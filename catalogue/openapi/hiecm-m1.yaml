@@ -1,0 +1,163 @@
+# Module M1: ABHA identity.
+#
+# M1 is counted as an HIE-CM milestone, but its APIs are served by the ABHA
+# service on a different host from M2 and M3. The servers below are the ABHA
+# ones. The access token still comes from the gateway session endpoint in
+# hiecm-gateway.yaml.
+#
+# Rules this file follows: catalogue/openapi/CONVENTIONS.md
+openapi: 3.1.1
+
+info:
+  title: ABDM M1, ABHA identity
+  summary: Create, find, log into and manage an ABHA, the health account that identifies a patient across ABDM.
+  description: |
+    M1 is where a patient gets an identity. An ABHA number is a 14 digit
+    identifier issued after a KYC check, and an ABHA address is the readable
+    name, such as `name@sbx`, that the rest of ABDM uses to route records.
+
+    You are here if you are building a PHR app, or a hospital, lab or
+    pharmacy system that registers patients. Everything in M2 and M3 assumes
+    the patient already has an ABHA address, and this module is how they get
+    one.
+
+    No operation in this file has been run against the sandbox from this
+    repository. `paths` is deliberately empty until NHA's swagger is fetched,
+    hashed and stored under `.raw/`. The servers, headers and tags below come
+    from NHA's own milestone pack and Postman collection, which are listed
+    under `x-abdm-sources`.
+  version: abdm-v3
+  license:
+    name: MIT
+    identifier: MIT
+  contact:
+    name: ABDM sandbox support
+    url: https://devforum.abdm.gov.in
+  x-abdm-gateway: hiecm
+  x-abdm-module: M1
+  x-abdm-phase: 1
+  x-abdm-roles: [phr, his]
+
+x-abdm-sources:
+  - file: ABDM Sandbox/ABDM/M1 ABHA Collection.postman_collection.json
+    role: upstream
+    status: not-yet-hashed
+    note: >
+      NHA's own M1 collection, 123 requests. The tag names in this file are
+      its folder names, so an integrator reading NHA's collection finds the
+      same words here. The header set below is what its requests actually
+      send.
+  - file: ABDM Sandbox/ABDM/Proposed Simplified Milestone 1.docx
+    role: upstream
+    status: not-yet-hashed
+    note: Carries the sandbox and production base URLs and the enrolment flows.
+  - url: https://sandbox.abdm.gov.in/sandbox/v3/new-documentation/swagger
+    role: upstream
+    status: not-yet-fetched
+    note: The published swagger. Fetch and hash it before filling `paths`.
+
+servers:
+  - url: https://abhasbx.abdm.gov.in/abha/api/v3
+    description: Sandbox
+  - url: https://abha.abdm.gov.in/api/abha/v3
+    description: Production
+
+security:
+  - gatewaySession: []
+
+tags:
+  - name: abha-creation
+    description: >
+      Creating an ABHA number after verifying who the person is. NHA supports
+      Aadhaar OTP, face authentication, fingerprint, IRIS, demographic
+      authentication, a driving licence route, and a separate route for a
+      child. Aadhaar OTP is mandatory for every integrator. The rest are
+      optional.
+  - name: abha-login
+    description: >
+      Signing an existing ABHA holder in, by mobile number, Aadhaar number,
+      ABHA number with a password, mobile OTP, biometric, or a face
+      authentication QR code.
+  - name: abha-profile
+    description: >
+      Managing an account after it exists. Updating the mobile number or
+      email, setting a password, repeating KYC, downloading the ABHA card,
+      deactivating, reactivating, deleting, and logging out.
+  - name: find-abha
+    description: >
+      Recovering an ABHA for someone who does not remember it, using mobile
+      OTP, Aadhaar OTP, face authentication or fingerprint.
+  - name: benefit-apis
+    description: >
+      The benefit scheme variants of creation, search and linking. These
+      calls carry the `BENEFIT_NAME` header.
+  - name: tokens-and-encryption
+    description: >
+      The certificate and token calls the other groups depend on, including
+      the public key used to encrypt Aadhaar and mobile values in transit.
+
+# Empty until NHA's swagger is fetched, hashed and reconciled. Generating
+# operations from the Postman collection alone would produce a contract with
+# no response schemas, which reads as authoritative and is not.
+paths: {}
+
+components:
+  securitySchemes:
+    gatewaySession:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: >
+        The `accessToken` from `POST /api/hiecm/gateway/v3/sessions`, which
+        is described in hiecm-gateway.yaml. Send it as
+        `Authorization: Bearer <ACCESS_TOKEN>`.
+
+  parameters:
+    RequestId:
+      name: REQUEST-ID
+      in: header
+      required: true
+      description: >
+        A fresh UUID that you generate for this request. Present on 121 of
+        the 123 requests in NHA's M1 collection. Log it, because it is how a
+        support ticket is traced.
+      schema:
+        type: string
+        format: uuid
+      example: 5f7a4a1e-59ba-4c0c-9e0c-8e6b3b6e2f11
+
+    Timestamp:
+      name: TIMESTAMP
+      in: header
+      required: true
+      description: >
+        The current time in ISO 8601, in UTC. Take it from a synchronised
+        clock. A drifted clock fails the whole module and the error does not
+        say so.
+      schema:
+        type: string
+        format: date-time
+      example: '2026-08-24T10:15:30.000Z'
+
+    XToken:
+      name: X-token
+      in: header
+      required: false
+      description: >
+        The user scoped token returned when a person logs in or verifies an
+        OTP. Profile calls act on one account, so they need this in addition
+        to the gateway token. Required on the calls that read or change a
+        specific person's account.
+      schema:
+        type: string
+
+    BenefitName:
+      name: BENEFIT_NAME
+      in: header
+      required: false
+      description: >
+        The benefit scheme an enrolment belongs to. Observed on the enrolment
+        and benefit calls in NHA's collection. Confirm the exact values with
+        NHA before using them in production.
+      schema:
+        type: string

@@ -1,0 +1,171 @@
+# Module M2: care context linking and HIP data sharing.
+#
+# Rules this file follows: catalogue/openapi/CONVENTIONS.md
+openapi: 3.1.1
+
+info:
+  title: ABDM M2, care context linking and data sharing
+  summary: Tell ABDM that a patient has records at your facility, and hand those records over when a consented request arrives.
+  description: |
+    M2 is the provider side. Your system holds health records, so ABDM calls
+    you a Health Information Provider, or HIP. Two things happen here.
+
+    First, linking. When you create a record for a patient, you group it into
+    a care context and link that care context to the patient's ABHA address.
+    The consent manager never sees the record itself, only a reference number
+    and a display name, which is why it is called data blind.
+
+    Second, sharing. When a request backed by a consent artefact reaches you,
+    you package the records as FHIR R4 bundles, encrypt them, and post them
+    to the URL in the request.
+
+    Most of M2 is asynchronous. You call the gateway, it answers with an
+    acknowledgement, and the real answer arrives later as a callback to a URL
+    you registered. Those callbacks belong under `webhooks` in this file.
+
+    Prerequisite: a valid facility id and the HIP role. Without both, every
+    call here fails on authorisation rather than on anything you sent.
+
+    No operation in this file has been run against the sandbox from this
+    repository. `paths` and `webhooks` stay empty until NHA's swagger is
+    fetched, hashed and stored under `.raw/`.
+  version: abdm-v3
+  license:
+    name: MIT
+    identifier: MIT
+  contact:
+    name: ABDM sandbox support
+    url: https://devforum.abdm.gov.in
+  x-abdm-gateway: hiecm
+  x-abdm-module: M2
+  x-abdm-phase: 1
+  x-abdm-roles: [hip, his]
+
+x-abdm-sources:
+  - file: ABDM Sandbox/ABDM/Proposed Simplified Milestone 2.docx
+    role: upstream
+    status: not-yet-hashed
+    note: >
+      NHA milestone pack. Carries the base URLs, the linking and discovery
+      narrative, the care context structure, and a custom error code table
+      that becomes the M2 error atoms.
+  - url: https://sandbox.abdm.gov.in/sandbox/v3/new-documentation?doc=HIPInitiatedlinking
+    role: upstream
+    status: not-yet-fetched
+  - url: https://sandbox.abdm.gov.in/sandbox/v3/newdocumentation?doc=DiscoveryAndlink
+    role: upstream
+    status: not-yet-fetched
+  - url: https://sandbox.abdm.gov.in/sandbox/v3/newdocumentation?doc=RequestHealthRecords
+    role: upstream
+    status: not-yet-fetched
+  - url: https://sandbox.abdm.gov.in/sandbox/v3/new-documentation/swagger
+    role: upstream
+    status: not-yet-fetched
+    note: The published swagger. Fetch and hash it before filling `paths`.
+
+externalDocs:
+  description: NRCeS FHIR R4 profiles, which every M2 bundle must validate against
+  url: https://nrces.in/ndhm/fhir/r4/index.html
+
+servers:
+  - url: https://dev.abdm.gov.in
+    description: 'Sandbox. Pair it with the `X-CM-ID: sbx` header.'
+  - url: https://apis.abdm.gov.in
+    description: 'Production. Pair it with the `X-CM-ID: abdm` header.'
+
+security:
+  - gatewaySession: []
+
+tags:
+  - name: hip-initiated-linking
+    description: >
+      Linking a care context when the patient gave you their ABHA address at
+      registration. Needs a link token, which you validate before use and
+      regenerate through demographic authentication when it has expired.
+  - name: mobile-notification
+    description: >
+      The path for a patient who gave a mobile number rather than an ABHA
+      address. ABDM sends them an SMS with a deep link, and they link the
+      record themselves from a PHR app.
+  - name: discovery-and-link
+    description: >
+      Answering a patient who is searching your facility from a PHR app. You
+      match them from the identifiers ABDM supplies and return care contexts.
+      No clinical detail may appear in a discovery response, only the
+      reference number and display name.
+  - name: health-information-request
+    description: >
+      Receiving a consented request for records and posting the encrypted
+      FHIR bundles to the data push URL it names.
+
+# Path inventory to fill at ingestion, from NHA's M2 material. Kept as a
+# comment rather than as empty operations, because an operation with no
+# request or response schema reads as a contract and is not one.
+#
+#   HIP calls the gateway:   care context link, link confirm, discovery
+#                            response, health information transfer
+#   Gateway calls the HIP:   discovery request, link request,
+#                            health information request
+#
+# Confirm every path against the swagger. None of them is transcribed here
+# from memory.
+paths: {}
+
+webhooks: {}
+
+components:
+  securitySchemes:
+    gatewaySession:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: >
+        The `accessToken` from `POST /api/hiecm/gateway/v3/sessions`, which
+        is described in hiecm-gateway.yaml. Send it as
+        `Authorization: Bearer <ACCESS_TOKEN>`.
+        M2 also uses per flow tokens, a link token for linking and an
+        authorisation token for patient scoped calls. NHA's error table names
+        both. Their exact header names go here once the swagger is ingested,
+        rather than being guessed now.
+
+  parameters:
+    RequestId:
+      name: REQUEST-ID
+      in: header
+      required: true
+      description: >
+        A fresh UUID that you generate for this request. The callback that
+        answers it carries the same value, so this is how you match an
+        asynchronous reply to the call that caused it. Store it before you
+        send the request, not after.
+      schema:
+        type: string
+        format: uuid
+      example: 5f7a4a1e-59ba-4c0c-9e0c-8e6b3b6e2f11
+
+    Timestamp:
+      name: TIMESTAMP
+      in: header
+      required: true
+      description: >
+        The current time in ISO 8601, in UTC, from a synchronised clock.
+      schema:
+        type: string
+        format: date-time
+      example: '2026-08-24T10:15:30.000Z'
+
+    CmId:
+      name: X-CM-ID
+      in: header
+      required: true
+      description: >
+        Which consent manager you are talking to. `sbx` on the sandbox and
+        `abdm` in production. NHA's M2 error table has a dedicated code for
+        an invalid value here, which tells you how often it is wrong.
+      schema:
+        type: string
+      examples:
+        sandbox:
+          value: sbx
+        production:
+          value: abdm

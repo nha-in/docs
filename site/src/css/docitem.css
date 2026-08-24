@@ -1,0 +1,154 @@
+/* docitem: owned by the docitem component set.
+ *
+ * The article column and the "on this page" rail. Measurements follow the
+ * reference documentation site: 816px column (40px top, 80px bottom padding,
+ * both from `.docs-content` in layout.css), 264px outline rail, sticky under
+ * the 112px chrome, rail hidden below 1280px.
+ */
+
+/* ---------- the two columns ---------- */
+
+.docs-article-row {
+  display: flex;
+  align-items: flex-start;
+  width: 100%;
+}
+
+.docs-article-main {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.docs-toc-col {
+  flex: 0 0 var(--toc-width);
+  width: var(--toc-width);
+  padding: 2.5rem 1.5rem 0 0;
+}
+
+@media (max-width: 1279px) {
+  .docs-toc-col {
+    display: none;
+  }
+}
+
+/* The rail only appears from 1280px, but the classic collapsible outline hides
+   itself from 997px. Without this the band between the two has no table of
+   contents at all, so the mobile outline is kept for it. The extra `.docs-content`
+   beats the theme's CSS module rule whichever order the two stylesheets land in. */
+@media (min-width: 997px) and (max-width: 1279px) {
+  .docs-content .theme-doc-toc-mobile {
+    display: block;
+  }
+}
+
+/* ---------- article column ---------- */
+
+.docs-content article > *:first-child {
+  margin-top: 0;
+}
+
+.docs-content .theme-doc-version-badge {
+  margin-bottom: 1rem;
+}
+
+/* The h1 comes from the page's own markdown, so the copy control is floated
+   beside it rather than laid out with it. */
+.docs-page-actions {
+  float: right;
+  display: inline-flex;
+  align-items: center;
+  margin: 0.25rem 0 0 1.5rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-control);
+  background: var(--surface);
+}
+
+.docs-page-actions > button {
+  color: var(--text-body);
+  font-weight: 500;
+  border-radius: 0;
+}
+
+.docs-page-actions > button:first-child {
+  border-radius: calc(var(--radius-control) - 1px) 0 0
+    calc(var(--radius-control) - 1px);
+}
+
+.docs-page-actions > button:last-child {
+  border-left: 1px solid var(--border);
+  border-radius: 0 calc(var(--radius-control) - 1px)
+    calc(var(--radius-control) - 1px) 0;
+}
+
+/* Too narrow to sit beside a serif h1: stack it above instead. */
+@media (max-width: 639px) {
+  .docs-page-actions {
+    float: none;
+    display: flex;
+    width: fit-content;
+    margin: 0 0 1rem;
+  }
+}
+
+/* ---------- feedback row ---------- */
+
+.docs-feedback {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 3rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--border);
+  clear: both;
+}
+
+.docs-feedback__prompt,
+.docs-feedback__thanks {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+  margin: 0;
+}
+
+.docs-content .pagination-nav {
+  margin-top: 3rem;
+}
+
+/* ---------- on this page ---------- */
+
+.docs-toc {
+  position: sticky;
+  top: calc(var(--chrome-height) + 2.5rem);
+  max-height: calc(100vh - var(--chrome-height) - 4rem);
+  overflow-y: auto;
+  border-left: 0;
+}
+
+.docs-toc .table-of-contents,
+.docs-toc .table-of-contents ul {
+  border-left: 0;
+  padding-left: 0;
+  margin: 0;
+}
+
+.docs-toc .table-of-contents ul {
+  padding-left: 0.75rem;
+}
+
+.docs-toc .table-of-contents__link {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 400;
+  line-height: 1.4;
+  padding: 0.125rem 0;
+  color: var(--text-faint);
+}
+
+.docs-toc .table-of-contents__link:hover {
+  color: var(--text-heading);
+}
+
+.docs-toc .table-of-contents__link--active,
+.docs-toc .table-of-contents__link--active:hover {
+  color: var(--accent);
+  font-weight: 400;
+}

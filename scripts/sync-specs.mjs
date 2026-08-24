@@ -1,4 +1,4 @@
-// Copies the catalogue's OpenAPI/AsyncAPI files into the site's static
+// Copies the catalogue's OpenAPI files into the site's static
 // directory so the Scalar plugin can serve them. The catalogue is the only
 // place specs are edited; site/static/specs is a build output.
 import { cpSync, mkdirSync, readdirSync, rmSync } from "node:fs";

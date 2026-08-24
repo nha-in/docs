@@ -1,0 +1,58 @@
+/**
+ * Scalar API reference, themed onto the same tokens as the rest of the site.
+ *
+ * Scalar exposes its own custom properties, so this is a mapping file rather
+ * than a set of overrides. The one hard override is the vendor footer: the
+ * "Powered by Scalar" badge and the hosted "Generate MCP" link both point at
+ * services we do not use.
+ */
+
+.scalar-app,
+.scalar-api-reference {
+  --scalar-font: var(--font-sans);
+  --scalar-font-code: var(--font-mono);
+  --scalar-heading-font: var(--font-serif);
+  --scalar-radius: 0.5rem;
+  --scalar-radius-lg: var(--radius-control);
+  --scalar-radius-xl: var(--radius-panel);
+
+  --scalar-background-1: var(--page);
+  --scalar-background-2: var(--surface-sunken);
+  --scalar-background-3: var(--surface-raised);
+  --scalar-background-accent: var(--accent-soft);
+
+  --scalar-color-1: var(--text-heading);
+  --scalar-color-2: var(--text-body);
+  --scalar-color-3: var(--text-faint);
+  --scalar-color-accent: var(--accent);
+
+  --scalar-border-color: var(--border);
+  --scalar-sidebar-background-1: var(--page);
+  --scalar-sidebar-color-1: var(--text-body);
+  --scalar-sidebar-color-2: var(--text-faint);
+  --scalar-sidebar-border-color: var(--border);
+  --scalar-sidebar-item-hover-background: var(--accent-soft);
+  --scalar-sidebar-item-hover-color: var(--text-heading);
+  --scalar-sidebar-item-active-background: var(--accent-soft);
+  --scalar-sidebar-color-active: var(--accent);
+  --scalar-sidebar-search-background: var(--surface-sunken);
+  --scalar-sidebar-search-border-color: var(--border);
+  --scalar-sidebar-search-color: var(--text-faint);
+}
+
+/* Vendor chrome for services this site does not use.
+   The badge is an anchor to scalar.com in the sidebar footer row, measured
+   from the rendered reference at /reference/hiecm-m1. Hiding the anchor keeps
+   the row's own controls, which are ours to use. */
+.scalar-mcp-layer,
+.darklight-reference a[href*='scalar.com'],
+.scalar-app a[href*='scalar.com'],
+[class*='scalar-powered-by'] {
+  display: none !important;
+}
+
+/* Scalar renders inside our page, not as a standalone app: let the site chrome
+   stay visible and give the reference the remaining viewport. */
+.scalar-reference-page {
+  min-height: calc(100vh - var(--chrome-height));
+}

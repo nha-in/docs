@@ -1,37 +1,129 @@
-/**
- * Any CSS included here will be global. The classic template
- * bundles Infima by default. Infima is a CSS framework designed to
- * work well for content-centric websites.
- */
+/* Tailwind is imported in pieces on purpose. Docusaurus puts its own CSS,
+   Infima included, into cascade layers, and an unlayered rule beats a layered
+   one whatever the specificity. Utilities therefore stay unlayered, so
+   `text-primary-foreground` on a button wins over Infima's `a` colour instead
+   of losing to it. Theme and preflight keep their layers. */
+@layer theme, base, components, utilities;
+@import 'tailwindcss/theme.css' layer(theme);
+@import 'tailwindcss/preflight.css' layer(base);
+@import 'tailwindcss/utilities.css';
+@import './tokens.css';
+@import './typography.css';
+@import './layout.css';
+@import './navbar.css';
+@import './sidebar.css';
+@import './docitem.css';
+@import './mdx.css';
+@import './home.css';
+@import './scalar.css';
 
-/* You can override the default Infima variables here. */
+/* Docusaurus toggles [data-theme] on <html>; teach Tailwind the same signal. */
+@custom-variant dark (&:where([data-theme='dark'], [data-theme='dark'] *));
+
+@source '../';
+
+/* Expose the design tokens as Tailwind utilities, so shadcn components and
+   our own components style from the same source as the Infima overrides. */
+@theme inline {
+  --color-page: var(--page);
+  --color-surface: var(--surface);
+  --color-surface-raised: var(--surface-raised);
+  --color-surface-sunken: var(--surface-sunken);
+  --color-code-surface: var(--code-surface);
+  --color-line: var(--border);
+  --color-line-strong: var(--border-strong);
+
+  --color-ink: var(--text);
+  --color-heading: var(--text-heading);
+  --color-body: var(--text-body);
+  --color-muted: var(--text-muted);
+  --color-faint: var(--text-faint);
+
+  --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
+  --color-accent-contrast: var(--accent-contrast);
+  --color-accent-soft: var(--accent-soft);
+  --color-accent-line: var(--accent-line);
+
+  --font-sans: var(--font-sans);
+  --font-serif: var(--font-serif);
+  --font-mono: var(--font-mono);
+
+  --radius-control: var(--radius-control);
+  --radius-panel: var(--radius-panel);
+
+  /* shadcn/ui expects these names */
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+}
+
+/* Infima variables, so the parts of Docusaurus we do not replace still match. */
 :root {
-  --ifm-color-primary: #2e8555;
-  --ifm-color-primary-dark: #29784c;
-  --ifm-color-primary-darker: #277148;
-  --ifm-color-primary-darkest: #205d3b;
-  --ifm-color-primary-light: #33925d;
-  --ifm-color-primary-lighter: #359962;
-  --ifm-color-primary-lightest: #3cad6e;
-  --ifm-code-font-size: 95%;
-  --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.1);
+  --ifm-color-primary: var(--accent);
+  --ifm-color-primary-dark: var(--sage-700);
+  --ifm-color-primary-darker: var(--sage-800);
+  --ifm-color-primary-darkest: var(--sage-900);
+  --ifm-color-primary-light: var(--sage-500);
+  --ifm-color-primary-lighter: var(--sage-400);
+  --ifm-color-primary-lightest: var(--sage-300);
+
+  --ifm-background-color: var(--page);
+  --ifm-background-surface-color: var(--surface);
+  --ifm-font-family-base: var(--font-sans);
+  --ifm-font-family-monospace: var(--font-mono);
+  --ifm-font-color-base: var(--text-body);
+  --ifm-heading-color: var(--text-heading);
+  --ifm-heading-font-family: var(--font-serif);
+  --ifm-heading-font-weight: 400;
+  --ifm-link-color: var(--accent);
+  --ifm-link-hover-color: var(--accent-hover);
+  --ifm-toc-border-color: var(--border);
+  --ifm-code-font-size: 87.5%;
+  --ifm-global-radius: var(--radius-control);
+  --ifm-navbar-height: var(--topbar-height);
+  --ifm-navbar-background-color: var(--page);
+  --ifm-navbar-shadow: none;
+  --ifm-navbar-padding-horizontal: 1.5rem;
+  --ifm-container-width-xl: 90rem;
+  --ifm-spacing-horizontal: 1.5rem;
+  --ifm-breadcrumb-color-active: var(--accent);
+  --ifm-menu-color-active: var(--accent);
+  --ifm-pre-background: var(--code-surface);
+  --docusaurus-highlighted-code-line-bg: var(--accent-soft);
+  --docusaurus-announcement-bar-height: 0px;
 }
 
-/* For readability concerns, you should choose a lighter palette in dark mode. */
-[data-theme='dark'] {
-  --ifm-color-primary: #25c2a0;
-  --ifm-color-primary-dark: #21af90;
-  --ifm-color-primary-darker: #1fa588;
-  --ifm-color-primary-darkest: #1a8870;
-  --ifm-color-primary-light: #29d5b0;
-  --ifm-color-primary-lighter: #32d8b4;
-  --ifm-color-primary-lightest: #4fddbf;
-  --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.3);
+html,
+body {
+  background: var(--page);
+  color: var(--text-body);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
 }
 
-/* Self-hosted Scalar: hide the "Generate MCP" sidebar link, which points to
-   Scalar's hosted platform. We run open-source Scalar only and will ship our
-   own MCP servers on top of this documentation. */
-.scalar-mcp-layer {
-  display: none !important;
+::selection {
+  background: var(--accent-soft);
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
 }
