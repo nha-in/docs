@@ -1,0 +1,22 @@
+# Dependencies
+node_modules/
+
+# Docusaurus build outputs
+site/build/
+site/.docusaurus/
+
+# Generated: specs are synced from catalogue/openapi by scripts/sync-specs.mjs
+site/static/specs/
+
+# Generated: Scalar browser bundle vendored by scripts/sync-specs.mjs
+site/static/vendor/
+
+# Environment
+.env
+.env.*
+
+# OS / editor
+.DS_Store
+.idea/
+.vscode/
+*.log
