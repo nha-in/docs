@@ -11,10 +11,12 @@
     "sync-specs": "node scripts/sync-specs.mjs",
     "lint:specs": "spectral lint \"catalogue/openapi/*.yaml\" --fail-severity=error",
     "start": "npm start --workspace site",
-    "build": "npm run build --workspace site"
+    "build": "npm run build --workspace site",
+    "lint:atoms": "node scripts/lint-atoms.mjs"
   },
   "devDependencies": {
     "@docusaurus/faster": "^3.10.2",
-    "@stoplight/spectral-cli": "^6.11.1"
+    "@stoplight/spectral-cli": "^6.11.1",
+    "yaml": "^2.8.1"
   }
 }
