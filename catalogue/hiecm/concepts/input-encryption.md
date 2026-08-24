@@ -15,6 +15,31 @@ sources:
   - file: site/docs/api/hie-cm/m1/implementation.md
     fetched: 2026-08-24
     hash: sha256:c01fb4baa0a049c6344d7003c96260c76fa04683c5bc0b7fd8ab87d00cba1cd4
+  - url: https://github.com/NHA-ABDM/ABDM-ABHA-APP/blob/main/lib/utils/validate/validator.dart
+    fetched: 2026-08-24
+    hash: git-blob:2b606616718a0973742e9c7e2d58c101ac64ce12
+    role: upstream
+    note: >
+      NHA's own ABHA application, the reference M1 client. Encrypts with
+      the Dart encrypt package version 5, whose RSA encoding defaults to
+      PKCS1 v1.5, against a bundled PEM public key.
+  - url: https://github.com/NHA-ABDM/UHI/blob/main/src/apps/backend/eua-backend/euaService/EUAclient/src/main/java/in/gov/abdm/eua/service/utils/RsaUtils.java
+    fetched: 2026-08-24
+    hash: git-blob:eb6abfd1c589d33860308e5432acb873d4412d2e
+    role: upstream
+    note: >
+      NHA's UHI reference implementation, stating PKCS1 v1.5 outright. A
+      different gateway, cited as corroboration of the older families'
+      convention, not as a V3 source.
+  - file: (private) production V3 integration, not publicly citable
+    fetched: 2026-08-24
+    status: not-publicly-citable
+    role: corroboration
+    note: >
+      A working integration running the V3 registration and login flows
+      against ABDM. Source of the OAEP with SHA-1 finding for V3 and of
+      the one-key-per-family split. Not a public URL, so a sandbox run
+      is what will make this atom verifiable by a reader.
 verified:
   status: unverified
   against: docs-only
@@ -71,20 +96,67 @@ For checking your local encryption by hand, NHA's document points at
 the RSA tool at devbeaver.com. Do not paste live personal data into a
 third party tool; use test values.
 
-What is deliberately not written here, because no source in this
-repository states it and guessing a wrong value costs an integrator
-days: the exact RSA padding scheme and hash parameters, the
-certificate's format and rotation policy, and the key itself. Common
-integrations of this API family use OAEP style padding, but which
-variant NHA's V3 expects must be read from the fetched certificate
-call and proven against sandbox, not assumed.
+### The padding depends on which API family you are calling
+
+This is the part that costs people days, and it is not stated in NHA's
+prose documents. There is no single ABDM padding scheme. The scheme
+that works is a property of the API family, and the same integrator
+often needs both:
+
+| Calling | Padding | Key |
+|---|---|---|
+| V3 ABHA and PHR registration and login, the flows this catalogue documents | RSA OAEP with SHA-1 | the V3 PHR public key, 2048 bit |
+| Older healthid API family, V1 and V2 | RSA PKCS1 v1.5 | a separate healthid public key, 4096 bit |
+| NHPR, the M4 professional registry | RSA PKCS1 v1.5 | a separate NHPR public key, 2048 bit |
+
+**For everything in this catalogue's M1 scope, use OAEP with SHA-1.**
+Note the hash: OAEP defaults to SHA-256 in most libraries, and SHA-256
+here is rejected. The digest must be SHA-1 for both the OAEP hash and
+the MGF1 mask generation, which is the library default when SHA-1 is
+passed as the hash. Output is the raw ciphertext, standard base64
+encoded, into the field.
+
+```
+Go      rsa.EncryptOAEP(sha1.New(), rand.Reader, pub, []byte(value), nil)
+Python  public_key.encrypt(value, padding.OAEP(
+            mgf=padding.MGF1(hashes.SHA1()), algorithm=hashes.SHA1(), label=None))
+Java    Cipher.getInstance("RSA/ECB/OAEPWithSHA-1AndMGF1Padding")
+Node    crypto.publicEncrypt({key, padding: RSA_PKCS1_OAEP_PADDING,
+            oaepHash: "sha1"}, buf)
+```
+
+Each key is an RSA public key in X.509 SubjectPublicKeyInfo form, the
+`-----BEGIN PUBLIC KEY-----` PEM. Working integrations pin the key
+rather than fetching it per request, and refresh it when NHA rotates.
+
+The evidence: a production V3 integration running against ABDM uses
+OAEP with SHA-1 for the V3 registration and login flows, and PKCS1 v1.5
+for the healthid and NHPR families, with a distinct key per family.
+NHA's own published code corroborates the PKCS1 v1.5 half: the UHI
+backend states `Cipher.getInstance("RSA/ECB/PKCS1Padding")` outright,
+and NHA's ABHA application encrypts through a library whose RSA default
+is PKCS1 v1.5. No NHA published source in reach states the V3 OAEP
+parameters, which is exactly why integrators reading only the documents
+get this wrong.
+
+What is still not settled, and is not guessed here: the public
+certificate endpoint's full URL, headers and response shape, since
+NHA's document carries them only as screenshots and the Postman
+collection does not include the call, and the rotation policy for each
+key. Nothing on this page has been run against the sandbox from this
+repository, so the atom stays unverified until the verification below
+is done.
 
 ```observation schema=precondition
-requires: public certificate fetched from NHA and cached with its validity window
+requires: the public key for the API family you are calling
+settled:
+  - v3 padding: RSA OAEP, SHA-1 for both digest and MGF1
+  - healthid and nhpr padding: RSA PKCS1 v1.5
+  - key format: X.509 SubjectPublicKeyInfo PEM, one key per API family
+  - ciphertext encoding: standard base64
 unknowns:
-  - certificate endpoint full URL and headers
-  - response shape and certificate format
-  - RSA padding scheme and hash parameters
+  - certificate endpoint full URL, headers and response shape
+  - rotation policy per key
 closed_by: sandbox verification run, recorded in this atom
 ```
 
@@ -99,11 +171,16 @@ your local output and NHA's helper output are interchangeable.
 
 ## When it goes wrong
 
-- A wrongly padded or wrongly keyed value does not fail loudly at
-  encryption time; it fails at the API with a validation style
+- Wrong padding or wrong hash is the most likely mistake, and the two
+  most common shapes of it are using PKCS1 v1.5 on a V3 call, or using
+  OAEP with SHA-256 because that is the library default. Neither fails
+  at encryption time. Both fail at the API with a validation style
   rejection, which reads as "my Aadhaar number is wrong" and wastes
-  hours. When an encrypted field is rejected, verify the padding and
-  the certificate before doubting the plaintext.
+  hours. When an encrypted field is rejected, check the padding and the
+  digest first, and doubt the plaintext last.
+- Using the right scheme with the wrong family's key fails the same
+  way. There is one key per API family, so an integrator who calls both
+  V3 and NHPR holds more than one and must not cross them.
 - A stale cached certificate fails every encrypted call at once after a
   rotation. Cache the certificate with a validity window, not forever.
 - Clock or header problems masquerade as encryption problems on these
