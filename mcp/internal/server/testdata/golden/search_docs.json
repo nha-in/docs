@@ -1,0 +1,23 @@
+{
+  "catalogue_version": "2026.08.24",
+  "hits": [
+    {
+      "id": "hiecm.error.abdm-1035",
+      "milestone": "M2",
+      "snippet": "...does not recognise your facility. **ABDM-1035** means the X-HIP-ID...",
+      "summary": "The gateway rejected the call.",
+      "title": "ABDM-1035 facility not onboarded",
+      "type": "error",
+      "verification_status": "verified"
+    },
+    {
+      "id": "hiecm.flow.m2-link-care-context",
+      "milestone": "M2",
+      "snippet": "## In plain words\n\nLinking makes a visit discoverable.",
+      "summary": "Tell ABDM about a visit.",
+      "title": "Link a care context",
+      "type": "flow",
+      "verification_status": "unverified"
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "atoms": {
+    "by_gateway": {
+      "hiecm": 2
+    },
+    "by_milestone": {
+      "M2": 2
+    },
+    "by_status": {
+      "unverified": 1,
+      "verified": 1
+    },
+    "by_type": {
+      "error": 1,
+      "flow": 1
+    }
+  },
+  "built_at": "2026-08-24T00:00:00Z",
+  "catalogue_version": "2026.08.24",
+  "embeddings": false,
+  "operations": 1
+}

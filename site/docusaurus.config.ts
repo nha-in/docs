@@ -19,6 +19,11 @@ function tailwindPlugin() {
   };
 }
 
+// Static assets (specs, the vendored Scalar bundle) are addressed with
+// absolute paths, so they must carry the base path when the site is
+// served under one, e.g. GitHub Pages at /abdm-docs/.
+const siteBase = process.env.DOCUSAURUS_BASE_URL ?? '/';
+
 // One interactive reference per specification file. Every instance is
 // self-hosted: the bundle is vendored, and Scalar's cloud services stay off.
 const references = [
@@ -40,9 +45,9 @@ const scalarPlugins = references.map(
         showNavLink: false,
         // Serve the reference bundle from our own origin, not jsdelivr.
         // Vendored by scripts/sync-specs.mjs from @scalar/api-reference.
-        cdn: '/vendor/scalar/standalone.js',
+        cdn: `${siteBase}vendor/scalar/standalone.js`,
         configuration: {
-          url: `/specs/${reference.spec}`,
+          url: `${siteBase}specs/${reference.spec}`,
           // Self-hosted: no Scalar cloud services. "Try it" requests go
           // directly from the browser, so target APIs must allow CORS, or
           // proxyUrl must point to a proxy in our own infrastructure
@@ -74,8 +79,10 @@ const config: Config = {
     v4: true,
   },
 
-  url: 'https://abdm-docs.example.com',
-  baseUrl: '/',
+  // The Pages workflow overrides these for the github.io deployment; a
+  // custom domain later sets DOCUSAURUS_URL and drops the base path.
+  url: process.env.DOCUSAURUS_URL ?? 'https://abdm-docs.example.com',
+  baseUrl: process.env.DOCUSAURUS_BASE_URL ?? '/',
 
   onBrokenLinks: 'throw',
 

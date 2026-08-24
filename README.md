@@ -23,6 +23,10 @@ catalogue/            Source of truth. Nothing downstream is hand-maintained.
 site/                 Docusaurus site with Scalar API references (a rendering,
                       not a source; site/static/specs is generated)
 scripts/              Build helpers (spec sync; later: nav generation, atom lint)
+mcp/                  Go MCP server: cmd/indexer compiles catalogue/ into a
+                      SQLite snapshot (FTS + embeddings via Ollama, optional);
+                      cmd/docs-mcp serves agents (/mcp) and the site search
+                      box (/api/search) with hybrid retrieval
 ```
 
 ## Working on the site
