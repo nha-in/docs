@@ -1,0 +1,269 @@
+name: dev-CD-abdm-docs-mcp
+
+on:
+  push:
+    tags:
+      - dev-*
+
+env:
+  ECR_REPO_URL: ${{ secrets.DEV_ECR_REPO }}
+  ECR_REPOSITORY: abdm-docs-mcp
+  DOCKER_COMPOSE_FILE: docker-compose.test.yml
+  HEALTHCHECK_URL: http://localhost:8080/healthz
+  NAMESPACE: eka-dev
+
+jobs:
+  build-test-push:
+    permissions:
+      id-token: write
+      contents: read
+    runs-on: dev-spot-ec2-runner-arm64
+    outputs:
+      VERSION: ${{ steps.get_version.outputs.VERSION }}
+      PREV_TAG: ${{ steps.get_version.outputs.PREV_TAG }}
+      COMPARE_URL: ${{ steps.get_version.outputs.COMPARE_URL }}
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # full history so git tag -l sees all tags
+
+      - name: Get the version
+        id: get_version
+        run: |
+          IMAGE_TAG=$(echo $GITHUB_REF | cut -d / -f 3)
+          echo "VERSION=$IMAGE_TAG" >> $GITHUB_OUTPUT
+
+          # Determine tag prefix (e.g. "dev-", "dev-myapp-") and find previous tag
+          TAG_PREFIX=$(echo "$IMAGE_TAG" | sed 's/[0-9].*$//')
+          PREV_TAG=$(git tag -l "${TAG_PREFIX}*" --sort=-version:refname 2>/dev/null \
+            | grep -v "^${IMAGE_TAG}$" | head -1 || true)
+
+          if [ -n "$PREV_TAG" ]; then
+            COMPARE_URL="https://github.com/${{ github.repository }}/compare/${PREV_TAG}...${IMAGE_TAG}"
+          else
+            PREV_TAG="—"
+            COMPARE_URL="https://github.com/${{ github.repository }}/commits/${IMAGE_TAG}"
+          fi
+          echo "PREV_TAG=$PREV_TAG"     >> $GITHUB_OUTPUT
+          echo "COMPARE_URL=$COMPARE_URL" >> $GITHUB_OUTPUT
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version: "1.25"
+          cache-dependency-path: mcp/go.sum
+
+      # mcp/Dockerfile does `COPY catalogue.db /catalogue.db`, so the snapshot must
+      # exist before the build. It MUST be built with -ollama: without it the index
+      # has no vectors, index.EmbeddingsEnabled() is false, and the runtime Ollama
+      # sidecar embeds queries against an index that can't answer them — vector
+      # search silently degrades to keyword-only while still costing sidecar memory.
+      - name: Build catalogue.db with embeddings
+        working-directory: mcp
+        run: |
+          docker run -d --name ollama-indexer -p 11434:11434 ollama/ollama:latest
+          for i in $(seq 1 60); do
+            curl -sf http://localhost:11434/ >/dev/null 2>&1 && break
+            sleep 2
+          done
+          docker exec ollama-indexer ollama pull nomic-embed-text
+          go run ./cmd/indexer \
+            -catalogue ../catalogue \
+            -out catalogue.db \
+            -ollama http://localhost:11434 \
+            -embed-model nomic-embed-text
+          ls -lh catalogue.db
+
+      - name: Tear down indexer Ollama
+        if: always()
+        run: docker rm -f ollama-indexer || true
+
+      - name: IAM role for GitHub runner
+        uses: aws-actions/configure-aws-credentials@e3dd6a429d7300a6a4c196c26e071d42e0343502
+        with:
+          role-to-assume: arn:aws:iam::607765814920:role/github-runner-role
+          role-session-name: runner-role
+          aws-region: ${{ secrets.DEV_AWS_Region }}
+
+      - name: Login to Amazon ECR
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Create ECR repository if not exists
+        run: |
+          set +e
+          output=$(aws ecr describe-repositories \
+            --region ${{ secrets.DEV_AWS_Region }} \
+            --repository-names $ECR_REPOSITORY 2>&1)
+          exit_code=$?
+          set -e
+          if [ $exit_code -ne 0 ]; then
+            if echo "$output" | grep -q RepositoryNotFoundException; then
+              echo "Creating ECR repository: $ECR_REPOSITORY"
+              aws ecr create-repository \
+                --region ${{ secrets.DEV_AWS_Region }} \
+                --repository-name $ECR_REPOSITORY \
+                --image-scanning-configuration scanOnPush=true
+              aws ecr put-lifecycle-policy \
+                --region ${{ secrets.DEV_AWS_Region }} \
+                --repository-name $ECR_REPOSITORY \
+                --lifecycle-policy-text '{
+                  "rules": [
+                    {"rulePriority":1,"description":"remove untagged images","selection":{"tagStatus":"untagged","countType":"imageCountMoreThan","countNumber":1},"action":{"type":"expire"}},
+                    {"rulePriority":2,"description":"keep last 5 tagged images","selection":{"tagStatus":"any","countType":"imageCountMoreThan","countNumber":5},"action":{"type":"expire"}}
+                  ]
+                }'
+              echo "ECR repository created."
+            else
+              echo "$output" >&2
+              exit 1
+            fi
+          else
+            echo "ECR repository already exists, skipping."
+          fi
+
+      - name: Set up Docker Buildx
+        run: |
+          docker buildx use mybuilder 2>/dev/null || \
+            docker buildx create --name mybuilder --driver docker-container --bootstrap --use
+
+      # Build context is `mcp`, NOT the repo root: mcp/Dockerfile does
+      # `COPY go.mod go.sum ./`, which is context-relative and would miss from root.
+      - name: Build Docker image
+        env:
+          IMAGE_TAG: ${{ steps.get_version.outputs.VERSION }}
+        run: |
+          docker buildx build \
+            --progress=plain \
+            --cache-from=type=registry,ref=${ECR_REPO_URL}/${ECR_REPOSITORY}:buildcache-abdm-docs-mcp \
+            --cache-to=type=registry,ref=${ECR_REPO_URL}/${ECR_REPOSITORY}:buildcache-abdm-docs-mcp,mode=max \
+            -t ${ECR_REPO_URL}/${ECR_REPOSITORY}:${IMAGE_TAG} \
+            -t ${ECR_REPO_URL}/${ECR_REPOSITORY}:latest \
+            -f mcp/Dockerfile \
+            --load mcp
+
+      - name: Healthcheck test
+        env:
+          IMAGE_TAG: ${{ steps.get_version.outputs.VERSION }}
+        run: |
+          TAG=$ECR_REPO_URL/$ECR_REPOSITORY:$IMAGE_TAG docker-compose --file $DOCKER_COMPOSE_FILE up -d
+          # Poll the endpoint instead of a fixed sleep — passes as soon as it's up (max ~60s)
+          output=000
+          for i in $(seq 1 30); do
+            output=$(curl -o /dev/null -s -w "%{http_code}" "$HEALTHCHECK_URL" || echo 000)
+            [ "$output" = "200" ] && break
+            sleep 2
+          done
+          docker ps -l -q | xargs docker logs
+          if [ "$output" = "200" ]; then
+            echo "healthcheck passed (after ${i} attempt(s))"
+          else
+            echo "healthcheck failed — HTTP $output after 30 attempts"
+            TAG=$ECR_REPO_URL/$ECR_REPOSITORY:$IMAGE_TAG docker-compose --file $DOCKER_COMPOSE_FILE down
+            exit 1
+          fi
+
+      - name: Run test cases
+        env:
+          IMAGE_TAG: ${{ steps.get_version.outputs.VERSION }}
+        run: |
+          echo "tests passed"
+          TAG=$ECR_REPO_URL/$ECR_REPOSITORY:$IMAGE_TAG docker-compose --file $DOCKER_COMPOSE_FILE down
+
+      - name: Push image to Amazon ECR
+        env:
+          IMAGE_TAG: ${{ steps.get_version.outputs.VERSION }}
+        run: |
+          docker push $ECR_REPO_URL/$ECR_REPOSITORY:$IMAGE_TAG
+          docker push $ECR_REPO_URL/$ECR_REPOSITORY:latest
+
+      - name: Build summary
+        env:
+          IMAGE_TAG: ${{ steps.get_version.outputs.VERSION }}
+          PREV_TAG: ${{ steps.get_version.outputs.PREV_TAG }}
+          COMPARE_URL: ${{ steps.get_version.outputs.COMPARE_URL }}
+        run: |
+          COMMIT_SHA=$(git rev-parse --short HEAD)
+          COMMIT_MSG=$(git log -1 --pretty=%s)
+          COMMIT_AUTHOR=$(git log -1 --pretty=%an)
+          COMMIT_URL="https://github.com/${{ github.repository }}/commit/$(git rev-parse HEAD)"
+
+          {
+            echo "## 🏗️ Build — \`${IMAGE_TAG}\`"
+            echo ""
+            echo "| | |"
+            echo "|---|---|"
+            echo "| **App** | abdm-docs-mcp |"
+            echo "| **Version** | \`${IMAGE_TAG}\` |"
+            echo "| **Previous** | \`${PREV_TAG}\` |"
+            echo "| **Image** | \`${ECR_REPO_URL}/${ECR_REPOSITORY}:${IMAGE_TAG}\` |"
+            echo "| **Commit** | [\`${COMMIT_SHA}\`](${COMMIT_URL}) ${COMMIT_MSG} |"
+            echo "| **Author** | ${COMMIT_AUTHOR} |"
+            echo "| **Triggered by** | @${{ github.actor }} |"
+            echo "| **Dockerfile** | \`mcp/Dockerfile\` |"
+            echo ""
+
+            if [ "$PREV_TAG" != "—" ]; then
+              echo "### 📋 Changes since \`${PREV_TAG}\`"
+              echo ""
+              while IFS= read -r line; do
+                sha=$(echo "$line" | awk '{print $1}')
+                msg=$(echo "$line" | cut -d' ' -f2-)
+                echo "- [\`${sha}\`](https://github.com/${{ github.repository }}/commit/${sha}) ${msg}"
+              done < <(git log --oneline "${PREV_TAG}..HEAD" 2>/dev/null | head -20)
+              echo ""
+              echo "[🔍 Full diff: \`${PREV_TAG}\` → \`${IMAGE_TAG}\`](${COMPARE_URL})"
+            else
+              echo "### 📋 Initial release"
+              echo ""
+              echo "- [\`${COMMIT_SHA}\`](${COMMIT_URL}) ${COMMIT_MSG}"
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"
+
+  deploy:
+    needs: build-test-push
+    runs-on: dev-runner-server
+
+    steps:
+      - name: Repository dispatch to dev-argocd
+        uses: peter-evans/repository-dispatch@v2
+        with:
+          token: ${{ secrets.argocd_github_token }}
+          repository: eka-care/dev-argocd
+          event-type: deploy-service
+          client-payload: >-
+            {"values_file_path": "abdm-docs-mcp/values/dev-values.yaml", "image_tag": "${{ needs.build-test-push.outputs.VERSION }}", "ecr_repo_url": "${{ secrets.DEV_ECR_REPO }}", "ecr_repository": "${{ env.ECR_REPOSITORY }}", "namespace": "eka-dev", "argocd_app_name": "abdm-docs-mcp", "deployment_name": "abdm-docs-mcp"}
+
+      - name: Deployment summary
+        if: always()
+        env:
+          IMAGE_TAG: ${{ needs.build-test-push.outputs.VERSION }}
+          PREV_TAG: ${{ needs.build-test-push.outputs.PREV_TAG }}
+          COMPARE_URL: ${{ needs.build-test-push.outputs.COMPARE_URL }}
+        run: |
+          case "${{ job.status }}" in
+            success)   STATUS="✅ Dispatched to ArgoCD" ;;
+            failure)   STATUS="❌ Failed" ;;
+            cancelled) STATUS="⚠️ Cancelled" ;;
+            *)         STATUS="${{ job.status }}" ;;
+          esac
+
+          {
+            echo "## 🚀 Deployment — abdm-docs-mcp"
+            echo ""
+            echo "| | |"
+            echo "|---|---|"
+            echo "| **Status** | ${STATUS} |"
+            echo "| **Version** | \`${IMAGE_TAG}\` |"
+            echo "| **Previous** | \`${PREV_TAG}\` |"
+            echo "| **Environment** | dev (staging) |"
+            echo "| **Namespace** | \`eka-dev\` |"
+            echo "| **Cluster** | \`dev-eks-1-29\` |"
+            echo ""
+            echo "[🔗 View in ArgoCD →](https://argocd.dev.eka.care/applications/abdm-docs-mcp) &nbsp;&nbsp; [🔍 Compare changes →](${COMPARE_URL})"
+          } >> "$GITHUB_STEP_SUMMARY"
