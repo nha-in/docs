@@ -1,0 +1,19 @@
+{
+  "name": "abdm-docs",
+  "version": "0.1.0",
+  "private": true,
+  "description": "ABDM Developer Portal: catalogue of the HIE-CM gateway plus the Docusaurus and Scalar documentation site",
+  "license": "MIT",
+  "workspaces": [
+    "site"
+  ],
+  "scripts": {
+    "sync-specs": "node scripts/sync-specs.mjs",
+    "lint:specs": "spectral lint \"catalogue/openapi/*.yaml\" --fail-severity=error",
+    "start": "npm start --workspace site",
+    "build": "npm run build --workspace site"
+  },
+  "devDependencies": {
+    "@stoplight/spectral-cli": "^6.11.1"
+  }
+}
