@@ -1,0 +1,15 @@
+# docker-compose.test.yml — used by CI to healthcheck the image before pushing to ECR
+# Usage: TAG=<ecr-url>/<repo>:<tag> docker-compose --file docker-compose.test.yml up -d
+#
+# Single service on purpose: this runs the image's own ENTRYPOINT, which omits
+# -ollama, so the server comes up keyword-only and /healthz returns 200 without
+# needing the Ollama sidecar. The sidecar is a runtime (Kubernetes) concern.
+
+version: '3.8'
+services:
+  abdm-docs-mcp:
+    image: ${TAG}
+    ports:
+      - "8080:8080"
+    environment:
+      - CURR_ENV=test
