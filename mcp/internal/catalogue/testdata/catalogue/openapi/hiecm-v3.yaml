@@ -1,0 +1,36 @@
+openapi: 3.0.3
+info:
+  title: HIE-CM fixture
+  version: abdm-v3
+paths:
+  /links/link/add-contexts:
+    post:
+      operationId: linkAddContexts
+      tags: [links]
+      summary: Add care contexts
+      parameters:
+        - name: X-HIP-ID
+          in: header
+          required: true
+          schema: {type: string}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [abhaNumber]
+              properties:
+                abhaNumber: {type: string}
+                count: {type: integer}
+      responses:
+        "202":
+          description: Accepted
+  /health:
+    get:
+      operationId: healthCheck
+      tags: [meta]
+      summary: Health check
+      responses:
+        "200":
+          description: OK

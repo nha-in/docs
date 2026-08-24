@@ -20,3 +20,7 @@ site/static/vendor/
 .idea/
 .vscode/
 *.log
+
+# Local index snapshots (build outputs; CI produces its own)
+mcp/catalogue.db
+docs

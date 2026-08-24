@@ -1,0 +1,7 @@
+{
+  "catalogue_version": "2026.08.24",
+  "operation_id": "linkAddContexts",
+  "spec": {
+    "summary": "Add care contexts"
+  }
+}

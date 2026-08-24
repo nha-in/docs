@@ -1,0 +1,94 @@
+// Package catalogue parses the ABDM catalogue: atom markdown files with
+// YAML frontmatter, the OpenAPI specifications, and body chunking.
+package catalogue
+
+import (
+	"bytes"
+	"fmt"
+	"regexp"
+	"sort"
+	"strings"
+
+	"gopkg.in/yaml.v3"
+)
+
+type Atom struct {
+	ID                 string
+	Type               string
+	Gateway            string
+	Milestone          string
+	Title              string
+	Summary            string
+	VerificationStatus string
+	Body               string
+	SourcePath         string
+	ErrorCodes         []string
+	Related            map[string][]string
+}
+
+type frontmatter struct {
+	ID        string              `yaml:"id"`
+	Type      string              `yaml:"type"`
+	Gateway   string              `yaml:"gateway"`
+	Milestone string              `yaml:"milestone"`
+	Title     string              `yaml:"title"`
+	Summary   string              `yaml:"summary"`
+	Related   map[string][]string `yaml:"related"`
+	Verified  struct {
+		Status string `yaml:"status"`
+	} `yaml:"verified"`
+}
+
+var errCodeRe = regexp.MustCompile(`\b(?:ABDM|GATEWAY|MIS|EKA)-\d{3,5}\b`)
+
+func ExtractErrorCodes(s string) []string {
+	set := map[string]bool{}
+	for _, c := range errCodeRe.FindAllString(s, -1) {
+		set[strings.ToUpper(c)] = true
+	}
+	var out []string
+	for c := range set {
+		out = append(out, c)
+	}
+	sort.Strings(out)
+	return out
+}
+
+func ParseAtom(sourcePath string, content []byte) (Atom, error) {
+	rest, ok := bytes.CutPrefix(content, []byte("---\n"))
+	if !ok {
+		return Atom{}, fmt.Errorf("%s: missing frontmatter", sourcePath)
+	}
+	fmBytes, body, ok := bytes.Cut(rest, []byte("\n---\n"))
+	if !ok {
+		return Atom{}, fmt.Errorf("%s: unterminated frontmatter", sourcePath)
+	}
+	var fm frontmatter
+	if err := yaml.Unmarshal(fmBytes, &fm); err != nil {
+		return Atom{}, fmt.Errorf("%s: frontmatter: %w", sourcePath, err)
+	}
+	if fm.ID == "" {
+		return Atom{}, fmt.Errorf("%s: frontmatter missing id", sourcePath)
+	}
+	status := fm.Verified.Status
+	if status == "" {
+		status = "draft"
+	}
+	related := fm.Related
+	if related == nil {
+		related = map[string][]string{}
+	}
+	return Atom{
+		ID:                 fm.ID,
+		Type:               fm.Type,
+		Gateway:            fm.Gateway,
+		Milestone:          fm.Milestone,
+		Title:              fm.Title,
+		Summary:            strings.TrimSpace(fm.Summary),
+		VerificationStatus: status,
+		Body:               strings.TrimSpace(string(body)),
+		SourcePath:         sourcePath,
+		ErrorCodes:         ExtractErrorCodes(string(content)),
+		Related:            related,
+	}, nil
+}

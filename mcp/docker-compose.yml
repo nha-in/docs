@@ -1,0 +1,24 @@
+services:
+  ollama:
+    image: ollama/ollama:latest
+    volumes:
+      - ollama-models:/root/.ollama
+    # After first start, pull the model once:
+    #   docker compose exec ollama ollama pull nomic-embed-text
+  docs-mcp:
+    build: .
+    ports:
+      - "8080:8080"
+    command:
+      - "-db"
+      - "/catalogue.db"
+      - "-addr"
+      - ":8080"
+      - "-ollama"
+      - "http://ollama:11434"
+      - "-allow-origin"
+      - "https://docs.example.com"
+    depends_on:
+      - ollama
+volumes:
+  ollama-models:
