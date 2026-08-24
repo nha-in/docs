@@ -1,0 +1,10 @@
+# Spectral ruleset for the catalogue's OpenAPI and AsyncAPI files.
+# NHA's upstream files often fail strict rules; corrections are recorded in
+# catalogue/openapi/corrections/, never applied silently. Keep warnings
+# visible but only fail CI on errors (see lint:specs --fail-severity).
+extends:
+  - spectral:oas
+  - spectral:asyncapi
+rules:
+  operation-operationId: error
+  oas3-schema: error
