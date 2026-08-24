@@ -29,7 +29,13 @@ function walk(dir) {
     if (statSync(p).isDirectory()) {
       if (name === "openapi") continue;
       out.push(...walk(p));
-    } else if (name.endsWith(".md") && name !== "CONVENTIONS.md") {
+    } else if (
+      name.endsWith(".md") &&
+      name !== "CONVENTIONS.md" &&
+      // The catalogue root README documents the tree and is not an atom.
+      // The Go indexer skips it the same way (mcp/cmd/indexer).
+      !(name === "README.md" && dir.endsWith("catalogue"))
+    ) {
       out.push(p);
     }
   }

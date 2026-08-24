@@ -7,6 +7,8 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"log/slog"
+	"time"
 
 	"github.com/eka-care/abdm-docs/mcp/internal/catalogue"
 	"github.com/eka-care/abdm-docs/mcp/internal/embed"
@@ -20,6 +22,7 @@ const serverVersion = "0.1.0"
 // NewMCPServer wires the nine tools. emb may be nil (keyword-only).
 func NewMCPServer(r *index.Reader, emb embed.Embedder) *mcp.Server {
 	s := mcp.NewServer(&mcp.Implementation{Name: "abdm-docs", Version: serverVersion}, nil)
+	s.AddReceivingMiddleware(toolCallLoggingMiddleware)
 	versioned := func(fields map[string]any) map[string]any {
 		fields["catalogue_version"] = r.CatalogueVersion()
 		return fields
@@ -262,6 +265,37 @@ func atomRefsJSON(refs []index.AtomRef) []map[string]any {
 		})
 	}
 	return out
+}
+
+// toolCallLoggingMiddleware logs exactly one slog line per served tools/call
+// request: message "tool_call" with attrs tool, ms and, when the call
+// produced an error, error=true. Request arguments and response bodies are
+// never logged, per the project privacy rule. Other methods, such as
+// initialize and tools/list, are left unlogged.
+func toolCallLoggingMiddleware(next mcp.MethodHandler) mcp.MethodHandler {
+	return func(ctx context.Context, method string, req mcp.Request) (mcp.Result, error) {
+		if method != "tools/call" {
+			return next(ctx, method, req)
+		}
+		tool := ""
+		if ctr, ok := req.(*mcp.CallToolRequest); ok {
+			tool = ctr.Params.Name
+		}
+		start := time.Now()
+		res, err := next(ctx, method, req)
+		attrs := []any{"tool", tool, "ms", time.Since(start).Milliseconds()}
+		isErr := err != nil
+		if !isErr {
+			if ctr, ok := res.(*mcp.CallToolResult); ok && ctr.IsError {
+				isErr = true
+			}
+		}
+		if isErr {
+			attrs = append(attrs, "error", true)
+		}
+		slog.Info("tool_call", attrs...)
+		return res, err
+	}
 }
 
 func jsonResult(v any) (*mcp.CallToolResult, any, error) {
