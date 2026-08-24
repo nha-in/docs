@@ -1,0 +1,136 @@
+/**
+ * sidebar: owned by the sidebar component set.
+ *
+ * The 256px rail. Item colour, padding and radius already live in layout.css;
+ * this file adds the frame (width, sticky offset, independent scroll, hover
+ * scrollbar), the section headers rendered by
+ * src/theme/DocSidebarItem/Category, and the two overrides of layout.css that
+ * the new markup needs. Nothing is removed from layout.css.
+ */
+
+/* Docusaurus's own default is 300px, and it drives the width of the <nav>
+   inside the rail as well as the space the doc layout reserves. layout.css
+   forces the outer container only, so the variable is retargeted here.
+   `:root:root` outranks the theme module's `:root` without needing !important. */
+:root:root {
+  --doc-sidebar-width: var(--sidebar-width);
+}
+
+@media (min-width: 997px) {
+  /* Sticky under the full chrome: 64px bar + 48px tab strip. A definite height
+     (the theme sets max-height only) is what lets the list below scroll. */
+  .theme-doc-sidebar-container > div {
+    top: var(--chrome-height);
+    height: calc(100vh - var(--chrome-height));
+    max-height: calc(100vh - var(--chrome-height));
+  }
+
+  /* The list scrolls on its own. min-height:0 lets it shrink inside the column
+     flex parent instead of pushing past the viewport. */
+  .theme-doc-sidebar-container .menu {
+    min-height: 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    /* Constant width, transparent until hover. Toggling scrollbar-width
+       instead would resize the content box, because theme-classic sets
+       `scrollbar-gutter: stable` on this nav, and every row would shift
+       sideways on hover. */
+    scrollbar-width: thin;
+    scrollbar-color: transparent transparent;
+  }
+
+  /* No scrollbar chrome until the pointer or the keyboard is in the rail. */
+  .theme-doc-sidebar-container .menu:hover,
+  .theme-doc-sidebar-container .menu:focus-within {
+    scrollbar-color: var(--border-strong) transparent;
+  }
+
+  .theme-doc-sidebar-container .menu::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .theme-doc-sidebar-container .menu::-webkit-scrollbar-track,
+  .theme-doc-sidebar-container .menu::-webkit-scrollbar-thumb {
+    background: transparent;
+    border-radius: 999px;
+  }
+
+  .theme-doc-sidebar-container .menu:hover::-webkit-scrollbar-thumb,
+  .theme-doc-sidebar-container .menu:focus-within::-webkit-scrollbar-thumb {
+    background: var(--border-strong);
+  }
+}
+
+/* ---------- top level category: a section header, not a row ---------- */
+
+/* `display: block` because the header is an <a> when the group has its own
+   page, and an inline box would drop the bottom margin. */
+.docs-sidebar-section__title {
+  display: block;
+  font-size: 0.875rem;
+  line-height: 1.5rem;
+  font-weight: 600;
+  color: var(--text-heading);
+  padding-left: 1rem;
+  margin-bottom: 0.625rem;
+}
+
+/* As a link it still reads as a header: no underline, no row surface. */
+a.docs-sidebar-section__title:hover {
+  color: var(--text-heading);
+  text-decoration: none;
+}
+
+/* Its page is the current one. Accent text only, no `--accent-soft` fill: the
+   fill is what marks a row, and this is a header. */
+.docs-sidebar-section__title--active,
+a.docs-sidebar-section__title--active:hover {
+  color: var(--accent);
+}
+
+/* The only spacing here that the contract does not measure: it gives 10px
+   below a header but nothing above one. A section can follow a plain link as
+   well as another section, so this is every section but the first. */
+.docs-sidebar-section:not(:first-child) {
+  margin-top: 1.5rem;
+}
+
+/* ---------- level 2 and deeper stay collapsible rows ---------- */
+
+/* Override of layout.css: its
+   `.menu__list-item-collapsible > .menu__link--sublist` rule paints every
+   collapsible category as a 600 weight heading. Now that the top level is
+   static text, that rule can only reach level 2+, where a category has to read
+   as a link. Overridden, not removed. */
+.theme-doc-sidebar-item-category:not(.theme-doc-sidebar-item-category-level-1)
+  > .menu__list-item-collapsible
+  > .menu__link {
+  font-size: 0.875rem;
+  line-height: 1.5rem;
+  font-weight: 400;
+  color: var(--text-faint);
+}
+
+.theme-doc-sidebar-item-category:not(.theme-doc-sidebar-item-category-level-1)
+  > .menu__list-item-collapsible
+  > .menu__link:hover {
+  color: var(--text-heading);
+}
+
+/* `--active:hover` as well, or the hover rule above (one pseudo-class more
+   specific) would repaint the current category on hover. */
+.theme-doc-sidebar-item-category:not(.theme-doc-sidebar-item-category-level-1)
+  > .menu__list-item-collapsible
+  > .menu__link--active,
+.theme-doc-sidebar-item-category:not(.theme-doc-sidebar-item-category-level-1)
+  > .menu__list-item-collapsible
+  > .menu__link--active:hover {
+  color: var(--accent);
+  font-weight: 500;
+}
+
+/* The caret is a button of its own when the category also has a page; it takes
+   the same no-surface hover as every other row. */
+.theme-doc-sidebar-container .menu__caret:hover {
+  background: transparent;
+}

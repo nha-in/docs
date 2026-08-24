@@ -13,8 +13,12 @@ catalogue/            Source of truth. Nothing downstream is hand-maintained.
   openapi/            API specifications
     .raw/             Upstream NHA files, stored untouched
     corrections/      Recorded patches to upstream files, never silent fixes
-    hiecm-v3.yaml     Cleaned HIE-CM V3 OpenAPI (placeholder until ingestion)
-    callbacks.asyncapi.yaml   Callbacks modelled as AsyncAPI channels
+    CONVENTIONS.md    The rules every spec below follows
+    hiecm-gateway.yaml  Session token, used by every module
+    hiecm-m1.yaml     M1 ABHA identity
+    hiecm-m2.yaml     M2 care context linking and HIP data sharing
+    hiecm-m3.yaml     M3 consent and HIU data fetch
+    hiecm-m4.yaml     M4 HPR and HFR registration (Phase 2, nothing written)
   VERSION             Catalogue version stamp
 site/                 Docusaurus site with Scalar API references (a rendering,
                       not a source; site/static/specs is generated)
@@ -30,9 +34,16 @@ npm run build      # production build
 npm run lint:specs # Spectral lint over catalogue/openapi
 ```
 
-The API reference is served at `/reference/hiecm`, rendered by
-`@scalar/docusaurus` from `catalogue/openapi/hiecm-v3.yaml`. Edit specs only
-in `catalogue/openapi/`; `site/static/specs/` is overwritten on every build.
+One interactive reference per module, served at `/reference/hiecm-m1`
+through `/reference/hiecm-m4` plus `/reference/hiecm-gateway`, each rendered
+by `@scalar/docusaurus` from its file in `catalogue/openapi/`. Edit specs
+only there; `site/static/specs/` is overwritten on every build.
+
+Callbacks live inside the module spec that owns them, as OpenAPI 3.1
+`webhooks`, rather than in a separate AsyncAPI document. ABDM callbacks are
+plain HTTPS POSTs, which is what `webhooks` describes, and keeping them in
+the module file means one file is the whole contract for that module. See
+[catalogue/openapi/CONVENTIONS.md](catalogue/openapi/CONVENTIONS.md).
 
 ## Self-hosting
 

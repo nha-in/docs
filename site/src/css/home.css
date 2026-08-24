@@ -1,0 +1,113 @@
+/**
+ * The landing page at `/`.
+ *
+ * Infima styles `h1`, `h2`, `p` and `a` with element selectors. Those sit in
+ * the `docusaurus.infima` cascade layer (`future.v4` is on), and everything in
+ * this file is unlayered, so these rules win. Keeping the page's type in one
+ * scoped block rather than as utilities on each element also keeps the whole
+ * scale readable in one place.
+ *
+ * Values come from the UI contract: h1 serif 36px / 40px weight 400, h2 serif
+ * 24px / 32px weight 400 with 48px above and 16px below, body 16px / 1.65,
+ * column capped at `--content-max`.
+ */
+
+.landing {
+  display: flex;
+  flex-direction: column;
+  /* 48px above every h2, per the contract. The sections carry no top margin,
+     so this gap is that space. */
+  gap: 3rem;
+  width: 100%;
+  max-width: var(--content-max);
+  margin: 0 auto;
+  padding: 4rem 1.5rem 6rem;
+}
+
+@media (min-width: 768px) {
+  .landing {
+    padding: 5rem 1.5rem 7rem;
+  }
+}
+
+/* ---------- title block ---------- */
+
+.landing__intro {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1.5rem;
+}
+
+.landing h1 {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-size: 2.25rem;
+  line-height: 2.5rem;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  color: var(--text-heading);
+}
+
+.landing__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+/* Each control is a shadcn button wrapping a Docusaurus link, and Infima
+   underlines every anchor on hover. */
+.landing a[data-slot='button'],
+.landing a[data-slot='button']:hover {
+  text-decoration: none;
+}
+
+/* ---------- sections ---------- */
+
+.landing h2 {
+  margin: 0 0 1rem;
+  font-family: var(--font-serif);
+  font-size: 1.5rem;
+  line-height: 2rem;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  color: var(--text-heading);
+}
+
+.landing p {
+  margin: 0;
+  font-size: 1rem;
+  line-height: 1.65;
+  color: var(--text-body);
+}
+
+/* Matches `.docs-lede` in layout.css, which is the same role on doc pages.
+   Scoped twice so it outranks `.landing p` above. */
+.landing .landing__lede {
+  font-size: 1.0625rem;
+  line-height: 1.6;
+  color: var(--text-muted);
+}
+
+/* Inline prose links: heading colour, weight 600, `--accent-line` underline.
+   `.markdown a` in typography.css does this for doc pages; the landing page is
+   not markdown, so it needs the same rule. */
+.landing p a {
+  color: var(--text-heading);
+  font-weight: 600;
+  text-decoration: underline;
+  text-decoration-color: var(--accent-line);
+  text-underline-offset: 3px;
+  text-decoration-thickness: 1px;
+  transition: text-decoration-color 150ms ease, color 150ms ease;
+}
+
+.landing p a:hover {
+  color: var(--accent);
+  text-decoration-color: var(--accent);
+}
+
+.landing__status {
+  border-top: 1px solid var(--border);
+  padding-top: 2rem;
+}
