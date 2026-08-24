@@ -1,0 +1,10 @@
+asyncapi: 2.6.0
+info:
+  title: HIE-CM callbacks
+  version: abdm-v3
+  description: >
+    Placeholder AsyncAPI document for HIE-CM gateway callbacks. Each callback
+    path (for example /on-add-contexts) becomes one channel here, with its
+    payload schema, the acknowledgement expected back, and the retry
+    behaviour where NHA documents it. Marked unknown where NHA does not.
+channels: {}
