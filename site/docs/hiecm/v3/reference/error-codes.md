@@ -5,6 +5,7 @@ sidebar_position: 3
 description: Every error code the specifications carry, with its message and what to do.
 verification: unverified
 source: the published OpenAPI specifications
+generated: true
 ---
 
 # Error codes

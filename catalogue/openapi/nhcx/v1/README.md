@@ -16,3 +16,9 @@ info:
 
 See `../../CONVENTIONS.md` for how the specs are written.
 
+Two rules the build enforces:
+
+- The file name must be unique across the whole `openapi/` tree, because it is
+  the served path and the Scalar route. Prefix it with the gateway.
+- Generated pages carry `generated: true`. Never hand-write a page at a
+  generated name; the build stops rather than overwrite one.

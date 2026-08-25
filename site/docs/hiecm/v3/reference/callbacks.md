@@ -5,6 +5,7 @@ sidebar_position: 2
 description: The calls ABDM makes back to your bridge, as the specifications declare them.
 verification: unverified
 source: the published OpenAPI specifications
+generated: true
 ---
 
 # Callbacks
