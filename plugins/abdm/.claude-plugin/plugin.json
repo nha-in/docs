@@ -1,0 +1,11 @@
+{
+  "name": "abdm",
+  "displayName": "ABDM Developer Portal",
+  "description": "Compiled agent skills for ABDM integration, built from the ABDM Developer Portal Catalogue. Each skill installs alone: hiecm-m1-build scaffolds an ABDM Milestone 1 (ABHA) integration flow by flow, hiecm-m1-debug diagnoses a failed M1 call against the Catalogue's error atoms. Every skill cites the atom it came from and is never hand-edited; if a skill is wrong, the Catalogue is wrong.",
+  "version": "0.1.0",
+  "author": {
+    "name": "ABDM Developer Portal"
+  },
+  "license": "MIT",
+  "keywords": ["abdm", "abha", "hie-cm", "m1", "healthcare", "india-health"]
+}

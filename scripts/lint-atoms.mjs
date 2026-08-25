@@ -1,13 +1,9 @@
 // Mechanised checks over the Catalogue's atoms. Everything here is a rule the
 // plan states, turned into something CI can fail on. An atom that passes this
 // is well formed; whether it is honest is still a reviewer's job.
-import { readdirSync, readFileSync, statSync } from "node:fs";
-import { join, dirname, relative } from "node:path";
-import { fileURLToPath } from "node:url";
-import { parse } from "yaml";
-
-const root = join(dirname(fileURLToPath(import.meta.url)), "..");
-const catalogue = join(root, "catalogue");
+import { statSync } from "node:fs";
+import { dirname, join, relative } from "node:path";
+import { loadAtoms, root } from "./lib/atoms.mjs";
 
 const TYPES = ["concept", "flow", "endpoint", "callback", "error", "test",
                "decision", "glossary", "fhir", "sandbox"];
@@ -22,43 +18,14 @@ const FOLDER = {
   decision: "decisions", glossary: "glossary", fhir: "fhir", sandbox: "sandbox",
 };
 
-function walk(dir) {
-  const out = [];
-  for (const name of readdirSync(dir)) {
-    const p = join(dir, name);
-    if (statSync(p).isDirectory()) {
-      if (name === "openapi") continue;
-      out.push(...walk(p));
-    } else if (
-      name.endsWith(".md") &&
-      name !== "CONVENTIONS.md" &&
-      // The catalogue root README documents the tree and is not an atom.
-      // The Go indexer skips it the same way (mcp/cmd/indexer).
-      !(name === "README.md" && dir.endsWith("catalogue"))
-    ) {
-      out.push(p);
-    }
-  }
-  return out;
-}
-
-const files = walk(catalogue);
 const problems = [];
-const atoms = new Map();
 
 function fail(file, msg) {
   problems.push(`${relative(root, file)}: ${msg}`);
 }
 
-// Pass one: parse and record ids, so the link check has everything to resolve.
-for (const file of files) {
-  const raw = readFileSync(file, "utf8");
-  const m = raw.match(/^---\n([\s\S]*?)\n---\n([\s\S]*)$/);
-  if (!m) { fail(file, "no frontmatter block"); continue; }
-  let fm;
-  try { fm = parse(m[1]); } catch (e) { fail(file, `frontmatter is not valid YAML: ${e.message}`); continue; }
-  atoms.set(fm?.id, { file, fm, body: m[2], raw });
-}
+const { atoms, problems: parseProblems } = loadAtoms();
+for (const p of parseProblems) fail(p.file, p.msg);
 
 for (const [id, atom] of atoms) {
   const { file, fm, body, raw } = atom;

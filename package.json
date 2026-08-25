@@ -12,7 +12,9 @@
     "lint:specs": "spectral lint \"catalogue/openapi/*.yaml\" --fail-severity=error",
     "start": "npm start --workspace site",
     "build": "npm run build --workspace site",
-    "lint:atoms": "node scripts/lint-atoms.mjs"
+    "lint:atoms": "node scripts/lint-atoms.mjs",
+    "compile:skills": "node scripts/compile-skills.mjs",
+    "validate:skills": "node scripts/validate-skills.mjs"
   },
   "devDependencies": {
     "@docusaurus/faster": "^3.10.2",
