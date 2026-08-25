@@ -40,7 +40,7 @@ Send OTP to login via ABHA Address.
 | `["abha-address-login","aadhaar-verify"]` | `abha-address` | Aadhaar OTP |
 | `["abha-login","aadhaar-bio-verify"]` | `abha-address` | Fingerprint |
 | `["abha-login","aadhaar-face-verify"]` | `abha-address` | Face |
-| `["abha-login","aadhaar-iris-verify"]` | `abha-address` | Iris |
+| `["abha-login","aadhaar-iris-verify"]` | `abha-address` | IRIS |
 
 This wording is NHA's own, from the file this operation was ingested from.
 

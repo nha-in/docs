@@ -66,7 +66,7 @@ every indexed chunk. Treat it like renaming an atom id.
 ## Summary and description
 
 An agent picks tools by reading these. Auto-generated text such as "Post
-enrollment request otp" makes an agent pick the wrong tool or skip the right
+enrollment request OTP" makes an agent pick the wrong tool or skip the right
 one, so both fields are written by a person:
 
 - `summary`: one line, imperative, what the call does.

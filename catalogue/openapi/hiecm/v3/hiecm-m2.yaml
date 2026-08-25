@@ -88,6 +88,9 @@ tags:
   description: Deep Linking via SMS notification
 - name: data-transfer
   description: Health data transfer, HIP side (consent ack + data push + notify)
+- name: webhooks
+  description: What ABDM sends to your registered URL. You do not call these;
+    you receive them.
 paths:
   /hiecm/v3/token/generate-token:
     post:
@@ -325,7 +328,9 @@ paths:
       tags:
       - user-linking
       summary: Link On-Init, HIP responds with OTP communication details
-      operationId: m2_on_link_init
+      # The v3 user-initiated linking operation owns m2_on_link_init; this
+      # v0.5 webhook keeps the receive name so the two stay distinct.
+      operationId: m2_receive_link_init
       description: |
         **Async Callback:** After receiving a link init request at the HIP bridge URL
         (`{bridgeUrl}/v0.5/links/link/init`), the HIP calls this Gateway endpoint to
@@ -367,7 +372,9 @@ paths:
       tags:
       - user-linking
       summary: Link On-Confirm, HIP confirms linked care contexts
-      operationId: m2_on_link_confirm
+      # The v3 user-initiated linking operation owns m2_on_link_confirm; this
+      # v0.5 webhook keeps the receive name so the two stay distinct.
+      operationId: m2_receive_link_confirm
       description: |
         **Async Callback:** After receiving a link confirm request at the HIP bridge URL
         (`{bridgeUrl}/v0.5/links/link/confirm`) with the patient's OTP, the HIP validates
@@ -535,6 +542,9 @@ webhooks:
         '202':
           description: Your bridge accepted the callback. NHA validates the body
             you send back, so a 202 carrying the wrong body is still a failure.
+      x-abdm-atom: hiecm.callback.m2-on-discovery-request
+      tags:
+      - webhooks
   /v0.5/links/link/init:
     post:
       operationId: m2_on_link_init
@@ -547,6 +557,9 @@ webhooks:
         '202':
           description: Your bridge accepted the callback. NHA validates the body
             you send back, so a 202 carrying the wrong body is still a failure.
+      x-abdm-atom: hiecm.callback.m2-on-link-init
+      tags:
+      - webhooks
   /v0.5/links/link/confirm:
     post:
       operationId: m2_on_link_confirm
@@ -559,6 +572,9 @@ webhooks:
         '202':
           description: Your bridge accepted the callback. NHA validates the body
             you send back, so a 202 carrying the wrong body is still a failure.
+      x-abdm-atom: hiecm.callback.m2-on-link-confirm
+      tags:
+      - webhooks
   /v0.5/health-information/hip/request:
     post:
       operationId: m2_on_health_information_request
@@ -571,6 +587,9 @@ webhooks:
         '202':
           description: Your bridge accepted the callback. NHA validates the body
             you send back, so a 202 carrying the wrong body is still a failure.
+      x-abdm-atom: hiecm.callback.m2-on-health-information-request
+      tags:
+      - webhooks
   /v0.5/consents/hiu/notify:
     post:
       operationId: m2_on_consent_notify_hiu
@@ -583,6 +602,9 @@ webhooks:
         '202':
           description: Your bridge accepted the callback. NHA validates the body
             you send back, so a 202 carrying the wrong body is still a failure.
+      x-abdm-atom: hiecm.callback.m2-on-consent-notify-hiu
+      tags:
+      - webhooks
   /api-hiu/data/notification:
     post:
       operationId: m2_on_data_notification
@@ -595,6 +617,9 @@ webhooks:
       responses:
         '202':
           description: Accepted. Acknowledge quickly, then process asynchronously.
+      x-abdm-atom: hiecm.callback.m2-on-data-notification
+      tags:
+      - webhooks
 components:
   securitySchemes:
     gatewaySession:
@@ -1196,7 +1221,12 @@ components:
             $ref: '#/components/schemas/ErrorResponse'
 x-abdm-errors:
   source: NHA's published M2 list, which carries code and message only. The action
-    is this catalogue's reading of the message text.
+    is this catalogue's reading of the message text. NHA's error code workbooks,
+    ABDM M1-M2-M3-M4_Error_Codes.xlsx and ErrorCode-Message.xlsx, supplied 2026-08-25.
+    Code, message and, where NHA gives one, the error name are NHA's. The action
+    column is this catalogue's reading of the message text, by a documented rule,
+    and is not NHA's. Anything the rule could not classify says Unclassified rather
+    than guessing.
   codes:
   - code: ABDM-1000
     message: Unable to connect the database

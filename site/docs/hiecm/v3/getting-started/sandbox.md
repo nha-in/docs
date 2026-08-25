@@ -33,7 +33,7 @@ that need neither.
 - Decide which role your system takes. [What you can build](/docs/hiecm/v3/getting-started/what-you-can-build)
   maps a kind of system to the milestones it needs, and
   [Integration milestones](/docs/hiecm/v3/getting-started/milestones) gives the role to milestone table.
-- Read the [M1 API sequence](/docs/hiecm/v3/api/m1/sequence) for the order of calls.
+- Read the [M1 API sequence](/reference/hiecm-m1) for the order of calls.
 - Open the [gateway session reference](/reference/hiecm-gateway), which covers step 3.
 
 The [M1 reference](/reference/hiecm-m1) carries its operation list. The M2, M3 and M4
@@ -83,7 +83,7 @@ document gives the ABHA sandbox base URL as `https://abhasbx.abdm.gov.in/abha/ap
 
 That request is a screenshot in the document, so the curl and the response body have not been
 transcribed. See [M1 APIs](/docs/hiecm/v3/api/m1/apis) for what the Postman collection does
-carry, and [M1 API sequence](/docs/hiecm/v3/api/m1/sequence) for the order of calls.
+carry, and [M1 API sequence](/reference/hiecm-m1) for the order of calls.
 
 ## Where to go next
 

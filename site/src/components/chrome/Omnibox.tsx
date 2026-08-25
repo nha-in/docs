@@ -112,9 +112,30 @@ export default function Omnibox() {
   // corrected on the node instead. React holds the prop constant, so it never
   // writes over this.
   React.useEffect(() => {
-    box.current
-      ?.querySelector('input.navbar__search-input')
+    const root = box.current;
+    if (!root) return;
+    root
+      .querySelector('input.navbar__search-input')
       ?.setAttribute('placeholder', 'Search or ask AI');
+
+    // The search theme hardcodes the Apple command mark. On Windows, Linux and
+    // Android that key does not exist, so the hint tells the reader to press
+    // something they do not have. Correct it from the platform, and drop it
+    // entirely where there is no hardware keyboard to press.
+    const ua = navigator.userAgent;
+    const isApple = /Mac|iPhone|iPad|iPod/.test(ua);
+    const isTouchOnly = /Android|iPhone|iPad|iPod/.test(ua);
+    for (const hint of Array.from(
+      root.querySelectorAll<HTMLElement>("kbd[class*='searchHint']"),
+    )) {
+      if (isTouchOnly) {
+        hint.style.display = 'none';
+        continue;
+      }
+      if (hint.textContent && hint.textContent.trim() !== 'K') {
+        hint.textContent = isApple ? '\u2318' : 'Ctrl';
+      }
+    }
   }, []);
 
   return (

@@ -9,7 +9,7 @@ source: ABDM__Proposed_Simplified_Milestone_3.md
 
 # M3 user journeys
 
-Milestone 3 (M3) of [ABDM](/docs/hiecm/v3/getting-started/glossary#abdm) is one story in three parts: a doctor asks for a patient's past records, the patient says yes or no, and if yes the records travel. Each part is drawn below, so you can see the round trips before you read the [API sequence](/docs/hiecm/v3/api/m3/sequence).
+Milestone 3 (M3) of [ABDM](/docs/hiecm/v3/getting-started/glossary#abdm) is one story in three parts: a doctor asks for a patient's past records, the patient says yes or no, and if yes the records travel. Each part is drawn below, so you can see the round trips before you read the [API reference](/reference/hiecm-m3).
 
 [NHA](/docs/hiecm/v3/getting-started/glossary#nha)'s document carries its own diagrams and screen sequences as images, which did not survive the conversion to text. The diagrams below come from the ordered prose of the same document. The step order is NHA's, the drawing is ours.
 
@@ -105,4 +105,4 @@ The M3 document does not describe the encryption scheme. It is [ECDH](/docs/hiec
 
 ## What the patient sees
 
-NHA's document includes a screen sequence and a set of expiry screens for the patient's side. Both are screenshots, and nothing readable converted, so they are not reproduced here. What the prose does state is on the [use cases](/docs/hiecm/v3/api/m3/sequence) page under patient rights.
+NHA's document includes a screen sequence and a set of expiry screens for the patient's side. Both are screenshots, and nothing readable converted, so they are not reproduced here. What the prose does state is on the [use cases](/reference/hiecm-m3) page under patient rights.

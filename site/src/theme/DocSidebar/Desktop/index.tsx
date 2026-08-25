@@ -6,6 +6,7 @@ import Content from '@theme/DocSidebar/Desktop/Content';
 import type {Props} from '@theme/DocSidebar/Desktop';
 import SidebarPickers from '@site/src/components/chrome/SidebarPickers';
 import SidebarResizer from '@site/src/components/chrome/SidebarResizer';
+import {useRoleScopedSidebar} from '@site/src/config/useRoleScopedSidebar';
 
 /**
  * The desktop sidebar, with the gateway and version pickers above the tree.
@@ -25,13 +26,18 @@ function DocSidebarDesktop({path, sidebar, onCollapse, isHidden}: Props) {
     },
   } = useThemeConfig();
 
+  // The tree is scoped to the reader's chosen role before the classic theme
+  // renders it, so item rendering, collapsing and the active state stay
+  // Docusaurus behaviour on a smaller list.
+  const scoped = useRoleScopedSidebar(sidebar);
+
   return (
     <div className={clsx('docs-sidebar', isHidden && 'docs-sidebar--hidden')}>
       <div className="docs-sidebar__head">
         <SidebarPickers />
         {hideable && <CollapseButton onClick={onCollapse} />}
       </div>
-      <Content path={path} sidebar={sidebar} />
+      <Content path={path} sidebar={scoped} />
       <SidebarResizer />
     </div>
   );

@@ -84,7 +84,7 @@ Linking is authorised by a [link token](/docs/hiecm/v3/getting-started/glossary#
 | --- | --- |
 | When you get it | Generated and stored at the time the patient registers with you |
 | Validity | Six months |
-| Before use | Validate it, for example with a tool like jwt.io. NHA names the tool and not the check it wants you to run. |
+| Before use | Validate it, for example with a tool like JWT.io. NHA names the tool and not the check it wants you to run. |
 | If you do not have a valid one | Regenerate it through demographic authentication |
 
 Store it against the patient record, not the visit: you need it for every link you make for that patient over six months. Check it before you link, not after the gateway rejects you.

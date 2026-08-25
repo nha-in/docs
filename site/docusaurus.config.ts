@@ -1,4 +1,4 @@
-import {readFileSync, readdirSync} from 'node:fs';
+import {existsSync, readFileSync, readdirSync} from 'node:fs';
 import {join} from 'node:path';
 import {themes as prismThemes} from 'prism-react-renderer';
 import type {Config} from '@docusaurus/types';
@@ -112,16 +112,53 @@ function useCaseGroups(moduleDir: string): any[] {
   );
 }
 
-/** Swap every generated endpoints folder for its module's use-case groups. */
+/** True when a module folder carries its own hand-written APIs page. */
+function hasApisDoc(moduleDir: string): boolean {
+  return ['mdx', 'md'].some((ext) =>
+    existsSync(join(__dirname, 'docs', `${moduleDir}/apis.${ext}`)),
+  );
+}
+
+/**
+ * Swap every generated endpoints folder for one APIs category holding the
+ * module's use-case groups.
+ *
+ * The groups used to be spread into the module, which made them siblings of
+ * User journey and Errors, so a module read as one long list with no way to
+ * tell a guide page from an endpoint group. Every module now has the same
+ * three rungs: User journey, APIs, Errors.
+ */
 function spliceEndpoints(items: any[]): any[] {
-  return items.flatMap((item) => {
+  const out = items.flatMap((item: any) => {
     if (item.type !== 'category') return [item];
     const id = firstDocId(item);
     if (item.label === 'Endpoints' && id && id.includes('/endpoints/')) {
-      return useCaseGroups(id.slice(0, id.indexOf('/endpoints/')));
+      const moduleDir = id.slice(0, id.indexOf('/endpoints/'));
+      return [
+        {
+          type: 'category',
+          label: 'APIs',
+          collapsed: false,
+          // Where the module has an APIs page, the category header opens it
+          // rather than sitting beside it as a second entry with the same name.
+          ...(hasApisDoc(moduleDir)
+            ? {link: {type: 'doc', id: `${moduleDir}/apis`}}
+            : {}),
+          items: useCaseGroups(moduleDir),
+        },
+      ];
     }
     return [{...item, items: spliceEndpoints(item.items ?? [])}];
   });
+  // The APIs page is now the category's link, so drop the loose doc entry.
+  const linked = new Set(
+    out
+      .filter((i: any) => i.type === 'category' && i.label === 'APIs' && i.link?.id)
+      .map((i: any) => i.link.id),
+  );
+  return linked.size === 0
+    ? out
+    : out.filter((i: any) => !(i.type === 'doc' && linked.has(i.id)));
 }
 
 async function sidebarItemsGenerator({defaultSidebarItemsGenerator, ...args}: any) {

@@ -90,7 +90,7 @@ Per professional: the HPID in both forms; the current HPR token, its expiry and 
 
 Once, for the whole integration: client id and client secret for the gateway session call, and NHA's public certificate from `v4/int/api/v1/auth/cert`. Three fields are encrypted with it, cipher `RSA/ECB/PKCS1Padding`: the mobile number in mobile match, the OTP in mobile login, and the email and password in create HPID.
 
-Upload limits: 1 MB for a profile photo, 5 MB for anything else, png, jpeg, jpg or pdf only. Attachments go as a `fileType` and a base64 `data` string.
+Upload limits: 1 MB for a profile photo, 5 MB for anything else, png, jpeg, jpg or PDF only. Attachments go as a `fileType` and a base64 `data` string.
 
 ## What did not survive the conversion
 

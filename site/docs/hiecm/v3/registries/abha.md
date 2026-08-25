@@ -34,7 +34,7 @@ Verification runs against Aadhaar through NHA's ABHA service, so your system nev
 | --- | --- | --- | --- |
 | Aadhaar [OTP](/docs/hiecm/v3/getting-started/glossary#otp) | A code sent to the Aadhaar linked mobile number | Mandatory | Mandatory |
 | Face authentication | A QR code scanned in the ABHA app, then face capture through the Aadhaar RD service | Optional | Optional |
-| Biometrics | Fingerprint or iris on a registered device, which returns a signed PID block | Optional | Optional |
+| Biometrics | Fingerprint or IRIS on a registered device, which returns a signed PID block | Optional | Optional |
 | Demographic authentication | Name, date of birth and gender matched against Aadhaar | Not required | Mandatory |
 
 Build Aadhaar OTP first. It is mandatory for everyone and needs no hardware.
@@ -87,7 +87,7 @@ Sandbox     https://abhasbx.abdm.gov.in/abha/api/v3/
 Production  https://abha.abdm.gov.in/api/abha/v3/
 ```
 
-One exception in NHA's M1 document: login by Aadhaar number using fingerprint or iris uses the v3.1 base URL, `https://abhasbx.abdm.gov.in/abha/api/v3.1/`. No production v3.1 URL is given.
+One exception in NHA's M1 document: login by Aadhaar number using fingerprint or IRIS uses the v3.1 base URL, `https://abhasbx.abdm.gov.in/abha/api/v3.1/`. No production v3.1 URL is given.
 
 ## What M1 does with it
 

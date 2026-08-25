@@ -65,7 +65,7 @@ Aadhaar is not an ABDM building block. NHA's ABHA service calls it for you.
 | Sandbox | `https://abhasbx.abdm.gov.in/abha/api/v3/` |
 | Production | `https://abha.abdm.gov.in/api/abha/v3/` |
 
-Login by Aadhaar number using fingerprint or iris is the exception: NHA puts it on v3.1, at `https://abhasbx.abdm.gov.in/abha/api/v3.1/` in sandbox. NHA gives no production v3.1 URL.
+Login by Aadhaar number using fingerprint or IRIS is the exception: NHA puts it on v3.1, at `https://abhasbx.abdm.gov.in/abha/api/v3.1/` in sandbox. NHA gives no production v3.1 URL.
 
 ## Two ways to build
 
@@ -77,7 +77,7 @@ Hand the whole milestone to your coding agent, or work through it yourself. Both
   note="The whole of M1 as one file an agent reads: every endpoint, the headers, the two token rule and the encryption rule. Generated from these pages, so it says what they say."
 />
 
-Building by hand instead? Start with [the API rules](/docs/hiecm/v3/api/m1/apis), then follow [the call sequence](/docs/hiecm/v3/api/m1/sequence).
+Building by hand instead? Start with [the API rules](/docs/hiecm/v3/api/m1/apis), then follow [the call sequence](/reference/hiecm-m1).
 
 ## Build in this order
 
@@ -87,16 +87,16 @@ Building by hand instead? Start with [the API rules](/docs/hiecm/v3/api/m1/apis)
 4. **User profile and ABHA card.** Mandatory for both. Plain reads against a token you hold.
 5. **Demographic authentication.** Mandatory for government integrators. Not required for private ones.
 
-NHA marks everything else optional for both. Skip all of it and you still complete M1. The full mandatory and optional split, capability by capability, is on the [use cases](/docs/hiecm/v3/api/m1/sequence) page.
+NHA marks everything else optional for both. Skip all of it and you still complete M1. The full mandatory and optional split, capability by capability, is on the [use cases](/reference/hiecm-m1) page.
 
 ## Read M1 in this order
 
 1. [User journey](/docs/hiecm/v3/api/m1/user-journey). The flows, one diagram each.
-2. [Use cases](/docs/hiecm/v3/api/m1/sequence). Which capabilities are mandatory for you.
+2. [API reference](/reference/hiecm-m1). Which capabilities are mandatory for you.
 3. [Agent skills](/docs/hiecm/v3/api/m1/apis). M1 context for a coding agent.
-4. [API sequence](/docs/hiecm/v3/api/m1/sequence). The calls in order.
+4. [API reference](/reference/hiecm-m1). The calls in order.
 5. [API conventions](/docs/hiecm/v3/api/m1/apis). The rules that hold across every endpoint. Each endpoint has its own page in the sidebar.
 6. [Errors](/docs/hiecm/v3/api/m1/errors). What each failure means.
-7. [Steps and calls](/docs/hiecm/v3/api/m1/sequence). Every step of every use case, with the call it makes and what to see when it works.
+7. [Steps and calls](/reference/hiecm-m1). Every step of every use case, with the call it makes and what to see when it works.
 
 Sandbox test data is in the [data dictionary](/docs/hiecm/v3/reference/data-dictionary). [Support](/docs/support) lists the channels.

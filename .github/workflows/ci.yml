@@ -42,6 +42,18 @@ jobs:
       - run: npm ci
       - run: npm run validate:skills
 
+  lint-agent-readiness:
+    name: Check specs are agent readable
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run lint:agent
+
   build-site:
     name: Build documentation site
     runs-on: ubuntu-latest

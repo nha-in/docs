@@ -29,7 +29,10 @@
 
 .landing-bar__mark {
   display: block;
-  height: 2rem;
+  /* Same height as .topbar-logo in navbar.css. The mark used to be 2rem here
+     and 2.25rem in the docs bar, so it changed size as you crossed from the
+     landing page into the documentation. */
+  height: 2.25rem;
   width: auto;
 }
 

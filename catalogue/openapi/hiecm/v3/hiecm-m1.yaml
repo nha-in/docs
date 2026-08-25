@@ -2976,7 +2976,8 @@ paths:
       - PHR & ABHA Address
       summary: Download PHR QR Code
       operationId: m1_download_phr_qr_code
-      description: Download the PHR QR code image.
+      description: Download the PHR QR code image. Schema and examples are in
+        this specification.
       parameters:
       - $ref: '#/components/parameters/RequestId'
       - $ref: '#/components/parameters/Timestamp'
@@ -4916,11 +4917,92 @@ x-abdm-errors:
 
     A numeric code, not an `ABDM-` code, plus a `description` field the other shapes lack. This comes from the API gateway in front of the ABHA service, before your request reaches the business logic. It almost always means the `Authorization` header is wrong or expired.
   source: Saved example responses in NHA's M1 ABHA Postman collection. NHA's M1
-    document carries its code reference as screenshots with no text.
+    document carries its code reference as screenshots with no text. NHA's error
+    code workbooks, ABDM M1-M2-M3-M4_Error_Codes.xlsx and ErrorCode-Message.xlsx,
+    supplied 2026-08-25. Code, message and, where NHA gives one, the error name
+    are NHA's. The action column is this catalogue's reading of the message text,
+    by a documented rule, and is not NHA's. Anything the rule could not classify
+    says Unclassified rather than guessing.
   codes:
+  - code: ABDM-1001
+    message: Subscription source update returned empty
+    action: Unclassified
+    name: DATA_NOT_FOUND
+  - code: ABDM-1002
+    message: Invalid frequency unit, it must be in HOUR, WEEK, DAY, MONTH, YEAR
+    action: Fix request
+    name: CONSTRAINT_VIOLATION
+  - code: ABDM-1006
+    message: Invalid HIType, it must be in Prescription,DiagnosticReport,OPConsultation,DischargeSummary,ImmunizationRecord,HealthDocumentRecord,WellnessRecord,Invoice
+    action: Fix request
+    name: BAD_REQUEST
+  - code: ABDM-1008
+    message: SMS service currently disabled
+    action: Unclassified
+    name: SMS_SERVICE_DISABLED
+  - code: ABDM-1009
+    message: Email service currently disabled
+    action: Unclassified
+    name: EMAIL_SERVICE_DISABLED
+  - code: ABDM-1010
+    message: No pending care context found for this abha address
+    action: Unclassified
+    name: VALIDATION_FAILED
   - code: ABDM-1013
     message: Invalid ABHA Number
     action: Fix request
+  - code: ABDM-1016
+    message: Invalid Timestamp
+    action: Fix request
+    name: INVALID_TIMESTAMP
+  - code: ABDM-1017
+    message: Invalid Transaction Id
+    action: Fix request
+    name: INVALID_TRANSACTION_ID
+  - code: ABDM-1019
+    message: Dependent Service Unavailable
+    action: Retry
+    name: FEIGN_EXCEPTION
+  - code: ABDM-1021
+    message: Lack of required priviledges
+    action: Fix request
+    name: UNAUTHORIZED_ACCESS
+  - code: ABDM-1022
+    message: Too many requests
+    action: Retry
+    name: TOO_MANY_REQUEST
+  - code: ABDM-1029
+    message: Redis server is unavailable
+    action: Retry
+    name: REDIS_SERVER_UNAVAILABLE
+  - code: ABDM-1030
+    message: Request id not found
+    action: Fix request
+    name: INVALID_REQUEST_ID
+  - code: ABDM-1034
+    message: Notification service unavailable
+    action: Retry
+    name: NOTIFICATION_SERVICE_UNAVAILABLE
+  - code: ABDM-1045
+    message: Database Access is restricted
+    action: Unclassified
+    name: DB_ACCESS_DENIED
+  - code: ABDM-1047
+    message: Purpose does not exist
+    action: Fix request
+    name: VALIDATION_FAILED_EXCEPTION
+  - code: ABDM-1048
+    message: Timeout
+    action: Retry
+    name: TIMEOUT_EXCEPTION
+  - code: ABDM-1065
+    message: Health facility does not exist
+    action: Fix request
+    name: HFR_UID_NOT_EXIST
+  - code: ABDM-1066
+    message: Please enter a valid Password
+    action: Unclassified
+    name: PASSWORD_NOT_EXIST
   - code: ABDM-1094
     message: Access to this feature is restricted. Please contact NHA to enable
       it.
@@ -4928,19 +5010,256 @@ x-abdm-errors:
   - code: ABDM-1094
     message: Invalid Benefit Name
     action: Fix auth
+  - code: ABDM-1100
+    message: You have requested multiple OTPs Or Exceeded maximum number of attempts
+      for OTP match in this transaction. Please try again in 30 minutes.
+    action: Retry
+    name: EXCEEDED_MULTIPLE_OTP_REQUEST_OR_OTP_MATCH
+  - code: ABDM-1101
+    message: This ABHA Address already exists. Please create with unique ABHA
+      address
+    action: Fix request
+    name: ABHA_ADDRESS_EXIST
+  - code: ABDM-1102
+    message: Mobile number verification is pending.
+    action: Unclassified
+    name: MOBILE_NUMBER_NOT_VERIFIED
+  - code: ABDM-1103
+    message: Cannot link with CHILD ABHA Number
+    action: Unclassified
+    name: CAN_NOT_LINK_WITH_CHILD_ABHA_NUMBER
+  - code: ABDM-1104
+    message: Cannot link with same ABHA Number
+    action: Unclassified
+    name: CAN_NOT_LINK_WITH_SAME_ABHA_NUMBER
+  - code: ABDM-1105
+    message: Invalid request for parent linking
+    action: Fix request
+    name: INVALID_LINK_REQUEST
+  - code: ABDM-1107
+    message: Invalid combinations of scopes
+    action: Fix request
+    name: INVALID_COMBINATIONS_OF_SCOPES
+  - code: ABDM-1108
+    message: Notification DB service unavailable
+    action: Retry
+    name: NOTIFICATION_DB_SERVICE_UNAVAILABLE
+  - code: ABDM-1109
+    message: Invalid On discovery response
+    action: Fix request
+    name: ABHA_DB_SERVICE_UNAVAILABLE
+  - code: ABDM-1110
+    message: Your new password must be different from your old password. Please
+      enter a unique new password.
+    action: Unclassified
+    name: OLD_AND_NEW_PASSWORD_SAME
+  - code: ABDM-1111
+    message: Invalid old password, please try with valid password.
+    action: Fix request
+    name: OLD_PASSWORD_NOT_MATCHED
+  - code: ABDM-1112
+    message: The provided gender does not match the gender in DigiLocker records
+    action: Unclassified
+    name: EITHER_OLD_OR_NEW_PASSWORD_NOT_ENCRYPTED
+  - code: ABDM-1113
+    message: Duplicate health information provider data flow response data flow
+      resoponse
+    action: Fix request
+    name: ABHA_UI_EXPERIENCE_INVALID_CAPTCHA
+  - code: ABDM-1114
+    message: The provided name does not match the name in DigiLocker records
+    action: Unclassified
+    name: ABHA_USER_NOT_FOUND
+  - code: ABDM-1115
+    message: Invalid patient information. At least one patient information is
+      required.
+    action: Fix request
+    name: MOBILE_NUMBER_NOT_FOUND
+  - code: ABDM-1116
+    message: 'generate_and_save_link_token : ''NoneType'' object has no attribute
+      ''get'''
+    action: Unclassified
+    name: AADHAAR_DETAILS_NOT_FOUND
+  - code: ABDM-1117
+    message: Auto approval id is already active
+    action: Fix request
+    name: LOGIN_VIA_PASSWORD_NOT_ALLOWED
+  - code: ABDM-1118
+    message: Login via ABHA Number OTP is not allowed
+    action: Fix request
+    name: LOGIN_VIA_ABHA_NUMBER_OTP_NOT_ALLOWED
+  - code: ABDM-1119
+    message: Login via Aadhaar OTP is not allowed
+    action: Fix request
+    name: LOGIN_VIA_AADHAAR_OTP_NOT_ALLOWED
+  - code: ABDM-1121
+    message: Invalid Enrolment Number
+    action: Fix request
+    name: ENROLLMENT_ID_NOT_FOUND
+  - code: ABDM-1122
+    message: Request can not be processed
+    action: Unclassified
+    name: UN_PROCESSABLE_ENTITY
+  - code: ABDM-1124
+    message: The mobile number provided by you is already linked to 6 ABHA Numbers.
+      Please provide a different Mobile Number.
+    action: Fix request
+    name: MOBILE_ALREADY_LINKED_TO_6_ACCOUNTS
+  - code: ABDM-1126
+    message: F-Token Expired
+    action: Fix request
+    name: F_TOKEN_EXPIRED
+  - code: ABDM-1127
+    message: Invalid F-Token
+    action: Fix request
+    name: INVALID_F_TOKEN
+  - code: ABDM-1132
+    message: Kindly enter valid linked ABHA Address
+    action: Unclassified
+    name: LINK_VALID_ABHA_ADDRESS
+  - code: ABDM-1133
+    message: Please enter a valid captcha result. Entered captcha result is incorrect.
+    action: Fix request
+    name: ABHA_UI_EXPERIENCE_WRONG_CAPTCHA
+  - code: ABDM-1134
+    message: Deactivated ABHA Account
+    action: Cannot proceed
+    name: DEACTIVATED_ABHA_ACCOUNT
+  - code: ABDM-1135
+    message: The email address provided by you is already linked to 6 ABHA Numbers.
+      Please provide a different email Id.
+    action: Fix request
+    name: EMAIL_ALREADY_LINKED_TO_6_ACCOUNTS
+  - code: ABDM-1136
+    message: message should not be null or empty.
+    action: Unclassified
+    name: INVALID_REASON
+  - code: ABDM-1137
+    message: Benefit Name Not Found
+    action: Fix request
+    name: BENEFIT_NOT_FOUND
   - code: ABDM-1138
     message: The benefit record has already been de-linked
     action: Treat as success
+  - code: ABDM-1139
+    message: Benefit record not found
+    action: Fix request
+    name: BENEFIT_RECORD_NOT_FOUND
   - code: ABDM-1140
     message: The benefit record has already been linked
     action: Treat as success
+  - code: ABDM-1141
+    message: An existing ABHA number created using this Aadhaar number has been
+      found. It is advisable to delete this account and use ABHA number \(([0-9]{2}(?:-[0-9]{4}){3})\)
+      for future purpose\.
+    action: Unclassified
+    name: ACCOUNT_ALREADY_EXIST
+  - code: ABDM-1142
+    message: Please enter a valid captcha. Entered captcha is expired.
+    action: Fix request
+    name: ABHA_UI_EXPERIENCE_EXPIRED_CAPTCHA
+  - code: ABDM-1143
+    message: Captcha limit exceeded.
+    action: Unclassified
+    name: ABHA_UI_EXPERIENCE_CAPTCHA_LIMIT_EXCEEDED
+  - code: ABDM-1144
+    message: Incorrect facility ID or password.
+    action: Fix request
+    name: ABHA_FACILITY_INCORRECT_ID_PASSWORD
+  - code: ABDM-1155
+    message: Parents must be 18 years of age or older to create a Child ABHA Account
+    action: Unclassified
+    name: INVALID_PARENTS_DOB_DETAILS
+  - code: ABDM-1156
+    message: Please ensure that the mobile number is mapped to the parent's ABHA
+      number
+    action: Unclassified
+    name: INVALID_PARENTS_MOBILE_NUMBER
+  - code: ABDM-1157
+    message: Child ABHA’s account limit has been exceeded for the requested Abha
+      ID number ‘(.*?)
+    action: Unclassified
+    name: CHILD_ENROLLMENT_LIMIT_EXCEEDED
+  - code: ABDM-1158
+    message: Invalid X-Token
+    action: Fix request
+    name: INVALID_PROFILE_X_TOKEN
+  - code: ABDM-1159
+    message: Children’s ages should be below '(.*?)' years as of the current date
+    action: Unclassified
+    name: CHILD_AGE_LIMIT_EXCEEDED
+  - code: ABDM-1160
+    message: Non KYC CHILD ABHA is allowed to update their profile only once
+    action: Unclassified
+    name: CHILD_ABHA_UPDATE_ALLOWED_ONLY_ONCE
+  - code: ABDM-1200
+    message: LGD Gateway is unavailable
+    action: Retry
+    name: LGD_GATEWAY_UNAVAILABLE
+  - code: ABDM-1201
+    message: IDP Gateway is unavailable
+    action: Retry
+    name: IDP_GATEWAY_UNAVAILABLE
+  - code: ABDM-1202
+    message: Document Gateway is unavailable
+    action: Retry
+    name: DOCUMENT_GATEWAY_UNAVAILABLE
+  - code: ABDM-1203
+    message: TEST
+    action: Unclassified
+    name: DRIVING_LICENSE_EXCEPTIONS
   - code: ABDM-1204
     message: A UIDAI failure passed through. The UIDAI code and text sit inside
       the message string
     action: Fix request
+  - code: ABDM-1205
+    message: Document DB Gateway is unavailable
+    action: Retry
+    name: DOCUMENT_DB_GATEWAY_UNAVAILABLE
+  - code: ABDM-1206
+    message: Aadhaar Gateway is unavailable
+    action: Retry
+    name: AADHAAR_GATEWAY_UNAVAILABLE
+  - code: ABDM-1207
+    message: The information you provided does not match the details on record
+      with Aadhaar. Please verify and provide accurate information.
+    action: Fix request
+    name: INVALID_DEMOGRAPHIC_DETAILS
+  - code: ABDM-1211
+    message: Email Sending Limit Exceeded
+    action: Unclassified
+    name: EMAIL_SENDING_LIMIT_EXCEEDED
+  - code: ABDM-1218
+    message: Role for the user does not exist.
+    action: Fix request
+    name: ROLE_IS_NOT_EXIST
+  - code: ABDM-1219
+    message: Your ABHA is linked with govt benefit programme, so it can not be
+      deleted- ABDM, National Health Authority.
+    action: Unclassified
+    name: NOTIFICATION_TEMPLATE_NOT_FOUND
+  - code: ABDM-1220
+    message: Sorry, Unable to process your request at this time. Please try again
+      later.
+    action: Retry
+    name: ABHA_RETRY
   - code: ABDM-1224
     message: Login via Biometric is not allowed.
     action: Fix auth
+  - code: ABDM-1226
+    message: Vault service unavailable
+    action: Retry
+    name: VAULT_GATEWAY_UNAVAILABLE
+  - code: ABDM-1227
+    message: This client ID has reached the maximum limit of 100 ABHA account
+      creations.
+    action: Unclassified
+    name: CLIENT_ID_ALREADY_CREATED_MAX_ACCOUNTS
+  - code: ABDM-1228
+    message: Your ABHA is linked with govt benefit programme, so it can not be
+      deactivated- ABDM, National Health Authority.
+    action: Cannot proceed
+    name: ABHA_DEACTIVATION_RESTRICTION
   - code: ABDM-9999
     message: 'Recorded as `ABDM-9999: ` with an `ABDM-1094` message stuck to the
       front of the text'

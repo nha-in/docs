@@ -1,0 +1,4350 @@
+# P2 PHR linking and records.
+#
+# Derived from NHA's Aarogya Setu Postman collection, which is NHA's own
+# PHR. The same calls and the same error codes apply to any PHR.
+#
+# Rules this file follows: catalogue/openapi/CONVENTIONS.md
+openapi: 3.1.1
+info:
+  title: ABDM P2 PHR linking and records
+  summary: P2 PHR linking and records, from NHA's reference PHR.
+  description: |
+    P2 is how a patient finds records and attaches them to their ABHA address.
+    Care context linking, user initiated linking, scan and share at a facility,
+    and health locker subscriptions.
+
+    It is the mirror of M2. M2 is the provider publishing a record; P2 is the
+    patient discovering and linking it.
+
+    Nothing in this file has been run against the sandbox from this repository. Sample values are scrubbed.
+  version: abdm-v3
+  license:
+    name: MIT
+    identifier: MIT
+  contact:
+    name: ABDM sandbox support
+    url: https://devforum.abdm.gov.in
+  x-abdm-gateway: hiecm
+  x-abdm-module: p2
+  x-abdm-phase: 2
+  x-abdm-roles:
+  - phr
+  x-portal:
+    module: p2
+    label: P2 PHR linking and records
+    position: 7
+x-abdm-sources:
+- file: catalogue/openapi/.raw/aarogya-setu.postman_collection.json
+  role: upstream
+  hash: sha256:84afbc33fc248dd13f63e12adcd8958c9be30e3877184555f5e5a0a50d5ec92c
+  fetched: '2026-08-25'
+  note: NHA's Aarogya Setu collection, 248 requests. Aarogya Setu is NHA's own
+    PHR, so it stands in for any PHR implementation.
+servers:
+- url: https://phrsbx.abdm.gov.in
+  description: Sandbox. Host taken from NHA's collection variables and not yet
+    confirmed.
+- url: https://phr.abdm.gov.in
+  description: Production.
+security:
+- gatewaySession: []
+tags:
+- name: care_context_link
+  description: From NHA's "Care Context Link service" folder in the Aarogya Setu
+    collection.
+- name: health_locker
+  description: From NHA's "Health locker service" folder in the Aarogya Setu collection.
+- name: scan_and_share
+  description: From NHA's "Scan and Share service" folder in the Aarogya Setu
+    collection.
+- name: user_initiated_linking
+  description: From NHA's "User Initiated Linking service" folder in the Aarogya
+    Setu collection.
+paths:
+  /api/care-context-link/bookmark/{careContextLinkId}:
+    post:
+      operationId: p2_bookmark_care_context
+      tags:
+      - care_context_link
+      summary: Bookmark Care Context
+      description: |
+        NHA's Aarogya Setu collection names this request "Bookmark Care Context", in its Care Context Link service. It is reproduced here as the reference PHR behaviour: Aarogya Setu is NHA's own PHR, so the same calls and the same error codes apply to any PHR implementation.
+
+        The prose is derived from the collection, not written from a specification. NHA has published no OpenAPI file for the PHR role.
+      x-abdm-atom: hiecm.endpoint.p2-bookmark-care-context
+      parameters:
+      - name: careContextLinkId
+        in: path
+        required: true
+        schema:
+          type: string
+        description: Taken from NHA's collection, which passes this as a path
+          segment.
+      x-abdm-source-folder: Care Context Link service
+      responses:
+        '500':
+          description: Recorded in NHA's collection. Values are scrubbed.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - code
+                - message
+              examples:
+                recorded:
+                  summary: Recorded response
+                  value:
+                    code: AS-1314
+                    message: Required header 'X-token' is not present.
+        '401':
+          description: Recorded in NHA's collection. Values are scrubbed.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+                  description:
+                    type: string
+                required:
+                - code
+                - description
+                - message
+              examples:
+                recorded:
+                  summary: Recorded response
+                  value:
+                    code: '900902'
+                    message: Missing Credentials
+                    description: 'Invalid Credentials. Make sure your API invocation
+                      call has a header: ''Authorization : Bearer ACCESS_TOKEN''
+                      or ''Authorization : Basic ACCESS_TOKEN'' or ''apikey: API_KEY'''
+  /api/care-context-link/care-context-link/fetch:
+    get:
+      operationId: p2_get_care_context_links
+      tags:
+      - care_context_link
+      summary: Get Care Context Links
+      description: |
+        NHA's Aarogya Setu collection names this request "Get Care Context Links", in its Care Context Link service. It is reproduced here as the reference PHR behaviour: Aarogya Setu is NHA's own PHR, so the same calls and the same error codes apply to any PHR implementation.
+
+        The prose is derived from the collection, not written from a specification. NHA has published no OpenAPI file for the PHR role.
+      x-abdm-atom: hiecm.endpoint.p2-get-care-context-links
+      x-abdm-source-folder: Care Context Link service
+      responses:
+        '500':
+          description: Recorded in NHA's collection. Values are scrubbed.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - code
+                - message
+              examples:
+                recorded:
+                  summary: Recorded response
+                  value:
+                    code: AS-1314
+                    message: Required header 'X-token' is not present.
+        '200':
+          description: Recorded in NHA's collection. Values are scrubbed.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    lockerView:
+                      type: string
+                    id:
+                      type: integer
+                    hipId:
+                      type: string
+                    hipName:
+                      type: string
+                    patientId:
+                      type: string
+                    careContext:
+                      type: object
+                      properties:
+                        patientReference:
+                          type: string
+                        careContextReference:
+                          type: string
+                        hiTypes:
+                          type: array
+                          items:
+                            type: string
+                      required:
+                      - careContextReference
+                      - hiTypes
+                      - patientReference
+                    dateCreated:
+                      type: string
+                    dateModified:
+                      type: string
+                    resourceDate:
+                      type: string
+                    dataTransferStatus:
+                      type: string
+                    dataReceived:
+                      type: boolean
+                    bookmarked:
+                      type: boolean
+                  required:
+                  - bookmarked
+                  - careContext
+                  - dataReceived
+                  - dataTransferStatus
+                  - dateCreated
+                  - dateModified
+                  - hipId
+                  - hipName
+                  - id
+                  - lockerView
+                  - patientId
+                  - resourceDate
+        '401':
+          description: Recorded in NHA's collection. Values are scrubbed.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+                  description:
+                    type: string
+                required:
+                - code
+                - description
+                - message
+              examples:
+                recorded:
+                  summary: Recorded response
+                  value:
+                    code: '900902'
+                    message: Missing Credentials
+                    description: 'Invalid Credentials. Make sure your API invocation
+                      call has a header: ''Authorization : Bearer ACCESS_TOKEN''
+                      or ''Authorization : Basic ACCESS_TOKEN'' or ''apikey: API_KEY'''
+  /api/care-context-link/care-context/bundle-url/{careContextLinkId}:
+    get:
+      operationId: p2_fetch_care_context_bundle_url
+      tags:
+      - care_context_link
+      summary: Fetch Care Context Bundle URL
+      description: |
+        NHA's Aarogya Setu collection names this request "Fetch Care Context Bundle URL", in its Care Context Link service. It is reproduced here as the reference PHR behaviour: Aarogya Setu is NHA's own PHR, so the same calls and the same error codes apply to any PHR implementation.
+
+        The prose is derived from the collection, not written from a specification. NHA has published no OpenAPI file for the PHR role.
+      x-abdm-atom: hiecm.endpoint.p2-fetch-care-context-bundle-url
+      parameters:
+      - name: careContextLinkId
+        in: path
+        required: true
+        schema:
+          type: string
+        description: Taken from NHA's collection, which passes this as a path
+          segment.
+      x-abdm-source-folder: Care Context Link service
+      responses:
+        '500':
+          description: Recorded in NHA's collection. Values are scrubbed.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - code
+                - message
+              examples:
+                recorded:
+                  summary: Recorded response
+                  value:
+                    code: AS-1314
+                    message: Required header 'X-token' is not present.
+        '401':
+          description: Recorded in NHA's collection. Values are scrubbed.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+                  description:
+                    type: string
+                required:
+                - code
+                - description
+                - message
+              examples:
+                recorded:
+                  summary: Recorded response
+                  value:
+                    code: '900902'
+                    message: Missing Credentials
+                    description: 'Invalid Credentials. Make sure your API invocation
+                      call has a header: ''Authorization : Bearer ACCESS_TOKEN''
+                      or ''Authorization : Basic ACCESS_TOKEN'' or ''apikey: API_KEY'''
+        '200':
+          description: Recorded in NHA's collection. Values are scrubbed.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  lockerView:
+                    type: 'null'
+                  fetchRecordStatus:
+                    type: string
+                  bundleUrls:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                        careContextLinkId:
+                          type: integer
+                        bundleUrl:
+                          type: string
+                        transactionId:
+                          type: string
+                        dateCreated:
+                          type: string
+                        dateModified:
+                          type: string
+                      required:
+                      - bundleUrl
+                      - careContextLinkId
+                      - dateCreated
+                      - dateModified
+                      - id
+                      - transactionId
+                required:
+                - bundleUrls
+                - fetchRecordStatus
+                - lockerView
+              examples:
+                recorded:
+                  summary: Recorded response
+                  value:
+                    lockerView: null
+                    fetchRecordStatus: SUCCESS
+                    bundleUrls:
+                    - id: 843312
+                      careContextLinkId: 481116
+                      bundleUrl: nithishjanithi@sbx/DigiLocker_NEGD/25ac532f-178d-5885-9bcb-b82052f345eb_20260523161857599891/<TXN_ID>.json
+                      transactionId: <TXN_ID>
+                      dateCreated: '2026-05-23 16:19:03.193'
+                      dateModified: '2026-05-23 16:19:03.193'
+  /api/care-context-link/fetch/hips:
+    get:
+      operationId: p2_get_linked_hips
+      tags:
+      - care_context_link
+      summary: Get Linked HIPs
+      description: |
+        NHA's Aarogya Setu collection names this request "Get Linked HIPs", in its Care Context Link service. It is reproduced here as the reference PHR behaviour: Aarogya Setu is NHA's own PHR, so the same calls and the same error codes apply to any PHR implementation.
+
+        The prose is derived from the collection, not written from a specification. NHA has published no OpenAPI file for the PHR role.
+      x-abdm-atom: hiecm.endpoint.p2-get-linked-hips
+      x-abdm-source-folder: Care Context Link service
+      responses:
+        '200':
+          description: Recorded in NHA's collection. Values are scrubbed.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  downloadBaseUrl:
+                    type: string
+                  unTransferredHipIds:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        name:
+                          type: string
+                      required:
+                      - id
+                      - name
+                required:
+                - downloadBaseUrl
+                - unTransferredHipIds
+              examples:
+                recorded:
+                  summary: Recorded response
+                  value:
+                    downloadBaseUrl: https://abhasbx.abdm.gov.in/abha/api/v3/fetchFile/phrpullrecord/
+                    unTransferredHipIds:
+                    - id: LTIM_HIP_1
+                      name: <NAME>
+                    - id: LTIM_HIP
+                      name: <NAME>
+                    - id: IN2710002381
+                      name: <NAME>
+        '500':
+          description: Recorded in NHA's collection. Values are scrubbed.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - code
+                - message
+              examples:
+                recorded:
+                  summary: Recorded response
+                  value:
+                    code: AS-1314
+                    message: Required header 'X-token' is not present.
+        '400':
+          description: Recorded in NHA's collection. Values are scrubbed.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - code
+                - message
+              examples:
+                recorded:
+                  summary: Recorded response
+                  value:
+                    code: 'ABDM-9999: '
+                    message: Invalid X Auth token
+        '401':
+          description: Recorded in NHA's collection. Values are scrubbed.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+                  description:
+                    type: string
+                required:
+                - code
+                - description
+                - message
+              examples:
+                recorded:
+                  summary: Recorded response
+                  value:
+                    code: '900902'
+                    message: Missing Credentials
+                    description: 'Invalid Credentials. Make sure your API invocation
+                      call has a header: ''Authorization : Bearer ACCESS_TOKEN''
+                      or ''Authorization : Basic ACCESS_TOKEN'' or ''apikey: API_KEY'''
+  /api/care-context-link/file/details:
+    get:
+      operationId: p2_get_file_metadata
+      tags:
+      - care_context_link
+      summary: Get File Metadata
+      description: |
+        NHA's Aarogya Setu collection names this request "Get File Metadata", in its Care Context Link service. It is reproduced here as the reference PHR behaviour: Aarogya Setu is NHA's own PHR, so the same calls and the same error codes apply to any PHR implementation.
+
+        The prose is derived from the collection, not written from a specification. NHA has published no OpenAPI file for the PHR role.
+      x-abdm-atom: hiecm.endpoint.p2-get-file-metadata
+      x-abdm-source-folder: Care Context Link service
+      responses:
+        '500':
+          description: Recorded in NHA's collection. Values are scrubbed.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - code
+                - message
+              examples:
+                recorded:
+                  summary: Recorded response
+                  value:
+                    code: AS-1415
+                    message: Unable to fetch the file details.
+        '200':
+          description: Recorded in NHA's collection. Values are scrubbed.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  fileName:
+                    type: string
+                  fileSize:
+                    type: integer
+                  chunkSize:
+                    type: integer
+                required:
+                - chunkSize
+                - fileName
+                - fileSize
+              examples:
+                recorded:
+                  summary: Recorded response
+                  value:
+                    fileName: nithishjanithi@sbx/DigiLocker_NEGD/25ac532f-178d-5885-9bcb-b82052f345eb_20260604192056317009/<TXN_ID>.json
+                    fileSize: 27636
+                    chunkSize: 5242880
+  /api/care-context-link/file/download:
+    get:
+      operationId: p2_download_file_chunk
+      tags:
+      - care_context_link
+      summary: Download File Chunk
+      description: |
+        NHA's Aarogya Setu collection names this request "Download File Chunk", in its Care Context Link service. It is reproduced here as the reference PHR behaviour: Aarogya Setu is NHA's own PHR, so the same calls and the same error codes apply to any PHR implementation.
+
+        The prose is derived from the collection, not written from a specification. NHA has published no OpenAPI file for the PHR role.
+      x-abdm-atom: hiecm.endpoint.p2-download-file-chunk
+      x-abdm-source-folder: Care Context Link service
+      responses:
+        '200':
+          description: NHA's collection saves no response body for this request,
+            so the shape is not recorded here.
+  /api/care-context-link/get-hip-ids:
+    get:
+      operationId: p2_get_hip_ids
+      tags:
+      - care_context_link
+      summary: Get HIP IDs
+      description: |
+        NHA's Aarogya Setu collection names this request "Get HIP IDs", in its Care Context Link service. It is reproduced here as the reference PHR behaviour: Aarogya Setu is NHA's own PHR, so the same calls and the same error codes apply to any PHR implementation.
+
+        The prose is derived from the collection, not written from a specification. NHA has published no OpenAPI file for the PHR role.
+      x-abdm-atom: hiecm.endpoint.p2-get-hip-ids
+      x-abdm-source-folder: Care Context Link service
+      responses:
+        '200':
+          description: Recorded in NHA's collection. Values are scrubbed.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  downloadBaseUrl:
+                    type: string
+                  transferredHipIds:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        name:
+                          type: string
+                      required:
+                      - id
+                      - name
+                  lockerView:
+                    type: string
+                required:
+                - downloadBaseUrl
+                - lockerView
+                - transferredHipIds
+              examples:
+                recorded:
+                  summary: Recorded response
+                  value:
+                    downloadBaseUrl: https://abhasbx.abdm.gov.in/fetchFile/disk4/phrpullrecord/
+                    transferredHipIds:
+                    - id: DigiLocker_NEGD
+                      name: <NAME>
+                    lockerView: PHR
+        '401':
+          description: Recorded in NHA's collection. Values are scrubbed.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+                  description:
+                    type: string
+                required:
+                - code
+                - description
+                - message
+              examples:
+                recorded:
+                  summary: Recorded response
+                  value:
+                    code: '900902'
+                    message: Missing Credentials
+                    description: 'Invalid Credentials. Make sure your API invocation
+                      call has a header: ''Authorization : Bearer ACCESS_TOKEN''
+                      or ''Authorization : Basic ACCESS_TOKEN'' or ''apikey: API_KEY'''
+        '500':
+          description: Recorded in NHA's collection. Values are scrubbed.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - code
+                - message
+              examples:
+                recorded:
+                  summary: Recorded response
+                  value:
+                    code: AS-1314
+                    message: Required header 'X-token' is not present.
+  /api/care-context-link/get/data-flow-part/{transactionId}:
+    get:
+      operationId: p2_get_data_flow_part_status
+      tags:
+      - care_context_link
+      summary: Get Data Flow Part Status
+      description: |
+        NHA's Aarogya Setu collection names this request "Get Data Flow Part Status", in its Care Context Link service. It is reproduced here as the reference PHR behaviour: Aarogya Setu is NHA's own PHR, so the same calls and the same error codes apply to any PHR implementation.
+
+        The prose is derived from the collection, not written from a specification. NHA has published no OpenAPI file for the PHR role.
+      x-abdm-atom: hiecm.endpoint.p2-get-data-flow-part-status
+      parameters:
+      - name: transactionId
+        in: path
+        required: true
+        schema:
+          type: string
+        description: Taken from NHA's collection, which passes this as a path
+          segment.
+      x-abdm-source-folder: Care Context Link service
+      responses:
+        '200':
+          description: NHA's collection saves no response body for this request,
+            so the shape is not recorded here.
+  /api/care-context-link/get/health-information/{transactionId}:
+    get:
+      operationId: p2_get_health_information_by_transaction_id
+      tags:
+      - care_context_link
+      summary: Get Health Information by Transaction ID
+      description: |
+        NHA's Aarogya Setu collection names this request "Get Health Information by Transaction ID", in its Care Context Link service. It is reproduced here as the reference PHR behaviour: Aarogya Setu is NHA's own PHR, so the same calls and the same error codes apply to any PHR implementation.
+
+        The prose is derived from the collection, not written from a specification. NHA has published no OpenAPI file for the PHR role.
+      x-abdm-atom: hiecm.endpoint.p2-get-health-information-by-transaction-id
+      parameters:
+      - name: transactionId
+        in: path
+        required: true
+        schema:
+          type: string
+        description: Taken from NHA's collection, which passes this as a path
+          segment.
+      x-abdm-source-folder: Care Context Link service
+      responses:
+        '200':
+          description: NHA's collection saves no response body for this request,
+            so the shape is not recorded here.
+  /api/care-context-link/health-information/on-request:
+    post:
+      operationId: p2_health_information_on_request_callback
+      tags:
+      - care_context_link
+      summary: Health Information On-Request Callback
+      description: |
+        NHA's Aarogya Setu collection names this request "Health Information On-Request Callback", in its Care Context Link service. It is reproduced here as the reference PHR behaviour: Aarogya Setu is NHA's own PHR, so the same calls and the same error codes apply to any PHR implementation.
+
+        The prose is derived from the collection, not written from a specification. NHA has published no OpenAPI file for the PHR role.
+      x-abdm-atom: hiecm.endpoint.p2-health-information-on-request-callback
+      x-abdm-source-folder: Care Context Link service
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                requestId:
+                  type: string
+                timestamp:
+                  type: string
+                hiRequest:
+                  type: object
+                  properties:
+                    transactionId:
+                      type: string
+                    sessionStatus:
+                      type: string
+                  required:
+                  - sessionStatus
+                  - transactionId
+                error:
+                  type: 'null'
+                resp:
+                  type: object
+                  properties:
+                    requestId:
+                      type: string
+                  required:
+                  - requestId
+              required:
+              - error
+              - hiRequest
+              - requestId
+              - resp
+              - timestamp
+            examples:
+              from_nha_collection:
+                summary: From NHA's collection, values scrubbed
+                value:
+                  requestId: <GENERATED>
+                  timestamp: '2026-06-12T00:00:00.000Z'
+                  hiRequest:
+                    transactionId: txn-001
+                    sessionStatus: ACKNOWLEDGED
+                  error: null
+                  resp:
+                    requestId: <REQUEST_ID>
+      responses:
+        '200':
+          description: NHA's collection saves no response body for this request,
+            so the shape is not recorded here.
+  /api/care-context-link/link/get-links:
+    post:
+      operationId: p2_get_links_by_hip
+      tags:
+      - care_context_link
+      summary: Get Links by HIP
+      description: |
+        NHA's Aarogya Setu collection names this request "Get Links by HIP", in its Care Context Link service. It is reproduced here as the reference PHR behaviour: Aarogya Setu is NHA's own PHR, so the same calls and the same error codes apply to any PHR implementation.
+
+        The prose is derived from the collection, not written from a specification. NHA has published no OpenAPI file for the PHR role.
+      x-abdm-atom: hiecm.endpoint.p2-get-links-by-hip
+      x-abdm-source-folder: Care Context Link service
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties: {}
+              required: []
+            examples:
+              from_nha_collection:
+                summary: From NHA's collection, values scrubbed
+                value: {}
+      responses:
+        '200':
+          description: Recorded in NHA's collection. Values are scrubbed.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    patient:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        links:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              id:
+                                type: integer
+                              smartData:
+                                type: object
+                                properties:
+                                  dataProcessed:
+                                    type: boolean
+                                  status:
+                                    type: string
+                                  documentId:
+                                    type: string
+                                  enabledForProcessing:
+                                    type: boolean
+                                  isAarogyaSetuProcessed:
+                                    type: boolean
+                                required:
+                                - dataProcessed
+                                - enabledForProcessing
+                                - isAarogyaSetuProcessed
+                              hip:
+                                type: object
+                                properties:
+                                  id:
+                                    type: string
+                                  name:
+                                    type: string
+                                  type:
+                                    type: string
+                                required:
+                                - id
+                                - name
+                                - type
+                              referenceNumber:
+                                type: string
+                              careContexts:
+                                type: array
+                                items:
+                                  type: object
+                                  properties:
+                                    referenceNumber:
+                                      type: string
+                                    patientReference:
+                                      type: string
+                                    hiTypes:
+                                      type: array
+                                      items:
+                                        type: string
+                                  required:
+                                  - hiTypes
+                                  - patientReference
+                                  - referenceNumber
+                              dateCreated:
+                                type: string
+                              isBookmarked:
+                                type: boolean
+                            required:
+                            - careContexts
+                            - dateCreated
+                            - hip
+                            - id
+                            - isBookmarked
+                            - referenceNumber
+                            - smartData
+                      required:
+                      - id
+                      - links
+                  required:
+                  - patient
+              examples:
+                recorded:
+                  summary: Recorded response
+                  value:
+                  - patient:
+                      id: nithishjanithi@sbx
+                      links:
+                      - id: 496112
+                        smartData:
+                          dataProcessed: true
+                          status: APPROVED
+                          documentId: <TXN_ID>
+                          enabledForProcessing: true
+                          isAarogyaSetuProcessed: true
+                        hip:
+                          id: DigiLocker_NEGD
+                          name: <NAME>
+                          type: HIP
+                        referenceNumber: nithishjanithi@sbx
+                        careContexts:
+                        - referenceNumber: 25ac532f-178d-5885-9bcb-b82052f345eb_20260604192056317009
+                          patientReference: nithishjanithi@sbx
+                          hiTypes:
+                          - OPConsultation
+                        dateCreated: '2026-06-04 19:00:00.0'
+                        isBookmarked: false
+                      - id: 481118
+                        smartData:
+                          dataProcessed: false
+                          enabledForProcessing: true
+                          isAarogyaSetuProcessed: false
+                        hip:
+                          id: DigiLocker_NEGD
+                          name: <NAME>
+                          type: HIP
+                        referenceNumber: nithishjanithi@sbx
+                        careContexts:
+                        - referenceNumber: 25ac532f-178d-5885-9bcb-b82052f345eb_20260523161917547707
+                          patientReference: nithishjanithi@sbx
+                          hiTypes:
+                          - OPConsultation
+                        dateCreated: '2026-05-23 16:06:14.614'
+                        isBookmarked: false
+                      - id: 481120
+                        smartData:
+                          dataProcessed: false
+                          enabledForProcessing: true
+                          isAarogyaSetuProcessed: false
+                        hip:
+                          id: DigiLocker_NEGD
+                          name: <NAME>
+                          type: HIP
+                        referenceNumber: nithishjanithi@sbx
+                        careContexts:
+                        - referenceNumber: 25ac532f-178d-5885-9bcb-b82052f345eb_20260523162447162793
+                          patientReference: nithishjanithi@sbx
+                          hiTypes:
+                          - Prescription
+                          - DischargeSummary
+                        dateCreated: '2026-05-23 16:01:28.128'
+                        isBookmarked: false
+                      - id: 481091
+                        smartData:
+                          dataProcessed: false
+                          enabledForProcessing: true
+                          isAarogyaSetuProcessed: false
+                        hip:
+                          id: DigiLocker_NEGD
+                          name: <NAME>
+                          type: HIP
+                        referenceNumber: nithishjanithi@sbx
+                        careContexts:
+                        - referenceNumber: 25ac532f-178d-5885-9bcb-b82052f345eb_20260523155337176650
+                          patientReference: nithishjanithi@sbx
+                          hiTypes:
+                          - DiagnosticReport
+                        dateCreated: '2025-07-18 00:00:00.0'
+                        isBookmarked: false
+                      - id: 481076
+                        smartData:
+                          dataProcessed: false
+                          enabledForProcessing: true
+                          isAarogyaSetuProcessed: false
+                        hip:
+                          id: DigiLocker_NEGD
+                          name: <NAME>
+                          type: HIP
+                        referenceNumber: nithishjanithi@sbx
+                        careContexts:
+                        - referenceNumber: 25ac532f-178d-5885-9bcb-b82052f345eb_20260523154132334035
+                          patientReference: nithishjanithi@sbx
+                          hiTypes:
+                          - OPConsultation
+                        dateCreated: '2025-05-05 17:00:00.0'
+                        isBookmarked: false
+                      - id: 481119
+                        smartData:
+                          dataProcessed: false
+                          enabledForProcessing: true
+                          isAarogyaSetuProcessed: false
+                        hip:
+                          id: DigiLocker_NEGD
+                          name: <NAME>
+                          type: HIP
+                        referenceNumber: nithishjanithi@sbx
+                        careContexts:
+                        - referenceNumber: 25ac532f-178d-5885-9bcb-b82052f345eb_20260523162300479026
+                          patientReference: nithishjanithi@sbx
+                          hiTypes:
+                          - OPConsultation
+                        dateCreated: '2025-02-22 00:00:00.0'
+                        isBookmarked: false
+                      - id: 496111
+                        smartData:
+                          dataProcessed: true
+                          status: APPROVED
+                          documentId: <TXN_ID>
+                          enabledForProcessing: true
+                          isAarogyaSetuProcessed: true
+                        hip:
+                          id: DigiLocker_NEGD
+                          name: <NAME>
+                          type: HIP
+                        referenceNumber: nithishjanithi@sbx
+                        careContexts:
+                        - referenceNumber: 25ac532f-178d-5885-9bcb-b82052f345eb_20260604191949954362
+                          patientReference: nithishjanithi@sbx
+                          hiTypes:
+                          - OPConsultation
+                        dateCreated: '2024-11-12 00:00:00.0'
+                        isBookmarked: false
+                      - id: 496084
+                        smartData:
+                          dataProcessed: false
+                          enabledForProcessing: true
+                          isAarogyaSetuProcessed: false
+                        hip:
+                          id: DigiLocker_NEGD
+                          name: <NAME>
+                          type: HIP
+                        referenceNumber: nithishjanithi@sbx
+                        careContexts:
+                        - referenceNumber: 25ac532f-178d-5885-9bcb-b82052f345eb_20260604190956854815
+                          patientReference: nithishjanithi@sbx
+                          hiTypes:
+                          - OPConsultation
+                        dateCreated: '2024-11-12 00:00:00.0'
+                        isBookmarked: false
+                      - id: 496059
+                        smartData:
+                          dataProcessed: false
+                          enabledForProcessing: true
+                          isAarogyaSetuProcessed: false
+                        hip:
+                          id: DigiLocker_NEGD
+                          name: <NAME>
+                          type: HIP
+                        referenceNumber: nithishjanithi@sbx
+                        careContexts:
+                        - referenceNumber: 25ac532f-178d-5885-9bcb-b82052f345eb_20260604184554840033
+                          patientReference: nithishjanithi@sbx
+                          hiTypes:
+                          - OPConsultation
+                        dateCreated: '2024-11-12 00:00:00.0'
+                        isBookmarked: false
+                      - id: 496076
+                        smartData:
+                          dataProcessed: false
+                          enabledForProcessing: true
+                          isAarogyaSetuProcessed: false
+                        hip:
+                          id: DigiLocker_NEGD
+                          name: <NAME>
+                          type: HIP
+                        referenceNumber: nithishjanithi@sbx
+                        careContexts:
+                        - referenceNumber: 25ac532f-178d-5885-9bcb-b82052f345eb_20260604184732285009
+                          patientReference: nithishjanithi@sbx
+                          hiTypes:
+                          - OPConsultation
+                        dateCreated: '2024-11-12 00:00:00.0'
+                        isBookmarked: false
+        '401':
+          description: Recorded in NHA's collection. Values are scrubbed.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+                  description:
+                    type: string
+                required:
+                - code
+                - description
+                - message
+              examples:
+                recorded:
+                  summary: Recorded response
+                  value:
+                    code: '900902'
+                    message: Missing Credentials
+                    description: 'Invalid Credentials. Make sure your API invocation
+                      call has a header: ''Authorization : Bearer ACCESS_TOKEN''
+                      or ''Authorization : Basic ACCESS_TOKEN'' or ''apikey: API_KEY'''
+        '500':
+          description: Recorded in NHA's collection. Values are scrubbed.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - code
+                - message
+              examples:
+                recorded:
+                  summary: Recorded response
+                  value:
+                    code: AS-1314
+                    message: Required header 'X-token' is not present.
+  /api/care-context-link/link/patient/links:
+    get:
+      operationId: p2_get_all_linked_care_contexts
+      tags:
+      - care_context_link
+      summary: Get All Linked Care Contexts
+      description: |
+        NHA's Aarogya Setu collection names this request "Get All Linked Care Contexts", in its Care Context Link service. It is reproduced here as the reference PHR behaviour: Aarogya Setu is NHA's own PHR, so the same calls and the same error codes apply to any PHR implementation.
+
+        The prose is derived from the collection, not written from a specification. NHA has published no OpenAPI file for the PHR role.
+      x-abdm-atom: hiecm.endpoint.p2-get-all-linked-care-contexts
+      x-abdm-source-folder: Care Context Link service
+      responses:
+        '400':
+          description: Recorded in NHA's collection. Values are scrubbed.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - code
+                - message
+              examples:
+                recorded:
+                  summary: Recorded response
+                  value:
+                    code: 'ABDM-9999: '
+                    message: Invalid X Auth token
+        '200':
+          description: Recorded in NHA's collection. Values are scrubbed.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  patient:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                      links:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            hip:
+                              type: object
+                              properties:
+                                id:
+                                  type: string
+                                name:
+                                  type: string
+                                type:
+                                  type: string
+                              required:
+                              - id
+                              - name
+                              - type
+                            referenceNumber:
+                              type: string
+                            display:
+                              type: string
+                            hiType:
+                              type: string
+                            careContexts:
+                              type: array
+                              items:
+                                type: object
+                                properties:
+                                  referenceNumber:
+                                    type: string
+                                  display:
+                                    type: string
+                                required:
+                                - display
+                                - referenceNumber
+                            dateCreated:
+                              type: string
+                            new:
+                              type: boolean
+                          required:
+                          - careContexts
+                          - dateCreated
+                          - display
+                          - hiType
+                          - hip
+                          - new
+                          - referenceNumber
+                    required:
+                    - id
+                    - links
+                required:
+                - patient
+              examples:
+                recorded:
+                  summary: Recorded response
+                  value:
+                    patient:
+                      id: nithishjanithi1@sbx
+                      links:
+                      - hip:
+                          id: IN0002222
+                          name: <NAME>
+                          type: HIP
+                        referenceNumber: nithishjanithi1@sbx
+                        display: Blood Test
+                        hiType: OPConsultation
+                        careContexts:
+                        - referenceNumber: Blood test1-28May
+                          display: Blood Test
+                        dateCreated: '2026-01-22T09:09:37.817Z'
+                        new: false
+                      - hip:
+                          id: DigiLocker_NEGD
+                          name: <NAME>
+                          type: HIP
+                        referenceNumber: nithishjanithi1@sbx
+                        display: Health Document
+                        hiType: DiagnosticReport
+                        careContexts:
+                        - referenceNumber: 25ac532f-178d-5885-9bcb-b82052f345eb_20260612153648199758
+                          display: DigiLocker_2026-06-12-15:36:51
+                        dateCreated: '2026-06-12T10:06:51.884Z'
+                        new: false
+                      - hip:
+                          id: DigiLocker_NEGD
+                          name: <NAME>
+                          type: HIP
+                        referenceNumber: nithishjanithi1@sbx
+                        display: Health Document
+                        hiType: DiagnosticReport
+                        careContexts:
+                        - referenceNumber: 25ac532f-178d-5885-9bcb-b82052f345eb_20260612153826884020
+                          display: DigiLocker_2026-06-12-15:38:27
+                        dateCreated: '2026-06-12T10:08:28.085Z'
+                        new: false
+        '500':
+          description: Recorded in NHA's collection. Values are scrubbed.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - code
+                - message
+              examples:
+                recorded:
+                  summary: Recorded response
+                  value:
+                    code: AS-1314
+                    message: Required header 'X-token' is not present.
+        '401':
+          description: Recorded in NHA's collection. Values are scrubbed.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+                  description:
+                    type: string
+                required:
+                - code
+                - description
+                - message
+              examples:
+                recorded:
+                  summary: Recorded response
+                  value:
+                    code: '900902'
+                    message: Missing Credentials
+                    description: 'Invalid Credentials. Make sure your API invocation
+                      call has a header: ''Authorization : Bearer ACCESS_TOKEN''
+                      or ''Authorization : Basic ACCESS_TOKEN'' or ''apikey: API_KEY'''
+  /api/care-context-link/my-record/bookmark:
+    post:
+      operationId: p2_add_my_record_bookmark
+      tags:
+      - care_context_link
+      summary: Add My Record Bookmark
+      description: |
+        NHA's Aarogya Setu collection names this request "Add My Record Bookmark", in its Care Context Link service. It is reproduced here as the reference PHR behaviour: Aarogya Setu is NHA's own PHR, so the same calls and the same error codes apply to any PHR implementation.
+
+        The prose is derived from the collection, not written from a specification. NHA has published no OpenAPI file for the PHR role.
+      x-abdm-atom: hiecm.endpoint.p2-add-my-record-bookmark
+      x-abdm-source-folder: Care Context Link service
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                careContextReference:
+                  type: string
+                abhaAddress:
+                  type: string
+              required:
+              - abhaAddress
+              - careContextReference
+            examples:
+              from_nha_collection:
+                summary: From NHA's collection, values scrubbed
+                value:
+                  careContextReference: care-context-ref-001
+                  abhaAddress: <ABHA_ADDRESS>
+      responses:
+        '500':
+          description: Recorded in NHA's collection. Values are scrubbed.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - code
+                - message
+              examples:
+                recorded:
+                  summary: Recorded response
+                  value:
+                    code: AS-1314
+                    message: Required header 'X-token' is not present.
+        '401':
+          description: Recorded in NHA's collection. Values are scrubbed.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+                  description:
+                    type: string
+                required:
+                - code
+                - description
+                - message
+              examples:
+                recorded:
+                  summary: Recorded response
+                  value:
+                    code: '900902'
+                    message: Missing Credentials
+                    description: 'Invalid Credentials. Make sure your API invocation
+                      call has a header: ''Authorization : Bearer ACCESS_TOKEN''
+                      or ''Authorization : Basic ACCESS_TOKEN'' or ''apikey: API_KEY'''
+        '200':
+          description: Recorded in NHA's collection. Values are scrubbed.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  patientId:
+                    type: string
+                  careContextReference:
+                    type: string
+                  dateCreated:
+                    type: string
+                required:
+                - careContextReference
+                - dateCreated
+                - id
+                - patientId
+              examples:
+                recorded:
+                  summary: Recorded response
+                  value:
+                    id: 254
+                    patientId: <PATIENT_ID>
+                    careContextReference: 25ac532f-178d-5885-9bcb-b82052f345eb_20260604190956854815
+                    dateCreated: '2026-06-13T19:01:35.955'
+    delete:
+      operationId: p2_delete_my_record_bookmark
+      tags:
+      - care_context_link
+      summary: Delete My Record Bookmark
+      description: |
+        NHA's Aarogya Setu collection names this request "Delete My Record Bookmark", in its Care Context Link service. It is reproduced here as the reference PHR behaviour: Aarogya Setu is NHA's own PHR, so the same calls and the same error codes apply to any PHR implementation.
+
+        The prose is derived from the collection, not written from a specification. NHA has published no OpenAPI file for the PHR role.
+      x-abdm-atom: hiecm.endpoint.p2-delete-my-record-bookmark
+      x-abdm-source-folder: Care Context Link service
+      responses:
+        '500':
+          description: Recorded in NHA's collection. Values are scrubbed.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - code
+                - message
+              examples:
+                recorded:
+                  summary: Recorded response
+                  value:
+                    code: AS-1314
+                    message: Required header 'X-token' is not present.
+        '401':
+          description: Recorded in NHA's collection. Values are scrubbed.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+                  description:
+                    type: string
+                required:
+                - code
+                - description
+                - message
+              examples:
+                recorded:
+                  summary: Recorded response
+                  value:
+                    code: '900902'
+                    message: Missing Credentials
+                    description: 'Invalid Credentials. Make sure your API invocation
+                      call has a header: ''Authorization : Bearer ACCESS_TOKEN''
+                      or ''Authorization : Basic ACCESS_TOKEN'' or ''apikey: API_KEY'''
+  /api/care-context-link/my-records/fetch/all:
+    post:
+      operationId: p2_get_all_care_context_links_for_abha_address
+      tags:
+      - care_context_link
+      summary: Get All Care Context Links for ABHA Address
+      description: |
+        NHA's Aarogya Setu collection names this request "Get All Care Context Links for ABHA Address", in its Care Context Link service. It is reproduced here as the reference PHR behaviour: Aarogya Setu is NHA's own PHR, so the same calls and the same error codes apply to any PHR implementation.
+
+        The prose is derived from the collection, not written from a specification. NHA has published no OpenAPI file for the PHR role.
+      x-abdm-atom: hiecm.endpoint.p2-get-all-care-context-links-for-abha-address
+      x-abdm-source-folder: Care Context Link service
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                abhaAddress:
+                  type: string
+                limit:
+                  type: integer
+                offset:
+                  type: integer
+                hipId:
+                  type: string
+                hiType:
+                  type: string
+                bookmarked:
+                  type: 'null'
+                selfUploaded:
+                  type: 'null'
+                dateRange:
+                  type: 'null'
+                sortHipName:
+                  type: 'null'
+              required:
+              - abhaAddress
+              - bookmarked
+              - dateRange
+              - hiType
+              - hipId
+              - limit
+              - offset
+              - selfUploaded
+              - sortHipName
+            examples:
+              from_nha_collection:
+                summary: From NHA's collection, values scrubbed
+                value:
+                  abhaAddress: <ABHA_ADDRESS>
+                  limit: 10
+                  offset: 0
+                  hipId: ''
+                  hiType: ''
+                  bookmarked: null
+                  selfUploaded: null
+                  dateRange: null
+                  sortHipName: null
+      responses:
+        '401':
+          description: Recorded in NHA's collection. Values are scrubbed.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+                  description:
+                    type: string
+                required:
+                - code
+                - description
+                - message
+              examples:
+                recorded:
+                  summary: Recorded response
+                  value:
+                    code: '900902'
+                    message: Missing Credentials
+                    description: 'Invalid Credentials. Make sure your API invocation
+                      call has a header: ''Authorization : Bearer ACCESS_TOKEN''
+                      or ''Authorization : Basic ACCESS_TOKEN'' or ''apikey: API_KEY'''
+        '500':
+          description: Recorded in NHA's collection. Values are scrubbed.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - code
+                - message
+              examples:
+                recorded:
+                  summary: Recorded response
+                  value:
+                    code: AS-1314
+                    message: Required header 'X-token' is not present.
+  /api/care-context-link/patient/consent-request:
+    post:
+      operationId: p2_post_patient_consent_request
+      tags:
+      - care_context_link
+      summary: Post Patient Consent Request
+      description: |
+        NHA's Aarogya Setu collection names this request "Post Patient Consent Request", in its Care Context Link service. It is reproduced here as the reference PHR behaviour: Aarogya Setu is NHA's own PHR, so the same calls and the same error codes apply to any PHR implementation.
+
+        The prose is derived from the collection, not written from a specification. NHA has published no OpenAPI file for the PHR role.
+      x-abdm-atom: hiecm.endpoint.p2-post-patient-consent-request
+      x-abdm-source-folder: Care Context Link service
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                abhaAddress:
+                  type: string
+                hipIds:
+                  type: array
+                  items:
+                    type: string
+                consentArtefactIds:
+                  type: array
+                  items:
+                    type: string
+              required:
+              - abhaAddress
+              - consentArtefactIds
+              - hipIds
+            examples:
+              from_nha_collection:
+                summary: From NHA's collection, values scrubbed
+                value:
+                  abhaAddress: <ABHA_ADDRESS>
+                  hipIds:
+                  - HIP001
+                  - HIP002
+                  consentArtefactIds:
+                  - consent-001
+                  - consent-002
+      responses:
+        '200':
+          description: NHA's collection saves no response body for this request,
+            so the shape is not recorded here.
+  /api/care-context-link/patient/health-information/fetch:
+    post:
+      operationId: p2_fetch_patient_health_information
+      tags:
+      - care_context_link
+      summary: Fetch Patient Health Information
+      description: |
+        NHA's Aarogya Setu collection names this request "Fetch Patient Health Information", in its Care Context Link service. It is reproduced here as the reference PHR behaviour: Aarogya Setu is NHA's own PHR, so the same calls and the same error codes apply to any PHR implementation.
+
+        The prose is derived from the collection, not written from a specification. NHA has published no OpenAPI file for the PHR role.
+      x-abdm-atom: hiecm.endpoint.p2-fetch-patient-health-information
+      x-abdm-source-folder: Care Context Link service
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                requestIds:
+                  type: array
+                  items:
+                    type: string
+                limit:
+                  type: integer
+                offset:
+                  type: integer
+              required:
+              - limit
+              - offset
+              - requestIds
+            examples:
+              from_nha_collection:
+                summary: From NHA's collection, values scrubbed
+                value:
+                  requestIds:
+                  - req-001
+                  - req-002
+                  limit: 10
+                  offset: 0
+      responses:
+        '200':
+          description: NHA's collection saves no response body for this request,
+            so the shape is not recorded here.
+  /api/care-context-link/patient/health-information/pull:
+    post:
+      operationId: p2_pull_patient_health_information
+      tags:
+      - care_context_link
+      summary: Pull Patient Health Information
+      description: |
+        NHA's Aarogya Setu collection names this request "Pull Patient Health Information", in its Care Context Link service. It is reproduced here as the reference PHR behaviour: Aarogya Setu is NHA's own PHR, so the same calls and the same error codes apply to any PHR implementation.
+
+        The prose is derived from the collection, not written from a specification. NHA has published no OpenAPI file for the PHR role.
+      x-abdm-atom: hiecm.endpoint.p2-pull-patient-health-information
+      x-abdm-source-folder: Care Context Link service
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                hipIds:
+                  type: array
+                  items:
+                    type: string
+                abhaAddress:
+                  type: string
+              required:
+              - abhaAddress
+              - hipIds
+            examples:
+              from_nha_collection:
+                summary: From NHA's collection, values scrubbed
+                value:
+                  hipIds:
+                  - HIP001
+                  abhaAddress: <ABHA_ADDRESS>
+      responses:
+        '200':
+          description: NHA's collection saves no response body for this request,
+            so the shape is not recorded here.
+  /api/care-context-link/patient/health-information/refresh:
+    post:
+      operationId: p2_refresh_patient_health_information
+      tags:
+      - care_context_link
+      summary: Refresh Patient Health Information
+      description: |
+        NHA's Aarogya Setu collection names this request "Refresh Patient Health Information", in its Care Context Link service. It is reproduced here as the reference PHR behaviour: Aarogya Setu is NHA's own PHR, so the same calls and the same error codes apply to any PHR implementation.
+
+        The prose is derived from the collection, not written from a specification. NHA has published no OpenAPI file for the PHR role.
+      x-abdm-atom: hiecm.endpoint.p2-refresh-patient-health-information
+      x-abdm-source-folder: Care Context Link service
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                hipIds:
+                  type: array
+                  items:
+                    type: string
+              required:
+              - hipIds
+            examples:
+              from_nha_collection:
+                summary: From NHA's collection, values scrubbed
+                value:
+                  hipIds:
+                  - HIP001
+                  - HIP002
+      responses:
+        '200':
+          description: NHA's collection saves no response body for this request,
+            so the shape is not recorded here.
+  /api/care-context-link/patient/health-information/status:
+    post:
+      operationId: p2_fetch_health_information_status
+      tags:
+      - care_context_link
+      summary: Fetch Health Information Status
+      description: |
+        NHA's Aarogya Setu collection names this request "Fetch Health Information Status", in its Care Context Link service. It is reproduced here as the reference PHR behaviour: Aarogya Setu is NHA's own PHR, so the same calls and the same error codes apply to any PHR implementation.
+
+        The prose is derived from the collection, not written from a specification. NHA has published no OpenAPI file for the PHR role.
+      x-abdm-atom: hiecm.endpoint.p2-fetch-health-information-status
+      x-abdm-source-folder: Care Context Link service
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                transactionIds:
+                  type: array
+                  items:
+                    type: string
+              required:
+              - transactionIds
+            examples:
+              from_nha_collection:
+                summary: From NHA's collection, values scrubbed
+                value:
+                  transactionIds:
+                  - txn-001
+                  - txn-002
+      responses:
+        '200':
+          description: NHA's collection saves no response body for this request,
+            so the shape is not recorded here.
+  /api/care-context-link/patient/transaction-ids:
+    post:
+      operationId: p2_get_patient_transaction_ids_by_hips
+      tags:
+      - care_context_link
+      summary: Get Patient Transaction IDs by HIPs
+      description: |
+        NHA's Aarogya Setu collection names this request "Get Patient Transaction IDs by HIPs", in its Care Context Link service. It is reproduced here as the reference PHR behaviour: Aarogya Setu is NHA's own PHR, so the same calls and the same error codes apply to any PHR implementation.
+
+        The prose is derived from the collection, not written from a specification. NHA has published no OpenAPI file for the PHR role.
+      x-abdm-atom: hiecm.endpoint.p2-get-patient-transaction-ids-by-hips
+      x-abdm-source-folder: Care Context Link service
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                abhaAddress:
+                  type: string
+                hipIds:
+                  type: array
+                  items:
+                    type: string
+                consentArtefactIds:
+                  type: array
+                  items:
+                    type: string
+              required:
+              - abhaAddress
+              - consentArtefactIds
+              - hipIds
+            examples:
+              from_nha_collection:
+                summary: From NHA's collection, values scrubbed
+                value:
+                  abhaAddress: <ABHA_ADDRESS>
+                  hipIds:
+                  - HIP001
+                  - HIP002
+                  consentArtefactIds:
+                  - consent-001
+                  - consent-002
+      responses:
+        '200':
+          description: NHA's collection saves no response body for this request,
+            so the shape is not recorded here.
+  /api/care-context-link/phr/care-context-link/fetch/all:
+    get:
+      operationId: p2_phr_get_all_care_context_links
+      tags:
+      - care_context_link
+      summary: PHR - Get All Care Context Links
+      description: |
+        NHA's Aarogya Setu collection names this request "PHR - Get All Care Context Links", in its Care Context Link service. It is reproduced here as the reference PHR behaviour: Aarogya Setu is NHA's own PHR, so the same calls and the same error codes apply to any PHR implementation.
+
+        The prose is derived from the collection, not written from a specification. NHA has published no OpenAPI file for the PHR role.
+      x-abdm-atom: hiecm.endpoint.p2-phr-get-all-care-context-links
+      x-abdm-source-folder: Care Context Link service
+      responses:
+        '200':
+          description: Recorded in NHA's collection. Values are scrubbed.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    patient:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        links:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              id:
+                                type: integer
+                              smartData:
+                                type: object
+                                properties:
+                                  dataProcessed:
+                                    type: boolean
+                                  status:
+                                    type: string
+                                  documentId:
+                                    type: string
+                                  enabledForProcessing:
+                                    type: boolean
+                                  isAarogyaSetuProcessed:
+                                    type: boolean
+                                required:
+                                - dataProcessed
+                                - enabledForProcessing
+                                - isAarogyaSetuProcessed
+                              hip:
+                                type: object
+                                properties:
+                                  id:
+                                    type: string
+                                  name:
+                                    type: string
+                                  type:
+                                    type: string
+                                required:
+                                - id
+                                - name
+                                - type
+                              referenceNumber:
+                                type: string
+                              careContexts:
+                                type: array
+                                items:
+                                  type: object
+                                  properties:
+                                    referenceNumber:
+                                      type: string
+                                    patientReference:
+                                      type: string
+                                    hiTypes:
+                                      type: array
+                                      items:
+                                        type: string
+                                  required:
+                                  - hiTypes
+                                  - patientReference
+                                  - referenceNumber
+                              dateCreated:
+                                type: string
+                              isBookmarked:
+                                type: boolean
+                            required:
+                            - careContexts
+                            - dateCreated
+                            - hip
+                            - id
+                            - isBookmarked
+                            - referenceNumber
+                            - smartData
+                      required:
+                      - id
+                      - links
+                  required:
+                  - patient
+              examples:
+                recorded:
+                  summary: Recorded response
+                  value:
+                  - patient:
+                      id: nithishjanithi@sbx
+                      links:
+                      - id: 496112
+                        smartData:
+                          dataProcessed: true
+                          status: APPROVED
+                          documentId: <TXN_ID>
+                          enabledForProcessing: true
+                          isAarogyaSetuProcessed: true
+                        hip:
+                          id: DigiLocker_NEGD
+                          name: <NAME>
+                          type: HIP
+                        referenceNumber: nithishjanithi@sbx
+                        careContexts:
+                        - referenceNumber: 25ac532f-178d-5885-9bcb-b82052f345eb_20260604192056317009
+                          patientReference: nithishjanithi@sbx
+                          hiTypes:
+                          - OPConsultation
+                        dateCreated: '2026-06-04 19:00:00.0'
+                        isBookmarked: false
+                      - id: 481118
+                        smartData:
+                          dataProcessed: false
+                          enabledForProcessing: true
+                          isAarogyaSetuProcessed: false
+                        hip:
+                          id: DigiLocker_NEGD
+                          name: <NAME>
+                          type: HIP
+                        referenceNumber: nithishjanithi@sbx
+                        careContexts:
+                        - referenceNumber: 25ac532f-178d-5885-9bcb-b82052f345eb_20260523161917547707
+                          patientReference: nithishjanithi@sbx
+                          hiTypes:
+                          - OPConsultation
+                        dateCreated: '2026-05-23 16:06:14.614'
+                        isBookmarked: false
+                      - id: 481120
+                        smartData:
+                          dataProcessed: false
+                          enabledForProcessing: true
+                          isAarogyaSetuProcessed: false
+                        hip:
+                          id: DigiLocker_NEGD
+                          name: <NAME>
+                          type: HIP
+                        referenceNumber: nithishjanithi@sbx
+                        careContexts:
+                        - referenceNumber: 25ac532f-178d-5885-9bcb-b82052f345eb_20260523162447162793
+                          patientReference: nithishjanithi@sbx
+                          hiTypes:
+                          - Prescription
+                          - DischargeSummary
+                        dateCreated: '2026-05-23 16:01:28.128'
+                        isBookmarked: false
+                      - id: 481091
+                        smartData:
+                          dataProcessed: false
+                          enabledForProcessing: true
+                          isAarogyaSetuProcessed: false
+                        hip:
+                          id: DigiLocker_NEGD
+                          name: <NAME>
+                          type: HIP
+                        referenceNumber: nithishjanithi@sbx
+                        careContexts:
+                        - referenceNumber: 25ac532f-178d-5885-9bcb-b82052f345eb_20260523155337176650
+                          patientReference: nithishjanithi@sbx
+                          hiTypes:
+                          - DiagnosticReport
+                        dateCreated: '2025-07-18 00:00:00.0'
+                        isBookmarked: false
+                      - id: 481076
+                        smartData:
+                          dataProcessed: false
+                          enabledForProcessing: true
+                          isAarogyaSetuProcessed: false
+                        hip:
+                          id: DigiLocker_NEGD
+                          name: <NAME>
+                          type: HIP
+                        referenceNumber: nithishjanithi@sbx
+                        careContexts:
+                        - referenceNumber: 25ac532f-178d-5885-9bcb-b82052f345eb_20260523154132334035
+                          patientReference: nithishjanithi@sbx
+                          hiTypes:
+                          - OPConsultation
+                        dateCreated: '2025-05-05 17:00:00.0'
+                        isBookmarked: false
+                      - id: 481119
+                        smartData:
+                          dataProcessed: false
+                          enabledForProcessing: true
+                          isAarogyaSetuProcessed: false
+                        hip:
+                          id: DigiLocker_NEGD
+                          name: <NAME>
+                          type: HIP
+                        referenceNumber: nithishjanithi@sbx
+                        careContexts:
+                        - referenceNumber: 25ac532f-178d-5885-9bcb-b82052f345eb_20260523162300479026
+                          patientReference: nithishjanithi@sbx
+                          hiTypes:
+                          - OPConsultation
+                        dateCreated: '2025-02-22 00:00:00.0'
+                        isBookmarked: false
+                      - id: 496111
+                        smartData:
+                          dataProcessed: true
+                          status: APPROVED
+                          documentId: <TXN_ID>
+                          enabledForProcessing: true
+                          isAarogyaSetuProcessed: true
+                        hip:
+                          id: DigiLocker_NEGD
+                          name: <NAME>
+                          type: HIP
+                        referenceNumber: nithishjanithi@sbx
+                        careContexts:
+                        - referenceNumber: 25ac532f-178d-5885-9bcb-b82052f345eb_20260604191949954362
+                          patientReference: nithishjanithi@sbx
+                          hiTypes:
+                          - OPConsultation
+                        dateCreated: '2024-11-12 00:00:00.0'
+                        isBookmarked: false
+                      - id: 496084
+                        smartData:
+                          dataProcessed: false
+                          enabledForProcessing: true
+                          isAarogyaSetuProcessed: false
+                        hip:
+                          id: DigiLocker_NEGD
+                          name: <NAME>
+                          type: HIP
+                        referenceNumber: nithishjanithi@sbx
+                        careContexts:
+                        - referenceNumber: 25ac532f-178d-5885-9bcb-b82052f345eb_20260604190956854815
+                          patientReference: nithishjanithi@sbx
+                          hiTypes:
+                          - OPConsultation
+                        dateCreated: '2024-11-12 00:00:00.0'
+                        isBookmarked: false
+                      - id: 496059
+                        smartData:
+                          dataProcessed: false
+                          enabledForProcessing: true
+                          isAarogyaSetuProcessed: false
+                        hip:
+                          id: DigiLocker_NEGD
+                          name: <NAME>
+                          type: HIP
+                        referenceNumber: nithishjanithi@sbx
+                        careContexts:
+                        - referenceNumber: 25ac532f-178d-5885-9bcb-b82052f345eb_20260604184554840033
+                          patientReference: nithishjanithi@sbx
+                          hiTypes:
+                          - OPConsultation
+                        dateCreated: '2024-11-12 00:00:00.0'
+                        isBookmarked: false
+                      - id: 496076
+                        smartData:
+                          dataProcessed: false
+                          enabledForProcessing: true
+                          isAarogyaSetuProcessed: false
+                        hip:
+                          id: DigiLocker_NEGD
+                          name: <NAME>
+                          type: HIP
+                        referenceNumber: nithishjanithi@sbx
+                        careContexts:
+                        - referenceNumber: 25ac532f-178d-5885-9bcb-b82052f345eb_20260604184732285009
+                          patientReference: nithishjanithi@sbx
+                          hiTypes:
+                          - OPConsultation
+                        dateCreated: '2024-11-12 00:00:00.0'
+                        isBookmarked: false
+  /api/care-context-link/phr/care-context/bundle-url:
+    post:
+      operationId: p2_phr_save_care_context_bundle_url
+      tags:
+      - care_context_link
+      summary: PHR - Save Care Context Bundle URL
+      description: |
+        NHA's Aarogya Setu collection names this request "PHR - Save Care Context Bundle URL", in its Care Context Link service. It is reproduced here as the reference PHR behaviour: Aarogya Setu is NHA's own PHR, so the same calls and the same error codes apply to any PHR implementation.
+
+        The prose is derived from the collection, not written from a specification. NHA has published no OpenAPI file for the PHR role.
+      x-abdm-atom: hiecm.endpoint.p2-phr-save-care-context-bundle-url
+      x-abdm-source-folder: Care Context Link service
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                careContextLinkId:
+                  type: integer
+                bundleUrl:
+                  type: string
+                status:
+                  type: string
+              required:
+              - bundleUrl
+              - careContextLinkId
+              - status
+            examples:
+              from_nha_collection:
+                summary: From NHA's collection, values scrubbed
+                value:
+                  careContextLinkId: 12345
+                  bundleUrl: https://example.com/bundle/url
+                  status: RECEIVED
+      responses:
+        '500':
+          description: Recorded in NHA's collection. Values are scrubbed.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - code
+                - message
+              examples:
+                recorded:
+                  summary: Recorded response
+                  value:
+                    code: 'ABDM-9999: '
+                    message: 400 BAD_REQUEST "Type mismatch."
+  /api/care-context-link/phr/care-context/bundle-url/{careContextLinkId}:
+    get:
+      operationId: p2_phr_fetch_care_context_bundle_url
+      tags:
+      - care_context_link
+      summary: PHR - Fetch Care Context Bundle URL
+      description: |
+        NHA's Aarogya Setu collection names this request "PHR - Fetch Care Context Bundle URL", in its Care Context Link service. It is reproduced here as the reference PHR behaviour: Aarogya Setu is NHA's own PHR, so the same calls and the same error codes apply to any PHR implementation.
+
+        The prose is derived from the collection, not written from a specification. NHA has published no OpenAPI file for the PHR role.
+      x-abdm-atom: hiecm.endpoint.p2-phr-fetch-care-context-bundle-url
+      parameters:
+      - name: careContextLinkId
+        in: path
+        required: true
+        schema:
+          type: string
+        description: Taken from NHA's collection, which passes this as a path
+          segment.
+      x-abdm-source-folder: Care Context Link service
+      responses:
+        '400':
+          description: Recorded in NHA's collection. Values are scrubbed.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - code
+                - message
+              examples:
+                recorded:
+                  summary: Recorded response
+                  value:
+                    code: 'ABDM-9999: '
+                    message: X-Token Expired
+        '200':
+          description: Recorded in NHA's collection. Values are scrubbed.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  lockerView:
+                    type: 'null'
+                  fetchRecordStatus:
+                    type: string
+                  bundleUrls:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                        careContextLinkId:
+                          type: integer
+                        bundleUrl:
+                          type: string
+                        transactionId:
+                          type: string
+                        dateCreated:
+                          type: string
+                        dateModified:
+                          type: string
+                      required:
+                      - bundleUrl
+                      - careContextLinkId
+                      - dateCreated
+                      - dateModified
+                      - id
+                      - transactionId
+                required:
+                - bundleUrls
+                - fetchRecordStatus
+                - lockerView
+              examples:
+                recorded:
+                  summary: Recorded response
+                  value:
+                    lockerView: null
+                    fetchRecordStatus: SUCCESS
+                    bundleUrls:
+                    - id: 873302
+                      careContextLinkId: 496112
+                      bundleUrl: nithishjanithi@sbx/DigiLocker_NEGD/25ac532f-178d-5885-9bcb-b82052f345eb_20260604192056317009/<TXN_ID>.json
+                      transactionId: <TXN_ID>
+                      dateCreated: '2026-06-12 15:32:34.231'
+                      dateModified: '2026-06-12 15:32:34.231'
+  /api/care-context-link/phr/fetch:
+    get:
+      operationId: p2_phr_get_care_context_links
+      tags:
+      - care_context_link
+      summary: PHR - Get Care Context Links
+      description: |
+        NHA's Aarogya Setu collection names this request "PHR - Get Care Context Links", in its Care Context Link service. It is reproduced here as the reference PHR behaviour: Aarogya Setu is NHA's own PHR, so the same calls and the same error codes apply to any PHR implementation.
+
+        The prose is derived from the collection, not written from a specification. NHA has published no OpenAPI file for the PHR role.
+      x-abdm-atom: hiecm.endpoint.p2-phr-get-care-context-links
+      x-abdm-source-folder: Care Context Link service
+      responses:
+        '200':
+          description: Recorded in NHA's collection. Values are scrubbed.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    lockerView:
+                      type: string
+                    id:
+                      type: integer
+                    hipId:
+                      type: string
+                    hipName:
+                      type: string
+                    patientId:
+                      type: string
+                    careContext:
+                      type: object
+                      properties:
+                        patientReference:
+                          type: string
+                        careContextReference:
+                          type: string
+                        hiTypes:
+                          type: array
+                          items:
+                            type: string
+                      required:
+                      - careContextReference
+                      - hiTypes
+                      - patientReference
+                    dateCreated:
+                      type: string
+                    dateModified:
+                      type: string
+                    resourceDate:
+                      type: string
+                    dataTransferStatus:
+                      type: string
+                    dataReceived:
+                      type: boolean
+                    bookmarked:
+                      type: boolean
+                  required:
+                  - bookmarked
+                  - careContext
+                  - dataReceived
+                  - dataTransferStatus
+                  - dateCreated
+                  - dateModified
+                  - hipId
+                  - hipName
+                  - id
+                  - lockerView
+                  - patientId
+                  - resourceDate
+              examples:
+                recorded:
+                  summary: Recorded response
+                  value:
+                  - lockerView: PHR
+                    id: 496112
+                    hipId: DigiLocker_NEGD
+                    hipName: DigiLocker_NEGD
+                    patientId: <PATIENT_ID>
+                    careContext:
+                      patientReference: nithishjanithi@sbx
+                      careContextReference: 25ac532f-178d-5885-9bcb-b82052f345eb_20260604192056317009
+                      hiTypes:
+                      - OPConsultation
+                    dateCreated: '2026-06-04 19:03:46.346'
+                    dateModified: '2026-06-12 15:32:34.231'
+                    resourceDate: '2026-06-04 19:00:00.000'
+                    dataTransferStatus: RECEIVED
+                    dataReceived: true
+                    bookmarked: false
+                  - lockerView: PHR
+                    id: 481118
+                    hipId: DigiLocker_NEGD
+                    hipName: DigiLocker_NEGD
+                    patientId: <PATIENT_ID>
+                    careContext:
+                      patientReference: nithishjanithi@sbx
+                      careContextReference: 25ac532f-178d-5885-9bcb-b82052f345eb_20260523161917547707
+                      hiTypes:
+                      - OPConsultation
+                    dateCreated: '2026-05-23 16:06:14.614'
+                    dateModified: '2026-05-23 16:19:23.922'
+                    resourceDate: '2026-05-23 16:06:14.614'
+                    dataTransferStatus: RECEIVED
+                    dataReceived: true
+                    bookmarked: false
+                  - lockerView: PHR
+                    id: 481120
+                    hipId: DigiLocker_NEGD
+                    hipName: DigiLocker_NEGD
+                    patientId: <PATIENT_ID>
+                    careContext:
+                      patientReference: nithishjanithi@sbx
+                      careContextReference: 25ac532f-178d-5885-9bcb-b82052f345eb_20260523162447162793
+                      hiTypes:
+                      - Prescription
+                      - DischargeSummary
+                    dateCreated: '2026-05-23 16:01:28.128'
+                    dateModified: '2026-05-23 16:24:52.450'
+                    resourceDate: '2026-05-23 16:01:28.128'
+                    dataTransferStatus: RECEIVED
+                    dataReceived: true
+                    bookmarked: false
+                  - lockerView: PHR
+                    id: 481091
+                    hipId: DigiLocker_NEGD
+                    hipName: DigiLocker_NEGD
+                    patientId: <PATIENT_ID>
+                    careContext:
+                      patientReference: nithishjanithi@sbx
+                      careContextReference: 25ac532f-178d-5885-9bcb-b82052f345eb_20260523155337176650
+                      hiTypes:
+                      - DiagnosticReport
+                    dateCreated: '2026-05-23 15:00:28.028'
+                    dateModified: '2026-05-23 15:53:46.341'
+                    resourceDate: '2025-07-18 00:00:00.000'
+                    dataTransferStatus: RECEIVED
+                    dataReceived: true
+                    bookmarked: false
+                  - lockerView: PHR
+                    id: 481076
+                    hipId: DigiLocker_NEGD
+                    hipName: DigiLocker_NEGD
+                    patientId: <PATIENT_ID>
+                    careContext:
+                      patientReference: nithishjanithi@sbx
+                      careContextReference: 25ac532f-178d-5885-9bcb-b82052f345eb_20260523154132334035
+                      hiTypes:
+                      - OPConsultation
+                    dateCreated: '2026-05-23 15:05:30.530'
+                    dateModified: '2026-05-23 15:57:49.744'
+                    resourceDate: '2025-05-05 17:00:00.000'
+                    dataTransferStatus: RECEIVED
+                    dataReceived: true
+                    bookmarked: false
+                  - lockerView: PHR
+                    id: 481119
+                    hipId: DigiLocker_NEGD
+                    hipName: DigiLocker_NEGD
+                    patientId: <PATIENT_ID>
+                    careContext:
+                      patientReference: nithishjanithi@sbx
+                      careContextReference: 25ac532f-178d-5885-9bcb-b82052f345eb_20260523162300479026
+                      hiTypes:
+                      - OPConsultation
+                    dateCreated: '2026-05-23 16:06:17.617'
+                    dateModified: '2026-05-23 16:23:04.234'
+                    resourceDate: '2025-02-22 00:00:00.000'
+                    dataTransferStatus: RECEIVED
+                    dataReceived: true
+                    bookmarked: false
+                  - lockerView: PHR
+                    id: 496111
+                    hipId: DigiLocker_NEGD
+                    hipName: DigiLocker_NEGD
+                    patientId: <PATIENT_ID>
+                    careContext:
+                      patientReference: nithishjanithi@sbx
+                      careContextReference: 25ac532f-178d-5885-9bcb-b82052f345eb_20260604191949954362
+                      hiTypes:
+                      - OPConsultation
+                    dateCreated: '2026-06-04 19:06:57.657'
+                    dateModified: '2026-06-04 19:20:07.207'
+                    resourceDate: '2024-11-12 00:00:00.000'
+                    dataTransferStatus: RECEIVED
+                    dataReceived: true
+                    bookmarked: false
+                  - lockerView: PHR
+                    id: 496084
+                    hipId: DigiLocker_NEGD
+                    hipName: DigiLocker_NEGD
+                    patientId: <PATIENT_ID>
+                    careContext:
+                      patientReference: nithishjanithi@sbx
+                      careContextReference: 25ac532f-178d-5885-9bcb-b82052f345eb_20260604190956854815
+                      hiTypes:
+                      - OPConsultation
+                    dateCreated: '2026-06-04 19:04:16.416'
+                    dateModified: '2026-06-04 19:10:05.105'
+                    resourceDate: '2024-11-12 00:00:00.000'
+                    dataTransferStatus: RECEIVED
+                    dataReceived: true
+                    bookmarked: false
+                  - lockerView: PHR
+                    id: 496059
+                    hipId: DigiLocker_NEGD
+                    hipName: DigiLocker_NEGD
+                    patientId: <PATIENT_ID>
+                    careContext:
+                      patientReference: nithishjanithi@sbx
+                      careContextReference: 25ac532f-178d-5885-9bcb-b82052f345eb_20260604184554840033
+                      hiTypes:
+                      - OPConsultation
+                    dateCreated: '2026-06-04 18:09:24.924'
+                    dateModified: '2026-06-04 19:02:11.211'
+                    resourceDate: '2024-11-12 00:00:00.000'
+                    dataTransferStatus: RECEIVED
+                    dataReceived: true
+                    bookmarked: false
+                  - lockerView: PHR
+                    id: 496076
+                    hipId: DigiLocker_NEGD
+                    hipName: DigiLocker_NEGD
+                    patientId: <PATIENT_ID>
+                    careContext:
+                      patientReference: nithishjanithi@sbx
+                      careContextReference: 25ac532f-178d-5885-9bcb-b82052f345eb_20260604184732285009
+                      hiTypes:
+                      - OPConsultation
+                    dateCreated: '2026-06-04 18:03:02.032'
+                    dateModified: '2026-06-04 18:47:42.738'
+                    resourceDate: '2024-11-12 00:00:00.000'
+                    dataTransferStatus: RECEIVED
+                    dataReceived: true
+                    bookmarked: false
+  /api/care-context-link/phr/fetch/hips:
+    get:
+      operationId: p2_phr_get_linked_hips
+      tags:
+      - care_context_link
+      summary: PHR - Get Linked HIPs
+      description: |
+        NHA's Aarogya Setu collection names this request "PHR - Get Linked HIPs", in its Care Context Link service. It is reproduced here as the reference PHR behaviour: Aarogya Setu is NHA's own PHR, so the same calls and the same error codes apply to any PHR implementation.
+
+        The prose is derived from the collection, not written from a specification. NHA has published no OpenAPI file for the PHR role.
+      x-abdm-atom: hiecm.endpoint.p2-phr-get-linked-hips
+      x-abdm-source-folder: Care Context Link service
+      responses:
+        '200':
+          description: Recorded in NHA's collection. Values are scrubbed.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  downloadBaseUrl:
+                    type: string
+                  transferredHipIds:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        name:
+                          type: string
+                      required:
+                      - id
+                      - name
+                  lockerView:
+                    type: string
+                required:
+                - downloadBaseUrl
+                - lockerView
+                - transferredHipIds
+              examples:
+                recorded:
+                  summary: Recorded response
+                  value:
+                    downloadBaseUrl: https://abhasbx.abdm.gov.in/fetchFile/disk4/phrpullrecord/
+                    transferredHipIds:
+                    - id: DigiLocker_NEGD
+                      name: <NAME>
+                    lockerView: PHR
+  /api/care-context-link/phr/file/details:
+    get:
+      operationId: p2_phr_get_file_metadata
+      tags:
+      - care_context_link
+      summary: PHR - Get File Metadata
+      description: |
+        NHA's Aarogya Setu collection names this request "PHR - Get File Metadata", in its Care Context Link service. It is reproduced here as the reference PHR behaviour: Aarogya Setu is NHA's own PHR, so the same calls and the same error codes apply to any PHR implementation.
+
+        The prose is derived from the collection, not written from a specification. NHA has published no OpenAPI file for the PHR role.
+      x-abdm-atom: hiecm.endpoint.p2-phr-get-file-metadata
+      x-abdm-source-folder: Care Context Link service
+      responses:
+        '200':
+          description: Recorded in NHA's collection. Values are scrubbed.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  fileName:
+                    type: string
+                  fileSize:
+                    type: integer
+                  chunkSize:
+                    type: integer
+                required:
+                - chunkSize
+                - fileName
+                - fileSize
+              examples:
+                recorded:
+                  summary: Recorded response
+                  value:
+                    fileName: nithishjanithi@sbx/DigiLocker_NEGD/25ac532f-178d-5885-9bcb-b82052f345eb_20260604192056317009/<TXN_ID>.json
+                    fileSize: 27636
+                    chunkSize: 5242880
+        '400':
+          description: Recorded in NHA's collection. Values are scrubbed.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - code
+                - message
+              examples:
+                recorded:
+                  summary: Recorded response
+                  value:
+                    code: AS-1415
+                    message: Unable to fetch the file details.
+  /api/care-context-link/phr/file/download:
+    get:
+      operationId: p2_phr_download_file_chunk
+      tags:
+      - care_context_link
+      summary: PHR - Download File Chunk
+      description: |
+        NHA's Aarogya Setu collection names this request "PHR - Download File Chunk", in its Care Context Link service. It is reproduced here as the reference PHR behaviour: Aarogya Setu is NHA's own PHR, so the same calls and the same error codes apply to any PHR implementation.
+
+        The prose is derived from the collection, not written from a specification. NHA has published no OpenAPI file for the PHR role.
+      x-abdm-atom: hiecm.endpoint.p2-phr-download-file-chunk
+      x-abdm-source-folder: Care Context Link service
+      responses:
+        '400':
+          description: Recorded in NHA's collection. Values are scrubbed.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - code
+                - message
+              examples:
+                recorded:
+                  summary: Recorded response
+                  value:
+                    code: 'ABDM-9999: '
+                    message: Invalid request to external service
+  /api/care-context-link/phr/patient/health-information/pull:
+    post:
+      operationId: p2_phr_pull_health_information_for_care_context
+      tags:
+      - care_context_link
+      summary: PHR - Pull Health Information for Care Context
+      description: |
+        NHA's Aarogya Setu collection names this request "PHR - Pull Health Information for Care Context", in its Care Context Link service. It is reproduced here as the reference PHR behaviour: Aarogya Setu is NHA's own PHR, so the same calls and the same error codes apply to any PHR implementation.
+
+        The prose is derived from the collection, not written from a specification. NHA has published no OpenAPI file for the PHR role.
+      x-abdm-atom: hiecm.endpoint.p2-phr-pull-health-information-for-care-context
+      x-abdm-source-folder: Care Context Link service
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                careContextReference:
+                  type: string
+                hipId:
+                  type: string
+              required:
+              - careContextReference
+              - hipId
+            examples:
+              from_nha_collection:
+                summary: From NHA's collection, values scrubbed
+                value:
+                  careContextReference: care-context-ref-001
+                  hipId: HIP001
+      responses:
+        '200':
+          description: NHA's collection saves no response body for this request,
+            so the shape is not recorded here.
+  /api/care-context-link/phr/patient/health-information/refresh:
+    post:
+      operationId: p2_phr_refresh_patient_health_information
+      tags:
+      - care_context_link
+      summary: PHR - Refresh Patient Health Information
+      description: |
+        NHA's Aarogya Setu collection names this request "PHR - Refresh Patient Health Information", in its Care Context Link service. It is reproduced here as the reference PHR behaviour: Aarogya Setu is NHA's own PHR, so the same calls and the same error codes apply to any PHR implementation.
+
+        The prose is derived from the collection, not written from a specification. NHA has published no OpenAPI file for the PHR role.
+      x-abdm-atom: hiecm.endpoint.p2-phr-refresh-patient-health-information
+      x-abdm-source-folder: Care Context Link service
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                hipIds:
+                  type: array
+                  items:
+                    type: string
+              required:
+              - hipIds
+            examples:
+              from_nha_collection:
+                summary: From NHA's collection, values scrubbed
+                value:
+                  hipIds:
+                  - HIP001
+                  - HIP002
+      responses:
+        '200':
+          description: NHA's collection saves no response body for this request,
+            so the shape is not recorded here.
+  /api/care-context-link/read/link/patient/links/{hipId}:
+    delete:
+      operationId: p2_mark_linked_facility_as_read
+      tags:
+      - care_context_link
+      summary: Mark Linked Facility as Read
+      description: |
+        NHA's Aarogya Setu collection names this request "Mark Linked Facility as Read", in its Care Context Link service. It is reproduced here as the reference PHR behaviour: Aarogya Setu is NHA's own PHR, so the same calls and the same error codes apply to any PHR implementation.
+
+        The prose is derived from the collection, not written from a specification. NHA has published no OpenAPI file for the PHR role.
+      x-abdm-atom: hiecm.endpoint.p2-mark-linked-facility-as-read
+      parameters:
+      - name: hipId
+        in: path
+        required: true
+        schema:
+          type: string
+        description: Taken from NHA's collection, which passes this as a path
+          segment.
+      x-abdm-source-folder: Care Context Link service
+      responses:
+        '500':
+          description: Recorded in NHA's collection. Values are scrubbed.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - code
+                - message
+              examples:
+                recorded:
+                  summary: Recorded response
+                  value:
+                    code: 'ABDM-9999: '
+                    message: X-Token Expired
+        '401':
+          description: Recorded in NHA's collection. Values are scrubbed.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+                  description:
+                    type: string
+                required:
+                - code
+                - description
+                - message
+              examples:
+                recorded:
+                  summary: Recorded response
+                  value:
+                    code: '900902'
+                    message: Missing Credentials
+                    description: 'Invalid Credentials. Make sure your API invocation
+                      call has a header: ''Authorization : Bearer ACCESS_TOKEN''
+                      or ''Authorization : Basic ACCESS_TOKEN'' or ''apikey: API_KEY'''
+  /api/care-context-link/save:
+    post:
+      operationId: p2_save_care_context_link
+      tags:
+      - care_context_link
+      summary: Save Care Context Link
+      description: |
+        NHA's Aarogya Setu collection names this request "Save Care Context Link", in its Care Context Link service. It is reproduced here as the reference PHR behaviour: Aarogya Setu is NHA's own PHR, so the same calls and the same error codes apply to any PHR implementation.
+
+        The prose is derived from the collection, not written from a specification. NHA has published no OpenAPI file for the PHR role.
+      x-abdm-atom: hiecm.endpoint.p2-save-care-context-link
+      x-abdm-source-folder: Care Context Link service
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                hipId:
+                  type: string
+                patientId:
+                  type: string
+                careContext:
+                  type: object
+                  properties:
+                    patientReference:
+                      type: string
+                    careContextReference:
+                      type: string
+                    hiTypes:
+                      type: array
+                      items:
+                        type: string
+                  required:
+                  - careContextReference
+                  - hiTypes
+                  - patientReference
+                dataTransferred:
+                  type: boolean
+              required:
+              - careContext
+              - dataTransferred
+              - hipId
+              - patientId
+            examples:
+              from_nha_collection:
+                summary: From NHA's collection, values scrubbed
+                value:
+                  hipId: IN0002222
+                  patientId: <PATIENT_ID>
+                  careContext:
+                    patientReference: NITHISH_1999
+                    careContextReference: Prescription566
+                    hiTypes:
+                    - Prescription
+                    - WellnessRecord
+                    - Invoice
+                    - OPConsultation
+                    - HealthDocumentRecord
+                  dataTransferred: true
+      responses:
+        '401':
+          description: Recorded in NHA's collection. Values are scrubbed.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+                  description:
+                    type: string
+                required:
+                - code
+                - description
+                - message
+              examples:
+                recorded:
+                  summary: Recorded response
+                  value:
+                    code: '900902'
+                    message: Missing Credentials
+                    description: 'Invalid Credentials. Make sure your API invocation
+                      call has a header: ''Authorization : Bearer ACCESS_TOKEN''
+                      or ''Authorization : Basic ACCESS_TOKEN'' or ''apikey: API_KEY'''
+        '500':
+          description: Recorded in NHA's collection. Values are scrubbed.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - code
+                - message
+              examples:
+                recorded:
+                  summary: Recorded response
+                  value:
+                    code: AS-1314
+                    message: Required header 'X-token' is not present.
+        '200':
+          description: Recorded in NHA's collection. Values are scrubbed.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  hipId:
+                    type: string
+                  patientId:
+                    type: string
+                  careContext:
+                    type: object
+                    properties:
+                      patientReference:
+                        type: string
+                      careContextReference:
+                        type: string
+                      hiTypes:
+                        type: array
+                        items:
+                          type: string
+                    required:
+                    - careContextReference
+                    - hiTypes
+                    - patientReference
+                  dateCreated:
+                    type: string
+                  dateModified:
+                    type: string
+                  resourceDate:
+                    type: string
+                  dataTransferStatus:
+                    type: string
+                  dataReceived:
+                    type: boolean
+                  bookmarked:
+                    type: boolean
+                required:
+                - bookmarked
+                - careContext
+                - dataReceived
+                - dataTransferStatus
+                - dateCreated
+                - dateModified
+                - hipId
+                - id
+                - patientId
+                - resourceDate
+              examples:
+                recorded:
+                  summary: Recorded response
+                  value:
+                    id: 1018
+                    hipId: IN0002222
+                    patientId: <PATIENT_ID>
+                    careContext:
+                      patientReference: NITHISH_1999
+                      careContextReference: Prescription566
+                      hiTypes:
+                      - Prescription
+                      - WellnessRecord
+                      - Invoice
+                      - OPConsultation
+                      - HealthDocumentRecord
+                    dateCreated: '2026-06-13 17:51:19.114'
+                    dateModified: '2026-06-13 17:51:19.114'
+                    resourceDate: '2026-06-13 17:51:19.114'
+                    dataTransferStatus: NEW
+                    dataReceived: false
+                    bookmarked: false
+  /api/care-context-link/search/care-context-link:
+    get:
+      operationId: p2_search_care_context_links
+      tags:
+      - care_context_link
+      summary: Search Care Context Links
+      description: |
+        NHA's Aarogya Setu collection names this request "Search Care Context Links", in its Care Context Link service. It is reproduced here as the reference PHR behaviour: Aarogya Setu is NHA's own PHR, so the same calls and the same error codes apply to any PHR implementation.
+
+        The prose is derived from the collection, not written from a specification. NHA has published no OpenAPI file for the PHR role.
+      x-abdm-atom: hiecm.endpoint.p2-search-care-context-links
+      x-abdm-source-folder: Care Context Link service
+      responses:
+        '200':
+          description: NHA's collection saves no response body for this request,
+            so the shape is not recorded here.
+  /api/care-context-link/v0.5/health-information/transfer:
+    post:
+      operationId: p2_health_information_data_transfer_hip_to_hiu
+      tags:
+      - care_context_link
+      summary: Health Information Data Transfer (HIP to HIU)
+      description: |
+        NHA's Aarogya Setu collection names this request "Health Information Data Transfer (HIP to HIU)", in its Care Context Link service. It is reproduced here as the reference PHR behaviour: Aarogya Setu is NHA's own PHR, so the same calls and the same error codes apply to any PHR implementation.
+
+        The prose is derived from the collection, not written from a specification. NHA has published no OpenAPI file for the PHR role.
+      x-abdm-atom: hiecm.endpoint.p2-health-information-data-transfer-hip-to-hiu
+      x-abdm-source-folder: Care Context Link service
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                pageNumber:
+                  type: integer
+                pageCount:
+                  type: integer
+                transactionId:
+                  type: string
+                entries:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      content:
+                        type: string
+                      media:
+                        type: string
+                      checksum:
+                        type: string
+                      careContextReference:
+                        type: string
+                    required:
+                    - careContextReference
+                    - checksum
+                    - content
+                    - media
+                keyMaterial:
+                  type: object
+                  properties:
+                    cryptoAlg:
+                      type: string
+                    curve:
+                      type: string
+                    dhPublicKey:
+                      type: object
+                      properties:
+                        expiry:
+                          type: string
+                        parameters:
+                          type: string
+                        keyValue:
+                          type: string
+                      required:
+                      - expiry
+                      - keyValue
+                      - parameters
+                    nonce:
+                      type: string
+                  required:
+                  - cryptoAlg
+                  - curve
+                  - dhPublicKey
+                  - nonce
+              required:
+              - entries
+              - keyMaterial
+              - pageCount
+              - pageNumber
+              - transactionId
+            examples:
+              from_nha_collection:
+                summary: From NHA's collection, values scrubbed
+                value:
+                  pageNumber: 1
+                  pageCount: 1
+                  transactionId: txn-001
+                  entries:
+                  - content: <encrypted-content-here>
+                    media: application/fhir+json
+                    checksum: checksum-value
+                    careContextReference: care-context-ref-001
+                  keyMaterial:
+                    cryptoAlg: ECDH
+                    curve: curve25519
+                    dhPublicKey:
+                      expiry: '2026-12-31T00:00:00.000Z'
+                      parameters: Ephemeral public key
+                      keyValue: <KEYVALUE>
+                    nonce: <nonce-value>
+      responses:
+        '200':
+          description: NHA's collection saves no response body for this request,
+            so the shape is not recorded here.
+  /api/health-locker/lockers/unsubscribe:
+    post:
+      operationId: p2_public_health_lockers_unsubscribe
+      tags:
+      - health_locker
+      summary: Public-Health-Lockers-Unsubscribe
+      description: |
+        NHA's Aarogya Setu collection names this request "Public-Health-Lockers-Unsubscribe", in its Health locker service. It is reproduced here as the reference PHR behaviour: Aarogya Setu is NHA's own PHR, so the same calls and the same error codes apply to any PHR implementation.
+
+        The prose is derived from the collection, not written from a specification. NHA has published no OpenAPI file for the PHR role.
+      x-abdm-atom: hiecm.endpoint.p2-public-health-lockers-unsubscribe
+      x-abdm-source-folder: Health locker service
+      responses:
+        '500':
+          description: Recorded in NHA's collection. Values are scrubbed.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - code
+                - message
+              examples:
+                recorded:
+                  summary: Recorded response
+                  value:
+                    code: AS-1314
+                    message: Required header 'X-token' is not present.
+        '403':
+          description: Recorded in NHA's collection. Values are scrubbed.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+                  description:
+                    type: string
+                required:
+                - code
+                - description
+                - message
+              examples:
+                recorded:
+                  summary: Recorded response
+                  value:
+                    code: '900908'
+                    message: 'Resource forbidden '
+                    description: 'Resource forbidden '
+        '200':
+          description: Recorded in NHA's collection. Values are scrubbed.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  patientId:
+                    type: string
+                  lockerId:
+                    type: string
+                  isActive:
+                    type: boolean
+                required:
+                - isActive
+                - lockerId
+                - patientId
+              examples:
+                recorded:
+                  summary: Recorded response
+                  value:
+                    patientId: <PATIENT_ID>
+                    lockerId: Priyanka_Health_Locker
+                    isActive: false
+  /api/hiecm/patient-share/v3/on-share:
+    post:
+      operationId: p2_onpatientshare
+      tags:
+      - scan_and_share
+      summary: onpatientshare
+      description: |
+        NHA's Aarogya Setu collection names this request "onpatientshare", in its Scan and Share service. It is reproduced here as the reference PHR behaviour: Aarogya Setu is NHA's own PHR, so the same calls and the same error codes apply to any PHR implementation.
+
+        The prose is derived from the collection, not written from a specification. NHA has published no OpenAPI file for the PHR role.
+      x-abdm-atom: hiecm.endpoint.p2-onpatientshare
+      x-abdm-source-folder: Scan and Share service
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                acknowledgement:
+                  type: object
+                  properties:
+                    status:
+                      type: string
+                    abhaAddress:
+                      type: string
+                    profile:
+                      type: object
+                      properties:
+                        context:
+                          type: string
+                        tokenNumber:
+                          type: string
+                        expiry:
+                          type: string
+                      required:
+                      - context
+                      - expiry
+                      - tokenNumber
+                  required:
+                  - abhaAddress
+                  - profile
+                  - status
+                response:
+                  type: object
+                  properties:
+                    requestId:
+                      type: string
+                  required:
+                  - requestId
+              required:
+              - acknowledgement
+              - response
+            examples:
+              from_nha_collection:
+                summary: From NHA's collection, values scrubbed
+                value:
+                  acknowledgement:
+                    status: SUCCESS
+                    abhaAddress: <ABHA_ADDRESS>
+                    profile:
+                      context: '5'
+                      tokenNumber: <TOKENNUMBER>
+                      expiry: '1800'
+                  response:
+                    requestId: <TXN_ID>
+      responses:
+        '400':
+          description: Recorded in NHA's collection. Values are scrubbed.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                      message:
+                        type: string
+                    required:
+                    - code
+                    - message
+                required:
+                - error
+              examples:
+                recorded:
+                  summary: Recorded response
+                  value:
+                    error:
+                      code: ABDM-1015
+                      message: Request Timed out
+        '500':
+          description: Recorded in NHA's collection. Values are scrubbed.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - code
+                - message
+              examples:
+                recorded:
+                  summary: Recorded response
+                  value:
+                    code: 'ABDM-9999: '
+                    message: 400 BAD_REQUEST "Required header 'X-HIU-ID' is not
+                      present."
+  /api/hiecm/user-initiated-linking/v3/link/care-context/on-confirm:
+    post:
+      operationId: p2_call_back_link_on_confirm
+      tags:
+      - user_initiated_linking
+      summary: call-back link-on-confirm
+      description: |
+        NHA's Aarogya Setu collection names this request "call-back link-on-confirm", in its User Initiated Linking service. It is reproduced here as the reference PHR behaviour: Aarogya Setu is NHA's own PHR, so the same calls and the same error codes apply to any PHR implementation.
+
+        The prose is derived from the collection, not written from a specification. NHA has published no OpenAPI file for the PHR role.
+      x-abdm-atom: hiecm.endpoint.p2-call-back-link-on-confirm
+      x-abdm-source-folder: User Initiated Linking service
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                patient:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      referenceNumber:
+                        type: string
+                      display:
+                        type: string
+                      careContexts:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            referenceNumber:
+                              type: string
+                            display:
+                              type: string
+                          required:
+                          - display
+                          - referenceNumber
+                      hiType:
+                        type: string
+                      count:
+                        type: integer
+                    required:
+                    - careContexts
+                    - count
+                    - display
+                    - hiType
+                    - referenceNumber
+                response:
+                  type: object
+                  properties:
+                    requestId:
+                      type: string
+                  required:
+                  - requestId
+              required:
+              - patient
+              - response
+            examples:
+              from_nha_collection:
+                summary: From NHA's collection, values scrubbed
+                value:
+                  patient:
+                  - referenceNumber: <ABHA_ADDRESS>
+                    display: Test
+                    careContexts:
+                    - referenceNumber: Test 4
+                      display: Sugar Test
+                    hiType: Invoice
+                    count: 1
+                  response:
+                    requestId: <TXN_ID>
+      responses:
+        '200':
+          description: NHA's collection saves no response body for this request,
+            so the shape is not recorded here.
+  /api/hiecm/user-initiated-linking/v3/link/care-context/on-init:
+    post:
+      operationId: p2_call_back_on_init
+      tags:
+      - user_initiated_linking
+      summary: call-back on-init
+      description: |
+        NHA's Aarogya Setu collection names this request "call-back on-init", in its User Initiated Linking service. It is reproduced here as the reference PHR behaviour: Aarogya Setu is NHA's own PHR, so the same calls and the same error codes apply to any PHR implementation.
+
+        The prose is derived from the collection, not written from a specification. NHA has published no OpenAPI file for the PHR role.
+      x-abdm-atom: hiecm.endpoint.p2-call-back-on-init
+      x-abdm-source-folder: User Initiated Linking service
+      responses:
+        '200':
+          description: NHA's collection saves no response body for this request,
+            so the shape is not recorded here.
+  /health-locker/lockers/subscribe:
+    post:
+      operationId: p2_public_health_lockers_subscribe
+      tags:
+      - health_locker
+      summary: Public-Health-Lockers-Subscribe
+      description: |
+        NHA's Aarogya Setu collection names this request "Public-Health-Lockers-Subscribe", in its Health locker service. It is reproduced here as the reference PHR behaviour: Aarogya Setu is NHA's own PHR, so the same calls and the same error codes apply to any PHR implementation.
+
+        The prose is derived from the collection, not written from a specification. NHA has published no OpenAPI file for the PHR role.
+      x-abdm-atom: hiecm.endpoint.p2-public-health-lockers-subscribe
+      x-abdm-source-folder: Health locker service
+      responses:
+        '400':
+          description: Recorded in NHA's collection. Values are scrubbed.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - code
+                - message
+              examples:
+                recorded:
+                  summary: Recorded response
+                  value:
+                    code: AS-1084
+                    message: 'JWT token is invalid '
+        '500':
+          description: Recorded in NHA's collection. Values are scrubbed.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - code
+                - message
+              examples:
+                recorded:
+                  summary: Recorded response
+                  value:
+                    code: AS-1314
+                    message: Required header 'X-token' is not present.
+        '200':
+          description: Recorded in NHA's collection. Values are scrubbed.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  consentAutoApprovalId:
+                    type: string
+                required:
+                - consentAutoApprovalId
+              examples:
+                recorded:
+                  summary: Recorded response
+                  value:
+                    consentAutoApprovalId: <TXN_ID>
+  /health-locker/subscription-requests/patients/lockers:
+    get:
+      operationId: p2_public_get_subscribed_lockers_by_patientid_copy
+      tags:
+      - health_locker
+      summary: Public -Get-Subscribed-Lockers-By-PatientId Copy
+      description: |
+        NHA's Aarogya Setu collection names this request "Public -Get-Subscribed-Lockers-By-PatientId Copy", in its Health locker service. It is reproduced here as the reference PHR behaviour: Aarogya Setu is NHA's own PHR, so the same calls and the same error codes apply to any PHR implementation.
+
+        The prose is derived from the collection, not written from a specification. NHA has published no OpenAPI file for the PHR role.
+      x-abdm-atom: hiecm.endpoint.p2-public-get-subscribed-lockers-by-patientid-copy
+      x-abdm-source-folder: Health locker service
+      responses:
+        '200':
+          description: Recorded in NHA's collection. Values are scrubbed.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    lockerId:
+                      type: string
+                    lockerName:
+                      type: string
+                    patientId:
+                      type: string
+                    dateCreated:
+                      type: string
+                    dateModified:
+                      type: string
+                    healthIdNumber:
+                      type: string
+                    isActive:
+                      type: boolean
+                  required:
+                  - dateCreated
+                  - dateModified
+                  - healthIdNumber
+                  - id
+                  - isActive
+                  - lockerId
+                  - lockerName
+                  - patientId
+              examples:
+                recorded:
+                  summary: Recorded response
+                  value:
+                  - id: 9720
+                    lockerId: Harish4_lti
+                    lockerName: Testing
+                    patientId: <PATIENT_ID>
+                    dateCreated: '2025-05-22T12:22:28.454Z'
+                    dateModified: '2025-06-11T06:13:58.645Z'
+                    healthIdNumber: <ABHA_NUMBER>
+                    isActive: true
+                  - id: 8726
+                    lockerId: driefcasehl
+                    lockerName: DRiefcase Health Locker
+                    patientId: <PATIENT_ID>
+                    dateCreated: '2025-03-11T12:00:27.982Z'
+                    dateModified: '2025-06-11T06:13:47.713Z'
+                    healthIdNumber: <ABHA_NUMBER>
+                    isActive: true
+                  - id: 9796
+                    lockerId: Priyanka_Health_Locker1
+                    lockerName: Priyanka_Health_Locker1
+                    patientId: <PATIENT_ID>
+                    dateCreated: '2025-06-02T10:26:02.286Z'
+                    dateModified: '2025-06-24T13:25:14.531Z'
+                    healthIdNumber: <ABHA_NUMBER>
+                    isActive: true
+                  - id: 9705
+                    lockerId: Harish1_lti
+                    lockerName: Testing
+                    patientId: <PATIENT_ID>
+                    dateCreated: '2025-05-21T18:20:38.867Z'
+                    dateModified: '2025-06-11T06:13:18.700Z'
+                    healthIdNumber: <ABHA_NUMBER>
+                    isActive: true
+                  - id: 9722
+                    lockerId: Priyanka_Health_Locker
+                    lockerName: Priyanka_Health_Locker
+                    patientId: <PATIENT_ID>
+                    dateCreated: '2025-05-22T13:12:14.779Z'
+                    dateModified: '2025-06-11T09:46:57.289Z'
+                    healthIdNumber: <ABHA_NUMBER>
+                    isActive: false
+                  - id: 11622
+                    lockerId: DigiLocker_NEGD
+                    lockerName: DigiLocker_NEGD
+                    patientId: <PATIENT_ID>
+                    dateCreated: '2025-10-10T12:02:14.730Z'
+                    dateModified: '2025-10-10T12:02:14.731Z'
+                    healthIdNumber: <ABHA_NUMBER>
+                    isActive: true
+        '500':
+          description: Recorded in NHA's collection. Values are scrubbed.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - code
+                - message
+              examples:
+                recorded:
+                  summary: Recorded response
+                  value:
+                    code: AS-1314
+                    message: Required header 'X-token' is not present.
+        '400':
+          description: Recorded in NHA's collection. Values are scrubbed.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - code
+                - message
+              examples:
+                recorded:
+                  summary: Recorded response
+                  value:
+                    code: AS-1084
+                    message: 'JWT token is invalid '
+  /scan-share/profile/share:
+    post:
+      operationId: p2_profile_share
+      tags:
+      - scan_and_share
+      summary: profile share
+      description: |
+        NHA's Aarogya Setu collection names this request "profile share", in its Scan and Share service. It is reproduced here as the reference PHR behaviour: Aarogya Setu is NHA's own PHR, so the same calls and the same error codes apply to any PHR implementation.
+
+        The prose is derived from the collection, not written from a specification. NHA has published no OpenAPI file for the PHR role.
+      x-abdm-atom: hiecm.endpoint.p2-profile-share
+      x-abdm-source-folder: Scan and Share service
+      responses:
+        '500':
+          description: Recorded in NHA's collection. Values are scrubbed.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - code
+                - message
+              examples:
+                recorded:
+                  summary: Recorded response
+                  value:
+                    code: AS-1314
+                    message: Required header 'X-token' is not present.
+        '404':
+          description: Recorded in NHA's collection. Values are scrubbed.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  type:
+                    type: string
+                  message:
+                    type: string
+                  description:
+                    type: string
+                required:
+                - code
+                - description
+                - message
+                - type
+              examples:
+                recorded:
+                  summary: Recorded response
+                  value:
+                    code: '404'
+                    type: Status report
+                    message: Runtime Error
+                    description: No matching resource found for given API Request
+        '401':
+          description: Recorded in NHA's collection. Values are scrubbed.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+                  description:
+                    type: string
+                required:
+                - code
+                - description
+                - message
+              examples:
+                recorded:
+                  summary: Recorded response
+                  value:
+                    code: '900902'
+                    message: Missing Credentials
+                    description: 'Invalid Credentials. Make sure your API invocation
+                      call has a header: ''Authorization : Bearer ACCESS_TOKEN''
+                      or ''Authorization : Basic ACCESS_TOKEN'' or ''apikey: API_KEY'''
+  /scan-share/record-share/on-notify:
+    post:
+      operationId: p2_as_recordshare_on_notify
+      tags:
+      - scan_and_share
+      summary: AS - RecordShare on-notify
+      description: |
+        NHA's Aarogya Setu collection names this request "AS - RecordShare on-notify", in its Scan and Share service. It is reproduced here as the reference PHR behaviour: Aarogya Setu is NHA's own PHR, so the same calls and the same error codes apply to any PHR implementation.
+
+        The prose is derived from the collection, not written from a specification. NHA has published no OpenAPI file for the PHR role.
+      x-abdm-atom: hiecm.endpoint.p2-as-recordshare-on-notify
+      x-abdm-source-folder: Scan and Share service
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                notification:
+                  type: object
+                  properties:
+                    transactionId:
+                      type: string
+                    doneAt:
+                      type: string
+                    statusNotification:
+                      type: object
+                      properties:
+                        sessionStatus:
+                          type: string
+                        statusResponses:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              careContextReference:
+                                type: string
+                              hiStatus:
+                                type: string
+                              description:
+                                type: string
+                            required:
+                            - careContextReference
+                            - description
+                            - hiStatus
+                      required:
+                      - sessionStatus
+                      - statusResponses
+                  required:
+                  - doneAt
+                  - statusNotification
+                  - transactionId
+              required:
+              - notification
+            examples:
+              from_nha_collection:
+                summary: From NHA's collection, values scrubbed
+                value:
+                  notification:
+                    transactionId: <TXN_ID>
+                    doneAt: '2026-06-24T06:35:44.167Z'
+                    statusNotification:
+                      sessionStatus: TRANSFERRED
+                      statusResponses:
+                      - careContextReference: '74538'
+                        hiStatus: DELIVERED
+                        description: Data received successfully
+      responses:
+        '500':
+          description: Recorded in NHA's collection. Values are scrubbed.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - code
+                - message
+              examples:
+                recorded:
+                  summary: Recorded response
+                  value:
+                    code: 'ABDM-9999: '
+                    message: 400 BAD_REQUEST "Required header 'X-HIU-ID' is not
+                      present."
+        '404':
+          description: Recorded in NHA's collection. Values are scrubbed.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  type:
+                    type: string
+                  message:
+                    type: string
+                  description:
+                    type: string
+                required:
+                - code
+                - description
+                - message
+                - type
+              examples:
+                recorded:
+                  summary: Recorded response
+                  value:
+                    code: '404'
+                    type: Status report
+                    message: Runtime Error
+                    description: No matching resource found for given API Request
+  /scan-share/record-share/on-share:
+    post:
+      operationId: p2_as_record_on_share
+      tags:
+      - scan_and_share
+      summary: AS - Record On Share
+      description: |
+        NHA's Aarogya Setu collection names this request "AS - Record On Share", in its Scan and Share service. It is reproduced here as the reference PHR behaviour: Aarogya Setu is NHA's own PHR, so the same calls and the same error codes apply to any PHR implementation.
+
+        The prose is derived from the collection, not written from a specification. NHA has published no OpenAPI file for the PHR role.
+      x-abdm-atom: hiecm.endpoint.p2-as-record-on-share
+      x-abdm-source-folder: Scan and Share service
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                hiRequest:
+                  type: object
+                  properties:
+                    transactionId:
+                      type: string
+                    dataPushUrl:
+                      type: string
+                    keyMaterial:
+                      type: object
+                      properties:
+                        cryptoAlg:
+                          type: string
+                        curve:
+                          type: string
+                        dhPublicKey:
+                          type: object
+                          properties:
+                            expiry:
+                              type: string
+                            parameters:
+                              type: string
+                            keyValue:
+                              type: string
+                          required:
+                          - expiry
+                          - keyValue
+                          - parameters
+                        nonce:
+                          type: string
+                      required:
+                      - cryptoAlg
+                      - curve
+                      - dhPublicKey
+                      - nonce
+                  required:
+                  - dataPushUrl
+                  - keyMaterial
+                  - transactionId
+                response:
+                  type: object
+                  properties:
+                    requestId:
+                      type: string
+                  required:
+                  - requestId
+              required:
+              - hiRequest
+              - response
+            examples:
+              from_nha_collection:
+                summary: From NHA's collection, values scrubbed
+                value:
+                  hiRequest:
+                    transactionId: <TXN_ID>
+                    dataPushUrl: https://webhook.site/<TXN_ID>/health-information/transfer
+                    keyMaterial:
+                      cryptoAlg: ECDH.
+                      curve: curve25519
+                      dhPublicKey:
+                        expiry: '2026-12-28T13:18:20.742Z'
+                        parameters: Ephemeral public key.
+                        keyValue: <KEYVALUE>
+                      nonce: H5EG5X61tTJ2ctjs3ByenbMvUezrf1VCRHZukspooaY=
+                  response:
+                    requestId: <TXN_ID>
+      responses:
+        '200':
+          description: NHA's collection saves no response body for this request,
+            so the shape is not recorded here.
+  /scan-share/record-share/share:
+    post:
+      operationId: p2_as_recordshare
+      tags:
+      - scan_and_share
+      summary: AS - RecordShare
+      description: |
+        NHA's Aarogya Setu collection names this request "AS - RecordShare", in its Scan and Share service. It is reproduced here as the reference PHR behaviour: Aarogya Setu is NHA's own PHR, so the same calls and the same error codes apply to any PHR implementation.
+
+        The prose is derived from the collection, not written from a specification. NHA has published no OpenAPI file for the PHR role.
+      x-abdm-atom: hiecm.endpoint.p2-as-recordshare
+      x-abdm-source-folder: Scan and Share service
+      responses:
+        '500':
+          description: Recorded in NHA's collection. Values are scrubbed.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - code
+                - message
+              examples:
+                recorded:
+                  summary: Recorded response
+                  value:
+                    code: AS-1082
+                    message: Invalid X Auth token
+        '400':
+          description: Recorded in NHA's collection. Values are scrubbed.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - code
+                - message
+              examples:
+                recorded:
+                  summary: Recorded response
+                  value:
+                    code: AS-1127
+                    message: Patient profile does not match the X Auth token.
+                      Please verify your session.
+  /scan-share/share-record/audit-history:
+    get:
+      operationId: p2_as_recordshare_history
+      tags:
+      - scan_and_share
+      summary: AS - RecordShare History
+      description: |
+        NHA's Aarogya Setu collection names this request "AS - RecordShare History", in its Scan and Share service. It is reproduced here as the reference PHR behaviour: Aarogya Setu is NHA's own PHR, so the same calls and the same error codes apply to any PHR implementation.
+
+        The prose is derived from the collection, not written from a specification. NHA has published no OpenAPI file for the PHR role.
+      x-abdm-atom: hiecm.endpoint.p2-as-recordshare-history
+      x-abdm-source-folder: Scan and Share service
+      responses:
+        '200':
+          description: Recorded in NHA's collection. Values are scrubbed.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    requestId:
+                      type: string
+                    abhaAddress:
+                      type: string
+                    senderFacilityId:
+                      type: string
+                    senderFacilityName:
+                      type: string
+                    receiverFacilityId:
+                      type: string
+                    receiverFacilityName:
+                      type: string
+                    counterCode:
+                      type: string
+                    transactionId:
+                      type: string
+                    status:
+                      type: string
+                    sharedRecordCount:
+                      type: integer
+                    consent:
+                      type: object
+                      properties:
+                        accessMode:
+                          type: string
+                        dataEraseAt:
+                          type: string
+                        careContexts:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              patientReference:
+                                type: string
+                              careContextReference:
+                                type: string
+                            required:
+                            - careContextReference
+                            - patientReference
+                      required:
+                      - accessMode
+                      - careContexts
+                      - dataEraseAt
+                    dateCreated:
+                      type: string
+                    dateModified:
+                      type: string
+                  required:
+                  - abhaAddress
+                  - consent
+                  - counterCode
+                  - dateCreated
+                  - dateModified
+                  - receiverFacilityId
+                  - receiverFacilityName
+                  - requestId
+                  - senderFacilityId
+                  - senderFacilityName
+                  - sharedRecordCount
+                  - status
+                  - transactionId
+              examples:
+                recorded:
+                  summary: Recorded response
+                  value:
+                  - requestId: <TXN_ID>
+                    abhaAddress: <ABHA_ADDRESS>
+                    senderFacilityId: sbx_aaroga_setu_aws
+                    senderFacilityName: Sandbox Aaroga-Setu-Aws
+                    receiverFacilityId: IN2810001317
+                    receiverFacilityName: 'MEDIPLUS HOSPITAL '
+                    counterCode: '1'
+                    transactionId: <TXN_ID>
+                    status: TRANSFERRED
+                    sharedRecordCount: 2
+                    consent:
+                      accessMode: VIEW
+                      dataEraseAt: '2026-05-30T11:54:00.000Z'
+                      careContexts:
+                      - patientReference: manish_191@sbx
+                        careContextReference: 03dc029b-f580-5b19-baff-47a707221658_20260518134701945848
+                      - patientReference: manish_191@sbx
+                        careContextReference: 03dc029b-f580-5b19-baff-47a707221658_20260518130702309469
+                    dateCreated: '2026-05-29T11:54:54.528Z'
+                    dateModified: '2026-05-29T11:54:56.315Z'
+                  - requestId: <TXN_ID>
+                    abhaAddress: <ABHA_ADDRESS>
+                    senderFacilityId: sbx_aaroga_setu_aws
+                    senderFacilityName: Sandbox Aaroga-Setu-Aws
+                    receiverFacilityId: IN2810001317
+                    receiverFacilityName: 'MEDIPLUS HOSPITAL '
+                    counterCode: '1'
+                    transactionId: <TXN_ID>
+                    status: TRANSFERRED
+                    sharedRecordCount: 3
+                    consent:
+                      accessMode: VIEW
+                      dataEraseAt: '2026-05-30T11:22:00.000Z'
+                      careContexts:
+                      - patientReference: manish_191@sbx
+                        careContextReference: 03dc029b-f580-5b19-baff-47a707221658_20260518134701945848
+                      - patientReference: manish_191@sbx
+                        careContextReference: 03dc029b-f580-5b19-baff-47a707221658_20260518130702309469
+                      - patientReference: manish_191@sbx
+                        careContextReference: 03dc029b-f580-5b19-baff-47a707221658_20260514102638492212
+                    dateCreated: '2026-05-29T11:22:41.680Z'
+                    dateModified: '2026-05-29T11:22:45.987Z'
+                  - requestId: <TXN_ID>
+                    abhaAddress: <ABHA_ADDRESS>
+                    senderFacilityId: sbx_aaroga_setu_aws
+                    senderFacilityName: Sandbox Aaroga-Setu-Aws
+                    receiverFacilityId: IN2710001809
+                    receiverFacilityName: 'MedFord Hospital '
+                    counterCode: '1'
+                    transactionId: <TXN_ID>
+                    status: TRANSFERRED
+                    sharedRecordCount: 1
+                    consent:
+                      accessMode: VIEW
+                      dataEraseAt: '2026-05-27T14:21:00.000Z'
+                      careContexts:
+                      - patientReference: manish_191@sbx
+                        careContextReference: 03dc029b-f580-5b19-baff-47a707221658_20260518130702309469
+                    dateCreated: '2026-05-26T14:21:06.631Z'
+                    dateModified: '2026-05-26T14:21:10.964Z'
+        '500':
+          description: Recorded in NHA's collection. Values are scrubbed.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - code
+                - message
+        '401':
+          description: Recorded in NHA's collection. Values are scrubbed.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+                  description:
+                    type: string
+                required:
+                - code
+                - description
+                - message
+              examples:
+                recorded:
+                  summary: Recorded response
+                  value:
+                    code: '900902'
+                    message: Missing Credentials
+                    description: 'Invalid Credentials. Make sure your API invocation
+                      call has a header: ''Authorization : Bearer ACCESS_TOKEN''
+                      or ''Authorization : Basic ACCESS_TOKEN'' or ''apikey: API_KEY'''
+        '404':
+          description: Recorded in NHA's collection. Values are scrubbed.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  type:
+                    type: string
+                  message:
+                    type: string
+                  description:
+                    type: string
+                required:
+                - code
+                - description
+                - message
+                - type
+              examples:
+                recorded:
+                  summary: Recorded response
+                  value:
+                    code: '404'
+                    type: Status report
+                    message: Runtime Error
+                    description: No matching resource found for given API Request
+  /user-initiated-linking/link/confirm:
+    post:
+      operationId: p2_03_link_confirm
+      tags:
+      - user_initiated_linking
+      summary: 03 link-confirm
+      description: |
+        NHA's Aarogya Setu collection names this request "03 link-confirm", in its User Initiated Linking service. It is reproduced here as the reference PHR behaviour: Aarogya Setu is NHA's own PHR, so the same calls and the same error codes apply to any PHR implementation.
+
+        The prose is derived from the collection, not written from a specification. NHA has published no OpenAPI file for the PHR role.
+      x-abdm-atom: hiecm.endpoint.p2-03-link-confirm
+      x-abdm-source-folder: User Initiated Linking service
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                token:
+                  type: integer
+                linkRefNumber:
+                  type: string
+              required:
+              - linkRefNumber
+              - token
+            examples:
+              from_nha_collection:
+                summary: From NHA's collection, values scrubbed
+                value:
+                  token: 123456
+                  linkRefNumber: <TXN_ID>
+      responses:
+        '200':
+          description: NHA's collection saves no response body for this request,
+            so the shape is not recorded here.
+  /user-initiated-linking/link/discover:
+    post:
+      operationId: p2_01_discovery
+      tags:
+      - user_initiated_linking
+      summary: 01 discovery
+      description: |
+        NHA's Aarogya Setu collection names this request "01 discovery", in its User Initiated Linking service. It is reproduced here as the reference PHR behaviour: Aarogya Setu is NHA's own PHR, so the same calls and the same error codes apply to any PHR implementation.
+
+        The prose is derived from the collection, not written from a specification. NHA has published no OpenAPI file for the PHR role.
+      x-abdm-atom: hiecm.endpoint.p2-01-discovery
+      x-abdm-source-folder: User Initiated Linking service
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                hip:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                    name:
+                      type: string
+                  required:
+                  - id
+                  - name
+                unverifiedIdentifiers:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      value:
+                        type: string
+                    required:
+                    - type
+                    - value
+              required:
+              - hip
+              - unverifiedIdentifiers
+            examples:
+              from_nha_collection:
+                summary: From NHA's collection, values scrubbed
+                value:
+                  hip:
+                    id: <HIP_ID>
+                    name: <NAME>
+                  unverifiedIdentifiers:
+                  - type: MR
+                    value: <MOBILE>
+      responses:
+        '200':
+          description: NHA's collection saves no response body for this request,
+            so the shape is not recorded here.
+  /user-initiated-linking/link/init:
+    post:
+      operationId: p2_02_link_init
+      tags:
+      - user_initiated_linking
+      summary: 02 link-init
+      description: |
+        NHA's Aarogya Setu collection names this request "02 link-init", in its User Initiated Linking service. It is reproduced here as the reference PHR behaviour: Aarogya Setu is NHA's own PHR, so the same calls and the same error codes apply to any PHR implementation.
+
+        The prose is derived from the collection, not written from a specification. NHA has published no OpenAPI file for the PHR role.
+      x-abdm-atom: hiecm.endpoint.p2-02-link-init
+      x-abdm-source-folder: User Initiated Linking service
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                transactionId:
+                  type: string
+                patient:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      referenceNumber:
+                        type: string
+                      display:
+                        type: string
+                      careContexts:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            referenceNumber:
+                              type: string
+                            display:
+                              type: string
+                          required:
+                          - display
+                          - referenceNumber
+                      hiType:
+                        type: string
+                      count:
+                        type: integer
+                    required:
+                    - careContexts
+                    - count
+                    - display
+                    - hiType
+                    - referenceNumber
+              required:
+              - patient
+              - transactionId
+            examples:
+              from_nha_collection:
+                summary: From NHA's collection, values scrubbed
+                value:
+                  transactionId: <TXN_ID>
+                  patient:
+                  - referenceNumber: <ABHA_ADDRESS>
+                    display: Test
+                    careContexts:
+                    - referenceNumber: Test 1
+                      display: Sugar Test
+                    hiType: Invoice
+                    count: 1
+      responses:
+        '200':
+          description: NHA's collection saves no response body for this request,
+            so the shape is not recorded here.
+  /user-initiated-linking/link/on-discover:
+    post:
+      operationId: p2_call_back_on_discovery
+      tags:
+      - user_initiated_linking
+      summary: call-back on-discovery
+      description: |
+        NHA's Aarogya Setu collection names this request "call-back on-discovery", in its User Initiated Linking service. It is reproduced here as the reference PHR behaviour: Aarogya Setu is NHA's own PHR, so the same calls and the same error codes apply to any PHR implementation.
+
+        The prose is derived from the collection, not written from a specification. NHA has published no OpenAPI file for the PHR role.
+      x-abdm-atom: hiecm.endpoint.p2-call-back-on-discovery
+      x-abdm-source-folder: User Initiated Linking service
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                transactionId:
+                  type: string
+                error:
+                  type: object
+                  properties:
+                    code:
+                      type: string
+                    message:
+                      type: string
+                  required:
+                  - code
+                  - message
+                response:
+                  type: object
+                  properties:
+                    requestId:
+                      type: string
+                  required:
+                  - requestId
+              required:
+              - error
+              - response
+              - transactionId
+            examples:
+              from_nha_collection:
+                summary: From NHA's collection, values scrubbed
+                value:
+                  transactionId: <TXN_ID>
+                  error:
+                    code: ABDM-1010
+                    message: Patient not found
+                  response:
+                    requestId: <TXN_ID>
+      responses:
+        '200':
+          description: NHA's collection saves no response body for this request,
+            so the shape is not recorded here.
+components:
+  securitySchemes:
+    gatewaySession:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: The access token from the gateway session endpoint, described
+        in hiecm-gateway.yaml.
+x-abdm-errors:
+  source: The PHR error codes are the same for every PHR module, so they are recorded
+    once against P1 rather than repeated here. See the P1 error page, or the error
+    code reference.
+  codes: []

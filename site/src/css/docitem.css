@@ -129,7 +129,10 @@
 
 /* ---------- on this page ---------- */
 
+/* The rail sits over the article, so it needs its own ground. Without one,
+   anything that does overflow the column shows through the outline text. */
 .docs-toc {
+  background: var(--page);
   position: sticky;
   top: calc(var(--chrome-height) + 2.5rem);
   max-height: calc(100vh - var(--chrome-height) - 5rem);

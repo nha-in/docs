@@ -107,7 +107,7 @@ function Row({
         <code className="api-console__name">{field.name}</code>
         <span className="api-console__type">{field.type}</span>
         {field.required ? (
-          <span className="api-console__required">required</span>
+          <span className="api-console__required">Required</span>
         ) : null}
         {badge ? <span className="api-console__badge">{badge}</span> : null}
       </label>
@@ -294,10 +294,10 @@ export default function TryIt({operation}: {operation: Operation}) {
             <code className="api-console__name">{node.leaf}</code>
             <span className="api-console__type">{node.field.type}</span>
             {node.field.required ? (
-              <span className="api-console__required">required</span>
+              <span className="api-console__required">Required</span>
             ) : null}
             {node.field.type.endsWith('[]') ? (
-              <span className="api-console__badge">one element</span>
+              <span className="api-console__badge">One element</span>
             ) : null}
           </div>
           {node.children.map((child) => renderNode(child, depth + 1))}
@@ -585,7 +585,7 @@ export default function TryIt({operation}: {operation: Operation}) {
               ) : (
                 <label className="api-console__row api-console__row--wide">
                   <span className="api-console__ident">
-                    <code className="api-console__name">request body</code>
+                    <code className="api-console__name">Request body</code>
                     <span className="api-console__type">json</span>
                   </span>
                   <textarea

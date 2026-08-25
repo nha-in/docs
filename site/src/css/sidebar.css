@@ -257,6 +257,22 @@
   align-items: center;
   gap: 0.375rem;
   min-width: 0;
+  /* Version and role sit side by side on a wide sidebar and stack when the
+     reader has narrowed it, rather than the role being squeezed out. */
+  flex-wrap: wrap;
+  row-gap: 0.125rem;
+}
+
+/* The role value is the long one, "Information Management System", so it is
+   the one allowed to truncate. */
+.sidebar-picker--role {
+  min-width: 0;
+}
+
+.sidebar-picker--role .sidebar-picker__value {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .sidebar-picker {
@@ -290,6 +306,14 @@
 
 .sidebar-picker--version {
   flex: 0 0 auto;
+}
+
+.sidebar-picker__field {
+  flex: none;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  letter-spacing: 0.01em;
 }
 
 .sidebar-picker__value {

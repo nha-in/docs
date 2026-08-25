@@ -31,7 +31,7 @@ export default function ParamField({
         {type ? <span className="docs-param__type">{type}</span> : null}
         {required ? (
           <Badge variant="ghost" className="docs-param__required">
-            required
+            Required
           </Badge>
         ) : null}
       </div>

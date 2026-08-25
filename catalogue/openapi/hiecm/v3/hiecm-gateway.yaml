@@ -546,3 +546,153 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/ErrorResponse'
+x-abdm-errors:
+  codes:
+  - code: ABDM-1053
+    message: Problem occurred while loading overlay image
+    action: Unclassified
+  - code: ABDM-1068
+    message: Both Patient and Error details cannot be null
+    action: Fix request
+  - code: ABDM-1069
+    message: Invalid Authentication type
+    action: Fix request
+  - code: ABDM-1073
+    message: if is applicable for all HIP's is true;then HIP object must be null
+    action: Unclassified
+  - code: ABDM-1076
+    message: One or more invalid HIP is exist in the request
+    action: Fix request
+  - code: ABDM-1088
+    message: Captcha verification failed, Please enter valid code.
+    action: Unclassified
+  - code: ABDM-1089
+    message: Payment information cannot be null
+    action: Fix request
+  - code: ABDM-1096
+    message: Duplicate Gateway Consent Manager request
+    action: Cannot proceed
+  - code: ABDM-1097
+    message: Duplicate Gateway Consent Manager patch request
+    action: Cannot proceed
+  - code: ABDM-1098
+    message: Duplicate Gateway Government Program request
+    action: Fix request
+  - code: ABDM-1123
+    message: User authentication failed
+    action: Unclassified
+  - code: ABDM-1125
+    message: ABHA number and ABHA address cannot be null
+    action: Fix request
+  - code: ABDM-1128
+    message: T-Token Expired
+    action: Fix request
+  - code: ABDM-1129
+    message: Invalid T-Token
+    action: Fix request
+  - code: ABDM-1130
+    message: Invalid X-Token
+    action: Fix request
+  - code: ABDM-1131
+    message: X-Token Expired
+    action: Fix request
+  - code: ABDM-1208
+    message: Abha Profile Gateway is unavailable
+    action: Retry
+  - code: ABDM-1209
+    message: PHR DB service unavailable
+    action: Retry
+  - code: ABDM-1210
+    message: Login via Email Address OTP is not allowed
+    action: Fix request
+  - code: ABDM-1212
+    message: Email address not found.
+    action: Fix request
+  - code: ABDM-1213
+    message: User not active.
+    action: Unclassified
+  - code: ABDM-1214
+    message: Mobile/Email verification is pending.
+    action: Unclassified
+  - code: ABDM-1215
+    message: Login via Mobile Number OTP is not allowed
+    action: Fix request
+  - code: ABDM-1216
+    message: The ABHA Address is deactivated.
+    action: Cannot proceed
+  - code: ABDM-1217
+    message: Login is not allowed
+    action: Fix request
+  - code: ABDM-1221
+    message: Face verification has been failed, please try again.
+    action: Retry
+  - code: ABDM-1222
+    message: Fingerprint verification has been failed, please try again.
+    action: Retry
+  - code: ABDM-1223
+    message: IRIS verification has been failed, please try again.
+    action: Retry
+  - code: ABDM-1300
+    message: Provided emailId doesn't match with existing emailId
+    action: Unclassified
+  - code: ABDM-1301
+    message: The mobile number you have entered has already been verified. Please
+      provide an alternate mobile number.
+    action: Fix request
+  - code: ABDM-1302
+    message: The emailId you have entered has already been verified. Please provide
+      an alternate emailId.
+    action: Fix request
+  - code: ABDM-1303
+    message: Your mobile number is not linked to the ABHA number. Please update
+      your mobile number in ABHA or try using Aadhaar OTP.
+    action: Unclassified
+  - code: ABDM-1304
+    message: Mobile number is not linked to your ABHA address. Please update your
+      mobile number in ABHA.
+    action: Unclassified
+  - code: ABDM-1305
+    message: Mobile number is missing for this ABHA address. Please update your
+      mobile number.
+    action: Fix request
+  - code: ABDM-1308
+    message: This account is deactivated. Please reactivate it from ABHA portal.
+    action: Cannot proceed
+  - code: ABDM-1506
+    message: Invalid callback resp id
+    action: Fix request
+  - code: ABDM-1919
+    message: Invalid Refresh token
+    action: Fix request
+  - code: ABDM-1920
+    message: Invalid grant type
+    action: Fix request
+  - code: ABDM-1921
+    message: Invalid client id
+    action: Fix request
+  - code: ABDM-1922
+    message: Invalid client secret
+    action: Fix request
+  - code: ABDM-1923
+    message: Invalid client id and secret
+    action: Fix request
+  - code: ABDM-1931
+    message: Service-Id= (.*?) is already exists
+    action: Fix request
+  - code: ABDM-1932
+    message: HFR request failed, rollback successful for hfr-id= (\S+)\s*
+    action: Unclassified
+  - code: ABDM-1933
+    message: Bridge registry request is invalid
+    action: Fix request
+  - code: ABDM-1935
+    message: All the provided service IDs do not match with the client ID
+    action: Unclassified
+  - code: ABDM-9008
+    message: No CR Mapped with Abha Address
+    action: Unclassified
+  source: NHA's error code workbooks, ABDM M1-M2-M3-M4_Error_Codes.xlsx and ErrorCode-Message.xlsx,
+    supplied 2026-08-25. Code, message and, where NHA gives one, the error name
+    are NHA's. The action column is this catalogue's reading of the message text,
+    by a documented rule, and is not NHA's. Anything the rule could not classify
+    says Unclassified rather than guessing.

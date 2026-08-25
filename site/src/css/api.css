@@ -82,15 +82,11 @@
   color: var(--accent);
 }
 
-.api-chip--get {
-  background: color-mix(in srgb, var(--accent) 14%, transparent);
-  color: color-mix(in srgb, var(--accent) 80%, var(--text-heading));
-}
-
-.api-chip--delete {
-  background: color-mix(in srgb, var(--destructive) 14%, transparent);
-  color: color-mix(in srgb, var(--destructive) 80%, var(--text-heading));
-}
+.api-chip--get    { background: var(--method-get-soft);    color: var(--method-get); }
+.api-chip--post   { background: var(--method-post-soft);   color: var(--method-post); }
+.api-chip--put    { background: var(--method-put-soft);    color: var(--method-put); }
+.api-chip--patch  { background: var(--method-patch-soft);  color: var(--method-patch); }
+.api-chip--delete { background: var(--method-delete-soft); color: var(--method-delete); }
 
 /* ---------- the request bar ---------- */
 
@@ -894,26 +890,31 @@ label.api-console__ident {
 .api-method > .menu__link::before,
 .menu__link.api-method::before {
   content: 'GET';
+  color: var(--method-get);
 }
 
 .api-method--post > .menu__link::before,
 .menu__link.api-method--post::before {
   content: 'POST';
+  color: var(--method-post);
 }
 
 .api-method--put > .menu__link::before,
 .menu__link.api-method--put::before {
   content: 'PUT';
+  color: var(--method-put);
 }
 
 .api-method--patch > .menu__link::before,
 .menu__link.api-method--patch::before {
   content: 'PATCH';
+  color: var(--method-patch);
 }
 
 .api-method--delete > .menu__link::before,
 .menu__link.api-method--delete::before {
   content: 'DEL';
+  color: var(--method-delete);
 }
 
 /* ---------- narrow ---------- */

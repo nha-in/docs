@@ -14,6 +14,23 @@ read or do.
 
 ## 2026-08-25
 
+### The PHR role has API references
+
+Aarogya Setu is NHA's reference PHR, and its collection is now ingested and
+split the way the provider milestones are, rather than landing as one file of
+208 operations.
+
+- [P1](/reference/hiecm-p1), identity and profile, 63 operations
+- [P2](/reference/hiecm-p2), linking and records, 49 operations
+- [P3](/reference/hiecm-p3), consent and notifications, 35 operations
+- [PHR application services](/reference/hiecm-phr-services), 61 operations,
+  which is **not** a certification milestone
+
+The same calls and the same 422 PHR error codes apply to any PHR, not only to
+Aarogya Setu. NHA has published no OpenAPI file for this role, so these are
+derived from the collection rather than from a specification, and every
+operation says so.
+
 ### M2 and M3 have real API references
 
 NHA supplied an OpenAPI file for each of M1, M2 and M3, plus Postman

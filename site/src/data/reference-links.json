@@ -18,5 +18,21 @@
   {
     "label": "M4 HPR and HFR",
     "to": "/reference/hiecm-m4"
+  },
+  {
+    "label": "P1 PHR identity and profile",
+    "to": "/reference/hiecm-p1"
+  },
+  {
+    "label": "P2 PHR linking and records",
+    "to": "/reference/hiecm-p2"
+  },
+  {
+    "label": "P3 PHR consent and notifications",
+    "to": "/reference/hiecm-p3"
+  },
+  {
+    "label": "PHR application services",
+    "to": "/reference/hiecm-phr-services"
   }
 ]

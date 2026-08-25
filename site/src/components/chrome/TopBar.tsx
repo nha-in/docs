@@ -152,6 +152,8 @@ function GatewayMenu() {
 function LandingBar() {
   return (
     <nav className="navbar landing-bar" aria-label="Site">
+      {/* One mark, the publisher's. The mission's own logo used to sit beside
+          it and read as a second brand on a page that is not the mission's. */}
       <div className="landing-bar__marks">
         <ThemedImage
           className="landing-bar__mark"
@@ -160,14 +162,6 @@ function LandingBar() {
             dark: useBaseUrl('img/nha-logo-dark.svg'),
           }}
           alt="National Health Authority"
-        />
-        <ThemedImage
-          className="landing-bar__mark"
-          sources={{
-            light: useBaseUrl('img/logo.svg'),
-            dark: useBaseUrl('img/logo-dark.svg'),
-          }}
-          alt="Ayushman Bharat Digital Mission"
         />
       </div>
       <NavbarColorModeToggle className="topbar-toggle" />

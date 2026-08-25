@@ -5,15 +5,20 @@
 # improvise operations from this file, and do not compile a skill against it.
 #
 # Rules this file follows: catalogue/openapi/CONVENTIONS.md
+# Phase 2. Left empty on purpose. Filling this in is a scope change, not a
+# documentation task, and it needs the Phase 1 modules verified first.
+# The HIS family, which M4 uses instead of the ABDM codes. NHA publishes about
+# 150 in six groups and carries the full list in its sandbox documentation;
+# these are the ranges and the examples that appear in text.
 openapi: 3.1.1
-
 info:
   x-portal:
     module: m4
     label: M4 HPR and HFR
     position: 5
   title: ABDM M4, HPR and HFR registration
-  summary: Register healthcare professionals and facilities in the HPR and the HFR.
+  summary: Register healthcare professionals and facilities in the HPR and the
+    HFR.
   description: |
     M4 registers the people and the places. A healthcare professional gets an
     HPID from the Healthcare Professionals Registry, and a facility is
@@ -41,47 +46,39 @@ info:
   x-abdm-gateway: hiecm
   x-abdm-module: M4
   x-abdm-phase: 2
-  x-abdm-roles: [his, hip]
-
+  x-abdm-roles:
+  - his
+  - hip
 x-abdm-sources:
-  - file: ABDM Sandbox/ABDM/Proposed Simplified Milestone 4 (NHPR).docx
-    role: upstream
-    status: not-yet-hashed
-    note: >
-      NHA milestone pack. Carries the HPR base URLs, the Aadhaar link and
-      verification sequence, and the session request and response that
-      hiecm-gateway.yaml describes.
-  - url: https://sandbox.abdm.gov.in/sandbox/v3/new-documentation?doc=health-facility-registry/HPID%20creation
-    role: upstream
-    status: not-yet-fetched
-
+- file: ABDM Sandbox/ABDM/Proposed Simplified Milestone 4 (NHPR).docx
+  role: upstream
+  status: not-yet-hashed
+  note: |
+    NHA milestone pack. Carries the HPR base URLs, the Aadhaar link and verification sequence, and the session request and response that hiecm-gateway.yaml describes.
+- url: https://sandbox.abdm.gov.in/sandbox/v3/new-documentation?doc=health-facility-registry/HPID%20creation
+  role: upstream
+  status: not-yet-fetched
 servers:
-  - url: https://apihspsbx.abdm.gov.in/v4/int
-    description: Sandbox
-  - url: https://apinhpr.abdm.gov.in/v4/int
-    description: Production
-
+- url: https://apihspsbx.abdm.gov.in/v4/int
+  description: Sandbox
+- url: https://apinhpr.abdm.gov.in/v4/int
+  description: Production
 security:
-  - gatewaySession: []
-
+- gatewaySession: []
 tags:
-  - name: hpr-registration
-    description: >
-      Creating an HPID for a healthcare professional, through Aadhaar
-      verification. No operation published yet.
-  - name: hfr-facility
-    description: >
-      Searching for a facility, onboarding it and linking software to it.
-      No operation published yet.
-
-# Phase 2. Left empty on purpose. Filling this in is a scope change, not a
-# documentation task, and it needs the Phase 1 modules verified first.
+- name: hpr-registration
+  description: |
+    Creating an HPID for a healthcare professional, through Aadhaar verification. No operation published yet.
+- name: hfr-facility
+  description: |
+    Searching for a facility, onboarding it and linking software to it. No operation published yet.
 paths:
   /v4/int/api/v1/auth/authPassword:
     post:
       operationId: m4_hpr_login_password
       x-abdm-use-case: HPR login
-      tags: [hpr-registration]
+      tags:
+      - hpr-registration
       summary: Log in to the HPR with a username and password
       description: |
         One of the five HPR login routes NHA documents, and the only one whose
@@ -93,59 +90,509 @@ paths:
         response shapes are unconfirmed.
       responses:
         '200':
-          description: >
-            A token for the professional. NHA's document shows the response as
-            a screenshot, so the field list is not transcribed.
+          description: |
+            A token for the professional. NHA's document shows the response as a screenshot, so the field list is not transcribed.
+      x-abdm-atom: hiecm.endpoint.m4-hpr-login-password
   /v1.5/facility/get-specialities:
     get:
       operationId: m4_hfr_get_specialities
       x-abdm-use-case: HFR master data
-      tags: [hfr-facility]
+      tags:
+      - hfr-facility
       summary: List the specialities a facility can declare
       description: |
         One of the two HFR master data calls whose path appears in text. Not
         run against the ABDM sandbox, so the response shape is unconfirmed.
       responses:
         '200':
-          description: >
-            The speciality list. NHA's document carries the response as a
-            screenshot, so the field list is not transcribed.
-
+          description: |
+            The speciality list. NHA's document carries the response as a screenshot, so the field list is not transcribed.
+      x-abdm-atom: hiecm.endpoint.m4-hfr-get-specialities
 components:
   securitySchemes:
     gatewaySession:
       type: http
       scheme: bearer
       bearerFormat: JWT
-      description: >
-        The `accessToken` from `POST /api/hiecm/gateway/v3/sessions`, which
-        is described in hiecm-gateway.yaml. Send it as
-        `Authorization: Bearer <ACCESS_TOKEN>`.
-
-# The HIS family, which M4 uses instead of the ABDM codes. NHA publishes about
-# 150 in six groups and carries the full list in its sandbox documentation;
-# these are the ranges and the examples that appear in text.
+      description: |
+        The `accessToken` from `POST /api/hiecm/gateway/v3/sessions`, which is described in hiecm-gateway.yaml. Send it as `Authorization: Bearer <ACCESS_TOKEN>`.
 x-abdm-errors:
-  source: >
-    NHA's M4 document, which states the ranges and gives examples. The full
-    list is in NHA's sandbox documentation for the healthcare professional
-    registry.
+  source: |-
+    NHA's M4 document, which states the ranges and gives examples. The full list is in NHA's sandbox documentation for the healthcare professional registry.
+     NHA's error code workbooks, ABDM M1-M2-M3-M4_Error_Codes.xlsx and ErrorCode-Message.xlsx, supplied 2026-08-25. Code, message and, where NHA gives one, the error name are NHA's. The action column is this catalogue's reading of the message text, by a documented rule, and is not NHA's. Anything the rule could not classify says Unclassified rather than guessing.
   ranges:
-    - range: HIS-400 to HIS-504
-      covers: The HTTP level failures
-      examples: HIS-401 user is not authorized, HIS-403 forbidden, HIS-503 requested service is unavailable
-    - range: HIS-1xxx
-      covers: Validation and facility errors, 103 of them
-      examples: HIS-1002 the field value should not be empty, HIS-1124 bridge not linked, HIS-1128 HIP name already exists, HIS-1132 duplicate facility detected
-    - range: HIS-2xxx
-      covers: Aadhaar, OTP and session errors
-      examples: HIS-2022 invalid OTP, HIS-2031 request expired, HIS-2045 session expired
-    - range: HIS-3xxx
-      covers: Aadhaar data and HPID state
-      examples: HIS-3001 resident data not available, HIS-3021 HPRID already exists, HIS-3031 invalid token
-    - range: HIS-4xxx
-      covers: Facility record errors
-      examples: HIS-4003 facility already exists, HIS-4032 invalid state code, HIS-4055 invalid image format
-    - range: HIS-5xxx
-      covers: Registration workflow errors
-      examples: HIS-5005 already registered, HIS-5011 token expired
+  - range: HIS-400 to HIS-504
+    covers: The HTTP level failures
+    examples: HIS-401 user is not authorized, HIS-403 forbidden, HIS-503 requested
+      service is unavailable
+  - range: HIS-1xxx
+    covers: Validation and facility errors, 103 of them
+    examples: HIS-1002 the field value should not be empty, HIS-1124 bridge not
+      linked, HIS-1128 HIP name already exists, HIS-1132 duplicate facility detected
+  - range: HIS-2xxx
+    covers: Aadhaar, OTP and session errors
+    examples: HIS-2022 invalid OTP, HIS-2031 request expired, HIS-2045 session
+      expired
+  - range: HIS-3xxx
+    covers: Aadhaar data and HPID state
+    examples: HIS-3001 resident data not available, HIS-3021 HPRID already exists,
+      HIS-3031 invalid token
+  - range: HIS-4xxx
+    covers: Facility record errors
+    examples: HIS-4003 facility already exists, HIS-4032 invalid state code, HIS-4055
+      invalid image format
+  - range: HIS-5xxx
+    covers: Registration workflow errors
+    examples: HIS-5005 already registered, HIS-5011 token expired
+  codes:
+  - code: HIS-400
+    message: Request is invalid. Please enter the correct data.
+    action: Fix request
+  - code: HIS-401
+    message: User is not authorized.
+    action: Cannot proceed
+  - code: HIS-403
+    message: Forbidden.
+    action: Cannot proceed
+  - code: HIS-422
+    message: Unable to process the current request due to wrong data.
+    action: Unclassified
+  - code: HIS-500
+    message: An unexpected error has occurred\. Please try again in some time
+      \{0\}\{1\}\.
+    action: Retry
+  - code: HIS-503
+    message: Requested service is unavailable.
+    action: Retry
+  - code: HIS-504
+    message: Database exception occurred while processing request.
+    action: Unclassified
+  - code: HIS-1001
+    message: 'Doctor info not found for healthProfessionalId: (.*)'
+    action: Fix request
+  - code: HIS-1002
+    message: The field value should not be empty.
+    action: Unclassified
+  - code: HIS-1003
+    message: Invalid pattern found.
+    action: Fix request
+  - code: HIS-1004
+    message: Type mismatched. Please send the correct type.
+    action: Fix request
+  - code: HIS-1005
+    message: Please try logging in with the correct details.
+    action: Unclassified
+  - code: HIS-1006
+    message: Authentication is not initiated with provided method.
+    action: Unclassified
+  - code: HIS-1007
+    message: The user is disabled.
+    action: Unclassified
+  - code: HIS-1008
+    message: Invalid HPID/USERID.
+    action: Fix request
+  - code: HIS-1009
+    message: Error while connecting to UIDAI service.
+    action: Unclassified
+  - code: HIS-1010
+    message: Password must follow required format.
+    action: Fix request
+  - code: HIS-1011
+    message: Please enter valid mobile number.
+    action: Unclassified
+  - code: HIS-1012
+    message: Please enter valid Aadhaar number.
+    action: Unclassified
+  - code: HIS-1013
+    message: Incorrect OTP entered.
+    action: Fix request
+  - code: HIS-1014
+    message: Field contains only alphabets.
+    action: Unclassified
+  - code: HIS-1015
+    message: HPID already exists.
+    action: Fix request
+  - code: HIS-1016
+    message: HPID not available.
+    action: Unclassified
+  - code: HIS-1018
+    message: HPID creation allowed only for specific regions.
+    action: Unclassified
+  - code: HIS-1019
+    message: HP Facility ID not available.
+    action: Unclassified
+  - code: HIS-1020
+    message: Facility already registered with HPID.
+    action: Fix request
+  - code: HIS-1021
+    message: Current and new password cannot be same.
+    action: Unclassified
+  - code: HIS-1022
+    message: Please verify captcha.
+    action: Unclassified
+  - code: HIS-1023
+    message: Please wait before sending another OTP.
+    action: Unclassified
+  - code: HIS-1024
+    message: Invalid state.
+    action: Fix request
+  - code: HIS-1025
+    message: Invalid district.
+    action: Fix request
+  - code: HIS-1026
+    message: Transaction not found.
+    action: Fix request
+  - code: HIS-1027
+    message: Benefit not integrated.
+    action: Unclassified
+  - code: HIS-1028
+    message: Aadhaar required for KYC.
+    action: Fix request
+  - code: HIS-1029
+    message: HPID already linked with Aadhaar.
+    action: Fix request
+  - code: HIS-1030
+    message: Name mismatch with Aadhaar records.
+    action: Fix request
+  - code: HIS-1031
+    message: Password not set for HPID.
+    action: Unclassified
+  - code: HIS-1032
+    message: Integrated program not found.
+    action: Fix request
+  - code: HIS-1033
+    message: Authentication failed.
+    action: Unclassified
+  - code: HIS-1034
+    message: Invalid date format.
+    action: Fix request
+  - code: HIS-1035
+    message: Invalid Healthcare Professional ID.
+    action: Fix request
+  - code: HIS-1036
+    message: ID type and domain not configured.
+    action: Unclassified
+  - code: HIS-1039
+    message: Max login attempts exceeded.
+    action: Unclassified
+  - code: HIS-1040
+    message: File size exceeds limit.
+    action: Unclassified
+  - code: HIS-1041
+    message: Max OTP attempts reached.
+    action: Unclassified
+  - code: HIS-1042
+    message: Invalid OIDC transition.
+    action: Fix request
+  - code: HIS-1043
+    message: Redirect URL mismatch.
+    action: Fix request
+  - code: HIS-1044
+    message: Access code expired.
+    action: Fix request
+  - code: HIS-1045
+    message: Mobile update failed.
+    action: Unclassified
+  - code: HIS-1046
+    message: Same mobile number not allowed.
+    action: Fix request
+  - code: HIS-1047
+    message: Input must be encrypted.
+    action: Unclassified
+  - code: HIS-1048
+    message: Unable to fetch document details.
+    action: Unclassified
+  - code: HIS-1054
+    message: Invalid document type.
+    action: Fix request
+  - code: HIS-1055
+    message: Invalid gender code.
+    action: Fix request
+  - code: HIS-1056
+    message: HPID not created via driving licence.
+    action: Unclassified
+  - code: HIS-1057
+    message: Document details not available.
+    action: Unclassified
+  - code: HIS-1059
+    message: Invalid data provided.
+    action: Fix request
+  - code: HIS-1060
+    message: OTP expired or invalid.
+    action: Fix request
+  - code: HIS-1061
+    message: Invalid category ID.
+    action: Fix request
+  - code: HIS-1062
+    message: Invalid sub category ID.
+    action: Fix request
+  - code: HIS-1063
+    message: Invalid image uploaded.
+    action: Fix request
+  - code: HIS-1064
+    message: Invalid image size.
+    action: Fix request
+  - code: HIS-1065
+    message: Consent required.
+    action: Cannot proceed
+  - code: HIS-1066
+    message: Incorrect captcha.
+    action: Fix request
+  - code: HIS-1067
+    message: Invalid credentials.
+    action: Fix request
+  - code: HIS-1068
+    message: Mobile verification required.
+    action: Fix request
+  - code: HIS-1069
+    message: No HPID found for Aadhaar.
+    action: Unclassified
+  - code: HIS-1070
+    message: Required field is empty.
+    action: Fix request
+  - code: HIS-1071
+    message: Old password does not match.
+    action: Unclassified
+  - code: HIS-1072
+    message: Mobile number not registered.
+    action: Cannot proceed
+  - code: HIS-1073
+    message: New password cannot be same as old password.
+    action: Unclassified
+  - code: HIS-1100
+    message: Invalid Bridge ID.
+    action: Fix request
+  - code: HIS-1101
+    message: Bridge ID already registered.
+    action: Fix request
+  - code: HIS-1102
+    message: Self transfer not allowed.
+    action: Fix request
+  - code: HIS-1103
+    message: Facility transfer request already initiated.
+    action: Fix request
+  - code: HIS-1104
+    message: Linked program already in use.
+    action: Fix request
+  - code: HIS-1105
+    message: Operation not allowed.
+    action: Fix request
+  - code: HIS-1106
+    message: Required fields missing.
+    action: Fix request
+  - code: HIS-1107
+    message: Reassign to same manager not allowed.
+    action: Fix request
+  - code: HIS-1108
+    message: Invalid attempt.
+    action: Fix request
+  - code: HIS-1109
+    message: Professional type mismatch.
+    action: Fix request
+  - code: HIS-1110
+    message: Not a Central Government facility.
+    action: Unclassified
+  - code: HIS-1111
+    message: Not a State facility.
+    action: Unclassified
+  - code: HIS-1112
+    message: Not a Government facility.
+    action: Unclassified
+  - code: HIS-1113
+    message: Invalid facility ID format.
+    action: Fix request
+  - code: HIS-1114
+    message: Invalid pin code.
+    action: Fix request
+  - code: HIS-1115
+    message: Invalid ownership code.
+    action: Fix request
+  - code: HIS-1116
+    message: HPR ID required.
+    action: Fix request
+  - code: HIS-1117
+    message: Transaction ID required.
+    action: Fix request
+  - code: HIS-1118
+    message: Invalid password format.
+    action: Fix request
+  - code: HIS-1119
+    message: Invalid token.
+    action: Fix request
+  - code: HIS-1120
+    message: Invalid facility ID or name.
+    action: Fix request
+  - code: HIS-1121
+    message: Invalid facility details.
+    action: Fix request
+  - code: HIS-1122
+    message: User not government type.
+    action: Unclassified
+  - code: HIS-1123
+    message: Request body missing fields.
+    action: Fix request
+  - code: HIS-1124
+    message: Bridge not linked.
+    action: Unclassified
+  - code: HIS-1125
+    message: Invalid HIP name.
+    action: Fix request
+  - code: HIS-1126
+    message: Invalid Bridge ID.
+    action: Fix request
+  - code: HIS-1127
+    message: Invalid HIP ID.
+    action: Fix request
+  - code: HIS-1128
+    message: HIP name already exists.
+    action: Fix request
+  - code: HIS-1129
+    message: Invalid HIP name format.
+    action: Fix request
+  - code: HIS-1130
+    message: Bridge request failed.
+    action: Unclassified
+  - code: HIS-1131
+    message: Geolocation limit exceeded.
+    action: Unclassified
+  - code: HIS-1132
+    message: Duplicate facility detected.
+    action: Fix request
+  - code: HIS-1148
+    message: Not a government facility.
+    action: Unclassified
+  - code: HIS-1149
+    message: Not a private facility.
+    action: Unclassified
+  - code: HIS-1150
+    message: Invalid private facility.
+    action: Fix request
+  - code: HIS-1151
+    message: Facility ministry mismatch.
+    action: Fix request
+  - code: HIS-1152
+    message: Mobile number not found.
+    action: Fix request
+  - code: HIS-1153
+    message: PSU mismatch.
+    action: Fix request
+  - code: HIS-2001
+    message: Invalid Aadhaar number.
+    action: Fix request
+  - code: HIS-2004
+    message: OTP system error.
+    action: Unclassified
+  - code: HIS-2022
+    message: Invalid OTP.
+    action: Fix request
+  - code: HIS-2031
+    message: Request expired.
+    action: Fix request
+  - code: HIS-2045
+    message: Session expired.
+    action: Fix request
+  - code: HIS-2055
+    message: Invalid gender.
+    action: Fix request
+  - code: HIS-2057
+    message: Invalid category.
+    action: Fix request
+  - code: HIS-2062
+    message: Invalid medical council.
+    action: Fix request
+  - code: HIS-2075
+    message: Invalid reason of not working.
+    action: Fix request
+  - code: HIS-2076
+    message: Invalid work status.
+    action: Fix request
+  - code: HIS-2081
+    message: Invalid boolean value.
+    action: Fix request
+  - code: HIS-2082
+    message: Invalid reason of not working.
+    action: Fix request
+  - code: HIS-2083
+    message: Invalid ministry.
+    action: Fix request
+  - code: HIS-2084
+    message: Invalid category.
+    action: Fix request
+  - code: HIS-2085
+    message: Validation / verification failure.
+    action: Unclassified
+  - code: HIS-2094
+    message: Work status not required.
+    action: Fix request
+  - code: HIS-2095
+    message: Facility declaration not required.
+    action: Fix request
+  - code: HIS-2096
+    message: Select State Govt facility.
+    action: Unclassified
+  - code: HIS-2097
+    message: Select Central Govt facility.
+    action: Unclassified
+  - code: HIS-3001
+    message: Resident data not available.
+    action: Unclassified
+  - code: HIS-3006
+    message: Document mismatch.
+    action: Fix request
+  - code: HIS-3015
+    message: Server timeout.
+    action: Retry
+  - code: HIS-3021
+    message: HPRID already exists.
+    action: Fix request
+  - code: HIS-3031
+    message: Invalid token.
+    action: Fix request
+  - code: HIS-4003
+    message: Facility already exists.
+    action: Fix request
+  - code: HIS-4015
+    message: Invalid ownership subtype.
+    action: Fix request
+  - code: HIS-4020
+    message: Invalid longitude.
+    action: Fix request
+  - code: HIS-4032
+    message: Invalid state code.
+    action: Fix request
+  - code: HIS-4044
+    message: Invalid page number.
+    action: Fix request
+  - code: HIS-4055
+    message: Invalid image format.
+    action: Fix request
+  - code: HIS-4061
+    message: Facility status change not allowed.
+    action: Fix request
+  - code: HIS-5001
+    message: Workflow not defined.
+    action: Unclassified
+  - code: HIS-5002
+    message: Qualification missing.
+    action: Fix request
+  - code: HIS-5005
+    message: Already registered.
+    action: Fix request
+  - code: HIS-5006
+    message: Invalid practitioner DTO.
+    action: Fix request
+  - code: HIS-5007
+    message: Invalid personal DTO.
+    action: Fix request
+  - code: HIS-5008
+    message: Invalid academic DTO.
+    action: Fix request
+  - code: HIS-5009
+    message: Invalid registration DTO.
+    action: Fix request
+  - code: HIS-5010
+    message: Invalid work DTO.
+    action: Fix request
+  - code: HIS-5011
+    message: Token expired.
+    action: Fix request
