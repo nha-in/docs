@@ -28,8 +28,19 @@ Design: ../docs/superpowers/specs/2026-08-24-docs-mcp-design.md
 
 ## Run locally
 
+The server requires an explicit provider decision: an absent EMBED_PROVIDER
+is a startup failure, so a deployment that forgot to decide fails its
+rollout instead of quietly serving keyword-only. Keyword-only is spelled
+`none`, on purpose:
+
     go run ./cmd/indexer -catalogue ../catalogue -out /tmp/catalogue.db
-    go run ./cmd/docs-mcp -db /tmp/catalogue.db -addr :8080
+    EMBED_PROVIDER=none go run ./cmd/docs-mcp -db /tmp/catalogue.db -addr :8080
+
+A configured provider is probed with one embedding at startup, so bad
+credentials or an unreachable endpoint also fail the rollout, not the first
+developer's query. A provider over a vector-less index fails too; only
+`none` over a vectored index is allowed, with a warning, since that is an
+operator explicitly switching semantic search off.
 
 With embeddings via Bedrock (any AWS credentials the default chain finds):
 
