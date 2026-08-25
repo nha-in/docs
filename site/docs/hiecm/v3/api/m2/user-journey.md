@@ -37,7 +37,7 @@ sequenceDiagram
     CM->>A: Notify every PHR app subscribed to that ABHA address
 ```
 
-- **No valid [link token](/docs/hiecm/v3/getting-started/glossary#link-token).** Validate the stored token before use, with a tool such as jwt.io. If it is expired or missing, regenerate it through demographic authentication.
+- **No valid [link token](/docs/hiecm/v3/getting-started/glossary#link-token).** Validate the stored token before use, with a tool such as JWT.io. If it is expired or missing, regenerate it through demographic authentication.
 - **An existing care context gains new records.** The step 8 notification fires for that too, not only for a new context.
 
 ## Journey 2: Notification to mobile
@@ -124,4 +124,4 @@ Four NHA constraints on step 9, the push.
 - Large datasets such as CT or MRI images may be split across multiple parts.
 - For very large files NHA recommends streaming over one whole payload.
 
-Encryption uses [ECDH](/docs/hiecm/v3/getting-started/glossary#ecdh), Elliptic Curve Diffie Hellman, over Curve25519. Mechanics: [use cases](/docs/hiecm/v3/api/m2/sequence). Call order: [API sequence](/docs/hiecm/v3/api/m2/sequence).
+Encryption uses [ECDH](/docs/hiecm/v3/getting-started/glossary#ecdh), Elliptic Curve Diffie Hellman, over Curve25519. Mechanics: [use cases](/reference/hiecm-m2). Call order: [API reference](/reference/hiecm-m2).

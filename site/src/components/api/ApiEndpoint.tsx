@@ -49,7 +49,7 @@ function FieldRow({field}: {field: Field}) {
         <code className="api-field__name">{field.name}</code>
         <span className="api-field__type">{field.type}</span>
         {field.required ? (
-          <span className="api-field__required">required</span>
+          <span className="api-field__required">Required</span>
         ) : null}
       </div>
       {field.description ? (

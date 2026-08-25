@@ -74,20 +74,94 @@ A numeric code, not an `ABDM-` code, plus a `description` field the other shapes
 
 ## Codes
 
-Saved example responses in NHA's M1 ABHA Postman collection. NHA's M1 document carries its code reference as screenshots with no text.
+Saved example responses in NHA's M1 ABHA Postman collection. NHA's M1 document carries its code reference as screenshots with no text. NHA's error code workbooks, ABDM M1-M2-M3-M4_Error_Codes.xlsx and ErrorCode-Message.xlsx, supplied 2026-08-25. Code, message and, where NHA gives one, the error name are NHA's. The action column is this catalogue's reading of the message text, by a documented rule, and is not NHA's. Anything the rule could not classify says Unclassified rather than guessing.
 
 | Code | Message | What to do |
 | --- | --- | --- |
+| `ABDM-1001` | Subscription source update returned empty | Unclassified |
+| `ABDM-1002` | Invalid frequency unit, it must be in HOUR, WEEK, DAY, MONTH, YEAR | Fix request |
+| `ABDM-1006` | Invalid HIType, it must be in Prescription,DiagnosticReport,OPConsultation,DischargeSummary,ImmunizationRecord,HealthDocumentRecord,WellnessRecord,Invoice | Fix request |
+| `ABDM-1008` | SMS service currently disabled | Unclassified |
+| `ABDM-1009` | Email service currently disabled | Unclassified |
+| `ABDM-1010` | No pending care context found for this abha address | Unclassified |
 | `ABDM-1013` | Invalid ABHA Number | Fix request |
+| `ABDM-1016` | Invalid Timestamp | Fix request |
+| `ABDM-1017` | Invalid Transaction Id | Fix request |
+| `ABDM-1019` | Dependent Service Unavailable | Retry |
+| `ABDM-1021` | Lack of required priviledges | Fix request |
+| `ABDM-1022` | Too many requests | Retry |
+| `ABDM-1029` | Redis server is unavailable | Retry |
+| `ABDM-1030` | Request id not found | Fix request |
+| `ABDM-1034` | Notification service unavailable | Retry |
+| `ABDM-1045` | Database Access is restricted | Unclassified |
+| `ABDM-1047` | Purpose does not exist | Fix request |
+| `ABDM-1048` | Timeout | Retry |
+| `ABDM-1065` | Health facility does not exist | Fix request |
+| `ABDM-1066` | Please enter a valid Password | Unclassified |
 | `ABDM-1094` | Access to this feature is restricted. Please contact NHA to enable it. | Fix auth |
 | `ABDM-1094` | Invalid Benefit Name | Fix auth |
+| `ABDM-1100` | You have requested multiple OTPs Or Exceeded maximum number of attempts for OTP match in this transaction. Please try again in 30 minutes. | Retry |
+| `ABDM-1101` | This ABHA Address already exists. Please create with unique ABHA address | Fix request |
+| `ABDM-1102` | Mobile number verification is pending. | Unclassified |
+| `ABDM-1103` | Cannot link with CHILD ABHA Number | Unclassified |
+| `ABDM-1104` | Cannot link with same ABHA Number | Unclassified |
+| `ABDM-1105` | Invalid request for parent linking | Fix request |
+| `ABDM-1107` | Invalid combinations of scopes | Fix request |
+| `ABDM-1108` | Notification DB service unavailable | Retry |
+| `ABDM-1109` | Invalid On discovery response | Fix request |
+| `ABDM-1110` | Your new password must be different from your old password. Please enter a unique new password. | Unclassified |
+| `ABDM-1111` | Invalid old password, please try with valid password. | Fix request |
+| `ABDM-1112` | The provided gender does not match the gender in DigiLocker records | Unclassified |
+| `ABDM-1113` | Duplicate health information provider data flow response data flow resoponse | Fix request |
+| `ABDM-1114` | The provided name does not match the name in DigiLocker records | Unclassified |
+| `ABDM-1115` | Invalid patient information. At least one patient information is required. | Fix request |
+| `ABDM-1116` | generate_and_save_link_token : 'NoneType' object has no attribute 'get' | Unclassified |
+| `ABDM-1117` | Auto approval id is already active | Fix request |
+| `ABDM-1118` | Login via ABHA Number OTP is not allowed | Fix request |
+| `ABDM-1119` | Login via Aadhaar OTP is not allowed | Fix request |
+| `ABDM-1121` | Invalid Enrolment Number | Fix request |
+| `ABDM-1122` | Request can not be processed | Unclassified |
+| `ABDM-1124` | The mobile number provided by you is already linked to 6 ABHA Numbers. Please provide a different Mobile Number. | Fix request |
+| `ABDM-1126` | F-Token Expired | Fix request |
+| `ABDM-1127` | Invalid F-Token | Fix request |
+| `ABDM-1132` | Kindly enter valid linked ABHA Address | Unclassified |
+| `ABDM-1133` | Please enter a valid captcha result. Entered captcha result is incorrect. | Fix request |
+| `ABDM-1134` | Deactivated ABHA Account | Cannot proceed |
+| `ABDM-1135` | The email address provided by you is already linked to 6 ABHA Numbers. Please provide a different email Id. | Fix request |
+| `ABDM-1136` | message should not be null or empty. | Unclassified |
+| `ABDM-1137` | Benefit Name Not Found | Fix request |
 | `ABDM-1138` | The benefit record has already been de-linked | Treat as success |
+| `ABDM-1139` | Benefit record not found | Fix request |
 | `ABDM-1140` | The benefit record has already been linked | Treat as success |
+| `ABDM-1141` | An existing ABHA number created using this Aadhaar number has been found. It is advisable to delete this account and use ABHA number \(([0-9]{2}(?:-[0-9]{4}){3})\) for future purpose\. | Unclassified |
+| `ABDM-1142` | Please enter a valid captcha. Entered captcha is expired. | Fix request |
+| `ABDM-1143` | Captcha limit exceeded. | Unclassified |
+| `ABDM-1144` | Incorrect facility ID or password. | Fix request |
+| `ABDM-1155` | Parents must be 18 years of age or older to create a Child ABHA Account | Unclassified |
+| `ABDM-1156` | Please ensure that the mobile number is mapped to the parent's ABHA number | Unclassified |
+| `ABDM-1157` | Child ABHA’s account limit has been exceeded for the requested Abha ID number ‘(.*?) | Unclassified |
+| `ABDM-1158` | Invalid X-Token | Fix request |
+| `ABDM-1159` | Children’s ages should be below '(.*?)' years as of the current date | Unclassified |
+| `ABDM-1160` | Non KYC CHILD ABHA is allowed to update their profile only once | Unclassified |
+| `ABDM-1200` | LGD Gateway is unavailable | Retry |
+| `ABDM-1201` | IDP Gateway is unavailable | Retry |
+| `ABDM-1202` | Document Gateway is unavailable | Retry |
+| `ABDM-1203` | TEST | Unclassified |
 | `ABDM-1204` | A UIDAI failure passed through. The UIDAI code and text sit inside the message string | Fix request |
+| `ABDM-1205` | Document DB Gateway is unavailable | Retry |
+| `ABDM-1206` | Aadhaar Gateway is unavailable | Retry |
+| `ABDM-1207` | The information you provided does not match the details on record with Aadhaar. Please verify and provide accurate information. | Fix request |
+| `ABDM-1211` | Email Sending Limit Exceeded | Unclassified |
+| `ABDM-1218` | Role for the user does not exist. | Fix request |
+| `ABDM-1219` | Your ABHA is linked with govt benefit programme, so it can not be deleted- ABDM, National Health Authority. | Unclassified |
+| `ABDM-1220` | Sorry, Unable to process your request at this time. Please try again later. | Retry |
 | `ABDM-1224` | Login via Biometric is not allowed. | Fix auth |
+| `ABDM-1226` | Vault service unavailable | Retry |
+| `ABDM-1227` | This client ID has reached the maximum limit of 100 ABHA account creations. | Unclassified |
+| `ABDM-1228` | Your ABHA is linked with govt benefit programme, so it can not be deactivated- ABDM, National Health Authority. | Cannot proceed |
 | `ABDM-9999` | Recorded as `ABDM-9999: ` with an `ABDM-1094` message stuck to the front of the text | Fix auth |
 
-## untagged codes
+## Untagged codes
 
 The same collection, and the only source that recorded HTTP statuses.
 
@@ -97,7 +171,7 @@ The same collection, and the only source that recorded HTTP statuses.
 | `900900` | 500 | Unclassified authentication failure. The one saved example had a bad path and a bad token together, so read it as a client error first | Fix auth |
 | `404` | 404 | No matching resource found for given API Request`. A wrong path, not a missing record | Fix request |
 
-## uidai codes
+## UIDAI codes
 
 Codes from the Unique Identification Authority of India, passed through inside the message of ABDM-1204. NHA passes through more than these, so parse the message.
 

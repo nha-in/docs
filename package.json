@@ -14,7 +14,8 @@
     "build": "npm run build --workspace site",
     "lint:atoms": "node scripts/lint-atoms.mjs",
     "compile:skills": "node scripts/compile-skills.mjs",
-    "validate:skills": "node scripts/validate-skills.mjs"
+    "validate:skills": "node scripts/validate-skills.mjs",
+    "lint:agent": "node scripts/lint-agent-readiness.mjs"
   },
   "devDependencies": {
     "@docusaurus/faster": "^3.10.2",

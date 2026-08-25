@@ -313,7 +313,7 @@ NHA is explicit about one difference: the SMD ID identifies doctors only. Search
 | Fetch professional details | `id` (HPR ID, mandatory), `name` (minimum 3 letters), `contactNumber`, `state`, `registrationNumber`, `stateCouncilName` | Not in text |
 | Search facility from HPR | `ownershipCode`, `stateLGDCode`, `districtLGDCode`, `subdistrictLGDCode`, `pincode`, `facilityName`, `facilityId`, `page`, `resultsPerPage` | Not in text |
 
-Upload rules NHA states: profile photo 1 MB or smaller, other documents 5 MB or smaller, accepted types png, jpeg, jpg and pdf. The document types are `profilePhoto`, `degreeCertificate`, `registrationCertificate`, `proofOfWorkCertificate`, `proofOfNameChangeRegCertificate` and `proofOfNameChangeQualCertificate`. Which identifier you send as `document_id` depends on the type:
+Upload rules NHA states: profile photo 1 MB or smaller, other documents 5 MB or smaller, accepted types png, jpeg, jpg and PDF. The document types are `profilePhoto`, `degreeCertificate`, `registrationCertificate`, `proofOfWorkCertificate`, `proofOfNameChangeRegCertificate` and `proofOfNameChangeQualCertificate`. Which identifier you send as `document_id` depends on the type:
 
 | Document type | Identifier to use |
 |---|---|

@@ -10,7 +10,7 @@ source: ABDM__Proposed_Simplified_Milestone_1.md
 
 # M1 user journeys
 
-Milestone 1 (M1) of [ABDM](/docs/hiecm/v3/getting-started/glossary#abdm) has four flows: creating an [ABHA](/docs/hiecm/v3/getting-started/glossary#abha), attaching a communication mobile number, logging an existing holder in, and reading the profile. Each is drawn below at step level, so you see the round trips before you read the [API sequence](/docs/hiecm/v3/api/m1/sequence).
+Milestone 1 (M1) of [ABDM](/docs/hiecm/v3/getting-started/glossary#abdm) has four flows: creating an [ABHA](/docs/hiecm/v3/getting-started/glossary#abha), attaching a communication mobile number, logging an existing holder in, and reading the profile. Each is drawn below at step level, so you see the round trips before you read the [API reference](/reference/hiecm-m1).
 
 NHA's document carries its own sequence diagrams as images, and those images did not survive the conversion to text. The diagrams below are drawn from the ordered lists of steps in the same document. The step order is NHA's; the drawing is ours.
 
@@ -88,7 +88,7 @@ sequenceDiagram
     A-->>S: Access token for the chosen ABHA
 ```
 
-Login by Aadhaar number, by ABHA number and by ABHA address follow the same two beats: request a challenge, then verify it. The challenge can be an Aadhaar OTP, a mobile OTP, a fingerprint or IRIS capture, or a face authentication scan. [Use cases](/docs/hiecm/v3/api/m1/sequence) lists which routes NHA marks mandatory.
+Login by Aadhaar number, by ABHA number and by ABHA address follow the same two beats: request a challenge, then verify it. The challenge can be an Aadhaar OTP, a mobile OTP, a fingerprint or IRIS capture, or a face authentication scan. [API reference](/reference/hiecm-m1) lists which routes NHA marks mandatory.
 
 ## Journey 4: Profile, ABHA card and quick response (QR) code
 
@@ -109,5 +109,5 @@ sequenceDiagram
 
 NHA says the card is displayed in the response rather than fetched from a separate link, but shows that response as a screenshot, so the content type and encoding are not transcribed. The QR code response is not transcribed either. Neither shape is on the [APIs](/docs/hiecm/v3/api/m1/apis) page, so treat both as unconfirmed until you call them.
 
-Next: [use cases](/docs/hiecm/v3/api/m1/sequence) for which journeys you must build, then [API sequence](/docs/hiecm/v3/api/m1/sequence) for the calls in order.
+Next: [use cases](/reference/hiecm-m1) for which journeys you must build, then [API reference](/reference/hiecm-m1) for the calls in order.
 

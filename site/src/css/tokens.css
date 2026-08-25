@@ -78,6 +78,22 @@
   --accent-soft: hsl(140 30% 34% / 0.1);
   --accent-line: hsl(140 30% 34% / 0.4);
 
+  /* HTTP method colours. GET and POST previously both fell through to the
+     accent, so a read and a write looked identical in the sidebar and on the
+     request bar. Each method now carries its own hue, in the conventional
+     order developers already expect from API tooling. */
+  --method-get: #1b6ac9;
+  --method-get-soft: hsl(211 76% 45% / 0.12);
+  --method-post: var(--brand-600);
+  --method-post-soft: hsl(140 30% 34% / 0.14);
+  --method-put: #a45c00;
+  --method-put-soft: hsl(34 100% 32% / 0.14);
+  --method-patch: #6d43b8;
+  --method-patch-soft: hsl(264 46% 49% / 0.13);
+  --method-delete: var(--destructive);
+  --method-delete-soft: hsl(3 71% 41% / 0.12);
+
+
   /* Structure, measured from the reference site */
   --topbar-height: 4rem;
   --tabs-height: 3rem;
@@ -149,4 +165,17 @@
   --accent-contrast: #0d0d0d;
   --accent-soft: hsl(134 20% 72% / 0.12);
   --accent-line: hsl(134 20% 72% / 0.4);
+
+  /* Method colours, lifted for dark ground. */
+  --method-get: #7fb4f0;
+  --method-get-soft: hsl(211 76% 72% / 0.16);
+  --method-post: var(--brand-300);
+  --method-post-soft: hsl(134 20% 72% / 0.16);
+  --method-put: #e0ac6a;
+  --method-put-soft: hsl(34 66% 65% / 0.16);
+  --method-patch: #b79ce8;
+  --method-patch-soft: hsl(264 58% 76% / 0.16);
+  --method-delete: var(--destructive);
+  --method-delete-soft: hsl(3 71% 84% / 0.14);
+
 }

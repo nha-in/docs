@@ -384,7 +384,7 @@ column, and **Meaning** NHA's own description.
 | `milestone` | character varying | Yes | Current implementation milestone achieved |
 | `updated_at` | timestamp with time zone | Yes | Timestamp when the record was last updated |
 
-## sd_hiu
+## sd_HIU
 
 | Field | Type | Nullable | Meaning |
 | --- | --- | --- | --- |
@@ -394,7 +394,7 @@ column, and **Meaning** NHA's own description.
 | `organization` | character varying | Yes | Name of the HIU organization |
 | `created_at` | timestamp with time zone | Yes | Timestamp when the HIU record was created |
 
-## sd_uhi
+## sd_UHI
 
 | Field | Type | Nullable | Meaning |
 | --- | --- | --- | --- |
@@ -450,7 +450,7 @@ column, and **Meaning** NHA's own description.
 | `pin_code` | character varying | Yes | Postal PIN code of the registered address |
 | `id_public` | bigint | No | Public identifier of the HCX address record |
 
-## nhcx_exit
+## NHCX_exit
 
 | Field | Type | Nullable | Meaning |
 | --- | --- | --- | --- |

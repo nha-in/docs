@@ -139,5 +139,5 @@ each, against two different messages.
 - [M1 overview](/docs/hiecm/v3/api/m1) and the [M1 API reference](/reference/hiecm-m1).
 - [M2 overview](/docs/hiecm/v3/api/m2) and the [M2 API reference](/reference/hiecm-m2).
 - [M2 errors](/docs/hiecm/v3/api/m2/errors), the full ABDM error code list.
-- [M2 steps and calls](/docs/hiecm/v3/api/m2/sequence), what sandbox exit asks you to demonstrate.
+- [M2 steps and calls](/reference/hiecm-m2), what sandbox exit asks you to demonstrate.
 - [PHR applications](/docs/hiecm/v3/concepts/phr), the other side of every flow here.

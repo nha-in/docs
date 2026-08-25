@@ -35,7 +35,7 @@ VERSION               The catalogue version stamp, read into every build
 ```
 
 Prose about ABDM goes in an atom markdown file under the matching type
-folder. Machine contracts go in the module's yaml under `openapi/`.
+folder. Machine contracts go in the module's YAML under `openapi/`.
 There is no third place.
 
 ## How this tree is indexed

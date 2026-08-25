@@ -36,6 +36,27 @@ const sidebarFile = join(root, 'site', 'src', 'data', 'api-sidebar.json');
 
 const METHODS = ['get', 'put', 'post', 'delete', 'patch', 'options', 'head'];
 
+// Acronyms stay in capitals wherever a label is built from an identifier.
+// A key like `x-abdm-errors-uidai` used to render as the heading "uidai
+// codes", which reads as a typo and is one.
+const ACRONYMS = new Set([
+  'abdm', 'abha', 'api', 'apis', 'eua', 'fhir', 'hfr', 'hip', 'hiu', 'hpr',
+  'hspa', 'jwt', 'kyc', 'nha', 'nhcx', 'otp', 'phr', 'qr', 'rsa', 'sms',
+  'uhi', 'uidai', 'url', 'uuid',
+]);
+
+const label = (text) =>
+  String(text)
+    .split(/[\s_-]+/)
+    .filter(Boolean)
+    .map((word) =>
+      ACRONYMS.has(word.toLowerCase())
+        ? word.toUpperCase()
+        : word.charAt(0).toUpperCase() + word.slice(1),
+    )
+    .join(' ');
+
+
 const slug = (s) =>
   s
     .replace(/[^a-zA-Z0-9]+/g, '-')
@@ -374,6 +395,10 @@ for (const {platform, version, files} of tree) {
       moduleDir: `${platform}/${version}/api/${module.dir}`,
       label: module.label,
       route: module.route,
+      // Which integrator roles this module is for. Declared in the spec as
+      // info.x-abdm-roles, so the sidebar's role switcher is driven by the
+      // catalogue rather than by a list kept in the site.
+      roles: module.spec?.info?.['x-abdm-roles'] ?? [],
       groups,
     });
   }
@@ -585,7 +610,7 @@ for (const {platform, version, files} of tree) {
         if (codes.length === 0) continue;
         total += codes.length;
         const suffix = key.replace('x-abdm-errors', '').replace(/^-/, '');
-        lines.push(`## ${module.label}${suffix ? `, ${suffix}` : ''}`);
+        lines.push(`## ${module.label}${suffix ? `, ${label(suffix)}` : ''}`);
         lines.push('');
         if (block.source) {
           lines.push(block.source);
@@ -653,7 +678,7 @@ for (const {platform, version, files} of tree) {
         const rows = block?.codes ?? [];
         if (!rows.length) continue;
         const suffix = key.replace('x-abdm-errors', '').replace(/^-/, '');
-        lines.push(`## ${suffix ? `${suffix} codes` : 'Codes'}`);
+        lines.push(`## ${suffix ? `${label(suffix)} codes` : 'Codes'}`);
         lines.push('');
         if (block.source) {
           lines.push(String(block.source).replace(/\s+/g, ' ').trim());

@@ -36,7 +36,7 @@ changed the picture considerably.
 | Request and response bodies | **Documented.** Ingested from NHA's M3 OpenAPI file into the [M3 API reference](/reference/hiecm-m3). |
 | Callbacks the gateway sends you | **Documented, with payloads.** NHA's specification carries no callbacks at all, so these were transcribed from NHA's M3 collection, which does. M3 is the only milestone where both halves of the exchange are described. |
 | Screen Sequence, and the Expiry screens | Screenshots only. No text survived the conversion. |
-| The sequence diagrams the change note corrects | Screenshots only. The two corrected bridge URLs did survive, and are on the [API sequence](/docs/hiecm/v3/api/m3/sequence) page. |
+| The sequence diagrams the change note corrects | Screenshots only. The two corrected bridge URLs did survive, and are on the [API reference](/reference/hiecm-m3) page. |
 
 Two caveats worth carrying into your integration.
 
@@ -52,9 +52,9 @@ right, and recorded it as correction C3 in
 ## Read M3 in this order
 
 1. [User journey](/docs/hiecm/v3/api/m3/user-journey). The request, the patient's decision, the fetch.
-2. [Use cases](/docs/hiecm/v3/api/m3/sequence). Purpose of use and [HI type](/docs/hiecm/v3/getting-started/glossary#hi-type) code tables, and what the patient controls.
-3. [API sequence](/docs/hiecm/v3/api/m3/sequence). The calls and callbacks in order.
+2. [API reference](/reference/hiecm-m3). Purpose of use and [HI type](/docs/hiecm/v3/getting-started/glossary#hi-type) code tables, and what the patient controls.
+3. [API reference](/reference/hiecm-m3). The calls and callbacks in order.
 4. [Errors](/docs/hiecm/v3/api/m3/errors). What can go wrong at each stage.
-5. [Steps and calls](/docs/hiecm/v3/api/m3/sequence). Every step of every use case, with the call it makes and what to see when it works.
+5. [Steps and calls](/reference/hiecm-m3). Every step of every use case, with the call it makes and what to see when it works.
 
 Sandbox test data: [data dictionary](/docs/hiecm/v3/reference/data-dictionary). Channels: [support](/docs/support).

@@ -156,7 +156,23 @@ div[class^='codeBlockTitle'] {
 /* Tables. border-collapse: collapse merges every cell border into the table's
    own, so there is no border box left for border-radius to round or overflow
    to clip; both were dead weight. Square corners read as consistent with the
-   restrained look everywhere else, so nothing replaces them. */
+   restrained look everywhere else, so nothing replaces them.
+
+   `display: table` means the element cannot scroll itself, so a table wider
+   than the column used to spill out of the article and run underneath the
+   sticky outline on the right. The wrapper below is what scrolls; the table
+   keeps its layout. */
+.markdown .table-scroll {
+  display: block;
+  max-width: 100%;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+}
+
+.markdown .table-scroll > table {
+  margin-bottom: 0;
+}
+
 .markdown table {
   display: table;
   width: 100%;
@@ -183,6 +199,56 @@ div[class^='codeBlockTitle'] {
   border-bottom: 1px solid var(--border);
   padding: 0.625rem 0.875rem;
   color: var(--text-body);
+  /* Error messages carry unbroken runs like
+     "Prescription,DiagnosticReport,OPConsultation,..." with no spaces to
+     break at, so a cell could not wrap and the row overflowed instead. A
+     horizontal scrollbar is the wrong answer: nobody discovers it. Let the
+     cell break inside the run. */
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+/* A code chip is an identifier and must not be split down the middle:
+   `ABDM-1001` was wrapping to "ABDM-" over "1001". */
+.markdown table td > code:only-child,
+.markdown table th > code:only-child {
+  white-space: nowrap;
+}
+
+/* Reference tables keyed by a code, the error tables above all, are laid out
+   rather than left to the browser's content sizing. On auto layout the three
+   columns wanted 668px inside a 648px column, so the table overflowed and the
+   only way to read the end of a message was a horizontal scrollbar nobody
+   discovers.
+
+   Fixed layout with the two narrow columns sized gives the message column
+   everything else, and the message wraps instead of running off the edge.
+   Scoped by :has() to tables whose first body cell is a bare code chip, so
+   ordinary prose tables keep content based sizing. */
+.markdown table:has(tbody td:first-child > code:only-child) {
+  table-layout: fixed;
+}
+
+.markdown table:has(tbody td:first-child > code:only-child) tr > *:first-child {
+  width: 7.5rem;
+}
+
+.markdown table:has(tbody td:first-child > code:only-child) tr > *:last-child {
+  width: 9rem;
+}
+
+/* Narrow viewports have no room to give a column away, so the table goes back
+   to content sizing and the wrapper's scroll becomes the fallback it was
+   meant to be. */
+@media (max-width: 768px) {
+  .markdown table:has(tbody td:first-child > code:only-child) {
+    table-layout: auto;
+  }
+
+  .markdown table:has(tbody td:first-child > code:only-child) tr > *:first-child,
+  .markdown table:has(tbody td:first-child > code:only-child) tr > *:last-child {
+    width: auto;
+  }
 }
 
 .markdown table tr:last-child td {

@@ -72,9 +72,9 @@ NHA marks implementing all [HI types](/docs/hiecm/v3/getting-started/glossary#hi
 ## Read M2 in this order
 
 1. [User journey](/docs/hiecm/v3/api/m2/user-journey). The four flows as diagrams.
-2. [Use cases](/docs/hiecm/v3/api/m2/sequence). Care contexts, linking, packaging, validation, encryption.
-3. [API sequence](/docs/hiecm/v3/api/m2/sequence). Calls and callbacks in order.
+2. [API reference](/reference/hiecm-m2). Care contexts, linking, packaging, validation, encryption.
+3. [API reference](/reference/hiecm-m2). Calls and callbacks in order.
 4. [Errors](/docs/hiecm/v3/api/m2/errors). NHA's custom error codes.
-5. [Steps and calls](/docs/hiecm/v3/api/m2/sequence). Every step of every use case, with the call it makes and what to see when it works.
+5. [Steps and calls](/reference/hiecm-m2). Every step of every use case, with the call it makes and what to see when it works.
 
 Shapes: [M2 API reference](/reference/hiecm-m2), [gateway reference](/reference/hiecm-gateway). Test data: [data dictionary](/docs/hiecm/v3/reference/data-dictionary). Channels: [support](/docs/support).

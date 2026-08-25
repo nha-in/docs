@@ -72,3 +72,19 @@ Generated from the specifications. Every scheme and header below is declared in 
 
 **gatewaySession**, `http` `bearer`. The `accessToken` from `POST /api/hiecm/gateway/v3/sessions`, which is described in hiecm-gateway.yaml. Send it as `Authorization: Bearer <ACCESS_TOKEN>`.
 
+## P1 PHR identity and profile
+
+**gatewaySession**, `http` `bearer`. The access token from the gateway session endpoint, described in hiecm-gateway.yaml.
+
+## P2 PHR linking and records
+
+**gatewaySession**, `http` `bearer`. The access token from the gateway session endpoint, described in hiecm-gateway.yaml.
+
+## P3 PHR consent and notifications
+
+**gatewaySession**, `http` `bearer`. The access token from the gateway session endpoint, described in hiecm-gateway.yaml.
+
+## PHR application services
+
+**gatewaySession**, `http` `bearer`. The access token from the gateway session endpoint, described in hiecm-gateway.yaml.
+

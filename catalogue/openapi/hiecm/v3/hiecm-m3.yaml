@@ -79,6 +79,9 @@ tags:
     fetch artefact
 - name: data-retrieval
   description: Health data retrieval, HI request and transfer completion notification
+- name: webhooks
+  description: What ABDM sends to your registered URL. You do not call these;
+    you receive them.
 paths:
   /hiecm/consent/v3/request/init:
     post:
@@ -549,6 +552,8 @@ webhooks:
                   response:
                     requestId: 6cb80f71-49fa-4f8c-93d5-de9916a708e8
       x-abdm-atom: hiecm.callback.m3-on-consent-request-init
+      tags:
+      - webhooks
   /api/v3/hiu/consent/request/notify:
     post:
       operationId: m3_on_consent_request_notify_hiu
@@ -600,6 +605,8 @@ webhooks:
                     consentArtefacts:
                     - id: 28ef6ae8-ad03-488d-b26e-940e27154cc0
       x-abdm-atom: hiecm.callback.m3-on-consent-request-notify-hiu
+      tags:
+      - webhooks
   /api/v3/consent/request/hip/notify:
     post:
       operationId: m3_on_consent_request_notify_hip
@@ -612,6 +619,9 @@ webhooks:
         '202':
           description: Your bridge accepted the callback. NHA validates the body
             you send back, so a 202 carrying the wrong body is still a failure.
+      x-abdm-atom: hiecm.callback.m3-on-consent-request-notify-hip
+      tags:
+      - webhooks
   /api/v3/hiu/consent/on-fetch:
     post:
       operationId: m3_on_consent_fetch
@@ -860,6 +870,8 @@ webhooks:
                     requestId: e1ff8798-53c1-4d1c-8443-e38589c7ac98
                   resp: null
       x-abdm-atom: hiecm.callback.m3-on-consent-fetch
+      tags:
+      - webhooks
   /api/v3/hiu/health-information/on-request:
     post:
       operationId: m3_on_health_information_request
@@ -913,6 +925,8 @@ webhooks:
                   response:
                     requestId: e492d2b5-5f0a-4406-8a5d-5b4351e2ff2c
       x-abdm-atom: hiecm.callback.m3-on-health-information-request
+      tags:
+      - webhooks
   /api/v3/hiu/consent/request/on-status:
     post:
       operationId: m3_on_consent_request_status
@@ -970,6 +984,8 @@ webhooks:
                     requestId: 68b099de-f7ba-4a92-9bd5-97de2e397f31
                   resp: null
       x-abdm-atom: hiecm.callback.m3-on-consent-request-status
+      tags:
+      - webhooks
 components:
   securitySchemes:
     gatewaySession:
@@ -1621,3 +1637,334 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/ErrorResponse'
+x-abdm-errors:
+  codes:
+  - code: ABDM-1000
+    message: Unable to connect the database
+    action: Retry
+  - code: ABDM-1001
+    message: Subscription source update returned empty
+    action: Unclassified
+    name: DATA_NOT_FOUND
+  - code: ABDM-1002
+    message: Invalid frequency unit, it must be in HOUR, WEEK, DAY, MONTH, YEAR
+    action: Fix request
+    name: CONSTRAINT_VIOLATION
+  - code: ABDM-1003
+    message: Email Gateway is unavailable
+    action: Retry
+  - code: ABDM-1004
+    message: SMS Gateway is unavailable
+    action: Retry
+  - code: ABDM-1005
+    message: Invalid receiver
+    action: Fix request
+  - code: ABDM-1006
+    message: Invalid HIType, it must be in Prescription,DiagnosticReport,OPConsultation,DischargeSummary,ImmunizationRecord,HealthDocumentRecord,WellnessRecord,Invoice
+    action: Fix request
+    name: BAD_REQUEST
+  - code: ABDM-1007
+    message: Connection failed due to timeout
+    action: Retry
+  - code: ABDM-1008
+    message: SMS service currently disabled
+    action: Unclassified
+    name: SMS_SERVICE_DISABLED
+  - code: ABDM-1009
+    message: Email service currently disabled
+    action: Unclassified
+    name: EMAIL_SERVICE_DISABLED
+  - code: ABDM-1010
+    message: No pending care context found for this abha address
+    action: Unclassified
+    name: VALIDATION_FAILED
+  - code: ABDM-1011
+    message: Gateway database unavailable
+    action: Retry
+  - code: ABDM-1012
+    message: No records found against the ABHA Address
+    action: Unclassified
+  - code: ABDM-1013
+    message: Invalid ABHA Number
+    action: Fix request
+    name: INVALID_ABHA_NUMBER
+  - code: ABDM-1014
+    message: Invalid Mobile Email
+    action: Fix request
+  - code: ABDM-1015
+    message: Invalid Response
+    action: Fix request
+  - code: ABDM-1016
+    message: Invalid Timestamp
+    action: Fix request
+    name: INVALID_TIMESTAMP
+  - code: ABDM-1017
+    message: Invalid Transaction Id
+    action: Fix request
+    name: INVALID_TRANSACTION_ID
+  - code: ABDM-1018
+    message: Share Profile database unavailable
+    action: Retry
+  - code: ABDM-1019
+    message: Dependent Service Unavailable
+    action: Retry
+    name: FEIGN_EXCEPTION
+  - code: ABDM-1020
+    message: Unknown database
+    action: Unclassified
+  - code: ABDM-1021
+    message: Lack of required priviledges
+    action: Fix request
+    name: UNAUTHORIZED_ACCESS
+  - code: ABDM-1022
+    message: Too many requests
+    action: Retry
+    name: TOO_MANY_REQUEST
+  - code: ABDM-1023
+    message: Invalid User
+    action: Fix request
+  - code: ABDM-1024
+    message: Dependent service unavailable
+    action: Retry
+  - code: ABDM-1025
+    message: Invalid ServiceId
+    action: Fix request
+  - code: ABDM-1026
+    message: Bridge Id not found
+    action: Fix request
+  - code: ABDM-1027
+    message: You are blocked. Please try again after 24 hours.
+    action: Cannot proceed
+  - code: ABDM-1028
+    message: HIP is unavailable
+    action: Retry
+  - code: ABDM-1029
+    message: Redis server is unavailable
+    action: Retry
+    name: REDIS_SERVER_UNAVAILABLE
+  - code: ABDM-1030
+    message: Request id not found
+    action: Fix request
+    name: INVALID_REQUEST_ID
+  - code: ABDM-1031
+    message: Invalid reason. Reason should not be null or empty and should contains
+      only alphabets, dot(.) and comma(,)
+    action: Fix request
+  - code: ABDM-1032
+    message: Invalid header
+    action: Fix request
+  - code: ABDM-1033
+    message: HIU is unavailable
+    action: Retry
+  - code: ABDM-1034
+    message: Notification service unavailable
+    action: Retry
+    name: NOTIFICATION_SERVICE_UNAVAILABLE
+  - code: ABDM-1035
+    message: OTP does not matched
+    action: Unclassified
+  - code: ABDM-1039
+    message: Invalid Consent request id
+    action: Cannot proceed
+  - code: ABDM-1040
+    message: Invalid Locker ID
+    action: Fix request
+  - code: ABDM-1041
+    message: Invalid Acknowledgement
+    action: Fix request
+  - code: ABDM-1046
+    message: Invalid Purpose
+    action: Fix request
+  - code: ABDM-1047
+    message: Purpose does not exist
+    action: Fix request
+    name: VALIDATION_FAILED_EXCEPTION
+  - code: ABDM-1048
+    message: Timeout
+    action: Retry
+    name: TIMEOUT_EXCEPTION
+  - code: ABDM-1051
+    message: Invalid ABHA Number or ABHA Address
+    action: Fix request
+  - code: ABDM-1054
+    message: Invalid Subscription Request Id
+    action: Fix request
+  - code: ABDM-1057
+    message: Invalid Care Contexts
+    action: Fix request
+  - code: ABDM-1058
+    message: Invalid HI Types
+    action: Fix request
+  - code: ABDM-1060
+    message: Invalid Patient Reference Number
+    action: Fix request
+  - code: ABDM-1061
+    message: Consent artefact expired
+    action: Cannot proceed
+  - code: ABDM-1062
+    message: ABHA number mismatch with Link token),
+    action: Fix request
+  - code: ABDM-1063
+    message: HIP Id mismatch with Link token
+    action: Fix request
+  - code: ABDM-1064
+    message: request with this request id already exists
+    action: Fix request
+  - code: ABDM-1065
+    message: Health facility does not exist
+    action: Fix request
+    name: HFR_UID_NOT_EXIST
+  - code: ABDM-1070
+    message: Duplicate consent request
+    action: Cannot proceed
+  - code: ABDM-1071
+    message: User doesn't belongs to same organisation
+    action: Unclassified
+  - code: ABDM-1072
+    message: Included source size must be at least 1
+    action: Unclassified
+  - code: ABDM-1074
+    message: HIP object cannot be null in excluded sources
+    action: Fix request
+  - code: ABDM-1075
+    message: HIP object cannot be null in included sources
+    action: Fix request
+  - code: ABDM-1077
+    message: Auto approval policy id doesn't exist.
+    action: Unclassified
+  - code: ABDM-1078
+    message: Failed to upload documents
+    action: Unclassified
+  - code: ABDM-1079
+    message: Auto approval id is already disabled
+    action: Fix request
+  - code: ABDM-1080
+    message: Subscription request may be already approved or denied
+    action: Fix request
+  - code: ABDM-1081
+    message: Please upload registration certificate of your organisation
+    action: Unclassified
+  - code: ABDM-1082
+    message: Please upload authority letter from your organisation
+    action: Unclassified
+  - code: ABDM-1083
+    message: User doesn't belongs to same organisation
+    action: Unclassified
+  - code: ABDM-1084
+    message: The Details fetched from Aadhaar is not matching with our database.
+      Please select the correct details to proceed
+    action: Unclassified
+  - code: ABDM-1085
+    message: ABHA number mismatch with X Auth token
+    action: Fix request
+  - code: ABDM-1099
+    message: Invalid event Id, it cannot be null
+    action: Fix request
+  - code: ABDM-1100
+    message: You have requested multiple OTPs Or Exceeded maximum number of attempts
+      for OTP match in this transaction. Please try again in 30 minutes.
+    action: Retry
+    name: EXCEEDED_MULTIPLE_OTP_REQUEST_OR_OTP_MATCH
+  - code: ABDM-1112
+    message: The provided gender does not match the gender in DigiLocker records
+    action: Unclassified
+    name: EITHER_OLD_OR_NEW_PASSWORD_NOT_ENCRYPTED
+  - code: ABDM-1113
+    message: Duplicate health information provider data flow response data flow
+      resoponse
+    action: Fix request
+    name: ABHA_UI_EXPERIENCE_INVALID_CAPTCHA
+  - code: ABDM-1116
+    message: 'generate_and_save_link_token : ''NoneType'' object has no attribute
+      ''get'''
+    action: Unclassified
+    name: AADHAAR_DETAILS_NOT_FOUND
+  - code: ABDM-1117
+    message: Auto approval id is already active
+    action: Fix request
+    name: LOGIN_VIA_PASSWORD_NOT_ALLOWED
+  - code: ABDM-1118
+    message: Login via ABHA Number OTP is not allowed
+    action: Fix request
+    name: LOGIN_VIA_ABHA_NUMBER_OTP_NOT_ALLOWED
+  - code: ABDM-1119
+    message: Login via Aadhaar OTP is not allowed
+    action: Fix request
+    name: LOGIN_VIA_AADHAAR_OTP_NOT_ALLOWED
+  - code: ABDM-1120
+    message: No care context is available for this patient.
+    action: Unclassified
+  - code: ABDM-1144
+    message: Incorrect facility ID or password.
+    action: Fix request
+    name: ABHA_FACILITY_INCORRECT_ID_PASSWORD
+  - code: ABDM-1145
+    message: Subscription is already disabled
+    action: Fix request
+  - code: ABDM-1146
+    message: Subscription is not in revoked state
+    action: Unclassified
+  - code: ABDM-1147
+    message: Subscription is not in granted state
+    action: Unclassified
+  - code: ABDM-1148
+    message: Subscription id does not belong to the patient
+    action: Unclassified
+  - code: ABDM-1151
+    message: Health locker is already setup for the user
+    action: Fix request
+  - code: ABDM-1152
+    message: Subscription not found for the locker
+    action: Fix request
+  - code: ABDM-1153
+    message: Unable to create Consent Auto Approval for the health locker
+    action: Cannot proceed
+  - code: ABDM-1154
+    message: Unable to save user health locker
+    action: Unclassified
+  - code: ABDM-1170
+    message: Invalid ABHA address
+    action: Fix request
+  - code: ABDM-1401
+    message: Your mobile number is not linked to the ABHA number. Please update
+      your mobile number in ABHA or try to register using Aadhaar OTP
+    action: Unclassified
+  - code: ABDM-1402
+    message: Transaction Id is not matching with response
+    action: Unclassified
+  - code: ABDM-1403
+    message: As per NHA policy, you have exceeded ABHA address creation limit,
+      please link your ABHA address to ABHA number.
+    action: Unclassified
+  - code: ABDM-1404
+    message: Patient record share detail not found
+    action: Fix request
+  - code: ABDM-1405
+    message: Invalid health information status
+    action: Fix request
+  - code: ABDM-1406
+    message: Invalid session status, Status should be TRANSFERRED, PARTIAL_TRANSFERRED
+      or FAILED
+    action: Fix request
+  - code: ABDM-1407
+    message: The ABHA Number associated with this ABHA Address is currently deactivated.
+      Please reactivate it.
+    action: Cannot proceed
+  - code: ABDM-1408
+    message: Invalid API sequence flow, please follow logical flow
+    action: Fix request
+  - code: ABDM-8877
+    message: HIP did not acknowledge the HIP consent notify. Please try again
+      after some time
+    action: Cannot proceed
+  - code: ABDM-9999
+    message: Invalid purpose text, it must be in Care Management, Break the Glass,
+      Public Health, Healthcare Payment, Disease Specific Healthcare Research,
+      Self Requested
+    action: Fix request
+    name: UNKNOWN_EXCEPTION
+  source: NHA's error code workbooks, ABDM M1-M2-M3-M4_Error_Codes.xlsx and ErrorCode-Message.xlsx,
+    supplied 2026-08-25. Code, message and, where NHA gives one, the error name
+    are NHA's. The action column is this catalogue's reading of the message text,
+    by a documented rule, and is not NHA's. Anything the rule could not classify
+    says Unclassified rather than guessing.

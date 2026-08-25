@@ -84,7 +84,7 @@ Every record is a `Bundle` of `type: document`, and the first entry must be a `C
 }
 ```
 
-That is the skeleton. The full sample, with the Organization, the Encounter and the section entries, is on [M2 use cases](/docs/hiecm/v3/api/m2/sequence).
+That is the skeleton. The full sample, with the Organization, the Encounter and the section entries, is on [M2 use cases](/reference/hiecm-m2).
 
 ### Why the Composition comes first
 
@@ -125,7 +125,7 @@ It checks structural correctness, conformance to the NRCES profiles, and require
 
 ## Where this is implemented
 
-- [M2 use cases](/docs/hiecm/v3/api/m2/sequence), the full bundle sample and validation in context.
+- [M2 use cases](/reference/hiecm-m2), the full bundle sample and validation in context.
 - [How a record travels](/docs/hiecm/v3/concepts/data-flow), what happens to the bundle after you build it.
 - [Care contexts and linking](/docs/hiecm/v3/concepts/linking), how records are grouped and made findable.
 - [Consent](/docs/hiecm/v3/concepts/consent), where the HI type codes above are chosen and read.
