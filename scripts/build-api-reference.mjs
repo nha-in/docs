@@ -286,15 +286,41 @@ for (const module of MODULES) {
     count += 1;
   }
 
+  // Use cases whose tags share the part before the comma are one family:
+  // "ABHA creation, Aadhaar OTP" and "ABHA creation, Aadhaar biometric" fold
+  // into an "ABHA creation" section with the variants as children. The split
+  // is presentation only; the tag in the specification stays the one name.
+  const pretty = (tag) =>
+    /[A-Z]/.test(tag)
+      ? tag
+      : tag.replace(/-/g, ' ').replace(/^./, (c) => c.toUpperCase());
+  const families = new Map();
+  for (const [tag, items] of byTag.entries()) {
+    const label = pretty(tag);
+    const comma = label.indexOf(', ');
+    const family = comma === -1 ? label : label.slice(0, comma);
+    if (!families.has(family)) families.set(family, []);
+    families.get(family).push({label, items});
+  }
+  const groups = [...families.entries()].map(([family, members]) =>
+    members.length === 1
+      ? members[0]
+      : {
+          label: family,
+          children: members.map((member) => {
+            const variant = member.label.slice(family.length + 2);
+            return {
+              label: variant.replace(/^./, (c) => c.toUpperCase()),
+              items: member.items,
+            };
+          }),
+        },
+  );
+
   sidebar.push({
     moduleId: module.id,
     label: module.label,
-    groups: [...byTag.entries()].map(([tag, items]) => ({
-      label: /[A-Z]/.test(tag)
-        ? tag
-        : tag.replace(/-/g, ' ').replace(/^./, (c) => c.toUpperCase()),
-      items,
-    })),
+    groups,
   });
 }
 
@@ -324,7 +350,9 @@ const SPEC_ROUTES = {
 };
 
 for (const module of sidebar) {
-  const total = module.groups.reduce((n, g) => n + g.items.length, 0);
+  // A family group holds its endpoints one level down, in its children.
+  const flatGroups = module.groups.flatMap((g) => g.children ?? [g]);
+  const total = flatGroups.reduce((n, g) => n + g.items.length, 0);
   indexLines.push(`## ${module.label}`);
   indexLines.push('');
   indexLines.push(
