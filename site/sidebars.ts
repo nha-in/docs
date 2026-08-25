@@ -10,20 +10,42 @@ type GeneratedItem = {
   className: string;
 };
 
+type GeneratedGroup = {
+  label: string;
+  items?: GeneratedItem[];
+  children?: {label: string; items: GeneratedItem[]}[];
+};
+
 /**
  * The use case groups under a module, generated from the OpenAPI files by
  * scripts/build-api-reference.mjs. A use case is a category and its endpoints
- * are the items, each carrying the class that paints its method badge. Adding
- * an operation to a specification adds it here.
+ * are the items, each carrying the class that paints its method badge. Use
+ * cases from one family ("ABHA creation, ...") arrive folded: the family is
+ * the category and each variant is a child category. Adding an operation to a
+ * specification adds it here.
  */
 function useCasesOf(moduleId: string) {
   const module = apiTree.find((entry) => entry.moduleId === moduleId);
-  return (module?.groups ?? []).map((group) => ({
-    type: 'category' as const,
-    label: group.label,
-    collapsed: true,
-    items: group.items as GeneratedItem[],
-  }));
+  return ((module?.groups ?? []) as GeneratedGroup[]).map((group) =>
+    group.children
+      ? {
+          type: 'category' as const,
+          label: group.label,
+          collapsed: true,
+          items: group.children.map((child) => ({
+            type: 'category' as const,
+            label: child.label,
+            collapsed: true,
+            items: child.items,
+          })),
+        }
+      : {
+          type: 'category' as const,
+          label: group.label,
+          collapsed: true,
+          items: group.items as GeneratedItem[],
+        },
+  );
 }
 
 /**
