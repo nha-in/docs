@@ -5,6 +5,7 @@ sidebar_position: 1
 description: The credentials every ABDM call carries, and the headers that go with them.
 verification: unverified
 source: the published OpenAPI specifications
+generated: true
 ---
 
 # Authentication

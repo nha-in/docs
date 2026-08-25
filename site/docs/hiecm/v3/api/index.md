@@ -5,6 +5,7 @@ sidebar_position: 1
 description: Every operation published for this gateway, module by module.
 verification: unverified
 source: the published OpenAPI specifications
+generated: true
 ---
 
 # API references

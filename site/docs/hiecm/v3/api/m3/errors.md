@@ -5,6 +5,7 @@ sidebar_position: 98
 description: What M3 Consent and fetching returns when a call fails, and what to do about it.
 verification: unverified
 source: hiecm-m3.yaml
+generated: true
 ---
 
 # M3 Consent and fetching errors

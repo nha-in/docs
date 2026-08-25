@@ -70,6 +70,22 @@ label, and modules sort alphabetically. Hand-written module guide pages
 `site/docs/<platform>/<version>/api/<module>/` next to the generated content;
 never edit anything under `endpoints/` — it is overwritten on every build.
 
+Two rules the build enforces, because breaking either one publishes something
+wrong rather than failing:
+
+- **Spec file names are unique across the whole tree.** The name is the served
+  path and the Scalar route, so `uhi/v1/m1.yaml` and `hiecm/v3/m1.yaml` would
+  be one page. Prefix with the gateway: `uhi-search.yaml`.
+- **Do not hand-write a page at a generated name.** Generated pages carry
+  `generated: true` in their frontmatter; the build refuses to overwrite a
+  page that lacks it, and stops rather than dropping either version. Generated
+  names are `api/index.md`, `api/<module>/errors.md`, and
+  `reference/{authentication,callbacks,error-codes}.md`.
+
+Removing a spec does not remove its module folder, because that folder also
+holds hand-written guide pages. Delete the folder yourself when you retire a
+specification.
+
 ## Moving or renaming a page
 
 Old URLs must keep working. Add a redirect in `site/docusaurus.config.ts`

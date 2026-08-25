@@ -5,6 +5,7 @@ sidebar_position: 98
 description: What M4 HPR and HFR returns when a call fails, and what to do about it.
 verification: unverified
 source: hiecm-m4.yaml
+generated: true
 ---
 
 # M4 HPR and HFR errors

@@ -7,11 +7,28 @@
 // position}); the filename stem is the Scalar route (/reference/<stem>).
 // Everything under .../api/<module>/endpoints, the generated reference pages
 // and site/src/data/api are build outputs. Edit the specs, not the output.
-import {readFileSync, writeFileSync, mkdirSync, rmSync} from 'node:fs';
+import {existsSync, readFileSync, writeFileSync, mkdirSync, rmSync} from 'node:fs';
 import {join, dirname} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {parse} from 'yaml';
 import {listSpecTree} from './specs.mjs';
+
+/**
+ * Write a page this script owns, refusing to destroy one a person wrote.
+ *
+ * Generated pages carry `generated: true` in their frontmatter. A file that
+ * exists without that marker was authored by hand and sitting at a name this
+ * script also wants, so it is left alone and reported. Silently overwriting it
+ * loses the only copy of somebody's writing.
+ */
+const clobbered = [];
+function writeGenerated(path, content) {
+  if (existsSync(path) && !/^generated: true$/m.test(readFileSync(path, 'utf8'))) {
+    clobbered.push(path);
+    return;
+  }
+  writeFileSync(path, content);
+}
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const dataDir = join(root, 'site', 'src', 'data', 'api');
@@ -282,6 +299,7 @@ for (const {platform, version, files} of tree) {
         'wrapperClassName: api-doc',
         'verification: unverified',
         `source: ${module.file}`,
+        'generated: true',
         '---',
         '',
         "import ApiEndpoint from '@site/src/components/api/ApiEndpoint';",
@@ -369,6 +387,7 @@ for (const {platform, version, files} of tree) {
     'description: Every operation published for this gateway, module by module.',
     'verification: unverified',
     'source: the published OpenAPI specifications',
+    'generated: true',
     '---',
     '',
     '# API references',
@@ -400,7 +419,7 @@ for (const {platform, version, files} of tree) {
     indexLines.push('');
   }
   mkdirSync(docsDir, {recursive: true});
-  writeFileSync(join(docsDir, 'index.md'), `${indexLines.join('\n')}\n`);
+  writeGenerated(join(docsDir, 'index.md'), `${indexLines.join('\n')}\n`);
 
   // -------------------------------------------------------------------------
   // The reference pages. Everything below is generated from the
@@ -419,6 +438,7 @@ for (const {platform, version, files} of tree) {
       `description: ${description}`,
       'verification: unverified',
       'source: the published OpenAPI specifications',
+      'generated: true',
       '---',
       '',
     ].join('\n');
@@ -474,7 +494,7 @@ for (const {platform, version, files} of tree) {
         lines.push('');
       }
     }
-    writeFileSync(join(refDir, 'authentication.md'), `${lines.join('\n')}\n`);
+    writeGenerated(join(refDir, 'authentication.md'), `${lines.join('\n')}\n`);
   }
 
   // ---- callbacks: the webhooks the specifications declare ----
@@ -520,7 +540,7 @@ for (const {platform, version, files} of tree) {
       );
       lines.push('');
     }
-    writeFileSync(join(refDir, 'callbacks.md'), `${lines.join('\n')}\n`);
+    writeGenerated(join(refDir, 'callbacks.md'), `${lines.join('\n')}\n`);
   }
 
   // ---- error codes: the x-abdm-errors blocks ----
@@ -590,7 +610,7 @@ for (const {platform, version, files} of tree) {
       `${total} code${total === 1 ? '' : 's'} are recorded. A code you meet that is not here is one the specifications do not carry yet.`,
     );
     lines.push('');
-    writeFileSync(join(refDir, 'error-codes.md'), `${lines.join('\n')}\n`);
+    writeGenerated(join(refDir, 'error-codes.md'), `${lines.join('\n')}\n`);
     console.log(`Built the ${platform}/${version} error reference from ${total} recorded code(s).`);
   }
 
@@ -616,6 +636,7 @@ for (const {platform, version, files} of tree) {
       `description: What ${module.label} returns when a call fails, and what to do about it.`,
       'verification: unverified',
       `source: ${module.file}`,
+      'generated: true',
       '---',
       '',
       `# ${module.label} errors`,
@@ -689,7 +710,7 @@ for (const {platform, version, files} of tree) {
 
     const dir = join(docsDir, module.dir);
     mkdirSync(dir, {recursive: true});
-    writeFileSync(join(dir, 'errors.md'), `${lines.join('\n')}\n`);
+    writeGenerated(join(dir, 'errors.md'), `${lines.join('\n')}\n`);
   }
 
   // ---- the base URLs partial each module's conventions page renders ----
@@ -717,3 +738,23 @@ console.log(
     .map((pv) => `${pv.platform}/${pv.version} (${pv.files.length} spec(s))`)
     .join(', ')}.`,
 );
+
+// A hand written page sitting where a generated one goes is a conflict only a
+// person can settle: keep the writing under another name, or delete it and let
+// the specification own the page. Failing here is the point, because the
+// alternative is publishing a gateway whose reference silently went missing.
+if (clobbered.length > 0) {
+  console.error(
+    [
+      '',
+      'These pages are written by hand at names this script generates:',
+      ...clobbered.map((path) => `  ${path.slice(root.length + 1)}`),
+      '',
+      'They were left untouched, so their generated versions are missing.',
+      'Rename the hand written page, or delete it to let the specification',
+      'own that page.',
+      '',
+    ].join('\n'),
+  );
+  process.exit(1);
+}
