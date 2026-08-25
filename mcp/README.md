@@ -6,9 +6,23 @@ read-only SQLite snapshot compiled from catalogue/ by cmd/indexer; the
 server never reads the catalogue directly and never writes anything.
 
 Search is hybrid: FTS5 keyword ranking fused (reciprocal rank fusion)
-with cosine similarity over chunk embeddings from a self-hosted Ollama
-sidecar (nomic-embed-text). Both the indexer and the server run without
-Ollama, degrading to keyword-only; /healthz reports which mode is live.
+with cosine similarity over chunk embeddings. Embeddings come from one
+of two providers, chosen by EMBED_PROVIDER: `bedrock` (Amazon Titan
+Text Embeddings V2, credentials via the SDK default chain — task role,
+OIDC role, or a local profile; never configured here) or `ollama`
+(nomic-embed-text, for test deployments without AWS model access).
+Both the indexer and the server run without a provider, degrading to
+keyword-only; /healthz reports which mode is live.
+
+The provider is decided once per deployment, in the pipeline, and the
+indexer and server both inherit it. There is no runtime fallback from
+one provider to another: the index stamps its provider-qualified model
+(`bedrock/amazon.titan-embed-text-v2:0`, `ollama/nomic-embed-text`)
+and the server refuses a mismatched snapshot at startup. Switching
+provider therefore means rebuilding catalogue.db.
+
+Configuration is environment-first (see .env.example); every env var
+has a same-named flag that overrides it for local runs.
 
 Design: ../docs/superpowers/specs/2026-08-24-docs-mcp-design.md
 
@@ -17,12 +31,18 @@ Design: ../docs/superpowers/specs/2026-08-24-docs-mcp-design.md
     go run ./cmd/indexer -catalogue ../catalogue -out /tmp/catalogue.db
     go run ./cmd/docs-mcp -db /tmp/catalogue.db -addr :8080
 
-With embeddings (Ollama running locally with nomic-embed-text pulled):
+With embeddings via Bedrock (any AWS credentials the default chain finds):
 
-    go run ./cmd/indexer -catalogue ../catalogue -out /tmp/catalogue.db -ollama http://localhost:11434
-    go run ./cmd/docs-mcp -db /tmp/catalogue.db -addr :8080 -ollama http://localhost:11434
+    EMBED_PROVIDER=bedrock AWS_REGION=ap-south-1 go run ./cmd/indexer -catalogue ../catalogue -out /tmp/catalogue.db
+    EMBED_PROVIDER=bedrock AWS_REGION=ap-south-1 go run ./cmd/docs-mcp -db /tmp/catalogue.db
 
-Or the full pair: docker compose up (see docker-compose.yml).
+With embeddings via Ollama (running locally, nomic-embed-text pulled):
+
+    EMBED_PROVIDER=ollama OLLAMA_URL=http://localhost:11434 go run ./cmd/indexer -catalogue ../catalogue -out /tmp/catalogue.db
+    EMBED_PROVIDER=ollama OLLAMA_URL=http://localhost:11434 go run ./cmd/docs-mcp -db /tmp/catalogue.db
+
+Or docker compose up (see docker-compose.yml; the Ollama sidecar is the
+`ollama` profile).
 
 ## Tools
 
@@ -35,7 +55,8 @@ verification_status.
 
     go test ./...
 
-No test needs Ollama; embeddings are covered by a deterministic fake.
+No test needs Ollama or AWS; embeddings are covered by a deterministic
+fake, and the Bedrock client is tested against a stand-in invoker.
 Golden contract files live in internal/server/testdata/golden; regenerate
 with go test ./internal/server/ -run TestGolden -update and review the
 diff like any other contract change.

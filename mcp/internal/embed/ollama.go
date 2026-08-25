@@ -21,7 +21,10 @@ func NewOllama(baseURL, model string) *Ollama {
 		client: &http.Client{Timeout: 60 * time.Second}}
 }
 
-func (o *Ollama) Model() string { return o.model }
+// Model is provider-qualified so an index built by one provider can never be
+// served by another without the startup mismatch error firing. Indexes built
+// before this qualification carry the bare model name and need a rebuild.
+func (o *Ollama) Model() string { return "ollama/" + o.model }
 
 func (o *Ollama) Embed(ctx context.Context, texts []string) ([][]float32, error) {
 	body, err := json.Marshal(map[string]any{"model": o.model, "input": texts})

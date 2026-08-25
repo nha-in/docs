@@ -71,8 +71,9 @@ jobs:
         working-directory: mcp
       - run: go test ./...
         working-directory: mcp
-      # PR builds are keyword-only: no Ollama on CI runners. The deploy
-      # pipeline re-runs the indexer with -ollama for the published snapshot.
+      # PR builds are keyword-only: no embedding provider on CI runners. The
+      # deploy pipeline resolves EMBED_PROVIDER and rebuilds the snapshot with
+      # embeddings for the published image.
       - run: go run ./cmd/indexer -catalogue ../catalogue -out catalogue.db
         working-directory: mcp
       - uses: actions/upload-artifact@v4

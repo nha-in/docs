@@ -59,13 +59,50 @@ jobs:
           go-version: "1.25"
           cache-dependency-path: mcp/go.sum
 
+      # The embedding provider is decided HERE, once per deployment, and the
+      # indexer below and the runtime env (dev-argocd values: EMBED_PROVIDER,
+      # EMBED_MODEL, and OLLAMA_URL or AWS_REGION) must carry the same answer.
+      # The index stamps its provider-qualified model and the server refuses a
+      # mismatched snapshot at startup, so drift fails loudly, not silently.
+      # Flip the EMBED_PROVIDER repository variable to `bedrock` once Bedrock
+      # access exists in the target account; until then it resolves to ollama
+      # so a test deployment never fails for want of AWS model access.
+      - name: Resolve embedding provider
+        id: embed
+        run: |
+          PROVIDER="${{ vars.EMBED_PROVIDER || 'ollama' }}"
+          echo "provider=$PROVIDER" >> "$GITHUB_OUTPUT"
+          echo "### Embeddings: \`$PROVIDER\`" >> "$GITHUB_STEP_SUMMARY"
+
+      # The runner role is assumed before indexing so the bedrock path can
+      # invoke the embedding model; ECR push below reuses the same session.
+      - name: IAM role for GitHub runner
+        uses: aws-actions/configure-aws-credentials@e3dd6a429d7300a6a4c196c26e071d42e0343502
+        with:
+          role-to-assume: arn:aws:iam::607765814920:role/github-runner-role
+          role-session-name: runner-role
+          aws-region: ${{ secrets.DEV_AWS_Region }}
+
       # mcp/Dockerfile does `COPY catalogue.db /catalogue.db`, so the snapshot must
-      # exist before the build. It MUST be built with -ollama: without it the index
-      # has no vectors, index.EmbeddingsEnabled() is false, and the runtime Ollama
-      # sidecar embeds queries against an index that can't answer them — vector
-      # search silently degrades to keyword-only while still costing sidecar memory.
-      - name: Build catalogue.db with embeddings
+      # exist before the build, and it must be built WITH embeddings: without them
+      # index.EmbeddingsEnabled() is false and vector search silently degrades to
+      # keyword-only at runtime.
+      - name: Build catalogue.db (bedrock)
+        if: steps.embed.outputs.provider == 'bedrock'
         working-directory: mcp
+        env:
+          EMBED_PROVIDER: bedrock
+          AWS_REGION: ${{ secrets.DEV_AWS_Region }}
+        run: |
+          go run ./cmd/indexer -catalogue ../catalogue -out catalogue.db
+          ls -lh catalogue.db
+
+      - name: Build catalogue.db (ollama)
+        if: steps.embed.outputs.provider == 'ollama'
+        working-directory: mcp
+        env:
+          EMBED_PROVIDER: ollama
+          OLLAMA_URL: http://localhost:11434
         run: |
           docker run -d --name ollama-indexer -p 11434:11434 ollama/ollama:latest
           for i in $(seq 1 60); do
@@ -73,23 +110,12 @@ jobs:
             sleep 2
           done
           docker exec ollama-indexer ollama pull nomic-embed-text
-          go run ./cmd/indexer \
-            -catalogue ../catalogue \
-            -out catalogue.db \
-            -ollama http://localhost:11434 \
-            -embed-model nomic-embed-text
+          go run ./cmd/indexer -catalogue ../catalogue -out catalogue.db
           ls -lh catalogue.db
 
       - name: Tear down indexer Ollama
         if: always()
         run: docker rm -f ollama-indexer || true
-
-      - name: IAM role for GitHub runner
-        uses: aws-actions/configure-aws-credentials@e3dd6a429d7300a6a4c196c26e071d42e0343502
-        with:
-          role-to-assume: arn:aws:iam::607765814920:role/github-runner-role
-          role-session-name: runner-role
-          aws-region: ${{ secrets.DEV_AWS_Region }}
 
       - name: Login to Amazon ECR
         uses: aws-actions/amazon-ecr-login@v2

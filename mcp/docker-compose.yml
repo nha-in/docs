@@ -1,24 +1,28 @@
+# Two topologies, one file. The deploy pipeline resolves EMBED_PROVIDER once
+# and both the indexer and this server inherit it, so the snapshot's model
+# stamp and the server's configuration cannot diverge.
+#
+#   Bedrock (no sidecar; credentials come from the instance role or profile):
+#     EMBED_PROVIDER=bedrock AWS_REGION=ap-south-1 docker compose up
+#
+#   Ollama (test boxes without AWS access):
+#     COMPOSE_PROFILES=ollama EMBED_PROVIDER=ollama docker compose up
+#     # then, once: docker compose exec ollama ollama pull nomic-embed-text
 services:
-  ollama:
-    image: ollama/ollama:latest
-    volumes:
-      - ollama-models:/root/.ollama
-    # After first start, pull the model once:
-    #   docker compose exec ollama ollama pull nomic-embed-text
   docs-mcp:
     build: .
     ports:
       - "8080:8080"
-    command:
-      - "-db"
-      - "/catalogue.db"
-      - "-addr"
-      - ":8080"
-      - "-ollama"
-      - "http://ollama:11434"
-      - "-allow-origin"
-      - "https://docs.example.com"
-    depends_on:
-      - ollama
+    environment:
+      EMBED_PROVIDER: ${EMBED_PROVIDER:-none}
+      EMBED_MODEL: ${EMBED_MODEL:-}
+      OLLAMA_URL: ${OLLAMA_URL:-http://ollama:11434}
+      AWS_REGION: ${AWS_REGION:-}
+      ALLOW_ORIGIN: ${ALLOW_ORIGIN:-}
+  ollama:
+    image: ollama/ollama:latest
+    profiles: ["ollama"]
+    volumes:
+      - ollama-models:/root/.ollama
 volumes:
   ollama-models:

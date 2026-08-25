@@ -21,15 +21,33 @@ import (
 
 const embedBatch = 32
 
+// envOr lets the environment set every default while the flags stay as local
+// dev overrides. The pipeline resolves EMBED_PROVIDER once and feeds the same
+// value to this indexer and to the server it ships with, so the model stamp
+// in the snapshot and the server's configuration cannot diverge.
+func envOr(name, fallback string) string {
+	if v := os.Getenv(name); v != "" {
+		return v
+	}
+	return fallback
+}
+
 func main() {
-	catDir := flag.String("catalogue", "../catalogue", "catalogue directory")
-	out := flag.String("out", "catalogue.db", "output database path")
-	ollamaURL := flag.String("ollama", "", "Ollama base URL; empty builds keyword-only")
-	model := flag.String("embed-model", "nomic-embed-text", "embedding model name")
+	catDir := flag.String("catalogue", envOr("CATALOGUE_DIR", "../catalogue"), "catalogue directory")
+	out := flag.String("out", envOr("DB_PATH", "catalogue.db"), "output database path")
+	provider := flag.String("embed-provider", envOr("EMBED_PROVIDER", ""), "embedding provider: bedrock, ollama or none")
+	model := flag.String("embed-model", envOr("EMBED_MODEL", ""), "embedding model id; empty takes the provider default")
+	ollamaURL := flag.String("ollama", envOr("OLLAMA_URL", ""), "Ollama base URL, for -embed-provider ollama")
+	region := flag.String("aws-region", envOr("AWS_REGION", ""), "AWS region, for -embed-provider bedrock")
 	flag.Parse()
-	var emb embed.Embedder
-	if *ollamaURL != "" {
-		emb = embed.NewOllama(*ollamaURL, *model)
+	emb, err := embed.New(context.Background(), embed.Config{
+		Provider:  *provider,
+		Model:     *model,
+		OllamaURL: *ollamaURL,
+		Region:    *region,
+	})
+	if err != nil {
+		log.Fatal(err)
 	}
 	if err := run(*catDir, *out, emb); err != nil {
 		log.Fatal(err)
