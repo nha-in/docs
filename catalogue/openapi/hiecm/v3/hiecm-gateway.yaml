@@ -1,19 +1,18 @@
-# ABDM gateway session API.
+# ABDM gateway: sessions, certificates and bridge registration.
 #
-# Every module gets its access token from this one endpoint, so it is
-# described once here instead of being copied into four module files. The
-# module specs point at it from their security scheme description.
+# NHA repeats this group in all three milestone files. It is described once
+# here so the module files carry only what is specific to them.
 #
 # Rules this file follows: catalogue/openapi/CONVENTIONS.md
 openapi: 3.1.1
-
 info:
   x-portal:
     module: gateway
     label: Gateway session
     position: 1
   title: ABDM gateway sessions
-  summary: Exchange a client id and client secret for the access token every other ABDM call needs.
+  summary: Exchange a client id and client secret for the access token every other
+    ABDM call needs.
   description: |
     The first call in any ABDM integration. You send the client id and client
     secret issued when you registered your application on the ABDM sandbox,
@@ -34,41 +33,44 @@ info:
   x-abdm-gateway: hiecm
   x-abdm-module: gateway
   x-abdm-phase: 1
-  x-abdm-roles: [phr, his, hip, hiu]
-
+  x-abdm-roles:
+  - phr
+  - his
+  - hip
+  - hiu
 x-abdm-sources:
-  - file: ABDM Sandbox/ABDM/Proposed Simplified Milestone 4 (NHPR).docx
-    role: upstream
-    status: not-yet-hashed
-    note: >
-      NHA milestone pack, supplied as a document rather than a specification.
-      Carries the session request body and a sample response verbatim.
-  - url: https://sandbox.abdm.gov.in/sandbox/v3/new-documentation/swagger
-    role: upstream
-    status: not-yet-fetched
-    note: >
-      The published swagger. Fetch it, hash it, store it under .raw/ and
-      reconcile this file against it before anyone integrates from it.
-
+- file: catalogue/openapi/.raw/ABDM_M1_API_Swagger.yaml
+  role: upstream
+  hash: sha256:14bbfcbe0fc38e13a485d2a8fcfd6dc6d84e89d4f2e6b743cb85a238a3c18873
+  fetched: '2026-08-25'
+  note: NHA repeats the session, certificate and bridge group in all three milestone
+    files. It is described once here.
+- file: catalogue/openapi/.raw/ABDM_M2_API_Swagger.yaml
+  role: upstream
+  hash: sha256:cd96452677132da92c23858da7df6d72a7c886b510e6d006261f6d81ec483839
+  fetched: '2026-08-25'
+  note: Same group, as expressed against the /api server.
+- file: catalogue/openapi/.raw/ABDM_M3_API_Swagger.yaml
+  role: upstream
+  hash: sha256:6d56fd91a3f75575c4382de1489ad4a6a0091d0eece9dfa5278c4d248f6fcf6b
+  fetched: '2026-08-25'
+  note: Same group again.
 servers:
-  - url: https://dev.abdm.gov.in
-    description: 'Sandbox. Pair it with the `X-CM-ID: sbx` header.'
-  - url: https://apis.abdm.gov.in
-    description: 'Production. Pair it with the `X-CM-ID: abdm` header.'
-
+- url: https://dev.abdm.gov.in
+  description: 'Sandbox. Pair it with the `X-CM-ID: sbx` header.'
+- url: https://apis.abdm.gov.in
+  description: 'Production. Pair it with the `X-CM-ID: abdm` header.'
 tags:
-  - name: sessions
-    description: >
-      Getting and refreshing the gateway access token. Do this before any
-      other call in any module, and cache the token until it expires rather
-      than asking for a new one per request.
-
+- name: sessions
+  description: |
+    Getting and refreshing the gateway access token. Do this before any other call in any module, and cache the token until it expires rather than asking for a new one per request.
 paths:
   /api/hiecm/gateway/v3/sessions:
     post:
       operationId: gateway_sessions_create
       x-abdm-use-case: Session and tokens
-      tags: [sessions]
+      tags:
+      - sessions
       summary: Create a session and get an access token
       description: |
         Send the client id and client secret from your ABDM sandbox
@@ -83,9 +85,9 @@ paths:
         waiting for a 401.
       security: []
       parameters:
-        - $ref: '#/components/parameters/RequestId'
-        - $ref: '#/components/parameters/Timestamp'
-        - $ref: '#/components/parameters/CmId'
+      - $ref: '#/components/parameters/RequestId'
+      - $ref: '#/components/parameters/Timestamp'
+      - $ref: '#/components/parameters/CmId'
       requestBody:
         required: true
         content:
@@ -100,52 +102,221 @@ paths:
               schema:
                 $ref: '#/components/schemas/SessionResponse'
       x-abdm-atom: hiecm.endpoint.gateway-sessions
-
+  /api/hiecm/gateway/v3/bridge/url:
+    patch:
+      tags:
+      - Gateway & Bridge
+      summary: Update HIP/HIU Bridge Callback URL
+      operationId: gateway_update_bridge_url
+      description: |
+        Register the HIP/HIU callback URL with the ABDM Gateway.
+        All gateway push notifications (e.g. patient-share) are delivered to this URL.
+        **Server:** `https://dev.abdm.gov.in/api/hiecm`
+      servers:
+      - url: https://dev.abdm.gov.in/api/hiecm
+        description: ABDM Gateway
+      parameters:
+      - $ref: '#/components/parameters/RequestId'
+      - $ref: '#/components/parameters/Timestamp'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - url
+              properties:
+                url:
+                  type: string
+                  format: uri
+                  description: HTTPS callback URL for the HIP/HIU
+                  examples:
+                  - https://your-hip.example.com/abdm/callback
+      responses:
+        '200':
+          description: Bridge URL updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageResponse'
+      x-abdm-nha-operation-id: updateBridgeUrl
+      x-abdm-atom: hiecm.endpoint.gateway-update-bridge-url
+  /api/hiecm/gateway/v3/bridge-services:
+    get:
+      tags:
+      - Gateway & Bridge
+      summary: List All Bridge Services
+      operationId: gateway_list_bridge_services
+      description: |
+        List all HIP/HIU services registered under the authenticated bridge.
+        **Server:** `https://dev.abdm.gov.in/api/hiecm`
+      servers:
+      - url: https://dev.abdm.gov.in/api/hiecm
+        description: ABDM Gateway
+      parameters:
+      - $ref: '#/components/parameters/RequestId'
+      - $ref: '#/components/parameters/Timestamp'
+      responses:
+        '200':
+          description: List of registered bridge services
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BridgeServicesResponse'
+      x-abdm-nha-operation-id: listBridgeServices
+      x-abdm-atom: hiecm.endpoint.gateway-list-bridge-services
+  /api/hiecm/gateway/v3/bridge-service/serviceId/{serviceId}:
+    get:
+      tags:
+      - Gateway & Bridge
+      summary: Find Bridge Service by Service ID
+      operationId: gateway_get_bridge_service_by_id
+      description: |
+        Look up a specific registered HIP/HIU service by its service ID.
+        **Server:** `https://dev.abdm.gov.in/api/hiecm`
+      servers:
+      - url: https://dev.abdm.gov.in/api/hiecm
+        description: ABDM Gateway
+      parameters:
+      - name: serviceId
+        in: path
+        required: true
+        description: Service identifier
+        schema:
+          type: string
+          examples:
+          - CityHospital_HIP
+      - $ref: '#/components/parameters/RequestId'
+      - $ref: '#/components/parameters/Timestamp'
+      responses:
+        '200':
+          description: Service details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BridgeServiceDetail'
+      x-abdm-nha-operation-id: getBridgeServiceById
+      x-abdm-atom: hiecm.endpoint.gateway-get-bridge-service-by-id
+  /api/hiecm/gateway/v3/certs:
+    get:
+      tags:
+      - Gateway & Bridge
+      summary: Get Gateway JWKS Certificates
+      operationId: gateway_get_gateway_certs
+      description: |
+        Get the JSON Web Key Set (JWKS) to verify JWT signatures in gateway callbacks.
+        **Server:** `https://dev.abdm.gov.in/api/hiecm`
+      servers:
+      - url: https://dev.abdm.gov.in/api/hiecm
+        description: ABDM Gateway
+      security: []
+      responses:
+        '200':
+          description: JWKS response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JwksResponse'
+      x-abdm-nha-operation-id: getGatewayCerts
+      x-abdm-atom: hiecm.endpoint.gateway-get-gateway-certs
+  /api/hiecm/gateway/v3/.well-known/openid-configuration:
+    get:
+      tags:
+      - Gateway & Bridge
+      summary: Get OIDC Discovery Document
+      operationId: gateway_get_oidc_config
+      description: |
+        OIDC discovery endpoint for the ABDM Gateway.
+        **Server:** `https://dev.abdm.gov.in/api/hiecm`
+      servers:
+      - url: https://dev.abdm.gov.in/api/hiecm
+        description: ABDM Gateway
+      security: []
+      responses:
+        '200':
+          description: OpenID Connect configuration
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OidcConfigResponse'
+      x-abdm-nha-operation-id: getOidcConfig
+      x-abdm-atom: hiecm.endpoint.gateway-get-oidc-config
+  /v4/int/v1/bridges/MutipleHRPAddUpdateServices:
+    post:
+      tags:
+      - bridge
+      summary: Register / Update Bridge Services (HIU)
+      operationId: gateway_register_bridge_services
+      description: |
+        Registers or updates one or more HIU service entries under a facility
+        in the HSP Registry. Set `type` to `"HIU"` for Health Information User registration.
+        **Base URL:** `https://apihspsbx.abdm.gov.in`
+      servers:
+      - url: https://apihspsbx.abdm.gov.in
+        description: HSP Registry (Sandbox)
+      security:
+      - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterBridgeServicesRequest'
+            examples:
+              default:
+                value:
+                  facilityId: IN07100XXXXX
+                  facilityName: City Health HIU
+                  HRP:
+                  - bridgeId: BRIDGE_HIU_001
+                    hipName: City Health HIU
+                    type: HIU
+                    active: true
+      responses:
+        '200':
+          description: HIU service registered/updated successfully
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+      x-abdm-nha-operation-id: registerBridgeServices
+      x-abdm-atom: hiecm.endpoint.gateway-register-bridge-services
 components:
   securitySchemes:
     gatewaySession:
       type: http
       scheme: bearer
       bearerFormat: JWT
-      description: >
-        The `accessToken` returned by `POST /api/hiecm/gateway/v3/sessions`
-        in this file. Send it as `Authorization: Bearer <ACCESS_TOKEN>`.
-
+      description: |
+        The `accessToken` returned by `POST /api/hiecm/gateway/v3/sessions` in this file. Send it as `Authorization: Bearer <ACCESS_TOKEN>`.
   parameters:
     RequestId:
       name: REQUEST-ID
       in: header
       required: true
-      description: >
-        A fresh UUID that you generate for this request. It is how you and
-        NHA correlate a call with its callback and with a support ticket, so
-        log it. Reusing one across requests makes both impossible.
+      description: |
+        A fresh UUID that you generate for this request. It is how you and NHA correlate a call with its callback and with a support ticket, so log it. Reusing one across requests makes both impossible.
       schema:
         type: string
-        format: uuid
+        x-abdm-correction: C3
       example: 5f7a4a1e-59ba-4c0c-9e0c-8e6b3b6e2f11
-
     Timestamp:
       name: TIMESTAMP
       in: header
       required: true
-      description: >
-        The current time in ISO 8601, in IST, the +05:30 offset. Working integrations send IST even though NHA's collection fills this with Postman's `$isoTimestamp`, which emits UTC. The gateway rejects a request
-        whose timestamp has drifted too far from its own clock, so take this
-        from a synchronised clock rather than from a local one.
+      description: |
+        The current time in ISO 8601, in IST, the +05:30 offset. Working integrations send IST even though NHA's collection fills this with Postman's `$isoTimestamp`, which emits UTC. The gateway rejects a request whose timestamp has drifted too far from its own clock, so take this from a synchronised clock rather than from a local one.
       schema:
         type: string
         format: date-time
       example: '2026-08-24T15:45:30.000+05:30'
-
     CmId:
       name: X-CM-ID
       in: header
       required: true
-      description: >
-        Which consent manager you are talking to. `sbx` on the sandbox and
-        `abdm` in production. Sending the wrong one against the right host is
-        a common first-day failure and reads as an authorisation error.
+      description: |
+        Which consent manager you are talking to. `sbx` on the sandbox and `abdm` in production. Sending the wrong one against the right host is a common first-day failure and reads as an authorisation error.
       schema:
         type: string
       examples:
@@ -153,26 +324,25 @@ components:
           value: sbx
         production:
           value: abdm
-
   schemas:
     SessionRequest:
       type: object
-      required: [clientId, clientSecret, grantType]
+      required:
+      - clientId
+      - clientSecret
+      - grantType
       properties:
         clientId:
           type: string
           description: The client id issued when you registered on the ABDM sandbox.
         clientSecret:
           type: string
-          description: >
-            The client secret issued alongside the client id. It is a
-            credential. Keep it server side, never in a mobile or browser
-            build.
+          description: |
+            The client secret issued alongside the client id. It is a credential. Keep it server side, never in a mobile or browser build.
         grantType:
           type: string
           description: The only value NHA's documentation shows is `client_credentials`.
           example: client_credentials
-
     SessionResponse:
       type: object
       properties:
@@ -181,16 +351,198 @@ components:
           description: The bearer token to send on every other call.
         expiresIn:
           type: integer
-          description: >
-            Seconds until the access token stops working. Read it rather than
-            hardcoding a lifetime, because NHA has changed it.
+          description: |
+            Seconds until the access token stops working. Read it rather than hardcoding a lifetime, because NHA has changed it.
         refreshExpiresIn:
           type: integer
           description: Seconds until the refresh token stops working.
         refreshToken:
           type: string
-          description: Used to get a new access token without sending the secret again.
+          description: Used to get a new access token without sending the secret
+            again.
         tokenType:
           type: string
           description: NHA's sample response shows `bearer`.
           example: bearer
+    ErrorResponse:
+      type: object
+      properties:
+        code:
+          type: integer
+        message:
+          type: string
+    JwksResponse:
+      type: object
+      properties:
+        keys:
+          type: array
+          items:
+            type: object
+            properties:
+              kid:
+                type: string
+                description: Key ID
+              kty:
+                type: string
+                description: Key type (e.g. RSA)
+                examples:
+                - RSA
+              alg:
+                type: string
+                description: Algorithm (e.g. RS256)
+                examples:
+                - RS256
+              use:
+                type: string
+                description: Key usage
+                examples:
+                - sig
+              n:
+                type: string
+                description: RSA modulus (Base64URL encoded)
+              e:
+                type: string
+                description: RSA public exponent (Base64URL encoded)
+                examples:
+                - AQAB
+    BridgeServicesResponse:
+      type: object
+      properties:
+        services:
+          type: array
+          items:
+            $ref: '#/components/schemas/BridgeServiceDetail'
+    RegisterBridgeServicesRequest:
+      type: object
+      required:
+      - facilityId
+      - facilityName
+      - HRP
+      properties:
+        facilityId:
+          type: string
+          examples:
+          - IN07100XXXXX
+        facilityName:
+          type: string
+          examples:
+          - City Health HIU
+        HRP:
+          type: array
+          items:
+            type: object
+            required:
+            - bridgeId
+            - hipName
+            - type
+            - active
+            properties:
+              bridgeId:
+                type: string
+              hipName:
+                type: string
+              type:
+                type: string
+                enum:
+                - HIP
+                - HIU
+              active:
+                type: boolean
+    OidcConfigResponse:
+      type: object
+      properties:
+        issuer:
+          type: string
+          format: uri
+          examples:
+          - https://dev.ndhm.gov.in/auth/realms/central-registry
+        authorization_endpoint:
+          type: string
+          format: uri
+        token_endpoint:
+          type: string
+          format: uri
+        jwks_uri:
+          type: string
+          format: uri
+        response_types_supported:
+          type: array
+          items:
+            type: string
+          examples:
+          - - code
+            - token
+            - id_token
+        subject_types_supported:
+          type: array
+          items:
+            type: string
+          examples:
+          - - public
+        id_token_signing_alg_values_supported:
+          type: array
+          items:
+            type: string
+          examples:
+          - - RS256
+    MessageResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          examples:
+          - Operation completed successfully
+    BridgeServiceDetail:
+      type: object
+      properties:
+        serviceId:
+          type: string
+          examples:
+          - CityHospital_HIP
+        bridgeId:
+          type: string
+          examples:
+          - your-client-id
+        serviceType:
+          type: string
+          enum:
+          - HIP
+          - HIU
+          - HRP
+          examples:
+          - HIP
+        serviceName:
+          type: string
+          examples:
+          - City General Hospital
+        facilityName:
+          type: string
+          examples:
+          - City General Hospital
+        hipType:
+          type: string
+          enum:
+          - HOSPITAL
+          - CLINIC
+          - LAB
+          - PHARMACY
+          - WELLNESS
+          - DIAGNOSTIC
+          - OTHER
+        active:
+          type: boolean
+          examples:
+          - true
+  responses:
+    BadRequest:
+      description: Bad request, invalid parameters or missing fields
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    Unauthorized:
+      description: Unauthorized, missing or invalid Bearer token
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'

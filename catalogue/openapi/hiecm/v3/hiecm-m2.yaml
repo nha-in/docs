@@ -1,38 +1,33 @@
 # Module M2: care context linking and HIP data sharing.
 #
+# Operations ingested from NHA's M2 OpenAPI file. Callbacks are declared as
+# OpenAPI 3.1 webhooks, because NHA's file describes only the outbound half.
+#
 # Rules this file follows: catalogue/openapi/CONVENTIONS.md
 openapi: 3.1.1
-
 info:
   x-portal:
     module: m2
     label: M2 Linking and sharing
     position: 3
   title: ABDM M2, care context linking and data sharing
-  summary: Tell ABDM that a patient has records at your facility, and hand those records over when a consented request arrives.
+  summary: Tell ABDM that a patient has records at your facility, and hand those
+    records over when a consented request arrives.
   description: |
-    M2 is the provider side. Your system holds health records, so ABDM calls
-    you a Health Information Provider, or HIP. Two things happen here.
+    M2 is the provider side. Your system holds health records, so ABDM calls you
+    a Health Information Provider, or HIP. You link care contexts to a patient's
+    ABHA address, answer discovery, and hand over encrypted FHIR bundles when a
+    consented request arrives.
 
-    First, linking. When you create a record for a patient, you group it into
-    a care context and link that care context to the patient's ABHA address.
-    The consent manager never sees the record itself, only a reference number
-    and a display name, which is why it is called data blind.
+    Where this comes from. The operations are ingested from NHA's M2 OpenAPI
+    file, hashed under `.raw/`. NHA's file carries no callbacks at all, so the
+    inbound half is not in it. The `webhooks` below are what the gateway posts to
+    your registered URL. Only the data notification carries a payload transcribed
+    from NHA's collection; the rest are declared with the path and no body,
+    because NHA has not published one and inventing a shape would be worse than
+    the gap.
 
-    Second, sharing. When a request backed by a consent artefact reaches you,
-    you package the records as FHIR R4 bundles, encrypt them, and post them
-    to the URL in the request.
-
-    Most of M2 is asynchronous. You call the gateway, it answers with an
-    acknowledgement, and the real answer arrives later as a callback to a URL
-    you registered. Those callbacks belong under `webhooks` in this file.
-
-    Prerequisite: a valid facility id and the HIP role. Without both, every
-    call here fails on authorisation rather than on anything you sent.
-
-    No operation in this file has been run against the sandbox from this
-    repository. `paths` and `webhooks` stay empty until NHA's swagger is
-    fetched, hashed and stored under `.raw/`.
+    Nothing here has been run against the sandbox from this repository.
   version: abdm-v3
   license:
     name: MIT
@@ -43,186 +38,603 @@ info:
   x-abdm-gateway: hiecm
   x-abdm-module: M2
   x-abdm-phase: 1
-  x-abdm-roles: [hip, his]
-
+  x-abdm-roles:
+  - hip
+  - his
 x-abdm-sources:
-  - file: ABDM Sandbox/ABDM/Proposed Simplified Milestone 2.docx
-    role: upstream
-    status: not-yet-hashed
-    note: >
-      NHA milestone pack. Carries the base URLs, the linking and discovery
-      narrative, the care context structure, and a custom error code table
-      that becomes the M2 error atoms.
-  - url: https://sandbox.abdm.gov.in/sandbox/v3/new-documentation?doc=HIPInitiatedlinking
-    role: upstream
-    status: not-yet-fetched
-  - url: https://sandbox.abdm.gov.in/sandbox/v3/newdocumentation?doc=DiscoveryAndlink
-    role: upstream
-    status: not-yet-fetched
-  - url: https://sandbox.abdm.gov.in/sandbox/v3/newdocumentation?doc=RequestHealthRecords
-    role: upstream
-    status: not-yet-fetched
-  - url: https://sandbox.abdm.gov.in/sandbox/v3/new-documentation/swagger
-    role: upstream
-    status: not-yet-fetched
-    note: The published swagger. Fetch and hash it before filling `paths`.
-
+- file: catalogue/openapi/.raw/ABDM_M2_API_Swagger.yaml
+  role: upstream
+  hash: sha256:cd96452677132da92c23858da7df6d72a7c886b510e6d006261f6d81ec483839
+  fetched: '2026-08-25'
+  note: NHA's M2 OpenAPI, supplied 2026-08-25. 17 operations. Carries no callbacks.
+- file: catalogue/openapi/.raw/M2_postman_collection.json
+  role: upstream
+  hash: sha256:a27633f9f9bc29daeba3d550fe70438835d69a07b8d608adfcdfc6f7d860da24
+  fetched: '2026-08-25'
+  note: NHA's M2 collection, 19 requests and 33 saved responses. Source of the
+    data notification payload.
 externalDocs:
   description: NRCeS FHIR R4 profiles, which every M2 bundle must validate against
   url: https://nrces.in/ndhm/fhir/r4/index.html
-
 servers:
-  - url: https://dev.abdm.gov.in
-    description: 'Sandbox. Pair it with the `X-CM-ID: sbx` header.'
-  - url: https://apis.abdm.gov.in
-    description: 'Production. Pair it with the `X-CM-ID: abdm` header.'
-
+- url: https://dev.abdm.gov.in/api
+  description: ABDM Gateway (Dev / Sandbox)
+- url: https://apihspsbx.abdm.gov.in
+  description: HSP Registry (Sandbox)
 security:
-  - gatewaySession: []
-
+- gatewaySession: []
 tags:
-  - name: hip-initiated-linking
-    description: >
-      Linking a care context when the patient gave you their ABHA address at
-      registration. Needs a link token, which you validate before use and
-      regenerate through demographic authentication when it has expired.
-  - name: mobile-notification
-    description: >
-      The path for a patient who gave a mobile number rather than an ABHA
-      address. ABDM sends them an SMS with a deep link, and they link the
-      record themselves from a PHR app.
-  - name: discovery-and-link
-    description: >
-      Answering a patient who is searching your facility from a PHR app. You
-      match them from the identifiers ABDM supplies and return care contexts.
-      No clinical detail may appear in a discovery response, only the
-      reference number and display name.
-  - name: health-information-request
-    description: >
-      Receiving a consented request for records and posting the encrypted
-      FHIR bundles to the data push URL it names.
+- name: hip-initiated-linking
+  description: |
+    Linking a care context when the patient gave you their ABHA address at registration. Needs a link token, which you validate before use and regenerate through demographic authentication when it has expired.
+- name: mobile-notification
+  description: |
+    The path for a patient who gave a mobile number rather than an ABHA address. ABDM sends them an SMS with a deep link, and they link the record themselves from a PHR app.
+- name: discovery-and-link
+  description: |
+    Answering a patient who is searching your facility from a PHR app. You match them from the identifiers ABDM supplies and return care contexts. No clinical detail may appear in a discovery response, only the reference number and display name.
+- name: health-information-request
+  description: |
+    Receiving a consented request for records and posting the encrypted FHIR bundles to the data push URL it names.
+- name: auth
+  description: Session token & gateway certificate APIs
+- name: bridge
+  description: Bridge URL registration & service management
+- name: hip-linking
+  description: HIP Initiated Care Context Linking
+- name: user-linking
+  description: User Initiated Linking, HIP callback responses
+- name: deep-linking
+  description: Deep Linking via SMS notification
+- name: data-transfer
+  description: Health data transfer, HIP side (consent ack + data push + notify)
+paths:
+  /hiecm/v3/token/generate-token:
+    post:
+      tags:
+      - hip-linking
+      summary: Generate Link Token
+      operationId: m2_generate_link_token
+      description: |
+        Generates a short-lived link token for a specific patient identified by their ABHA number/address.
+        The link token is passed as `X-Link-Token` header when calling the care context linking API.
+        Must be called immediately before the linking call, tokens expire quickly.
+      security:
+      - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GenerateLinkTokenRequest'
+            examples:
+              default:
+                value:
+                  abhaNumber: 91234567890123
+                  abhaAddress: patient@sbx
+                  name: Ramesh Kumar
+                  gender: M
+                  yearOfBirth: 1985
+      responses:
+        '200':
+          description: Link token generated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LinkTokenResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      x-abdm-nha-operation-id: generateLinkToken
+      x-abdm-atom: hiecm.endpoint.m2-generate-link-token
+  /hiecm/hip/v3/link/carecontext:
+    post:
+      tags:
+      - hip-linking
+      summary: HIP Initiated Care Context Linking (Single or Multiple)
+      operationId: m2_hip_link_care_context
+      description: |
+        Links one or more care contexts (health records) to a patient's ABHA address.
+        Use the same endpoint for both single and multiple care context linking, the `careContexts` array can contain one or many entries.
 
-# Path inventory to fill at ingestion, from NHA's M2 material. Kept as a
-# comment rather than as empty operations, because an operation with no
-# request or response schema reads as a contract and is not one.
-#
-#   HIP calls the gateway:   care context link, link confirm, discovery
-#                            response, health information transfer
-#   Gateway calls the HIP:   discovery request, link request,
-#                            health information request
-#
-# Confirm every path against the swagger. None of them is transcribed here
-# from memory.
-paths: {}
+        Requires the `X-Link-Token` header with a freshly generated link token.
+      security:
+      - bearerAuth: []
+      parameters:
+      - $ref: '#/components/parameters/XLinkToken'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HIPLinkCareContextRequest'
+            examples:
+              single:
+                summary: Single care context
+                value:
+                  abhaNumber: '91234567890123'
+                  abhaAddress: patient@sbx
+                  patient:
+                  - referenceNumber: PAT-REF-001
+                    display: Ramesh Kumar
+                    careContexts:
+                    - referenceNumber: VISIT-2024-001
+                      display: OPD Visit 10-Jan-2024
+                    hiType:
+                    - Prescription
+                    count: 1
+              multiple:
+                summary: Multiple care contexts
+                value:
+                  abhaNumber: '91234567890123'
+                  abhaAddress: patient@sbx
+                  patient:
+                  - referenceNumber: PAT-REF-001
+                    display: Ramesh Kumar
+                    careContexts:
+                    - referenceNumber: VISIT-2024-001
+                      display: OPD Visit 10-Jan-2024
+                    - referenceNumber: LAB-2024-001
+                      display: Lab Report 10-Jan-2024
+                    - referenceNumber: DS-2024-001
+                      display: Discharge Summary Jan-2024
+                    hiType:
+                    - Prescription
+                    - DiagnosticReport
+                    - DischargeSummary
+                    count: 3
+      responses:
+        '202':
+          description: Care context linking accepted and queued
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+      x-abdm-nha-operation-id: hipLinkCareContext
+      x-abdm-atom: hiecm.endpoint.m2-hip-link-care-context
+  /hiecm/hip/v3/link/context/notify:
+    post:
+      tags:
+      - hip-linking
+      summary: Link Care Context Notify
+      operationId: m2_link_care_context_notify
+      description: |
+        Sends an explicit notification to the ABDM Gateway about a newly linked care context.
+        This is called after successful care context linking to ensure the patient's ABHA App
+        receives a timely notification with the care context details.
+      security:
+      - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LinkCareContextNotifyRequest'
+            examples:
+              default:
+                value:
+                  notification:
+                    patient:
+                      id: patient@sbx
+                    careContext:
+                      patientReference: patient@sbx
+                      careContextReference: VISIT-2024-001
+                    hiTypes:
+                    - Prescription
+                    date: '2024-01-10T12:00:00.000Z'
+                    hip:
+                      id: HIP_SERVICE_ID
+      responses:
+        '202':
+          description: Notification accepted
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+      x-abdm-nha-operation-id: linkCareContextNotify
+      x-abdm-atom: hiecm.endpoint.m2-link-care-context-notify
+  /hiecm/hip/v3/link/patient/links/sms/notify2:
+    post:
+      tags:
+      - deep-linking
+      summary: SMS Deep Link Notify
+      operationId: m2_sms_deep_link_notify
+      description: |
+        Requests ABDM to send an SMS to a patient's mobile number containing a deep link
+        to download/open the ABHA App. Used when a patient is not yet on ABDM and the HIP
+        wants to invite them to link their health records.
+      security:
+      - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SmsNotifyRequest'
+            examples:
+              default:
+                value:
+                  requestId: f47ac10b-58cc-4372-a567-0e02b2c3d479
+                  timestamp: '2024-01-10T12:00:00.000Z'
+                  notification:
+                    phoneNo: '917812345678'
+                    hip:
+                      name: S Y Hospital
+                      id: HIP_SERVICE_ID
+      responses:
+        '202':
+          description: SMS notification queued
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+      x-abdm-nha-operation-id: smsDeepLinkNotify
+      x-abdm-atom: hiecm.endpoint.m2-sms-deep-link-notify
+  /hiecm/user-initiated-linking/v3/patient/care-context/on-discover:
+    post:
+      tags:
+      - user-linking
+      summary: On Discovery, HIP responds with found care contexts
+      operationId: m2_on_discover_care_contexts
+      description: |
+        **Async Callback:** After receiving a discovery request at the HIP bridge URL
+        (`{bridgeUrl}/v0.5/care-contexts/discover`), the HIP calls this Gateway endpoint
+        to return the list of care contexts found for the patient.
 
-# Callbacks NHA makes to your bridge. Transcribed from NHA's milestone
-# document; none has been observed against the sandbox.
+        The HIP matches the patient using the demographics provided
+        (name, gender, DOB, verified identifiers) and returns matching records.
+      security:
+      - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OnDiscoverRequest'
+            examples:
+              default:
+                value:
+                  transactionId: txn-uuid-001
+                  patient:
+                  - referenceNumber: PAT-REF-001
+                    display: Ramesh Kumar
+                    careContexts:
+                    - referenceNumber: VISIT-2024-001
+                      display: OPD Visit 10-Jan-2024
+                    - referenceNumber: LAB-2024-001
+                      display: Lab Report 10-Jan-2024
+                    hiType:
+                    - DiagnosticReport
+                    count: 2
+                  response:
+                    requestId: req-uuid-from-discover
+      responses:
+        '202':
+          description: Discovery response accepted by Gateway
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+      x-abdm-nha-operation-id: onDiscoverCareContexts
+      x-abdm-atom: hiecm.endpoint.m2-on-discover-care-contexts
+  /hiecm/user-initiated-linking/v3/link/care-context/on-init:
+    post:
+      tags:
+      - user-linking
+      summary: Link On-Init, HIP responds with OTP communication details
+      operationId: m2_on_link_init
+      description: |
+        **Async Callback:** After receiving a link init request at the HIP bridge URL
+        (`{bridgeUrl}/v0.5/links/link/init`), the HIP calls this Gateway endpoint to
+        return the authentication details (OTP communication medium and expiry).
+
+        The Gateway uses this to prompt the patient to enter the OTP for link confirmation.
+      security:
+      - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OnLinkInitRequest'
+            examples:
+              default:
+                value:
+                  transactionId: txn-uuid-001
+                  link:
+                    referenceNumber: link-ref-uuid-001
+                    authenticationType: DIRECT
+                    meta:
+                      communicationMedium: MOBILE
+                      communicationHint: OTP
+                      communicationExpiry: '2024-01-10T12:10:00.000Z'
+                  response:
+                    requestId: req-uuid-from-link-init
+      responses:
+        '202':
+          description: Link init response accepted by Gateway
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+      x-abdm-nha-operation-id: onLinkInit
+      x-abdm-atom: hiecm.endpoint.m2-on-link-init
+  /hiecm/user-initiated-linking/v3/link/care-context/on-confirm:
+    post:
+      tags:
+      - user-linking
+      summary: Link On-Confirm, HIP confirms linked care contexts
+      operationId: m2_on_link_confirm
+      description: |
+        **Async Callback:** After receiving a link confirm request at the HIP bridge URL
+        (`{bridgeUrl}/v0.5/links/link/confirm`) with the patient's OTP, the HIP validates
+        the OTP and calls this Gateway endpoint to confirm the linked care contexts.
+      security:
+      - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OnLinkConfirmRequest'
+            examples:
+              default:
+                value:
+                  patient:
+                  - referenceNumber: PAT-REF-001
+                    display: Ramesh Kumar
+                    careContexts:
+                    - referenceNumber: VISIT-2024-001
+                      display: OPD Visit 10-Jan-2024
+                    hiType:
+                    - Prescription
+                    count: 1
+                  response:
+                    requestId: req-uuid-from-link-confirm
+      responses:
+        '202':
+          description: Link confirm response accepted by Gateway
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+      x-abdm-nha-operation-id: onLinkConfirm
+      x-abdm-atom: hiecm.endpoint.m2-on-link-confirm
+  /hiecm/consent/v3/request/hip/on-notify:
+    post:
+      tags:
+      - data-transfer
+      summary: Consent HIP On-Notify, Acknowledge consent notification
+      operationId: m2_consent_hip_on_notify
+      description: |
+        **Async Callback:** After ABDM Gateway sends a consent grant notification to the HIP bridge URL
+        (`{bridgeUrl}/v0.5/consents/hip/notify`), the HIP calls this Gateway endpoint to
+        acknowledge receipt of the consent artefact.
+
+        The consent notification contains the full consent details including care contexts,
+        HI types, date range, and digital signature for validation.
+      security:
+      - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConsentHipOnNotifyRequest'
+            examples:
+              default:
+                value:
+                  acknowledgement:
+                    status: OK
+                    consentId: consent-art-uuid-001
+                  response:
+                    requestId: req-uuid-from-hip-notify
+      responses:
+        '202':
+          description: Consent acknowledgement accepted
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+      x-abdm-nha-operation-id: consentHipOnNotify
+      x-abdm-atom: hiecm.endpoint.m2-consent-hip-on-notify
+  /hiecm/data-flow/v3/health-information/hip/on-request:
+    post:
+      tags:
+      - data-transfer
+      summary: HIP Health Information Response, Acknowledge data request
+      operationId: m2_hip_health_information_on_request
+      description: |
+        **Async Callback:** After ABDM Gateway sends a health information request to the HIP bridge URL
+        (`{bridgeUrl}/v0.5/health-information/hip/request`), the HIP calls this Gateway endpoint to
+        acknowledge receipt and indicate it will begin processing (ACKNOWLEDGED).
+
+        After this, the HIP prepares and encrypts FHIR records, then pushes them to the HIU's `dataPushUrl`.
+      security:
+      - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HipHealthInfoOnRequestBody'
+            examples:
+              default:
+                value:
+                  hiRequest:
+                    transactionId: txn-uuid-data-001
+                    sessionStatus: ACKNOWLEDGED
+                  response:
+                    requestId: req-uuid-from-hi-request
+      responses:
+        '202':
+          description: Health information request acknowledgement accepted
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+      x-abdm-nha-operation-id: hipHealthInformationOnRequest
+      x-abdm-atom: hiecm.endpoint.m2-hip-health-information-on-request
+  /hiecm/data-flow/v3/health-information/notify:
+    post:
+      tags:
+      - data-transfer
+      summary: HIP Data Flow Notification, Notify Gateway transfer is complete
+      operationId: m2_hip_data_flow_notify
+      description: |
+        After successfully pushing all encrypted FHIR health data to the HIU's `dataPushUrl`,
+        the HIP calls this endpoint to notify the ABDM Gateway that the data transfer session
+        is complete. The Gateway relays this status to the HIU.
+      security:
+      - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DataFlowNotifyRequest'
+            examples:
+              default:
+                value:
+                  notification:
+                    consentId: consent-art-uuid-001
+                    transactionId: txn-uuid-data-001
+                    doneAt: '2024-01-15T10:30:00.000Z'
+                    notifier:
+                      type: HIP
+                      id: HIP_SERVICE_ID
+                    statusNotification:
+                      sessionStatus: TRANSFERRED
+                      hipId: HIP_SERVICE_ID
+                      statusResponses:
+                      - careContextReference: VISIT-2024-001
+                        hiStatus: OK
+                        description: Successfully transferred
+      responses:
+        '202':
+          description: Notification accepted
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+      x-abdm-nha-operation-id: hipDataFlowNotify
+      x-abdm-atom: hiecm.endpoint.m2-hip-data-flow-notify
 webhooks:
   /v0.5/care-contexts/discover:
     post:
       operationId: m2_on_discovery_request
-      summary: "A discovery request for a patient you may hold records for"
+      summary: A discovery request for a patient you may hold records for
       description: |
         Inbound to every HIP. Answer with care context metadata only: NHA states that a discovery response carries no clinical or sensitive data. A rejected answer is reported as ABDM-1109.
 
         Transcribed from NHA's milestone document. Not run against the ABDM sandbox, so the payload is unconfirmed.
       responses:
         '202':
-          description: "Your bridge accepted the callback. NHA validates the body you send back, so a 202 carrying the wrong body is still a failure."
+          description: Your bridge accepted the callback. NHA validates the body
+            you send back, so a 202 carrying the wrong body is still a failure.
   /v0.5/links/link/init:
     post:
       operationId: m2_on_link_init
-      summary: "A request to start linking a care context"
+      summary: A request to start linking a care context
       description: |
         Inbound to the HIP. A duplicate arrives as ABDM-1104, and a rejected answer as ABDM-1110.
 
         Transcribed from NHA's milestone document. Not run against the ABDM sandbox, so the payload is unconfirmed.
       responses:
         '202':
-          description: "Your bridge accepted the callback. NHA validates the body you send back, so a 202 carrying the wrong body is still a failure."
+          description: Your bridge accepted the callback. NHA validates the body
+            you send back, so a 202 carrying the wrong body is still a failure.
   /v0.5/links/link/confirm:
     post:
       operationId: m2_on_link_confirm
-      summary: "Confirmation of a link, carrying the token the patient approved"
+      summary: Confirmation of a link, carrying the token the patient approved
       description: |
         Inbound to the HIP. A duplicate arrives as ABDM-1105, and a rejected answer as ABDM-1111.
 
         Transcribed from NHA's milestone document. Not run against the ABDM sandbox, so the payload is unconfirmed.
       responses:
         '202':
-          description: "Your bridge accepted the callback. NHA validates the body you send back, so a 202 carrying the wrong body is still a failure."
+          description: Your bridge accepted the callback. NHA validates the body
+            you send back, so a 202 carrying the wrong body is still a failure.
   /v0.5/health-information/hip/request:
     post:
       operationId: m2_on_health_information_request
-      summary: "A request for the records a consent covers"
+      summary: A request for the records a consent covers
       description: |
         Inbound to the HIP, carrying the consent id, the date range, the data push URL and the encryption parameters. NHA states 20 minutes from this request to the data push.
 
         Transcribed from NHA's milestone document. Not run against the ABDM sandbox, so the payload is unconfirmed.
       responses:
         '202':
-          description: "Your bridge accepted the callback. NHA validates the body you send back, so a 202 carrying the wrong body is still a failure."
+          description: Your bridge accepted the callback. NHA validates the body
+            you send back, so a 202 carrying the wrong body is still a failure.
   /v0.5/consents/hiu/notify:
     post:
       operationId: m2_on_consent_notify_hiu
-      summary: "A consent notification to an HIU bridge"
+      summary: A consent notification to an HIU bridge
       description: |
         Inbound to the HIU bridge, at the bridge URL you registered.
 
         Transcribed from NHA's milestone document. Not run against the ABDM sandbox, so the payload is unconfirmed.
       responses:
         '202':
-          description: "Your bridge accepted the callback. NHA validates the body you send back, so a 202 carrying the wrong body is still a failure."
+          description: Your bridge accepted the callback. NHA validates the body
+            you send back, so a 202 carrying the wrong body is still a failure.
+  /api-hiu/data/notification:
+    post:
+      operationId: m2_on_data_notification
+      summary: The provider pushes encrypted health information to the URL named
+        in the request.
+      description: |
+        The provider pushes encrypted health information to the URL named in the request.
 
+        Payload transcribed from NHA's own collection for this milestone.
+      responses:
+        '202':
+          description: Accepted. Acknowledge quickly, then process asynchronously.
 components:
   securitySchemes:
     gatewaySession:
       type: http
       scheme: bearer
       bearerFormat: JWT
-      description: >
-        The `accessToken` from `POST /api/hiecm/gateway/v3/sessions`, which
-        is described in hiecm-gateway.yaml. Send it as
-        `Authorization: Bearer <ACCESS_TOKEN>`.
-        M2 also uses per flow tokens, a link token for linking and an
-        authorisation token for patient scoped calls. NHA's error table names
-        both. Their exact header names go here once the swagger is ingested,
-        rather than being guessed now.
-
+      description: |
+        The `accessToken` from `POST /api/hiecm/gateway/v3/sessions`, which is described in hiecm-gateway.yaml. Send it as `Authorization: Bearer <ACCESS_TOKEN>`. M2 also uses per flow tokens, a link token for linking and an authorisation token for patient scoped calls. NHA's error table names both. Their exact header names go here once the swagger is ingested, rather than being guessed now.
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: Bearer token obtained from POST /hiecm/gateway/v3/sessions
   parameters:
     RequestId:
       name: REQUEST-ID
       in: header
       required: true
-      description: >
-        A fresh UUID that you generate for this request. The callback that
-        answers it carries the same value, so this is how you match an
-        asynchronous reply to the call that caused it. Store it before you
-        send the request, not after.
+      description: |
+        A fresh UUID that you generate for this request. The callback that answers it carries the same value, so this is how you match an asynchronous reply to the call that caused it. Store it before you send the request, not after.
       schema:
         type: string
-        format: uuid
+        x-abdm-correction: C3
       example: 5f7a4a1e-59ba-4c0c-9e0c-8e6b3b6e2f11
-
     Timestamp:
       name: TIMESTAMP
       in: header
       required: true
-      description: >
+      description: |
         The current time in ISO 8601, in IST, the +05:30 offset, from a synchronised clock. Working integrations send IST rather than the UTC that NHA's collection templates emit.
       schema:
         type: string
         format: date-time
       example: '2026-08-24T15:45:30.000+05:30'
-
     CmId:
       name: X-CM-ID
       in: header
       required: true
-      description: >
-        Which consent manager you are talking to. `sbx` on the sandbox and
-        `abdm` in production. NHA's M2 error table has a dedicated code for
-        an invalid value here, which tells you how often it is wrong.
+      description: |
+        Which consent manager you are talking to. `sbx` on the sandbox and `abdm` in production. NHA's M2 error table has a dedicated code for an invalid value here, which tells you how often it is wrong.
       schema:
         type: string
       examples:
@@ -230,368 +642,924 @@ components:
           value: sbx
         production:
           value: abdm
-
-# Lifted from the error reference so the codes have one home.
+    XLinkToken:
+      name: X-Link-Token
+      in: header
+      required: true
+      schema:
+        type: string
+      description: Short-lived link token generated via POST /hiecm/v3/token/generate-token
+  schemas:
+    SessionRequest:
+      type: object
+      required:
+      - clientId
+      - clientSecret
+      - grantType
+      properties:
+        clientId:
+          type: string
+          description: Client ID issued during HIP/HIU registration
+          examples:
+          - your-client-id
+        clientSecret:
+          type: string
+          description: Client secret (keep confidential)
+          examples:
+          - your-client-secret
+        grantType:
+          type: string
+          enum:
+          - client_credentials
+          examples:
+          - client_credentials
+    SessionResponse:
+      type: object
+      properties:
+        accessToken:
+          type: string
+          description: JWT Bearer token
+        tokenType:
+          type: string
+          examples:
+          - bearer
+        expiresIn:
+          type: integer
+          description: Token lifetime in seconds
+          examples:
+          - 1800
+    CertsResponse:
+      type: object
+      properties:
+        keys:
+          type: array
+          items:
+            type: object
+            properties:
+              kty:
+                type: string
+                examples:
+                - RSA
+              use:
+                type: string
+                examples:
+                - sig
+              kid:
+                type: string
+              n:
+                type: string
+                description: RSA modulus (base64url)
+              e:
+                type: string
+                description: RSA exponent (base64url)
+    OpenIdConfiguration:
+      type: object
+      properties:
+        issuer:
+          type: string
+        authorization_endpoint:
+          type: string
+        token_endpoint:
+          type: string
+        jwks_uri:
+          type: string
+        response_types_supported:
+          type: array
+          items:
+            type: string
+    BridgeUrlRequest:
+      type: object
+      required:
+      - url
+      properties:
+        url:
+          type: string
+          format: uri
+          description: HTTPS callback base URL of the HIP/HIU server
+          examples:
+          - https://your-hip-server.com/abdm/callback
+    BridgeService:
+      type: object
+      properties:
+        serviceId:
+          type: string
+        name:
+          type: string
+        type:
+          type: string
+          enum:
+          - HIP
+          - HIU
+          - HRP
+        active:
+          type: boolean
+        bridgeId:
+          type: string
+        facilityId:
+          type: string
+    RegisterBridgeServicesRequest:
+      type: object
+      required:
+      - facilityId
+      - facilityName
+      - HRP
+      properties:
+        facilityId:
+          type: string
+          description: Facility identifier from the Health Facility Registry
+          examples:
+          - IN07100XXXXX
+        facilityName:
+          type: string
+          examples:
+          - S Y Hospital
+        HRP:
+          type: array
+          items:
+            type: object
+            required:
+            - bridgeId
+            - hipName
+            - type
+            - active
+            properties:
+              bridgeId:
+                type: string
+              hipName:
+                type: string
+              type:
+                type: string
+                enum:
+                - HIP
+                - HIU
+              active:
+                type: boolean
+    GenerateLinkTokenRequest:
+      type: object
+      required:
+      - abhaAddress
+      - name
+      - gender
+      - yearOfBirth
+      properties:
+        abhaNumber:
+          type: integer
+          description: 14-digit ABHA number (optional if abhaAddress provided)
+          examples:
+          - 91234567890123
+        abhaAddress:
+          type: string
+          description: ABHA address (PHR address) e.g. user@sbx
+          examples:
+          - patient@sbx
+        name:
+          type: string
+          examples:
+          - Ramesh Kumar
+        gender:
+          type: string
+          enum:
+          - M
+          - F
+          - O
+          examples:
+          - M
+        yearOfBirth:
+          type: integer
+          examples:
+          - 1985
+    LinkTokenResponse:
+      type: object
+      properties:
+        linkToken:
+          type: string
+          description: Short-lived token to be used in X-Link-Token header
+        expiryTime:
+          type: string
+          format: date-time
+    CareContext:
+      type: object
+      required:
+      - referenceNumber
+      - display
+      properties:
+        referenceNumber:
+          type: string
+          description: HIP's internal reference for this care context
+          examples:
+          - VISIT-2024-001
+        display:
+          type: string
+          description: Human-readable name of the care context
+          examples:
+          - OPD Visit 10-Jan-2024
+    PatientCareContextEntry:
+      type: object
+      required:
+      - referenceNumber
+      - display
+      - careContexts
+      - hiType
+      - count
+      properties:
+        referenceNumber:
+          type: string
+          description: HIP's internal patient reference number
+        display:
+          type: string
+          description: Patient display name
+        careContexts:
+          type: array
+          items:
+            $ref: '#/components/schemas/CareContext'
+        hiType:
+          type: array
+          items:
+            $ref: '#/components/schemas/HIType'
+        count:
+          type: integer
+          description: Total number of care contexts in this entry
+    HIPLinkCareContextRequest:
+      type: object
+      required:
+      - abhaAddress
+      - patient
+      properties:
+        abhaNumber:
+          type: string
+          description: 14-digit ABHA number (optional)
+        abhaAddress:
+          type: string
+          description: ABHA address of the patient
+          examples:
+          - patient@sbx
+        patient:
+          type: array
+          items:
+            $ref: '#/components/schemas/PatientCareContextEntry'
+    LinkCareContextNotifyRequest:
+      type: object
+      required:
+      - notification
+      properties:
+        notification:
+          type: object
+          required:
+          - patient
+          - careContext
+          - hiTypes
+          - date
+          - hip
+          properties:
+            patient:
+              type: object
+              properties:
+                id:
+                  type: string
+                  description: Patient ABHA address
+            careContext:
+              type: object
+              properties:
+                patientReference:
+                  type: string
+                careContextReference:
+                  type: string
+            hiTypes:
+              type: array
+              items:
+                $ref: '#/components/schemas/HIType'
+            date:
+              type: string
+              format: date-time
+            hip:
+              type: object
+              properties:
+                id:
+                  type: string
+    SmsNotifyRequest:
+      type: object
+      required:
+      - requestId
+      - timestamp
+      - notification
+      properties:
+        requestId:
+          type: string
+          description: Unique request ID (UUIDv4)
+          x-abdm-correction: C3
+        timestamp:
+          type: string
+          format: date-time
+        notification:
+          type: object
+          required:
+          - phoneNo
+          - hip
+          properties:
+            phoneNo:
+              type: string
+              description: Patient mobile number with country code (e.g. 917812345678)
+              examples:
+              - '917812345678'
+            hip:
+              type: object
+              required:
+              - name
+              - id
+              properties:
+                name:
+                  type: string
+                  examples:
+                  - S Y Hospital
+                id:
+                  type: string
+                  examples:
+                  - HIP_SERVICE_ID
+    OnDiscoverRequest:
+      type: object
+      required:
+      - transactionId
+      - patient
+      - response
+      properties:
+        transactionId:
+          type: string
+          description: Same transactionId from the discover request received at
+            HIP bridge
+        patient:
+          type: array
+          items:
+            $ref: '#/components/schemas/PatientCareContextEntry'
+        response:
+          $ref: '#/components/schemas/CallbackResponse'
+    OnLinkInitRequest:
+      type: object
+      required:
+      - transactionId
+      - link
+      - response
+      properties:
+        transactionId:
+          type: string
+        link:
+          type: object
+          required:
+          - referenceNumber
+          - authenticationType
+          - meta
+          properties:
+            referenceNumber:
+              type: string
+              description: HIP-generated link reference (UUIDv4)
+            authenticationType:
+              type: string
+              enum:
+              - DIRECT
+              - MEDIATED
+              examples:
+              - DIRECT
+            meta:
+              type: object
+              properties:
+                communicationMedium:
+                  type: string
+                  enum:
+                  - MOBILE
+                  - EMAIL
+                communicationHint:
+                  type: string
+                  description: Masked hint (e.g. mobile ending digits)
+                communicationExpiry:
+                  type: string
+                  format: date-time
+        response:
+          $ref: '#/components/schemas/CallbackResponse'
+    OnLinkConfirmRequest:
+      type: object
+      required:
+      - patient
+      - response
+      properties:
+        patient:
+          type: array
+          items:
+            $ref: '#/components/schemas/PatientCareContextEntry'
+        response:
+          $ref: '#/components/schemas/CallbackResponse'
+    ConsentHipOnNotifyRequest:
+      type: object
+      required:
+      - acknowledgement
+      - response
+      properties:
+        acknowledgement:
+          type: object
+          required:
+          - status
+          - consentId
+          properties:
+            status:
+              type: string
+              enum:
+              - OK
+              - ERROR
+            consentId:
+              type: string
+              description: The consent artefact ID being acknowledged
+        response:
+          $ref: '#/components/schemas/CallbackResponse'
+    HipHealthInfoOnRequestBody:
+      type: object
+      required:
+      - hiRequest
+      - response
+      properties:
+        hiRequest:
+          type: object
+          required:
+          - transactionId
+          - sessionStatus
+          properties:
+            transactionId:
+              type: string
+              description: Transaction ID from the original data request
+            sessionStatus:
+              type: string
+              enum:
+              - ACKNOWLEDGED
+              - ERRORED
+              examples:
+              - ACKNOWLEDGED
+        response:
+          $ref: '#/components/schemas/CallbackResponse'
+    DataFlowNotifyRequest:
+      type: object
+      required:
+      - notification
+      properties:
+        notification:
+          type: object
+          required:
+          - consentId
+          - transactionId
+          - doneAt
+          - notifier
+          - statusNotification
+          properties:
+            consentId:
+              type: string
+            transactionId:
+              type: string
+            doneAt:
+              type: string
+              format: date-time
+            notifier:
+              type: object
+              properties:
+                type:
+                  type: string
+                  enum:
+                  - HIP
+                  - HIU
+                id:
+                  type: string
+            statusNotification:
+              type: object
+              properties:
+                sessionStatus:
+                  type: string
+                  enum:
+                  - TRANSFERRED
+                  - FAILED
+                hipId:
+                  type: string
+                statusResponses:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      careContextReference:
+                        type: string
+                      hiStatus:
+                        type: string
+                        enum:
+                        - OK
+                        - ERRORED
+                      description:
+                        type: string
+    CallbackResponse:
+      type: object
+      description: Echo of the requestId from the original Gateway-to-HIP request
+      required:
+      - requestId
+      properties:
+        requestId:
+          type: string
+          description: requestId received in the original Gateway request to HIP
+            bridge
+    HIType:
+      type: string
+      enum:
+      - Prescription
+      - DiagnosticReport
+      - OPConsultation
+      - DischargeSummary
+      - ImmunizationRecord
+      - HealthDocumentRecord
+      - WellnessRecord
+      description: ABDM Health Information type
+    ErrorResponse:
+      type: object
+      properties:
+        code:
+          type: integer
+        message:
+          type: string
+  responses:
+    BadRequest:
+      description: Bad request, invalid parameters or missing fields
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    Unauthorized:
+      description: Unauthorized, missing or invalid Bearer token
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
 x-abdm-errors:
-  source: "NHA's published M2 list, which carries code and message only. The action is this catalogue's reading of the message text."
+  source: NHA's published M2 list, which carries code and message only. The action
+    is this catalogue's reading of the message text.
   codes:
-    - code: "ABDM-1000"
-      message: "Unable to connect the database"
-      action: "Retry"
-    - code: "ABDM-1001"
-      message: "No data found"
-      action: "Fix request"
-    - code: "ABDM-1004"
-      message: "SMS Gateway is unavailable"
-      action: "Retry"
-    - code: "ABDM-1006"
-      message: "Invalid HIType, it must be in Prescription,DiagnosticReport,OPConsultation,DischargeSummary,ImmunizationRecord,HealthDocumentRecord,WellnessRecord,Invoice"
-      action: "Fix request"
-    - code: "ABDM-1006"
-      message: "Bad Request, invalid request Body"
-      action: "Fix request"
-    - code: "ABDM-1006"
-      message: "Invalid combinations of scopes"
-      action: "Fix request"
-    - code: "ABDM-1006"
-      message: "Invalid count, must be 2 digit and ranges between 1 to 20"
-      action: "Fix request"
-    - code: "ABDM-1007"
-      message: "Connection failed due to timeout"
-      action: "Retry"
-    - code: "ABDM-1008"
-      message: "SMS service currently disabled"
-      action: "Retry"
-    - code: "ABDM-1010"
-      message: "Validation failed"
-      action: "Fix request"
-    - code: "ABDM-1011"
-      message: "Gateway database unavailable"
-      action: "Retry"
-    - code: "ABDM-1012"
-      message: "No records found against the ABHA Address"
-      action: "Fix request"
-    - code: "ABDM-1013"
-      message: "Invalid ABHA Number"
-      action: "Fix request"
-    - code: "ABDM-1015"
-      message: "Invalid Response"
-      action: "Fix request"
-    - code: "ABDM-1016"
-      message: "Invalid TimeStamp"
-      action: "Fix request"
-    - code: "ABDM-1017"
-      message: "Invalid TransactionId"
-      action: "Fix request"
-    - code: "ABDM-1018"
-      message: "Share Profile database unavailable"
-      action: "Retry"
-    - code: "ABDM-1019"
-      message: "Dependent Service Unavailable"
-      action: "Retry"
-    - code: "ABDM-1020"
-      message: "Unknown database"
-      action: "Retry"
-    - code: "ABDM-1022"
-      message: "Too many requests"
-      action: "Back off"
-    - code: "ABDM-1023"
-      message: "Invalid User"
-      action: "Fix request"
-    - code: "ABDM-1024"
-      message: "Dependent service unavailable"
-      action: "Retry"
-    - code: "ABDM-1025"
-      message: "Invalid ServiceId"
-      action: "Fix request"
-    - code: "ABDM-1026"
-      message: "Invalid Link Token"
-      action: "Fix auth"
-    - code: "ABDM-1027"
-      message: "You are blocked. Please try again after 24 hours."
-      action: "Blocked, no retry"
-    - code: "ABDM-1028"
-      message: "HIP is unavailable"
-      action: "Chase the [HIP](/docs/hiecm/v3/getting-started/glossary#hip)"
-    - code: "ABDM-1029"
-      message: "Redis server is unavailable"
-      action: "Retry"
-    - code: "ABDM-1030"
-      message: "Invalid request ID"
-      action: "Fix request"
-    - code: "ABDM-1030"
-      message: "Request id not found"
-      action: "Fix request"
-    - code: "ABDM-1031"
-      message: "Invalid request"
-      action: "Fix request"
-    - code: "ABDM-1032"
-      message: "Invalid header"
-      action: "Fix request"
-    - code: "ABDM-1033"
-      message: "HIU is unavailable"
-      action: "Chase the [HIU](/docs/hiecm/v3/getting-started/glossary#hiu)"
-    - code: "ABDM-1034"
-      message: "Notification service unavailable"
-      action: "Retry"
-    - code: "ABDM-1035"
-      message: "Invalid HIP ID"
-      action: "Fix request"
-    - code: "ABDM-1036"
-      message: "Data does not matched"
-      action: "Fix request"
-    - code: "ABDM-1037"
-      message: "Counter and Care context count mismatch"
-      action: "Fix request"
-    - code: "ABDM-1038"
-      message: "ABHA address and Link token mismatch"
-      action: "Fix auth"
-    - code: "ABDM-1040"
-      message: "Invalid HIU ID"
-      action: "Fix request"
-    - code: "ABDM-1041"
-      message: "Invalid Acknowledgement"
-      action: "Fix request"
-    - code: "ABDM-1042"
-      message: "Provider Mandatory"
-      action: "Fix request"
-    - code: "ABDM-1043"
-      message: "ABHA Address does not match with KYC details."
-      action: "Fix request"
-    - code: "ABDM-1044"
-      message: "Broadcast Failed"
-      action: "Retry"
-    - code: "ABDM-1045"
-      message: "Database Access is restricted"
-      action: "Retry"
-    - code: "ABDM-1046"
-      message: "Invalid Purpose"
-      action: "New consent"
-    - code: "ABDM-1047"
-      message: "Purpose does not exist"
-      action: "New consent"
-    - code: "ABDM-1048"
-      message: "Timeout"
-      action: "Retry"
-    - code: "ABDM-1049"
-      message: "Invalid Profile Share Intent Keys"
-      action: "Ask support"
-    - code: "ABDM-1050"
-      message: "Invalid Profile Share Metadata Keys"
-      action: "Ask support"
-    - code: "ABDM-1051"
-      message: "Invalid ABHA Number or ABHA Address"
-      action: "Fix request"
-    - code: "ABDM-1052"
-      message: "Invalid TransactionId or response's requestId"
-      action: "Fix request"
-    - code: "ABDM-1055"
-      message: "Invalid HIP Id or PHR Id"
-      action: "Fix request"
-    - code: "ABDM-1056"
-      message: "This care contexts has been already linked"
-      action: "Treat as success"
-    - code: "ABDM-1056"
-      message: "Invalid Link Reference Number"
-      action: "Fix request"
-    - code: "ABDM-1057"
-      message: "Invalid Care Contexts"
-      action: "Fix request"
-    - code: "ABDM-1059"
-      message: "Invalid Care Contexts count"
-      action: "Fix request"
-    - code: "ABDM-1060"
-      message: "Invalid Patient Reference Number"
-      action: "Fix request"
-    - code: "ABDM-1061"
-      message: "Invalid Patient Display"
-      action: "Fix request"
-    - code: "ABDM-1061"
-      message: "Consent artefact expired"
-      action: "New consent"
-    - code: "ABDM-1062"
-      message: "ABHA number mismatch with Link token"
-      action: "Fix auth"
-    - code: "ABDM-1062"
-      message: "Consent Not granted"
-      action: "New consent"
-    - code: "ABDM-1063"
-      message: "HIP Id mismatch with Link token"
-      action: "Fix auth"
-    - code: "ABDM-1063"
-      message: "Date Range given is invalid"
-      action: "New consent"
-    - code: "ABDM-1064"
-      message: "request with this request id already exists"
-      action: "New request id"
-    - code: "ABDM-1064"
-      message: "Request body was missing"
-      action: "Fix request"
-    - code: "ABDM-1065"
-      message: "Invalid X Auth token"
-      action: "Fix auth"
-    - code: "ABDM-1066"
-      message: "Invalid JWT token"
-      action: "Fix auth"
-    - code: "ABDM-1067"
-      message: "Request body not required"
-      action: "Fix request"
-    - code: "ABDM-1084"
-      message: "ABHA address mismatch with X Auth token"
-      action: "Fix auth"
-    - code: "ABDM-1085"
-      message: "ABHA number mismatch with X Auth token"
-      action: "Fix auth"
-    - code: "ABDM-1086"
-      message: "Patient profile mismatch with X Auth token"
-      action: "Fix auth"
-    - code: "ABDM-1087"
-      message: "Duplicate patient share request"
-      action: "New request id"
-    - code: "ABDM-1090"
-      message: "Duplicate HIP link request"
-      action: "New request id"
-    - code: "ABDM-1091"
-      message: "Duplicate Get links request"
-      action: "New request id"
-    - code: "ABDM-1092"
-      message: "Duplicate Link token request"
-      action: "New request id"
-    - code: "ABDM-1093"
-      message: "Duplicate Bridge request"
-      action: "New request id"
-    - code: "ABDM-1094"
-      message: "Duplicate bridge patch request"
-      action: "New request id"
-    - code: "ABDM-1095"
-      message: "Duplicate Bridge service request"
-      action: "New request id"
-    - code: "ABDM-1102"
-      message: "Profile information cannot be null"
-      action: "Ask support"
-    - code: "ABDM-1103"
-      message: "Duplicate Discovery request"
-      action: "New request id"
-    - code: "ABDM-1104"
-      message: "Duplicate Init request"
-      action: "New request id"
-    - code: "ABDM-1105"
-      message: "Duplicate Confirm request"
-      action: "New request id"
-    - code: "ABDM-1106"
-      message: "Duplicate On discovery request"
-      action: "New request id"
-    - code: "ABDM-1107"
-      message: "Duplicate On init request"
-      action: "New request id"
-    - code: "ABDM-1108"
-      message: "Duplicate On confirm request"
-      action: "New request id"
-    - code: "ABDM-1108"
-      message: "Notification DB service unavailable"
-      action: "Retry"
-    - code: "ABDM-1109"
-      message: "Invalid On discovery response"
-      action: "Fix request"
-    - code: "ABDM-1109"
-      message: "ABHA DB service unavailable"
-      action: "Retry"
-    - code: "ABDM-1110"
-      message: "Invalid On init response"
-      action: "Fix request"
-    - code: "ABDM-1111"
-      message: "Invalid On confirm response"
-      action: "Fix request"
-    - code: "ABDM-1112"
-      message: "Invalid or already expired consent artefact id"
-      action: "New consent"
-    - code: "ABDM-1113"
-      message: "Duplicate health information provider data flow response"
-      action: "New request id"
-    - code: "ABDM-1149"
-      message: "Intent type is not supported at HIP end"
-      action: "Fix request"
-    - code: "ABDM-1150"
-      message: "Bridge API version cannot be null"
-      action: "Ask support"
-    - code: "ABDM-1170"
-      message: "Invalid ABHA address"
-      action: "Fix request"
-    - code: "ABDM-1201"
-      message: "IDP Gateway is unavailable"
-      action: "Retry"
-    - code: "ABDM-1401"
-      message: "HIP is not available"
-      action: "Chase the HIP"
-    - code: "ABDM-1402"
-      message: "Acknowledgement is not received from HIP"
-      action: "Chase the HIP"
-    - code: "ABDM-1407"
-      message: "The ABHA Number associated with this ABHA Address is currently deactivated. Please reactivate it."
-      action: "Fix request"
-    - code: "ABDM-2401"
-      message: "The X Auth token is invalid."
-      action: "Fix auth"
-    - code: "ABDM-2402"
-      message: "Invalid Timestamp"
-      action: "Fix request"
-    - code: "ABDM-2403"
-      message: "Invalid X-CM-ID"
-      action: "Fix request"
-    - code: "ABDM-2404"
-      message: "Invalid Request Id"
-      action: "Fix request"
-    - code: "ABDM-2406"
-      message: "Invalid API sequence flow, please follow logical flow"
-      action: "Fix request"
-    - code: "ABDM-2406"
-      message: "The status is invalid. Please follow the logical status flow or transition."
-      action: "Fix request"
-    - code: "ABDM-2429"
-      message: "Too many requests found"
-      action: "Back off"
-    - code: "ABDM-2500"
-      message: "Authorization header is missing"
-      action: "Fix auth"
-    - code: "ABDM-2500"
-      message: "No mapping found for"
-      action: "Fix request"
-    - code: "ABDM-2501"
-      message: "Payment status should be : `SUCCESS,CANCELED,PENDING,FAIL,REFUND_INITIATED,REFUND_SUCCESS"
-      action: "Ask support"
-    - code: "ABDM-9001"
-      message: "No open order against ABHA. Please ensure a minimum of one open order"
-      action: "Ask support"
-    - code: "ABDM-9002"
-      message: "No registration found at `<<hospital name>>`. Contact counter support"
-      action: "Ask support"
-    - code: "ABDM-9003"
-      message: "Hospital services temporarily unavailable. Please try again after some time."
-      action: "Retry"
-    - code: "ABDM-9004"
-      message: "Services disrupted, please try again."
-      action: "Retry"
-    - code: "ABDM-9005"
-      message: "Bank server not responding. Please try again later"
-      action: "Ask support"
-    - code: "ABDM-9006"
-      message: "Service details mismatch. Please ensure original service ID from HMIS"
-      action: "Ask support"
-    - code: "ABDM-9007"
-      message: "The Scan and Pay functionality is not enabled at this facility. Kindly contact the hospital administration."
-      action: "Ask support"
-    - code: "ABDM-9999"
-      message: "HIP is unable to generate a token at this time. Please try again later."
-      action: "Chase the HIP"
-    - code: "ABDM-9999"
-      message: "HIP is unable to process at this time. Please try again later."
-      action: "Chase the HIP"
-    - code: "ABDM-9999"
-      message: "Unknown exception"
-      action: "Retry"
-    - code: "ABDM-9999"
-      message: "Cannot process the request at the moment, please try later."
-      action: "Retry"
-    - code: "ABDM-9999"
-      message: "User not found"
-      action: "Retry"
+  - code: ABDM-1000
+    message: Unable to connect the database
+    action: Retry
+  - code: ABDM-1001
+    message: No data found
+    action: Fix request
+  - code: ABDM-1004
+    message: SMS Gateway is unavailable
+    action: Retry
+  - code: ABDM-1006
+    message: Invalid HIType, it must be in Prescription,DiagnosticReport,OPConsultation,DischargeSummary,ImmunizationRecord,HealthDocumentRecord,WellnessRecord,Invoice
+    action: Fix request
+  - code: ABDM-1006
+    message: Bad Request, invalid request Body
+    action: Fix request
+  - code: ABDM-1006
+    message: Invalid combinations of scopes
+    action: Fix request
+  - code: ABDM-1006
+    message: Invalid count, must be 2 digit and ranges between 1 to 20
+    action: Fix request
+  - code: ABDM-1007
+    message: Connection failed due to timeout
+    action: Retry
+  - code: ABDM-1008
+    message: SMS service currently disabled
+    action: Retry
+  - code: ABDM-1010
+    message: Validation failed
+    action: Fix request
+  - code: ABDM-1011
+    message: Gateway database unavailable
+    action: Retry
+  - code: ABDM-1012
+    message: No records found against the ABHA Address
+    action: Fix request
+  - code: ABDM-1013
+    message: Invalid ABHA Number
+    action: Fix request
+  - code: ABDM-1015
+    message: Invalid Response
+    action: Fix request
+  - code: ABDM-1016
+    message: Invalid TimeStamp
+    action: Fix request
+  - code: ABDM-1017
+    message: Invalid TransactionId
+    action: Fix request
+  - code: ABDM-1018
+    message: Share Profile database unavailable
+    action: Retry
+  - code: ABDM-1019
+    message: Dependent Service Unavailable
+    action: Retry
+  - code: ABDM-1020
+    message: Unknown database
+    action: Retry
+  - code: ABDM-1022
+    message: Too many requests
+    action: Back off
+  - code: ABDM-1023
+    message: Invalid User
+    action: Fix request
+  - code: ABDM-1024
+    message: Dependent service unavailable
+    action: Retry
+  - code: ABDM-1025
+    message: Invalid ServiceId
+    action: Fix request
+  - code: ABDM-1026
+    message: Invalid Link Token
+    action: Fix auth
+  - code: ABDM-1027
+    message: You are blocked. Please try again after 24 hours.
+    action: Blocked, no retry
+  - code: ABDM-1028
+    message: HIP is unavailable
+    action: Chase the [HIP](/docs/hiecm/v3/getting-started/glossary#hip)
+  - code: ABDM-1029
+    message: Redis server is unavailable
+    action: Retry
+  - code: ABDM-1030
+    message: Invalid request ID
+    action: Fix request
+  - code: ABDM-1030
+    message: Request id not found
+    action: Fix request
+  - code: ABDM-1031
+    message: Invalid request
+    action: Fix request
+  - code: ABDM-1032
+    message: Invalid header
+    action: Fix request
+  - code: ABDM-1033
+    message: HIU is unavailable
+    action: Chase the [HIU](/docs/hiecm/v3/getting-started/glossary#hiu)
+  - code: ABDM-1034
+    message: Notification service unavailable
+    action: Retry
+  - code: ABDM-1035
+    message: Invalid HIP ID
+    action: Fix request
+  - code: ABDM-1036
+    message: Data does not matched
+    action: Fix request
+  - code: ABDM-1037
+    message: Counter and Care context count mismatch
+    action: Fix request
+  - code: ABDM-1038
+    message: ABHA address and Link token mismatch
+    action: Fix auth
+  - code: ABDM-1040
+    message: Invalid HIU ID
+    action: Fix request
+  - code: ABDM-1041
+    message: Invalid Acknowledgement
+    action: Fix request
+  - code: ABDM-1042
+    message: Provider Mandatory
+    action: Fix request
+  - code: ABDM-1043
+    message: ABHA Address does not match with KYC details.
+    action: Fix request
+  - code: ABDM-1044
+    message: Broadcast Failed
+    action: Retry
+  - code: ABDM-1045
+    message: Database Access is restricted
+    action: Retry
+  - code: ABDM-1046
+    message: Invalid Purpose
+    action: New consent
+  - code: ABDM-1047
+    message: Purpose does not exist
+    action: New consent
+  - code: ABDM-1048
+    message: Timeout
+    action: Retry
+  - code: ABDM-1049
+    message: Invalid Profile Share Intent Keys
+    action: Ask support
+  - code: ABDM-1050
+    message: Invalid Profile Share Metadata Keys
+    action: Ask support
+  - code: ABDM-1051
+    message: Invalid ABHA Number or ABHA Address
+    action: Fix request
+  - code: ABDM-1052
+    message: Invalid TransactionId or response's requestId
+    action: Fix request
+  - code: ABDM-1055
+    message: Invalid HIP Id or PHR Id
+    action: Fix request
+  - code: ABDM-1056
+    message: This care contexts has been already linked
+    action: Treat as success
+  - code: ABDM-1056
+    message: Invalid Link Reference Number
+    action: Fix request
+  - code: ABDM-1057
+    message: Invalid Care Contexts
+    action: Fix request
+  - code: ABDM-1059
+    message: Invalid Care Contexts count
+    action: Fix request
+  - code: ABDM-1060
+    message: Invalid Patient Reference Number
+    action: Fix request
+  - code: ABDM-1061
+    message: Invalid Patient Display
+    action: Fix request
+  - code: ABDM-1061
+    message: Consent artefact expired
+    action: New consent
+  - code: ABDM-1062
+    message: ABHA number mismatch with Link token
+    action: Fix auth
+  - code: ABDM-1062
+    message: Consent Not granted
+    action: New consent
+  - code: ABDM-1063
+    message: HIP Id mismatch with Link token
+    action: Fix auth
+  - code: ABDM-1063
+    message: Date Range given is invalid
+    action: New consent
+  - code: ABDM-1064
+    message: request with this request id already exists
+    action: New request id
+  - code: ABDM-1064
+    message: Request body was missing
+    action: Fix request
+  - code: ABDM-1065
+    message: Invalid X Auth token
+    action: Fix auth
+  - code: ABDM-1066
+    message: Invalid JWT token
+    action: Fix auth
+  - code: ABDM-1067
+    message: Request body not required
+    action: Fix request
+  - code: ABDM-1084
+    message: ABHA address mismatch with X Auth token
+    action: Fix auth
+  - code: ABDM-1085
+    message: ABHA number mismatch with X Auth token
+    action: Fix auth
+  - code: ABDM-1086
+    message: Patient profile mismatch with X Auth token
+    action: Fix auth
+  - code: ABDM-1087
+    message: Duplicate patient share request
+    action: New request id
+  - code: ABDM-1090
+    message: Duplicate HIP link request
+    action: New request id
+  - code: ABDM-1091
+    message: Duplicate Get links request
+    action: New request id
+  - code: ABDM-1092
+    message: Duplicate Link token request
+    action: New request id
+  - code: ABDM-1093
+    message: Duplicate Bridge request
+    action: New request id
+  - code: ABDM-1094
+    message: Duplicate bridge patch request
+    action: New request id
+  - code: ABDM-1095
+    message: Duplicate Bridge service request
+    action: New request id
+  - code: ABDM-1102
+    message: Profile information cannot be null
+    action: Ask support
+  - code: ABDM-1103
+    message: Duplicate Discovery request
+    action: New request id
+  - code: ABDM-1104
+    message: Duplicate Init request
+    action: New request id
+  - code: ABDM-1105
+    message: Duplicate Confirm request
+    action: New request id
+  - code: ABDM-1106
+    message: Duplicate On discovery request
+    action: New request id
+  - code: ABDM-1107
+    message: Duplicate On init request
+    action: New request id
+  - code: ABDM-1108
+    message: Duplicate On confirm request
+    action: New request id
+  - code: ABDM-1108
+    message: Notification DB service unavailable
+    action: Retry
+  - code: ABDM-1109
+    message: Invalid On discovery response
+    action: Fix request
+  - code: ABDM-1109
+    message: ABHA DB service unavailable
+    action: Retry
+  - code: ABDM-1110
+    message: Invalid On init response
+    action: Fix request
+  - code: ABDM-1111
+    message: Invalid On confirm response
+    action: Fix request
+  - code: ABDM-1112
+    message: Invalid or already expired consent artefact id
+    action: New consent
+  - code: ABDM-1113
+    message: Duplicate health information provider data flow response
+    action: New request id
+  - code: ABDM-1149
+    message: Intent type is not supported at HIP end
+    action: Fix request
+  - code: ABDM-1150
+    message: Bridge API version cannot be null
+    action: Ask support
+  - code: ABDM-1170
+    message: Invalid ABHA address
+    action: Fix request
+  - code: ABDM-1201
+    message: IDP Gateway is unavailable
+    action: Retry
+  - code: ABDM-1401
+    message: HIP is not available
+    action: Chase the HIP
+  - code: ABDM-1402
+    message: Acknowledgement is not received from HIP
+    action: Chase the HIP
+  - code: ABDM-1407
+    message: The ABHA Number associated with this ABHA Address is currently deactivated.
+      Please reactivate it.
+    action: Fix request
+  - code: ABDM-2401
+    message: The X Auth token is invalid.
+    action: Fix auth
+  - code: ABDM-2402
+    message: Invalid Timestamp
+    action: Fix request
+  - code: ABDM-2403
+    message: Invalid X-CM-ID
+    action: Fix request
+  - code: ABDM-2404
+    message: Invalid Request Id
+    action: Fix request
+  - code: ABDM-2406
+    message: Invalid API sequence flow, please follow logical flow
+    action: Fix request
+  - code: ABDM-2406
+    message: The status is invalid. Please follow the logical status flow or transition.
+    action: Fix request
+  - code: ABDM-2429
+    message: Too many requests found
+    action: Back off
+  - code: ABDM-2500
+    message: Authorization header is missing
+    action: Fix auth
+  - code: ABDM-2500
+    message: No mapping found for
+    action: Fix request
+  - code: ABDM-2501
+    message: 'Payment status should be : `SUCCESS,CANCELED,PENDING,FAIL,REFUND_INITIATED,REFUND_SUCCESS'
+    action: Ask support
+  - code: ABDM-9001
+    message: No open order against ABHA. Please ensure a minimum of one open order
+    action: Ask support
+  - code: ABDM-9002
+    message: No registration found at `<<hospital name>>`. Contact counter support
+    action: Ask support
+  - code: ABDM-9003
+    message: Hospital services temporarily unavailable. Please try again after
+      some time.
+    action: Retry
+  - code: ABDM-9004
+    message: Services disrupted, please try again.
+    action: Retry
+  - code: ABDM-9005
+    message: Bank server not responding. Please try again later
+    action: Ask support
+  - code: ABDM-9006
+    message: Service details mismatch. Please ensure original service ID from
+      HMIS
+    action: Ask support
+  - code: ABDM-9007
+    message: The Scan and Pay functionality is not enabled at this facility. Kindly
+      contact the hospital administration.
+    action: Ask support
+  - code: ABDM-9999
+    message: HIP is unable to generate a token at this time. Please try again
+      later.
+    action: Chase the HIP
+  - code: ABDM-9999
+    message: HIP is unable to process at this time. Please try again later.
+    action: Chase the HIP
+  - code: ABDM-9999
+    message: Unknown exception
+    action: Retry
+  - code: ABDM-9999
+    message: Cannot process the request at the moment, please try later.
+    action: Retry
+  - code: ABDM-9999
+    message: User not found
+    action: Retry

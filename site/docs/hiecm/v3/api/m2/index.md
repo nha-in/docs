@@ -23,6 +23,19 @@ Milestone 2 (M2) attaches health records to a person's [ABHA address](/docs/hiec
 
 Requesting records from other facilities is [M3](/docs/hiecm/v3/api/m3).
 
+## What the sources give you, and what they still do not
+
+Since 25 August 2026 M2 has an OpenAPI file from NHA, ingested into the
+[M2 API reference](/reference/hiecm-m2).
+
+| Referred to | State now |
+|---|---|
+| Request and response bodies for the calls you make | **Documented.** Ingested from NHA's M2 OpenAPI file. |
+| Callbacks the gateway sends you | **Declared, mostly without payloads.** NHA's specification carries no callbacks, and NHA's M2 collection includes only the data notification. The discovery, link init, link confirm and consent notify payloads are in neither source. Those webhooks name the path and stop, because inventing a body would be worse than the gap. |
+
+Nothing here has been run against the sandbox from this repository, so the
+schemas are what NHA says rather than what was observed.
+
 ## Prerequisites
 
 [NHA](/docs/hiecm/v3/getting-started/glossary#nha) states the first. The rest follow from the flows.

@@ -20,6 +20,7 @@ A call you make is acknowledged, and the answer arrives later at your own endpoi
 | `POST` | `/v0.5/links/link/confirm` | Confirmation of a link, carrying the token the patient approved |
 | `POST` | `/v0.5/health-information/hip/request` | A request for the records a consent covers |
 | `POST` | `/v0.5/consents/hiu/notify` | A consent notification to an HIU bridge |
+| `POST` | `/api-hiu/data/notification` | The provider pushes encrypted health information to the URL named in the request. |
 
 ## M3 Consent and fetching
 
@@ -30,4 +31,5 @@ A call you make is acknowledged, and the answer arrives later at your own endpoi
 | `POST` | `/api/v3/consent/request/hip/notify` | The patient's decision, sent to the record holder |
 | `POST` | `/api/v3/hiu/consent/on-fetch` | The consent artefact detail, fetched by artefact id |
 | `POST` | `/api/v3/hiu/health-information/on-request` | Acknowledgement of a health information request |
+| `POST` | `/api/v3/hiu/consent/request/on-status` | The consent manager reports the state of a consent request you asked about. |
 

@@ -12,6 +12,45 @@ source: repository README.md and catalogue/openapi/CONVENTIONS.md
 Dated changes to these pages, newest first. Each entry links to what you can now
 read or do.
 
+## 2026-08-25
+
+### M2 and M3 have real API references
+
+NHA supplied an OpenAPI file for each of M1, M2 and M3, plus Postman
+collections for all three. They are ingested, and the reference pages are
+built from them rather than from prose.
+
+The catalogue went from 35 documented operations to 69, and from 10 declared
+callbacks to 12, five of which now carry a real payload.
+
+- [M1 API reference](/reference/hiecm-m1), 44 operations, up from 32
+- [M2 API reference](/reference/hiecm-m2), 10 operations, up from none
+- [M3 API reference](/reference/hiecm-m3), 6 operations and 6 callbacks, up from none
+- [Gateway reference](/reference/hiecm-gateway), 7 operations. NHA repeats
+  this group in all three files, so it is described once
+
+### What the new sources do not give you
+
+NHA's three specifications describe **no callbacks at all**. What they model
+as paths is the outbound half, the calls you make, including the `on-init`
+and `on-notify` responses you send. What the gateway posts to your registered
+URL is absent from every one of them.
+
+For M3 that gap is filled from NHA's collection, which does carry the
+payloads. For M2 only the data notification is available, so the remaining
+M2 callbacks name a path and stop.
+
+### Corrections against NHA's files
+
+Five, all recorded in `catalogue/openapi/corrections/` rather than applied
+silently: 52 em dashes rewritten, 8 references to components NHA never
+defined, 26 UUID format assertions NHA's own examples contradict, 2 `hiType`
+examples that disagreed with NHA's schema, and 1 example dropped for
+violating the schema it illustrates.
+
+Nothing in this release has been run against the ABDM sandbox. Every page and
+every atom says `unverified`.
+
 ## 2026-08-24
 
 ### Read the HIE-CM modules

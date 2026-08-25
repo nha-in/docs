@@ -25,17 +25,29 @@ M3 does not create identities, which is [M1](/docs/hiecm/v3/api/m1), and does no
 
 The patient must be known to you by ABHA address first. [NHA](/docs/hiecm/v3/getting-started/glossary#nha) gives one concrete route: the patient scans the health facility QR code at registration, and a doctor raises a consent request against the address.
 
-## What the source is missing
+## What the sources give you, and what they still do not
 
-NHA's M3 document is a change note, not a full specification. It removes three tabs, Requesting Consent, Storing Consent Artefacts and Display Health Records, and adds three: Request Consent API Workflow (HIE-CM Integration), Swagger API Sequence URL and Screen Sequence.
+NHA has supplied two things for M3: a change note document, and, since 25
+August 2026, an OpenAPI file and a Postman collection. The specification
+changed the picture considerably.
 
-| Referred to | State in the source |
+| Referred to | State now |
 |---|---|
+| Request and response bodies | **Documented.** Ingested from NHA's M3 OpenAPI file into the [M3 API reference](/reference/hiecm-m3). |
+| Callbacks the gateway sends you | **Documented, with payloads.** NHA's specification carries no callbacks at all, so these were transcribed from NHA's M3 collection, which does. M3 is the only milestone where both halves of the exchange are described. |
 | Screen Sequence, and the Expiry screens | Screenshots only. No text survived the conversion. |
-| The existing sequence diagrams it corrects | Screenshots only. The two corrected bridge URLs did survive, and are on the [API sequence](/docs/hiecm/v3/api/m3/sequence) page. |
-| Every request and response body | Screenshots only. Not transcribed. |
+| The sequence diagrams the change note corrects | Screenshots only. The two corrected bridge URLs did survive, and are on the [API sequence](/docs/hiecm/v3/api/m3/sequence) page. |
 
-So these pages give you the flow, the endpoint paths and the code tables, not payloads. For field level detail use the [M3 API reference](/reference/hiecm-m3), the [gateway reference](/reference/hiecm-gateway) and NHA's [sandbox Swagger for consent management](https://sandbox.abdm.gov.in/sandbox/v3/new-documentation/swagger?integration_label=https://sandboxcms.abdm.gov.in/uploads/consent_management_data_flow12_jan_ded6ab978d).
+Two caveats worth carrying into your integration.
+
+**Nothing here has been run against the sandbox from this repository.** The
+schemas are what NHA says, not what was observed. Every page says so.
+
+**One of NHA's own assertions is unsettled.** NHA's schema declares
+`consentId` and `consentRequestId` as UUIDs while NHA's own examples give
+values that are not. We removed the assertion rather than guess which side is
+right, and recorded it as correction C3 in
+`catalogue/openapi/corrections/`. Running it against the sandbox settles it.
 
 ## Read M3 in this order
 
