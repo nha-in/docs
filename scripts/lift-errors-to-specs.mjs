@@ -7,6 +7,7 @@
 import {readFileSync, writeFileSync} from 'node:fs';
 import {join, dirname} from 'node:path';
 import {fileURLToPath} from 'node:url';
+import {findSpec} from './specs.mjs';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const page = readFileSync(
@@ -100,7 +101,7 @@ for (const section of SECTIONS) {
 }
 
 for (const [file, blocks] of byFile) {
-  const path = join(root, 'catalogue', 'openapi', file);
+  const path = findSpec(file);
   let text = readFileSync(path, 'utf8');
   for (const {key, block, count} of blocks) {
     if (text.includes(`\n${key}:`)) {

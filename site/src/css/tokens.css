@@ -2,11 +2,9 @@
  * Design tokens.
  *
  * The scale and the structure are taken from the Claude Code documentation
- * site (code.claude.com/docs). The colour follows beckn.io, measured from its
- * rendered stylesheet: a neutral grey page, near black text, and a single
- * blue that carries every accent. The earlier cream page and sage accent read
- * as warm and dated. The rule this palette keeps is beckn's: one hue, used
- * sparingly, on greys with no colour cast in either direction.
+ * site (code.claude.com/docs). The one deliberate change is the
+ * accent: sage green in place of the original terracotta, on the reference
+ * site's cream page, in both light and dark mode.
  *
  * Everything here is a raw value. Nothing in this file references Infima or
  * Tailwind, so both can be mapped onto it in custom.css.
@@ -20,7 +18,7 @@
   --ramp-300: #d4d4d4;
   --ramp-400: #a1a1a1;
   /* The one step the ramp was missing: light mode needs its faintest text at
-     500 to stay above 4.5:1 on the page grey, which left dark mode with no
+     500 to stay above 4.5:1 on the page, which left dark mode with no
      value between 400 and 500 to put its own faintest text on. */
   --ramp-450: #8a8a8a;
   --ramp-500: #6f6f6f;
@@ -30,30 +28,30 @@
   --ramp-900: #171717;
   --ramp-950: #0d0d0d;
 
-  /* One blue, taken from beckn.io's link and button colour. Light mode uses
-     600, dark mode 300, so the accent keeps its weight on either background. */
-  --brand-50: #eff5ff;
-  --brand-100: #dbe7fe;
-  --brand-200: #bfd3fe;
-  --brand-300: #93b4fd;
-  --brand-400: #6090fa;
-  --brand-500: #3b6ff6;
-  --brand-600: #1a56db;
-  --brand-700: #1749b4;
-  --brand-800: #173f92;
-  --brand-900: #172f5f;
+  /* Sage accent. Light mode uses 600, dark mode 300, so the accent keeps its
+     weight on either background. */
+  --brand-50: hsl(140 25% 96%);
+  --brand-100: hsl(140 22% 91%);
+  --brand-200: hsl(138 20% 82%);
+  --brand-300: hsl(134 20% 72%);
+  --brand-400: hsl(130 21% 62%);
+  --brand-500: hsl(130 24% 48%);
+  --brand-600: hsl(140 30% 34%);
+  --brand-700: hsl(142 32% 27%);
+  --brand-800: hsl(144 32% 21%);
+  --brand-900: hsl(146 30% 16%);
 
-  /* Semantic surfaces: beckn's neutral grey page, white panels on top */
-  --page: #f8f8f8;
+  /* Semantic surfaces: the reference site's cream page, white panels on top */
+  --page: #fdfdf7;
   --surface: #ffffff;
   --surface-raised: #ffffff;
-  --surface-sunken: #f1f1f1;
-  --code-surface: #f6f6f6;
+  --surface-sunken: #f7f7f0;
+  --code-surface: #f7f7f0;
   --border: rgb(0 0 0 / 0.09);
   --border-strong: rgb(0 0 0 / 0.16);
 
   /* Hover and resting fills, neutral. Every hover state in the shell used
-     --accent-soft, which over this page grey is a visible pale blue rectangle:
+     --accent-soft, which over this page is a visible pale sage rectangle:
      twenty rules all shouting the accent for the ordinary act of moving a
      pointer. The accent is now reserved for the two things that are actually
      about the accent, the current page and a link. */
@@ -64,7 +62,7 @@
      and --text-faint were both ramp-500, so a hierarchy meant to be carried by
      colour had one fewer step than it declared, and the work fell to fills and
      rules instead. The quiet band now steps 700, 600, 500. 700 and 600 clear
-     4.5:1 on the page grey with room to spare; 500 was measured at #767676 and
+     4.5:1 on the page with room to spare; 500 was measured at #767676 and
      landed at 4.28:1, short of the bar, so it is darkened to #6f6f6f, which
      measures 4.73:1. Dark mode never reads this step (its own faintest text is
      ramp-450, one step lighter), so the change is light mode only. */
@@ -77,8 +75,8 @@
   --accent: var(--brand-600);
   --accent-hover: var(--brand-700);
   --accent-contrast: #ffffff;
-  --accent-soft: rgb(26 86 219 / 0.08);
-  --accent-line: rgb(26 86 219 / 0.4);
+  --accent-soft: hsl(140 30% 34% / 0.1);
+  --accent-line: hsl(140 30% 34% / 0.4);
 
   /* Structure, measured from the reference site */
   --topbar-height: 4rem;
@@ -106,7 +104,7 @@
 /**
  * shadcn/ui semantic names, mapped onto the tokens above so its components
  * inherit this palette instead of carrying a second one. The `accent` role in
- * shadcn means "hover surface", which here is the blue tint, not the blue.
+ * shadcn means "hover surface", which here is the sage tint, not the sage.
  */
 :root {
   --background: var(--page);
@@ -149,6 +147,6 @@
   --accent: var(--brand-300);
   --accent-hover: var(--brand-200);
   --accent-contrast: #0d0d0d;
-  --accent-soft: rgb(147 180 253 / 0.12);
-  --accent-line: rgb(147 180 253 / 0.4);
+  --accent-soft: hsl(134 20% 72% / 0.12);
+  --accent-line: hsl(134 20% 72% / 0.4);
 }

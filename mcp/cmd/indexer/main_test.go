@@ -188,9 +188,11 @@ Not applicable.
 	}
 }
 
-func TestRunFailsOnNestedReadme(t *testing.T) {
+func TestRunSkipsNestedReadme(t *testing.T) {
 	dir := t.TempDir()
 
+	// READMEs anywhere in the catalogue are contributor notes for their
+	// folder, never atoms, so a frontmatter-less one must not fail the run.
 	concepts := filepath.Join(dir, "hiecm", "concepts")
 	if err := os.MkdirAll(concepts, 0o755); err != nil {
 		t.Fatal(err)
@@ -204,8 +206,8 @@ func TestRunFailsOnNestedReadme(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	if err := run(dir, filepath.Join(dir, "out.db"), nil); err == nil {
-		t.Fatal("want error for nested README.md")
+	if err := run(dir, filepath.Join(dir, "out.db"), nil); err != nil {
+		t.Fatalf("nested README.md should be skipped, got: %v", err)
 	}
 }
 

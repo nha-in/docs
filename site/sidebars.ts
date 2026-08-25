@@ -1,266 +1,84 @@
 import type {SidebarsConfig} from '@docusaurus/plugin-content-docs';
-import apiTree from './src/data/api-sidebar.json';
+import {existsSync, readdirSync} from 'node:fs';
+import {join} from 'node:path';
 
 // This runs in Node.js - Don't use client-side code here (browser APIs, JSX...)
 
-type GeneratedItem = {
-  type: 'doc';
-  id: string;
-  label: string;
-  className: string;
-};
+/**
+ * Sidebars are the docs tree, not a curated list. Every docs/<platform>/
+ * <version> folder gets two sidebars: an overview one holding everything but
+ * api/ and reference/, and an API one holding exactly those. Order and labels
+ * come from _category_.json files and sidebar_position front matter, so a
+ * contributor places a page by where they put the file, never by editing this
+ * file. The api/ and reference/ split, and the endpoint use-case grouping,
+ * are applied by the sidebarItemsGenerator in docusaurus.config.ts.
+ */
 
-type GeneratedGroup = {
-  label: string;
-  items?: GeneratedItem[];
-  children?: {label: string; items: GeneratedItem[]}[];
-};
+const docsRoot = join(__dirname, 'docs');
 
 /**
- * The use case groups under a module, generated from the OpenAPI files by
- * scripts/build-api-reference.mjs. A use case is a category and its endpoints
- * are the items, each carrying the class that paints its method badge. Use
- * cases from one family ("ABHA creation, ...") arrive folded: the family is
- * the category and each variant is a child category. Adding an operation to a
- * specification adds it here.
+ * True when a folder holds at least one page the site will render. A folder
+ * carrying only a README (a contributor note) or partials is scaffolding for
+ * future content and must not become an empty sidebar category, which
+ * Docusaurus rejects.
  */
-function useCasesOf(moduleId: string) {
-  const module = apiTree.find((entry) => entry.moduleId === moduleId);
-  return ((module?.groups ?? []) as GeneratedGroup[]).map((group) =>
-    group.children
-      ? {
-          type: 'category' as const,
-          label: group.label,
-          collapsed: true,
-          items: group.children.map((child) => ({
-            type: 'category' as const,
-            label: child.label,
-            collapsed: true,
-            items: child.items,
-          })),
-        }
-      : {
-          type: 'category' as const,
-          label: group.label,
-          collapsed: true,
-          items: group.items as GeneratedItem[],
-        },
-  );
+function hasDocs(dir: string): boolean {
+  if (!existsSync(dir)) {
+    return false;
+  }
+  return readdirSync(dir, {withFileTypes: true}).some((entry) => {
+    if (entry.name.startsWith('_') || entry.name.startsWith('.')) {
+      return false;
+    }
+    if (entry.isDirectory()) {
+      return hasDocs(join(dir, entry.name));
+    }
+    return /\.(md|mdx)$/.test(entry.name) && entry.name !== 'README.md';
+  });
 }
 
-/**
- * A module's API section: its conventions page at the top, then the sequence,
- * then one collapsible section per use case holding that journey's endpoints.
- */
-function apiSection(moduleId: string, docId?: string) {
-  return {
-    type: 'category' as const,
-    label: 'APIs',
-    collapsed: true,
-    ...(docId ? {link: {type: 'doc' as const, id: docId}} : {}),
-    items: [
-      ...(moduleId === 'm4' ? [] : [`abdm/v3/api/${moduleId}/sequence`]),
-      ...useCasesOf(moduleId),
-    ],
-  };
-}
+// Folders that are tabs of their own, not platforms.
+const NOT_PLATFORMS = new Set(['whats-new', 'support']);
 
 const sidebars: SidebarsConfig = {
-  // --------------------------------------------------------------- Overview
-  overviewSidebar: [
-    {
-      type: 'category',
-      label: 'Getting started',
-      collapsed: false,
-      items: [
-        'abdm/v3/index',
-        'abdm/v3/architecture',
-        'abdm/v3/sandbox',
-        'abdm/v3/milestones',
-        'abdm/v3/what-you-can-build',
-        'abdm/v3/glossary',
-      ],
-    },
-    {
-      type: 'category',
-      label: 'Gateways',
-      collapsed: false,
-      items: [
-        'abdm/v3/building-blocks/hie-cm',
-        {
-          type: 'category',
-          label: 'UHI',
-          link: {type: 'doc', id: 'uhi/v1/index'},
-          collapsed: true,
-          items: [
-            'uhi/v1/network-and-protocol',
-            'uhi/v1/onboarding',
-            {
-              type: 'category',
-              label: 'Services',
-              collapsed: true,
-              items: [
-                'uhi/v1/services/physical-consultation',
-                'uhi/v1/services/pmjay-hem',
-                'uhi/v1/services/blood-bank',
-                'uhi/v1/services/ambulance-booking',
-                'uhi/v1/services/jan-aushadhi-kendra',
-                'uhi/v1/services/jan-aushadhi-medicine-search',
-                'uhi/v1/services/amrit-pharmacy',
-              ],
-            },
-          ],
-        },
-        {
-          type: 'category',
-          label: 'NHCX',
-          link: {type: 'doc', id: 'nhcx/v1/index'},
-          collapsed: true,
-          items: ['nhcx/v1/api'],
-        },
-      ],
-    },
-    {
-      type: 'category',
-      label: 'Registries',
-      link: {type: 'doc', id: 'abdm/v3/building-blocks/registries/index'},
-      collapsed: false,
-      items: [
-        'abdm/v3/building-blocks/registries/abha',
-        {
-          type: 'category',
-          label: 'NHPR',
-          link: {
-            type: 'doc',
-            id: 'abdm/v3/building-blocks/registries/nhpr/index',
-          },
-          collapsed: true,
-          items: [
-            'abdm/v3/building-blocks/registries/nhpr/hpr',
-            'abdm/v3/building-blocks/registries/nhpr/hfr',
-          ],
-        },
-      ],
-    },
-    {
-      type: 'category',
-      label: 'Core concepts',
-      collapsed: false,
-      items: [
-        'abdm/v3/concepts/hip-hiu',
-        'abdm/v3/concepts/consent',
-        'abdm/v3/concepts/linking',
-        'abdm/v3/concepts/data-flow',
-        'abdm/v3/concepts/fhir',
-        'abdm/v3/building-blocks/gateway',
-      ],
-    },
-    {
-      type: 'category',
-      label: 'PHR applications',
-      collapsed: false,
-      items: ['abdm/v3/phr/index'],
-    },
-  ],
-
-  // --------------------------------------------------------- API references
-  // One sidebar per gateway here, because the reader is inside one gateway's
-  // contract and switches with the picker at the top rather than by scrolling
-  // past two others. The Overview tab keeps Gateways as a branch.
-  abdmApiSidebar: [
-    {
-      type: 'category',
-      label: 'HIE-CM',
-      link: {type: 'doc', id: 'abdm/v3/api/index'},
-      collapsed: false,
-      items: [
-        {
-          type: 'category',
-          label: 'Gateway session',
-          collapsed: true,
-          items: useCasesOf('gateway').flatMap((group) => group.items),
-        },
-        {
-          type: 'category',
-          label: 'M1 ABHA identity',
-          link: {type: 'doc', id: 'abdm/v3/api/m1/index'},
-          collapsed: true,
-          items: [
-            'abdm/v3/api/m1/user-journey',
-            apiSection('m1', 'abdm/v3/api/m1/apis'),
-            'abdm/v3/api/m1/errors',
-          ],
-        },
-        {
-          type: 'category',
-          label: 'M2 Linking and sharing',
-          link: {type: 'doc', id: 'abdm/v3/api/m2/index'},
-          collapsed: true,
-          items: [
-            'abdm/v3/api/m2/user-journey',
-            apiSection('m2'),
-            'abdm/v3/api/m2/errors',
-          ],
-        },
-        {
-          type: 'category',
-          label: 'M3 Consent and fetching',
-          link: {type: 'doc', id: 'abdm/v3/api/m3/index'},
-          collapsed: true,
-          items: [
-            'abdm/v3/api/m3/user-journey',
-            apiSection('m3'),
-            'abdm/v3/api/m3/errors',
-          ],
-        },
-        {
-          type: 'category',
-          label: 'M4 HPR and HFR',
-          link: {type: 'doc', id: 'abdm/v3/api/m4/index'},
-          collapsed: true,
-          items: [
-            'abdm/v3/api/m4/user-journey',
-            apiSection('m4'),
-            'abdm/v3/api/m4/undocumented',
-          ],
-        },
-      ],
-    },
-    {
-      type: 'category',
-      label: 'Reference',
-      collapsed: false,
-      items: [
-        'abdm/v3/reference/authentication',
-        'abdm/v3/reference/callbacks',
-        'abdm/v3/reference/error-codes',
-        'abdm/v3/reference/data-dictionary',
-      ],
-    },
-  ],
-
-  uhiApiSidebar: [
-    {
-      type: 'category',
-      label: 'UHI',
-      link: {type: 'doc', id: 'uhi/v1/api'},
-      collapsed: false,
-      items: ['uhi/v1/network-and-protocol', 'uhi/v1/onboarding'],
-    },
-  ],
-
-  nhcxApiSidebar: [
-    {
-      type: 'category',
-      label: 'NHCX',
-      link: {type: 'doc', id: 'nhcx/v1/api'},
-      collapsed: false,
-      items: ['nhcx/v1/index'],
-    },
-  ],
-
   whatsNewSidebar: [{type: 'autogenerated', dirName: 'whats-new'}],
   supportSidebar: [{type: 'autogenerated', dirName: 'support'}],
 };
+
+for (const platform of readdirSync(docsRoot, {withFileTypes: true})) {
+  if (
+    !platform.isDirectory() ||
+    platform.name.startsWith('_') ||
+    platform.name.startsWith('.') ||
+    NOT_PLATFORMS.has(platform.name)
+  ) {
+    continue;
+  }
+  for (const version of readdirSync(join(docsRoot, platform.name), {withFileTypes: true})) {
+    if (!version.isDirectory() || version.name.startsWith('_') || version.name.startsWith('.')) {
+      continue;
+    }
+    const pv = `${platform.name}/${version.name}`;
+    sidebars[`${platform.name}-${version.name}-overview`] = [
+      {type: 'autogenerated', dirName: pv},
+    ];
+
+    const apiItems: SidebarsConfig[string] = [];
+    if (hasDocs(join(docsRoot, pv, 'api'))) {
+      apiItems.push({type: 'autogenerated', dirName: `${pv}/api`});
+    }
+    if (hasDocs(join(docsRoot, pv, 'reference'))) {
+      apiItems.push({
+        type: 'category',
+        label: 'References',
+        collapsed: false,
+        items: [{type: 'autogenerated', dirName: `${pv}/reference`}],
+      });
+    }
+    if (apiItems.length > 0) {
+      sidebars[`${platform.name}-${version.name}-api`] = apiItems;
+    }
+  }
+}
 
 export default sidebars;

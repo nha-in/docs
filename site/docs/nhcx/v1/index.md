@@ -4,25 +4,30 @@ sidebar_label: NHCX
 description: What NHCX is, who is on it, and the index of NHA's own NHCX documents.
 verification: unverified
 source: NHCX__NHCX-Website_DocumentDetails.md
+sidebar_position: 1
 ---
 
 # NHCX
 
-[NHCX](/docs/abdm/v3/glossary#nhcx) is the National Health Claims Exchange, the third [ABDM](/docs/abdm/v3/glossary#abdm) gateway, carrying insurance claims and their responses between providers and payers. After this page you will know who is on NHCX and which of [NHA](/docs/abdm/v3/glossary#nha)'s own documents to open next.
+The Ayushman Bharat Digital Mission ([ABDM](/docs/nhcx/v1/getting-started/glossary#abdm)) is India's national
+health data network, run by the National Health Authority ([NHA](/docs/nhcx/v1/getting-started/glossary#nha)).
+It is three gateways, not one, and this section documents the third of them.
+
+[NHCX](/docs/nhcx/v1/getting-started/glossary#nhcx) is the National Health Claims Exchange, the third [ABDM](/docs/nhcx/v1/getting-started/glossary#abdm) gateway, carrying insurance claims and their responses between providers and payers. After this page you will know who is on NHCX and which of [NHA](/docs/nhcx/v1/getting-started/glossary#nha)'s own documents to open next.
 
 ## What is not here
 
 No endpoint on this gateway has been documented here yet. No endpoint reference, no sequence diagrams, no error tables, no test cases.
 
-The [HIE-CM](/docs/abdm/v3/glossary#hie-cm) and [UHI](/docs/abdm/v3/glossary#uhi) gateways are documented at [milestones](/docs/abdm/v3/milestones) and [UHI](/docs/uhi/v1). NHCX sits outside both, on its own sandbox, with its own onboarding, participant registry and document set.
+The [HIE-CM](/docs/nhcx/v1/getting-started/glossary#hie-cm) and [UHI](/docs/nhcx/v1/getting-started/glossary#uhi) gateways are documented at [milestones](/docs/hiecm/v3/getting-started/milestones) and [UHI](/docs/uhi/v1). NHCX sits outside both, on its own sandbox, with its own onboarding, participant registry and document set.
 
-NHCX does appear in the sandbox database. An NHCX application is recorded against your organisation, and the column list for it is the [`nhcx_exit` table](/docs/abdm/v3/reference/data-dictionary#nhcx_exit).
+NHCX does appear in the sandbox database. An NHCX application is recorded against your organisation, and the column list for it is the [`nhcx_exit` table](/docs/hiecm/v3/reference/data-dictionary#nhcx_exit).
 
 ## HIE-CM or NHCX
 
 Claims are not health records. If your product shares or fetches a patient's clinical record, you are on HIE-CM. If it submits or adjudicates an insurance claim, you are on NHCX. A hospital system can end up on both. The two integrations share no API surface.
 
-NHA's index shows the shape of a claim without describing it. A claim is a [FHIR](/docs/abdm/v3/glossary#fhir) bundle. It travels with a protected header that carries a workflow status code. A request cycle is closed by sending a protocol response back. Those are rows 11, 12 and 15 below. We have not read them.
+NHA's index shows the shape of a claim without describing it. A claim is a [FHIR](/docs/nhcx/v1/getting-started/glossary#fhir) bundle. It travels with a protected header that carries a workflow status code. A request cycle is closed by sending a protocol response back. Those are rows 11, 12 and 15 below. We have not read them.
 
 ## Who is on it
 
@@ -44,7 +49,7 @@ NHA gives one location per group of documents, not a URL per file.
 | --- | --- |
 | [hcxsbx.abdm.gov.in/#/documents](https://hcxsbx.abdm.gov.in/#/documents) | Onboarding, use cases, payload references, error handling, Postman collections and FAQs. Rows 1 to 22. |
 | [hcxsbx.abdm.gov.in/#/technical-specifications/api-specifications](https://hcxsbx.abdm.gov.in/#/technical-specifications/api-specifications) | Swagger for the use case APIs and the participant service. Row 23. |
-| [hcxsbx.abdm.gov.in/#/hmisdocuments](https://hcxsbx.abdm.gov.in/#/hmisdocuments) | The Supporting Documents section of that page holds the PMJAY and [HMIS](/docs/abdm/v3/glossary#hmis) material. Rows 24 to 32. |
+| [hcxsbx.abdm.gov.in/#/hmisdocuments](https://hcxsbx.abdm.gov.in/#/hmisdocuments) | The Supporting Documents section of that page holds the PMJAY and [HMIS](/docs/hiecm/v3/getting-started/glossary#hmis) material. Rows 24 to 32. |
 
 ## The document index
 
@@ -101,7 +106,7 @@ Everything past the index. We have the title and the purpose of each NHA documen
 ## Next
 
 - New to NHCX? Start at row 4 above, NHA's sandbox onboarding document.
-- [Choose your gateway](/docs/abdm/v3)
-- [HIE-CM gateway](/docs/abdm/v3/building-blocks/hie-cm)
+- [Choose your gateway](/docs/hiecm/v3)
+- [HIE-CM](/docs/hiecm/v3/)
 - [UHI services](/docs/uhi/v1)
 - [Support](/docs/support), for anything about these pages rather than about NHCX itself

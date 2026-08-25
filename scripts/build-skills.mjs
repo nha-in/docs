@@ -20,7 +20,7 @@ const MODULES = [
     id: 'm1',
     slug: 'abdm-m1',
     title: 'M1, ABHA identity',
-    docs: '/docs/abdm/v3/api/m1',
+    docs: '/docs/hiecm/v3/api/m1',
     description:
       'Use when building ABDM Milestone 1: creating an ABHA number or address, ABHA login, profile management, or the gateway session token. Covers the endpoints, the required headers, the two token rule and the encryption rule.',
   },
@@ -137,7 +137,7 @@ function build(module) {
     'M1 returns errors in more than one shape, depending on which layer rejected the call, so do not write a parser that expects one. A code can also appear twice with different meanings, so read the code together with the message.',
   );
   lines.push(
-    `Full list: ${module.docs}/errors, and the aggregated reference at /docs/abdm/v3/reference/error-codes.`,
+    `Full list: ${module.docs}/errors, and the aggregated reference at /docs/hiecm/v3/reference/error-codes.`,
   );
   lines.push('');
 
@@ -146,7 +146,7 @@ function build(module) {
   lines.push(`- Every endpoint, with its body fields and responses: ${module.docs}`);
   lines.push(`- The steps of each journey, and what to see when they work: ${module.docs}/sequence`);
   lines.push(`- The rules that hold across endpoints: ${module.docs}/apis`);
-  lines.push(`- Terms: /docs/abdm/v3/glossary`);
+  lines.push(`- Terms: /docs/hiecm/v3/glossary`);
   lines.push('');
 
   return lines.join('\n');

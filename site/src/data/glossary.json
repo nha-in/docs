@@ -52,7 +52,7 @@
   {
     "term": "EMR",
     "anchor": "emr",
-    "definition": "Electronic Medical Record system: the clinical system a hospital or a clinic uses to record consultations, prescriptions and results. In ABDM an EMR acts as a [HIP](#hip), so it links care contexts in [M2](#m2). See [Hospital, lab and pharmacy systems](/docs/abdm/v3/concepts/hip-hiu)."
+    "definition": "Electronic Medical Record system: the clinical system a hospital or a clinic uses to record consultations, prescriptions and results. In ABDM an EMR acts as a [HIP](#hip), so it links care contexts in [M2](#m2). See [Hospital, lab and pharmacy systems](/docs/hiecm/v3/concepts/hip-hiu)."
   },
   {
     "term": "EUA",
@@ -67,12 +67,12 @@
   {
     "term": "Gateway",
     "anchor": "gateway",
-    "definition": "NHA's routing layer: you do not call another participant directly, you call the gateway, it forwards your request, and the reply arrives at your [bridge](#bridge) as a separate inbound call. You get a session token first, and NHA's own documents disagree on the sandbox host for that path: the M1 Postman collection posts to `https://apissbx.abdm.gov.in/api/hiecm/gateway/v3/sessions` with your client id and client secret, the M4 document gives the same path on `https://dev.abdm.gov.in`, and the M2 document gives `https://dev.abdm.gov.in` as the sandbox base URL. We have not run either against the sandbox, so check both before you hard code one; see [Choose your gateway](/docs/abdm/v3)."
+    "definition": "NHA's routing layer: you do not call another participant directly, you call the gateway, it forwards your request, and the reply arrives at your [bridge](#bridge) as a separate inbound call. You get a session token first, and NHA's own documents disagree on the sandbox host for that path: the M1 Postman collection posts to `https://apissbx.abdm.gov.in/api/hiecm/gateway/v3/sessions` with your client id and client secret, the M4 document gives the same path on `https://dev.abdm.gov.in`, and the M2 document gives `https://dev.abdm.gov.in` as the sandbox base URL. We have not run either against the sandbox, so check both before you hard code one; see [Choose your gateway](/docs/hiecm/v3)."
   },
   {
     "term": "HFR",
     "anchor": "hfr",
-    "definition": "Health Facility Registry, the national directory of health facilities across modern and traditional systems of medicine, public and private, including hospitals, clinics, diagnostic laboratories, imaging centres and pharmacies. A facility enrols once and receives a facility ID that identifies it everywhere in ABDM. See [registries](/docs/abdm/v3/building-blocks/registries)."
+    "definition": "Health Facility Registry, the national directory of health facilities across modern and traditional systems of medicine, public and private, including hospitals, clinics, diagnostic laboratories, imaging centres and pharmacies. A facility enrols once and receives a facility ID that identifies it everywhere in ABDM. See [registries](/docs/hiecm/v3/registries)."
   },
   {
     "term": "HI type",
@@ -82,7 +82,7 @@
   {
     "term": "HIE-CM",
     "anchor": "hie-cm",
-    "definition": "Health Information Exchange and Consent Manager, NHA's component that routes exchange requests and manages patient consent. NHA describes it as data blind: it holds identifiers and metadata about [care contexts](#care-context), never the content of a record. See [HIE-CM gateway](/docs/abdm/v3/building-blocks/hie-cm)."
+    "definition": "Health Information Exchange and Consent Manager, NHA's component that routes exchange requests and manages patient consent. NHA describes it as data blind: it holds identifiers and metadata about [care contexts](#care-context), never the content of a record. See [The ABDM gateway](/docs/hiecm/v3/concepts/gateway)."
   },
   {
     "term": "HIP",
@@ -127,7 +127,7 @@
   {
     "term": "LIMS",
     "anchor": "lims",
-    "definition": "Laboratory Information Management System: the system a diagnostic lab uses to record orders, samples and results. In ABDM a LIMS acts as a [HIP](#hip) and links each report as a care context in [M2](#m2). See [Hospital, lab and pharmacy systems](/docs/abdm/v3/concepts/hip-hiu)."
+    "definition": "Laboratory Information Management System: the system a diagnostic lab uses to record orders, samples and results. In ABDM a LIMS acts as a [HIP](#hip) and links each report as a care context in [M2](#m2). See [Hospital, lab and pharmacy systems](/docs/hiecm/v3/concepts/hip-hiu)."
   },
   {
     "term": "Link token",
@@ -142,22 +142,22 @@
   {
     "term": "M1",
     "anchor": "m1",
-    "definition": "Milestone 1, ABHA identity: creating an [ABHA number](#abha-number), logging a person in, reading and updating their profile, downloading the ABHA card, and the [gateway](#gateway) session and token calls that everything else depends on. NHA's M1 document marks most of these APIs mandatory for both private and government integrators, with Aadhaar demographic authentication the exception: mandatory for government integrators, not required for private ones. See [M1](/docs/abdm/v3/api/m1)."
+    "definition": "Milestone 1, ABHA identity: creating an [ABHA number](#abha-number), logging a person in, reading and updating their profile, downloading the ABHA card, and the [gateway](#gateway) session and token calls that everything else depends on. NHA's M1 document marks most of these APIs mandatory for both private and government integrators, with Aadhaar demographic authentication the exception: mandatory for government integrators, not required for private ones. See [M1](/docs/hiecm/v3/api/m1)."
   },
   {
     "term": "M2",
     "anchor": "m2",
-    "definition": "Milestone 2, sharing records as a [HIP](#hip): turning your records into [FHIR](#fhir) bundles, grouping them into [care contexts](#care-context), linking those to a patient's [ABHA address](#abha-address), answering [discovery](#discovery), and encrypting and pushing data when consent allows. See [M2](/docs/abdm/v3/api/m2)."
+    "definition": "Milestone 2, sharing records as a [HIP](#hip): turning your records into [FHIR](#fhir) bundles, grouping them into [care contexts](#care-context), linking those to a patient's [ABHA address](#abha-address), answering [discovery](#discovery), and encrypting and pushing data when consent allows. See [M2](/docs/hiecm/v3/api/m2)."
   },
   {
     "term": "M3",
     "anchor": "m3",
-    "definition": "Milestone 3, consent and reading records as an [HIU](#hiu): raising a consent request, tracking its status, handling the grant or denial callback, fetching the [consent artefact](#consent-artefact), requesting health information and decrypting what arrives. See [M3](/docs/abdm/v3/api/m3)."
+    "definition": "Milestone 3, consent and reading records as an [HIU](#hiu): raising a consent request, tracking its status, handling the grant or denial callback, fetching the [consent artefact](#consent-artefact), requesting health information and decrypting what arrives. See [M3](/docs/hiecm/v3/api/m3)."
   },
   {
     "term": "M4",
     "anchor": "m4",
-    "definition": "Milestone 4, the registries: creating an [HPID](#hpid) on the [HPR](#hpr) and onboarding a facility to the [HFR](#hfr). NHA's document also calls this NHPR. See [M4](/docs/abdm/v3/api/m4)."
+    "definition": "Milestone 4, the registries: creating an [HPID](#hpid) on the [HPR](#hpr) and onboarding a facility to the [HFR](#hfr). NHA's document also calls this NHPR. See [M4](/docs/hiecm/v3/api/m4)."
   },
   {
     "term": "NHA",
@@ -177,7 +177,7 @@
   {
     "term": "PHR",
     "anchor": "phr",
-    "definition": "Personal Health Record, a patient facing application: the person logs in with their [ABHA address](#abha-address), discovers records held by facilities they visited, links them, and reads them. PHR apps subscribe to a patient's ABHA address and are notified when a new [care context](#care-context) is linked. See [PHR applications](/docs/abdm/v3/phr)."
+    "definition": "Personal Health Record, a patient facing application: the person logs in with their [ABHA address](#abha-address), discovers records held by facilities they visited, links them, and reads them. PHR apps subscribe to a patient's ABHA address and are notified when a new [care context](#care-context) is linked. See [PHR applications](/docs/hiecm/v3/concepts/phr)."
   },
   {
     "term": "Purpose of use",
@@ -187,7 +187,7 @@
   {
     "term": "Sandbox",
     "anchor": "sandbox",
-    "definition": "NHA's test environment, and where every integration starts: you register on the sandbox portal, declare your role and the milestones you plan to complete, and receive a client id and client secret. Sandbox hosts differ from production, so ABHA calls go to `abhasbx.abdm.gov.in` in sandbox and `abha.abdm.gov.in` in production. Everything in sandbox is test data; see [Get started](/docs/abdm/v3/sandbox)."
+    "definition": "NHA's test environment, and where every integration starts: you register on the sandbox portal, declare your role and the milestones you plan to complete, and receive a client id and client secret. Sandbox hosts differ from production, so ABHA calls go to `abhasbx.abdm.gov.in` in sandbox and `abha.abdm.gov.in` in production. Everything in sandbox is test data; see [Get started](/docs/hiecm/v3/getting-started/sandbox)."
   },
   {
     "term": "UHI",

@@ -1,34 +1,69 @@
 import React from 'react';
 import Link from '@docusaurus/Link';
-import {useLocation} from '@docusaurus/router';
 import useBaseUrl from '@docusaurus/useBaseUrl';
 import ThemedImage from '@theme/ThemedImage';
-import SearchBar from '@theme/SearchBar';
 import NavbarColorModeToggle from '@theme/Navbar/ColorModeToggle';
-import {ChevronDown, Sparkles} from 'lucide-react';
+import {Check, ChevronDown, Languages} from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@site/src/components/ui/dropdown-menu';
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from '@site/src/components/ui/dialog';
-import {Button} from '@site/src/components/ui/button';
+  activePlatform,
+  activeTab,
+  isLanding,
+  platforms,
+  useRoutePath,
+} from '@site/src/config/navigation';
+import {useHistory} from '@docusaurus/router';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@site/src/components/ui/tooltip';
 import MobileNav from './MobileNav';
+import Omnibox from './Omnibox';
 
 /** External destinations shown in the bar. Not routes, so not in navigation.ts. */
 const SANDBOX_URL = 'https://sandbox.abdm.gov.in';
-const GITHUB_URL = 'https://github.com/eka-care/abdm-docs';
+const GITHUB_URL = 'https://github.com/nha-in';
+
+/**
+ * The sandbox: an open isometric tray with a code caret sitting in it, drawn
+ * here rather than taken from an icon set because no set carries this shape.
+ * The rim is deliberately wide and the caret oversized: at this size the tray
+ * is barely a dozen device pixels tall, and thinner proportions close up into
+ * a blob.
+ *
+ * The viewBox is cropped to the artwork rather than left square, so the tray
+ * carries the same visual weight as the repository mark beside it. A square
+ * box would have padded a wide flat shape with empty space and drawn it small.
+ */
+function SandboxMark() {
+  return (
+    <svg
+      viewBox="1 1.8 22 16"
+      width="26"
+      height="19"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true">
+      {/* the open top, the two walls, then the caret on the floor */}
+      <path d="M12 2.2 22.4 8.2 12 14.2 1.6 8.2Z" />
+      <path d="M1.6 8.2v3.1L12 17.3l10.4-6V8.2" />
+      <path d="M9.2 6.4 6.4 8.2l2.8 1.8M14.8 6.4l2.8 1.8-2.8 1.8M13.4 5.3l-2.8 6" />
+    </svg>
+  );
+}
 
 function GitHubMark() {
   return (
@@ -46,10 +81,11 @@ function LocaleMenu() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger className="topbar-action topbar-locale">
+        <Languages className="size-4" aria-hidden="true" />
         English
         <ChevronDown className="size-3.5" aria-hidden="true" />
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="start" className="min-w-56">
+      <DropdownMenuContent align="end" className="min-w-56">
         <DropdownMenuCheckboxItem checked disabled>
           English
         </DropdownMenuCheckboxItem>
@@ -62,53 +98,86 @@ function LocaleMenu() {
   );
 }
 
-/** No assistant is wired up, so the button says so and points at Support. */
-function AskAiDialog() {
+/**
+ * The gateway a reader is working in, at the head of the bar. It used to sit
+ * at the top of the sidebar, where it only appeared inside the API references
+ * tab; the gateway is the first choice a reader makes and it governs every
+ * tab, so it belongs in the chrome, in the slot the locale control was
+ * occupying.
+ */
+function GatewayMenu() {
+  const pathname = useRoutePath();
+  const history = useHistory();
+  const current = activePlatform(pathname) ?? platforms[0];
+  // Send an API reader to the next gateway's contract, everyone else to its
+  // overview, so switching keeps the reader where they already were.
+  const inApiTab = activeTab(pathname)?.id === 'api';
+
   return (
-    <Dialog>
-      <DialogTrigger className="topbar-action">
-        <Sparkles className="size-4" aria-hidden="true" />
-        Ask AI
-      </DialogTrigger>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle className="font-serif text-xl font-normal text-heading">
-            The assistant is not connected yet
-          </DialogTitle>
-          <DialogDescription>
-            This portal has no question answering assistant behind it today. Nothing
-            here can answer a question about ABDM, so the button does not pretend to.
-            Until one is connected, the support page lists the channels that a human
-            reads.
-          </DialogDescription>
-        </DialogHeader>
-        <DialogFooter showCloseButton>
-          <Button asChild variant="outline">
-            <Link to="/docs/support">Go to support</Link>
-          </Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
+    <DropdownMenu>
+      <DropdownMenuTrigger
+        className="topbar-action topbar-gateway"
+        aria-label={`Gateway: ${current.label}`}>
+        {current.label}
+        <ChevronDown className="size-3.5" aria-hidden="true" />
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="start" className="w-72">
+        <DropdownMenuLabel>Gateway</DropdownMenuLabel>
+        {platforms.map((entry) => (
+          <DropdownMenuItem
+            key={entry.id}
+            className="sidebar-picker__option"
+            onSelect={() => history.push(inApiTab ? entry.apiTo : entry.to)}>
+            <span className="sidebar-picker__option-main">
+              <span className="sidebar-picker__option-label">{entry.label}</span>
+              <span className="sidebar-picker__option-note">
+                {entry.description}
+              </span>
+            </span>
+            {entry.id === current.id ? (
+              <Check className="size-4 shrink-0" aria-hidden="true" />
+            ) : null}
+          </DropdownMenuItem>
+        ))}
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 }
 
-
 /**
- * The landing page's own bar: only the colour mode control. The official
- * marks sit in the hero itself, and the ways into the documentation sit
- * under the call to action, where a reader is already looking.
+ * The landing page's own bar: the two official marks on the left, the colour
+ * mode control on the right, and nothing else. The ways into the documentation
+ * sit under the call to action, where a reader is already looking.
  */
 function LandingBar() {
   return (
     <nav className="navbar landing-bar" aria-label="Site">
+      <div className="landing-bar__marks">
+        <ThemedImage
+          className="landing-bar__mark"
+          sources={{
+            light: useBaseUrl('img/nha-logo.svg'),
+            dark: useBaseUrl('img/nha-logo-dark.svg'),
+          }}
+          alt="National Health Authority"
+        />
+        <ThemedImage
+          className="landing-bar__mark"
+          sources={{
+            light: useBaseUrl('img/logo.svg'),
+            dark: useBaseUrl('img/logo-dark.svg'),
+          }}
+          alt="Ayushman Bharat Digital Mission"
+        />
+      </div>
       <NavbarColorModeToggle className="topbar-toggle" />
     </nav>
   );
 }
 
 export default function TopBar() {
-  const {pathname} = useLocation();
-  if (pathname === '/' || pathname === '/index.html') {
+  const pathname = useRoutePath();
+  if (isLanding(pathname)) {
     return <LandingBar />;
   }
 
@@ -117,34 +186,44 @@ export default function TopBar() {
       {/* The wordmark is hidden under 576px, so the name is on the link itself:
           without it the brand link is an empty decorative image on a phone. */}
       <Link to="/" className="topbar-brand" aria-label="ABDM Developer Portal">
+        {/* The authority that runs the network, not the mission's mark: the
+            bar names the publisher, the landing page shows both. */}
         <ThemedImage
           className="topbar-logo"
           sources={{
-            light: useBaseUrl('img/logo.svg'),
-            dark: useBaseUrl('img/logo-dark.svg'),
+            light: useBaseUrl('img/nha-logo.svg'),
+            dark: useBaseUrl('img/nha-logo-dark.svg'),
           }}
           alt=""
-          width={26}
-          height={24}
         />
         <span className="topbar-wordmark">ABDM Developer Portal</span>
       </Link>
 
-      <LocaleMenu />
+      <GatewayMenu />
 
-      {/* Search and the assistant sit together in the middle of the bar, the
-          way the reference site pairs them. */}
+      {/* Search and the assistant, as one control, in the middle of the bar. */}
       <div className="topbar-center">
-        <div className="topbar-search">
-          <SearchBar />
-        </div>
-        <AskAiDialog />
+        <Omnibox />
       </div>
 
       <div className="topbar-actions">
-        <a className="topbar-action" href={SANDBOX_URL} target="_blank" rel="noopener noreferrer">
-          ABDM sandbox
-        </a>
+        {/* The sandbox is a place you go to try calls, so it is a mark rather
+            than two words of prose. */}
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <a
+                className="topbar-action topbar-action--icon"
+                href={SANDBOX_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="ABDM sandbox">
+                <SandboxMark />
+              </a>
+            </TooltipTrigger>
+            <TooltipContent>ABDM sandbox</TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
         <a
           className="topbar-action topbar-action--icon"
           href={GITHUB_URL}
@@ -153,6 +232,7 @@ export default function TopBar() {
           aria-label="GitHub repository">
           <GitHubMark />
         </a>
+        <LocaleMenu />
       </div>
 
       <MobileNav />

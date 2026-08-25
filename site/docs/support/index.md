@@ -10,14 +10,14 @@ source: repository README.md and catalogue/openapi/hiecm-gateway.yaml
 # Support
 
 Two places to ask, depending on what went wrong. Sandbox behaviour goes to
-[NHA](/docs/abdm/v3/glossary#nha); a page here that is wrong, missing or broken
+[NHA](/docs/hiecm/v3/getting-started/glossary#nha); a page here that is wrong, missing or broken
 goes to whoever maintains it.
 
 ## Ask NHA about the sandbox
 
 NHA runs a developer forum at
 [devforum.abdm.gov.in](https://devforum.abdm.gov.in). Post there for anything
-about the [ABDM](/docs/abdm/v3/glossary#abdm) sandbox itself: credentials,
+about the [ABDM](/docs/hiecm/v3/getting-started/glossary#abdm) sandbox itself: credentials,
 onboarding, an endpoint returning something the document does not describe, a
 callback that never arrives, or a certification question. Search the forum
 first, because the answer is often already on a thread.

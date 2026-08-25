@@ -19,9 +19,10 @@ function walk(dir) {
     } else if (
       name.endsWith(".md") &&
       name !== "CONVENTIONS.md" &&
-      // The catalogue root README documents the tree and is not an atom.
-      // The Go indexer skips it the same way (mcp/cmd/indexer).
-      !(name === "README.md" && dir.endsWith("catalogue"))
+      // READMEs anywhere in the catalogue are contributor notes for their
+      // folder, not atoms. The Go indexer skips them the same way
+      // (mcp/cmd/indexer).
+      name !== "README.md"
     ) {
       out.push(p);
     }

@@ -4,8 +4,25 @@
     {
       "name": "ui-worktree",
       "runtimeExecutable": "npm",
-      "runtimeArgs": ["start", "--workspace", "site", "--", "--port", "3200"],
-      "port": 3200
+      "runtimeArgs": [
+        "start",
+        "--workspace",
+        "site"
+      ],
+      "port": 3200,
+      "autoPort": true
+    },
+    {
+      "name": "built-site",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": [
+        "run",
+        "serve",
+        "--workspace",
+        "site"
+      ],
+      "port": 3000,
+      "autoPort": true
     }
   ]
 }

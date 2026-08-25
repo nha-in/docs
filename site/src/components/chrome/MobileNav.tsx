@@ -1,6 +1,5 @@
 import React, {useEffect, useState} from 'react';
 import Link from '@docusaurus/Link';
-import {useLocation} from '@docusaurus/router';
 import {
   useNavbarMobileSidebar,
   useNavbarSecondaryMenu,
@@ -14,7 +13,12 @@ import {
   SheetTitle,
   SheetTrigger,
 } from '@site/src/components/ui/sheet';
-import {activeTab, tabHref, tabs} from '@site/src/config/navigation';
+import {
+  activeTab,
+  tabHref,
+  tabs,
+  useRoutePath,
+} from '@site/src/config/navigation';
 import SidebarPickers from './SidebarPickers';
 
 /**
@@ -30,7 +34,7 @@ import SidebarPickers from './SidebarPickers';
  */
 export default function MobileNav() {
   const [open, setOpen] = useState(false);
-  const {pathname} = useLocation();
+  const pathname = useRoutePath();
   const current = activeTab(pathname);
   const sidebar = useNavbarSecondaryMenu().content;
   const mobileSidebar = useNavbarMobileSidebar();

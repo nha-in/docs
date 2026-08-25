@@ -1,0 +1,224 @@
+# Module M3: consent and HIU data fetch.
+#
+# Rules this file follows: catalogue/openapi/CONVENTIONS.md
+openapi: 3.1.1
+
+info:
+  x-portal:
+    module: m3
+    label: M3 Consent and fetching
+    position: 4
+  title: ABDM M3, consent and data fetch
+  summary: Ask a patient for permission to see their records, then fetch the records that permission covers.
+  description: |
+    M3 is the requester side. You want to read someone else's records, so
+    ABDM calls you a Health Information User, or HIU. A doctor, an insurer, a
+    referral system and an analytics product all sit here.
+
+    The shape of it. You send a consent request naming the patient's ABHA
+    address, the purpose, the record types and the date range. The consent
+    manager acknowledges, then notifies the patient. The patient grants or
+    denies. You are told which, and if granted you receive consent artefact
+    ids. You then fetch the records against an artefact id, and the data
+    arrives as a callback rather than in the fetch response.
+
+    The patient stays in control throughout. They set an expiry when they
+    grant, they may deny, and they may revoke after granting. Build for
+    revocation from the start, because a consent that worked yesterday can
+    stop working today.
+
+    Nearly every step here has a callback. Those belong under `webhooks` in
+    this file.
+
+    No operation in this file has been run against the sandbox from this
+    repository. `paths` and `webhooks` stay empty until NHA's swagger is
+    fetched, hashed and stored under `.raw/`.
+  version: abdm-v3
+  license:
+    name: MIT
+    identifier: MIT
+  contact:
+    name: ABDM sandbox support
+    url: https://devforum.abdm.gov.in
+  x-abdm-gateway: hiecm
+  x-abdm-module: M3
+  x-abdm-phase: 1
+  x-abdm-roles: [hiu, phr]
+
+x-abdm-sources:
+  - file: ABDM Sandbox/ABDM/Proposed Simplified Milestone 3.docx
+    role: upstream
+    status: not-yet-hashed
+    note: >
+      NHA milestone pack. Carries the consent request sequence, the purpose
+      of use and health information type code lists, and the swagger paths
+      quoted in the inventory below.
+  - url: https://sandbox.abdm.gov.in/sandbox/v3/new-documentation/swagger
+    role: upstream
+    status: not-yet-fetched
+    note: The published swagger. Fetch and hash it before filling `paths`.
+  - url: http://terminology.hl7.org/ValueSet/v3-PurposeOfUse
+    role: upstream
+    status: not-yet-fetched
+    note: >
+      ABDM's purpose of use codes are a subset of this HL7 value set. The
+      subset itself is a concept atom, not a schema enum, until it is
+      confirmed against the swagger.
+
+servers:
+  - url: https://dev.abdm.gov.in
+    description: 'Sandbox. Pair it with the `X-CM-ID: sbx` header.'
+  - url: https://apis.abdm.gov.in
+    description: 'Production. Pair it with the `X-CM-ID: abdm` header.'
+
+security:
+  - gatewaySession: []
+
+tags:
+  - name: consent-request
+    description: >
+      Raising a consent request against a patient's ABHA address and checking
+      what happened to it. The status call exists because the answer is
+      asynchronous and a callback can be missed.
+  - name: consent-notification
+    description: >
+      Being told what the patient decided, and the provider being told the
+      same. Granted, denied and revoked all arrive this way.
+  - name: health-information-fetch
+    description: >
+      Fetching records against a granted consent artefact id. The fetch call
+      is acknowledged immediately and the data arrives later as a callback.
+
+# Path inventory to fill at ingestion. These paths are quoted from NHA's M3
+# milestone pack, listed under `x-abdm-sources`. They are kept as a comment
+# rather than as empty operations, because an operation with no request or
+# response schema reads as a contract and is not one. Confirm each against
+# the swagger before promoting it.
+#
+#   HIU calls the gateway:
+#     POST /api/hiecm/consent/v3/request/init
+#     POST /api/hiecm/consent/v3/request/status
+#     POST /api/hiecm/consent/v3/request/hiu/on-notify
+#     POST /api/hiecm/consent/v3/fetch
+#
+#   Gateway calls the HIU:
+#     POST /api/v3/hiu/consent/request/on-init
+#     POST /api/v3/hiu/consent/request/notify
+#
+#   Gateway calls the HIP:
+#     POST /api/v3/consent/request/hip/notify
+#
+# The on-status and on-fetch callbacks are described in the pack but their
+# paths are not quoted there. Take them from the swagger.
+paths: {}
+
+# Callbacks NHA makes to your bridge. Transcribed from NHA's milestone
+# document; none has been observed against the sandbox.
+webhooks:
+  /api/v3/hiu/consent/request/on-init:
+    post:
+      operationId: m3_on_consent_request_init
+      summary: "The consent request was accepted, with its request id"
+      description: |
+        Carries the consent request and the request id. Store the request id: it is how a later notification is tied back to the request you made.
+
+        Transcribed from NHA's milestone document. Not run against the ABDM sandbox, so the payload is unconfirmed.
+      responses:
+        '202':
+          description: "Your bridge accepted the callback. NHA validates the body you send back, so a 202 carrying the wrong body is still a failure."
+  /api/v3/hiu/consent/request/notify:
+    post:
+      operationId: m3_on_consent_request_notify_hiu
+      summary: "The patient's decision, sent to the requester"
+      description: |
+        On a grant, carries every consent artefact id created against the request, with the request id. On a denial, carries the denial.
+
+        Transcribed from NHA's milestone document. Not run against the ABDM sandbox, so the payload is unconfirmed.
+      responses:
+        '202':
+          description: "Your bridge accepted the callback. NHA validates the body you send back, so a 202 carrying the wrong body is still a failure."
+  /api/v3/consent/request/hip/notify:
+    post:
+      operationId: m3_on_consent_request_notify_hip
+      summary: "The patient's decision, sent to the record holder"
+      description: |
+        The same decision sent to the system that holds the records, with all care context references.
+
+        Transcribed from NHA's milestone document. Not run against the ABDM sandbox, so the payload is unconfirmed.
+      responses:
+        '202':
+          description: "Your bridge accepted the callback. NHA validates the body you send back, so a 202 carrying the wrong body is still a failure."
+  /api/v3/hiu/consent/on-fetch:
+    post:
+      operationId: m3_on_consent_fetch
+      summary: "The consent artefact detail, fetched by artefact id"
+      description: |
+        The artefact itself, in answer to a fetch by artefact id.
+
+        Transcribed from NHA's milestone document. Not run against the ABDM sandbox, so the payload is unconfirmed.
+      responses:
+        '202':
+          description: "Your bridge accepted the callback. NHA validates the body you send back, so a 202 carrying the wrong body is still a failure."
+  /api/v3/hiu/health-information/on-request:
+    post:
+      operationId: m3_on_health_information_request
+      summary: "Acknowledgement of a health information request"
+      description: |
+        Carries the transaction id, the request id and the current status. This is an acknowledgement, not the records. The records arrive at the data push URL you supplied.
+
+        Transcribed from NHA's milestone document. Not run against the ABDM sandbox, so the payload is unconfirmed.
+      responses:
+        '202':
+          description: "Your bridge accepted the callback. NHA validates the body you send back, so a 202 carrying the wrong body is still a failure."
+
+components:
+  securitySchemes:
+    gatewaySession:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: >
+        The `accessToken` from `POST /api/hiecm/gateway/v3/sessions`, which
+        is described in hiecm-gateway.yaml. Send it as
+        `Authorization: Bearer <ACCESS_TOKEN>`.
+
+  parameters:
+    RequestId:
+      name: REQUEST-ID
+      in: header
+      required: true
+      description: >
+        A fresh UUID that you generate for this request. The callback that
+        answers it carries the same value. In M3 a single consent can produce
+        several callbacks, so keep the mapping from request id to consent
+        request id rather than relying on ordering.
+      schema:
+        type: string
+        format: uuid
+      example: 5f7a4a1e-59ba-4c0c-9e0c-8e6b3b6e2f11
+
+    Timestamp:
+      name: TIMESTAMP
+      in: header
+      required: true
+      description: >
+        The current time in ISO 8601, in IST, the +05:30 offset, from a synchronised clock. Working integrations send IST rather than the UTC that NHA's collection templates emit.
+      schema:
+        type: string
+        format: date-time
+      example: '2026-08-24T15:45:30.000+05:30'
+
+    CmId:
+      name: X-CM-ID
+      in: header
+      required: true
+      description: >
+        Which consent manager you are talking to. `sbx` on the sandbox and
+        `abdm` in production.
+      schema:
+        type: string
+      examples:
+        sandbox:
+          value: sbx
+        production:
+          value: abdm
