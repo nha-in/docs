@@ -17,6 +17,8 @@ site/static/skills/
 # Environment
 .env
 .env.*
+# The example is documentation, not an environment.
+!.env.example
 
 # OS / editor
 .DS_Store
