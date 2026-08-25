@@ -1,6 +1,8 @@
 import React from 'react';
 import Link from '@docusaurus/Link';
+import {useLocation} from '@docusaurus/router';
 import useBaseUrl from '@docusaurus/useBaseUrl';
+import ThemedImage from '@theme/ThemedImage';
 import SearchBar from '@theme/SearchBar';
 import NavbarColorModeToggle from '@theme/Navbar/ColorModeToggle';
 import {ChevronDown, Sparkles} from 'lucide-react';
@@ -90,13 +92,41 @@ function AskAiDialog() {
   );
 }
 
+
+/**
+ * The landing page's own bar: only the colour mode control. The official
+ * marks sit in the hero itself, and the ways into the documentation sit
+ * under the call to action, where a reader is already looking.
+ */
+function LandingBar() {
+  return (
+    <nav className="navbar landing-bar" aria-label="Site">
+      <NavbarColorModeToggle className="topbar-toggle" />
+    </nav>
+  );
+}
+
 export default function TopBar() {
+  const {pathname} = useLocation();
+  if (pathname === '/' || pathname === '/index.html') {
+    return <LandingBar />;
+  }
+
   return (
     <nav className="navbar navbar--fixed-top topbar" aria-label="Site">
       {/* The wordmark is hidden under 576px, so the name is on the link itself:
           without it the brand link is an empty decorative image on a phone. */}
       <Link to="/" className="topbar-brand" aria-label="ABDM Developer Portal">
-        <img className="topbar-logo" src={useBaseUrl('img/logo.svg')} alt="" width={24} height={24} />
+        <ThemedImage
+          className="topbar-logo"
+          sources={{
+            light: useBaseUrl('img/logo.svg'),
+            dark: useBaseUrl('img/logo-dark.svg'),
+          }}
+          alt=""
+          width={26}
+          height={24}
+        />
         <span className="topbar-wordmark">ABDM Developer Portal</span>
       </Link>
 

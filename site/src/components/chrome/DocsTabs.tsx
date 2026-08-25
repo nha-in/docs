@@ -2,7 +2,7 @@ import React from 'react';
 import Link from '@docusaurus/Link';
 import {useLocation} from '@docusaurus/router';
 import {cn} from '@site/src/lib/utils';
-import {activeTab, tabs} from '@site/src/config/navigation';
+import {activeTab, tabHref, tabs} from '@site/src/config/navigation';
 
 /**
  * Row two of the chrome: the four sections, sticky directly under the top bar.
@@ -10,7 +10,13 @@ import {activeTab, tabs} from '@site/src/config/navigation';
  * border and the flush accent underline (site/src/css/layout.css).
  */
 export default function DocsTabs() {
-  const current = activeTab(useLocation().pathname);
+  const {pathname} = useLocation();
+  const current = activeTab(pathname);
+
+  // The landing page is its own thing: one page, no sections to move between.
+  if (pathname === '/' || pathname === '/index.html') {
+    return null;
+  }
 
   return (
     <nav className="docs-tabs" aria-label="Documentation sections">
@@ -19,7 +25,7 @@ export default function DocsTabs() {
         return (
           <Link
             key={tab.to}
-            to={tab.to}
+            to={tabHref(tab, pathname)}
             className={cn('docs-tab', isActive && 'docs-tab--active')}
             aria-current={isActive ? 'page' : undefined}>
             {tab.label}

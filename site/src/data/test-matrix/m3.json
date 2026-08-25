@@ -1,0 +1,262 @@
+{
+  "module": "M3",
+  "title": "Consent management and health record fetch",
+  "groups": [
+    {
+      "id": "consent-request",
+      "label": "Consent request",
+      "rows": [
+        {
+          "id": "CNS_01",
+          "type": "Core path",
+          "functionality": "Raise a consent request for a patient's previous records",
+          "expected": "You receive an on-init callback carrying a consent request id.",
+          "api": {
+            "method": null,
+            "path": "/api/hiecm/consent/v3/request/init",
+            "to": null
+          },
+          "webhook": {
+            "method": "POST",
+            "path": "/api/v3/hiu/consent/request/on-init"
+          },
+          "detail": "Name the patient by ABHA address, give the purpose of use code, the HI types wanted and the from and to dates. The result arrives on the callback, not in the response body. Store the request id: every later consent step quotes it. Needs sandbox credentials, an access token, a registered callback URL the gateway can reach, and a patient with an ABHA address holding at least one record at a HIP. Without that last one a request can be granted and still return no records, and you cannot tell a working integration from a broken one. NHA's M3 document publishes every request and response as a screenshot, so no field list and no HTTP method converted for this step."
+        },
+        {
+          "id": "CNS_02",
+          "type": "Core path",
+          "functionality": "Poll the request status before the patient acts",
+          "expected": "Status comes back `Requested`.",
+          "api": {
+            "method": null,
+            "path": "/api/hiecm/consent/v3/request/status",
+            "to": null
+          },
+          "webhook": {
+            "method": "POST",
+            "path": null
+          },
+          "detail": "Give the request id. NHA gives three states: Requested, the patient has not responded yet; Granted, the patient approved; Denied, the patient refused. The status call exists because the flow is asynchronous, so use it rather than waiting on a callback that may not come. The on-status callback path is the one path in this sequence NHA's document does not state."
+        },
+        {
+          "id": "CNS_03",
+          "type": "Edge path",
+          "functionality": "Handle a consent request that produces no on-init callback at all",
+          "expected": "The on-init callback arrives at your registered URL. Nothing arriving means the URL is not registered or not reachable.",
+          "api": {
+            "method": null,
+            "path": "/api/hiecm/consent/v3/request/init",
+            "to": null
+          },
+          "webhook": {
+            "method": "POST",
+            "path": "/api/v3/hiu/consent/request/on-init"
+          },
+          "detail": "Most M3 results arrive at your callback URL, not in a response body. A consent request that is accepted and never calls back is a registration or reachability fault, not a consent fault. This case breaks in production if you skip it in sandbox."
+        },
+        {
+          "id": "CNS_04",
+          "type": "Coverage",
+          "functionality": "Send one consent request per purpose of use code you will use in production",
+          "expected": "Each code is accepted and reaches the patient's PHR app.",
+          "api": {
+            "method": null,
+            "path": "/api/hiecm/consent/v3/request/init",
+            "to": null
+          },
+          "webhook": {
+            "method": "POST",
+            "path": "/api/v3/hiu/consent/request/on-init"
+          },
+          "detail": "The purpose of use says why you want the health information. NHA takes six codes from the HL7 v3 PurposeOfUse value set: CAREMGT for care management, BTG for break the glass, PUBHLTH for public health, HPAYMT for healthcare payment, DSRCH for disease specific healthcare research and PATRQT for self-requested. A code you never send in sandbox is a code you have never tested."
+        },
+        {
+          "id": "CNS_05",
+          "type": "Coverage",
+          "functionality": "Send one consent request per HI type you will display",
+          "expected": "Each type is accepted, and your system renders what comes back for it.",
+          "api": {
+            "method": null,
+            "path": "/api/hiecm/consent/v3/request/init",
+            "to": null
+          },
+          "webhook": {
+            "method": "POST",
+            "path": "/api/v3/hiu/consent/request/on-init"
+          },
+          "detail": "NHA supports seven HI types as of writing: Prescription, DiagnosticReport, OPConsultation, DischargeSummary, ImmunizationRecord, HealthDocumentRecord and WellnessRecord. Ask for the types you will show. A request for everything is easier for the patient to refuse. A type you never send in sandbox is a type you have never tested."
+        }
+      ]
+    },
+    {
+      "id": "consent-grant-and-denial",
+      "label": "Consent grant and denial",
+      "rows": [
+        {
+          "id": "GRT_01",
+          "type": "Core path",
+          "functionality": "Receive a grant and acknowledge the consent artefact ids",
+          "expected": "You receive a notify callback with one or more consent artefact ids and the request id.",
+          "api": {
+            "method": null,
+            "path": "/api/hiecm/consent/v3/request/hiu/on-notify",
+            "to": null
+          },
+          "webhook": {
+            "method": "POST",
+            "path": "/api/v3/hiu/consent/request/notify"
+          },
+          "detail": "There is no API for the grant itself. The patient acts in their PHR app and sets an expiry date and time. The notify callback carries every consent artefact id created against the request. Acknowledge with the consent artefact id and the request id. The gateway separately notifies the record holder at `/api/v3/consent/request/hip/notify` with all care context references, which is why a HIP accepts your later data request. NHA's document corrects the bridge URL for the HIU notification to `POST {hiuBridgeUrl}/v0.5/consents/hiu/notify`, hosted on the bridge base URL registered for that participant."
+        },
+        {
+          "id": "GRT_02",
+          "type": "Core path",
+          "functionality": "Handle a denial on a second request",
+          "expected": "You receive a notify callback with status `Denied` and no artefact ids.",
+          "api": null,
+          "webhook": {
+            "method": "POST",
+            "path": "/api/v3/hiu/consent/request/notify"
+          },
+          "detail": "A denial gives you a status and nothing else. There is no partial result to fall back on, and no preview state in M3: before consent the doctor's console shows nothing. Your system stops here rather than retrying the same request."
+        },
+        {
+          "id": "GRT_03",
+          "type": "Edge path",
+          "functionality": "Handle a grant that produces more than one artefact",
+          "expected": "Every artefact id in the notify callback is fetched and used, not only the first.",
+          "api": {
+            "method": null,
+            "path": "/api/hiecm/consent/v3/fetch",
+            "to": null
+          },
+          "webhook": {
+            "method": "POST",
+            "path": "/api/v3/hiu/consent/request/notify"
+          },
+          "detail": "One consent request can produce several artefacts, one per record holder. Records held at two hospitals produce two artefacts. Handling only the first is a common bug, and it breaks in production if you skip it in sandbox."
+        }
+      ]
+    },
+    {
+      "id": "consent-artefact-handling",
+      "label": "Consent artefact handling",
+      "rows": [
+        {
+          "id": "ART_01",
+          "type": "Core path",
+          "functionality": "Fetch a consent artefact by id",
+          "expected": "You receive an on-fetch callback for the artefact id you quoted.",
+          "api": {
+            "method": null,
+            "path": "/api/hiecm/consent/v3/fetch",
+            "to": null
+          },
+          "webhook": {
+            "method": "POST",
+            "path": "/api/v3/hiu/consent/on-fetch"
+          },
+          "detail": "The artefact is the approved permission: who, what, why, which date range, until when. NHA describes the on-fetch payload as carrying the patient's health information as permitted by the consent. No artefact, no records."
+        },
+        {
+          "id": "ART_02",
+          "type": "Edge path",
+          "functionality": "Stop fetching once the consent has expired",
+          "expected": "The fetch fails and your code stops, rather than retrying forever.",
+          "api": {
+            "method": null,
+            "path": "/api/hiecm/consent/v3/fetch",
+            "to": null
+          },
+          "webhook": null,
+          "detail": "Expiry is a real deadline, set by the patient at the moment they grant. Fetch inside it, or raise a new consent request. NHA's M3 document states no error code and no response body for a fetch after expiry, so record what your system observes."
+        }
+      ]
+    },
+    {
+      "id": "data-fetch",
+      "label": "Data fetch",
+      "rows": [
+        {
+          "id": "DAT_01",
+          "type": "Core path",
+          "functionality": "Request the health information under a granted consent",
+          "expected": "You receive an on-request callback with a transaction id, request id and status.",
+          "api": {
+            "method": null,
+            "path": "/api/hiecm/data-flow/v3/health-information/request",
+            "to": null
+          },
+          "webhook": {
+            "method": "POST",
+            "path": "/api/v3/hiu/health-information/on-request"
+          },
+          "detail": "Quote the consent id and the request id, and supply the data push URL here. The callback is an acknowledgement, not the data. NHA's document corrects the bridge URL for the onward request to the record holder to `POST {hipBridgeUrl}/v0.5/health-information/hip/request`, hosted on the bridge base URL registered for that participant."
+        },
+        {
+          "id": "DAT_02",
+          "type": "Core path",
+          "functionality": "Receive the encrypted records",
+          "expected": "Encrypted records arrive at the data push callback URL you supplied.",
+          "api": null,
+          "webhook": null,
+          "detail": "Inbound. The records arrive at the same callback URL you gave as the data push URL in the health information request. NHA's M3 document fixes no path for it, because the URL is yours, and states no HTTP method."
+        },
+        {
+          "id": "DAT_03",
+          "type": "Core path",
+          "functionality": "Decrypt the records and render them",
+          "expected": "The records read as FHIR content your system can display, as plain text or structured output.",
+          "api": null,
+          "webhook": null,
+          "detail": "Two jobs, in NHA's framing: decrypt the data, then present it in a format a person can read. NHA's M3 document does not specify the encryption scheme. It is ECDH key exchange, specified on the HIP side in NHA's M2 document. Once the records render, the doctor's console shows the patient's history."
+        },
+        {
+          "id": "DAT_04",
+          "type": "Edge path",
+          "functionality": "Render a partial result when only some requested HI types exist",
+          "expected": "The types that exist render. Your system does not treat the missing ones as a failure.",
+          "api": {
+            "method": null,
+            "path": "/api/hiecm/data-flow/v3/health-information/request",
+            "to": null
+          },
+          "webhook": null,
+          "detail": "Ask for several HI types for a patient who holds records for only some of them. The missing types are absent from the result, not an error. This breaks in production if you skip it in sandbox."
+        },
+        {
+          "id": "DAT_05",
+          "type": "Core path",
+          "functionality": "Notify receipt and close the transaction",
+          "expected": "You call health information notify and the transaction closes.",
+          "api": {
+            "method": null,
+            "path": "/api/hiecm/data-flow/v3/health-information/notify",
+            "to": null
+          },
+          "webhook": null,
+          "detail": "Send this once the data has arrived at your data push URL. It tells the gateway you received the data, and it is the step that closes the transaction."
+        }
+      ]
+    },
+    {
+      "id": "consent-revocation",
+      "label": "Consent revocation",
+      "rows": [
+        {
+          "id": "REV_01",
+          "type": "Edge path",
+          "functionality": "Stop fetching once the patient revokes consent",
+          "expected": "The fetch fails and your system stops. Access ends from the point of revocation.",
+          "api": {
+            "method": null,
+            "path": "/api/hiecm/consent/v3/fetch",
+            "to": null
+          },
+          "webhook": null,
+          "detail": "The patient can withdraw a consent they already granted, at any time. Revocation can land between a successful fetch and the next one, and it can arrive after you have read the data. Treat it as a stop signal for further fetches, and follow your own retention policy for what you already hold. NHA's M3 document names no revocation endpoint and no error code for a fetch after revocation, so record what your system observes."
+        }
+      ]
+    }
+  ]
+}

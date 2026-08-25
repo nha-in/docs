@@ -1,0 +1,130 @@
+{
+  "module": "M2",
+  "title": "Care context linking and data sharing",
+  "groups": [
+    {
+      "id": "hip-initiated-linking",
+      "label": "HIP initiated linking",
+      "rows": [
+        {
+          "id": "LNK_01",
+          "type": "Mandatory",
+          "functionality": "Group every new record into a care context",
+          "expected": "Two visits for one patient show as two entries in a PHR app, each named so the patient knows which visit it was.",
+          "api": null,
+          "webhook": null,
+          "detail": "Assign every record to a care context at the moment you create it. NHA recommends one care context per outpatient visit and one per inpatient admission. A care context carries two fields: a reference number that is unique and resolves to the records behind it, and a display name a patient recognises. NHA's example of an acceptable display name is \"OPD records (X-Ray, Prescription) from 3rd March 2023\". The test fails if a display name carries a diagnosis, a test result or a report."
+        },
+        {
+          "id": "LNK_02",
+          "type": "Mandatory",
+          "functionality": "Store the link token at registration and validate it before every use",
+          "expected": "Linking works while the token is valid. An expired or missing token triggers regeneration, not a link attempt.",
+          "api": null,
+          "webhook": null,
+          "detail": "The link token is generated and stored when the patient registers with you, and it is the authorisation for linking. NHA currently sets validity at six months. Check expiry before every link attempt. Confirm the failure path by decoding a stored token with jwt.io and comparing it against what your code decided. With no valid token, regenerate through demographic authentication rather than attempting the link."
+        },
+        {
+          "id": "LNK_03",
+          "type": "Mandatory",
+          "functionality": "Link a care context for a patient who gave you their ABHA address",
+          "expected": "The link is acknowledged and the record appears in the patient's PHR app with no action from the patient.",
+          "api": null,
+          "webhook": null,
+          "detail": "Send the patient reference and the care context, authorised by the link token. NHA then notifies every PHR application subscribed to that ABHA address. You do not send that notification. Run the test twice: linking a new care context, and adding a record to an existing one. NHA says the notification fires in both cases. On failure watch for ABDM-1038, ABDM-1062 and ABDM-1063. All three mean the link token does not match the patient or facility you sent. NHA's M2 document publishes the request and response tables as screenshots, so no endpoint path and no field list converted for this step."
+        }
+      ]
+    },
+    {
+      "id": "notification-to-mobile",
+      "label": "Notification to mobile",
+      "rows": [
+        {
+          "id": "NTF_01",
+          "type": "Conditional",
+          "functionality": "Tell NHA a record is ready for a patient who has no ABHA address",
+          "expected": "The patient receives an SMS with a link that opens a PHR app, or offers to install one.",
+          "api": null,
+          "webhook": null,
+          "detail": "Use this route when you hold a mobile number, a name, an age and a gender, and no ABHA address. There is nothing to link to, so you tell NHA the record exists once it is ready to share. NHA sends the SMS with a secure deep link. The rest is between the patient and NHA: they open the app, create an ABHA address if they need one, then link the record through discovery against your system. If no SMS arrives, check for ABDM-1004 and ABDM-1008, NHA's SMS gateway unavailable or disabled."
+        }
+      ]
+    },
+    {
+      "id": "discovery-and-link",
+      "label": "Discovery and user initiated linking",
+      "rows": [
+        {
+          "id": "DSC_01",
+          "type": "Mandatory",
+          "functionality": "Match an inbound discovery request and return the patient's care contexts",
+          "expected": "A patient who has visited your facility sees their visits, named recognisably. A patient who has never visited sees nothing.",
+          "api": null,
+          "webhook": {
+            "method": "POST",
+            "path": null
+          },
+          "detail": "Discovery starts in the patient's PHR app and reaches you as inbound traffic. Implementing it correctly is mandatory for every HIP. You are given verified identifiers, which are ABHA address, mobile number, name, gender and year of birth, plus unverified facility issued identifiers such as a patient ID. Weight the verified ones higher and treat the user declared ones as supporting evidence. Answer on a separate callback, not in the body of the inbound request. Two later steps also arrive inbound: link init, whose answer NHA names on-init, and link confirm, whose answer NHA names on-confirm. Two failures to force on purpose. A patient whose name and gender match but whose year of birth does not returns nothing, because a wrong match hands one patient another patient's records. And the response body carries no diagnosis, no test result and no report content in any field, including the display name. NHA's error list validates the linking flow against the care context count, the patient reference number, the patient display value and the link reference number, with a distinct code for each, and does not say which step raises which. No endpoint path converted from NHA's M2 document."
+        }
+      ]
+    },
+    {
+      "id": "data-request-and-transfer",
+      "label": "Data request and transfer",
+      "rows": [
+        {
+          "id": "DAT_01",
+          "type": "Mandatory",
+          "functionality": "Validate a FHIR bundle against the NRCeS implementation guide",
+          "expected": "The validator reports no structural or profile error, for one bundle per HI type you support.",
+          "api": null,
+          "webhook": null,
+          "detail": "NHA's own procedure. Needs a Java Development Kit, version 8 or higher, and the FHIR validator command line tool version 6.2.1. Run `java -jar validator_cli.jar <YOUR_EXPORTED_BUNDLE>.json -ig https://nrces.in/ndhm/fhir/r4`. It checks structural correctness, compliance with the NRCeS FHIR profiles, and required fields and constraints. NHA marks implementing all HI types as mandatory for an HMIS, so run one bundle per type. Two things the validator does not catch, so check them yourself: every reference resolves inside the bundle and no reference is an absolute URL, and `Composition.attester.party` points at an Organization in the same bundle whose identifier is registered in the sandbox facility registry."
+        },
+        {
+          "id": "DAT_02",
+          "type": "Mandatory",
+          "functionality": "Refuse a health information request that falls outside the consent",
+          "expected": "Nothing is sent, and the failure carries the matching error code.",
+          "api": null,
+          "webhook": {
+            "method": "POST",
+            "path": null
+          },
+          "detail": "The request arrives from the gateway carrying the consent ID, the data push URL, the date and time range, the HIU's ECDH public key and nonce, and the HIE-CM's transaction ID. Before you touch a record, run three checks. Consent status: expired, paused or revoked fails with ABDM-1061 or ABDM-1062. Date range: outside what the consent artefact permits fails with ABDM-1063. Encryption parameters: incorrect or incompatible. Force each failure with its own request. NHA carries no code for bad encryption parameters, so record what your system does."
+        },
+        {
+          "id": "DAT_03",
+          "type": "Mandatory",
+          "functionality": "Encrypt a bundle so only the requester can read it",
+          "expected": "Decrypting your output with the matching private key returns the original bundle byte for byte.",
+          "api": null,
+          "webhook": null,
+          "detail": "Take a request's public key and nonce, run your encryption path, then decrypt the output with the matching private key. ABDM uses ECDH on the Curve25519 elliptic curve with AES-GCM. On your side: generate a new ECDH key pair in the group the HIU specified, generate a 32 byte nonce, compute the shared key from the HIU's public key and your private key, XOR the two nonces and take the first 20 bytes as the HKDF salt and the last 12 as the initialisation vector, derive a 256 bit AES-GCM session key with HKDF, then encrypt. Check your implementation against Fidelius, the reference implementation. Confirm the payload is signed with your long term private key, not the session key."
+        },
+        {
+          "id": "DAT_04",
+          "type": "NHA procedure",
+          "functionality": "Deliver a record you created to the ABHA PHR app end to end",
+          "expected": "The record displays, readable, in the ABHA PHR app, without you touching the app in between.",
+          "api": null,
+          "webhook": null,
+          "detail": "NHA's own verification script, in NHA's order. Log in to the PHR app with a sandbox ABHA address. Register a patient in your HIP system with that same ABHA address. Create a new health record for that patient. Link a care context for the record using HIP initiated linking. The PHR app then requests the record with the appropriate consents, which you do not trigger. Your system prepares the record, encrypts it and transfers it to the data push URL the PHR app supplied. The record displays. When the last step fails the fault is usually the push: NHA allows the data push URL to differ from the HIU's registered gateway URL, so use the one in the request rather than one you looked up."
+        },
+        {
+          "id": "DAT_05",
+          "type": "Mandatory",
+          "functionality": "Close the transfer with a completion notification, inside the timeout",
+          "expected": "A transfer that succeeded is recorded as succeeded on both sides, within 20 minutes of the request arriving.",
+          "api": {
+            "method": null,
+            "path": "health-information/notify",
+            "to": null
+          },
+          "webhook": null,
+          "detail": "After a successful push, call `health-information/notify` to tell the HIE-CM the transfer is complete. Measure the time from the request arriving to the push finishing. NHA's current timeout is 20 minutes. Test with a large record, such as an imaging study, and confirm your split or streaming path stays inside it. Split large datasets such as CT or MRI images across multiple parts, and stream very large files rather than sending one large payload. This is the only endpoint NHA's M2 document names in prose, and it states no HTTP method for it."
+        }
+      ]
+    }
+  ]
+}

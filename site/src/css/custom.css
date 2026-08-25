@@ -15,6 +15,8 @@
 @import './docitem.css';
 @import './mdx.css';
 @import './home.css';
+@import './hub.css';
+@import './api.css';
 @import './scalar.css';
 
 /* Docusaurus toggles [data-theme] on <html>; teach Tailwind the same signal. */
@@ -78,12 +80,12 @@
 /* Infima variables, so the parts of Docusaurus we do not replace still match. */
 :root {
   --ifm-color-primary: var(--accent);
-  --ifm-color-primary-dark: var(--sage-700);
-  --ifm-color-primary-darker: var(--sage-800);
-  --ifm-color-primary-darkest: var(--sage-900);
-  --ifm-color-primary-light: var(--sage-500);
-  --ifm-color-primary-lighter: var(--sage-400);
-  --ifm-color-primary-lightest: var(--sage-300);
+  --ifm-color-primary-dark: var(--brand-700);
+  --ifm-color-primary-darker: var(--brand-800);
+  --ifm-color-primary-darkest: var(--brand-900);
+  --ifm-color-primary-light: var(--brand-500);
+  --ifm-color-primary-lighter: var(--brand-400);
+  --ifm-color-primary-lightest: var(--brand-300);
 
   --ifm-background-color: var(--page);
   --ifm-background-surface-color: var(--surface);
@@ -106,6 +108,18 @@
   --ifm-spacing-horizontal: 1.5rem;
   --ifm-breadcrumb-color-active: var(--accent);
   --ifm-menu-color-active: var(--accent);
+
+  /* Both resolve to --ifm-hover-overlay, a flat 5% black. That is the grey box
+     behind the current sidebar row, and it wins on specificity wherever it is
+     painted, so it is emptied here rather than fought selector by selector. */
+  --ifm-menu-color-background-active: transparent;
+  --ifm-menu-color-background-hover: transparent;
+  --ifm-breadcrumb-item-background-active: transparent;
+
+  /* The classic collapse button's CSS module defined these and is no longer
+     imported, so they were undefined for the whole page. */
+  --docusaurus-collapse-button-bg: transparent;
+  --docusaurus-collapse-button-bg-hover: transparent;
   --ifm-pre-background: var(--code-surface);
   --docusaurus-highlighted-code-line-bg: var(--accent-soft);
   --docusaurus-announcement-bar-height: 0px;
