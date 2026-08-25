@@ -1,0 +1,1095 @@
+openapi: 3.0.3
+info:
+  title: ABDM Milestone 2 – HIP Integration APIs
+  description: |
+    OpenAPI specification for ABDM (Ayushman Bharat Digital Mission) Milestone 2 APIs.
+
+    **Role:** Health Information Provider (HIP)
+
+    **Scope:** Registration & Auth setup, HIP Initiated Care Context Linking,
+    User Initiated Linking (HIP callbacks), Deep Linking via SMS, and
+    Health Data Transfer (HIP side).
+
+    ## Architecture
+    - The HIP system calls ABDM Gateway endpoints directly (active calls).
+    - The HIP also implements **callback endpoints** at its registered Bridge URL
+      that the ABDM Gateway calls when initiating discovery, linking, or data requests.
+    - All active calls require a Bearer token obtained from the Session API.
+
+    ## Servers
+    - **ABDM Gateway (Dev):** `https://dev.abdm.gov.in`
+    - **HSP Registry (Sandbox):** `https://apihspsbx.abdm.gov.in`
+
+    ## Security
+    All endpoints require `Authorization: Bearer <accessToken>` except the Session API itself.
+
+  version: "1.0.0"
+  contact:
+    name: ABDM Integration Support
+    url: https://abdm.gov.in
+  license:
+    name: Government of India
+    url: https://abdm.gov.in
+
+servers:
+  - url: https://dev.abdm.gov.in/api
+    description: ABDM Gateway (Dev / Sandbox)
+  - url: https://apihspsbx.abdm.gov.in
+    description: HSP Registry (Sandbox)
+
+tags:
+  - name: auth
+    description: Session token & gateway certificate APIs
+  - name: bridge
+    description: Bridge URL registration & service management
+  - name: hip-linking
+    description: HIP Initiated Care Context Linking
+  - name: user-linking
+    description: User Initiated Linking — HIP callback responses
+  - name: deep-linking
+    description: Deep Linking via SMS notification
+  - name: data-transfer
+    description: Health data transfer — HIP side (consent ack + data push + notify)
+
+# ─────────────────────────────────────────────────────────────────────────────
+# PATHS
+# ─────────────────────────────────────────────────────────────────────────────
+paths:
+
+  # ── AUTH ──────────────────────────────────────────────────────────────────
+
+  /hiecm/gateway/v3/sessions:
+    post:
+      tags: [auth]
+      summary: Create Gateway Session (Bearer Token)
+      operationId: createSession
+      description: |
+        Obtains a Bearer access token using client credentials.
+        The token must be passed as `Authorization: Bearer <accessToken>` on all subsequent calls.
+        Tokens expire as indicated by `expiresIn` (seconds).
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SessionRequest'
+            example:
+              clientId: "your-client-id"
+              clientSecret: "your-client-secret"
+              grantType: "client_credentials"
+      responses:
+        '200':
+          description: Session created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SessionResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+  /hiecm/gateway/v3/certs:
+    get:
+      tags: [auth]
+      summary: Get Gateway Public Certificates
+      operationId: getCerts
+      description: Returns the ABDM Gateway's public key set (JWKS) used for token verification and encryption.
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: JWKS public key set
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CertsResponse'
+
+  /hiecm/gateway/v3/.well-known/openid-configuration:
+    get:
+      tags: [auth]
+      summary: OpenID Configuration Discovery
+      operationId: getOpenIdConfig
+      description: Returns the OpenID Connect discovery document for the ABDM Gateway.
+      security: []
+      responses:
+        '200':
+          description: OpenID Connect configuration
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OpenIdConfiguration'
+
+  # ── BRIDGE ────────────────────────────────────────────────────────────────
+
+  /hiecm/gateway/v3/bridge/url:
+    patch:
+      tags: [bridge]
+      summary: Update Bridge Callback URL
+      operationId: updateBridgeUrl
+      description: |
+        Registers or updates the HIP's callback base URL with the ABDM Gateway.
+        The Gateway will send discovery, linking, and data requests to this URL.
+        Must be an HTTPS endpoint reachable from ABDM infrastructure.
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BridgeUrlRequest'
+            example:
+              url: "https://your-hip-server.com/abdm/callback"
+      responses:
+        '200':
+          description: Bridge URL updated successfully
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /hiecm/gateway/v3/bridge-service/serviceId/{serviceId}:
+    get:
+      tags: [bridge]
+      summary: Find Bridge Service By Service ID
+      operationId: findBridgeServiceById
+      description: Retrieves details of a specific registered service by its service ID.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: serviceId
+          in: path
+          required: true
+          schema:
+            type: string
+          description: The service ID to look up
+          example: "HIP_SERVICE_001"
+      responses:
+        '200':
+          description: Service details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BridgeService'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /hiecm/gateway/v3/bridge-services:
+    get:
+      tags: [bridge]
+      summary: Find All Services By Bridge ID
+      operationId: findServicesByBridgeId
+      description: Returns all services registered under the authenticated bridge (client ID).
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: List of registered services
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  services:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/BridgeService'
+
+  # ── HSP REGISTRY ──────────────────────────────────────────────────────────
+
+  /v4/int/v1/bridges/MutipleHRPAddUpdateServices:
+    post:
+      tags: [bridge]
+      summary: Register / Update Bridge Services (HIP/HIU)
+      operationId: registerBridgeServices
+      description: |
+        Registers or updates one or more HIP/HIU service entries under a facility
+        in the HSP (Health Service Provider) Registry.
+        **Base URL:** `https://apihspsbx.abdm.gov.in`
+      servers:
+        - url: https://apihspsbx.abdm.gov.in
+          description: HSP Registry (Sandbox)
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterBridgeServicesRequest'
+            example:
+              facilityId: "IN07100XXXXX"
+              facilityName: "S Y Hospital"
+              HRP:
+                - bridgeId: "BRIDGE_ID_001"
+                  hipName: "S Y Hospital"
+                  type: "HIP"
+                  active: true
+      responses:
+        '200':
+          description: Services registered/updated successfully
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  # ── HIP INITIATED LINKING ─────────────────────────────────────────────────
+
+  /hiecm/v3/token/generate-token:
+    post:
+      tags: [hip-linking]
+      summary: Generate Link Token
+      operationId: generateLinkToken
+      description: |
+        Generates a short-lived link token for a specific patient identified by their ABHA number/address.
+        The link token is passed as `X-Link-Token` header when calling the care context linking API.
+        Must be called immediately before the linking call — tokens expire quickly.
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GenerateLinkTokenRequest'
+            example:
+              abhaNumber: 91234567890123
+              abhaAddress: "patient@sbx"
+              name: "Ramesh Kumar"
+              gender: "M"
+              yearOfBirth: 1985
+      responses:
+        '200':
+          description: Link token generated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LinkTokenResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /hiecm/hip/v3/link/carecontext:
+    post:
+      tags: [hip-linking]
+      summary: HIP Initiated Care Context Linking (Single or Multiple)
+      operationId: hipLinkCareContext
+      description: |
+        Links one or more care contexts (health records) to a patient's ABHA address.
+        Use the same endpoint for both single and multiple care context linking —
+        the `careContexts` array can contain one or many entries.
+
+        Requires the `X-Link-Token` header with a freshly generated link token.
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/XLinkToken'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HIPLinkCareContextRequest'
+            examples:
+              single:
+                summary: Single care context
+                value:
+                  abhaNumber: "91234567890123"
+                  abhaAddress: "patient@sbx"
+                  patient:
+                    - referenceNumber: "PAT-REF-001"
+                      display: "Ramesh Kumar"
+                      careContexts:
+                        - referenceNumber: "VISIT-2024-001"
+                          display: "OPD Visit 10-Jan-2024"
+                      hiType:
+                        - "Prescription"
+                      count: 1
+              multiple:
+                summary: Multiple care contexts
+                value:
+                  abhaNumber: "91234567890123"
+                  abhaAddress: "patient@sbx"
+                  patient:
+                    - referenceNumber: "PAT-REF-001"
+                      display: "Ramesh Kumar"
+                      careContexts:
+                        - referenceNumber: "VISIT-2024-001"
+                          display: "OPD Visit 10-Jan-2024"
+                        - referenceNumber: "LAB-2024-001"
+                          display: "Lab Report 10-Jan-2024"
+                        - referenceNumber: "DS-2024-001"
+                          display: "Discharge Summary Jan-2024"
+                      hiType:
+                        - "Prescription"
+                        - "DiagnosticReport"
+                        - "DischargeSummary"
+                      count: 3
+      responses:
+        '202':
+          description: Care context linking accepted and queued
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /hiecm/hip/v3/link/context/notify:
+    post:
+      tags: [hip-linking]
+      summary: Link Care Context Notify
+      operationId: linkCareContextNotify
+      description: |
+        Sends an explicit notification to the ABDM Gateway about a newly linked care context.
+        This is called after successful care context linking to ensure the patient's ABHA App
+        receives a timely notification with the care context details.
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LinkCareContextNotifyRequest'
+            example:
+              notification:
+                patient:
+                  id: "patient@sbx"
+                careContext:
+                  patientReference: "patient@sbx"
+                  careContextReference: "VISIT-2024-001"
+                hiTypes:
+                  - "Prescription"
+                date: "2024-01-10T12:00:00.000Z"
+                hip:
+                  id: "HIP_SERVICE_ID"
+      responses:
+        '202':
+          description: Notification accepted
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  # ── DEEP LINKING ──────────────────────────────────────────────────────────
+
+  /hiecm/hip/v3/link/patient/links/sms/notify2:
+    post:
+      tags: [deep-linking]
+      summary: SMS Deep Link Notify
+      operationId: smsDeepLinkNotify
+      description: |
+        Requests ABDM to send an SMS to a patient's mobile number containing a deep link
+        to download/open the ABHA App. Used when a patient is not yet on ABDM and the HIP
+        wants to invite them to link their health records.
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SmsNotifyRequest'
+            example:
+              requestId: "f47ac10b-58cc-4372-a567-0e02b2c3d479"
+              timestamp: "2024-01-10T12:00:00.000Z"
+              notification:
+                phoneNo: "917812345678"
+                hip:
+                  name: "S Y Hospital"
+                  id: "HIP_SERVICE_ID"
+      responses:
+        '202':
+          description: SMS notification queued
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  # ── USER INITIATED LINKING (HIP callbacks to Gateway) ────────────────────
+
+  /hiecm/user-initiated-linking/v3/patient/care-context/on-discover:
+    post:
+      tags: [user-linking]
+      summary: On Discovery — HIP responds with found care contexts
+      operationId: onDiscoverCareContexts
+      description: |
+        **Async Callback:** After receiving a discovery request at the HIP bridge URL
+        (`{bridgeUrl}/v0.5/care-contexts/discover`), the HIP calls this Gateway endpoint
+        to return the list of care contexts found for the patient.
+
+        The HIP matches the patient using the demographics provided
+        (name, gender, DOB, verified identifiers) and returns matching records.
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OnDiscoverRequest'
+            example:
+              transactionId: "txn-uuid-001"
+              patient:
+                - referenceNumber: "PAT-REF-001"
+                  display: "Ramesh Kumar"
+                  careContexts:
+                    - referenceNumber: "VISIT-2024-001"
+                      display: "OPD Visit 10-Jan-2024"
+                    - referenceNumber: "LAB-2024-001"
+                      display: "Lab Report 10-Jan-2024"
+                  hiType: "DiagnosticReport"
+                  count: 2
+              response:
+                requestId: "req-uuid-from-discover"
+      responses:
+        '202':
+          description: Discovery response accepted by Gateway
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /hiecm/user-initiated-linking/v3/link/care-context/on-init:
+    post:
+      tags: [user-linking]
+      summary: Link On-Init — HIP responds with OTP communication details
+      operationId: onLinkInit
+      description: |
+        **Async Callback:** After receiving a link init request at the HIP bridge URL
+        (`{bridgeUrl}/v0.5/links/link/init`), the HIP calls this Gateway endpoint to
+        return the authentication details (OTP communication medium and expiry).
+
+        The Gateway uses this to prompt the patient to enter the OTP for link confirmation.
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OnLinkInitRequest'
+            example:
+              transactionId: "txn-uuid-001"
+              link:
+                referenceNumber: "link-ref-uuid-001"
+                authenticationType: "DIRECT"
+                meta:
+                  communicationMedium: "MOBILE"
+                  communicationHint: "OTP"
+                  communicationExpiry: "2024-01-10T12:10:00.000Z"
+              response:
+                requestId: "req-uuid-from-link-init"
+      responses:
+        '202':
+          description: Link init response accepted by Gateway
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /hiecm/user-initiated-linking/v3/link/care-context/on-confirm:
+    post:
+      tags: [user-linking]
+      summary: Link On-Confirm — HIP confirms linked care contexts
+      operationId: onLinkConfirm
+      description: |
+        **Async Callback:** After receiving a link confirm request at the HIP bridge URL
+        (`{bridgeUrl}/v0.5/links/link/confirm`) with the patient's OTP, the HIP validates
+        the OTP and calls this Gateway endpoint to confirm the linked care contexts.
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OnLinkConfirmRequest'
+            example:
+              patient:
+                - referenceNumber: "PAT-REF-001"
+                  display: "Ramesh Kumar"
+                  careContexts:
+                    - referenceNumber: "VISIT-2024-001"
+                      display: "OPD Visit 10-Jan-2024"
+                  hiType: "Prescription"
+                  count: 1
+              response:
+                requestId: "req-uuid-from-link-confirm"
+      responses:
+        '202':
+          description: Link confirm response accepted by Gateway
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  # ── DATA TRANSFER (HIP SIDE) ──────────────────────────────────────────────
+
+  /hiecm/consent/v3/request/hip/on-notify:
+    post:
+      tags: [data-transfer]
+      summary: Consent HIP On-Notify — Acknowledge consent notification
+      operationId: consentHipOnNotify
+      description: |
+        **Async Callback:** After ABDM Gateway sends a consent grant notification to the HIP bridge URL
+        (`{bridgeUrl}/v0.5/consents/hip/notify`), the HIP calls this Gateway endpoint to
+        acknowledge receipt of the consent artefact.
+
+        The consent notification contains the full consent details including care contexts,
+        HI types, date range, and digital signature for validation.
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConsentHipOnNotifyRequest'
+            example:
+              acknowledgement:
+                status: "OK"
+                consentId: "consent-art-uuid-001"
+              response:
+                requestId: "req-uuid-from-hip-notify"
+      responses:
+        '202':
+          description: Consent acknowledgement accepted
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /hiecm/data-flow/v3/health-information/hip/on-request:
+    post:
+      tags: [data-transfer]
+      summary: HIP Health Information Response — Acknowledge data request
+      operationId: hipHealthInformationOnRequest
+      description: |
+        **Async Callback:** After ABDM Gateway sends a health information request to the HIP bridge URL
+        (`{bridgeUrl}/v0.5/health-information/hip/request`), the HIP calls this Gateway endpoint to
+        acknowledge receipt and indicate it will begin processing (ACKNOWLEDGED).
+
+        After this, the HIP prepares and encrypts FHIR records, then pushes them to the HIU's `dataPushUrl`.
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HipHealthInfoOnRequestBody'
+            example:
+              hiRequest:
+                transactionId: "txn-uuid-data-001"
+                sessionStatus: "ACKNOWLEDGED"
+              response:
+                requestId: "req-uuid-from-hi-request"
+      responses:
+        '202':
+          description: Health information request acknowledgement accepted
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /hiecm/data-flow/v3/health-information/notify:
+    post:
+      tags: [data-transfer]
+      summary: HIP Data Flow Notification — Notify Gateway transfer is complete
+      operationId: hipDataFlowNotify
+      description: |
+        After successfully pushing all encrypted FHIR health data to the HIU's `dataPushUrl`,
+        the HIP calls this endpoint to notify the ABDM Gateway that the data transfer session
+        is complete. The Gateway relays this status to the HIU.
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DataFlowNotifyRequest'
+            example:
+              notification:
+                consentId: "consent-art-uuid-001"
+                transactionId: "txn-uuid-data-001"
+                doneAt: "2024-01-15T10:30:00.000Z"
+                notifier:
+                  type: "HIP"
+                  id: "HIP_SERVICE_ID"
+                statusNotification:
+                  sessionStatus: "TRANSFERRED"
+                  hipId: "HIP_SERVICE_ID"
+                  statusResponses:
+                    - careContextReference: "VISIT-2024-001"
+                      hiStatus: "OK"
+                      description: "Successfully transferred"
+      responses:
+        '202':
+          description: Notification accepted
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+# ─────────────────────────────────────────────────────────────────────────────
+# COMPONENTS
+# ─────────────────────────────────────────────────────────────────────────────
+components:
+
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: Bearer token obtained from POST /hiecm/gateway/v3/sessions
+
+  parameters:
+    XLinkToken:
+      name: X-Link-Token
+      in: header
+      required: true
+      schema:
+        type: string
+      description: Short-lived link token generated via POST /hiecm/v3/token/generate-token
+
+  responses:
+    BadRequest:
+      description: Bad request — invalid parameters or missing fields
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    Unauthorized:
+      description: Unauthorized — missing or invalid Bearer token
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+
+  schemas:
+
+    # ── AUTH ──────────────────────────────────────────────────────────────
+
+    SessionRequest:
+      type: object
+      required: [clientId, clientSecret, grantType]
+      properties:
+        clientId:
+          type: string
+          description: Client ID issued during HIP/HIU registration
+          example: "your-client-id"
+        clientSecret:
+          type: string
+          description: Client secret (keep confidential)
+          example: "your-client-secret"
+        grantType:
+          type: string
+          enum: [client_credentials]
+          example: "client_credentials"
+
+    SessionResponse:
+      type: object
+      properties:
+        accessToken:
+          type: string
+          description: JWT Bearer token
+        tokenType:
+          type: string
+          example: "bearer"
+        expiresIn:
+          type: integer
+          description: Token lifetime in seconds
+          example: 1800
+
+    CertsResponse:
+      type: object
+      properties:
+        keys:
+          type: array
+          items:
+            type: object
+            properties:
+              kty: { type: string, example: "RSA" }
+              use: { type: string, example: "sig" }
+              kid: { type: string }
+              n:   { type: string, description: "RSA modulus (base64url)" }
+              e:   { type: string, description: "RSA exponent (base64url)" }
+
+    OpenIdConfiguration:
+      type: object
+      properties:
+        issuer:          { type: string }
+        authorization_endpoint: { type: string }
+        token_endpoint:  { type: string }
+        jwks_uri:        { type: string }
+        response_types_supported:
+          type: array
+          items: { type: string }
+
+    # ── BRIDGE ────────────────────────────────────────────────────────────
+
+    BridgeUrlRequest:
+      type: object
+      required: [url]
+      properties:
+        url:
+          type: string
+          format: uri
+          description: HTTPS callback base URL of the HIP/HIU server
+          example: "https://your-hip-server.com/abdm/callback"
+
+    BridgeService:
+      type: object
+      properties:
+        serviceId:   { type: string }
+        name:        { type: string }
+        type:
+          type: string
+          enum: [HIP, HIU, HRP]
+        active:      { type: boolean }
+        bridgeId:    { type: string }
+        facilityId:  { type: string }
+
+    RegisterBridgeServicesRequest:
+      type: object
+      required: [facilityId, facilityName, HRP]
+      properties:
+        facilityId:
+          type: string
+          description: Facility identifier from the Health Facility Registry
+          example: "IN07100XXXXX"
+        facilityName:
+          type: string
+          example: "S Y Hospital"
+        HRP:
+          type: array
+          items:
+            type: object
+            required: [bridgeId, hipName, type, active]
+            properties:
+              bridgeId:  { type: string }
+              hipName:   { type: string }
+              type:
+                type: string
+                enum: [HIP, HIU]
+              active:    { type: boolean }
+
+    # ── HIP LINKING ───────────────────────────────────────────────────────
+
+    GenerateLinkTokenRequest:
+      type: object
+      required: [abhaAddress, name, gender, yearOfBirth]
+      properties:
+        abhaNumber:
+          type: integer
+          description: 14-digit ABHA number (optional if abhaAddress provided)
+          example: 91234567890123
+        abhaAddress:
+          type: string
+          description: ABHA address (PHR address) e.g. user@sbx
+          example: "patient@sbx"
+        name:
+          type: string
+          example: "Ramesh Kumar"
+        gender:
+          type: string
+          enum: [M, F, O]
+          example: "M"
+        yearOfBirth:
+          type: integer
+          example: 1985
+
+    LinkTokenResponse:
+      type: object
+      properties:
+        linkToken:
+          type: string
+          description: Short-lived token to be used in X-Link-Token header
+        expiryTime:
+          type: string
+          format: date-time
+
+    CareContext:
+      type: object
+      required: [referenceNumber, display]
+      properties:
+        referenceNumber:
+          type: string
+          description: HIP's internal reference for this care context
+          example: "VISIT-2024-001"
+        display:
+          type: string
+          description: Human-readable name of the care context
+          example: "OPD Visit 10-Jan-2024"
+
+    PatientCareContextEntry:
+      type: object
+      required: [referenceNumber, display, careContexts, hiType, count]
+      properties:
+        referenceNumber:
+          type: string
+          description: HIP's internal patient reference number
+        display:
+          type: string
+          description: Patient display name
+        careContexts:
+          type: array
+          items:
+            $ref: '#/components/schemas/CareContext'
+        hiType:
+          type: array
+          items:
+            $ref: '#/components/schemas/HIType'
+        count:
+          type: integer
+          description: Total number of care contexts in this entry
+
+    HIPLinkCareContextRequest:
+      type: object
+      required: [abhaAddress, patient]
+      properties:
+        abhaNumber:
+          type: string
+          description: 14-digit ABHA number (optional)
+        abhaAddress:
+          type: string
+          description: ABHA address of the patient
+          example: "patient@sbx"
+        patient:
+          type: array
+          items:
+            $ref: '#/components/schemas/PatientCareContextEntry'
+
+    LinkCareContextNotifyRequest:
+      type: object
+      required: [notification]
+      properties:
+        notification:
+          type: object
+          required: [patient, careContext, hiTypes, date, hip]
+          properties:
+            patient:
+              type: object
+              properties:
+                id: { type: string, description: "Patient ABHA address" }
+            careContext:
+              type: object
+              properties:
+                patientReference:     { type: string }
+                careContextReference: { type: string }
+            hiTypes:
+              type: array
+              items:
+                $ref: '#/components/schemas/HIType'
+            date:
+              type: string
+              format: date-time
+            hip:
+              type: object
+              properties:
+                id: { type: string }
+
+    # ── DEEP LINKING ──────────────────────────────────────────────────────
+
+    SmsNotifyRequest:
+      type: object
+      required: [requestId, timestamp, notification]
+      properties:
+        requestId:
+          type: string
+          format: uuid
+          description: Unique request ID (UUIDv4)
+        timestamp:
+          type: string
+          format: date-time
+        notification:
+          type: object
+          required: [phoneNo, hip]
+          properties:
+            phoneNo:
+              type: string
+              description: Patient mobile number with country code (e.g. 917812345678)
+              example: "917812345678"
+            hip:
+              type: object
+              required: [name, id]
+              properties:
+                name: { type: string, example: "S Y Hospital" }
+                id:   { type: string, example: "HIP_SERVICE_ID" }
+
+    # ── USER INITIATED LINKING ────────────────────────────────────────────
+
+    OnDiscoverRequest:
+      type: object
+      required: [transactionId, patient, response]
+      properties:
+        transactionId:
+          type: string
+          description: Same transactionId from the discover request received at HIP bridge
+        patient:
+          type: array
+          items:
+            $ref: '#/components/schemas/PatientCareContextEntry'
+        response:
+          $ref: '#/components/schemas/CallbackResponse'
+
+    OnLinkInitRequest:
+      type: object
+      required: [transactionId, link, response]
+      properties:
+        transactionId:
+          type: string
+        link:
+          type: object
+          required: [referenceNumber, authenticationType, meta]
+          properties:
+            referenceNumber:
+              type: string
+              description: HIP-generated link reference (UUIDv4)
+            authenticationType:
+              type: string
+              enum: [DIRECT, MEDIATED]
+              example: "DIRECT"
+            meta:
+              type: object
+              properties:
+                communicationMedium:
+                  type: string
+                  enum: [MOBILE, EMAIL]
+                communicationHint:
+                  type: string
+                  description: Masked hint (e.g. mobile ending digits)
+                communicationExpiry:
+                  type: string
+                  format: date-time
+        response:
+          $ref: '#/components/schemas/CallbackResponse'
+
+    OnLinkConfirmRequest:
+      type: object
+      required: [patient, response]
+      properties:
+        patient:
+          type: array
+          items:
+            $ref: '#/components/schemas/PatientCareContextEntry'
+        response:
+          $ref: '#/components/schemas/CallbackResponse'
+
+    # ── DATA TRANSFER ─────────────────────────────────────────────────────
+
+    ConsentHipOnNotifyRequest:
+      type: object
+      required: [acknowledgement, response]
+      properties:
+        acknowledgement:
+          type: object
+          required: [status, consentId]
+          properties:
+            status:
+              type: string
+              enum: [OK, ERROR]
+            consentId:
+              type: string
+              description: The consent artefact ID being acknowledged
+        response:
+          $ref: '#/components/schemas/CallbackResponse'
+
+    HipHealthInfoOnRequestBody:
+      type: object
+      required: [hiRequest, response]
+      properties:
+        hiRequest:
+          type: object
+          required: [transactionId, sessionStatus]
+          properties:
+            transactionId:
+              type: string
+              description: Transaction ID from the original data request
+            sessionStatus:
+              type: string
+              enum: [ACKNOWLEDGED, ERRORED]
+              example: "ACKNOWLEDGED"
+        response:
+          $ref: '#/components/schemas/CallbackResponse'
+
+    DataFlowNotifyRequest:
+      type: object
+      required: [notification]
+      properties:
+        notification:
+          type: object
+          required: [consentId, transactionId, doneAt, notifier, statusNotification]
+          properties:
+            consentId:     { type: string }
+            transactionId: { type: string }
+            doneAt:
+              type: string
+              format: date-time
+            notifier:
+              type: object
+              properties:
+                type: { type: string, enum: [HIP, HIU] }
+                id:   { type: string }
+            statusNotification:
+              type: object
+              properties:
+                sessionStatus:
+                  type: string
+                  enum: [TRANSFERRED, FAILED]
+                hipId:
+                  type: string
+                statusResponses:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      careContextReference: { type: string }
+                      hiStatus:
+                        type: string
+                        enum: [OK, ERRORED]
+                      description:          { type: string }
+
+    # ── SHARED ────────────────────────────────────────────────────────────
+
+    CallbackResponse:
+      type: object
+      description: Echo of the requestId from the original Gateway-to-HIP request
+      required: [requestId]
+      properties:
+        requestId:
+          type: string
+          description: requestId received in the original Gateway request to HIP bridge
+
+    HIType:
+      type: string
+      enum:
+        - Prescription
+        - DiagnosticReport
+        - OPConsultation
+        - DischargeSummary
+        - ImmunizationRecord
+        - HealthDocumentRecord
+        - WellnessRecord
+      description: ABDM Health Information type
+
+    ErrorResponse:
+      type: object
+      properties:
+        code:    { type: integer }
+        message: { type: string }
+
+security:
+  - bearerAuth: []

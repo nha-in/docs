@@ -13,25 +13,25 @@ Every endpoint below is generated from the specification that declares it. Each 
 
 ## Gateway session
 
-1 endpoint across 1 use case: Session and tokens. Each endpoint has its own page in the sidebar.
+7 endpoints across 3 use cases: Session and tokens, Gateway & Bridge, Bridge. Each endpoint has its own page in the sidebar.
 
 [Read the whole specification](/reference/hiecm-gateway)
 
 ## M1 ABHA identity
 
-32 endpoints across 8 use cases: ABHA creation, ABHA verification, Share patient profile, Profile update, ABHA QR code, Session and tokens, Fetch ABHA by mobile number, Fetch ABHA by Aadhaar number. Each endpoint has its own page in the sidebar.
+44 endpoints across 14 use cases: ABHA creation, ABHA verification, Share patient profile, Profile update, ABHA QR code, Session and tokens, Fetch ABHA by mobile number, Fetch ABHA by Aadhaar number, Authentication, Login & Verification, ABHA Profile, PHR & ABHA Address, Gateway & Bridge, Scan & Share. Each endpoint has its own page in the sidebar.
 
 [Read the whole specification](/reference/hiecm-m1)
 
 ## M2 Linking and sharing
 
-5 endpoints across 1 use case: Endpoints. Each endpoint has its own page in the sidebar.
+16 endpoints across 5 use cases: Hip linking, Deep linking, User linking, Data transfer, Endpoints. Each endpoint has its own page in the sidebar.
 
 [Read the whole specification](/reference/hiecm-m2)
 
 ## M3 Consent and fetching
 
-5 endpoints across 1 use case: Endpoints. Each endpoint has its own page in the sidebar.
+12 endpoints across 3 use cases: Consent, Data retrieval, Endpoints. Each endpoint has its own page in the sidebar.
 
 [Read the whole specification](/reference/hiecm-m3)
 

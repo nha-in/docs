@@ -1,0 +1,3060 @@
+openapi: 3.0.3
+
+info:
+  title: ABDM Milestone 1 (M1) Integration API
+  description: |
+    ## Overview
+    Complete OpenAPI specification for ABDM Milestone 1 integration.
+
+    Covers the following domains:
+    - **Session & Certificate** — Obtain Bearer token and RSA public key
+    - **ABHA Enrolment** — Create ABHA via Aadhaar OTP, Driving Licence, or Biometrics
+    - **Login & Verification** — Authenticate existing ABHA holders
+    - **ABHA Profile** — View/update profile, manage account lifecycle
+    - **PHR / ABHA Address** — PHR login via ABHA Address
+    - **Benefit APIs** — Link/de-link government scheme benefits
+    - **Child ABHA** — Create ABHA for children via parent session
+    - **Gateway & Bridge** — HIP/HIU registration and bridge management
+    - **Scan & Share** — QR-based patient profile sharing
+
+    ## Authentication Flow
+    1. Call `POST /api/hiecm/gateway/v3/sessions` → get `accessToken`
+    2. Use `Authorization: Bearer {accessToken}` on all subsequent calls
+    3. After login/verify, use `X-Token: {token}` for profile operations
+
+    ## Encryption Requirement
+    **All sensitive fields must be RSA-encrypted** using the public key from
+    `GET /abha/api/v3/profile/public/certificate` before transmission:
+    - Aadhaar number
+    - Mobile number
+    - OTP value
+    - Password
+    - ABHA Number (in some flows)
+    - Email address
+    - Profile photo
+
+    ## Sandbox Environments
+    | Server | Base URL |
+    |--------|----------|
+    | ABHA Server (Sandbox) | `https://abhasbx.abdm.gov.in/abha/api/v3` |
+    | ABDM Gateway (Dev) | `https://dev.abdm.gov.in/api/hiecm/gateway/v3` |
+    | Facility Registry (Sandbox) | `https://facilitysbx.abdm.gov.in` |
+
+  version: "3.0.0"
+  contact:
+    name: ABDM Integration Support
+    url: https://abdm.gov.in
+  license:
+    name: Government of India — National Health Authority
+    url: https://nha.gov.in
+
+servers:
+  - url: https://abhasbx.abdm.gov.in/abha/api/v3
+    description: ABHA Server — Sandbox (primary)
+  - url: https://dev.abdm.gov.in/api/hiecm
+    description: ABDM Gateway — Dev
+  - url: https://facilitysbx.abdm.gov.in
+    description: Facility Registry — Sandbox
+
+security:
+  - bearerAuth: []
+
+tags:
+  - name: Authentication
+    description: |
+      Session token and RSA certificate — **must be called first** before any other API.
+  - name: Enrollment
+    description: Create a new ABHA number via Aadhaar OTP, Driving Licence, or Biometrics.
+  - name: Login & Verification
+    description: Authenticate an existing ABHA holder via multiple channels.
+  - name: ABHA Profile
+    description: View, update, and manage ABHA profile details and account lifecycle.
+  - name: PHR & ABHA Address
+    description: PHR application login and profile management using ABHA Address.
+  - name: Child ABHA
+    description: Create and manage ABHA numbers for children via parent session.
+  - name: Benefit APIs
+    description: Link or de-link ABHA to government / insurance benefit schemes.
+  - name: Gateway & Bridge
+    description: HIP/HIU service registration, bridge URL management, and OIDC configuration.
+  - name: Scan & Share
+    description: |
+      Patient scans HIP QR code → ABHA App shares profile →
+      HIP callback receives data → HIP sends acknowledgement to Gateway.
+
+# ═══════════════════════════════════════════════════════════════════════
+# PATHS
+# ═══════════════════════════════════════════════════════════════════════
+
+paths:
+
+  # ──────────────────────────────────────────
+  # AUTHENTICATION
+  # ──────────────────────────────────────────
+
+  /gateway/v3/sessions:
+    post:
+      tags: [Authentication]
+      summary: Create Session — Obtain Access Token
+      operationId: createSession
+      description: |
+        Obtain a JWT Bearer access token using client credentials (OAuth 2.0 client_credentials grant).
+        This token must be passed as `Authorization: Bearer {accessToken}` in all subsequent API calls.
+
+        **Server:** `https://dev.abdm.gov.in/api/hiecm`
+      security: []
+      servers:
+        - url: https://dev.abdm.gov.in/api/hiecm
+          description: ABDM Gateway
+      parameters:
+        - $ref: '#/components/parameters/RequestId'
+        - $ref: '#/components/parameters/Timestamp'
+        - name: X-CM-ID
+          in: header
+          required: true
+          description: Consent Manager ID (`sbx` for sandbox)
+          schema:
+            type: string
+            default: sbx
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SessionRequest'
+            example:
+              clientId: "your-client-id"
+              clientSecret: "your-client-secret"
+              grantType: "client_credentials"
+      responses:
+        '200':
+          description: Access token generated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SessionResponse'
+              example:
+                accessToken: "eyJhbGciOiJSUzI1NiIsInR5..."
+                tokenType: "Bearer"
+                expiresIn: 1800
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /profile/public/certificate:
+    get:
+      tags: [Authentication]
+      summary: Get RSA Public Certificate
+      operationId: getPublicCertificate
+      description: |
+        Fetch the RSA public key used to encrypt all sensitive fields before transmission.
+        Fields requiring encryption: Aadhaar, Mobile, OTP, Password, ABHA Number, Email, Photo.
+
+        **Server:** `https://abhasbx.abdm.gov.in/abha/api/v3`
+      parameters:
+        - $ref: '#/components/parameters/RequestId'
+        - $ref: '#/components/parameters/Timestamp'
+      responses:
+        '200':
+          description: RSA public key retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CertificateResponse'
+
+  # ──────────────────────────────────────────
+  # ENROLLMENT
+  # ──────────────────────────────────────────
+
+  /enrollment/request/otp:
+    post:
+      tags: [Enrollment]
+      summary: Send OTP — Initiate Enrollment
+      operationId: enrollmentRequestOtp
+      description: |
+        Send an OTP to initiate the ABHA enrollment process.
+
+        **Scope combinations by use case:**
+
+        | Use Case | scope | loginHint | otpSystem |
+        |----------|-------|-----------|-----------|
+        | Aadhaar OTP enrollment | `["abha-enrol"]` | `aadhaar` | `aadhaar` |
+        | Mobile update after enrollment | `["abha-enrol","mobile-verify"]` | `mobile` | `abdm` |
+        | DL enrollment — mobile verify | `["abha-enrol","mobile-verify","dl-flow"]` | `mobile` | `abdm` |
+      parameters:
+        - $ref: '#/components/parameters/RequestId'
+        - $ref: '#/components/parameters/Timestamp'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EnrollmentOtpRequest'
+            examples:
+              aadhaar_enrollment:
+                summary: Aadhaar OTP — start enrollment
+                value:
+                  txnId: ""
+                  scope: ["abha-enrol"]
+                  loginHint: "aadhaar"
+                  loginId: "{{RSA_encrypted_aadhaar}}"
+                  otpSystem: "aadhaar"
+              mobile_update:
+                summary: Mobile update — post enrollment
+                value:
+                  txnId: "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+                  scope: ["abha-enrol", "mobile-verify"]
+                  loginHint: "mobile"
+                  loginId: "{{RSA_encrypted_mobile}}"
+                  otpSystem: "abdm"
+              dl_flow:
+                summary: DL enrollment — mobile OTP
+                value:
+                  scope: ["abha-enrol", "mobile-verify", "dl-flow"]
+                  loginHint: "mobile"
+                  loginId: "{{RSA_encrypted_mobile}}"
+      responses:
+        '200':
+          description: OTP sent — returns transaction ID
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TxnResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /enrollment/enrol/byAadhaar:
+    post:
+      tags: [Enrollment]
+      summary: Enrol by Aadhaar (OTP / Biometric / Face / Iris / Child / DemoAuth)
+      operationId: enrolByAadhaar
+      description: |
+        Multi-purpose enrollment and child ABHA creation endpoint.
+        The `authMethods` array determines which authentication data is required:
+
+        | authMethods | Description | Required fields |
+        |-------------|-------------|-----------------|
+        | `["otp"]` | Aadhaar OTP enrollment | `otp.txnId`, `otp.otpValue` |
+        | `["bio"]` | Fingerprint biometric | `bio.aadhaar`, `bio.bioType`, `bio.pid` |
+        | `["face"]` | Face authentication | `face.aadhaar`, `face.pid` |
+        | `["iris"]` | Iris scan | `iris.aadhaar`, `iris.pid` |
+        | `["child"]` | Child ABHA (parent must be logged in) | `child.*` fields |
+        | `["demo_auth"]` | Demographic authentication | `demo_auth.aadhaarNumber`, demographics |
+      parameters:
+        - $ref: '#/components/parameters/RequestId'
+        - $ref: '#/components/parameters/Timestamp'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EnrolByAadhaarRequest'
+            examples:
+              otp_enrol:
+                summary: Enrol via Aadhaar OTP
+                value:
+                  authData:
+                    authMethods: ["otp"]
+                    otp:
+                      timeStamp: "2024-11-20T06:55:56.832Z"
+                      txnId: "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+                      otpValue: "{{RSA_encrypted_otp}}"
+              fingerprint_enrol:
+                summary: Enrol via fingerprint
+                value:
+                  authData:
+                    authMethods: ["bio"]
+                    bio:
+                      aadhaar: "{{RSA_encrypted_aadhaar}}"
+                      bioType: "FMR"
+                      pid: "{{encrypted_PID_block}}"
+              face_enrol:
+                summary: Enrol via face recognition
+                value:
+                  authData:
+                    authMethods: ["face"]
+                    face:
+                      aadhaar: "{{RSA_encrypted_aadhaar}}"
+                      pid: "{{encrypted_face_PID}}"
+              iris_enrol:
+                summary: Enrol via iris scan
+                value:
+                  authData:
+                    authMethods: ["iris"]
+                    iris:
+                      aadhaar: "{{RSA_encrypted_aadhaar}}"
+                      pid: "{{encrypted_iris_PID}}"
+              child_enrol:
+                summary: Child ABHA creation
+                value:
+                  authData:
+                    authMethods: ["child"]
+                    child:
+                      dayOfBirth: "15"
+                      monthOfBirth: "03"
+                      yearOfBirth: "2015"
+                      firstName: "Ravi"
+                      middleName: ""
+                      lastName: "Kumar"
+                      gender: "M"
+                      parentAbhaNumber: "91-1234-5678-9012"
+              demo_auth_enrol:
+                summary: Demographic authentication
+                value:
+                  authData:
+                    authMethods: ["demo_auth"]
+                    demo_auth:
+                      aadhaarNumber: "{{RSA_encrypted_aadhaar}}"
+                      name: "John Doe"
+                      dob: "1990-01-15"
+                      gender: "M"
+      responses:
+        '201':
+          description: ABHA created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EnrolmentResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '409':
+          description: ABHA already exists for this Aadhaar
+
+  /enrollment/auth/byAbdm:
+    post:
+      tags: [Enrollment]
+      summary: Verify OTP via ABDM (Mobile Update / DL Sub-flows)
+      operationId: enrollmentAuthByAbdm
+      description: |
+        Verify OTP within enrollment sub-flows:
+        - Mobile number update after ABHA creation
+        - DL enrollment mobile OTP verification (before `byDocument` call)
+      parameters:
+        - $ref: '#/components/parameters/RequestId'
+        - $ref: '#/components/parameters/Timestamp'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AbdmAuthVerifyRequest'
+            examples:
+              mobile_update_verify:
+                summary: Mobile update OTP verification
+                value:
+                  scope: ["abha-enrol", "mobile-verify"]
+                  authData:
+                    authMethods: ["otp"]
+                    otp:
+                      txnId: "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+                      otpValue: "{{RSA_encrypted_otp}}"
+              dl_flow_verify:
+                summary: DL flow OTP verification
+                value:
+                  scope: ["abha-enrol", "mobile-verify", "dl-flow"]
+                  authData:
+                    authMethods: ["otp"]
+                    otp:
+                      txnId: "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+                      otpValue: "{{RSA_encrypted_otp}}"
+      responses:
+        '200':
+          description: OTP verified — proceed to next step
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TxnResponse'
+
+  /enrollment/enrol/byDocument:
+    post:
+      tags: [Enrollment]
+      summary: Enrol by Driving Licence
+      operationId: enrolByDocument
+      description: |
+        Create an ABHA enrolment number using a Driving Licence.
+        Must be called **after** mobile OTP is verified via `POST /enrollment/auth/byAbdm`
+        with `dl-flow` in scope.
+      parameters:
+        - $ref: '#/components/parameters/RequestId'
+        - $ref: '#/components/parameters/Timestamp'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EnrolByDocumentRequest'
+            example:
+              txnId: "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+              documentType: "DRIVING_LICENCE"
+              documentId: "{{RSA_encrypted_DL_number}}"
+              firstName: "John"
+              middleName: ""
+              lastName: "Doe"
+              dob: "1990-01-15"
+              gender: "M"
+              address: "123 Main Street, Andheri"
+              districtCode: "501"
+              stateCode: "27"
+              pinCode: "400053"
+      responses:
+        '201':
+          description: Enrolment number created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DLEnrolmentResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+  /enrollment/enrol/suggestion:
+    get:
+      tags: [Enrollment]
+      summary: Get ABHA Address Suggestions
+      operationId: getAbhaAddressSuggestions
+      description: |
+        Returns a list of available ABHA Address suggestions based on the user's name.
+        Called after ABHA creation (uses the X-Token from the enrolment response).
+      parameters:
+        - $ref: '#/components/parameters/RequestId'
+        - $ref: '#/components/parameters/Timestamp'
+      security:
+        - bearerAuth: []
+        - xToken: []
+      responses:
+        '200':
+          description: Suggested ABHA addresses
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuggestionResponse'
+              example:
+                abhaAddressList:
+                  - "johnkumar@sbx"
+                  - "john.kumar123@sbx"
+                  - "jkumar99@sbx"
+
+  /enrollment/enrol/abha-address:
+    post:
+      tags: [Enrollment]
+      summary: Set ABHA Address (PHR Address)
+      operationId: setAbhaAddress
+      description: Set the preferred ABHA Address (PHR Address / Health ID) for the newly created ABHA.
+      parameters:
+        - $ref: '#/components/parameters/RequestId'
+        - $ref: '#/components/parameters/Timestamp'
+      security:
+        - bearerAuth: []
+        - xToken: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SetAbhaAddressRequest'
+            example:
+              txnId: "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+              abhaAddress: "johnkumar@sbx"
+              preferred: 1
+      responses:
+        '200':
+          description: ABHA Address set successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AbhaAddressResponse'
+
+  # ──────────────────────────────────────────
+  # CHILD ABHA
+  # ──────────────────────────────────────────
+
+  /enrollment/profile/children:
+    get:
+      tags: [Child ABHA]
+      summary: Get Children Profiles
+      operationId: getChildrenProfiles
+      description: Retrieve a list of children linked to the authenticated parent's ABHA account.
+      parameters:
+        - $ref: '#/components/parameters/RequestId'
+        - $ref: '#/components/parameters/Timestamp'
+      security:
+        - bearerAuth: []
+        - xToken: []
+      responses:
+        '200':
+          description: Children profiles
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChildrenResponse'
+
+  # ──────────────────────────────────────────
+  # LOGIN & VERIFICATION
+  # ──────────────────────────────────────────
+
+  /profile/login/request/otp:
+    post:
+      tags: [Login & Verification]
+      summary: Send OTP / Initiate Login
+      operationId: loginRequestOtp
+      description: |
+        Initiate login for an existing ABHA holder. The `scope` and `loginHint`
+        combination determines the authentication channel.
+
+        **Complete scope reference:**
+
+        | loginHint | scope | Use case |
+        |-----------|-------|----------|
+        | `abha-number` | `["abha-login","aadhaar-verify"]` | ABHA Number + Aadhaar OTP |
+        | `abha-number` | `["abha-login","mobile-verify"]` | ABHA Number + ABHA mobile OTP |
+        | `abha-number` | `["abha-login","aadhaar-face-verify"]` | ABHA Number + Face |
+        | `abha-number` | `["abha-login","aadhaar-bio-verify"]` | ABHA Number + Fingerprint |
+        | `abha-number` | `["abha-login","aadhaar-iris-verify"]` | ABHA Number + Iris |
+        | `mobile` | `["abha-login","mobile-verify"]` | Mobile OTP (multi-ABHA) |
+        | `aadhaar` | `["abha-login","aadhaar-verify"]` | Aadhaar number + OTP |
+        | `index` | `["abha-login","search-abha","mobile-verify"]` | Find ABHA (post-search) |
+        | `index` | `["abha-login","search-abha","aadhaar-bio-verify"]` | Find ABHA via biometric |
+        | `abha-number` | `["abha-login","aadhaar-verify","re-activate"]` | Reactivate via Aadhaar OTP |
+        | `abha-number` | `["abha-login","mobile-verify","re-activate"]` | Reactivate via mobile OTP |
+      parameters:
+        - $ref: '#/components/parameters/RequestId'
+        - $ref: '#/components/parameters/Timestamp'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginOtpRequest'
+            examples:
+              abha_aadhaar_otp:
+                summary: ABHA Number + Aadhaar OTP
+                value:
+                  scope: ["abha-login", "aadhaar-verify"]
+                  loginHint: "abha-number"
+                  loginId: "{{RSA_encrypted_abha_number}}"
+              abha_mobile_otp:
+                summary: ABHA Number + Mobile OTP
+                value:
+                  scope: ["abha-login", "mobile-verify"]
+                  loginHint: "abha-number"
+                  loginId: "{{RSA_encrypted_abha_number}}"
+              mobile_login:
+                summary: Mobile number OTP (multi-ABHA)
+                value:
+                  scope: ["abha-login", "mobile-verify"]
+                  loginHint: "mobile"
+                  loginId: "{{RSA_encrypted_mobile}}"
+              aadhaar_login:
+                summary: Aadhaar number + OTP
+                value:
+                  scope: ["abha-login", "aadhaar-verify"]
+                  loginHint: "aadhaar"
+                  loginId: "{{RSA_encrypted_aadhaar}}"
+              face_login:
+                summary: Face biometric login
+                value:
+                  scope: ["abha-login", "aadhaar-face-verify"]
+                  loginHint: "abha-number"
+                  loginId: "{{RSA_encrypted_abha_number}}"
+              fingerprint_login:
+                summary: Fingerprint login
+                value:
+                  scope: ["abha-login", "aadhaar-bio-verify"]
+                  loginHint: "abha-number"
+                  loginId: "{{RSA_encrypted_abha_number}}"
+              find_abha:
+                summary: Find ABHA (after search step)
+                value:
+                  scope: ["abha-login", "search-abha", "mobile-verify"]
+                  loginHint: "index"
+                  loginId: "{{index_from_search_response}}"
+              reactivate:
+                summary: Reactivate ABHA
+                value:
+                  scope: ["abha-login", "aadhaar-verify", "re-activate"]
+                  loginHint: "abha-number"
+                  loginId: "{{RSA_encrypted_abha_number}}"
+              forgot_abha_retrieval:
+                summary: Retrieval of enrolment number
+                value:
+                  scope: ["abha-login", "mobile-verify", "retrieval"]
+                  loginHint: "mobile"
+                  loginId: "{{RSA_encrypted_mobile}}"
+      responses:
+        '200':
+          description: OTP sent / login initiated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TxnResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+  /profile/login/verify:
+    post:
+      tags: [Login & Verification]
+      summary: Verify OTP / Password / Biometric — Complete Login
+      operationId: loginVerify
+      description: |
+        Complete the login by providing the OTP, password, or biometric PID block.
+        Returns an `X-Token` for profile operations and optionally a list of ABHA accounts
+        when the login hint was `mobile` and multiple ABHAs are linked.
+      parameters:
+        - $ref: '#/components/parameters/RequestId'
+        - $ref: '#/components/parameters/Timestamp'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginVerifyRequest'
+            examples:
+              otp_verify:
+                summary: OTP verification
+                value:
+                  scope: ["abha-login", "aadhaar-verify"]
+                  authData:
+                    authMethods: ["otp"]
+                    otp:
+                      txnId: "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+                      otpValue: "{{RSA_encrypted_otp}}"
+              password_verify:
+                summary: Password verification
+                value:
+                  scope: ["abha-login", "password-verify"]
+                  authData:
+                    authMethods: ["password"]
+                    password:
+                      value: "{{RSA_encrypted_password}}"
+              face_verify:
+                summary: Face biometric verification
+                value:
+                  scope: ["abha-login", "aadhaar-face-verify"]
+                  authData:
+                    authMethods: ["face"]
+                    face:
+                      txnId: "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+                      pid: "{{encrypted_face_PID}}"
+              fingerprint_verify:
+                summary: Fingerprint verification
+                value:
+                  scope: ["abha-login", "aadhaar-bio-verify"]
+                  authData:
+                    authMethods: ["bio"]
+                    bio:
+                      txnId: "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+                      bioType: "FMR"
+                      pid: "{{encrypted_FP_PID}}"
+              iris_verify:
+                summary: Iris verification
+                value:
+                  scope: ["abha-login", "aadhaar-iris-verify"]
+                  authData:
+                    authMethods: ["iris"]
+                    iris:
+                      txnId: "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+                      pid: "{{encrypted_iris_PID}}"
+              reactivate_verify:
+                summary: Reactivate ABHA
+                value:
+                  scope: ["abha-login", "aadhaar-verify", "re-activate"]
+                  authData:
+                    authMethods: ["otp"]
+                    otp:
+                      txnId: "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+                      otpValue: "{{RSA_encrypted_otp}}"
+              reactivate_password:
+                summary: Reactivate via password
+                value:
+                  scope: ["abha-login", "password-verify", "re-activate"]
+                  authData:
+                    authMethods: ["password"]
+                    password:
+                      value: "{{RSA_encrypted_password}}"
+      responses:
+        '200':
+          description: Login verified — returns X-Token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginVerifyResponse'
+
+  /profile/login/verify/user:
+    post:
+      tags: [Login & Verification]
+      summary: Select ABHA Account (Multi-ABHA on same mobile)
+      operationId: loginVerifyUser
+      description: |
+        When a mobile number is linked to multiple ABHA accounts, `POST /profile/login/verify`
+        returns an `accounts` array. Use this endpoint to select the desired account
+        and receive the final `X-Token`.
+      parameters:
+        - $ref: '#/components/parameters/RequestId'
+        - $ref: '#/components/parameters/Timestamp'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SelectUserRequest'
+            example:
+              ABHANumber: "91-1234-5678-9012"
+              txnId: "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+      responses:
+        '200':
+          description: Account selected — returns X-Token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginVerifyResponse'
+
+  /profile/login/search:
+    post:
+      tags: [Login & Verification]
+      summary: Search ABHA Profile (for Password Login)
+      operationId: loginSearch
+      description: |
+        Look up a profile by ABHA Number as the first step of the password login flow.
+        Returns basic profile info to confirm the correct account before requesting password.
+      parameters:
+        - $ref: '#/components/parameters/RequestId'
+        - $ref: '#/components/parameters/Timestamp'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [ABHANumber]
+              properties:
+                ABHANumber:
+                  type: string
+                  description: 14-digit ABHA number (with or without hyphens)
+                  example: "91-1234-5678-9012"
+      responses:
+        '200':
+          description: Profile found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SearchProfileResponse'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /profile/account/abha/search:
+    post:
+      tags: [Login & Verification]
+      summary: Search ABHA by Mobile — Find ABHA
+      operationId: searchAbhaByMobile
+      description: |
+        Search for ABHA numbers linked to a mobile number.
+        Returns an opaque `index` value used as `loginId` in the subsequent
+        `POST /profile/login/request/otp` call to complete the Find ABHA flow.
+      parameters:
+        - $ref: '#/components/parameters/RequestId'
+        - $ref: '#/components/parameters/Timestamp'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [scope, mobile]
+              properties:
+                scope:
+                  type: array
+                  items:
+                    type: string
+                  example: ["search-abha"]
+                mobile:
+                  type: string
+                  description: RSA-encrypted mobile number
+                  example: "{{RSA_encrypted_mobile}}"
+      responses:
+        '200':
+          description: Search result with opaque index
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AbhaSearchResponse'
+
+  # ──────────────────────────────────────────
+  # ABHA PROFILE MANAGEMENT
+  # ──────────────────────────────────────────
+
+  /profile/account:
+    get:
+      tags: [ABHA Profile]
+      summary: Get ABHA Profile Details
+      operationId: getProfile
+      description: Retrieve the full ABHA profile of the authenticated user.
+      parameters:
+        - $ref: '#/components/parameters/RequestId'
+        - $ref: '#/components/parameters/Timestamp'
+      security:
+        - bearerAuth: []
+        - xToken: []
+      responses:
+        '200':
+          description: ABHA profile details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProfileResponse'
+
+    patch:
+      tags: [ABHA Profile]
+      summary: Update Profile (Photo / Benefit Update)
+      operationId: updateProfile
+      description: |
+        Update profile fields. Used in two contexts:
+        - **Self-service**: update `profilePhoto`
+        - **Benefit program**: update `abhaNumber`, `mobile`, `accountStatus`, `profilePhoto`
+      parameters:
+        - $ref: '#/components/parameters/RequestId'
+        - $ref: '#/components/parameters/Timestamp'
+      security:
+        - bearerAuth: []
+        - xToken: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateProfileRequest'
+            examples:
+              update_photo:
+                summary: Update profile photo
+                value:
+                  profilePhoto: "{{RSA_encrypted_base64_photo}}"
+              child_profile_update:
+                summary: Update child ABHA details
+                value:
+                  abhaNumber: "91-1234-5678-9999"
+                  dob: "2015-03-15"
+                  name: "Ravi Kumar"
+                  gender: "M"
+              benefit_update:
+                summary: Benefit program profile update
+                value:
+                  abhaNumber: "91-1234-5678-9012"
+                  mobile: "9876543210"
+                  accountStatus: "ACTIVE"
+                  profilePhoto: ""
+      responses:
+        '200':
+          description: Profile updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageResponse'
+
+  /profile/account/qrCode:
+    get:
+      tags: [ABHA Profile]
+      summary: Download ABHA QR Code
+      operationId: downloadQrCode
+      description: Download the ABHA QR code as a PNG image.
+      parameters:
+        - $ref: '#/components/parameters/RequestId'
+        - $ref: '#/components/parameters/Timestamp'
+      security:
+        - bearerAuth: []
+        - xToken: []
+      responses:
+        '200':
+          description: QR Code image
+          content:
+            image/png:
+              schema:
+                type: string
+                format: binary
+
+  /profile/account/abha-card:
+    get:
+      tags: [ABHA Profile]
+      summary: Download ABHA Card
+      operationId: downloadAbhaCard
+      description: Download the ABHA health ID card as an image (PNG or SVG).
+      parameters:
+        - $ref: '#/components/parameters/RequestId'
+        - $ref: '#/components/parameters/Timestamp'
+      security:
+        - bearerAuth: []
+        - xToken: []
+      responses:
+        '200':
+          description: ABHA Card image
+          content:
+            image/png:
+              schema:
+                type: string
+                format: binary
+            image/svg+xml:
+              schema:
+                type: string
+
+  /profile/account/request/otp:
+    post:
+      tags: [ABHA Profile]
+      summary: Send OTP for Profile Actions
+      operationId: profileRequestOtp
+      description: |
+        Send OTP for authenticated profile management actions.
+
+        **Scope → Action mapping:**
+
+        | scope | loginHint | Action |
+        |-------|-----------|--------|
+        | `["abha-profile","mobile-verify"]` | `mobile` | Update mobile number |
+        | `["abha-profile","email-verify"]` | `email` | Update email |
+        | `["abha-profile","re-kyc"]` | `abha-number` | Re-KYC |
+        | `["abha-profile","change-password"]` | `password` | Change password (OTP path) |
+        | `["abha-profile","delete"]` | `abha-number` | Delete ABHA |
+        | `["abha-profile","de-activate"]` | `abha-number` | Deactivate ABHA |
+      parameters:
+        - $ref: '#/components/parameters/RequestId'
+        - $ref: '#/components/parameters/Timestamp'
+      security:
+        - bearerAuth: []
+        - xToken: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProfileOtpRequest'
+            examples:
+              update_mobile:
+                summary: Update mobile number
+                value:
+                  scope: ["abha-profile", "mobile-verify"]
+                  loginHint: "mobile"
+                  loginId: "{{RSA_encrypted_new_mobile}}"
+              update_email:
+                summary: Update email address
+                value:
+                  scope: ["abha-profile", "email-verify"]
+                  loginHint: "email"
+                  loginId: "{{RSA_encrypted_email}}"
+                  otpSystem: "abdm"
+              re_kyc:
+                summary: Re-KYC via Aadhaar OTP
+                value:
+                  scope: ["abha-profile", "re-kyc"]
+                  loginHint: "abha-number"
+                  loginId: "{{RSA_encrypted_abha_number}}"
+                  otpSystem: "aadhaar"
+              change_password_otp:
+                summary: Change password (via OTP)
+                value:
+                  scope: ["abha-profile", "change-password"]
+                  loginHint: "password"
+                  loginId: "{{RSA_encrypted_current_password}}"
+                  otpSystem: "aadhaar"
+              delete_aadhaar_otp:
+                summary: Delete ABHA via Aadhaar OTP
+                value:
+                  scope: ["abha-profile", "delete"]
+                  loginHint: "abha-number"
+                  loginId: "{{RSA_encrypted_abha_number}}"
+                  otpSystem: "aadhaar"
+              delete_abha_otp:
+                summary: Delete ABHA via ABHA OTP
+                value:
+                  scope: ["abha-profile", "delete"]
+                  loginHint: "abha-number"
+                  loginId: "{{RSA_encrypted_abha_number}}"
+                  otpSystem: "abdm"
+              deactivate:
+                summary: Deactivate ABHA
+                value:
+                  scope: ["abha-profile", "de-activate"]
+                  loginHint: "abha-number"
+                  loginId: "{{RSA_encrypted_abha_number}}"
+      responses:
+        '200':
+          description: OTP sent
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TxnResponse'
+
+  /profile/account/verify:
+    post:
+      tags: [ABHA Profile]
+      summary: Verify OTP / Password — Complete Profile Action
+      operationId: profileVerify
+      description: |
+        Complete a profile management action by verifying OTP or password.
+        The `scope` field in the request body identifies which action to perform.
+
+        **Supported actions:**
+
+        | scope | authMethods | Description |
+        |-------|-------------|-------------|
+        | `["abha-profile","mobile-verify"]` | `otp` | Confirm mobile update |
+        | `["abha-profile","email-verify"]` | `otp` | Confirm email update |
+        | `["abha-profile","re-kyc"]` | `otp` | Complete re-KYC |
+        | `["abha-profile","change-password"]` | `password` | Set/update password |
+        | `["abha-profile","change-password"]` | `otp` | Reset password via OTP |
+        | `["abha-profile","delete"]` | `otp` or `password` | Delete ABHA |
+        | `["abha-profile","de-activate"]` | `otp` or `password` | Deactivate ABHA |
+      parameters:
+        - $ref: '#/components/parameters/RequestId'
+        - $ref: '#/components/parameters/Timestamp'
+      security:
+        - bearerAuth: []
+        - xToken: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProfileVerifyRequest'
+            examples:
+              mobile_otp_verify:
+                summary: Confirm mobile update via OTP
+                value:
+                  scope: ["abha-profile", "mobile-verify"]
+                  authData:
+                    authMethods: ["otp"]
+                    otp:
+                      txnId: "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+                      otpValue: "{{RSA_encrypted_otp}}"
+              set_new_password:
+                summary: Set new password directly
+                value:
+                  scope: ["abha-profile", "change-password"]
+                  authData:
+                    authMethods: ["password"]
+                    password:
+                      value: "{{RSA_encrypted_new_password}}"
+              change_password:
+                summary: Change password via old password
+                value:
+                  scope: ["abha-profile", "change-password"]
+                  authData:
+                    authMethods: ["password"]
+                    password:
+                      value: "{{RSA_encrypted_old_password}}"
+                      newPassword: "{{RSA_encrypted_new_password}}"
+              reset_password_otp:
+                summary: Reset password after OTP
+                value:
+                  scope: ["abha-profile", "change-password"]
+                  authData:
+                    authMethods: ["otp"]
+                    otp:
+                      txnId: "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+                      otpValue: "{{RSA_encrypted_otp}}"
+                    password:
+                      newPassword: "{{RSA_encrypted_new_password}}"
+              delete_via_otp:
+                summary: Delete ABHA via OTP
+                value:
+                  scope: ["abha-profile", "delete"]
+                  authData:
+                    authMethods: ["otp"]
+                    otp:
+                      txnId: "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+                      otpValue: "{{RSA_encrypted_otp}}"
+              delete_via_password:
+                summary: Delete ABHA via password
+                value:
+                  scope: ["abha-profile", "delete"]
+                  authData:
+                    authMethods: ["password"]
+                    password:
+                      value: "{{RSA_encrypted_password}}"
+              deactivate_via_otp:
+                summary: Deactivate ABHA via OTP
+                value:
+                  scope: ["abha-profile", "de-activate"]
+                  authData:
+                    authMethods: ["otp"]
+                    otp:
+                      txnId: "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+                      otpValue: "{{RSA_encrypted_otp}}"
+      responses:
+        '200':
+          description: Action completed successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageResponse'
+
+  /profile/account/request/emailVerificationLink:
+    post:
+      tags: [ABHA Profile]
+      summary: Send Email Verification Link
+      operationId: sendEmailVerificationLink
+      description: Send a one-click email verification link. The user clicks it to verify their email — no OTP required.
+      parameters:
+        - $ref: '#/components/parameters/RequestId'
+        - $ref: '#/components/parameters/Timestamp'
+      security:
+        - bearerAuth: []
+        - xToken: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [scope, loginHint, loginId]
+              properties:
+                scope:
+                  type: array
+                  items:
+                    type: string
+                  example: ["abha-profile", "email-link-verify"]
+                loginHint:
+                  type: string
+                  enum: [email]
+                  example: "email"
+                loginId:
+                  type: string
+                  description: RSA-encrypted email address
+            example:
+              scope: ["abha-profile", "email-link-verify"]
+              loginHint: "email"
+              loginId: "{{RSA_encrypted_email}}"
+      responses:
+        '200':
+          description: Verification link sent to email
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageResponse'
+
+  /profile/account/request/logout:
+    get:
+      tags: [ABHA Profile]
+      summary: Logout
+      operationId: logout
+      description: Invalidate the current X-Token session.
+      parameters:
+        - $ref: '#/components/parameters/RequestId'
+        - $ref: '#/components/parameters/Timestamp'
+      security:
+        - bearerAuth: []
+        - xToken: []
+      responses:
+        '200':
+          description: Logged out successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageResponse'
+
+  /profile/account/request/token:
+    get:
+      tags: [ABHA Profile]
+      summary: Refresh X-Token
+      operationId: refreshXToken
+      description: Obtain a refreshed X-Token using the existing Bearer token.
+      parameters:
+        - $ref: '#/components/parameters/RequestId'
+        - $ref: '#/components/parameters/Timestamp'
+      responses:
+        '200':
+          description: Refreshed X-Token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                    description: Refreshed X-Token
+
+  # ──────────────────────────────────────────
+  # PHR / ABHA ADDRESS
+  # ──────────────────────────────────────────
+
+  /phr/web/login/abha/search:
+    post:
+      tags: [PHR & ABHA Address]
+      summary: Search ABHA Address — Get Auth Methods
+      operationId: phrSearchAbhaAddress
+      description: Look up available authentication methods for a given ABHA Address before login.
+      parameters:
+        - $ref: '#/components/parameters/RequestId'
+        - $ref: '#/components/parameters/Timestamp'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [abhaAddress]
+              properties:
+                abhaAddress:
+                  type: string
+                  example: "johnkumar@sbx"
+      responses:
+        '200':
+          description: Available authentication methods
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthMethodsResponse'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /phr/web/login/abha/request/otp:
+    post:
+      tags: [PHR & ABHA Address]
+      summary: Send OTP for ABHA Address Login
+      operationId: phrRequestOtp
+      description: |
+        Send OTP to login via ABHA Address.
+
+        | scope | loginHint | Method |
+        |-------|-----------|--------|
+        | `["abha-address-login","mobile-verify"]` | `abha-address` | Mobile OTP |
+        | `["abha-address-login","aadhaar-verify"]` | `abha-address` | Aadhaar OTP |
+        | `["abha-login","aadhaar-bio-verify"]` | `abha-address` | Fingerprint |
+        | `["abha-login","aadhaar-face-verify"]` | `abha-address` | Face |
+        | `["abha-login","aadhaar-iris-verify"]` | `abha-address` | Iris |
+      parameters:
+        - $ref: '#/components/parameters/RequestId'
+        - $ref: '#/components/parameters/Timestamp'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PhrOtpRequest'
+            examples:
+              mobile_otp:
+                summary: Mobile OTP
+                value:
+                  scope: ["abha-address-login", "mobile-verify"]
+                  loginHint: "abha-address"
+                  loginId: "{{RSA_encrypted_abha_address}}"
+              aadhaar_otp:
+                summary: Aadhaar OTP
+                value:
+                  scope: ["abha-address-login", "aadhaar-verify"]
+                  loginHint: "abha-address"
+                  loginId: "{{RSA_encrypted_abha_address}}"
+      responses:
+        '200':
+          description: OTP sent
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TxnResponse'
+
+  /phr/web/login/abha/verify:
+    post:
+      tags: [PHR & ABHA Address]
+      summary: Verify OTP / Biometric for ABHA Address Login
+      operationId: phrVerify
+      description: Complete the ABHA Address login with OTP or biometric.
+      parameters:
+        - $ref: '#/components/parameters/RequestId'
+        - $ref: '#/components/parameters/Timestamp'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PhrVerifyRequest'
+            examples:
+              mobile_otp_verify:
+                summary: Mobile OTP verification
+                value:
+                  scope: ["abha-address-login", "mobile-verify"]
+                  authData:
+                    authMethods: ["otp"]
+                    otp:
+                      txnId: "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+                      otpValue: "{{RSA_encrypted_otp}}"
+              biometric_verify:
+                summary: Fingerprint verification
+                value:
+                  scope: ["abha-login", "aadhaar-bio-verify"]
+                  authData:
+                    authMethods: ["bio"]
+                    bio:
+                      txnId: "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+                      bioType: "FMR"
+                      pid: "{{encrypted_PID_block}}"
+      responses:
+        '200':
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginVerifyResponse'
+
+  /phr/web/login/profile/abha-profile:
+    get:
+      tags: [PHR & ABHA Address]
+      summary: Get PHR Profile
+      operationId: getPhrProfile
+      description: Retrieve the authenticated user's PHR profile after ABHA Address login.
+      parameters:
+        - $ref: '#/components/parameters/RequestId'
+        - $ref: '#/components/parameters/Timestamp'
+      security:
+        - bearerAuth: []
+        - xToken: []
+      responses:
+        '200':
+          description: PHR profile details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PhrProfileResponse'
+
+  /phr/web/login/profile/abha/phr-card:
+    get:
+      tags: [PHR & ABHA Address]
+      summary: Download PHR Card
+      operationId: downloadPhrCard
+      description: Download the PHR / ABHA Address card image.
+      parameters:
+        - $ref: '#/components/parameters/RequestId'
+        - $ref: '#/components/parameters/Timestamp'
+      security:
+        - bearerAuth: []
+        - xToken: []
+      responses:
+        '200':
+          description: PHR Card image (PNG)
+          content:
+            image/png:
+              schema:
+                type: string
+                format: binary
+
+  /phr/web/login/profile/abha/qr-code:
+    get:
+      tags: [PHR & ABHA Address]
+      summary: Download PHR QR Code
+      operationId: downloadPhrQrCode
+      description: Download the PHR QR code image.
+      parameters:
+        - $ref: '#/components/parameters/RequestId'
+        - $ref: '#/components/parameters/Timestamp'
+      security:
+        - bearerAuth: []
+        - xToken: []
+      responses:
+        '200':
+          description: QR Code image
+          content:
+            image/png:
+              schema:
+                type: string
+                format: binary
+
+  # ──────────────────────────────────────────
+  # BENEFIT APIs
+  # ──────────────────────────────────────────
+
+  /profile/benefit/linkAndDelink:
+    post:
+      tags: [Benefit APIs]
+      summary: Link or De-link Benefit Scheme
+      operationId: benefitLinkDelink
+      description: |
+        Link or de-link an ABHA number to a government/insurance benefit scheme.
+
+        **Identification methods:**
+        - **X-Token only** — user already logged in, no extra `loginHint` needed
+        - **ABHA Number** — `loginHint: "abha-number"`, `loginId: encryptedABHANumber`
+        - **xmlUid** — `loginHint: "xmlUid"`, `loginId: encryptedXmlUid`
+      parameters:
+        - $ref: '#/components/parameters/RequestId'
+        - $ref: '#/components/parameters/Timestamp'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BenefitLinkRequest'
+            examples:
+              link_xtoken:
+                summary: Link via active X-Token session
+                value:
+                  scope: ["link"]
+              link_abha_number:
+                summary: Link via ABHA Number
+                value:
+                  scope: ["link"]
+                  loginHint: "abha-number"
+                  loginId: "{{RSA_encrypted_abha_number}}"
+              delink_xmluid:
+                summary: De-link via xmlUid
+                value:
+                  scope: ["de-link"]
+                  loginHint: "xmlUid"
+                  loginId: "{{RSA_encrypted_xmlUid}}"
+      responses:
+        '200':
+          description: Link / de-link successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageResponse'
+
+  /profile/benefit/search:
+    post:
+      tags: [Benefit APIs]
+      summary: Search Benefit Status
+      operationId: benefitSearch
+      description: Search for benefit scheme details associated with an ABHA number or xmlUid.
+      parameters:
+        - $ref: '#/components/parameters/RequestId'
+        - $ref: '#/components/parameters/Timestamp'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BenefitSearchRequest'
+            examples:
+              by_abha:
+                summary: Search by ABHA Number
+                value:
+                  scope: ["search"]
+                  loginHint: "abha-number"
+                  loginId: "{{RSA_encrypted_abha_number}}"
+              by_xmluid:
+                summary: Search by xmlUid
+                value:
+                  scope: ["search"]
+                  loginHint: "xmlUid"
+                  loginId: "{{RSA_encrypted_xmlUid}}"
+      responses:
+        '200':
+          description: Benefit details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BenefitSearchResponse'
+
+  /profile/benefit/abha/{abhaNumber}:
+    get:
+      tags: [Benefit APIs]
+      summary: Get Benefit Details by ABHA Number
+      operationId: getBenefitByAbha
+      description: Directly retrieve benefit details for a specific ABHA number.
+      parameters:
+        - name: abhaNumber
+          in: path
+          required: true
+          description: 14-digit ABHA number (digits only, no hyphens)
+          schema:
+            type: string
+            pattern: '^\d{14}$'
+            example: "91123456789012"
+        - $ref: '#/components/parameters/RequestId'
+        - $ref: '#/components/parameters/Timestamp'
+      responses:
+        '200':
+          description: Benefit details for the ABHA number
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BenefitSearchResponse'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  # ──────────────────────────────────────────
+  # GATEWAY & BRIDGE
+  # ──────────────────────────────────────────
+
+  /gateway/v3/bridge/url:
+    patch:
+      tags: [Gateway & Bridge]
+      summary: Update HIP/HIU Bridge Callback URL
+      operationId: updateBridgeUrl
+      description: |
+        Register the HIP/HIU callback URL with the ABDM Gateway.
+        All gateway push notifications (e.g. patient-share) are delivered to this URL.
+        **Server:** `https://dev.abdm.gov.in/api/hiecm`
+      servers:
+        - url: https://dev.abdm.gov.in/api/hiecm
+          description: ABDM Gateway
+      parameters:
+        - $ref: '#/components/parameters/RequestId'
+        - $ref: '#/components/parameters/Timestamp'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [url]
+              properties:
+                url:
+                  type: string
+                  format: uri
+                  description: HTTPS callback URL for the HIP/HIU
+                  example: "https://your-hip.example.com/abdm/callback"
+      responses:
+        '200':
+          description: Bridge URL updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageResponse'
+
+  /gateway/v3/bridge-services:
+    get:
+      tags: [Gateway & Bridge]
+      summary: List All Bridge Services
+      operationId: listBridgeServices
+      description: |
+        List all HIP/HIU services registered under the authenticated bridge.
+        **Server:** `https://dev.abdm.gov.in/api/hiecm`
+      servers:
+        - url: https://dev.abdm.gov.in/api/hiecm
+          description: ABDM Gateway
+      parameters:
+        - $ref: '#/components/parameters/RequestId'
+        - $ref: '#/components/parameters/Timestamp'
+      responses:
+        '200':
+          description: List of registered bridge services
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BridgeServicesResponse'
+
+  /gateway/v3/bridge-service/serviceId/{serviceId}:
+    get:
+      tags: [Gateway & Bridge]
+      summary: Find Bridge Service by Service ID
+      operationId: getBridgeServiceById
+      description: |
+        Look up a specific registered HIP/HIU service by its service ID.
+        **Server:** `https://dev.abdm.gov.in/api/hiecm`
+      servers:
+        - url: https://dev.abdm.gov.in/api/hiecm
+          description: ABDM Gateway
+      parameters:
+        - name: serviceId
+          in: path
+          required: true
+          description: Service identifier
+          schema:
+            type: string
+            example: "CityHospital_HIP"
+        - $ref: '#/components/parameters/RequestId'
+        - $ref: '#/components/parameters/Timestamp'
+      responses:
+        '200':
+          description: Service details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BridgeServiceDetail'
+
+  /gateway/v3/certs:
+    get:
+      tags: [Gateway & Bridge]
+      summary: Get Gateway JWKS Certificates
+      operationId: getGatewayCerts
+      description: |
+        Get the JSON Web Key Set (JWKS) to verify JWT signatures in gateway callbacks.
+        **Server:** `https://dev.abdm.gov.in/api/hiecm`
+      servers:
+        - url: https://dev.abdm.gov.in/api/hiecm
+          description: ABDM Gateway
+      security: []
+      responses:
+        '200':
+          description: JWKS response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JwksResponse'
+
+  /gateway/v3/.well-known/openid-configuration:
+    get:
+      tags: [Gateway & Bridge]
+      summary: Get OIDC Discovery Document
+      operationId: getOidcConfig
+      description: |
+        OIDC discovery endpoint for the ABDM Gateway.
+        **Server:** `https://dev.abdm.gov.in/api/hiecm`
+      servers:
+        - url: https://dev.abdm.gov.in/api/hiecm
+          description: ABDM Gateway
+      security: []
+      responses:
+        '200':
+          description: OpenID Connect configuration
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OidcConfigResponse'
+
+  /v1/bridges/MutipleHRPAddUpdateServices:
+    post:
+      tags: [Gateway & Bridge]
+      summary: Register / Update HIP-HIU Services (Facility Registry)
+      operationId: registerHrpServices
+      description: |
+        Register or update HIP/HIU services in the Facility Registry.
+        Must be called after updating the bridge URL.
+        **Server:** `https://facilitysbx.abdm.gov.in`
+      servers:
+        - url: https://facilitysbx.abdm.gov.in
+          description: Facility Registry
+      parameters:
+        - $ref: '#/components/parameters/RequestId'
+        - $ref: '#/components/parameters/Timestamp'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterServicesRequest'
+            example:
+              facilityId: "IN0710000001"
+              facilityName: "City General Hospital"
+              HRP:
+                - bridgeId: "your-client-id"
+                  hipName: "City General Hospital"
+                  hipId: "CityGeneralHospital_HIP"
+                  hipType: "HOSPITAL"
+                  facilityName: "City General Hospital"
+      responses:
+        '200':
+          description: Services registered / updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageResponse'
+
+  # ──────────────────────────────────────────
+  # SCAN & SHARE
+  # ──────────────────────────────────────────
+
+  /patient-share/v3/share:
+    post:
+      tags: [Scan & Share]
+      summary: "[HIP Callback] Receive Patient Profile Share"
+      operationId: receivePatientShare
+      description: |
+        **This endpoint is implemented by the HIP** — the ABDM Gateway forwards the
+        patient's profile to the HIP's registered callback URL when the patient
+        scans the HIP's QR code and consents to share their profile.
+
+        The HIP must respond with a 2xx status and subsequently call `POST /patient-share/v3/on-share`.
+      parameters:
+        - $ref: '#/components/parameters/RequestId'
+        - $ref: '#/components/parameters/Timestamp'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatientShareRequest'
+            example:
+              intent: "PROFILE_SHARE"
+              metaData:
+                hipId: "CityGeneralHospital_HIP"
+                context: "123"
+                hprId: "testhpr@hpr.abdm"
+              profile:
+                patient:
+                  abhaNumber: "91-1234-5678-9012"
+                  abhaAddress: "johnkumar@sbx"
+                  name: "John Kumar"
+                  gender: "M"
+                  dob: "1990-01-15"
+                  mobile: "9876543210"
+                  kycPhoto: "{{base64_photo}}"
+                  address:
+                    line: "123 Main Street"
+                    district: "Mumbai"
+                    state: "Maharashtra"
+                    pinCode: "400001"
+      responses:
+        '200':
+          description: Profile received by HIP
+
+  /patient-share/v3/on-share:
+    post:
+      tags: [Scan & Share]
+      summary: Send Share Acknowledgement (HIP → Gateway)
+      operationId: onShareAcknowledgement
+      description: |
+        HIP sends an acknowledgement back to the ABDM Gateway after receiving
+        and processing the patient's shared profile.
+        Typically includes a token/queue number assigned to the patient.
+        **Server:** `https://dev.abdm.gov.in/api/hiecm`
+      servers:
+        - url: https://dev.abdm.gov.in/api/hiecm
+          description: ABDM Gateway
+      parameters:
+        - $ref: '#/components/parameters/RequestId'
+        - $ref: '#/components/parameters/Timestamp'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OnShareRequest'
+            examples:
+              success:
+                summary: Successful acknowledgement with token
+                value:
+                  acknowledgement:
+                    status: "SUCCESS"
+                    abhaAddress: "johnkumar@sbx"
+                    profile:
+                      context: "123"
+                      tokenNumber: "TKN-0042"
+              failure:
+                summary: Failure acknowledgement
+                value:
+                  acknowledgement:
+                    status: "FAILURE"
+                    abhaAddress: "johnkumar@sbx"
+                    error:
+                      code: "HIP_ERROR_001"
+                      message: "Unable to process profile at this time"
+      responses:
+        '200':
+          description: Acknowledgement accepted by Gateway
+
+# ═══════════════════════════════════════════════════════════════════════
+# COMPONENTS
+# ═══════════════════════════════════════════════════════════════════════
+
+components:
+
+  # ──────────────────────────────────────────
+  # SECURITY SCHEMES
+  # ──────────────────────────────────────────
+
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: |
+        JWT Bearer token from `POST /api/hiecm/gateway/v3/sessions`.
+        Header: `Authorization: Bearer {accessToken}`
+    xToken:
+      type: apiKey
+      in: header
+      name: X-Token
+      description: |
+        Short-lived session token returned in login/verify responses.
+        Required for all `/profile/account/*` operations.
+        Header: `X-Token: {token}`
+
+  # ──────────────────────────────────────────
+  # REUSABLE PARAMETERS
+  # ──────────────────────────────────────────
+
+  parameters:
+    RequestId:
+      name: REQUEST-ID
+      in: header
+      required: true
+      description: |
+        Unique UUID v4 per request. Used for idempotency and distributed tracing.
+        Generate a fresh UUID for every call.
+      schema:
+        type: string
+        format: uuid
+        example: "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+
+    Timestamp:
+      name: TIMESTAMP
+      in: header
+      required: true
+      description: ISO 8601 UTC timestamp of the request.
+      schema:
+        type: string
+        format: date-time
+        example: "2024-11-20T06:55:56.832Z"
+
+  # ──────────────────────────────────────────
+  # REUSABLE RESPONSES
+  # ──────────────────────────────────────────
+
+  responses:
+    BadRequest:
+      description: Bad Request — invalid scope, loginHint, or encrypted field
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            invalid_scope:
+              value:
+                scope: "Invalid Scope"
+                timestamp: "2024-05-10 11:13:04"
+            invalid_login_id:
+              value:
+                loginId: "Invalid LoginId"
+                timestamp: "2024-05-10 11:15:14"
+            invalid_login_hint:
+              value:
+                loginHint: "Invalid LoginHint"
+                timestamp: "2024-05-10 11:16:00"
+
+    Unauthorized:
+      description: Unauthorized — missing, invalid, or expired Bearer token
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+
+  # ──────────────────────────────────────────
+  # SCHEMAS
+  # ──────────────────────────────────────────
+
+  schemas:
+
+    # ── Authentication ──────────────────────
+
+    SessionRequest:
+      type: object
+      required: [clientId, clientSecret, grantType]
+      properties:
+        clientId:
+          type: string
+          description: Client ID provided during HIP/HIU registration
+          example: "NHATEST_001"
+        clientSecret:
+          type: string
+          description: Client secret provided during registration
+          example: "your-client-secret"
+        grantType:
+          type: string
+          enum: [client_credentials]
+          description: OAuth 2.0 grant type — always `client_credentials`
+          example: "client_credentials"
+
+    SessionResponse:
+      type: object
+      properties:
+        accessToken:
+          type: string
+          description: JWT Bearer token for API authentication
+        tokenType:
+          type: string
+          example: "Bearer"
+        expiresIn:
+          type: integer
+          description: Token expiry duration in seconds
+          example: 1800
+        refreshToken:
+          type: string
+          nullable: true
+
+    CertificateResponse:
+      type: object
+      properties:
+        publicKey:
+          type: string
+          description: |
+            RSA public key in PEM format. Use this to encrypt:
+            Aadhaar, Mobile, OTP, Password, ABHA Number, Email, Photos.
+          example: "-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9...\n-----END PUBLIC KEY-----"
+
+    # ── Common / Shared ──────────────────────
+
+    TxnResponse:
+      type: object
+      properties:
+        txnId:
+          type: string
+          format: uuid
+          description: |
+            Transaction ID — must be passed back in the subsequent verification call.
+            Valid for a limited time (typically 10 minutes).
+          example: "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+        message:
+          type: string
+          example: "OTP sent successfully"
+
+    MessageResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Operation completed successfully"
+
+    ErrorResponse:
+      type: object
+      properties:
+        code:
+          type: string
+          description: Machine-readable error code
+        message:
+          type: string
+          description: Human-readable error description
+        timestamp:
+          type: string
+          description: Error timestamp
+        details:
+          type: object
+          description: Additional field-level error details
+          additionalProperties: true
+
+    OtpData:
+      type: object
+      required: [txnId, otpValue]
+      description: OTP payload for verification requests
+      properties:
+        timeStamp:
+          type: string
+          format: date-time
+          description: Unix timestamp of OTP generation
+        txnId:
+          type: string
+          format: uuid
+          description: Transaction ID from the OTP request step
+        otpValue:
+          type: string
+          description: RSA-encrypted 6-digit OTP
+
+    PasswordData:
+      type: object
+      description: Password payload for authentication/change requests
+      properties:
+        value:
+          type: string
+          description: RSA-encrypted current password
+        newPassword:
+          type: string
+          description: RSA-encrypted new password (only for change-password actions)
+
+    TokenPair:
+      type: object
+      description: Authentication tokens returned on successful enrollment/login
+      properties:
+        token:
+          type: string
+          description: X-Token for profile operations (short-lived)
+        refreshToken:
+          type: string
+          description: Refresh token to obtain a new X-Token
+
+    # ── Enrollment ──────────────────────────
+
+    EnrollmentOtpRequest:
+      type: object
+      required: [scope, loginHint, loginId]
+      properties:
+        txnId:
+          type: string
+          description: Existing transaction ID (for mobile update flows; empty string for first call)
+          example: ""
+        scope:
+          type: array
+          description: Defines the enrollment sub-flow
+          items:
+            type: string
+            enum: [abha-enrol, mobile-verify, dl-flow]
+          minItems: 1
+          example: ["abha-enrol"]
+        loginHint:
+          type: string
+          description: Type of identifier provided in `loginId`
+          enum: [aadhaar, mobile]
+          example: "aadhaar"
+        loginId:
+          type: string
+          description: RSA-encrypted Aadhaar number or mobile number
+          example: "{{RSA_encrypted_aadhaar}}"
+        otpSystem:
+          type: string
+          description: |
+            OTP delivery channel:
+            - `aadhaar` — OTP to Aadhaar-linked mobile (via UIDAI)
+            - `abdm` — OTP to ABHA-registered mobile (via ABDM)
+          enum: [aadhaar, abdm]
+          example: "aadhaar"
+
+    EnrolByAadhaarRequest:
+      type: object
+      required: [authData]
+      properties:
+        authData:
+          type: object
+          required: [authMethods]
+          properties:
+            authMethods:
+              type: array
+              description: Authentication method(s) — determines which auth data object is required
+              items:
+                type: string
+                enum: [otp, bio, face, iris, child, demo_auth]
+              example: ["otp"]
+            otp:
+              $ref: '#/components/schemas/OtpData'
+            bio:
+              type: object
+              description: Fingerprint biometric data
+              required: [aadhaar, bioType, pid]
+              properties:
+                aadhaar:
+                  type: string
+                  description: RSA-encrypted Aadhaar number
+                bioType:
+                  type: string
+                  description: Biometric type — FMR (Fingerprint Minutiae Record)
+                  enum: [FMR, FIR]
+                  example: "FMR"
+                pid:
+                  type: string
+                  description: Encrypted PID block from certified biometric device
+            face:
+              type: object
+              description: Face authentication data
+              required: [aadhaar, pid]
+              properties:
+                aadhaar:
+                  type: string
+                  description: RSA-encrypted Aadhaar number
+                pid:
+                  type: string
+                  description: Encrypted face PID block
+            iris:
+              type: object
+              description: Iris scan authentication data
+              required: [aadhaar, pid]
+              properties:
+                aadhaar:
+                  type: string
+                  description: RSA-encrypted Aadhaar number
+                pid:
+                  type: string
+                  description: Encrypted iris PID block
+            child:
+              type: object
+              description: Child ABHA creation data (parent must be authenticated)
+              required: [dayOfBirth, monthOfBirth, yearOfBirth, firstName, lastName, gender]
+              properties:
+                dayOfBirth:
+                  type: string
+                  example: "15"
+                monthOfBirth:
+                  type: string
+                  example: "03"
+                yearOfBirth:
+                  type: string
+                  example: "2015"
+                firstName:
+                  type: string
+                  example: "Ravi"
+                middleName:
+                  type: string
+                  example: ""
+                lastName:
+                  type: string
+                  example: "Kumar"
+                gender:
+                  type: string
+                  enum: [M, F, O]
+                  example: "M"
+                parentAbhaNumber:
+                  type: string
+                  description: Parent's 14-digit ABHA Number
+                  example: "91-1234-5678-9012"
+                parentAbhaAddress:
+                  type: string
+                  description: Parent's ABHA Address (alternative to parentAbhaNumber)
+                  example: "parentuser@sbx"
+            demo_auth:
+              type: object
+              description: Demographic authentication data
+              required: [aadhaarNumber, name, dob, gender]
+              properties:
+                aadhaarNumber:
+                  type: string
+                  description: RSA-encrypted Aadhaar number
+                name:
+                  type: string
+                  description: Full name as per Aadhaar
+                  example: "John Kumar"
+                dob:
+                  type: string
+                  format: date
+                  description: Date of birth (YYYY-MM-DD)
+                  example: "1990-01-15"
+                gender:
+                  type: string
+                  enum: [M, F, O]
+                  example: "M"
+
+    EnrolmentResponse:
+      type: object
+      description: Response after successful ABHA creation
+      properties:
+        ABHANumber:
+          type: string
+          description: 14-digit ABHA Number (Health ID)
+          example: "91-1234-5678-9012"
+        name:
+          type: string
+          example: "John Kumar"
+        gender:
+          type: string
+          enum: [M, F, O]
+          example: "M"
+        dob:
+          type: string
+          format: date
+          example: "1990-01-15"
+        mobile:
+          type: string
+          example: "9876543210"
+        email:
+          type: string
+          nullable: true
+          example: "john.kumar@example.com"
+        txnId:
+          type: string
+          format: uuid
+          description: Transaction ID for subsequent enrollment steps (mobile update, ABHA Address)
+        tokens:
+          $ref: '#/components/schemas/TokenPair'
+        message:
+          type: string
+          example: "ABHA Number created successfully"
+        kycStatus:
+          type: string
+          enum: [VERIFIED, PROVISIONAL]
+          example: "VERIFIED"
+
+    AbdmAuthVerifyRequest:
+      type: object
+      description: OTP verification within enrollment sub-flows
+      required: [scope, authData]
+      properties:
+        scope:
+          type: array
+          items:
+            type: string
+          example: ["abha-enrol", "mobile-verify"]
+        authData:
+          type: object
+          required: [authMethods]
+          properties:
+            authMethods:
+              type: array
+              items:
+                type: string
+                enum: [otp]
+            otp:
+              $ref: '#/components/schemas/OtpData'
+
+    EnrolByDocumentRequest:
+      type: object
+      required: [txnId, documentType, documentId, firstName, lastName, dob, gender]
+      properties:
+        txnId:
+          type: string
+          format: uuid
+          description: Transaction ID from the DL flow OTP verification step
+        documentType:
+          type: string
+          enum: [DRIVING_LICENCE]
+          description: Document type (currently only Driving Licence supported)
+        documentId:
+          type: string
+          description: RSA-encrypted driving licence number
+        firstName:
+          type: string
+          example: "John"
+        middleName:
+          type: string
+          nullable: true
+          example: ""
+        lastName:
+          type: string
+          example: "Kumar"
+        dob:
+          type: string
+          format: date
+          description: Date of birth as on the driving licence
+          example: "1990-01-15"
+        gender:
+          type: string
+          enum: [M, F, O]
+          example: "M"
+        address:
+          type: string
+          description: Street address
+          example: "123 Main Street, Andheri West"
+        districtCode:
+          type: string
+          description: LGD district code
+          example: "501"
+        stateCode:
+          type: string
+          description: LGD state code
+          example: "27"
+        pinCode:
+          type: string
+          description: 6-digit PIN code
+          example: "400053"
+
+    DLEnrolmentResponse:
+      type: object
+      properties:
+        enrolmentNumber:
+          type: string
+          description: |
+            Enrolment number issued for DL-based registration.
+            This is NOT a full ABHA Number — full ABHA is created after KYC verification.
+          example: "EN-9876543210-001"
+        txnId:
+          type: string
+          format: uuid
+        message:
+          type: string
+          example: "Enrolment number created successfully"
+
+    SuggestionResponse:
+      type: object
+      properties:
+        abhaAddressList:
+          type: array
+          description: List of available ABHA Address suggestions
+          items:
+            type: string
+            example: "johnkumar@sbx"
+          example: ["johnkumar@sbx", "john.kumar@sbx", "jkumar1990@sbx"]
+
+    SetAbhaAddressRequest:
+      type: object
+      required: [txnId, abhaAddress]
+      properties:
+        txnId:
+          type: string
+          format: uuid
+          description: Transaction ID from enrollment flow
+        abhaAddress:
+          type: string
+          description: Chosen ABHA Address (must be from suggestion list or custom)
+          example: "johnkumar@sbx"
+        preferred:
+          type: integer
+          enum: [1]
+          description: Set to 1 to mark as preferred
+          example: 1
+
+    AbhaAddressResponse:
+      type: object
+      properties:
+        ABHAAddress:
+          type: string
+          example: "johnkumar@sbx"
+        health_id:
+          type: string
+          example: "johnkumar@sbx"
+
+    ChildrenResponse:
+      type: object
+      properties:
+        children:
+          type: array
+          items:
+            type: object
+            properties:
+              ABHANumber:
+                type: string
+                example: "91-9999-8888-7777"
+              name:
+                type: string
+                example: "Ravi Kumar"
+              dob:
+                type: string
+                format: date
+              gender:
+                type: string
+                enum: [M, F, O]
+              abhaAddress:
+                type: string
+
+    # ── Login & Verification ─────────────────
+
+    LoginOtpRequest:
+      type: object
+      required: [scope, loginHint, loginId]
+      properties:
+        scope:
+          type: array
+          description: |
+            Defines login method and optional modifiers.
+            First element is always `"abha-login"` except for find-abha flows.
+          items:
+            type: string
+            enum:
+              - abha-login
+              - aadhaar-verify
+              - mobile-verify
+              - password-verify
+              - aadhaar-face-verify
+              - aadhaar-bio-verify
+              - aadhaar-iris-verify
+              - search-abha
+              - re-activate
+              - retrieval
+          minItems: 2
+          example: ["abha-login", "aadhaar-verify"]
+        loginHint:
+          type: string
+          description: Type of identifier in `loginId`
+          enum: [abha-number, mobile, aadhaar, index]
+          example: "abha-number"
+        loginId:
+          type: string
+          description: RSA-encrypted identifier (ABHA Number / mobile / Aadhaar / search index)
+
+    LoginVerifyRequest:
+      type: object
+      required: [scope, authData]
+      properties:
+        scope:
+          type: array
+          items:
+            type: string
+          example: ["abha-login", "aadhaar-verify"]
+        authData:
+          type: object
+          required: [authMethods]
+          properties:
+            authMethods:
+              type: array
+              description: Must match the method initiated in the OTP/login request step
+              items:
+                type: string
+                enum: [otp, password, bio, face, iris]
+            otp:
+              $ref: '#/components/schemas/OtpData'
+            password:
+              $ref: '#/components/schemas/PasswordData'
+            bio:
+              type: object
+              description: Fingerprint PID block
+              properties:
+                txnId:
+                  type: string
+                  format: uuid
+                bioType:
+                  type: string
+                  enum: [FMR, FIR]
+                pid:
+                  type: string
+                  description: Encrypted fingerprint PID block
+            face:
+              type: object
+              description: Face authentication PID block
+              properties:
+                txnId:
+                  type: string
+                  format: uuid
+                pid:
+                  type: string
+                  description: Encrypted face PID block
+            iris:
+              type: object
+              description: Iris scan PID block
+              properties:
+                txnId:
+                  type: string
+                  format: uuid
+                pid:
+                  type: string
+                  description: Encrypted iris PID block
+
+    LoginVerifyResponse:
+      type: object
+      properties:
+        token:
+          type: string
+          description: X-Token for profile operations
+        refreshToken:
+          type: string
+          description: Refresh token
+        expiresIn:
+          type: integer
+          description: X-Token expiry in seconds
+          example: 1800
+        refreshExpiresIn:
+          type: integer
+          description: Refresh token expiry in seconds
+          example: 86400
+        accounts:
+          type: array
+          nullable: true
+          description: |
+            Present only when `loginHint: "mobile"` and multiple ABHAs are linked.
+            In this case, call `POST /profile/login/verify/user` to select one.
+          items:
+            type: object
+            properties:
+              ABHANumber:
+                type: string
+                example: "91-1234-5678-9012"
+              name:
+                type: string
+                example: "John Kumar"
+              mobile:
+                type: string
+                example: "9876543210"
+              kycStatus:
+                type: string
+                enum: [VERIFIED, PROVISIONAL, KYC_VERIFIED]
+
+    SelectUserRequest:
+      type: object
+      required: [ABHANumber, txnId]
+      properties:
+        ABHANumber:
+          type: string
+          description: ABHA number selected from the accounts list
+          example: "91-1234-5678-9012"
+        txnId:
+          type: string
+          format: uuid
+          description: Transaction ID from the verify step
+
+    SearchProfileResponse:
+      type: object
+      properties:
+        ABHANumber:
+          type: string
+          example: "91-1234-5678-9012"
+        name:
+          type: string
+          example: "John Kumar"
+        kycStatus:
+          type: string
+          enum: [VERIFIED, PROVISIONAL, KYC_VERIFIED]
+        gender:
+          type: string
+          enum: [M, F, O]
+        mobile:
+          type: string
+          example: "987XXXXX10"
+          description: Partially masked mobile number
+
+    AbhaSearchResponse:
+      type: object
+      properties:
+        index:
+          type: string
+          description: |
+            Opaque reference value to use as `loginId` with `loginHint: "index"`
+            in the subsequent `POST /profile/login/request/otp` call.
+
+    # ── ABHA Profile ─────────────────────────
+
+    ProfileResponse:
+      type: object
+      description: Full ABHA profile
+      properties:
+        ABHANumber:
+          type: string
+          example: "91-1234-5678-9012"
+        healthIdNumber:
+          type: string
+          example: "91-1234-5678-9012"
+        firstName:
+          type: string
+          example: "John"
+        middleName:
+          type: string
+          nullable: true
+          example: ""
+        lastName:
+          type: string
+          example: "Kumar"
+        name:
+          type: string
+          example: "John Kumar"
+        gender:
+          type: string
+          enum: [M, F, O]
+          example: "M"
+        dob:
+          type: string
+          format: date
+          example: "1990-01-15"
+        mobile:
+          type: string
+          example: "9876543210"
+        email:
+          type: string
+          format: email
+          nullable: true
+          example: "john.kumar@example.com"
+        abhaAddress:
+          type: string
+          description: Primary ABHA Address
+          example: "johnkumar@sbx"
+        kycStatus:
+          type: string
+          enum: [VERIFIED, PROVISIONAL, KYC_VERIFIED]
+          example: "VERIFIED"
+        accountStatus:
+          type: string
+          enum: [ACTIVE, DEACTIVATED, DELETED]
+          example: "ACTIVE"
+        profilePhoto:
+          type: string
+          nullable: true
+          description: Base64-encoded profile photo
+        address:
+          type: object
+          properties:
+            line:
+              type: string
+              example: "123 Main Street"
+            district:
+              type: string
+              example: "Mumbai"
+            state:
+              type: string
+              example: "Maharashtra"
+            pinCode:
+              type: string
+              example: "400001"
+        districtName:
+          type: string
+          example: "Mumbai Suburban"
+        stateName:
+          type: string
+          example: "Maharashtra"
+        pinCode:
+          type: string
+          example: "400001"
+
+    UpdateProfileRequest:
+      type: object
+      description: Profile update payload — provide only the fields to update
+      properties:
+        abhaNumber:
+          type: string
+          description: Required for benefit-program initiated updates
+          example: "91-1234-5678-9012"
+        mobile:
+          type: string
+          description: Mobile number (plain text for benefit updates)
+          example: "9876543210"
+        accountStatus:
+          type: string
+          enum: [ACTIVE]
+          description: Set to ACTIVE to reactivate (benefit programs only)
+        profilePhoto:
+          type: string
+          description: RSA-encrypted base64 photo (for self-service updates)
+        dob:
+          type: string
+          format: date
+          description: Date of birth (for child ABHA updates)
+        name:
+          type: string
+          description: Full name (for child ABHA updates)
+        gender:
+          type: string
+          enum: [M, F, O]
+          description: Gender (for child ABHA updates)
+
+    ProfileOtpRequest:
+      type: object
+      required: [scope, loginHint, loginId]
+      description: OTP request for profile management actions
+      properties:
+        scope:
+          type: array
+          description: First element is `"abha-profile"`, second defines the action
+          items:
+            type: string
+            enum: [abha-profile, mobile-verify, email-verify, re-kyc, change-password, delete, de-activate]
+          minItems: 2
+          example: ["abha-profile", "mobile-verify"]
+        loginHint:
+          type: string
+          enum: [abha-number, mobile, email, password]
+        loginId:
+          type: string
+          description: RSA-encrypted identifier (new mobile / new email / ABHA Number / current password)
+        otpSystem:
+          type: string
+          enum: [aadhaar, abdm]
+          description: OTP delivery channel (`aadhaar` for UIDAI, `abdm` for ABDM)
+          example: "abdm"
+
+    ProfileVerifyRequest:
+      type: object
+      required: [scope, authData]
+      description: OTP or password verification for profile management actions
+      properties:
+        scope:
+          type: array
+          items:
+            type: string
+          example: ["abha-profile", "mobile-verify"]
+        authData:
+          type: object
+          required: [authMethods]
+          properties:
+            authMethods:
+              type: array
+              items:
+                type: string
+                enum: [otp, password]
+            otp:
+              $ref: '#/components/schemas/OtpData'
+            password:
+              $ref: '#/components/schemas/PasswordData'
+
+    # ── PHR & ABHA Address ───────────────────
+
+    AuthMethodsResponse:
+      type: object
+      properties:
+        authMethods:
+          type: array
+          description: Authentication methods available for this ABHA Address
+          items:
+            type: string
+            enum: [MOBILE_OTP, AADHAAR_OTP, PASSWORD, BIOMETRIC_FACE, BIOMETRIC_FINGERPRINT, BIOMETRIC_IRIS]
+          example: ["MOBILE_OTP", "AADHAAR_OTP"]
+
+    PhrOtpRequest:
+      type: object
+      required: [scope, loginHint, loginId]
+      properties:
+        scope:
+          type: array
+          items:
+            type: string
+          example: ["abha-address-login", "mobile-verify"]
+        loginHint:
+          type: string
+          enum: [abha-address]
+          example: "abha-address"
+        loginId:
+          type: string
+          description: RSA-encrypted ABHA Address
+
+    PhrVerifyRequest:
+      type: object
+      required: [scope, authData]
+      properties:
+        scope:
+          type: array
+          items:
+            type: string
+          example: ["abha-address-login", "mobile-verify"]
+        authData:
+          type: object
+          required: [authMethods]
+          properties:
+            authMethods:
+              type: array
+              items:
+                type: string
+                enum: [otp, bio, face, iris]
+            otp:
+              $ref: '#/components/schemas/OtpData'
+            bio:
+              type: object
+              properties:
+                txnId:
+                  type: string
+                bioType:
+                  type: string
+                  enum: [FMR]
+                pid:
+                  type: string
+            face:
+              type: object
+              properties:
+                txnId:
+                  type: string
+                pid:
+                  type: string
+            iris:
+              type: object
+              properties:
+                txnId:
+                  type: string
+                pid:
+                  type: string
+
+    PhrProfileResponse:
+      type: object
+      properties:
+        ABHAAddress:
+          type: string
+          example: "johnkumar@sbx"
+        ABHANumber:
+          type: string
+          example: "91-1234-5678-9012"
+        name:
+          type: string
+          example: "John Kumar"
+        gender:
+          type: string
+          enum: [M, F, O]
+        dob:
+          type: string
+          format: date
+        mobile:
+          type: string
+          example: "987XXXXX10"
+        email:
+          type: string
+          nullable: true
+        profilePhoto:
+          type: string
+          nullable: true
+          description: Base64-encoded profile photo
+
+    # ── Benefit APIs ─────────────────────────
+
+    BenefitLinkRequest:
+      type: object
+      required: [scope]
+      properties:
+        scope:
+          type: array
+          items:
+            type: string
+            enum: [link, de-link]
+          example: ["link"]
+        loginHint:
+          type: string
+          enum: [abha-number, xmlUid]
+          description: |
+            Optional — if omitted, the active X-Token session is used for identification.
+            Required when making a server-to-server call without a user session.
+        loginId:
+          type: string
+          description: RSA-encrypted ABHA Number or xmlUid
+
+    BenefitSearchRequest:
+      type: object
+      required: [scope, loginHint, loginId]
+      properties:
+        scope:
+          type: array
+          items:
+            type: string
+          example: ["search"]
+        loginHint:
+          type: string
+          enum: [abha-number, xmlUid]
+        loginId:
+          type: string
+          description: RSA-encrypted identifier
+
+    BenefitSearchResponse:
+      type: object
+      properties:
+        ABHANumber:
+          type: string
+          example: "91-1234-5678-9012"
+        name:
+          type: string
+          example: "John Kumar"
+        benefits:
+          type: array
+          items:
+            type: object
+            properties:
+              schemeId:
+                type: string
+                description: Unique identifier for the benefit scheme
+                example: "PMJAY-2024"
+              schemeName:
+                type: string
+                example: "Pradhan Mantri Jan Arogya Yojana"
+              status:
+                type: string
+                enum: [ACTIVE, INACTIVE, PENDING]
+              linkedAt:
+                type: string
+                format: date-time
+              xmlUid:
+                type: string
+                description: External UID from the benefit program
+
+    # ── Gateway & Bridge ─────────────────────
+
+    BridgeServicesResponse:
+      type: object
+      properties:
+        services:
+          type: array
+          items:
+            $ref: '#/components/schemas/BridgeServiceDetail'
+
+    BridgeServiceDetail:
+      type: object
+      properties:
+        serviceId:
+          type: string
+          example: "CityHospital_HIP"
+        bridgeId:
+          type: string
+          example: "your-client-id"
+        serviceType:
+          type: string
+          enum: [HIP, HIU, HRP]
+          example: "HIP"
+        serviceName:
+          type: string
+          example: "City General Hospital"
+        facilityName:
+          type: string
+          example: "City General Hospital"
+        hipType:
+          type: string
+          enum: [HOSPITAL, CLINIC, LAB, PHARMACY, WELLNESS, DIAGNOSTIC, OTHER]
+        active:
+          type: boolean
+          example: true
+
+    JwksResponse:
+      type: object
+      properties:
+        keys:
+          type: array
+          items:
+            type: object
+            properties:
+              kid:
+                type: string
+                description: Key ID
+              kty:
+                type: string
+                description: Key type (e.g. RSA)
+                example: "RSA"
+              alg:
+                type: string
+                description: Algorithm (e.g. RS256)
+                example: "RS256"
+              use:
+                type: string
+                description: Key usage
+                example: "sig"
+              n:
+                type: string
+                description: RSA modulus (Base64URL encoded)
+              e:
+                type: string
+                description: RSA public exponent (Base64URL encoded)
+                example: "AQAB"
+
+    OidcConfigResponse:
+      type: object
+      properties:
+        issuer:
+          type: string
+          format: uri
+          example: "https://dev.ndhm.gov.in/auth/realms/central-registry"
+        authorization_endpoint:
+          type: string
+          format: uri
+        token_endpoint:
+          type: string
+          format: uri
+        jwks_uri:
+          type: string
+          format: uri
+        response_types_supported:
+          type: array
+          items:
+            type: string
+          example: ["code", "token", "id_token"]
+        subject_types_supported:
+          type: array
+          items:
+            type: string
+          example: ["public"]
+        id_token_signing_alg_values_supported:
+          type: array
+          items:
+            type: string
+          example: ["RS256"]
+
+    RegisterServicesRequest:
+      type: object
+      required: [facilityId, facilityName, HRP]
+      properties:
+        facilityId:
+          type: string
+          description: Facility identifier from the Health Facility Registry
+          example: "IN0710000001"
+        facilityName:
+          type: string
+          description: Name of the healthcare facility
+          example: "City General Hospital"
+        HRP:
+          type: array
+          description: List of HIP/HIU/HRP services to register
+          minItems: 1
+          items:
+            type: object
+            required: [bridgeId, hipName, hipId, hipType, facilityName]
+            properties:
+              bridgeId:
+                type: string
+                description: Your client ID (bridge identifier)
+                example: "your-client-id"
+              hipName:
+                type: string
+                description: Display name of the HIP
+                example: "City General Hospital"
+              hipId:
+                type: string
+                description: Unique HIP service identifier
+                example: "CityGeneralHospital_HIP"
+              hipType:
+                type: string
+                enum: [HOSPITAL, CLINIC, LAB, PHARMACY, WELLNESS, DIAGNOSTIC, OTHER]
+                example: "HOSPITAL"
+              facilityName:
+                type: string
+                example: "City General Hospital"
+
+    # ── Scan & Share ─────────────────────────
+
+    PatientShareRequest:
+      type: object
+      required: [intent, metaData, profile]
+      description: Patient profile share payload — forwarded by Gateway to HIP callback
+      properties:
+        intent:
+          type: string
+          enum: [PROFILE_SHARE]
+          description: Always `PROFILE_SHARE` for scan-and-share flows
+        metaData:
+          type: object
+          required: [hipId, context]
+          properties:
+            hipId:
+              type: string
+              description: HIP identifier embedded in the QR code
+              example: "CityGeneralHospital_HIP"
+            context:
+              type: string
+              description: Counter or context value from the QR code
+              example: "42"
+            hprId:
+              type: string
+              description: Health Professional Registry ID of the scanning clinician
+              example: "dr.smith@hpr.abdm"
+        profile:
+          type: object
+          properties:
+            patient:
+              $ref: '#/components/schemas/SharedPatientProfile'
+
+    SharedPatientProfile:
+      type: object
+      description: Patient profile data shared via Scan & Share
+      properties:
+        abhaNumber:
+          type: string
+          example: "91-1234-5678-9012"
+        abhaAddress:
+          type: string
+          example: "johnkumar@sbx"
+        name:
+          type: string
+          example: "John Kumar"
+        gender:
+          type: string
+          enum: [M, F, O]
+          example: "M"
+        dob:
+          type: string
+          format: date
+          example: "1990-01-15"
+        mobile:
+          type: string
+          example: "9876543210"
+        kycPhoto:
+          type: string
+          description: Base64-encoded KYC photo (may be omitted if patient declines)
+          nullable: true
+        address:
+          type: object
+          properties:
+            line:
+              type: string
+              example: "123 Main Street"
+            district:
+              type: string
+              example: "Mumbai"
+            state:
+              type: string
+              example: "Maharashtra"
+            pinCode:
+              type: string
+              example: "400001"
+
+    OnShareRequest:
+      type: object
+      required: [acknowledgement]
+      description: HIP acknowledgement sent to the Gateway after processing the patient profile
+      properties:
+        acknowledgement:
+          type: object
+          required: [status, abhaAddress]
+          properties:
+            status:
+              type: string
+              enum: [SUCCESS, FAILURE]
+              description: Processing result
+              example: "SUCCESS"
+            abhaAddress:
+              type: string
+              description: ABHA Address of the patient who shared their profile
+              example: "johnkumar@sbx"
+            profile:
+              type: object
+              description: Present on SUCCESS — echoes context and provides assigned token
+              properties:
+                context:
+                  type: string
+                  description: Context value from the original share request
+                  example: "42"
+                tokenNumber:
+                  type: string
+                  description: Queue/token number assigned to the patient by the HIP
+                  example: "TKN-0042"
+            error:
+              type: object
+              description: Present on FAILURE
+              properties:
+                code:
+                  type: string
+                  example: "HIP_ERROR_001"
+                message:
+                  type: string
+                  example: "Unable to process at this time"
