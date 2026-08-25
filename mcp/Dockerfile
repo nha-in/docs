@@ -9,10 +9,10 @@ FROM gcr.io/distroless/static-debian12
 COPY --from=build /docs-mcp /docs-mcp
 # catalogue.db is produced by cmd/indexer in CI and copied in at image build.
 COPY catalogue.db /catalogue.db
+# Configuration is environment-first: the same image runs in every environment
+# by env alone, and the deploy pipeline decides EMBED_PROVIDER (bedrock in the
+# NHA account, ollama for a test box, none for keyword-only). These two are the
+# only defaults the image itself carries.
+ENV DB_PATH=/catalogue.db \
+    ADDR=:8080
 ENTRYPOINT ["/docs-mcp"]
-# Defaults live in CMD, not ENTRYPOINT, so a caller can replace the whole flag set
-# without also having to restate the binary path: docker-compose `command:` and
-# Kubernetes `args:` both override CMD alone.
-# -ollama targets localhost because the Ollama sidecar shares the pod network
-# namespace on EKS; docker-compose.yml overrides it with the compose service name.
-CMD ["-db", "/catalogue.db", "-addr", ":8080", "-ollama", "http://localhost:11434", "-embed-model", "nomic-embed-text"]
