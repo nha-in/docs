@@ -11,7 +11,7 @@
           "type": "Mandatory",
           "functionality": "Offer ABHA creation",
           "expected": "The user is offered ABHA creation by Aadhaar OTP, and a code arrives on the mobile number linked to their Aadhaar.",
-          "api": {"method": "POST", "path": "/v3/enrollment/request/otp", "to": "/docs/abdm/v3/api/m1/endpoints/m1-enrolment-request-otp"},
+          "api": {"method": "POST", "path": "/v3/enrollment/request/otp", "to": "/docs/hiecm/v3/api/m1/endpoints/m1-enrolment-request-otp"},
           "webhook": null,
           "detail": "Send scope [\"abha-enrol\"], loginHint \"aadhaar\", otpSystem \"aadhaar\" and the encrypted Aadhaar number. Success is HTTP 200 with a non empty txnId, which the next call needs. Aadhaar sends this code, not NHA."
         },
@@ -20,7 +20,7 @@
           "type": "Mandatory",
           "functionality": "Create the ABHA number",
           "expected": "The person types the code and comes out with a 14 digit ABHA number.",
-          "api": {"method": "POST", "path": "/v3/enrollment/enrol/byAadhaar", "to": "/docs/abdm/v3/api/m1/endpoints/m1-enrolment-by-aadhaar"},
+          "api": {"method": "POST", "path": "/v3/enrollment/enrol/byAadhaar", "to": "/docs/hiecm/v3/api/m1/endpoints/m1-enrolment-by-aadhaar"},
           "webhook": null,
           "detail": "Send the txnId and the encrypted OTP. Success is HTTP 200 carrying ABHAProfile.ABHANumber, tokens.token and tokens.refreshToken. The number matches 91-\\d{4}-\\d{4}-\\d{4} and passes the Luhn checksum on its 14 digits. A 400 whose body key is txnId means the wrong transaction id. A 422 with ABDM-1204 means Aadhaar rejected the attempt, and the UIDAI code inside the message says why."
         },
@@ -29,7 +29,7 @@
           "type": "Optional",
           "functionality": "Reject a wrong Aadhaar OTP",
           "expected": "A wrong code fails cleanly and creates nothing.",
-          "api": {"method": "POST", "path": "/v3/enrollment/enrol/byAadhaar", "to": "/docs/abdm/v3/api/m1/endpoints/m1-enrolment-by-aadhaar"},
+          "api": {"method": "POST", "path": "/v3/enrollment/enrol/byAadhaar", "to": "/docs/hiecm/v3/api/m1/endpoints/m1-enrolment-by-aadhaar"},
           "webhook": null,
           "detail": "Repeat the OTP request, then send a deliberately wrong encrypted OTP. Success is a non 200 with no ABHAProfile.ABHANumber in the body. The exact code for a wrong Aadhaar OTP is not transcribed in either source, so assert on the absence of the field and on the status, not on a code. Check your own database too: a failed enrolment must leave no partial patient record."
         },
@@ -38,7 +38,7 @@
           "type": "Optional",
           "functionality": "Reject a reused transaction id",
           "expected": "A finished attempt cannot be replayed to create a second ABHA.",
-          "api": {"method": "POST", "path": "/v3/enrollment/enrol/byAadhaar", "to": "/docs/abdm/v3/api/m1/endpoints/m1-enrolment-by-aadhaar"},
+          "api": {"method": "POST", "path": "/v3/enrollment/enrol/byAadhaar", "to": "/docs/hiecm/v3/api/m1/endpoints/m1-enrolment-by-aadhaar"},
           "webhook": null,
           "detail": "Take a txnId from a completed enrolment and send it again. Success is HTTP 400 with a body key of txnId and the value Invalid Transaction Id, or an equivalent rejection. HTTP 200 and a second ABHA number is a failure."
         },
@@ -47,7 +47,7 @@
           "type": "Mandatory",
           "functionality": "Request a communication mobile OTP",
           "expected": "A code reaches the number the person wants health messages on.",
-          "api": {"method": "POST", "path": "/v3/enrollment/request/otp", "to": "/docs/abdm/v3/api/m1/endpoints/m1-enrolment-request-otp"},
+          "api": {"method": "POST", "path": "/v3/enrollment/request/otp", "to": "/docs/hiecm/v3/api/m1/endpoints/m1-enrolment-request-otp"},
           "webhook": null,
           "detail": "Send scope [\"abha-enrol\",\"mobile-verify\"], loginHint \"mobile\", otpSystem \"abdm\", the encrypted mobile number and the txnId from enrolment. NHA sends this code, not Aadhaar. This number may differ from the Aadhaar linked one. Success is HTTP 200 with a non empty txnId."
         },
@@ -56,7 +56,7 @@
           "type": "Mandatory",
           "functionality": "Verify the communication mobile",
           "expected": "The number the person named is now on their profile.",
-          "api": {"method": "POST", "path": "/v3/enrollment/auth/byAbdm", "to": "/docs/abdm/v3/api/m1/endpoints/m1-enrolment-verify-abdm-otp"},
+          "api": {"method": "POST", "path": "/v3/enrollment/auth/byAbdm", "to": "/docs/hiecm/v3/api/m1/endpoints/m1-enrolment-verify-abdm-otp"},
           "webhook": null,
           "detail": "Send the same scope and the encrypted OTP. Success is HTTP 200 here and a profile readback whose mobile equals the number you sent. A profile whose mobile is still the Aadhaar linked number is a failure."
         },
@@ -65,7 +65,7 @@
           "type": "Optional",
           "functionality": "Keep the two OTP systems apart",
           "expected": "A code from NHA is refused at the Aadhaar endpoint.",
-          "api": {"method": "POST", "path": "/v3/enrollment/enrol/byAadhaar", "to": "/docs/abdm/v3/api/m1/endpoints/m1-enrolment-by-aadhaar"},
+          "api": {"method": "POST", "path": "/v3/enrollment/enrol/byAadhaar", "to": "/docs/hiecm/v3/api/m1/endpoints/m1-enrolment-by-aadhaar"},
           "webhook": null,
           "detail": "Take a valid mobile OTP obtained with otpSystem \"abdm\" and send it to enrol by Aadhaar instead of to auth/byAbdm. Success is a non 200, proving your routing is by scope. HTTP 200 means something sends both codes to the same endpoint. Sandbox lets that pass. Production will not."
         },
@@ -74,7 +74,7 @@
           "type": "Optional",
           "functionality": "Accept a non Aadhaar mobile number",
           "expected": "A family phone or a changed number works as the communication number.",
-          "api": {"method": "POST", "path": "/v3/enrollment/request/otp", "to": "/docs/abdm/v3/api/m1/endpoints/m1-enrolment-request-otp"},
+          "api": {"method": "POST", "path": "/v3/enrollment/request/otp", "to": "/docs/hiecm/v3/api/m1/endpoints/m1-enrolment-request-otp"},
           "webhook": null,
           "detail": "Run the mobile request and verify pair with a number different from the one the Aadhaar OTP went to. Success is HTTP 200 on both calls and a profile whose mobile is the new number. A rejection naming loginId points at your encryption, not at the number."
         },
@@ -83,7 +83,7 @@
           "type": "Optional",
           "functionality": "Request an email verification OTP",
           "expected": "A code reaches the email address the person gave.",
-          "api": {"method": "POST", "path": "/v3/enrollment/request/otp", "to": "/docs/abdm/v3/api/m1/endpoints/m1-enrolment-request-otp"},
+          "api": {"method": "POST", "path": "/v3/enrollment/request/otp", "to": "/docs/hiecm/v3/api/m1/endpoints/m1-enrolment-request-otp"},
           "webhook": null,
           "detail": "Send scope [\"abha-enrol\",\"email-verify\"] with the encrypted email address. NHA marks the email step optional in the Aadhaar OTP, face authentication and biometric routes alike."
         },
@@ -92,7 +92,7 @@
           "type": "Optional",
           "functionality": "Verify the email address",
           "expected": "The email address is attached to the new account.",
-          "api": {"method": "POST", "path": "/v3/enrollment/auth/byAbdm", "to": "/docs/abdm/v3/api/m1/endpoints/m1-enrolment-verify-abdm-otp"},
+          "api": {"method": "POST", "path": "/v3/enrollment/auth/byAbdm", "to": "/docs/hiecm/v3/api/m1/endpoints/m1-enrolment-verify-abdm-otp"},
           "webhook": null,
           "detail": "Send the email scope and the encrypted OTP. Run this only if you ran the email request."
         },
@@ -101,7 +101,7 @@
           "type": "Mandatory",
           "functionality": "Show ABHA address suggestions",
           "expected": "The person sees a list of addresses to pick from, or types their own.",
-          "api": {"method": "GET", "path": "/v3/enrollment/enrol/suggestion", "to": "/docs/abdm/v3/api/m1/endpoints/m1-enrolment-address-suggestions"},
+          "api": {"method": "GET", "path": "/v3/enrollment/enrol/suggestion", "to": "/docs/hiecm/v3/api/m1/endpoints/m1-enrolment-address-suggestions"},
           "webhook": null,
           "detail": "The transaction goes in the TRANSACTION_ID header, not in a body. The response shape is not transcribed in either source. If your code cannot parse the suggestions, let the person type an address instead. That path is fully specified."
         },
@@ -110,7 +110,7 @@
           "type": "Mandatory",
           "functionality": "Link the chosen ABHA address",
           "expected": "The address the person chose is the address they end up with.",
-          "api": {"method": "POST", "path": "/v3/enrollment/enrol/abha-address", "to": "/docs/abdm/v3/api/m1/endpoints/m1-enrolment-claim-abha-address"},
+          "api": {"method": "POST", "path": "/v3/enrollment/enrol/abha-address", "to": "/docs/hiecm/v3/api/m1/endpoints/m1-enrolment-claim-abha-address"},
           "webhook": null,
           "detail": "Send the chosen address with preferred: 1. Success is HTTP 200 with healthIdNumber in the body, and a later profile read whose preferredAbhaAddress starts with the address you sent. A different address, or an auto generated one built from the ABHA number, is a failure. Enrolment ends here."
         }
@@ -134,7 +134,7 @@
           "type": "Optional",
           "functionality": "Create the ABHA from the scan",
           "expected": "The person gets a 14 digit ABHA number without typing a code.",
-          "api": {"method": "POST", "path": "/v3/enrollment/enrol/byAadhaar", "to": "/docs/abdm/v3/api/m1/endpoints/m1-enrolment-by-aadhaar"},
+          "api": {"method": "POST", "path": "/v3/enrollment/enrol/byAadhaar", "to": "/docs/hiecm/v3/api/m1/endpoints/m1-enrolment-by-aadhaar"},
           "webhook": null,
           "detail": "Fingerprint and iris are two flows in NHA's document and both run against this call with the signed data block and the Aadhaar details. The request body is not transcribed. After enrolment this route continues with the same mobile, optional email, address and link steps as the Aadhaar OTP route."
         },
@@ -143,7 +143,7 @@
           "type": "Optional",
           "functionality": "Start a face authentication",
           "expected": "The portal shows a QR code for the person to scan with the ABHA app.",
-          "api": {"method": "POST", "path": "/v3/enrollment/enrol/auth/init", "to": "/docs/abdm/v3/api/m1/endpoints/m1-enrolment-face-auth-init"},
+          "api": {"method": "POST", "path": "/v3/enrollment/enrol/auth/init", "to": "/docs/hiecm/v3/api/m1/endpoints/m1-enrolment-face-auth-init"},
           "webhook": null,
           "detail": "Send scope [\"abha-enrol\",\"face-auth\"]. Turn the returned txnId into a QR code and show it. The person opens the ABHA app, taps Portal Face Auth, scans the code, and completes face authentication through the Aadhaar registered device service. Plan the screen that tells them to install the app first."
         },
@@ -152,7 +152,7 @@
           "type": "Optional",
           "functionality": "Poll for the captured block",
           "expected": "The portal waits until the person has finished on their phone, then moves on.",
-          "api": {"method": "POST", "path": "/v3/enrollment/enrol/capturePID", "to": "/docs/abdm/v3/api/m1/endpoints/m1-enrolment-capture-pid"},
+          "api": {"method": "POST", "path": "/v3/enrollment/enrol/capturePID", "to": "/docs/hiecm/v3/api/m1/endpoints/m1-enrolment-capture-pid"},
           "webhook": null,
           "detail": "This call answers HTTP 200 every time, so branch on status: PENDING, then VERIFIED, then COMPLETE. Stop at COMPLETE. Your system drives this loop. M1 has no callbacks and NHA never calls you."
         },
@@ -161,7 +161,7 @@
           "type": "Optional",
           "functionality": "Create the ABHA from the face",
           "expected": "The person gets a 14 digit ABHA number after face authentication.",
-          "api": {"method": "POST", "path": "/v3/enrollment/enrol/byAadhaar", "to": "/docs/abdm/v3/api/m1/endpoints/m1-enrolment-by-aadhaar"},
+          "api": {"method": "POST", "path": "/v3/enrollment/enrol/byAadhaar", "to": "/docs/hiecm/v3/api/m1/endpoints/m1-enrolment-by-aadhaar"},
           "webhook": null,
           "detail": "Send authMethods [\"face_auth\"] with the transaction id, then continue at the communication mobile step of the Aadhaar OTP route."
         }
@@ -176,7 +176,7 @@
           "type": "Mandatory",
           "functionality": "Create the ABHA from demographics",
           "expected": "The person gets a 14 digit ABHA number with no code and no scan.",
-          "api": {"method": "POST", "path": "/v3/enrollment/enrol/byAadhaar", "to": "/docs/abdm/v3/api/m1/endpoints/m1-enrolment-by-aadhaar"},
+          "api": {"method": "POST", "path": "/v3/enrollment/enrol/byAadhaar", "to": "/docs/hiecm/v3/api/m1/endpoints/m1-enrolment-by-aadhaar"},
           "webhook": null,
           "detail": "One call, with authMethods [\"demo_auth\"] and a demo_auth object holding the encrypted Aadhaar number, name, date of birth, gender, state code and district code, plus a consent block of code abha-enrollment and version 1.4. Mobile, address, profile photo, pincode and consentHealthId are optional in that object. NHA marks this route mandatory for government integrators and not required for private ones."
         },
@@ -185,7 +185,7 @@
           "type": "Optional",
           "functionality": "List the child accounts",
           "expected": "The children mapped to a parent's ABHA number come back.",
-          "api": {"method": "GET", "path": "/v3/enrollment/profile/children", "to": "/docs/abdm/v3/api/m1/endpoints/m1-enrolment-list-children"},
+          "api": {"method": "GET", "path": "/v3/enrollment/profile/children", "to": "/docs/hiecm/v3/api/m1/endpoints/m1-enrolment-list-children"},
           "webhook": null,
           "detail": "A child ABHA is issued for a child under six with no Aadhaar number, on the consent of a parent or guardian, and it links to the parent's ABHA number. NHA reaches it through government health programmes and restricts it to government integrators by leadership approval. Skip it unless NHA has enabled it for you."
         }
@@ -200,7 +200,7 @@
           "type": "Optional",
           "functionality": "Request a mobile OTP",
           "expected": "A code reaches the mobile number the person gave.",
-          "api": {"method": "POST", "path": "/v3/enrollment/request/otp", "to": "/docs/abdm/v3/api/m1/endpoints/m1-enrolment-request-otp"},
+          "api": {"method": "POST", "path": "/v3/enrollment/request/otp", "to": "/docs/hiecm/v3/api/m1/endpoints/m1-enrolment-request-otp"},
           "webhook": null,
           "detail": "Send scope [\"abha-enrol\",\"mobile-verify\",\"dl-flow\"], loginHint \"mobile\", otpSystem \"abdm\" and the encrypted mobile number. The third scope value is what marks this as the document route."
         },
@@ -209,7 +209,7 @@
           "type": "Optional",
           "functionality": "Verify the mobile OTP",
           "expected": "The mobile number is confirmed before the document goes anywhere.",
-          "api": {"method": "POST", "path": "/v3/enrollment/auth/byAbdm", "to": "/docs/abdm/v3/api/m1/endpoints/m1-enrolment-verify-abdm-otp"},
+          "api": {"method": "POST", "path": "/v3/enrollment/auth/byAbdm", "to": "/docs/hiecm/v3/api/m1/endpoints/m1-enrolment-verify-abdm-otp"},
           "webhook": null,
           "detail": "Send the same three scope values, authMethods [\"otp\"], the txnId from the request and the encrypted OTP."
         },
@@ -218,7 +218,7 @@
           "type": "Optional",
           "functionality": "Create the ABHA from the document",
           "expected": "The person gets an ABHA number from an identity document instead of Aadhaar.",
-          "api": {"method": "POST", "path": "/v3/enrollment/enrol/byDocument", "to": "/docs/abdm/v3/api/m1/endpoints/m1-enrolment-by-document"},
+          "api": {"method": "POST", "path": "/v3/enrollment/enrol/byDocument", "to": "/docs/hiecm/v3/api/m1/endpoints/m1-enrolment-by-document"},
           "webhook": null,
           "detail": "The body carries txnId, documentType, documentId, the name parts, dob, gender, front and back photos, address, state, district, pinCode and a consent block. NHA's collection uses a driving licence. The account created this way is restricted until it is upgraded through Aadhaar KYC, so tell the person that rather than letting them discover it later."
         }
@@ -233,7 +233,7 @@
           "type": "Mandatory",
           "functionality": "Request a login OTP from Aadhaar",
           "expected": "A code reaches the mobile number linked to the person's Aadhaar.",
-          "api": {"method": "POST", "path": "/v3/profile/login/request/otp", "to": "/docs/abdm/v3/api/m1/endpoints/m1-login-request-otp"},
+          "api": {"method": "POST", "path": "/v3/profile/login/request/otp", "to": "/docs/hiecm/v3/api/m1/endpoints/m1-login-request-otp"},
           "webhook": null,
           "detail": "For a person who typed their 14 digit ABHA number, send loginHint \"abha-number\", scope [\"abha-login\",\"aadhaar-verify\"] and otpSystem \"aadhaar\". Keep the txnId."
         },
@@ -242,7 +242,7 @@
           "type": "Mandatory",
           "functionality": "Verify the login OTP",
           "expected": "A person who knows their 14 digit number is signed in.",
-          "api": {"method": "POST", "path": "/v3/profile/login/verify", "to": "/docs/abdm/v3/api/m1/endpoints/m1-login-verify"},
+          "api": {"method": "POST", "path": "/v3/profile/login/verify", "to": "/docs/hiecm/v3/api/m1/endpoints/m1-login-verify"},
           "webhook": null,
           "detail": "Run it twice: once with scope [\"abha-login\",\"aadhaar-verify\"] and otpSystem \"aadhaar\", once with scope [\"abha-login\",\"mobile-verify\"] and otpSystem \"abdm\". Both runs pass with HTTP 200, authResult of success, and a non empty token, refreshToken and numeric expiresIn. A 400 naming scope means the scope values differ between the request and the verify call. They must be identical."
         },
@@ -251,7 +251,7 @@
           "type": "Mandatory",
           "functionality": "Request an Aadhaar login OTP",
           "expected": "A person who typed their Aadhaar number gets a code.",
-          "api": {"method": "POST", "path": "/v3.1/profile/login/request/otp", "to": "/docs/abdm/v3/api/m1/endpoints/m1-login-request-otp-v31"},
+          "api": {"method": "POST", "path": "/v3.1/profile/login/request/otp", "to": "/docs/hiecm/v3/api/m1/endpoints/m1-login-request-otp-v31"},
           "webhook": null,
           "detail": "Send scope [\"abha-login\",\"aadhaar-verify\",\"aadhaar-otp-verify\"], loginHint \"aadhaar\" and otpSystem \"aadhaar\". This route sits on the v3.1 base URL at https://abhasbx.abdm.gov.in/abha/api/v3.1/. The rest of M1 is on v3."
         },
@@ -260,7 +260,7 @@
           "type": "Mandatory",
           "functionality": "Verify the Aadhaar login OTP",
           "expected": "The person is signed in with their Aadhaar number.",
-          "api": {"method": "POST", "path": "/v3.1/profile/login/verify", "to": "/docs/abdm/v3/api/m1/endpoints/m1-login-verify-v31"},
+          "api": {"method": "POST", "path": "/v3.1/profile/login/verify", "to": "/docs/hiecm/v3/api/m1/endpoints/m1-login-verify-v31"},
           "webhook": null,
           "detail": "Send the same three scope values as the request, the txnId and the encrypted OTP. You receive token, refreshToken and expiresIn."
         }
@@ -275,7 +275,7 @@
           "type": "Mandatory",
           "functionality": "Request a login OTP by mobile",
           "expected": "A code reaches the person, and the screen names the masked number it went to.",
-          "api": {"method": "POST", "path": "/v3/profile/login/request/otp", "to": "/docs/abdm/v3/api/m1/endpoints/m1-login-request-otp"},
+          "api": {"method": "POST", "path": "/v3/profile/login/request/otp", "to": "/docs/hiecm/v3/api/m1/endpoints/m1-login-request-otp"},
           "webhook": null,
           "detail": "Send scope [\"abha-login\",\"mobile-verify\"], loginHint \"mobile\" and otpSystem \"abdm\". Success is HTTP 200 with a txnId and a message naming the masked mobile. Show that message to the person."
         },
@@ -284,7 +284,7 @@
           "type": "Mandatory",
           "functionality": "Verify the mobile OTP",
           "expected": "The code is accepted and the accounts on that number are offered.",
-          "api": {"method": "POST", "path": "/v3/profile/login/verify", "to": "/docs/abdm/v3/api/m1/endpoints/m1-login-verify"},
+          "api": {"method": "POST", "path": "/v3/profile/login/verify", "to": "/docs/hiecm/v3/api/m1/endpoints/m1-login-verify"},
           "webhook": null,
           "detail": "Send the txnId and the encrypted OTP. Success is HTTP 200. One mobile number can hold several ABHA accounts, so a third call follows."
         },
@@ -293,7 +293,7 @@
           "type": "Mandatory",
           "functionality": "Pick an account and sign in",
           "expected": "The person picks their ABHA from the list and is logged in.",
-          "api": {"method": "POST", "path": "/v3/profile/login/verify/user", "to": "/docs/abdm/v3/api/m1/endpoints/m1-login-select-account"},
+          "api": {"method": "POST", "path": "/v3/profile/login/verify/user", "to": "/docs/hiecm/v3/api/m1/endpoints/m1-login-select-account"},
           "webhook": null,
           "detail": "Send the ABHA number the person picked, with the transaction token in the T-token header. Success is HTTP 200 with token and refreshToken in the body. A 400 here usually means T-token is missing. It is the only M1 call that uses that header. The collection has no shortcut for a number with exactly one ABHA behind it, so build all three calls."
         },
@@ -302,7 +302,7 @@
           "type": "Optional",
           "functionality": "Reject a wrong login OTP",
           "expected": "A wrong code does not log anybody in.",
-          "api": {"method": "POST", "path": "/v3/profile/login/verify", "to": "/docs/abdm/v3/api/m1/endpoints/m1-login-verify"},
+          "api": {"method": "POST", "path": "/v3/profile/login/verify", "to": "/docs/hiecm/v3/api/m1/endpoints/m1-login-verify"},
           "webhook": null,
           "detail": "Request a login OTP, then verify with a wrong encrypted OTP. Success is a non 200 with no token in the body. HTTP 200, or any token present, is a failure. Check your session store holds nothing for that person afterwards."
         },
@@ -311,7 +311,7 @@
           "type": "Mandatory",
           "functionality": "Sign in by ABHA number",
           "expected": "A person who knows their 14 digit number signs in with a code from NHA.",
-          "api": {"method": "POST", "path": "/v3/profile/login/request/otp", "to": "/docs/abdm/v3/api/m1/endpoints/m1-login-request-otp"},
+          "api": {"method": "POST", "path": "/v3/profile/login/request/otp", "to": "/docs/hiecm/v3/api/m1/endpoints/m1-login-request-otp"},
           "webhook": null,
           "detail": "Two calls, the same pair as the Aadhaar route with loginHint \"abha-number\", scope [\"abha-login\",\"mobile-verify\"] and otpSystem \"abdm\". There is also a password route: one call to verify a login with scope [\"abha-login\",\"password-verify\"] and an authData.password object holding the ABHA number and the encrypted password. No OTP request comes first."
         }
@@ -326,7 +326,7 @@
           "type": "Optional",
           "functionality": "Start a face login transaction",
           "expected": "The portal shows a QR code for the person to scan with the ABHA app.",
-          "api": {"method": "POST", "path": "/v3/enrollment/enrol/auth/init", "to": "/docs/abdm/v3/api/m1/endpoints/m1-enrolment-face-auth-init"},
+          "api": {"method": "POST", "path": "/v3/enrollment/enrol/auth/init", "to": "/docs/hiecm/v3/api/m1/endpoints/m1-enrolment-face-auth-init"},
           "webhook": null,
           "detail": "NHA's collection reuses the enrolment auth init call to get the txnId that the login QR code is built from."
         },
@@ -335,7 +335,7 @@
           "type": "Optional",
           "functionality": "Verify the face capture",
           "expected": "The person is signed in after face authentication.",
-          "api": {"method": "POST", "path": "/v3.1/profile/login/verify", "to": "/docs/abdm/v3/api/m1/endpoints/m1-login-verify-v31"},
+          "api": {"method": "POST", "path": "/v3.1/profile/login/verify", "to": "/docs/hiecm/v3/api/m1/endpoints/m1-login-verify-v31"},
           "webhook": null,
           "detail": "This verify sits on the v3.1 base URL, not v3. NHA's collection has a variant that carries the PID block and one that does not."
         },
@@ -344,7 +344,7 @@
           "type": "Optional",
           "functionality": "Sign in by fingerprint or iris",
           "expected": "The person is signed in with a scan from an Aadhaar registered device.",
-          "api": {"method": "POST", "path": "/v3.1/profile/login/verify", "to": "/docs/abdm/v3/api/m1/endpoints/m1-login-verify-v31"},
+          "api": {"method": "POST", "path": "/v3.1/profile/login/verify", "to": "/docs/hiecm/v3/api/m1/endpoints/m1-login-verify-v31"},
           "webhook": null,
           "detail": "Fingerprint and iris are separate requests in NHA's collection against the same v3.1 verify call. NHA's M1 document shows the request bodies only as screenshots, so the fields are not transcribed. Write the checks from what you observe against sandbox."
         }
@@ -359,7 +359,7 @@
           "type": "Mandatory",
           "functionality": "Encrypt the mobile number",
           "expected": "The mobile number leaves your system scrambled.",
-          "api": {"method": "POST", "path": "/v3/phr/app/enrollment/encrypt", "to": "/docs/abdm/v3/api/m1/endpoints/m1-encrypt-value"},
+          "api": {"method": "POST", "path": "/v3/phr/app/enrollment/encrypt", "to": "/docs/hiecm/v3/api/m1/endpoints/m1-encrypt-value"},
           "webhook": null,
           "detail": "Post the plain value and use the encryptedData that comes back. This is what NHA's collection does for the find ABHA flow. The other option is to fetch NHA's public certificate and encrypt locally, better for production because the plain value never leaves your system."
         },
@@ -368,7 +368,7 @@
           "type": "Mandatory",
           "functionality": "Search for the accounts",
           "expected": "The ABHA accounts held against that mobile number come back.",
-          "api": {"method": "POST", "path": "/v3/profile/account/abha/search", "to": "/docs/abdm/v3/api/m1/endpoints/m1-find-abha-search"},
+          "api": {"method": "POST", "path": "/v3/profile/account/abha/search", "to": "/docs/hiecm/v3/api/m1/endpoints/m1-find-abha-search"},
           "webhook": null,
           "detail": "Send scope [\"search-abha\"] and the encrypted mobile. Keep the transaction id. The two pieces of evidence in NHA's collection disagree on the response shape, so confirm it against sandbox before you rely on it."
         },
@@ -377,7 +377,7 @@
           "type": "Mandatory",
           "functionality": "Request a login OTP",
           "expected": "A code reaches the person for the account they chose.",
-          "api": {"method": "POST", "path": "/v3/profile/login/request/otp", "to": "/docs/abdm/v3/api/m1/endpoints/m1-login-request-otp"},
+          "api": {"method": "POST", "path": "/v3/profile/login/request/otp", "to": "/docs/hiecm/v3/api/m1/endpoints/m1-login-request-otp"},
           "webhook": null,
           "detail": "Send scope [\"abha-login\",\"search-abha\",\"mobile-verify\"], loginHint \"index\", and the search transaction id in txnId."
         },
@@ -386,7 +386,7 @@
           "type": "Mandatory",
           "functionality": "Verify the OTP and sign in",
           "expected": "The person is signed in to the ABHA they picked.",
-          "api": {"method": "POST", "path": "/v3/profile/login/verify", "to": "/docs/abdm/v3/api/m1/endpoints/m1-login-verify"},
+          "api": {"method": "POST", "path": "/v3/profile/login/verify", "to": "/docs/hiecm/v3/api/m1/endpoints/m1-login-verify"},
           "webhook": null,
           "detail": "Send scope [\"abha-login\",\"mobile-verify\"] with the encrypted OTP. You receive the user token."
         }
@@ -401,7 +401,7 @@
           "type": "Optional",
           "functionality": "Find the ABHA behind an Aadhaar",
           "expected": "The ABHA number recorded against that Aadhaar number comes back.",
-          "api": {"method": "GET", "path": "/v3/profile/benefit/search/abhaByAadhaar", "to": "/docs/abdm/v3/api/m1/endpoints/m1-benefit-find-abha-by-aadhaar"},
+          "api": {"method": "GET", "path": "/v3/profile/benefit/search/abhaByAadhaar", "to": "/docs/hiecm/v3/api/m1/endpoints/m1-benefit-find-abha-by-aadhaar"},
           "webhook": null,
           "detail": "A benefit scheme lookup, not a general search. The Aadhaar value is encrypted. NHA restricts the benefit endpoints to government integrators."
         },
@@ -410,7 +410,7 @@
           "type": "Optional",
           "functionality": "Find the Aadhaar behind an ABHA",
           "expected": "The Aadhaar number recorded against that ABHA number comes back.",
-          "api": {"method": "GET", "path": "/v3/profile/benefit/search/aadhaarByAbha", "to": "/docs/abdm/v3/api/m1/endpoints/m1-benefit-find-aadhaar-by-abha"},
+          "api": {"method": "GET", "path": "/v3/profile/benefit/search/aadhaarByAbha", "to": "/docs/hiecm/v3/api/m1/endpoints/m1-benefit-find-aadhaar-by-abha"},
           "webhook": null,
           "detail": "The other half of the same pair in NHA's collection, under the same government only restriction."
         },
@@ -434,7 +434,7 @@
           "type": "Mandatory",
           "functionality": "Get the ABHA QR code",
           "expected": "The person sees the QR code that shares their ABHA at a facility desk.",
-          "api": {"method": "GET", "path": "/v3/profile/account/qrCode", "to": "/docs/abdm/v3/api/m1/endpoints/m1-profile-get-qr-code"},
+          "api": {"method": "GET", "path": "/v3/profile/account/qrCode", "to": "/docs/hiecm/v3/api/m1/endpoints/m1-profile-get-qr-code"},
           "webhook": null,
           "detail": "Gateway token in Authorization, user token in X-token, the same two headers as the profile call. The response shape is not transcribed, because NHA's document shows it as a screenshot."
         },
@@ -443,7 +443,7 @@
           "type": "Mandatory",
           "functionality": "Generate the ABHA card",
           "expected": "The person sees their ABHA card.",
-          "api": {"method": "GET", "path": "/v3/profile/account/abha-card", "to": "/docs/abdm/v3/api/m1/endpoints/m1-profile-get-abha-card"},
+          "api": {"method": "GET", "path": "/v3/profile/account/abha-card", "to": "/docs/hiecm/v3/api/m1/endpoints/m1-profile-get-abha-card"},
           "webhook": null,
           "detail": "Same two headers. NHA shows the card arriving inside the response rather than as a URL to fetch, and the response shape is not transcribed."
         },
@@ -452,7 +452,7 @@
           "type": "Mandatory",
           "functionality": "Download the ABHA card",
           "expected": "The person can save their ABHA card as a file.",
-          "api": {"method": "GET", "path": "/v3/profile/account/download-abha-card", "to": "/docs/abdm/v3/api/m1/endpoints/m1-profile-download-abha-card"},
+          "api": {"method": "GET", "path": "/v3/profile/account/download-abha-card", "to": "/docs/hiecm/v3/api/m1/endpoints/m1-profile-download-abha-card"},
           "webhook": null,
           "detail": "Same two headers. The response shape is not transcribed."
         },
@@ -476,7 +476,7 @@
           "type": "Optional",
           "functionality": "Request a new number OTP",
           "expected": "A code reaches the number the person wants to move to.",
-          "api": {"method": "POST", "path": "/v3/profile/account/request/otp", "to": "/docs/abdm/v3/api/m1/endpoints/m1-profile-request-otp"},
+          "api": {"method": "POST", "path": "/v3/profile/account/request/otp", "to": "/docs/hiecm/v3/api/m1/endpoints/m1-profile-request-otp"},
           "webhook": null,
           "detail": "Send scope [\"abha-profile\",\"mobile-verify\"] and the new number, encrypted. Both the gateway token and the user token are needed. Success is HTTP 200 with a txnId."
         },
@@ -485,7 +485,7 @@
           "type": "Optional",
           "functionality": "Verify the profile change",
           "expected": "The new number shows on the person's profile.",
-          "api": {"method": "POST", "path": "/v3/profile/account/verify", "to": "/docs/abdm/v3/api/m1/endpoints/m1-profile-verify-otp"},
+          "api": {"method": "POST", "path": "/v3/profile/account/verify", "to": "/docs/hiecm/v3/api/m1/endpoints/m1-profile-verify-otp"},
           "webhook": null,
           "detail": "Send the same scope and the encrypted OTP. Success is HTTP 200 followed by a profile read showing the new mobile. A 400 with {\"message\": \"Invalid X-token\"} means you sent the gateway token where the user token belongs. Both headers are needed here. The verify response body is not transcribed, so assert on the status and the readback, not on a field in the response."
         },
@@ -494,7 +494,7 @@
           "type": "Optional",
           "functionality": "Change email, password or KYC",
           "expected": "The same pair of calls covers the other profile changes.",
-          "api": {"method": "POST", "path": "/v3/profile/account/request/otp", "to": "/docs/abdm/v3/api/m1/endpoints/m1-profile-request-otp"},
+          "api": {"method": "POST", "path": "/v3/profile/account/request/otp", "to": "/docs/hiecm/v3/api/m1/endpoints/m1-profile-request-otp"},
           "webhook": null,
           "detail": "The email update, password change, re-KYC, delete and deactivate flows use the same request and verify pair with a different second scope value. NHA marks re-KYC optional for private and government integrators alike."
         },
@@ -503,7 +503,7 @@
           "type": "Optional",
           "functionality": "Update self declared details",
           "expected": "The person's self declared details change on their profile.",
-          "api": {"method": "PATCH", "path": "/v3/profile/account", "to": "/docs/abdm/v3/api/m1/endpoints/m1-profile-update-account"},
+          "api": {"method": "PATCH", "path": "/v3/profile/account", "to": "/docs/hiecm/v3/api/m1/endpoints/m1-profile-update-account"},
           "webhook": null,
           "detail": "Changing a mobile number or an email address is not done here. Those need the OTP pair above, because NHA verifies the new value before accepting it. NHA's collection uses this call to change the profile photo."
         }
@@ -518,7 +518,7 @@
           "type": "Mandatory",
           "functionality": "Read the profile back",
           "expected": "The profile shows the ABHA number, address and mobile the person created.",
-          "api": {"method": "GET", "path": "/v3/profile/account", "to": "/docs/abdm/v3/api/m1/endpoints/m1-profile-get-account"},
+          "api": {"method": "GET", "path": "/v3/profile/account", "to": "/docs/hiecm/v3/api/m1/endpoints/m1-profile-get-account"},
           "webhook": null,
           "detail": "Gateway token in Authorization, user token in X-token, both required. Success is HTTP 200 with ABHANumber, preferredAbhaAddress and mobile matching what was created, and non empty name, gender and the three date of birth fields. An ABHA number that is not the one you logged in as means the user token belongs to a different session, so check you are not reusing a token across test runs. The field list comes from a saved example on the PATCH of the same path, not on the GET."
         },
@@ -527,7 +527,7 @@
           "type": "Mandatory",
           "functionality": "Check both tokens are needed",
           "expected": "The profile comes back only when your system and the person both prove themselves.",
-          "api": {"method": "GET", "path": "/v3/profile/account", "to": "/docs/abdm/v3/api/m1/endpoints/m1-profile-get-account"},
+          "api": {"method": "GET", "path": "/v3/profile/account", "to": "/docs/hiecm/v3/api/m1/endpoints/m1-profile-get-account"},
           "webhook": null,
           "detail": "Call it three times: with both headers, with Authorization only, and with X-token only. Success is HTTP 200 with both and a non 200 for each of the other two. If X-token alone works, your gateway token is being read from somewhere else, such as a proxy that injects it."
         },
@@ -551,7 +551,7 @@
           "type": "Mandatory",
           "functionality": "Get a gateway access token",
           "expected": "Your system can prove who it is to NHA.",
-          "api": {"method": "POST", "path": "/api/hiecm/gateway/v3/sessions", "to": "/docs/abdm/v3/api/gateway/endpoints/gateway-sessions-create"},
+          "api": {"method": "POST", "path": "/api/hiecm/gateway/v3/sessions", "to": "/docs/hiecm/v3/api/gateway/endpoints/gateway-sessions-create"},
           "webhook": null,
           "detail": "Send your sandbox client id and secret with grantType \"client_credentials\". Success is HTTP 200 with a non empty accessToken. Every later call carries it in the Authorization header. A 401 with {\"code\": \"900901\"} means the credentials are wrong, not the request. Check the X-CM-ID: sbx header, which the sessions call needs and no other M1 call has."
         },
@@ -560,7 +560,7 @@
           "type": "Mandatory",
           "functionality": "Encrypt the sensitive fields",
           "expected": "The Aadhaar number, mobile number and code that leave your system are scrambled, not readable.",
-          "api": {"method": "POST", "path": "/v3/phr/app/enrollment/encrypt", "to": "/docs/abdm/v3/api/m1/endpoints/m1-encrypt-value"},
+          "api": {"method": "POST", "path": "/v3/phr/app/enrollment/encrypt", "to": "/docs/hiecm/v3/api/m1/endpoints/m1-encrypt-value"},
           "webhook": null,
           "detail": "Encrypt every Aadhaar number, mobile number, email address, OTP value and password before you send it. Success is HTTP 200 with encryptedData present, not equal to the input, and longer than it. Also a failure: any place in your own code where a plain Aadhaar number, mobile number or OTP reaches a request body. Grep for it."
         },
@@ -569,7 +569,7 @@
           "type": "Optional",
           "functionality": "Reject a call with no token",
           "expected": "A call that carries no token is refused.",
-          "api": {"method": "GET", "path": "/v3/profile/account", "to": "/docs/abdm/v3/api/m1/endpoints/m1-profile-get-account"},
+          "api": {"method": "GET", "path": "/v3/profile/account", "to": "/docs/hiecm/v3/api/m1/endpoints/m1-profile-get-account"},
           "webhook": null,
           "detail": "Call the profile with the Authorization header removed. Success is HTTP 401 with a code of 900901 or an error.code. HTTP 200 means something other than NHA is answering you, most likely a cached response. Stop and find out what."
         },
@@ -578,7 +578,7 @@
           "type": "Mandatory",
           "functionality": "Refresh the user token",
           "expected": "A session longer than half an hour keeps working without showing the person an error.",
-          "api": {"method": "GET", "path": "/v3/profile/account/request/token", "to": "/docs/abdm/v3/api/m1/endpoints/m1-token-refresh"},
+          "api": {"method": "GET", "path": "/v3/profile/account/request/token", "to": "/docs/hiecm/v3/api/m1/endpoints/m1-token-refresh"},
           "webhook": null,
           "detail": "The one saved login example gives the user token an expiresIn of 1800 seconds. Wait past it and a profile call returns a non 200, one shape being a 400 with {\"message\": \"Invalid X-token\"}. Put the refresh token in the R-token header, not X-token and not the body. Success is HTTP 200 with a new token and refreshToken, and a profile call that then succeeds. Store the new refresh token and treat the old one as spent. Neither source says whether the old one keeps working."
         },
@@ -587,7 +587,7 @@
           "type": "Optional",
           "functionality": "End the session",
           "expected": "When the person logs out, their token stops working.",
-          "api": {"method": "GET", "path": "/v3/profile/account/request/logout", "to": "/docs/abdm/v3/api/m1/endpoints/m1-profile-logout"},
+          "api": {"method": "GET", "path": "/v3/profile/account/request/logout", "to": "/docs/hiecm/v3/api/m1/endpoints/m1-profile-logout"},
           "webhook": null,
           "detail": "Success is HTTP 200 with {\"message\": \"You have been logged out\"}, then a non 200 from a profile call made with the same user token. A profile call that still returns HTTP 200 and profile data is a failure."
         },
@@ -605,7 +605,7 @@
           "type": "Optional",
           "functionality": "Reject an empty body",
           "expected": "An empty request names the fields it wanted.",
-          "api": {"method": "POST", "path": "/v3/profile/login/verify", "to": "/docs/abdm/v3/api/m1/endpoints/m1-login-verify"},
+          "api": {"method": "POST", "path": "/v3/profile/login/verify", "to": "/docs/hiecm/v3/api/m1/endpoints/m1-login-verify"},
           "webhook": null,
           "detail": "POST an empty body to verify a login. Expect HTTP 400 with both scope and authData as keys in the response."
         },

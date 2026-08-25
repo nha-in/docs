@@ -14,11 +14,23 @@
   padding: 0 1.5rem;
   display: flex;
   align-items: center;
-  justify-content: flex-end;
+  justify-content: space-between;
   background: transparent;
   backdrop-filter: none;
   border-bottom: 0;
   box-shadow: none;
+}
+
+.landing-bar__marks {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+}
+
+.landing-bar__mark {
+  display: block;
+  height: 2rem;
+  width: auto;
 }
 
 .landing-bar__links {
@@ -43,6 +55,14 @@
 @media (max-width: 640px) {
   .landing-bar__links {
     gap: 1rem;
+  }
+
+  .landing-bar__marks {
+    gap: 0.875rem;
+  }
+
+  .landing-bar__mark {
+    height: 1.625rem;
   }
 }
 
@@ -117,30 +137,6 @@
 
 /* The two official marks above the statement. Sized by height so the NHA
    lockup and the squarer mission mark read as one row. */
-.landing-hero__marks {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 2.25rem;
-  margin-bottom: 0.5rem;
-}
-
-.landing-hero__mark {
-  display: block;
-  height: 3.5rem;
-  width: auto;
-}
-
-@media (max-width: 640px) {
-  .landing-hero__marks {
-    gap: 1.5rem;
-  }
-
-  .landing-hero__mark {
-    height: 2.75rem;
-  }
-}
-
 .landing-hero__eyebrow {
   margin: 0;
   font-size: 0.8125rem;
@@ -150,10 +146,11 @@
   color: var(--accent);
 }
 
-/* h1 at the measured size: serif 36px / 40px, weight 400. */
+/* h1 at the measured size: serif 36px / 40px, weight 400. The line breaks are
+   in the markup, so the measure only has to be wide enough not to fight them. */
 .landing-hero__statement {
   margin: 0;
-  max-width: 24ch;
+  max-width: none;
   font-family: var(--font-serif);
   font-size: 2.25rem;
   line-height: 2.5rem;
@@ -222,136 +219,6 @@
   color: var(--text-faint);
 }
 
-/* ---------- the way down ---------- */
-
-.landing-hero__scroll {
-  position: absolute;
-  bottom: 2.5rem;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 1;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-size: 0.8125rem;
-  color: var(--text-faint);
-  text-decoration: none;
-  transition: color 150ms ease;
-}
-
-.landing-hero__scroll:hover {
-  color: var(--accent);
-  text-decoration: none;
-}
-
-/* ---------- the gateways, one scroll below ---------- */
-
-.landing-gateways {
-  max-width: 72rem;
-  margin: 0 auto;
-  padding: 0 1.5rem 7rem;
-  scroll-margin-top: 5rem;
-}
-
-.landing-gateways__head {
-  max-width: 44rem;
-  margin-bottom: 2rem;
-}
-
-/* h2 at the measured size: serif 24px / 32px, weight 400. */
-.landing-gateways__title {
-  margin: 0 0 0.75rem;
-  font-family: var(--font-serif);
-  font-size: 1.5rem;
-  line-height: 2rem;
-  font-weight: 400;
-  letter-spacing: -0.01em;
-  color: var(--text-heading);
-}
-
-.landing-gateways__lede {
-  margin: 0;
-  font-size: 1rem;
-  line-height: 1.65;
-  color: var(--text-muted);
-}
-
-.landing-gateways__list {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr));
-  gap: 1rem;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.landing-card {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  padding: 1.75rem;
-  border: 1px solid var(--border);
-  border-radius: var(--radius-panel);
-  background: var(--surface);
-  color: inherit;
-  text-decoration: none;
-  transition: border-color 180ms ease, background-color 180ms ease;
-}
-
-.landing-card:hover {
-  border-color: var(--accent-line);
-  background: var(--surface-raised);
-  color: inherit;
-  text-decoration: none;
-}
-
-.landing-card__kind {
-  font-size: 0.6875rem;
-  font-weight: 600;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--accent);
-}
-
-.landing-card__name {
-  margin-top: 1.25rem;
-  font-family: var(--font-serif);
-  font-size: 1.5rem;
-  line-height: 2rem;
-  color: var(--text-heading);
-}
-
-.landing-card__expansion {
-  margin-bottom: 0.875rem;
-  font-size: 0.8125rem;
-  line-height: 1.2rem;
-  color: var(--text-faint);
-}
-
-.landing-card__body {
-  font-size: 0.9375rem;
-  line-height: 1.65;
-  color: var(--text-body);
-}
-
-.landing-card__go {
-  position: absolute;
-  top: 1.5rem;
-  right: 1.5rem;
-  color: var(--text-faint);
-  opacity: 0;
-  transform: translate(-2px, 2px);
-  transition: opacity 180ms ease, transform 180ms ease, color 180ms ease;
-}
-
-.landing-card:hover .landing-card__go,
-.landing-card:focus-visible .landing-card__go {
-  opacity: 1;
-  transform: none;
-  color: var(--accent);
-}
-
 /* ---------- narrow ---------- */
 
 @media (max-width: 768px) {
@@ -365,8 +232,9 @@
     max-width: none;
   }
 
-  .landing-card__go {
-    opacity: 1;
-    transform: none;
+  /* Too narrow for "Digital Health Infrastructure" on one line, so the text
+     wraps to the column instead of to the breaks. */
+  .landing-hero__statement br {
+    display: none;
   }
 }

@@ -1,0 +1,54 @@
+[
+  {
+    "id": "hiecm",
+    "label": "HIE-CM",
+    "description": "Health Information Exchange and Consent Manager",
+    "position": 1,
+    "version": "V3",
+    "versions": [
+      {
+        "label": "V3",
+        "to": "/docs/hiecm/v3"
+      },
+      {
+        "label": "V2",
+        "note": "Not published here. NHA has retired it for new integrations."
+      }
+    ],
+    "apiTo": "/docs/hiecm/v3/api",
+    "to": "/docs/hiecm/v3",
+    "match": "/docs/hiecm"
+  },
+  {
+    "id": "uhi",
+    "label": "UHI",
+    "description": "Unified Health Interface",
+    "position": 2,
+    "version": "V1",
+    "versions": [
+      {
+        "label": "V1",
+        "to": "/docs/uhi/v1"
+      }
+    ],
+    "apiTo": "/docs/uhi/v1/api",
+    "to": "/docs/uhi/v1",
+    "match": "/docs/uhi"
+  },
+  {
+    "id": "nhcx",
+    "label": "NHCX",
+    "description": "National Health Claims Exchange",
+    "position": 3,
+    "version": "V1",
+    "versions": [
+      {
+        "label": "V1",
+        "to": "/docs/nhcx/v1"
+      }
+    ],
+    "apiTo": "/docs/nhcx/v1/api",
+    "to": "/docs/nhcx/v1",
+    "match": "/docs/nhcx"
+  }
+]

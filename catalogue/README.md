@@ -15,17 +15,20 @@ hiecm/                One folder per atom type for the HIE-CM gateway
   errors/             Error code, cause and fix (abdm-1062.md)
   tests/              NHA functional test cases, one atom each
   decisions/          Recorded decisions and why
+uhi/                  Same atom-type folders for the UHI gateway, empty until
+nhcx/                 authored; same again for NHCX
 shared/               Gateway neutral atoms
   glossary/           Terms (abha.md)
   fhir/               FHIR bundle atoms per hi_type
   sandbox/            Registration, credentials, callback URL guides
-openapi/              Machine contracts, one self-contained file per module
+openapi/              Machine contracts, one folder per gateway and version,
+                      one self-contained file per module
   CONVENTIONS.md      The binding rules for every spec file below
-  hiecm-gateway.yaml  Session token, used by every module
-  hiecm-m1.yaml       One file per module; callbacks live inside the
-  hiecm-m2.yaml       module file that owns them as OpenAPI 3.1 webhooks
-  hiecm-m3.yaml
-  hiecm-m4.yaml
+  hiecm/v3/           hiecm-gateway.yaml plus one file per module; callbacks
+                      live inside the module file that owns them as
+                      OpenAPI 3.1 webhooks
+  uhi/v1/             Empty until UHI specs are authored
+  nhcx/v1/            Empty until NHCX specs are authored
   .raw/               Upstream NHA files, stored untouched
   corrections/        Recorded patches to upstream files, never silent
 VERSION               The catalogue version stamp, read into every build
@@ -42,11 +45,11 @@ snapshot the docs-mcp server serves. Its rules are strict and fail loud:
 
 1. `.raw/` directories are skipped entirely. Sources, not content.
 2. Every `.md` file OUTSIDE `openapi/` is parsed as an atom, with one
-   exception: this `README.md` at the catalogue root is skipped. An atom
-   must carry valid frontmatter with an `id`, or the whole build fails
-   naming the file. Do not drop stray notes or README files into the
-   atom folders; a `README.md` inside `hiecm/` or `shared/` fails the
-   build by design.
+   exception: `README.md` files are contributor notes for the folder
+   they sit in and are skipped wherever they are. An atom must carry
+   valid frontmatter with an `id`, or the whole build fails naming the
+   file. Do not drop stray notes into the atom folders; any other
+   frontmatter-less `.md` fails the build by design.
 3. `.md` files INSIDE `openapi/` (like `CONVENTIONS.md`) are spec-area
    documentation and are skipped silently.
 4. Every `openapi/*.yaml` outside `corrections/` is parsed as an OpenAPI

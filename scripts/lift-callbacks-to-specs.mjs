@@ -8,6 +8,7 @@
 import {readFileSync, writeFileSync} from 'node:fs';
 import {join, dirname} from 'node:path';
 import {fileURLToPath} from 'node:url';
+import {findSpec} from './specs.mjs';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 
@@ -92,7 +93,7 @@ const CALLBACKS = {
 const quote = (value) => JSON.stringify(String(value));
 
 for (const [file, hooks] of Object.entries(CALLBACKS)) {
-  const path = join(root, 'catalogue', 'openapi', file);
+  const path = findSpec(file);
   let text = readFileSync(path, 'utf8');
   if (/\nwebhooks:\s*\n\s+\S/.test(text)) {
     console.log(`${file}: webhooks already populated, left alone`);

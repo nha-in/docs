@@ -24,7 +24,7 @@ export function PathChoices({paths}: {paths: Path[]}): React.ReactNode {
   return (
     <nav className="path-choices" aria-label="Ways into this milestone">
       {paths.map((path) => (
-        <Link key={path.to} to={path.to} className="path-choice">
+        <Link key={path.to} to={path.to} className="path-choice card">
           <span className="path-choice__label">
             {path.label}
             <ArrowRight className="size-4" aria-hidden="true" />
@@ -39,7 +39,7 @@ export function PathChoices({paths}: {paths: Path[]}): React.ReactNode {
 /** The single next rung at the foot of a ladder page. */
 export function NextStep({label, detail, to}: Path): React.ReactNode {
   return (
-    <Link to={to} className="next-step">
+    <Link to={to} className="next-step card">
       <span className="next-step__eyebrow">Next</span>
       <span className="next-step__label">
         {label}

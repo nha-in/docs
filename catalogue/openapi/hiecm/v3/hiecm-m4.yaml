@@ -1,0 +1,151 @@
+# Module M4: HPR and HFR registration. Phase 2.
+#
+# This file exists so that M4 has a declared place and an honest phase, not
+# so that anyone can integrate from it. Nothing is written here. Do not
+# improvise operations from this file, and do not compile a skill against it.
+#
+# Rules this file follows: catalogue/openapi/CONVENTIONS.md
+openapi: 3.1.1
+
+info:
+  x-portal:
+    module: m4
+    label: M4 HPR and HFR
+    position: 5
+  title: ABDM M4, HPR and HFR registration
+  summary: Register healthcare professionals and facilities in the HPR and the HFR.
+  description: |
+    M4 registers the people and the places. A healthcare professional gets an
+    HPID from the Healthcare Professionals Registry, and a facility is
+    searched for, onboarded and linked in the Health Facility Registry.
+
+    No operation is published in this file yet. The written guidance for M4
+    lives in the M4 guide, which is transcribed from NHA's milestone document
+    and has not been run against the sandbox.
+
+    Two things are worth recording now, because they surprise people who
+    assume M4 sits behind the same gateway as M1 to M3.
+
+    First, the host and the version differ. M4 runs on the HPR service at
+    `/v4/int`, not on the HIE-CM gateway at `/api/hiecm/.../v3`.
+
+    Second, the access token still comes from the same place, the gateway
+    session endpoint in hiecm-gateway.yaml.
+  version: abdm-v4
+  license:
+    name: MIT
+    identifier: MIT
+  contact:
+    name: ABDM sandbox support
+    url: https://devforum.abdm.gov.in
+  x-abdm-gateway: hiecm
+  x-abdm-module: M4
+  x-abdm-phase: 2
+  x-abdm-roles: [his, hip]
+
+x-abdm-sources:
+  - file: ABDM Sandbox/ABDM/Proposed Simplified Milestone 4 (NHPR).docx
+    role: upstream
+    status: not-yet-hashed
+    note: >
+      NHA milestone pack. Carries the HPR base URLs, the Aadhaar link and
+      verification sequence, and the session request and response that
+      hiecm-gateway.yaml describes.
+  - url: https://sandbox.abdm.gov.in/sandbox/v3/new-documentation?doc=health-facility-registry/HPID%20creation
+    role: upstream
+    status: not-yet-fetched
+
+servers:
+  - url: https://apihspsbx.abdm.gov.in/v4/int
+    description: Sandbox
+  - url: https://apinhpr.abdm.gov.in/v4/int
+    description: Production
+
+security:
+  - gatewaySession: []
+
+tags:
+  - name: hpr-registration
+    description: >
+      Creating an HPID for a healthcare professional, through Aadhaar
+      verification. No operation published yet.
+  - name: hfr-facility
+    description: >
+      Searching for a facility, onboarding it and linking software to it.
+      No operation published yet.
+
+# Phase 2. Left empty on purpose. Filling this in is a scope change, not a
+# documentation task, and it needs the Phase 1 modules verified first.
+paths:
+  /v4/int/api/v1/auth/authPassword:
+    post:
+      operationId: m4_hpr_login_password
+      x-abdm-use-case: HPR login
+      tags: [hpr-registration]
+      summary: Log in to the HPR with a username and password
+      description: |
+        One of the five HPR login routes NHA documents, and the only one whose
+        path appears in text rather than in a screenshot. Returns the
+        `hprToken` that the HFR create call carries in its header.
+
+        The password is encrypted with NHA's public certificate before it goes
+        in the body. Not run against the ABDM sandbox, so the request and
+        response shapes are unconfirmed.
+      responses:
+        '200':
+          description: >
+            A token for the professional. NHA's document shows the response as
+            a screenshot, so the field list is not transcribed.
+  /v1.5/facility/get-specialities:
+    get:
+      operationId: m4_hfr_get_specialities
+      x-abdm-use-case: HFR master data
+      tags: [hfr-facility]
+      summary: List the specialities a facility can declare
+      description: |
+        One of the two HFR master data calls whose path appears in text. Not
+        run against the ABDM sandbox, so the response shape is unconfirmed.
+      responses:
+        '200':
+          description: >
+            The speciality list. NHA's document carries the response as a
+            screenshot, so the field list is not transcribed.
+
+components:
+  securitySchemes:
+    gatewaySession:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: >
+        The `accessToken` from `POST /api/hiecm/gateway/v3/sessions`, which
+        is described in hiecm-gateway.yaml. Send it as
+        `Authorization: Bearer <ACCESS_TOKEN>`.
+
+# The HIS family, which M4 uses instead of the ABDM codes. NHA publishes about
+# 150 in six groups and carries the full list in its sandbox documentation;
+# these are the ranges and the examples that appear in text.
+x-abdm-errors:
+  source: >
+    NHA's M4 document, which states the ranges and gives examples. The full
+    list is in NHA's sandbox documentation for the healthcare professional
+    registry.
+  ranges:
+    - range: HIS-400 to HIS-504
+      covers: The HTTP level failures
+      examples: HIS-401 user is not authorized, HIS-403 forbidden, HIS-503 requested service is unavailable
+    - range: HIS-1xxx
+      covers: Validation and facility errors, 103 of them
+      examples: HIS-1002 the field value should not be empty, HIS-1124 bridge not linked, HIS-1128 HIP name already exists, HIS-1132 duplicate facility detected
+    - range: HIS-2xxx
+      covers: Aadhaar, OTP and session errors
+      examples: HIS-2022 invalid OTP, HIS-2031 request expired, HIS-2045 session expired
+    - range: HIS-3xxx
+      covers: Aadhaar data and HPID state
+      examples: HIS-3001 resident data not available, HIS-3021 HPRID already exists, HIS-3031 invalid token
+    - range: HIS-4xxx
+      covers: Facility record errors
+      examples: HIS-4003 facility already exists, HIS-4032 invalid state code, HIS-4055 invalid image format
+    - range: HIS-5xxx
+      covers: Registration workflow errors
+      examples: HIS-5005 already registered, HIS-5011 token expired

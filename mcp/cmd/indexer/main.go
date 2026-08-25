@@ -63,8 +63,9 @@ func run(catDir, outPath string, emb embed.Embedder) error {
 			// Spec-area documentation (e.g. openapi/CONVENTIONS.md) is not an atom
 			// and is not hashed; skip it silently.
 			return nil
-		case strings.HasSuffix(path, ".md") && relSlash == "README.md":
-			// Root catalogue documentation is not an atom; skip it silently.
+		case strings.HasSuffix(path, string(os.PathSeparator)+"README.md") || relSlash == "README.md":
+			// READMEs are contributor notes for the folder they sit in, not
+			// atoms; skip them silently wherever they are.
 			return nil
 		case strings.HasSuffix(path, ".md"):
 			a, err := catalogue.ParseAtom(rel, content)

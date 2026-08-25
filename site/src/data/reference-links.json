@@ -1,0 +1,22 @@
+[
+  {
+    "label": "Gateway session",
+    "to": "/reference/hiecm-gateway"
+  },
+  {
+    "label": "M1 ABHA identity",
+    "to": "/reference/hiecm-m1"
+  },
+  {
+    "label": "M2 Linking and sharing",
+    "to": "/reference/hiecm-m2"
+  },
+  {
+    "label": "M3 Consent and fetching",
+    "to": "/reference/hiecm-m3"
+  },
+  {
+    "label": "M4 HPR and HFR",
+    "to": "/reference/hiecm-m4"
+  }
+]

@@ -1,0 +1,88 @@
+{/* Shared glossary partial. Imported by the gateway glossary pages;
+    the leading underscore keeps it off the site as a page of its own. */}
+
+These terms belong to HIE-CM: the roles, the consent objects and the four milestones.
+
+<div className="glossary">
+
+### Bridge
+
+The set of callback endpoints your system exposes to NHA's [gateway](#gateway); NHA stores one bridge URL for each registered participant and posts callbacks underneath it. NHA's M3 document gives `POST {hiuBridgeUrl}/v0.5/consents/hiu/notify` for an [HIU](#hiu) and `POST {hipBridgeUrl}/v0.5/health-information/hip/request` for a [HIP](#hip). Registering your bridge URL is part of sandbox onboarding.
+
+### Care context
+
+A group of a patient's health records, defined by your system. It carries two fields and nothing else: a reference number, which is your own internal identifier, and a display name a person can read, which must not carry clinical detail such as a diagnosis or a test result because it is shown before consent. NHA recommends one care context per outpatient visit and one per inpatient admission.
+
+### Consent artefact
+
+The record of a consent the patient granted. It names the patient, the requesting [HIU](#hiu), the [HI types](#hi-type) covered, the [purpose of use](#purpose-of-use), the date range of records allowed and an expiry. An HIU quotes the consent artefact id when it asks for data, and the [HIP](#hip) checks that id, and its date range, before it sends anything.
+
+### Consent manager
+
+The component that holds consent on the patient's behalf. In ABDM that component is the [HIE-CM](#hie-cm). It receives consent requests, shows them to the patient, records the grant or the denial, and tells both the requester and the record holder what the patient decided.
+
+### Discovery
+
+The step where a patient's [PHR](#phr) app asks a facility whether it holds records for that patient. The [HIE-CM](#hie-cm) forwards the request to the [HIP](#hip) with verified identifiers (ABHA address, mobile number, name, gender, year of birth) and any unverified identifier the patient typed, such as a hospital patient ID. Your system matches those against your own patients and replies with a list of [care contexts](#care-context), carrying no clinical detail.
+
+### ECDH
+
+Elliptic Curve Diffie-Hellman key exchange, used so that only the [HIU](#hiu) that holds a valid consent can read the records a [HIP](#hip) sends. Both sides generate a short lived key pair and a random 32 byte nonce, exchange the public halves, and derive the same session key. NHA's M2 document specifies Curve25519 for the exchange and AES-GCM for the encryption itself.
+
+### EMR
+
+Electronic Medical Record system: the clinical system a hospital or a clinic uses to record consultations, prescriptions and results. In ABDM an EMR acts as a [HIP](#hip), so it links care contexts in [M2](#m2). See [Hospital, lab and pharmacy systems](/docs/hiecm/v3/concepts/hip-hiu).
+
+### HI type
+
+Health Information type: the kind of record being asked for or shared, used in consent requests and in data requests. NHA's M3 document lists seven values: `Prescription`, `DiagnosticReport`, `OPConsultation`, `DischargeSummary`, `ImmunizationRecord`, `HealthDocumentRecord` and `WellnessRecord`. The M2 error message for an invalid HI type also lists `Invoice`.
+
+### HIP
+
+Health Information Provider: the role for a system that creates health records and shares them, such as a hospital, laboratory or pharmacy system. A HIP links [care contexts](#care-context) to a patient's [ABHA address](#abha-address), answers [discovery](#discovery), and sends encrypted records when a valid [consent artefact](#consent-artefact) exists. [M2](#m2) is the HIP milestone.
+
+### HIU
+
+Health Information User: the role for a system that reads someone else's records, such as a doctor's console, an insurer, a referral tool or an analytics product. An HIU raises a consent request, waits for the patient's decision, and fetches data only under a granted [consent artefact](#consent-artefact). [M3](#m3) is the HIU milestone.
+
+### HMIS
+
+Hospital Management Information System, NHA's term for the software a hospital runs day to day. An HMIS normally integrates as a [HIP](#hip). NHA's M2 document states that implementing every [HI type](#hi-type) is mandatory for an HMIS.
+
+### HRP
+
+Health Repository Provider. NHA's M2 document uses HRP for the system that actually holds the records, and writes it as "HRP/HIP" because the same system usually plays both parts. If you run an [HMIS](#hmis) or an [LMIS](#lmis) and you are integrating M2, HRP means you.
+
+### LIMS
+
+Laboratory Information Management System: the system a diagnostic lab uses to record orders, samples and results. In ABDM a LIMS acts as a [HIP](#hip) and links each report as a care context in [M2](#m2). See [Hospital, lab and pharmacy systems](/docs/hiecm/v3/concepts/hip-hiu).
+
+### Link token
+
+The token that authorises your system to link a [care context](#care-context) to a patient's [ABHA address](#abha-address); your system obtains it when the patient registers and stores it against that patient. NHA's M2 document gives it a validity of six months and says to validate it before use. If you do not hold a valid one, regenerate it through demographic authentication before you link.
+
+### LMIS
+
+Laboratory Management Information System, NHA's term for laboratory software. An LMIS integrates as a [HIP](#hip), the same way an [HMIS](#hmis) does.
+
+### M1
+
+Milestone 1, ABHA identity: creating an [ABHA number](#abha-number), logging a person in, reading and updating their profile, downloading the ABHA card, and the [gateway](#gateway) session and token calls that everything else depends on. NHA's M1 document marks most of these APIs mandatory for both private and government integrators, with Aadhaar demographic authentication the exception: mandatory for government integrators, not required for private ones. See [M1](/docs/hiecm/v3/api/m1).
+
+### M2
+
+Milestone 2, sharing records as a [HIP](#hip): turning your records into [FHIR](#fhir) bundles, grouping them into [care contexts](#care-context), linking those to a patient's [ABHA address](#abha-address), answering [discovery](#discovery), and encrypting and pushing data when consent allows. See [M2](/docs/hiecm/v3/api/m2).
+
+### M3
+
+Milestone 3, consent and reading records as an [HIU](#hiu): raising a consent request, tracking its status, handling the grant or denial callback, fetching the [consent artefact](#consent-artefact), requesting health information and decrypting what arrives. See [M3](/docs/hiecm/v3/api/m3).
+
+### M4
+
+Milestone 4, the registries: creating an [HPID](#hpid) on the [HPR](#hpr) and onboarding a facility to the [HFR](#hfr). NHA's document also calls this NHPR. See [M4](/docs/hiecm/v3/api/m4).
+
+### Purpose of use
+
+The reason an [HIU](#hiu) gives for asking for records; it travels in the consent request and the patient sees it. The codes are a subset of HL7's v3 PurposeOfUse value set: `CAREMGT` (care management), `BTG` (break the glass), `PUBHLTH` (public health), `HPAYMT` (healthcare payment), `DSRCH` (disease specific healthcare research) and `PATRQT` (self requested).
+
+</div>
