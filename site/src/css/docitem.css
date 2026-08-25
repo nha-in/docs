@@ -19,9 +19,26 @@
   min-width: 0;
 }
 
+/* Docusaurus offsets a hash-linked heading by --ifm-navbar-height alone, 4rem,
+   which only ever covered the top bar. The sticky chrome here is the top bar
+   plus the tab strip, --chrome-height, so every anchor in the content needs
+   its own scroll-margin against the real total or it lands underneath it.
+   Headings and anything else a link can target by id both need this, not
+   headings alone: a table of contents entry, a cross reference, or a plain
+   #fragment link can all point at a non-heading element with an id. */
+.docs-content :is(h1, h2, h3, h4, h5, h6, [id]) {
+  scroll-margin-top: calc(var(--chrome-height) + 1rem);
+}
+
+/* A sticky box can only travel inside its containing block, and this column is
+   that containing block. Left to the row's flex-start alignment the column
+   shrink-wraps the rail, so containing block and sticky box are the same
+   height, travel is zero, and the rail scrolls away with the article from the
+   first pixel. Stretching this one item gives it the height of the flex line. */
 .docs-toc-col {
   flex: 0 0 var(--toc-width);
   width: var(--toc-width);
+  align-self: stretch;
   padding: 2.5rem 1.5rem 0 0;
 }
 
@@ -33,11 +50,35 @@
 
 /* The rail only appears from 1280px, but the classic collapsible outline hides
    itself from 997px. Without this the band between the two has no table of
-   contents at all, so the mobile outline is kept for it. The extra `.docs-content`
-   beats the theme's CSS module rule whichever order the two stylesheets land in. */
+   contents at all, so the mobile outline is kept for it. The extra
+   `.docs-content` beats the theme's CSS module rule whichever order the two
+   stylesheets land in. */
 @media (min-width: 997px) and (max-width: 1279px) {
   .docs-content .theme-doc-toc-mobile {
     display: block;
+    margin: 0 0 2rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-panel);
+  }
+
+  /* Its caret is the same Infima wedge, at full opacity. */
+  .docs-content [class*='tocCollapsibleButton']::after {
+    content: '';
+    box-sizing: border-box;
+    width: 0.375rem;
+    height: 0.375rem;
+    min-width: 0;
+    background: none;
+    filter: none;
+    border: 0;
+    border-right: 1.25px solid currentColor;
+    border-bottom: 1.25px solid currentColor;
+    color: var(--text-faint);
+    transform: rotate(-45deg);
+  }
+
+  .docs-content [class*='tocCollapsibleButtonExpanded']::after {
+    transform: rotate(45deg);
   }
 }
 
@@ -47,47 +88,20 @@
   margin-top: 0;
 }
 
+/* The theme renders this as an Infima badge, which is a filled bordered pill
+   around a single word. It is a label, so it is set as one. */
 .docs-content .theme-doc-version-badge {
+  display: inline-block;
   margin-bottom: 1rem;
-}
-
-/* The h1 comes from the page's own markdown, so the copy control is floated
-   beside it rather than laid out with it. */
-.docs-page-actions {
-  float: right;
-  display: inline-flex;
-  align-items: center;
-  margin: 0.25rem 0 0 1.5rem;
-  border: 1px solid var(--border);
-  border-radius: var(--radius-control);
-  background: var(--surface);
-}
-
-.docs-page-actions > button {
-  color: var(--text-body);
-  font-weight: 500;
+  padding: 0;
+  border: 0;
   border-radius: 0;
-}
-
-.docs-page-actions > button:first-child {
-  border-radius: calc(var(--radius-control) - 1px) 0 0
-    calc(var(--radius-control) - 1px);
-}
-
-.docs-page-actions > button:last-child {
-  border-left: 1px solid var(--border);
-  border-radius: 0 calc(var(--radius-control) - 1px)
-    calc(var(--radius-control) - 1px) 0;
-}
-
-/* Too narrow to sit beside a serif h1: stack it above instead. */
-@media (max-width: 639px) {
-  .docs-page-actions {
-    float: none;
-    display: flex;
-    width: fit-content;
-    margin: 0 0 1rem;
-  }
+  background: transparent;
+  color: var(--text-faint);
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
 }
 
 /* ---------- feedback row ---------- */
@@ -118,9 +132,35 @@
 .docs-toc {
   position: sticky;
   top: calc(var(--chrome-height) + 2.5rem);
-  max-height: calc(100vh - var(--chrome-height) - 4rem);
+  max-height: calc(100vh - var(--chrome-height) - 5rem);
   overflow-y: auto;
+  overscroll-behavior: contain;
   border-left: 0;
+  /* Constant width, transparent until the pointer is in the rail. Same
+     treatment as the tree, for the same reason: toggling scrollbar-width would
+     reflow every line on hover. */
+  scrollbar-width: thin;
+  scrollbar-color: transparent transparent;
+}
+
+.docs-toc:hover,
+.docs-toc:focus-within {
+  scrollbar-color: var(--border-strong) transparent;
+}
+
+.docs-toc::-webkit-scrollbar {
+  width: 6px;
+}
+
+.docs-toc::-webkit-scrollbar-track,
+.docs-toc::-webkit-scrollbar-thumb {
+  background: transparent;
+  border-radius: 999px;
+}
+
+.docs-toc:hover::-webkit-scrollbar-thumb,
+.docs-toc:focus-within::-webkit-scrollbar-thumb {
+  background: var(--border-strong);
 }
 
 .docs-toc .table-of-contents,
@@ -136,10 +176,10 @@
 
 .docs-toc .table-of-contents__link {
   display: block;
-  font-size: 0.875rem;
+  font-size: 0.8125rem;
   font-weight: 400;
   line-height: 1.4;
-  padding: 0.125rem 0;
+  padding: 0.1875rem 0;
   color: var(--text-faint);
 }
 
@@ -147,8 +187,127 @@
   color: var(--text-heading);
 }
 
+/* The outline marks position on the page, and it changes on every scroll tick.
+   Ink and weight say where you are without a colour flickering down the rail
+   as you read. The accent stays with the sidebar, which marks position in the
+   site and only changes when you navigate. */
 .docs-toc .table-of-contents__link--active,
 .docs-toc .table-of-contents__link--active:hover {
-  color: var(--accent);
+  color: var(--text-heading);
+  font-weight: 500;
+}
+
+/* ---------- breadcrumbs ----------
+   The path a reader is on, above the title. Small, quiet, and the only place
+   the four level depth under Registries is visible on the page itself. */
+
+.docs-content .breadcrumbs {
+  margin-bottom: 0.75rem;
+  padding: 0;
+}
+
+.docs-content .breadcrumbs__item {
+  font-size: 0.8125rem;
+}
+
+.docs-content .breadcrumbs__link {
+  padding: 0;
+  border-radius: 0;
+  background: transparent;
+  color: var(--text-faint);
   font-weight: 400;
+}
+
+.docs-content .breadcrumbs__link:hover {
+  background: transparent;
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.docs-content .breadcrumbs__item--active .breadcrumbs__link {
+  background: transparent;
+  color: var(--text-heading);
+}
+
+/* Infima's separator is a filled right pointing triangle. Same drawn chevron
+   as the tree, one weight lighter because the crumbs are 13px. */
+.docs-content .breadcrumbs__item:not(:last-child)::after {
+  content: '';
+  box-sizing: border-box;
+  display: inline-block;
+  width: 0.3125rem;
+  height: 0.3125rem;
+  min-width: 0;
+  background: none;
+  filter: none;
+  opacity: 1;
+  border: 0;
+  border-right: 1px solid var(--text-faint);
+  border-bottom: 1px solid var(--text-faint);
+  transform: rotate(-45deg);
+  margin: 0 0.5rem;
+  vertical-align: 1px;
+}
+
+/* The home crumb is a filled glyph sized for 16px type in a row of 13px type.
+   Targeting the icon by element rather than by the theme's own class: that
+   class is a CSS module, hashed at build time, so the literal name here would
+   never match the rendered one. */
+.docs-content .breadcrumbs__item:first-child svg {
+  width: 0.875rem;
+  height: 0.875rem;
+  vertical-align: -2px;
+}
+
+/* ---------- glossary ----------
+   Each entry is a heading followed by one paragraph, so the pair falls into
+   two grid columns and reads as a table. Keeping real headings keeps the
+   `#term` anchors every other page links to, which a rendered table would
+   have thrown away. */
+
+.markdown .glossary {
+  display: grid;
+  grid-template-columns: 13rem minmax(0, 1fr);
+  border-top: 1px solid var(--border);
+}
+
+.markdown .glossary h3 {
+  margin: 0;
+  padding: 0.875rem 1rem 0.875rem 0;
+  border-bottom: 1px solid var(--border);
+  font-family: var(--font-sans);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  line-height: 1.5rem;
+  color: var(--text-heading);
+}
+
+.markdown .glossary p {
+  margin: 0;
+  padding: 0.875rem 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  color: var(--text-body);
+}
+
+/* The heading's anchor link would push the term off its own row. */
+.markdown .glossary h3 .hash-link {
+  display: none;
+}
+
+.markdown .glossary h3:target,
+.markdown .glossary h3:target + p {
+  background: var(--accent-soft);
+}
+
+@media (max-width: 768px) {
+  .markdown .glossary {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .markdown .glossary h3 {
+    padding-bottom: 0.25rem;
+    border-bottom: 0;
+  }
 }

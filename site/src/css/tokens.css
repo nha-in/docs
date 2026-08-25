@@ -1,10 +1,12 @@
 /**
  * Design tokens.
  *
- * The scale, the ramp and the surface colours are taken from the Claude Code
- * documentation site (code.claude.com/docs), measured from its rendered
- * stylesheet. The one deliberate change is the accent: sage green in place of
- * the original terracotta, in both light and dark mode.
+ * The scale and the structure are taken from the Claude Code documentation
+ * site (code.claude.com/docs). The colour follows beckn.io, measured from its
+ * rendered stylesheet: a neutral grey page, near black text, and a single
+ * blue that carries every accent. The earlier cream page and sage accent read
+ * as warm and dated. The rule this palette keeps is beckn's: one hue, used
+ * sparingly, on greys with no colour cast in either direction.
  *
  * Everything here is a raw value. Nothing in this file references Infima or
  * Tailwind, so both can be mapped onto it in custom.css.
@@ -12,55 +14,71 @@
 
 :root {
   /* Neutral ramp, measured from the reference site */
-  --ramp-50: #f3f3f3;
-  --ramp-100: #eeeeee;
-  --ramp-200: #dedede;
-  --ramp-300: #cecece;
-  --ramp-400: #9e9e9e;
-  --ramp-500: #707070;
-  --ramp-600: #505050;
-  --ramp-700: #3e3e3e;
-  --ramp-800: #252525;
+  --ramp-50: #fafafa;
+  --ramp-100: #f4f4f4;
+  --ramp-200: #e7e7e7;
+  --ramp-300: #d4d4d4;
+  --ramp-400: #a1a1a1;
+  /* The one step the ramp was missing: light mode needs its faintest text at
+     500 to stay above 4.5:1 on the page grey, which left dark mode with no
+     value between 400 and 500 to put its own faintest text on. */
+  --ramp-450: #8a8a8a;
+  --ramp-500: #6f6f6f;
+  --ramp-600: #525252;
+  --ramp-700: #3d3d3d;
+  --ramp-800: #262626;
   --ramp-900: #171717;
-  --ramp-950: #0a0a0a;
+  --ramp-950: #0d0d0d;
 
-  /* Sage accent, replacing the reference site's terracotta.
-     Light mode mirrors its accent-main-000, dark mode its primary-light. */
-  --sage-50: hsl(140 25% 96%);
-  --sage-100: hsl(140 22% 91%);
-  --sage-200: hsl(138 20% 82%);
-  --sage-300: hsl(134 20% 72%);
-  --sage-400: hsl(130 21% 62%);
-  --sage-500: hsl(130 24% 48%);
-  --sage-600: hsl(140 30% 34%);
-  --sage-700: hsl(142 32% 27%);
-  --sage-800: hsl(144 32% 21%);
-  --sage-900: hsl(146 30% 16%);
+  /* One blue, taken from beckn.io's link and button colour. Light mode uses
+     600, dark mode 300, so the accent keeps its weight on either background. */
+  --brand-50: #eff5ff;
+  --brand-100: #dbe7fe;
+  --brand-200: #bfd3fe;
+  --brand-300: #93b4fd;
+  --brand-400: #6090fa;
+  --brand-500: #3b6ff6;
+  --brand-600: #1a56db;
+  --brand-700: #1749b4;
+  --brand-800: #173f92;
+  --brand-900: #172f5f;
 
-  /* Semantic surfaces: light mode is the reference site's cream */
-  --page: #fdfdf7;
+  /* Semantic surfaces: beckn's neutral grey page, white panels on top */
+  --page: #f8f8f8;
   --surface: #ffffff;
   --surface-raised: #ffffff;
-  --surface-sunken: #f7f7f0;
-  --code-surface: #f7f7f0;
-  --border: rgb(0 0 0 / 0.08);
-  --border-strong: rgb(0 0 0 / 0.14);
+  --surface-sunken: #f1f1f1;
+  --code-surface: #f6f6f6;
+  --border: rgb(0 0 0 / 0.09);
+  --border-strong: rgb(0 0 0 / 0.16);
 
-  /* The reference site is dark first, where its faintest text is ramp-400 on
-     near black, a 5.6:1 contrast. The same value on this cream background is
-     2.6:1, so the light ramp steps down instead of across: nav and outline
-     text sits at ramp-500, which keeps the same visual hierarchy at 5.3:1. */
+  /* Hover and resting fills, neutral. Every hover state in the shell used
+     --accent-soft, which over this page grey is a visible pale blue rectangle:
+     twenty rules all shouting the accent for the ordinary act of moving a
+     pointer. The accent is now reserved for the two things that are actually
+     about the accent, the current page and a link. */
+  --hover-soft: rgb(0 0 0 / 0.04);
+  --fill-soft: rgb(0 0 0 / 0.06);
+
+  /* Five steps, and until now two of them held the same value: --text-muted
+     and --text-faint were both ramp-500, so a hierarchy meant to be carried by
+     colour had one fewer step than it declared, and the work fell to fills and
+     rules instead. The quiet band now steps 700, 600, 500. 700 and 600 clear
+     4.5:1 on the page grey with room to spare; 500 was measured at #767676 and
+     landed at 4.28:1, short of the bar, so it is darkened to #6f6f6f, which
+     measures 4.73:1. Dark mode never reads this step (its own faintest text is
+     ramp-450, one step lighter), so the change is light mode only. */
   --text: var(--ramp-950);
   --text-heading: var(--ramp-900);
-  --text-body: var(--ramp-600);
-  --text-muted: var(--ramp-500);
+  --text-body: var(--ramp-700);
+  --text-muted: var(--ramp-600);
   --text-faint: var(--ramp-500);
 
-  --accent: var(--sage-600);
-  --accent-hover: var(--sage-700);
+  --accent: var(--brand-600);
+  --accent-hover: var(--brand-700);
   --accent-contrast: #ffffff;
-  --accent-soft: hsl(140 30% 34% / 0.1);
-  --accent-line: hsl(140 30% 34% / 0.4);
+  --accent-soft: rgb(26 86 219 / 0.08);
+  --accent-line: rgb(26 86 219 / 0.4);
 
   /* Structure, measured from the reference site */
   --topbar-height: 4rem;
@@ -69,8 +87,12 @@
   --sidebar-width: 16rem;
   --toc-width: 16.5rem;
   --content-max: 51rem;
-  --radius-control: 0.75rem;
-  --radius-panel: 1rem;
+  /* Nine radius values were in play against two tokens, so no two corners in
+     the shell agreed. Three, and every box picks one by its size: a chip, a
+     control, a panel. */
+  --radius-chip: 0.375rem;
+  --radius-control: 0.5rem;
+  --radius-panel: 0.75rem;
 
   /* The reference site sets a licensed face first and falls back to these.
      We ship no webfont, so the fallbacks are the stack. */
@@ -84,7 +106,7 @@
 /**
  * shadcn/ui semantic names, mapped onto the tokens above so its components
  * inherit this palette instead of carrying a second one. The `accent` role in
- * shadcn means "hover surface", which here is the sage tint, not the sage.
+ * shadcn means "hover surface", which here is the blue tint, not the blue.
  */
 :root {
   --background: var(--page);
@@ -102,29 +124,31 @@
   --destructive: #b3261e;
   --input: var(--border);
   --ring: var(--accent);
-  --radius: 0.75rem;
+  --radius: 0.625rem;
 }
 
 [data-theme='dark'] {
   --destructive: #f2b8b5;
 
-  --page: #09090b;
-  --surface: #0d0d0f;
-  --surface-raised: #141416;
-  --surface-sunken: #08080a;
-  --code-surface: #141416;
+  --page: #0d0d0d;
+  --surface: #141414;
+  --surface-raised: #1c1c1c;
+  --surface-sunken: #0a0a0a;
+  --code-surface: #1c1c1c;
   --border: rgb(255 255 255 / 0.08);
   --border-strong: rgb(255 255 255 / 0.14);
+  --hover-soft: rgb(255 255 255 / 0.05);
+  --fill-soft: rgb(255 255 255 / 0.08);
 
   --text: #ffffff;
   --text-heading: var(--ramp-200);
-  --text-body: var(--ramp-400);
-  --text-muted: var(--ramp-500);
-  --text-faint: var(--ramp-400);
+  --text-body: var(--ramp-300);
+  --text-muted: var(--ramp-400);
+  --text-faint: var(--ramp-450);
 
-  --accent: var(--sage-300);
-  --accent-hover: var(--sage-200);
-  --accent-contrast: #0a0a0a;
-  --accent-soft: hsl(134 20% 72% / 0.1);
-  --accent-line: hsl(134 20% 72% / 0.4);
+  --accent: var(--brand-300);
+  --accent-hover: var(--brand-200);
+  --accent-contrast: #0d0d0d;
+  --accent-soft: rgb(147 180 253 / 0.12);
+  --accent-line: rgb(147 180 253 / 0.4);
 }

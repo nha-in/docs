@@ -11,6 +11,9 @@ site/static/specs/
 # Generated: Scalar browser bundle vendored by scripts/sync-specs.mjs
 site/static/vendor/
 
+# Generated: agent skills compiled from the pages by scripts/build-skills.mjs
+site/static/skills/
+
 # Environment
 .env
 .env.*
@@ -23,4 +26,18 @@ site/static/vendor/
 
 # Local index snapshots (build outputs; CI produces its own)
 mcp/catalogue.db
-docs
+# The planning artifacts at the repo root only. A bare "docs" here would
+# also ignore site/docs, which is the entire documentation content.
+/docs/
+
+# Generated: the API reference, built from catalogue/openapi by
+# scripts/build-api-reference.mjs
+site/docs/abdm/v3/api/*/endpoints/
+site/docs/abdm/v3/api/index.md
+site/docs/abdm/v3/api/*/errors.md
+site/docs/abdm/v3/api/*/_servers.md
+site/docs/abdm/v3/reference/authentication.md
+site/docs/abdm/v3/reference/callbacks.md
+site/docs/abdm/v3/reference/error-codes.md
+site/src/data/api/
+site/src/data/api-sidebar.json

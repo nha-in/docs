@@ -9,27 +9,20 @@ source: repository README.md and catalogue/openapi/hiecm-gateway.yaml
 
 # Support
 
-Two different things can go wrong, and they go to two different places. If a
-sandbox call behaves in a way this portal does not explain, that is a question
-for [NHA](/docs/overview/glossary#nha). If a page here is wrong, missing or
-broken, that is a question for this repository.
+Two places to ask, depending on what went wrong. Sandbox behaviour goes to
+[NHA](/docs/abdm/v3/glossary#nha); a page here that is wrong, missing or broken
+goes to whoever maintains it.
 
 ## Ask NHA about the sandbox
 
 NHA runs a developer forum at
 [devforum.abdm.gov.in](https://devforum.abdm.gov.in). Post there for anything
-about the [ABDM](/docs/overview/glossary#abdm) sandbox itself: credentials,
+about the [ABDM](/docs/abdm/v3/glossary#abdm) sandbox itself: credentials,
 onboarding, an endpoint returning something the document does not describe, a
-callback that never arrives, or a certification question.
-
-Search the forum before posting. Sandbox problems are often shared, and the
-answer is frequently already on a thread from someone integrating the same
-module.
+callback that never arrives, or a certification question. Search the forum
+first, because the answer is often already on a thread.
 
 ## What to put in a report
-
-A report with these five things can be acted on. A report without them turns
-into a round of questions first.
 
 | Include | Example |
 |---|---|
@@ -39,24 +32,18 @@ into a round of questions first.
 | The response you received | Status code and full body |
 | What you expected instead | The behaviour the document describes |
 
-Include the callback body too, if the call is asynchronous and a callback
-arrived. Never post an access token, a client secret, or a real patient's
-identifiers. Replace them with a placeholder before you post.
+Add the callback body if the call is asynchronous and a callback arrived. Never
+post an access token, a client secret, or a real patient's identifiers. Replace
+them with a placeholder.
 
-The `REQUEST-ID` and the timestamp matter more than they look. `REQUEST-ID` is
-a fresh UUID you generate per request, and NHA's own M1 Postman collection
-sends it on almost every call. It is the one value in your report that names
-the exact call you made, so log it and quote it. Without it, the first reply
-you get is usually a request for it.
+`REQUEST-ID` is a fresh UUID you generate per request, and NHA's M1 Postman
+collection sends it on almost every call. It is the one value that names the
+exact call you made, so log it and quote it.
 
-## Report a problem with this portal
+## Report a problem with a page here
 
-Wrong page, dead link, a payload that does not match what the sandbox actually
-returns: raise it on the repository that builds this site, not on NHA's forum.
-The catalogue is the source, so a fix lands in the catalogue and the site
-rebuilds from it.
-
-Two things worth saying in the report: the page URL, and whether you saw the
-real behaviour yourself. Pages here are written from NHA's documents and are
-marked `unverified` for that reason. A report from someone who has run the call
-is how a page becomes verified.
+Wrong page, dead link, a payload that does not match what the sandbox returns:
+report it against the page, not on NHA's forum. Say the page URL, and whether
+you saw the real behaviour yourself. Pages here are written from NHA's documents
+and marked `unverified` for that reason, so a report from someone who has run
+the call is how a page becomes verified.

@@ -113,18 +113,19 @@
   margin: 2.5rem 0;
 }
 
-/* Inline code: the reference site tints it, no border. */
+/* Inline code: a neutral tint, no border. It was the accent tint, which put a
+   pale blue box behind every identifier in the prose. */
 .markdown code:not(pre code) {
   font-family: var(--font-mono);
   font-size: 0.875em;
-  background: var(--accent-soft);
+  background: var(--fill-soft);
   color: var(--text-heading);
   border: 0;
-  border-radius: 0.375rem;
+  border-radius: var(--radius-chip);
   padding: 0.125rem 0.3125rem;
 }
 
-/* Code blocks: 16px radius, 14px/24px mono, tinted surface. */
+/* Code blocks: the panel radius, 14px/24px mono, tinted surface. */
 .theme-code-block {
   border-radius: var(--radius-panel) !important;
   border: 1px solid var(--border);
@@ -152,20 +153,22 @@ div[class^='codeBlockTitle'] {
   background: transparent !important;
 }
 
-/* Tables */
+/* Tables. border-collapse: collapse merges every cell border into the table's
+   own, so there is no border box left for border-radius to round or overflow
+   to clip; both were dead weight. Square corners read as consistent with the
+   restrained look everywhere else, so nothing replaces them. */
 .markdown table {
   display: table;
   width: 100%;
   font-size: 0.9375rem;
   border-collapse: collapse;
   border: 1px solid var(--border);
-  border-radius: var(--radius-control);
-  overflow: hidden;
   margin-bottom: 1.5rem;
 }
 
 .markdown table thead {
-  background: var(--surface-sunken);
+  background: transparent;
+  border-bottom: 1px solid var(--border);
 }
 
 .markdown table th {
@@ -190,13 +193,12 @@ div[class^='codeBlockTitle'] {
   background: transparent !important;
 }
 
-/* Admonitions, restyled as the reference site's callouts.
-   Measured there: radius 16px, padding 16px 20px, a uniform 1px border and a
-   10% tint of the foreground, with a 12px gap to the icon. */
+/* Admonitions. The ordinary border weight, not the strong one: a callout is an
+   aside, and at --border-strong it drew harder than the code blocks around it. */
 .theme-admonition {
-  border: 1px solid var(--border-strong);
+  border: 1px solid var(--border);
   border-radius: var(--radius-panel);
-  background: color-mix(in srgb, var(--text) 5%, transparent);
+  background: color-mix(in srgb, var(--text) 4%, transparent);
   box-shadow: none;
   font-size: 1rem;
   line-height: 1.75rem;

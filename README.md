@@ -22,6 +22,12 @@ catalogue/            Source of truth. Nothing downstream is hand-maintained.
   VERSION             Catalogue version stamp
 site/                 Docusaurus site with Scalar API references (a rendering,
                       not a source; site/static/specs is generated)
+  docs/               Pages, routed as /docs/<gateway>/<version>/<section>
+    abdm/v3/          HIE-CM, Phase 1
+    uhi/v1/           UHI, Phase 2
+    nhcx/v1/          NHCX, out of scope for V1
+  sidebars.ts         One sidebar per gateway; the gateway and version
+                      pickers at the top of the sidebar switch between them
 scripts/              Build helpers (spec sync; later: nav generation, atom lint)
 mcp/                  Go MCP server: cmd/indexer compiles catalogue/ into a
                       SQLite snapshot (FTS + embeddings via Ollama, optional);

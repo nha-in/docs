@@ -108,7 +108,64 @@ tags:
 # paths are not quoted there. Take them from the swagger.
 paths: {}
 
-webhooks: {}
+# Callbacks NHA makes to your bridge. Transcribed from NHA's milestone
+# document; none has been observed against the sandbox.
+webhooks:
+  /api/v3/hiu/consent/request/on-init:
+    post:
+      operationId: m3_on_consent_request_init
+      summary: "The consent request was accepted, with its request id"
+      description: |
+        Carries the consent request and the request id. Store the request id: it is how a later notification is tied back to the request you made.
+
+        Transcribed from NHA's milestone document. Not run against the ABDM sandbox, so the payload is unconfirmed.
+      responses:
+        '202':
+          description: "Your bridge accepted the callback. NHA validates the body you send back, so a 202 carrying the wrong body is still a failure."
+  /api/v3/hiu/consent/request/notify:
+    post:
+      operationId: m3_on_consent_request_notify_hiu
+      summary: "The patient's decision, sent to the requester"
+      description: |
+        On a grant, carries every consent artefact id created against the request, with the request id. On a denial, carries the denial.
+
+        Transcribed from NHA's milestone document. Not run against the ABDM sandbox, so the payload is unconfirmed.
+      responses:
+        '202':
+          description: "Your bridge accepted the callback. NHA validates the body you send back, so a 202 carrying the wrong body is still a failure."
+  /api/v3/consent/request/hip/notify:
+    post:
+      operationId: m3_on_consent_request_notify_hip
+      summary: "The patient's decision, sent to the record holder"
+      description: |
+        The same decision sent to the system that holds the records, with all care context references.
+
+        Transcribed from NHA's milestone document. Not run against the ABDM sandbox, so the payload is unconfirmed.
+      responses:
+        '202':
+          description: "Your bridge accepted the callback. NHA validates the body you send back, so a 202 carrying the wrong body is still a failure."
+  /api/v3/hiu/consent/on-fetch:
+    post:
+      operationId: m3_on_consent_fetch
+      summary: "The consent artefact detail, fetched by artefact id"
+      description: |
+        The artefact itself, in answer to a fetch by artefact id.
+
+        Transcribed from NHA's milestone document. Not run against the ABDM sandbox, so the payload is unconfirmed.
+      responses:
+        '202':
+          description: "Your bridge accepted the callback. NHA validates the body you send back, so a 202 carrying the wrong body is still a failure."
+  /api/v3/hiu/health-information/on-request:
+    post:
+      operationId: m3_on_health_information_request
+      summary: "Acknowledgement of a health information request"
+      description: |
+        Carries the transaction id, the request id and the current status. This is an acknowledgement, not the records. The records arrive at the data push URL you supplied.
+
+        Transcribed from NHA's milestone document. Not run against the ABDM sandbox, so the payload is unconfirmed.
+      responses:
+        '202':
+          description: "Your bridge accepted the callback. NHA validates the body you send back, so a 202 carrying the wrong body is still a failure."
 
 components:
   securitySchemes:
@@ -141,11 +198,11 @@ components:
       in: header
       required: true
       description: >
-        The current time in ISO 8601, in UTC, from a synchronised clock.
+        The current time in ISO 8601, in IST, the +05:30 offset, from a synchronised clock. Working integrations send IST rather than the UTC that NHA's collection templates emit.
       schema:
         type: string
         format: date-time
-      example: '2026-08-24T10:15:30.000Z'
+      example: '2026-08-24T15:45:30.000+05:30'
 
     CmId:
       name: X-CM-ID

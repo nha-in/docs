@@ -14,7 +14,8 @@ import {
   SheetTitle,
   SheetTrigger,
 } from '@site/src/components/ui/sheet';
-import {activeTab, tabs} from '@site/src/config/navigation';
+import {activeTab, tabHref, tabs} from '@site/src/config/navigation';
+import SidebarPickers from './SidebarPickers';
 
 /**
  * The under-996px menu: the four tabs, then the current tab's doc sidebar.
@@ -29,7 +30,8 @@ import {activeTab, tabs} from '@site/src/config/navigation';
  */
 export default function MobileNav() {
   const [open, setOpen] = useState(false);
-  const current = activeTab(useLocation().pathname);
+  const {pathname} = useLocation();
+  const current = activeTab(pathname);
   const sidebar = useNavbarSecondaryMenu().content;
   const mobileSidebar = useNavbarMobileSidebar();
 
@@ -66,7 +68,7 @@ export default function MobileNav() {
                   <li key={tab.to}>
                     <SheetClose asChild>
                       <Link
-                        to={tab.to}
+                        to={tabHref(tab, pathname)}
                         className={cn('mobile-nav-tab', isActive && 'mobile-nav-tab--active')}
                         aria-current={isActive ? 'page' : undefined}>
                         {tab.label}
@@ -80,7 +82,8 @@ export default function MobileNav() {
 
           {sidebar ? (
             <nav aria-label={current ? `${current.label} pages` : 'Pages'}>
-              <p className="mobile-nav-section">{current?.label ?? 'On this page'}</p>
+              <p className="mobile-nav-section">Gateway</p>
+              <SidebarPickers />
               <div className="mobile-nav-sidebar">{sidebar}</div>
             </nav>
           ) : null}

@@ -14,20 +14,29 @@
    `:root:root` outranks the theme module's `:root` without needing !important. */
 :root:root {
   --doc-sidebar-width: var(--sidebar-width);
+  /* The theme's 30px strip existed to be a full height click target. Claude's
+     own reference leaves nothing behind at all: the tree collapses to zero
+     width, and the control that brings it back floats over the content
+     instead of living in a reserved gutter. */
+  --doc-sidebar-hidden-width: 0px;
 }
 
 @media (min-width: 997px) {
-  /* Sticky under the full chrome: 64px bar + 48px tab strip. A definite height
-     (the theme sets max-height only) is what lets the list below scroll. */
+  /* The sticky viewport, sized to the space under the chrome. A definite
+     height, not the theme's max-height alone, is what gives the tree below a
+     box to scroll inside. The <aside> above it stretches to the full doc row,
+     which is where the travel comes from. */
   .theme-doc-sidebar-container > div {
     top: var(--chrome-height);
     height: calc(100vh - var(--chrome-height));
     max-height: calc(100vh - var(--chrome-height));
   }
 
-  /* The list scrolls on its own. min-height:0 lets it shrink inside the column
-     flex parent instead of pushing past the viewport. */
-  .theme-doc-sidebar-container .menu {
+  /* The head is fixed and the tree takes what is left. min-height:0 is what
+     lets a flex item shrink below its content instead of pushing the column
+     past the viewport and handing the scroll back to the page. */
+  .theme-doc-sidebar-container .docs-sidebar > .menu {
+    flex: 1 1 auto;
     min-height: 0;
     overflow-y: auto;
     overscroll-behavior: contain;
@@ -39,7 +48,6 @@
     scrollbar-color: transparent transparent;
   }
 
-  /* No scrollbar chrome until the pointer or the keyboard is in the rail. */
   .theme-doc-sidebar-container .menu:hover,
   .theme-doc-sidebar-container .menu:focus-within {
     scrollbar-color: var(--border-strong) transparent;
@@ -61,54 +69,57 @@
   }
 }
 
-/* ---------- top level category: a section header, not a row ---------- */
+/* ---------- categories ----------
+   Every group expands and collapses, including the top level ones. A top
+   level group still reads as a section header, so it keeps the 600 weight and
+   the heading colour, but it is a control now: it has a caret, it takes focus,
+   and clicking it opens or closes its children. */
 
-/* `display: block` because the header is an <a> when the group has its own
-   page, and an inline box would drop the bottom margin. */
-.docs-sidebar-section__title {
-  display: block;
-  font-size: 0.875rem;
-  line-height: 1.5rem;
-  font-weight: 600;
-  color: var(--text-heading);
-  padding-left: 1rem;
-  margin-bottom: 0.625rem;
-}
-
-/* As a link it still reads as a header: no underline, no row surface. */
-a.docs-sidebar-section__title:hover {
-  color: var(--text-heading);
-  text-decoration: none;
-}
-
-/* Its page is the current one. Accent text only, no `--accent-soft` fill: the
-   fill is what marks a row, and this is a header. */
-.docs-sidebar-section__title--active,
-a.docs-sidebar-section__title--active:hover {
-  color: var(--accent);
-}
-
-/* The only spacing here that the contract does not measure: it gives 10px
-   below a header but nothing above one. A section can follow a plain link as
-   well as another section, so this is every section but the first. */
-.docs-sidebar-section:not(:first-child) {
-  margin-top: 1.5rem;
-}
-
-/* ---------- level 2 and deeper stay collapsible rows ---------- */
-
-/* Override of layout.css: its
-   `.menu__list-item-collapsible > .menu__link--sublist` rule paints every
-   collapsible category as a 600 weight heading. Now that the top level is
-   static text, that rule can only reach level 2+, where a category has to read
-   as a link. Overridden, not removed. */
-.theme-doc-sidebar-item-category:not(.theme-doc-sidebar-item-category-level-1)
+.theme-doc-sidebar-item-category-level-1
   > .menu__list-item-collapsible
   > .menu__link {
   font-size: 0.875rem;
-  line-height: 1.5rem;
-  font-weight: 400;
-  color: var(--text-faint);
+  line-height: 1.25rem;
+  font-weight: 600;
+  color: var(--text-heading);
+  padding-left: 1rem;
+}
+
+.theme-doc-sidebar-item-category-level-1
+  > .menu__list-item-collapsible
+  > .menu__link:hover {
+  color: var(--text-heading);
+}
+
+/* The group's own page is the current one: accent text, no fill, and a step
+   to 700 weight so the state does not ride on colour alone (WCAG 1.4.1). The
+   leaf uses a 2px bar for the same job, but that mark is drawn on ::after,
+   which a category row already spends on its own chevron. */
+.theme-doc-sidebar-item-category-level-1
+  > .menu__list-item-collapsible
+  > .menu__link--active,
+.theme-doc-sidebar-item-category-level-1
+  > .menu__list-item-collapsible
+  > .menu__link--active:hover {
+  color: var(--accent);
+  background: transparent;
+  font-weight: 700;
+}
+
+/* Air above every group but the first. */
+.theme-doc-sidebar-item-category-level-1:not(:first-child) {
+  margin-top: 1.25rem;
+}
+
+/* Level 2 and deeper sit between a header and a leaf, and until now they were
+   set identically to a leaf. One step of weight and one of colour is enough. */
+.theme-doc-sidebar-item-category:not(.theme-doc-sidebar-item-category-level-1)
+  > .menu__list-item-collapsible
+  > .menu__link {
+  font-size: 0.8125rem;
+  line-height: 1.25rem;
+  font-weight: 500;
+  color: var(--text-body);
 }
 
 .theme-doc-sidebar-item-category:not(.theme-doc-sidebar-item-category-level-1)
@@ -117,8 +128,6 @@ a.docs-sidebar-section__title--active:hover {
   color: var(--text-heading);
 }
 
-/* `--active:hover` as well, or the hover rule above (one pseudo-class more
-   specific) would repaint the current category on hover. */
 .theme-doc-sidebar-item-category:not(.theme-doc-sidebar-item-category-level-1)
   > .menu__list-item-collapsible
   > .menu__link--active,
@@ -126,11 +135,542 @@ a.docs-sidebar-section__title--active:hover {
   > .menu__list-item-collapsible
   > .menu__link--active:hover {
   color: var(--accent);
-  font-weight: 500;
+  font-weight: 600;
 }
 
-/* The caret is a button of its own when the category also has a page; it takes
-   the same no-surface hover as every other row. */
+/* ---------- the expand and collapse mark ----------
+   Two borders on an empty box, rotated. Drawn rather than fetched so it takes
+   currentColor and a token, which the data URI it replaces could not: that one
+   carried rgba(0,0,0,0.5) inside the SVG and was recoloured in dark mode by an
+   invert filter. Collapsed points right, expanded points down. */
+
+.theme-doc-sidebar-container .menu__caret::before,
+.theme-doc-sidebar-container .menu__link--sublist-caret::after {
+  content: '';
+  box-sizing: border-box;
+  width: 0.375rem;
+  height: 0.375rem;
+  min-width: 0;
+  background: none;
+  filter: none;
+  opacity: 1;
+  border: 0;
+  border-right: 1.25px solid currentColor;
+  border-bottom: 1.25px solid currentColor;
+  border-radius: 0 0 1px 0;
+  color: var(--text-faint);
+  transform: rotate(45deg);
+  transition: transform 160ms ease;
+}
+
+/* On a link-only category the mark is drawn inside the link, but it must land
+   in the same place as the mark inside a category's 1.75rem caret button:
+   centred, so 0.6875rem in from the row's right edge. The link's own 0.75rem
+   right padding overshoots that, hence the negative remainder. */
+.theme-doc-sidebar-container .menu__link--sublist-caret::after {
+  margin: 0 calc((1.75rem - 0.375rem) / 2 - 0.75rem) 0 auto;
+}
+
+.theme-doc-sidebar-container
+  .menu__list-item--collapsed
+  > .menu__list-item-collapsible
+  > .menu__caret::before,
+.theme-doc-sidebar-container
+  .menu__list-item--collapsed
+  > .menu__list-item-collapsible
+  > .menu__link--sublist-caret::after {
+  transform: rotate(-45deg);
+}
+
+/* The whole row is the control, so the mark follows the row's colour. */
+.theme-doc-sidebar-container
+  .menu__list-item-collapsible:hover
+  .menu__caret::before,
+.theme-doc-sidebar-container
+  .menu__list-item-collapsible:hover
+  .menu__link--sublist-caret::after {
+  color: var(--text-heading);
+}
+
+/* The caret is a real button when the category also has a page. Squared off to
+   the same 28px as the fold control, and it takes the same neutral wash. */
+.theme-doc-sidebar-container .menu__caret {
+  width: 1.75rem;
+  padding: 0;
+  justify-content: center;
+  border-radius: var(--radius-chip);
+  opacity: 1;
+}
+
 .theme-doc-sidebar-container .menu__caret:hover {
+  background: var(--hover-soft);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .theme-doc-sidebar-container .menu__caret::before,
+  .theme-doc-sidebar-container .menu__link--sublist-caret::after {
+    transition: none;
+  }
+}
+
+/* ---------- desktop sidebar shell ----------
+   Replaces the classic theme's CSS module, which the swizzled
+   DocSidebar/Desktop no longer imports. Same box: a full height column under
+   the chrome, at the sidebar width. */
+
+@media (min-width: 997px) {
+  .docs-sidebar {
+    display: flex;
+    flex-direction: column;
+    /* The resize handle is positioned against this column. */
+    position: relative;
+    height: 100%;
+    width: var(--doc-sidebar-width);
+    padding-top: 1.5rem;
+  }
+
+  .docs-sidebar--hidden {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+
+/* ---------- the head ----------
+   One row: the pickers, and the control that folds the tree away. The left
+   inset lines the picker's label up with the section headers below it, and the
+   right inset lines the fold control up with the rows' right edge, so the head
+   reads as part of the tree rather than as a bar above it. */
+
+.docs-sidebar__head {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 0.25rem;
+  /* The rows below sit inside the menu's own 0.75rem side padding, so the
+     head's right inset is that padding plus the rows' inset. */
+  padding: 0 1.5rem 0.75rem 1.375rem;
+}
+
+.sidebar-pickers {
+  display: flex;
+  flex: 1 1 auto;
+  align-items: center;
+  gap: 0.375rem;
+  min-width: 0;
+}
+
+.sidebar-picker {
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.375rem;
+  height: 1.75rem;
+  padding: 0 0.375rem;
+  border: 0;
+  border-radius: var(--radius-chip);
   background: transparent;
+  color: var(--text-heading);
+  font-family: inherit;
+  font-size: 0.75rem;
+  font-weight: 500;
+  line-height: 1;
+  cursor: pointer;
+  transition: color 150ms ease, background-color 150ms ease;
+}
+
+.sidebar-picker:hover,
+.sidebar-picker[data-state='open'] {
+  background: var(--hover-soft);
+}
+
+.sidebar-picker--platform {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.sidebar-picker--version {
+  flex: 0 0 auto;
+}
+
+.sidebar-picker__value {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.sidebar-picker__option {
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 0.5rem 0.625rem;
+}
+
+.sidebar-picker__option-main {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+  min-width: 0;
+}
+
+.sidebar-picker__option-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 600;
+  color: var(--text-heading);
+}
+
+.sidebar-picker__option-note {
+  font-size: 0.75rem;
+  line-height: 1.1rem;
+  color: var(--text-muted);
+  white-space: normal;
+}
+
+.sidebar-picker__footnote {
+  font-size: 0.6875rem;
+  font-weight: 400;
+  line-height: 1rem;
+  color: var(--text-faint);
+  white-space: normal;
+}
+
+/* ---------- fold and unfold ----------
+   Both halves of the pair are the same object: a 28px ghost icon button, no
+   fill and no border at rest, a neutral wash on hover. The theme's version was
+   a full width strip at the foot of the tree and a full height rail in its
+   place, which is furniture, not a control. */
+
+.sidebar-fold,
+.sidebar-unfold {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  width: 1.75rem;
+  height: 1.75rem;
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-chip);
+  background: transparent;
+  color: var(--text-faint);
+  cursor: pointer;
+  transition: color 150ms ease, background-color 150ms ease;
+}
+
+.sidebar-fold:hover,
+.sidebar-unfold:hover {
+  background: var(--hover-soft);
+  color: var(--text-heading);
+}
+
+/* No strip is left behind when the tree folds away, so this control has
+   nowhere in the layout to sit: it floats over the content instead, fixed to
+   the viewport rather than positioned against the sidebar. Fixed coordinates
+   put it level with where the fold button sits in the head.
+
+   The component portals this button to <body> (see ExpandButton), rather
+   than leaving it to render where React would otherwise put it, inside the
+   <aside>. `position: fixed` does not by itself escape an ancestor's
+   clip-path: the aside is clipped to its own box below, and at the collapsed
+   width that box has zero area, so a fixed descendant left inside it would
+   still be clipped to nothing. The portal is what actually gets it out. */
+.sidebar-unfold {
+  position: fixed;
+  top: calc(var(--chrome-height) + 0.75rem);
+  left: 0.75rem;
+  z-index: 30;
+}
+
+/* The theme puts a pointer cursor on the whole collapsed column, a promise
+   that a 28px button does not keep.
+
+   min-width is the load bearing line. The <aside> is a flex item, so its
+   automatic minimum size is the 256px column inside it: the theme's own
+   `width: var(--doc-sidebar-hidden-width)` never took, the width never
+   animated, and the transitionend that flips the theme into its collapsed
+   state, the one that renders the unfold control (now portalled out of this
+   box, so it no longer shares the box's fate), never fired. Zero here is
+   what makes the collapse to nothing real. */
+.theme-doc-sidebar-container[class*='docSidebarContainerHidden'] {
+  cursor: default;
+  min-width: 0;
+}
+
+/* The floating button now sits where the breadcrumb row would otherwise
+   start. The theme adds this same modifier to <main> exactly when the
+   sidebar it is a sibling of is hidden, so the nudge only applies to a
+   collapsed doc page, never to a page with no sidebar at all. */
+.theme-doc-sidebar-container[class*='docSidebarContainerHidden']
+  ~ main[class*='docMainContainerEnhanced']
+  .docs-content {
+  padding-top: 4rem;
+}
+
+/* ---------- the resize handle ----------
+   A hairline down the sidebar's right edge. Invisible until the pointer is
+   near it, then it thickens into a grip that takes a drag.
+
+   The <aside> this sits inside carries the theme's own clip-path: inset(0),
+   which clips hit-testing to its border box. A handle straddling that edge
+   used to have its outer half, and the grip line on it, dead: clicks there
+   hit nothing. Keeping the whole 12px hit area inside the edge (right: 0
+   rather than a negative offset) puts it back inside the clip, and the grip
+   is drawn at the box's own right edge so it still sits visually on the
+   boundary. */
+.sidebar-resizer {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 0.75rem;
+  z-index: 20;
+  cursor: col-resize;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  touch-action: none;
+}
+
+.sidebar-resizer__grip {
+  width: 1px;
+  height: 100%;
+  background: transparent;
+  transition: background-color 150ms ease;
+}
+
+/* Nothing is drawn between the rail and the article until the pointer asks for
+   the handle. While a drag is running the accent confirms it is live. */
+.sidebar-resizer:hover .sidebar-resizer__grip,
+.sidebar-resizer:focus-visible .sidebar-resizer__grip {
+  background: var(--border-strong);
+}
+
+.sidebar-resizer--active .sidebar-resizer__grip {
+  background: var(--accent);
+}
+
+/* WCAG 2.4.7: a keyboard-focused control needs a visible indicator. The
+   ordinary focus ring, since this is an ordinary focusable control. */
+.sidebar-resizer:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* While dragging, the pointer is over the article: stop it selecting text. */
+body.is-resizing-sidebar {
+  user-select: none;
+  cursor: col-resize;
+}
+
+/* No handle where the sidebar is a sheet rather than a column. */
+@media (max-width: 996px) {
+  .sidebar-resizer {
+    display: none;
+  }
+}
+
+/* ---------- the skill install panel ----------
+   It leads a module's APIs section: the file, and the one command that puts
+   it where an agent reads it. */
+
+.skill-install {
+  margin: 0 0 2.5rem;
+  padding: 1.5rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-panel);
+  background: transparent;
+}
+
+.skill-install__head {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.skill-install__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: var(--radius-control);
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+.skill-install__body {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.markdown .skill-install__title {
+  margin: 0 0 0.25rem;
+  font-family: var(--font-serif);
+  font-size: 1.25rem;
+  line-height: 1.75rem;
+  font-weight: 400;
+  color: var(--text-heading);
+}
+
+.markdown .skill-install__note {
+  margin: 0;
+  font-size: 0.9375rem;
+  line-height: 1.5rem;
+  color: var(--text-body);
+}
+
+.skill-install__download {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex: 0 0 auto;
+  height: 2.5rem;
+  padding: 0 1rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-control);
+  background: var(--surface);
+  color: var(--text-heading);
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.skill-install__download:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.skill-install__targets {
+  display: flex;
+  gap: 0.375rem;
+  margin: 1.25rem 0 0.625rem;
+}
+
+.skill-install__target {
+  height: 1.875rem;
+  padding: 0 0.75rem;
+  border: 1px solid transparent;
+  border-radius: var(--radius-chip);
+  background: transparent;
+  color: var(--text-muted);
+  font-family: inherit;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.skill-install__target:hover {
+  color: var(--text-heading);
+}
+
+.skill-install__target--active {
+  border-color: var(--border);
+  background: var(--surface);
+  color: var(--text-heading);
+}
+
+.skill-cmd {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.625rem 0.625rem 0.625rem 0.875rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-control);
+  background: var(--code-surface);
+  overflow: hidden;
+}
+
+.markdown .skill-cmd__text {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow-x: auto;
+  white-space: nowrap;
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  color: var(--text-heading);
+  background: transparent;
+  border: 0;
+  padding: 0;
+  scrollbar-width: none;
+}
+
+.markdown .skill-cmd__text::-webkit-scrollbar {
+  display: none;
+}
+
+.skill-cmd__copy {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  width: 1.875rem;
+  height: 1.875rem;
+  border: 0;
+  border-radius: var(--radius-chip);
+  background: transparent;
+  color: var(--text-faint);
+  cursor: pointer;
+}
+
+.skill-cmd__copy:hover {
+  background: var(--surface);
+  color: var(--accent);
+}
+
+.markdown .skill-install__hint {
+  margin: 0.625rem 0 0;
+  font-size: 0.8125rem;
+  line-height: 1.25rem;
+  color: var(--text-muted);
+}
+
+@media (max-width: 640px) {
+  .skill-install__head {
+    flex-wrap: wrap;
+  }
+}
+
+/* ---------- depth ----------
+   The nested list steps right (layout.css). These two put the first level on
+   the same left edge as the section headers above it, so the ladder starts
+   flush and every level below is one step in. */
+
+.theme-doc-sidebar-container > div > div > .menu > .menu__list > .menu__list-item > .menu__link,
+.theme-doc-sidebar-container > div > div > .menu > .menu__list > .theme-doc-sidebar-item-link-level-1 > .menu__link {
+  padding-left: 1rem;
+}
+
+/* ---------- the method on an endpoint row ----------
+   A filled badge inside a row that now has no fill of its own reads as a
+   second object on the line. The verb is set in mono at a fixed muted colour
+   instead, quieter than the row's heading and accent states but never below
+   4.5:1 on its own, and the fixed width keeps every label on one left edge.
+   PATCH is the width driver at five characters.
+
+   This file is the sole owner of the verb's presentation (colour, size,
+   spacing, type): the ancestor-scoped selector below is deliberately more
+   specific than api.css's plain `.api-method > .menu__link::before`, so the
+   win is a declared fact of scoping to this docs-sidebar context, not an
+   accident of which file happens to be pickier. api.css owns only the word,
+   through the ::before content it sets and this file does not touch, and the
+   row's own flex layout. */
+
+.theme-doc-sidebar-container .menu__link.api-method::before,
+.theme-doc-sidebar-container .api-method > .menu__link::before,
+.navbar-sidebar .menu__link.api-method::before,
+.navbar-sidebar .api-method > .menu__link::before {
+  flex: 0 0 auto;
+  min-width: 2.5rem;
+  padding: 0;
+  border-radius: 0;
+  background: none;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  font-weight: 600;
+  line-height: 1.25rem;
+  letter-spacing: 0.06em;
+  text-align: left;
 }

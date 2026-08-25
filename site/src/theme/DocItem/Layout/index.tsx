@@ -1,12 +1,7 @@
 import React from 'react';
-import {useLocation} from '@docusaurus/router';
+import clsx from 'clsx';
 import {useWindowSize} from '@docusaurus/theme-common';
-import {
-  findSidebarCategory,
-  isActiveSidebarItem,
-  useDoc,
-  useDocsSidebar,
-} from '@docusaurus/plugin-content-docs/client';
+import {useDoc} from '@docusaurus/plugin-content-docs/client';
 import DocItemPaginator from '@theme/DocItem/Paginator';
 import DocVersionBanner from '@theme/DocVersionBanner';
 import DocVersionBadge from '@theme/DocVersionBadge';
@@ -14,10 +9,9 @@ import DocItemFooter from '@theme/DocItem/Footer';
 import DocItemTOCMobile from '@theme/DocItem/TOC/Mobile';
 import DocItemTOCDesktop from '@theme/DocItem/TOC/Desktop';
 import DocItemContent from '@theme/DocItem/Content';
+import DocBreadcrumbs from '@theme/DocBreadcrumbs';
 import ContentVisibility from '@theme/ContentVisibility';
 import type {Props} from '@theme/DocItem/Layout';
-import PageActions from '@site/src/components/docs/PageActions';
-import {activeTab} from '@site/src/config/navigation';
 
 /** Decide if the toc should be rendered, on mobile or desktop viewports. */
 function useDocTOC() {
@@ -34,42 +28,30 @@ function useDocTOC() {
 }
 
 /**
- * The line above the title: the section this page sits in. Preference is the
- * sidebar category that contains the page; failing that, the tab it belongs
- * to. Nothing is rendered when neither is available, or when the name would
- * just repeat the title.
+ * The article column. The line above the title is the breadcrumb trail rather
+ * than a single section name: the tree runs four levels deep under Registries,
+ * and the reader needs the whole path, not the nearest parent.
  */
-function useEyebrow(): string | undefined {
-  const sidebar = useDocsSidebar();
-  const {pathname} = useLocation();
-  const {metadata} = useDoc();
-  const category = sidebar
-    ? findSidebarCategory(sidebar.items, (item) =>
-        isActiveSidebarItem(item, pathname),
-      )
-    : undefined;
-  const label = category?.label ?? activeTab(pathname)?.label;
-  return label && label.toLowerCase() !== metadata.title.toLowerCase()
-    ? label
-    : undefined;
-}
-
 export default function DocItemLayout({children}: Props): React.ReactNode {
   const docTOC = useDocTOC();
-  const {metadata} = useDoc();
-  const eyebrow = useEyebrow();
+  const {metadata, frontMatter} = useDoc();
+  // A page asks for a different frame with `wrapperClassName`. The API
+  // reference pages use it to widen the column for their request panel.
+  // `wrapperClassName` is a Docusaurus frontmatter field that the DocFrontMatter
+  // type does not declare, so read it through an index access.
+  const declared = (frontMatter as Record<string, unknown>).wrapperClassName;
+  const wrapperClassName = typeof declared === 'string' ? declared : undefined;
 
   return (
-    <div className="docs-article-row">
+    <div className={clsx('docs-article-row', wrapperClassName)}>
       <div className="docs-article-main">
         <ContentVisibility metadata={metadata} />
         <DocVersionBanner />
         <div className="docs-content">
           <article>
+            <DocBreadcrumbs />
             <DocVersionBadge />
             {docTOC.mobile}
-            {eyebrow && <p className="docs-eyebrow">{eyebrow}</p>}
-            <PageActions />
             <DocItemContent>{children}</DocItemContent>
             <DocItemFooter />
           </article>

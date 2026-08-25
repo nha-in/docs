@@ -94,25 +94,57 @@
   color: var(--text-heading);
 }
 
-.docs-tab--active::after {
+/* The accent underscore marks both the hovered tab and the current one. It sits
+   on the strip's own bottom border, so nothing shifts when it appears. */
+.docs-tab::after {
   content: '';
   position: absolute;
   inset-inline: 0;
   bottom: -1px;
-  height: 1px;
+  height: 2px;
+  border-radius: 1px;
   background: var(--accent);
+  opacity: 0;
+  transform: scaleX(0.4);
+  transition: opacity 150ms ease, transform 150ms ease;
+}
+
+.docs-tab:hover::after,
+.docs-tab:focus-visible::after {
+  opacity: 0.55;
+  transform: scaleX(1);
+}
+
+.docs-tab--active::after,
+.docs-tab--active:hover::after {
+  opacity: 1;
+  transform: scaleX(1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .docs-tab::after {
+    transition: none;
+    transform: none;
+  }
 }
 
 /* ---------- doc page frame ---------- */
 
-.theme-doc-sidebar-container {
+/* The container is 256px open. When it is folded away Docusaurus shrinks it
+   to `--doc-sidebar-hidden-width` and pulls it off canvas, so the width is set
+   only on the open state: an `!important` on both would pin it open. */
+.theme-doc-sidebar-container:not([class*='docSidebarContainerHidden']) {
   width: var(--sidebar-width) !important;
-  border-right: 0 !important;
-  background: transparent;
 }
 
-.theme-doc-sidebar-container > div > div {
-  padding-top: 1.5rem;
+.theme-doc-sidebar-container {
+  border-right: 0 !important;
+  background: transparent;
+  /* The theme module pulls the container up behind the navbar by a negative
+     navbar-height margin and expects the sidebar to pad itself back down.
+     This sidebar sits below the chrome instead, so the pull would only bury
+     the picker head behind the sticky tabs until the page scrolls. */
+  margin-top: 0 !important;
 }
 
 .menu {
@@ -122,8 +154,12 @@
   scrollbar-width: thin;
 }
 
+/* Every level steps right of its parent, so the depth of a page is visible in
+   the rail rather than only in the breadcrumb. The step is applied to the
+   nested list, so it compounds: gateway, module, section, use case, endpoint.
+   No left rule: the indent alone carries the structure. */
 .menu__list .menu__list {
-  padding-left: 0;
+  padding-left: 0.75rem;
   margin-left: 0;
   border-left: 0;
 }
@@ -132,13 +168,17 @@
   margin-top: 0.0625rem;
 }
 
+/* A leaf is the quietest thing in the rail: 13px, regular, faint. It has one
+   step of size, one of weight and one of colour between it and the section
+   header above it, which is what lets both of them carry structure without a
+   rule or a fill. */
 .menu__link {
-  font-size: 0.875rem;
-  line-height: 1.5rem;
+  font-size: 0.8125rem;
+  line-height: 1.25rem;
   font-weight: 400;
   color: var(--text-faint);
   border-radius: var(--radius-control);
-  padding: 0.375rem 0.75rem 0.375rem 1rem;
+  padding: 0.375rem 0.75rem;
   transition: color 120ms ease, background-color 120ms ease;
 }
 
@@ -147,11 +187,38 @@
   color: var(--text-heading);
 }
 
+/* Current page: no fill at all. The row is the current one because its type is
+   half a step heavier, because its colour is the accent against faint
+   siblings, and because of one 2px mark in the gutter. Three quiet signals
+   instead of one loud rectangle, and the mark is the only place the accent is
+   painted as a shape in the whole rail. */
 .menu__link--active,
-.menu__link--active:hover {
+.menu__link--active:hover,
+.menu__link--active:not(.menu__link--sublist) {
   color: var(--accent);
-  background: var(--accent-soft);
+  background: transparent;
   font-weight: 500;
+}
+
+.theme-doc-sidebar-container .menu__link--active:not(.menu__link--sublist),
+.navbar-sidebar .menu__link--active:not(.menu__link--sublist) {
+  position: relative;
+}
+
+/* ::before on this element is the API method verb, so the mark takes ::after.
+   Category rows are excluded: ::after is their chevron, and a header that is
+   also the current page says so with colour alone. */
+.theme-doc-sidebar-container .menu__link--active:not(.menu__link--sublist)::after,
+.navbar-sidebar .menu__link--active:not(.menu__link--sublist)::after {
+  content: '';
+  position: absolute;
+  inset-inline-start: 0;
+  top: 50%;
+  width: 2px;
+  height: 0.875rem;
+  margin-top: -0.4375rem;
+  border-radius: 1px;
+  background: var(--accent);
 }
 
 /* Category labels read as section headers, not as clickable rows. */
@@ -160,17 +227,22 @@
   font-size: 0.875rem;
   font-weight: 600;
   color: var(--text-heading);
+  background: transparent;
+}
+
+/* Only the top level carries the fixed inset. Below it the nested list's own
+   step is the indent, and adding both would push each level twice. */
+.theme-doc-sidebar-item-category-level-1 > .menu__list-item-collapsible > .menu__link,
+.theme-doc-sidebar-item-link-level-1 > .menu__link {
   padding-left: 1rem;
-  background: transparent;
 }
 
-.menu__list-item-collapsible:hover {
+/* Infima fills this wrapper at a 4px radius when the category's own page is
+   current, inside rows that carry a 12px radius. Both states are flat now. */
+.menu__list-item-collapsible:hover,
+.menu__list-item-collapsible--active,
+.theme-doc-sidebar-container .menu__list-item-collapsible--active {
   background: transparent;
-}
-
-.menu__caret,
-.menu__link--sublist-caret::after {
-  opacity: 0.5;
 }
 
 /* ---------- content column ---------- */
@@ -178,6 +250,13 @@
 .docMainContainer_node_modules,
 main .container {
   max-width: none;
+}
+
+/* The rail pins 40px under the chrome, and its resting position has to be the
+   same 40px or it jumps on the first scroll. Infima's padding-top--md utility
+   on the container adds 16px above the row, which is exactly that jump. */
+main .container:has(> .docs-article-row) {
+  padding-top: 0;
 }
 
 .docs-content {
@@ -221,24 +300,33 @@ main .container {
   display: block;
 }
 
-.table-of-contents__link:hover,
-.table-of-contents__link--active {
-  color: var(--accent);
+.table-of-contents__link:hover {
+  color: var(--text-heading);
   text-decoration: none;
 }
 
+.table-of-contents__link--active {
+  color: var(--text-heading);
+  font-weight: 500;
+  text-decoration: none;
+}
+
+/* A label, not an entry. Same idiom as .docs-eyebrow, one step smaller and
+   without the accent, because it names the list rather than the page. */
 .docs-toc-heading {
-  font-family: var(--font-serif);
-  font-size: 0.875rem;
-  font-weight: 400;
-  color: var(--text-muted);
-  margin-bottom: 0.5rem;
+  font-family: var(--font-sans);
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+  margin-bottom: 0.75rem;
 }
 
 /* ---------- footer ---------- */
 
 .footer {
-  background: var(--surface-sunken);
+  background: transparent;
   border-top: 1px solid var(--border);
   color: var(--text-muted);
   font-size: 0.875rem;
@@ -253,6 +341,7 @@ main .container {
 }
 
 .footer__link-item {
+  font-size: 0.8125rem;
   color: var(--text-faint);
 }
 
@@ -267,16 +356,26 @@ main .container {
 
 /* ---------- pagination ---------- */
 
+/* Two bordered cards under the prose were the loudest objects on the page for
+   what is one word and one title. What a reader needs is the direction and the
+   destination, so that is all that is left. */
 .pagination-nav__link {
-  border: 1px solid var(--border);
-  border-radius: var(--radius-panel);
-  padding: 1rem 1.25rem;
-  background: var(--surface);
-  transition: border-color 150ms ease;
+  display: block;
+  border: 0;
+  border-radius: 0;
+  padding: 0.25rem 0;
+  background: transparent;
 }
 
-.pagination-nav__link:hover {
-  border-color: var(--accent-line);
+.pagination-nav__link:hover .pagination-nav__label {
+  color: var(--accent);
+}
+
+/* Infima sets these to guillemets, rendered here in Georgia at 17px. The
+   uppercase sublabel already says Previous and Next. */
+.pagination-nav__link--prev .pagination-nav__label::before,
+.pagination-nav__link--next .pagination-nav__label::after {
+  content: none;
 }
 
 .pagination-nav__sublabel {

@@ -1,0 +1,77 @@
+---
+title: Introduction
+sidebar_label: Introduction
+description: What ABDM is, what the HIE-CM gateway carries, and the order to work through this section.
+verification: unverified
+source: ABDM__Proposed_Simplified_Milestone_1.md, ABDM__Proposed_Simplified_Milestone_2.md, ABDM__Proposed_Simplified_Milestone_3.md, ABDM__NewDocumant_PHR_app.md
+---
+
+import {Steps, Step} from '@site/src/components/mdx';
+
+# Introduction
+
+The Ayushman Bharat Digital Mission ([ABDM](/docs/abdm/v3/glossary#abdm)) is India's national
+health data network, run by the National Health Authority ([NHA](/docs/abdm/v3/glossary#nha)).
+This section documents the Health Information Exchange and Consent Manager
+([HIE-CM](/docs/abdm/v3/glossary#hie-cm)), the gateway that carries identity, care contexts,
+consent and health records.
+
+## Get started
+
+<Steps>
+  <Step title="Choose your role">
+    An [HIP](/docs/abdm/v3/glossary#hip) creates records. An
+    [HIU](/docs/abdm/v3/glossary#hiu) reads records held elsewhere. A
+    [PHR](/docs/abdm/v3/glossary#phr) is the patient's own app, and NHA's PHR document states
+    that every PHR application also implements HIU functionality. One system often takes
+    several roles. See [HIP and HIU](/docs/abdm/v3/concepts/hip-hiu) and
+    [PHR applications](/docs/abdm/v3/phr).
+  </Step>
+  <Step title="Get sandbox credentials">
+    NHA reviews your registration before it issues a client id and client secret, and its
+    documents do not say how long that takes. [Sandbox access](/docs/abdm/v3/sandbox) covers
+    the registration and the wait.
+  </Step>
+  <Step title="Pick your milestones">
+    NHA certifies four milestones one at a time.
+    [Integration milestones](/docs/abdm/v3/milestones) maps each role to the milestones it
+    has to build.
+  </Step>
+  <Step title="Make your first call">
+    Exchange the client id and client secret for an access token at the gateway session
+    endpoint. The [gateway session reference](/reference/hiecm-gateway) has the request shape.
+  </Step>
+</Steps>
+
+## The registries
+
+Every HIE-CM call carries an identifier that a registry issued.
+
+| Registry | What it identifies |
+| --- | --- |
+| [ABHA](/docs/abdm/v3/building-blocks/registries/abha) | A person. A 14 digit [ABHA](/docs/abdm/v3/glossary#abha) number is issued after Aadhaar based [KYC](/docs/abdm/v3/glossary#kyc). An ABHA address, such as `name@abdm`, is the name used to hold and share records. |
+| [NHPR](/docs/abdm/v3/building-blocks/registries/nhpr) | The provider side: healthcare professionals in the [HPR](/docs/abdm/v3/glossary#hpr), health facilities in the [HFR](/docs/abdm/v3/glossary#hfr). |
+
+ABDM keeps no central store of health records. Records stay in the system that created them.
+HIE-CM is data blind: NHA's Milestone 2 document states that it does not access or store
+health record content, and works only with identifiers and metadata about care contexts.
+[Registries](/docs/abdm/v3/building-blocks/registries) has the detail.
+
+## The four milestones
+
+| Milestone | What you build |
+| --- | --- |
+| [M1](/docs/abdm/v3/api/m1) | ABHA creation, ABHA login, profile management, sessions |
+| [M2](/docs/abdm/v3/api/m2) | Care contexts, linking, discovery, sharing records as an HIP |
+| [M3](/docs/abdm/v3/api/m3) | Consent requests, consent artefacts, fetching records as an HIU |
+| [M4](/docs/abdm/v3/api/m4) | Professional and facility registries |
+
+## Next steps
+
+[Architecture](/docs/abdm/v3/architecture) for how the pieces fit,
+[Sandbox access](/docs/abdm/v3/sandbox) for credentials,
+[Glossary](/docs/abdm/v3/glossary) for any unfamiliar term.
+
+Booking services rather than moving records runs on [UHI](/docs/uhi/v1), the Unified Health
+Interface. Insurance claims run on [NHCX](/docs/nhcx/v1), the National Health Claims Exchange.
+The picker at the top of the sidebar switches between the three.

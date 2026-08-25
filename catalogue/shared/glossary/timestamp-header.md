@@ -22,7 +22,8 @@ related:
 
 ## In plain words
 
-Every ABDM call carries a `TIMESTAMP` header in ISO 8601, in UTC. The
+Every ABDM call carries a `TIMESTAMP` header in ISO 8601, in IST, the
++05:30 offset, for example `2026-08-24T15:45:30.000+05:30`. The
 gateway compares it against its own clock and rejects the request if the
 difference is too large.
 

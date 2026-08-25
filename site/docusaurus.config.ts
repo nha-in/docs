@@ -98,7 +98,9 @@ const config: Config = {
         docs: {
           sidebarPath: './sidebars.ts',
           routeBasePath: '/docs',
-          breadcrumbs: false,
+          // The tree runs four levels deep under Registries, so the path a
+          // reader is on is worth showing.
+          breadcrumbs: true,
           showLastUpdateTime: true,
         },
         blog: false,
@@ -109,7 +111,23 @@ const config: Config = {
     ],
   ],
 
-  plugins: [tailwindPlugin, ...scalarPlugins],
+  plugins: [
+    tailwindPlugin,
+    ...scalarPlugins,
+    [
+      // A reader who types /docs, or follows a link written before the
+      // gateway segment existed, lands on the HIE-CM introduction rather
+      // than a 404.
+      '@docusaurus/plugin-client-redirects',
+      {
+        redirects: [
+          {from: '/docs', to: '/docs/abdm/v3'},
+          {from: '/docs/overview', to: '/docs/abdm/v3'},
+          {from: '/docs/api', to: '/docs/abdm/v3/milestones'},
+        ],
+      },
+    ],
+  ],
 
   themes: [
     // Open source local search, indexed at build time. No third party service.
@@ -133,7 +151,9 @@ const config: Config = {
     },
     docs: {
       sidebar: {
-        hideable: false,
+        // The sidebar folds away sideways, which the API pages need: their
+        // request panel wants the width more than the tree does.
+        hideable: true,
         autoCollapseCategories: false,
       },
     },
@@ -142,6 +162,7 @@ const config: Config = {
       logo: {
         alt: '',
         src: 'img/logo.svg',
+        srcDark: 'img/logo-dark.svg',
       },
       hideOnScroll: false,
       items: [
@@ -163,18 +184,18 @@ const config: Config = {
         {
           title: 'Overview',
           items: [
-            {label: 'What ABDM is', to: '/docs/overview'},
-            {label: 'Get started', to: '/docs/overview/get-started'},
-            {label: 'Glossary', to: '/docs/overview/glossary'},
+            {label: 'Introduction', to: '/docs/abdm/v3'},
+            {label: 'Sandbox access', to: '/docs/abdm/v3/sandbox'},
+            {label: 'Glossary', to: '/docs/abdm/v3/glossary'},
           ],
         },
         {
           title: 'API references',
           items: [
-            {label: 'Choose your gateway', to: '/docs/api'},
-            {label: 'M1 ABHA identity', to: '/reference/hiecm-m1'},
-            {label: 'M2 Linking and sharing', to: '/reference/hiecm-m2'},
-            {label: 'M3 Consent and fetching', to: '/reference/hiecm-m3'},
+            {label: 'All endpoints', to: '/docs/abdm/v3/api'},
+            {label: 'M1 ABHA identity', to: '/docs/abdm/v3/api/m1'},
+            {label: 'M2 Linking and sharing', to: '/docs/abdm/v3/api/m2'},
+            {label: 'M3 Consent and fetching', to: '/docs/abdm/v3/api/m3'},
           ],
         },
         {
@@ -192,8 +213,8 @@ const config: Config = {
       copyright: `Catalogue ${catalogueVersion} · Copyright © ${new Date().getFullYear()} National Health Authority (NHA). MIT licensed.`,
     },
     prism: {
-      theme: prismThemes.github,
-      darkTheme: prismThemes.dracula,
+      theme: prismThemes.oneLight,
+      darkTheme: prismThemes.oneDark,
       additionalLanguages: ['bash', 'json', 'yaml', 'java', 'python'],
     },
   } satisfies Preset.ThemeConfig,

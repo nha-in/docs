@@ -1,0 +1,52 @@
+---
+title: M1 APIs
+sidebar_label: APIs
+description: The rules that hold across every M1 endpoint. Base URLs, how scope picks the job, RSA encryption, and the two token rule.
+verification: unverified
+source: ABDM__M1_ABHA_Collection.postman_collection.md
+---
+
+import Servers from './_servers.md';
+import {NextStep} from '@site/src/components/docs/PathForward';
+
+# M1 APIs
+
+Every Milestone 1 ([M1](/docs/abdm/v3/api/m1)) endpoint of [ABDM](/docs/abdm/v3/glossary#abdm) has its own page, carrying its method, path, headers, body fields, responses and a curl sample. This page carries what those pages cannot: the rules that hold across all of them. The detail comes from [NHA](/docs/abdm/v3/glossary#nha)'s M1 [ABHA](/docs/abdm/v3/glossary#abha) Postman collection, the only M1 source with real request text.
+
+## Base URLs
+
+<Servers />
+
+The session call lives on the gateway host. Every other M1 call lives on the ABHA service. A few login routes sit on v3.1 instead of v3, at `https://abhasbx.abdm.gov.in/abha/api/v3.1/`, and their own pages say so. Neither source says the sandbox and production hosts differ in anything but the name, and we have not compared them.
+
+## The scope array picks the job
+
+About twenty paths cover the whole M1 surface. Most are reused for several jobs, and the `scope` array picks which. The same `POST enrollment/request/otp` sends the Aadhaar [OTP](/docs/abdm/v3/glossary#otp), the mobile OTP and the email OTP. `POST profile/account/request/otp` covers mobile update, email update, password change, re-[KYC](/docs/abdm/v3/glossary#kyc), delete and deactivate. Read the `scope` values on an endpoint page before you assume the path does one thing.
+
+## Sensitive fields travel encrypted
+
+Aadhaar numbers, mobile numbers, email addresses, OTP values and passwords are RSA encrypted with NHA's public certificate before they go in the body. Placeholders are named for it, for example `<RSA_ENCRYPTED_AADHAAR_NUMBER>`.
+
+Encrypt locally. NHA's [encrypt endpoint](/docs/abdm/v3/api/m1/endpoints/m1-encrypt-value) does it for you, which helps when you are trying a flow by hand and is wrong in production, because it sends the raw value to a remote host.
+
+NHA's M1 document names a `public/certificate` API for fetching the public key. Its example is a screenshot, so the URL, the headers and the response body are not transcribed here. The Postman collection does not contain that call.
+
+## Two tokens, not interchangeable
+
+The gateway access token from the [session call](/docs/abdm/v3/api/gateway/endpoints/gateway-sessions-create) goes in `Authorization`. It says your system may call. The user token from an enrolment or a login goes in `X-token`. It says whose account to act on.
+
+Profile endpoints need both. That is every path under `profile/account`, including the card, the quick response (QR) code and logout. The refresh token is a third value with its own header: it goes in `R-token` on the token refresh call only, never in `X-token` and never in the body.
+
+## The benefit endpoints are government only
+
+NHA's M1 document marks the benefit programme APIs under `profile/benefit/` as government integrator only. A private integrator calling them receives `ABDM-1094`. See [errors](/docs/abdm/v3/api/m1/errors). Child ABHA creation is restricted further, to specific government integrators on leadership approval.
+
+## Every endpoint has its own page
+
+Each M1 endpoint is listed in the sidebar under its group, with its request fields, its recorded responses, and a request you can send from the page. Start at [the endpoint index](/docs/abdm/v3/api), or read [the call order](/docs/abdm/v3/api/m1/sequence) first if you have not built the flow yet.
+
+<NextStep
+  label="Follow the exact call order"
+  detail="The sequence page walks the calls in the order the gateway expects them."
+  to="/docs/abdm/v3/api/m1/sequence"
+/>

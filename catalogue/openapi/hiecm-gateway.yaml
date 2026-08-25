@@ -63,6 +63,7 @@ paths:
   /api/hiecm/gateway/v3/sessions:
     post:
       operationId: gateway_sessions_create
+      x-abdm-use-case: Session and tokens
       tags: [sessions]
       summary: Create a session and get an access token
       description: |
@@ -125,13 +126,13 @@ components:
       in: header
       required: true
       description: >
-        The current time in ISO 8601, in UTC. The gateway rejects a request
+        The current time in ISO 8601, in IST, the +05:30 offset. Working integrations send IST even though NHA's collection fills this with Postman's `$isoTimestamp`, which emits UTC. The gateway rejects a request
         whose timestamp has drifted too far from its own clock, so take this
         from a synchronised clock rather than from a local one.
       schema:
         type: string
         format: date-time
-      example: '2026-08-24T10:15:30.000Z'
+      example: '2026-08-24T15:45:30.000+05:30'
 
     CmId:
       name: X-CM-ID
