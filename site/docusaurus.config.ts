@@ -25,6 +25,50 @@ function tailwindPlugin() {
 // served under one, e.g. GitHub Pages at /abdm-docs/.
 const siteBase = process.env.DOCUSAURUS_BASE_URL ?? '/';
 
+// When the site itself is served under /docs (GitHub Pages on a repository
+// named docs), the docs plugin moves to the route root, so every final URL
+// keeps the production shape: <origin>/docs/hiecm/v3 either way. That also
+// lets the content's absolute /docs/... links resolve unchanged, and matches
+// useBaseUrl's behaviour of leaving a path that already starts with the base
+// alone. navigation.ts reads this back through customFields to restore the
+// canonical /docs shape its matchers are written against.
+const docsRouteBasePath = siteBase === '/docs/' ? '/' : '/docs';
+
+// A canonical '/docs/...' path as the docs plugin actually routes it: with the
+// plugin at the route root the '/docs' segment comes off, because the base
+// supplies it instead.
+const docsRoute = (p: string): string =>
+  docsRouteBasePath === '/' ? p.slice('/docs'.length) || '/' : p;
+
+// Old published URLs and their current homes, in the canonical '/docs' shape.
+// The plugin config below reshapes them for the build's actual route base.
+const redirectPairs = [
+  {from: '/docs', to: '/docs/hiecm/v3/'},
+  {from: '/docs/abdm/v3/building-blocks/registries', to: '/docs/hiecm/v3/registries/'},
+  {from: '/docs/abdm/v3/building-blocks/registries/abha', to: '/docs/hiecm/v3/registries/abha'},
+  {from: '/docs/abdm/v3/building-blocks/registries/nhpr', to: '/docs/hiecm/v3/registries/nhpr/'},
+  {from: '/docs/abdm/v3/building-blocks/registries/nhpr/hpr', to: '/docs/hiecm/v3/registries/nhpr/hpr'},
+  {from: '/docs/abdm/v3/building-blocks/registries/nhpr/hfr', to: '/docs/hiecm/v3/registries/nhpr/hfr'},
+  {from: '/docs/abdm/v3/building-blocks/gateway', to: '/docs/hiecm/v3/concepts/gateway'},
+  {from: '/docs/abdm/v3/building-blocks/hie-cm', to: '/docs/hiecm/v3/concepts/gateway'},
+  {from: '/docs/abdm/v3/concepts/hie-cm', to: '/docs/hiecm/v3/concepts/gateway'},
+  {from: '/docs/overview', to: '/docs/hiecm/v3/'},
+  {from: '/docs/api', to: '/docs/hiecm/v3/getting-started/milestones'},
+  {from: '/docs/abdm/v3/architecture', to: '/docs/hiecm/v3/getting-started/architecture'},
+  {from: '/docs/abdm/v3/sandbox', to: '/docs/hiecm/v3/getting-started/sandbox'},
+  {from: '/docs/abdm/v3/milestones', to: '/docs/hiecm/v3/getting-started/milestones'},
+  {from: '/docs/abdm/v3/what-you-can-build', to: '/docs/hiecm/v3/getting-started/what-you-can-build'},
+  {from: '/docs/abdm/v3/glossary', to: '/docs/hiecm/v3/getting-started/glossary'},
+  {from: '/docs/abdm/v3/phr', to: '/docs/hiecm/v3/concepts/phr'},
+  {from: '/docs/abdm/v3/registries/hpr', to: '/docs/hiecm/v3/registries/nhpr/hpr'},
+  {from: '/docs/abdm/v3/registries/hfr', to: '/docs/hiecm/v3/registries/nhpr/hfr'},
+  {from: '/docs/uhi/v1/onboarding', to: '/docs/uhi/v1/getting-started/onboarding'},
+  {from: '/docs/uhi/v1/glossary', to: '/docs/uhi/v1/getting-started/glossary'},
+  {from: '/docs/uhi/v1/network-and-protocol', to: '/docs/uhi/v1/concepts/network-and-protocol'},
+  {from: '/docs/nhcx/v1/glossary', to: '/docs/nhcx/v1/getting-started/glossary'},
+];
+
+
 // One interactive reference per specification file, discovered from the
 // catalogue tree: dropping a YAML under catalogue/openapi/<platform>/<version>
 // publishes its Scalar reference at /reference/<filename-stem>. Every instance
@@ -232,6 +276,7 @@ const config: Config = {
     // panel on the MCP page renders locked, and every button on it goes live
     // the moment this resolves. Nothing else has to change.
     mcpUrl: process.env.MCP_URL ?? null,
+    docsRouteBasePath,
   },
 
   i18n: {
@@ -246,7 +291,7 @@ const config: Config = {
         docs: {
           sidebarPath: './sidebars.ts',
           sidebarItemsGenerator,
-          routeBasePath: '/docs',
+          routeBasePath: docsRouteBasePath,
           // README.md files are contributor notes for the folder they sit in,
           // shown by GitHub and never rendered as pages. The first entries are
           // Docusaurus's own defaults, which setting `exclude` would drop.
@@ -279,50 +324,29 @@ const config: Config = {
       // than a 404.
       '@docusaurus/plugin-client-redirects',
       {
-        redirects: [
-          {from: '/docs', to: '/docs/hiecm/v3/'},
-          // Old flat and building-blocks URLs from before the folder
-          // restructure. The `from` paths are the URLs as they were published,
-          // under the platform's old name (abdm); the blanket abdm-to-hiecm
-          // alias in createRedirects only covers pages that still exist at the
-          // same path, so moved pages need these explicit entries.
-          {from: '/docs/abdm/v3/building-blocks/registries', to: '/docs/hiecm/v3/registries/'},
-          {from: '/docs/abdm/v3/building-blocks/registries/abha', to: '/docs/hiecm/v3/registries/abha'},
-          {from: '/docs/abdm/v3/building-blocks/registries/nhpr', to: '/docs/hiecm/v3/registries/nhpr/'},
-          {from: '/docs/abdm/v3/building-blocks/registries/nhpr/hpr', to: '/docs/hiecm/v3/registries/nhpr/hpr'},
-          {from: '/docs/abdm/v3/building-blocks/registries/nhpr/hfr', to: '/docs/hiecm/v3/registries/nhpr/hfr'},
-          {from: '/docs/abdm/v3/building-blocks/gateway', to: '/docs/hiecm/v3/concepts/gateway'},
-          {from: '/docs/abdm/v3/building-blocks/hie-cm', to: '/docs/hiecm/v3/concepts/gateway'},
-          {from: '/docs/abdm/v3/concepts/hie-cm', to: '/docs/hiecm/v3/concepts/gateway'},
-          {from: '/docs/overview', to: '/docs/hiecm/v3/'},
-          {from: '/docs/api', to: '/docs/hiecm/v3/getting-started/milestones'},
-          {from: '/docs/abdm/v3/architecture', to: '/docs/hiecm/v3/getting-started/architecture'},
-          {from: '/docs/abdm/v3/sandbox', to: '/docs/hiecm/v3/getting-started/sandbox'},
-          {from: '/docs/abdm/v3/milestones', to: '/docs/hiecm/v3/getting-started/milestones'},
-          {from: '/docs/abdm/v3/what-you-can-build', to: '/docs/hiecm/v3/getting-started/what-you-can-build'},
-          {from: '/docs/abdm/v3/glossary', to: '/docs/hiecm/v3/getting-started/glossary'},
-          {from: '/docs/abdm/v3/phr', to: '/docs/hiecm/v3/concepts/phr'},
-          {from: '/docs/abdm/v3/registries/hpr', to: '/docs/hiecm/v3/registries/nhpr/hpr'},
-          {from: '/docs/abdm/v3/registries/hfr', to: '/docs/hiecm/v3/registries/nhpr/hfr'},
-          {from: '/docs/uhi/v1/onboarding', to: '/docs/uhi/v1/getting-started/onboarding'},
-          {from: '/docs/uhi/v1/glossary', to: '/docs/uhi/v1/getting-started/glossary'},
-          {from: '/docs/uhi/v1/network-and-protocol', to: '/docs/uhi/v1/concepts/network-and-protocol'},
-          {from: '/docs/nhcx/v1/glossary', to: '/docs/nhcx/v1/getting-started/glossary'},
-        ],
+        redirects: redirectPairs.flatMap(({from, to}) => {
+          const pair = {from: docsRoute(from), to: docsRoute(to)};
+          // '/docs' itself collapses onto the landing route, which exists.
+          return pair.from === '/' ? [] : [pair];
+        }),
         createRedirects(to: string) {
+          // The plugin hands over the route as built; the alias rules are
+          // written against the canonical '/docs' shape, so restore it first
+          // and take it off the aliases again on the way out.
+          const canonical = docsRouteBasePath === '/' ? `/docs${to}` : to;
           const aliases: string[] = [];
           // The HIE-CM platform folder was renamed from abdm; every page
           // answers at its old URL too.
-          const hiecm = to.match(/^\/docs\/hiecm\/(.+)$/);
+          const hiecm = canonical.match(/^\/docs\/hiecm\/(.+)$/);
           if (hiecm) {
             aliases.push(`/docs/abdm/${hiecm[1]}`);
           }
           // Every UHI service page moved down into concepts/.
-          const service = to.match(/^\/docs\/uhi\/v1\/concepts\/services\/(.+)$/);
+          const service = canonical.match(/^\/docs\/uhi\/v1\/concepts\/services\/(.+)$/);
           if (service) {
             aliases.push(`/docs/uhi/v1/services/${service[1]}`);
           }
-          return aliases.length > 0 ? aliases : undefined;
+          return aliases.length > 0 ? aliases.map(docsRoute) : undefined;
         },
       },
     ],
@@ -424,6 +448,26 @@ const config: Config = {
     // from NHA documents and contain raw angle brackets and URLs that MDX
     // would try to parse as JSX. A page that wants components uses .mdx.
     format: 'detect',
+    // Content links are written absolute (/docs/..., /reference/...), which
+    // is correct for the production origin where the site lives at /. On a
+    // based deployment the base has to be carried into them, and this is the
+    // one place every markdown file passes through. When the base is /docs/
+    // itself, the /docs links already are base plus route and stay as they
+    // are; only the /reference links still need the base.
+    preprocessor: ({fileContent}) => {
+      if (siteBase === '/') {
+        return fileContent;
+      }
+      let out = fileContent
+        .replaceAll('](/reference/', `](${siteBase}reference/`)
+        .replaceAll('href="/reference/', `href="${siteBase}reference/`);
+      if (docsRouteBasePath === '/docs') {
+        out = out
+          .replaceAll('](/docs/', `](${siteBase}docs/`)
+          .replaceAll('href="/docs/', `href="${siteBase}docs/`);
+      }
+      return out;
+    },
   },
 
 };
