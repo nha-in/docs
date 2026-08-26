@@ -12,12 +12,94 @@ import {ChevronDown} from 'lucide-react';
 /** Where a scroll past the statement takes the reader. */
 const API_REFERENCE = '/docs/hiecm/v3/api';
 
+/** Longest the run down the page may take before the route changes anyway. */
+const RUN_LIMIT_MS = 700;
+
+/** Shortest it may take, so a run that has not started yet is not read as one that has finished. */
+const RUN_FLOOR_MS = 120;
+
+/** How long the reference page is held at its top while the swap settles. */
+const SETTLE_MS = 220;
+
 /** The three gateways, as text separated by interpuncts (see home.css). */
 const ways = [
   {label: 'HIE-CM', to: '/docs/hiecm/v3'},
   {label: 'UHI', to: '/docs/uhi/v1'},
   {label: 'NHCX', to: '/docs/nhcx/v1'},
 ];
+
+/**
+ * Runs the page down to the bottom of the cue and calls back when it has
+ * actually stopped moving, rather than when a guessed duration has elapsed.
+ *
+ * The browser decides how long its own smooth scroll takes, and the number
+ * varies with the distance and with the browser. Handing off on a guess means
+ * handing off mid-animation, and an animation that outlives the handoff keeps
+ * easing the page it lands on.
+ *
+ * Stillness for two frames is the end of the run: reaching the bottom and the
+ * browser finishing early both look the same from here, and both are done.
+ * The floor covers the frames before the animation has moved anything, and the
+ * timeout covers a tab sent to the background mid-run, where frames stop
+ * arriving but the reader still has to end up somewhere.
+ */
+function runDown(then: () => void): void {
+  let finished = false;
+  const finish = () => {
+    if (finished) return;
+    finished = true;
+    then();
+  };
+
+  const startedAt = performance.now();
+  window.scrollTo({top: document.body.scrollHeight, behavior: 'smooth'});
+
+  let last = window.scrollY;
+  let stillFor = 0;
+  const watch = () => {
+    if (finished) return;
+    const y = window.scrollY;
+    stillFor = Math.abs(y - last) < 1 ? stillFor + 1 : 0;
+    last = y;
+    const elapsed = performance.now() - startedAt;
+    if (elapsed >= RUN_FLOOR_MS && stillFor >= 2) {
+      finish();
+      return;
+    }
+    if (elapsed >= RUN_LIMIT_MS) {
+      finish();
+      return;
+    }
+    requestAnimationFrame(watch);
+  };
+  requestAnimationFrame(watch);
+  // Frames stop in a background tab; timers do not.
+  window.setTimeout(finish, RUN_LIMIT_MS);
+}
+
+/**
+ * Holds the window at the top for a moment after the route changes, then lets
+ * go.
+ *
+ * One scrollTo is not enough. React commits the new route asynchronously, so
+ * the reference page is not there yet when the handoff ends; it is taller than
+ * the page it replaces, so its layout settles over the next few frames; and
+ * whatever momentum the reader's own flick had left arrives after the swap and
+ * would otherwise carry the new page down with it.
+ */
+function holdAtTop(release: () => void): void {
+  const until = performance.now() + SETTLE_MS;
+  const hold = () => {
+    if (window.scrollY !== 0) window.scrollTo(0, 0);
+    if (performance.now() < until) {
+      requestAnimationFrame(hold);
+      return;
+    }
+    release();
+  };
+  requestAnimationFrame(hold);
+  window.setTimeout(release, SETTLE_MS * 4);
+}
 
 /**
  * The landing page is one screen, and leaving it goes to the API references.
@@ -33,9 +115,11 @@ const ways = [
  * method agrees on, keyboard and dragged scrollbar included. Either path ends
  * in the same place, and `leaving` makes sure only the first one counts.
  *
- * A timeout, not a `scrollend` listener: Safari did not ship `scrollend`, and
- * a reader whose system asks for reduced motion gets an instant jump with no
- * end event to wait for. The route change must not depend on either.
+ * Nothing may still be scrolling when the route changes, and nothing may
+ * reset the scroll before it. Both of those are visible: an unfinished scroll
+ * carries on into the reference page and lands it part way down, and a reset
+ * issued before the swap is painted on the page being left, where it reads as
+ * a jump backwards to the top.
  */
 function useScrollHandoff(): () => void {
   const history = useHistory();
@@ -45,19 +129,30 @@ function useScrollHandoff(): () => void {
     if (leaving.current) return;
     leaving.current = true;
 
-    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (!reduced) {
-      window.scrollTo({top: document.body.scrollHeight, behavior: 'smooth'});
+    const go = () => {
+      const html = document.documentElement;
+      const behavior = html.style.scrollBehavior;
+      // Stop the page where it stands, and keep every scroll from here to the
+      // end of the swap instant. A smooth reset would animate against the
+      // hold below, and against anything the reader's flick has left.
+      html.style.scrollBehavior = 'auto';
+      window.scrollTo(0, window.scrollY);
+
+      history.push(API_REFERENCE);
+
+      holdAtTop(() => {
+        html.style.scrollBehavior = behavior;
+      });
+    };
+
+    // A reader who asked for less motion gets the route change on its own.
+    // There is no run to wait for, but the hold still applies: the reference
+    // page has to open at its own top either way.
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      go();
+      return;
     }
-    window.setTimeout(
-      () => {
-        // The reference page opens at its own top, not part way down it: a
-        // route change does not reset scroll the way a page load does.
-        window.scrollTo(0, 0);
-        history.push(API_REFERENCE);
-      },
-      reduced ? 0 : 420,
-    );
+    runDown(go);
   }, [history]);
 
   useEffect(() => {

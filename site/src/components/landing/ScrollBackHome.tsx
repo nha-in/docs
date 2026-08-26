@@ -58,7 +58,10 @@ export default function ScrollBackHome(): null {
       }, 220);
     };
 
-    let lastWheel = 0;
+    // Seeded to arrival, not to zero: a reader who has just been handed to
+    // this page still has the tail of the flick that brought them here, and
+    // that tail must not read as the deliberate push that leaves again.
+    let lastWheel = performance.now();
     const onWheel = (event: WheelEvent) => {
       const now = event.timeStamp;
       const sinceLast = now - lastWheel;
