@@ -54,6 +54,22 @@ jobs:
       - run: npm ci
       - run: npm run lint:agent
 
+  lint-tables:
+    name: Check tables hold their content
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      # Only Chromium, and only its headless shell: the check renders pages,
+      # it does not test browser compatibility.
+      - run: npx playwright install --with-deps chromium
+      - run: npm run build
+      - run: npm run lint:tables
+
   build-site:
     name: Build documentation site
     runs-on: ubuntu-latest

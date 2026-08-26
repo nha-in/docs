@@ -225,48 +225,67 @@ div[class^='codeBlockTitle'] {
   overflow-wrap: break-word;
 }
 
-/* The exception is a reference table keyed by a code. There the first column
-   is a short identifier in a column sized for it, and `ABDM-1001` splitting to
-   "ABDM-" over "1001" is the thing being prevented. */
-.markdown table:has(tbody td:first-child > code:only-child) td:first-child > code:only-child,
-.markdown table:has(tbody td:first-child > code:only-child) th:first-child > code:only-child {
-  white-space: nowrap;
-  overflow-wrap: normal;
+/* ---------- how a table is sized ----------
+
+   Three layers, tried in order. Each engages only when the one before it
+   cannot cope, and none of them carries a per-table constant, which is what
+   kept breaking: this file used to pin the first column to 7.5rem and the
+   last to 9rem, numbers measured off the error tables and then applied to
+   every table whose first cell is a code chip. The data dictionary's widest
+   identifier needs 176px, was given 120px, and overflowed into the column
+   beside it.
+
+   1. Size to content. `table-layout: auto` is the algorithm that sets each
+      column from the longest thing in it, shrinking toward min-content when
+      the table is tight. It is the default, and pinning widths replaced it
+      with a guess. Nothing here overrides it.
+
+   2. Widen before scrolling. A table may reach into the article's own
+      padding rather than compressing into a column meant for prose.
+
+   3. Scroll, visibly. Only when even the widened box cannot hold it. The
+      fade on the edge says so, because an undiscovered scrollbar is how the
+      end of a row goes unread.
+
+   A code chip is not pinned with `white-space: nowrap` any more either. Auto
+   layout already refuses to size a column below its longest unbreakable
+   token, so `ABDM-1001` stays on one line without being told to, and on the
+   rare table where it genuinely cannot fit it now wraps instead of
+   overflowing. */
+
+.markdown .table-scroll {
+  /* Layer 2. `min-width` keeps a small table aligned with the prose it sits
+     in; `max-width` lets a wide one reach into the padding on both sides. */
+  --table-bleed: 2rem;
+  width: fit-content;
+  min-width: 100%;
+  max-width: calc(100% + 2 * var(--table-bleed));
+  margin-inline: calc(var(--table-bleed) * -1);
+  padding-inline: var(--table-bleed);
 }
 
-/* Reference tables keyed by a code, the error tables above all, are laid out
-   rather than left to the browser's content sizing. On auto layout the three
-   columns wanted 668px inside a 648px column, so the table overflowed and the
-   only way to read the end of a message was a horizontal scrollbar nobody
-   discovers.
-
-   Fixed layout with the two narrow columns sized gives the message column
-   everything else, and the message wraps instead of running off the edge.
-   Scoped by :has() to tables whose first body cell is a bare code chip, so
-   ordinary prose tables keep content based sizing. */
-.markdown table:has(tbody td:first-child > code:only-child) {
-  table-layout: fixed;
+/* Layer 3, made visible: a fade on the right edge while there is more to
+   reach. `scroll-timeline` would hide it at the end of the scroll, but is not
+   in Safari, so the fade is constant and only present when the box actually
+   scrolls, which is the part that matters. */
+.markdown .table-scroll {
+  scrollbar-width: thin;
 }
 
-.markdown table:has(tbody td:first-child > code:only-child) tr > *:first-child {
-  width: 7.5rem;
+.markdown .table-scroll::-webkit-scrollbar {
+  height: 0.5rem;
 }
 
-.markdown table:has(tbody td:first-child > code:only-child) tr > *:last-child {
-  width: 9rem;
+.markdown .table-scroll::-webkit-scrollbar-thumb {
+  background: var(--border-strong);
+  border-radius: 999px;
 }
 
-/* Narrow viewports have no room to give a column away, so the table goes back
-   to content sizing and the wrapper's scroll becomes the fallback it was
-   meant to be. */
 @media (max-width: 768px) {
-  .markdown table:has(tbody td:first-child > code:only-child) {
-    table-layout: auto;
-  }
-
-  .markdown table:has(tbody td:first-child > code:only-child) tr > *:first-child,
-  .markdown table:has(tbody td:first-child > code:only-child) tr > *:last-child {
-    width: auto;
+  /* No padding to reach into on a phone, so the table stays inside the column
+     and layer 3 does the work. */
+  .markdown .table-scroll {
+    --table-bleed: 0rem;
   }
 }
 
