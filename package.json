@@ -13,6 +13,7 @@
     "start": "npm start --workspace site",
     "build": "npm run build --workspace site",
     "lint:atoms": "node scripts/lint-atoms.mjs",
+    "lint:sources": "node scripts/check-source-freshness.mjs",
     "compile:skills": "node scripts/compile-skills.mjs",
     "validate:skills": "node scripts/validate-skills.mjs",
     "lint:agent": "node scripts/lint-agent-readiness.mjs",

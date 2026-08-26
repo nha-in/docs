@@ -101,3 +101,11 @@ three copies drift apart, our single copy will silently follow whichever one
 we ingested last.
 
 **Blocked on:** nothing. This is a watch item for the source watcher.
+
+## P8: TIMESTAMP verified on sandbox, assumed for production
+
+**Status:** the UTC format is observation-backed for abhasbx.abdm.gov.in
+only (2026-08-25). Production (abha.abdm.gov.in) is assumed to behave the
+same, consistent with NHA's own spec saying UTC, but has not been observed.
+
+**Blocked on:** one production call, once production credentials exist.

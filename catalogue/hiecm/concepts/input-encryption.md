@@ -6,8 +6,10 @@ milestone: M1
 version: abdm-v3
 title: Encrypting sensitive inputs, Aadhaar, mobile, OTP and passwords
 summary: >
-  Sensitive values never travel raw in M1. They are RSA encrypted with
-  NHA's public certificate before they go in a request body.
+  Sensitive identifiers never travel raw in M1. You encrypt an Aadhaar
+  number, mobile number, OTP or password with NHA's public key before it
+  goes in a request body: RSA OAEP with SHA-1 for the V3 flows, a
+  padding NHA's own documents do not state.
 sources:
   - file: site/docs/api/hie-cm/m1/apis.md
     fetched: 2026-08-24

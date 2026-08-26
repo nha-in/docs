@@ -156,12 +156,16 @@ func (r *Reader) ListAtoms(atomType, milestone string) ([]AtomRef, error) {
 func (r *Reader) AtomsByErrorCode(code string) ([]AtomRef, error) {
 	return r.atomRefs(`SELECT `+refCols+` FROM atoms
         WHERE id IN (SELECT atom_id FROM atom_error_codes WHERE code = ?)
-        ORDER BY id`, strings.ToUpper(code))
+        ORDER BY id`, catalogue.NormalizeErrorCode(code))
 }
 
+// RelatedGroup buckets related atoms by the related atom's own type
+// ("error", "flow", "endpoint", ...), never by the edge's relation name;
+// a reverse edge from a flow's "endpoints" list must file the flow under
+// "flow". Atoms whose id has no atom yet are grouped under "missing".
 type RelatedGroup struct {
-	Relation string
-	Atoms    []AtomRef
+	Type  string
+	Atoms []AtomRef
 }
 
 func (r *Reader) RelatedAtoms(id string) ([]RelatedGroup, error) {
@@ -169,55 +173,72 @@ func (r *Reader) RelatedAtoms(id string) ([]RelatedGroup, error) {
 		return nil, err
 	}
 	rows, err := r.db.Query(`
-        SELECT relation, to_id FROM related WHERE from_id = ?
+        SELECT to_id FROM related WHERE from_id = ?
         UNION
-        SELECT relation, from_id FROM related WHERE to_id = ?`, id, id)
+        SELECT from_id FROM related WHERE to_id = ?`, id, id)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
-	byRel := map[string][]string{}
+	var others []string
 	for rows.Next() {
-		var rel, other string
-		if err := rows.Scan(&rel, &other); err != nil {
+		var other string
+		if err := rows.Scan(&other); err != nil {
 			return nil, err
 		}
-		byRel[rel] = append(byRel[rel], other)
+		if other != id {
+			others = append(others, other)
+		}
 	}
 	if err := rows.Err(); err != nil {
 		return nil, err
 	}
-	var rels []string
-	for rel := range byRel {
-		rels = append(rels, rel)
-	}
-	sort.Strings(rels)
-	var groups []RelatedGroup
-	for _, rel := range rels {
-		g := RelatedGroup{Relation: rel}
-		for _, other := range byRel[rel] {
-			// A related id may point at an atom that does not exist yet;
-			// represent it honestly rather than dropping it.
-			a, err := r.GetAtom(other)
-			if err != nil {
-				g.Atoms = append(g.Atoms, AtomRef{ID: other, VerificationStatus: "missing"})
-				continue
-			}
-			g.Atoms = append(g.Atoms, AtomRef{a.ID, a.Type, a.Milestone, a.Title, a.VerificationStatus})
+	sort.Strings(others)
+	byType := map[string][]AtomRef{}
+	for _, other := range others {
+		// A related id may point at an atom that does not exist yet;
+		// represent it honestly rather than dropping it.
+		a, err := r.GetAtom(other)
+		if err != nil {
+			byType["missing"] = append(byType["missing"], AtomRef{ID: other, VerificationStatus: "missing"})
+			continue
 		}
-		groups = append(groups, g)
+		byType[a.Type] = append(byType[a.Type],
+			AtomRef{a.ID, a.Type, a.Milestone, a.Title, a.VerificationStatus})
+	}
+	var types []string
+	for t := range byType {
+		types = append(types, t)
+	}
+	sort.Strings(types)
+	var groups []RelatedGroup
+	for _, t := range types {
+		groups = append(groups, RelatedGroup{Type: t, Atoms: byType[t]})
 	}
 	return groups, nil
 }
 
 type OperationSummary struct {
-	OperationID, Method, Path, Summary, Tag string
+	OperationID string `json:"operation_id"`
+	Method      string `json:"method"`
+	Path        string `json:"path"`
+	Summary     string `json:"summary"`
+	Tag         string `json:"tag"`
+	Module      string `json:"module"`
 }
 
-func (r *Reader) ListOperations(tag string) ([]OperationSummary, error) {
+// ListOperations filters by exact tag, exact module, and a free
+// case-insensitive substring q over operation_id, summary and path.
+// Empty filters match everything.
+func (r *Reader) ListOperations(tag, module, q string) ([]OperationSummary, error) {
+	like := "%" + strings.ToLower(q) + "%"
 	rows, err := r.db.Query(`
-        SELECT operation_id, method, path, summary, tag FROM operations
-        WHERE (? = '' OR tag = ?) ORDER BY operation_id`, tag, tag)
+        SELECT operation_id, method, path, summary, tag, module FROM operations
+        WHERE (? = '' OR tag = ?)
+          AND (? = '' OR module = ?)
+          AND (? = '' OR lower(operation_id) LIKE ? OR lower(summary) LIKE ? OR lower(path) LIKE ?)
+        ORDER BY operation_id`,
+		tag, tag, module, module, q, like, like, like)
 	if err != nil {
 		return nil, err
 	}
@@ -225,10 +246,33 @@ func (r *Reader) ListOperations(tag string) ([]OperationSummary, error) {
 	out := []OperationSummary{}
 	for rows.Next() {
 		var o OperationSummary
-		if err := rows.Scan(&o.OperationID, &o.Method, &o.Path, &o.Summary, &o.Tag); err != nil {
+		if err := rows.Scan(&o.OperationID, &o.Method, &o.Path, &o.Summary, &o.Tag, &o.Module); err != nil {
 			return nil, err
 		}
 		out = append(out, o)
+	}
+	return out, rows.Err()
+}
+
+// SpecErrorCodes returns the specification error table rows for one code.
+// The code is normalized first, so raw response values such as
+// "ABDM-1016: " still match.
+func (r *Reader) SpecErrorCodes(code string) ([]catalogue.SpecErrorCode, error) {
+	rows, err := r.db.Query(`
+        SELECT code, message, action, module FROM spec_error_codes
+        WHERE code = ? ORDER BY module, message`,
+		catalogue.NormalizeErrorCode(code))
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	out := []catalogue.SpecErrorCode{}
+	for rows.Next() {
+		var e catalogue.SpecErrorCode
+		if err := rows.Scan(&e.Code, &e.Message, &e.Action, &e.Module); err != nil {
+			return nil, err
+		}
+		out = append(out, e)
 	}
 	return out, rows.Err()
 }

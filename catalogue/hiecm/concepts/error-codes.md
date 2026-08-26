@@ -146,6 +146,31 @@ All 103 codes NHA lists in the M2 pack, in NHA's own words. This
 | `ABDM-9007` | The Scan and Pay functionality is not enabled at this facility. Kindly contact the hospital administration. |
 | `ABDM-9999` | Cannot process the request at the moment, please try later. |
 
+## When the HTTP status lies
+
+ABDM services return domain errors wrapped in misleading HTTP statuses.
+On 2026-08-25 the ABHA sandbox returned a 404 whose body carried
+`ABDM-1016` for a bad `TIMESTAMP` header. Nothing was missing; the
+route existed and the request was rejected. So parse the body code
+first and treat the HTTP status as advisory.
+
+The body shape is how you tell a real routing 404 from a rejected
+request. A rejected request carries a domain code:
+
+```json
+{"error":{"code":"ABDM-1016: ","message":"Invalid Timestamp"}}
+```
+
+A genuinely wrong path returns a different shape with no domain code:
+
+```json
+{"code":"404","type":"Status report","message":"Not Found"}
+```
+
+Note the trailing colon and space inside the `code` field of the first
+shape. It is part of the observed value, so match on the prefix or trim
+before comparing.
+
 ## How you know it worked
 
 You have understood this when you can answer both of these.

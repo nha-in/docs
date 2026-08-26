@@ -19,7 +19,7 @@ Generated from the specifications. Every scheme and header below is declared in 
 | Header | Required | What it is |
 | --- | --- | --- |
 | `REQUEST-ID` | yes | A fresh UUID that you generate for this request. It is how you and NHA correlate a call with its callback and with a support ticket, so log it. Reusing one across requests makes both impossible. |
-| `TIMESTAMP` | yes | The current time in ISO 8601, in IST, the +05:30 offset. Working integrations send IST even though NHA's collection fills this with Postman's `$isoTimestamp`, which emits UTC. The gateway rejects a request whose timestamp has drifted too far from its own clock, so take this from a synchronised clock rather than from a local one. |
+| `TIMESTAMP` | yes | The current time in ISO 8601 UTC, with milliseconds and the `Z` suffix. NHA's collection fills this with Postman's `$isoTimestamp`, which emits exactly this format. The gateway rejects a request whose timestamp has drifted too far from its own clock, so take this from a synchronised clock rather than from a local one. |
 | `X-CM-ID` | yes | Which consent manager you are talking to. `sbx` on the sandbox and `abdm` in production. Sending the wrong one against the right host is a common first-day failure and reads as an authorisation error. |
 
 ## M1 ABHA identity

@@ -8,15 +8,22 @@ type Chunk struct {
 	Text    string
 }
 
-// ChunkAtom splits a body into one chunk per "## " section. The chunk
-// text is prefixed with the atom title and heading so short sections
-// stay distinguishable when embedded.
+// ChunkAtom emits one leading chunk of title plus frontmatter summary,
+// then splits the body into one chunk per "## " section. The section
+// chunk text is prefixed with the atom title and heading so short
+// sections stay distinguishable when embedded. The summary chunk matters
+// because summaries carry the searcher's vocabulary; without it the
+// embedder never sees them.
 func ChunkAtom(a Atom) []Chunk {
+	var chunks []Chunk
+	if summary := strings.TrimSpace(a.Summary); summary != "" {
+		chunks = append(chunks, Chunk{AtomID: a.ID, Heading: "",
+			Text: a.Title + "\n" + summary})
+	}
 	body := strings.TrimSpace(a.Body)
 	if body == "" {
-		return nil
+		return chunks
 	}
-	var chunks []Chunk
 	add := func(heading, text string) {
 		text = strings.TrimSpace(text)
 		if text == "" {

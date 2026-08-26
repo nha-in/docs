@@ -18,6 +18,15 @@
       "title": "Link a care context",
       "type": "flow",
       "verification_status": "unverified"
+    },
+    {
+      "id": "hiecm.endpoint.m1-enrolment-by-aadhaar",
+      "milestone": "M1",
+      "snippet": "Enrol an ABHA by Aadhaar\nPOST enrol/byAadhaar creates an ABHA from an Aadhaar OTP.",
+      "summary": "POST enrol/byAadhaar creates an ABHA from an Aadhaar OTP.",
+      "title": "Enrol an ABHA by Aadhaar",
+      "type": "endpoint",
+      "verification_status": "unverified"
     }
   ]
 }

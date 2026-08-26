@@ -26,7 +26,7 @@ type Meta struct {
 }
 
 func Build(dbPath string, atoms []catalogue.Atom, ops []catalogue.Operation,
-	chunks []EmbeddedChunk, meta Meta) error {
+	specErrors []catalogue.SpecErrorCode, chunks []EmbeddedChunk, meta Meta) error {
 	_ = os.Remove(dbPath)
 	db, err := sql.Open("sqlite", dbPath)
 	if err != nil {
@@ -76,10 +76,16 @@ func Build(dbPath string, atoms []catalogue.Atom, ops []catalogue.Operation,
 		if o.RequestSchemaJSON != nil {
 			reqSchema = string(o.RequestSchemaJSON)
 		}
-		if _, err := tx.Exec(`INSERT INTO operations VALUES (?,?,?,?,?,?,?,?)`,
-			o.OperationID, o.Method, o.Path, o.Summary, o.Tag,
+		if _, err := tx.Exec(`INSERT INTO operations VALUES (?,?,?,?,?,?,?,?,?)`,
+			o.OperationID, o.Method, o.Path, o.Summary, o.Tag, o.Module,
 			string(o.SpecJSON), reqSchema, string(reqParams)); err != nil {
 			return fmt.Errorf("operation %s: %w", o.OperationID, err)
+		}
+	}
+	for _, e := range specErrors {
+		if _, err := tx.Exec(`INSERT INTO spec_error_codes VALUES (?,?,?,?)`,
+			catalogue.NormalizeErrorCode(e.Code), e.Message, e.Action, e.Module); err != nil {
+			return fmt.Errorf("spec error code %s: %w", e.Code, err)
 		}
 	}
 	for _, c := range chunks {

@@ -3,9 +3,12 @@ package server
 import (
 	"context"
 	"encoding/json"
+	"fmt"
+	"path/filepath"
 	"strings"
 	"testing"
 
+	"github.com/eka-care/abdm-docs/mcp/internal/catalogue"
 	"github.com/eka-care/abdm-docs/mcp/internal/embed"
 	"github.com/eka-care/abdm-docs/mcp/internal/index"
 	"github.com/modelcontextprotocol/go-sdk/mcp"
@@ -96,11 +99,65 @@ func TestGetAtomUnknownNamesClosest(t *testing.T) {
 	}
 }
 
+func relatedGroups(t *testing.T, out string) map[string][]struct {
+	ID   string `json:"id"`
+	Type string `json:"type"`
+} {
+	t.Helper()
+	var payload struct {
+		Related map[string][]struct {
+			ID   string `json:"id"`
+			Type string `json:"type"`
+		} `json:"related"`
+	}
+	if err := json.Unmarshal([]byte(out), &payload); err != nil {
+		t.Fatalf("not JSON: %v\n%s", err, out)
+	}
+	return payload.Related
+}
+
 func TestRelatedAtoms(t *testing.T) {
 	sess := connect(t, false, nil)
 	out := callText(t, sess, "related_atoms", map[string]any{"id": "hiecm.flow.m2-link-care-context"})
-	if !strings.Contains(out, "hiecm.error.abdm-1035") || !strings.Contains(out, "errors") {
-		t.Errorf("graph walk missing error relation: %s", out)
+	related := relatedGroups(t, out)
+	errs := related["error"]
+	if len(errs) != 1 || errs[0].ID != "hiecm.error.abdm-1035" {
+		t.Errorf("error group = %+v", related)
+	}
+	eps := related["endpoint"]
+	if len(eps) != 1 || eps[0].ID != "hiecm.endpoint.m1-enrolment-by-aadhaar" {
+		t.Errorf("endpoint group = %+v", related)
+	}
+}
+
+func TestRelatedAtomsReverseEdgeNotMislabeled(t *testing.T) {
+	// The flow references the endpoint under its "endpoints" relation.
+	// Walking from the endpoint, the flow must come back under "flow",
+	// once, and never under an "endpoints" or "endpoint" group.
+	sess := connect(t, false, nil)
+	out := callText(t, sess, "related_atoms", map[string]any{"id": "hiecm.endpoint.m1-enrolment-by-aadhaar"})
+	related := relatedGroups(t, out)
+	if _, ok := related["endpoints"]; ok {
+		t.Errorf("reverse edge still grouped under relation name: %s", out)
+	}
+	if _, ok := related["endpoint"]; ok {
+		t.Errorf("flow mislabeled as endpoint: %s", out)
+	}
+	flows := related["flow"]
+	if len(flows) != 1 || flows[0].ID != "hiecm.flow.m2-link-care-context" || flows[0].Type != "flow" {
+		t.Errorf("flow group = %+v", related)
+	}
+}
+
+func TestGetAtomCautionOnUnverifiedOnly(t *testing.T) {
+	sess := connect(t, false, nil)
+	out := callText(t, sess, "get_atom", map[string]any{"id": "hiecm.flow.m2-link-care-context"})
+	if !strings.Contains(out, `"caution"`) || !strings.Contains(out, "recorded claims, not observed behaviour") {
+		t.Errorf("unverified atom missing caution: %s", out)
+	}
+	out = callText(t, sess, "get_atom", map[string]any{"id": "hiecm.error.abdm-1035"})
+	if strings.Contains(out, `"caution"`) {
+		t.Errorf("verified atom must carry no caution: %s", out)
 	}
 }
 
@@ -111,9 +168,129 @@ func TestDecodeError(t *testing.T) {
 	if !strings.Contains(out, "hiecm.error.abdm-1035") {
 		t.Errorf("decode failed: %s", out)
 	}
+	// The verified error atom sits side by side with the spec table row.
+	if !strings.Contains(out, `"specification"`) ||
+		!strings.Contains(out, "Facility is not registered with the bridge") {
+		t.Errorf("spec rows missing beside the atom: %s", out)
+	}
+	if strings.Contains(out, `"caution"`) {
+		t.Errorf("verified error atom must carry no caution: %s", out)
+	}
 	out = callText(t, sess, "decode_error", map[string]any{"input": "nothing here"})
 	if !strings.Contains(out, "no error codes") {
 		t.Errorf("want honest empty answer, got: %s", out)
+	}
+}
+
+func TestDecodeErrorSpecTableFallback(t *testing.T) {
+	// ABDM-1016 has no error atom, only a spec table row; decode_error
+	// must return the row instead of going silent. Real responses carry
+	// trailing punctuation on the code field.
+	sess := connect(t, false, nil)
+	raw := `{"code":"ABDM-1016: ","message":"Dependent service unavailable"}`
+	out := callText(t, sess, "decode_error", map[string]any{"input": raw})
+	if strings.Contains(out, "no error atom for this code yet; try search_docs") {
+		t.Fatalf("went silent despite spec table row: %s", out)
+	}
+	for _, want := range []string{
+		`"specification"`, "ABDM-1016", "Dependent service unavailable",
+		"Retry with backoff", `"module": "m1"`, "specification error table",
+		"no narrative error atom",
+	} {
+		if !strings.Contains(out, want) {
+			t.Errorf("fallback output missing %q: %s", want, out)
+		}
+	}
+	// A code in neither source still gets the honest empty answer.
+	out = callText(t, sess, "decode_error", map[string]any{"input": "ABDM-9999"})
+	if !strings.Contains(out, "no error atom for this code yet") {
+		t.Errorf("want honest miss for unknown code: %s", out)
+	}
+}
+
+func TestListOperationsCasingAndFilters(t *testing.T) {
+	sess := connect(t, false, nil)
+	out := callText(t, sess, "list_operations", map[string]any{})
+	for _, want := range []string{`"operation_id"`, `"method"`, `"path"`, `"summary"`, `"tag"`, `"module": "m2"`} {
+		if !strings.Contains(out, want) {
+			t.Errorf("snake_case field %s missing: %s", want, out)
+		}
+	}
+	for _, goCased := range []string{"OperationID", "Method", "Path", "Summary", "Tag"} {
+		if strings.Contains(out, `"`+goCased+`"`) {
+			t.Errorf("Go-cased field %q leaked into JSON: %s", goCased, out)
+		}
+	}
+	out = callText(t, sess, "list_operations", map[string]any{"module": "m2"})
+	if !strings.Contains(out, "linkAddContexts") {
+		t.Errorf("module filter dropped the operation: %s", out)
+	}
+	out = callText(t, sess, "list_operations", map[string]any{"q": "add-contexts"})
+	if !strings.Contains(out, "linkAddContexts") {
+		t.Errorf("q filter missed the path substring: %s", out)
+	}
+	out = callText(t, sess, "list_operations", map[string]any{"q": "no-such-thing"})
+	if strings.Contains(out, "linkAddContexts") {
+		t.Errorf("q filter matched everything: %s", out)
+	}
+}
+
+func TestListOperationsTruncatesUnfiltered(t *testing.T) {
+	// Build a snapshot with more operations than the unfiltered cap.
+	atoms := fixtureAtoms()
+	ops := make([]catalogue.Operation, 0, 70)
+	for i := 0; i < 70; i++ {
+		ops = append(ops, catalogue.Operation{
+			OperationID: fmt.Sprintf("op%03d", i), Method: "GET",
+			Path: fmt.Sprintf("/things/%03d", i), Summary: "Thing",
+			Tag: "things", Module: "m1",
+			SpecJSON: []byte(`{}`), RequiredParams: nil,
+		})
+	}
+	dbPath := filepath.Join(t.TempDir(), "catalogue.db")
+	meta := index.Meta{CatalogueVersion: "2026.08.24", BuiltAt: "2026-08-24T00:00:00Z"}
+	if err := index.Build(dbPath, atoms, ops, nil, nil, meta); err != nil {
+		t.Fatal(err)
+	}
+	r, err := index.Open(dbPath)
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Cleanup(func() { r.Close() })
+	srv := NewMCPServer(r, nil)
+	ct, st := mcp.NewInMemoryTransports()
+	if _, err := srv.Connect(context.Background(), st, nil); err != nil {
+		t.Fatal(err)
+	}
+	client := mcp.NewClient(&mcp.Implementation{Name: "test", Version: "0"}, nil)
+	sess, err := client.Connect(context.Background(), ct, nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Cleanup(func() { sess.Close() })
+
+	out := callText(t, sess, "list_operations", map[string]any{})
+	var payload struct {
+		Operations []map[string]any `json:"operations"`
+		Truncated  string           `json:"truncated"`
+	}
+	if err := json.Unmarshal([]byte(out), &payload); err != nil {
+		t.Fatalf("not JSON: %v\n%s", err, out)
+	}
+	if len(payload.Operations) != 60 {
+		t.Errorf("unfiltered rows = %d, want cap of 60", len(payload.Operations))
+	}
+	if payload.Truncated != "10 more; filter by tag, module or q" {
+		t.Errorf("truncated = %q", payload.Truncated)
+	}
+
+	// A filtered listing is never truncated.
+	out = callText(t, sess, "list_operations", map[string]any{"module": "m1"})
+	if err := json.Unmarshal([]byte(out), &payload); err != nil {
+		t.Fatal(err)
+	}
+	if len(payload.Operations) != 70 || strings.Contains(out, "truncated") {
+		t.Errorf("filtered listing should be complete: %d rows", len(payload.Operations))
 	}
 }
 

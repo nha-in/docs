@@ -306,11 +306,11 @@ components:
       in: header
       required: true
       description: |
-        The current time in ISO 8601, in IST, the +05:30 offset. Working integrations send IST even though NHA's collection fills this with Postman's `$isoTimestamp`, which emits UTC. The gateway rejects a request whose timestamp has drifted too far from its own clock, so take this from a synchronised clock rather than from a local one.
+        The current time in ISO 8601 UTC, with milliseconds and the `Z` suffix. NHA's collection fills this with Postman's `$isoTimestamp`, which emits exactly this format. The gateway rejects a request whose timestamp has drifted too far from its own clock, so take this from a synchronised clock rather than from a local one.
       schema:
         type: string
         format: date-time
-      example: '2026-08-24T15:45:30.000+05:30'
+      example: '2026-08-25T15:51:15.339Z'
     CmId:
       name: X-CM-ID
       in: header

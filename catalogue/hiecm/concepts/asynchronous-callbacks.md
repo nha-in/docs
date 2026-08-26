@@ -6,8 +6,10 @@ milestone: M2
 version: abdm-v3
 title: Asynchronous calls and callbacks, why a 200 means very little
 summary: >
-  Most of M2 and M3 answer later on a callback rather than in the
-  response, so acceptance and completion are different events.
+  In M2 and M3 your request returns immediately with an acknowledgement,
+  and the real answer arrives later on a different channel, as an
+  asynchronous callback posted to the URL you registered. Acknowledgement
+  now, answer later: a 200 means accepted, not done.
 sources:
   - file: ABDM Sandbox/ABDM/Proposed Simplified Milestone 2.docx
     status: not-yet-hashed

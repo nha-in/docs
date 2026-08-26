@@ -57,6 +57,7 @@ func main() {
 func run(catDir, outPath string, emb embed.Embedder) error {
 	var atoms []catalogue.Atom
 	var ops []catalogue.Operation
+	var specErrors []catalogue.SpecErrorCode
 	hashes := map[string]string{}
 
 	err := filepath.WalkDir(catDir, func(path string, d fs.DirEntry, err error) error {
@@ -95,11 +96,12 @@ func run(catDir, outPath string, emb embed.Embedder) error {
 			strings.HasSuffix(path, ".yaml") &&
 			!strings.Contains(rel, "corrections") &&
 			!strings.Contains(path, "asyncapi"):
-			parsed, err := catalogue.ParseOperations(path)
+			parsed, err := catalogue.ParseSpec(path)
 			if err != nil {
 				return err
 			}
-			ops = append(ops, parsed...)
+			ops = append(ops, parsed.Operations...)
+			specErrors = append(specErrors, parsed.ErrorCodes...)
 			sum := sha256.Sum256(content)
 			hashes[filepath.ToSlash(rel)] = hex.EncodeToString(sum[:])
 		}
@@ -140,14 +142,14 @@ func run(catDir, outPath string, emb embed.Embedder) error {
 		return fmt.Errorf("read VERSION: %w", err)
 	}
 	meta.CatalogueVersion = strings.TrimSpace(string(versionBytes))
-	if err := index.Build(outPath, atoms, ops, chunks, meta); err != nil {
+	if err := index.Build(outPath, atoms, ops, specErrors, chunks, meta); err != nil {
 		return err
 	}
 	mode := "keyword-only"
 	if emb != nil {
 		mode = fmt.Sprintf("embeddings via %s", emb.Model())
 	}
-	fmt.Printf("indexed %d atoms, %d operations, %d chunks (%s) -> %s (catalogue %s)\n",
-		len(atoms), len(ops), len(chunks), mode, outPath, meta.CatalogueVersion)
+	fmt.Printf("indexed %d atoms, %d operations, %d spec error codes, %d chunks (%s) -> %s (catalogue %s)\n",
+		len(atoms), len(ops), len(specErrors), len(chunks), mode, outPath, meta.CatalogueVersion)
 	return nil
 }

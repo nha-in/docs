@@ -30,6 +30,18 @@ jobs:
       - run: npm ci
       - run: npm run lint:atoms
 
+  lint-sources:
+    name: Check source freshness
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run lint:sources
+
   validate-skills:
     name: Validate compiled agent skills
     runs-on: ubuntu-latest

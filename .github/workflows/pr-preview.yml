@@ -1,0 +1,68 @@
+name: pr-preview
+
+# Every PR gets a viewable deployment of the docs site on GitHub Pages,
+# now that production serves from S3 + CloudFront. Each PR publishes to
+# pr-<number>/ on the gh-pages branch and a sticky comment carries the
+# link; closing the PR removes its folder.
+#
+# One-time setting: Settings -> Pages -> Deploy from a branch ->
+# gh-pages, / (root).
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: pr-preview-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  build-and-preview:
+    # Same-repo branches only: forked PRs get no write token, and this
+    # repo works from branches anyway.
+    if: github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: Build the site for the preview path
+        env:
+          DOCUSAURUS_URL: https://${{ github.repository_owner }}.github.io
+          DOCUSAURUS_BASE_URL: /${{ github.event.repository.name }}/pr-${{ github.event.pull_request.number }}/
+        run: npm run build
+
+      - name: Publish to gh-pages under pr-<number>/
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: site/build
+          destination_dir: pr-${{ github.event.pull_request.number }}
+          commit_message: "preview: PR #${{ github.event.pull_request.number }} ${{ github.event.pull_request.head.sha }}"
+
+      - name: Comment the preview link
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const n = context.payload.pull_request.number;
+            const url = `https://${context.repo.owner}.github.io/${context.repo.repo}/pr-${n}/`;
+            const marker = '<!-- pr-preview-link -->';
+            const body = `${marker}\n**Preview deployed:** ${url}\n\nRebuilds on every push to this PR; removed when the PR closes.`;
+            const {data: comments} = await github.rest.issues.listComments({
+              ...context.repo, issue_number: n, per_page: 100});
+            const mine = comments.find(c => c.body && c.body.includes(marker));
+            if (mine) {
+              await github.rest.issues.updateComment({...context.repo, comment_id: mine.id, body});
+            } else {
+              await github.rest.issues.createComment({...context.repo, issue_number: n, body});
+            }

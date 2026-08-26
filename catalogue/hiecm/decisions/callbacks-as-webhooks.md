@@ -6,9 +6,10 @@ milestone: n/a
 version: abdm-v3
 title: Describing callbacks as OpenAPI webhooks rather than as AsyncAPI
 summary: >
-  This catalogue keeps each module's callbacks inside that module's
-  OpenAPI file as 3.1 webhooks, instead of maintaining a separate
-  AsyncAPI document.
+  ABDM's asynchronous callbacks, where the real response arrives later
+  as a POST to your registered URL rather than in the reply to your own
+  request, are described in each module's OpenAPI file as 3.1 webhooks
+  instead of a separate AsyncAPI document.
 sources:
   - file: catalogue/openapi/CONVENTIONS.md
     status: not-yet-hashed

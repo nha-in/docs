@@ -1,16 +1,18 @@
 {
   "atoms": {
     "by_gateway": {
-      "hiecm": 2
+      "hiecm": 3
     },
     "by_milestone": {
+      "M1": 1,
       "M2": 2
     },
     "by_status": {
-      "unverified": 1,
+      "unverified": 2,
       "verified": 1
     },
     "by_type": {
+      "endpoint": 1,
       "error": 1,
       "flow": 1
     }

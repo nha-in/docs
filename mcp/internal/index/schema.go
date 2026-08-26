@@ -22,9 +22,16 @@ CREATE TABLE operations (
     path TEXT NOT NULL,
     summary TEXT NOT NULL,
     tag TEXT NOT NULL,
+    module TEXT NOT NULL,
     spec_json TEXT NOT NULL,
     request_schema_json TEXT,
     required_params_json TEXT NOT NULL
+);
+CREATE TABLE spec_error_codes (
+    code TEXT NOT NULL,
+    message TEXT NOT NULL,
+    action TEXT NOT NULL,
+    module TEXT NOT NULL
 );
 CREATE TABLE related (
     from_id TEXT NOT NULL,
@@ -47,4 +54,5 @@ CREATE TABLE sources (path TEXT PRIMARY KEY, sha256 TEXT NOT NULL);
 CREATE INDEX idx_related_from ON related(from_id);
 CREATE INDEX idx_related_to ON related(to_id);
 CREATE INDEX idx_codes ON atom_error_codes(code);
+CREATE INDEX idx_spec_codes ON spec_error_codes(code);
 `
