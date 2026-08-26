@@ -203,16 +203,35 @@ div[class^='codeBlockTitle'] {
      "Prescription,DiagnosticReport,OPConsultation,..." with no spaces to
      break at, so a cell could not wrap and the row overflowed instead. A
      horizontal scrollbar is the wrong answer: nobody discovers it. Let the
-     cell break inside the run. */
-  overflow-wrap: anywhere;
-  word-break: break-word;
+     cell break inside the run.
+
+     `break-word`, not `anywhere`. The two break the same way, but only
+     `anywhere` counts those break points when the browser works out how
+     narrow a column may be. That let a column shrink below its longest word,
+     which is how "Consent artefact" became "Consen / t / artefact" and
+     "Identifier" became "Identifie / r". With `break-word` a column is never
+     narrower than its longest word, so a word always fits on one line and a
+     run only breaks when it genuinely cannot. */
+  overflow-wrap: break-word;
 }
 
-/* A code chip is an identifier and must not be split down the middle:
-   `ABDM-1001` was wrapping to "ABDM-" over "1001". */
-.markdown table td > code:only-child,
-.markdown table th > code:only-child {
+/* Code in a table cell may wrap. Holding it on one line made a cell holding a
+   long URL claim the whole row: on the base URL table the two URL columns took
+   everything and the Purpose column collapsed to one character per line.
+
+   A URL has plenty of places to break, so it breaks, by the same `break-word`
+   rule so it cannot starve the column beside it either. */
+.markdown table code {
+  overflow-wrap: break-word;
+}
+
+/* The exception is a reference table keyed by a code. There the first column
+   is a short identifier in a column sized for it, and `ABDM-1001` splitting to
+   "ABDM-" over "1001" is the thing being prevented. */
+.markdown table:has(tbody td:first-child > code:only-child) td:first-child > code:only-child,
+.markdown table:has(tbody td:first-child > code:only-child) th:first-child > code:only-child {
   white-space: nowrap;
+  overflow-wrap: normal;
 }
 
 /* Reference tables keyed by a code, the error tables above all, are laid out
