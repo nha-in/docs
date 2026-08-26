@@ -10,9 +10,9 @@ import (
 	"log/slog"
 	"time"
 
-	"github.com/eka-care/abdm-docs/mcp/internal/catalogue"
-	"github.com/eka-care/abdm-docs/mcp/internal/embed"
-	"github.com/eka-care/abdm-docs/mcp/internal/index"
+	"github.com/nha-in/docs/mcp/internal/catalogue"
+	"github.com/nha-in/docs/mcp/internal/embed"
+	"github.com/nha-in/docs/mcp/internal/index"
 	"github.com/getkin/kin-openapi/openapi3"
 	"github.com/google/jsonschema-go/jsonschema"
 	"github.com/modelcontextprotocol/go-sdk/mcp"

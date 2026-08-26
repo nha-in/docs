@@ -371,7 +371,7 @@ const config: Config = {
           position: 'right',
         },
         {
-          href: 'https://github.com/eka-care/abdm-docs',
+          href: 'https://github.com/nha-in/docs',
           label: 'GitHub',
           position: 'right',
         },

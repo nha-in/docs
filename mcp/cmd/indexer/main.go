@@ -14,9 +14,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/eka-care/abdm-docs/mcp/internal/catalogue"
-	"github.com/eka-care/abdm-docs/mcp/internal/embed"
-	"github.com/eka-care/abdm-docs/mcp/internal/index"
+	"github.com/nha-in/docs/mcp/internal/catalogue"
+	"github.com/nha-in/docs/mcp/internal/embed"
+	"github.com/nha-in/docs/mcp/internal/index"
 )
 
 const embedBatch = 32
