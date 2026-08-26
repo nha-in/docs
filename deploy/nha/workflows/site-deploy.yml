@@ -1,0 +1,61 @@
+# Deploys the documentation site to S3 + CloudFront on every push to main.
+#
+# Template: copy to .github/workflows/ once the repository lives at
+# nha-in/docs. Before the first run, set these repository VARIABLES
+# (Settings -> Secrets and variables -> Actions -> Variables). No secrets
+# are used anywhere; AWS access is the OIDC role.
+#
+#   AWS_REGION        ap-south-1
+#   SITE_URL          https://docs.abdm.gov.in
+#   SITE_ROLE_ARN     arn:aws:iam::<account>:role/<ci-role>
+#   SITE_BUCKET       <the S3 bucket name>
+#   CLOUDFRONT_ID     <the distribution id>
+#
+# The same file runs unchanged in any account: only the variables differ.
+# The job skips itself until the variables exist, so the file is safe to
+# carry in a repository whose S3 hosting is not provisioned yet.
+
+name: deploy-site
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  build-and-publish:
+    if: ${{ vars.SITE_ROLE_ARN != '' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: Build the site
+        env:
+          DOCUSAURUS_URL: ${{ vars.SITE_URL }}
+          DOCUSAURUS_BASE_URL: /
+        run: npm run build
+
+      - name: Assume the CI role (OIDC)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ vars.SITE_ROLE_ARN }}
+          aws-region: ${{ vars.AWS_REGION }}
+
+      # --delete keeps the bucket exactly equal to the build, so removed
+      # pages disappear instead of lingering as stale orphans.
+      - name: Publish
+        run: |
+          aws s3 sync site/build "s3://${{ vars.SITE_BUCKET }}" --delete
+          aws cloudfront create-invalidation \
+            --distribution-id "${{ vars.CLOUDFRONT_ID }}" \
+            --paths "/*"

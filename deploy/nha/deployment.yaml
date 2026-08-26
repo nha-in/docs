@@ -1,0 +1,122 @@
+# docs-mcp on EKS, in the confirmed namespace:
+#   kubectl -n abdm-docs apply -f deploy/nha/
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: docs-mcp
+  annotations:
+    # The IRSA role carrying bedrock-invoke-policy.json. This is the entire
+    # credential story: the SDK inside the pod resolves this role by itself.
+    eks.amazonaws.com/role-arn: arn:aws:iam::<ACCOUNT_ID>:role/<DOCS_MCP_ROLE>
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: docs-mcp
+  labels:
+    app: docs-mcp
+spec:
+  # Two replicas for availability: a node drain, a spot reclaim or a bad
+  # rollout never takes the service to zero.
+  replicas: 2
+  selector:
+    matchLabels:
+      app: docs-mcp
+  template:
+    metadata:
+      labels:
+        app: docs-mcp
+    spec:
+      serviceAccountName: docs-mcp
+      # Prefer different nodes, so one node loss keeps one pod serving.
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                topologyKey: kubernetes.io/hostname
+                labelSelector:
+                  matchLabels:
+                    app: docs-mcp
+      containers:
+        - name: docs-mcp
+          # CI stamps the release tag; the catalogue snapshot is inside the image,
+          # so image tag = content version, and rollback is image rollback.
+          image: <ECR_URI>/abdm-docs-mcp:<TAG>
+          ports:
+            - containerPort: 8080
+              name: http
+          env:
+            # The deployment's one decision. The server fails its rollout if
+            # this is absent, if the model cannot be reached, or if the baked
+            # index was built by a different provider.
+            - name: EMBED_PROVIDER
+              value: bedrock
+            - name: AWS_REGION
+              value: ap-south-1
+            - name: ALLOW_ORIGIN
+              value: https://docs.abdm.gov.in
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: http
+            initialDelaySeconds: 5
+            periodSeconds: 15
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: http
+            initialDelaySeconds: 15
+            periodSeconds: 30
+          resources:
+            requests:
+              cpu: 250m
+              memory: 512Mi
+            # Limits carry headroom for the OS page cache over the read-only
+            # SQLite snapshot and any future in-memory caching.
+            limits:
+              cpu: "1"
+              memory: 1Gi
+---
+# With two replicas a disruption budget is safe (it deadlocks a
+# single-replica app): voluntary evictions always leave one pod serving.
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: docs-mcp
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels:
+      app: docs-mcp
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: docs-mcp
+spec:
+  selector:
+    app: docs-mcp
+  ports:
+    - name: http
+      port: 80
+      targetPort: http
+---
+# Neutral default. Replace with the house ingress standard (ALB controller,
+# Istio gateway, etc.); the only contract is HTTP to the Service above.
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: docs-mcp
+spec:
+  rules:
+    - host: mcp.docs.abdm.gov.in
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: docs-mcp
+                port:
+                  name: http

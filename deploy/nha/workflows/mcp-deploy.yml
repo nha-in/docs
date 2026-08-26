@@ -1,0 +1,92 @@
+# Builds the docs-mcp image (search index inside) and deploys it to EKS on
+# every release tag.
+#
+# Template: copy to .github/workflows/ once the repository lives at
+# nha-in/docs. Repository VARIABLES to set before the first run; no secrets
+# are used anywhere, AWS access is the OIDC role:
+#
+#   AWS_REGION        ap-south-1
+#   MCP_ROLE_ARN      arn:aws:iam::<account>:role/<ci-role>
+#   ECR_REPOSITORY    abdm-docs-mcp
+#   EKS_CLUSTER       <cluster name>
+#   EMBED_PROVIDER    bedrock          (ollama only for test environments)
+#
+# The CI role needs: ECR push, bedrock:InvokeModel on the Titan embeddings
+# model, eks:DescribeCluster, and an EKS access entry (or aws-auth mapping)
+# permitting deployment updates in the abdm-docs namespace.
+
+name: deploy-mcp
+
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version: '1.25'
+          cache-dependency-path: mcp/go.sum
+
+      - name: Assume the CI role (OIDC)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ vars.MCP_ROLE_ARN }}
+          aws-region: ${{ vars.AWS_REGION }}
+
+      # The embedding provider is decided HERE, once per deployment. The
+      # indexer below and the pod's env (deploy/nha/deployment.yaml) must
+      # carry the same answer; the index stamps its provider-qualified model
+      # and the server refuses a mismatched snapshot at startup, so drift
+      # fails the rollout instead of degrading search.
+      - name: Build catalogue.db with embeddings
+        working-directory: mcp
+        env:
+          EMBED_PROVIDER: ${{ vars.EMBED_PROVIDER || 'bedrock' }}
+          AWS_REGION: ${{ vars.AWS_REGION }}
+        run: |
+          go run ./cmd/indexer -catalogue ../catalogue -out catalogue.db
+          ls -lh catalogue.db
+
+      - name: Login to Amazon ECR
+        id: ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Build and push the image
+        working-directory: mcp
+        env:
+          IMAGE: ${{ steps.ecr.outputs.registry }}/${{ vars.ECR_REPOSITORY }}:${{ github.ref_name }}
+        run: |
+          docker build -t "$IMAGE" .
+          docker push "$IMAGE"
+
+      # deployment.yaml carries an image placeholder; the release tag is
+      # stamped in before the one apply, so no intermediate state ever
+      # references a non-existent image. kubectl waits for the rollout, and
+      # the server's strict startup (provider, probe, stamp) is what healthy
+      # means.
+      - name: Deploy to EKS
+        env:
+          IMAGE: ${{ steps.ecr.outputs.registry }}/${{ vars.ECR_REPOSITORY }}:${{ github.ref_name }}
+        run: |
+          aws eks update-kubeconfig --name "${{ vars.EKS_CLUSTER }}" --region "${{ vars.AWS_REGION }}"
+          sed -i "s|image: .*abdm-docs-mcp.*|image: $IMAGE|" deploy/nha/deployment.yaml
+          kubectl -n abdm-docs apply -f deploy/nha/
+          kubectl -n abdm-docs rollout status deployment/docs-mcp --timeout=180s
+
+      - name: Verify
+        run: |
+          for i in $(seq 1 10); do
+            code=$(curl -s -o /dev/null -w "%{http_code}" https://mcp.docs.abdm.gov.in/healthz || echo 000)
+            [ "$code" = "200" ] && break
+            sleep 6
+          done
+          curl -sf https://mcp.docs.abdm.gov.in/healthz
