@@ -120,20 +120,39 @@ export function activeVersion(platform: Platform, pathname: string): Version {
   );
 }
 
+// The routes that do not belong to the docs plugin, exactly as they leave the
+// site root. Everything else is a docs page and, on a build where the docs
+// plugin sits at the route root, gets its canonical /docs prefix restored.
+const nonDocsRoutes = ['/', '/index.html', '/404.html', '/search'];
+
 /**
- * The route, with the site's baseUrl stripped off the front. Every matcher
- * above is written against site-root paths ('/docs/...'), but the deployed
- * site sits under '/abdm-docs/', so a raw `useLocation().pathname` matches
- * none of them: the landing page stops looking like '/' and the whole chrome
- * appears on it. Read the route through this, never through useLocation.
+ * The route in its canonical shape: the site's baseUrl stripped off the
+ * front, and the docs plugin's pages under '/docs/...'. Every matcher above
+ * is written against that shape, so a raw `useLocation().pathname` matches
+ * none of them on a based deployment: the landing page stops looking like '/'
+ * and the whole chrome appears on it. On a GitHub Pages build the base is
+ * '/docs/' and the docs plugin moves to the route root (docusaurus.config.ts,
+ * docsRouteBasePath), so the prefix the base strip removed is put back for
+ * docs pages. Read the route through this, never through useLocation.
  */
 export function useRoutePath(): string {
   const {pathname} = useLocation();
   const {siteConfig} = useDocusaurusContext();
   const base = siteConfig.baseUrl;
-  return base !== '/' && pathname.startsWith(base)
-    ? `/${pathname.slice(base.length)}`
-    : pathname;
+  if (base !== '/' && pathname === base.slice(0, -1)) {
+    return '/';
+  }
+  const stripped =
+    base !== '/' && pathname.startsWith(base)
+      ? `/${pathname.slice(base.length)}`
+      : pathname;
+  if ((siteConfig.customFields?.docsRouteBasePath as string) !== '/') {
+    return stripped;
+  }
+  if (nonDocsRoutes.includes(stripped) || stripped.startsWith('/reference/')) {
+    return stripped;
+  }
+  return `/docs${stripped}`;
 }
 
 /** True for the landing page, in dev at '/' and in a build at '/index.html'. */
