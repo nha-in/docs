@@ -6,7 +6,7 @@ milestone: M1
 version: abdm-v3
 title: Why identifiers are encrypted, and where to do it
 summary: >
-  An Aadhaar number, a mobile number or an OTP is encrypted against
+  An Aadhaar number, a mobile number or an OTP is RSA encrypted against
   NHA's public key before it is sent, and doing that remotely defeats
   the point.
 sources:

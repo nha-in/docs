@@ -1,7 +1,7 @@
 # Rehearsing NHA's hosting shape on an Eka domain
 
 The site moves off GitHub Pages onto S3 + CloudFront in Eka's account, at
-docs.abdm.dev.eka.care, following the same pattern as the nectar frontends
+abdm-docs.dev.eka.care, following the same pattern as the nectar frontends
 (dev-abdm-s3-deploy and siblings): tag-triggered deploys from the shared
 runner, the runner role via OIDC, a DevOps-provisioned bucket and
 distribution named in the workflow. `../.github/workflows/dev-docs-cd.yml`
@@ -16,8 +16,8 @@ frontend's `main/`. That shrinks the ask to the distribution:
 
 | Piece | Value |
 |---|---|
-| CloudFront distribution | origin `elixir-dev-abdm` with origin path `/docs`, certificate for `docs.abdm.dev.eka.care` |
-| DNS | `docs.abdm.dev.eka.care` to the distribution |
+| CloudFront distribution | origin `elixir-dev-abdm` with origin path `/docs`, certificate for `abdm-docs.dev.eka.care` |
+| DNS | `abdm-docs.dev.eka.care` to the distribution |
 | Role permission | `cloudfront:CreateInvalidation` on the new distribution for `github-runner-role`, if its policy names distributions individually |
 
 Then fill `DISTRIBUTION_ID` in the workflow and push a `dev-docs-*` tag. GitHub Pages keeps serving until the first tag deploy is

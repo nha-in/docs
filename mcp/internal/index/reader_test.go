@@ -66,7 +66,7 @@ func TestRelatedAtomsBothDirections(t *testing.T) {
 	}
 	found := false
 	for _, g := range groups {
-		if g.Relation == "errors" {
+		if g.Type == "error" {
 			for _, a := range g.Atoms {
 				if a.ID == "hiecm.error.abdm-1035" && a.VerificationStatus == "verified" {
 					found = true
@@ -75,7 +75,7 @@ func TestRelatedAtomsBothDirections(t *testing.T) {
 		}
 	}
 	if !found {
-		t.Errorf("outgoing errors missing: %+v", groups)
+		t.Errorf("outgoing error atom missing: %+v", groups)
 	}
 	// Incoming: error <- flow.
 	groups, err = r.RelatedAtoms("hiecm.error.abdm-1035")
@@ -87,11 +87,101 @@ func TestRelatedAtomsBothDirections(t *testing.T) {
 		for _, a := range g.Atoms {
 			if a.ID == "hiecm.flow.m2-link-care-context" {
 				found = true
+				if g.Type != "flow" {
+					t.Errorf("flow bucketed under %q, want its own type", g.Type)
+				}
 			}
 		}
 	}
 	if !found {
 		t.Errorf("incoming reference missing: %+v", groups)
+	}
+}
+
+func TestRelatedAtomsReverseEdgeGroupedByOwnType(t *testing.T) {
+	// The flow references this endpoint under its "endpoints" relation.
+	// Walking from the endpoint, the flow arrives over the reverse edge
+	// and must be bucketed as a flow, once, never under "endpoint".
+	r := openFixture(t, false)
+	groups, err := r.RelatedAtoms("hiecm.endpoint.m1-enrolment-by-aadhaar")
+	if err != nil {
+		t.Fatal(err)
+	}
+	seen := 0
+	for _, g := range groups {
+		for _, a := range g.Atoms {
+			if a.ID == "hiecm.flow.m2-link-care-context" {
+				seen++
+				if g.Type != "flow" {
+					t.Errorf("reverse edge grouped under %q, want flow", g.Type)
+				}
+			}
+		}
+		if g.Type == "endpoint" {
+			t.Errorf("unexpected endpoint group on an endpoint's own walk: %+v", g.Atoms)
+		}
+	}
+	if seen != 1 {
+		t.Errorf("flow appears %d times, want exactly once", seen)
+	}
+}
+
+func TestSpecErrorCodesLookup(t *testing.T) {
+	r := openFixture(t, false)
+	rows, err := r.SpecErrorCodes("ABDM-1016")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(rows) != 1 || rows[0].Message != "Dependent service unavailable" ||
+		rows[0].Action != "Retry with backoff" || rows[0].Module != "m1" {
+		t.Errorf("rows = %+v", rows)
+	}
+	// Raw response code fields arrive with trailing colon and space.
+	trimmed, err := r.SpecErrorCodes("ABDM-1016: ")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(trimmed) != 1 || trimmed[0].Code != "ABDM-1016" {
+		t.Errorf("trimmed lookup rows = %+v", trimmed)
+	}
+	empty, err := r.SpecErrorCodes("ABDM-9999")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(empty) != 0 {
+		t.Errorf("want no rows for unknown code, got %+v", empty)
+	}
+}
+
+func TestListOperationsFilters(t *testing.T) {
+	r := openFixture(t, false)
+	all, err := r.ListOperations("", "", "")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(all) != 1 || all[0].Module != "m2" {
+		t.Errorf("all = %+v", all)
+	}
+	byModule, err := r.ListOperations("", "m2", "")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(byModule) != 1 {
+		t.Errorf("module filter = %+v", byModule)
+	}
+	byQ, err := r.ListOperations("", "", "ADD-CONTEXTS")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(byQ) != 1 {
+		t.Errorf("q filter should match path case-insensitively, got %+v", byQ)
+	}
+	none, err := r.ListOperations("", "m9", "")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(none) != 0 {
+		t.Errorf("want no rows for unknown module, got %+v", none)
 	}
 }
 
@@ -133,7 +223,7 @@ func TestGetOperationAndStats(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if s.ByStatus["verified"] != 1 || s.ByStatus["unverified"] != 1 || s.Operations != 1 {
+	if s.ByStatus["verified"] != 1 || s.ByStatus["unverified"] != 2 || s.Operations != 1 {
 		t.Errorf("stats = %+v", s)
 	}
 }

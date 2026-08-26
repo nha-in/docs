@@ -49,6 +49,69 @@ func TestParseOperations(t *testing.T) {
 	}
 }
 
+func TestParseSpecReadsModuleAndErrorTable(t *testing.T) {
+	data, err := ParseSpec(filepath.Join("testdata", "catalogue", "openapi", "hiecm-v3.yaml"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	if data.Module != "m2" {
+		t.Errorf("Module = %q, want m2 from info.x-portal.module", data.Module)
+	}
+	for _, op := range data.Operations {
+		if op.Module != "m2" {
+			t.Errorf("operation %s Module = %q, want m2", op.OperationID, op.Module)
+		}
+	}
+	if len(data.ErrorCodes) != 2 {
+		t.Fatalf("ErrorCodes = %+v, want 2", data.ErrorCodes)
+	}
+	byCode := map[string]SpecErrorCode{}
+	for _, e := range data.ErrorCodes {
+		byCode[e.Code] = e
+	}
+	e1016, ok := byCode["ABDM-1016"]
+	if !ok || e1016.Message != "Dependent service unavailable" ||
+		e1016.Action != "Retry with backoff" || e1016.Module != "m2" {
+		t.Errorf("ABDM-1016 = %+v", e1016)
+	}
+	// The fixture records "ABDM-1035: " with trailing colon and space,
+	// as observed in real tables; ingestion must normalize it.
+	if _, ok := byCode["ABDM-1035"]; !ok {
+		t.Errorf("trailing-colon code not normalized: %+v", data.ErrorCodes)
+	}
+}
+
+func TestParseSpecModuleFallsBackToFilenameStem(t *testing.T) {
+	spec := []byte("openapi: 3.0.3\ninfo: {title: x, version: v}\npaths:\n  /a:\n    get:\n      operationId: getA\n      responses: {\"200\": {description: ok}}\n")
+	p := filepath.Join(t.TempDir(), "hiecm-m9.yaml")
+	if err := os.WriteFile(p, spec, 0o644); err != nil {
+		t.Fatal(err)
+	}
+	data, err := ParseSpec(p)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if data.Module != "hiecm-m9" {
+		t.Errorf("Module = %q, want filename stem hiecm-m9", data.Module)
+	}
+	if len(data.ErrorCodes) != 0 {
+		t.Errorf("want no error codes without x-abdm-errors, got %+v", data.ErrorCodes)
+	}
+}
+
+func TestNormalizeErrorCode(t *testing.T) {
+	for in, want := range map[string]string{
+		"ABDM-1016":     "ABDM-1016",
+		"ABDM-1016: ":   "ABDM-1016",
+		" abdm-1016:\t": "ABDM-1016",
+		"ABDM-1016::":   "ABDM-1016",
+	} {
+		if got := NormalizeErrorCode(in); got != want {
+			t.Errorf("NormalizeErrorCode(%q) = %q, want %q", in, got, want)
+		}
+	}
+}
+
 func TestParseOperationsRejectsMissingOperationID(t *testing.T) {
 	spec := []byte("openapi: 3.0.3\ninfo: {title: x, version: v}\npaths:\n  /a:\n    get:\n      summary: no id\n      responses: {\"200\": {description: ok}}\n")
 	p := filepath.Join(t.TempDir(), "bad.yaml")

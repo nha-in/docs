@@ -30,7 +30,7 @@ jobs:
 
       - name: Build the site
         env:
-          DOCUSAURUS_URL: https://docs.abdm.dev.eka.care
+          DOCUSAURUS_URL: https://abdm-docs.dev.eka.care
           DOCUSAURUS_BASE_URL: /
         run: |
           npm ci
@@ -44,7 +44,7 @@ jobs:
           aws-region: ${{ secrets.DEV_AWS_Region }}
 
       # The shared frontend bucket; the abdm app owns main/, the docs own
-      # docs/. The distribution for docs.abdm.dev.eka.care uses origin path
+      # docs/. The distribution for abdm-docs.dev.eka.care uses origin path
       # /docs, so the site still serves from the domain root.
       - name: Push to s3 bucket
         env:
@@ -58,3 +58,11 @@ jobs:
         run: |
           echo 'CD Completed, Invalidating Cache'
           aws cloudfront create-invalidation --distribution-id "$DISTRIBUTION_ID" --paths "/*"
+
+      # The runner is shared and persistent, so the job cleans up after
+      # itself: ~1GB of dependencies and build output would otherwise sit on
+      # the machine between deploys. The npm cache in the runner's home is
+      # kept, which is what makes the next npm ci fast anyway.
+      - name: Clean the workspace
+        if: always()
+        run: rm -rf node_modules site/node_modules site/build site/.docusaurus

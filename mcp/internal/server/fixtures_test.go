@@ -27,7 +27,18 @@ func fixtureAtoms() []catalogue.Atom {
 			Body:       "## In plain words\n\nLinking makes a visit discoverable.",
 			SourcePath: "hiecm/flows/m2-link-care-context.md",
 			ErrorCodes: []string{"ABDM-1035"},
-			Related:    map[string][]string{"errors": {"hiecm.error.abdm-1035"}},
+			Related: map[string][]string{
+				"errors":    {"hiecm.error.abdm-1035"},
+				"endpoints": {"hiecm.endpoint.m1-enrolment-by-aadhaar"},
+			},
+		},
+		{
+			ID: "hiecm.endpoint.m1-enrolment-by-aadhaar", Type: "endpoint", Gateway: "hiecm",
+			Milestone: "M1", Title: "Enrol an ABHA by Aadhaar",
+			Summary: "POST enrol/byAadhaar creates an ABHA from an Aadhaar OTP.", VerificationStatus: "unverified",
+			Body:       "## In plain words\n\nSend the encrypted Aadhaar OTP to enrol.",
+			SourcePath: "hiecm/endpoints/m1-enrolment-by-aadhaar.md",
+			Related:    map[string][]string{},
 		},
 	}
 }
@@ -36,11 +47,21 @@ func fixtureOps() []catalogue.Operation {
 	return []catalogue.Operation{{
 		OperationID: "linkAddContexts", Method: "POST",
 		Path: "/links/link/add-contexts", Summary: "Add care contexts",
-		Tag: "links", SpecJSON: []byte(`{"summary":"Add care contexts"}`),
+		Tag: "links", Module: "m2", SpecJSON: []byte(`{"summary":"Add care contexts"}`),
 		RequestSchemaJSON: []byte(`{"type":"object","required":["abhaNumber"],"properties":{"abhaNumber":{"type":"string"},"count":{"type":"integer"}}}`),
 		RequiredParams:    []string{"X-HIP-ID (header)"},
 	}}
 }
+
+func fixtureSpecErrors() []catalogue.SpecErrorCode {
+	return []catalogue.SpecErrorCode{
+		{Code: "ABDM-1016", Message: "Dependent service unavailable",
+			Action: "Retry with backoff", Module: "m1"},
+		{Code: "ABDM-1035", Message: "Facility is not registered with the bridge",
+			Action: "Fix onboarding", Module: "m2"},
+	}
+}
+
 
 // buildServerFixtureDB builds the same two-atom, one-operation snapshot
 // the index tests use, assembled via the exported catalogue, embed and
@@ -76,7 +97,7 @@ func buildServerFixtureDB(t *testing.T, withVectors bool) string {
 		chunks = nil
 	}
 	dbPath := filepath.Join(t.TempDir(), "catalogue.db")
-	if err := index.Build(dbPath, atoms, fixtureOps(), chunks, meta); err != nil {
+	if err := index.Build(dbPath, atoms, fixtureOps(), fixtureSpecErrors(), chunks, meta); err != nil {
 		t.Fatal(err)
 	}
 	return dbPath

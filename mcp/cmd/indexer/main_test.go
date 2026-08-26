@@ -25,7 +25,7 @@ func TestRunKeywordOnly(t *testing.T) {
 	}
 	defer db.Close()
 	counts := map[string]int{}
-	for _, q := range []string{"atoms", "operations", "chunks"} {
+	for _, q := range []string{"atoms", "operations", "chunks", "spec_error_codes"} {
 		var n int
 		if err := db.QueryRow("SELECT count(*) FROM " + q).Scan(&n); err != nil {
 			t.Fatal(err)
@@ -34,6 +34,16 @@ func TestRunKeywordOnly(t *testing.T) {
 	}
 	if counts["atoms"] != 2 || counts["operations"] != 2 {
 		t.Errorf("counts = %v", counts)
+	}
+	if counts["spec_error_codes"] != 2 {
+		t.Errorf("spec_error_codes = %d, want 2 from the fixture x-abdm-errors table", counts["spec_error_codes"])
+	}
+	var module string
+	if err := db.QueryRow("SELECT module FROM operations WHERE operation_id='linkAddContexts'").Scan(&module); err != nil {
+		t.Fatal(err)
+	}
+	if module != "m2" {
+		t.Errorf("operation module = %q, want m2 from info.x-portal.module", module)
 	}
 	if counts["chunks"] != 0 {
 		t.Errorf("keyword-only build wrote %d chunks, want 0", counts["chunks"])

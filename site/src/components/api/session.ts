@@ -87,12 +87,10 @@ export function perRequestHeaders(): Record<string, string> {
     typeof crypto !== 'undefined' && 'randomUUID' in crypto
       ? crypto.randomUUID()
       : `${Date.now()}-${Math.random().toString(16).slice(2)}`;
-  // The gateway wants IST, the +05:30 offset, not UTC. Shifting the clock
-  // before toISOString gives IST wall time; the suffix is then corrected.
-  const ist = new Date(Date.now() + 330 * 60 * 1000)
-    .toISOString()
-    .replace('Z', '+05:30');
-  return {'REQUEST-ID': uuid, TIMESTAMP: ist};
+  // The gateway wants ISO 8601 UTC with milliseconds and the Z suffix, and
+  // rejects non-UTC offsets such as +05:30 with ABDM-1016 Invalid Timestamp.
+  // toISOString emits exactly the accepted shape.
+  return {'REQUEST-ID': uuid, TIMESTAMP: new Date().toISOString()};
 }
 
 /** Headers this panel fills in itself, so the reader does not type them. */

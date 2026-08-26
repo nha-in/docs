@@ -29,6 +29,32 @@ func TestChunkAtomNoHeadings(t *testing.T) {
 	}
 }
 
+func TestChunkAtomEmbedsSummary(t *testing.T) {
+	a := Atom{ID: "x", Title: "Get the public certificate",
+		Summary: "Where to get the public key used to encrypt the Aadhaar number.",
+		Body:    "## In plain words\n\nFetch the certificate.\n\n## What happens\n\nSequence."}
+	chunks := ChunkAtom(a)
+	if len(chunks) != 3 {
+		t.Fatalf("got %d chunks, want summary chunk plus 2 section chunks", len(chunks))
+	}
+	found := false
+	for _, c := range chunks {
+		if strings.Contains(c.Text, a.Summary) {
+			found = true
+		}
+	}
+	if !found {
+		t.Errorf("no chunk carries the frontmatter summary: %+v", chunks)
+	}
+	if chunks[0].Text != a.Title+"\n"+a.Summary {
+		t.Errorf("first chunk = %q, want title plus summary", chunks[0].Text)
+	}
+	// Section chunking is unchanged after the summary chunk.
+	if chunks[1].Heading != "In plain words" || chunks[2].Heading != "What happens" {
+		t.Errorf("section headings = %q, %q", chunks[1].Heading, chunks[2].Heading)
+	}
+}
+
 func TestChunkAtomEmptyBody(t *testing.T) {
 	if got := ChunkAtom(Atom{ID: "x", Title: "T", Body: ""}); len(got) != 0 {
 		t.Fatalf("want no chunks for empty body, got %+v", got)

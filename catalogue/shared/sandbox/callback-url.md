@@ -6,9 +6,10 @@ milestone: n/a
 version: abdm-v3
 title: The callback URL, and why M2 and M3 need one before anything works
 summary: >
-  ABDM answers most M2 and M3 calls by posting to a URL you
-  registered, so that URL has to be public and reachable before those
-  flows can complete.
+  This is where the gateway's incoming notifications land while you are
+  testing: ABDM posts callbacks to the webhook receiver URL you register
+  in the sandbox. That URL must be publicly reachable, usually through a
+  tunnel to your local process.
 sources:
   - file: ABDM Sandbox/ABDM/Proposed Simplified Milestone 1.docx
     status: not-yet-hashed
