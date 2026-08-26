@@ -31,27 +31,27 @@ export const ROLES: Record<string, Role[]> = {
     {
       id: 'ims',
       label: 'Information Management System',
-      description: 'HMIS, EMR, LIMS or a pharmacy system. Holds records and shares them.',
-      covers: ['his', 'hip', 'hiu'],
+      description: 'Holds records and shares them',
+      covers: ['his', 'hip', 'hiu', 'shared'],
     },
     {
       id: 'phr',
       label: 'PHR',
-      description: "The patient's own application. Discovers, links and consents.",
-      covers: ['phr'],
+      description: "The patient's own application",
+      covers: ['phr', 'shared'],
     },
   ],
   uhi: [
     {
       id: 'hspa',
       label: 'HSPA',
-      description: 'Health Service Provider Application. Offers a service.',
+      description: 'Offers a service',
       covers: ['hspa'],
     },
     {
       id: 'eua',
       label: 'EUA',
-      description: 'End User Application. Books one.',
+      description: 'Books one',
       covers: ['eua'],
     },
   ],
@@ -59,13 +59,13 @@ export const ROLES: Record<string, Role[]> = {
     {
       id: 'provider',
       label: 'Provider',
-      description: 'A hospital submitting claims.',
+      description: 'Submits claims',
       covers: ['provider'],
     },
     {
       id: 'payer',
       label: 'Payer',
-      description: 'An insurer receiving and adjudicating them.',
+      description: 'Receives and adjudicates them',
       covers: ['payer'],
     },
   ],
@@ -115,8 +115,9 @@ export function moduleMatchesRole(
   if (!roleId) return true; // no choice made: show everything
   const role = rolesFor(platformId).find((r) => r.id === roleId);
   if (!role) return true;
-  // A module that declares no roles is plumbing everyone needs, the gateway
-  // session above all, so it is never filtered away.
+  // A module that declares no roles is plumbing everyone needs, so it is never
+  // filtered away. `shared` says the same thing explicitly, and every role
+  // covers it: a PHR still has to get a session token.
   if (!moduleRoles || moduleRoles.length === 0) return true;
   return moduleRoles.some((r) => role.covers.includes(r));
 }

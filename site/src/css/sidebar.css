@@ -698,3 +698,129 @@ body.is-resizing-sidebar {
   letter-spacing: 0.06em;
   text-align: left;
 }
+
+/* ---------- sidebar settings ----------
+   Version and role behind one equaliser button. They are the same kind of
+   thing, a setting that changes what the tree shows, so they share a control
+   rather than sitting side by side competing with the tree. */
+
+.sidebar-settings {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4375rem;
+  height: 1.75rem;
+  padding: 0 0.5rem;
+  border: 0;
+  border-radius: var(--radius-chip);
+  background: transparent;
+  color: var(--text-muted);
+  font-family: inherit;
+  font-size: 0.8125rem;
+  line-height: 1.25rem;
+  cursor: pointer;
+  min-width: 0;
+}
+
+.sidebar-settings:hover {
+  background: var(--surface-sunken);
+  color: var(--text-heading);
+}
+
+.sidebar-settings__summary {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* A filtered tree with no sign of filtering is how a reader concludes a page
+   is missing. The dot says a setting is off its default. */
+.sidebar-settings__dot {
+  flex: none;
+  width: 0.375rem;
+  height: 0.375rem;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+.sidebar-settings__panel {
+  width: 19rem;
+  padding: 0.375rem;
+}
+
+.sidebar-settings__group + .sidebar-settings__group {
+  margin-top: 0.25rem;
+  padding-top: 0.375rem;
+  border-top: 1px solid var(--border);
+}
+
+.sidebar-settings__group-label {
+  margin: 0;
+  padding: 0.375rem 0.5rem 0.25rem;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.sidebar-settings__option {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  width: 100%;
+  padding: 0.4375rem 0.5rem;
+  border: 0;
+  border-radius: var(--radius-chip);
+  background: transparent;
+  color: var(--text-heading);
+  font-family: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.sidebar-settings__option:hover:not(:disabled) {
+  background: var(--surface-sunken);
+}
+
+.sidebar-settings__option:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.sidebar-settings__option-main {
+  display: flex;
+  flex-direction: column;
+  gap: 0.0625rem;
+  min-width: 0;
+}
+
+/* One line each, so every row is the same height however long a future role
+   name turns out to be. */
+.sidebar-settings__option-label,
+.sidebar-settings__option-note {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.sidebar-settings__option-label {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  line-height: 1.25rem;
+}
+
+.sidebar-settings__option-note {
+  font-size: 0.75rem;
+  line-height: 1.1rem;
+  color: var(--text-muted);
+  font-weight: 400;
+}
+
+.sidebar-settings__footnote {
+  margin: 0.25rem 0 0;
+  padding: 0 0.5rem 0.25rem;
+  font-size: 0.6875rem;
+  line-height: 1rem;
+  color: var(--text-muted);
+}

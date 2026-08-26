@@ -1177,7 +1177,9 @@ label.api-console__ident {
   background: transparent;
   border: 0;
   padding: 0;
-  overflow-wrap: anywhere;
+  /* Same rule as the markdown tables: break a run that cannot fit, never a
+     word that could. */
+  overflow-wrap: break-word;
 }
 
 .matrix__api--link:hover {
