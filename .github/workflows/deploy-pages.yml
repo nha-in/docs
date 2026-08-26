@@ -7,6 +7,9 @@ name: deploy-pages
 on:
   push:
     branches: [main]
+  # A hand trigger, for the first deploy and for re-running one without a
+  # commit.
+  workflow_dispatch:
 
 permissions:
   contents: read
