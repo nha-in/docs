@@ -1,5 +1,5 @@
 import type {ReactNode} from 'react';
-import {useEffect} from 'react';
+import {useCallback, useEffect, useRef} from 'react';
 import Link from '@docusaurus/Link';
 import {useHistory} from '@docusaurus/router';
 import Layout from '@theme/Layout';
@@ -7,66 +7,75 @@ import Heading from '@theme/Heading';
 import NetworkWeb from '@site/src/components/landing/NetworkWeb';
 import BrandMark from '@site/src/components/chrome/BrandMark';
 import BrowserOnly from '@docusaurus/BrowserOnly';
-import {ArrowRight} from 'lucide-react';
+import {ChevronDown} from 'lucide-react';
 
-/** Where a scroll past the statement takes the reader: the API references,
- * the landing page's own next screen away from a choice. */
+/** Where a scroll past the statement takes the reader. */
 const API_REFERENCE = '/docs/hiecm/v3/api';
 
-/**
- * Scrolling past the one screen the hero occupies reads as intent, the same
- * way it does on the sites this page borrows its shape from: not a request
- * for more hero, a request for the next thing. There is no second screen of
- * landing content to scroll into, so the gesture carries the reader straight
- * into the API references instead of dead-ending on blank page.
- *
- * A `scroll` listener, not `wheel`: `wheel` fires per device with wildly
- * different deltas (a trackpad flick and a mouse click-wheel are not the same
- * gesture), while `scrollY` is the one number every input method, including a
- * keyboard or a dragged scrollbar, agrees on. The threshold is small enough
- * to fire on the first real scroll and large enough that the page settling
- * after load, or a stray pixel of touch jitter, does not count as one.
- */
-function useScrollsIntoReference(): void {
-  const history = useHistory();
-  useEffect(() => {
-    let navigated = false;
-    const threshold = 24;
-    const onScroll = () => {
-      if (navigated || window.scrollY <= threshold) {
-        return;
-      }
-      navigated = true;
-      window.removeEventListener('scroll', onScroll);
-      // Land at the top of the reference page, not part way down it: a route
-      // change does not reset scroll position the way a full page load does,
-      // so without this the new page opens already scrolled by the same
-      // amount that triggered the navigation.
-      window.scrollTo(0, 0);
-      history.push(API_REFERENCE);
-    };
-    window.addEventListener('scroll', onScroll, {passive: true});
-    return () => window.removeEventListener('scroll', onScroll);
-  }, [history]);
-}
-
-/**
- * The landing page: one screen, holding the statement, the one control and the
- * three gateways, and nothing else. The two official marks sit in the bar, top
- * left.
- *
- * The gateways used to be a second screen of cards below the fold. They are
- * the only choice this page asks a reader to make, so they are on it rather
- * than under it, as the three ways in beneath Get started.
- */
+/** The three gateways, as text separated by interpuncts (see home.css). */
 const ways = [
   {label: 'HIE-CM', to: '/docs/hiecm/v3'},
   {label: 'UHI', to: '/docs/uhi/v1'},
   {label: 'NHCX', to: '/docs/nhcx/v1'},
 ];
 
+/**
+ * The landing page is one screen, and leaving it goes to the API references.
+ *
+ * The exit is a scroll, because that is what the reader was going to do
+ * anyway: pressing Get started runs the page down to the bottom of the cue
+ * below the hero, and the route changes when it gets there. The button
+ * therefore does visibly the same thing the gesture does, rather than being a
+ * second, different way out.
+ *
+ * The `scroll` listener catches the manual gesture. `wheel` fires per device
+ * with wildly different deltas; `scrollY` is the one number every input
+ * method agrees on, keyboard and dragged scrollbar included. Either path ends
+ * in the same place, and `leaving` makes sure only the first one counts.
+ *
+ * A timeout, not a `scrollend` listener: Safari did not ship `scrollend`, and
+ * a reader whose system asks for reduced motion gets an instant jump with no
+ * end event to wait for. The route change must not depend on either.
+ */
+function useScrollHandoff(): () => void {
+  const history = useHistory();
+  const leaving = useRef(false);
+
+  const leave = useCallback(() => {
+    if (leaving.current) return;
+    leaving.current = true;
+
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (!reduced) {
+      window.scrollTo({top: document.body.scrollHeight, behavior: 'smooth'});
+    }
+    window.setTimeout(
+      () => {
+        // The reference page opens at its own top, not part way down it: a
+        // route change does not reset scroll the way a page load does.
+        window.scrollTo(0, 0);
+        history.push(API_REFERENCE);
+      },
+      reduced ? 0 : 420,
+    );
+  }, [history]);
+
+  useEffect(() => {
+    const onScroll = () => {
+      // 24px: past the settle after load and past touch jitter, but reached
+      // by the first real scroll of any input device.
+      if (window.scrollY > 24) leave();
+    };
+    window.addEventListener('scroll', onScroll, {passive: true});
+    return () => window.removeEventListener('scroll', onScroll);
+  }, [leave]);
+
+  return leave;
+}
+
 export default function Home(): ReactNode {
-  useScrollsIntoReference();
+  const leave = useScrollHandoff();
+
   return (
     <Layout
       title="ABDM Developer Portal"
@@ -97,25 +106,37 @@ export default function Home(): ReactNode {
               <br />
               Secure. Private. Robust.
             </p>
-            <Link className="landing-hero__cta" to="/docs/hiecm/v3">
+            {/* Get started does what a scroll does, so it is a button rather
+                than a link: it carries the reader down to the references
+                through the same transition, instead of jumping to a different
+                page than the gesture beside it. The arrow is gone with the
+                link, because it pointed sideways at a destination this no
+                longer goes to. */}
+            <button type="button" className="landing-hero__cta" onClick={leave}>
               Get started
-              <ArrowRight className="size-4" aria-hidden="true" />
-            </Link>
+            </button>
 
             <nav className="landing-hero__ways" aria-label="The three gateways">
-              {ways.map((way) => (
-                <Link key={way.to} to={way.to} className="landing-hero__way">
-                  {way.label}
+              {ways.map(({label, to}) => (
+                <Link key={to} to={to} className="landing-hero__way">
+                  {label}
                 </Link>
               ))}
             </nav>
           </div>
 
+          {/* The scroll is the page's main gesture, so it is advertised. */}
+          <button
+            type="button"
+            className="landing-scroll-hint"
+            onClick={leave}
+            aria-label="Go to the API references">
+            <ChevronDown className="size-5" aria-hidden="true" />
+          </button>
         </section>
 
-        {/* Scroll room, nothing else. The reader crosses into it and the
-            effect above carries them into the API references before they see
-            what, if anything, is down here. */}
+        {/* Scroll room, nothing else: somewhere for a real scroll to travel
+            before the handoff fires. Not meant to be seen. */}
         <div className="landing-scroll-cue" aria-hidden="true" />
       </main>
     </Layout>

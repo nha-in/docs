@@ -2,9 +2,9 @@ import React, {useEffect, useRef} from 'react';
 
 type Node = {x: number; y: number; vx: number; vy: number};
 
-const DENSITY = 3200; // one node per this many square pixels
-const MAX_NODES = 340;
-const LINK = 210; // px: two nodes closer than this are joined
+const DENSITY = 4600; // one node per this many square pixels
+const MAX_NODES = 240;
+const LINK = 190; // px: two nodes closer than this are joined
 const DRIFT = 0.1; // px per frame
 const LINE_WIDTH = 1.6; // px, heavier than a hairline so the mesh reads under the veil
 

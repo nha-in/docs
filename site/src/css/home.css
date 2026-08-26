@@ -122,22 +122,47 @@
   pointer-events: none;
   will-change: mask-image;
   transform: translateZ(0);
+  /* The reveal is full strength again. Dimming every stop made the whole
+     network dull to fix a problem that only exists where the words are, so
+     the dimming moved to the words instead: see .landing-hero__copy::before.
+     The core is soft rather than flat so the edge of the torch does not read
+     as a cut circle. */
   mask-image: radial-gradient(
     circle var(--reveal-r) at var(--reveal-x) var(--reveal-y),
     transparent 0%,
-    transparent 42%,
+    transparent 30%,
+    rgb(0 0 0 / 0.55) 66%,
     #000 100%
   );
   -webkit-mask-image: radial-gradient(
     circle var(--reveal-r) at var(--reveal-x) var(--reveal-y),
     transparent 0%,
-    transparent 42%,
+    transparent 30%,
+    rgb(0 0 0 / 0.55) 66%,
     #000 100%
   );
 }
 
-/* No plate behind the copy. It would sit exactly where the pointer usually
-   is and swallow the reveal; the web is thin enough to read over. */
+/* A scrim behind the copy, and only behind the copy.
+   The torch is at full strength everywhere else; here it is damped, because
+   this is the one place the network competes with something that has to be
+   read. A soft radial rather than a plate: it has no edge of its own, so the
+   reveal still passes through it and the reader sees the web brighten under
+   the words rather than hitting a panel. */
+.landing-hero__copy::before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  inset: -3rem -4rem;
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse at center,
+    var(--page) 0%,
+    color-mix(in srgb, var(--page) 82%, transparent) 45%,
+    color-mix(in srgb, var(--page) 45%, transparent) 70%,
+    transparent 100%
+  );
+}
 
 /* The kicker above the statement: the Ashoka emblem and the portal's name,
    held in the shared .brand-chip pill (navbar.css). Its own scale is smaller
@@ -183,6 +208,10 @@
 }
 
 .landing-hero__cta {
+  /* A <button> now, not a link, so it needs the resets an <a> did not. */
+  border: 0;
+  font-family: inherit;
+  cursor: pointer;
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
@@ -209,13 +238,20 @@
   flex-wrap: wrap;
   align-items: center;
   justify-content: center;
-  gap: 1.75rem;
+  /* Room for the interpunct to sit in, and for the pair either side of it to
+     breathe. */
+  gap: 2.75rem;
   margin-top: 1.5rem;
 }
 
+/* Plain links, separated by interpuncts. They were chips for a moment and
+   read as three buttons crowding the one real call to action above them;
+   as text they sit back where they belong. Sage and bold on hover, so the
+   pointer still says they are pressable. */
 .landing-hero__way {
   position: relative;
   font-size: 0.9375rem;
+  font-weight: 500;
   color: var(--text-body);
   text-decoration: none;
   transition: color 150ms ease;
@@ -223,15 +259,28 @@
 
 .landing-hero__way:hover {
   color: var(--accent);
+  font-weight: 700;
   text-decoration: none;
 }
 
-/* A middot between the links, sitting in the gap rather than in either. */
+/* The interpunct sits in the gap rather than in either link, so it is not
+   part of the hit area and does not turn sage with its neighbour.
+
+   Sage, and larger than the text it separates. At the body size in
+   --text-faint it was a speck; a middot is a small glyph to begin with, so it
+   needs the size to register as a deliberate mark rather than as dirt on the
+   screen. Vertically centred by hand: a raised middot sits high in its own
+   line box, and scaling it up exaggerates that. */
 .landing-hero__way + .landing-hero__way::before {
   content: '·';
   position: absolute;
-  left: -0.9375rem;
-  color: var(--text-faint);
+  left: -1.5rem;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 1.5rem;
+  line-height: 1;
+  font-weight: 700;
+  color: var(--accent);
 }
 
 /* ---------- narrow ---------- */
@@ -257,10 +306,78 @@
 /* ---------- the scroll cue ----------
    Empty space below the hero, tall enough to give a real scroll a real
    distance to travel before the reader would call it accidental. The reader
-   is meant to leave this element unseen: the effect in index.tsx fires on the
+   is meant to leave this element unseen: the handoff in index.tsx fires on the
    first meaningful scroll and carries them into the API references before
    this comes into view. */
 .landing-scroll-cue {
   height: 45vh;
+}
+
+/* ---------- the scroll hint ----------
+   Scrolling is this page's main gesture and it was unadvertised: the hero
+   fills the screen, so there is no visible cut-off edge to suggest anything
+   is below it. The arrow says so, and pressing it does the same thing as the
+   scroll rather than being a second, different control. */
+.landing-scroll-hint {
+  position: absolute;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--surface-sunken);
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: color 150ms ease, border-color 150ms ease, background-color 150ms ease;
+  animation: landing-scroll-nudge 2.4s ease-in-out infinite;
+}
+
+.landing-scroll-hint:hover {
+  color: var(--accent);
+  border-color: var(--accent-line);
+  background: var(--accent-soft);
+}
+
+/* A small, slow fall. Enough to read as "down", not enough to pull the eye off
+   the statement it sits under. */
+@keyframes landing-scroll-nudge {
+  0%, 100% { transform: translateX(-50%) translateY(0); }
+  50%      { transform: translateX(-50%) translateY(0.25rem); }
+}
+
+/* ---------- leaving ----------
+   The handoff is a scroll, not a fade: pressing Get started runs the page
+   down and the route changes when it arrives, so the button does visibly what
+   a scroll does. Nothing here dims the hero on the way out; the movement is
+   the transition. index.tsx drives it with a smooth scrollTo.
+
+   Coming back the other way, from the top of the API references, is still a
+   fade: there is nothing above the top of that page to scroll through, so a
+   movement would have nowhere to go. The class is set on the document element
+   because the page being left is a docs page, which knows nothing about
+   this. */
+:root[data-leaving-back='true'] .main-wrapper {
+  opacity: 0;
+  transform: translateY(1.5rem);
+  transition: opacity 200ms ease, transform 200ms ease;
+}
+
+/* Motion is decoration here, and the handoff must still work without it: the
+   timeout in index.tsx does not depend on the transition firing. */
+@media (prefers-reduced-motion: reduce) {
+  :root[data-leaving-back='true'] .main-wrapper {
+    transition: none;
+  }
+
+  .landing-scroll-hint {
+    animation: none;
+  }
 }
 
