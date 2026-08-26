@@ -39,8 +39,10 @@
   display: block;
   width: auto;
   /* NHA's mark is a lockup, emblem plus wordmark, so it needs more height
-     than the ABDM roundel did before its own text is readable. */
-  height: 2.25rem;
+     than the ABDM roundel did before its own text is readable. Raised in
+     step with .landing-bar__mark in home.css, so it stays the same size
+     crossing from the landing page into the documentation. */
+  height: 2.875rem;
 }
 
 .topbar-wordmark {
@@ -51,6 +53,39 @@
   letter-spacing: -0.01em;
   color: var(--text-heading);
   white-space: nowrap;
+}
+
+/* ---------- the brand chip ----------
+   "ABDM Developer Portal" plus the Ashoka emblem, held in one pill. It carries
+   the portal's own name; the NHA lockup beside it (or above it, on the
+   landing page) carries the publisher's. Used in the docs topbar and on the
+   landing page, each keeping its own text treatment, sharing this container. */
+.brand-chip {
+  display: inline-flex;
+  align-items: center;
+  /* Reset regardless of the tag it renders as: a <p> on the landing page, a
+     <span> in the topbar. A <p>'s default margin would otherwise stack with
+     the flex gap around it. */
+  margin: 0;
+  gap: 0.5rem;
+  padding: 0.375rem 0.75rem 0.375rem 0.625rem;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--surface-sunken);
+}
+
+.brand-chip__mark {
+  flex: none;
+  display: block;
+  width: 1.125rem;
+  height: 1.125rem;
+  background-color: var(--text-heading);
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+  -webkit-mask-size: contain;
+  mask-size: contain;
 }
 
 /* Every control in the bar: locale trigger, Ask AI, sandbox, GitHub, menu. */

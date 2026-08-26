@@ -29,10 +29,11 @@
 
 .landing-bar__mark {
   display: block;
-  /* Same height as .topbar-logo in navbar.css. The mark used to be 2rem here
-     and 2.25rem in the docs bar, so it changed size as you crossed from the
-     landing page into the documentation. */
-  height: 2.25rem;
+  /* Same height as .topbar-logo in navbar.css, kept in step for the same
+     reason as before: the mark must not change size crossing from the
+     landing page into the documentation. Both raised together, from 2.25rem,
+     so the publisher's mark reads clearly rather than as a footnote. */
+  height: 2.875rem;
   width: auto;
 }
 
@@ -65,7 +66,7 @@
   }
 
   .landing-bar__mark {
-    height: 1.625rem;
+    height: 2.125rem;
   }
 }
 
@@ -138,10 +139,21 @@
 /* No plate behind the copy. It would sit exactly where the pointer usually
    is and swallow the reveal; the web is thin enough to read over. */
 
-/* The two official marks above the statement. Sized by height so the NHA
-   lockup and the squarer mission mark read as one row. */
+/* The kicker above the statement: the Ashoka emblem and the portal's name,
+   held in the shared .brand-chip pill (navbar.css). Its own scale is smaller
+   than the topbar's, to sit quietly under the two official marks rather than
+   compete with the headline below it. */
+.brand-chip--eyebrow {
+  padding: 0.3125rem 0.75rem 0.3125rem 0.5625rem;
+}
+
+.brand-chip--eyebrow .brand-chip__mark {
+  width: 0.875rem;
+  height: 0.875rem;
+  background-color: var(--accent);
+}
+
 .landing-hero__eyebrow {
-  margin: 0;
   font-size: 0.8125rem;
   font-weight: 500;
   letter-spacing: 0.06em;
@@ -241,3 +253,14 @@
     display: none;
   }
 }
+
+/* ---------- the scroll cue ----------
+   Empty space below the hero, tall enough to give a real scroll a real
+   distance to travel before the reader would call it accidental. The reader
+   is meant to leave this element unseen: the effect in index.tsx fires on the
+   first meaningful scroll and carries them into the API references before
+   this comes into view. */
+.landing-scroll-cue {
+  height: 45vh;
+}
+
