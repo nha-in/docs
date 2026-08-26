@@ -7,9 +7,24 @@ verification: unverified
 source: ABDM__Proposed_Simplified_Milestone_2.md
 ---
 
+import SkillInstall from '@site/src/components/docs/SkillInstall';
+
 # M2 linking and sharing
 
 Milestone 2 (M2) attaches health records to a person's [ABHA address](/docs/hiecm/v3/getting-started/glossary#abha-address). After it you can group records into [care contexts](/docs/hiecm/v3/getting-started/glossary#care-context), link them, answer [discovery](/docs/hiecm/v3/getting-started/glossary#discovery) requests from [PHR](/docs/hiecm/v3/getting-started/glossary#phr) apps, and push encrypted records when a consented request arrives.
+
+<SkillInstall
+  slug="abdm-m2"
+  note="The whole of M2 as one file an agent reads. Generated from these pages, so it says what they say."
+/>
+
+## In short
+
+- You act as the [HIP](/docs/hiecm/v3/getting-started/glossary#hip). A valid Facility ID and HIP registration come first.
+- M2 is keyed to an ABHA address, so [M1](/docs/hiecm/v3/api/m1) has to work before M2 can.
+- Hold a [link token](/docs/hiecm/v3/getting-started/glossary#link-token) per patient. NHA gives its validity as six months.
+- Records go out as [FHIR](/docs/hiecm/v3/getting-started/glossary#fhir) R4 against the ABDM profiles.
+- Four callbacks name a path and carry no payload in NHA's sources. Do not assume a body.
 
 ## What M2 gives you
 

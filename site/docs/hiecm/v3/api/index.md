@@ -12,6 +12,8 @@ generated: true
 
 Every endpoint below is generated from the specification that declares it. Each one has its own page with the headers, the body and a request you can send.
 
+This page lists every module, including any that the role you have chosen does not use. The sidebar shows only yours.
+
 ## Gateway session
 
 7 endpoints across 3 use cases: Session and tokens, Gateway & Bridge, Bridge. Each endpoint has its own page in the sidebar.

@@ -9,7 +9,13 @@ source: ABDM__Proposed_Simplified_Milestone_4_(NHPR).md
 
 # M4 user journeys
 
-Milestone 4 of [ABDM](/docs/hiecm/v3/getting-started/glossary#abdm) has three journeys: a professional gets an [HPID](/docs/hiecm/v3/getting-started/glossary#hpid) and an [HPR](/docs/hiecm/v3/getting-started/glossary#hpr) profile, a facility manager onboards a facility to the [HFR](/docs/hiecm/v3/getting-started/glossary#hfr), and a facility links its bridges so its software can act as a [HIP](/docs/hiecm/v3/getting-started/glossary#hip) or an [HIU](/docs/hiecm/v3/getting-started/glossary#hiu). This page shows the order of calls in each; field lists are on the [what NHA documents without a path](/docs/hiecm/v3/api/m4/undocumented) page.
+Milestone 4 of [ABDM](/docs/hiecm/v3/getting-started/glossary#abdm) has three journeys:
+
+- A professional gets an [HPID](/docs/hiecm/v3/getting-started/glossary#hpid) and an [HPR](/docs/hiecm/v3/getting-started/glossary#hpr) profile.
+- A facility manager onboards a facility to the [HFR](/docs/hiecm/v3/getting-started/glossary#hfr).
+- A facility links its bridges, so its software can act as a [HIP](/docs/hiecm/v3/getting-started/glossary#hip) or an [HIU](/docs/hiecm/v3/getting-started/glossary#hiu).
+
+This page shows the order of calls in each. Field lists are on the [what NHA documents without a path](/docs/hiecm/v3/api/m4/undocumented) page.
 
 :::caution[A map, not a runbook]
 These diagrams follow the order of steps NHA's document sets out. They are a map, not a tested runbook.

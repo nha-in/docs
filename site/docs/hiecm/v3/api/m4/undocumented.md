@@ -27,7 +27,16 @@ Use this page to size the work and find the right call. Expect to open NHA's san
 
 NHA's document carries about 95 screenshots, each a request or response sample. In most cases the screenshot is the only place the method and path appear, so both are missing here. The calls affected:
 
-- The whole HPID creation chain: generate Aadhaar link, check Aadhaar authentication status, verify OTP and fetch user details, check whether an HPID exists by Aadhaar, mobile match, generate mobile OTP, verify mobile OTP, username suggestions and create HPID. Only the base URL and the parameter behaviour survived.
+- The whole HPID creation chain, nine calls. Only the base URL and the parameter behaviour survived.
+  - Generate Aadhaar link
+  - Check Aadhaar authentication status
+  - Verify OTP and fetch user details
+  - Check whether an HPID exists by Aadhaar
+  - Mobile match
+  - Generate mobile OTP
+  - Verify mobile OTP
+  - Username suggestions
+  - Create HPID
 - All five HFR onboarding calls: deduplicate search, basic facility information, additional information, detailed information and submit facility. Parameter tables survived in full, paths did not.
 - Bridge linkage. Parameter table yes, path no.
 - All HFR utility and search calls: master types, master data, LGD lookups, facility type, facility subtype, ownership subtype, specialities, PSU details, search facility, nearby search, send OTP to contact and validate OTP.
@@ -431,7 +440,12 @@ No paths survived in text. Two are named inside other parameter descriptions: `v
 
 ## HPR master data
 
-NHA lists 17 master data calls: system of medicine, medical councils, languages, universities, courses, colleges, countries, states, districts, sub districts, nurse affiliated boards, nurse councils, nurse college by state, affiliated board by state councils, get all ministry, HPRID categories and HPRID subcategories.
+NHA lists 17 master data calls, in four groups:
+
+- Qualifications: system of medicine, medical councils, languages, universities, courses, colleges
+- Geography: countries, states, districts, sub districts
+- Nursing bodies: nurse affiliated boards, nurse councils, nurse college by state, affiliated board by state councils
+- Classification: get all ministry, HPRID categories, HPRID subcategories
 
 The only master data paths the document carries in text:
 

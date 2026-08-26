@@ -7,9 +7,24 @@ verification: unverified
 source: ABDM__Proposed_Simplified_Milestone_3.md
 ---
 
+import SkillInstall from '@site/src/components/docs/SkillInstall';
+
 # M3 consent and fetching
 
 In Milestone 3 (M3) of [ABDM](/docs/hiecm/v3/getting-started/glossary#abdm) your system asks a patient for permission to see their health records, then fetches them. You are the [HIU](/docs/hiecm/v3/getting-started/glossary#hiu); the [HIE-CM](/docs/hiecm/v3/getting-started/glossary#hie-cm) holds the consent, asks the patient on your behalf, and on a grant returns a [consent artefact](/docs/hiecm/v3/getting-started/glossary#consent-artefact) id. No artefact, no records.
+
+<SkillInstall
+  slug="abdm-m3"
+  note="The whole of M3 as one file an agent reads. Generated from these pages, so it says what they say."
+/>
+
+## In short
+
+- You act as the HIU. The HIE-CM holds the consent and asks the patient for you.
+- No artefact, no records. The patient must be known to you by [ABHA address](/docs/hiecm/v3/getting-started/glossary#abha-address) first.
+- One request can produce more than one artefact. Store the request id and every artefact id.
+- Records arrive encrypted on your callback URL. Decrypt, then acknowledge to the gateway.
+- NHA declares `consentId` and `consentRequestId` as UUIDs while its own examples are not. Do not validate them as UUIDs.
 
 ## What M3 gives you
 

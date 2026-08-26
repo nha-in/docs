@@ -419,6 +419,8 @@ for (const {platform, version, files} of tree) {
     '',
     'Every endpoint below is generated from the specification that declares it. Each one has its own page with the headers, the body and a request you can send.',
     '',
+    'This page lists every module, including any that the role you have chosen does not use. The sidebar shows only yours.',
+    '',
   ];
 
   for (const module of modules) {

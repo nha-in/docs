@@ -14,7 +14,13 @@ import apiTree from '@site/src/data/api-sidebar.json';
 import {activePlatform, platforms, useRoutePath} from './navigation';
 import {moduleMatchesRole, useRole} from './roles';
 
-type Item = {type?: string; label?: string; items?: Item[]};
+type Item = {
+  type?: string;
+  label?: string;
+  items?: Item[];
+  /** Docusaurus carries `sidebar_custom_props` through to the item. */
+  customProps?: {roles?: string[]};
+};
 
 export function useRoleScopedSidebar<T>(sidebar: T): T {
   const pathname = useRoutePath();
@@ -28,14 +34,21 @@ export function useRoleScopedSidebar<T>(sidebar: T): T {
     for (const entry of apiTree as any[]) {
       if (entry.platform === platform.id) rolesByLabel.set(entry.label, entry.roles ?? []);
     }
-    if (rolesByLabel.size === 0) return sidebar;
+    // No early return when a gateway has no specifications yet: its pages
+    // can still declare roles in `sidebar_custom_props`, and UHI and NHCX
+    // are exactly that case today.
 
     const keep = (items: Item[]): Item[] =>
       items
         .filter((item) => {
-          const declared = item.label ? rolesByLabel.get(item.label) : undefined;
-          // Only module categories are known here. Anything else, a guide
-          // page or the References group, is left alone.
+          // A page states its own roles in `sidebar_custom_props`, which is
+          // how a guide or concept page opts into scoping. A module category
+          // gets its roles from the specification, through api-sidebar.json.
+          const declared =
+            item.customProps?.roles ??
+            (item.label ? rolesByLabel.get(item.label) : undefined);
+          // Anything declaring nothing, the References group above all, is
+          // left alone: silence means everyone needs it.
           return declared === undefined
             ? true
             : moduleMatchesRole(declared, platform.id, role);

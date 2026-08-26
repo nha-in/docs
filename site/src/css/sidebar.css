@@ -566,6 +566,43 @@ body.is-resizing-sidebar {
   text-decoration: none;
 }
 
+/* What the skill can do. Three jobs, one row on a wide screen, stacked when
+   there is no room for three. */
+.skill-caps {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+  margin: 1.5rem 0 0;
+  padding: 1.25rem 0 0;
+  border-top: 1px solid var(--border);
+  list-style: none;
+}
+
+.markdown .skill-caps {
+  padding-left: 0;
+}
+
+.skill-caps__item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  min-width: 0;
+}
+
+.skill-caps__label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.skill-caps__detail {
+  font-size: 0.8125rem;
+  line-height: 1.25rem;
+  color: var(--text-body);
+}
+
 .skill-install__targets {
   display: flex;
   gap: 0.375rem;
@@ -650,9 +687,87 @@ body.is-resizing-sidebar {
   color: var(--text-muted);
 }
 
+.skill-how {
+  margin: 1.25rem 0 0;
+  padding: 1.25rem 0 0;
+  border-top: 1px solid var(--border);
+}
+
+/* The steps are a disclosure now: most readers install and go, and the ones
+   who want the walkthrough open it. <details> does the state itself, so there
+   is no JavaScript here and it still works before hydration. */
+.skill-how__summary {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  width: fit-content;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  cursor: pointer;
+  list-style: none;
+}
+
+.skill-how__summary::-webkit-details-marker {
+  display: none;
+}
+
+/* The caret, drawn rather than fetched so it takes currentColor. Points right
+   when closed and down when open, matching the sidebar's own mark. */
+.skill-how__summary::after {
+  content: '';
+  box-sizing: border-box;
+  width: 0.3125rem;
+  height: 0.3125rem;
+  border-right: 1.25px solid currentColor;
+  border-bottom: 1.25px solid currentColor;
+  transform: rotate(-45deg);
+  transition: transform 160ms ease;
+}
+
+.skill-how[open] .skill-how__summary::after {
+  transform: rotate(45deg);
+}
+
+.skill-how__summary:hover {
+  color: var(--text-heading);
+}
+
+.skill-how[open] .skill-how__steps {
+  margin-top: 0.75rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skill-how__summary::after {
+    transition: none;
+  }
+}
+
+.markdown .skill-how__steps {
+  margin: 0;
+  /* A reset above this turns list markers off site wide. The steps are an
+     order, so the numbers have to come back. */
+  list-style: decimal outside;
+  padding-left: 1.125rem;
+  font-size: 0.8125rem;
+  line-height: 1.375rem;
+  color: var(--text-body);
+}
+
+.markdown .skill-how__steps li + li {
+  margin-top: 0.375rem;
+}
+
 @media (max-width: 640px) {
   .skill-install__head {
     flex-wrap: wrap;
+  }
+
+  .skill-caps {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.875rem;
   }
 }
 
@@ -823,4 +938,77 @@ body.is-resizing-sidebar {
   font-size: 0.6875rem;
   line-height: 1rem;
   color: var(--text-muted);
+}
+
+/* One click into Claude Code, beside the command it would otherwise copy.
+   The link fills that agent's prompt box; it does not run anything. */
+.skill-launch {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4375rem;
+  margin: 0.625rem 0 0;
+  padding: 0 0.75rem;
+  height: 1.875rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-control);
+  background: var(--surface);
+  color: var(--text-heading);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.skill-launch:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  text-decoration: none;
+}
+
+/* ---------- locked panel ----------
+   A capability that exists but is not reachable yet. It has to read as
+   deliberate: the panel keeps its shape and its text, and only the controls
+   that would do something are muted. */
+.skill-install--locked {
+  border-style: dashed;
+}
+
+.skill-install--locked .skill-install__icon {
+  background: var(--hover-soft);
+  color: var(--text-muted);
+}
+
+.skill-chip {
+  display: inline-flex;
+  align-items: center;
+  margin-left: 0.5rem;
+  padding: 0 0.4375rem;
+  height: 1.25rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-chip);
+  background: var(--hover-soft);
+  color: var(--text-muted);
+  font-family: var(--font-sans);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  vertical-align: middle;
+}
+
+.skill-launch--locked {
+  color: var(--text-faint);
+  background: transparent;
+  border-style: dashed;
+  cursor: not-allowed;
+}
+
+.markdown .skill-caps__tools {
+  margin-top: 0.125rem;
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  line-height: 1rem;
+  color: var(--text-faint);
+  background: transparent;
+  border: 0;
+  padding: 0;
+  overflow-wrap: anywhere;
 }
