@@ -2,10 +2,11 @@ import React, {useEffect, useRef} from 'react';
 
 type Node = {x: number; y: number; vx: number; vy: number};
 
-const DENSITY = 9000; // one node per this many square pixels
-const MAX_NODES = 130;
-const LINK = 165; // px: two nodes closer than this are joined
+const DENSITY = 3200; // one node per this many square pixels
+const MAX_NODES = 340;
+const LINK = 210; // px: two nodes closer than this are joined
 const DRIFT = 0.1; // px per frame
+const LINE_WIDTH = 1.6; // px, heavier than a hairline so the mesh reads under the veil
 
 /**
  * The network under the landing copy, revealed by the cursor.
@@ -76,7 +77,7 @@ export default function NetworkWeb(): React.ReactNode {
       }
 
       context.strokeStyle = accent;
-      context.lineWidth = 1;
+      context.lineWidth = LINE_WIDTH;
       for (let i = 0; i < nodes.length; i += 1) {
         for (let j = i + 1; j < nodes.length; j += 1) {
           const dx = nodes[i].x - nodes[j].x;

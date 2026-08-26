@@ -189,7 +189,32 @@ const catalogueVersion = readFileSync(
 const config: Config = {
   title: 'ABDM Developer Portal',
   tagline: 'One catalogue of ABDM, readable by humans and machines',
-  favicon: 'img/favicon.ico',
+  // The national emblem, not Docusaurus's own mark. One SVG for both themes:
+  // a browser cannot choose between a light and a dark icon the way the page
+  // chrome does, so the file carries its own prefers-color-scheme rule.
+  favicon: 'img/favicon.svg',
+
+  // Safari does not take an SVG favicon, so a raster of the same emblem is
+  // offered alongside it. `alternate icon` is only reached by a browser that
+  // could not use the SVG, so Chrome, Firefox and Edge still get the vector
+  // and its light and dark variants.
+  headTags: [
+    {
+      tagName: 'link',
+      attributes: {
+        rel: 'alternate icon',
+        type: 'image/png',
+        href: `${process.env.DOCUSAURUS_BASE_URL ?? '/'}img/favicon.png`,
+      },
+    },
+    {
+      tagName: 'link',
+      attributes: {
+        rel: 'apple-touch-icon',
+        href: `${process.env.DOCUSAURUS_BASE_URL ?? '/'}img/apple-touch-icon.png`,
+      },
+    },
+  ],
 
   future: {
     v4: true,

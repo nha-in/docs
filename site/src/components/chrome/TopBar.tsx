@@ -27,6 +27,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@site/src/components/ui/tooltip';
+import BrandMark from './BrandMark';
 import MobileNav from './MobileNav';
 import Omnibox from './Omnibox';
 
@@ -190,7 +191,10 @@ export default function TopBar() {
           }}
           alt=""
         />
-        <span className="topbar-wordmark">ABDM Developer Portal</span>
+        <span className="brand-chip">
+          <BrandMark />
+          <span className="topbar-wordmark">ABDM Developer Portal</span>
+        </span>
       </Link>
 
       <GatewayMenu />
