@@ -75,22 +75,37 @@ export const rolesFor = (platformId: string): Role[] => ROLES[platformId] ?? [];
 
 const storageKey = (platformId: string) => `abdm-portal.role.${platformId}`;
 
+/** The query parameter that carries a role in a shared link. */
+const ROLE_PARAM = 'role';
+
 /**
- * The reader's chosen role for one gateway, remembered between visits.
+ * The reader's chosen role for one gateway, remembered between visits and
+ * carried by a link when one is shared.
  *
- * The choice is kept in storage rather than in the URL, so no published link
- * changes and no link breaks. Putting the role in the path is the larger move
- * described in docs/roles-design.md, and it needs redirects for every existing
- * URL before it can happen.
+ * The role is a facet, not a location, so it never enters the path: a module
+ * can serve several roles (the gateway session serves all of them, M1 and M3
+ * serve both HIE-CM roles), and a path segment can only put a page in one
+ * place. It rides in `?role=` instead, which makes a role scoped view
+ * shareable without duplicating a page or breaking a published URL.
+ *
+ * Precedence is link, then storage. Someone opening a colleague's link sees
+ * what the colleague saw, and that choice becomes theirs.
  */
 export function useRole(platformId: string): [string | null, (id: string | null) => void] {
   const [role, setRoleState] = useState<string | null>(null);
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
-    const stored = window.localStorage.getItem(storageKey(platformId));
-    const known = rolesFor(platformId).some((r) => r.id === stored);
-    setRoleState(known ? stored : null);
+    const known = (id: string | null) =>
+      id && rolesFor(platformId).some((r) => r.id === id) ? id : null;
+
+    const fromLink = known(new URLSearchParams(window.location.search).get(ROLE_PARAM));
+    if (fromLink) {
+      setRoleState(fromLink);
+      window.localStorage.setItem(storageKey(platformId), fromLink);
+      return;
+    }
+    setRoleState(known(window.localStorage.getItem(storageKey(platformId))));
   }, [platformId]);
 
   const setRole = useCallback(
@@ -99,6 +114,14 @@ export function useRole(platformId: string): [string | null, (id: string | null)
       if (typeof window === 'undefined') return;
       if (id) window.localStorage.setItem(storageKey(platformId), id);
       else window.localStorage.removeItem(storageKey(platformId));
+
+      // Keep the address bar in step so copying it shares the current view.
+      // replaceState rather than push, because choosing a role is not a
+      // navigation and should not need a back press to undo.
+      const url = new URL(window.location.href);
+      if (id) url.searchParams.set(ROLE_PARAM, id);
+      else url.searchParams.delete(ROLE_PARAM);
+      window.history.replaceState(window.history.state, '', url);
     },
     [platformId],
   );

@@ -92,7 +92,7 @@ NHA's M2 error message for an invalid HI type lists these seven and adds `Invoic
 
 **Revocation is not.** The patient can withdraw at any time, including after you have read the data, and NHA's PHR document states that future data sharing under that consent must stop immediately.
 
-So treat every fetch as a fresh permission check, and handle a mid flow revocation: a consent that was live when you sent the health information request can be dead when the record holder validates it, which returns `ABDM-1062`, consent not granted. Decide your retention policy for data you already hold. NHA's documents say sharing stops; they do not say what to do with what you received.
+So treat every fetch as a fresh permission check, and handle a mid flow revocation. A consent that was live when you sent the health information request can be dead when the record holder validates it. That returns `ABDM-1062`, consent not granted. Decide your retention policy for data you already hold. NHA's documents say sharing stops; they do not say what to do with what you received.
 
 Read every code with the message the gateway returns. NHA's error table lists `ABDM-1061` and `ABDM-1062` against two different messages each, so the code alone does not identify the failure.
 

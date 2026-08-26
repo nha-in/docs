@@ -43,3 +43,8 @@ site/docs/abdm/v3/reference/callbacks.md
 site/docs/abdm/v3/reference/error-codes.md
 site/src/data/api/
 site/src/data/api-sidebar.json
+
+# Generated: the skill manifest and the llms.txt index, written on every build
+# by scripts/build-skills.mjs and scripts/build-nav.mjs.
+site/src/data/skills.json
+site/static/llms.txt

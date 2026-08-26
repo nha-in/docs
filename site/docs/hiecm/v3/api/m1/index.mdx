@@ -14,6 +14,18 @@ import SkillInstall from '@site/src/components/docs/SkillInstall';
 
 Milestone 1 (M1) of [ABDM](/docs/hiecm/v3/getting-started/glossary#abdm) is the identity milestone: create an [ABHA](/docs/hiecm/v3/getting-started/glossary#abha) for a person, log that person in, and read or update their profile. An ABHA number is a 14 digit identifier issued after a strong [KYC](/docs/hiecm/v3/getting-started/glossary#kyc) check, and every other ABDM flow assumes the person already has one.
 
+<SkillInstall
+  slug="abdm-m1"
+  note="The whole of M1 as one file an agent reads. Generated from these pages, so it says what they say."
+/>
+
+## In short
+
+- M1 is identity only. It creates and authenticates an ABHA; it moves no health records.
+- Nothing runs until the gateway session call returns an access token.
+- Two tokens exist and are not interchangeable: the gateway token in `Authorization`, the user token in `X-token`.
+- Aadhaar numbers, mobile numbers, OTP values and passwords travel RSA encrypted.
+
 <PathChoices
   paths={[
     {
@@ -66,18 +78,6 @@ Aadhaar is not an ABDM building block. NHA's ABHA service calls it for you.
 | Production | `https://abha.abdm.gov.in/api/abha/v3/` |
 
 Login by Aadhaar number using fingerprint or IRIS is the exception: NHA puts it on v3.1, at `https://abhasbx.abdm.gov.in/abha/api/v3.1/` in sandbox. NHA gives no production v3.1 URL.
-
-## Two ways to build
-
-Hand the whole milestone to your coding agent, or work through it yourself. Both paths end at the same sandbox calls.
-
-<SkillInstall
-  module="M1"
-  slug="abdm-m1"
-  note="The whole of M1 as one file an agent reads: every endpoint, the headers, the two token rule and the encryption rule. Generated from these pages, so it says what they say."
-/>
-
-Building by hand instead? Start with [the API rules](/docs/hiecm/v3/api/m1/apis), then follow [the call sequence](/reference/hiecm-m1).
 
 ## Build in this order
 

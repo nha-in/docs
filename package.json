@@ -16,7 +16,8 @@
     "compile:skills": "node scripts/compile-skills.mjs",
     "validate:skills": "node scripts/validate-skills.mjs",
     "lint:agent": "node scripts/lint-agent-readiness.mjs",
-    "lint:tables": "node scripts/lint-tables.mjs"
+    "lint:tables": "node scripts/lint-tables.mjs",
+    "lint:content": "node scripts/lint-content.mjs"
   },
   "devDependencies": {
     "@docusaurus/faster": "^3.10.2",

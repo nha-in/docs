@@ -54,6 +54,18 @@ jobs:
       - run: npm ci
       - run: npm run lint:agent
 
+  lint-content:
+    name: Check pages follow the content paradigm
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run lint:content
+
   lint-tables:
     name: Check tables hold their content
     runs-on: ubuntu-latest

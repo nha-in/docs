@@ -227,6 +227,13 @@ const config: Config = {
 
   onBrokenLinks: 'throw',
 
+  customFields: {
+    // The Docs MCP server's public address. Null until it has one: the install
+    // panel on the MCP page renders locked, and every button on it goes live
+    // the moment this resolves. Nothing else has to change.
+    mcpUrl: process.env.MCP_URL ?? null,
+  },
+
   i18n: {
     defaultLocale: 'en',
     locales: ['en'],

@@ -9,7 +9,7 @@ source: UHI__UHI_Physical_Consultation_v2.0_-_Onboarding_Document.md
 
 # Physical consultation
 
-Physical consultation is the fullest service on [UHI](/docs/uhi/v1/getting-started/glossary#uhi): a patient searches for a doctor, sees real slots and fees from clinics they have no prior relationship with, books one, and receives a 4-digit PIN to present at the clinic. After this page you will know the four stages, the endpoints each role exposes, and the fields on every call, as [NHA](/docs/uhi/v1/getting-started/glossary#nha) documents them.
+Physical consultation is the fullest service on [UHI](/docs/uhi/v1/getting-started/glossary#uhi). A patient searches for a doctor, then sees real slots and fees from clinics they have no prior relationship with. They book one, and receive a 4-digit PIN to present at the clinic. After this page you will know the four stages, the endpoints each role exposes, and the fields on every call, as [NHA](/docs/uhi/v1/getting-started/glossary#nha) documents them.
 
 Read [UHI services](/docs/uhi/v1) first, for the `context` block, the acknowledgement model, signing and the two transports.
 

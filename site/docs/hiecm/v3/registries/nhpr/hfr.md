@@ -27,7 +27,7 @@ Three layers, one call each.
 | Additional information | Yes or no flags for a dialysis centre, pharmacy, blood bank, cath lab, diagnostic lab and imaging centre, plus scheme identifiers the facility already holds: NHRR, NIN, AB-PMJAY, Rohini, ECHS, CGHS, CEA registration and a state insurance scheme ID |
 | Detailed information | Specialities per system of medicine, and the sections that apply to this facility type: medical infrastructure and bed counts, pharmacy details, blood bank details, diagnostic services, imaging services |
 
-Which parts of the detailed layer are mandatory depends on the facility type, the type of service and the system of medicine, and NHA's rules are on [what NHA documents without a path](/docs/hiecm/v3/api/m4/undocumented). Two shape your form: an inpatient or day care facility must submit at least one bed count greater than zero, and an imaging centre, diagnostic laboratory, blood bank or pharmacy need not submit medical infrastructure at all.
+Which parts of the detailed layer are mandatory depends on the facility type, the type of service and the system of medicine, and NHA's rules are on [what NHA documents without a path](/docs/hiecm/v3/api/m4/undocumented). Two of them shape your form. An inpatient or day care facility must submit at least one bed count greater than zero. An imaging centre, diagnostic laboratory, blood bank or pharmacy need not submit medical infrastructure at all.
 
 ### Codes, not names
 
@@ -38,7 +38,7 @@ Ownership, facility type, facility subtype, speciality, system of medicine, oper
 Five calls, and NHA is explicit that the order is fixed.
 
 1. **Deduplicate search.** Check the facility is not already listed.
-2. **Basic facility information.** Creates the record and returns a tracking ID, which NHA says is the unique identification number for your facility until you submit, and which you pass as the facility ID on every later call in the sequence.
+2. **Basic facility information.** Creates the record and returns a tracking ID. NHA says that ID is the unique identification number for your facility until you submit. Pass it as the facility ID on every later call in the sequence.
 3. **Additional information.** Takes the tracking ID.
 4. **Detailed information.** Takes the tracking ID.
 5. **Submit facility details.** Sends the facility for verification.
@@ -70,7 +70,7 @@ Two different things under one parameter name. We have not run either call to es
 
 A bridge is your software's connection to ABDM. Registering a facility gives it an identity; linking a bridge makes your system resolvable as that facility's HIP or [HIU](/docs/hiecm/v3/getting-started/glossary#hiu), so records flow to it. The call takes a facility ID, the facility name, a bridge ID, a HIP name, a type of `HIP` or `HIU`, and an active flag.
 
-The HIP name is the one field a patient sees. NHA describes it as the name shown in the [ABHA](/docs/hiecm/v3/getting-started/glossary#abha) or [PHR](/docs/hiecm/v3/getting-started/glossary#phr) app when the patient searches for the hospital, and constrains it to 15 characters or fewer, no special characters, unique for every bridge within a facility. NHA's suggested pattern is the hospital name plus the bridge name: hospital XYZ on bridge BRIDGE TEST becomes `XYZ BRIDGE`. Fifteen characters is short, so pick what a patient will recognise.
+The HIP name is the one field a patient sees. NHA describes it as the name shown in the [ABHA](/docs/hiecm/v3/getting-started/glossary#abha) or [PHR](/docs/hiecm/v3/getting-started/glossary#phr) app when the patient searches for the hospital. It must be 15 characters or fewer, carry no special characters, and be unique for every bridge within a facility. NHA's suggested pattern is the hospital name plus the bridge name: hospital XYZ on bridge BRIDGE TEST becomes `XYZ BRIDGE`. Fifteen characters is short, so pick what a patient will recognise.
 
 ## Finding a facility
 
@@ -88,7 +88,7 @@ Base URLs for every call on this page are on [NHPR](/docs/hiecm/v3/registries/nh
 NHA's M4 document carries its request and response samples as screenshots, which do not convert to text. Missing from our source:
 
 - The method and path of all five onboarding calls, and of bridge linkage.
-- The method and path of every utility and search call: master types, master data, LGD states, LGD districts, LGD sub districts, facility type, facility subtype, ownership subtype, specialities, PSU details by ministry, search facility, nearby search, send OTP to contact and validate OTP.
+- The method and path of every utility and search call. Those are master types, master data, and the three LGD lookups for states, districts and sub districts. Also facility type, facility subtype, ownership subtype, specialities, PSU details by ministry, search facility, nearby search, send OTP to contact and validate OTP.
 - Every request body and every response body for all of the above.
 
 Two paths appear in text, quoted inside other parameter descriptions: `v1.5/facility/fetchfacilitytype` and `/v1.5/facility/get-specialities`.

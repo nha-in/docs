@@ -58,7 +58,19 @@ The SMD ID identifies doctors only. Searching for nurse colleges by SMD returns 
 
 Two halves, in order. Nothing in the second works until the first produces a token.
 
-**Half one, create the HPID.** Nine calls after the gateway session token: generate Aadhaar link, check Aadhaar authentication status, verify OTP and fetch user details, check whether an HPID already exists for this Aadhaar, mobile match, generate mobile OTP, verify mobile OTP, username suggestions, create HPID. The last returns the HPID and an `hprToken`, which the next call needs.
+**Half one, create the HPID.** Nine calls follow the gateway session token, in this order:
+
+1. Generate Aadhaar link
+2. Check Aadhaar authentication status
+3. Verify OTP and fetch user details
+4. Check whether an HPID already exists for this Aadhaar
+5. Mobile match
+6. Generate mobile OTP
+7. Verify mobile OTP
+8. Username suggestions
+9. Create HPID
+
+The last returns the HPID and an `hprToken`, which the next call needs.
 
 **Half two, register the professional.** Register professional writes the full profile, and its path is the one HPR write call that survived conversion: `POST https://apihspsbx.abdm.gov.in/v4/int/apis/v1/doctors/register-professional-new`. Then retrieve professional document list, upload documents, update professional and fetch professional details.
 
@@ -86,7 +98,13 @@ The bodies are on [what NHA documents without a path](/docs/hiecm/v3/api/m4/undo
 
 ## What your system has to hold
 
-Per professional: the HPID in both forms; the current HPR token, its expiry and a way to refresh it without re-registering the person; the transaction id, for one flow only; the master data ids you sent for council, course, college, university, language, country, state and district, since the registry rejects display values; and the certificates you uploaded with each document slot identifier.
+Per professional, store:
+
+- The HPID, in both forms.
+- The current HPR token, its expiry, and a way to refresh it without re-registering the person.
+- The transaction id, for one flow only.
+- The master data ids you sent for council, course, college, university, language, country, state and district. The registry rejects display values.
+- The certificates you uploaded, with each document slot identifier.
 
 Once, for the whole integration: client id and client secret for the gateway session call, and NHA's public certificate from `v4/int/api/v1/auth/cert`. Three fields are encrypted with it, cipher `RSA/ECB/PKCS1Padding`: the mobile number in mobile match, the OTP in mobile login, and the email and password in create HPID.
 
