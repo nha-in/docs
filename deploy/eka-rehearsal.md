@@ -4,7 +4,7 @@ The site moves off GitHub Pages onto S3 + CloudFront in Eka's account, at
 docs.abdm.dev.eka.care, following the same pattern as the nectar frontends
 (dev-abdm-s3-deploy and siblings): tag-triggered deploys from the shared
 runner, the runner role via OIDC, a DevOps-provisioned bucket and
-distribution named in the workflow. `.github/workflows/dev-docs-s3-deploy.yml`
+distribution named in the workflow. `../.github/workflows/dev-docs-cd.yml`
 is the live workflow; it fires on `dev-docs-*` tags, so it is inert until
 the first tag is pushed.
 

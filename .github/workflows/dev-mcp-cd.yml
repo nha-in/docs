@@ -3,7 +3,7 @@ name: dev-CD-abdm-docs-mcp
 on:
   push:
     tags:
-      - dev-*
+      - dev-mcp-*
 
 env:
   ECR_REPO_URL: ${{ secrets.DEV_ECR_REPO }}
