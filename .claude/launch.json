@@ -23,6 +23,15 @@
       ],
       "port": 3000,
       "autoPort": true
+    },
+    {
+      "name": "nha-pages",
+      "runtimeExecutable": "sh",
+      "runtimeArgs": [
+        "-c",
+        "cd /Users/shyam/code/nha/docs/site && DOCUSAURUS_URL=https://nha-in.github.io DOCUSAURUS_BASE_URL=/docs/ npx docusaurus serve --dir build --port 3344 --no-open"
+      ],
+      "port": 3344
     }
   ]
 }
