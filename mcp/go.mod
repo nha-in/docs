@@ -1,4 +1,4 @@
-module github.com/eka-care/abdm-docs/mcp
+module github.com/nha-in/docs/mcp
 
 go 1.25.0
 

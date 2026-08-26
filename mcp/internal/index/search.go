@@ -7,7 +7,7 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/eka-care/abdm-docs/mcp/internal/embed"
+	"github.com/nha-in/docs/mcp/internal/embed"
 )
 
 type SearchHit struct {
