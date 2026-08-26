@@ -1,0 +1,25 @@
+# If NHA's platform team runs ArgoCD, this Application replaces the deploy
+# half of workflows/mcp-deploy.yml: CI builds and pushes the image and
+# commits the new tag into deployment.yaml; ArgoCD syncs it. CI then needs
+# no EKS access at all, and drift on the cluster is corrected back to git.
+#
+# Apply this once, into the namespace ArgoCD watches (usually argocd).
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: abdm-docs-mcp
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/nha-in/docs
+    targetRevision: main
+    path: deploy/nha
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: abdm-docs
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=false
