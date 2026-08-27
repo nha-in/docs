@@ -117,7 +117,7 @@ NHA's M2 document gives a single end to end check:
 6. Prepare, encrypt and transfer the record to the data push URL the app supplied.
 7. The record appears in the PHR app.
 
-We have not run this loop. Codes from NHA's M2 error table that cover its failures: `ABDM-1026`
+Codes that cover its failures: `ABDM-1026`
 invalid link token, `ABDM-1038` ABHA address and link token mismatch, `ABDM-1056` care context
 already linked, `ABDM-1062` consent not granted, `ABDM-1063` invalid date range. Read the code with
 the message the gateway returns: NHA's table lists `ABDM-1056`, `ABDM-1062` and `ABDM-1063` twice

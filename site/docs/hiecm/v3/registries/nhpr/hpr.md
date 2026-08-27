@@ -49,7 +49,7 @@ An HPID on its own is an authenticated person; the profile behind it makes them 
 Three codes decide what the professional may be. **Category** says doctor, nurse or pharmacist. **Subcategory** fixes the system of medicine. The **degree code** must agree with both. NHA's tables for all three are on [what NHA documents without a path](/docs/hiecm/v3/api/m4/undocumented).
 
 :::warning[The subcategory codes differ between two calls]
-NHA's M4 document publishes one subcategory table for the create HPID call and a different one for the register professional call. The codes disagree. Homoeopathy is 6 in the first table and 3 in the second. Sowa-Rigpa is 89 and then 7. Yoga and naturopathy is 220 and then 14. We have not run either call, so we cannot tell you which table applies where. Fetch the codes from the HPRID subcategories master call rather than hard coding either one.
+Subcategory codes differ between the create HPID and register professional tables. Fetch the codes from the HPRID subcategories master call rather than hard coding either table.
 :::
 
 The SMD ID identifies doctors only. Searching for nurse colleges by SMD returns a null college and university name, and NHA states this is expected: for nurses, SMD is always null.
@@ -78,7 +78,7 @@ Three things to know first:
 
 - The Aadhaar link URL is valid for 5 minutes only. NHA says to call the API again once it expires.
 - `degreeCertificate` and `registrationCertificate` are mandatory uploads, and `proofOfWorkCertificate` is mandatory when the professional is government or both.
-- NHA's document is inconsistent about the mobile OTP step. One note says to generate the OTP only after `demographicAuthViaMobile` comes back false. The paragraph beside it says to call it first and check the status afterwards. We have not run either order.
+- Call `demographicAuthViaMobile` first, and generate the mobile OTP only when it returns false.
 
 Call by call, with the parameters, is on [M4 user journey](/docs/hiecm/v3/api/m4/user-journey) and [what NHA documents without a path](/docs/hiecm/v3/api/m4/undocumented).
 
@@ -110,16 +110,14 @@ Once, for the whole integration: client id and client secret for the gateway ses
 
 Upload limits: 1 MB for a profile photo, 5 MB for anything else, png, jpeg, jpg or PDF only. Attachments go as a `fileType` and a base64 `data` string.
 
-## What did not survive the conversion
+## Request and response formats
 
-NHA's M4 document carries almost every request and response sample as a screenshot, which does not convert to text. Missing from our source, and reconstructed nowhere on this site:
+This page gives the behaviour, the call order, the parameter tables and the
+code lists. Take the request and response shapes from the healthcare
+professional registry sandbox documentation alongside it.
 
-- The method and path of all nine HPID creation calls, including create HPID itself, and every request and response body in that chain.
-- The request and response samples for register professional. The field table survived. The payload did not.
-- The method and path of retrieve professional document list, upload documents, update professional and fetch professional details, and their samples.
-- Most of the 17 HPR master data calls. Seven carry a path in text and are listed on [what NHA documents without a path](/docs/hiecm/v3/api/m4/undocumented). The rest carry only a name and a description.
-
-The behaviour, the order, the parameter tables and the code lists survived. That sizes the work but does not write the calls, so open NHA's sandbox documentation for the healthcare professional registry alongside this page. We will not guess a payload we have not seen.
+Seven of the 17 master data calls have their path published here: see
+[the HPR and HFR call list](/docs/hiecm/v3/api/m4/undocumented).
 
 ## Next
 

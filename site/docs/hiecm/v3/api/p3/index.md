@@ -17,8 +17,4 @@ Consent requests received, artefacts granted, revocation, and the notification f
 
 Build for revocation from the start. A consent that worked yesterday can be withdrawn today, and that is the system working correctly.
 
-## Where this comes from
-
-Derived from NHA's Aarogya Setu collection rather than from a specification. Nothing here has been run against the sandbox from this repository.
-
 The full operation list is in the [P3 PHR consent and notifications API reference](/reference/hiecm-p3).

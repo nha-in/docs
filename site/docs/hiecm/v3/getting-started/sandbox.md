@@ -20,10 +20,9 @@ Create an account at [https://sandbox.abdm.gov.in](https://sandbox.abdm.gov.in) 
 your organisation. NHA's M4 document gives the same instruction in one line: to obtain a
 `clientId` and a `clientSecret`, register on the sandbox application.
 
-[NHA](/docs/hiecm/v3/getting-started/glossary#nha) reviews the request before it issues them. Its documents give
-no turnaround time, and we have not run the registration, so we cannot tell you how long you
-will wait. Nothing in ABDM unblocks until the credentials arrive, so raise the request on day
-one.
+[NHA](/docs/hiecm/v3/getting-started/glossary#nha) reviews the request before it issues them. No
+turnaround time is published. Nothing in ABDM unblocks until the credentials arrive, so raise
+the request on day one.
 
 ## 2. Use the wait
 

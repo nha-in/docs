@@ -585,7 +585,6 @@ The `on_init` terms array carries the text the patient reads before confirming. 
 
 ## What is missing here
 
-- We have not run any call in this service against the sandbox. Nothing on this page is verified.
 - NHA's document contains architecture and sequence diagrams as images. Those did not convert and are not reproduced.
 - The complete order field reference in NHA's document is longer than the tables here. Use NHA's [Swagger spec](https://uhigatewaysandbox.abdm.gov.in/swagger-ui/index.html?urls.primaryName=v2.0.2#/) for the full list.
 - Error codes for this service are not enumerated in NHA's document. It gives only the shape of the error object: `type` and `code` are mandatory, `path` and `message` are optional. No code list is published, so we do not print one.

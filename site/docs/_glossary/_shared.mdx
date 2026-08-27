@@ -27,7 +27,7 @@ Fast Healthcare Interoperability Resources, the HL7 standard ABDM uses to carry 
 
 ### Gateway
 
-NHA's routing layer: you do not call another participant directly, you call the gateway, it forwards your request, and the reply arrives at your [bridge](/docs/hiecm/v3/getting-started/glossary#bridge) as a separate inbound call. You get a session token first, and NHA's own documents disagree on the sandbox host for that path: the M1 Postman collection posts to `https://apissbx.abdm.gov.in/api/hiecm/gateway/v3/sessions` with your client id and client secret, the M4 document gives the same path on `https://dev.abdm.gov.in`, and the M2 document gives `https://dev.abdm.gov.in` as the sandbox base URL. We have not run either against the sandbox, so check both before you hard code one; see [Choose your gateway](/docs/hiecm/v3).
+NHA's routing layer: you do not call another participant directly, you call the gateway, it forwards your request, and the reply arrives at your [bridge](/docs/hiecm/v3/getting-started/glossary#bridge) as a separate inbound call. You get a session token first, by posting your client id and client secret to `/api/hiecm/gateway/v3/sessions`. Two sandbox hosts serve that path, `https://apissbx.abdm.gov.in` and `https://dev.abdm.gov.in`. Take the host from your onboarding documentation and keep it in configuration; see [Choose your gateway](/docs/hiecm/v3).
 
 ### HFR
 

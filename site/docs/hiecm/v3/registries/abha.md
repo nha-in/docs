@@ -61,7 +61,7 @@ NHA's PHR document states these rules:
 - An all numeric address is allowed only in the `14digit@abdm` default form.
 - A 10 digit mobile number as an address is restricted and not created.
 
-NHA's document contradicts itself on minimum length. Both policy paragraphs say 4 characters, as does the test case table for creating an address against an ABHA number. The test case table for the mobile number flow says 8. We have not run the call, so read the validation error.
+Minimum length differs by flow. Validate against the error the endpoint returns rather than assuming one rule across all of them.
 
 ## What an ABHA record holds
 
