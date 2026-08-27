@@ -1,6 +1,7 @@
 import React from 'react';
 import TopBar from '@site/src/components/chrome/TopBar';
 import DocsTabs from '@site/src/components/chrome/DocsTabs';
+import MobileNav from '@site/src/components/chrome/MobileNav';
 
 /**
  * Replaces the classic navbar with the two-row chrome: a 64px bar and a 48px
@@ -13,6 +14,8 @@ export default function Navbar() {
     <>
       <TopBar />
       <DocsTabs />
+      {/* Narrow widths only: the tab strip gives way to this. */}
+      <MobileNav />
     </>
   );
 }

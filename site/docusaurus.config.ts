@@ -377,39 +377,54 @@ const config: Config = {
         },
       ],
     },
+    // NHA's own footer, transcribed from the ABDM sandbox documentation site:
+    // the contact block, the registry links, the policies. The previous footer
+    // repeated this site's own navigation, which the gateway sidebars already
+    // carry, and named HIE-CM's modules as though they were the whole portal.
     footer: {
       style: 'light',
       links: [
         {
-          title: 'Overview',
+          title: 'Contact',
           items: [
-            {label: 'Introduction', to: '/docs/hiecm/v3'},
-            {label: 'Sandbox access', to: '/docs/hiecm/v3/getting-started/sandbox'},
-            {label: 'Glossary', to: '/docs/hiecm/v3/getting-started/glossary'},
+            {
+              label:
+                'National Health Authority, 9th Floor, Tower-I, Jeevan Bharati Building, Connaught Place, New Delhi 110 001',
+              href: 'https://abdm.gov.in/',
+            },
+            {label: 'abdm[at]nha[dot]gov[dot]in', href: 'mailto:abdm@nha.gov.in'},
+            {label: 'Toll free 1800-11-4477', href: 'tel:18001144477'},
           ],
         },
         {
-          title: 'API references',
+          title: 'Important links',
           items: [
-            {label: 'All endpoints', to: '/docs/hiecm/v3/api'},
-            {label: 'M1 ABHA identity', to: '/docs/hiecm/v3/api/m1'},
-            {label: 'M2 Linking and sharing', to: '/docs/hiecm/v3/api/m2'},
-            {label: 'M3 Consent and fetching', to: '/docs/hiecm/v3/api/m3'},
+            {label: 'Ministry of Health & Family Welfare', href: 'https://www.mohfw.gov.in/'},
+            {label: 'Ayushman Bharat Health Account (ABHA)', href: 'https://abha.abdm.gov.in/'},
+            {label: 'Healthcare Professionals Registry (HPR)', href: 'https://nhpr.abdm.gov.in/'},
+            {label: 'Health Facility Registry (HFR)', href: 'https://facility.abdm.gov.in/'},
+            {label: 'Grievance portal', href: 'https://grievance.abdm.gov.in/'},
           ],
         },
         {
-          title: 'More',
+          title: 'Policies',
           items: [
-            {label: "What's new", to: '/docs/whats-new'},
-            {label: 'Support', to: '/docs/support'},
-            {label: 'ABDM sandbox', href: 'https://sandbox.abdm.gov.in'},
-            {label: 'NHA dev forum', href: 'https://devforum.abdm.gov.in'},
+            {label: 'Terms and conditions', href: 'https://abdm.gov.in/terms-condition'},
+            {label: 'Website policies', href: 'https://abdm.gov.in/website-policy'},
+            {
+              label: 'Health Data Management Policy',
+              href: 'https://abdm.gov.in/strapicms/uploads/health_management_policy_bac9429a79.pdf',
+            },
+            {
+              label: 'Data privacy policy',
+              href: 'https://abdm.gov.in/strapicms/uploads/privacypolicy_178041845b.pdf',
+            },
           ],
         },
       ],
-      // The catalogue version is in the footer so a reader can tell an agent
-      // which version of the documentation they are looking at.
-      copyright: `Catalogue ${catalogueVersion} · Copyright © ${new Date().getFullYear()} National Health Authority (NHA). MIT licensed.`,
+      // The catalogue version stays: it is how a reader tells an agent which
+      // version of the documentation they are looking at.
+      copyright: `This website belongs to the National Health Authority, Ministry of Health and Family Welfare, Government of India · Catalogue ${catalogueVersion}`,
     },
     prism: {
       theme: prismThemes.oneLight,

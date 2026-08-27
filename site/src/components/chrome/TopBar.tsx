@@ -3,7 +3,7 @@ import Link from '@docusaurus/Link';
 import useBaseUrl from '@docusaurus/useBaseUrl';
 import ThemedImage from '@theme/ThemedImage';
 import NavbarColorModeToggle from '@theme/Navbar/ColorModeToggle';
-import {Check, ChevronDown, Languages} from 'lucide-react';
+import {Check, ChevronDown, Languages, MoreHorizontal} from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -28,7 +28,6 @@ import {
   TooltipTrigger,
 } from '@site/src/components/ui/tooltip';
 import BrandMark from './BrandMark';
-import MobileNav from './MobileNav';
 import Omnibox from './Omnibox';
 
 /** External destinations shown in the bar. Not routes, so not in navigation.ts. */
@@ -170,6 +169,52 @@ function LandingBar() {
   );
 }
 
+/**
+ * The controls that leave the bar when it gets narrow: the sandbox, the
+ * repository and the locale, gathered behind one mark.
+ *
+ * The Claude Code docs do the same thing with the same control, and the reason
+ * is arithmetic rather than taste: below about 1000px the bar cannot hold the
+ * brand, the gateway, a field and four more targets without either overlapping
+ * or shrinking them under the size a thumb can hit.
+ */
+function OverflowMenu() {
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger
+        className="topbar-action topbar-action--icon topbar-overflow"
+        aria-label="More">
+        <MoreHorizontal className="size-5" aria-hidden="true" />
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end" className="w-56">
+        <DropdownMenuItem asChild>
+          <a href={SANDBOX_URL} target="_blank" rel="noopener noreferrer">
+            <SandboxMark />
+            ABDM sandbox
+          </a>
+        </DropdownMenuItem>
+        <DropdownMenuItem asChild>
+          <a href={GITHUB_URL} target="_blank" rel="noopener noreferrer">
+            <GitHubMark />
+            GitHub
+          </a>
+        </DropdownMenuItem>
+        <DropdownMenuSeparator />
+        <DropdownMenuLabel className="flex items-center gap-2">
+          <Languages className="size-4" aria-hidden="true" />
+          Language
+        </DropdownMenuLabel>
+        <DropdownMenuCheckboxItem checked disabled>
+          English
+        </DropdownMenuCheckboxItem>
+        <DropdownMenuItem disabled>
+          Other locales are not published yet
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+}
+
 export default function TopBar() {
   const pathname = useRoutePath();
   if (isLanding(pathname)) {
@@ -233,7 +278,7 @@ export default function TopBar() {
         <LocaleMenu />
       </div>
 
-      <MobileNav />
+      <OverflowMenu />
 
       <NavbarColorModeToggle className="topbar-toggle" />
     </nav>

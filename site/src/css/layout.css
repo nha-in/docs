@@ -6,12 +6,23 @@
 
 /* ---------- top bar ---------- */
 
+/* Translucent chrome, on the Claude Code docs' own numbers: blur alone at the
+   top of a page, and a 75% wash of the page colour once anything has scrolled
+   under it, faded in over half a second. At rest the bar is only a blur, so
+   whatever is behind it — the network's light on the landing page, the first
+   line of a document — stays visible through it instead of being covered by a
+   strip of flat colour. */
 .navbar {
   height: var(--topbar-height);
   padding: 0 1.5rem;
-  background: color-mix(in srgb, var(--page) 88%, transparent);
-  backdrop-filter: blur(12px);
+  background-color: transparent;
+  backdrop-filter: blur(8px);
   border-bottom: 0;
+  transition: background-color 500ms ease;
+}
+
+[data-scrolled='true'] .navbar {
+  background-color: var(--chrome-veil);
 }
 
 .navbar__inner {
@@ -61,11 +72,16 @@
   align-items: stretch;
   gap: 1.5rem;
   padding: 0 1.5rem;
-  background: color-mix(in srgb, var(--page) 88%, transparent);
-  backdrop-filter: blur(12px);
+  background-color: transparent;
+  backdrop-filter: blur(8px);
   border-bottom: 1px solid var(--border);
   overflow-x: auto;
   scrollbar-width: none;
+  transition: background-color 500ms ease;
+}
+
+[data-scrolled='true'] .docs-tabs {
+  background-color: var(--chrome-veil);
 }
 
 .docs-tabs::-webkit-scrollbar {
@@ -404,4 +420,19 @@ main .container:has(> .docs-article-row) {
 .breadcrumbs__item--active .breadcrumbs__link {
   color: var(--text-heading);
   background: transparent;
+}
+
+/* ---------- skip link ----------
+   The theme parks its skip link at `left: 100%`, which is off screen but still
+   inside the document: every page could be scrolled sideways by the width of
+   the link. It hides above the viewport instead, and drops in on focus, which
+   is where a skip link is supposed to appear anyway. */
+[class*='skipToContent'] {
+  left: 1rem !important;
+  transform: translateY(calc(-100% - 1.5rem));
+  transition: transform 150ms ease;
+}
+
+[class*='skipToContent']:focus {
+  transform: none;
 }

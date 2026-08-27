@@ -19,6 +19,10 @@
 .topbar {
   align-items: center;
   gap: 1rem;
+  /* A hairline of its own. The bar was separated from the page by its blur
+     alone, which is nothing to look at where the page behind it is plain: the
+     two rows read as one floating block with no edge. */
+  border-bottom: 1px solid var(--border);
 }
 
 .topbar-brand {
@@ -174,6 +178,11 @@
    edge is the assistant. */
 .omnibox {
   position: absolute;
+  /* Centred on both axes. `left` alone leaves the box at its static vertical
+     position, which is wherever the flex row would have put it, and that is
+     not the middle of the bar: the field hung low and clipped into the tab
+     strip under it. */
+  top: 50%;
   left: 50%;
   z-index: 1;
   display: flex;
@@ -181,8 +190,8 @@
   /* Centred on the bar, so the room it has is the distance from the middle to
      whichever cluster is wider, not the space between them. 26rem is that
      clearance doubled: enough for the brand and the gateway on the left. */
-  width: min(21rem, calc(100vw - 26rem));
-  transform: translateX(-50%);
+  width: min(21rem, calc(100vw - 30rem));
+  transform: translate(-50%, -50%);
 }
 
 /* The assistant, inside the field rather than beside it. */
@@ -438,25 +447,74 @@
 
 /* ---------- under 996px ---------- */
 
-.topbar-menu {
+.topbar-overflow,
+.nav-row {
   display: none;
 }
 
 @media (max-width: 996px) {
+  /* The sandbox, the repository and the locale move behind the overflow mark;
+     the tab strip gives way to the navigation row, which the sheet behind it
+     lists the tabs in. */
   .topbar-actions {
     display: none;
   }
 
-  .topbar-menu {
+  .topbar-overflow {
     display: inline-flex;
   }
 
-  /* The tab strip stays on every width. It is the only always visible map of
-     the four sections, so it scrolls sideways rather than collapsing into the
-     sheet. The sheet still lists the tabs, for the reader already in it. */
   .docs-tabs {
-    gap: 1.25rem;
-    padding: 0 1rem;
+    display: none;
+  }
+
+  .nav-row {
+    display: flex;
+    position: sticky;
+    top: var(--topbar-height);
+    z-index: 190;
+    width: 100%;
+    height: var(--tabs-height);
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0 1.25rem;
+    border: 0;
+    border-bottom: 1px solid var(--border);
+    background-color: transparent;
+    backdrop-filter: blur(8px);
+    font-family: inherit;
+    font-size: 0.875rem;
+    color: var(--text-muted);
+    text-align: left;
+    cursor: pointer;
+    transition: background-color 500ms ease;
+  }
+
+  [data-scrolled='true'] .nav-row {
+    background-color: var(--chrome-veil);
+  }
+
+  .nav-row__label {
+    color: var(--text-faint);
+  }
+
+  .nav-row__here {
+    color: var(--text-heading);
+    font-weight: 500;
+  }
+
+  /* The separator between the two, drawn rather than typed, so it stays put
+     when either side changes length. */
+  .nav-row__here::before {
+    content: '/';
+    margin-right: 0.5rem;
+    color: var(--border-strong);
+    font-weight: 400;
+  }
+
+  .nav-row__chevron {
+    margin-left: auto;
+    color: var(--text-faint);
   }
 }
 
@@ -469,10 +527,45 @@
   }
 }
 
-@media (max-width: 576px) {
+/* Below this the bar holds the brand, the gateway and two 32px controls, and
+   no more: a full width field centred on the bar runs straight into the
+   gateway, because a centred box's room is the distance to the wider cluster
+   rather than the gap between them. */
+@media (max-width: 996px) {
 
-  /* A phone bar has room for the brand, the gateway and two 32px controls,
-     and no more. So the field shrinks to a puck and expands leftward over the
+  /* Back into the row. Centred on the bar, the puck lands on the gateway at
+     this width, because the middle of the bar is where the brand still is. In
+     the flow it sits with the other marks instead.
+
+     `flex: 0 0 auto`, not `1 1 auto`: as a growing item in an over-full row it
+     collapses to nothing, and the puck inside it then hangs out over the
+     gateway. Sized to its content, the row's own gaps space it. */
+  .topbar-center {
+    display: flex;
+    flex: 0 0 auto;
+    align-items: center;
+    justify-content: flex-end;
+    margin-left: auto;
+  }
+
+  /* The lockup and the emblem beside it are two marks saying the same thing,
+     and the emblem is the one the bar can do without at this width. */
+  .topbar-logo {
+    height: 1.75rem;
+  }
+
+  .topbar-brand .brand-chip {
+    display: none;
+  }
+
+  .omnibox {
+    position: relative;
+    top: auto;
+    left: auto;
+    transform: none;
+  }
+
+  /* So the field shrinks to a puck and expands leftward over the
      bar when it is tapped, and the assistant chip, which needs a field to sit
      inside, gives up its place: search is the one of the two a reader on a
      phone actually needs. The assistant is a tap away on any wider screen. */
@@ -501,6 +594,15 @@
   }
 
   .omnibox__ai {
+    display: none;
+  }
+
+  /* The hint and the clear button are placed against the full width field,
+     88px in from its right edge. Against a 32px puck that lands them out in
+     the middle of the bar, so they go: the shortcut is no use on a screen
+     this size anyway, and Escape still clears the field. */
+  .omnibox [class*='searchHintContainer'],
+  .omnibox [class*='searchBarContainer'] [class*='searchClearButton'] {
     display: none;
   }
 }
