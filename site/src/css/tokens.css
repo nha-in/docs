@@ -55,6 +55,13 @@
      twenty rules all shouting the accent for the ordinary act of moving a
      pointer. The accent is now reserved for the two things that are actually
      about the accent, the current page and a link. */
+  /* The wash the chrome takes on once the page has scrolled under it: the page
+     colour at 75%, written out rather than mixed. A color-mix of var(--page)
+     held in a custom property does not survive the minifier, which separates
+     the substituted colour from the percentage with an empty comment and
+     leaves an invalid function behind; the declaration is then dropped and the
+     bar stays clear at every scroll position. Keep this in step with --page. */
+  --chrome-veil: rgb(253 253 247 / 0.75);
   --hover-soft: rgb(0 0 0 / 0.04);
   --fill-soft: rgb(0 0 0 / 0.06);
 
@@ -151,6 +158,8 @@
   --code-surface: #1c1c1c;
   --border: rgb(255 255 255 / 0.08);
   --border-strong: rgb(255 255 255 / 0.14);
+  /* In step with --page above, at 75%. See the note in light mode. */
+  --chrome-veil: rgb(13 13 13 / 0.75);
   --hover-soft: rgb(255 255 255 / 0.05);
   --fill-soft: rgb(255 255 255 / 0.08);
 

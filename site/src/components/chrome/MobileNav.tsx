@@ -4,7 +4,7 @@ import {
   useNavbarMobileSidebar,
   useNavbarSecondaryMenu,
 } from '@docusaurus/theme-common/internal';
-import {Menu} from 'lucide-react';
+import {ChevronDown, Menu} from 'lucide-react';
 import {cn} from '@site/src/lib/utils';
 import {
   Sheet,
@@ -22,7 +22,8 @@ import {
 import SidebarPickers from './SidebarPickers';
 
 /**
- * The under-996px menu: the four tabs, then the current tab's doc sidebar.
+ * The under-996px navigation: a row under the bar that opens a sheet holding
+ * the four tabs and then the current tab's doc sidebar.
  *
  * The sidebar cannot be read here with `useDocsSidebar()`. `DocsSidebarProvider`
  * is mounted by `@theme/DocRoot`, which sits *inside* `@theme/Layout`, so the
@@ -53,10 +54,15 @@ export default function MobileNav() {
 
   return (
     <Sheet open={open} onOpenChange={setOpen}>
-      <SheetTrigger
-        className="topbar-action topbar-action--icon topbar-menu"
-        aria-label="Open navigation">
-        <Menu className="size-5" aria-hidden="true" />
+      {/* A row of its own under the bar rather than a hamburger inside it,
+          the way the Claude Code docs do it: at this width the sidebar is the
+          thing a reader needs most, and a full width target that says where
+          they are is easier to hit and easier to read than an icon. */}
+      <SheetTrigger className="nav-row" aria-label="Open navigation">
+        <Menu className="size-4" aria-hidden="true" />
+        <span className="nav-row__label">Navigation</span>
+        <span className="nav-row__here">{current?.label ?? 'Overview'}</span>
+        <ChevronDown className="size-4 nav-row__chevron" aria-hidden="true" />
       </SheetTrigger>
 
       <SheetContent side="left" aria-describedby={undefined}>

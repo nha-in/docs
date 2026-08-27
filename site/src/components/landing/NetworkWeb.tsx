@@ -1,26 +1,63 @@
 import React, {useEffect, useRef} from 'react';
-
-type Node = {x: number; y: number; vx: number; vy: number};
-
-const DENSITY = 4600; // one node per this many square pixels
-const MAX_NODES = 240;
-const LINK = 190; // px: two nodes closer than this are joined
-const DRIFT = 0.1; // px per frame
-const LINE_WIDTH = 1.6; // px, heavier than a hairline so the mesh reads under the veil
+import {
+  Building2,
+  FlaskConical,
+  Landmark,
+  Pill,
+  ShieldCheck,
+  Smartphone,
+  Stethoscope,
+  User,
+} from 'lucide-react';
 
 /**
- * The network under the landing copy, revealed by the cursor.
+ * The ABDM network behind the landing copy: the participants, every link
+ * between them, and the reader carrying a record across it.
  *
- * Two layers. The canvas draws the whole web at full strength. Over it sits a
- * veil painted in the page colour, so the page reads as flat until the pointer
- * moves. A radial mask follows the pointer and cuts a hole in that veil, so
- * the reader lights the part of the network they are over. The mechanic is the
- * one beckn.io uses on its hero; what is underneath is ours.
+ * The mesh used to be anonymous dots under a veil with a hole cut at the
+ * pointer. Two things changed. The dots are the actual cast of the network, so
+ * the shape on screen is the argument the page is making rather than
+ * decoration; and the reveal is a falloff rather than a hole, because the
+ * visible circle edge is what reads as the flashlight trope. Light still
+ * follows the pointer, in sage, the way beckn.io does it.
  *
- * The mask is moved by writing two custom properties, so a pointer move costs
- * a style recalculation rather than a React render. The veil takes no pointer
- * events, so nothing underneath becomes harder to click.
+ * The icons are DOM, the links and the courier are canvas. Canvas cannot draw
+ * an icon without shipping its path data, and the DOM cannot draw 28 live
+ * links without 28 elements; each layer does the half it is good at, and both
+ * read the same participant table.
  */
+
+/** The cast. Positions are percentages of the hero, kept out of the copy. */
+const PARTICIPANTS = [
+  {id: 'citizen', label: 'Citizen', Icon: User, x: 50, y: 7, small: true},
+  {id: 'phr', label: 'PHR app', Icon: Smartphone, x: 79, y: 17},
+  {id: 'insurer', label: 'Insurer', Icon: ShieldCheck, x: 92, y: 45, small: true},
+  {id: 'pharmacy', label: 'Pharmacy', Icon: Pill, x: 82, y: 74},
+  // Bottom centre is left clear: the scroll cue lives there.
+  {id: 'lab', label: 'Diagnostics', Icon: FlaskConical, x: 64, y: 88, small: true},
+  {id: 'hospital', label: 'Hospital', Icon: Building2, x: 36, y: 88, small: true},
+  {id: 'nha', label: 'NHA', Icon: Landmark, x: 8, y: 45},
+  {id: 'doctor', label: 'Doctor', Icon: Stethoscope, x: 21, y: 17, small: true},
+];
+
+/** Every pair, once. The claim ABDM makes is that any of these can exchange. */
+const LINKS = PARTICIPANTS.flatMap((from, i) =>
+  PARTICIPANTS.slice(i + 1).map((to) => [i, PARTICIPANTS.indexOf(to)] as const),
+);
+
+const REACH = 260; // px: how far the courier's light carries
+const ARRIVE = 76; // px: close enough to a participant to hand the record over
+const IDLE_AFTER = 10_000; // ms of stillness before the network demonstrates itself
+const PACKET_MS = 900; // how long a record takes to travel one link
+
+type Point = {x: number; y: number};
+
+/** 0 at `far` and beyond, 1 at zero distance, eased so there is no visible rim. */
+function falloff(distance: number, far: number) {
+  const t = Math.max(0, 1 - distance / far);
+  return t * t;
+}
+
 export default function NetworkWeb(): React.ReactNode {
   const wrapRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -34,13 +71,24 @@ export default function NetworkWeb(): React.ReactNode {
     }
 
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
-    let nodes: Node[] = [];
+    const icons = Array.from(
+      wrap.querySelectorAll<HTMLElement>('[data-participant]'),
+    );
+
     let width = 0;
     let height = 0;
+    let places: Point[] = [];
     let frame = 0;
 
-    const read = (name: string) =>
-      getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+    /** Where the courier is, and where it last handed a record over. */
+    let courier: Point = {x: -9999, y: -9999};
+    let holding = -1;
+    /** A record in flight: from, to, and when it left. */
+    let packet: {from: number; to: number; at: number} | null = null;
+    let lastMove = 0;
+    let idleFrom = 0;
+    let idleTo = 1;
+    let idleSince = 0;
 
     const measure = () => {
       const ratio = Math.min(window.devicePixelRatio || 1, 2);
@@ -50,101 +98,249 @@ export default function NetworkWeb(): React.ReactNode {
       canvas.width = Math.round(width * ratio);
       canvas.height = Math.round(height * ratio);
       context.setTransform(ratio, 0, 0, ratio, 0, 0);
-
-      const count = Math.min(
-        MAX_NODES,
-        Math.max(30, Math.round((width * height) / DENSITY)),
-      );
-      nodes = Array.from({length: count}, () => ({
-        x: Math.random() * width,
-        y: Math.random() * height,
-        vx: (Math.random() - 0.5) * DRIFT * 2,
-        vy: (Math.random() - 0.5) * DRIFT * 2,
+      places = PARTICIPANTS.map((p) => ({
+        x: (p.x / 100) * width,
+        y: (p.y / 100) * height,
       }));
     };
 
-    const draw = () => {
-      const accent = read('--accent') || '#3d714e';
+    const accent = () =>
+      getComputedStyle(document.documentElement)
+        .getPropertyValue('--accent')
+        .trim() || '#3d714e';
+
+    /**
+     * The accent as `r, g, b`, so a gradient can fade to that same colour at
+     * zero alpha.
+     *
+     * A canvas gradient interpolates its stops without premultiplying alpha,
+     * so a stop of `transparent` is transparent *black*: the fade runs through
+     * grey and stops dead at the arc's edge, which is the hard rim. CSS
+     * gradients premultiply and have no such problem, which is why only the
+     * canvas half needed this.
+     */
+    const rgbOf = (colour: string) => {
+      context.fillStyle = colour;
+      const normalised = context.fillStyle as string;
+      if (normalised.startsWith('#')) {
+        const hex = normalised.slice(1);
+        const full =
+          hex.length === 3
+            ? hex.split('').map((c) => c + c).join('')
+            : hex;
+        const value = parseInt(full, 16);
+        return `${(value >> 16) & 255}, ${(value >> 8) & 255}, ${value & 255}`;
+      }
+      return normalised.replace(/^rgba?\(|\)$/g, '').split(',').slice(0, 3).join(',');
+    };
+
+    const nearest = (from: Point) => {
+      let best = -1;
+      let bestDistance = Infinity;
+      places.forEach((place, index) => {
+        const distance = Math.hypot(place.x - from.x, place.y - from.y);
+        if (distance < bestDistance) {
+          bestDistance = distance;
+          best = index;
+        }
+      });
+      return {index: best, distance: bestDistance};
+    };
+
+    /** Hand the record on when the courier reaches someone new. */
+    const deliver = (now: number) => {
+      const {index, distance} = nearest(courier);
+      if (index < 0 || distance > ARRIVE || index === holding) {
+        return;
+      }
+      if (holding >= 0) {
+        packet = {from: holding, to: index, at: now};
+      }
+      holding = index;
+    };
+
+    /** With no pointer, the courier walks its own route so the page moves. */
+    const walkIdle = (now: number) => {
+      const from = places[idleFrom];
+      const to = places[idleTo];
+      const t = Math.min(1, (now - idleSince) / 2200);
+      // Ease in and out, so the courier slows into each participant.
+      const eased = t < 0.5 ? 2 * t * t : 1 - (-2 * t + 2) ** 2 / 2;
+      courier = {
+        x: from.x + (to.x - from.x) * eased,
+        y: from.y + (to.y - from.y) * eased,
+      };
+      if (t >= 1) {
+        idleFrom = idleTo;
+        do {
+          idleTo = Math.floor(Math.random() * PARTICIPANTS.length);
+        } while (idleTo === idleFrom);
+        idleSince = now;
+      }
+    };
+
+    const draw = (now: number) => {
+      frame = requestAnimationFrame(draw);
+      const colour = accent();
+      const channels = rgbOf(colour);
+      const idle = now - lastMove > IDLE_AFTER;
+
+      if (idle && !reduced.matches) {
+        if (!idleSince) idleSince = now;
+        walkIdle(now);
+      }
+      deliver(now);
+
       context.clearRect(0, 0, width, height);
+      context.lineCap = 'round';
+      context.strokeStyle = colour;
 
-      if (!reduced.matches) {
-        for (const node of nodes) {
-          node.x += node.vx;
-          node.y += node.vy;
-          if (node.x < 0 || node.x > width) node.vx *= -1;
-          if (node.y < 0 || node.y > height) node.vy *= -1;
-        }
-      }
-
-      context.strokeStyle = accent;
-      context.lineWidth = LINE_WIDTH;
-      for (let i = 0; i < nodes.length; i += 1) {
-        for (let j = i + 1; j < nodes.length; j += 1) {
-          const dx = nodes[i].x - nodes[j].x;
-          const dy = nodes[i].y - nodes[j].y;
-          const distance = Math.hypot(dx, dy);
-          if (distance > LINK) {
-            continue;
-          }
-          context.globalAlpha = (1 - distance / LINK) * 0.55;
-          context.beginPath();
-          context.moveTo(nodes[i].x, nodes[i].y);
-          context.lineTo(nodes[j].x, nodes[j].y);
-          context.stroke();
-        }
-      }
-
-      context.fillStyle = accent;
-      for (const node of nodes) {
-        context.globalAlpha = 0.85;
+      // Every link, lit by how close the courier passes to it.
+      for (const [a, b] of LINKS) {
+        const from = places[a];
+        const to = places[b];
+        const middle = {x: (from.x + to.x) / 2, y: (from.y + to.y) / 2};
+        const lit = falloff(
+          Math.hypot(middle.x - courier.x, middle.y - courier.y),
+          REACH * 1.6,
+        );
+        context.globalAlpha = 0.05 + lit * 0.3;
+        context.lineWidth = 1;
         context.beginPath();
-        context.arc(node.x, node.y, 2, 0, Math.PI * 2);
+        context.moveTo(from.x, from.y);
+        context.lineTo(to.x, to.y);
+        context.stroke();
+      }
+
+      // The two links the courier is currently standing between.
+      const ranked = places
+        .map((place, index) => ({
+          index,
+          distance: Math.hypot(place.x - courier.x, place.y - courier.y),
+        }))
+        .sort((one, two) => one.distance - two.distance)
+        .slice(0, 2);
+
+      for (const {index, distance} of ranked) {
+        if (distance > REACH) continue;
+        context.globalAlpha = 0.15 + falloff(distance, REACH) * 0.5;
+        context.lineWidth = 1.25;
+        context.beginPath();
+        context.moveTo(courier.x, courier.y);
+        context.lineTo(places[index].x, places[index].y);
+        context.stroke();
+      }
+
+      // A record in flight along the link it was handed across.
+      if (packet) {
+        const t = (now - packet.at) / PACKET_MS;
+        if (t >= 1) {
+          packet = null;
+        } else {
+          const from = places[packet.from];
+          const to = places[packet.to];
+          const at = {
+            x: from.x + (to.x - from.x) * t,
+            y: from.y + (to.y - from.y) * t,
+          };
+          context.globalAlpha = 0.5 * (1 - t);
+          context.lineWidth = 2;
+          context.beginPath();
+          context.moveTo(from.x, from.y);
+          context.lineTo(at.x, at.y);
+          context.stroke();
+
+          context.globalAlpha = 1 - t * 0.4;
+          context.fillStyle = colour;
+          context.beginPath();
+          context.arc(at.x, at.y, 3, 0, Math.PI * 2);
+          context.fill();
+        }
+      }
+
+      // The courier itself: the record the reader is carrying, and its light.
+      if (courier.x > -9000) {
+        const glow = context.createRadialGradient(
+          courier.x,
+          courier.y,
+          0,
+          courier.x,
+          courier.y,
+          REACH * 1.5,
+        );
+        // Four stops on a curve rather than two on a line: a linear ramp still
+        // shows where it ends. The last stop is the same colour at zero alpha.
+        glow.addColorStop(0, `rgba(${channels}, 0.16)`);
+        glow.addColorStop(0.35, `rgba(${channels}, 0.07)`);
+        glow.addColorStop(0.7, `rgba(${channels}, 0.02)`);
+        glow.addColorStop(1, `rgba(${channels}, 0)`);
+        context.globalAlpha = 1;
+        context.fillStyle = glow;
+        context.beginPath();
+        context.arc(courier.x, courier.y, REACH * 1.5, 0, Math.PI * 2);
+        context.fill();
+
+        context.globalAlpha = 0.9;
+        context.fillStyle = colour;
+        context.beginPath();
+        context.arc(courier.x, courier.y, 3.5, 0, Math.PI * 2);
         context.fill();
       }
+
+      // The icons take their light from the same distance, as a custom
+      // property, so a pointer move costs a style recalculation and no render.
+      icons.forEach((icon, index) => {
+        const place = places[index];
+        if (!place) return;
+        const lit = falloff(
+          Math.hypot(place.x - courier.x, place.y - courier.y),
+          REACH,
+        );
+        // The participant holding the record keeps a floor of light, so it is
+        // clear where the record came from, without pinning it at full
+        // brightness long after the courier has gone.
+        const held = index === holding ? 0.5 : 0;
+        icon.style.setProperty('--lit', Math.max(lit, held).toFixed(3));
+      });
+
       context.globalAlpha = 1;
     };
 
-    const loop = () => {
-      draw();
-      frame = window.requestAnimationFrame(loop);
-    };
-
-    // The torch: two custom properties the mask reads.
-    const onPointerMove = (event: PointerEvent) => {
-      const box = wrap.getBoundingClientRect();
-      wrap.style.setProperty('--reveal-x', `${event.clientX - box.left}px`);
-      wrap.style.setProperty('--reveal-y', `${event.clientY - box.top}px`);
-      wrap.style.setProperty('--reveal-r', '190px');
-    };
-    const onPointerLeave = () => wrap.style.setProperty('--reveal-r', '0px');
-    const onResize = () => {
-      measure();
-      if (reduced.matches) draw();
+    const onPointer = (event: PointerEvent) => {
+      const box = canvas.getBoundingClientRect();
+      courier = {x: event.clientX - box.left, y: event.clientY - box.top};
+      lastMove = performance.now();
+      idleSince = 0;
     };
 
     measure();
-    if (reduced.matches) {
-      draw();
-    } else {
-      frame = window.requestAnimationFrame(loop);
-    }
+    // Start on the idle walk, so the network is already moving on arrival.
+    idleSince = 0;
+    frame = requestAnimationFrame(draw);
 
-    window.addEventListener('pointermove', onPointerMove, {passive: true});
-    window.addEventListener('pointerleave', onPointerLeave);
+    const onResize = () => measure();
     window.addEventListener('resize', onResize);
-
+    window.addEventListener('pointermove', onPointer, {passive: true});
     return () => {
-      window.cancelAnimationFrame(frame);
-      window.removeEventListener('pointermove', onPointerMove);
-      window.removeEventListener('pointerleave', onPointerLeave);
+      cancelAnimationFrame(frame);
       window.removeEventListener('resize', onResize);
+      window.removeEventListener('pointermove', onPointer);
     };
   }, []);
 
   return (
     <div className="network-web" ref={wrapRef} aria-hidden="true">
       <canvas className="network-web__canvas" ref={canvasRef} />
-      <div className="network-web__veil" />
+      {PARTICIPANTS.map(({id, label, Icon, x, y, small}) => (
+        <span
+          key={id}
+          data-participant={id}
+          className={`network-node${small ? '' : ' network-node--wide'}`}
+          style={{left: `${x}%`, top: `${y}%`}}>
+          <Icon className="network-node__icon" strokeWidth={1.5} />
+          <span className="network-node__label">{label}</span>
+        </span>
+      ))}
     </div>
   );
 }

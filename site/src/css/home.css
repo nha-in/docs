@@ -74,6 +74,8 @@
 
 /* The first screen holds the copy and the ways in, and nothing else. */
 .landing-hero {
+  --exit: 0;
+
   position: relative;
   display: flex;
   flex-direction: column;
@@ -95,15 +97,50 @@
   max-width: 52rem;
 }
 
-/* ---------- the network, and the torch that reveals it ---------- */
+/* ---------- the network, and the courier crossing it ---------- */
 
 .network-web {
   position: absolute;
   inset: 0;
   z-index: 0;
-  --reveal-x: 50%;
-  --reveal-y: 50%;
-  --reveal-r: 0px;
+  pointer-events: none;
+  /* A vignette over the whole layer. Without it the canvas edge cuts whatever
+     is crossing it: the courier's light passing under the bar left a hard
+     horizontal line the width of the page, because a glow drawn at the top of
+     the canvas simply stops there. Everything the canvas draws now fades out
+     before it reaches a boundary. */
+  /* Two masks, intersected. The first fades the layer out before it reaches
+     any edge, so nothing the canvas draws is ever cut off by the boundary. The
+     second thins it behind the words: the copy used to sit on a painted panel
+     of page colour, which read as a box laid over the network, and this does
+     the same job by removing the network rather than by covering it. The words
+     are a layer above, untouched by either. */
+  mask-image: radial-gradient(
+      ellipse 92% 88% at 50% 50%,
+      #000 45%,
+      rgb(0 0 0 / 0.6) 72%,
+      transparent 100%
+    ),
+    radial-gradient(
+      ellipse 34% 30% at 50% 52%,
+      rgb(0 0 0 / 0.12) 0%,
+      rgb(0 0 0 / 0.45) 55%,
+      #000 100%
+    );
+  mask-composite: intersect;
+  -webkit-mask-image: radial-gradient(
+      ellipse 92% 88% at 50% 50%,
+      #000 45%,
+      rgb(0 0 0 / 0.6) 72%,
+      transparent 100%
+    ),
+    radial-gradient(
+      ellipse 34% 30% at 50% 52%,
+      rgb(0 0 0 / 0.12) 0%,
+      rgb(0 0 0 / 0.45) 55%,
+      #000 100%
+    );
+  -webkit-mask-composite: source-in;
 }
 
 .network-web__canvas {
@@ -112,57 +149,100 @@
   height: 100%;
 }
 
-/* The page colour, laid over the web. The mask cuts a hole at the pointer, so
-   the reader lights the part of the network they are over. Before the first
-   move the radius is 0 and the page reads as flat. */
-.network-web__veil {
+/* A participant. `--lit` is written by the canvas loop from the courier's
+   distance, so the icon brightens with the links running into it and the two
+   layers agree without the DOM re-rendering. */
+.network-node {
+  --lit: 0;
+
   position: absolute;
-  inset: 0;
-  background: var(--page);
-  pointer-events: none;
-  will-change: mask-image;
-  transform: translateZ(0);
-  /* The reveal is full strength again. Dimming every stop made the whole
-     network dull to fix a problem that only exists where the words are, so
-     the dimming moved to the words instead: see .landing-hero__copy::before.
-     The core is soft rather than flat so the edge of the torch does not read
-     as a cut circle. */
-  mask-image: radial-gradient(
-    circle var(--reveal-r) at var(--reveal-x) var(--reveal-y),
-    transparent 0%,
-    transparent 30%,
-    rgb(0 0 0 / 0.55) 66%,
-    #000 100%
-  );
-  -webkit-mask-image: radial-gradient(
-    circle var(--reveal-r) at var(--reveal-x) var(--reveal-y),
-    transparent 0%,
-    transparent 30%,
-    rgb(0 0 0 / 0.55) 66%,
-    #000 100%
-  );
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.375rem;
+  color: var(--accent);
+  opacity: calc(0.28 + var(--lit) * 0.72);
+  transition: opacity 200ms ease;
 }
 
-/* A scrim behind the copy, and only behind the copy.
-   The torch is at full strength everywhere else; here it is damped, because
-   this is the one place the network competes with something that has to be
-   read. A soft radial rather than a plate: it has no edge of its own, so the
-   reveal still passes through it and the reader sees the web brighten under
-   the words rather than hitting a panel. */
-.landing-hero__copy::before {
+/* The sage light, behind the icon rather than on it, so the glow reads as
+   light falling on the participant and not as a coloured tile. */
+.network-node::before {
   content: '';
   position: absolute;
   z-index: -1;
-  inset: -3rem -4rem;
-  pointer-events: none;
+  width: 7.5rem;
+  height: 7.5rem;
+  border-radius: 999px;
+  /* Stops on a curve, not a straight ramp: a two stop gradient reads as a
+     disc with an edge however soft the second stop is. */
   background: radial-gradient(
-    ellipse at center,
-    var(--page) 0%,
-    color-mix(in srgb, var(--page) 82%, transparent) 45%,
-    color-mix(in srgb, var(--page) 45%, transparent) 70%,
+    circle,
+    color-mix(in srgb, var(--accent) 22%, transparent) 0%,
+    color-mix(in srgb, var(--accent) 9%, transparent) 38%,
+    color-mix(in srgb, var(--accent) 2%, transparent) 66%,
     transparent 100%
   );
+  opacity: var(--lit);
 }
+
+.network-node__icon {
+  width: 1.375rem;
+  height: 1.375rem;
+}
+
+.network-node__label {
+  font-size: 0.625rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: var(--text-faint);
+  opacity: calc(0.4 + var(--lit) * 0.6);
+}
+
+/* Under 768px the ring has no room for eight, and the labels collide with the
+   statement. Four participants, no captions. */
+@media (max-width: 768px) {
+  .network-node--wide {
+    display: none;
+  }
+
+  .network-node__label {
+    display: none;
+  }
+
+  /* The statement is four lines deep at this width rather than three across,
+     so the clearing in the middle of the mesh changes shape with it. */
+  .network-web {
+    mask-image: radial-gradient(
+        ellipse 96% 92% at 50% 50%,
+        #000 40%,
+        rgb(0 0 0 / 0.6) 74%,
+        transparent 100%
+      ),
+      radial-gradient(
+        ellipse 62% 42% at 50% 50%,
+        rgb(0 0 0 / 0.1) 0%,
+        rgb(0 0 0 / 0.4) 55%,
+        #000 100%
+      );
+    -webkit-mask-image: radial-gradient(
+        ellipse 96% 92% at 50% 50%,
+        #000 40%,
+        rgb(0 0 0 / 0.6) 74%,
+        transparent 100%
+      ),
+      radial-gradient(
+        ellipse 62% 42% at 50% 50%,
+        rgb(0 0 0 / 0.1) 0%,
+        rgb(0 0 0 / 0.4) 55%,
+        #000 100%
+      );
+  }
+}
+
 
 /* The kicker above the statement: the Ashoka emblem and the portal's name,
    held in the shared .brand-chip pill (navbar.css). Its own scale is smaller
@@ -186,17 +266,24 @@
   color: var(--accent);
 }
 
-/* h1 at the measured size: serif 36px / 40px, weight 400. The line breaks are
-   in the markup, so the measure only has to be wide enough not to fight them. */
+/* h1 at the measured size: serif 36px / 40px, weight 400, scaling down with
+   the viewport so a short or narrow window sets the same three lines rather
+   than breaking them. The lines are elements, not breaks: see LandingHero. */
 .landing-hero__statement {
   margin: 0;
   max-width: none;
+  font-size: clamp(1.5rem, 0.9rem + 2.4vw, 2.25rem);
+  line-height: 1.15;
   font-family: var(--font-serif);
   font-size: 2.25rem;
   line-height: 2.5rem;
   font-weight: 400;
   letter-spacing: -0.01em;
   color: var(--text-heading);
+}
+
+.landing-hero__line {
+  display: block;
 }
 
 .landing-hero__lede {
@@ -296,10 +383,11 @@
     max-width: none;
   }
 
-  /* Too narrow for "Digital Health Infrastructure" on one line, so the text
-     wraps to the column instead of to the breaks. */
-  .landing-hero__statement br {
-    display: none;
+  /* Too narrow for "Digital Health Infrastructure" on one line, so the lines
+     run together and wrap to the column instead. The space between the spans
+     is a real space in the markup, so the words stay apart. */
+  .landing-hero__line {
+    display: inline;
   }
 }
 
@@ -309,8 +397,10 @@
    is meant to leave this element unseen: the handoff in index.tsx fires on the
    first meaningful scroll and carries them into the API references before
    this comes into view. */
+/* Room for the exit to travel through. The handoff commits at 42vh, so this
+   is the gesture's runway, not a section. */
 .landing-scroll-cue {
-  height: 45vh;
+  height: 60vh;
 }
 
 /* ---------- the scroll hint ----------
@@ -381,3 +471,135 @@
   }
 }
 
+
+/* Pulling back to the landing page from the top of the references. The page
+   follows the pull a little, and the further it is pulled the less it gives:
+   the rubber band is what tells the reader the gesture exists and that it is
+   not finished yet. */
+.pull-home {
+  transform: translateY(calc(var(--pull, 0) * 1px));
+  transition: transform 260ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.pull-home[data-pulling='true'] {
+  transition: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pull-home {
+    transform: none;
+  }
+}
+
+/* ---------- the curtain ----------
+   The landing page over the references, lifted by the gesture rather than
+   swapped for them. `--lift` runs 0 to 1 and is written from the wheel, so the
+   curtain tracks the hand: this is a blind being raised, not an animation
+   being played. Nothing eases it, because an eased transform would lag the
+   fingers by exactly the length of the easing. */
+.curtain {
+  --lift: 0;
+
+  position: fixed;
+  inset: 0;
+  z-index: 400;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: var(--page);
+  transform: translate3d(0, calc(var(--lift) * -100%), 0);
+  will-change: transform;
+}
+
+/* Translucent, and fading rather than ending: the bar sits over the network
+   now, so a solid strip would cut the light off in a straight line and a
+   backdrop filter would draw its own rectangle. A gradient to nothing has no
+   edge to see, and still holds enough page colour under the marks to keep
+   them legible. */
+.curtain__bar {
+  position: relative;
+  z-index: 1;
+  flex: 0 0 auto;
+  height: var(--topbar-height);
+  padding: 0 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: linear-gradient(
+    to bottom,
+    color-mix(in srgb, var(--page) 82%, transparent) 0%,
+    color-mix(in srgb, var(--page) 46%, transparent) 62%,
+    transparent 100%
+  );
+}
+
+.curtain__toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border: 0;
+  border-radius: var(--radius-control);
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: background-color 150ms ease, color 150ms ease;
+}
+
+.curtain__toggle:hover {
+  background: var(--hover-soft);
+  color: var(--text-heading);
+}
+
+.curtain__mark {
+  display: block;
+  width: auto;
+  height: 2.25rem;
+}
+
+.curtain__mark--dark,
+[data-theme='dark'] .curtain__mark--light {
+  display: none;
+}
+
+[data-theme='dark'] .curtain__mark--dark {
+  display: block;
+}
+
+/* The hero fills what is left of the curtain, so the fold sits at its foot.
+   `min-height: 0` and a scaled pad, because the curtain is exactly the height
+   of the window: a fixed padding that is comfortable at 900px tall pushes the
+   gateways off the bottom of a 600px one. The curtain does the clipping, so
+   the hero does none: the network reaches up behind the bar. */
+.curtain .landing-hero {
+  flex: 1 1 auto;
+  min-height: 0;
+  padding: clamp(1rem, 4vh, 3rem) 1.5rem clamp(1.5rem, 6vh, 4rem);
+  overflow: visible;
+}
+
+/* The network runs the full height of the curtain, under the bar as well as
+   under the words. Anything else and the courier's light stops dead at the top
+   of the hero, which is a straight line across the page. */
+.curtain .network-web {
+  top: calc(var(--topbar-height) * -1);
+}
+
+/* Short windows: the parts that can go, in the order they can go. */
+@media (max-height: 720px) {
+  .landing-hero__copy {
+    gap: 0.875rem;
+  }
+
+  .landing-scroll-hint {
+    bottom: 1rem;
+  }
+}
+
+@media (max-height: 560px) {
+  .landing-hero__lede,
+  .landing-scroll-hint {
+    display: none;
+  }
+}

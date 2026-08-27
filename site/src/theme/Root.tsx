@@ -1,14 +1,12 @@
 import React from 'react';
-import ScrollBackHome from '@site/src/components/landing/ScrollBackHome';
+import LandingCurtain from '@site/src/components/landing/LandingCurtain';
+import PullHome from '@site/src/components/landing/PullHome';
+import ScrolledFlag from '@site/src/components/chrome/ScrolledFlag';
 
 /**
- * Wraps every page and never unmounts, which is what the scroll handoff needs:
- * the listener has to survive the route change it causes, and it has to be
- * mounted on the reference page even though nothing on that page knows about
- * the landing page.
- *
- * ScrollBackHome renders nothing and decides for itself whether the current
- * route is one it should listen on.
+ * Wraps every page and never unmounts, which is what both of these need: the
+ * curtain performs the route change it survives, and the pull back listens on
+ * the references page, which knows nothing about the landing page.
  */
 export default function Root({
   children,
@@ -17,7 +15,9 @@ export default function Root({
 }): React.ReactNode {
   return (
     <>
-      <ScrollBackHome />
+      <ScrolledFlag />
+      <LandingCurtain />
+      <PullHome />
       {children}
     </>
   );
