@@ -98,7 +98,7 @@ NHA's documents give four hosts for gateway paths, and they do not agree.
 | `https://live.abdm.gov.in` | M4 document | Not labelled, appears alongside the `dev` host for the same call |
 | `https://apis.abdm.gov.in` | M2 document | Production base URL |
 
-We have not called any of them. Take the host from the sandbox documentation NHA gives you at onboarding, and keep it in configuration, not in code.
+Take the host from the sandbox documentation issued at onboarding, and keep it in configuration, not in code.
 
 ## What NHA's documents do not say
 

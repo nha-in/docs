@@ -204,8 +204,8 @@ paths:
                       otpValue: <OTPVALUE>
       responses:
         '200':
-          description: The call was accepted. NHA's collection saves no response
-            body for this operation, so the shape is not recorded here. Run it
+          description: The call was accepted. No response body is documented
+            for this operation. Run it
             against the sandbox and record what comes back before relying on it.
       x-abdm-atom: hiecm.endpoint.m1-enrolment-verify-abdm-otp
   /v3/enrollment/enrol/abha-address:
@@ -309,8 +309,8 @@ paths:
                   - face-auth
       responses:
         '200':
-          description: The call was accepted. NHA's collection saves no response
-            body for this operation, so the shape is not recorded here. Run it
+          description: The call was accepted. No response body is documented
+            for this operation. Run it
             against the sandbox and record what comes back before relying on it.
       x-abdm-atom: hiecm.endpoint.m1-enrolment-face-auth-init
   /v3/enrollment/enrol/byAadhaar:
@@ -465,8 +465,8 @@ paths:
                     version: '1.4'
       responses:
         '200':
-          description: The call was accepted. NHA's collection saves no response
-            body for this operation, so the shape is not recorded here. Run it
+          description: The call was accepted. No response body is documented
+            for this operation. Run it
             against the sandbox and record what comes back before relying on it.
       x-abdm-atom: hiecm.endpoint.m1-enrolment-by-aadhaar
   /v3/enrollment/enrol/byDocument:
@@ -568,8 +568,8 @@ paths:
                     version: '1.4'
       responses:
         '200':
-          description: The call was accepted. NHA's collection saves no response
-            body for this operation, so the shape is not recorded here. Run it
+          description: The call was accepted. No response body is documented
+            for this operation. Run it
             against the sandbox and record what comes back before relying on it.
       x-abdm-atom: hiecm.endpoint.m1-enrolment-by-document
   /v3/enrollment/enrol/capturePID:
@@ -625,7 +625,7 @@ paths:
                   txnId: <TXN_ID>
       responses:
         '200':
-          description: Recorded in NHA's own collection. Values are scrubbed.
+          description: Example values, scrubbed.
           content:
             application/json:
               schema:
@@ -681,8 +681,8 @@ paths:
       - $ref: '#/components/parameters/TransactionId'
       responses:
         '200':
-          description: The call was accepted. NHA's collection saves no response
-            body for this operation, so the shape is not recorded here. Run it
+          description: The call was accepted. No response body is documented
+            for this operation. Run it
             against the sandbox and record what comes back before relying on it.
       x-abdm-atom: hiecm.endpoint.m1-enrolment-address-suggestions
   /v3/enrollment/profile/children:
@@ -701,8 +701,8 @@ paths:
       - $ref: '#/components/parameters/XToken'
       responses:
         '200':
-          description: The call was accepted. NHA's collection saves no response
-            body for this operation, so the shape is not recorded here. Run it
+          description: The call was accepted. No response body is documented
+            for this operation. Run it
             against the sandbox and record what comes back before relying on it.
       x-abdm-atom: hiecm.endpoint.m1-enrolment-list-children
   /v3/enrollment/request/otp:
@@ -784,8 +784,8 @@ paths:
                   otpSystem: abdm
       responses:
         '200':
-          description: The call was accepted. NHA's collection saves no response
-            body for this operation, so the shape is not recorded here. Run it
+          description: The call was accepted. No response body is documented
+            for this operation. Run it
             against the sandbox and record what comes back before relying on it.
       x-abdm-atom: hiecm.endpoint.m1-enrolment-request-otp
   /v3.1/profile/login/request/otp:
@@ -840,8 +840,8 @@ paths:
                   otpSystem: aadhaar
       responses:
         '200':
-          description: The call was accepted. NHA's collection saves no response
-            body for this operation, so the shape is not recorded here. Run it
+          description: The call was accepted. No response body is documented
+            for this operation. Run it
             against the sandbox and record what comes back before relying on it.
       x-abdm-atom: hiecm.endpoint.m1-login-request-otp-v31
   /v3.1/profile/login/verify:
@@ -961,7 +961,7 @@ paths:
                       fingerPrintAuthPid: <FINGERPRINTAUTHPID>
       responses:
         '200':
-          description: Recorded in NHA's own collection. Values are scrubbed.
+          description: Example values, scrubbed.
           content:
             application/json:
               schema:
@@ -1098,7 +1098,7 @@ paths:
                   otpSystem: abdm
       responses:
         '200':
-          description: Recorded in NHA's own collection. Values are scrubbed.
+          description: Example values, scrubbed.
           content:
             application/json:
               schema:
@@ -1118,7 +1118,7 @@ paths:
                     txnId: <TXN_ID>
                     message: Transaction Id generated Successfully
         '401':
-          description: Recorded in NHA's own collection. Values are scrubbed.
+          description: Example values, scrubbed.
           content:
             application/json:
               schema:
@@ -1268,7 +1268,7 @@ paths:
                       password: <PASSWORD>
       responses:
         '200':
-          description: Recorded in NHA's own collection. Values are scrubbed.
+          description: Example values, scrubbed.
           content:
             application/json:
               schema:
@@ -1340,7 +1340,7 @@ paths:
                       profilePhoto: <BASE64_PHOTO>
                       mobileVerified: false
         '400':
-          description: Recorded in NHA's own collection. Values are scrubbed.
+          description: Example values, scrubbed.
           content:
             application/json:
               schema:
@@ -1376,7 +1376,7 @@ paths:
                     faceDto: Invalid Aadhaar face request
                     timestamp: '2025-01-15 13:32:04'
         '401':
-          description: Recorded in NHA's own collection. Values are scrubbed.
+          description: Example values, scrubbed.
           content:
             application/json:
               schema:
@@ -1401,7 +1401,7 @@ paths:
                     description: Invalid JWT token. Make sure you have provided
                       the correct security credentials
         '404':
-          description: Recorded in NHA's own collection. Values are scrubbed.
+          description: Example values, scrubbed.
           content:
             application/json:
               schema:
@@ -1429,7 +1429,7 @@ paths:
                     message: Runtime Error
                     description: No matching resource found for given API Request
         '422':
-          description: Recorded in NHA's own collection. Values are scrubbed.
+          description: Example values, scrubbed.
           content:
             application/json:
               schema:
@@ -1502,8 +1502,8 @@ paths:
                   txnId: <TXN_ID>
       responses:
         '200':
-          description: The call was accepted. NHA's collection saves no response
-            body for this operation, so the shape is not recorded here. Run it
+          description: The call was accepted. No response body is documented
+            for this operation. Run it
             against the sandbox and record what comes back before relying on it.
       x-abdm-atom: hiecm.endpoint.m1-login-select-account
   /v3/profile/account:
@@ -1564,7 +1564,7 @@ paths:
                   profilePhoto: <BASE64_PHOTO>
       responses:
         '200':
-          description: Recorded in NHA's own collection. Values are scrubbed.
+          description: Example values, scrubbed.
           content:
             application/json:
               schema:
@@ -1784,8 +1784,8 @@ paths:
       - $ref: '#/components/parameters/XToken'
       responses:
         '200':
-          description: The call was accepted. NHA's collection saves no response
-            body for this operation, so the shape is not recorded here. Run it
+          description: The call was accepted. No response body is documented
+            for this operation. Run it
             against the sandbox and record what comes back before relying on it.
       x-abdm-atom: hiecm.endpoint.m1-profile-get-account
   /v3/profile/account/abha-card:
@@ -1803,8 +1803,8 @@ paths:
       - $ref: '#/components/parameters/XToken'
       responses:
         '200':
-          description: The call was accepted. NHA's collection saves no response
-            body for this operation, so the shape is not recorded here. Run it
+          description: The call was accepted. No response body is documented
+            for this operation. Run it
             against the sandbox and record what comes back before relying on it.
       x-abdm-atom: hiecm.endpoint.m1-profile-get-abha-card
   /v3/profile/account/download-abha-card:
@@ -1823,8 +1823,8 @@ paths:
       - $ref: '#/components/parameters/XToken'
       responses:
         '200':
-          description: The call was accepted. NHA's collection saves no response
-            body for this operation, so the shape is not recorded here. Run it
+          description: The call was accepted. No response body is documented
+            for this operation. Run it
             against the sandbox and record what comes back before relying on it.
       x-abdm-atom: hiecm.endpoint.m1-profile-download-abha-card
   /v3/profile/account/qrCode:
@@ -1843,8 +1843,8 @@ paths:
       - $ref: '#/components/parameters/XToken'
       responses:
         '200':
-          description: The call was accepted. NHA's collection saves no response
-            body for this operation, so the shape is not recorded here. Run it
+          description: The call was accepted. No response body is documented
+            for this operation. Run it
             against the sandbox and record what comes back before relying on it.
       x-abdm-atom: hiecm.endpoint.m1-profile-get-qr-code
   /v3/profile/account/request/logout:
@@ -1864,7 +1864,7 @@ paths:
       - $ref: '#/components/parameters/XToken'
       responses:
         '200':
-          description: Recorded in NHA's own collection. Values are scrubbed.
+          description: Example values, scrubbed.
           content:
             application/json:
               schema:
@@ -1956,8 +1956,8 @@ paths:
                   otpSystem: aadhaar
       responses:
         '200':
-          description: The call was accepted. NHA's collection saves no response
-            body for this operation, so the shape is not recorded here. Run it
+          description: The call was accepted. No response body is documented
+            for this operation. Run it
             against the sandbox and record what comes back before relying on it.
       x-abdm-atom: hiecm.endpoint.m1-profile-request-otp
   /v3/profile/account/verify:
@@ -2060,8 +2060,8 @@ paths:
                       otpValue: <OTPVALUE>
       responses:
         '200':
-          description: The call was accepted. NHA's collection saves no response
-            body for this operation, so the shape is not recorded here. Run it
+          description: The call was accepted. No response body is documented
+            for this operation. Run it
             against the sandbox and record what comes back before relying on it.
       x-abdm-atom: hiecm.endpoint.m1-profile-verify-otp
   /v3/profile/account/abha/search:
@@ -2115,7 +2115,7 @@ paths:
                   mobile: <MOBILE>
       responses:
         '200':
-          description: Recorded in NHA's own collection. Values are scrubbed.
+          description: Example values, scrubbed.
             Two shapes are recorded because the collection's test script and its
             saved example disagree, and the script is the more trustworthy of
             the two.
@@ -2179,7 +2179,7 @@ paths:
       - $ref: '#/components/parameters/AbhaNumber'
       responses:
         '200':
-          description: Recorded in NHA's own collection. Values are scrubbed.
+          description: Example values, scrubbed.
           content:
             application/json:
               schema:
@@ -2206,7 +2206,7 @@ paths:
                     insuranceProgramsLinked:
                     - Health ID Test
         '400':
-          description: Recorded in NHA's own collection. Values are scrubbed.
+          description: Example values, scrubbed.
           content:
             application/json:
               schema:
@@ -2232,7 +2232,7 @@ paths:
                       code: ABDM-1013
                       message: Invalid ABHA Number
         '401':
-          description: Recorded in NHA's own collection. Values are scrubbed.
+          description: Example values, scrubbed.
           content:
             application/json:
               schema:
@@ -2259,7 +2259,7 @@ paths:
                       message: ABDM-1094Access to this feature is restricted.
                         Please contact NHA to enable it.
         '500':
-          description: Recorded in NHA's own collection. Values are scrubbed.
+          description: Example values, scrubbed.
           content:
             application/json:
               schema:
@@ -2301,8 +2301,8 @@ paths:
       - $ref: '#/components/parameters/AbhaNumber'
       responses:
         '200':
-          description: The call was accepted. NHA's collection saves no response
-            body for this operation, so the shape is not recorded here. Run it
+          description: The call was accepted. No response body is documented
+            for this operation. Run it
             against the sandbox and record what comes back before relying on it.
       x-abdm-atom: hiecm.endpoint.m1-benefit-get-state-district
   /v3/profile/benefit/abha/{abhaNumber}:
@@ -2321,8 +2321,8 @@ paths:
       - $ref: '#/components/parameters/AbhaNumber'
       responses:
         '200':
-          description: The call was accepted. NHA's collection saves no response
-            body for this operation, so the shape is not recorded here. Run it
+          description: The call was accepted. No response body is documented
+            for this operation. Run it
             against the sandbox and record what comes back before relying on it.
       x-abdm-atom: hiecm.endpoint.m1-benefit-get-by-abha
   /v3/profile/benefit/linkAndDelink:
@@ -2374,7 +2374,7 @@ paths:
                   example: <RSA_ENCRYPTED_ABHA_NUMBER>
       responses:
         '200':
-          description: Recorded in NHA's own collection. Values are scrubbed.
+          description: Example values, scrubbed.
           content:
             application/json:
               schema:
@@ -2404,7 +2404,7 @@ paths:
                     healthId: <ABHA_ADDRESS>
                     status: Benefit record has been de-linked successfully
         '400':
-          description: Recorded in NHA's own collection. Values are scrubbed.
+          description: Example values, scrubbed.
           content:
             application/json:
               schema:
@@ -2440,7 +2440,7 @@ paths:
                       code: ABDM-1138
                       message: The benefit record has already been de-linked
         '401':
-          description: Recorded in NHA's own collection. Values are scrubbed.
+          description: Example values, scrubbed.
           content:
             application/json:
               schema:
@@ -2522,7 +2522,7 @@ paths:
                   loginId: <ENCRYPTED_A_B_H_A_NUMBER>
       responses:
         '200':
-          description: Recorded in NHA's own collection. Values are scrubbed.
+          description: Example values, scrubbed.
           content:
             application/json:
               schema:
@@ -2583,8 +2583,8 @@ paths:
       - $ref: '#/components/parameters/HealthIdNumberHeader'
       responses:
         '200':
-          description: The call was accepted. NHA's collection saves no response
-            body for this operation, so the shape is not recorded here. Run it
+          description: The call was accepted. No response body is documented
+            for this operation. Run it
             against the sandbox and record what comes back before relying on it.
       x-abdm-atom: hiecm.endpoint.m1-benefit-find-aadhaar-by-abha
   /v3/profile/benefit/search/abhaByAadhaar:
@@ -2604,8 +2604,8 @@ paths:
       - $ref: '#/components/parameters/AadhaarNumberHeader'
       responses:
         '200':
-          description: The call was accepted. NHA's collection saves no response
-            body for this operation, so the shape is not recorded here. Run it
+          description: The call was accepted. No response body is documented
+            for this operation. Run it
             against the sandbox and record what comes back before relying on it.
       x-abdm-atom: hiecm.endpoint.m1-benefit-find-abha-by-aadhaar
   /v3/phr/app/enrollment/encrypt:
@@ -2645,8 +2645,8 @@ paths:
                   data: '1'
       responses:
         '200':
-          description: The call was accepted. NHA's collection saves no response
-            body for this operation, so the shape is not recorded here. Run it
+          description: The call was accepted. No response body is documented
+            for this operation. Run it
             against the sandbox and record what comes back before relying on it.
       x-abdm-atom: hiecm.endpoint.m1-encrypt-value
   /v3/profile/account/request/token:
@@ -2665,8 +2665,8 @@ paths:
       - $ref: '#/components/parameters/RToken'
       responses:
         '200':
-          description: The call was accepted. NHA's collection saves no response
-            body for this operation, so the shape is not recorded here. Run it
+          description: The call was accepted. No response body is documented
+            for this operation. Run it
             against the sandbox and record what comes back before relying on it.
       x-abdm-atom: hiecm.endpoint.m1-token-refresh
   /profile/public/certificate:

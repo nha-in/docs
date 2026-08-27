@@ -40,7 +40,7 @@ column, and **Meaning** NHA's own description.
 - These names are misspelled in the schema itself and reproduced as they are:
   `messege`, `previlege`, `redy_for_testing`, `suporting_doc`,
   `integratin_phase`, `user_jorny`, `admin_coment`, `sare_date`.
-- Thin descriptions, such as `flag` on `sd_exit`, are NHA's. We have not padded
+- Thin descriptions, such as `flag` on `sd_exit`, are reproduced as published, not padded
   them out with a guess.
 
 ### Abbreviations used in the descriptions

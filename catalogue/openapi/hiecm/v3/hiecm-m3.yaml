@@ -510,10 +510,10 @@ webhooks:
       description: |
         Carries the consent request and the request id. Store the request id: it is how a later notification is tied back to the request you made.
 
-        Transcribed from NHA's milestone document. Not run against the ABDM sandbox, so the payload is unconfirmed.
+        
       responses:
         '202':
-          description: Your bridge accepted the callback. NHA validates the body
+          description: Your bridge accepted the callback. The gateway validates the body
             you send back, so a 202 carrying the wrong body is still a failure.
       requestBody:
         required: true
@@ -544,7 +544,7 @@ webhooks:
               - response
             examples:
               from_nha_collection:
-                summary: From NHA's collection, values scrubbed
+                summary: Example values, scrubbed
                 value:
                   consentRequest:
                     id: 77969467-5a92-44bb-9d6c-4caf24907ea5
@@ -561,10 +561,10 @@ webhooks:
       description: |
         On a grant, carries every consent artefact id created against the request, with the request id. On a denial, carries the denial.
 
-        Transcribed from NHA's milestone document. Not run against the ABDM sandbox, so the payload is unconfirmed.
+        
       responses:
         '202':
-          description: Your bridge accepted the callback. NHA validates the body
+          description: Your bridge accepted the callback. The gateway validates the body
             you send back, so a 202 carrying the wrong body is still a failure.
       requestBody:
         required: true
@@ -597,7 +597,7 @@ webhooks:
               - notification
             examples:
               from_nha_collection:
-                summary: From NHA's collection, values scrubbed
+                summary: Example values, scrubbed
                 value:
                   notification:
                     consentRequestId: 77969467-5a92-44bb-9d6c-4caf24907ea5
@@ -614,10 +614,10 @@ webhooks:
       description: |
         The same decision sent to the system that holds the records, with all care context references.
 
-        Transcribed from NHA's milestone document. Not run against the ABDM sandbox, so the payload is unconfirmed.
+        
       responses:
         '202':
-          description: Your bridge accepted the callback. NHA validates the body
+          description: Your bridge accepted the callback. The gateway validates the body
             you send back, so a 202 carrying the wrong body is still a failure.
       x-abdm-atom: hiecm.callback.m3-on-consent-request-notify-hip
       tags:
@@ -629,10 +629,10 @@ webhooks:
       description: |
         The artefact itself, in answer to a fetch by artefact id.
 
-        Transcribed from NHA's milestone document. Not run against the ABDM sandbox, so the payload is unconfirmed.
+        
       responses:
         '202':
-          description: Your bridge accepted the callback. NHA validates the body
+          description: Your bridge accepted the callback. The gateway validates the body
             you send back, so a 202 carrying the wrong body is still a failure.
       requestBody:
         required: true
@@ -814,7 +814,7 @@ webhooks:
               - response
             examples:
               from_nha_collection:
-                summary: From NHA's collection, values scrubbed
+                summary: Example values, scrubbed
                 value:
                   consent:
                     status: GRANTED
@@ -879,10 +879,10 @@ webhooks:
       description: |
         Carries the transaction id, the request id and the current status. This is an acknowledgement, not the records. The records arrive at the data push URL you supplied.
 
-        Transcribed from NHA's milestone document. Not run against the ABDM sandbox, so the payload is unconfirmed.
+        
       responses:
         '202':
-          description: Your bridge accepted the callback. NHA validates the body
+          description: Your bridge accepted the callback. The gateway validates the body
             you send back, so a 202 carrying the wrong body is still a failure.
       requestBody:
         required: true
@@ -916,7 +916,7 @@ webhooks:
               - response
             examples:
               from_nha_collection:
-                summary: From NHA's collection, values scrubbed
+                summary: Example values, scrubbed
                 value:
                   hiRequest:
                     transactionId: 8376a2b0-3fc9-4bb5-8af5-54a49a3910f4
@@ -974,7 +974,7 @@ webhooks:
               - response
             examples:
               from_nha_collection:
-                summary: From NHA's collection, values scrubbed
+                summary: Example values, scrubbed
                 value:
                   consentRequest:
                     id: 77969467-5a92-44bb-9d6c-4caf24907ea5

@@ -42,7 +42,7 @@ x-abdm-sources:
     PHR, so it stands in for any PHR implementation.
 servers:
 - url: https://phrsbx.abdm.gov.in
-  description: Sandbox. Host taken from NHA's collection variables and not yet
+  description: Sandbox host, not yet
     confirmed.
 - url: https://phr.abdm.gov.in
   description: Production.
@@ -50,8 +50,7 @@ security:
 - gatewaySession: []
 tags:
 - name: consent_management
-  description: From NHA's "Consent Management service" folder in the Aarogya Setu
-    collection.
+  description: The Consent Management service operations.
 - name: notification_collection
   description: From NHA's "Notification Collection service" folder in the Aarogya
     Setu collection.
@@ -62,15 +61,11 @@ paths:
       tags:
       - consent_management
       summary: Get All Consent Artefacts by ABHA Address
-      description: |
-        NHA's Aarogya Setu collection names this request "Get All Consent Artefacts by ABHA Address", in its Consent Management service. It is reproduced here as the reference PHR behaviour: Aarogya Setu is NHA's own PHR, so the same calls and the same error codes apply to any PHR implementation.
-
-        The prose is derived from the collection, not written from a specification. NHA has published no OpenAPI file for the PHR role.
       x-abdm-atom: hiecm.endpoint.p3-get-all-consent-artefacts-by-abha-address
       x-abdm-source-folder: Consent Management service
       responses:
         '200':
-          description: Recorded in NHA's collection. Values are scrubbed.
+          description: Example values, scrubbed.
           content:
             application/json:
               schema:
@@ -407,7 +402,7 @@ paths:
                             repeats: 1
                       signature: O+qjztRyZPvrBdEmK2FssBTtsSsDQKmNiKo2x2r7/443qDQPLqa/espMGGLHJ4XsnQVOP2ucWv9qWcASRIvFQjcmaED9r8ewL+yh00ofPBP6HDjaRYL1UA5AQLCVlRA8PWZha9LavYFa/kAairDIr4xZ7S3Gx9Fs+zXFOyrApvOqgT4F+FkekSTgtRMhQ8FjAf5wmQ2UC3X0slV/DoZ0Zf9qf82dESyEcE5W2LUXZbfflDXjiC1y34NK7pG/huL84rGhs+a5+JvMGzFweFDkzTI3fqkYAVNi7/KeNgJPXpak6dNrMMtT7Q2ppZHKGySIQjuckhbDS9FRaKyne7DgAA==
         '500':
-          description: Recorded in NHA's collection. Values are scrubbed.
+          description: Example values, scrubbed.
           content:
             application/json:
               schema:
@@ -427,7 +422,7 @@ paths:
                     code: AS-1314
                     message: Required header 'X-token' is not present.
         '401':
-          description: Recorded in NHA's collection. Values are scrubbed.
+          description: Example values, scrubbed.
           content:
             application/json:
               schema:
@@ -452,15 +447,11 @@ paths:
       tags:
       - consent_management
       summary: Get Consent Request List
-      description: |
-        NHA's Aarogya Setu collection names this request "Get Consent Request List", in its Consent Management service. It is reproduced here as the reference PHR behaviour: Aarogya Setu is NHA's own PHR, so the same calls and the same error codes apply to any PHR implementation.
-
-        The prose is derived from the collection, not written from a specification. NHA has published no OpenAPI file for the PHR role.
       x-abdm-atom: hiecm.endpoint.p3-get-consent-request-list
       x-abdm-source-folder: Consent Management service
       responses:
         '200':
-          description: Recorded in NHA's collection. Values are scrubbed.
+          description: Example values, scrubbed.
           content:
             application/json:
               schema:
@@ -968,7 +959,7 @@ paths:
                           value: 1
                           repeats: 1
         '500':
-          description: Recorded in NHA's collection. Values are scrubbed.
+          description: Example values, scrubbed.
           content:
             application/json:
               schema:
@@ -988,7 +979,7 @@ paths:
                     code: AS-1314
                     message: Required header 'X-token' is not present.
         '400':
-          description: Recorded in NHA's collection. Values are scrubbed.
+          description: Example values, scrubbed.
           content:
             application/json:
               schema:
@@ -1008,7 +999,7 @@ paths:
                     code: AS-1082
                     message: Invalid X Auth token
         '401':
-          description: Recorded in NHA's collection. Values are scrubbed.
+          description: Example values, scrubbed.
           content:
             application/json:
               schema:
@@ -1039,10 +1030,6 @@ paths:
       tags:
       - consent_management
       summary: Get Consent Request by Request ID
-      description: |
-        NHA's Aarogya Setu collection names this request "Get Consent Request by Request ID", in its Consent Management service. It is reproduced here as the reference PHR behaviour: Aarogya Setu is NHA's own PHR, so the same calls and the same error codes apply to any PHR implementation.
-
-        The prose is derived from the collection, not written from a specification. NHA has published no OpenAPI file for the PHR role.
       x-abdm-atom: hiecm.endpoint.p3-get-consent-request-by-request-id
       parameters:
       - name: consentRequestId
@@ -1050,12 +1037,11 @@ paths:
         required: true
         schema:
           type: string
-        description: Taken from NHA's collection, which passes this as a path
-          segment.
+        description: Passed as a path segment.
       x-abdm-source-folder: Consent Management service
       responses:
         '401':
-          description: Recorded in NHA's collection. Values are scrubbed.
+          description: Example values, scrubbed.
           content:
             application/json:
               schema:
@@ -1072,7 +1058,7 @@ paths:
                 - description
                 - message
         '200':
-          description: Recorded in NHA's collection. Values are scrubbed.
+          description: Example values, scrubbed.
           content:
             application/json:
               schema:
@@ -1245,7 +1231,7 @@ paths:
                         value: 1
                         repeats: 1
         '500':
-          description: Recorded in NHA's collection. Values are scrubbed.
+          description: Example values, scrubbed.
           content:
             application/json:
               schema:
@@ -1270,10 +1256,6 @@ paths:
       tags:
       - consent_management
       summary: Approve Consent Request
-      description: |
-        NHA's Aarogya Setu collection names this request "Approve Consent Request", in its Consent Management service. It is reproduced here as the reference PHR behaviour: Aarogya Setu is NHA's own PHR, so the same calls and the same error codes apply to any PHR implementation.
-
-        The prose is derived from the collection, not written from a specification. NHA has published no OpenAPI file for the PHR role.
       x-abdm-atom: hiecm.endpoint.p3-approve-consent-request
       parameters:
       - name: consentRequestId
@@ -1281,8 +1263,7 @@ paths:
         required: true
         schema:
           type: string
-        description: Taken from NHA's collection, which passes this as a path
-          segment.
+        description: Passed as a path segment.
       x-abdm-source-folder: Consent Management service
       requestBody:
         required: true
@@ -1363,7 +1344,7 @@ paths:
               - consents
             examples:
               from_nha_collection:
-                summary: From NHA's collection, values scrubbed
+                summary: Example values, scrubbed
                 value:
                   consents:
                   - hiTypes:
@@ -1385,7 +1366,7 @@ paths:
                         repeats: 0
       responses:
         '200':
-          description: Recorded in NHA's collection. Values are scrubbed.
+          description: Example values, scrubbed.
           content:
             application/json:
               schema:
@@ -1414,7 +1395,7 @@ paths:
                     - message
                 required: []
         '500':
-          description: Recorded in NHA's collection. Values are scrubbed.
+          description: Example values, scrubbed.
           content:
             application/json:
               schema:
@@ -1439,10 +1420,6 @@ paths:
       tags:
       - consent_management
       summary: Get All Consent Artefacts by Request ID
-      description: |
-        NHA's Aarogya Setu collection names this request "Get All Consent Artefacts by Request ID", in its Consent Management service. It is reproduced here as the reference PHR behaviour: Aarogya Setu is NHA's own PHR, so the same calls and the same error codes apply to any PHR implementation.
-
-        The prose is derived from the collection, not written from a specification. NHA has published no OpenAPI file for the PHR role.
       x-abdm-atom: hiecm.endpoint.p3-get-all-consent-artefacts-by-request-id
       parameters:
       - name: consentRequestId
@@ -1450,12 +1427,11 @@ paths:
         required: true
         schema:
           type: string
-        description: Taken from NHA's collection, which passes this as a path
-          segment.
+        description: Passed as a path segment.
       x-abdm-source-folder: Consent Management service
       responses:
         '401':
-          description: Recorded in NHA's collection. Values are scrubbed.
+          description: Example values, scrubbed.
           content:
             application/json:
               schema:
@@ -1475,7 +1451,7 @@ paths:
                     code: 'ABDM-9999: '
                     message: Authentication required
         '200':
-          description: Recorded in NHA's collection. Values are scrubbed.
+          description: Example values, scrubbed.
           content:
             application/json:
               schema:
@@ -1674,7 +1650,7 @@ paths:
                           repeats: 0
                     signature: tY9rOuZomDEo3ihjgjiOl92dgQ1wjzBQa4ogJYlLl7BZFAO3IiR6k8p9qcd30eYgBc1xyPEPied6nDrdPwT6oD2mAso/ny6Ykcto3uU/1nViYH7K/H9/XVEoo4hyOPKb62aGUqMn69QpWNhPM9HTnhtj3CXOjB6TA2eFkHYYbaniX02W/6ALtuPb0OsUchlImVbjj1EBlCK4Xs8GrtAnneU2esnMWR7N0ra9bnyR6zF5Bi2ng/pDLTIeKC3wfVKg4AGUC6obC7FCRrykAUlpgWMM4wBbiV7Y1oLPcJ4VFL7DSUdtilGbW53ez0Av4cKlVizRxZ9gWvw2kWQBa2iL/w==
         '500':
-          description: Recorded in NHA's collection. Values are scrubbed.
+          description: Example values, scrubbed.
           content:
             application/json:
               schema:
@@ -1699,10 +1675,6 @@ paths:
       tags:
       - consent_management
       summary: Deny Consent Request
-      description: |
-        NHA's Aarogya Setu collection names this request "Deny Consent Request", in its Consent Management service. It is reproduced here as the reference PHR behaviour: Aarogya Setu is NHA's own PHR, so the same calls and the same error codes apply to any PHR implementation.
-
-        The prose is derived from the collection, not written from a specification. NHA has published no OpenAPI file for the PHR role.
       x-abdm-atom: hiecm.endpoint.p3-deny-consent-request
       parameters:
       - name: consentRequestId
@@ -1710,8 +1682,7 @@ paths:
         required: true
         schema:
           type: string
-        description: Taken from NHA's collection, which passes this as a path
-          segment.
+        description: Passed as a path segment.
       x-abdm-source-folder: Consent Management service
       requestBody:
         required: true
@@ -1726,12 +1697,12 @@ paths:
               - reason
             examples:
               from_nha_collection:
-                summary: From NHA's collection, values scrubbed
+                summary: Example values, scrubbed
                 value:
                   reason: Not required
       responses:
         '500':
-          description: Recorded in NHA's collection. Values are scrubbed.
+          description: Example values, scrubbed.
           content:
             application/json:
               schema:
@@ -1751,7 +1722,7 @@ paths:
                     code: AS-1314
                     message: Required header 'X-token' is not present.
         '200':
-          description: Recorded in NHA's collection. Values are scrubbed.
+          description: Example values, scrubbed.
           content:
             application/json:
               schema:
@@ -1776,10 +1747,6 @@ paths:
       tags:
       - consent_management
       summary: HIU On-Fetch (Consent Artefact Fetch Callback)
-      description: |
-        NHA's Aarogya Setu collection names this request "HIU On-Fetch (Consent Artefact Fetch Callback)", in its Consent Management service. It is reproduced here as the reference PHR behaviour: Aarogya Setu is NHA's own PHR, so the same calls and the same error codes apply to any PHR implementation.
-
-        The prose is derived from the collection, not written from a specification. NHA has published no OpenAPI file for the PHR role.
       x-abdm-atom: hiecm.endpoint.p3-hiu-on-fetch-consent-artefact-fetch-callback
       x-abdm-source-folder: Consent Management service
       requestBody:
@@ -1815,7 +1782,7 @@ paths:
                         careContexts:
                           type: array
                           items:
-                            description: NHA's sample array was empty, so the
+                            description: The sample array was empty, so the
                               element type is unknown.
                         purpose:
                           type: object
@@ -1918,7 +1885,7 @@ paths:
               - timestamp
             examples:
               from_nha_collection:
-                summary: From NHA's collection, values scrubbed
+                summary: Example values, scrubbed
                 value:
                   requestId: <GENERATED>
                   timestamp: <ISO_8601_TIMESTAMP>
@@ -1956,18 +1923,13 @@ paths:
                     requestId: <original-request-id>
       responses:
         '200':
-          description: NHA's collection saves no response body for this request,
-            so the shape is not recorded here.
+          description: No response body is documented for this request.
   /api/consent-management/consent/request/init:
     post:
       operationId: p3_init_consent_request
       tags:
       - consent_management
       summary: Init Consent Request
-      description: |
-        NHA's Aarogya Setu collection names this request "Init Consent Request", in its Consent Management service. It is reproduced here as the reference PHR behaviour: Aarogya Setu is NHA's own PHR, so the same calls and the same error codes apply to any PHR implementation.
-
-        The prose is derived from the collection, not written from a specification. NHA has published no OpenAPI file for the PHR role.
       x-abdm-atom: hiecm.endpoint.p3-init-consent-request
       x-abdm-source-folder: Consent Management service
       requestBody:
@@ -2089,7 +2051,7 @@ paths:
               - consent
             examples:
               from_nha_collection:
-                summary: From NHA's collection, values scrubbed
+                summary: Example values, scrubbed
                 value:
                   consent:
                     purpose:
@@ -2123,7 +2085,7 @@ paths:
                         repeats: 0
       responses:
         '401':
-          description: Recorded in NHA's collection. Values are scrubbed.
+          description: Example values, scrubbed.
           content:
             application/json:
               schema:
@@ -2149,7 +2111,7 @@ paths:
                       call has a header: ''Authorization : Bearer ACCESS_TOKEN''
                       or ''Authorization : Basic ACCESS_TOKEN'' or ''apikey: API_KEY'''
         '400':
-          description: Recorded in NHA's collection. Values are scrubbed.
+          description: Example values, scrubbed.
           content:
             application/json:
               schema:
@@ -2175,10 +2137,6 @@ paths:
       tags:
       - consent_management
       summary: HIU Consent Notification
-      description: |
-        NHA's Aarogya Setu collection names this request "HIU Consent Notification", in its Consent Management service. It is reproduced here as the reference PHR behaviour: Aarogya Setu is NHA's own PHR, so the same calls and the same error codes apply to any PHR implementation.
-
-        The prose is derived from the collection, not written from a specification. NHA has published no OpenAPI file for the PHR role.
       x-abdm-atom: hiecm.endpoint.p3-hiu-consent-notification
       x-abdm-source-folder: Consent Management service
       requestBody:
@@ -2212,7 +2170,7 @@ paths:
               - notification
             examples:
               from_nha_collection:
-                summary: From NHA's collection, values scrubbed
+                summary: Example values, scrubbed
                 value:
                   notification:
                     consentRequestId: <TXN_ID>
@@ -2221,7 +2179,7 @@ paths:
                     - id: <TXN_ID>
       responses:
         '500':
-          description: Recorded in NHA's collection. Values are scrubbed.
+          description: Example values, scrubbed.
           content:
             application/json:
               schema:
@@ -2246,10 +2204,6 @@ paths:
       tags:
       - consent_management
       summary: HIU Consent Request On-Init (Callback)
-      description: |
-        NHA's Aarogya Setu collection names this request "HIU Consent Request On-Init (Callback)", in its Consent Management service. It is reproduced here as the reference PHR behaviour: Aarogya Setu is NHA's own PHR, so the same calls and the same error codes apply to any PHR implementation.
-
-        The prose is derived from the collection, not written from a specification. NHA has published no OpenAPI file for the PHR role.
       x-abdm-atom: hiecm.endpoint.p3-hiu-consent-request-on-init-callback
       x-abdm-source-folder: Consent Management service
       requestBody:
@@ -2284,7 +2238,7 @@ paths:
               - timestamp
             examples:
               from_nha_collection:
-                summary: From NHA's collection, values scrubbed
+                summary: Example values, scrubbed
                 value:
                   requestId: <GENERATED>
                   timestamp: <ISO_8601_TIMESTAMP>
@@ -2294,18 +2248,13 @@ paths:
                     requestId: <TXN_ID>
       responses:
         '200':
-          description: NHA's collection saves no response body for this request,
-            so the shape is not recorded here.
+          description: No response body is documented for this request.
   /api/consent-management/consents/auto-approval-policy/{autoApprovalId}/disable:
     post:
       operationId: p3_disable_auto_approval
       tags:
       - consent_management
       summary: Disable Auto Approval
-      description: |
-        NHA's Aarogya Setu collection names this request "Disable Auto Approval", in its Consent Management service. It is reproduced here as the reference PHR behaviour: Aarogya Setu is NHA's own PHR, so the same calls and the same error codes apply to any PHR implementation.
-
-        The prose is derived from the collection, not written from a specification. NHA has published no OpenAPI file for the PHR role.
       x-abdm-atom: hiecm.endpoint.p3-disable-auto-approval
       parameters:
       - name: autoApprovalId
@@ -2313,12 +2262,11 @@ paths:
         required: true
         schema:
           type: string
-        description: Taken from NHA's collection, which passes this as a path
-          segment.
+        description: Passed as a path segment.
       x-abdm-source-folder: Consent Management service
       responses:
         '400':
-          description: Recorded in NHA's collection. Values are scrubbed.
+          description: Example values, scrubbed.
           content:
             application/json:
               schema:
@@ -2338,7 +2286,7 @@ paths:
                     code: AS-1082
                     message: Invalid X Auth token
         '200':
-          description: Recorded in NHA's collection. Values are scrubbed.
+          description: Example values, scrubbed.
           content:
             application/json:
               schema:
@@ -2358,7 +2306,7 @@ paths:
                     type: string
                 required: []
         '401':
-          description: Recorded in NHA's collection. Values are scrubbed.
+          description: Example values, scrubbed.
           content:
             application/json:
               schema:
@@ -2383,10 +2331,6 @@ paths:
       tags:
       - consent_management
       summary: Enable Auto Approval
-      description: |
-        NHA's Aarogya Setu collection names this request "Enable Auto Approval", in its Consent Management service. It is reproduced here as the reference PHR behaviour: Aarogya Setu is NHA's own PHR, so the same calls and the same error codes apply to any PHR implementation.
-
-        The prose is derived from the collection, not written from a specification. NHA has published no OpenAPI file for the PHR role.
       x-abdm-atom: hiecm.endpoint.p3-enable-auto-approval
       parameters:
       - name: autoApprovalId
@@ -2394,12 +2338,11 @@ paths:
         required: true
         schema:
           type: string
-        description: Taken from NHA's collection, which passes this as a path
-          segment.
+        description: Passed as a path segment.
       x-abdm-source-folder: Consent Management service
       responses:
         '200':
-          description: Recorded in NHA's collection. Values are scrubbed.
+          description: Example values, scrubbed.
           content:
             application/json:
               schema:
@@ -2419,7 +2362,7 @@ paths:
                     - message
                 required: []
         '500':
-          description: Recorded in NHA's collection. Values are scrubbed.
+          description: Example values, scrubbed.
           content:
             application/json:
               schema:
@@ -2439,7 +2382,7 @@ paths:
                     code: AS-1314
                     message: Required header 'X-token' is not present.
         '401':
-          description: Recorded in NHA's collection. Values are scrubbed.
+          description: Example values, scrubbed.
           content:
             application/json:
               schema:
@@ -2464,10 +2407,6 @@ paths:
       tags:
       - consent_management
       summary: Consent Auto Approve
-      description: |
-        NHA's Aarogya Setu collection names this request "Consent Auto Approve", in its Consent Management service. It is reproduced here as the reference PHR behaviour: Aarogya Setu is NHA's own PHR, so the same calls and the same error codes apply to any PHR implementation.
-
-        The prose is derived from the collection, not written from a specification. NHA has published no OpenAPI file for the PHR role.
       x-abdm-atom: hiecm.endpoint.p3-consent-auto-approve
       x-abdm-source-folder: Consent Management service
       requestBody:
@@ -2537,7 +2476,7 @@ paths:
               - isApplicableForAllHIPs
             examples:
               from_nha_collection:
-                summary: From NHA's collection, values scrubbed
+                summary: Example values, scrubbed
                 value:
                   isApplicableForAllHIPs: true
                   hiu:
@@ -2557,7 +2496,7 @@ paths:
                   excludedSources: null
       responses:
         '400':
-          description: Recorded in NHA's collection. Values are scrubbed.
+          description: Example values, scrubbed.
           content:
             application/json:
               schema:
@@ -2571,7 +2510,7 @@ paths:
                 - code
                 - message
         '401':
-          description: Recorded in NHA's collection. Values are scrubbed.
+          description: Example values, scrubbed.
           content:
             application/json:
               schema:
@@ -2591,7 +2530,7 @@ paths:
                     code: 'ABDM-9999: '
                     message: Authentication required
         '200':
-          description: Recorded in NHA's collection. Values are scrubbed.
+          description: Example values, scrubbed.
           content:
             application/json:
               schema:
@@ -2615,10 +2554,6 @@ paths:
       tags:
       - consent_management
       summary: Revoke Consent
-      description: |
-        NHA's Aarogya Setu collection names this request "Revoke Consent", in its Consent Management service. It is reproduced here as the reference PHR behaviour: Aarogya Setu is NHA's own PHR, so the same calls and the same error codes apply to any PHR implementation.
-
-        The prose is derived from the collection, not written from a specification. NHA has published no OpenAPI file for the PHR role.
       x-abdm-atom: hiecm.endpoint.p3-revoke-consent
       x-abdm-source-folder: Consent Management service
       requestBody:
@@ -2636,13 +2571,13 @@ paths:
               - consents
             examples:
               from_nha_collection:
-                summary: From NHA's collection, values scrubbed
+                summary: Example values, scrubbed
                 value:
                   consents:
                   - <TXN_ID>
       responses:
         '200':
-          description: Recorded in NHA's collection. Values are scrubbed.
+          description: Example values, scrubbed.
           content:
             application/json:
               schema:
@@ -2662,7 +2597,7 @@ paths:
                     - message
                 required: []
         '500':
-          description: Recorded in NHA's collection. Values are scrubbed.
+          description: Example values, scrubbed.
           content:
             application/json:
               schema:
@@ -2687,10 +2622,6 @@ paths:
       tags:
       - consent_management
       summary: Get Consent Artefact by Artefact ID
-      description: |
-        NHA's Aarogya Setu collection names this request "Get Consent Artefact by Artefact ID", in its Consent Management service. It is reproduced here as the reference PHR behaviour: Aarogya Setu is NHA's own PHR, so the same calls and the same error codes apply to any PHR implementation.
-
-        The prose is derived from the collection, not written from a specification. NHA has published no OpenAPI file for the PHR role.
       x-abdm-atom: hiecm.endpoint.p3-get-consent-artefact-by-artefact-id
       parameters:
       - name: consentArtefactId
@@ -2698,12 +2629,11 @@ paths:
         required: true
         schema:
           type: string
-        description: Taken from NHA's collection, which passes this as a path
-          segment.
+        description: Passed as a path segment.
       x-abdm-source-folder: Consent Management service
       responses:
         '200':
-          description: Recorded in NHA's collection. Values are scrubbed.
+          description: Example values, scrubbed.
           content:
             application/json:
               schema:
@@ -2900,7 +2830,7 @@ paths:
                           repeats: 0
                     signature: tY9rOuZomDEo3ihjgjiOl92dgQ1wjzBQa4ogJYlLl7BZFAO3IiR6k8p9qcd30eYgBc1xyPEPied6nDrdPwT6oD2mAso/ny6Ykcto3uU/1nViYH7K/H9/XVEoo4hyOPKb62aGUqMn69QpWNhPM9HTnhtj3CXOjB6TA2eFkHYYbaniX02W/6ALtuPb0OsUchlImVbjj1EBlCK4Xs8GrtAnneU2esnMWR7N0ra9bnyR6zF5Bi2ng/pDLTIeKC3wfVKg4AGUC6obC7FCRrykAUlpgWMM4wBbiV7Y1oLPcJ4VFL7DSUdtilGbW53ez0Av4cKlVizRxZ9gWvw2kWQBa2iL/w==
         '500':
-          description: Recorded in NHA's collection. Values are scrubbed.
+          description: Example values, scrubbed.
           content:
             application/json:
               schema:
@@ -2920,7 +2850,7 @@ paths:
                     code: AS-1314
                     message: Required header 'X-token' is not present.
         '401':
-          description: Recorded in NHA's collection. Values are scrubbed.
+          description: Example values, scrubbed.
           content:
             application/json:
               schema:
@@ -2945,10 +2875,6 @@ paths:
       tags:
       - consent_management
       summary: Get Links
-      description: |
-        NHA's Aarogya Setu collection names this request "Get Links", in its Consent Management service. It is reproduced here as the reference PHR behaviour: Aarogya Setu is NHA's own PHR, so the same calls and the same error codes apply to any PHR implementation.
-
-        The prose is derived from the collection, not written from a specification. NHA has published no OpenAPI file for the PHR role.
       x-abdm-atom: hiecm.endpoint.p3-get-links
       x-abdm-source-folder: Consent Management service
       requestBody:
@@ -2969,7 +2895,7 @@ paths:
               - patientId
             examples:
               from_nha_collection:
-                summary: From NHA's collection, values scrubbed
+                summary: Example values, scrubbed
                 value:
                   patientId: <PATIENT_ID>
                   hipIds:
@@ -2977,7 +2903,7 @@ paths:
                   - <hip-id-2>
       responses:
         '200':
-          description: Recorded in NHA's collection. Values are scrubbed.
+          description: Example values, scrubbed.
           content:
             application/json:
               schema:
@@ -3110,7 +3036,7 @@ paths:
                           - OPConsultation
                         dateCreated: '2026-06-04T13:17:57.653Z'
         '500':
-          description: Recorded in NHA's collection. Values are scrubbed.
+          description: Example values, scrubbed.
           content:
             application/json:
               schema:
@@ -3130,7 +3056,7 @@ paths:
                     code: AS-1314
                     message: Required header 'X-token' is not present.
         '401':
-          description: Recorded in NHA's collection. Values are scrubbed.
+          description: Example values, scrubbed.
           content:
             application/json:
               schema:
@@ -3155,10 +3081,6 @@ paths:
       tags:
       - consent_management
       summary: Edit Subscription
-      description: |
-        NHA's Aarogya Setu collection names this request "Edit Subscription", in its Consent Management service. It is reproduced here as the reference PHR behaviour: Aarogya Setu is NHA's own PHR, so the same calls and the same error codes apply to any PHR implementation.
-
-        The prose is derived from the collection, not written from a specification. NHA has published no OpenAPI file for the PHR role.
       x-abdm-atom: hiecm.endpoint.p3-edit-subscription
       parameters:
       - name: subscriptionId
@@ -3166,8 +3088,7 @@ paths:
         required: true
         schema:
           type: string
-        description: Taken from NHA's collection, which passes this as a path
-          segment.
+        description: Passed as a path segment.
       x-abdm-source-folder: Consent Management service
       requestBody:
         required: true
@@ -3227,7 +3148,7 @@ paths:
                     excludedSources:
                       type: array
                       items:
-                        description: NHA's sample array was empty, so the element
+                        description: The sample array was empty, so the element
                           type is unknown.
                   required:
                   - excludedSources
@@ -3238,7 +3159,7 @@ paths:
               - subscriptionEditAndApprovalRequest
             examples:
               from_nha_collection:
-                summary: From NHA's collection, values scrubbed
+                summary: Example values, scrubbed
                 value:
                   hiuId: <HIU_ID>
                   subscriptionEditAndApprovalRequest:
@@ -3265,7 +3186,7 @@ paths:
                     excludedSources: []
       responses:
         '401':
-          description: Recorded in NHA's collection. Values are scrubbed.
+          description: Example values, scrubbed.
           content:
             application/json:
               schema:
@@ -3285,7 +3206,7 @@ paths:
                     code: 'ABDM-9999: '
                     message: Authentication required
         '500':
-          description: Recorded in NHA's collection. Values are scrubbed.
+          description: Example values, scrubbed.
           content:
             application/json:
               schema:
@@ -3310,15 +3231,11 @@ paths:
       tags:
       - consent_management
       summary: Get All HIU Subscription Requests
-      description: |
-        NHA's Aarogya Setu collection names this request "Get All HIU Subscription Requests", in its Consent Management service. It is reproduced here as the reference PHR behaviour: Aarogya Setu is NHA's own PHR, so the same calls and the same error codes apply to any PHR implementation.
-
-        The prose is derived from the collection, not written from a specification. NHA has published no OpenAPI file for the PHR role.
       x-abdm-atom: hiecm.endpoint.p3-get-all-hiu-subscription-requests
       x-abdm-source-folder: Consent Management service
       responses:
         '200':
-          description: Recorded in NHA's collection. Values are scrubbed.
+          description: Example values, scrubbed.
           content:
             application/json:
               schema:
@@ -3377,7 +3294,7 @@ paths:
                         hips:
                           type: array
                           items:
-                            description: NHA's sample array was empty, so the
+                            description: The sample array was empty, so the
                               element type is unknown.
                         categories:
                           type: array
@@ -3516,7 +3433,7 @@ paths:
                       requesterType: HEALTH_LOCKER
                       subscriptionId: <TXN_ID>
         '500':
-          description: Recorded in NHA's collection. Values are scrubbed.
+          description: Example values, scrubbed.
           content:
             application/json:
               schema:
@@ -3536,7 +3453,7 @@ paths:
                     code: AS-1314
                     message: Required header 'X-token' is not present.
         '400':
-          description: Recorded in NHA's collection. Values are scrubbed.
+          description: Example values, scrubbed.
           content:
             application/json:
               schema:
@@ -3556,7 +3473,7 @@ paths:
                     code: AS-1084
                     message: 'JWT token is invalid '
         '401':
-          description: Recorded in NHA's collection. Values are scrubbed.
+          description: Example values, scrubbed.
           content:
             application/json:
               schema:
@@ -3581,10 +3498,6 @@ paths:
       tags:
       - consent_management
       summary: Initiate Subscription Request
-      description: |
-        NHA's Aarogya Setu collection names this request "Initiate Subscription Request", in its Consent Management service. It is reproduced here as the reference PHR behaviour: Aarogya Setu is NHA's own PHR, so the same calls and the same error codes apply to any PHR implementation.
-
-        The prose is derived from the collection, not written from a specification. NHA has published no OpenAPI file for the PHR role.
       x-abdm-atom: hiecm.endpoint.p3-initiate-subscription-request
       x-abdm-source-folder: Consent Management service
       requestBody:
@@ -3653,7 +3566,7 @@ paths:
               - purpose
             examples:
               from_nha_collection:
-                summary: From NHA's collection, values scrubbed
+                summary: Example values, scrubbed
                 value:
                   hiu:
                     id: <hiu-id>
@@ -3673,7 +3586,7 @@ paths:
                     to: '2023-12-31T23:59:59.999Z'
       responses:
         '400':
-          description: Recorded in NHA's collection. Values are scrubbed.
+          description: Example values, scrubbed.
           content:
             application/json:
               schema:
@@ -3687,7 +3600,7 @@ paths:
                 - code
                 - message
         '401':
-          description: Recorded in NHA's collection. Values are scrubbed.
+          description: Example values, scrubbed.
           content:
             application/json:
               schema:
@@ -3706,10 +3619,6 @@ paths:
       tags:
       - consent_management
       summary: Get Subscription Details by Request ID
-      description: |
-        NHA's Aarogya Setu collection names this request "Get Subscription Details by Request ID", in its Consent Management service. It is reproduced here as the reference PHR behaviour: Aarogya Setu is NHA's own PHR, so the same calls and the same error codes apply to any PHR implementation.
-
-        The prose is derived from the collection, not written from a specification. NHA has published no OpenAPI file for the PHR role.
       x-abdm-atom: hiecm.endpoint.p3-get-subscription-details-by-request-id
       parameters:
       - name: subscriptionRequestId
@@ -3717,12 +3626,11 @@ paths:
         required: true
         schema:
           type: string
-        description: Taken from NHA's collection, which passes this as a path
-          segment.
+        description: Passed as a path segment.
       x-abdm-source-folder: Consent Management service
       responses:
         '200':
-          description: Recorded in NHA's collection. Values are scrubbed.
+          description: Example values, scrubbed.
           content:
             application/json:
               schema:
@@ -3777,7 +3685,7 @@ paths:
                       hips:
                         type: array
                         items:
-                          description: NHA's sample array was empty, so the element
+                          description: The sample array was empty, so the element
                             type is unknown.
                       categories:
                         type: array
@@ -3847,7 +3755,7 @@ paths:
                     dateModified: '2026-05-29T09:20:41.769Z'
                     healthIdNumber: <ABHA_NUMBER>
         '500':
-          description: Recorded in NHA's collection. Values are scrubbed.
+          description: Example values, scrubbed.
           content:
             application/json:
               schema:
@@ -3867,7 +3775,7 @@ paths:
                     code: AS-1314
                     message: Required header 'X-token' is not present.
         '401':
-          description: Recorded in NHA's collection. Values are scrubbed.
+          description: Example values, scrubbed.
           content:
             application/json:
               schema:
@@ -3887,7 +3795,7 @@ paths:
                     code: 'ABDM-9999: '
                     message: Authentication required
         '400':
-          description: Recorded in NHA's collection. Values are scrubbed.
+          description: Example values, scrubbed.
           content:
             application/json:
               schema:
@@ -3912,10 +3820,6 @@ paths:
       tags:
       - consent_management
       summary: Get Subscription Details by Subscription ID
-      description: |
-        NHA's Aarogya Setu collection names this request "Get Subscription Details by Subscription ID", in its Consent Management service. It is reproduced here as the reference PHR behaviour: Aarogya Setu is NHA's own PHR, so the same calls and the same error codes apply to any PHR implementation.
-
-        The prose is derived from the collection, not written from a specification. NHA has published no OpenAPI file for the PHR role.
       x-abdm-atom: hiecm.endpoint.p3-get-subscription-details-by-subscription-id
       parameters:
       - name: subscriptionId
@@ -3923,23 +3827,17 @@ paths:
         required: true
         schema:
           type: string
-        description: Taken from NHA's collection, which passes this as a path
-          segment.
+        description: Passed as a path segment.
       x-abdm-source-folder: Consent Management service
       responses:
         '200':
-          description: NHA's collection saves no response body for this request,
-            so the shape is not recorded here.
+          description: No response body is documented for this request.
   /api/consent-management/subscription-requests/{subscriptionRequestId}/approve:
     post:
       operationId: p3_approve_subscription_request
       tags:
       - consent_management
       summary: Approve Subscription Request
-      description: |
-        NHA's Aarogya Setu collection names this request "Approve Subscription Request", in its Consent Management service. It is reproduced here as the reference PHR behaviour: Aarogya Setu is NHA's own PHR, so the same calls and the same error codes apply to any PHR implementation.
-
-        The prose is derived from the collection, not written from a specification. NHA has published no OpenAPI file for the PHR role.
       x-abdm-atom: hiecm.endpoint.p3-approve-subscription-request
       parameters:
       - name: subscriptionRequestId
@@ -3947,8 +3845,7 @@ paths:
         required: true
         schema:
           type: string
-        description: Taken from NHA's collection, which passes this as a path
-          segment.
+        description: Passed as a path segment.
       x-abdm-source-folder: Consent Management service
       requestBody:
         required: true
@@ -4003,7 +3900,7 @@ paths:
                 excludedSources:
                   type: array
                   items:
-                    description: NHA's sample array was empty, so the element
+                    description: The sample array was empty, so the element
                       type is unknown.
               required:
               - excludedSources
@@ -4011,7 +3908,7 @@ paths:
               - isApplicableForAllHIPs
             examples:
               from_nha_collection:
-                summary: From NHA's collection, values scrubbed
+                summary: Example values, scrubbed
                 value:
                   isApplicableForAllHIPs: true
                   includedSources:
@@ -4031,7 +3928,7 @@ paths:
                   excludedSources: []
       responses:
         '400':
-          description: Recorded in NHA's collection. Values are scrubbed.
+          description: Example values, scrubbed.
           content:
             application/json:
               schema:
@@ -4050,10 +3947,6 @@ paths:
       tags:
       - consent_management
       summary: Deny Subscription Request
-      description: |
-        NHA's Aarogya Setu collection names this request "Deny Subscription Request", in its Consent Management service. It is reproduced here as the reference PHR behaviour: Aarogya Setu is NHA's own PHR, so the same calls and the same error codes apply to any PHR implementation.
-
-        The prose is derived from the collection, not written from a specification. NHA has published no OpenAPI file for the PHR role.
       x-abdm-atom: hiecm.endpoint.p3-deny-subscription-request
       parameters:
       - name: subscriptionRequestId
@@ -4061,8 +3954,7 @@ paths:
         required: true
         schema:
           type: string
-        description: Taken from NHA's collection, which passes this as a path
-          segment.
+        description: Passed as a path segment.
       x-abdm-source-folder: Consent Management service
       requestBody:
         required: true
@@ -4074,11 +3966,11 @@ paths:
               required: []
             examples:
               from_nha_collection:
-                summary: From NHA's collection, values scrubbed
+                summary: Example values, scrubbed
                 value: {}
       responses:
         '400':
-          description: Recorded in NHA's collection. Values are scrubbed.
+          description: Example values, scrubbed.
           content:
             application/json:
               schema:
@@ -4092,7 +3984,7 @@ paths:
                 - code
                 - message
         '401':
-          description: Recorded in NHA's collection. Values are scrubbed.
+          description: Example values, scrubbed.
           content:
             application/json:
               schema:
@@ -4117,26 +4009,17 @@ paths:
       tags:
       - consent_management
       summary: Set Up Subscription for Aarogya Setu
-      description: |
-        NHA's Aarogya Setu collection names this request "Set Up Subscription for Aarogya Setu", in its Consent Management service. It is reproduced here as the reference PHR behaviour: Aarogya Setu is NHA's own PHR, so the same calls and the same error codes apply to any PHR implementation.
-
-        The prose is derived from the collection, not written from a specification. NHA has published no OpenAPI file for the PHR role.
       x-abdm-atom: hiecm.endpoint.p3-set-up-subscription-for-aarogya-setu
       x-abdm-source-folder: Consent Management service
       responses:
         '200':
-          description: NHA's collection saves no response body for this request,
-            so the shape is not recorded here.
+          description: No response body is documented for this request.
   /api/notification/app-push-notification/all:
     post:
       operationId: p3_single_multiple_notification_read
       tags:
       - notification_collection
       summary: Single/Multiple Notification read
-      description: |
-        NHA's Aarogya Setu collection names this request "Single/Multiple Notification read", in its Notification Collection service. It is reproduced here as the reference PHR behaviour: Aarogya Setu is NHA's own PHR, so the same calls and the same error codes apply to any PHR implementation.
-
-        The prose is derived from the collection, not written from a specification. NHA has published no OpenAPI file for the PHR role.
       x-abdm-atom: hiecm.endpoint.p3-single-multiple-notification-read
       x-abdm-source-folder: Notification Collection service
       requestBody:
@@ -4197,7 +4080,7 @@ paths:
                 - unreadCount
             examples:
               from_nha_collection:
-                summary: From NHA's collection, values scrubbed
+                summary: Example values, scrubbed
                 value:
                 - id: 515459874
                   patientId: <PATIENT_ID>
@@ -4217,7 +4100,7 @@ paths:
                   unreadCount: 3
       responses:
         '200':
-          description: Recorded in NHA's collection. Values are scrubbed.
+          description: Example values, scrubbed.
           content:
             application/json:
               schema:
@@ -4268,7 +4151,7 @@ paths:
                       type: boolean
                   required: []
         '500':
-          description: Recorded in NHA's collection. Values are scrubbed.
+          description: Example values, scrubbed.
           content:
             application/json:
               schema:
@@ -4287,10 +4170,6 @@ paths:
       tags:
       - notification_collection
       summary: Clear Notification
-      description: |
-        NHA's Aarogya Setu collection names this request "Clear Notification", in its Notification Collection service. It is reproduced here as the reference PHR behaviour: Aarogya Setu is NHA's own PHR, so the same calls and the same error codes apply to any PHR implementation.
-
-        The prose is derived from the collection, not written from a specification. NHA has published no OpenAPI file for the PHR role.
       x-abdm-atom: hiecm.endpoint.p3-clear-notification
       x-abdm-source-folder: Notification Collection service
       requestBody:
@@ -4351,7 +4230,7 @@ paths:
                 - unreadCount
             examples:
               from_nha_collection:
-                summary: From NHA's collection, values scrubbed
+                summary: Example values, scrubbed
                 value:
                 - id: 515459874
                   patientId: <PATIENT_ID>
@@ -4371,7 +4250,7 @@ paths:
                   unreadCount: 3
       responses:
         '500':
-          description: Recorded in NHA's collection. Values are scrubbed.
+          description: Example values, scrubbed.
           content:
             application/json:
               schema:
@@ -4391,13 +4270,13 @@ paths:
                     code: 'ABDM-9999: '
                     message: X-Token Expired
         '200':
-          description: Recorded in NHA's collection. Values are scrubbed.
+          description: Example values, scrubbed.
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  description: NHA's sample array was empty, so the element type
+                  description: The sample array was empty, so the element type
                     is unknown.
               examples:
                 recorded:
@@ -4409,10 +4288,6 @@ paths:
       tags:
       - notification_collection
       summary: Add Feedback
-      description: |
-        NHA's Aarogya Setu collection names this request "Add Feedback", in its Notification Collection service. It is reproduced here as the reference PHR behaviour: Aarogya Setu is NHA's own PHR, so the same calls and the same error codes apply to any PHR implementation.
-
-        The prose is derived from the collection, not written from a specification. NHA has published no OpenAPI file for the PHR role.
       x-abdm-atom: hiecm.endpoint.p3-add-feedback
       x-abdm-source-folder: Notification Collection service
       requestBody:
@@ -4437,7 +4312,7 @@ paths:
               - title
             examples:
               from_nha_collection:
-                summary: From NHA's collection, values scrubbed
+                summary: Example values, scrubbed
                 value:
                   healthId: <ABHA_ADDRESS>
                   emailId: <EMAIL>
@@ -4445,7 +4320,7 @@ paths:
                   body: AarogyaSethu feedback test-1
       responses:
         '500':
-          description: Recorded in NHA's collection. Values are scrubbed.
+          description: Example values, scrubbed.
           content:
             application/json:
               schema:
@@ -4466,7 +4341,7 @@ paths:
                     message: Sorry you have exceeded your feedback submission
                       limit
         '200':
-          description: Recorded in NHA's collection. Values are scrubbed.
+          description: Example values, scrubbed.
           content:
             application/json:
               schema:
@@ -4502,7 +4377,7 @@ paths:
                     body: AarogyaSethu feedback test-1
                     dateCreated: '2026-06-01T08:15:27.682Z'
         '401':
-          description: Recorded in NHA's collection. Values are scrubbed.
+          description: Example values, scrubbed.
           content:
             application/json:
               schema:
@@ -4533,15 +4408,11 @@ paths:
       tags:
       - notification_collection
       summary: Get all notification details Copy
-      description: |
-        NHA's Aarogya Setu collection names this request "Get all notification details Copy", in its Notification Collection service. It is reproduced here as the reference PHR behaviour: Aarogya Setu is NHA's own PHR, so the same calls and the same error codes apply to any PHR implementation.
-
-        The prose is derived from the collection, not written from a specification. NHA has published no OpenAPI file for the PHR role.
       x-abdm-atom: hiecm.endpoint.p3-get-all-notification-details-copy
       x-abdm-source-folder: Notification Collection service
       responses:
         '200':
-          description: Recorded in NHA's collection. Values are scrubbed.
+          description: Example values, scrubbed.
           content:
             application/json:
               schema:
@@ -4923,7 +4794,7 @@ paths:
                     unreadCount: 5
                     totalNotificationCount: 298
         '403':
-          description: Recorded in NHA's collection. Values are scrubbed.
+          description: Example values, scrubbed.
           content:
             application/json:
               schema:
@@ -4947,7 +4818,7 @@ paths:
                     message: 'Resource forbidden '
                     description: 'Resource forbidden '
         '500':
-          description: Recorded in NHA's collection. Values are scrubbed.
+          description: Example values, scrubbed.
           content:
             application/json:
               schema:
@@ -4972,10 +4843,6 @@ paths:
       tags:
       - notification_collection
       summary: Add new Notification
-      description: |
-        NHA's Aarogya Setu collection names this request "Add new Notification", in its Notification Collection service. It is reproduced here as the reference PHR behaviour: Aarogya Setu is NHA's own PHR, so the same calls and the same error codes apply to any PHR implementation.
-
-        The prose is derived from the collection, not written from a specification. NHA has published no OpenAPI file for the PHR role.
       x-abdm-atom: hiecm.endpoint.p3-add-new-notification
       x-abdm-source-folder: Notification Collection service
       requestBody:
@@ -5036,7 +4903,7 @@ paths:
                 - unreadCount
             examples:
               from_nha_collection:
-                summary: From NHA's collection, values scrubbed
+                summary: Example values, scrubbed
                 value:
                 - id: 515459874
                   patientId: <PATIENT_ID>
@@ -5056,7 +4923,7 @@ paths:
                   unreadCount: 3
       responses:
         '200':
-          description: Recorded in NHA's collection. Values are scrubbed.
+          description: Example values, scrubbed.
           content:
             application/json:
               schema:
@@ -5124,7 +4991,7 @@ paths:
                     isNotificationRead: false
                     isDeleted: false
         '500':
-          description: Recorded in NHA's collection. Values are scrubbed.
+          description: Example values, scrubbed.
           content:
             application/json:
               schema:
@@ -5150,15 +5017,11 @@ paths:
       tags:
       - notification_collection
       summary: App Notification Token
-      description: |
-        NHA's Aarogya Setu collection names this request "App Notification Token", in its Notification Collection service. It is reproduced here as the reference PHR behaviour: Aarogya Setu is NHA's own PHR, so the same calls and the same error codes apply to any PHR implementation.
-
-        The prose is derived from the collection, not written from a specification. NHA has published no OpenAPI file for the PHR role.
       x-abdm-atom: hiecm.endpoint.p3-app-notification-token
       x-abdm-source-folder: Notification Collection service
       responses:
         '200':
-          description: Recorded in NHA's collection. Values are scrubbed.
+          description: Example values, scrubbed.
           content:
             application/json:
               schema:
@@ -5194,7 +5057,7 @@ paths:
                     dateModified: '2026-05-27 16:12:16.215'
                     osType: android
         '500':
-          description: Recorded in NHA's collection. Values are scrubbed.
+          description: Example values, scrubbed.
           content:
             application/json:
               schema:
@@ -5215,7 +5078,7 @@ paths:
                     message: 400 BAD_REQUEST "Required header 'abhaAddress' is
                       not present."
         '401':
-          description: Recorded in NHA's collection. Values are scrubbed.
+          description: Example values, scrubbed.
           content:
             application/json:
               schema:
@@ -5246,10 +5109,6 @@ paths:
       tags:
       - notification_collection
       summary: Schedule-push-notification - internal
-      description: |
-        NHA's Aarogya Setu collection names this request "Schedule-push-notification - internal", in its Notification Collection service. It is reproduced here as the reference PHR behaviour: Aarogya Setu is NHA's own PHR, so the same calls and the same error codes apply to any PHR implementation.
-
-        The prose is derived from the collection, not written from a specification. NHA has published no OpenAPI file for the PHR role.
       x-abdm-atom: hiecm.endpoint.p3-schedule-push-notification-internal
       x-abdm-source-folder: Notification Collection service
       requestBody:
@@ -5299,7 +5158,7 @@ paths:
               - timestamp_to_push
             examples:
               from_nha_collection:
-                summary: From NHA's collection, values scrubbed
+                summary: Example values, scrubbed
                 value:
                   patient_id: <PATIENT_ID>
                   push_notification_data:
@@ -5315,7 +5174,7 @@ paths:
                   medical_remainder_id: '01'
       responses:
         '500':
-          description: Recorded in NHA's collection. Values are scrubbed.
+          description: Example values, scrubbed.
           content:
             application/json:
               schema:
@@ -5340,15 +5199,11 @@ paths:
       tags:
       - notification_collection
       summary: GET-scheduled push Notifications
-      description: |
-        NHA's Aarogya Setu collection names this request "GET-scheduled push Notifications", in its Notification Collection service. It is reproduced here as the reference PHR behaviour: Aarogya Setu is NHA's own PHR, so the same calls and the same error codes apply to any PHR implementation.
-
-        The prose is derived from the collection, not written from a specification. NHA has published no OpenAPI file for the PHR role.
       x-abdm-atom: hiecm.endpoint.p3-get-scheduled-push-notifications
       x-abdm-source-folder: Notification Collection service
       responses:
         '200':
-          description: Recorded in NHA's collection. Values are scrubbed.
+          description: Example values, scrubbed.
           content:
             application/json:
               schema:
@@ -5428,7 +5283,7 @@ paths:
                     processing_pod_id: aarogya-setu-notification-app-service-7db645d7f9-pzbvz
                     medical_remainder_id: null
         '500':
-          description: Recorded in NHA's collection. Values are scrubbed.
+          description: Example values, scrubbed.
           content:
             application/json:
               schema:
@@ -5453,10 +5308,6 @@ paths:
       tags:
       - notification_collection
       summary: Update-scheduled push notification
-      description: |
-        NHA's Aarogya Setu collection names this request "Update-scheduled push notification", in its Notification Collection service. It is reproduced here as the reference PHR behaviour: Aarogya Setu is NHA's own PHR, so the same calls and the same error codes apply to any PHR implementation.
-
-        The prose is derived from the collection, not written from a specification. NHA has published no OpenAPI file for the PHR role.
       x-abdm-atom: hiecm.endpoint.p3-update-scheduled-push-notification
       x-abdm-source-folder: Notification Collection service
       requestBody:
@@ -5481,7 +5332,7 @@ paths:
               - timestamp_to_push
             examples:
               from_nha_collection:
-                summary: From NHA's collection, values scrubbed
+                summary: Example values, scrubbed
                 value:
                   patient_id: <PATIENT_ID>
                   id: 42
@@ -5489,7 +5340,7 @@ paths:
                   medical_remainder_id: MED-NEW-001
       responses:
         '500':
-          description: Recorded in NHA's collection. Values are scrubbed.
+          description: Example values, scrubbed.
           content:
             application/json:
               schema:
@@ -5515,26 +5366,17 @@ paths:
       tags:
       - notification_collection
       summary: Delete push notification
-      description: |
-        NHA's Aarogya Setu collection names this request "Delete push notification", in its Notification Collection service. It is reproduced here as the reference PHR behaviour: Aarogya Setu is NHA's own PHR, so the same calls and the same error codes apply to any PHR implementation.
-
-        The prose is derived from the collection, not written from a specification. NHA has published no OpenAPI file for the PHR role.
       x-abdm-atom: hiecm.endpoint.p3-delete-push-notification
       x-abdm-source-folder: Notification Collection service
       responses:
         '200':
-          description: NHA's collection saves no response body for this request,
-            so the shape is not recorded here.
+          description: No response body is documented for this request.
   /notification/app-notification-token:
     post:
       operationId: p3_post_add_app_notification_token
       tags:
       - notification_collection
       summary: Post - add App Notification Token
-      description: |
-        NHA's Aarogya Setu collection names this request "Post - add App Notification Token", in its Notification Collection service. It is reproduced here as the reference PHR behaviour: Aarogya Setu is NHA's own PHR, so the same calls and the same error codes apply to any PHR implementation.
-
-        The prose is derived from the collection, not written from a specification. NHA has published no OpenAPI file for the PHR role.
       x-abdm-atom: hiecm.endpoint.p3-post-add-app-notification-token
       x-abdm-source-folder: Notification Collection service
       requestBody:
@@ -5556,14 +5398,14 @@ paths:
               - osType
             examples:
               from_nha_collection:
-                summary: From NHA's collection, values scrubbed
+                summary: Example values, scrubbed
                 value:
                   healthId: <ABHA_ADDRESS>
                   appToken: <APPTOKEN>
                   osType: android
       responses:
         '200':
-          description: Recorded in NHA's collection. Values are scrubbed.
+          description: Example values, scrubbed.
           content:
             application/json:
               schema:
@@ -5655,7 +5497,7 @@ paths:
                   - stateCode: 19
                     stateName: WEST BENGAL
         '500':
-          description: Recorded in NHA's collection. Values are scrubbed.
+          description: Example values, scrubbed.
           content:
             application/json:
               schema:
@@ -5675,7 +5517,7 @@ paths:
                     code: AS-1314
                     message: Required header 'X-token' is not present.
         '401':
-          description: Recorded in NHA's collection. Values are scrubbed.
+          description: Example values, scrubbed.
           content:
             application/json:
               schema:

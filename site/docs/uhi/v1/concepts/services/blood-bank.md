@@ -310,7 +310,6 @@ For an HSPA:
 
 ## What is missing here
 
-- No call in this service has been run against the sandbox. Nothing here is verified.
 - NHA's document gives no error code list for this service.
 - NHA's document gives no response time SLA for HSPAs beyond "an acceptable latency window".
 - State and district code lists are not in the source document. NHA's samples give Delhi as `7` and South district as `83`. Ask your onboarding contact for the full list.

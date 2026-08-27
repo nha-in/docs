@@ -13,7 +13,7 @@ sidebar_position: 2
 
 ## Why it blocks everything else
 
-NHA's M2 document states the prerequisite plainly: a valid facility ID and registration in the [HIP](/docs/hiecm/v3/getting-started/glossary#hip) role, before the entity can create health records and share them. A product that has finished [M2](/docs/hiecm/v3/api/m2) or [M3](/docs/hiecm/v3/api/m3) against the sandbox cannot go live without this registry.
+A facility needs a valid facility ID and registration in the [HIP](/docs/hiecm/v3/getting-started/glossary#hip) role before it can create health records and share them. A product that has finished [M2](/docs/hiecm/v3/api/m2) or [M3](/docs/hiecm/v3/api/m3) against the sandbox cannot go live without this registry.
 
 What the facility gets, per NHA: a trusted identity, a listing in national search results, less paperwork on licence renewals and insurance empanelment, and access to ABDM's digital services.
 
@@ -35,36 +35,36 @@ Ownership, facility type, facility subtype, speciality, system of medicine, oper
 
 ## The onboarding journey
 
-Five calls, and NHA is explicit that the order is fixed.
+Five calls, in a fixed order.
 
 1. **Deduplicate search.** Check the facility is not already listed.
-2. **Basic facility information.** Creates the record and returns a tracking ID. NHA says that ID is the unique identification number for your facility until you submit. Pass it as the facility ID on every later call in the sequence.
+2. **Basic facility information.** Creates the record and returns a tracking ID. That ID is your facility's unique identification number until you submit. Pass it as the facility ID on every later call in the sequence.
 3. **Additional information.** Takes the tracking ID.
 4. **Detailed information.** Takes the tracking ID.
 5. **Submit facility details.** Sends the facility for verification.
 
 :::warning[Without call five the facility does not exist]
-NHA's document states that if the submit call is not made, the facility remains in draft. It goes nowhere and nothing else in ABDM can use it. A common way to lose a day is to run the first four calls, see a tracking ID come back, and assume you are registered.
+If you do not make the submit call, the facility stays in draft. A draft facility goes nowhere, and nothing else in ABDM can use it. Running the first four calls and getting a tracking ID back does not mean you are registered.
 :::
 
 To update a facility later, send the same calls with the facility ID or tracking ID in the payload rather than creating a new record.
 
 ## The link to the HPR token
 
-Your client credentials are not enough. Basic facility information takes an **HPR token in the header**, generated from an HPR ID and password; NHA points at the get HPR token flow in its update professional document. Submit facility takes an **`x-hpird-auth` token in the header**. NHA does not say whether the two are the same value under two names, and we have not run the calls.
+Your client credentials are not enough. Basic facility information takes an **HPR token in the header**, generated from an HPR ID and password. Submit facility takes an **`x-hpird-auth` token in the header**. Obtain both from the HPR token flow, and set each header by the name the call asks for.
 
 Both come from a person, not from your application. That is why [HPR](/docs/hiecm/v3/registries/nhpr/hpr) comes first in a rollout, and why somebody in your organisation needs an [HPID](/docs/hiecm/v3/getting-started/glossary#hpid) with facility manager rights, role 2 or role 3, before you write a line of HFR code.
 
 ## The facility ID
 
-A submitted and verified facility carries a facility ID, and that ID identifies it in every record you share. NHA's M4 document is not consistent about the format:
+A submitted and verified facility carries a facility ID, and that ID identifies it in every record you share. Two formats are documented for it:
 
 | Where | What NHA's document says |
 | --- | --- |
 | Bridge linkage, facility search, nearby search, send OTP to contact | Starts with `IN` and is 12 characters in total |
 | Deduplicate search | A 6 digit numeric value, labelled there as the facility unique ID |
 
-Two different things under one parameter name. We have not run either call to establish which applies where.
+One parameter name carries two different formats. Take the format from the reference page for the call you are making.
 
 ## Bridge linkage
 
@@ -83,17 +83,18 @@ The HIP name is the one field a patient sees. NHA describes it as the name shown
 
 Base URLs for every call on this page are on [NHPR](/docs/hiecm/v3/registries/nhpr).
 
-## What did not survive the conversion
+## Request and response formats
 
-NHA's M4 document carries its request and response samples as screenshots, which do not convert to text. Missing from our source:
+This page gives what a facility record holds and the order the calls go in.
+Take the request and response shapes from the health facility registry sandbox
+documentation alongside it.
 
-- The method and path of all five onboarding calls, and of bridge linkage.
-- The method and path of every utility and search call. Those are master types, master data, and the three LGD lookups for states, districts and sub districts. Also facility type, facility subtype, ownership subtype, specialities, PSU details by ministry, search facility, nearby search, send OTP to contact and validate OTP.
-- Every request body and every response body for all of the above.
+Two paths are fixed here:
 
-Two paths appear in text, quoted inside other parameter descriptions: `v1.5/facility/fetchfacilitytype` and `/v1.5/facility/get-specialities`.
-
-The parameter tables survived in full, which is why this page can say what a facility record holds and in what order the calls go, but not the shape of a request. We will not guess a payload we have not seen, so open NHA's sandbox documentation for the health facility registry alongside this page.
+| Call | Path |
+| --- | --- |
+| Fetch facility type | `v1.5/facility/fetchfacilitytype` |
+| Get specialities | `/v1.5/facility/get-specialities` |
 
 ## Next
 

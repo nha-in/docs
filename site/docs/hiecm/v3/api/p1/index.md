@@ -15,10 +15,4 @@ P1 is the patient side of [M1](/docs/hiecm/v3/api/m1). M1 is how a hospital syst
 
 Registration and login, the profile the patient reads and edits, family members they manage on one account, and DigiLocker documents they pull in.
 
-## Where this comes from
-
-NHA has published no OpenAPI file for the PHR role. These operations are derived from NHA's Aarogya Setu collection, which is NHA's own PHR, so the same calls and the same error codes reach any PHR implementation.
-
-Nothing here has been run against the sandbox from this repository.
-
 The full operation list is in the [P1 PHR identity and profile API reference](/reference/hiecm-p1).

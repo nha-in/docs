@@ -23,27 +23,11 @@ This page lists every call NHA's Milestone 4 document names, for the [HPR](/docs
 Use this page to size the work and find the right call. Expect to open NHA's sandbox documentation alongside it for the paths this page does not have.
 :::
 
-## What did not survive conversion
+## Calls without a published path
 
-NHA's document carries about 95 screenshots, each a request or response sample. In most cases the screenshot is the only place the method and path appear, so both are missing here. The calls affected:
-
-- The whole HPID creation chain, nine calls. Only the base URL and the parameter behaviour survived.
-  - Generate Aadhaar link
-  - Check Aadhaar authentication status
-  - Verify OTP and fetch user details
-  - Check whether an HPID exists by Aadhaar
-  - Mobile match
-  - Generate mobile OTP
-  - Verify mobile OTP
-  - Username suggestions
-  - Create HPID
-- All five HFR onboarding calls: deduplicate search, basic facility information, additional information, detailed information and submit facility. Parameter tables survived in full, paths did not.
-- Bridge linkage. Parameter table yes, path no.
-- All HFR utility and search calls: master types, master data, LGD lookups, facility type, facility subtype, ownership subtype, specialities, PSU details, search facility, nearby search, send OTP to contact and validate OTP.
-- Register professional, retrieve professional document list, upload documents, update professional and fetch professional details. Field tables survived; only register professional carries its path in text.
-- Most HPR master data calls. A handful carry their path in text and are listed below.
-
-Where no request body is shown, NHA's document does not carry one in text. We will not guess a payload.
+Method and path are not yet published for the calls below. Their parameter
+tables are published, so you can size the work and prepare the fields. Take the
+paths and payloads from the sandbox documentation.
 
 ## Session token
 

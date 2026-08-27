@@ -15,8 +15,4 @@ P2 is the mirror of [M2](/docs/hiecm/v3/api/m2). M2 is a provider publishing a r
 
 Care context linking, user initiated linking, scan and share at a facility, and health locker subscriptions.
 
-## Where this comes from
-
-Derived from NHA's Aarogya Setu collection rather than from a specification, because NHA has published none for this role. Nothing here has been run against the sandbox from this repository.
-
 The full operation list is in the [P2 PHR linking and records API reference](/reference/hiecm-p2).

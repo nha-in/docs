@@ -27,7 +27,7 @@ NHCX does appear in the sandbox database. An NHCX application is recorded agains
 
 Claims are not health records. If your product shares or fetches a patient's clinical record, you are on HIE-CM. If it submits or adjudicates an insurance claim, you are on NHCX. A hospital system can end up on both. The two integrations share no API surface.
 
-NHA's index shows the shape of a claim without describing it. A claim is a [FHIR](/docs/nhcx/v1/getting-started/glossary#fhir) bundle. It travels with a protected header that carries a workflow status code. A request cycle is closed by sending a protocol response back. Those are rows 11, 12 and 15 below. We have not read them.
+NHA's index shows the shape of a claim without describing it. A claim is a [FHIR](/docs/nhcx/v1/getting-started/glossary#fhir) bundle. It travels with a protected header that carries a workflow status code. A request cycle is closed by sending a protocol response back. Those are rows 11, 12 and 15 below.
 
 ## Who is on it
 

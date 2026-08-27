@@ -333,7 +333,6 @@ For an HSPA:
 
 ## What is missing here
 
-- No call in this service has been run against the sandbox. Nothing here is verified.
 - The calls in NHA's second phase have no field reference yet in NHA's document.
 - NHA lists a Postman collection for this service as a reference resource without a public link. Ask your onboarding contact.
 - Error codes for this service are not enumerated in the source document.

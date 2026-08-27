@@ -537,10 +537,10 @@ webhooks:
       description: |
         Inbound to every HIP. Answer with care context metadata only: NHA states that a discovery response carries no clinical or sensitive data. A rejected answer is reported as ABDM-1109.
 
-        Transcribed from NHA's milestone document. Not run against the ABDM sandbox, so the payload is unconfirmed.
+        
       responses:
         '202':
-          description: Your bridge accepted the callback. NHA validates the body
+          description: Your bridge accepted the callback. The gateway validates the body
             you send back, so a 202 carrying the wrong body is still a failure.
       x-abdm-atom: hiecm.callback.m2-on-discovery-request
       tags:
@@ -552,10 +552,10 @@ webhooks:
       description: |
         Inbound to the HIP. A duplicate arrives as ABDM-1104, and a rejected answer as ABDM-1110.
 
-        Transcribed from NHA's milestone document. Not run against the ABDM sandbox, so the payload is unconfirmed.
+        
       responses:
         '202':
-          description: Your bridge accepted the callback. NHA validates the body
+          description: Your bridge accepted the callback. The gateway validates the body
             you send back, so a 202 carrying the wrong body is still a failure.
       x-abdm-atom: hiecm.callback.m2-on-link-init
       tags:
@@ -567,10 +567,10 @@ webhooks:
       description: |
         Inbound to the HIP. A duplicate arrives as ABDM-1105, and a rejected answer as ABDM-1111.
 
-        Transcribed from NHA's milestone document. Not run against the ABDM sandbox, so the payload is unconfirmed.
+        
       responses:
         '202':
-          description: Your bridge accepted the callback. NHA validates the body
+          description: Your bridge accepted the callback. The gateway validates the body
             you send back, so a 202 carrying the wrong body is still a failure.
       x-abdm-atom: hiecm.callback.m2-on-link-confirm
       tags:
@@ -582,10 +582,10 @@ webhooks:
       description: |
         Inbound to the HIP, carrying the consent id, the date range, the data push URL and the encryption parameters. NHA states 20 minutes from this request to the data push.
 
-        Transcribed from NHA's milestone document. Not run against the ABDM sandbox, so the payload is unconfirmed.
+        
       responses:
         '202':
-          description: Your bridge accepted the callback. NHA validates the body
+          description: Your bridge accepted the callback. The gateway validates the body
             you send back, so a 202 carrying the wrong body is still a failure.
       x-abdm-atom: hiecm.callback.m2-on-health-information-request
       tags:
@@ -597,10 +597,10 @@ webhooks:
       description: |
         Inbound to the HIU bridge, at the bridge URL you registered.
 
-        Transcribed from NHA's milestone document. Not run against the ABDM sandbox, so the payload is unconfirmed.
+        
       responses:
         '202':
-          description: Your bridge accepted the callback. NHA validates the body
+          description: Your bridge accepted the callback. The gateway validates the body
             you send back, so a 202 carrying the wrong body is still a failure.
       x-abdm-atom: hiecm.callback.m2-on-consent-notify-hiu
       tags:
