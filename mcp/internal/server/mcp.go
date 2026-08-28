@@ -10,7 +10,6 @@ import (
 	"log/slog"
 	"time"
 
-	"github.com/eka-care/abdm-docs/mcp/internal/catalogue"
 	"github.com/eka-care/abdm-docs/mcp/internal/embed"
 	"github.com/eka-care/abdm-docs/mcp/internal/index"
 	"github.com/getkin/kin-openapi/openapi3"
@@ -57,129 +56,51 @@ func NewMCPServer(r *index.Reader, emb embed.Embedder) *mcp.Server {
 		return fields
 	}
 
-	type searchIn struct {
-		Query     string `json:"query" jsonschema:"the search query"`
-		Type      string `json:"type,omitempty" jsonschema:"optional atom type filter, one of: concept, flow, endpoint, callback, error, test, glossary, decision, fhir, sandbox"`
-		Milestone string `json:"milestone,omitempty" jsonschema:"optional milestone filter, M1 to M4"`
-		Limit     int    `json:"limit,omitempty" jsonschema:"max results, default 10, cap 25"`
-	}
+	tools := NewTools(r, emb)
+
 	mcp.AddTool(s, &mcp.Tool{
-		Name: "search_docs",
-		Description: "Hybrid search over the ABDM catalogue atoms: concepts, flows, endpoints, callbacks, errors, tests, glossary entries, decisions, FHIR mappings and sandbox notes. " +
-			"It does NOT search raw API operations; those are covered by list_operations and get_operation. " +
-			"Use this when you have an intent in your own words and want the catalogue's guidance. " +
-			"Results carry verification_status; treat unverified content as unverified.",
+		Name:        "search_docs",
+		Description: searchDocsDescription,
 		InputSchema: schemaWithAtomTypeEnum[searchIn](),
 	}, func(ctx context.Context, req *mcp.CallToolRequest, in searchIn) (*mcp.CallToolResult, any, error) {
-		hits, err := r.Search(ctx, in.Query, in.Type, in.Milestone, in.Limit, emb)
+		out, err := tools.SearchDocs(ctx, in)
 		if err != nil {
 			return nil, nil, err
 		}
-		return jsonResult(versioned(map[string]any{"hits": searchHitsJSON(hits)}))
+		return jsonResult(out)
 	})
 
-	type getAtomIn struct {
-		ID string `json:"id" jsonschema:"the atom id, for example hiecm.error.abdm-1035"`
-	}
 	mcp.AddTool(s, &mcp.Tool{
-		Name: "get_atom",
-		Description: "Read one catalogue atom: full frontmatter fields and markdown body. " +
-			"Use this when you already know the exact atom id and want the one full atom; use search_docs when you only have an intent. " +
-			"Atoms not marked verified carry a caution field.",
+		Name:        "get_atom",
+		Description: getAtomDescription,
 	}, func(ctx context.Context, req *mcp.CallToolRequest, in getAtomIn) (*mcp.CallToolResult, any, error) {
-		a, err := r.GetAtom(in.ID)
+		out, err := tools.GetAtom(ctx, in)
 		if err != nil {
 			return notFoundOrErr(err)
 		}
-		fields := map[string]any{
-			"id": a.ID, "type": a.Type, "gateway": a.Gateway,
-			"milestone": a.Milestone, "title": a.Title, "summary": a.Summary,
-			"verification_status": a.VerificationStatus, "body": a.Body,
-		}
-		if a.VerificationStatus != "verified" {
-			fields["caution"] = unverifiedCaution
-		}
-		return jsonResult(versioned(fields))
+		return jsonResult(out)
 	})
 
 	mcp.AddTool(s, &mcp.Tool{
-		Name: "related_atoms",
-		Description: "Walk the catalogue graph from one atom, both directions. " +
-			"Related atoms come back grouped by their own type (concept, flow, endpoint, callback, error, test, ...), each atom once. " +
-			"Use this to move from one exact atom to its neighbours; use search_docs when you do not have a starting atom.",
+		Name:        "related_atoms",
+		Description: relatedAtomsDescription,
 	}, func(ctx context.Context, req *mcp.CallToolRequest, in getAtomIn) (*mcp.CallToolResult, any, error) {
-		groups, err := r.RelatedAtoms(in.ID)
+		out, err := tools.RelatedAtoms(ctx, in)
 		if err != nil {
 			return notFoundOrErr(err)
 		}
-		out := map[string]any{}
-		for _, g := range groups {
-			out[g.Type] = atomRefsJSON(g.Atoms)
-		}
-		return jsonResult(versioned(map[string]any{"id": in.ID, "related": out}))
+		return jsonResult(out)
 	})
 
-	type decodeIn struct {
-		Input string `json:"input" jsonschema:"an error code or a raw gateway response body"`
-	}
 	mcp.AddTool(s, &mcp.Tool{
-		Name: "decode_error",
-		Description: "Extract ABDM error codes from a code or raw response body and return, per code, the matching narrative error atoms with their fixes plus the specification error table rows (code, message, action, module). " +
-			"Use this first for any error response from the gateway, before reaching for search_docs.",
+		Name:        "decode_error",
+		Description: decodeErrorDescription,
 	}, func(ctx context.Context, req *mcp.CallToolRequest, in decodeIn) (*mcp.CallToolResult, any, error) {
-		codes := catalogue.ExtractErrorCodes(in.Input)
-		if len(codes) == 0 {
-			return jsonResult(versioned(map[string]any{
-				"message": "no error codes found in the input; try search_docs with the response text",
-				"codes":   []string{},
-			}))
+		out, err := tools.DecodeError(ctx, in)
+		if err != nil {
+			return nil, nil, err
 		}
-		matches := map[string]any{}
-		for _, code := range codes {
-			refs, err := r.AtomsByErrorCode(code)
-			if err != nil {
-				return nil, nil, err
-			}
-			var full []map[string]any
-			for _, ref := range refs {
-				if ref.Type != "error" {
-					continue
-				}
-				a, err := r.GetAtom(ref.ID)
-				if err != nil {
-					continue
-				}
-				entry := map[string]any{
-					"id": a.ID, "title": a.Title, "summary": a.Summary,
-					"verification_status": a.VerificationStatus, "body": a.Body,
-				}
-				if a.VerificationStatus != "verified" {
-					entry["caution"] = unverifiedCaution
-				}
-				full = append(full, entry)
-			}
-			specRows, err := r.SpecErrorCodes(code)
-			if err != nil {
-				return nil, nil, err
-			}
-			match := map[string]any{}
-			if full != nil {
-				match["atoms"] = full
-			}
-			if len(specRows) > 0 {
-				match["specification"] = specRows
-				match["source"] = "specification error table"
-			}
-			if full == nil {
-				if len(specRows) > 0 {
-					match["note"] = "no narrative error atom exists for this code yet; the specification rows above are the recorded truth, and search_docs with the message text may find related guidance"
-				} else {
-					match["message"] = "no error atom for this code yet; try search_docs"
-				}
-			}
-			matches[code] = match
-		}
-		return jsonResult(versioned(map[string]any{"codes": codes, "matches": matches}))
+		return jsonResult(out)
 	})
 
 	type listAtomsIn struct {
@@ -199,69 +120,37 @@ func NewMCPServer(r *index.Reader, emb embed.Embedder) *mcp.Server {
 		return jsonResult(versioned(map[string]any{"atoms": atomRefsJSON(refs)}))
 	})
 
-	type emptyIn struct{}
 	mcp.AddTool(s, &mcp.Tool{
-		Name: "catalogue_info",
-		Description: "Catalogue version, build time, embeddings status and coverage counts by gateway, milestone, type and verification status. " +
-			"Use this to check which snapshot you are talking to and how complete it is.",
+		Name:        "catalogue_info",
+		Description: catalogueInfoDescription,
 	}, func(ctx context.Context, req *mcp.CallToolRequest, in emptyIn) (*mcp.CallToolResult, any, error) {
-		stats, err := r.Stats()
+		out, err := tools.CatalogueInfo(ctx, in)
 		if err != nil {
 			return nil, nil, err
 		}
-		return jsonResult(versioned(map[string]any{
-			"built_at":   r.BuiltAt(),
-			"embeddings": emb != nil && r.EmbeddingsEnabled(),
-			"atoms": map[string]any{
-				"by_gateway":   stats.ByGateway,
-				"by_milestone": stats.ByMilestone,
-				"by_type":      stats.ByType,
-				"by_status":    stats.ByStatus,
-			},
-			"operations": stats.Operations,
-		}))
+		return jsonResult(out)
 	})
 
-	type listOpsIn struct {
-		Tag    string `json:"tag,omitempty" jsonschema:"optional exact tag filter"`
-		Module string `json:"module,omitempty" jsonschema:"optional exact module filter, for example gateway, m1, m2, m3, m4, p1, phr-services"`
-		Q      string `json:"q,omitempty" jsonschema:"optional case-insensitive substring filter over operation_id, summary and path"`
-	}
 	mcp.AddTool(s, &mcp.Tool{
-		Name: "list_operations",
-		Description: "List API operations from the ingested OpenAPI specifications. " +
-			"The unfiltered listing is hundreds of operations and is truncated at 60 rows, so filter by tag, by module or by q, a substring over operation_id, summary and path. " +
-			"Use this to enumerate or find operations; use get_operation for one exact operation, and search_docs for catalogue guidance.",
+		Name:        "list_operations",
+		Description: listOperationsDescription,
 	}, func(ctx context.Context, req *mcp.CallToolRequest, in listOpsIn) (*mcp.CallToolResult, any, error) {
-		ops, err := r.ListOperations(in.Tag, in.Module, in.Q)
+		out, err := tools.ListOperations(ctx, in)
 		if err != nil {
 			return nil, nil, err
 		}
-		fields := map[string]any{"operations": ops}
-		if in.Tag == "" && in.Module == "" && in.Q == "" && len(ops) > maxUnfilteredOperations {
-			fields["operations"] = ops[:maxUnfilteredOperations]
-			fields["truncated"] = fmt.Sprintf("%d more; filter by tag, module or q",
-				len(ops)-maxUnfilteredOperations)
-		}
-		return jsonResult(versioned(fields))
+		return jsonResult(out)
 	})
 
-	type getOpIn struct {
-		OperationID string `json:"operation_id" jsonschema:"the operationId from list_operations"`
-	}
 	mcp.AddTool(s, &mcp.Tool{
-		Name: "get_operation",
-		Description: "Get the exact OpenAPI fragment for one operation: parameters, headers, schemas. " +
-			"Use this when you know the operation_id and need the one exact contract; find ids with list_operations.",
+		Name:        "get_operation",
+		Description: getOperationDescription,
 	}, func(ctx context.Context, req *mcp.CallToolRequest, in getOpIn) (*mcp.CallToolResult, any, error) {
-		frag, err := r.GetOperation(in.OperationID)
+		out, err := tools.GetOperation(ctx, in)
 		if err != nil {
 			return notFoundOrErr(err)
 		}
-		return jsonResult(versioned(map[string]any{
-			"operation_id": in.OperationID,
-			"spec":         json.RawMessage(frag),
-		}))
+		return jsonResult(out)
 	})
 
 	type validateIn struct {

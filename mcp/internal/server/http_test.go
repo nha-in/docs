@@ -5,11 +5,44 @@ import (
 	"net/http/httptest"
 	"testing"
 
+	"github.com/eka-care/abdm-docs/mcp/internal/chat"
 	"github.com/eka-care/abdm-docs/mcp/internal/embed"
 )
 
+func TestClientIP(t *testing.T) {
+	cases := []struct {
+		name       string
+		forwarded  string
+		remoteAddr string
+		trustProxy bool
+		want       string
+	}{
+		{"no forwarded header uses remote addr host", "", "1.2.3.4:5678", false, "1.2.3.4"},
+		{"single forwarded entry, trusted", "5.6.7.8", "1.2.3.4:5678", true, "5.6.7.8"},
+		{"last of multiple forwarded entries wins, trusted", "5.6.7.8, 9.9.9.9", "1.2.3.4:5678", true, "9.9.9.9"},
+		{"remote addr without port falls back verbatim", "", "not-a-host-port", false, "not-a-host-port"},
+		// Untrusted: a direct caller can set X-Forwarded-For to anything it
+		// likes, so the header must be ignored entirely and RemoteAddr's
+		// host used instead -- the whole point of the trustProxy gate.
+		{"forwarded header ignored when not trusted", "5.6.7.8", "1.2.3.4:5678", false, "1.2.3.4"},
+		{"forged forwarded header ignored when not trusted", "6.6.6.6, 9.9.9.9", "1.2.3.4:5678", false, "1.2.3.4"},
+	}
+	for _, c := range cases {
+		t.Run(c.name, func(t *testing.T) {
+			req := httptest.NewRequest("POST", "/api/chat", nil)
+			req.RemoteAddr = c.remoteAddr
+			if c.forwarded != "" {
+				req.Header.Set("X-Forwarded-For", c.forwarded)
+			}
+			if got := clientIP(req, c.trustProxy); got != c.want {
+				t.Errorf("clientIP = %q, want %q", got, c.want)
+			}
+		})
+	}
+}
+
 func TestHealthzReportsEmbeddings(t *testing.T) {
-	h, err := Handler(fixtureReader(t, true), embed.NewFake(64), "https://docs.example.com")
+	h, err := Handler(fixtureReader(t, true), embed.NewFake(64), "https://docs.example.com", nil, nil, false)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -33,13 +66,19 @@ func TestHealthzReportsEmbeddings(t *testing.T) {
 }
 
 func TestHandlerRejectsModelMismatch(t *testing.T) {
-	if _, err := Handler(fixtureReader(t, true), embed.NewFake(32), "*"); err == nil {
+	if _, err := Handler(fixtureReader(t, true), embed.NewFake(32), "*", nil, nil, false); err == nil {
 		t.Fatal("want error for model mismatch at startup")
 	}
 }
 
+func TestHandlerRejectsChatSvcWithoutLimiter(t *testing.T) {
+	if _, err := Handler(fixtureReader(t, false), nil, "*", &chat.Service{}, nil, false); err == nil {
+		t.Fatal("want error when chatSvc is set but limiter is nil")
+	}
+}
+
 func TestAPISearchAndCORS(t *testing.T) {
-	h, err := Handler(fixtureReader(t, false), nil, "https://docs.example.com")
+	h, err := Handler(fixtureReader(t, false), nil, "https://docs.example.com", nil, nil, false)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -67,7 +106,7 @@ func TestAPISearchAndCORS(t *testing.T) {
 }
 
 func TestAPISearchMissingQuery(t *testing.T) {
-	h, err := Handler(fixtureReader(t, false), nil, "*")
+	h, err := Handler(fixtureReader(t, false), nil, "*", nil, nil, false)
 	if err != nil {
 		t.Fatal(err)
 	}
