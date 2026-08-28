@@ -2,10 +2,17 @@
   "Version": "2012-10-17",
   "Statement": [
     {
-      "Sid": "InvokeTitanEmbeddings",
+      "Sid": "InvokeBedrockModels",
       "Effect": "Allow",
-      "Action": "bedrock:InvokeModel",
-      "Resource": "arn:aws:bedrock:ap-south-1::foundation-model/amazon.titan-embed-text-v2:0"
+      "Action": [
+        "bedrock:InvokeModel",
+        "bedrock:InvokeModelWithResponseStream"
+      ],
+      "Resource": [
+        "arn:aws:bedrock:ap-south-1::foundation-model/amazon.titan-embed-text-v2:0",
+        "arn:aws:bedrock:*::foundation-model/anthropic.*",
+        "arn:aws:bedrock:*:*:inference-profile/*.anthropic.*"
+      ]
     }
   ]
 }

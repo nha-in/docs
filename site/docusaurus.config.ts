@@ -232,6 +232,9 @@ const config: Config = {
     // panel on the MCP page renders locked, and every button on it goes live
     // the moment this resolves. Nothing else has to change.
     mcpUrl: process.env.MCP_URL ?? null,
+    // The chat backend's origin. Null keeps the Ask AI panel a labeled mock,
+    // so Pages and preview builds never ship a dead composer.
+    chatUrl: process.env.CHAT_URL ?? null,
   },
 
   i18n: {

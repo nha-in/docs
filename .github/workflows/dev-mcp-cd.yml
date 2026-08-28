@@ -67,6 +67,13 @@ jobs:
       # Flip the EMBED_PROVIDER repository variable to `bedrock` once Bedrock
       # access exists in the target account; until then it resolves to ollama
       # so a test deployment never fails for want of AWS model access.
+      #
+      # CHAT_MODEL rides beside EMBED_PROVIDER in that same dev-argocd values
+      # file: it is not set from this workflow because the pod's env lives
+      # entirely in that external repo. Set it to the Claude model id
+      # confirmed with `aws bedrock list-foundation-models` on the runner
+      # role; until confirmed, leave it unset there too, and the MCP serves
+      # chat disabled the same way an empty CHAT_MODEL does on NHA's side.
       - name: Resolve embedding provider
         id: embed
         run: |

@@ -7,6 +7,7 @@ require (
 	github.com/aws/aws-sdk-go-v2/config v1.32.38
 	github.com/aws/aws-sdk-go-v2/service/bedrockruntime v1.57.4
 	github.com/getkin/kin-openapi v0.147.0
+	github.com/google/jsonschema-go v0.4.3
 	github.com/modelcontextprotocol/go-sdk v1.7.0
 	gopkg.in/yaml.v3 v3.0.1
 	modernc.org/sqlite v1.57.0
@@ -29,7 +30,6 @@ require (
 	github.com/dustin/go-humanize v1.0.1 // indirect
 	github.com/go-openapi/jsonpointer v0.22.5 // indirect
 	github.com/go-openapi/swag/jsonname v0.25.5 // indirect
-	github.com/google/jsonschema-go v0.4.3 // indirect
 	github.com/google/uuid v1.6.0 // indirect
 	github.com/kr/pretty v0.3.1 // indirect
 	github.com/mattn/go-isatty v0.0.24 // indirect

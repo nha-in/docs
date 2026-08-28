@@ -52,6 +52,10 @@ spec:
             # index was built by a different provider.
             - name: EMBED_PROVIDER
               value: bedrock
+            # The Bedrock model id for the Ask AI panel. Leave empty until NHA's
+            # Claude access lands; empty serves the MCP with chat disabled.
+            - name: CHAT_MODEL
+              value: ""
             - name: AWS_REGION
               value: ap-south-1
             - name: ALLOW_ORIGIN
