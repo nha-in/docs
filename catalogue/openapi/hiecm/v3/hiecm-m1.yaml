@@ -51,7 +51,6 @@ info:
   x-abdm-module: M1
   x-abdm-phase: 1
   x-abdm-roles:
-  - phr
   - his
 x-abdm-sources:
 - file: catalogue/openapi/.raw/ABDM_M1_API_Swagger.yaml

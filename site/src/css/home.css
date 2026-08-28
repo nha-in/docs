@@ -29,12 +29,8 @@
 
 .landing-bar__mark {
   display: block;
-  /* Same height as .topbar-logo in navbar.css, kept in step for the same
-     reason as before: the mark must not change size crossing from the
-     landing page into the documentation. Both raised together, from 2.25rem,
-     so the publisher's mark reads clearly rather than as a footnote. */
-  height: 2.875rem;
   width: auto;
+  height: var(--mark-height);
 }
 
 .landing-bar__links {
@@ -555,7 +551,8 @@
 .curtain__mark {
   display: block;
   width: auto;
-  height: 2.25rem;
+  /* The same token the top bar's mark uses: one lockup, one size. */
+  height: var(--mark-height);
 }
 
 .curtain__mark--dark,

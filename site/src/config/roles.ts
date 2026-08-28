@@ -30,14 +30,14 @@ export const ROLES: Record<string, Role[]> = {
   hiecm: [
     {
       id: 'ims',
-      label: 'Information Management System',
-      description: 'Holds records and shares them',
+      label: 'IMS',
+      description: 'HIMS, LIMS, EMR and other information management systems',
       covers: ['his', 'hip', 'hiu', 'shared'],
     },
     {
       id: 'phr',
       label: 'PHR',
-      description: "The patient's own application",
+      description: "A Personal Health Record application, the patient's own",
       covers: ['phr', 'shared'],
     },
   ],
@@ -79,6 +79,19 @@ const storageKey = (platformId: string) => `abdm-portal.role.${platformId}`;
 const ROLE_PARAM = 'role';
 
 /**
+ * Every `useRole` is its own `useState`, and the page has two of them: the
+ * picker in the sidebar head, and the hook that scopes the tree below it.
+ * Setting the role in the picker left the tree on the old value until
+ * something else re-mounted it, which is why choosing a role appeared to do
+ * nothing until the reader navigated.
+ *
+ * A custom event rather than a context: the two hooks are on opposite sides of
+ * the theme's own component tree, and a provider would have to wrap the whole
+ * layout to reach both.
+ */
+const ROLE_EVENT = 'abdm-portal:role';
+
+/**
  * The reader's chosen role for one gateway, remembered between visits and
  * carried by a link when one is shared.
  *
@@ -108,6 +121,17 @@ export function useRole(platformId: string): [string | null, (id: string | null)
     setRoleState(known(window.localStorage.getItem(storageKey(platformId))));
   }, [platformId]);
 
+  // Follow any other copy of this hook that changes the same gateway's role.
+  useEffect(() => {
+    if (typeof window === 'undefined') return undefined;
+    const onChange = (event: Event) => {
+      const detail = (event as CustomEvent<{platformId: string; id: string | null}>).detail;
+      if (detail?.platformId === platformId) setRoleState(detail.id);
+    };
+    window.addEventListener(ROLE_EVENT, onChange);
+    return () => window.removeEventListener(ROLE_EVENT, onChange);
+  }, [platformId]);
+
   const setRole = useCallback(
     (id: string | null) => {
       setRoleState(id);
@@ -122,6 +146,10 @@ export function useRole(platformId: string): [string | null, (id: string | null)
       if (id) url.searchParams.set(ROLE_PARAM, id);
       else url.searchParams.delete(ROLE_PARAM);
       window.history.replaceState(window.history.state, '', url);
+
+      window.dispatchEvent(
+        new CustomEvent(ROLE_EVENT, {detail: {platformId, id}}),
+      );
     },
     [platformId],
   );

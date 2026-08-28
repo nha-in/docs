@@ -27,6 +27,10 @@ import {rolesFor, useRole} from '@site/src/config/roles';
 export default function SidebarPickers(): React.ReactNode {
   const pathname = useRoutePath();
   const history = useHistory();
+  // Controlled, so that choosing something closes the panel. A setting that
+  // takes effect behind an open panel leaves the reader looking at the panel
+  // rather than at what they just changed.
+  const [open, setOpen] = React.useState(false);
   const platform: Platform = activePlatform(pathname) ?? platforms[0];
   const version = activeVersion(platform, pathname);
   const roles = rolesFor(platform.id);
@@ -36,7 +40,7 @@ export default function SidebarPickers(): React.ReactNode {
 
   return (
     <div className="sidebar-pickers">
-      <Popover>
+      <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger
           className="sidebar-settings"
           aria-label={`Settings. Version ${version.label}${
@@ -59,7 +63,11 @@ export default function SidebarPickers(): React.ReactNode {
                 note={entry.note}
                 selected={entry.label === version.label}
                 disabled={!entry.to}
-                onSelect={() => entry.to && history.push(entry.to)}
+                onSelect={() => {
+                  if (!entry.to) return;
+                  setOpen(false);
+                  history.push(entry.to);
+                }}
               />
             ))}
             <p className="sidebar-settings__footnote">
@@ -73,7 +81,10 @@ export default function SidebarPickers(): React.ReactNode {
                 label="Everything"
                 note="Every module this gateway has"
                 selected={role === null}
-                onSelect={() => setRole(null)}
+                onSelect={() => {
+                  setRole(null);
+                  setOpen(false);
+                }}
               />
               {roles.map((entry) => (
                 <Option
@@ -81,7 +92,10 @@ export default function SidebarPickers(): React.ReactNode {
                   label={entry.label}
                   note={entry.description}
                   selected={role === entry.id}
-                  onSelect={() => setRole(entry.id)}
+                  onSelect={() => {
+                    setRole(entry.id);
+                    setOpen(false);
+                  }}
                 />
               ))}
             </Group>

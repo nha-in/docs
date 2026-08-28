@@ -40,7 +40,6 @@ info:
   x-abdm-phase: 1
   x-abdm-roles:
   - hiu
-  - phr
 x-abdm-sources:
 - file: catalogue/openapi/.raw/ABDM_M3_API_Swagger.yaml
   role: upstream

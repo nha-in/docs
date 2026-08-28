@@ -43,10 +43,11 @@
   display: block;
   width: auto;
   /* NHA's mark is a lockup, emblem plus wordmark, so it needs more height
-     than the ABDM roundel did before its own text is readable. Raised in
-     step with .landing-bar__mark in home.css, so it stays the same size
-     crossing from the landing page into the documentation. */
-  height: 2.875rem;
+     than the ABDM roundel did before its own text is readable. The height is
+     a token shared with the landing curtain's mark, so it is the same size
+     crossing from the landing page into the documentation, and it scales with
+     the viewport rather than stepping at a breakpoint. */
+  height: var(--mark-height);
 }
 
 .topbar-wordmark {
@@ -621,10 +622,6 @@
 
   /* The lockup and the emblem beside it are two marks saying the same thing,
      and the emblem is the one the bar can do without at this width. */
-  .topbar-logo {
-    height: 1.75rem;
-  }
-
   .topbar-brand .brand-chip {
     display: none;
   }
@@ -647,21 +644,59 @@
     width: auto;
   }
 
+  /* A pill fill 32px wide is a grey disc with a magnifier on it. At this size
+     the control is the glyph: no fill, no border, and the tap target is the
+     32px box around it. The fill comes back when the field opens. */
   .omnibox .navbar__search-input {
     width: 2rem;
     padding: 0 0 0 2rem;
+    background: transparent;
+    border-color: transparent;
+    box-shadow: none;
   }
 
-  /* The theme marks the container `focused` in its own JS; matching that as
-     well as `:focus` keeps the expansion working in browsers that do not
-     hand the page focus. */
+  .omnibox .navbar__search-input:hover {
+    background: var(--hover-soft);
+  }
+
+  /* Opening the field takes the bar, rather than covering two thirds of it and
+     leaving the brand showing through underneath. The other controls step
+     aside while it is open and come back when it closes.
+
+     The theme marks the container `focused` in its own JS; matching that as
+     well as `:focus` keeps this working in browsers that do not hand the page
+     focus. */
+  .omnibox:has([class*='focused_']),
+  .omnibox:has(.navbar__search-input:focus) {
+    position: absolute;
+    inset: 0.75rem 1.25rem;
+    z-index: 2;
+  }
+
+  .omnibox [class*='focused_'],
+  .omnibox [class*='focused_'] [class*='searchBar_'] {
+    width: 100%;
+  }
+
   .omnibox [class*='focused_'] .navbar__search-input,
   .omnibox .navbar__search-input:focus {
-    position: absolute;
-    right: 0;
-    z-index: 1;
-    width: 70vw;
-    padding: 0 0.75rem 0 2.25rem;
+    width: 100%;
+    padding: 0 0.875rem 0 2.25rem;
+    background: var(--surface);
+    border-color: var(--border-strong);
+  }
+
+  /* Everything else in the bar, while the field is open. */
+  .topbar:has(.navbar__search-input:focus) .topbar-brand,
+  .topbar:has(.navbar__search-input:focus) .topbar-gateway,
+  .topbar:has(.navbar__search-input:focus) .topbar-overflow,
+  .topbar:has(.navbar__search-input:focus) .topbar-toggle,
+  .topbar:has([class*='focused_']) .topbar-brand,
+  .topbar:has([class*='focused_']) .topbar-gateway,
+  .topbar:has([class*='focused_']) .topbar-overflow,
+  .topbar:has([class*='focused_']) .topbar-toggle {
+    opacity: 0;
+    pointer-events: none;
   }
 
   .omnibox__ai {

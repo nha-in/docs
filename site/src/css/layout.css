@@ -356,9 +356,24 @@ main .container:has(> .docs-article-row) {
   color: var(--text-heading);
 }
 
+/* The address in the contact column is one long line, and the theme's own
+   link item does not hold itself to the column: at 375px it measured 642px
+   wide and dragged the whole document out with it, which is the strip of dead
+   space that appeared to the right of every page on a phone. */
 .footer__link-item {
+  display: block;
+  max-width: 100%;
+  white-space: normal;
+  overflow-wrap: anywhere;
   font-size: 0.8125rem;
   color: var(--text-faint);
+}
+
+/* Every link in this footer leaves the site, so the mark on each one says
+   nothing that the column headings do not, and it wraps onto a line of its
+   own after the block above. */
+.footer__link-item svg[class*='iconExternalLink'] {
+  display: none;
 }
 
 .footer__link-item:hover {
