@@ -382,6 +382,8 @@
 }
 
 .ask-ai__turn--assistant {
+  position: relative;
+  padding-bottom: 1.5rem;
   background: var(--surface-sunken);
   color: var(--text-body);
 }
@@ -413,9 +415,24 @@
   margin-bottom: 0;
 }
 
+/* The reset strips list markers site-wide, which leaves an answer's steps as
+   unlabelled indented lines. Inside the panel they are put back: an assistant
+   listing three things should look like three things. */
 .ask-ai__turn--assistant ul,
 .ask-ai__turn--assistant ol {
   padding-left: 1.25rem;
+}
+
+.ask-ai__turn--assistant ul {
+  list-style: disc outside;
+}
+
+.ask-ai__turn--assistant ol {
+  list-style: decimal outside;
+}
+
+.ask-ai__turn--assistant li::marker {
+  color: var(--text-faint);
 }
 
 .ask-ai__turn--assistant li {
@@ -430,15 +447,150 @@
   padding: 0.0625rem 0.3125rem;
 }
 
+/* Fenced code, for the JSON and curl an API assistant answers with. It scrolls
+   inside its own box so a long line never widens the panel. */
+.ask-ai__code {
+  position: relative;
+  margin: 0.625rem 0;
+}
+
+.ask-ai__code pre {
+  margin: 0;
+  padding: 0.625rem 2.25rem 0.625rem 0.75rem;
+  overflow-x: auto;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-control);
+  background: var(--page);
+}
+
+.ask-ai__code code {
+  padding: 0;
+  border: 0;
+  background: none;
+  font-size: 0.75rem;
+  line-height: 1.6;
+  color: var(--text-heading);
+  white-space: pre;
+}
+
+.ask-ai__code-copy,
+.ask-ai__turn-copy {
+  position: absolute;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-chip);
+  background: var(--surface);
+  color: var(--text-faint);
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 120ms ease, color 120ms ease;
+}
+
+.ask-ai__code-copy {
+  top: 0.375rem;
+  right: 0.375rem;
+}
+
+/* The answer's own copy control sits at its bottom edge, out of the way of
+   the first line, and appears on hover so a resting thread stays quiet. */
+.ask-ai__turn-copy {
+  right: 0.375rem;
+  bottom: 0.375rem;
+}
+
+.ask-ai__code:hover .ask-ai__code-copy,
+.ask-ai__turn--assistant:hover .ask-ai__turn-copy,
+.ask-ai__code-copy:focus-visible,
+.ask-ai__turn-copy:focus-visible {
+  opacity: 1;
+}
+
+.ask-ai__code-copy:hover,
+.ask-ai__turn-copy:hover {
+  color: var(--text-heading);
+}
+
+/* Openers for the empty state. Full width because they are sentences, and a
+   reader picks one by reading it rather than by scanning a row. */
+.ask-ai__starters {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+  margin-top: 0.25rem;
+}
+
+.ask-ai__starter {
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-control);
+  background: var(--surface);
+  font-family: inherit;
+  font-size: 0.8125rem;
+  line-height: 1.4;
+  text-align: left;
+  color: var(--text-body);
+  cursor: pointer;
+  transition: border-color 120ms ease, color 120ms ease;
+}
+
+.ask-ai__starter:hover {
+  border-color: var(--border-strong);
+  color: var(--text-heading);
+}
+
+/* A new conversation, once there is one to leave behind. */
+.ask-ai__reset {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  margin-left: auto;
+  padding: 0.1875rem 0.5rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-chip);
+  background: var(--surface);
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  cursor: pointer;
+}
+
+.ask-ai__reset:hover {
+  border-color: var(--border-strong);
+  color: var(--text-heading);
+}
+
 /* Citation chips, one per source, under the answer text they support. */
 .ask-ai__sources {
   display: flex;
   flex-wrap: wrap;
+  align-items: center;
   gap: 0.375rem;
-  margin-top: 0.5rem;
+  margin-top: 0.625rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid var(--border);
+}
+
+.ask-ai__sources-label {
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-faint);
 }
 
 .ask-ai__source-chip {
+  /* A citation is a pointer, not a sentence: long atom titles are cut rather
+     than allowed to take a line each, which is what turned six sources into
+     half a panel of boxes. */
+  max-width: 11rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
   padding: 0.125rem 0.5rem;
   border: 1px solid var(--border);
   border-radius: var(--radius-chip);
@@ -453,9 +605,32 @@
   color: var(--text-heading);
 }
 
+/* A slow pulse beside the activity line: the wait before the first token can
+   run to a few seconds, and a still panel reads as a broken one. */
+.ask-ai__pulse {
+  display: inline-block;
+  width: 0.375rem;
+  height: 0.375rem;
+  margin-right: 0.5rem;
+  border-radius: 999px;
+  background: var(--accent);
+  animation: ask-ai-pulse 1.4s ease-in-out infinite;
+}
+
+@keyframes ask-ai-pulse {
+  0%, 100% { opacity: 0.25; }
+  50%      { opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ask-ai__pulse { animation: none; opacity: 0.6; }
+}
+
 /* What the model is doing while an answer streams in, shown until the first
    text delta arrives and the turn it belongs to stops being empty. */
 .ask-ai__activity {
+  display: flex;
+  align-items: center;
   margin: 0;
   padding: 0.625rem 0.75rem;
   font-size: 0.8125rem;
@@ -470,11 +645,19 @@
   border-top: 1px solid var(--border);
 }
 
+.ask-ai__composer {
+  align-items: flex-end;
+}
+
 .ask-ai__input {
   flex: 1 1 auto;
-  height: 2.25rem;
   min-width: 0;
-  padding: 0 0.75rem;
+  min-height: 2.25rem;
+  max-height: 10rem;
+  padding: 0.4375rem 0.75rem;
+  resize: none;
+  overflow-y: auto;
+  line-height: 1.5;
   border: 1px solid var(--border);
   border-radius: var(--radius-control);
   background: var(--page);
@@ -488,7 +671,13 @@
   border-color: var(--border-strong);
 }
 
+.ask-ai__send--stop {
+  background: var(--fill-soft);
+  color: var(--text-heading);
+}
+
 .ask-ai__send {
+  flex: 0 0 auto;
   display: inline-flex;
   align-items: center;
   justify-content: center;
