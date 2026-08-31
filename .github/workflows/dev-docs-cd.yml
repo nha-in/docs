@@ -15,7 +15,7 @@ on:
 
 jobs:
   build-and-publish:
-    runs-on: dev-ec2-server
+    runs-on: dev-spot-ec2-runner-amd64
     permissions:
       id-token: write
       contents: read
