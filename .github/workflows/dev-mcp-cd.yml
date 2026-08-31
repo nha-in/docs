@@ -17,7 +17,7 @@ jobs:
     permissions:
       id-token: write
       contents: read
-    runs-on: dev-spot-ec2-runner-arm64
+    runs-on: dev-spot-ec2-runner-amd64
     outputs:
       VERSION: ${{ steps.get_version.outputs.VERSION }}
       PREV_TAG: ${{ steps.get_version.outputs.PREV_TAG }}
