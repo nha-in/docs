@@ -5,6 +5,7 @@ description: What a care context is, why a record has to be linked before anyone
 verification: unverified
 source: ABDM__Proposed_Simplified_Milestone_2.md, ABDM__NewDocumant_PHR_app.md
 sidebar_position: 3
+covers: [hiecm.concept.care-context]
 ---
 
 # Care contexts and linking

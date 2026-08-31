@@ -1,0 +1,543 @@
+/* ---------- theming ---------- */
+
+/*
+ * Colour comes from the host page's own design tokens where it defines them,
+ * with this palette as the fallback. Custom properties are the one thing that
+ * crosses a shadow boundary, so a docs site that already declares --surface,
+ * --accent and the rest gets a panel that matches it, and a partner's wiki
+ * that declares nothing gets a panel that still reads correctly. An embedder
+ * who wants a different look sets those properties on the element.
+ *
+ * The fallbacks follow prefers-color-scheme. There is no theme attribute:
+ * a forced light or dark would mean a third copy of this list, and setting
+ * the properties does the same job with less machinery.
+ */
+:host {
+  --aa-fb-page: #fdfdf7;
+  --aa-fb-surface: #ffffff;
+  --aa-fb-sunken: #f7f7f0;
+  --aa-fb-border: rgb(0 0 0 / 0.09);
+  --aa-fb-border-strong: rgb(0 0 0 / 0.16);
+  --aa-fb-fill-soft: rgb(0 0 0 / 0.06);
+  --aa-fb-accent: hsl(140 30% 34%);
+  --aa-fb-accent-soft: hsl(140 30% 34% / 0.1);
+  --aa-fb-accent-line: hsl(140 30% 34% / 0.4);
+  --aa-fb-accent-contrast: #ffffff;
+  --aa-fb-heading: #171717;
+  --aa-fb-body: #3d3d3d;
+  --aa-fb-muted: #525252;
+  --aa-fb-faint: #6f6f6f;
+
+  --aa-page: var(--page, var(--aa-fb-page));
+  --aa-surface: var(--surface, var(--aa-fb-surface));
+  --aa-sunken: var(--surface-sunken, var(--aa-fb-sunken));
+  --aa-border: var(--border, var(--aa-fb-border));
+  --aa-border-strong: var(--border-strong, var(--aa-fb-border-strong));
+  --aa-fill-soft: var(--fill-soft, var(--aa-fb-fill-soft));
+  --aa-accent: var(--accent, var(--aa-fb-accent));
+  --aa-accent-soft: var(--accent-soft, var(--aa-fb-accent-soft));
+  --aa-accent-line: var(--accent-line, var(--aa-fb-accent-line));
+  --aa-accent-contrast: var(--accent-contrast, var(--aa-fb-accent-contrast));
+  --aa-heading: var(--text-heading, var(--aa-fb-heading));
+  --aa-body: var(--text-body, var(--aa-fb-body));
+  --aa-muted: var(--text-muted, var(--aa-fb-muted));
+  --aa-faint: var(--text-faint, var(--aa-fb-faint));
+  --aa-font-sans: var(
+    --font-sans,
+    system-ui,
+    -apple-system,
+    'Segoe UI',
+    Roboto,
+    Helvetica,
+    Arial,
+    sans-serif
+  );
+  --aa-font-serif: var(--font-serif, Georgia, 'Times New Roman', Times, serif);
+  --aa-radius-chip: var(--radius-chip, 0.375rem);
+  --aa-radius-control: var(--radius-control, 0.5rem);
+
+  display: inline-flex;
+  font-family: var(--aa-font-sans);
+}
+
+@media (prefers-color-scheme: dark) {
+  :host {
+    --aa-fb-page: #0d0d0d;
+    --aa-fb-surface: #141414;
+    --aa-fb-sunken: #0a0a0a;
+    --aa-fb-border: rgb(255 255 255 / 0.08);
+    --aa-fb-border-strong: rgb(255 255 255 / 0.14);
+    --aa-fb-fill-soft: rgb(255 255 255 / 0.08);
+    --aa-fb-accent: hsl(134 20% 72%);
+    --aa-fb-accent-soft: hsl(134 20% 72% / 0.12);
+    --aa-fb-accent-line: hsl(134 20% 72% / 0.4);
+    --aa-fb-accent-contrast: #0d0d0d;
+    --aa-fb-heading: #e5e5e5;
+    --aa-fb-body: #d4d4d4;
+    --aa-fb-muted: #a3a3a3;
+    --aa-fb-faint: #8f8f8f;
+  }
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/* ---------- the launcher ---------- */
+
+/* Sized to sit inside a search field on the docs site, and to stand on its
+   own anywhere else. The host element is what an embedder positions. */
+.ask-ai__launcher {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  height: 1.625rem;
+  padding: 0 0.625rem;
+  border: 0;
+  border-radius: 999px;
+  background: var(--aa-accent-soft);
+  font-family: inherit;
+  font-size: 0.75rem;
+  font-weight: 500;
+  line-height: 1;
+  color: var(--aa-accent);
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background-color 150ms ease;
+}
+
+.ask-ai__launcher:hover {
+  background: var(--aa-accent-line);
+  color: var(--aa-accent-contrast);
+}
+
+/* ---------- the assistant panel ---------- */
+
+/* A native modal dialog: the top layer puts it above whatever the host page
+   stacks, and Escape, the backdrop and focus containment come with it. */
+.ask-ai {
+  position: fixed;
+  inset: 0 0 0 auto;
+  z-index: auto;
+  display: none;
+  flex-direction: column;
+  width: min(26rem, 100vw);
+  max-width: 100vw;
+  height: 100%;
+  max-height: 100%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-left: 1px solid var(--aa-border);
+  background: var(--aa-surface);
+  color: var(--aa-body);
+  font-family: var(--aa-font-sans);
+}
+
+.ask-ai[open] {
+  display: flex;
+}
+
+.ask-ai::backdrop {
+  background: rgb(0 0 0 / 0.4);
+}
+
+.ask-ai__head {
+  padding: 1rem;
+  border-bottom: 1px solid var(--aa-border);
+}
+
+.ask-ai__title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0;
+  font-family: var(--aa-font-serif);
+  font-size: 1.125rem;
+  font-weight: 400;
+  color: var(--aa-heading);
+}
+
+.ask-ai__blurb {
+  margin: 0.375rem 0 0;
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  color: var(--aa-muted);
+}
+
+/* Pushes the controls to the right edge whether or not the reset chip and
+   the mock badge are there. */
+.ask-ai__grow {
+  flex: 1 1 auto;
+}
+
+.ask-ai__blurb a {
+  color: var(--aa-accent);
+}
+
+.ask-ai__close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  padding: 0;
+  border: 0;
+  border-radius: var(--aa-radius-chip);
+  background: none;
+  color: var(--aa-faint);
+  cursor: pointer;
+}
+
+.ask-ai__close:hover {
+  color: var(--aa-heading);
+}
+
+/* The panel answers with a constant. The badge is how a reader knows that
+   before they read the answer, not after. */
+.ask-ai__badge {
+  padding: 0.125rem 0.375rem;
+  border-radius: var(--aa-radius-chip);
+  background: var(--aa-fill-soft);
+  font-family: var(--aa-font-sans);
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--aa-faint);
+}
+
+.ask-ai__thread {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  gap: 0.75rem;
+  overflow-y: auto;
+  padding: 1rem;
+}
+
+.ask-ai__turn {
+  max-width: 90%;
+  margin: 0;
+  padding: 0.625rem 0.75rem;
+  border-radius: var(--aa-radius-control);
+  font-size: 0.875rem;
+  line-height: 1.6;
+}
+
+.ask-ai__turn--assistant {
+  position: relative;
+  padding-bottom: 1.5rem;
+  background: var(--aa-sunken);
+  color: var(--aa-body);
+}
+
+.ask-ai__turn--you {
+  align-self: flex-end;
+  background: var(--aa-accent);
+  color: var(--aa-accent-contrast);
+}
+
+/* The assistant writes markdown; these keep its blocks at chat scale.
+   Margins collapse to nothing at the bubble's edges so the first and last
+   block sit flush with the padding. */
+.ask-ai__turn--assistant p,
+.ask-ai__turn--assistant ul,
+.ask-ai__turn--assistant ol {
+  margin: 0.5rem 0;
+}
+
+.ask-ai__turn--assistant > p:first-child,
+.ask-ai__turn--assistant > ul:first-child,
+.ask-ai__turn--assistant > ol:first-child {
+  margin-top: 0;
+}
+
+.ask-ai__turn--assistant > p:last-child,
+.ask-ai__turn--assistant > ul:last-child,
+.ask-ai__turn--assistant > ol:last-child {
+  margin-bottom: 0;
+}
+
+.ask-ai__turn--assistant ul,
+.ask-ai__turn--assistant ol {
+  padding-left: 1.25rem;
+}
+
+.ask-ai__turn--assistant ul {
+  list-style: disc outside;
+}
+
+.ask-ai__turn--assistant ol {
+  list-style: decimal outside;
+}
+
+.ask-ai__turn--assistant li::marker {
+  color: var(--aa-faint);
+}
+
+.ask-ai__turn--assistant li {
+  margin: 0.25rem 0;
+}
+
+.ask-ai__turn--assistant a {
+  color: var(--aa-accent);
+}
+
+.ask-ai__turn--assistant code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.8125rem;
+  background: var(--aa-surface);
+  border: 1px solid var(--aa-border);
+  border-radius: 4px;
+  padding: 0.0625rem 0.3125rem;
+}
+
+/* Fenced code, for the JSON and curl an API assistant answers with. It scrolls
+   inside its own box so a long line never widens the panel. */
+.ask-ai__code {
+  position: relative;
+  margin: 0.625rem 0;
+}
+
+.ask-ai__code pre {
+  margin: 0;
+  padding: 0.625rem 2.25rem 0.625rem 0.75rem;
+  overflow-x: auto;
+  border: 1px solid var(--aa-border);
+  border-radius: var(--aa-radius-control);
+  background: var(--aa-page);
+}
+
+.ask-ai__code code {
+  padding: 0;
+  border: 0;
+  background: none;
+  font-size: 0.75rem;
+  line-height: 1.6;
+  color: var(--aa-heading);
+  white-space: pre;
+}
+
+.ask-ai__code-copy,
+.ask-ai__turn-copy {
+  position: absolute;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  padding: 0;
+  border: 1px solid var(--aa-border);
+  border-radius: var(--aa-radius-chip);
+  background: var(--aa-surface);
+  color: var(--aa-faint);
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 120ms ease, color 120ms ease;
+}
+
+.ask-ai__code-copy {
+  top: 0.375rem;
+  right: 0.375rem;
+}
+
+/* The answer's own copy control sits at its bottom edge, out of the way of
+   the first line, and appears on hover so a resting thread stays quiet. */
+.ask-ai__turn-copy {
+  right: 0.375rem;
+  bottom: 0.375rem;
+}
+
+.ask-ai__code:hover .ask-ai__code-copy,
+.ask-ai__turn--assistant:hover .ask-ai__turn-copy,
+.ask-ai__code-copy:focus-visible,
+.ask-ai__turn-copy:focus-visible {
+  opacity: 1;
+}
+
+.ask-ai__code-copy:hover,
+.ask-ai__turn-copy:hover {
+  color: var(--aa-heading);
+}
+
+/* Openers for the empty state. Full width because they are sentences, and a
+   reader picks one by reading it rather than by scanning a row. */
+.ask-ai__starters {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+  margin-top: 0.25rem;
+}
+
+.ask-ai__starter {
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--aa-border);
+  border-radius: var(--aa-radius-control);
+  background: var(--aa-surface);
+  font-family: inherit;
+  font-size: 0.8125rem;
+  line-height: 1.4;
+  text-align: left;
+  color: var(--aa-body);
+  cursor: pointer;
+  transition: border-color 120ms ease, color 120ms ease;
+}
+
+.ask-ai__starter:hover {
+  border-color: var(--aa-border-strong);
+  color: var(--aa-heading);
+}
+
+/* A new conversation, once there is one to leave behind. */
+.ask-ai__reset {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.1875rem 0.5rem;
+  border: 1px solid var(--aa-border);
+  border-radius: var(--aa-radius-chip);
+  background: var(--aa-surface);
+  font-family: var(--aa-font-sans);
+  font-size: 0.75rem;
+  color: var(--aa-muted);
+  cursor: pointer;
+}
+
+.ask-ai__reset:hover {
+  border-color: var(--aa-border-strong);
+  color: var(--aa-heading);
+}
+
+/* Citation chips, one per source, under the answer text they support. */
+.ask-ai__sources {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.375rem;
+  margin-top: 0.625rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid var(--aa-border);
+}
+
+.ask-ai__sources-label {
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--aa-faint);
+}
+
+.ask-ai__source-chip {
+  /* A citation is a pointer, not a sentence: long atom titles are cut rather
+     than allowed to take a line each, which is what turned six sources into
+     half a panel of boxes. */
+  max-width: 11rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  padding: 0.125rem 0.5rem;
+  border: 1px solid var(--aa-border);
+  border-radius: var(--aa-radius-chip);
+  background: var(--aa-surface);
+  font-size: 0.75rem;
+  color: var(--aa-body);
+  text-decoration: none;
+}
+
+.ask-ai__source-chip:hover {
+  border-color: var(--aa-border-strong);
+  color: var(--aa-heading);
+}
+
+/* A slow pulse beside the activity line: the wait before the first token can
+   run to a few seconds, and a still panel reads as a broken one. */
+.ask-ai__pulse {
+  display: inline-block;
+  width: 0.375rem;
+  height: 0.375rem;
+  margin-right: 0.5rem;
+  border-radius: 999px;
+  background: var(--aa-accent);
+  animation: ask-ai-pulse 1.4s ease-in-out infinite;
+}
+
+@keyframes ask-ai-pulse {
+  0%,
+  100% {
+    opacity: 0.25;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ask-ai__pulse {
+    animation: none;
+    opacity: 0.6;
+  }
+}
+
+/* What the model is doing while an answer streams in, shown until the first
+   text delta arrives and the turn it belongs to stops being empty. */
+.ask-ai__activity {
+  display: flex;
+  align-items: center;
+  margin: 0;
+  padding: 0.625rem 0.75rem;
+  font-size: 0.8125rem;
+  font-style: italic;
+  color: var(--aa-faint);
+}
+
+.ask-ai__composer {
+  display: flex;
+  align-items: flex-end;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem 1rem;
+  border-top: 1px solid var(--aa-border);
+}
+
+.ask-ai__input {
+  flex: 1 1 auto;
+  min-width: 0;
+  min-height: 2.25rem;
+  max-height: 10rem;
+  padding: 0.4375rem 0.75rem;
+  resize: none;
+  overflow-y: auto;
+  line-height: 1.5;
+  border: 1px solid var(--aa-border);
+  border-radius: var(--aa-radius-control);
+  background: var(--aa-page);
+  font-family: inherit;
+  font-size: 0.875rem;
+  color: var(--aa-heading);
+}
+
+.ask-ai__input:focus {
+  outline: none;
+  border-color: var(--aa-border-strong);
+}
+
+.ask-ai__send {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border: 0;
+  border-radius: var(--aa-radius-control);
+  background: var(--aa-accent);
+  color: var(--aa-accent-contrast);
+  cursor: pointer;
+}
+
+.ask-ai__send--stop {
+  background: var(--aa-fill-soft);
+  color: var(--aa-heading);
+}

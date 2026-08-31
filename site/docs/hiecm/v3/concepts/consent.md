@@ -5,6 +5,7 @@ description: What a consent request is, what a consent artefact is, who holds it
 verification: unverified
 source: ABDM__Proposed_Simplified_Milestone_3.md, ABDM__NewDocumant_PHR_app.md, ABDM__Proposed_Simplified_Milestone_2.md
 sidebar_position: 4
+covers: [hiecm.concept.consent-artefact]
 ---
 
 # Consent

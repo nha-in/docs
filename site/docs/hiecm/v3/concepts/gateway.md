@@ -5,6 +5,7 @@ description: The routing layer every ABDM call goes through, and the session end
 verification: unverified
 source: ABDM__M1_ABHA_Collection.postman_collection.md, ABDM__Proposed_Simplified_Milestone_2.md, ABDM__Proposed_Simplified_Milestone_3.md, ABDM__Proposed_Simplified_Milestone_4_(NHPR).md
 sidebar_position: 7
+covers: [hiecm.concept.gateway-session]
 ---
 
 # The ABDM gateway

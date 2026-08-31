@@ -6,6 +6,7 @@ description: Every error code the specifications carry, with its message and wha
 verification: unverified
 source: the published OpenAPI specifications
 generated: true
+covers: [hiecm.concept.error-codes]
 ---
 
 # Error codes

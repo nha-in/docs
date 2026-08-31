@@ -24,9 +24,14 @@ built entirely from the catalogue. Nothing under `site/docs` or
 `site/static/specs` is hand-edited; both are regenerated on every build. See
 [site/README.md](site/README.md).
 
+**The widget** is the support agent's user interface as one custom element,
+`<abdm-support-agent>`, built to a self-contained script that goes on any
+page. The docs site embeds it the way any other host would: a script tag and
+an element, no import. See [widget/README.md](widget/README.md).
+
 **The Docs MCP server** is a Go binary that compiles the catalogue into a
 SQLite snapshot and serves it three ways: the MCP protocol for coding
-agents, the site's search box, and the site's "Ask AI" chat panel. See
+agents, the site's search box, and the "Ask AI" widget. See
 [mcp/README.md](mcp/README.md) for configuration, the full tool list, and
 how to run it.
 

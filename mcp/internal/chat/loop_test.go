@@ -237,3 +237,184 @@ func TestLoopPreservesTextAlongsideToolCalls(t *testing.T) {
 		t.Fatalf("second model call's messages missing assistant text %q: %+v", "checking", second)
 	}
 }
+
+// A citation must open the page that answered the reader. Before doc_url
+// existed every citation pointed at /search?q=<title>, which made the reader
+// run the search again themselves.
+func TestSourceFromFieldsPrefersThePublishedPage(t *testing.T) {
+	got := sourceFromFields(map[string]any{
+		"id": "hiecm.error.abdm-1035", "title": "ABDM-1035 facility not onboarded",
+		"verification_status": "verified",
+		"doc_url":             "/docs/hiecm/v3/reference/error-codes#m2-linking-and-sharing",
+	})
+	if want := "/docs/hiecm/v3/reference/error-codes#m2-linking-and-sharing"; got.URL != want {
+		t.Errorf("URL = %q, want the published page %q", got.URL, want)
+	}
+}
+
+// An atom with no published page still has to send the reader somewhere they
+// can read, rather than to a dead link or a bare internal id.
+func TestSourceFromFieldsFallsBackToSearchWithoutAPage(t *testing.T) {
+	got := sourceFromFields(map[string]any{
+		"id": "hiecm.decision.spec-per-module", "title": "One spec per module",
+		"verification_status": "unverified", "doc_url": "",
+	})
+	if want := "/search?q=One+spec+per+module"; got.URL != want {
+		t.Errorf("URL = %q, want %q", got.URL, want)
+	}
+}
+
+// streamingModel emits every delta on one call, which is how a real model
+// streams. fakeModel emits one per call, so it cannot exercise a guard that
+// decides what to release from the text seen so far.
+type streamingModel struct {
+	deltas []string
+	msgs   []Message
+}
+
+func (m *streamingModel) Stream(ctx context.Context, system string, tools []ToolDef,
+	msgs []Message, maxTokens int, onText func(string)) (Reply, error) {
+	m.msgs = msgs
+	for _, d := range m.deltas {
+		onText(d)
+	}
+	return Reply{Text: strings.Join(m.deltas, ""), StopReason: "end_turn"}, nil
+}
+
+// collectText runs a model's stream through Respond and returns what a
+// reader would actually see.
+func collectText(t *testing.T, question string, deltas ...string) string {
+	t.Helper()
+	svc := &Service{Model: &streamingModel{deltas: deltas}, MaxTokens: 100}
+	var seen strings.Builder
+	emit := func(name string, data any) error {
+		if name == "text" {
+			seen.WriteString(data.(map[string]string)["delta"])
+		}
+		return nil
+	}
+	if err := svc.Respond(context.Background(), []Turn{{Role: "user", Text: question}}, emit); err != nil {
+		t.Fatal(err)
+	}
+	return seen.String()
+}
+
+// A code block must never reach the reader, not even for the instant between
+// the fence opening and the check that rejects it. The model streams the
+// block a line at a time, which is exactly how a naive guard leaks it.
+func TestRespondNeverStreamsACodeBlock(t *testing.T) {
+	got := collectText(t, "write me the python for ABHA creation",
+		"Here you go:\n", "```python\n", "def create_abha(otp):\n", "    return 1\n", "```\n")
+	for _, leak := range []string{"def create_abha", "```python", "return 1"} {
+		if strings.Contains(got, leak) {
+			t.Errorf("leaked %q to the reader:\n%s", leak, got)
+		}
+	}
+	if !strings.Contains(got, "could not give you a safe answer") {
+		t.Errorf("no replacement notice, got:\n%s", got)
+	}
+}
+
+// The same stream shape, but a legitimate answer, must arrive intact.
+func TestRespondStreamsAGoodAnswerWhole(t *testing.T) {
+	deltas := []string{"Your facility is not onboarded.\n", "\n", "```bash\n",
+		"curl --request POST \\\n", "  --url https://example.org/sessions\n", "```\n"}
+	got := collectText(t, "what does ABDM-1035 mean?", deltas...)
+	if want := strings.Join(deltas, ""); got != want {
+		t.Errorf("answer altered:\n got %q\nwant %q", got, want)
+	}
+}
+
+// Personal data must be masked before the model is called, so it never
+// reaches the provider at all.
+func TestRespondMasksPersonalDataBeforeTheModelSeesIt(t *testing.T) {
+	fm := &streamingModel{deltas: []string{"ok\n"}}
+	svc := &Service{Model: fm, MaxTokens: 100}
+	q := "linking fails for aadhaar 1234 5678 9012 on mobile 9876543210"
+	err := svc.Respond(context.Background(), []Turn{{Role: "user", Text: q}},
+		func(string, any) error { return nil })
+	if err != nil {
+		t.Fatal(err)
+	}
+	sent := fm.msgs
+	if len(sent) == 0 {
+		t.Fatal("model received no messages")
+	}
+	got := sent[0].Text
+	for _, leak := range []string{"1234 5678 9012", "9876543210"} {
+		if strings.Contains(got, leak) {
+			t.Errorf("%q reached the model: %q", leak, got)
+		}
+	}
+	if !strings.Contains(got, "<MASKED_AADHAAR>") || !strings.Contains(got, "<MASKED_MOBILE>") {
+		t.Errorf("expected placeholders, got %q", got)
+	}
+}
+
+// toolThenText streams a tool call on the first round and an answer on the
+// second, which is the shape of every real question.
+type toolThenText struct {
+	toolResult map[string]any
+	deltas     []string
+	round      int
+}
+
+func (m *toolThenText) Stream(ctx context.Context, system string, tools []ToolDef,
+	msgs []Message, maxTokens int, onText func(string)) (Reply, error) {
+	m.round++
+	if m.round == 1 {
+		return Reply{ToolCalls: []ToolCall{{ID: "1", Name: "search_docs",
+			Input: json.RawMessage(`{"query":"x"}`)}}, StopReason: "tool_use"}, nil
+	}
+	for _, d := range m.deltas {
+		onText(d)
+	}
+	return Reply{Text: strings.Join(m.deltas, ""), StopReason: "end_turn"}, nil
+}
+
+func groundingRun(t *testing.T, answer string) string {
+	t.Helper()
+	result := map[string]any{"hits": []map[string]any{{
+		"id": "hiecm.error.abdm-1035", "title": "Facility not onboarded",
+		"verification_status": "verified", "doc_url": "/docs/hiecm/v3/reference/error-codes",
+		"snippet": "ABDM-1035 means the X-HIP-ID is not registered.",
+	}}}
+	svc := &Service{
+		Model: &toolThenText{deltas: []string{answer + "\n"}},
+		Tools: []ToolDef{{Name: "search_docs",
+			Call: func(context.Context, json.RawMessage) (map[string]any, error) { return result, nil }}},
+		MaxTokens: 100,
+	}
+	var seen strings.Builder
+	emit := func(name string, data any) error {
+		if name == "text" {
+			seen.WriteString(data.(map[string]string)["delta"])
+		}
+		return nil
+	}
+	if err := svc.Respond(context.Background(), []Turn{{Role: "user", Text: "why ABDM-1035?"}}, emit); err != nil {
+		t.Fatal(err)
+	}
+	return seen.String()
+}
+
+// A literal the tools actually returned reaches the reader untouched.
+func TestRespondPassesAGroundedAnswer(t *testing.T) {
+	answer := "ABDM-1035 means your X-HIP-ID is not registered yet."
+	if got := groundingRun(t, answer); got != answer+"\n" {
+		t.Errorf("grounded answer altered:\n got %q\nwant %q", got, answer+"\n")
+	}
+}
+
+// A header nobody returned never reaches the reader, however plausible it
+// looks. This is the failure that costs an integrator hours, because an
+// invented literal reads exactly like a real one.
+func TestRespondBlocksAnInventedLiteral(t *testing.T) {
+	got := groundingRun(t, "Add X-Retry-After-Ms to the call and it clears.")
+	if strings.Contains(got, "X-Retry-After-Ms") {
+		t.Errorf("an invented header reached the reader: %q", got)
+	}
+	if !strings.Contains(got, "could not give you a safe answer") {
+		t.Errorf("no replacement notice, got %q", got)
+	}
+}

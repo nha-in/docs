@@ -63,7 +63,6 @@ func fixtureSpecErrors() []catalogue.SpecErrorCode {
 	}
 }
 
-
 // buildFixtureDB builds a snapshot; withVectors selects the fake-embedded
 // or the keyword-only variant. Reused by reader and server tests.
 func buildFixtureDB(t *testing.T, withVectors bool) string {
@@ -171,5 +170,50 @@ func TestVectorRoundTrip(t *testing.T) {
 	got := blobToVec(vecToBlob(v))
 	if len(got) != 3 || got[0] != 1.5 || got[1] != -2.25 || got[2] != 0 {
 		t.Errorf("round trip = %v", got)
+	}
+}
+
+// The atoms INSERT is positional, so a column added to the schema without a
+// matching value (or the reverse) writes the wrong field into the wrong
+// column, or silently drops one. Round-tripping through Build and GetAtom is
+// what catches that: it is not visible from a successful build or a passing
+// indexer run.
+func TestBuildRoundTripsDocLinkColumns(t *testing.T) {
+	dbPath := filepath.Join(t.TempDir(), "c.db")
+	atom := catalogue.Atom{
+		ID: "hiecm.error.abdm-1035", Type: "error", Gateway: "hiecm",
+		Milestone: "M2", Title: "T", Summary: "s", VerificationStatus: "verified",
+		Body: "b", SourcePath: "hiecm/errors/abdm-1035.md",
+		DocURL: "/docs/hiecm/v3/reference/error-codes", DocAnchor: "m2-linking-and-sharing",
+	}
+	if err := Build(dbPath, []catalogue.Atom{atom}, nil, nil, nil,
+		Meta{CatalogueVersion: "v", BuiltAt: "t"}); err != nil {
+		t.Fatal(err)
+	}
+	r, err := Open(dbPath)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer r.Close()
+
+	got, err := r.GetAtom(atom.ID)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if got.DocURL != atom.DocURL || got.DocAnchor != atom.DocAnchor {
+		t.Errorf("round trip lost the link: DocURL=%q DocAnchor=%q, want %q and %q",
+			got.DocURL, got.DocAnchor, atom.DocURL, atom.DocAnchor)
+	}
+	if want := atom.DocURL + "#" + atom.DocAnchor; DocLink(got.DocURL, got.DocAnchor) != want {
+		t.Errorf("DocLink = %q, want %q", DocLink(got.DocURL, got.DocAnchor), want)
+	}
+
+	// The same columns must survive the list path, which selects its own set.
+	refs, err := r.ListAtoms("error", "")
+	if err != nil || len(refs) != 1 {
+		t.Fatalf("ListAtoms: %v, %d rows", err, len(refs))
+	}
+	if refs[0].DocURL != atom.DocURL || refs[0].DocAnchor != atom.DocAnchor {
+		t.Errorf("ListAtoms lost the link: %+v", refs[0])
 	}
 }

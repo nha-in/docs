@@ -215,6 +215,7 @@ func searchHitsJSON(hits []index.SearchHit) []map[string]any {
 			"id": h.ID, "type": h.Type, "milestone": h.Milestone,
 			"title": h.Title, "summary": h.Summary,
 			"verification_status": h.VerificationStatus, "snippet": h.Snippet,
+			"doc_url": index.DocLink(h.DocURL, h.DocAnchor),
 		})
 	}
 	return out
@@ -226,6 +227,7 @@ func atomRefsJSON(refs []index.AtomRef) []map[string]any {
 		out = append(out, map[string]any{
 			"id": a.ID, "type": a.Type, "milestone": a.Milestone,
 			"title": a.Title, "verification_status": a.VerificationStatus,
+			"doc_url": index.DocLink(a.DocURL, a.DocAnchor),
 		})
 	}
 	return out

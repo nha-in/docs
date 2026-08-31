@@ -111,10 +111,10 @@ func (r *Reader) GetAtom(id string) (catalogue.Atom, error) {
 	var a catalogue.Atom
 	err := r.db.QueryRow(`
         SELECT id, type, gateway, milestone, title, summary,
-               verification_status, body, source_path
+               verification_status, body, source_path, doc_url, doc_anchor
         FROM atoms WHERE id = ?`, id).Scan(
 		&a.ID, &a.Type, &a.Gateway, &a.Milestone, &a.Title, &a.Summary,
-		&a.VerificationStatus, &a.Body, &a.SourcePath)
+		&a.VerificationStatus, &a.Body, &a.SourcePath, &a.DocURL, &a.DocAnchor)
 	if err == sql.ErrNoRows {
 		return catalogue.Atom{}, &NotFoundError{ID: id, Closest: r.closest("atoms", "id", id)}
 	}
@@ -126,6 +126,7 @@ func (r *Reader) GetAtom(id string) (catalogue.Atom, error) {
 
 type AtomRef struct {
 	ID, Type, Milestone, Title, VerificationStatus string
+	DocURL, DocAnchor                              string
 }
 
 func (r *Reader) atomRefs(query string, args ...any) ([]AtomRef, error) {
@@ -137,7 +138,8 @@ func (r *Reader) atomRefs(query string, args ...any) ([]AtomRef, error) {
 	refs := []AtomRef{}
 	for rows.Next() {
 		var a AtomRef
-		if err := rows.Scan(&a.ID, &a.Type, &a.Milestone, &a.Title, &a.VerificationStatus); err != nil {
+		if err := rows.Scan(&a.ID, &a.Type, &a.Milestone, &a.Title,
+			&a.VerificationStatus, &a.DocURL, &a.DocAnchor); err != nil {
 			return nil, err
 		}
 		refs = append(refs, a)
@@ -145,7 +147,21 @@ func (r *Reader) atomRefs(query string, args ...any) ([]AtomRef, error) {
 	return refs, rows.Err()
 }
 
-const refCols = `id, type, milestone, title, verification_status`
+const refCols = `id, type, milestone, title, verification_status, doc_url, doc_anchor`
+
+// DocLink joins a page route and a section anchor into the link a reader
+// follows. It returns "" when the atom has no published page, which the
+// caller must treat as "not citable to a reader" rather than linking to
+// nothing.
+func DocLink(docURL, anchor string) string {
+	if docURL == "" {
+		return ""
+	}
+	if anchor == "" {
+		return docURL
+	}
+	return docURL + "#" + anchor
+}
 
 func (r *Reader) ListAtoms(atomType, milestone string) ([]AtomRef, error) {
 	return r.atomRefs(`SELECT `+refCols+` FROM atoms
@@ -204,7 +220,7 @@ func (r *Reader) RelatedAtoms(id string) ([]RelatedGroup, error) {
 			continue
 		}
 		byType[a.Type] = append(byType[a.Type],
-			AtomRef{a.ID, a.Type, a.Milestone, a.Title, a.VerificationStatus})
+			AtomRef{a.ID, a.Type, a.Milestone, a.Title, a.VerificationStatus, a.DocURL, a.DocAnchor})
 	}
 	var types []string
 	for t := range byType {

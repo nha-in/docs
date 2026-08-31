@@ -42,9 +42,9 @@ func Build(dbPath string, atoms []catalogue.Atom, ops []catalogue.Operation,
 	}
 	defer tx.Rollback()
 	for _, a := range atoms {
-		if _, err := tx.Exec(`INSERT INTO atoms VALUES (?,?,?,?,?,?,?,?,?)`,
+		if _, err := tx.Exec(`INSERT INTO atoms VALUES (?,?,?,?,?,?,?,?,?,?,?)`,
 			a.ID, a.Type, a.Gateway, a.Milestone, a.Title, a.Summary,
-			a.VerificationStatus, a.Body, a.SourcePath); err != nil {
+			a.VerificationStatus, a.Body, a.SourcePath, a.DocURL, a.DocAnchor); err != nil {
 			return fmt.Errorf("atom %s: %w", a.ID, err)
 		}
 		if _, err := tx.Exec(

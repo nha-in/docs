@@ -29,11 +29,16 @@ The site depends on nothing outside its own origin:
   must allow CORS, or through `proxyUrl` pointed at a proxy in our own
   infrastructure.
 
-## The Ask AI panel
+## The Ask AI widget
 
-The chip in the top bar streams answers from the [Docs MCP
-server](../mcp)'s chat endpoint. It reads its backend's address from the
-`CHAT_URL` build environment variable; the MCP server's own address for
+The chip in the top bar is not a component of this site. It is
+`<abdm-support-agent>`, the standalone widget in [../widget](../widget), built
+into `static/agent/` on every `prestart` and `prebuild` and loaded by a script
+tag. The site places the element and sets its attributes, exactly as any other
+embedder would, and styles only the box it sits in.
+
+It streams answers from the [Docs MCP server](../mcp)'s chat endpoint, whose
+address comes from the `CHAT_URL` build environment variable; the MCP server's own address for
 the install instructions on the MCP page comes from `MCP_URL`. Leaving
 either unset keeps that part of the site in a clearly labelled preview
 state rather than pointing at nothing — so a build with no backend

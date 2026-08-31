@@ -11,7 +11,9 @@ CREATE TABLE atoms (
     summary TEXT NOT NULL,
     verification_status TEXT NOT NULL,
     body TEXT NOT NULL,
-    source_path TEXT NOT NULL
+    source_path TEXT NOT NULL,
+    doc_url TEXT NOT NULL,
+    doc_anchor TEXT NOT NULL
 );
 CREATE VIRTUAL TABLE atoms_fts USING fts5(
     id UNINDEXED, title, summary, body, error_codes

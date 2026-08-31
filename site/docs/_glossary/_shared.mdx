@@ -69,6 +69,10 @@ Personal Health Record, a patient facing application: the person logs in with th
 
 NHA's test environment, and where every integration starts: you register on the sandbox portal, declare your role and the milestones you plan to complete, and receive a client id and client secret. Sandbox hosts differ from production, so ABHA calls go to `abhasbx.abdm.gov.in` in sandbox and `abha.abdm.gov.in` in production. Everything in sandbox is test data; see [Get started](/docs/hiecm/v3/getting-started/sandbox).
 
+### txnId
+
+Transaction id. Most flows take two or three calls, and the first one returns a `txnId` that the calls after it send back, so ABDM knows which attempt they belong to. It is short lived and single purpose. It is not a session and it is not a token: holding a `txnId` does not authenticate you, and it stops working once the flow it belongs to finishes or expires.
+
 ### UHI
 
 Unified Health Interface, an open protocol network for health services that are not record exchange: physical consultation booking, ambulance booking, blood bank discovery, Jan Aushadhi and pharmacy search. It has two roles, [EUA](/docs/uhi/v1/getting-started/glossary#eua) on the consumer side and [HSPA](/docs/uhi/v1/getting-started/glossary#hspa) on the provider side, and every call is signed with Ed25519. See [UHI](/docs/uhi/v1).

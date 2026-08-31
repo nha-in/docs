@@ -14,6 +14,10 @@ site/static/vendor/
 # Generated: agent skills compiled from the pages by scripts/build-skills.mjs
 site/static/skills/
 
+# Generated: the support agent widget, bundled from widget/ on every build
+site/static/agent/
+widget/dist/
+
 # Environment
 .env
 .env.*
