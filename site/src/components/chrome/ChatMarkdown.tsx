@@ -1,18 +1,20 @@
 import React from 'react';
 import Link from '@docusaurus/Link';
+import {Check, Copy} from 'lucide-react';
 
 /**
- * Renders the small markdown subset the Ask AI assistant actually emits:
- * paragraphs, bulleted and numbered lists, bold, italics, inline code and
- * links. Nothing else, deliberately. A full markdown library would be a new
- * dependency and a bigger attack surface for text that streams straight from
- * a model; this renderer produces React elements only, so model output can
- * never inject markup.
+ * Renders the small markdown subset the Ask AI assistant emits: paragraphs,
+ * bulleted and numbered lists, fenced code blocks, bold, italics, inline code
+ * and links. Nothing else, deliberately. A full markdown library would be a
+ * new dependency and a bigger attack surface for text that streams straight
+ * from a model; this renderer produces React elements only, so model output
+ * can never inject markup.
  *
  * The text re-renders on every streamed delta, so a marker that is still
  * half-open ("**bo") shows literally for a moment and resolves when its
- * closing half arrives. That is the standard look of streaming chat and
- * costs nothing.
+ * closing half arrives. Fences are the exception: an unclosed fence renders
+ * as a code block right away, because an answer that is mid-way through a
+ * curl example should look like code while it arrives, not like prose.
  */
 
 const INLINE = /(`[^`]+`|\*\*[^*]+\*\*|\*[^*]+\*|\[[^\]]+\]\([^)\s]+\))/g;
@@ -32,8 +34,8 @@ function renderInline(text: string): React.ReactNode[] {
     const link = /^\[([^\]]+)\]\(([^)\s]+)\)$/.exec(part);
     if (link) {
       const [, label, href] = link;
-      // Only site-relative and http(s) destinations; anything else renders
-      // as the text it was.
+      // Site-relative and http(s) destinations only; anything else renders as
+      // the text it was.
       if (href.startsWith('/')) {
         return (
           <Link key={i} to={href}>
@@ -54,8 +56,51 @@ function renderInline(text: string): React.ReactNode[] {
   });
 }
 
+/** Copies text to the clipboard and says so for a moment. */
+export function CopyButton({
+  text,
+  label,
+  className,
+}: {
+  text: string;
+  label: string;
+  className: string;
+}) {
+  const [copied, setCopied] = React.useState(false);
+
+  React.useEffect(() => {
+    if (!copied) return;
+    const id = window.setTimeout(() => setCopied(false), 1600);
+    return () => window.clearTimeout(id);
+  }, [copied]);
+
+  // The clipboard API needs a secure context. Where it is missing the button
+  // would silently do nothing, so it does not render at all.
+  if (typeof navigator === 'undefined' || !navigator.clipboard) return null;
+
+  return (
+    <button
+      type="button"
+      className={className}
+      aria-label={copied ? 'Copied' : label}
+      onClick={() => {
+        navigator.clipboard.writeText(text).then(
+          () => setCopied(true),
+          () => undefined,
+        );
+      }}>
+      {copied ? (
+        <Check className="size-3.5" aria-hidden="true" />
+      ) : (
+        <Copy className="size-3.5" aria-hidden="true" />
+      )}
+    </button>
+  );
+}
+
 type Block =
   | {kind: 'p'; text: string}
+  | {kind: 'code'; text: string}
   | {kind: 'ul' | 'ol'; items: string[]};
 
 const BULLET = /^\s*[-*]\s+(.*)$/;
@@ -65,6 +110,7 @@ function toBlocks(text: string): Block[] {
   const blocks: Block[] = [];
   let list: {kind: 'ul' | 'ol'; items: string[]} | null = null;
   let para: string[] = [];
+  let code: string[] | null = null;
 
   const flushPara = () => {
     if (para.length > 0) {
@@ -80,6 +126,24 @@ function toBlocks(text: string): Block[] {
   };
 
   for (const line of text.split('\n')) {
+    if (line.trimStart().startsWith('```')) {
+      if (code) {
+        blocks.push({kind: 'code', text: code.join('\n')});
+        code = null;
+      } else {
+        flushPara();
+        flushList();
+        // The info string (```json) is dropped: nothing here highlights, and
+        // showing it would put a stray word above the sample.
+        code = [];
+      }
+      continue;
+    }
+    if (code) {
+      code.push(line);
+      continue;
+    }
+
     const bullet = BULLET.exec(line);
     const numbered = bullet ? null : NUMBERED.exec(line);
     if (bullet || numbered) {
@@ -103,10 +167,12 @@ function toBlocks(text: string): Block[] {
       continue;
     }
     flushList();
-    // Headings arrive rarely; render them as emphasized prose rather than
-    // grabbing heading levels inside a chat bubble.
+    // Headings arrive rarely; they render as emphasized prose rather than
+    // taking heading levels inside a chat bubble.
     para.push(line.replace(/^#{1,4}\s+/, '').trim());
   }
+  // A fence still open at the end of the text is a code block mid-stream.
+  if (code) blocks.push({kind: 'code', text: code.join('\n')});
   flushPara();
   flushList();
   return blocks;
@@ -118,6 +184,20 @@ export default function ChatMarkdown({text}: {text: string}) {
       {toBlocks(text).map((block, i) => {
         if (block.kind === 'p') {
           return <p key={i}>{renderInline(block.text)}</p>;
+        }
+        if (block.kind === 'code') {
+          return (
+            <div key={i} className="ask-ai__code">
+              <pre>
+                <code>{block.text}</code>
+              </pre>
+              <CopyButton
+                text={block.text}
+                label="Copy code"
+                className="ask-ai__code-copy"
+              />
+            </div>
+          );
         }
         const ListTag = block.kind;
         return (

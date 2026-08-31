@@ -2,9 +2,9 @@ import React from 'react';
 import Link from '@docusaurus/Link';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import SearchBar from '@theme/SearchBar';
-import {ArrowUp, Sparkles} from 'lucide-react';
+import {ArrowUp, PenLine, Sparkles, Square} from 'lucide-react';
 import {cn} from '@site/src/lib/utils';
-import ChatMarkdown from '@site/src/components/chrome/ChatMarkdown';
+import ChatMarkdown, {CopyButton} from '@site/src/components/chrome/ChatMarkdown';
 import {
   Sheet,
   SheetContent,
@@ -42,6 +42,19 @@ const LIVE_OPENING: Turn = {
     'Ask about ABDM and this answers from the published catalogue, with the ' +
     'atoms it drew on cited below the reply.',
 };
+
+/**
+ * The empty state's openers. A blank chat box is the hardest question a
+ * reader answers, and these also teach the panel's range in one glance: a
+ * header detail, an error code, a flow, and a concept. They are questions the
+ * catalogue genuinely answers, so a first try does not miss.
+ */
+const STARTERS = [
+  'What format does the TIMESTAMP header need?',
+  'What does ABDM-1016 mean and how do I fix it?',
+  'How do I create an ABHA with an Aadhaar OTP?',
+  'What is a care context?',
+];
 
 type StreamHandlers = {
   onText: (delta: string) => void;
@@ -160,10 +173,56 @@ function AskAiPanel() {
   const [draft, setDraft] = React.useState('');
   const [busy, setBusy] = React.useState(false);
   const [activity, setActivity] = React.useState<string | null>(null);
+  const thread = React.useRef<HTMLDivElement>(null);
+  const composer = React.useRef<HTMLTextAreaElement>(null);
+  const abort = React.useRef<AbortController | null>(null);
 
-  const send = async (event: React.FormEvent) => {
-    event.preventDefault();
-    const asked = draft.trim();
+  // Follow the answer as it streams, and stop the moment the reader scrolls
+  // away to re-read something earlier. Yanking them back down mid-sentence is
+  // the rudest thing a chat panel can do.
+  //
+  // The intent is tracked rather than inferred from distance: measuring the
+  // gap on each render looks equivalent but is not, because until the answer
+  // is taller than the panel the browser clamps scrollTop to 0, and the first
+  // answer that overflows then reads as "the reader has scrolled up" and
+  // following stops for good. A scroll listener sees the difference, since
+  // pinning to the bottom lands at a gap of zero and leaves the flag set.
+  const stick = React.useRef(true);
+  const onThreadScroll = () => {
+    const el = thread.current;
+    if (!el) return;
+    stick.current = el.scrollHeight - el.scrollTop - el.clientHeight < 40;
+  };
+
+  React.useEffect(() => {
+    const el = thread.current;
+    if (el && stick.current) el.scrollTop = el.scrollHeight;
+  }, [turns, activity]);
+
+  // The composer grows with what is pasted into it, up to a point: developers
+  // arrive with a whole error body to paste, and a one line box hides all but
+  // the last line of it.
+  React.useEffect(() => {
+    const el = composer.current;
+    if (!el) return;
+    el.style.height = 'auto';
+    el.style.height = `${Math.min(el.scrollHeight, 160)}px`;
+  }, [draft]);
+
+  // Leaving the panel mid-answer stops the stream rather than leaving it to
+  // run against a component nobody is watching.
+  React.useEffect(() => () => abort.current?.abort(), []);
+
+  const reset = () => {
+    abort.current?.abort();
+    stick.current = true;
+    setTurns([chatUrl ? LIVE_OPENING : MOCK_OPENING]);
+    setDraft('');
+    setActivity(null);
+    setBusy(false);
+  };
+
+  const ask = async (asked: string) => {
     if (!asked || busy) return;
     setDraft('');
 
@@ -183,9 +242,12 @@ function AskAiPanel() {
       {from: 'assistant', text: ''},
     ]);
     setBusy(true);
+    const controller = new AbortController();
+    abort.current = controller;
     try {
       const res = await fetch(`${chatUrl}/api/chat`, {
         method: 'POST',
+        signal: controller.signal,
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({
           turns: history
@@ -200,12 +262,21 @@ function AskAiPanel() {
         onSources: (sources) => attachSources(setTurns, sources),
         onError: (message) => appendToLastTurn(setTurns, message),
       });
-    } catch {
-      appendToLastTurn(setTurns, UNREACHABLE);
+    } catch (err) {
+      // A stop is the reader's own doing: keep whatever arrived, say nothing.
+      if (!(err instanceof DOMException && err.name === 'AbortError')) {
+        appendToLastTurn(setTurns, UNREACHABLE);
+      }
     } finally {
+      abort.current = null;
       setBusy(false);
       setActivity(null);
     }
+  };
+
+  const send = (event: React.FormEvent) => {
+    event.preventDefault();
+    void ask(draft.trim());
   };
 
   const lastTurn = turns[turns.length - 1];
@@ -224,6 +295,16 @@ function AskAiPanel() {
           <SheetTitle className="ask-ai__title">
             Ask AI
             {!chatUrl && <span className="ask-ai__badge">Mock</span>}
+            {turns.length > 1 && (
+              <button
+                type="button"
+                className="ask-ai__reset"
+                onClick={reset}
+                aria-label="Start a new conversation">
+                <PenLine className="size-3.5" aria-hidden="true" />
+                New
+              </button>
+            )}
           </SheetTitle>
           <SheetDescription>
             {chatUrl ? (
@@ -237,7 +318,7 @@ function AskAiPanel() {
           </SheetDescription>
         </SheetHeader>
 
-        <div className="ask-ai__thread">
+        <div className="ask-ai__thread" ref={thread} onScroll={onThreadScroll}>
           {turns.map((turn, index) => (
             <div
               key={index}
@@ -247,8 +328,16 @@ function AskAiPanel() {
               ) : (
                 turn.text
               )}
+              {turn.from === 'assistant' && index > 0 && turn.text !== '' && (
+                <CopyButton
+                  text={turn.text}
+                  label="Copy answer"
+                  className="ask-ai__turn-copy"
+                />
+              )}
               {turn.sources && turn.sources.length > 0 && (
                 <div className="ask-ai__sources">
+                  <span className="ask-ai__sources-label">Sources</span>
                   {turn.sources.map((source) => (
                     <Link
                       key={source.id}
@@ -262,25 +351,66 @@ function AskAiPanel() {
               )}
             </div>
           ))}
-          {showActivity && <p className="ask-ai__activity">{activity}</p>}
+          {showActivity && (
+            <p className="ask-ai__activity">
+              <span className="ask-ai__pulse" aria-hidden="true" />
+              {activity}
+            </p>
+          )}
+
+          {/* The empty state carries the openers, and they go the moment the
+              reader has asked anything of their own. */}
+          {turns.length === 1 && (
+            <div className="ask-ai__starters">
+              {STARTERS.map((q) => (
+                <button
+                  key={q}
+                  type="button"
+                  className="ask-ai__starter"
+                  onClick={() => void ask(q)}>
+                  {q}
+                </button>
+              ))}
+            </div>
+          )}
         </div>
 
         <form className="ask-ai__composer" onSubmit={send}>
-          <input
+          {/* A textarea, not an input: an error body pasted in should be
+              readable before it is sent. Enter still sends, because that is
+              what every chat box does; shift and enter takes a new line. */}
+          <textarea
+            ref={composer}
             className="ask-ai__input"
             value={draft}
+            rows={1}
             onChange={(event) => setDraft(event.target.value)}
+            onKeyDown={(event) => {
+              if (event.key === 'Enter' && !event.shiftKey) {
+                event.preventDefault();
+                void ask(draft.trim());
+              }
+            }}
             placeholder="Ask about ABDM"
             aria-label="Ask the assistant"
-            disabled={busy}
           />
+          {busy ? (
+            <button
+              className="ask-ai__send ask-ai__send--stop"
+              type="button"
+              aria-label="Stop"
+              onClick={() => abort.current?.abort()}>
+              <Square className="size-3" aria-hidden="true" />
+            </button>
+          ) : (
           <button
             className="ask-ai__send"
             type="submit"
             aria-label="Send"
-            disabled={busy}>
+            disabled={draft.trim() === ''}>
             <ArrowUp className="size-4" aria-hidden="true" />
           </button>
+          )}
         </form>
       </SheetContent>
     </Sheet>
