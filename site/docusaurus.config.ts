@@ -198,6 +198,13 @@ const config: Config = {
   // offered alongside it. `alternate icon` is only reached by a browser that
   // could not use the SVG, so Chrome, Firefox and Edge still get the vector
   // and its light and dark variants.
+  // The support agent is a standalone custom element, loaded like any
+  // third-party embed would load it. Nothing in the site imports it, which is
+  // what keeps it usable on pages that are not this site.
+  scripts: [
+    {src: `${siteBase}agent/abdm-support-agent.js`, defer: true},
+  ],
+
   headTags: [
     {
       tagName: 'link',

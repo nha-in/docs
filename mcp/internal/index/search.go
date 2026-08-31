@@ -12,6 +12,10 @@ import (
 
 type SearchHit struct {
 	ID, Type, Milestone, Title, Summary, VerificationStatus, Snippet string
+	// DocURL and DocAnchor are the published page this atom's knowledge
+	// lives on. Empty means the atom has no page and must not be cited to
+	// a reader. See DocLink.
+	DocURL, DocAnchor string
 }
 
 const rrfK = 60.0
@@ -34,6 +38,7 @@ func (r *Reader) ftsSearch(query, atomType, milestone string, limit int) ([]Sear
 	}
 	rows, err := r.db.Query(`
         SELECT a.id, a.type, a.milestone, a.title, a.summary, a.verification_status,
+               a.doc_url, a.doc_anchor,
                snippet(atoms_fts, 3, '**', '**', '...', 12)
         FROM atoms_fts
         JOIN atoms a ON a.id = atoms_fts.id
@@ -51,7 +56,7 @@ func (r *Reader) ftsSearch(query, atomType, milestone string, limit int) ([]Sear
 	for rows.Next() {
 		var h SearchHit
 		if err := rows.Scan(&h.ID, &h.Type, &h.Milestone, &h.Title, &h.Summary,
-			&h.VerificationStatus, &h.Snippet); err != nil {
+			&h.VerificationStatus, &h.DocURL, &h.DocAnchor, &h.Snippet); err != nil {
 			return nil, err
 		}
 		hits = append(hits, h)
@@ -67,7 +72,8 @@ func (r *Reader) vectorSearch(ctx context.Context, query, atomType, milestone st
 	}
 	rows, err := r.db.Query(`
         SELECT c.atom_id, c.text, c.embedding,
-               a.type, a.milestone, a.title, a.summary, a.verification_status
+               a.type, a.milestone, a.title, a.summary, a.verification_status,
+               a.doc_url, a.doc_anchor
         FROM chunks c JOIN atoms a ON a.id = c.atom_id
         WHERE c.embedding IS NOT NULL
           AND (? = '' OR a.type = ?)
@@ -87,7 +93,7 @@ func (r *Reader) vectorSearch(ctx context.Context, query, atomType, milestone st
 		var blob []byte
 		var h SearchHit
 		if err := rows.Scan(&atomID, &text, &blob, &h.Type, &h.Milestone,
-			&h.Title, &h.Summary, &h.VerificationStatus); err != nil {
+			&h.Title, &h.Summary, &h.VerificationStatus, &h.DocURL, &h.DocAnchor); err != nil {
 			return nil, err
 		}
 		h.ID = atomID

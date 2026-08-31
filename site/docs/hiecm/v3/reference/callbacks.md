@@ -6,6 +6,7 @@ description: The calls ABDM makes back to your bridge, as the specifications dec
 verification: unverified
 source: the published OpenAPI specifications
 generated: true
+covers: [hiecm.concept.asynchronous-callbacks, hiecm.decision.callbacks-as-webhooks]
 ---
 
 # Callbacks

@@ -62,3 +62,19 @@ func TestParseAtomRejectsMissingID(t *testing.T) {
 		t.Fatal("want error for missing id")
 	}
 }
+
+// An atom must never carry its own route. It is authored before the site is
+// built and is not published one to one as a page, so a route in frontmatter
+// would be a guess that rots. Routes come from catalogue/atom-routes.json,
+// applied by the indexer.
+func TestParseAtomIgnoresAnyRouteInFrontmatter(t *testing.T) {
+	content := []byte("---\nid: a.b.c\ndocs:\n  url: /docs/somewhere\n---\n\n# Body\n")
+	a, err := ParseAtom("x.md", content)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if a.DocURL != "" || a.DocAnchor != "" {
+		t.Errorf("DocURL=%q DocAnchor=%q, want both empty: an atom may not declare a route",
+			a.DocURL, a.DocAnchor)
+	}
+}

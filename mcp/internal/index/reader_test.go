@@ -227,3 +227,18 @@ func TestGetOperationAndStats(t *testing.T) {
 		t.Errorf("stats = %+v", s)
 	}
 }
+
+func TestDocLink(t *testing.T) {
+	cases := []struct{ url, anchor, want string }{
+		{"/docs/hiecm/v3/reference/error-codes", "when-it-goes-wrong",
+			"/docs/hiecm/v3/reference/error-codes#when-it-goes-wrong"},
+		{"/docs/hiecm/v3/reference/error-codes", "", "/docs/hiecm/v3/reference/error-codes"},
+		// No published page means not citable to a reader, not a link to nowhere.
+		{"", "when-it-goes-wrong", ""},
+	}
+	for _, c := range cases {
+		if got := DocLink(c.url, c.anchor); got != c.want {
+			t.Errorf("DocLink(%q,%q) = %q, want %q", c.url, c.anchor, got, c.want)
+		}
+	}
+}

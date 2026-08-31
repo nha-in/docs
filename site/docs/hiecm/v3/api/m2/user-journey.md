@@ -5,6 +5,7 @@ sidebar_position: 10
 description: The four M2 flows as sequence diagrams, from linking a care context to pushing encrypted records.
 verification: unverified
 source: ABDM__Proposed_Simplified_Milestone_2.md
+covers: [hiecm.flow.m2-link-care-context]
 ---
 
 # M2 user journeys

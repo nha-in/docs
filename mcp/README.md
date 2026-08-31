@@ -53,6 +53,9 @@ With embeddings via Ollama (running locally, nomic-embed-text pulled):
 Or docker compose up (see docker-compose.yml; the Ollama sidecar is the
 `ollama` profile).
 
+The support agent that consumes this server, its guardrails and its
+answer contract, is specified in support-agent-playbook.md.
+
 ## Tools
 
 search_docs, get_atom, related_atoms, decode_error, list_atoms,

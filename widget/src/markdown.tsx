@@ -1,14 +1,14 @@
-import React from 'react';
-import Link from '@docusaurus/Link';
-import {Check, Copy} from 'lucide-react';
+import {useEffect, useState} from 'preact/hooks';
+import type {ComponentChildren} from 'preact';
+import {Check, Copy} from './icons';
 
 /**
- * Renders the small markdown subset the Ask AI assistant emits: paragraphs,
+ * Renders the small markdown subset the support agent emits: paragraphs,
  * bulleted and numbered lists, fenced code blocks, bold, italics, inline code
  * and links. Nothing else, deliberately. A full markdown library would be a
  * new dependency and a bigger attack surface for text that streams straight
- * from a model; this renderer produces React elements only, so model output
- * can never inject markup.
+ * from a model; this renderer produces elements only, so model output can
+ * never inject markup.
  *
  * The text re-renders on every streamed delta, so a marker that is still
  * half-open ("**bo") shows literally for a moment and resolves when its
@@ -19,33 +19,38 @@ import {Check, Copy} from 'lucide-react';
 
 const INLINE = /(`[^`]+`|\*\*[^*]+\*\*|\*[^*]+\*|\[[^\]]+\]\([^)\s]+\))/g;
 
-function renderInline(text: string): React.ReactNode[] {
+/**
+ * A site-relative destination is absolute against the docs origin. The widget
+ * runs on pages that are not the docs site, where "/docs/..." points at
+ * whatever the host happens to publish there.
+ */
+export function absolute(href: string, docsOrigin: string): string | null {
+  if (href.startsWith('/')) return `${docsOrigin.replace(/\/$/, '')}${href}`;
+  if (href.startsWith('https://') || href.startsWith('http://')) return href;
+  return null;
+}
+
+function renderInline(text: string, docsOrigin: string): ComponentChildren[] {
   const parts = text.split(INLINE);
   return parts.map((part, i) => {
     if (part.startsWith('`') && part.endsWith('`') && part.length > 2) {
       return <code key={i}>{part.slice(1, -1)}</code>;
     }
     if (part.startsWith('**') && part.endsWith('**') && part.length > 4) {
-      return <b key={i}>{renderInline(part.slice(2, -2))}</b>;
+      return <b key={i}>{renderInline(part.slice(2, -2), docsOrigin)}</b>;
     }
     if (part.startsWith('*') && part.endsWith('*') && part.length > 2) {
-      return <em key={i}>{renderInline(part.slice(1, -1))}</em>;
+      return <em key={i}>{renderInline(part.slice(1, -1), docsOrigin)}</em>;
     }
     const link = /^\[([^\]]+)\]\(([^)\s]+)\)$/.exec(part);
     if (link) {
       const [, label, href] = link;
       // Site-relative and http(s) destinations only; anything else renders as
       // the text it was.
-      if (href.startsWith('/')) {
+      const url = absolute(href, docsOrigin);
+      if (url) {
         return (
-          <Link key={i} to={href}>
-            {label}
-          </Link>
-        );
-      }
-      if (href.startsWith('https://') || href.startsWith('http://')) {
-        return (
-          <a key={i} href={href} target="_blank" rel="noopener noreferrer">
+          <a key={i} href={url} target="_blank" rel="noopener noreferrer">
             {label}
           </a>
         );
@@ -66,9 +71,9 @@ export function CopyButton({
   label: string;
   className: string;
 }) {
-  const [copied, setCopied] = React.useState(false);
+  const [copied, setCopied] = useState(false);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (!copied) return;
     const id = window.setTimeout(() => setCopied(false), 1600);
     return () => window.clearTimeout(id);
@@ -81,7 +86,7 @@ export function CopyButton({
   return (
     <button
       type="button"
-      className={className}
+      class={className}
       aria-label={copied ? 'Copied' : label}
       onClick={() => {
         navigator.clipboard.writeText(text).then(
@@ -89,11 +94,7 @@ export function CopyButton({
           () => undefined,
         );
       }}>
-      {copied ? (
-        <Check className="size-3.5" aria-hidden="true" />
-      ) : (
-        <Copy className="size-3.5" aria-hidden="true" />
-      )}
+      {copied ? <Check /> : <Copy />}
     </button>
   );
 }
@@ -106,7 +107,7 @@ type Block =
 const BULLET = /^\s*[-*]\s+(.*)$/;
 const NUMBERED = /^\s*\d+[.)]\s+(.*)$/;
 
-function toBlocks(text: string): Block[] {
+export function toBlocks(text: string): Block[] {
   const blocks: Block[] = [];
   let list: {kind: 'ul' | 'ol'; items: string[]} | null = null;
   let para: string[] = [];
@@ -178,16 +179,22 @@ function toBlocks(text: string): Block[] {
   return blocks;
 }
 
-export default function ChatMarkdown({text}: {text: string}) {
+export default function ChatMarkdown({
+  text,
+  docsOrigin,
+}: {
+  text: string;
+  docsOrigin: string;
+}) {
   return (
     <>
       {toBlocks(text).map((block, i) => {
         if (block.kind === 'p') {
-          return <p key={i}>{renderInline(block.text)}</p>;
+          return <p key={i}>{renderInline(block.text, docsOrigin)}</p>;
         }
         if (block.kind === 'code') {
           return (
-            <div key={i} className="ask-ai__code">
+            <div key={i} class="ask-ai__code">
               <pre>
                 <code>{block.text}</code>
               </pre>
@@ -203,7 +210,7 @@ export default function ChatMarkdown({text}: {text: string}) {
         return (
           <ListTag key={i}>
             {block.items.map((item, j) => (
-              <li key={j}>{renderInline(item)}</li>
+              <li key={j}>{renderInline(item, docsOrigin)}</li>
             ))}
           </ListTag>
         );

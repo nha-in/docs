@@ -18,6 +18,9 @@ func fixtureAtoms() []catalogue.Atom {
 			Summary: "The gateway rejected the call.", VerificationStatus: "verified",
 			Body:       "## In plain words\n\nThe gateway does not recognise your facility. ABDM-1035 means the X-HIP-ID is not registered.",
 			SourcePath: "hiecm/errors/abdm-1035.md",
+			// One fixture carries a published page so the contract covers a
+			// citation that resolves, not only the empty case.
+			DocURL: "/docs/hiecm/v3/reference/error-codes", DocAnchor: "m2-linking-and-sharing",
 			ErrorCodes: []string{"ABDM-1035"}, Related: map[string][]string{},
 		},
 		{
@@ -61,7 +64,6 @@ func fixtureSpecErrors() []catalogue.SpecErrorCode {
 			Action: "Fix onboarding", Module: "m2"},
 	}
 }
-
 
 // buildServerFixtureDB builds the same two-atom, one-operation snapshot
 // the index tests use, assembled via the exported catalogue, embed and

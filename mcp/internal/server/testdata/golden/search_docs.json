@@ -2,6 +2,7 @@
   "catalogue_version": "2026.08.24",
   "hits": [
     {
+      "doc_url": "/docs/hiecm/v3/reference/error-codes#m2-linking-and-sharing",
       "id": "hiecm.error.abdm-1035",
       "milestone": "M2",
       "snippet": "...does not recognise your facility. **ABDM-1035** means the X-HIP-ID...",
@@ -11,6 +12,7 @@
       "verification_status": "verified"
     },
     {
+      "doc_url": "",
       "id": "hiecm.flow.m2-link-care-context",
       "milestone": "M2",
       "snippet": "## In plain words\n\nLinking makes a visit discoverable.",
@@ -20,6 +22,7 @@
       "verification_status": "unverified"
     },
     {
+      "doc_url": "",
       "id": "hiecm.endpoint.m1-enrolment-by-aadhaar",
       "milestone": "M1",
       "snippet": "Enrol an ABHA by Aadhaar\nPOST enrol/byAadhaar creates an ABHA from an Aadhaar OTP.",

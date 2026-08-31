@@ -456,7 +456,11 @@ for (const {platform, version, files} of tree) {
   const refDir = join(root, 'site', 'docs', platform, version, 'reference');
   mkdirSync(refDir, {recursive: true});
 
-  const frontMatter = (title, label, description, position) =>
+  // covers names the catalogue atoms a page is the published home for, and
+  // scripts/build-atom-routes.mjs reads it to point a support answer at a
+  // real page. On a generated page it has to be emitted here: hand-adding it
+  // to the file works until the next generator run silently drops it.
+  const frontMatter = (title, label, description, position, covers = []) =>
     [
       '---',
       `title: ${title}`,
@@ -466,6 +470,7 @@ for (const {platform, version, files} of tree) {
       'verification: unverified',
       'source: the published OpenAPI specifications',
       'generated: true',
+      ...(covers.length ? [`covers: [${covers.join(', ')}]`] : []),
       '---',
       '',
     ].join('\n');
@@ -532,6 +537,7 @@ for (const {platform, version, files} of tree) {
         'Callbacks',
         'The calls ABDM makes back to your bridge, as the specifications declare them.',
         2,
+        ['hiecm.concept.asynchronous-callbacks', 'hiecm.decision.callbacks-as-webhooks'],
       ),
       '# Callbacks',
       '',
@@ -578,6 +584,7 @@ for (const {platform, version, files} of tree) {
         'Error codes',
         'Every error code the specifications carry, with its message and what to do.',
         3,
+        ['hiecm.concept.error-codes'],
       ),
       '# Error codes',
       '',

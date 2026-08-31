@@ -4,9 +4,13 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"log/slog"
 	"net/url"
+	"strings"
 	"time"
 	"unicode/utf8"
+
+	"github.com/eka-care/abdm-docs/mcp/internal/guard"
 )
 
 // Turn is one message in a conversation as the HTTP layer (Task 6) decodes
@@ -112,9 +116,35 @@ The reader sees a documentation assistant. How it works is none of their concern
 - When you have nothing, say so in one line and offer [support](/docs/support) as a markdown link. Do not pad it with what you looked in.
 - A general industry term the portal does not define is worth one sentence of plain explanation, said as general background rather than as ABDM documentation. That courtesy never extends to an ABDM API detail: paths, headers, codes, fields and payloads come from the tools or not at all.
 
+CODE YOU MAY NOT WRITE
+
+You never write code for the reader's own codebase. Not a function, a class, a handler, a config file, SQL, a shell script, a regular expression for their parsing, or pseudocode, in any language. This holds when they ask directly, when they say they will review it, and when they paste their file and ask for a corrected version.
+
+The reason is worth saying to them in one line when you decline: code written here cannot be checked against this portal, it ages badly against NHA's changes, and a wrong snippet in a health system is a patient safety problem rather than a bug.
+
+Never decline without giving them the route that fits. There are three:
+
+- They want working code in their project: point them at the ABDM Connect agent skill for that milestone.
+- They want to understand the call: give the request as curl, and let the panel's sources take them to the page.
+- They want their own coding assistant to write it: tell them to connect this portal's MCP server to it, so it writes against this documentation instead of guessing.
+
+curl is the exception and it is your main tool. A curl command is a statement of a documented request, not code for their codebase. Every value in one comes from your tools or from their own message. Placeholders name where they came from, like <ACCESS_TOKEN_FROM_SESSIONS_CALL>, never a bare <TOKEN>.
+
+WHEN THEY PASTE CODE
+
+Read it. Never rewrite it. Give four things in this order, and nothing else:
+
+1. What is wrong, naming the line or the field in what they pasted that shows it. Not "there may be an issue with your configuration".
+2. Why it fails, from what your tools returned.
+3. A plan in numbered prose describing the change to make. "Move the token fetch above the discovery call and pass the same request id through both" is a plan. A diff is not.
+4. A curl command that reproduces the failure or proves the fix, and the response they should expect.
+
+Say nothing about their code style, their structure or their choice of language. If the defect is not visible in what your tools returned, say you cannot see it from here rather than guessing at their framework.
+
 WRITING THE ANSWER
 
 - Lead with the answer. The reader is mid-task, usually with a failing call in front of them.
+- Never open by praising the question, apologising, restating the question back, or announcing what you are about to do. Start with the substance. Warmth is being useful quickly, not saying "great question".
 - Quote API literals exactly as the tools give them: endpoint paths, header names, error codes, timestamp formats, field names. Never paraphrase a literal, and never tidy its case or spacing.
 - Markdown renders in this panel. Use inline code for every literal, short bulleted or numbered lists for steps and options, and no headings.
 - Do not invent portal URLs. The panel shows links to your sources by itself; /docs/support is the one path you may name.
@@ -155,10 +185,28 @@ func (s *Service) ValidateTurns(turns []Turn) error {
 
 // toMessages converts the wire-shaped Turn slice into the Model's Message
 // shape, a direct 1:1 mapping since a Turn only ever carries plain text.
+// toMessages converts the conversation for the model, masking personal data
+// out of every user turn on the way.
+//
+// This is a health system, and the support surface is exactly where somebody
+// pastes a failing request with a live patient identifier still in it. The
+// masking happens here, before the text reaches the model provider, and the
+// replacement is one way: nothing downstream can turn <MASKED_AADHAAR> back
+// into a number, so a value masked here cannot leak from a provider's
+// retention, a transcript or a log written later.
 func toMessages(turns []Turn) []Message {
 	msgs := make([]Message, 0, len(turns))
 	for _, t := range turns {
-		msgs = append(msgs, Message{Role: t.Role, Text: t.Text})
+		text := t.Text
+		if t.Role == "user" {
+			masked, found := guard.MaskPII(text)
+			if len(found) > 0 {
+				// The kinds are recorded, never the values.
+				slog.Info("pii_masked", "kinds", strings.Join(found, ","))
+			}
+			text = masked
+		}
+		msgs = append(msgs, Message{Role: t.Role, Text: text})
 	}
 	return msgs
 }
@@ -230,12 +278,23 @@ func addSource(sources *[]Source, src Source) {
 
 // sourceFromFields builds a Source from one atom-shaped result map (the
 // fields get_atom and each search_docs hit share: id, title,
-// verification_status).
+// verification_status, doc_url).
+//
+// doc_url is the published page the knowledge lives on, generated into the
+// index from what the site actually publishes. When it is present the
+// citation opens the page, and the section, that answered the question.
+// When it is absent the atom has no published page, so the fallback is a
+// search for its title: a reader still gets somewhere they can read, rather
+// than a dead link or a bare internal id.
 func sourceFromFields(fields map[string]any) Source {
 	id, _ := fields["id"].(string)
 	title, _ := fields["title"].(string)
 	status, _ := fields["verification_status"].(string)
-	return Source{ID: id, Title: title, Status: status, URL: "/search?q=" + url.QueryEscape(title)}
+	href, _ := fields["doc_url"].(string)
+	if href == "" {
+		href = "/search?q=" + url.QueryEscape(title)
+	}
+	return Source{ID: id, Title: title, Status: status, URL: href}
 }
 
 // collectSources folds one successful tool call's result into sources,
@@ -276,7 +335,7 @@ func (s *Service) Respond(ctx context.Context, turns []Turn, emit func(event str
 	// onText stops emitting further deltas for the rest of this Respond
 	// call.
 	var textErr error
-	onText := func(delta string) {
+	send := func(delta string) {
 		if textErr != nil {
 			return
 		}
@@ -284,6 +343,12 @@ func (s *Service) Respond(ctx context.Context, turns []Turn, emit func(event str
 			textErr = err
 		}
 	}
+	question := lastUserText(turns)
+	g := &answerGuard{send: send, question: question,
+		cited: func() int { return len(sources) }}
+	// The reader's own words ground the literals they quoted back at us.
+	g.corpus.WriteString(question)
+	onText := g.write
 
 	runRound := func() (Reply, error) {
 		reply, err := s.Model.Stream(ctx, systemPrompt, s.Tools, msgs, s.MaxTokens, onText)
@@ -302,6 +367,20 @@ func (s *Service) Respond(ctx context.Context, turns []Turn, emit func(event str
 			return err
 		}
 		if len(reply.ToolCalls) == 0 {
+			// The guard holds text back until it is known to be safe, so the
+			// last of an answer is emitted here rather than during the round.
+			// A client that went away is therefore first seen at this flush,
+			// and the error still has to surface.
+			g.flush()
+			if textErr != nil {
+				return textErr
+			}
+			if g.blocked {
+				// The answer broke a rule the prompt cannot be trusted to
+				// hold, so nothing it said is shown. Citations are dropped
+				// too: they belong to an answer the reader never saw.
+				return s.finish(nil, emit)
+			}
 			return s.finish(sources, emit)
 		}
 
@@ -314,6 +393,10 @@ func (s *Service) Respond(ctx context.Context, turns []Turn, emit func(event str
 			if fields != nil {
 				collectSources(&sources, c.Name, fields)
 			}
+			// What the tools returned is what the answer may state. Keeping
+			// the raw result is deliberate: the model sees exactly this, so
+			// the check sees exactly what the model had to work from.
+			g.corpus.Write(result.Content)
 			// Any text the model streamed before calling tools rides along on
 			// the first ToolUse message rather than being dropped: the model
 			// already said it (the panel showed it), so the next round's
@@ -349,4 +432,115 @@ func (s *Service) finish(sources []Source, emit func(event string, data any) err
 		}
 	}
 	return emit("done", map[string]any{})
+}
+
+// blockedNotice replaces an answer that broke a rule. It says nothing about
+// which rule: the reader cannot act on that, and naming the check invites
+// working around it.
+const blockedNotice = "I could not give you a safe answer to that. Try asking for the specific call or error you are stuck on, or ask [support](/docs/support)."
+
+// answerGuard sits between the model's stream and the reader.
+//
+// The playbook is explicit that a rule living only in the system prompt is
+// guidance rather than a control, and that a draft failing a check is never
+// shown. Streaming makes the second part the hard one: text already sent
+// cannot be recalled. So this releases text only once it is known to be
+// safe, which costs at most a line of latency.
+//
+// Two holdbacks matter:
+//
+//   - Text is released a whole line at a time, because a rule can only be
+//     judged on a complete line.
+//   - Nothing is released while a fenced block is open. A block is judged by
+//     its language and its contents, and neither is known until it closes,
+//     so releasing "```python" the moment it arrives would put the code on
+//     screen before the check that rejects it could run.
+type answerGuard struct {
+	send     func(string)
+	question string
+	// corpus is everything the tools returned this turn, plus the question.
+	// A literal in the answer is grounded if it appears here.
+	corpus strings.Builder
+	// cited reports how many sources the answer ended up with, read at flush
+	// because tool calls keep adding to it while the answer streams.
+	cited func() int
+
+	released strings.Builder // already shown to the reader
+	pending  strings.Builder // held until it is known to be safe
+	blocked  bool
+}
+
+// insideFence reports whether an odd number of fences have opened, meaning
+// the text ends inside a code block.
+func insideFence(s string) bool {
+	return strings.Count(s, "```")%2 == 1
+}
+
+func (g *answerGuard) write(delta string) {
+	if g.blocked {
+		return
+	}
+	g.pending.WriteString(delta)
+	text := g.pending.String()
+	cut := strings.LastIndexByte(text, '\n')
+	if cut < 0 {
+		return
+	}
+	candidate := text[:cut+1]
+	if insideFence(g.released.String() + candidate) {
+		return // a block is still open; hold everything until it closes
+	}
+	g.release(candidate, text[cut+1:], false)
+}
+
+// flush releases whatever is left once the model has stopped talking.
+func (g *answerGuard) flush() {
+	if g.blocked {
+		return
+	}
+	g.release(g.pending.String(), "", true)
+}
+
+// release checks the answer as it would stand with candidate appended, and
+// either sends it or blocks the whole answer.
+func (g *answerGuard) release(candidate, keep string, final bool) {
+	if candidate == "" {
+		return
+	}
+	whole := g.released.String() + candidate
+	violations := guard.CheckAnswer(whole)
+	cited := 0
+	if g.cited != nil {
+		cited = g.cited()
+	}
+	violations = append(violations, guard.CheckGrounding(whole, g.corpus.String(), cited, final)...)
+	if final {
+		// The route often arrives in the last sentence, so this one can only
+		// be judged once the answer has stopped.
+		violations = append(violations, guard.CheckCodeRoute(g.question, whole)...)
+	}
+	if len(violations) > 0 {
+		g.blocked = true
+		g.pending.Reset()
+		for _, v := range violations {
+			slog.Warn("answer_blocked", "rule", v.Rule, "detail", v.Detail)
+		}
+		g.send(blockedNotice)
+		return
+	}
+	g.released.WriteString(candidate)
+	g.pending.Reset()
+	g.pending.WriteString(keep)
+	g.send(candidate)
+}
+
+// lastUserText returns the question being answered, for the checks that need
+// to know what was asked.
+func lastUserText(turns []Turn) string {
+	for i := len(turns) - 1; i >= 0; i-- {
+		if turns[i].Role == "user" {
+			return turns[i].Text
+		}
+	}
+	return ""
 }

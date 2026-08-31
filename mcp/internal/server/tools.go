@@ -117,6 +117,9 @@ func (t *Tools) GetAtom(ctx context.Context, in getAtomIn) (map[string]any, erro
 		"id": a.ID, "type": a.Type, "gateway": a.Gateway,
 		"milestone": a.Milestone, "title": a.Title, "summary": a.Summary,
 		"verification_status": a.VerificationStatus, "body": a.Body,
+		// The page a reader is sent to. Empty when the atom has no
+		// published page, which callers must treat as not citable.
+		"doc_url": index.DocLink(a.DocURL, a.DocAnchor),
 	}
 	if a.VerificationStatus != "verified" {
 		fields["caution"] = unverifiedCaution

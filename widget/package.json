@@ -1,0 +1,16 @@
+{
+  "name": "@abdm-docs/support-agent-widget",
+  "version": "0.1.0",
+  "private": true,
+  "description": "The ABDM support agent as one embeddable custom element, <abdm-support-agent>",
+  "scripts": {
+    "build": "node build.mjs",
+    "test": "node test.mjs"
+  },
+  "dependencies": {
+    "preact": "^10.28.2"
+  },
+  "devDependencies": {
+    "esbuild": "^0.27.1"
+  }
+}
