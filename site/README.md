@@ -1,43 +1,40 @@
-# Website
+# Site
 
-This website is built using [Docusaurus](https://docusaurus.io/), a modern static website generator.
-
-## Installation
+The developer portal's Docusaurus site: pages and the interactive Scalar
+API references, generated from [`../catalogue`](../catalogue). Nothing
+under `docs/` or `static/specs/` is hand-edited — both are overwritten by
+the build, from the catalogue's atoms and OpenAPI files respectively.
 
 ```bash
 npm install
+npm start          # dev server, live reload; syncs specs first
+npm run build      # production build, into build/
+npm run lint:specs # Spectral lint over catalogue/openapi
 ```
 
-**Note**: feel free to use the package manager of your choice.
+One interactive reference per module, served at `/reference/hiecm-m1`
+through `/reference/hiecm-m4` plus `/reference/hiecm-gateway`, each
+rendered by `@scalar/docusaurus` from its file in `catalogue/openapi/`.
 
-## Local Development
+## Self-hosting
 
-```bash
-npm run start
-```
+The site depends on nothing outside its own origin:
 
-This command starts a local development server and opens up a browser window. Most changes are reflected live without having to restart the server.
+- The Scalar reference bundle is vendored from `@scalar/api-reference`
+  into `static/vendor/scalar/` at build time; nothing loads from a CDN.
+- No Scalar cloud services: the request proxy, Scalar's own AI assistant,
+  the API client link-out, and telemetry are all disabled in
+  `docusaurus.config.ts`.
+- "Try it" requests go straight from the browser to the target API, which
+  must allow CORS, or through `proxyUrl` pointed at a proxy in our own
+  infrastructure.
 
-## Build
+## The Ask AI panel
 
-```bash
-npm run build
-```
-
-This command generates static content into the `build` directory and can be served using any static contents hosting service.
-
-## Deployment
-
-Using SSH:
-
-```bash
-USE_SSH=true npm run deploy
-```
-
-Not using SSH:
-
-```bash
-GIT_USER=<Your GitHub username> npm run deploy
-```
-
-If you are using GitHub Pages for hosting, this command is a convenient way to build the website and push to the `gh-pages` branch.
+The chip in the top bar streams answers from the [Docs MCP
+server](../mcp)'s chat endpoint. It reads its backend's address from the
+`CHAT_URL` build environment variable; the MCP server's own address for
+the install instructions on the MCP page comes from `MCP_URL`. Leaving
+either unset keeps that part of the site in a clearly labelled preview
+state rather than pointing at nothing — so a build with no backend
+configured (Pages, a PR preview) still ships cleanly.

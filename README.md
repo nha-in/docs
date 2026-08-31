@@ -1,41 +1,58 @@
 # ABDM Developer Portal
 
-Documentation for the HIE-CM gateway (ABDM V3), built as one catalogue that
-renders for humans and compiles for machines.
+The developer portal for India's Ayushman Bharat Digital Mission (ABDM):
+documentation, an interactive API reference, an MCP server for coding
+agents, and an AI assistant that answers from the same content a human
+reads. All four are generated from one source, so they cannot drift apart.
 
-## Repository layout
+Today only the HIE-CM gateway (ABDM V3) is populated. UHI and NHCX have
+empty scaffolding reserved for later phases.
 
-```
-catalogue/            Source of truth. Nothing downstream is hand-maintained.
-  hiecm/              Typed atoms for the HIE-CM gateway
-                      (concepts, flows, endpoints, callbacks, errors, tests, decisions)
-  shared/             Gateway-neutral atoms (glossary, fhir, sandbox)
-  openapi/            API specifications
-    .raw/             Upstream NHA files, stored untouched
-    corrections/      Recorded patches to upstream files, never silent fixes
-    CONVENTIONS.md    The rules every spec below follows
-    hiecm-gateway.yaml  Session token, used by every module
-    hiecm-m1.yaml     M1 ABHA identity
-    hiecm-m2.yaml     M2 care context linking and HIP data sharing
-    hiecm-m3.yaml     M3 consent and HIU data fetch
-    hiecm-m4.yaml     M4 HPR and HFR registration (Phase 2, nothing written)
-  VERSION             Catalogue version stamp
-site/                 Docusaurus site with Scalar API references (a rendering,
-                      not a source; site/static/specs is generated)
-  docs/               Pages, routed as /docs/<gateway>/<version>/<section>
-    abdm/v3/          HIE-CM, Phase 1
-    uhi/v1/           UHI, Phase 2
-    nhcx/v1/          NHCX, out of scope for V1
-  sidebars.ts         One sidebar per gateway; the gateway and version
-                      pickers at the top of the sidebar switch between them
-scripts/              Build helpers (spec sync; later: nav generation, atom lint)
-mcp/                  Go MCP server: cmd/indexer compiles catalogue/ into a
-                      SQLite snapshot (FTS + embeddings via Ollama, optional);
-                      cmd/docs-mcp serves agents (/mcp) and the site search
-                      box (/api/search) with hybrid retrieval
-```
+## What's in here
 
-## Working on the site
+**The catalogue** is the source of truth: hand-authored knowledge (concepts,
+step-by-step flows, endpoint guides, error explanations, callbacks, test
+cases, decisions) plus NHA's own OpenAPI specifications. NHA's files are
+kept byte-for-byte as published; anything wrong or missing in them is
+recorded as a dated correction, never silently edited. See
+[catalogue/README.md](catalogue/README.md) for how content is organised and
+[catalogue/openapi/CONVENTIONS.md](catalogue/openapi/CONVENTIONS.md) for how
+the specs are structured.
+
+**The site** is a Docusaurus site with interactive Scalar API references,
+built entirely from the catalogue. Nothing under `site/docs` or
+`site/static/specs` is hand-edited; both are regenerated on every build. See
+[site/README.md](site/README.md).
+
+**The Docs MCP server** is a Go binary that compiles the catalogue into a
+SQLite snapshot and serves it three ways: the MCP protocol for coding
+agents, the site's search box, and the site's "Ask AI" chat panel. See
+[mcp/README.md](mcp/README.md) for configuration, the full tool list, and
+how to run it.
+
+## How retrieval and chat work
+
+Search is hybrid: keyword ranking (SQLite FTS5) fused with vector
+similarity over embeddings, so an exact error code and a vague description
+both find the right atom. Embeddings come from one provider per deployment,
+decided once and stamped into the index — an index built with one
+embedding model is refused by a server configured for another, so the pair
+can never silently drift out of sync.
+
+The chat panel runs the same retrieval tools a coding agent gets over MCP,
+driven by a Claude model on Amazon Bedrock. It answers strictly from what
+those tools return, cites its sources, and says plainly when the catalogue
+doesn't have something, rather than improvising. The chat endpoint only
+turns on when a Bedrock model id is configured; without one, the panel
+stays a clearly labelled preview.
+
+Nothing here calls a third-party AI API directly. The only network
+dependency beyond the reader's own browser is Amazon Bedrock, reached
+through an IAM role with no long-lived credentials stored anywhere.
+
+## Running it locally
+
+### The site
 
 ```bash
 npm install
@@ -44,31 +61,25 @@ npm run build      # production build
 npm run lint:specs # Spectral lint over catalogue/openapi
 ```
 
-One interactive reference per module, served at `/reference/hiecm-m1`
-through `/reference/hiecm-m4` plus `/reference/hiecm-gateway`, each rendered
-by `@scalar/docusaurus` from its file in `catalogue/openapi/`. Edit specs
-only there; `site/static/specs/` is overwritten on every build.
+### The Docs MCP server
 
-Callbacks live inside the module spec that owns them, as OpenAPI 3.1
-`webhooks`, rather than in a separate AsyncAPI document. ABDM callbacks are
-plain HTTPS POSTs, which is what `webhooks` describes, and keeping them in
-the module file means one file is the whole contract for that module. See
-[catalogue/openapi/CONVENTIONS.md](catalogue/openapi/CONVENTIONS.md).
+```bash
+cd mcp
+go run ./cmd/indexer -catalogue ../catalogue -out /tmp/catalogue.db
+EMBED_PROVIDER=none go run ./cmd/docs-mcp -db /tmp/catalogue.db -addr :8080
+```
 
-## Self-hosting
+`EMBED_PROVIDER=none` runs keyword-only search with no external
+dependency. Full setup, including embeddings and the optional chat
+endpoint, is in [mcp/README.md](mcp/README.md).
 
-The site uses only the MIT licensed open source Scalar packages and serves
-everything from its own origin:
+## Deploying
 
-- The Scalar reference bundle is vendored from `@scalar/api-reference` into
-  `site/static/vendor/scalar/` at build time; nothing loads from a CDN.
-- No Scalar cloud services: the request proxy, Ask AI agent, API client
-  link-out, and telemetry are all disabled in `site/docusaurus.config.ts`.
-- "Try it" requests go directly from the browser. Target APIs must allow
-  CORS, or `proxyUrl` must point to a proxy in our own infrastructure
-  (Scalar's proxy server is open source and self-hostable).
-- MCP servers and agents over this documentation will be built by us on top
-  of the catalogue, not taken from a hosted service.
+Kubernetes manifests, the IAM policy, and the CI workflow templates for
+running this on AWS live in [deploy/nha/](deploy/nha/). A full
+[architecture diagram](deploy/nha/architecture/aws-deployment-architecture.drawio)
+covers the site's CDN, the MCP server's cluster, and how Bedrock and CI/CD
+credentials flow through IAM without a single stored secret.
 
 ## Rules
 

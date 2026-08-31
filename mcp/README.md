@@ -24,8 +24,6 @@ provider therefore means rebuilding catalogue.db.
 Configuration is environment-first (see .env.example); every env var
 has a same-named flag that overrides it for local runs.
 
-Design: ../docs/superpowers/specs/2026-08-24-docs-mcp-design.md
-
 ## Run locally
 
 The server requires an explicit provider decision: an absent EMBED_PROVIDER
@@ -61,6 +59,30 @@ search_docs, get_atom, related_atoms, decode_error, list_atoms,
 catalogue_info, list_operations, get_operation, validate_request. Every
 response carries catalogue_version; every atom result carries
 verification_status.
+
+## Chat
+
+`POST /api/chat` is a server-sent-events endpoint behind the site's "Ask
+AI" panel. It runs an agent loop against a Claude model on Amazon Bedrock,
+using the same seven read tools listed above (not list_atoms or
+validate_request) — so the assistant's retrieval quality is exactly the
+MCP server's retrieval quality, never a separate, duplicated path.
+
+The endpoint is off by default. Set `CHAT_MODEL` to a Bedrock model or
+inference-profile id to turn it on; leave it empty and `/api/chat` answers
+404, so a deployment that only wants the MCP server needs no other change.
+Guardrails are environment-tunable: `CHAT_MAX_TOKENS` (default 1500),
+`CHAT_RATE_PER_MIN` (default 5) and `CHAT_RATE_PER_DAY` (default 100) cap
+one IP's spend, and `ALLOW_ORIGIN` scopes CORS exactly as `/api/search`
+does. The system prompt keeps the assistant strictly inside the catalogue:
+answers only from tool results, honest about what's verified against a
+sandbox versus taken from the specification, and a plain "I don't have
+that" instead of a guess when nothing matches.
+
+Credentials for Bedrock come from the environment's default AWS
+credential chain — an EKS pod's IRSA role in production, never a stored
+key. The IAM policy and Kubernetes manifests are in
+[deploy/nha/](../deploy/nha/).
 
 ## Tests
 
