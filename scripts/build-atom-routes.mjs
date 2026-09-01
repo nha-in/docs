@@ -85,8 +85,10 @@ const pages = files.filter((f) => !isPartial(f)).map((f) => {
 function headingFor(body, needle) {
   const i = body.toLowerCase().indexOf(needle.toLowerCase());
   if (i < 0) return null;
+  // Both levels: a glossary term is a "### Term", and landing a reader on
+  // the term beats landing them on the section that contains it.
   let best = null;
-  for (const m of body.matchAll(/^##\s+(.+)$/gm)) {
+  for (const m of body.matchAll(/^#{2,3}\s+(.+)$/gm)) {
     if (m.index > i) break;
     best = m[1].trim();
   }
@@ -219,7 +221,18 @@ for (const [id, atom] of atoms) {
     // terms like X-CM-ID are defined where they are used, not in the list.
     const candidates = [glossaryPage, ...pages.filter((p) => /\/reference\/|\/getting-started\//.test(p.route))]
       .filter(Boolean);
-    const page = candidates.find((p) => p.body.toLowerCase().includes(term.toLowerCase()));
+    // A glossary term must anchor on its own heading, never on the first
+    // place the string appears: "M2" occurs inside the ECDH definition, and
+    // a citation that lands a reader on the wrong term is worse than one
+    // that lands them on the top of the page.
+    const heading = new RegExp(`^#{2,4}\\s+${term.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\s*$`, "im");
+    const owns = candidates.find((p) => heading.test(p.body));
+    if (owns) {
+      route = owns.route; anchor = slug(term);
+      rule = `term defined under its own heading on ${basename(owns.route)}`;
+      confidence = "derived";
+    }
+    const page = owns ? null : candidates.find((p) => p.body.toLowerCase().includes(term.toLowerCase()));
     if (page) {
       const h = headingFor(page.body, term);
       route = page.route; anchor = h ? slug(h) : null;
