@@ -30,7 +30,7 @@ const unverifiedCaution = "unverified: formats, URLs and enums in this atom are 
 // filters of search_docs and list_atoms.
 var atomTypeValues = []any{
 	"concept", "flow", "endpoint", "callback", "error",
-	"test", "glossary", "decision", "fhir", "sandbox",
+	"test", "glossary", "decision", "fhir", "sandbox", "troubleshooting",
 }
 
 // schemaWithAtomTypeEnum infers the input schema for In and constrains its
