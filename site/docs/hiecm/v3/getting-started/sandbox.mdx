@@ -8,6 +8,8 @@ sidebar_position: 2
 covers: [shared.sandbox.registration-and-credentials, shared.sandbox.callback-url]
 ---
 
+import SandboxAction from '@site/src/components/docs/SandboxAction';
+
 # Sandbox access
 
 Four steps stand between you and your first [ABDM](/docs/hiecm/v3/getting-started/glossary#abdm) call: register
@@ -24,6 +26,9 @@ your organisation. NHA's M4 document gives the same instruction in one line: to 
 [NHA](/docs/hiecm/v3/getting-started/glossary#nha) reviews the request before it issues them. No
 turnaround time is published. Nothing in ABDM unblocks until the credentials arrive, so raise
 the request on day one.
+
+<SandboxAction action="register">Register on the sandbox</SandboxAction>{' '}
+<SandboxAction action="credentials">View credentials in the sandbox</SandboxAction>
 
 ## 2. Use the wait
 
@@ -90,6 +95,8 @@ carry, and [M1 API sequence](/reference/hiecm-m1) for the order of calls.
 In [M1](/docs/hiecm/v3/api/m1) the answer to a call comes back in the response to that call. In [M2](/docs/hiecm/v3/api/m2) and [M3](/docs/hiecm/v3/api/m3) it does not. The response only acknowledges that ABDM received your request. The answer arrives afterwards as a POST from ABDM to a URL you registered in advance.
 
 You register one base URL. ABDM posts to paths under it, and each callback carries the `REQUEST-ID` you sent on the original call so you can match the answer to the question. The paths are listed on [callbacks](/docs/hiecm/v3/reference/callbacks).
+
+<SandboxAction action="callbackUrl">Register your callback URL</SandboxAction>
 
 Two things about that URL decide whether your integration works:
 
