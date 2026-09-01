@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "startup|resume|clear",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "grep -q abdm-contributors-assistant \"${CLAUDE_CONFIG_DIR:-$HOME/.claude}/plugins/installed_plugins.json\" 2>/dev/null || printf '%s\\n' \"Changes to this repo are meant to go through the ABDM Contributor's Assistant plugin, which ships in plugins/abdm-contributors-assistant, and it is not installed in this Claude Code. Before making any change here, tell the user in a sentence that the plugin carries the skills, commands and agents this repo expects to be used, and that installing it is two commands from the repo root: 'claude plugin marketplace add ./' then 'claude plugin install abdm-contributors-assistant@abdm-portal', followed by a restart. Do not install it for them. If they decline or want to proceed without it, do the work anyway and follow CLAUDE.md.\""
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -149,3 +149,32 @@ jobs:
         with:
           name: catalogue-db
           path: mcp/catalogue.db
+
+  plan-check:
+    name: Plan and plugin are in sync
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: ./scripts/plan-check.sh
+
+  plugin-validate:
+    name: Validate the contributor's assistant plugin
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm install -g @anthropic-ai/claude-code
+      - name: manifests and components are valid
+        run: |
+          claude plugin validate .claude-plugin/marketplace.json --strict
+          claude plugin validate ./plugins/abdm-contributors-assistant --strict
+      - name: agent frontmatter parses
+        run: python3 scripts/check-agent-frontmatter.py
+      - name: no skill shares a name with a command
+        run: |
+          cd plugins/abdm-contributors-assistant
+          dupes=$(comm -12 <(ls skills | sort) <(ls commands | sed 's/\.md$//' | sort))
+          if [ -n "$dupes" ]; then echo "name collision: $dupes"; exit 1; fi
+          echo "ok no collisions"
