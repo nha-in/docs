@@ -74,7 +74,7 @@ Notice how many of those are atom bugs, not site bugs. That is the point of the 
 
 ## Re-running
 
-- The eval set runs on every Catalogue change, in CI.
+- The eval set is not wired into CI. `.github/workflows/ci.yml` runs `lint-specs`, `lint-atoms`, `lint-sources`, `validate-skills`, `lint-agent-readiness`, `lint-content`, `lint-tables`, `build-site`, `mcp` and `plan-stamp`, none of them the eval set. Run it by hand with `/eval-run` after a Catalogue change, until someone adds the CI job.
 - The first-day test runs before ship, and again whenever the M1 path changes materially. It needs a fresh developer each time, which is the constraint on how often it can run.
 
 ## What proof does not mean

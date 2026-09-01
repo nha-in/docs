@@ -10,17 +10,17 @@ Publish the ABDM docs site. Load the `scalar-docs` skill and follow the procedur
 ```
 /docs-publish --preview        # preview deployment, the default for a pull request
 /docs-publish                  # publish to the live site, main only
-/docs-publish --nav-only       # regenerate scalar.config.json navigation and stop
+/docs-publish --nav-only       # run scripts/build-nav.mjs and stop
 /docs-publish --check          # verify what would publish without publishing
 ```
 
 ## Sequence
 
-1. Generate navigation from atom frontmatter, grouped gateway, then milestone, then type
-2. Emit depth labels into the sidebar, not only onto pages
-3. Emit verification banners for unverified and stale atoms
-4. Stamp `catalogue_version` into the footer
-5. Build, then preview or publish
+1. Generate navigation with `scripts/build-nav.mjs`, which walks the folder tree under `site/docs` and the `_platform.json` beside each platform's version folders. It does not read atom frontmatter, so nothing here groups by gateway, milestone or type
+2. Check the rendered page carries its own phase and verification wording. Depth labels in the sidebar and verification banners for `unverified` and `stale` atoms were both designed and neither is built. Nothing under `site/src` renders one, so a page that needs the warning has to say it in its own body
+3. Build, then preview or publish. `site/docusaurus.config.ts` reads `catalogue/VERSION` and stamps it into the footer copyright as part of the build
+
+Steps 1 and 3 run for you: `site`'s `prebuild` and `prestart` call `sync-specs.mjs`, `build-api-reference.mjs`, `build-nav.mjs` and `build-skills.mjs` in that order. Step 2 is review, not a script.
 
 ## Preconditions
 
@@ -28,8 +28,8 @@ Publishing to live requires: lint passing, skills compiling and validating, and 
 
 ## Reviewing a preview
 
-Read the rendered page, not the diff. Dummy-proofness is a property of rendered output: whether a banner is visible, whether a diagram makes the sequence obvious, whether a depth label is where a skimming reader will see it.
+Read the rendered page, not the diff. Dummy-proofness is a property of rendered output: whether the page says what is unverified in words a skimming reader will see, whether a diagram makes the sequence obvious. No banner or depth label appears for you, so this is the only place either gets caught.
 
 ## Never hand-edit navigation
 
-`scalar.config.json` navigation is a build output. If a page is grouped wrongly, its frontmatter is wrong. Editing the config is the same class of mistake as editing a compiled skill.
+There is no `scalar.config.json` in this repository. Navigation is Docusaurus sidebars plus `site/src/data/platforms.json` and `reference-links.json`, all build outputs of `scripts/build-nav.mjs`. If a page is grouped wrongly, it is in the wrong folder: move the file. Editing a generated data file is the same class of mistake as editing a compiled skill.

@@ -53,17 +53,17 @@ skills:
 Field rules that catch people out:
 
 - `id` is `gateway.type.slug`, lowercase, stable, and never reused. Renaming an id is a breaking change and needs a redirect.
-- `gateway` is one of `hiecm`, `uhi`, `shared`. Shared atoms have no milestone; use `n/a`. There is no `nhcx` value: NHCX is out of scope and lint rejects it. `uhi` exists for Phase 2 and nothing is written against it yet.
+- `gateway` is one of `hiecm`, `uhi`, `nhcx`, `shared`. Shared atoms have no milestone; use `n/a`. All four lint clean. `uhi` and `nhcx` carry no atoms yet because Phase 1's time went to HIE-CM M1 to M3, not because anything rejects them. Write one when you have the time to prove it.
 - `version` is the NHA spec version this is true for, not the Catalogue version. The Catalogue version is stamped by the build.
 - `summary` is one sentence a new developer understands with no acronyms. It is what the index and the search result show. Write it last, after the body, when you know what the atom actually says.
-- `verified.status` is `verified`, `unverified` or `stale`. Only `atom-verifier` or a human who ran it may set `verified`. Writing `verified` without a recorded response is the single worst thing you can do in this repo.
+- `verified.status` is `unverified`, `verified` or `stale`, plus a fourth value, `draft`, that lint accepts but the catalogue has never used and no compiler or selector script treats specially. Leave new atoms `unverified` until proven. Only `atom-verifier` or a human who ran it may set `verified`. Writing `verified` without a recorded response is the single worst thing you can do in this repo.
 - `related` ids must all resolve. Lint fails on a dangling id.
 - `skills` declares which compiled skills consume this atom. The compiler reads it. An atom with no `skills` entry renders in the docs but never reaches an agent, which is sometimes correct (glossary, decision) and sometimes a mistake.
 
-Optional fields:
-
-- `fix.deterministic: true` on an error atom that has exactly one known fix. The compiler emits it as a direct action and the skill skips the Decide phase. Use it only when there is genuinely no judgement involved.
-- `depth: reference` on a Phase 2 atom that carries sections 1 to 3 only. Nothing in Phase 1 may use it: an HIE-CM M1 to M3 atom is dummy proof or it is not done.
+No optional fields exist yet. `fix.deterministic` and `depth` are not read by
+`scripts/lint-atoms.mjs`, `scripts/compile-skills.mjs`, or any other script in
+this repository: writing them on an atom has no effect. Do not add them
+until a script actually reads them.
 
 ## The five body sections
 
@@ -95,19 +95,7 @@ The three to five most common failures. Each links to an error atom that names t
 
 ## Structured blocks inside the body
 
-Facts the compiler needs go in fenced blocks with a declared schema, so it lifts them without parsing prose. Prose around them stays human.
-
-````
-```observation schema=exit-condition
-channel: callback
-path: /on-add-contexts
-match:
-  status: SUCCESS
-timeout_seconds: 60
-```
-````
-
-Declared block schemas: `exit-condition`, `precondition`, `request`, `response`, `state-transition`. Anything else fails lint.
+No lint script enforces a declared schema on fenced blocks. `scripts/lint-atoms.mjs`, `scripts/lint-content.mjs` and `scripts/lint-agent-readiness.mjs` do not check for `schema=` annotations, and `scripts/compile-skills.mjs` assembles a compiled skill from the body's `##` sections as prose, not by lifting fenced blocks. If you want the compiler to pick out a fact reliably, put it in section 4, "How you know it worked," in the plain-observation style shown there. A fenced block is still fine for a curl example or a payload, but nothing parses it structurally today.
 
 ## Type-specific rules
 
@@ -127,13 +115,14 @@ Read the file for the type you are writing: `references/atom-types.md`.
 ## How the indexer reads your atom
 
 The Docs MCP indexer walks the catalogue and parses every `.md` outside
-`openapi/` as an atom, with one exception, the `README.md` at the
-catalogue root. A file that fails to parse fails the whole build,
+`openapi/` as an atom, with one exception: a file named `README.md`, wherever
+in the tree it sits, not only at the catalogue root. A file that fails to parse fails the whole build,
 loudly, naming the file. Atom bodies are chunked per `##` heading and
-embedded for semantic search. The full walk contract, including what
-feeds which MCP tool, is documented at `catalogue/README.md` in the
-abdm-docs repository; read it before adding any non-atom file to the
-tree.
+embedded for semantic search. `catalogue/README.md` restates the frontmatter
+field list and the five section names for a reader browsing the catalogue
+directly, without this skill installed; it does not add rules beyond what
+this skill states. Read this skill for the rules, and `catalogue/README.md`
+if you only have the repository open.
 
 ## Related
 

@@ -20,26 +20,33 @@ Every source, including the manual drop, gets a URL, a fetch date and a hash. An
 
 ## Module-per-file layout
 
-Specs live one file per module under `catalogue/openapi/`:
+Specs live one file per module, under `catalogue/openapi/<platform>/<version>/`:
 
 ```
 openapi/
-  CONVENTIONS.md          the binding spec-authoring rules every file follows
-  hiecm-gateway.yaml       session token, used by every module
-  hiecm-m1.yaml            one self-contained file per module; callbacks
-  hiecm-m2.yaml            live inside the module file that owns them, as
-  hiecm-m3.yaml            OpenAPI 3.1 webhooks, so one file is the whole
-  hiecm-m4.yaml             contract for that module
-  .raw/                    upstream NHA files, stored untouched
-  corrections/             recorded patches, never silent fixes
+  CONVENTIONS.md              the binding spec-authoring rules every file follows
+  hiecm/v3/
+    hiecm-gateway.yaml         session token, used by every module
+    hiecm-m1.yaml               one self-contained file per module; callbacks
+    hiecm-m2.yaml                live inside the module file that owns them, as
+    hiecm-m3.yaml                OpenAPI 3.1 webhooks, so one file is the whole
+    hiecm-m4.yaml                 contract for that module
+    hiecm-p1.yaml, -p2.yaml,      three more HIE-CM modules, plus PHR services
+      -p3.yaml, -phr-services.yaml
+  .raw/                       upstream NHA files, stored untouched
+  corrections/                recorded patches, never silent fixes
 ```
+
+Nine module spec files exist under `hiecm/v3/` today; this skill's own
+scope is HIE-CM M1 to M3, and the rest are named here only so the path
+structure is not mistaken for something flatter than it is.
 
 There is no AsyncAPI file anywhere in this stack. `CONVENTIONS.md` states the rules ingestion and hand-authoring both follow: how a `webhooks` entry is structured, naming, shared components, how the gateway session token is referenced from each module file.
 
 ## The ingestion sequence
 
 1. **Fetch** the raw file exactly as served. Store the original untouched under `openapi/.raw/`.
-2. **Hash** it. `sha256` over the raw bytes. This hash is what the watcher compares against.
+2. **Hash** it. `sha256` over the raw bytes. This hash is what `scripts/check-source-freshness.mjs` compares against in CI. There is no watcher.
 3. **Lint** with Spectral. Record the violations; do not fix them yet.
 4. **Correct** only what blocks rendering or stub generation. Every correction is recorded, see below.
 5. **Fold callbacks in** as OpenAPI 3.1 `webhooks` entries inside the module file they belong to, per `CONVENTIONS.md`, so Scalar renders them from the same reference as the rest of the module.

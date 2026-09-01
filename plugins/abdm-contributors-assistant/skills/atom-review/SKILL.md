@@ -69,7 +69,7 @@ Run the `writing-guide` checklist. Most commonly caught: banned words, unnamed p
 
 - Is this one atom or two? Two flows, two types, or two milestones in one file means split.
 - Is anything here Eka-specific? It does not belong in the core Catalogue. See `dpg-governance`.
-- Is the scope right? Everything in V1 is HIE-CM M1 to M3. An atom for M4, UHI or NHCX does not belong in this Catalogue yet, however good it is.
+- Is the scope right? V1 atoms are HIE-CM M1 to M3 (120 atoms), plus 20 gateway-agnostic shared atoms and 2 HIE-CM decision atoms carrying `milestone: n/a` (`npm run lint:atoms`: 142 total, 122 `hiecm` of which 2 are `n/a`, 20 `shared`). An atom for M4 does not belong in this Catalogue yet, however good it is. `uhi` and `nhcx` are legal gateways that lint clean and carry zero atoms, because nobody has written one, not because anything rejects one. An atom for M4, UHI or NHCX raises a scheduling question rather than a scope violation: ask whether the time exists to prove it, not whether the gateway is allowed.
 
 ## Failure modes reviewers miss
 

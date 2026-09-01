@@ -23,25 +23,27 @@ Self-hosting is total, not partial: the Scalar browser bundle is vendored into t
 - The atom bodies. Scalar renders markdown; it does not write guides.
 - Navigation generation from frontmatter, because hand-maintained navigation drifts.
 - The skill compiler.
-- The source watcher.
+- The source watcher, which is designed and not built.
 - Our lint rules, including Spectral, run in our own CI.
 - The Docs MCP server (see `support-agent` and the plan §6). This used to be something Scalar's hosted platform provided for free; now it is ours.
 
 ## Navigation is generated, never hand-edited
 
-Docusaurus sidebars are a build output. The generator walks atom frontmatter and groups gateway, then milestone, then type, mirroring the flow-page structure integrators already find readable.
+Docusaurus sidebars are a build output. The generator is `scripts/build-nav.mjs`, run from `site`'s `prebuild` and `prestart`. It walks the folder tree under `site/docs`, one platform per folder and one version per folder below it, reading a `_platform.json` beside the version folders for the display label, description and any extra picker entries. It does not read atom frontmatter and does not import `lib/atoms.mjs`, so it groups by folder, not by gateway, milestone and type. A page's placement is its path.
 
-Hand-editing navigation is the same class of mistake as hand-editing a compiled skill. If a page is in the wrong place, its frontmatter is wrong.
+Hand-editing navigation is the same class of mistake as hand-editing a compiled skill. If a page is in the wrong place, move the file.
 
-The generator also emits:
+The generator writes exactly three things:
 
-- The phase scope, visible in the sidebar and not only on the landing page: HIE-CM M1 to M3 in Phase 1, M4 and UHI in Phase 2, NHCX out of scope
-- Verification banners for `unverified` and `stale` atoms
-- The `catalogue_version` in the footer
+- `site/src/data/platforms.json`, the platform and version model
+- `site/src/data/reference-links.json`, from the `api-sidebar.json` that `build-api-reference.mjs` wrote just before it
+- `site/static/llms.txt`, an index of every page under `site/docs`
+
+It emits no phase scope into the sidebar and no verification banner. Nothing under `site/src` renders a banner for an `unverified` or a `stale` atom: that was designed and is not built, so an honest phase and verification note has to be written into the page itself. The `catalogue_version` in the footer is real but is not this script's doing: `site/docusaurus.config.ts` reads `catalogue/VERSION` and puts it in the copyright line.
 
 ## Per-module reference routes
 
-One Scalar reference per OpenAPI spec file, matching the module-per-file layout in `catalogue/openapi/`:
+One Scalar reference per OpenAPI spec file, matching the module-per-file layout in `catalogue/openapi/hiecm/v3/`:
 
 | Route | Spec file |
 |---|---|
@@ -50,6 +52,8 @@ One Scalar reference per OpenAPI spec file, matching the module-per-file layout 
 | `/reference/hiecm-m2` | `hiecm-m2.yaml` |
 | `/reference/hiecm-m3` | `hiecm-m3.yaml` |
 | `/reference/hiecm-m4` | `hiecm-m4.yaml`, Phase 2, exists in the layout but says so |
+
+This skill's scope is HIE-CM M1 to M3. Three more modules and PHR services (`hiecm-p1.yaml` through `-p3.yaml`, `hiecm-phr-services.yaml`) render the same way and are out of scope here, not out of existence.
 
 Each spec file is the whole contract for its module, callbacks included as `webhooks` entries. There is no AsyncAPI file anywhere in this stack; see `openapi-ingest` for the layout and `CONVENTIONS.md`.
 

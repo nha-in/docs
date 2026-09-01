@@ -1,37 +1,38 @@
 ---
-description: Fetch and hash NHA sources, diff against stored hashes, and open a pull request flipping affected ABDM Catalogue atoms to stale.
-argument-hint: '[<source>|--hash <url>|--dry-run]'
+description: Run the recorded source hash check, npm run lint:sources, and report drift. It does not fetch NHA sources and it does not open a pull request.
+argument-hint: '[--hash <url>]'
 ---
 
-Sweep the configured ABDM sources for changes. Load the `update-pipeline` skill. Target: `$ARGUMENTS`. With no arguments, check every configured source, including the plan.
+Check whether the sources the Catalogue records still match what the repository holds. Load the `update-pipeline` skill, and read its first section before you report anything. Target: `$ARGUMENTS`.
 
-The manual version of what the watcher does daily. Run it before a release, or when NHA has announced something.
+## What actually runs
+
+`npm run lint:sources`, which is `scripts/check-source-freshness.mjs`. It hashes everything under `catalogue/openapi/.raw/`, collects every source reference the Catalogue records (a spec's `x-abdm-sources` list, an atom's frontmatter `sources` list), and reports three buckets:
+
+- `MISMATCH`, a recorded sha256 differs from the current `.raw` hash. CI fails on this.
+- `MISSING`, a recorded file is nowhere under `.raw/`. A warning, not a failure.
+- `UNHASHED`, a reference recorded with a status instead of a hash. Counted as coverage debt.
+
+The same command runs in CI as the `lint-sources` job.
+
+## What this command does not do
+
+- It does not fetch anything from NHA. It compares recorded hashes against files already in the repository, so it detects a raw file changing under the Catalogue, not NHA changing a page.
+- It does not flip any atom to `stale`. Nothing does; no atom is stale today.
+- It does not open a pull request. There is no bot. If the check reports a `MISMATCH`, a person reads the diff and edits the affected atoms by hand.
+- It is not scheduled. Nothing sweeps sources on a timer.
 
 ## Usage
 
 ```
-/source-check                        # every configured source
-/source-check <source-name>          # one
-/source-check --hash <url>           # just compute a hash, for adding a source by hand
-/source-check --dry-run              # report changes without opening a pull request
+/source-check                        # run npm run lint:sources and read the output
+/source-check --hash <url>           # fetch one URL yourself and print its sha256, for adding a source by hand
 ```
 
-## What it does
+`--hash` is you fetching and hashing, not a pipeline. Say so when you report the number.
 
-Fetches each source exactly as served, hashes the raw bytes, compares to the stored hash. On a change: identifies affected atoms, flips them to stale, drafts mechanical edits, and opens one pull request per source.
+## Reporting
 
-## Read the unreachable list first
+Report the three buckets separately and name every affected atom id. `UNHASHED` is the one people skim past: a source recorded without a hash cannot drift-check, so it is unwatched however watched it looks.
 
-A source that could not be fetched is reported at the top, separately from unchanged sources. This distinction matters more than it looks: treating a fetch failure as no change is how a Catalogue silently goes stale while appearing to be watched.
-
-## What it will not do
-
-- Merge anything
-- Edit a verified atom's content to match a new source
-- Narrow the affected set to reduce review load
-
-Over-flagging costs a review. Under-flagging ships something untrue.
-
-## Breaking changes
-
-Anything that looks like a change to an endpoint contract is called out separately at the top of the report, because those need a person now rather than in the review queue.
+Anything that looks like a change to an endpoint contract goes at the top, because that needs a person now rather than in a review queue.

@@ -23,7 +23,7 @@ Where the Catalogue actually is, as opposed to where it feels like it is.
 
 **Verification** counts: verified, unverified, stale, and the age of the oldest verification.
 
-**Scope** compliance: no atom carries `gateway: nhcx`, no atom exists for M4 or UHI, and nothing in M1 to M3 claims dummy-proof depth without all five sections.
+**Scope** reporting: which gateways and milestones carry atoms, and which carry none yet. Report the counts rather than judging them, because no gateway is barred. Flag anything in M1 to M3 claiming dummy-proof depth without all five sections.
 
 **Graph health**: dangling ids, orphan atoms, flows with no skill target, flow steps with no endpoint atom.
 
