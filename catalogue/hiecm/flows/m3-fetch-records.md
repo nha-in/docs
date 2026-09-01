@@ -141,7 +141,7 @@ sequenceDiagram
 6. **Acknowledge the transfer.** Call
    [HIU Data Flow Notification](../endpoints/m3-hiu-data-flow-notify.md),
    which posts to `/hiecm/data-flow/v3/health-information/notify` with
-   `statusNotification.sessionStatus` set to `TRANSFERRED` once you have
+   `notification.statusNotification.sessionStatus` set to `TRANSFERRED` once you have
    decrypted everything, or `FAILED` with the reason if you have not.
 
 ## How you know it worked
@@ -150,13 +150,13 @@ sequenceDiagram
 channel: self
 path: your own call to /hiecm/data-flow/v3/health-information/notify
 match:
-  statusNotification.sessionStatus: TRANSFERRED
+  notification.statusNotification.sessionStatus: TRANSFERRED
 timeout_seconds: unknown
 note: >
   NHA's M3 file documents no payload shape for what arrives at your
   dataPushUrl, so no field name from that push is confirmed here. What
   is confirmed, from hiecm-m3.yaml, is the field you send once every
-  care context in the artefact has decrypted: statusNotification.sessionStatus
+  care context in the artefact has decrypted: notification.statusNotification.sessionStatus
   set to TRANSFERRED on the data flow notify call. Treat that outbound
   call, not an inbound field name, as the exit signal until the push
   payload itself has been observed.
