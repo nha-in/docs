@@ -104,6 +104,25 @@
   text-transform: uppercase;
 }
 
+/* ---------- copy/view as markdown ---------- */
+
+.docs-copy-markdown {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.docs-copy-markdown__view {
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--text-muted);
+}
+
+.docs-copy-markdown__view:hover {
+  color: var(--text-heading);
+}
+
 /* ---------- feedback row ---------- */
 
 .docs-feedback {
