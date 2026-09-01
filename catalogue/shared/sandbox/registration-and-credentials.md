@@ -32,8 +32,10 @@ Everything else in this catalogue assumes you have them.
 
 You need an email address you control and a description of what you are
 building. Have the role in mind before you register: read
-[the three roles](../../hiecm/concepts/roles.md), because what you
-register as decides which APIs answer you.
+[roles](../../hiecm/concepts/roles.md), because what you register as
+decides which APIs answer you. Register for what your software does,
+publishing or reading or both, rather than for what kind of product it
+is.
 
 ## What happens
 

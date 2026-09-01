@@ -25,9 +25,14 @@ related:
 ## In plain words
 
 Hospital Management Information System, NHA's term for the software a
-hospital runs day to day. An HMIS normally integrates as a
-[HIP](hip.md). NHA's M2 document states that implementing every [HI
-type](hi-type.md) is mandatory for an HMIS.
+hospital runs day to day. NHA's M2 document states that implementing
+every [HI type](hi-type.md) is mandatory for an HMIS.
+
+An HMIS is a position: it is the provider facing side of the HIE-CM, as
+against a [PHR app](phr.md) on the citizen side. It acts as a
+[HIP](hip.md) when it publishes a record and as an [HIU](hiu.md) when it
+fetches one, so most of them need M2 and M3 rather than one or the
+other. See [roles](../../hiecm/concepts/roles.md).
 
 ## Before you start
 

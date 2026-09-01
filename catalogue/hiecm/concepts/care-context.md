@@ -34,8 +34,9 @@ person recognises.
 
 ## Before you start
 
-You need the HIP role and a facility id before any of this applies. Read
-[the three roles](roles.md) to confirm you are a HIP.
+You need a facility id, and you need to be publishing rather than
+reading, because linking is HIP behaviour. Read
+[roles](roles.md) if you are unsure which direction you are acting in.
 
 ## What happens
 
