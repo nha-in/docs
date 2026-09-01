@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"encoding/json"
 	"fmt"
+	"log/slog"
 	"sort"
 	"strings"
 
@@ -17,6 +18,7 @@ type Reader struct {
 	builtAt  string
 	embModel string
 	hasVecs  bool
+	vocab    *Vocabulary
 }
 
 func Open(dbPath string) (*Reader, error) {
@@ -41,6 +43,26 @@ func Open(dbPath string) (*Reader, error) {
 		return nil, err
 	}
 	r.hasVecs = n > 0 && r.embModel != ""
+
+	// The vocabulary is optional, and an index built before it existed has
+	// no such row. Either way search still works, so a miss here is not
+	// worth failing the open over.
+	var vocabYAML string
+	switch err := db.QueryRow(`SELECT value FROM meta WHERE key='vocabulary'`).
+		Scan(&vocabYAML); {
+	case err == sql.ErrNoRows || vocabYAML == "":
+		slog.Info("no vocabulary in index, query expansion is off")
+	case err != nil:
+		db.Close()
+		return nil, fmt.Errorf("meta vocabulary: %w", err)
+	default:
+		v, perr := ParseVocabulary([]byte(vocabYAML))
+		if perr != nil {
+			db.Close()
+			return nil, fmt.Errorf("parse vocabulary: %w", perr)
+		}
+		r.vocab = v
+	}
 	return r, nil
 }
 

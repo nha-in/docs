@@ -29,7 +29,13 @@ func ftsQuote(q string) string {
 }
 
 func (r *Reader) ftsSearch(query, atomType, milestone string, limit int) ([]SearchHit, error) {
-	if ftsQuote(query) == "" {
+	match := ftsQuery(query, r.vocab)
+	if expansions := r.vocab.Expand(query); len(expansions) > 0 {
+		// Logged so a miss can be diagnosed against what the expander
+		// actually did, rather than guessed at.
+		slog.Debug("query expanded", "query", query, "added", expansions)
+	}
+	if match == "" {
 		// A query that reduces to nothing after quoting (empty or
 		// whitespace-only) has no valid FTS5 MATCH expression. Treat it
 		// as zero keyword hits instead of letting an empty MATCH raise
@@ -47,7 +53,7 @@ func (r *Reader) ftsSearch(query, atomType, milestone string, limit int) ([]Sear
           AND (? = '' OR a.milestone = ?)
         ORDER BY bm25(atoms_fts, 0.0, 5.0, 3.0, 1.0, 8.0)
         LIMIT ?`,
-		ftsQuote(query), atomType, atomType, milestone, milestone, limit)
+		match, atomType, atomType, milestone, milestone, limit)
 	if err != nil {
 		return nil, err
 	}

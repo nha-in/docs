@@ -16,18 +16,27 @@ verified:
   status: unverified
 related:
   concepts: [hiecm.concept.roles, hiecm.concept.consent-artefact]
+  glossary: [shared.glossary.hip, shared.glossary.hrp, shared.glossary.dsc]
+  decisions: [shared.decision.role-model-two-axes]
 ---
 
 # HIU, Health Information User
 
 ## In plain words
 
-A doctor's console, an insurer, a referral system or an analytics product
-acts as an HIU when it requests consent and then fetches records. The HIU
-never gets data without a granted consent artefact, and the patient can
-revoke that at any time.
+HIU is something a system does, not something a system is. Any system
+acts as an HIU in the moment it asks to read records it did not create:
+it requests consent, waits for the patient to grant it, then fetches
+against the artefact. It never gets data without one, and the patient
+can revoke at any time.
 
-This is the M3 role.
+A doctor's console does this, and so does an insurer, a referral system
+or an analytics product. So does a hospital system, an HMIS or EMR,
+whenever it pulls a patient's history from elsewhere rather than serving
+its own records. So does a PHR app fetching records on the patient's
+behalf. The same product is a HIP when it publishes instead.
+
+Reading is M3 work.
 
 ## Before you start
 

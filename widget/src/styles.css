@@ -8,9 +8,11 @@
  * that declares nothing gets a panel that still reads correctly. An embedder
  * who wants a different look sets those properties on the element.
  *
- * The fallbacks follow prefers-color-scheme. There is no theme attribute:
- * a forced light or dark would mean a third copy of this list, and setting
- * the properties does the same job with less machinery.
+ * The fallbacks follow the host page's own background, which the element
+ * reads once and records as the ground attribute. That is a better guess than
+ * the reader's system preference, because a light page on a machine set to
+ * dark is still a light page. An embedder can set ground itself, and one that
+ * wants a different look entirely sets the properties.
  */
 :host {
   --aa-fb-page: #fdfdf7;
@@ -60,24 +62,25 @@
   font-family: var(--aa-font-sans);
 }
 
-@media (prefers-color-scheme: dark) {
-  :host {
-    --aa-fb-page: #0d0d0d;
-    --aa-fb-surface: #141414;
-    --aa-fb-sunken: #0a0a0a;
-    --aa-fb-border: rgb(255 255 255 / 0.08);
-    --aa-fb-border-strong: rgb(255 255 255 / 0.14);
-    --aa-fb-fill-soft: rgb(255 255 255 / 0.08);
-    --aa-fb-accent: hsl(134 20% 72%);
-    --aa-fb-accent-soft: hsl(134 20% 72% / 0.12);
-    --aa-fb-accent-line: hsl(134 20% 72% / 0.4);
-    --aa-fb-accent-contrast: #0d0d0d;
-    --aa-fb-heading: #e5e5e5;
-    --aa-fb-body: #d4d4d4;
-    --aa-fb-muted: #a3a3a3;
-    --aa-fb-faint: #8f8f8f;
+/* Set by the element from the host page's own background, or by an embedder
+   who would rather say so. See groundOf() in index.tsx. */
+:host([ground='dark']) {
+  --aa-fb-page: #0d0d0d;
+  --aa-fb-surface: #141414;
+  --aa-fb-sunken: #0a0a0a;
+  --aa-fb-border: rgb(255 255 255 / 0.08);
+  --aa-fb-border-strong: rgb(255 255 255 / 0.14);
+  --aa-fb-fill-soft: rgb(255 255 255 / 0.08);
+  --aa-fb-accent: hsl(134 20% 72%);
+  --aa-fb-accent-soft: hsl(134 20% 72% / 0.12);
+  --aa-fb-accent-line: hsl(134 20% 72% / 0.4);
+  --aa-fb-accent-contrast: #0d0d0d;
+  --aa-fb-heading: #e5e5e5;
+  --aa-fb-body: #d4d4d4;
+  --aa-fb-muted: #a3a3a3;
+  --aa-fb-faint: #8f8f8f;
   }
-}
+
 
 *,
 *::before,
@@ -450,6 +453,40 @@
 .ask-ai__source-chip:hover {
   border-color: var(--aa-border-strong);
   color: var(--aa-heading);
+}
+
+/* The caret at the end of an answer while it is still arriving. It marks the
+   live edge of the text, which is what tells a reader that a pause is the
+   model thinking rather than the answer having ended. Only after a paragraph:
+   a block of code ends at its own boundary and does not need one. */
+.ask-ai__turn--streaming > p:last-child::after {
+  content: '';
+  display: inline-block;
+  width: 0.45em;
+  height: 1em;
+  margin-left: 0.1em;
+  vertical-align: -0.13em;
+  border-radius: 1px;
+  background: var(--aa-accent);
+  animation: ask-ai-caret 1s steps(2, start) infinite;
+}
+
+@keyframes ask-ai-caret {
+  0%,
+  49.9% {
+    opacity: 1;
+  }
+  50%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ask-ai__turn--streaming > p:last-child::after {
+    animation: none;
+    opacity: 0.5;
+  }
 }
 
 /* A slow pulse beside the activity line: the wait before the first token can

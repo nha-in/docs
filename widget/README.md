@@ -29,10 +29,29 @@ configuration.
 | `docs-origin` | Where citations resolve. Defaults to the host page's own origin, which is right only on the docs site. |
 | `support-url` | Where the mock's "use support" link points. Defaults to `<docs-origin>/docs/support`. |
 | `launcher`    | `none` supplies your own trigger instead of the built-in chip.            |
+| `ground`      | `light` or `dark`. The element reads the host page's background and sets this itself; set it to override that reading. |
 | `open`        | Present while the panel is showing. Set it to open the panel, and the element removes it when the reader closes one. |
 
 `show()` and `hide()` on the element do the same as setting and removing
 `open`, for a host that prefers a method call.
+
+### How an answer arrives
+
+A stream does not arrive evenly: a tool call, a second of silence, then a
+paragraph in one packet. The panel buffers what arrives and reveals it on the
+display's own clock, a share of the backlog each frame, so the answer reads at
+an even pace whatever the network did. Nothing is shown until the panel has
+visibly thought for half a second, so a fast first token does not flash a word
+up in place of the indicator, and a caret marks the live edge of the text so a
+pause reads as the model thinking rather than the answer having ended.
+
+Under `prefers-reduced-motion: reduce` the text is not paced at all: it appears
+as it arrives. The three constants that set the pacing are at the top of
+`src/index.tsx`.
+
+Stopping an answer keeps every word that had arrived, including the part still
+waiting to be shown. Citations attach when the answer finishes, not while it is
+still being revealed.
 
 ### Appearance
 

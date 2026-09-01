@@ -19,6 +19,7 @@ uhi/                  Same atom-type folders for the UHI gateway, empty until
 nhcx/                 authored; same again for NHCX
 shared/               Gateway neutral atoms
   glossary/           Terms (abha.md)
+  decisions/          Recorded decisions that hold across every gateway
   fhir/               FHIR bundle atoms per hi_type
   sandbox/            Registration, credentials, callback URL guides
 openapi/              Machine contracts, one folder per gateway and version,

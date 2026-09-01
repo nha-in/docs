@@ -23,6 +23,10 @@ type Meta struct {
 	EmbeddingModel   string
 	EmbeddingDim     int
 	SourceHashes     map[string]string
+	// Vocabulary is catalogue/shared/vocabulary.yaml verbatim, carried in
+	// the index so the server needs the database and nothing else. Empty
+	// when the file is absent, and search then behaves as it did before.
+	Vocabulary string
 }
 
 func Build(dbPath string, atoms []catalogue.Atom, ops []catalogue.Operation,
@@ -104,6 +108,7 @@ func Build(dbPath string, atoms []catalogue.Atom, ops []catalogue.Operation,
 		{"built_at", meta.BuiltAt},
 		{"embedding_model", meta.EmbeddingModel},
 		{"embedding_dim", strconv.Itoa(meta.EmbeddingDim)},
+		{"vocabulary", meta.Vocabulary},
 	} {
 		if _, err := tx.Exec(`INSERT INTO meta VALUES (?,?)`, kv[0], kv[1]); err != nil {
 			return err
