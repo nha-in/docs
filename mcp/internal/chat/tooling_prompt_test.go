@@ -14,7 +14,7 @@ import (
 const toolingPage = "/docs/hiecm/v3/getting-started/mcp"
 
 func TestPromptOffersTheTooling(t *testing.T) {
-	if !strings.Contains(systemPrompt, toolingPage) {
+	if !strings.Contains(SystemPrompt(""), toolingPage) {
 		t.Errorf("system prompt never names %s, so an integrator is never told the skills and the MCP server exist", toolingPage)
 	}
 }
@@ -42,12 +42,30 @@ func TestToolingPageExists(t *testing.T) {
 // The offer must be scoped. A citizen asking what an Ayushman card is should
 // not be told to install an MCP server, so the rule has to say when it fires.
 func TestToolingOfferIsScoped(t *testing.T) {
-	idx := strings.Index(systemPrompt, toolingPage)
+	prompt := SystemPrompt("")
+	idx := strings.Index(prompt, toolingPage)
 	if idx < 0 {
 		t.Skip("covered by TestPromptOffersTheTooling")
 	}
-	window := systemPrompt[max(0, idx-600):idx]
+	window := prompt[max(0, idx-600):idx]
 	if !strings.Contains(strings.ToLower(window), "building") {
 		t.Errorf("the tooling offer does not say it is for readers who are building; it will fire on definition questions too")
+	}
+}
+
+// The MCP address is deployment configuration, not a fact of the source:
+// a deployment on another hostname must be able to change what the
+// assistant says without a code edit.
+func TestPromptTakesTheDeploymentsMCPURL(t *testing.T) {
+	custom := "https://mcp.docs.abdm.gov.in/mcp"
+	got := SystemPrompt(custom)
+	if !strings.Contains(got, custom) {
+		t.Errorf("SystemPrompt(%q) does not carry the configured address", custom)
+	}
+	if strings.Contains(got, "{{MCP_URL}}") {
+		t.Error("the template placeholder leaked into the rendered prompt")
+	}
+	if !strings.Contains(SystemPrompt(""), DefaultMCPURL) {
+		t.Error("an empty MCPURL should fall back to DefaultMCPURL")
 	}
 }

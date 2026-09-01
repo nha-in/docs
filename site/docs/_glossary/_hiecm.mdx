@@ -55,7 +55,7 @@ Health Repository Provider. NHA's M2 document uses HRP for the system that actua
 
 ### LIMS
 
-Laboratory Information Management System: the system a diagnostic lab uses to record orders, samples and results. In ABDM a LIMS acts as a [HIP](#hip) and links each report as a care context in [M2](#m2). See [Hospital, lab and pharmacy systems](/docs/hiecm/v3/concepts/hip-hiu).
+Laboratory Information Management System: the system a diagnostic lab uses to record orders, samples and results. In ABDM a LIMS acts as a [HIP](#hip) when it publishes, linking each report as a care context in [M2](#m2), which is most of what a lab does. It acts as an [HIU](#hiu) on the rarer occasions it reads a patient's history. See [Hospital, lab and pharmacy systems](/docs/hiecm/v3/concepts/hip-hiu).
 
 ### Link token
 
@@ -63,7 +63,7 @@ The token that authorises your system to link a [care context](#care-context) to
 
 ### LMIS
 
-Laboratory Management Information System, NHA's term for laboratory software. An LMIS integrates as a [HIP](#hip), the same way an [HMIS](#hmis) does.
+Laboratory Management Information System, NHA's term for laboratory software. An LMIS sits on the provider facing side of the HIE-CM, the same side an [HMIS](#hmis) does: a [HIP](#hip) whenever it publishes a report, and an [HIU](#hiu) on the rarer occasions it reads a patient's history to interpret a result.
 
 ### M1
 

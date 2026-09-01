@@ -35,6 +35,9 @@ type Service struct {
 	Model     Model
 	Tools     []ToolDef
 	MaxTokens int
+	// MCPURL is the public MCP endpoint the prompt offers to readers who
+	// are building. Empty means DefaultMCPURL.
+	MCPURL string
 }
 
 const (
@@ -63,7 +66,22 @@ const (
 // budget is spent, telling the model to stop investigating and answer.
 const budgetExhaustedNotice = "Tool budget exhausted. Answer now from what you have."
 
-// systemPrompt is the Ask AI assistant's system prompt.
+// DefaultMCPURL is where the public Docs MCP server lives today. The
+// prompt names it so the assistant can hand it to a reader who asks; a
+// deployment on another hostname overrides it with MCP_URL rather than a
+// code change.
+const DefaultMCPURL = "https://abdm-docs-mcp.dev.eka.care/mcp"
+
+// SystemPrompt renders the assistant's system prompt with the MCP server
+// address this deployment serves. An empty mcpURL keeps the default.
+func SystemPrompt(mcpURL string) string {
+	if mcpURL == "" {
+		mcpURL = DefaultMCPURL
+	}
+	return strings.ReplaceAll(systemPromptTemplate, "{{MCP_URL}}", mcpURL)
+}
+
+// systemPromptTemplate is the Ask AI assistant's system prompt.
 //
 // It is longer than a rule list because the retriever has shapes the model
 // cannot see and would otherwise be misled by: search_docs covers atoms and
@@ -76,7 +94,7 @@ const budgetExhaustedNotice = "Tool budget exhausted. Answer now from what you h
 //
 // Every word here is sent on each model call, and a single question can take
 // up to MaxToolCalls+1 of them, so additions should earn their place.
-const systemPrompt = `You are the Ask AI assistant on the ABDM Developer Portal. You answer developer questions about India's ABDM gateways (HIE-CM, UHI, NHCX) strictly from this portal's catalogue, which you reach through your tools. Never answer an ABDM API question from general knowledge. If you have not looked, look first.
+const systemPromptTemplate = `You are the Ask AI assistant on the ABDM Developer Portal. You answer developer questions about India's ABDM gateways (HIE-CM, UHI, NHCX) strictly from this portal's catalogue, which you reach through your tools. Never answer an ABDM API question from general knowledge. If you have not looked, look first.
 
 WHERE THINGS LIVE
 
@@ -123,7 +141,7 @@ A reader who is building an integration can have this catalogue inside their own
 - When the reader is clearly building against ABDM, close with one line offering it: the agent skills give their coding agent a milestone's rules as a file it loads once, and the MCP server lets it query this documentation as it works. Link [agent skills and the MCP server](/docs/hiecm/v3/getting-started/mcp).
 - Offer it once in a conversation, never twice, and never before the answer. It is a closing line, not an opening.
 - Do not offer it to someone who is not building. A question about what an Ayushman card is, or what ABHA stands for, is answered and left alone.
-- Both are available now. The server is public at https://abdm-docs-mcp.dev.eka.care/mcp, and the page carries the one click install for Claude Code, Cursor and VS Code. Name the page rather than reciting the URL, unless they ask for the address itself.
+- Both are available now. The server is public at {{MCP_URL}}, and the page carries the one click install for Claude Code, Cursor and VS Code. Name the page rather than reciting the URL, unless they ask for the address itself.
 
 CODE YOU MAY NOT WRITE
 
@@ -156,7 +174,7 @@ WRITING THE ANSWER
 - Never open by praising the question, apologising, restating the question back, or announcing what you are about to do. Start with the substance. Warmth is being useful quickly, not saying "great question".
 - Quote API literals exactly as the tools give them: endpoint paths, header names, error codes, timestamp formats, field names. Never paraphrase a literal, and never tidy its case or spacing.
 - Markdown renders in this panel. Use inline code for every literal, short bulleted or numbered lists for steps and options, and no headings.
-- Do not invent portal URLs. The panel shows links to your sources by itself. Two paths you may name: /docs/support, and /docs/hiecm/v3/getting-started/mcp for the agent skills and the MCP server.
+- Do not invent portal URLs. The panel shows links to your sources by itself. Two paths you may name: /docs/support, and /docs/hiecm/v3/getting-started/mcp for the agent skills and the MCP server. The MCP server's own address is not a portal path: give it exactly when the reader asks for it, per OFFERING THE TOOLS.
 - Answer in the language the question was asked in. Literals stay as they are.
 - A few sentences unless the question needs a sequence. Answer what was asked and offer the next step, rather than explaining everything nearby.`
 
@@ -360,7 +378,7 @@ func (s *Service) Respond(ctx context.Context, turns []Turn, emit func(event str
 	onText := g.write
 
 	runRound := func() (Reply, error) {
-		reply, err := s.Model.Stream(ctx, systemPrompt, s.Tools, msgs, s.MaxTokens, onText)
+		reply, err := s.Model.Stream(ctx, SystemPrompt(s.MCPURL), s.Tools, msgs, s.MaxTokens, onText)
 		if err != nil {
 			return reply, err
 		}
