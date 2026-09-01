@@ -3234,11 +3234,11 @@ paths:
                     consentAutoApprovalId: <TXN_ID>
   /health-locker/subscription-requests/patients/lockers:
     get:
-      operationId: p2_public_get_subscribed_lockers_by_patientid_copy
+      operationId: p2_public_get_subscribed_lockers_by_patientid
       tags:
       - health_locker
-      summary: Public -Get-Subscribed-Lockers-By-PatientId Copy
-      x-abdm-atom: hiecm.endpoint.p2-public-get-subscribed-lockers-by-patientid-copy
+      summary: Public -Get-Subscribed-Lockers-By-PatientId
+      x-abdm-atom: hiecm.endpoint.p2-public-get-subscribed-lockers-by-patientid
       x-abdm-source-folder: Health locker service
       responses:
         '200':

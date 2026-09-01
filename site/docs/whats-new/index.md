@@ -12,6 +12,18 @@ source: repository README.md and catalogue/openapi/CONVENTIONS.md
 Dated changes to these pages, newest first. Each entry links to what you can now
 read or do.
 
+## 2026-09-01
+
+### Seven PHR operations renamed off their Postman "Copy" suffix
+
+Seven operations in the P1 through P3 and PHR application services
+references carried a " Copy" suffix inherited from NHA's Postman export.
+Each was checked against the operation its name implied it duplicated. None
+turned out to be a true duplicate: five have no other operation to
+duplicate, and the other two point at a different host or a different API
+entirely. Every one has been given a name that says what it does instead.
+The corrections log records the comparison.
+
 ## 2026-08-25
 
 ### The PHR role has API references
