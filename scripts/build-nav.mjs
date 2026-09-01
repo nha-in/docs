@@ -82,6 +82,13 @@ writeFileSync(
 // The link list is generated from the same tree the sidebar is, so a page that
 // exists is listed and a page that does not cannot be.
 {
+  if (!process.env.DOCUSAURUS_URL && process.env.CI) {
+    console.error('build-nav: DOCUSAURUS_URL is required in CI so llms.txt never ships placeholder URLs.');
+    process.exit(1);
+  }
+  if (!process.env.DOCUSAURUS_URL) {
+    console.warn('build-nav: DOCUSAURUS_URL unset, llms.txt will use the example.com placeholder (local build only).');
+  }
   const siteUrl = (process.env.DOCUSAURUS_URL ?? 'https://abdm-docs.example.com').replace(/\/+$/, '');
   const base = (process.env.DOCUSAURUS_BASE_URL ?? '/').replace(/\/+$/, '');
 
