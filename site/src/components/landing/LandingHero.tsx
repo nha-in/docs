@@ -14,6 +14,20 @@ const ways = [
 ];
 
 /**
+ * What the visitor is trying to build, asked before which gateway they need.
+ * Each chip lands on the matching heading of What you can build; anchors
+ * confirmed against the built page (site/docs/hiecm/v3/getting-started/
+ * what-you-can-build.md), not guessed from the heading text.
+ */
+const buildGoals = [
+  {label: 'I hold health records to share', to: '/docs/hiecm/v3/getting-started/what-you-can-build#a-hospital-or-clinic-system'},
+  {label: 'I need to read health records', to: '/docs/hiecm/v3/getting-started/what-you-can-build#an-insurer'},
+  {label: "I am building a patient's app", to: '/docs/hiecm/v3/getting-started/what-you-can-build#a-phr-app'},
+  {label: 'I run a lab or pharmacy', to: '/docs/hiecm/v3/getting-started/what-you-can-build#a-lab-or-pharmacy'},
+  {label: 'Not sure yet', to: '/docs/hiecm/v3/getting-started/what-you-can-build'},
+];
+
+/**
  * The statement, the one control and the three gateways.
  *
  * Markup only. What lifts it off the references page underneath is the
@@ -59,6 +73,21 @@ export default function LandingHero({
           Get started
         </Link>
 
+        {/* The build question, asked before the gateway. A visitor thinks in
+            terms of what they are building, not in ABDM's own org chart of
+            HIE-CM, UHI and NHCX, so this comes first. */}
+        <div className="landing-hero__goals">
+          <p className="landing-hero__goals-prompt">What are you trying to build?</p>
+          <nav className="landing-hero__goals-list" aria-label="What you are trying to build">
+            {buildGoals.map(({label, to}) => (
+              <Link key={to} to={to} className="landing-hero__goal">
+                {label}
+              </Link>
+            ))}
+          </nav>
+        </div>
+
+        <p className="landing-hero__ways-label">Or browse by gateway</p>
         <nav className="landing-hero__ways" aria-label="The three gateways">
           {ways.map(({label, to}) => (
             <Link key={to} to={to} className="landing-hero__way">
