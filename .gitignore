@@ -37,14 +37,17 @@ mcp/catalogue.db
 /docs/
 
 # Generated: the API reference, built from catalogue/openapi by
-# scripts/build-api-reference.mjs
-site/docs/abdm/v3/api/*/endpoints/
-site/docs/abdm/v3/api/index.md
-site/docs/abdm/v3/api/*/errors.md
-site/docs/abdm/v3/api/*/_servers.md
-site/docs/abdm/v3/reference/authentication.md
-site/docs/abdm/v3/reference/callbacks.md
-site/docs/abdm/v3/reference/error-codes.md
+# scripts/build-api-reference.mjs. Globbed by gateway and version rather
+# than naming one, because these rules named site/docs/abdm/v3 until the
+# gateway was renamed to hiecm and then silently matched nothing, which
+# put two generated pages into git. A glob survives the next rename.
+site/docs/*/v*/api/*/endpoints/
+site/docs/*/v*/api/index.md
+site/docs/*/v*/api/*/errors.md
+site/docs/*/v*/api/*/_servers.md
+site/docs/*/v*/reference/authentication.md
+site/docs/*/v*/reference/callbacks.md
+site/docs/*/v*/reference/error-codes.md
 site/src/data/api/
 site/src/data/api-sidebar.json
 

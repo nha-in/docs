@@ -1,0 +1,12 @@
+# Generated files that stay tracked, because something reads them without
+# running the generator first. The Go indexer reads catalogue/atom-routes.json
+# (mcp/cmd/indexer/main.go), and lint-atoms.mjs reads it too, so a fresh clone
+# must have it before any site build has happened.
+#
+# linguist-generated collapses these in GitHub diffs and keeps them out of the
+# repository's language statistics. It does not prevent an edit: the generators
+# overwrite these on every build, so a hand edit here is silently lost.
+catalogue/atom-routes.json          linguist-generated=true
+site/src/data/platforms.json        linguist-generated=true
+site/src/data/reference-links.json  linguist-generated=true
+site/src/data/glossary.json         linguist-generated=true

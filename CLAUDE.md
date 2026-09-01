@@ -22,7 +22,7 @@ is a rule you follow rather than a gate that stops you.
 
 Two things the index will not route for you, because they are repo-wide:
 
-- Generated files are never hand-edited. `site/docs/abdm/v3/api/`,
+- Generated files are never hand-edited. `site/docs/<gateway>/<version>/api/`,
   `site/static/specs/`, `plugins/abdm/skills/` and `site/static/llms.txt` are
   build outputs. If one is wrong, the catalogue or the generator is wrong.
 - The plan under `plan/` cannot move without the skills compiled from it moving
