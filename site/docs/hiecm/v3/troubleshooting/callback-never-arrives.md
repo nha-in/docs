@@ -26,9 +26,9 @@ for the inbound side you receive it on.
 ## Work through these in order
 
 1. **Is the callback URL registered with the gateway?** Confirm it with
-   the update bridge callback URL call, documented on the
-   [M1 API reference](/docs/hiecm/v3/api/m1). Setting a URL in a console
-   once is not the same as confirming the gateway has it.
+   the [update bridge callback URL](/docs/hiecm/v3/api/gateway/endpoints/gateway-update-bridge-url)
+   call. Setting a URL in a console once is not the same as confirming
+   the gateway has it.
 2. **Is that URL reachable from the public internet over HTTPS?** ABDM
    posts to it from outside your network. A URL that only answers on
    your local machine or behind a VPN will never receive anything, and
@@ -38,9 +38,12 @@ for the inbound side you receive it on.
    documents we have. If you have waited what feels like a long time,
    say so when you escalate rather than assuming a fixed window.
 4. **Is your endpoint returning a non success status?** A handler that
-   errors, times out, or is slow can make ABDM's retry logic give up
-   silently. Respond quickly with a success status even before you have
-   finished processing the callback body.
+   errors, times out, or is slow is a real problem, though NHA does not
+   document a specific policy for when or whether delivery attempts
+   stop. Deliveries can repeat, so your handler has to treat every one
+   as possibly a retry of one it already handled. Respond quickly with a
+   success status even before you have finished processing the callback
+   body.
 
 ## How you know it worked
 

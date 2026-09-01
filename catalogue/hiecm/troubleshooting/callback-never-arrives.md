@@ -58,8 +58,9 @@ for why this is the normal shape of these flows, not a fault.
 
 ## What happens
 
-Work through these checks in order. Each one has been the actual cause
-more often than the one after it.
+Work through these checks in this order. This is the sequence this
+catalogue recommends checking, not a record of how often each has
+turned out to be the actual cause.
 
 1. **Is the callback URL registered with the gateway?** Confirm with
    [update HIP/HIU bridge callback URL](../endpoints/gateway-update-bridge-url.md).
@@ -70,14 +71,19 @@ more often than the one after it.
    your local machine or behind a VPN will never receive anything, and
    nothing tells you that from the original call. See
    [the callback URL](../../shared/sandbox/callback-url.md).
-3. **Did the request expire before the other party answered?** The
-   asynchronous callbacks atom names delivery timing as unconfirmed by
-   NHA's documents, so if you have waited what seems like a long time,
-   say so when you escalate rather than assuming a fixed window.
+3. **Did the request expire before the other party answered?** How long
+   a request stays live before ABDM gives up is not stated in NHA's
+   documents this catalogue has. If you have waited what seems like a
+   long time, say so when you escalate rather than assuming a fixed
+   window.
 4. **Is your endpoint returning a non success status?** A handler that
-   errors, times out, or is too slow can make NHA's retry logic give up
-   silently. Confirm your handler responds quickly with a success status
-   even before it has finished processing the callback body.
+   errors, times out, or is too slow is a real problem, though NHA's
+   documents do not describe a specific policy for when or whether
+   delivery attempts stop. The asynchronous callbacks atom does confirm
+   deliveries can repeat, so your handler has to treat every delivery as
+   possibly a retry of one it already handled. Respond quickly with a
+   success status even before you have finished processing the callback
+   body.
 
 ## How you know it worked
 

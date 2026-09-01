@@ -19,7 +19,7 @@ sources:
 verified:
   status: unverified
 related:
-  concepts: [hiecm.concept.gateway-session]
+  concepts: [hiecm.concept.consent-artefact]
   endpoints: [hiecm.endpoint.m3-consent-request-init, hiecm.endpoint.m3-consent-request-status]
   errors: [hiecm.error.abdm-1170]
   glossary: [shared.glossary.abha-address, shared.glossary.hiu]
@@ -61,18 +61,18 @@ Work through these in order.
    beyond the patient having an address.
 2. **Has the request expired?** A consent request carries a window the
    requester sets for the patient to respond, separate from how long
-   access lasts once granted. See
-   [consent, the two clocks](../../../site/docs/hiecm/v3/concepts/consent.md):
-   running out of the request window moves the state to Expired, not
-   Requested, so checking the current state with
+   access lasts once granted; this catalogue calls these the two
+   clocks. Running out of the request window moves the state to
+   Expired, not Requested, so checking the current state with
    [consent request status](../endpoints/m3-consent-request-status.md)
    tells you if this has already happened.
 3. **Was it raised against the right [ABHA address](../../shared/glossary/abha-address.md)?**
-   See
-   [ABDM-1170, the address is malformed or does not exist here](../errors/abdm-1170.md).
-   A request raised against an address that is not the one the patient
-   actually uses will never be seen by them, and the request call can
-   still succeed because the address is syntactically valid.
+   An address that is malformed or does not exist produces
+   [ABDM-1170](../errors/abdm-1170.md) and the request goes nowhere. A
+   syntactically valid address that belongs to a different real patient
+   will not error at all: the request is delivered and seen, just by
+   the wrong person, not the one you meant. Getting the address right
+   matters more than passing validation.
 
 ## How you know it worked
 

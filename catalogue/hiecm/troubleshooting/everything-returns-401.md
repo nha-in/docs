@@ -55,14 +55,18 @@ Work through these in order.
    token instead of retrying the failing call with the old one.
 2. **Are you calling the wrong environment's base URL?** A sandbox
    token is not valid against a production base URL, or the reverse.
-   Confirm the host in the failing request matches the host you
-   requested the session against.
+   Look at the host in the failing request and the host you requested
+   the session token from, side by side. If they differ, that mismatch
+   is the fault: point every call at the same host you authenticated
+   against.
 3. **Is your clock wrong?** The `TIMESTAMP` header has to be close to
    the gateway's own clock, in ISO 8601 UTC. See
    [ABDM-2402, your clock is wrong](../errors/abdm-2402.md): a container
    host that was suspended and resumed is the usual cause, because its
    clock resumes behind.
-4. **Is `X-CM-ID` missing or wrong for this environment?** See
+4. **Is `X-CM-ID` missing or wrong for this environment?** Look at the
+   literal value you sent, not the value you meant to send: `sbx` on
+   the sandbox, `abdm` in production. See
    [ABDM-2403](../errors/abdm-2403.md). This header names the consent
    manager you are pointed at, and the wrong value fails every call the
    same way a missing session token does.

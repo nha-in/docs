@@ -29,16 +29,19 @@ code that names the real reason.
    failing call with the old one. See
    [authentication](/docs/hiecm/v3/reference/authentication).
 2. **Are you calling the wrong environment's base URL?** A sandbox token
-   is not valid against a production base URL, or the reverse. Confirm
-   the host in the failing request matches the host you requested the
-   session against.
+   is not valid against a production base URL, or the reverse. Look at
+   the host in the failing request and the host you requested the
+   session token from, side by side. If they differ, point every call
+   at the same host you authenticated against.
 3. **Is your clock wrong?** The `TIMESTAMP` header has to be close to
    the gateway's own clock, in ISO 8601 UTC. A container host that was
    suspended and resumed is the usual cause, because its clock resumes
    behind. See [authentication](/docs/hiecm/v3/reference/authentication).
-4. **Is `X-CM-ID` missing or wrong for this environment?** This header
-   names the consent manager you are pointed at, and the wrong value
-   fails every call the same way a missing session token does.
+4. **Is `X-CM-ID` missing or wrong for this environment?** Look at the
+   literal value you sent, not the value you meant to send: `sbx` on
+   the sandbox, `abdm` in production. This header names the consent
+   manager you are pointed at, and the wrong value fails every call the
+   same way a missing session token does.
 
 ## How you know it worked
 
