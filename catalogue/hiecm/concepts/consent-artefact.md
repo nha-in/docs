@@ -32,8 +32,9 @@ HIU fetches against those.
 
 ## Before you start
 
-You need the HIU role and a gateway session. Read
-[the three roles](roles.md) first.
+You need a gateway session, and you are acting as an HIU here, because
+requesting consent is what reading looks like. Read
+[roles](roles.md) if that distinction is new.
 
 ## What happens
 
