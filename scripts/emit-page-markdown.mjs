@@ -11,11 +11,39 @@ const BUILD = join(SITE, 'build');
 const DOCS_SRC = join(SITE, 'docs');
 const API_DATA = join(SITE, 'src', 'data', 'api');
 
+// Splits markdown on fenced code blocks (``` or ~~~, with an optional info
+// string such as ```tsx) so JSX stripping can skip fenced content entirely.
+// Returns alternating {fenced: false} prose and {fenced: true} code segments.
+function splitOnFences(text) {
+  const fence = /^(```|~~~)[^\n]*\n[\s\S]*?\n\1[ \t]*$/gm;
+  const parts = [];
+  let last = 0;
+  let m;
+  while ((m = fence.exec(text))) {
+    parts.push({fenced: false, text: text.slice(last, m.index)});
+    parts.push({fenced: true, text: m[0]});
+    last = m.index + m[0].length;
+  }
+  parts.push({fenced: false, text: text.slice(last)});
+  return parts;
+}
+
+// Drops JSX component lines the markdown reader cannot use; keeps prose.
+// Only ever called on non-fenced segments.
+function stripJsx(text) {
+  return text
+    .replace(/^<([A-Z]\w*)(?:\s[^>]*)?\/>$/gm, '')
+    // Closing tag must match the opening tag name, so a run of different
+    // sibling components cannot match past the wrong closer.
+    .replace(/^<([A-Z]\w*)[^>]*>[\s\S]*?^<\/\1>$/gm, '');
+}
+
 export function stripToMarkdown(src) {
   let body = src.replace(/^---\n[\s\S]*?\n---\n/, '');
   body = body.replace(/^import .*$/gm, '');
-  // Drop JSX component blocks the markdown reader cannot use; keep prose.
-  body = body.replace(/^<[A-Z][\s\S]*?\/>$/gm, '').replace(/^<[A-Z]\w+[\s\S]*?<\/[A-Z]\w+>$/gm, '');
+  body = splitOnFences(body)
+    .map((part) => (part.fenced ? part.text : stripJsx(part.text)))
+    .join('');
   const title = /title:\s*"?([^"\n]+)"?/.exec(src)?.[1];
   if (title && !new RegExp(`^# `, 'm').test(body)) body = `# ${title}\n\n${body}`;
   return body.replace(/\n{3,}/g, '\n\n').trim() + '\n';
