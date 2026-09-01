@@ -5,6 +5,7 @@ sidebar_position: 10
 description: The consent request, the patient's decision and the data fetch, drawn as three sequence diagrams.
 verification: unverified
 source: ABDM__Proposed_Simplified_Milestone_3.md
+covers: [hiecm.flow.m3-request-consent, hiecm.flow.m3-fetch-records]
 ---
 
 # M3 user journeys
