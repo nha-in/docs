@@ -4404,11 +4404,11 @@ paths:
                       or ''Authorization : Basic ACCESS_TOKEN'' or ''apikey: API_KEY'''
   /api/notification/get-notification:
     get:
-      operationId: p3_get_all_notification_details_copy
+      operationId: p3_get_all_notification_details
       tags:
       - notification_collection
-      summary: Get all notification details Copy
-      x-abdm-atom: hiecm.endpoint.p3-get-all-notification-details-copy
+      summary: Get all notification details
+      x-abdm-atom: hiecm.endpoint.p3-get-all-notification-details
       x-abdm-source-folder: Notification Collection service
       responses:
         '200':
