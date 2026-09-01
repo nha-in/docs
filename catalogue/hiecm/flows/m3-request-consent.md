@@ -74,9 +74,10 @@ Five things must already be true, each checkable:
 
 - You hold a gateway session token. See
   [the gateway session](../concepts/gateway-session.md).
-- Your application is registered in the HIU role, so the
-  [HIE-CM](../../shared/glossary/hie-cm.md) knows to route the patient's
-  decision back to you.
+- Your application is registered in the HIU role, with a
+  [bridge](../../shared/glossary/bridge.md) URL the
+  [HIE-CM](../../shared/glossary/hie-cm.md) can route the patient's
+  decision to.
 - Your callback URL is registered with ABDM and reachable from the
   public internet. See
   [the callback URL](../../shared/sandbox/callback-url.md).
@@ -130,9 +131,9 @@ sequenceDiagram
    [the consent manager reports the state of a consent request you asked about](../callbacks/m3-on-consent-request-status.md).
    NHA's file names five states: `REQUESTED`, `GRANTED`, `DENIED`,
    `EXPIRED`, `REVOKED`.
-4. **The patient grants or denies, in their PHR app.** This step is not
-   a call your system makes. NHA's document places the whole decision
-   on the patient's side, in the app they use.
+4. **The patient grants or denies, in their [PHR](../../shared/glossary/phr.md)
+   app.** This step is not a call your system makes. NHA's document
+   places the whole decision on the patient's side, in the app they use.
 5. **The decision arrives on your callback.**
    [The patient's decision, sent to the requester](../callbacks/m3-on-consent-request-notify-hiu.md)
    arrives at `/api/v3/hiu/consent/request/notify`, carrying the status
@@ -150,12 +151,14 @@ sequenceDiagram
 channel: callback
 path: /api/v3/hiu/consent/request/notify
 match:
-  status: GRANTED
+  notification.status: GRANTED
 timeout_seconds: unknown
 note: >
-  the payload also carries at least one id in consentArtefacts. NHA's
-  M3 file does not state how long the patient has to act; that window
-  is the one you set on the init call, not a gateway timeout.
+  the payload also carries at least one id in notification.consentArtefacts.
+  Both fields are named in hiecm-m3.yaml's request body schema for this
+  callback. NHA's M3 file does not state how long the patient has to
+  act; that window is the one you set on the init call, not a gateway
+  timeout.
 ```
 
 Not yet observed against the sandbox. This repository has not run a
