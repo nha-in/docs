@@ -13,6 +13,7 @@ MCP index and compile into agent skills; they are not site pages.
 | `flows/` | One atom per end-to-end journey, stitching endpoints and callbacks in call order. |
 | `decisions/` | One atom per integration decision: the options, the trade-off, the recommendation. |
 | `tests/` | One atom per test case: what it proves functionally, and its exact pass and fail conditions. |
+| `troubleshooting/` | One atom per symptom a developer reports, not per error code: the checks that rule out the common causes, in order. |
 
 Scaffold a new atom with the `atom-new` skill so the frontmatter and the five
 mandatory sections come out right. READMEs like this one are contributor

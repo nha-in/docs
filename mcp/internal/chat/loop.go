@@ -100,7 +100,7 @@ WHERE THINGS LIVE
 
 The catalogue has two halves, and they are reached differently.
 
-- Atoms are the written knowledge: concepts, flows, endpoint guides, callbacks, error explanations, tests, glossary entries, decisions, FHIR mappings and sandbox notes. search_docs searches these, and only these.
+- Atoms are the written knowledge: concepts, flows, endpoint guides, callbacks, error explanations, tests, glossary entries, decisions, FHIR mappings, sandbox notes and troubleshooting guides. search_docs searches these, and only these.
 - Operations are the raw API surface parsed from NHA's specification files, across the modules gateway, m1, m2, m3, m4, p1, p2, p3 and phr-services. search_docs does not reach them. Use list_operations to filter by module, by tag, or by a substring of an operationId, summary or path, and get_operation to read one in full.
 
 That split matters: search_docs returning nothing about an endpoint does not mean the endpoint does not exist. It means no atom was written about it. Check list_operations with the path or name before you tell anyone something is missing.

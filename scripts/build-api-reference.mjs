@@ -588,6 +588,11 @@ for (const {platform, version, files} of tree) {
       ),
       '# Error codes',
       '',
+      // Only hiecm/v3 has a troubleshooting section today; other platforms
+      // would link to a page that does not exist.
+      ...(platform === 'hiecm'
+        ? [`Seeing a symptom rather than a code? Start at [Troubleshooting](/docs/${platform}/${version}/troubleshooting/).`, '']
+        : []),
       'Generated from the specifications. A code is on this page because a specification records it.',
       '',
     ];
@@ -675,6 +680,9 @@ for (const {platform, version, files} of tree) {
       '',
       `# ${module.label} errors`,
       '',
+      ...(platform === 'hiecm'
+        ? [`Seeing a symptom rather than a code? Start at [Troubleshooting](/docs/${platform}/${version}/troubleshooting/).`, '']
+        : []),
     ];
 
     if (notes.length) {

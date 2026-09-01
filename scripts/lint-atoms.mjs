@@ -6,7 +6,7 @@ import { dirname, join, relative } from "node:path";
 import { loadAtoms, root } from "./lib/atoms.mjs";
 
 const TYPES = ["concept", "flow", "endpoint", "callback", "error", "test",
-               "decision", "glossary", "fhir", "sandbox"];
+               "decision", "glossary", "fhir", "sandbox", "troubleshooting"];
 const GATEWAYS = ["hiecm", "uhi", "nhcx", "shared"];
 const STATUSES = ["draft", "unverified", "verified", "stale"];
 const SECTIONS = ["In plain words", "Before you start", "What happens",
@@ -16,6 +16,7 @@ const FOLDER = {
   concept: "concepts", flow: "flows", endpoint: "endpoints",
   callback: "callbacks", error: "errors", test: "tests",
   decision: "decisions", glossary: "glossary", fhir: "fhir", sandbox: "sandbox",
+  troubleshooting: "troubleshooting",
 };
 
 const problems = [];
