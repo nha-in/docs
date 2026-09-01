@@ -35,6 +35,20 @@ agents, the site's search box, and the "Ask AI" widget. See
 [mcp/README.md](mcp/README.md) for configuration, the full tool list, and
 how to run it.
 
+**The plan** under `plan/` is the architecture and execution plan, versioned
+with a hash and a manifest so a skill compiled from it can tell when it has
+gone stale. `scripts/plan-check.sh` is the gate: it fails when the plan moves
+and the manifest, a compiled skill or the gantt generator does not move with
+it. See [plan/plan-as-source-addendum.md](plan/plan-as-source-addendum.md).
+
+**The contributor's assistant** in
+[plugins/abdm-contributors-assistant](plugins/abdm-contributors-assistant) is
+the plugin for building this portal, not for integrating with ABDM: atom
+authoring, verification, linting, OpenAPI ingestion, docs, skill compilation,
+the update pipeline, the support agent, planning and proof. Four of its skills
+are compiled from the plan above. The separate `plugins/abdm` ships the
+compiled integration skills that ABDM integrators install.
+
 ## How retrieval and chat work
 
 Search is hybrid: keyword ranking (SQLite FTS5) fused with vector

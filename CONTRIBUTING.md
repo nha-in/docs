@@ -12,6 +12,25 @@ it on every pull request.
 | A documentation page | Markdown (`.md`, or `.mdx` for components) | `site/docs/<platform>/<version>/...` |
 | API reference | OpenAPI 3.1 YAML | `catalogue/openapi/<platform>/<version>/<spec>.yaml` |
 
+## The contributor's assistant
+
+This repo ships a Claude Code plugin, `plugins/abdm-contributors-assistant`,
+holding the skills, commands and agents for working on the portal: authoring an
+atom, verifying one against the sandbox, linting, ingesting OpenAPI, compiling
+skills, and the plan and gantt checks. Changes here are meant to go through it,
+as [CLAUDE.md](CLAUDE.md) says. It is not the plugin ABDM integrators install.
+
+Two commands from the repo root, then restart Claude Code:
+
+```sh
+claude plugin marketplace add ./
+claude plugin install abdm-contributors-assistant@abdm-portal
+```
+
+`./` installs from your checkout, so a branch you are working on is the version
+you run. Claude Code offers this when you open the repo without it, and will not
+install it for you: a repository cannot install its own plugin, by design.
+
 ## Documentation pages (Markdown)
 
 The docs tree is the navigation. Under `site/docs`:
