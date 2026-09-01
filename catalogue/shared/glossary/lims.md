@@ -26,7 +26,9 @@ related:
 
 Laboratory Information Management System: the system a diagnostic lab
 uses to record orders, samples and results. In ABDM a LIMS acts as a
-[HIP](hip.md) and links each report as a care context in [M2](m2.md).
+[HIP](hip.md) when it publishes, linking each report as a care context
+in [M2](m2.md), which is most of what a lab does. It acts as an
+[HIU](hiu.md) on the rarer occasions it reads a patient's history.
 See [Hospital, lab and pharmacy systems](/docs/hiecm/v3/concepts/hip-
 hiu).
 
