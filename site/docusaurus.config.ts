@@ -5,6 +5,7 @@ import type {Config} from '@docusaurus/types';
 import type * as Preset from '@docusaurus/preset-classic';
 import type {ScalarOptions} from '@scalar/docusaurus';
 import apiTree from './src/data/api-sidebar.json';
+import {sandboxLinks} from './src/data/sandboxLinks';
 
 // This runs in Node.js - Don't use client-side code here (browser APIs, JSX...)
 
@@ -376,7 +377,7 @@ const config: Config = {
       hideOnScroll: false,
       items: [
         {
-          href: 'https://sandbox.abdm.gov.in',
+          href: sandboxLinks.home,
           label: 'ABDM sandbox',
           position: 'right',
         },
