@@ -6,8 +6,9 @@ milestone: n/a
 version: abdm-v3
 title: LMIS, laboratory management information system
 summary: >
-  NHA's term for laboratory software, which integrates as a HIP the
-  same way an HMIS does.
+  NHA's term for laboratory software: provider side like an HMIS,
+  acting as a HIP when it publishes reports and as an HIU when it
+  reads a patient's history.
 sources:
   - file: site/docs/_glossary/_hiecm.mdx
     status: not-yet-hashed
@@ -17,7 +18,8 @@ sources:
 verified:
   status: unverified
 related:
-  concepts: []
+  concepts: [hiecm.concept.roles]
+  glossary: [shared.glossary.hmis, shared.glossary.hip, shared.glossary.hiu]
 ---
 
 # LMIS, laboratory management information system

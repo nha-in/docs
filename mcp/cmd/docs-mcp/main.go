@@ -62,6 +62,7 @@ func main() {
 	chatMaxTokens := flag.Int("chat-max-tokens", envIntOr("CHAT_MAX_TOKENS", 1500), "max output tokens per chat answer")
 	chatPerMin := flag.Int("chat-rate-per-min", envIntOr("CHAT_RATE_PER_MIN", 5), "chat requests per ip per minute")
 	chatPerDay := flag.Int("chat-rate-per-day", envIntOr("CHAT_RATE_PER_DAY", 100), "chat requests per ip per day")
+	mcpURL := flag.String("mcp-url", envOr("MCP_URL", ""), "public MCP endpoint the chat assistant names; empty keeps the built-in default")
 	trustProxy := flag.Bool("trust-proxy", envBoolOr("TRUST_PROXY", false),
 		"trust the last X-Forwarded-For entry for the chat rate limiter's client IP; "+
 			"enable only when a trusted reverse proxy sits in front and appends its own entry")
@@ -152,6 +153,7 @@ func main() {
 			Model:     model,
 			Tools:     server.ChatTools(server.NewTools(r, emb).Defs()),
 			MaxTokens: *chatMaxTokens,
+			MCPURL:    *mcpURL,
 		}
 		limiter = chat.NewLimiter(*chatPerMin, *chatPerDay)
 		slog.Info("chat enabled", "model", *chatModel)
