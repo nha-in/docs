@@ -33,7 +33,7 @@ Search the core Catalogue for vendor hostnames, credential formats, console refe
 
 ### 5. Scope creep and silent absence
 
-Has anything for M4, UHI or NHCX crept into the Catalogue, the skills or the navigation? Does the site say out loud that M4 and UHI are Phase 2 and NHCX is out of scope, in the sidebar and the index skill and not only on the landing page? An absence nobody declared reads as a gap, and a gap nobody declared reads as an oversight.
+Does the site say out loud which gateways carry atoms and which do not, in the sidebar and the index skill and not only on the landing page? M4, UHI and NHCX are Phase 2 for atoms, which is a schedule and not a prohibition, so check the wording claims neither more depth than exists nor a ban that does not exist. An absence nobody declared reads as a gap, and a gap nobody declared reads as an oversight.
 
 ### 6. Drift between surfaces
 

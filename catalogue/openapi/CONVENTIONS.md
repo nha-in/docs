@@ -97,7 +97,7 @@ specification must carry.
 
 | Extension | Where | What it carries |
 |---|---|---|
-| `x-abdm-gateway` | `info` | `hiecm`, `uhi` or `shared`. Never `nhcx`. |
+| `x-abdm-gateway` | `info` | `hiecm`, `uhi`, `nhcx` or `shared`. All four are accepted. |
 | `x-abdm-module` | `info` | `gateway`, `M1`, `M2`, `M3`, `M4` |
 | `x-abdm-phase` | `info` | `1` for what ships now, `2` for declared but unwritten |
 | `x-abdm-roles` | `info` | Which integrator roles call this module |

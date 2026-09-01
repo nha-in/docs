@@ -1,9 +1,9 @@
 ---
 name: dpg-governance
 description: 'The digital public good constraint on the ABDM Developer Portal: FOSS licensing, no dependency on Eka infrastructure or APIs, the overlay repo boundary for vendor-specific content, governance files, and the acceptance test that proves decoupling. Use whenever anything touches licensing, vendor-specific content, hosting dependencies, contribution process, or when someone proposes adding an Eka endpoint, credential format or URL to the core Catalogue. Also use before any public release.'
-plan_version: 2026.08.24-4
+plan_version: 2026.08.31
 plan_source: abdm-v1-phase1-architecture-and-plan.md
-plan_hash: sha256:cdb2f0b61402cf7f7d4a278a16a65b77d8dc43d0bb3056ee8039124700aee0d6
+plan_hash: sha256:4be567f1afffd4389e5a8e8d4444b9f90a2ca17bb1393f28afb15405fe97e4fa
 compiled_from_plan: true
 ---
 
@@ -19,7 +19,7 @@ Decoupling is proven operationally, not asserted.
 
 > A team with only NHA sandbox credentials, a laptop and a container runtime can clone the repo, build the docs, install the skills, and follow M1 to a successful sandbox call, having never contacted Eka.
 
-This runs in CI. If it breaks, the release is blocked. It is the difference between open source and Eka-shaped software with a licence file.
+Nothing runs this. No job in any of the five workflows performs it, and no script in `scripts/` does either. It is a test someone has to sit down and do by hand, and the release is blocked by whoever decides to block it. It is the difference between open source and Eka-shaped software with a licence file, which is exactly why it should not be described as automatic. Do not tell anyone CI proves the decoupling for them.
 
 ## What lives where
 
@@ -40,7 +40,7 @@ The overlay repo depends on the Catalogue. The Catalogue never depends on the ov
 
 ## The lint rule
 
-`prose.no-vendor-url` fails the build on any vendor hostname in the core Catalogue. It is deliberately blunt. When it fires, the content moves to the overlay; the rule does not get an exemption.
+There is no lint rule for this yet. `prose.no-vendor-url` is the intended rule, blunt by design: fail the build on any vendor hostname in the core Catalogue, no exemptions, and when it fires the content moves to the overlay. Nothing in `scripts/` implements it today, so the boundary is held by review. Do not tell anyone the build will catch a vendor URL for them.
 
 ## Governance files, required at first public tag
 
@@ -71,8 +71,8 @@ The test: could this Catalogue be rendered by a different static site generator 
 
 ## Review questions before any public release
 
-- [ ] Does the acceptance test pass in CI?
-- [ ] Does `prose.no-vendor-url` pass on the core Catalogue?
+- [ ] Has someone run the decoupling acceptance test by hand and said it passed? CI does not run it
+- [ ] Has someone read the core Catalogue for vendor hostnames? `prose.no-vendor-url` is not implemented, so there is nothing to pass
 - [ ] Are all five governance files present and current?
 - [ ] Is the licence neutral and applied to every file?
 - [ ] Can a page be read as raw markdown with nothing lost but styling?

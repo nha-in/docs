@@ -5,7 +5,7 @@ description: The internal support agent that answers integrator questions strict
 
 # Support Agent
 
-A Slack or Claude-based agent for the Eka support team, connected to our own Docs MCP server's public `/mcp` endpoint. It does not live in any Scalar surface: there is no on-site assistant in V1, and this agent is not it.
+A Slack or Claude-based agent for whichever team fields integrator questions, connected to the operator's own Docs MCP server's public `/mcp` endpoint. Any operator running this Catalogue can point the agent at their own deployment; nothing here names a specific company or team. It does not live in any Scalar surface: there is no on-site assistant in V1, and this agent is not it.
 
 Its value is not that it answers quickly. It is that it answers **only from the Catalogue**, and that every question it cannot answer becomes a gap we can see.
 
@@ -26,7 +26,7 @@ The support agent runs the same OODA loop as the compiled skills, with a human i
 
 **Cite the atom id in every answer.** Not a page title, the id. It is stable, it is searchable, and it lets the engineer check the source.
 
-**Carry the verification status.** If the atom is `unverified`, the answer says so: this follows NHA's published spec but we have not run it against sandbox. If it is `stale`, the answer says the source changed and links the open pull request.
+**Carry the verification status.** If the atom is `unverified`, the answer says so: this follows NHA's published spec but we have not run it against sandbox. If it is `stale`, the answer says the source changed. Do not promise an open pull request; nothing opens one today.
 
 **Never answer from general knowledge.** The agent has plenty of ambient knowledge about ABDM from training. It is not permitted to use it. An answer that is right but ungrounded teaches the support team to trust ungrounded answers, and the next one will be wrong.
 

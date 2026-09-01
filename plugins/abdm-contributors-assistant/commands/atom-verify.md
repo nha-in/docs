@@ -13,13 +13,13 @@ Prove an atom by running it. The only path to `verified.status: verified`.
 /atom-verify <atom-id>
 /atom-verify hiecm.endpoint.links-link-add-contexts
 /atom-verify --milestone M1          # every unverified atom in M1
-/atom-verify --stale                 # everything the watcher flipped
+/atom-verify --stale                 # every atom marked stale by hand; no watcher marks any
 ```
 
 ## Prerequisites
 
 - Sandbox credentials, and knowledge of which facility they belong to
-- A callback receiver for asynchronous atoms. Start one with the `callback-tunnel` tool. Without it, asynchronous atoms report blocked rather than verified.
+- A callback receiver for asynchronous atoms, which you provide yourself. The `callback-tunnel` tool named in earlier drafts of this plugin does not exist in this repository. Without a receiver, asynchronous atoms report blocked rather than verified.
 
 ## What it does
 

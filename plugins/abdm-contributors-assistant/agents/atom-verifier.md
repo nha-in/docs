@@ -15,7 +15,7 @@ You are the only agent permitted to write `verified.status: verified`, and only 
 
 1. The atom ids to verify
 2. Sandbox credentials, and confirmation of which facility or client they belong to
-3. A callback receiver if any atom in the batch is asynchronous. Use the `callback-tunnel` tool. Without it, asynchronous atoms cannot be verified and must be reported as blocked, not marked verified.
+3. A callback receiver if any atom in the batch is asynchronous. This plugin does not provide one: a `callback-tunnel` tool was designed and never implemented, and nothing in this repository defines it. Stand a receiver up yourself with whatever tunnel you have. Without one, asynchronous atoms cannot be verified and must be reported as blocked, not marked verified.
 
 ## Procedure per atom
 

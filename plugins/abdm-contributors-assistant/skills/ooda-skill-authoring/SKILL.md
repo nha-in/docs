@@ -77,7 +77,9 @@ Good escalation: "Three link attempts returned ABDM-1035. Facility onboarding is
 
 ## Deterministic fixes skip decide
 
-Some error atoms have exactly one fix and no judgement: a reused REQUEST-ID, a missing X-CM-ID, clock skew outside the accepted window. These carry `fix.deterministic: true` and the compiler emits them as direct actions. The skill goes observe, orient, act.
+Some error atoms have exactly one fix and no judgement: a reused REQUEST-ID, a missing X-CM-ID, clock skew outside the accepted window. For these, write section 5 as a direct instruction with no branching, and the skill can go observe, orient, act, with nothing to decide.
+
+No `fix.deterministic` field exists: `scripts/compile-skills.mjs` does not read one, and nothing marks an atom this way today. The distinction lives in how you write the prose, not in frontmatter.
 
 Use this sparingly. A fix is deterministic only when there is genuinely one cause and one remedy. If the fix depends on how the integrator's system is configured, it is not deterministic.
 

@@ -1,9 +1,9 @@
 ---
 name: portal-planning
 description: The ABDM Developer Portal schedule, workstreams, ownership split, two-day shipping increments, definition of done, and risk register. Use whenever someone asks what ships when, what is blocked, who owns a piece of work, whether V1 is on track, what counts as finished, how to sequence a task, or wants a standup, a status update, or a re-plan. Also use when scope is being added or cut so the trade is made against the schedule rather than in the abstract.
-plan_version: 2026.08.24-4
+plan_version: 2026.08.31
 plan_source: abdm-v1-phase1-architecture-and-plan.md
-plan_hash: sha256:cdb2f0b61402cf7f7d4a278a16a65b77d8dc43d0bb3056ee8039124700aee0d6
+plan_hash: sha256:4be567f1afffd4389e5a8e8d4444b9f90a2ca17bb1393f28afb15405fe97e4fa
 compiled_from_plan: true
 ---
 
@@ -62,7 +62,7 @@ Every item is checkable. None is a judgement call. This is the list to run befor
 7. The watcher has opened at least one real pull request from a real source change
 8. The support agent answered the six eval tasks from the Catalogue, citing atom ids, with the score recorded
 9. The first-day developer test passes: no ABDM exposure, docs URL and sandbox credentials only, successful M1 ABHA verification call in under two hours with no human asked
-10. The landing page, index entries and skill descriptions state the phase scope, HIE-CM M1 to M3 in Phase 1, M4 and UHI in Phase 2, NHCX out of scope, and every unverified atom renders the banner
+10. The landing page, index entries and skill descriptions state the phase scope as the plan's §7 states it, keeping what exists separate from what is verified, and naming NHCX as present in site pages and carrying no atoms yet, and every unverified atom renders the banner
 11. Public repo, neutral licence, contributing, security and governance files present, no `eka.care` reference in the core Catalogue
 
 ## Risk register
@@ -71,11 +71,12 @@ Each risk carries the decision it needs, because an unowned risk is just anxiety
 
 | Risk | Mitigation | Decision needed |
 |---|---|---|
+| Verification lags authoring badly. 142 atoms are written, 138 of them say `unverified` and only 4 are verified against sandbox, while the plan promises dummy proof and recorded responses | Credentials, then a verification sweep across M1 to M3 before ship. No `verified` stamp without a recorded response, and `lint-atoms.mjs` fails the build on one | The long pole. If credentials slip, ship honest `unverified` labels rather than a fabricated stamp |
 | NHA swagger is inconsistent or incomplete, with known 403s on some V3 sandbox endpoints | Ingest, hand-correct, record both the NHA file and the correction in `sources`, mark unverified until sandbox confirms | Accept that some endpoints ship unverified |
 | Docusaurus guides and Scalar references are two rendering systems on one site | Keep prose in plain markdown, avoid MDX beyond callouts and steps, so it ports anywhere; specs stay the single source under `catalogue/openapi/` | Decided: fully self-hosted from day one, no hosted-Scalar phase |
 | An existing community docs site overlaps heavily | Reach out early, propose the Catalogue as shared upstream | Product makes the call and the call |
-| The time available is not enough for three gateways at full depth | Phase 1 is HIE-CM M1 to M3 only. M4 and UHI are Phase 2, NHCX is out of scope | Needs sign-off, already decided in the plan |
-| The prose pass invents facts | Validator diffs every identifier against the Catalogue, any new token fails the build | None, it is a hard rule |
+| The time available is not enough for three gateways at full depth | Atom depth in Phase 1 is HIE-CM M1 to M3 only. M4, the PHR modules, UHI and NHCX stay at specification or site page depth, with no atoms written against them yet | Needs sign-off, already decided in the plan |
+| The prose pass invents facts | `scripts/validate-skills.mjs` fails the build on a cited atom id the Catalogue does not define and on a curl target recorded on no atom. It does not diff every token | Residual. A fabricated sentence carrying no identifier passes, which is why the compiled skills still need a reader |
 | The Docs MCP is public with no auth in V1 | Read-only server over public docs; rate limiting at the reverse proxy; Ollama sidecar never exposed | Add auth and quotas only when abuse is observed |
 | Ollama sidecar down at query time | Search degrades to keyword-only by design; `/healthz` reports `embeddings: false` | None, the degradation is tested |
 | Sandbox credentials take three to four days | Apply on day one, in parallel with schema work | Apply immediately |

@@ -38,7 +38,7 @@ The build stops. Nothing publishes. Common causes and where to look:
 | Identifier diff | The prose pass invented a token. Regenerate. Do not add it to the Catalogue. |
 | Missing exit condition | The atom's section 4 is not observable. Fix the atom. |
 | Missing loop limit | Template bug. See `ooda-skill-authoring`. |
-| Gateway coverage zero | A gateway has no verified atoms. This is P1 working. |
+| Gateway coverage zero | Nothing raises this. No script checks verified coverage per gateway and none refuses to build on it. That gate is wanted and not implemented, so P1's phasing is held by review, not by CI. Do not cite it as a gate. |
 
 ## Never
 
