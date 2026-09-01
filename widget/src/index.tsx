@@ -3,6 +3,7 @@ import {useEffect, useRef, useState} from 'preact/hooks';
 import ChatMarkdown, {CopyButton, absolute} from './markdown';
 import {ArrowUp, PenLine, Sparkles, Square, X} from './icons';
 import {readStream, UNREACHABLE, type Source} from './sse';
+import {revealStep} from './pacing';
 import css from './styles.css';
 
 type Turn = {from: 'you' | 'assistant'; text: string; sources?: Source[]};
@@ -83,12 +84,87 @@ function Panel({apiBase, docsOrigin, open, onClose, supportUrl}: PanelProps) {
     apiBase ? LIVE_OPENING : MOCK_OPENING,
   ]);
   const [draft, setDraft] = useState('');
-  const [busy, setBusy] = useState(false);
+  const [phase, setPhase] = useState<'idle' | 'thinking' | 'streaming'>('idle');
   const [activity, setActivity] = useState<string | null>(null);
   const dialog = useRef<HTMLDialogElement>(null);
   const thread = useRef<HTMLDivElement>(null);
   const composer = useRef<HTMLTextAreaElement>(null);
   const abort = useRef<AbortController | null>(null);
+  const busy = phase !== 'idle';
+
+  // Text that has arrived but has not been shown yet, and the frame loop that
+  // shows it. Both are refs: the loop runs from a callback the browser holds,
+  // outside any one render, so state it read would be the state of the render
+  // that started it.
+  const pending = useRef('');
+  const revealing = useRef(false);
+  const netDone = useRef(true);
+  const askedAt = useRef(0);
+  const atOnce = useRef(false);
+  const frame = useRef(0);
+  const heldSources = useRef<Source[] | null>(null);
+
+  const drain = () => {
+    frame.current = requestAnimationFrame(drain);
+    const backlog = pending.current.length;
+
+    if (backlog === 0) {
+      if (!netDone.current) return;
+      cancelAnimationFrame(frame.current);
+      frame.current = 0;
+      revealing.current = false;
+      if (heldSources.current) {
+        attachSources(setTurns, heldSources.current);
+        heldSources.current = null;
+      }
+      setPhase('idle');
+      return;
+    }
+
+    const take = revealStep(
+      backlog,
+      performance.now() - askedAt.current,
+      revealing.current,
+      atOnce.current,
+    );
+    // Zero is the thinking hold: the indicator stands rather than a first word
+    // flashing up in its place.
+    if (take === 0) return;
+    if (!revealing.current) {
+      revealing.current = true;
+      setPhase('streaming');
+    }
+    appendToLastTurn(setTurns, pending.current.slice(0, take));
+    pending.current = pending.current.slice(take);
+  };
+
+  /** Queues text for the reveal loop rather than rendering it directly. */
+  const emit = (text: string) => {
+    pending.current += text;
+  };
+
+  /** Holds the citations until the answer they belong to has finished. */
+  const queueSources = (sources: Source[]) => {
+    heldSources.current = sources;
+  };
+
+  const stopDrain = () => {
+    if (frame.current) cancelAnimationFrame(frame.current);
+    frame.current = 0;
+    revealing.current = false;
+    pending.current = '';
+    heldSources.current = null;
+    netDone.current = true;
+  };
+
+  // An embedder can set api-base after the element is already on the page.
+  // While nothing has been asked, the opening line follows it, rather than
+  // introducing a mock that is no longer one.
+  useEffect(() => {
+    setTurns((prior) =>
+      prior.length === 1 ? [apiBase ? LIVE_OPENING : MOCK_OPENING] : prior,
+    );
+  }, [apiBase]);
 
   // The dialog's own state is the source of truth for the browser; the `open`
   // prop drives it. Escape and the backdrop fire "close", which is where the
@@ -137,7 +213,7 @@ function Panel({apiBase, docsOrigin, open, onClose, supportUrl}: PanelProps) {
   useEffect(() => {
     const el = thread.current;
     if (el && stick.current) el.scrollTop = el.scrollHeight;
-  }, [turns, activity]);
+  }, [turns, phase, activity]);
 
   // The composer grows with what is pasted into it, up to a point: developers
   // arrive with a whole error body to paste, and a one line box hides all but
@@ -151,29 +227,35 @@ function Panel({apiBase, docsOrigin, open, onClose, supportUrl}: PanelProps) {
 
   // Leaving the page mid-answer stops the stream rather than leaving it to
   // run against a component nobody is watching.
-  useEffect(() => () => abort.current?.abort(), []);
+  useEffect(
+    () => () => {
+      abort.current?.abort();
+      if (frame.current) cancelAnimationFrame(frame.current);
+    },
+    [],
+  );
 
   const reset = () => {
     abort.current?.abort();
+    stopDrain();
     stick.current = true;
     setTurns([apiBase ? LIVE_OPENING : MOCK_OPENING]);
     setDraft('');
     setActivity(null);
-    setBusy(false);
+    setPhase('idle');
+  };
+
+  /** Stops the answer and keeps every word of it that had arrived. */
+  const stop = () => {
+    abort.current?.abort();
+    if (pending.current) appendToLastTurn(setTurns, pending.current);
+    pending.current = '';
+    netDone.current = true;
   };
 
   const ask = async (asked: string) => {
     if (!asked || busy) return;
     setDraft('');
-
-    if (!apiBase) {
-      setTurns((prior) => [
-        ...prior,
-        {from: 'you', text: asked},
-        {from: 'assistant', text: CANNED},
-      ]);
-      return;
-    }
 
     const history = [...turns.slice(1), {from: 'you' as const, text: asked}];
     setTurns((prior) => [
@@ -181,7 +263,26 @@ function Panel({apiBase, docsOrigin, open, onClose, supportUrl}: PanelProps) {
       {from: 'you', text: asked},
       {from: 'assistant', text: ''},
     ]);
-    setBusy(true);
+
+    // Every answer, mock or live, goes through the same reveal loop, so the
+    // preview shows the pacing the real thing has.
+    pending.current = '';
+    revealing.current = false;
+    netDone.current = false;
+    askedAt.current = performance.now();
+    atOnce.current = window.matchMedia(
+      '(prefers-reduced-motion: reduce)',
+    ).matches;
+    setPhase('thinking');
+    setActivity('Thinking');
+    if (!frame.current) frame.current = requestAnimationFrame(drain);
+
+    if (!apiBase) {
+      emit(CANNED);
+      netDone.current = true;
+      return;
+    }
+
     const controller = new AbortController();
     abort.current = controller;
     try {
@@ -198,26 +299,30 @@ function Panel({apiBase, docsOrigin, open, onClose, supportUrl}: PanelProps) {
       });
       if (!res.ok || !res.body) throw new Error(`status ${res.status}`);
       await readStream(res.body, {
-        onText: (delta) => appendToLastTurn(setTurns, delta),
+        onText: emit,
         onTool: (detail) => setActivity(detail),
-        onSources: (sources) => attachSources(setTurns, sources),
-        onError: (message) => appendToLastTurn(setTurns, message),
+        // Citations belong to the answer, so they wait for it: attaching them
+        // while the text is still revealing would sit them under half a reply.
+        onSources: (sources) => queueSources(sources),
+        onError: emit,
       });
     } catch (err) {
       // A stop is the reader's own doing: keep whatever arrived, say nothing.
       if (!(err instanceof DOMException && err.name === 'AbortError')) {
-        appendToLastTurn(setTurns, UNREACHABLE);
+        emit(UNREACHABLE);
       }
     } finally {
       abort.current = null;
-      setBusy(false);
+      netDone.current = true;
       setActivity(null);
     }
   };
 
-  const lastTurn = turns[turns.length - 1];
-  const showActivity =
-    activity !== null && lastTurn?.from === 'assistant' && lastTurn.text === '';
+  // The indicator stands until the first word is actually shown, not until
+  // the first byte lands. A reader watching it needs to know the panel is
+  // working; what it says comes from the model's own tool calls once those
+  // start arriving.
+  const showActivity = phase === 'thinking';
 
   return (
     <dialog
@@ -267,21 +372,42 @@ function Panel({apiBase, docsOrigin, open, onClose, supportUrl}: PanelProps) {
         </p>
       </div>
 
-      <div class="ask-ai__thread" ref={thread} onScroll={onThreadScroll}>
-        {turns.map((turn, index) => (
-          <div key={index} class={`ask-ai__turn ask-ai__turn--${turn.from}`}>
+      {/* A log rather than a live region per turn: the reader's screen reader
+          holds the announcement while aria-busy is set and reads the answer
+          once, when it has finished arriving, instead of word by word. */}
+      <div
+        class="ask-ai__thread"
+        ref={thread}
+        role="log"
+        aria-live="polite"
+        aria-busy={busy}
+        onScroll={onThreadScroll}>
+        {turns.map((turn, index) =>
+          // An answer with nothing in it yet is not a bubble. The thinking
+          // indicator below stands in its place until the first word.
+          turn.from === 'assistant' && turn.text === '' ? null : (
+          <div
+            key={index}
+            class={`ask-ai__turn ask-ai__turn--${turn.from}${
+              phase === 'streaming' && index === turns.length - 1
+                ? ' ask-ai__turn--streaming'
+                : ''
+            }`}>
             {turn.from === 'assistant' ? (
               <ChatMarkdown text={turn.text} docsOrigin={docsOrigin} />
             ) : (
               turn.text
             )}
-            {turn.from === 'assistant' && index > 0 && turn.text !== '' && (
-              <CopyButton
-                text={turn.text}
-                label="Copy answer"
-                className="ask-ai__turn-copy"
-              />
-            )}
+            {turn.from === 'assistant' &&
+              index > 0 &&
+              turn.text !== '' &&
+              !(busy && index === turns.length - 1) && (
+                <CopyButton
+                  text={turn.text}
+                  label="Copy answer"
+                  className="ask-ai__turn-copy"
+                />
+              )}
             {turn.sources && turn.sources.length > 0 && (
               <div class="ask-ai__sources">
                 <span class="ask-ai__sources-label">Sources</span>
@@ -299,11 +425,12 @@ function Panel({apiBase, docsOrigin, open, onClose, supportUrl}: PanelProps) {
               </div>
             )}
           </div>
-        ))}
+          ),
+        )}
         {showActivity && (
           <p class="ask-ai__activity">
             <span class="ask-ai__pulse" aria-hidden="true" />
-            {activity}
+            {activity ?? 'Thinking'}
           </p>
         )}
 
@@ -353,7 +480,7 @@ function Panel({apiBase, docsOrigin, open, onClose, supportUrl}: PanelProps) {
             class="ask-ai__send ask-ai__send--stop"
             type="button"
             aria-label="Stop"
-            onClick={() => abort.current?.abort()}>
+            onClick={stop}>
             <Square />
           </button>
         ) : (
@@ -436,8 +563,35 @@ function Widget({
  * tokens where it defines them (see styles.css), and nothing about a
  * conversation is written to the host page's storage.
  */
+/**
+ * Which way the host page's ground runs, read from the first ancestor that
+ * actually paints a background. The panel's fallback palette follows the page
+ * it is on rather than the reader's operating system: a light page on a
+ * machine set to dark is still a light page, and a dark panel dropped into it
+ * looks like a bug. Where nothing paints, the system preference decides.
+ */
+function groundOf(): 'light' | 'dark' {
+  for (let el: HTMLElement | null = document.body; el; el = el.parentElement) {
+    const parts = /^rgba?\(([^)]+)\)/.exec(getComputedStyle(el).backgroundColor);
+    if (!parts) continue;
+    const [r, g, b, a = 1] = parts[1].split(',').map(Number);
+    if (!a) continue;
+    return 0.2126 * r + 0.7152 * g + 0.0722 * b < 128 ? 'dark' : 'light';
+  }
+  return window.matchMedia('(prefers-color-scheme: dark)').matches
+    ? 'dark'
+    : 'light';
+}
+
 class SupportAgentElement extends HTMLElement {
-  static observedAttributes = ['api-base', 'docs-origin', 'support-url', 'launcher', 'open'];
+  static observedAttributes = [
+    'api-base',
+    'docs-origin',
+    'support-url',
+    'launcher',
+    'open',
+    'ground',
+  ];
 
   private root: ShadowRoot | null = null;
 
@@ -447,6 +601,8 @@ class SupportAgentElement extends HTMLElement {
       const style = document.createElement('style');
       style.textContent = css;
       this.root.append(style);
+      // An embedder who sets this themselves is taken at their word.
+      if (!this.hasAttribute('ground')) this.setAttribute('ground', groundOf());
     }
     this.paint();
   }

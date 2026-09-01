@@ -9,7 +9,8 @@ const out = join(tmpdir(), `abdm-widget-test-${process.pid}.mjs`);
 await build({
   stdin: {
     contents: `export {toBlocks, absolute} from './src/markdown';
-               export {readStream} from './src/sse';`,
+               export {readStream} from './src/sse';
+               export {revealStep, THINKING_HOLD, THINKING_BURST} from './src/pacing';`,
     resolveDir: import.meta.dirname,
     loader: 'ts',
   },
@@ -20,7 +21,17 @@ await build({
   loader: {'.css': 'text'},
   outfile: out,
 });
-const {toBlocks, absolute, readStream} = await import(out);
+const {toBlocks, absolute, readStream, revealStep, THINKING_HOLD, THINKING_BURST} =
+  await import(out);
+
+// Pacing: hold while thinking, drain a share of the backlog, never overrun it.
+assert.equal(revealStep(0, 9999, true, false), 0);
+assert.equal(revealStep(10, 0, false, false), 0, 'holds during the think');
+assert.equal(revealStep(THINKING_BURST, 0, false, false) > 0, true, 'a big burst does not wait');
+assert.equal(revealStep(10, THINKING_HOLD, false, false) > 0, true, 'the hold expires');
+assert.equal(revealStep(600, 9999, true, false), 100, 'a sixth of the backlog');
+assert.equal(revealStep(1, 9999, true, false), 1, 'never more than is waiting');
+assert.equal(revealStep(600, 0, false, true), 600, 'reduced motion shows it all');
 
 // Markdown: a paragraph, a list, and a fence that has not closed yet.
 assert.deepEqual(toBlocks('one\ntwo'), [{kind: 'p', text: 'one two'}]);

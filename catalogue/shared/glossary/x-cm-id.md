@@ -24,11 +24,20 @@ related:
 
 ## In plain words
 
-`X-CM-ID` tells the gateway which consent manager environment a call
-belongs to. On the sandbox it is `sbx`. In production it is `abdm`.
+`X-CM-ID` names which consent manager a call is addressed to. On the
+sandbox it is `sbx`. In production it is `abdm`.
+
+The value is not an environment name that happens to look like a suffix.
+It is the suffix. Take an ABHA address, drop everything up to and
+including the `@`, and what remains is the value of this header. NHA
+says exactly that: get it from the HIE-CM domain name after the `@` in
+the address. The architecture allows for several consent managers, each
+with its own domain, and this header is how a call reaches the right one.
+Today NHA runs one, which is why the header looks like an environment
+switch.
 
 It is a header, not part of the URL, so it is easy to leave pointing at
-the wrong environment while the host is right.
+the wrong consent manager while the host is right.
 
 ## Before you start
 

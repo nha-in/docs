@@ -48,3 +48,7 @@ You have understood this when you can say what Care context is without using the
 
 Putting a diagnosis or a test result in the display name. That leaks clinical information into a system designed never to hold it.
 
+A care context cannot be unlinked or deleted once it is linked. That is
+what makes the display name worth getting right the first time: a leak
+there is permanent, and so is a name that turns out to be wrong.
+

@@ -17,16 +17,21 @@ verified:
   against: docs-only
 related:
   concepts: [hiecm.concept.care-context]
+  glossary: [shared.glossary.ayushman-card, shared.glossary.abha-address]
 ---
 
 ## In plain words
 
 ABHA expands to Ayushman Bharat Health Account. In practice it means two
 different things: the ABHA number, a 14 digit identifier issued after a
-KYC check that validates under the Luhn algorithm, and the ABHA address,
-a readable name on the HIE-CM such as `name@abdm` that routes records.
+KYC check, and the ABHA address, a readable name on the HIE-CM such as
+`name@abdm` that routes records.
 You will meet both in every module; when a document says "the patient's
 ABHA", work out which of the two it means before writing code against it.
+
+ABHA was called Health ID until NHA renamed it. The old name is still
+live in NHA's own hostnames, `healthid.abdm.gov.in` among them, so both
+names reach the same thing.
 
 ## Before you start
 
@@ -47,3 +52,11 @@ Not applicable to a definition.
 The common mistake is passing an ABHA number where an API wants an ABHA
 address, or the reverse. They are different fields with different
 formats.
+
+An earlier version of this entry said the ABHA number validates under
+the Luhn algorithm. That claim came from this repository's own site
+prose rather than from NHA, and no fetched NHA page states which
+checksum the ABHA number uses. NHA's M1 documentation names Verhoeff,
+but for the Aadhaar number inside the enrolment flow, which is a
+different field. The claim is removed rather than replaced. Do not
+restore either algorithm here without an NHA source.

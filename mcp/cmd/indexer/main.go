@@ -120,6 +120,22 @@ func run(catDir, outPath string, emb embed.Embedder) error {
 	var chunks []index.EmbeddedChunk
 	meta := index.Meta{SourceHashes: hashes,
 		BuiltAt: time.Now().UTC().Format(time.RFC3339)}
+
+	// The synonym table travels inside the index, so a deployed server
+	// needs the database and not the catalogue. A missing file is not an
+	// error: search then behaves as it did before expansion existed.
+	vocabPath := filepath.Join(catDir, "shared", "vocabulary.yaml")
+	switch vocabBytes, err := os.ReadFile(vocabPath); {
+	case os.IsNotExist(err):
+		fmt.Fprintln(os.Stderr, "no vocabulary.yaml, query expansion will be off")
+	case err != nil:
+		return fmt.Errorf("read vocabulary: %w", err)
+	default:
+		if _, err := index.ParseVocabulary(vocabBytes); err != nil {
+			return fmt.Errorf("vocabulary is not valid: %w", err)
+		}
+		meta.Vocabulary = string(vocabBytes)
+	}
 	if emb != nil {
 		var all []catalogue.Chunk
 		for _, a := range atoms {

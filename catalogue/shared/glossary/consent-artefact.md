@@ -22,10 +22,14 @@ related:
 
 ## In plain words
 
-When a patient grants a consent request, the consent manager creates one
-or more consent artefacts and gives their identifiers to the requester.
-The artefact names who may read what, for which date range, and until
-when.
+When a patient grants a consent request, the consent manager creates
+consent artefacts and gives their identifiers to the requester. The
+artefact names who may read what, for which date range, and until when.
+
+One artefact is created per provider. A request covering three hospitals
+grants three artefacts, and the requester fetches each one separately.
+Code written for a single artefact breaks the first time a patient has
+records in two places.
 
 Fetching data means presenting an artefact identifier. No artefact, no
 data.

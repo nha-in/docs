@@ -1,0 +1,150 @@
+# The words readers bring, mapped to the words this catalogue uses.
+#
+# Each entry is a synonym set: the terms mean the same thing, so a query
+# using any one of them is expanded with the others before the keyword
+# search runs. Expansion is symmetric and there is no canonical term.
+#
+# This file holds synonyms only. A term that is merely *related* to
+# another does not belong here. HMIS and HIP are not synonyms: an HMIS is
+# a kind of application and HIP is something it does in one interaction.
+# That link is carried by the prose in the atoms and by the related graph
+# in their frontmatter. Putting it here would make every query about
+# hospital software return every atom about publishing records.
+#
+# See shared.decision.vocabulary-in-one-file for why this is one file
+# rather than a field on every atom.
+#
+# Adding a term is one line. Removing one is also one line, and the
+# retrieval eval in mcp/eval is how you tell whether it earned its place.
+
+- terms: [abdm, ndhm, national digital health mission, ayushman bharat digital mission]
+  note: >
+    ABDM was NDHM until it was renamed at national rollout in September
+    2021. NHA's own hostnames and filenames still carry the old name.
+
+- terms: [abha, health id, healthid, ayushman bharat health account]
+  note: >
+    NHA renamed Health ID to ABHA. The old name is still live in
+    hostnames such as healthid.abdm.gov.in.
+
+- terms: [abha address, phr address, phr id]
+  note: >
+    NHA states outright that ABHA address and PHR address are the same
+    thing. Older material also uses the @ndhm suffix.
+
+- terms: [hie-cm, hiecm, consent manager, hdcm, health data consent manager]
+  note: >
+    The swagger file is titled Health Data Consent Manager, the header is
+    X-CM-ID, and the prose says HIE-CM. All one component.
+
+- terms: [hmis, hims, hms, his, hospital management information system,
+          hospital information system, hospital software,
+          clinic management software, emr, ehr, electronic medical record,
+          electronic health record]
+  note: >
+    NHA's own building blocks guide treats HMIS, HIMS and HIS as one
+    thing. Integrators add EMR and EHR for the same software. Beware the
+    collision: HMIS is also MoHFW's separate reporting portal at
+    hmis.mohfw.gov.in, which is not this.
+
+- terms: [lmis, lims, lis, laboratory information system,
+          laboratory management information system, lab software]
+  note: NHA's partner category is LMIS; the guidance document also says LIMS.
+
+- terms: [hrp, health repository provider, health records provider]
+  note: >
+    NHA's API pages use Health Records Provider and the sandbox glossary
+    once misprinted it as Health Professional Registry. The repository is
+    meant in every case.
+
+- terms: [dsc, digital solution company]
+
+- terms: [hpr id, hpid, healthcare professional id, health professional id]
+  note: Three spellings of one identifier across NHA's own pages.
+
+- terms: [nhpr, national healthcare providers registry]
+
+- terms: [hfr, health facility registry, healthcare facility registry]
+
+- terms: [hpr, healthcare professionals registry, health professional registry]
+
+- terms: [facility id, hfr id, hip id]
+  note: >
+    Not merely synonymous by convention. NHA states that the HFR ID is
+    the HIP ID, which is why X-HIP-ID carries a facility code.
+
+- terms: [bridge, bridge id, client id]
+  note: >
+    NHA's sandbox FAQ says the bridge id and the client id are the same
+    value, used to authenticate an entity.
+
+- terms: [care context, carecontext, care contexts]
+
+- terms: [hi type, hi types, health information type, health record type,
+          record type]
+
+- terms: [scan and share, scan and register, qr registration]
+  note: >
+    The service is Scan and Share in the sandbox and press material, and
+    Scan and Register on the ABDM dashboard and in Aarogya Setu 2.0.
+
+- terms: [ayushman card, golden card, pmjay card, pm-jay card, e-card]
+  note: >
+    The PM-JAY entitlement card, which is not an ABHA. NHA's own FAQ
+    still calls it the golden card.
+
+- terms: [pm-jay, pmjay, ab pm-jay, ab-pmjay, nhpm, ab-nhpm,
+          pradhan mantri jan arogya yojana, national health protection scheme]
+  note: >
+    PM-JAY was NHPS before it was renamed, and NHA's own FAQ still uses
+    NHPM and AB-NHPM throughout.
+
+- terms: [uhi, unified health interface, universal health interface]
+  note: >
+    NHA's building blocks guide heading says Universal in one place and
+    Unified everywhere else. Unified is correct.
+
+- terms: [nhcx, hcx, national health claims exchange, health claims exchange]
+
+- terms: [nrces, nrcs, national resource centre for ehr standards,
+          national resource centre for e-health standards]
+
+- terms: [dhis, digital health incentive scheme,
+          digital health incentivization scheme]
+  note: >
+    Beware the collision with DHIS2, the district health information
+    software, which is a different thing entirely.
+
+- terms: [gateway, abdm gateway, ndhm gateway]
+
+- terms: [sandbox, abdm sandbox]
+
+- terms: [htc, health tech committee]
+
+- terms: [wasa, web application security assessment,
+          website application security assessment, security audit]
+
+- terms: [aadhaar, aadhar, adhaar, uidai number]
+  note: Misspellings are common enough in queries to be worth carrying.
+
+- terms: [fhir, fast healthcare interoperability resources]
+
+- terms: [snomed, snomed ct, snomedct, snomed clinical terms]
+
+- terms: [document bundle, documentbundle, fhir bundle, bundle]
+
+- terms: [auth mode, auth modes, fetch mode, fetch modes,
+          authentication mode, authentication modes]
+  note: >
+    NHA names the API fetch-modes and the values authentication modes,
+    so readers arrive with either word.
+
+- terms: [key pair, keypair, key material, public private key]
+
+- terms: [ecdh, elliptic curve diffie hellman, elliptic-curve diffie-hellman]
+
+- terms: [phr app, personal health record application, health locker,
+          locker, patient app]
+  note: >
+    NHA folded the health locker specification into the PHR app
+    requirements, so the two are one category for most questions.
