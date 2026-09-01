@@ -25,8 +25,13 @@ related:
 ## In plain words
 
 Laboratory Management Information System, NHA's term for laboratory
-software. An LMIS integrates as a [HIP](hip.md), the same way an
-[HMIS](hmis.md) does.
+software. An LMIS is a position, the provider facing side of the
+HIE-CM, the same side an [HMIS](hmis.md) sits on.
+
+It acts as a [HIP](hip.md) whenever it publishes a report, which is
+most of what a lab does, and as an [HIU](hiu.md) on the rarer occasions
+it reads a patient's history to interpret a result. See
+[roles](../../hiecm/concepts/roles.md).
 
 ## Before you start
 

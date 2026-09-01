@@ -11,8 +11,8 @@ import {cn} from '@site/src/lib/utils';
  * backend (a PR preview, a local run) renders the panel locked: the targets
  * are listed and described, and nothing is clickable.
  *
- * Locked is a deliberate state, not a broken one. A reader can see what the
- * server will give them and decide whether to wait for it.
+ * Locked is a deliberate state, not a broken one: a reader sees what the
+ * server offers and where it would come from.
  */
 
 /** What the server carries, from mcp/README.md. */
