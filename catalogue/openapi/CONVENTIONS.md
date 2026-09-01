@@ -89,7 +89,11 @@ already small enough not to need a second level.
 
 ## Extensions
 
-The whole vocabulary. Anything else is a mistake.
+An extension not listed in the reference below is a mistake.
+
+Every extension in use, with a real example and what reads it, is in
+[extensions.md](extensions.md). The six below are the ones every
+specification must carry.
 
 | Extension | Where | What it carries |
 |---|---|---|
