@@ -80,9 +80,12 @@ Four things must already be true, each checkable:
   (`site/docs/hiecm/v3/concepts/data-flow.md`) sets out who generates
   what and points at NHA's reference implementation, Fidelius, rather
   than hand rolling it.
-- You expose a `dataPushUrl` endpoint on your own infrastructure,
-  separate from your registered callback URL, that can receive encrypted
-  [FHIR](../../shared/glossary/fhir.md) bundles.
+- You expose a `dataPushUrl` endpoint that can receive encrypted
+  [FHIR](../../shared/glossary/fhir.md) bundles: the URL you name in the
+  health information request. NHA's M3 file only says to expose one; it
+  does not say whether that URL must differ from your other registered
+  callback URLs. The data flow concept page notes it may differ from
+  your registered gateway URL, not that it must.
 
 ## What happens
 
@@ -109,9 +112,9 @@ sequenceDiagram
    [the consent artefact detail, fetched by artefact id](../callbacks/m3-on-consent-fetch.md)
    at `/api/v3/hiu/consent/on-fetch`. NHA's file says this carries the
    exact care contexts approved, the HI types permitted, the date range,
-   the data erase date, and the HIP and HIU identifiers. Store it: the
-   health information request needs the artefact detail, not just the
-   id.
+   the data erase date, and the HIP and
+   [HIU](../../shared/glossary/hiu.md) identifiers. Store it: the health
+   information request needs the artefact detail, not the id alone.
 2. **Generate your key pair.** Before the next call, generate an ECDH
    key pair and a nonce, in the group the HIP will expect. The M3
    endpoint atom names `Curve25519` as the supported curve. This step
@@ -144,15 +147,19 @@ sequenceDiagram
 ## How you know it worked
 
 ```observation schema=exit-condition
-channel: callback
-path: <YOUR_DATA_PUSH_URL>
+channel: self
+path: your own call to /hiecm/data-flow/v3/health-information/notify
 match:
-  transferComplete: true
+  statusNotification.sessionStatus: TRANSFERRED
 timeout_seconds: unknown
 note: >
-  a decrypted FHIR bundle for every care context named in the artefact.
-  NHA's M3 file does not state a timeout between the health information
-  request and the push arriving.
+  NHA's M3 file documents no payload shape for what arrives at your
+  dataPushUrl, so no field name from that push is confirmed here. What
+  is confirmed, from hiecm-m3.yaml, is the field you send once every
+  care context in the artefact has decrypted: statusNotification.sessionStatus
+  set to TRANSFERRED on the data flow notify call. Treat that outbound
+  call, not an inbound field name, as the exit signal until the push
+  payload itself has been observed.
 ```
 
 Not yet observed against the sandbox. This repository has not run a
@@ -164,19 +171,27 @@ payload shape here and set `verified.status`.
 - The chain stops partway between fetch, request and push. See
   [accepted, then nothing](../troubleshooting/accepted-then-nothing.md),
   which covers finding which callback in a multi step chain is missing.
-- The consent was valid when you sent the request but is not by the time
-  the HIP checks it, because the patient revoked it mid flow. See
+- The consent was valid when you sent the request but is not granted by
+  the time the HIP checks it. NHA's own error table names this state,
+  not a specific cause; a mid flow revocation is one way it happens. See
   [ABDM-1062](../errors/abdm-1062.md). Treat every fetch as a fresh
   permission check, not a cached yes.
 - The artefact id is unknown, expired or already used past its window.
   See [ABDM-1112](../errors/abdm-1112.md).
 - The push never arrives at your `dataPushUrl`. See
-  [the callback never arrives](../troubleshooting/callback-never-arrives.md),
-  though note the push lands on your own infrastructure, not on the
-  registered gateway callback URL, so check that endpoint specifically.
+  [the callback never arrives](../troubleshooting/callback-never-arrives.md).
+  Check the `dataPushUrl` you sent on the health information request
+  specifically, since it may not be the same endpoint your other
+  registered callbacks land on.
 - The clock is wrong and every call fails. See
   [ABDM-2402](../errors/abdm-2402.md).
 - The `REQUEST-ID` is missing, malformed or reused. See
   [ABDM-2404](../errors/abdm-2404.md).
 - No session token was sent. See [ABDM-2500](../errors/abdm-2500.md).
 - ABDM fails and does not say why. See [ABDM-9999](../errors/abdm-9999.md).
+
+Next: a decrypted bundle today is not a standing right to fetch again
+tomorrow. Read
+[consent, what it authorises and how it ends](../concepts/consent-artefact.md)
+for when the artefact you just used stops being usable, so you know
+when a repeat fetch needs a fresh consent request instead.

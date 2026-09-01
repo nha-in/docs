@@ -79,7 +79,7 @@ sequenceDiagram
 
 ## Journey 3: fetching the records
 
-With an artefact id you fetch the artefact, ask for the data it covers, and wait for that data on your callback URL.
+With an artefact id you fetch the artefact, then ask for the data it covers. The data lands on the data push URL you supplied in that request.
 
 ```mermaid
 sequenceDiagram
@@ -100,7 +100,7 @@ sequenceDiagram
     S->>G: Health information notify, receipt of the data
 ```
 
-The records arrive encrypted, at the same callback URL you supplied as the data push URL. NHA states your side plainly: convert the data back to its original form, then present it in a readable format.
+The records arrive encrypted, at the data push URL you supplied. NHA's document does not say whether that URL must differ from your other registered callback URLs. NHA states your side plainly: convert the data back to its original form, then present it in a readable format.
 
 The M3 document does not describe the encryption scheme. It is [ECDH](/docs/hiecm/v3/getting-started/glossary#ecdh) key exchange, specified on the [HIP](/docs/hiecm/v3/getting-started/glossary#hip) side in NHA's M2 document. See [M2](/docs/hiecm/v3/api/m2).
 
