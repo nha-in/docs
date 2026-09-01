@@ -45,7 +45,7 @@ const (
 
 type searchIn struct {
 	Query     string `json:"query" jsonschema:"the search query"`
-	Type      string `json:"type,omitempty" jsonschema:"optional atom type filter, one of: concept, flow, endpoint, callback, error, test, glossary, decision, fhir, sandbox"`
+	Type      string `json:"type,omitempty" jsonschema:"optional atom type filter, one of: concept, flow, endpoint, callback, error, test, glossary, decision, fhir, sandbox, troubleshooting"`
 	Milestone string `json:"milestone,omitempty" jsonschema:"optional milestone filter, M1 to M4"`
 	Limit     int    `json:"limit,omitempty" jsonschema:"max results, default 10, cap 25"`
 }

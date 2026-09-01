@@ -106,7 +106,7 @@ func NewMCPServer(r *index.Reader, emb embed.Embedder) *mcp.Server {
 	})
 
 	type listAtomsIn struct {
-		Type      string `json:"type,omitempty" jsonschema:"optional atom type filter, one of: concept, flow, endpoint, callback, error, test, glossary, decision, fhir, sandbox"`
+		Type      string `json:"type,omitempty" jsonschema:"optional atom type filter, one of: concept, flow, endpoint, callback, error, test, glossary, decision, fhir, sandbox, troubleshooting"`
 		Milestone string `json:"milestone,omitempty" jsonschema:"optional milestone filter"`
 	}
 	mcp.AddTool(s, &mcp.Tool{
