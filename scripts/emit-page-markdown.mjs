@@ -13,19 +13,46 @@ const API_DATA = join(SITE, 'src', 'data', 'api');
 
 // Splits markdown on fenced code blocks (``` or ~~~, with an optional info
 // string such as ```tsx) so JSX stripping can skip fenced content entirely.
-// Returns alternating {fenced: false} prose and {fenced: true} code segments.
+// Line-based, not a single regex, so it can handle a fence indented under a
+// list item (any amount of leading whitespace, not capped at three spaces)
+// and an unterminated fence that CommonMark treats as running to EOF.
+// Returns alternating {fenced: false} prose and {fenced: true} code groups
+// that partition the input's lines, so joining them with '\n' reproduces it.
 function splitOnFences(text) {
-  const fence = /^(```|~~~)[^\n]*\n[\s\S]*?\n\1[ \t]*$/gm;
-  const parts = [];
-  let last = 0;
-  let m;
-  while ((m = fence.exec(text))) {
-    parts.push({fenced: false, text: text.slice(last, m.index)});
-    parts.push({fenced: true, text: m[0]});
-    last = m.index + m[0].length;
+  const lines = text.split('\n');
+  const openRe = /^[ \t]*(`{3,}|~{3,})/;
+  const groups = [];
+  let i = 0;
+  let prose = [];
+  while (i < lines.length) {
+    const open = openRe.exec(lines[i]);
+    if (!open) {
+      prose.push(lines[i]);
+      i += 1;
+      continue;
+    }
+    if (prose.length) {
+      groups.push({fenced: false, lines: prose});
+      prose = [];
+    }
+    const marker = open[1][0];
+    const minLen = open[1].length;
+    const closeRe = new RegExp(`^[ \\t]*\\${marker}{${minLen},}[ \\t]*$`);
+    const fenceLines = [lines[i]];
+    let j = i + 1;
+    while (j < lines.length) {
+      fenceLines.push(lines[j]);
+      const closed = closeRe.test(lines[j]);
+      j += 1;
+      if (closed) break;
+    }
+    // If no closing fence was found, j has reached lines.length and the
+    // fence (correctly) swallowed every remaining line, to EOF.
+    groups.push({fenced: true, lines: fenceLines});
+    i = j;
   }
-  parts.push({fenced: false, text: text.slice(last)});
-  return parts;
+  if (prose.length) groups.push({fenced: false, lines: prose});
+  return groups;
 }
 
 // Drops JSX component lines the markdown reader cannot use; keeps prose.
@@ -42,8 +69,11 @@ export function stripToMarkdown(src) {
   let body = src.replace(/^---\n[\s\S]*?\n---\n/, '');
   body = body.replace(/^import .*$/gm, '');
   body = splitOnFences(body)
-    .map((part) => (part.fenced ? part.text : stripJsx(part.text)))
-    .join('');
+    .map((group) => {
+      const text = group.lines.join('\n');
+      return group.fenced ? text : stripJsx(text);
+    })
+    .join('\n');
   const title = /title:\s*"?([^"\n]+)"?/.exec(src)?.[1];
   if (title && !new RegExp(`^# `, 'm').test(body)) body = `# ${title}\n\n${body}`;
   return body.replace(/\n{3,}/g, '\n\n').trim() + '\n';

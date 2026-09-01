@@ -67,3 +67,29 @@ test('stripToMarkdown leaves prose containing a bare < character untouched', () 
   const md = stripToMarkdown(src);
   assert.match(md, /a < b holds true\./);
 });
+
+test('stripToMarkdown preserves an indented fence inside a list item byte for byte', () => {
+  const src = [
+    '# Title',
+    '',
+    '1. Step one',
+    '',
+    '   ```tsx',
+    '<Foo>',
+    '  bar',
+    '</Foo>',
+    '   ```',
+    '',
+    '2. Step two',
+    '',
+  ].join('\n');
+  const md = stripToMarkdown(src);
+  assert.match(md, /```tsx\n<Foo>\n {2}bar\n<\/Foo>\n {3}```/);
+  assert.match(md, /2\. Step two/);
+});
+
+test('stripToMarkdown preserves an unterminated fence at end of file byte for byte', () => {
+  const src = '# Title\n\n```tsx\n<Foo>\n  bar\n</Foo>\n';
+  const md = stripToMarkdown(src);
+  assert.match(md, /```tsx\n<Foo>\n {2}bar\n<\/Foo>/);
+});
