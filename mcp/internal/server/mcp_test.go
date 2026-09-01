@@ -249,7 +249,7 @@ func TestListOperationsTruncatesUnfiltered(t *testing.T) {
 	}
 	dbPath := filepath.Join(t.TempDir(), "catalogue.db")
 	meta := index.Meta{CatalogueVersion: "2026.08.24", BuiltAt: "2026-08-24T00:00:00Z"}
-	if err := index.Build(dbPath, atoms, ops, nil, nil, meta); err != nil {
+	if err := index.Build(dbPath, atoms, ops, nil, nil, nil, nil, meta); err != nil {
 		t.Fatal(err)
 	}
 	r, err := index.Open(dbPath)

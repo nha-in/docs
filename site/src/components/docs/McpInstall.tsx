@@ -6,9 +6,10 @@ import {cn} from '@site/src/lib/utils';
 /**
  * The Docs MCP server, and the one click that installs it.
  *
- * The server is not public yet, so this panel renders locked: the targets are
- * listed and described, and nothing is clickable. Set MCP_URL at build time and
- * every button below becomes live. That is the only wiring left to do.
+ * MCP_URL at build time is what arms it: with the endpoint set (the deploy
+ * pipeline sets it), every button below is live. Without it, a build with no
+ * backend (a PR preview, a local run) renders the panel locked: the targets
+ * are listed and described, and nothing is clickable.
  *
  * Locked is a deliberate state, not a broken one. A reader can see what the
  * server will give them and decide whether to wait for it.

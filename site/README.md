@@ -2,8 +2,10 @@
 
 The developer portal's Docusaurus site: pages and the interactive Scalar
 API references, generated from [`../catalogue`](../catalogue). Nothing
-under `docs/` or `static/specs/` is hand-edited — both are overwritten by
-the build, from the catalogue's atoms and OpenAPI files respectively.
+under `docs/`, `static/specs/` or `static/skills/` is hand-edited — all
+three are overwritten by the build: pages from the catalogue's atoms,
+specs from its OpenAPI files, and skills by `scripts/build-skills.mjs`
+(which also copies in the committed skills from `plugins/abdm/skills/`).
 
 ```bash
 npm install

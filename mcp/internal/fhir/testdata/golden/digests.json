@@ -1,0 +1,743 @@
+[
+  {
+    "record_type": "DiagnosticReport",
+    "profile_name": "DiagnosticReportRecord",
+    "url": "https://nrces.in/ndhm/fhir/r4/StructureDefinition/DiagnosticReportRecord",
+    "title": "",
+    "description": "The Clinical Artifact represents diagnostic reports including Radiology and Laboratory reports that can be shared across the health ecosystem.",
+    "required": [
+      {
+        "path": "Composition.status",
+        "min": 1,
+        "max": "1"
+      },
+      {
+        "path": "Composition.type",
+        "min": 1,
+        "max": "1"
+      },
+      {
+        "path": "Composition.type.coding",
+        "min": 1,
+        "max": "1"
+      },
+      {
+        "path": "Composition.subject",
+        "min": 1,
+        "max": "1"
+      },
+      {
+        "path": "Composition.subject.reference",
+        "min": 1,
+        "max": "1"
+      },
+      {
+        "path": "Composition.date",
+        "min": 1,
+        "max": "1"
+      },
+      {
+        "path": "Composition.author",
+        "min": 1,
+        "max": "*"
+      },
+      {
+        "path": "Composition.author.reference",
+        "min": 1,
+        "max": "1"
+      },
+      {
+        "path": "Composition.title",
+        "min": 1,
+        "max": "1"
+      },
+      {
+        "path": "Composition.attester.mode",
+        "min": 1,
+        "max": "1"
+      },
+      {
+        "path": "Composition.relatesTo.code",
+        "min": 1,
+        "max": "1"
+      },
+      {
+        "path": "Composition.relatesTo.target[x]",
+        "min": 1,
+        "max": "1"
+      },
+      {
+        "path": "Composition.section",
+        "min": 1,
+        "max": "1"
+      },
+      {
+        "path": "Composition.section.entry",
+        "min": 1,
+        "max": "2"
+      }
+    ],
+    "sections": [],
+    "fixed": []
+  },
+  {
+    "record_type": "DischargeSummary",
+    "profile_name": "DischargeSummaryRecord",
+    "url": "https://nrces.in/ndhm/fhir/r4/StructureDefinition/DischargeSummaryRecord",
+    "title": "",
+    "description": "Clinical document used to represent the discharge summary record for ABDM HDE data set.",
+    "required": [
+      {
+        "path": "Composition.status",
+        "min": 1,
+        "max": "1"
+      },
+      {
+        "path": "Composition.type",
+        "min": 1,
+        "max": "1"
+      },
+      {
+        "path": "Composition.type.coding",
+        "min": 1,
+        "max": "1"
+      },
+      {
+        "path": "Composition.subject",
+        "min": 1,
+        "max": "1"
+      },
+      {
+        "path": "Composition.subject.reference",
+        "min": 1,
+        "max": "1"
+      },
+      {
+        "path": "Composition.encounter",
+        "min": 1,
+        "max": "1"
+      },
+      {
+        "path": "Composition.date",
+        "min": 1,
+        "max": "1"
+      },
+      {
+        "path": "Composition.author",
+        "min": 1,
+        "max": "*"
+      },
+      {
+        "path": "Composition.title",
+        "min": 1,
+        "max": "1"
+      },
+      {
+        "path": "Composition.attester.mode",
+        "min": 1,
+        "max": "1"
+      },
+      {
+        "path": "Composition.relatesTo.code",
+        "min": 1,
+        "max": "1"
+      },
+      {
+        "path": "Composition.relatesTo.target[x]",
+        "min": 1,
+        "max": "1"
+      },
+      {
+        "path": "Composition.section",
+        "min": 1,
+        "max": "*"
+      }
+    ],
+    "sections": [
+      {
+        "slice": "ChiefComplaints",
+        "min": 0,
+        "max": "1"
+      },
+      {
+        "slice": "PhysicalExamination",
+        "min": 0,
+        "max": "1"
+      },
+      {
+        "slice": "Allergies",
+        "min": 0,
+        "max": "1"
+      },
+      {
+        "slice": "MedicalHistory",
+        "min": 0,
+        "max": "1"
+      },
+      {
+        "slice": "FamilyHistory",
+        "min": 0,
+        "max": "1"
+      },
+      {
+        "slice": "Investigations",
+        "min": 0,
+        "max": "1"
+      },
+      {
+        "slice": "Medications",
+        "min": 0,
+        "max": "1"
+      },
+      {
+        "slice": "Procedures",
+        "min": 0,
+        "max": "1"
+      },
+      {
+        "slice": "CarePlan",
+        "min": 0,
+        "max": "1"
+      },
+      {
+        "slice": "DocumentReference",
+        "min": 0,
+        "max": "1"
+      }
+    ],
+    "fixed": []
+  },
+  {
+    "record_type": "",
+    "profile_name": "DocumentBundle",
+    "url": "https://nrces.in/ndhm/fhir/r4/StructureDefinition/DocumentBundle",
+    "title": "",
+    "description": "This profile sets minimum expectations for the DocumentBundle that includes all resources into a single instance with containing context to act as an exchangeable clinical document.",
+    "required": [
+      {
+        "path": "Bundle.meta",
+        "min": 1,
+        "max": ""
+      },
+      {
+        "path": "Bundle.meta.versionId",
+        "min": 1,
+        "max": ""
+      },
+      {
+        "path": "Bundle.identifier",
+        "min": 1,
+        "max": ""
+      },
+      {
+        "path": "Bundle.identifier.system",
+        "min": 1,
+        "max": ""
+      },
+      {
+        "path": "Bundle.identifier.value",
+        "min": 1,
+        "max": ""
+      },
+      {
+        "path": "Bundle.timestamp",
+        "min": 1,
+        "max": ""
+      }
+    ],
+    "sections": [],
+    "fixed": [
+      {
+        "path": "Bundle.type",
+        "value": "document"
+      }
+    ]
+  },
+  {
+    "record_type": "HealthDocumentRecord",
+    "profile_name": "HealthDocumentRecord",
+    "url": "https://nrces.in/ndhm/fhir/r4/StructureDefinition/HealthDocumentRecord",
+    "title": "",
+    "description": "The Clinical Artifact represents the unstructured historical health records as a single of multiple Health Record Documents generally uploaded by the patients through the Health Locker and can be shared across the health ecosystem.",
+    "required": [
+      {
+        "path": "Composition.status",
+        "min": 1,
+        "max": "1"
+      },
+      {
+        "path": "Composition.type",
+        "min": 1,
+        "max": "1"
+      },
+      {
+        "path": "Composition.type.coding",
+        "min": 1,
+        "max": "1"
+      },
+      {
+        "path": "Composition.subject",
+        "min": 1,
+        "max": "1"
+      },
+      {
+        "path": "Composition.subject.reference",
+        "min": 1,
+        "max": "1"
+      },
+      {
+        "path": "Composition.date",
+        "min": 1,
+        "max": "1"
+      },
+      {
+        "path": "Composition.author",
+        "min": 1,
+        "max": "*"
+      },
+      {
+        "path": "Composition.author.reference",
+        "min": 1,
+        "max": "1"
+      },
+      {
+        "path": "Composition.title",
+        "min": 1,
+        "max": "1"
+      },
+      {
+        "path": "Composition.attester.mode",
+        "min": 1,
+        "max": "1"
+      },
+      {
+        "path": "Composition.relatesTo.code",
+        "min": 1,
+        "max": "1"
+      },
+      {
+        "path": "Composition.relatesTo.target[x]",
+        "min": 1,
+        "max": "1"
+      },
+      {
+        "path": "Composition.section",
+        "min": 1,
+        "max": "1"
+      },
+      {
+        "path": "Composition.section.entry",
+        "min": 1,
+        "max": "*"
+      }
+    ],
+    "sections": [],
+    "fixed": []
+  },
+  {
+    "record_type": "ImmunizationRecord",
+    "profile_name": "ImmunizationRecord",
+    "url": "https://nrces.in/ndhm/fhir/r4/StructureDefinition/ImmunizationRecord",
+    "title": "",
+    "description": "The Clinical Artifact represents the Immunization records with any additional documents such as vaccine certificate, the next immunization recommendations, etc. This can be further shared across the health ecosystem.",
+    "required": [
+      {
+        "path": "Composition.status",
+        "min": 1,
+        "max": "1"
+      },
+      {
+        "path": "Composition.type",
+        "min": 1,
+        "max": "1"
+      },
+      {
+        "path": "Composition.type.coding",
+        "min": 1,
+        "max": "1"
+      },
+      {
+        "path": "Composition.subject",
+        "min": 1,
+        "max": "1"
+      },
+      {
+        "path": "Composition.subject.reference",
+        "min": 1,
+        "max": "1"
+      },
+      {
+        "path": "Composition.date",
+        "min": 1,
+        "max": "1"
+      },
+      {
+        "path": "Composition.author",
+        "min": 1,
+        "max": "*"
+      },
+      {
+        "path": "Composition.title",
+        "min": 1,
+        "max": "1"
+      },
+      {
+        "path": "Composition.attester.mode",
+        "min": 1,
+        "max": "1"
+      },
+      {
+        "path": "Composition.relatesTo.code",
+        "min": 1,
+        "max": "1"
+      },
+      {
+        "path": "Composition.relatesTo.target[x]",
+        "min": 1,
+        "max": "1"
+      },
+      {
+        "path": "Composition.section",
+        "min": 1,
+        "max": "1"
+      },
+      {
+        "path": "Composition.section.entry",
+        "min": 1,
+        "max": "*"
+      }
+    ],
+    "sections": [],
+    "fixed": []
+  },
+  {
+    "record_type": "OPConsultation",
+    "profile_name": "OPConsultRecord",
+    "url": "https://nrces.in/ndhm/fhir/r4/StructureDefinition/OPConsultRecord",
+    "title": "",
+    "description": "The Clinical Artifact represents the outpatient visit consultation note which may include clinical information on any OP examinations, procedures along with medication administered, and advice that can be shared across the health ecosystem.",
+    "required": [
+      {
+        "path": "Composition.status",
+        "min": 1,
+        "max": "1"
+      },
+      {
+        "path": "Composition.type",
+        "min": 1,
+        "max": "1"
+      },
+      {
+        "path": "Composition.type.coding",
+        "min": 1,
+        "max": "1"
+      },
+      {
+        "path": "Composition.subject",
+        "min": 1,
+        "max": "1"
+      },
+      {
+        "path": "Composition.subject.reference",
+        "min": 1,
+        "max": "1"
+      },
+      {
+        "path": "Composition.encounter",
+        "min": 1,
+        "max": "1"
+      },
+      {
+        "path": "Composition.date",
+        "min": 1,
+        "max": "1"
+      },
+      {
+        "path": "Composition.author",
+        "min": 1,
+        "max": "*"
+      },
+      {
+        "path": "Composition.author.reference",
+        "min": 1,
+        "max": "1"
+      },
+      {
+        "path": "Composition.title",
+        "min": 1,
+        "max": "1"
+      },
+      {
+        "path": "Composition.attester.mode",
+        "min": 1,
+        "max": "1"
+      },
+      {
+        "path": "Composition.relatesTo.code",
+        "min": 1,
+        "max": "1"
+      },
+      {
+        "path": "Composition.relatesTo.target[x]",
+        "min": 1,
+        "max": "1"
+      },
+      {
+        "path": "Composition.section",
+        "min": 1,
+        "max": "*"
+      }
+    ],
+    "sections": [
+      {
+        "slice": "ChiefComplaints",
+        "min": 0,
+        "max": "1"
+      },
+      {
+        "slice": "PhysicalExamination",
+        "min": 0,
+        "max": "1"
+      },
+      {
+        "slice": "Allergies",
+        "min": 0,
+        "max": "1"
+      },
+      {
+        "slice": "MedicalHistory",
+        "min": 0,
+        "max": "1"
+      },
+      {
+        "slice": "FamilyHistory",
+        "min": 0,
+        "max": "1"
+      },
+      {
+        "slice": "InvestigationAdvice",
+        "min": 0,
+        "max": "1"
+      },
+      {
+        "slice": "Medications",
+        "min": 0,
+        "max": "1"
+      },
+      {
+        "slice": "FollowUp",
+        "min": 0,
+        "max": "1"
+      },
+      {
+        "slice": "Procedure",
+        "min": 0,
+        "max": "1"
+      },
+      {
+        "slice": "Referral",
+        "min": 0,
+        "max": "1"
+      },
+      {
+        "slice": "OtherObservations",
+        "min": 0,
+        "max": "1"
+      },
+      {
+        "slice": "DocumentReference",
+        "min": 0,
+        "max": "1"
+      }
+    ],
+    "fixed": []
+  },
+  {
+    "record_type": "Prescription",
+    "profile_name": "PrescriptionRecord",
+    "url": "https://nrces.in/ndhm/fhir/r4/StructureDefinition/PrescriptionRecord",
+    "title": "",
+    "description": "The Clinical Artifact represents the medication advice to the patient in compliance with the Pharmacy Council of India (PCI) guidelines, which can be shared across the health ecosystem.",
+    "required": [
+      {
+        "path": "Composition.status",
+        "min": 1,
+        "max": "1"
+      },
+      {
+        "path": "Composition.type",
+        "min": 1,
+        "max": "1"
+      },
+      {
+        "path": "Composition.type.coding",
+        "min": 1,
+        "max": "1"
+      },
+      {
+        "path": "Composition.subject",
+        "min": 1,
+        "max": "1"
+      },
+      {
+        "path": "Composition.subject.reference",
+        "min": 1,
+        "max": "1"
+      },
+      {
+        "path": "Composition.date",
+        "min": 1,
+        "max": "1"
+      },
+      {
+        "path": "Composition.author",
+        "min": 1,
+        "max": "*"
+      },
+      {
+        "path": "Composition.author.reference",
+        "min": 1,
+        "max": "1"
+      },
+      {
+        "path": "Composition.title",
+        "min": 1,
+        "max": "1"
+      },
+      {
+        "path": "Composition.attester.mode",
+        "min": 1,
+        "max": "1"
+      },
+      {
+        "path": "Composition.relatesTo.code",
+        "min": 1,
+        "max": "1"
+      },
+      {
+        "path": "Composition.relatesTo.target[x]",
+        "min": 1,
+        "max": "1"
+      },
+      {
+        "path": "Composition.section",
+        "min": 1,
+        "max": "1"
+      },
+      {
+        "path": "Composition.section.entry",
+        "min": 1,
+        "max": "*"
+      }
+    ],
+    "sections": [],
+    "fixed": []
+  },
+  {
+    "record_type": "WellnessRecord",
+    "profile_name": "WellnessRecord",
+    "url": "https://nrces.in/ndhm/fhir/r4/StructureDefinition/WellnessRecord",
+    "title": "",
+    "description": "The Clinical Artifact represents regular wellness information of patients typically through the Patient Health Record (PHR) application covering clinical information such as vitals, physical examination, general wellness, women wellness, etc., that can be shared across the health ecosystem.",
+    "required": [
+      {
+        "path": "Composition.status",
+        "min": 1,
+        "max": "1"
+      },
+      {
+        "path": "Composition.type",
+        "min": 1,
+        "max": "1"
+      },
+      {
+        "path": "Composition.subject",
+        "min": 1,
+        "max": "1"
+      },
+      {
+        "path": "Composition.subject.reference",
+        "min": 1,
+        "max": "1"
+      },
+      {
+        "path": "Composition.date",
+        "min": 1,
+        "max": "1"
+      },
+      {
+        "path": "Composition.author",
+        "min": 1,
+        "max": "*"
+      },
+      {
+        "path": "Composition.title",
+        "min": 1,
+        "max": "1"
+      },
+      {
+        "path": "Composition.attester.mode",
+        "min": 1,
+        "max": "1"
+      },
+      {
+        "path": "Composition.relatesTo.code",
+        "min": 1,
+        "max": "1"
+      },
+      {
+        "path": "Composition.relatesTo.target[x]",
+        "min": 1,
+        "max": "1"
+      },
+      {
+        "path": "Composition.section",
+        "min": 1,
+        "max": "*"
+      }
+    ],
+    "sections": [
+      {
+        "slice": "VitalSigns",
+        "min": 0,
+        "max": "1"
+      },
+      {
+        "slice": "BodyMeasurement",
+        "min": 0,
+        "max": "1"
+      },
+      {
+        "slice": "PhysicalActivity",
+        "min": 0,
+        "max": "1"
+      },
+      {
+        "slice": "GeneralAssessment",
+        "min": 0,
+        "max": "1"
+      },
+      {
+        "slice": "WomenHealth",
+        "min": 0,
+        "max": "1"
+      },
+      {
+        "slice": "Lifestyle",
+        "min": 0,
+        "max": "1"
+      },
+      {
+        "slice": "OtherObservations",
+        "min": 0,
+        "max": "1"
+      },
+      {
+        "slice": "DocumentReference",
+        "min": 0,
+        "max": "1"
+      }
+    ],
+    "fixed": []
+  }
+]

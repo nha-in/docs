@@ -53,6 +53,17 @@ CREATE TABLE chunks (
 );
 CREATE TABLE meta (key TEXT PRIMARY KEY, value TEXT NOT NULL);
 CREATE TABLE sources (path TEXT PRIMARY KEY, sha256 TEXT NOT NULL);
+CREATE TABLE fhir_profiles (
+    profile_name TEXT PRIMARY KEY,
+    record_type  TEXT NOT NULL,
+    url          TEXT NOT NULL,
+    title        TEXT NOT NULL,
+    digest       TEXT NOT NULL
+);
+CREATE TABLE fhir_examples (
+    record_type TEXT PRIMARY KEY,
+    bundle      TEXT NOT NULL
+);
 CREATE INDEX idx_related_from ON related(from_id);
 CREATE INDEX idx_related_to ON related(to_id);
 CREATE INDEX idx_codes ON atom_error_codes(code);

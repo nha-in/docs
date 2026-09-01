@@ -26,6 +26,21 @@ const testDir = join(root, 'site', 'src', 'data', 'test-matrix');
 const specDir = join(root, 'catalogue', 'openapi', 'hiecm', 'v3');
 const outDir = join(root, 'site', 'static', 'skills');
 
+// Provenance for the snapshot header. A downloaded skill is frozen while the
+// catalogue moves, so every file names the version and date it was built
+// from, and its own canonical URL, which is what lets an agent notice the
+// copy is stale and heal it. The version is the same catalogue/VERSION the
+// MCP indexer stamps into its snapshot, so the two surfaces are comparable.
+const catalogueVersion = readFileSync(join(root, 'catalogue', 'VERSION'), 'utf8').trim();
+const buildDate = new Date().toISOString().slice(0, 10);
+// The site build exports DOCUSAURUS_URL; without it (a local dev run) the
+// header falls back to naming the path, which is still enough to act on.
+const siteUrl = process.env.DOCUSAURUS_URL
+  ? `${process.env.DOCUSAURUS_URL}${process.env.DOCUSAURUS_BASE_URL ?? '/'}`.replace(/\/+$/, '')
+  : null;
+const skillUrl = (slug) =>
+  siteUrl ? `${siteUrl}/skills/${slug}/SKILL.md` : `the portal's /skills/${slug}/SKILL.md path`;
+
 // Every rule below is lifted from that module's own pages. A rule that is true
 // of M1 and not of M2 belongs to M1 only: an agent told the wrong rule is
 // worse off than an agent told nothing.
@@ -143,7 +158,14 @@ function build(module) {
   lines.push(`# ABDM ${module.title}`);
   lines.push('');
   lines.push(
-    'Generated from the ABDM Developer Portal. Every fact below comes from a page in that portal, which is the place to look when this file does not carry enough.',
+    `Generated from the ABDM Developer Portal on ${buildDate}, catalogue version ${catalogueVersion}. Every fact below comes from a page in that portal, which is the place to look when this file does not carry enough.`,
+  );
+  lines.push('');
+  lines.push(
+    `This file is a snapshot. Re-download it from ${skillUrl(module.slug)} when it is older than the work you are doing.`,
+  );
+  lines.push(
+    'If the abdm-docs MCP server is connected, trust its answers over this file: it serves the current catalogue and stamps every response with its catalogue_version, which you can compare against the version above.',
   );
   lines.push('');
 
@@ -337,9 +359,136 @@ for (const module of MODULES) {
   );
 }
 
+// The committed skills under plugins/abdm/skills ship too, at the same
+// /skills/<name>/SKILL.md URLs the compiled module skills get, so the
+// site is the one place an integrator finds every skill. Each gets a
+// manifest entry (kind: guided) so a page can render an install panel
+// for it; the description comes from the skill's own frontmatter, and
+// the example prompt lives here because the file does not carry one.
+const GUIDED = {
+  'fhir-generate': {module: 'FHIR', example: 'Add ABDM compliant FHIR bundle generation to this codebase'},
+  'fhir-audit': {module: 'FHIR', example: "Check this FHIR store's bundles for ABDM compliance"},
+  'hiecm-m1-build': {module: 'M1', example: 'Scaffold ABHA creation by Aadhaar OTP, flow by flow'},
+  'hiecm-m1-debug': {module: 'M1', example: 'Diagnose this failed ABDM call'},
+};
+const pluginDir = join(root, 'plugins', 'abdm', 'skills');
+for (const name of readdirSync(pluginDir)) {
+  const src = join(pluginDir, name, 'SKILL.md');
+  if (!existsSync(src)) continue; // README.md and other non-skill entries
+  const raw = readFileSync(src, 'utf8');
+  const folder = join(outDir, name);
+  mkdirSync(folder, {recursive: true});
+  writeFileSync(join(folder, 'SKILL.md'), raw);
+  const fm = parse(raw.match(/^---\n([\s\S]*?)\n---/)?.[1] ?? '') ?? {};
+  manifest[name] = {
+    kind: 'guided',
+    module: GUIDED[name]?.module ?? 'ABDM',
+    title: fm.name ?? name,
+    description: fm.description ?? '',
+    example: GUIDED[name]?.example ?? '',
+  };
+  count += 1;
+  console.log(`Copied ${name} from plugins/abdm/skills.`);
+}
+
 writeFileSync(
   join(root, 'site', 'src', 'data', 'skills.json'),
   `${JSON.stringify(manifest, null, 2)}\n`,
 );
 
 console.log(`Compiled ${count} skill(s) into site/static/skills.`);
+
+// ---------------------------------------------------------------------------
+// The hosted setup prompt, the pattern Cloudflare's docs use: what a reader
+// copies is one line pointing here, and the instructions themselves live at
+// this URL, regenerated every build. The pasted prompt therefore cannot go
+// stale, which no inline prompt can promise. AgentSetup.tsx copies the one
+// line; this file is what the agent fetches.
+const promptSkills = [
+  ['abdm-m1', 'ABDM Milestone 1: ABHA identity, login, profile'],
+  ['abdm-m2', 'ABDM Milestone 2: linking and sharing records'],
+  ['abdm-m3', 'ABDM Milestone 3: consent and fetching'],
+  ['fhir-generate', 'building NRCES compliant FHIR bundles in this codebase'],
+  ['fhir-audit', 'checking an existing FHIR store for NRCES compliance'],
+];
+const mcpUrl = process.env.MCP_URL ?? null;
+// The Claude Code plugin marketplace: this repository itself. Update at
+// handover, together with PLUGIN_REPO in site/src/components/docs/AgentSetup.tsx.
+const pluginRepo = process.env.MARKETPLACE_REPO ?? 'eka-care/abdm-docs';
+// Without DOCUSAURUS_URL every reference is origin-relative, and one note
+// tells the agent what the origin is: wherever it fetched this file from.
+const promptRef = (path) => (siteUrl ? `${siteUrl}${path}` : path);
+const promptLines = [
+  `These are official instructions from the ABDM Developer Portal (catalogue version ${catalogueVersion}, built ${buildDate}) to set up an AI development environment for integrating with ABDM, India's health data network.`,
+  '',
+  'Complete the steps yourself by running the commands directly. Ask the user only the questions in step 1.',
+  '',
+  '## 1. Establish scope',
+  '',
+  'Ask the user which of these this project needs, and install only what they name:',
+  '',
+  ...promptSkills.map(([slug, what]) => `- \`${slug}\`: ${what}`),
+  '',
+  'A project that produces FHIR documents from its own code wants `fhir-generate`; one with an existing FHIR store wants `fhir-audit`; most need only one of the two.',
+  '',
+  '## 2. Install the skills',
+  '',
+  '### Claude Code',
+  '',
+  'Install the plugin, which carries every skill at once and stays current through `claude plugin update`:',
+  '',
+  '```',
+  `claude plugin marketplace add ${pluginRepo}`,
+  'claude plugin install abdm@abdm-portal',
+  '```',
+  '',
+  'If the marketplace add fails (the repository may not be accessible from here), fall back to the per-file downloads below.',
+  '',
+  '### Other agents',
+  '',
+  'Each skill is one markdown file in the cross-agent SKILL.md format. Download each chosen skill into the directory your agent reads skills from:',
+  '',
+  '- Claude Code: `.claude/skills/<name>/SKILL.md`',
+  '- Cursor: `.cursor/skills/<name>/SKILL.md` (it also reads `.claude/skills`)',
+  '- GitHub Copilot: `.github/skills/<name>/SKILL.md`',
+  '- Any other agent: wherever it reads context from',
+  '',
+  ...(siteUrl
+    ? []
+    : ['URLs below are relative to the origin you fetched this file from.', '']),
+  'For example:',
+  '',
+  '```',
+  `mkdir -p .claude/skills/abdm-m1 && curl -fsSL ${promptRef('/skills/abdm-m1/SKILL.md')} -o .claude/skills/abdm-m1/SKILL.md`,
+  '```',
+  '',
+  ...promptSkills.map(([slug]) => `- ${promptRef(`/skills/${slug}/SKILL.md`)}`),
+  '',
+  '## 3. Connect the Docs MCP server',
+  '',
+  ...(mcpUrl
+    ? [
+        'The portal serves its catalogue live over MCP (streamable HTTP). Register it with your agent:',
+        '',
+        '```',
+        `claude mcp add --transport http abdm-docs ${mcpUrl}`,
+        '```',
+        '',
+        `For other agents, add an HTTP MCP server named \`abdm-docs\` at \`${mcpUrl}\` using their config format.`,
+      ]
+    : [
+        `The portal's Docs MCP server is not publicly reachable yet. Skip this step; ${promptRef('/docs/hiecm/v3/getting-started/mcp')} has the current status and the connect instructions for when it opens.`,
+      ]),
+  '',
+  '## 4. Report back',
+  '',
+  'Tell the user what you installed and where you suggest starting. Two cautions to keep for the whole engagement:',
+  '',
+  '- Nothing in these skills has been run against the ABDM sandbox. Verify response shapes against real calls before relying on them.',
+  `- The skills are snapshots. The current documentation lives at ${promptRef('/')}; prefer it, and the MCP server when connected, over any downloaded copy that has aged.`,
+  '',
+];
+const promptDir = join(root, 'site', 'static', 'agent-setup');
+mkdirSync(promptDir, {recursive: true});
+writeFileSync(join(promptDir, 'prompt.md'), `${promptLines.join('\n')}\n`);
+console.log('Wrote agent-setup/prompt.md.');

@@ -32,6 +32,16 @@ built by a different provider all fail the readiness probe and the rollout.
 The previous ReplicaSet keeps serving. The startup log names the exact
 problem.
 
+## One commit, both artifacts
+
+The docs site (which generates the downloadable agent skills) and the MCP
+server's snapshot both derive from `catalogue/`, through two different
+build steps. Deploy them from the same commit, in the same pipeline run,
+or the skills a developer downloads and the answers the MCP serves will
+disagree until the next sync. Every skill file and every MCP response
+carries the catalogue version, so a mismatch is at least visible; the
+pipeline's job is to make it rare.
+
 ## Sizing
 
 Two replicas for availability, preferring separate nodes, with a

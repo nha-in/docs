@@ -1,0 +1,6 @@
+package: ndhm.in
+version: 6.5.0
+fhir: 4.0.1
+source: https://nrces.in/ndhm/fhir/r4/package.tgz
+file: catalogue/openapi/.raw/nrces-ndhm.in-6.5.0.tgz
+sha256: 41fa99955adbd1983a235d7c7136b30f423ce34ff541d86b354d95b7704527d4

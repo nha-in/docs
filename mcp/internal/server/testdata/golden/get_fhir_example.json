@@ -1,0 +1,22 @@
+{
+  "catalogue_version": "2026.08.24",
+  "example": {
+    "resourceType": "Bundle",
+    "type": "document",
+    "timestamp": "2020-07-09T15:32:26.605+05:30",
+    "identifier": {
+      "system": "https://example.com/bundle",
+      "value": "1"
+    },
+    "entry": [
+      {
+        "fullUrl": "Composition/1",
+        "resource": {
+          "resourceType": "Composition",
+          "id": "1"
+        }
+      }
+    ]
+  },
+  "record_type": "OPConsultation"
+}

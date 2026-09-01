@@ -4,7 +4,7 @@ sidebar_label: Milestones
 description: The four HIE-CM milestones, what each one certifies, and which ones your role has to build.
 verification: unverified
 source: ABDM__Proposed_Simplified_Milestone_1.md, ABDM__Proposed_Simplified_Milestone_2.md, ABDM__Proposed_Simplified_Milestone_3.md, ABDM__Proposed_Simplified_Milestone_4_(NHPR).md
-sidebar_position: 4
+sidebar_position: 5
 ---
 
 # Integration milestones

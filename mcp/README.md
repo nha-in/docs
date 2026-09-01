@@ -59,17 +59,24 @@ answer contract, is specified in support-agent-playbook.md.
 ## Tools
 
 search_docs, get_atom, related_atoms, decode_error, list_atoms,
-catalogue_info, list_operations, get_operation, validate_request. Every
-response carries catalogue_version; every atom result carries
-verification_status.
+catalogue_info, list_operations, get_operation, validate_request,
+list_fhir_profiles, get_fhir_profile, get_fhir_example, validate_fhir.
+Every response carries catalogue_version; every atom result carries
+verification_status. validate_fhir never logs bundle contents — the
+tool-call logging middleware records only the tool name, duration and
+whether it errored — and, like validate_request, is not part of the
+chat tool set. A bundle over the 2 MiB input cap gets a different
+response shape: just `error` and `catalogue_version`, with no
+`findings` or `limits` field.
 
 ## Chat
 
 `POST /api/chat` is a server-sent-events endpoint behind the site's "Ask
 AI" panel. It runs an agent loop against a Claude model on Amazon Bedrock,
-using the same seven read tools listed above (not list_atoms or
-validate_request) — so the assistant's retrieval quality is exactly the
-MCP server's retrieval quality, never a separate, duplicated path.
+using the same ten read tools listed above (not list_atoms,
+validate_request or validate_fhir) — so the assistant's retrieval quality
+is exactly the MCP server's retrieval quality, never a separate,
+duplicated path.
 
 The endpoint is off by default. Set `CHAT_MODEL` to a Bedrock model or
 inference-profile id to turn it on; leave it empty and `/api/chat` answers

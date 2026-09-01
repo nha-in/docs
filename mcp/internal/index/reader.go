@@ -9,16 +9,18 @@ import (
 	"strings"
 
 	"github.com/eka-care/abdm-docs/mcp/internal/catalogue"
+	"github.com/eka-care/abdm-docs/mcp/internal/fhir"
 	_ "modernc.org/sqlite"
 )
 
 type Reader struct {
-	db       *sql.DB
-	version  string
-	builtAt  string
-	embModel string
-	hasVecs  bool
-	vocab    *Vocabulary
+	db            *sql.DB
+	version       string
+	builtAt       string
+	embModel      string
+	fhirIGVersion string
+	hasVecs       bool
+	vocab         *Vocabulary
 }
 
 func Open(dbPath string) (*Reader, error) {
@@ -36,6 +38,14 @@ func Open(dbPath string) (*Reader, error) {
 			db.Close()
 			return nil, fmt.Errorf("meta %s: %w", key, err)
 		}
+	}
+	// fhir_ig_version was added after the initial schema; a snapshot built
+	// by the pre-FHIR writer has no such row. Leave the field zero-valued
+	// rather than failing Open, matching FHIRIGVersion()'s documented
+	// "" contract for snapshots with no FHIR IG indexed.
+	if err := db.QueryRow(`SELECT value FROM meta WHERE key='fhir_ig_version'`).Scan(&r.fhirIGVersion); err != nil && err != sql.ErrNoRows {
+		db.Close()
+		return nil, fmt.Errorf("meta fhir_ig_version: %w", err)
 	}
 	var n int
 	if err := db.QueryRow(`SELECT count(*) FROM chunks WHERE embedding IS NOT NULL`).Scan(&n); err != nil {
@@ -71,6 +81,7 @@ func (r *Reader) CatalogueVersion() string { return r.version }
 func (r *Reader) BuiltAt() string          { return r.builtAt }
 func (r *Reader) EmbeddingModel() string   { return r.embModel }
 func (r *Reader) EmbeddingsEnabled() bool  { return r.hasVecs }
+func (r *Reader) FHIRIGVersion() string    { return r.fhirIGVersion }
 
 type NotFoundError struct {
 	ID      string
@@ -385,4 +396,59 @@ func (r *Reader) Stats() (Stats, error) {
 	}
 	err = r.db.QueryRow(`SELECT count(*) FROM operations`).Scan(&s.Operations)
 	return s, err
+}
+
+// FHIRProfileSummary is a compact listing row for one indexed FHIR profile.
+type FHIRProfileSummary struct {
+	RecordType  string `json:"record_type"`
+	ProfileName string `json:"profile_name"`
+	URL         string `json:"url"`
+	Title       string `json:"title"`
+}
+
+func (r *Reader) ListFHIRProfiles() ([]FHIRProfileSummary, error) {
+	rows, err := r.db.Query(`
+        SELECT record_type, profile_name, url, title FROM fhir_profiles
+        ORDER BY profile_name`)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	out := []FHIRProfileSummary{}
+	for rows.Next() {
+		var p FHIRProfileSummary
+		if err := rows.Scan(&p.RecordType, &p.ProfileName, &p.URL, &p.Title); err != nil {
+			return nil, err
+		}
+		out = append(out, p)
+	}
+	return out, rows.Err()
+}
+
+func (r *Reader) GetFHIRProfile(profileName string) (*fhir.ProfileDigest, error) {
+	var raw string
+	err := r.db.QueryRow(`SELECT digest FROM fhir_profiles WHERE profile_name = ?`, profileName).Scan(&raw)
+	if err == sql.ErrNoRows {
+		return nil, &NotFoundError{ID: profileName, Closest: r.closest("fhir_profiles", "profile_name", profileName)}
+	}
+	if err != nil {
+		return nil, err
+	}
+	var d fhir.ProfileDigest
+	if err := json.Unmarshal([]byte(raw), &d); err != nil {
+		return nil, err
+	}
+	return &d, nil
+}
+
+func (r *Reader) GetFHIRExample(recordType string) ([]byte, error) {
+	var bundle string
+	err := r.db.QueryRow(`SELECT bundle FROM fhir_examples WHERE record_type = ?`, recordType).Scan(&bundle)
+	if err == sql.ErrNoRows {
+		return nil, &NotFoundError{ID: recordType, Closest: r.closest("fhir_examples", "record_type", recordType)}
+	}
+	if err != nil {
+		return nil, err
+	}
+	return []byte(bundle), nil
 }

@@ -1,0 +1,31 @@
+---
+title: Build with AI
+sidebar_label: Build with AI
+sidebar_position: 3
+description: Set a coding agent up to build your ABDM integration, from a one-file skill to live retrieval over MCP.
+verification: unverified
+source: scripts/build-skills.mjs, plugins/abdm/skills
+---
+
+import AgentSetup from '@site/src/components/docs/AgentSetup';
+import SkillPicker from '@site/src/components/docs/SkillPicker';
+
+# Build with AI
+
+This portal is written to be read by coding agents as much as by people. Everything an agent needs is a public URL on this site, in three tiers: a skill it loads once, a server it queries live, and an assistant for quick questions. Start with the prompt; it sets the rest up for you.
+
+<AgentSetup />
+
+## The skills
+
+One file per job, picked by what you are building. The module skills carry everything published for that milestone: endpoints, hosts, headers, every recorded error code, and the test matrix, regenerated from these pages on every release so the file cannot say something the pages do not. The FHIR skills are guided procedures for ABDM's hardest step, building or auditing NRCES compliant document bundles.
+
+<SkillPicker />
+
+## Live retrieval: the Docs MCP server
+
+A downloaded skill is a snapshot; the [Docs MCP server](/docs/hiecm/v3/getting-started/mcp) is the same catalogue served live. A connected agent searches it as it works, retrieves only the paragraph it needs, decodes error codes, and validates request bodies and FHIR bundles before sending anything. Every skill file names its own catalogue version and tells the agent to prefer the server when both are available, so the two never quietly disagree.
+
+## Quick questions: Ask AI
+
+The Ask AI button in the top bar answers from the same catalogue over the same retrieval, for the questions that do not need an agent at all. Same facts on every surface, one place they come from.

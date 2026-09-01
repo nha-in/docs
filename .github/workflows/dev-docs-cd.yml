@@ -32,11 +32,12 @@ jobs:
         env:
           DOCUSAURUS_URL: https://abdm-docs.dev.eka.care
           DOCUSAURUS_BASE_URL: /
-          # The dev MCP has no public hostname yet (dev-mcp-cd.yml deploys it
-          # into eka-dev with no ingress defined in this repository). Empty
-          # keeps the Ask AI panel a labeled mock, same as an unset value;
-          # fill this in once the hostname exists.
+          # The MCP server's public hostname. CHAT_URL is its origin (the Ask
+          # AI panel posts to /api/chat there); MCP_URL is the MCP endpoint
+          # itself, which the MCP page's install buttons and the generated
+          # agent-setup/prompt.md hand to coding agents.
           CHAT_URL: "https://abdm-docs-mcp.dev.eka.care"
+          MCP_URL: "https://abdm-docs-mcp.dev.eka.care/mcp"
         run: |
           npm ci
           npm run build

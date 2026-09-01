@@ -1,0 +1,11 @@
+{
+  "catalogue_version": "2026.08.24",
+  "profiles": [
+    {
+      "record_type": "OPConsultation",
+      "profile_name": "OPConsultRecord",
+      "url": "https://nrces.in/ndhm/fhir/r4/StructureDefinition/OPConsultRecord",
+      "title": "OP Consult Record"
+    }
+  ]
+}
