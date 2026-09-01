@@ -1,4 +1,4 @@
-import React, {useCallback, useState} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {useLocation} from '@docusaurus/router';
 import {Button} from '@site/src/components/ui/button';
 
@@ -33,6 +33,9 @@ export default function CopyPageMarkdown(): React.ReactNode {
   const {pathname} = useLocation();
   const mdUrl = `${pathname.replace(/\/$/, '')}/index.md`;
   const [status, setStatus] = useState<Status>('idle');
+  const resetTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+
+  useEffect(() => () => clearTimeout(resetTimer.current), []);
 
   const copy = useCallback(async () => {
     try {
@@ -43,7 +46,8 @@ export default function CopyPageMarkdown(): React.ReactNode {
     } catch {
       setStatus('unavailable');
     }
-    setTimeout(() => setStatus('idle'), 2000);
+    clearTimeout(resetTimer.current);
+    resetTimer.current = setTimeout(() => setStatus('idle'), 2000);
   }, [mdUrl]);
 
   return (
