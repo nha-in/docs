@@ -11,11 +11,13 @@ covers: [hiecm.troubleshooting.consent-stuck-requested]
 # Consent stuck in Requested
 
 You raised a consent request and it has not moved to Granted or Denied.
-Requested is the starting state of a
-[consent artefact](/docs/hiecm/v3/getting-started/glossary#consent-artefact):
-nothing has failed yet, the patient simply has not acted, or something
+Requested is the starting state of the consent request itself, not of
+the [consent artefact](/docs/hiecm/v3/getting-started/glossary#consent-artefact)
+it can produce: the artefact is created only once the patient grants.
+Nothing has failed yet, the patient simply has not acted, or something
 kept them from ever seeing it. See
-[Consent](/docs/hiecm/v3/concepts/consent) for the full state model.
+[Consent, two objects, not one](/docs/hiecm/v3/concepts/consent#two-objects-not-one)
+for the full state model.
 
 Before working through the checks, confirm the request itself was
 accepted, and check its current state rather than only waiting: the
@@ -39,10 +41,12 @@ status call.
    for the two clocks. Running out of the request window moves the state
    to Expired, not Requested, so checking the current status tells you
    if this has already happened.
-3. **Was it raised against the right ABHA address?** A request raised
-   against an address that is not the one the patient actually uses will
-   never be seen by them, and the request call can still succeed because
-   the address is syntactically valid.
+3. **Was it raised against the right ABHA address?** An address that is
+   malformed or does not exist produces an error and the request goes
+   nowhere. A syntactically valid address that belongs to a different
+   real patient will not error at all: the request is delivered and
+   seen, just by the wrong person, not the one you meant. Getting the
+   address right matters more than passing validation.
 
 ## How you know it worked
 
