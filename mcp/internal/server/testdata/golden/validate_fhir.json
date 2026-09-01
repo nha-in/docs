@@ -1,0 +1,30 @@
+{
+  "catalogue_version": "2026.08.24",
+  "findings": [
+    {
+      "severity": "error",
+      "location": "Bundle.entry[0].resource.meta.profile",
+      "problem": "Composition.meta.profile does not include OPConsultRecord, the profile expected for hiType \"OPConsultation\"",
+      "why": "The M2 data push's hiType tells the HIU what profile to expect; a bundle whose Composition carries a different (or no) profile fails validation on their side.",
+      "fix": "Set Composition.meta.profile to include \"https://nrces.in/ndhm/fhir/r4/StructureDefinition/OPConsultRecord\".",
+      "ref": "OPConsultRecord"
+    },
+    {
+      "severity": "error",
+      "location": "Bundle.entry[0].resource.meta.profile",
+      "problem": "Composition.meta.profile does not include https://nrces.in/ndhm/fhir/r4/StructureDefinition/OPConsultRecord",
+      "why": "OPConsultRecord requires Composition.meta.profile to declare https://nrces.in/ndhm/fhir/r4/StructureDefinition/OPConsultRecord so the HIU's profile validation can match the bundle against it.",
+      "fix": "Set Composition.meta.profile to include \"https://nrces.in/ndhm/fhir/r4/StructureDefinition/OPConsultRecord\".",
+      "ref": "OPConsultRecord"
+    },
+    {
+      "severity": "error",
+      "location": "Bundle.entry[0].resource.author",
+      "problem": "Composition.author is missing",
+      "why": "OPConsultRecord requires Composition.author (min 1); a Composition without it fails NRCES profile validation.",
+      "fix": "Add Composition.author to the Composition.",
+      "ref": "OPConsultRecord"
+    }
+  ],
+  "limits": "This is a structural check against the pinned NRCES profiles (ndhm.in 0.7.2) plus ABDM transport rules. It does not validate terminology and is not a certification. Run the official HL7 validator with the same IG version for full conformance; the catalogue's validator recipe atom explains how."
+}

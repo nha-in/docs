@@ -11,6 +11,7 @@ import (
 	"fmt"
 	"io/fs"
 	"log"
+	"log/slog"
 	"os"
 	"path/filepath"
 	"strings"
@@ -18,6 +19,7 @@ import (
 
 	"github.com/eka-care/abdm-docs/mcp/internal/catalogue"
 	"github.com/eka-care/abdm-docs/mcp/internal/embed"
+	"github.com/eka-care/abdm-docs/mcp/internal/fhir"
 	"github.com/eka-care/abdm-docs/mcp/internal/index"
 )
 
@@ -41,6 +43,8 @@ func main() {
 	model := flag.String("embed-model", envOr("EMBED_MODEL", ""), "embedding model id; empty takes the provider default")
 	ollamaURL := flag.String("ollama", envOr("OLLAMA_URL", ""), "Ollama base URL, for -embed-provider ollama")
 	region := flag.String("aws-region", envOr("AWS_REGION", ""), "AWS region, for -embed-provider bedrock")
+	nrces := flag.String("nrces", envOr("NRCES_PACKAGE", "../catalogue/openapi/.raw/nrces-ndhm.in-6.5.0.tgz"),
+		"path to the pinned NRCES IG package; empty skips FHIR indexing")
 	flag.Parse()
 	emb, err := embed.New(context.Background(), embed.Config{
 		Provider:  *provider,
@@ -51,12 +55,12 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	if err := run(*catDir, *out, emb); err != nil {
+	if err := run(*catDir, *out, *nrces, emb); err != nil {
 		log.Fatal(err)
 	}
 }
 
-func run(catDir, outPath string, emb embed.Embedder) error {
+func run(catDir, outPath, nrcesPath string, emb embed.Embedder) error {
 	var atoms []catalogue.Atom
 	var ops []catalogue.Operation
 	var specErrors []catalogue.SpecErrorCode
@@ -164,7 +168,33 @@ func run(catDir, outPath string, emb embed.Embedder) error {
 		return fmt.Errorf("read VERSION: %w", err)
 	}
 	meta.CatalogueVersion = strings.TrimSpace(string(versionBytes))
-	if err := index.Build(outPath, atoms, ops, specErrors, chunks, meta); err != nil {
+
+	var fhirDigests []fhir.ProfileDigest
+	var fhirExamples map[string][]byte
+	if nrcesPath != "" {
+		ig, err := fhir.LoadIG(nrcesPath)
+		if err != nil {
+			slog.Error("load NRCES package", "err", err)
+			os.Exit(1)
+		}
+		ds, err := fhir.AllDigests(ig)
+		if err != nil {
+			slog.Error("extract FHIR digests", "err", err)
+			os.Exit(1)
+		}
+		for _, d := range ds {
+			fhirDigests = append(fhirDigests, *d)
+		}
+		fhirExamples, err = fhir.GoldenExamples(ig)
+		if err != nil {
+			slog.Error("select FHIR golden examples", "err", err)
+			os.Exit(1)
+		}
+		meta.FHIRIGVersion = ig.Version
+		slog.Info("fhir indexed", "version", ig.Version, "profiles", len(fhirDigests), "examples", len(fhirExamples))
+	}
+
+	if err := index.Build(outPath, atoms, ops, specErrors, fhirDigests, fhirExamples, chunks, meta); err != nil {
 		return err
 	}
 	mode := "keyword-only"

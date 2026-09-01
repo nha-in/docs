@@ -35,6 +35,14 @@ agents, the site's search box, and the "Ask AI" widget. See
 [mcp/README.md](mcp/README.md) for configuration, the full tool list, and
 how to run it.
 
+**FHIR support** covers ABDM's hardest integration step two ways: profile
+digests and golden examples from the pinned NRCES implementation guide
+teach an agent to build compliant document bundles in the integrator's own
+codebase, and a structural validator plus an official HL7 validator recipe
+check the result, whether the bundles come from new code or an existing
+FHIR store. See [plugins/abdm/skills/](plugins/abdm/skills/) for the two
+guided paths.
+
 **The plan** under `plan/` is the architecture and execution plan, versioned
 with a hash and a manifest so a skill compiled from it can tell when it has
 gone stale. `scripts/plan-check.sh` is the gate: it fails when the plan moves

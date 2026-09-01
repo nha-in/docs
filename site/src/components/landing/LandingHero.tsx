@@ -51,9 +51,13 @@ export default function LandingHero({
           <br />
           Secure. Private. Robust.
         </p>
-        <button type="button" className="landing-hero__cta" onClick={onLift}>
+        {/* One action. Getting started means the Build with AI page: the
+            agent path first, with the skills, the MCP server and the manual
+            route all one page away. Browsing has the gateways below and the
+            scroll gesture itself. */}
+        <Link className="landing-hero__cta" to="/docs/hiecm/v3/getting-started/build-with-ai">
           Get started
-        </button>
+        </Link>
 
         <nav className="landing-hero__ways" aria-label="The three gateways">
           {ways.map(({label, to}) => (

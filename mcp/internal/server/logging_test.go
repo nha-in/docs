@@ -2,7 +2,9 @@ package server
 
 import (
 	"context"
+	"fmt"
 	"log/slog"
+	"strings"
 	"sync"
 	"testing"
 
@@ -42,6 +44,25 @@ func (h *captureHandler) toolCallRecords() []slog.Record {
 		}
 	}
 	return out
+}
+
+// allText renders every captured record's message and attribute values into
+// one string, for a blunt string-absence check: the middleware must never
+// pass tool call arguments (or results) through to slog, so nothing in that
+// rendering may ever contain content that only appeared in a call's input.
+func (h *captureHandler) allText() string {
+	h.mu.Lock()
+	defer h.mu.Unlock()
+	var sb strings.Builder
+	for _, r := range *h.records {
+		sb.WriteString(r.Message)
+		r.Attrs(func(a slog.Attr) bool {
+			fmt.Fprintf(&sb, " %s=%v", a.Key, a.Value.Any())
+			return true
+		})
+		sb.WriteString("\n")
+	}
+	return sb.String()
 }
 
 func recordAttr(r slog.Record, key string) (any, bool) {
@@ -112,5 +133,34 @@ func TestToolCallLoggingErrorFlag(t *testing.T) {
 	}
 	if !found {
 		t.Fatalf("want a tool_call record with error=true for get_atom on unknown id, got: %+v", recs)
+	}
+}
+
+// TestValidateFhirArgsNeverLogged pins that no slog call anywhere in the
+// validate_fhir path carries the bundle. The middleware logs only tool
+// name, ms and error (toolCallLoggingMiddleware in mcp.go); this drives a
+// tools/call for validate_fhir through it with a slog handler that records
+// every attribute value, then asserts none contains a marker planted only
+// inside the bundle content.
+func TestValidateFhirArgsNeverLogged(t *testing.T) {
+	h := newCaptureHandler()
+	prev := slog.Default()
+	slog.SetDefault(slog.New(h))
+	defer slog.SetDefault(prev)
+
+	const marker = "SECRET-BUNDLE-CONTENT-9d1f"
+	bundle := fmt.Sprintf(`{"resourceType":"Bundle","type":"document","marker":%q}`, marker)
+
+	sess := connect(t, false, nil)
+	if _, err := sess.CallTool(context.Background(), &mcp.CallToolParams{
+		Name:      "validate_fhir",
+		Arguments: map[string]any{"bundle_json": bundle},
+	}); err != nil {
+		t.Fatal(err)
+	}
+
+	captured := h.allText()
+	if strings.Contains(captured, marker) {
+		t.Fatal("bundle content reached a log line")
 	}
 }

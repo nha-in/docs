@@ -3,7 +3,7 @@ import {useHistory} from '@docusaurus/router';
 import {useRoutePath} from '@site/src/config/navigation';
 
 /** The page the landing hero hands off to, and the page it hands back from. */
-const API_REFERENCE = '/docs/hiecm/v3/api';
+const BEHIND = '/docs/hiecm/v3';
 
 /**
  * The other half of the landing page's scroll handoff: at the very top of the
@@ -26,7 +26,7 @@ export default function ScrollBackHome(): null {
 
   useEffect(() => {
     const onReference =
-      pathname === API_REFERENCE || pathname === `${API_REFERENCE}/`;
+      pathname === BEHIND || pathname === `${BEHIND}/`;
     if (!onReference) return undefined;
 
     let leaving = false;

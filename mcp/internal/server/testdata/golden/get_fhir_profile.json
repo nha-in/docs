@@ -1,0 +1,23 @@
+{
+  "catalogue_version": "2026.08.24",
+  "description": "A record of an outpatient consultation.",
+  "fixed": null,
+  "profile_name": "OPConsultRecord",
+  "record_type": "OPConsultation",
+  "required": [
+    {
+      "path": "Composition.author",
+      "min": 1,
+      "max": ""
+    }
+  ],
+  "sections": [
+    {
+      "slice": "ChiefComplaints",
+      "min": 0,
+      "max": "1"
+    }
+  ],
+  "title": "OP Consult Record",
+  "url": "https://nrces.in/ndhm/fhir/r4/StructureDefinition/OPConsultRecord"
+}

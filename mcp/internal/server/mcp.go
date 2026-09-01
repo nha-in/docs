@@ -8,9 +8,11 @@ import (
 	"errors"
 	"fmt"
 	"log/slog"
+	"sync"
 	"time"
 
 	"github.com/eka-care/abdm-docs/mcp/internal/embed"
+	"github.com/eka-care/abdm-docs/mcp/internal/fhir"
 	"github.com/eka-care/abdm-docs/mcp/internal/index"
 	"github.com/getkin/kin-openapi/openapi3"
 	"github.com/google/jsonschema-go/jsonschema"
@@ -47,7 +49,7 @@ func schemaWithAtomTypeEnum[In any]() *jsonschema.Schema {
 // kilobytes.
 const maxUnfilteredOperations = 60
 
-// NewMCPServer wires the nine tools. emb may be nil (keyword-only).
+// NewMCPServer wires the thirteen tools. emb may be nil (keyword-only).
 func NewMCPServer(r *index.Reader, emb embed.Embedder) *mcp.Server {
 	s := mcp.NewServer(&mcp.Implementation{Name: "abdm-docs", Version: serverVersion}, nil)
 	s.AddReceivingMiddleware(toolCallLoggingMiddleware)
@@ -153,6 +155,39 @@ func NewMCPServer(r *index.Reader, emb embed.Embedder) *mcp.Server {
 		return jsonResult(out)
 	})
 
+	mcp.AddTool(s, &mcp.Tool{
+		Name:        "list_fhir_profiles",
+		Description: listFhirProfilesDescription,
+	}, func(ctx context.Context, req *mcp.CallToolRequest, in emptyFhirIn) (*mcp.CallToolResult, any, error) {
+		out, err := tools.ListFHIRProfiles(ctx, in)
+		if err != nil {
+			return nil, nil, err
+		}
+		return jsonResult(out)
+	})
+
+	mcp.AddTool(s, &mcp.Tool{
+		Name:        "get_fhir_profile",
+		Description: getFhirProfileDescription,
+	}, func(ctx context.Context, req *mcp.CallToolRequest, in getFhirProfileIn) (*mcp.CallToolResult, any, error) {
+		out, err := tools.GetFHIRProfile(ctx, in)
+		if err != nil {
+			return notFoundOrErr(err)
+		}
+		return jsonResult(out)
+	})
+
+	mcp.AddTool(s, &mcp.Tool{
+		Name:        "get_fhir_example",
+		Description: getFhirExampleDescription,
+	}, func(ctx context.Context, req *mcp.CallToolRequest, in getFhirExampleIn) (*mcp.CallToolResult, any, error) {
+		out, err := tools.GetFHIRExample(ctx, in)
+		if err != nil {
+			return notFoundOrErr(err)
+		}
+		return jsonResult(out)
+	})
+
 	type validateIn struct {
 		OperationID string `json:"operation_id" jsonschema:"the operationId from list_operations"`
 		Body        string `json:"body" jsonschema:"the candidate request body as raw JSON"`
@@ -203,6 +238,60 @@ func NewMCPServer(r *index.Reader, emb embed.Embedder) *mcp.Server {
 		}
 		base["errors"] = errs
 		return jsonResult(versioned(base))
+	})
+
+	// loadAllDigests loads every indexed profile digest once and caches it
+	// for the lifetime of this server: digests are immutable per snapshot,
+	// and validate_fhir would otherwise re-read every profile digest from
+	// the reader on every call.
+	var (
+		digestsOnce  sync.Once
+		digestsCache map[string]*fhir.ProfileDigest
+		digestsErr   error
+	)
+	loadAllDigests := func(r *index.Reader) (map[string]*fhir.ProfileDigest, error) {
+		digestsOnce.Do(func() {
+			summaries, err := r.ListFHIRProfiles()
+			if err != nil {
+				digestsErr = err
+				return
+			}
+			m := make(map[string]*fhir.ProfileDigest, len(summaries))
+			for _, sm := range summaries {
+				d, err := r.GetFHIRProfile(sm.ProfileName)
+				if err != nil {
+					digestsErr = err
+					return
+				}
+				m[sm.ProfileName] = d
+			}
+			digestsCache = m
+		})
+		return digestsCache, digestsErr
+	}
+
+	type validateFhirIn struct {
+		BundleJSON string `json:"bundle_json" jsonschema:"the FHIR document bundle to check, as a JSON string"`
+		RecordType string `json:"record_type,omitempty" jsonschema:"optional expected ABDM hiType, for example OPConsultation"`
+	}
+	mcp.AddTool(s, &mcp.Tool{
+		Name: "validate_fhir",
+		Description: "Structural pre-flight check of a FHIR document bundle against the pinned NRCES profiles and ABDM transport rules. " +
+			"Returns findings with locations and concrete fixes, never a bare pass or fail. " +
+			"This is tier 1: it does not validate terminology and does not replace the official HL7 validator, whose recipe the catalogue carries.",
+	}, func(ctx context.Context, req *mcp.CallToolRequest, in validateFhirIn) (*mcp.CallToolResult, any, error) {
+		if len(in.BundleJSON) > 2<<20 {
+			return jsonResult(versioned(map[string]any{"error": "bundle exceeds the 2 MiB limit"}))
+		}
+		digests, err := loadAllDigests(r)
+		if err != nil {
+			return nil, nil, err
+		}
+		findings := fhir.Validate([]byte(in.BundleJSON), in.RecordType, digests)
+		return jsonResult(versioned(map[string]any{
+			"findings": findings,
+			"limits":   fmt.Sprintf(fhir.LimitsTemplate, r.FHIRIGVersion()),
+		}))
 	})
 
 	return s

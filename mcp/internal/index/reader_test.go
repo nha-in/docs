@@ -1,13 +1,29 @@
 package index
 
 import (
+	"bytes"
+	"database/sql"
 	"errors"
 	"testing"
+
+	"github.com/eka-care/abdm-docs/mcp/internal/fhir"
 )
 
 func openFixture(t *testing.T, withVectors bool) *Reader {
 	t.Helper()
 	r, err := Open(buildFixtureDB(t, withVectors))
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Cleanup(func() { r.Close() })
+	return r
+}
+
+// buildFixture builds a keyword-only fixture snapshot with the given
+// fixtureOpts (e.g. withFHIR) applied, and opens it.
+func buildFixture(t *testing.T, opts ...fixtureOpt) *Reader {
+	t.Helper()
+	r, err := Open(buildFixtureDB(t, false, opts...))
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -24,6 +40,31 @@ func TestMetaAndEmbeddingFlags(t *testing.T) {
 	kw := openFixture(t, false)
 	if kw.EmbeddingsEnabled() {
 		t.Error("keyword-only snapshot reports embeddings enabled")
+	}
+}
+
+func TestOpenTolerantOfMissingFHIRIGVersion(t *testing.T) {
+	// Snapshots built by the pre-Task-4 writer have no fhir_ig_version
+	// row in meta at all; Open must not fail on that, and FHIRIGVersion()
+	// must report "" rather than propagate a missing-row error.
+	dbPath := buildFixtureDB(t, false)
+	db, err := sql.Open("sqlite", dbPath)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if _, err := db.Exec(`DELETE FROM meta WHERE key = 'fhir_ig_version'`); err != nil {
+		t.Fatal(err)
+	}
+	if err := db.Close(); err != nil {
+		t.Fatal(err)
+	}
+	r, err := Open(dbPath)
+	if err != nil {
+		t.Fatalf("Open on a snapshot missing fhir_ig_version = %v, want success", err)
+	}
+	t.Cleanup(func() { r.Close() })
+	if got := r.FHIRIGVersion(); got != "" {
+		t.Errorf("FHIRIGVersion() = %q, want \"\"", got)
 	}
 }
 
@@ -200,6 +241,30 @@ func TestAtomsByErrorCode(t *testing.T) {
 	}
 	if len(empty) != 0 {
 		t.Errorf("want empty for unknown code, got %+v", empty)
+	}
+}
+
+func TestFHIRProfileRoundTrip(t *testing.T) {
+	d := fhir.ProfileDigest{RecordType: "OPConsultation", ProfileName: "OPConsultRecord",
+		URL: "https://nrces.in/ndhm/fhir/r4/StructureDefinition/OPConsultRecord", Title: "OP Consult",
+		Sections: []fhir.SectionRule{{Slice: "ChiefComplaints", Min: 0, Max: "1"}}}
+	r := buildFixture(t, withFHIR([]fhir.ProfileDigest{d}, map[string][]byte{
+		"OPConsultation": []byte(`{"resourceType":"Bundle","type":"document"}`),
+	}))
+	list, err := r.ListFHIRProfiles()
+	if err != nil || len(list) != 1 || list[0].ProfileName != "OPConsultRecord" {
+		t.Fatalf("list = %+v, err = %v", list, err)
+	}
+	got, err := r.GetFHIRProfile("OPConsultRecord")
+	if err != nil || len(got.Sections) != 1 || got.Sections[0].Slice != "ChiefComplaints" {
+		t.Fatalf("digest = %+v, err = %v", got, err)
+	}
+	ex, err := r.GetFHIRExample("OPConsultation")
+	if err != nil || !bytes.Contains(ex, []byte(`"document"`)) {
+		t.Fatalf("example = %s, err = %v", ex, err)
+	}
+	if _, err := r.GetFHIRProfile("Nope"); err == nil {
+		t.Fatal("expected not-found error")
 	}
 }
 

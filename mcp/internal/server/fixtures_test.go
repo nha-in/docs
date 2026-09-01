@@ -7,6 +7,7 @@ import (
 
 	"github.com/eka-care/abdm-docs/mcp/internal/catalogue"
 	"github.com/eka-care/abdm-docs/mcp/internal/embed"
+	"github.com/eka-care/abdm-docs/mcp/internal/fhir"
 	"github.com/eka-care/abdm-docs/mcp/internal/index"
 )
 
@@ -65,16 +66,41 @@ func fixtureSpecErrors() []catalogue.SpecErrorCode {
 	}
 }
 
+// fixtureFHIRDigests returns one NRCES profile digest, mirroring the shape
+// Task 4's writer_test withFHIR fixture uses: enough for list_fhir_profiles
+// and get_fhir_profile to have something real to read.
+func fixtureFHIRDigests() []fhir.ProfileDigest {
+	return []fhir.ProfileDigest{{
+		RecordType:  "OPConsultation",
+		ProfileName: "OPConsultRecord",
+		URL:         "https://nrces.in/ndhm/fhir/r4/StructureDefinition/OPConsultRecord",
+		Title:       "OP Consult Record",
+		Description: "A record of an outpatient consultation.",
+		Required:    []fhir.ElementRule{{Path: "Composition.author", Min: 1}},
+		Sections:    []fhir.SectionRule{{Slice: "ChiefComplaints", Min: 0, Max: "1"}},
+	}}
+}
+
+// fixtureFHIRExamples returns one known-good document bundle keyed by hiType,
+// for get_fhir_example.
+func fixtureFHIRExamples() map[string][]byte {
+	return map[string][]byte{
+		"OPConsultation": []byte(`{"resourceType":"Bundle","type":"document","timestamp":"2020-07-09T15:32:26.605+05:30","identifier":{"system":"https://example.com/bundle","value":"1"},"entry":[{"fullUrl":"Composition/1","resource":{"resourceType":"Composition","id":"1"}}]}`),
+	}
+}
+
 // buildServerFixtureDB builds the same two-atom, one-operation snapshot
 // the index tests use, assembled via the exported catalogue, embed and
-// index APIs. withVectors selects the fake-embedded or keyword-only
-// variant.
+// index APIs, plus one FHIR profile digest and one FHIR example so the
+// three FHIR read tools have fixture data to read. withVectors selects the
+// fake-embedded or keyword-only variant.
 func buildServerFixtureDB(t *testing.T, withVectors bool) string {
 	t.Helper()
 	atoms := fixtureAtoms()
 	var chunks []index.EmbeddedChunk
 	meta := index.Meta{CatalogueVersion: "2026.08.24", BuiltAt: "2026-08-24T00:00:00Z",
-		SourceHashes: map[string]string{"openapi/hiecm-v3.yaml": "abc"}}
+		SourceHashes:  map[string]string{"openapi/hiecm-v3.yaml": "abc"},
+		FHIRIGVersion: "0.7.2"}
 	for _, a := range atoms {
 		for _, c := range catalogue.ChunkAtom(a) {
 			chunks = append(chunks, index.EmbeddedChunk{Chunk: c})
@@ -99,7 +125,8 @@ func buildServerFixtureDB(t *testing.T, withVectors bool) string {
 		chunks = nil
 	}
 	dbPath := filepath.Join(t.TempDir(), "catalogue.db")
-	if err := index.Build(dbPath, atoms, fixtureOps(), fixtureSpecErrors(), chunks, meta); err != nil {
+	if err := index.Build(dbPath, atoms, fixtureOps(), fixtureSpecErrors(),
+		fixtureFHIRDigests(), fixtureFHIRExamples(), chunks, meta); err != nil {
 		t.Fatal(err)
 	}
 	return dbPath

@@ -7,7 +7,7 @@
 // condition and a loop limit.
 //
 // Usage: node scripts/validate-skills.mjs
-import { readFileSync, readdirSync } from "node:fs";
+import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
 import { parse } from "yaml";
 import { loadAtoms, root } from "./lib/atoms.mjs";
@@ -30,6 +30,7 @@ function fail(skill, msg) { failures.push(`${skill}: ${msg}`); }
 
 for (const name of readdirSync(skillsDir)) {
   const file = join(skillsDir, name, "SKILL.md");
+  if (!existsSync(file)) continue; // README.md and other non-skill entries
   const raw = readFileSync(file, "utf8");
   const m = raw.match(/^---\n([\s\S]*?)\n---\n([\s\S]*)$/);
   if (!m) { fail(name, "no frontmatter block"); continue; }
@@ -47,7 +48,7 @@ for (const name of readdirSync(skillsDir)) {
   }
 
   // Every atom id the skill cites must exist in the Catalogue.
-  for (const m2 of body.matchAll(/`(hiecm\.[a-z]+\.[a-z0-9-]+)`/g)) {
+  for (const m2 of body.matchAll(/`((?:hiecm|shared)\.[a-z]+\.[a-z0-9-]+)`/g)) {
     if (!atoms.has(m2[1])) fail(name, `cites atom "${m2[1]}", which the Catalogue does not define`);
   }
 
@@ -58,11 +59,16 @@ for (const name of readdirSync(skillsDir)) {
 
   // Every loop needs a stated limit and every flow/error block needs an
   // exit condition, or an agent following it cannot terminate correctly.
-  if (!/Loop limit: \d+ passes? per/.test(body)) fail(name, "no loop limit stated");
-  const blocks = body.split(/\n### /).length - 1;
-  const exitMentions = (body.match(/Exit condition/g) ?? []).length;
-  if (blocks > 0 && exitMentions < blocks) {
-    fail(name, `${blocks} loop(s) but only ${exitMentions} exit condition(s)`);
+  // These two rules describe the compiled OODA skills (the ones with
+  // required sections); hand-authored skills state their own done
+  // conditions in prose and are reviewed by hand.
+  if (name in REQUIRED_SECTIONS) {
+    if (!/Loop limit: \d+ passes? per/.test(body)) fail(name, "no loop limit stated");
+    const blocks = body.split(/\n### /).length - 1;
+    const exitMentions = (body.match(/Exit condition/g) ?? []).length;
+    if (blocks > 0 && exitMentions < blocks) {
+      fail(name, `${blocks} loop(s) but only ${exitMentions} exit condition(s)`);
+    }
   }
 }
 

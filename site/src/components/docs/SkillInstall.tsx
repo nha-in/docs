@@ -13,14 +13,18 @@ export type SkillInstallProps = {
 };
 
 type Entry = {
+  /** Absent on module skills; "guided" marks a committed procedure skill. */
+  kind?: 'guided';
   module: string;
   title: string;
-  docs: string;
+  docs?: string;
   example: string;
-  errorExample: string | null;
-  operations: number;
-  codes: number;
-  tests: number;
+  errorExample?: string | null;
+  operations?: number;
+  codes?: number;
+  tests?: number;
+  /** Guided skills only: the SKILL.md frontmatter description. */
+  description?: string;
 };
 
 type Target = {
@@ -105,6 +109,11 @@ const TARGETS: Target[] = [
 
 /** What the skill carries, counted from the file the generator wrote. */
 function capabilities(entry: Entry) {
+  // A guided skill is a procedure, not a reference: its own description
+  // says what it does better than counts could.
+  if (entry.kind === 'guided') {
+    return [{label: 'Guided', detail: entry.description ?? ''}];
+  }
   return [
     {
       label: 'Integrate',
@@ -179,7 +188,9 @@ export default function SkillInstall({slug, note}: SkillInstallProps): React.Rea
           <Sparkles className="size-4" />
         </span>
         <div className="skill-install__body">
-          <p className="skill-install__title">{entry.module} agent skill</p>
+          <p className="skill-install__title">
+            {entry.kind === 'guided' ? entry.title : entry.module} agent skill
+          </p>
           <p className="skill-install__note">{note}</p>
         </div>
         <a className="skill-install__download" href={download} download>
@@ -233,9 +244,10 @@ export default function SkillInstall({slug, note}: SkillInstallProps): React.Rea
           <li>Run the command above in the repository you are integrating.</li>
           <li>
             Ask your agent for the job in your own words. "{entry.example}"
-            {entry.errorExample ? `, "why am I getting ${entry.errorExample}"` : ''}, or
-            "write the {entry.module} tests for this". The skill loads when the task
-            matches it.
+            {entry.errorExample ? `, "why am I getting ${entry.errorExample}"` : ''}
+            {entry.kind === 'guided'
+              ? '. The skill loads when the task matches it.'
+              : `, or "write the ${entry.module} tests for this". The skill loads when the task matches it.`}
           </li>
           <li>
             Check what it writes against these pages. The skill carries the facts,

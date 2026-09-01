@@ -3,7 +3,7 @@ import {useHistory} from '@docusaurus/router';
 import {useRoutePath} from '@site/src/config/navigation';
 
 /** The page the landing hero hands off to, and the only page that hands back. */
-const API_REFERENCE = '/docs/hiecm/v3/api';
+const BEHIND = '/docs/hiecm/v3';
 
 /**
  * How much accumulated upward pull it takes to leave. A hard flick of a wheel
@@ -42,7 +42,7 @@ export default function PullHome(): null {
 
   useEffect(() => {
     const onReference =
-      pathname === API_REFERENCE || pathname === `${API_REFERENCE}/`;
+      pathname === BEHIND || pathname === `${BEHIND}/`;
     if (!onReference) {
       return undefined;
     }

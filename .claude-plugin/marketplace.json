@@ -1,12 +1,20 @@
 {
   "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
   "name": "abdm-portal",
-  "description": "The ABDM Developer Portal: its Catalogue, its plan, and the plugin compiled from them",
+  "description": "The ABDM Developer Portal: integration skills for ABDM integrators, and the contributor's assistant for building the portal itself",
   "owner": {
     "name": "ABDM Developer Portal working group",
     "url": "https://github.com/eka-care/abdm-docs"
   },
   "plugins": [
+    {
+      "name": "abdm",
+      "source": "./plugins/abdm",
+      "description": "hiecm-m1-build and hiecm-m1-debug scaffold and debug an ABDM Milestone 1 (ABHA) integration, citing the Catalogue atom behind every call. fhir-generate and fhir-audit build or audit NRCES compliant FHIR document bundles, iterating against the Docs MCP validator until clean.",
+      "category": "documentation",
+      "keywords": ["abdm", "abha", "hie-cm", "fhir", "nrces", "healthcare", "india-health"],
+      "homepage": "https://github.com/eka-care/abdm-docs"
+    },
     {
       "name": "abdm-contributors-assistant",
       "source": "./plugins/abdm-contributors-assistant",

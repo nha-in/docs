@@ -497,6 +497,56 @@ body.is-resizing-sidebar {
    It leads a module's APIs section: the file, and the one command that puts
    it where an agent reads it. */
 
+/* The Build with AI page's skill picker: the choice chips reuse the install
+   panel's tab styling, and get their own bottom spacing since they sit
+   outside a panel. */
+
+.skill-picker__choices {
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+}
+
+/* ---------- the agent setup band ----------
+   One prompt, copied whole into any agent. It opens the Build with AI page,
+   so the shortest path comes first. */
+
+.agent-setup {
+  margin: 0 0 2.5rem;
+  padding: 1.5rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-panel);
+}
+
+.agent-setup__row {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.9rem;
+  margin-bottom: 1rem;
+}
+
+.agent-setup__body {
+  flex: 1;
+  min-width: 0;
+}
+
+/* The MCP line: the setup's second act, kept visible under every tab. */
+.agent-setup__mcp {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  margin: 1rem 0 0;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border);
+  font-size: 0.8125rem;
+  color: var(--text-body);
+}
+
+.agent-setup__mcp svg {
+  flex-shrink: 0;
+  margin-top: 0.15rem;
+  color: var(--accent);
+}
+
 .skill-install {
   margin: 0 0 2.5rem;
   padding: 1.5rem;

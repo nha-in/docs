@@ -59,11 +59,11 @@ function CurtainThemeToggle(): React.ReactNode {
   );
 }
 
-/** What the curtain uncovers. */
-const BEHIND = '/docs/hiecm/v3/api';
+/** What the curtain uncovers: the gateway's overview, where reading starts. */
+const BEHIND = '/docs/hiecm/v3';
 
-/** How far a gesture has to travel, as a share of the viewport, to lift it. */
-const TRAVEL = 0.9;
+/** How far a touch has to travel, in pixels, before it commits the lift. */
+const TOUCH_COMMIT = 24;
 
 /**
  * The landing page as a curtain over the API references.
@@ -93,6 +93,7 @@ export default function LandingCurtain(): React.ReactNode {
   const lift = useRef(0);
   const surface = useRef<HTMLDivElement>(null);
   const pushed = useRef(false);
+  const raising = useRef(false);
 
   const showing = onLanding || lifting;
 
@@ -116,10 +117,13 @@ export default function LandingCurtain(): React.ReactNode {
     paint();
     setLifting(false);
     pushed.current = false;
+    raising.current = false;
   }, [paint]);
 
   /** The control does what the gesture does, at a steady rate. */
   const pullUp = useCallback(() => {
+    if (raising.current) return;
+    raising.current = true;
     reveal();
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (reduced) {
@@ -153,36 +157,24 @@ export default function LandingCurtain(): React.ReactNode {
     paint();
 
     let touchFrom = 0;
+    let touchTravel = 0;
 
-    const move = (amount: number) => {
-      if (amount === 0) return;
-      const travel = Math.max(1, window.innerHeight * TRAVEL);
-      const next = Math.min(1, Math.max(0, lift.current + amount / travel));
-      if (next > 0 && !pushed.current) reveal();
-      lift.current = next;
-      paint();
-      if (next >= 1) {
-        done();
-        return;
-      }
-      // Pulled all the way back down: the reader is on the landing page again,
-      // so the address bar says so. Replace rather than push, or a curtain
-      // raised and lowered twice would leave four entries to press back
-      // through.
-      if (next === 0 && pushed.current) {
-        pushed.current = false;
-        history.replace('/');
-      }
+    // Any downward intent commits the whole lift. The curtain used to track
+    // the gesture proportionally, which read as considered until a mild
+    // scroll left it stalled halfway across the screen; a curtain either
+    // covers the stage or it has gone.
+    const onWheel = (event: WheelEvent) => {
+      if (event.deltaY > 0) pullUp();
     };
-
-    const onWheel = (event: WheelEvent) => move(event.deltaY);
     const onTouchStart = (event: TouchEvent) => {
       touchFrom = event.touches[0]?.clientY ?? 0;
+      touchTravel = 0;
     };
     const onTouchMove = (event: TouchEvent) => {
       const y = event.touches[0]?.clientY ?? 0;
-      move(touchFrom - y);
+      touchTravel += touchFrom - y;
       touchFrom = y;
+      if (touchTravel > TOUCH_COMMIT) pullUp();
     };
     const onKey = (event: KeyboardEvent) => {
       if (['PageDown', 'ArrowDown', ' ', 'Enter'].includes(event.key)) {
@@ -201,7 +193,7 @@ export default function LandingCurtain(): React.ReactNode {
       window.removeEventListener('touchmove', onTouchMove);
       window.removeEventListener('keydown', onKey);
     };
-  }, [history, showing, done, paint, pullUp, reveal]);
+  }, [showing, paint, pullUp]);
 
   // The references are what the curtain uncovers, so they are worth having in
   // memory before it moves. Prefetching a route a push will ask for is the

@@ -9,6 +9,7 @@ import (
 	"strings"
 
 	"github.com/eka-care/abdm-docs/mcp/internal/catalogue"
+	"github.com/eka-care/abdm-docs/mcp/internal/fhir"
 	_ "modernc.org/sqlite"
 )
 
@@ -23,6 +24,7 @@ type Meta struct {
 	EmbeddingModel   string
 	EmbeddingDim     int
 	SourceHashes     map[string]string
+	FHIRIGVersion    string
 	// Vocabulary is catalogue/shared/vocabulary.yaml verbatim, carried in
 	// the index so the server needs the database and nothing else. Empty
 	// when the file is absent, and search then behaves as it did before.
@@ -30,7 +32,8 @@ type Meta struct {
 }
 
 func Build(dbPath string, atoms []catalogue.Atom, ops []catalogue.Operation,
-	specErrors []catalogue.SpecErrorCode, chunks []EmbeddedChunk, meta Meta) error {
+	specErrors []catalogue.SpecErrorCode, fhirDigests []fhir.ProfileDigest,
+	fhirExamples map[string][]byte, chunks []EmbeddedChunk, meta Meta) error {
 	_ = os.Remove(dbPath)
 	db, err := sql.Open("sqlite", dbPath)
 	if err != nil {
@@ -108,6 +111,7 @@ func Build(dbPath string, atoms []catalogue.Atom, ops []catalogue.Operation,
 		{"built_at", meta.BuiltAt},
 		{"embedding_model", meta.EmbeddingModel},
 		{"embedding_dim", strconv.Itoa(meta.EmbeddingDim)},
+		{"fhir_ig_version", meta.FHIRIGVersion},
 		{"vocabulary", meta.Vocabulary},
 	} {
 		if _, err := tx.Exec(`INSERT INTO meta VALUES (?,?)`, kv[0], kv[1]); err != nil {
@@ -117,6 +121,22 @@ func Build(dbPath string, atoms []catalogue.Atom, ops []catalogue.Operation,
 	for p, h := range meta.SourceHashes {
 		if _, err := tx.Exec(`INSERT INTO sources VALUES (?,?)`, p, h); err != nil {
 			return err
+		}
+	}
+	for _, d := range fhirDigests {
+		digestJSON, err := json.Marshal(d)
+		if err != nil {
+			return fmt.Errorf("fhir digest %s: %w", d.ProfileName, err)
+		}
+		if _, err := tx.Exec(`INSERT INTO fhir_profiles VALUES (?,?,?,?,?)`,
+			d.ProfileName, d.RecordType, d.URL, d.Title, string(digestJSON)); err != nil {
+			return fmt.Errorf("fhir profile %s: %w", d.ProfileName, err)
+		}
+	}
+	for recordType, bundle := range fhirExamples {
+		if _, err := tx.Exec(`INSERT INTO fhir_examples VALUES (?,?)`,
+			recordType, string(bundle)); err != nil {
+			return fmt.Errorf("fhir example %s: %w", recordType, err)
 		}
 	}
 	return tx.Commit()

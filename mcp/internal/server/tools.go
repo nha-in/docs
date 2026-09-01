@@ -8,11 +8,12 @@ import (
 	"github.com/eka-care/abdm-docs/mcp/internal/catalogue"
 	"github.com/eka-care/abdm-docs/mcp/internal/chat"
 	"github.com/eka-care/abdm-docs/mcp/internal/embed"
+	"github.com/eka-care/abdm-docs/mcp/internal/fhir"
 	"github.com/eka-care/abdm-docs/mcp/internal/index"
 	"github.com/google/jsonschema-go/jsonschema"
 )
 
-// The seven chat-visible tool descriptions, shared verbatim between the MCP
+// The ten chat-visible tool descriptions, shared verbatim between the MCP
 // registration in mcp.go and the Defs table below.
 const (
 	searchDocsDescription = "Hybrid search over the ABDM catalogue atoms: concepts, flows, endpoints, callbacks, errors, tests, glossary entries, decisions, FHIR mappings and sandbox notes. " +
@@ -34,6 +35,12 @@ const (
 		"Use this to enumerate or find operations; use get_operation for one exact operation, and search_docs for catalogue guidance."
 	getOperationDescription = "Get the exact OpenAPI fragment for one operation: parameters, headers, schemas. " +
 		"Use this when you know the operation_id and need the one exact contract; find ids with list_operations."
+	listFhirProfilesDescription = "List the NRCES FHIR profiles the ABDM record types map to, with each profile's canonical URL. " +
+		"Use this to discover which profile a hiType requires before building or validating a bundle."
+	getFhirProfileDescription = "Read one NRCES profile digest: required elements, Composition sections, and fixed values, extracted from the pinned implementation guide. " +
+		"Accepts the profile name or the ABDM hiType. Use this when writing or fixing bundle generation code."
+	getFhirExampleDescription = "A known-good document bundle for one ABDM record type, taken from the NRCES implementation guide's own examples. " +
+		"Use it as the reference shape when scaffolding generation code."
 )
 
 type searchIn struct {
@@ -63,6 +70,16 @@ type getOpIn struct {
 	OperationID string `json:"operation_id" jsonschema:"the operationId from list_operations"`
 }
 
+type emptyFhirIn struct{}
+
+type getFhirProfileIn struct {
+	Profile string `json:"profile" jsonschema:"the NRCES profile name, for example OPConsultRecord, or an ABDM hiType such as OPConsultation"`
+}
+
+type getFhirExampleIn struct {
+	RecordType string `json:"record_type" jsonschema:"the ABDM hiType, for example OPConsultation"`
+}
+
 // mustSchemaFor infers the input schema for In with no further constraints.
 func mustSchemaFor[In any]() *jsonschema.Schema {
 	s, err := jsonschema.For[In](nil)
@@ -82,7 +99,7 @@ type ToolDef struct {
 	Call func(ctx context.Context, raw json.RawMessage) (map[string]any, error)
 }
 
-// Tools holds the seven read-only catalogue tools shared by the MCP server
+// Tools holds the ten read-only catalogue tools shared by the MCP server
 // registration and the chat loop.
 type Tools struct {
 	r   *index.Reader
@@ -238,9 +255,56 @@ func (t *Tools) CatalogueInfo(ctx context.Context, in emptyIn) (map[string]any, 
 	}), nil
 }
 
+func (t *Tools) ListFHIRProfiles(ctx context.Context, in emptyFhirIn) (map[string]any, error) {
+	profiles, err := t.r.ListFHIRProfiles()
+	if err != nil {
+		return nil, err
+	}
+	return t.versioned(map[string]any{"profiles": profiles}), nil
+}
+
+// GetFHIRProfile resolves in.Profile first as an NRCES profile name; when
+// that misses, and the input is instead an ABDM hiType, it retries via
+// fhir.RecordTypes's hiType-to-profile-name mapping. Either way the
+// returned error, when the profile is not found, is the reader's own
+// NotFoundError, so mcp.go's notFoundOrErr can format it the same way
+// get_atom's miss is formatted.
+func (t *Tools) GetFHIRProfile(ctx context.Context, in getFhirProfileIn) (map[string]any, error) {
+	d, err := t.r.GetFHIRProfile(in.Profile)
+	if err != nil {
+		if profileName, ok := fhir.RecordTypes[in.Profile]; ok {
+			d, err = t.r.GetFHIRProfile(profileName)
+		}
+	}
+	if err != nil {
+		return nil, err
+	}
+	return t.versioned(map[string]any{
+		"record_type":  d.RecordType,
+		"profile_name": d.ProfileName,
+		"url":          d.URL,
+		"title":        d.Title,
+		"description":  d.Description,
+		"required":     d.Required,
+		"sections":     d.Sections,
+		"fixed":        d.Fixed,
+	}), nil
+}
+
+func (t *Tools) GetFHIRExample(ctx context.Context, in getFhirExampleIn) (map[string]any, error) {
+	b, err := t.r.GetFHIRExample(in.RecordType)
+	if err != nil {
+		return nil, err
+	}
+	return t.versioned(map[string]any{
+		"record_type": in.RecordType,
+		"example":     json.RawMessage(b),
+	}), nil
+}
+
 // ChatTools adapts server.ToolDef definitions (as vended by Tools.Defs) into
 // the chat package's own ToolDef shape, so a chat.Service can be built from
-// the same seven tools the MCP server exposes. Package chat cannot import
+// the same ten tools the MCP server exposes. Package chat cannot import
 // package server -- server imports chat for the /api/chat handler (Task 6),
 // and Go disallows the reverse -- so this conversion lives on the server
 // side of that boundary instead. Field-by-field rather than a bulk slice
@@ -255,9 +319,11 @@ func ChatTools(defs []ToolDef) []chat.ToolDef {
 	return out
 }
 
-// Defs returns the seven chat-visible tool definitions, in a fixed order:
+// Defs returns the ten chat-visible tool definitions, in a fixed order:
 // search_docs, get_atom, related_atoms, decode_error, list_operations,
-// get_operation, catalogue_info.
+// get_operation, catalogue_info, list_fhir_profiles, get_fhir_profile,
+// get_fhir_example. validate_fhir is deliberately not here: it is
+// registered MCP-only, in mcp.go, so it never reaches the chat tool set.
 func (t *Tools) Defs() []ToolDef {
 	return []ToolDef{
 		{
@@ -342,6 +408,42 @@ func (t *Tools) Defs() []ToolDef {
 					return nil, err
 				}
 				return t.CatalogueInfo(ctx, in)
+			},
+		},
+		{
+			Name:        "list_fhir_profiles",
+			Description: listFhirProfilesDescription,
+			InputSchema: mustSchemaFor[emptyFhirIn](),
+			Call: func(ctx context.Context, raw json.RawMessage) (map[string]any, error) {
+				var in emptyFhirIn
+				if err := json.Unmarshal(raw, &in); err != nil {
+					return nil, err
+				}
+				return t.ListFHIRProfiles(ctx, in)
+			},
+		},
+		{
+			Name:        "get_fhir_profile",
+			Description: getFhirProfileDescription,
+			InputSchema: mustSchemaFor[getFhirProfileIn](),
+			Call: func(ctx context.Context, raw json.RawMessage) (map[string]any, error) {
+				var in getFhirProfileIn
+				if err := json.Unmarshal(raw, &in); err != nil {
+					return nil, err
+				}
+				return t.GetFHIRProfile(ctx, in)
+			},
+		},
+		{
+			Name:        "get_fhir_example",
+			Description: getFhirExampleDescription,
+			InputSchema: mustSchemaFor[getFhirExampleIn](),
+			Call: func(ctx context.Context, raw json.RawMessage) (map[string]any, error) {
+				var in getFhirExampleIn
+				if err := json.Unmarshal(raw, &in); err != nil {
+					return nil, err
+				}
+				return t.GetFHIRExample(ctx, in)
 			},
 		},
 	}

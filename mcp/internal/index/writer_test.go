@@ -8,6 +8,7 @@ import (
 
 	"github.com/eka-care/abdm-docs/mcp/internal/catalogue"
 	"github.com/eka-care/abdm-docs/mcp/internal/embed"
+	"github.com/eka-care/abdm-docs/mcp/internal/fhir"
 	_ "modernc.org/sqlite"
 )
 
@@ -63,10 +64,32 @@ func fixtureSpecErrors() []catalogue.SpecErrorCode {
 	}
 }
 
+
+// fixtureOpt customizes buildFixtureDB beyond the withVectors switch, for
+// tests that also need FHIR digests and examples in the snapshot.
+type fixtureOpt func(*fixtureConfig)
+
+type fixtureConfig struct {
+	fhirDigests  []fhir.ProfileDigest
+	fhirExamples map[string][]byte
+}
+
+// withFHIR seeds the snapshot's fhir_profiles and fhir_examples tables.
+func withFHIR(digests []fhir.ProfileDigest, examples map[string][]byte) fixtureOpt {
+	return func(c *fixtureConfig) {
+		c.fhirDigests = digests
+		c.fhirExamples = examples
+	}
+}
+
 // buildFixtureDB builds a snapshot; withVectors selects the fake-embedded
 // or the keyword-only variant. Reused by reader and server tests.
-func buildFixtureDB(t *testing.T, withVectors bool) string {
+func buildFixtureDB(t *testing.T, withVectors bool, opts ...fixtureOpt) string {
 	t.Helper()
+	var cfg fixtureConfig
+	for _, opt := range opts {
+		opt(&cfg)
+	}
 	atoms := fixtureAtoms()
 	var chunks []EmbeddedChunk
 	meta := Meta{CatalogueVersion: "2026.08.24", BuiltAt: "2026-08-24T00:00:00Z",
@@ -95,7 +118,8 @@ func buildFixtureDB(t *testing.T, withVectors bool) string {
 		chunks = nil
 	}
 	dbPath := filepath.Join(t.TempDir(), "catalogue.db")
-	if err := Build(dbPath, atoms, fixtureOps(), fixtureSpecErrors(), chunks, meta); err != nil {
+	if err := Build(dbPath, atoms, fixtureOps(), fixtureSpecErrors(),
+		cfg.fhirDigests, cfg.fhirExamples, chunks, meta); err != nil {
 		t.Fatal(err)
 	}
 	return dbPath
@@ -148,7 +172,7 @@ func TestBuildNormalizesSpecErrorCodes(t *testing.T) {
 		{Code: "abdm-1016: ", Message: "m", Action: "a", Module: "m1"},
 	}
 	meta := Meta{CatalogueVersion: "v", BuiltAt: "t"}
-	if err := Build(dbPath, nil, nil, specErrs, nil, meta); err != nil {
+	if err := Build(dbPath, nil, nil, specErrs, nil, nil, nil, meta); err != nil {
 		t.Fatal(err)
 	}
 	db, err := sql.Open("sqlite", dbPath)
@@ -186,7 +210,7 @@ func TestBuildRoundTripsDocLinkColumns(t *testing.T) {
 		Body: "b", SourcePath: "hiecm/errors/abdm-1035.md",
 		DocURL: "/docs/hiecm/v3/reference/error-codes", DocAnchor: "m2-linking-and-sharing",
 	}
-	if err := Build(dbPath, []catalogue.Atom{atom}, nil, nil, nil,
+	if err := Build(dbPath, []catalogue.Atom{atom}, nil, nil, nil, nil, nil,
 		Meta{CatalogueVersion: "v", BuiltAt: "t"}); err != nil {
 		t.Fatal(err)
 	}

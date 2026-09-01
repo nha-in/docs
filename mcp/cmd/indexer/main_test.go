@@ -16,7 +16,7 @@ func fixtureDir() string {
 
 func TestRunKeywordOnly(t *testing.T) {
 	out := filepath.Join(t.TempDir(), "catalogue.db")
-	if err := run(fixtureDir(), out, nil); err != nil {
+	if err := run(fixtureDir(), out, "", nil); err != nil {
 		t.Fatal(err)
 	}
 	db, err := sql.Open("sqlite", out)
@@ -52,7 +52,7 @@ func TestRunKeywordOnly(t *testing.T) {
 
 func TestRunWithEmbedder(t *testing.T) {
 	out := filepath.Join(t.TempDir(), "catalogue.db")
-	if err := run(fixtureDir(), out, embed.NewFake(32)); err != nil {
+	if err := run(fixtureDir(), out, "", embed.NewFake(32)); err != nil {
 		t.Fatal(err)
 	}
 	db, err := sql.Open("sqlite", out)
@@ -121,7 +121,7 @@ Not applicable.
 	}
 
 	out := filepath.Join(dir, "out.db")
-	if err := run(dir, out, nil); err != nil {
+	if err := run(dir, out, "", nil); err != nil {
 		t.Fatalf("run() failed: %v", err)
 	}
 
@@ -180,7 +180,7 @@ Not applicable.
 	}
 
 	out := filepath.Join(dir, "out.db")
-	if err := run(dir, out, nil); err != nil {
+	if err := run(dir, out, "", nil); err != nil {
 		t.Fatalf("run() failed: %v", err)
 	}
 
@@ -216,7 +216,7 @@ func TestRunSkipsNestedReadme(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	if err := run(dir, filepath.Join(dir, "out.db"), nil); err != nil {
+	if err := run(dir, filepath.Join(dir, "out.db"), "", nil); err != nil {
 		t.Fatalf("nested README.md should be skipped, got: %v", err)
 	}
 }
@@ -233,7 +233,7 @@ func TestRunFailsOnBadAtom(t *testing.T) {
 	if err := os.WriteFile(filepath.Join(dir, "VERSION"), []byte("v"), 0o644); err != nil {
 		t.Fatal(err)
 	}
-	if err := run(dir, filepath.Join(dir, "out.db"), nil); err == nil {
+	if err := run(dir, filepath.Join(dir, "out.db"), "", nil); err == nil {
 		t.Fatal("want error for broken atom")
 	}
 }
