@@ -58,4 +58,4 @@ So: the model above is confirmed, and the list of encrypted fields is confirmed.
 ## Where to go next
 
 - [Gateway](/docs/hiecm/v3/concepts/gateway) for the session token every call needs, including the key and helper endpoints.
-- [M1 user journeys](/docs/hiecm/v3/api/m1/user-journey), where the encrypted identifier appears in the search and login steps.
+- [M1 user journeys](/docs/hiecm/v3/milestones/m1-journey), where the encrypted identifier appears in the search and login steps.

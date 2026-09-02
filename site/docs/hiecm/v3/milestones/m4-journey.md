@@ -1,7 +1,9 @@
 ---
 title: M4 user journeys
-sidebar_label: User journey
-sidebar_position: 10
+sidebar_label: M4 journey
+sidebar_position: 8
+sidebar_custom_props:
+  roles: [his, hip]
 description: The professional registration and facility onboarding journeys that NHA's M4 document describes, as diagrams.
 verification: unverified
 source: ABDM__Proposed_Simplified_Milestone_4_(NHPR).md

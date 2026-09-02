@@ -14,7 +14,7 @@ The gateway is the [NHA](/docs/hiecm/v3/getting-started/glossary#nha) routing la
 
 ## Gateway and HIE-CM are not the same thing
 
-[HIE-CM](/docs/hiecm/v3/getting-started/glossary#hie-cm) is the service: patient identity, care context links and consent. Its four modules and who builds which are on [Integration milestones](/docs/hiecm/v3/getting-started/milestones).
+[HIE-CM](/docs/hiecm/v3/getting-started/glossary#hie-cm) is the service: patient identity, care context links and consent. Its four modules and who builds which are on [Integration milestones](/docs/hiecm/v3/milestones).
 
 The gateway is its front door. It authenticates you, validates your headers, and routes each call. Your consent request goes to `/api/hiecm/consent/v3/request/init` on the gateway host, and the gateway puts it in front of the patient's consent manager.
 
@@ -112,6 +112,6 @@ Take the host from the sandbox documentation issued at onboarding, and keep it i
 
 - [Authentication](/docs/hiecm/v3/reference/authentication), credentials and headers.
 - [Callbacks](/docs/hiecm/v3/reference/callbacks), the inbound half.
-- [Integration milestones](/docs/hiecm/v3/getting-started/milestones), the four modules and who builds which.
+- [Integration milestones](/docs/hiecm/v3/milestones), the four modules and who builds which.
 - [Registries](/docs/hiecm/v3/registries), who and what ABDM identifies.
 - [Error codes](/docs/hiecm/v3/reference/error-codes), what a rejection means.

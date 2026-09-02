@@ -80,7 +80,7 @@ Three things to know first:
 - `degreeCertificate` and `registrationCertificate` are mandatory uploads, and `proofOfWorkCertificate` is mandatory when the professional is government or both.
 - Call `demographicAuthViaMobile` first, and generate the mobile OTP only when it returns false.
 
-Call by call, with the parameters, is on [M4 user journey](/docs/hiecm/v3/api/m4/user-journey) and [the HPR and HFR call list](/docs/hiecm/v3/api/m4/undocumented).
+Call by call, with the parameters, is on [M4 user journey](/docs/hiecm/v3/milestones/m4-journey) and [the HPR and HFR call list](/docs/hiecm/v3/api/m4/undocumented).
 
 ## Getting an HPR token later
 
@@ -123,5 +123,5 @@ Seven of the 17 master data calls have their path published here: see
 
 - [HFR](/docs/hiecm/v3/registries/nhpr/hfr), the facility half, which needs a token from this registry.
 - [NHPR](/docs/hiecm/v3/registries/nhpr), the parent page.
-- [M4 user journey](/docs/hiecm/v3/api/m4/user-journey), the same order as diagrams.
+- [M4 user journey](/docs/hiecm/v3/milestones/m4-journey), the same order as diagrams.
 - [the HPR and HFR call list](/docs/hiecm/v3/api/m4/undocumented), the parameter tables and the error codes.

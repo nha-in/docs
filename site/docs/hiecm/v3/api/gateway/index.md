@@ -13,4 +13,4 @@ Session and token calls, certificate endpoints for verifying tokens, and bridge 
 
 The full operation list is in the [Gateway session API reference](/reference/hiecm-gateway).
 
-New to this? Start with [Your integration path](/docs/hiecm/v3/getting-started/milestones).
+New to this? Start with [Milestones](/docs/hiecm/v3/milestones).

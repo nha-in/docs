@@ -81,5 +81,5 @@ authorises facility registration.
 
 ## Next
 
-[Your integration path](/docs/hiecm/v3/getting-started/milestones) for what your role has to
+[Your integration path](/docs/hiecm/v3/milestones) for what your role has to
 build.

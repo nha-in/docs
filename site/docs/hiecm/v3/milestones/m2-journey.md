@@ -1,7 +1,9 @@
 ---
 title: M2 user journeys
-sidebar_label: User journey
-sidebar_position: 10
+sidebar_label: M2 journey
+sidebar_position: 4
+sidebar_custom_props:
+  roles: [hip, his]
 description: The four M2 flows as sequence diagrams, from linking a care context to pushing encrypted records.
 verification: unverified
 source: ABDM__Proposed_Simplified_Milestone_2.md

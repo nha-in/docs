@@ -63,7 +63,7 @@ This symptom can surface as
 [ABDM-9999](/docs/hiecm/v3/reference/error-codes), the catch-all for a
 failure the gateway does not explain further.
 
-<a class="next-step" href="/docs/hiecm/v3/api/m2/user-journey">
+<a class="next-step" href="/docs/hiecm/v3/milestones/m2-journey">
 <span class="next-step__eyebrow">Next</span>
 <span class="next-step__label">Still stuck? Check the M2 user journey</span>
 <span class="next-step__detail">Confirm which step of the sequence your call sits in, so you know which callback should follow it.</span>
