@@ -76,6 +76,41 @@ sandbox account does not exist in production.
 
 The call returns the account you expected, and the number in the response matches the one you sent.
 
+### ABDM-1016, your timestamp format is wrong (`hiecm.error.abdm-1016`)
+
+**Observed as**
+
+Your `TIMESTAMP` header is in a format the service does not accept, so
+the request was refused before anything else was looked at.
+
+This is a formatting problem, not a clock problem. Its sibling,
+[ABDM-2402](./abdm-2402.md), is the clock drift case: the value is well
+formed but too far from the gateway's own time. If your value parses as
+ISO 8601 UTC with milliseconds and still fails, read that atom instead.
+
+**Fix**
+
+Format the header as ISO 8601 UTC with milliseconds and the `Z` suffix,
+for example `2026-08-25T15:51:15.339Z`. That exact change is what turned
+the observed failure into a success. Generate it from your language's
+date library, for example `Instant.now().toString()` in Java or
+`new Date().toISOString()` in JavaScript. Do not format the value by
+hand.
+
+If a well formed UTC value still fails, your clock has probably
+drifted, which is [ABDM-2402](./abdm-2402.md)'s territory.
+
+If you are matching error codes and never see `ABDM-1016`, check that
+your parser is not doing an exact match on the `code` field. The
+observed value carried a trailing colon and space.
+
+**Exit condition: the original call now succeeds**
+
+The call you were making returns its normal response rather than this
+code. In the observed session, resending the identical request with the
+`TIMESTAMP` reformatted to UTC succeeded immediately, so no wait or
+retry backoff is involved.
+
 ### ABDM-1094, access to this feature is restricted (`hiecm.error.abdm-1094`)
 
 **Observed as**

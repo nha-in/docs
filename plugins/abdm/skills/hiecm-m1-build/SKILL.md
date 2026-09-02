@@ -26,7 +26,7 @@ Loop limit: 8 passes per flow step. Hitting the limit is an escalation: state wh
 - Their explicit consent to create an ABHA, which you send in the
   enrolment call.
 
-**Act: call these in order**
+**Act: the calls in this flow, in order**
 
 #### Send an OTP to begin or continue an enrolment (`hiecm.endpoint.m1-enrolment-request-otp`)
 
@@ -160,7 +160,7 @@ Every call fails with a header error. Check
 - The person's mobile number, and the person present to read an OTP.
 - The document details.
 
-**Act: call these in order**
+**Act: the calls in this flow, in order**
 
 #### Send an OTP to begin or continue an enrolment (`hiecm.endpoint.m1-enrolment-request-otp`)
 
@@ -284,7 +284,7 @@ them.
 - A way to show a QR code, because that is how the transaction moves from
   your screen to their phone.
 
-**Act: call these in order**
+**Act: the calls in this flow, in order**
 
 #### Start face or biometric authentication and get a transaction id (`hiecm.endpoint.m1-enrolment-face-auth-init`)
 
@@ -394,7 +394,7 @@ flow yourself once they confirm.
 - The identifier the person remembers, encrypted.
 - The person present to read an OTP.
 
-**Act: call these in order**
+**Act: the calls in this flow, in order**
 
 #### Encrypt a value with NHA's public key (`hiecm.endpoint.m1-encrypt-value`)
 
@@ -402,11 +402,10 @@ flow yourself once they confirm.
 curl -X POST 'https://abhasbx.abdm.gov.in/abha/api/v3/phr/app/enrollment/encrypt' \
   -H 'Authorization: Bearer <ACCESS_TOKEN>' \
   -H 'REQUEST-ID: <FRESH_UUID>' \
-  -H 'TIMESTAMP: <ISO_8601_TIMESTAMP>' \
-  -H 'KEY_TYPE: <KEY_TYPE>' \
+  -H 'TIMESTAMP: <UTC_ISO_8601_WITH_MILLISECONDS_AND_Z>' \
   -H 'Content-Type: application/json' \
   -d '{
-  "data": "1"
+  "data": "<PLAINTEXT_TO_ENCRYPT>"
 }'
 ```
 
@@ -505,7 +504,7 @@ lookup of somebody else's identity.
   [why identifiers are encrypted](../concepts/encrypted-identifiers.md).
 - The person present to read an OTP.
 
-**Act: call these in order**
+**Act: the calls in this flow, in order**
 
 #### Send a login OTP (`hiecm.endpoint.m1-login-request-otp`)
 
@@ -600,7 +599,7 @@ Login fails with an authentication error and nothing more specific. See
 - The new value, encrypted.
 - The person present, holding the new number, because the OTP goes there.
 
-**Act: call these in order**
+**Act: the calls in this flow, in order**
 
 #### Send an OTP to change something on the profile (`hiecm.endpoint.m1-profile-request-otp`)
 
