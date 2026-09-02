@@ -30,6 +30,28 @@
   margin-bottom: 0.75rem;
 }
 
+/* A short mark in the corner: "Recommended" and its like. Absolutely
+   placed so it never pushes the title's first line down or wraps under it,
+   and the card keeps room for it on the right. */
+.docs-card {
+  position: relative;
+}
+
+.docs-card__tag {
+  position: absolute;
+  max-width: 50%;
+  top: 1rem;
+  right: 1rem;
+  padding: 0.125rem 0.5rem;
+  border-radius: 999px;
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  line-height: 1.4;
+}
+
 .docs-card__title {
   font-family: var(--font-serif);
   font-size: 1.0625rem;
@@ -309,4 +331,12 @@ li.docs-step:last-child {
 
 .docs-param__body > :last-child {
   margin-bottom: 0;
+}
+
+/* The second row of tabs, where one vendor ships more than one surface. It
+   reads as a follow-up to the row above rather than a peer of it. */
+.skill-install__targets--sub {
+  margin-top: -0.25rem;
+  padding-left: 0.75rem;
+  font-size: 0.8125rem;
 }

@@ -13,6 +13,8 @@ export type CardProps = {
   href?: string;
   /** Body copy. `children` wins when both are given. */
   description?: ReactNode;
+  /** A short mark in the top right: "Recommended", "New", a version. */
+  tag?: ReactNode;
   children?: ReactNode;
   className?: string;
 };
@@ -26,6 +28,7 @@ export default function Card({
   icon,
   href,
   description,
+  tag,
   children,
   className,
 }: CardProps): ReactNode {
@@ -33,6 +36,7 @@ export default function Card({
   const surface = (
     <CardSurface
       className={cn('docs-card', href && 'docs-card--link', className)}>
+      {tag ? <span className="docs-card__tag">{tag}</span> : null}
       {icon ? (
         <span className="docs-card__icon" aria-hidden="true">
           {typeof icon === 'string' ? (

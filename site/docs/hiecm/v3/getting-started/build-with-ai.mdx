@@ -12,37 +12,36 @@ import {useLocation} from '@docusaurus/router';
 import AgentSetup from '@site/src/components/docs/AgentSetup';
 import SkillPicker from '@site/src/components/docs/SkillPicker';
 import McpInstall from '@site/src/components/docs/McpInstall';
-import {Badge} from '@site/src/components/ui/badge';
 import {Button} from '@site/src/components/ui/button';
 import {FileText, Sparkles} from 'lucide-react';
 
 # Build with AI
 
-Every fact on this site is a public URL. There are three ways to put it in front of your agent, and they combine: most people connect the server and load the skill for the milestone they are on.
+Every fact on this site is a public URL. There are three ways to put it in front of your agent, and they combine: the plugin is the one command that sets up the other two.
 
 <CardGroup cols={3}>
-  <Card title={<>Docs MCP server <Badge variant="secondary">Recommended</Badge></>} icon="server" href="#connect-the-docs-mcp-server">
+  <Card title="Docs MCP server" tag="Recommended" icon="server" href="#connect-the-docs-mcp-server">
     This documentation live, queried a paragraph at a time as your agent works. It cannot go stale, because it is this site answering.
   </Card>
-  <Card title="Agent skill" icon="file-text" href="#install-a-skill">
-    One file your agent loads once, carrying a whole milestone: every endpoint, header, error code and test. Works offline, and ages until you update it.
+  <Card title="AI plugin" icon="puzzle" href="#install-the-plugin">
+    One command that sets your agent up with both of the others: the skills as files, the server as a connection.
   </Card>
-  <Card title="Markdown and llms.txt" icon="hash" href="#read-this-site-as-an-agent">
-    Every page as plain Markdown at its own URL, and the whole site in one file. No setup, nothing to install, and no retrieval either.
+  <Card title="Agent skills" icon="file-text" href="#install-a-skill">
+    One file per job, carrying a whole milestone: every endpoint, header, error code and test. Works offline, and ages until you update it.
   </Card>
 </CardGroup>
-
-## Set up your agent in one step
-
-The fastest path: this connects the server and installs the skills together.
-
-<AgentSetup />
 
 ## Connect the Docs MCP server
 
 A skill is a snapshot. The Docs MCP server is the same catalogue live, queried a paragraph at a time instead of loaded whole.
 
 <McpInstall />
+
+## Install the plugin
+
+One command for both halves: the skills as files and the server as a connection. Claude takes it as a plugin; Cursor, Codex, ChatGPT and anything else that can fetch a URL take the same setup as a line to paste.
+
+<AgentSetup />
 
 ## Install a skill
 
