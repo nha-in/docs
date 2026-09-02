@@ -306,7 +306,7 @@ components:
       in: header
       required: true
       description: |
-        The current time in ISO 8601 UTC, with milliseconds and the `Z` suffix. NHA's collection fills this with Postman's `$isoTimestamp`, which emits exactly this format. The gateway rejects a request whose timestamp has drifted too far from its own clock, so take this from a synchronised clock rather than from a local one.
+        The current time in ISO 8601 UTC, with milliseconds and the `Z` suffix. The gateway rejects a request whose timestamp has drifted too far from its own clock, so take this from a synchronised clock rather than from a local one.
       schema:
         type: string
         format: date-time

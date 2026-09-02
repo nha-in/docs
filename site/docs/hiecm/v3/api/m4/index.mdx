@@ -2,64 +2,24 @@
 title: M4 HPR and HFR
 sidebar_label: Overview
 sidebar_position: 0
-description: What Milestone 4 covers and who needs it.
+description: M4 base URLs and the HPR and HFR operations.
 verification: unverified
 source: ABDM__Proposed_Simplified_Milestone_4_(NHPR).md
 ---
 
 # M4 HPR and HFR
 
-Milestone 4 (M4) is the registries milestone of [ABDM](/docs/hiecm/v3/getting-started/glossary#abdm), which NHA's document also calls the NHPR. A healthcare professional registers on the [HPR](/docs/hiecm/v3/getting-started/glossary#hpr) and is issued an [HPID](/docs/hiecm/v3/getting-started/glossary#hpid); a health facility onboards to the [HFR](/docs/hiecm/v3/getting-started/glossary#hfr) and is issued a facility ID.
+Register a healthcare professional on the HPR, onboard a facility to the HFR, and link the facility to its bridges.
 
-:::caution[Not a step by step guide]
-This page and its two siblings cover the shape of M4 and the endpoints NHA's document names. They are not yet a step by step guide to building it.
-:::
-
-Neither registry moves a health record. They establish who the professional is and what the facility is, so record flows have a verified provider behind them.
-
-## What M4 covers
-
-| Area | What it produces | Who it is for |
-|---|---|---|
-| HPID creation | A 14 digit HPID, issued after Aadhaar authentication | A doctor, nurse, pharmacist or facility manager |
-| Register professional | A full HPR profile: qualifications, council registration, current work | The same professional, after the HPID exists |
-| Facility onboarding | A facility ID on the HFR, in the form `IN` plus 10 characters | A hospital, clinic, lab, imaging centre, pharmacy or blood bank |
-| Bridge linkage | A link between a facility ID and one or more bridges, each marked [HIP](/docs/hiecm/v3/getting-started/glossary#hip) or [HIU](/docs/hiecm/v3/getting-started/glossary#hiu) | A facility whose software is going live on ABDM |
-| Search and master data | Facility search, nearby search, and the code lists every other call needs | Anyone building either of the above |
-
-## Who needs it
-
-- **Facilities going live.** Without a facility in the HFR and a bridge linked to it, you cannot share as a HIP or fetch as an HIU. If you have built [M2](/docs/hiecm/v3/api/m2) or [M3](/docs/hiecm/v3/api/m3), M4 is the step in front of production.
-- **Professionals registering.** An HPID is a verified identity in ABDM. NHA names three categories, doctor, nurse and pharmacist, and says others come later.
-- **Software acting for others.** A [HMIS](/docs/hiecm/v3/getting-started/glossary#hmis) or practice management product can drive these calls for its own customers.
-
-## How the two halves connect
-
-The HPR comes first, twice over. Creating an HPID returns an `hprToken`, which the register professional call carries in its payload. Onboarding a facility needs an HPR token in the header of the create calls, generated from an HPR ID and password. So facility onboarding usually starts with a person getting an HPID.
-
-## Environments
+## Base URLs
 
 | Purpose | Environment | Base URL |
 |---|---|---|
 | HPR and HFR calls | Sandbox | `https://apihspsbx.abdm.gov.in/v4/int/` |
 | HPR and HFR calls | Production | `https://apinhpr.abdm.gov.in/v4/int/` |
-| Session token | Not labelled | `https://dev.abdm.gov.in/api/hiecm/gateway/v3/sessions` |
-| Session token | Not labelled | `https://live.abdm.gov.in/api/hiecm/gateway/v3/sessions` |
+| Session token | Sandbox | `https://dev.abdm.gov.in/api/hiecm/gateway/v3/sessions` |
+| Session token | Production | `https://live.abdm.gov.in/api/hiecm/gateway/v3/sessions` |
 
-NHA labels the HPR and HFR base URLs but not the session hosts: `dev.abdm.gov.in` appears in three places and `live.abdm.gov.in` in two, same request body, no note saying which is which. Elsewhere on this site, sandbox session calls go to `dev.abdm.gov.in`. Several samples in the HPR login section also show the `apinhpr` production host while describing sandbox behaviour. Expect to correct a host or two.
+The full operation list is in the [M4 API reference](/reference/hiecm-m4).
 
-## Read M4 in this order
-
-1. [User journey](/docs/hiecm/v3/api/m4/user-journey). The registration journeys as diagrams.
-2. [what NHA documents without a path](/docs/hiecm/v3/api/m4/undocumented). Every endpoint NHA's document names, and what did not survive conversion.
-
-The interactive reference is at [M4 API reference](/reference/hiecm-m4).
-
-## Certification
-
-NHA certifies M4 individually, alongside the other milestones your role needs, though it
-certifies last; see [Integration milestones](/docs/hiecm/v3/getting-started/milestones) for the
-checklist NHA gives you when you apply. This portal does not document how a milestone is
-submitted for certification. NHA also runs a separate functional testing and exit process once, after every
-milestone your role needs works end to end. See
-[Going live](/docs/hiecm/v3/getting-started/going-live) for what that process involves.
+New to this? Start with [Your integration path](/docs/hiecm/v3/getting-started/milestones).

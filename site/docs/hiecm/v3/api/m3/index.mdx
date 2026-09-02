@@ -2,59 +2,15 @@
 title: M3 consent and fetching
 sidebar_label: Overview
 sidebar_position: 0
-description: What Milestone 3 gives you, who asks for consent, and the order to read the M3 pages.
+description: The M3 operations grouped by use case.
 verification: unverified
 source: ABDM__Proposed_Simplified_Milestone_3.md
 ---
 
 # M3 consent and fetching
 
-In Milestone 3 (M3) of [ABDM](/docs/hiecm/v3/getting-started/glossary#abdm) your system asks a patient for permission to see their health records, then fetches them. You are the [HIU](/docs/hiecm/v3/getting-started/glossary#hiu); the [HIE-CM](/docs/hiecm/v3/getting-started/glossary#hie-cm) holds the consent, asks the patient on your behalf, and on a grant returns a [consent artefact](/docs/hiecm/v3/getting-started/glossary#consent-artefact) id. No artefact, no records.
+Request patient consent, track its status, and fetch the health records a granted consent artefact covers.
 
-Building with a coding agent? Get the M3 skill on [Build with AI](/docs/hiecm/v3/getting-started/build-with-ai).
+The full operation list is in the [M3 API reference](/reference/hiecm-m3).
 
-## In short
-
-- You act as the HIU. The HIE-CM holds the consent and asks the patient for you.
-- No artefact, no records. The patient must be known to you by [ABHA address](/docs/hiecm/v3/getting-started/glossary#abha-address) first.
-- One request can produce more than one artefact. Store the request id and every artefact id.
-- Records arrive encrypted on your callback URL. Decrypt, then acknowledge to the gateway.
-- NHA declares `consentId` and `consentRequestId` as UUIDs while its own examples are not. Do not validate them as UUIDs.
-
-## What M3 gives you
-
-| Capability | What your system can do |
-|---|---|
-| Consent request | Ask a patient, by [ABHA](/docs/hiecm/v3/getting-started/glossary#abha) address, for named record types over a named date range |
-| Status tracking | Check whether a request is pending, granted or denied |
-| Consent artefacts | Receive the artefact ids created on a grant, and fetch each artefact |
-| Health information request | Ask for the records an artefact covers |
-| Data receipt | Receive encrypted records on your callback URL, decrypt them, and tell the gateway you got them |
-
-M3 does not create identities, which is [M1](/docs/hiecm/v3/api/m1), and does not publish records, which is the [HIP](/docs/hiecm/v3/getting-started/glossary#hip) side, [M2](/docs/hiecm/v3/api/m2). A hospital that shares its own records and reads others' does both.
-
-The patient must be known to you by ABHA address first. [NHA](/docs/hiecm/v3/getting-started/glossary#nha) gives one concrete route: the patient scans the health facility QR code at registration, and a doctor raises a consent request against the address.
-
-:::note[Identifier format]
-Do not validate `consentId` or `consentRequestId` as UUIDs. Treat both as
-opaque strings.
-:::
-
-## Read M3 in this order
-
-1. [User journey](/docs/hiecm/v3/api/m3/user-journey). The request, the patient's decision, the fetch.
-2. [API reference](/reference/hiecm-m3). Purpose of use and [HI type](/docs/hiecm/v3/getting-started/glossary#hi-type) code tables, and what the patient controls.
-3. [API reference](/reference/hiecm-m3). The calls and callbacks in order.
-4. [Errors](/docs/hiecm/v3/api/m3/errors). What can go wrong at each stage.
-5. [Steps and calls](/reference/hiecm-m3). Every step of every use case, with the call it makes and what to see when it works.
-
-## Certification
-
-NHA certifies M3 individually, alongside the other milestones your role needs; see
-[Integration milestones](/docs/hiecm/v3/getting-started/milestones) for the checklist NHA gives
-you when you apply. This portal does not document how a milestone is submitted for
-certification. NHA also runs a separate functional testing and exit process once, after every
-milestone your role needs works end to end. See
-[Going live](/docs/hiecm/v3/getting-started/going-live) for what that process involves.
-
-Sandbox test data: [data dictionary](/docs/hiecm/v3/reference/data-dictionary). Channels: [support](/docs/support).
+New to this? Start with [Your integration path](/docs/hiecm/v3/getting-started/milestones).

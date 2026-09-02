@@ -87,7 +87,7 @@ sequenceDiagram
 
 Step 3 hands you two groups of identifiers.
 
-- **Verified.** ABHA address, mobile number, name, gender, year of birth. NHA says to weight these higher.
+- **Verified.** ABHA address, mobile number, name, gender, year of birth. Weight these higher.
 - **Unverified, user declared.** Facility issued identifiers such as a medical registration number or patient ID.
 
 Step 5 has a hard rule: care context metadata only. No diagnosis, no test result, no report content.
