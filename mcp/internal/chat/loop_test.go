@@ -525,3 +525,58 @@ func TestAttachmentBlockSaysWhereTheTextCameFrom(t *testing.T) {
 		t.Errorf("an inner fence escaped its block:\n%s", got)
 	}
 }
+
+// A refusal reached without a single lookup is the failure that made a reader
+// ask twice: the glossary has the term, and the model answered from nothing.
+// The first attempt is thrown away unread and the model is asked to look.
+func TestRespondRetriesARefusalThatSkippedTheTools(t *testing.T) {
+	fm := &fakeModel{
+		replies: []Reply{
+			{Text: "I do not have a definition for HIMS.", StopReason: "end_turn"},
+			{Text: "HMIS is the software a hospital runs day to day.", StopReason: "end_turn"},
+		},
+		texts: []string{
+			"I do not have a definition for HIMS.\n\n",
+			"HMIS is the software a hospital runs day to day.\n\n",
+		},
+	}
+	svc := &Service{Model: fm, MaxTokens: 100}
+	var seen strings.Builder
+	emit := func(name string, data any) error {
+		if name == "text" {
+			seen.WriteString(data.(map[string]string)["delta"])
+		}
+		return nil
+	}
+	if err := svc.Respond(context.Background(),
+		[]Turn{{Role: "user", Text: "whats an HIMS"}}, nil, emit); err != nil {
+		t.Fatal(err)
+	}
+	if got := seen.String(); strings.Contains(got, "I do not have") {
+		t.Errorf("the unresearched refusal reached the reader:\n%s", got)
+	}
+	if got := seen.String(); !strings.Contains(got, "HMIS is the software") {
+		t.Errorf("the second attempt did not reach the reader:\n%s", got)
+	}
+	if fm.calls != 2 {
+		t.Errorf("model called %d times, want 2", fm.calls)
+	}
+}
+
+// An answer that needs no tool and refuses nothing is left alone: a retry
+// there is a wasted call and a second chance to say something worse.
+func TestRespondDoesNotRetryAPlainAnswer(t *testing.T) {
+	fm := &fakeModel{
+		replies: []Reply{{Text: "Hello.", StopReason: "end_turn"}},
+		texts:   []string{"Hello.\n\n"},
+	}
+	svc := &Service{Model: fm, MaxTokens: 100}
+	emit, _ := collectEvents()
+	if err := svc.Respond(context.Background(),
+		[]Turn{{Role: "user", Text: "hi"}}, nil, emit); err != nil {
+		t.Fatal(err)
+	}
+	if fm.calls != 1 {
+		t.Errorf("model called %d times, want 1", fm.calls)
+	}
+}

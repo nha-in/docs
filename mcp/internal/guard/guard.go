@@ -100,6 +100,25 @@ func MaskPII(s string) (string, []string) {
 type Violation struct {
 	Rule   string // stable identifier, for metrics
 	Detail string // what was seen, for the log
+	// Blocking says the answer must not be shown at all. Most rules are not:
+	// an answer that says "the catalogue" instead of "this documentation", or
+	// opens with a word the style guide dislikes, is worse prose and a fine
+	// answer, and withholding it teaches the reader that the assistant has
+	// nothing. Only the two rules that would mislead somebody building
+	// against a health network block: code written for their codebase, and an
+	// API literal that appears in no source.
+	Blocking bool
+}
+
+// Blocking reports whether any of these violations means the answer is
+// withheld rather than logged.
+func Blocking(vs []Violation) bool {
+	for _, v := range vs {
+		if v.Blocking {
+			return true
+		}
+	}
+	return false
 }
 
 // atomIDRe matches the catalogue's internal id shape, gateway.type.slug.
@@ -155,6 +174,9 @@ func CheckAnswer(s string) []Violation {
 	add := func(rule, detail string) {
 		out = append(out, Violation{Rule: rule, Detail: detail})
 	}
+	refuse := func(rule, detail string) {
+		out = append(out, Violation{Rule: rule, Detail: detail, Blocking: true})
+	}
 
 	if m := openerRe.FindString(s); m != "" {
 		add("sycophantic_opener", strings.TrimSpace(m))
@@ -179,21 +201,21 @@ func CheckAnswer(s string) []Violation {
 		lang := strings.ToLower(strings.TrimSpace(block[1]))
 		body := block[2]
 		if !allowedFence[lang] {
-			add("generated_code", "fenced block marked "+lang)
+			refuse("generated_code", "fenced block marked "+lang)
 			continue
 		}
 		// A shell block has to actually be a shell command. "```bash" around a
 		// Python function is the obvious way past a language check.
 		if lang == "curl" || lang == "bash" || lang == "sh" || lang == "shell" {
 			if !strings.Contains(body, "curl") {
-				add("generated_code", "shell block that does not run curl")
+				refuse("generated_code", "shell block that does not run curl")
 				continue
 			}
 		}
 		if lang == "" {
 			for _, re := range codeTokens {
 				if re.MatchString(body) {
-					add("generated_code", "unlabelled block containing "+re.String())
+					refuse("generated_code", "unlabelled block containing "+re.String())
 					break
 				}
 			}
@@ -279,12 +301,17 @@ func CheckGrounding(answer, corpus string, cited int, final bool) []Violation {
 	for _, lit := range literals {
 		if !strings.Contains(haystack, strings.ToLower(lit)) {
 			out = append(out, Violation{
-				Rule:   "invented_identifier",
-				Detail: lit + " appears in neither the retrieved documentation nor the question",
+				Rule:     "invented_identifier",
+				Detail:   lit + " appears in neither the retrieved documentation nor the question",
+				Blocking: true,
 			})
 		}
 	}
 	if final && len(literals) > 0 && cited == 0 {
+		// Recorded, not blocked. Every literal here was already checked
+		// against what the tools returned, so this fires on an answer whose
+		// facts are right and whose citations are missing, and the reader
+		// loses more from a blank panel than from an uncited paragraph.
 		out = append(out, Violation{
 			Rule:   "ungrounded_answer",
 			Detail: "the answer states API specifics but drew on no source",
