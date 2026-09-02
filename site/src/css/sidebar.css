@@ -885,18 +885,21 @@ body.is-resizing-sidebar {
 
 /* ---------- the method on an endpoint row ----------
    A filled badge inside a row that now has no fill of its own reads as a
-   second object on the line. The verb is set in mono at a fixed muted colour
-   instead, quieter than the row's heading and accent states but never below
-   4.5:1 on its own, and the fixed width keeps every label on one left edge.
-   PATCH is the width driver at five characters.
+   second object on the line. The verb is set in mono, quieter than the row's
+   heading and accent states, and the fixed width keeps every label on one
+   left edge. PATCH is the width driver at five characters.
 
-   This file is the sole owner of the verb's presentation (colour, size,
-   spacing, type): the ancestor-scoped selector below is deliberately more
-   specific than api.css's plain `.api-method > .menu__link::before`, so the
-   win is a declared fact of scoping to this docs-sidebar context, not an
-   accident of which file happens to be pickier. api.css owns only the word,
-   through the ::before content it sets and this file does not touch, and the
-   row's own flex layout. */
+   Every verb was being set to the same flat --text-muted here, which is why
+   GET and POST (and every other method) read as identical grey in the tree:
+   this file's ancestor-scoped selector outranks api.css's plain
+   `.api-method > .menu__link::before` and was overwriting the per-method
+   colour that rule sets with one constant value. The fix keeps this file as
+   the sole owner of the verb's presentation (colour, size, spacing, type)
+   but has it read the same --method-* tokens api.css and tokens.css already
+   define, so the badge is colour coded here too instead of silently
+   flattened back to grey. api.css owns only the word, through the ::before
+   content it sets and this file does not touch, and the row's own flex
+   layout. */
 
 .theme-doc-sidebar-container .menu__link.api-method::before,
 .theme-doc-sidebar-container .api-method > .menu__link::before,
@@ -907,13 +910,41 @@ body.is-resizing-sidebar {
   padding: 0;
   border-radius: 0;
   background: none;
-  color: var(--text-muted);
+  color: var(--method-get);
   font-family: var(--font-mono);
   font-size: 0.625rem;
   font-weight: 600;
   line-height: 1.25rem;
   letter-spacing: 0.06em;
   text-align: left;
+}
+
+.theme-doc-sidebar-container .menu__link.api-method--post::before,
+.theme-doc-sidebar-container .api-method--post > .menu__link::before,
+.navbar-sidebar .menu__link.api-method--post::before,
+.navbar-sidebar .api-method--post > .menu__link::before {
+  color: var(--method-post);
+}
+
+.theme-doc-sidebar-container .menu__link.api-method--put::before,
+.theme-doc-sidebar-container .api-method--put > .menu__link::before,
+.navbar-sidebar .menu__link.api-method--put::before,
+.navbar-sidebar .api-method--put > .menu__link::before {
+  color: var(--method-put);
+}
+
+.theme-doc-sidebar-container .menu__link.api-method--patch::before,
+.theme-doc-sidebar-container .api-method--patch > .menu__link::before,
+.navbar-sidebar .menu__link.api-method--patch::before,
+.navbar-sidebar .api-method--patch > .menu__link::before {
+  color: var(--method-patch);
+}
+
+.theme-doc-sidebar-container .menu__link.api-method--delete::before,
+.theme-doc-sidebar-container .api-method--delete > .menu__link::before,
+.navbar-sidebar .menu__link.api-method--delete::before,
+.navbar-sidebar .api-method--delete > .menu__link::before {
+  color: var(--method-delete);
 }
 
 /* ---------- sidebar settings ----------

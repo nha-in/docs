@@ -15,12 +15,24 @@ Find your system in this table. It names the role you take on
 
 | Your system | You act as | You build |
 | --- | --- | --- |
-| Hospital or clinic system | a [HIP](/docs/hiecm/v3/getting-started/glossary#hip) (Health Information Provider), the system that holds the records it created | Linking and sharing records |
-| Lab or pharmacy | a HIP as well, with fewer record types | Linking and sharing reports or prescriptions |
-| Insurer | an [HIU](/docs/hiecm/v3/getting-started/glossary#hiu) (Health Information User), a system that reads records held elsewhere | Consent requests and record fetching |
-| Patient app | a [PHR](/docs/hiecm/v3/getting-started/glossary#phr) (Personal Health Record) app, and an HIU too | Identity, consent and reading records |
+| Patient app | a [PHR](/docs/hiecm/v3/getting-started/glossary#phr) (Personal Health Record) app, and an HIU too | [Identity, consent and reading records](/docs/hiecm/v3/milestones/p1) |
+| Hospital or clinic system | a [HIP](/docs/hiecm/v3/getting-started/glossary#hip) (Health Information Provider), the system that holds the records it created | [Linking and sharing records](/docs/hiecm/v3/milestones/m2) |
+| Lab or pharmacy | a HIP as well, with fewer record types | [Linking and sharing reports or prescriptions](/docs/hiecm/v3/milestones/m2) |
+| Insurer | an [HIU](/docs/hiecm/v3/getting-started/glossary#hiu) (Health Information User), a system that reads records held elsewhere | [Consent requests and record fetching](/docs/hiecm/v3/milestones/m3) |
 
 Every system starts at identity, because every call carries a session token.
+
+## Patient app
+
+You act as a PHR app, and every PHR app carries HIU functionality too.
+
+- Create an ABHA address from a mobile number or an existing ABHA number, and log the patient in.
+- Discover records at a facility the patient names, then link them after a one-time password check ([OTP](/docs/hiecm/v3/getting-started/glossary#otp)).
+- Show consent requests, and let the patient grant, deny or revoke them.
+- Fetch and show records in chronological order.
+- Handle the deep link sent by SMS when a facility creates a record for a mobile number with no ABHA address.
+
+Start with: [PHR applications](/docs/hiecm/v3/concepts/phr).
 
 ## Hospital or clinic system
 
@@ -57,18 +69,6 @@ Claims exchange runs on a different gateway,
 [NHCX](/docs/hiecm/v3/getting-started/glossary#nhcx).
 
 Start with: [M3 Consent and fetching](/docs/hiecm/v3/api/m3).
-
-## Patient app
-
-You act as a PHR app, and every PHR app carries HIU functionality too.
-
-- Create an ABHA address from a mobile number or an existing ABHA number, and log the patient in.
-- Discover records at a facility the patient names, then link them after a one-time password check ([OTP](/docs/hiecm/v3/getting-started/glossary#otp)).
-- Show consent requests, and let the patient grant, deny or revoke them.
-- Fetch and show records in chronological order.
-- Handle the deep link sent by SMS when a facility creates a record for a mobile number with no ABHA address.
-
-Start with: [PHR applications](/docs/hiecm/v3/concepts/phr).
 
 ## Next
 
