@@ -13,9 +13,9 @@ sidebar_custom_props: {roles: ['his', 'hip', 'hiu']}
 Your system creates and holds health records. A hospital system, an
 [EMR](/docs/hiecm/v3/getting-started/glossary#emr), a lab
 [LIMS](/docs/hiecm/v3/getting-started/glossary#lims) or a pharmacy system all sit here.
-ABDM calls you a [HIP](/docs/hiecm/v3/getting-started/glossary#hip) when you publish records,
-and an [HIU](/docs/hiecm/v3/getting-started/glossary#hiu) when you read records held elsewhere.
-Most systems are both.
+You act as a [HIP](/docs/hiecm/v3/getting-started/glossary#hip) when you publish records, and as
+an [HIU](/docs/hiecm/v3/getting-started/glossary#hiu) when you read records held elsewhere. Most
+systems are both.
 
 Pick this role in the switcher at the top of the sidebar and the API tree shows
 only the modules below.
@@ -30,10 +30,10 @@ only the modules below.
 | 4 | [M2 Linking and sharing](/docs/hiecm/v3/api/m2) | The bulk of your build. Link care contexts, answer data requests. |
 | 5 | [M3 Consent and fetching](/docs/hiecm/v3/api/m3) | Only if you also read records held elsewhere. |
 
-**M4 certifies last but blocks M2.** NHA's M2 document requires a valid Facility
-ID and registration in the HIP role before you can share any record, and that
-Facility ID comes from the [HFR](/docs/hiecm/v3/registries/nhpr/hfr), which is M4. Teams
-that leave the registry work until the end find M2 blocked. Plan it early.
+**M4 certifies last but blocks M2.** Sharing a record needs a valid Facility ID
+and registration in the HIP role, and that Facility ID comes from the
+[HFR](/docs/hiecm/v3/registries/nhpr/hfr), which is M4. Teams that leave the
+registry work until the end find M2 blocked. Plan it early.
 
 ## What you do not build
 
@@ -43,6 +43,6 @@ patient sees when they grant you consent.
 
 ## Next
 
-- [Integration milestones](/docs/hiecm/v3/getting-started/milestones), the role to module matrix and what certification asks.
+- [Your integration path](/docs/hiecm/v3/getting-started/milestones), the role to module matrix and what certification asks.
 - [HIP and HIU](/docs/hiecm/v3/concepts/hip-hiu), the two roles your system plays.
-- [Sandbox access](/docs/hiecm/v3/getting-started/sandbox), credentials before any call.
+- [Get your sandbox credentials](/docs/hiecm/v3/getting-started/sandbox), credentials before any call.

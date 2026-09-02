@@ -1,61 +1,60 @@
 ---
-title: Integration milestones
-sidebar_label: Milestones
-description: The four HIE-CM milestones, what each one certifies, and which ones your role has to build.
+title: Your integration path
+sidebar_label: Your integration path
+description: The four milestones you certify, in order, what each one gets you, and which ones your role needs.
 verification: unverified
 source: ABDM__Proposed_Simplified_Milestone_1.md, ABDM__Proposed_Simplified_Milestone_2.md, ABDM__Proposed_Simplified_Milestone_3.md, ABDM__Proposed_Simplified_Milestone_4_(NHPR).md
-sidebar_position: 6
+sidebar_position: 5
 ---
 
-# Integration milestones
+# Your integration path
 
-[NHA](/docs/hiecm/v3/getting-started/glossary#nha) groups integration work on the
-[HIE-CM](/docs/hiecm/v3/getting-started/glossary#hie-cm) gateway into four milestones, M1 to M4, each with its
-own NHA document. You certify against them one at a time, and which ones you build depends on
-your role. NHA gives you the certification checklist when you apply.
+The four milestones are the four things you certify, in order.
 
-## The four milestones
+| Milestone | What you get | Who needs it |
+| --- | --- | --- |
+| [M1](/docs/hiecm/v3/api/m1) | Identity and the session token | Everyone |
+| [M2](/docs/hiecm/v3/api/m2) | Linking and sharing records | [HIP](/docs/hiecm/v3/getting-started/glossary#hip) systems, and the patient side for a [PHR](/docs/hiecm/v3/getting-started/glossary#phr) app |
+| [M3](/docs/hiecm/v3/api/m3) | Consent and record fetching | [HIU](/docs/hiecm/v3/getting-started/glossary#hiu) systems and PHR apps |
+| [M4](/docs/hiecm/v3/api/m4) | A Facility ID and professional registration | Anyone going live as a facility |
 
-| Milestone | What it certifies |
-| --- | --- |
-| [M1](/docs/hiecm/v3/api/m1) | Identity. You can create an [ABHA](/docs/hiecm/v3/getting-started/glossary#abha), log a user in, read and manage the profile, and hold the session token every other call needs. |
-| [M2](/docs/hiecm/v3/api/m2) | Linking and sharing. You can group records into care contexts, link them to an ABHA address, answer discovery, package data as [FHIR](/docs/hiecm/v3/getting-started/glossary#fhir) and send it encrypted. |
-| [M3](/docs/hiecm/v3/api/m3) | Consent and fetching. You can raise a consent request, follow it to granted or denied, then fetch and decrypt the health information. |
-| [M4](/docs/hiecm/v3/api/m4) | Provider registries. You can register a professional in the [HPR](/docs/hiecm/v3/getting-started/glossary#hpr) and a facility in the [HFR](/docs/hiecm/v3/getting-started/glossary#hfr), and link your software to that facility. |
+## M1, identity
 
-M1 is not optional for anyone. NHA marks the session and authentication APIs mandatory for
-both private and government integrators.
+You create an [ABHA](/docs/hiecm/v3/getting-started/glossary#abha), log a user in, manage the
+profile, and hold the session token every other call carries. Nobody skips it. See
+[M1 ABHA identity](/docs/hiecm/v3/api/m1).
 
-## Role to milestone
+## M2, linking and sharing
 
-A [PHR](/docs/hiecm/v3/getting-started/glossary#phr) application serves the patient, an
-[HIP](/docs/hiecm/v3/getting-started/glossary#hip) holds records it created, an
-[HIU](/docs/hiecm/v3/getting-started/glossary#hiu) reads records held elsewhere, and most hospital systems are
-both HIP and HIU. See [HIP and HIU](/docs/hiecm/v3/concepts/hip-hiu).
+You group records into care contexts, link them to an ABHA address, answer discovery, and send
+data as encrypted [FHIR](/docs/hiecm/v3/getting-started/glossary#fhir) bundles. See
+[M2 Linking and sharing](/docs/hiecm/v3/api/m2).
+
+## M3, consent and fetching
+
+You raise a consent request, follow it to granted or denied, then fetch and decrypt the health
+information. See [M3 Consent and fetching](/docs/hiecm/v3/api/m3).
+
+## M4, registries
+
+You register a professional in the [HPR](/docs/hiecm/v3/getting-started/glossary#hpr) and a
+facility in the [HFR](/docs/hiecm/v3/getting-started/glossary#hfr), then link your software to
+that facility. See [M4 HPR and HFR](/docs/hiecm/v3/api/m4).
+
+## Which ones your role needs
 
 | Your role | M1 | M2 | M3 | M4 |
 | --- | --- | --- | --- | --- |
-| PHR application | Required. Identity is the whole product. | Patient side only. Your user starts discovery and links care contexts to their ABHA. | Required. Your user grants, denies and revokes consent, and reads the records that arrive. | Not needed. |
-| HIP | Required. You need the session token and the patient's ABHA. | Required. This is the bulk of your build. | Only if you also read records held elsewhere. Serving a data request under a consent artefact is M2 work, not M3. | Facility and professional registration. |
-| HIU | Required. Same reason. | Not needed unless you also act as a HIP. | Required. This is the bulk of your build. | Facility and professional registration. |
+| PHR application | Required | Patient side only | Required | Not needed |
+| HIP | Required | The bulk of your build | Only if you also read records held elsewhere | Required |
+| HIU | Required | Not needed unless you also act as a HIP | The bulk of your build | Required |
 
-NHA's M2 document adds a prerequisite that catches teams late: you need a valid Facility ID,
-and registration in the HIP role, before you can share any record. That Facility ID comes from
-M4, so plan the registry work early even though it certifies last.
+**M4 certifies last but blocks M2.** Sharing a record needs a valid Facility ID and registration
+in the HIP role, and that Facility ID comes from M4. Plan the registry work early.
 
-## What is documented here
+The M1 pages carry request URLs, headers and bodies. Most M2, M3 and M4 request and response
+shapes are not transcribed yet, so those pages give steps and failure modes rather than payloads.
 
-The M1 pages carry request URLs, headers and bodies transcribed from NHA's Postman collection,
-and the [M1 reference](/reference/hiecm-m1) has the operation list to match.
+## Next
 
-NHA presents most request and response tables in the M2, M3 and M4 documents as screenshots,
-which did not survive conversion to text. Those pages give steps, obligations and failure
-modes, not payload shapes. The [M2](/reference/hiecm-m2),
-[M3](/reference/hiecm-m3) and [M4](/reference/hiecm-m4) references are published with empty
-operation lists until those shapes are transcribed.
-
-## Where to go next
-
-Each milestone above links to its own section, and
-[Sandbox access](/docs/hiecm/v3/getting-started/sandbox) has the credentials they all need. The
-exit process itself is on [Going live](./going-live).
+[Go live](./going-live).

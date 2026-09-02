@@ -1665,8 +1665,8 @@
       "atom": "shared.glossary.request-id",
       "type": "glossary",
       "route": "/docs/hiecm/v3/getting-started/first-fifteen-minutes",
-      "anchor": "2-read-one-transcribed-exchange-about-5-minutes",
-      "link": "/docs/hiecm/v3/getting-started/first-fifteen-minutes#2-read-one-transcribed-exchange-about-5-minutes",
+      "anchor": "1-create-a-session",
+      "link": "/docs/hiecm/v3/getting-started/first-fifteen-minutes#1-create-a-session",
       "rule": "term defined on first-fifteen-minutes",
       "confidence": "derived"
     },
@@ -1692,8 +1692,8 @@
       "atom": "shared.glossary.timestamp-header",
       "type": "glossary",
       "route": "/docs/hiecm/v3/getting-started/first-fifteen-minutes",
-      "anchor": "2-read-one-transcribed-exchange-about-5-minutes",
-      "link": "/docs/hiecm/v3/getting-started/first-fifteen-minutes#2-read-one-transcribed-exchange-about-5-minutes",
+      "anchor": "1-create-a-session",
+      "link": "/docs/hiecm/v3/getting-started/first-fifteen-minutes#1-create-a-session",
       "rule": "term defined on first-fifteen-minutes",
       "confidence": "derived"
     },
@@ -1719,8 +1719,8 @@
       "atom": "shared.glossary.x-cm-id",
       "type": "glossary",
       "route": "/docs/hiecm/v3/getting-started/first-fifteen-minutes",
-      "anchor": "2-read-one-transcribed-exchange-about-5-minutes",
-      "link": "/docs/hiecm/v3/getting-started/first-fifteen-minutes#2-read-one-transcribed-exchange-about-5-minutes",
+      "anchor": "1-create-a-session",
+      "link": "/docs/hiecm/v3/getting-started/first-fifteen-minutes#1-create-a-session",
       "rule": "term defined on first-fifteen-minutes",
       "confidence": "derived"
     },
@@ -1728,8 +1728,8 @@
       "atom": "shared.sandbox.callback-url",
       "type": "sandbox",
       "route": "/docs/hiecm/v3/getting-started/sandbox",
-      "anchor": "5-register-a-callback-url-before-you-start-m2-or-m3",
-      "link": "/docs/hiecm/v3/getting-started/sandbox#5-register-a-callback-url-before-you-start-m2-or-m3",
+      "anchor": null,
+      "link": "/docs/hiecm/v3/getting-started/sandbox",
       "rule": "claimed by sandbox",
       "confidence": "derived"
     },
