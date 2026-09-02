@@ -1,4 +1,5 @@
 import React, {useState} from 'react';
+import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import {cn} from '@site/src/lib/utils';
 import SkillInstall from './SkillInstall';
 
@@ -44,6 +45,8 @@ const CHOICES: Choice[] = [
 
 export default function SkillPicker(): React.ReactNode {
   const [choice, setChoice] = useState(CHOICES[0]);
+  const {siteConfig} = useDocusaurusContext();
+  const base = `${siteConfig.url}${siteConfig.baseUrl}`.replace(/\/+$/, '');
 
   return (
     <div className="skill-picker">
@@ -67,6 +70,22 @@ export default function SkillPicker(): React.ReactNode {
         ))}
       </div>
       <SkillInstall key={choice.slug} slug={choice.slug} note={choice.note} />
+
+      {/* No packaged bundle exists yet (site/static/skills carries one
+          SKILL.md per slug, no zip or index), so this lists each file
+          directly rather than claiming a "download all" archive. */}
+      <details className="skill-how skill-picker__all">
+        <summary className="skill-how__summary">Download all skills</summary>
+        <ul className="skill-picker__all-list">
+          {CHOICES.map((option) => (
+            <li key={option.slug}>
+              <a href={`${base}/skills/${option.slug}/SKILL.md`} download>
+                {option.label}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </details>
     </div>
   );
 }

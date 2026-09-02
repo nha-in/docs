@@ -74,9 +74,13 @@ const TARGETS: Target[] = [
   {
     id: 'cursor',
     label: 'Cursor',
-    dir: '.cursor/skills',
+    // https://cursor.com/docs/context/mcp... project rules live at
+    // .cursor/rules as .mdc files; a plain .md is ignored. The skill's own
+    // frontmatter already carries a `description`, so Cursor can match it as
+    // an agent-requested rule without edits.
+    dir: '.cursor/rules',
     command: (url, slug) =>
-      `mkdir -p .cursor/skills/${slug} && curl -fsSL ${url}/skills/${slug}/SKILL.md -o .cursor/skills/${slug}/SKILL.md`,
+      `mkdir -p .cursor/rules && curl -fsSL ${url}/skills/${slug}/SKILL.md -o .cursor/rules/${slug}.mdc`,
     // https://cursor.com/docs/integrations/deeplinks. Cursor has no skill
     // install deeplink, but it has a prompt one, so this lands the same way the
     // Claude link does: the command in the composer, waiting to be sent.
@@ -84,7 +88,7 @@ const TARGETS: Target[] = [
       `cursor://anysphere.cursor-deeplink/prompt?text=${encodeURIComponent(
         promptFor(command, module),
       )}`,
-    note: 'Cursor reads the same file. It also picks up .claude/skills if you already installed there.',
+    note: 'Saved as a Cursor project rule. Cursor matches it by its description when a task calls for it.',
   },
   {
     id: 'vscode',
@@ -118,25 +122,54 @@ function capabilities(entry: Entry) {
     {
       label: 'Integrate',
       detail:
-        entry.operations > 0
+        (entry.operations ?? 0) > 0
           ? `${entry.operations} operations, with their hosts, headers and the rules that hold across them.`
           : 'No operation is recorded for this module yet.',
     },
     {
       label: 'Debug',
       detail:
-        entry.codes > 0
+        (entry.codes ?? 0) > 0
           ? `${entry.codes} recorded error codes, each with its message and what to do about it.`
           : 'No error code is recorded for this module yet.',
     },
     {
       label: 'Test',
       detail:
-        entry.tests > 0
+        (entry.tests ?? 0) > 0
           ? `${entry.tests} test cases, each with the call it makes and what to see when it passes.`
           : 'No test matrix exists for this module yet.',
     },
   ];
+}
+
+/** Copies the raw SKILL.md text, not just the install command, for a reader
+    who wants to paste the file itself somewhere the curl targets do not cover. */
+function CopySkillButton({url}: {url: string}) {
+  const [state, setState] = useState<'idle' | 'copied' | 'error'>('idle');
+  return (
+    <button
+      type="button"
+      className="skill-install__download"
+      onClick={async () => {
+        try {
+          const res = await fetch(url);
+          if (!res.ok) throw new Error(String(res.status));
+          await navigator.clipboard.writeText(await res.text());
+          setState('copied');
+        } catch {
+          setState('error');
+        }
+        window.setTimeout(() => setState('idle'), 2000);
+      }}>
+      {state === 'copied' ? (
+        <Check className="size-4" aria-hidden="true" />
+      ) : (
+        <Copy className="size-4" aria-hidden="true" />
+      )}
+      {state === 'error' ? 'Unavailable here' : state === 'copied' ? 'Copied' : 'Copy SKILL.md'}
+    </button>
+  );
 }
 
 function CopyLine({value}: {value: string}) {
@@ -193,10 +226,13 @@ export default function SkillInstall({slug, note}: SkillInstallProps): React.Rea
           </p>
           <p className="skill-install__note">{note}</p>
         </div>
-        <a className="skill-install__download" href={download} download>
-          <Download className="size-4" aria-hidden="true" />
-          Download
-        </a>
+        <div className="skill-install__actions">
+          <CopySkillButton url={download} />
+          <a className="skill-install__download" href={download} download>
+            <Download className="size-4" aria-hidden="true" />
+            Download
+          </a>
+        </div>
       </div>
 
       <ul className="skill-caps">
