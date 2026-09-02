@@ -8,9 +8,13 @@ verification: unverified
 source: ABDM__Proposed_Simplified_Milestone_1.md, ABDM__Proposed_Simplified_Milestone_2.md, ABDM__Proposed_Simplified_Milestone_3.md, ABDM__NewDocumant_PHR_app.md, scripts/build-skills.mjs
 ---
 
+import RoleSelector from '@site/src/components/docs/RoleSelector';
+
 # Get started
 
 Connect your application to India's health data network.
+
+<RoleSelector />
 
 ## Start here: build with AI
 
@@ -37,7 +41,7 @@ Using Cursor, Codex or another agent? [Build with AI](/docs/hiecm/v3/getting-sta
   <Card title="Build with AI" icon="sparkles" href="/docs/hiecm/v3/getting-started/build-with-ai">
     Skills, MCP server and prompts for your coding agent.
   </Card>
-  <Card title="Your integration path" icon="milestone" href="/docs/hiecm/v3/getting-started/milestones">
+  <Card title="Milestones" icon="milestone" href="/docs/hiecm/v3/milestones">
     The four milestones and what each one gets you.
   </Card>
   <Card title="Go live" icon="rocket" href="/docs/hiecm/v3/getting-started/going-live">
@@ -48,19 +52,19 @@ Using Cursor, Codex or another agent? [Build with AI](/docs/hiecm/v3/getting-sta
 ## Common use cases
 
 <CardGroup cols={3}>
-  <Card title="Share records from a hospital or clinic" href="/docs/hiecm/v3/api/m2">
-    Link care contexts and serve them under consent.
-  </Card>
-  <Card title="Read a patient's records as an insurer" href="/docs/hiecm/v3/api/m3">
-    Request consent, fetch and decrypt.
-  </Card>
-  <Card title="Build a patient's health app" href="/docs/hiecm/v3/concepts/phr">
+  <Card title="Build a patient's health app" href="/docs/hiecm/v3/milestones/p1">
     ABHA login, record discovery, consent control.
   </Card>
-  <Card title="Register a facility or professional" href="/docs/hiecm/v3/api/m4">
+  <Card title="Share records from a hospital or clinic" href="/docs/hiecm/v3/milestones/m2">
+    Link care contexts and serve them under consent.
+  </Card>
+  <Card title="Read a patient's records as an insurer" href="/docs/hiecm/v3/milestones/m3">
+    Request consent, fetch and decrypt.
+  </Card>
+  <Card title="Register a facility or professional" href="/docs/hiecm/v3/milestones/m4">
     Get the ids every call needs.
   </Card>
-  <Card title="Create and verify ABHA" href="/docs/hiecm/v3/api/m1">
+  <Card title="Create and verify ABHA" href="/docs/hiecm/v3/milestones/m1">
     Identity for every patient.
   </Card>
 </CardGroup>
