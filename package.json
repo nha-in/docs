@@ -28,8 +28,15 @@
   "devDependencies": {
     "@docusaurus/faster": "^3.10.2",
     "@stoplight/spectral-cli": "^6.11.1",
+    "@tesseract.js-data/eng": "^1.0.0",
     "@types/react-dom": "^19.2.5",
+    "pdfjs-dist": "^6.3.289",
     "playwright": "^1.62.1",
+    "tesseract.js": "^7.0.0",
+    "tesseract.js-core": "^7.0.0",
     "yaml": "^2.8.1"
+  },
+  "dependencies": {
+    "typescript": "^7.0.2"
   }
 }

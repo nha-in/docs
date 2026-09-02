@@ -184,9 +184,11 @@ const catalogueVersion = readFileSync(
 const config: Config = {
   title: 'ABDM Developer Portal',
   tagline: 'One catalogue of ABDM, readable by humans and machines',
-  // The national emblem, not Docusaurus's own mark. One SVG for both themes:
-  // a browser cannot choose between a light and a dark icon the way the page
-  // chrome does, so the file carries its own prefers-color-scheme rule.
+  // The State Emblem of India, as abdm.gov.in and the sandbox show it in
+  // their own tabs: the Lion Capital with the motto beneath, padded into a
+  // square. One SVG for both themes, since a browser cannot choose between a
+  // light and a dark icon the way the page chrome does, so the file carries
+  // its own prefers-color-scheme rule.
   favicon: 'img/favicon.svg',
 
   // Safari does not take an SVG favicon, so a raster of the same emblem is

@@ -173,3 +173,97 @@ func TestCheckGroundingCatchesAnUncitedAnswer(t *testing.T) {
 		t.Errorf("plain prose with no sources should pass, got %q", rules(v))
 	}
 }
+
+// A FHIR bundle carries the identifiers no pattern can find: a name is only
+// a name because the field says so. Masking by field name is what makes an
+// attached bundle safe to send, and it is the half Presidio needs a language
+// model for.
+func TestMaskAttachmentMasksAFHIRBundleByItsFields(t *testing.T) {
+	bundle := `{"resourceType":"Bundle","entry":[{"resource":{
+		"resourceType":"Patient",
+		"name":[{"given":["Rakesh"],"family":"Sharma"}],
+		"telecom":[{"system":"phone","value":"9812345678"}],
+		"birthDate":"1988-04-02",
+		"address":[{"line":["12 MG Road"],"city":"Bengaluru"}],
+		"identifier":[{"system":"https://healthid.ndhm.gov.in","value":"12-3456-7890-1234"}]}}]}`
+
+	got, kinds := MaskAttachment(bundle)
+	for _, leak := range []string{"Rakesh", "Sharma", "9812345678", "1988-04-02", "MG Road", "12-3456-7890-1234"} {
+		if strings.Contains(got, leak) {
+			t.Errorf("%q survived masking:\n%s", leak, got)
+		}
+	}
+	if !strings.Contains(got, "Bundle") || !strings.Contains(got, "Patient") {
+		t.Errorf("the structure the model has to read is gone:\n%s", got)
+	}
+	if len(kinds) == 0 {
+		t.Error("nothing reported as masked")
+	}
+}
+
+// A file that is not JSON still goes through the pattern masking, so a log
+// line with an Aadhaar number in it is no different from a pasted one.
+func TestMaskAttachmentFallsBackToPatternsOnPlainText(t *testing.T) {
+	got, kinds := MaskAttachment("ERROR request for 1234 5678 9012 failed")
+	if strings.Contains(got, "1234 5678 9012") {
+		t.Errorf("an Aadhaar number survived in a plain text file: %q", got)
+	}
+	if len(kinds) == 0 {
+		t.Error("nothing reported as masked")
+	}
+}
+
+// The India identifiers carried over from Presidio's own recognisers.
+func TestMaskPIIMasksIndianIdentifiers(t *testing.T) {
+	cases := map[string]string{
+		"PAN":      "my pan ABCDE1234F is on the form",
+		"PASSPORT": "passport M1234567 expires soon",
+		"VOTER_ID": "voter id ABC1234567 was rejected",
+	}
+	for label, in := range cases {
+		got, found := MaskPII(in)
+		if !strings.Contains(got, "<MASKED_"+label+">") {
+			t.Errorf("%s not masked: %q", label, got)
+		}
+		if len(found) == 0 {
+			t.Errorf("%s not reported", label)
+		}
+	}
+}
+
+// A file name is repeated back to the model, so a path is cut to its base and
+// the characters that would break out of the sentence carrying it are gone.
+func TestAttachmentNameIsReducedToABaseName(t *testing.T) {
+	if got := AttachmentName(`C:\Users\someone\bundle.json`); got != "bundle.json" {
+		t.Errorf("AttachmentName kept the path: %q", got)
+	}
+	if got := AttachmentName("  "); got != "attachment" {
+		t.Errorf("AttachmentName(empty) = %q", got)
+	}
+}
+
+// Text read out of a screenshot has no field names, so a labelled name is
+// the only handle there is. This is the case a support panel actually sees:
+// a picture of a failing call with the patient's name printed on it.
+func TestMaskAttachmentMasksALabelledNameInReadText(t *testing.T) {
+	read := "HTTP 400 ABDM-1016\nX-HIP-ID missing on discovery\npatient: Rakesh Sharma\n"
+	got, kinds := MaskAttachment(read)
+	if strings.Contains(got, "Rakesh") {
+		t.Errorf("a labelled name survived:\n%s", got)
+	}
+	if !strings.Contains(got, "ABDM-1016") || !strings.Contains(got, "X-HIP-ID") {
+		t.Errorf("the error the reader asked about is gone:\n%s", got)
+	}
+	if len(kinds) == 0 {
+		t.Error("nothing reported as masked")
+	}
+}
+
+// A specification is not a person. "name: string" in an attached schema stays
+// as written, or the file stops being readable for no gain in privacy.
+func TestMaskAttachmentLeavesASchemaAlone(t *testing.T) {
+	got, _ := MaskAttachment("fields:\n  name: string\n  patient: required\n")
+	if strings.Contains(got, "MASKED") {
+		t.Errorf("a schema was masked as if it named someone:\n%s", got)
+	}
+}
