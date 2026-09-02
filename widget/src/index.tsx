@@ -171,9 +171,10 @@ const MOCK_OPENING: Turn = {
 
 const LIVE_OPENING: Turn = {
   from: 'assistant',
-  text:
-    'Ask about ABDM and this answers from the published catalogue, with the ' +
-    'atoms it drew on cited below the reply.',
+  // Said the way a person would open, not as a notice about itself. What it
+  // can do is shown by the questions below it; where the answer came from is
+  // shown under the answer.
+  text: 'What are you building? Ask me anything about ABDM.',
 };
 
 /**
@@ -670,19 +671,21 @@ function Panel({
             <X />
           </button>
         </h2>
-        <p class="ask-ai__blurb">
-          {apiBase ? (
-            'Answers come from the published catalogue and cite their sources. Questions are logged to improve the answers.'
-          ) : (
-            <>
-              Not connected to anything. For a real answer, use{' '}
-              <a href={supportUrl} target="_blank" rel="noopener noreferrer">
-                support
-              </a>
-              .
-            </>
-          )}
-        </p>
+        {/* Nothing under the title while the assistant works. What it draws
+            on shows under each answer as sources, which says the same thing
+            where it can be checked; how questions are handled is on the
+            support page, in the reader's own words rather than as a notice
+            over every conversation. The mock still announces itself, because
+            a panel that cannot answer has to say so. */}
+        {!apiBase && (
+          <p class="ask-ai__blurb">
+            Not connected to anything. For a real answer, use{' '}
+            <a href={supportUrl} target="_blank" rel="noopener noreferrer">
+              support
+            </a>
+            .
+          </p>
+        )}
       </div>
 
       {/* A log rather than a live region per turn: the reader's screen reader
