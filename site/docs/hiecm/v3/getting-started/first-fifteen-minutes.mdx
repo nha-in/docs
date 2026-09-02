@@ -1,50 +1,26 @@
 ---
-title: Your first fifteen minutes
-sidebar_label: Your first fifteen minutes
-description: The honest quick win before NHA approves your sandbox registration. Nothing but a browser, one transcribed exchange, your first call ready to paste.
+title: Make your first call
+sidebar_label: Make your first call
+description: Create a gateway session, read the token out of the response, and send it on every call that follows.
 verification: unverified
-source: catalogue/openapi/hiecm/v3/hiecm-gateway.yaml, abdm.gov.in/FAQ
-sidebar_position: 1
+source: catalogue/openapi/hiecm/v3/hiecm-gateway.yaml
+sidebar_position: 3
 covers: [shared.sandbox.first-fifteen-minutes]
 ---
 
-import SandboxAction from '@site/src/components/docs/SandboxAction';
+# Make your first call
 
-# Your first fifteen minutes
+Your first [ABDM](/docs/hiecm/v3/getting-started/glossary#abdm) call creates a session. It
+returns the token every other call carries.
 
-Nothing on this portal runs a live call before [NHA](/docs/hiecm/v3/getting-started/glossary#nha)
-approves your sandbox registration. NHA's FAQ publishes a maximum for that review: applications
-are processed within 5 working days. This page gives you a genuine fifteen minutes of your own
-while that runs: nothing but a browser, one complete transcribed exchange, and your own first
-call assembled and waiting. Applying for sandbox access is a separate step, worth doing first
-since it starts NHA's review clock.
+## Before you start
 
-## 1. Register in the sandbox app, about 10 minutes
+Have your `clientId` and `clientSecret` in hand. If you do not,
+[get your sandbox credentials](/docs/hiecm/v3/getting-started/sandbox) first.
 
-NHA's FAQ gives this estimate for the application itself, and a maximum of 5 working days for
-it to be processed. This starts NHA's review clock, so do it before anything else.
+## 1. Create a session
 
-<SandboxAction action="register">Register on the sandbox</SandboxAction>
-
-The wait that follows is the one step nothing here can shorten. See
-[Sandbox access](/docs/hiecm/v3/getting-started/sandbox) for what to read while you wait.
-
-## 2. Read one transcribed exchange, about 5 minutes
-
-Below is the gateway session call, the one every other
-[ABDM](/docs/hiecm/v3/getting-started/glossary#abdm) call depends on, transcribed from this
-repository's specification. It is **not run live**: nobody has executed this exact call from
-this repository, and the header and body values shown are generated example values from the
-specification, not values NHA has returned.
-
-Method and path: `POST /api/hiecm/gateway/v3/sessions`, sandbox host `https://dev.abdm.gov.in`.
-
-| Header | Example value in the specification |
-| --- | --- |
-| `REQUEST-ID` | `5f7a4a1e-59ba-4c0c-9e0c-8e6b3b6e2f11` |
-| `TIMESTAMP` | `2026-08-25T15:51:15.339Z` |
-| `X-CM-ID` | `sbx` on the sandbox, `abdm` in production |
-| `Content-Type` | `application/json` |
+Send this, with your two credentials filled in and a fresh `REQUEST-ID` and `TIMESTAMP`.
 
 ```bash
 curl --request POST \
@@ -54,58 +30,44 @@ curl --request POST \
   --header 'X-CM-ID: sbx' \
   --header 'Content-Type: application/json' \
   --data '{
-  "clientId": "<CLIENT_ID>",
-  "clientSecret": "<CLIENT_SECRET>",
-  "grantType": "client_credentials"
-}'
-```
-
-A successful call answers `200`. This repository's specification
-(`catalogue/openapi/hiecm/v3/hiecm-gateway.yaml`) describes it as "a session was created and a
-bearer token was issued" but carries no captured response body from NHA, only the field list:
-`accessToken`, `expiresIn`, `refreshExpiresIn`, `refreshToken` and `tokenType`. See the
-[gateway session reference](/reference/hiecm-gateway) for what each field means. This page does
-not invent a body NHA never sent.
-
-## 3. Assemble your own first call, about 10 minutes
-
-The same request, with the credential placeholders named for where they come from:
-
-```bash
-curl --request POST \
-  --url https://dev.abdm.gov.in/api/hiecm/gateway/v3/sessions \
-  --header 'REQUEST-ID: <A_FRESH_UUID_YOU_GENERATE>' \
-  --header 'TIMESTAMP: <CURRENT_ISO_8601_UTC_TIMESTAMP>' \
-  --header 'X-CM-ID: sbx' \
-  --header 'Content-Type: application/json' \
-  --data '{
   "clientId": "<CLIENT_ID_FROM_SANDBOX_REGISTRATION>",
   "clientSecret": "<CLIENT_SECRET_FROM_SANDBOX_REGISTRATION>",
   "grantType": "client_credentials"
 }'
 ```
 
-Save it somewhere you can find it. When NHA emails your client id and client secret, filling
-in two placeholders is the only step left before your first real call.
+| Header | What to send |
+| --- | --- |
+| `REQUEST-ID` | A fresh UUID per request. Do not reuse one. |
+| `TIMESTAMP` | The current time in ISO 8601, in UTC. |
+| `X-CM-ID` | `sbx` on the sandbox, `abdm` in production. |
 
-## How you know it worked
+*Example values shown; run it to see your own.*
 
-For the transcribed exchange: you can now say what the session endpoint returns and where the
-token goes on every later call, a `200` carrying `accessToken`, sent afterwards as
-`Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>`.
+## 2. Read the response
 
-For your own first call: `Not yet observed`. It stays that way until you run it, and running it
-needs credentials NHA has not issued yet.
+A session call answers `200` and returns five fields: `accessToken`, `expiresIn`,
+`refreshExpiresIn`, `refreshToken` and `tokenType`. The
+[gateway session reference](/reference/hiecm-gateway) says what each one means.
 
-## When it goes wrong
+`accessToken` is the one you need next. `expiresIn` tells you when to ask for another.
 
-NHA's FAQ gives a maximum of 5 working days to process a registration. If you are past that
-with no word, raise it on [NHA's developer forum](https://devforum.abdm.gov.in) through the
-[Support](/docs/support) page.
+## 3. Use the token on every call
 
-If your first real call fails with a 401 once you do have credentials, that is a different
-problem from registration. See
-[Everything returns 401](/docs/hiecm/v3/troubleshooting/everything-returns-401).
+Send the token as a header on every later call:
 
-While NHA reviews your registration, use the wait: [Sandbox access](/docs/hiecm/v3/getting-started/sandbox)
-has the reading path, picking your role and the milestone table.
+```
+Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>
+```
+
+Keep sending a fresh `REQUEST-ID`, a current `TIMESTAMP` and `X-CM-ID: sbx` alongside it.
+
+## What you see when it works
+
+A `200`, a body carrying `accessToken`, and a later call that no longer returns 401.
+
+If it fails, see [Everything returns 401](/docs/hiecm/v3/troubleshooting/everything-returns-401).
+
+## Next
+
+[Your integration path](/docs/hiecm/v3/getting-started/milestones).

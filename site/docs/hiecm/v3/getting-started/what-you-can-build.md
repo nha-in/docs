@@ -1,82 +1,75 @@
 ---
-title: What you can build
-sidebar_label: What you can build
-description: What a PHR app, a hospital system, a lab, a pharmacy and an insurer each build on ABDM, and which milestones each one needs.
+title: What are you building?
+sidebar_label: What are you building?
+description: Find your kind of system, the role it takes on ABDM, and what you build first.
 verification: unverified
 source: ABDM__NewDocumant_PHR_app.md, ABDM__Proposed_Simplified_Milestone_2.md, ABDM__Proposed_Simplified_Milestone_3.md
-sidebar_position: 7
+sidebar_position: 1
 covers: [hiecm.concept.roles]
 ---
 
-# What you can build
+# What are you building?
 
-What you build on [ABDM](/docs/hiecm/v3/getting-started/glossary#abdm) depends on whether your system creates
-health records, reads them, or holds them for a patient. Find your kind of system below for
-its role and its milestones.
+Find your system in this table. It names the role you take on
+[ABDM](/docs/hiecm/v3/getting-started/glossary#abdm) and what you build.
 
-## Quick answer
-
-| Your system | Role it takes | Milestones |
+| Your system | You act as | You build |
 | --- | --- | --- |
-| PHR app | [PHR](/docs/hiecm/v3/getting-started/glossary#phr) and [HIU](/docs/hiecm/v3/getting-started/glossary#hiu) | M1, M3, plus the patient side of M2 |
-| Hospital or clinic system | [HIP](/docs/hiecm/v3/getting-started/glossary#hip), often HIU too | M1, M2 and M4 before go live. Add M3 to read records from elsewhere |
-| Lab or pharmacy | HIP | M1, M2, and M4 before go live |
-| Insurer | HIU | M1, M3, and M4 before go live |
+| Hospital or clinic system | a [HIP](/docs/hiecm/v3/getting-started/glossary#hip) (Health Information Provider), the system that holds the records it created | Linking and sharing records |
+| Lab or pharmacy | a HIP as well, with fewer record types | Linking and sharing reports or prescriptions |
+| Insurer | an [HIU](/docs/hiecm/v3/getting-started/glossary#hiu) (Health Information User), a system that reads records held elsewhere | Consent requests and record fetching |
+| Patient app | a [PHR](/docs/hiecm/v3/getting-started/glossary#phr) (Personal Health Record) app, and an HIU too | Identity, consent and reading records |
 
-Every row starts at M1, because every call needs a session token. Every row that goes live
-needs a Facility ID, because a bridge is linked to a facility with a type of `HIP` or `HIU`.
-That is [M4](/docs/hiecm/v3/api/m4) work. A PHR app is the exception: it is not a facility.
-[Integration milestones](/docs/hiecm/v3/getting-started/milestones) has the full table.
+Every system starts at identity, because every call carries a session token.
 
-## A PHR app
+## Hospital or clinic system
 
-A patient holds their [ABHA](/docs/hiecm/v3/getting-started/glossary#abha) address here and reads their own
-records. [NHA](/docs/hiecm/v3/getting-started/glossary#nha)'s PHR document lists the functions such an app has
-to provide:
+You act as a HIP, the system that holds the records it created.
 
-- Create an ABHA address from a mobile number or an existing ABHA number, and link the two.
-- Log in by ABHA address, ABHA number or mobile number.
-- Show and edit the profile, including an ABHA QR code and a downloadable card.
-- Scan and share: the user scans a facility QR code at a registration counter to share their
-  profile, and the facility can return a token number.
-- Subscribe to the user's ABHA address, so the app hears when a care context is linked or
-  updated, and let the user approve or deny each subscription.
-- Discover records at a facility the user names, then link those care contexts after an OTP
-  check ([OTP](/docs/hiecm/v3/getting-started/glossary#otp)).
-- Handle deep links: NHA sends an SMS when a facility creates a record for a mobile number with
-  no ABHA address, and your app must start discovery from the facility code in that link.
-- Show consent requests, let the user grant, deny or revoke them, and show active consents.
-- Fetch and display records in chronological order.
+- Group records into care contexts, one per outpatient visit or inpatient admission.
+- Link those care contexts to the patient's [ABHA](/docs/hiecm/v3/getting-started/glossary#abha) address.
+- Answer discovery when another system looks for a patient's records.
+- Send records as encrypted [FHIR](/docs/hiecm/v3/getting-started/glossary#fhir) bundles once a valid consent arrives.
+- Register your facility, because sharing needs a Facility ID and the HIP role.
 
-NHA's document is explicit that every PHR application must also implement
-[HIU](/docs/hiecm/v3/getting-started/glossary#hiu) functionality, which is Milestone 3. Start at
-[PHR applications](/docs/hiecm/v3/concepts/phr).
+Start with: [Hospital, lab and pharmacy systems](/docs/hiecm/v3/concepts/hip-hiu).
 
-## A hospital or clinic system
+## Lab or pharmacy
 
-Your system creates records, so it takes the [HIP](/docs/hiecm/v3/getting-started/glossary#hip) role. NHA's
-Milestone 2 document states the prerequisite: a valid facility id, registered with the HIP
-role.
+You act as a HIP too. The linking, discovery and transfer work matches a hospital system.
 
-You group records into care contexts, one per outpatient visit or inpatient admission, link
-them to the patient's ABHA address, and hand them over as encrypted
-[FHIR](/docs/hiecm/v3/getting-started/glossary#fhir) bundles when a valid consent arrives. Milestone 2 lists
-eight health record types, and implementing all of them is mandatory for an
-[HMIS](/docs/hiecm/v3/getting-started/glossary#hmis). Most hospital systems take the HIU role too, which is
-Milestone 3. Start at
-[Hospital, lab and pharmacy systems](/docs/hiecm/v3/concepts/hip-hiu).
+- A lab produces one main record type, the diagnostic report, so its FHIR bundle is smaller.
+- A pharmacy sends the prescription record, which follows Pharmacy Council of India guidance.
+- A pharmacy also sends the invoice record for billing.
 
-## A lab or pharmacy
+Start with: [M2 Linking and sharing](/docs/hiecm/v3/api/m2).
 
-Both are HIPs, and the linking, discovery and transfer work is the same as a hospital's. A lab produces
-one main record type, the diagnostic report, so its FHIR bundle is smaller. For a pharmacy,
-Milestone 2 lists the prescription record, which follows Pharmacy Council of India guidance,
-and the invoice record for billing. See [M2](/docs/hiecm/v3/api/m2).
+## Insurer
 
-## An insurer
+You act as an HIU. You read records rather than create them.
 
-An insurer reads records rather than creating them, so it is an HIU. Milestone 3 lists a
-purpose code for this, `HPAYMT`, healthcare payment. You raise a consent request against the
-patient's ABHA address, wait for the grant, then fetch under the consent artefact. Claims
-exchange itself runs on a different gateway, [NHCX](/docs/hiecm/v3/getting-started/glossary#nhcx). See
-[M3](/docs/hiecm/v3/api/m3) and [NHCX](/docs/nhcx/v1).
+- Raise a consent request against the patient's ABHA address.
+- Wait for the patient to grant it.
+- Fetch and decrypt the records covered by the consent artefact.
+- Send the purpose code `HPAYMT`, healthcare payment.
+
+Claims exchange runs on a different gateway,
+[NHCX](/docs/hiecm/v3/getting-started/glossary#nhcx).
+
+Start with: [M3 Consent and fetching](/docs/hiecm/v3/api/m3).
+
+## Patient app
+
+You act as a PHR app, and every PHR app carries HIU functionality too.
+
+- Create an ABHA address from a mobile number or an existing ABHA number, and log the patient in.
+- Discover records at a facility the patient names, then link them after a one-time password check ([OTP](/docs/hiecm/v3/getting-started/glossary#otp)).
+- Show consent requests, and let the patient grant, deny or revoke them.
+- Fetch and show records in chronological order.
+- Handle the deep link sent by SMS when a facility creates a record for a mobile number with no ABHA address.
+
+Start with: [PHR applications](/docs/hiecm/v3/concepts/phr).
+
+## Next
+
+[Get your sandbox credentials](/docs/hiecm/v3/getting-started/sandbox).

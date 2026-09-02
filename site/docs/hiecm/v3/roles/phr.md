@@ -12,8 +12,8 @@ sidebar_custom_props: {roles: ['phr']}
 
 Your application belongs to the patient. They create an
 [ABHA](/docs/hiecm/v3/getting-started/glossary#abha), find records held about them across the
-network, decide who may see what, and read what arrives. NHA's own reference
-application is the model for the P modules below.
+network, decide who may see what, and read what arrives. Our reference application is
+the model for the P modules below.
 
 Pick this role in the switcher at the top of the sidebar and the API tree shows
 only the modules below.
@@ -38,7 +38,7 @@ though M2 is what responds when your user links a care context.
 
 ## Where these came from
 
-The four P specifications are transcribed from NHA's reference PHR application
+The four P specifications are transcribed from our reference PHR application
 collection, not from a published specification document. Nothing in them has
 been run against the sandbox. Treat request and response shapes as unconfirmed
 until a page says otherwise.
@@ -47,4 +47,4 @@ until a page says otherwise.
 
 - [PHR applications](/docs/hiecm/v3/concepts/phr), what the role means in ABDM.
 - [Consent](/docs/hiecm/v3/concepts/consent), the artefact your user grants and revokes.
-- [Sandbox access](/docs/hiecm/v3/getting-started/sandbox), credentials before any call.
+- [Get your sandbox credentials](/docs/hiecm/v3/getting-started/sandbox), credentials before any call.
