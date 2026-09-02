@@ -9,6 +9,8 @@ verification: unverified
 source: ABDM__NewDocumant_PHR_app.md, catalogue/openapi/hiecm/v3/hiecm-p3.yaml
 ---
 
+import ApiLinks from '@site/src/components/docs/ApiLinks';
+
 # P3 Consent and notifications
 
 P3 is the other side of [M3 Retrieve](./m3). M3 is a requester asking for
@@ -17,6 +19,8 @@ records. P3 is the patient deciding, and being told each time.
 Every [PHR](/docs/hiecm/v3/getting-started/glossary#phr) application must also
 implement the [HIU](/docs/hiecm/v3/getting-started/glossary#hiu) role, because
 fetching a user's own records is an HIU flow.
+
+<ApiLinks module="p3" />
 
 ## In short
 
