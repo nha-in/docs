@@ -130,7 +130,9 @@ export default function RoleSelector(): React.ReactNode {
         Who are you?
       </h2>
       <p className="role-selector__lede">
-        Pick the one that fits and the rest of the documentation follows your choice.
+        This is where you choose your path. Pick the one that fits and the rest of
+        the documentation follows it, in the sidebar and on every page. You can
+        change it whenever you like from the filter at the top of the sidebar.
       </p>
 
       <div className="role-selector__choices">

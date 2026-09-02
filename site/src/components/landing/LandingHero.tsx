@@ -78,18 +78,11 @@ export default function LandingHero({
           <br />
           Secure. Private. Robust.
         </p>
-        {/* One action, and it goes straight to the docs get-started page,
-            the same place the scroll gesture lands. */}
-        <Link className="landing-hero__cta" to="/docs/hiecm/v3">
-          Get started
-        </Link>
-
-        {/* The gateway question, asked as intent rather than as ABDM's own
-            role names (HIP, HIU, PHR). Each card names what the visitor is
-            trying to do; the gateway short name is a small label, and the
-            full form only appears on hover or keyboard focus. */}
+        {/* The three gateways are the page's action. Each card names what
+            the visitor is trying to do rather than ABDM's own role names
+            (HIP, HIU, PHR); the gateway short name is a small label, and
+            the full form appears on hover or keyboard focus. */}
         <div className="landing-hero__goals">
-          <p className="landing-hero__goals-prompt">What are you building?</p>
           <TooltipProvider>
             <nav className="landing-hero__goals-list" aria-label="Which gateway you need">
               {gateways.map(({intent, short, full, to}) => (
