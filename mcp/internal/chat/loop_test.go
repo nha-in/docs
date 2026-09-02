@@ -580,3 +580,28 @@ func TestRespondDoesNotRetryAPlainAnswer(t *testing.T) {
 		t.Errorf("model called %d times, want 1", fm.calls)
 	}
 }
+
+// The shapes a refusal actually arrives in. A model that asks the reader
+// which of four things they meant, without having searched for any of them,
+// is refusing with extra steps.
+func TestSaysItHasNothingCoversTheRealRefusals(t *testing.T) {
+	for _, answer := range []string{
+		"I do not have a definition for HIMS in this documentation.",
+		`I'm not sure what you're asking. "HIMS" isn't an ABDM term I recognize.`,
+		"Are you asking about HMIS, a health IT system category?",
+		"I could not find anything on that.",
+		"Did you mean HMIS?",
+	} {
+		if !saysItHasNothing(answer) {
+			t.Errorf("not caught as a refusal: %q", answer)
+		}
+	}
+	for _, answer := range []string{
+		"HMIS is the software a hospital runs day to day.",
+		"Send TIMESTAMP as UTC, to the millisecond.",
+	} {
+		if saysItHasNothing(answer) {
+			t.Errorf("a real answer was taken for a refusal: %q", answer)
+		}
+	}
+}
