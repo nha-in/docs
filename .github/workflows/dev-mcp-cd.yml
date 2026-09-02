@@ -11,6 +11,12 @@ env:
   DOCKER_COMPOSE_FILE: docker-compose.test.yml
   HEALTHCHECK_URL: http://localhost:8080/healthz
   NAMESPACE: eka-dev
+  # The architecture of the cluster's nodes, which the image must match. It
+  # is pinned here rather than inherited from the runner: switching the runner
+  # from ARM64 to AMD64 once shipped an amd64 binary to arm64 nodes, and every
+  # pod died with "exec format error" while CI stayed green. Verify with
+  # `kubectl get nodes -o wide` (the ARCH column) before changing it.
+  TARGET_PLATFORM: linux/arm64
 
 jobs:
   build-test-push:
@@ -162,6 +168,9 @@ jobs:
 
       - name: Set up Docker Buildx
         run: |
+          # binfmt lets this runner run the target-architecture image for
+          # the healthcheck below; the Go build itself cross-compiles natively.
+          docker run --privileged --rm tonistiigi/binfmt --install all >/dev/null
           docker buildx use mybuilder 2>/dev/null || \
             docker buildx create --name mybuilder --driver docker-container --bootstrap --use
 
@@ -172,6 +181,7 @@ jobs:
           IMAGE_TAG: ${{ steps.get_version.outputs.VERSION }}
         run: |
           docker buildx build \
+            --platform ${TARGET_PLATFORM} \
             --progress=plain \
             --cache-from=type=registry,ref=${ECR_REPO_URL}/${ECR_REPOSITORY}:buildcache-abdm-docs-mcp \
             --cache-to=type=registry,ref=${ECR_REPO_URL}/${ECR_REPOSITORY}:buildcache-abdm-docs-mcp,mode=max \
