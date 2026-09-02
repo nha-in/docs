@@ -1,7 +1,7 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react';
-import Link from '@docusaurus/Link';
 import {useLocation} from '@docusaurus/router';
 import {ClipboardList, Download, Sparkles} from 'lucide-react';
+import InstallToolsDialog from './InstallToolsDialog';
 
 type Status = 'idle' | 'copied' | 'unavailable';
 
@@ -44,7 +44,7 @@ function MarkdownMark(): React.ReactNode {
  * site lays out its own: one line of text buttons with dividers between
  * them, under the page's lede, above a rule. Ask about this page opens the
  * site's own assistant; Copy for LLM copies the page as Markdown; View as
- * Markdown opens it; Install tools goes to Build with AI.
+ * Markdown opens it; Install tools opens the install pop-up (InstallToolsDialog).
  *
  * Copy and View read the `index.md` a postbuild step writes beside every
  * route (see scripts/emit-page-markdown.mjs), so neither exists in
@@ -56,6 +56,7 @@ export default function PageActions(): React.ReactNode {
   const {pathname} = useLocation();
   const mdUrl = `${pathname.replace(/\/$/, '')}/index.md`;
   const [status, setStatus] = useState<Status>('idle');
+  const [installOpen, setInstallOpen] = useState(false);
   const resetTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
 
   useEffect(() => () => clearTimeout(resetTimer.current), []);
@@ -95,16 +96,20 @@ export default function PageActions(): React.ReactNode {
         <MarkdownMark />
         View as Markdown
       </a>
-      <Link className="page-actions__item" to="/docs/hiecm/v3/getting-started/build-with-ai">
+      <button
+        type="button"
+        className="page-actions__item"
+        onClick={() => setInstallOpen(true)}>
         <Download className="page-actions__icon" aria-hidden="true" />
         Install tools
-      </Link>
+      </button>
       {/* Visually hidden but announced: a button's own label change is not
           reliably read out by a screen reader, so the result is also spoken
           through this live region. */}
       <span className="sr-only" role="status" aria-live="polite">
         {STATUS_TEXT[status]}
       </span>
+      <InstallToolsDialog open={installOpen} onOpenChange={setInstallOpen} />
     </div>
   );
 }
