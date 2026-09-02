@@ -375,3 +375,12 @@
     border-bottom: 0;
   }
 }
+
+/* ---------- sandbox actions ----------
+   Every route to the sandbox carries the same mark the top bar uses, so the
+   destination is recognisable wherever the action appears. */
+.sandbox-action {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}

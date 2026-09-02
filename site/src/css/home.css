@@ -321,6 +321,14 @@
    Asked as intent, not as HIE-CM / UHI / NHCX, ABDM's own org chart: a
    visitor knows what they are trying to build before they know which
    gateway that maps to. One row, one card per gateway. */
+.landing-hero__goals-prompt {
+  margin: 0 0 0.25rem;
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  color: var(--accent);
+}
+
 .landing-hero__goals {
   margin-top: 2.75rem;
   display: flex;
@@ -343,7 +351,8 @@
 .landing-hero__goal {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: center;
+  text-align: center;
   gap: 0.625rem;
   width: 14rem;
   padding: 1.125rem 1.25rem;
