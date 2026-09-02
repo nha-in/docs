@@ -92,7 +92,19 @@ export default function Omnibox() {
     const input = root.querySelector<HTMLInputElement>(
       'input.navbar__search-input',
     );
+    const agent = root.querySelector('abdm-support-agent');
     if (!input) return;
+    // A half written question survives the move from the field to the panel.
+    // The words are handed over when the reader leaves the field or presses
+    // the assistant's own chip, not on every keystroke: the chip lives in the
+    // widget's shadow root, so this catches the press on the host on the way
+    // down, before the widget opens itself.
+    const carry = () => {
+      if (!agent) return;
+      const asked = input.value.trim();
+      if (asked) agent.setAttribute('question', asked);
+      else agent.removeAttribute('question');
+    };
     const sync = () => {
       const el = panel.current;
       if (el) el.hidden = input.value.trim() !== '';
@@ -105,7 +117,10 @@ export default function Omnibox() {
       window.requestAnimationFrame(sync);
     };
     // Late, so a click on a row below lands before the panel goes.
-    const onBlur = () => window.setTimeout(() => setFocused(false), 140);
+    const onBlur = () => {
+      carry();
+      window.setTimeout(() => setFocused(false), 140);
+    };
     // Up, down and enter belong to these rows only while they are the thing
     // on screen, which is while the field is empty. The moment anything is
     // typed the search theme's own results take the same keys back.
@@ -136,7 +151,9 @@ export default function Omnibox() {
     input.addEventListener('focus', onFocus);
     input.addEventListener('blur', onBlur);
     input.addEventListener('keydown', onKey, true);
+    agent?.addEventListener('mousedown', carry, true);
     return () => {
+      agent?.removeEventListener('mousedown', carry, true);
       input.removeEventListener('input', sync);
       input.removeEventListener('focus', onFocus);
       input.removeEventListener('blur', onBlur);
