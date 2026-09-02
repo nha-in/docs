@@ -93,9 +93,10 @@ const toBase64 = (buffer: ArrayBuffer) =>
 /**
  * RSA encrypt one value against NHA's published certificate, in this browser.
  *
- * WebCrypto offers RSA-OAEP only, and NHA's specification does not record which
- * padding or digest the service expects, so the digest is a control on the page
- * rather than a constant here.
+ * The V3 ABHA service takes RSA-OAEP with SHA-1, and its certificate response
+ * says so itself in `encryptionAlgorithm`. The digest defaults to SHA-1 and
+ * follows what the certificate declares; the control stays on the page for the
+ * older API families, which use a different padding.
  */
 async function encryptValue(pem: string, value: string, hash: string): Promise<string> {
   const spki = pem.replace(/-----[^-]*-----/g, '').replace(/\s+/g, '');
@@ -113,6 +114,19 @@ async function encryptValue(pem: string, value: string, hash: string): Promise<s
   );
   return toBase64(cipher);
 }
+
+/**
+ * NHA's sandbox edge accepts browser requests only from origins it has
+ * allowlisted, and answers everything else with a 403 and no body. That is a
+ * different failure from a token that lacks a role, which comes back as JSON,
+ * so it gets its own explanation rather than the generic 403 text.
+ */
+function originBlocked(exchange: Exchange): boolean {
+  return exchange.status === 403 && !(exchange.response ?? '').trim();
+}
+
+const ORIGIN_BLOCKED =
+  'The ABDM sandbox only accepts browser requests from origins NHA has allowlisted, and this site is not one yet: it answered 403 with no body before the request reached the API. The request itself is fine. Copy it from the exchange below and run it from a terminal, or run this portal locally on localhost:3000, which the sandbox allows.';
 
 /** Read a field back under any of the spellings the specification records. */
 function field(json: Record<string, unknown> | null, names: string[]): string {
@@ -214,7 +228,7 @@ export default function Quickstart() {
   const [clientSecret, setClientSecret] = useState('');
   const [token, setToken] = useState(readToken);
   const [aadhaar, setAadhaar] = useState('');
-  const [digest, setDigest] = useState('SHA-256');
+  const [digest, setDigest] = useState('SHA-1');
   const [pem, setPem] = useState('');
   const [loginId, setLoginId] = useState('');
   const [txnId, setTxnId] = useState('');
@@ -271,7 +285,7 @@ export default function Quickstart() {
       writeToken(minted);
       setStatus('Step 1 succeeded. You have an access token.');
     } else {
-      setStatus('Step 1 did not return an access token. The response is shown below.');
+      setStatus(originBlocked(exchange) ? ORIGIN_BLOCKED : 'Step 1 did not return an access token. The response is shown below.');
     }
     setBusy('');
   }
@@ -293,10 +307,17 @@ export default function Quickstart() {
     const key = field(json, ['publicKey']) || (text.includes('BEGIN PUBLIC KEY') ? text : '');
     setPem(key);
     if (!key) {
-      setStatus('No certificate came back, so nothing was encrypted.');
+      setStatus(
+        originBlocked(exchange)
+          ? ORIGIN_BLOCKED
+          : 'No certificate came back, so nothing was encrypted.',
+      );
       setBusy('');
       return;
     }
+    // The certificate names its own algorithm. Follow it rather than guess.
+    const declared = field(json, ['encryptionAlgorithm']);
+    if (declared) setDigest(/SHA-?256/i.test(declared) ? 'SHA-256' : 'SHA-1');
     try {
       setLoginId(await encryptValue(key, aadhaar.trim(), digest));
       setStatus('Step 2 succeeded. The number was encrypted in this browser.');
@@ -326,7 +347,7 @@ export default function Quickstart() {
       setTxnId(returned);
       setStatus('Step 3 succeeded. An OTP was sent to the registered mobile.');
     } else {
-      setStatus('Step 3 returned no transaction id. The response is shown below.');
+      setStatus(originBlocked(exchange) ? ORIGIN_BLOCKED : 'Step 3 returned no transaction id. The response is shown below.');
     }
     setBusy('');
   }
@@ -485,13 +506,13 @@ export default function Quickstart() {
                 className="quickstart__input"
                 value={digest}
                 onChange={(event) => setDigest(event.target.value)}>
-                <option value="SHA-256">SHA-256</option>
                 <option value="SHA-1">SHA-1</option>
+                <option value="SHA-256">SHA-256</option>
               </select>
               <span className="quickstart__hint">
-                NHA's specification does not record which padding the service expects.
-                This page uses RSA-OAEP, the only RSA encryption a browser offers. If the
-                next call rejects the value, try the other digest.
+                The V3 ABHA service takes RSA-OAEP with SHA-1, and the certificate it
+                returns states the algorithm, so this follows the certificate. SHA-256 is
+                here for hosts that declare it; the V3 sandbox rejects it.
               </span>
             </label>
           </div>
