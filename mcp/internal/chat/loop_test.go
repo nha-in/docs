@@ -21,15 +21,17 @@ import (
 // file here importing server would be a self-import cycle. See that file's
 // doc comment for the full explanation.
 type fakeModel struct {
-	replies []Reply
-	texts   []string
-	calls   int
-	gotMsgs [][]Message
+	replies   []Reply
+	texts     []string
+	calls     int
+	gotMsgs   [][]Message
+	gotSystem []string
 }
 
 func (f *fakeModel) Stream(ctx context.Context, system string, tools []ToolDef,
 	msgs []Message, maxTokens int, onText func(string)) (Reply, error) {
 	f.gotMsgs = append(f.gotMsgs, msgs)
+	f.gotSystem = append(f.gotSystem, system)
 	i := f.calls
 	f.calls++
 	if i < len(f.texts) && f.texts[i] != "" {
@@ -119,7 +121,7 @@ func TestValidateTurnsCapsAssistantLen(t *testing.T) {
 func TestRespondRejectsInvalidTurns(t *testing.T) {
 	svc := &Service{Model: &fakeModel{}}
 	emit, _ := collectEvents()
-	err := svc.Respond(context.Background(), []Turn{{Role: "assistant", Text: "hi"}}, emit)
+	err := svc.Respond(context.Background(), []Turn{{Role: "assistant", Text: "hi"}}, nil, emit)
 	if err == nil {
 		t.Fatal("want validation error, got nil")
 	}
@@ -171,7 +173,7 @@ func TestRespondStopsOnFirstEmitTextError(t *testing.T) {
 		}
 		return nil
 	}
-	err := svc.Respond(context.Background(), []Turn{{Role: "user", Text: "hi"}}, emit)
+	err := svc.Respond(context.Background(), []Turn{{Role: "user", Text: "hi"}}, nil, emit)
 	if !errors.Is(err, wantErr) {
 		t.Fatalf("err = %v, want %v", err, wantErr)
 	}
@@ -194,7 +196,7 @@ func TestLoopUnknownToolRoutesAround(t *testing.T) {
 	}
 	svc := &Service{Model: fm, Tools: nil, MaxTokens: 100}
 	emit, _ := collectEvents()
-	if err := svc.Respond(context.Background(), []Turn{{Role: "user", Text: "hi"}}, emit); err != nil {
+	if err := svc.Respond(context.Background(), []Turn{{Role: "user", Text: "hi"}}, nil, emit); err != nil {
 		t.Fatal(err)
 	}
 	last := fm.gotMsgs[1]
@@ -220,7 +222,7 @@ func TestLoopPreservesTextAlongsideToolCalls(t *testing.T) {
 	}
 	svc := &Service{Model: fm, Tools: nil, MaxTokens: 100}
 	emit, _ := collectEvents()
-	if err := svc.Respond(context.Background(), []Turn{{Role: "user", Text: "hi"}}, emit); err != nil {
+	if err := svc.Respond(context.Background(), []Turn{{Role: "user", Text: "hi"}}, nil, emit); err != nil {
 		t.Fatal(err)
 	}
 	if fm.calls != 2 {
@@ -293,7 +295,7 @@ func collectText(t *testing.T, question string, deltas ...string) string {
 		}
 		return nil
 	}
-	if err := svc.Respond(context.Background(), []Turn{{Role: "user", Text: question}}, emit); err != nil {
+	if err := svc.Respond(context.Background(), []Turn{{Role: "user", Text: question}}, nil, emit); err != nil {
 		t.Fatal(err)
 	}
 	return seen.String()
@@ -331,7 +333,7 @@ func TestRespondMasksPersonalDataBeforeTheModelSeesIt(t *testing.T) {
 	fm := &streamingModel{deltas: []string{"ok\n"}}
 	svc := &Service{Model: fm, MaxTokens: 100}
 	q := "linking fails for aadhaar 1234 5678 9012 on mobile 9876543210"
-	err := svc.Respond(context.Background(), []Turn{{Role: "user", Text: q}},
+	err := svc.Respond(context.Background(), []Turn{{Role: "user", Text: q}}, nil,
 		func(string, any) error { return nil })
 	if err != nil {
 		t.Fatal(err)
@@ -392,7 +394,7 @@ func groundingRun(t *testing.T, answer string) string {
 		}
 		return nil
 	}
-	if err := svc.Respond(context.Background(), []Turn{{Role: "user", Text: "why ABDM-1035?"}}, emit); err != nil {
+	if err := svc.Respond(context.Background(), []Turn{{Role: "user", Text: "why ABDM-1035?"}}, nil, emit); err != nil {
 		t.Fatal(err)
 	}
 	return seen.String()
