@@ -215,14 +215,18 @@ div[class^='codeBlockTitle'] {
   overflow-wrap: break-word;
 }
 
-/* Code in a table cell may wrap. Holding it on one line made a cell holding a
-   long URL claim the whole row: on the base URL table the two URL columns took
-   everything and the Purpose column collapsed to one character per line.
+/* Code in a table cell stays on one line. It used to break like prose, which
+   kept a long URL from starving the column beside it, but it also split short
+   tokens down the middle: an error code rendered as "ABDM- / 1053" over two
+   lines, and a callback path broke mid-segment. A code span is one token to a
+   reader, so it is not a place to wrap.
 
-   A URL has plenty of places to break, so it breaks, by the same `break-word`
-   rule so it cannot starve the column beside it either. */
+   The cost is that a table carrying a long URL can now be wider than the
+   column and scroll sideways inside `.table-scroll`. That is the trade the
+   product owner chose: the message beside the code still wraps freely, so
+   only the code itself holds the row open. */
 .markdown table code {
-  overflow-wrap: break-word;
+  white-space: nowrap;
 }
 
 /* ---------- how a table is sized ----------
@@ -247,11 +251,10 @@ div[class^='codeBlockTitle'] {
       fade on the edge says so, because an undiscovered scrollbar is how the
       end of a row goes unread.
 
-   A code chip is not pinned with `white-space: nowrap` any more either. Auto
-   layout already refuses to size a column below its longest unbreakable
-   token, so `ABDM-1001` stays on one line without being told to, and on the
-   rare table where it genuinely cannot fit it now wraps instead of
-   overflowing. */
+   Code in a cell is pinned with `white-space: nowrap` (see the rule above).
+   Auto layout will not size a column below its longest unbreakable token, so
+   a code span holds its own width, and a table that genuinely cannot fit
+   reaches layer 3 and scrolls rather than splitting a token. */
 
 .markdown .table-scroll {
   /* Layer 2. `min-width` keeps a small table aligned with the prose it sits

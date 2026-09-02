@@ -38,7 +38,12 @@ function DocSidebarDesktop({path, sidebar, onCollapse, isHidden}: Props) {
   // calling rather than of the guides that explain it. Sidebars split on
   // the api/ and reference/ folders (site/sidebars.ts), and `path` is the
   // doc's own route, so the folder segment says which sidebar this is.
-  const onApiSidebar = /\/(api|reference)\//.test(path);
+  // `api` and `reference` are matched as whole path segments, at the end of
+  // the path as well as in the middle. Requiring a trailing slash made this
+  // depend on how the route happened to be written: the module index at
+  // /docs/hiecm/v3/api matched on the server and not in the browser, so the
+  // version appeared for one frame and then vanished on hydration.
+  const onApiSidebar = /\/(api|reference)(\/|$)/.test(path);
 
   return (
     <div className={clsx('docs-sidebar', isHidden && 'docs-sidebar--hidden')}>

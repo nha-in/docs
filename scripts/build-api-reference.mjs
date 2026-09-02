@@ -558,8 +558,11 @@ for (const {platform, version, files} of tree) {
       for (const [name, item] of hooks) {
         for (const method of METHODS) {
           if (!item?.[method]) continue;
+          // The verb carries its own colour here, the same one it carries in
+          // the sidebar and on an endpoint page, so a reader scanning this
+          // table reads methods the way they read them everywhere else.
           lines.push(
-            `| \`${method.toUpperCase()}\` | \`${name}\` | ${(
+            `| <span class="api-chip api-chip--${method}">${method.toUpperCase()}</span> | \`${name}\` | ${(
               item[method].summary ?? ''
             ).trim()} |`,
           );
