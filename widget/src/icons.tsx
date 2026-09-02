@@ -1,5 +1,5 @@
 /**
- * The seven marks the panel uses, inlined from Lucide (ISC) rather than
+ * The eight marks the panel uses, inlined from Lucide (ISC) rather than
  * pulled in as a dependency: an icon package in a script that embeds on other
  * people's pages is 1500 icons shipped to draw seven.
  */
@@ -60,5 +60,12 @@ export const X = () => (
   <svg {...base} width="16" height="16">
     <path d="M18 6 6 18" />
     <path d="m6 6 12 12" />
+  </svg>
+);
+
+export const Paperclip = () => (
+  <svg {...base} width="16" height="16">
+    <path d="M13.234 20.252 21 12.3" />
+    <path d="m16 6-8.414 8.586a2 2 0 0 0 0 2.828 2 2 0 0 0 2.828 0l8.414-8.586a4 4 0 0 0 0-5.656 4 4 0 0 0-5.656 0l-8.415 8.585a6 6 0 1 0 8.486 8.486" />
   </svg>
 );

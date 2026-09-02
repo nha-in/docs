@@ -609,7 +609,7 @@
   max-height: 10rem;
   padding: 0.4375rem 0.75rem;
   resize: none;
-  overflow-y: auto;
+  overflow-y: hidden; /* the composer turns this on when it overflows */
   line-height: 1.5;
   border: 1px solid var(--aa-border);
   border-radius: var(--aa-radius-control);
@@ -641,4 +641,89 @@
 .ask-ai__send--stop {
   background: var(--aa-fill-soft);
   color: var(--aa-heading);
+}
+
+/* An attached file: the chip above the composer while it is waiting to be
+   sent, the paperclip that picks it, and the line naming it on the question
+   it went with. */
+.ask-ai__attachment {
+  /* Its own strip above the composer rather than an item inside it: a
+     wrapping composer stretches the field to the height of the line it wraps
+     onto, and an empty box then stands three lines tall. */
+  display: flex;
+  margin: 0 1rem;
+  align-items: center;
+  gap: 0.375rem;
+  width: 100%;
+  padding: 0.375rem 0.5rem;
+  border: 1px solid var(--aa-border);
+  border-radius: var(--aa-radius-control);
+  background: var(--aa-fill-soft);
+  color: var(--aa-body);
+  font-size: 0.75rem;
+}
+
+.ask-ai__attachment-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ask-ai__attachment-size {
+  flex: 0 0 auto;
+  margin-inline-start: auto;
+  color: var(--aa-muted);
+}
+
+.ask-ai__attachment-remove {
+  display: inline-flex;
+  flex: 0 0 auto;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--aa-muted);
+  cursor: pointer;
+}
+
+.ask-ai__attachment-error {
+  color: var(--aa-muted);
+}
+
+.ask-ai__picker {
+  display: none;
+}
+
+.ask-ai__attach {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border: 1px solid var(--aa-border);
+  border-radius: var(--aa-radius-control);
+  background: var(--aa-page);
+  color: var(--aa-muted);
+  cursor: pointer;
+}
+
+.ask-ai__attach:disabled {
+  cursor: default;
+  opacity: 0.5;
+}
+
+.ask-ai__turn-file {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  margin-top: 0.375rem;
+  color: var(--aa-muted);
+  font-size: 0.6875rem;
+}
+
+.ask-ai__attachment-note {
+  margin: 0.25rem 1rem 0;
+  color: var(--aa-faint);
+  font-size: 0.6875rem;
+  line-height: 1.4;
 }
