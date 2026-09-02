@@ -148,10 +148,26 @@
 /* A participant. `--lit` is written by the canvas loop from the courier's
    distance, so the icon brightens with the links running into it and the two
    layers agree without the DOM re-rendering. */
+/* The nodes sit above the canvas and take pointer events; the canvas below
+   does not, so the drawing stays decoration and only the participants are
+   clickable. */
+.network-web__nodes {
+  position: absolute;
+  inset: 0;
+  /* The layer above sets `pointer-events: none` so the drawing never eats a
+     click meant for the hero. The nodes are links, so they take it back. */
+  pointer-events: none;
+}
+
+.network-node {
+  pointer-events: auto;
+}
+
 .network-node {
   --lit: 0;
 
   position: absolute;
+  text-decoration: none;
   transform: translate(-50%, -50%);
   display: flex;
   flex-direction: column;
@@ -186,6 +202,28 @@
 .network-node__icon {
   width: 1.375rem;
   height: 1.375rem;
+}
+
+/* A participant is a link, so it says so on hover and on focus: the node
+   comes up to full strength and its label takes the accent. Without this the
+   only feedback would be the ambient glow the canvas already drives, which
+   moves on its own and so says nothing about the pointer. */
+.network-node:hover,
+.network-node:focus-visible {
+  opacity: 1;
+  text-decoration: none;
+}
+
+.network-node:hover .network-node__label,
+.network-node:focus-visible .network-node__label {
+  color: var(--accent);
+  opacity: 1;
+}
+
+.network-node:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 6px;
+  border-radius: 0.5rem;
 }
 
 .network-node__label {
