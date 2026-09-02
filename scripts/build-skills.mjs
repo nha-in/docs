@@ -366,10 +366,26 @@ for (const module of MODULES) {
 // for it; the description comes from the skill's own frontmatter, and
 // the example prompt lives here because the file does not carry one.
 const GUIDED = {
-  'fhir-generate': {module: 'FHIR', example: 'Add ABDM compliant FHIR bundle generation to this codebase'},
-  'fhir-audit': {module: 'FHIR', example: "Check this FHIR store's bundles for ABDM compliance"},
-  'hiecm-m1-build': {module: 'M1', example: 'Scaffold ABHA creation by Aadhaar OTP, flow by flow'},
-  'hiecm-m1-debug': {module: 'M1', example: 'Diagnose this failed ABDM call'},
+  'fhir-generate': {
+    module: 'FHIR',
+    title: 'FHIR generate',
+    example: 'Add ABDM compliant FHIR bundle generation to this codebase',
+  },
+  'fhir-audit': {
+    module: 'FHIR',
+    title: 'FHIR audit',
+    example: "Check this FHIR store's bundles for ABDM compliance",
+  },
+  'hiecm-m1-build': {
+    module: 'M1',
+    title: 'M1 build',
+    example: 'Scaffold ABHA creation by Aadhaar OTP, flow by flow',
+  },
+  'hiecm-m1-debug': {
+    module: 'M1',
+    title: 'M1 debug',
+    example: 'Diagnose this failed ABDM call',
+  },
 };
 const pluginDir = join(root, 'plugins', 'abdm', 'skills');
 for (const name of readdirSync(pluginDir)) {
@@ -383,7 +399,9 @@ for (const name of readdirSync(pluginDir)) {
   manifest[name] = {
     kind: 'guided',
     module: GUIDED[name]?.module ?? 'ABDM',
-    title: fm.name ?? name,
+    // The heading reads this out loud, so it carries the acronym in the case
+    // the acronym has. The skill's own name stays the file name below it.
+    title: GUIDED[name]?.title ?? fm.name ?? name,
     description: fm.description ?? '',
     example: GUIDED[name]?.example ?? '',
   };
