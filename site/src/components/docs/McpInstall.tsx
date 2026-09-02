@@ -148,12 +148,12 @@ export default function McpInstall(): React.ReactNode {
         <div className="skill-install__body">
           <p className="skill-install__title">
             Docs MCP server
-            {!url && <span className="skill-chip">Not public yet</span>}
+            {!url && <span className="skill-chip">Address not in this build</span>}
           </p>
           <p className="skill-install__note">
             {url
               ? 'Your agent queries this catalogue as it works, instead of loading it.'
-              : 'Your agent will query this catalogue as it works, instead of loading it. The server runs, but only inside our network. The endpoint below is set at deploy, and every control here goes live the moment it resolves.'}
+              : 'Your agent will query this catalogue as it works, instead of loading it. The server is live; this build just does not carry its address. The endpoint is set at deploy, and every control here works the moment it resolves.'}
           </p>
         </div>
       </div>
