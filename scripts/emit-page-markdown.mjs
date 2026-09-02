@@ -97,7 +97,20 @@ function* walk(dir) {
   }
 }
 
-function routeFor(srcPath) {
+/**
+ * Where a page is actually published.
+ *
+ * Usually that follows the file's own path, but front matter can override it
+ * with `slug:`, and then the file path is not where the page lives. Get
+ * started is exactly that case: it sits in `getting-started/index.mdx` and
+ * publishes at `/hiecm/v3`. Deriving the route from the path alone wrote its
+ * markdown beside a route that does not exist and never wrote one beside the
+ * route that does, so both Copy for LLM and View as Markdown failed on it.
+ */
+export function routeFor(srcPath, raw) {
+  const slug = /^slug:\s*(\S+)\s*$/m.exec(raw ?? '')?.[1];
+  if (slug) return join('docs', slug.replace(/^\/+/, '').replace(/\/+$/, ''));
+
   // site/docs/hiecm/v3/getting-started/sandbox.md -> docs/hiecm/v3/getting-started/sandbox
   let r = relative(DOCS_SRC, srcPath).replace(/\.(mdx?|md)$/, '');
   if (r.endsWith('/index') || r.endsWith('\\index')) r = dirname(r);
@@ -129,7 +142,7 @@ function main() {
       title = /title:\s*"?([^"\n]+)"?/.exec(raw)?.[1] ?? md.match(/^#\s+(.+)$/m)?.[1] ?? '';
     }
 
-    const route = routeFor(src);
+    const route = routeFor(src, raw);
     const outDir = join(BUILD, route);
     if (!existsSync(outDir)) {
       skipped += 1;
