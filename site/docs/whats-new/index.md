@@ -12,6 +12,31 @@ source: repository README.md and catalogue/openapi/CONVENTIONS.md
 Dated changes to these pages, newest first. Each entry links to what you can now
 read or do.
 
+## 2026-09-02
+
+### Get started is now a launchpad, not an introduction
+
+[Get started](/docs/hiecm/v3) opens with what you can do: build with AI in one command,
+then cards for every step from finding your role to going live, and the common use cases
+by system type. The Introduction page is gone. Every page in Get started now leads with
+the action and ends with the next step.
+
+### The landing page asks what you are building
+
+Three intents, one per gateway: records to share, health services to offer, health
+insurance to solve for. Hover any of them for the gateway's full name. Scrolling down
+lands on Get started.
+
+### Every page has Copy page, Open in ChatGPT, Open in Claude and Ask AI
+
+The control on every doc page copies the page as Markdown, opens it as Markdown, hands
+it to ChatGPT or Claude, or opens Ask AI with the page as context.
+
+### The API reference speaks as the API
+
+Reference pages describe what each operation accepts and returns and nothing else. What
+a milestone is, and the order to build in, lives in [Your integration path](/docs/hiecm/v3/getting-started/milestones).
+
 ## 2026-09-01
 
 ### Troubleshooting organised by what you see, not by error code
