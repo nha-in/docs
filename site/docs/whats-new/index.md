@@ -14,6 +14,30 @@ read or do.
 
 ## 2026-09-02
 
+### Milestones spell CARE, and each one has its own page
+
+[Milestones](/docs/hiecm/v3/milestones) explains the four milestones in one word each,
+Create, Attach, Retrieve, Enrol, and walks them through one patient's visits. Every
+milestone, M1 to M4 and P1 to P3, now has a detail page with what it gives you, what you
+need and the journey diagrams. The API reference links to them and stays a reference.
+
+### Tell us who you are, and Get started fits itself to you
+
+A "Who are you?" selector on [Get started](/docs/hiecm/v3) asks whether you are a health
+facility, an IMS vendor, a patient app or still deciding, says in one line what that makes
+you on ABDM, and shows the journey for that role. The patient app comes first wherever
+roles are listed.
+
+### Install tools opens in place
+
+Install tools on any page opens a panel with agent setup, skills and the MCP server, so you
+never leave the page you are reading.
+
+### Methods are colour coded
+
+GET, POST, PUT, PATCH and DELETE each have their own colour in the API reference sidebar
+and on every endpoint page.
+
 ### Get started is now a launchpad, not an introduction
 
 [Get started](/docs/hiecm/v3) opens with what you can do: build with AI in one command,
@@ -35,7 +59,7 @@ it to ChatGPT or Claude, or opens Ask AI with the page as context.
 ### The API reference speaks as the API
 
 Reference pages describe what each operation accepts and returns and nothing else. What
-a milestone is, and the order to build in, lives in [Your integration path](/docs/hiecm/v3/getting-started/milestones).
+a milestone is, and the order to build in, lives in [Your integration path](/docs/hiecm/v3/milestones).
 
 ## 2026-09-01
 
@@ -50,7 +74,7 @@ anyone who has a symptom rather than a code.
 
 ### The M3 consent journey, drawn in three parts
 
-[M3 user journeys](/docs/hiecm/v3/api/m3/user-journey) draws the whole
+[M3 user journeys](/docs/hiecm/v3/milestones/m3-journey) draws the whole
 [consent](/docs/hiecm/v3/getting-started/glossary#consent-artefact) story as NHA's document
 tells it: raising a consent request, the patient granting or denying it, and fetching the
 records once an artefact exists. Two new flow atoms back the diagrams,
