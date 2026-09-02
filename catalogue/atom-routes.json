@@ -1664,10 +1664,10 @@
     {
       "atom": "shared.glossary.request-id",
       "type": "glossary",
-      "route": "/docs/hiecm/v3/getting-started/first-fifteen-minutes",
-      "anchor": "1-create-a-session",
-      "link": "/docs/hiecm/v3/getting-started/first-fifteen-minutes#1-create-a-session",
-      "rule": "term defined on first-fifteen-minutes",
+      "route": "/docs/hiecm/v3/getting-started/sandbox",
+      "anchor": "3-register-your-callback-url",
+      "link": "/docs/hiecm/v3/getting-started/sandbox#3-register-your-callback-url",
+      "rule": "term defined on sandbox",
       "confidence": "derived"
     },
     {
@@ -1691,10 +1691,10 @@
     {
       "atom": "shared.glossary.timestamp-header",
       "type": "glossary",
-      "route": "/docs/hiecm/v3/getting-started/first-fifteen-minutes",
-      "anchor": "1-create-a-session",
-      "link": "/docs/hiecm/v3/getting-started/first-fifteen-minutes#1-create-a-session",
-      "rule": "term defined on first-fifteen-minutes",
+      "route": "/docs/hiecm/v3/reference/authentication",
+      "anchor": "gateway-session",
+      "link": "/docs/hiecm/v3/reference/authentication#gateway-session",
+      "rule": "term defined on authentication",
       "confidence": "derived"
     },
     {
@@ -1719,8 +1719,8 @@
       "atom": "shared.glossary.x-cm-id",
       "type": "glossary",
       "route": "/docs/hiecm/v3/getting-started/first-fifteen-minutes",
-      "anchor": "1-create-a-session",
-      "link": "/docs/hiecm/v3/getting-started/first-fifteen-minutes#1-create-a-session",
+      "anchor": "if-a-call-fails",
+      "link": "/docs/hiecm/v3/getting-started/first-fifteen-minutes#if-a-call-fails",
       "rule": "term defined on first-fifteen-minutes",
       "confidence": "derived"
     },
