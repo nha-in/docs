@@ -8,7 +8,8 @@ title: The callback never arrives
 summary: >
   You sent a request, got back a 202 or 200, and the answer that was
   supposed to follow on your registered callback URL never came. The
-  checks that rule out the common causes, in order.
+  checks this catalogue recommends, in the order it recommends
+  checking them, not a record of how often each has been the cause.
 sources:
   - file: ABDM Sandbox/ABDM/Proposed Simplified Milestone 2.docx
     status: not-yet-hashed
@@ -36,8 +37,8 @@ skills:
 You made a call, it returned quickly with a 202 or a 200, and nothing
 else has happened since. This is a common report in
 [HIE-CM](../../shared/glossary/hie-cm.md) integration. The checks below
-start with the callback URL, because it is the first place NHA's
-documents point to for this symptom.
+are in the order this catalogue recommends checking, not a record of
+how often each has turned out to be the actual cause.
 
 That early response only means the gateway accepted your request. In M2
 and M3 the real answer arrives later, as a POST from

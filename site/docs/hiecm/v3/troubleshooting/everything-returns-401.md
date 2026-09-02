@@ -59,7 +59,7 @@ matching code, escalate on the
 called, the `REQUEST-ID`, the `TIMESTAMP`, and the full response body.
 See [Support](/docs/support) for the full report format.
 
-The codes this symptom most often turns out to be are on the
+The codes this symptom can surface are on the
 [error codes reference](/docs/hiecm/v3/reference/error-codes): an
 invalid timestamp, the wrong consent manager id, a missing session
 token, or a required header that is absent or malformed.
