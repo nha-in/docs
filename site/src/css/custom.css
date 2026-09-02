@@ -22,6 +22,7 @@
 @import './quickstart.css';
 @import './scalar.css';
 @import './whats-new.css';
+@import './markdown-view.css';
 
 /* Docusaurus toggles [data-theme] on <html>; teach Tailwind the same signal. */
 @custom-variant dark (&:where([data-theme='dark'], [data-theme='dark'] *));

@@ -1,0 +1,83 @@
+/* markdown-view: the standalone /markdown route (src/pages/markdown.tsx)
+ * that shows a page's raw markdown source in the browser, so "View as
+ * Markdown" opens a page instead of downloading a file. Owned by that page
+ * alone.
+ */
+
+.markdown-view {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 2.5rem 1.5rem 4rem;
+}
+
+.markdown-view__bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1.25rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.markdown-view__path {
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+  color: var(--text-heading);
+  word-break: break-all;
+}
+
+.markdown-view__actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.markdown-view__actions button,
+.markdown-view__actions .markdown-view__link {
+  padding: 0.4rem 0.9rem;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--surface);
+  color: var(--text-heading);
+  font: inherit;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.markdown-view__actions button:hover,
+.markdown-view__actions .markdown-view__link:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.markdown-view__actions button:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.markdown-view__status {
+  color: var(--text-muted);
+}
+
+.markdown-view__status--error {
+  color: var(--destructive);
+}
+
+.markdown-view__pre {
+  margin: 0;
+  padding: 1.25rem;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--text-heading);
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  line-height: 1.6;
+  white-space: pre;
+  overflow: auto;
+  user-select: text;
+}
