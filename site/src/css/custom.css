@@ -19,6 +19,7 @@
 @import './role-selector.css';
 @import './milestones.css';
 @import './api.css';
+@import './quickstart.css';
 @import './scalar.css';
 
 /* Docusaurus toggles [data-theme] on <html>; teach Tailwind the same signal. */
