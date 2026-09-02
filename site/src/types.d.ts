@@ -16,6 +16,8 @@ declare module 'react' {
         'support-url'?: string;
         launcher?: string;
         open?: string;
+        question?: string;
+        starters?: string;
       };
     }
   }

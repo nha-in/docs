@@ -13,13 +13,14 @@ function agent(): SupportAgent | null {
 }
 
 /**
- * Lets any page open the Ask AI panel, and hand the panel the page itself,
- * without knowing where the panel lives.
+ * Lets any page open the Ask AI panel, and hand the panel the page itself or
+ * the words the reader already typed, without knowing where the panel lives.
  *
  * Dispatch `window.dispatchEvent(new CustomEvent('abdm:ask-ai', {detail:
- * {page, title}}))` and the `<abdm-support-agent>` element in the top bar
- * opens, the same way its own chip opens it, by setting its `open`
- * attribute. The panel then also gets the page as Markdown, so the reader's
+ * {page, title, question}}))` and the `<abdm-support-agent>` element in the
+ * top bar opens, the same way its own chip opens it, by setting its `open`
+ * attribute. `question` seeds the composer, and nothing is sent: the reader
+ * still presses send. `page` hands the panel the page as Markdown, so their
  * first question is answered against what they are looking at.
  *
  * The Markdown is the `index.md` a postbuild step writes beside every route
@@ -39,8 +40,11 @@ export default function AskAiBridge(): null {
     const open = (event: Event) => {
       const el = agent();
       if (!el) return;
+      const {page, title, question} = (event as CustomEvent).detail ?? {};
+      // A caller that already has the reader's words hands them over, and the
+      // panel seeds its composer with them.
+      if (question) el.setAttribute('question', question);
       el.setAttribute('open', '');
-      const {page, title} = (event as CustomEvent).detail ?? {};
       if (!page || !el.attachPage) return;
       const url = `${String(page).replace(/\/$/, '')}/index.md`;
       // The panel opens now and the page lands a moment later. Fetching

@@ -573,3 +573,101 @@
 .mobile-nav-sidebar .menu__list {
   padding: 0;
 }
+
+/* The command palette. It sits in the browser's top layer as a native modal,
+   so nothing in the page's own stacking can cover it, and it borrows the
+   site's tokens rather than inventing a second surface. */
+.palette {
+  width: min(38rem, calc(100vw - 2rem));
+  margin: 12vh auto auto;
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-panel);
+  background: var(--surface-raised);
+  color: var(--text-body);
+  box-shadow: 0 1.5rem 3rem rgb(0 0 0 / 0.18);
+}
+
+.palette::backdrop {
+  background: rgb(0 0 0 / 0.35);
+}
+
+.palette__box {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.875rem 1rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.palette__field {
+  flex: 1 1 auto;
+  min-width: 0;
+  border: 0;
+  background: transparent;
+  color: var(--text-heading);
+  font-family: inherit;
+  font-size: 1rem;
+}
+
+.palette__field:focus {
+  outline: none;
+}
+
+.palette__esc {
+  padding: 0.125rem 0.375rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-chip);
+  background: var(--surface-sunken);
+  color: var(--text-faint);
+  font-size: 0.6875rem;
+}
+
+.palette__rows {
+  margin: 0;
+  padding: 0.375rem;
+  list-style: none;
+}
+
+.palette__row {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  border: 0;
+  border-radius: var(--radius-control);
+  background: transparent;
+  color: inherit;
+  font-family: inherit;
+  font-size: 0.875rem;
+  text-align: left;
+  cursor: pointer;
+}
+
+.palette__row--active {
+  background: var(--accent-soft);
+}
+
+.palette__label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.palette__hint {
+  flex: 0 0 auto;
+  color: var(--text-faint);
+  font-size: 0.6875rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.palette__footer {
+  margin: 0;
+  padding: 0.625rem 1rem;
+  border-top: 1px solid var(--border);
+  color: var(--text-faint);
+  font-size: 0.75rem;
+}
