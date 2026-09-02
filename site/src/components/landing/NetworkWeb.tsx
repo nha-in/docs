@@ -1,3 +1,4 @@
+import Link from '@docusaurus/Link';
 import React, {useEffect, useRef} from 'react';
 import {
   Building2,
@@ -80,8 +81,14 @@ export default function NetworkWeb(): React.ReactNode {
     let places: Point[] = [];
     let frame = 0;
 
-    /** Where the courier is, and where it last handed a record over. */
+    /** Where the courier is drawn, and where it last handed a record over. */
     let courier: Point = {x: -9999, y: -9999};
+    /** Where the pointer, or the idle walk, is asking the courier to be. */
+    let aim: Point = {x: -9999, y: -9999};
+    /** The participant the light is settling onto, and how far it has settled. */
+    let onto = -1;
+    let settled = 0;
+    let lastFrame = 0;
     let holding = -1;
     /** A record in flight: from, to, and when it left. */
     let packet: {from: number; to: number; at: number} | null = null;
@@ -134,6 +141,38 @@ export default function NetworkWeb(): React.ReactNode {
       return normalised.replace(/^rgba?\(|\)$/g, '').split(',').slice(0, 3).join(',');
     };
 
+    /**
+     * The same sage, at the chroma a pale page needs.
+     *
+     * Dark mode has headroom: a low alpha wash over near black is read as
+     * light, and that version stays as it is. Cream has none, so the identical
+     * wash is read as a film of grey green laid on the paper. A canvas
+     * composite does not rescue it either: over a near white ground multiply
+     * and source-over resolve to the same pixels. What separates a lamp from a
+     * stain here is colour, so the light torch keeps the accent's hue and
+     * takes its saturation up, and gets its shape from a hot core below.
+     */
+    const neon = (channels: string) => {
+      const [r, g, b] = channels.split(',').map((n) => Number(n) / 255);
+      const high = Math.max(r, g, b);
+      const low = Math.min(r, g, b);
+      const level = (high + low) / 2;
+      const spread = high - low;
+      const saturation = spread === 0 ? 0 : spread / (1 - Math.abs(2 * level - 1));
+      let hue = 0;
+      if (spread > 0) {
+        hue =
+          high === r
+            ? (g - b) / spread
+            : high === g
+              ? (b - r) / spread + 2
+              : (r - g) / spread + 4;
+        hue = (hue * 60 + 360) % 360;
+      }
+      const lifted = Math.min(0.52, saturation * 1.6) * 100;
+      return rgbOf(`hsl(${hue.toFixed(0)}, ${lifted.toFixed(0)}%, 43%)`);
+    };
+
     const nearest = (from: Point) => {
       let best = -1;
       let bestDistance = Infinity;
@@ -166,7 +205,7 @@ export default function NetworkWeb(): React.ReactNode {
       const t = Math.min(1, (now - idleSince) / 2200);
       // Ease in and out, so the courier slows into each participant.
       const eased = t < 0.5 ? 2 * t * t : 1 - (-2 * t + 2) ** 2 / 2;
-      courier = {
+      aim = {
         x: from.x + (to.x - from.x) * eased,
         y: from.y + (to.y - from.y) * eased,
       };
@@ -183,12 +222,42 @@ export default function NetworkWeb(): React.ReactNode {
       frame = requestAnimationFrame(draw);
       const colour = accent();
       const channels = rgbOf(colour);
+      // Read per frame rather than at mount: the bar has a theme toggle, and a
+      // torch built once would keep the old theme's recipe until a reload.
+      const dark = document.documentElement.dataset.theme === 'dark';
+      const torch = dark ? channels : neon(channels);
       const idle = now - lastMove > IDLE_AFTER;
 
       if (idle && !reduced.matches) {
         if (!idleSince) idleSince = now;
         walkIdle(now);
       }
+
+      // A torch held over a participant should be concentric with it, not
+      // hanging off its edge, so within a participant's reach the light settles
+      // onto the exact centre. It is eased rather than snapped because the
+      // pointer crosses that reach on the way to somewhere else more often than
+      // it stops in it, and a jump on every near miss would read as a fault.
+      const near = nearest(aim);
+      const over = near.index >= 0 && near.distance <= ARRIVE;
+      if (over) onto = near.index;
+      const elapsed = lastFrame ? Math.min(now - lastFrame, 50) : 0;
+      lastFrame = now;
+      // Reduced motion gets the centring and none of the travel to it.
+      settled = reduced.matches
+        ? Number(over)
+        : settled + ((over ? 1 : 0) - settled) * (1 - Math.exp(-elapsed / 90));
+      const anchor = places[onto];
+      // Released, `settled` runs back down to zero and the courier is the
+      // pointer again, wherever the pointer has got to by then.
+      courier =
+        anchor && settled > 0.001
+          ? {
+              x: aim.x + (anchor.x - aim.x) * settled,
+              y: aim.y + (anchor.y - aim.y) * settled,
+            }
+          : aim;
+
       deliver(now);
 
       context.clearRect(0, 0, width, height);
@@ -268,20 +337,42 @@ export default function NetworkWeb(): React.ReactNode {
           courier.y,
           REACH * 1.5,
         );
-        // Four stops on a curve rather than two on a line: a linear ramp still
-        // shows where it ends. The last stop is the same colour at zero alpha.
-        glow.addColorStop(0, `rgba(${channels}, 0.16)`);
-        glow.addColorStop(0.35, `rgba(${channels}, 0.07)`);
-        glow.addColorStop(0.7, `rgba(${channels}, 0.02)`);
-        glow.addColorStop(1, `rgba(${channels}, 0)`);
+        // Stops on a curve rather than two on a line: a linear ramp still shows
+        // where it ends. The last stop is the same colour at zero alpha.
+        //
+        // Dark mode carries an even haze across the whole reach, which is what
+        // makes it read as ambient light. Light mode front loads the same reach
+        // into a small bright centre that has fallen to almost nothing by a
+        // third of the way out, because on a pale page a torch is read from its
+        // core and an even wash of that size is exactly the stain.
+        const stops = dark
+          ? [
+              [0, 0.16],
+              [0.35, 0.07],
+              [0.7, 0.02],
+              [1, 0],
+            ]
+          : [
+              [0, 0.34],
+              [0.13, 0.15],
+              [0.36, 0.05],
+              [0.7, 0.012],
+              [1, 0],
+            ];
+        for (const [at, alpha] of stops) {
+          glow.addColorStop(at, `rgba(${torch}, ${alpha})`);
+        }
         context.globalAlpha = 1;
         context.fillStyle = glow;
         context.beginPath();
         context.arc(courier.x, courier.y, REACH * 1.5, 0, Math.PI * 2);
         context.fill();
 
+        // The filament. It takes the torch colour rather than the accent, so
+        // in light mode the very centre is the brightest, most saturated point
+        // on the page and the glow has something to be the glow of.
         context.globalAlpha = 0.9;
-        context.fillStyle = colour;
+        context.fillStyle = `rgb(${torch})`;
         context.beginPath();
         context.arc(courier.x, courier.y, 3.5, 0, Math.PI * 2);
         context.fill();
@@ -308,7 +399,7 @@ export default function NetworkWeb(): React.ReactNode {
 
     const onPointer = (event: PointerEvent) => {
       const box = canvas.getBoundingClientRect();
-      courier = {x: event.clientX - box.left, y: event.clientY - box.top};
+      aim = {x: event.clientX - box.left, y: event.clientY - box.top};
       lastMove = performance.now();
       idleSince = 0;
     };
@@ -329,18 +420,24 @@ export default function NetworkWeb(): React.ReactNode {
   }, []);
 
   return (
-    <div className="network-web" ref={wrapRef} aria-hidden="true">
-      <canvas className="network-web__canvas" ref={canvasRef} />
-      {PARTICIPANTS.map(({id, label, Icon, x, y, small}) => (
-        <span
-          key={id}
-          data-participant={id}
-          className={`network-node${small ? '' : ' network-node--wide'}`}
-          style={{left: `${x}%`, top: `${y}%`}}>
-          <Icon className="network-node__icon" strokeWidth={1.5} />
-          <span className="network-node__label">{label}</span>
-        </span>
-      ))}
+    <div className="network-web" ref={wrapRef}>
+      {/* The web itself is decoration. The nodes on top of it are not: each
+          one is the participant's page, so the picture is a way into the
+          documentation rather than an illustration of it. */}
+      <canvas className="network-web__canvas" ref={canvasRef} aria-hidden="true" />
+      <nav className="network-web__nodes" aria-label="Who takes part in ABDM">
+        {PARTICIPANTS.map(({id, label, Icon, x, y, small}) => (
+          <Link
+            key={id}
+            to={`/docs/hiecm/v3/concepts/participants/${id}`}
+            data-participant={id}
+            className={`network-node${small ? '' : ' network-node--wide'}`}
+            style={{left: `${x}%`, top: `${y}%`}}>
+            <Icon className="network-node__icon" strokeWidth={1.5} aria-hidden="true" />
+            <span className="network-node__label">{label}</span>
+          </Link>
+        ))}
+      </nav>
     </div>
   );
 }

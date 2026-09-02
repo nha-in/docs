@@ -1,4 +1,4 @@
-import {existsSync, readFileSync, readdirSync} from 'node:fs';
+import {readFileSync, readdirSync} from 'node:fs';
 import {join} from 'node:path';
 import {themes as prismThemes} from 'prism-react-renderer';
 import type {Config} from '@docusaurus/types';
@@ -113,13 +113,6 @@ function useCaseGroups(moduleDir: string): any[] {
   );
 }
 
-/** True when a module folder carries its own hand-written APIs page. */
-function hasApisDoc(moduleDir: string): boolean {
-  return ['mdx', 'md'].some((ext) =>
-    existsSync(join(__dirname, 'docs', `${moduleDir}/apis.${ext}`)),
-  );
-}
-
 /**
  * Swap every generated endpoints folder for one APIs category holding the
  * module's use-case groups.
@@ -135,31 +128,20 @@ function spliceEndpoints(items: any[]): any[] {
     const id = firstDocId(item);
     if (item.label === 'Endpoints' && id && id.includes('/endpoints/')) {
       const moduleDir = id.slice(0, id.indexOf('/endpoints/'));
-      return [
-        {
-          type: 'category',
-          label: 'APIs',
-          collapsed: false,
-          // Where the module has an APIs page, the category header opens it
-          // rather than sitting beside it as a second entry with the same name.
-          ...(hasApisDoc(moduleDir)
-            ? {link: {type: 'doc', id: `${moduleDir}/apis`}}
-            : {}),
-          items: useCaseGroups(moduleDir),
-        },
-      ];
+      // The use cases sit directly under the module. They used to sit inside
+      // a category called APIs, which put a click between the module and its
+      // operations and read as a second "APIs" beneath the one above it.
+      // Errors stays their sibling, so a reader after failures does not open
+      // the operations to find it.
+      return useCaseGroups(moduleDir);
     }
     return [{...item, items: spliceEndpoints(item.items ?? [])}];
   });
-  // The APIs page is now the category's link, so drop the loose doc entry.
-  const linked = new Set(
-    out
-      .filter((i: any) => i.type === 'category' && i.label === 'APIs' && i.link?.id)
-      .map((i: any) => i.link.id),
-  );
-  return linked.size === 0
-    ? out
-    : out.filter((i: any) => !(i.type === 'doc' && linked.has(i.id)));
+  // A module's own APIs page keeps its place, set by its front matter, but
+  // not its name: "APIs" read as a category header and reads as nothing at
+  // all sitting among use cases. It holds the rules that hold across every
+  // endpoint of the module, so it is named for that.
+  return out;
 }
 
 async function sidebarItemsGenerator({defaultSidebarItemsGenerator, ...args}: any) {
@@ -177,7 +159,12 @@ async function sidebarItemsGenerator({defaultSidebarItemsGenerator, ...args}: an
     });
   }
   if (dirName.endsWith('/api')) {
-    return spliceEndpoints(items);
+    // The index is the section header's own link (see site/sidebars.ts), so
+    // listing it again beneath itself is the extra click this removes.
+    const withoutIndex = items.filter(
+      (item: any) => !(item.type === 'doc' && item.id === `${dirName}/index`),
+    );
+    return spliceEndpoints(withoutIndex);
   }
   return items;
 }
