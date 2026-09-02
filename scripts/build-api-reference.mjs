@@ -81,6 +81,13 @@ function deref(spec, node, depth = 0) {
   return out;
 }
 
+// The identifiers ABDM never takes raw. In an M1 request body each is RSA
+// encrypted against NHA's public key before it is sent, so the try-it console
+// takes the raw value and encrypts it in the browser. This list scopes that
+// treatment; `fields()` only ever walks request bodies, so a `loginId` in a
+// response is never in this set. See catalogue/hiecm/concepts/input-encryption.
+const ENCRYPTED_FIELDS = new Set(['loginId', 'aadhaar', 'otpValue', 'password']);
+
 /** Flatten a JSON schema into rows a table can render, two levels deep. */
 function fields(schema, prefix = '', depth = 0) {
   if (!schema || depth > 3) return [];
@@ -98,6 +105,7 @@ function fields(schema, prefix = '', depth = 0) {
       description: property.description ?? '',
       enum: property.enum,
       format: property.format,
+      encrypted: property['x-abdm-encrypted'] === true || ENCRYPTED_FIELDS.has(name),
     });
     const child = property.type === 'array' ? property.items : property;
     if (child?.properties) {

@@ -16,6 +16,8 @@ import {CopyButton} from './ApiEndpoint';
 import type {BodyNode} from './body';
 import {compose, leaves, seed, toTree} from './body';
 import {curlFrom} from './curl';
+import type {Padding} from './rsa';
+import {encryptValue, paddingFromAlgorithm} from './rsa';
 import {
   consentManagerFor,
   findToken,
@@ -25,6 +27,12 @@ import {
   subscribeToken,
   writeToken,
 } from './session';
+
+// The V3 public certificate lives at this path under the M1 server. It is the
+// key that encrypts the identifiers in an M1 request body, and its response
+// names its own algorithm. Only M1 request bodies carry encrypted fields, so
+// this is the only certificate the console fetches.
+const CERT_PATH = '/v3/profile/public/certificate';
 
 /** Refresh REQUEST-ID/TIMESTAMP in a header map, leaving everything else as typed. */
 function withFreshGenerated(current: Record<string, string>): Record<string, string> {
@@ -176,6 +184,65 @@ export default function TryIt({operation}: {operation: Operation}) {
   const [tab, setTab] = useState<string>(() => operation.responses[0]?.status ?? 'live');
   const [result, setResult] = useState<Result>({state: 'idle'});
 
+  // Encryption. The console encrypts the marked fields in the browser before
+  // sending, so the reader types a raw mobile number or OTP rather than a
+  // ciphertext. The key comes from the server (which also states its algorithm)
+  // or is pasted; a reader who already holds ciphertext turns encryption off.
+  const hasEncrypted = useMemo(
+    () => leaves(operation.body).some((field) => field.encrypted),
+    [operation],
+  );
+  const [keySource, setKeySource] = useState<'server' | 'paste'>('server');
+  const [pastedKey, setPastedKey] = useState('');
+  const [pastePadding, setPastePadding] = useState<Padding>('oaep-sha1');
+  const [serverKey, setServerKey] = useState<{key: string; padding: Padding} | null>(null);
+  const [keyState, setKeyState] = useState<'idle' | 'fetching' | 'ready' | 'error'>('idle');
+  const [keyError, setKeyError] = useState('');
+  const [sendAsTyped, setSendAsTyped] = useState(false);
+
+  // A fetched key belongs to the server it came from. Change server, drop it.
+  useEffect(() => {
+    setServerKey(null);
+    setKeyState('idle');
+    setKeyError('');
+  }, [server]);
+
+  /** The key and padding to encrypt with now, or null when none is ready. */
+  function activeKey(): {key: string; padding: Padding} | null {
+    if (keySource === 'paste') {
+      return pastedKey.trim() ? {key: pastedKey, padding: pastePadding} : null;
+    }
+    return serverKey;
+  }
+
+  async function fetchKey() {
+    setKeyState('fetching');
+    setKeyError('');
+    try {
+      const requestHeaders: Record<string, string> = {
+        ...perRequestHeaders(),
+        'X-CM-ID': consentManagerFor(server),
+        Accept: 'application/json',
+      };
+      if (token) requestHeaders.Authorization = `Bearer ${token}`;
+      const response = await fetch(`${server}${CERT_PATH}`, {headers: requestHeaders});
+      if (!response.ok) {
+        throw new Error(
+          response.status === 401
+            ? 'the certificate call needs a token; run the gateway session first'
+            : `the certificate call returned ${response.status}`,
+        );
+      }
+      const data = await response.json();
+      if (!data.publicKey) throw new Error('the response carried no publicKey');
+      setServerKey({key: data.publicKey, padding: paddingFromAlgorithm(data.encryptionAlgorithm)});
+      setKeyState('ready');
+    } catch (error) {
+      setKeyState('error');
+      setKeyError(error instanceof Error ? error.message : 'the certificate call failed');
+    }
+  }
+
   // Another panel, or another page in this tab, may set the token first.
   useEffect(() => subscribeToken(setToken), []);
 
@@ -214,11 +281,42 @@ export default function TryIt({operation}: {operation: Operation}) {
   const rawErrorId = `try-${operation.id}-body-error`;
   const bodyHintId = `try-${operation.id}-body-hint`;
 
-  /** The body that will actually go out, whichever editor is in front. */
+  /** The preview body. Encrypted fields show a marker, not the raw value or a
+      one-shot ciphertext, so the reader sees that encryption happens on send. */
   function bodyText(): string {
     if (!hasBody) return '';
     if (mode === 'raw') return raw;
-    const composed = compose(operation.body, values);
+    const shown = {...values};
+    if (hasEncrypted && !sendAsTyped) {
+      for (const field of leaves(operation.body)) {
+        if (field.encrypted && values[field.name]) {
+          shown[field.name] = `<ENCRYPTED ${field.name.split('.').pop()}>`;
+        }
+      }
+    }
+    const composed = compose(operation.body, shown);
+    return Object.keys(composed).length ? JSON.stringify(composed) : '';
+  }
+
+  /** The body that actually goes out: the marked fields encrypted for real. */
+  async function outgoingBody(): Promise<string> {
+    if (!hasBody) return '';
+    if (mode === 'raw') return raw;
+    const effective = {...values};
+    if (hasEncrypted && !sendAsTyped) {
+      const key = activeKey();
+      for (const field of leaves(operation.body)) {
+        if (field.encrypted && values[field.name]) {
+          if (!key) {
+            throw new Error(
+              'Fetch or paste a public key to encrypt the marked fields, or turn encryption off if the values are already encrypted.',
+            );
+          }
+          effective[field.name] = await encryptValue(key.key, key.padding, values[field.name]);
+        }
+      }
+    }
+    const composed = compose(operation.body, effective);
     return Object.keys(composed).length ? JSON.stringify(composed) : '';
   }
 
@@ -309,13 +407,17 @@ export default function TryIt({operation}: {operation: Operation}) {
         </div>
       );
     }
+    const isEncrypted = Boolean(node.field.encrypted) && !sendAsTyped;
     return (
       <Row
         key={node.field.name}
         id={`try-${operation.id}-body-${node.field.name}`}
         field={{...node.field, name: node.leaf}}
         value={values[node.field.name] ?? ''}
-        placeholder={ghosts[node.field.name]}
+        badge={isEncrypted ? 'encrypted on send' : undefined}
+        placeholder={
+          isEncrypted ? `enter ${node.leaf} raw, it is encrypted on send` : ghosts[node.field.name]
+        }
         depth={depth}
         onChange={(next) =>
           setValues((current) => ({...current, [node.field.name]: next}))
@@ -340,7 +442,7 @@ export default function TryIt({operation}: {operation: Operation}) {
         if (value) sent[name] = value;
       }
       if (hasAuth && token) sent.Authorization = `Bearer ${token}`;
-      const payload = bodyText();
+      const payload = await outgoingBody();
       if (hasBody && payload) sent['Content-Type'] = 'application/json';
 
       const response = await fetch(requestUrl(), {
@@ -559,6 +661,95 @@ export default function TryIt({operation}: {operation: Operation}) {
                   }
                 />
               ))}
+            </Group>
+          ) : null}
+
+          {hasEncrypted ? (
+            <Group title="Encryption" count={undefined}>
+              <p className="api-console__note">
+                The marked fields are RSA encrypted in your browser before the request
+                is sent. Type the raw value. Nothing sensitive leaves this page except
+                the ciphertext.
+              </p>
+              <div className="api-console__enc-source" role="radiogroup" aria-label="Public key">
+                <label>
+                  <input
+                    type="radio"
+                    name={`enc-${operation.id}`}
+                    checked={keySource === 'server'}
+                    onChange={() => setKeySource('server')}
+                  />
+                  Fetch the key from this server
+                </label>
+                <label>
+                  <input
+                    type="radio"
+                    name={`enc-${operation.id}`}
+                    checked={keySource === 'paste'}
+                    onChange={() => setKeySource('paste')}
+                  />
+                  Paste a public key
+                </label>
+              </div>
+
+              {keySource === 'server' ? (
+                <div className="api-console__enc-row">
+                  <button
+                    type="button"
+                    className="api-console__enc-fetch"
+                    onClick={fetchKey}
+                    disabled={keyState === 'fetching'}>
+                    {keyState === 'fetching' ? 'Fetching...' : serverKey ? 'Refetch key' : 'Fetch key'}
+                  </button>
+                  <span className="api-console__enc-status">
+                    {keyState === 'ready' && serverKey
+                      ? `Ready, ${serverKey.padding === 'oaep-sha1' ? 'OAEP SHA-1' : 'PKCS#1 v1.5'}`
+                      : keyState === 'error'
+                        ? keyError
+                        : 'Needs a token; run the gateway session first.'}
+                  </span>
+                </div>
+              ) : (
+                <>
+                  <textarea
+                    className="api-console__input api-console__textarea"
+                    rows={4}
+                    spellCheck={false}
+                    value={pastedKey}
+                    placeholder="PEM or base64 DER public key"
+                    onChange={(event) => setPastedKey(event.target.value)}
+                  />
+                  <div className="api-console__enc-source" role="radiogroup" aria-label="Padding">
+                    <label>
+                      <input
+                        type="radio"
+                        name={`pad-${operation.id}`}
+                        checked={pastePadding === 'oaep-sha1'}
+                        onChange={() => setPastePadding('oaep-sha1')}
+                      />
+                      OAEP SHA-1 (V3)
+                    </label>
+                    <label>
+                      <input
+                        type="radio"
+                        name={`pad-${operation.id}`}
+                        checked={pastePadding === 'pkcs1v15'}
+                        onChange={() => setPastePadding('pkcs1v15')}
+                      />
+                      PKCS#1 v1.5 (older families)
+                    </label>
+                  </div>
+                </>
+              )}
+
+              <label className="api-console__enc-typed">
+                <input
+                  type="checkbox"
+                  checked={sendAsTyped}
+                  onChange={(event) => setSendAsTyped(event.target.checked)}
+                />
+                My values are already encrypted, send as typed
+              </label>
             </Group>
           ) : null}
 

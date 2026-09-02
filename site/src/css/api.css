@@ -1216,3 +1216,55 @@ label.api-console__ident {
     order: -1;
   }
 }
+
+/* The encryption group: key source, fetch status, and the already-encrypted
+   escape hatch. Reuses the console's own input and badge styles. */
+.api-console__enc-source {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin: 0.5rem 0;
+  font-size: 0.85rem;
+}
+
+.api-console__enc-source label,
+.api-console__enc-typed {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  cursor: pointer;
+}
+
+.api-console__enc-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 0.5rem 0;
+  flex-wrap: wrap;
+}
+
+.api-console__enc-fetch {
+  padding: 0.4rem 0.85rem;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-control);
+  background: var(--ifm-font-color-base);
+  color: var(--ifm-background-color);
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.api-console__enc-fetch:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.api-console__enc-status {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+}
+
+.api-console__enc-typed {
+  margin-top: 0.75rem;
+  font-size: 0.85rem;
+}
