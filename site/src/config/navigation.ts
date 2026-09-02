@@ -90,6 +90,24 @@ export function activePlatform(pathname: string): Platform | undefined {
 }
 
 /**
+ * True when a route belongs to the API side of a gateway.
+ *
+ * The API side is two folders, `api/` and `reference/` (see site/sidebars.ts,
+ * which splits the sidebars on exactly those). Both are matched as whole path
+ * segments, at the end of a path as well as in the middle, so a section index
+ * such as `/docs/hiecm/v3/api` counts the same as a page beneath it.
+ *
+ * One predicate, exported, because this question is asked in more than one
+ * place: the tab strip asks it to light the right tab, and the sidebar asks it
+ * to decide whether to offer the version. They answered it differently once,
+ * which is how a reference page lit the Docs tab while its sidebar showed the
+ * API tree.
+ */
+export function isApiRoute(pathname: string): boolean {
+  return /\/(api|reference)(\/|$)/.test(pathname);
+}
+
+/**
  * Which tab a route belongs to. The two short tabs own their own prefixes.
  * Everything else under a gateway is either its API section or its overview.
  */
@@ -104,7 +122,7 @@ export function activeTab(pathname: string): Tab | undefined {
   }
   const platform = activePlatform(pathname);
   if (platform) {
-    return pathname.startsWith(`${platform.to}/api`)
+    return isApiRoute(pathname)
       ? tabs.find((tab) => tab.id === 'api')
       : tabs.find((tab) => tab.id === 'overview');
   }
