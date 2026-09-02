@@ -4,7 +4,7 @@ sidebar_label: Architecture
 description: How the registries, the HIE-CM gateway and the HIP, HIU and PHR roles fit together, and where a health record actually lives.
 verification: unverified
 source: ABDM__Proposed_Simplified_Milestone_1.md, ABDM__Proposed_Simplified_Milestone_2.md, ABDM__Proposed_Simplified_Milestone_3.md, ABDM__Proposed_Simplified_Milestone_4_(NHPR).md
-sidebar_position: 1
+sidebar_position: 2
 ---
 
 # Architecture

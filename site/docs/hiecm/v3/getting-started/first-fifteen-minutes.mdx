@@ -1,0 +1,105 @@
+---
+title: Your first fifteen minutes
+sidebar_label: Your first fifteen minutes
+description: The honest quick win before NHA approves your sandbox registration. Nothing but a browser, one recorded exchange, your first call ready to paste.
+verification: unverified
+source: site/src/data/api/gateway-sessions-create.json, catalogue/openapi/hiecm/v3/hiecm-gateway.yaml
+sidebar_position: 1
+covers: [shared.sandbox.first-fifteen-minutes]
+---
+
+import SandboxAction from '@site/src/components/docs/SandboxAction';
+
+# Your first fifteen minutes
+
+Nothing on this portal runs a live call before [NHA](/docs/hiecm/v3/getting-started/glossary#nha)
+approves your sandbox registration, and NHA does not publish how long that review takes. Rather
+than pretend otherwise, this page gives you the honest quick win: about fifteen minutes, nothing
+but a browser, one complete recorded exchange, and your own first call assembled and waiting.
+
+## 1. Register in the sandbox app, about 2 minutes
+
+This starts NHA's review clock, so do it first.
+
+<SandboxAction action="register">Register on the sandbox</SandboxAction>
+
+The wait that follows is the one step nothing here can shorten. See
+[Sandbox access](/docs/hiecm/v3/getting-started/sandbox) for what to read while you wait.
+
+## 2. Read one recorded exchange, about 5 minutes
+
+Below is the gateway session call, the one every other
+[ABDM](/docs/hiecm/v3/getting-started/glossary#abdm) call depends on, exactly as it appears in
+NHA's Postman collection. It is **recorded from NHA's collection, not run live**: nobody has
+executed this exact call from this repository.
+
+Method and path: `POST /api/hiecm/gateway/v3/sessions`, sandbox host `https://dev.abdm.gov.in`.
+
+| Header | Value in the recording |
+| --- | --- |
+| `REQUEST-ID` | `5f7a4a1e-59ba-4c0c-9e0c-8e6b3b6e2f11` |
+| `TIMESTAMP` | `2026-08-25T15:51:15.339Z` |
+| `Content-Type` | `application/json` |
+
+```bash
+curl --request POST \
+  --url https://dev.abdm.gov.in/api/hiecm/gateway/v3/sessions \
+  --header 'REQUEST-ID: 5f7a4a1e-59ba-4c0c-9e0c-8e6b3b6e2f11' \
+  --header 'TIMESTAMP: 2026-08-25T15:51:15.339Z' \
+  --header 'X-CM-ID: <X_CM_ID>' \
+  --header 'Content-Type: application/json' \
+  --data '{
+  "clientId": "<CLIENT_ID>",
+  "clientSecret": "<CLIENT_SECRET>",
+  "grantType": "client_credentials"
+}'
+```
+
+A successful call answers `200`. NHA's collection describes it as "a session was created and a
+bearer token was issued" but carries no captured response body, only the field list:
+`accessToken`, `expiresIn`, `refreshExpiresIn`, `refreshToken` and `tokenType`. See the
+[gateway session reference](/reference/hiecm-gateway) for what each field means. This page does
+not invent a body NHA never recorded.
+
+## 3. Assemble your own first call, about 5 minutes
+
+The same request, with the credential placeholders named for where they come from:
+
+```bash
+curl --request POST \
+  --url https://dev.abdm.gov.in/api/hiecm/gateway/v3/sessions \
+  --header 'REQUEST-ID: <A_FRESH_UUID_YOU_GENERATE>' \
+  --header 'TIMESTAMP: <CURRENT_ISO_8601_UTC_TIMESTAMP>' \
+  --header 'X-CM-ID: sbx' \
+  --header 'Content-Type: application/json' \
+  --data '{
+  "clientId": "<CLIENT_ID_FROM_SANDBOX_REGISTRATION>",
+  "clientSecret": "<CLIENT_SECRET_FROM_SANDBOX_REGISTRATION>",
+  "grantType": "client_credentials"
+}'
+```
+
+Save it somewhere you can find it. When NHA emails your client id and client secret, filling
+in two placeholders is the only step left before your first real call.
+
+## How you know it worked
+
+For the recorded exchange: you can now say what the session endpoint returns and where the
+token goes on every later call, a `200` carrying `accessToken`, sent afterwards as
+`Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>`.
+
+For your own first call: `Not yet observed`. It stays that way until you run it, and running it
+needs credentials NHA has not issued yet.
+
+## When it goes wrong
+
+Registration questions, including how long the review is taking, go to
+[NHA's developer forum](https://devforum.abdm.gov.in) through the
+[Support](/docs/support) page.
+
+If your first real call fails with a 401 once you do have credentials, that is a different
+problem from registration. See
+[Everything returns 401](/docs/hiecm/v3/troubleshooting/everything-returns-401).
+
+While NHA reviews your registration, use the wait: [Sandbox access](/docs/hiecm/v3/getting-started/sandbox)
+has the reading path, picking your role and the milestone table.
