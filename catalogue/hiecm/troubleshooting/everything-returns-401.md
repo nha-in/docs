@@ -86,7 +86,7 @@ code that matches the checks above, escalate on the NHA dev forum.
 Report the API you called, the `REQUEST-ID` you sent, the `TIMESTAMP`
 you sent, and the full response body, not just the status.
 
-The errors this symptom most often turns out to be:
+The errors this symptom can surface:
 [ABDM-2402](../errors/abdm-2402.md), your clock is wrong;
 [ABDM-2403](../errors/abdm-2403.md), you are pointed at the wrong consent
 manager; [ABDM-2500](../errors/abdm-2500.md), you did not send a session

@@ -10,11 +10,12 @@ summary: >
   elsewhere, and collect the consent artefact ids once they grant it.
 sources:
   - file: catalogue/openapi/hiecm/v3/hiecm-m3.yaml
-    fetched: 2026-09-01
-    hash: sha256:44ca96103239452f37cbf42255be065d14c2bf1db3cade405a9f79c0efdea52a
+    fetched: 2026-09-02
+    hash: sha256:d8ef3bf185e046e5e95800915a24dffa860e9887a752c35f7501145b25338355
     note: >
-      NHA's M3 OpenAPI file as ingested on this branch. NHA's revised M3
-      specification is in flight on a colleague's pull request and is
+      NHA's M3 OpenAPI file as ingested on this branch. Recomputed after
+      commit a0364c139 retitled M3 summaries in this file. NHA's revised
+      M3 specification is in flight on a colleague's pull request and is
       not reflected here.
   - file: site/docs/hiecm/v3/concepts/consent.md
     fetched: 2026-09-01
