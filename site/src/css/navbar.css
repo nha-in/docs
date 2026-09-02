@@ -631,3 +631,8 @@
   letter-spacing: 0.04em;
   text-transform: uppercase;
 }
+
+.quick-actions__row--active {
+  background: var(--accent-soft);
+  color: var(--text-heading);
+}
