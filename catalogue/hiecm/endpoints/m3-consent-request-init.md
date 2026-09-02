@@ -4,7 +4,7 @@ type: endpoint
 gateway: hiecm
 milestone: M3
 version: abdm-v3
-title: Consent Init Request
+title: Initiate a consent request
 summary: >
   Initiates a new consent request for a patient's health records.  The
   Gateway notifies the patient via the ABHA App.

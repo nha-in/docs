@@ -4,7 +4,7 @@ type: endpoint
 gateway: hiecm
 milestone: M3
 version: abdm-v3
-title: Consent Request Status
+title: Check the status of a consent request
 summary: >
   Checks the current status of a previously initiated consent request.
   Can be polled periodically while awaiting patient action.  **Status

@@ -4,7 +4,7 @@ type: endpoint
 gateway: hiecm
 milestone: M3
 version: abdm-v3
-title: HIU Data Flow Notification, Notify Gateway data received
+title: Notify the gateway that data was received
 summary: >
   After receiving all FHIR health data at the `dataPushUrl`, the HIU
   calls this endpoint to notify the ABDM Gateway that the data

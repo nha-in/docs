@@ -4,7 +4,7 @@ type: endpoint
 gateway: hiecm
 milestone: M3
 version: abdm-v3
-title: Consent Fetch, Retrieve full consent artefact
+title: Fetch the full consent artefact
 summary: >
   Fetches the full consent artefact for a given consent artefact ID.
   Should be called after receiving the `on-notify` callback with

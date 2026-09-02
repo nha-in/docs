@@ -4,7 +4,7 @@ type: endpoint
 gateway: hiecm
 milestone: M2
 version: abdm-v3
-title: HIP Initiated Care Context Linking (Single or Multiple)
+title: Link care contexts to an ABHA address
 summary: >
   Links one or more care contexts (health records) to a patient's ABHA
   address. Use the same endpoint for both single and multiple care

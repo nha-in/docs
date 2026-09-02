@@ -86,9 +86,10 @@ paths:
     post:
       tags:
       - consent
-      summary: Consent Init Request
+      summary: Initiate a consent request
       operationId: m3_consent_request_init
       description: |
+        NHA's formal name: Consent Init Request.
         Initiates a new consent request for a patient's health records.
 
         The Gateway notifies the patient via the ABHA App. The patient can approve or deny.
@@ -195,9 +196,10 @@ paths:
     post:
       tags:
       - consent
-      summary: Consent Request Status
+      summary: Check the status of a consent request
       operationId: m3_consent_request_status
       description: |
+        NHA's formal name: Consent Request Status.
         Checks the current status of a previously initiated consent request.
         Can be polled periodically while awaiting patient action.
 
@@ -259,9 +261,10 @@ paths:
     post:
       tags:
       - consent
-      summary: Consent HIU On-Notify, Acknowledge consent notification
+      summary: Acknowledge a consent notification
       operationId: m3_consent_hiu_on_notify
       description: |
+        NHA's formal name: Consent HIU On-Notify.
         **Async Callback:** After ABDM Gateway sends a consent grant/deny notification to the HIU
         bridge URL (`{bridgeUrl}/v0.5/consents/hiu/notify`), the HIU calls this Gateway endpoint
         to acknowledge receipt.
@@ -308,9 +311,10 @@ paths:
     post:
       tags:
       - consent
-      summary: Consent Fetch, Retrieve full consent artefact
+      summary: Fetch the full consent artefact
       operationId: m3_consent_fetch
       description: |
+        NHA's formal name: Consent Fetch.
         Fetches the full consent artefact for a given consent artefact ID.
         Should be called after receiving the `on-notify` callback with status `GRANTED`.
 
@@ -366,9 +370,10 @@ paths:
     post:
       tags:
       - data-retrieval
-      summary: HIU Health Information Request
+      summary: Request a patient's health information
       operationId: m3_hiu_health_information_request
       description: |
+        NHA's formal name: HIU Health Information Request.
         Requests health data from the HIP for a specific consent artefact.
 
         The HIU must:
@@ -431,9 +436,10 @@ paths:
     post:
       tags:
       - data-retrieval
-      summary: HIU Data Flow Notification, Notify Gateway data received
+      summary: Notify the gateway that data was received
       operationId: m3_hiu_data_flow_notify
       description: |
+        NHA's formal name: HIU Data Flow Notification.
         After receiving all FHIR health data at the `dataPushUrl`, the HIU calls this endpoint
         to notify the ABDM Gateway that the data transfer session is complete.
 
