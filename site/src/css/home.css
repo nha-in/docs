@@ -317,9 +317,10 @@
 }
 
 
-/* ---------- the build question ----------
-   Asked above the gateway row: a visitor thinks in terms of what they are
-   building, not in HIE-CM / UHI / NHCX, ABDM's own org chart. */
+/* ---------- the gateway question ----------
+   Asked as intent, not as HIE-CM / UHI / NHCX, ABDM's own org chart: a
+   visitor knows what they are trying to build before they know which
+   gateway that maps to. One row, one card per gateway. */
 .landing-hero__goals {
   margin-top: 2rem;
   display: flex;
@@ -338,97 +339,58 @@
 .landing-hero__goals-list {
   display: flex;
   flex-wrap: wrap;
-  align-items: center;
+  align-items: stretch;
   justify-content: center;
-  gap: 0.625rem;
+  gap: 1rem;
 }
 
+/* A real card: padding to breathe in, a border to hold its own shape against
+   the network behind it, and a lift on hover so it reads as pressable
+   without turning into a button. */
 .landing-hero__goal {
-  display: inline-flex;
-  align-items: center;
-  height: 2.25rem;
-  padding: 0 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.625rem;
+  width: 14rem;
+  padding: 1.125rem 1.25rem;
   border: 1px solid var(--border);
-  border-radius: 999px;
+  border-radius: 0.75rem;
   background: var(--surface-sunken);
-  color: var(--text-body);
-  font-size: 0.875rem;
-  font-weight: 500;
   text-decoration: none;
-  transition: color 150ms ease, border-color 150ms ease, background-color 150ms ease;
+  transition: color 150ms ease, border-color 150ms ease, background-color 150ms ease,
+    transform 150ms ease;
+}
+
+.landing-hero__goal-intent {
+  font-size: 0.9375rem;
+  font-weight: 500;
+  line-height: 1.4;
+  color: var(--text-body);
+}
+
+.landing-hero__goal-short {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--text-muted);
 }
 
 .landing-hero__goal:hover {
-  color: var(--accent);
   border-color: var(--accent-line);
   background: var(--accent-soft);
+  transform: translateY(-2px);
   text-decoration: none;
+}
+
+.landing-hero__goal:hover .landing-hero__goal-intent,
+.landing-hero__goal:hover .landing-hero__goal-short {
+  color: var(--accent);
 }
 
 .landing-hero__goal:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 2px;
-}
-
-.landing-hero__ways-label {
-  margin: 2rem 0 0;
-  font-size: 0.8125rem;
-  color: var(--text-muted);
-}
-
-.landing-hero__ways {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: center;
-  /* Room for the interpunct to sit in, and for the pair either side of it to
-     breathe. */
-  gap: 2.75rem;
-  margin-top: 0.5rem;
-}
-
-/* Plain links, separated by interpuncts. They were chips for a moment and
-   read as three buttons crowding the one real call to action above them;
-   as text they sit back where they belong. Sage and bold on hover, so the
-   pointer still says they are pressable. */
-.landing-hero__way {
-  position: relative;
-  font-size: 0.9375rem;
-  font-weight: 500;
-  color: var(--text-body);
-  text-decoration: none;
-  transition: color 150ms ease;
-}
-
-.landing-hero__way:hover {
-  color: var(--accent);
-  font-weight: 700;
-  text-decoration: none;
-}
-
-.landing-hero__way:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
-}
-
-/* The interpunct sits in the gap rather than in either link, so it is not
-   part of the hit area and does not turn sage with its neighbour.
-
-   Sage, and larger than the text it separates. At the body size in
-   --text-faint it was a speck; a middot is a small glyph to begin with, so it
-   needs the size to register as a deliberate mark rather than as dirt on the
-   screen. Vertically centred by hand: a raised middot sits high in its own
-   line box, and scaling it up exaggerates that. */
-.landing-hero__way + .landing-hero__way::before {
-  content: '·';
-  position: absolute;
-  left: -1.5rem;
-  top: 50%;
-  transform: translateY(-50%);
-  font-size: 1.5rem;
-  line-height: 1;
-  font-weight: 700;
-  color: var(--accent);
 }
 
 /* ---------- narrow ---------- */

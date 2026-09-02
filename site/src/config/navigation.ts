@@ -57,7 +57,7 @@ export type TabId = 'overview' | 'api' | 'whats-new' | 'support';
 // The default platform is the picker's first entry; a tab opened with no
 // gateway chosen lands there.
 export const tabs: Tab[] = [
-  {id: 'overview', label: 'Overview', to: platforms[0].to, match: '/docs/'},
+  {id: 'overview', label: 'Docs', to: platforms[0].to, match: '/docs/'},
   {id: 'api', label: 'API references', to: platforms[0].apiTo, match: '/api'},
   {id: 'whats-new', label: "What's new", to: '/docs/whats-new', match: '/docs/whats-new'},
   {id: 'support', label: 'Support', to: '/docs/support', match: '/docs/support'},

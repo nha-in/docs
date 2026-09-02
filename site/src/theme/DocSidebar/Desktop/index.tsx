@@ -31,10 +31,17 @@ function DocSidebarDesktop({path, sidebar, onCollapse, isHidden}: Props) {
   // Docusaurus behaviour on a smaller list.
   const scoped = useRoleScopedSidebar(sidebar);
 
+  // The version and role picker only makes sense once a reader knows which
+  // API they are calling. On the overview sidebar, where they are assumed
+  // not to know their role yet, it is out of place. Sidebars split on the
+  // api/ and reference/ folders (site/sidebars.ts), and `path` is the doc's
+  // own route, so the folder segment says which sidebar this is.
+  const onApiSidebar = /\/(api|reference)\//.test(path);
+
   return (
     <div className={clsx('docs-sidebar', isHidden && 'docs-sidebar--hidden')}>
       <div className="docs-sidebar__head">
-        <SidebarPickers />
+        {onApiSidebar && <SidebarPickers />}
         {hideable && <CollapseButton onClick={onCollapse} />}
       </div>
       <Content path={path} sidebar={scoped} />
