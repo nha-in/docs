@@ -4,7 +4,7 @@ type: endpoint
 gateway: hiecm
 milestone: M2
 version: abdm-v3
-title: SMS Deep Link Notify
+title: Send an SMS with a deep link to the ABHA App
 summary: >
   Requests ABDM to send an SMS to a patient's mobile number containing
   a deep link to download/open the ABHA App.

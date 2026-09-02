@@ -3039,9 +3039,10 @@ paths:
     post:
       tags:
       - Scan & Share
-      summary: '[HIP Callback] Receive Patient Profile Share'
+      summary: Receive a patient's shared profile
       operationId: m1_receive_patient_share
       description: |
+        NHA's formal name: [HIP Callback] Receive Patient Profile Share.
         **This endpoint is implemented by the HIP**, the ABDM Gateway forwards the
         patient's profile to the HIP's registered callback URL when the patient
         scans the HIP's QR code and consents to share their profile.

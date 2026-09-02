@@ -4,7 +4,7 @@ type: endpoint
 gateway: hiecm
 milestone: M1
 version: abdm-v3
-title: "[HIP Callback] Receive Patient Profile Share"
+title: Receive a patient's shared profile
 summary: >
   **This endpoint is implemented by the HIP**, the ABDM Gateway
   forwards the patient's profile to the HIP's registered callback URL
