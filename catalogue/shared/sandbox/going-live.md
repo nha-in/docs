@@ -84,8 +84,8 @@ NHA rather than something published.
 You hold production credentials: a production client id and client secret, issued after the
 exit process completes. They are not the same values as your sandbox credentials.
 
-You also switch base URLs. The [M1 overview page](/docs/hiecm/v3/api/m1) records the sandbox
-and production hosts side by side. For the gateway session call, sandbox is
+You also switch base URLs. The [gateway concept page](/docs/hiecm/v3/concepts/gateway) records
+the sandbox and production hosts side by side. For the gateway session call, sandbox is
 `https://dev.abdm.gov.in` with `X-CM-ID: sbx`, and production is `https://apis.abdm.gov.in`
 with `X-CM-ID: abdm`. For the [ABHA](../glossary/abha.md) service, sandbox is
 `https://abhasbx.abdm.gov.in/abha/api/v3/` and production is

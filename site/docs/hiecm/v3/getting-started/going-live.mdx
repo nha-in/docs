@@ -8,8 +8,6 @@ sidebar_position: 9
 covers: [shared.sandbox.going-live]
 ---
 
-import SandboxAction from '@site/src/components/docs/SandboxAction';
-
 # Going live
 
 Passing every milestone's functional tests in the sandbox is not the same as being live.
@@ -29,10 +27,6 @@ You also need the Safe to Host certificate NHA requires before production: a sec
 separate from anything functional, done by a CERT-In empanelled auditor, per
 [NHA's sandbox FAQ](https://sandbox.abdm.gov.in/sandbox/v3/faq). This portal does not yet have
 a page of its own on that audit; the FAQ above is the best available source until it does.
-
-Submit your milestone tests from the sandbox app when each milestone is ready:
-
-<SandboxAction action="milestoneTests">Submit milestone tests</SandboxAction>
 
 ## What happens
 
@@ -62,8 +56,8 @@ rather than something published here.
 You hold production credentials: a production client id and client secret, issued after the
 exit process completes. They are not the same values as your sandbox credentials.
 
-You also switch base URLs. The [M1 overview page](/docs/hiecm/v3/api/m1) records the sandbox
-and production hosts side by side. For the gateway session call, sandbox is
+You also switch base URLs. The [gateway concept page](/docs/hiecm/v3/concepts/gateway) records
+the sandbox and production hosts side by side. For the gateway session call, sandbox is
 `https://dev.abdm.gov.in` with `X-CM-ID: sbx`, and production is `https://apis.abdm.gov.in`
 with `X-CM-ID: abdm`. For the ABHA service, sandbox is
 `https://abhasbx.abdm.gov.in/abha/api/v3/` and production is
