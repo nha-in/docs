@@ -1,7 +1,7 @@
 ---
 title: PHR applications
 sidebar_label: PHR application
-sidebar_position: 2
+sidebar_position: 1
 description: The path through HIE-CM for a patient facing personal health record application.
 verification: unverified
 source: aarogya-setu.postman_collection.json, ABDM__NewDocumant_PHR_app.md
