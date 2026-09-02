@@ -9,6 +9,7 @@ covers: [shared.sandbox.registration-and-credentials, shared.sandbox.callback-ur
 ---
 
 import SandboxAction from '@site/src/components/docs/SandboxAction';
+import {sandboxLinks} from '@site/src/data/sandboxLinks';
 
 # Sandbox access
 
@@ -19,7 +20,7 @@ says what to do during it.
 
 ## 1. Register on the ABDM sandbox
 
-Create an account at [https://sandbox.abdm.gov.in](https://sandbox.abdm.gov.in) and register
+Create an account at <a href={sandboxLinks.home} target="_blank" rel="noopener noreferrer">the ABDM sandbox</a> and register
 your organisation. NHA's M4 document gives the same instruction in one line: to obtain a
 `clientId` and a `clientSecret`, register on the sandbox application.
 
