@@ -14,6 +14,57 @@ read or do.
 
 ## 2026-09-01
 
+### Troubleshooting organised by what you see, not by error code
+
+A new [Troubleshooting](/docs/hiecm/v3/troubleshooting/) section starts from the symptom in
+front of you: the callback never arrives, everything returns 401, the OTP never arrives,
+a call is accepted then nothing happens, a consent stays stuck in `Requested`. Each page
+works through the checks in order and names what counts as proof the fix worked. The
+[Error codes](/docs/hiecm/v3/reference/error-codes) reference now points here first for
+anyone who has a symptom rather than a code.
+
+### The M3 consent journey, drawn in three parts
+
+[M3 user journeys](/docs/hiecm/v3/api/m3/user-journey) draws the whole
+[consent](/docs/hiecm/v3/getting-started/glossary#consent-artefact) story as NHA's document
+tells it: raising a consent request, the patient granting or denying it, and fetching the
+records once an artefact exists. Two new flow atoms back the diagrams,
+`hiecm.flow.m3-request-consent` and `hiecm.flow.m3-fetch-records`, so the sequence you read
+here matches what the M3 API reference expects call by call.
+
+### A first fifteen minutes that needs nothing but a browser
+
+[Your first fifteen minutes](/docs/hiecm/v3/getting-started/first-fifteen-minutes) gives you
+something to do while NHA reviews your sandbox registration: one gateway session call
+transcribed from this repository's specification, and your own first call assembled with
+the credential placeholders named for where they come from. The transcribed request and
+response are read from the OpenAPI spec in this repository, not invented, and the page says
+plainly which parts are observed and which are not yet.
+
+### Going live, in NHA's own order
+
+[Going live](/docs/hiecm/v3/getting-started/going-live) states the sandbox exit process the
+way NHA's FAQ and integration and exit process page describe it, including the Safe to Host
+audit by a CERT-In empanelled auditor, and says plainly where NHA does not publish a detail
+instead of guessing one in.
+
+### Every doc page serves itself as markdown, for agents and people alike
+
+Every documentation route now has a "Copy page as Markdown" and "View as Markdown" button,
+and serves its own `index.md` alongside the rendered page. A repository-wide `llms.txt` and
+`llms-full.txt`, plus one `llms.txt` per module, are built on every release so an agent can
+retrieve exactly the page it needs without scraping HTML. See
+[Build with AI](/docs/hiecm/v3/getting-started/build-with-ai) for the skills and the
+[Docs MCP server](/docs/hiecm/v3/getting-started/mcp) built on the same content.
+
+### The homepage asks what you are trying to build
+
+The homepage now opens with "What are you trying to build?" and routes by that answer, a
+PHR app, a hospital or clinic system, a lab or pharmacy, an insurer, or not sure yet, before
+it offers the gateway list. Each goal lands on
+[What you can build](/docs/hiecm/v3/getting-started/what-you-can-build), which gives the
+role and the milestones for that kind of system.
+
 ### Seven PHR operations renamed off their Postman "Copy" suffix
 
 Seven operations in the P1 through P3 and PHR application services
