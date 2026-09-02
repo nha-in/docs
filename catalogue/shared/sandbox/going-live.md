@@ -40,9 +40,10 @@ related:
 
 ## In plain words
 
-Passing every milestone's functional tests in the sandbox is not the same as being live.
-Between the two sits an exit process [NHA](../glossary/nha.md) runs once, at the end, and it is
-separate from any one milestone's certification.
+NHA certifies each milestone your role needs individually; this catalogue does not document how
+a milestone is submitted for certification. Being certified on every milestone you need is not
+the same as being live. Between the two sits an exit process [NHA](../glossary/nha.md) runs
+once, at the end, and it is separate from any one milestone's certification.
 
 ## Before you start
 
