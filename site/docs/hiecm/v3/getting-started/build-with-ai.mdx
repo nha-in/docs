@@ -12,28 +12,43 @@ import {useLocation} from '@docusaurus/router';
 import AgentSetup from '@site/src/components/docs/AgentSetup';
 import SkillPicker from '@site/src/components/docs/SkillPicker';
 import McpInstall from '@site/src/components/docs/McpInstall';
+import {Badge} from '@site/src/components/ui/badge';
 import {Button} from '@site/src/components/ui/button';
 import {FileText, Sparkles} from 'lucide-react';
 
 # Build with AI
 
-Every fact on this site is a public URL: a skill your agent loads once, a server it queries live, or plain Markdown it can fetch directly. Pick what you need below.
+Every fact on this site is a public URL. There are three ways to put it in front of your agent, and they combine: most people connect the server and load the skill for the milestone they are on.
+
+<CardGroup cols={3}>
+  <Card title={<>Docs MCP server <Badge variant="secondary">Recommended</Badge></>} icon="server" href="#connect-the-docs-mcp-server">
+    This documentation live, queried a paragraph at a time as your agent works. It cannot go stale, because it is this site answering.
+  </Card>
+  <Card title="Agent skill" icon="file-text" href="#install-a-skill">
+    One file your agent loads once, carrying a whole milestone: every endpoint, header, error code and test. Works offline, and ages until you update it.
+  </Card>
+  <Card title="Markdown and llms.txt" icon="hash" href="#read-this-site-as-an-agent">
+    Every page as plain Markdown at its own URL, and the whole site in one file. No setup, nothing to install, and no retrieval either.
+  </Card>
+</CardGroup>
 
 ## Set up your agent in one step
 
+The fastest path: this connects the server and installs the skills together.
+
 <AgentSetup />
-
-## Install a skill
-
-One file per job. The module skills carry every endpoint, header, error code and test for that milestone; the FHIR skills are guided procedures for building or auditing NRCES compliant bundles.
-
-<SkillPicker />
 
 ## Connect the Docs MCP server
 
 A skill is a snapshot. The Docs MCP server is the same catalogue live, queried a paragraph at a time instead of loaded whole.
 
 <McpInstall />
+
+## Install a skill
+
+One file per job. The module skills carry every endpoint, header, error code and test for that milestone; the FHIR skills are guided procedures for building or auditing NRCES compliant bundles.
+
+<SkillPicker />
 
 ## Read this site as an agent
 
