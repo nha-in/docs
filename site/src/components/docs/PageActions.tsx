@@ -1,14 +1,7 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {useLocation} from '@docusaurus/router';
 import {Button} from '@site/src/components/ui/button';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '@site/src/components/ui/dropdown-menu';
-import {Bot, ChevronDown, Copy, ExternalLink, MessageSquare, Sparkles} from 'lucide-react';
+import {Bot, Copy, ExternalLink, MessageSquare, Sparkles} from 'lucide-react';
 
 type Status = 'idle' | 'copied' | 'unavailable';
 
@@ -26,17 +19,16 @@ const STATUS_TEXT: Record<Status, string> = {
 };
 
 /**
- * Copy the page's plain-Markdown source, view it directly, or hand it to an
- * assistant. All four external actions read the `index.md` a postbuild step
+ * One horizontal row of page actions on the title line: copy the page as
+ * Markdown, open it as Markdown, hand it to ChatGPT or Claude, or ask the
+ * site's own assistant. Every action reads the `index.md` a postbuild step
  * writes beside every route (see scripts/emit-page-markdown.mjs), so none of
  * it exists in `npm start`: the fetch 404s and the copy button reports
- * "unavailable" rather than failing silently. That is expected there, not a
- * bug.
+ * "unavailable" rather than failing silently. That is expected there.
  *
  * The URL is built from `pathname` alone, not `useBaseUrl`: `pathname`
  * already carries the site's base URL, and `useBaseUrl` would prefix it a
- * second time and 404 on any deployment with a non-root base (PR previews
- * set one via DOCUSAURUS_BASE_URL).
+ * second time and 404 on any deployment with a non-root base.
  */
 export default function PageActions(): React.ReactNode {
   const {pathname} = useLocation();
@@ -60,9 +52,8 @@ export default function PageActions(): React.ReactNode {
   }, [mdUrl]);
 
   // ChatGPT and Claude both take a prompt as a `q` search param and start a
-  // fresh chat with it. The URL has to be absolute, and only known once a
-  // browser is actually navigating to it, so it's built here rather than
-  // alongside `mdUrl` above.
+  // fresh chat with it. The URL has to be absolute, so it is built at click
+  // time from the browser's own origin.
   const openWith = useCallback(
     (origin: string) => {
       const absoluteMdUrl = window.location.origin + mdUrl;
@@ -74,62 +65,47 @@ export default function PageActions(): React.ReactNode {
 
   // Opens the site's own assistant. `chrome/AskAiBridge.tsx` listens for
   // this on window and sets `open` on the `<abdm-support-agent>` element in
-  // the top bar; dispatching the event rather than reaching for that
-  // element directly keeps this component from needing to know where the
-  // panel lives.
+  // the top bar.
   const askAi = useCallback(() => {
     window.dispatchEvent(
       new CustomEvent('abdm:ask-ai', {detail: {page: pathname, title: document.title}}),
     );
   }, [pathname]);
 
+  const cls = 'docs-page-actions__btn text-[13px]';
+
   return (
-    <div className="docs-page-actions">
-      <Button
-        variant="outline"
-        size="sm"
-        onClick={copy}
-        className="docs-page-actions__copy rounded-r-none text-[13px]">
+    <div className="docs-page-actions" role="group" aria-label="Page actions">
+      <Button variant="outline" size="sm" onClick={copy} className={cls}>
         <Copy className="size-3.5" aria-hidden="true" />
         {BUTTON_TEXT[status]}
       </Button>
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button
-            variant="outline"
-            size="icon-sm"
-            className="docs-page-actions__trigger -ml-px rounded-l-none"
-            aria-label="More page actions">
-            <ChevronDown className="size-3.5" aria-hidden="true" />
-          </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent align="end" className="w-56">
-          <DropdownMenuItem onSelect={copy}>
-            <Copy aria-hidden="true" />
-            Copy page
-          </DropdownMenuItem>
-          <DropdownMenuItem asChild>
-            <a href={mdUrl} target="_blank" rel="noopener noreferrer">
-              <ExternalLink aria-hidden="true" />
-              View as Markdown
-            </a>
-          </DropdownMenuItem>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem onSelect={() => openWith('https://chatgpt.com/')}>
-            <MessageSquare aria-hidden="true" />
-            Open in ChatGPT
-          </DropdownMenuItem>
-          <DropdownMenuItem onSelect={() => openWith('https://claude.ai/new')}>
-            <Bot aria-hidden="true" />
-            Open in Claude
-          </DropdownMenuItem>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem onSelect={askAi}>
-            <Sparkles aria-hidden="true" />
-            Ask AI
-          </DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
+      <Button variant="outline" size="sm" asChild className={cls}>
+        <a href={mdUrl} target="_blank" rel="noopener noreferrer">
+          <ExternalLink className="size-3.5" aria-hidden="true" />
+          View as Markdown
+        </a>
+      </Button>
+      <Button
+        variant="outline"
+        size="sm"
+        onClick={() => openWith('https://chatgpt.com/')}
+        className={cls}>
+        <MessageSquare className="size-3.5" aria-hidden="true" />
+        Open in ChatGPT
+      </Button>
+      <Button
+        variant="outline"
+        size="sm"
+        onClick={() => openWith('https://claude.ai/new')}
+        className={cls}>
+        <Bot className="size-3.5" aria-hidden="true" />
+        Open in Claude
+      </Button>
+      <Button variant="outline" size="sm" onClick={askAi} className={cls}>
+        <Sparkles className="size-3.5" aria-hidden="true" />
+        Ask AI
+      </Button>
       {/* Visually hidden but announced: a button's own label change is not
           reliably read out by a screen reader, so the result is also spoken
           through this live region. */}
