@@ -77,6 +77,16 @@ const TARGETS: Target[] = [
     note: 'Opens Cursor with the prompt in the composer. It fetches the current instructions from this site.',
   },
   {
+    id: 'chatgpt',
+    label: 'ChatGPT',
+    command: fetchPrompt,
+    // https://help.openai.com/en/articles/9955102 — chatgpt.com/?q=<text> opens
+    // a new chat with the text preloaded. Nothing sends until Enter, same as
+    // the other deeplinks here.
+    link: (base) => `https://chatgpt.com/?q=${encodeURIComponent(guarded(fetchPrompt(base)))}`,
+    note: 'Opens ChatGPT with the setup preloaded. It fetches the current instructions from this site.',
+  },
+  {
     id: 'codex',
     label: 'Codex',
     command: fetchPrompt,

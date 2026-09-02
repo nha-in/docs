@@ -506,6 +506,23 @@ body.is-resizing-sidebar {
   flex-wrap: wrap;
 }
 
+.skill-picker__all {
+  margin-top: -1.25rem;
+}
+
+.skill-picker__all-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.25rem;
+  margin: 0.75rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.markdown .skill-picker__all-list a {
+  font-size: 0.875rem;
+}
+
 /* ---------- the agent setup band ----------
    One prompt, copied whole into any agent. It opens the Build with AI page,
    so the shortest path comes first. */
@@ -594,6 +611,40 @@ body.is-resizing-sidebar {
   color: var(--text-body);
 }
 
+.skill-install__actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex: 0 0 auto;
+}
+
+.skill-install__actions--wrap {
+  flex-wrap: wrap;
+  margin: 1rem 0;
+}
+
+/* CTA rows on the Build with AI page: "read as an agent" and any other
+   button-only section that isn't a full skill-install panel. */
+.docs-cta-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 0.75rem 0 1.5rem;
+}
+
+.skill-install__mcp-tabs {
+  margin-top: 0.5rem;
+}
+
+.skill-cmd--block {
+  align-items: flex-start;
+}
+
+.markdown .skill-cmd--block .skill-cmd__text {
+  white-space: pre-wrap;
+  overflow-x: visible;
+}
+
 .skill-install__download {
   display: inline-flex;
   align-items: center;
@@ -608,6 +659,7 @@ body.is-resizing-sidebar {
   font-size: 0.875rem;
   font-weight: 600;
   text-decoration: none;
+  cursor: pointer;
 }
 
 .skill-install__download:hover {
