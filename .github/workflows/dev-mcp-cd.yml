@@ -11,12 +11,13 @@ env:
   DOCKER_COMPOSE_FILE: docker-compose.test.yml
   HEALTHCHECK_URL: http://localhost:8080/healthz
   NAMESPACE: eka-dev
-  # The architecture of the cluster's nodes, which the image must match. It
-  # is pinned here rather than inherited from the runner: switching the runner
-  # from ARM64 to AMD64 once shipped an amd64 binary to arm64 nodes, and every
-  # pod died with "exec format error" while CI stayed green. Verify with
-  # `kubectl get nodes -o wide` (the ARCH column) before changing it.
-  TARGET_PLATFORM: linux/arm64
+  # The cluster runs both x86_64 and aarch64 nodes, so the image is a
+  # multi-architecture manifest and each node pulls its own variant. It is
+  # pinned here rather than inherited from the runner: switching the runner
+  # from ARM64 to AMD64 once shipped an amd64-only binary, and every pod
+  # scheduled onto an arm64 node died with "exec format error" while CI stayed
+  # green. `kubectl get nodes -o wide` shows the mix in the KERNEL column.
+  TARGET_PLATFORMS: linux/amd64,linux/arm64
 
 jobs:
   build-test-push:
@@ -168,32 +169,40 @@ jobs:
 
       - name: Set up Docker Buildx
         run: |
-          # binfmt lets this runner run the target-architecture image for
-          # the healthcheck below; the Go build itself cross-compiles natively.
-          docker run --privileged --rm tonistiigi/binfmt --install all >/dev/null
+          # No emulation is needed: mcp/Dockerfile cross-compiles the Go binary
+          # for each target, and the distroless final stage is pulled per arch.
           docker buildx use mybuilder 2>/dev/null || \
             docker buildx create --name mybuilder --driver docker-container --bootstrap --use
 
       # Build context is `mcp`, NOT the repo root: mcp/Dockerfile does
       # `COPY go.mod go.sum ./`, which is context-relative and would miss from root.
-      - name: Build Docker image
+      # A multi-platform build cannot be loaded into the local daemon, so the
+      # version tag is pushed straight from the build. Nothing deploys from it
+      # until the dispatch job, which only runs when this job succeeds, and
+      # `latest` is not moved until the healthcheck below has passed.
+      - name: Build and push the multi-arch image
         env:
           IMAGE_TAG: ${{ steps.get_version.outputs.VERSION }}
         run: |
           docker buildx build \
-            --platform ${TARGET_PLATFORM} \
+            --platform ${TARGET_PLATFORMS} \
             --progress=plain \
             --cache-from=type=registry,ref=${ECR_REPO_URL}/${ECR_REPOSITORY}:buildcache-abdm-docs-mcp \
             --cache-to=type=registry,ref=${ECR_REPO_URL}/${ECR_REPOSITORY}:buildcache-abdm-docs-mcp,mode=max \
             -t ${ECR_REPO_URL}/${ECR_REPOSITORY}:${IMAGE_TAG} \
-            -t ${ECR_REPO_URL}/${ECR_REPOSITORY}:latest \
             -f mcp/Dockerfile \
-            --load mcp
+            --push mcp
+          # Prove the manifest carries both architectures before anything runs it.
+          docker buildx imagetools inspect ${ECR_REPO_URL}/${ECR_REPOSITORY}:${IMAGE_TAG} \
+            | tee /tmp/manifest.txt
+          grep -q 'linux/amd64' /tmp/manifest.txt && grep -q 'linux/arm64' /tmp/manifest.txt
 
       - name: Healthcheck test
         env:
           IMAGE_TAG: ${{ steps.get_version.outputs.VERSION }}
         run: |
+          # Pulls the runner's own variant from the manifest just pushed.
+          TAG=$ECR_REPO_URL/$ECR_REPOSITORY:$IMAGE_TAG docker-compose --file $DOCKER_COMPOSE_FILE pull
           TAG=$ECR_REPO_URL/$ECR_REPOSITORY:$IMAGE_TAG docker-compose --file $DOCKER_COMPOSE_FILE up -d
           # Poll the endpoint instead of a fixed sleep — passes as soon as it's up (max ~60s)
           output=000
@@ -218,12 +227,15 @@ jobs:
           echo "tests passed"
           TAG=$ECR_REPO_URL/$ECR_REPOSITORY:$IMAGE_TAG docker-compose --file $DOCKER_COMPOSE_FILE down
 
-      - name: Push image to Amazon ECR
+      # The manifest is already in ECR under the version tag; this only moves
+      # `latest` onto it, after the healthcheck, without rebuilding or pulling.
+      - name: Tag the verified image as latest
         env:
           IMAGE_TAG: ${{ steps.get_version.outputs.VERSION }}
         run: |
-          docker push $ECR_REPO_URL/$ECR_REPOSITORY:$IMAGE_TAG
-          docker push $ECR_REPO_URL/$ECR_REPOSITORY:latest
+          docker buildx imagetools create \
+            -t $ECR_REPO_URL/$ECR_REPOSITORY:latest \
+            $ECR_REPO_URL/$ECR_REPOSITORY:$IMAGE_TAG
 
       - name: Build summary
         env:
