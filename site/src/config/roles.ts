@@ -79,6 +79,15 @@ const storageKey = (platformId: string) => `abdm-portal.role.${platformId}`;
 const ROLE_PARAM = 'role';
 
 /**
+ * The value that means "no role, show everything", as opposed to the
+ * parameter being absent, which means "whatever this reader chose before".
+ */
+export const ROLE_ALL = 'all';
+
+/** A link into a gateway's docs that clears any role the reader has stored. */
+export const unfiltered = (to: string): string => `${to}?${ROLE_PARAM}=${ROLE_ALL}`;
+
+/**
  * Every `useRole` is its own `useState`, and the page has two of them: the
  * picker in the sidebar head, and the hook that scopes the tree below it.
  * Setting the role in the picker left the tree on the old value until
@@ -112,7 +121,20 @@ export function useRole(platformId: string): [string | null, (id: string | null)
     const known = (id: string | null) =>
       id && rolesFor(platformId).some((r) => r.id === id) ? id : null;
 
-    const fromLink = known(new URLSearchParams(window.location.search).get(ROLE_PARAM));
+    const param = new URLSearchParams(window.location.search).get(ROLE_PARAM);
+
+    // `?role=all` is an explicit "show me everything", which is what the
+    // landing page links carry. It has to clear the stored choice as well as
+    // the state: a reader who picked a role weeks ago and then arrives from
+    // the landing page is asking to start again, and leaving the old value in
+    // storage would filter the tree they were just promised in full.
+    if (param === ROLE_ALL) {
+      setRoleState(null);
+      window.localStorage.removeItem(storageKey(platformId));
+      return;
+    }
+
+    const fromLink = known(param);
     if (fromLink) {
       setRoleState(fromLink);
       window.localStorage.setItem(storageKey(platformId), fromLink);

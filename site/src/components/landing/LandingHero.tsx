@@ -5,6 +5,7 @@ import BrowserOnly from '@docusaurus/BrowserOnly';
 import {ChevronDown} from 'lucide-react';
 import NetworkWeb from '@site/src/components/landing/NetworkWeb';
 import BrandMark from '@site/src/components/chrome/BrandMark';
+import {unfiltered} from '@site/src/config/roles';
 import {
   Tooltip,
   TooltipContent,
@@ -89,7 +90,7 @@ export default function LandingHero({
               {gateways.map(({intent, short, full, to}) => (
                 <Tooltip key={to}>
                   <TooltipTrigger asChild>
-                    <Link to={to} className="landing-hero__goal">
+                    <Link to={unfiltered(to)} className="landing-hero__goal">
                       <span className="landing-hero__goal-intent">{intent}</span>
                       <span className="landing-hero__goal-short">{short}</span>
                     </Link>

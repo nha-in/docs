@@ -1,3 +1,4 @@
+import Link from '@docusaurus/Link';
 import React, {useEffect, useRef} from 'react';
 import {
   Building2,
@@ -329,18 +330,24 @@ export default function NetworkWeb(): React.ReactNode {
   }, []);
 
   return (
-    <div className="network-web" ref={wrapRef} aria-hidden="true">
-      <canvas className="network-web__canvas" ref={canvasRef} />
-      {PARTICIPANTS.map(({id, label, Icon, x, y, small}) => (
-        <span
-          key={id}
-          data-participant={id}
-          className={`network-node${small ? '' : ' network-node--wide'}`}
-          style={{left: `${x}%`, top: `${y}%`}}>
-          <Icon className="network-node__icon" strokeWidth={1.5} />
-          <span className="network-node__label">{label}</span>
-        </span>
-      ))}
+    <div className="network-web" ref={wrapRef}>
+      {/* The web itself is decoration. The nodes on top of it are not: each
+          one is the participant's page, so the picture is a way into the
+          documentation rather than an illustration of it. */}
+      <canvas className="network-web__canvas" ref={canvasRef} aria-hidden="true" />
+      <nav className="network-web__nodes" aria-label="Who takes part in ABDM">
+        {PARTICIPANTS.map(({id, label, Icon, x, y, small}) => (
+          <Link
+            key={id}
+            to={`/docs/hiecm/v3/concepts/participants/${id}`}
+            data-participant={id}
+            className={`network-node${small ? '' : ' network-node--wide'}`}
+            style={{left: `${x}%`, top: `${y}%`}}>
+            <Icon className="network-node__icon" strokeWidth={1.5} aria-hidden="true" />
+            <span className="network-node__label">{label}</span>
+          </Link>
+        ))}
+      </nav>
     </div>
   );
 }
