@@ -33,7 +33,7 @@ skills:
 
 You raised a consent request and it has not moved to Granted or Denied.
 A consent request has states, and Requested is the starting state:
-nothing has failed yet, the patient simply has not acted, or something
+nothing has failed yet, the patient has not yet acted, or something
 kept them from ever seeing it.
 
 ## Before you start

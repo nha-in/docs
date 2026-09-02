@@ -21,7 +21,7 @@ const ways = [
  */
 const buildGoals = [
   {label: 'I hold health records to share', to: '/docs/hiecm/v3/getting-started/what-you-can-build#a-hospital-or-clinic-system'},
-  {label: 'I need to read health records', to: '/docs/hiecm/v3/getting-started/what-you-can-build#an-insurer'},
+  {label: 'I need to read health records', to: '/docs/hiecm/v3/getting-started/what-you-can-build#quick-answer'},
   {label: "I am building a patient's app", to: '/docs/hiecm/v3/getting-started/what-you-can-build#a-phr-app'},
   {label: 'I run a lab or pharmacy', to: '/docs/hiecm/v3/getting-started/what-you-can-build#a-lab-or-pharmacy'},
   {label: 'Not sure yet', to: '/docs/hiecm/v3/getting-started/what-you-can-build'},

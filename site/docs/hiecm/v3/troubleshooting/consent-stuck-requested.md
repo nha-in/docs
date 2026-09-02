@@ -14,7 +14,7 @@ You raised a consent request and it has not moved to Granted or Denied.
 Requested is the starting state of the consent request itself, not of
 the [consent artefact](/docs/hiecm/v3/getting-started/glossary#consent-artefact)
 it can produce: the artefact is created only once the patient grants.
-Nothing has failed yet, the patient simply has not acted, or something
+Nothing has failed yet, the patient has not yet acted, or something
 kept them from ever seeing it. See
 [Consent, two objects, not one](/docs/hiecm/v3/concepts/consent#two-objects-not-one)
 for the full state model.

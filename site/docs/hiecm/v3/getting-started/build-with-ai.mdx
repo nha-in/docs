@@ -16,6 +16,10 @@ This portal is written to be read by coding agents as much as by people. Everyth
 
 <AgentSetup />
 
+## Every page as markdown
+
+Every documentation route on this site serves its own `index.md` alongside the rendered page. Each page also carries a "Copy page as Markdown" and "View as Markdown" control, so a person or an agent can pull the plain text directly, without scraping HTML. A repository-wide `llms.txt` and `llms-full.txt`, plus one `llms.txt` per module, are built on every release so an agent can find the page it needs by URL instead of guessing.
+
 ## The skills
 
 One file per job, picked by what you are building. The module skills carry everything published for that milestone: endpoints, hosts, headers, every recorded error code, and the test matrix. They are regenerated from these pages on every release, so a file cannot say something the pages do not. The FHIR skills are guided procedures for ABDM's hardest step, building or auditing NRCES compliant document bundles.
