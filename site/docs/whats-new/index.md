@@ -112,7 +112,7 @@ retrieve exactly the page it needs without scraping HTML. See
 The homepage now opens with "What are you trying to build?" and routes by that answer, a
 PHR app, a hospital or clinic system, a lab or pharmacy, an insurer, or not sure yet, before
 it offers the gateway list. Each goal lands on
-[What you can build](/docs/hiecm/v3/getting-started/what-you-can-build), which gives the
+[Milestones](/docs/hiecm/v3/milestones), which gives the
 role and the milestones for that kind of system.
 
 ### Seven PHR operations renamed off their Postman "Copy" suffix
