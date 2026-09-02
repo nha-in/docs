@@ -83,6 +83,7 @@ export default function LandingHero({
             (HIP, HIU, PHR); the gateway short name is a small label, and
             the full form appears on hover or keyboard focus. */}
         <div className="landing-hero__goals">
+          <p className="landing-hero__goals-prompt">What do you want to solve today?</p>
           <TooltipProvider>
             <nav className="landing-hero__goals-list" aria-label="Which gateway you need">
               {gateways.map(({intent, short, full, to}) => (
