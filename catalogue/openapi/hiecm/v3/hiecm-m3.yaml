@@ -644,6 +644,7 @@ webhooks:
                   response:
                     requestId: 6cb80f71-49fa-4f8c-93d5-de9916a708e8
       x-abdm-atom: hiecm.callback.m3-on-consent-request-init
+      x-abdm-triggered-by: m3_consent_request_init
       tags:
       - webhooks
   /api/v3/hiu/consent/request/notify:
@@ -704,6 +705,7 @@ webhooks:
                     consentArtefacts:
                     - id: 28ef6ae8-ad03-488d-b26e-940e27154cc0
       x-abdm-atom: hiecm.callback.m3-on-consent-request-notify-hiu
+      x-abdm-answered-by: m3_consent_hiu_on_notify
       tags:
       - webhooks
   /api/v3/consent/request/hip/notify:
@@ -1168,6 +1170,7 @@ webhooks:
                     requestId: e1ff8798-53c1-4d1c-8443-e38589c7ac98
                   resp: null
       x-abdm-atom: hiecm.callback.m3-on-consent-fetch
+      x-abdm-triggered-by: m3_consent_fetch
       tags:
       - webhooks
   /api/v3/hiu/health-information/on-request:
@@ -1223,6 +1226,7 @@ webhooks:
                   response:
                     requestId: e492d2b5-5f0a-4406-8a5d-5b4351e2ff2c
       x-abdm-atom: hiecm.callback.m3-on-health-information-request
+      x-abdm-triggered-by: m3_hiu_health_information_request
       tags:
       - webhooks
   /api/v3/hiu/consent/request/on-status:
@@ -1291,6 +1295,7 @@ webhooks:
                     requestId: 68b099de-f7ba-4a92-9bd5-97de2e397f31
                   resp: null
       x-abdm-atom: hiecm.callback.m3-on-consent-request-status
+      x-abdm-triggered-by: m3_consent_request_status
       tags:
       - webhooks
   /health-information/transfer:

@@ -20,8 +20,8 @@ That early response only means the [NHA](/docs/hiecm/v3/getting-started/glossary
 gateway accepted your request. In M2 and M3 the real answer arrives
 later, as a POST from the gateway to a URL you registered in advance.
 See [the gateway](/docs/hiecm/v3/concepts/gateway) for why this is the
-normal shape of these flows, and [callbacks](/docs/hiecm/v3/reference/callbacks)
-for the inbound side you receive it on.
+normal shape of these flows, and the [API reference](/docs/hiecm/v3/api),
+where each call names the callback it produces.
 
 ## Work through these in order
 
