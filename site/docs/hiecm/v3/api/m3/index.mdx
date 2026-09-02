@@ -7,8 +7,6 @@ verification: unverified
 source: ABDM__Proposed_Simplified_Milestone_3.md
 ---
 
-import SandboxAction from '@site/src/components/docs/SandboxAction';
-
 # M3 consent and fetching
 
 In Milestone 3 (M3) of [ABDM](/docs/hiecm/v3/getting-started/glossary#abdm) your system asks a patient for permission to see their health records, then fetches them. You are the [HIU](/docs/hiecm/v3/getting-started/glossary#hiu); the [HIE-CM](/docs/hiecm/v3/getting-started/glossary#hie-cm) holds the consent, asks the patient on your behalf, and on a grant returns a [consent artefact](/docs/hiecm/v3/getting-started/glossary#consent-artefact) id. No artefact, no records.
@@ -52,8 +50,8 @@ opaque strings.
 
 ## Certification
 
-Once M3 works end to end, submit your functional test cases in the sandbox for NHA's review.
-
-<SandboxAction action="milestoneTests">Submit milestone tests in the sandbox</SandboxAction>
+M3 does not have its own certification step. NHA's FAQ describes one exit process for the whole
+integration, run once, after every milestone your role needs works end to end. See
+[Going live](/docs/hiecm/v3/getting-started/going-live) for what that process involves.
 
 Sandbox test data: [data dictionary](/docs/hiecm/v3/reference/data-dictionary). Channels: [support](/docs/support).
