@@ -26,7 +26,7 @@ It never holds a patient's health record, only identifiers, metadata about where
 
 Every request is addressed to the gateway, which forwards it. Three things follow.
 
-- **You get an acknowledgement, not an answer.** In the [M3](/docs/hiecm/v3/getting-started/glossary#m3) consent flow the [HIU](/docs/hiecm/v3/getting-started/glossary#hiu) asks, the HIE-CM acknowledges with a consent request id, and the patient's decision comes back later. See [callbacks](/docs/hiecm/v3/reference/callbacks).
+- **You get an acknowledgement, not an answer.** In the [M3](/docs/hiecm/v3/getting-started/glossary#m3) consent flow the [HIU](/docs/hiecm/v3/getting-started/glossary#hiu) asks, the HIE-CM acknowledges with a consent request id, and the patient's decision comes back later. Each call's page in the [API reference](/docs/hiecm/v3/api) names the callback it produces.
 - **You have to be reachable.** Half of [M2](/docs/hiecm/v3/getting-started/glossary#m2) is endpoints the gateway calls on your system. A [HIP](/docs/hiecm/v3/getting-started/glossary#hip) it cannot reach fails on someone else's logs, as `ABDM-1028 HIP is unavailable`.
 - **Order is enforced.** The M2 error list carries `ABDM-2406 Invalid API sequence flow, please follow logical flow`.
 
@@ -111,7 +111,7 @@ Take the host from the sandbox documentation issued at onboarding, and keep it i
 ## Next
 
 - [Authentication](/docs/hiecm/v3/reference/authentication), credentials and headers.
-- [Callbacks](/docs/hiecm/v3/reference/callbacks), the inbound half.
+- [API references](/docs/hiecm/v3/api), every call and the callback it produces.
 - [Integration milestones](/docs/hiecm/v3/milestones), the four modules and who builds which.
 - [Registries](/docs/hiecm/v3/registries), who and what ABDM identifies.
 - [Error codes](/docs/hiecm/v3/reference/error-codes), what a rejection means.

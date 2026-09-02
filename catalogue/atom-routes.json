@@ -125,10 +125,10 @@
     {
       "atom": "hiecm.concept.asynchronous-callbacks",
       "type": "concept",
-      "route": "/docs/hiecm/v3/reference/callbacks",
+      "route": "/docs/hiecm/v3/api",
       "anchor": null,
-      "link": "/docs/hiecm/v3/reference/callbacks",
-      "rule": "claimed by callbacks",
+      "link": "/docs/hiecm/v3/api",
+      "rule": "claimed by api",
       "confidence": "derived"
     },
     {
@@ -197,10 +197,10 @@
     {
       "atom": "hiecm.decision.callbacks-as-webhooks",
       "type": "decision",
-      "route": "/docs/hiecm/v3/reference/callbacks",
+      "route": "/docs/hiecm/v3/api",
       "anchor": null,
-      "link": "/docs/hiecm/v3/reference/callbacks",
-      "rule": "claimed by callbacks",
+      "link": "/docs/hiecm/v3/api",
+      "rule": "claimed by api",
       "confidence": "derived"
     },
     {

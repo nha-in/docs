@@ -532,10 +532,74 @@
 
 .ask-ai__composer {
   display: flex;
+  flex-wrap: wrap;
   align-items: flex-end;
   gap: 0.5rem;
   padding: 0.75rem 1rem 1rem;
   border-top: 1px solid var(--aa-border);
+}
+
+/* The attached page, on its own line above the box it will be sent with, so
+   the reader reads what is going before they write the question. It takes
+   the full width of the composer rather than sitting beside the input,
+   because a page title is a phrase and truncating it to a chip's width would
+   leave the reader unsure which page is attached. */
+.ask-ai__attached {
+  flex: 1 0 100%;
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  min-width: 0;
+  padding: 0.25rem 0.25rem 0.25rem 0.625rem;
+  border: 1px solid var(--aa-border);
+  border-radius: var(--aa-radius-chip);
+  background: var(--aa-page);
+  font-size: 0.75rem;
+  color: var(--aa-body);
+}
+
+/* The failure reads as a notice rather than an attachment: no fill, so it
+   does not look like something the answer is using. */
+.ask-ai__attached--failed {
+  border-style: dashed;
+  background: none;
+  color: var(--aa-faint);
+}
+
+.ask-ai__attached-text {
+  flex: 1 1 auto;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ask-ai__attached-remove {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.25rem;
+  height: 1.25rem;
+  padding: 0;
+  border: 0;
+  border-radius: var(--aa-radius-control);
+  background: none;
+  color: var(--aa-faint);
+  cursor: pointer;
+}
+
+.ask-ai__attached-remove:hover {
+  color: var(--aa-heading);
+  background: var(--aa-fill-soft);
+}
+
+/* Keyboard reach is the whole point of this control being a button: the
+   focus ring has to be visible against both the filled and the dashed
+   state. */
+.ask-ai__attached-remove:focus-visible {
+  outline: 2px solid var(--aa-accent);
+  outline-offset: 1px;
+  color: var(--aa-heading);
 }
 
 .ask-ai__input {

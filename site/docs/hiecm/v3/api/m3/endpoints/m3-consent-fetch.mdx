@@ -15,3 +15,7 @@ import ApiEndpoint from '@site/src/components/api/ApiEndpoint';
 import operation from '@site/src/data/api/m3-consent-fetch.json';
 
 <ApiEndpoint operation={operation} />
+
+## Callbacks
+
+- After this call, ABDM posts **The consent artefact detail, fetched by artefact id** to `/api/v3/hiu/consent/on-fetch`. [Open the callback](/docs/hiecm/v3/api/m3/endpoints/m3-on-consent-fetch).

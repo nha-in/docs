@@ -238,8 +238,113 @@ for (const {platform, version, files} of tree) {
     .sort((a, b) => (a.position ?? 999) - (b.position ?? 999) || a.file.localeCompare(b.file));
 
   const docsDir = join(root, 'site', 'docs', platform, version, 'api');
+  // Only HIE-CM v3 has a troubleshooting section and the callback atoms today;
+  // the other gateways would link to pages and claim atoms that do not exist.
+  const isHiecmV3 = platform === 'hiecm' && version === 'v3';
   for (const module of modules) {
     rmSync(join(docsDir, module.dir, 'endpoints'), {recursive: true, force: true});
+  }
+
+  // ---- which call each callback belongs to ----
+  //
+  // A specification declares its webhooks at module level, so the pairing with
+  // a single operation is not in the shape of the file. It is stated per
+  // webhook instead: `x-abdm-triggered-by` names the call that produces the
+  // callback, `x-abdm-answered-by` names the call you make in reply. Both name
+  // an operationId, which may sit in another module's specification, so the
+  // index below spans every module of this gateway version.
+  //
+  // A webhook carrying neither key has no stated pairing. It is never guessed
+  // at: its own page says the specification does not name a call, and the API
+  // index lists it under the module that declares it.
+  const operationPage = (moduleDir, id) =>
+    `/docs/${platform}/${version}/api/${moduleDir}/endpoints/${slug(id)}`;
+
+  const operations = new Map();
+  for (const module of modules) {
+    for (const [path, item] of Object.entries(module.spec.paths ?? {})) {
+      for (const method of METHODS) {
+        const op = item?.[method];
+        if (!op) continue;
+        const id = op.operationId ?? slug(`${method}-${path}`);
+        operations.set(id, {
+          summary: (op.summary ?? id).trim(),
+          route: operationPage(module.dir, id),
+        });
+      }
+    }
+  }
+
+  // operationId -> the callbacks its page shows. Callback id -> its pairing.
+  const callbacksByOperation = new Map();
+  const pairingByCallback = new Map();
+  const unpairedCallbacks = [];
+  for (const module of modules) {
+    for (const [path, item] of Object.entries(module.spec.webhooks ?? {})) {
+      for (const method of METHODS) {
+        const hook = item?.[method];
+        if (!hook) continue;
+        const id = hook.operationId ?? slug(`${method}-${path}`);
+        const entry = {
+          module: module.label,
+          method: method.toUpperCase(),
+          path,
+          summary: (hook.summary ?? '').trim(),
+          route: operationPage(module.dir, id),
+        };
+        const triggeredBy = hook['x-abdm-triggered-by'];
+        const answeredBy = hook['x-abdm-answered-by'];
+        const target = triggeredBy ?? answeredBy;
+        if (!target || !operations.has(target)) {
+          unpairedCallbacks.push(entry);
+          continue;
+        }
+        entry.relation = triggeredBy ? 'triggered-by' : 'answered-by';
+        entry.operation = {id: target, ...operations.get(target)};
+        if (!callbacksByOperation.has(target)) callbacksByOperation.set(target, []);
+        callbacksByOperation.get(target).push(entry);
+        pairingByCallback.set(id, entry);
+      }
+    }
+  }
+
+  /** The Callbacks section appended to an operation's page, if it has any. */
+  function callbackSection(operationId) {
+    const entries = callbacksByOperation.get(operationId) ?? [];
+    if (entries.length === 0) return [];
+    return [
+      '## Callbacks',
+      '',
+      // No lead sentence: an operation can be the one that produces a callback
+      // or the one you send in reply, and each bullet says which it is.
+      ...entries.map((entry) =>
+        entry.relation === 'triggered-by'
+          ? `- After this call, ABDM posts **${entry.summary}** to \`${entry.path}\`. [Open the callback](${entry.route}).`
+          : `- You make this call in reply to **${entry.summary}**, which ABDM posts to \`${entry.path}\`. [Open the callback](${entry.route}).`,
+      ),
+      '',
+    ];
+  }
+
+  /** The section appended to a callback's own page, saying where it fits. */
+  function callbackOriginSection(callbackId, moduleFile) {
+    const pairing = pairingByCallback.get(callbackId);
+    if (!pairing) {
+      return [
+        '## Where this fits',
+        '',
+        `\`${moduleFile}\` declares this callback at module level and names no call against it. Which call produces it is not documented, so this page does not say.`,
+        '',
+      ];
+    }
+    return [
+      '## Where this fits',
+      '',
+      pairing.relation === 'triggered-by'
+        ? `You produce this callback by calling [${pairing.operation.summary}](${pairing.operation.route}).`
+        : `Answer this callback by calling [${pairing.operation.summary}](${pairing.operation.route}).`,
+      '',
+    ];
   }
 
   for (const [moduleIndex, module] of modules.entries()) {
@@ -363,6 +468,13 @@ for (const {platform, version, files} of tree) {
         '',
         '<ApiEndpoint operation={operation} />',
         '',
+        // The callback belongs with the call, not on a page of its own listing
+        // every webhook the gateway has. An operation shows the callbacks a
+        // specification ties to it; a callback shows the call it pairs with,
+        // or says that no specification names one.
+        ...(entry.kind === 'callback'
+          ? callbackOriginSection(id, module.file)
+          : callbackSection(id)),
       ].join('\n');
       writeFileSync(join(endpointsDir, `${name}.mdx`), frontMatter);
 
@@ -460,6 +572,12 @@ for (const {platform, version, files} of tree) {
     'verification: unverified',
     'source: the published OpenAPI specifications',
     'generated: true',
+    // This page is where the callbacks concept and the decision to declare
+    // them as webhooks are published, now that there is no page of nothing but
+    // callbacks. Both atoms are HIE-CM's, so only its index claims them.
+    ...(isHiecmV3
+      ? ['covers: [hiecm.concept.asynchronous-callbacks, hiecm.decision.callbacks-as-webhooks]']
+      : []),
     '---',
     '',
     '# API references',
@@ -468,6 +586,12 @@ for (const {platform, version, files} of tree) {
     '',
     'This page lists every module, including any that the role you have chosen does not use. The sidebar shows only yours.',
     '',
+    ...(isHiecmV3
+      ? [
+          'In M2 and M3 a call is acknowledged now and answered later. The answer arrives as a callback, a POST from ABDM to the URL you registered, declared in the specification as a webhook. Each callback is shown on the call it belongs to, and has a page of its own under that module.',
+          '',
+        ]
+      : []),
   ];
 
   for (const module of modules) {
@@ -492,6 +616,35 @@ for (const {platform, version, files} of tree) {
     indexLines.push(`[Read the whole specification](${module.route})`);
     indexLines.push('');
   }
+
+  // The callbacks no specification pairs with a call. They are named here
+  // rather than shown against an operation that may not be the one, so a
+  // reader can still find them without being told something NHA has not said.
+  if (unpairedCallbacks.length > 0) {
+    indexLines.push('## Callbacks with no documented trigger');
+    indexLines.push('');
+    indexLines.push(
+      `${unpairedCallbacks.length} callback${
+        unpairedCallbacks.length === 1 ? ' is' : 's are'
+      } declared at module level with no call named against ${
+        unpairedCallbacks.length === 1 ? 'it' : 'them'
+      }. Which call produces ${
+        unpairedCallbacks.length === 1 ? 'it' : 'each one'
+      } is not documented, so this page does not say.`,
+    );
+    indexLines.push('');
+    indexLines.push('| Module | Method | Arrives at | What it carries |');
+    indexLines.push('| --- | --- | --- | --- |');
+    for (const entry of unpairedCallbacks) {
+      indexLines.push(
+        `| ${entry.module} | <span class="api-chip api-chip--${entry.method.toLowerCase()}">${
+          entry.method
+        }</span> | [\`${entry.path}\`](${entry.route}) | ${entry.summary} |`,
+      );
+    }
+    indexLines.push('');
+  }
+
   mkdirSync(docsDir, {recursive: true});
   writeGenerated(join(docsDir, 'index.md'), `${indexLines.join('\n')}\n`);
 
@@ -576,56 +729,6 @@ for (const {platform, version, files} of tree) {
     writeGenerated(join(refDir, 'authentication.md'), `${lines.join('\n')}\n`);
   }
 
-  // ---- callbacks: the webhooks the specifications declare ----
-  {
-    const lines = [
-      frontMatter(
-        'Callbacks',
-        'Callbacks',
-        'The calls ABDM makes back to your bridge, as the specifications declare them.',
-        2,
-        ['hiecm.concept.asynchronous-callbacks', 'hiecm.decision.callbacks-as-webhooks'],
-      ),
-      '# Callbacks',
-      '',
-      'A call you make is acknowledged, and the answer arrives later at your own endpoint. Those inbound calls are declared as webhooks in the specifications, and this page is generated from them.',
-      '',
-    ];
-    let total = 0;
-    for (const module of modules) {
-      const hooks = Object.entries(module.spec.webhooks ?? {});
-      if (hooks.length === 0) {
-        continue;
-      }
-      total += hooks.length;
-      lines.push(`## ${module.label}`);
-      lines.push('');
-      lines.push('| Method | Callback | What it carries |');
-      lines.push('| --- | --- | --- |');
-      for (const [name, item] of hooks) {
-        for (const method of METHODS) {
-          if (!item?.[method]) continue;
-          // The verb carries its own colour here, the same one it carries in
-          // the sidebar and on an endpoint page, so a reader scanning this
-          // table reads methods the way they read them everywhere else.
-          lines.push(
-            `| <span class="api-chip api-chip--${method}">${method.toUpperCase()}</span> | \`${name}\` | ${(
-              item[method].summary ?? ''
-            ).trim()} |`,
-          );
-        }
-      }
-      lines.push('');
-    }
-    if (total === 0) {
-      lines.push(
-        'No specification declares a webhook yet. The callbacks each module expects are described in its own pages until they are written into the specification that owns them.',
-      );
-      lines.push('');
-    }
-    writeGenerated(join(refDir, 'callbacks.md'), `${lines.join('\n')}\n`);
-  }
-
   // ---- error codes: the x-abdm-errors blocks ----
   {
     const lines = [
@@ -641,7 +744,7 @@ for (const {platform, version, files} of tree) {
       // Only hiecm/v3 has a troubleshooting section today; other platforms
       // and other versions of hiecm would link to a page that does not
       // exist.
-      ...(platform === 'hiecm' && version === 'v3'
+      ...(isHiecmV3
         ? [`Seeing a symptom rather than a code? Start at [Troubleshooting](/docs/${platform}/${version}/troubleshooting/).`, '']
         : []),
       'Generated from the specifications. A code is on this page because a specification records it.',
@@ -731,7 +834,7 @@ for (const {platform, version, files} of tree) {
       '',
       `# ${module.label} errors`,
       '',
-      ...(platform === 'hiecm' && version === 'v3'
+      ...(isHiecmV3
         ? [`Seeing a symptom rather than a code? Start at [Troubleshooting](/docs/${platform}/${version}/troubleshooting/).`, '']
         : []),
     ];

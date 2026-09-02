@@ -33,13 +33,15 @@ import (
 // an unscripted scriptedModel{} must survive being called rather than
 // index-panicking.
 type scriptedModel struct {
-	replies []chat.Reply
-	texts   []string
-	calls   int
+	replies   []chat.Reply
+	texts     []string
+	calls     int
+	gotSystem []string
 }
 
 func (f *scriptedModel) Stream(ctx context.Context, system string, tools []chat.ToolDef,
 	msgs []chat.Message, maxTokens int, onText func(string)) (chat.Reply, error) {
+	f.gotSystem = append(f.gotSystem, system)
 	i := f.calls
 	f.calls++
 	if i < len(f.texts) && f.texts[i] != "" {
@@ -109,6 +111,49 @@ func TestChatEndpointValidation(t *testing.T) {
 		if rec.Code != 400 {
 			t.Errorf("%s: status %d, want 400", name, rec.Code)
 		}
+	}
+}
+
+// The panel attaches the page a reader opened it from, as an optional
+// "page" object beside the turns. It has to reach the model, and it has to
+// stay optional so an older panel keeps working.
+func TestChatEndpointCarriesTheAttachedPage(t *testing.T) {
+	fm := &scriptedModel{replies: []chat.Reply{{Text: "ok", StopReason: "end_turn"}}, texts: []string{"ok\n"}}
+	svc := &chat.Service{Model: fm, MaxTokens: 100}
+	h := testHandler(t, svc, chat.NewLimiter(100, 1000))
+	body := `{"turns":[{"role":"user","text":"what does this need?"}],` +
+		`"page":{"title":"Link a care context","url":"/docs/m2/link","markdown":"POST /v0.5/links/link/confirm"}}`
+	rec := httptest.NewRecorder()
+	h.ServeHTTP(rec, httptest.NewRequest("POST", "/api/chat", strings.NewReader(body)))
+	if rec.Code != 200 {
+		t.Fatalf("status %d, body %s", rec.Code, rec.Body.String())
+	}
+	if len(fm.gotSystem) == 0 || !strings.Contains(fm.gotSystem[0], "/v0.5/links/link/confirm") {
+		t.Fatal("the attached page never reached the model")
+	}
+	if !strings.Contains(fm.gotSystem[0], "Link a care context") {
+		t.Error("the attached page's title never reached the model")
+	}
+}
+
+func TestChatEndpointPageSizeLimits(t *testing.T) {
+	svc := &chat.Service{Model: &scriptedModel{}, MaxTokens: 100}
+	h := testHandler(t, svc, chat.NewLimiter(100, 1000))
+	post := func(n int) int {
+		body := fmt.Sprintf(`{"turns":[{"role":"user","text":"hi"}],"page":{"title":"x","url":"/x","markdown":%q}}`,
+			strings.Repeat("x", n))
+		rec := httptest.NewRecorder()
+		h.ServeHTTP(rec, httptest.NewRequest("POST", "/api/chat", strings.NewReader(body)))
+		return rec.Code
+	}
+	// The panel cuts to exactly MaxPageChars, so that length has to get
+	// through: this is what pins chatBodyLimit above the page cap, and it is
+	// the assertion that fails if either number moves without the other.
+	if got := post(chat.MaxPageChars); got != 200 {
+		t.Errorf("page at exactly MaxPageChars = %d, want 200", got)
+	}
+	if got := post(chat.MaxPageChars + 1); got != 400 {
+		t.Errorf("oversized page = %d, want 400", got)
 	}
 }
 

@@ -15,3 +15,7 @@ import ApiEndpoint from '@site/src/components/api/ApiEndpoint';
 import operation from '@site/src/data/api/m2-on-discover-care-contexts.json';
 
 <ApiEndpoint operation={operation} />
+
+## Callbacks
+
+- You make this call in reply to **A discovery request for a patient you may hold records for**, which ABDM posts to `/api/v3/hip/patient/care-context/discover`. [Open the callback](/docs/hiecm/v3/api/m2/endpoints/m2-on-discovery-request).
