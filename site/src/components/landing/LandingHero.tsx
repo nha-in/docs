@@ -22,7 +22,11 @@ import {
  */
 const gateways = [
   {
-    intent: 'I have health records to share',
+    // Identity comes before sharing, in the work and in the sentence: nobody
+    // shares a record before there is an ABHA to hang it off, and a reader
+    // whose first job is M1 saw only the second half of what this gateway
+    // does.
+    intent: 'I want to create an ABHA and share health records',
     short: 'HIE-CM',
     full: 'Health Information Exchange and Consent Manager',
     to: '/docs/hiecm/v3',
