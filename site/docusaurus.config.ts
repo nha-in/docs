@@ -323,10 +323,14 @@ const config: Config = {
           // The milestones page moved out of Get started into its own section,
           // and each module's user journey moved with it.
           {from: '/docs/hiecm/v3/getting-started/milestones', to: '/docs/hiecm/v3/milestones'},
-          {from: '/docs/hiecm/v3/api/m1/user-journey', to: '/docs/hiecm/v3/milestones/m1-journey'},
-          {from: '/docs/hiecm/v3/api/m2/user-journey', to: '/docs/hiecm/v3/milestones/m2-journey'},
-          {from: '/docs/hiecm/v3/api/m3/user-journey', to: '/docs/hiecm/v3/milestones/m3-journey'},
-          {from: '/docs/hiecm/v3/api/m4/user-journey', to: '/docs/hiecm/v3/milestones/m4-journey'},
+          {from: '/docs/hiecm/v3/api/m1/user-journey', to: '/docs/hiecm/v3/milestones/m1'},
+          {from: '/docs/hiecm/v3/milestones/m1-journey', to: '/docs/hiecm/v3/milestones/m1'},
+          {from: '/docs/hiecm/v3/milestones/m2-journey', to: '/docs/hiecm/v3/milestones/m2'},
+          {from: '/docs/hiecm/v3/milestones/m3-journey', to: '/docs/hiecm/v3/milestones/m3'},
+          {from: '/docs/hiecm/v3/milestones/m4-journey', to: '/docs/hiecm/v3/milestones/m4'},
+          {from: '/docs/hiecm/v3/api/m2/user-journey', to: '/docs/hiecm/v3/milestones/m2'},
+          {from: '/docs/hiecm/v3/api/m3/user-journey', to: '/docs/hiecm/v3/milestones/m3'},
+          {from: '/docs/hiecm/v3/api/m4/user-journey', to: '/docs/hiecm/v3/milestones/m4'},
         ],
         createRedirects(to: string) {
           const aliases: string[] = [];
