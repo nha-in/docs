@@ -1,0 +1,128 @@
+[
+ [
+  "abha-api-v3",
+  "type-mismatch",
+  ".paths./abha/api/v3/enrollment/request/otp.post.requestBody.content.application/json.schema.properties.loginHint",
+  "type=string but example is list: ['aadhaar,email,mobile']"
+ ],
+ [
+  "abha-api-v3",
+  "type-mismatch",
+  ".paths./abha/api/v3/profile/login/verify.post.responses.404.content.application/json.schema.properties.error",
+  "type=object but example is str: '900901'"
+ ],
+ [
+  "abha-api-v3",
+  "type-mismatch",
+  ".paths./abha/api/v3/phr/web/login/abha/search.post.responses.200.content.application/json.schema.properties.blockedAuthMethods.items",
+  "type=string but example is NoneType: None"
+ ],
+ [
+  "abha-api-v3",
+  "type-mismatch",
+  ".paths./abha/api/v3/phr/web/login/abha/search.post.responses.200.content.application/json.schema.properties.message",
+  "type=string but example is NoneType: None"
+ ],
+ [
+  "consent-management-data-flow",
+  "type-mismatch",
+  ".paths./api/v3/hiu/consent/request/on-status.post.requestBody.content.application/json.schema.properties.resp",
+  "type=string but example is NoneType: None"
+ ],
+ [
+  "consent-management-data-flow",
+  "type-mismatch",
+  ".paths./api/v3/hiu/consent/request/notify.post.requestBody.content.application/json.schema.properties.notification.properties.reason",
+  "type=string but example is NoneType: None"
+ ],
+ [
+  "consent-management-data-flow",
+  "type-mismatch",
+  ".paths./api/v3/hiu/consent/on-fetch.post.requestBody.content.application/json.schema.properties.error",
+  "type=object but example is NoneType: None"
+ ],
+ [
+  "consent-management-data-flow",
+  "type-mismatch",
+  ".paths./api/v3/hiu/consent/on-fetch.post.requestBody.content.application/json.schema.properties.resp",
+  "type=string but example is NoneType: None"
+ ],
+ [
+  "patient-share",
+  "bad-format:email",
+  ".paths./api/hiecm/patient-share/v3/profile/getTokenDetails.get.responses.200.content.application/json.schema.oneOf[0].items.properties.patientId",
+  "'abdulkalam@abdm'"
+ ],
+ [
+  "scan-and-pay",
+  "type-mismatch",
+  ".paths./v3/patient/selection.post.requestBody.content.application/json.schema.properties.openOrderRequestId",
+  "type=object but example is str: '6c3d4e5c-09d1-4ecc-817b-a0c82d130c53'"
+ ],
+ [
+  "scan-and-pay",
+  "type-mismatch",
+  ".paths./api/hiecm/scan-gateway/v3/patient/on-selection.post.requestBody.content.application/json.schema.anyOf[0].properties.openOrderRequestId",
+  "type=object but example is str: 'b767614f-153a-4aa3-946f-1622596f0fab'"
+ ],
+ [
+  "scan-and-pay",
+  "type-mismatch",
+  ".paths./api/hiecm/scan-gateway/v3/patient/scan-pay/notify.post.requestBody.content.application/json.schema.properties.acknowledgement.properties.openOrderRequestId",
+  "type=object but example is str: 'b767614f-153a-4aa3-946f-1622596f0fab'"
+ ],
+ [
+  "scan-and-pay",
+  "type-mismatch",
+  ".paths./v3/patient/scan-pay/on-notify.post.requestBody.content.application/json.schema.oneOf[0].properties.acknowledgement.properties.openOrderRequestId",
+  "type=object but example is str: 'b767614f-153a-4aa3-946f-1622596f0fab'"
+ ],
+ [
+  "scan-and-pay",
+  "type-mismatch",
+  ".paths./api/hiecm/scan-gateway/v3/patient/share/open-order.post.requestBody.content.application/json.schema.properties.metaData.properties.counterId",
+  "type=number but example is str: '123-456'"
+ ],
+ [
+  "scan-and-pay",
+  "type-mismatch",
+  ".paths./api/hiecm/scan-gateway/v3/patient/selection.post.requestBody.content.application/json.schema.anyOf[0].properties.openOrderRequestId",
+  "type=object but example is str: 'b767614f-153a-***-946f-1622596f0fab'"
+ ],
+ [
+  "scan-and-pay",
+  "type-mismatch",
+  ".paths./v3/patient/on-selection.post.requestBody.content.application/json.schema.properties.openOrderRequestId",
+  "type=object but example is str: 'b767614f-153a-4aa3-946f-1622596f0fab'"
+ ],
+ [
+  "scan-and-pay",
+  "type-mismatch",
+  ".paths./v3/patient/scan-pay/notify.post.requestBody.content.application/json.schema.properties.acknowledgement.properties.openOrderRequestId",
+  "type=object but example is str: 'b767614f-153a-4aa3-946f-1622596f0fab'"
+ ],
+ [
+  "scan-and-pay",
+  "type-mismatch",
+  ".paths./api/hiecm/scan-gateway/v3/patient/scan-pay/on-notify.post.requestBody.content.application/json.schema.anyOf[0].properties.acknowledgement.properties.openOrderRequestId",
+  "type=object but example is str: 'b767614f-153a-4aa3-946f-1622596f0fab'"
+ ],
+ [
+  "scan-and-pay",
+  "type-mismatch",
+  ".paths./api/hiecm/gateway/v3/scanPay/updateVersion.patch.requestBody.content.application/json.schema.properties.serviceId.items",
+  "type=object but example is str: '****_HIP, ***_HIU'"
+ ],
+ [
+  "phr-api",
+  "type-mismatch",
+  ".paths./abha/api/v3/phr/app/login/verify.post.responses.200.content.application/json.schema.properties.tokens.properties.refreshExpiresIn",
+  "type=number but example is NoneType: None"
+ ],
+ [
+  "phr-api",
+  "type-mismatch",
+  ".paths./abha/api/v3/phr/app/login/verify.post.responses.200.content.application/json.schema.properties.tokens.properties.refreshToken",
+  "type=string but example is NoneType: None"
+ ]
+]

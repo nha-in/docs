@@ -11,7 +11,7 @@ import (
 // toolingPage is the one portal path the assistant offers when a reader is
 // building an integration. It covers both the agent skills and the MCP
 // server, so there is a single place to send people.
-const toolingPage = "/docs/hiecm/v3/getting-started/mcp"
+const toolingPage = "/docs/hiecm/v3/getting-started/build-with-ai"
 
 func TestPromptOffersTheTooling(t *testing.T) {
 	if !strings.Contains(SystemPrompt(""), toolingPage) {

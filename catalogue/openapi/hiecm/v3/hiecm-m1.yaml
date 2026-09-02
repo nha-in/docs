@@ -61,8 +61,18 @@ x-abdm-sources:
   hash: sha256:a677f8786b19dfd5b05d7f71c6f17a437a221625f643a8d39a64d4ce6a4351ec
   fetched: '2026-08-25'
   note: NHA's M1 collection, 143 requests and 473 saved responses.
+- file: catalogue/openapi/.raw/nha-2026-09-01/fixed/abha/abha-api-v3.yaml
+  role: upstream
+  hash: sha256:489d2ef041c7312ffe1cc0e9fa25702c73097fc3910cf80e17236f18770e1204
+  fetched: '2026-09-01'
+  note: NHA's 2026-09-01 M1/ABHA OpenAPI drop, audited and auto-fixed copy
+    ('fixed/' tree). 36 operations, zero operationId values, matched
+    against ours by path suffix. See
+    catalogue/openapi/nha-drops/2026-09-01-diffs/m1-abha.md for the full
+    diff and catalogue/openapi/corrections/2026-09-01-nha-drop-m1.md for
+    what was applied.
 servers:
-- url: https://abhasbx.abdm.gov.in/abha/api/v3
+- url: https://abhasbx.abdm.gov.in/abha/api
   description: ABHA Server, Sandbox (primary)
 - url: https://dev.abdm.gov.in/api/hiecm
   description: ABDM Gateway, Dev
@@ -200,7 +210,19 @@ paths:
                       otpValue: <OTPVALUE>
       responses:
         '200':
-          description: "Response body: not documented."
+          description: Whether the OTP verified, the transaction id, and the ABHA accounts the person may pick from.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VerifyOtpResult'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/ServerError'
       x-abdm-atom: hiecm.endpoint.m1-enrolment-verify-abdm-otp
   /v3/enrollment/enrol/abha-address:
     post:
@@ -260,6 +282,14 @@ paths:
                     type: string
                     description: The ABHA number. Named `healthIdNumber` here
                       and `ABHANumber` in the enrol response, for the same value.
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/ServerError'
       x-abdm-atom: hiecm.endpoint.m1-enrolment-claim-abha-address
   /v3/enrollment/enrol/auth/init:
     post:
@@ -298,7 +328,19 @@ paths:
                   - face-auth
       responses:
         '200':
-          description: "Response body: not documented."
+          description: The transaction id to carry into the next step, with a message.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TxnResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/ServerError'
       x-abdm-atom: hiecm.endpoint.m1-enrolment-face-auth-init
   /v3/enrollment/enrol/byAadhaar:
     post:
@@ -451,6 +493,16 @@ paths:
       responses:
         '200':
           description: "Response body: not documented."
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/ServerError'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'
       x-abdm-atom: hiecm.endpoint.m1-enrolment-by-aadhaar
   /v3/enrollment/enrol/byDocument:
     post:
@@ -552,6 +604,16 @@ paths:
       responses:
         '200':
           description: "Response body: not documented."
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/ServerError'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'
       x-abdm-atom: hiecm.endpoint.m1-enrolment-by-document
   /v3/enrollment/enrol/capturePID:
     post:
@@ -606,7 +668,7 @@ paths:
                   txnId: <TXN_ID>
       responses:
         '200':
-          description: Example values, scrubbed.
+          description: The capture status, a message, and the transaction id.
           content:
             application/json:
               schema:
@@ -642,6 +704,14 @@ paths:
                     status: COMPLETE
                     message: PID capture successful
                     txnId: <TXN_ID>
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/ServerError'
       x-abdm-atom: hiecm.endpoint.m1-enrolment-capture-pid
   /v3/enrollment/enrol/suggestion:
     get:
@@ -662,7 +732,19 @@ paths:
       - $ref: '#/components/parameters/TransactionId'
       responses:
         '200':
-          description: "Response body: not documented."
+          description: ABHA address suggestions for the transaction.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuggestionResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/ServerError'
       x-abdm-atom: hiecm.endpoint.m1-enrolment-address-suggestions
   /v3/enrollment/profile/children:
     get:
@@ -677,10 +759,31 @@ paths:
       parameters:
       - $ref: '#/components/parameters/RequestId'
       - $ref: '#/components/parameters/Timestamp'
-      - $ref: '#/components/parameters/XToken'
+      - name: X-token
+        in: header
+        required: true
+        description: |
+          The user scoped token returned when a person logs in or verifies an
+          OTP. Required on this operation. See the shared `XToken` parameter
+          for the general description and the `Bearer ` prefix rule.
+        schema:
+          type: string
+        example: Bearer <X_TOKEN_FROM_LOGIN_VERIFY>
       responses:
         '200':
-          description: "Response body: not documented."
+          description: The children linked to the parent ABHA, with their count.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChildrenListResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/ServerError'
       x-abdm-atom: hiecm.endpoint.m1-enrolment-list-children
   /v3/enrollment/request/otp:
     post:
@@ -761,7 +864,19 @@ paths:
                   otpSystem: abdm
       responses:
         '200':
-          description: "Response body: not documented."
+          description: The transaction id to carry into the next step, with a message.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TxnResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/ServerError'
       x-abdm-atom: hiecm.endpoint.m1-enrolment-request-otp
   /v3.1/profile/login/request/otp:
     post:
@@ -933,7 +1048,7 @@ paths:
                       fingerPrintAuthPid: <FINGERPRINTAUTHPID>
       responses:
         '200':
-          description: Example values, scrubbed.
+          description: Whether the login verified, with the user token and its expiry.
           content:
             application/json:
               schema:
@@ -1070,7 +1185,7 @@ paths:
                   otpSystem: abdm
       responses:
         '200':
-          description: Example values, scrubbed.
+          description: The transaction id to carry into the next step, with a message.
           content:
             application/json:
               schema:
@@ -1090,7 +1205,7 @@ paths:
                     txnId: <TXN_ID>
                     message: Transaction Id generated Successfully
         '401':
-          description: Example values, scrubbed.
+          description: The error NHA returns, with its code and message.
           content:
             application/json:
               schema:
@@ -1115,6 +1230,14 @@ paths:
                     error:
                       code: ABDM-1224
                       message: Login via Biometric is not allowed.
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
       x-abdm-atom: hiecm.endpoint.m1-login-request-otp
   /v3/profile/login/verify:
     post:
@@ -1240,7 +1363,7 @@ paths:
                       password: <PASSWORD>
       responses:
         '200':
-          description: Example values, scrubbed.
+          description: Whether the login verified, with the user token and its expiry.
           content:
             application/json:
               schema:
@@ -1312,7 +1435,7 @@ paths:
                       profilePhoto: <BASE64_PHOTO>
                       mobileVerified: false
         '400':
-          description: Example values, scrubbed.
+          description: The response as NHA documents it.
           content:
             application/json:
               schema:
@@ -1348,7 +1471,7 @@ paths:
                     faceDto: Invalid Aadhaar face request
                     timestamp: '2025-01-15 13:32:04'
         '401':
-          description: Example values, scrubbed.
+          description: The error NHA returns, with its code and message.
           content:
             application/json:
               schema:
@@ -1373,7 +1496,7 @@ paths:
                     description: Invalid JWT token. Make sure you have provided
                       the correct security credentials
         '404':
-          description: Example values, scrubbed.
+          description: The error NHA returns, with its code and message.
           content:
             application/json:
               schema:
@@ -1401,7 +1524,7 @@ paths:
                     message: Runtime Error
                     description: No matching resource found for given API Request
         '422':
-          description: Example values, scrubbed.
+          description: The error NHA returns, with its code and message.
           content:
             application/json:
               schema:
@@ -1436,6 +1559,10 @@ paths:
                       message: 'UIDAI Error code : 561 : Request expired (“Pid->ts”
                         value is older than N hours where N is a configured threshold
                         in authentication server)'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/ServerError'
       x-abdm-atom: hiecm.endpoint.m1-login-verify
   /v3/profile/login/verify/user:
     post:
@@ -1451,7 +1578,15 @@ paths:
       parameters:
       - $ref: '#/components/parameters/RequestId'
       - $ref: '#/components/parameters/Timestamp'
-      - $ref: '#/components/parameters/TToken'
+      - name: T-token
+        in: header
+        required: true
+        description: |
+          The transaction token that carries state between the two halves of
+          a login. Required for account selection. See the shared `TToken`
+          parameter for the general description.
+        schema:
+          type: string
       requestBody:
         required: true
         content:
@@ -1474,7 +1609,19 @@ paths:
                   txnId: <TXN_ID>
       responses:
         '200':
-          description: "Response body: not documented."
+          description: The user token and refresh token, with their expiries.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenIssuanceResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/ServerError'
       x-abdm-atom: hiecm.endpoint.m1-login-select-account
   /v3/profile/account:
     patch:
@@ -1534,7 +1681,7 @@ paths:
                   profilePhoto: <BASE64_PHOTO>
       responses:
         '200':
-          description: Example values, scrubbed.
+          description: The ABHA profile as held by NHA.
           content:
             application/json:
               schema:
@@ -1555,11 +1702,14 @@ paths:
                   name:
                     type: string
                   yearOfBirth:
-                    type: string
+                    type: integer
+                    x-abdm-correction: '2026-09-01-7'
                   dayOfBirth:
-                    type: string
+                    type: integer
+                    x-abdm-correction: '2026-09-01-7'
                   monthOfBirth:
-                    type: string
+                    type: integer
+                    x-abdm-correction: '2026-09-01-7'
                   gender:
                     type: string
                   email:
@@ -1571,9 +1721,11 @@ paths:
                   status:
                     type: string
                   stateCode:
-                    type: string
+                    type: integer
+                    x-abdm-correction: '2026-09-01-7'
                   districtCode:
-                    type: string
+                    type: integer
+                    x-abdm-correction: '2026-09-01-7'
                   subDistrictCode:
                     type: 'null'
                   villageCode:
@@ -1666,15 +1818,15 @@ paths:
                     middleName: <MIDDLE_NAME>
                     lastName: <LAST_NAME>
                     name: <NAME>
-                    yearOfBirth: <YEAR>
-                    dayOfBirth: <DAY>
-                    monthOfBirth: <MONTH>
+                    yearOfBirth: 1999
+                    dayOfBirth: 26
+                    monthOfBirth: 6
                     gender: M
                     email: <EMAIL>
                     profilePhoto: <BASE64_PHOTO>
                     status: ACTIVE
-                    stateCode: '32'
-                    districtCode: '563'
+                    stateCode: 32
+                    districtCode: 563
                     subDistrictCode: null
                     villageCode: null
                     townCode: null
@@ -1706,15 +1858,15 @@ paths:
                     middleName: <MIDDLE_NAME>
                     lastName: <LAST_NAME>
                     name: <NAME>
-                    yearOfBirth: <YEAR>
-                    dayOfBirth: <DAY>
-                    monthOfBirth: <MONTH>
+                    yearOfBirth: 1999
+                    dayOfBirth: 26
+                    monthOfBirth: 6
                     gender: M
                     email: null
                     profilePhoto: <BASE64_PHOTO>
                     status: ACTIVE
-                    stateCode: '32'
-                    districtCode: '563'
+                    stateCode: 32
+                    districtCode: 563
                     subDistrictCode: null
                     villageCode: null
                     townCode: null
@@ -1738,6 +1890,14 @@ paths:
                     verificationStatus: VERIFIED
                     verificationType: AADHAAR
                     emailVerified: null
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/ServerError'
       x-abdm-atom: hiecm.endpoint.m1-profile-update-account
     get:
       operationId: m1_profile_get_account
@@ -1751,10 +1911,31 @@ paths:
       parameters:
       - $ref: '#/components/parameters/RequestId'
       - $ref: '#/components/parameters/Timestamp'
-      - $ref: '#/components/parameters/XToken'
+      - name: X-token
+        in: header
+        required: true
+        description: |
+          The user scoped token returned when a person logs in or verifies an
+          OTP. Required on this operation. See the shared `XToken` parameter
+          for the general description and the `Bearer ` prefix rule.
+        schema:
+          type: string
+        example: Bearer <X_TOKEN_FROM_LOGIN_VERIFY>
       responses:
         '200':
-          description: "Response body: not documented."
+          description: The response as NHA documents it.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProfileAccountResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/ServerError'
       x-abdm-atom: hiecm.endpoint.m1-profile-get-account
   /v3/profile/account/abha-card:
     get:
@@ -1768,10 +1949,27 @@ paths:
       parameters:
       - $ref: '#/components/parameters/RequestId'
       - $ref: '#/components/parameters/Timestamp'
-      - $ref: '#/components/parameters/XToken'
+      - name: X-token
+        in: header
+        required: true
+        description: |
+          The user scoped token returned when a person logs in or verifies an
+          OTP. Required on this operation. See the shared `XToken` parameter
+          for the general description and the `Bearer ` prefix rule.
+        schema:
+          type: string
+        example: Bearer <X_TOKEN_FROM_LOGIN_VERIFY>
       responses:
         '200':
           description: "Response body: not documented."
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/ServerError'
       x-abdm-atom: hiecm.endpoint.m1-profile-get-abha-card
   /v3/profile/account/download-abha-card:
     get:
@@ -1804,10 +2002,27 @@ paths:
       parameters:
       - $ref: '#/components/parameters/RequestId'
       - $ref: '#/components/parameters/Timestamp'
-      - $ref: '#/components/parameters/XToken'
+      - name: X-token
+        in: header
+        required: true
+        description: |
+          The user scoped token returned when a person logs in or verifies an
+          OTP. Required on this operation. See the shared `XToken` parameter
+          for the general description and the `Bearer ` prefix rule.
+        schema:
+          type: string
+        example: Bearer <X_TOKEN_FROM_LOGIN_VERIFY>
       responses:
         '200':
           description: "Response body: not documented."
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/ServerError'
       x-abdm-atom: hiecm.endpoint.m1-profile-get-qr-code
   /v3/profile/account/request/logout:
     get:
@@ -1823,10 +2038,19 @@ paths:
       parameters:
       - $ref: '#/components/parameters/RequestId'
       - $ref: '#/components/parameters/Timestamp'
-      - $ref: '#/components/parameters/XToken'
+      - name: X-token
+        in: header
+        required: true
+        description: |
+          The user scoped token returned when a person logs in or verifies an
+          OTP. Required on this operation. See the shared `XToken` parameter
+          for the general description and the `Bearer ` prefix rule.
+        schema:
+          type: string
+        example: Bearer <X_TOKEN_FROM_LOGIN_VERIFY>
       responses:
         '200':
-          description: Example values, scrubbed.
+          description: Confirmation that the session ended.
           content:
             application/json:
               schema:
@@ -1850,6 +2074,14 @@ paths:
                   value:
                     message: You have been logged out
                     timestamp: '2025-10-23 11:23:49'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/ServerError'
       x-abdm-atom: hiecm.endpoint.m1-profile-logout
   /v3/profile/account/request/otp:
     post:
@@ -1865,7 +2097,16 @@ paths:
       parameters:
       - $ref: '#/components/parameters/RequestId'
       - $ref: '#/components/parameters/Timestamp'
-      - $ref: '#/components/parameters/XToken'
+      - name: X-token
+        in: header
+        required: true
+        description: |
+          The user scoped token returned when a person logs in or verifies an
+          OTP. Required on this operation. See the shared `XToken` parameter
+          for the general description and the `Bearer ` prefix rule.
+        schema:
+          type: string
+        example: Bearer <X_TOKEN_FROM_LOGIN_VERIFY>
       requestBody:
         required: true
         content:
@@ -1918,7 +2159,19 @@ paths:
                   otpSystem: aadhaar
       responses:
         '200':
-          description: "Response body: not documented."
+          description: The transaction id to carry into the next step, with a message.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TxnResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/ServerError'
       x-abdm-atom: hiecm.endpoint.m1-profile-request-otp
   /v3/profile/account/verify:
     post:
@@ -1933,7 +2186,16 @@ paths:
       parameters:
       - $ref: '#/components/parameters/RequestId'
       - $ref: '#/components/parameters/Timestamp'
-      - $ref: '#/components/parameters/XToken'
+      - name: X-token
+        in: header
+        required: true
+        description: |
+          The user scoped token returned when a person logs in or verifies an
+          OTP. Required on this operation. See the shared `XToken` parameter
+          for the general description and the `Bearer ` prefix rule.
+        schema:
+          type: string
+        example: Bearer <X_TOKEN_FROM_LOGIN_VERIFY>
       requestBody:
         required: true
         content:
@@ -2020,7 +2282,21 @@ paths:
                       otpValue: <OTPVALUE>
       responses:
         '200':
-          description: "Response body: not documented."
+          description: Whether the OTP verified, the transaction id, and the ABHA accounts the person may pick from.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VerifyOtpResult'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/ServerError'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'
       x-abdm-atom: hiecm.endpoint.m1-profile-verify-otp
   /v3/profile/account/abha/search:
     post:
@@ -2069,8 +2345,7 @@ paths:
                   mobile: <MOBILE>
       responses:
         '200':
-          description: Example values, scrubbed. Two shapes are documented;
-            the array is the more likely of the two.
+          description: Two shapes are documented; the array is the more likely of the two.
           content:
             application/json:
               schema:
@@ -2112,6 +2387,16 @@ paths:
                   value:
                     txnId: <TXN_ID>
                     message: OTP is sent to Mobile number ending with ******0161
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/ServerError'
+        '404':
+          $ref: '#/components/responses/NotFound'
       x-abdm-atom: hiecm.endpoint.m1-find-abha-search
   /v3/profile/benefit/abha/search/insurance/{abhaNumber}:
     get:
@@ -2129,7 +2414,7 @@ paths:
       - $ref: '#/components/parameters/AbhaNumber'
       responses:
         '200':
-          description: Example values, scrubbed.
+          description: The insurance programmes linked to the ABHA.
           content:
             application/json:
               schema:
@@ -2156,7 +2441,7 @@ paths:
                     insuranceProgramsLinked:
                     - Health ID Test
         '400':
-          description: Example values, scrubbed.
+          description: The error NHA returns, with its code and message.
           content:
             application/json:
               schema:
@@ -2182,7 +2467,7 @@ paths:
                       code: ABDM-1013
                       message: Invalid ABHA Number
         '401':
-          description: Example values, scrubbed.
+          description: The error NHA returns, with its code and message.
           content:
             application/json:
               schema:
@@ -2209,7 +2494,7 @@ paths:
                       message: ABDM-1094Access to this feature is restricted.
                         Please contact NHA to enable it.
         '500':
-          description: Example values, scrubbed.
+          description: The error NHA returns, with its code and message.
           content:
             application/json:
               schema:
@@ -2234,6 +2519,10 @@ paths:
                     description: 'Access failure for API: /abha/api/v3/profile/benefit/abha/1,
                       version: 1 status: (900900) - Unclassified Authentication
                       Failure'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
       x-abdm-atom: hiecm.endpoint.m1-benefit-search-insurance
   /v3/profile/benefit/abha/statedistrict/{abhaNumber}:
     get:
@@ -2251,7 +2540,19 @@ paths:
       - $ref: '#/components/parameters/AbhaNumber'
       responses:
         '200':
-          description: "Response body: not documented."
+          description: The state and district codes recorded against the ABHA.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BenefitStateDistrictResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/ServerError'
       x-abdm-atom: hiecm.endpoint.m1-benefit-get-state-district
   /v3/profile/benefit/abha/{abhaNumber}:
     get:
@@ -2269,7 +2570,19 @@ paths:
       - $ref: '#/components/parameters/AbhaNumber'
       responses:
         '200':
-          description: "Response body: not documented."
+          description: The benefit programmes recorded against the ABHA.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BenefitByAbhaResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/ServerError'
       x-abdm-atom: hiecm.endpoint.m1-benefit-get-by-abha
   /v3/profile/benefit/linkAndDelink:
     post:
@@ -2320,7 +2633,7 @@ paths:
                   example: <RSA_ENCRYPTED_ABHA_NUMBER>
       responses:
         '200':
-          description: Example values, scrubbed.
+          description: The benefit link status for the ABHA.
           content:
             application/json:
               schema:
@@ -2350,7 +2663,7 @@ paths:
                     healthId: <ABHA_ADDRESS>
                     status: Benefit record has been de-linked successfully
         '400':
-          description: Example values, scrubbed.
+          description: The error NHA returns, with its code and message.
           content:
             application/json:
               schema:
@@ -2386,7 +2699,7 @@ paths:
                       code: ABDM-1138
                       message: The benefit record has already been de-linked
         '401':
-          description: Example values, scrubbed.
+          description: The error NHA returns, with its code and message.
           content:
             application/json:
               schema:
@@ -2416,6 +2729,10 @@ paths:
                     message: Access to this feature is restricted. Please contact
                       NHA to enable it.
                     timestamp: '2024-10-25 15:02:34'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/ServerError'
       x-abdm-atom: hiecm.endpoint.m1-benefit-link-or-delink
   /v3/profile/benefit/search:
     post:
@@ -2468,7 +2785,7 @@ paths:
                   loginId: <ENCRYPTED_A_B_H_A_NUMBER>
       responses:
         '200':
-          description: Example values, scrubbed.
+          description: The response as NHA documents it.
           content:
             application/json:
               schema:
@@ -2511,6 +2828,16 @@ paths:
                     benefitId: <BENEFIT_ID>
                     abhaNumber: <ABHA_NUMBER>
                     status: 0
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/ServerError'
+        '404':
+          $ref: '#/components/responses/NotFound'
       x-abdm-atom: hiecm.endpoint.m1-benefit-search
   /v3/profile/benefit/search/aadhaarByAbha:
     get:
@@ -2602,10 +2929,30 @@ paths:
       parameters:
       - $ref: '#/components/parameters/RequestId'
       - $ref: '#/components/parameters/Timestamp'
-      - $ref: '#/components/parameters/RToken'
+      - name: R-token
+        in: header
+        required: true
+        description: |
+          The refresh token, sent when asking for a new user token without
+          making the person log in again. Required for token refresh. See
+          the shared `RToken` parameter for the general description.
+        schema:
+          type: string
       responses:
         '200':
-          description: "Response body: not documented."
+          description: The user token and refresh token, with their expiries.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenIssuanceResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/ServerError'
       x-abdm-atom: hiecm.endpoint.m1-token-refresh
   /profile/public/certificate:
     get:
@@ -2617,7 +2964,7 @@ paths:
         Fetch the RSA public key used to encrypt all sensitive fields before transmission.
         Fields requiring encryption: Aadhaar, Mobile, OTP, Password, ABHA Number, Email, Photo.
 
-        **Server:** `https://abhasbx.abdm.gov.in/abha/api/v3`
+        **Server:** `https://abhasbx.abdm.gov.in/abha/api`
       parameters:
       - $ref: '#/components/parameters/RequestId'
       - $ref: '#/components/parameters/Timestamp'
@@ -2628,6 +2975,14 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/CertificateResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/ServerError'
       x-abdm-nha-operation-id: getPublicCertificate
       x-abdm-atom: hiecm.endpoint.m1-get-public-certificate
   /profile/login/search:
@@ -2665,6 +3020,14 @@ paths:
                 $ref: '#/components/schemas/SearchProfileResponse'
         '404':
           $ref: '#/components/responses/NotFound'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/ServerError'
       x-abdm-nha-operation-id: loginSearch
       x-abdm-atom: hiecm.endpoint.m1-login-search
   /profile/account/request/emailVerificationLink:
@@ -2691,6 +3054,7 @@ paths:
               - scope
               - loginHint
               - loginId
+              - otpSystem
               properties:
                 scope:
                   type: array
@@ -2708,6 +3072,14 @@ paths:
                 loginId:
                   type: string
                   description: RSA-encrypted email address
+                otpSystem:
+                  type: string
+                  description: |
+                    Which identity system the loginId is encrypted for.
+                    Example values include `abdm` and `aadhaar`.
+                  x-abdm-correction: '2026-09-01-8'
+                  examples:
+                  - abdm, aadhaar
             examples:
               default:
                 value:
@@ -2716,6 +3088,7 @@ paths:
                   - email-link-verify
                   loginHint: email
                   loginId: '{{RSA_encrypted_email}}'
+                  otpSystem: abdm, aadhaar
       responses:
         '200':
           description: Verification link sent to email
@@ -2723,6 +3096,14 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/MessageResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/ServerError'
       x-abdm-nha-operation-id: sendEmailVerificationLink
       x-abdm-atom: hiecm.endpoint.m1-send-email-verification-link
   /phr/web/login/abha/search:
@@ -2758,6 +3139,14 @@ paths:
                 $ref: '#/components/schemas/AuthMethodsResponse'
         '404':
           $ref: '#/components/responses/NotFound'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/ServerError'
       x-abdm-nha-operation-id: phrSearchAbhaAddress
       x-abdm-atom: hiecm.endpoint.m1-phr-search-abha-address
   /phr/web/login/abha/request/otp:
@@ -2794,6 +3183,7 @@ paths:
                   - mobile-verify
                   loginHint: abha-address
                   loginId: '{{RSA_encrypted_abha_address}}'
+                  otpSystem: abdm, aadhaar
               aadhaar_otp:
                 summary: Aadhaar OTP
                 value:
@@ -2802,6 +3192,7 @@ paths:
                   - aadhaar-verify
                   loginHint: abha-address
                   loginId: '{{RSA_encrypted_abha_address}}'
+                  otpSystem: abdm, aadhaar
       responses:
         '200':
           description: OTP sent
@@ -2809,6 +3200,14 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/TxnResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/ServerError'
       x-abdm-nha-operation-id: phrRequestOtp
       x-abdm-atom: hiecm.endpoint.m1-phr-request-otp
   /phr/web/login/abha/verify:
@@ -2860,6 +3259,14 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/LoginVerifyResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/ServerError'
       x-abdm-nha-operation-id: phrVerify
       x-abdm-atom: hiecm.endpoint.m1-phr-verify
   /phr/web/login/profile/abha-profile:
@@ -2883,6 +3290,14 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/PhrProfileResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/ServerError'
       x-abdm-nha-operation-id: getPhrProfile
       x-abdm-atom: hiecm.endpoint.m1-get-phr-profile
   /phr/web/login/profile/abha/phr-card:
@@ -2906,6 +3321,14 @@ paths:
               schema:
                 type: string
                 contentMediaType: application/octet-stream
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/ServerError'
       x-abdm-nha-operation-id: downloadPhrCard
       x-abdm-atom: hiecm.endpoint.m1-download-phr-card
   /phr/web/login/profile/abha/qr-code:
@@ -2930,6 +3353,14 @@ paths:
               schema:
                 type: string
                 contentMediaType: application/octet-stream
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/ServerError'
       x-abdm-nha-operation-id: downloadPhrQrCode
       x-abdm-atom: hiecm.endpoint.m1-download-phr-qr-code
   /v1/bridges/MutipleHRPAddUpdateServices:
@@ -3135,6 +3566,8 @@ components:
         The benefit scheme an enrolment belongs to. On enrolment and benefit calls, the value is `healthid api` on the enrol and search calls, and `healthid` on the login OTP and verify calls under Find ABHA and on some of the benefit calls. On the enrolment OTP request the header is present but explicitly disabled, so it is not sent there.
 
         This header is spelled four different ways across requests: `BENEFIT_NAME` (most), `Benefit-Name` (demo auth and child ABHA calls), `BENEFIT-NAME` (child update, state district search) and `Benefit_Name` (once). Underscore and hyphen are different header names on the wire. Benefit programme calls also use scheme values beyond healthid: `COVIN` on an IRIS enrol and a profile photo update, and a disabled `PAN`.
+
+        Which spelling is correct has not been confirmed against the sandbox.
       schema:
         type: string
       example: healthid api
@@ -3712,6 +4145,12 @@ components:
     SuggestionResponse:
       type: object
       properties:
+        txnId:
+          type: string
+          description: |
+            Transaction id for this suggestion request.
+          examples:
+          - 23acf181-339d-4771-b532-5c5df4a28d19
         abhaAddressList:
           type: array
           description: List of available ABHA Address suggestions
@@ -4238,6 +4677,7 @@ components:
       - scope
       - loginHint
       - loginId
+      - otpSystem
       properties:
         scope:
           type: array
@@ -4255,6 +4695,14 @@ components:
         loginId:
           type: string
           description: RSA-encrypted ABHA Address
+        otpSystem:
+          type: string
+          description: |
+            Which identity system the loginId is encrypted for. Example
+            values include `abdm` and `aadhaar`.
+          x-abdm-correction: '2026-09-01-8'
+          examples:
+          - abdm, aadhaar
     PhrVerifyRequest:
       type: object
       required:
@@ -4760,6 +5208,248 @@ components:
                   type: string
                   examples:
                   - Unable to process at this time
+    AccountSummary:
+      type: object
+      description: |
+        One ABHA linked to the identifier used in the request. Only
+        `ABHANumber` is documented; the account object may carry
+        additional fields.
+      properties:
+        ABHANumber:
+          type: string
+          examples:
+          - 91-7561-4088-XXXX
+    VerifyOtpResult:
+      type: object
+      description: |
+        Result of an OTP verification. The same shape applies to enrolment
+        OTP verification and to profile OTP verification: mobile update,
+        email update, delete, deactivate, re-KYC and password.
+      properties:
+        txnId:
+          type: string
+          examples:
+          - 9c5d453e-756f-45e1-9766-43b9cc1190de
+        authResult:
+          type: string
+          examples:
+          - success
+        message:
+          type: string
+          examples:
+          - Mobile number is now successfully linked to your Account
+        accounts:
+          type: array
+          items:
+            $ref: '#/components/schemas/AccountSummary'
+    TokenIssuanceResponse:
+      type: object
+      description: |
+        A full token issuance. Account selection and token refresh both
+        return this shape.
+      properties:
+        token:
+          type: string
+          description: JWT user token, sent afterwards as X-token.
+          examples:
+          - <JWT_USER_TOKEN>
+        expiresIn:
+          type: integer
+          examples:
+          - 1800
+        refreshToken:
+          type: string
+          examples:
+          - <JWT_REFRESH_TOKEN>
+        refreshExpiresIn:
+          type: integer
+          examples:
+          - 1296000
+    ChildAbhaSummary:
+      type: object
+      properties:
+        dateOfBirth:
+          type: string
+          examples:
+          - 21-2-2020
+        name:
+          type: string
+          examples:
+          - <NAME>
+        gender:
+          type: string
+          examples:
+          - M
+        phrAddress:
+          type: string
+          examples:
+          - 9137868001XXXX@abdm
+        ABHANumber:
+          type: string
+          examples:
+          - 91-3786-8001-XXXX
+    ChildrenListResponse:
+      type: object
+      properties:
+        parentAbhaNumber:
+          type: string
+          examples:
+          - 91-5553-4126-XXXX
+        mobileNumber:
+          type: string
+          examples:
+          - '******0903'
+        childrenCount:
+          type: integer
+          examples:
+          - 2
+        children:
+          type: array
+          items:
+            $ref: '#/components/schemas/ChildAbhaSummary'
+    BenefitByAbhaResponse:
+      type: object
+      properties:
+        abhaNumber:
+          type: string
+          description: 14-digit unique ABHA number of the patient.
+          examples:
+          - 91-7722-7553-XXXX
+        programme:
+          type: array
+          items:
+            type: object
+            properties:
+              benefitName:
+                type: string
+                examples:
+                - Poshan Abhiyaan
+    BenefitStateDistrictResponse:
+      type: object
+      properties:
+        abhaNumber:
+          type: string
+          description: 14-digit unique ABHA number of the patient.
+          examples:
+          - 91-7722-7553-XXXX
+        stateCode:
+          type: integer
+          examples:
+          - 1
+        districtCode:
+          type: integer
+          examples:
+          - 5
+        status:
+          type: string
+          examples:
+          - ACTIVE
+    ProfileAccountResponse:
+      type: object
+      description: |
+        The signed in person's full ABHA profile. Photo fields are
+        scrubbed here; real calls return base64 JPEG bytes.
+      properties:
+        ABHANumber:
+          type: string
+          examples:
+          - 91-7561-4088-XXXX
+        preferredAbhaAddress:
+          type: string
+          examples:
+          - username1997@sbx
+        mobile:
+          type: string
+          examples:
+          - '******0903'
+        firstName:
+          type: string
+        middleName:
+          type: string
+        lastName:
+          type: string
+        name:
+          type: string
+        yearOfBirth:
+          type: string
+          examples:
+          - '1999'
+        dayOfBirth:
+          type: string
+          examples:
+          - '26'
+        monthOfBirth:
+          type: string
+          examples:
+          - '06'
+        gender:
+          type: string
+          examples:
+          - M
+        profilePhoto:
+          type: string
+          description: Base64 JPEG, scrubbed here.
+          examples:
+          - <BASE64_PHOTO>
+        status:
+          type: string
+          examples:
+          - ACTIVE
+        stateCode:
+          type: string
+          examples:
+          - '27'
+        districtCode:
+          type: string
+          examples:
+          - '478'
+        pincode:
+          type: string
+          examples:
+          - '424201'
+        address:
+          type: string
+        kycPhoto:
+          type: string
+          description: Base64 JPEG, scrubbed here.
+          examples:
+          - <BASE64_PHOTO>
+        stateName:
+          type: string
+        districtName:
+          type: string
+        subdistrictName:
+          type: string
+        authMethods:
+          type: array
+          items:
+            type: string
+          examples:
+          - - MOBILE_OTP
+            - AADHAAR_OTP
+        tags:
+          type: object
+        kycVerified:
+          type: boolean
+          examples:
+          - true
+        verificationStatus:
+          type: string
+          examples:
+          - VERIFIED
+        verificationType:
+          type: string
+          examples:
+          - AADHAAR
+        localizedDetails:
+          type: object
+          description: |
+            The same fields translated into the person's local language,
+            where NHA has one on record.
+        createdDate:
+          type: string
+          examples:
+          - '07-05-2024'
   responses:
     BadRequest:
       description: Bad Request, invalid scope, loginHint, or encrypted field
@@ -4788,6 +5478,24 @@ components:
             $ref: '#/components/schemas/ErrorResponse'
     NotFound:
       description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    Forbidden:
+      description: Forbidden, the token is valid but not permitted for this operation
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    ServerError:
+      description: Server error, retry
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    UnprocessableEntity:
+      description: Unprocessable, the request parsed but failed validation
       content:
         application/json:
           schema:

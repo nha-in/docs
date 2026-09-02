@@ -83,6 +83,7 @@ function Row({
   masked,
   depth,
   onChange,
+  placeholder,
 }: {
   id: string;
   field: Field;
@@ -96,9 +97,13 @@ function Row({
       because the row itself, not just its enclosing group, needs the step. */
   depth?: number;
   onChange: (next: string) => void;
+  /** Example ghost text. An example belongs in the placeholder, never in
+      the value: a prefilled box is something the reader has to erase. */
+  placeholder?: string;
 }) {
   const leaf = field.name.split('.').pop() ?? field.name;
   const hintId = field.description ? `${id}-hint` : undefined;
+  const ghost = placeholder ?? `enter ${leaf}`;
   return (
     <div
       className="api-console__row"
@@ -118,7 +123,7 @@ function Row({
         autoComplete="off"
         spellCheck={false}
         readOnly={readOnly}
-        placeholder={`enter ${leaf}`}
+        placeholder={ghost}
         value={value}
         aria-describedby={hintId}
         onChange={(event) => onChange(event.target.value)}
@@ -145,10 +150,12 @@ export default function TryIt({operation}: {operation: Operation}) {
   // The token is held for the browser session, so running the sessions call
   // once fills this in on every other endpoint's panel.
   const [token, setToken] = useState(readToken);
+  // Inputs start empty. The spec's examples appear as placeholder ghost
+  // text instead, so nothing has to be erased before typing. The two
+  // exceptions are filled by their own effects: the generated pair
+  // (REQUEST-ID/TIMESTAMP) and the server-derived X-CM-ID.
   const [headers, setHeaders] = useState<Record<string, string>>(() =>
-    Object.fromEntries(
-      operation.headers.map((header) => [header.name, String(header.example ?? '')]),
-    ),
+    Object.fromEntries(operation.headers.map((header) => [header.name, ''])),
   );
   const [pathValues, setPathValues] = useState<Record<string, string>>(() =>
     Object.fromEntries(operation.pathParams.map((p) => [p.name, ''])),
@@ -156,14 +163,12 @@ export default function TryIt({operation}: {operation: Operation}) {
   const [queryValues, setQueryValues] = useState<Record<string, string>>(() =>
     Object.fromEntries(operation.queryParams.map((q) => [q.name, ''])),
   );
-  const [values, setValues] = useState(() =>
-    seed(operation.body, operation.requestExample),
+  const [values, setValues] = useState<Record<string, string>>({});
+  const ghosts = useMemo(
+    () => seed(operation.body, operation.requestExample),
+    [operation],
   );
-  const [raw, setRaw] = useState(() =>
-    operation.requestExample === undefined
-      ? ''
-      : JSON.stringify(operation.requestExample, null, 2),
-  );
+  const [raw, setRaw] = useState('');
   const [mode, setMode] = useState<'fields' | 'raw'>(() =>
     leaves(operation.body).length ? 'fields' : 'raw',
   );
@@ -310,6 +315,7 @@ export default function TryIt({operation}: {operation: Operation}) {
         id={`try-${operation.id}-body-${node.field.name}`}
         field={{...node.field, name: node.leaf}}
         value={values[node.field.name] ?? ''}
+        placeholder={ghosts[node.field.name]}
         depth={depth}
         onChange={(next) =>
           setValues((current) => ({...current, [node.field.name]: next}))
@@ -545,6 +551,9 @@ export default function TryIt({operation}: {operation: Operation}) {
                   }
                   readOnly={GENERATED_HEADERS.has(field.name)}
                   value={headers[field.name] ?? ''}
+                  placeholder={
+                    field.example !== undefined ? String(field.example) : undefined
+                  }
                   onChange={(next) =>
                     setHeaders((current) => ({...current, [field.name]: next}))
                   }
@@ -593,7 +602,13 @@ export default function TryIt({operation}: {operation: Operation}) {
                     rows={Math.min(18, Math.max(6, raw.split('\n').length))}
                     spellCheck={false}
                     value={raw}
-                    placeholder={bodyUnknown ? bodyHint : undefined}
+                    placeholder={
+                      bodyUnknown
+                        ? bodyHint
+                        : operation.requestExample === undefined
+                          ? undefined
+                          : JSON.stringify(operation.requestExample, null, 2)
+                    }
                     aria-describedby={
                       [rawError ? rawErrorId : null, bodyUnknown ? bodyHintId : null]
                         .filter(Boolean)

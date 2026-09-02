@@ -1,0 +1,971 @@
+<title>ABDM Swagger Audit</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+
+<style>
+:root{
+  --ground:#F3F6F4;
+  --surface:#FFFFFF;
+  --surface-2:#EAEFEC;
+  --ink:#141D1B;
+  --ink-2:#4E5C58;
+  --ink-3:#7C8A85;
+  --rule:#D5DDD9;
+  --rule-2:#BCC7C2;
+  --accent:#0A6257;
+  --accent-soft:#DCEBE7;
+  --crit:#9E2620;
+  --crit-soft:#F6E2E0;
+  --warn:#8A5A05;
+  --warn-soft:#F6EBD8;
+  --info:#2A5478;
+  --info-soft:#E0E9F1;
+  --ok:#356B45;
+  --ok-soft:#E0EDE3;
+  --shadow:0 1px 2px rgba(20,29,27,.06);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --ground:#101715;
+    --surface:#18211E;
+    --surface-2:#1F2A27;
+    --ink:#E5ECE9;
+    --ink-2:#A3B0AB;
+    --ink-3:#7B8883;
+    --rule:#2C3835;
+    --rule-2:#3C4A46;
+    --accent:#54C2B0;
+    --accent-soft:#152E2A;
+    --crit:#EC8078;
+    --crit-soft:#331B19;
+    --warn:#D8A24A;
+    --warn-soft:#2E2413;
+    --info:#87ADD0;
+    --info-soft:#182530;
+    --ok:#74BE88;
+    --ok-soft:#16271B;
+    --shadow:0 1px 2px rgba(0,0,0,.4);
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#101715;
+  --surface:#18211E;
+  --surface-2:#1F2A27;
+  --ink:#E5ECE9;
+  --ink-2:#A3B0AB;
+  --ink-3:#7B8883;
+  --rule:#2C3835;
+  --rule-2:#3C4A46;
+  --accent:#54C2B0;
+  --accent-soft:#152E2A;
+  --crit:#EC8078;
+  --crit-soft:#331B19;
+  --warn:#D8A24A;
+  --warn-soft:#2E2413;
+  --info:#87ADD0;
+  --info-soft:#182530;
+  --ok:#74BE88;
+  --ok-soft:#16271B;
+  --shadow:0 1px 2px rgba(0,0,0,.4);
+}
+
+*{box-sizing:border-box}
+body{
+  background:var(--ground);
+  color:var(--ink);
+  font-family:'Archivo',system-ui,-apple-system,'Segoe UI',sans-serif;
+  font-size:15px;
+  line-height:1.55;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:1040px;margin:0 auto;padding:0 28px 96px}
+
+/* ---------- masthead ---------- */
+.masthead{
+  border-bottom:2px solid var(--ink);
+  padding:56px 0 22px;
+  margin-bottom:38px;
+}
+.eyebrow{
+  font-size:11px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--accent);margin:0 0 14px;
+}
+h1{
+  font-family:'Archivo',sans-serif;
+  font-size:clamp(34px,5.2vw,52px);
+  font-weight:700;letter-spacing:-.022em;line-height:1.04;
+  margin:0 0 16px;text-wrap:balance;
+}
+.standfirst{
+  font-family:'Source Serif 4',Georgia,serif;
+  font-size:19px;line-height:1.5;color:var(--ink-2);
+  max-width:60ch;margin:0 0 26px;
+}
+.provenance{
+  display:flex;flex-wrap:wrap;gap:6px 26px;
+  font-family:'IBM Plex Mono',ui-monospace,monospace;
+  font-size:12px;color:var(--ink-3);
+}
+.provenance b{color:var(--ink-2);font-weight:500}
+
+/* ---------- verdict strip ---------- */
+.verdicts{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));
+  gap:1px;background:var(--rule);border:1px solid var(--rule);
+  margin-bottom:52px;
+}
+.verdict{background:var(--surface);padding:18px 20px 20px}
+.verdict .axis{
+  font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--ink-3);margin-bottom:10px;
+}
+.verdict .call{
+  font-size:19px;font-weight:600;letter-spacing:-.01em;margin-bottom:6px;
+}
+.verdict .call.bad{color:var(--crit)}
+.verdict .call.mid{color:var(--warn)}
+.verdict .call.good{color:var(--ok)}
+.verdict .note{font-size:13px;color:var(--ink-2);line-height:1.45}
+
+/* ---------- sections ---------- */
+section{margin-bottom:64px;scroll-margin-top:20px}
+h2{
+  font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--accent);margin:0 0 8px;
+}
+.h2-title{
+  font-size:clamp(24px,3.4vw,32px);font-weight:700;letter-spacing:-.018em;
+  margin:0 0 14px;line-height:1.15;text-wrap:balance;
+}
+.lede{
+  font-family:'Source Serif 4',Georgia,serif;
+  font-size:17px;line-height:1.62;color:var(--ink-2);
+  max-width:68ch;margin:0 0 28px;
+}
+p{max-width:70ch}
+h3{
+  font-size:16px;font-weight:600;letter-spacing:-.005em;
+  margin:34px 0 10px;
+}
+
+/* ---------- findings ---------- */
+.finding{
+  border-top:1px solid var(--rule);
+  padding:18px 0 4px;
+  display:grid;
+  grid-template-columns:82px 1fr;
+  gap:0 22px;
+  align-items:start;
+}
+.chip{
+  font-family:'IBM Plex Mono',ui-monospace,monospace;
+  font-size:10px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;
+  padding:3px 7px;display:inline-block;margin-top:3px;white-space:nowrap;
+}
+.chip.crit{background:var(--crit-soft);color:var(--crit)}
+.chip.warn{background:var(--warn-soft);color:var(--warn)}
+.chip.info{background:var(--info-soft);color:var(--info)}
+.chip.ok{background:var(--ok-soft);color:var(--ok)}
+.finding .body{min-width:0}
+.finding .title{font-weight:600;margin:0 0 6px;letter-spacing:-.005em}
+.finding p{margin:0 0 8px;color:var(--ink-2);font-size:14.5px}
+.where{
+  font-family:'IBM Plex Mono',ui-monospace,monospace;
+  font-size:12px;color:var(--ink-3);margin:0 0 10px;
+}
+
+code{
+  font-family:'IBM Plex Mono',ui-monospace,monospace;
+  font-size:.88em;
+  background:var(--surface-2);
+  padding:1px 5px;
+  color:var(--ink);
+  word-break:break-word;
+}
+pre{
+  font-family:'IBM Plex Mono',ui-monospace,monospace;
+  background:var(--surface);
+  border:1px solid var(--rule);
+  border-left:3px solid var(--rule-2);
+  padding:13px 16px;margin:0 0 14px;
+  font-size:12.5px;line-height:1.65;
+  overflow-x:auto;
+}
+pre code{background:none;padding:0;font-size:inherit}
+.cm{color:var(--ink-3)}
+.bad{color:var(--crit)}
+.good{color:var(--ok)}
+
+/* ---------- tables ---------- */
+.tablewrap{overflow-x:auto;margin:0 0 16px;border:1px solid var(--rule);background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:13px}
+th,td{padding:8px 13px;text-align:left;border-bottom:1px solid var(--rule);vertical-align:top}
+thead th{
+  font-size:10.5px;font-weight:600;letter-spacing:.09em;text-transform:uppercase;
+  color:var(--ink-3);background:var(--surface-2);white-space:nowrap;
+  border-bottom:1px solid var(--rule-2);
+}
+tbody tr:last-child td{border-bottom:none}
+td.num,th.num{text-align:right;font-variant-numeric:tabular-nums;font-family:'IBM Plex Mono',monospace}
+td.mono,th.mono{font-family:'IBM Plex Mono',monospace;font-size:12px;white-space:nowrap}
+.zero{color:var(--ink-3)}
+.flag{color:var(--crit);font-weight:600}
+caption{
+  caption-side:bottom;text-align:left;padding:9px 13px;
+  font-size:12px;color:var(--ink-3);border-top:1px solid var(--rule);
+}
+
+ul{margin:0 0 14px;padding-left:19px;max-width:70ch}
+li{margin-bottom:6px;color:var(--ink-2);font-size:14.5px}
+li strong{color:var(--ink);font-weight:600}
+
+.callout{
+  background:var(--accent-soft);
+  border:1px solid var(--rule);
+  border-left:3px solid var(--accent);
+  padding:15px 18px;margin:0 0 22px;
+}
+.callout p{margin:0;font-size:14.5px;color:var(--ink)}
+.callout p + p{margin-top:9px}
+
+hr{border:none;border-top:1px solid var(--rule);margin:44px 0}
+
+footer{
+  border-top:2px solid var(--ink);
+  padding-top:22px;margin-top:20px;
+  font-size:13px;color:var(--ink-3);
+}
+footer h3{margin-top:0}
+footer p{color:var(--ink-3);font-size:13px}
+
+@media (max-width:620px){
+  .wrap{padding:0 18px 64px}
+  .finding{grid-template-columns:1fr;gap:8px}
+  .chip{margin-top:0}
+}
+</style>
+
+<div class="wrap">
+
+<header class="masthead">
+  <p class="eyebrow">Cross-specification consistency review</p>
+  <h1>ABDM Swagger Audit</h1>
+  <p class="standfirst">Ten OpenAPI documents from the ABDM sandbox — ABHA, PHR, and eight HIE-CM services — checked for timestamp consistency, error-code coherence, encryption-key correctness, and whether the examples actually validate.</p>
+  <div class="provenance">
+    <span><b>Source</b> sandboxcms.abdm.gov.in/uploads</span>
+    <span><b>Specs</b> 10 files, 158 operations</span>
+    <span><b>Reviewed</b> 31 Aug 2026</span>
+  </div>
+</header>
+
+<div class="verdicts">
+  <div class="verdict">
+    <div class="axis">Timestamps</div>
+    <div class="call bad">Not consistent</div>
+    <div class="note">Three incompatible encodings for the same <code>timestamp</code> field. Headers agree; bodies do not.</div>
+  </div>
+  <div class="verdict">
+    <div class="axis">Error codes</div>
+    <div class="call bad">Not consistent</div>
+    <div class="note">14 error-body shapes, 25 malformed code literals, and codes that mean different things per spec.</div>
+  </div>
+  <div class="verdict">
+    <div class="axis">Encryption keys</div>
+    <div class="call mid">One good, one broken</div>
+    <div class="note">ABHA's key is genuine and valid. The gateway JWKS example is truncated and unusable.</div>
+  </div>
+  <div class="verdict">
+    <div class="axis">Examples</div>
+    <div class="call bad">608 fail</div>
+    <div class="note">Of 5,123 examples checked, 608 contradict their own schema. Two files won't even parse.</div>
+  </div>
+</div>
+
+<!-- ============ REMEDIATION ============ -->
+<section id="fixes">
+  <h2>Remediation</h2>
+  <div class="h2-title">All ten specs now validate</div>
+  <p class="lede">A corrected copy of all ten specs sits in <code>fixed/</code>, alongside a <code>CHANGES.md</code> listing every edit with its before and after. The originals are untouched and byte-identical to what the CMS serves. Eight rounds were applied: self-contradictions where only one resolution was possible; corrections backed by evidence inside the suite; and finally answers mined from the official ABDM V3 milestone documents and one live request. Nothing was changed on the strength of preference alone.</p>
+
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>Measure</th><th class="num">Original</th><th class="num">After tier 1</th><th class="num">After tier 2</th><th>Result</th></tr></thead>
+      <tbody>
+        <tr><td>Files that parse with a strict YAML loader</td><td class="num">8 / 10</td><td class="num">10 / 10</td><td class="num">10 / 10</td><td class="good"><strong>All ten load</strong></td></tr>
+        <tr><td><strong>Files valid in Swagger Editor</strong></td><td class="num">3 / 10</td><td class="num">3 / 10</td><td class="num">10 / 10</td><td class="good"><strong>All ten validate</strong></td></tr>
+        <tr><td>Scalar examples contradicting their schema</td><td class="num">423</td><td class="num">81</td><td class="num">21</td><td class="good">−95%</td></tr>
+        <tr><td>Whole-payload examples failing validation</td><td class="num">185</td><td class="num">174</td><td class="num">25</td><td class="good">−86%</td></tr>
+        <tr><td>Distinct timestamp encodings in body fields</td><td class="num">3</td><td class="num">3</td><td class="num">2</td><td class="good">both now correct</td></tr>
+        <tr><td>Duplicate <code>operationId</code>s</td><td class="num">22</td><td class="num">0</td><td class="num">0</td><td class="good">codegen-safe</td></tr>
+        <tr><td>Header names with multiple spellings</td><td class="num">5</td><td class="num">0</td><td class="num">0</td><td class="good">normalised</td></tr>
+      </tbody>
+      <caption>Paths, operations and declared response codes are identical in every file — verified by comparing the parsed structure before and after each round.</caption>
+    </table>
+  </div>
+
+  <h3>What the reference documents settled</h3>
+  <p>Two questions that looked like judgment calls turned out to have evidence behind them, found in the official ABDM V3 milestone documents linked from the sandbox:</p>
+  <ul>
+    <li><strong>The timestamp format is <code>yyyy-MM-dd'T'HH:mm:ss.SSS'Z'</code>.</strong> The M2, M3 and ABHA/PHR reference documents use it exclusively — 131 occurrences of a single literal, and not one epoch or space-separated value. ABHA's <code>2024-05-10 11:13:04</code> was the sole outlier and is now converted.</li>
+    <li><strong>The epoch-millis timestamps were never wrong.</strong> Every one sits inside a Spring Boot error envelope — <code>{timestamp, path, status, error, requestId}</code> — on a 500 response, where epoch milliseconds is the framework's own rendering. That is a different field from the ABDM protocol timestamp, and it was left alone. What looked like three competing encodings is really two correct ones plus one genuine outlier.</li>
+  </ul>
+
+  <h3>What was changed</h3>
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>Fix</th><th class="num">Edits</th><th>Rationale</th></tr></thead>
+      <tbody>
+        <tr><td>Quoted unparseable <code>{{…}}</code> placeholders</td><td class="num">4</td><td>The only change that makes ABHA and PHR loadable</td></tr>
+        <tr><td>Stripped whitespace from example strings</td><td class="num">613</td><td>Padding is never meaningful in a code or message literal</td></tr>
+        <tr><td>Error <code>code</code> retyped <code>integer</code> → <code>string</code></td><td class="num">25</td><td>The example is <code>ABDM-xxxx</code>; no integer can hold it</td></tr>
+        <tr><td>Quoted bare date scalars</td><td class="num">13</td><td>YAML was coercing them to native dates against <code>type: string</code></td></tr>
+        <tr><td>Made duplicate <code>operationId</code>s unique</td><td class="num">22</td><td>Generators collapse or reject colliding ids</td></tr>
+        <tr><td>Repaired malformed UUID examples</td><td class="num">9</td><td>Matched the correct variant already present in the same file</td></tr>
+        <tr><td><code>scope</code>/<code>authMethods</code> retyped <code>string</code> → <code>array</code></td><td class="num">7</td><td>Every example was already an array</td></tr>
+        <tr><td>Normalised header name spellings</td><td class="num">6</td><td>Collapsed to the majority spelling in each file</td></tr>
+        <tr><td>Corrected enum examples</td><td class="num">3</td><td>Replaced the joined enum list with one legal value</td></tr>
+        <tr><td>Renamed the mis-indented <code>example</code> property</td><td class="num">3</td><td>Sibling specs show the field is <code>description</code></td></tr>
+        <tr><td>Removed periods leaked from descriptions</td><td class="num">2</td><td><code>ECDH.</code> → <code>ECDH</code></td></tr>
+        <tr><td>De-listed an <code>items</code>-level example</td><td class="num">1</td><td>An items schema describes one element, not a list</td></tr>
+      </tbody>
+      <caption><code>link-token.yaml</code> needed no edits. PHR took the most (354), then consent-management (79) and ABHA (72).</caption>
+    </table>
+  </div>
+
+  <h3>Tier 2 — the evidence-backed round</h3>
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>Fix</th><th class="num">Edits</th><th>Evidence it rests on</th></tr></thead>
+      <tbody>
+        <tr><td>Trailing <code>:</code> and <code>,</code> stripped from error codes</td><td class="num">555</td><td>The same code already ships clean elsewhere in the suite</td></tr>
+        <tr><td>ABHA timestamps converted to RFC 3339</td><td class="num">269</td><td>131 occurrences of that format in the official docs, zero of any other</td></tr>
+        <tr><td>ABHA 400 bodies changed from array to object</td><td class="num">39</td><td>5 of 10 ABHA 400s already declare object; all media-level examples are objects</td></tr>
+        <tr><td>Truncated <code>requestId</code> examples completed</td><td class="num">29</td><td><code>d20b575b-2659</code> is half a UUID</td></tr>
+        <tr><td>Examples quoted to match a declared string type</td><td class="num">49</td><td>The declaration is the contract; the example was the error</td></tr>
+        <tr><td><code>expiresIn</code>/<code>refreshExpiresIn</code> retyped to <code>integer</code></td><td class="num">7</td><td>Declared numeric 26 times across the suite against 5 string declarations</td></tr>
+        <tr><td>ABHA's Spring envelope aligned to <code>number</code> + epoch</td><td class="num">6</td><td>Subscription and user-initiated-linking declare the identical envelope that way, 29 times to ABHA's 1</td></tr>
+      </tbody>
+      <caption>Tier 2 total: 954 edits. Combined with tier 1's 708, that is 1,651 changes with no structural drift.</caption>
+    </table>
+  </div>
+
+  <div class="callout">
+    <p><strong>The <code>required</code> lists look wrong, not the examples.</strong> Sixteen request examples omit a field their schema marks required — but the evidence points at the schema. All six examples on <code>/profile/account/verify</code> omit <code>reasons</code>; the PATCH on <code>/profile/account</code> sends only the field being changed, which is what PATCH is for; and the example that omits <code>loginHint</code> and <code>loginId</code> is named "LINK or DELINK via X-token", i.e. the variant that authenticates by header instead. Filling these in would document requests nobody sends. Relaxing <code>required</code> is the likely fix, but that loosens a contract, so it is left open.</p>
+  </div>
+
+  <h3>Tier 3 — settled by the official documents</h3>
+  <p class="lede">The sandbox publishes milestone documents (M2, M3, ABHA/PHR) alongside the specs. Mining them, plus one live request, resolved four of the questions that the specs alone could not answer.</p>
+
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>Question</th><th>Answer</th><th>Source</th></tr></thead>
+      <tbody>
+        <tr><td><code>isHip</code> or <code>isHIP</code>?</td><td class="good"><strong>Both</strong> — they are different endpoints</td><td>Docs use <code>isHIP</code> under <code>/providers</code> and <code>/govt-programs</code>, <code>isHip</code> only under <code>/bridge-service</code></td></tr>
+        <tr><td><code>/sessions</code> — 200 or 202?</td><td class="good"><strong>202 Accepted</strong></td><td>M2 and M3 both state it for this exact URL; gateway.yaml already agreed</td></tr>
+        <tr><td>Is <code>/certs</code> public?</td><td class="good"><strong>No — it requires auth</strong></td><td>A live request returns 401; the spec declared no security at all</td></tr>
+        <tr><td>What does <code>ABDM-9999</code> mean?</td><td class="good"><strong>"Unknown exception"</strong></td><td>The M2 Error Codes Listing — a 69-code registry</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="finding">
+    <span class="chip ok">Resolved</span>
+    <div class="body">
+      <p class="title">The <code>isHip</code>/<code>isHIP</code> conflict was two endpoints, not one typo</p>
+      <p>The reference documents use <code>isHIP</code> in every <code>/providers</code>, <code>/providers/{id}</code> and <code>/govt-programs</code> sample, and <code>isHip</code> only under <code>/bridge-service/serviceId/{serviceId}</code>. So <code>gateway.yaml</code> was right for bridge-service and wrong for the other three; <code>scan-and-pay</code> was right all along. Three occurrences corrected, and the two specs now agree on <code>/providers/{provider-id}</code>. The <code>/health-lockers</code> response also uses <code>isHip</code> but no document covers it, so it was left alone.</p>
+    </div>
+  </div>
+
+  <div class="finding">
+    <span class="chip ok">Resolved</span>
+    <div class="body">
+      <p class="title">An official 69-code error registry exists, and the specs diverge from it</p>
+      <p>The M2 document carries an "Error Codes Listing" mapping every <code>ABDM-xxxx</code> to one meaning. Twelve placeholder messages — <code>"string"</code> and <code>"error message"</code> shipped as documentation — were replaced with the registry's text. But the registry also exposes how far the specs have drifted:</p>
+      <ul>
+        <li><strong><code>ABDM-1006</code> is "Bad Request, invalid request Body"</strong> — yet PHR uses it for eleven distinct validation failures (<em>"Invalid Password"</em>, <em>"Invalid Email Id"</em>, and so on). <code>ABDM-1010 "Validation failed"</code> looks like the code that was meant.</li>
+        <li><strong><code>ABDM-1001</code> is "No data found"</strong> — but <code>consent-management-data-flow</code> documents it as <em>"unable to connect database"</em>, which is <code>ABDM-1000</code>.</li>
+        <li><strong>22 codes in the specs are absent from the registry</strong> (<code>ABDM-1065</code>, <code>ABDM-1103</code>–<code>1107</code>, <code>ABDM-1211</code>, <code>ABDM-2429</code>, <code>ABDM-2500</code> and others) — the registry appears to predate them rather than the codes being wrong.</li>
+        <li><strong>The registry contradicts itself twice.</strong> <code>ABDM-1035</code> is listed as both "Invalid HIP ID" and "OTP does not matched"; <code>ABDM-1006</code> as both "Bad Request, invalid request Body" and "Invalid combinations of scopes".</li>
+      </ul>
+      <p>None of the code-to-meaning divergences were changed. The specs likely document what the service really returns, and the registry is the normative list — reconciling them is ABDM's call, not a documentation edit.</p>
+    </div>
+  </div>
+
+  <div class="finding">
+    <span class="chip crit">Unfixable — truncated at source</span>
+    <div class="body">
+      <p class="title">The gateway JWKS is broken in the official documents too</p>
+      <p>The reference documents carry the <em>same</em> 142-character modulus that decodes to 106 bytes. The truncation is not a copying error in the spec — ABDM publishes it that way everywhere. A live fetch would settle it, but <code>/certs</code> requires credentials. No substitute key was invented: a plausible-looking but fabricated public key in a health-data specification is worse than a visibly broken one.</p>
+    </div>
+  </div>
+
+  <div class="callout">
+    <p><strong>One tier-2 decision now looks less certain.</strong> Stripping the trailing <code>:</code> from 555 error codes was justified on the clean form appearing elsewhere in the suite. The reference documents complicate that: their normative registry lists every code clean, but their JSON response samples show the dirty form 294 times against 100 clean. If the service really emits <code>"ABDM-9999: "</code> on the wire, that change should be reverted — every edit is logged in <code>CHANGES.md</code>, so it is one pass to undo.</p>
+  </div>
+
+  <h3>Enrichment — putting the documents back into the specs</h3>
+  <p class="lede">The reference documents carry parameter tables the specs never absorbed. Mining them closed most of the gap, additively: nothing that already had a description was overwritten.</p>
+
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>Coverage</th><th class="num">Before</th><th class="num">After</th><th>Worst case</th></tr></thead>
+      <tbody>
+        <tr><td>Property descriptions</td><td class="num">33%</td><td class="num">46%</td><td>ABHA 8% → 28%, PHR 21% → 26%</td></tr>
+        <tr><td>Parameter descriptions</td><td class="num">72%</td><td class="num">97%</td><td class="good">ABHA 2/99 → 88/99, PHR 0/56 → 55/56</td></tr>
+        <tr><td>Error codes carrying their meaning</td><td class="num">0</td><td class="num">564</td><td class="good">every code now says what it means</td></tr>
+      </tbody>
+      <caption>141 header descriptions, 489 field descriptions, 564 error-code descriptions — 1,194 additions in total.</caption>
+    </table>
+  </div>
+
+  <div class="finding">
+    <span class="chip ok">Enriched</span>
+    <div class="body">
+      <p class="title">Every error code now states its own meaning</p>
+      <p>The generic note was replaced with the code's actual definition. Where the code appears in the M2 registry the meaning comes from there (309); for the 22 newer ABDM codes and the WSO2 numeric codes the registry predates, it comes from the spec's own sibling <code>message</code> example (255).</p>
+<pre><code>code:
+  type: string
+  pattern: '^(ABDM-\d{4}|\d{3,6})(: )?$'
+  description: &gt;-
+    <span class="good">ABDM-1024 - Dependent service unavailable.</span> May be returned either bare
+    or with a trailing ": " separator; match on the code itself and
+    tolerate the separator.</code></pre>
+    </div>
+  </div>
+
+  <div class="callout">
+    <p><strong>What was deliberately not mined.</strong> The extraction also produced flow-specific sentences — <em>"Request ID sent in init API call"</em> for <code>requestId</code>, for instance. Those are correct on one endpoint and wrong on the twelve others sharing the field name, so the mined list was curated by hand and roughly two thirds of it discarded. Accuracy beat coverage; that is why ABHA and PHR sit at 28% and 26% rather than higher.</p>
+  </div>
+
+  <div class="finding">
+    <span class="chip ok">Filled in</span>
+    <div class="body">
+      <p class="title">PHR now documents 5xx on all 21 operations</p>
+      <p>PHR shipped with no server-error shape at all. Both responses were modelled on siblings rather than invented:</p>
+      <div class="tablewrap">
+        <table>
+          <thead><tr><th>Added</th><th>Shape and code</th><th>Modelled on</th><th>Confidence</th></tr></thead>
+          <tbody>
+            <tr><td class="mono">500 ×21</td><td class="mono">{code, message, description} — 900900</td><td>ABHA</td><td class="good">High</td></tr>
+            <tr><td class="mono">503 ×21</td><td class="mono">{code, message} — ABDM-1024</td><td>The HIE-CM specs</td><td class="flag">Lower</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>PHR shares ABHA's host, path family and 401 envelope, and its own 401 carries <code>www-authenticate: … realm="WSO2 API Manager"</code> — so both sit behind the same gateway, and <code>900900</code> is both ABHA's 500 code and the dominant one suite-wide (33 occurrences). The 503 is the weaker call: <code>ABDM-1024</code> is dominant across six HIE-CM specs (58 occurrences), but ABHA documents no 503 at all, so this one is defensive inference rather than something any document states. It is flagged in <code>CHANGES.md</code> as the first thing to drop if ABDM confirms PHR never returns 503.</p>
+    </div>
+  </div>
+
+  <div class="finding">
+    <span class="chip ok">Completed</span>
+    <div class="body">
+      <p class="title">Every operation now documents 400, 401 and 403</p>
+      <p>134 blocks added across all ten specs, each in that spec's own house shape so no file gained a foreign convention.</p>
+      <div class="tablewrap">
+        <table>
+          <thead><tr><th>Status</th><th class="num">Added</th><th>Shape</th><th>Code</th><th>Basis</th></tr></thead>
+          <tbody>
+            <tr><td class="mono">400</td><td class="num">37</td><td class="mono">{error: {code, message}}</td><td class="mono">ABDM-1006</td><td>52 existing uses of the envelope; the registry's "Bad Request, invalid request Body"</td></tr>
+            <tr><td class="mono">401</td><td class="num">28</td><td class="mono">{code, message, description}</td><td class="mono">900901 / 900902</td><td>The WSO2 shape, identical in all ten specs; each keeps its own code</td></tr>
+            <tr><td class="mono">403</td><td class="num">69</td><td class="mono">text/plain string</td><td class="zero">—</td><td>The convention in all 8 specs that documented it</td></tr>
+          </tbody>
+          <caption>Status coverage is now complete: all 158 operations carry 400, 401 and 403.</caption>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="callout">
+    <p><strong>Read the 403s with more caution than the rest.</strong> 69 of the 134 additions are <code>403</code>, and 46 of those went to ABHA (36) and gateway (10) — two specs that documented no <code>403</code> anywhere. The <code>400</code> and <code>401</code> additions had in-file precedent to copy; these do not. The shape is certainly right, but whether each of those endpoints can actually return <code>403</code> is asserted, not established. The same applies more weakly to the 46 callback operations (<code>&lt;callback_url&gt;/…</code>, <code>/on-*</code>, <code>/notify</code>), which the HIP or HIU implements rather than ABDM — there the added blocks read as a template for the integrator's own service, not as observed ABDM behaviour.</p>
+  </div>
+
+  <h3>Swagger Editor — the check that found what YAML parsing could not</h3>
+  <p class="lede">Validating with <code>@apidevtools/swagger-parser</code>, the library Swagger Editor itself uses, put the originals at <strong>3 of 10</strong>. Loading cleanly into PyYAML says nothing about being a valid OpenAPI document, and seven files failed on a single root cause that every earlier round had missed.</p>
+
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>Fix</th><th class="num">Count</th><th>Why the document was invalid</th></tr></thead>
+      <tbody>
+        <tr><td><code>&lt;callback_url&gt;/…</code> path keys → <code>/…</code></td><td class="num">30</td><td>Every key under <code>paths</code> must begin with <code>/</code>. This one thing broke 7 of the 10 files</td></tr>
+        <tr><td><code>apikeyAuth</code> / <code>noauthAuth</code> removed</td><td class="num">18</td><td><code>type: http</code> with a scheme absent from the IANA registry — declared in 9 specs, referenced by none</td></tr>
+        <tr><td><code>decription:</code> → <code>description:</code></td><td class="num">2</td><td>A typo turns it into an unrecognised keyword, invalidating the schema object</td></tr>
+        <tr><td><code>nuallable:</code> → <code>nullable:</code></td><td class="num">1</td><td>Same</td></tr>
+        <tr><td><code>type: timestamp</code> → <code>string</code> + <code>format: date-time</code></td><td class="num">1</td><td>Not a JSON Schema type</td></tr>
+        <tr><td><code>required: null</code> removed</td><td class="num">1</td><td><code>required</code> must be an array</td></tr>
+        <tr><td>Empty <code>description:</code> removed</td><td class="num">1</td><td><code>description</code> must be a string</td></tr>
+      </tbody>
+      <caption>The 30 renamed paths keep their meaning — each operation now opens with "Hosted by the HIP/HIU, not by ABDM" and explains the path is relative to the bridge's registered callback URL.</caption>
+    </table>
+  </div>
+
+  <div class="callout">
+    <p><strong>This round also caught a regression introduced by an earlier one.</strong> The array→object unwrap left a duplicated <code>type: object</code> in 39 ABHA branches. PyYAML keeps the last of a duplicated key silently, so every check up to this point passed; js-yaml, which Swagger Editor uses, rejects the document outright. ABHA was the one file that validated <em>before</em> the refactor and not after. It is fixed, and a duplicate-key scan now runs as part of verification — the lesson being that a permissive parser agreeing with you is not evidence of much.</p>
+  </div>
+
+  <div class="finding">
+    <span class="chip ok">Settled</span>
+    <div class="body">
+      <p class="title">hiType now has one enum, everywhere</p>
+      <p>All 33 <code>hiType</code>/<code>hiTypes</code> schemas across the four specs that carry the field now hold the identical eight values in the identical order — <code>DiagnosticReport</code>, <code>DischargeSummary</code>, <code>HealthDocumentRecord</code>, <code>ImmunizationRecord</code>, <code>OPConsultation</code>, <code>Prescription</code>, <code>WellnessRecord</code>, <code>Invoice</code>. Two occurrences that had no enum at all now have one, one spec's list had <code>DiagnosticReport<strong>s</strong></code> plural, and two examples used an uppercase spelling.</p>
+      <p>This one nearly went wrong. The reference documents use an uppercase vocabulary in the care-context linking samples and carry a server error reading <em>"Invalid HIType, it must be in PRESCRIPTION, DIAGNOSTIC REPORT, OPCONSULTATION…"</em> — seven values, no <code>Invoice</code>. That read convincingly as a second vocabulary belonging to the linking endpoints, and the two enum-less occurrences sat on exactly those endpoints. It was wrong: the camelCase set is the real vocabulary throughout and the uppercase forms in the documents are stale. Suggestive evidence is not the same as correct evidence.</p>
+    </div>
+  </div>
+
+  <div class="callout">
+    <p><strong>Still open.</strong> The <code>ABDM-1006</code>/<code>ABDM-9999</code> overloading; the <code>curve25519</code> contradiction; the bodies on <code>204</code>; the sixteen over-strict <code>required</code> lists; three ABHA 400 examples that are arrays where the schema says object; and four codes that cram several values into one string. Each needs a decision from whoever owns the service.</p>
+  </div>
+</section>
+
+<!-- ============ BLOCKING ============ -->
+<section>
+  <h2>Start here</h2>
+  <div class="h2-title">Two of the ten files fail to parse at all</div>
+  <p class="lede">Before any of the consistency questions matter: <code>abha-api-v3.yaml</code> and <code>phr-api.yaml</code> are not loadable YAML. Four lines contain unquoted template placeholders that YAML reads as flow mappings with an unhashable key. Swagger UI's browser parser is lenient enough to render them; strict loaders (PyYAML, snakeyaml, most codegen toolchains) stop dead.</p>
+
+  <div class="finding">
+    <span class="chip crit">Blocking</span>
+    <div class="body">
+      <p class="title">Unquoted <code>{{…}}</code> placeholders break the YAML parse</p>
+      <p class="where">abha/abha-api-v3.yaml:1594, :1597 &nbsp;·&nbsp; phr/phr-api.yaml:10209, :10235</p>
+<pre><code><span class="cm"># abha-api-v3.yaml:1594 — the {{ }} has already been mangled into explicit-key syntax</span>
+example: { ? { txnId } }        <span class="bad">← ConstructorError: found unhashable key</span>
+
+<span class="cm"># phr-api.yaml:10209</span>
+example: {{profile-photo}}      <span class="bad">← same failure</span>
+
+<span class="cm"># the fix is one pair of quotes:</span>
+example: <span class="good">'{{txnId}}'</span></code></pre>
+      <p>This is an inconsistency, not a convention: ABHA quotes 305 of its 308 placeholders, PHR quotes 68 of 171. The remaining bare ones are simply oversights. All eight HIE-CM specs parse clean and contain no placeholders at all.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ TIMESTAMPS ============ -->
+<section>
+  <h2>Question one</h2>
+  <div class="h2-title">Timestamps</div>
+  <p class="lede">The <code>TIMESTAMP</code> request header is consistent everywhere. The <code>timestamp</code> field inside response bodies is not — it is encoded three mutually incompatible ways, and a client that parses one family's format will fail on the other two.</p>
+
+  <h3>The header is fine</h3>
+  <p>All nine specs that define the <code>TIMESTAMP</code> header use RFC 3339 with milliseconds and a <code>Z</code> suffix. Eight HIE-CM specs share the frozen example <code>2022-10-06T15:10:00.587Z</code>; PHR uses <code>2024-09-03T11:20:51.456Z</code>. ABHA is the odd one out only in that it ships the Postman variable <code>{{$isoTimestamp}}</code> rather than a literal — same format, different presentation.</p>
+
+  <h3>The body field is not</h3>
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>Spec</th><th>Encoding of <code>timestamp</code></th><th class="mono">Example</th><th class="num">Count</th><th>Declared type</th></tr></thead>
+      <tbody>
+        <tr><td>abha-api-v3</td><td class="flag">Space-separated, no timezone</td><td class="mono">2024-05-10 11:13:04</td><td class="num">63</td><td class="mono">string</td></tr>
+        <tr><td>abha-api-v3</td><td class="flag">Unquoted → native YAML date</td><td class="mono">2024-05-10 12:01:22</td><td class="num">3</td><td class="mono">string</td></tr>
+        <tr><td>phr-api</td><td>RFC 3339 + millis + Z</td><td class="mono">2024-05-10T06:45:07.259Z</td><td class="num">12</td><td class="mono">string</td></tr>
+        <tr><td>subscription</td><td class="flag">Epoch milliseconds</td><td class="mono">1731557446506</td><td class="num">17</td><td class="mono">number</td></tr>
+        <tr><td>user-initiated-linking</td><td class="flag">Epoch milliseconds</td><td class="mono">1731557446506</td><td class="num">12</td><td class="mono">number</td></tr>
+      </tbody>
+      <caption>Body-level <code>timestamp</code> fields carrying an example, across all 10 specs. The other five specs define no body <code>timestamp</code>.</caption>
+    </table>
+  </div>
+
+  <div class="finding">
+    <span class="chip crit">Contradiction</span>
+    <div class="body">
+      <p class="title">Eight fields declare <code>format: date-time</code> but give a non-RFC-3339 example</p>
+      <p class="where">abha-api-v3 — enrolment and profile error responses</p>
+      <p><code>2024-05-10 11:13:04</code> has a space where RFC 3339 requires <code>T</code>, and carries no timezone at all. A generated client that parses the declared <code>date-time</code> format rejects the documented example. This is the same field the spec elsewhere types as a plain string, so validation strictness decides whether it breaks.</p>
+    </div>
+  </div>
+
+  <div class="finding">
+    <span class="chip warn">Type drift</span>
+    <div class="body">
+      <p class="title">The same concept is typed <code>string</code> in 80 places and <code>number</code> in 29</p>
+      <p>Across the suite, 72 timestamp-ish schemas are <code>type: string</code> with no format, 8 are <code>string</code> + <code>date-time</code>, and 29 are <code>type: number</code>. There is no rule that predicts which — <code>subscription</code> and <code>user-initiated-linking</code> chose epoch millis while their sibling HIE-CM specs chose strings.</p>
+    </div>
+  </div>
+
+  <div class="finding">
+    <span class="chip info">Cosmetic</span>
+    <div class="body">
+      <p class="title">Three ABHA timestamps are unquoted and silently become dates</p>
+      <p class="where">abha-api-v3 — 400 responses on the enrolment endpoints</p>
+      <p>YAML 1.1 resolves bare <code>2024-05-10 12:01:22</code> to a native timestamp, so a loader hands the tool a date object where the schema promised a string. Quoting them restores the declared type.</p>
+    </div>
+  </div>
+
+  <div class="callout">
+    <p><strong>One place gets it right.</strong> <code>consent-management-data-flow</code> documents <code>dhPublicKey.expiry</code> with both an RFC 3339 example and an explicit format string in the description — <code>yyyy-MM-dd'T'HH:mm:ss.SSS'Z'</code>. That pattern, applied suite-wide, is the fix.</p>
+  </div>
+</section>
+
+<!-- ============ ERROR CODES ============ -->
+<section>
+  <h2>Question two</h2>
+  <div class="h2-title">Error codes</div>
+  <p class="lede">Error handling is the least consistent dimension of the four. The HTTP status sets differ per spec, the error body has fourteen distinct shapes, a quarter of the code literals carry copy-paste damage, and several codes carry different meanings in different files.</p>
+
+  <h3>Status-code coverage is uneven</h3>
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>Spec</th><th class="num">200</th><th class="num">202</th><th class="num">204</th><th class="num">400</th><th class="num">401</th><th class="num">403</th><th class="num">404</th><th class="num">422</th><th class="num">429</th><th class="num">500</th><th class="num">503</th></tr></thead>
+      <tbody>
+        <tr><td>abha-api-v3</td><td class="num">35</td><td class="num">1</td><td class="num zero">–</td><td class="num">31</td><td class="num">35</td><td class="num zero">–</td><td class="num">12</td><td class="num">4</td><td class="num zero">–</td><td class="num">36</td><td class="num zero">–</td></tr>
+        <tr><td>consent-mgmt-data-flow</td><td class="num">13</td><td class="num">15</td><td class="num zero">–</td><td class="num">17</td><td class="num">25</td><td class="num">25</td><td class="num">27</td><td class="num zero">–</td><td class="num zero">–</td><td class="num">25</td><td class="num">25</td></tr>
+        <tr><td>gateway</td><td class="num">8</td><td class="num">2</td><td class="num">10</td><td class="num">10</td><td class="num">7</td><td class="num zero">–</td><td class="num zero">–</td><td class="num zero">–</td><td class="num zero">–</td><td class="num">10</td><td class="num">10</td></tr>
+        <tr><td>hip-initiated-linking</td><td class="num">4</td><td class="num">3</td><td class="num zero">–</td><td class="num">7</td><td class="num">7</td><td class="num">7</td><td class="num">7</td><td class="num zero">–</td><td class="num zero">–</td><td class="num">7</td><td class="num zero">–</td></tr>
+        <tr><td>link-token</td><td class="num">1</td><td class="num">1</td><td class="num zero">–</td><td class="num">1</td><td class="num">1</td><td class="num">1</td><td class="num">1</td><td class="num zero">–</td><td class="num zero">–</td><td class="num">1</td><td class="num">1</td></tr>
+        <tr><td>patient-share</td><td class="num">3</td><td class="num">2</td><td class="num zero">–</td><td class="num">3</td><td class="num">3</td><td class="num">3</td><td class="num">3</td><td class="num zero">–</td><td class="num">3</td><td class="num">5</td><td class="num">5</td></tr>
+        <tr><td><strong>phr-api</strong></td><td class="num">19</td><td class="num">2</td><td class="num zero">–</td><td class="num">15</td><td class="num">12</td><td class="num">13</td><td class="num zero">–</td><td class="num zero">–</td><td class="num zero">–</td><td class="num flag">0 → 21</td><td class="num flag">0 → 21</td></tr>
+        <tr><td>scan-and-pay</td><td class="num">11</td><td class="num">8</td><td class="num zero">–</td><td class="num">8</td><td class="num">11</td><td class="num">11</td><td class="num">8</td><td class="num zero">–</td><td class="num">8</td><td class="num">19</td><td class="num">19</td></tr>
+        <tr><td>subscription</td><td class="num">12</td><td class="num">6</td><td class="num zero">–</td><td class="num">17</td><td class="num">17</td><td class="num">17</td><td class="num">17</td><td class="num zero">–</td><td class="num zero">–</td><td class="num">17</td><td class="num">17</td></tr>
+        <tr><td>user-initiated-linking</td><td class="num">5</td><td class="num">7</td><td class="num zero">–</td><td class="num">12</td><td class="num">12</td><td class="num">12</td><td class="num zero">–</td><td class="num zero">–</td><td class="num zero">–</td><td class="num">12</td><td class="num zero">–</td></tr>
+      </tbody>
+      <caption>Operations declaring each status. <strong>PHR documented no 5xx response anywhere</strong> — since fixed, modelled on ABHA and the HIE-CM specs.</caption>
+    </table>
+  </div>
+
+  <div class="finding">
+    <span class="chip crit">Interop risk</span>
+    <div class="body">
+      <p class="title">The same code carries different meanings in different specs</p>
+      <p>Ten of the 42 distinct error codes have divergent message text. Two are severe enough to defeat code-based branching:</p>
+      <ul>
+        <li><strong><code>ABDM-9999</code></strong> — documented with 21 different messages. It is <em>"Unknown exception"</em> in <code>gateway</code> and <code>hip-initiated-linking</code>, but PHR uses it as a general validation error (<em>"Invalid Scope"</em>, <em>"Invalid OTP Value"</em>, <em>"Invalid Month Of Birth"</em>, <em>"This ABHA Address already exists"</em>), and <code>subscription</code> uses it for business-rule failures (<em>"To date should be present or future date"</em>).</li>
+        <li><strong><code>ABDM-1006</code></strong> — 12 meanings. <em>"Bad Request, invalid request Body"</em> in HIE-CM, but <em>"Invalid Password"</em>, <em>"Invalid Email Id"</em>, <em>"Invalid Mobile Number"</em> and others in PHR, and <em>"Invalid X-token"</em> in ABHA.</li>
+        <li><strong><code>ABDM-1001</code></strong> — <em>"No data found"</em> in four specs, but <em>"unable to connect database"</em> in <code>consent-management-data-flow</code>.</li>
+        <li><strong><code>900901</code></strong> — <em>"Invalid Credentials"</em> in seven specs, <em>"Unauthorized"</em> in one.</li>
+      </ul>
+      <p>Placeholder text also survived into published examples: <code>ABDM-1001</code> is documented as <em>"error message"</em> in two specs, and <code>ABDM-9999</code> as the literal string <em>"string"</em> in <code>patient-share</code>.</p>
+    </div>
+  </div>
+
+  <div class="finding">
+    <span class="chip crit">Breaks matching</span>
+    <div class="body">
+      <p class="title">25 of 63 code literals carry trailing punctuation — and the clean form also exists</p>
+      <p>A client comparing <code>code === "ABDM-1001"</code> matches in three specs and fails in four, because the same code is published both ways.</p>
+<pre><code><span class="cm">code            clean form appears in        dirty form appears in</span>
+ABDM-1001       consent-mgmt, subscription   <span class="bad">'ABDM-1001: '</span>  gateway, patient-share, hip-linking
+ABDM-1006       abha, patient-share          <span class="bad">'ABDM-1006: '</span>  hip-linking, phr
+ABDM-1015       consent-mgmt, subscription   <span class="bad">'ABDM-1015: '</span>  gateway
+ABDM-1030       abha                         <span class="bad">'ABDM-1030:'</span>   abha
+ABDM-9999       abha, patient-share, phr     <span class="bad">'ABDM-9999: '</span>  gateway, consent-mgmt, +3
+ABDM-2500       <span class="cm">— never clean —</span>              <span class="bad">'ABDM-2500:'</span> and <span class="bad">'ABDM-2500: '</span>  scan-and-pay</code></pre>
+      <p>Three examples cram multiple codes into one string field: <code>'ABDM-1211, ABDM-1006'</code>, <code>'ABDM-1016:, ABDM-1030: '</code>, and <code>'ABDM-1114,ABDM-1030:, ABDM-1016:'</code>. One is a stray comma: <code>'900902,'</code>.</p>
+    </div>
+  </div>
+
+  <div class="finding">
+    <span class="chip warn">Schema wrong</span>
+    <div class="body">
+      <p class="title">25 error schemas type <code>code</code> as <code>integer</code> while the example is a string</p>
+      <p class="where">gateway ×10 · user-initiated-linking ×12 · patient-share ×3</p>
+<pre><code>code:
+  type: <span class="bad">integer</span>
+  example: <span class="bad">'ABDM-1015: '</span>   <span class="cm"># never an integer</span></code></pre>
+      <p>Codegen produces an <code>int</code> field that can never hold the documented value.</p>
+    </div>
+  </div>
+
+  <div class="finding">
+    <span class="chip warn">Inconsistent</span>
+    <div class="body">
+      <p class="title">The same HTTP status maps to different internal codes</p>
+      <ul>
+        <li><strong>401</strong> → <code>900901</code> in seven specs, <code>900902</code> in four.</li>
+        <li><strong>404</strong> → the bare number <code>404</code> in <code>consent-management-data-flow</code>, <code>ABDM-1030</code> in ABHA.</li>
+        <li><strong>500</strong> → <code>900900</code> in four specs, <code>ABDM-9999:</code> in <code>hip-initiated-linking</code>.</li>
+        <li><strong>503</strong> → <code>ABDM-1024</code> in five specs, <code>ABDM-2500:</code> in <code>scan-and-pay</code>.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="finding">
+    <span class="chip warn">Shape drift</span>
+    <div class="body">
+      <p class="title">Fourteen distinct error-body shapes</p>
+      <p>Four are used broadly and are already mutually incompatible — <code>{code, message}</code>, <code>{code, description, message}</code>, <code>{error: {…}}</code>, and a bare schema with no properties at all. Beyond those, <code>subscription</code> and <code>user-initiated-linking</code> add a Spring-style <code>{error, path, requestId, status, timestamp}</code> envelope, and ABHA documents several 4xx responses with what are plainly success payloads — <code>{ABHANumber, timestamp}</code>, <code>{mobile, timestamp}</code>, <code>{txnId, timestamp}</code>.</p>
+    </div>
+  </div>
+
+  <div class="finding">
+    <span class="chip info">Gap</span>
+    <div class="body">
+      <p class="title">Two operations document no failure mode at all</p>
+      <p class="where">link-token — <code>POST &lt;callback_url&gt;/api/v3/hip/token/on-generate-token</code><br>subscription — <code>GET /api/hiecm/subscription-requests/v3/patients/lockers</code></p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ENCRYPTION ============ -->
+<section>
+  <h2>Question three</h2>
+  <div class="h2-title">Encryption key APIs</div>
+  <p class="lede">Two endpoints publish key material, in two unrelated formats. ABHA's is a genuine, verifiable RSA key. The gateway's JWKS example is truncated to the point of being unusable, and the ECDH key material in the data-flow spec contradicts the curve it declares.</p>
+
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>Endpoint</th><th>Spec</th><th>Format</th><th>Auth</th><th>Example valid?</th></tr></thead>
+      <tbody>
+        <tr><td class="mono">GET /abha/api/v3/profile/public/certificate</td><td>abha-api-v3</td><td>Raw base64 SPKI under <code>publicKey</code></td><td class="mono">bearerAuth</td><td class="good"><strong>Yes</strong> — 550 B, parses as a 4096-bit RSA key</td></tr>
+        <tr><td class="mono">GET /api/hiecm/gateway/v3/certs</td><td>gateway</td><td>JWKS — <code>keys[]</code> with <code>kty/n/e/x5c</code></td><td class="mono zero">none declared</td><td class="flag"><strong>No</strong> — modulus and certificate both truncated</td></tr>
+      </tbody>
+      <caption>The two key-distribution endpoints in the suite. Nothing in either spec cross-references the other.</caption>
+    </table>
+  </div>
+
+  <div class="finding">
+    <span class="chip ok">Verified good</span>
+    <div class="body">
+      <p class="title">ABHA's published key is real</p>
+      <p>The <code>publicKey</code> example decodes from 736 base64 characters to 550 bytes and loads cleanly as a SubjectPublicKeyInfo structure containing a 4096-bit RSA public key. The companion <code>encryptionAlgorithm</code> field documents <code>RSA/ECB/OAEPWithSHA-1AndMGF1Padding</code> — worth noting that this is SHA-1-based OAEP, a legacy padding choice, but it is at least stated explicitly and consistently.</p>
+    </div>
+  </div>
+
+  <div class="finding">
+    <span class="chip crit">Unusable example</span>
+    <div class="body">
+      <p class="title">The gateway JWKS modulus and certificate are both cut off mid-value</p>
+      <p class="where">hiecm/gateway.yaml — <code>GET /api/hiecm/gateway/v3/certs</code>, 200 response</p>
+<pre><code><span class="cm"># n — the RSA modulus</span>
+142 base64url chars → 106 bytes → an <span class="bad">848-bit modulus</span>
+<span class="cm">a 2048-bit RSA key needs 256 bytes / ~342 chars</span>
+
+<span class="cm"># x5c[0] — the X.509 certificate</span>
+173 base64 chars → <span class="bad">not decodable at all</span>
+<span class="cm">(length ≡ 1 mod 4 — invalid base64, truncated mid-character)</span>
+
+<span class="cm"># e is fine</span>
+'AQAB' → 65537 <span class="good">✓</span></code></pre>
+      <p>Anyone copying this example into a test fixture gets key material that no JOSE library will load. The truncation looks like a display-width trim applied when the example was authored.</p>
+    </div>
+  </div>
+
+  <div class="finding">
+    <span class="chip crit">Contradiction</span>
+    <div class="body">
+      <p class="title">The ECDH key example doesn't match the curve the spec declares</p>
+      <p class="where">hiecm/consent-management-data-flow.yaml — <code>keyMaterial.dhPublicKey.keyValue</code></p>
+      <p>The schema states <code>cryptoAlg: ECDH</code> and <code>curve: curve25519</code>. A Curve25519 public key is 32 raw bytes. The example decodes to 65 bytes beginning with <code>0x04</code> — the SEC1 uncompressed-point encoding used by the NIST curves:</p>
+<pre><code>BFN7KTdOT0jIAExG2A8Jg+01wMPWxptiGqwHRVvtiVEsUq2FR7P2UdqZxJyPJSeR6muai21iQhasNxnhh8I5M+g=
+  ↓ 65 bytes, first byte 0x04
+  parses as X25519 public key ....... <span class="bad">No</span>  (must be 32 bytes)
+  parses as a P-256 point ........... <span class="bad">No</span>  (point not on the curve)</code></pre>
+      <p>So the example is neither a valid key on the declared curve nor a valid key on the curve its encoding implies. This is the single field that governs how health records are encrypted in transit between HIP and HIU — it is the one that most needs an example an implementer can trust.</p>
+    </div>
+  </div>
+
+  <div class="finding">
+    <span class="chip warn">Schema bug</span>
+    <div class="body">
+      <p class="title">ABHA's certificate endpoint has an indentation error that invents a field</p>
+      <p class="where">abha/abha-api-v3.yaml — <code>/abha/api/v3/profile/public/certificate</code>, 401 response</p>
+      <p>The <code>example:</code> keyword sits one level too deep and lands inside <code>properties</code>, so the 401 body is documented as having a third field literally named <code>example</code>. The same response also disagrees with itself: the schema gives <code>code: "900902"</code> while the <code>examples</code> block gives <code>"900902 "</code> with a trailing space. It is the only occurrence of this indentation bug in the suite.</p>
+    </div>
+  </div>
+
+  <div class="finding">
+    <span class="chip warn">Protocol</span>
+    <div class="body">
+      <p class="title">All ten gateway operations attach a response body to <code>204 No Content</code></p>
+      <p class="where">hiecm/gateway.yaml — including <code>/certs</code> and <code>/sessions</code></p>
+      <p>Each 204 declares an <code>application/json</code> body carrying <code>{error: {code: 'ABDM-1001: ', message: 'No data found'}}</code>. A 204 must not have a body; most HTTP clients discard it unread, so the documented error never reaches the caller.</p>
+    </div>
+  </div>
+
+  <div class="finding">
+    <span class="chip info">Documentation gap</span>
+    <div class="body">
+      <p class="title">Copy-paste noise in the crypto fields</p>
+      <p><code>cryptoAlg</code> is exampled as both <code>ECDH</code> and <code>ECDH.</code>; <code>parameters</code> as both <code>Ephemeral public key</code> and <code>Ephemeral public key.</code> — the description's trailing period pulled into the value. Several occurrences of <code>keyMaterial</code>, <code>curve</code>, <code>keyValue</code> and <code>nonce</code> carry no example at all, so the three operations that exchange key material are documented to different depths.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ EXAMPLES ============ -->
+<section>
+  <h2>Question four</h2>
+  <div class="h2-title">Are the examples valid?</div>
+  <p class="lede">Mostly, but not where it counts. Every <code>example</code> was checked against the schema it sits on, and every whole-payload example against its media-type schema. 608 of 5,123 fail — and the failures concentrate in the request bodies developers copy first.</p>
+
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>Failure</th><th class="num">Count</th><th>What it means</th></tr></thead>
+      <tbody>
+        <tr><td>Payload violates its schema</td><td class="num">185</td><td>A full request/response example that the schema rejects</td></tr>
+        <tr><td>Leading/trailing whitespace</td><td class="num">301</td><td>Mostly the <code>'ABDM-xxxx: '</code> error literals above</td></tr>
+        <tr><td>Example type ≠ declared type</td><td class="num">110</td><td>Array where string declared, int where string declared, etc.</td></tr>
+        <tr><td>Fails <code>format: date-time</code></td><td class="num">8</td><td>All ABHA — the space-separated timestamps</td></tr>
+        <tr><td>Value not in its own <code>enum</code></td><td class="num">3</td><td>consent-management-data-flow</td></tr>
+        <tr><td>Fails <code>format: email</code></td><td class="num">1</td><td>patient-share — <code>abdulkalam@abdm</code></td></tr>
+      </tbody>
+      <caption>4,443 scalar examples and 680 payload examples checked. Placeholder strings such as <code>{{txnId}}</code> were excluded from type checks so they don't inflate the count.</caption>
+    </table>
+  </div>
+
+  <div class="finding">
+    <span class="chip crit">Schema wrong</span>
+    <div class="body">
+      <p class="title">ABHA's <code>scope</code> and <code>authMethods</code> are declared as strings but are always arrays</p>
+      <p class="where">abha-api-v3.yaml:52 and throughout the enrolment endpoints</p>
+<pre><code>scope:
+  type: <span class="bad">string</span>
+  example: <span class="good">[ "email-verify", "abha-enrol", "mobile-verify", "dl-flow" ]</span></code></pre>
+      <p>Every single example is an array — the declaration is simply wrong, and it is wrong on the two fields that appear in nearly every ABHA request body. This alone accounts for a large share of the 184 ABHA payload violations. The correct form is <code>type: array</code> with <code>items: {type: string, enum: [...]}</code>.</p>
+    </div>
+  </div>
+
+  <div class="finding">
+    <span class="chip crit">Won't work if copied</span>
+    <div class="body">
+      <p class="title">Seven request examples omit a field the schema marks required</p>
+      <div class="tablewrap">
+        <table>
+          <thead><tr><th>Spec</th><th>Operation</th><th>Missing</th></tr></thead>
+          <tbody>
+            <tr><td>abha-api-v3</td><td class="mono">POST /abha/api/v3/enrollment/enrol/auth/init</td><td class="mono">authData</td></tr>
+            <tr><td>abha-api-v3</td><td class="mono">POST /abha/api/v3/profile/login/verify</td><td class="mono">otp</td></tr>
+            <tr><td>abha-api-v3</td><td class="mono">POST /abha/api/v3/profile/account/verify</td><td class="mono">otp, reasons</td></tr>
+            <tr><td>abha-api-v3</td><td class="mono">PATCH /abha/api/v3/profile/account</td><td class="mono">abhaNumber</td></tr>
+            <tr><td>abha-api-v3</td><td class="mono">POST /abha/api/v3/profile/benefit/linkAndDelink</td><td class="mono">loginHint</td></tr>
+            <tr><td>phr-api</td><td class="mono">POST /abha/api/v3/phr/app/login/verify</td><td class="mono">otp</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>Paste these into Postman as-is and the server rejects them.</p>
+    </div>
+  </div>
+
+  <div class="finding">
+    <span class="chip warn">Type mismatch</span>
+    <div class="body">
+      <p class="title">110 examples contradict their declared type</p>
+      <p>Beyond the arrays above: <code>expiresIn</code> is <code>type: string</code> with example <code>1800</code>; <code>dayOfBirth</code>, <code>monthOfBirth</code>, <code>yearOfBirth</code>, <code>stateCode</code>, <code>districtCode</code> and <code>preferred</code> are all <code>string</code> with integer examples; <code>emailVerified</code> and <code>isDocumentAccount</code> are <code>string</code> with boolean examples. Six examples are <code>null</code> against a non-nullable string.</p>
+    </div>
+  </div>
+
+  <div class="finding">
+    <span class="chip warn">Enum broken</span>
+    <div class="body">
+      <p class="title">An enum example lists the whole enum as one value</p>
+      <p class="where">consent-management-data-flow — <code>hiType</code></p>
+      <p>The example is the single string <code>"Prescription, DiagnosticReport, OPConsultation, DischargeSummary, Imm…"</code> against an enum of individual values. A generated client will send that entire comma-joined string as one <code>hiType</code>. The same file gives <code>media</code> the example <code>"mimetype of the content."</code> against an enum of <code>['application/fhir+json']</code> — the description leaked into the value slot.</p>
+    </div>
+  </div>
+
+  <div class="finding">
+    <span class="chip info">Malformed IDs</span>
+    <div class="body">
+      <p class="title">Three UUID examples aren't UUIDs</p>
+<pre><code>phr-api      e906de88-7e4e-465f-<span class="bad">97</span>-f246a5c96b5b     <span class="cm"># 3rd group short</span>
+phr-api      e906de88-7e4e-465f-<span class="bad">974</span>-f246a5c96b5b    <span class="cm"># 3rd group short</span>
+abha-api-v3  30839193-9788-4c0d-9459-<span class="bad">7cd70a</span>        <span class="cm"># last group short</span></code></pre>
+      <p>All three are <code>REQUEST-ID</code> or transaction-ID examples, on endpoints where the gateway validates the format.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CROSS-CUTTING ============ -->
+<section>
+  <h2>Also found</h2>
+  <div class="h2-title">Cross-cutting inconsistencies</div>
+  <p class="lede">Issues that fall outside the four questions but affect anyone integrating against more than one of these files.</p>
+
+  <div class="finding">
+    <span class="chip crit">Direct conflict</span>
+    <div class="body">
+      <p class="title">The session endpoint is documented two incompatible ways</p>
+      <p class="where"><code>POST /api/hiecm/gateway/v3/sessions</code> — defined in both <code>abha-api-v3</code> and <code>gateway</code></p>
+      <div class="tablewrap">
+        <table>
+          <thead><tr><th></th><th>abha-api-v3</th><th>gateway</th></tr></thead>
+          <tbody>
+            <tr><td>Success status</td><td class="mono">200</td><td class="mono flag">202, 204 — no 200</td></tr>
+            <tr><td>Success body</td><td class="mono">accessToken, expiresIn, refreshExpiresIn, refreshToken, tokenType</td><td class="mono flag">none declared</td></tr>
+            <tr><td>Request body</td><td class="mono">clientId, clientSecret, grantType</td><td class="mono">clientId, clientSecret, grantType</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>This is the token endpoint every integration calls first. The request contract agrees; the response contract does not exist in one of the two files.</p>
+    </div>
+  </div>
+
+  <div class="finding">
+    <span class="chip crit">Field renamed</span>
+    <div class="body">
+      <p class="title">The same provider lookup returns <code>isHip</code> or <code>isHIP</code> depending on which spec you read</p>
+      <p class="where"><code>GET /api/hiecm/gateway/v3/providers/{provider-id}</code> — in both <code>gateway</code> and <code>scan-and-pay</code></p>
+      <p><code>gateway</code> documents <code>{facilityType, identifier, isHip}</code>. <code>scan-and-pay</code> documents <code>{facilityType, identifier, isHIP, isPaymentShare, isRecordShare, scanPayVersion}</code>. JSON keys are case-sensitive, so at most one of these is correct.</p>
+    </div>
+  </div>
+
+  <div class="finding">
+    <span class="chip warn">Header naming</span>
+    <div class="body">
+      <p class="title">Three spellings of one header, and two casings of another</p>
+      <ul>
+        <li>ABHA declares the same benefit header as <code>BENEFIT NAME</code> (with a literal space, which is not a legal HTTP field name), <code>BENEFIT_NAME</code>, and <code>Benefit-Name</code>.</li>
+        <li>Both ABHA and PHR declare <code>X-Token</code> and <code>X-token</code> as separate parameters. HTTP treats them as one header; OpenAPI tooling treats them as two.</li>
+        <li>PHR's <code>X-Token</code> example begins with a leading space before the JWT.</li>
+        <li><code>X-HIU-ID</code> is exampled as <code>IN2810014366</code> in four specs but as the placeholder <code>HIU_ID</code> in <code>patient-share</code>.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="finding">
+    <span class="chip warn">Breaks codegen</span>
+    <div class="body">
+      <p class="title">Duplicate <code>operationId</code> values in three specs</p>
+      <p><code>scan-and-pay</code> reuses <code>patient-share 2</code> six times, <code>abdm-patient-share 1</code> and <code>scan-gateway 2</code> four times each. <code>consent-management-data-flow</code> has six duplicated IDs, <code>subscription</code> one. Most generators either fail or silently collapse the colliding methods.</p>
+    </div>
+  </div>
+
+  <div class="finding">
+    <span class="chip info">Metadata drift</span>
+    <div class="body">
+      <p class="title">No shared versioning or server convention</p>
+      <div class="tablewrap">
+        <table>
+          <thead><tr><th>Spec</th><th class="mono">openapi</th><th class="mono">info.version</th><th>Servers</th></tr></thead>
+          <tbody>
+            <tr><td>abha-api-v3</td><td class="mono">3.0.0</td><td class="mono">3.0.0</td><td class="mono">abhasbx.abdm.gov.in, dev.abdm.gov.in</td></tr>
+            <tr><td>phr-api</td><td class="mono">3.0.3</td><td class="mono">1.0.0</td><td class="mono">abhasbx.abdm.gov.in</td></tr>
+            <tr><td>gateway</td><td class="mono">3.0.2</td><td class="mono">1.0</td><td class="mono">dev.abdm.gov.in, apis.abdm.gov.in</td></tr>
+            <tr><td>link-token</td><td class="mono">3.0.3</td><td class="mono">1.0.0</td><td class="mono">dev.abdm.gov.in, apis.abdm.gov.in</td></tr>
+            <tr><td>hip-initiated-linking</td><td class="mono">3.0.2</td><td class="mono">1.0.2</td><td class="mono">dev.abdm.gov.in, apis.abdm.gov.in</td></tr>
+            <tr><td>consent-mgmt, patient-share,<br>scan-and-pay, subscription,<br>user-initiated-linking</td><td class="mono">3.0.2</td><td class="mono">3.0</td><td class="mono">dev.abdm.gov.in, apis.abdm.gov.in</td></tr>
+          </tbody>
+          <caption>Five different <code>info.version</code> schemes across ten files that ship as one "v3" API set. The ABHA/PHR pair and the HIE-CM group also point at different hosts, with no overlap.</caption>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ WHERE ============ -->
+<section>
+  <h2>Reference</h2>
+  <div class="h2-title">Findings by file</div>
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>File</th><th class="num">Ops</th><th class="num">Example issues</th><th>Parses?</th><th>Heaviest problem</th></tr></thead>
+      <tbody>
+        <tr><td class="mono">abha/abha-api-v3.yaml</td><td class="num">36</td><td class="num flag">237</td><td class="flag">No</td><td><code>scope</code>/<code>authMethods</code> typed as string; non-RFC-3339 timestamps</td></tr>
+        <tr><td class="mono">phr/phr-api.yaml</td><td class="num">21</td><td class="num flag">105</td><td class="flag">No</td><td>No 5xx documented anywhere; malformed UUIDs</td></tr>
+        <tr><td class="mono">hiecm/scan-and-pay.yaml</td><td class="num">19</td><td class="num">60</td><td>Yes</td><td>Duplicate operationIds; <code>isHIP</code> conflict</td></tr>
+        <tr><td class="mono">hiecm/consent-management-data-flow.yaml</td><td class="num">28</td><td class="num">55</td><td>Yes</td><td>ECDH key example contradicts declared curve</td></tr>
+        <tr><td class="mono">hiecm/subscription.yaml</td><td class="num">18</td><td class="num">34</td><td>Yes</td><td>Epoch-millis timestamps; <code>ABDM-9999</code> overloaded</td></tr>
+        <tr><td class="mono">hiecm/patient-share.yaml</td><td class="num">5</td><td class="num">33</td><td>Yes</td><td>Placeholder text <code>"string"</code> shipped as an error message</td></tr>
+        <tr><td class="mono">hiecm/user-initiated-linking.yaml</td><td class="num">12</td><td class="num">32</td><td>Yes</td><td>12 error codes typed <code>integer</code> with string examples</td></tr>
+        <tr><td class="mono">hiecm/gateway.yaml</td><td class="num">10</td><td class="num">30</td><td>Yes</td><td>Truncated JWKS; bodies on every 204</td></tr>
+        <tr><td class="mono">hiecm/hip-initiated-linking.yaml</td><td class="num">7</td><td class="num">22</td><td>Yes</td><td>Error-code literals with trailing <code>: </code></td></tr>
+        <tr><td class="mono">hiecm/link-token.yaml</td><td class="num">2</td><td class="num zero">0</td><td>Yes</td><td class="zero">Cleanest file in the set</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<footer>
+  <h3>How this was checked</h3>
+  <p>All ten specs were loaded with a YAML parser that quotes unparseable placeholder scalars and records each repair, so the two failing files could be analysed alongside the eight that parse. Every <code>example</code> was then validated against the schema node it sits on (type, format, enum, pattern, length), and every media-type <code>example</code> and <code>examples[*].value</code> against its full schema using JSON Schema draft-7, with OpenAPI 3.0 <code>nullable</code> translated to a union type. Placeholder strings of the form <code>{{…}}</code> were excluded from type and format checks. Key material was decoded and loaded with a real cryptography library rather than pattern-matched — that is how the ABHA key was confirmed genuine and the gateway's confirmed truncated.</p>
+  <p style="margin-top:16px">Specs downloaded 31 Aug 2026 from <code>sandboxcms.abdm.gov.in/uploads</code>, as linked from the ABDM sandbox Swagger documentation page.</p>
+</footer>
+
+</div>

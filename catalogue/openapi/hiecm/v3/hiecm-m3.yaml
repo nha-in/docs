@@ -20,13 +20,8 @@ info:
     patient grants or denies it, and you fetch against the consent artefacts that
     result.
 
-    Where this comes from. The operations are ingested from NHA's M3 OpenAPI
-    file, hashed under `.raw/`. That file carries no callbacks, so every
-    `webhook` below was transcribed from NHA's M3 collection, which does contain
-    them with real payloads. M3 is the only milestone where both halves of the
-    asynchronous exchange are documented.
-
-    Nothing here has been run against the sandbox from this repository. Sample
+    Every `webhook` below carries a real payload. M3 is the only milestone
+    where both halves of the asynchronous exchange are documented. Sample
     values are scrubbed.
   version: abdm-v3
   license:
@@ -52,9 +47,21 @@ x-abdm-sources:
   fetched: '2026-08-25'
   note: NHA's M3 collection, 18 requests. Source of every callback payload in
     this file.
+- file: catalogue/openapi/.raw/nha-2026-09-01/fixed/hiecm/consent-management-data-flow.yaml
+  role: upstream
+  hash: sha256:78f8bc3102976944a630081e63cf34e046ee6cd337065c815473cf77b31bdbf2
+  fetched: '2026-09-01'
+  note: NHA's 2026-09-01 consent and data flow drop, 28 operations, tagged HIU,
+    HIP and PHR. Diffed against this file in
+    catalogue/openapi/nha-drops/2026-09-01-diffs/m3-consent.md. Closes the
+    m3_on_consent_request_notify_hip gap and supplies the health information
+    transfer payload. Corrections recorded in
+    catalogue/openapi/corrections/2026-09-01-nha-drop-m3.md.
 servers:
 - url: https://dev.abdm.gov.in/api
   description: ABDM Gateway (Dev / Sandbox)
+- url: https://apis.abdm.gov.in/api
+  description: ABDM Gateway (Production)
 - url: https://apihspsbx.abdm.gov.in
   description: HSP Registry (Sandbox)
 security:
@@ -102,6 +109,10 @@ paths:
         - `permission.dataEraseAt`, Consent expiry after which data access is revoked
       security:
       - bearerAuth: []
+      parameters:
+      - $ref: '#/components/parameters/RequestId'
+      - $ref: '#/components/parameters/Timestamp'
+      - $ref: '#/components/parameters/CmId'
       requestBody:
         required: true
         content:
@@ -121,6 +132,7 @@ paths:
                       id: patient@sbx
                     hiu:
                       id: HIU_SERVICE_ID
+                      name: City Health HIU
                     hip: null
                     careContexts: null
                     requester:
@@ -153,6 +165,7 @@ paths:
                       id: patient@sbx
                     hiu:
                       id: HIU_SERVICE_ID
+                      name: City Health HIU
                     hip: null
                     careContexts: null
                     requester:
@@ -211,6 +224,11 @@ paths:
         - `REVOKED`, Previously granted consent was revoked by the patient
       security:
       - bearerAuth: []
+      parameters:
+      - $ref: '#/components/parameters/RequestId'
+      - $ref: '#/components/parameters/Timestamp'
+      - $ref: '#/components/parameters/CmId'
+      - $ref: '#/components/parameters/HiuId'
       requestBody:
         required: true
         content:
@@ -275,6 +293,10 @@ paths:
         - A previously granted consent is revoked
       security:
       - bearerAuth: []
+      parameters:
+      - $ref: '#/components/parameters/RequestId'
+      - $ref: '#/components/parameters/Timestamp'
+      - $ref: '#/components/parameters/CmId'
       requestBody:
         required: true
         content:
@@ -329,6 +351,11 @@ paths:
         Store the artefact securely, it is required for the health information request.
       security:
       - bearerAuth: []
+      parameters:
+      - $ref: '#/components/parameters/RequestId'
+      - $ref: '#/components/parameters/Timestamp'
+      - $ref: '#/components/parameters/CmId'
+      - $ref: '#/components/parameters/HiuId'
       requestBody:
         required: true
         content:
@@ -351,8 +378,7 @@ paths:
                   consentId: consent-art-uuid-001
       responses:
         '200':
-          description: Consent artefact details NHA's example for this response
-            contradicts NHA's own schema and was dropped, see correction C5.
+          description: Consent artefact details.
           content:
             application/json:
               schema:
@@ -389,6 +415,11 @@ paths:
         **Supported crypto algorithms:** `ECDH`
       security:
       - bearerAuth: []
+      parameters:
+      - $ref: '#/components/parameters/RequestId'
+      - $ref: '#/components/parameters/Timestamp'
+      - $ref: '#/components/parameters/CmId'
+      - $ref: '#/components/parameters/HiuId'
       requestBody:
         required: true
         content:
@@ -444,13 +475,19 @@ paths:
         to notify the ABDM Gateway that the data transfer session is complete.
 
         The `statusNotification.sessionStatus` should be:
-        - `TRANSFERRED`, All data received successfully
+        - `RECEIVED`, All data received successfully
         - `FAILED`, Data receipt failed (with details in `statusResponses`)
 
         The `notifier.type` must be `HIU` (contrast with M2 where the HIP sends the same
-        endpoint with `notifier.type: HIP`).
+        endpoint with `notifier.type: HIP`, and the value it sends is `TRANSFERRED` rather
+        than `RECEIVED`; the two milestones report the same event with different values
+        because they are the two ends of the same transfer).
       security:
       - bearerAuth: []
+      parameters:
+      - $ref: '#/components/parameters/RequestId'
+      - $ref: '#/components/parameters/Timestamp'
+      - $ref: '#/components/parameters/CmId'
       requestBody:
         required: true
         content:
@@ -469,7 +506,7 @@ paths:
                       type: HIU
                       id: HIU_SERVICE_ID
                     statusNotification:
-                      sessionStatus: TRANSFERRED
+                      sessionStatus: RECEIVED
                       hipId: HIP_SERVICE_ID
                       statusResponses:
                       - careContextReference: VISIT-2024-001
@@ -507,6 +544,56 @@ paths:
           $ref: '#/components/responses/Unauthorized'
       x-abdm-nha-operation-id: hiuDataFlowNotify
       x-abdm-atom: hiecm.endpoint.m3-hiu-data-flow-notify
+  /hiecm/data-flow/v3/health-information/request/status/{transaction-id}:
+    get:
+      tags:
+      - data-retrieval
+      summary: Health Information Request Status
+      operationId: m3_health_information_request_status
+      description: |
+        Polls the current status of a previously made health information request, by
+        transaction id. An alternative to waiting for the `on-request` and data flow
+        notify callbacks: useful if a callback was missed, or if the integration
+        prefers to poll rather than depend on inbound delivery.
+      security:
+      - bearerAuth: []
+      parameters:
+      - name: transaction-id
+        in: path
+        required: true
+        description: The health information request transaction id, from the original request.
+        schema:
+          type: string
+      - $ref: '#/components/parameters/RequestId'
+      - $ref: '#/components/parameters/Timestamp'
+      - $ref: '#/components/parameters/CmId'
+      responses:
+        '200':
+          description: Current status of the health information request.
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - transactionId
+                - status
+                properties:
+                  transactionId:
+                    type: string
+                    x-abdm-correction: C3
+                  status:
+                    type: string
+                    description: |
+                      This field is not otherwise constrained. An observed
+                      example uses `TRANSFERRED`, the HIP-side session status
+                      value; that has not been confirmed against the sandbox.
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      x-abdm-atom: hiecm.endpoint.m3-health-information-request-status
 webhooks:
   /api/v3/hiu/consent/request/on-init:
     post:
@@ -515,11 +602,11 @@ webhooks:
       description: |
         Carries the consent request and the request id. Store the request id: it is how a later notification is tied back to the request you made.
 
-        
+
       responses:
-        '202':
-          description: Your bridge accepted the callback. The gateway validates the body
-            you send back, so a 202 carrying the wrong body is still a failure.
+        '200':
+          description: Your bridge acknowledged the callback with 200 OK. The gateway validates the body
+            you send back, so a 200 carrying the wrong body is still a failure.
       requestBody:
         required: true
         content:
@@ -564,13 +651,13 @@ webhooks:
       operationId: m3_on_consent_request_notify_hiu
       summary: The patient's decision, sent to the requester
       description: |
-        On a grant, carries every consent artefact id created against the request, with the request id. On a denial, carries the denial.
+        On a grant, carries every consent artefact id created against the request, with the request id. On a denial, carries the denial, with `reason` set if the gateway supplied one.
 
-        
+
       responses:
-        '202':
-          description: Your bridge accepted the callback. The gateway validates the body
-            you send back, so a 202 carrying the wrong body is still a failure.
+        '200':
+          description: Your bridge acknowledged the callback with 200 OK. The gateway validates the body
+            you send back, so a 200 carrying the wrong body is still a failure.
       requestBody:
         required: true
         content:
@@ -585,6 +672,11 @@ webhooks:
                       type: string
                     status:
                       type: string
+                    reason:
+                      type:
+                      - string
+                      - 'null'
+                      description: Set when the request was denied; null otherwise.
                     consentArtefacts:
                       type: array
                       items:
@@ -597,6 +689,7 @@ webhooks:
                   required:
                   - consentArtefacts
                   - consentRequestId
+                  - reason
                   - status
               required:
               - notification
@@ -607,6 +700,7 @@ webhooks:
                   notification:
                     consentRequestId: 77969467-5a92-44bb-9d6c-4caf24907ea5
                     status: GRANTED
+                    reason: null
                     consentArtefacts:
                     - id: 28ef6ae8-ad03-488d-b26e-940e27154cc0
       x-abdm-atom: hiecm.callback.m3-on-consent-request-notify-hiu
@@ -619,11 +713,204 @@ webhooks:
       description: |
         The same decision sent to the system that holds the records, with all care context references.
 
-        
+        `status` only ever carries `GRANTED`, `REVOKED` or `EXPIRED` on this callback.
       responses:
-        '202':
-          description: Your bridge accepted the callback. The gateway validates the body
-            you send back, so a 202 carrying the wrong body is still a failure.
+        '200':
+          description: Your bridge acknowledged the callback with 200 OK. The gateway validates the body
+            you send back, so a 200 carrying the wrong body is still a failure.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - status
+              - consentId
+              - consentDetail
+              - signature
+              - grantAcknowledgement
+              properties:
+                status:
+                  type: string
+                  description: The values actually sent to a HIP on this callback.
+                  enum:
+                  - GRANTED
+                  - REVOKED
+                  - EXPIRED
+                consentId:
+                  type: string
+                  x-abdm-correction: C3
+                consentDetail:
+                  type: object
+                  required:
+                  - schemaVersion
+                  - consentId
+                  - createdAt
+                  - patient
+                  - careContexts
+                  - purpose
+                  - hip
+                  - hiu
+                  - consentManager
+                  - requester
+                  - hiTypes
+                  - permission
+                  properties:
+                    schemaVersion:
+                      type: string
+                    consentId:
+                      type: string
+                      x-abdm-correction: C3
+                    createdAt:
+                      type: string
+                      format: date-time
+                    patient:
+                      type: object
+                      required:
+                      - id
+                      properties:
+                        id:
+                          type: string
+                    careContexts:
+                      type: array
+                      items:
+                        type: object
+                        required:
+                        - patientReference
+                        - careContextReference
+                        properties:
+                          patientReference:
+                            type: string
+                          careContextReference:
+                            type: string
+                    purpose:
+                      type: object
+                      required:
+                      - text
+                      - code
+                      - refUri
+                      properties:
+                        text:
+                          type: string
+                        code:
+                          type: string
+                        refUri:
+                          type: string
+                    hip:
+                      type: object
+                      required:
+                      - id
+                      - name
+                      properties:
+                        id:
+                          type: string
+                        name:
+                          type: string
+                        type:
+                          type: string
+                    hiu:
+                      type: object
+                      required:
+                      - id
+                      - name
+                      properties:
+                        id:
+                          type: string
+                        name:
+                          type: string
+                        type:
+                          type: string
+                    consentManager:
+                      type: object
+                      required:
+                      - id
+                      properties:
+                        id:
+                          type: string
+                    requester:
+                      type: object
+                      required:
+                      - name
+                      - identifier
+                      properties:
+                        name:
+                          type: string
+                        identifier:
+                          type: object
+                          required:
+                          - value
+                          - type
+                          - system
+                          properties:
+                            value:
+                              type: string
+                            type:
+                              type: string
+                            system:
+                              type: string
+                    hiTypes:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/HIType'
+                    permission:
+                      $ref: '#/components/schemas/ConsentPermission'
+                signature:
+                  type: string
+                  description: Base64-encoded digital signature of the consent artefact.
+                grantAcknowledgement:
+                  type: boolean
+                  description: Required; no further semantics are documented for this
+                    field beyond the boolean value.
+            examples:
+              sample:
+                summary: Example values, scrubbed
+                value:
+                  status: GRANTED
+                  consentId: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+                  consentDetail:
+                    schemaVersion: v3
+                    consentId: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+                    createdAt: '2024-05-01T05:10:20.123Z'
+                    patient:
+                      id: abdulkalam@abdm
+                    careContexts:
+                    - patientReference: batman@tmh
+                      careContextReference: Episode1
+                    purpose:
+                      text: Care Management
+                      code: CAREMGT
+                      refUri: www.abc.com
+                    hip:
+                      id: cowin_hip_01
+                      name: Cowin
+                      type: HIP
+                    hiu:
+                      id: cowin_hiu_01
+                      name: Cowin
+                      type: HIU
+                    consentManager:
+                      id: abdm
+                    requester:
+                      name: abdulkalam@abdm
+                      identifier:
+                        value: REG1
+                        type: MH1001
+                        system: https://www.sample.com
+                    hiTypes:
+                    - Prescription
+                    permission:
+                      accessMode: VIEW
+                      dateRange:
+                        from: '2021-09-28T12:30:08.573Z'
+                        to: '2021-09-28T12:30:08.573Z'
+                      dataEraseAt: '2021-09-28T12:30:08.573Z'
+                      frequency:
+                        unit: HOUR
+                        value: 1
+                        repeats: 0
+                  signature: scrubbed-base64-signature
+                  grantAcknowledgement: false
       x-abdm-atom: hiecm.callback.m3-on-consent-request-notify-hip
       tags:
       - webhooks
@@ -634,11 +921,11 @@ webhooks:
       description: |
         The artefact itself, in answer to a fetch by artefact id.
 
-        
+
       responses:
-        '202':
-          description: Your bridge accepted the callback. The gateway validates the body
-            you send back, so a 202 carrying the wrong body is still a failure.
+        '200':
+          description: Your bridge acknowledged the callback with 200 OK. The gateway validates the body
+            you send back, so a 200 carrying the wrong body is still a failure.
       requestBody:
         required: true
         content:
@@ -651,6 +938,12 @@ webhooks:
                   properties:
                     status:
                       type: string
+                      description: Matches ConsentFetchResponse.consent.status.
+                      enum:
+                      - GRANTED
+                      - DENIED
+                      - REVOKED
+                      - EXPIRED
                     consentDetail:
                       type: object
                       properties:
@@ -884,11 +1177,11 @@ webhooks:
       description: |
         Carries the transaction id, the request id and the current status. This is an acknowledgement, not the records. The records arrive at the data push URL you supplied.
 
-        
+
       responses:
-        '202':
-          description: Your bridge accepted the callback. The gateway validates the body
-            you send back, so a 202 carrying the wrong body is still a failure.
+        '200':
+          description: Your bridge acknowledged the callback with 200 OK. The gateway validates the body
+            you send back, so a 200 carrying the wrong body is still a failure.
       requestBody:
         required: true
         content:
@@ -940,10 +1233,12 @@ webhooks:
       description: |
         The consent manager reports the state of a consent request you asked about.
 
-        Payload transcribed from NHA's own collection for this milestone.
+        GRANTED is absent from `status`'s enum here on purpose: a grant is communicated
+        through the notify callback with `consentArtefacts`, not through this status
+        callback.
       responses:
-        '202':
-          description: Accepted. Acknowledge quickly, then process asynchronously.
+        '200':
+          description: OK. Acknowledge quickly, then process asynchronously.
       requestBody:
         required: true
         content:
@@ -958,6 +1253,13 @@ webhooks:
                       type: string
                     status:
                       type: string
+                      description: GRANTED is not one of these values; see the operation
+                        description for why.
+                      enum:
+                      - REQUESTED
+                      - DENIED
+                      - EXPIRED
+                      - REVOKED
                   required:
                   - id
                   - status
@@ -991,6 +1293,94 @@ webhooks:
       x-abdm-atom: hiecm.callback.m3-on-consent-request-status
       tags:
       - webhooks
+  /health-information/transfer:
+    post:
+      operationId: m3_on_health_information_transfer
+      summary: The encrypted health data itself, pushed to the URL you supplied
+      description: |
+        The actual encrypted FHIR bundle. The HIP Data Bridge posts this directly to
+        the `dataPushUrl` you supplied in the health information request; it is not
+        routed through the Gateway, and this literal path is illustrative rather than
+        fixed, because `dataPushUrl` is a URL you host and register yourself.
+
+        Decrypt `entries[].content` with the ECDH shared secret derived from your
+        private key and `keyMaterial`. `entries[].checksum` is the MD5 of the content
+        before encryption, so verify it after decrypting. Large payloads arrive across
+        several calls, paginated by `pageNumber` and `pageCount`.
+      responses:
+        '202':
+          description: Accepted. Verify the checksum after decrypting before treating the transfer as complete.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - pageNumber
+              - pageCount
+              - transactionId
+              - entries
+              - keyMaterial
+              properties:
+                pageNumber:
+                  type: integer
+                  description: Current page number, for a multi-page transfer.
+                pageCount:
+                  type: integer
+                  description: Total number of pages in this transfer.
+                transactionId:
+                  type: string
+                  description: The transaction id issued when the health information was requested.
+                  x-abdm-correction: C3
+                entries:
+                  type: array
+                  items:
+                    type: object
+                    required:
+                    - content
+                    - media
+                    - checksum
+                    - careContextReference
+                    properties:
+                      content:
+                        type: string
+                        description: Encrypted FHIR bundle content.
+                      media:
+                        type: string
+                        enum:
+                        - application/fhir+json
+                      checksum:
+                        type: string
+                        description: MD5 checksum of the content, taken before encryption.
+                      careContextReference:
+                        type: string
+                        description: The care context this entry's data belongs to.
+                keyMaterial:
+                  $ref: '#/components/schemas/ECDHKeyMaterial'
+            examples:
+              sample:
+                summary: Example values, scrubbed
+                value:
+                  pageNumber: 1
+                  pageCount: 1
+                  transactionId: 8376a2b0-3fc9-4bb5-8af5-54a49a3910f4
+                  entries:
+                  - content: encrypted-fhir-bundle-content
+                    media: application/fhir+json
+                    checksum: d41d8cd98f00b204e9800998ecf8427e
+                    careContextReference: manishk@abdm-02
+                  keyMaterial:
+                    cryptoAlg: ECDH
+                    curve: Curve25519
+                    dhPublicKey:
+                      expiry: '2024-12-31T00:00:00.000Z'
+                      parameters: Curve25519/32byte
+                      keyValue: base64-encoded-hip-ecdh-public-key
+                    nonce: base64-encoded-random-nonce-32bytes
+      x-abdm-atom: hiecm.callback.m3-on-health-information-transfer
+      tags:
+      - webhooks
 components:
   securitySchemes:
     gatewaySession:
@@ -1020,11 +1410,11 @@ components:
       in: header
       required: true
       description: |
-        The current time in ISO 8601, in IST, the +05:30 offset, from a synchronised clock.
+        The current time in ISO 8601 UTC, with milliseconds and the `Z` suffix. NHA's collection fills this with Postman's `$isoTimestamp`, which emits exactly this format. The gateway rejects a request whose timestamp has drifted too far from its own clock, so take this from a synchronised clock rather than from a local one.
       schema:
         type: string
         format: date-time
-      example: '2026-08-24T15:45:30.000+05:30'
+      example: '2026-08-25T15:51:15.339Z'
     CmId:
       name: X-CM-ID
       in: header
@@ -1038,6 +1428,15 @@ components:
           value: sbx
         production:
           value: abdm
+    HiuId:
+      name: X-HIU-ID
+      in: header
+      required: true
+      description: |
+        Identifier of the health information user the request or callback is intended for.
+      schema:
+        type: string
+      example: IN2810014366
   schemas:
     SessionRequest:
       type: object
@@ -1225,20 +1624,36 @@ components:
               type: object
               required:
               - id
+              - name
               properties:
                 id:
                   type: string
                   description: HIU service ID
                   examples:
                   - HIU_SERVICE_ID
+                name:
+                  type: string
+                  description: HIU display name.
+                type:
+                  type: string
+                  description: Not otherwise constrained.
             hip:
               type:
               - object
               - 'null'
               description: Specific HIP to request from (null = any HIP)
+              required:
+              - id
+              - name
               properties:
                 id:
                   type: string
+                name:
+                  type: string
+                  description: HIP display name.
+                type:
+                  type: string
+                  description: Not otherwise constrained.
             careContexts:
               type:
               - array
@@ -1576,8 +1991,12 @@ components:
               properties:
                 sessionStatus:
                   type: string
+                  description: |
+                    HIU-side value, this is the M3 half of the exchange. RECEIVED on
+                    success, not TRANSFERRED, which is what the HIP sends on the M2
+                    side of the same event.
                   enum:
-                  - TRANSFERRED
+                  - RECEIVED
                   - FAILED
                 hipId:
                   type: string
@@ -1615,12 +2034,18 @@ components:
       - ImmunizationRecord
       - HealthDocumentRecord
       - WellnessRecord
-      description: ABDM Health Information type categories
+      - Invoice
+      description: |
+        ABDM Health Information type categories.
     ErrorResponse:
       type: object
       properties:
         code:
-          type: integer
+          type: string
+          pattern: '^(ABDM-\d{4}|\d{3,6})(: )?$'
+          description: |
+            A string matching this pattern. Observed values include `ABDM-1006`,
+            `900901` and `404`.
         message:
           type: string
   responses:
