@@ -6,7 +6,7 @@
     "docusaurus": "docusaurus",
     "start": "docusaurus start",
     "build": "docusaurus build",
-    "postbuild": "node ../scripts/emit-page-markdown.mjs",
+    "postbuild": "node ../scripts/emit-page-markdown.mjs && node ../scripts/strip-generator-meta.mjs",
     "swizzle": "docusaurus swizzle",
     "deploy": "docusaurus deploy",
     "clear": "docusaurus clear",
