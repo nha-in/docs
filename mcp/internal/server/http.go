@@ -14,16 +14,19 @@ import (
 
 	"github.com/eka-care/abdm-docs/mcp/internal/chat"
 	"github.com/eka-care/abdm-docs/mcp/internal/embed"
+	"github.com/eka-care/abdm-docs/mcp/internal/guard"
 	"github.com/eka-care/abdm-docs/mcp/internal/index"
 	"github.com/modelcontextprotocol/go-sdk/mcp"
 )
 
 // chatBodyLimit bounds how much of a POST /api/chat request body gets
 // decoded, so a client cannot force the server to buffer an unbounded
-// payload. 128 KiB comfortably covers MaxTurns turns at MaxInputLen /
-// MaxAssistantLen each (about 30 KB) alongside an attached page at
-// MaxPageChars (24 KB), plus JSON escaping of a whole Markdown document.
-const chatBodyLimit = 128 * 1024 // 128 KiB
+// payload. 512 KiB covers MaxTurns turns of text (about 30 KB) alongside an
+// attached page at MaxPageChars (24 KB) and, on every user turn, an attachment
+// at MaxAttachmentLen, since the whole conversation is re-sent each request.
+// Turn count and per-field limits are still enforced by ValidateTurns; this
+// only stops a body too large to be any of that from being buffered at all.
+const chatBodyLimit = 512 * 1024 // 512 KiB
 
 func Handler(r *index.Reader, emb embed.Embedder, allowOrigin string, chatSvc *chat.Service, limiter *chat.Limiter, trustProxy bool) (http.Handler, error) {
 	if emb != nil && r.EmbeddingsEnabled() && emb.Model() != r.EmbeddingModel() {
@@ -129,8 +132,14 @@ func Handler(r *index.Reader, emb embed.Embedder, allowOrigin string, chatSvc *c
 			slog.Error("chat failed", "err", err)
 			return
 		}
+		// The question is logged masked, never as it arrived. The model is
+		// handed a masked copy and the original stays in this handler's
+		// memory, so writing it out here would put the one identifier the
+		// masking exists to stop into the one place it was promised not to
+		// reach.
+		asked, _ := guard.MaskPII(in.Turns[len(in.Turns)-1].Text)
 		slog.Info("chat", "turns", len(in.Turns), "ms", time.Since(start).Milliseconds(),
-			"q", in.Turns[len(in.Turns)-1].Text)
+			"q", asked)
 	})
 
 	return mux, nil
