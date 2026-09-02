@@ -323,6 +323,9 @@ const config: Config = {
           // The milestones page moved out of Get started into its own section,
           // and each module's user journey moved with it.
           {from: '/docs/hiecm/v3/getting-started/milestones', to: '/docs/hiecm/v3/milestones'},
+          {from: '/docs/hiecm/v3/roles', to: '/docs/hiecm/v3'},
+          {from: '/docs/hiecm/v3/roles/ims', to: '/docs/hiecm/v3'},
+          {from: '/docs/hiecm/v3/roles/phr', to: '/docs/hiecm/v3/milestones/p1'},
           {from: '/docs/hiecm/v3/api/m1/user-journey', to: '/docs/hiecm/v3/milestones/m1'},
           {from: '/docs/hiecm/v3/milestones/m1-journey', to: '/docs/hiecm/v3/milestones/m1'},
           {from: '/docs/hiecm/v3/milestones/m2-journey', to: '/docs/hiecm/v3/milestones/m2'},

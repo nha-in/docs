@@ -24,7 +24,17 @@ import {rolesFor, useRole} from '@site/src/config/roles';
  * filtered tree with no visible sign of filtering is how a reader concludes a
  * page is missing.
  */
-export default function SidebarPickers(): React.ReactNode {
+export default function SidebarPickers({
+  showVersion = true,
+}: {
+  /**
+   * The version belongs to the API reference, the way it does on the
+   * reference sites this follows: a version is a property of the contract
+   * you are calling, not of the guides that explain it. The role is a
+   * property of the reader, so it shows on both sidebars.
+   */
+  showVersion?: boolean;
+} = {}): React.ReactNode {
   const pathname = useRoutePath();
   const history = useHistory();
   // Controlled, so that choosing something closes the panel. A setting that
@@ -43,18 +53,20 @@ export default function SidebarPickers(): React.ReactNode {
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger
           className="sidebar-settings"
-          aria-label={`Settings. Version ${version.label}${
-            roles.length > 0 ? `, role ${currentRole?.label ?? 'Everything'}` : ''
+          aria-label={`Settings.${showVersion ? ` Version ${version.label}` : ''}${
+            roles.length > 0 ? ` Role ${currentRole?.label ?? 'Everything'}` : ''
           }`}>
           <SlidersHorizontal className="size-4 shrink-0" aria-hidden="true" />
           <span className="sidebar-settings__summary">
-            {version.label}
-            {roles.length > 0 ? ` · ${currentRole?.label ?? 'Everything'}` : ''}
+            {showVersion ? version.label : null}
+            {showVersion && roles.length > 0 ? ' · ' : null}
+            {roles.length > 0 ? (currentRole?.label ?? 'Everything') : null}
           </span>
           {filtered ? <span className="sidebar-settings__dot" aria-hidden="true" /> : null}
         </PopoverTrigger>
 
         <PopoverContent align="start" className="sidebar-settings__panel">
+          {showVersion ? (
           <Group label={`${platform.label} version`}>
             {platform.versions.map((entry) => (
               <Option
@@ -71,9 +83,10 @@ export default function SidebarPickers(): React.ReactNode {
               />
             ))}
             <p className="sidebar-settings__footnote">
-              Versions track NHA's specification versions, not this portal's.
+              Versions track the specification's versions, not this portal's.
             </p>
           </Group>
+          ) : null}
 
           {roles.length > 0 ? (
             <Group label={`${platform.label} role`}>
