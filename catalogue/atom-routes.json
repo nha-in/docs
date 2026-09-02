@@ -188,10 +188,10 @@
     {
       "atom": "hiecm.concept.roles",
       "type": "concept",
-      "route": "/docs/hiecm/v3/getting-started/what-you-can-build",
+      "route": "/docs/hiecm/v3/milestones",
       "anchor": null,
-      "link": "/docs/hiecm/v3/getting-started/what-you-can-build",
-      "rule": "claimed by what-you-can-build",
+      "link": "/docs/hiecm/v3/milestones",
+      "rule": "claimed by milestones",
       "confidence": "derived"
     },
     {
