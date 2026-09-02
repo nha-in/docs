@@ -227,10 +227,13 @@ export default function TryIt({operation}: {operation: Operation}) {
       if (token) requestHeaders.Authorization = `Bearer ${token}`;
       const response = await fetch(`${server}${CERT_PATH}`, {headers: requestHeaders});
       if (!response.ok) {
+        const text = await response.text();
         throw new Error(
           response.status === 401
             ? 'the certificate call needs a token; run the gateway session first'
-            : `the certificate call returned ${response.status}`,
+            : response.status === 403 && !text.trim()
+              ? 'the sandbox only accepts browser requests from origins NHA has allowlisted, and this site is not one yet; paste the key instead, or run the portal locally on localhost:3000'
+              : `the certificate call returned ${response.status}`,
         );
       }
       const data = await response.json();
@@ -916,7 +919,19 @@ export default function TryIt({operation}: {operation: Operation}) {
 
                   {result.state === 'done' ? (
                     <>
-                      {matched ? (
+                      {result.status === 403 && !result.body.trim() ? (
+                        // NHA's edge answers a 403 with no body when the browser's
+                        // origin is not on its allowlist. A role problem comes back
+                        // as JSON, so an empty 403 is this and not that.
+                        <p className="api-console__meaning">
+                          The ABDM sandbox only accepts browser requests from origins NHA
+                          has allowlisted, and this site is not one yet: it answered 403
+                          with no body before the request reached the API. The request
+                          itself is fine. Copy the cURL above and run it from a terminal,
+                          or run this portal locally on localhost:3000, which the sandbox
+                          allows.
+                        </p>
+                      ) : matched ? (
                         <p className="api-console__meaning">
                           {operation.responses.find((r) => r.status === matched)
                             ?.description}
