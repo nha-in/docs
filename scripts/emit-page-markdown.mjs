@@ -142,8 +142,10 @@ function main() {
     const moduleMatch = /^docs[\\/]hiecm[\\/]v3[\\/]api[\\/]([\w-]+)([\\/]|$)/.exec(route);
     if (moduleMatch) {
       const moduleId = moduleMatch[1];
+      const description =
+        /^description:\s*"?([^"\n]+)"?/m.exec(raw)?.[1]?.trim() ?? '';
       if (!apiModulePages.has(moduleId)) apiModulePages.set(moduleId, []);
-      apiModulePages.get(moduleId).push({title, route});
+      apiModulePages.get(moduleId).push({title, route, description});
     }
   }
 
@@ -160,12 +162,26 @@ function main() {
   const siteUrl = (process.env.DOCUSAURUS_URL ?? 'https://abdm-docs.example.com').replace(/\/+$/, '');
   const base = (process.env.DOCUSAURUS_BASE_URL ?? '/').replace(/\/+$/, '');
 
+  // Same llmstxt.org shape as the root llms.txt (build-nav.mjs): H1, a `>`
+  // summary, one `## section`, then `- [Title](url): description` lines.
   for (const [moduleId, pages] of apiModulePages) {
     pages.sort((a, b) => a.route.localeCompare(b.route));
-    const lines = pages.map((p) => `${p.title} ${siteUrl}${base}/${p.route}`);
     const outDir = join(BUILD, 'docs', 'hiecm', 'v3', 'api', moduleId);
     if (!existsSync(outDir)) continue;
-    writeFileSync(join(outDir, 'llms.txt'), lines.join('\n') + '\n');
+    const label = moduleId.toUpperCase();
+    const lines = [
+      `# ${label}`,
+      '',
+      `> Every page of the ${label} module of the ABDM Developer Portal, fetchable as markdown.`,
+      '',
+      '## Pages',
+      '',
+    ];
+    for (const p of pages) {
+      lines.push(`- [${p.title}](${siteUrl}${base}/${p.route})${p.description ? `: ${p.description}` : ''}`);
+    }
+    lines.push('');
+    writeFileSync(join(outDir, 'llms.txt'), lines.join('\n'));
   }
 
   console.log(

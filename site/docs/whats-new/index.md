@@ -37,9 +37,10 @@ here matches what the M3 API reference expects call by call.
 [Your first fifteen minutes](/docs/hiecm/v3/getting-started/first-fifteen-minutes) gives you
 something to do while NHA reviews your sandbox registration: one gateway session call
 transcribed from this repository's specification, and your own first call assembled with
-the credential placeholders named for where they come from. The transcribed request and
-response are read from the OpenAPI spec in this repository, not invented, and the page says
-plainly which parts are observed and which are not yet.
+the credential placeholders named for where they come from. The transcribed request is read
+from the OpenAPI spec in this repository, not invented. The spec carries no captured response
+body, only the field list, and the page says plainly which parts are observed and which are
+not yet.
 
 ### Going live, in NHA's own order
 

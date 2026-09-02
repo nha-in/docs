@@ -406,6 +406,11 @@
   text-decoration: none;
 }
 
+.landing-hero__way:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
 /* The interpunct sits in the gap rather than in either link, so it is not
    part of the hit area and does not turn sage with its neighbour.
 
