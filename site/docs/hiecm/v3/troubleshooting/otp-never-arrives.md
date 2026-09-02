@@ -26,7 +26,7 @@ or the code the response names on the
    Aadhaar OTP enrolment flow, only the mobile number registered against
    that Aadhaar number receives the OTP. That is not necessarily the
    phone the person is holding while they enrol. See the
-   [M1 user journey](/docs/hiecm/v3/milestones/m1-journey) for the full
+   [M1 user journey](/docs/hiecm/v3/milestones/m1) for the full
    enrolment sequence, and confirm which number Aadhaar has on file
    before assuming delivery failed.
 2. **Have you requested an OTP for this transaction more than a few
@@ -60,7 +60,7 @@ This symptom can surface as a rate limit code or the catch-all
 failure code, both on the
 [error codes reference](/docs/hiecm/v3/reference/error-codes).
 
-<a class="next-step" href="/docs/hiecm/v3/milestones/m1-journey">
+<a class="next-step" href="/docs/hiecm/v3/milestones/m1">
 <span class="next-step__eyebrow">Next</span>
 <span class="next-step__label">Still stuck? Walk the M1 user journey</span>
 <span class="next-step__detail">See exactly where the OTP request sits among the calls that create an ABHA.</span>

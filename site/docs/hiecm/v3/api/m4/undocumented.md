@@ -484,5 +484,5 @@ The full list is in NHA's sandbox documentation for the [healthcare professional
 ## Where to go next
 
 - The interactive reference: [M4 API reference](/reference/hiecm-m4).
-- The order of calls, as diagrams: [M4 user journeys](/docs/hiecm/v3/milestones/m4-journey).
+- The order of calls, as diagrams: [M4 user journeys](/docs/hiecm/v3/milestones/m4).
 - A path missing here that you need now: ask on [support](/docs/support).

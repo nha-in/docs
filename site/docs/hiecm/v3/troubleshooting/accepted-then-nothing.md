@@ -72,7 +72,7 @@ This symptom can surface as a duplicate or invalid link reference, or a
 call made out of the logical sequence, both on the
 [M2 errors reference](/docs/hiecm/v3/api/m2/errors).
 
-<a class="next-step" href="/docs/hiecm/v3/milestones/m2-journey">
+<a class="next-step" href="/docs/hiecm/v3/milestones/m2">
 <span class="next-step__eyebrow">Next</span>
 <span class="next-step__label">Still stuck? Check the M2 user journey</span>
 <span class="next-step__detail">Confirm exactly where your call sits in the sequence, and which callback should follow it.</span>

@@ -74,7 +74,7 @@ anyone who has a symptom rather than a code.
 
 ### The M3 consent journey, drawn in three parts
 
-[M3 user journeys](/docs/hiecm/v3/milestones/m3-journey) draws the whole
+[M3 user journeys](/docs/hiecm/v3/milestones/m3) draws the whole
 [consent](/docs/hiecm/v3/getting-started/glossary#consent-artefact) story as NHA's document
 tells it: raising a consent request, the patient granting or denying it, and fetching the
 records once an artefact exists. Two new flow atoms back the diagrams,
