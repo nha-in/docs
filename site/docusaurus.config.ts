@@ -291,7 +291,7 @@ const config: Config = {
       '@docusaurus/plugin-client-redirects',
       {
         redirects: [
-          {from: '/docs', to: '/docs/hiecm/v3/'},
+          {from: '/docs', to: '/docs/hiecm/v3'},
           // Old flat and building-blocks URLs from before the folder
           // restructure. The `from` paths are the URLs as they were published,
           // under the platform's old name (abdm); the blanket abdm-to-hiecm
@@ -305,10 +305,11 @@ const config: Config = {
           {from: '/docs/abdm/v3/building-blocks/gateway', to: '/docs/hiecm/v3/concepts/gateway'},
           {from: '/docs/abdm/v3/building-blocks/hie-cm', to: '/docs/hiecm/v3/concepts/gateway'},
           {from: '/docs/abdm/v3/concepts/hie-cm', to: '/docs/hiecm/v3/concepts/gateway'},
-          {from: '/docs/overview', to: '/docs/hiecm/v3/'},
+          {from: '/docs/overview', to: '/docs/hiecm/v3'},
           {from: '/docs/api', to: '/docs/hiecm/v3/getting-started/milestones'},
           {from: '/docs/abdm/v3/architecture', to: '/docs/hiecm/v3/concepts/how-it-fits'},
           {from: '/docs/hiecm/v3/getting-started/architecture', to: '/docs/hiecm/v3/concepts/how-it-fits'},
+          {from: '/docs/hiecm/v3/getting-started/mcp', to: '/docs/hiecm/v3/getting-started/build-with-ai'},
           {from: '/docs/abdm/v3/sandbox', to: '/docs/hiecm/v3/getting-started/sandbox'},
           {from: '/docs/abdm/v3/milestones', to: '/docs/hiecm/v3/getting-started/milestones'},
           {from: '/docs/abdm/v3/what-you-can-build', to: '/docs/hiecm/v3/getting-started/what-you-can-build'},

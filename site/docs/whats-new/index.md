@@ -81,7 +81,7 @@ and serves its own `index.md` alongside the rendered page. A repository-wide `ll
 `llms-full.txt`, plus one `llms.txt` per module, are built on every release so an agent can
 retrieve exactly the page it needs without scraping HTML. See
 [Build with AI](/docs/hiecm/v3/getting-started/build-with-ai) for the skills and the
-[Docs MCP server](/docs/hiecm/v3/getting-started/mcp) built on the same content.
+[Docs MCP server](/docs/hiecm/v3/getting-started/build-with-ai#connect-the-docs-mcp-server) built on the same content.
 
 ### The homepage asks what you are trying to build
 
