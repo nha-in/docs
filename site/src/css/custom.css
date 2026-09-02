@@ -22,6 +22,7 @@
 @import './quickstart.css';
 @import './scalar.css';
 @import './whats-new.css';
+@import './markdown-view.css';
 
 /* Docusaurus toggles [data-theme] on <html>; teach Tailwind the same signal. */
 @custom-variant dark (&:where([data-theme='dark'], [data-theme='dark'] *));
@@ -139,6 +140,25 @@ body {
 
 ::selection {
   background: var(--accent-soft);
+}
+
+/* Tailwind v4 dropped the browser's old `cursor: pointer` on buttons, so
+   every control built on a <button> stopped saying it was clickable: the
+   tabs in the Install tools panel, the copy buttons, the role cards. The
+   individual files that set it were each patching one instance of a
+   site-wide change. One rule, on everything that is actually a control, and
+   the disabled ones say so instead. */
+button:not(:disabled),
+[role='button']:not([aria-disabled='true']),
+[role='tab']:not([aria-disabled='true']),
+summary,
+label[for] {
+  cursor: pointer;
+}
+
+button:disabled,
+[aria-disabled='true'] {
+  cursor: not-allowed;
 }
 
 :focus-visible {

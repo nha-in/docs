@@ -1,6 +1,6 @@
 import {test} from 'node:test';
 import assert from 'node:assert';
-import {renderOperationMarkdown, stripToMarkdown} from './emit-page-markdown.mjs';
+import {renderOperationMarkdown, routeFor, stripToMarkdown} from './emit-page-markdown.mjs';
 
 test('operation JSON renders to markdown with method, path and curl', () => {
   const op = {
@@ -92,4 +92,24 @@ test('stripToMarkdown preserves an unterminated fence at end of file byte for by
   const src = '# Title\n\n```tsx\n<Foo>\n  bar\n</Foo>\n';
   const md = stripToMarkdown(src);
   assert.match(md, /```tsx\n<Foo>\n {2}bar\n<\/Foo>/);
+});
+
+test('routeFor follows the file path when no slug is set', () => {
+  const r = routeFor('site/docs/hiecm/v3/getting-started/sandbox.md', '---\ntitle: x\n---\n');
+  assert.strictEqual(r, 'docs/hiecm/v3/getting-started/sandbox');
+});
+
+test('routeFor collapses an index file to its folder', () => {
+  const r = routeFor('site/docs/hiecm/v3/milestones/index.mdx', '---\ntitle: x\n---\n');
+  assert.strictEqual(r, 'docs/hiecm/v3/milestones');
+});
+
+test('routeFor honours a slug that moves the page off its path', () => {
+  // Get started lives in getting-started/index.mdx and publishes at /hiecm/v3.
+  // Following the path would write the markdown where no page is served.
+  const r = routeFor(
+    'site/docs/hiecm/v3/getting-started/index.mdx',
+    '---\ntitle: Get started\nslug: /hiecm/v3\n---\n',
+  );
+  assert.strictEqual(r, 'docs/hiecm/v3');
 });

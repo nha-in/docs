@@ -92,7 +92,11 @@ export default function PageActions(): React.ReactNode {
         <ClipboardList className="page-actions__icon" aria-hidden="true" />
         {COPY_TEXT[status]}
       </button>
-      <a className="page-actions__item" href={mdUrl} target="_blank" rel="noopener noreferrer">
+      <a
+        className="page-actions__item"
+        href={`/markdown?path=${encodeURIComponent(pathname)}`}
+        target="_blank"
+        rel="noopener noreferrer">
         <MarkdownMark />
         View as Markdown
       </a>
