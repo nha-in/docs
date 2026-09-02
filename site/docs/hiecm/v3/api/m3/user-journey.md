@@ -101,10 +101,10 @@ sequenceDiagram
     S->>G: Health information notify, receipt of the data
 ```
 
-The records arrive encrypted, at the data push URL you supplied. NHA's document does not say whether that URL must differ from your other registered callback URLs. NHA states your side plainly: convert the data back to its original form, then present it in a readable format.
+The records arrive encrypted, at the data push URL you supplied. Whether that URL must differ from your other registered callback URLs is not documented yet. Your side is simple: decrypt the data, then present it in a readable format.
 
 The M3 document does not describe the encryption scheme. It is [ECDH](/docs/hiecm/v3/getting-started/glossary#ecdh) key exchange, specified on the [HIP](/docs/hiecm/v3/getting-started/glossary#hip) side in NHA's M2 document. See [M2](/docs/hiecm/v3/api/m2).
 
 ## What the patient sees
 
-NHA's document includes a screen sequence and a set of expiry screens for the patient's side. Both are screenshots, and nothing readable converted, so they are not reproduced here. What the prose does state is on the [use cases](/reference/hiecm-m3) page under patient rights.
+The patient's screens and expiry screens are not reproduced here. What applies to you is on the [use cases](/reference/hiecm-m3) page under patient rights.

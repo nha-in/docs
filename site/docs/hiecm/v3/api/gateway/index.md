@@ -9,16 +9,8 @@ source: catalogue/openapi/hiecm/v3/hiecm-gateway.yaml
 
 # Gateway session
 
-Every module in this catalogue gets its access token here, so this is the first call in any integration and the one to get working before anything else.
-
-NHA repeats this group inside all three milestone files. It is described once here, so a change lands in one place rather than three.
-
-## What is in it
-
-Sessions, the certificate endpoints your client needs to verify tokens, and the bridge registration calls that tell ABDM which URL your callbacks arrive on.
-
-## Before your first call
-
-You need a client ID and client secret from the ABDM sandbox. See [the sandbox page](/docs/hiecm/v3/getting-started/sandbox).
+Session and token calls, certificate endpoints for verifying tokens, and bridge registration calls that tell ABDM which URL your callbacks arrive on.
 
 The full operation list is in the [Gateway session API reference](/reference/hiecm-gateway).
+
+New to this? Start with [Your integration path](/docs/hiecm/v3/getting-started/milestones).

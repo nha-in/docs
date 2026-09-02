@@ -39,7 +39,7 @@ The first call you make, and one of the few whose method, URL and body all survi
 | URL | `https://dev.abdm.gov.in/api/hiecm/gateway/v3/sessions` |
 | URL, second host | `https://live.abdm.gov.in/api/hiecm/gateway/v3/sessions` |
 
-NHA gives both hosts and labels neither. See [the note on environments](/docs/hiecm/v3/api/m4#environments).
+Both hosts are listed under [Base URLs](/docs/hiecm/v3/api/m4#base-urls).
 
 Headers NHA names:
 

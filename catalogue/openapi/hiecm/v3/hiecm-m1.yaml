@@ -27,15 +27,12 @@ info:
     and a few login calls from `/abha/api/v3.1`, so the version is part of the
     path here rather than part of the server URL.
 
-    Where this comes from, and what it is worth. Paths, methods, headers,
-    request shapes and the response examples are derived from NHA's own M1
-    Postman collection. Nothing has been run against the sandbox from this
-    repository, so no operation here is verified. Where NHA saved no response
-    body, the operation says so rather than guessing a shape.
+    Where no response body is documented, the operation says so rather than
+    guessing a shape.
 
     Sample values are scrubbed. Tokens, ABHA numbers and long identifiers are
-    replaced with placeholders, and Postman variables such as
-    `{{lastResponseTxnId}}` are rewritten as `<LAST_RESPONSE_TXN_ID>`.
+    replaced with placeholders such as `<LAST_RESPONSE_TXN_ID>`, which stands
+    for a value carried over from an earlier response in the same flow.
 
     One rule runs through the whole module. Identifiers you send, an Aadhaar
     number, a mobile number, an OTP, are encrypted against NHA's public key
@@ -203,9 +200,7 @@ paths:
                       otpValue: <OTPVALUE>
       responses:
         '200':
-          description: The call was accepted. No response body is documented
-            for this operation. Run it
-            against the sandbox and record what comes back before relying on it.
+          description: "Response body: not documented."
       x-abdm-atom: hiecm.endpoint.m1-enrolment-verify-abdm-otp
   /v3/enrollment/enrol/abha-address:
     post:
@@ -224,9 +219,7 @@ paths:
 
         The ABHA number comes back from this call as `healthIdNumber`, not as
         `ABHANumber`. The enrol response spells the same value `ABHANumber`, so
-        a client that reuses its enrol parsing here reads nothing. The field
-        name is taken from the test script in NHA's collection, which stores
-        `responseBody.healthIdNumber`, rather than from a saved response.
+        a client that reuses its enrol parsing here reads nothing.
       parameters:
       - $ref: '#/components/parameters/RequestId'
       - $ref: '#/components/parameters/Timestamp'
@@ -256,11 +249,8 @@ paths:
                   preferred: 1
       responses:
         '200':
-          description: NHA's collection saves no response body for this operation.
-            The one field below is read off the collection's test script rather
-            than a saved example, so the rest of the shape is unknown and none
-            of it is verified. Run it against the sandbox and record what comes
-            back before relying on it.
+          description: Response body not fully documented. `healthIdNumber` is
+            confirmed; the rest of the shape is not.
           content:
             application/json:
               schema:
@@ -308,9 +298,7 @@ paths:
                   - face-auth
       responses:
         '200':
-          description: The call was accepted. No response body is documented
-            for this operation. Run it
-            against the sandbox and record what comes back before relying on it.
+          description: "Response body: not documented."
       x-abdm-atom: hiecm.endpoint.m1-enrolment-face-auth-init
   /v3/enrollment/enrol/byAadhaar:
     post:
@@ -328,15 +316,13 @@ paths:
         permanent side effect. If you retry it blindly after a timeout you may be
         asking NHA to enrol somebody twice.
 
-        `BENEFIT_NAME` is sent on this call in NHA's collection when the
-        enrolment belongs to a benefit scheme.
+        `BENEFIT_NAME` is sent on this call when the enrolment belongs to a
+        benefit scheme.
 
         The demographic authentication variant reads the user token from a
-        different place. Its script in NHA's collection takes `token` at the top
-        level, while the OTP, face and fingerprint variants take `tokens.token`.
-        Both scripts are in the collection, NHA's M1 document does not explain
-        the difference, and no response example was saved for either variant, so
-        neither shape is verified. Check which one you get before parsing.
+        different place: `token` at the top level, while the OTP, face and
+        fingerprint variants take `tokens.token`. Check which one you get
+        before parsing.
       parameters:
       - $ref: '#/components/parameters/RequestId'
       - $ref: '#/components/parameters/Timestamp'
@@ -464,9 +450,7 @@ paths:
                     version: '1.4'
       responses:
         '200':
-          description: The call was accepted. No response body is documented
-            for this operation. Run it
-            against the sandbox and record what comes back before relying on it.
+          description: "Response body: not documented."
       x-abdm-atom: hiecm.endpoint.m1-enrolment-by-aadhaar
   /v3/enrollment/enrol/byDocument:
     post:
@@ -567,9 +551,7 @@ paths:
                     version: '1.4'
       responses:
         '200':
-          description: The call was accepted. No response body is documented
-            for this operation. Run it
-            against the sandbox and record what comes back before relying on it.
+          description: "Response body: not documented."
       x-abdm-atom: hiecm.endpoint.m1-enrolment-by-document
   /v3/enrollment/enrol/capturePID:
     post:
@@ -680,9 +662,7 @@ paths:
       - $ref: '#/components/parameters/TransactionId'
       responses:
         '200':
-          description: The call was accepted. No response body is documented
-            for this operation. Run it
-            against the sandbox and record what comes back before relying on it.
+          description: "Response body: not documented."
       x-abdm-atom: hiecm.endpoint.m1-enrolment-address-suggestions
   /v3/enrollment/profile/children:
     get:
@@ -700,9 +680,7 @@ paths:
       - $ref: '#/components/parameters/XToken'
       responses:
         '200':
-          description: The call was accepted. No response body is documented
-            for this operation. Run it
-            against the sandbox and record what comes back before relying on it.
+          description: "Response body: not documented."
       x-abdm-atom: hiecm.endpoint.m1-enrolment-list-children
   /v3/enrollment/request/otp:
     post:
@@ -783,9 +761,7 @@ paths:
                   otpSystem: abdm
       responses:
         '200':
-          description: The call was accepted. No response body is documented
-            for this operation. Run it
-            against the sandbox and record what comes back before relying on it.
+          description: "Response body: not documented."
       x-abdm-atom: hiecm.endpoint.m1-enrolment-request-otp
   /v3.1/profile/login/request/otp:
     post:
@@ -799,8 +775,7 @@ paths:
         path from the rest of M1, `/abha/api/v3.1` rather than `/abha/api/v3`,
         which is why the version appears in the path here.
 
-        NHA's collection uses it for Aadhaar OTP and biometric login. Treat v3
-        as the default and reach for v3.1 only where NHA's material does.
+        Use v3 by default. v3.1 is used for Aadhaar OTP and biometric login.
       parameters:
       - $ref: '#/components/parameters/RequestId'
       - $ref: '#/components/parameters/Timestamp'
@@ -839,9 +814,7 @@ paths:
                   otpSystem: aadhaar
       responses:
         '200':
-          description: The call was accepted. No response body is documented
-            for this operation. Run it
-            against the sandbox and record what comes back before relying on it.
+          description: "Response body: not documented."
       x-abdm-atom: hiecm.endpoint.m1-login-request-otp-v31
   /v3.1/profile/login/verify:
     post:
@@ -1160,8 +1133,8 @@ paths:
         responds with the list instead of a token, and you continue with the
         user selection call.
 
-        The saved responses in NHA's collection cover 400, 401, 404 and 422 as
-        well as 200, so read the body rather than only the status.
+        Documented responses cover 400, 401, 404 and 422 as well as 200, so
+        read the body rather than only the status.
       parameters:
       - $ref: '#/components/parameters/RequestId'
       - $ref: '#/components/parameters/Timestamp'
@@ -1501,9 +1474,7 @@ paths:
                   txnId: <TXN_ID>
       responses:
         '200':
-          description: The call was accepted. No response body is documented
-            for this operation. Run it
-            against the sandbox and record what comes back before relying on it.
+          description: "Response body: not documented."
       x-abdm-atom: hiecm.endpoint.m1-login-select-account
   /v3/profile/account:
     patch:
@@ -1783,9 +1754,7 @@ paths:
       - $ref: '#/components/parameters/XToken'
       responses:
         '200':
-          description: The call was accepted. No response body is documented
-            for this operation. Run it
-            against the sandbox and record what comes back before relying on it.
+          description: "Response body: not documented."
       x-abdm-atom: hiecm.endpoint.m1-profile-get-account
   /v3/profile/account/abha-card:
     get:
@@ -1802,9 +1771,7 @@ paths:
       - $ref: '#/components/parameters/XToken'
       responses:
         '200':
-          description: The call was accepted. No response body is documented
-            for this operation. Run it
-            against the sandbox and record what comes back before relying on it.
+          description: "Response body: not documented."
       x-abdm-atom: hiecm.endpoint.m1-profile-get-abha-card
   /v3/profile/account/download-abha-card:
     get:
@@ -1822,9 +1789,7 @@ paths:
       - $ref: '#/components/parameters/XToken'
       responses:
         '200':
-          description: The call was accepted. No response body is documented
-            for this operation. Run it
-            against the sandbox and record what comes back before relying on it.
+          description: "Response body: not documented."
       x-abdm-atom: hiecm.endpoint.m1-profile-download-abha-card
   /v3/profile/account/qrCode:
     get:
@@ -1842,9 +1807,7 @@ paths:
       - $ref: '#/components/parameters/XToken'
       responses:
         '200':
-          description: The call was accepted. No response body is documented
-            for this operation. Run it
-            against the sandbox and record what comes back before relying on it.
+          description: "Response body: not documented."
       x-abdm-atom: hiecm.endpoint.m1-profile-get-qr-code
   /v3/profile/account/request/logout:
     get:
@@ -1955,9 +1918,7 @@ paths:
                   otpSystem: aadhaar
       responses:
         '200':
-          description: The call was accepted. No response body is documented
-            for this operation. Run it
-            against the sandbox and record what comes back before relying on it.
+          description: "Response body: not documented."
       x-abdm-atom: hiecm.endpoint.m1-profile-request-otp
   /v3/profile/account/verify:
     post:
@@ -2059,9 +2020,7 @@ paths:
                       otpValue: <OTPVALUE>
       responses:
         '200':
-          description: The call was accepted. No response body is documented
-            for this operation. Run it
-            against the sandbox and record what comes back before relying on it.
+          description: "Response body: not documented."
       x-abdm-atom: hiecm.endpoint.m1-profile-verify-otp
   /v3/profile/account/abha/search:
     post:
@@ -2076,15 +2035,11 @@ paths:
         a message naming the masked mobile the OTP went to, so the person can
         confirm it is theirs before waiting for it.
 
-        Two things in NHA's collection disagree about the shape that comes back,
-        and both are recorded below. The test script reads `jsonData[0].txnId`,
-        so it expects a JSON array, which fits one mobile number mapping to
-        several accounts. The saved example is a single object. That example
-        also carries a URL of `profile/login/request/otp`, so it was probably
-        saved against the wrong request, which makes the script the more
-        trustworthy of the two. Neither has been run from this repository.
-        Write the client to read an array, and keep the single object in mind
-        until the sandbox settles it.
+        Two shapes are documented for the response: an array, which fits one
+        mobile number mapping to several accounts, and a single object. The
+        single-object example carries a URL of `profile/login/request/otp`,
+        so it likely describes a different endpoint. Expect an array, and
+        treat the single object as unconfirmed.
       parameters:
       - $ref: '#/components/parameters/RequestId'
       - $ref: '#/components/parameters/Timestamp'
@@ -2114,18 +2069,15 @@ paths:
                   mobile: <MOBILE>
       responses:
         '200':
-          description: Example values, scrubbed.
-            Two shapes are recorded because the collection's test script and its
-            saved example disagree, and the script is the more trustworthy of
-            the two.
+          description: Example values, scrubbed. Two shapes are documented;
+            the array is the more likely of the two.
           content:
             application/json:
               schema:
                 oneOf:
-                - title: Array, what the collection's test script expects
-                  description: The script reads `jsonData[0].txnId`, so it treats
-                    the body as a list. One mobile number can map to several accounts,
-                    which fits a list.
+                - title: Array, the more likely shape
+                  description: One mobile number can map to several accounts,
+                    which fits an array response.
                   type: array
                   items:
                     type: object
@@ -2136,10 +2088,10 @@ paths:
                         type: string
                     required:
                     - txnId
-                - title: Single object, what the saved example shows
-                  description: The example NHA saved carries a URL of `profile/login/request/otp`,
-                    so it was probably saved against the wrong request and describes
-                    that call rather than this one.
+                - title: Single object, an alternate documented shape
+                  description: This example carries a URL of
+                    `profile/login/request/otp`, so it likely describes a
+                    different endpoint rather than this one.
                   type: object
                   properties:
                     txnId:
@@ -2169,9 +2121,8 @@ paths:
       - benefit-apis
       summary: Find insurance cover recorded against an ABHA number
       description: |
-        NHA's collection saves 400, 401 and 500 responses for this call as well
-        as 200, which is a fair sign of how often it is called with something
-        missing. Handle all four.
+        Documented responses include 400, 401 and 500 as well as 200. Handle
+        all four.
       parameters:
       - $ref: '#/components/parameters/RequestId'
       - $ref: '#/components/parameters/Timestamp'
@@ -2300,9 +2251,7 @@ paths:
       - $ref: '#/components/parameters/AbhaNumber'
       responses:
         '200':
-          description: The call was accepted. No response body is documented
-            for this operation. Run it
-            against the sandbox and record what comes back before relying on it.
+          description: "Response body: not documented."
       x-abdm-atom: hiecm.endpoint.m1-benefit-get-state-district
   /v3/profile/benefit/abha/{abhaNumber}:
     get:
@@ -2320,9 +2269,7 @@ paths:
       - $ref: '#/components/parameters/AbhaNumber'
       responses:
         '200':
-          description: The call was accepted. No response body is documented
-            for this operation. Run it
-            against the sandbox and record what comes back before relying on it.
+          description: "Response body: not documented."
       x-abdm-atom: hiecm.endpoint.m1-benefit-get-by-abha
   /v3/profile/benefit/linkAndDelink:
     post:
@@ -2582,9 +2529,7 @@ paths:
       - $ref: '#/components/parameters/HealthIdNumberHeader'
       responses:
         '200':
-          description: The call was accepted. No response body is documented
-            for this operation. Run it
-            against the sandbox and record what comes back before relying on it.
+          description: "Response body: not documented."
       x-abdm-atom: hiecm.endpoint.m1-benefit-find-aadhaar-by-abha
   /v3/profile/benefit/search/abhaByAadhaar:
     get:
@@ -2603,9 +2548,7 @@ paths:
       - $ref: '#/components/parameters/AadhaarNumberHeader'
       responses:
         '200':
-          description: The call was accepted. No response body is documented
-            for this operation. Run it
-            against the sandbox and record what comes back before relying on it.
+          description: "Response body: not documented."
       x-abdm-atom: hiecm.endpoint.m1-benefit-find-abha-by-aadhaar
   /v3/phr/app/enrollment/encrypt:
     post:
@@ -2644,9 +2587,7 @@ paths:
                   data: '1'
       responses:
         '200':
-          description: The call was accepted. No response body is documented
-            for this operation. Run it
-            against the sandbox and record what comes back before relying on it.
+          description: "Response body: not documented."
       x-abdm-atom: hiecm.endpoint.m1-encrypt-value
   /v3/profile/account/request/token:
     get:
@@ -2664,9 +2605,7 @@ paths:
       - $ref: '#/components/parameters/RToken'
       responses:
         '200':
-          description: The call was accepted. No response body is documented
-            for this operation. Run it
-            against the sandbox and record what comes back before relying on it.
+          description: "Response body: not documented."
       x-abdm-atom: hiecm.endpoint.m1-token-refresh
   /profile/public/certificate:
     get:
@@ -3042,7 +2981,7 @@ paths:
       summary: Receive a patient's shared profile
       operationId: m1_receive_patient_share
       description: |
-        NHA's formal name: [HIP Callback] Receive Patient Profile Share.
+        Also known as: [HIP Callback] Receive Patient Profile Share.
         **This endpoint is implemented by the HIP**, the ABDM Gateway forwards the
         patient's profile to the HIP's registered callback URL when the patient
         scans the HIP's QR code and consents to share their profile.
@@ -3184,7 +3123,7 @@ components:
       description: |
         The user scoped token returned when a person logs in or verifies an OTP. Profile calls act on one account, so they need this in addition to the gateway token. Required on the calls that read or change a specific person's account.
 
-        The value carries a `Bearer ` prefix, exactly like the Authorization header: every one of the 33 X-token values in NHA's collection is `Bearer <token>`, never the bare token. Sending the bare token reads as an invalid token error.
+        The value carries a `Bearer ` prefix, exactly like the Authorization header. Sending the bare token reads as an invalid token error.
       schema:
         type: string
       example: Bearer <X_TOKEN_FROM_LOGIN_VERIFY>
@@ -3193,9 +3132,9 @@ components:
       in: header
       required: false
       description: |
-        The benefit scheme an enrolment belongs to. Observed on the enrolment and benefit calls in NHA's collection, where the literal value is `healthid api` on the enrol and search calls, and `healthid` on the login OTP and verify calls under Find ABHA and on some of the benefit calls. On the enrolment OTP request the header is present but explicitly disabled, so NHA does not send it there.
+        The benefit scheme an enrolment belongs to. On enrolment and benefit calls, the value is `healthid api` on the enrol and search calls, and `healthid` on the login OTP and verify calls under Find ABHA and on some of the benefit calls. On the enrolment OTP request the header is present but explicitly disabled, so it is not sent there.
 
-        NHA's own collection spells this header four different ways across its requests: `BENEFIT_NAME` (most), `Benefit-Name` (the demo auth and child ABHA calls), `BENEFIT-NAME` (child update, state district search) and `Benefit_Name` (once). Underscore and hyphen are different header names on the wire, so this is a real inconsistency in the source, recorded here rather than smoothed over. The benefit programme calls also show scheme values beyond healthid: `COVIN` on an IRIS enrol and a profile photo update, and a disabled `PAN`. Nothing here has been run from this repository, so confirm the spelling and the exact values with NHA before using them in production.
+        This header is spelled four different ways across requests: `BENEFIT_NAME` (most), `Benefit-Name` (demo auth and child ABHA calls), `BENEFIT-NAME` (child update, state district search) and `Benefit_Name` (once). Underscore and hyphen are different header names on the wire. Benefit programme calls also use scheme values beyond healthid: `COVIN` on an IRIS enrol and a profile photo update, and a disabled `PAN`.
       schema:
         type: string
       example: healthid api

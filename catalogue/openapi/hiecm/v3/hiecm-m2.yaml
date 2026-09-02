@@ -19,15 +19,10 @@ info:
     ABHA address, answer discovery, and hand over encrypted FHIR bundles when a
     consented request arrives.
 
-    Where this comes from. The operations are ingested from NHA's M2 OpenAPI
-    file, hashed under `.raw/`. NHA's file carries no callbacks at all, so the
-    inbound half is not in it. The `webhooks` below are what the gateway posts to
-    your registered URL. Only the data notification carries a payload transcribed
-    from NHA's collection; the rest are declared with the path and no body,
-    because NHA has not published one and inventing a shape would be worse than
-    the gap.
-
-    Nothing here has been run against the sandbox from this repository.
+    The `webhooks` below are what the gateway posts to your registered URL.
+    Only the data notification carries a documented payload; the rest are
+    declared with the path and no body, since no shape is published for
+    them.
   version: abdm-v3
   license:
     name: MIT
@@ -140,7 +135,7 @@ paths:
       summary: Link care contexts to an ABHA address
       operationId: m2_hip_link_care_context
       description: |
-        NHA's formal name: HIP Initiated Care Context Linking (Single or Multiple).
+        Also known as: HIP Initiated Care Context Linking (Single or Multiple).
         Links one or more care contexts (health records) to a patient's ABHA address.
         Use the same endpoint for both single and multiple care context linking, the `careContexts` array can contain one or many entries.
 
@@ -247,7 +242,7 @@ paths:
       summary: Send an SMS with a deep link to the ABHA App
       operationId: m2_sms_deep_link_notify
       description: |
-        NHA's formal name: SMS Deep Link Notify.
+        Also known as: SMS Deep Link Notify.
         Requests ABDM to send an SMS to a patient's mobile number containing a deep link
         to download/open the ABHA App. Used when a patient is not yet on ABDM and the HIP
         wants to invite them to link their health records.
@@ -419,7 +414,7 @@ paths:
       summary: Acknowledge a consent notification
       operationId: m2_consent_hip_on_notify
       description: |
-        NHA's formal name: Consent HIP On-Notify.
+        Also known as: Consent HIP On-Notify.
         **Async Callback:** After ABDM Gateway sends a consent grant notification to the HIP bridge URL
         (`{bridgeUrl}/v0.5/consents/hip/notify`), the HIP calls this Gateway endpoint to
         acknowledge receipt of the consent artefact.
@@ -458,7 +453,7 @@ paths:
       summary: Acknowledge a health information data request
       operationId: m2_hip_health_information_on_request
       description: |
-        NHA's formal name: HIP Health Information Response.
+        Also known as: HIP Health Information Response.
         **Async Callback:** After ABDM Gateway sends a health information request to the HIP bridge URL
         (`{bridgeUrl}/v0.5/health-information/hip/request`), the HIP calls this Gateway endpoint to
         acknowledge receipt and indicate it will begin processing (ACKNOWLEDGED).
@@ -496,7 +491,7 @@ paths:
       summary: Notify the gateway that a data transfer finished
       operationId: m2_hip_data_flow_notify
       description: |
-        NHA's formal name: HIP Data Flow Notification.
+        Also known as: HIP Data Flow Notification.
         After successfully pushing all encrypted FHIR health data to the HIU's `dataPushUrl`,
         the HIP calls this endpoint to notify the ABDM Gateway that the data transfer session
         is complete. The Gateway relays this status to the HIU.
@@ -654,7 +649,7 @@ components:
       in: header
       required: true
       description: |
-        The current time in ISO 8601, in IST, the +05:30 offset, from a synchronised clock. Working integrations send IST rather than the UTC that NHA's collection templates emit.
+        The current time in ISO 8601, in IST, the +05:30 offset, from a synchronised clock.
       schema:
         type: string
         format: date-time

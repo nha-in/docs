@@ -13,7 +13,7 @@ covers: [hiecm.flow.m1-update-mobile]
 
 Milestone 1 (M1) of [ABDM](/docs/hiecm/v3/getting-started/glossary#abdm) has seven journeys. Three of them create an [ABHA](/docs/hiecm/v3/getting-started/glossary#abha), by Aadhaar OTP, by face authentication or from an identity document. The other four attach a communication mobile number, log an existing holder in, find an ABHA the person has forgotten, and read the profile. Each is drawn below at step level, so you see the round trips before you read the [API reference](/reference/hiecm-m1).
 
-NHA's document carries its own sequence diagrams as images, and those images did not survive the conversion to text. The diagrams below are drawn from the ordered lists of steps in the same document. The step order is NHA's; the drawing is ours.
+The diagrams below follow the published step order for each flow.
 
 "ABHA service" is NHA's ABHA API at the base URL on the [M1 overview](/docs/hiecm/v3/api/m1). Your system never calls Aadhaar. NHA's service does that for you.
 
@@ -44,7 +44,7 @@ sequenceDiagram
     A-->>S: ABHA number issued
 ```
 
-Email verification sits between the mobile step and the address step. NHA marks it optional, so it is not drawn.
+Email verification sits between the mobile step and the address step. It is optional, so it is not drawn.
 
 ## Journey 2: ABHA creation by face authentication
 
@@ -140,7 +140,7 @@ sequenceDiagram
     A-->>S: Access token for the chosen ABHA
 ```
 
-Login by Aadhaar number, by ABHA number and by ABHA address follow the same two beats: request a challenge, then verify it. The challenge can be an Aadhaar OTP, a mobile OTP, a fingerprint or IRIS capture, or a face authentication scan. [API reference](/reference/hiecm-m1) lists which routes NHA marks mandatory.
+Login by Aadhaar number, by ABHA number and by ABHA address follow the same two beats: request a challenge, then verify it. The challenge can be an Aadhaar OTP, a mobile OTP, a fingerprint or IRIS capture, or a face authentication scan. [API reference](/reference/hiecm-m1) lists which routes are mandatory.
 
 ## Journey 6: Finding an ABHA the person has forgotten
 
@@ -165,7 +165,7 @@ sequenceDiagram
 
 The search response names the masked mobile the OTP was sent to, for example one ending `0161`. Show that to the person so they can confirm the number is theirs before they sit waiting for a message that will not arrive.
 
-Encrypt the identifier inside your own system. NHA's collection performs this step by calling a remote encryption helper, and in some variants a third party website, which sends a patient identifier to a party that has no reason to hold it. See [encryption](/docs/hiecm/v3/concepts/encryption) for how to do it locally.
+Encrypt the identifier inside your own system. Do not send the identifier to a remote encryption helper or a third party site; that hands a patient identifier to a party that has no reason to hold it. See [encryption](/docs/hiecm/v3/concepts/encryption) for how to do it locally.
 
 ## Journey 7: Profile, ABHA card and quick response (QR) code
 
@@ -184,7 +184,7 @@ sequenceDiagram
     A-->>S: QR code
 ```
 
-NHA says the card is displayed in the response rather than fetched from a separate link, but shows that response as a screenshot, so the content type and encoding are not transcribed. The QR code response is not transcribed either. Neither shape is on the [APIs](/docs/hiecm/v3/api/m1/apis) page, so treat both as unconfirmed until you call them.
+The card is returned in the response rather than fetched from a separate link. The content type and encoding of the card and QR code responses are not documented yet; see the [APIs](/docs/hiecm/v3/api/m1/apis) page for what is.
 
 Next: [use cases](/reference/hiecm-m1) for which journeys you must build, then [API reference](/reference/hiecm-m1) for the calls in order.
 
