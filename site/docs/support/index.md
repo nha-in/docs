@@ -40,6 +40,41 @@ them with a placeholder.
 collection sends it on almost every call. It is the one value that names the
 exact call you made, so log it and quote it.
 
+## Attaching a file to Ask AI
+
+Ask AI takes a file with your question: a failing request body, a FHIR bundle,
+a log, a CSV, a PDF, or a screenshot. The paperclip is on the left of the box.
+At most 20,000 characters of text, 256KB for a text file and 8MB for a PDF or
+an image.
+
+What happens to it is worth knowing before you attach one.
+
+- The file is read in your own browser and only the text it gives up travels
+  with your question. A PDF gives up the text it already carries. A screenshot
+  is read by a text recognition engine your browser downloads once, from this
+  site, and runs on your own machine. The picture itself is never sent, so
+  nothing is uploaded and nothing is stored: the conversation lives in the
+  panel and is gone when you close it.
+- A PDF that is only pictures of text, a scan, gives up nothing. Screenshot
+  the part you mean instead and that will be read.
+- Text read from a picture carries reading mistakes. The assistant is told
+  where the text came from, so it can say when an answer turns on a character
+  it cannot trust.
+- Personal data is removed before the file reaches the model. A file that
+  parses as JSON is masked by its field names, so `name`, `telecom`,
+  `address`, `birthDate` and identifier values in a FHIR bundle are replaced
+  with placeholders such as `<MASKED_NAME>`. Aadhaar, ABHA, PAN, passport,
+  voter, mobile, email and bearer tokens are matched by pattern anywhere in
+  the file, JSON or not.
+- A file with no field names, a log or the text read from a screenshot, gets
+  the same pattern masking, and a name on a labelled line goes too:
+  `patient: Rakesh Sharma` leaves as `patient: <MASKED_NAME>`.
+- What none of that catches is a name written in running prose, with nothing
+  marking it as a name. Redact those yourself, the same way you would in a
+  forum post. The panel says so next to any file it read for you.
+- Your question is logged, masked, to improve the answers. The file is not
+  logged.
+
 ## Report a problem with a page here
 
 Wrong page, dead link, a payload that does not match what the sandbox returns:

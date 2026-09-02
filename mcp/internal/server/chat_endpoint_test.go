@@ -11,8 +11,10 @@
 package server_test
 
 import (
+	"bytes"
 	"context"
 	"fmt"
+	"log/slog"
 	"net/http"
 	"net/http/httptest"
 	"strings"
@@ -196,5 +198,28 @@ func TestChatEndpointMethodNotAllowed(t *testing.T) {
 	h.ServeHTTP(rec, httptest.NewRequest("GET", "/api/chat", nil))
 	if rec.Code != 405 {
 		t.Fatalf("status = %d, want 405", rec.Code)
+	}
+}
+
+// The question reaches the log masked. The model is handed a masked copy
+// while the original stays in the handler, so this is the one place a live
+// patient identifier could still be written down.
+func TestChatLogsTheQuestionMasked(t *testing.T) {
+	var buf bytes.Buffer
+	prior := slog.Default()
+	slog.SetDefault(slog.New(slog.NewTextHandler(&buf, nil)))
+	defer slog.SetDefault(prior)
+
+	h := testHandler(t, &chat.Service{Model: &scriptedModel{
+		replies: []chat.Reply{{Text: "ok", StopReason: "end_turn"}},
+		texts:   []string{"ok"},
+	}, MaxTokens: 100}, chat.NewLimiter(100, 1000))
+	body := `{"turns":[{"role":"user","text":"my aadhaar 1234 5678 9012 fails"}]}`
+	req := httptest.NewRequest("POST", "/api/chat", strings.NewReader(body))
+	req.Header.Set("Origin", "https://docs.example.com")
+	h.ServeHTTP(httptest.NewRecorder(), req)
+
+	if got := buf.String(); strings.Contains(got, "1234 5678 9012") {
+		t.Errorf("the raw question reached the log:\n%s", got)
 	}
 }

@@ -1,12 +1,137 @@
 import {render} from 'preact';
 import {useEffect, useRef, useState} from 'preact/hooks';
 import ChatMarkdown, {CopyButton, absolute} from './markdown';
-import {ArrowUp, PenLine, Sparkles, Square, X} from './icons';
+import {ArrowUp, Paperclip, PenLine, Sparkles, Square, X} from './icons';
 import {readStream, UNREACHABLE, type Source} from './sse';
 import {revealStep} from './pacing';
 import css from './styles.css';
 
-type Turn = {from: 'you' | 'assistant'; text: string; sources?: Source[]};
+type Turn = {
+  from: 'you' | 'assistant';
+  text: string;
+  sources?: Source[];
+  /** The file that went with this question, kept so a follow-up still has it. */
+  file?: Attached;
+};
+
+/**
+ * A file the reader attached, read in the browser and never uploaded.
+ *
+ * kind says how the text was got, because it changes how far it can be
+ * trusted: a PDF's own text layer is exact, an image's is a machine's reading
+ * of a picture and comes with the mistakes that implies.
+ */
+type Attached = {name: string; text: string; kind?: 'pdf' | 'image'};
+
+/**
+ * What may be attached, and how much of it.
+ *
+ * Text only, and read here rather than uploaded: the server has no place to
+ * put a file and no way to redact one it cannot read. A screenshot would need
+ * both, which is why images are not in this list. The character cap matches
+ * the server's own, so a file that is too long is refused here, where the
+ * reader can see why, rather than in a 400.
+ */
+const ATTACH_TYPES =
+  '.json,.txt,.log,.csv,.xml,.yaml,.yml,.md,.har,.pdf,.png,.jpg,.jpeg,.webp';
+const ATTACH_MAX_CHARS = 20000;
+/** A text file is small. A scan or a screenshot is not, so it gets its own cap. */
+const ATTACH_MAX_BYTES = 256 * 1024;
+const ATTACH_MAX_BINARY_BYTES = 8 * 1024 * 1024;
+
+/**
+ * Where the readers live: beside this script, wherever it was served from.
+ *
+ * currentScript is read at load, while the script is still executing, since
+ * it is null by the time anything here runs. The widget embeds on other
+ * people's pages, so this cannot be a path on the host page.
+ */
+const ASSET_BASE = (() => {
+  const src = (document.currentScript as HTMLScriptElement | null)?.src;
+  try {
+    return new URL('vendor/', src ?? '/agent/').href;
+  } catch {
+    return '/agent/vendor/';
+  }
+})();
+
+const loaded = new Map<string, Promise<void>>();
+
+/** Loads a classic script once, and hands every later caller the same promise. */
+function loadScript(url: string): Promise<void> {
+  const already = loaded.get(url);
+  if (already) return already;
+  const pending = new Promise<void>((resolve, reject) => {
+    const el = document.createElement('script');
+    el.src = url;
+    el.onload = () => resolve();
+    el.onerror = () => reject(new Error(`could not load ${url}`));
+    document.head.append(el);
+  });
+  loaded.set(url, pending);
+  return pending;
+}
+
+/**
+ * Reads the text a PDF already carries. A scan with no text layer comes back
+ * empty, which the caller reports rather than sending a blank attachment.
+ */
+async function textFromPdf(file: File): Promise<string> {
+  const pdfjs = await import(/* @vite-ignore */ `${ASSET_BASE}pdf.min.mjs`);
+  pdfjs.GlobalWorkerOptions.workerSrc = `${ASSET_BASE}pdf.worker.min.mjs`;
+  const task = pdfjs.getDocument({data: await file.arrayBuffer()});
+  const doc = await task.promise;
+  const pages: string[] = [];
+  for (let n = 1; n <= doc.numPages; n += 1) {
+    const content = await (await doc.getPage(n)).getTextContent();
+    pages.push(
+      content.items
+        .map((item: {str?: string}) => item.str ?? '')
+        .join(' ')
+        .replace(/[ \t]+/g, ' ')
+        .trim(),
+    );
+    if (pages.join('\n\n').length > ATTACH_MAX_CHARS) break;
+  }
+  // The loading task owns the worker, not the document, so this is what
+  // actually lets the worker go.
+  await doc.cleanup?.();
+  await task.destroy();
+  return pages.join('\n\n').trim();
+}
+
+/**
+ * Reads the text out of an image, in the reader's own browser.
+ *
+ * The picture never leaves their machine: what travels is the text, masked
+ * on the way like any other attachment. Sending the image itself would mean
+ * an upload, a vision model and redacting pixels, and a screenshot of a
+ * failing call in a health system carries the patient in its pixels.
+ */
+async function textFromImage(
+  file: File,
+  onProgress: (note: string) => void,
+): Promise<string> {
+  onProgress('Loading the reader, once per browser.');
+  await loadScript(`${ASSET_BASE}tesseract.min.js`);
+  const lib = (window as unknown as {Tesseract: any}).Tesseract;
+  onProgress('Reading the text out of that image.');
+  const worker = await lib.createWorker('eng', 1, {
+    workerPath: `${ASSET_BASE}worker.min.js`,
+    corePath: ASSET_BASE,
+    langPath: `${ASSET_BASE}lang`,
+    // The language data is a file this site serves, not a download from
+    // somebody else's CDN, so it must not be cached under a name that
+    // implies otherwise.
+    cacheMethod: 'none',
+  });
+  try {
+    const {data} = await worker.recognize(file);
+    return (data.text ?? '').replace(/[ \t]+/g, ' ').trim();
+  } finally {
+    await worker.terminate();
+  }
+}
 
 /**
  * A page the host has attached as context for the conversation, through the
@@ -64,6 +189,19 @@ const STARTERS = [
   'What is a care context?',
 ];
 
+/**
+ * The openers a host page asked for, one per line in the `starters`
+ * attribute, falling back to the four above. A page that knows what its
+ * reader came to do offers that rather than the general set.
+ */
+function startersFrom(given: string): string[] {
+  const lines = given
+    .split('\n')
+    .map((line) => line.trim())
+    .filter(Boolean);
+  return lines.length ? lines.slice(0, 4) : STARTERS;
+}
+
 type Setter = (update: (prior: Turn[]) => Turn[]) => void;
 
 /** Appends a text delta onto the last turn in the thread. */
@@ -87,6 +225,8 @@ type PanelProps = {
   docsOrigin: string;
   open: boolean;
   onClose: () => void;
+  question: string;
+  starters: string[];
   supportUrl: string;
   page: PageAttachment | null;
   onDetach: () => void;
@@ -110,19 +250,25 @@ function Panel({
   docsOrigin,
   open,
   onClose,
-  supportUrl,
   page,
   onDetach,
+  question,
+  starters,
+  supportUrl,
 }: PanelProps) {
   const [turns, setTurns] = useState<Turn[]>([
     apiBase ? LIVE_OPENING : MOCK_OPENING,
   ]);
   const [draft, setDraft] = useState('');
+  const [chosen, setChosen] = useState<Attached | null>(null);
+  const [attachError, setAttachError] = useState<string | null>(null);
+  const [reading, setReading] = useState<string | null>(null);
   const [phase, setPhase] = useState<'idle' | 'thinking' | 'streaming'>('idle');
   const [activity, setActivity] = useState<string | null>(null);
   const dialog = useRef<HTMLDialogElement>(null);
   const thread = useRef<HTMLDivElement>(null);
   const composer = useRef<HTMLTextAreaElement>(null);
+  const picker = useRef<HTMLInputElement>(null);
   const abort = useRef<AbortController | null>(null);
   const busy = phase !== 'idle';
   // A page with no markdown is one the host could not fetch. It still shows,
@@ -204,13 +350,31 @@ function Panel({
     );
   }, [apiBase]);
 
+  // A host that already knows what the reader was typing, the docs site's
+  // search box being the one that does, hands it over in `question`. It
+  // seeds the composer and is never sent: the reader still decides whether
+  // that is the question, and can edit it first. An empty box only, so
+  // reopening the panel never writes over what they were part way through.
+  useEffect(() => {
+    if (!open) return;
+    if (question) setDraft((prior) => prior || question);
+  }, [open, question]);
+
   // The dialog's own state is the source of truth for the browser; the `open`
   // prop drives it. Escape and the backdrop fire "close", which is where the
   // host is told the panel went away.
   useEffect(() => {
     const el = dialog.current;
     if (!el) return;
-    if (open && !el.open) el.showModal();
+    // Opening the panel is the reader saying they have something to ask, so
+    // the caret starts in the composer and they do not have to click the box
+    // first. The dialog's own autofocus would be the way to say that, but it
+    // leaves focus on the dialog itself here, so the composer is focused by
+    // hand once the panel is actually showing.
+    if (open && !el.open) {
+      el.showModal();
+      composer.current?.focus();
+    }
     if (!open && el.open) el.close();
   }, [open]);
 
@@ -260,7 +424,13 @@ function Panel({
     const el = composer.current;
     if (!el) return;
     el.style.height = 'auto';
-    el.style.height = `${Math.min(el.scrollHeight, 160)}px`;
+    const height = Math.min(el.scrollHeight, 160);
+    el.style.height = `${height}px`;
+    // A scrollbar only once there is something to scroll to. Left on auto,
+    // a platform with classic scrollbars paints one against a single line of
+    // text, because the box's own minimum height and the text's height round
+    // apart by a pixel.
+    el.style.overflowY = el.scrollHeight > height ? 'auto' : 'hidden';
   }, [draft]);
 
   // Leaving the page mid-answer stops the stream rather than leaving it to
@@ -279,8 +449,82 @@ function Panel({
     stick.current = true;
     setTurns([apiBase ? LIVE_OPENING : MOCK_OPENING]);
     setDraft('');
+    setChosen(null);
+    setAttachError(null);
+    setReading(null);
     setActivity(null);
     setPhase('idle');
+  };
+
+  /**
+   * Reads a chosen file into the composer's attachment slot.
+   *
+   * The reading happens here, in the reader's own browser, and what travels
+   * is the text it found. A file that is too large, or that turns out to be
+   * binary once read, is refused with a line saying so rather than sent as
+   * mojibake for the model to guess at.
+   */
+  const takeFile = async (file: File | undefined) => {
+    if (!file) return;
+    setAttachError(null);
+    const name = file.name.toLowerCase();
+    const isPdf = file.type === 'application/pdf' || name.endsWith('.pdf');
+    const isImage = file.type.startsWith('image/');
+    const cap = isPdf || isImage ? ATTACH_MAX_BINARY_BYTES : ATTACH_MAX_BYTES;
+    if (file.size > cap) {
+      setAttachError('That file is too large. Attach the failing part of it.');
+      return;
+    }
+    let text: string;
+    try {
+      if (isPdf) {
+        setReading('Reading the text in that PDF.');
+        text = await textFromPdf(file);
+        if (!text) {
+          setReading(null);
+          setAttachError(
+            'That PDF has no text in it, only pictures of text. Attach a screenshot of the part you mean and it will be read.',
+          );
+          return;
+        }
+      } else if (isImage) {
+        text = await textFromImage(file, setReading);
+      } else {
+        text = await file.text();
+      }
+    } catch {
+      setReading(null);
+      setAttachError('That file could not be read.');
+      return;
+    } finally {
+      setReading(null);
+    }
+    // A replacement character is what a decoder leaves behind when the bytes
+    // were never text, which is the cheap way to catch an image renamed .txt.
+    if (!isPdf && !isImage && text.includes('\uFFFD')) {
+      setAttachError('That looks like a binary file. Text and JSON only.');
+      return;
+    }
+    if (text.length > ATTACH_MAX_CHARS) {
+      setAttachError(
+        `That file is ${text.length.toLocaleString()} characters. Attach at most ${ATTACH_MAX_CHARS.toLocaleString()}.`,
+      );
+      return;
+    }
+    if (!text.trim()) {
+      setAttachError(
+        isImage
+          ? 'No text could be read out of that image.'
+          : 'That file is empty.',
+      );
+      return;
+    }
+    setChosen({
+      name: file.name,
+      text,
+      kind: isPdf ? 'pdf' : isImage ? 'image' : undefined,
+    });
+    composer.current?.focus();
   };
 
   /** Stops the answer and keeps every word of it that had arrived. */
@@ -293,12 +537,18 @@ function Panel({
 
   const ask = async (asked: string) => {
     if (!asked || busy) return;
+    const file = chosen;
     setDraft('');
+    setChosen(null);
+    setAttachError(null);
 
-    const history = [...turns.slice(1), {from: 'you' as const, text: asked}];
+    const history = [
+      ...turns.slice(1),
+      {from: 'you' as const, text: asked, file: file ?? undefined},
+    ];
     setTurns((prior) => [
       ...prior,
-      {from: 'you', text: asked},
+      {from: 'you', text: asked, file: file ?? undefined},
       {from: 'assistant', text: ''},
     ]);
 
@@ -332,6 +582,18 @@ function Panel({
           turns: history.slice(-9).map((t) => ({
             role: t.from === 'you' ? 'user' : 'assistant',
             text: t.text,
+            // The file rides with the question it came with, on every round,
+            // because the whole conversation is re-sent each time and a
+            // follow-up about "the bundle I sent" needs it still there.
+            ...(t.file
+              ? {
+                  attachment: {
+                    name: t.file.name,
+                    text: t.file.text,
+                    ...(t.file.kind ? {kind: t.file.kind} : {}),
+                  },
+                }
+              : {}),
           })),
           // Context, not a turn: the server puts it in front of the model as
           // the page the reader is looking at, and it never enters the
@@ -449,6 +711,14 @@ function Panel({
             ) : (
               turn.text
             )}
+            {/* The file that went with the question, named in the reader's
+                own bubble so what was sent is on the record they can see. */}
+            {turn.file && (
+              <span class="ask-ai__turn-file">
+                <Paperclip />
+                {turn.file.name}
+              </span>
+            )}
             {turn.from === 'assistant' &&
               index > 0 &&
               turn.text !== '' &&
@@ -489,7 +759,7 @@ function Panel({
             reader has asked anything of their own. */}
         {turns.length === 1 && (
           <div class="ask-ai__starters">
-            {STARTERS.map((q) => (
+            {starters.map((q) => (
               <button
                 key={q}
                 type="button"
@@ -502,6 +772,44 @@ function Panel({
         )}
       </div>
 
+      {(chosen || attachError || reading) && (
+        <div class="ask-ai__attachment">
+          {reading ? (
+            <>
+              <span class="ask-ai__pulse" aria-hidden="true" />
+              <span class="ask-ai__attachment-note">{reading}</span>
+            </>
+          ) : chosen ? (
+            <>
+              <Paperclip />
+              <span class="ask-ai__attachment-name">{chosen.name}</span>
+              <span class="ask-ai__attachment-size">
+                {chosen.kind === 'image'
+                  ? `${chosen.text.length.toLocaleString()} characters read`
+                  : `${chosen.text.length.toLocaleString()} characters`}
+              </span>
+              <button
+                type="button"
+                class="ask-ai__attachment-remove"
+                aria-label={`Remove ${chosen.name}`}
+                onClick={() => setChosen(null)}>
+                <X />
+              </button>
+            </>
+          ) : (
+            <span class="ask-ai__attachment-error">{attachError}</span>
+          )}
+        </div>
+      )}
+      {/* Identifiers are masked on the way out, but a person's name written
+          in prose is not something any pattern finds, and a screenshot is
+          where one usually is. Said once, next to the file it applies to. */}
+      {chosen?.kind && !reading && (
+        <p class="ask-ai__attachment-note">
+          Read here in your browser; the file itself is not sent. Names in it
+          are yours to check before you send.
+        </p>
+      )}
       <form
         class="ask-ai__composer"
         onSubmit={(event) => {
@@ -533,6 +841,30 @@ function Panel({
             </button>
           </div>
         )}
+        {/* The file never leaves the browser as a file: it is read here and
+            its text goes with the question, so there is nothing to upload
+            and nothing stored. */}
+        <input
+          ref={picker}
+          type="file"
+          class="ask-ai__picker"
+          accept={ATTACH_TYPES}
+          onChange={(event) => {
+            const input = event.currentTarget;
+            void takeFile(input.files?.[0]);
+            // Cleared so choosing the same file twice still fires a change.
+            input.value = '';
+          }}
+        />
+        <button
+          type="button"
+          class="ask-ai__attach"
+          aria-label="Attach a text or JSON file"
+          title="Attach a text or JSON file"
+          disabled={busy}
+          onClick={() => picker.current?.click()}>
+          <Paperclip />
+        </button>
         {/* A textarea, not an input: an error body pasted in should be
             readable before it is sent. Enter still sends, because that is
             what every chat box does; shift and enter takes a new line. */}
@@ -582,6 +914,8 @@ function Widget({
   open,
   page,
   onDetach,
+  question,
+  starters,
 }: {
   host: HTMLElement;
   apiBase: string;
@@ -591,6 +925,8 @@ function Widget({
   open: boolean;
   page: PageAttachment | null;
   onDetach: () => void;
+  question: string;
+  starters: string[];
 }) {
   const close = () => {
     host.removeAttribute('open');
@@ -621,6 +957,8 @@ function Widget({
         docsOrigin={docsOrigin}
         supportUrl={supportUrl}
         open={open}
+        question={question}
+        starters={starters}
         onClose={close}
         page={page}
         onDetach={onDetach}
@@ -639,6 +977,10 @@ function Widget({
  *   launcher     "none" to supply your own trigger and drive `open`
  *   open         present while the panel is showing; the element removes it
  *                and fires a "close" event when the reader dismisses it
+ *   question     seeds the composer when the panel opens with an empty box,
+ *                for a host that already has the reader's words
+ *   starters     the empty state's opening questions, one per line, for a
+ *                page that knows what its reader came to do
  *
  * One thing is set by method rather than attribute: attachPage({title, url,
  * markdown}) gives the conversation the page the reader is looking at, and
@@ -678,6 +1020,8 @@ class SupportAgentElement extends HTMLElement {
     'support-url',
     'launcher',
     'open',
+    'question',
+    'starters',
     'ground',
   ];
 
@@ -740,6 +1084,8 @@ class SupportAgentElement extends HTMLElement {
         open={this.hasAttribute('open')}
         page={this.page}
         onDetach={() => this.attachPage(null)}
+        question={this.getAttribute('question') ?? ''}
+        starters={startersFrom(this.getAttribute('starters') ?? '')}
       />,
       this.root!,
     );
