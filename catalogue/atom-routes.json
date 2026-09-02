@@ -1665,8 +1665,8 @@
       "atom": "shared.glossary.request-id",
       "type": "glossary",
       "route": "/docs/hiecm/v3/getting-started/first-fifteen-minutes",
-      "anchor": "2-read-one-recorded-exchange-about-5-minutes",
-      "link": "/docs/hiecm/v3/getting-started/first-fifteen-minutes#2-read-one-recorded-exchange-about-5-minutes",
+      "anchor": "2-read-one-transcribed-exchange-about-5-minutes",
+      "link": "/docs/hiecm/v3/getting-started/first-fifteen-minutes#2-read-one-transcribed-exchange-about-5-minutes",
       "rule": "term defined on first-fifteen-minutes",
       "confidence": "derived"
     },
@@ -1692,8 +1692,8 @@
       "atom": "shared.glossary.timestamp-header",
       "type": "glossary",
       "route": "/docs/hiecm/v3/getting-started/first-fifteen-minutes",
-      "anchor": "2-read-one-recorded-exchange-about-5-minutes",
-      "link": "/docs/hiecm/v3/getting-started/first-fifteen-minutes#2-read-one-recorded-exchange-about-5-minutes",
+      "anchor": "2-read-one-transcribed-exchange-about-5-minutes",
+      "link": "/docs/hiecm/v3/getting-started/first-fifteen-minutes#2-read-one-transcribed-exchange-about-5-minutes",
       "rule": "term defined on first-fifteen-minutes",
       "confidence": "derived"
     },
@@ -1719,8 +1719,8 @@
       "atom": "shared.glossary.x-cm-id",
       "type": "glossary",
       "route": "/docs/hiecm/v3/getting-started/first-fifteen-minutes",
-      "anchor": "2-read-one-recorded-exchange-about-5-minutes",
-      "link": "/docs/hiecm/v3/getting-started/first-fifteen-minutes#2-read-one-recorded-exchange-about-5-minutes",
+      "anchor": "2-read-one-transcribed-exchange-about-5-minutes",
+      "link": "/docs/hiecm/v3/getting-started/first-fifteen-minutes#2-read-one-transcribed-exchange-about-5-minutes",
       "rule": "term defined on first-fifteen-minutes",
       "confidence": "derived"
     },

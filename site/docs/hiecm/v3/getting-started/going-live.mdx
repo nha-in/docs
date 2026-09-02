@@ -3,7 +3,7 @@ title: Going live
 sidebar_label: Going live
 description: NHA's sandbox exit process, in NHA's own order, with what NHA does not publish stated plainly rather than guessed.
 verification: unverified
-source: abdm.gov.in/FAQ
+source: abdm.gov.in/FAQ, sandbox.abdm.gov.in/docs/integration_and_exit_process, sandbox.abdm.gov.in/sandbox/v3/faq
 sidebar_position: 9
 covers: [shared.sandbox.going-live]
 ---
@@ -25,9 +25,10 @@ apply to a [PHR](/docs/hiecm/v3/getting-started/glossary#phr) application, a
 [HIU](/docs/hiecm/v3/getting-started/glossary#hiu). NHA's FAQ describes the exit process as
 something you run after integration is complete, not milestone by milestone.
 
-You also need the Safe to Host certificate NHA requires before production. That security audit
-is a separate exercise from anything functional, done by a CERT-In empanelled auditor, and it
-is not covered by this page.
+You also need the Safe to Host certificate NHA requires before production: a security audit,
+separate from anything functional, done by a CERT-In empanelled auditor, per
+[NHA's sandbox FAQ](https://sandbox.abdm.gov.in/sandbox/v3/faq). This portal does not yet have
+a page of its own on that audit; the FAQ above is the best available source until it does.
 
 Submit your milestone tests from the sandbox app when each milestone is ready:
 
@@ -35,7 +36,9 @@ Submit your milestone tests from the sandbox app when each milestone is ready:
 
 ## What happens
 
-NHA's FAQ describes the exit process in four steps, in this order:
+NHA's FAQ describes the exit process in four steps, in this order, and links
+[NHA's own integration and exit process page](https://sandbox.abdm.gov.in/docs/integration_and_exit_process)
+as the fuller source:
 
 1. **Demonstration.** NHA's FAQ says you demonstrate the
    [ABDM](/docs/hiecm/v3/getting-started/glossary#abdm) functionalities you built to the ABDM
@@ -59,8 +62,8 @@ rather than something published here.
 You hold production credentials: a production client id and client secret, issued after the
 exit process completes. They are not the same values as your sandbox credentials.
 
-You also switch base URLs. The [M1 conventions page](/docs/hiecm/v3/api/m1/apis) records the
-sandbox and production hosts side by side. For the gateway session call, sandbox is
+You also switch base URLs. The [M1 overview page](/docs/hiecm/v3/api/m1) records the sandbox
+and production hosts side by side. For the gateway session call, sandbox is
 `https://dev.abdm.gov.in` with `X-CM-ID: sbx`, and production is `https://apis.abdm.gov.in`
 with `X-CM-ID: abdm`. For the ABHA service, sandbox is
 `https://abhasbx.abdm.gov.in/abha/api/v3/` and production is
