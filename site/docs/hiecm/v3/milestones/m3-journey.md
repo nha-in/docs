@@ -1,7 +1,9 @@
 ---
 title: M3 user journeys
-sidebar_label: User journey
-sidebar_position: 10
+sidebar_label: M3 journey
+sidebar_position: 6
+sidebar_custom_props:
+  roles: [hiu, his]
 description: The consent request, the patient's decision and the data fetch, drawn as three sequence diagrams.
 verification: unverified
 source: ABDM__Proposed_Simplified_Milestone_3.md

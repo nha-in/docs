@@ -48,7 +48,7 @@ once, at the end, and it is separate from any one milestone's certification.
 ## Before you start
 
 Have every milestone your role needs already certified. The
-[milestones page](/docs/hiecm/v3/getting-started/milestones)'s role table says which milestones
+[milestones page](/docs/hiecm/v3/milestones)'s role table says which milestones
 apply to a [PHR](../glossary/phr.md) application, a [HIP](../glossary/hip.md) or a
 [HIU](../glossary/hiu.md); see [roles](../../hiecm/concepts/roles.md) for what those positions
 mean. NHA's FAQ describes the exit process as something you run after integration is complete,

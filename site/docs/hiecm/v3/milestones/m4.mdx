@@ -1,0 +1,85 @@
+---
+title: 'M4 Enrol: facilities and professionals'
+sidebar_label: M4 Enrol
+sidebar_position: 7
+sidebar_custom_props:
+  roles: [his, hip]
+description: What Milestone 4 covers, who needs it, how the two registries connect, and why it blocks going live.
+verification: unverified
+source: ABDM__Proposed_Simplified_Milestone_4_(NHPR).md
+---
+
+import SandboxAction from '@site/src/components/docs/SandboxAction';
+
+# M4 Enrol: facilities and professionals
+
+Milestone 4 is the registries milestone, also called the NHPR. A healthcare
+professional registers on the
+[HPR](/docs/hiecm/v3/getting-started/glossary#hpr) and is issued an
+[HPID](/docs/hiecm/v3/getting-started/glossary#hpid). A health facility onboards
+to the [HFR](/docs/hiecm/v3/getting-started/glossary#hfr) and is issued a
+facility ID.
+
+Neither registry moves a health record. They establish who the professional is
+and what the facility is, so every record flow has a verified provider behind
+it.
+
+## In short
+
+- M4 certifies last but blocks M2 and M3 in production. No facility ID, no
+  sharing and no fetching.
+- The HPR comes first. Facility onboarding needs an HPR token, which needs a
+  person with an HPID.
+- A facility ID has the form `IN` plus 10 characters. An HPID is 14 digits.
+- Expect to correct a host or two. Several published samples show the
+  production host while describing sandbox behaviour.
+
+:::caution[Not a step by step guide]
+These pages cover the shape of M4 and the endpoints that are named. They are
+not yet a step by step guide to building it.
+:::
+
+## What M4 covers
+
+| Area | What it produces | Who it is for |
+|---|---|---|
+| HPID creation | A 14 digit HPID, issued after Aadhaar authentication | A doctor, nurse, pharmacist or facility manager |
+| Register professional | A full HPR profile: qualifications, council registration, current work | The same professional, after the HPID exists |
+| Facility onboarding | A facility ID on the HFR, in the form `IN` plus 10 characters | A hospital, clinic, lab, imaging centre, pharmacy or blood bank |
+| Bridge linkage | A link between a facility ID and one or more bridges, each marked [HIP](/docs/hiecm/v3/getting-started/glossary#hip) or [HIU](/docs/hiecm/v3/getting-started/glossary#hiu) | A facility whose software is going live |
+| Search and master data | Facility search, nearby search, and the code lists every other call needs | Anyone building either of the above |
+
+## Who needs it
+
+- **Facilities going live.** Without a facility in the HFR and a bridge linked
+  to it, you cannot share as a HIP or fetch as an HIU. If you have built [M2
+  Attach](./m2) or [M3 Retrieve](./m3), M4 is the step in front of production.
+- **Professionals registering.** An HPID is a verified identity in ABDM. Three
+  categories are open today: doctor, nurse and pharmacist. Others come later.
+- **Software acting for others.** An
+  [HMIS](/docs/hiecm/v3/getting-started/glossary#hmis) or practice management
+  product can drive these calls for its own customers.
+
+## How the two halves connect
+
+The HPR comes first, twice over. Creating an HPID returns an `hprToken`, which
+the register professional call carries in its payload. Onboarding a facility
+needs an HPR token in the header of the create calls, generated from an HPR ID
+and password. So facility onboarding usually starts with a person getting an
+HPID.
+
+## Certification
+
+Once M4 works end to end, submit your functional test cases in the sandbox for
+review.
+
+<SandboxAction action="milestoneTests">Submit milestone tests in the sandbox</SandboxAction>
+
+## Next
+
+- The registration journeys as diagrams: [M4 journey](./m4-journey).
+- The base URLs and the operation list: [M4 API
+  reference](/docs/hiecm/v3/api/m4).
+- Every endpoint named without a path: [what is documented without a
+  path](/docs/hiecm/v3/api/m4/undocumented).
+- The patient side of all four: [P1 Identity and profile](./p1).

@@ -1,0 +1,100 @@
+---
+title: 'M1 Create: ABHA identity'
+sidebar_label: M1 Create
+sidebar_position: 1
+description: What Milestone 1 gives you, what you need before your first call, and the order to build it in.
+verification: unverified
+source: ABDM__Proposed_Simplified_Milestone_1.md
+---
+
+import SandboxAction from '@site/src/components/docs/SandboxAction';
+
+# M1 Create: ABHA identity
+
+Milestone 1 is the identity milestone of
+[ABDM](/docs/hiecm/v3/getting-started/glossary#abdm). You create an
+[ABHA](/docs/hiecm/v3/getting-started/glossary#abha) for a person, log that
+person in, and read or update their profile. An ABHA number is a 14 digit
+identifier issued after a [KYC](/docs/hiecm/v3/getting-started/glossary#kyc)
+check. Every other ABDM flow assumes the person already has one, so nobody
+skips M1.
+
+## In short
+
+- M1 is identity only. It creates and authenticates an ABHA. It moves no health
+  records.
+- Nothing runs until the gateway session call returns an access token.
+- Two tokens exist and are not interchangeable: the gateway token in
+  `Authorization`, the user token in `X-token`.
+- Aadhaar numbers, mobile numbers, [OTP](/docs/hiecm/v3/getting-started/glossary#otp)
+  values and passwords travel RSA encrypted.
+
+## What M1 gives you
+
+| Capability | What your system can do |
+|---|---|
+| Session and tokens | Get an access token, refresh it, fetch the public certificate |
+| ABHA creation | Verify the person against Aadhaar, attach a mobile number and an ABHA address |
+| ABHA login | Sign in a holder by mobile number, Aadhaar number, ABHA number or ABHA address |
+| Profile management | Read the profile, show the ABHA card and QR code, change the mobile number, redo KYC |
+
+M1 moves no health records. [M2 Attach](./m2) links them. [M3
+Retrieve](./m3) fetches them with consent.
+
+## Who needs it
+
+Everyone. A [PHR](/docs/hiecm/v3/getting-started/glossary#phr) app, a
+[HIP](/docs/hiecm/v3/getting-started/glossary#hip) and an
+[HIU](/docs/hiecm/v3/getting-started/glossary#hiu) all hold the session token
+that M1 issues, and all of them key their work to an ABHA address.
+
+## Building blocks you use
+
+- The [ABHA registry](/docs/hiecm/v3/registries), which holds the ABHA number,
+  address and profile.
+- The [HIE-CM](/docs/hiecm/v3/getting-started/glossary#hie-cm) gateway, which
+  issues your session token. See [The ABDM
+  gateway](/docs/hiecm/v3/concepts/gateway).
+
+Aadhaar is not an ABDM building block. The ABHA service calls it for you.
+
+## Before you start
+
+1. **Sandbox credentials.** A client ID and secret from [Get
+   started](/docs/hiecm/v3/getting-started/sandbox).
+2. **An access token.** From the session API, carried on every M1 call.
+3. **The public certificate.** The Aadhaar number, the OTP and the mobile
+   number travel encrypted, so fetch the certificate before you encrypt
+   anything.
+
+## What you build, in order
+
+1. **Session and tokens.** Mandatory. Nothing else in M1 runs until this works.
+2. **ABHA creation by Aadhaar OTP.** Mandatory.
+3. **ABHA login.** Mandatory, on all four entry points.
+4. **User profile and ABHA card.** Mandatory. Plain reads against a token you
+   hold.
+5. **Demographic authentication.** Mandatory for government integrators, not
+   for private ones.
+
+Everything else in M1 is optional for both. Skip all of it and you still
+complete the milestone. The mandatory and optional split, capability by
+capability, is on the [M1 API reference](/reference/hiecm-m1).
+
+## Certification
+
+Once M1 works end to end, submit your functional test cases in the sandbox for
+review.
+
+<SandboxAction action="milestoneTests">Submit milestone tests in the sandbox</SandboxAction>
+
+Sandbox test data is in the [data
+dictionary](/docs/hiecm/v3/reference/data-dictionary). [Support](/docs/support)
+lists the channels.
+
+## Next
+
+- The flows as diagrams: [M1 journey](./m1-journey).
+- The calls, base URLs and error shapes: [M1 API
+  reference](/docs/hiecm/v3/api/m1).
+- The next milestone: [M2 Attach](./m2).

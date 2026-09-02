@@ -1,7 +1,7 @@
 ---
 title: Information management systems
 sidebar_label: Information management system
-sidebar_position: 1
+sidebar_position: 2
 description: The path through HIE-CM for a hospital, lab or pharmacy system that holds health records.
 verification: unverified
 source: ABDM__Proposed_Simplified_Milestone_2.md, ABDM__Proposed_Simplified_Milestone_4_(NHPR).md
@@ -43,6 +43,6 @@ patient sees when they grant you consent.
 
 ## Next
 
-- [Your integration path](/docs/hiecm/v3/getting-started/milestones), the role to module matrix and what certification asks.
+- [Your integration path](/docs/hiecm/v3/milestones), the role to module matrix and what certification asks.
 - [HIP and HIU](/docs/hiecm/v3/concepts/hip-hiu), the two roles your system plays.
 - [Get your sandbox credentials](/docs/hiecm/v3/getting-started/sandbox), credentials before any call.

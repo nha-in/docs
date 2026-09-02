@@ -306,12 +306,11 @@ const config: Config = {
           {from: '/docs/abdm/v3/building-blocks/hie-cm', to: '/docs/hiecm/v3/concepts/gateway'},
           {from: '/docs/abdm/v3/concepts/hie-cm', to: '/docs/hiecm/v3/concepts/gateway'},
           {from: '/docs/overview', to: '/docs/hiecm/v3'},
-          {from: '/docs/api', to: '/docs/hiecm/v3/getting-started/milestones'},
+          {from: '/docs/api', to: '/docs/hiecm/v3/milestones'},
           {from: '/docs/abdm/v3/architecture', to: '/docs/hiecm/v3/concepts/how-it-fits'},
           {from: '/docs/hiecm/v3/getting-started/architecture', to: '/docs/hiecm/v3/concepts/how-it-fits'},
           {from: '/docs/hiecm/v3/getting-started/mcp', to: '/docs/hiecm/v3/getting-started/build-with-ai'},
           {from: '/docs/abdm/v3/sandbox', to: '/docs/hiecm/v3/getting-started/sandbox'},
-          {from: '/docs/abdm/v3/milestones', to: '/docs/hiecm/v3/getting-started/milestones'},
           {from: '/docs/abdm/v3/what-you-can-build', to: '/docs/hiecm/v3/getting-started/what-you-can-build'},
           {from: '/docs/abdm/v3/glossary', to: '/docs/hiecm/v3/getting-started/glossary'},
           {from: '/docs/abdm/v3/phr', to: '/docs/hiecm/v3/concepts/phr'},
@@ -321,6 +320,13 @@ const config: Config = {
           {from: '/docs/uhi/v1/glossary', to: '/docs/uhi/v1/getting-started/glossary'},
           {from: '/docs/uhi/v1/network-and-protocol', to: '/docs/uhi/v1/concepts/network-and-protocol'},
           {from: '/docs/nhcx/v1/glossary', to: '/docs/nhcx/v1/getting-started/glossary'},
+          // The milestones page moved out of Get started into its own section,
+          // and each module's user journey moved with it.
+          {from: '/docs/hiecm/v3/getting-started/milestones', to: '/docs/hiecm/v3/milestones'},
+          {from: '/docs/hiecm/v3/api/m1/user-journey', to: '/docs/hiecm/v3/milestones/m1-journey'},
+          {from: '/docs/hiecm/v3/api/m2/user-journey', to: '/docs/hiecm/v3/milestones/m2-journey'},
+          {from: '/docs/hiecm/v3/api/m3/user-journey', to: '/docs/hiecm/v3/milestones/m3-journey'},
+          {from: '/docs/hiecm/v3/api/m4/user-journey', to: '/docs/hiecm/v3/milestones/m4-journey'},
         ],
         createRedirects(to: string) {
           const aliases: string[] = [];
