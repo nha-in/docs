@@ -1,0 +1,83 @@
+---
+title: Going live
+sidebar_label: Going live
+description: NHA's sandbox exit process, in NHA's own order, with what NHA does not publish stated plainly rather than guessed.
+verification: unverified
+source: abdm.gov.in/FAQ
+sidebar_position: 9
+covers: [shared.sandbox.going-live]
+---
+
+import SandboxAction from '@site/src/components/docs/SandboxAction';
+
+# Going live
+
+Passing every milestone's functional tests in the sandbox is not the same as being live.
+Between the two sits an exit process [NHA](/docs/hiecm/v3/getting-started/glossary#nha) runs
+once, at the end, and it is separate from any one milestone's certification.
+
+## Before you start
+
+Have every milestone your role needs already certified. The
+[milestones page](/docs/hiecm/v3/getting-started/milestones)'s role table says which milestones
+apply to a [PHR](/docs/hiecm/v3/getting-started/glossary#phr) application, a
+[HIP](/docs/hiecm/v3/getting-started/glossary#hip) or a
+[HIU](/docs/hiecm/v3/getting-started/glossary#hiu). NHA's FAQ describes the exit process as
+something you run after integration is complete, not milestone by milestone.
+
+You also need the Safe to Host certificate NHA requires before production. That security audit
+is a separate exercise from anything functional, done by a CERT-In empanelled auditor, and it
+is not covered by this page.
+
+Submit your milestone tests from the sandbox app when each milestone is ready:
+
+<SandboxAction action="milestoneTests">Submit milestone tests</SandboxAction>
+
+## What happens
+
+NHA's FAQ describes the exit process in four steps, in this order:
+
+1. **Demonstration.** NHA's FAQ says you demonstrate the
+   [ABDM](/docs/hiecm/v3/getting-started/glossary#abdm) functionalities you built to the ABDM
+   integration team.
+2. **Functional testing and security audit.** NHA's FAQ says these run after the demonstration,
+   done by NHA-empanelled agencies.
+3. **Exit form submission.** NHA's FAQ names the documents you upload with the exit form on the
+   sandbox: the functional testing report and certificate, the security audit report, a signed
+   undertaking document, and any other supporting document NHA asks for.
+4. **A second demonstration.** NHA's FAQ says that once the earlier steps are complete, the
+   ABDM team schedules a demo for the Health Tech Committee (HTC). This is a different
+   demonstration from step 1, to a different audience.
+
+NHA's FAQ does not say how long any of these four steps take, individually or together. NHA's
+documents do not say what the functional testing report or the undertaking document have to
+contain beyond their names, so treat the exact evidence format as something to confirm with NHA
+rather than something published here.
+
+## How you know it worked
+
+You hold production credentials: a production client id and client secret, issued after the
+exit process completes. They are not the same values as your sandbox credentials.
+
+You also switch base URLs. The [M1 conventions page](/docs/hiecm/v3/api/m1/apis) records the
+sandbox and production hosts side by side. For the gateway session call, sandbox is
+`https://dev.abdm.gov.in` with `X-CM-ID: sbx`, and production is `https://apis.abdm.gov.in`
+with `X-CM-ID: abdm`. For the ABHA service, sandbox is
+`https://abhasbx.abdm.gov.in/abha/api/v3/` and production is
+`https://abha.abdm.gov.in/api/abha/v3/`. A production client id against a sandbox host, or the
+reverse, fails.
+
+NHA's FAQ does not publish what a production client id or secret looks like, so this page does
+not describe their shape beyond that they differ from sandbox values.
+
+## When it goes wrong
+
+Questions about the exit process itself, including where to submit the exit form or what
+counts as a valid supporting document, go to
+[NHA's developer forum](https://devforum.abdm.gov.in) or `integration.support@nha.gov.in`, both
+named in NHA's FAQ. See [Support](/docs/support) for the report format.
+
+If a call that worked in the sandbox fails in production, check the base URL and the
+`X-CM-ID` header first: see
+[Everything returns 401](/docs/hiecm/v3/troubleshooting/everything-returns-401), which covers
+this exact class of failure.
