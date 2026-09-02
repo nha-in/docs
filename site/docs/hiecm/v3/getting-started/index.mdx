@@ -1,0 +1,106 @@
+---
+title: Get started
+sidebar_label: Get started
+slug: /hiecm/v3
+sidebar_position: 0
+description: Connect your application to India's health data network, from sandbox credentials to your first call to going live.
+verification: unverified
+source: ABDM__Proposed_Simplified_Milestone_1.md, ABDM__Proposed_Simplified_Milestone_2.md, ABDM__Proposed_Simplified_Milestone_3.md, ABDM__NewDocumant_PHR_app.md, scripts/build-skills.mjs
+---
+
+import RoleSelector from '@site/src/components/docs/RoleSelector';
+import AgentSetup from '@site/src/components/docs/AgentSetup';
+
+# Get started
+
+Connect your application to India's health data network.
+
+## What ABDM is
+
+The Ayushman Bharat Digital Mission is India's national health data network. It
+gives every person one health identity, an
+[ABHA](/docs/hiecm/v3/getting-started/glossary#abha), and lets the systems that
+hold their records exchange those records with the person's consent.
+
+There is no central store of health records. Records stay in the system that
+created them. What the network moves is a request, a consent and, once that
+consent is granted, the records themselves, encrypted between the two systems.
+The exchange itself is data blind: it works with identifiers and metadata about
+where records live, and does not read what is in them.
+
+Three gateways carry different work, and this section documents the first.
+
+| Gateway | What it carries |
+| --- | --- |
+| [HIE-CM](/docs/hiecm/v3/getting-started/glossary#hie-cm) | Identity, care contexts, consent and health records |
+| [UHI](/docs/uhi/v1) | Finding and booking a health service |
+| [NHCX](/docs/nhcx/v1) | Health insurance claims |
+
+Your work on HIE-CM is four milestones, and they spell
+[CARE](/docs/hiecm/v3/milestones): Create the identity, Attach your records to
+it, Retrieve records held elsewhere, Enrol your facility and your
+professionals.
+
+<RoleSelector />
+
+## Start here: build with AI
+
+Your coding agent can read every page, every endpoint and every error code on this site.
+
+<AgentSetup />
+
+More ways to set one up are on [Build with AI](/docs/hiecm/v3/getting-started/build-with-ai).
+
+## Start building
+
+<CardGroup cols={3}>
+  <Card title="Get your sandbox credentials" icon="key-round" href="/docs/hiecm/v3/getting-started/sandbox">
+    Register and get a client id and secret.
+  </Card>
+  <Card title="Quickstart" icon="terminal" href="/docs/hiecm/v3/getting-started/first-fifteen-minutes">
+    Create your first ABHA live, with your own credentials.
+  </Card>
+  <Card title="Milestones" icon="milestone" href="/docs/hiecm/v3/milestones">
+    The four milestones and what each one gets you.
+  </Card>
+  <Card title="Build with AI" icon="sparkles" href="/docs/hiecm/v3/getting-started/build-with-ai">
+    Skills, MCP server and prompts for your coding agent.
+  </Card>
+  <Card title="Go live" icon="rocket" href="/docs/hiecm/v3/getting-started/going-live">
+    What certification and the exit process involve.
+  </Card>
+  <Card title="Fix what broke" icon="life-buoy" href="/docs/hiecm/v3/troubleshooting">
+    Start from the symptom you are seeing, not the error code.
+  </Card>
+</CardGroup>
+
+## Common use cases
+
+<CardGroup cols={3}>
+  <Card title="Build a patient's health app" href="/docs/hiecm/v3/milestones/p1">
+    ABHA login, record discovery, consent control.
+  </Card>
+  <Card title="Share records from a hospital or clinic" href="/docs/hiecm/v3/milestones/m2">
+    Link care contexts and serve them under consent.
+  </Card>
+  <Card title="Read a patient's records as an insurer" href="/docs/hiecm/v3/milestones/m3">
+    Request consent, fetch and decrypt.
+  </Card>
+  <Card title="Register a facility or professional" href="/docs/hiecm/v3/milestones/m4">
+    Get the ids every call needs.
+  </Card>
+  <Card title="Create and verify ABHA" href="/docs/hiecm/v3/milestones/m1">
+    Identity for every patient.
+  </Card>
+</CardGroup>
+
+## More resources
+
+<CardGroup cols={3}>
+  <Card title="Explore every API" href="/docs/hiecm/v3/api">
+    The full reference, with try-it.
+  </Card>
+  <Card title="How consent works" href="/docs/hiecm/v3/concepts/consent">
+    The one concept you must understand.
+  </Card>
+</CardGroup>

@@ -36,7 +36,7 @@ You do not link a record. You link a [care context](/docs/hiecm/v3/getting-start
 }
 ```
 
-[NHA](/docs/hiecm/v3/getting-started/glossary#nha)'s example of a good display name is "OPD records (X-Ray, Prescription) from 3rd March 2023": what kind of visit and when, not what was found. NHA recommends one care context per outpatient visit and one per inpatient admission.
+A good display name is "OPD records (X-Ray, Prescription) from 3rd March 2023": what kind of visit and when, not what was found. Use one care context per outpatient visit and one per inpatient admission.
 
 ## Why the record has to be linked first
 
@@ -50,7 +50,7 @@ An unlinked record is not private. It is absent.
 
 ## Link when the record is ready to share
 
-NHA is specific: link as soon as the health record is ready to be shared, not when the visit opens and not at the end of the month.
+Link as soon as the health record is ready to be shared, not when the visit opens and not at the end of the month.
 
 Whenever a care context is linked, or an existing one gains new records, the HIE-CM notifies every PHR application subscribed to that ABHA address. You do not send those notifications. You trigger them by linking.
 
@@ -72,7 +72,7 @@ Which route applies depends on what the patient gave you at registration.
 
 What you are handed splits in two:
 
-- **Verified identifiers**, which NHA says to weight higher: ABHA address, mobile number, name, gender and year of birth.
+- **Verified identifiers**, which you weight higher: ABHA address, mobile number, name, gender and year of birth.
 - **Unverified, patient declared information**, typically a facility issued identifier such as a patient ID or a medical registration number.
 
 Use the unverified value to sharpen a match, not to make one. The response carries care context metadata and nothing else: no diagnosis, no test result, no report content. Somebody who has not yet proved they are the patient reads it.
@@ -81,18 +81,18 @@ Use the unverified value to sharpen a match, not to make one. The response carri
 
 Linking is authorised by a [link token](/docs/hiecm/v3/getting-started/glossary#link-token), not by your session token alone. The token ties your facility to one patient's ABHA address.
 
-| Property | What NHA's M2 document states |
+| Property | Rule |
 | --- | --- |
 | When you get it | Generated and stored at the time the patient registers with you |
 | Validity | Six months |
-| Before use | Validate it, for example with a tool like JWT.io. NHA names the tool and not the check it wants you to run. |
+| Before use | Validate it, for example with a tool like JWT.io. Which check to run is not documented yet. |
 | If you do not have a valid one | Regenerate it through demographic authentication |
 
 Store it against the patient record, not the visit: you need it for every link you make for that patient over six months. Check it before you link, not after the gateway rejects you.
 
 ## What links look like when they go wrong
 
-From NHA's M2 error table. Read the code with the message the gateway returns, because the table reuses some codes against more than one message.
+From the M2 error table. Read the code with the message the gateway returns, because the table reuses some codes against more than one message.
 
 | Code | Message |
 | --- | --- |

@@ -82,6 +82,13 @@ writeFileSync(
 // The link list is generated from the same tree the sidebar is, so a page that
 // exists is listed and a page that does not cannot be.
 {
+  if (!process.env.DOCUSAURUS_URL && process.env.CI) {
+    console.error('build-nav: DOCUSAURUS_URL is required in CI so llms.txt never ships placeholder URLs.');
+    process.exit(1);
+  }
+  if (!process.env.DOCUSAURUS_URL) {
+    console.warn('build-nav: DOCUSAURUS_URL unset, llms.txt will use the example.com placeholder (local build only).');
+  }
   const siteUrl = (process.env.DOCUSAURUS_URL ?? 'https://abdm-docs.example.com').replace(/\/+$/, '');
   const base = (process.env.DOCUSAURUS_BASE_URL ?? '/').replace(/\/+$/, '');
 
@@ -138,6 +145,22 @@ writeFileSync(
   lines.push(
     `- [Agent skills](${siteUrl}${base}/skills): one markdown file per module, carrying its endpoints, error codes and test cases.`,
   );
+  // One llms.txt per HIE-CM API module (m1, m2, ..., gateway, p1, ...), so
+  // an agent does not have to guess the module's llms.txt URL. Written by
+  // scripts/emit-page-markdown.mjs as a postbuild step; listed here from
+  // the same docs tree so a module without a build directory is not listed.
+  const apiDir = join(docsRoot, 'hiecm', 'v3', 'api');
+  if (existsSync(apiDir)) {
+    const moduleIds = readdirSync(apiDir, {withFileTypes: true})
+      .filter((e) => e.isDirectory() && !e.name.startsWith('_') && !e.name.startsWith('.'))
+      .map((e) => e.name)
+      .sort();
+    for (const moduleId of moduleIds) {
+      lines.push(
+        `- [${moduleId.toUpperCase()} module index](${siteUrl}${base}/docs/hiecm/v3/api/${moduleId}/llms.txt): per-page links for the ${moduleId.toUpperCase()} module.`,
+      );
+    }
+  }
   lines.push('');
 
   writeFileSync(join(root, 'site', 'static', 'llms.txt'), lines.join('\n'));

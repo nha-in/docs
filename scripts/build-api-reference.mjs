@@ -558,8 +558,11 @@ for (const {platform, version, files} of tree) {
       for (const [name, item] of hooks) {
         for (const method of METHODS) {
           if (!item?.[method]) continue;
+          // The verb carries its own colour here, the same one it carries in
+          // the sidebar and on an endpoint page, so a reader scanning this
+          // table reads methods the way they read them everywhere else.
           lines.push(
-            `| \`${method.toUpperCase()}\` | \`${name}\` | ${(
+            `| <span class="api-chip api-chip--${method}">${method.toUpperCase()}</span> | \`${name}\` | ${(
               item[method].summary ?? ''
             ).trim()} |`,
           );
@@ -588,6 +591,12 @@ for (const {platform, version, files} of tree) {
       ),
       '# Error codes',
       '',
+      // Only hiecm/v3 has a troubleshooting section today; other platforms
+      // and other versions of hiecm would link to a page that does not
+      // exist.
+      ...(platform === 'hiecm' && version === 'v3'
+        ? [`Seeing a symptom rather than a code? Start at [Troubleshooting](/docs/${platform}/${version}/troubleshooting/).`, '']
+        : []),
       'Generated from the specifications. A code is on this page because a specification records it.',
       '',
     ];
@@ -675,6 +684,9 @@ for (const {platform, version, files} of tree) {
       '',
       `# ${module.label} errors`,
       '',
+      ...(platform === 'hiecm' && version === 'v3'
+        ? [`Seeing a symptom rather than a code? Start at [Troubleshooting](/docs/${platform}/${version}/troubleshooting/).`, '']
+        : []),
     ];
 
     if (notes.length) {

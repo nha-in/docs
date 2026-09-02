@@ -1,0 +1,169 @@
+---
+title: Milestones
+slug: /hiecm/v3/milestones
+sidebar_label: Milestones
+description: The four milestones spell CARE. Create, Attach, Retrieve, Enrol, in build order, plus the three PHR milestones and what each role needs.
+covers: [hiecm.concept.roles]
+verification: unverified
+source: ABDM__Proposed_Simplified_Milestone_1.md, ABDM__Proposed_Simplified_Milestone_2.md, ABDM__Proposed_Simplified_Milestone_3.md, ABDM__Proposed_Simplified_Milestone_4_(NHPR).md
+---
+
+import PatientJourney from '@site/src/components/docs/PatientJourney';
+import AcronymCards from '@site/src/components/docs/AcronymCards';
+
+# Milestones
+
+Four milestones. You certify them one at a time, in order, and together they
+spell CARE.
+
+## In short
+
+<AcronymCards
+  label="The four milestones, CARE"
+  cards={[
+    {
+      word: 'Create',
+      label: 'M1',
+      text: "Create and verify the patient's ABHA, the identity every record hangs on.",
+      to: '/docs/hiecm/v3/milestones/m1',
+    },
+    {
+      word: 'Attach',
+      label: 'M2',
+      text: 'Attach the records you hold to that identity: care contexts, linking, and sharing as a HIP.',
+      to: '/docs/hiecm/v3/milestones/m2',
+    },
+    {
+      word: 'Retrieve',
+      label: 'M3',
+      text: "Retrieve records held elsewhere, with the patient's consent, as an HIU.",
+      to: '/docs/hiecm/v3/milestones/m3',
+    },
+    {
+      word: 'Enrol',
+      label: 'M4',
+      text: 'Enrol your facility and your professionals in the registries, so you can go live.',
+      to: '/docs/hiecm/v3/milestones/m4',
+    },
+  ]}
+/>
+
+M4 certifies last but blocks M2. Sharing a record needs a valid facility ID and
+registration in the HIP role, and that facility ID comes from M4. Plan the
+registry work early.
+
+## One patient, four milestones
+
+Meera arrives at your clinic. Each card below is one thing your system has to
+be able to do for her, and one milestone that gives you it.
+
+<PatientJourney
+  label="Meera's journey through the four milestones"
+  steps={[
+    {
+      eyebrow: 'Milestone 1 · Create',
+      title: "Register Meera's ABHA",
+      story:
+        'Meera walks in without a health ID. Create her ABHA so every record from today onwards links to one identity.',
+      cta: 'Build M1 Create',
+      to: '/docs/hiecm/v3/milestones/m1',
+      icon: 'user-plus',
+    },
+    {
+      eyebrow: 'Milestone 2 · Attach',
+      title: "Attach today's visit to her ABHA",
+      story:
+        "Her consultation note and her blood test are yours to hold. Group them into care contexts, link them to her ABHA address, and answer when her app comes looking.",
+      cta: 'Build M2 Attach',
+      to: '/docs/hiecm/v3/milestones/m2',
+      icon: 'link-2',
+    },
+    {
+      eyebrow: 'Milestone 3 · Retrieve',
+      title: 'Retrieve the scan from another hospital',
+      story:
+        'Meera mentions a scan done last year, somewhere else. Ask her for consent, wait for her answer, then fetch and decrypt what she granted.',
+      cta: 'Build M3 Retrieve',
+      to: '/docs/hiecm/v3/milestones/m3',
+      icon: 'download',
+    },
+    {
+      eyebrow: 'Milestone 4 · Enrol',
+      title: 'Enrol the clinic and its doctors',
+      story:
+        'None of the above leaves sandbox until the clinic is a registered facility and its doctors hold professional IDs. Enrol both, then link your software to the facility.',
+      cta: 'Build M4 Enrol',
+      to: '/docs/hiecm/v3/milestones/m4',
+      icon: 'building-2',
+    },
+  ]}
+/>
+
+## The same story from Meera's own app
+
+If you are building the patient's app rather than the clinic's system, you are
+building a [PHR](/docs/hiecm/v3/getting-started/glossary#phr) application. The
+work splits into three, and each part mirrors a milestone on the provider side.
+
+<PatientJourney
+  label="The PHR side, from the patient's app"
+  steps={[
+    {
+      eyebrow: 'PHR 1 · Identity and profile',
+      title: 'Meera signs up and holds her own profile',
+      story:
+        'She registers with a mobile number or an existing ABHA number, logs in four different ways, and manages her card, her QR code and her family members.',
+      cta: 'Build P1',
+      to: '/docs/hiecm/v3/milestones/p1',
+      icon: 'smartphone',
+    },
+    {
+      eyebrow: 'PHR 2 · Linking and records',
+      title: 'She finds records she never linked',
+      story:
+        'She searches for the hospital she visited last year, sees what it holds, verifies by one time password, and pulls those care contexts onto her ABHA address.',
+      cta: 'Build P2',
+      to: '/docs/hiecm/v3/milestones/p2',
+      icon: 'folder-plus',
+    },
+    {
+      eyebrow: 'PHR 3 · Consent and notifications',
+      title: 'She decides who sees what',
+      story:
+        'A clinic asks for her records. She reads the request, narrows it, grants or denies it, and revokes it later. Your app tells her each time.',
+      cta: 'Build P3',
+      to: '/docs/hiecm/v3/milestones/p3',
+      icon: 'shield-check',
+    },
+  ]}
+/>
+
+## Which milestones your role needs
+
+| Your role | M1 | M2 | M3 | M4 |
+| --- | --- | --- | --- | --- |
+| PHR application | Required | Patient side only | Required | Not needed |
+| HIP | Required | The bulk of your build | Only if you also read records held elsewhere | Required |
+| HIU | Required | Not needed unless you also act as a HIP | The bulk of your build | Required |
+
+A PHR application builds the P1, P2 and P3 pages above rather than the provider
+side of M2.
+
+## What each milestone gets you
+
+| Milestone | What you get | Who needs it |
+| --- | --- | --- |
+| [M1 Create](/docs/hiecm/v3/milestones/m1) | Identity and the session token | Everyone |
+| [M2 Attach](/docs/hiecm/v3/milestones/m2) | Linking and sharing records | HIP systems, and the patient side for a PHR app |
+| [M3 Retrieve](/docs/hiecm/v3/milestones/m3) | Consent and record fetching | HIU systems and PHR apps |
+| [M4 Enrol](/docs/hiecm/v3/milestones/m4) | A facility ID and professional registration | Anyone going live as a facility |
+
+The M1 pages carry request URLs, headers and bodies. Most M2, M3 and M4 request
+and response shapes are not transcribed yet, so those pages give steps and
+failure modes rather than payloads.
+
+## Next
+
+Start with [M1 Create](/docs/hiecm/v3/milestones/m1), or read [Go
+live](/docs/hiecm/v3/getting-started/going-live) for what happens after the
+fourth certificate.

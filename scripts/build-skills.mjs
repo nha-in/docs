@@ -306,7 +306,7 @@ function build(module) {
   lines.push('## Where the detail is');
   lines.push('');
   lines.push(`- Every endpoint, with its body fields and responses: ${module.docs}`);
-  lines.push(`- The flows as diagrams: ${module.docs}/user-journey`);
+  lines.push(`- The flows as diagrams: ${module.docs.replace(/\/api\/([^/]+)$/, "/milestones/$1")}`);
   lines.push(`- Every error code across modules: /docs/hiecm/v3/reference/error-codes`);
   lines.push(`- Sandbox test data: /docs/hiecm/v3/reference/data-dictionary`);
   lines.push(`- Terms: /docs/hiecm/v3/getting-started/glossary`);

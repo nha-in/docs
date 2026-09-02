@@ -77,6 +77,16 @@ const TARGETS: Target[] = [
     note: 'Opens Cursor with the prompt in the composer. It fetches the current instructions from this site.',
   },
   {
+    id: 'chatgpt',
+    label: 'ChatGPT',
+    command: fetchPrompt,
+    // https://help.openai.com/en/articles/9955102 — chatgpt.com/?q=<text> opens
+    // a new chat with the text preloaded. Nothing sends until Enter, same as
+    // the other deeplinks here.
+    link: (base) => `https://chatgpt.com/?q=${encodeURIComponent(guarded(fetchPrompt(base)))}`,
+    note: 'Opens ChatGPT with the setup preloaded. It fetches the current instructions from this site.',
+  },
+  {
     id: 'codex',
     label: 'Codex',
     command: fetchPrompt,
@@ -167,7 +177,7 @@ export default function AgentSetup(): React.ReactNode {
         <Database className="size-3.5" aria-hidden="true" />
         <span>
           The setup also connects the{' '}
-          <Link to="/docs/hiecm/v3/getting-started/mcp">Docs MCP server</Link>: the live
+          <Link to="/docs/hiecm/v3/getting-started/build-with-ai#connect-the-docs-mcp-server">Docs MCP server</Link>: the live
           version of these docs, queried by your agent as it works.
         </span>
       </p>

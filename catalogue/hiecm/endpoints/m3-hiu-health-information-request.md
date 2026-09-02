@@ -4,7 +4,7 @@ type: endpoint
 gateway: hiecm
 milestone: M3
 version: abdm-v3
-title: HIU Health Information Request
+title: Request a patient's health information
 summary: >
   Requests health data from the HIP for a specific consent artefact.
   The HIU must: 1.

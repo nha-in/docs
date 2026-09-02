@@ -4,7 +4,7 @@ type: endpoint
 gateway: hiecm
 milestone: M2
 version: abdm-v3
-title: HIP Data Flow Notification, Notify Gateway transfer is complete
+title: Notify the gateway that a data transfer finished
 summary: >
   After successfully pushing all encrypted FHIR health data to the
   HIU's `dataPushUrl`, the HIP calls this endpoint to notify the ABDM

@@ -4,7 +4,7 @@ type: endpoint
 gateway: hiecm
 milestone: M2
 version: abdm-v3
-title: HIP Health Information Response, Acknowledge data request
+title: Acknowledge a health information data request
 summary: >
   **Async Callback:** After ABDM Gateway sends a health information
   request to the HIP bridge URL (`{bridgeUrl}/v0.5/health-

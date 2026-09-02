@@ -71,9 +71,10 @@ You have understood this when you can answer both of these.
 
 ## When it goes wrong
 
-It never arrives. That is the single most common report, and the cause is
-almost always the callback URL: not public, not registered, or not
-responding fast enough.
+It never arrives. Check the callback URL first: not public, not registered, or not
+responding fast enough. See [the callback never arrives](../troubleshooting/callback-never-arrives.md)
+for the checks in the order this catalogue recommends, not a record of how often each has been
+the actual cause.
 
 Treating retries as new events. A duplicate delivery must be safe, which
 means keying on the `REQUEST-ID` rather than appending on every POST.

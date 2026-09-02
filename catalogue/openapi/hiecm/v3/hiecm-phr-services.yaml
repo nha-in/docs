@@ -12238,11 +12238,18 @@ paths:
                     description: No matching resource found for given API Request
   /health/service/facility/geo-location/search-within-radius:
     post:
-      operationId: phr_services_search_facilities_within_radius_copy
+      operationId: phr_services_search_facilities_within_radius_alt
       tags:
       - nearby_health_search
-      summary: Search Facilities Within Radius Copy
-      x-abdm-atom: hiecm.endpoint.phr-services-search-facilities-within-radius-copy
+      summary: Search Facilities Within Radius
+      description: |
+        The same facility-radius search as
+        `phr_services_search_facilities_within_radius` in this file. Request
+        and response are identical. NHA's Postman collection recorded this
+        as a separate request against a second route, without the `/api`
+        prefix the other route carries, so it is kept here as a separate
+        operation rather than merged away.
+      x-abdm-atom: hiecm.endpoint.phr-services-search-facilities-within-radius-alt
       x-abdm-source-folder: Nearby-health-Service-search service
       requestBody:
         required: true
@@ -58339,11 +58346,18 @@ paths:
                     message: Required header 'X-token' is not present.
   /v4/hfr/facility/search/searchFacility/IN2710002401:
     get:
-      operationId: phr_services_get_facility_details_by_search_id_copy
+      operationId: phr_services_hfr_facility_search_by_id
       tags:
       - nearby_health_search
-      summary: Get Facility Details By Search ID Copy
-      x-abdm-atom: hiecm.endpoint.phr-services-get-facility-details-by-search-id-copy
+      summary: Get HFR Facility Details By Search ID
+      description: |
+        Looks up a facility by search ID in the Health Facility Registry
+        (HFR), NHA's national registry of health facilities. This is a
+        different registry from the nearby-health-service facility search
+        elsewhere in this file: it is a separate NHA system with its own
+        host and its own record shape, not an alternate route to the same
+        data.
+      x-abdm-atom: hiecm.endpoint.phr-services-hfr-facility-search-by-id
       x-abdm-source-folder: Nearby-health-Service-search service
       responses:
         '200':

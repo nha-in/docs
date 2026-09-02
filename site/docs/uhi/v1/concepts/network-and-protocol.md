@@ -82,5 +82,5 @@ Our source is NHA's physical consultation onboarding document, version 2.0. Its 
 ## Next
 
 - [HIE-CM](/docs/hiecm/v3/)
-- [What you can build, by role](/docs/hiecm/v3/getting-started/what-you-can-build)
+- [Milestones, by role](/docs/hiecm/v3/milestones)
 - [UHI API references](/docs/uhi/v1)

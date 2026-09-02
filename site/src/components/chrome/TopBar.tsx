@@ -20,6 +20,7 @@ import {
   platforms,
   useRoutePath,
 } from '@site/src/config/navigation';
+import {sandboxLinks} from '@site/src/data/sandboxLinks';
 import {useHistory} from '@docusaurus/router';
 import {
   Tooltip,
@@ -31,7 +32,6 @@ import BrandMark from './BrandMark';
 import Omnibox from './Omnibox';
 
 /** External destinations shown in the bar. Not routes, so not in navigation.ts. */
-const SANDBOX_URL = 'https://sandbox.abdm.gov.in';
 const GITHUB_URL = 'https://github.com/nha-in';
 
 /**
@@ -188,7 +188,7 @@ function OverflowMenu() {
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-56">
         <DropdownMenuItem asChild>
-          <a href={SANDBOX_URL} target="_blank" rel="noopener noreferrer">
+          <a href={sandboxLinks.home} target="_blank" rel="noopener noreferrer">
             <SandboxMark />
             ABDM sandbox
           </a>
@@ -257,7 +257,7 @@ export default function TopBar() {
             <TooltipTrigger asChild>
               <a
                 className="topbar-action topbar-action--icon"
-                href={SANDBOX_URL}
+                href={sandboxLinks.home}
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="ABDM sandbox">

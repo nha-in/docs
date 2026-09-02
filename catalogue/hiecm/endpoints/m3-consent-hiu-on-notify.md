@@ -4,7 +4,7 @@ type: endpoint
 gateway: hiecm
 milestone: M3
 version: abdm-v3
-title: Consent HIU On-Notify, Acknowledge consent notification
+title: Acknowledge a consent notification
 summary: >
   **Async Callback:** After ABDM Gateway sends a consent grant/deny
   notification to the HIU bridge URL

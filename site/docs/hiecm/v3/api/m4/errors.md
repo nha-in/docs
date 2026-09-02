@@ -10,6 +10,8 @@ generated: true
 
 # M4 HPR and HFR errors
 
+Seeing a symptom rather than a code? Start at [Troubleshooting](/docs/hiecm/v3/troubleshooting/).
+
 ## Codes
 
 NHA's M4 document, which states the ranges and gives examples. The full list is in NHA's sandbox documentation for the healthcare professional registry. NHA's error code workbooks, ABDM M1-M2-M3-M4_Error_Codes.xlsx and ErrorCode-Message.xlsx, supplied 2026-08-25. Code, message and, where NHA gives one, the error name are NHA's. The action column is this catalogue's reading of the message text, by a documented rule, and is not NHA's. Anything the rule could not classify says Unclassified rather than guessing.

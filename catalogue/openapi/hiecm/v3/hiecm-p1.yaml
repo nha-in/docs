@@ -66,11 +66,11 @@ tags:
 paths:
   /abha/api/v3/phr/app/enrollment/encrypt:
     post:
-      operationId: p1_encryption_copy
+      operationId: p1_encryption
       tags:
       - login
-      summary: ENCRYPTION Copy
-      x-abdm-atom: hiecm.endpoint.p1-encryption-copy
+      summary: ENCRYPTION
+      x-abdm-atom: hiecm.endpoint.p1-encryption
       x-abdm-source-folder: AS Login service
       requestBody:
         required: true
@@ -3282,11 +3282,11 @@ paths:
                 - message
   /login/profile/request/otp:
     post:
-      operationId: p1_send_aadhaar_otp_link_delink_copy
+      operationId: p1_send_aadhaar_otp_link_delink
       tags:
       - profile
-      summary: Send AADHAAR Otp - Link-DeLink Copy
-      x-abdm-atom: hiecm.endpoint.p1-send-aadhaar-otp-link-delink-copy
+      summary: Send AADHAAR Otp - Link-DeLink
+      x-abdm-atom: hiecm.endpoint.p1-send-aadhaar-otp-link-delink
       x-abdm-source-folder: As profile service
       requestBody:
         required: true
@@ -3352,11 +3352,11 @@ paths:
                       with *******2425
   /login/profile/verify:
     post:
-      operationId: p1_verify_aadhaar_otp_link_delink_copy
+      operationId: p1_verify_aadhaar_otp_link_delink
       tags:
       - profile
-      summary: Verify AADHAAR Otp - Link-DeLink Copy
-      x-abdm-atom: hiecm.endpoint.p1-verify-aadhaar-otp-link-delink-copy
+      summary: Verify AADHAAR Otp - Link-DeLink
+      x-abdm-atom: hiecm.endpoint.p1-verify-aadhaar-otp-link-delink
       x-abdm-source-folder: As profile service
       requestBody:
         required: true
@@ -4126,11 +4126,11 @@ paths:
                       or ''Authorization : Basic ACCESS_TOKEN'' or ''apikey: API_KEY'''
   /profile/phr/set-preferred/abha-address:
     post:
-      operationId: p1_set_preffered_abha_address
+      operationId: p1_set_preferred_abha_address
       tags:
       - profile
-      summary: set-preffered/abha-address
-      x-abdm-atom: hiecm.endpoint.p1-set-preffered-abha-address
+      summary: Set the preferred ABHA address
+      x-abdm-atom: hiecm.endpoint.p1-set-preferred-abha-address
       x-abdm-source-folder: As profile service
       requestBody:
         required: true

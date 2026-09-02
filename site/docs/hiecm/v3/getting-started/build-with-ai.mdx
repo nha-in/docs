@@ -1,31 +1,88 @@
 ---
 title: Build with AI
 sidebar_label: Build with AI
-sidebar_position: 3
+sidebar_position: 4
 description: Set a coding agent up to build your ABDM integration, from a one-file skill to live retrieval over MCP.
 verification: unverified
 source: scripts/build-skills.mjs, plugins/abdm/skills
 ---
 
+import useBaseUrl from '@docusaurus/useBaseUrl';
+import {useLocation} from '@docusaurus/router';
 import AgentSetup from '@site/src/components/docs/AgentSetup';
 import SkillPicker from '@site/src/components/docs/SkillPicker';
+import McpInstall from '@site/src/components/docs/McpInstall';
+import {Button} from '@site/src/components/ui/button';
+import {FileText, Sparkles} from 'lucide-react';
 
 # Build with AI
 
-This portal is written to be read by coding agents as much as by people. Everything an agent needs is a public URL on this site, in three tiers: a skill it loads once, a server it queries live, and an assistant for quick questions. Start with the prompt; it sets the rest up for you.
+Every fact on this site is a public URL: a skill your agent loads once, a server it queries live, or plain Markdown it can fetch directly. Pick what you need below.
+
+## Set up your agent in one step
 
 <AgentSetup />
 
-## The skills
+## Install a skill
 
-One file per job, picked by what you are building. The module skills carry everything published for that milestone: endpoints, hosts, headers, every recorded error code, and the test matrix. They are regenerated from these pages on every release, so a file cannot say something the pages do not. The FHIR skills are guided procedures for ABDM's hardest step, building or auditing NRCES compliant document bundles.
+One file per job. The module skills carry every endpoint, header, error code and test for that milestone; the FHIR skills are guided procedures for building or auditing NRCES compliant bundles.
 
 <SkillPicker />
 
-## Live retrieval: the Docs MCP server
+## Connect the Docs MCP server
 
-A downloaded skill is a snapshot; the [Docs MCP server](/docs/hiecm/v3/getting-started/mcp) is the same catalogue served live. A connected agent searches it as it works, retrieves only the paragraph it needs, decodes error codes, and validates request bodies and FHIR bundles before sending anything. Every skill file names its own catalogue version and tells the agent to prefer the server when both are available, so the two never quietly disagree.
+A skill is a snapshot. The Docs MCP server is the same catalogue live, queried a paragraph at a time instead of loaded whole.
 
-## Quick questions: Ask AI
+<McpInstall />
 
-The Ask AI button in the top bar answers from the same catalogue over the same retrieval, for the questions that do not need an agent at all. Same facts on every surface, one place they come from.
+## Read this site as an agent
+
+export const ReadAsAgent = () => {
+  const llmsTxt = useBaseUrl('/llms.txt');
+  const llmsFullTxt = useBaseUrl('/llms-full.txt');
+  const {pathname} = useLocation();
+  const pageAsMarkdown = `${pathname.replace(/\/$/, '')}/index.md`;
+  return (
+    <div className="docs-cta-row">
+      <Button asChild variant="outline" size="sm">
+        <a href={llmsTxt}>
+          <FileText className="size-3.5" aria-hidden="true" />
+          View llms.txt
+        </a>
+      </Button>
+      <Button asChild variant="outline" size="sm">
+        <a href={llmsFullTxt}>
+          <FileText className="size-3.5" aria-hidden="true" />
+          View llms-full.txt
+        </a>
+      </Button>
+      <Button asChild variant="outline" size="sm">
+        <a href={pageAsMarkdown}>
+          <FileText className="size-3.5" aria-hidden="true" />
+          This page as Markdown
+        </a>
+      </Button>
+    </div>
+  );
+};
+
+`llms.txt` is a map of every page here; `llms-full.txt` is every page's text in one file. Add `/index.md` to any URL on this site to get that page as plain Markdown, no scraping required.
+
+<ReadAsAgent />
+
+## Ask AI
+
+Ask this catalogue a question directly, without setting anything up.
+
+export const AskAiButton = () => (
+  <Button
+    size="sm"
+    onClick={() => window.dispatchEvent(new CustomEvent('abdm:ask-ai'))}>
+    <Sparkles className="size-3.5" aria-hidden="true" />
+    Ask AI
+  </Button>
+);
+
+<AskAiButton />
+
+The same assistant sits in the search box at the top of every page, labelled "Search or ask AI".

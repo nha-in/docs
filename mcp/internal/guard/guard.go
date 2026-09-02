@@ -95,7 +95,7 @@ type Violation struct {
 // atomIDRe matches the catalogue's internal id shape, gateway.type.slug.
 // These are our filing codes. A reader has no idea what one means, and the
 // playbook's vocabulary rule keeps them off every integrator-facing surface.
-var atomIDRe = regexp.MustCompile(`\b[a-z0-9]+\.(?:concept|flow|endpoint|callback|error|test|decision|glossary|fhir|sandbox)\.[a-z0-9-]+\b`)
+var atomIDRe = regexp.MustCompile(`\b[a-z0-9]+\.(?:concept|flow|endpoint|callback|error|test|decision|glossary|fhir|sandbox|troubleshooting)\.[a-z0-9-]+\b`)
 
 // internalWords are ours, not the reader's. "Catalogue" and "atom" describe
 // how this portal is built; "unverified" and "stale" are frontmatter values.

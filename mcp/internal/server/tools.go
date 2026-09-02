@@ -16,7 +16,7 @@ import (
 // The ten chat-visible tool descriptions, shared verbatim between the MCP
 // registration in mcp.go and the Defs table below.
 const (
-	searchDocsDescription = "Hybrid search over the ABDM catalogue atoms: concepts, flows, endpoints, callbacks, errors, tests, glossary entries, decisions, FHIR mappings and sandbox notes. " +
+	searchDocsDescription = "Hybrid search over the ABDM catalogue atoms: concepts, flows, endpoints, callbacks, errors, tests, glossary entries, decisions, FHIR mappings, sandbox notes and troubleshooting guides. " +
 		"It does NOT search raw API operations; those are covered by list_operations and get_operation. " +
 		"Use this when you have an intent in your own words and want the catalogue's guidance. " +
 		"Results carry verification_status; treat unverified content as unverified."
@@ -45,7 +45,7 @@ const (
 
 type searchIn struct {
 	Query     string `json:"query" jsonschema:"the search query"`
-	Type      string `json:"type,omitempty" jsonschema:"optional atom type filter, one of: concept, flow, endpoint, callback, error, test, glossary, decision, fhir, sandbox"`
+	Type      string `json:"type,omitempty" jsonschema:"optional atom type filter, one of: concept, flow, endpoint, callback, error, test, glossary, decision, fhir, sandbox, troubleshooting"`
 	Milestone string `json:"milestone,omitempty" jsonschema:"optional milestone filter, M1 to M4"`
 	Limit     int    `json:"limit,omitempty" jsonschema:"max results, default 10, cap 25"`
 }
