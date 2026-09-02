@@ -242,7 +242,7 @@ for (const [id, atom] of atoms) {
 
   if (!route && type === "flow") {
     const mod = (id.match(/\.(m\d)-/) ?? [])[1];
-    const jp = pages.find((p) => new RegExp(`/api/${mod}/user-journey$`).test(p.route));
+    const jp = pages.find((p) => new RegExp(`/milestones/${mod}$`).test(p.route));
     if (jp) {
       const words = id.split(".").pop().replace(/^m\d-/, "").split("-").filter((w) => w.length > 2);
       let best = null, bestScore = 0;

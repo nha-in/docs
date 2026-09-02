@@ -17,14 +17,14 @@ patient by their [ABHA](/docs/hiecm/v3/getting-started/glossary#abha) address at
 
 ## Before you start
 
-NHA's M2 document states one prerequisite: a valid facility ID and registration in the HIP role.
+There is one prerequisite: a valid facility ID and registration in the HIP role.
 That authorises you to create health records and share them with
 [PHR](/docs/hiecm/v3/getting-started/glossary#phr) and [HIU](/docs/hiecm/v3/getting-started/glossary#hiu) systems. Facility
 registration lives in the [Health Facility Registry](/docs/hiecm/v3/registries).
 
 For discovery to reach you, your facility also has to be linked to an
-[HRP](/docs/hiecm/v3/getting-started/glossary#hrp), a health repository provider. NHA uses HRP and
-[HMIS](/docs/hiecm/v3/getting-started/glossary#hmis) or [LMIS](/docs/hiecm/v3/getting-started/glossary#lmis) interchangeably, so the
+[HRP](/docs/hiecm/v3/getting-started/glossary#hrp), a health repository provider. HRP and
+[HMIS](/docs/hiecm/v3/getting-started/glossary#hmis) or [LMIS](/docs/hiecm/v3/getting-started/glossary#lmis) are used interchangeably, so the
 HRP is usually your own software.
 
 | Purpose | Sandbox | Production |
@@ -36,7 +36,7 @@ HRP is usually your own software.
 ## What you build in M1
 
 M1 is the registration desk: create an ABHA for a patient who does not have one, or verify the one
-they do have. NHA marks each capability mandatory or optional, differently for private and
+they do have. Each capability is mandatory or optional, differently for private and
 government integrators.
 
 | Capability | Private integrators | Government integrators |
@@ -68,12 +68,12 @@ Five things have to work.
 
 1. **Health records in the right format.** A [FHIR](/docs/hiecm/v3/getting-started/glossary#fhir) R4 bundle following
    the NRCES profiles at <https://nrces.in/ndhm/fhir/r4/index.html>, either simple with a PDF or
-   image attachment or structured with coded information. NHA lists eight record types and makes all
-   of them mandatory for an HMIS. See [FHIR and health record
+   image attachment or structured with coded information. There are eight record types, all
+   mandatory for an HMIS. See [FHIR and health record
    formats](/docs/hiecm/v3/concepts/fhir).
 2. **Care contexts.** The unit that attaches to an ABHA address. The
    [HIE-CM](/docs/hiecm/v3/getting-started/glossary#hie-cm) is data blind and holds two fields per care context: your
-   internal reference ID, and a display name with nothing clinical in it. NHA recommends one per
+   internal reference ID, and a display name with nothing clinical in it. Use one per
    outpatient visit and one per inpatient admission.
 3. **Linking.** Three routes, depending on what the patient gave you: HIP initiated with their ABHA
    address, notification to mobile when you hold only a mobile number, name, age and gender, and
@@ -107,7 +107,7 @@ belongs in a background job, not the clinician's screen.
 
 ## Testing the loop in sandbox
 
-NHA's M2 document gives a single end to end check:
+There is a single end to end check:
 
 1. Log in to a PHR app with a sandbox ABHA address.
 2. Register a patient with that same ABHA address in your system.
@@ -120,7 +120,7 @@ NHA's M2 document gives a single end to end check:
 Codes that cover its failures: `ABDM-1026`
 invalid link token, `ABDM-1038` ABHA address and link token mismatch, `ABDM-1056` care context
 already linked, `ABDM-1062` consent not granted, `ABDM-1063` invalid date range. Read the code with
-the message the gateway returns: NHA's table lists `ABDM-1056`, `ABDM-1062` and `ABDM-1063` twice
+the message the gateway returns: the table lists `ABDM-1056`, `ABDM-1062` and `ABDM-1063` twice
 each, against two different messages.
 
 ## What you do not need to build

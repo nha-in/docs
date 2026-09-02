@@ -19,7 +19,7 @@ It is three gateways, not one, and this section documents the third of them.
 
 No endpoint on this gateway has been documented here yet. No endpoint reference, no sequence diagrams, no error tables, no test cases.
 
-The [HIE-CM](/docs/nhcx/v1/getting-started/glossary#hie-cm) and [UHI](/docs/nhcx/v1/getting-started/glossary#uhi) gateways are documented at [milestones](/docs/hiecm/v3/getting-started/milestones) and [UHI](/docs/uhi/v1). NHCX sits outside both, on its own sandbox, with its own onboarding, participant registry and document set.
+The [HIE-CM](/docs/nhcx/v1/getting-started/glossary#hie-cm) and [UHI](/docs/nhcx/v1/getting-started/glossary#uhi) gateways are documented at [milestones](/docs/hiecm/v3/milestones) and [UHI](/docs/uhi/v1). NHCX sits outside both, on its own sandbox, with its own onboarding, participant registry and document set.
 
 NHCX does appear in the sandbox database. An NHCX application is recorded against your organisation, and the column list for it is the [`nhcx_exit` table](/docs/hiecm/v3/reference/data-dictionary#nhcx_exit).
 

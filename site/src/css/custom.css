@@ -16,8 +16,12 @@
 @import './mdx.css';
 @import './home.css';
 @import './hub.css';
+@import './role-selector.css';
+@import './milestones.css';
 @import './api.css';
+@import './quickstart.css';
 @import './scalar.css';
+@import './whats-new.css';
 
 /* Docusaurus toggles [data-theme] on <html>; teach Tailwind the same signal. */
 @custom-variant dark (&:where([data-theme='dark'], [data-theme='dark'] *));

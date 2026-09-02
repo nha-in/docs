@@ -7,6 +7,7 @@
 #
 #   AWS_REGION        ap-south-1
 #   SITE_URL          https://docs.abdm.gov.in
+#   MCP_URL           the Docs MCP endpoint, if one is deployed
 #   SITE_ROLE_ARN     arn:aws:iam::<account>:role/<ci-role>
 #   SITE_BUCKET       <the S3 bucket name>
 #   CLOUDFRONT_ID     <the distribution id>
@@ -43,6 +44,9 @@ jobs:
         env:
           DOCUSAURUS_URL: ${{ vars.SITE_URL }}
           DOCUSAURUS_BASE_URL: /
+          # Unset is a supported state: the MCP panel then says the address
+          # is not in this build rather than showing a broken endpoint.
+          MCP_URL: ${{ vars.MCP_URL }}
         run: npm run build
 
       - name: Assume the CI role (OIDC)

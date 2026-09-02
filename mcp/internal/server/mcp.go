@@ -30,7 +30,7 @@ const unverifiedCaution = "unverified: formats, URLs and enums in this atom are 
 // filters of search_docs and list_atoms.
 var atomTypeValues = []any{
 	"concept", "flow", "endpoint", "callback", "error",
-	"test", "glossary", "decision", "fhir", "sandbox",
+	"test", "glossary", "decision", "fhir", "sandbox", "troubleshooting",
 }
 
 // schemaWithAtomTypeEnum infers the input schema for In and constrains its
@@ -106,7 +106,7 @@ func NewMCPServer(r *index.Reader, emb embed.Embedder) *mcp.Server {
 	})
 
 	type listAtomsIn struct {
-		Type      string `json:"type,omitempty" jsonschema:"optional atom type filter, one of: concept, flow, endpoint, callback, error, test, glossary, decision, fhir, sandbox"`
+		Type      string `json:"type,omitempty" jsonschema:"optional atom type filter, one of: concept, flow, endpoint, callback, error, test, glossary, decision, fhir, sandbox, troubleshooting"`
 		Milestone string `json:"milestone,omitempty" jsonschema:"optional milestone filter"`
 	}
 	mcp.AddTool(s, &mcp.Tool{

@@ -10,6 +10,8 @@ generated: true
 
 # M1 ABHA identity errors
 
+Seeing a symptom rather than a code? Start at [Troubleshooting](/docs/hiecm/v3/troubleshooting/).
+
 ## Four error shapes, not one
 
 Do not write a parser that expects a single shape.

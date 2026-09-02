@@ -1,7 +1,7 @@
 ---
 title: HPR, the professional registry
 sidebar_label: HPR
-description: The Healthcare Professionals Registry, the HPID, what identifies a doctor, and the registration journey NHA's M4 document describes.
+description: The Healthcare Professionals Registry, the HPID, what identifies a doctor, and the registration journey.
 verification: unverified
 source: ABDM__Proposed_Simplified_Milestone_4_(NHPR).md
 sidebar_position: 1
@@ -25,9 +25,9 @@ If nobody in your organisation holds role 2 or role 3, you cannot register a fac
 
 ## The HPID
 
-A unique 14 digit, Aadhaar authenticated identifier issued on successful registration to a healthcare professional or facility manager. NHA writes it both ways, HPID and HPR ID. Like an [ABHA](/docs/hiecm/v3/registries/abha), it comes in two forms:
+A unique 14 digit, Aadhaar authenticated identifier issued on successful registration to a healthcare professional or facility manager. It is written both ways, HPID and HPR ID. Like an [ABHA](/docs/hiecm/v3/registries/abha), it comes in two forms:
 
-| Form | Sample from NHA's document | Where it is used |
+| Form | Sample | Where it is used |
 | --- | --- | --- |
 | The number | `71-2665-5777-XXXX` | Sent as `hpId` or `hprIdNumber` |
 | The address | `name@hpr.abdm` | Sent as `hprId`, with `domainName` of `@hpr.abdm` |
@@ -36,7 +36,7 @@ The professional chooses the readable part through a username suggestion call, t
 
 ## What identifies a doctor
 
-An HPID on its own is an authenticated person; the profile behind it makes them a doctor. NHA's register professional call groups it in five blocks:
+An HPID on its own is an authenticated person; the profile behind it makes them a doctor. The register professional call groups it in five blocks:
 
 | Block | What it holds |
 | --- | --- |
@@ -46,13 +46,13 @@ An HPID on its own is an authenticated person; the profile behind it makes them 
 | Qualification | Degree or diploma obtained, college, university, year of award, and the degree certificate |
 | Current work | Whether they are working, the purpose of that work, whether it is private, government or both, and the facility they work at |
 
-Three codes decide what the professional may be. **Category** says doctor, nurse or pharmacist. **Subcategory** fixes the system of medicine. The **degree code** must agree with both. NHA's tables for all three are on [what NHA documents without a path](/docs/hiecm/v3/api/m4/undocumented).
+Three codes decide what the professional may be. **Category** says doctor, nurse or pharmacist. **Subcategory** fixes the system of medicine. The **degree code** must agree with both. The tables for all three are on [the HPR and HFR call list](/docs/hiecm/v3/api/m4/undocumented).
 
 :::warning[The subcategory codes differ between two calls]
 Subcategory codes differ between the create HPID and register professional tables. Fetch the codes from the HPRID subcategories master call rather than hard coding either table.
 :::
 
-The SMD ID identifies doctors only. Searching for nurse colleges by SMD returns a null college and university name, and NHA states this is expected: for nurses, SMD is always null.
+The SMD ID identifies doctors only. Searching for nurse colleges by SMD returns a null college and university name, and this is expected: for nurses, SMD is always null.
 
 ## The registration journey
 
@@ -76,11 +76,11 @@ The last returns the HPID and an `hprToken`, which the next call needs.
 
 Three things to know first:
 
-- The Aadhaar link URL is valid for 5 minutes only. NHA says to call the API again once it expires.
+- The Aadhaar link URL is valid for 5 minutes only. Call the API again once it expires.
 - `degreeCertificate` and `registrationCertificate` are mandatory uploads, and `proofOfWorkCertificate` is mandatory when the professional is government or both.
 - Call `demographicAuthViaMobile` first, and generate the mobile OTP only when it returns false.
 
-Call by call, with the parameters, is on [M4 user journey](/docs/hiecm/v3/api/m4/user-journey) and [what NHA documents without a path](/docs/hiecm/v3/api/m4/undocumented).
+Call by call, with the parameters, is on [M4 user journey](/docs/hiecm/v3/milestones/m4) and [the HPR and HFR call list](/docs/hiecm/v3/api/m4/undocumented).
 
 ## Getting an HPR token later
 
@@ -94,7 +94,7 @@ The `hprToken` from creation does not last. Three ways to get a fresh one, all s
 | By Aadhaar OTP, send | `/v4/int/api/v1/auth/init` |
 | By Aadhaar OTP, verify | `/v4/int/api/v1/auth/confirmWithAadhaarOtp` |
 
-The bodies are on [what NHA documents without a path](/docs/hiecm/v3/api/m4/undocumented), with a copy and paste error in NHA's document on the mobile verify path.
+The bodies are on [the HPR and HFR call list](/docs/hiecm/v3/api/m4/undocumented), with a copy and paste error in the source document on the mobile verify path.
 
 ## What your system has to hold
 
@@ -106,7 +106,7 @@ Per professional, store:
 - The master data ids you sent for council, course, college, university, language, country, state and district. The registry rejects display values.
 - The certificates you uploaded, with each document slot identifier.
 
-Once, for the whole integration: client id and client secret for the gateway session call, and NHA's public certificate from `v4/int/api/v1/auth/cert`. Three fields are encrypted with it, cipher `RSA/ECB/PKCS1Padding`: the mobile number in mobile match, the OTP in mobile login, and the email and password in create HPID.
+Once, for the whole integration: client id and client secret for the gateway session call, and the NHA public certificate from `v4/int/api/v1/auth/cert`. Three fields are encrypted with it, cipher `RSA/ECB/PKCS1Padding`: the mobile number in mobile match, the OTP in mobile login, and the email and password in create HPID.
 
 Upload limits: 1 MB for a profile photo, 5 MB for anything else, png, jpeg, jpg or PDF only. Attachments go as a `fileType` and a base64 `data` string.
 
@@ -123,5 +123,5 @@ Seven of the 17 master data calls have their path published here: see
 
 - [HFR](/docs/hiecm/v3/registries/nhpr/hfr), the facility half, which needs a token from this registry.
 - [NHPR](/docs/hiecm/v3/registries/nhpr), the parent page.
-- [M4 user journey](/docs/hiecm/v3/api/m4/user-journey), the same order as diagrams.
-- [what NHA documents without a path](/docs/hiecm/v3/api/m4/undocumented), the parameter tables and the error codes.
+- [M4 user journey](/docs/hiecm/v3/milestones/m4), the same order as diagrams.
+- [the HPR and HFR call list](/docs/hiecm/v3/api/m4/undocumented), the parameter tables and the error codes.

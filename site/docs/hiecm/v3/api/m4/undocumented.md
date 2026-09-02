@@ -39,7 +39,7 @@ The first call you make, and one of the few whose method, URL and body all survi
 | URL | `https://dev.abdm.gov.in/api/hiecm/gateway/v3/sessions` |
 | URL, second host | `https://live.abdm.gov.in/api/hiecm/gateway/v3/sessions` |
 
-NHA gives both hosts and labels neither. See [the note on environments](/docs/hiecm/v3/api/m4#environments).
+Both hosts are listed under [Base URLs](/docs/hiecm/v3/api/m4#base-urls).
 
 Headers NHA names:
 
@@ -484,5 +484,5 @@ The full list is in NHA's sandbox documentation for the [healthcare professional
 ## Where to go next
 
 - The interactive reference: [M4 API reference](/reference/hiecm-m4).
-- The order of calls, as diagrams: [M4 user journeys](/docs/hiecm/v3/api/m4/user-journey).
+- The order of calls, as diagrams: [M4 user journeys](/docs/hiecm/v3/milestones/m4).
 - A path missing here that you need now: ask on [support](/docs/support).

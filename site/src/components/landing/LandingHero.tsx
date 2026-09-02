@@ -5,12 +5,39 @@ import BrowserOnly from '@docusaurus/BrowserOnly';
 import {ChevronDown} from 'lucide-react';
 import NetworkWeb from '@site/src/components/landing/NetworkWeb';
 import BrandMark from '@site/src/components/chrome/BrandMark';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@site/src/components/ui/tooltip';
 
-/** The three gateways, as text separated by interpuncts (see home.css). */
-const ways = [
-  {label: 'HIE-CM', to: '/docs/hiecm/v3'},
-  {label: 'UHI', to: '/docs/uhi/v1'},
-  {label: 'NHCX', to: '/docs/nhcx/v1'},
+/**
+ * The three gateways, asked as intent rather than as ABDM's own role names
+ * (HIP, HIU, PHR). A visitor knows what they are trying to build before they
+ * know which gateway that maps to, so the intent is the card's main text and
+ * the gateway is a small label under it; the full form only shows on hover
+ * or keyboard focus, via the shared Tooltip.
+ */
+const gateways = [
+  {
+    intent: 'I have health records to share',
+    short: 'HIE-CM',
+    full: 'Health Information Exchange and Consent Manager',
+    to: '/docs/hiecm/v3',
+  },
+  {
+    intent: 'I want to offer health services',
+    short: 'UHI',
+    full: 'Unified Health Interface',
+    to: '/docs/uhi/v1',
+  },
+  {
+    intent: 'I want to solve for health insurance',
+    short: 'NHCX',
+    full: 'National Health Claims Exchange',
+    to: '/docs/nhcx/v1',
+  },
 ];
 
 /**
@@ -51,21 +78,28 @@ export default function LandingHero({
           <br />
           Secure. Private. Robust.
         </p>
-        {/* One action. Getting started means the Build with AI page: the
-            agent path first, with the skills, the MCP server and the manual
-            route all one page away. Browsing has the gateways below and the
-            scroll gesture itself. */}
-        <Link className="landing-hero__cta" to="/docs/hiecm/v3/getting-started/build-with-ai">
-          Get started
-        </Link>
-
-        <nav className="landing-hero__ways" aria-label="The three gateways">
-          {ways.map(({label, to}) => (
-            <Link key={to} to={to} className="landing-hero__way">
-              {label}
-            </Link>
-          ))}
-        </nav>
+        {/* The three gateways are the page's action. Each card names what
+            the visitor is trying to do rather than ABDM's own role names
+            (HIP, HIU, PHR); the gateway short name is a small label, and
+            the full form appears on hover or keyboard focus. */}
+        <div className="landing-hero__goals">
+          <p className="landing-hero__goals-prompt">What do you want to solve today?</p>
+          <TooltipProvider>
+            <nav className="landing-hero__goals-list" aria-label="Which gateway you need">
+              {gateways.map(({intent, short, full, to}) => (
+                <Tooltip key={to}>
+                  <TooltipTrigger asChild>
+                    <Link to={to} className="landing-hero__goal">
+                      <span className="landing-hero__goal-intent">{intent}</span>
+                      <span className="landing-hero__goal-short">{short}</span>
+                    </Link>
+                  </TooltipTrigger>
+                  <TooltipContent>{full}</TooltipContent>
+                </Tooltip>
+              ))}
+            </nav>
+          </TooltipProvider>
+        </div>
       </div>
 
       {/* The lift is the page's main gesture, so it is advertised. */}
@@ -73,7 +107,7 @@ export default function LandingHero({
         type="button"
         className="landing-scroll-hint"
         onClick={onLift}
-        aria-label="Show the API references">
+        aria-label="Show the documentation">
         <ChevronDown className="size-5" aria-hidden="true" />
       </button>
     </section>

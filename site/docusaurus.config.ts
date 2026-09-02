@@ -5,6 +5,7 @@ import type {Config} from '@docusaurus/types';
 import type * as Preset from '@docusaurus/preset-classic';
 import type {ScalarOptions} from '@scalar/docusaurus';
 import apiTree from './src/data/api-sidebar.json';
+import {sandboxLinks} from './src/data/sandboxLinks';
 
 // This runs in Node.js - Don't use client-side code here (browser APIs, JSX...)
 
@@ -290,7 +291,7 @@ const config: Config = {
       '@docusaurus/plugin-client-redirects',
       {
         redirects: [
-          {from: '/docs', to: '/docs/hiecm/v3/'},
+          {from: '/docs', to: '/docs/hiecm/v3'},
           // Old flat and building-blocks URLs from before the folder
           // restructure. The `from` paths are the URLs as they were published,
           // under the platform's old name (abdm); the blanket abdm-to-hiecm
@@ -304,12 +305,14 @@ const config: Config = {
           {from: '/docs/abdm/v3/building-blocks/gateway', to: '/docs/hiecm/v3/concepts/gateway'},
           {from: '/docs/abdm/v3/building-blocks/hie-cm', to: '/docs/hiecm/v3/concepts/gateway'},
           {from: '/docs/abdm/v3/concepts/hie-cm', to: '/docs/hiecm/v3/concepts/gateway'},
-          {from: '/docs/overview', to: '/docs/hiecm/v3/'},
-          {from: '/docs/api', to: '/docs/hiecm/v3/getting-started/milestones'},
-          {from: '/docs/abdm/v3/architecture', to: '/docs/hiecm/v3/getting-started/architecture'},
+          {from: '/docs/overview', to: '/docs/hiecm/v3'},
+          {from: '/docs/api', to: '/docs/hiecm/v3/milestones'},
+          {from: '/docs/abdm/v3/architecture', to: '/docs/hiecm/v3/concepts/how-it-fits'},
+          {from: '/docs/hiecm/v3/getting-started/architecture', to: '/docs/hiecm/v3/concepts/how-it-fits'},
+          {from: '/docs/hiecm/v3/getting-started/mcp', to: '/docs/hiecm/v3/getting-started/build-with-ai'},
           {from: '/docs/abdm/v3/sandbox', to: '/docs/hiecm/v3/getting-started/sandbox'},
-          {from: '/docs/abdm/v3/milestones', to: '/docs/hiecm/v3/getting-started/milestones'},
-          {from: '/docs/abdm/v3/what-you-can-build', to: '/docs/hiecm/v3/getting-started/what-you-can-build'},
+          {from: '/docs/abdm/v3/what-you-can-build', to: '/docs/hiecm/v3/milestones'},
+          {from: '/docs/hiecm/v3/getting-started/what-you-can-build', to: '/docs/hiecm/v3/milestones'},
           {from: '/docs/abdm/v3/glossary', to: '/docs/hiecm/v3/getting-started/glossary'},
           {from: '/docs/abdm/v3/phr', to: '/docs/hiecm/v3/concepts/phr'},
           {from: '/docs/abdm/v3/registries/hpr', to: '/docs/hiecm/v3/registries/nhpr/hpr'},
@@ -318,6 +321,20 @@ const config: Config = {
           {from: '/docs/uhi/v1/glossary', to: '/docs/uhi/v1/getting-started/glossary'},
           {from: '/docs/uhi/v1/network-and-protocol', to: '/docs/uhi/v1/concepts/network-and-protocol'},
           {from: '/docs/nhcx/v1/glossary', to: '/docs/nhcx/v1/getting-started/glossary'},
+          // The milestones page moved out of Get started into its own section,
+          // and each module's user journey moved with it.
+          {from: '/docs/hiecm/v3/getting-started/milestones', to: '/docs/hiecm/v3/milestones'},
+          {from: '/docs/hiecm/v3/roles', to: '/docs/hiecm/v3'},
+          {from: '/docs/hiecm/v3/roles/ims', to: '/docs/hiecm/v3'},
+          {from: '/docs/hiecm/v3/roles/phr', to: '/docs/hiecm/v3/milestones/p1'},
+          {from: '/docs/hiecm/v3/api/m1/user-journey', to: '/docs/hiecm/v3/milestones/m1'},
+          {from: '/docs/hiecm/v3/milestones/m1-journey', to: '/docs/hiecm/v3/milestones/m1'},
+          {from: '/docs/hiecm/v3/milestones/m2-journey', to: '/docs/hiecm/v3/milestones/m2'},
+          {from: '/docs/hiecm/v3/milestones/m3-journey', to: '/docs/hiecm/v3/milestones/m3'},
+          {from: '/docs/hiecm/v3/milestones/m4-journey', to: '/docs/hiecm/v3/milestones/m4'},
+          {from: '/docs/hiecm/v3/api/m2/user-journey', to: '/docs/hiecm/v3/milestones/m2'},
+          {from: '/docs/hiecm/v3/api/m3/user-journey', to: '/docs/hiecm/v3/milestones/m3'},
+          {from: '/docs/hiecm/v3/api/m4/user-journey', to: '/docs/hiecm/v3/milestones/m4'},
         ],
         createRedirects(to: string) {
           const aliases: string[] = [];
@@ -376,7 +393,7 @@ const config: Config = {
       hideOnScroll: false,
       items: [
         {
-          href: 'https://sandbox.abdm.gov.in',
+          href: sandboxLinks.home,
           label: 'ABDM sandbox',
           position: 'right',
         },

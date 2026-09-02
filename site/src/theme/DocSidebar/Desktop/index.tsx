@@ -7,6 +7,7 @@ import type {Props} from '@theme/DocSidebar/Desktop';
 import SidebarPickers from '@site/src/components/chrome/SidebarPickers';
 import SidebarResizer from '@site/src/components/chrome/SidebarResizer';
 import {useRoleScopedSidebar} from '@site/src/config/useRoleScopedSidebar';
+import {isApiRoute} from '@site/src/config/navigation';
 
 /**
  * The desktop sidebar, with the gateway and version pickers above the tree.
@@ -31,10 +32,21 @@ function DocSidebarDesktop({path, sidebar, onCollapse, isHidden}: Props) {
   // Docusaurus behaviour on a smaller list.
   const scoped = useRoleScopedSidebar(sidebar);
 
+  // The role picker belongs on both sidebars: it is a property of the
+  // reader, and the docs tree is scoped by it too. The version belongs to
+  // the API reference alone, the way it does on the reference sites this
+  // follows, because a version is a property of the contract you are
+  // calling rather than of the guides that explain it. Sidebars split on
+  // the api/ and reference/ folders (site/sidebars.ts), and `path` is the
+  // doc's own route, so the folder segment says which sidebar this is.
+  // Shared with the tab strip, so a page cannot light one tab while its
+  // sidebar behaves like the other. See isApiRoute in config/navigation.
+  const onApiSidebar = isApiRoute(path);
+
   return (
     <div className={clsx('docs-sidebar', isHidden && 'docs-sidebar--hidden')}>
       <div className="docs-sidebar__head">
-        <SidebarPickers />
+        <SidebarPickers showVersion={onApiSidebar} />
         {hideable && <CollapseButton onClick={onCollapse} />}
       </div>
       <Content path={path} sidebar={scoped} />
