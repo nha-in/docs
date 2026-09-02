@@ -2,7 +2,7 @@ import React from 'react';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import useBaseUrl from '@docusaurus/useBaseUrl';
 import SearchBar from '@theme/SearchBar';
-import CommandPalette from './CommandPalette';
+import QuickActions from './QuickActions';
 import {activePlatform, useRoutePath} from '@site/src/config/navigation';
 
 /**
@@ -39,6 +39,8 @@ export default function Omnibox() {
   const chatUrl = siteConfig.customFields?.chatUrl as string | null;
   const support = useBaseUrl('/docs/support');
   const box = React.useRef<HTMLDivElement>(null);
+  const [focused, setFocused] = React.useState(false);
+  const [query, setQuery] = React.useState('');
 
   // The search theme takes its placeholder from a translation string, and the
   // usual override, i18n/en/code.json, turns on translation validation for the
@@ -71,29 +73,50 @@ export default function Omnibox() {
       }
     }
 
-    // One field, so a half typed question survives the move between its two
-    // halves. Whatever is in the search box is mirrored onto the assistant,
-    // which seeds its composer when it opens. Nothing is asked on the
-    // reader's behalf: the words are handed over, and they still press send.
+    // The shortcut and a click on the field are the same act, and the search
+    // theme already treats them so: both put the caret here and both answer
+    // as the reader types. This watches that field rather than replacing it,
+    // for two things the search cannot do on its own. Empty and focused, the
+    // quick actions below offer the sections and the assistant. Typed, the
+    // words are mirrored onto the assistant, so a half written question
+    // survives the move from the field to the panel.
     const input = root.querySelector<HTMLInputElement>(
       'input.navbar__search-input',
     );
     const agent = root.querySelector('abdm-support-agent');
-    if (!input || !agent) return;
-    const carry = () => {
+    if (!input) return;
+    const read = () => {
+      setQuery(input.value);
       const asked = input.value.trim();
+      if (!agent) return;
       if (asked) agent.setAttribute('question', asked);
       else agent.removeAttribute('question');
     };
-    carry();
-    input.addEventListener('input', carry);
-    return () => input.removeEventListener('input', carry);
+    const onFocus = () => {
+      setFocused(true);
+      read();
+    };
+    // Late, so a click on a row below lands before the panel goes.
+    const onBlur = () => window.setTimeout(() => setFocused(false), 120);
+    input.addEventListener('input', read);
+    input.addEventListener('focus', onFocus);
+    input.addEventListener('blur', onBlur);
+    read();
+    return () => {
+      input.removeEventListener('input', read);
+      input.removeEventListener('focus', onFocus);
+      input.removeEventListener('blur', onBlur);
+    };
   }, []);
 
   return (
     <div ref={box} className="omnibox">
       <SearchBar />
-      <CommandPalette />
+      <QuickActions
+        open={focused}
+        query={query}
+        onLeave={() => setFocused(false)}
+      />
       {/* Citations are absolute against this site, because a relative
           /docs/... link is wrong on every host except this one. An absent
           api-base leaves the panel a labelled mock, which is what preview
