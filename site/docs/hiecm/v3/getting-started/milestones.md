@@ -57,4 +57,5 @@ operation lists until those shapes are transcribed.
 ## Where to go next
 
 Each milestone above links to its own section, and
-[Sandbox access](/docs/hiecm/v3/getting-started/sandbox) has the credentials they all need.
+[Sandbox access](/docs/hiecm/v3/getting-started/sandbox) has the credentials they all need. The
+exit process itself is on [Going live](./going-live).
