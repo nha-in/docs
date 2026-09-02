@@ -33,7 +33,7 @@ function guarded(body: string) {
   ].join('\n');
 }
 
-type Target = {
+type Surface = {
   id: string;
   label: string;
   /** The line the copy button yields. */
@@ -42,6 +42,18 @@ type Target = {
   link: ((base: string) => string) | null;
   note: string;
 };
+
+/**
+ * A target is one agent. Where a vendor ships more than one surface and they
+ * are set up differently, the surfaces sit under it as variants rather than
+ * as siblings in the top row: OpenAI's CLI and its chat window are one
+ * choice for a reader, then a second, smaller one.
+ */
+type Target = Surface | {id: string; label: string; variants: Surface[]};
+
+function surfacesOf(target: Target): Surface[] {
+  return 'variants' in target ? target.variants : [target];
+}
 
 const TARGETS: Target[] = [
   {
@@ -77,16 +89,33 @@ const TARGETS: Target[] = [
     note: 'Opens Cursor with the prompt in the composer. It fetches the current instructions from this site.',
   },
   {
-    // OpenAI's coding agent, which is the surface that writes code in a
-    // repository. Plain ChatGPT was here too and has gone: it is the same
-    // vendor answering in a chat window with no access to the project, so
-    // the reader who picked it got a worse version of "Any agent".
-    id: 'codex',
-    label: 'Codex',
-    command: fetchPrompt,
-    // Codex is a CLI with no URL scheme. Do not invent one.
-    link: null,
-    note: 'Paste into a Codex session. It fetches the current instructions from this site.',
+    id: 'openai',
+    label: 'OpenAI',
+    // One vendor, two surfaces, and they are not interchangeable: Codex is
+    // the agent that writes in the reader's repository, the chat window is
+    // where they paste a question. Both are here because a reader who has
+    // only ChatGPT should not leave with nothing.
+    variants: [
+      {
+        id: 'codex',
+        label: 'Codex CLI',
+        command: fetchPrompt,
+        // Codex is a CLI with no URL scheme. Do not invent one.
+        link: null,
+        note: 'Paste into a Codex session. It fetches the current instructions from this site.',
+      },
+      {
+        id: 'chatgpt',
+        label: 'ChatGPT',
+        command: fetchPrompt,
+        // https://help.openai.com/en/articles/9955102 - chatgpt.com/?q=<text>
+        // opens a new chat with the text preloaded. Nothing sends until
+        // Enter, the same as the other deeplinks here.
+        link: (base: string) =>
+          `https://chatgpt.com/?q=${encodeURIComponent(guarded(fetchPrompt(base)))}`,
+        note: 'Opens ChatGPT with the setup preloaded. It answers from this site, and writes nothing into your project.',
+      },
+    ],
   },
   {
     id: 'any',
@@ -99,10 +128,11 @@ const TARGETS: Target[] = [
 
 export default function AgentSetup(): React.ReactNode {
   const {siteConfig} = useDocusaurusContext();
-  const [target, setTarget] = useState(TARGETS[0]);
+  const [target, setTarget] = useState<Target>(TARGETS[0]);
+  const [surface, setSurface] = useState<Surface>(surfacesOf(TARGETS[0])[0]);
   const [copied, setCopied] = useState(false);
   const base = `${siteConfig.url}${siteConfig.baseUrl}`.replace(/\/+$/, '');
-  const command = target.command(base);
+  const command = surface.command(base);
 
   return (
     <aside className="agent-setup">
@@ -132,12 +162,41 @@ export default function AgentSetup(): React.ReactNode {
             )}
             onClick={() => {
               setTarget(option);
+              setSurface(surfacesOf(option)[0]);
               setCopied(false);
             }}>
             {option.label}
           </button>
         ))}
       </div>
+
+      {/* A vendor with more than one surface asks a second, smaller question:
+          which of theirs. One row of two, not four tabs in the row above,
+          because the reader picks the vendor first. */}
+      {surfacesOf(target).length > 1 && (
+        <div
+          className="skill-install__targets skill-install__targets--sub"
+          role="tablist"
+          aria-label={`${target.label} surface`}>
+          {surfacesOf(target).map((option) => (
+            <button
+              key={option.id}
+              type="button"
+              role="tab"
+              aria-selected={option.id === surface.id}
+              className={cn(
+                'skill-install__target',
+                option.id === surface.id && 'skill-install__target--active',
+              )}
+              onClick={() => {
+                setSurface(option);
+                setCopied(false);
+              }}>
+              {option.label}
+            </button>
+          ))}
+        </div>
+      )}
 
       <div className="skill-cmd">
         <code className="skill-cmd__text">{command}</code>
@@ -158,14 +217,14 @@ export default function AgentSetup(): React.ReactNode {
         </button>
       </div>
 
-      {target.link && (
-        <a className="skill-launch" href={target.link(base)}>
+      {surface.link && (
+        <a className="skill-launch" href={surface.link(base)}>
           <SquareArrowOutUpRight className="size-3.5" aria-hidden="true" />
-          Open in {target.label}
+          Open in {surface.label}
         </a>
       )}
 
-      <p className="skill-install__hint">{target.note}</p>
+      <p className="skill-install__hint">{surface.note}</p>
 
       <p className="agent-setup__mcp">
         <Database className="size-3.5" aria-hidden="true" />

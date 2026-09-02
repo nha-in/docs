@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"log/slog"
 	"net/url"
+	"regexp"
 	"strings"
 	"time"
 	"unicode/utf8"
@@ -165,6 +166,8 @@ That split matters: search_docs returning nothing about an endpoint does not mea
 search_docs returns short snippets, not whole atoms. When a hit looks like the answer, open it with get_atom before answering from it; a snippet cut at 200 characters is where half-right answers come from.
 
 The rest: decode_error for any error code or raw error body, and call it before anything else when the question carries one. related_atoms to walk from an atom you already have to its neighbours. catalogue_info for versions and coverage.
+
+Vocabulary is a lookup too. An acronym, a role, a system category or a piece of Indian health IT jargon, HMIS, LIMS, HRP, EMR, ABHA, HIP, is defined in this documentation's glossary far more often than not, and the spelling a reader uses may not be the spelling NHA chose: search before you say you do not have it, and search once more with the obvious variant before you say it a second time.
 
 JUDGING WHAT COMES BACK
 
@@ -525,8 +528,27 @@ func (s *Service) Respond(ctx context.Context, turns []Turn, page *Page, emit fu
 	}
 	onText := g.write
 
+	// Round one is written into a holding pen rather than to the reader.
+	//
+	// The model almost always calls a tool first, and text from a round that
+	// ends in a tool call is narration that gets dropped anyway, so this
+	// costs nothing in the common case. What it buys is the uncommon one: an
+	// answer produced without looking anything up, which reads exactly like a
+	// researched one and is how "I do not have a definition for HIMS" reaches
+	// a reader while the glossary entry sits in the index. Held text can
+	// still be thrown away and asked for again.
+	var firstRound strings.Builder
+	holding := true
+	onFirst := func(delta string) {
+		if holding {
+			firstRound.WriteString(delta)
+			return
+		}
+		onText(delta)
+	}
+
 	runRound := func() (Reply, error) {
-		reply, err := s.Model.Stream(ctx, system, s.Tools, msgs, s.MaxTokens, onText)
+		reply, err := s.Model.Stream(ctx, system, s.Tools, msgs, s.MaxTokens, onFirst)
 		if err != nil {
 			return reply, err
 		}
@@ -536,10 +558,30 @@ func (s *Service) Respond(ctx context.Context, turns []Turn, page *Page, emit fu
 		return reply, nil
 	}
 
+	looked := false
 	for round := 1; round <= MaxToolCalls; round++ {
 		reply, err := runRound()
 		if err != nil {
 			return err
+		}
+		if holding {
+			holding = false
+			// An answer with no tool call behind it is the model working from
+			// training rather than from this documentation. It gets one more
+			// go, told plainly to look, and the first attempt is discarded
+			// unread. One extra call, and only on a turn that skipped the
+			// tools entirely.
+			if len(reply.ToolCalls) == 0 && !looked && round < MaxToolCalls &&
+				saysItHasNothing(firstRound.String()+reply.Text) {
+				slog.Info("answer_without_lookup", "question", question)
+				msgs = append(msgs,
+					Message{Role: "assistant", Text: reply.Text},
+					Message{Role: "user", Text: lookFirst})
+				firstRound.Reset()
+				continue
+			}
+			onText(firstRound.String())
+			firstRound.Reset()
 		}
 		if len(reply.ToolCalls) == 0 {
 			// The guard holds text back until it is known to be safe, so the
@@ -567,6 +609,7 @@ func (s *Service) Respond(ctx context.Context, turns []Turn, page *Page, emit fu
 		// tool call is the proof, and it arrives after the words do, which is
 		// why this cannot be a rule on the text itself.
 		g.drop()
+		looked = true
 
 		for i := range reply.ToolCalls {
 			c := reply.ToolCalls[i]
@@ -617,6 +660,23 @@ func (s *Service) finish(sources []Source, emit func(event string, data any) err
 	}
 	return emit("done", map[string]any{})
 }
+
+// saysItHasNothing spots the answer this retry exists for: a refusal reached
+// without a single lookup. A direct answer that happens to need no tool is
+// left alone, and so is a refusal that follows a search which genuinely found
+// nothing, because by then the model has looked.
+var saysItHasNothingRe = regexp.MustCompile(`(?i)\b(?:i (?:do not|don't) have|i (?:could not|couldn't|cannot|can't) find|no (?:entry|definition|documentation|information)\b[^.]{0,30}\bfor\b|not (?:in|covered by) (?:this|the) documentation|is not documented (?:here|on this site))`)
+
+func saysItHasNothing(answer string) bool {
+	return saysItHasNothingRe.MatchString(answer)
+}
+
+// lookFirst is what the model is told when it answered from nothing. It is a
+// user turn because that is the only role Bedrock's Converse takes after an
+// assistant turn, and it names the tools rather than scolding: a model that
+// skipped them usually needs telling that a glossary entry is a lookup too,
+// not that it did wrong.
+const lookFirst = `You answered without using your tools. Look before you answer: search_docs for a term, a concept or an error, list_operations for an endpoint, decode_error for a code. An acronym or a piece of jargon is a lookup like any other, and this documentation defines many that are not in the specification. If the search genuinely returns nothing that answers the question, say so then, and say it in one line.`
 
 // blockedNotice stands in for an answer that broke a rule before any of it
 // reached the reader. It says nothing about which rule: the reader cannot
@@ -720,11 +780,21 @@ func (g *answerGuard) release(candidate, keep string, final bool) {
 		// be judged once the answer has stopped.
 		violations = append(violations, guard.CheckCodeRoute(g.question, whole)...)
 	}
-	if len(violations) > 0 {
+	for _, v := range violations {
+		if !v.Blocking {
+			// Recorded and shown. A rule about our own house style is a note
+			// for whoever writes the prompt, not a reason to hand the reader
+			// an empty panel in place of a correct answer.
+			slog.Info("answer_flagged", "rule", v.Rule, "detail", v.Detail)
+		}
+	}
+	if guard.Blocking(violations) {
 		g.blocked = true
 		g.pending.Reset()
 		for _, v := range violations {
-			slog.Warn("answer_blocked", "rule", v.Rule, "detail", v.Detail)
+			if v.Blocking {
+				slog.Warn("answer_blocked", "rule", v.Rule, "detail", v.Detail)
+			}
 		}
 		if g.released.Len() > 0 {
 			g.send("\n\n" + truncatedNotice)
