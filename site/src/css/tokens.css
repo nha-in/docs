@@ -156,15 +156,26 @@
 [data-theme='dark'] {
   --destructive: #f2b8b5;
 
-  --page: #0d0d0d;
-  --surface: #141414;
-  --surface-raised: #1c1c1c;
-  --surface-sunken: #0a0a0a;
-  --code-surface: #1c1c1c;
+  /* Material's dark theme guidance (m2.material.io/design/color/dark-theme):
+     the page sits at #121212, not pure black, so shadows stay visible and
+     large dark fields stay easy on the eye. Raised surfaces are the page with
+     a white overlay, not a separate darker palette, so elevation reads as
+     "lighter, in order" rather than as arbitrary greys. --surface is a 5%
+     overlay (roughly Material's 1dp), --surface-raised a 9% overlay (roughly
+     6dp) for the popovers and dialogs that sit above a card. --surface-sunken
+     stays a shade below the page for recessed wells (search hits, table
+     headers), the one surface that recedes rather than rises, but the step is
+     now small (3 points) instead of near-black, since it never has to carry a
+     large area. */
+  --page: #121212;
+  --surface: #1e1e1e;
+  --surface-raised: #272727;
+  --surface-sunken: #0f0f0f;
+  --code-surface: #272727;
   --border: rgb(255 255 255 / 0.08);
   --border-strong: rgb(255 255 255 / 0.14);
   /* In step with --page above, at 75%. See the note in light mode. */
-  --chrome-veil: rgb(13 13 13 / 0.75);
+  --chrome-veil: rgb(18 18 18 / 0.75);
   --hover-soft: rgb(255 255 255 / 0.05);
   --fill-soft: rgb(255 255 255 / 0.08);
 
