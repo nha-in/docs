@@ -1,72 +1,88 @@
 ---
-title: Make your first call
-sidebar_label: Make your first call
-description: Create a gateway session, read the token out of the response, and send it on every call that follows.
+title: Quickstart
+sidebar_label: Quickstart
+description: Create a gateway session and then create your first ABHA, live from this page, with your own sandbox credentials.
 verification: unverified
 source: catalogue/openapi/hiecm/v3/hiecm-gateway.yaml
 sidebar_position: 3
 covers: [shared.sandbox.first-fifteen-minutes]
 ---
 
-# Make your first call
+import Quickstart from '@site/src/components/docs/Quickstart';
 
-Your first [ABDM](/docs/hiecm/v3/getting-started/glossary#abdm) call creates a session. It
-returns the token every other call carries.
+# Quickstart
+
+Whatever you are building on [ABDM](/docs/hiecm/v3/getting-started/glossary#abdm), you
+have to be able to create an [ABHA](/docs/hiecm/v3/getting-started/glossary#abha). A
+hospital creates one at the registration desk, a lab creates one before it files a
+report, a personal health record app creates one when somebody signs up. So that is what
+you do here.
+
+Four calls, run live from this page against the sandbox: create a session, encrypt the
+Aadhaar number, request an OTP, create the account.
 
 ## Before you start
 
 Have your `clientId` and `clientSecret` in hand. If you do not,
 [get your sandbox credentials](/docs/hiecm/v3/getting-started/sandbox) first.
 
-## 1. Create a session
+You also need a sandbox test identity: an Aadhaar number issued to you for sandbox use,
+and access to the mobile number registered against it, because that is where the OTP
+goes. NHA does not publish a shared test Aadhaar number, so do not go looking for one in
+these pages.
 
-Send this, with your two credentials filled in and a fresh `REQUEST-ID` and `TIMESTAMP`.
+## What this page does with what you type
 
-```bash
-curl --request POST \
-  --url https://dev.abdm.gov.in/api/hiecm/gateway/v3/sessions \
-  --header 'REQUEST-ID: 5f7a4a1e-59ba-4c0c-9e0c-8e6b3b6e2f11' \
-  --header 'TIMESTAMP: 2026-08-25T15:51:15.339Z' \
-  --header 'X-CM-ID: sbx' \
-  --header 'Content-Type: application/json' \
-  --data '{
-  "clientId": "<CLIENT_ID_FROM_SANDBOX_REGISTRATION>",
-  "clientSecret": "<CLIENT_SECRET_FROM_SANDBOX_REGISTRATION>",
-  "grantType": "client_credentials"
-}'
-```
+The calls below go straight from your browser to NHA's hosts. There is no proxy and this
+site has no server of its own, so nothing you type is sent anywhere else and nothing is
+written to a URL.
 
-| Header | What to send |
-| --- | --- |
-| `REQUEST-ID` | A fresh UUID per request. Do not reuse one. |
-| `TIMESTAMP` | The current time in ISO 8601, in UTC. |
-| `X-CM-ID` | `sbx` on the sandbox, `abdm` in production. |
+- The **Aadhaar number** is encrypted in your browser with NHA's public key before it
+  leaves the page, and only the encrypted value is posted. The field is masked and the
+  raw number is held in the page's memory alone, which the browser discards when you
+  close the tab.
+- The **client secret** and the **OTP** are handled the same way: masked, never stored,
+  never in a URL.
+- The **access token** from step 1 is held in `sessionStorage` for this tab, so every
+  Try It console on this site can use it without you pasting it again. Closing the tab
+  ends it.
 
-*Example values shown; run it to see your own.*
+Use a sandbox test identity. Do not put a real person's Aadhaar number into a page you
+are trying out.
 
-## 2. Read the response
+<Quickstart />
 
-A session call answers `200` and returns five fields: `accessToken`, `expiresIn`,
-`refreshExpiresIn`, `refreshToken` and `tokenType`. The
-[gateway session reference](/reference/hiecm-gateway) says what each one means.
+## How this fits your product
 
-`accessToken` is the one you need next. `expiresIn` tells you when to ask for another.
+The registration desk is where most of this lands. Your intake screen either finds the
+patient's existing ABHA or creates one on the spot, which is the flow you just ran. The
+token from step 1 is not specific to ABHA creation: it is the token every later ABDM call
+carries, so whatever your system does next starts by getting one. Once the patient has an
+ABHA, records attach to it, and that is a different module.
 
-## 3. Use the token on every call
+- **Session, step 1.** Every call in every module carries this token. Mint it once, watch
+  `expiresIn`, refresh it before it lapses.
+- **Identity, [M1](/docs/hiecm/v3/milestones/m1).** Creating and verifying an ABHA at
+  intake, which is the runner above.
+- **Linking, [M2](/docs/hiecm/v3/milestones/m2).** Telling ABDM that you hold records for
+  that ABHA, and sending them when they are asked for.
+- **Reading, [M3](/docs/hiecm/v3/milestones/m3).** Requesting consent and fetching records
+  held by somebody else.
 
-Send the token as a header on every later call:
+[Your integration path](/docs/hiecm/v3/milestones) sets out which of these you need and in
+what order.
 
-```
-Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>
-```
+## If a call fails
 
-Keep sending a fresh `REQUEST-ID`, a current `TIMESTAMP` and `X-CM-ID: sbx` alongside it.
+Every step shows you the request it sent and the response it got back, including the error
+body. A 401 on the session call usually means the credentials or the `X-CM-ID` header, so
+see [Everything returns 401](/docs/hiecm/v3/troubleshooting/everything-returns-401).
 
-## What you see when it works
-
-A `200`, a body carrying `accessToken`, and a later call that no longer returns 401.
-
-If it fails, see [Everything returns 401](/docs/hiecm/v3/troubleshooting/everything-returns-401).
+A rejected `loginId` may be the encryption rather than the number. NHA's specification does
+not record which RSA padding the service expects, so the runner uses RSA-OAEP, which is the
+only RSA encryption a browser offers, and leaves the digest as a control you can change.
+[Encryption](/docs/hiecm/v3/concepts/encryption) sets out what is confirmed and what is
+not.
 
 ## Next
 
