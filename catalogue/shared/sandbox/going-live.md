@@ -10,13 +10,21 @@ summary: >
   demonstration, the functional testing and security audit, the exit
   form, and what NHA does not publish about any of it.
 sources:
+  - url: https://sandbox.abdm.gov.in/docs/integration_and_exit_process
+    status: docs-only
+    note: >
+      NHA's canonical exit process page, linked from the FAQ answer
+      below. Its own content was not directly readable at write time
+      (the page returned no body to an unauthenticated fetch), so the
+      steps here are taken from the FAQ, which points here as the
+      fuller source.
   - url: https://abdm.gov.in/FAQ
     fetched: 2026-09-02
     status: docs-only
     note: >
-      The Sandbox category, the question "What are the steps for the
-      exit process from Sandbox to Production?" and the related
-      questions on functional testing and security assessment.
+      The Sandbox category, the question "What to do when my
+      integration is completed? What are the next steps?", and the
+      related questions on functional testing and security assessment.
 verified:
   status: unverified
   against: docs-only
@@ -50,7 +58,9 @@ its own separate audit.
 
 ## What happens
 
-NHA's FAQ describes the exit process in four steps, in this order:
+NHA's FAQ describes the exit process in four steps, in this order, and links
+[NHA's own integration and exit process page](https://sandbox.abdm.gov.in/docs/integration_and_exit_process)
+as the fuller source:
 
 1. **Demonstration.** NHA's FAQ says you demonstrate the [ABDM](../glossary/abdm.md)
    functionalities you built to the ABDM integration team.
@@ -74,8 +84,8 @@ NHA rather than something published.
 You hold production credentials: a production client id and client secret, issued after the
 exit process completes. They are not the same values as your sandbox credentials.
 
-You also switch base URLs. The [M1 conventions page](/docs/hiecm/v3/api/m1/apis) records the
-sandbox and production hosts side by side. For the gateway session call, sandbox is
+You also switch base URLs. The [M1 overview page](/docs/hiecm/v3/api/m1) records the sandbox
+and production hosts side by side. For the gateway session call, sandbox is
 `https://dev.abdm.gov.in` with `X-CM-ID: sbx`, and production is `https://apis.abdm.gov.in`
 with `X-CM-ID: abdm`. For the [ABHA](../glossary/abha.md) service, sandbox is
 `https://abhasbx.abdm.gov.in/abha/api/v3/` and production is
