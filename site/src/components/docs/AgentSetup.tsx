@@ -177,7 +177,7 @@ export default function AgentSetup(): React.ReactNode {
         <Database className="size-3.5" aria-hidden="true" />
         <span>
           The setup also connects the{' '}
-          <Link to="/docs/hiecm/v3/getting-started/mcp">Docs MCP server</Link>: the live
+          <Link to="/docs/hiecm/v3/getting-started/build-with-ai#connect-the-docs-mcp-server">Docs MCP server</Link>: the live
           version of these docs, queried by your agent as it works.
         </span>
       </p>
