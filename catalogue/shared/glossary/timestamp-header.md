@@ -27,7 +27,7 @@ verified:
   status: verified
   against: https://abhasbx.abdm.gov.in (ABHA sandbox)
   on: "2026-08-25"
-  by: recorded integration session; request and response pairs in catalogue/openapi/corrections/2026-08-26-timestamp-utc.md
+  by: recorded integration session against the ABHA sandbox, request and response pairs observed
 related:
   errors: [hiecm.error.abdm-2402, hiecm.error.abdm-1016]
 ---
@@ -44,8 +44,8 @@ your clock has drifted too far from its own.
 It is present on 121 of the 123 requests in NHA's own M1 collection, so
 treat it as required everywhere.
 
-An earlier version of this entry said IST, the +05:30 offset. That was
-wrong, and observation refuted it. On 25 August 2026, against
+The value is UTC with the `Z` suffix, not IST: an IST offset reads as
+clock drift and is rejected. Observed on 25 August 2026, against
 `https://abhasbx.abdm.gov.in`:
 
 - `2026-08-25T21:12:40.588+05:30`, IST offset with milliseconds, was

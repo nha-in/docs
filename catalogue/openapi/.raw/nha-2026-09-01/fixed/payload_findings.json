@@ -1,0 +1,227 @@
+[
+ [
+  "abha-api-v3",
+  "POST /abha/api/v3/enrollment/enrol/byAadhaar",
+  "request",
+  "examples[Create ABHA via Biometrics- Aadhaar Faceauth]",
+  "authData",
+  "{'authMethods': ['face_auth'], 'face': {'txnId': '881f2bf5-7377-4067-b50e-1e6ff100b3cc', 'aadhaar': '{{encrypt",
+  1
+ ],
+ [
+  "abha-api-v3",
+  "POST /abha/api/v3/enrollment/enrol/byAadhaar",
+  "request",
+  "examples[Create ABHA via Biometrics- Aadhaar IRIS]",
+  "authData",
+  "{'authMethods': ['iris'], 'iris': {'aadhaar': '{{encrypted aadhaar number}}', 'pid': '{{PID}}', 'mobile': '{{m",
+  1
+ ],
+ [
+  "abha-api-v3",
+  "POST /abha/api/v3/enrollment/enrol/abha-address",
+  "request",
+  "examples[ABHA Address]",
+  "preferred",
+  "1 is not of type 'string'",
+  1
+ ],
+ [
+  "abha-api-v3",
+  "POST /abha/api/v3/enrollment/enrol/auth/init",
+  "request",
+  "examples[Init Transaction]",
+  "<root>",
+  "'authData' is a required property",
+  1
+ ],
+ [
+  "abha-api-v3",
+  "POST /abha/api/v3/profile/login/request/otp",
+  "response 404",
+  "examples[Retrieval of Enrolment-Mobile not found]",
+  "error",
+  "{'code': 'ABDM-1115', 'message': 'The mobile number you have entered does not match with any of the records. P",
+  1
+ ],
+ [
+  "abha-api-v3",
+  "POST /abha/api/v3/profile/login/verify",
+  "request",
+  "examples[Verify Login via Password]",
+  "authData",
+  "'otp' is a required property",
+  1
+ ],
+ [
+  "abha-api-v3",
+  "POST /abha/api/v3/profile/login/verify",
+  "request",
+  "examples[Verify Login via Biometric - Face]",
+  "authData",
+  "'otp' is a required property",
+  1
+ ],
+ [
+  "abha-api-v3",
+  "POST /abha/api/v3/profile/login/verify",
+  "request",
+  "examples[Verify Login via Biometric - FingerPrint]",
+  "authData",
+  "'otp' is a required property",
+  1
+ ],
+ [
+  "abha-api-v3",
+  "POST /abha/api/v3/profile/login/verify",
+  "request",
+  "examples[Verify Login via Biometric - IRIS]",
+  "authData",
+  "'otp' is a required property",
+  1
+ ],
+ [
+  "abha-api-v3",
+  "POST /abha/api/v3/profile/account/verify",
+  "request",
+  "examples[Deactivate ABHA - Verify Password]",
+  "authData",
+  "'otp' is a required property",
+  1
+ ],
+ [
+  "abha-api-v3",
+  "POST /abha/api/v3/profile/account/verify",
+  "request",
+  "examples[Delete ABHA via Password- Verify Password]",
+  "authData",
+  "'otp' is a required property",
+  1
+ ],
+ [
+  "abha-api-v3",
+  "POST /abha/api/v3/profile/account/verify",
+  "request",
+  "examples[PASSWORD_VERIFY_OTP]",
+  "<root>",
+  "'reasons' is a required property",
+  1
+ ],
+ [
+  "abha-api-v3",
+  "POST /abha/api/v3/profile/account/verify",
+  "request",
+  "examples[Re-KYC - Verify OTP]",
+  "<root>",
+  "'reasons' is a required property",
+  1
+ ],
+ [
+  "abha-api-v3",
+  "POST /abha/api/v3/profile/account/verify",
+  "request",
+  "examples[Update Mobile- Verify OTP]",
+  "<root>",
+  "'reasons' is a required property",
+  1
+ ],
+ [
+  "abha-api-v3",
+  "POST /abha/api/v3/profile/account/verify",
+  "request",
+  "examples[Update Email-Verify OTP]",
+  "<root>",
+  "'reasons' is a required property",
+  1
+ ],
+ [
+  "abha-api-v3",
+  "POST /abha/api/v3/profile/account/verify",
+  "request",
+  "examples[PASSWORD_SET]",
+  "<root>",
+  "'reasons' is a required property",
+  2
+ ],
+ [
+  "abha-api-v3",
+  "POST /abha/api/v3/profile/account/verify",
+  "request",
+  "examples[PASSWORD_UPDATE-OLD PASSWORD]",
+  "<root>",
+  "'reasons' is a required property",
+  2
+ ],
+ [
+  "abha-api-v3",
+  "PATCH /abha/api/v3/profile/account",
+  "request",
+  "examples[Update User Profile Photo]",
+  "<root>",
+  "'abhaNumber' is a required property",
+  4
+ ],
+ [
+  "abha-api-v3",
+  "POST /abha/api/v3/profile/benefit/linkAndDelink",
+  "request",
+  "examples[LINK or DELINK via X-token]",
+  "<root>",
+  "'loginHint' is a required property",
+  2
+ ],
+ [
+  "abha-api-v3",
+  "POST /abha/api/v3/profile/benefit/search",
+  "response 400",
+  "examples[Invalid Benefit Name]",
+  "<root>",
+  "{'message': 'Invalid Benefit Name,', 'timestamp': '2025-01-03T00:25:29.000Z'} is not of type 'array'",
+  1
+ ],
+ [
+  "abha-api-v3",
+  "POST /abha/api/v3/phr/web/login/abha/search",
+  "response 200",
+  "examples[ABHA search]",
+  "message",
+  "None is not of type 'string'",
+  1
+ ],
+ [
+  "abha-api-v3",
+  "POST /abha/api/v3/phr/web/login/abha/request/otp",
+  "response 400",
+  "examples[ABHA Address Verification via Aadhaar OTP-User Not found]",
+  "<root>",
+  "[{'code': 'ABDM-1211', 'message': 'User not found.'}] is not of type 'object'",
+  1
+ ],
+ [
+  "abha-api-v3",
+  "POST /abha/api/v3/phr/web/login/abha/request/otp",
+  "response 400",
+  "examples[ABHA Address Verification via Aadhaar OTP-Invaild abha address]",
+  "<root>",
+  "[{'code': 'ABDM-1006', 'message': 'Invalid Abha Address'}] is not of type 'object'",
+  1
+ ],
+ [
+  "abha-api-v3",
+  "POST /abha/api/v3/phr/web/login/abha/request/otp",
+  "response 400",
+  "examples[ABHA Address Verification via Aadhaar OTP-Invaild Otp System]",
+  "<root>",
+  "[{'code': 'ABDM-1006', 'message': 'Invalid Otp System'}] is not of type 'object'",
+  1
+ ],
+ [
+  "phr-api",
+  "POST /abha/api/v3/phr/app/login/verify",
+  "request",
+  "examples[Login Verify - Password]",
+  "authData",
+  "'otp' is a required property",
+  1
+ ]
+]

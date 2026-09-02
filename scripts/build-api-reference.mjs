@@ -7,7 +7,7 @@
 // position}); the filename stem is the Scalar route (/reference/<stem>).
 // Everything under .../api/<module>/endpoints, the generated reference pages
 // and site/src/data/api are build outputs. Edit the specs, not the output.
-import {existsSync, readFileSync, writeFileSync, mkdirSync, rmSync} from 'node:fs';
+import {existsSync, readFileSync, writeFileSync, mkdirSync, rmSync, readdirSync} from 'node:fs';
 import {join, dirname} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {parse} from 'yaml';
@@ -81,6 +81,13 @@ function deref(spec, node, depth = 0) {
   return out;
 }
 
+// The identifiers ABDM never takes raw. In an M1 request body each is RSA
+// encrypted against NHA's public key before it is sent, so the try-it console
+// takes the raw value and encrypts it in the browser. This list scopes that
+// treatment; `fields()` only ever walks request bodies, so a `loginId` in a
+// response is never in this set. See catalogue/hiecm/concepts/input-encryption.
+const ENCRYPTED_FIELDS = new Set(['loginId', 'aadhaar', 'otpValue', 'password']);
+
 /** Flatten a JSON schema into rows a table can render, two levels deep. */
 function fields(schema, prefix = '', depth = 0) {
   if (!schema || depth > 3) return [];
@@ -98,6 +105,7 @@ function fields(schema, prefix = '', depth = 0) {
       description: property.description ?? '',
       enum: property.enum,
       format: property.format,
+      encrypted: property['x-abdm-encrypted'] === true || ENCRYPTED_FIELDS.has(name),
     });
     const child = property.type === 'array' ? property.items : property;
     if (child?.properties) {
@@ -187,6 +195,28 @@ const tree = listSpecTree();
 const sidebar = [];
 let count = 0;
 
+// The journey order is defined in exactly one place: each flow atom's
+// `related.endpoints` list, which names its endpoint atoms in execution
+// order. Operations link back to their atom via `x-abdm-atom`, so the
+// sidebar can follow the journey without the order being copied anywhere.
+// First flow to name an atom wins; an atom no flow names keeps spec order.
+const flowStep = new Map();
+const catalogueDir = join(root, 'catalogue');
+for (const platform of readdirSync(catalogueDir, {withFileTypes: true})) {
+  if (!platform.isDirectory()) continue;
+  const flowsDir = join(catalogueDir, platform.name, 'flows');
+  if (!existsSync(flowsDir)) continue;
+  for (const file of readdirSync(flowsDir)) {
+    if (!file.endsWith('.md')) continue;
+    const match = readFileSync(join(flowsDir, file), 'utf8').match(/endpoints: \[([^\]]+)\]/);
+    if (!match) continue;
+    match[1].split(',').forEach((id, index) => {
+      const atom = id.trim();
+      if (!flowStep.has(atom)) flowStep.set(atom, index + 1);
+    });
+  }
+}
+
 for (const {platform, version, files} of tree) {
   // A spec places itself: info.x-portal names the module folder, the sidebar
   // label and the order; the filename stem is the Scalar route.
@@ -252,7 +282,12 @@ for (const {platform, version, files} of tree) {
       const responses = Object.entries(op.responses ?? {}).map(([status, response]) => ({
         status,
         description: response.description ?? '',
-        example: firstExample(response.content),
+        // An explicit example wins; otherwise the response schema supplies
+        // one, same as the request side, so a status with a documented body
+        // never renders as prose alone.
+        example:
+          firstExample(response.content) ??
+          sampleFromSchema(response.content?.['application/json']?.schema),
       }));
 
       const id = op.operationId ?? slug(`${entry.method}-${entry.path}`);
@@ -337,8 +372,20 @@ for (const {platform, version, files} of tree) {
         id: `${platform}/${version}/api/${module.dir}/endpoints/${name}`,
         label: operation.summary,
         className: `api-method api-method--${operation.method.toLowerCase()}`,
+        // Journey position within the use case, straight from the flow
+        // atom that names this operation's atom. Not stored in the spec:
+        // the flow atom is the one place the order is defined.
+        step: flowStep.get(op['x-abdm-atom']) ?? Infinity,
       });
       count += 1;
+    }
+
+    // Within a use case the reader walks a journey, so annotated steps come
+    // first in their stated order; unannotated operations keep the spec's
+    // own order after them. The sort is stable, so ties do not reshuffle.
+    for (const items of byTag.values()) {
+      items.sort((a, b) => a.step - b.step);
+      for (const item of items) delete item.step;
     }
 
     // The module folder is a sidebar category. Its label and order come from

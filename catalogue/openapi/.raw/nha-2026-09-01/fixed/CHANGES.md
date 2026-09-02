@@ -1,0 +1,5331 @@
+# Tier-1 fixes applied to the ABDM specs
+
+Originals are unmodified in `abha/`, `hiecm/`, `phr/`. These are the edits made to the copies in `fixed/`.
+
+Every change is a case where the spec contradicted itself and only one
+resolution was possible. No behavioural or semantic decisions were made:
+error-code semantics, timestamp encoding, and the truncated key material
+are all left as-is.
+
+| Class | Count |
+|---|---|
+| A1 unparseable placeholder quoted | 4 |
+| A10 enum example corrected | 3 |
+| A11 duplicate operationId disambiguated | 22 |
+| A13 header name normalised | 6 |
+| A2 bare datetime scalar quoted | 13 |
+| A3 example whitespace stripped | 613 |
+| A4 error code integer->string | 25 |
+| A5 string->array (scope/authMethods) | 7 |
+| A6i items-level example de-listed | 1 |
+| A7 mis-indented example -> description | 3 |
+| A8 trailing period removed | 2 |
+| A9 malformed UUID repaired | 9 |
+| **Total** | **708** |
+
+
+## A1 unparseable placeholder quoted (4)
+
+- `abha-api-v3.yaml:1594`
+  - before: `example: { ? { txnId } }`
+  - after:  `example: '{{txnId}}'`
+- `abha-api-v3.yaml:1597`
+  - before: `example: { ? { abhaAddress } }`
+  - after:  `example: '{{abhaAddress}}'`
+- `phr-api.yaml:10209`
+  - before: `example: {{profile-photo}}`
+  - after:  `example: '{{profile-photo}}'`
+- `phr-api.yaml:10235`
+  - before: `profilePhoto: {{profile-photo}}`
+  - after:  `profilePhoto: '{{profile-photo}}'`
+
+## A10 enum example corrected (3)
+
+- `consent-management-data-flow.yaml:1132`
+  - before: `example: mimetype of the content.`
+  - after:  `example: application/fhir+json`
+- `consent-management-data-flow.yaml:4892`
+  - before: `Prescription, DiagnosticReport, OPConsultation, DischargeSummary, ImmunizationRecord, HealthDocumentRecord, WellnessRecord,Invoice`
+  - after:  `example: Prescription`
+- `consent-management-data-flow.yaml:5357`
+  - before: `Prescription, DiagnosticReport, OPConsultation, DischargeSummary, ImmunizationRecord, HealthDocumentRecord, WellnessRecord,Invoice`
+  - after:  `example: Prescription`
+
+## A11 duplicate operationId disambiguated (22)
+
+- `consent-management-data-flow.yaml:1802`
+  - before: `operationId: abdm-consent-management 3`
+  - after:  `operationId: abdm-consent-management 3 (2)`
+- `consent-management-data-flow.yaml:2322`
+  - before: `operationId: abdm-consent-management 3`
+  - after:  `operationId: abdm-consent-management 3 (3)`
+- `consent-management-data-flow.yaml:2533`
+  - before: `operationId: abdm-consent-management 5`
+  - after:  `operationId: abdm-consent-management 5 (2)`
+- `consent-management-data-flow.yaml:2694`
+  - before: `operationId: consent-management 6`
+  - after:  `operationId: consent-management 6 (2)`
+- `consent-management-data-flow.yaml:3953`
+  - before: `operationId: abdm-consent-management 1`
+  - after:  `operationId: abdm-consent-management 1 (2)`
+- `consent-management-data-flow.yaml:4297`
+  - before: `operationId: abdm-consent-management 2`
+  - after:  `operationId: abdm-consent-management 2 (2)`
+- `consent-management-data-flow.yaml:4468`
+  - before: `operationId: abdm-consent-management 3`
+  - after:  `operationId: abdm-consent-management 3 (4)`
+- `consent-management-data-flow.yaml:5067`
+  - before: `operationId: abdm-consent-management 5`
+  - after:  `operationId: abdm-consent-management 5 (3)`
+- `consent-management-data-flow.yaml:5957`
+  - before: `operationId: abdm-consent-management 6`
+  - after:  `operationId: abdm-consent-management 6 (2)`
+- `scan-and-pay.yaml:530`
+  - before: `operationId: patient-share 1`
+  - after:  `operationId: patient-share 1 (2)`
+- `scan-and-pay.yaml:694`
+  - before: `operationId: scan-gateway 2`
+  - after:  `operationId: scan-gateway 2 (2)`
+- `scan-and-pay.yaml:1378`
+  - before: `operationId: patient-share 2`
+  - after:  `operationId: patient-share 2 (2)`
+- `scan-and-pay.yaml:1492`
+  - before: `operationId: scan-gateway 2`
+  - after:  `operationId: scan-gateway 2 (3)`
+- `scan-and-pay.yaml:1734`
+  - before: `operationId: abdm-patient-share 1`
+  - after:  `operationId: abdm-patient-share 1 (2)`
+- `scan-and-pay.yaml:2030`
+  - before: `operationId: patient-share 2`
+  - after:  `operationId: patient-share 2 (3)`
+- `scan-and-pay.yaml:2213`
+  - before: `operationId: abdm-patient-share 1`
+  - after:  `operationId: abdm-patient-share 1 (3)`
+- `scan-and-pay.yaml:2462`
+  - before: `operationId: patient-share 2`
+  - after:  `operationId: patient-share 2 (4)`
+- `scan-and-pay.yaml:2687`
+  - before: `operationId: patient-share 2`
+  - after:  `operationId: patient-share 2 (5)`
+- `scan-and-pay.yaml:2832`
+  - before: `operationId: scan-gateway 2`
+  - after:  `operationId: scan-gateway 2 (4)`
+- `scan-and-pay.yaml:3075`
+  - before: `operationId: abdm-patient-share 1`
+  - after:  `operationId: abdm-patient-share 1 (4)`
+- `scan-and-pay.yaml:3274`
+  - before: `operationId: patient-share 2`
+  - after:  `operationId: patient-share 2 (6)`
+- `subscription.yaml:3346`
+  - before: `operationId: subscription-phr 6`
+  - after:  `operationId: subscription-phr 6 (2)`
+
+## A13 header name normalised (6)
+
+- `abha-api-v3.yaml:6025`
+  - before: `- name: X-Token`
+  - after:  `- name: X-token`
+- `abha-api-v3.yaml:6144`
+  - before: `- name: BENEFIT_NAME`
+  - after:  `- name: Benefit-Name`
+- `abha-api-v3.yaml:6311`
+  - before: `- name: BENEFIT_NAME`
+  - after:  `- name: Benefit-Name`
+- `abha-api-v3.yaml:7650`
+  - before: `name: 'BENEFIT NAME'`
+  - after:  `name: Benefit-Name`
+- `abha-api-v3.yaml:7770`
+  - before: `name: 'BENEFIT NAME'`
+  - after:  `name: Benefit-Name`
+- `phr-api.yaml:9659`
+  - before: `- name: X-Token`
+  - after:  `- name: X-token`
+
+## A2 bare datetime scalar quoted (13)
+
+- `abha-api-v3.yaml:1500`
+  - before: `example: 2024-05-10 12:01:22`
+  - after:  `example: '2024-05-10 12:01:22'`
+- `abha-api-v3.yaml:1619`
+  - before: `example: 2024-05-10 12:00:14`
+  - after:  `example: '2024-05-10 12:00:14'`
+- `abha-api-v3.yaml:2829`
+  - before: `timestamp: 2024-05-10 11:16:16`
+  - after:  `timestamp: '2024-05-10 11:16:16'`
+- `abha-api-v3.yaml:2833`
+  - before: `timestamp: 2024-05-10 11:16:16`
+  - after:  `timestamp: '2024-05-10 11:16:16'`
+- `abha-api-v3.yaml:5621`
+  - before: `example: 2023-01-11 00:14:02`
+  - after:  `example: '2023-01-11 00:14:02'`
+- `abha-api-v3.yaml:5967`
+  - before: `timestamp: 2024-05-10 14:53:18`
+  - after:  `timestamp: '2024-05-10 14:53:18'`
+- `abha-api-v3.yaml:6383`
+  - before: `timestamp: 2025-01-03 00:10:54`
+  - after:  `timestamp: '2025-01-03 00:10:54'`
+- `abha-api-v3.yaml:6387`
+  - before: `timestamp: 2025-01-03 00:14:46`
+  - after:  `timestamp: '2025-01-03 00:14:46'`
+- `abha-api-v3.yaml:6391`
+  - before: `timestamp: 2025-01-03 00:15:58`
+  - after:  `timestamp: '2025-01-03 00:15:58'`
+- `abha-api-v3.yaml:6395`
+  - before: `timestamp: 2025-01-03 00:25:29`
+  - after:  `timestamp: '2025-01-03 00:25:29'`
+- `abha-api-v3.yaml:7586`
+  - before: `timestamp: 2024-05-10 14:53:18`
+  - after:  `timestamp: '2024-05-10 14:53:18'`
+- `scan-and-pay.yaml:3513`
+  - before: `example: 2024-07-13T07:30:10.186Z`
+  - after:  `example: '2024-07-13T07:30:10.186Z'`
+- `scan-and-pay.yaml:3520`
+  - before: `example: 2025-02-18T08:30:50.189Z`
+  - after:  `example: '2025-02-18T08:30:50.189Z'`
+
+## A3 example whitespace stripped (613)
+
+- `abha-api-v3.yaml:3419`
+  - before: `- code: 'ABDM-9999: '`
+  - after:  `- code: 'ABDM-9999:'`
+- `abha-api-v3.yaml:3589`
+  - before: `code: '900901 '`
+  - after:  `code: '900901'`
+- `abha-api-v3.yaml:3614`
+  - before: `code: 'ABDM-1114 '`
+  - after:  `code: 'ABDM-1114'`
+- `abha-api-v3.yaml:3619`
+  - before: `code: 'ABDM-1114 '`
+  - after:  `code: 'ABDM-1114'`
+- `abha-api-v3.yaml:3624`
+  - before: `code: 'code '`
+  - after:  `code: 'code'`
+- `abha-api-v3.yaml:5258`
+  - before: `example: ' कैलास कैलास शेळके'`
+  - after:  `example: 'कैलास कैलास शेळके'`
+- `abha-api-v3.yaml:5417`
+  - before: `code: 'ABDM-1030: '`
+  - after:  `code: 'ABDM-1030:'`
+- `abha-api-v3.yaml:5422`
+  - before: `code: 'ABDM-1016: '`
+  - after:  `code: 'ABDM-1016:'`
+- `abha-api-v3.yaml:6668`
+  - before: `code: 'ABDM-1030: '`
+  - after:  `code: 'ABDM-1030:'`
+- `abha-api-v3.yaml:6823`
+  - before: `- code: 'ABDM-1006: '`
+  - after:  `- code: 'ABDM-1006:'`
+- `abha-api-v3.yaml:6828`
+  - before: `- code: 'ABDM-1006: '`
+  - after:  `- code: 'ABDM-1006:'`
+- `abha-api-v3.yaml:6905`
+  - before: `example: 'txnId '`
+  - after:  `example: 'txnId'`
+- `abha-api-v3.yaml:6908`
+  - before: `example: '{{encryptedOtpValue}} '`
+  - after:  `example: '{{encryptedOtpValue}}'`
+- `abha-api-v3.yaml:6918`
+  - before: `example: 'txnId '`
+  - after:  `example: 'txnId'`
+- `abha-api-v3.yaml:6921`
+  - before: `example: '{{faceAuthPid}} '`
+  - after:  `example: '{{faceAuthPid}}'`
+- `abha-api-v3.yaml:6931`
+  - before: `example: 'txnId '`
+  - after:  `example: 'txnId'`
+- `abha-api-v3.yaml:6934`
+  - before: `example: '{{faceAuthPid}} '`
+  - after:  `example: '{{faceAuthPid}}'`
+- `abha-api-v3.yaml:6944`
+  - before: `example: 'txnId '`
+  - after:  `example: 'txnId'`
+- `abha-api-v3.yaml:6947`
+  - before: `example: '{{irisAuthPid}} '`
+  - after:  `example: '{{irisAuthPid}}'`
+- `abha-api-v3.yaml:7195`
+  - before: `- code: 'ABDM-9999: '`
+  - after:  `- code: 'ABDM-9999:'`
+- `abha-api-v3.yaml:7200`
+  - before: `- code: 'ABDM-9999: '`
+  - after:  `- code: 'ABDM-9999:'`
+- `abha-api-v3.yaml:7205`
+  - before: `- code: 'ABDM-9999: '`
+  - after:  `- code: 'ABDM-9999:'`
+- `abha-api-v3.yaml:7210`
+  - before: `- code: 'ABDM-1204: '`
+  - after:  `- code: 'ABDM-1204:'`
+- `abha-api-v3.yaml:7215`
+  - before: `- code: 'ABDM-1204: '`
+  - after:  `- code: 'ABDM-1204:'`
+- `abha-api-v3.yaml:7216`
+  - before: `message: 'UIDAI Error code:300 : Biometric data did not match. '`
+  - after:  `message: 'UIDAI Error code:300 : Biometric data did not match.'`
+- `abha-api-v3.yaml:7416`
+  - before: `- code: 'ABDM-1006: '`
+  - after:  `- code: 'ABDM-1006:'`
+- `abha-api-v3.yaml:7504`
+  - before: `- code: 'ABDM-1006: '`
+  - after:  `- code: 'ABDM-1006:'`
+- `abha-api-v3.yaml:7727`
+  - before: `code: 'ABDM-1030: '`
+  - after:  `code: 'ABDM-1030:'`
+- `abha-api-v3.yaml:7732`
+  - before: `code: 'ABDM-1016: '`
+  - after:  `code: 'ABDM-1016:'`
+- `abha-api-v3.yaml:7812`
+  - before: `example: "ABDM-1013 "`
+  - after:  `example: "ABDM-1013"`
+- `abha-api-v3.yaml:7869`
+  - before: `code: 'ABDM-1030: '`
+  - after:  `code: 'ABDM-1030:'`
+- `abha-api-v3.yaml:7874`
+  - before: `code: 'ABDM-1016: '`
+  - after:  `code: 'ABDM-1016:'`
+- `abha-api-v3.yaml:7983`
+  - before: `code: 'ABDM-1030: '`
+  - after:  `code: 'ABDM-1030:'`
+- `abha-api-v3.yaml:7988`
+  - before: `code: 'ABDM-1016: '`
+  - after:  `code: 'ABDM-1016:'`
+- `abha-api-v3.yaml:8111`
+  - before: `example: "ABDM-1016:, ABDM-1030: "`
+  - after:  `example: "ABDM-1016:, ABDM-1030:"`
+- `abha-api-v3.yaml:8120`
+  - before: `code: 'ABDM-1016: '`
+  - after:  `code: 'ABDM-1016:'`
+- `abha-api-v3.yaml:8126`
+  - before: `code: 'ABDM-1030: '`
+  - after:  `code: 'ABDM-1030:'`
+- `abha-api-v3.yaml:8187`
+  - before: `example: "ABDM-1016: "`
+  - after:  `example: "ABDM-1016:"`
+- `abha-api-v3.yaml:8196`
+  - before: `code: 'ABDM-1016: '`
+  - after:  `code: 'ABDM-1016:'`
+- `abha-api-v3.yaml:8201`
+  - before: `code: 'ABDM-1030: '`
+  - after:  `code: 'ABDM-1030:'`
+- `abha-api-v3.yaml:8223`
+  - before: `code: '900902 '`
+  - after:  `code: '900902'`
+- `consent-management-data-flow.yaml:419`
+  - before: `example: " Access Denied"`
+  - after:  `example: "Access Denied"`
+- `consent-management-data-flow.yaml:435`
+  - before: `example: "ABDM-1001: "`
+  - after:  `example: "ABDM-1001:"`
+- `consent-management-data-flow.yaml:596`
+  - before: `code: "ABDM-9999: "`
+  - after:  `code: "ABDM-9999:"`
+- `consent-management-data-flow.yaml:599`
+  - before: `code: "ABDM-9999: "`
+  - after:  `code: "ABDM-9999:"`
+- `consent-management-data-flow.yaml:602`
+  - before: `code: "ABDM-9999: "`
+  - after:  `code: "ABDM-9999:"`
+- `consent-management-data-flow.yaml:628`
+  - before: `example: " Access Denied"`
+  - after:  `example: "Access Denied"`
+- `consent-management-data-flow.yaml:644`
+  - before: `example: "ABDM-1001: "`
+  - after:  `example: "ABDM-1001:"`
+- `consent-management-data-flow.yaml:1532`
+  - before: `code: "ABDM-9999: "`
+  - after:  `code: "ABDM-9999:"`
+- `consent-management-data-flow.yaml:1535`
+  - before: `code: "ABDM-9999: "`
+  - after:  `code: "ABDM-9999:"`
+- `consent-management-data-flow.yaml:1538`
+  - before: `code: "ABDM-9999: "`
+  - after:  `code: "ABDM-9999:"`
+- `consent-management-data-flow.yaml:1541`
+  - before: `code: "ABDM-9999: "`
+  - after:  `code: "ABDM-9999:"`
+- `consent-management-data-flow.yaml:1544`
+  - before: `code: "ABDM-9999: "`
+  - after:  `code: "ABDM-9999:"`
+- `consent-management-data-flow.yaml:1569`
+  - before: `example: " Access Denied"`
+  - after:  `example: "Access Denied"`
+- `consent-management-data-flow.yaml:1585`
+  - before: `example: "ABDM-1001: "`
+  - after:  `example: "ABDM-1001:"`
+- `consent-management-data-flow.yaml:1743`
+  - before: `example: " Access Denied"`
+  - after:  `example: "Access Denied"`
+- `consent-management-data-flow.yaml:1759`
+  - before: `example: "ABDM-1001: "`
+  - after:  `example: "ABDM-1001:"`
+- `consent-management-data-flow.yaml:1876`
+  - before: `example: "ABDM-9999: "`
+  - after:  `example: "ABDM-9999:"`
+- `consent-management-data-flow.yaml:1903`
+  - before: `example: " Access Denied"`
+  - after:  `example: "Access Denied"`
+- `consent-management-data-flow.yaml:1919`
+  - before: `example: "ABDM-1001: "`
+  - after:  `example: "ABDM-1001:"`
+- `consent-management-data-flow.yaml:2091`
+  - before: `example: " Access Denied"`
+  - after:  `example: "Access Denied"`
+- `consent-management-data-flow.yaml:2107`
+  - before: `example: "ABDM-1001: "`
+  - after:  `example: "ABDM-1001:"`
+- `consent-management-data-flow.yaml:2263`
+  - before: `example: " Access Denied"`
+  - after:  `example: "Access Denied"`
+- `consent-management-data-flow.yaml:2279`
+  - before: `example: "ABDM-1001: "`
+  - after:  `example: "ABDM-1001:"`
+- `consent-management-data-flow.yaml:2443`
+  - before: `code: "ABDM-9999: "`
+  - after:  `code: "ABDM-9999:"`
+- `consent-management-data-flow.yaml:2446`
+  - before: `code: "ABDM-9999: "`
+  - after:  `code: "ABDM-9999:"`
+- `consent-management-data-flow.yaml:2449`
+  - before: `code: "ABDM-9999: "`
+  - after:  `code: "ABDM-9999:"`
+- `consent-management-data-flow.yaml:2474`
+  - before: `example: " Access Denied"`
+  - after:  `example: "Access Denied"`
+- `consent-management-data-flow.yaml:2490`
+  - before: `example: "ABDM-1001: "`
+  - after:  `example: "ABDM-1001:"`
+- `consent-management-data-flow.yaml:2608`
+  - before: `example: "ABDM-9999: "`
+  - after:  `example: "ABDM-9999:"`
+- `consent-management-data-flow.yaml:2635`
+  - before: `example: " Access Denied"`
+  - after:  `example: "Access Denied"`
+- `consent-management-data-flow.yaml:2651`
+  - before: `example: "ABDM-1001: "`
+  - after:  `example: "ABDM-1001:"`
+- `consent-management-data-flow.yaml:3101`
+  - before: `example: " Access Denied"`
+  - after:  `example: "Access Denied"`
+- `consent-management-data-flow.yaml:3117`
+  - before: `example: "ABDM-1001: "`
+  - after:  `example: "ABDM-1001:"`
+- `consent-management-data-flow.yaml:4204`
+  - before: `code: "ABDM-9999: "`
+  - after:  `code: "ABDM-9999:"`
+- `consent-management-data-flow.yaml:4207`
+  - before: `code: "ABDM-9999: "`
+  - after:  `code: "ABDM-9999:"`
+- `consent-management-data-flow.yaml:4210`
+  - before: `code: "ABDM-9999: "`
+  - after:  `code: "ABDM-9999:"`
+- `consent-management-data-flow.yaml:4213`
+  - before: `code: "ABDM-9999: "`
+  - after:  `code: "ABDM-9999:"`
+- `consent-management-data-flow.yaml:4238`
+  - before: `example: " Access Denied"`
+  - after:  `example: "Access Denied"`
+- `consent-management-data-flow.yaml:4254`
+  - before: `example: "ABDM-1001: "`
+  - after:  `example: "ABDM-1001:"`
+- `consent-management-data-flow.yaml:4382`
+  - before: `example: "ABDM-1065: "`
+  - after:  `example: "ABDM-1065:"`
+- `consent-management-data-flow.yaml:4409`
+  - before: `example: " Access Denied"`
+  - after:  `example: "Access Denied"`
+- `consent-management-data-flow.yaml:4425`
+  - before: `example: "ABDM-1001: "`
+  - after:  `example: "ABDM-1001:"`
+- `consent-management-data-flow.yaml:4554`
+  - before: `example: "ABDM-1080: "`
+  - after:  `example: "ABDM-1080:"`
+- `consent-management-data-flow.yaml:4581`
+  - before: `example: " Access Denied"`
+  - after:  `example: "Access Denied"`
+- `consent-management-data-flow.yaml:4597`
+  - before: `example: "ABDM-1001: "`
+  - after:  `example: "ABDM-1001:"`
+- `consent-management-data-flow.yaml:5009`
+  - before: `example: " Access Denied"`
+  - after:  `example: "Access Denied"`
+- `consent-management-data-flow.yaml:5025`
+  - before: `example: "ABDM-1001: "`
+  - after:  `example: "ABDM-1001:"`
+- `consent-management-data-flow.yaml:5456`
+  - before: `example: " Access Denied"`
+  - after:  `example: "Access Denied"`
+- `consent-management-data-flow.yaml:5472`
+  - before: `example: "ABDM-1001: "`
+  - after:  `example: "ABDM-1001:"`
+- `consent-management-data-flow.yaml:5900`
+  - before: `example: " Access Denied"`
+  - after:  `example: "Access Denied"`
+- `consent-management-data-flow.yaml:5916`
+  - before: `example: "ABDM-1001: "`
+  - after:  `example: "ABDM-1001:"`
+- `consent-management-data-flow.yaml:6360`
+  - before: `example: " Access Denied"`
+  - after:  `example: "Access Denied"`
+- `consent-management-data-flow.yaml:6376`
+  - before: `example: "ABDM-1001: "`
+  - after:  `example: "ABDM-1001:"`
+- `consent-management-data-flow.yaml:6836`
+  - before: `example: " Access Denied"`
+  - after:  `example: "Access Denied"`
+- `consent-management-data-flow.yaml:6852`
+  - before: `example: "ABDM-1001: "`
+  - after:  `example: "ABDM-1001:"`
+- `consent-management-data-flow.yaml:7216`
+  - before: `code: "ABDM-9999: "`
+  - after:  `code: "ABDM-9999:"`
+- `consent-management-data-flow.yaml:7219`
+  - before: `code: "ABDM-9999: "`
+  - after:  `code: "ABDM-9999:"`
+- `consent-management-data-flow.yaml:7222`
+  - before: `code: "ABDM-9999: "`
+  - after:  `code: "ABDM-9999:"`
+- `consent-management-data-flow.yaml:7225`
+  - before: `code: "ABDM-9999: "`
+  - after:  `code: "ABDM-9999:"`
+- `consent-management-data-flow.yaml:7251`
+  - before: `example: " Access Denied"`
+  - after:  `example: "Access Denied"`
+- `consent-management-data-flow.yaml:7267`
+  - before: `example: "ABDM-1001: "`
+  - after:  `example: "ABDM-1001:"`
+- `consent-management-data-flow.yaml:7433`
+  - before: `example: " Access Denied"`
+  - after:  `example: "Access Denied"`
+- `consent-management-data-flow.yaml:7449`
+  - before: `example: "ABDM-1001: "`
+  - after:  `example: "ABDM-1001:"`
+- `consent-management-data-flow.yaml:7615`
+  - before: `example: " Access Denied"`
+  - after:  `example: "Access Denied"`
+- `consent-management-data-flow.yaml:7631`
+  - before: `example: "ABDM-1001: "`
+  - after:  `example: "ABDM-1001:"`
+- `gateway.yaml:198`
+  - before: `example: "ABDM-1001: "`
+  - after:  `example: "ABDM-1001:"`
+- `gateway.yaml:217`
+  - before: `example: "ABDM-1015: "`
+  - after:  `example: "ABDM-1015:"`
+- `gateway.yaml:253`
+  - before: `example: "ABDM-9999: "`
+  - after:  `example: "ABDM-9999:"`
+- `gateway.yaml:388`
+  - before: `example: "ABDM-1001: "`
+  - after:  `example: "ABDM-1001:"`
+- `gateway.yaml:407`
+  - before: `example: "ABDM-1015: "`
+  - after:  `example: "ABDM-1015:"`
+- `gateway.yaml:443`
+  - before: `example: "ABDM-9999: "`
+  - after:  `example: "ABDM-9999:"`
+- `gateway.yaml:532`
+  - before: `example: "ABDM-1001: "`
+  - after:  `example: "ABDM-1001:"`
+- `gateway.yaml:551`
+  - before: `example: "ABDM-1015: "`
+  - after:  `example: "ABDM-1015:"`
+- `gateway.yaml:587`
+  - before: `example: "ABDM-9999: "`
+  - after:  `example: "ABDM-9999:"`
+- `gateway.yaml:745`
+  - before: `example: "ABDM-1001: "`
+  - after:  `example: "ABDM-1001:"`
+- `gateway.yaml:764`
+  - before: `example: "ABDM-1015: "`
+  - after:  `example: "ABDM-1015:"`
+- `gateway.yaml:800`
+  - before: `example: "ABDM-9999: "`
+  - after:  `example: "ABDM-9999:"`
+- `gateway.yaml:915`
+  - before: `example: "ABDM-1001: "`
+  - after:  `example: "ABDM-1001:"`
+- `gateway.yaml:934`
+  - before: `example: "ABDM-1015: "`
+  - after:  `example: "ABDM-1015:"`
+- `gateway.yaml:970`
+  - before: `example: "ABDM-9999: "`
+  - after:  `example: "ABDM-9999:"`
+- `gateway.yaml:1080`
+  - before: `example: "ABDM-1001: "`
+  - after:  `example: "ABDM-1001:"`
+- `gateway.yaml:1099`
+  - before: `example: "ABDM-1015: "`
+  - after:  `example: "ABDM-1015:"`
+- `gateway.yaml:1135`
+  - before: `example: "ABDM-9999: "`
+  - after:  `example: "ABDM-9999:"`
+- `gateway.yaml:1282`
+  - before: `example: "ABDM-1001: "`
+  - after:  `example: "ABDM-1001:"`
+- `gateway.yaml:1301`
+  - before: `example: "ABDM-1015: "`
+  - after:  `example: "ABDM-1015:"`
+- `gateway.yaml:1337`
+  - before: `example: "ABDM-9999: "`
+  - after:  `example: "ABDM-9999:"`
+- `gateway.yaml:1465`
+  - before: `example: "ABDM-1001: "`
+  - after:  `example: "ABDM-1001:"`
+- `gateway.yaml:1484`
+  - before: `example: "ABDM-1015: "`
+  - after:  `example: "ABDM-1015:"`
+- `gateway.yaml:1503`
+  - before: `example: "ABDM-9999: "`
+  - after:  `example: "ABDM-9999:"`
+- `gateway.yaml:1587`
+  - before: `example: "ABDM-1001: "`
+  - after:  `example: "ABDM-1001:"`
+- `gateway.yaml:1606`
+  - before: `example: "ABDM-1015: "`
+  - after:  `example: "ABDM-1015:"`
+- `gateway.yaml:1625`
+  - before: `example: "ABDM-9999: "`
+  - after:  `example: "ABDM-9999:"`
+- `gateway.yaml:1750`
+  - before: `example: "ABDM-1001: "`
+  - after:  `example: "ABDM-1001:"`
+- `gateway.yaml:1769`
+  - before: `example: "ABDM-1015: "`
+  - after:  `example: "ABDM-1015:"`
+- `gateway.yaml:1788`
+  - before: `example: "ABDM-9999: "`
+  - after:  `example: "ABDM-9999:"`
+- `hip-initiated-linking.yaml:174`
+  - before: `example: "ABDM-1006: "`
+  - after:  `example: "ABDM-1006:"`
+- `hip-initiated-linking.yaml:217`
+  - before: `example: "ABDM-1001: "`
+  - after:  `example: "ABDM-1001:"`
+- `hip-initiated-linking.yaml:230`
+  - before: `example: "ABDM-9999: "`
+  - after:  `example: "ABDM-9999:"`
+- `hip-initiated-linking.yaml:418`
+  - before: `example: "ABDM-1006: "`
+  - after:  `example: "ABDM-1006:"`
+- `hip-initiated-linking.yaml:461`
+  - before: `example: "ABDM-1001: "`
+  - after:  `example: "ABDM-1001:"`
+- `hip-initiated-linking.yaml:474`
+  - before: `example: "ABDM-9999: "`
+  - after:  `example: "ABDM-9999:"`
+- `hip-initiated-linking.yaml:620`
+  - before: `example: "ABDM-1006: "`
+  - after:  `example: "ABDM-1006:"`
+- `hip-initiated-linking.yaml:663`
+  - before: `example: "ABDM-1001: "`
+  - after:  `example: "ABDM-1001:"`
+- `hip-initiated-linking.yaml:676`
+  - before: `example: "ABDM-9999: "`
+  - after:  `example: "ABDM-9999:"`
+- `hip-initiated-linking.yaml:748`
+  - before: `example: "ABDM-1006: "`
+  - after:  `example: "ABDM-1006:"`
+- `hip-initiated-linking.yaml:783`
+  - before: `example: "ABDM-1006: "`
+  - after:  `example: "ABDM-1006:"`
+- `hip-initiated-linking.yaml:826`
+  - before: `example: "ABDM-1001: "`
+  - after:  `example: "ABDM-1001:"`
+- `hip-initiated-linking.yaml:839`
+  - before: `example: "ABDM-9999: "`
+  - after:  `example: "ABDM-9999:"`
+- `hip-initiated-linking.yaml:932`
+  - before: `example: "ABDM-1006: "`
+  - after:  `example: "ABDM-1006:"`
+- `hip-initiated-linking.yaml:975`
+  - before: `example: "ABDM-1001: "`
+  - after:  `example: "ABDM-1001:"`
+- `hip-initiated-linking.yaml:988`
+  - before: `example: "ABDM-9999: "`
+  - after:  `example: "ABDM-9999:"`
+- `hip-initiated-linking.yaml:1096`
+  - before: `example: "ABDM-1006: "`
+  - after:  `example: "ABDM-1006:"`
+- `hip-initiated-linking.yaml:1139`
+  - before: `example: "ABDM-1001: "`
+  - after:  `example: "ABDM-1001:"`
+- `hip-initiated-linking.yaml:1152`
+  - before: `example: "ABDM-9999: "`
+  - after:  `example: "ABDM-9999:"`
+- `hip-initiated-linking.yaml:1292`
+  - before: `example: "ABDM-1065: "`
+  - after:  `example: "ABDM-1065:"`
+- `hip-initiated-linking.yaml:1335`
+  - before: `example: "ABDM-1001: "`
+  - after:  `example: "ABDM-1001:"`
+- `hip-initiated-linking.yaml:1348`
+  - before: `example: "ABDM-9999: "`
+  - after:  `example: "ABDM-9999:"`
+- `patient-share.yaml:239`
+  - before: `example: "ABDM-1007: "`
+  - after:  `example: "ABDM-1007:"`
+- `patient-share.yaml:462`
+  - before: `example: "ABDM-1001: "`
+  - after:  `example: "ABDM-1001:"`
+- `patient-share.yaml:481`
+  - before: `example: "ABDM-1007: "`
+  - after:  `example: "ABDM-1007:"`
+- `patient-share.yaml:500`
+  - before: `example: "ABDM-1022: "`
+  - after:  `example: "ABDM-1022:"`
+- `patient-share.yaml:813`
+  - before: `example: "ABDM-1001: "`
+  - after:  `example: "ABDM-1001:"`
+- `patient-share.yaml:832`
+  - before: `example: "ABDM-1007: "`
+  - after:  `example: "ABDM-1007:"`
+- `patient-share.yaml:851`
+  - before: `example: "ABDM-1022: "`
+  - after:  `example: "ABDM-1022:"`
+- `patient-share.yaml:1031`
+  - before: `example: "ABDM-1007: "`
+  - after:  `example: "ABDM-1007:"`
+- `patient-share.yaml:1236`
+  - before: `example: "ABDM-1001: "`
+  - after:  `example: "ABDM-1001:"`
+- `patient-share.yaml:1255`
+  - before: `example: "ABDM-1007: "`
+  - after:  `example: "ABDM-1007:"`
+- `patient-share.yaml:1274`
+  - before: `example: "ABDM-1022: "`
+  - after:  `example: "ABDM-1022:"`
+- `scan-and-pay.yaml:214`
+  - before: `example: "ABDM-2500: "`
+  - after:  `example: "ABDM-2500:"`
+- `scan-and-pay.yaml:231`
+  - before: `example: "ABDM-2500: "`
+  - after:  `example: "ABDM-2500:"`
+- `scan-and-pay.yaml:440`
+  - before: `example: "ABDM-2500: "`
+  - after:  `example: "ABDM-2500:"`
+- `scan-and-pay.yaml:504`
+  - before: `example: "ABDM-2500: "`
+  - after:  `example: "ABDM-2500:"`
+- `scan-and-pay.yaml:521`
+  - before: `example: "ABDM-2500: "`
+  - after:  `example: "ABDM-2500:"`
+- `scan-and-pay.yaml:668`
+  - before: `example: "ABDM-2500: "`
+  - after:  `example: "ABDM-2500:"`
+- `scan-and-pay.yaml:685`
+  - before: `example: "ABDM-2500: "`
+  - after:  `example: "ABDM-2500:"`
+- `scan-and-pay.yaml:917`
+  - before: `example: "ABDM-2500: "`
+  - after:  `example: "ABDM-2500:"`
+- `scan-and-pay.yaml:981`
+  - before: `example: "ABDM-2500: "`
+  - after:  `example: "ABDM-2500:"`
+- `scan-and-pay.yaml:998`
+  - before: `example: "ABDM-2500: "`
+  - after:  `example: "ABDM-2500:"`
+- `scan-and-pay.yaml:1133`
+  - before: `example: "ABDM-2500: "`
+  - after:  `example: "ABDM-2500:"`
+- `scan-and-pay.yaml:1197`
+  - before: `example: "ABDM-2500: "`
+  - after:  `example: "ABDM-2500:"`
+- `scan-and-pay.yaml:1214`
+  - before: `example: "ABDM-2500: "`
+  - after:  `example: "ABDM-2500:"`
+- `scan-and-pay.yaml:1352`
+  - before: `example: "ABDM-2500: "`
+  - after:  `example: "ABDM-2500:"`
+- `scan-and-pay.yaml:1369`
+  - before: `example: "ABDM-2500: "`
+  - after:  `example: "ABDM-2500:"`
+- `scan-and-pay.yaml:1466`
+  - before: `example: "ABDM-2500: "`
+  - after:  `example: "ABDM-2500:"`
+- `scan-and-pay.yaml:1483`
+  - before: `example: "ABDM-2500: "`
+  - after:  `example: "ABDM-2500:"`
+- `scan-and-pay.yaml:1644`
+  - before: `example: "ABDM-2500: "`
+  - after:  `example: "ABDM-2500:"`
+- `scan-and-pay.yaml:1708`
+  - before: `example: "ABDM-2500: "`
+  - after:  `example: "ABDM-2500:"`
+- `scan-and-pay.yaml:1725`
+  - before: `example: "ABDM-2500: "`
+  - after:  `example: "ABDM-2500:"`
+- `scan-and-pay.yaml:1940`
+  - before: `example: "ABDM-2500: "`
+  - after:  `example: "ABDM-2500:"`
+- `scan-and-pay.yaml:2004`
+  - before: `example: "ABDM-2500: "`
+  - after:  `example: "ABDM-2500:"`
+- `scan-and-pay.yaml:2021`
+  - before: `example: "ABDM-2500: "`
+  - after:  `example: "ABDM-2500:"`
+- `scan-and-pay.yaml:2187`
+  - before: `example: "ABDM-2500: "`
+  - after:  `example: "ABDM-2500:"`
+- `scan-and-pay.yaml:2204`
+  - before: `example: "ABDM-2500: "`
+  - after:  `example: "ABDM-2500:"`
+- `scan-and-pay.yaml:2372`
+  - before: `example: "ABDM-2500: "`
+  - after:  `example: "ABDM-2500:"`
+- `scan-and-pay.yaml:2436`
+  - before: `example: "ABDM-2500: "`
+  - after:  `example: "ABDM-2500:"`
+- `scan-and-pay.yaml:2453`
+  - before: `example: "ABDM-2500: "`
+  - after:  `example: "ABDM-2500:"`
+- `scan-and-pay.yaml:2661`
+  - before: `example: "ABDM-2500: "`
+  - after:  `example: "ABDM-2500:"`
+- `scan-and-pay.yaml:2678`
+  - before: `example: "ABDM-2500: "`
+  - after:  `example: "ABDM-2500:"`
+- `scan-and-pay.yaml:2806`
+  - before: `example: "ABDM-2500: "`
+  - after:  `example: "ABDM-2500:"`
+- `scan-and-pay.yaml:2823`
+  - before: `example: "ABDM-2500: "`
+  - after:  `example: "ABDM-2500:"`
+- `scan-and-pay.yaml:2985`
+  - before: `example: "ABDM-2500: "`
+  - after:  `example: "ABDM-2500:"`
+- `scan-and-pay.yaml:3049`
+  - before: `example: "ABDM-2500: "`
+  - after:  `example: "ABDM-2500:"`
+- `scan-and-pay.yaml:3066`
+  - before: `example: "ABDM-2500: "`
+  - after:  `example: "ABDM-2500:"`
+- `scan-and-pay.yaml:3184`
+  - before: `example: "ABDM-2500: "`
+  - after:  `example: "ABDM-2500:"`
+- `scan-and-pay.yaml:3248`
+  - before: `example: "ABDM-2500: "`
+  - after:  `example: "ABDM-2500:"`
+- `scan-and-pay.yaml:3408`
+  - before: `example: "ABDM-2500: "`
+  - after:  `example: "ABDM-2500:"`
+- `scan-and-pay.yaml:3425`
+  - before: `example: "ABDM-2500: "`
+  - after:  `example: "ABDM-2500:"`
+- `scan-and-pay.yaml:3706`
+  - before: `example: "ABDM-2500: "`
+  - after:  `example: "ABDM-2500:"`
+- `scan-and-pay.yaml:3723`
+  - before: `example: "ABDM-2500: "`
+  - after:  `example: "ABDM-2500:"`
+- `scan-and-pay.yaml:3847`
+  - before: `example: "ABDM-2500: "`
+  - after:  `example: "ABDM-2500:"`
+- `scan-and-pay.yaml:3864`
+  - before: `example: "ABDM-2500: "`
+  - after:  `example: "ABDM-2500:"`
+- `scan-and-pay.yaml:4006`
+  - before: `example: "ABDM-2500: "`
+  - after:  `example: "ABDM-2500:"`
+- `scan-and-pay.yaml:4023`
+  - before: `example: "ABDM-2500: "`
+  - after:  `example: "ABDM-2500:"`
+- `subscription.yaml:241`
+  - before: `example: "ABDM-9999: "`
+  - after:  `example: "ABDM-9999:"`
+- `subscription.yaml:296`
+  - before: `example: " Internal Server Error"`
+  - after:  `example: "Internal Server Error"`
+- `subscription.yaml:428`
+  - before: `example: "ABDM-1031: "`
+  - after:  `example: "ABDM-1031:"`
+- `subscription.yaml:485`
+  - before: `example: " Internal Server Error"`
+  - after:  `example: "Internal Server Error"`
+- `subscription.yaml:784`
+  - before: `example: "ABDM-1031: "`
+  - after:  `example: "ABDM-1031:"`
+- `subscription.yaml:841`
+  - before: `example: " Internal Server Error"`
+  - after:  `example: "Internal Server Error"`
+- `subscription.yaml:1046`
+  - before: `example: " Internal Server Error"`
+  - after:  `example: "Internal Server Error"`
+- `subscription.yaml:1247`
+  - before: `example: "ABDM-1031: "`
+  - after:  `example: "ABDM-1031:"`
+- `subscription.yaml:1304`
+  - before: `example: " Internal Server Error"`
+  - after:  `example: "Internal Server Error"`
+- `subscription.yaml:1511`
+  - before: `example: " Internal Server Error"`
+  - after:  `example: "Internal Server Error"`
+- `subscription.yaml:1853`
+  - before: `example: "ABDM-1066: "`
+  - after:  `example: "ABDM-1066:"`
+- `subscription.yaml:1910`
+  - before: `example: " Internal Server Error"`
+  - after:  `example: "Internal Server Error"`
+- `subscription.yaml:2286`
+  - before: `example: "ABDM-9999: "`
+  - after:  `example: "ABDM-9999:"`
+- `subscription.yaml:2343`
+  - before: `example: " Internal Server Error"`
+  - after:  `example: "Internal Server Error"`
+- `subscription.yaml:2469`
+  - before: `example: "ABDM-1066: "`
+  - after:  `example: "ABDM-1066:"`
+- `subscription.yaml:2526`
+  - before: `example: " Internal Server Error"`
+  - after:  `example: "Internal Server Error"`
+- `subscription.yaml:2938`
+  - before: `example: "ABDM-1066: "`
+  - after:  `example: "ABDM-1066:"`
+- `subscription.yaml:2995`
+  - before: `example: " Internal Server Error"`
+  - after:  `example: "Internal Server Error"`
+- `subscription.yaml:3103`
+  - before: `example: "ABDM-1066: "`
+  - after:  `example: "ABDM-1066:"`
+- `subscription.yaml:3160`
+  - before: `example: " Internal Server Error"`
+  - after:  `example: "Internal Server Error"`
+- `subscription.yaml:3263`
+  - before: `example: "ABDM-1066: "`
+  - after:  `example: "ABDM-1066:"`
+- `subscription.yaml:3320`
+  - before: `example: " Internal Server Error"`
+  - after:  `example: "Internal Server Error"`
+- `subscription.yaml:3683`
+  - before: `example: " Internal Server Error"`
+  - after:  `example: "Internal Server Error"`
+- `subscription.yaml:4003`
+  - before: `example: "ABDM-1066: "`
+  - after:  `example: "ABDM-1066:"`
+- `subscription.yaml:4060`
+  - before: `example: " Internal Server Error"`
+  - after:  `example: "Internal Server Error"`
+- `subscription.yaml:4740`
+  - before: `example: "ABDM-1066: "`
+  - after:  `example: "ABDM-1066:"`
+- `subscription.yaml:4795`
+  - before: `example: " Internal Server Error"`
+  - after:  `example: "Internal Server Error"`
+- `subscription.yaml:5510`
+  - before: `example: "ABDM-1066: "`
+  - after:  `example: "ABDM-1066:"`
+- `subscription.yaml:5565`
+  - before: `example: " Internal Server Error"`
+  - after:  `example: "Internal Server Error"`
+- `subscription.yaml:5782`
+  - before: `example: "ABDM-1066: "`
+  - after:  `example: "ABDM-1066:"`
+- `subscription.yaml:5839`
+  - before: `example: " Internal Server Error"`
+  - after:  `example: "Internal Server Error"`
+- `user-initiated-linking.yaml:177`
+  - before: `example: "ABDM-1103: "`
+  - after:  `example: "ABDM-1103:"`
+- `user-initiated-linking.yaml:231`
+  - before: `example: " Internal Server Error"`
+  - after:  `example: "Internal Server Error"`
+- `user-initiated-linking.yaml:415`
+  - before: `example: "ABDM-1106: "`
+  - after:  `example: "ABDM-1106:"`
+- `user-initiated-linking.yaml:469`
+  - before: `example: " Internal Server Error"`
+  - after:  `example: "Internal Server Error"`
+- `user-initiated-linking.yaml:676`
+  - before: `example: "ABDM-1104: "`
+  - after:  `example: "ABDM-1104:"`
+- `user-initiated-linking.yaml:730`
+  - before: `example: " Internal Server Error"`
+  - after:  `example: "Internal Server Error"`
+- `user-initiated-linking.yaml:892`
+  - before: `example: "ABDM-1107: "`
+  - after:  `example: "ABDM-1107:"`
+- `user-initiated-linking.yaml:946`
+  - before: `example: " Internal Server Error"`
+  - after:  `example: "Internal Server Error"`
+- `user-initiated-linking.yaml:1031`
+  - before: `example: "ABDM-1105: "`
+  - after:  `example: "ABDM-1105:"`
+- `user-initiated-linking.yaml:1085`
+  - before: `example: " Internal Server Error"`
+  - after:  `example: "Internal Server Error"`
+- `user-initiated-linking.yaml:1253`
+  - before: `example: "ABDM-1108: "`
+  - after:  `example: "ABDM-1108:"`
+- `user-initiated-linking.yaml:1307`
+  - before: `example: " Internal Server Error"`
+  - after:  `example: "Internal Server Error"`
+- `user-initiated-linking.yaml:1425`
+  - before: `example: "ABDM-1103: "`
+  - after:  `example: "ABDM-1103:"`
+- `user-initiated-linking.yaml:1479`
+  - before: `example: " Internal Server Error"`
+  - after:  `example: "Internal Server Error"`
+- `user-initiated-linking.yaml:1722`
+  - before: `example: "ABDM-1106: "`
+  - after:  `example: "ABDM-1106:"`
+- `user-initiated-linking.yaml:1776`
+  - before: `example: " Internal Server Error"`
+  - after:  `example: "Internal Server Error"`
+- `user-initiated-linking.yaml:1928`
+  - before: `example: "ABDM-1104: "`
+  - after:  `example: "ABDM-1104:"`
+- `user-initiated-linking.yaml:1982`
+  - before: `example: " Internal Server Error"`
+  - after:  `example: "Internal Server Error"`
+- `user-initiated-linking.yaml:2145`
+  - before: `example: "ABDM-1107: "`
+  - after:  `example: "ABDM-1107:"`
+- `user-initiated-linking.yaml:2199`
+  - before: `example: " Internal Server Error"`
+  - after:  `example: "Internal Server Error"`
+- `user-initiated-linking.yaml:2296`
+  - before: `example: "ABDM-1105: "`
+  - after:  `example: "ABDM-1105:"`
+- `user-initiated-linking.yaml:2350`
+  - before: `example: " Internal Server Error"`
+  - after:  `example: "Internal Server Error"`
+- `user-initiated-linking.yaml:2513`
+  - before: `example: "ABDM-1108: "`
+  - after:  `example: "ABDM-1108:"`
+- `user-initiated-linking.yaml:2567`
+  - before: `example: " Internal Server Error"`
+  - after:  `example: "Internal Server Error"`
+- `phr-api.yaml:312`
+  - before: `- code: 'ABDM-1006: '`
+  - after:  `- code: 'ABDM-1006:'`
+- `phr-api.yaml:321`
+  - before: `example: 'ABDM-1006: '`
+  - after:  `example: 'ABDM-1006:'`
+- `phr-api.yaml:326`
+  - before: `- code: 'ABDM-1006: '`
+  - after:  `- code: 'ABDM-1006:'`
+- `phr-api.yaml:342`
+  - before: `example: 'ABDM-9999: '`
+  - after:  `example: 'ABDM-9999:'`
+- `phr-api.yaml:347`
+  - before: `- code: 'ABDM-9999: '`
+  - after:  `- code: 'ABDM-9999:'`
+- `phr-api.yaml:355`
+  - before: `example: 'ABDM-9999: '`
+  - after:  `example: 'ABDM-9999:'`
+- `phr-api.yaml:360`
+  - before: `- code: 'ABDM-9999: '`
+  - after:  `- code: 'ABDM-9999:'`
+- `phr-api.yaml:365`
+  - before: `- code: 'ABDM-9999: '`
+  - after:  `- code: 'ABDM-9999:'`
+- `phr-api.yaml:369`
+  - before: `- code: 'ABDM-9999: '`
+  - after:  `- code: 'ABDM-9999:'`
+- `phr-api.yaml:373`
+  - before: `- code: 'ABDM-9999: '`
+  - after:  `- code: 'ABDM-9999:'`
+- `phr-api.yaml:377`
+  - before: `- code: 'ABDM-9999: '`
+  - after:  `- code: 'ABDM-9999:'`
+- `phr-api.yaml:381`
+  - before: `- code: 'ABDM-9999: '`
+  - after:  `- code: 'ABDM-9999:'`
+- `phr-api.yaml:389`
+  - before: `- code: 'ABDM-9999: '`
+  - after:  `- code: 'ABDM-9999:'`
+- `phr-api.yaml:393`
+  - before: `- code: 'ABDM-9999: '`
+  - after:  `- code: 'ABDM-9999:'`
+- `phr-api.yaml:397`
+  - before: `- code: 'ABDM-1006: '`
+  - after:  `- code: 'ABDM-1006:'`
+- `phr-api.yaml:401`
+  - before: `- code: 'ABDM-1006: '`
+  - after:  `- code: 'ABDM-1006:'`
+- `phr-api.yaml:1102`
+  - before: `example: 'ABDM-9999: '`
+  - after:  `example: 'ABDM-9999:'`
+- `phr-api.yaml:1107`
+  - before: `- code: 'ABDM-9999: '`
+  - after:  `- code: 'ABDM-9999:'`
+- `phr-api.yaml:1112`
+  - before: `- code: 'ABDM-1006: '`
+  - after:  `- code: 'ABDM-1006:'`
+- `phr-api.yaml:1116`
+  - before: `- code: 'ABDM-9999: '`
+  - after:  `- code: 'ABDM-9999:'`
+- `phr-api.yaml:1120`
+  - before: `- code: 'ABDM-9999: '`
+  - after:  `- code: 'ABDM-9999:'`
+- `phr-api.yaml:1126`
+  - before: `- code: 'ABDM-9999: '`
+  - after:  `- code: 'ABDM-9999:'`
+- `phr-api.yaml:1130`
+  - before: `- code: 'ABDM-1006: '`
+  - after:  `- code: 'ABDM-1006:'`
+- `phr-api.yaml:1132`
+  - before: `- code: 'ABDM-9999: '`
+  - after:  `- code: 'ABDM-9999:'`
+- `phr-api.yaml:1136`
+  - before: `- code: 'ABDM-9999: '`
+  - after:  `- code: 'ABDM-9999:'`
+- `phr-api.yaml:1142`
+  - before: `- code: 'ABDM-9999: '`
+  - after:  `- code: 'ABDM-9999:'`
+- `phr-api.yaml:1146`
+  - before: `- code: 'ABDM-9999: '`
+  - after:  `- code: 'ABDM-9999:'`
+- `phr-api.yaml:1150`
+  - before: `- code: 'ABDM-9999: '`
+  - after:  `- code: 'ABDM-9999:'`
+- `phr-api.yaml:1154`
+  - before: `- code: 'ABDM-9999: '`
+  - after:  `- code: 'ABDM-9999:'`
+- `phr-api.yaml:1156`
+  - before: `- code: 'ABDM-9999: '`
+  - after:  `- code: 'ABDM-9999:'`
+- `phr-api.yaml:1160`
+  - before: `- code: 'ABDM-9999: '`
+  - after:  `- code: 'ABDM-9999:'`
+- `phr-api.yaml:1497`
+  - before: `example: 'ABDM-9999: '`
+  - after:  `example: 'ABDM-9999:'`
+- `phr-api.yaml:1502`
+  - before: `- code: 'ABDM-9999: '`
+  - after:  `- code: 'ABDM-9999:'`
+- `phr-api.yaml:1507`
+  - before: `- code: 'ABDM-9999: '`
+  - after:  `- code: 'ABDM-9999:'`
+- `phr-api.yaml:1511`
+  - before: `- code: 'ABDM-9999: '`
+  - after:  `- code: 'ABDM-9999:'`
+- `phr-api.yaml:1515`
+  - before: `- code: 'ABDM-9999: '`
+  - after:  `- code: 'ABDM-9999:'`
+- `phr-api.yaml:1519`
+  - before: `- code: 'ABDM-9999: '`
+  - after:  `- code: 'ABDM-9999:'`
+- `phr-api.yaml:1521`
+  - before: `- code: 'ABDM-9999: '`
+  - after:  `- code: 'ABDM-9999:'`
+- `phr-api.yaml:1525`
+  - before: `- code: 'ABDM-9999: '`
+  - after:  `- code: 'ABDM-9999:'`
+- `phr-api.yaml:1718`
+  - before: `example: 'ABDM-1006: '`
+  - after:  `example: 'ABDM-1006:'`
+- `phr-api.yaml:1723`
+  - before: `- code: 'ABDM-1006: '`
+  - after:  `- code: 'ABDM-1006:'`
+- `phr-api.yaml:1728`
+  - before: `- code: 'ABDM-1006: '`
+  - after:  `- code: 'ABDM-1006:'`
+- `phr-api.yaml:2390`
+  - before: `- code: 'ABDM-9999: '`
+  - after:  `- code: 'ABDM-9999:'`
+- `phr-api.yaml:2399`
+  - before: `example: 'ABDM-9999: '`
+  - after:  `example: 'ABDM-9999:'`
+- `phr-api.yaml:2404`
+  - before: `- code: 'ABDM-9999: '`
+  - after:  `- code: 'ABDM-9999:'`
+- `phr-api.yaml:2410`
+  - before: `example: 'ABDM-9999: '`
+  - after:  `example: 'ABDM-9999:'`
+- `phr-api.yaml:2422`
+  - before: `example: 'ABDM-9999: '`
+  - after:  `example: 'ABDM-9999:'`
+- `phr-api.yaml:2427`
+  - before: `- code: 'ABDM-9999: '`
+  - after:  `- code: 'ABDM-9999:'`
+- `phr-api.yaml:2435`
+  - before: `example: 'ABDM-9999: '`
+  - after:  `example: 'ABDM-9999:'`
+- `phr-api.yaml:2440`
+  - before: `- code: 'ABDM-9999: '`
+  - after:  `- code: 'ABDM-9999:'`
+- `phr-api.yaml:2448`
+  - before: `example: 'ABDM-9999: '`
+  - after:  `example: 'ABDM-9999:'`
+- `phr-api.yaml:2453`
+  - before: `- code: 'ABDM-9999: '`
+  - after:  `- code: 'ABDM-9999:'`
+- `phr-api.yaml:2455`
+  - before: `- code: 'ABDM-9999: '`
+  - after:  `- code: 'ABDM-9999:'`
+- `phr-api.yaml:2461`
+  - before: `example: 'ABDM-9999: '`
+  - after:  `example: 'ABDM-9999:'`
+- `phr-api.yaml:2473`
+  - before: `example: 'ABDM-9999: '`
+  - after:  `example: 'ABDM-9999:'`
+- `phr-api.yaml:2478`
+  - before: `- code: 'ABDM-9999: '`
+  - after:  `- code: 'ABDM-9999:'`
+- `phr-api.yaml:2486`
+  - before: `example: 'ABDM-9999: '`
+  - after:  `example: 'ABDM-9999:'`
+- `phr-api.yaml:2491`
+  - before: `- code: 'ABDM-9999: '`
+  - after:  `- code: 'ABDM-9999:'`
+- `phr-api.yaml:2499`
+  - before: `example: 'ABDM-9999: '`
+  - after:  `example: 'ABDM-9999:'`
+- `phr-api.yaml:2504`
+  - before: `- code: 'ABDM-9999: '`
+  - after:  `- code: 'ABDM-9999:'`
+- `phr-api.yaml:2506`
+  - before: `- code: 'ABDM-9999: '`
+  - after:  `- code: 'ABDM-9999:'`
+- `phr-api.yaml:2512`
+  - before: `example: 'ABDM-9999: '`
+  - after:  `example: 'ABDM-9999:'`
+- `phr-api.yaml:2521`
+  - before: `code: 'ABDM-9999: '`
+  - after:  `code: 'ABDM-9999:'`
+- `phr-api.yaml:2527`
+  - before: `- code: 'ABDM-9999: '`
+  - after:  `- code: 'ABDM-9999:'`
+- `phr-api.yaml:2529`
+  - before: `- code: 'ABDM-9999: '`
+  - after:  `- code: 'ABDM-9999:'`
+- `phr-api.yaml:2533`
+  - before: `- code: 'ABDM-9999: '`
+  - after:  `- code: 'ABDM-9999:'`
+- `phr-api.yaml:2537`
+  - before: `- code: 'ABDM-9999: '`
+  - after:  `- code: 'ABDM-9999:'`
+- `phr-api.yaml:2856`
+  - before: `example: 'ABDM-9999: '`
+  - after:  `example: 'ABDM-9999:'`
+- `phr-api.yaml:2861`
+  - before: `- code: 'ABDM-9999: '`
+  - after:  `- code: 'ABDM-9999:'`
+- `phr-api.yaml:2870`
+  - before: `- code: 'ABDM-9999: '`
+  - after:  `- code: 'ABDM-9999:'`
+- `phr-api.yaml:3391`
+  - before: `- code: 'ABDM-1006: '`
+  - after:  `- code: 'ABDM-1006:'`
+- `phr-api.yaml:3400`
+  - before: `example: 'ABDM-1006: '`
+  - after:  `example: 'ABDM-1006:'`
+- `phr-api.yaml:3405`
+  - before: `- code: 'ABDM-1006: '`
+  - after:  `- code: 'ABDM-1006:'`
+- `phr-api.yaml:3421`
+  - before: `example: 'ABDM-9999: '`
+  - after:  `example: 'ABDM-9999:'`
+- `phr-api.yaml:3426`
+  - before: `- code: 'ABDM-9999: '`
+  - after:  `- code: 'ABDM-9999:'`
+- `phr-api.yaml:3434`
+  - before: `example: 'ABDM-9999: '`
+  - after:  `example: 'ABDM-9999:'`
+- `phr-api.yaml:3439`
+  - before: `- code: 'ABDM-9999: '`
+  - after:  `- code: 'ABDM-9999:'`
+- `phr-api.yaml:3455`
+  - before: `example: 'ABDM-1006: '`
+  - after:  `example: 'ABDM-1006:'`
+- `phr-api.yaml:3460`
+  - before: `- code: 'ABDM-1006: '`
+  - after:  `- code: 'ABDM-1006:'`
+- `phr-api.yaml:3468`
+  - before: `example: 'ABDM-1006: '`
+  - after:  `example: 'ABDM-1006:'`
+- `phr-api.yaml:3473`
+  - before: `- code: 'ABDM-1006: '`
+  - after:  `- code: 'ABDM-1006:'`
+- `phr-api.yaml:3481`
+  - before: `example: 'ABDM-9999: '`
+  - after:  `example: 'ABDM-9999:'`
+- `phr-api.yaml:3486`
+  - before: `- code: 'ABDM-9999: '`
+  - after:  `- code: 'ABDM-9999:'`
+- `phr-api.yaml:3494`
+  - before: `example: 'ABDM-9999: '`
+  - after:  `example: 'ABDM-9999:'`
+- `phr-api.yaml:3499`
+  - before: `- code: 'ABDM-9999: '`
+  - after:  `- code: 'ABDM-9999:'`
+- `phr-api.yaml:3507`
+  - before: `example: 'ABDM-1006: '`
+  - after:  `example: 'ABDM-1006:'`
+- `phr-api.yaml:3512`
+  - before: `- code: 'ABDM-1006: '`
+  - after:  `- code: 'ABDM-1006:'`
+- `phr-api.yaml:3520`
+  - before: `example: 'ABDM-9999: '`
+  - after:  `example: 'ABDM-9999:'`
+- `phr-api.yaml:3525`
+  - before: `- code: 'ABDM-9999: '`
+  - after:  `- code: 'ABDM-9999:'`
+- `phr-api.yaml:3533`
+  - before: `example: 'ABDM-1006: '`
+  - after:  `example: 'ABDM-1006:'`
+- `phr-api.yaml:3538`
+  - before: `- code: 'ABDM-1006: '`
+  - after:  `- code: 'ABDM-1006:'`
+- `phr-api.yaml:3546`
+  - before: `example: 'ABDM-9999: '`
+  - after:  `example: 'ABDM-9999:'`
+- `phr-api.yaml:3551`
+  - before: `- code: 'ABDM-9999: '`
+  - after:  `- code: 'ABDM-9999:'`
+- `phr-api.yaml:3559`
+  - before: `example: 'ABDM-9999: '`
+  - after:  `example: 'ABDM-9999:'`
+- `phr-api.yaml:3564`
+  - before: `- code: 'ABDM-9999: '`
+  - after:  `- code: 'ABDM-9999:'`
+- `phr-api.yaml:3572`
+  - before: `example: 'ABDM-1006: '`
+  - after:  `example: 'ABDM-1006:'`
+- `phr-api.yaml:3577`
+  - before: `- code: 'ABDM-1006: '`
+  - after:  `- code: 'ABDM-1006:'`
+- `phr-api.yaml:3585`
+  - before: `example: 'ABDM-9999: '`
+  - after:  `example: 'ABDM-9999:'`
+- `phr-api.yaml:3590`
+  - before: `- code: 'ABDM-9999: '`
+  - after:  `- code: 'ABDM-9999:'`
+- `phr-api.yaml:3598`
+  - before: `example: 'ABDM-9999: '`
+  - after:  `example: 'ABDM-9999:'`
+- `phr-api.yaml:3603`
+  - before: `- code: 'ABDM-9999: '`
+  - after:  `- code: 'ABDM-9999:'`
+- `phr-api.yaml:3611`
+  - before: `example: 'ABDM-9999: '`
+  - after:  `example: 'ABDM-9999:'`
+- `phr-api.yaml:3616`
+  - before: `- code: 'ABDM-9999: '`
+  - after:  `- code: 'ABDM-9999:'`
+- `phr-api.yaml:3621`
+  - before: `- code: 'ABDM-9999: '`
+  - after:  `- code: 'ABDM-9999:'`
+- `phr-api.yaml:3625`
+  - before: `- code: 'ABDM-9999: '`
+  - after:  `- code: 'ABDM-9999:'`
+- `phr-api.yaml:3629`
+  - before: `- code: 'ABDM-9999: '`
+  - after:  `- code: 'ABDM-9999:'`
+- `phr-api.yaml:3633`
+  - before: `- code: 'ABDM-9999: '`
+  - after:  `- code: 'ABDM-9999:'`
+- `phr-api.yaml:3637`
+  - before: `- code: 'ABDM-9999: '`
+  - after:  `- code: 'ABDM-9999:'`
+- `phr-api.yaml:3641`
+  - before: `- code: 'ABDM-9999: '`
+  - after:  `- code: 'ABDM-9999:'`
+- `phr-api.yaml:3645`
+  - before: `- code: 'ABDM-1006: '`
+  - after:  `- code: 'ABDM-1006:'`
+- `phr-api.yaml:3649`
+  - before: `- code: 'ABDM-9999: '`
+  - after:  `- code: 'ABDM-9999:'`
+- `phr-api.yaml:3653`
+  - before: `- code: 'ABDM-9999: '`
+  - after:  `- code: 'ABDM-9999:'`
+- `phr-api.yaml:3665`
+  - before: `- code: 'ABDM-9999: '`
+  - after:  `- code: 'ABDM-9999:'`
+- `phr-api.yaml:3669`
+  - before: `- code: 'ABDM-9999: '`
+  - after:  `- code: 'ABDM-9999:'`
+- `phr-api.yaml:3673`
+  - before: `- code: 'ABDM-9999: '`
+  - after:  `- code: 'ABDM-9999:'`
+- `phr-api.yaml:3677`
+  - before: `- code: 'ABDM-1006: '`
+  - after:  `- code: 'ABDM-1006:'`
+- `phr-api.yaml:3681`
+  - before: `- code: 'ABDM-9999: '`
+  - after:  `- code: 'ABDM-9999:'`
+- `phr-api.yaml:3685`
+  - before: `- code: 'ABDM-9999: '`
+  - after:  `- code: 'ABDM-9999:'`
+- `phr-api.yaml:3689`
+  - before: `- code: 'ABDM-9999: '`
+  - after:  `- code: 'ABDM-9999:'`
+- `phr-api.yaml:3693`
+  - before: `- code: 'ABDM-1006: '`
+  - after:  `- code: 'ABDM-1006:'`
+- `phr-api.yaml:3697`
+  - before: `- code: 'ABDM-9999: '`
+  - after:  `- code: 'ABDM-9999:'`
+- `phr-api.yaml:3701`
+  - before: `- code: 'ABDM-9999: '`
+  - after:  `- code: 'ABDM-9999:'`
+- `phr-api.yaml:3705`
+  - before: `- code: 'ABDM-9999: '`
+  - after:  `- code: 'ABDM-9999:'`
+- `phr-api.yaml:3709`
+  - before: `- code: 'ABDM-9999: '`
+  - after:  `- code: 'ABDM-9999:'`
+- `phr-api.yaml:3713`
+  - before: `- code: 'ABDM-9999: '`
+  - after:  `- code: 'ABDM-9999:'`
+- `phr-api.yaml:3717`
+  - before: `- code: 'ABDM-1006: '`
+  - after:  `- code: 'ABDM-1006:'`
+- `phr-api.yaml:3721`
+  - before: `- code: 'ABDM-9999: '`
+  - after:  `- code: 'ABDM-9999:'`
+- `phr-api.yaml:4840`
+  - before: `- code: 'ABDM-9999: '`
+  - after:  `- code: 'ABDM-9999:'`
+- `phr-api.yaml:4849`
+  - before: `example: 'ABDM-9999: '`
+  - after:  `example: 'ABDM-9999:'`
+- `phr-api.yaml:4854`
+  - before: `- code: 'ABDM-9999: '`
+  - after:  `- code: 'ABDM-9999:'`
+- `phr-api.yaml:4870`
+  - before: `example: 'ABDM-9999: '`
+  - after:  `example: 'ABDM-9999:'`
+- `phr-api.yaml:4875`
+  - before: `- code: 'ABDM-9999: '`
+  - after:  `- code: 'ABDM-9999:'`
+- `phr-api.yaml:4883`
+  - before: `example: 'ABDM-1006: '`
+  - after:  `example: 'ABDM-1006:'`
+- `phr-api.yaml:4888`
+  - before: `- code: 'ABDM-1006: '`
+  - after:  `- code: 'ABDM-1006:'`
+- `phr-api.yaml:4890`
+  - before: `- code: 'ABDM-1006: '`
+  - after:  `- code: 'ABDM-1006:'`
+- `phr-api.yaml:4908`
+  - before: `example: 'ABDM-1006: '`
+  - after:  `example: 'ABDM-1006:'`
+- `phr-api.yaml:4913`
+  - before: `- code: 'ABDM-1006: '`
+  - after:  `- code: 'ABDM-1006:'`
+- `phr-api.yaml:4921`
+  - before: `example: 'ABDM-1006: '`
+  - after:  `example: 'ABDM-1006:'`
+- `phr-api.yaml:4926`
+  - before: `- code: 'ABDM-1006: '`
+  - after:  `- code: 'ABDM-1006:'`
+- `phr-api.yaml:4934`
+  - before: `example: 'ABDM-9999: '`
+  - after:  `example: 'ABDM-9999:'`
+- `phr-api.yaml:4939`
+  - before: `- code: 'ABDM-9999: '`
+  - after:  `- code: 'ABDM-9999:'`
+- `phr-api.yaml:4947`
+  - before: `example: 'ABDM-9999: '`
+  - after:  `example: 'ABDM-9999:'`
+- `phr-api.yaml:4952`
+  - before: `- code: 'ABDM-9999: '`
+  - after:  `- code: 'ABDM-9999:'`
+- `phr-api.yaml:4960`
+  - before: `example: 'ABDM-1006: '`
+  - after:  `example: 'ABDM-1006:'`
+- `phr-api.yaml:4965`
+  - before: `- code: 'ABDM-1006: '`
+  - after:  `- code: 'ABDM-1006:'`
+- `phr-api.yaml:4967`
+  - before: `- code: 'ABDM-1006: '`
+  - after:  `- code: 'ABDM-1006:'`
+- `phr-api.yaml:4977`
+  - before: `example: 'ABDM-9999: '`
+  - after:  `example: 'ABDM-9999:'`
+- `phr-api.yaml:4982`
+  - before: `- code: 'ABDM-9999: '`
+  - after:  `- code: 'ABDM-9999:'`
+- `phr-api.yaml:4990`
+  - before: `example: 'ABDM-9999: '`
+  - after:  `example: 'ABDM-9999:'`
+- `phr-api.yaml:4995`
+  - before: `- code: 'ABDM-9999: '`
+  - after:  `- code: 'ABDM-9999:'`
+- `phr-api.yaml:5003`
+  - before: `example: 'ABDM-1006: '`
+  - after:  `example: 'ABDM-1006:'`
+- `phr-api.yaml:5008`
+  - before: `- code: 'ABDM-1006: '`
+  - after:  `- code: 'ABDM-1006:'`
+- `phr-api.yaml:5010`
+  - before: `- code: 'ABDM-1006: '`
+  - after:  `- code: 'ABDM-1006:'`
+- `phr-api.yaml:5020`
+  - before: `example: 'ABDM-9999: '`
+  - after:  `example: 'ABDM-9999:'`
+- `phr-api.yaml:5025`
+  - before: `- code: 'ABDM-9999: '`
+  - after:  `- code: 'ABDM-9999:'`
+- `phr-api.yaml:5033`
+  - before: `example: 'ABDM-9999: '`
+  - after:  `example: 'ABDM-9999:'`
+- `phr-api.yaml:5038`
+  - before: `- code: 'ABDM-9999: '`
+  - after:  `- code: 'ABDM-9999:'`
+- `phr-api.yaml:5046`
+  - before: `example: 'ABDM-1006: '`
+  - after:  `example: 'ABDM-1006:'`
+- `phr-api.yaml:5051`
+  - before: `- code: 'ABDM-1006: '`
+  - after:  `- code: 'ABDM-1006:'`
+- `phr-api.yaml:5053`
+  - before: `- code: 'ABDM-1006: '`
+  - after:  `- code: 'ABDM-1006:'`
+- `phr-api.yaml:5063`
+  - before: `example: 'ABDM-9999: '`
+  - after:  `example: 'ABDM-9999:'`
+- `phr-api.yaml:5068`
+  - before: `- code: 'ABDM-9999: '`
+  - after:  `- code: 'ABDM-9999:'`
+- `phr-api.yaml:5073`
+  - before: `- code: 'ABDM-9999: '`
+  - after:  `- code: 'ABDM-9999:'`
+- `phr-api.yaml:5081`
+  - before: `- code: 'ABDM-1006: '`
+  - after:  `- code: 'ABDM-1006:'`
+- `phr-api.yaml:5083`
+  - before: `- code: 'ABDM-1006: '`
+  - after:  `- code: 'ABDM-1006:'`
+- `phr-api.yaml:5089`
+  - before: `- code: 'ABDM-9999: '`
+  - after:  `- code: 'ABDM-9999:'`
+- `phr-api.yaml:5093`
+  - before: `- code: 'ABDM-1006: '`
+  - after:  `- code: 'ABDM-1006:'`
+- `phr-api.yaml:5095`
+  - before: `- code: 'ABDM-1006: '`
+  - after:  `- code: 'ABDM-1006:'`
+- `phr-api.yaml:5101`
+  - before: `- code: 'ABDM-9999: '`
+  - after:  `- code: 'ABDM-9999:'`
+- `phr-api.yaml:5105`
+  - before: `- code: 'ABDM-9999: '`
+  - after:  `- code: 'ABDM-9999:'`
+- `phr-api.yaml:5109`
+  - before: `- code: 'ABDM-1006: '`
+  - after:  `- code: 'ABDM-1006:'`
+- `phr-api.yaml:5111`
+  - before: `- code: 'ABDM-1006: '`
+  - after:  `- code: 'ABDM-1006:'`
+- `phr-api.yaml:5121`
+  - before: `- code: 'ABDM-9999: '`
+  - after:  `- code: 'ABDM-9999:'`
+- `phr-api.yaml:5125`
+  - before: `- code: 'ABDM-1006: '`
+  - after:  `- code: 'ABDM-1006:'`
+- `phr-api.yaml:5127`
+  - before: `- code: 'ABDM-1006: '`
+  - after:  `- code: 'ABDM-1006:'`
+- `phr-api.yaml:5133`
+  - before: `- code: 'ABDM-9999: '`
+  - after:  `- code: 'ABDM-9999:'`
+- `phr-api.yaml:5137`
+  - before: `- code: 'ABDM-9999: '`
+  - after:  `- code: 'ABDM-9999:'`
+- `phr-api.yaml:5141`
+  - before: `- code: 'ABDM-1006: '`
+  - after:  `- code: 'ABDM-1006:'`
+- `phr-api.yaml:5143`
+  - before: `- code: 'ABDM-1006: '`
+  - after:  `- code: 'ABDM-1006:'`
+- `phr-api.yaml:5149`
+  - before: `- code: 'ABDM-9999: '`
+  - after:  `- code: 'ABDM-9999:'`
+- `phr-api.yaml:5153`
+  - before: `- code: 'ABDM-9999: '`
+  - after:  `- code: 'ABDM-9999:'`
+- `phr-api.yaml:5157`
+  - before: `- code: 'ABDM-1006: '`
+  - after:  `- code: 'ABDM-1006:'`
+- `phr-api.yaml:5159`
+  - before: `- code: 'ABDM-1006: '`
+  - after:  `- code: 'ABDM-1006:'`
+- `phr-api.yaml:5165`
+  - before: `- code: 'ABDM-9999: '`
+  - after:  `- code: 'ABDM-9999:'`
+- `phr-api.yaml:5169`
+  - before: `- code: 'ABDM-1006: '`
+  - after:  `- code: 'ABDM-1006:'`
+- `phr-api.yaml:5173`
+  - before: `- code: 'ABDM-1006: '`
+  - after:  `- code: 'ABDM-1006:'`
+- `phr-api.yaml:5177`
+  - before: `- code: 'ABDM-9999: '`
+  - after:  `- code: 'ABDM-9999:'`
+- `phr-api.yaml:5578`
+  - before: `- code: 'ABDM-9999: '`
+  - after:  `- code: 'ABDM-9999:'`
+- `phr-api.yaml:5587`
+  - before: `example: 'ABDM-9999: '`
+  - after:  `example: 'ABDM-9999:'`
+- `phr-api.yaml:5592`
+  - before: `- code: 'ABDM-9999: '`
+  - after:  `- code: 'ABDM-9999:'`
+- `phr-api.yaml:5598`
+  - before: `example: 'ABDM-9999: '`
+  - after:  `example: 'ABDM-9999:'`
+- `phr-api.yaml:5608`
+  - before: `example: 'ABDM-9999: '`
+  - after:  `example: 'ABDM-9999:'`
+- `phr-api.yaml:5613`
+  - before: `- code: 'ABDM-9999: '`
+  - after:  `- code: 'ABDM-9999:'`
+- `phr-api.yaml:5621`
+  - before: `example: 'ABDM-9999: '`
+  - after:  `example: 'ABDM-9999:'`
+- `phr-api.yaml:5626`
+  - before: `- code: 'ABDM-9999: '`
+  - after:  `- code: 'ABDM-9999:'`
+- `phr-api.yaml:5632`
+  - before: `example: 'ABDM-9999: '`
+  - after:  `example: 'ABDM-9999:'`
+- `phr-api.yaml:5642`
+  - before: `example: 'ABDM-9999: '`
+  - after:  `example: 'ABDM-9999:'`
+- `phr-api.yaml:5647`
+  - before: `- code: 'ABDM-9999: '`
+  - after:  `- code: 'ABDM-9999:'`
+- `phr-api.yaml:5655`
+  - before: `example: 'ABDM-9999: '`
+  - after:  `example: 'ABDM-9999:'`
+- `phr-api.yaml:5660`
+  - before: `- code: 'ABDM-9999: '`
+  - after:  `- code: 'ABDM-9999:'`
+- `phr-api.yaml:5666`
+  - before: `example: 'ABDM-9999: '`
+  - after:  `example: 'ABDM-9999:'`
+- `phr-api.yaml:5676`
+  - before: `example: 'ABDM-9999: '`
+  - after:  `example: 'ABDM-9999:'`
+- `phr-api.yaml:5681`
+  - before: `- code: 'ABDM-9999: '`
+  - after:  `- code: 'ABDM-9999:'`
+- `phr-api.yaml:5689`
+  - before: `example: 'ABDM-9999: '`
+  - after:  `example: 'ABDM-9999:'`
+- `phr-api.yaml:5694`
+  - before: `- code: 'ABDM-9999: '`
+  - after:  `- code: 'ABDM-9999:'`
+- `phr-api.yaml:5700`
+  - before: `example: 'ABDM-9999: '`
+  - after:  `example: 'ABDM-9999:'`
+- `phr-api.yaml:5710`
+  - before: `example: 'ABDM-9999: '`
+  - after:  `example: 'ABDM-9999:'`
+- `phr-api.yaml:5715`
+  - before: `- code: 'ABDM-9999: '`
+  - after:  `- code: 'ABDM-9999:'`
+- `phr-api.yaml:5720`
+  - before: `- code: 'ABDM-9999: '`
+  - after:  `- code: 'ABDM-9999:'`
+- `phr-api.yaml:5724`
+  - before: `- code: 'ABDM-9999: '`
+  - after:  `- code: 'ABDM-9999:'`
+- `phr-api.yaml:5728`
+  - before: `code: 'ABDM-9999: '`
+  - after:  `code: 'ABDM-9999:'`
+- `phr-api.yaml:6157`
+  - before: `- code: 'ABDM-1006: '`
+  - after:  `- code: 'ABDM-1006:'`
+- `phr-api.yaml:6166`
+  - before: `example: 'ABDM-1006: '`
+  - after:  `example: 'ABDM-1006:'`
+- `phr-api.yaml:6171`
+  - before: `- code: 'ABDM-1006: '`
+  - after:  `- code: 'ABDM-1006:'`
+- `phr-api.yaml:6187`
+  - before: `example: 'ABDM-9999: '`
+  - after:  `example: 'ABDM-9999:'`
+- `phr-api.yaml:6192`
+  - before: `- code: 'ABDM-9999: '`
+  - after:  `- code: 'ABDM-9999:'`
+- `phr-api.yaml:6200`
+  - before: `example: 'ABDM-9999: '`
+  - after:  `example: 'ABDM-9999:'`
+- `phr-api.yaml:6205`
+  - before: `- code: 'ABDM-9999: '`
+  - after:  `- code: 'ABDM-9999:'`
+- `phr-api.yaml:6213`
+  - before: `example: 'ABDM-9999: '`
+  - after:  `example: 'ABDM-9999:'`
+- `phr-api.yaml:6218`
+  - before: `- code: 'ABDM-9999: '`
+  - after:  `- code: 'ABDM-9999:'`
+- `phr-api.yaml:6226`
+  - before: `example: 'ABDM-1006: '`
+  - after:  `example: 'ABDM-1006:'`
+- `phr-api.yaml:6231`
+  - before: `- code: 'ABDM-1006: '`
+  - after:  `- code: 'ABDM-1006:'`
+- `phr-api.yaml:6239`
+  - before: `example: 'ABDM-9999: '`
+  - after:  `example: 'ABDM-9999:'`
+- `phr-api.yaml:6244`
+  - before: `- code: 'ABDM-9999: '`
+  - after:  `- code: 'ABDM-9999:'`
+- `phr-api.yaml:6252`
+  - before: `example: 'ABDM-9999: '`
+  - after:  `example: 'ABDM-9999:'`
+- `phr-api.yaml:6257`
+  - before: `- code: 'ABDM-9999: '`
+  - after:  `- code: 'ABDM-9999:'`
+- `phr-api.yaml:6265`
+  - before: `example: 'ABDM-9999: '`
+  - after:  `example: 'ABDM-9999:'`
+- `phr-api.yaml:6270`
+  - before: `- code: 'ABDM-9999: '`
+  - after:  `- code: 'ABDM-9999:'`
+- `phr-api.yaml:6286`
+  - before: `example: 'ABDM-9999: '`
+  - after:  `example: 'ABDM-9999:'`
+- `phr-api.yaml:6291`
+  - before: `- code: 'ABDM-9999: '`
+  - after:  `- code: 'ABDM-9999:'`
+- `phr-api.yaml:6299`
+  - before: `example: 'ABDM-9999: '`
+  - after:  `example: 'ABDM-9999:'`
+- `phr-api.yaml:6304`
+  - before: `- code: 'ABDM-9999: '`
+  - after:  `- code: 'ABDM-9999:'`
+- `phr-api.yaml:6312`
+  - before: `example: 'ABDM-9999: '`
+  - after:  `example: 'ABDM-9999:'`
+- `phr-api.yaml:6317`
+  - before: `- code: 'ABDM-9999: '`
+  - after:  `- code: 'ABDM-9999:'`
+- `phr-api.yaml:6325`
+  - before: `example: 'ABDM-1006: '`
+  - after:  `example: 'ABDM-1006:'`
+- `phr-api.yaml:6330`
+  - before: `- code: 'ABDM-1006: '`
+  - after:  `- code: 'ABDM-1006:'`
+- `phr-api.yaml:6338`
+  - before: `example: 'ABDM-9999: '`
+  - after:  `example: 'ABDM-9999:'`
+- `phr-api.yaml:6343`
+  - before: `- code: 'ABDM-9999: '`
+  - after:  `- code: 'ABDM-9999:'`
+- `phr-api.yaml:6351`
+  - before: `example: 'ABDM-9999: '`
+  - after:  `example: 'ABDM-9999:'`
+- `phr-api.yaml:6356`
+  - before: `- code: 'ABDM-9999: '`
+  - after:  `- code: 'ABDM-9999:'`
+- `phr-api.yaml:6364`
+  - before: `example: 'ABDM-9999: '`
+  - after:  `example: 'ABDM-9999:'`
+- `phr-api.yaml:6369`
+  - before: `- code: 'ABDM-9999: '`
+  - after:  `- code: 'ABDM-9999:'`
+- `phr-api.yaml:6374`
+  - before: `- code: 'ABDM-9999: '`
+  - after:  `- code: 'ABDM-9999:'`
+- `phr-api.yaml:6382`
+  - before: `- code: 'ABDM-9999: '`
+  - after:  `- code: 'ABDM-9999:'`
+- `phr-api.yaml:6386`
+  - before: `- code: 'ABDM-9999: '`
+  - after:  `- code: 'ABDM-9999:'`
+- `phr-api.yaml:6390`
+  - before: `- code: 'ABDM-1006: '`
+  - after:  `- code: 'ABDM-1006:'`
+- `phr-api.yaml:6394`
+  - before: `- code: 'ABDM-9999: '`
+  - after:  `- code: 'ABDM-9999:'`
+- `phr-api.yaml:6398`
+  - before: `- code: 'ABDM-9999: '`
+  - after:  `- code: 'ABDM-9999:'`
+- `phr-api.yaml:6402`
+  - before: `- code: 'ABDM-9999: '`
+  - after:  `- code: 'ABDM-9999:'`
+- `phr-api.yaml:6406`
+  - before: `- code: 'ABDM-1006: '`
+  - after:  `- code: 'ABDM-1006:'`
+- `phr-api.yaml:6410`
+  - before: `- code: 'ABDM-9999: '`
+  - after:  `- code: 'ABDM-9999:'`
+- `phr-api.yaml:6414`
+  - before: `- code: 'ABDM-9999: '`
+  - after:  `- code: 'ABDM-9999:'`
+- `phr-api.yaml:6418`
+  - before: `- code: 'ABDM-9999: '`
+  - after:  `- code: 'ABDM-9999:'`
+- `phr-api.yaml:6422`
+  - before: `- code: 'ABDM-9999: '`
+  - after:  `- code: 'ABDM-9999:'`
+- `phr-api.yaml:6426`
+  - before: `- code: 'ABDM-9999: '`
+  - after:  `- code: 'ABDM-9999:'`
+- `phr-api.yaml:6430`
+  - before: `- code: 'ABDM-9999: '`
+  - after:  `- code: 'ABDM-9999:'`
+- `phr-api.yaml:6434`
+  - before: `- code: 'ABDM-9999: '`
+  - after:  `- code: 'ABDM-9999:'`
+- `phr-api.yaml:6438`
+  - before: `- code: 'ABDM-1006: '`
+  - after:  `- code: 'ABDM-1006:'`
+- `phr-api.yaml:7485`
+  - before: `- code: 'ABDM-9999: '`
+  - after:  `- code: 'ABDM-9999:'`
+- `phr-api.yaml:7494`
+  - before: `example: 'ABDM-9999: '`
+  - after:  `example: 'ABDM-9999:'`
+- `phr-api.yaml:7499`
+  - before: `- code: 'ABDM-9999: '`
+  - after:  `- code: 'ABDM-9999:'`
+- `phr-api.yaml:7515`
+  - before: `example: 'ABDM-1006: '`
+  - after:  `example: 'ABDM-1006:'`
+- `phr-api.yaml:7520`
+  - before: `- code: 'ABDM-1006: '`
+  - after:  `- code: 'ABDM-1006:'`
+- `phr-api.yaml:7522`
+  - before: `- code: 'ABDM-1006: '`
+  - after:  `- code: 'ABDM-1006:'`
+- `phr-api.yaml:7532`
+  - before: `example: 'ABDM-9999: '`
+  - after:  `example: 'ABDM-9999:'`
+- `phr-api.yaml:7537`
+  - before: `- code: 'ABDM-9999: '`
+  - after:  `- code: 'ABDM-9999:'`
+- `phr-api.yaml:7545`
+  - before: `example: 'ABDM-9999: '`
+  - after:  `example: 'ABDM-9999:'`
+- `phr-api.yaml:7550`
+  - before: `- code: 'ABDM-9999: '`
+  - after:  `- code: 'ABDM-9999:'`
+- `phr-api.yaml:7558`
+  - before: `example: 'ABDM-1006: '`
+  - after:  `example: 'ABDM-1006:'`
+- `phr-api.yaml:7563`
+  - before: `- code: 'ABDM-1006: '`
+  - after:  `- code: 'ABDM-1006:'`
+- `phr-api.yaml:7565`
+  - before: `- code: 'ABDM-1006: '`
+  - after:  `- code: 'ABDM-1006:'`
+- `phr-api.yaml:7575`
+  - before: `example: 'ABDM-9999: '`
+  - after:  `example: 'ABDM-9999:'`
+- `phr-api.yaml:7580`
+  - before: `- code: 'ABDM-9999: '`
+  - after:  `- code: 'ABDM-9999:'`
+- `phr-api.yaml:7588`
+  - before: `example: 'ABDM-9999: '`
+  - after:  `example: 'ABDM-9999:'`
+- `phr-api.yaml:7593`
+  - before: `- code: 'ABDM-9999: '`
+  - after:  `- code: 'ABDM-9999:'`
+- `phr-api.yaml:7609`
+  - before: `example: 'ABDM-1006: '`
+  - after:  `example: 'ABDM-1006:'`
+- `phr-api.yaml:7614`
+  - before: `- code: 'ABDM-1006: '`
+  - after:  `- code: 'ABDM-1006:'`
+- `phr-api.yaml:7616`
+  - before: `- code: 'ABDM-1006: '`
+  - after:  `- code: 'ABDM-1006:'`
+- `phr-api.yaml:7626`
+  - before: `example: 'ABDM-9999: '`
+  - after:  `example: 'ABDM-9999:'`
+- `phr-api.yaml:7631`
+  - before: `- code: 'ABDM-9999: '`
+  - after:  `- code: 'ABDM-9999:'`
+- `phr-api.yaml:7639`
+  - before: `example: 'ABDM-9999: '`
+  - after:  `example: 'ABDM-9999:'`
+- `phr-api.yaml:7644`
+  - before: `- code: 'ABDM-9999: '`
+  - after:  `- code: 'ABDM-9999:'`
+- `phr-api.yaml:7652`
+  - before: `example: 'ABDM-1006: '`
+  - after:  `example: 'ABDM-1006:'`
+- `phr-api.yaml:7657`
+  - before: `- code: 'ABDM-1006: '`
+  - after:  `- code: 'ABDM-1006:'`
+- `phr-api.yaml:7659`
+  - before: `- code: 'ABDM-1006: '`
+  - after:  `- code: 'ABDM-1006:'`
+- `phr-api.yaml:7669`
+  - before: `example: 'ABDM-9999: '`
+  - after:  `example: 'ABDM-9999:'`
+- `phr-api.yaml:7674`
+  - before: `- code: 'ABDM-9999: '`
+  - after:  `- code: 'ABDM-9999:'`
+- `phr-api.yaml:7679`
+  - before: `- code: 'ABDM-1006: '`
+  - after:  `- code: 'ABDM-1006:'`
+- `phr-api.yaml:7681`
+  - before: `- code: 'ABDM-1006: '`
+  - after:  `- code: 'ABDM-1006:'`
+- `phr-api.yaml:7691`
+  - before: `- code: 'ABDM-9999: '`
+  - after:  `- code: 'ABDM-9999:'`
+- `phr-api.yaml:7695`
+  - before: `- code: 'ABDM-9999: '`
+  - after:  `- code: 'ABDM-9999:'`
+- `phr-api.yaml:7699`
+  - before: `- code: 'ABDM-9999: '`
+  - after:  `- code: 'ABDM-9999:'`
+- `phr-api.yaml:7703`
+  - before: `- code: 'ABDM-1006: '`
+  - after:  `- code: 'ABDM-1006:'`
+- `phr-api.yaml:7705`
+  - before: `- code: 'ABDM-1006: '`
+  - after:  `- code: 'ABDM-1006:'`
+- `phr-api.yaml:7711`
+  - before: `- code: 'ABDM-9999: '`
+  - after:  `- code: 'ABDM-9999:'`
+- `phr-api.yaml:7715`
+  - before: `- code: 'ABDM-1006: '`
+  - after:  `- code: 'ABDM-1006:'`
+- `phr-api.yaml:7717`
+  - before: `- code: 'ABDM-1006: '`
+  - after:  `- code: 'ABDM-1006:'`
+- `phr-api.yaml:7723`
+  - before: `- code: 'ABDM-9999: '`
+  - after:  `- code: 'ABDM-9999:'`
+- `phr-api.yaml:7727`
+  - before: `- code: 'ABDM-9999: '`
+  - after:  `- code: 'ABDM-9999:'`
+- `phr-api.yaml:7731`
+  - before: `- code: 'ABDM-1006: '`
+  - after:  `- code: 'ABDM-1006:'`
+- `phr-api.yaml:7733`
+  - before: `- code: 'ABDM-1006: '`
+  - after:  `- code: 'ABDM-1006:'`
+- `phr-api.yaml:7739`
+  - before: `- code: 'ABDM-9999: '`
+  - after:  `- code: 'ABDM-9999:'`
+- `phr-api.yaml:7743`
+  - before: `- code: 'ABDM-9999: '`
+  - after:  `- code: 'ABDM-9999:'`
+- `phr-api.yaml:8165`
+  - before: `example: 'ABDM-9999: '`
+  - after:  `example: 'ABDM-9999:'`
+- `phr-api.yaml:8175`
+  - before: `example: 'ABDM-9999: '`
+  - after:  `example: 'ABDM-9999:'`
+- `phr-api.yaml:8180`
+  - before: `- code: 'ABDM-9999: '`
+  - after:  `- code: 'ABDM-9999:'`
+- `phr-api.yaml:8188`
+  - before: `example: 'ABDM-9999: '`
+  - after:  `example: 'ABDM-9999:'`
+- `phr-api.yaml:8193`
+  - before: `- code: 'ABDM-9999: '`
+  - after:  `- code: 'ABDM-9999:'`
+- `phr-api.yaml:8199`
+  - before: `example: 'ABDM-9999: '`
+  - after:  `example: 'ABDM-9999:'`
+- `phr-api.yaml:8209`
+  - before: `example: 'ABDM-9999: '`
+  - after:  `example: 'ABDM-9999:'`
+- `phr-api.yaml:8214`
+  - before: `- code: 'ABDM-9999: '`
+  - after:  `- code: 'ABDM-9999:'`
+- `phr-api.yaml:8222`
+  - before: `example: 'ABDM-9999: '`
+  - after:  `example: 'ABDM-9999:'`
+- `phr-api.yaml:8227`
+  - before: `- code: 'ABDM-9999: '`
+  - after:  `- code: 'ABDM-9999:'`
+- `phr-api.yaml:8232`
+  - before: `- code: 'ABDM-9999: '`
+  - after:  `- code: 'ABDM-9999:'`
+- `phr-api.yaml:8236`
+  - before: `- code: 'ABDM-9999: '`
+  - after:  `- code: 'ABDM-9999:'`
+- `phr-api.yaml:8240`
+  - before: `code: 'ABDM-9999: '`
+  - after:  `code: 'ABDM-9999:'`
+- `phr-api.yaml:8510`
+  - before: `example: 'ABDM-9999: '`
+  - after:  `example: 'ABDM-9999:'`
+- `phr-api.yaml:8520`
+  - before: `example: 'ABDM-9999: '`
+  - after:  `example: 'ABDM-9999:'`
+- `phr-api.yaml:8525`
+  - before: `- code: 'ABDM-9999: '`
+  - after:  `- code: 'ABDM-9999:'`
+- `phr-api.yaml:8527`
+  - before: `- code: 'ABDM-9999: '`
+  - after:  `- code: 'ABDM-9999:'`
+- `phr-api.yaml:8533`
+  - before: `example: 'ABDM-9999: '`
+  - after:  `example: 'ABDM-9999:'`
+- `phr-api.yaml:8543`
+  - before: `example: 'ABDM-9999: '`
+  - after:  `example: 'ABDM-9999:'`
+- `phr-api.yaml:8548`
+  - before: `- code: 'ABDM-9999: '`
+  - after:  `- code: 'ABDM-9999:'`
+- `phr-api.yaml:8550`
+  - before: `- code: 'ABDM-9999: '`
+  - after:  `- code: 'ABDM-9999:'`
+- `phr-api.yaml:8555`
+  - before: `- code: 'ABDM-9999: '`
+  - after:  `- code: 'ABDM-9999:'`
+- `phr-api.yaml:8557`
+  - before: `- code: 'ABDM-9999: '`
+  - after:  `- code: 'ABDM-9999:'`
+- `phr-api.yaml:8561`
+  - before: `code: 'ABDM-9999: '`
+  - after:  `code: 'ABDM-9999:'`
+- `phr-api.yaml:8668`
+  - before: `example: ' eyJ4NXQiOiJOMkpqTWpOaU0yRXhZalJrTnpaalptWTFZVEF4Tm1GbE5qZzRPV1UxWVdRMll6YzFObVk1TlE9PSIsImtpZdI6ImdhdGV3YXlfY3VydGlmaWNhdGVfYWxpYXMiLCJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9'`
+  - after:  `example: 'eyJ4NXQiOiJOMkpqTWpOaU0yRXhZalJrTnpaalptWTFZVEF4Tm1GbE5qZzRPV1UxWVdRMll6YzFObVk1TlE9PSIsImtpZdI6ImdhdGV3YXlfY3VydGlmaWNhdGVfYWxpYXMiLCJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9'`
+- `phr-api.yaml:9185`
+  - before: `example: 'ABDM-9999: '`
+  - after:  `example: 'ABDM-9999:'`
+- `phr-api.yaml:9195`
+  - before: `example: 'ABDM-9999: '`
+  - after:  `example: 'ABDM-9999:'`
+- `phr-api.yaml:9200`
+  - before: `- code: 'ABDM-9999: '`
+  - after:  `- code: 'ABDM-9999:'`
+- `phr-api.yaml:9205`
+  - before: `code: 'ABDM-9999: '`
+  - after:  `code: 'ABDM-9999:'`
+- `phr-api.yaml:9209`
+  - before: `- code: 'ABDM-9999: '`
+  - after:  `- code: 'ABDM-9999:'`
+- `phr-api.yaml:9664`
+  - before: `example: ' eyJ4NXQiOiJOMkpqTWpOaU0yRXhZalJrTnpaalptWTFZVEF4Tm1GbE5qZzRPV1UxWVdRMll6YzFObVk1TlE9PSIsImtpZdI6ImdhdGV3YXlfY3VydGlmaWNhdGVfYWxpYXMiLCJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9'`
+  - after:  `example: 'eyJ4NXQiOiJOMkpqTWpOaU0yRXhZalJrTnpaalptWTFZVEF4Tm1GbE5qZzRPV1UxWVdRMll6YzFObVk1TlE9PSIsImtpZdI6ImdhdGV3YXlfY3VydGlmaWNhdGVfYWxpYXMiLCJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9'`
+- `phr-api.yaml:10570`
+  - before: `example: 'ABDM-9999: '`
+  - after:  `example: 'ABDM-9999:'`
+- `phr-api.yaml:10575`
+  - before: `- code: 'ABDM-9999: '`
+  - after:  `- code: 'ABDM-9999:'`
+- `phr-api.yaml:10580`
+  - before: `- code: 'ABDM-9999: '`
+  - after:  `- code: 'ABDM-9999:'`
+- `phr-api.yaml:10582`
+  - before: `- code: 'ABDM-9999: '`
+  - after:  `- code: 'ABDM-9999:'`
+- `phr-api.yaml:10584`
+  - before: `- code: 'ABDM-9999: '`
+  - after:  `- code: 'ABDM-9999:'`
+- `phr-api.yaml:10586`
+  - before: `- code: 'ABDM-9999: '`
+  - after:  `- code: 'ABDM-9999:'`
+- `phr-api.yaml:10590`
+  - before: `- code: 'ABDM-9999: '`
+  - after:  `- code: 'ABDM-9999:'`
+- `phr-api.yaml:10592`
+  - before: `- code: 'ABDM-9999: '`
+  - after:  `- code: 'ABDM-9999:'`
+- `phr-api.yaml:10594`
+  - before: `- code: 'ABDM-9999: '`
+  - after:  `- code: 'ABDM-9999:'`
+- `phr-api.yaml:10598`
+  - before: `- code: 'ABDM-9999: '`
+  - after:  `- code: 'ABDM-9999:'`
+
+## A4 error code integer->string (25)
+
+- `gateway.yaml:216`
+  - before: `type: integer`
+  - after:  `type: string`
+- `gateway.yaml:406`
+  - before: `type: integer`
+  - after:  `type: string`
+- `gateway.yaml:550`
+  - before: `type: integer`
+  - after:  `type: string`
+- `gateway.yaml:763`
+  - before: `type: integer`
+  - after:  `type: string`
+- `gateway.yaml:933`
+  - before: `type: integer`
+  - after:  `type: string`
+- `gateway.yaml:1098`
+  - before: `type: integer`
+  - after:  `type: string`
+- `gateway.yaml:1300`
+  - before: `type: integer`
+  - after:  `type: string`
+- `gateway.yaml:1483`
+  - before: `type: integer`
+  - after:  `type: string`
+- `gateway.yaml:1605`
+  - before: `type: integer`
+  - after:  `type: string`
+- `gateway.yaml:1768`
+  - before: `type: integer`
+  - after:  `type: string`
+- `patient-share.yaml:418`
+  - before: `type: integer`
+  - after:  `type: string`
+- `patient-share.yaml:769`
+  - before: `type: integer`
+  - after:  `type: string`
+- `patient-share.yaml:1192`
+  - before: `type: integer`
+  - after:  `type: string`
+- `user-initiated-linking.yaml:176`
+  - before: `type: integer`
+  - after:  `type: string`
+- `user-initiated-linking.yaml:414`
+  - before: `type: integer`
+  - after:  `type: string`
+- `user-initiated-linking.yaml:675`
+  - before: `type: integer`
+  - after:  `type: string`
+- `user-initiated-linking.yaml:891`
+  - before: `type: integer`
+  - after:  `type: string`
+- `user-initiated-linking.yaml:1030`
+  - before: `type: integer`
+  - after:  `type: string`
+- `user-initiated-linking.yaml:1252`
+  - before: `type: integer`
+  - after:  `type: string`
+- `user-initiated-linking.yaml:1424`
+  - before: `type: integer`
+  - after:  `type: string`
+- `user-initiated-linking.yaml:1721`
+  - before: `type: integer`
+  - after:  `type: string`
+- `user-initiated-linking.yaml:1927`
+  - before: `type: integer`
+  - after:  `type: string`
+- `user-initiated-linking.yaml:2144`
+  - before: `type: integer`
+  - after:  `type: string`
+- `user-initiated-linking.yaml:2295`
+  - before: `type: integer`
+  - after:  `type: string`
+- `user-initiated-linking.yaml:2512`
+  - before: `type: integer`
+  - after:  `type: string`
+
+## A5 string->array (scope/authMethods) (7)
+
+- `abha-api-v3.yaml:53`
+  - before: `type: string`
+  - after:  `type: array / items: {type: string}`
+- `abha-api-v3.yaml:359`
+  - before: `type: string`
+  - after:  `type: array / items: {type: string}`
+- `abha-api-v3.yaml:1132`
+  - before: `type: string`
+  - after:  `type: array / items: {type: string}`
+- `abha-api-v3.yaml:1138`
+  - before: `type: string`
+  - after:  `type: array / items: {type: string}`
+- `abha-api-v3.yaml:1670`
+  - before: `type: string`
+  - after:  `type: array / items: {type: string}`
+- `abha-api-v3.yaml:1781`
+  - before: `type: string`
+  - after:  `type: array / items: {type: string}`
+- `abha-api-v3.yaml:2370`
+  - before: `type: string`
+  - after:  `type: array / items: {type: string}`
+
+## A6i items-level example de-listed (1)
+
+- `abha-api-v3.yaml:6706`
+  - before: `example: [ "abha-address-login", "mobile-verify", "aadhaar-face-verify", "aadhaar-bio-verify", "aadhaar-iris-verify" ]`
+  - after:  `example: abha-address-login`
+
+## A7 mis-indented example -> description (3)
+
+- `abha-api-v3.yaml:8230`
+  - before: `example:`
+  - after:  `description:`
+- `abha-api-v3.yaml:8232`
+  - before: `example: "Invalid Credentials. Make sure your API invocation call has a header: 'Authorization : Bearer ACCESS_TOKEN' or 'Authorization : Basic ACCESS_TOKEN' or 'apikey: API_KEY'"`
+  - after:  `description: "Invalid Credentials. Make sure your API invocation call has a header: 'Authorization : Bearer ACCESS_TOKEN' or 'Authorization : Basic ACCESS_TOKEN' or 'apikey: API_KEY'"`
+- `abha-api-v3.yaml:8239`
+  - before: `example: "Invalid Credentials. Make sure your API invocation call has a header: 'Authorization : Bearer ACCESS_TOKEN' or 'Authorization : Basic ACCESS_TOKEN' or 'apikey: API_KEY'"`
+  - after:  `description: "Invalid Credentials. Make sure your API invocation call has a header: 'Authorization : Bearer ACCESS_TOKEN' or 'Authorization : Basic ACCESS_TOKEN' or 'apikey: API_KEY'"`
+
+## A8 trailing period removed (2)
+
+- `consent-management-data-flow.yaml:3273`
+  - before: `example: ECDH.`
+  - after:  `example: ECDH`
+- `consent-management-data-flow.yaml:3296`
+  - before: `example: Ephemeral public key.`
+  - after:  `example: Ephemeral public key`
+
+## A9 malformed UUID repaired (9)
+
+- `abha-api-v3.yaml:1339`
+  - before: `example: "30839193-9788-4c0d-9459-7cd70a"`
+  - after:  `example: "30839193-9788-4c0d-9459-7cd70a1b2c3d"`
+- `abha-api-v3.yaml:1355`
+  - before: `txnId: 30839193-9788-4c0d-9459-7cd70a`
+  - after:  `txnId: 30839193-9788-4c0d-9459-7cd70a1b2c3d`
+- `phr-api.yaml:32`
+  - before: `example: 'e906de88-7e4e-465f-974-f246a5c96b5b'`
+  - after:  `example: 'e906de88-7e4e-465f-9744-f246a5c96b5b'`
+- `phr-api.yaml:1178`
+  - before: `example: 'e906de88-7e4e-465f-97-f246a5c96b5b'`
+  - after:  `example: 'e906de88-7e4e-465f-9744-f246a5c96b5b'`
+- `phr-api.yaml:1548`
+  - before: `example: 'e906de88-7e4e-465f-974-f246a5c96b5b'`
+  - after:  `example: 'e906de88-7e4e-465f-9744-f246a5c96b5b'`
+- `phr-api.yaml:2569`
+  - before: `example: 'e906de88-7e4e-465f-974-f246a5c96b5b'`
+  - after:  `example: 'e906de88-7e4e-465f-9744-f246a5c96b5b'`
+- `phr-api.yaml:3035`
+  - before: `example: 'e906de88-7e4e-465f-974-f246a5c96b5b'`
+  - after:  `example: 'e906de88-7e4e-465f-9744-f246a5c96b5b'`
+- `phr-api.yaml:3881`
+  - before: `example: 'e906de88-7e4e-465f-974-f246a5c96b5b'`
+  - after:  `example: 'e906de88-7e4e-465f-9744-f246a5c96b5b'`
+- `phr-api.yaml:5361`
+  - before: `example: 'e906de88-7e4e-465f-974-f246a5c96b5b'`
+  - after:  `example: 'e906de88-7e4e-465f-9744-f246a5c96b5b'`
+
+
+---
+
+# Tier-2 fixes (evidence-backed)
+
+| Class | Count |
+|---|---|
+| T1 timestamp -> RFC 3339 | 268 |
+| T2 example quoted to match declared string type | 49 |
+| T3 type string -> integer (suite majority) | 3 |
+| T4 trailing punctuation removed from code | 555 |
+| T5 400 body array -> object | 39 |
+| T6 truncated UUID example completed | 29 |
+
+## T1 timestamp -> RFC 3339 (268)
+
+- `abha/abha-api-v3.yaml:200`
+  - before: `example: "2024-05-10 11:13:04"`
+  - after:  `example: "2024-05-10T11:13:04.000Z"`
+- `abha/abha-api-v3.yaml:209`
+  - before: `example: "2024-05-10 11:15:14"`
+  - after:  `example: "2024-05-10T11:15:14.000Z"`
+- `abha/abha-api-v3.yaml:218`
+  - before: `example: "2024-05-10 11:16:16"`
+  - after:  `example: "2024-05-10T11:16:16.000Z"`
+- `abha/abha-api-v3.yaml:224`
+  - before: `timestamp: '2024-05-10 11:13:04'`
+  - after:  `timestamp: '2024-05-10T11:13:04.000Z'`
+- `abha/abha-api-v3.yaml:228`
+  - before: `timestamp: '2024-05-10 11:15:14'`
+  - after:  `timestamp: '2024-05-10T11:15:14.000Z'`
+- `abha/abha-api-v3.yaml:232`
+  - before: `timestamp: '2024-05-10 11:16:16'`
+  - after:  `timestamp: '2024-05-10T11:16:16.000Z'`
+- `abha/abha-api-v3.yaml:236`
+  - before: `timestamp: '2024-05-10 11:13:04'`
+  - after:  `timestamp: '2024-05-10T11:13:04.000Z'`
+- `abha/abha-api-v3.yaml:240`
+  - before: `timestamp: '2024-05-10 11:15:14'`
+  - after:  `timestamp: '2024-05-10T11:15:14.000Z'`
+- `abha/abha-api-v3.yaml:244`
+  - before: `timestamp: '2024-05-10 11:16:16'`
+  - after:  `timestamp: '2024-05-10T11:16:16.000Z'`
+- `abha/abha-api-v3.yaml:248`
+  - before: `timestamp: '2024-05-10 11:13:04'`
+  - after:  `timestamp: '2024-05-10T11:13:04.000Z'`
+- `abha/abha-api-v3.yaml:252`
+  - before: `timestamp: '2024-05-10 11:15:14'`
+  - after:  `timestamp: '2024-05-10T11:15:14.000Z'`
+- `abha/abha-api-v3.yaml:256`
+  - before: `timestamp: '2024-05-10 11:16:16'`
+  - after:  `timestamp: '2024-05-10T11:16:16.000Z'`
+- `abha/abha-api-v3.yaml:260`
+  - before: `timestamp: '2024-05-10 11:13:04'`
+  - after:  `timestamp: '2024-05-10T11:13:04.000Z'`
+- `abha/abha-api-v3.yaml:264`
+  - before: `timestamp: '2024-05-10 11:16:16'`
+  - after:  `timestamp: '2024-05-10T11:16:16.000Z'`
+- `abha/abha-api-v3.yaml:268`
+  - before: `timestamp: '2024-05-10 11:16:16'`
+  - after:  `timestamp: '2024-05-10T11:16:16.000Z'`
+- `abha/abha-api-v3.yaml:272`
+  - before: `timestamp: '2024-05-10 11:13:04'`
+  - after:  `timestamp: '2024-05-10T11:13:04.000Z'`
+- `abha/abha-api-v3.yaml:276`
+  - before: `timestamp: '2024-05-10 11:15:14'`
+  - after:  `timestamp: '2024-05-10T11:15:14.000Z'`
+- `abha/abha-api-v3.yaml:981`
+  - before: `example: "2024-05-10 11:41:47"`
+  - after:  `example: "2024-05-10T11:41:47.000Z"`
+- `abha/abha-api-v3.yaml:989`
+  - before: `example: "2024-05-10 11:40:16"`
+  - after:  `example: "2024-05-10T11:40:16.000Z"`
+- `abha/abha-api-v3.yaml:997`
+  - before: `example: "2024-05-10 11:44:46"`
+  - after:  `example: "2024-05-10T11:44:46.000Z"`
+- `abha/abha-api-v3.yaml:1005`
+  - before: `example: "2024-05-10 14:37:47"`
+  - after:  `example: "2024-05-10T14:37:47.000Z"`
+- `abha/abha-api-v3.yaml:1011`
+  - before: `timestamp: '2024-05-10 11:41:47'`
+  - after:  `timestamp: '2024-05-10T11:41:47.000Z'`
+- `abha/abha-api-v3.yaml:1015`
+  - before: `timestamp: '2024-05-10 11:40:16'`
+  - after:  `timestamp: '2024-05-10T11:40:16.000Z'`
+- `abha/abha-api-v3.yaml:1019`
+  - before: `timestamp: '2024-05-10 11:44:46'`
+  - after:  `timestamp: '2024-05-10T11:44:46.000Z'`
+- `abha/abha-api-v3.yaml:1023`
+  - before: `timestamp: '2024-05-10 14:37:47'`
+  - after:  `timestamp: '2024-05-10T14:37:47.000Z'`
+- `abha/abha-api-v3.yaml:1038`
+  - before: `example: "2024-05-10 18:52:59"`
+  - after:  `example: "2024-05-10T18:52:59.000Z"`
+- `abha/abha-api-v3.yaml:1055`
+  - before: `timestamp: '2024-05-10 14:39:48'`
+  - after:  `timestamp: '2024-05-10T14:39:48.000Z'`
+- `abha/abha-api-v3.yaml:1059`
+  - before: `timestamp: '2024-05-10 14:25:56'`
+  - after:  `timestamp: '2024-05-10T14:25:56.000Z'`
+- `abha/abha-api-v3.yaml:1063`
+  - before: `timestamp: '2024-05-10 18:52:59'`
+  - after:  `timestamp: '2024-05-10T18:52:59.000Z'`
+- `abha/abha-api-v3.yaml:1073`
+  - before: `timestamp: '2024-05-10 18:55:03'`
+  - after:  `timestamp: '2024-05-10T18:55:03.000Z'`
+- `abha/abha-api-v3.yaml:1326`
+  - before: `example: "2024-05-10 11:41:47"`
+  - after:  `example: "2024-05-10T11:41:47.000Z"`
+- `abha/abha-api-v3.yaml:1334`
+  - before: `example: "2024-05-10 11:40:16"`
+  - after:  `example: "2024-05-10T11:40:16.000Z"`
+- `abha/abha-api-v3.yaml:1350`
+  - before: `example: "2024-05-10 14:37:47"`
+  - after:  `example: "2024-05-10T14:37:47.000Z"`
+- `abha/abha-api-v3.yaml:1361`
+  - before: `timestamp: '2024-05-10 11:41:47'`
+  - after:  `timestamp: '2024-05-10T11:41:47.000Z'`
+- `abha/abha-api-v3.yaml:1366`
+  - before: `timestamp: '2024-05-10 11:41:47'`
+  - after:  `timestamp: '2024-05-10T11:41:47.000Z'`
+- `abha/abha-api-v3.yaml:1371`
+  - before: `timestamp: '2024-05-10 11:21:54'`
+  - after:  `timestamp: '2024-05-10T11:21:54.000Z'`
+- `abha/abha-api-v3.yaml:1508`
+  - before: `example: '2024-05-10 12:01:22'`
+  - after:  `example: '2024-05-10T12:01:22.000Z'`
+- `abha/abha-api-v3.yaml:1513`
+  - before: `timestamp: '2024-05-10 12:01:22'`
+  - after:  `timestamp: '2024-05-10T12:01:22.000Z'`
+- `abha/abha-api-v3.yaml:1517`
+  - before: `timestamp: '2024-05-10 12:00:14'`
+  - after:  `timestamp: '2024-05-10T12:00:14.000Z'`
+- `abha/abha-api-v3.yaml:1627`
+  - before: `example: '2024-05-10 12:00:14'`
+  - after:  `example: '2024-05-10T12:00:14.000Z'`
+- `abha/abha-api-v3.yaml:1633`
+  - before: `timestamp: '2024-05-10 12:00:14'`
+  - after:  `timestamp: '2024-05-10T12:00:14.000Z'`
+- `abha/abha-api-v3.yaml:1638`
+  - before: `timestamp: '2024-05-10 12:01:22'`
+  - after:  `timestamp: '2024-05-10T12:01:22.000Z'`
+- `abha/abha-api-v3.yaml:1745`
+  - before: `example: "2024-05-10 11:41:47"`
+  - after:  `example: "2024-05-10T11:41:47.000Z"`
+- `abha/abha-api-v3.yaml:2295`
+  - before: `example: "2024-12-26 10:41:04"`
+  - after:  `example: "2024-12-26T10:41:04.000Z"`
+- `abha/abha-api-v3.yaml:2426`
+  - before: `example: "2024-12-26 10:41:04"`
+  - after:  `example: "2024-12-26T10:41:04.000Z"`
+- `abha/abha-api-v3.yaml:2757`
+  - before: `example: '2024-05-10 14:33:06'`
+  - after:  `example: '2024-05-10T14:33:06.000Z'`
+- `abha/abha-api-v3.yaml:2760`
+  - before: `timestamp: '2024-05-10 14:33:06'`
+  - after:  `timestamp: '2024-05-10T14:33:06.000Z'`
+- `abha/abha-api-v3.yaml:2770`
+  - before: `example: '2024-05-10 14:33:06'`
+  - after:  `example: '2024-05-10T14:33:06.000Z'`
+- `abha/abha-api-v3.yaml:2773`
+  - before: `timestamp: '2024-05-10 14:33:06'`
+  - after:  `timestamp: '2024-05-10T14:33:06.000Z'`
+- `abha/abha-api-v3.yaml:2783`
+  - before: `example: '2024-05-10 14:33:06'`
+  - after:  `example: '2024-05-10T14:33:06.000Z'`
+- `abha/abha-api-v3.yaml:2786`
+  - before: `timestamp: '2024-05-10 14:33:06'`
+  - after:  `timestamp: '2024-05-10T14:33:06.000Z'`
+- `abha/abha-api-v3.yaml:2796`
+  - before: `example: '2024-05-10 14:33:06'`
+  - after:  `example: '2024-05-10T14:33:06.000Z'`
+- `abha/abha-api-v3.yaml:2799`
+  - before: `timestamp: '2024-05-10 14:33:06'`
+  - after:  `timestamp: '2024-05-10T14:33:06.000Z'`
+- `abha/abha-api-v3.yaml:2809`
+  - before: `example: '2024-05-10 14:33:06'`
+  - after:  `example: '2024-05-10T14:33:06.000Z'`
+- `abha/abha-api-v3.yaml:2812`
+  - before: `timestamp: '2024-05-10 14:33:06'`
+  - after:  `timestamp: '2024-05-10T14:33:06.000Z'`
+- `abha/abha-api-v3.yaml:2822`
+  - before: `example: '2024-05-10 14:33:06'`
+  - after:  `example: '2024-05-10T14:33:06.000Z'`
+- `abha/abha-api-v3.yaml:2825`
+  - before: `timestamp: '2024-05-10 14:33:06'`
+  - after:  `timestamp: '2024-05-10T14:33:06.000Z'`
+- `abha/abha-api-v3.yaml:2835`
+  - before: `example: '2024-05-10 14:33:06'`
+  - after:  `example: '2024-05-10T14:33:06.000Z'`
+- `abha/abha-api-v3.yaml:2838`
+  - before: `timestamp: '2024-05-10 14:33:06'`
+  - after:  `timestamp: '2024-05-10T14:33:06.000Z'`
+- `abha/abha-api-v3.yaml:2843`
+  - before: `timestamp: '2024-05-10 11:16:16'`
+  - after:  `timestamp: '2024-05-10T11:16:16.000Z'`
+- `abha/abha-api-v3.yaml:2847`
+  - before: `timestamp: '2024-05-10 11:16:16'`
+  - after:  `timestamp: '2024-05-10T11:16:16.000Z'`
+- `abha/abha-api-v3.yaml:2851`
+  - before: `timestamp: '2024-05-10 11:16:16'`
+  - after:  `timestamp: '2024-05-10T11:16:16.000Z'`
+- `abha/abha-api-v3.yaml:2855`
+  - before: `timestamp: '2024-05-10 11:16:16'`
+  - after:  `timestamp: '2024-05-10T11:16:16.000Z'`
+- `abha/abha-api-v3.yaml:2859`
+  - before: `timestamp: '2024-05-10 11:13:04'`
+  - after:  `timestamp: '2024-05-10T11:13:04.000Z'`
+- `abha/abha-api-v3.yaml:2863`
+  - before: `timestamp: '2024-05-10 11:15:14'`
+  - after:  `timestamp: '2024-05-10T11:15:14.000Z'`
+- `abha/abha-api-v3.yaml:2867`
+  - before: `timestamp: '2024-05-10 11:15:14'`
+  - after:  `timestamp: '2024-05-10T11:15:14.000Z'`
+- `abha/abha-api-v3.yaml:2871`
+  - before: `timestamp: '2024-05-10 11:16:16'`
+  - after:  `timestamp: '2024-05-10T11:16:16.000Z'`
+- `abha/abha-api-v3.yaml:2875`
+  - before: `timestamp: '2024-05-10 11:16:16'`
+  - after:  `timestamp: '2024-05-10T11:16:16.000Z'`
+- `abha/abha-api-v3.yaml:2879`
+  - before: `timestamp: '2024-05-10 11:13:04'`
+  - after:  `timestamp: '2024-05-10T11:13:04.000Z'`
+- `abha/abha-api-v3.yaml:2883`
+  - before: `timestamp: '2024-05-10 19:54:16'`
+  - after:  `timestamp: '2024-05-10T19:54:16.000Z'`
+- `abha/abha-api-v3.yaml:2887`
+  - before: `timestamp: '2024-05-10 11:16:16'`
+  - after:  `timestamp: '2024-05-10T11:16:16.000Z'`
+- `abha/abha-api-v3.yaml:2891`
+  - before: `timestamp: '2024-05-10 11:15:14'`
+  - after:  `timestamp: '2024-05-10T11:15:14.000Z'`
+- `abha/abha-api-v3.yaml:3445`
+  - before: `example: '2024-05-10 14:33:06'`
+  - after:  `example: '2024-05-10T14:33:06.000Z'`
+- `abha/abha-api-v3.yaml:3448`
+  - before: `timestamp: '2024-05-10 14:33:06'`
+  - after:  `timestamp: '2024-05-10T14:33:06.000Z'`
+- `abha/abha-api-v3.yaml:3458`
+  - before: `example: '2024-05-10 14:33:06'`
+  - after:  `example: '2024-05-10T14:33:06.000Z'`
+- `abha/abha-api-v3.yaml:3461`
+  - before: `timestamp: '2024-05-10 14:33:06'`
+  - after:  `timestamp: '2024-05-10T14:33:06.000Z'`
+- `abha/abha-api-v3.yaml:3471`
+  - before: `example: '2024-05-10 14:33:06'`
+  - after:  `example: '2024-05-10T14:33:06.000Z'`
+- `abha/abha-api-v3.yaml:3474`
+  - before: `timestamp: '2024-05-10 14:33:06'`
+  - after:  `timestamp: '2024-05-10T14:33:06.000Z'`
+- `abha/abha-api-v3.yaml:3484`
+  - before: `example: '2024-05-10 14:33:06'`
+  - after:  `example: '2024-05-10T14:33:06.000Z'`
+- `abha/abha-api-v3.yaml:3487`
+  - before: `timestamp: '2024-05-10 14:33:06'`
+  - after:  `timestamp: '2024-05-10T14:33:06.000Z'`
+- `abha/abha-api-v3.yaml:3497`
+  - before: `example: '2024-05-10 14:33:06'`
+  - after:  `example: '2024-05-10T14:33:06.000Z'`
+- `abha/abha-api-v3.yaml:3500`
+  - before: `timestamp: '2024-05-10 14:33:06'`
+  - after:  `timestamp: '2024-05-10T14:33:06.000Z'`
+- `abha/abha-api-v3.yaml:3510`
+  - before: `example: '2024-05-10 14:33:06'`
+  - after:  `example: '2024-05-10T14:33:06.000Z'`
+- `abha/abha-api-v3.yaml:3513`
+  - before: `timestamp: '2024-05-10 14:33:06'`
+  - after:  `timestamp: '2024-05-10T14:33:06.000Z'`
+- `abha/abha-api-v3.yaml:3523`
+  - before: `example: '2024-05-10 14:33:06'`
+  - after:  `example: '2024-05-10T14:33:06.000Z'`
+- `abha/abha-api-v3.yaml:3526`
+  - before: `timestamp: '2024-05-10 14:33:06'`
+  - after:  `timestamp: '2024-05-10T14:33:06.000Z'`
+- `abha/abha-api-v3.yaml:3532`
+  - before: `timestamp: '2024-05-10 14:33:06'`
+  - after:  `timestamp: '2024-05-10T14:33:06.000Z'`
+- `abha/abha-api-v3.yaml:3537`
+  - before: `timestamp: '2024-05-10 12:51:40'`
+  - after:  `timestamp: '2024-05-10T12:51:40.000Z'`
+- `abha/abha-api-v3.yaml:3543`
+  - before: `timestamp: '2024-05-10 12:51:40'`
+  - after:  `timestamp: '2024-05-10T12:51:40.000Z'`
+- `abha/abha-api-v3.yaml:3548`
+  - before: `timestamp: '2024-10-03 17:28:42'`
+  - after:  `timestamp: '2024-10-03T17:28:42.000Z'`
+- `abha/abha-api-v3.yaml:3553`
+  - before: `timestamp: '2024-10-04 15:40:46'`
+  - after:  `timestamp: '2024-10-04T15:40:46.000Z'`
+- `abha/abha-api-v3.yaml:3559`
+  - before: `timestamp: '2024-05-10 11:20:28'`
+  - after:  `timestamp: '2024-05-10T11:20:28.000Z'`
+- `abha/abha-api-v3.yaml:3563`
+  - before: `timestamp: '2024-05-10 11:21:54'`
+  - after:  `timestamp: '2024-05-10T11:21:54.000Z'`
+- `abha/abha-api-v3.yaml:3567`
+  - before: `timestamp: '2024-05-10 11:22:57'`
+  - after:  `timestamp: '2024-05-10T11:22:57.000Z'`
+- `abha/abha-api-v3.yaml:3571`
+  - before: `timestamp: '2024-05-10 11:23:53'`
+  - after:  `timestamp: '2024-05-10T11:23:53.000Z'`
+- `abha/abha-api-v3.yaml:3576`
+  - before: `timestamp: '2024-05-10 20:04:27'`
+  - after:  `timestamp: '2024-05-10T20:04:27.000Z'`
+- `abha/abha-api-v3.yaml:3581`
+  - before: `timestamp: '2024-12-27 16:14:46'`
+  - after:  `timestamp: '2024-12-27T16:14:46.000Z'`
+- `abha/abha-api-v3.yaml:3737`
+  - before: `example: "2024-05-10 12:59:05"`
+  - after:  `example: "2024-05-10T12:59:05.000Z"`
+- `abha/abha-api-v3.yaml:3744`
+  - before: `example: "2024-05-10 13:12:08"`
+  - after:  `example: "2024-05-10T13:12:08.000Z"`
+- `abha/abha-api-v3.yaml:3751`
+  - before: `timestamp: '2024-05-10 12:59:05'`
+  - after:  `timestamp: '2024-05-10T12:59:05.000Z'`
+- `abha/abha-api-v3.yaml:3756`
+  - before: `timestamp: '2024-05-10 13:12:08'`
+  - after:  `timestamp: '2024-05-10T13:12:08.000Z'`
+- `abha/abha-api-v3.yaml:3987`
+  - before: `example: '2024-05-10 14:33:06'`
+  - after:  `example: '2024-05-10T14:33:06.000Z'`
+- `abha/abha-api-v3.yaml:3990`
+  - before: `timestamp: '2024-05-10 14:33:06'`
+  - after:  `timestamp: '2024-05-10T14:33:06.000Z'`
+- `abha/abha-api-v3.yaml:4000`
+  - before: `example: '2024-05-10 14:33:06'`
+  - after:  `example: '2024-05-10T14:33:06.000Z'`
+- `abha/abha-api-v3.yaml:4003`
+  - before: `timestamp: '2024-05-10 14:33:06'`
+  - after:  `timestamp: '2024-05-10T14:33:06.000Z'`
+- `abha/abha-api-v3.yaml:4013`
+  - before: `example: '2024-05-10 14:33:06'`
+  - after:  `example: '2024-05-10T14:33:06.000Z'`
+- `abha/abha-api-v3.yaml:4016`
+  - before: `timestamp: '2024-05-10 14:33:06'`
+  - after:  `timestamp: '2024-05-10T14:33:06.000Z'`
+- `abha/abha-api-v3.yaml:4026`
+  - before: `example: '2024-05-10 14:33:06'`
+  - after:  `example: '2024-05-10T14:33:06.000Z'`
+- `abha/abha-api-v3.yaml:4038`
+  - before: `example: '2024-05-10 14:33:06'`
+  - after:  `example: '2024-05-10T14:33:06.000Z'`
+- `abha/abha-api-v3.yaml:4041`
+  - before: `timestamp: '2024-05-10 14:33:06'`
+  - after:  `timestamp: '2024-05-10T14:33:06.000Z'`
+- `abha/abha-api-v3.yaml:4047`
+  - before: `timestamp: '2024-05-10 11:13:04'`
+  - after:  `timestamp: '2024-05-10T11:13:04.000Z'`
+- `abha/abha-api-v3.yaml:4051`
+  - before: `timestamp: '2024-05-10 11:15:14'`
+  - after:  `timestamp: '2024-05-10T11:15:14.000Z'`
+- `abha/abha-api-v3.yaml:4056`
+  - before: `timestamp: '2024-05-10 11:16:16'`
+  - after:  `timestamp: '2024-05-10T11:16:16.000Z'`
+- `abha/abha-api-v3.yaml:4060`
+  - before: `timestamp: '2024-05-10 15:43:47'`
+  - after:  `timestamp: '2024-05-10T15:43:47.000Z'`
+- `abha/abha-api-v3.yaml:4064`
+  - before: `timestamp: '2024-05-10 15:44:28'`
+  - after:  `timestamp: '2024-05-10T15:44:28.000Z'`
+- `abha/abha-api-v3.yaml:4069`
+  - before: `timestamp: '2024-05-10 15:45:28'`
+  - after:  `timestamp: '2024-05-10T15:45:28.000Z'`
+- `abha/abha-api-v3.yaml:4073`
+  - before: `timestamp: '2024-05-10 15:45:57'`
+  - after:  `timestamp: '2024-05-10T15:45:57.000Z'`
+- `abha/abha-api-v3.yaml:4077`
+  - before: `timestamp: '2024-05-10 15:46:48'`
+  - after:  `timestamp: '2024-05-10T15:46:48.000Z'`
+- `abha/abha-api-v3.yaml:4081`
+  - before: `timestamp: '2024-05-10 11:13:04'`
+  - after:  `timestamp: '2024-05-10T11:13:04.000Z'`
+- `abha/abha-api-v3.yaml:4086`
+  - before: `timestamp: '2024-05-10 14:53:18'`
+  - after:  `timestamp: '2024-05-10T14:53:18.000Z'`
+- `abha/abha-api-v3.yaml:4091`
+  - before: `timestamp: '2024-05-10 11:15:14'`
+  - after:  `timestamp: '2024-05-10T11:15:14.000Z'`
+- `abha/abha-api-v3.yaml:4096`
+  - before: `timestamp: '2024-05-10 11:16:16'`
+  - after:  `timestamp: '2024-05-10T11:16:16.000Z'`
+- `abha/abha-api-v3.yaml:4101`
+  - before: `timestamp: '2024-05-10 11:13:04'`
+  - after:  `timestamp: '2024-05-10T11:13:04.000Z'`
+- `abha/abha-api-v3.yaml:4106`
+  - before: `timestamp: '2024-05-10 11:15:14'`
+  - after:  `timestamp: '2024-05-10T11:15:14.000Z'`
+- `abha/abha-api-v3.yaml:4111`
+  - before: `timestamp: '2024-05-10 11:16:16'`
+  - after:  `timestamp: '2024-05-10T11:16:16.000Z'`
+- `abha/abha-api-v3.yaml:4116`
+  - before: `timestamp: '2024-05-10 11:13:04'`
+  - after:  `timestamp: '2024-05-10T11:13:04.000Z'`
+- `abha/abha-api-v3.yaml:4120`
+  - before: `timestamp: '2024-05-10 11:15:14'`
+  - after:  `timestamp: '2024-05-10T11:15:14.000Z'`
+- `abha/abha-api-v3.yaml:4125`
+  - before: `timestamp: '2024-05-10 11:16:16'`
+  - after:  `timestamp: '2024-05-10T11:16:16.000Z'`
+- `abha/abha-api-v3.yaml:4130`
+  - before: `timestamp: '2024-05-10 11:13:04'`
+  - after:  `timestamp: '2024-05-10T11:13:04.000Z'`
+- `abha/abha-api-v3.yaml:4135`
+  - before: `timestamp: '2024-05-10 11:16:16'`
+  - after:  `timestamp: '2024-05-10T11:16:16.000Z'`
+- `abha/abha-api-v3.yaml:4140`
+  - before: `timestamp: '2024-05-10 14:53:18'`
+  - after:  `timestamp: '2024-05-10T14:53:18.000Z'`
+- `abha/abha-api-v3.yaml:4144`
+  - before: `timestamp: '2024-05-10 11:13:04'`
+  - after:  `timestamp: '2024-05-10T11:13:04.000Z'`
+- `abha/abha-api-v3.yaml:4148`
+  - before: `timestamp: '2024-05-10 11:15:14'`
+  - after:  `timestamp: '2024-05-10T11:15:14.000Z'`
+- `abha/abha-api-v3.yaml:4152`
+  - before: `timestamp: '2024-05-10 11:16:16'`
+  - after:  `timestamp: '2024-05-10T11:16:16.000Z'`
+- `abha/abha-api-v3.yaml:4156`
+  - before: `timestamp: '2024-05-10 14:53:18'`
+  - after:  `timestamp: '2024-05-10T14:53:18.000Z'`
+- `abha/abha-api-v3.yaml:4160`
+  - before: `timestamp: '2024-05-10 11:13:04'`
+  - after:  `timestamp: '2024-05-10T11:13:04.000Z'`
+- `abha/abha-api-v3.yaml:4164`
+  - before: `timestamp: '2024-05-10 11:15:14'`
+  - after:  `timestamp: '2024-05-10T11:15:14.000Z'`
+- `abha/abha-api-v3.yaml:4168`
+  - before: `timestamp: '2024-05-10 14:53:18'`
+  - after:  `timestamp: '2024-05-10T14:53:18.000Z'`
+- `abha/abha-api-v3.yaml:4172`
+  - before: `timestamp: '2024-05-10 11:16:16'`
+  - after:  `timestamp: '2024-05-10T11:16:16.000Z'`
+- `abha/abha-api-v3.yaml:4176`
+  - before: `timestamp: '2024-05-10 11:16:16'`
+  - after:  `timestamp: '2024-05-10T11:16:16.000Z'`
+- `abha/abha-api-v3.yaml:4180`
+  - before: `timestamp: '2024-05-10 11:15:14'`
+  - after:  `timestamp: '2024-05-10T11:15:14.000Z'`
+- `abha/abha-api-v3.yaml:4184`
+  - before: `timestamp: '2024-05-10 14:53:18'`
+  - after:  `timestamp: '2024-05-10T14:53:18.000Z'`
+- `abha/abha-api-v3.yaml:4625`
+  - before: `example: '2024-05-10 14:33:06'`
+  - after:  `example: '2024-05-10T14:33:06.000Z'`
+- `abha/abha-api-v3.yaml:4628`
+  - before: `timestamp: '2024-05-10 14:33:06'`
+  - after:  `timestamp: '2024-05-10T14:33:06.000Z'`
+- `abha/abha-api-v3.yaml:4638`
+  - before: `example: '2024-05-10 14:33:06'`
+  - after:  `example: '2024-05-10T14:33:06.000Z'`
+- `abha/abha-api-v3.yaml:4641`
+  - before: `timestamp: '2024-05-10 14:33:06'`
+  - after:  `timestamp: '2024-05-10T14:33:06.000Z'`
+- `abha/abha-api-v3.yaml:4651`
+  - before: `example: '2024-05-10 14:33:06'`
+  - after:  `example: '2024-05-10T14:33:06.000Z'`
+- `abha/abha-api-v3.yaml:4654`
+  - before: `timestamp: '2024-05-10 14:33:06'`
+  - after:  `timestamp: '2024-05-10T14:33:06.000Z'`
+- `abha/abha-api-v3.yaml:4664`
+  - before: `example: '2024-05-10 14:33:06'`
+  - after:  `example: '2024-05-10T14:33:06.000Z'`
+- `abha/abha-api-v3.yaml:4676`
+  - before: `example: '2024-05-10 14:33:06'`
+  - after:  `example: '2024-05-10T14:33:06.000Z'`
+- `abha/abha-api-v3.yaml:4679`
+  - before: `timestamp: '2024-05-10 14:33:06'`
+  - after:  `timestamp: '2024-05-10T14:33:06.000Z'`
+- `abha/abha-api-v3.yaml:4689`
+  - before: `example: '2024-05-10 14:33:06'`
+  - after:  `example: '2024-05-10T14:33:06.000Z'`
+- `abha/abha-api-v3.yaml:4692`
+  - before: `timestamp: '2024-05-10 14:33:06'`
+  - after:  `timestamp: '2024-05-10T14:33:06.000Z'`
+- `abha/abha-api-v3.yaml:4702`
+  - before: `example: '2024-05-10 14:33:06'`
+  - after:  `example: '2024-05-10T14:33:06.000Z'`
+- `abha/abha-api-v3.yaml:4705`
+  - before: `timestamp: '2024-05-10 14:33:06'`
+  - after:  `timestamp: '2024-05-10T14:33:06.000Z'`
+- `abha/abha-api-v3.yaml:4715`
+  - before: `example: '2024-05-10 14:33:06'`
+  - after:  `example: '2024-05-10T14:33:06.000Z'`
+- `abha/abha-api-v3.yaml:4718`
+  - before: `timestamp: '2024-05-10 14:33:06'`
+  - after:  `timestamp: '2024-05-10T14:33:06.000Z'`
+- `abha/abha-api-v3.yaml:4728`
+  - before: `example: '2024-05-10 14:33:06'`
+  - after:  `example: '2024-05-10T14:33:06.000Z'`
+- `abha/abha-api-v3.yaml:4731`
+  - before: `timestamp: '2024-05-10 14:33:06'`
+  - after:  `timestamp: '2024-05-10T14:33:06.000Z'`
+- `abha/abha-api-v3.yaml:4741`
+  - before: `example: '2024-05-10 14:33:06'`
+  - after:  `example: '2024-05-10T14:33:06.000Z'`
+- `abha/abha-api-v3.yaml:4744`
+  - before: `timestamp: '2024-05-10 14:33:06'`
+  - after:  `timestamp: '2024-05-10T14:33:06.000Z'`
+- `abha/abha-api-v3.yaml:4754`
+  - before: `example: '2024-05-10 14:33:06'`
+  - after:  `example: '2024-05-10T14:33:06.000Z'`
+- `abha/abha-api-v3.yaml:4757`
+  - before: `timestamp: '2024-05-10 14:33:06'`
+  - after:  `timestamp: '2024-05-10T14:33:06.000Z'`
+- `abha/abha-api-v3.yaml:4762`
+  - before: `timestamp: '2024-05-10 12:45:25'`
+  - after:  `timestamp: '2024-05-10T12:45:25.000Z'`
+- `abha/abha-api-v3.yaml:4766`
+  - before: `timestamp: '2024-05-10 11:13:04'`
+  - after:  `timestamp: '2024-05-10T11:13:04.000Z'`
+- `abha/abha-api-v3.yaml:4771`
+  - before: `timestamp: '2024-05-10 11:40:16'`
+  - after:  `timestamp: '2024-05-10T11:40:16.000Z'`
+- `abha/abha-api-v3.yaml:4776`
+  - before: `timestamp: '2024-05-10 14:53:18'`
+  - after:  `timestamp: '2024-05-10T14:53:18.000Z'`
+- `abha/abha-api-v3.yaml:4780`
+  - before: `timestamp: '2024-05-10 15:35:20'`
+  - after:  `timestamp: '2024-05-10T15:35:20.000Z'`
+- `abha/abha-api-v3.yaml:4784`
+  - before: `timestamp: '2024-05-10 12:45:25'`
+  - after:  `timestamp: '2024-05-10T12:45:25.000Z'`
+- `abha/abha-api-v3.yaml:4788`
+  - before: `timestamp: '2024-05-10 11:13:04'`
+  - after:  `timestamp: '2024-05-10T11:13:04.000Z'`
+- `abha/abha-api-v3.yaml:4793`
+  - before: `timestamp: '2024-05-10 11:40:16'`
+  - after:  `timestamp: '2024-05-10T11:40:16.000Z'`
+- `abha/abha-api-v3.yaml:4797`
+  - before: `timestamp: '2024-05-10 14:53:18'`
+  - after:  `timestamp: '2024-05-10T14:53:18.000Z'`
+- `abha/abha-api-v3.yaml:4801`
+  - before: `timestamp: '2024-05-10 15:35:20'`
+  - after:  `timestamp: '2024-05-10T15:35:20.000Z'`
+- `abha/abha-api-v3.yaml:4806`
+  - before: `timestamp: '2024-05-10 12:45:25'`
+  - after:  `timestamp: '2024-05-10T12:45:25.000Z'`
+- `abha/abha-api-v3.yaml:4811`
+  - before: `timestamp: '2024-05-10 11:13:04'`
+  - after:  `timestamp: '2024-05-10T11:13:04.000Z'`
+- `abha/abha-api-v3.yaml:4816`
+  - before: `timestamp: '2024-05-10 11:40:16'`
+  - after:  `timestamp: '2024-05-10T11:40:16.000Z'`
+- `abha/abha-api-v3.yaml:4821`
+  - before: `timestamp: '2024-05-10 14:53:18'`
+  - after:  `timestamp: '2024-05-10T14:53:18.000Z'`
+- `abha/abha-api-v3.yaml:4826`
+  - before: `timestamp: '2024-05-10 15:35:20'`
+  - after:  `timestamp: '2024-05-10T15:35:20.000Z'`
+- `abha/abha-api-v3.yaml:4830`
+  - before: `timestamp: '2023-01-11 02:37:38'`
+  - after:  `timestamp: '2023-01-11T02:37:38.000Z'`
+- `abha/abha-api-v3.yaml:4834`
+  - before: `timestamp: '2024-05-10 11:13:04'`
+  - after:  `timestamp: '2024-05-10T11:13:04.000Z'`
+- `abha/abha-api-v3.yaml:4838`
+  - before: `timestamp: '2024-05-10 11:40:16'`
+  - after:  `timestamp: '2024-05-10T11:40:16.000Z'`
+- `abha/abha-api-v3.yaml:4843`
+  - before: `timestamp: '2024-05-10 14:53:18'`
+  - after:  `timestamp: '2024-05-10T14:53:18.000Z'`
+- `abha/abha-api-v3.yaml:4848`
+  - before: `timestamp: '2023-01-11 02:35:47'`
+  - after:  `timestamp: '2023-01-11T02:35:47.000Z'`
+- `abha/abha-api-v3.yaml:4853`
+  - before: `timestamp: '2024-05-10 11:13:04'`
+  - after:  `timestamp: '2024-05-10T11:13:04.000Z'`
+- `abha/abha-api-v3.yaml:4858`
+  - before: `timestamp: '2024-05-10 11:40:16'`
+  - after:  `timestamp: '2024-05-10T11:40:16.000Z'`
+- `abha/abha-api-v3.yaml:4863`
+  - before: `timestamp: '2024-05-10 14:53:18'`
+  - after:  `timestamp: '2024-05-10T14:53:18.000Z'`
+- `abha/abha-api-v3.yaml:4868`
+  - before: `timestamp: '2024-05-10 18:13:16'`
+  - after:  `timestamp: '2024-05-10T18:13:16.000Z'`
+- `abha/abha-api-v3.yaml:4873`
+  - before: `timestamp: '2024-05-10 12:45:25'`
+  - after:  `timestamp: '2024-05-10T12:45:25.000Z'`
+- `abha/abha-api-v3.yaml:4878`
+  - before: `timestamp: '2024-05-10 12:51:40'`
+  - after:  `timestamp: '2024-05-10T12:51:40.000Z'`
+- `abha/abha-api-v3.yaml:4883`
+  - before: `timestamp: '2024-05-10 11:13:04'`
+  - after:  `timestamp: '2024-05-10T11:13:04.000Z'`
+- `abha/abha-api-v3.yaml:4888`
+  - before: `timestamp: '2024-05-10 11:40:16'`
+  - after:  `timestamp: '2024-05-10T11:40:16.000Z'`
+- `abha/abha-api-v3.yaml:4892`
+  - before: `timestamp: '2024-05-10 12:45:25'`
+  - after:  `timestamp: '2024-05-10T12:45:25.000Z'`
+- `abha/abha-api-v3.yaml:4896`
+  - before: `timestamp: '2024-05-10 12:51:40'`
+  - after:  `timestamp: '2024-05-10T12:51:40.000Z'`
+- `abha/abha-api-v3.yaml:4901`
+  - before: `timestamp: '2024-05-10 11:13:04'`
+  - after:  `timestamp: '2024-05-10T11:13:04.000Z'`
+- `abha/abha-api-v3.yaml:4906`
+  - before: `timestamp: '2024-05-10 11:40:16'`
+  - after:  `timestamp: '2024-05-10T11:40:16.000Z'`
+- `abha/abha-api-v3.yaml:4911`
+  - before: `timestamp: '2024-05-10 14:53:18'`
+  - after:  `timestamp: '2024-05-10T14:53:18.000Z'`
+- `abha/abha-api-v3.yaml:4915`
+  - before: `timestamp: '2024-05-10 12:51:40'`
+  - after:  `timestamp: '2024-05-10T12:51:40.000Z'`
+- `abha/abha-api-v3.yaml:4919`
+  - before: `timestamp: '2024-05-10 12:51:40'`
+  - after:  `timestamp: '2024-05-10T12:51:40.000Z'`
+- `abha/abha-api-v3.yaml:4923`
+  - before: `timestamp: '2024-05-10 11:13:04'`
+  - after:  `timestamp: '2024-05-10T11:13:04.000Z'`
+- `abha/abha-api-v3.yaml:4927`
+  - before: `timestamp: '2024-05-10 11:40:16'`
+  - after:  `timestamp: '2024-05-10T11:40:16.000Z'`
+- `abha/abha-api-v3.yaml:4931`
+  - before: `timestamp: '2024-05-10 11:13:04'`
+  - after:  `timestamp: '2024-05-10T11:13:04.000Z'`
+- `abha/abha-api-v3.yaml:4935`
+  - before: `timestamp: '2024-05-10 12:45:25'`
+  - after:  `timestamp: '2024-05-10T12:45:25.000Z'`
+- `abha/abha-api-v3.yaml:4939`
+  - before: `timestamp: '2024-05-10 12:51:40'`
+  - after:  `timestamp: '2024-05-10T12:51:40.000Z'`
+- `abha/abha-api-v3.yaml:4943`
+  - before: `timestamp: '2024-05-10 14:53:18'`
+  - after:  `timestamp: '2024-05-10T14:53:18.000Z'`
+- `abha/abha-api-v3.yaml:4948`
+  - before: `timestamp: '2024-05-10 11:40:16'`
+  - after:  `timestamp: '2024-05-10T11:40:16.000Z'`
+- `abha/abha-api-v3.yaml:4952`
+  - before: `timestamp: '2024-05-10 12:45:25'`
+  - after:  `timestamp: '2024-05-10T12:45:25.000Z'`
+- `abha/abha-api-v3.yaml:4956`
+  - before: `timestamp: '2024-05-10 12:51:40'`
+  - after:  `timestamp: '2024-05-10T12:51:40.000Z'`
+- `abha/abha-api-v3.yaml:4960`
+  - before: `timestamp: '2024-05-10 11:13:04'`
+  - after:  `timestamp: '2024-05-10T11:13:04.000Z'`
+- `abha/abha-api-v3.yaml:4964`
+  - before: `timestamp: '2024-05-10 11:40:16'`
+  - after:  `timestamp: '2024-05-10T11:40:16.000Z'`
+- `abha/abha-api-v3.yaml:4968`
+  - before: `timestamp: '2024-05-10 11:40:16'`
+  - after:  `timestamp: '2024-05-10T11:40:16.000Z'`
+- `abha/abha-api-v3.yaml:4972`
+  - before: `timestamp: '2024-05-10 14:53:18'`
+  - after:  `timestamp: '2024-05-10T14:53:18.000Z'`
+- `abha/abha-api-v3.yaml:4976`
+  - before: `timestamp: '2024-05-10 11:13:04'`
+  - after:  `timestamp: '2024-05-10T11:13:04.000Z'`
+- `abha/abha-api-v3.yaml:4980`
+  - before: `timestamp: '2024-05-10 14:53:18'`
+  - after:  `timestamp: '2024-05-10T14:53:18.000Z'`
+- `abha/abha-api-v3.yaml:4984`
+  - before: `timestamp: '2024-05-10 14:33:06'`
+  - after:  `timestamp: '2024-05-10T14:33:06.000Z'`
+- `abha/abha-api-v3.yaml:5010`
+  - before: `example: "2023-01-18 18:01:36"`
+  - after:  `example: "2023-01-18T18:01:36.000Z"`
+- `abha/abha-api-v3.yaml:5022`
+  - before: `timestamp: '2023-01-18 18:01:36'`
+  - after:  `timestamp: '2023-01-18T18:01:36.000Z'`
+- `abha/abha-api-v3.yaml:5033`
+  - before: `timestamp: '2024-05-10 14:51:16'`
+  - after:  `timestamp: '2024-05-10T14:51:16.000Z'`
+- `abha/abha-api-v3.yaml:5044`
+  - before: `timestamp: '2024-05-10 14:51:16'`
+  - after:  `timestamp: '2024-05-10T14:51:16.000Z'`
+- `abha/abha-api-v3.yaml:5053`
+  - before: `timestamp: '2024-05-10 14:51:16'`
+  - after:  `timestamp: '2024-05-10T14:51:16.000Z'`
+- `abha/abha-api-v3.yaml:5063`
+  - before: `timestamp: '2024-05-10 14:51:16'`
+  - after:  `timestamp: '2024-05-10T14:51:16.000Z'`
+- `abha/abha-api-v3.yaml:5074`
+  - before: `timestamp: '2023-01-18 18:01:36'`
+  - after:  `timestamp: '2023-01-18T18:01:36.000Z'`
+- `abha/abha-api-v3.yaml:5083`
+  - before: `timestamp: '2023-01-18 18:01:36'`
+  - after:  `timestamp: '2023-01-18T18:01:36.000Z'`
+- `abha/abha-api-v3.yaml:5087`
+  - before: `timestamp: '2024-05-10 14:53:18'`
+  - after:  `timestamp: '2024-05-10T14:53:18.000Z'`
+- `abha/abha-api-v3.yaml:5108`
+  - before: `timestamp: '2023-01-18 18:01:36'`
+  - after:  `timestamp: '2023-01-18T18:01:36.000Z'`
+- `abha/abha-api-v3.yaml:5117`
+  - before: `timestamp: '2023-01-18 18:01:36'`
+  - after:  `timestamp: '2023-01-18T18:01:36.000Z'`
+- `abha/abha-api-v3.yaml:5130`
+  - before: `example: "2023-01-11 00:14:02"`
+  - after:  `example: "2023-01-11T00:14:02.000Z"`
+- `abha/abha-api-v3.yaml:5135`
+  - before: `timestamp: '2023-01-11 00:14:02'`
+  - after:  `timestamp: '2023-01-11T00:14:02.000Z'`
+- `abha/abha-api-v3.yaml:5140`
+  - before: `timestamp: '2023-01-11 00:44:29'`
+  - after:  `timestamp: '2023-01-11T00:44:29.000Z'`
+- `abha/abha-api-v3.yaml:5374`
+  - before: `example: '2024-05-10 14:53:18'`
+  - after:  `example: '2024-05-10T14:53:18.000Z'`
+- `abha/abha-api-v3.yaml:5380`
+  - before: `timestamp: '2024-05-10 14:53:18'`
+  - after:  `timestamp: '2024-05-10T14:53:18.000Z'`
+- `abha/abha-api-v3.yaml:5409`
+  - before: `timestamp: '2024-05-10 14:51:16'`
+  - after:  `timestamp: '2024-05-10T14:51:16.000Z'`
+- `abha/abha-api-v3.yaml:5635`
+  - before: `example: '2023-01-11 00:14:02'`
+  - after:  `example: '2023-01-11T00:14:02.000Z'`
+- `abha/abha-api-v3.yaml:5641`
+  - before: `timestamp: '2023-01-11 00:14:02'`
+  - after:  `timestamp: '2023-01-11T00:14:02.000Z'`
+- `abha/abha-api-v3.yaml:5820`
+  - before: `example: '2024-05-10 14:33:06'`
+  - after:  `example: '2024-05-10T14:33:06.000Z'`
+- `abha/abha-api-v3.yaml:5823`
+  - before: `timestamp: '2024-05-10 14:33:06'`
+  - after:  `timestamp: '2024-05-10T14:33:06.000Z'`
+- `abha/abha-api-v3.yaml:5833`
+  - before: `example: '2024-05-10 14:33:06'`
+  - after:  `example: '2024-05-10T14:33:06.000Z'`
+- `abha/abha-api-v3.yaml:5836`
+  - before: `timestamp: '2024-05-10 14:33:06'`
+  - after:  `timestamp: '2024-05-10T14:33:06.000Z'`
+- `abha/abha-api-v3.yaml:5846`
+  - before: `example: '2024-05-10 14:33:06'`
+  - after:  `example: '2024-05-10T14:33:06.000Z'`
+- `abha/abha-api-v3.yaml:5849`
+  - before: `timestamp: '2024-05-10 14:33:06'`
+  - after:  `timestamp: '2024-05-10T14:33:06.000Z'`
+- `abha/abha-api-v3.yaml:5859`
+  - before: `example: '2024-05-10 14:33:06'`
+  - after:  `example: '2024-05-10T14:33:06.000Z'`
+- `abha/abha-api-v3.yaml:5871`
+  - before: `example: '2024-05-10 14:33:06'`
+  - after:  `example: '2024-05-10T14:33:06.000Z'`
+- `abha/abha-api-v3.yaml:5874`
+  - before: `timestamp: '2024-05-10 14:33:06'`
+  - after:  `timestamp: '2024-05-10T14:33:06.000Z'`
+- `abha/abha-api-v3.yaml:5879`
+  - before: `timestamp: '2024-05-10 11:13:04'`
+  - after:  `timestamp: '2024-05-10T11:13:04.000Z'`
+- `abha/abha-api-v3.yaml:5883`
+  - before: `timestamp: '2024-05-10 11:15:14'`
+  - after:  `timestamp: '2024-05-10T11:15:14.000Z'`
+- `abha/abha-api-v3.yaml:5887`
+  - before: `timestamp: '2024-05-10 11:16:16'`
+  - after:  `timestamp: '2024-05-10T11:16:16.000Z'`
+- `abha/abha-api-v3.yaml:5891`
+  - before: `timestamp: '2024-05-10 15:43:47'`
+  - after:  `timestamp: '2024-05-10T15:43:47.000Z'`
+- `abha/abha-api-v3.yaml:5900`
+  - before: `timestamp: '2024-05-10 15:43:47'`
+  - after:  `timestamp: '2024-05-10T15:43:47.000Z'`
+- `abha/abha-api-v3.yaml:5976`
+  - before: `example: '2024-05-10 14:53:18'`
+  - after:  `example: '2024-05-10T14:53:18.000Z'`
+- `abha/abha-api-v3.yaml:5981`
+  - before: `timestamp: '2024-05-10 14:53:18'`
+  - after:  `timestamp: '2024-05-10T14:53:18.000Z'`
+- `abha/abha-api-v3.yaml:6007`
+  - before: `timestamp: '2024-05-10 14:53:18'`
+  - after:  `timestamp: '2024-05-10T14:53:18.000Z'`
+- `abha/abha-api-v3.yaml:6064`
+  - before: `example: "2024-05-10 14:53:18"`
+  - after:  `example: "2024-05-10T14:53:18.000Z"`
+- `abha/abha-api-v3.yaml:6364`
+  - before: `example: "2025-01-03 00:15:58"`
+  - after:  `example: "2025-01-03T00:15:58.000Z"`
+- `abha/abha-api-v3.yaml:6373`
+  - before: `example: "2025-01-03 00:10:54"`
+  - after:  `example: "2025-01-03T00:10:54.000Z"`
+- `abha/abha-api-v3.yaml:6382`
+  - before: `example: "2025-01-03 00:15:58"`
+  - after:  `example: "2025-01-03T00:15:58.000Z"`
+- `abha/abha-api-v3.yaml:6391`
+  - before: `example: "2025-01-03 00:15:58"`
+  - after:  `example: "2025-01-03T00:15:58.000Z"`
+- `abha/abha-api-v3.yaml:6397`
+  - before: `timestamp: '2025-01-03 00:10:54'`
+  - after:  `timestamp: '2025-01-03T00:10:54.000Z'`
+- `abha/abha-api-v3.yaml:6401`
+  - before: `timestamp: '2025-01-03 00:14:46'`
+  - after:  `timestamp: '2025-01-03T00:14:46.000Z'`
+- `abha/abha-api-v3.yaml:6405`
+  - before: `timestamp: '2025-01-03 00:15:58'`
+  - after:  `timestamp: '2025-01-03T00:15:58.000Z'`
+- `abha/abha-api-v3.yaml:6409`
+  - before: `timestamp: '2025-01-03 00:25:29'`
+  - after:  `timestamp: '2025-01-03T00:25:29.000Z'`
+- `abha/abha-api-v3.yaml:6501`
+  - before: `example: '2024-05-10 19:43:22'`
+  - after:  `example: '2024-05-10T19:43:22.000Z'`
+- `abha/abha-api-v3.yaml:6506`
+  - before: `timestamp: "2024-05-10 19:43:22"`
+  - after:  `timestamp: "2024-05-10T19:43:22.000Z"`
+- `abha/abha-api-v3.yaml:7595`
+  - before: `example: '2024-05-10 14:53:18'`
+  - after:  `example: '2024-05-10T14:53:18.000Z'`
+- `abha/abha-api-v3.yaml:7600`
+  - before: `timestamp: '2024-05-10 14:53:18'`
+  - after:  `timestamp: '2024-05-10T14:53:18.000Z'`
+- `abha/abha-api-v3.yaml:7626`
+  - before: `timestamp: '2024-05-10 14:53:18'`
+  - after:  `timestamp: '2024-05-10T14:53:18.000Z'`
+- `abha/abha-api-v3.yaml:8079`
+  - before: `example: "2025-01-08 15:44:30"`
+  - after:  `example: "2025-01-08T15:44:30.000Z"`
+- `abha/abha-api-v3.yaml:8084`
+  - before: `timestamp: '2025-01-08 15:44:30'`
+  - after:  `timestamp: '2025-01-08T15:44:30.000Z'`
+- `phr/phr-api.yaml:11107`
+  - before: `example: '2023-07-27 13:36:28'`
+  - after:  `example: '2023-07-27T13:36:28.000Z'`
+- `phr/phr-api.yaml:11112`
+  - before: `timestamp: '2023-07-27 13:36:28'`
+  - after:  `timestamp: '2023-07-27T13:36:28.000Z'`
+
+## T2 example quoted to match declared string type (49)
+
+- `abha/abha-api-v3.yaml:1564`
+  - before: `example: 1`
+  - after:  `example: '1'`
+- `abha/abha-api-v3.yaml:1608`
+  - before: `example: 1`
+  - after:  `example: '1'`
+- `abha/abha-api-v3.yaml:1648`
+  - before: `example: 900901`
+  - after:  `example: '900901'`
+- `abha/abha-api-v3.yaml:2412`
+  - before: `example: false`
+  - after:  `example: 'false'`
+- `abha/abha-api-v3.yaml:6652`
+  - before: `example: 900902`
+  - after:  `example: '900902'`
+- `abha/abha-api-v3.yaml:6854`
+  - before: `example: 900902`
+  - after:  `example: '900902'`
+- `abha/abha-api-v3.yaml:7240`
+  - before: `example: 900902`
+  - after:  `example: '900902'`
+- `abha/abha-api-v3.yaml:7316`
+  - before: `example: 14`
+  - after:  `example: '14'`
+- `abha/abha-api-v3.yaml:7319`
+  - before: `example: 11`
+  - after:  `example: '11'`
+- `abha/abha-api-v3.yaml:7322`
+  - before: `example: 1995`
+  - after:  `example: '1995'`
+- `abha/abha-api-v3.yaml:7349`
+  - before: `example: 27`
+  - after:  `example: '27'`
+- `abha/abha-api-v3.yaml:7352`
+  - before: `example: 487`
+  - after:  `example: '487'`
+- `abha/abha-api-v3.yaml:7371`
+  - before: `example: false`
+  - after:  `example: 'false'`
+- `abha/abha-api-v3.yaml:7374`
+  - before: `example: true`
+  - after:  `example: 'true'`
+- `abha/abha-api-v3.yaml:7443`
+  - before: `example: 900902`
+  - after:  `example: '900902'`
+- `abha/abha-api-v3.yaml:7530`
+  - before: `example: 900902`
+  - after:  `example: '900902'`
+- `hiecm/consent-management-data-flow.yaml:1203`
+  - before: `example: 4500`
+  - after:  `example: '4500'`
+- `hiecm/consent-management-data-flow.yaml:3639`
+  - before: `example: 100005`
+  - after:  `example: '100005'`
+- `hiecm/patient-share.yaml:101`
+  - before: `example: 6`
+  - after:  `example: '6'`
+- `hiecm/patient-share.yaml:172`
+  - before: `example: 1`
+  - after:  `example: '1'`
+- `hiecm/patient-share.yaml:179`
+  - before: `example: 8`
+  - after:  `example: '8'`
+- `hiecm/patient-share.yaml:186`
+  - before: `example: 9999`
+  - after:  `example: '9999'`
+- `hiecm/patient-share.yaml:213`
+  - before: `example: 641050`
+  - after:  `example: '641050'`
+- `hiecm/patient-share.yaml:218`
+  - before: `example: 9876543210`
+  - after:  `example: '9876543210'`
+- `hiecm/patient-share.yaml:360`
+  - before: `example: 43`
+  - after:  `example: '43'`
+- `hiecm/patient-share.yaml:365`
+  - before: `example: 3`
+  - after:  `example: '3'`
+- `hiecm/patient-share.yaml:631`
+  - before: `example: 6`
+  - after:  `example: '6'`
+- `hiecm/patient-share.yaml:702`
+  - before: `example: 1`
+  - after:  `example: '1'`
+- `hiecm/patient-share.yaml:709`
+  - before: `example: 8`
+  - after:  `example: '8'`
+- `hiecm/patient-share.yaml:716`
+  - before: `example: 9999`
+  - after:  `example: '9999'`
+- `hiecm/patient-share.yaml:743`
+  - before: `example: 641050`
+  - after:  `example: '641050'`
+- `hiecm/patient-share.yaml:748`
+  - before: `example: 9876543210`
+  - after:  `example: '9876543210'`
+- `hiecm/patient-share.yaml:972`
+  - before: `example: 43`
+  - after:  `example: '43'`
+- `hiecm/patient-share.yaml:977`
+  - before: `example: 3`
+  - after:  `example: '3'`
+- `hiecm/patient-share.yaml:1148`
+  - before: `example: 1`
+  - after:  `example: '1'`
+- `hiecm/scan-and-pay.yaml:406`
+  - before: `example: 1000`
+  - after:  `example: '1000'`
+- `hiecm/scan-and-pay.yaml:853`
+  - before: `example: 123465`
+  - after:  `example: '123465'`
+- `hiecm/scan-and-pay.yaml:2621`
+  - before: `example: 123465`
+  - after:  `example: '123465'`
+- `hiecm/subscription.yaml:4543`
+  - before: `example: 1234`
+  - after:  `example: '1234'`
+- `hiecm/subscription.yaml:4897`
+  - before: `example: 1234`
+  - after:  `example: '1234'`
+- `hiecm/subscription.yaml:5644`
+  - before: `example: true`
+  - after:  `example: 'true'`
+- `hiecm/user-initiated-linking.yaml:311`
+  - before: `example: 12345`
+  - after:  `example: '12345'`
+- `hiecm/user-initiated-linking.yaml:330`
+  - before: `example: 12345`
+  - after:  `example: '12345'`
+- `hiecm/user-initiated-linking.yaml:1161`
+  - before: `example: 12345`
+  - after:  `example: '12345'`
+- `hiecm/user-initiated-linking.yaml:1180`
+  - before: `example: 12345`
+  - after:  `example: '12345'`
+- `hiecm/user-initiated-linking.yaml:1557`
+  - before: `example: 12345`
+  - after:  `example: '12345'`
+- `hiecm/user-initiated-linking.yaml:1576`
+  - before: `example: 12345`
+  - after:  `example: '12345'`
+- `hiecm/user-initiated-linking.yaml:2435`
+  - before: `example: 12345`
+  - after:  `example: '12345'`
+- `hiecm/user-initiated-linking.yaml:2454`
+  - before: `example: 12345`
+  - after:  `example: '12345'`
+
+## T3 type string -> integer (suite majority) (3)
+
+- `abha/abha-api-v3.yaml:8308`
+  - before: `type: string`
+  - after:  `type: integer`
+- `abha/abha-api-v3.yaml:8311`
+  - before: `type: string`
+  - after:  `type: integer`
+- `hiecm/patient-share.yaml:1162`
+  - before: `type: string`
+  - after:  `type: integer`
+
+## T4 trailing punctuation removed from code (555)
+
+- `abha/abha-api-v3.yaml:3433`
+  - before: `- code: 'ABDM-9999:'`
+  - after:  `- code: 'ABDM-9999'`
+- `abha/abha-api-v3.yaml:5422`
+  - before: `example: 'ABDM-1030:'`
+  - after:  `example: 'ABDM-1030'`
+- `abha/abha-api-v3.yaml:5431`
+  - before: `code: 'ABDM-1030:'`
+  - after:  `code: 'ABDM-1030'`
+- `abha/abha-api-v3.yaml:5436`
+  - before: `code: 'ABDM-1016:'`
+  - after:  `code: 'ABDM-1016'`
+- `abha/abha-api-v3.yaml:6419`
+  - before: `example: "900902,"`
+  - after:  `example: "900902"`
+- `abha/abha-api-v3.yaml:6682`
+  - before: `code: 'ABDM-1030:'`
+  - after:  `code: 'ABDM-1030'`
+- `abha/abha-api-v3.yaml:6837`
+  - before: `- code: 'ABDM-1006:'`
+  - after:  `- code: 'ABDM-1006'`
+- `abha/abha-api-v3.yaml:6842`
+  - before: `- code: 'ABDM-1006:'`
+  - after:  `- code: 'ABDM-1006'`
+- `abha/abha-api-v3.yaml:7209`
+  - before: `- code: 'ABDM-9999:'`
+  - after:  `- code: 'ABDM-9999'`
+- `abha/abha-api-v3.yaml:7214`
+  - before: `- code: 'ABDM-9999:'`
+  - after:  `- code: 'ABDM-9999'`
+- `abha/abha-api-v3.yaml:7219`
+  - before: `- code: 'ABDM-9999:'`
+  - after:  `- code: 'ABDM-9999'`
+- `abha/abha-api-v3.yaml:7224`
+  - before: `- code: 'ABDM-1204:'`
+  - after:  `- code: 'ABDM-1204'`
+- `abha/abha-api-v3.yaml:7229`
+  - before: `- code: 'ABDM-1204:'`
+  - after:  `- code: 'ABDM-1204'`
+- `abha/abha-api-v3.yaml:7430`
+  - before: `- code: 'ABDM-1006:'`
+  - after:  `- code: 'ABDM-1006'`
+- `abha/abha-api-v3.yaml:7518`
+  - before: `- code: 'ABDM-1006:'`
+  - after:  `- code: 'ABDM-1006'`
+- `abha/abha-api-v3.yaml:7741`
+  - before: `code: 'ABDM-1030:'`
+  - after:  `code: 'ABDM-1030'`
+- `abha/abha-api-v3.yaml:7746`
+  - before: `code: 'ABDM-1016:'`
+  - after:  `code: 'ABDM-1016'`
+- `abha/abha-api-v3.yaml:7883`
+  - before: `code: 'ABDM-1030:'`
+  - after:  `code: 'ABDM-1030'`
+- `abha/abha-api-v3.yaml:7888`
+  - before: `code: 'ABDM-1016:'`
+  - after:  `code: 'ABDM-1016'`
+- `abha/abha-api-v3.yaml:7997`
+  - before: `code: 'ABDM-1030:'`
+  - after:  `code: 'ABDM-1030'`
+- `abha/abha-api-v3.yaml:8002`
+  - before: `code: 'ABDM-1016:'`
+  - after:  `code: 'ABDM-1016'`
+- `abha/abha-api-v3.yaml:8134`
+  - before: `code: 'ABDM-1016:'`
+  - after:  `code: 'ABDM-1016'`
+- `abha/abha-api-v3.yaml:8140`
+  - before: `code: 'ABDM-1030:'`
+  - after:  `code: 'ABDM-1030'`
+- `abha/abha-api-v3.yaml:8201`
+  - before: `example: "ABDM-1016:"`
+  - after:  `example: "ABDM-1016"`
+- `abha/abha-api-v3.yaml:8210`
+  - before: `code: 'ABDM-1016:'`
+  - after:  `code: 'ABDM-1016'`
+- `abha/abha-api-v3.yaml:8215`
+  - before: `code: 'ABDM-1030:'`
+  - after:  `code: 'ABDM-1030'`
+- `hiecm/consent-management-data-flow.yaml:435`
+  - before: `example: "ABDM-1001:"`
+  - after:  `example: "ABDM-1001"`
+- `hiecm/consent-management-data-flow.yaml:596`
+  - before: `code: "ABDM-9999:"`
+  - after:  `code: "ABDM-9999"`
+- `hiecm/consent-management-data-flow.yaml:599`
+  - before: `code: "ABDM-9999:"`
+  - after:  `code: "ABDM-9999"`
+- `hiecm/consent-management-data-flow.yaml:602`
+  - before: `code: "ABDM-9999:"`
+  - after:  `code: "ABDM-9999"`
+- `hiecm/consent-management-data-flow.yaml:644`
+  - before: `example: "ABDM-1001:"`
+  - after:  `example: "ABDM-1001"`
+- `hiecm/consent-management-data-flow.yaml:1532`
+  - before: `code: "ABDM-9999:"`
+  - after:  `code: "ABDM-9999"`
+- `hiecm/consent-management-data-flow.yaml:1535`
+  - before: `code: "ABDM-9999:"`
+  - after:  `code: "ABDM-9999"`
+- `hiecm/consent-management-data-flow.yaml:1538`
+  - before: `code: "ABDM-9999:"`
+  - after:  `code: "ABDM-9999"`
+- `hiecm/consent-management-data-flow.yaml:1541`
+  - before: `code: "ABDM-9999:"`
+  - after:  `code: "ABDM-9999"`
+- `hiecm/consent-management-data-flow.yaml:1544`
+  - before: `code: "ABDM-9999:"`
+  - after:  `code: "ABDM-9999"`
+- `hiecm/consent-management-data-flow.yaml:1585`
+  - before: `example: "ABDM-1001:"`
+  - after:  `example: "ABDM-1001"`
+- `hiecm/consent-management-data-flow.yaml:1759`
+  - before: `example: "ABDM-1001:"`
+  - after:  `example: "ABDM-1001"`
+- `hiecm/consent-management-data-flow.yaml:1876`
+  - before: `example: "ABDM-9999:"`
+  - after:  `example: "ABDM-9999"`
+- `hiecm/consent-management-data-flow.yaml:1919`
+  - before: `example: "ABDM-1001:"`
+  - after:  `example: "ABDM-1001"`
+- `hiecm/consent-management-data-flow.yaml:2107`
+  - before: `example: "ABDM-1001:"`
+  - after:  `example: "ABDM-1001"`
+- `hiecm/consent-management-data-flow.yaml:2279`
+  - before: `example: "ABDM-1001:"`
+  - after:  `example: "ABDM-1001"`
+- `hiecm/consent-management-data-flow.yaml:2443`
+  - before: `code: "ABDM-9999:"`
+  - after:  `code: "ABDM-9999"`
+- `hiecm/consent-management-data-flow.yaml:2446`
+  - before: `code: "ABDM-9999:"`
+  - after:  `code: "ABDM-9999"`
+- `hiecm/consent-management-data-flow.yaml:2449`
+  - before: `code: "ABDM-9999:"`
+  - after:  `code: "ABDM-9999"`
+- `hiecm/consent-management-data-flow.yaml:2490`
+  - before: `example: "ABDM-1001:"`
+  - after:  `example: "ABDM-1001"`
+- `hiecm/consent-management-data-flow.yaml:2608`
+  - before: `example: "ABDM-9999:"`
+  - after:  `example: "ABDM-9999"`
+- `hiecm/consent-management-data-flow.yaml:2651`
+  - before: `example: "ABDM-1001:"`
+  - after:  `example: "ABDM-1001"`
+- `hiecm/consent-management-data-flow.yaml:3117`
+  - before: `example: "ABDM-1001:"`
+  - after:  `example: "ABDM-1001"`
+- `hiecm/consent-management-data-flow.yaml:4204`
+  - before: `code: "ABDM-9999:"`
+  - after:  `code: "ABDM-9999"`
+- `hiecm/consent-management-data-flow.yaml:4207`
+  - before: `code: "ABDM-9999:"`
+  - after:  `code: "ABDM-9999"`
+- `hiecm/consent-management-data-flow.yaml:4210`
+  - before: `code: "ABDM-9999:"`
+  - after:  `code: "ABDM-9999"`
+- `hiecm/consent-management-data-flow.yaml:4213`
+  - before: `code: "ABDM-9999:"`
+  - after:  `code: "ABDM-9999"`
+- `hiecm/consent-management-data-flow.yaml:4254`
+  - before: `example: "ABDM-1001:"`
+  - after:  `example: "ABDM-1001"`
+- `hiecm/consent-management-data-flow.yaml:4382`
+  - before: `example: "ABDM-1065:"`
+  - after:  `example: "ABDM-1065"`
+- `hiecm/consent-management-data-flow.yaml:4425`
+  - before: `example: "ABDM-1001:"`
+  - after:  `example: "ABDM-1001"`
+- `hiecm/consent-management-data-flow.yaml:4554`
+  - before: `example: "ABDM-1080:"`
+  - after:  `example: "ABDM-1080"`
+- `hiecm/consent-management-data-flow.yaml:4597`
+  - before: `example: "ABDM-1001:"`
+  - after:  `example: "ABDM-1001"`
+- `hiecm/consent-management-data-flow.yaml:5024`
+  - before: `example: "ABDM-1001:"`
+  - after:  `example: "ABDM-1001"`
+- `hiecm/consent-management-data-flow.yaml:5470`
+  - before: `example: "ABDM-1001:"`
+  - after:  `example: "ABDM-1001"`
+- `hiecm/consent-management-data-flow.yaml:5914`
+  - before: `example: "ABDM-1001:"`
+  - after:  `example: "ABDM-1001"`
+- `hiecm/consent-management-data-flow.yaml:6374`
+  - before: `example: "ABDM-1001:"`
+  - after:  `example: "ABDM-1001"`
+- `hiecm/consent-management-data-flow.yaml:6850`
+  - before: `example: "ABDM-1001:"`
+  - after:  `example: "ABDM-1001"`
+- `hiecm/consent-management-data-flow.yaml:7214`
+  - before: `code: "ABDM-9999:"`
+  - after:  `code: "ABDM-9999"`
+- `hiecm/consent-management-data-flow.yaml:7217`
+  - before: `code: "ABDM-9999:"`
+  - after:  `code: "ABDM-9999"`
+- `hiecm/consent-management-data-flow.yaml:7220`
+  - before: `code: "ABDM-9999:"`
+  - after:  `code: "ABDM-9999"`
+- `hiecm/consent-management-data-flow.yaml:7223`
+  - before: `code: "ABDM-9999:"`
+  - after:  `code: "ABDM-9999"`
+- `hiecm/consent-management-data-flow.yaml:7265`
+  - before: `example: "ABDM-1001:"`
+  - after:  `example: "ABDM-1001"`
+- `hiecm/consent-management-data-flow.yaml:7447`
+  - before: `example: "ABDM-1001:"`
+  - after:  `example: "ABDM-1001"`
+- `hiecm/consent-management-data-flow.yaml:7629`
+  - before: `example: "ABDM-1001:"`
+  - after:  `example: "ABDM-1001"`
+- `hiecm/gateway.yaml:198`
+  - before: `example: "ABDM-1001:"`
+  - after:  `example: "ABDM-1001"`
+- `hiecm/gateway.yaml:217`
+  - before: `example: "ABDM-1015:"`
+  - after:  `example: "ABDM-1015"`
+- `hiecm/gateway.yaml:253`
+  - before: `example: "ABDM-9999:"`
+  - after:  `example: "ABDM-9999"`
+- `hiecm/gateway.yaml:388`
+  - before: `example: "ABDM-1001:"`
+  - after:  `example: "ABDM-1001"`
+- `hiecm/gateway.yaml:407`
+  - before: `example: "ABDM-1015:"`
+  - after:  `example: "ABDM-1015"`
+- `hiecm/gateway.yaml:443`
+  - before: `example: "ABDM-9999:"`
+  - after:  `example: "ABDM-9999"`
+- `hiecm/gateway.yaml:532`
+  - before: `example: "ABDM-1001:"`
+  - after:  `example: "ABDM-1001"`
+- `hiecm/gateway.yaml:551`
+  - before: `example: "ABDM-1015:"`
+  - after:  `example: "ABDM-1015"`
+- `hiecm/gateway.yaml:587`
+  - before: `example: "ABDM-9999:"`
+  - after:  `example: "ABDM-9999"`
+- `hiecm/gateway.yaml:745`
+  - before: `example: "ABDM-1001:"`
+  - after:  `example: "ABDM-1001"`
+- `hiecm/gateway.yaml:764`
+  - before: `example: "ABDM-1015:"`
+  - after:  `example: "ABDM-1015"`
+- `hiecm/gateway.yaml:800`
+  - before: `example: "ABDM-9999:"`
+  - after:  `example: "ABDM-9999"`
+- `hiecm/gateway.yaml:915`
+  - before: `example: "ABDM-1001:"`
+  - after:  `example: "ABDM-1001"`
+- `hiecm/gateway.yaml:934`
+  - before: `example: "ABDM-1015:"`
+  - after:  `example: "ABDM-1015"`
+- `hiecm/gateway.yaml:970`
+  - before: `example: "ABDM-9999:"`
+  - after:  `example: "ABDM-9999"`
+- `hiecm/gateway.yaml:1080`
+  - before: `example: "ABDM-1001:"`
+  - after:  `example: "ABDM-1001"`
+- `hiecm/gateway.yaml:1099`
+  - before: `example: "ABDM-1015:"`
+  - after:  `example: "ABDM-1015"`
+- `hiecm/gateway.yaml:1135`
+  - before: `example: "ABDM-9999:"`
+  - after:  `example: "ABDM-9999"`
+- `hiecm/gateway.yaml:1282`
+  - before: `example: "ABDM-1001:"`
+  - after:  `example: "ABDM-1001"`
+- `hiecm/gateway.yaml:1301`
+  - before: `example: "ABDM-1015:"`
+  - after:  `example: "ABDM-1015"`
+- `hiecm/gateway.yaml:1337`
+  - before: `example: "ABDM-9999:"`
+  - after:  `example: "ABDM-9999"`
+- `hiecm/gateway.yaml:1465`
+  - before: `example: "ABDM-1001:"`
+  - after:  `example: "ABDM-1001"`
+- `hiecm/gateway.yaml:1484`
+  - before: `example: "ABDM-1015:"`
+  - after:  `example: "ABDM-1015"`
+- `hiecm/gateway.yaml:1503`
+  - before: `example: "ABDM-9999:"`
+  - after:  `example: "ABDM-9999"`
+- `hiecm/gateway.yaml:1587`
+  - before: `example: "ABDM-1001:"`
+  - after:  `example: "ABDM-1001"`
+- `hiecm/gateway.yaml:1606`
+  - before: `example: "ABDM-1015:"`
+  - after:  `example: "ABDM-1015"`
+- `hiecm/gateway.yaml:1625`
+  - before: `example: "ABDM-9999:"`
+  - after:  `example: "ABDM-9999"`
+- `hiecm/gateway.yaml:1750`
+  - before: `example: "ABDM-1001:"`
+  - after:  `example: "ABDM-1001"`
+- `hiecm/gateway.yaml:1769`
+  - before: `example: "ABDM-1015:"`
+  - after:  `example: "ABDM-1015"`
+- `hiecm/gateway.yaml:1788`
+  - before: `example: "ABDM-9999:"`
+  - after:  `example: "ABDM-9999"`
+- `hiecm/hip-initiated-linking.yaml:174`
+  - before: `example: "ABDM-1006:"`
+  - after:  `example: "ABDM-1006"`
+- `hiecm/hip-initiated-linking.yaml:217`
+  - before: `example: "ABDM-1001:"`
+  - after:  `example: "ABDM-1001"`
+- `hiecm/hip-initiated-linking.yaml:230`
+  - before: `example: "ABDM-9999:"`
+  - after:  `example: "ABDM-9999"`
+- `hiecm/hip-initiated-linking.yaml:418`
+  - before: `example: "ABDM-1006:"`
+  - after:  `example: "ABDM-1006"`
+- `hiecm/hip-initiated-linking.yaml:461`
+  - before: `example: "ABDM-1001:"`
+  - after:  `example: "ABDM-1001"`
+- `hiecm/hip-initiated-linking.yaml:474`
+  - before: `example: "ABDM-9999:"`
+  - after:  `example: "ABDM-9999"`
+- `hiecm/hip-initiated-linking.yaml:620`
+  - before: `example: "ABDM-1006:"`
+  - after:  `example: "ABDM-1006"`
+- `hiecm/hip-initiated-linking.yaml:663`
+  - before: `example: "ABDM-1001:"`
+  - after:  `example: "ABDM-1001"`
+- `hiecm/hip-initiated-linking.yaml:676`
+  - before: `example: "ABDM-9999:"`
+  - after:  `example: "ABDM-9999"`
+- `hiecm/hip-initiated-linking.yaml:748`
+  - before: `example: "ABDM-1006:"`
+  - after:  `example: "ABDM-1006"`
+- `hiecm/hip-initiated-linking.yaml:783`
+  - before: `example: "ABDM-1006:"`
+  - after:  `example: "ABDM-1006"`
+- `hiecm/hip-initiated-linking.yaml:826`
+  - before: `example: "ABDM-1001:"`
+  - after:  `example: "ABDM-1001"`
+- `hiecm/hip-initiated-linking.yaml:839`
+  - before: `example: "ABDM-9999:"`
+  - after:  `example: "ABDM-9999"`
+- `hiecm/hip-initiated-linking.yaml:932`
+  - before: `example: "ABDM-1006:"`
+  - after:  `example: "ABDM-1006"`
+- `hiecm/hip-initiated-linking.yaml:975`
+  - before: `example: "ABDM-1001:"`
+  - after:  `example: "ABDM-1001"`
+- `hiecm/hip-initiated-linking.yaml:988`
+  - before: `example: "ABDM-9999:"`
+  - after:  `example: "ABDM-9999"`
+- `hiecm/hip-initiated-linking.yaml:1096`
+  - before: `example: "ABDM-1006:"`
+  - after:  `example: "ABDM-1006"`
+- `hiecm/hip-initiated-linking.yaml:1139`
+  - before: `example: "ABDM-1001:"`
+  - after:  `example: "ABDM-1001"`
+- `hiecm/hip-initiated-linking.yaml:1152`
+  - before: `example: "ABDM-9999:"`
+  - after:  `example: "ABDM-9999"`
+- `hiecm/hip-initiated-linking.yaml:1292`
+  - before: `example: "ABDM-1065:"`
+  - after:  `example: "ABDM-1065"`
+- `hiecm/hip-initiated-linking.yaml:1335`
+  - before: `example: "ABDM-1001:"`
+  - after:  `example: "ABDM-1001"`
+- `hiecm/hip-initiated-linking.yaml:1348`
+  - before: `example: "ABDM-9999:"`
+  - after:  `example: "ABDM-9999"`
+- `hiecm/patient-share.yaml:239`
+  - before: `example: "ABDM-1007:"`
+  - after:  `example: "ABDM-1007"`
+- `hiecm/patient-share.yaml:462`
+  - before: `example: "ABDM-1001:"`
+  - after:  `example: "ABDM-1001"`
+- `hiecm/patient-share.yaml:481`
+  - before: `example: "ABDM-1007:"`
+  - after:  `example: "ABDM-1007"`
+- `hiecm/patient-share.yaml:500`
+  - before: `example: "ABDM-1022:"`
+  - after:  `example: "ABDM-1022"`
+- `hiecm/patient-share.yaml:813`
+  - before: `example: "ABDM-1001:"`
+  - after:  `example: "ABDM-1001"`
+- `hiecm/patient-share.yaml:832`
+  - before: `example: "ABDM-1007:"`
+  - after:  `example: "ABDM-1007"`
+- `hiecm/patient-share.yaml:851`
+  - before: `example: "ABDM-1022:"`
+  - after:  `example: "ABDM-1022"`
+- `hiecm/patient-share.yaml:1031`
+  - before: `example: "ABDM-1007:"`
+  - after:  `example: "ABDM-1007"`
+- `hiecm/patient-share.yaml:1236`
+  - before: `example: "ABDM-1001:"`
+  - after:  `example: "ABDM-1001"`
+- `hiecm/patient-share.yaml:1255`
+  - before: `example: "ABDM-1007:"`
+  - after:  `example: "ABDM-1007"`
+- `hiecm/patient-share.yaml:1274`
+  - before: `example: "ABDM-1022:"`
+  - after:  `example: "ABDM-1022"`
+- `hiecm/scan-and-pay.yaml:214`
+  - before: `example: "ABDM-2500:"`
+  - after:  `example: "ABDM-2500"`
+- `hiecm/scan-and-pay.yaml:231`
+  - before: `example: "ABDM-2500:"`
+  - after:  `example: "ABDM-2500"`
+- `hiecm/scan-and-pay.yaml:440`
+  - before: `example: "ABDM-2500:"`
+  - after:  `example: "ABDM-2500"`
+- `hiecm/scan-and-pay.yaml:485`
+  - before: `example: "ABDM-2429:"`
+  - after:  `example: "ABDM-2429"`
+- `hiecm/scan-and-pay.yaml:504`
+  - before: `example: "ABDM-2500:"`
+  - after:  `example: "ABDM-2500"`
+- `hiecm/scan-and-pay.yaml:521`
+  - before: `example: "ABDM-2500:"`
+  - after:  `example: "ABDM-2500"`
+- `hiecm/scan-and-pay.yaml:668`
+  - before: `example: "ABDM-2500:"`
+  - after:  `example: "ABDM-2500"`
+- `hiecm/scan-and-pay.yaml:685`
+  - before: `example: "ABDM-2500:"`
+  - after:  `example: "ABDM-2500"`
+- `hiecm/scan-and-pay.yaml:917`
+  - before: `example: "ABDM-2500:"`
+  - after:  `example: "ABDM-2500"`
+- `hiecm/scan-and-pay.yaml:962`
+  - before: `example: "ABDM-2429:"`
+  - after:  `example: "ABDM-2429"`
+- `hiecm/scan-and-pay.yaml:981`
+  - before: `example: "ABDM-2500:"`
+  - after:  `example: "ABDM-2500"`
+- `hiecm/scan-and-pay.yaml:998`
+  - before: `example: "ABDM-2500:"`
+  - after:  `example: "ABDM-2500"`
+- `hiecm/scan-and-pay.yaml:1133`
+  - before: `example: "ABDM-2500:"`
+  - after:  `example: "ABDM-2500"`
+- `hiecm/scan-and-pay.yaml:1178`
+  - before: `example: "ABDM-2429:"`
+  - after:  `example: "ABDM-2429"`
+- `hiecm/scan-and-pay.yaml:1197`
+  - before: `example: "ABDM-2500:"`
+  - after:  `example: "ABDM-2500"`
+- `hiecm/scan-and-pay.yaml:1214`
+  - before: `example: "ABDM-2500:"`
+  - after:  `example: "ABDM-2500"`
+- `hiecm/scan-and-pay.yaml:1352`
+  - before: `example: "ABDM-2500:"`
+  - after:  `example: "ABDM-2500"`
+- `hiecm/scan-and-pay.yaml:1369`
+  - before: `example: "ABDM-2500:"`
+  - after:  `example: "ABDM-2500"`
+- `hiecm/scan-and-pay.yaml:1466`
+  - before: `example: "ABDM-2500:"`
+  - after:  `example: "ABDM-2500"`
+- `hiecm/scan-and-pay.yaml:1483`
+  - before: `example: "ABDM-2500:"`
+  - after:  `example: "ABDM-2500"`
+- `hiecm/scan-and-pay.yaml:1644`
+  - before: `example: "ABDM-2500:"`
+  - after:  `example: "ABDM-2500"`
+- `hiecm/scan-and-pay.yaml:1689`
+  - before: `example: "ABDM-2429:"`
+  - after:  `example: "ABDM-2429"`
+- `hiecm/scan-and-pay.yaml:1708`
+  - before: `example: "ABDM-2500:"`
+  - after:  `example: "ABDM-2500"`
+- `hiecm/scan-and-pay.yaml:1725`
+  - before: `example: "ABDM-2500:"`
+  - after:  `example: "ABDM-2500"`
+- `hiecm/scan-and-pay.yaml:1940`
+  - before: `example: "ABDM-2500:"`
+  - after:  `example: "ABDM-2500"`
+- `hiecm/scan-and-pay.yaml:1985`
+  - before: `example: "ABDM-2429:"`
+  - after:  `example: "ABDM-2429"`
+- `hiecm/scan-and-pay.yaml:2004`
+  - before: `example: "ABDM-2500:"`
+  - after:  `example: "ABDM-2500"`
+- `hiecm/scan-and-pay.yaml:2021`
+  - before: `example: "ABDM-2500:"`
+  - after:  `example: "ABDM-2500"`
+- `hiecm/scan-and-pay.yaml:2187`
+  - before: `example: "ABDM-2500:"`
+  - after:  `example: "ABDM-2500"`
+- `hiecm/scan-and-pay.yaml:2204`
+  - before: `example: "ABDM-2500:"`
+  - after:  `example: "ABDM-2500"`
+- `hiecm/scan-and-pay.yaml:2372`
+  - before: `example: "ABDM-2500:"`
+  - after:  `example: "ABDM-2500"`
+- `hiecm/scan-and-pay.yaml:2417`
+  - before: `example: "ABDM-2429:"`
+  - after:  `example: "ABDM-2429"`
+- `hiecm/scan-and-pay.yaml:2436`
+  - before: `example: "ABDM-2500:"`
+  - after:  `example: "ABDM-2500"`
+- `hiecm/scan-and-pay.yaml:2453`
+  - before: `example: "ABDM-2500:"`
+  - after:  `example: "ABDM-2500"`
+- `hiecm/scan-and-pay.yaml:2661`
+  - before: `example: "ABDM-2500:"`
+  - after:  `example: "ABDM-2500"`
+- `hiecm/scan-and-pay.yaml:2678`
+  - before: `example: "ABDM-2500:"`
+  - after:  `example: "ABDM-2500"`
+- `hiecm/scan-and-pay.yaml:2806`
+  - before: `example: "ABDM-2500:"`
+  - after:  `example: "ABDM-2500"`
+- `hiecm/scan-and-pay.yaml:2823`
+  - before: `example: "ABDM-2500:"`
+  - after:  `example: "ABDM-2500"`
+- `hiecm/scan-and-pay.yaml:2985`
+  - before: `example: "ABDM-2500:"`
+  - after:  `example: "ABDM-2500"`
+- `hiecm/scan-and-pay.yaml:3030`
+  - before: `example: "ABDM-2429:"`
+  - after:  `example: "ABDM-2429"`
+- `hiecm/scan-and-pay.yaml:3049`
+  - before: `example: "ABDM-2500:"`
+  - after:  `example: "ABDM-2500"`
+- `hiecm/scan-and-pay.yaml:3066`
+  - before: `example: "ABDM-2500:"`
+  - after:  `example: "ABDM-2500"`
+- `hiecm/scan-and-pay.yaml:3184`
+  - before: `example: "ABDM-2500:"`
+  - after:  `example: "ABDM-2500"`
+- `hiecm/scan-and-pay.yaml:3229`
+  - before: `example: "ABDM-2429:"`
+  - after:  `example: "ABDM-2429"`
+- `hiecm/scan-and-pay.yaml:3248`
+  - before: `example: "ABDM-2500:"`
+  - after:  `example: "ABDM-2500"`
+- `hiecm/scan-and-pay.yaml:3265`
+  - before: `example: "ABDM-2500:"`
+  - after:  `example: "ABDM-2500"`
+- `hiecm/scan-and-pay.yaml:3408`
+  - before: `example: "ABDM-2500:"`
+  - after:  `example: "ABDM-2500"`
+- `hiecm/scan-and-pay.yaml:3425`
+  - before: `example: "ABDM-2500:"`
+  - after:  `example: "ABDM-2500"`
+- `hiecm/scan-and-pay.yaml:3706`
+  - before: `example: "ABDM-2500:"`
+  - after:  `example: "ABDM-2500"`
+- `hiecm/scan-and-pay.yaml:3723`
+  - before: `example: "ABDM-2500:"`
+  - after:  `example: "ABDM-2500"`
+- `hiecm/scan-and-pay.yaml:3847`
+  - before: `example: "ABDM-2500:"`
+  - after:  `example: "ABDM-2500"`
+- `hiecm/scan-and-pay.yaml:3864`
+  - before: `example: "ABDM-2500:"`
+  - after:  `example: "ABDM-2500"`
+- `hiecm/scan-and-pay.yaml:4006`
+  - before: `example: "ABDM-2500:"`
+  - after:  `example: "ABDM-2500"`
+- `hiecm/scan-and-pay.yaml:4023`
+  - before: `example: "ABDM-2500:"`
+  - after:  `example: "ABDM-2500"`
+- `hiecm/subscription.yaml:241`
+  - before: `example: "ABDM-9999:"`
+  - after:  `example: "ABDM-9999"`
+- `hiecm/subscription.yaml:428`
+  - before: `example: "ABDM-1031:"`
+  - after:  `example: "ABDM-1031"`
+- `hiecm/subscription.yaml:784`
+  - before: `example: "ABDM-1031:"`
+  - after:  `example: "ABDM-1031"`
+- `hiecm/subscription.yaml:1247`
+  - before: `example: "ABDM-1031:"`
+  - after:  `example: "ABDM-1031"`
+- `hiecm/subscription.yaml:1853`
+  - before: `example: "ABDM-1066:"`
+  - after:  `example: "ABDM-1066"`
+- `hiecm/subscription.yaml:2286`
+  - before: `example: "ABDM-9999:"`
+  - after:  `example: "ABDM-9999"`
+- `hiecm/subscription.yaml:2469`
+  - before: `example: "ABDM-1066:"`
+  - after:  `example: "ABDM-1066"`
+- `hiecm/subscription.yaml:2938`
+  - before: `example: "ABDM-1066:"`
+  - after:  `example: "ABDM-1066"`
+- `hiecm/subscription.yaml:3103`
+  - before: `example: "ABDM-1066:"`
+  - after:  `example: "ABDM-1066"`
+- `hiecm/subscription.yaml:3263`
+  - before: `example: "ABDM-1066:"`
+  - after:  `example: "ABDM-1066"`
+- `hiecm/subscription.yaml:4003`
+  - before: `example: "ABDM-1066:"`
+  - after:  `example: "ABDM-1066"`
+- `hiecm/subscription.yaml:4740`
+  - before: `example: "ABDM-1066:"`
+  - after:  `example: "ABDM-1066"`
+- `hiecm/subscription.yaml:5510`
+  - before: `example: "ABDM-1066:"`
+  - after:  `example: "ABDM-1066"`
+- `hiecm/subscription.yaml:5782`
+  - before: `example: "ABDM-1066:"`
+  - after:  `example: "ABDM-1066"`
+- `hiecm/user-initiated-linking.yaml:177`
+  - before: `example: "ABDM-1103:"`
+  - after:  `example: "ABDM-1103"`
+- `hiecm/user-initiated-linking.yaml:415`
+  - before: `example: "ABDM-1106:"`
+  - after:  `example: "ABDM-1106"`
+- `hiecm/user-initiated-linking.yaml:676`
+  - before: `example: "ABDM-1104:"`
+  - after:  `example: "ABDM-1104"`
+- `hiecm/user-initiated-linking.yaml:892`
+  - before: `example: "ABDM-1107:"`
+  - after:  `example: "ABDM-1107"`
+- `hiecm/user-initiated-linking.yaml:1031`
+  - before: `example: "ABDM-1105:"`
+  - after:  `example: "ABDM-1105"`
+- `hiecm/user-initiated-linking.yaml:1253`
+  - before: `example: "ABDM-1108:"`
+  - after:  `example: "ABDM-1108"`
+- `hiecm/user-initiated-linking.yaml:1425`
+  - before: `example: "ABDM-1103:"`
+  - after:  `example: "ABDM-1103"`
+- `hiecm/user-initiated-linking.yaml:1722`
+  - before: `example: "ABDM-1106:"`
+  - after:  `example: "ABDM-1106"`
+- `hiecm/user-initiated-linking.yaml:1928`
+  - before: `example: "ABDM-1104:"`
+  - after:  `example: "ABDM-1104"`
+- `hiecm/user-initiated-linking.yaml:2145`
+  - before: `example: "ABDM-1107:"`
+  - after:  `example: "ABDM-1107"`
+- `hiecm/user-initiated-linking.yaml:2296`
+  - before: `example: "ABDM-1105:"`
+  - after:  `example: "ABDM-1105"`
+- `hiecm/user-initiated-linking.yaml:2513`
+  - before: `example: "ABDM-1108:"`
+  - after:  `example: "ABDM-1108"`
+- `phr/phr-api.yaml:312`
+  - before: `- code: 'ABDM-1006:'`
+  - after:  `- code: 'ABDM-1006'`
+- `phr/phr-api.yaml:321`
+  - before: `example: 'ABDM-1006:'`
+  - after:  `example: 'ABDM-1006'`
+- `phr/phr-api.yaml:326`
+  - before: `- code: 'ABDM-1006:'`
+  - after:  `- code: 'ABDM-1006'`
+- `phr/phr-api.yaml:342`
+  - before: `example: 'ABDM-9999:'`
+  - after:  `example: 'ABDM-9999'`
+- `phr/phr-api.yaml:347`
+  - before: `- code: 'ABDM-9999:'`
+  - after:  `- code: 'ABDM-9999'`
+- `phr/phr-api.yaml:355`
+  - before: `example: 'ABDM-9999:'`
+  - after:  `example: 'ABDM-9999'`
+- `phr/phr-api.yaml:360`
+  - before: `- code: 'ABDM-9999:'`
+  - after:  `- code: 'ABDM-9999'`
+- `phr/phr-api.yaml:365`
+  - before: `- code: 'ABDM-9999:'`
+  - after:  `- code: 'ABDM-9999'`
+- `phr/phr-api.yaml:369`
+  - before: `- code: 'ABDM-9999:'`
+  - after:  `- code: 'ABDM-9999'`
+- `phr/phr-api.yaml:373`
+  - before: `- code: 'ABDM-9999:'`
+  - after:  `- code: 'ABDM-9999'`
+- `phr/phr-api.yaml:377`
+  - before: `- code: 'ABDM-9999:'`
+  - after:  `- code: 'ABDM-9999'`
+- `phr/phr-api.yaml:381`
+  - before: `- code: 'ABDM-9999:'`
+  - after:  `- code: 'ABDM-9999'`
+- `phr/phr-api.yaml:389`
+  - before: `- code: 'ABDM-9999:'`
+  - after:  `- code: 'ABDM-9999'`
+- `phr/phr-api.yaml:393`
+  - before: `- code: 'ABDM-9999:'`
+  - after:  `- code: 'ABDM-9999'`
+- `phr/phr-api.yaml:397`
+  - before: `- code: 'ABDM-1006:'`
+  - after:  `- code: 'ABDM-1006'`
+- `phr/phr-api.yaml:401`
+  - before: `- code: 'ABDM-1006:'`
+  - after:  `- code: 'ABDM-1006'`
+- `phr/phr-api.yaml:1102`
+  - before: `example: 'ABDM-9999:'`
+  - after:  `example: 'ABDM-9999'`
+- `phr/phr-api.yaml:1107`
+  - before: `- code: 'ABDM-9999:'`
+  - after:  `- code: 'ABDM-9999'`
+- `phr/phr-api.yaml:1112`
+  - before: `- code: 'ABDM-1006:'`
+  - after:  `- code: 'ABDM-1006'`
+- `phr/phr-api.yaml:1116`
+  - before: `- code: 'ABDM-9999:'`
+  - after:  `- code: 'ABDM-9999'`
+- `phr/phr-api.yaml:1120`
+  - before: `- code: 'ABDM-9999:'`
+  - after:  `- code: 'ABDM-9999'`
+- `phr/phr-api.yaml:1126`
+  - before: `- code: 'ABDM-9999:'`
+  - after:  `- code: 'ABDM-9999'`
+- `phr/phr-api.yaml:1130`
+  - before: `- code: 'ABDM-1006:'`
+  - after:  `- code: 'ABDM-1006'`
+- `phr/phr-api.yaml:1132`
+  - before: `- code: 'ABDM-9999:'`
+  - after:  `- code: 'ABDM-9999'`
+- `phr/phr-api.yaml:1136`
+  - before: `- code: 'ABDM-9999:'`
+  - after:  `- code: 'ABDM-9999'`
+- `phr/phr-api.yaml:1142`
+  - before: `- code: 'ABDM-9999:'`
+  - after:  `- code: 'ABDM-9999'`
+- `phr/phr-api.yaml:1146`
+  - before: `- code: 'ABDM-9999:'`
+  - after:  `- code: 'ABDM-9999'`
+- `phr/phr-api.yaml:1150`
+  - before: `- code: 'ABDM-9999:'`
+  - after:  `- code: 'ABDM-9999'`
+- `phr/phr-api.yaml:1154`
+  - before: `- code: 'ABDM-9999:'`
+  - after:  `- code: 'ABDM-9999'`
+- `phr/phr-api.yaml:1156`
+  - before: `- code: 'ABDM-9999:'`
+  - after:  `- code: 'ABDM-9999'`
+- `phr/phr-api.yaml:1160`
+  - before: `- code: 'ABDM-9999:'`
+  - after:  `- code: 'ABDM-9999'`
+- `phr/phr-api.yaml:1497`
+  - before: `example: 'ABDM-9999:'`
+  - after:  `example: 'ABDM-9999'`
+- `phr/phr-api.yaml:1502`
+  - before: `- code: 'ABDM-9999:'`
+  - after:  `- code: 'ABDM-9999'`
+- `phr/phr-api.yaml:1507`
+  - before: `- code: 'ABDM-9999:'`
+  - after:  `- code: 'ABDM-9999'`
+- `phr/phr-api.yaml:1511`
+  - before: `- code: 'ABDM-9999:'`
+  - after:  `- code: 'ABDM-9999'`
+- `phr/phr-api.yaml:1515`
+  - before: `- code: 'ABDM-9999:'`
+  - after:  `- code: 'ABDM-9999'`
+- `phr/phr-api.yaml:1519`
+  - before: `- code: 'ABDM-9999:'`
+  - after:  `- code: 'ABDM-9999'`
+- `phr/phr-api.yaml:1521`
+  - before: `- code: 'ABDM-9999:'`
+  - after:  `- code: 'ABDM-9999'`
+- `phr/phr-api.yaml:1525`
+  - before: `- code: 'ABDM-9999:'`
+  - after:  `- code: 'ABDM-9999'`
+- `phr/phr-api.yaml:1718`
+  - before: `example: 'ABDM-1006:'`
+  - after:  `example: 'ABDM-1006'`
+- `phr/phr-api.yaml:1723`
+  - before: `- code: 'ABDM-1006:'`
+  - after:  `- code: 'ABDM-1006'`
+- `phr/phr-api.yaml:1728`
+  - before: `- code: 'ABDM-1006:'`
+  - after:  `- code: 'ABDM-1006'`
+- `phr/phr-api.yaml:2390`
+  - before: `- code: 'ABDM-9999:'`
+  - after:  `- code: 'ABDM-9999'`
+- `phr/phr-api.yaml:2399`
+  - before: `example: 'ABDM-9999:'`
+  - after:  `example: 'ABDM-9999'`
+- `phr/phr-api.yaml:2404`
+  - before: `- code: 'ABDM-9999:'`
+  - after:  `- code: 'ABDM-9999'`
+- `phr/phr-api.yaml:2410`
+  - before: `example: 'ABDM-9999:'`
+  - after:  `example: 'ABDM-9999'`
+- `phr/phr-api.yaml:2422`
+  - before: `example: 'ABDM-9999:'`
+  - after:  `example: 'ABDM-9999'`
+- `phr/phr-api.yaml:2427`
+  - before: `- code: 'ABDM-9999:'`
+  - after:  `- code: 'ABDM-9999'`
+- `phr/phr-api.yaml:2435`
+  - before: `example: 'ABDM-9999:'`
+  - after:  `example: 'ABDM-9999'`
+- `phr/phr-api.yaml:2440`
+  - before: `- code: 'ABDM-9999:'`
+  - after:  `- code: 'ABDM-9999'`
+- `phr/phr-api.yaml:2448`
+  - before: `example: 'ABDM-9999:'`
+  - after:  `example: 'ABDM-9999'`
+- `phr/phr-api.yaml:2453`
+  - before: `- code: 'ABDM-9999:'`
+  - after:  `- code: 'ABDM-9999'`
+- `phr/phr-api.yaml:2455`
+  - before: `- code: 'ABDM-9999:'`
+  - after:  `- code: 'ABDM-9999'`
+- `phr/phr-api.yaml:2461`
+  - before: `example: 'ABDM-9999:'`
+  - after:  `example: 'ABDM-9999'`
+- `phr/phr-api.yaml:2473`
+  - before: `example: 'ABDM-9999:'`
+  - after:  `example: 'ABDM-9999'`
+- `phr/phr-api.yaml:2478`
+  - before: `- code: 'ABDM-9999:'`
+  - after:  `- code: 'ABDM-9999'`
+- `phr/phr-api.yaml:2486`
+  - before: `example: 'ABDM-9999:'`
+  - after:  `example: 'ABDM-9999'`
+- `phr/phr-api.yaml:2491`
+  - before: `- code: 'ABDM-9999:'`
+  - after:  `- code: 'ABDM-9999'`
+- `phr/phr-api.yaml:2499`
+  - before: `example: 'ABDM-9999:'`
+  - after:  `example: 'ABDM-9999'`
+- `phr/phr-api.yaml:2504`
+  - before: `- code: 'ABDM-9999:'`
+  - after:  `- code: 'ABDM-9999'`
+- `phr/phr-api.yaml:2506`
+  - before: `- code: 'ABDM-9999:'`
+  - after:  `- code: 'ABDM-9999'`
+- `phr/phr-api.yaml:2512`
+  - before: `example: 'ABDM-9999:'`
+  - after:  `example: 'ABDM-9999'`
+- `phr/phr-api.yaml:2521`
+  - before: `code: 'ABDM-9999:'`
+  - after:  `code: 'ABDM-9999'`
+- `phr/phr-api.yaml:2527`
+  - before: `- code: 'ABDM-9999:'`
+  - after:  `- code: 'ABDM-9999'`
+- `phr/phr-api.yaml:2529`
+  - before: `- code: 'ABDM-9999:'`
+  - after:  `- code: 'ABDM-9999'`
+- `phr/phr-api.yaml:2533`
+  - before: `- code: 'ABDM-9999:'`
+  - after:  `- code: 'ABDM-9999'`
+- `phr/phr-api.yaml:2537`
+  - before: `- code: 'ABDM-9999:'`
+  - after:  `- code: 'ABDM-9999'`
+- `phr/phr-api.yaml:2856`
+  - before: `example: 'ABDM-9999:'`
+  - after:  `example: 'ABDM-9999'`
+- `phr/phr-api.yaml:2861`
+  - before: `- code: 'ABDM-9999:'`
+  - after:  `- code: 'ABDM-9999'`
+- `phr/phr-api.yaml:2870`
+  - before: `- code: 'ABDM-9999:'`
+  - after:  `- code: 'ABDM-9999'`
+- `phr/phr-api.yaml:3391`
+  - before: `- code: 'ABDM-1006:'`
+  - after:  `- code: 'ABDM-1006'`
+- `phr/phr-api.yaml:3400`
+  - before: `example: 'ABDM-1006:'`
+  - after:  `example: 'ABDM-1006'`
+- `phr/phr-api.yaml:3405`
+  - before: `- code: 'ABDM-1006:'`
+  - after:  `- code: 'ABDM-1006'`
+- `phr/phr-api.yaml:3421`
+  - before: `example: 'ABDM-9999:'`
+  - after:  `example: 'ABDM-9999'`
+- `phr/phr-api.yaml:3426`
+  - before: `- code: 'ABDM-9999:'`
+  - after:  `- code: 'ABDM-9999'`
+- `phr/phr-api.yaml:3434`
+  - before: `example: 'ABDM-9999:'`
+  - after:  `example: 'ABDM-9999'`
+- `phr/phr-api.yaml:3439`
+  - before: `- code: 'ABDM-9999:'`
+  - after:  `- code: 'ABDM-9999'`
+- `phr/phr-api.yaml:3455`
+  - before: `example: 'ABDM-1006:'`
+  - after:  `example: 'ABDM-1006'`
+- `phr/phr-api.yaml:3460`
+  - before: `- code: 'ABDM-1006:'`
+  - after:  `- code: 'ABDM-1006'`
+- `phr/phr-api.yaml:3468`
+  - before: `example: 'ABDM-1006:'`
+  - after:  `example: 'ABDM-1006'`
+- `phr/phr-api.yaml:3473`
+  - before: `- code: 'ABDM-1006:'`
+  - after:  `- code: 'ABDM-1006'`
+- `phr/phr-api.yaml:3481`
+  - before: `example: 'ABDM-9999:'`
+  - after:  `example: 'ABDM-9999'`
+- `phr/phr-api.yaml:3486`
+  - before: `- code: 'ABDM-9999:'`
+  - after:  `- code: 'ABDM-9999'`
+- `phr/phr-api.yaml:3494`
+  - before: `example: 'ABDM-9999:'`
+  - after:  `example: 'ABDM-9999'`
+- `phr/phr-api.yaml:3499`
+  - before: `- code: 'ABDM-9999:'`
+  - after:  `- code: 'ABDM-9999'`
+- `phr/phr-api.yaml:3507`
+  - before: `example: 'ABDM-1006:'`
+  - after:  `example: 'ABDM-1006'`
+- `phr/phr-api.yaml:3512`
+  - before: `- code: 'ABDM-1006:'`
+  - after:  `- code: 'ABDM-1006'`
+- `phr/phr-api.yaml:3520`
+  - before: `example: 'ABDM-9999:'`
+  - after:  `example: 'ABDM-9999'`
+- `phr/phr-api.yaml:3525`
+  - before: `- code: 'ABDM-9999:'`
+  - after:  `- code: 'ABDM-9999'`
+- `phr/phr-api.yaml:3533`
+  - before: `example: 'ABDM-1006:'`
+  - after:  `example: 'ABDM-1006'`
+- `phr/phr-api.yaml:3538`
+  - before: `- code: 'ABDM-1006:'`
+  - after:  `- code: 'ABDM-1006'`
+- `phr/phr-api.yaml:3546`
+  - before: `example: 'ABDM-9999:'`
+  - after:  `example: 'ABDM-9999'`
+- `phr/phr-api.yaml:3551`
+  - before: `- code: 'ABDM-9999:'`
+  - after:  `- code: 'ABDM-9999'`
+- `phr/phr-api.yaml:3559`
+  - before: `example: 'ABDM-9999:'`
+  - after:  `example: 'ABDM-9999'`
+- `phr/phr-api.yaml:3564`
+  - before: `- code: 'ABDM-9999:'`
+  - after:  `- code: 'ABDM-9999'`
+- `phr/phr-api.yaml:3572`
+  - before: `example: 'ABDM-1006:'`
+  - after:  `example: 'ABDM-1006'`
+- `phr/phr-api.yaml:3577`
+  - before: `- code: 'ABDM-1006:'`
+  - after:  `- code: 'ABDM-1006'`
+- `phr/phr-api.yaml:3585`
+  - before: `example: 'ABDM-9999:'`
+  - after:  `example: 'ABDM-9999'`
+- `phr/phr-api.yaml:3590`
+  - before: `- code: 'ABDM-9999:'`
+  - after:  `- code: 'ABDM-9999'`
+- `phr/phr-api.yaml:3598`
+  - before: `example: 'ABDM-9999:'`
+  - after:  `example: 'ABDM-9999'`
+- `phr/phr-api.yaml:3603`
+  - before: `- code: 'ABDM-9999:'`
+  - after:  `- code: 'ABDM-9999'`
+- `phr/phr-api.yaml:3611`
+  - before: `example: 'ABDM-9999:'`
+  - after:  `example: 'ABDM-9999'`
+- `phr/phr-api.yaml:3616`
+  - before: `- code: 'ABDM-9999:'`
+  - after:  `- code: 'ABDM-9999'`
+- `phr/phr-api.yaml:3621`
+  - before: `- code: 'ABDM-9999:'`
+  - after:  `- code: 'ABDM-9999'`
+- `phr/phr-api.yaml:3625`
+  - before: `- code: 'ABDM-9999:'`
+  - after:  `- code: 'ABDM-9999'`
+- `phr/phr-api.yaml:3629`
+  - before: `- code: 'ABDM-9999:'`
+  - after:  `- code: 'ABDM-9999'`
+- `phr/phr-api.yaml:3633`
+  - before: `- code: 'ABDM-9999:'`
+  - after:  `- code: 'ABDM-9999'`
+- `phr/phr-api.yaml:3637`
+  - before: `- code: 'ABDM-9999:'`
+  - after:  `- code: 'ABDM-9999'`
+- `phr/phr-api.yaml:3641`
+  - before: `- code: 'ABDM-9999:'`
+  - after:  `- code: 'ABDM-9999'`
+- `phr/phr-api.yaml:3645`
+  - before: `- code: 'ABDM-1006:'`
+  - after:  `- code: 'ABDM-1006'`
+- `phr/phr-api.yaml:3649`
+  - before: `- code: 'ABDM-9999:'`
+  - after:  `- code: 'ABDM-9999'`
+- `phr/phr-api.yaml:3653`
+  - before: `- code: 'ABDM-9999:'`
+  - after:  `- code: 'ABDM-9999'`
+- `phr/phr-api.yaml:3665`
+  - before: `- code: 'ABDM-9999:'`
+  - after:  `- code: 'ABDM-9999'`
+- `phr/phr-api.yaml:3669`
+  - before: `- code: 'ABDM-9999:'`
+  - after:  `- code: 'ABDM-9999'`
+- `phr/phr-api.yaml:3673`
+  - before: `- code: 'ABDM-9999:'`
+  - after:  `- code: 'ABDM-9999'`
+- `phr/phr-api.yaml:3677`
+  - before: `- code: 'ABDM-1006:'`
+  - after:  `- code: 'ABDM-1006'`
+- `phr/phr-api.yaml:3681`
+  - before: `- code: 'ABDM-9999:'`
+  - after:  `- code: 'ABDM-9999'`
+- `phr/phr-api.yaml:3685`
+  - before: `- code: 'ABDM-9999:'`
+  - after:  `- code: 'ABDM-9999'`
+- `phr/phr-api.yaml:3689`
+  - before: `- code: 'ABDM-9999:'`
+  - after:  `- code: 'ABDM-9999'`
+- `phr/phr-api.yaml:3693`
+  - before: `- code: 'ABDM-1006:'`
+  - after:  `- code: 'ABDM-1006'`
+- `phr/phr-api.yaml:3697`
+  - before: `- code: 'ABDM-9999:'`
+  - after:  `- code: 'ABDM-9999'`
+- `phr/phr-api.yaml:3701`
+  - before: `- code: 'ABDM-9999:'`
+  - after:  `- code: 'ABDM-9999'`
+- `phr/phr-api.yaml:3705`
+  - before: `- code: 'ABDM-9999:'`
+  - after:  `- code: 'ABDM-9999'`
+- `phr/phr-api.yaml:3709`
+  - before: `- code: 'ABDM-9999:'`
+  - after:  `- code: 'ABDM-9999'`
+- `phr/phr-api.yaml:3713`
+  - before: `- code: 'ABDM-9999:'`
+  - after:  `- code: 'ABDM-9999'`
+- `phr/phr-api.yaml:3717`
+  - before: `- code: 'ABDM-1006:'`
+  - after:  `- code: 'ABDM-1006'`
+- `phr/phr-api.yaml:3721`
+  - before: `- code: 'ABDM-9999:'`
+  - after:  `- code: 'ABDM-9999'`
+- `phr/phr-api.yaml:4840`
+  - before: `- code: 'ABDM-9999:'`
+  - after:  `- code: 'ABDM-9999'`
+- `phr/phr-api.yaml:4849`
+  - before: `example: 'ABDM-9999:'`
+  - after:  `example: 'ABDM-9999'`
+- `phr/phr-api.yaml:4854`
+  - before: `- code: 'ABDM-9999:'`
+  - after:  `- code: 'ABDM-9999'`
+- `phr/phr-api.yaml:4870`
+  - before: `example: 'ABDM-9999:'`
+  - after:  `example: 'ABDM-9999'`
+- `phr/phr-api.yaml:4875`
+  - before: `- code: 'ABDM-9999:'`
+  - after:  `- code: 'ABDM-9999'`
+- `phr/phr-api.yaml:4883`
+  - before: `example: 'ABDM-1006:'`
+  - after:  `example: 'ABDM-1006'`
+- `phr/phr-api.yaml:4888`
+  - before: `- code: 'ABDM-1006:'`
+  - after:  `- code: 'ABDM-1006'`
+- `phr/phr-api.yaml:4890`
+  - before: `- code: 'ABDM-1006:'`
+  - after:  `- code: 'ABDM-1006'`
+- `phr/phr-api.yaml:4908`
+  - before: `example: 'ABDM-1006:'`
+  - after:  `example: 'ABDM-1006'`
+- `phr/phr-api.yaml:4913`
+  - before: `- code: 'ABDM-1006:'`
+  - after:  `- code: 'ABDM-1006'`
+- `phr/phr-api.yaml:4921`
+  - before: `example: 'ABDM-1006:'`
+  - after:  `example: 'ABDM-1006'`
+- `phr/phr-api.yaml:4926`
+  - before: `- code: 'ABDM-1006:'`
+  - after:  `- code: 'ABDM-1006'`
+- `phr/phr-api.yaml:4934`
+  - before: `example: 'ABDM-9999:'`
+  - after:  `example: 'ABDM-9999'`
+- `phr/phr-api.yaml:4939`
+  - before: `- code: 'ABDM-9999:'`
+  - after:  `- code: 'ABDM-9999'`
+- `phr/phr-api.yaml:4947`
+  - before: `example: 'ABDM-9999:'`
+  - after:  `example: 'ABDM-9999'`
+- `phr/phr-api.yaml:4952`
+  - before: `- code: 'ABDM-9999:'`
+  - after:  `- code: 'ABDM-9999'`
+- `phr/phr-api.yaml:4960`
+  - before: `example: 'ABDM-1006:'`
+  - after:  `example: 'ABDM-1006'`
+- `phr/phr-api.yaml:4965`
+  - before: `- code: 'ABDM-1006:'`
+  - after:  `- code: 'ABDM-1006'`
+- `phr/phr-api.yaml:4967`
+  - before: `- code: 'ABDM-1006:'`
+  - after:  `- code: 'ABDM-1006'`
+- `phr/phr-api.yaml:4977`
+  - before: `example: 'ABDM-9999:'`
+  - after:  `example: 'ABDM-9999'`
+- `phr/phr-api.yaml:4982`
+  - before: `- code: 'ABDM-9999:'`
+  - after:  `- code: 'ABDM-9999'`
+- `phr/phr-api.yaml:4990`
+  - before: `example: 'ABDM-9999:'`
+  - after:  `example: 'ABDM-9999'`
+- `phr/phr-api.yaml:4995`
+  - before: `- code: 'ABDM-9999:'`
+  - after:  `- code: 'ABDM-9999'`
+- `phr/phr-api.yaml:5003`
+  - before: `example: 'ABDM-1006:'`
+  - after:  `example: 'ABDM-1006'`
+- `phr/phr-api.yaml:5008`
+  - before: `- code: 'ABDM-1006:'`
+  - after:  `- code: 'ABDM-1006'`
+- `phr/phr-api.yaml:5010`
+  - before: `- code: 'ABDM-1006:'`
+  - after:  `- code: 'ABDM-1006'`
+- `phr/phr-api.yaml:5020`
+  - before: `example: 'ABDM-9999:'`
+  - after:  `example: 'ABDM-9999'`
+- `phr/phr-api.yaml:5025`
+  - before: `- code: 'ABDM-9999:'`
+  - after:  `- code: 'ABDM-9999'`
+- `phr/phr-api.yaml:5033`
+  - before: `example: 'ABDM-9999:'`
+  - after:  `example: 'ABDM-9999'`
+- `phr/phr-api.yaml:5038`
+  - before: `- code: 'ABDM-9999:'`
+  - after:  `- code: 'ABDM-9999'`
+- `phr/phr-api.yaml:5046`
+  - before: `example: 'ABDM-1006:'`
+  - after:  `example: 'ABDM-1006'`
+- `phr/phr-api.yaml:5051`
+  - before: `- code: 'ABDM-1006:'`
+  - after:  `- code: 'ABDM-1006'`
+- `phr/phr-api.yaml:5053`
+  - before: `- code: 'ABDM-1006:'`
+  - after:  `- code: 'ABDM-1006'`
+- `phr/phr-api.yaml:5063`
+  - before: `example: 'ABDM-9999:'`
+  - after:  `example: 'ABDM-9999'`
+- `phr/phr-api.yaml:5068`
+  - before: `- code: 'ABDM-9999:'`
+  - after:  `- code: 'ABDM-9999'`
+- `phr/phr-api.yaml:5073`
+  - before: `- code: 'ABDM-9999:'`
+  - after:  `- code: 'ABDM-9999'`
+- `phr/phr-api.yaml:5081`
+  - before: `- code: 'ABDM-1006:'`
+  - after:  `- code: 'ABDM-1006'`
+- `phr/phr-api.yaml:5083`
+  - before: `- code: 'ABDM-1006:'`
+  - after:  `- code: 'ABDM-1006'`
+- `phr/phr-api.yaml:5089`
+  - before: `- code: 'ABDM-9999:'`
+  - after:  `- code: 'ABDM-9999'`
+- `phr/phr-api.yaml:5093`
+  - before: `- code: 'ABDM-1006:'`
+  - after:  `- code: 'ABDM-1006'`
+- `phr/phr-api.yaml:5095`
+  - before: `- code: 'ABDM-1006:'`
+  - after:  `- code: 'ABDM-1006'`
+- `phr/phr-api.yaml:5101`
+  - before: `- code: 'ABDM-9999:'`
+  - after:  `- code: 'ABDM-9999'`
+- `phr/phr-api.yaml:5105`
+  - before: `- code: 'ABDM-9999:'`
+  - after:  `- code: 'ABDM-9999'`
+- `phr/phr-api.yaml:5109`
+  - before: `- code: 'ABDM-1006:'`
+  - after:  `- code: 'ABDM-1006'`
+- `phr/phr-api.yaml:5111`
+  - before: `- code: 'ABDM-1006:'`
+  - after:  `- code: 'ABDM-1006'`
+- `phr/phr-api.yaml:5121`
+  - before: `- code: 'ABDM-9999:'`
+  - after:  `- code: 'ABDM-9999'`
+- `phr/phr-api.yaml:5125`
+  - before: `- code: 'ABDM-1006:'`
+  - after:  `- code: 'ABDM-1006'`
+- `phr/phr-api.yaml:5127`
+  - before: `- code: 'ABDM-1006:'`
+  - after:  `- code: 'ABDM-1006'`
+- `phr/phr-api.yaml:5133`
+  - before: `- code: 'ABDM-9999:'`
+  - after:  `- code: 'ABDM-9999'`
+- `phr/phr-api.yaml:5137`
+  - before: `- code: 'ABDM-9999:'`
+  - after:  `- code: 'ABDM-9999'`
+- `phr/phr-api.yaml:5141`
+  - before: `- code: 'ABDM-1006:'`
+  - after:  `- code: 'ABDM-1006'`
+- `phr/phr-api.yaml:5143`
+  - before: `- code: 'ABDM-1006:'`
+  - after:  `- code: 'ABDM-1006'`
+- `phr/phr-api.yaml:5149`
+  - before: `- code: 'ABDM-9999:'`
+  - after:  `- code: 'ABDM-9999'`
+- `phr/phr-api.yaml:5153`
+  - before: `- code: 'ABDM-9999:'`
+  - after:  `- code: 'ABDM-9999'`
+- `phr/phr-api.yaml:5157`
+  - before: `- code: 'ABDM-1006:'`
+  - after:  `- code: 'ABDM-1006'`
+- `phr/phr-api.yaml:5159`
+  - before: `- code: 'ABDM-1006:'`
+  - after:  `- code: 'ABDM-1006'`
+- `phr/phr-api.yaml:5165`
+  - before: `- code: 'ABDM-9999:'`
+  - after:  `- code: 'ABDM-9999'`
+- `phr/phr-api.yaml:5169`
+  - before: `- code: 'ABDM-1006:'`
+  - after:  `- code: 'ABDM-1006'`
+- `phr/phr-api.yaml:5173`
+  - before: `- code: 'ABDM-1006:'`
+  - after:  `- code: 'ABDM-1006'`
+- `phr/phr-api.yaml:5177`
+  - before: `- code: 'ABDM-9999:'`
+  - after:  `- code: 'ABDM-9999'`
+- `phr/phr-api.yaml:5578`
+  - before: `- code: 'ABDM-9999:'`
+  - after:  `- code: 'ABDM-9999'`
+- `phr/phr-api.yaml:5587`
+  - before: `example: 'ABDM-9999:'`
+  - after:  `example: 'ABDM-9999'`
+- `phr/phr-api.yaml:5592`
+  - before: `- code: 'ABDM-9999:'`
+  - after:  `- code: 'ABDM-9999'`
+- `phr/phr-api.yaml:5598`
+  - before: `example: 'ABDM-9999:'`
+  - after:  `example: 'ABDM-9999'`
+- `phr/phr-api.yaml:5608`
+  - before: `example: 'ABDM-9999:'`
+  - after:  `example: 'ABDM-9999'`
+- `phr/phr-api.yaml:5613`
+  - before: `- code: 'ABDM-9999:'`
+  - after:  `- code: 'ABDM-9999'`
+- `phr/phr-api.yaml:5621`
+  - before: `example: 'ABDM-9999:'`
+  - after:  `example: 'ABDM-9999'`
+- `phr/phr-api.yaml:5626`
+  - before: `- code: 'ABDM-9999:'`
+  - after:  `- code: 'ABDM-9999'`
+- `phr/phr-api.yaml:5632`
+  - before: `example: 'ABDM-9999:'`
+  - after:  `example: 'ABDM-9999'`
+- `phr/phr-api.yaml:5642`
+  - before: `example: 'ABDM-9999:'`
+  - after:  `example: 'ABDM-9999'`
+- `phr/phr-api.yaml:5647`
+  - before: `- code: 'ABDM-9999:'`
+  - after:  `- code: 'ABDM-9999'`
+- `phr/phr-api.yaml:5655`
+  - before: `example: 'ABDM-9999:'`
+  - after:  `example: 'ABDM-9999'`
+- `phr/phr-api.yaml:5660`
+  - before: `- code: 'ABDM-9999:'`
+  - after:  `- code: 'ABDM-9999'`
+- `phr/phr-api.yaml:5666`
+  - before: `example: 'ABDM-9999:'`
+  - after:  `example: 'ABDM-9999'`
+- `phr/phr-api.yaml:5676`
+  - before: `example: 'ABDM-9999:'`
+  - after:  `example: 'ABDM-9999'`
+- `phr/phr-api.yaml:5681`
+  - before: `- code: 'ABDM-9999:'`
+  - after:  `- code: 'ABDM-9999'`
+- `phr/phr-api.yaml:5689`
+  - before: `example: 'ABDM-9999:'`
+  - after:  `example: 'ABDM-9999'`
+- `phr/phr-api.yaml:5694`
+  - before: `- code: 'ABDM-9999:'`
+  - after:  `- code: 'ABDM-9999'`
+- `phr/phr-api.yaml:5700`
+  - before: `example: 'ABDM-9999:'`
+  - after:  `example: 'ABDM-9999'`
+- `phr/phr-api.yaml:5710`
+  - before: `example: 'ABDM-9999:'`
+  - after:  `example: 'ABDM-9999'`
+- `phr/phr-api.yaml:5715`
+  - before: `- code: 'ABDM-9999:'`
+  - after:  `- code: 'ABDM-9999'`
+- `phr/phr-api.yaml:5720`
+  - before: `- code: 'ABDM-9999:'`
+  - after:  `- code: 'ABDM-9999'`
+- `phr/phr-api.yaml:5724`
+  - before: `- code: 'ABDM-9999:'`
+  - after:  `- code: 'ABDM-9999'`
+- `phr/phr-api.yaml:5728`
+  - before: `code: 'ABDM-9999:'`
+  - after:  `code: 'ABDM-9999'`
+- `phr/phr-api.yaml:6157`
+  - before: `- code: 'ABDM-1006:'`
+  - after:  `- code: 'ABDM-1006'`
+- `phr/phr-api.yaml:6166`
+  - before: `example: 'ABDM-1006:'`
+  - after:  `example: 'ABDM-1006'`
+- `phr/phr-api.yaml:6171`
+  - before: `- code: 'ABDM-1006:'`
+  - after:  `- code: 'ABDM-1006'`
+- `phr/phr-api.yaml:6187`
+  - before: `example: 'ABDM-9999:'`
+  - after:  `example: 'ABDM-9999'`
+- `phr/phr-api.yaml:6192`
+  - before: `- code: 'ABDM-9999:'`
+  - after:  `- code: 'ABDM-9999'`
+- `phr/phr-api.yaml:6200`
+  - before: `example: 'ABDM-9999:'`
+  - after:  `example: 'ABDM-9999'`
+- `phr/phr-api.yaml:6205`
+  - before: `- code: 'ABDM-9999:'`
+  - after:  `- code: 'ABDM-9999'`
+- `phr/phr-api.yaml:6213`
+  - before: `example: 'ABDM-9999:'`
+  - after:  `example: 'ABDM-9999'`
+- `phr/phr-api.yaml:6218`
+  - before: `- code: 'ABDM-9999:'`
+  - after:  `- code: 'ABDM-9999'`
+- `phr/phr-api.yaml:6226`
+  - before: `example: 'ABDM-1006:'`
+  - after:  `example: 'ABDM-1006'`
+- `phr/phr-api.yaml:6231`
+  - before: `- code: 'ABDM-1006:'`
+  - after:  `- code: 'ABDM-1006'`
+- `phr/phr-api.yaml:6239`
+  - before: `example: 'ABDM-9999:'`
+  - after:  `example: 'ABDM-9999'`
+- `phr/phr-api.yaml:6244`
+  - before: `- code: 'ABDM-9999:'`
+  - after:  `- code: 'ABDM-9999'`
+- `phr/phr-api.yaml:6252`
+  - before: `example: 'ABDM-9999:'`
+  - after:  `example: 'ABDM-9999'`
+- `phr/phr-api.yaml:6257`
+  - before: `- code: 'ABDM-9999:'`
+  - after:  `- code: 'ABDM-9999'`
+- `phr/phr-api.yaml:6265`
+  - before: `example: 'ABDM-9999:'`
+  - after:  `example: 'ABDM-9999'`
+- `phr/phr-api.yaml:6270`
+  - before: `- code: 'ABDM-9999:'`
+  - after:  `- code: 'ABDM-9999'`
+- `phr/phr-api.yaml:6286`
+  - before: `example: 'ABDM-9999:'`
+  - after:  `example: 'ABDM-9999'`
+- `phr/phr-api.yaml:6291`
+  - before: `- code: 'ABDM-9999:'`
+  - after:  `- code: 'ABDM-9999'`
+- `phr/phr-api.yaml:6299`
+  - before: `example: 'ABDM-9999:'`
+  - after:  `example: 'ABDM-9999'`
+- `phr/phr-api.yaml:6304`
+  - before: `- code: 'ABDM-9999:'`
+  - after:  `- code: 'ABDM-9999'`
+- `phr/phr-api.yaml:6312`
+  - before: `example: 'ABDM-9999:'`
+  - after:  `example: 'ABDM-9999'`
+- `phr/phr-api.yaml:6317`
+  - before: `- code: 'ABDM-9999:'`
+  - after:  `- code: 'ABDM-9999'`
+- `phr/phr-api.yaml:6325`
+  - before: `example: 'ABDM-1006:'`
+  - after:  `example: 'ABDM-1006'`
+- `phr/phr-api.yaml:6330`
+  - before: `- code: 'ABDM-1006:'`
+  - after:  `- code: 'ABDM-1006'`
+- `phr/phr-api.yaml:6338`
+  - before: `example: 'ABDM-9999:'`
+  - after:  `example: 'ABDM-9999'`
+- `phr/phr-api.yaml:6343`
+  - before: `- code: 'ABDM-9999:'`
+  - after:  `- code: 'ABDM-9999'`
+- `phr/phr-api.yaml:6351`
+  - before: `example: 'ABDM-9999:'`
+  - after:  `example: 'ABDM-9999'`
+- `phr/phr-api.yaml:6356`
+  - before: `- code: 'ABDM-9999:'`
+  - after:  `- code: 'ABDM-9999'`
+- `phr/phr-api.yaml:6364`
+  - before: `example: 'ABDM-9999:'`
+  - after:  `example: 'ABDM-9999'`
+- `phr/phr-api.yaml:6369`
+  - before: `- code: 'ABDM-9999:'`
+  - after:  `- code: 'ABDM-9999'`
+- `phr/phr-api.yaml:6374`
+  - before: `- code: 'ABDM-9999:'`
+  - after:  `- code: 'ABDM-9999'`
+- `phr/phr-api.yaml:6382`
+  - before: `- code: 'ABDM-9999:'`
+  - after:  `- code: 'ABDM-9999'`
+- `phr/phr-api.yaml:6386`
+  - before: `- code: 'ABDM-9999:'`
+  - after:  `- code: 'ABDM-9999'`
+- `phr/phr-api.yaml:6390`
+  - before: `- code: 'ABDM-1006:'`
+  - after:  `- code: 'ABDM-1006'`
+- `phr/phr-api.yaml:6394`
+  - before: `- code: 'ABDM-9999:'`
+  - after:  `- code: 'ABDM-9999'`
+- `phr/phr-api.yaml:6398`
+  - before: `- code: 'ABDM-9999:'`
+  - after:  `- code: 'ABDM-9999'`
+- `phr/phr-api.yaml:6402`
+  - before: `- code: 'ABDM-9999:'`
+  - after:  `- code: 'ABDM-9999'`
+- `phr/phr-api.yaml:6406`
+  - before: `- code: 'ABDM-1006:'`
+  - after:  `- code: 'ABDM-1006'`
+- `phr/phr-api.yaml:6410`
+  - before: `- code: 'ABDM-9999:'`
+  - after:  `- code: 'ABDM-9999'`
+- `phr/phr-api.yaml:6414`
+  - before: `- code: 'ABDM-9999:'`
+  - after:  `- code: 'ABDM-9999'`
+- `phr/phr-api.yaml:6418`
+  - before: `- code: 'ABDM-9999:'`
+  - after:  `- code: 'ABDM-9999'`
+- `phr/phr-api.yaml:6422`
+  - before: `- code: 'ABDM-9999:'`
+  - after:  `- code: 'ABDM-9999'`
+- `phr/phr-api.yaml:6426`
+  - before: `- code: 'ABDM-9999:'`
+  - after:  `- code: 'ABDM-9999'`
+- `phr/phr-api.yaml:6430`
+  - before: `- code: 'ABDM-9999:'`
+  - after:  `- code: 'ABDM-9999'`
+- `phr/phr-api.yaml:6434`
+  - before: `- code: 'ABDM-9999:'`
+  - after:  `- code: 'ABDM-9999'`
+- `phr/phr-api.yaml:6438`
+  - before: `- code: 'ABDM-1006:'`
+  - after:  `- code: 'ABDM-1006'`
+- `phr/phr-api.yaml:7485`
+  - before: `- code: 'ABDM-9999:'`
+  - after:  `- code: 'ABDM-9999'`
+- `phr/phr-api.yaml:7494`
+  - before: `example: 'ABDM-9999:'`
+  - after:  `example: 'ABDM-9999'`
+- `phr/phr-api.yaml:7499`
+  - before: `- code: 'ABDM-9999:'`
+  - after:  `- code: 'ABDM-9999'`
+- `phr/phr-api.yaml:7515`
+  - before: `example: 'ABDM-1006:'`
+  - after:  `example: 'ABDM-1006'`
+- `phr/phr-api.yaml:7520`
+  - before: `- code: 'ABDM-1006:'`
+  - after:  `- code: 'ABDM-1006'`
+- `phr/phr-api.yaml:7522`
+  - before: `- code: 'ABDM-1006:'`
+  - after:  `- code: 'ABDM-1006'`
+- `phr/phr-api.yaml:7532`
+  - before: `example: 'ABDM-9999:'`
+  - after:  `example: 'ABDM-9999'`
+- `phr/phr-api.yaml:7537`
+  - before: `- code: 'ABDM-9999:'`
+  - after:  `- code: 'ABDM-9999'`
+- `phr/phr-api.yaml:7545`
+  - before: `example: 'ABDM-9999:'`
+  - after:  `example: 'ABDM-9999'`
+- `phr/phr-api.yaml:7550`
+  - before: `- code: 'ABDM-9999:'`
+  - after:  `- code: 'ABDM-9999'`
+- `phr/phr-api.yaml:7558`
+  - before: `example: 'ABDM-1006:'`
+  - after:  `example: 'ABDM-1006'`
+- `phr/phr-api.yaml:7563`
+  - before: `- code: 'ABDM-1006:'`
+  - after:  `- code: 'ABDM-1006'`
+- `phr/phr-api.yaml:7565`
+  - before: `- code: 'ABDM-1006:'`
+  - after:  `- code: 'ABDM-1006'`
+- `phr/phr-api.yaml:7575`
+  - before: `example: 'ABDM-9999:'`
+  - after:  `example: 'ABDM-9999'`
+- `phr/phr-api.yaml:7580`
+  - before: `- code: 'ABDM-9999:'`
+  - after:  `- code: 'ABDM-9999'`
+- `phr/phr-api.yaml:7588`
+  - before: `example: 'ABDM-9999:'`
+  - after:  `example: 'ABDM-9999'`
+- `phr/phr-api.yaml:7593`
+  - before: `- code: 'ABDM-9999:'`
+  - after:  `- code: 'ABDM-9999'`
+- `phr/phr-api.yaml:7609`
+  - before: `example: 'ABDM-1006:'`
+  - after:  `example: 'ABDM-1006'`
+- `phr/phr-api.yaml:7614`
+  - before: `- code: 'ABDM-1006:'`
+  - after:  `- code: 'ABDM-1006'`
+- `phr/phr-api.yaml:7616`
+  - before: `- code: 'ABDM-1006:'`
+  - after:  `- code: 'ABDM-1006'`
+- `phr/phr-api.yaml:7626`
+  - before: `example: 'ABDM-9999:'`
+  - after:  `example: 'ABDM-9999'`
+- `phr/phr-api.yaml:7631`
+  - before: `- code: 'ABDM-9999:'`
+  - after:  `- code: 'ABDM-9999'`
+- `phr/phr-api.yaml:7639`
+  - before: `example: 'ABDM-9999:'`
+  - after:  `example: 'ABDM-9999'`
+- `phr/phr-api.yaml:7644`
+  - before: `- code: 'ABDM-9999:'`
+  - after:  `- code: 'ABDM-9999'`
+- `phr/phr-api.yaml:7652`
+  - before: `example: 'ABDM-1006:'`
+  - after:  `example: 'ABDM-1006'`
+- `phr/phr-api.yaml:7657`
+  - before: `- code: 'ABDM-1006:'`
+  - after:  `- code: 'ABDM-1006'`
+- `phr/phr-api.yaml:7659`
+  - before: `- code: 'ABDM-1006:'`
+  - after:  `- code: 'ABDM-1006'`
+- `phr/phr-api.yaml:7669`
+  - before: `example: 'ABDM-9999:'`
+  - after:  `example: 'ABDM-9999'`
+- `phr/phr-api.yaml:7674`
+  - before: `- code: 'ABDM-9999:'`
+  - after:  `- code: 'ABDM-9999'`
+- `phr/phr-api.yaml:7679`
+  - before: `- code: 'ABDM-1006:'`
+  - after:  `- code: 'ABDM-1006'`
+- `phr/phr-api.yaml:7681`
+  - before: `- code: 'ABDM-1006:'`
+  - after:  `- code: 'ABDM-1006'`
+- `phr/phr-api.yaml:7691`
+  - before: `- code: 'ABDM-9999:'`
+  - after:  `- code: 'ABDM-9999'`
+- `phr/phr-api.yaml:7695`
+  - before: `- code: 'ABDM-9999:'`
+  - after:  `- code: 'ABDM-9999'`
+- `phr/phr-api.yaml:7699`
+  - before: `- code: 'ABDM-9999:'`
+  - after:  `- code: 'ABDM-9999'`
+- `phr/phr-api.yaml:7703`
+  - before: `- code: 'ABDM-1006:'`
+  - after:  `- code: 'ABDM-1006'`
+- `phr/phr-api.yaml:7705`
+  - before: `- code: 'ABDM-1006:'`
+  - after:  `- code: 'ABDM-1006'`
+- `phr/phr-api.yaml:7711`
+  - before: `- code: 'ABDM-9999:'`
+  - after:  `- code: 'ABDM-9999'`
+- `phr/phr-api.yaml:7715`
+  - before: `- code: 'ABDM-1006:'`
+  - after:  `- code: 'ABDM-1006'`
+- `phr/phr-api.yaml:7717`
+  - before: `- code: 'ABDM-1006:'`
+  - after:  `- code: 'ABDM-1006'`
+- `phr/phr-api.yaml:7723`
+  - before: `- code: 'ABDM-9999:'`
+  - after:  `- code: 'ABDM-9999'`
+- `phr/phr-api.yaml:7727`
+  - before: `- code: 'ABDM-9999:'`
+  - after:  `- code: 'ABDM-9999'`
+- `phr/phr-api.yaml:7731`
+  - before: `- code: 'ABDM-1006:'`
+  - after:  `- code: 'ABDM-1006'`
+- `phr/phr-api.yaml:7733`
+  - before: `- code: 'ABDM-1006:'`
+  - after:  `- code: 'ABDM-1006'`
+- `phr/phr-api.yaml:7739`
+  - before: `- code: 'ABDM-9999:'`
+  - after:  `- code: 'ABDM-9999'`
+- `phr/phr-api.yaml:7743`
+  - before: `- code: 'ABDM-9999:'`
+  - after:  `- code: 'ABDM-9999'`
+- `phr/phr-api.yaml:8165`
+  - before: `example: 'ABDM-9999:'`
+  - after:  `example: 'ABDM-9999'`
+- `phr/phr-api.yaml:8175`
+  - before: `example: 'ABDM-9999:'`
+  - after:  `example: 'ABDM-9999'`
+- `phr/phr-api.yaml:8180`
+  - before: `- code: 'ABDM-9999:'`
+  - after:  `- code: 'ABDM-9999'`
+- `phr/phr-api.yaml:8188`
+  - before: `example: 'ABDM-9999:'`
+  - after:  `example: 'ABDM-9999'`
+- `phr/phr-api.yaml:8193`
+  - before: `- code: 'ABDM-9999:'`
+  - after:  `- code: 'ABDM-9999'`
+- `phr/phr-api.yaml:8199`
+  - before: `example: 'ABDM-9999:'`
+  - after:  `example: 'ABDM-9999'`
+- `phr/phr-api.yaml:8209`
+  - before: `example: 'ABDM-9999:'`
+  - after:  `example: 'ABDM-9999'`
+- `phr/phr-api.yaml:8214`
+  - before: `- code: 'ABDM-9999:'`
+  - after:  `- code: 'ABDM-9999'`
+- `phr/phr-api.yaml:8222`
+  - before: `example: 'ABDM-9999:'`
+  - after:  `example: 'ABDM-9999'`
+- `phr/phr-api.yaml:8227`
+  - before: `- code: 'ABDM-9999:'`
+  - after:  `- code: 'ABDM-9999'`
+- `phr/phr-api.yaml:8232`
+  - before: `- code: 'ABDM-9999:'`
+  - after:  `- code: 'ABDM-9999'`
+- `phr/phr-api.yaml:8236`
+  - before: `- code: 'ABDM-9999:'`
+  - after:  `- code: 'ABDM-9999'`
+- `phr/phr-api.yaml:8240`
+  - before: `code: 'ABDM-9999:'`
+  - after:  `code: 'ABDM-9999'`
+- `phr/phr-api.yaml:8510`
+  - before: `example: 'ABDM-9999:'`
+  - after:  `example: 'ABDM-9999'`
+- `phr/phr-api.yaml:8520`
+  - before: `example: 'ABDM-9999:'`
+  - after:  `example: 'ABDM-9999'`
+- `phr/phr-api.yaml:8525`
+  - before: `- code: 'ABDM-9999:'`
+  - after:  `- code: 'ABDM-9999'`
+- `phr/phr-api.yaml:8527`
+  - before: `- code: 'ABDM-9999:'`
+  - after:  `- code: 'ABDM-9999'`
+- `phr/phr-api.yaml:8533`
+  - before: `example: 'ABDM-9999:'`
+  - after:  `example: 'ABDM-9999'`
+- `phr/phr-api.yaml:8543`
+  - before: `example: 'ABDM-9999:'`
+  - after:  `example: 'ABDM-9999'`
+- `phr/phr-api.yaml:8548`
+  - before: `- code: 'ABDM-9999:'`
+  - after:  `- code: 'ABDM-9999'`
+- `phr/phr-api.yaml:8550`
+  - before: `- code: 'ABDM-9999:'`
+  - after:  `- code: 'ABDM-9999'`
+- `phr/phr-api.yaml:8555`
+  - before: `- code: 'ABDM-9999:'`
+  - after:  `- code: 'ABDM-9999'`
+- `phr/phr-api.yaml:8557`
+  - before: `- code: 'ABDM-9999:'`
+  - after:  `- code: 'ABDM-9999'`
+- `phr/phr-api.yaml:8561`
+  - before: `code: 'ABDM-9999:'`
+  - after:  `code: 'ABDM-9999'`
+- `phr/phr-api.yaml:9185`
+  - before: `example: 'ABDM-9999:'`
+  - after:  `example: 'ABDM-9999'`
+- `phr/phr-api.yaml:9195`
+  - before: `example: 'ABDM-9999:'`
+  - after:  `example: 'ABDM-9999'`
+- `phr/phr-api.yaml:9200`
+  - before: `- code: 'ABDM-9999:'`
+  - after:  `- code: 'ABDM-9999'`
+- `phr/phr-api.yaml:9205`
+  - before: `code: 'ABDM-9999:'`
+  - after:  `code: 'ABDM-9999'`
+- `phr/phr-api.yaml:9209`
+  - before: `- code: 'ABDM-9999:'`
+  - after:  `- code: 'ABDM-9999'`
+- `phr/phr-api.yaml:10570`
+  - before: `example: 'ABDM-9999:'`
+  - after:  `example: 'ABDM-9999'`
+- `phr/phr-api.yaml:10575`
+  - before: `- code: 'ABDM-9999:'`
+  - after:  `- code: 'ABDM-9999'`
+- `phr/phr-api.yaml:10580`
+  - before: `- code: 'ABDM-9999:'`
+  - after:  `- code: 'ABDM-9999'`
+- `phr/phr-api.yaml:10582`
+  - before: `- code: 'ABDM-9999:'`
+  - after:  `- code: 'ABDM-9999'`
+- `phr/phr-api.yaml:10584`
+  - before: `- code: 'ABDM-9999:'`
+  - after:  `- code: 'ABDM-9999'`
+- `phr/phr-api.yaml:10586`
+  - before: `- code: 'ABDM-9999:'`
+  - after:  `- code: 'ABDM-9999'`
+- `phr/phr-api.yaml:10590`
+  - before: `- code: 'ABDM-9999:'`
+  - after:  `- code: 'ABDM-9999'`
+- `phr/phr-api.yaml:10592`
+  - before: `- code: 'ABDM-9999:'`
+  - after:  `- code: 'ABDM-9999'`
+- `phr/phr-api.yaml:10594`
+  - before: `- code: 'ABDM-9999:'`
+  - after:  `- code: 'ABDM-9999'`
+- `phr/phr-api.yaml:10598`
+  - before: `- code: 'ABDM-9999:'`
+  - after:  `- code: 'ABDM-9999'`
+
+## T5 400 body array -> object (39)
+
+- `abha/abha-api-v3.yaml:2748`
+  - before: `- type: array`
+  - after:  `- type: object`
+- `abha/abha-api-v3.yaml:2761`
+  - before: `- type: array`
+  - after:  `- type: object`
+- `abha/abha-api-v3.yaml:2774`
+  - before: `- type: array`
+  - after:  `- type: object`
+- `abha/abha-api-v3.yaml:2787`
+  - before: `- type: array`
+  - after:  `- type: object`
+- `abha/abha-api-v3.yaml:2800`
+  - before: `- type: array`
+  - after:  `- type: object`
+- `abha/abha-api-v3.yaml:2813`
+  - before: `- type: array`
+  - after:  `- type: object`
+- `abha/abha-api-v3.yaml:2826`
+  - before: `- type: array`
+  - after:  `- type: object`
+- `abha/abha-api-v3.yaml:3436`
+  - before: `- type: array`
+  - after:  `- type: object`
+- `abha/abha-api-v3.yaml:3449`
+  - before: `- type: array`
+  - after:  `- type: object`
+- `abha/abha-api-v3.yaml:3462`
+  - before: `- type: array`
+  - after:  `- type: object`
+- `abha/abha-api-v3.yaml:3475`
+  - before: `- type: array`
+  - after:  `- type: object`
+- `abha/abha-api-v3.yaml:3488`
+  - before: `- type: array`
+  - after:  `- type: object`
+- `abha/abha-api-v3.yaml:3501`
+  - before: `- type: array`
+  - after:  `- type: object`
+- `abha/abha-api-v3.yaml:3514`
+  - before: `- type: array`
+  - after:  `- type: object`
+- `abha/abha-api-v3.yaml:3978`
+  - before: `- type: array`
+  - after:  `- type: object`
+- `abha/abha-api-v3.yaml:3991`
+  - before: `- type: array`
+  - after:  `- type: object`
+- `abha/abha-api-v3.yaml:4004`
+  - before: `- type: array`
+  - after:  `- type: object`
+- `abha/abha-api-v3.yaml:4017`
+  - before: `- type: array`
+  - after:  `- type: object`
+- `abha/abha-api-v3.yaml:4029`
+  - before: `- type: array`
+  - after:  `- type: object`
+- `abha/abha-api-v3.yaml:4616`
+  - before: `- type: array`
+  - after:  `- type: object`
+- `abha/abha-api-v3.yaml:4629`
+  - before: `- type: array`
+  - after:  `- type: object`
+- `abha/abha-api-v3.yaml:4642`
+  - before: `- type: array`
+  - after:  `- type: object`
+- `abha/abha-api-v3.yaml:4655`
+  - before: `- type: array`
+  - after:  `- type: object`
+- `abha/abha-api-v3.yaml:4667`
+  - before: `- type: array`
+  - after:  `- type: object`
+- `abha/abha-api-v3.yaml:4680`
+  - before: `- type: array`
+  - after:  `- type: object`
+- `abha/abha-api-v3.yaml:4693`
+  - before: `- type: array`
+  - after:  `- type: object`
+- `abha/abha-api-v3.yaml:4706`
+  - before: `- type: array`
+  - after:  `- type: object`
+- `abha/abha-api-v3.yaml:4719`
+  - before: `- type: array`
+  - after:  `- type: object`
+- `abha/abha-api-v3.yaml:4732`
+  - before: `- type: array`
+  - after:  `- type: object`
+- `abha/abha-api-v3.yaml:4745`
+  - before: `- type: array`
+  - after:  `- type: object`
+- `abha/abha-api-v3.yaml:5811`
+  - before: `- type: array`
+  - after:  `- type: object`
+- `abha/abha-api-v3.yaml:5824`
+  - before: `- type: array`
+  - after:  `- type: object`
+- `abha/abha-api-v3.yaml:5837`
+  - before: `- type: array`
+  - after:  `- type: object`
+- `abha/abha-api-v3.yaml:5850`
+  - before: `- type: array`
+  - after:  `- type: object`
+- `abha/abha-api-v3.yaml:5862`
+  - before: `- type: array`
+  - after:  `- type: object`
+- `abha/abha-api-v3.yaml:6910`
+  - before: `- type: array`
+  - after:  `- type: object`
+- `abha/abha-api-v3.yaml:6923`
+  - before: `- type: array`
+  - after:  `- type: object`
+- `abha/abha-api-v3.yaml:6936`
+  - before: `- type: array`
+  - after:  `- type: object`
+- `abha/abha-api-v3.yaml:6949`
+  - before: `- type: array`
+  - after:  `- type: object`
+
+## T6 truncated UUID example completed (29)
+
+- `hiecm/subscription.yaml:299`
+  - before: `example: d20b575b-2659`
+  - after:  `example: 'd20b575b-2659-4a1b-8c2d-9e3f5a6b7c8d'`
+- `hiecm/subscription.yaml:488`
+  - before: `example: d20b575b-2659`
+  - after:  `example: 'd20b575b-2659-4a1b-8c2d-9e3f5a6b7c8d'`
+- `hiecm/subscription.yaml:844`
+  - before: `example: d20b575b-2659`
+  - after:  `example: 'd20b575b-2659-4a1b-8c2d-9e3f5a6b7c8d'`
+- `hiecm/subscription.yaml:1049`
+  - before: `example: d20b575b-2659`
+  - after:  `example: 'd20b575b-2659-4a1b-8c2d-9e3f5a6b7c8d'`
+- `hiecm/subscription.yaml:1307`
+  - before: `example: d20b575b-2659`
+  - after:  `example: 'd20b575b-2659-4a1b-8c2d-9e3f5a6b7c8d'`
+- `hiecm/subscription.yaml:1514`
+  - before: `example: d20b575b-2659`
+  - after:  `example: 'd20b575b-2659-4a1b-8c2d-9e3f5a6b7c8d'`
+- `hiecm/subscription.yaml:1913`
+  - before: `example: d20b575b-2659`
+  - after:  `example: 'd20b575b-2659-4a1b-8c2d-9e3f5a6b7c8d'`
+- `hiecm/subscription.yaml:2346`
+  - before: `example: d20b575b-2659`
+  - after:  `example: 'd20b575b-2659-4a1b-8c2d-9e3f5a6b7c8d'`
+- `hiecm/subscription.yaml:2529`
+  - before: `example: d20b575b-2659`
+  - after:  `example: 'd20b575b-2659-4a1b-8c2d-9e3f5a6b7c8d'`
+- `hiecm/subscription.yaml:2998`
+  - before: `example: d20b575b-2659`
+  - after:  `example: 'd20b575b-2659-4a1b-8c2d-9e3f5a6b7c8d'`
+- `hiecm/subscription.yaml:3163`
+  - before: `example: d20b575b-2659`
+  - after:  `example: 'd20b575b-2659-4a1b-8c2d-9e3f5a6b7c8d'`
+- `hiecm/subscription.yaml:3323`
+  - before: `example: d20b575b-2659`
+  - after:  `example: 'd20b575b-2659-4a1b-8c2d-9e3f5a6b7c8d'`
+- `hiecm/subscription.yaml:3686`
+  - before: `example: d20b575b-2659`
+  - after:  `example: 'd20b575b-2659-4a1b-8c2d-9e3f5a6b7c8d'`
+- `hiecm/subscription.yaml:4063`
+  - before: `example: d20b575b-2659`
+  - after:  `example: 'd20b575b-2659-4a1b-8c2d-9e3f5a6b7c8d'`
+- `hiecm/subscription.yaml:4798`
+  - before: `example: d20b575b-2659`
+  - after:  `example: 'd20b575b-2659-4a1b-8c2d-9e3f5a6b7c8d'`
+- `hiecm/subscription.yaml:5568`
+  - before: `example: d20b575b-2659`
+  - after:  `example: 'd20b575b-2659-4a1b-8c2d-9e3f5a6b7c8d'`
+- `hiecm/subscription.yaml:5842`
+  - before: `example: d20b575b-2659`
+  - after:  `example: 'd20b575b-2659-4a1b-8c2d-9e3f5a6b7c8d'`
+- `hiecm/user-initiated-linking.yaml:234`
+  - before: `example: d20b575b-2659`
+  - after:  `example: 'd20b575b-2659-4a1b-8c2d-9e3f5a6b7c8d'`
+- `hiecm/user-initiated-linking.yaml:472`
+  - before: `example: d20b575b-2659`
+  - after:  `example: 'd20b575b-2659-4a1b-8c2d-9e3f5a6b7c8d'`
+- `hiecm/user-initiated-linking.yaml:733`
+  - before: `example: d20b575b-2659`
+  - after:  `example: 'd20b575b-2659-4a1b-8c2d-9e3f5a6b7c8d'`
+- `hiecm/user-initiated-linking.yaml:949`
+  - before: `example: d20b575b-2659`
+  - after:  `example: 'd20b575b-2659-4a1b-8c2d-9e3f5a6b7c8d'`
+- `hiecm/user-initiated-linking.yaml:1088`
+  - before: `example: d20b575b-2659`
+  - after:  `example: 'd20b575b-2659-4a1b-8c2d-9e3f5a6b7c8d'`
+- `hiecm/user-initiated-linking.yaml:1310`
+  - before: `example: d20b575b-2659`
+  - after:  `example: 'd20b575b-2659-4a1b-8c2d-9e3f5a6b7c8d'`
+- `hiecm/user-initiated-linking.yaml:1482`
+  - before: `example: d20b575b-2659`
+  - after:  `example: 'd20b575b-2659-4a1b-8c2d-9e3f5a6b7c8d'`
+- `hiecm/user-initiated-linking.yaml:1779`
+  - before: `example: d20b575b-2659`
+  - after:  `example: 'd20b575b-2659-4a1b-8c2d-9e3f5a6b7c8d'`
+- `hiecm/user-initiated-linking.yaml:1985`
+  - before: `example: d20b575b-2659`
+  - after:  `example: 'd20b575b-2659-4a1b-8c2d-9e3f5a6b7c8d'`
+- `hiecm/user-initiated-linking.yaml:2202`
+  - before: `example: d20b575b-2659`
+  - after:  `example: 'd20b575b-2659-4a1b-8c2d-9e3f5a6b7c8d'`
+- `hiecm/user-initiated-linking.yaml:2353`
+  - before: `example: d20b575b-2659`
+  - after:  `example: 'd20b575b-2659-4a1b-8c2d-9e3f5a6b7c8d'`
+- `hiecm/user-initiated-linking.yaml:2570`
+  - before: `example: d20b575b-2659`
+  - after:  `example: 'd20b575b-2659-4a1b-8c2d-9e3f5a6b7c8d'`
+
+## T7 expiresIn example unquoted (2)
+
+- `abha/abha-api-v3.yaml:3187`
+  - before: `example: '1296000'`
+  - after:  `example: 1296000`
+- `abha/abha-api-v3.yaml:3193`
+  - before: `example: '1296000'`
+  - after:  `example: 1296000`
+
+## T7 expiresIn type string -> integer (2)
+
+- `abha/abha-api-v3.yaml:3186`
+  - before: `type: string`
+  - after:  `type: integer`
+- `abha/abha-api-v3.yaml:3192`
+  - before: `type: string`
+  - after:  `type: integer`
+
+## T8 epoch timestamp -> RFC 3339 (1)
+
+- `abha/abha-api-v3.yaml:2958`
+  - before: `timestamp: 1734929008319`
+  - after:  `timestamp: '2024-12-23T04:43:28.319Z'`
+
+## T9 Spring error-envelope alignment (3)
+
+- `abha/abha-api-v3.yaml:2941` timestamp `type: string` -> `type: number`
+- `abha/abha-api-v3.yaml:2942` example `'1734929008319'` -> `1734929008319`
+  - Evidence: subscription and user-initiated-linking declare the identical
+    Spring envelope as `number` with a bare epoch, 29 occurrences to ABHA's 1.
+- `abha/abha-api-v3.yaml` path example `/api/v3/profile/login/request/ot` -> `/abha/api/v3/profile/login/request/otp` (was truncated mid-word)
+
+
+---
+
+# Tier-3 fixes (external evidence)
+
+Each rests on the official ABDM V3 milestone documents (M2/M3/ABHA-PHR,
+linked from the sandbox V3 Documentation page) or on observed live behaviour.
+
+- **U2 isHip -> isHIP** `hiecm/gateway.yaml:685`
+  - before: `isHip:`
+  - after:  `isHIP:`
+  - evidence: reference docs use isHIP under /api/hiecm/gateway/v3/providers; scan-and-pay agrees
+- **U2 isHip -> isHIP** `hiecm/gateway.yaml:895`
+  - before: `isHip:`
+  - after:  `isHIP:`
+  - evidence: reference docs use isHIP under /api/hiecm/gateway/v3/providers/{provider-id}; scan-and-pay agrees
+- **U2 isHip -> isHIP** `hiecm/gateway.yaml:1060`
+  - before: `isHip:`
+  - after:  `isHIP:`
+  - evidence: reference docs use isHIP under /api/hiecm/gateway/v3/govt-programs; scan-and-pay agrees
+- **U3 /certs security declared** `hiecm/gateway.yaml:1652`
+  - before: `(none)`
+  - after:  `security: [bearerAuth]`
+  - evidence: live GET returns 401; 7 of 10 gateway ops declare bearerAuth
+- **U4 /sessions 200 -> 202** `abha/abha-api-v3.yaml:8258`
+  - before: `'200':`
+  - after:  `'202':`
+  - evidence: M2 and M3 both document 202 Accepted for this exact URL; gateway.yaml agrees
+- **U1 placeholder message -> official registry text** `hiecm/patient-share.yaml:388`
+  - before: `example: string`
+  - after:  `example: 'Unknown exception'`
+  - evidence: ABDM-9999 = "Unknown exception" in the M2 Error Codes Listing
+- **U1 placeholder message -> official registry text** `hiecm/patient-share.yaml:1000`
+  - before: `example: string`
+  - after:  `example: 'Unknown exception'`
+  - evidence: ABDM-9999 = "Unknown exception" in the M2 Error Codes Listing
+- **U1 placeholder message -> official registry text** `hiecm/user-initiated-linking.yaml:380`
+  - before: `example: "error message"`
+  - after:  `example: 'Unknown exception'`
+  - evidence: ABDM-9999 = "Unknown exception" in the M2 Error Codes Listing
+- **U1 placeholder message -> official registry text** `hiecm/user-initiated-linking.yaml:606`
+  - before: `example: error message`
+  - after:  `example: 'No data found'`
+  - evidence: ABDM-1001 = "No data found" in the M2 Error Codes Listing
+- **U1 placeholder message -> official registry text** `hiecm/user-initiated-linking.yaml:857`
+  - before: `example: error message`
+  - after:  `example: 'No data found'`
+  - evidence: ABDM-1001 = "No data found" in the M2 Error Codes Listing
+- **U1 placeholder message -> official registry text** `hiecm/user-initiated-linking.yaml:1218`
+  - before: `example: error message`
+  - after:  `example: 'No data found'`
+  - evidence: ABDM-1001 = "No data found" in the M2 Error Codes Listing
+- **U1 placeholder message -> official registry text** `hiecm/user-initiated-linking.yaml:1619`
+  - before: `example: error message`
+  - after:  `example: 'No data found'`
+  - evidence: ABDM-1001 = "No data found" in the M2 Error Codes Listing
+- **U1 placeholder message -> official registry text** `hiecm/user-initiated-linking.yaml:2110`
+  - before: `example: error message`
+  - after:  `example: 'No data found'`
+  - evidence: ABDM-1001 = "No data found" in the M2 Error Codes Listing
+- **U1 placeholder message -> official registry text** `hiecm/user-initiated-linking.yaml:2492`
+  - before: `example: error message`
+  - after:  `example: 'No data found'`
+  - evidence: ABDM-1001 = "No data found" in the M2 Error Codes Listing
+- **U1 placeholder message -> official registry text** `hiecm/subscription.yaml:397`
+  - before: `example: error message`
+  - after:  `example: 'No data found'`
+  - evidence: ABDM-1001 = "No data found" in the M2 Error Codes Listing
+- **U1 placeholder message -> official registry text** `hiecm/subscription.yaml:957`
+  - before: `example: error message`
+  - after:  `example: 'No data found'`
+  - evidence: ABDM-1001 = "No data found" in the M2 Error Codes Listing
+- **U1 placeholder message -> official registry text** `hiecm/subscription.yaml:1420`
+  - before: `example: error message`
+  - after:  `example: 'No data found'`
+  - evidence: ABDM-1001 = "No data found" in the M2 Error Codes Listing
+
+---
+
+# Tier-4: error code accepts both wire forms
+
+The registry lists codes bare (`ABDM-1024`); the service's own response samples in the
+milestone documents show a trailing `": "` separator 294 times against 100 bare. Rather
+than pick one, every error `code` schema now permits both.
+
+| Change | Count |
+|---|---|
+| `pattern: '^(ABDM-\d{4}\|\d{3,6})(: )?$'` added to error `code` | 569 |
+| `description` added explaining both forms are valid | 558 |
+| trailing-comma literals repaired (`900902,`, `Missing Credentials,`) | 2 |
+
+Scope: only `code` properties with a sibling `message` (the error-envelope shape).
+Deliberately excluded: `purpose.code` (`CAREMGT`) and `consent.code`
+(`abha-enrollment`), which are not error codes, and the four multi-code literals such as
+`'ABDM-1114,ABDM-1030:, ABDM-1016:'`, which remain an open question.
+
+Verified: all 569 patterns compile, every example matches its own pattern, and 564 of
+them accept the colon form as well (the other 5 carry no example at all).
+
+---
+
+# Tier-5: enrichment from the official reference documents
+
+Additive only — nothing that already carried a description was overwritten, except the
+generic error-code note, which was replaced with a code-specific one.
+
+| Change | Count |
+|---|---|
+| Header parameter descriptions added (ABHA and PHR had almost none) | 141 |
+| Field descriptions added, sourced from the docs' parameter tables | 489 |
+| Error `code` descriptions made code-specific | 564 |
+
+**Coverage before → after**
+- Property descriptions: 1,349 / 3,994 (33%) → 1,838 / 3,994 (46%)
+- Parameter descriptions: 393 / 547 (72%) → 534 / 547 (97%)
+  - ABHA: 2 / 99 → 88 / 99 · PHR: 0 / 56 → 55 / 56
+
+Error-code descriptions now read `ABDM-1024 - Dependent service unavailable. May be
+returned either bare or with a trailing ": " separator...`. Meanings come from the M2
+"Error Codes Listing" where the code appears there (309), and from the spec's own
+sibling `message` example for the 22 newer ABDM codes and the WSO2 numeric codes that
+the registry predates (255). Five carry no message anywhere and keep a code-agnostic note.
+
+Field descriptions were hand-curated from the mined tables. Flow-specific sentences were
+rejected: a description like "Request ID sent in init API call" is correct on one
+endpoint and wrong on the twelve others that share the field name.
+
+---
+
+# Tier-6: PHR 5xx responses
+
+PHR documented no 5xx on any of its 21 operations — a client written from it had no
+documented server-error shape to handle. Both were modelled on sibling specs.
+
+| Added | Ops | Modelled on | Confidence |
+|---|---|---|---|
+| `500` `{code, message, description}`, `900900` / Unclassified Authentication Failure | 21 | ABHA — PHR's closest sibling | High |
+| `503` `{code, message}`, `ABDM-1024` / Dependent service unavailable | 21 | The HIE-CM specs | Lower — see below |
+
+**Why ABHA for the 500.** PHR shares ABHA's host (`abhasbx.abdm.gov.in`), its path family
+(`/abha/api/v3/...`), and its 401 envelope `{code, message, description}`. PHR's own 401
+carries `www-authenticate: ... realm="WSO2 API Manager"`, so both sit behind the same
+gateway. `900900` is the dominant 500 across the suite (33 occurrences) and the code ABHA
+itself uses. The `description` example names PHR's own API path rather than ABHA's.
+
+**Why the 503 is weaker.** `ABDM-1024 / Dependent service unavailable` is the dominant 503
+in the suite (58 occurrences across 6 HIE-CM specs), but ABHA — the closest sibling —
+documents no 503 at all. A WSO2-fronted service will return 503 when its backend is
+unreachable, so documenting it is defensive rather than speculative, but it is an
+inference rather than something any document states. Drop these 21 blocks if ABDM
+confirms PHR never returns 503.
+
+Verified: all 42 new example payloads validate against their own schemas, PHR still
+parses, and no existing response was altered or removed.
+
+---
+
+# Tier-7: 400 / 401 / 403 completed across all specs
+
+All 158 operations now document all three. 134 blocks added, using each spec's own house
+shape so no file gained a foreign convention.
+
+| Status | Added | Shape | Code | Basis |
+|---|---|---|---|---|
+| `400` | 37 | `{error: {code, message}}` (PHR: flat `{code, message}`) | `ABDM-1006` | 52 existing occurrences of the envelope; `ABDM-1006` is "Bad Request, invalid request Body" in the M2 registry |
+| `401` | 28 | flat `{code, message, description}` | `900901` or `900902` per spec | The WSO2 shape, used identically by all 10 specs |
+| `403` | 69 | `text/plain` string | — | The house convention in all 8 specs that documented it (72 occurrences) |
+
+The `401` code follows each spec's own dominant value rather than one global choice:
+`900902` in hip-initiated-linking, link-token and phr-api; `900901` in the other seven.
+PHR takes a flat `{code, message}` 400 because its own 400 branches use that shape, not
+the HIE-CM `error` wrapper.
+
+**Read this before trusting the 403s.** 69 of the 134 are `403`, and 46 of those went to
+ABHA (36) and gateway (10) - two specs that documented no `403` anywhere. Unlike the `401`
+and `400` additions, which had in-file precedent, these assert that an authorisation
+failure is possible on endpoints where nothing states it is. The shape is certainly right;
+whether every one of those endpoints can actually return `403` is not established.
+
+The same caveat applies more weakly to callback endpoints (`<callback_url>/...`, `/on-*`,
+`/notify`) - 46 operations that the HIP/HIU implements rather than ABDM. Their error
+responses describe what the integrator's own service should return, so treat the added
+blocks there as a template rather than as observed behaviour.
+
+Verified: all 10 specs parse, no example regressions (21 scalar / 25 payload, unchanged),
+and every change is additive - the only response ever removed in the whole refactor
+remains ABHA `/sessions` `200`, replaced by `202`.
+
+---
+
+# Tier-8: Swagger Editor validation — 3/10 to 10/10
+
+Validated with `@apidevtools/swagger-parser`, the library Swagger Editor uses, and
+confirmed visually in a locally served Swagger Editor.
+
+**The originals score 3/10.** Seven fail on the same root cause, so the earlier rounds
+never saw it: PyYAML accepts what js-yaml and the OpenAPI meta-schema reject.
+
+| Fix | Count | Why it failed |
+|---|---|---|
+| `<callback_url>/...` path keys → `/...` | 30 | OpenAPI requires every key under `paths` to begin with `/`. This alone broke 7 of 10 files |
+| `decription:` → `description:` | 2 | A typo makes it an unrecognised keyword, so the schema object is invalid |
+| `nuallable:` → `nullable:` | 1 | Same |
+| `type: timestamp` → `type: string` + `format: date-time` | 1 | Not a JSON Schema type |
+| `required: null` removed | 1 | `required` must be an array |
+| `description:` with no value removed | 1 | `description` must be a string |
+| `apikeyAuth` / `noauthAuth` securitySchemes removed | 18 | `type: http` with a scheme absent from the IANA registry. Declared in 9 specs, referenced by none |
+
+The 30 renamed paths keep their meaning: each operation's description now opens with
+**"Hosted by the HIP/HIU, not by ABDM."** and explains the path is relative to the
+bridge's registered callback URL.
+
+**One regression of mine, caught here.** The tier-2 array→object unwrap left a duplicated
+`type: object` in 39 ABHA branches. PyYAML keeps the last duplicate silently, so every
+earlier check passed; js-yaml rejects the document outright. ABHA was the one file that
+validated *before* the refactor and not after. Now fixed, and a duplicate-key scan runs
+as part of verification.
+
+Remaining in the editor: one warning for `basicAuth` being declared but barely used.
+Not an error.
+
+---
+
+# Tier-9: hiType enums normalised
+
+The canonical set, confirmed by the user, applied to every `hiType` / `hiTypes` schema:
+
+```
+DiagnosticReport, DischargeSummary, HealthDocumentRecord, ImmunizationRecord,
+OPConsultation, Prescription, WellnessRecord, Invoice
+```
+
+| Change | Count |
+|---|---|
+| Enum rewritten to the canonical set and order | 31 |
+| Enum added where none existed (`user-initiated-linking`) | 2 |
+| Non-canonical value respelled (`PRESCRIPTION` → `Prescription`) | 2 |
+| `DiagnosticReports` → `DiagnosticReport` (earlier in this session) | 1 |
+
+All 33 occurrences across the four specs that carry hiType now hold the identical
+eight values in the identical order; none lack an enum; and no example anywhere sits
+outside the enum. The other six specs have no hiType field, correctly.
+
+**A theory this overturned.** The reference documents use an UPPERCASE vocabulary in the
+care-context linking samples (`"hiType": "PRESCRIPTION"`), and carry a server error
+reading *"Invalid HIType, it must be in PRESCRIPTION, DIAGNOSTIC REPORT, OPCONSULTATION,
+DISCHARGESUMMARY, IMMUNIZATIONRECORD, HEALTHDOCUMENTRECORD, WELLNESSRECORD"* - seven
+values, no Invoice. That looked like a second vocabulary belonging to the linking
+endpoints, and the two enum-less occurrences sat on exactly those endpoints, which fitted
+the theory neatly. It was wrong: the user confirmed the camelCase set is the actual
+vocabulary throughout. The uppercase forms in the documents are stale. Recorded because
+the evidence was genuinely suggestive, and a future pass should not resurrect it.

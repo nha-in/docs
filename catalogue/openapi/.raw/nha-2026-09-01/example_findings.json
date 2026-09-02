@@ -1,0 +1,2540 @@
+[
+ [
+  "abha-api-v3",
+  "type-mismatch",
+  ".paths./abha/api/v3/enrollment/request/otp.post.requestBody.content.application/json.schema.properties.scope",
+  "type=string but example is list: ['email-verify', 'abha-enrol', 'mobile-verify', 'dl-flow']"
+ ],
+ [
+  "abha-api-v3",
+  "type-mismatch",
+  ".paths./abha/api/v3/enrollment/request/otp.post.requestBody.content.application/json.schema.properties.loginHint",
+  "type=string but example is list: ['aadhaar,email,mobile']"
+ ],
+ [
+  "abha-api-v3",
+  "bad-format:date-time",
+  ".paths./abha/api/v3/enrollment/request/otp.post.responses.400.content.application/json.schema.anyOf[0].properties.timestamp",
+  "'2024-05-10 11:13:04'"
+ ],
+ [
+  "abha-api-v3",
+  "bad-format:date-time",
+  ".paths./abha/api/v3/enrollment/request/otp.post.responses.400.content.application/json.schema.anyOf[1].properties.timestamp",
+  "'2024-05-10 11:15:14'"
+ ],
+ [
+  "abha-api-v3",
+  "bad-format:date-time",
+  ".paths./abha/api/v3/enrollment/request/otp.post.responses.400.content.application/json.schema.anyOf[2].properties.timestamp",
+  "'2024-05-10 11:16:16'"
+ ],
+ [
+  "abha-api-v3",
+  "type-mismatch",
+  ".paths./abha/api/v3/enrollment/enrol/byAadhaar.post.requestBody.content.application/json.schema.properties.authData.properties.authMethods",
+  "type=string but example is list: ['otp', 'demo_auth', 'bio', 'face', 'iris', 'child']"
+ ],
+ [
+  "abha-api-v3",
+  "type-mismatch",
+  ".paths./abha/api/v3/enrollment/auth/byAbdm.post.requestBody.content.application/json.schema.properties.scope",
+  "type=string but example is list: ['abha-enrol', 'mobile-verify', 'dl-flow', 'email-verify']"
+ ],
+ [
+  "abha-api-v3",
+  "type-mismatch",
+  ".paths./abha/api/v3/enrollment/auth/byAbdm.post.requestBody.content.application/json.schema.properties.authData.properties.authMethods",
+  "type=string but example is list: ['otp']"
+ ],
+ [
+  "abha-api-v3",
+  "type-mismatch",
+  ".paths./abha/api/v3/enrollment/enrol/suggestion.get.responses.400.content.application/json.schema.properties.timestamp",
+  "type=string but example is datetime: datetime.datetime(2024, 5, 10, 12, 1, 22)"
+ ],
+ [
+  "abha-api-v3",
+  "type-mismatch",
+  ".paths./abha/api/v3/enrollment/enrol/abha-address.post.requestBody.content.application/json.schema.properties.preferred",
+  "type=string but example is int: 1"
+ ],
+ [
+  "abha-api-v3",
+  "type-mismatch",
+  ".paths./abha/api/v3/enrollment/enrol/abha-address.post.responses.200.content.application/json.schema.properties.preferred",
+  "type=string but example is int: 1"
+ ],
+ [
+  "abha-api-v3",
+  "type-mismatch",
+  ".paths./abha/api/v3/enrollment/enrol/abha-address.post.responses.400.content.application/json.schema.properties.timestamp",
+  "type=string but example is datetime: datetime.datetime(2024, 5, 10, 12, 0, 14)"
+ ],
+ [
+  "abha-api-v3",
+  "type-mismatch",
+  ".paths./abha/api/v3/enrollment/enrol/abha-address.post.responses.401.content.application/json.schema.properties.code",
+  "type=string but example is int: 900901"
+ ],
+ [
+  "abha-api-v3",
+  "type-mismatch",
+  ".paths./abha/api/v3/enrollment/enrol/auth/init.post.requestBody.content.application/json.schema.properties.scope",
+  "type=string but example is list: ['abha-enrol', 'face-auth']"
+ ],
+ [
+  "abha-api-v3",
+  "type-mismatch",
+  ".paths./abha/api/v3/enrollment/enrol/capturePID.post.requestBody.content.application/json.schema.properties.scope",
+  "type=string but example is list: ['abha-enrol', 'face-verify']"
+ ],
+ [
+  "abha-api-v3",
+  "type-mismatch",
+  ".paths./abha/api/v3/profile/login/search.post.responses.200.content.application/json.schema.items.properties.authMethods",
+  "type=string but example is list: ['DEMOGRAPHICS', 'AADHAAR_OTP', 'MOBILE_OTP', 'AADHAAR_BIO']"
+ ],
+ [
+  "abha-api-v3",
+  "type-mismatch",
+  ".paths./abha/api/v3/profile/login/search.post.responses.200.content.application/json.schema.items.properties.isDocumentAccount",
+  "type=string but example is bool: False"
+ ],
+ [
+  "abha-api-v3",
+  "type-mismatch",
+  ".paths./abha/api/v3/profile/login/verify.post.responses.404.content.application/json.schema.properties.error",
+  "type=object but example is str: '900901'"
+ ],
+ [
+  "abha-api-v3",
+  "whitespace-padding",
+  ".paths./abha/api/v3/profile/account.get.responses.200.content.application/json.schema.properties.localizedDetails.properties.name",
+  "' \u0915\u0948\u0932\u093e\u0938 \u0915\u0948\u0932\u093e\u0938 \u0936\u0947\u0933\u0915\u0947'"
+ ],
+ [
+  "abha-api-v3",
+  "type-mismatch",
+  ".paths./abha/api/v3/profile/account.patch.responses.400.content.application/json.schema.properties.error.properties.timestamp",
+  "type=string but example is datetime: datetime.datetime(2023, 1, 11, 0, 14, 2)"
+ ],
+ [
+  "abha-api-v3",
+  "bad-format:date-time",
+  ".paths./abha/api/v3/profile/benefit/search.post.responses.400.content.application/json.schema.items.anyOf[0].properties.timestamp",
+  "'2025-01-03 00:15:58'"
+ ],
+ [
+  "abha-api-v3",
+  "bad-format:date-time",
+  ".paths./abha/api/v3/profile/benefit/search.post.responses.400.content.application/json.schema.items.anyOf[1].properties.timestamp",
+  "'2025-01-03 00:10:54'"
+ ],
+ [
+  "abha-api-v3",
+  "bad-format:date-time",
+  ".paths./abha/api/v3/profile/benefit/search.post.responses.400.content.application/json.schema.items.anyOf[2].properties.timestamp",
+  "'2025-01-03 00:15:58'"
+ ],
+ [
+  "abha-api-v3",
+  "bad-format:date-time",
+  ".paths./abha/api/v3/profile/benefit/search.post.responses.400.content.application/json.schema.items.anyOf[3].properties.timestamp",
+  "'2025-01-03 00:15:58'"
+ ],
+ [
+  "abha-api-v3",
+  "type-mismatch",
+  ".paths./abha/api/v3/phr/web/login/abha/search.post.responses.200.content.application/json.schema.properties.blockedAuthMethods.items",
+  "type=string but example is NoneType: None"
+ ],
+ [
+  "abha-api-v3",
+  "type-mismatch",
+  ".paths./abha/api/v3/phr/web/login/abha/search.post.responses.200.content.application/json.schema.properties.message",
+  "type=string but example is NoneType: None"
+ ],
+ [
+  "abha-api-v3",
+  "type-mismatch",
+  ".paths./abha/api/v3/phr/web/login/abha/search.post.responses.401.content.application/json.schema.properties.code",
+  "type=string but example is int: 900902"
+ ],
+ [
+  "abha-api-v3",
+  "type-mismatch",
+  ".paths./abha/api/v3/phr/web/login/abha/request/otp.post.requestBody.content.application/json.schema.properties.scope.items",
+  "type=string but example is list: ['abha-address-login', 'mobile-verify', 'aadhaar-face-verify', 'aadhaar-bio-verify', 'aadhaar-iris-verify']"
+ ],
+ [
+  "abha-api-v3",
+  "type-mismatch",
+  ".paths./abha/api/v3/phr/web/login/abha/request/otp.post.responses.401.content.application/json.schema.properties.code",
+  "type=string but example is int: 900902"
+ ],
+ [
+  "abha-api-v3",
+  "whitespace-padding",
+  ".paths./abha/api/v3/phr/web/login/abha/verify.post.requestBody.content.application/json.schema.properties.authData.anyOf[0].items.properties.otp.properties.txnId",
+  "'txnId '"
+ ],
+ [
+  "abha-api-v3",
+  "whitespace-padding",
+  ".paths./abha/api/v3/phr/web/login/abha/verify.post.requestBody.content.application/json.schema.properties.authData.anyOf[0].items.properties.otp.properties.otpValue",
+  "'{{encryptedOtpValue}} '"
+ ],
+ [
+  "abha-api-v3",
+  "whitespace-padding",
+  ".paths./abha/api/v3/phr/web/login/abha/verify.post.requestBody.content.application/json.schema.properties.authData.anyOf[1].items.properties.face.properties.txnId",
+  "'txnId '"
+ ],
+ [
+  "abha-api-v3",
+  "whitespace-padding",
+  ".paths./abha/api/v3/phr/web/login/abha/verify.post.requestBody.content.application/json.schema.properties.authData.anyOf[1].items.properties.face.properties.faceAuthPid",
+  "'{{faceAuthPid}} '"
+ ],
+ [
+  "abha-api-v3",
+  "whitespace-padding",
+  ".paths./abha/api/v3/phr/web/login/abha/verify.post.requestBody.content.application/json.schema.properties.authData.anyOf[2].items.properties.bio.properties.txnId",
+  "'txnId '"
+ ],
+ [
+  "abha-api-v3",
+  "whitespace-padding",
+  ".paths./abha/api/v3/phr/web/login/abha/verify.post.requestBody.content.application/json.schema.properties.authData.anyOf[2].items.properties.bio.properties.fingerPrintAuthPid",
+  "'{{faceAuthPid}} '"
+ ],
+ [
+  "abha-api-v3",
+  "whitespace-padding",
+  ".paths./abha/api/v3/phr/web/login/abha/verify.post.requestBody.content.application/json.schema.properties.authData.anyOf[3].items.properties.iris.properties.txnId",
+  "'txnId '"
+ ],
+ [
+  "abha-api-v3",
+  "whitespace-padding",
+  ".paths./abha/api/v3/phr/web/login/abha/verify.post.requestBody.content.application/json.schema.properties.authData.anyOf[3].items.properties.iris.properties.irisAuthPid",
+  "'{{irisAuthPid}} '"
+ ],
+ [
+  "abha-api-v3",
+  "type-mismatch",
+  ".paths./abha/api/v3/phr/web/login/abha/verify.post.responses.401.content.application/json.schema.properties.code",
+  "type=string but example is int: 900902"
+ ],
+ [
+  "abha-api-v3",
+  "type-mismatch",
+  ".paths./abha/api/v3/phr/web/login/profile/abha-profile.get.responses.200.content.application/json.schema.properties.dayOfBirth",
+  "type=string but example is int: 14"
+ ],
+ [
+  "abha-api-v3",
+  "type-mismatch",
+  ".paths./abha/api/v3/phr/web/login/profile/abha-profile.get.responses.200.content.application/json.schema.properties.monthOfBirth",
+  "type=string but example is int: 11"
+ ],
+ [
+  "abha-api-v3",
+  "type-mismatch",
+  ".paths./abha/api/v3/phr/web/login/profile/abha-profile.get.responses.200.content.application/json.schema.properties.yearOfBirth",
+  "type=string but example is int: 1995"
+ ],
+ [
+  "abha-api-v3",
+  "type-mismatch",
+  ".paths./abha/api/v3/phr/web/login/profile/abha-profile.get.responses.200.content.application/json.schema.properties.stateCode",
+  "type=string but example is int: 27"
+ ],
+ [
+  "abha-api-v3",
+  "type-mismatch",
+  ".paths./abha/api/v3/phr/web/login/profile/abha-profile.get.responses.200.content.application/json.schema.properties.districtCode",
+  "type=string but example is int: 487"
+ ],
+ [
+  "abha-api-v3",
+  "type-mismatch",
+  ".paths./abha/api/v3/phr/web/login/profile/abha-profile.get.responses.200.content.application/json.schema.properties.emailVerified",
+  "type=string but example is bool: False"
+ ],
+ [
+  "abha-api-v3",
+  "type-mismatch",
+  ".paths./abha/api/v3/phr/web/login/profile/abha-profile.get.responses.200.content.application/json.schema.properties.mobileVerified",
+  "type=string but example is bool: True"
+ ],
+ [
+  "abha-api-v3",
+  "type-mismatch",
+  ".paths./abha/api/v3/phr/web/login/profile/abha-profile.get.responses.401.content.application/json.schema.properties.code",
+  "type=string but example is int: 900902"
+ ],
+ [
+  "abha-api-v3",
+  "type-mismatch",
+  ".paths./abha/api/v3/phr/web/login/profile/abha/phr-card.get.responses.401.content.application/json.schema.properties.code",
+  "type=string but example is int: 900902"
+ ],
+ [
+  "abha-api-v3",
+  "whitespace-padding",
+  ".paths./abha/api/v3/profile/benefit/abha/statedistrict/{abhanumber}.get.responses.400.content.application/json.schema.properties.error.properties.code",
+  "'ABDM-1013 '"
+ ],
+ [
+  "abha-api-v3",
+  "bad-format:date-time",
+  ".paths./abha/api/v3/profile/account/request/token.get.responses.400.content.application/json.schema.properties.timestamp",
+  "'2025-01-08 15:44:30'"
+ ],
+ [
+  "abha-api-v3",
+  "whitespace-padding",
+  ".paths./abha/api/v3/profile/account/request/token.get.responses.404.content.application/json.schema.properties.error.properties.code",
+  "'ABDM-1016:, ABDM-1030: '"
+ ],
+ [
+  "abha-api-v3",
+  "whitespace-padding",
+  ".paths./abha/api/v3/profile/public/certificate.get.responses.400.content.application/json.schema.properties.error.properties.code",
+  "'ABDM-1016: '"
+ ],
+ [
+  "abha-api-v3",
+  "type-mismatch",
+  ".paths./api/hiecm/gateway/v3/sessions.post.responses.200.content.application/json.schema.properties.expiresIn",
+  "type=string but example is int: 1200"
+ ],
+ [
+  "abha-api-v3",
+  "type-mismatch",
+  ".paths./api/hiecm/gateway/v3/sessions.post.responses.200.content.application/json.schema.properties.refreshExpiresIn",
+  "type=string but example is int: 1800"
+ ],
+ [
+  "consent-management-data-flow",
+  "whitespace-padding",
+  ".paths.<callback_url>/api/v3/consent/request/hip/notify.post.responses.403.content.text/plain.schema",
+  "' Access Denied'"
+ ],
+ [
+  "consent-management-data-flow",
+  "whitespace-padding",
+  ".paths.<callback_url>/api/v3/consent/request/hip/notify.post.responses.404.content.application/json.schema.properties.error.properties.code",
+  "'ABDM-1001: '"
+ ],
+ [
+  "consent-management-data-flow",
+  "whitespace-padding",
+  ".paths./api/hiecm/consent/v3/request/hip/on-notify.post.responses.403.content.text/plain.schema",
+  "' Access Denied'"
+ ],
+ [
+  "consent-management-data-flow",
+  "whitespace-padding",
+  ".paths./api/hiecm/consent/v3/request/hip/on-notify.post.responses.404.content.application/json.schema.properties.error.properties.code",
+  "'ABDM-1001: '"
+ ],
+ [
+  "consent-management-data-flow",
+  "not-in-enum",
+  ".paths./health-information/transfer.post.requestBody.content.application/json.schema.properties.entries.items.properties.media",
+  "'mimetype of the content.' not in ['application/fhir+json']"
+ ],
+ [
+  "consent-management-data-flow",
+  "type-mismatch",
+  ".paths./health-information/transfer.post.responses.400.content.application/json.schema.properties.error.properties.code",
+  "type=string but example is int: 4500"
+ ],
+ [
+  "consent-management-data-flow",
+  "whitespace-padding",
+  ".paths./api/hiecm/consent/v3/request/init.post.responses.403.content.text/plain.schema",
+  "' Access Denied'"
+ ],
+ [
+  "consent-management-data-flow",
+  "whitespace-padding",
+  ".paths./api/hiecm/consent/v3/request/init.post.responses.404.content.application/json.schema.properties.error.properties.code",
+  "'ABDM-1001: '"
+ ],
+ [
+  "consent-management-data-flow",
+  "whitespace-padding",
+  ".paths.<callback_url>/api/v3/hiu/consent/request/on-init.post.responses.403.content.text/plain.schema",
+  "' Access Denied'"
+ ],
+ [
+  "consent-management-data-flow",
+  "whitespace-padding",
+  ".paths.<callback_url>/api/v3/hiu/consent/request/on-init.post.responses.404.content.application/json.schema.properties.error.properties.code",
+  "'ABDM-1001: '"
+ ],
+ [
+  "consent-management-data-flow",
+  "whitespace-padding",
+  ".paths./api/hiecm/consent/v3/request/status.post.responses.400.content.application/json.schema.properties.error.properties.code",
+  "'ABDM-9999: '"
+ ],
+ [
+  "consent-management-data-flow",
+  "whitespace-padding",
+  ".paths./api/hiecm/consent/v3/request/status.post.responses.403.content.text/plain.schema",
+  "' Access Denied'"
+ ],
+ [
+  "consent-management-data-flow",
+  "whitespace-padding",
+  ".paths./api/hiecm/consent/v3/request/status.post.responses.404.content.application/json.schema.properties.error.properties.code",
+  "'ABDM-1001: '"
+ ],
+ [
+  "consent-management-data-flow",
+  "type-mismatch",
+  ".paths.<callback_url>/api/v3/hiu/consent/request/on-status.post.requestBody.content.application/json.schema.properties.resp",
+  "type=string but example is NoneType: None"
+ ],
+ [
+  "consent-management-data-flow",
+  "whitespace-padding",
+  ".paths.<callback_url>/api/v3/hiu/consent/request/on-status.post.responses.403.content.text/plain.schema",
+  "' Access Denied'"
+ ],
+ [
+  "consent-management-data-flow",
+  "whitespace-padding",
+  ".paths.<callback_url>/api/v3/hiu/consent/request/on-status.post.responses.404.content.application/json.schema.properties.error.properties.code",
+  "'ABDM-1001: '"
+ ],
+ [
+  "consent-management-data-flow",
+  "type-mismatch",
+  ".paths.<callback_url>/api/v3/hiu/consent/request/notify.post.requestBody.content.application/json.schema.properties.notification.properties.reason",
+  "type=string but example is NoneType: None"
+ ],
+ [
+  "consent-management-data-flow",
+  "whitespace-padding",
+  ".paths.<callback_url>/api/v3/hiu/consent/request/notify.post.responses.403.content.text/plain.schema",
+  "' Access Denied'"
+ ],
+ [
+  "consent-management-data-flow",
+  "whitespace-padding",
+  ".paths.<callback_url>/api/v3/hiu/consent/request/notify.post.responses.404.content.application/json.schema.properties.error.properties.code",
+  "'ABDM-1001: '"
+ ],
+ [
+  "consent-management-data-flow",
+  "whitespace-padding",
+  ".paths./api/hiecm/consent/v3/request/hiu/on-notify.post.responses.403.content.text/plain.schema",
+  "' Access Denied'"
+ ],
+ [
+  "consent-management-data-flow",
+  "whitespace-padding",
+  ".paths./api/hiecm/consent/v3/request/hiu/on-notify.post.responses.404.content.application/json.schema.properties.error.properties.code",
+  "'ABDM-1001: '"
+ ],
+ [
+  "consent-management-data-flow",
+  "whitespace-padding",
+  ".paths./api/hiecm/consent/v3/fetch.post.responses.400.content.application/json.schema.properties.error.properties.code",
+  "'ABDM-9999: '"
+ ],
+ [
+  "consent-management-data-flow",
+  "whitespace-padding",
+  ".paths./api/hiecm/consent/v3/fetch.post.responses.403.content.text/plain.schema",
+  "' Access Denied'"
+ ],
+ [
+  "consent-management-data-flow",
+  "whitespace-padding",
+  ".paths./api/hiecm/consent/v3/fetch.post.responses.404.content.application/json.schema.properties.error.properties.code",
+  "'ABDM-1001: '"
+ ],
+ [
+  "consent-management-data-flow",
+  "type-mismatch",
+  ".paths.<callback_url>/api/v3/hiu/consent/on-fetch.post.requestBody.content.application/json.schema.properties.error",
+  "type=object but example is NoneType: None"
+ ],
+ [
+  "consent-management-data-flow",
+  "type-mismatch",
+  ".paths.<callback_url>/api/v3/hiu/consent/on-fetch.post.requestBody.content.application/json.schema.properties.resp",
+  "type=string but example is NoneType: None"
+ ],
+ [
+  "consent-management-data-flow",
+  "whitespace-padding",
+  ".paths.<callback_url>/api/v3/hiu/consent/on-fetch.post.responses.403.content.text/plain.schema",
+  "' Access Denied'"
+ ],
+ [
+  "consent-management-data-flow",
+  "whitespace-padding",
+  ".paths.<callback_url>/api/v3/hiu/consent/on-fetch.post.responses.404.content.application/json.schema.properties.error.properties.code",
+  "'ABDM-1001: '"
+ ],
+ [
+  "consent-management-data-flow",
+  "type-mismatch",
+  ".paths./api/hiecm/data-flow/v3/health-information/notify.post.requestBody.content.application/json.schema.properties.notification.properties.notifier.properties.id",
+  "type=string but example is int: 100005"
+ ],
+ [
+  "consent-management-data-flow",
+  "whitespace-padding",
+  ".paths./api/hiecm/consent/v3/request/{request-id}/approve.post.responses.403.content.text/plain.schema",
+  "' Access Denied'"
+ ],
+ [
+  "consent-management-data-flow",
+  "whitespace-padding",
+  ".paths./api/hiecm/consent/v3/request/{request-id}/approve.post.responses.404.content.application/json.schema.properties.error.properties.code",
+  "'ABDM-1001: '"
+ ],
+ [
+  "consent-management-data-flow",
+  "whitespace-padding",
+  ".paths./api/hiecm/consent/v3/request/{request-id}/deny.post.responses.400.content.application/json.schema.properties.error.properties.code",
+  "'ABDM-1065: '"
+ ],
+ [
+  "consent-management-data-flow",
+  "whitespace-padding",
+  ".paths./api/hiecm/consent/v3/request/{request-id}/deny.post.responses.403.content.text/plain.schema",
+  "' Access Denied'"
+ ],
+ [
+  "consent-management-data-flow",
+  "whitespace-padding",
+  ".paths./api/hiecm/consent/v3/request/{request-id}/deny.post.responses.404.content.application/json.schema.properties.error.properties.code",
+  "'ABDM-1001: '"
+ ],
+ [
+  "consent-management-data-flow",
+  "whitespace-padding",
+  ".paths./api/hiecm/consent/v3/revoke.post.responses.400.content.application/json.schema.properties.error.properties.code",
+  "'ABDM-1080: '"
+ ],
+ [
+  "consent-management-data-flow",
+  "whitespace-padding",
+  ".paths./api/hiecm/consent/v3/revoke.post.responses.403.content.text/plain.schema",
+  "' Access Denied'"
+ ],
+ [
+  "consent-management-data-flow",
+  "whitespace-padding",
+  ".paths./api/hiecm/consent/v3/revoke.post.responses.404.content.application/json.schema.properties.error.properties.code",
+  "'ABDM-1001: '"
+ ],
+ [
+  "consent-management-data-flow",
+  "not-in-enum",
+  ".paths./api/hiecm/consent/v3/request/{request-id}.get.responses.200.content.application/json.schema.properties.hiType.items",
+  "'Prescription, DiagnosticReport, OPConsultation, DischargeSummary, ImmunizationRecord, HealthDocumentRecord, WellnessRecord,Invoice' not in ['Prescription', 'DiagnosticReport', 'OPConsultation', 'DischargeSummary', 'ImmunizationRecord', 'HealthDocumentRecord', 'WellnessRecord', 'Invoice']"
+ ],
+ [
+  "consent-management-data-flow",
+  "whitespace-padding",
+  ".paths./api/hiecm/consent/v3/request/{request-id}.get.responses.403.content.text/plain.schema",
+  "' Access Denied'"
+ ],
+ [
+  "consent-management-data-flow",
+  "whitespace-padding",
+  ".paths./api/hiecm/consent/v3/request/{request-id}.get.responses.404.content.application/json.schema.properties.error.properties.code",
+  "'ABDM-1001: '"
+ ],
+ [
+  "consent-management-data-flow",
+  "not-in-enum",
+  ".paths./api/hiecm/consent/v3/request.get.responses.200.content.application/json.schema.properties.requests.items.properties.hiType.items",
+  "'Prescription, DiagnosticReport, OPConsultation, DischargeSummary, ImmunizationRecord, HealthDocumentRecord, WellnessRecord,Invoice' not in ['Prescription', 'DiagnosticReport', 'OPConsultation', 'DischargeSummary', 'ImmunizationRecord', 'HealthDocumentRecord', 'WellnessRecord', 'Invoice']"
+ ],
+ [
+  "consent-management-data-flow",
+  "whitespace-padding",
+  ".paths./api/hiecm/consent/v3/request.get.responses.403.content.text/plain.schema",
+  "' Access Denied'"
+ ],
+ [
+  "consent-management-data-flow",
+  "whitespace-padding",
+  ".paths./api/hiecm/consent/v3/request.get.responses.404.content.application/json.schema.properties.error.properties.code",
+  "'ABDM-1001: '"
+ ],
+ [
+  "consent-management-data-flow",
+  "whitespace-padding",
+  ".paths./api/hiecm/consent/v3/artefact/request/{request-id}.get.responses.403.content.text/plain.schema",
+  "' Access Denied'"
+ ],
+ [
+  "consent-management-data-flow",
+  "whitespace-padding",
+  ".paths./api/hiecm/consent/v3/artefact/request/{request-id}.get.responses.404.content.application/json.schema.properties.error.properties.code",
+  "'ABDM-1001: '"
+ ],
+ [
+  "consent-management-data-flow",
+  "whitespace-padding",
+  ".paths./api/hiecm/consent/v3/artefact/{artefact-id}.get.responses.403.content.text/plain.schema",
+  "' Access Denied'"
+ ],
+ [
+  "consent-management-data-flow",
+  "whitespace-padding",
+  ".paths./api/hiecm/consent/v3/artefact/{artefact-id}.get.responses.404.content.application/json.schema.properties.error.properties.code",
+  "'ABDM-1001: '"
+ ],
+ [
+  "consent-management-data-flow",
+  "whitespace-padding",
+  ".paths./api/hiecm/consent/v3/artefact.get.responses.403.content.text/plain.schema",
+  "' Access Denied'"
+ ],
+ [
+  "consent-management-data-flow",
+  "whitespace-padding",
+  ".paths./api/hiecm/consent/v3/artefact.get.responses.404.content.application/json.schema.properties.error.properties.code",
+  "'ABDM-1001: '"
+ ],
+ [
+  "consent-management-data-flow",
+  "whitespace-padding",
+  ".paths./api/hiecm/consent/v3/auto/approve.post.responses.403.content.text/plain.schema",
+  "' Access Denied'"
+ ],
+ [
+  "consent-management-data-flow",
+  "whitespace-padding",
+  ".paths./api/hiecm/consent/v3/auto/approve.post.responses.404.content.application/json.schema.properties.error.properties.code",
+  "'ABDM-1001: '"
+ ],
+ [
+  "consent-management-data-flow",
+  "whitespace-padding",
+  ".paths./api/hiecm/consent/v3/auto/approve/{auto-approval-id}/disable.post.responses.403.content.text/plain.schema",
+  "' Access Denied'"
+ ],
+ [
+  "consent-management-data-flow",
+  "whitespace-padding",
+  ".paths./api/hiecm/consent/v3/auto/approve/{auto-approval-id}/disable.post.responses.404.content.application/json.schema.properties.error.properties.code",
+  "'ABDM-1001: '"
+ ],
+ [
+  "consent-management-data-flow",
+  "whitespace-padding",
+  ".paths./api/hiecm/consent/v3/auto/approve/{auto-approval-id}/enable.post.responses.403.content.text/plain.schema",
+  "' Access Denied'"
+ ],
+ [
+  "consent-management-data-flow",
+  "whitespace-padding",
+  ".paths./api/hiecm/consent/v3/auto/approve/{auto-approval-id}/enable.post.responses.404.content.application/json.schema.properties.error.properties.code",
+  "'ABDM-1001: '"
+ ],
+ [
+  "gateway",
+  "whitespace-padding",
+  ".paths./api/hiecm/gateway/v3/bridge-services.get.responses.204.content.application/json.schema.properties.error.properties.code",
+  "'ABDM-1001: '"
+ ],
+ [
+  "gateway",
+  "type-mismatch",
+  ".paths./api/hiecm/gateway/v3/bridge-services.get.responses.400.content.application/json.schema.properties.error.properties.code",
+  "type=integer but example is str: 'ABDM-1015: '"
+ ],
+ [
+  "gateway",
+  "whitespace-padding",
+  ".paths./api/hiecm/gateway/v3/bridge-services.get.responses.500.content.application/json.schema.properties.error.properties.code",
+  "'ABDM-9999: '"
+ ],
+ [
+  "gateway",
+  "whitespace-padding",
+  ".paths./api/hiecm/gateway/v3/bridge-service/serviceId/{service-id}.get.responses.204.content.application/json.schema.properties.error.properties.code",
+  "'ABDM-1001: '"
+ ],
+ [
+  "gateway",
+  "type-mismatch",
+  ".paths./api/hiecm/gateway/v3/bridge-service/serviceId/{service-id}.get.responses.400.content.application/json.schema.properties.error.properties.code",
+  "type=integer but example is str: 'ABDM-1015: '"
+ ],
+ [
+  "gateway",
+  "whitespace-padding",
+  ".paths./api/hiecm/gateway/v3/bridge-service/serviceId/{service-id}.get.responses.500.content.application/json.schema.properties.error.properties.code",
+  "'ABDM-9999: '"
+ ],
+ [
+  "gateway",
+  "whitespace-padding",
+  ".paths./api/hiecm/gateway/v3/bridge/url.patch.responses.204.content.application/json.schema.properties.error.properties.code",
+  "'ABDM-1001: '"
+ ],
+ [
+  "gateway",
+  "type-mismatch",
+  ".paths./api/hiecm/gateway/v3/bridge/url.patch.responses.400.content.application/json.schema.properties.error.properties.code",
+  "type=integer but example is str: 'ABDM-1015: '"
+ ],
+ [
+  "gateway",
+  "whitespace-padding",
+  ".paths./api/hiecm/gateway/v3/bridge/url.patch.responses.500.content.application/json.schema.properties.error.properties.code",
+  "'ABDM-9999: '"
+ ],
+ [
+  "gateway",
+  "whitespace-padding",
+  ".paths./api/hiecm/gateway/v3/providers.get.responses.204.content.application/json.schema.properties.error.properties.code",
+  "'ABDM-1001: '"
+ ],
+ [
+  "gateway",
+  "type-mismatch",
+  ".paths./api/hiecm/gateway/v3/providers.get.responses.400.content.application/json.schema.properties.error.properties.code",
+  "type=integer but example is str: 'ABDM-1015: '"
+ ],
+ [
+  "gateway",
+  "whitespace-padding",
+  ".paths./api/hiecm/gateway/v3/providers.get.responses.500.content.application/json.schema.properties.error.properties.code",
+  "'ABDM-9999: '"
+ ],
+ [
+  "gateway",
+  "whitespace-padding",
+  ".paths./api/hiecm/gateway/v3/providers/{provider-id}.get.responses.204.content.application/json.schema.properties.error.properties.code",
+  "'ABDM-1001: '"
+ ],
+ [
+  "gateway",
+  "type-mismatch",
+  ".paths./api/hiecm/gateway/v3/providers/{provider-id}.get.responses.400.content.application/json.schema.properties.error.properties.code",
+  "type=integer but example is str: 'ABDM-1015: '"
+ ],
+ [
+  "gateway",
+  "whitespace-padding",
+  ".paths./api/hiecm/gateway/v3/providers/{provider-id}.get.responses.500.content.application/json.schema.properties.error.properties.code",
+  "'ABDM-9999: '"
+ ],
+ [
+  "gateway",
+  "whitespace-padding",
+  ".paths./api/hiecm/gateway/v3/govt-programs.get.responses.204.content.application/json.schema.properties.error.properties.code",
+  "'ABDM-1001: '"
+ ],
+ [
+  "gateway",
+  "type-mismatch",
+  ".paths./api/hiecm/gateway/v3/govt-programs.get.responses.400.content.application/json.schema.properties.error.properties.code",
+  "type=integer but example is str: 'ABDM-1015: '"
+ ],
+ [
+  "gateway",
+  "whitespace-padding",
+  ".paths./api/hiecm/gateway/v3/govt-programs.get.responses.500.content.application/json.schema.properties.error.properties.code",
+  "'ABDM-9999: '"
+ ],
+ [
+  "gateway",
+  "whitespace-padding",
+  ".paths./api/hiecm/gateway/v3/health-lockers.get.responses.204.content.application/json.schema.properties.error.properties.code",
+  "'ABDM-1001: '"
+ ],
+ [
+  "gateway",
+  "type-mismatch",
+  ".paths./api/hiecm/gateway/v3/health-lockers.get.responses.400.content.application/json.schema.properties.error.properties.code",
+  "type=integer but example is str: 'ABDM-1015: '"
+ ],
+ [
+  "gateway",
+  "whitespace-padding",
+  ".paths./api/hiecm/gateway/v3/health-lockers.get.responses.500.content.application/json.schema.properties.error.properties.code",
+  "'ABDM-9999: '"
+ ],
+ [
+  "gateway",
+  "whitespace-padding",
+  ".paths./api/hiecm/gateway/v3/sessions.post.responses.204.content.application/json.schema.properties.error.properties.code",
+  "'ABDM-1001: '"
+ ],
+ [
+  "gateway",
+  "type-mismatch",
+  ".paths./api/hiecm/gateway/v3/sessions.post.responses.400.content.application/json.schema.properties.error.properties.code",
+  "type=integer but example is str: 'ABDM-1015: '"
+ ],
+ [
+  "gateway",
+  "whitespace-padding",
+  ".paths./api/hiecm/gateway/v3/sessions.post.responses.500.content.application/json.schema.properties.error.properties.code",
+  "'ABDM-9999: '"
+ ],
+ [
+  "gateway",
+  "whitespace-padding",
+  ".paths./api/hiecm/gateway/v3/.well-known/openid-configuration.get.responses.204.content.application/json.schema.properties.error.properties.code",
+  "'ABDM-1001: '"
+ ],
+ [
+  "gateway",
+  "type-mismatch",
+  ".paths./api/hiecm/gateway/v3/.well-known/openid-configuration.get.responses.400.content.application/json.schema.properties.error.properties.code",
+  "type=integer but example is str: 'ABDM-1015: '"
+ ],
+ [
+  "gateway",
+  "whitespace-padding",
+  ".paths./api/hiecm/gateway/v3/.well-known/openid-configuration.get.responses.500.content.application/json.schema.properties.error.properties.code",
+  "'ABDM-9999: '"
+ ],
+ [
+  "gateway",
+  "whitespace-padding",
+  ".paths./api/hiecm/gateway/v3/certs.get.responses.204.content.application/json.schema.properties.error.properties.code",
+  "'ABDM-1001: '"
+ ],
+ [
+  "gateway",
+  "type-mismatch",
+  ".paths./api/hiecm/gateway/v3/certs.get.responses.400.content.application/json.schema.properties.error.properties.code",
+  "type=integer but example is str: 'ABDM-1015: '"
+ ],
+ [
+  "gateway",
+  "whitespace-padding",
+  ".paths./api/hiecm/gateway/v3/certs.get.responses.500.content.application/json.schema.properties.error.properties.code",
+  "'ABDM-9999: '"
+ ],
+ [
+  "hip-initiated-linking",
+  "whitespace-padding",
+  ".paths./api/hiecm/hip/v3/link/carecontext.post.responses.400.content.application/json.schema.properties.error.properties.code",
+  "'ABDM-1006: '"
+ ],
+ [
+  "hip-initiated-linking",
+  "whitespace-padding",
+  ".paths./api/hiecm/hip/v3/link/carecontext.post.responses.404.content.application/json.schema.properties.error.properties.code",
+  "'ABDM-1001: '"
+ ],
+ [
+  "hip-initiated-linking",
+  "whitespace-padding",
+  ".paths./api/hiecm/hip/v3/link/carecontext.post.responses.500.content.application/json.schema.properties.code",
+  "'ABDM-9999: '"
+ ],
+ [
+  "hip-initiated-linking",
+  "whitespace-padding",
+  ".paths.<callback_url>/api/v3/link/on_carecontext.post.responses.400.content.application/json.schema.properties.error.properties.code",
+  "'ABDM-1006: '"
+ ],
+ [
+  "hip-initiated-linking",
+  "whitespace-padding",
+  ".paths.<callback_url>/api/v3/link/on_carecontext.post.responses.404.content.application/json.schema.properties.error.properties.code",
+  "'ABDM-1001: '"
+ ],
+ [
+  "hip-initiated-linking",
+  "whitespace-padding",
+  ".paths.<callback_url>/api/v3/link/on_carecontext.post.responses.500.content.application/json.schema.properties.code",
+  "'ABDM-9999: '"
+ ],
+ [
+  "hip-initiated-linking",
+  "whitespace-padding",
+  ".paths./api/hiecm/hip/v3/link/context/notify.post.responses.400.content.application/json.schema.properties.error.properties.code",
+  "'ABDM-1006: '"
+ ],
+ [
+  "hip-initiated-linking",
+  "whitespace-padding",
+  ".paths./api/hiecm/hip/v3/link/context/notify.post.responses.404.content.application/json.schema.properties.error.properties.code",
+  "'ABDM-1001: '"
+ ],
+ [
+  "hip-initiated-linking",
+  "whitespace-padding",
+  ".paths./api/hiecm/hip/v3/link/context/notify.post.responses.500.content.application/json.schema.properties.code",
+  "'ABDM-9999: '"
+ ],
+ [
+  "hip-initiated-linking",
+  "whitespace-padding",
+  ".paths.<callback_url>/api/v3/links/context/on-notify.post.requestBody.content.application/json.schema.properties.error.properties.code",
+  "'ABDM-1006: '"
+ ],
+ [
+  "hip-initiated-linking",
+  "whitespace-padding",
+  ".paths.<callback_url>/api/v3/links/context/on-notify.post.responses.400.content.application/json.schema.properties.error.properties.code",
+  "'ABDM-1006: '"
+ ],
+ [
+  "hip-initiated-linking",
+  "whitespace-padding",
+  ".paths.<callback_url>/api/v3/links/context/on-notify.post.responses.404.content.application/json.schema.properties.error.properties.code",
+  "'ABDM-1001: '"
+ ],
+ [
+  "hip-initiated-linking",
+  "whitespace-padding",
+  ".paths.<callback_url>/api/v3/links/context/on-notify.post.responses.500.content.application/json.schema.properties.code",
+  "'ABDM-9999: '"
+ ],
+ [
+  "hip-initiated-linking",
+  "whitespace-padding",
+  ".paths./api/hiecm/hip/v3/link/patient/links/sms/notify2.post.responses.400.content.application/json.schema.properties.error.properties.code",
+  "'ABDM-1006: '"
+ ],
+ [
+  "hip-initiated-linking",
+  "whitespace-padding",
+  ".paths./api/hiecm/hip/v3/link/patient/links/sms/notify2.post.responses.404.content.application/json.schema.properties.error.properties.code",
+  "'ABDM-1001: '"
+ ],
+ [
+  "hip-initiated-linking",
+  "whitespace-padding",
+  ".paths./api/hiecm/hip/v3/link/patient/links/sms/notify2.post.responses.500.content.application/json.schema.properties.code",
+  "'ABDM-9999: '"
+ ],
+ [
+  "hip-initiated-linking",
+  "whitespace-padding",
+  ".paths.<callback_url>/api/v3/patients/sms/on-notify.post.responses.400.content.application/json.schema.properties.error.properties.code",
+  "'ABDM-1006: '"
+ ],
+ [
+  "hip-initiated-linking",
+  "whitespace-padding",
+  ".paths.<callback_url>/api/v3/patients/sms/on-notify.post.responses.404.content.application/json.schema.properties.error.properties.code",
+  "'ABDM-1001: '"
+ ],
+ [
+  "hip-initiated-linking",
+  "whitespace-padding",
+  ".paths.<callback_url>/api/v3/patients/sms/on-notify.post.responses.500.content.application/json.schema.properties.code",
+  "'ABDM-9999: '"
+ ],
+ [
+  "hip-initiated-linking",
+  "whitespace-padding",
+  ".paths./api/hiecm/hip/v3/link/patient/links.get.responses.400.content.application/json.schema.properties.error.properties.code",
+  "'ABDM-1065: '"
+ ],
+ [
+  "hip-initiated-linking",
+  "whitespace-padding",
+  ".paths./api/hiecm/hip/v3/link/patient/links.get.responses.404.content.application/json.schema.properties.error.properties.code",
+  "'ABDM-1001: '"
+ ],
+ [
+  "hip-initiated-linking",
+  "whitespace-padding",
+  ".paths./api/hiecm/hip/v3/link/patient/links.get.responses.500.content.application/json.schema.properties.code",
+  "'ABDM-9999: '"
+ ],
+ [
+  "patient-share",
+  "type-mismatch",
+  ".paths.<callback_url>/api/v3/hip/patient/share.post.requestBody.content.application/json.schema.properties.metaData.properties.context",
+  "type=string but example is int: 6"
+ ],
+ [
+  "patient-share",
+  "type-mismatch",
+  ".paths.<callback_url>/api/v3/hip/patient/share.post.requestBody.content.application/json.schema.properties.profile.properties.patient.properties.dayOfBirth",
+  "type=string but example is int: 1"
+ ],
+ [
+  "patient-share",
+  "type-mismatch",
+  ".paths.<callback_url>/api/v3/hip/patient/share.post.requestBody.content.application/json.schema.properties.profile.properties.patient.properties.monthOfBirth",
+  "type=string but example is int: 8"
+ ],
+ [
+  "patient-share",
+  "type-mismatch",
+  ".paths.<callback_url>/api/v3/hip/patient/share.post.requestBody.content.application/json.schema.properties.profile.properties.patient.properties.yearOfBirth",
+  "type=string but example is int: 9999"
+ ],
+ [
+  "patient-share",
+  "type-mismatch",
+  ".paths.<callback_url>/api/v3/hip/patient/share.post.requestBody.content.application/json.schema.properties.profile.properties.patient.properties.address.properties.pincode",
+  "type=string but example is int: 641050"
+ ],
+ [
+  "patient-share",
+  "type-mismatch",
+  ".paths.<callback_url>/api/v3/hip/patient/share.post.requestBody.content.application/json.schema.properties.profile.properties.patient.properties.phoneNumber",
+  "type=string but example is int: 9876543210"
+ ],
+ [
+  "patient-share",
+  "whitespace-padding",
+  ".paths.<callback_url>/api/v3/hip/patient/share.post.responses.408.content.application/json.schema.properties.error.properties.code",
+  "'ABDM-1007: '"
+ ],
+ [
+  "patient-share",
+  "type-mismatch",
+  ".paths./api/hiecm/patient-share/v3/on-share.post.requestBody.content.application/json.schema.oneOf[0].properties.acknowledgement.properties.profile.properties.context",
+  "type=string but example is int: 43"
+ ],
+ [
+  "patient-share",
+  "type-mismatch",
+  ".paths./api/hiecm/patient-share/v3/on-share.post.requestBody.content.application/json.schema.oneOf[0].properties.acknowledgement.properties.profile.properties.tokenNumber",
+  "type=string but example is int: 3"
+ ],
+ [
+  "patient-share",
+  "type-mismatch",
+  ".paths./api/hiecm/patient-share/v3/on-share.post.responses.400.content.application/json.schema.properties.error.properties.code",
+  "type=integer but example is str: 'ABDM-1006'"
+ ],
+ [
+  "patient-share",
+  "whitespace-padding",
+  ".paths./api/hiecm/patient-share/v3/on-share.post.responses.404.content.application/json.schema.properties.error.properties.code",
+  "'ABDM-1001: '"
+ ],
+ [
+  "patient-share",
+  "whitespace-padding",
+  ".paths./api/hiecm/patient-share/v3/on-share.post.responses.408.content.application/json.schema.properties.error.properties.code",
+  "'ABDM-1007: '"
+ ],
+ [
+  "patient-share",
+  "whitespace-padding",
+  ".paths./api/hiecm/patient-share/v3/on-share.post.responses.429.content.application/json.schema.properties.error.properties.code",
+  "'ABDM-1022: '"
+ ],
+ [
+  "patient-share",
+  "type-mismatch",
+  ".paths./api/hiecm/patient-share/v3/share.post.requestBody.content.application/json.schema.properties.metaData.properties.context",
+  "type=string but example is int: 6"
+ ],
+ [
+  "patient-share",
+  "type-mismatch",
+  ".paths./api/hiecm/patient-share/v3/share.post.requestBody.content.application/json.schema.properties.profile.properties.patient.properties.dayOfBirth",
+  "type=string but example is int: 1"
+ ],
+ [
+  "patient-share",
+  "type-mismatch",
+  ".paths./api/hiecm/patient-share/v3/share.post.requestBody.content.application/json.schema.properties.profile.properties.patient.properties.monthOfBirth",
+  "type=string but example is int: 8"
+ ],
+ [
+  "patient-share",
+  "type-mismatch",
+  ".paths./api/hiecm/patient-share/v3/share.post.requestBody.content.application/json.schema.properties.profile.properties.patient.properties.yearOfBirth",
+  "type=string but example is int: 9999"
+ ],
+ [
+  "patient-share",
+  "type-mismatch",
+  ".paths./api/hiecm/patient-share/v3/share.post.requestBody.content.application/json.schema.properties.profile.properties.patient.properties.address.properties.pincode",
+  "type=string but example is int: 641050"
+ ],
+ [
+  "patient-share",
+  "type-mismatch",
+  ".paths./api/hiecm/patient-share/v3/share.post.requestBody.content.application/json.schema.properties.profile.properties.patient.properties.phoneNumber",
+  "type=string but example is int: 9876543210"
+ ],
+ [
+  "patient-share",
+  "type-mismatch",
+  ".paths./api/hiecm/patient-share/v3/share.post.responses.400.content.application/json.schema.properties.error.properties.code",
+  "type=integer but example is str: 'ABDM-1006'"
+ ],
+ [
+  "patient-share",
+  "whitespace-padding",
+  ".paths./api/hiecm/patient-share/v3/share.post.responses.404.content.application/json.schema.properties.error.properties.code",
+  "'ABDM-1001: '"
+ ],
+ [
+  "patient-share",
+  "whitespace-padding",
+  ".paths./api/hiecm/patient-share/v3/share.post.responses.408.content.application/json.schema.properties.error.properties.code",
+  "'ABDM-1007: '"
+ ],
+ [
+  "patient-share",
+  "whitespace-padding",
+  ".paths./api/hiecm/patient-share/v3/share.post.responses.429.content.application/json.schema.properties.error.properties.code",
+  "'ABDM-1022: '"
+ ],
+ [
+  "patient-share",
+  "type-mismatch",
+  ".paths.<callback_url>/api/v3/hiu/patient/on-share.post.requestBody.content.application/json.schema.oneOf[0].properties.acknowledgement.properties.profile.properties.context",
+  "type=string but example is int: 43"
+ ],
+ [
+  "patient-share",
+  "type-mismatch",
+  ".paths.<callback_url>/api/v3/hiu/patient/on-share.post.requestBody.content.application/json.schema.oneOf[0].properties.acknowledgement.properties.profile.properties.tokenNumber",
+  "type=string but example is int: 3"
+ ],
+ [
+  "patient-share",
+  "whitespace-padding",
+  ".paths.<callback_url>/api/v3/hiu/patient/on-share.post.responses.408.content.application/json.schema.properties.error.properties.code",
+  "'ABDM-1007: '"
+ ],
+ [
+  "patient-share",
+  "bad-format:email",
+  ".paths./api/hiecm/patient-share/v3/profile/getTokenDetails.get.responses.200.content.application/json.schema.oneOf[0].items.properties.patientId",
+  "'abdulkalam@abdm'"
+ ],
+ [
+  "patient-share",
+  "type-mismatch",
+  ".paths./api/hiecm/patient-share/v3/profile/getTokenDetails.get.responses.200.content.application/json.schema.oneOf[0].items.properties.tokenNumber",
+  "type=string but example is int: 1"
+ ],
+ [
+  "patient-share",
+  "type-mismatch",
+  ".paths./api/hiecm/patient-share/v3/profile/getTokenDetails.get.responses.200.content.application/json.schema.oneOf[0].items.properties.expiresIn",
+  "type=string but example is int: 1800"
+ ],
+ [
+  "patient-share",
+  "type-mismatch",
+  ".paths./api/hiecm/patient-share/v3/profile/getTokenDetails.get.responses.400.content.application/json.schema.properties.error.properties.code",
+  "type=integer but example is str: 'ABDM-1006'"
+ ],
+ [
+  "patient-share",
+  "whitespace-padding",
+  ".paths./api/hiecm/patient-share/v3/profile/getTokenDetails.get.responses.404.content.application/json.schema.properties.error.properties.code",
+  "'ABDM-1001: '"
+ ],
+ [
+  "patient-share",
+  "whitespace-padding",
+  ".paths./api/hiecm/patient-share/v3/profile/getTokenDetails.get.responses.408.content.application/json.schema.properties.error.properties.code",
+  "'ABDM-1007: '"
+ ],
+ [
+  "patient-share",
+  "whitespace-padding",
+  ".paths./api/hiecm/patient-share/v3/profile/getTokenDetails.get.responses.429.content.application/json.schema.properties.error.properties.code",
+  "'ABDM-1022: '"
+ ],
+ [
+  "scan-and-pay",
+  "whitespace-padding",
+  ".paths.<callback_url>/v3/patient/share/open-order.post.responses.500.content.application/json.schema.properties.error.properties.code",
+  "'ABDM-2500: '"
+ ],
+ [
+  "scan-and-pay",
+  "whitespace-padding",
+  ".paths.<callback_url>/v3/patient/share/open-order.post.responses.503.content.application/json.schema.properties.code",
+  "'ABDM-2500: '"
+ ],
+ [
+  "scan-and-pay",
+  "type-mismatch",
+  ".paths./api/hiecm/scan-gateway/v3/patient/on-share/open-order.post.requestBody.content.application/json.schema.anyOf[1].properties.error.properties.code",
+  "type=string but example is int: 1000"
+ ],
+ [
+  "scan-and-pay",
+  "whitespace-padding",
+  ".paths./api/hiecm/scan-gateway/v3/patient/on-share/open-order.post.responses.400.content.application/json.schema.properties.error.properties.code",
+  "'ABDM-2500: '"
+ ],
+ [
+  "scan-and-pay",
+  "whitespace-padding",
+  ".paths./api/hiecm/scan-gateway/v3/patient/on-share/open-order.post.responses.500.content.application/json.schema.properties.error.properties.code",
+  "'ABDM-2500: '"
+ ],
+ [
+  "scan-and-pay",
+  "whitespace-padding",
+  ".paths./api/hiecm/scan-gateway/v3/patient/on-share/open-order.post.responses.503.content.application/json.schema.properties.code",
+  "'ABDM-2500: '"
+ ],
+ [
+  "scan-and-pay",
+  "type-mismatch",
+  ".paths.<callback_url>/v3/patient/selection.post.requestBody.content.application/json.schema.properties.openOrderRequestId",
+  "type=object but example is str: '6c3d4e5c-09d1-4ecc-817b-a0c82d130c53'"
+ ],
+ [
+  "scan-and-pay",
+  "whitespace-padding",
+  ".paths.<callback_url>/v3/patient/selection.post.responses.500.content.application/json.schema.properties.error.properties.code",
+  "'ABDM-2500: '"
+ ],
+ [
+  "scan-and-pay",
+  "whitespace-padding",
+  ".paths.<callback_url>/v3/patient/selection.post.responses.503.content.application/json.schema.properties.code",
+  "'ABDM-2500: '"
+ ],
+ [
+  "scan-and-pay",
+  "type-mismatch",
+  ".paths./api/hiecm/scan-gateway/v3/patient/on-selection.post.requestBody.content.application/json.schema.anyOf[0].properties.openOrderRequestId",
+  "type=object but example is str: 'b767614f-153a-4aa3-946f-1622596f0fab'"
+ ],
+ [
+  "scan-and-pay",
+  "type-mismatch",
+  ".paths./api/hiecm/scan-gateway/v3/patient/on-selection.post.requestBody.content.application/json.schema.anyOf[0].properties.paymentBundle.properties.merchantId",
+  "type=string but example is int: 123465"
+ ],
+ [
+  "scan-and-pay",
+  "whitespace-padding",
+  ".paths./api/hiecm/scan-gateway/v3/patient/on-selection.post.responses.400.content.application/json.schema.properties.error.properties.code",
+  "'ABDM-2500: '"
+ ],
+ [
+  "scan-and-pay",
+  "whitespace-padding",
+  ".paths./api/hiecm/scan-gateway/v3/patient/on-selection.post.responses.500.content.application/json.schema.properties.error.properties.code",
+  "'ABDM-2500: '"
+ ],
+ [
+  "scan-and-pay",
+  "whitespace-padding",
+  ".paths./api/hiecm/scan-gateway/v3/patient/on-selection.post.responses.503.content.application/json.schema.properties.code",
+  "'ABDM-2500: '"
+ ],
+ [
+  "scan-and-pay",
+  "type-mismatch",
+  ".paths./api/hiecm/scan-gateway/v3/patient/scan-pay/notify.post.requestBody.content.application/json.schema.properties.acknowledgement.properties.openOrderRequestId",
+  "type=object but example is str: 'b767614f-153a-4aa3-946f-1622596f0fab'"
+ ],
+ [
+  "scan-and-pay",
+  "whitespace-padding",
+  ".paths./api/hiecm/scan-gateway/v3/patient/scan-pay/notify.post.responses.400.content.application/json.schema.properties.error.properties.code",
+  "'ABDM-2500: '"
+ ],
+ [
+  "scan-and-pay",
+  "whitespace-padding",
+  ".paths./api/hiecm/scan-gateway/v3/patient/scan-pay/notify.post.responses.500.content.application/json.schema.properties.error.properties.code",
+  "'ABDM-2500: '"
+ ],
+ [
+  "scan-and-pay",
+  "whitespace-padding",
+  ".paths./api/hiecm/scan-gateway/v3/patient/scan-pay/notify.post.responses.503.content.application/json.schema.properties.code",
+  "'ABDM-2500: '"
+ ],
+ [
+  "scan-and-pay",
+  "type-mismatch",
+  ".paths.<callback_url>/v3/patient/scan-pay/on-notify.post.requestBody.content.application/json.schema.oneOf[0].properties.acknowledgement.properties.openOrderRequestId",
+  "type=object but example is str: 'b767614f-153a-4aa3-946f-1622596f0fab'"
+ ],
+ [
+  "scan-and-pay",
+  "whitespace-padding",
+  ".paths.<callback_url>/v3/patient/scan-pay/on-notify.post.responses.500.content.application/json.schema.properties.error.properties.code",
+  "'ABDM-2500: '"
+ ],
+ [
+  "scan-and-pay",
+  "whitespace-padding",
+  ".paths.<callback_url>/v3/patient/scan-pay/on-notify.post.responses.503.content.application/json.schema.properties.code",
+  "'ABDM-2500: '"
+ ],
+ [
+  "scan-and-pay",
+  "whitespace-padding",
+  ".paths.<callback_url>/v3/patient/scan-pay/order-status.post.responses.500.content.application/json.schema.properties.error.properties.code",
+  "'ABDM-2500: '"
+ ],
+ [
+  "scan-and-pay",
+  "whitespace-padding",
+  ".paths.<callback_url>/v3/patient/scan-pay/order-status.post.responses.503.content.application/json.schema.properties.code",
+  "'ABDM-2500: '"
+ ],
+ [
+  "scan-and-pay",
+  "whitespace-padding",
+  ".paths./api/hiecm/scan-gateway/v3/patient/scan-pay/on-order-status.post.responses.400.content.application/json.schema.properties.error.properties.code",
+  "'ABDM-2500: '"
+ ],
+ [
+  "scan-and-pay",
+  "whitespace-padding",
+  ".paths./api/hiecm/scan-gateway/v3/patient/scan-pay/on-order-status.post.responses.500.content.application/json.schema.properties.error.properties.code",
+  "'ABDM-2500: '"
+ ],
+ [
+  "scan-and-pay",
+  "whitespace-padding",
+  ".paths./api/hiecm/scan-gateway/v3/patient/scan-pay/on-order-status.post.responses.503.content.application/json.schema.properties.code",
+  "'ABDM-2500: '"
+ ],
+ [
+  "scan-and-pay",
+  "type-mismatch",
+  ".paths./api/hiecm/scan-gateway/v3/patient/share/open-order.post.requestBody.content.application/json.schema.properties.metaData.properties.counterId",
+  "type=number but example is str: '123-456'"
+ ],
+ [
+  "scan-and-pay",
+  "whitespace-padding",
+  ".paths./api/hiecm/scan-gateway/v3/patient/share/open-order.post.responses.400.content.application/json.schema.properties.error.properties.code",
+  "'ABDM-2500: '"
+ ],
+ [
+  "scan-and-pay",
+  "whitespace-padding",
+  ".paths./api/hiecm/scan-gateway/v3/patient/share/open-order.post.responses.500.content.application/json.schema.properties.error.properties.code",
+  "'ABDM-2500: '"
+ ],
+ [
+  "scan-and-pay",
+  "whitespace-padding",
+  ".paths./api/hiecm/scan-gateway/v3/patient/share/open-order.post.responses.503.content.application/json.schema.properties.code",
+  "'ABDM-2500: '"
+ ],
+ [
+  "scan-and-pay",
+  "whitespace-padding",
+  ".paths.<callback_url>/v3/patient/on-share/open-order.post.responses.500.content.application/json.schema.properties.error.properties.code",
+  "'ABDM-2500: '"
+ ],
+ [
+  "scan-and-pay",
+  "whitespace-padding",
+  ".paths.<callback_url>/v3/patient/on-share/open-order.post.responses.503.content.application/json.schema.properties.code",
+  "'ABDM-2500: '"
+ ],
+ [
+  "scan-and-pay",
+  "type-mismatch",
+  ".paths./api/hiecm/scan-gateway/v3/patient/selection.post.requestBody.content.application/json.schema.anyOf[0].properties.openOrderRequestId",
+  "type=object but example is str: 'b767614f-153a-***-946f-1622596f0fab'"
+ ],
+ [
+  "scan-and-pay",
+  "whitespace-padding",
+  ".paths./api/hiecm/scan-gateway/v3/patient/selection.post.responses.400.content.application/json.schema.properties.error.properties.code",
+  "'ABDM-2500: '"
+ ],
+ [
+  "scan-and-pay",
+  "whitespace-padding",
+  ".paths./api/hiecm/scan-gateway/v3/patient/selection.post.responses.500.content.application/json.schema.properties.error.properties.code",
+  "'ABDM-2500: '"
+ ],
+ [
+  "scan-and-pay",
+  "whitespace-padding",
+  ".paths./api/hiecm/scan-gateway/v3/patient/selection.post.responses.503.content.application/json.schema.properties.code",
+  "'ABDM-2500: '"
+ ],
+ [
+  "scan-and-pay",
+  "type-mismatch",
+  ".paths.<callback_url>/v3/patient/on-selection.post.requestBody.content.application/json.schema.properties.openOrderRequestId",
+  "type=object but example is str: 'b767614f-153a-4aa3-946f-1622596f0fab'"
+ ],
+ [
+  "scan-and-pay",
+  "type-mismatch",
+  ".paths.<callback_url>/v3/patient/on-selection.post.requestBody.content.application/json.schema.properties.paymentBundle.properties.merchantId",
+  "type=string but example is int: 123465"
+ ],
+ [
+  "scan-and-pay",
+  "whitespace-padding",
+  ".paths.<callback_url>/v3/patient/on-selection.post.responses.500.content.application/json.schema.properties.error.properties.code",
+  "'ABDM-2500: '"
+ ],
+ [
+  "scan-and-pay",
+  "whitespace-padding",
+  ".paths.<callback_url>/v3/patient/on-selection.post.responses.503.content.application/json.schema.properties.code",
+  "'ABDM-2500: '"
+ ],
+ [
+  "scan-and-pay",
+  "type-mismatch",
+  ".paths.<callback_url>/v3/patient/scan-pay/notify.post.requestBody.content.application/json.schema.properties.acknowledgement.properties.openOrderRequestId",
+  "type=object but example is str: 'b767614f-153a-4aa3-946f-1622596f0fab'"
+ ],
+ [
+  "scan-and-pay",
+  "whitespace-padding",
+  ".paths.<callback_url>/v3/patient/scan-pay/notify.post.responses.500.content.application/json.schema.properties.error.properties.code",
+  "'ABDM-2500: '"
+ ],
+ [
+  "scan-and-pay",
+  "whitespace-padding",
+  ".paths.<callback_url>/v3/patient/scan-pay/notify.post.responses.503.content.application/json.schema.properties.code",
+  "'ABDM-2500: '"
+ ],
+ [
+  "scan-and-pay",
+  "type-mismatch",
+  ".paths./api/hiecm/scan-gateway/v3/patient/scan-pay/on-notify.post.requestBody.content.application/json.schema.anyOf[0].properties.acknowledgement.properties.openOrderRequestId",
+  "type=object but example is str: 'b767614f-153a-4aa3-946f-1622596f0fab'"
+ ],
+ [
+  "scan-and-pay",
+  "whitespace-padding",
+  ".paths./api/hiecm/scan-gateway/v3/patient/scan-pay/on-notify.post.responses.400.content.application/json.schema.properties.error.properties.code",
+  "'ABDM-2500: '"
+ ],
+ [
+  "scan-and-pay",
+  "whitespace-padding",
+  ".paths./api/hiecm/scan-gateway/v3/patient/scan-pay/on-notify.post.responses.500.content.application/json.schema.properties.error.properties.code",
+  "'ABDM-2500: '"
+ ],
+ [
+  "scan-and-pay",
+  "whitespace-padding",
+  ".paths./api/hiecm/scan-gateway/v3/patient/scan-pay/on-notify.post.responses.503.content.application/json.schema.properties.code",
+  "'ABDM-2500: '"
+ ],
+ [
+  "scan-and-pay",
+  "whitespace-padding",
+  ".paths./api/hiecm/scan-gateway/v3/patient/scan-pay/order-status.post.responses.400.content.application/json.schema.properties.error.properties.code",
+  "'ABDM-2500: '"
+ ],
+ [
+  "scan-and-pay",
+  "whitespace-padding",
+  ".paths./api/hiecm/scan-gateway/v3/patient/scan-pay/order-status.post.responses.500.content.application/json.schema.properties.error.properties.code",
+  "'ABDM-2500: '"
+ ],
+ [
+  "scan-and-pay",
+  "whitespace-padding",
+  ".paths.<callback_url>/v3/patient/scan-pay/on-order-status.post.responses.500.content.application/json.schema.properties.error.properties.code",
+  "'ABDM-2500: '"
+ ],
+ [
+  "scan-and-pay",
+  "whitespace-padding",
+  ".paths.<callback_url>/v3/patient/scan-pay/on-order-status.post.responses.503.content.application/json.schema.properties.code",
+  "'ABDM-2500: '"
+ ],
+ [
+  "scan-and-pay",
+  "type-mismatch",
+  ".paths./api/hiecm/scan-gateway/v3/patient/scan-pay/details.get.parameters[6].schema",
+  "type=string but example is datetime: datetime.datetime(2024, 7, 13, 7, 30, 10, 186000, tzinfo=datetime.timezone.utc)"
+ ],
+ [
+  "scan-and-pay",
+  "type-mismatch",
+  ".paths./api/hiecm/scan-gateway/v3/patient/scan-pay/details.get.parameters[7].schema",
+  "type=string but example is datetime: datetime.datetime(2025, 2, 18, 8, 30, 50, 189000, tzinfo=datetime.timezone.utc)"
+ ],
+ [
+  "scan-and-pay",
+  "whitespace-padding",
+  ".paths./api/hiecm/scan-gateway/v3/patient/scan-pay/details.get.responses.500.content.application/json.schema.properties.error.properties.code",
+  "'ABDM-2500: '"
+ ],
+ [
+  "scan-and-pay",
+  "whitespace-padding",
+  ".paths./api/hiecm/scan-gateway/v3/patient/scan-pay/details.get.responses.503.content.application/json.schema.properties.code",
+  "'ABDM-2500: '"
+ ],
+ [
+  "scan-and-pay",
+  "type-mismatch",
+  ".paths./api/hiecm/gateway/v3/scanPay/updateVersion.patch.requestBody.content.application/json.schema.properties.serviceId.items",
+  "type=object but example is str: '****_HIP, ***_HIU'"
+ ],
+ [
+  "scan-and-pay",
+  "whitespace-padding",
+  ".paths./api/hiecm/gateway/v3/scanPay/updateVersion.patch.responses.500.content.application/json.schema.properties.error.properties.code",
+  "'ABDM-2500: '"
+ ],
+ [
+  "scan-and-pay",
+  "whitespace-padding",
+  ".paths./api/hiecm/gateway/v3/scanPay/updateVersion.patch.responses.503.content.application/json.schema.properties.code",
+  "'ABDM-2500: '"
+ ],
+ [
+  "scan-and-pay",
+  "whitespace-padding",
+  ".paths./api/hiecm/gateway/v3/providers/{provider-id}.get.responses.500.content.application/json.schema.properties.error.properties.code",
+  "'ABDM-2500: '"
+ ],
+ [
+  "scan-and-pay",
+  "whitespace-padding",
+  ".paths./api/hiecm/gateway/v3/providers/{provider-id}.get.responses.503.content.application/json.schema.properties.code",
+  "'ABDM-2500: '"
+ ],
+ [
+  "subscription",
+  "whitespace-padding",
+  ".paths./api/hiecm/subscription-requests/v3/init.post.responses.400.content.application/json.schema.properties.error.properties.code",
+  "'ABDM-9999: '"
+ ],
+ [
+  "subscription",
+  "whitespace-padding",
+  ".paths./api/hiecm/subscription-requests/v3/init.post.responses.500.content.application/json.schema.properties.error",
+  "' Internal Server Error'"
+ ],
+ [
+  "subscription",
+  "whitespace-padding",
+  ".paths.<callback_url>/api/v3/hiu/hiecm/subscription-requests/on-init.post.responses.400.content.application/json.schema.properties.error.properties.code",
+  "'ABDM-1031: '"
+ ],
+ [
+  "subscription",
+  "whitespace-padding",
+  ".paths.<callback_url>/api/v3/hiu/hiecm/subscription-requests/on-init.post.responses.500.content.application/json.schema.properties.error",
+  "' Internal Server Error'"
+ ],
+ [
+  "subscription",
+  "whitespace-padding",
+  ".paths.<callback_url>/api/v3/hiu/subscription-requests/hiu/notify.post.responses.400.content.application/json.schema.properties.error.properties.code",
+  "'ABDM-1031: '"
+ ],
+ [
+  "subscription",
+  "whitespace-padding",
+  ".paths.<callback_url>/api/v3/hiu/subscription-requests/hiu/notify.post.responses.500.content.application/json.schema.properties.error",
+  "' Internal Server Error'"
+ ],
+ [
+  "subscription",
+  "whitespace-padding",
+  ".paths./api/hiecm/subscription-requests/v3/hiu/on-notify.post.responses.500.content.application/json.schema.properties.error",
+  "' Internal Server Error'"
+ ],
+ [
+  "subscription",
+  "whitespace-padding",
+  ".paths.<callback_url>/api/v3/hiu/subscription/notify.post.responses.400.content.application/json.schema.properties.error.properties.code",
+  "'ABDM-1031: '"
+ ],
+ [
+  "subscription",
+  "whitespace-padding",
+  ".paths.<callback_url>/api/v3/hiu/subscription/notify.post.responses.500.content.application/json.schema.properties.error",
+  "' Internal Server Error'"
+ ],
+ [
+  "subscription",
+  "whitespace-padding",
+  ".paths./api/hiecm/subscription-requests/v3/hiu/care-context/on-notify.post.responses.500.content.application/json.schema.properties.error",
+  "' Internal Server Error'"
+ ],
+ [
+  "subscription",
+  "whitespace-padding",
+  ".paths./api/hiecm/subscription-requests/v3/requests.get.responses.400.content.application/json.schema.properties.error.properties.code",
+  "'ABDM-1066: '"
+ ],
+ [
+  "subscription",
+  "whitespace-padding",
+  ".paths./api/hiecm/subscription-requests/v3/requests.get.responses.500.content.application/json.schema.properties.error",
+  "' Internal Server Error'"
+ ],
+ [
+  "subscription",
+  "whitespace-padding",
+  ".paths./api/hiecm/subscription-requests/v3/{request-id}/approve.post.responses.400.content.application/json.schema.properties.error.properties.code",
+  "'ABDM-9999: '"
+ ],
+ [
+  "subscription",
+  "whitespace-padding",
+  ".paths./api/hiecm/subscription-requests/v3/{request-id}/approve.post.responses.500.content.application/json.schema.properties.error",
+  "' Internal Server Error'"
+ ],
+ [
+  "subscription",
+  "whitespace-padding",
+  ".paths./api/hiecm/subscription-requests/v3/{request-id}/deny.post.responses.400.content.application/json.schema.properties.error.properties.code",
+  "'ABDM-1066: '"
+ ],
+ [
+  "subscription",
+  "whitespace-padding",
+  ".paths./api/hiecm/subscription-requests/v3/{request-id}/deny.post.responses.500.content.application/json.schema.properties.error",
+  "' Internal Server Error'"
+ ],
+ [
+  "subscription",
+  "whitespace-padding",
+  ".paths./api/hiecm/subscription-requests/v3/patients/{subscription-id}.put.responses.400.content.application/json.schema.properties.error.properties.code",
+  "'ABDM-1066: '"
+ ],
+ [
+  "subscription",
+  "whitespace-padding",
+  ".paths./api/hiecm/subscription-requests/v3/patients/{subscription-id}.put.responses.500.content.application/json.schema.properties.error",
+  "' Internal Server Error'"
+ ],
+ [
+  "subscription",
+  "whitespace-padding",
+  ".paths./api/hiecm/subscription-requests/v3/enable/{subscription-id}.post.responses.400.content.application/json.schema.properties.error.properties.code",
+  "'ABDM-1066: '"
+ ],
+ [
+  "subscription",
+  "whitespace-padding",
+  ".paths./api/hiecm/subscription-requests/v3/enable/{subscription-id}.post.responses.500.content.application/json.schema.properties.error",
+  "' Internal Server Error'"
+ ],
+ [
+  "subscription",
+  "whitespace-padding",
+  ".paths./api/hiecm/subscription-requests/v3/disable/{subscription-id}.post.responses.400.content.application/json.schema.properties.error.properties.code",
+  "'ABDM-1066: '"
+ ],
+ [
+  "subscription",
+  "whitespace-padding",
+  ".paths./api/hiecm/subscription-requests/v3/disable/{subscription-id}.post.responses.500.content.application/json.schema.properties.error",
+  "' Internal Server Error'"
+ ],
+ [
+  "subscription",
+  "whitespace-padding",
+  ".paths./api/hiecm/subscription-requests/v3/{subscription-id}.get.responses.500.content.application/json.schema.properties.error",
+  "' Internal Server Error'"
+ ],
+ [
+  "subscription",
+  "whitespace-padding",
+  ".paths./api/hiecm/subscription-requests/v3/request/{request-id}.get.responses.400.content.application/json.schema.properties.error.properties.code",
+  "'ABDM-1066: '"
+ ],
+ [
+  "subscription",
+  "whitespace-padding",
+  ".paths./api/hiecm/subscription-requests/v3/request/{request-id}.get.responses.500.content.application/json.schema.properties.error",
+  "' Internal Server Error'"
+ ],
+ [
+  "subscription",
+  "type-mismatch",
+  ".paths./api/hiecm/subscription-requests/v3/patients/requests.get.responses.200.content.application/json.schema.properties.subscriptions.properties.requests.items.properties.id",
+  "type=string but example is int: 1234"
+ ],
+ [
+  "subscription",
+  "whitespace-padding",
+  ".paths./api/hiecm/subscription-requests/v3/patients/requests.get.responses.400.content.application/json.schema.properties.error.properties.code",
+  "'ABDM-1066: '"
+ ],
+ [
+  "subscription",
+  "whitespace-padding",
+  ".paths./api/hiecm/subscription-requests/v3/patients/requests.get.responses.500.content.application/json.schema.properties.error",
+  "' Internal Server Error'"
+ ],
+ [
+  "subscription",
+  "type-mismatch",
+  ".paths./api/hiecm/subscription-requests/v3/patients/lockers/{lockerId}.get.responses.200.content.application/json.schema.properties.lockerId",
+  "type=string but example is int: 1234"
+ ],
+ [
+  "subscription",
+  "whitespace-padding",
+  ".paths./api/hiecm/subscription-requests/v3/patients/lockers/{lockerId}.get.responses.400.content.application/json.schema.properties.error.properties.code",
+  "'ABDM-1066: '"
+ ],
+ [
+  "subscription",
+  "whitespace-padding",
+  ".paths./api/hiecm/subscription-requests/v3/patients/lockers/{lockerId}.get.responses.500.content.application/json.schema.properties.error",
+  "' Internal Server Error'"
+ ],
+ [
+  "subscription",
+  "type-mismatch",
+  ".paths./api/hiecm/subscription-requests/v3/patients/lockers.get.parameters[4].schema",
+  "type=string but example is bool: True"
+ ],
+ [
+  "subscription",
+  "whitespace-padding",
+  ".paths./api/hiecm/subscription-requests/v3/setup-locker.post.responses.400.content.application/json.schema.properties.error.properties.code",
+  "'ABDM-1066: '"
+ ],
+ [
+  "subscription",
+  "whitespace-padding",
+  ".paths./api/hiecm/subscription-requests/v3/setup-locker.post.responses.500.content.application/json.schema.properties.error",
+  "' Internal Server Error'"
+ ],
+ [
+  "user-initiated-linking",
+  "type-mismatch",
+  ".paths.<callback_url>/api/v3/hip/patient/care-context/discover.post.responses.400.content.application/json.schema.properties.error.properties.code",
+  "type=integer but example is str: 'ABDM-1103: '"
+ ],
+ [
+  "user-initiated-linking",
+  "whitespace-padding",
+  ".paths.<callback_url>/api/v3/hip/patient/care-context/discover.post.responses.500.content.application/json.schema.properties.error",
+  "' Internal Server Error'"
+ ],
+ [
+  "user-initiated-linking",
+  "type-mismatch",
+  ".paths./api/hiecm/user-initiated-linking/v3/patient/care-context/on-discover.post.requestBody.content.application/json.schema.properties.patient.items.properties.display",
+  "type=string but example is int: 12345"
+ ],
+ [
+  "user-initiated-linking",
+  "type-mismatch",
+  ".paths./api/hiecm/user-initiated-linking/v3/patient/care-context/on-discover.post.requestBody.content.application/json.schema.properties.patient.items.properties.careContexts.items.properties.display",
+  "type=string but example is int: 12345"
+ ],
+ [
+  "user-initiated-linking",
+  "type-mismatch",
+  ".paths./api/hiecm/user-initiated-linking/v3/patient/care-context/on-discover.post.responses.400.content.application/json.schema.properties.error.properties.code",
+  "type=integer but example is str: 'ABDM-1106: '"
+ ],
+ [
+  "user-initiated-linking",
+  "whitespace-padding",
+  ".paths./api/hiecm/user-initiated-linking/v3/patient/care-context/on-discover.post.responses.500.content.application/json.schema.properties.error",
+  "' Internal Server Error'"
+ ],
+ [
+  "user-initiated-linking",
+  "type-mismatch",
+  ".paths.<callback_url>/api/v3/hip/link/care-context/init.post.responses.400.content.application/json.schema.properties.error.properties.code",
+  "type=integer but example is str: 'ABDM-1104: '"
+ ],
+ [
+  "user-initiated-linking",
+  "whitespace-padding",
+  ".paths.<callback_url>/api/v3/hip/link/care-context/init.post.responses.500.content.application/json.schema.properties.error",
+  "' Internal Server Error'"
+ ],
+ [
+  "user-initiated-linking",
+  "type-mismatch",
+  ".paths./api/hiecm/user-initiated-linking/v3/link/care-context/on-init.post.responses.400.content.application/json.schema.properties.error.properties.code",
+  "type=integer but example is str: 'ABDM-1107: '"
+ ],
+ [
+  "user-initiated-linking",
+  "whitespace-padding",
+  ".paths./api/hiecm/user-initiated-linking/v3/link/care-context/on-init.post.responses.500.content.application/json.schema.properties.error",
+  "' Internal Server Error'"
+ ],
+ [
+  "user-initiated-linking",
+  "type-mismatch",
+  ".paths.<callback_url>/api/v3/hip/link/care-context/confirm.post.responses.400.content.application/json.schema.properties.error.properties.code",
+  "type=integer but example is str: 'ABDM-1105: '"
+ ],
+ [
+  "user-initiated-linking",
+  "whitespace-padding",
+  ".paths.<callback_url>/api/v3/hip/link/care-context/confirm.post.responses.500.content.application/json.schema.properties.error",
+  "' Internal Server Error'"
+ ],
+ [
+  "user-initiated-linking",
+  "type-mismatch",
+  ".paths./api/hiecm/user-initiated-linking/v3/link/care-context/on-confirm.post.requestBody.content.application/json.schema.properties.patient.items.properties.display",
+  "type=string but example is int: 12345"
+ ],
+ [
+  "user-initiated-linking",
+  "type-mismatch",
+  ".paths./api/hiecm/user-initiated-linking/v3/link/care-context/on-confirm.post.requestBody.content.application/json.schema.properties.patient.items.properties.careContexts.items.properties.display",
+  "type=string but example is int: 12345"
+ ],
+ [
+  "user-initiated-linking",
+  "type-mismatch",
+  ".paths./api/hiecm/user-initiated-linking/v3/link/care-context/on-confirm.post.responses.400.content.application/json.schema.properties.error.properties.code",
+  "type=integer but example is str: 'ABDM-1108: '"
+ ],
+ [
+  "user-initiated-linking",
+  "whitespace-padding",
+  ".paths./api/hiecm/user-initiated-linking/v3/link/care-context/on-confirm.post.responses.500.content.application/json.schema.properties.error",
+  "' Internal Server Error'"
+ ],
+ [
+  "user-initiated-linking",
+  "type-mismatch",
+  ".paths./api/hiecm/user-initiated-linking/v3/patient/care-context/discover.post.responses.400.content.application/json.schema.properties.error.properties.code",
+  "type=integer but example is str: 'ABDM-1103: '"
+ ],
+ [
+  "user-initiated-linking",
+  "whitespace-padding",
+  ".paths./api/hiecm/user-initiated-linking/v3/patient/care-context/discover.post.responses.500.content.application/json.schema.properties.error",
+  "' Internal Server Error'"
+ ],
+ [
+  "user-initiated-linking",
+  "type-mismatch",
+  ".paths.<callback_url>/api/v3/hiu/patient/care-context/on-discover.post.requestBody.content.application/json.schema.properties.patient.items.properties.display",
+  "type=string but example is int: 12345"
+ ],
+ [
+  "user-initiated-linking",
+  "type-mismatch",
+  ".paths.<callback_url>/api/v3/hiu/patient/care-context/on-discover.post.requestBody.content.application/json.schema.properties.patient.items.properties.careContexts.items.properties.display",
+  "type=string but example is int: 12345"
+ ],
+ [
+  "user-initiated-linking",
+  "type-mismatch",
+  ".paths.<callback_url>/api/v3/hiu/patient/care-context/on-discover.post.responses.400.content.application/json.schema.properties.error.properties.code",
+  "type=integer but example is str: 'ABDM-1106: '"
+ ],
+ [
+  "user-initiated-linking",
+  "whitespace-padding",
+  ".paths.<callback_url>/api/v3/hiu/patient/care-context/on-discover.post.responses.500.content.application/json.schema.properties.error",
+  "' Internal Server Error'"
+ ],
+ [
+  "user-initiated-linking",
+  "type-mismatch",
+  ".paths./api/hiecm/user-initiated-linking/v3/link/care-context/init.post.responses.400.content.application/json.schema.properties.error.properties.code",
+  "type=integer but example is str: 'ABDM-1104: '"
+ ],
+ [
+  "user-initiated-linking",
+  "whitespace-padding",
+  ".paths./api/hiecm/user-initiated-linking/v3/link/care-context/init.post.responses.500.content.application/json.schema.properties.error",
+  "' Internal Server Error'"
+ ],
+ [
+  "user-initiated-linking",
+  "type-mismatch",
+  ".paths.<callback_url>/api/v3/hiu/patient/care-context/on-init.post.responses.400.content.application/json.schema.properties.error.properties.code",
+  "type=integer but example is str: 'ABDM-1107: '"
+ ],
+ [
+  "user-initiated-linking",
+  "whitespace-padding",
+  ".paths.<callback_url>/api/v3/hiu/patient/care-context/on-init.post.responses.500.content.application/json.schema.properties.error",
+  "' Internal Server Error'"
+ ],
+ [
+  "user-initiated-linking",
+  "type-mismatch",
+  ".paths./api/hiecm/user-initiated-linking/v3/link/care-context/confirm.post.responses.400.content.application/json.schema.properties.error.properties.code",
+  "type=integer but example is str: 'ABDM-1105: '"
+ ],
+ [
+  "user-initiated-linking",
+  "whitespace-padding",
+  ".paths./api/hiecm/user-initiated-linking/v3/link/care-context/confirm.post.responses.500.content.application/json.schema.properties.error",
+  "' Internal Server Error'"
+ ],
+ [
+  "user-initiated-linking",
+  "type-mismatch",
+  ".paths.<callback_url>/api/v3/hiu/patient/care-context/on-confirm.post.requestBody.content.application/json.schema.properties.patient.properties.display",
+  "type=string but example is int: 12345"
+ ],
+ [
+  "user-initiated-linking",
+  "type-mismatch",
+  ".paths.<callback_url>/api/v3/hiu/patient/care-context/on-confirm.post.requestBody.content.application/json.schema.properties.patient.properties.careContexts.items.properties.display",
+  "type=string but example is int: 12345"
+ ],
+ [
+  "user-initiated-linking",
+  "type-mismatch",
+  ".paths.<callback_url>/api/v3/hiu/patient/care-context/on-confirm.post.responses.400.content.application/json.schema.properties.error.properties.code",
+  "type=integer but example is str: 'ABDM-1108: '"
+ ],
+ [
+  "user-initiated-linking",
+  "whitespace-padding",
+  ".paths.<callback_url>/api/v3/hiu/patient/care-context/on-confirm.post.responses.500.content.application/json.schema.properties.error",
+  "' Internal Server Error'"
+ ],
+ [
+  "phr-api",
+  "whitespace-padding",
+  ".paths./abha/api/v3/phr/app/enrollment/request/otp.post.responses.400.content.application/json.schema.anyOf[0].items.properties.code",
+  "'ABDM-1006: '"
+ ],
+ [
+  "phr-api",
+  "whitespace-padding",
+  ".paths./abha/api/v3/phr/app/enrollment/request/otp.post.responses.400.content.application/json.schema.anyOf[2].items.properties.code",
+  "'ABDM-9999: '"
+ ],
+ [
+  "phr-api",
+  "whitespace-padding",
+  ".paths./abha/api/v3/phr/app/enrollment/request/otp.post.responses.400.content.application/json.schema.anyOf[3].items.properties.code",
+  "'ABDM-9999: '"
+ ],
+ [
+  "phr-api",
+  "whitespace-padding",
+  ".paths./abha/api/v3/phr/app/enrollment/verify.post.responses.400.content.application/json.schema.items.properties.code",
+  "'ABDM-9999: '"
+ ],
+ [
+  "phr-api",
+  "whitespace-padding",
+  ".paths./abha/api/v3/phr/app/enrollment/suggestion.post.responses.400.content.application/json.schema.items.properties.code",
+  "'ABDM-9999: '"
+ ],
+ [
+  "phr-api",
+  "whitespace-padding",
+  ".paths./abha/api/v3/phr/app/enrollment/isExists.get.responses.400.content.application/json.schema.items.properties.code",
+  "'ABDM-1006: '"
+ ],
+ [
+  "phr-api",
+  "whitespace-padding",
+  ".paths./abha/api/v3/phr/app/enrollment/enrol.post.responses.400.content.application/json.schema.anyOf[0].items.properties.code",
+  "'ABDM-9999: '"
+ ],
+ [
+  "phr-api",
+  "whitespace-padding",
+  ".paths./abha/api/v3/phr/app/enrollment/enrol.post.responses.400.content.application/json.schema.anyOf[1].properties.code",
+  "'ABDM-9999: '"
+ ],
+ [
+  "phr-api",
+  "whitespace-padding",
+  ".paths./abha/api/v3/phr/app/enrollment/enrol.post.responses.400.content.application/json.schema.anyOf[2].items.properties.code",
+  "'ABDM-9999: '"
+ ],
+ [
+  "phr-api",
+  "whitespace-padding",
+  ".paths./abha/api/v3/phr/app/enrollment/enrol.post.responses.400.content.application/json.schema.anyOf[3].items.properties.code",
+  "'ABDM-9999: '"
+ ],
+ [
+  "phr-api",
+  "whitespace-padding",
+  ".paths./abha/api/v3/phr/app/enrollment/enrol.post.responses.400.content.application/json.schema.anyOf[4].items.properties.code",
+  "'ABDM-9999: '"
+ ],
+ [
+  "phr-api",
+  "whitespace-padding",
+  ".paths./abha/api/v3/phr/app/enrollment/enrol.post.responses.400.content.application/json.schema.anyOf[5].properties.code",
+  "'ABDM-9999: '"
+ ],
+ [
+  "phr-api",
+  "whitespace-padding",
+  ".paths./abha/api/v3/phr/app/enrollment/enrol.post.responses.400.content.application/json.schema.anyOf[6].items.properties.code",
+  "'ABDM-9999: '"
+ ],
+ [
+  "phr-api",
+  "whitespace-padding",
+  ".paths./abha/api/v3/phr/app/enrollment/enrol.post.responses.400.content.application/json.schema.anyOf[7].items.properties.code",
+  "'ABDM-9999: '"
+ ],
+ [
+  "phr-api",
+  "whitespace-padding",
+  ".paths./abha/api/v3/phr/app/enrollment/enrol.post.responses.400.content.application/json.schema.anyOf[8].items.properties.code",
+  "'ABDM-9999: '"
+ ],
+ [
+  "phr-api",
+  "whitespace-padding",
+  ".paths./abha/api/v3/phr/app/enrollment/enrol.post.responses.400.content.application/json.schema.anyOf[9].properties.code",
+  "'ABDM-9999: '"
+ ],
+ [
+  "phr-api",
+  "whitespace-padding",
+  ".paths./abha/api/v3/phr/app/login/search.post.responses.400.content.application/json.schema.anyOf[1].items.properties.code",
+  "'ABDM-9999: '"
+ ],
+ [
+  "phr-api",
+  "whitespace-padding",
+  ".paths./abha/api/v3/phr/app/login/request/otp.post.responses.400.content.application/json.schema.anyOf[0].items.properties.code",
+  "'ABDM-1006: '"
+ ],
+ [
+  "phr-api",
+  "whitespace-padding",
+  ".paths./abha/api/v3/phr/app/login/request/otp.post.responses.400.content.application/json.schema.anyOf[2].items.properties.code",
+  "'ABDM-9999: '"
+ ],
+ [
+  "phr-api",
+  "whitespace-padding",
+  ".paths./abha/api/v3/phr/app/login/request/otp.post.responses.400.content.application/json.schema.anyOf[3].items.properties.code",
+  "'ABDM-9999: '"
+ ],
+ [
+  "phr-api",
+  "whitespace-padding",
+  ".paths./abha/api/v3/phr/app/login/request/otp.post.responses.400.content.application/json.schema.anyOf[5].items.properties.code",
+  "'ABDM-1006: '"
+ ],
+ [
+  "phr-api",
+  "whitespace-padding",
+  ".paths./abha/api/v3/phr/app/login/request/otp.post.responses.400.content.application/json.schema.anyOf[6].items.properties.code",
+  "'ABDM-1006: '"
+ ],
+ [
+  "phr-api",
+  "whitespace-padding",
+  ".paths./abha/api/v3/phr/app/login/request/otp.post.responses.400.content.application/json.schema.anyOf[7].items.properties.code",
+  "'ABDM-9999: '"
+ ],
+ [
+  "phr-api",
+  "whitespace-padding",
+  ".paths./abha/api/v3/phr/app/login/request/otp.post.responses.400.content.application/json.schema.anyOf[8].items.properties.code",
+  "'ABDM-9999: '"
+ ],
+ [
+  "phr-api",
+  "whitespace-padding",
+  ".paths./abha/api/v3/phr/app/login/request/otp.post.responses.400.content.application/json.schema.anyOf[9].items.properties.code",
+  "'ABDM-1006: '"
+ ],
+ [
+  "phr-api",
+  "whitespace-padding",
+  ".paths./abha/api/v3/phr/app/login/request/otp.post.responses.400.content.application/json.schema.anyOf[10].items.properties.code",
+  "'ABDM-9999: '"
+ ],
+ [
+  "phr-api",
+  "whitespace-padding",
+  ".paths./abha/api/v3/phr/app/login/request/otp.post.responses.400.content.application/json.schema.anyOf[11].items.properties.code",
+  "'ABDM-1006: '"
+ ],
+ [
+  "phr-api",
+  "whitespace-padding",
+  ".paths./abha/api/v3/phr/app/login/request/otp.post.responses.400.content.application/json.schema.anyOf[12].items.properties.code",
+  "'ABDM-9999: '"
+ ],
+ [
+  "phr-api",
+  "whitespace-padding",
+  ".paths./abha/api/v3/phr/app/login/request/otp.post.responses.400.content.application/json.schema.anyOf[13].items.properties.code",
+  "'ABDM-9999: '"
+ ],
+ [
+  "phr-api",
+  "whitespace-padding",
+  ".paths./abha/api/v3/phr/app/login/request/otp.post.responses.400.content.application/json.schema.anyOf[14].items.properties.code",
+  "'ABDM-1006: '"
+ ],
+ [
+  "phr-api",
+  "whitespace-padding",
+  ".paths./abha/api/v3/phr/app/login/request/otp.post.responses.400.content.application/json.schema.anyOf[15].items.properties.code",
+  "'ABDM-9999: '"
+ ],
+ [
+  "phr-api",
+  "whitespace-padding",
+  ".paths./abha/api/v3/phr/app/login/request/otp.post.responses.400.content.application/json.schema.anyOf[16].items.properties.code",
+  "'ABDM-9999: '"
+ ],
+ [
+  "phr-api",
+  "whitespace-padding",
+  ".paths./abha/api/v3/phr/app/login/request/otp.post.responses.400.content.application/json.schema.anyOf[17].items.properties.code",
+  "'ABDM-9999: '"
+ ],
+ [
+  "phr-api",
+  "type-mismatch",
+  ".paths./abha/api/v3/phr/app/login/verify.post.responses.200.content.application/json.schema.properties.tokens.properties.refreshExpiresIn",
+  "type=number but example is NoneType: None"
+ ],
+ [
+  "phr-api",
+  "type-mismatch",
+  ".paths./abha/api/v3/phr/app/login/verify.post.responses.200.content.application/json.schema.properties.tokens.properties.refreshToken",
+  "type=string but example is NoneType: None"
+ ],
+ [
+  "phr-api",
+  "whitespace-padding",
+  ".paths./abha/api/v3/phr/app/login/verify.post.responses.400.content.application/json.schema.anyOf[0].items.properties.code",
+  "'ABDM-9999: '"
+ ],
+ [
+  "phr-api",
+  "whitespace-padding",
+  ".paths./abha/api/v3/phr/app/login/verify.post.responses.400.content.application/json.schema.anyOf[2].items.properties.code",
+  "'ABDM-9999: '"
+ ],
+ [
+  "phr-api",
+  "whitespace-padding",
+  ".paths./abha/api/v3/phr/app/login/verify.post.responses.400.content.application/json.schema.anyOf[3].items.properties.code",
+  "'ABDM-1006: '"
+ ],
+ [
+  "phr-api",
+  "whitespace-padding",
+  ".paths./abha/api/v3/phr/app/login/verify.post.responses.400.content.application/json.schema.anyOf[5].items.properties.code",
+  "'ABDM-1006: '"
+ ],
+ [
+  "phr-api",
+  "whitespace-padding",
+  ".paths./abha/api/v3/phr/app/login/verify.post.responses.400.content.application/json.schema.anyOf[6].items.properties.code",
+  "'ABDM-1006: '"
+ ],
+ [
+  "phr-api",
+  "whitespace-padding",
+  ".paths./abha/api/v3/phr/app/login/verify.post.responses.400.content.application/json.schema.anyOf[7].items.properties.code",
+  "'ABDM-9999: '"
+ ],
+ [
+  "phr-api",
+  "whitespace-padding",
+  ".paths./abha/api/v3/phr/app/login/verify.post.responses.400.content.application/json.schema.anyOf[8].items.properties.code",
+  "'ABDM-9999: '"
+ ],
+ [
+  "phr-api",
+  "whitespace-padding",
+  ".paths./abha/api/v3/phr/app/login/verify.post.responses.400.content.application/json.schema.anyOf[9].items.properties.code",
+  "'ABDM-1006: '"
+ ],
+ [
+  "phr-api",
+  "whitespace-padding",
+  ".paths./abha/api/v3/phr/app/login/verify.post.responses.400.content.application/json.schema.anyOf[10].items.properties.code",
+  "'ABDM-9999: '"
+ ],
+ [
+  "phr-api",
+  "whitespace-padding",
+  ".paths./abha/api/v3/phr/app/login/verify.post.responses.400.content.application/json.schema.anyOf[11].items.properties.code",
+  "'ABDM-9999: '"
+ ],
+ [
+  "phr-api",
+  "whitespace-padding",
+  ".paths./abha/api/v3/phr/app/login/verify.post.responses.400.content.application/json.schema.anyOf[12].items.properties.code",
+  "'ABDM-1006: '"
+ ],
+ [
+  "phr-api",
+  "whitespace-padding",
+  ".paths./abha/api/v3/phr/app/login/verify.post.responses.400.content.application/json.schema.anyOf[13].items.properties.code",
+  "'ABDM-9999: '"
+ ],
+ [
+  "phr-api",
+  "whitespace-padding",
+  ".paths./abha/api/v3/phr/app/login/verify.post.responses.400.content.application/json.schema.anyOf[14].items.properties.code",
+  "'ABDM-9999: '"
+ ],
+ [
+  "phr-api",
+  "whitespace-padding",
+  ".paths./abha/api/v3/phr/app/login/verify.post.responses.400.content.application/json.schema.anyOf[15].items.properties.code",
+  "'ABDM-1006: '"
+ ],
+ [
+  "phr-api",
+  "whitespace-padding",
+  ".paths./abha/api/v3/phr/app/login/verify.post.responses.400.content.application/json.schema.anyOf[16].items.properties.code",
+  "'ABDM-9999: '"
+ ],
+ [
+  "phr-api",
+  "whitespace-padding",
+  ".paths./abha/api/v3/phr/app/login/verify/user.post.responses.400.content.application/json.schema.anyOf[0].items.properties.code",
+  "'ABDM-9999: '"
+ ],
+ [
+  "phr-api",
+  "whitespace-padding",
+  ".paths./abha/api/v3/phr/app/login/verify/user.post.responses.400.content.application/json.schema.anyOf[1].properties.code",
+  "'ABDM-9999: '"
+ ],
+ [
+  "phr-api",
+  "whitespace-padding",
+  ".paths./abha/api/v3/phr/app/login/verify/user.post.responses.400.content.application/json.schema.anyOf[2].items.properties.code",
+  "'ABDM-9999: '"
+ ],
+ [
+  "phr-api",
+  "whitespace-padding",
+  ".paths./abha/api/v3/phr/app/login/verify/user.post.responses.400.content.application/json.schema.anyOf[3].items.properties.code",
+  "'ABDM-9999: '"
+ ],
+ [
+  "phr-api",
+  "whitespace-padding",
+  ".paths./abha/api/v3/phr/app/login/verify/user.post.responses.400.content.application/json.schema.anyOf[4].properties.code",
+  "'ABDM-9999: '"
+ ],
+ [
+  "phr-api",
+  "whitespace-padding",
+  ".paths./abha/api/v3/phr/app/login/verify/user.post.responses.400.content.application/json.schema.anyOf[5].items.properties.code",
+  "'ABDM-9999: '"
+ ],
+ [
+  "phr-api",
+  "whitespace-padding",
+  ".paths./abha/api/v3/phr/app/login/verify/user.post.responses.400.content.application/json.schema.anyOf[6].items.properties.code",
+  "'ABDM-9999: '"
+ ],
+ [
+  "phr-api",
+  "whitespace-padding",
+  ".paths./abha/api/v3/phr/app/login/verify/user.post.responses.400.content.application/json.schema.anyOf[7].properties.code",
+  "'ABDM-9999: '"
+ ],
+ [
+  "phr-api",
+  "whitespace-padding",
+  ".paths./abha/api/v3/phr/app/login/verify/user.post.responses.400.content.application/json.schema.anyOf[8].items.properties.code",
+  "'ABDM-9999: '"
+ ],
+ [
+  "phr-api",
+  "whitespace-padding",
+  ".paths./abha/api/v3/phr/app/login/verify/user.post.responses.400.content.application/json.schema.anyOf[9].items.properties.code",
+  "'ABDM-9999: '"
+ ],
+ [
+  "phr-api",
+  "whitespace-padding",
+  ".paths./abha/api/v3/phr/app/login/verify/user.post.responses.400.content.application/json.schema.anyOf[10].properties.code",
+  "'ABDM-9999: '"
+ ],
+ [
+  "phr-api",
+  "whitespace-padding",
+  ".paths./abha/api/v3/phr/app/login/verify/user.post.responses.400.content.application/json.schema.anyOf[11].items.properties.code",
+  "'ABDM-9999: '"
+ ],
+ [
+  "phr-api",
+  "whitespace-padding",
+  ".paths./abha/api/v3/phr/app/login/profile/request/otp.post.responses.400.content.application/json.schema.anyOf[0].items.properties.code",
+  "'ABDM-1006: '"
+ ],
+ [
+  "phr-api",
+  "whitespace-padding",
+  ".paths./abha/api/v3/phr/app/login/profile/request/otp.post.responses.400.content.application/json.schema.anyOf[2].items.properties.code",
+  "'ABDM-9999: '"
+ ],
+ [
+  "phr-api",
+  "whitespace-padding",
+  ".paths./abha/api/v3/phr/app/login/profile/request/otp.post.responses.400.content.application/json.schema.anyOf[3].items.properties.code",
+  "'ABDM-9999: '"
+ ],
+ [
+  "phr-api",
+  "whitespace-padding",
+  ".paths./abha/api/v3/phr/app/login/profile/request/otp.post.responses.400.content.application/json.schema.anyOf[4].items.properties.code",
+  "'ABDM-9999: '"
+ ],
+ [
+  "phr-api",
+  "whitespace-padding",
+  ".paths./abha/api/v3/phr/app/login/profile/request/otp.post.responses.400.content.application/json.schema.anyOf[5].items.properties.code",
+  "'ABDM-1006: '"
+ ],
+ [
+  "phr-api",
+  "whitespace-padding",
+  ".paths./abha/api/v3/phr/app/login/profile/request/otp.post.responses.400.content.application/json.schema.anyOf[6].items.properties.code",
+  "'ABDM-9999: '"
+ ],
+ [
+  "phr-api",
+  "whitespace-padding",
+  ".paths./abha/api/v3/phr/app/login/profile/request/otp.post.responses.400.content.application/json.schema.anyOf[7].items.properties.code",
+  "'ABDM-9999: '"
+ ],
+ [
+  "phr-api",
+  "whitespace-padding",
+  ".paths./abha/api/v3/phr/app/login/profile/request/otp.post.responses.400.content.application/json.schema.anyOf[8].items.properties.code",
+  "'ABDM-9999: '"
+ ],
+ [
+  "phr-api",
+  "whitespace-padding",
+  ".paths./abha/api/v3/phr/app/login/profile/request/otp.post.responses.400.content.application/json.schema.anyOf[10].items.properties.code",
+  "'ABDM-9999: '"
+ ],
+ [
+  "phr-api",
+  "whitespace-padding",
+  ".paths./abha/api/v3/phr/app/login/profile/request/otp.post.responses.400.content.application/json.schema.anyOf[11].items.properties.code",
+  "'ABDM-9999: '"
+ ],
+ [
+  "phr-api",
+  "whitespace-padding",
+  ".paths./abha/api/v3/phr/app/login/profile/request/otp.post.responses.400.content.application/json.schema.anyOf[12].items.properties.code",
+  "'ABDM-9999: '"
+ ],
+ [
+  "phr-api",
+  "whitespace-padding",
+  ".paths./abha/api/v3/phr/app/login/profile/request/otp.post.responses.400.content.application/json.schema.anyOf[13].items.properties.code",
+  "'ABDM-1006: '"
+ ],
+ [
+  "phr-api",
+  "whitespace-padding",
+  ".paths./abha/api/v3/phr/app/login/profile/request/otp.post.responses.400.content.application/json.schema.anyOf[14].items.properties.code",
+  "'ABDM-9999: '"
+ ],
+ [
+  "phr-api",
+  "whitespace-padding",
+  ".paths./abha/api/v3/phr/app/login/profile/request/otp.post.responses.400.content.application/json.schema.anyOf[15].items.properties.code",
+  "'ABDM-9999: '"
+ ],
+ [
+  "phr-api",
+  "whitespace-padding",
+  ".paths./abha/api/v3/phr/app/login/profile/request/otp.post.responses.400.content.application/json.schema.anyOf[16].items.properties.code",
+  "'ABDM-9999: '"
+ ],
+ [
+  "phr-api",
+  "whitespace-padding",
+  ".paths./abha/api/v3/phr/app/login/profile/verify.post.responses.400.content.application/json.schema.anyOf[0].items.properties.code",
+  "'ABDM-9999: '"
+ ],
+ [
+  "phr-api",
+  "whitespace-padding",
+  ".paths./abha/api/v3/phr/app/login/profile/verify.post.responses.400.content.application/json.schema.anyOf[2].items.properties.code",
+  "'ABDM-1006: '"
+ ],
+ [
+  "phr-api",
+  "whitespace-padding",
+  ".paths./abha/api/v3/phr/app/login/profile/verify.post.responses.400.content.application/json.schema.anyOf[3].items.properties.code",
+  "'ABDM-9999: '"
+ ],
+ [
+  "phr-api",
+  "whitespace-padding",
+  ".paths./abha/api/v3/phr/app/login/profile/verify.post.responses.400.content.application/json.schema.anyOf[4].items.properties.code",
+  "'ABDM-9999: '"
+ ],
+ [
+  "phr-api",
+  "whitespace-padding",
+  ".paths./abha/api/v3/phr/app/login/profile/verify.post.responses.400.content.application/json.schema.anyOf[5].items.properties.code",
+  "'ABDM-1006: '"
+ ],
+ [
+  "phr-api",
+  "whitespace-padding",
+  ".paths./abha/api/v3/phr/app/login/profile/verify.post.responses.400.content.application/json.schema.anyOf[6].items.properties.code",
+  "'ABDM-9999: '"
+ ],
+ [
+  "phr-api",
+  "whitespace-padding",
+  ".paths./abha/api/v3/phr/app/login/profile/verify.post.responses.400.content.application/json.schema.anyOf[7].items.properties.code",
+  "'ABDM-9999: '"
+ ],
+ [
+  "phr-api",
+  "whitespace-padding",
+  ".paths./abha/api/v3/phr/app/login/profile/verify.post.responses.400.content.application/json.schema.anyOf[9].items.properties.code",
+  "'ABDM-1006: '"
+ ],
+ [
+  "phr-api",
+  "whitespace-padding",
+  ".paths./abha/api/v3/phr/app/login/profile/verify.post.responses.400.content.application/json.schema.anyOf[10].items.properties.code",
+  "'ABDM-9999: '"
+ ],
+ [
+  "phr-api",
+  "whitespace-padding",
+  ".paths./abha/api/v3/phr/app/login/profile/verify.post.responses.400.content.application/json.schema.anyOf[11].items.properties.code",
+  "'ABDM-9999: '"
+ ],
+ [
+  "phr-api",
+  "whitespace-padding",
+  ".paths./abha/api/v3/phr/app/login/profile/verify.post.responses.400.content.application/json.schema.anyOf[12].items.properties.code",
+  "'ABDM-1006: '"
+ ],
+ [
+  "phr-api",
+  "whitespace-padding",
+  ".paths./abha/api/v3/phr/app/login/profile/verify.post.responses.400.content.application/json.schema.anyOf[13].items.properties.code",
+  "'ABDM-9999: '"
+ ],
+ [
+  "phr-api",
+  "whitespace-padding",
+  ".paths./abha/api/v3/phr/app/login/profile/link.post.responses.400.content.application/json.schema.anyOf[0].properties.code",
+  "'ABDM-9999: '"
+ ],
+ [
+  "phr-api",
+  "whitespace-padding",
+  ".paths./abha/api/v3/phr/app/login/profile/link.post.responses.400.content.application/json.schema.anyOf[1].items.properties.code",
+  "'ABDM-9999: '"
+ ],
+ [
+  "phr-api",
+  "whitespace-padding",
+  ".paths./abha/api/v3/phr/app/login/profile/link.post.responses.400.content.application/json.schema.anyOf[2].items.properties.code",
+  "'ABDM-9999: '"
+ ],
+ [
+  "phr-api",
+  "whitespace-padding",
+  ".paths./abha/api/v3/phr/app/login/profile/link.post.responses.400.content.application/json.schema.anyOf[3].properties.code",
+  "'ABDM-9999: '"
+ ],
+ [
+  "phr-api",
+  "whitespace-padding",
+  ".paths./abha/api/v3/phr/app/login/profile/link.post.responses.400.content.application/json.schema.anyOf[4].items.properties.code",
+  "'ABDM-9999: '"
+ ],
+ [
+  "phr-api",
+  "whitespace-padding",
+  ".paths./abha/api/v3/phr/app/login/profile/link.post.responses.400.content.application/json.schema.anyOf[5].items.properties.code",
+  "'ABDM-9999: '"
+ ],
+ [
+  "phr-api",
+  "whitespace-padding",
+  ".paths./abha/api/v3/phr/app/login/profile/deLink.post.responses.400.content.application/json.schema.anyOf[0].properties.code",
+  "'ABDM-9999: '"
+ ],
+ [
+  "phr-api",
+  "whitespace-padding",
+  ".paths./abha/api/v3/phr/app/login/profile/deLink.post.responses.400.content.application/json.schema.anyOf[1].items.properties.code",
+  "'ABDM-9999: '"
+ ],
+ [
+  "phr-api",
+  "whitespace-padding",
+  ".paths./abha/api/v3/phr/app/login/profile/deLink.post.responses.400.content.application/json.schema.anyOf[2].properties.code",
+  "'ABDM-9999: '"
+ ],
+ [
+  "phr-api",
+  "whitespace-padding",
+  ".paths./abha/api/v3/phr/app/login/profile/deLink.post.responses.400.content.application/json.schema.anyOf[3].items.properties.code",
+  "'ABDM-9999: '"
+ ],
+ [
+  "phr-api",
+  "whitespace-padding",
+  ".paths./abha/api/v3/phr/app/login/profile/switch-profile.get.parameters[0].schema",
+  "' eyJ4NXQiOiJOMkpqTWpOaU0yRXhZalJrTnpaalptWTFZVEF4Tm1GbE5qZzR'"
+ ],
+ [
+  "phr-api",
+  "whitespace-padding",
+  ".paths./abha/api/v3/phr/app/login/profile/verify/switch-profile/user.post.responses.400.content.application/json.schema.anyOf[0].properties.code",
+  "'ABDM-9999: '"
+ ],
+ [
+  "phr-api",
+  "whitespace-padding",
+  ".paths./abha/api/v3/phr/app/login/profile/verify/switch-profile/user.post.responses.400.content.application/json.schema.anyOf[1].items.properties.code",
+  "'ABDM-9999: '"
+ ],
+ [
+  "phr-api",
+  "whitespace-padding",
+  ".paths./abha/api/v3/phr/app/login/profile/qrCode.get.parameters[0].schema",
+  "' eyJ4NXQiOiJOMkpqTWpOaU0yRXhZalJrTnpaalptWTFZVEF4Tm1GbE5qZzR'"
+ ],
+ [
+  "phr-api",
+  "whitespace-padding",
+  ".paths./abha/api/v3/phr/app/login/profile/updateProfile.post.responses.400.content.application/json.schema.items.properties.code",
+  "'ABDM-9999: '"
+ ]
+]

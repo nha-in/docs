@@ -1,0 +1,3006 @@
+{
+ "A2 unquoted datetime scalar": [
+  [
+   "abha-api-v3",
+   "abha\\abha-api-v3.yaml:1500"
+  ],
+  [
+   "abha-api-v3",
+   "abha\\abha-api-v3.yaml:1619"
+  ],
+  [
+   "abha-api-v3",
+   "abha\\abha-api-v3.yaml:2829"
+  ],
+  [
+   "abha-api-v3",
+   "abha\\abha-api-v3.yaml:2833"
+  ],
+  [
+   "abha-api-v3",
+   "abha\\abha-api-v3.yaml:5621"
+  ],
+  [
+   "abha-api-v3",
+   "abha\\abha-api-v3.yaml:5967"
+  ],
+  [
+   "abha-api-v3",
+   "abha\\abha-api-v3.yaml:6383"
+  ],
+  [
+   "abha-api-v3",
+   "abha\\abha-api-v3.yaml:6387"
+  ],
+  [
+   "abha-api-v3",
+   "abha\\abha-api-v3.yaml:6391"
+  ],
+  [
+   "abha-api-v3",
+   "abha\\abha-api-v3.yaml:6395"
+  ],
+  [
+   "abha-api-v3",
+   "abha\\abha-api-v3.yaml:7586"
+  ]
+ ],
+ "A1 unparseable placeholder": [
+  [
+   "abha-api-v3",
+   "abha\\abha-api-v3.yaml:1594"
+  ],
+  [
+   "abha-api-v3",
+   "abha\\abha-api-v3.yaml:1597"
+  ],
+  [
+   "phr-api",
+   "phr\\phr-api.yaml:10209"
+  ],
+  [
+   "phr-api",
+   "phr\\phr-api.yaml:10235"
+  ]
+ ],
+ "A5 string type, array example": [
+  [
+   "abha-api-v3",
+   "scope"
+  ],
+  [
+   "abha-api-v3",
+   "loginHint"
+  ],
+  [
+   "abha-api-v3",
+   "authMethods"
+  ],
+  [
+   "abha-api-v3",
+   "scope"
+  ],
+  [
+   "abha-api-v3",
+   "authMethods"
+  ],
+  [
+   "abha-api-v3",
+   "scope"
+  ],
+  [
+   "abha-api-v3",
+   "scope"
+  ],
+  [
+   "abha-api-v3",
+   "authMethods"
+  ],
+  [
+   "abha-api-v3",
+   "items"
+  ]
+ ],
+ "A9 malformed UUID example": [
+  [
+   "abha-api-v3",
+   ""
+  ],
+  [
+   "phr-api",
+   ""
+  ],
+  [
+   "phr-api",
+   ""
+  ],
+  [
+   "phr-api",
+   ""
+  ],
+  [
+   "phr-api",
+   ""
+  ],
+  [
+   "phr-api",
+   ""
+  ],
+  [
+   "phr-api",
+   ""
+  ],
+  [
+   "phr-api",
+   ""
+  ]
+ ],
+ "A6 string type, scalar-nonstring example": [
+  [
+   "abha-api-v3",
+   "preferred"
+  ],
+  [
+   "abha-api-v3",
+   "preferred"
+  ],
+  [
+   "abha-api-v3",
+   "code"
+  ],
+  [
+   "abha-api-v3",
+   "isDocumentAccount"
+  ],
+  [
+   "abha-api-v3",
+   "code"
+  ],
+  [
+   "abha-api-v3",
+   "code"
+  ],
+  [
+   "abha-api-v3",
+   "code"
+  ],
+  [
+   "abha-api-v3",
+   "dayOfBirth"
+  ],
+  [
+   "abha-api-v3",
+   "monthOfBirth"
+  ],
+  [
+   "abha-api-v3",
+   "yearOfBirth"
+  ],
+  [
+   "abha-api-v3",
+   "stateCode"
+  ],
+  [
+   "abha-api-v3",
+   "districtCode"
+  ],
+  [
+   "abha-api-v3",
+   "emailVerified"
+  ],
+  [
+   "abha-api-v3",
+   "mobileVerified"
+  ],
+  [
+   "abha-api-v3",
+   "code"
+  ],
+  [
+   "abha-api-v3",
+   "code"
+  ],
+  [
+   "abha-api-v3",
+   "expiresIn"
+  ],
+  [
+   "abha-api-v3",
+   "refreshExpiresIn"
+  ],
+  [
+   "consent-management-data-flow",
+   "code"
+  ],
+  [
+   "consent-management-data-flow",
+   "id"
+  ],
+  [
+   "patient-share",
+   "context"
+  ],
+  [
+   "patient-share",
+   "dayOfBirth"
+  ],
+  [
+   "patient-share",
+   "monthOfBirth"
+  ],
+  [
+   "patient-share",
+   "yearOfBirth"
+  ],
+  [
+   "patient-share",
+   "pincode"
+  ],
+  [
+   "patient-share",
+   "phoneNumber"
+  ],
+  [
+   "patient-share",
+   "context"
+  ],
+  [
+   "patient-share",
+   "tokenNumber"
+  ],
+  [
+   "patient-share",
+   "context"
+  ],
+  [
+   "patient-share",
+   "dayOfBirth"
+  ],
+  [
+   "patient-share",
+   "monthOfBirth"
+  ],
+  [
+   "patient-share",
+   "yearOfBirth"
+  ],
+  [
+   "patient-share",
+   "pincode"
+  ],
+  [
+   "patient-share",
+   "phoneNumber"
+  ],
+  [
+   "patient-share",
+   "context"
+  ],
+  [
+   "patient-share",
+   "tokenNumber"
+  ],
+  [
+   "patient-share",
+   "tokenNumber"
+  ],
+  [
+   "patient-share",
+   "expiresIn"
+  ],
+  [
+   "scan-and-pay",
+   "code"
+  ],
+  [
+   "scan-and-pay",
+   "merchantId"
+  ],
+  [
+   "scan-and-pay",
+   "merchantId"
+  ],
+  [
+   "subscription",
+   "id"
+  ],
+  [
+   "subscription",
+   "lockerId"
+  ],
+  [
+   "subscription",
+   "schema"
+  ],
+  [
+   "user-initiated-linking",
+   "display"
+  ],
+  [
+   "user-initiated-linking",
+   "display"
+  ],
+  [
+   "user-initiated-linking",
+   "display"
+  ],
+  [
+   "user-initiated-linking",
+   "display"
+  ],
+  [
+   "user-initiated-linking",
+   "display"
+  ],
+  [
+   "user-initiated-linking",
+   "display"
+  ],
+  [
+   "user-initiated-linking",
+   "display"
+  ],
+  [
+   "user-initiated-linking",
+   "display"
+  ]
+ ],
+ "A3 whitespace-padded example": [
+  [
+   "abha-api-v3",
+   ""
+  ],
+  [
+   "abha-api-v3",
+   ""
+  ],
+  [
+   "abha-api-v3",
+   ""
+  ],
+  [
+   "abha-api-v3",
+   ""
+  ],
+  [
+   "abha-api-v3",
+   ""
+  ],
+  [
+   "abha-api-v3",
+   ""
+  ],
+  [
+   "abha-api-v3",
+   ""
+  ],
+  [
+   "abha-api-v3",
+   ""
+  ],
+  [
+   "abha-api-v3",
+   ""
+  ],
+  [
+   "abha-api-v3",
+   ""
+  ],
+  [
+   "abha-api-v3",
+   ""
+  ],
+  [
+   "abha-api-v3",
+   ""
+  ],
+  [
+   "consent-management-data-flow",
+   ""
+  ],
+  [
+   "consent-management-data-flow",
+   ""
+  ],
+  [
+   "consent-management-data-flow",
+   ""
+  ],
+  [
+   "consent-management-data-flow",
+   ""
+  ],
+  [
+   "consent-management-data-flow",
+   ""
+  ],
+  [
+   "consent-management-data-flow",
+   ""
+  ],
+  [
+   "consent-management-data-flow",
+   ""
+  ],
+  [
+   "consent-management-data-flow",
+   ""
+  ],
+  [
+   "consent-management-data-flow",
+   ""
+  ],
+  [
+   "consent-management-data-flow",
+   ""
+  ],
+  [
+   "consent-management-data-flow",
+   ""
+  ],
+  [
+   "consent-management-data-flow",
+   ""
+  ],
+  [
+   "consent-management-data-flow",
+   ""
+  ],
+  [
+   "consent-management-data-flow",
+   ""
+  ],
+  [
+   "consent-management-data-flow",
+   ""
+  ],
+  [
+   "consent-management-data-flow",
+   ""
+  ],
+  [
+   "consent-management-data-flow",
+   ""
+  ],
+  [
+   "consent-management-data-flow",
+   ""
+  ],
+  [
+   "consent-management-data-flow",
+   ""
+  ],
+  [
+   "consent-management-data-flow",
+   ""
+  ],
+  [
+   "consent-management-data-flow",
+   ""
+  ],
+  [
+   "consent-management-data-flow",
+   ""
+  ],
+  [
+   "consent-management-data-flow",
+   ""
+  ],
+  [
+   "consent-management-data-flow",
+   ""
+  ],
+  [
+   "consent-management-data-flow",
+   ""
+  ],
+  [
+   "consent-management-data-flow",
+   ""
+  ],
+  [
+   "consent-management-data-flow",
+   ""
+  ],
+  [
+   "consent-management-data-flow",
+   ""
+  ],
+  [
+   "consent-management-data-flow",
+   ""
+  ],
+  [
+   "consent-management-data-flow",
+   ""
+  ],
+  [
+   "consent-management-data-flow",
+   ""
+  ],
+  [
+   "consent-management-data-flow",
+   ""
+  ],
+  [
+   "consent-management-data-flow",
+   ""
+  ],
+  [
+   "consent-management-data-flow",
+   ""
+  ],
+  [
+   "consent-management-data-flow",
+   ""
+  ],
+  [
+   "consent-management-data-flow",
+   ""
+  ],
+  [
+   "consent-management-data-flow",
+   ""
+  ],
+  [
+   "consent-management-data-flow",
+   ""
+  ],
+  [
+   "consent-management-data-flow",
+   ""
+  ],
+  [
+   "consent-management-data-flow",
+   ""
+  ],
+  [
+   "consent-management-data-flow",
+   ""
+  ],
+  [
+   "consent-management-data-flow",
+   ""
+  ],
+  [
+   "consent-management-data-flow",
+   ""
+  ],
+  [
+   "consent-management-data-flow",
+   ""
+  ],
+  [
+   "consent-management-data-flow",
+   ""
+  ],
+  [
+   "consent-management-data-flow",
+   ""
+  ],
+  [
+   "gateway",
+   ""
+  ],
+  [
+   "gateway",
+   ""
+  ],
+  [
+   "gateway",
+   ""
+  ],
+  [
+   "gateway",
+   ""
+  ],
+  [
+   "gateway",
+   ""
+  ],
+  [
+   "gateway",
+   ""
+  ],
+  [
+   "gateway",
+   ""
+  ],
+  [
+   "gateway",
+   ""
+  ],
+  [
+   "gateway",
+   ""
+  ],
+  [
+   "gateway",
+   ""
+  ],
+  [
+   "gateway",
+   ""
+  ],
+  [
+   "gateway",
+   ""
+  ],
+  [
+   "gateway",
+   ""
+  ],
+  [
+   "gateway",
+   ""
+  ],
+  [
+   "gateway",
+   ""
+  ],
+  [
+   "gateway",
+   ""
+  ],
+  [
+   "gateway",
+   ""
+  ],
+  [
+   "gateway",
+   ""
+  ],
+  [
+   "gateway",
+   ""
+  ],
+  [
+   "gateway",
+   ""
+  ],
+  [
+   "gateway",
+   ""
+  ],
+  [
+   "gateway",
+   ""
+  ],
+  [
+   "gateway",
+   ""
+  ],
+  [
+   "gateway",
+   ""
+  ],
+  [
+   "gateway",
+   ""
+  ],
+  [
+   "gateway",
+   ""
+  ],
+  [
+   "gateway",
+   ""
+  ],
+  [
+   "gateway",
+   ""
+  ],
+  [
+   "gateway",
+   ""
+  ],
+  [
+   "gateway",
+   ""
+  ],
+  [
+   "hip-initiated-linking",
+   ""
+  ],
+  [
+   "hip-initiated-linking",
+   ""
+  ],
+  [
+   "hip-initiated-linking",
+   ""
+  ],
+  [
+   "hip-initiated-linking",
+   ""
+  ],
+  [
+   "hip-initiated-linking",
+   ""
+  ],
+  [
+   "hip-initiated-linking",
+   ""
+  ],
+  [
+   "hip-initiated-linking",
+   ""
+  ],
+  [
+   "hip-initiated-linking",
+   ""
+  ],
+  [
+   "hip-initiated-linking",
+   ""
+  ],
+  [
+   "hip-initiated-linking",
+   ""
+  ],
+  [
+   "hip-initiated-linking",
+   ""
+  ],
+  [
+   "hip-initiated-linking",
+   ""
+  ],
+  [
+   "hip-initiated-linking",
+   ""
+  ],
+  [
+   "hip-initiated-linking",
+   ""
+  ],
+  [
+   "hip-initiated-linking",
+   ""
+  ],
+  [
+   "hip-initiated-linking",
+   ""
+  ],
+  [
+   "hip-initiated-linking",
+   ""
+  ],
+  [
+   "hip-initiated-linking",
+   ""
+  ],
+  [
+   "hip-initiated-linking",
+   ""
+  ],
+  [
+   "hip-initiated-linking",
+   ""
+  ],
+  [
+   "hip-initiated-linking",
+   ""
+  ],
+  [
+   "hip-initiated-linking",
+   ""
+  ],
+  [
+   "patient-share",
+   ""
+  ],
+  [
+   "patient-share",
+   ""
+  ],
+  [
+   "patient-share",
+   ""
+  ],
+  [
+   "patient-share",
+   ""
+  ],
+  [
+   "patient-share",
+   ""
+  ],
+  [
+   "patient-share",
+   ""
+  ],
+  [
+   "patient-share",
+   ""
+  ],
+  [
+   "patient-share",
+   ""
+  ],
+  [
+   "patient-share",
+   ""
+  ],
+  [
+   "patient-share",
+   ""
+  ],
+  [
+   "patient-share",
+   ""
+  ],
+  [
+   "scan-and-pay",
+   ""
+  ],
+  [
+   "scan-and-pay",
+   ""
+  ],
+  [
+   "scan-and-pay",
+   ""
+  ],
+  [
+   "scan-and-pay",
+   ""
+  ],
+  [
+   "scan-and-pay",
+   ""
+  ],
+  [
+   "scan-and-pay",
+   ""
+  ],
+  [
+   "scan-and-pay",
+   ""
+  ],
+  [
+   "scan-and-pay",
+   ""
+  ],
+  [
+   "scan-and-pay",
+   ""
+  ],
+  [
+   "scan-and-pay",
+   ""
+  ],
+  [
+   "scan-and-pay",
+   ""
+  ],
+  [
+   "scan-and-pay",
+   ""
+  ],
+  [
+   "scan-and-pay",
+   ""
+  ],
+  [
+   "scan-and-pay",
+   ""
+  ],
+  [
+   "scan-and-pay",
+   ""
+  ],
+  [
+   "scan-and-pay",
+   ""
+  ],
+  [
+   "scan-and-pay",
+   ""
+  ],
+  [
+   "scan-and-pay",
+   ""
+  ],
+  [
+   "scan-and-pay",
+   ""
+  ],
+  [
+   "scan-and-pay",
+   ""
+  ],
+  [
+   "scan-and-pay",
+   ""
+  ],
+  [
+   "scan-and-pay",
+   ""
+  ],
+  [
+   "scan-and-pay",
+   ""
+  ],
+  [
+   "scan-and-pay",
+   ""
+  ],
+  [
+   "scan-and-pay",
+   ""
+  ],
+  [
+   "scan-and-pay",
+   ""
+  ],
+  [
+   "scan-and-pay",
+   ""
+  ],
+  [
+   "scan-and-pay",
+   ""
+  ],
+  [
+   "scan-and-pay",
+   ""
+  ],
+  [
+   "scan-and-pay",
+   ""
+  ],
+  [
+   "scan-and-pay",
+   ""
+  ],
+  [
+   "scan-and-pay",
+   ""
+  ],
+  [
+   "scan-and-pay",
+   ""
+  ],
+  [
+   "scan-and-pay",
+   ""
+  ],
+  [
+   "scan-and-pay",
+   ""
+  ],
+  [
+   "scan-and-pay",
+   ""
+  ],
+  [
+   "scan-and-pay",
+   ""
+  ],
+  [
+   "scan-and-pay",
+   ""
+  ],
+  [
+   "scan-and-pay",
+   ""
+  ],
+  [
+   "scan-and-pay",
+   ""
+  ],
+  [
+   "scan-and-pay",
+   ""
+  ],
+  [
+   "scan-and-pay",
+   ""
+  ],
+  [
+   "scan-and-pay",
+   ""
+  ],
+  [
+   "scan-and-pay",
+   ""
+  ],
+  [
+   "scan-and-pay",
+   ""
+  ],
+  [
+   "subscription",
+   ""
+  ],
+  [
+   "subscription",
+   ""
+  ],
+  [
+   "subscription",
+   ""
+  ],
+  [
+   "subscription",
+   ""
+  ],
+  [
+   "subscription",
+   ""
+  ],
+  [
+   "subscription",
+   ""
+  ],
+  [
+   "subscription",
+   ""
+  ],
+  [
+   "subscription",
+   ""
+  ],
+  [
+   "subscription",
+   ""
+  ],
+  [
+   "subscription",
+   ""
+  ],
+  [
+   "subscription",
+   ""
+  ],
+  [
+   "subscription",
+   ""
+  ],
+  [
+   "subscription",
+   ""
+  ],
+  [
+   "subscription",
+   ""
+  ],
+  [
+   "subscription",
+   ""
+  ],
+  [
+   "subscription",
+   ""
+  ],
+  [
+   "subscription",
+   ""
+  ],
+  [
+   "subscription",
+   ""
+  ],
+  [
+   "subscription",
+   ""
+  ],
+  [
+   "subscription",
+   ""
+  ],
+  [
+   "subscription",
+   ""
+  ],
+  [
+   "subscription",
+   ""
+  ],
+  [
+   "subscription",
+   ""
+  ],
+  [
+   "subscription",
+   ""
+  ],
+  [
+   "subscription",
+   ""
+  ],
+  [
+   "subscription",
+   ""
+  ],
+  [
+   "subscription",
+   ""
+  ],
+  [
+   "subscription",
+   ""
+  ],
+  [
+   "subscription",
+   ""
+  ],
+  [
+   "subscription",
+   ""
+  ],
+  [
+   "subscription",
+   ""
+  ],
+  [
+   "user-initiated-linking",
+   ""
+  ],
+  [
+   "user-initiated-linking",
+   ""
+  ],
+  [
+   "user-initiated-linking",
+   ""
+  ],
+  [
+   "user-initiated-linking",
+   ""
+  ],
+  [
+   "user-initiated-linking",
+   ""
+  ],
+  [
+   "user-initiated-linking",
+   ""
+  ],
+  [
+   "user-initiated-linking",
+   ""
+  ],
+  [
+   "user-initiated-linking",
+   ""
+  ],
+  [
+   "user-initiated-linking",
+   ""
+  ],
+  [
+   "user-initiated-linking",
+   ""
+  ],
+  [
+   "user-initiated-linking",
+   ""
+  ],
+  [
+   "user-initiated-linking",
+   ""
+  ],
+  [
+   "user-initiated-linking",
+   ""
+  ],
+  [
+   "user-initiated-linking",
+   ""
+  ],
+  [
+   "user-initiated-linking",
+   ""
+  ],
+  [
+   "user-initiated-linking",
+   ""
+  ],
+  [
+   "user-initiated-linking",
+   ""
+  ],
+  [
+   "user-initiated-linking",
+   ""
+  ],
+  [
+   "user-initiated-linking",
+   ""
+  ],
+  [
+   "user-initiated-linking",
+   ""
+  ],
+  [
+   "user-initiated-linking",
+   ""
+  ],
+  [
+   "user-initiated-linking",
+   ""
+  ],
+  [
+   "user-initiated-linking",
+   ""
+  ],
+  [
+   "user-initiated-linking",
+   ""
+  ],
+  [
+   "phr-api",
+   ""
+  ],
+  [
+   "phr-api",
+   ""
+  ],
+  [
+   "phr-api",
+   ""
+  ],
+  [
+   "phr-api",
+   ""
+  ],
+  [
+   "phr-api",
+   ""
+  ],
+  [
+   "phr-api",
+   ""
+  ],
+  [
+   "phr-api",
+   ""
+  ],
+  [
+   "phr-api",
+   ""
+  ],
+  [
+   "phr-api",
+   ""
+  ],
+  [
+   "phr-api",
+   ""
+  ],
+  [
+   "phr-api",
+   ""
+  ],
+  [
+   "phr-api",
+   ""
+  ],
+  [
+   "phr-api",
+   ""
+  ],
+  [
+   "phr-api",
+   ""
+  ],
+  [
+   "phr-api",
+   ""
+  ],
+  [
+   "phr-api",
+   ""
+  ],
+  [
+   "phr-api",
+   ""
+  ],
+  [
+   "phr-api",
+   ""
+  ],
+  [
+   "phr-api",
+   ""
+  ],
+  [
+   "phr-api",
+   ""
+  ],
+  [
+   "phr-api",
+   ""
+  ],
+  [
+   "phr-api",
+   ""
+  ],
+  [
+   "phr-api",
+   ""
+  ],
+  [
+   "phr-api",
+   ""
+  ],
+  [
+   "phr-api",
+   ""
+  ],
+  [
+   "phr-api",
+   ""
+  ],
+  [
+   "phr-api",
+   ""
+  ],
+  [
+   "phr-api",
+   ""
+  ],
+  [
+   "phr-api",
+   ""
+  ],
+  [
+   "phr-api",
+   ""
+  ],
+  [
+   "phr-api",
+   ""
+  ],
+  [
+   "phr-api",
+   ""
+  ],
+  [
+   "phr-api",
+   ""
+  ],
+  [
+   "phr-api",
+   ""
+  ],
+  [
+   "phr-api",
+   ""
+  ],
+  [
+   "phr-api",
+   ""
+  ],
+  [
+   "phr-api",
+   ""
+  ],
+  [
+   "phr-api",
+   ""
+  ],
+  [
+   "phr-api",
+   ""
+  ],
+  [
+   "phr-api",
+   ""
+  ],
+  [
+   "phr-api",
+   ""
+  ],
+  [
+   "phr-api",
+   ""
+  ],
+  [
+   "phr-api",
+   ""
+  ],
+  [
+   "phr-api",
+   ""
+  ],
+  [
+   "phr-api",
+   ""
+  ],
+  [
+   "phr-api",
+   ""
+  ],
+  [
+   "phr-api",
+   ""
+  ],
+  [
+   "phr-api",
+   ""
+  ],
+  [
+   "phr-api",
+   ""
+  ],
+  [
+   "phr-api",
+   ""
+  ],
+  [
+   "phr-api",
+   ""
+  ],
+  [
+   "phr-api",
+   ""
+  ],
+  [
+   "phr-api",
+   ""
+  ],
+  [
+   "phr-api",
+   ""
+  ],
+  [
+   "phr-api",
+   ""
+  ],
+  [
+   "phr-api",
+   ""
+  ],
+  [
+   "phr-api",
+   ""
+  ],
+  [
+   "phr-api",
+   ""
+  ],
+  [
+   "phr-api",
+   ""
+  ],
+  [
+   "phr-api",
+   ""
+  ],
+  [
+   "phr-api",
+   ""
+  ],
+  [
+   "phr-api",
+   ""
+  ],
+  [
+   "phr-api",
+   ""
+  ],
+  [
+   "phr-api",
+   ""
+  ],
+  [
+   "phr-api",
+   ""
+  ],
+  [
+   "phr-api",
+   ""
+  ],
+  [
+   "phr-api",
+   ""
+  ],
+  [
+   "phr-api",
+   ""
+  ],
+  [
+   "phr-api",
+   ""
+  ],
+  [
+   "phr-api",
+   ""
+  ],
+  [
+   "phr-api",
+   ""
+  ],
+  [
+   "phr-api",
+   ""
+  ],
+  [
+   "phr-api",
+   ""
+  ],
+  [
+   "phr-api",
+   ""
+  ],
+  [
+   "phr-api",
+   ""
+  ],
+  [
+   "phr-api",
+   ""
+  ],
+  [
+   "phr-api",
+   ""
+  ],
+  [
+   "phr-api",
+   ""
+  ],
+  [
+   "phr-api",
+   ""
+  ],
+  [
+   "phr-api",
+   ""
+  ],
+  [
+   "phr-api",
+   ""
+  ],
+  [
+   "phr-api",
+   ""
+  ],
+  [
+   "phr-api",
+   ""
+  ],
+  [
+   "phr-api",
+   ""
+  ],
+  [
+   "phr-api",
+   ""
+  ],
+  [
+   "phr-api",
+   ""
+  ],
+  [
+   "phr-api",
+   ""
+  ],
+  [
+   "phr-api",
+   ""
+  ],
+  [
+   "phr-api",
+   ""
+  ],
+  [
+   "phr-api",
+   ""
+  ],
+  [
+   "phr-api",
+   ""
+  ],
+  [
+   "phr-api",
+   ""
+  ],
+  [
+   "phr-api",
+   ""
+  ],
+  [
+   "phr-api",
+   ""
+  ],
+  [
+   "phr-api",
+   ""
+  ],
+  [
+   "phr-api",
+   ""
+  ],
+  [
+   "phr-api",
+   ""
+  ],
+  [
+   "phr-api",
+   ""
+  ],
+  [
+   "phr-api",
+   ""
+  ],
+  [
+   "phr-api",
+   ""
+  ],
+  [
+   "phr-api",
+   ""
+  ],
+  [
+   "phr-api",
+   ""
+  ]
+ ],
+ "B1 code literal w/ trailing punctuation": [
+  [
+   "abha-api-v3",
+   "ABDM-1030:"
+  ],
+  [
+   "abha-api-v3",
+   "900902,"
+  ],
+  [
+   "abha-api-v3",
+   "ABDM-1016: "
+  ],
+  [
+   "consent-management-data-flow",
+   "ABDM-1001: "
+  ],
+  [
+   "consent-management-data-flow",
+   "ABDM-1001: "
+  ],
+  [
+   "consent-management-data-flow",
+   "ABDM-1001: "
+  ],
+  [
+   "consent-management-data-flow",
+   "ABDM-1001: "
+  ],
+  [
+   "consent-management-data-flow",
+   "ABDM-9999: "
+  ],
+  [
+   "consent-management-data-flow",
+   "ABDM-1001: "
+  ],
+  [
+   "consent-management-data-flow",
+   "ABDM-1001: "
+  ],
+  [
+   "consent-management-data-flow",
+   "ABDM-1001: "
+  ],
+  [
+   "consent-management-data-flow",
+   "ABDM-1001: "
+  ],
+  [
+   "consent-management-data-flow",
+   "ABDM-9999: "
+  ],
+  [
+   "consent-management-data-flow",
+   "ABDM-1001: "
+  ],
+  [
+   "consent-management-data-flow",
+   "ABDM-1001: "
+  ],
+  [
+   "consent-management-data-flow",
+   "ABDM-1001: "
+  ],
+  [
+   "consent-management-data-flow",
+   "ABDM-1065: "
+  ],
+  [
+   "consent-management-data-flow",
+   "ABDM-1001: "
+  ],
+  [
+   "consent-management-data-flow",
+   "ABDM-1080: "
+  ],
+  [
+   "consent-management-data-flow",
+   "ABDM-1001: "
+  ],
+  [
+   "consent-management-data-flow",
+   "ABDM-1001: "
+  ],
+  [
+   "consent-management-data-flow",
+   "ABDM-1001: "
+  ],
+  [
+   "consent-management-data-flow",
+   "ABDM-1001: "
+  ],
+  [
+   "consent-management-data-flow",
+   "ABDM-1001: "
+  ],
+  [
+   "consent-management-data-flow",
+   "ABDM-1001: "
+  ],
+  [
+   "consent-management-data-flow",
+   "ABDM-1001: "
+  ],
+  [
+   "consent-management-data-flow",
+   "ABDM-1001: "
+  ],
+  [
+   "consent-management-data-flow",
+   "ABDM-1001: "
+  ],
+  [
+   "gateway",
+   "ABDM-1001: "
+  ],
+  [
+   "gateway",
+   "ABDM-1015: "
+  ],
+  [
+   "gateway",
+   "ABDM-9999: "
+  ],
+  [
+   "gateway",
+   "ABDM-1001: "
+  ],
+  [
+   "gateway",
+   "ABDM-1015: "
+  ],
+  [
+   "gateway",
+   "ABDM-9999: "
+  ],
+  [
+   "gateway",
+   "ABDM-1001: "
+  ],
+  [
+   "gateway",
+   "ABDM-1015: "
+  ],
+  [
+   "gateway",
+   "ABDM-9999: "
+  ],
+  [
+   "gateway",
+   "ABDM-1001: "
+  ],
+  [
+   "gateway",
+   "ABDM-1015: "
+  ],
+  [
+   "gateway",
+   "ABDM-9999: "
+  ],
+  [
+   "gateway",
+   "ABDM-1001: "
+  ],
+  [
+   "gateway",
+   "ABDM-1015: "
+  ],
+  [
+   "gateway",
+   "ABDM-9999: "
+  ],
+  [
+   "gateway",
+   "ABDM-1001: "
+  ],
+  [
+   "gateway",
+   "ABDM-1015: "
+  ],
+  [
+   "gateway",
+   "ABDM-9999: "
+  ],
+  [
+   "gateway",
+   "ABDM-1001: "
+  ],
+  [
+   "gateway",
+   "ABDM-1015: "
+  ],
+  [
+   "gateway",
+   "ABDM-9999: "
+  ],
+  [
+   "gateway",
+   "ABDM-1001: "
+  ],
+  [
+   "gateway",
+   "ABDM-1015: "
+  ],
+  [
+   "gateway",
+   "ABDM-9999: "
+  ],
+  [
+   "gateway",
+   "ABDM-1001: "
+  ],
+  [
+   "gateway",
+   "ABDM-1015: "
+  ],
+  [
+   "gateway",
+   "ABDM-9999: "
+  ],
+  [
+   "gateway",
+   "ABDM-1001: "
+  ],
+  [
+   "gateway",
+   "ABDM-1015: "
+  ],
+  [
+   "gateway",
+   "ABDM-9999: "
+  ],
+  [
+   "hip-initiated-linking",
+   "ABDM-1006: "
+  ],
+  [
+   "hip-initiated-linking",
+   "ABDM-1001: "
+  ],
+  [
+   "hip-initiated-linking",
+   "ABDM-9999: "
+  ],
+  [
+   "hip-initiated-linking",
+   "ABDM-1006: "
+  ],
+  [
+   "hip-initiated-linking",
+   "ABDM-1001: "
+  ],
+  [
+   "hip-initiated-linking",
+   "ABDM-9999: "
+  ],
+  [
+   "hip-initiated-linking",
+   "ABDM-1006: "
+  ],
+  [
+   "hip-initiated-linking",
+   "ABDM-1001: "
+  ],
+  [
+   "hip-initiated-linking",
+   "ABDM-9999: "
+  ],
+  [
+   "hip-initiated-linking",
+   "ABDM-1006: "
+  ],
+  [
+   "hip-initiated-linking",
+   "ABDM-1006: "
+  ],
+  [
+   "hip-initiated-linking",
+   "ABDM-1001: "
+  ],
+  [
+   "hip-initiated-linking",
+   "ABDM-9999: "
+  ],
+  [
+   "hip-initiated-linking",
+   "ABDM-1006: "
+  ],
+  [
+   "hip-initiated-linking",
+   "ABDM-1001: "
+  ],
+  [
+   "hip-initiated-linking",
+   "ABDM-9999: "
+  ],
+  [
+   "hip-initiated-linking",
+   "ABDM-1006: "
+  ],
+  [
+   "hip-initiated-linking",
+   "ABDM-1001: "
+  ],
+  [
+   "hip-initiated-linking",
+   "ABDM-9999: "
+  ],
+  [
+   "hip-initiated-linking",
+   "ABDM-1065: "
+  ],
+  [
+   "hip-initiated-linking",
+   "ABDM-1001: "
+  ],
+  [
+   "hip-initiated-linking",
+   "ABDM-9999: "
+  ],
+  [
+   "patient-share",
+   "ABDM-1007: "
+  ],
+  [
+   "patient-share",
+   "ABDM-1001: "
+  ],
+  [
+   "patient-share",
+   "ABDM-1007: "
+  ],
+  [
+   "patient-share",
+   "ABDM-1022: "
+  ],
+  [
+   "patient-share",
+   "ABDM-1001: "
+  ],
+  [
+   "patient-share",
+   "ABDM-1007: "
+  ],
+  [
+   "patient-share",
+   "ABDM-1022: "
+  ],
+  [
+   "patient-share",
+   "ABDM-1007: "
+  ],
+  [
+   "patient-share",
+   "ABDM-1001: "
+  ],
+  [
+   "patient-share",
+   "ABDM-1007: "
+  ],
+  [
+   "patient-share",
+   "ABDM-1022: "
+  ],
+  [
+   "scan-and-pay",
+   "ABDM-2500: "
+  ],
+  [
+   "scan-and-pay",
+   "ABDM-2500: "
+  ],
+  [
+   "scan-and-pay",
+   "ABDM-2500: "
+  ],
+  [
+   "scan-and-pay",
+   "ABDM-2429:"
+  ],
+  [
+   "scan-and-pay",
+   "ABDM-2500: "
+  ],
+  [
+   "scan-and-pay",
+   "ABDM-2500: "
+  ],
+  [
+   "scan-and-pay",
+   "ABDM-2500: "
+  ],
+  [
+   "scan-and-pay",
+   "ABDM-2500: "
+  ],
+  [
+   "scan-and-pay",
+   "ABDM-2500: "
+  ],
+  [
+   "scan-and-pay",
+   "ABDM-2429:"
+  ],
+  [
+   "scan-and-pay",
+   "ABDM-2500: "
+  ],
+  [
+   "scan-and-pay",
+   "ABDM-2500: "
+  ],
+  [
+   "scan-and-pay",
+   "ABDM-2500: "
+  ],
+  [
+   "scan-and-pay",
+   "ABDM-2429:"
+  ],
+  [
+   "scan-and-pay",
+   "ABDM-2500: "
+  ],
+  [
+   "scan-and-pay",
+   "ABDM-2500: "
+  ],
+  [
+   "scan-and-pay",
+   "ABDM-2500: "
+  ],
+  [
+   "scan-and-pay",
+   "ABDM-2500: "
+  ],
+  [
+   "scan-and-pay",
+   "ABDM-2500: "
+  ],
+  [
+   "scan-and-pay",
+   "ABDM-2500: "
+  ],
+  [
+   "scan-and-pay",
+   "ABDM-2500: "
+  ],
+  [
+   "scan-and-pay",
+   "ABDM-2429:"
+  ],
+  [
+   "scan-and-pay",
+   "ABDM-2500: "
+  ],
+  [
+   "scan-and-pay",
+   "ABDM-2500: "
+  ],
+  [
+   "scan-and-pay",
+   "ABDM-2500: "
+  ],
+  [
+   "scan-and-pay",
+   "ABDM-2429:"
+  ],
+  [
+   "scan-and-pay",
+   "ABDM-2500: "
+  ],
+  [
+   "scan-and-pay",
+   "ABDM-2500: "
+  ],
+  [
+   "scan-and-pay",
+   "ABDM-2500: "
+  ],
+  [
+   "scan-and-pay",
+   "ABDM-2500: "
+  ],
+  [
+   "scan-and-pay",
+   "ABDM-2500: "
+  ],
+  [
+   "scan-and-pay",
+   "ABDM-2429:"
+  ],
+  [
+   "scan-and-pay",
+   "ABDM-2500: "
+  ],
+  [
+   "scan-and-pay",
+   "ABDM-2500: "
+  ],
+  [
+   "scan-and-pay",
+   "ABDM-2500: "
+  ],
+  [
+   "scan-and-pay",
+   "ABDM-2500: "
+  ],
+  [
+   "scan-and-pay",
+   "ABDM-2500: "
+  ],
+  [
+   "scan-and-pay",
+   "ABDM-2500: "
+  ],
+  [
+   "scan-and-pay",
+   "ABDM-2500: "
+  ],
+  [
+   "scan-and-pay",
+   "ABDM-2429:"
+  ],
+  [
+   "scan-and-pay",
+   "ABDM-2500: "
+  ],
+  [
+   "scan-and-pay",
+   "ABDM-2500: "
+  ],
+  [
+   "scan-and-pay",
+   "ABDM-2500: "
+  ],
+  [
+   "scan-and-pay",
+   "ABDM-2429:"
+  ],
+  [
+   "scan-and-pay",
+   "ABDM-2500: "
+  ],
+  [
+   "scan-and-pay",
+   "ABDM-2500:"
+  ],
+  [
+   "scan-and-pay",
+   "ABDM-2500: "
+  ],
+  [
+   "scan-and-pay",
+   "ABDM-2500: "
+  ],
+  [
+   "scan-and-pay",
+   "ABDM-2500: "
+  ],
+  [
+   "scan-and-pay",
+   "ABDM-2500: "
+  ],
+  [
+   "scan-and-pay",
+   "ABDM-2500: "
+  ],
+  [
+   "scan-and-pay",
+   "ABDM-2500: "
+  ],
+  [
+   "scan-and-pay",
+   "ABDM-2500: "
+  ],
+  [
+   "scan-and-pay",
+   "ABDM-2500: "
+  ],
+  [
+   "subscription",
+   "ABDM-9999: "
+  ],
+  [
+   "subscription",
+   "ABDM-1031: "
+  ],
+  [
+   "subscription",
+   "ABDM-1031: "
+  ],
+  [
+   "subscription",
+   "ABDM-1031: "
+  ],
+  [
+   "subscription",
+   "ABDM-1066: "
+  ],
+  [
+   "subscription",
+   "ABDM-9999: "
+  ],
+  [
+   "subscription",
+   "ABDM-1066: "
+  ],
+  [
+   "subscription",
+   "ABDM-1066: "
+  ],
+  [
+   "subscription",
+   "ABDM-1066: "
+  ],
+  [
+   "subscription",
+   "ABDM-1066: "
+  ],
+  [
+   "subscription",
+   "ABDM-1066: "
+  ],
+  [
+   "subscription",
+   "ABDM-1066: "
+  ],
+  [
+   "subscription",
+   "ABDM-1066: "
+  ],
+  [
+   "subscription",
+   "ABDM-1066: "
+  ],
+  [
+   "user-initiated-linking",
+   "ABDM-1103: "
+  ],
+  [
+   "user-initiated-linking",
+   "ABDM-1106: "
+  ],
+  [
+   "user-initiated-linking",
+   "ABDM-1104: "
+  ],
+  [
+   "user-initiated-linking",
+   "ABDM-1107: "
+  ],
+  [
+   "user-initiated-linking",
+   "ABDM-1105: "
+  ],
+  [
+   "user-initiated-linking",
+   "ABDM-1108: "
+  ],
+  [
+   "user-initiated-linking",
+   "ABDM-1103: "
+  ],
+  [
+   "user-initiated-linking",
+   "ABDM-1106: "
+  ],
+  [
+   "user-initiated-linking",
+   "ABDM-1104: "
+  ],
+  [
+   "user-initiated-linking",
+   "ABDM-1107: "
+  ],
+  [
+   "user-initiated-linking",
+   "ABDM-1105: "
+  ],
+  [
+   "user-initiated-linking",
+   "ABDM-1108: "
+  ],
+  [
+   "phr-api",
+   "ABDM-1006: "
+  ],
+  [
+   "phr-api",
+   "ABDM-9999: "
+  ],
+  [
+   "phr-api",
+   "ABDM-9999: "
+  ],
+  [
+   "phr-api",
+   "ABDM-9999: "
+  ],
+  [
+   "phr-api",
+   "ABDM-9999: "
+  ],
+  [
+   "phr-api",
+   "ABDM-1006: "
+  ],
+  [
+   "phr-api",
+   "ABDM-9999: "
+  ],
+  [
+   "phr-api",
+   "ABDM-9999: "
+  ],
+  [
+   "phr-api",
+   "ABDM-9999: "
+  ],
+  [
+   "phr-api",
+   "ABDM-9999: "
+  ],
+  [
+   "phr-api",
+   "ABDM-9999: "
+  ],
+  [
+   "phr-api",
+   "ABDM-9999: "
+  ],
+  [
+   "phr-api",
+   "ABDM-9999: "
+  ],
+  [
+   "phr-api",
+   "ABDM-9999: "
+  ],
+  [
+   "phr-api",
+   "ABDM-9999: "
+  ],
+  [
+   "phr-api",
+   "ABDM-9999: "
+  ],
+  [
+   "phr-api",
+   "ABDM-9999: "
+  ],
+  [
+   "phr-api",
+   "ABDM-1006: "
+  ],
+  [
+   "phr-api",
+   "ABDM-9999: "
+  ],
+  [
+   "phr-api",
+   "ABDM-9999: "
+  ],
+  [
+   "phr-api",
+   "ABDM-1006: "
+  ],
+  [
+   "phr-api",
+   "ABDM-1006: "
+  ],
+  [
+   "phr-api",
+   "ABDM-9999: "
+  ],
+  [
+   "phr-api",
+   "ABDM-9999: "
+  ],
+  [
+   "phr-api",
+   "ABDM-1006: "
+  ],
+  [
+   "phr-api",
+   "ABDM-9999: "
+  ],
+  [
+   "phr-api",
+   "ABDM-1006: "
+  ],
+  [
+   "phr-api",
+   "ABDM-9999: "
+  ],
+  [
+   "phr-api",
+   "ABDM-9999: "
+  ],
+  [
+   "phr-api",
+   "ABDM-1006: "
+  ],
+  [
+   "phr-api",
+   "ABDM-9999: "
+  ],
+  [
+   "phr-api",
+   "ABDM-9999: "
+  ],
+  [
+   "phr-api",
+   "ABDM-9999: "
+  ],
+  [
+   "phr-api",
+   "ABDM-9999: "
+  ],
+  [
+   "phr-api",
+   "ABDM-9999: "
+  ],
+  [
+   "phr-api",
+   "ABDM-1006: "
+  ],
+  [
+   "phr-api",
+   "ABDM-1006: "
+  ],
+  [
+   "phr-api",
+   "ABDM-1006: "
+  ],
+  [
+   "phr-api",
+   "ABDM-9999: "
+  ],
+  [
+   "phr-api",
+   "ABDM-9999: "
+  ],
+  [
+   "phr-api",
+   "ABDM-1006: "
+  ],
+  [
+   "phr-api",
+   "ABDM-9999: "
+  ],
+  [
+   "phr-api",
+   "ABDM-9999: "
+  ],
+  [
+   "phr-api",
+   "ABDM-1006: "
+  ],
+  [
+   "phr-api",
+   "ABDM-9999: "
+  ],
+  [
+   "phr-api",
+   "ABDM-9999: "
+  ],
+  [
+   "phr-api",
+   "ABDM-1006: "
+  ],
+  [
+   "phr-api",
+   "ABDM-9999: "
+  ],
+  [
+   "phr-api",
+   "ABDM-9999: "
+  ],
+  [
+   "phr-api",
+   "ABDM-9999: "
+  ],
+  [
+   "phr-api",
+   "ABDM-9999: "
+  ],
+  [
+   "phr-api",
+   "ABDM-9999: "
+  ],
+  [
+   "phr-api",
+   "ABDM-9999: "
+  ],
+  [
+   "phr-api",
+   "ABDM-9999: "
+  ],
+  [
+   "phr-api",
+   "ABDM-9999: "
+  ],
+  [
+   "phr-api",
+   "ABDM-9999: "
+  ],
+  [
+   "phr-api",
+   "ABDM-9999: "
+  ],
+  [
+   "phr-api",
+   "ABDM-9999: "
+  ],
+  [
+   "phr-api",
+   "ABDM-9999: "
+  ],
+  [
+   "phr-api",
+   "ABDM-9999: "
+  ],
+  [
+   "phr-api",
+   "ABDM-1006: "
+  ],
+  [
+   "phr-api",
+   "ABDM-9999: "
+  ],
+  [
+   "phr-api",
+   "ABDM-9999: "
+  ],
+  [
+   "phr-api",
+   "ABDM-9999: "
+  ],
+  [
+   "phr-api",
+   "ABDM-1006: "
+  ],
+  [
+   "phr-api",
+   "ABDM-9999: "
+  ],
+  [
+   "phr-api",
+   "ABDM-9999: "
+  ],
+  [
+   "phr-api",
+   "ABDM-9999: "
+  ],
+  [
+   "phr-api",
+   "ABDM-9999: "
+  ],
+  [
+   "phr-api",
+   "ABDM-9999: "
+  ],
+  [
+   "phr-api",
+   "ABDM-9999: "
+  ],
+  [
+   "phr-api",
+   "ABDM-1006: "
+  ],
+  [
+   "phr-api",
+   "ABDM-9999: "
+  ],
+  [
+   "phr-api",
+   "ABDM-9999: "
+  ],
+  [
+   "phr-api",
+   "ABDM-9999: "
+  ],
+  [
+   "phr-api",
+   "ABDM-9999: "
+  ],
+  [
+   "phr-api",
+   "ABDM-1006: "
+  ],
+  [
+   "phr-api",
+   "ABDM-9999: "
+  ],
+  [
+   "phr-api",
+   "ABDM-9999: "
+  ],
+  [
+   "phr-api",
+   "ABDM-1006: "
+  ],
+  [
+   "phr-api",
+   "ABDM-9999: "
+  ],
+  [
+   "phr-api",
+   "ABDM-9999: "
+  ],
+  [
+   "phr-api",
+   "ABDM-1006: "
+  ],
+  [
+   "phr-api",
+   "ABDM-9999: "
+  ],
+  [
+   "phr-api",
+   "ABDM-9999: "
+  ],
+  [
+   "phr-api",
+   "ABDM-1006: "
+  ],
+  [
+   "phr-api",
+   "ABDM-9999: "
+  ],
+  [
+   "phr-api",
+   "ABDM-9999: "
+  ],
+  [
+   "phr-api",
+   "ABDM-9999: "
+  ],
+  [
+   "phr-api",
+   "ABDM-9999: "
+  ],
+  [
+   "phr-api",
+   "ABDM-9999: "
+  ],
+  [
+   "phr-api",
+   "ABDM-9999: "
+  ],
+  [
+   "phr-api",
+   "ABDM-9999: "
+  ],
+  [
+   "phr-api",
+   "ABDM-9999: "
+  ],
+  [
+   "phr-api",
+   "ABDM-9999: "
+  ],
+  [
+   "phr-api",
+   "ABDM-9999: "
+  ],
+  [
+   "phr-api",
+   "ABDM-9999: "
+  ],
+  [
+   "phr-api",
+   "ABDM-9999: "
+  ],
+  [
+   "phr-api",
+   "ABDM-9999: "
+  ],
+  [
+   "phr-api",
+   "ABDM-9999: "
+  ]
+ ],
+ "A7 example-keyword indentation bug": [
+  [
+   "abha-api-v3",
+   ""
+  ]
+ ],
+ "A13 header spelled multiple ways": [
+  [
+   "abha-api-v3",
+   "['BENEFIT NAME', 'BENEFIT_NAME', 'Benefit-Name']"
+  ],
+  [
+   "abha-api-v3",
+   "['X-Token', 'X-token']"
+  ],
+  [
+   "phr-api",
+   "['X-Token', 'X-token']"
+  ]
+ ],
+ "A10 enum example not in enum": [
+  [
+   "consent-management-data-flow",
+   "mimetype of the content."
+  ],
+  [
+   "consent-management-data-flow",
+   "Prescription, DiagnosticReport, OPConsul"
+  ],
+  [
+   "consent-management-data-flow",
+   "Prescription, DiagnosticReport, OPConsul"
+  ]
+ ],
+ "A8 description period leaked into example": [
+  [
+   "consent-management-data-flow",
+   ""
+  ],
+  [
+   "consent-management-data-flow",
+   ""
+  ]
+ ],
+ "A11 duplicate operationId": [
+  [
+   "consent-management-data-flow",
+   "abdm-consent-management 2"
+  ],
+  [
+   "consent-management-data-flow",
+   "abdm-consent-management 3"
+  ],
+  [
+   "consent-management-data-flow",
+   "abdm-consent-management 3"
+  ],
+  [
+   "consent-management-data-flow",
+   "abdm-consent-management 3"
+  ],
+  [
+   "consent-management-data-flow",
+   "abdm-consent-management 5"
+  ],
+  [
+   "consent-management-data-flow",
+   "abdm-consent-management 5"
+  ],
+  [
+   "consent-management-data-flow",
+   "abdm-consent-management 6"
+  ],
+  [
+   "consent-management-data-flow",
+   "abdm-consent-management 1"
+  ],
+  [
+   "consent-management-data-flow",
+   "consent-management 6"
+  ],
+  [
+   "scan-and-pay",
+   "patient-share 1"
+  ],
+  [
+   "scan-and-pay",
+   "scan-gateway 2"
+  ],
+  [
+   "scan-and-pay",
+   "scan-gateway 2"
+  ],
+  [
+   "scan-and-pay",
+   "scan-gateway 2"
+  ],
+  [
+   "scan-and-pay",
+   "abdm-patient-share 1"
+  ],
+  [
+   "scan-and-pay",
+   "abdm-patient-share 1"
+  ],
+  [
+   "scan-and-pay",
+   "abdm-patient-share 1"
+  ],
+  [
+   "scan-and-pay",
+   "patient-share 2"
+  ],
+  [
+   "scan-and-pay",
+   "patient-share 2"
+  ],
+  [
+   "scan-and-pay",
+   "patient-share 2"
+  ],
+  [
+   "scan-and-pay",
+   "patient-share 2"
+  ],
+  [
+   "scan-and-pay",
+   "patient-share 2"
+  ],
+  [
+   "subscription",
+   "subscription-phr 6"
+  ]
+ ],
+ "A4 code typed integer, string example": [
+  [
+   "gateway",
+   ""
+  ],
+  [
+   "gateway",
+   ""
+  ],
+  [
+   "gateway",
+   ""
+  ],
+  [
+   "gateway",
+   ""
+  ],
+  [
+   "gateway",
+   ""
+  ],
+  [
+   "gateway",
+   ""
+  ],
+  [
+   "gateway",
+   ""
+  ],
+  [
+   "gateway",
+   ""
+  ],
+  [
+   "gateway",
+   ""
+  ],
+  [
+   "gateway",
+   ""
+  ],
+  [
+   "patient-share",
+   ""
+  ],
+  [
+   "patient-share",
+   ""
+  ],
+  [
+   "patient-share",
+   ""
+  ],
+  [
+   "user-initiated-linking",
+   ""
+  ],
+  [
+   "user-initiated-linking",
+   ""
+  ],
+  [
+   "user-initiated-linking",
+   ""
+  ],
+  [
+   "user-initiated-linking",
+   ""
+  ],
+  [
+   "user-initiated-linking",
+   ""
+  ],
+  [
+   "user-initiated-linking",
+   ""
+  ],
+  [
+   "user-initiated-linking",
+   ""
+  ],
+  [
+   "user-initiated-linking",
+   ""
+  ],
+  [
+   "user-initiated-linking",
+   ""
+  ],
+  [
+   "user-initiated-linking",
+   ""
+  ],
+  [
+   "user-initiated-linking",
+   ""
+  ],
+  [
+   "user-initiated-linking",
+   ""
+  ]
+ ],
+ "C1 204 declares a body": [
+  [
+   "gateway",
+   ""
+  ],
+  [
+   "gateway",
+   ""
+  ],
+  [
+   "gateway",
+   ""
+  ],
+  [
+   "gateway",
+   ""
+  ],
+  [
+   "gateway",
+   ""
+  ],
+  [
+   "gateway",
+   ""
+  ],
+  [
+   "gateway",
+   ""
+  ],
+  [
+   "gateway",
+   ""
+  ],
+  [
+   "gateway",
+   ""
+  ],
+  [
+   "gateway",
+   ""
+  ]
+ ]
+}

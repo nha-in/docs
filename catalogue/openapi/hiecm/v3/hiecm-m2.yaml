@@ -20,9 +20,14 @@ info:
     consented request arrives.
 
     The `webhooks` below are what the gateway posts to your registered URL.
-    Only the data notification carries a documented payload; the rest are
-    declared with the path and no body, since no shape is published for
-    them.
+    Discovery, link-init and link-confirm carry full request bodies. Consent
+    notify and two other webhooks are declared with the path only: no request
+    body is published for them yet.
+
+    Generating a link token is asynchronous. The call to
+    `m2_generate_link_token` is accepted with `202`, and the token itself
+    arrives later on the `m2_on_generate_token_result` callback that your
+    bridge must expose.
   version: abdm-v3
   license:
     name: MIT
@@ -48,6 +53,36 @@ x-abdm-sources:
   fetched: '2026-08-25'
   note: NHA's M2 collection, 19 requests and 33 saved responses. Source of the
     data notification payload.
+- file: catalogue/openapi/.raw/nha-2026-09-01/fixed/hiecm/hip-initiated-linking.yaml
+  role: upstream
+  hash: sha256:d1224af3e12ede109747d595721cb0f39b90dfe6b1319bf8742c4d6f4d046d16
+  fetched: '2026-09-01'
+  note: NHA's 2026-09-01 drop, HIP-initiated linking, 7 operations. Source of the
+    m2_on_carecontext_result, m2_on_context_notify_result and m2_on_sms_notify_result
+    webhook payloads, and of the standard headers and Invoice HIType value added
+    to the matched path operations.
+- file: catalogue/openapi/.raw/nha-2026-09-01/fixed/hiecm/user-initiated-linking.yaml
+  role: upstream
+  hash: sha256:037228e5e81c35313d320d23215d531fe6a44f6327ead2a0eedc678afa3926f9
+  fetched: '2026-09-01'
+  note: NHA's 2026-09-01 drop, user-initiated linking, 12 operations. Source of
+    the m2_on_discovery_request, m2_on_link_init and m2_on_link_confirm webhook
+    payloads, previously declared with a path and no body.
+- file: catalogue/openapi/.raw/nha-2026-09-01/fixed/hiecm/link-token.yaml
+  role: upstream
+  hash: sha256:0deb32fd67f3489d1ecc86c622ef066eaa6b545f81c62948669fc5235cbc37c8
+  fetched: '2026-09-01'
+  note: NHA's 2026-09-01 drop, link token service, 2 operations. Source of the
+    m2_generate_link_token async correction (202, not 200) and the new
+    m2_on_generate_token_result webhook.
+- file: catalogue/openapi/.raw/nha-2026-09-01/fixed/hiecm/patient-share.yaml
+  role: upstream
+  hash: sha256:b86c701eeee6edd19067cb81a5a6ee9ba0b8a3d09c64970ae29ece60605a8d19
+  fetched: '2026-09-01'
+  note: NHA's 2026-09-01 drop, patient share, 5 operations. Every match for this
+    file is cross-file (hiecm-m1.yaml, hiecm-p2.yaml), so nothing in this source
+    changed hiecm-m2.yaml directly. Recorded here because the task named all
+    four drop files as sources for this pass.
 externalDocs:
   description: NRCeS FHIR R4 profiles, which every M2 bundle must validate against
   url: https://nrces.in/ndhm/fhir/r4/index.html
@@ -97,8 +132,17 @@ paths:
         Generates a short-lived link token for a specific patient identified by their ABHA number/address.
         The link token is passed as `X-Link-Token` header when calling the care context linking API.
         Must be called immediately before the linking call, tokens expire quickly.
+
+        This call is accepted with `202` and carries no token. The token
+        itself arrives on the `m2_on_generate_token_result` callback, at the
+        callback URL registered for your bridge.
       security:
       - bearerAuth: []
+      parameters:
+      - $ref: '#/components/parameters/RequestId'
+      - $ref: '#/components/parameters/Timestamp'
+      - $ref: '#/components/parameters/CmId'
+      - $ref: '#/components/parameters/XHipId'
       requestBody:
         required: true
         content:
@@ -114,18 +158,21 @@ paths:
                   gender: M
                   yearOfBirth: 1985
       responses:
-        '200':
-          description: Link token generated
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/LinkTokenResponse'
+        '202':
+          description: Accepted. No body. The token arrives on the
+            m2_on_generate_token_result callback.
         '400':
           $ref: '#/components/responses/BadRequest'
         '401':
           $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
         '404':
           $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+        '503':
+          $ref: '#/components/responses/ServiceUnavailable'
       x-abdm-nha-operation-id: generateLinkToken
       x-abdm-atom: hiecm.endpoint.m2-generate-link-token
   /hiecm/hip/v3/link/carecontext:
@@ -143,6 +190,10 @@ paths:
       security:
       - bearerAuth: []
       parameters:
+      - $ref: '#/components/parameters/RequestId'
+      - $ref: '#/components/parameters/Timestamp'
+      - $ref: '#/components/parameters/CmId'
+      - $ref: '#/components/parameters/XHipId'
       - $ref: '#/components/parameters/XLinkToken'
       requestBody:
         required: true
@@ -192,6 +243,12 @@ paths:
           $ref: '#/components/responses/BadRequest'
         '401':
           $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
       x-abdm-nha-operation-id: hipLinkCareContext
       x-abdm-atom: hiecm.endpoint.m2-hip-link-care-context
   /hiecm/hip/v3/link/context/notify:
@@ -206,6 +263,11 @@ paths:
         receives a timely notification with the care context details.
       security:
       - bearerAuth: []
+      parameters:
+      - $ref: '#/components/parameters/RequestId'
+      - $ref: '#/components/parameters/Timestamp'
+      - $ref: '#/components/parameters/CmId'
+      - $ref: '#/components/parameters/XHipId'
       requestBody:
         required: true
         content:
@@ -226,6 +288,8 @@ paths:
                     date: '2024-01-10T12:00:00.000Z'
                     hip:
                       id: HIP_SERVICE_ID
+                      name: S Y Hospital
+                      type: HIP
       responses:
         '202':
           description: Notification accepted
@@ -233,6 +297,12 @@ paths:
           $ref: '#/components/responses/BadRequest'
         '401':
           $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
       x-abdm-nha-operation-id: linkCareContextNotify
       x-abdm-atom: hiecm.endpoint.m2-link-care-context-notify
   /hiecm/hip/v3/link/patient/links/sms/notify2:
@@ -248,6 +318,10 @@ paths:
         wants to invite them to link their health records.
       security:
       - bearerAuth: []
+      parameters:
+      - $ref: '#/components/parameters/RequestId'
+      - $ref: '#/components/parameters/Timestamp'
+      - $ref: '#/components/parameters/CmId'
       requestBody:
         required: true
         content:
@@ -271,6 +345,12 @@ paths:
           $ref: '#/components/responses/BadRequest'
         '401':
           $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
       x-abdm-nha-operation-id: smsDeepLinkNotify
       x-abdm-atom: hiecm.endpoint.m2-sms-deep-link-notify
   /hiecm/user-initiated-linking/v3/patient/care-context/on-discover:
@@ -288,6 +368,10 @@ paths:
         (name, gender, DOB, verified identifiers) and returns matching records.
       security:
       - bearerAuth: []
+      parameters:
+      - $ref: '#/components/parameters/RequestId'
+      - $ref: '#/components/parameters/Timestamp'
+      - $ref: '#/components/parameters/CmId'
       requestBody:
         required: true
         content:
@@ -318,6 +402,10 @@ paths:
           $ref: '#/components/responses/BadRequest'
         '401':
           $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
       x-abdm-nha-operation-id: onDiscoverCareContexts
       x-abdm-atom: hiecm.endpoint.m2-on-discover-care-contexts
   /hiecm/user-initiated-linking/v3/link/care-context/on-init:
@@ -336,6 +424,10 @@ paths:
         The Gateway uses this to prompt the patient to enter the OTP for link confirmation.
       security:
       - bearerAuth: []
+      parameters:
+      - $ref: '#/components/parameters/RequestId'
+      - $ref: '#/components/parameters/Timestamp'
+      - $ref: '#/components/parameters/CmId'
       requestBody:
         required: true
         content:
@@ -362,6 +454,10 @@ paths:
           $ref: '#/components/responses/BadRequest'
         '401':
           $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
       x-abdm-nha-operation-id: onLinkInit
       x-abdm-atom: hiecm.endpoint.m2-on-link-init
   /hiecm/user-initiated-linking/v3/link/care-context/on-confirm:
@@ -378,6 +474,10 @@ paths:
         the OTP and calls this Gateway endpoint to confirm the linked care contexts.
       security:
       - bearerAuth: []
+      parameters:
+      - $ref: '#/components/parameters/RequestId'
+      - $ref: '#/components/parameters/Timestamp'
+      - $ref: '#/components/parameters/CmId'
       requestBody:
         required: true
         content:
@@ -405,6 +505,10 @@ paths:
           $ref: '#/components/responses/BadRequest'
         '401':
           $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
       x-abdm-nha-operation-id: onLinkConfirm
       x-abdm-atom: hiecm.endpoint.m2-on-link-confirm
   /hiecm/consent/v3/request/hip/on-notify:
@@ -530,14 +634,24 @@ paths:
       x-abdm-nha-operation-id: hipDataFlowNotify
       x-abdm-atom: hiecm.endpoint.m2-hip-data-flow-notify
 webhooks:
-  /v0.5/care-contexts/discover:
+  /api/v3/hip/patient/care-context/discover:
     post:
       operationId: m2_on_discovery_request
       summary: A discovery request for a patient you may hold records for
       description: |
-        Inbound to every HIP. Answer with care context metadata only: NHA states that a discovery response carries no clinical or sensitive data. A rejected answer is reported as ABDM-1109.
+        Inbound to every HIP. Answer with care context metadata only: a discovery response carries no clinical or sensitive data. A rejected answer is reported as ABDM-1109.
 
-        
+        Retry count, backoff and timeout for this callback are not stated in NHA's material, so treat them as unknown.
+      parameters:
+      - $ref: '#/components/parameters/RequestId'
+      - $ref: '#/components/parameters/Timestamp'
+      - $ref: '#/components/parameters/XHipId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DiscoveryRequestPayload'
       responses:
         '202':
           description: Your bridge accepted the callback. The gateway validates the body
@@ -545,14 +659,24 @@ webhooks:
       x-abdm-atom: hiecm.callback.m2-on-discovery-request
       tags:
       - webhooks
-  /v0.5/links/link/init:
+  /api/v3/hip/link/care-context/init:
     post:
       operationId: m2_on_link_init
       summary: A request to start linking a care context
       description: |
         Inbound to the HIP. A duplicate arrives as ABDM-1104, and a rejected answer as ABDM-1110.
 
-        
+        Retry count, backoff and timeout for this callback are not stated in NHA's material, so treat them as unknown.
+      parameters:
+      - $ref: '#/components/parameters/RequestId'
+      - $ref: '#/components/parameters/Timestamp'
+      - $ref: '#/components/parameters/XHipId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LinkInitPayload'
       responses:
         '202':
           description: Your bridge accepted the callback. The gateway validates the body
@@ -560,14 +684,24 @@ webhooks:
       x-abdm-atom: hiecm.callback.m2-on-link-init
       tags:
       - webhooks
-  /v0.5/links/link/confirm:
+  /api/v3/hip/link/care-context/confirm:
     post:
       operationId: m2_on_link_confirm
       summary: Confirmation of a link, carrying the token the patient approved
       description: |
         Inbound to the HIP. A duplicate arrives as ABDM-1105, and a rejected answer as ABDM-1111.
 
-        
+        Retry count, backoff and timeout for this callback are not stated in NHA's material, so treat them as unknown.
+      parameters:
+      - $ref: '#/components/parameters/RequestId'
+      - $ref: '#/components/parameters/Timestamp'
+      - $ref: '#/components/parameters/XHipId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LinkConfirmPayload'
       responses:
         '202':
           description: Your bridge accepted the callback. The gateway validates the body
@@ -575,7 +709,7 @@ webhooks:
       x-abdm-atom: hiecm.callback.m2-on-link-confirm
       tags:
       - webhooks
-  /v0.5/health-information/hip/request:
+  /api/v3/hip/health-information/request:
     post:
       operationId: m2_on_health_information_request
       summary: A request for the records a consent covers
@@ -612,12 +746,110 @@ webhooks:
         in the request.
       description: |
         The provider pushes encrypted health information to the URL named in the request.
-
-        Payload transcribed from NHA's own collection for this milestone.
       responses:
         '202':
           description: Accepted. Acknowledge quickly, then process asynchronously.
       x-abdm-atom: hiecm.callback.m2-on-data-notification
+      tags:
+      - webhooks
+  /v3/hip/token/on-generate-token:
+    post:
+      operationId: m2_on_generate_token_result
+      summary: The link token m2_generate_link_token generated, or why it failed
+      description: |
+        Hosted by your bridge, not by ABDM. The gateway calls this endpoint at the callback URL registered for your bridge, so the path above is relative to that URL.
+
+        `response.requestId` echoes the REQUEST-ID you sent to m2_generate_link_token, so match this callback to that call before reading `abhaAddress` or `linkToken`.
+      parameters:
+      - $ref: '#/components/parameters/RequestId'
+      - $ref: '#/components/parameters/Timestamp'
+      - $ref: '#/components/parameters/XHipId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OnGenerateTokenResultPayload'
+      responses:
+        '200':
+          description: Your bridge accepted the callback. The gateway validates the body
+            you send back, so a 200 carrying the wrong body is still a failure.
+      x-abdm-atom: hiecm.callback.m2-on-generate-token-result
+      tags:
+      - webhooks
+  /v3/link/on_carecontext:
+    post:
+      operationId: m2_on_carecontext_result
+      summary: The outcome of a care context linking call you made
+      description: |
+        Hosted by your bridge, not by ABDM. The gateway calls this endpoint at the callback URL registered for your bridge, so the path above is relative to that URL. This is the result leg for `m2_hip_link_care_context`.
+
+        `response.requestId` echoes the REQUEST-ID you sent to m2_hip_link_care_context.
+      parameters:
+      - $ref: '#/components/parameters/RequestId'
+      - $ref: '#/components/parameters/Timestamp'
+      - $ref: '#/components/parameters/XHipId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OnCareContextResultPayload'
+      responses:
+        '200':
+          description: Your bridge accepted the callback. The gateway validates the body
+            you send back, so a 200 carrying the wrong body is still a failure.
+      x-abdm-atom: hiecm.callback.m2-on-carecontext-result
+      tags:
+      - webhooks
+  /v3/links/context/on-notify:
+    post:
+      operationId: m2_on_context_notify_result
+      summary: The outcome of a care context notify call you made
+      description: |
+        Hosted by your bridge, not by ABDM. The gateway calls this endpoint at the callback URL registered for your bridge, so the path above is relative to that URL. This is the result leg for `m2_link_care_context_notify`.
+
+        `response.requestId` echoes the REQUEST-ID you sent to m2_link_care_context_notify.
+      parameters:
+      - $ref: '#/components/parameters/RequestId'
+      - $ref: '#/components/parameters/Timestamp'
+      - $ref: '#/components/parameters/XHipId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OnContextNotifyResultPayload'
+      responses:
+        '200':
+          description: Your bridge accepted the callback. The gateway validates the body
+            you send back, so a 200 carrying the wrong body is still a failure.
+      x-abdm-atom: hiecm.callback.m2-on-context-notify-result
+      tags:
+      - webhooks
+  /v3/patients/sms/on-notify:
+    post:
+      operationId: m2_on_sms_notify_result
+      summary: The outcome of an SMS deep link notify call you made
+      description: |
+        Hosted by your bridge, not by ABDM. The gateway calls this endpoint at the callback URL registered for your bridge, so the path above is relative to that URL. This is the result leg for `m2_sms_deep_link_notify`.
+
+        `response.requestId` echoes the REQUEST-ID you sent to m2_sms_deep_link_notify.
+      parameters:
+      - $ref: '#/components/parameters/RequestId'
+      - $ref: '#/components/parameters/Timestamp'
+      - $ref: '#/components/parameters/XHipId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OnSmsNotifyResultPayload'
+      responses:
+        '200':
+          description: Your bridge accepted the callback. The gateway validates the body
+            you send back, so a 200 carrying the wrong body is still a failure.
+      x-abdm-atom: hiecm.callback.m2-on-sms-notify-result
       tags:
       - webhooks
 components:
@@ -649,11 +881,11 @@ components:
       in: header
       required: true
       description: |
-        The current time in ISO 8601, in IST, the +05:30 offset, from a synchronised clock.
+        The current time in ISO 8601, UTC, with milliseconds and a `Z` suffix, from a synchronised clock. The sandbox rejects IST and accepts UTC.
       schema:
         type: string
         format: date-time
-      example: '2026-08-24T15:45:30.000+05:30'
+      example: '2022-10-06T15:10:00.587Z'
     CmId:
       name: X-CM-ID
       in: header
@@ -674,6 +906,23 @@ components:
       schema:
         type: string
       description: Short-lived link token generated via POST /hiecm/v3/token/generate-token
+    XHipId:
+      name: X-HIP-ID
+      in: header
+      required: true
+      description: |
+        Identifier of the Health Information Provider the request or callback belongs to.
+      schema:
+        type: string
+      example: IN2810014366
+    XHiuId:
+      name: X-HIU-ID
+      in: header
+      required: true
+      description: |
+        Identifier of the Health Information User the request or callback belongs to.
+      schema:
+        type: string
   schemas:
     SessionRequest:
       type: object
@@ -853,15 +1102,42 @@ components:
           type: integer
           examples:
           - 1985
-    LinkTokenResponse:
+    ErrorObject:
       type: object
+      description: The error code and message on a failed callback delivery.
+      required:
+      - code
+      - message
       properties:
+        code:
+          type: string
+          pattern: '^(ABDM-\d{4}|\d{3,6})(: )?$'
+          examples:
+          - ABDM-1006
+        message:
+          type: string
+    OnGenerateTokenResultPayload:
+      type: object
+      description: >
+        What your bridge receives at the callback URL for m2_generate_link_token.
+        Either `abhaAddress` and `linkToken` (success) or `error` (failure) is
+        present; `response.requestId` is always present.
+      required:
+      - response
+      properties:
+        abhaAddress:
+          type: string
+          description: Present on success.
+          examples:
+          - patient@sbx
         linkToken:
           type: string
-          description: Short-lived token to be used in X-Link-Token header
-        expiryTime:
-          type: string
-          format: date-time
+          description: The generated link token, present on success. Pass it as
+            X-Link-Token on the next m2_hip_link_care_context call.
+        error:
+          $ref: '#/components/schemas/ErrorObject'
+        response:
+          $ref: '#/components/schemas/CallbackResponse'
     CareContext:
       type: object
       required:
@@ -958,8 +1234,19 @@ components:
               format: date-time
             hip:
               type: object
+              required:
+              - id
+              - name
+              - type
+              description: >
+                `id`, `name` and `type` are all required. What `name` and
+                `type` contain beyond a string is not documented.
               properties:
                 id:
+                  type: string
+                name:
+                  type: string
+                type:
                   type: string
     SmsNotifyRequest:
       type: object
@@ -1069,6 +1356,210 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/PatientCareContextEntry'
+        response:
+          $ref: '#/components/schemas/CallbackResponse'
+    PatientIdentifier:
+      type: object
+      description: One identifier ABDM offers to match the patient against your
+        own records.
+      required:
+      - type
+      - value
+      properties:
+        type:
+          type: string
+          enum:
+          - MR
+          - MOBILE
+          - ABHA_NUMBER
+          - ABHA_ADDRESS
+          - EMAIL
+        value:
+          type: string
+    DiscoveryRequestPayload:
+      type: object
+      description: >
+        What your bridge receives at the callback URL for a discovery request.
+        Your answer must carry care context metadata only, no clinical or
+        sensitive data.
+      required:
+      - transactionId
+      - patient
+      properties:
+        transactionId:
+          type: string
+          description: A fresh identifier for this discovery flow. Echo it back
+            as response.requestId when you answer on m2_on_discover_care_contexts.
+          examples:
+          - f901b782-bfdf-4224-9f8d-da2cadc20c0d
+        patient:
+          type: object
+          required:
+          - id
+          - verifiedIdentifiers
+          - name
+          - gender
+          - yearOfBirth
+          properties:
+            id:
+              type: string
+              description: A patient identifier to search your records by.
+              examples:
+              - abc@abdm
+            verifiedIdentifiers:
+              type: array
+              items:
+                $ref: '#/components/schemas/PatientIdentifier'
+            unverifiedIdentifiers:
+              type: array
+              description: Identifiers to search your own records by, not verified
+                by ABDM.
+              items:
+                $ref: '#/components/schemas/PatientIdentifier'
+            name:
+              type: string
+              examples:
+              - Abdul Kalam
+            gender:
+              type: string
+              enum:
+              - M
+              - F
+              - O
+              - D
+              - T
+              - U
+            yearOfBirth:
+              type: integer
+              examples:
+              - 1999
+    LinkInitPayload:
+      type: object
+      description: >
+        What your bridge receives at the callback URL for a link-init request.
+      required:
+      - transactionId
+      - abhaAddress
+      - patient
+      properties:
+        transactionId:
+          type: string
+        abhaAddress:
+          type: string
+        patient:
+          type: array
+          items:
+            type: object
+            required:
+            - referenceNumber
+            - display
+            - careContexts
+            - hiType
+            properties:
+              referenceNumber:
+                type: string
+              display:
+                type: string
+              careContexts:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CareContext'
+              hiType:
+                $ref: '#/components/schemas/HIType'
+              count:
+                type: integer
+    LinkConfirmPayload:
+      type: object
+      description: >
+        What your bridge receives at the callback URL for a link-confirm
+        request, carrying the OTP the patient entered and the link reference
+        number from the earlier init step.
+      required:
+      - confirmation
+      properties:
+        confirmation:
+          type: object
+          required:
+          - token
+          - linkRefNumber
+          properties:
+            token:
+              type: integer
+              description: The 6-digit OTP the patient entered.
+              examples:
+              - 123456
+            linkRefNumber:
+              type: string
+              format: uuid
+              description: The link reference number from the earlier init step.
+    OnCareContextResultPayload:
+      type: object
+      description: >
+        What your bridge receives at the callback URL for m2_hip_link_care_context.
+        Either the success fields or error is present; response.requestId is
+        always present.
+      required:
+      - response
+      properties:
+        abhaAddress:
+          type: string
+          description: Present on success.
+        status:
+          type: string
+          description: Present on success. Kept as free text rather than a
+            closed enum, since one observed value, "invalid   [invalid
+            request]", reads as malformed prose rather than a clean wire
+            value.
+          examples:
+          - Successfully Linked care context
+        error:
+          $ref: '#/components/schemas/ErrorObject'
+        response:
+          $ref: '#/components/schemas/CallbackResponse'
+    OnContextNotifyResultPayload:
+      type: object
+      description: >
+        What your bridge receives at the callback URL for m2_link_care_context_notify.
+      required:
+      - acknowledgement
+      - response
+      properties:
+        acknowledgement:
+          type: object
+          required:
+          - status
+          properties:
+            status:
+              type: string
+              enum:
+              - SUCCESS
+              - ERRORED
+        error:
+          $ref: '#/components/schemas/ErrorObject'
+        response:
+          $ref: '#/components/schemas/CallbackResponse'
+    OnSmsNotifyResultPayload:
+      type: object
+      description: >
+        What your bridge receives at the callback URL for m2_sms_deep_link_notify.
+        Same acknowledgement, error and response shape as
+        m2_on_context_notify_result.
+      required:
+      - acknowledgement
+      - response
+      properties:
+        acknowledgement:
+          type: object
+          required:
+          - status
+          properties:
+            status:
+              type: string
+              enum:
+              - SUCCESS
+              - ERRORED
+        error:
+          $ref: '#/components/schemas/ErrorObject'
         response:
           $ref: '#/components/schemas/CallbackResponse'
     ConsentHipOnNotifyRequest:
@@ -1192,13 +1683,46 @@ components:
       - ImmunizationRecord
       - HealthDocumentRecord
       - WellnessRecord
-      description: ABDM Health Information type
+      - Invoice
+      description: >
+        ABDM Health Information type.
     ErrorResponse:
       type: object
+      description: >
+        400, 404 and 500 responses nest `code` and `message` under an `error`
+        key. `code` is a string matching `^(ABDM-\d{4}|\d{3,6})(: )?$`; the
+        pattern allows a trailing `": "`. See hiecm.error.abdm-1016.
+      properties:
+        error:
+          type: object
+          required:
+          - code
+          - message
+          properties:
+            code:
+              type: string
+              pattern: '^(ABDM-\d{4}|\d{3,6})(: )?$'
+              examples:
+              - ABDM-1006
+            message:
+              type: string
+    FlatErrorResponse:
+      type: object
+      description: >
+        401 responses across M2 linking use `code` and `message` flat, not
+        nested under an `error` key, plus a `description` field. `code`
+        follows a numeric 9xxxxx-family pattern (for example `900902`),
+        distinct from the `ABDM-xxxx` family every other error response
+        uses.
       properties:
         code:
-          type: integer
+          type: string
+          pattern: '^(ABDM-\d{4}|\d{3,6})(: )?$'
+          examples:
+          - '900902'
         message:
+          type: string
+        description:
           type: string
   responses:
     BadRequest:
@@ -1212,9 +1736,30 @@ components:
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/ErrorResponse'
+            $ref: '#/components/schemas/FlatErrorResponse'
+    Forbidden:
+      description: 'Forbidden. Returned as plain text ("Access Denied"), not JSON.'
+      content:
+        text/plain:
+          schema:
+            type: string
+            examples:
+            - Access Denied
     NotFound:
       description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    InternalServerError:
+      description: Internal server error.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    ServiceUnavailable:
+      description: Service unavailable. Returned by the link token generation
+        operation.
       content:
         application/json:
           schema:

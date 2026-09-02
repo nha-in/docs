@@ -17,6 +17,9 @@ export type Field = {
   enum?: (string | number)[];
   format?: string;
   example?: unknown;
+  /** True for identifiers ABDM takes RSA encrypted: the console encrypts the
+      raw value in the browser before sending. Set by the reference generator. */
+  encrypted?: boolean;
 };
 
 export type Operation = {
