@@ -2,7 +2,7 @@ import React from 'react';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import useBaseUrl from '@docusaurus/useBaseUrl';
 import SearchBar from '@theme/SearchBar';
-import QuickActions from './QuickActions';
+import QuickActions, {useRows} from './QuickActions';
 import {activePlatform, useRoutePath} from '@site/src/config/navigation';
 
 /**
@@ -39,8 +39,14 @@ export default function Omnibox() {
   const chatUrl = siteConfig.customFields?.chatUrl as string | null;
   const support = useBaseUrl('/docs/support');
   const box = React.useRef<HTMLDivElement>(null);
+  const panel = React.useRef<HTMLDivElement>(null);
   const [focused, setFocused] = React.useState(false);
-  const [query, setQuery] = React.useState('');
+  const [active, setActive] = React.useState(-1);
+  // The rows live here as well as in the panel, because the arrow keys are
+  // caught on the search field and have to know what they are walking.
+  const rows = useRows();
+  const activeRef = React.useRef(-1);
+  activeRef.current = active;
 
   // The search theme takes its placeholder from a translation string, and the
   // usual override, i18n/en/code.json, turns on translation validation for the
@@ -76,45 +82,76 @@ export default function Omnibox() {
     // The shortcut and a click on the field are the same act, and the search
     // theme already treats them so: both put the caret here and both answer
     // as the reader types. This watches that field rather than replacing it,
-    // for two things the search cannot do on its own. Empty and focused, the
-    // quick actions below offer the sections and the assistant. Typed, the
-    // words are mirrored onto the assistant, so a half written question
-    // survives the move from the field to the panel.
+    // for the one thing the search cannot do on its own: while the field is
+    // empty, the quick actions below offer the sections and the assistant.
+    //
+    // Nothing here sets React state per keystroke, and that is not tidiness.
+    // The search field belongs to the search theme; re-rendering this
+    // component around it while somebody is typing dropped every second
+    // character. The panel is shown and hidden on the node instead.
     const input = root.querySelector<HTMLInputElement>(
       'input.navbar__search-input',
     );
-    const agent = root.querySelector('abdm-support-agent');
     if (!input) return;
-    const read = () => {
-      setQuery(input.value);
-      const asked = input.value.trim();
-      if (!agent) return;
-      if (asked) agent.setAttribute('question', asked);
-      else agent.removeAttribute('question');
+    const sync = () => {
+      const el = panel.current;
+      if (el) el.hidden = input.value.trim() !== '';
     };
     const onFocus = () => {
       setFocused(true);
-      read();
+      setActive(-1);
+      // The panel mounts on the render this focus causes, so it is synced on
+      // the next frame rather than now.
+      window.requestAnimationFrame(sync);
     };
     // Late, so a click on a row below lands before the panel goes.
-    const onBlur = () => window.setTimeout(() => setFocused(false), 120);
-    input.addEventListener('input', read);
+    const onBlur = () => window.setTimeout(() => setFocused(false), 140);
+    // Up, down and enter belong to these rows only while they are the thing
+    // on screen, which is while the field is empty. The moment anything is
+    // typed the search theme's own results take the same keys back.
+    const onKey = (event: KeyboardEvent) => {
+      if (input.value.trim() !== '') return;
+      if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
+        event.preventDefault();
+        event.stopPropagation();
+        const step = event.key === 'ArrowDown' ? 1 : -1;
+        const next =
+          (activeRef.current + step + rows.length + (activeRef.current < 0 && step < 0 ? 1 : 0)) %
+          rows.length;
+        setActive(next);
+      } else if (event.key === 'Enter' && activeRef.current >= 0) {
+        event.preventDefault();
+        event.stopPropagation();
+        const row = rows[activeRef.current];
+        input.blur();
+        setFocused(false);
+        row.run();
+      } else if (event.key === 'Escape') {
+        input.blur();
+        setFocused(false);
+      }
+    };
+
+    input.addEventListener('input', sync);
     input.addEventListener('focus', onFocus);
     input.addEventListener('blur', onBlur);
-    read();
+    input.addEventListener('keydown', onKey, true);
     return () => {
-      input.removeEventListener('input', read);
+      input.removeEventListener('input', sync);
       input.removeEventListener('focus', onFocus);
       input.removeEventListener('blur', onBlur);
+      input.removeEventListener('keydown', onKey, true);
     };
-  }, []);
+  }, [rows]);
 
   return (
     <div ref={box} className="omnibox">
       <SearchBar />
       <QuickActions
+        ref={panel}
         open={focused}
-        query={query}
+        active={active}
+        onActive={setActive}
         onLeave={() => setFocused(false)}
       />
       {/* Citations are absolute against this site, because a relative
