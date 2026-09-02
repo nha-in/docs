@@ -11,10 +11,10 @@ covers: [hiecm.troubleshooting.callback-never-arrives]
 # The callback never arrives
 
 You made a call, it came back with a 202 or a 200, and nothing else has
-happened since. This is the most common report in
-[HIE-CM](/docs/hiecm/v3/getting-started/glossary#hie-cm) integration,
-and the cause is almost always the callback URL rather than the call
-itself.
+happened since. This is a common report in
+[HIE-CM](/docs/hiecm/v3/getting-started/glossary#hie-cm) integration.
+The checks below are in the order this catalogue recommends checking,
+not a record of how often each has turned out to be the actual cause.
 
 That early response only means [NHA](/docs/hiecm/v3/getting-started/glossary#nha)'s
 gateway accepted your request. In M2 and M3 the real answer arrives
