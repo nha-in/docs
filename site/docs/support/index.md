@@ -9,15 +9,15 @@ source: repository README.md and catalogue/openapi/hiecm-gateway.yaml
 
 # Support
 
-Two places to ask, depending on what went wrong. Sandbox behaviour goes to
-[NHA](/docs/hiecm/v3/getting-started/glossary#nha); a page here that is wrong, missing or broken
-goes to whoever maintains it.
+Two places to ask, depending on what went wrong. Sandbox behaviour goes to the
+[ABDM](/docs/hiecm/v3/getting-started/glossary#abdm) developer forum; a page here that is wrong,
+missing or broken goes to whoever maintains it.
 
-## Ask NHA about the sandbox
+## Ask about the sandbox
 
-NHA runs a developer forum at
+The developer forum is at
 [devforum.abdm.gov.in](https://devforum.abdm.gov.in). Post there for anything
-about the [ABDM](/docs/hiecm/v3/getting-started/glossary#abdm) sandbox itself: credentials,
+about the sandbox itself: credentials,
 onboarding, an endpoint returning something the document does not describe, a
 callback that never arrives, or a certification question. Search the forum
 first, because the answer is often already on a thread.
@@ -36,14 +36,14 @@ Add the callback body if the call is asynchronous and a callback arrived. Never
 post an access token, a client secret, or a real patient's identifiers. Replace
 them with a placeholder.
 
-`REQUEST-ID` is a fresh UUID you generate per request, and NHA's M1 Postman
+`REQUEST-ID` is a fresh UUID you generate per request, and the M1 Postman
 collection sends it on almost every call. It is the one value that names the
 exact call you made, so log it and quote it.
 
 ## Report a problem with a page here
 
 Wrong page, dead link, a payload that does not match what the sandbox returns:
-report it against the page, not on NHA's forum. Say the page URL, and whether
-you saw the real behaviour yourself. Pages here are written from NHA's documents
+report it against the page, not on the developer forum. Say the page URL, and whether
+you saw the real behaviour yourself. Pages here are written from the source documents
 and marked `unverified` for that reason, so a report from someone who has run
 the call is how a page becomes verified.

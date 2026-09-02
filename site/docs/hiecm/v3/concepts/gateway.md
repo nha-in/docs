@@ -10,7 +10,7 @@ covers: [hiecm.concept.gateway-session]
 
 # The ABDM gateway
 
-The gateway is [NHA](/docs/hiecm/v3/getting-started/glossary#nha)'s routing layer for [ABDM](/docs/hiecm/v3/getting-started/glossary#abdm): you never call a hospital, a lab or a [PHR](/docs/hiecm/v3/getting-started/glossary#phr) app directly, and the answer to a call arrives later at an endpoint you expose. It also issues the access token every other call carries.
+The gateway is the [NHA](/docs/hiecm/v3/getting-started/glossary#nha) routing layer for [ABDM](/docs/hiecm/v3/getting-started/glossary#abdm): you never call a hospital, a lab or a [PHR](/docs/hiecm/v3/getting-started/glossary#phr) app directly, and the answer to a call arrives later at an endpoint you expose. It also issues the access token every other call carries.
 
 ## Gateway and HIE-CM are not the same thing
 
@@ -26,11 +26,11 @@ It never holds a patient's health record, only identifiers, metadata about where
 
 Every request is addressed to the gateway, which forwards it. Three things follow.
 
-- **You get an acknowledgement, not an answer.** In NHA's [M3](/docs/hiecm/v3/getting-started/glossary#m3) consent flow the [HIU](/docs/hiecm/v3/getting-started/glossary#hiu) asks, the HIE-CM acknowledges with a consent request id, and the patient's decision comes back later. See [callbacks](/docs/hiecm/v3/reference/callbacks).
+- **You get an acknowledgement, not an answer.** In the [M3](/docs/hiecm/v3/getting-started/glossary#m3) consent flow the [HIU](/docs/hiecm/v3/getting-started/glossary#hiu) asks, the HIE-CM acknowledges with a consent request id, and the patient's decision comes back later. See [callbacks](/docs/hiecm/v3/reference/callbacks).
 - **You have to be reachable.** Half of [M2](/docs/hiecm/v3/getting-started/glossary#m2) is endpoints the gateway calls on your system. A [HIP](/docs/hiecm/v3/getting-started/glossary#hip) it cannot reach fails on someone else's logs, as `ABDM-1028 HIP is unavailable`.
-- **Order is enforced.** NHA's M2 error list carries `ABDM-2406 Invalid API sequence flow, please follow logical flow`.
+- **Order is enforced.** The M2 error list carries `ABDM-2406 Invalid API sequence flow, please follow logical flow`.
 
-One exception. In the health information flow the HIU supplies a data push URL, and the HIP encrypts the records and pushes them there. NHA's M2 document says that URL may differ from the HIU's registered gateway URL, to improve privacy. The permission came through the gateway. The bytes do not.
+One exception. In the health information flow the HIU supplies a data push URL, and the HIP encrypts the records and pushes them there. That URL may differ from the HIU's registered gateway URL, to improve privacy. The permission came through the gateway. The bytes do not.
 
 ## What moves through it
 
@@ -45,7 +45,7 @@ The gateway holds no health record. It routes the permission and the metadata.
 
 ## The session endpoint
 
-One endpoint issues the token every other call carries. It is a real request in NHA's [M1](/docs/hiecm/v3/getting-started/glossary#m1) Postman collection, and NHA's [M4](/docs/hiecm/v3/getting-started/glossary#m4) document repeats it.
+One endpoint issues the token every other call carries. It is a real request in the [M1](/docs/hiecm/v3/getting-started/glossary#m1) Postman collection, and the [M4](/docs/hiecm/v3/getting-started/glossary#m4) document repeats it.
 
 **POST** `/api/hiecm/gateway/v3/sessions`
 
@@ -55,7 +55,7 @@ Headers, transcribed from the collection:
 |---|---|---|
 | `REQUEST-ID` | `{{$randomUUID}}` | A fresh UUID for this call |
 | `TIMESTAMP` | `{{$isoTimestamp}}` | The time you made the call, ISO 8601 |
-| `X-CM-ID` | `sbx` | The consent manager. NHA's M4 document gives `sbx` for sandbox and `abdm` for production |
+| `X-CM-ID` | `sbx` | The consent manager. Use `sbx` for sandbox and `abdm` for production |
 | `Content-Type` | `application/json` | |
 
 No `Authorization` header on this call. It is the one call with no token yet, and the collection marks it `noauth`.
@@ -70,9 +70,9 @@ Body, transcribed from the collection:
 }
 ```
 
-The collection sends the literal `healthid-api` as the client id. NHA's M4 document shows a per integrator value in the same field. Send whatever NHA issued you.
+The collection sends the literal `healthid-api` as the client id. The M4 document shows a per integrator value in the same field. Send whatever you were issued.
 
-Response shape, from NHA's M4 document, which prints it as text:
+Response shape, from the M4 document, which prints it as text:
 
 ```json
 {
@@ -90,7 +90,7 @@ Send the token back as `Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>`
 
 ## Which host
 
-NHA's documents give four hosts for gateway paths, and they do not agree.
+Four hosts appear for gateway paths, and they do not agree.
 
 | Host | Where it appears | What it is called there |
 |---|---|---|
@@ -101,11 +101,11 @@ NHA's documents give four hosts for gateway paths, and they do not agree.
 
 Take the host from the sandbox documentation issued at onboarding, and keep it in configuration, not in code.
 
-## What NHA's documents do not say
+## What is not documented yet
 
 - **Retry behaviour on callbacks.** Unstated. Make your endpoint idempotent and assume a repeat.
 - **Gateway token lifetime in M1.** The M4 `expiresIn` samples disagree: one shows `1200`, another `36000`. Read it from your own response.
-- **Rate limits.** NHA's M2 error list carries `ABDM-1022 Too many requests` and `ABDM-1027 You are blocked. Please try again after 24 hours.` Neither source gives the threshold.
+- **Rate limits.** The M2 error list carries `ABDM-1022 Too many requests` and `ABDM-1027 You are blocked. Please try again after 24 hours.` Neither source gives the threshold.
 - **Request signing.** Nothing describes a signature over the gateway request itself. Payload encryption and signing are described for health records, on the [M2](/docs/hiecm/v3/api/m2) side.
 
 ## Next

@@ -19,7 +19,7 @@ shows the records back. You build [M1](/docs/hiecm/v3/api/m1) for identity,
 ## What a PHR app does
 
 Every user needs an ABHA address, `username@abdm`. Consent, notifications and
-record sharing hang off it. NHA's document sets out six jobs:
+record sharing hang off it. There are six jobs:
 
 | Job | What the user sees |
 | --- | --- |
@@ -60,15 +60,15 @@ Address rules:
 - All numeric is allowed only for the `14digit@abdm` form.
 - Creating a `10digitmobile@abdm` address is currently blocked.
 - Creating a `14digit@abdm` address is not allowed, but a user can log in with
-  one. Every 14 digit ABHA number is issued a default address of this shape, which
-  NHA's document writes as `14digit@sbx` or `14digit@abdm` without saying which
-  environment uses which suffix.
+  one. Every 14 digit ABHA number is issued a default address of this shape,
+  written as `14digit@sbx` or `14digit@abdm`. Which environment uses which
+  suffix is not documented yet.
 - Minimum length is stated twice and the statements disagree: 4 characters in the
   prose and the ABHA number test cases, 8 in the mobile number test case table.
   Unresolved against the sandbox, so validate against the API response.
 - Password, where you collect one: 8 characters or longer, one A to Z, one a to z,
   one digit, one symbol, no spaces, no more than 2 consecutive characters or
-  keyboard keys. NHA's document says password validation is now optional.
+  keyboard keys. Password validation is now optional.
 
 ### Linking an ABHA number to an ABHA address
 
@@ -140,8 +140,7 @@ Every PHR application must also implement the
 
 A subscription is how your app hears about changes to a user's ABHA address. Set
 one up when you create an ABHA address, and when a user logs in with an address
-your install has not seen. NHA's document requires you to ask the user for consent
-first.
+your install has not seen. Ask the user for consent first.
 
 An approved subscription notifies your app of a new care context, a modified care
 context, a new consent request and a new subscription request. Surface these as
@@ -163,7 +162,7 @@ The user must be able to disable a policy. A request then arrives for each recor
 
 ### Consent management
 
-NHA's document lists five capabilities:
+You build five capabilities:
 
 | Capability | What it covers |
 | --- | --- |
@@ -191,7 +190,7 @@ Once a care context is linked to the user's ABHA address:
 6. Your app stores them for long term access and displays them, preferably in
    chronological order.
 
-NHA's test cases cover fetching each health information type structured and
+The test cases cover fetching each health information type structured and
 unstructured: diagnostic report, prescription, discharge summary, consultation
 note, immunisation record, wellness record and health document record.
 
@@ -208,8 +207,8 @@ address, and optionally a patient registration number issued by that provider. T
 HIP is expected to respond within 10 seconds.
 
 Care contexts already linked must not be shown again. When everything is linked,
-NHA's document asks for the message "All your existing records are linked. No
-additional records available for linking".
+show the message "All your existing records are linked. No additional records
+available for linking".
 
 The user selects care contexts and confirms, the HIP sends an OTP to the
 registered mobile number, and on successful verification the care contexts link to
@@ -247,7 +246,7 @@ Store URL and App Store URL.
 ## Where a PHR app also acts as a HIP
 
 A health locker, letting users upload their own records, puts you briefly on the
-HIP side. NHA's document asks PHR apps to accept scanned physical records and
+HIP side. A PHR app must accept scanned physical records and
 output from devices such as BP meters, glucose meters, fitness trackers and
 smartwatches. Your app sets the health information type from the contents or from
 user input, and uses `HealthDocumentRecord` when it cannot be determined.
