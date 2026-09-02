@@ -8,6 +8,30 @@ import css from './styles.css';
 
 type Turn = {from: 'you' | 'assistant'; text: string; sources?: Source[]};
 
+/**
+ * A page the host has attached as context for the conversation, through the
+ * element's `attachPage` method. The widget knows nothing about where it
+ * came from: the host fetches it and hands over the text.
+ *
+ * An empty `markdown` is the honest failure: the host tried to attach the
+ * page and could not, and the panel says so rather than pretending.
+ */
+export type PageAttachment = {title: string; url: string; markdown: string};
+
+/**
+ * The chat API caps an attached page, so the panel cuts to the same length
+ * rather than having the request rejected. The note goes to the model, not
+ * to the reader: it is the model that has to know its copy stops early.
+ */
+const MAX_PAGE_CHARS = 24000;
+const CUT_NOTE =
+  '\n\n[This page was cut here to fit. Say so if the answer needs the rest of it.]';
+
+function pageBody(markdown: string): string {
+  if (markdown.length <= MAX_PAGE_CHARS) return markdown;
+  return markdown.slice(0, MAX_PAGE_CHARS - CUT_NOTE.length) + CUT_NOTE;
+}
+
 /** What the mock says back, whatever it is asked. */
 const CANNED =
   'This panel is a mock. No assistant is connected here yet, so nothing in ' +
@@ -64,6 +88,8 @@ type PanelProps = {
   open: boolean;
   onClose: () => void;
   supportUrl: string;
+  page: PageAttachment | null;
+  onDetach: () => void;
 };
 
 /**
@@ -79,7 +105,15 @@ type PanelProps = {
  * widget knowing anything about them, and it brings Escape, the backdrop and
  * focus containment with it.
  */
-function Panel({apiBase, docsOrigin, open, onClose, supportUrl}: PanelProps) {
+function Panel({
+  apiBase,
+  docsOrigin,
+  open,
+  onClose,
+  supportUrl,
+  page,
+  onDetach,
+}: PanelProps) {
   const [turns, setTurns] = useState<Turn[]>([
     apiBase ? LIVE_OPENING : MOCK_OPENING,
   ]);
@@ -91,6 +125,10 @@ function Panel({apiBase, docsOrigin, open, onClose, supportUrl}: PanelProps) {
   const composer = useRef<HTMLTextAreaElement>(null);
   const abort = useRef<AbortController | null>(null);
   const busy = phase !== 'idle';
+  // A page with no markdown is one the host could not fetch. It still shows,
+  // as a failure, because a reader who asked for the page to be attached has
+  // to be told it was not.
+  const attached = page !== null && page.markdown !== '';
 
   // Text that has arrived but has not been shown yet, and the frame loop that
   // shows it. Both are refs: the loop runs from a callback the browser holds,
@@ -295,6 +333,19 @@ function Panel({apiBase, docsOrigin, open, onClose, supportUrl}: PanelProps) {
             role: t.from === 'you' ? 'user' : 'assistant',
             text: t.text,
           })),
+          // Context, not a turn: the server puts it in front of the model as
+          // the page the reader is looking at, and it never enters the
+          // transcript as something they typed. Omitted entirely when
+          // nothing is attached, which is what an older server also sees.
+          ...(attached
+            ? {
+                page: {
+                  title: page!.title,
+                  url: page!.url,
+                  markdown: pageBody(page!.markdown),
+                },
+              }
+            : {}),
         }),
       });
       if (!res.ok || !res.body) throw new Error(`status ${res.status}`);
@@ -457,6 +508,31 @@ function Panel({apiBase, docsOrigin, open, onClose, supportUrl}: PanelProps) {
           event.preventDefault();
           void ask(draft.trim());
         }}>
+        {/* What is going with the question, said before it is sent rather
+            than after. An attachment the reader cannot see is an answer they
+            cannot account for, so it is named here and it comes off from
+            here. */}
+        {page && (
+          <div
+            class={`ask-ai__attached${attached ? '' : ' ask-ai__attached--failed'}`}>
+            <span class="ask-ai__attached-text">
+              {attached
+                ? `Using this page: ${page.title}`
+                : `Could not attach ${page.title}. The answer will not use it.`}
+            </span>
+            <button
+              type="button"
+              class="ask-ai__attached-remove"
+              onClick={onDetach}
+              aria-label={
+                attached
+                  ? `Do not use ${page.title}`
+                  : `Dismiss the attachment notice for ${page.title}`
+              }>
+              <X />
+            </button>
+          </div>
+        )}
         {/* A textarea, not an input: an error body pasted in should be
             readable before it is sent. Enter still sends, because that is
             what every chat box does; shift and enter takes a new line. */}
@@ -504,6 +580,8 @@ function Widget({
   supportUrl,
   launcher,
   open,
+  page,
+  onDetach,
 }: {
   host: HTMLElement;
   apiBase: string;
@@ -511,6 +589,8 @@ function Widget({
   supportUrl: string;
   launcher: boolean;
   open: boolean;
+  page: PageAttachment | null;
+  onDetach: () => void;
 }) {
   const close = () => {
     host.removeAttribute('open');
@@ -542,6 +622,8 @@ function Widget({
         supportUrl={supportUrl}
         open={open}
         onClose={close}
+        page={page}
+        onDetach={onDetach}
       />
     </>
   );
@@ -557,6 +639,12 @@ function Widget({
  *   launcher     "none" to supply your own trigger and drive `open`
  *   open         present while the panel is showing; the element removes it
  *                and fires a "close" event when the reader dismisses it
+ *
+ * One thing is set by method rather than attribute: attachPage({title, url,
+ * markdown}) gives the conversation the page the reader is looking at, and
+ * attachPage(null) takes it off again. A page of Markdown does not belong in
+ * an attribute, and the host is the only one that knows where its own pages
+ * are published, so it fetches and hands over the text.
  *
  * Everything renders in a shadow root, so the host page's styles cannot reach
  * in and the widget's cannot leak out. Colour is taken from the host's own
@@ -594,6 +682,7 @@ class SupportAgentElement extends HTMLElement {
   ];
 
   private root: ShadowRoot | null = null;
+  private page: PageAttachment | null = null;
 
   connectedCallback() {
     if (!this.root) {
@@ -621,6 +710,20 @@ class SupportAgentElement extends HTMLElement {
     this.removeAttribute('open');
   }
 
+  /**
+   * Attaches a page as context for the conversation, or clears it with
+   * null. The host fetches the Markdown itself, since only the host knows
+   * where its pages live; an empty `markdown` says it tried and failed, and
+   * the panel shows that rather than attaching nothing quietly.
+   *
+   * It is a method rather than an attribute because a whole page of Markdown
+   * has no business being reflected into the DOM as a string.
+   */
+  attachPage(page: PageAttachment | null) {
+    this.page = page;
+    if (this.root) this.paint();
+  }
+
   private paint() {
     const docsOrigin =
       this.getAttribute('docs-origin') ?? window.location.origin;
@@ -635,6 +738,8 @@ class SupportAgentElement extends HTMLElement {
         }
         launcher={this.getAttribute('launcher') !== 'none'}
         open={this.hasAttribute('open')}
+        page={this.page}
+        onDetach={() => this.attachPage(null)}
       />,
       this.root!,
     );

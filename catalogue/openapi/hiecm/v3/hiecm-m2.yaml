@@ -657,6 +657,7 @@ webhooks:
           description: Your bridge accepted the callback. The gateway validates the body
             you send back, so a 202 carrying the wrong body is still a failure.
       x-abdm-atom: hiecm.callback.m2-on-discovery-request
+      x-abdm-answered-by: m2_on_discover_care_contexts
       tags:
       - webhooks
   /api/v3/hip/link/care-context/init:
@@ -682,6 +683,7 @@ webhooks:
           description: Your bridge accepted the callback. The gateway validates the body
             you send back, so a 202 carrying the wrong body is still a failure.
       x-abdm-atom: hiecm.callback.m2-on-link-init
+      x-abdm-answered-by: m2_receive_link_init
       tags:
       - webhooks
   /api/v3/hip/link/care-context/confirm:
@@ -707,6 +709,7 @@ webhooks:
           description: Your bridge accepted the callback. The gateway validates the body
             you send back, so a 202 carrying the wrong body is still a failure.
       x-abdm-atom: hiecm.callback.m2-on-link-confirm
+      x-abdm-answered-by: m2_receive_link_confirm
       tags:
       - webhooks
   /api/v3/hip/health-information/request:
@@ -722,6 +725,7 @@ webhooks:
           description: Your bridge accepted the callback. The gateway validates the body
             you send back, so a 202 carrying the wrong body is still a failure.
       x-abdm-atom: hiecm.callback.m2-on-health-information-request
+      x-abdm-answered-by: m2_hip_health_information_on_request
       tags:
       - webhooks
   /v0.5/consents/hiu/notify:
@@ -737,6 +741,7 @@ webhooks:
           description: Your bridge accepted the callback. The gateway validates the body
             you send back, so a 202 carrying the wrong body is still a failure.
       x-abdm-atom: hiecm.callback.m2-on-consent-notify-hiu
+      x-abdm-answered-by: m3_consent_hiu_on_notify
       tags:
       - webhooks
   /api-hiu/data/notification:

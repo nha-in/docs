@@ -736,7 +736,7 @@ body.is-resizing-sidebar {
 
 .skill-cmd {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 0.5rem;
   padding: 0.625rem 0.625rem 0.625rem 0.875rem;
   border: 1px solid var(--border);
@@ -748,8 +748,12 @@ body.is-resizing-sidebar {
 .markdown .skill-cmd__text {
   flex: 1 1 auto;
   min-width: 0;
-  overflow-x: auto;
-  white-space: nowrap;
+  /* Wrap rather than scroll. The scroll had its bar hidden, so a command
+     longer than the box simply looked cut off, which is how the plugin
+     install line read inside the Install tools dialog. A command is meant to
+     be read before it is copied. */
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
   font-family: var(--font-mono);
   font-size: 0.8125rem;
   color: var(--text-heading);

@@ -92,10 +92,16 @@ export function activePlatform(pathname: string): Platform | undefined {
 /**
  * True when a route belongs to the API side of a gateway.
  *
- * The API side is two folders, `api/` and `reference/` (see site/sidebars.ts,
- * which splits the sidebars on exactly those). Both are matched as whole path
- * segments, at the end of a path as well as in the middle, so a section index
- * such as `/docs/hiecm/v3/api` counts the same as a page beneath it.
+ * The API side is three folders, `api/`, `reference/` and `troubleshooting/`
+ * (see site/sidebars.ts, which composes the API sidebar from exactly those).
+ * All three are matched as whole path segments, at the end of a path as well
+ * as in the middle, so a section index such as `/docs/hiecm/v3/api` counts the
+ * same as a page beneath it.
+ *
+ * Troubleshooting is here rather than in Docs because a reader reaches it from
+ * a failing call, which is an API reference question. It keeps its published
+ * URL, `/docs/<platform>/<version>/troubleshooting/...`, because moving the
+ * folder would break five live links to buy nothing.
  *
  * One predicate, exported, because this question is asked in more than one
  * place: the tab strip asks it to light the right tab, and the sidebar asks it
@@ -104,7 +110,7 @@ export function activePlatform(pathname: string): Platform | undefined {
  * API tree.
  */
 export function isApiRoute(pathname: string): boolean {
-  return /\/(api|reference)(\/|$)/.test(pathname);
+  return /\/(api|reference|troubleshooting)(\/|$)/.test(pathname);
 }
 
 /**

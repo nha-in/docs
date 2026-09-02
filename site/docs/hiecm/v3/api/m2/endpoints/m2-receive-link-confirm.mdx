@@ -15,3 +15,7 @@ import ApiEndpoint from '@site/src/components/api/ApiEndpoint';
 import operation from '@site/src/data/api/m2-receive-link-confirm.json';
 
 <ApiEndpoint operation={operation} />
+
+## Callbacks
+
+- You make this call in reply to **Confirmation of a link, carrying the token the patient approved**, which ABDM posts to `/api/v3/hip/link/care-context/confirm`. [Open the callback](/docs/hiecm/v3/api/m2/endpoints/m2-on-link-confirm).

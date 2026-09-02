@@ -20,9 +20,10 @@ import (
 
 // chatBodyLimit bounds how much of a POST /api/chat request body gets
 // decoded, so a client cannot force the server to buffer an unbounded
-// payload. 64 KiB comfortably covers MaxTurns turns at MaxInputLen /
-// MaxAssistantLen each, plus JSON overhead.
-const chatBodyLimit = 64 * 1024 // 64 KiB
+// payload. 128 KiB comfortably covers MaxTurns turns at MaxInputLen /
+// MaxAssistantLen each (about 30 KB) alongside an attached page at
+// MaxPageChars (24 KB), plus JSON escaping of a whole Markdown document.
+const chatBodyLimit = 128 * 1024 // 128 KiB
 
 func Handler(r *index.Reader, emb embed.Embedder, allowOrigin string, chatSvc *chat.Service, limiter *chat.Limiter, trustProxy bool) (http.Handler, error) {
 	if emb != nil && r.EmbeddingsEnabled() && emb.Model() != r.EmbeddingModel() {
@@ -96,6 +97,9 @@ func Handler(r *index.Reader, emb embed.Embedder, allowOrigin string, chatSvc *c
 		}
 		var in struct {
 			Turns []chat.Turn `json:"turns"`
+			// Optional: the page the reader had open. Absent from an older
+			// client, and from any request opened from the top bar.
+			Page *chat.Page `json:"page"`
 		}
 		if err := json.NewDecoder(io.LimitReader(req.Body, chatBodyLimit)).Decode(&in); err != nil {
 			writeJSON(w, 400, map[string]string{"error": "bad request body"})
@@ -104,6 +108,10 @@ func Handler(r *index.Reader, emb embed.Embedder, allowOrigin string, chatSvc *c
 		// Validation errors must be JSON 400s, not SSE streams: validate
 		// before NewSSEWriter commits the response to text/event-stream.
 		if err := chatSvc.ValidateTurns(in.Turns); err != nil {
+			writeJSON(w, 400, map[string]string{"error": err.Error()})
+			return
+		}
+		if err := chatSvc.ValidatePage(in.Page); err != nil {
 			writeJSON(w, 400, map[string]string{"error": err.Error()})
 			return
 		}
@@ -116,7 +124,7 @@ func Handler(r *index.Reader, emb embed.Embedder, allowOrigin string, chatSvc *c
 			return
 		}
 		start := time.Now()
-		if err := chatSvc.Respond(ctx, in.Turns, sw.Event); err != nil {
+		if err := chatSvc.Respond(ctx, in.Turns, in.Page, sw.Event); err != nil {
 			_ = sw.Event("error", map[string]string{"message": "the assistant hit a problem, try again shortly"})
 			slog.Error("chat failed", "err", err)
 			return

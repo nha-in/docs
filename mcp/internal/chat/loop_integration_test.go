@@ -73,7 +73,7 @@ func TestLoopToolCallThenAnswer(t *testing.T) {
 	svc := &chat.Service{Model: fm, Tools: tools, MaxTokens: 100}
 	emit, evs := collectEvents()
 	err := svc.Respond(context.Background(),
-		[]chat.Turn{{Role: "user", Text: "what is the timestamp format?"}}, emit)
+		[]chat.Turn{{Role: "user", Text: "what is the timestamp format?"}}, nil, emit)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -109,7 +109,7 @@ func TestLoopBudgetExhausted(t *testing.T) {
 	svc := &chat.Service{Model: fm, Tools: server.ChatTools(server.NewTools(r, nil).Defs()), MaxTokens: 100}
 	emit, _ := collectEvents()
 	if err := svc.Respond(context.Background(),
-		[]chat.Turn{{Role: "user", Text: "hi"}}, emit); err != nil {
+		[]chat.Turn{{Role: "user", Text: "hi"}}, nil, emit); err != nil {
 		t.Fatal(err)
 	}
 	if fm.calls != 7 {
