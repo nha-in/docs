@@ -24,18 +24,21 @@ Create an account at <a href={sandboxLinks.home} target="_blank" rel="noopener n
 your organisation. NHA's M4 document gives the same instruction in one line: to obtain a
 `clientId` and a `clientSecret`, register on the sandbox application.
 
-[NHA](/docs/hiecm/v3/getting-started/glossary#nha) reviews the request before it issues them. No
-turnaround time is published. Nothing in ABDM unblocks until the credentials arrive, so raise
-the request on day one.
+[NHA](/docs/hiecm/v3/getting-started/glossary#nha) reviews the request before it issues them.
+NHA's FAQ says the application itself takes about 10 minutes, and that applications are
+processed in a maximum of 5 working days. Nothing in ABDM unblocks until the credentials
+arrive, so raise the request on day one.
 
-<SandboxAction action="register">Register on the sandbox</SandboxAction>{' '}
-<SandboxAction action="credentials">View credentials in the sandbox</SandboxAction>
+<SandboxAction action="register">Register on the sandbox</SandboxAction>
 
 ## 2. Use the wait
 
 Every call needs a token, and every token needs those credentials. Spend the wait on the parts
 that need neither.
 
+- [Your first fifteen minutes](/docs/hiecm/v3/getting-started/first-fifteen-minutes) gives you
+  a transcribed exchange and your own first call assembled, so you have something ready to run
+  the moment credentials arrive.
 - Decide which role your system takes. [What you can build](/docs/hiecm/v3/getting-started/what-you-can-build)
   maps a kind of system to the milestones it needs, and
   [Integration milestones](/docs/hiecm/v3/getting-started/milestones) gives the role to milestone table.
@@ -97,7 +100,7 @@ In [M1](/docs/hiecm/v3/api/m1) the answer to a call comes back in the response t
 
 You register one base URL. ABDM posts to paths under it, and each callback carries the `REQUEST-ID` you sent on the original call so you can match the answer to the question. The paths are listed on [callbacks](/docs/hiecm/v3/reference/callbacks).
 
-<SandboxAction action="callbackUrl">Register your callback URL</SandboxAction>
+<SandboxAction action="callbackUrl">Open the sandbox</SandboxAction>
 
 Two things about that URL decide whether your integration works:
 
