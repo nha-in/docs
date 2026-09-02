@@ -74,11 +74,17 @@ export default function PageActions(): React.ReactNode {
     resetTimer.current = setTimeout(() => setStatus('idle'), 2000);
   }, [mdUrl]);
 
-  // `chrome/AskAiBridge.tsx` listens for this on window and opens the
-  // `<abdm-support-agent>` element in the top bar.
+  // `chrome/AskAiBridge.tsx` listens for this on window: it opens the
+  // `<abdm-support-agent>` element in the top bar and hands it this page's
+  // Markdown, so the first question is answered against the page the reader
+  // is on. The heading rather than document.title, because the title carries
+  // the site's name after it and the panel shows this back to the reader.
   const askAi = useCallback(() => {
+    const heading = document.querySelector('h1')?.textContent?.trim();
     window.dispatchEvent(
-      new CustomEvent('abdm:ask-ai', {detail: {page: pathname, title: document.title}}),
+      new CustomEvent('abdm:ask-ai', {
+        detail: {page: pathname, title: heading || document.title},
+      }),
     );
   }, [pathname]);
 
