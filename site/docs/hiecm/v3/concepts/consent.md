@@ -19,7 +19,7 @@ Consent is the permission layer of [ABDM](/docs/hiecm/v3/getting-started/glossar
 | Consent request | The ask. It names the patient by [ABHA](/docs/hiecm/v3/getting-started/glossary#abha) address, the reason, the record types wanted, and the date range wanted. | The [HIU](/docs/hiecm/v3/getting-started/glossary#hiu), through the gateway | Consent request id |
 | [Consent artefact](/docs/hiecm/v3/getting-started/glossary#consent-artefact) | The permission itself, created only if the patient grants the request. It is what a record holder checks before sending anything. | The [HIE-CM](/docs/hiecm/v3/getting-started/glossary#hie-cm), on the patient's decision | Consent artefact id |
 
-One request can produce more than one artefact. [NHA](/docs/hiecm/v3/getting-started/glossary#nha)'s M3 document says a granted request returns the ids of the consent artefacts created against it, plural. Store the request id and every artefact id.
+One request can produce more than one artefact. A granted request returns the ids of the consent artefacts created against it, plural. Store the request id and every artefact id.
 
 ## Who holds what
 
@@ -30,7 +30,7 @@ One request can produce more than one artefact. [NHA](/docs/hiecm/v3/getting-sta
 
 ## The states a consent moves through
 
-NHA's PHR document names five states, in the two sections a PHR app shows: Requests holds Requested, Denied and Expired; Approved holds Granted and Revoked.
+There are five states, in the two sections a PHR app shows: Requests holds Requested, Denied and Expired; Approved holds Granted and Revoked.
 
 ```mermaid
 stateDiagram-v2
@@ -50,15 +50,15 @@ stateDiagram-v2
 | Expired | The patient did not act inside the window the HIU set on the request. | Raise a new request if the clinical need is still there. |
 | Revoked | The patient withdrew a consent they had already granted. | Stop fetching under that artefact from that moment. |
 
-Two clocks run here. The **request window** is how long the patient has to answer, set by the HIU, and running out produces Expired. The **consent validity period** is how long access lasts once granted, set by the patient as they grant, "with a defined expiry date and time" in NHA's M3 document. Neither is the **date range**, which says which records are in scope by when the care happened: a consent granted today can cover records from 2019.
+Two clocks run here. The **request window** is how long the patient has to answer, set by the HIU, and running out produces Expired. The **consent validity period** is how long access lasts once granted, set by the patient as they grant, with a defined expiry date and time. Neither is the **date range**, which says which records are in scope by when the care happened: a consent granted today can cover records from 2019.
 
 ## What the patient sees, and can change
 
-NHA's PHR document lists what a consent request must display: the requesting HIU, the purpose of data access, the data types requested, the date range, the consent validity period and the request status. Where permitted, the patient may modify four of those before approving: access duration, record date range, data categories and validity period. The consent you get back can be narrower than the one you asked for, so read the artefact.
+A consent request must display the requesting HIU, the purpose of data access, the data types requested, the date range, the consent validity period and the request status. Where permitted, the patient may modify four of those before approving: access duration, record date range, data categories and validity period. The consent you get back can be narrower than the one you asked for, so read the artefact.
 
 ## Purpose of use codes
 
-Why you want the records. See [purpose of use](/docs/hiecm/v3/getting-started/glossary#purpose-of-use). NHA takes a subset of the HL7 v3 PurposeOfUse value set at [terminology.hl7.org](http://terminology.hl7.org/ValueSet/v3-PurposeOfUse).
+Why you want the records. See [purpose of use](/docs/hiecm/v3/getting-started/glossary#purpose-of-use). These codes are a subset of the HL7 v3 PurposeOfUse value set at [terminology.hl7.org](http://terminology.hl7.org/ValueSet/v3-PurposeOfUse).
 
 | Code | Display |
 | --- | --- |
@@ -69,11 +69,11 @@ Why you want the records. See [purpose of use](/docs/hiecm/v3/getting-started/gl
 | `DSRCH` | Disease Specific Healthcare Research |
 | `PATRQT` | Self-Requested |
 
-NHA's table prints the header row and the `CAREMGT` row twice, an artefact of the source document. There are six codes. The patient reads this code.
+The source table prints the header row and the `CAREMGT` row twice. There are six codes. The patient reads this code.
 
 ## Health information types
 
-What kind of record you are asking for. See [HI type](/docs/hiecm/v3/getting-started/glossary#hi-type). NHA's M3 document lists the types supported as of writing:
+What kind of record you are asking for. See [HI type](/docs/hiecm/v3/getting-started/glossary#hi-type). M3 supports these types as of writing:
 
 | Code | Display |
 | --- | --- |
@@ -85,21 +85,21 @@ What kind of record you are asking for. See [HI type](/docs/hiecm/v3/getting-sta
 | `HealthDocumentRecord` | Record artifact |
 | `WellnessRecord` | Wellness Record |
 
-NHA's M2 error message for an invalid HI type lists these seven and adds `Invoice`. The two documents disagree by one value, so check the swagger before you send `Invoice`. What each type carries as a [FHIR](/docs/hiecm/v3/getting-started/glossary#fhir) bundle is on [FHIR and health record formats](/docs/hiecm/v3/concepts/fhir).
+The M2 error message for an invalid HI type lists these seven and adds `Invoice`. The two disagree by one value, so check the swagger before you send `Invoice`. What each type carries as a [FHIR](/docs/hiecm/v3/getting-started/glossary#fhir) bundle is on [FHIR and health record formats](/docs/hiecm/v3/concepts/fhir).
 
 ## Expiry and revocation
 
 **Expiry is predictable.** The artefact carries an end, so you can fetch before it arrives. Past it, the record holder rejects the request: `ABDM-1061` for an expired consent artefact, `ABDM-1112` for an artefact id that is invalid or already expired.
 
-**Revocation is not.** The patient can withdraw at any time, including after you have read the data, and NHA's PHR document states that future data sharing under that consent must stop immediately.
+**Revocation is not.** The patient can withdraw at any time, including after you have read the data, and future data sharing under that consent must stop immediately.
 
-So treat every fetch as a fresh permission check, and handle a mid flow revocation. A consent that was live when you sent the health information request can be dead when the record holder validates it. That returns `ABDM-1062`, consent not granted. Decide your retention policy for data you already hold. NHA's documents say sharing stops; they do not say what to do with what you received.
+So treat every fetch as a fresh permission check, and handle a mid flow revocation. A consent that was live when you sent the health information request can be dead when the record holder validates it. That returns `ABDM-1062`, consent not granted. Decide your retention policy for data you already hold. Sharing stops. What to do with what you already received is not documented yet.
 
-Read every code with the message the gateway returns. NHA's error table lists `ABDM-1061` and `ABDM-1062` against two different messages each, so the code alone does not identify the failure.
+Read every code with the message the gateway returns. The error table lists `ABDM-1061` and `ABDM-1062` against two different messages each, so the code alone does not identify the failure.
 
 ## Consent without a person tapping approve
 
-NHA's PHR document describes an auto approval policy: the patient authorises the app once, the app registers the policy with the HIE-CM, and later requests under that policy are granted immediately. The patient can disable it, after which each record needs its own request again. This changes who taps the button, not the model. An artefact is still created, still carries an expiry, and can still be revoked. Detail is on [PHR applications](/docs/hiecm/v3/concepts/phr).
+An auto approval policy works like this: the patient authorises the app once, the app registers the policy with the HIE-CM, and later requests under that policy are granted immediately. The patient can disable it, after which each record needs its own request again. This changes who taps the button, not the model. An artefact is still created, still carries an expiry, and can still be revoked. Detail is on [PHR applications](/docs/hiecm/v3/concepts/phr).
 
 ## Where this is implemented
 

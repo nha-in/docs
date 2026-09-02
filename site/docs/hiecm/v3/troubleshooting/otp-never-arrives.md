@@ -36,7 +36,7 @@ or the code the response names on the
    rate limit response can read like a plain timeout depending on how
    your client surfaces it.
 3. **Has the transaction expired before you tried to verify it?** How
-   long a `txnId` stays valid is not stated in NHA's documents we have.
+   long a `txnId` stays valid is not documented yet.
    A failed enrolment call should not be retried blindly: start a fresh
    OTP request rather than reuse an old `txnId` if enough time has
    passed that you are unsure it is still live.
@@ -51,12 +51,12 @@ a `txnId` from the request call alone does not confirm the SMS was sent.
 
 If you have confirmed the receiving number, are not rate limited, and
 the transaction is fresh, and the OTP still has not arrived, escalate on
-the [NHA dev forum](https://devforum.abdm.gov.in) rather than requesting
+the [developer forum](https://devforum.abdm.gov.in) rather than requesting
 again. Report the API you called, the `REQUEST-ID`, the `TIMESTAMP`, and
 the full response body including the `txnId`. See
 [Support](/docs/support) for the full report format.
 
-This symptom can surface as a rate limit code or NHA's catch-all
+This symptom can surface as a rate limit code or the catch-all
 failure code, both on the
 [error codes reference](/docs/hiecm/v3/reference/error-codes).
 

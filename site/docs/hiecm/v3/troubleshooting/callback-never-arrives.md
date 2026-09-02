@@ -13,10 +13,10 @@ covers: [hiecm.troubleshooting.callback-never-arrives]
 You made a call, it came back with a 202 or a 200, and nothing else has
 happened since. This is a common report in
 [HIE-CM](/docs/hiecm/v3/getting-started/glossary#hie-cm) integration.
-The checks below are in the order this catalogue recommends checking,
-not a record of how often each has turned out to be the actual cause.
+The checks below are in the order we recommend, not a record of how
+often each has turned out to be the actual cause.
 
-That early response only means [NHA](/docs/hiecm/v3/getting-started/glossary#nha)'s
+That early response only means the [NHA](/docs/hiecm/v3/getting-started/glossary#nha)
 gateway accepted your request. In M2 and M3 the real answer arrives
 later, as a POST from the gateway to a URL you registered in advance.
 See [the gateway](/docs/hiecm/v3/concepts/gateway) for why this is the
@@ -34,14 +34,14 @@ for the inbound side you receive it on.
    your local machine or behind a VPN will never receive anything, and
    the original call gives you no signal that this is wrong.
 3. **Did the request expire before the other party answered?** How long
-   a request stays live before ABDM gives up is not stated in NHA's
-   documents we have. If you have waited what feels like a long time,
-   say so when you escalate rather than assuming a fixed window.
+   a request stays live before ABDM gives up is not documented yet. If
+   you have waited what feels like a long time, say so when you escalate
+   rather than assuming a fixed window.
 4. **Is your endpoint returning a non success status?** A handler that
-   errors, times out, or is slow is a real problem, though NHA does not
-   document a specific policy for when or whether delivery attempts
-   stop. Deliveries can repeat, so your handler has to treat every one
-   as possibly a retry of one it already handled. Respond quickly with a
+   errors, times out, or is slow is a real problem. Whether and when
+   delivery attempts stop is not documented yet. Deliveries can repeat,
+   so your handler has to treat every one as possibly a retry of one it
+   already handled. Respond quickly with a
    success status even before you have finished processing the callback
    body.
 
@@ -49,19 +49,19 @@ for the inbound side you receive it on.
 
 Your handler receives a POST at your registered URL, carrying the exact
 `REQUEST-ID` you generated for the original call. Until you have
-observed that once, treat the callback path as unproven even if the
+observed that once, the callback path is unproven, even if the
 registration call itself succeeded.
 
 ## When it goes wrong
 
 If all four checks pass and the callback still has not arrived, escalate
-on the [NHA dev forum](https://devforum.abdm.gov.in). Report the API you
+on the [developer forum](https://devforum.abdm.gov.in). Report the API you
 called, the `REQUEST-ID`, the `TIMESTAMP`, and the response you got. See
 [Support](/docs/support) for the full report format.
 
 This symptom can surface as
-[ABDM-9999](/docs/hiecm/v3/reference/error-codes), NHA's catch-all for a
-failure it does not explain further.
+[ABDM-9999](/docs/hiecm/v3/reference/error-codes), the catch-all for a
+failure the gateway does not explain further.
 
 <a class="next-step" href="/docs/hiecm/v3/api/m2/user-journey">
 <span class="next-step__eyebrow">Next</span>
