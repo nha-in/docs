@@ -34,9 +34,10 @@ skills:
 ## In plain words
 
 You made a call, it returned quickly with a 202 or a 200, and nothing
-else has happened since. This is the single most common report in
-[HIE-CM](../../shared/glossary/hie-cm.md) integration, and the cause is
-almost always the callback URL rather than the original call.
+else has happened since. This is a common report in
+[HIE-CM](../../shared/glossary/hie-cm.md) integration. The checks below
+start with the callback URL, because it is the first place NHA's
+documents point to for this symptom.
 
 That early response only means the gateway accepted your request. In M2
 and M3 the real answer arrives later, as a POST from

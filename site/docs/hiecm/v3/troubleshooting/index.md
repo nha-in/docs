@@ -9,9 +9,10 @@ sidebar_position: 0
 
 # When something breaks
 
-Find the symptom you are seeing. Every page here walks the checks in
-order, from the most common cause to escalation, so you do not need to
-know an error code to start.
+Find the symptom you are seeing. Every page here walks the checks in the
+order this catalogue recommends checking, not a record of how often each
+has turned out to be the actual cause, so you do not need to know an
+error code to start.
 
 - [The callback never arrives](/docs/hiecm/v3/troubleshooting/callback-never-arrives): a call returned 202, and nothing followed on your registered URL.
 - [Everything returns 401](/docs/hiecm/v3/troubleshooting/everything-returns-401): every call fails the same way, not just one endpoint.

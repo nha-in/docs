@@ -60,7 +60,7 @@ sequenceDiagram
     P->>C: Views the request details
     alt Patient grants
         P->>C: Grants, with an expiry date and time
-        C->>C: Creates one consent artefact per HIP
+        C->>C: Creates one or more consent artefacts
         C->>G: Notify granted, with artefact ids and request id
         G->>S: Consent request notify to your system
         S-->>G: on-notify acknowledgement
@@ -74,7 +74,7 @@ sequenceDiagram
 ```
 
 - A grant carries an expiry. The patient sets when the permission runs out.
-- A grant can produce more than one consent artefact, because the patient's records sit in more than one hospital.
+- A grant can produce more than one consent artefact. NHA's M3 document allows this without stating why a given grant produces more than one.
 - The patient can revoke a granted consent at any time. Your access ends when they do.
 
 ## Journey 3: fetching the records
@@ -92,7 +92,8 @@ sequenceDiagram
     G->>C: Forwards
     C-->>G: Artefact detail
     G-->>S: on-fetch callback with the artefact
-    S->>G: Health information request with consent id and request id
+    S->>S: Generates an ECDH key pair for this exchange
+    S->>G: Health information request with consent id, date range, data push URL and public key
     G-->>S: on-request callback with transaction id and status
     G->>H: Health information request to the HIP
     H->>S: Pushes encrypted records to your data push callback URL
