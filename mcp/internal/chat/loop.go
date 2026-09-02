@@ -167,6 +167,8 @@ search_docs returns short snippets, not whole atoms. When a hit looks like the a
 
 The rest: decode_error for any error code or raw error body, and call it before anything else when the question carries one. related_atoms to walk from an atom you already have to its neighbours. catalogue_info for versions and coverage.
 
+A question that is one word, or one acronym, is a glossary lookup, not an ambiguity to hand back. Search it, and search the obvious variant of it, before you write anything: HIMS for HMIS, LIS for LIMS, HRP for the repository. Answer with what you find and name the spelling this documentation uses. Never open by asking the reader which of several things they meant, and never tell them a term is unrecognised until a search has actually failed.
+
 Vocabulary is a lookup too. An acronym, a role, a system category or a piece of Indian health IT jargon, HMIS, LIMS, HRP, EMR, ABHA, HIP, is defined in this documentation's glossary far more often than not, and the spelling a reader uses may not be the spelling NHA chose: search before you say you do not have it, and search once more with the obvious variant before you say it a second time.
 
 JUDGING WHAT COMES BACK
@@ -665,7 +667,7 @@ func (s *Service) finish(sources []Source, emit func(event string, data any) err
 // without a single lookup. A direct answer that happens to need no tool is
 // left alone, and so is a refusal that follows a search which genuinely found
 // nothing, because by then the model has looked.
-var saysItHasNothingRe = regexp.MustCompile(`(?i)\b(?:i (?:do not|don't) have|i (?:could not|couldn't|cannot|can't) find|no (?:entry|definition|documentation|information)\b[^.]{0,30}\bfor\b|not (?:in|covered by) (?:this|the) documentation|is not documented (?:here|on this site))`)
+var saysItHasNothingRe = regexp.MustCompile(`(?i)\b(?:i (?:do not|don't) have|i (?:could not|couldn't|cannot|can't) find|no (?:entry|definition|documentation|information)\b[^.]{0,30}\bfor\b|not (?:in|covered by) (?:this|the) documentation|is not documented (?:here|on this site)|(?:i am|i'm) not sure what you(?:'re| are) asking|(?:do not|don't) recogni[sz]e|is(?:n't| not) an? (?:ABDM|abdm) term|did you mean|are you asking about)`)
 
 func saysItHasNothing(answer string) bool {
 	return saysItHasNothingRe.MatchString(answer)
