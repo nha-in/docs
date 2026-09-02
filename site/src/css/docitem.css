@@ -104,23 +104,42 @@
   text-transform: uppercase;
 }
 
-/* ---------- copy/view as markdown ---------- */
+/* ---------- page actions ----------
+ * Copy/view as markdown, open in an external assistant, ask this site's own
+ * assistant: a compact split button pinned to the H1's row, top right, the
+ * same placement as the reference documentation site's own page actions.
+ *
+ * `.docs-page-actions-row` is the positioning context the theme wrapper
+ * renders around both this control and the article (see
+ * theme/DocItem/Content/index.tsx); the article itself renders its
+ * breadcrumbs, version badge and H1 internally, so there's no seam to join
+ * this control onto the same flex row as the heading. Pinning it here with a
+ * fixed offset is the fallback.
+ *
+ * ponytail: the offset below is a fixed approximation of the breadcrumb
+ * row's height, not a measurement of the real H1 baseline, so it drifts on
+ * pages that also carry a version badge. Upgrade path: have DocItem/Content
+ * accept a title slot so this can sit in a real flex row with the heading.
+ */
+.docs-page-actions-row {
+  position: relative;
+}
 
-.docs-copy-markdown {
+.docs-page-actions {
+  position: absolute;
+  top: 2.25rem;
+  right: 0;
+  z-index: 1;
   display: flex;
   align-items: center;
-  gap: 0.75rem;
-  margin-bottom: 1.5rem;
 }
 
-.docs-copy-markdown__view {
-  font-size: 0.8125rem;
-  font-weight: 500;
-  color: var(--text-muted);
-}
-
-.docs-copy-markdown__view:hover {
-  color: var(--text-heading);
+@media (max-width: 640px) {
+  .docs-page-actions {
+    position: static;
+    justify-content: flex-end;
+    margin-bottom: 1rem;
+  }
 }
 
 /* ---------- feedback row ---------- */
