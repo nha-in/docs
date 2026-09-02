@@ -17,12 +17,6 @@ info:
     The first call in any ABDM integration. You send the client id and client
     secret issued when you registered your application on the ABDM sandbox,
     and you get back a bearer token that the module APIs accept.
-
-    Nothing in this file has been run against the sandbox from this
-    repository. The request body and response fields below are transcribed
-    from NHA's own milestone documentation, listed under `x-abdm-sources`.
-    They are documented, not verified. An endpoint atom records a real
-    response before anything here may be called verified.
   version: abdm-v3
   license:
     name: MIT
@@ -55,6 +49,16 @@ x-abdm-sources:
   hash: sha256:6d56fd91a3f75575c4382de1489ad4a6a0091d0eece9dfa5278c4d248f6fcf6b
   fetched: '2026-08-25'
   note: Same group again.
+- file: catalogue/openapi/.raw/nha-2026-09-01/fixed/hiecm/gateway.yaml
+  role: upstream
+  hash: sha256:e7ca9d3e54d6e6c864f3f1ef7b2422a322c38f6ef0bf64e421c57960b8851dc7
+  fetched: '2026-09-01'
+  note: |
+    First NHA drop to ship the session, certificate and bridge group as its
+    own standalone gateway.yaml rather than embedded in a milestone file.
+    Diffed against this file in catalogue/openapi/nha-drops/2026-09-01-diffs/gateway.md;
+    corrections applied are recorded in
+    catalogue/openapi/corrections/2026-09-01-nha-drop-gateway.md.
 servers:
 - url: https://dev.abdm.gov.in
   description: 'Sandbox. Pair it with the `X-CM-ID: sbx` header.'
@@ -111,13 +115,12 @@ paths:
       description: |
         Register the HIP/HIU callback URL with the ABDM Gateway.
         All gateway push notifications (e.g. patient-share) are delivered to this URL.
-        **Server:** `https://dev.abdm.gov.in/api/hiecm`
-      servers:
-      - url: https://dev.abdm.gov.in/api/hiecm
-        description: ABDM Gateway
+      security:
+      - gatewaySession: []
       parameters:
       - $ref: '#/components/parameters/RequestId'
       - $ref: '#/components/parameters/Timestamp'
+      - $ref: '#/components/parameters/CmId'
       requestBody:
         required: true
         content:
@@ -150,13 +153,12 @@ paths:
       operationId: gateway_list_bridge_services
       description: |
         List all HIP/HIU services registered under the authenticated bridge.
-        **Server:** `https://dev.abdm.gov.in/api/hiecm`
-      servers:
-      - url: https://dev.abdm.gov.in/api/hiecm
-        description: ABDM Gateway
+      security:
+      - gatewaySession: []
       parameters:
       - $ref: '#/components/parameters/RequestId'
       - $ref: '#/components/parameters/Timestamp'
+      - $ref: '#/components/parameters/CmId'
       responses:
         '200':
           description: List of registered bridge services
@@ -174,10 +176,8 @@ paths:
       operationId: gateway_get_bridge_service_by_id
       description: |
         Look up a specific registered HIP/HIU service by its service ID.
-        **Server:** `https://dev.abdm.gov.in/api/hiecm`
-      servers:
-      - url: https://dev.abdm.gov.in/api/hiecm
-        description: ABDM Gateway
+      security:
+      - gatewaySession: []
       parameters:
       - name: serviceId
         in: path
@@ -189,6 +189,7 @@ paths:
           - CityHospital_HIP
       - $ref: '#/components/parameters/RequestId'
       - $ref: '#/components/parameters/Timestamp'
+      - $ref: '#/components/parameters/CmId'
       responses:
         '200':
           description: Service details
@@ -206,11 +207,10 @@ paths:
       operationId: gateway_get_gateway_certs
       description: |
         Get the JSON Web Key Set (JWKS) to verify JWT signatures in gateway callbacks.
-        **Server:** `https://dev.abdm.gov.in/api/hiecm`
-      servers:
-      - url: https://dev.abdm.gov.in/api/hiecm
-        description: ABDM Gateway
       security: []
+      parameters:
+      - $ref: '#/components/parameters/RequestId'
+      - $ref: '#/components/parameters/Timestamp'
       responses:
         '200':
           description: JWKS response
@@ -228,11 +228,10 @@ paths:
       operationId: gateway_get_oidc_config
       description: |
         OIDC discovery endpoint for the ABDM Gateway.
-        **Server:** `https://dev.abdm.gov.in/api/hiecm`
-      servers:
-      - url: https://dev.abdm.gov.in/api/hiecm
-        description: ABDM Gateway
       security: []
+      parameters:
+      - $ref: '#/components/parameters/RequestId'
+      - $ref: '#/components/parameters/Timestamp'
       responses:
         '200':
           description: OpenID Connect configuration
@@ -282,6 +281,135 @@ paths:
           $ref: '#/components/responses/Unauthorized'
       x-abdm-nha-operation-id: registerBridgeServices
       x-abdm-atom: hiecm.endpoint.gateway-register-bridge-services
+  /api/hiecm/gateway/v3/providers:
+    get:
+      tags:
+      - Gateway & Bridge
+      operationId: gateway_list_providers
+      x-abdm-use-case: Provider directory
+      summary: List providers by name
+      description: |
+        List ABDM-registered providers, optionally filtered by name.
+      security:
+      - gatewaySession: []
+      parameters:
+      - $ref: '#/components/parameters/RequestId'
+      - $ref: '#/components/parameters/Timestamp'
+      - $ref: '#/components/parameters/CmId'
+      - name: name
+        in: query
+        required: false
+        description: Filter providers by name.
+        schema:
+          type: string
+        examples:
+          filter:
+            value: ABC Hospital
+      responses:
+        '200':
+          description: Matching providers.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/GatewayProvider'
+      x-abdm-nha-operation-id: abdm-gateway4
+      x-abdm-atom: hiecm.endpoint.gateway-list-providers
+  /api/hiecm/gateway/v3/providers/{provider-id}:
+    get:
+      tags:
+      - Gateway & Bridge
+      operationId: gateway_get_provider_by_id
+      x-abdm-use-case: Provider directory
+      summary: Get a provider by id
+      description: |
+        Look up one provider by its provider id.
+      security:
+      - gatewaySession: []
+      parameters:
+      - name: provider-id
+        in: path
+        required: true
+        description: Provider identifier.
+        schema:
+          type: string
+      - $ref: '#/components/parameters/RequestId'
+      - $ref: '#/components/parameters/Timestamp'
+      - $ref: '#/components/parameters/CmId'
+      responses:
+        '200':
+          description: Provider details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GatewayProviderSummary'
+      x-abdm-nha-operation-id: abdm-gateway5
+      x-abdm-atom: hiecm.endpoint.gateway-get-provider-by-id
+  /api/hiecm/gateway/v3/govt-programs:
+    get:
+      tags:
+      - Gateway & Bridge
+      operationId: gateway_list_govt_programs
+      x-abdm-use-case: Provider directory
+      summary: List government programs
+      description: |
+        List government programs registered with the gateway. The response
+        items share the same shape, field for field, as the provider-by-id
+        response. That shape has not been observed against the sandbox.
+      security:
+      - gatewaySession: []
+      parameters:
+      - $ref: '#/components/parameters/RequestId'
+      - $ref: '#/components/parameters/Timestamp'
+      - $ref: '#/components/parameters/CmId'
+      responses:
+        '200':
+          description: Government programs.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/GatewayProviderSummary'
+      x-abdm-nha-operation-id: abdm-gateway6
+      x-abdm-atom: hiecm.endpoint.gateway-list-govt-programs
+  /api/hiecm/gateway/v3/health-lockers:
+    get:
+      tags:
+      - Gateway & Bridge
+      operationId: gateway_list_health_lockers
+      x-abdm-use-case: Provider directory
+      summary: List health-locker-enabled providers
+      description: |
+        List providers with health locker functionality enabled, optionally
+        filtered by name.
+      security:
+      - gatewaySession: []
+      parameters:
+      - $ref: '#/components/parameters/RequestId'
+      - $ref: '#/components/parameters/Timestamp'
+      - $ref: '#/components/parameters/CmId'
+      - name: name
+        in: query
+        required: false
+        description: Filter by locker name.
+        schema:
+          type: string
+        examples:
+          filter:
+            value: ABC locker
+      responses:
+        '200':
+          description: Health-locker-enabled providers.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/GatewayHealthLocker'
+      x-abdm-nha-operation-id: abdm-gateway7
+      x-abdm-atom: hiecm.endpoint.gateway-list-health-lockers
 components:
   securitySchemes:
     gatewaySession:
@@ -289,7 +417,7 @@ components:
       scheme: bearer
       bearerFormat: JWT
       description: |
-        The `accessToken` returned by `POST /api/hiecm/gateway/v3/sessions` in this file. Send it as `Authorization: Bearer <ACCESS_TOKEN>`.
+        The `accessToken` returned by `POST /api/hiecm/gateway/v3/sessions`. Send it as `Authorization: Bearer <ACCESS_TOKEN>`.
   parameters:
     RequestId:
       name: REQUEST-ID
@@ -405,13 +533,50 @@ components:
                 description: RSA public exponent (Base64URL encoded)
                 examples:
                 - AQAB
+              x5c:
+                type: array
+                description: X.509 certificate chain, each entry a Base64 encoded
+                  DER certificate.
+                items:
+                  type: string
+              x5t:
+                type: string
+                description: X.509 certificate SHA-1 thumbprint.
+              x5t2:
+                type: string
+                description: X.509 certificate SHA-256 thumbprint.
     BridgeServicesResponse:
       type: object
       properties:
+        bridge:
+          type: object
+          description: The bridge the authenticated caller registered.
+          properties:
+            id:
+              type: string
+              examples:
+              - Bridge_ABC
+            name:
+              type: string
+              examples:
+              - ABC Bridge
+            url:
+              type: string
+              format: uri
+              examples:
+              - https://abc.def.in
+            active:
+              type: boolean
+              examples:
+              - true
+            blocklisted:
+              type: boolean
+              examples:
+              - false
         services:
           type: array
           items:
-            $ref: '#/components/schemas/BridgeServiceDetail'
+            $ref: '#/components/schemas/BridgeServiceSummary'
     RegisterBridgeServicesRequest:
       type: object
       required:
@@ -494,45 +659,235 @@ components:
           - Operation completed successfully
     BridgeServiceDetail:
       type: object
+      description: |
+        The service detail returned by the by-id lookup.
       properties:
-        serviceId:
-          type: string
+        id:
+          type: number
           examples:
-          - CityHospital_HIP
+          - 4
         bridgeId:
           type: string
           examples:
-          - your-client-id
-        serviceType:
-          type: string
-          enum:
-          - HIP
-          - HIU
-          - HRP
-          examples:
-          - HIP
-        serviceName:
+          - ABC_Bridge
+        serviceId:
           type: string
           examples:
-          - City General Hospital
-        facilityName:
+          - ABC_Service
+        name:
           type: string
           examples:
-          - City General Hospital
-        hipType:
-          type: string
-          enum:
-          - HOSPITAL
-          - CLINIC
-          - LAB
-          - PHARMACY
-          - WELLNESS
-          - DIAGNOSTIC
-          - OTHER
+          - Service ABC
+        isHip:
+          type: boolean
+          examples:
+          - true
+        isHiu:
+          type: boolean
+          examples:
+          - true
+        isHealthLocker:
+          type: boolean
+          examples:
+          - true
+        isPhr:
+          type: boolean
+          examples:
+          - true
         active:
           type: boolean
           examples:
           - true
+        registerTime:
+          type: string
+          format: date-time
+          nullable: true
+          examples:
+          - '2022-10-06T10:10:00.587Z'
+        dateCreated:
+          type: string
+          format: date-time
+          nullable: true
+          examples:
+          - '2022-10-06T10:10:00.587Z'
+        dateModified:
+          type: string
+          format: date-time
+          nullable: true
+          examples:
+          - '2022-10-06T10:10:00.587Z'
+    BridgeServiceSummary:
+      type: object
+      description: |
+        One entry in the bridge's service list. A different shape from
+        BridgeServiceDetail; the list operation and the by-id operation
+        return different fields for what sounds like the same thing.
+      properties:
+        id:
+          type: string
+          examples:
+          - ABC_Service
+        name:
+          type: string
+          examples:
+          - Service ABC
+        types:
+          type: array
+          items:
+            type: string
+            enum:
+            - HIP
+            - HIU
+            - HEALTH_LOCKER
+            - PHR
+          examples:
+          - - HIP
+        endpoints:
+          type: object
+          nullable: true
+          properties:
+            hipEndpoints:
+              type: array
+              items:
+                $ref: '#/components/schemas/BridgeServiceEndpoint'
+            hiuEndpoints:
+              type: array
+              items:
+                $ref: '#/components/schemas/BridgeServiceEndpoint'
+            healthLockerEndpoints:
+              type: array
+              items:
+                $ref: '#/components/schemas/BridgeServiceEndpoint'
+        active:
+          type: boolean
+          examples:
+          - true
+    BridgeServiceEndpoint:
+      type: object
+      properties:
+        use:
+          type: string
+          examples:
+          - registration
+        connectionType:
+          type: string
+          examples:
+          - HTTPS
+        address:
+          type: string
+          format: uri
+          examples:
+          - https://abc.com/register
+    GatewayEntityIdentifier:
+      type: object
+      properties:
+        name:
+          type: string
+          examples:
+          - AB - PMJAY
+        id:
+          type: string
+          examples:
+          - PMJAY
+    GatewayProvider:
+      type: object
+      description: One entry in the provider directory list.
+      properties:
+        identifier:
+          $ref: '#/components/schemas/GatewayEntityIdentifier'
+        facilityType:
+          type: array
+          items:
+            type: string
+            enum:
+            - HIP
+            - HIU
+            - HEALTH_LOCKER
+          examples:
+          - - HIP
+        isHIP:
+          type: boolean
+          examples:
+          - true
+        isHiu:
+          type: boolean
+          examples:
+          - false
+        isHealthLocker:
+          type: boolean
+          examples:
+          - true
+        isPhr:
+          type: boolean
+          examples:
+          - true
+        isGovtEntity:
+          type: boolean
+          nullable: true
+          examples:
+          - false
+        endpoints:
+          type: object
+          properties:
+            healthLockerEndpoints:
+              type: array
+              items:
+                $ref: '#/components/schemas/BridgeServiceEndpoint'
+    GatewayProviderSummary:
+      type: object
+      description: |
+        The narrower shape returned by the provider-by-id lookup and by the
+        govt-programs list. Both operations return an identically shaped
+        object. That shape has not been observed against the sandbox.
+      properties:
+        identifier:
+          $ref: '#/components/schemas/GatewayEntityIdentifier'
+        facilityType:
+          type: array
+          items:
+            type: string
+            enum:
+            - HIP
+            - HIU
+            - HEALTH_LOCKER
+          examples:
+          - - HIP
+        isHIP:
+          type: boolean
+          examples:
+          - true
+    GatewayHealthLocker:
+      type: object
+      description: One entry in the health-locker-enabled provider list.
+      properties:
+        identifier:
+          $ref: '#/components/schemas/GatewayEntityIdentifier'
+        facilityType:
+          type: array
+          items:
+            type: string
+            enum:
+            - HIP
+            - HIU
+            - HEALTH_LOCKER
+          examples:
+          - - HIP
+        isHip:
+          type: boolean
+          examples:
+          - true
+        isGovtEntity:
+          type: boolean
+          nullable: true
+          examples:
+          - false
+        endpoints:
+          type: object
+          properties:
+            healthLockerEndpoints:
+              type: array
+              items:
+                $ref: '#/components/schemas/BridgeServiceEndpoint'
   responses:
     BadRequest:
       description: Bad request, invalid parameters or missing fields

@@ -1,0 +1,1406 @@
+[
+ [
+  "abha-api-v3",
+  "POST /abha/api/v3/enrollment/enrol/byAadhaar",
+  "request",
+  "examples[Create ABHA via Biometrics- Aadhaar Faceauth]",
+  "authData",
+  "{'authMethods': ['face_auth'], 'face': {'txnId': '881f2bf5-7377-4067-b50e-1e6ff100b3cc', 'aadhaar': '{{encrypt",
+  1
+ ],
+ [
+  "abha-api-v3",
+  "POST /abha/api/v3/enrollment/enrol/byAadhaar",
+  "request",
+  "examples[Create ABHA via Biometrics- Aadhaar IRIS]",
+  "authData",
+  "{'authMethods': ['iris'], 'iris': {'aadhaar': '{{encrypted aadhaar number}}', 'pid': '{{PID}}', 'mobile': '{{m",
+  1
+ ],
+ [
+  "abha-api-v3",
+  "POST /abha/api/v3/enrollment/enrol/abha-address",
+  "request",
+  "examples[ABHA Address]",
+  "preferred",
+  "1 is not of type 'string'",
+  1
+ ],
+ [
+  "abha-api-v3",
+  "POST /abha/api/v3/enrollment/enrol/auth/init",
+  "request",
+  "examples[Init Transaction]",
+  "<root>",
+  "'authData' is a required property",
+  1
+ ],
+ [
+  "abha-api-v3",
+  "POST /abha/api/v3/profile/login/request/otp",
+  "response 400",
+  "examples[Login Via ABHA Number - Using Aadhaar OTP - Invalid Login Hint]",
+  "<root>",
+  "{'loginHint': 'Invalid Login Hint', 'timestamp': '2024-05-10 11:16:16'} is not valid under any of the given sc",
+  1
+ ],
+ [
+  "abha-api-v3",
+  "POST /abha/api/v3/profile/login/request/otp",
+  "response 400",
+  "examples[Login Via ABHA Number - Using ABHA OTP - Invalid Login Hint]",
+  "<root>",
+  "{'loginHint': 'Invalid Login Hint', 'timestamp': '2024-05-10 11:16:16'} is not valid under any of the given sc",
+  1
+ ],
+ [
+  "abha-api-v3",
+  "POST /abha/api/v3/profile/login/request/otp",
+  "response 400",
+  "examples[Login Via Mobile Number - Invalid LoginHint]",
+  "<root>",
+  "{'loginHint': 'Invalid Login Hint', 'timestamp': '2024-05-10 11:16:16'} is not valid under any of the given sc",
+  1
+ ],
+ [
+  "abha-api-v3",
+  "POST /abha/api/v3/profile/login/request/otp",
+  "response 400",
+  "examples[Login via Aadhaar - Invalid Login Hint]",
+  "<root>",
+  "{'loginHint': 'Invalid Login Hint', 'timestamp': '2024-05-10 11:16:16'} is not valid under any of the given sc",
+  1
+ ],
+ [
+  "abha-api-v3",
+  "POST /abha/api/v3/profile/login/request/otp",
+  "response 400",
+  "examples[Login via Aadhaar OTP - Invalid Scope]",
+  "<root>",
+  "{'scope': 'Invalid Scope', 'timestamp': '2024-05-10 11:13:04'} is not valid under any of the given schemas",
+  1
+ ],
+ [
+  "abha-api-v3",
+  "POST /abha/api/v3/profile/login/request/otp",
+  "response 400",
+  "examples[Login via Aadhaar OTP - Invalid LoginId]",
+  "<root>",
+  "{'loginId': 'Invalid LoginId', 'timestamp': '2024-05-10 11:15:14'} is not valid under any of the given schemas",
+  1
+ ],
+ [
+  "abha-api-v3",
+  "POST /abha/api/v3/profile/login/request/otp",
+  "response 400",
+  "examples[Forgot ABHA via Mobile OTP-Invalid LoginId]",
+  "<root>",
+  "{'loginId': 'Invalid LoginId', 'timestamp': '2024-05-10 11:15:14'} is not valid under any of the given schemas",
+  1
+ ],
+ [
+  "abha-api-v3",
+  "POST /abha/api/v3/profile/login/request/otp",
+  "response 400",
+  "examples[Forgot ABHA via Mobile OTP-Invalid LoginHint]",
+  "<root>",
+  "{'loginHint': 'Invalid Login Hint', 'timestamp': '2024-05-10 11:16:16'} is not valid under any of the given sc",
+  1
+ ],
+ [
+  "abha-api-v3",
+  "POST /abha/api/v3/profile/login/request/otp",
+  "response 400",
+  "examples[Forgot ABHA via Aadhaar OTP- Invalid LoginHint]",
+  "<root>",
+  "{'loginHint': 'Invalid Login Hint', 'timestamp': '2024-05-10 11:16:16'} is not valid under any of the given sc",
+  1
+ ],
+ [
+  "abha-api-v3",
+  "POST /abha/api/v3/profile/login/request/otp",
+  "response 400",
+  "examples[Forgot ABHA via Aadhaar OTP-Invalid scope]",
+  "<root>",
+  "{'scope': 'Invalid Scope', 'timestamp': '2024-05-10 11:13:04'} is not valid under any of the given schemas",
+  1
+ ],
+ [
+  "abha-api-v3",
+  "POST /abha/api/v3/profile/login/request/otp",
+  "response 400",
+  "examples[Retrieval of Enrolment-Invalid LoginId]",
+  "<root>",
+  "{'loginId': 'Invalid LoginId', 'timestamp': '2024-05-10 19:54:16'} is not valid under any of the given schemas",
+  1
+ ],
+ [
+  "abha-api-v3",
+  "POST /abha/api/v3/profile/login/request/otp",
+  "response 400",
+  "examples[Retrieval of Enrolment-Invalid Login Hint]",
+  "<root>",
+  "{'loginHint': 'Invalid Login Hint', 'timestamp': '2024-05-10 11:16:16'} is not valid under any of the given sc",
+  1
+ ],
+ [
+  "abha-api-v3",
+  "POST /abha/api/v3/profile/login/request/otp",
+  "response 400",
+  "examples[Search ABHA Via Mobile Number - Invalid LoginId]",
+  "<root>",
+  "{'loginId': 'Invalid LoginId', 'timestamp': '2024-05-10 11:15:14'} is not valid under any of the given schemas",
+  1
+ ],
+ [
+  "abha-api-v3",
+  "POST /abha/api/v3/profile/login/request/otp",
+  "response 404",
+  "examples[Login ABHA API's]",
+  "timestamp",
+  "1734929008319 is not of type 'string'",
+  1
+ ],
+ [
+  "abha-api-v3",
+  "POST /abha/api/v3/profile/login/request/otp",
+  "response 404",
+  "examples[Retrieval of Enrolment-Mobile not found]",
+  "error",
+  "{'code': 'ABDM-1115', 'message': 'The mobile number you have entered does not match with any of the records. P",
+  1
+ ],
+ [
+  "abha-api-v3",
+  "POST /abha/api/v3/profile/login/verify",
+  "request",
+  "examples[Verify Login via Password]",
+  "authData",
+  "'otp' is a required property",
+  1
+ ],
+ [
+  "abha-api-v3",
+  "POST /abha/api/v3/profile/login/verify",
+  "request",
+  "examples[Verify Login via Biometric - Face]",
+  "authData",
+  "'otp' is a required property",
+  1
+ ],
+ [
+  "abha-api-v3",
+  "POST /abha/api/v3/profile/login/verify",
+  "request",
+  "examples[Verify Login via Biometric - FingerPrint]",
+  "authData",
+  "'otp' is a required property",
+  1
+ ],
+ [
+  "abha-api-v3",
+  "POST /abha/api/v3/profile/login/verify",
+  "request",
+  "examples[Verify Login via Biometric - IRIS]",
+  "authData",
+  "'otp' is a required property",
+  1
+ ],
+ [
+  "abha-api-v3",
+  "POST /abha/api/v3/profile/login/verify",
+  "response 200",
+  "examples[Verify Login Via ABHA Number - Verify Password]",
+  "expiresIn",
+  "1296000 is not of type 'string'",
+  2
+ ],
+ [
+  "abha-api-v3",
+  "POST /abha/api/v3/profile/login/verify",
+  "response 200",
+  "examples[Forgot ABHA via Mobile OTP- Positive Flow]",
+  "expiresIn",
+  "300 is not of type 'string'",
+  1
+ ],
+ [
+  "abha-api-v3",
+  "POST /abha/api/v3/profile/login/verify",
+  "response 200",
+  "examples[Retrieval of Enrolment-Positive Flow]",
+  "expiresIn",
+  "300 is not of type 'string'",
+  1
+ ],
+ [
+  "abha-api-v3",
+  "POST /abha/api/v3/profile/login/verify",
+  "response 200",
+  "examples[Forgot ABHA via Aadhaar OTP-Positive flow]",
+  "expiresIn",
+  "1800 is not of type 'string'",
+  2
+ ],
+ [
+  "abha-api-v3",
+  "POST /abha/api/v3/profile/login/verify",
+  "response 200",
+  "examples[Find ABHA - Verify Mobile OTP]",
+  "expiresIn",
+  "1800 is not of type 'string'",
+  2
+ ],
+ [
+  "abha-api-v3",
+  "POST /abha/api/v3/profile/login/verify",
+  "response 200",
+  "examples[Verify Login Via ABHA Number - Using Aadhaar OTP]",
+  "expiresIn",
+  "1800 is not of type 'string'",
+  2
+ ],
+ [
+  "abha-api-v3",
+  "POST /abha/api/v3/profile/login/verify",
+  "response 200",
+  "examples[Verify Login Via ABHA Number - Using ABHA OTP]",
+  "expiresIn",
+  "1800 is not of type 'string'",
+  2
+ ],
+ [
+  "abha-api-v3",
+  "POST /abha/api/v3/profile/login/verify",
+  "response 200",
+  "examples[Verify Login Via Mobile Number]",
+  "expiresIn",
+  "300 is not of type 'string'",
+  1
+ ],
+ [
+  "abha-api-v3",
+  "POST /abha/api/v3/profile/login/verify",
+  "response 200",
+  "examples[Verify Login Via Biometric - Face]",
+  "expiresIn",
+  "1800 is not of type 'string'",
+  2
+ ],
+ [
+  "abha-api-v3",
+  "POST /abha/api/v3/profile/login/verify",
+  "response 200",
+  "examples[Verify Login Via Biometric - FingerPrint]",
+  "expiresIn",
+  "1800 is not of type 'string'",
+  2
+ ],
+ [
+  "abha-api-v3",
+  "POST /abha/api/v3/profile/login/verify",
+  "response 200",
+  "examples[Verify Login Via Biometric - IRIS]",
+  "expiresIn",
+  "1800 is not of type 'string'",
+  2
+ ],
+ [
+  "abha-api-v3",
+  "POST /abha/api/v3/profile/login/verify",
+  "response 400",
+  "examples[Verify Login via ABHA Number using Password - Invalid Password]",
+  "<root>",
+  "{'password': 'Invalid Password', 'timestamp': '2024-05-10 14:33:06'} is not valid under any of the given schem",
+  1
+ ],
+ [
+  "abha-api-v3",
+  "POST /abha/api/v3/profile/login/verify",
+  "response 400",
+  "examples[Verify Login via ABHA Number using Aadhaar OTP - Invalid OTP Value]",
+  "<root>",
+  "{'otpValue': 'Invalid OTP Value', 'timestamp': '2024-05-10 12:51:40'} is not valid under any of the given sche",
+  1
+ ],
+ [
+  "abha-api-v3",
+  "POST /abha/api/v3/profile/login/verify",
+  "response 400",
+  "examples[Verify Login via ABHA Number using ABHA OTP - Invalid OTP Value]",
+  "<root>",
+  "{'otpValue': 'Invalid OTP Value', 'timestamp': '2024-05-10 12:51:40'} is not valid under any of the given sche",
+  1
+ ],
+ [
+  "abha-api-v3",
+  "POST /abha/api/v3/profile/login/verify",
+  "response 400",
+  "examples[Verify Login via Biometric (Face) - Invalid Pid]",
+  "<root>",
+  "{'PID': 'Invalid Face Auth PID', 'timestamp': '2024-10-03 17:28:42'} is not valid under any of the given schem",
+  1
+ ],
+ [
+  "abha-api-v3",
+  "POST /abha/api/v3/profile/login/verify",
+  "response 400",
+  "examples[Verify Login via Biometric (FingerPrint) - Invalid Pid]",
+  "<root>",
+  "{'PID': 'Invalid Fingerprint Auth PID', 'timestamp': '2024-10-04 15:40:46'} is not valid under any of the give",
+  1
+ ],
+ [
+  "abha-api-v3",
+  "POST /abha/api/v3/profile/login/verify",
+  "response 400",
+  "examples[Forgot ABHA via Mobile OTP-Invalid OTP Value]",
+  "<root>",
+  "{'value': {'otpValue': 'Invalid OTP Value', 'timestamp': '2024-05-10 11:20:28'}} is not valid under any of the",
+  1
+ ],
+ [
+  "abha-api-v3",
+  "POST /abha/api/v3/profile/login/verify",
+  "response 400",
+  "examples[Forgot ABHA via Mobile OTP-Invalid Transaction Id]",
+  "<root>",
+  "{'txnId': 'Invalid Transaction Id', 'timestamp': '2024-05-10 11:21:54'} is not valid under any of the given sc",
+  1
+ ],
+ [
+  "abha-api-v3",
+  "POST /abha/api/v3/profile/login/verify",
+  "response 400",
+  "examples[Forgot ABHA via Mobile OTP-Invalid scope]",
+  "<root>",
+  "{'scope': 'Invalid Scope', 'timestamp': '2024-05-10 11:22:57'} is not valid under any of the given schemas",
+  1
+ ],
+ [
+  "abha-api-v3",
+  "POST /abha/api/v3/profile/login/verify",
+  "response 400",
+  "examples[Forgot ABHA via Mobile OTP-Invalid authMethod]",
+  "<root>",
+  "{'authMethods': 'Invalid Auth Method', 'timestamp': '2024-05-10 11:23:53'} is not valid under any of the given",
+  1
+ ],
+ [
+  "abha-api-v3",
+  "POST /abha/api/v3/profile/login/verify",
+  "response 400",
+  "examples[Forgot ABHA via Aadhaar OTP-Invalid OTP]",
+  "<root>",
+  "{'value': {'otpValue': 'Invalid OTP Value', 'timestamp': '2024-05-10 20:04:27'}} is not valid under any of the",
+  1
+ ],
+ [
+  "abha-api-v3",
+  "POST /abha/api/v3/profile/login/verify",
+  "response 400",
+  "examples[Find ABHA  - Invalid Transaction Id]",
+  "<root>",
+  "{'txnId': 'Invalid Transaction Id', 'timestamp': '2024-12-27 16:14:46'} is not valid under any of the given sc",
+  1
+ ],
+ [
+  "abha-api-v3",
+  "POST /abha/api/v3/profile/account/request/otp",
+  "response 400",
+  "examples[Update Email- Invalid Scope]",
+  "<root>",
+  "{'scope': 'Invalid Scope', 'timestamp': '2024-05-10 11:13:04'} is not valid under any of the given schemas",
+  1
+ ],
+ [
+  "abha-api-v3",
+  "POST /abha/api/v3/profile/account/request/otp",
+  "response 400",
+  "examples[Update Email- Invalid LoginId]",
+  "<root>",
+  "{'loginId': 'Invalid LoginId', 'timestamp': '2024-05-10 11:15:14'} is not valid under any of the given schemas",
+  1
+ ],
+ [
+  "abha-api-v3",
+  "POST /abha/api/v3/profile/account/request/otp",
+  "response 400",
+  "examples[Update Email- Invalid Login Hint]",
+  "<root>",
+  "{'value': {'loginHint': 'Invalid Login Hint', 'timestamp': '2024-05-10 11:16:16'}} is not valid under any of t",
+  1
+ ],
+ [
+  "abha-api-v3",
+  "POST /abha/api/v3/profile/account/request/otp",
+  "response 400",
+  "examples[Update Email- Invalid X-token]",
+  "<root>",
+  "{'message': 'Invalid X-token', 'timestamp': '2024-05-10 15:43:47'} is not valid under any of the given schemas",
+  1
+ ],
+ [
+  "abha-api-v3",
+  "POST /abha/api/v3/profile/account/request/otp",
+  "response 400",
+  "examples[Update Mobile- Invalid LoginId]",
+  "<root>",
+  "{'loginId': 'Invalid LoginId', 'timestamp': '2024-05-10 15:44:28'} is not valid under any of the given schemas",
+  1
+ ],
+ [
+  "abha-api-v3",
+  "POST /abha/api/v3/profile/account/request/otp",
+  "response 400",
+  "examples[Update Mobile- Invalid Login Hint]",
+  "<root>",
+  "{'loginHint': 'Invalid Login Hint', 'timestamp': '2024-05-10 15:45:28'} is not valid under any of the given sc",
+  1
+ ],
+ [
+  "abha-api-v3",
+  "POST /abha/api/v3/profile/account/request/otp",
+  "response 400",
+  "examples[Update Mobile-Already verified mobile number]",
+  "<root>",
+  "{'message': 'This mobile number is already verified. Please enter a different mobile number.', 'timestamp': '2",
+  1
+ ],
+ [
+  "abha-api-v3",
+  "POST /abha/api/v3/profile/account/request/otp",
+  "response 400",
+  "examples[Update Mobile- Invalid Scope]",
+  "<root>",
+  "{'scope': 'Invalid Scope', 'timestamp': '2024-05-10 15:46:48'} is not valid under any of the given schemas",
+  1
+ ],
+ [
+  "abha-api-v3",
+  "POST /abha/api/v3/profile/account/request/otp",
+  "response 400",
+  "examples[Re-KYC- Invalid Scope]",
+  "<root>",
+  "{'scope': 'Invalid Scope', 'timestamp': '2024-05-10 11:13:04'} is not valid under any of the given schemas",
+  1
+ ],
+ [
+  "abha-api-v3",
+  "POST /abha/api/v3/profile/account/request/otp",
+  "response 400",
+  "examples[Re-KYC- Invalid X-token]",
+  "<root>",
+  "{'message': 'Invalid X-token', 'timestamp': '2024-05-10 14:53:18'} is not valid under any of the given schemas",
+  1
+ ],
+ [
+  "abha-api-v3",
+  "POST /abha/api/v3/profile/account/request/otp",
+  "response 400",
+  "examples[Re-KYC- Invalid LoginId]",
+  "<root>",
+  "{'loginId': 'Invalid LoginId', 'timestamp': '2024-05-10 11:15:14'} is not valid under any of the given schemas",
+  1
+ ],
+ [
+  "abha-api-v3",
+  "POST /abha/api/v3/profile/account/request/otp",
+  "response 400",
+  "examples[Re-KYC- Invalid Login Hint]",
+  "<root>",
+  "{'loginHint': 'Invalid Login Hint', 'timestamp': '2024-05-10 11:16:16'} is not valid under any of the given sc",
+  1
+ ],
+ [
+  "abha-api-v3",
+  "POST /abha/api/v3/profile/account/request/otp",
+  "response 400",
+  "examples[PASSWORD_UPDATE_REQUEST_OTP - AADHAAR-Invalid Scope]",
+  "<root>",
+  "{'scope': 'Invalid Scope', 'timestamp': '2024-05-10 11:13:04'} is not valid under any of the given schemas",
+  1
+ ],
+ [
+  "abha-api-v3",
+  "POST /abha/api/v3/profile/account/request/otp",
+  "response 400",
+  "examples[PASSWORD_UPDATE_REQUEST_OTP - AADHAAR-Invalid LoginId]",
+  "<root>",
+  "{'loginId': 'Invalid LoginId', 'timestamp': '2024-05-10 11:15:14'} is not valid under any of the given schemas",
+  1
+ ],
+ [
+  "abha-api-v3",
+  "POST /abha/api/v3/profile/account/request/otp",
+  "response 400",
+  "examples[PASSWORD_UPDATE_REQUEST_OTP - AADHAAR-Invalid Login Hint]",
+  "<root>",
+  "{'loginHint': 'Invalid Login Hint', 'timestamp': '2024-05-10 11:16:16'} is not valid under any of the given sc",
+  1
+ ],
+ [
+  "abha-api-v3",
+  "POST /abha/api/v3/profile/account/request/otp",
+  "response 400",
+  "examples[PASSWORD_REQUEST_OTP_ABDM- Invalid Scope]",
+  "<root>",
+  "{'scope': 'Invalid Scope', 'timestamp': '2024-05-10 11:13:04'} is not valid under any of the given schemas",
+  1
+ ],
+ [
+  "abha-api-v3",
+  "POST /abha/api/v3/profile/account/request/otp",
+  "response 400",
+  "examples[PASSWORD_REQUEST_OTP_ABDM- Invalid LoginId]",
+  "<root>",
+  "{'loginId': 'Invalid LoginId', 'timestamp': '2024-05-10 11:15:14'} is not valid under any of the given schemas",
+  1
+ ],
+ [
+  "abha-api-v3",
+  "POST /abha/api/v3/profile/account/request/otp",
+  "response 400",
+  "examples[PASSWORD_REQUEST_OTP_ABDM- Invalid Login Hint]",
+  "<root>",
+  "{'loginHint': 'Invalid Login Hint', 'timestamp': '2024-05-10 11:16:16'} is not valid under any of the given sc",
+  1
+ ],
+ [
+  "abha-api-v3",
+  "POST /abha/api/v3/profile/account/request/otp",
+  "response 400",
+  "examples[Delete ABHA via Aadhaar OTP- Invalid Scope]",
+  "<root>",
+  "{'scope': 'Invalid Scope', 'timestamp': '2024-05-10 11:13:04'} is not valid under any of the given schemas",
+  1
+ ],
+ [
+  "abha-api-v3",
+  "POST /abha/api/v3/profile/account/request/otp",
+  "response 400",
+  "examples[Delete ABHA via Aadhaar OTP- Invalid Login Hint]",
+  "<root>",
+  "{'loginHint': 'Invalid Login Hint', 'timestamp': '2024-05-10 11:16:16'} is not valid under any of the given sc",
+  1
+ ],
+ [
+  "abha-api-v3",
+  "POST /abha/api/v3/profile/account/request/otp",
+  "response 400",
+  "examples[Delete ABHA via Aadhaar OTP- Invalid X-token]",
+  "<root>",
+  "{'message': 'Invalid X-token', 'timestamp': '2024-05-10 14:53:18'} is not valid under any of the given schemas",
+  1
+ ],
+ [
+  "abha-api-v3",
+  "POST /abha/api/v3/profile/account/request/otp",
+  "response 400",
+  "examples[Delete ABHA via ABHA OTP-Invalid scope]",
+  "<root>",
+  "{'scope': 'Invalid Scope', 'timestamp': '2024-05-10 11:13:04'} is not valid under any of the given schemas",
+  1
+ ],
+ [
+  "abha-api-v3",
+  "POST /abha/api/v3/profile/account/request/otp",
+  "response 400",
+  "examples[Delete ABHA via ABHA OTP- Invalid LoginId]",
+  "<root>",
+  "{'loginId': 'Invalid LoginId', 'timestamp': '2024-05-10 11:15:14'} is not valid under any of the given schemas",
+  1
+ ],
+ [
+  "abha-api-v3",
+  "POST /abha/api/v3/profile/account/request/otp",
+  "response 400",
+  "examples[Delete ABHA via ABHA OTP- Invalid LoginHint]",
+  "<root>",
+  "{'loginHint': 'Invalid Login Hint', 'timestamp': '2024-05-10 11:16:16'} is not valid under any of the given sc",
+  1
+ ],
+ [
+  "abha-api-v3",
+  "POST /abha/api/v3/profile/account/request/otp",
+  "response 400",
+  "examples[Delete ABHA via ABHA OTP- Invalid X-token]",
+  "<root>",
+  "{'message': 'Invalid X-token', 'timestamp': '2024-05-10 14:53:18'} is not valid under any of the given schemas",
+  1
+ ],
+ [
+  "abha-api-v3",
+  "POST /abha/api/v3/profile/account/request/otp",
+  "response 400",
+  "examples[Deactivate ABHA via AADHAR- Invalid scope]",
+  "<root>",
+  "{'scope': 'Invalid Scope', 'timestamp': '2024-05-10 11:13:04'} is not valid under any of the given schemas",
+  1
+ ],
+ [
+  "abha-api-v3",
+  "POST /abha/api/v3/profile/account/request/otp",
+  "response 400",
+  "examples[Deactivate ABHA via Aadhaar OTP- Invalid LoginId]",
+  "<root>",
+  "{'loginId': 'Invalid LoginId', 'timestamp': '2024-05-10 11:15:14'} is not valid under any of the given schemas",
+  1
+ ],
+ [
+  "abha-api-v3",
+  "POST /abha/api/v3/profile/account/request/otp",
+  "response 400",
+  "examples[Deactivate ABHA via Aadhaar OTP- Invalid X-token]",
+  "<root>",
+  "{'message': 'Invalid X-token', 'timestamp': '2024-05-10 14:53:18'} is not valid under any of the given schemas",
+  1
+ ],
+ [
+  "abha-api-v3",
+  "POST /abha/api/v3/profile/account/request/otp",
+  "response 400",
+  "examples[Deactivate ABHA via Aadhaar OTP- Invalid LoginHint]",
+  "<root>",
+  "{'loginHint': 'Invalid Login Hint', 'timestamp': '2024-05-10 11:16:16'} is not valid under any of the given sc",
+  1
+ ],
+ [
+  "abha-api-v3",
+  "POST /abha/api/v3/profile/account/request/otp",
+  "response 400",
+  "examples[Deactivate ABHA via ABHA OTP- Invalid Login Hint]",
+  "<root>",
+  "{'loginHint': 'Invalid Login Hint', 'timestamp': '2024-05-10 11:16:16'} is not valid under any of the given sc",
+  1
+ ],
+ [
+  "abha-api-v3",
+  "POST /abha/api/v3/profile/account/request/otp",
+  "response 400",
+  "examples[Deactivate ABHA via ABHA OTP- Invalid LoginId]",
+  "<root>",
+  "{'loginId': 'Invalid LoginId', 'timestamp': '2024-05-10 11:15:14'} is not valid under any of the given schemas",
+  1
+ ],
+ [
+  "abha-api-v3",
+  "POST /abha/api/v3/profile/account/request/otp",
+  "response 400",
+  "examples[Deactivate ABHA via ABHA OTP- Invalid X-token]",
+  "<root>",
+  "{'message': 'Invalid X-token', 'timestamp': '2024-05-10 14:53:18'} is not valid under any of the given schemas",
+  1
+ ],
+ [
+  "abha-api-v3",
+  "POST /abha/api/v3/profile/account/verify",
+  "request",
+  "examples[Deactivate ABHA - Verify Password]",
+  "authData",
+  "'otp' is a required property",
+  1
+ ],
+ [
+  "abha-api-v3",
+  "POST /abha/api/v3/profile/account/verify",
+  "request",
+  "examples[Delete ABHA via Password- Verify Password]",
+  "authData",
+  "'otp' is a required property",
+  1
+ ],
+ [
+  "abha-api-v3",
+  "POST /abha/api/v3/profile/account/verify",
+  "request",
+  "examples[PASSWORD_VERIFY_OTP]",
+  "<root>",
+  "'reasons' is a required property",
+  1
+ ],
+ [
+  "abha-api-v3",
+  "POST /abha/api/v3/profile/account/verify",
+  "request",
+  "examples[Re-KYC - Verify OTP]",
+  "<root>",
+  "'reasons' is a required property",
+  1
+ ],
+ [
+  "abha-api-v3",
+  "POST /abha/api/v3/profile/account/verify",
+  "request",
+  "examples[Update Mobile- Verify OTP]",
+  "<root>",
+  "'reasons' is a required property",
+  1
+ ],
+ [
+  "abha-api-v3",
+  "POST /abha/api/v3/profile/account/verify",
+  "request",
+  "examples[Update Email-Verify OTP]",
+  "<root>",
+  "'reasons' is a required property",
+  1
+ ],
+ [
+  "abha-api-v3",
+  "POST /abha/api/v3/profile/account/verify",
+  "request",
+  "examples[PASSWORD_SET]",
+  "<root>",
+  "'reasons' is a required property",
+  2
+ ],
+ [
+  "abha-api-v3",
+  "POST /abha/api/v3/profile/account/verify",
+  "request",
+  "examples[PASSWORD_UPDATE-OLD PASSWORD]",
+  "<root>",
+  "'reasons' is a required property",
+  2
+ ],
+ [
+  "abha-api-v3",
+  "POST /abha/api/v3/profile/account/verify",
+  "response 400",
+  "examples[Update Email- Invalid Transaction Id]",
+  "<root>",
+  "{'txnId': 'Invalid Transaction Id', 'timestamp': '2024-05-10 12:45:25'} is not valid under any of the given sc",
+  1
+ ],
+ [
+  "abha-api-v3",
+  "POST /abha/api/v3/profile/account/verify",
+  "response 400",
+  "examples[Update Email- Invalid Scope]",
+  "<root>",
+  "{'scope': 'Invalid Scope', 'timestamp': '2024-05-10 11:13:04'} is not valid under any of the given schemas",
+  1
+ ],
+ [
+  "abha-api-v3",
+  "POST /abha/api/v3/profile/account/verify",
+  "response 400",
+  "examples[Update Email- Invalid Auth Methods]",
+  "<root>",
+  "{'value': {'authMethods': 'Invalid Auth Methods', 'timestamp': '2024-05-10 11:40:16'}} is not valid under any ",
+  1
+ ],
+ [
+  "abha-api-v3",
+  "POST /abha/api/v3/profile/account/verify",
+  "response 400",
+  "examples[Update Email- Invalid X-token]",
+  "<root>",
+  "{'value': {'message': 'Invalid X-token', 'timestamp': '2024-05-10 14:53:18'}} is not valid under any of the gi",
+  1
+ ],
+ [
+  "abha-api-v3",
+  "POST /abha/api/v3/profile/account/verify",
+  "response 400",
+  "examples[Update Email- Invalid OTP Value]",
+  "<root>",
+  "{'otpValue': 'Invalid OTP Value', 'timestamp': '2024-05-10 15:35:20'} is not valid under any of the given sche",
+  1
+ ],
+ [
+  "abha-api-v3",
+  "POST /abha/api/v3/profile/account/verify",
+  "response 400",
+  "examples[Update Mobile- Invalid Transaction Id]",
+  "<root>",
+  "{'txnId': 'Invalid Transaction Id', 'timestamp': '2024-05-10 12:45:25'} is not valid under any of the given sc",
+  1
+ ],
+ [
+  "abha-api-v3",
+  "POST /abha/api/v3/profile/account/verify",
+  "response 400",
+  "examples[Update Mobile- Invalid Scope]",
+  "<root>",
+  "{'scope': 'Invalid Scope', 'timestamp': '2024-05-10 11:13:04'} is not valid under any of the given schemas",
+  1
+ ],
+ [
+  "abha-api-v3",
+  "POST /abha/api/v3/profile/account/verify",
+  "response 400",
+  "examples[Update Mobile- Invalid Auth Methods]",
+  "<root>",
+  "{'authMethods': 'Invalid Auth Methods', 'timestamp': '2024-05-10 11:40:16'} is not valid under any of the give",
+  1
+ ],
+ [
+  "abha-api-v3",
+  "POST /abha/api/v3/profile/account/verify",
+  "response 400",
+  "examples[Update Mobile- Invalid X-token]",
+  "<root>",
+  "{'message': 'Invalid X-token', 'timestamp': '2024-05-10 14:53:18'} is not valid under any of the given schemas",
+  1
+ ],
+ [
+  "abha-api-v3",
+  "POST /abha/api/v3/profile/account/verify",
+  "response 400",
+  "examples[Update Mobile- Invalid OTP Value]",
+  "<root>",
+  "{'otpValue': 'Invalid OTP Value', 'timestamp': '2024-05-10 15:35:20'} is not valid under any of the given sche",
+  1
+ ],
+ [
+  "abha-api-v3",
+  "POST /abha/api/v3/profile/account/verify",
+  "response 400",
+  "examples[Re-KYC- Invalid Transaction Id]",
+  "<root>",
+  "{'txnId': 'Invalid Transaction Id', 'timestamp': '2024-05-10 12:45:25'} is not valid under any of the given sc",
+  1
+ ],
+ [
+  "abha-api-v3",
+  "POST /abha/api/v3/profile/account/verify",
+  "response 400",
+  "examples[Re-KYC- Invalid Scope]",
+  "<root>",
+  "{'scope': 'Invalid Scope', 'timestamp': '2024-05-10 11:13:04'} is not valid under any of the given schemas",
+  1
+ ],
+ [
+  "abha-api-v3",
+  "POST /abha/api/v3/profile/account/verify",
+  "response 400",
+  "examples[ReKyc- Invalid Auth Method]",
+  "<root>",
+  "{'authMethods': 'Invalid Auth Methods', 'timestamp': '2024-05-10 11:40:16'} is not valid under any of the give",
+  1
+ ],
+ [
+  "abha-api-v3",
+  "POST /abha/api/v3/profile/account/verify",
+  "response 400",
+  "examples[Re-KYC- Invalid X-token]",
+  "<root>",
+  "{'message': 'Invalid X-token', 'timestamp': '2024-05-10 14:53:18'} is not valid under any of the given schemas",
+  1
+ ],
+ [
+  "abha-api-v3",
+  "POST /abha/api/v3/profile/account/verify",
+  "response 400",
+  "examples[Re-Kyc- Invalid OTP Value]",
+  "<root>",
+  "{'otpValue': 'Invalid OTP Value', 'timestamp': '2024-05-10 15:35:20'} is not valid under any of the given sche",
+  1
+ ],
+ [
+  "abha-api-v3",
+  "POST /abha/api/v3/profile/account/verify",
+  "response 400",
+  "examples[Password_Set-NEW & CONFIRM - NOT SAME]",
+  "<root>",
+  "{'password': 'New & Confirm Password is not same', 'timestamp': '2023-01-11 02:37:38'} is not valid under any ",
+  1
+ ],
+ [
+  "abha-api-v3",
+  "POST /abha/api/v3/profile/account/verify",
+  "response 400",
+  "examples[Password-Set- Invalid Scope]",
+  "<root>",
+  "{'scope': 'Invalid Scope', 'timestamp': '2024-05-10 11:13:04'} is not valid under any of the given schemas",
+  1
+ ],
+ [
+  "abha-api-v3",
+  "POST /abha/api/v3/profile/account/verify",
+  "response 400",
+  "examples[Password Set- Invalid Auth Methods]",
+  "<root>",
+  "{'authMethods': 'Invalid Auth Methods', 'timestamp': '2024-05-10 11:40:16'} is not valid under any of the give",
+  1
+ ],
+ [
+  "abha-api-v3",
+  "POST /abha/api/v3/profile/account/verify",
+  "response 400",
+  "examples[Password_Set- Invalid X-token]",
+  "<root>",
+  "{'message': 'Invalid X-token', 'timestamp': '2024-05-10 14:53:18'} is not valid under any of the given schemas",
+  1
+ ],
+ [
+  "abha-api-v3",
+  "POST /abha/api/v3/profile/account/verify",
+  "response 400",
+  "examples[PASSWORD_UPDATE-OLD PASSWORD-NEW & CONFIRM - NOT SAME]",
+  "<root>",
+  "{'password': 'New & Confirm Password is not same', 'timestamp': '2023-01-11 02:35:47'} is not valid under any ",
+  1
+ ],
+ [
+  "abha-api-v3",
+  "POST /abha/api/v3/profile/account/verify",
+  "response 400",
+  "examples[PASSWORD_UPDATE-OLD PASSWORD- Invalid Scope]",
+  "<root>",
+  "{'scope': 'Invalid Scope', 'timestamp': '2024-05-10 11:13:04'} is not valid under any of the given schemas",
+  1
+ ],
+ [
+  "abha-api-v3",
+  "POST /abha/api/v3/profile/account/verify",
+  "response 400",
+  "examples[PASSWORD_UPDATE-OLD PASSWORD- Invalid Auth Method]",
+  "<root>",
+  "{'authMethods': 'Invalid Auth Methods', 'timestamp': '2024-05-10 11:40:16'} is not valid under any of the give",
+  1
+ ],
+ [
+  "abha-api-v3",
+  "POST /abha/api/v3/profile/account/verify",
+  "response 400",
+  "examples[PASSWORD_UPDATE-OLD PASSWORD- Invalid X-token]",
+  "<root>",
+  "{'message': 'Invalid X-token', 'timestamp': '2024-05-10 14:53:18'} is not valid under any of the given schemas",
+  1
+ ],
+ [
+  "abha-api-v3",
+  "POST /abha/api/v3/profile/account/verify",
+  "response 400",
+  "examples[PASSWORD_UPDATE-OLD PASSWORD- Invalid New Password]",
+  "<root>",
+  "{'newPassword': 'Invalid New Password', 'timestamp': '2024-05-10 18:13:16'} is not valid under any of the give",
+  1
+ ],
+ [
+  "abha-api-v3",
+  "POST /abha/api/v3/profile/account/verify",
+  "response 400",
+  "examples[PASSWORD_VERIFY_OTP- Invalid Transaction Id]",
+  "<root>",
+  "{'txnId': 'Invalid Transaction Id', 'timestamp': '2024-05-10 12:45:25'} is not valid under any of the given sc",
+  1
+ ],
+ [
+  "abha-api-v3",
+  "POST /abha/api/v3/profile/account/verify",
+  "response 400",
+  "examples[PASSWORD_VERIFY_OTP- Invalid OTP Value]",
+  "<root>",
+  "{'otpValue': 'Invalid OTP Value', 'timestamp': '2024-05-10 12:51:40'} is not valid under any of the given sche",
+  1
+ ],
+ [
+  "abha-api-v3",
+  "POST /abha/api/v3/profile/account/verify",
+  "response 400",
+  "examples[PASSWORD_VERIFY_OTP- Invalid Scope]",
+  "<root>",
+  "{'scope': 'Invalid Scope', 'timestamp': '2024-05-10 11:13:04'} is not valid under any of the given schemas",
+  1
+ ],
+ [
+  "abha-api-v3",
+  "POST /abha/api/v3/profile/account/verify",
+  "response 400",
+  "examples[PASSWORD_VERIFY_OTP- Invalid Auth Method]",
+  "<root>",
+  "{'authMethods': 'Invalid Auth Method', 'timestamp': '2024-05-10 11:40:16'} is not valid under any of the given",
+  1
+ ],
+ [
+  "abha-api-v3",
+  "POST /abha/api/v3/profile/account/verify",
+  "response 400",
+  "examples[Delete ABHA via Aadhaar OTP- Invalid Transaction Id]",
+  "<root>",
+  "{'txnId': 'Invalid Transaction Id', 'timestamp': '2024-05-10 12:45:25'} is not valid under any of the given sc",
+  1
+ ],
+ [
+  "abha-api-v3",
+  "POST /abha/api/v3/profile/account/verify",
+  "response 400",
+  "examples[Delete ABHA via Aadhaar OTP- Invalid OTP Value]",
+  "<root>",
+  "{'otpValue': 'Invalid OTP Value', 'timestamp': '2024-05-10 12:51:40'} is not valid under any of the given sche",
+  1
+ ],
+ [
+  "abha-api-v3",
+  "POST /abha/api/v3/profile/account/verify",
+  "response 400",
+  "examples[Delete ABHA via Aadhaar OTP- Invalid Scope]",
+  "<root>",
+  "{'value': {'scope': 'Invalid Scope', 'timestamp': '2024-05-10 11:13:04'}} is not valid under any of the given ",
+  1
+ ],
+ [
+  "abha-api-v3",
+  "POST /abha/api/v3/profile/account/verify",
+  "response 400",
+  "examples[Delete ABHA via Aadhaar OTP- Invalid Auth Method]",
+  "<root>",
+  "{'authMethods': 'Invalid Auth Method', 'timestamp': '2024-05-10 11:40:16'} is not valid under any of the given",
+  1
+ ],
+ [
+  "abha-api-v3",
+  "POST /abha/api/v3/profile/account/verify",
+  "response 400",
+  "examples[Delete ABHA via Aadhaar OTP- Invalid X-token]",
+  "<root>",
+  "{'message': 'Invalid X-token', 'timestamp': '2024-05-10 14:53:18'} is not valid under any of the given schemas",
+  1
+ ],
+ [
+  "abha-api-v3",
+  "POST /abha/api/v3/profile/account/verify",
+  "response 400",
+  "examples[Deactivate ABHA via ABHA OTP- Invalid OTP value]",
+  "<root>",
+  "{'otpValue': 'Invalid OTP Value', 'timestamp': '2024-05-10 12:51:40'} is not valid under any of the given sche",
+  1
+ ],
+ [
+  "abha-api-v3",
+  "POST /abha/api/v3/profile/account/verify",
+  "response 400",
+  "examples[Delete ABHA via ABHA OTP- Invalid OTP value]",
+  "<root>",
+  "{'otpValue': 'Invalid OTP Value', 'timestamp': '2024-05-10 12:51:40'} is not valid under any of the given sche",
+  1
+ ],
+ [
+  "abha-api-v3",
+  "POST /abha/api/v3/profile/account/verify",
+  "response 400",
+  "examples[Deactivate ABHA via ABHA OTP- Invalid scope]",
+  "<root>",
+  "{'scope': 'Invalid Scope', 'timestamp': '2024-05-10 11:13:04'} is not valid under any of the given schemas",
+  1
+ ],
+ [
+  "abha-api-v3",
+  "POST /abha/api/v3/profile/account/verify",
+  "response 400",
+  "examples[Deactivate ABHA via ABHA OTP- Invalid authMethod]",
+  "<root>",
+  "{'authMethods': 'Invalid Auth Method', 'timestamp': '2024-05-10 11:40:16'} is not valid under any of the given",
+  1
+ ],
+ [
+  "abha-api-v3",
+  "POST /abha/api/v3/profile/account/verify",
+  "response 400",
+  "examples[Deactivate ABHA via Aadhaar OTP- Invalid scope]",
+  "<root>",
+  "{'scope': 'Invalid Scope', 'timestamp': '2024-05-10 11:13:04'} is not valid under any of the given schemas",
+  1
+ ],
+ [
+  "abha-api-v3",
+  "POST /abha/api/v3/profile/account/verify",
+  "response 400",
+  "examples[Deactivate ABHA via Aadhaar OTP- Invalid transaction id]",
+  "<root>",
+  "{'txnId': 'Invalid Transaction Id', 'timestamp': '2024-05-10 12:45:25'} is not valid under any of the given sc",
+  1
+ ],
+ [
+  "abha-api-v3",
+  "POST /abha/api/v3/profile/account/verify",
+  "response 400",
+  "examples[Deactivate ABHA via Aadhaar OTP- Invalid OTP value]",
+  "<root>",
+  "{'otpValue': 'Invalid OTP Value', 'timestamp': '2024-05-10 12:51:40'} is not valid under any of the given sche",
+  1
+ ],
+ [
+  "abha-api-v3",
+  "POST /abha/api/v3/profile/account/verify",
+  "response 400",
+  "examples[Deactivate ABHA via Aadhaar OTP- Invalid X-token]",
+  "<root>",
+  "{'message': 'Invalid X-token', 'timestamp': '2024-05-10 14:53:18'} is not valid under any of the given schemas",
+  1
+ ],
+ [
+  "abha-api-v3",
+  "POST /abha/api/v3/profile/account/verify",
+  "response 400",
+  "examples[Deactivate ABHA via AADHAR OTP - Invalid Auth Methods]",
+  "<root>",
+  "{'authMethods': 'Invalid Auth Method', 'timestamp': '2024-05-10 11:40:16'} is not valid under any of the given",
+  1
+ ],
+ [
+  "abha-api-v3",
+  "POST /abha/api/v3/profile/account/verify",
+  "response 400",
+  "examples[Deactivate ABHA via ABHA OTP- Invalid transaction id]",
+  "<root>",
+  "{'txnId': 'Invalid Transaction Id', 'timestamp': '2024-05-10 12:45:25'} is not valid under any of the given sc",
+  1
+ ],
+ [
+  "abha-api-v3",
+  "POST /abha/api/v3/profile/account/verify",
+  "response 400",
+  "examples[Deactivate ABHA via ABHA OTP- Invalid OTP Value]",
+  "<root>",
+  "{'otpValue': 'Invalid OTP Value', 'timestamp': '2024-05-10 12:51:40'} is not valid under any of the given sche",
+  1
+ ],
+ [
+  "abha-api-v3",
+  "POST /abha/api/v3/profile/account/verify",
+  "response 400",
+  "examples[Deactivate ABHA via ABHA OTP- Invalid Scope]",
+  "<root>",
+  "{'scope': 'Invalid Scope', 'timestamp': '2024-05-10 11:13:04'} is not valid under any of the given schemas",
+  1
+ ],
+ [
+  "abha-api-v3",
+  "POST /abha/api/v3/profile/account/verify",
+  "response 400",
+  "examples[Deactivate ABHA via ABHA OTP- Invalid Auth Method]",
+  "<root>",
+  "{'authMethods': 'Invalid Auth Method', 'timestamp': '2024-05-10 11:40:16'} is not valid under any of the given",
+  1
+ ],
+ [
+  "abha-api-v3",
+  "POST /abha/api/v3/profile/account/verify",
+  "response 400",
+  "examples[Deactivate ABHA via Password- Invalid Auth Method]",
+  "<root>",
+  "{'authMethods': 'Invalid Auth Method', 'timestamp': '2024-05-10 11:40:16'} is not valid under any of the given",
+  1
+ ],
+ [
+  "abha-api-v3",
+  "POST /abha/api/v3/profile/account/verify",
+  "response 400",
+  "examples[Deactivate ABHA via ABHA OTP- Invalid X-token]",
+  "<root>",
+  "{'message': 'Invalid X-token', 'timestamp': '2024-05-10 14:53:18'} is not valid under any of the given schemas",
+  1
+ ],
+ [
+  "abha-api-v3",
+  "POST /abha/api/v3/profile/account/verify",
+  "response 400",
+  "examples[Deactivate ABHA via Password- Invalid Scope]",
+  "<root>",
+  "{'scope': 'Invalid Scope', 'timestamp': '2024-05-10 11:13:04'} is not valid under any of the given schemas",
+  1
+ ],
+ [
+  "abha-api-v3",
+  "POST /abha/api/v3/profile/account/verify",
+  "response 400",
+  "examples[Deactivate ABHA via Password- Invalid X-token]",
+  "<root>",
+  "{'message': 'Invalid X-token', 'timestamp': '2024-05-10 14:53:18'} is not valid under any of the given schemas",
+  1
+ ],
+ [
+  "abha-api-v3",
+  "POST /abha/api/v3/profile/account/verify",
+  "response 400",
+  "examples[Deactivate ABHA via Password- Invalid Password]",
+  "<root>",
+  "{'password': 'Invalid Password', 'timestamp': '2024-05-10 14:33:06'} is not valid under any of the given schem",
+  1
+ ],
+ [
+  "abha-api-v3",
+  "PATCH /abha/api/v3/profile/account",
+  "request",
+  "examples[Update User Profile Photo]",
+  "<root>",
+  "'abhaNumber' is a required property",
+  4
+ ],
+ [
+  "abha-api-v3",
+  "POST /abha/api/v3/profile/account/request/emailVerificationLink",
+  "response 400",
+  "examples[Invalid Scope]",
+  "<root>",
+  "{'scope': 'Invalid Scope', 'timestamp': '2024-05-10 11:13:04'} is not valid under any of the given schemas",
+  1
+ ],
+ [
+  "abha-api-v3",
+  "POST /abha/api/v3/profile/account/request/emailVerificationLink",
+  "response 400",
+  "examples[Invalid LoginId]",
+  "<root>",
+  "{'loginId': 'Invalid LoginId', 'timestamp': '2024-05-10 11:15:14'} is not valid under any of the given schemas",
+  1
+ ],
+ [
+  "abha-api-v3",
+  "POST /abha/api/v3/profile/account/request/emailVerificationLink",
+  "response 400",
+  "examples[Invalid Login Hint]",
+  "<root>",
+  "{'loginHint': 'Invalid Login Hint', 'timestamp': '2024-05-10 11:16:16'} is not valid under any of the given sc",
+  1
+ ],
+ [
+  "abha-api-v3",
+  "POST /abha/api/v3/profile/account/request/emailVerificationLink",
+  "response 400",
+  "examples[Invalid X-token]",
+  "<root>",
+  "{'message': 'Invalid X-token', 'timestamp': '2024-05-10 15:43:47'} is not valid under any of the given schemas",
+  1
+ ],
+ [
+  "abha-api-v3",
+  "POST /abha/api/v3/profile/account/request/emailVerificationLink",
+  "response 400",
+  "examples[Invalid access token]",
+  "<root>",
+  "{'code': '900901', 'message': 'Invalid Credentials', 'description': 'Invalid Credentials. Make sure you have p",
+  1
+ ],
+ [
+  "abha-api-v3",
+  "POST /abha/api/v3/profile/account/request/emailVerificationLink",
+  "response 400",
+  "examples[Invalid otpSystem]",
+  "<root>",
+  "{'message': 'Invalid Otp System', 'timestamp': '2024-05-10 15:43:47'} is not valid under any of the given sche",
+  1
+ ],
+ [
+  "abha-api-v3",
+  "POST /abha/api/v3/profile/benefit/linkAndDelink",
+  "request",
+  "examples[LINK or DELINK via X-token]",
+  "<root>",
+  "'loginHint' is a required property",
+  2
+ ],
+ [
+  "abha-api-v3",
+  "POST /abha/api/v3/profile/benefit/search",
+  "response 400",
+  "examples[Invalid Benefit Name]",
+  "<root>",
+  "{'message': 'Invalid Benefit Name,', 'timestamp': '2025-01-03 00:25:29'} is not of type 'array'",
+  1
+ ],
+ [
+  "abha-api-v3",
+  "POST /abha/api/v3/phr/web/login/abha/search",
+  "response 200",
+  "examples[ABHA search]",
+  "message",
+  "None is not of type 'string'",
+  1
+ ],
+ [
+  "abha-api-v3",
+  "POST /abha/api/v3/phr/web/login/abha/request/otp",
+  "response 400",
+  "examples[ABHA Address Verification via Aadhaar OTP-User Not found]",
+  "<root>",
+  "[{'code': 'ABDM-1211', 'message': 'User not found.'}] is not of type 'object'",
+  1
+ ],
+ [
+  "abha-api-v3",
+  "POST /abha/api/v3/phr/web/login/abha/request/otp",
+  "response 400",
+  "examples[ABHA Address Verification via Aadhaar OTP-Invaild abha address]",
+  "<root>",
+  "[{'code': 'ABDM-1006:', 'message': 'Invalid Abha Address'}] is not of type 'object'",
+  1
+ ],
+ [
+  "abha-api-v3",
+  "POST /abha/api/v3/phr/web/login/abha/request/otp",
+  "response 400",
+  "examples[ABHA Address Verification via Aadhaar OTP-Invaild Otp System]",
+  "<root>",
+  "[{'code': 'ABDM-1006:', 'message': 'Invalid Otp System'}] is not of type 'object'",
+  1
+ ],
+ [
+  "abha-api-v3",
+  "POST /abha/api/v3/phr/web/login/abha/verify",
+  "request",
+  "examples[Verify OTP -Mobile Number]",
+  "authData",
+  "{'authMethods': ['otp'], 'otp': {'txnId': '41e59beb-6ee7-421e-a844-3652b2482038', 'otpValue': '{{encryptedOtpV",
+  1
+ ],
+ [
+  "abha-api-v3",
+  "POST /abha/api/v3/phr/web/login/abha/verify",
+  "request",
+  "examples[Verify OTP -Aadhaar Number]",
+  "authData",
+  "{'authMethods': ['otp'], 'otp': {'txnId': '41e59beb-6ee7-421e-a844-3652b2482038', 'otpValue': '{{encryptedOtpV",
+  1
+ ],
+ [
+  "abha-api-v3",
+  "POST /abha/api/v3/phr/web/login/abha/verify",
+  "request",
+  "examples[Verify via Biometric - (Fingerprint Authentication)]",
+  "authData",
+  "{'authMethods': ['bio'], 'bio': {'txnId': '41e59beb-6ee7-421e-a844-3652b2482038', 'fingerPrintAuthPid': '{{fin",
+  1
+ ],
+ [
+  "abha-api-v3",
+  "POST /abha/api/v3/phr/web/login/abha/verify",
+  "request",
+  "examples[Verify via Biometric - (Face Authentication)]",
+  "authData",
+  "{'authMethods': ['face'], 'face': {'txnId': '41e59beb-6ee7-421e-a844-3652b2482038', 'faceAuthPid': '{{faceAuth",
+  1
+ ],
+ [
+  "abha-api-v3",
+  "POST /abha/api/v3/phr/web/login/abha/verify",
+  "request",
+  "examples[Verify via Biometric - (Iris Authentication)]",
+  "authData",
+  "{'authMethods': ['iris'], 'iris': {'txnId': '41e59beb-6ee7-421e-a844-3652b2482038', 'irisAuthPid': '{{irisAuth",
+  1
+ ],
+ [
+  "abha-api-v3",
+  "POST /api/hiecm/gateway/v3/sessions",
+  "response 200",
+  "examples[Successful Response]",
+  "expiresIn",
+  "1200 is not of type 'string'",
+  2
+ ],
+ [
+  "phr-api",
+  "POST /abha/api/v3/phr/app/login/verify",
+  "request",
+  "examples[Login Verify - Password]",
+  "authData",
+  "'otp' is a required property",
+  1
+ ]
+]
