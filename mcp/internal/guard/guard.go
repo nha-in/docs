@@ -41,6 +41,16 @@ var maskers = []masker{
 	{"ABHA_NUMBER", regexp.MustCompile(`\b\d{2}[- ]?\d{4}[- ]?\d{4}[- ]?\d{4}\b`)},
 	// Aadhaar: 12 digits, often in 4-4-4 groups.
 	{"AADHAAR", regexp.MustCompile(`\b\d{4}[- ]?\d{4}[- ]?\d{4}\b`)},
+	// PAN, the income tax identifier: five letters, four digits, one letter.
+	// This shape and the two below are Microsoft Presidio's own India
+	// recognisers, carried here as patterns rather than as a dependency:
+	// Presidio is a Python service, and a health system's masking must not
+	// depend on a second process being up.
+	{"PAN", regexp.MustCompile(`\b[A-Za-z]{5}[0-9]{4}[A-Za-z]\b`)},
+	// Indian passport: a letter, then seven digits, sometimes spaced.
+	{"PASSPORT", regexp.MustCompile(`\b[A-PR-WYa-prwy][1-9]\d\s?\d{4}[1-9]\b`)},
+	// Voter ID (EPIC): three letters and seven digits.
+	{"VOTER_ID", regexp.MustCompile(`\b[A-Za-z]{3}[0-9]{7}\b`)},
 	// Indian mobile, with or without the country code.
 	{"MOBILE", regexp.MustCompile(`\b(?:\+?91[- ]?)?[6-9]\d{9}\b`)},
 	// Bearer tokens and client secrets, which are credentials rather than
