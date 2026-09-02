@@ -8,6 +8,7 @@ source: ABDM__Proposed_Simplified_Milestone_1.md, ABDM__Proposed_Simplified_Mile
 ---
 
 import PatientJourney from '@site/src/components/docs/PatientJourney';
+import AcronymCards from '@site/src/components/docs/AcronymCards';
 
 # Milestones
 
@@ -16,16 +17,35 @@ spell CARE.
 
 ## In short
 
-- **C, [M1](/docs/hiecm/v3/milestones/m1) Create.** Create and verify the patient's
-  [ABHA](/docs/hiecm/v3/getting-started/glossary#abha), the identity every
-  record hangs on.
-- **A, [M2](/docs/hiecm/v3/milestones/m2) Attach.** Attach the records you hold to that identity: care
-  contexts, linking, and sharing as a
-  [HIP](/docs/hiecm/v3/getting-started/glossary#hip).
-- **R, [M3](/docs/hiecm/v3/milestones/m3) Retrieve.** Retrieve records held elsewhere, with the
-  patient's consent, as an [HIU](/docs/hiecm/v3/getting-started/glossary#hiu).
-- **E, [M4](/docs/hiecm/v3/milestones/m4) Enrol.** Enrol your facility and your professionals in the
-  registries, so you can go live.
+<AcronymCards
+  label="The four milestones, CARE"
+  cards={[
+    {
+      word: 'Create',
+      label: 'M1',
+      text: "Create and verify the patient's ABHA, the identity every record hangs on.",
+      to: '/docs/hiecm/v3/milestones/m1',
+    },
+    {
+      word: 'Attach',
+      label: 'M2',
+      text: 'Attach the records you hold to that identity: care contexts, linking, and sharing as a HIP.',
+      to: '/docs/hiecm/v3/milestones/m2',
+    },
+    {
+      word: 'Retrieve',
+      label: 'M3',
+      text: "Retrieve records held elsewhere, with the patient's consent, as an HIU.",
+      to: '/docs/hiecm/v3/milestones/m3',
+    },
+    {
+      word: 'Enrol',
+      label: 'M4',
+      text: 'Enrol your facility and your professionals in the registries, so you can go live.',
+      to: '/docs/hiecm/v3/milestones/m4',
+    },
+  ]}
+/>
 
 M4 certifies last but blocks M2. Sharing a record needs a valid facility ID and
 registration in the HIP role, and that facility ID comes from M4. Plan the

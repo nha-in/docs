@@ -42,7 +42,7 @@ export default function PatientJourney({
             <span className="patient-journey__eyebrow">{step.eyebrow}</span>
             <span className="patient-journey__title">{step.title}</span>
             <p className="patient-journey__story">{step.story}</p>
-            <Link to={step.to} className="patient-journey__cta card">
+            <Link to={step.to} className="patient-journey__cta">
               {step.cta}
               <ArrowRight className="size-4" aria-hidden="true" />
             </Link>
