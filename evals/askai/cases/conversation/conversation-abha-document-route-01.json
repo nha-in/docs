@@ -1,0 +1,44 @@
+{
+  "id": "conversation-abha-document-route-01",
+  "slice": "conversation",
+  "class": "how-do-i",
+  "turns": [
+    {
+      "role": "user",
+      "text": "What are the different ways to register for an ABHA?"
+    },
+    {
+      "role": "assistant",
+      "text": "Registration via Aadhaar uses Aadhaar OTP verification and returns the full profile with the ABHA number. Registration via mobile is being deprecated. Registration via another ID document, such as a driving licence, needs a linked mobile number and OTP verification."
+    },
+    {
+      "role": "user",
+      "text": "A walk-in patient only has a driving licence and a phone, which route do I use?"
+    }
+  ],
+  "attachment": null,
+  "page": null,
+  "must_contain": [
+    "use the identity document route, NHA's own collection uses a driving licence",
+    "you need a working session token, the patient's mobile number with them present to read an OTP, and the document details",
+    "the account this produces is restricted until it is upgraded through Aadhaar KYC"
+  ],
+  "must_not_contain": [
+    "<MASKED",
+    "i apologize",
+    "i apologise",
+    "let me ",
+    "great question",
+    "the catalogue",
+    "atom"
+  ],
+  "expected_sources": [
+    "hiecm.flow.m1-create-abha-by-document"
+  ],
+  "expected_shape": "how-do-i",
+  "expected_behaviour": "answer",
+  "derived_from": null,
+  "source_row": "annexure#sandbox-faq-m1",
+  "catalogue_version": "2026.08.24",
+  "notes": "follow-up narrows a listed set of methods to one concrete case; the second answer is the by-document flow atom."
+}
