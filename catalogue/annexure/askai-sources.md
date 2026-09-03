@@ -5,7 +5,7 @@ description: Every NHA document the assistant's knowledge and its evaluation dep
 
 # Ask AI sources
 
-One row per NHA document. `id` is stable and is what an eval case or an atom cites, as `annexure#<id>`. `hash` is the sha256 of the fetched file where the source is a file; a page rendered by a JavaScript application has no stable bytes to hash and says `page` instead. `atoms` and `cases` are counts kept current by `npm run lint:annexure`, which fails when a citation points nowhere.
+One row per NHA document. `id` is stable and is what an eval case or an atom cites, as `annexure#<id>`. `hash` is the sha256 of the fetched file where the source is a file, truncated to its first 16 hex characters and prefixed `sha256:`; a page rendered by a JavaScript application has no stable bytes to hash and says `page` instead. `atoms` and `cases` are counts kept current by `npm run lint:annexure`, which fails when a citation points nowhere.
 
 | id | url | what | fetched | hash | atoms | cases |
 |---|---|---|---|---|---|---|
@@ -18,7 +18,7 @@ One row per NHA document. `id` is stable and is what an eval case or an atom cit
 | abdm-faq-hpr | https://abdm.gov.in/FAQ | abdm.gov.in FAQ, the Healthcare Professionals Registry category | 2026-09-03 | page | 0 | 0 |
 | abdm-faq-hfr | https://abdm.gov.in/FAQ | abdm.gov.in FAQ, the Health Facility Registry category | 2026-09-03 | page | 0 | 0 |
 | abdm-faq-general | https://abdm.gov.in/FAQ | abdm.gov.in FAQ, the General category | 2026-09-03 | page | 0 | 12 |
-| glossary | site/docs/_glossary/_hiecm.mdx | This portal's glossary, from which the shared glossary atoms were moved | 2026-09-03 | file | 0 | 23 |
-| spec-errors-m1 | catalogue/openapi/hiecm/v3/hiecm-m1.yaml | NHA M1 error table as curated in the catalogue | 2026-09-03 | file | 0 | 5 |
-| spec-errors-m2 | catalogue/openapi/hiecm/v3/hiecm-m2.yaml | NHA M2 error table as curated in the catalogue | 2026-09-03 | file | 0 | 10 |
-| spec-errors-m3 | catalogue/openapi/hiecm/v3/hiecm-m3.yaml | NHA M3 error table as curated in the catalogue | 2026-09-03 | file | 0 | 2 |
+| glossary | site/docs/_glossary/_hiecm.mdx | This portal's glossary, from which the shared glossary atoms were moved | 2026-09-03 | sha256:b38e31aa0161e094 | 0 | 23 |
+| spec-errors-m1 | catalogue/openapi/hiecm/v3/hiecm-m1.yaml | NHA M1 error table as curated in the catalogue | 2026-09-03 | sha256:48351b6fef3958c3 | 0 | 5 |
+| spec-errors-m2 | catalogue/openapi/hiecm/v3/hiecm-m2.yaml | NHA M2 error table as curated in the catalogue | 2026-09-03 | sha256:0fac31a008fe78b2 | 0 | 10 |
+| spec-errors-m3 | catalogue/openapi/hiecm/v3/hiecm-m3.yaml | NHA M3 error table as curated in the catalogue | 2026-09-03 | sha256:490efae0c96f0f93 | 0 | 2 |

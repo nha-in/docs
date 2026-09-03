@@ -83,6 +83,13 @@ type Service struct {
 	// MCPURL is the public MCP endpoint the prompt offers to readers who
 	// are building. Empty means DefaultMCPURL.
 	MCPURL string
+	// TraceTools emits the tool_result event: a tool call's raw input and
+	// output, which the eval harness records as evidence and no reader's
+	// panel uses. False by default, which is what every deployment serving
+	// readers must keep it at -- without it, a reader's browser would
+	// download every raw tool payload the widget ignores. The eval sets it
+	// true when it builds its own Service (internal/eval/runner.go).
+	TraceTools bool
 }
 
 const (
@@ -629,18 +636,31 @@ func (s *Service) Respond(ctx context.Context, turns []Turn, page *Page, emit fu
 			// panel's progress cue must fire before the call so the reader
 			// sees "searching" during the wait, while the eval harness's
 			// evidence (the call's raw input and output) only exists after
-			// runTool returns. output travels as json.RawMessage when the
-			// tool returned valid JSON and as a plain string otherwise, so
-			// an error path like "unknown tool" (not valid JSON on its own)
-			// can never fail this marshal and abort the round.
-			var output any = string(result.Content)
-			if json.Valid(result.Content) {
-				output = json.RawMessage(result.Content)
-			}
-			if err := emit("tool_result", map[string]any{
-				"name": c.Name, "input": json.RawMessage(c.Input), "output": output,
-			}); err != nil {
-				return err
+			// runTool returns. tool_result itself only goes out when the
+			// service asks for it (TraceTools): every reader-facing
+			// deployment leaves it false, because the payload is the eval
+			// harness's evidence and no reader's panel uses it.
+			if s.TraceTools {
+				// Both input and output travel as json.RawMessage when valid
+				// JSON and as a plain string otherwise. Input is a model's
+				// tool-use arguments, which max_tokens can truncate mid
+				// object; guarding it the same way output already is means a
+				// truncated call can never fail this marshal and abort the
+				// round, the same failure the output side was already
+				// guarded against.
+				input := any(string(c.Input))
+				if json.Valid(c.Input) {
+					input = json.RawMessage(c.Input)
+				}
+				output := any(string(result.Content))
+				if json.Valid(result.Content) {
+					output = json.RawMessage(result.Content)
+				}
+				if err := emit("tool_result", map[string]any{
+					"name": c.Name, "input": input, "output": output,
+				}); err != nil {
+					return err
+				}
 			}
 			if fields != nil {
 				collectSources(&sources, c.Name, fields)
