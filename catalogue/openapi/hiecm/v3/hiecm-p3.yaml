@@ -40,6 +40,12 @@ x-abdm-sources:
   fetched: '2026-08-25'
   note: NHA's Aarogya Setu collection, 248 requests. Aarogya Setu is NHA's own
     PHR, so it stands in for any PHR implementation.
+- file: catalogue/openapi/corrections/2026-09-03-p-series-descriptions.md
+  role: correction
+  hash: sha256:19ec9c925786ede3b664575f705948a022dcb891316e605ce4f2d2006aeb832d
+  fetched: '2026-09-03'
+  note: One description per operation, written from each operation's own
+    signature. The upstream collection names its requests and describes none.
 servers:
 - url: https://phrsbx.abdm.gov.in
   description: Sandbox host, not yet
@@ -61,6 +67,7 @@ paths:
       tags:
       - consent_management
       summary: Get All Consent Artefacts by ABHA Address
+      description: "Lists the consent artefacts granted by the signed-in ABHA address, with paging."
       x-abdm-atom: hiecm.endpoint.p3-get-all-consent-artefacts-by-abha-address
       x-abdm-source-folder: Consent Management service
       responses:
@@ -447,6 +454,7 @@ paths:
       tags:
       - consent_management
       summary: Get Consent Request List
+      description: "Lists the consent requests raised against the signed-in ABHA address, with paging."
       x-abdm-atom: hiecm.endpoint.p3-get-consent-request-list
       x-abdm-source-folder: Consent Management service
       responses:
@@ -1030,6 +1038,7 @@ paths:
       tags:
       - consent_management
       summary: Get Consent Request by Request ID
+      description: "Returns one consent request: who is asking, for what purpose, which record types, and its current status."
       x-abdm-atom: hiecm.endpoint.p3-get-consent-request-by-request-id
       parameters:
       - name: consentRequestId
@@ -1256,6 +1265,7 @@ paths:
       tags:
       - consent_management
       summary: Approve Consent Request
+      description: "Approves a consent request. `consents` names the HIPs and care contexts the person is granting, and the artefact ids come back."
       x-abdm-atom: hiecm.endpoint.p3-approve-consent-request
       parameters:
       - name: consentRequestId
@@ -1420,6 +1430,7 @@ paths:
       tags:
       - consent_management
       summary: Get All Consent Artefacts by Request ID
+      description: "Lists the consent artefacts created when a request was approved, one per HIP."
       x-abdm-atom: hiecm.endpoint.p3-get-all-consent-artefacts-by-request-id
       parameters:
       - name: consentRequestId
@@ -1675,6 +1686,7 @@ paths:
       tags:
       - consent_management
       summary: Deny Consent Request
+      description: "Denies a consent request, with the reason the person gave."
       x-abdm-atom: hiecm.endpoint.p3-deny-consent-request
       parameters:
       - name: consentRequestId
@@ -1747,6 +1759,7 @@ paths:
       tags:
       - consent_management
       summary: HIU On-Fetch (Consent Artefact Fetch Callback)
+      description: "Callback the gateway sends with a consent artefact the HIU asked to fetch, or the error that stopped it."
       x-abdm-atom: hiecm.endpoint.p3-hiu-on-fetch-consent-artefact-fetch-callback
       x-abdm-source-folder: Consent Management service
       requestBody:
@@ -1930,6 +1943,7 @@ paths:
       tags:
       - consent_management
       summary: Init Consent Request
+      description: "Raises a consent request as a HIU: names the patient, the purpose, the record types and the period of care wanted."
       x-abdm-atom: hiecm.endpoint.p3-init-consent-request
       x-abdm-source-folder: Consent Management service
       requestBody:
@@ -2137,6 +2151,7 @@ paths:
       tags:
       - consent_management
       summary: HIU Consent Notification
+      description: "Notification the gateway sends a HIU when a consent request is granted, denied, revoked or expires."
       x-abdm-atom: hiecm.endpoint.p3-hiu-consent-notification
       x-abdm-source-folder: Consent Management service
       requestBody:
@@ -2204,6 +2219,7 @@ paths:
       tags:
       - consent_management
       summary: HIU Consent Request On-Init (Callback)
+      description: "Callback the gateway sends after a consent request is raised: the request id to track it by, or the error that stopped it."
       x-abdm-atom: hiecm.endpoint.p3-hiu-consent-request-on-init-callback
       x-abdm-source-folder: Consent Management service
       requestBody:
@@ -2255,6 +2271,7 @@ paths:
       tags:
       - consent_management
       summary: Disable Auto Approval
+      description: "Turns off an auto-approval policy, so later consent requests it would have matched wait for the person again."
       x-abdm-atom: hiecm.endpoint.p3-disable-auto-approval
       parameters:
       - name: autoApprovalId
@@ -2331,6 +2348,7 @@ paths:
       tags:
       - consent_management
       summary: Enable Auto Approval
+      description: "Turns an auto-approval policy back on."
       x-abdm-atom: hiecm.endpoint.p3-enable-auto-approval
       parameters:
       - name: autoApprovalId
@@ -2407,6 +2425,7 @@ paths:
       tags:
       - consent_management
       summary: Consent Auto Approve
+      description: "Creates an auto-approval policy: consent requests from the HIU named are approved without asking, for the sources included and not the ones excluded."
       x-abdm-atom: hiecm.endpoint.p3-consent-auto-approve
       x-abdm-source-folder: Consent Management service
       requestBody:
@@ -2554,6 +2573,7 @@ paths:
       tags:
       - consent_management
       summary: Revoke Consent
+      description: "Revokes the consent artefacts given, so the HIUs holding them can no longer fetch under them."
       x-abdm-atom: hiecm.endpoint.p3-revoke-consent
       x-abdm-source-folder: Consent Management service
       requestBody:
@@ -2622,6 +2642,7 @@ paths:
       tags:
       - consent_management
       summary: Get Consent Artefact by Artefact ID
+      description: "Returns one consent artefact with its signature and current status."
       x-abdm-atom: hiecm.endpoint.p3-get-consent-artefact-by-artefact-id
       parameters:
       - name: consentArtefactId
@@ -2875,6 +2896,7 @@ paths:
       tags:
       - consent_management
       summary: Get Links
+      description: "Lists the person's linked care contexts at the HIPs given, for choosing what to grant in a consent."
       x-abdm-atom: hiecm.endpoint.p3-get-links
       x-abdm-source-folder: Consent Management service
       requestBody:
@@ -3081,6 +3103,7 @@ paths:
       tags:
       - consent_management
       summary: Edit Subscription
+      description: "Edits a subscription and approves it in the same step, changing which HIPs and categories the HIU is subscribed to."
       x-abdm-atom: hiecm.endpoint.p3-edit-subscription
       parameters:
       - name: subscriptionId
@@ -3231,6 +3254,7 @@ paths:
       tags:
       - consent_management
       summary: Get All HIU Subscription Requests
+      description: "Lists the subscription requests HIUs have raised against the signed-in ABHA address, with paging."
       x-abdm-atom: hiecm.endpoint.p3-get-all-hiu-subscription-requests
       x-abdm-source-folder: Consent Management service
       responses:
@@ -3498,6 +3522,7 @@ paths:
       tags:
       - consent_management
       summary: Initiate Subscription Request
+      description: "Raises a subscription request as a HIU: asks to be notified when the patient links new care contexts at the HIPs and categories named, for a period."
       x-abdm-atom: hiecm.endpoint.p3-initiate-subscription-request
       x-abdm-source-folder: Consent Management service
       requestBody:
@@ -3619,6 +3644,7 @@ paths:
       tags:
       - consent_management
       summary: Get Subscription Details by Request ID
+      description: "Returns one subscription request with its status and details, by the request id."
       x-abdm-atom: hiecm.endpoint.p3-get-subscription-details-by-request-id
       parameters:
       - name: subscriptionRequestId
@@ -3820,6 +3846,7 @@ paths:
       tags:
       - consent_management
       summary: Get Subscription Details by Subscription ID
+      description: "Returns one subscription with its details, by the subscription id."
       x-abdm-atom: hiecm.endpoint.p3-get-subscription-details-by-subscription-id
       parameters:
       - name: subscriptionId
@@ -3838,6 +3865,7 @@ paths:
       tags:
       - consent_management
       summary: Approve Subscription Request
+      description: "Approves a subscription request for the sources included and not the ones excluded, or for every HIP."
       x-abdm-atom: hiecm.endpoint.p3-approve-subscription-request
       parameters:
       - name: subscriptionRequestId
@@ -3947,6 +3975,7 @@ paths:
       tags:
       - consent_management
       summary: Deny Subscription Request
+      description: "Denies a subscription request, so the HIU is not notified of the person's new care contexts."
       x-abdm-atom: hiecm.endpoint.p3-deny-subscription-request
       parameters:
       - name: subscriptionRequestId
@@ -4009,6 +4038,7 @@ paths:
       tags:
       - consent_management
       summary: Set Up Subscription for Aarogya Setu
+      description: "Sets up the PHR application's own subscription, so it is notified when the person links new care contexts."
       x-abdm-atom: hiecm.endpoint.p3-set-up-subscription-for-aarogya-setu
       x-abdm-source-folder: Consent Management service
       responses:
@@ -4020,6 +4050,7 @@ paths:
       tags:
       - notification_collection
       summary: Single/Multiple Notification read
+      description: "Marks one or more push notifications as read."
       x-abdm-atom: hiecm.endpoint.p3-single-multiple-notification-read
       x-abdm-source-folder: Notification Collection service
       requestBody:
@@ -4170,6 +4201,7 @@ paths:
       tags:
       - notification_collection
       summary: Clear Notification
+      description: "Clears the push notifications given from the person's list."
       x-abdm-atom: hiecm.endpoint.p3-clear-notification
       x-abdm-source-folder: Notification Collection service
       requestBody:
@@ -4288,6 +4320,7 @@ paths:
       tags:
       - notification_collection
       summary: Add Feedback
+      description: "Records feedback from the person, with a title and body, against their ABHA."
       x-abdm-atom: hiecm.endpoint.p3-add-feedback
       x-abdm-source-folder: Notification Collection service
       requestBody:
@@ -4408,6 +4441,7 @@ paths:
       tags:
       - notification_collection
       summary: Get all notification details
+      description: "Lists the person's push notifications with their read state and the unread count."
       x-abdm-atom: hiecm.endpoint.p3-get-all-notification-details
       x-abdm-source-folder: Notification Collection service
       responses:
@@ -4843,6 +4877,7 @@ paths:
       tags:
       - notification_collection
       summary: Add new Notification
+      description: "Creates a push notification for a person."
       x-abdm-atom: hiecm.endpoint.p3-add-new-notification
       x-abdm-source-folder: Notification Collection service
       requestBody:
@@ -5017,6 +5052,7 @@ paths:
       tags:
       - notification_collection
       summary: App Notification Token
+      description: "Returns the device token registered for push notifications to the signed-in person."
       x-abdm-atom: hiecm.endpoint.p3-app-notification-token
       x-abdm-source-folder: Notification Collection service
       responses:
@@ -5109,6 +5145,7 @@ paths:
       tags:
       - notification_collection
       summary: Schedule-push-notification - internal
+      description: "Schedules a push notification to a person for a given time, for example a medication reminder."
       x-abdm-atom: hiecm.endpoint.p3-schedule-push-notification-internal
       x-abdm-source-folder: Notification Collection service
       requestBody:
@@ -5199,6 +5236,7 @@ paths:
       tags:
       - notification_collection
       summary: GET-scheduled push Notifications
+      description: "Lists the push notifications scheduled for later delivery, with their processing state."
       x-abdm-atom: hiecm.endpoint.p3-get-scheduled-push-notifications
       x-abdm-source-folder: Notification Collection service
       responses:
@@ -5308,6 +5346,7 @@ paths:
       tags:
       - notification_collection
       summary: Update-scheduled push notification
+      description: "Changes the delivery time of a scheduled push notification."
       x-abdm-atom: hiecm.endpoint.p3-update-scheduled-push-notification
       x-abdm-source-folder: Notification Collection service
       requestBody:
@@ -5366,6 +5405,7 @@ paths:
       tags:
       - notification_collection
       summary: Delete push notification
+      description: "Deletes a scheduled push notification by its id."
       x-abdm-atom: hiecm.endpoint.p3-delete-push-notification
       x-abdm-source-folder: Notification Collection service
       responses:
@@ -5377,6 +5417,7 @@ paths:
       tags:
       - notification_collection
       summary: Post - add App Notification Token
+      description: "Registers a device token for push notifications, with the operating system it belongs to."
       x-abdm-atom: hiecm.endpoint.p3-post-add-app-notification-token
       x-abdm-source-folder: Notification Collection service
       requestBody:
