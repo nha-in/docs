@@ -11,10 +11,9 @@
   "attachment": null,
   "page": null,
   "must_contain": [
-    "the catalogue's term is LMIS, not LIMS",
-    "LMIS is NHA's term for laboratory software",
-    "an LMIS is the provider facing side of the HIE-CM, the same side an HMIS sits on",
-    "an LMIS acts as a HIP when it publishes a report and as an HIU when it reads a patient's history"
+    "LIMS is the system a diagnostic laboratory uses to manage samples, tests and results",
+    "the catalogue holds LIMS and LMIS as separate entries",
+    "NHA's term for provider-side lab software is LMIS"
   ],
   "must_not_contain": [
     "<MASKED",
@@ -26,6 +25,7 @@
     "atom"
   ],
   "expected_sources": [
+    "shared.glossary.lims",
     "shared.glossary.lmis"
   ],
   "expected_shape": "define",
@@ -33,5 +33,5 @@
   "derived_from": null,
   "source_row": "annexure#glossary",
   "catalogue_version": "2026.08.24",
-  "notes": "reader typed LIMS; we expect the answer to target LMIS (laboratory management information system), NHA's term for provider-side lab software. A separate real atom, shared.glossary.lims (laboratory information management system), also exists for a different meaning; the lmis atom itself warns that searching one spelling and concluding the other does not exist is a common mistake, so an answer that also names LIMS by way of disambiguation is acceptable."
+  "notes": "reader typed LIMS, which is itself a real catalogue term, laboratory information management system, shared.glossary.lims. The catalogue also holds LMIS, laboratory management information system, shared.glossary.lmis, NHA's own term for provider-side lab software, as a separate entry. A correct answer defines LIMS and names LMIS as the related term, not the claim that LIMS does not exist."
 }

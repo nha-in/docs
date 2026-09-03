@@ -22,7 +22,9 @@
     "the catalogue",
     "atom",
     "business days",
-    "working days"
+    "7 working days",
+    "15 working days",
+    "30 working days"
   ],
   "expected_sources": [],
   "expected_shape": "decline",
@@ -30,5 +32,5 @@
   "derived_from": null,
   "source_row": "annexure#sandbox-faq-general",
   "catalogue_version": "2026.08.24",
-  "notes": "the go-live page states the four exit steps in order but NHA has not published a turnaround duration; do not invent one."
+  "notes": "the go-live page states the four exit steps in order but NHA has not published a turnaround duration; do not invent one. Replaced the bare 'working days' in must_not_contain with digit-bearing forms: the bare phrase fires as a substring of the honest decline 'NHA has not published how many working days this takes', while a fabricated day count does not."
 }
