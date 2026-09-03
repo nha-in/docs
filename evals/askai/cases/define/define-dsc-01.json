@@ -1,0 +1,37 @@
+{
+  "id": "define-dsc-01",
+  "slice": "define",
+  "class": "define",
+  "turns": [
+    {
+      "role": "user",
+      "text": "What is a DSC?"
+    }
+  ],
+  "attachment": null,
+  "page": null,
+  "must_contain": [
+    "DSC stands for Digital Solution Company",
+    "a DSC is the company that makes ABDM compliant software for patients or health facilities",
+    "a DSC is the primary user of the sandbox",
+    "a DSC certifies its product once, and each facility running it registers separately in the Health Facility Registry"
+  ],
+  "must_not_contain": [
+    "<MASKED",
+    "i apologize",
+    "i apologise",
+    "let me ",
+    "great question",
+    "the catalogue",
+    "atom"
+  ],
+  "expected_sources": [
+    "shared.glossary.dsc"
+  ],
+  "expected_shape": "define",
+  "expected_behaviour": "answer",
+  "derived_from": null,
+  "source_row": "annexure#glossary",
+  "catalogue_version": "2026.08.24",
+  "notes": "asked using the catalogue's own spelling."
+}

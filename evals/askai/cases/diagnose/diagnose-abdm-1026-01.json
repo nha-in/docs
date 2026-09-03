@@ -1,0 +1,40 @@
+{
+  "id": "diagnose-abdm-1026-01",
+  "slice": "diagnose",
+  "class": "diagnose",
+  "turns": [
+    {
+      "role": "user",
+      "text": "The attached response came back on a link call, what should I do next?"
+    }
+  ],
+  "attachment": {
+    "name": "response.json",
+    "text": "{\"error\":{\"code\":\"ABDM-1026\",\"message\":\"Invalid Link Token\"}}",
+    "kind": ""
+  },
+  "page": null,
+  "must_contain": [
+    "ABDM-1026 means the link token you sent is not valid for this link",
+    "causes include the token has expired, was issued for a different ABHA address, or was issued for a different HIP",
+    "the fix is to validate the token before use since it is a JWT with a readable expiry, and if it has expired, regenerate it through demographic authentication rather than retrying the same token"
+  ],
+  "must_not_contain": [
+    "<MASKED",
+    "i apologize",
+    "i apologise",
+    "let me ",
+    "great question",
+    "the catalogue",
+    "atom"
+  ],
+  "expected_sources": [
+    "hiecm.error.abdm-1026"
+  ],
+  "expected_shape": "diagnose",
+  "expected_behaviour": "answer",
+  "derived_from": null,
+  "source_row": "annexure#spec-errors-m2",
+  "catalogue_version": "2026.08.24",
+  "notes": "attached form; response body is representative, not a recorded example for this code."
+}
