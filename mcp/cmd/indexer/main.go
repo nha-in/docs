@@ -75,6 +75,10 @@ func run(catDir, outPath, nrcesPath string, emb embed.Embedder) error {
 			if d.Name() == ".raw" {
 				return filepath.SkipDir
 			}
+			// Annexure records document sources that atoms cite, not atoms themselves, so they carry no atom frontmatter.
+			if d.Name() == "annexure" {
+				return filepath.SkipDir
+			}
 			return nil
 		}
 		rel, _ := filepath.Rel(catDir, path)
