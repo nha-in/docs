@@ -130,6 +130,11 @@ const budgetExhaustedNotice = "Tool budget exhausted. Answer now from what you h
 // code change.
 const DefaultMCPURL = "https://abdm-docs-mcp.dev.eka.care/mcp"
 
+// PromptVersion names the system prompt an eval run answered with. Bump it
+// whenever systemPromptTemplate changes, and record the change in the pull
+// request's scorecard.
+const PromptVersion = "v1"
+
 // SystemPrompt renders the assistant's system prompt with the MCP server
 // address this deployment serves. An empty mcpURL keeps the default.
 func SystemPrompt(mcpURL string) string {
@@ -615,10 +620,17 @@ func (s *Service) Respond(ctx context.Context, turns []Turn, page *Page, emit fu
 
 		for i := range reply.ToolCalls {
 			c := reply.ToolCalls[i]
-			if err := emit("tool", map[string]string{"name": c.Name, "detail": toolDetail(c)}); err != nil {
+			result, fields := runTool(ctx, s.Tools, c)
+			// The event carries the call's input and output as well as the
+			// name: the panel reads the name and the detail, and the eval
+			// harness reads the rest to score retrieval without reaching
+			// into this loop.
+			if err := emit("tool", map[string]any{
+				"name": c.Name, "detail": toolDetail(c),
+				"input": json.RawMessage(c.Input), "output": json.RawMessage(result.Content),
+			}); err != nil {
 				return err
 			}
-			result, fields := runTool(ctx, s.Tools, c)
 			if fields != nil {
 				collectSources(&sources, c.Name, fields)
 			}

@@ -93,7 +93,7 @@ func TestLoopToolCallThenAnswer(t *testing.T) {
 	}
 	// The tool event names the search_docs call with its query as the detail.
 	toolEvt := (*evs)[0]
-	data, ok := toolEvt.data.(map[string]string)
+	data, ok := toolEvt.data.(map[string]any)
 	if !ok || data["name"] != "search_docs" || data["detail"] != "timestamp" {
 		t.Errorf("tool event data = %+v", toolEvt.data)
 	}
