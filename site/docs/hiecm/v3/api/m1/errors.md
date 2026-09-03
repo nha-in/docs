@@ -76,7 +76,7 @@ A numeric code, not an `ABDM-` code, plus a `description` field the other shapes
 
 ## Codes
 
-Saved example responses in NHA's M1 ABHA Postman collection. NHA's M1 document carries its code reference as screenshots with no text. NHA's error code workbooks, ABDM M1-M2-M3-M4_Error_Codes.xlsx and ErrorCode-Message.xlsx, supplied 2026-08-25. Code, message and, where NHA gives one, the error name are NHA's. The action column is this catalogue's reading of the message text, by a documented rule, and is not NHA's. Anything the rule could not classify says Unclassified rather than guessing.
+Code, message and error name are as published. The action column reads the message text by a documented rule, and says Unclassified where the rule could not classify one.
 
 | Code | Message | What to do |
 | --- | --- | --- |
@@ -175,7 +175,7 @@ The same collection, and the only source that recorded HTTP statuses.
 
 ## UIDAI codes
 
-Codes from the Unique Identification Authority of India, passed through inside the message of ABDM-1204. NHA passes through more than these, so parse the message.
+Codes from the Unique Identification Authority of India, passed through inside the message of ABDM-1204. More codes pass through than are listed here, so parse the message.
 
 | Code | Message | What to do |
 | --- | --- | --- |

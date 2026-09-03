@@ -42,7 +42,7 @@ This is something ABDM sends to you. It arrives at the URL you registered, not a
 
 ABDM posts to `/v0.5/consents/hiu/notify` on your registered base URL.
 
-**No payload is documented.** NHA's specification carries no callbacks at all, and NHA's collection for this milestone does not include this one. The path is declared so the exchange is visible, but the body shape is unknown and is not guessed here.
+**The payload is not yet published.** The path is declared so the exchange is visible.
 
 Acknowledge with a 202 quickly. Do the work afterwards.
 

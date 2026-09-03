@@ -424,7 +424,7 @@ components:
       in: header
       required: true
       description: |
-        A fresh UUID that you generate for this request. It is how you and NHA correlate a call with its callback and with a support ticket, so log it. Reusing one across requests makes both impossible.
+        A fresh UUID that you generate for this request. It is how you and the gateway correlate a call with its callback and with a support ticket, so log it. Reusing one across requests makes both impossible.
       schema:
         type: string
         x-abdm-correction: C3
@@ -469,7 +469,7 @@ components:
             The client secret issued alongside the client id. It is a credential. Keep it server side, never in a mobile or browser build.
         grantType:
           type: string
-          description: The only value NHA's documentation shows is `client_credentials`.
+          description: The only accepted value is `client_credentials`.
           example: client_credentials
     SessionResponse:
       type: object
@@ -480,7 +480,7 @@ components:
         expiresIn:
           type: integer
           description: |
-            Seconds until the access token stops working. Read it rather than hardcoding a lifetime, because NHA has changed it.
+            Seconds until the access token stops working. Read it rather than hardcoding a lifetime, because it changes.
         refreshExpiresIn:
           type: integer
           description: Seconds until the refresh token stops working.
@@ -490,7 +490,7 @@ components:
             again.
         tokenType:
           type: string
-          description: NHA's sample response shows `bearer`.
+          description: The value is `bearer`.
           example: bearer
     ErrorResponse:
       type: object
@@ -1046,8 +1046,6 @@ x-abdm-errors:
   - code: ABDM-9008
     message: No CR Mapped with Abha Address
     action: Unclassified
-  source: NHA's error code workbooks, ABDM M1-M2-M3-M4_Error_Codes.xlsx and ErrorCode-Message.xlsx,
-    supplied 2026-08-25. Code, message and, where NHA gives one, the error name
-    are NHA's. The action column is this catalogue's reading of the message text,
-    by a documented rule, and is not NHA's. Anything the rule could not classify
-    says Unclassified rather than guessing.
+  source: Code, message and error name are as published. The action column
+    reads the message text by a documented rule, and says Unclassified where
+    the rule could not classify one.

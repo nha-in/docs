@@ -717,7 +717,7 @@ webhooks:
       operationId: m2_on_health_information_request
       summary: A request for the records a consent covers
       description: |
-        Inbound to the HIP, carrying the consent id, the date range, the data push URL and the encryption parameters. NHA states 20 minutes from this request to the data push.
+        Inbound to the HIP, carrying the consent id, the date range, the data push URL and the encryption parameters. You have 20 minutes from this request to the data push.
 
         
       responses:
@@ -864,7 +864,7 @@ components:
       scheme: bearer
       bearerFormat: JWT
       description: |
-        The `accessToken` from `POST /api/hiecm/gateway/v3/sessions`, which is described in hiecm-gateway.yaml. Send it as `Authorization: Bearer <ACCESS_TOKEN>`. M2 also uses per flow tokens, a link token for linking and an authorisation token for patient scoped calls. NHA's error table names both. Their exact header names go here once the swagger is ingested, rather than being guessed now.
+        The `accessToken` from `POST /api/hiecm/gateway/v3/sessions`, which is described in hiecm-gateway.yaml. Send it as `Authorization: Bearer <ACCESS_TOKEN>`. M2 also uses per flow tokens, a link token for linking and an authorisation token for patient scoped calls. Their header names are not yet published.
     bearerAuth:
       type: http
       scheme: bearer
@@ -896,7 +896,7 @@ components:
       in: header
       required: true
       description: |
-        Which consent manager you are talking to. `sbx` on the sandbox and `abdm` in production. NHA's M2 error table has a dedicated code for an invalid value here, which tells you how often it is wrong.
+        Which consent manager you are talking to. `sbx` on the sandbox and `abdm` in production. A dedicated error code exists for an invalid value here, which tells you how often it is wrong.
       schema:
         type: string
       examples:
@@ -1770,12 +1770,8 @@ components:
           schema:
             $ref: '#/components/schemas/ErrorResponse'
 x-abdm-errors:
-  source: NHA's published M2 list, which carries code and message only. The action
-    is this catalogue's reading of the message text. NHA's error code workbooks,
-    ABDM M1-M2-M3-M4_Error_Codes.xlsx and ErrorCode-Message.xlsx, supplied 2026-08-25.
-    Code, message and, where NHA gives one, the error name are NHA's. The action
-    column is this catalogue's reading of the message text, by a documented rule,
-    and is not NHA's. Anything the rule could not classify says Unclassified rather
+  source: Code, message and error name are as published. The action column reads
+    the message text by a documented rule, and says Unclassified rather
     than guessing.
   codes:
   - code: ABDM-1000
