@@ -59,8 +59,13 @@ jobs:
       - name: Report against the last run on main
         id: report
         run: |
-          LAST=$(cat ../evals/askai/runs/latest)
-          go run ./cmd/askai-eval report -cases ../evals/askai/cases -run ../evals/askai/runs/$RUN -before ../evals/askai/runs/$LAST > ../scorecard.md
+          if [ -f ../evals/askai/runs/latest ]; then
+            LAST=$(cat ../evals/askai/runs/latest)
+            go run ./cmd/askai-eval report -cases ../evals/askai/cases -run ../evals/askai/runs/$RUN -before ../evals/askai/runs/$LAST > ../scorecard.md
+          else
+            echo "no previous run to compare against (evals/askai/runs/latest is absent); reporting without a baseline"
+            go run ./cmd/askai-eval report -cases ../evals/askai/cases -run ../evals/askai/runs/$RUN > ../scorecard.md
+          fi
           cat ../scorecard.md
         working-directory: mcp
       - uses: actions/upload-artifact@v4

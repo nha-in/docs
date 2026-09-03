@@ -284,7 +284,7 @@ func reportInto(casesDir, dir string) error {
 	if err := writeJSON(filepath.Join(dir, "scorecard.json"), sc); err != nil {
 		return err
 	}
-	fmt.Println(eval.Delta(sc, eval.Scorecard{}))
+	fmt.Println(eval.Table(sc))
 	return nil
 }
 
