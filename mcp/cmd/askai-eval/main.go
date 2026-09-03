@@ -123,6 +123,10 @@ func checkCmd(args []string) error {
 	if dir == "" {
 		latest, err := os.ReadFile("../evals/askai/runs/latest")
 		if err != nil {
+			if os.IsNotExist(err) {
+				fmt.Println("askai-eval check: no run has been recorded yet (evals/askai/runs/latest is absent), so there is nothing to replay. This gate proves nothing until the first run lands.")
+				return nil
+			}
 			return fmt.Errorf("check: no -run and no runs/latest: %w", err)
 		}
 		dir = filepath.Join("../evals/askai/runs", strings.TrimSpace(string(latest)))
@@ -154,16 +158,35 @@ func checkInto(casesDir, runDir string) error {
 	if err := writeJSON(filepath.Join(runDir, "retrieval.json"), retrieval); err != nil {
 		return err
 	}
-	failing := 0
-	for _, r := range results {
-		if len(r.Failures) > 0 {
-			failing++
-			fmt.Printf("%s\n  %s\n", r.CaseID, strings.Join(r.Failures, "\n  "))
+	baseline := map[string]bool{}
+	if raw, err := os.ReadFile(filepath.Join(filepath.Dir(runDir), "baseline.json")); err == nil {
+		var b struct {
+			FailingCases []string `json:"failing_cases"`
+		}
+		if json.Unmarshal(raw, &b) == nil {
+			for _, id := range b.FailingCases {
+				baseline[id] = true
+			}
 		}
 	}
-	fmt.Printf("checks: %d of %d cases clean\n", len(results)-failing, len(results))
-	if failing > 0 {
-		return fmt.Errorf("%d cases failed deterministic checks", failing)
+	failing := 0
+	newFailures := 0
+	for _, r := range results {
+		if len(r.Failures) == 0 {
+			continue
+		}
+		failing++
+		tag := ""
+		if baseline[r.CaseID] {
+			tag = " (baseline)"
+		} else {
+			newFailures++
+		}
+		fmt.Printf("%s%s\n  %s\n", r.CaseID, tag, strings.Join(r.Failures, "\n  "))
+	}
+	fmt.Printf("checks: %d failing, %d new since baseline\n", failing, newFailures)
+	if newFailures > 0 {
+		return fmt.Errorf("%d cases newly fail deterministic checks", newFailures)
 	}
 	return nil
 }

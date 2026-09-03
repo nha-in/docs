@@ -19,3 +19,13 @@ Run:
 A scorecard reports, per slice: factuality (share of A or B on answer
 cases), uncertainty (share of correct declines), grounding failures,
 forbidden phrases, shape failures, recall at 3 and MRR.
+
+## Gates
+
+CI runs `eval:askai:check` on every pull request, against the last recorded
+run named in `runs/latest`, with no model and no credentials. Until the
+first run is recorded the gate passes without proving anything: it says so
+and exits clean rather than turning the whole repository red. Once a run
+exists, a case that fails and is not already in `runs/baseline.json` fails
+the build; the baseline only ever shrinks, so fixing a case is what tightens
+the gate.
