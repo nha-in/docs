@@ -38,6 +38,17 @@ func envIntOr(name string, fallback int) int {
 	return fallback
 }
 
+// envFloatOr is envOr's float counterpart, for the one setting that is a
+// fraction rather than a count.
+func envFloatOr(name string, fallback float64) float64 {
+	if raw := os.Getenv(name); raw != "" {
+		if v, err := strconv.ParseFloat(raw, 64); err == nil {
+			return v
+		}
+	}
+	return fallback
+}
+
 // envBoolOr is envOr's boolean counterpart: the environment sets the
 // default, the flag stays available as a local override, and a malformed
 // environment value falls back rather than failing startup on a typo.
@@ -60,6 +71,8 @@ func main() {
 	region := flag.String("aws-region", envOr("AWS_REGION", ""), "AWS region, for -embed-provider bedrock")
 	chatModel := flag.String("chat-model", envOr("CHAT_MODEL", ""), "Bedrock model id for /api/chat; empty disables chat")
 	chatMaxTokens := flag.Int("chat-max-tokens", envIntOr("CHAT_MAX_TOKENS", 1500), "max output tokens per chat answer")
+	chatTemperature := flag.Float64("chat-temperature", envFloatOr("CHAT_TEMPERATURE", 0.2),
+		"sampling temperature for chat answers; low keeps quoted literals and tool choices stable")
 	chatPerMin := flag.Int("chat-rate-per-min", envIntOr("CHAT_RATE_PER_MIN", 5), "chat requests per ip per minute")
 	chatPerDay := flag.Int("chat-rate-per-day", envIntOr("CHAT_RATE_PER_DAY", 100), "chat requests per ip per day")
 	mcpURL := flag.String("mcp-url", envOr("MCP_URL", ""), "public MCP endpoint the chat assistant names; empty keeps the built-in default")
@@ -144,7 +157,12 @@ func main() {
 			slog.Error("CHAT_RATE_PER_DAY must be a positive integer", "got", *chatPerDay)
 			os.Exit(1)
 		}
-		model, err := chat.NewBedrockModel(context.Background(), *region, *chatModel)
+		if *chatTemperature < 0 || *chatTemperature > 1 {
+			slog.Error("CHAT_TEMPERATURE must be between 0 and 1", "got", *chatTemperature)
+			os.Exit(1)
+		}
+		model, err := chat.NewBedrockModel(
+			context.Background(), *region, *chatModel, float32(*chatTemperature))
 		if err != nil {
 			slog.Error("configure chat model", "err", err)
 			os.Exit(1)

@@ -15,15 +15,21 @@ import (
 // bedrockModel is the real Model, backed by Amazon Bedrock's ConverseStream
 // API. It carries no state across calls beyond the client and model ID.
 type bedrockModel struct {
-	client  *bedrockruntime.Client
-	modelID string
+	client      *bedrockruntime.Client
+	modelID     string
+	temperature float32
 }
 
 // NewBedrockModel resolves credentials through the SDK default chain: the
 // task role in production, an OIDC-assumed role in CI, a configured profile
 // on a laptop. No key material is ever passed in here. Follows the same
 // config-loading idiom as internal/embed's Bedrock adapter.
-func NewBedrockModel(ctx context.Context, region, modelID string) (Model, error) {
+// The temperature is a deployment setting rather than a constant: this
+// assistant answers strictly from what its tools returned, and sampling
+// variance is a defect there, not a feature. A low value keeps quoted
+// literals (paths, headers, error codes) stable and makes the tool loop's
+// choices repeatable.
+func NewBedrockModel(ctx context.Context, region, modelID string, temperature float32) (Model, error) {
 	opts := []func(*awsconfig.LoadOptions) error{}
 	if region != "" {
 		opts = append(opts, awsconfig.WithRegion(region))
@@ -32,7 +38,11 @@ func NewBedrockModel(ctx context.Context, region, modelID string) (Model, error)
 	if err != nil {
 		return nil, fmt.Errorf("bedrock model: load aws config: %w", err)
 	}
-	return &bedrockModel{client: bedrockruntime.NewFromConfig(cfg), modelID: modelID}, nil
+	return &bedrockModel{
+		client:      bedrockruntime.NewFromConfig(cfg),
+		modelID:     modelID,
+		temperature: temperature,
+	}, nil
 }
 
 // toBedrockMessages maps our provider-agnostic Message shape onto Bedrock's
@@ -129,6 +139,26 @@ func toBedrockTools(defs []ToolDef) (*types.ToolConfiguration, error) {
 	return &types.ToolConfiguration{Tools: tools}, nil
 }
 
+// systemBlocksFor builds the system prefix: the prompt, then a cache point.
+//
+// The prompt is identical on every request and on every turn of the tool loop,
+// so the cache point lets Bedrock charge the prefix at the read rate instead of
+// resending it at full price. The tool definitions sit in the same stable
+// prefix. Anything after it, the question and the retrieved documentation,
+// differs per request and is not cacheable. An empty prompt gets no blocks at
+// all: a lone cache point is a request Bedrock rejects.
+func systemBlocksFor(system string) []types.SystemContentBlock {
+	if system == "" {
+		return nil
+	}
+	return []types.SystemContentBlock{
+		&types.SystemContentBlockMemberText{Value: system},
+		&types.SystemContentBlockMemberCachePoint{
+			Value: types.CachePointBlock{Type: types.CachePointTypeDefault},
+		},
+	}
+}
+
 // Stream calls Bedrock's ConverseStream and drains the event stream into one
 // assembled Reply, invoking onText as text deltas arrive.
 func (b *bedrockModel) Stream(ctx context.Context, system string, tools []ToolDef,
@@ -139,12 +169,7 @@ func (b *bedrockModel) Stream(ctx context.Context, system string, tools []ToolDe
 		return Reply{}, err
 	}
 
-	var systemBlocks []types.SystemContentBlock
-	if system != "" {
-		systemBlocks = []types.SystemContentBlock{
-			&types.SystemContentBlockMemberText{Value: system},
-		}
-	}
+	systemBlocks := systemBlocksFor(system)
 
 	out, err := b.client.ConverseStream(ctx, &bedrockruntime.ConverseStreamInput{
 		ModelId:    aws.String(b.modelID),
@@ -152,7 +177,8 @@ func (b *bedrockModel) Stream(ctx context.Context, system string, tools []ToolDe
 		Messages:   toBedrockMessages(msgs),
 		ToolConfig: toolConfig,
 		InferenceConfig: &types.InferenceConfiguration{
-			MaxTokens: aws.Int32(int32(maxTokens)),
+			MaxTokens:   aws.Int32(int32(maxTokens)),
+			Temperature: aws.Float32(b.temperature),
 		},
 	})
 	if err != nil {
