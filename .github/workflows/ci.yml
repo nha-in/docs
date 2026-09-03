@@ -5,6 +5,14 @@ on:
     branches: [main]
   pull_request:
 
+# build-nav.mjs refuses to build under CI without this, so that llms.txt never
+# ships example.com placeholder URLs to an agent. Two jobs below run the build,
+# lint-tables and build-site, so it is set once here rather than on each of
+# them. The value is where dev-docs-cd.yml actually publishes, so the URLs in a
+# CI artifact are the URLs the pages really carry.
+env:
+  DOCUSAURUS_URL: https://abdm-docs.dev.eka.care
+
 jobs:
   lint-specs:
     name: Lint OpenAPI specs
