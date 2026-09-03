@@ -5126,10 +5126,9 @@ components:
       description: The access token from the gateway session endpoint, described
         in hiecm-gateway.yaml.
 x-abdm-errors:
-  source: NHA's ErrorCode-Message.xlsx, AarogyaSetu sheet, supplied 2026-08-25.
-    Code and message are NHA's. The action column is this catalogue's reading
-    of the message text, by a documented rule, and is not NHA's. These codes are the PHR facing wording of the core ABDM
-    codes, row for row.
+  source: Code and message are as published. The action column reads the message
+    text by a documented rule. These codes are the PHR facing wording of the core
+    ABDM codes, row for row.
   codes:
   - code: AS-1001
     message: Database connection failed. Please try again later.

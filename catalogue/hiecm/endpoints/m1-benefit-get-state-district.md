@@ -48,9 +48,7 @@ Every placeholder in angle brackets is something you supply. `REQUEST-ID` is a U
 
 ## How you know it worked
 
-Not yet observed. NHA's collection saves no response body for this operation, so this catalogue does not state a shape, because guessing one is worse than admitting the gap.
-
-When you run this against the sandbox, record the exact response here and set `verified.status` to verified with the date and who ran it. Until then treat any assumption about the response as unproven.
+The response body for this operation is not yet published.
 
 ## When it goes wrong
 

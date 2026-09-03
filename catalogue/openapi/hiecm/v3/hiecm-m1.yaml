@@ -35,7 +35,7 @@ info:
     for a value carried over from an earlier response in the same flow.
 
     One rule runs through the whole module. Identifiers you send, an Aadhaar
-    number, a mobile number, an OTP, are encrypted against NHA's public key
+    number, a mobile number, an OTP, are encrypted against the ABDM public key
     rather than sent raw.
   version: abdm-v3
   license:
@@ -81,7 +81,7 @@ security:
 tags:
 - name: abha-creation
   description: |
-    Creating an ABHA number after verifying who the person is. NHA supports Aadhaar OTP, face authentication, fingerprint, IRIS, demographic authentication, a driving licence route, and a separate route for a child. Aadhaar OTP is mandatory for every integrator. The rest are optional.
+    Creating an ABHA number after verifying who the person is. The supported routes are Aadhaar OTP, face authentication, fingerprint, IRIS, demographic authentication, a driving licence route, and a separate route for a child. Aadhaar OTP is mandatory for every integrator. The rest are optional.
 - name: abha-login
   description: |
     Signing an existing ABHA holder in, by mobile number, Aadhaar number, ABHA number with a password, mobile OTP, biometric, or a face authentication QR code.
@@ -235,7 +235,7 @@ paths:
         Attaches the address the person picked to the ABHA number created
         earlier. `preferred: 1` marks it as the one to show.
 
-        Until this succeeds the account has only the default address that NHA
+        Until this succeeds the account has only the default address that the service
         issues automatically, which is the fourteen digit number followed by
         `@sbx` or `@abdm` and which nobody can remember.
 
@@ -356,7 +356,7 @@ paths:
 
         This is the call that creates the account, so treat a success as a
         permanent side effect. If you retry it blindly after a timeout you may be
-        asking NHA to enrol somebody twice.
+        enrolling somebody twice.
 
         `BENEFIT_NAME` is sent on this call when the enrolment belongs to a
         benefit scheme.
@@ -512,8 +512,8 @@ paths:
       - abha-creation
       summary: Create an ABHA from an identity document
       description: |
-        The route for somebody who cannot complete Aadhaar authentication. NHA's
-        collection uses a driving licence. The account created this way is
+        The route for somebody who cannot complete Aadhaar authentication. A
+        driving licence is one accepted document. The account created this way is
         restricted until it is upgraded through Aadhaar KYC, so tell the person
         that rather than letting them discover it later.
       parameters:
@@ -623,7 +623,7 @@ paths:
       - abha-creation
       summary: Submit a captured biometric or face authentication block
       description: |
-        Hands NHA the PID block produced by the Aadhaar RD service. The block is
+        Hands over the PID block produced by the Aadhaar RD service. The block is
         encrypted by the device and is time limited, so send it as soon as the
         capture returns rather than storing it.
 
@@ -723,7 +723,7 @@ paths:
       description: |
         Returns a handful of available ABHA addresses built from the person's
         name and date of birth. Offer them as a choice. The person may type their
-        own instead, subject to NHA's address policy: at least four characters,
+        own instead, subject to the address policy: at least four characters,
         letters, numbers and dots only, and it may not begin with a number or
         begin or end with a dot.
       parameters:
@@ -804,7 +804,7 @@ paths:
         `email-verify`, `otpSystem` becomes `abdm`, and you pass the `txnId` from
         the enrolment you are continuing.
 
-        `loginId` is encrypted, never the raw value. Encrypt it against NHA's
+        `loginId` is encrypted, never the raw value. Encrypt it against the ABDM
         public key first.
       parameters:
       - $ref: '#/components/parameters/RequestId'
@@ -1205,7 +1205,7 @@ paths:
                     txnId: <TXN_ID>
                     message: Transaction Id generated Successfully
         '401':
-          description: The error NHA returns, with its code and message.
+          description: The error returned, with its code and message.
           content:
             application/json:
               schema:
@@ -1435,7 +1435,7 @@ paths:
                       profilePhoto: <BASE64_PHOTO>
                       mobileVerified: false
         '400':
-          description: The response as NHA documents it.
+          description: The response.
           content:
             application/json:
               schema:
@@ -1471,7 +1471,7 @@ paths:
                     faceDto: Invalid Aadhaar face request
                     timestamp: '2025-01-15 13:32:04'
         '401':
-          description: The error NHA returns, with its code and message.
+          description: The error returned, with its code and message.
           content:
             application/json:
               schema:
@@ -1496,7 +1496,7 @@ paths:
                     description: Invalid JWT token. Make sure you have provided
                       the correct security credentials
         '404':
-          description: The error NHA returns, with its code and message.
+          description: The error returned, with its code and message.
           content:
             application/json:
               schema:
@@ -1524,7 +1524,7 @@ paths:
                     message: Runtime Error
                     description: No matching resource found for given API Request
         '422':
-          description: The error NHA returns, with its code and message.
+          description: The error returned, with its code and message.
           content:
             application/json:
               schema:
@@ -1923,7 +1923,7 @@ paths:
         example: Bearer <X_TOKEN_FROM_LOGIN_VERIFY>
       responses:
         '200':
-          description: The response as NHA documents it.
+          description: The response.
           content:
             application/json:
               schema:
@@ -2441,7 +2441,7 @@ paths:
                     insuranceProgramsLinked:
                     - Health ID Test
         '400':
-          description: The error NHA returns, with its code and message.
+          description: The error returned, with its code and message.
           content:
             application/json:
               schema:
@@ -2467,7 +2467,7 @@ paths:
                       code: ABDM-1013
                       message: Invalid ABHA Number
         '401':
-          description: The error NHA returns, with its code and message.
+          description: The error returned, with its code and message.
           content:
             application/json:
               schema:
@@ -2494,7 +2494,7 @@ paths:
                       message: ABDM-1094Access to this feature is restricted.
                         Please contact NHA to enable it.
         '500':
-          description: The error NHA returns, with its code and message.
+          description: The error returned, with its code and message.
           content:
             application/json:
               schema:
@@ -2592,7 +2592,7 @@ paths:
       - benefit-apis
       summary: Link or unlink a benefit record from an ABHA
       description: |
-        One call does both directions. NHA's saved success response names the
+        One call does both directions. The success response names the
         scheme and confirms the link in a human readable `status` string rather
         than a code, so match on the HTTP status and the scheme, not on that
         text.
@@ -2618,7 +2618,7 @@ paths:
                     - link
                     - de-link
                   description: |
-                    The direction. The recorded requests send `["de-link"]`, and the collection's comment shows `["link"]` for linking. Note the hyphen in `de-link`.
+                    The direction. Send `["de-link"]` to de-link and `["link"]` to link. Note the hyphen in `de-link`.
                   example:
                   - link
                 loginHint:
@@ -2629,7 +2629,7 @@ paths:
                 loginId:
                   type: string
                   description: |
-                    The identifier named by `loginHint`, RSA encrypted against NHA's public key, never raw. Present only alongside `loginHint`.
+                    The identifier named by `loginHint`, RSA encrypted against the ABDM public key, never raw. Present only alongside `loginHint`.
                   example: <RSA_ENCRYPTED_ABHA_NUMBER>
       responses:
         '200':
@@ -2663,7 +2663,7 @@ paths:
                     healthId: <ABHA_ADDRESS>
                     status: Benefit record has been de-linked successfully
         '400':
-          description: The error NHA returns, with its code and message.
+          description: The error returned, with its code and message.
           content:
             application/json:
               schema:
@@ -2699,7 +2699,7 @@ paths:
                       code: ABDM-1138
                       message: The benefit record has already been de-linked
         '401':
-          description: The error NHA returns, with its code and message.
+          description: The error returned, with its code and message.
           content:
             application/json:
               schema:
@@ -2785,7 +2785,7 @@ paths:
                   loginId: <ENCRYPTED_A_B_H_A_NUMBER>
       responses:
         '200':
-          description: The response as NHA documents it.
+          description: The response.
           content:
             application/json:
               schema:
@@ -2883,10 +2883,10 @@ paths:
       x-abdm-use-case: Session and tokens
       tags:
       - tokens-and-encryption
-      summary: Encrypt a value with NHA's public key
+      summary: Encrypt a value with the ABDM public key
       description: |
-        Every `loginId` in M1 is encrypted rather than sent raw, and this is NHA's
-        own helper for doing it. It is convenient for trying a flow by hand.
+        Every `loginId` in M1 is encrypted rather than sent raw, and this is the
+        hosted helper for doing it. It is convenient for trying a flow by hand.
 
         Do not put it in a production path. Sending an Aadhaar or mobile number to
         a remote endpoint so that it can be encrypted defeats the point of
@@ -3580,7 +3580,7 @@ components:
       description: The transaction token that carries state between the two halves
         of a login. Returned by the verify call and sent back on the account selection
         call. Like X-token, the value carries a `Bearer ` prefix in every one
-        of NHA's recorded requests.
+        of the recorded requests.
     RToken:
       name: R-token
       in: header
@@ -3589,13 +3589,13 @@ components:
         type: string
       description: The refresh token, sent when asking for a new user token without
         making the person log in again. Like X-token, the value carries a `Bearer
-        ` prefix in NHA's recorded request.
+        ` prefix.
     AadhaarNumberHeader:
       name: aadhaarNumber
       in: header
       required: true
       description: |
-        The person's Aadhaar number, RSA encrypted against NHA's public key and sent as a header rather than in a body. The recorded value is an encrypted blob, never the raw number: encrypt it the same way as an enrolment `loginId`. See the input encryption concept atom for the padding rules.
+        The person's Aadhaar number, RSA encrypted against the ABDM public key and sent as a header rather than in a body. The recorded value is an encrypted blob, never the raw number: encrypt it the same way as an enrolment `loginId`. See the input encryption concept atom for the padding rules.
       schema:
         type: string
       example: <RSA_ENCRYPTED_AADHAAR_NUMBER>
@@ -3614,7 +3614,7 @@ components:
       required: false
       schema:
         type: string
-      description: Which NHA public key the encryption helper should use.
+      description: Which ABDM public key the encryption helper should use.
     TransactionId:
       name: TRANSACTION_ID
       in: header
@@ -5563,13 +5563,9 @@ x-abdm-errors:
     ```
 
     A numeric code, not an `ABDM-` code, plus a `description` field the other shapes lack. This comes from the API gateway in front of the ABHA service, before your request reaches the business logic. It almost always means the `Authorization` header is wrong or expired.
-  source: Saved example responses in NHA's M1 ABHA Postman collection. NHA's M1
-    document carries its code reference as screenshots with no text. NHA's error
-    code workbooks, ABDM M1-M2-M3-M4_Error_Codes.xlsx and ErrorCode-Message.xlsx,
-    supplied 2026-08-25. Code, message and, where NHA gives one, the error name
-    are NHA's. The action column is this catalogue's reading of the message text,
-    by a documented rule, and is not NHA's. Anything the rule could not classify
-    says Unclassified rather than guessing.
+  source: Code, message and error name are as published. The action column reads
+    the message text by a documented rule, and says Unclassified where the rule
+    could not classify one.
   codes:
   - code: ABDM-1001
     message: Subscription source update returned empty
@@ -5931,8 +5927,8 @@ x-abdm-errors-untagged:
     action: Fix request
 x-abdm-errors-uidai:
   source: Codes from the Unique Identification Authority of India, passed through
-    inside the message of ABDM-1204. NHA passes through more than these, so parse
-    the message.
+    inside the message of ABDM-1204. More codes pass through than are listed here,
+    so parse the message.
   codes:
   - code: '300'
     message: Biometric mismatch

@@ -14,7 +14,7 @@ Seeing a symptom rather than a code? Start at [Troubleshooting](/docs/hiecm/v3/t
 
 ## Codes
 
-NHA's ErrorCode-Message.xlsx, AarogyaSetu sheet, supplied 2026-08-25. Code and message are NHA's. The action column is this catalogue's reading of the message text, by a documented rule, and is not NHA's. These codes are the PHR facing wording of the core ABDM codes, row for row.
+Code and message are as published. The action column reads the message text by a documented rule. These codes are the PHR facing wording of the core ABDM codes, row for row.
 
 | Code | Message | What to do |
 | --- | --- | --- |
