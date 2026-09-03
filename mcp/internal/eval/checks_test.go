@@ -92,3 +92,76 @@ func hasPrefix(list []string, p string) bool {
 	}
 	return false
 }
+
+// declineCase returns a decline-shaped variant of answerCase, the same base
+// the brief's own TestCheckDeclineShape builds by hand.
+func declineCase() Case {
+	c := answerCase()
+	c.ID, c.Slice, c.Class, c.ExpectedShape, c.ExpectedBehaviour = "decline-01", "decline", "out-of-scope", "decline", "decline"
+	c.MustContain = []string{"/docs/support"}
+	return c
+}
+
+func TestCheckSentenceCountIgnoresAbbreviations(t *testing.T) {
+	cases := []struct {
+		name      string
+		c         Case
+		answer    string
+		badPrefix string // the failure that a naive sentence count would wrongly add
+	}{
+		{
+			name: "define answer with four abbreviations stays within the four sentence limit",
+			c:    answerCase(),
+			answer: "NHA publishes this, e.g. for HIPs, i.e. hospital systems, etc. It is public. " +
+				"Dr. Rao confirmed it.",
+			badPrefix: "shape: define has",
+		},
+		{
+			name:      "decline answer with two abbreviations stays within the two sentence limit",
+			c:         declineCase(),
+			answer:    "Dr. Sharma covers that, e.g. in the FAQ. Ask support at /docs/support.",
+			badPrefix: "decline:",
+		},
+	}
+	for _, tc := range cases {
+		t.Run(tc.name, func(t *testing.T) {
+			r := Check(tc.c, Transcript{CaseID: tc.c.ID, Answer: tc.answer})
+			if hasPrefix(r.Failures, tc.badPrefix) {
+				t.Fatalf("an abbreviation was counted as a sentence end: %v", r.Failures)
+			}
+		})
+	}
+}
+
+func TestCheckForbiddenAtomIsAWholeWordOnly(t *testing.T) {
+	cases := []struct {
+		name    string
+		answer  string
+		wantHit bool
+	}{
+		// "atomic" contains the letters "atom" as a substring; a naive
+		// Contains check flags it even though the answer never says "atom".
+		{"atomic operation does not trip the internal word atom", "The sandbox performs an atomic write for every consent grant.", false},
+		{"automatically does not trip the internal word atom", "The callback arrives automatically once the HIP responds.", false},
+		{"the bare word atom still trips it", "Each atom in the catalogue names one fact.", true},
+	}
+	for _, tc := range cases {
+		t.Run(tc.name, func(t *testing.T) {
+			r := Check(answerCase(), Transcript{CaseID: "define-hmis-01", Answer: tc.answer})
+			got := contains(r.Failures, "forbidden: atom")
+			if got != tc.wantHit {
+				t.Fatalf("forbidden: atom present = %v, want %v (failures: %v)", got, tc.wantHit, r.Failures)
+			}
+		})
+	}
+}
+
+func TestCheckMustNotContainKeepsPartialMatching(t *testing.T) {
+	c := answerCase()
+	c.MustNotContain = []string{"<MASKED"}
+	tr := Transcript{CaseID: c.ID, Answer: "Contact <MASKED_NAME> for help with that."}
+	r := Check(c, tr)
+	if !contains(r.Failures, "forbidden: <MASKED") {
+		t.Fatalf("a partial must_not_contain entry stopped matching: %v", r.Failures)
+	}
+}
