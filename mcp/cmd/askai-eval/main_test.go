@@ -6,6 +6,7 @@ import (
 	"path/filepath"
 	"testing"
 
+	"github.com/eka-care/abdm-docs/mcp/internal/chat"
 	"github.com/eka-care/abdm-docs/mcp/internal/eval"
 )
 
@@ -90,13 +91,14 @@ func TestCheckIntoNoBaselineFileWritesOneAndPasses(t *testing.T) {
 		t.Fatalf("checkInto did not write a baseline: %v", err)
 	}
 	var b struct {
-		FailingCases []string `json:"failing_cases"`
+		FailingCases map[string][]string `json:"failing_cases"`
 	}
 	if err := json.Unmarshal(raw, &b); err != nil {
 		t.Fatal(err)
 	}
-	if len(b.FailingCases) != 1 || b.FailingCases[0] != "define-hmis-01" {
-		t.Fatalf("baseline.json failing_cases = %v, want [define-hmis-01]", b.FailingCases)
+	failures, ok := b.FailingCases["define-hmis-01"]
+	if !ok || len(failures) == 0 {
+		t.Fatalf("baseline.json failing_cases = %v, want an entry for define-hmis-01 naming its failures", b.FailingCases)
 	}
 }
 
@@ -111,6 +113,51 @@ func TestCheckIntoFailureInBaselinePasses(t *testing.T) {
 	casesDir, runDir := buildRun(t, []string{"define-hmis-01"})
 	if err := checkInto(casesDir, runDir); err != nil {
 		t.Fatalf("a baseline failure should not fail the command: %v", err)
+	}
+}
+
+// TestCheckIntoBaselineFailureStringDoesNotExcuseADifferentFailure covers
+// I4: the ratchet is per failure string, not per case. A case already in
+// the baseline that acquires a brand new grounding failure must still fail
+// the gate, even though its case id was already in runs/baseline.json for a
+// different, older reason.
+func TestCheckIntoBaselineFailureStringDoesNotExcuseADifferentFailure(t *testing.T) {
+	root := t.TempDir()
+	casesDir := filepath.Join(root, "cases")
+	if err := os.MkdirAll(casesDir, 0o755); err != nil {
+		t.Fatal(err)
+	}
+	writeCase(t, casesDir, ratchetCase())
+
+	runsDir := filepath.Join(root, "runs")
+	runDir := filepath.Join(runsDir, "2026-09-03-v1")
+	// Sources are present, so "citations: none" (the failure the baseline
+	// below records) does not fire this time. The answer instead invents a
+	// header the corpus never mentions, a different failure entirely.
+	tr := eval.Transcript{
+		CaseID:  "define-hmis-01",
+		Answer:  "Send X-Something-New with the call. HMIS is hospital software.",
+		Corpus:  "HMIS, hospital management information system",
+		Sources: []chat.Source{{ID: "shared.glossary.hmis"}},
+	}
+	if err := eval.WriteTranscript(filepath.Join(runDir, "transcripts"), tr); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.MkdirAll(runsDir, 0o755); err != nil {
+		t.Fatal(err)
+	}
+	baseline := struct {
+		FailingCases map[string][]string `json:"failing_cases"`
+	}{FailingCases: map[string][]string{"define-hmis-01": {"citations: none"}}}
+	raw, err := json.Marshal(baseline)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if err := os.WriteFile(filepath.Join(runsDir, "baseline.json"), raw, 0o644); err != nil {
+		t.Fatal(err)
+	}
+	if err := checkInto(casesDir, runDir); err == nil {
+		t.Fatal("expected an error: the baseline excuses \"citations: none\", not the grounding failure this run actually has")
 	}
 }
 

@@ -35,6 +35,45 @@ func TestScorecardCountsPerSlice(t *testing.T) {
 	}
 }
 
+// TestPartialRunReportsFewerAnsweredThanCases covers C2: a run that stopped
+// partway through (a Bedrock throttle at case 40, say) must not read as a
+// complete one. CheckAll records "transcript: missing" for the unanswered
+// case, and the scorecard must count it as unanswered rather than folding
+// it into a number that looks like the rest.
+func TestPartialRunReportsFewerAnsweredThanCases(t *testing.T) {
+	cases := []Case{
+		{ID: "d1", Slice: "define", ExpectedBehaviour: "answer"},
+		{ID: "d2", Slice: "define", ExpectedBehaviour: "answer"},
+	}
+	checks := CheckAll(cases, map[string]Transcript{
+		"d1": {CaseID: "d1", Answer: "HMIS is hospital software."},
+	})
+	sc := BuildScorecard(cases, checks, nil, nil)
+	if sc.Overall.Cases != 2 {
+		t.Fatalf("cases = %d, want 2", sc.Overall.Cases)
+	}
+	if sc.Overall.Answered != 1 {
+		t.Fatalf("answered = %d, want 1 (the run stopped after one case)", sc.Overall.Answered)
+	}
+}
+
+// TestGradedCountExcludesQuestionMarkButKeepsUnstable covers the other half
+// of C2: a case graded "?" (a total judge failure) never produced a usable
+// verdict and must not count as graded, while "unstable" is a real verdict
+// (a three way split) and does.
+func TestGradedCountExcludesQuestionMarkButKeepsUnstable(t *testing.T) {
+	cases := []Case{
+		{ID: "a1", Slice: "define", ExpectedBehaviour: "answer"},
+		{ID: "a2", Slice: "define", ExpectedBehaviour: "answer"},
+		{ID: "a3", Slice: "define", ExpectedBehaviour: "answer"},
+	}
+	grades := []Grade{{CaseID: "a1", Grade: "A"}, {CaseID: "a2", Grade: "unstable"}, {CaseID: "a3", Grade: "?"}}
+	sc := BuildScorecard(cases, nil, nil, grades)
+	if sc.Overall.Graded != 2 {
+		t.Fatalf("graded = %d, want 2 (a1 and a2; a3's \"?\" is not a verdict)", sc.Overall.Graded)
+	}
+}
+
 func TestDeltaNamesTheChange(t *testing.T) {
 	before := Scorecard{Slices: []SliceScore{{Slice: "define", Factuality: 0.5}}}
 	now := Scorecard{Slices: []SliceScore{{Slice: "define", Factuality: 0.9}}}
