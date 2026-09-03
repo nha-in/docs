@@ -81,8 +81,9 @@ func TestLoopToolCallThenAnswer(t *testing.T) {
 	for _, e := range *evs {
 		names = append(names, e.name)
 	}
-	// tool event first, then streamed text, then sources, then done
-	want := []string{"tool", "text", "sources", "done"}
+	// tool event before the call, tool_result after it, then streamed text,
+	// then sources, then done.
+	want := []string{"tool", "tool_result", "text", "sources", "done"}
 	if !slices.Equal(names, want) {
 		t.Fatalf("events %v, want %v", names, want)
 	}
@@ -93,9 +94,19 @@ func TestLoopToolCallThenAnswer(t *testing.T) {
 	}
 	// The tool event names the search_docs call with its query as the detail.
 	toolEvt := (*evs)[0]
-	data, ok := toolEvt.data.(map[string]any)
+	data, ok := toolEvt.data.(map[string]string)
 	if !ok || data["name"] != "search_docs" || data["detail"] != "timestamp" {
 		t.Errorf("tool event data = %+v", toolEvt.data)
+	}
+	// The tool_result event carries the raw input and output the eval
+	// harness records; it is the recorder's evidence, not the reader's cue.
+	resultEvt := (*evs)[1]
+	rdata, ok := resultEvt.data.(map[string]any)
+	if !ok || rdata["name"] != "search_docs" {
+		t.Errorf("tool_result event data = %+v", resultEvt.data)
+	}
+	if _, ok := rdata["input"].(json.RawMessage); !ok {
+		t.Errorf("tool_result input = %+v, want json.RawMessage", rdata["input"])
 	}
 }
 

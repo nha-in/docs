@@ -620,14 +620,25 @@ func (s *Service) Respond(ctx context.Context, turns []Turn, page *Page, emit fu
 
 		for i := range reply.ToolCalls {
 			c := reply.ToolCalls[i]
+			if err := emit("tool", map[string]string{"name": c.Name, "detail": toolDetail(c)}); err != nil {
+				return err
+			}
 			result, fields := runTool(ctx, s.Tools, c)
-			// The event carries the call's input and output as well as the
-			// name: the panel reads the name and the detail, and the eval
-			// harness reads the rest to score retrieval without reaching
-			// into this loop.
-			if err := emit("tool", map[string]any{
-				"name": c.Name, "detail": toolDetail(c),
-				"input": json.RawMessage(c.Input), "output": json.RawMessage(result.Content),
+			// tool and tool_result are two separate events, not one, because
+			// they serve two readers who need it at two different times: the
+			// panel's progress cue must fire before the call so the reader
+			// sees "searching" during the wait, while the eval harness's
+			// evidence (the call's raw input and output) only exists after
+			// runTool returns. output travels as json.RawMessage when the
+			// tool returned valid JSON and as a plain string otherwise, so
+			// an error path like "unknown tool" (not valid JSON on its own)
+			// can never fail this marshal and abort the round.
+			var output any = string(result.Content)
+			if json.Valid(result.Content) {
+				output = json.RawMessage(result.Content)
+			}
+			if err := emit("tool_result", map[string]any{
+				"name": c.Name, "input": json.RawMessage(c.Input), "output": output,
 			}); err != nil {
 				return err
 			}
