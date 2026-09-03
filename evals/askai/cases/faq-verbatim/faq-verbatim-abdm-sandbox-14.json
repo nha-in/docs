@@ -1,0 +1,34 @@
+{
+  "id": "faq-verbatim-abdm-sandbox-14",
+  "slice": "faq-verbatim",
+  "class": "define",
+  "turns": [
+    {
+      "role": "user",
+      "text": "What are Application Programming Interfaces or APIs?"
+    }
+  ],
+  "attachment": null,
+  "page": null,
+  "must_contain": [
+    "an API lets different software applications communicate and interact with each other",
+    "ABDM has published APIs for its functionalities on its website",
+    "developers can use ABDM's APIs to integrate their digital health solutions with the platform"
+  ],
+  "must_not_contain": [
+    "<MASKED",
+    "i apologize",
+    "i apologise",
+    "let me ",
+    "great question",
+    "the catalogue",
+    "atom"
+  ],
+  "expected_sources": [],
+  "expected_shape": "define",
+  "expected_behaviour": "answer",
+  "derived_from": null,
+  "source_row": "annexure#abdm-faq-sandbox",
+  "catalogue_version": "2026.08.24",
+  "notes": "catalogue gap: a generic definition of an API is not written up as a catalogue atom"
+}

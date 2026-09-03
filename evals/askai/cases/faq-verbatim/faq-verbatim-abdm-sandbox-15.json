@@ -1,0 +1,34 @@
+{
+  "id": "faq-verbatim-abdm-sandbox-15",
+  "slice": "faq-verbatim",
+  "class": "how-do-i",
+  "turns": [
+    {
+      "role": "user",
+      "text": "Are citizens, healthcare professionals or healthcare facilities required to register on sandbox?"
+    }
+  ],
+  "attachment": null,
+  "page": null,
+  "must_contain": [
+    "no, the ABDM sandbox is set up for companies and entities in the health space, not for individuals",
+    "citizens and healthcare professionals do not register directly on the sandbox",
+    "if a professional's digital solution is not integrated with ABDM, they can ask their solution provider to integrate it"
+  ],
+  "must_not_contain": [
+    "<MASKED",
+    "i apologize",
+    "i apologise",
+    "let me ",
+    "great question",
+    "the catalogue",
+    "atom"
+  ],
+  "expected_sources": [],
+  "expected_shape": "how-do-i",
+  "expected_behaviour": "answer",
+  "derived_from": null,
+  "source_row": "annexure#abdm-faq-sandbox",
+  "catalogue_version": "2026.08.24",
+  "notes": "catalogue gap: who is expected to register on the sandbox, entities rather than individual citizens or professionals, is not documented"
+}

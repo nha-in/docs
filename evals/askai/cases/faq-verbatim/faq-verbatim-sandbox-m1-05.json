@@ -1,0 +1,36 @@
+{
+  "id": "faq-verbatim-sandbox-m1-05",
+  "slice": "faq-verbatim",
+  "class": "define",
+  "turns": [
+    {
+      "role": "user",
+      "text": "What should be the format for Authorization header?"
+    }
+  ],
+  "attachment": null,
+  "page": null,
+  "must_contain": [
+    "the authorization header uses the Bearer scheme",
+    "the word Bearer is followed by a space and then the token value",
+    "the token value is the access token returned by the session call"
+  ],
+  "must_not_contain": [
+    "<MASKED",
+    "i apologize",
+    "i apologise",
+    "let me ",
+    "great question",
+    "the catalogue",
+    "atom"
+  ],
+  "expected_sources": [
+    "hiecm.concept.gateway-session"
+  ],
+  "expected_shape": "define",
+  "expected_behaviour": "answer",
+  "derived_from": null,
+  "source_row": "annexure#sandbox-faq-m1",
+  "catalogue_version": "2026.08.24",
+  "notes": ""
+}
