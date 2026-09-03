@@ -14,7 +14,7 @@ import ReleaseGroup from '@site/src/components/docs/ReleaseGroup';
 
 ### The PHR role has API references
 
-Aarogya Setu is NHA's reference PHR, and its collection is now ingested and
+Aarogya Setu is the reference PHR, and it is now ingested and
 split the way the provider milestones are, rather than landing as one file of
 208 operations.
 
@@ -25,13 +25,13 @@ split the way the provider milestones are, rather than landing as one file of
   which is **not** a certification milestone
 
 The same calls and the same 422 PHR error codes apply to any PHR, not only to
-Aarogya Setu. NHA has published no OpenAPI file for this role, so these are
+Aarogya Setu. No OpenAPI file is published for this role yet, so these are
 derived from the collection rather than from a specification, and every
 operation says so.
 
 ### M2 and M3 have real API references
 
-NHA supplied an OpenAPI file for each of M1, M2 and M3, plus Postman
+An OpenAPI file now exists for each of M1, M2 and M3, plus Postman
 collections for all three. They are ingested, and the reference pages are
 built from them rather than from prose.
 
@@ -41,26 +41,26 @@ callbacks to 12, five of which now carry a real payload.
 - [M1 API reference](/reference/hiecm-m1), 44 operations, up from 32
 - [M2 API reference](/reference/hiecm-m2), 10 operations, up from none
 - [M3 API reference](/reference/hiecm-m3), 6 operations and 6 callbacks, up from none
-- [Gateway reference](/reference/hiecm-gateway), 7 operations. NHA repeats
+- [Gateway reference](/reference/hiecm-gateway), 7 operations. The gateway group repeats
   this group in all three files, so it is described once
 
 ### What the new sources do not give you
 
-NHA's three specifications describe **no callbacks at all**. What they model
+The three specifications describe **no callbacks at all**. What they model
 as paths is the outbound half, the calls you make, including the `on-init`
 and `on-notify` responses you send. What the gateway posts to your registered
 URL is absent from every one of them.
 
-For M3 that gap is filled from NHA's collection, which does carry the
+For M3 that gap is now filled: the callbacks carry the
 payloads. For M2 only the data notification is available, so the remaining
 M2 callbacks name a path and stop.
 
-### Corrections against NHA's files
+### Corrections applied to the published files
 
 Five, all recorded in `catalogue/openapi/corrections/` rather than applied
-silently: 52 em dashes rewritten, 8 references to components NHA never
-defined, 26 UUID format assertions NHA's own examples contradict, 2 `hiType`
-examples that disagreed with NHA's schema, and 1 example dropped for
+silently: 52 em dashes rewritten, 8 references to components that were never
+defined, 26 UUID format assertions the examples contradict, 2 `hiType`
+examples that disagreed with the schema, and 1 example dropped for
 violating the schema it illustrates.
 
 Nothing in this release has been run against the ABDM sandbox. Every page and

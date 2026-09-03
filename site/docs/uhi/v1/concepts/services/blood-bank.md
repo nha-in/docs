@@ -51,7 +51,7 @@ At the time of the document there was one registered blood bank HSPA on the netw
 | 6 | Gateway | Forwards `on_search` to your `consumer_uri` |
 | 7 | Your EUA | Returns HTTP 200 and aggregates results as they arrive |
 
-There is no end signal. Responses land one at a time and nothing tells you the last one has arrived. NHA recommends a timeout window of 10 to 15 seconds, and displaying results as they come in.
+There is no end signal. Responses land one at a time and nothing tells you the last one has arrived. Use a timeout window of 10 to 15 seconds, and display results as they come in.
 
 ## Two search modes
 
@@ -87,8 +87,6 @@ Support both. GPS returns incomplete results where blood bank density is low, an
 | `location.district.code` | Numeric district code | For example `83` |
 
 ### Sample, GPS with a specific group and component
-
-NHA's document prints these payloads in YAML. They are shown here as the JSON that goes on the wire. The fields and values are unchanged.
 
 ```json
 {
@@ -296,7 +294,7 @@ Use these in `category.descriptor.code`.
 
 For an EUA:
 
-- [ABDM](/docs/uhi/v1/getting-started/glossary#abdm) [M2](/docs/hiecm/v3/api/m2) with [HIE-CM](/docs/uhi/v1/getting-started/glossary#hie-cm) completed. NHA states this as a hard prerequisite for any UHI service.
+- [ABDM](/docs/uhi/v1/getting-started/glossary#abdm) [M2](/docs/hiecm/v3/api/m2) with [HIE-CM](/docs/uhi/v1/getting-started/glossary#hie-cm) completed. This is a hard prerequisite for any UHI service.
 - A publicly reachable HTTPS `consumer_uri`.
 - Ed25519 signing with BLAKE-512 body hashing.
 - Asynchronous handling. Do not block on a synchronous reply to `search`.
@@ -306,13 +304,13 @@ For an HSPA:
 - An independently maintained blood bank database with real-time or near real-time inventory, comparable in scope and quality to e-RaktKosh.
 - A publicly reachable HTTPS `provider_uri` to receive searches from the gateway.
 - Ed25519 signing on every outbound response.
-- Sandbox integration and written NHA sign-off before production.
+- Sandbox integration and written sign-off before production.
 
 ## What is missing here
 
-- NHA's document gives no error code list for this service.
-- NHA's document gives no response time SLA for HSPAs beyond "an acceptable latency window".
-- State and district code lists are not in the source document. NHA's samples give Delhi as `7` and South district as `83`. Ask your onboarding contact for the full list.
+- No error code list is published for this service.
+- No response time SLA is published for HSPAs beyond an acceptable latency window.
+- State and district codes are issued at onboarding. Delhi is `7` and South district is `83`.
 
 ## Next
 

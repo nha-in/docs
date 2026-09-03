@@ -10,4 +10,4 @@ source: NHCX__NHCX-Website_DocumentDetails.md
 
 No specification is published here for NHCX, and no endpoint on this gateway has been documented here yet.
 
-[The NHCX introduction](/docs/nhcx/v1) records what NHA's own document index lists, so you can see what exists and where it lives.
+[The NHCX introduction](/docs/nhcx/v1) lists what the documentation set covers, so you can see what exists and where it lives.

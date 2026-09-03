@@ -2,23 +2,23 @@
 title: Sandbox data dictionary
 sidebar_label: Data dictionary
 sidebar_position: 4
-description: The tables and columns behind NHA's sandbox portal, grouped by what each one records.
+description: The tables and columns behind the ABDM sandbox portal, grouped by what each one records.
 verification: unverified
 source: Data_Dictionary__Sandboxdb_data_dictionary_v1.0.md
 ---
 
 # Sandbox data dictionary
 
-The database behind NHA's sandbox portal, the site where you register your
+The database behind the sandbox portal, the site where you register your
 organisation, declare which milestones you will build and apply for sandbox
 exit. Read it to find what the portal records about your application, and what
-a status you see on screen is called underneath. It is NHA's own store, not an
+a status you see on screen is called underneath. It is the portal's own store, not an
 [ABDM](/docs/hiecm/v3/getting-started/glossary#abdm) API, so nothing here is an endpoint you can
 call.
 
 ## What the source contains
 
-NHA's spreadsheet has five sheets. Three are transcribed here.
+Three of the portal's five record groups are listed here.
 
 | Sheet | What it holds | On this page |
 | --- | --- | --- |
@@ -30,9 +30,9 @@ NHA's spreadsheet has five sheets. Three are transcribed here.
 
 ## How to read these tables
 
-Each section below is one database table. **Field** is the column name as NHA
-spells it, **Type** the Postgres type, **Nullable** `No` for a `NOT NULL`
-column, and **Meaning** NHA's own description.
+Each section below is one database table. **Field** is the column name,
+**Type** the Postgres type, **Nullable** `No` for a `NOT NULL` column, and
+**Meaning** what it records.
 
 - `sd_id` is the self declaration identifier and the join key across most
   tables. `id_public` is a second, public facing identifier many tables carry
@@ -89,7 +89,7 @@ column, and **Meaning** NHA's own description.
 | Audit, logs and messages | [`concern`](#concern) | Support messages raised through the portal |
 | Reference data and content | [`std_data`](#std_data) | STD dialling codes, with their state, LDCA and SDCA names |
 | Reference data and content | [`upcoming_session`](#upcoming_session) | Sessions listed on the portal, with joining links |
-| Replication internals | [`awsdms_apply_exceptions`](#awsdms_apply_exceptions) | Exceptions raised by NHA's AWS Database Migration Service tasks |
+| Replication internals | [`awsdms_apply_exceptions`](#awsdms_apply_exceptions) | Exceptions raised by the portal's AWS Database Migration Service tasks |
 | Backup copies | [`sd_login_bk`, `sd_login_bk_16062026`, `sd_login_bk_20012026_updt`, `sd_exit_live`](#backup-copies) | Tables that repeat the column lists of `sd_login` and `sd_exit` |
 
 ## sd_login
@@ -666,8 +666,7 @@ mark.
 
 ## Indexes
 
-Every index in the source, with the columns it covers. NHA's spreadsheet has the
-full `CREATE INDEX` statements.
+Every index, with the columns it covers.
 
 | Table | Index | Unique | On |
 | --- | --- | --- | --- |
@@ -730,12 +729,11 @@ Two sheets are left out, and neither carries anything you act on.
   `nextval('<sequence>'::regclass)` on identifier columns and
   `NULL::character varying` on text columns.
 
-Both are in NHA's sandbox document pack, in the data dictionary spreadsheet
-v1.0.
+Both are in the sandbox document pack, data dictionary v1.0.
 
 ## What this page does not tell you
 
-This dictionary describes NHA's portal, not the [ABDM](/docs/hiecm/v3/getting-started/glossary#abdm)
+This dictionary describes the sandbox portal, not the [ABDM](/docs/hiecm/v3/getting-started/glossary#abdm)
 APIs. It carries no request shape, no response shape and no endpoint. Registry
 identifiers such as [ABHA](/docs/hiecm/v3/getting-started/glossary#abha) numbers do not appear in
 it at all.

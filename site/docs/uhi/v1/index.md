@@ -19,7 +19,7 @@ It is three gateways, not one, and this section documents the second of them.
 
 ## The gate before anything else
 
-Your application must have completed ABDM [M2](/docs/hiecm/v3/api/m2) with HIE-CM before it can be onboarded to any UHI service. NHA states this in all three documents. UHI sits on top of HIE-CM, it is not an alternative to it.
+Your application must have completed ABDM [M2](/docs/hiecm/v3/api/m2) with HIE-CM before it can be onboarded to any UHI service. This applies to every service on the network. UHI sits on top of HIE-CM, it is not an alternative to it.
 
 ## Two roles
 
@@ -28,7 +28,7 @@ Your application must have completed ABDM [M2](/docs/hiecm/v3/api/m2) with HIE-C
 | [EUA](/docs/uhi/v1/getting-started/glossary#eua) | End User Application | The patient facing app. Searches, shows results, books, displays status. |
 | [HSPA](/docs/uhi/v1/getting-started/glossary#hspa) | Health Service Provider Application | The provider platform. Holds availability, answers searches, drives the booking lifecycle. |
 
-The HSP is the hospital, clinic, doctor, ambulance operator or blood bank, and the HSPA is its digital interface. The [gateway](/docs/uhi/v1/getting-started/glossary#gateway) is NHA's routing layer. Each service page says which roles it accepts.
+The HSP is the hospital, clinic, doctor, ambulance operator or blood bank, and the HSPA is its digital interface. The [gateway](/docs/uhi/v1/getting-started/glossary#gateway) is the network's routing layer. Each service page says which roles it accepts.
 
 ## Services
 

@@ -25,11 +25,11 @@ About twenty paths cover the whole M1 surface. Most are reused for several jobs,
 
 ## Sensitive fields travel encrypted
 
-Aadhaar numbers, mobile numbers, email addresses, OTP values and passwords are RSA encrypted with NHA's public certificate before they go in the body. Placeholders are named for it, for example `<RSA_ENCRYPTED_AADHAAR_NUMBER>`.
+Aadhaar numbers, mobile numbers, email addresses, OTP values and passwords are RSA encrypted with the ABDM public certificate before they go in the body. Placeholders are named for it, for example `<RSA_ENCRYPTED_AADHAAR_NUMBER>`.
 
-Encrypt locally. NHA's [encrypt endpoint](/docs/hiecm/v3/api/m1/endpoints/m1-encrypt-value) does it for you, which helps when you are trying a flow by hand and is wrong in production, because it sends the raw value to a remote host.
+Encrypt locally. The [encrypt endpoint](/docs/hiecm/v3/api/m1/endpoints/m1-encrypt-value) does it for you. That helps when you are trying a flow by hand, and it is wrong in production, because it sends the raw value to a remote host.
 
-NHA's M1 document names a `public/certificate` API for fetching the public key. Its example is a screenshot, so the URL, the headers and the response body are not transcribed here. The Postman collection does not contain that call.
+M1 names a `public/certificate` API for fetching the public key. Its URL, headers and response body are not yet published.
 
 ## Two tokens, not interchangeable
 
@@ -39,7 +39,7 @@ Profile endpoints need both. That is every path under `profile/account`, includi
 
 ## The benefit endpoints are government only
 
-NHA's M1 document marks the benefit programme APIs under `profile/benefit/` as government integrator only. A private integrator calling them receives `ABDM-1094`. See [errors](/docs/hiecm/v3/api/m1/errors). Child ABHA creation is restricted further, to specific government integrators on leadership approval.
+The benefit programme APIs under `profile/benefit/` are government integrator only. A private integrator calling them receives `ABDM-1094`. See [errors](/docs/hiecm/v3/api/m1/errors). Child ABHA creation is restricted further, to specific government integrators on leadership approval.
 
 ## Every endpoint has its own page
 

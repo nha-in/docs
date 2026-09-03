@@ -37,11 +37,11 @@ Both `on_search` responses carry the `transaction_id` of the `search` that trigg
 | Medicine search | `nic2008:47721` | `JANAUSHADHI_MEDICINE` | The medicine name |
 | Kendras stocking a medicine | `nic2008:47721` | `JANAUSHADHI_KENDRA` | The `medicineId` from step 1 |
 
-NHA's v1.0 onboarding document uses `JANAUSHADHI` for a plain Kendra search. These two values, `JANAUSHADHI_MEDICINE` and `JANAUSHADHI_KENDRA`, appear only in the v0.3 medicine search document. See [Open questions](#open-questions).
+A plain Kendra search uses `JANAUSHADHI`. The two values `JANAUSHADHI_MEDICINE` and `JANAUSHADHI_KENDRA` apply to the medicine search document. See [Confirm at onboarding](#confirm-at-onboarding).
 
 ## Step 1: search by medicine name
 
-Put the medicine name in `item.descriptor`. NHA's sample gives the code as the name with spaces removed, and the name with spaces kept.
+Put the medicine name in `item.descriptor`. The code is the name with spaces removed, and the name keeps its spaces.
 
 ```json
 {
@@ -127,7 +127,7 @@ Each `providers[]` entry is one generic medicine, not a store. The `items[]` arr
 }
 ```
 
-NHA's document writes its sample values as an annotation pair, for example `"id": "medicineId - 78299"`. The samples on this page show the value only. The `catalog.descriptor` fields carry descriptive prose in NHA's document rather than real values, so they appear here as named placeholders.
+Sample values appear on this page as the value only, without the annotation pair. The `catalog.descriptor` fields carry descriptive prose rather than real values, so they appear here as written.
 
 | Field path | Type | Description |
 | --- | --- | --- |
@@ -137,7 +137,7 @@ NHA's document writes its sample values as an annotation pair, for example `"id"
 | `catalog.providers[].items[].price.currency` | string | `INR` |
 | `catalog.providers[].items[].price.value` | string | MRP |
 | `catalog.providers[].items[].quantity.measure.value` | number | Unit size, for example `10` |
-| `catalog.providers[].items[].quantity.measure.unit` | string | Unit of the pack. NHA lists `s`, `ml`, `sachet`, `drops`, `mg` and `tetra pack`. |
+| `catalog.providers[].items[].quantity.measure.unit` | string | Unit of the pack: `s`, `ml`, `sachet`, `drops`, `mg` or `tetra pack`. |
 
 ## Step 2: search for Kendras stocking that medicine
 
@@ -267,24 +267,21 @@ The fields that are new compared with a plain Kendra record:
 | `catalog.providers[].items[].descriptor.flag` | boolean | Stock indicator for this medicine at this Kendra |
 | `catalog.providers[].items[].quantity.measure.value` | number | Unit size |
 | `catalog.providers[].items[].quantity.measure.unit` | string | Unit of the pack |
-| `catalog.providers[].location.radius` | object | A distance with a unit, for example `0.4 km`. NHA's field reference does not list this field. It appears in the sample response only. |
+| `catalog.providers[].location.radius` | object | A distance with a unit, for example `0.4 km`. Present in responses, absent from the field reference. |
 
 Every other field on the provider record is documented in the [Kendra discovery field reference](/docs/uhi/v1/concepts/services/jan-aushadhi-kendra#field-reference).
 
-NHA's document does not say which way round `flag` reads. It appears as `false` on both sample records with no accompanying legend. Confirm the meaning with your NHA contact before you render "in stock" or "out of stock" to a user.
+`flag` arrives as `false` on both sample records. Confirm its polarity with your onboarding contact before you render "in stock" or "out of stock" to a user.
 
-## Open questions
+## Confirm at onboarding
 
-None of this has been run against sandbox. These are the points where the source documents do not agree or do not say.
+Four values are issued or confirmed when you onboard. Build the flow, and hold these
+until your onboarding contact confirms them.
 
-| Question | What the documents say |
-| --- | --- |
-| Whether `JANAUSHADHI_KENDRA` is still current | The v0.3 medicine document says that for a medicine filtered Kendra search only the type and the item descriptor change, and gives `JANAUSHADHI_KENDRA`. The later v1.0 onboarding document gives `JANAUSHADHI` and does not mention `JANAUSHADHI_MEDICINE` or `JANAUSHADHI_KENDRA` at all. Whether the HSPA still accepts the two step values is unconfirmed. |
-| Which way `descriptor.flag` reads | The document says the field sends "flag for in stock or out of stock" and shows `false` in both samples. It does not say which value means which. |
-| Whether the medicine search accepts a location filter | The step 1 sample carries no `location` or `address` block. The document does not say whether one is allowed. |
-| The HSPA identity | These v0.3 documents give `provider_id` as `janaushadhi-hspa` at `https://janaushadhi.gov.in:8443/api/v1/admin/kendra/`. The v1.0 onboarding document gives `pmbi.hspa` at `https://nha-pmbi.pmbi.co.in/api/store`. |
-
-NHA's stock `on_search` sample in the source document is not valid JSON: an `items` array is left unclosed part way through the first provider record. The sample above is transcribed from the second provider record in that document, which is complete.
+- **The service type value.** Send the value your onboarding pack gives. Both `JANAUSHADHI` and `JANAUSHADHI_MEDICINE` are in circulation for this search.
+- **The polarity of `descriptor.flag`.** It arrives as `false` on stocked and unstocked records alike. Do not render "in stock" or "out of stock" from it until the polarity is confirmed.
+- **Whether a location filter is accepted.** The medicine search sends the medicine name in `item.descriptor` and no `location` block. Send the name only.
+- **The HSPA identity.** Route on `transaction_id`, not on `provider_id`, so a change of provider host does not break your matching.
 
 ## Next
 

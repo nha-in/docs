@@ -15,26 +15,26 @@ Read [UHI services](/docs/uhi/v1) first, for the `context` block, the acknowledg
 
 ## What is live, and what is not
 
-NHA is releasing this service in two phases.
+This service is released in two phases.
 
-| NHA's phase | Calls | Status |
+| Phase | Calls | Status |
 | --- | --- | --- |
 | First | `search`, `on_search`, `init`, `on_init` | Current |
 | Second | `confirm`, `on_confirm`, `status`, `on_status`, `cancel`, `on_cancel`, `on_update` | Upcoming |
 
-Today the flow ends at a quote. The patient discovers ambulances, picks one, sends their details with `init`, and receives a quote with terms in `on_init`. There is no `confirm`. NHA describes the outcome as the patient requesting a callback from the provider they chose.
+Today the flow ends at a quote. The patient discovers ambulances, picks one, sends their details with `init`, and receives a quote with terms in `on_init`. There is no `confirm`. The outcome is the patient requesting a callback from the provider they chose.
 
 Two limits follow from that.
 
-- **The `agent` block must not appear in any current-phase payload.** Driver name, vehicle number and driver phone are post-confirmation data. NHA tests for their absence in `on_search` and `on_init`, and tests that your EUA shows no driver or vehicle UI at any point before confirmation.
-- **Live tracking and dispatch updates are not available.** They arrive with NHA's second phase.
+- **The `agent` block must not appear in any current-phase payload.** Driver name, vehicle number and driver phone are post-confirmation data. Their absence is tested in `on_search` and `on_init`, and tests that your EUA shows no driver or vehicle UI at any point before confirmation.
+- **Live tracking and dispatch updates are not available.** They arrive with the second phase.
 
 ## Out of scope right now
 
-- The `NON_EMERGENCY` flow. NHA's document describes it and prints sample payloads for it, marked as future scope. Build `EMERGENCY` first.
+- The `NON_EMERGENCY` flow, which is future scope. Build `EMERGENCY` first.
 - Booking confirmation and order creation from the EUA.
 - State-operated ambulance networks. 108, 102 and 112 services are not on UHI today.
-- Patient transport ambulances. An HSPA may return a `PTA` category in its catalog. NHA's document says to ignore it.
+- Patient transport ambulances. An HSPA may return a `PTA` category in its catalog. Ignore it.
 
 ## Service identity
 
@@ -51,7 +51,7 @@ Two limits follow from that.
 | --- | --- |
 | [EUA](/docs/uhi/v1/getting-started/glossary#eua) | The patient or caregiver app. Sends the search, shows options, sends `init`, shows the quote and terms |
 | [HSPA](/docs/uhi/v1/getting-started/glossary#hspa) | The ambulance operator's platform. Answers searches with live availability, answers `init` with a quote |
-| [Gateway](/docs/uhi/v1/getting-started/glossary#gateway) | NHA's routing layer. Broadcasts the search. Not involved from `init` onwards |
+| [Gateway](/docs/uhi/v1/getting-started/glossary#gateway) | The routing layer. Broadcasts the search. Not involved from `init` onwards |
 
 ## The four calls
 
@@ -73,7 +73,7 @@ Silence is not an error. An HSPA answers only for areas it covers, so no respons
 | `EMERGENCY` | `ALS`, `BLS`, `ALL` | `SOURCE` only: pickup GPS and address |
 | `NON_EMERGENCY` | `ALS`, `BLS`, `ALL` | `SOURCE` and `DESTINATION`, both GPS and address |
 
-`ALS` is advanced life support, `BLS` is basic life support. NHA's guidance for an emergency search is to set the class to `ALL` so nothing available is filtered out.
+`ALS` is advanced life support, `BLS` is basic life support. For an emergency search, set the class to `ALL` so nothing available is filtered out.
 
 ## search
 
@@ -94,7 +94,7 @@ Silence is not an error. An HSPA answers only for areas it covers, so no respons
 
 ### Sample, emergency
 
-From NHA's document, with your identifiers substituted.
+With your identifiers substituted.
 
 ```json
 {
@@ -144,7 +144,7 @@ From NHA's document, with your identifiers substituted.
 | `context.provider_uri` | string | Mandatory | HSPA callback URL. You need this for `init` |
 | `context.transaction_id` | string | Mandatory | Matches your search |
 | `catalog.descriptor.name` | string | Mandatory | HSPA name |
-| `catalog.descriptor.images` | string | Optional | HSPA logo. NHA prefers base64 |
+| `catalog.descriptor.images` | string | Optional | HSPA logo, preferably base64 |
 | `catalog.descriptor.flag` | boolean | Mandatory | `false` means the service is active, `true` means paused |
 | `providers[].id` | string | Mandatory | Provider identifier |
 | `providers[].categories[].code` | string | Mandatory | Ambulance class: `ALS` or `BLS` |
@@ -263,7 +263,7 @@ The HSPA answers with the order ID, a quote and the terms.
 
 | Field | Type | Required | What it is |
 | --- | --- | --- | --- |
-| `order.id` | string | Mandatory | The HSPA's order ID. Carry it into every call in NHA's second phase |
+| `order.id` | string | Mandatory | The HSPA's order ID. Carry it into every call in the second phase |
 | `order.fulfillment.tags.terms_reference` | string (URL) | Mandatory | Link to the HSPA's versioned terms document |
 | `order.quote.price.value` | string | Mandatory | Total confirmed price in INR |
 | `order.quote.breakup[].title` | string | Mandatory | Line item name, for example `Ambulance Base Charge` |
@@ -275,7 +275,7 @@ The HSPA answers with the order ID, a quote and the terms.
 | `order.locations[SOURCE]` | object | Mandatory | Echoed from `init` |
 | `order.locations[DESTINATION]` | object | Conditional | Echoed from `init` for non-emergency |
 
-NHA's sample carries three terms in the current phase: `Commercial`, `Cancellation` and `Payment`, each at `INITIATED`.
+Three terms apply in the current phase: `Commercial`, `Cancellation` and `Payment`, each at `INITIATED`.
 
 ```json
 {
@@ -290,11 +290,9 @@ NHA's sample carries three terms in the current phase: `Commercial`, `Cancellati
 }
 ```
 
-Most of `on_init` exists for NHA's second phase. NHA's guidance is that you may receive these fields now without showing all of them to the user yet.
+Most of `on_init` exists for the second phase. You may receive these fields now without showing all of them to the user yet.
 
 ## What your EUA has to show
-
-These are NHA's own test cases, not our suggestions.
 
 | ID | Requirement |
 | --- | --- |
@@ -327,14 +325,14 @@ For an HSPA:
 
 - A publicly reachable HTTPS callback URL for `search` from the gateway and `init` from EUAs.
 - Ed25519 signing on every outbound response.
-- Real-time or near real-time availability data. NHA states that integrations relying only on manually maintained records will not be approved for production.
+- Real-time or near real-time availability data. Integrations relying only on manually maintained records are not approved for production.
 - An `on_init` that carries a confirmed quote, payment terms and a cancellation policy.
 - No `agent` block in any current-phase payload.
 
 ## What is missing here
 
-- The calls in NHA's second phase have no field reference yet in NHA's document.
-- NHA lists a Postman collection for this service as a reference resource without a public link. Ask your onboarding contact.
+- The calls in the second phase have no field reference yet.
+- A Postman collection for this service is available from your onboarding contact.
 - Error codes for this service are not enumerated in the source document.
 
 ## Next
