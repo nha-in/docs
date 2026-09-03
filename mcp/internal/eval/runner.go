@@ -58,10 +58,20 @@ func Run(ctx context.Context, cfg RunConfig, cases []Case) (int, error) {
 			switch event {
 			case "text":
 				answer.WriteString(data.(map[string]string)["delta"])
-			case "tool":
+			case "tool_result":
 				m := data.(map[string]any)
 				in, _ := m["input"].(json.RawMessage)
-				out, _ := m["output"].(json.RawMessage)
+				// output is json.RawMessage when the tool returned valid
+				// JSON and a plain string (an error message such as
+				// "unknown tool") otherwise; either way ToolTrace.Output
+				// ends up valid JSON, a bare string marshalled into one.
+				var out json.RawMessage
+				switch v := m["output"].(type) {
+				case json.RawMessage:
+					out = v
+				case string:
+					out, _ = json.Marshal(v)
+				}
 				pendingTools = append(pendingTools, ToolTrace{Name: m["name"].(string), Input: in, Output: out})
 				corpus.Write(out)
 				corpus.WriteString("\n")
