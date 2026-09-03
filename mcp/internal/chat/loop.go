@@ -703,10 +703,10 @@ func saysItHasNothing(answer string) bool {
 // not that it did wrong.
 const lookFirst = `You answered without using your tools. Look before you answer: search_docs for a term, a concept or an error, list_operations for an endpoint, decode_error for a code. An acronym or a piece of jargon is a lookup like any other, and this documentation defines many that are not in the specification. If the search genuinely returns nothing that answers the question, say so then, and say it in one line.`
 
-// blockedNotice stands in for an answer that broke a rule before any of it
+// BlockedNotice stands in for an answer that broke a rule before any of it
 // reached the reader. It says nothing about which rule: the reader cannot
 // act on that, and naming the check invites working around it.
-const blockedNotice = "I do not have an answer for that I can stand behind. Ask about the specific call or error you are stuck on, or ask [support](/docs/support)."
+const BlockedNotice = "I do not have an answer for that I can stand behind. Ask about the specific call or error you are stuck on, or ask [support](/docs/support)."
 
 // truncatedNotice ends an answer whose later lines broke a rule after
 // earlier ones were already on screen. Streaming cannot recall what was
@@ -824,7 +824,7 @@ func (g *answerGuard) release(candidate, keep string, final bool) {
 		if g.released.Len() > 0 {
 			g.send("\n\n" + truncatedNotice)
 		} else {
-			g.send(blockedNotice)
+			g.send(BlockedNotice)
 		}
 		return
 	}

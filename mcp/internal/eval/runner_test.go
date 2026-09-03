@@ -63,6 +63,33 @@ func TestRunWritesATranscriptWithToolsAndSources(t *testing.T) {
 	_ = filepath.Join
 }
 
+// TestRunRecordsTheRetrievalStackOnTheTranscript covers I7: two runs on
+// different retrieval stacks must not compare as if they were the same
+// instrument, so the provider and the index they ran against travel with
+// every transcript rather than living only in the command line that
+// produced them.
+func TestRunRecordsTheRetrievalStackOnTheTranscript(t *testing.T) {
+	out := t.TempDir()
+	cases := []Case{{ID: "define-hmis-01", Slice: "define", Class: "define",
+		Turns: []Turn{{Role: "user", Text: "what is a HIMS"}}, MustContain: []string{"hospital"},
+		ExpectedShape: "define", ExpectedBehaviour: "answer", SourceRow: "annexure#glossary",
+		CatalogueVersion: "2026.08.24"}}
+	fm := &toolThenAnswer{round: 1} // skip straight to the text-only reply
+	n, err := Run(context.Background(), RunConfig{OutDir: out, Model: fm, ModelID: "fake",
+		Temperature: 0.1, MaxTokens: 200, EmbedProvider: "bedrock", DBPath: "catalogue.db"}, cases)
+	if err != nil || n != 1 {
+		t.Fatalf("n=%d err=%v", n, err)
+	}
+	ts, err := ReadTranscripts(out)
+	if err != nil {
+		t.Fatal(err)
+	}
+	tr := ts["define-hmis-01"]
+	if tr.EmbedProvider != "bedrock" || tr.DBPath != "catalogue.db" {
+		t.Fatalf("transcript did not record the retrieval stack: embed_provider=%q db_path=%q", tr.EmbedProvider, tr.DBPath)
+	}
+}
+
 // twoCallsThenAnswer makes two tool calls in a single round, then answers.
 // It is the shape a question takes when the model looks two places before
 // it has enough to answer.

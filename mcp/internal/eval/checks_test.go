@@ -64,6 +64,23 @@ func TestCheckDeclineShape(t *testing.T) {
 	}
 }
 
+// TestCheckLiteralInsideAFencedCurlBlockIsNotOutsideACodeSpan covers I8:
+// codeSpanRe only matches a single backtick span, which cannot cross the
+// newlines inside a fenced block. Seventeen cases carry the diagnose shape,
+// whose spec-mandated form is a curl command in a fenced block, and it must
+// not raise a "literal outside a code span" failure for the header and path
+// that command legitimately carries.
+func TestCheckLiteralInsideAFencedCurlBlockIsNotOutsideACodeSpan(t *testing.T) {
+	tr := Transcript{CaseID: "define-hmis-01",
+		Answer: "Here is the call:\n\n```curl\ncurl -X POST /v3/hip/token/on-generate-token \\\n  -H 'X-HIP-ID: hip-01'\n```",
+		Corpus: "X-HIP-ID header, /v3/hip/token/on-generate-token",
+	}
+	r := Check(answerCase(), tr)
+	if hasPrefix(r.Failures, "shape: literal") {
+		t.Fatalf("a literal inside a fenced curl block was flagged as outside a code span: %v", r.Failures)
+	}
+}
+
 func TestCheckLiteralOutsideCodeSpan(t *testing.T) {
 	tr := Transcript{CaseID: "define-hmis-01",
 		Answer:  "Send X-HIP-ID on every call.",
