@@ -362,35 +362,23 @@ func checkInto(casesDir, runDir string) error {
 		return err
 	}
 	baselinePath := filepath.Join(filepath.Dir(runDir), "baseline.json")
-	_, baselineErr := os.Stat(baselinePath)
-	hadBaseline := baselineErr == nil
-	baseline := map[string]bool{}
-	if hadBaseline {
-		if raw, err := os.ReadFile(baselinePath); err == nil {
-			var b struct {
-				FailingCases []string `json:"failing_cases"`
-			}
-			if json.Unmarshal(raw, &b) == nil {
-				for _, id := range b.FailingCases {
-					baseline[id] = true
-				}
-			}
-		}
-	}
+	baseline, hadBaseline := readBaseline(baselinePath)
 	failing := 0
 	newFailures := 0
-	var failingCases []string
+	newBaseline := map[string][]string{}
 	for _, r := range results {
 		if len(r.Failures) == 0 {
 			continue
 		}
 		failing++
-		failingCases = append(failingCases, r.CaseID)
+		newBaseline[r.CaseID] = r.Failures
+		newOnes := newFailureStrings(baseline, r)
 		tag := ""
-		if baseline[r.CaseID] {
+		if len(newOnes) == 0 {
 			tag = " (baseline)"
 		} else {
 			newFailures++
+			tag = fmt.Sprintf(" (new: %s)", strings.Join(newOnes, "; "))
 		}
 		fmt.Printf("%s%s\n  %s\n", r.CaseID, tag, strings.Join(r.Failures, "\n  "))
 	}
@@ -399,13 +387,7 @@ func checkInto(casesDir, runDir string) error {
 	// a command that just succeeded, this run's own failures become the
 	// baseline, and a later run is what tightens the gate.
 	if !hadBaseline {
-		raw, err := json.MarshalIndent(struct {
-			FailingCases []string `json:"failing_cases"`
-		}{FailingCases: failingCases}, "", "  ")
-		if err != nil {
-			return err
-		}
-		if err := os.WriteFile(baselinePath, raw, 0o644); err != nil {
+		if err := writeBaseline(baselinePath, newBaseline); err != nil {
 			return err
 		}
 		fmt.Printf("no baseline existed; wrote one from this run's %d failing cases to %s\n", failing, baselinePath)
@@ -415,6 +397,81 @@ func checkInto(casesDir, runDir string) error {
 		return fmt.Errorf("%d cases newly fail deterministic checks", newFailures)
 	}
 	return nil
+}
+
+// readBaseline loads runs/baseline.json as a map from case id to the
+// failure strings recorded for it. It accepts two shapes: the current one,
+// {"failing_cases": {"<id>": ["grounding: X", ...]}}, and the older one
+// this replaces, {"failing_cases": ["<id>", ...]}, which named only which
+// cases failed and not which failures. A case loaded from the older shape
+// gets a nil slice here, which newFailureStrings treats as "matches any
+// failure this case carries today" -- the coarse per-case behavior the
+// older shape actually had, so a baseline.json written before this ships
+// still loads and still ratchets, just without the finer per-failure check
+// until it is rewritten by a run that passes through here.
+//
+// hadBaseline is false only when the file does not exist yet, which is what
+// lets checkInto tell "first run, nothing to compare against" apart from
+// "baseline exists but every case in it happens to pass now".
+func readBaseline(path string) (map[string][]string, bool) {
+	raw, err := os.ReadFile(path)
+	if err != nil {
+		return map[string][]string{}, false
+	}
+	var byFailure struct {
+		FailingCases map[string][]string `json:"failing_cases"`
+	}
+	if json.Unmarshal(raw, &byFailure) == nil && byFailure.FailingCases != nil {
+		return byFailure.FailingCases, true
+	}
+	var byCase struct {
+		FailingCases []string `json:"failing_cases"`
+	}
+	data := map[string][]string{}
+	if json.Unmarshal(raw, &byCase) == nil {
+		for _, id := range byCase.FailingCases {
+			data[id] = nil
+		}
+	}
+	return data, true
+}
+
+func writeBaseline(path string, data map[string][]string) error {
+	raw, err := json.MarshalIndent(struct {
+		FailingCases map[string][]string `json:"failing_cases"`
+	}{FailingCases: data}, "", "  ")
+	if err != nil {
+		return err
+	}
+	return os.WriteFile(path, raw, 0o644)
+}
+
+// newFailureStrings returns the failure strings in r that the baseline does
+// not already excuse for this case. A case absent from the baseline is
+// entirely new. A case present with a nil failure list (the legacy shape,
+// see readBaseline) excuses every failure it carries, matching the ratchet
+// this replaces. Otherwise a failure string not in that case's recorded
+// list is new, so a case already in the baseline can no longer acquire a
+// different failure for free.
+func newFailureStrings(baseline map[string][]string, r eval.CheckResult) []string {
+	known, inBaseline := baseline[r.CaseID]
+	if !inBaseline {
+		return r.Failures
+	}
+	if known == nil {
+		return nil
+	}
+	knownSet := make(map[string]bool, len(known))
+	for _, f := range known {
+		knownSet[f] = true
+	}
+	var newOnes []string
+	for _, f := range r.Failures {
+		if !knownSet[f] {
+			newOnes = append(newOnes, f)
+		}
+	}
+	return newOnes
 }
 
 func writeJSON(path string, v any) error {

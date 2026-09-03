@@ -11,11 +11,12 @@ The instrument that scores the assistant's answers. Read the design in
 
 Run:
 
-    npm run eval:askai:run      # answer every case against Bedrock, record transcripts, write runs/latest
-    npm run eval:askai:check    # deterministic checks against the latest run, no model
-    npm run eval:askai:judge    # grade the latest run with the Bedrock judge
-    npm run eval:askai:report   # render the latest run's scorecard as a table
-    npm run lint:annexure       # every case cites a source row that exists
+    npm run eval:askai:run        # answer every case against Bedrock, record transcripts, write runs/latest
+    npm run eval:askai:check      # deterministic checks against the latest run, no model
+    npm run eval:askai:judge      # grade the latest run with the Bedrock judge
+    npm run eval:askai:calibrate  # check the judge's grades on the latest run against the owner's
+    npm run eval:askai:report     # render the latest run's scorecard as a table
+    npm run lint:annexure         # every case cites a source row that exists
 
 `run` writes checks, retrieval, and a scorecard for the run it just answered,
 and names it in `runs/latest` so the commands above never need `-run` by
@@ -32,15 +33,25 @@ CI runs `eval:askai:check` on every pull request, against the last recorded
 run named in `runs/latest`, with no model and no credentials. Until the
 first run is recorded the gate passes without proving anything: it says so
 and exits clean rather than turning the whole repository red. Once a run
-exists, a case that fails and is not already in `runs/baseline.json` fails
-the build; the baseline only ever shrinks, so fixing a case is what tightens
-the gate.
+exists, a case that fails with a failure string not already recorded for it
+in `runs/baseline.json` fails the build: the baseline records which failures
+were already known, per case, not just which cases were failing, so a case
+already in the baseline cannot acquire a new kind of failure for free.
+Shrinking the baseline is a deliberate act in a pull request, when a case is
+actually fixed, not something the tooling does on its own.
+
+The judge is not trusted until it agrees with the owner's hand grading on at
+least 85 percent of the 30 cases in `calibration/owner-grades.json`;
+`eval:askai:calibrate` checks that and fails clearly while that file is
+still empty, which is the state today.
 
 Pull requests labelled `eval`, and every night against `main`, get the full
-judged run instead: all 150 cases, answered, checked and graded by the
-judge. Merge is blocked when overall factuality or uncertainty falls, or the
-count of ungrounded literals rises, against the run named in `runs/latest`.
-The scorecard, with its delta from that run, is posted as a comment on the
-pull request. After a nightly run on `main` passes, `runs/latest` is updated
-by a pull request that commits the new run, so the comparison point moves
-forward deliberately rather than on every push.
+judged run instead: all 150 cases, answered, checked, calibrated and graded
+by the judge. A run that did not finish answering or grading every case
+fails the gate outright, before any of the numbers below are trusted.
+Otherwise merge is blocked when overall factuality or uncertainty falls, or
+the count of ungrounded literals rises, against the run named in
+`runs/latest`. The scorecard, with its delta from that run, is posted as a
+comment on the pull request. After a nightly run on `main` passes,
+`runs/latest` is updated by a pull request that commits the new run, so the
+comparison point moves forward deliberately rather than on every push.

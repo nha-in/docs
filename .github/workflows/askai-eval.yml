@@ -37,6 +37,15 @@ jobs:
         with:
           role-to-assume: ${{ secrets.EVAL_AWS_ROLE_ARN }}
           aws-region: ${{ vars.AWS_REGION || 'ap-south-1' }}
+      # run (below) writes evals/askai/runs/latest itself once it finishes,
+      # so the pointer to the run this job should compare against has to be
+      # captured before that happens, not read again afterward.
+      - name: Snapshot the run this job compares against
+        run: |
+          if [ -f ../evals/askai/runs/latest ]; then
+            echo "LAST=$(cat ../evals/askai/runs/latest)" >> "$GITHUB_ENV"
+          fi
+        working-directory: mcp
       - name: Build the index
         run: go run ./cmd/indexer -catalogue ../catalogue -out catalogue.db
         working-directory: mcp
@@ -56,14 +65,19 @@ jobs:
         env:
           EVAL_JUDGE_MODEL: ${{ vars.EVAL_JUDGE_MODEL }}
           AWS_REGION: ${{ vars.AWS_REGION || 'ap-south-1' }}
+      # A judged number is not trusted until the judge itself agrees with the
+      # owner's hand grading. This needs judge.json, so it runs after Judge
+      # and before the run's numbers go anywhere near a report or a gate.
+      - name: Calibrate the judge against the owner
+        run: go run ./cmd/askai-eval calibrate -run ../evals/askai/runs/$RUN
+        working-directory: mcp
       - name: Report against the last run on main
         id: report
         run: |
-          if [ -f ../evals/askai/runs/latest ]; then
-            LAST=$(cat ../evals/askai/runs/latest)
+          if [ -n "$LAST" ]; then
             go run ./cmd/askai-eval report -cases ../evals/askai/cases -run ../evals/askai/runs/$RUN -before ../evals/askai/runs/$LAST > ../scorecard.md
           else
-            echo "no previous run to compare against (evals/askai/runs/latest is absent); reporting without a baseline"
+            echo "no previous run to compare against (evals/askai/runs/latest was absent before this run started); reporting without a baseline"
             go run ./cmd/askai-eval report -cases ../evals/askai/cases -run ../evals/askai/runs/$RUN > ../scorecard.md
           fi
           cat ../scorecard.md
@@ -83,16 +97,21 @@ jobs:
       - name: Gate
         run: |
           node -e "
-          const fs = require('fs');
-          if (!fs.existsSync('evals/askai/runs/latest')) {
-            console.log('no previous run to compare against; gate passed');
-            process.exit(0);
-          }
           const now=require('./evals/askai/runs/'+process.env.RUN+'/scorecard.json');
-          const was=require('./evals/askai/runs/'+fs.readFileSync('evals/askai/runs/latest','utf8').trim()+'/scorecard.json');
           const bad=[];
-          if (now.overall.factuality>=0 && was.overall.factuality>=0 && now.overall.factuality < was.overall.factuality) bad.push('factuality fell');
-          if (now.overall.uncertainty>=0 && was.overall.uncertainty>=0 && now.overall.uncertainty < was.overall.uncertainty) bad.push('uncertainty fell');
-          if (now.overall.grounding_failures > was.overall.grounding_failures) bad.push('new ungrounded literals');
+          // A half executed run must not score like a complete one: a
+          // Bedrock throttle partway through leaves cases unanswered or
+          // ungraded, and every other number here is computed only over
+          // whatever did come back.
+          if (now.overall.answered < now.overall.cases) bad.push('only '+now.overall.answered+' of '+now.overall.cases+' cases answered');
+          if (now.overall.graded < now.overall.answered) bad.push('only '+now.overall.graded+' of '+now.overall.answered+' answered cases graded');
+          if (process.env.LAST) {
+            const was=require('./evals/askai/runs/'+process.env.LAST+'/scorecard.json');
+            if (now.overall.factuality>=0 && was.overall.factuality>=0 && now.overall.factuality < was.overall.factuality) bad.push('factuality fell');
+            if (now.overall.uncertainty>=0 && was.overall.uncertainty>=0 && now.overall.uncertainty < was.overall.uncertainty) bad.push('uncertainty fell');
+            if (now.overall.grounding_failures > was.overall.grounding_failures) bad.push('new ungrounded literals');
+          } else {
+            console.log('no previous run to compare against; skipping the delta checks');
+          }
           if (bad.length) { console.error(bad.join('; ')); process.exit(1); }
           console.log('gate passed');"
