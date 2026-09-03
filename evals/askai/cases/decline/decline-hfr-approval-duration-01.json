@@ -23,7 +23,9 @@
     "atom",
     "7 days",
     "10 days",
-    "working days"
+    "7 working days",
+    "15 working days",
+    "30 working days"
   ],
   "expected_sources": [],
   "expected_shape": "decline",
@@ -31,5 +33,5 @@
   "derived_from": null,
   "source_row": "annexure#abdm-faq-general",
   "catalogue_version": "2026.08.24",
-  "notes": "the HFR page describes what a facility record holds and the onboarding sequence, not an approval turnaround; do not invent a day count."
+  "notes": "the HFR page describes what a facility record holds and the onboarding sequence, not an approval turnaround; do not invent a day count. Replaced the bare 'working days' in must_not_contain with digit-bearing forms: the bare phrase fires as a substring of the honest decline 'NHA has not published how many working days this takes', while a fabricated day count does not."
 }

@@ -30,5 +30,5 @@
   "derived_from": null,
   "source_row": "annexure#abdm-faq-sandbox",
   "catalogue_version": "2026.08.24",
-  "notes": "catalogue gap: who is expected to register on the sandbox, entities rather than individual citizens or professionals, is not documented"
+  "notes": "catalogue gap: who is expected to register on the sandbox, entities rather than individual citizens or professionals, is not documented. NHA's own pages disagree on who can participate: this case requires that citizens and healthcare professionals do not register directly, while faq-verbatim-sandbox-m1-02 requires 'any entity or individual can potentially participate' and faq-verbatim-abdm-sandbox-07 requires the stricter entity-eligibility answer. The conflict is NHA's, across its own pages, not ours."
 }
