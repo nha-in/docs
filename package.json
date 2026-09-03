@@ -24,7 +24,9 @@
     "build:routes": "node scripts/build-atom-routes.mjs",
     "check:routes": "node scripts/build-atom-routes.mjs --check",
     "build:widget": "npm run build --workspace widget",
-    "test:widget": "npm test --workspace widget"
+    "test:widget": "npm test --workspace widget",
+    "eval:askai:run": "cd mcp && go run ./cmd/askai-eval run -cases ../evals/askai/cases -out ../evals/askai/runs/$(date +%Y-%m-%d)-$(cat ../catalogue/VERSION)",
+    "eval:askai:check": "cd mcp && go run ./cmd/askai-eval check -cases ../evals/askai/cases"
   },
   "devDependencies": {
     "@docusaurus/faster": "^3.10.2",
