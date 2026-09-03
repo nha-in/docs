@@ -71,8 +71,8 @@ func main() {
 	region := flag.String("aws-region", envOr("AWS_REGION", ""), "AWS region, for -embed-provider bedrock")
 	chatModel := flag.String("chat-model", envOr("CHAT_MODEL", ""), "Bedrock model id for /api/chat; empty disables chat")
 	chatMaxTokens := flag.Int("chat-max-tokens", envIntOr("CHAT_MAX_TOKENS", 1500), "max output tokens per chat answer")
-	chatTemperature := flag.Float64("chat-temperature", envFloatOr("CHAT_TEMPERATURE", 0.2),
-		"sampling temperature for chat answers; low keeps quoted literals and tool choices stable")
+	chatTemperature := flag.Float64("chat-temperature", envFloatOr("CHAT_TEMPERATURE", 0.1),
+		"sampling temperature for chat answers, 0.1 to 0.2; low keeps quoted literals and tool choices stable, and 0 is not deterministic on any provider")
 	chatPerMin := flag.Int("chat-rate-per-min", envIntOr("CHAT_RATE_PER_MIN", 5), "chat requests per ip per minute")
 	chatPerDay := flag.Int("chat-rate-per-day", envIntOr("CHAT_RATE_PER_DAY", 100), "chat requests per ip per day")
 	mcpURL := flag.String("mcp-url", envOr("MCP_URL", ""), "public MCP endpoint the chat assistant names; empty keeps the built-in default")

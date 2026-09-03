@@ -29,3 +29,12 @@ and exits clean rather than turning the whole repository red. Once a run
 exists, a case that fails and is not already in `runs/baseline.json` fails
 the build; the baseline only ever shrinks, so fixing a case is what tightens
 the gate.
+
+Pull requests labelled `eval`, and every night against `main`, get the full
+judged run instead: all 150 cases, answered, checked and graded by the
+judge. Merge is blocked when overall factuality or uncertainty falls, or the
+count of ungrounded literals rises, against the run named in `runs/latest`.
+The scorecard, with its delta from that run, is posted as a comment on the
+pull request. After a nightly run on `main` passes, `runs/latest` is updated
+by a pull request that commits the new run, so the comparison point moves
+forward deliberately rather than on every push.
