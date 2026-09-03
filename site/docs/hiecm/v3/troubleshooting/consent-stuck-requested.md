@@ -26,7 +26,7 @@ status call.
 
 ## Work through these in order
 
-1. **Does the patient's app show the request at all?** NHA's gateway
+1. **Does the patient's app show the request at all?** The gateway
    notifies the patient through the ABHA App when a consent request is
    raised. If the patient uses a third party PHR app instead, that app
    needs an approved subscription with the gateway to be notified of a
@@ -52,7 +52,7 @@ status call.
 
 The consent request status reports Granted or Denied rather than
 Requested. A Granted result also carries the id of at least one consent
-artefact; NHA's M3 document says a granted request can produce more than
+artefact, and a granted request can produce more than
 one.
 
 ## When it goes wrong

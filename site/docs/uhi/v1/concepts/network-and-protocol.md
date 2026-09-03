@@ -15,7 +15,7 @@ source: UHI__UHI_Physical_Consultation_v2.0_-_Onboarding_Document.md
 
 ## Prerequisite
 
-Your application must have completed ABDM [M2](/docs/hiecm/v3/api/m2) with HIE-CM before it can be onboarded to any UHI service. NHA states this as a hard requirement. UHI sits on top of HIE-CM, it is not an alternative to it.
+Your application must have completed ABDM [M2](/docs/hiecm/v3/api/m2) with HIE-CM before it can be onboarded to any UHI service. This is a hard requirement. UHI sits on top of HIE-CM, it is not an alternative to it.
 
 ## Two roles
 
@@ -24,11 +24,11 @@ Your application must have completed ABDM [M2](/docs/hiecm/v3/api/m2) with HIE-C
 | [EUA](/docs/uhi/v1/getting-started/glossary#eua) | End User Application | The patient facing app or website. Searches, shows results, books, displays status. |
 | [HSPA](/docs/uhi/v1/getting-started/glossary#hspa) | Health Service Provider Application | The provider platform. Holds doctor profiles and slot availability, confirms bookings, drives the appointment lifecycle. |
 
-The HSP is the hospital, clinic or doctor, and the HSPA is its digital interface. The Gateway is NHA's routing layer, and [NHA](/docs/uhi/v1/getting-started/glossary#nha) is the network operator that governs onboarding and the protocol.
+The HSP is the hospital, clinic or doctor, and the HSPA is its digital interface. The Gateway is the routing layer, and [NHA](/docs/uhi/v1/getting-started/glossary#nha) is the network operator that governs onboarding and the protocol.
 
 ## Two transports in one flow
 
-NHA's document flags this as the critical architectural point.
+This is the critical architectural point.
 
 - **Discovery goes through the gateway.** Your EUA sends one `/search`, and the gateway broadcasts it to every registered HSPA. Responses come back to your callback URL as `/on_search`.
 - **Everything after discovery is direct.** Booking, fulfilment and post fulfilment are point to point between the EUA and the one HSPA the patient chose. There is no central UHI API for those stages, so both sides expose their own endpoints.
@@ -37,9 +37,9 @@ The provider URI for those direct calls comes from the context of the `on_search
 
 ## Signing
 
-Every UHI call is signed. NHA's document specifies Ed25519 signatures over a BLAKE-512 hash of the request body, carried in an `Authorization` header. Inbound gateway calls carry the same structure in an `X-Gateway-Authorization` header, with the key ID prefixed `gateway-nha`.
+Every UHI call is signed with Ed25519 over a BLAKE-512 hash of the request body, carried in an `Authorization` header. Inbound gateway calls carry the same structure in an `X-Gateway-Authorization` header, with the key ID prefixed `gateway-nha`.
 
-NHA publishes a header generator utility at [github.com/NHA-ABDM/UHI](https://github.com/NHA-ABDM/UHI/tree/main/header_generator_utility). Generate your Ed25519 key pair with it and send NHA the public key only.
+A header generator utility is published at [github.com/NHA-ABDM/UHI](https://github.com/NHA-ABDM/UHI/tree/main/header_generator_utility). Generate your Ed25519 key pair with it and send NHA the public key only.
 
 ## Sandbox environment
 
@@ -77,7 +77,7 @@ The index for all of them is [UHI in API references](/docs/uhi/v1).
 
 ## What is missing here
 
-Our source is NHA's physical consultation onboarding document, version 2.0. Its per stage request and response bodies sit on the [physical consultation](/docs/uhi/v1/concepts/services/physical-consultation) page. The other six services have their own documents and are not covered here.
+Per stage request and response bodies sit on the [physical consultation](/docs/uhi/v1/concepts/services/physical-consultation) page. The other six services have their own documents and are not covered here.
 
 ## Next
 

@@ -1,37 +1,28 @@
 ---
-title: What NHA documents without a path
-sidebar_label: Undocumented paths
+title: M4 operations and fields
+sidebar_label: Operations and fields
 sidebar_position: 90
-description: The M4 calls NHA describes but never gives a method or a path for, and what does exist in the specification.
+page_type: reference
+description: Every M4 call for the HPR and the HFR, with its parameters, codes and rules, including the calls whose path is not yet published.
 verification: unverified
 source: ABDM__Proposed_Simplified_Milestone_4_(NHPR).md
 ---
 
-# What NHA documents without a path
+# M4 operations and fields
 
-Two M4 operations carry a path in NHA's text, and they are in the
-specification, so they have their own pages under APIs like every other
-endpoint. Everything below is the rest: calls NHA describes in prose while
-carrying the method and the path only inside a screenshot. The behaviour is
-recorded here so it is not lost. It is not an API reference, because the two
-facts a reference needs are missing at the source.
+Every Milestone 4 call for the [HPR](/docs/hiecm/v3/getting-started/glossary#hpr)
+and the [HFR](/docs/hiecm/v3/getting-started/glossary#hfr), with its parameters,
+its codes and the rules that apply to it. Two operations carry a published path
+and have their own pages under APIs. The rest are here.
 
-
-This page lists every call NHA's Milestone 4 document names, for the [HPR](/docs/hiecm/v3/getting-started/glossary#hpr) and the [HFR](/docs/hiecm/v3/getting-started/glossary#hfr). NHA pasted most request and response samples in as screenshots, which did not convert to text, so many calls have a name, a purpose and a parameter list but no method or path. Every gap is marked, and nothing here is invented.
-
-:::caution[A map, not a build guide]
-Use this page to size the work and find the right call. Expect to open NHA's sandbox documentation alongside it for the paths this page does not have.
+:::caution[Where do I get the paths this page does not give?]
+Method and path are not yet published for most calls below. Take them from the
+sandbox documentation, and use this page for the fields, codes and rules.
 :::
-
-## Calls without a published path
-
-Method and path are not yet published for the calls below. Their parameter
-tables are published, so you can size the work and prepare the fields. Take the
-paths and payloads from the sandbox documentation.
 
 ## Session token
 
-The first call you make, and one of the few whose method, URL and body all survived in text. Same session pattern as [M1](/docs/hiecm/v3/api/m1), issued by the [HIE-CM](/docs/hiecm/v3/getting-started/glossary#hie-cm) gateway.
+The first call you make. Same session pattern as [M1](/docs/hiecm/v3/api/m1), issued by the [HIE-CM](/docs/hiecm/v3/getting-started/glossary#hie-cm) gateway.
 
 | | |
 |---|---|
@@ -41,7 +32,7 @@ The first call you make, and one of the few whose method, URL and body all survi
 
 Both hosts are listed under [Base URLs](/docs/hiecm/v3/api/m4#base-urls).
 
-Headers NHA names:
+Headers:
 
 | Header | Value |
 |---|---|
@@ -71,7 +62,7 @@ Response shape:
 }
 ```
 
-`expiresIn` is inconsistent across NHA's samples: one shows `36000`, another `1200`. Read it from your own response rather than hard coding either.
+Read `expiresIn` from your own response rather than hard coding a value.
 
 Every later call carries this token. The `Authorization` header value is the word `Bearer`, one space, then the access token.
 
@@ -85,11 +76,11 @@ Three fields below are sent encrypted: the mobile number in mobile match, the [O
 | Sandbox URL | `https://apihspsbx.abdm.gov.in/v4/int/api/v1/auth/cert` |
 | Production URL | `https://apinhpr.abdm.gov.in/v4/int/api/v1/auth/cert` |
 
-The response is a PEM public key, beginning `-----BEGIN PUBLIC KEY-----`. NHA names the cipher as `RSA/ECB/PKCS1Padding`.
+The response is a PEM public key, beginning `-----BEGIN PUBLIC KEY-----`. The cipher is `RSA/ECB/PKCS1Padding`.
 
 ## HPID creation
 
-Nine calls, in order. NHA gives the behaviour of each but not the path.
+Nine calls, in order. Method and path are not yet published for these.
 
 | Step | Call | What it does | Detail we have |
 |---|---|---|---|
@@ -140,12 +131,28 @@ Role:
 | 3 | Healthcare Professional and Facility Manager |
 
 :::note[The subcategory codes differ between calls]
-NHA publishes a second subcategory table for register professional and update professional whose codes do not match the create HPID table above. There Dentistry is 2, Homoeopathy is 3, Ayurveda is 4, Unani is 5, Siddha is 6, Sowa-Rigpa is 7, the nurse codes run 8 to 11, Pharmacist is 13 and Yoga and Naturopathy is 14. Which table applies to which call is unconfirmed. Fetch the codes from the HPRID subcategories master API rather than hard coding either.
+Register professional and update professional use a second subcategory table, and
+its codes differ from the create HPID table above.
+
+| Subcategory | Code |
+| --- | --- |
+| Dentistry | 2 |
+| Homoeopathy | 3 |
+| Ayurveda | 4 |
+| Unani | 5 |
+| Siddha | 6 |
+| Sowa-Rigpa | 7 |
+| Nurse categories | 8 to 11 |
+| Pharmacist | 13 |
+| Yoga and Naturopathy | 14 |
+
+Fetch the codes from the HPRID subcategories master API rather than hard coding
+either table. See [HPR master data](#hpr-master-data).
 :::
 
 ## Getting an HPR token
 
-The HPR token is not the gateway access token: it represents the professional, not your client. NHA gives three ways to get one, and all three carry the gateway access token in the `Authorization` header as well.
+The HPR token is not the gateway access token: it represents the professional, not your client. There are three ways to get one, and all three carry the gateway access token in the `Authorization` header as well.
 
 ### Login by password
 
@@ -165,7 +172,7 @@ One call. The professional supplies their HPR ID and password.
 }
 ```
 
-The `token` in the response is the HPR token. NHA also points at the HPR Swagger page at `https://apihspsbx.abdm.gov.in/v4/int/swagger-ui/index.html?urls.primaryName=HPR` to try the call in a browser.
+The `token` in the response is the HPR token. The HPR Swagger page at `https://apihspsbx.abdm.gov.in/v4/int/swagger-ui/index.html?urls.primaryName=HPR` lets you try the call in a browser.
 
 The sample `expiresIn` is `1739710198`, which reads as a Unix timestamp rather than seconds. The other two login flows return `1800`. The call has not been run, so which reading is right is unknown.
 
@@ -180,7 +187,7 @@ Four calls.
 | 3. Verify OTP | Path not confirmed, see below | `{ "txnId": "<TXN_ID_FROM_STEP_1>", "otp": "<OTP_ENCRYPTED_WITH_THE_PUBLIC_CERT>", "mobile": "<MOBILE_NUMBER>" }` |
 | 4. Login with HPR ID | `POST /v4/int/api/v2/auth/login/userAuthorizedToken` | `{ "hpId": "<HPR_ID_FROM_STEP_3>", "txnId": "<TXN_ID_FROM_STEP_3>" }` |
 
-Step 3 is a problem in the source: NHA repeats the send OTP path, `loginViaMobileSendOTP`, for the verify OTP call. That reads like a copy and paste error. The correct path is unknown, so check NHA's Swagger page for the verify endpoint.
+The verify OTP path is not yet published: the published value repeats the send OTP path, `loginViaMobileSendOTP`. Take the verify endpoint from the HPR Swagger page.
 
 Step 1 response:
 
@@ -230,7 +237,7 @@ Step 1 returns `{ "txnId": "..." }`. Step 2 returns the same token object as ste
 
 ## Register professional
 
-The one HPR write call whose path survived in text.
+The one HPR write call with a published path.
 
 | | |
 |---|---|
@@ -239,7 +246,7 @@ The one HPR write call whose path survived in text.
 
 The `hprToken` from create HPID goes in the payload, not the header. The gateway access token goes in the `Authorization` header.
 
-NHA groups the large payload into personal information, communication address, registration data, qualification data and current work details. Selected fields, with the rules NHA states:
+The payload is grouped into personal information, communication address, registration data, qualification data and current work details. Selected fields and their rules:
 
 | Field | Mandatory | Notes |
 |---|---|---|
@@ -260,7 +267,7 @@ NHA groups the large payload into personal information, communication address, r
 | `ministry` | Conditional | Mandatory when `chooseWorkStatus` is `1` or `2`. Values from the get all ministry master |
 | `isPermanentOrRenewable` | Conditional | Mandatory for a doctor. If `Renewable`, `renewableDueDate` is mandatory. Not required for a nurse |
 
-Three conditional rules NHA calls out separately:
+Three conditional rules apply separately:
 
 - When `chooseWorkStatus` is `1` or `2`, `category` inside `personalInformation` must be `C` for central government or `S` for state. When it is `0`, send an empty string. Mandatory either way.
 - When `chooseWorkStatus` is `1` or `2`, `facilityDeclarationData` is mandatory.
@@ -290,15 +297,15 @@ Every attachment in the payload uses the same shape:
 }
 ```
 
-NHA lists the accepted `fileType` values as `image/jpeg`, `image/png` and `certificate.pdf`. The third is a file name, not a media type, so the PDF case is unclear. The samples are inconsistent too, showing bare `jpeg`, `png` and `pdf` in some places and the full media type in others.
+Accepted file types are JPEG, PNG and PDF, sent in `fileType`. Read the exact value back from your own response rather than hard coding one.
 
 ### A note on nurses
 
-NHA is explicit about one difference: the SMD ID identifies doctors only. Searching nurse colleges by SMD returns a null college or university name. That is expected, not a failure. For nurses, SMD is always null.
+The SMD ID identifies doctors only. Searching nurse colleges by SMD returns a null college or university name. That is expected, not a failure. For nurses, SMD is always null.
 
 ## The other professional calls
 
-| Call | Parameters that survived | Path |
+| Call | Published parameters | Path |
 |---|---|---|
 | Retrieve professional document list | `hprid` | Not in text |
 | Upload documents | `hpr_token`, `document_id`, `document_type`, `data` (base64) | Not in text |
@@ -306,7 +313,7 @@ NHA is explicit about one difference: the SMD ID identifies doctors only. Search
 | Fetch professional details | `id` (HPR ID, mandatory), `name` (minimum 3 letters), `contactNumber`, `state`, `registrationNumber`, `stateCouncilName` | Not in text |
 | Search facility from HPR | `ownershipCode`, `stateLGDCode`, `districtLGDCode`, `subdistrictLGDCode`, `pincode`, `facilityName`, `facilityId`, `page`, `resultsPerPage` | Not in text |
 
-Upload rules NHA states: profile photo 1 MB or smaller, other documents 5 MB or smaller, accepted types png, jpeg, jpg and PDF. The document types are `profilePhoto`, `degreeCertificate`, `registrationCertificate`, `proofOfWorkCertificate`, `proofOfNameChangeRegCertificate` and `proofOfNameChangeQualCertificate`. Which identifier you send as `document_id` depends on the type:
+Upload rules: profile photo 1 MB or smaller, other documents 5 MB or smaller, accepted types png, jpeg, jpg and PDF. The document types are `profilePhoto`, `degreeCertificate`, `registrationCertificate`, `proofOfWorkCertificate`, `proofOfNameChangeRegCertificate` and `proofOfNameChangeQualCertificate`. Which identifier you send as `document_id` depends on the type:
 
 | Document type | Identifier to use |
 |---|---|
@@ -319,7 +326,7 @@ Upload rules NHA states: profile photo 1 MB or smaller, other documents 5 MB or 
 
 ## HFR onboarding
 
-Five calls, in order. No paths survived; all parameter tables did.
+Five calls, in order. Method and path are not yet published; the parameter tables are.
 
 ### 1. Deduplicate search
 
@@ -341,7 +348,7 @@ LGD codes come from the Local Government Directory at [lgdirectory.gov.in](https
 
 Creates the record and returns a tracking ID that acts as the facility ID for every later call. Needs an HPR token in the header, generated from an HPR ID and password.
 
-Mandatory fields NHA names:
+Mandatory fields:
 
 | Param | Notes |
 |---|---|
@@ -369,7 +376,7 @@ It also carries the facility's existing scheme identifiers, all optional: `nhrrI
 
 ### 4. Detailed information
 
-The tracking ID plus the sections that apply, which depends on the facility type, the type of service and the system of medicine. NHA's rules:
+The tracking ID plus the sections that apply, which depends on the facility type, the type of service and the system of medicine. The rules:
 
 - Specialities are required for most facility types, but not for blood bank, cath laboratory, diagnostic laboratory, dialysis centre, imaging centre or pharmacy.
 - Medical infrastructure is mandatory for IPD and day care. For IPD at least one bed count must be greater than zero; for day care at least one day care bed count must be.
@@ -403,7 +410,7 @@ Links one facility to one or more bridges. Path not in text.
 
 ## HFR search and master data
 
-No paths survived in text. Two are named inside other parameter descriptions: `v1.5/facility/fetchfacilitytype` and `/v1.5/facility/get-specialities`.
+Paths are not yet published. Two appear inside other parameter descriptions: `v1.5/facility/fetchfacilitytype` and `/v1.5/facility/get-specialities`.
 
 | Call | Parameters | Notes |
 |---|---|---|
@@ -424,7 +431,7 @@ No paths survived in text. Two are named inside other parameter descriptions: `v
 
 ## HPR master data
 
-NHA lists 17 master data calls, in four groups:
+There are 17 master data calls, in four groups:
 
 - Qualifications: system of medicine, medical councils, languages, universities, courses, colleges
 - Geography: countries, states, districts, sub districts
@@ -457,18 +464,18 @@ Path variables are optional. Drop one and you get the full list. Countries retur
 }
 ```
 
-Two calls take parameters that survived:
+Two calls take parameters:
 
 | Call | Parameters |
 |---|---|
 | HPRID categories | `role`: `1` healthcare professional, `2` facility manager, `3` both |
 | HPRID subcategories | `role` as above, plus `categoryCode` from the categories call |
 
-NHA also publishes a system of medicine table with a twelfth row, `12 Registered Pharmacist`, filed under `nurse`. That looks like a source error. Fetch the list from the master API rather than copying it.
+A published system of medicine table carries a twelfth row, `12 Registered Pharmacist`, filed under `nurse`. Fetch the list from the master API rather than copying either table.
 
 ## Error codes
 
-NHA publishes 150 error codes, all prefixed `HIS-`, in six groups.
+There are 150 error codes, all prefixed `HIS-`, in six groups.
 
 | Range | What it covers | Examples |
 |---|---|---|
@@ -479,7 +486,7 @@ NHA publishes 150 error codes, all prefixed `HIS-`, in six groups.
 | `HIS-4xxx` | Facility record errors | `HIS-4003` facility already exists, `HIS-4032` invalid state code, `HIS-4055` invalid image format |
 | `HIS-5xxx` | Registration workflow errors | `HIS-5005` already registered, `HIS-5011` token expired |
 
-The full list is in NHA's sandbox documentation for the [healthcare professional registry](https://sandbox.abdm.gov.in/sandbox/v3/new-documentation?doc=healthcare-professional-registry). None of these calls have been run, so which codes you meet most often is unknown.
+The full list is in the sandbox documentation for the [healthcare professional registry](https://sandbox.abdm.gov.in/sandbox/v3/new-documentation?doc=healthcare-professional-registry).
 
 ## Where to go next
 

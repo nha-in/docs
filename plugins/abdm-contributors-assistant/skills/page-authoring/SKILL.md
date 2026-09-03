@@ -50,6 +50,63 @@ Inferred from the path, or set explicitly with `page_type:` when the path gets i
 
 A page over budget is too wide in scope, not too fat in prose. **The fix is to split the page or cut its scope. Never compress the sentences to fit.** Going over budget does not fail CI today: it is reported on its own list, separate from warnings, because a split is a different piece of work from an edit. It is a warning, not an error, even far over budget.
 
+### The four types are Diataxis, named for this repo
+
+Diataxis separates documentation by what the reader is doing, and the page types above are that separation with our own names on it. Getting the type right is what makes the budget the right number, so decide the type before you argue with the budget.
+
+| Diataxis mode | The reader is | Our page type | Where it lives |
+| --- | --- | --- | --- |
+| Tutorial | Learning by doing, on rails | Use case or how-to | `getting-started/first-fifteen-minutes` |
+| How-to | Completing a task they already understand | Use case or how-to | `getting-started/`, use case pages |
+| Reference | Looking something up mid-build | Endpoint, reference | `api/**/endpoints/`, `reference/` |
+| Explanation | Building a model of how the thing works | Concept, module overview | `concepts/`, `api/<module>/index.mdx` |
+
+The failure this catches is a page in two modes at once. A concept page that
+grows build instructions is explanation plus how-to, and it will sit over budget
+however tightly it is written, because two jobs do not fit one budget. Splitting
+it along the mode boundary is the fix, not trimming adjectives.
+
+### Before you split, check the type is right
+
+A page can be over budget because it is misclassified rather than too wide.
+Reference carries no budget, because a table of fields, codes and rules is data
+and data does not compress.
+
+`api/m4/undocumented.md` sat at 1448 words against a 700 budget for two
+releases. It is field tables, code tables and an error list, so it was never a
+how-to: the path inferred the type and the path was wrong. `page_type: reference`
+in its frontmatter is the correct classification and the whole fix.
+
+**This is not an escape hatch.** Ask one question: is the page mostly tables and
+enumerations a reader scans, or mostly prose a reader reads? If it is prose,
+`page_type: reference` is a lie and the page still needs splitting. Setting it to
+duck a warning on a page of paragraphs is worse than the warning.
+
+### The shape of a procedure page
+
+A how-to whose steps run in a fixed order gets numbered step headings, so the
+table of contents is the procedure. A reader who reads only the headings still
+knows what to do.
+
+```
+# Go live
+[the task, in two sentences]
+## In short            <- required above 300 prose words
+## Prerequisites
+## 1. Demonstrate what you built
+## 2. Complete functional testing and the security audit
+## 3. Submit the exit form
+## 4. Demonstrate to the Health Tech Committee
+## 5. Switch to the production base URLs
+## What you see when it works
+## When it goes wrong
+## Next steps
+```
+
+Differences go in a table, never in prose: sandbox against production, mandatory
+against optional, what each party supplies. See `nha-voice` for the benchmark
+this follows and for the callout and Next steps patterns.
+
 ## Structure
 
 Do not invent a section scheme per page. Every page answers the same six questions, in whatever headings suit it:
@@ -133,6 +190,8 @@ Pages carrying `generated: true` in frontmatter come from `scripts/build-api-ref
 | Mistake | Why it fails | Do instead |
 | --- | --- | --- |
 | Compressing prose to fit the budget | The paradigm's claim is that a wide page is the problem, not fat prose | Split the page or cut its scope |
+| A concept page carrying build steps for three milestones | Explanation and how-to in one page, so no budget fits it | Split on the mode boundary, or cut to the milestone pages that own the steps |
+| `page_type: reference` on a page of paragraphs | The type is a claim about the content, and the warning was right | Split it |
 | `## In short` on a 150 word page | Below 300 words it repeats the title and wastes the top of the page | Leave it out |
 | First heading "Overview" | The linter rejects it as a page's first heading, and CI fails | Open with the answer as the first heading |
 | A 40 word sentence with three clauses joined by "and" | Over the 35 word error limit | Split into a bulleted list or separate sentences |
@@ -143,6 +202,7 @@ Pages carrying `generated: true` in frontmatter come from `scripts/build-api-ref
 ## Related
 
 - The prose rules underneath this paradigm: `writing-guide`
+- Voice, which outranks every rule here: `nha-voice`
 - Site structure, tabs and the module page ladder: `docs-ux`
 - The Scalar docs site and its build: `scalar-docs`
 - Catalogue atoms, a different kind of file: `atom-authoring`

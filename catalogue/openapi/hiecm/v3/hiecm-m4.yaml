@@ -81,11 +81,11 @@ paths:
       - hpr-registration
       summary: Log in to the HPR with a username and password
       description: |
-        One of the five HPR login routes NHA documents, and the only one whose
-        path appears in text rather than in a screenshot. Returns the
+        One of the five HPR login routes, and the only one with a published
+        path. Returns the
         `hprToken` that the HFR create call carries in its header.
 
-        The password is encrypted with NHA's public certificate before it goes
+        The password is encrypted with the ABDM public certificate before it goes
         in the body. Not run against the ABDM sandbox, so the request and
         response shapes are unconfirmed.
       responses:
@@ -118,8 +118,7 @@ components:
         The `accessToken` from `POST /api/hiecm/gateway/v3/sessions`, which is described in hiecm-gateway.yaml. Send it as `Authorization: Bearer <ACCESS_TOKEN>`.
 x-abdm-errors:
   source: |-
-    NHA's M4 document, which states the ranges and gives examples. The full list is in NHA's sandbox documentation for the healthcare professional registry.
-     NHA's error code workbooks, ABDM M1-M2-M3-M4_Error_Codes.xlsx and ErrorCode-Message.xlsx, supplied 2026-08-25. Code, message and, where NHA gives one, the error name are NHA's. The action column is this catalogue's reading of the message text, by a documented rule, and is not NHA's. Anything the rule could not classify says Unclassified rather than guessing.
+    The ranges below, with examples. The full list is in the sandbox documentation for the healthcare professional registry. Code, message and error name are as published. The action column reads the message text by a documented rule, and says Unclassified where the rule could not classify one.
   ranges:
   - range: HIS-400 to HIS-504
     covers: The HTTP level failures

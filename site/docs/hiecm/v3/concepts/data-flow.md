@@ -9,7 +9,7 @@ sidebar_position: 5
 
 # How a record travels
 
-In [ABDM](/docs/hiecm/v3/getting-started/glossary#abdm) the request goes through [NHA](/docs/hiecm/v3/getting-started/glossary#nha)'s [gateway](/docs/hiecm/v3/getting-started/glossary#gateway) and the [HIE-CM](/docs/hiecm/v3/getting-started/glossary#hie-cm), because that is where consent is checked and routing lives. The record itself goes straight from the system that holds it to a URL the requester nominated, encrypted so only the requester can open it.
+In [ABDM](/docs/hiecm/v3/getting-started/glossary#abdm) the request goes through the [gateway](/docs/hiecm/v3/getting-started/glossary#gateway) and the [HIE-CM](/docs/hiecm/v3/getting-started/glossary#hie-cm), because that is where consent is checked and routing lives. The record itself goes straight from the system that holds it to a URL the requester nominated, encrypted so only the requester can open it.
 
 ## The two sides
 
@@ -47,10 +47,10 @@ sequenceDiagram
 
 ## Stage 1: the request
 
-The HIU sends a health information request through the gateway, quoting a consent artefact the patient granted. NHA's M2 document names four things it carries.
+The HIU sends a health information request through the gateway, quoting a consent artefact the patient granted. It carries four things.
 
 - **The consent id**, the artefact that authorises the request.
-- **The data push URL**, where the HIP sends the records. NHA notes it may differ from the HIU's registered gateway URL, to improve privacy and anonymity.
+- **The data push URL**, where the HIP sends the records. It may differ from the HIU's registered gateway URL, which improves privacy and anonymity.
 - **The date and time range** of records wanted.
 - **The encryption parameters**: the HIU's public key and its nonce.
 
@@ -66,7 +66,7 @@ Before the HIP retrieves anything it runs three checks.
 
 Only then does it package the records as [FHIR](/docs/hiecm/v3/getting-started/glossary#fhir) bundles, encrypt, sign with its long term private key, and send with the transaction id to the data push URL.
 
-Two failures land here: `ABDM-1062`, consent not granted, and `ABDM-1063`, date range given is invalid. Both codes appear a second time in NHA's error table against a linking message, so read the code with the message.
+Two failures land here: `ABDM-1062`, consent not granted, and `ABDM-1063`, date range given is invalid. Both codes also appear against a linking message, so read the code with the message.
 
 ## Stage 3: the notifications that close it
 
@@ -74,7 +74,7 @@ Both sides call `health-information/notify`: the HIP to say the data was transmi
 
 ## Timing and size
 
-| Constraint | What NHA's M2 document states |
+| Constraint | Rule |
 | --- | --- |
 | Timeout | 20 minutes from the start of the request |
 | Large datasets | Split into multiple parts, for example CT or MRI images running to hundreds of megabytes |
@@ -84,7 +84,7 @@ Treat retrieval and encryption as a background job, not work inside a web reques
 
 ## The encryption
 
-NHA's M2 document specifies [Elliptic Curve Diffie-Hellman](/docs/hiecm/v3/getting-started/glossary#ecdh) key exchange on Curve25519, AES-GCM for the payload, and HKDF to derive the session key. Only the HIU holding valid consent can read the data, and the design gives perfect forward secrecy: key material compromised later does not expose data exchanged earlier.
+The scheme is [Elliptic Curve Diffie-Hellman](/docs/hiecm/v3/getting-started/glossary#ecdh) key exchange on Curve25519, with AES-GCM for the payload and HKDF to derive the session key. Only the HIU holding valid consent can read the data, and the design gives perfect forward secrecy: key material compromised later does not expose data exchanged earlier.
 
 ### Who holds which key
 
@@ -115,11 +115,11 @@ Six steps, once consent has validated.
 
 The HIP then sends DHPK(P), RAND(P) and the encrypted data. The HIU derives the same session key from its own private key DHSK(U) and the HIP's public key DHPK(P), with salt and IV from the same XOR.
 
-Watch one thing in the source. NHA's high level summary says the HIP builds the shared key from its own private key, its own public key and its own nonce. The detailed section, numbered above, says it comes from the HIU's public key and the HIP's private key. That is the one that describes a working Diffie-Hellman exchange. Implement it.
+Build the shared key from the HIU's public key and the HIP's private key. That is the pairing that makes the Diffie-Hellman exchange work.
 
 ### Do not write this yourself
 
-NHA points at two reference implementations: Fidelius, at [github.com/sukreet/fidelius](https://github.com/sukreet/fidelius), and the Fidelius CLI, which is Java, with worked examples for Node.js, Python, Ruby and PHP at [github.com/mgrmtech/fidelius-cli](https://github.com/mgrmtech/fidelius-cli/tree/main/examples) that run the binary as a subprocess. NHA also links a webinar covering the CLI from both sides, at [youtu.be/rSir2gbkEmk](https://youtu.be/rSir2gbkEmk?t=9232) from 2:33:52.
+Two reference implementations exist. Fidelius, at [github.com/sukreet/fidelius](https://github.com/sukreet/fidelius), and the Fidelius CLI, which is Java, with worked examples for Node.js, Python, Ruby and PHP at [github.com/mgrmtech/fidelius-cli](https://github.com/mgrmtech/fidelius-cli/tree/main/examples) that run the binary as a subprocess. A webinar covers the CLI from both sides, at [youtu.be/rSir2gbkEmk](https://youtu.be/rSir2gbkEmk?t=9232) from 2:33:52.
 
 ## Where this is implemented
 

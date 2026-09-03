@@ -72,7 +72,7 @@ Two halves, in order. Nothing in the second works until the first produces a tok
 
 The last returns the HPID and an `hprToken`, which the next call needs.
 
-**Half two, register the professional.** Register professional writes the full profile, and its path is the one HPR write call that survived conversion: `POST https://apihspsbx.abdm.gov.in/v4/int/apis/v1/doctors/register-professional-new`. Then retrieve professional document list, upload documents, update professional and fetch professional details.
+**Half two, register the professional.** Register professional writes the full profile, and it is the one HPR write call with a published path: `POST https://apihspsbx.abdm.gov.in/v4/int/apis/v1/doctors/register-professional-new`. Then retrieve professional document list, upload documents, update professional and fetch professional details.
 
 Three things to know first:
 
@@ -94,7 +94,7 @@ The `hprToken` from creation does not last. Three ways to get a fresh one, all s
 | By Aadhaar OTP, send | `/v4/int/api/v1/auth/init` |
 | By Aadhaar OTP, verify | `/v4/int/api/v1/auth/confirmWithAadhaarOtp` |
 
-The bodies are on [the HPR and HFR call list](/docs/hiecm/v3/api/m4/undocumented), with a copy and paste error in the source document on the mobile verify path.
+The bodies are on [M4 operations and fields](/docs/hiecm/v3/api/m4/undocumented). The mobile verify path is not yet published.
 
 ## What your system has to hold
 
@@ -106,7 +106,7 @@ Per professional, store:
 - The master data ids you sent for council, course, college, university, language, country, state and district. The registry rejects display values.
 - The certificates you uploaded, with each document slot identifier.
 
-Once, for the whole integration: client id and client secret for the gateway session call, and the NHA public certificate from `v4/int/api/v1/auth/cert`. Three fields are encrypted with it, cipher `RSA/ECB/PKCS1Padding`: the mobile number in mobile match, the OTP in mobile login, and the email and password in create HPID.
+Once, for the whole integration: client id and client secret for the gateway session call, and the public certificate from `v4/int/api/v1/auth/cert`. Three fields are encrypted with it, cipher `RSA/ECB/PKCS1Padding`: the mobile number in mobile match, the OTP in mobile login, and the email and password in create HPID.
 
 Upload limits: 1 MB for a profile photo, 5 MB for anything else, png, jpeg, jpg or PDF only. Attachments go as a `fileType` and a base64 `data` string.
 

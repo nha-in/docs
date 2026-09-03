@@ -31,6 +31,8 @@ The only skill an agent needs loaded to know what else exists. Read the decision
    - Creating a new atom, catalogue knowledge under `catalogue/`: `atom-authoring`, then `/atom-new`
    - Writing or editing a documentation page, under `site/docs/`: `page-authoring`
    - Getting the prose right, or a lint failure about style: `writing-guide`
+   - Writing as ABDM rather than about it, or a draft that cites NHA: `nha-voice`
+   - Deciding whether a change deserves a What's New entry, or writing one: `changelog`
    - Reviewing someone else's atom before merge: `atom-review`
    - A CI failure on the Catalogue: `catalogue-linting`
    - Pulling in NHA swagger, GitHub specs or callback definitions: `openapi-ingest`
@@ -79,6 +81,8 @@ Scope is phased, and phase is not the same as existence. Before promising anythi
 | `openapi-ingest` | build | Bringing an NHA source in |
 | `scalar-docs` | build | The docs site itself |
 | `docs-ux` | build | Where a page goes, the tabs, the module ladder, site chrome |
+| `nha-voice` | build | Any prose, anywhere. Outranks the writing guide |
+| `changelog` | build | What earns a What's New entry, and what never does |
 | `skill-compiler` | build | The atoms to skills pipeline |
 | `ooda-skill-authoring` | build | Authoring or fixing a compiled skill's loop |
 | `update-pipeline` | build | CI and publishers, plus the watcher and PR bot as design only |

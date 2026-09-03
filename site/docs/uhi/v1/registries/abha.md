@@ -15,7 +15,7 @@ person the booking is for.
 
 ## Where it appears
 
-| Field | Service | Required | Example in NHA's document |
+| Field | Service | Required | Example |
 | --- | --- | --- | --- |
 | `order.customer.id` | [Physical consultation](/docs/uhi/v1/concepts/services/physical-consultation) | Yes | `rahul.k001@sbx` |
 | `order.customer.id` | [Ambulance booking](/docs/uhi/v1/concepts/services/ambulance-booking) | Mandatory | `91XXXXXXXXXX@sbx` |

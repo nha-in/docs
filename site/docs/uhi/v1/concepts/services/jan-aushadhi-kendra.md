@@ -109,7 +109,7 @@ The `context` block is the same in all five variants. Only `message.intent` chan
 }
 ```
 
-NHA's documents do not agree about what goes in `category.descriptor`. See [Open questions](#open-questions) below before you build this one.
+Confirm what goes in `category.descriptor` before you build this one. See [Confirm at onboarding](#confirm-at-onboarding) below.
 
 ### Search by state and district
 
@@ -317,7 +317,7 @@ All fields are mandatory. The block is identical across every variant.
 | --- | --- | --- |
 | `catalog.providers[].id` | string | PMBJP Kendra code, for example `PMBJK01460` |
 | `catalog.providers[].descriptor.name` | string | Kendra name |
-| `catalog.providers[].descriptor.code` | string | Ownership type. NHA lists `PP` private-private, `PG` private-government and `GG` government-government, then adds "etc.", so treat the list as incomplete. |
+| `catalog.providers[].descriptor.code` | string | Ownership type: `PP` private-private, `PG` private-government, `GG` government-government. Treat the list as incomplete. |
 | `catalog.providers[].descriptor.symbol` | string | Serial number assigned by PMBI |
 | `catalog.providers[].descriptor.short_desc` | string | May be empty |
 | `catalog.providers[].descriptor.long_desc` | string | May be empty |
@@ -332,22 +332,19 @@ All fields are mandatory. The block is identical across every variant.
 | `catalog.providers[].location.district.code` | string | District code |
 | `catalog.providers[].location.state.name` | string | State name |
 | `catalog.providers[].location.state.code` | string | State code |
-| `catalog.providers[].location.radius` | object | A distance with a unit, for example `1.19 km`. NHA's field reference does not list this field. It appears in the sample response only, so what it is measured from is not stated. |
+| `catalog.providers[].location.radius` | object | A distance with a unit, for example `1.19 km`. Present in responses, absent from the field reference, so what it is measured from is not stated. |
 | `catalog.providers[].location.country.name` | string | `INDIA`, fixed |
 | `catalog.providers[].location.country.code` | string | `+91`, fixed |
 | `catalog.providers[].contact.phone` | string | Kendra phone number |
 | `catalog.providers[].contact.email` | string | May be empty |
 
-## Open questions
+## Confirm at onboarding
 
-Two things in NHA's documents contradict each other. Neither has been run against sandbox, so which one the HSPA accepts is unknown.
+Two values are settled when you onboard. Build the flow and hold these until your
+onboarding contact confirms them.
 
-| Question | What the documents say |
-| --- | --- |
-| What goes in `category.descriptor` for a Kendra code search | The v1.0 onboarding sample puts the Kendra code itself there, `PMBJK02129`. The field reference in the same document, and the earlier search v0.3 sample, put the literal string `Jan Aushadhi Kendra Code` there. |
-| The HSPA identity in `on_search` | Section 3.1 and the sample response give `provider_id` as `pmbi.hspa` at `https://nha-pmbi.pmbi.co.in/api/store`. The field reference table in section 5.3 gives `janaushadhi-hspa` at `https://janaushadhi.gov.in:8443/api/v1/admin/kendra/`. |
-
-Treat the `on_search` `provider_id` as informational and route on `transaction_id` instead. Raise the `category.descriptor` question with your NHA contact before you ship a Kendra code search.
+- **What goes in `category.descriptor` for a Kendra code search.** Both the Kendra code itself, for example `PMBJK02129`, and the literal string `Jan Aushadhi Kendra Code` are in circulation. Confirm which the HSPA accepts before you ship a Kendra code search.
+- **The HSPA identity in `on_search`.** Route on `transaction_id`, not on `provider_id`, so a change of provider host does not break your matching.
 
 ## Next
 

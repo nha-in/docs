@@ -1415,7 +1415,7 @@ components:
       in: header
       required: true
       description: |
-        The current time in ISO 8601 UTC, with milliseconds and the `Z` suffix. NHA's collection fills this with Postman's `$isoTimestamp`, which emits exactly this format. The gateway rejects a request whose timestamp has drifted too far from its own clock, so take this from a synchronised clock rather than from a local one.
+        The current time in ISO 8601 UTC, with milliseconds and the `Z` suffix. The gateway rejects a request whose timestamp has drifted too far from its own clock, so take this from a synchronised clock rather than from a local one.
       schema:
         type: string
         format: date-time
@@ -2398,8 +2398,6 @@ x-abdm-errors:
       Self Requested
     action: Fix request
     name: UNKNOWN_EXCEPTION
-  source: NHA's error code workbooks, ABDM M1-M2-M3-M4_Error_Codes.xlsx and ErrorCode-Message.xlsx,
-    supplied 2026-08-25. Code, message and, where NHA gives one, the error name
-    are NHA's. The action column is this catalogue's reading of the message text,
-    by a documented rule, and is not NHA's. Anything the rule could not classify
-    says Unclassified rather than guessing.
+  source: Code, message and error name are as published. The action column
+    reads the message text by a documented rule, and says Unclassified where
+    the rule could not classify one.

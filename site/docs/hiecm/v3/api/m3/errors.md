@@ -14,7 +14,7 @@ Seeing a symptom rather than a code? Start at [Troubleshooting](/docs/hiecm/v3/t
 
 ## Codes
 
-NHA's error code workbooks, ABDM M1-M2-M3-M4_Error_Codes.xlsx and ErrorCode-Message.xlsx, supplied 2026-08-25. Code, message and, where NHA gives one, the error name are NHA's. The action column is this catalogue's reading of the message text, by a documented rule, and is not NHA's. Anything the rule could not classify says Unclassified rather than guessing.
+Code, message and error name are as published. The action column reads the message text by a documented rule, and says Unclassified where the rule could not classify one.
 
 | Code | Message | What to do |
 | --- | --- | --- |
