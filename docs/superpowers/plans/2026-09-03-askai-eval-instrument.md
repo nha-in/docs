@@ -44,7 +44,7 @@ mcp/internal/eval/case.go                    Case type, LoadCases
 mcp/internal/eval/transcript.go              Transcript type, RecordingModel, WriteTranscript, ReadTranscripts
 mcp/internal/eval/checks.go                  deterministic checks
 mcp/internal/eval/retrieval.go               recall@3, MRR
-mcp/internal/eval/judge.go                   rubric, Judge, majority of three, Calibrate
+mcp/internal/eval/judge.go                   rubric, Judge, majority of three, Agreement
 mcp/internal/eval/scorecard.go               per-slice numbers, delta against a previous run
 mcp/cmd/askai-eval/main.go                   subcommands: run, check, judge, calibrate, report
 .github/workflows/ci.yml                     the check job

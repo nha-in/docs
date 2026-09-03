@@ -53,7 +53,10 @@ func Run(ctx context.Context, cfg RunConfig, cases []Case) (int, error) {
 	n := 0
 	for _, c := range cases {
 		rec := &RecordingModel{Inner: cfg.Model}
-		svc := &chat.Service{Model: rec, Tools: cfg.Tools, MaxTokens: cfg.MaxTokens, MCPURL: cfg.MCPURL}
+		// TraceTools is the eval's own opt in: the tool_result event carries
+		// the raw input and output this loop records below, and nothing
+		// serving a real reader should ever turn it on.
+		svc := &chat.Service{Model: rec, Tools: cfg.Tools, MaxTokens: cfg.MaxTokens, MCPURL: cfg.MCPURL, TraceTools: true}
 		tr := Transcript{CaseID: c.ID, CatalogueVersion: cfg.CatalogueVersion, ModelID: cfg.ModelID,
 			Temperature: cfg.Temperature, PromptVersion: cfg.PromptVersion,
 			EmbedProvider: cfg.EmbedProvider, DBPath: cfg.DBPath,
@@ -66,12 +69,22 @@ func Run(ctx context.Context, cfg RunConfig, cases []Case) (int, error) {
 				answer.WriteString(data.(map[string]string)["delta"])
 			case "tool_result":
 				m := data.(map[string]any)
-				in, _ := m["input"].(json.RawMessage)
-				// output is json.RawMessage when the tool returned valid
-				// JSON and a plain string (an error message such as
-				// "unknown tool") otherwise; either way ToolTrace.Output
-				// ends up valid JSON, a bare string marshalled into one.
-				var out json.RawMessage
+				// Both input and output arrive as json.RawMessage when
+				// valid JSON and as a plain string otherwise -- a
+				// tool-use input truncated at max_tokens is invalid JSON,
+				// same as an error message such as "unknown tool" is on
+				// the output side. Either way ToolTrace's fields end up
+				// valid JSON, a bare string marshalled into one, because
+				// they are json.RawMessage and are written verbatim into
+				// the transcript: storing an invalid string as one, rather
+				// than marshalling it, would write a broken transcript.json.
+				var in, out json.RawMessage
+				switch v := m["input"].(type) {
+				case json.RawMessage:
+					in = v
+				case string:
+					in, _ = json.Marshal(v)
+				}
 				switch v := m["output"].(type) {
 				case json.RawMessage:
 					out = v

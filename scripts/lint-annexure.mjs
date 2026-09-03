@@ -27,17 +27,27 @@ const walk = (dir, out = []) => {
   return out;
 };
 
-// Cases: every case must cite a row.
+// Cases: every case must cite a row. Only a missing cases directory is
+// tolerated here (no cases yet is fine): a file that vanishes mid scan or
+// fails to parse is a real problem and must not be swallowed into a
+// silently truncated, under-counted scan.
+let caseFiles = [];
 try {
-  for (const file of walk(casesDir).filter((f) => f.endsWith('.json'))) {
-    const c = JSON.parse(readFileSync(file, 'utf8'));
-    const ref = String(c.source_row ?? '');
-    const id = ref.startsWith('annexure#') ? ref.slice('annexure#'.length) : '';
-    if (!rows.has(id)) failures.push(`${file}: source_row "${ref}" is not a row in the annexure`);
-    else rows.get(id).cases += 1;
-  }
+  caseFiles = walk(casesDir).filter((f) => f.endsWith('.json'));
 } catch (err) {
-  if (err.code !== 'ENOENT') throw err; // no cases yet is fine
+  if (err.code !== 'ENOENT') throw err;
+}
+for (const file of caseFiles) {
+  let c;
+  try {
+    c = JSON.parse(readFileSync(file, 'utf8'));
+  } catch (err) {
+    throw new Error(`${file}: ${err.message}`);
+  }
+  const ref = String(c.source_row ?? '');
+  const id = ref.startsWith('annexure#') ? ref.slice('annexure#'.length) : '';
+  if (!rows.has(id)) failures.push(`${file}: source_row "${ref}" is not a row in the annexure`);
+  else rows.get(id).cases += 1;
 }
 
 // Atoms: a `sources:` entry may cite `annexure#<id>`; if it does, the row must exist.
