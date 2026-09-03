@@ -11,10 +11,16 @@ The instrument that scores the assistant's answers. Read the design in
 
 Run:
 
-    npm run eval:askai:run      # answer every case against Bedrock, record transcripts
+    npm run eval:askai:run      # answer every case against Bedrock, record transcripts, write runs/latest
     npm run eval:askai:check    # deterministic checks against the latest run, no model
     npm run eval:askai:judge    # grade the latest run with the Bedrock judge
+    npm run eval:askai:report   # render the latest run's scorecard as a table
     npm run lint:annexure       # every case cites a source row that exists
+
+`run` writes checks, retrieval, and a scorecard for the run it just answered,
+and names it in `runs/latest` so the commands above never need `-run` by
+hand. `judge` and `report` overwrite that run's `scorecard.json` with the
+judged numbers once grading has run.
 
 A scorecard reports, per slice: factuality (share of A or B on answer
 cases), uncertainty (share of correct declines), grounding failures,

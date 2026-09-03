@@ -1,10 +1,16 @@
 // Command askai-eval is the instrument that scores the Ask AI assistant.
 //
-//	askai-eval run   -cases ../evals/askai/cases -out ../evals/askai/runs/<name> -db catalogue.db
-//	askai-eval check -cases ../evals/askai/cases -run ../evals/askai/runs/<name>
+//	askai-eval run       -cases ../evals/askai/cases -out ../evals/askai/runs/<name> -db catalogue.db
+//	askai-eval check     -cases ../evals/askai/cases -run ../evals/askai/runs/<name>
+//	askai-eval judge     -cases ../evals/askai/cases -run ../evals/askai/runs/<name>
+//	askai-eval report    -cases ../evals/askai/cases -run ../evals/askai/runs/<name>
+//	askai-eval calibrate -run ../evals/askai/runs/<name>
 //
-// run needs Bedrock (CHAT_MODEL, AWS_REGION, EMBED_PROVIDER as the server
-// does); check needs nothing but the files.
+// run needs Bedrock (CHAT_MODEL, AWS_REGION, EMBED_PROVIDER, all required
+// with no default, as the server needs them); check, report and calibrate
+// need nothing but the files; judge needs Bedrock too (EVAL_JUDGE_MODEL,
+// AWS_REGION). Every command but run reads -run from evals/askai/runs/latest
+// when -run is omitted, and run writes that file itself once it finishes.
 package main
 
 import (
@@ -23,6 +29,11 @@ import (
 	"github.com/eka-care/abdm-docs/mcp/internal/server"
 )
 
+// runsLatestPath names the run every command but run defaults to when -run
+// is not given. It is relative to the cmd/askai-eval working directory,
+// matching every other relative path this command already uses.
+const runsLatestPath = "../evals/askai/runs/latest"
+
 func envOr(k, d string) string {
 	if v := os.Getenv(k); v != "" {
 		return v
@@ -32,7 +43,7 @@ func envOr(k, d string) string {
 
 func main() {
 	if len(os.Args) < 2 {
-		fmt.Fprintln(os.Stderr, "usage: askai-eval run|check [flags]")
+		fmt.Fprintln(os.Stderr, "usage: askai-eval run|check|judge|report|calibrate [flags]")
 		os.Exit(2)
 	}
 	var err error
@@ -117,7 +128,34 @@ func runCmd(args []string) error {
 	if runErr != nil {
 		fmt.Fprintf(os.Stderr, "first error: %v\n", runErr)
 	}
-	return checkInto(*casesDir, *out)
+	// The run reached here, so check, judge, report and calibrate must be
+	// able to find it without being told -run by hand. Recording it as
+	// latest does not depend on every case having answered, or on the
+	// deterministic gate below passing: an owner chasing a Bedrock throttle
+	// still needs check and report to work on what did come back.
+	if err := recordLatest(*out); err != nil {
+		return err
+	}
+	fmt.Printf("wrote %s naming this run as the one check, judge, report and calibrate replay\n", runsLatestPath)
+	// checkInto's error is the deterministic gate: genuine new failures
+	// against the baseline. reportInto must still run so a scorecard always
+	// comes out of a run, whether or not the gate passed.
+	checkErr := checkInto(*casesDir, *out)
+	if err := reportInto(*casesDir, *out); err != nil {
+		return err
+	}
+	return checkErr
+}
+
+// recordLatest writes outDir's basename to runsLatestPath, creating the
+// runs directory when this is the first run to finish. Split out from
+// runCmd so the owner's path (a run always leaves something the other
+// commands can find) is unit testable without Bedrock.
+func recordLatest(outDir string) error {
+	if err := os.MkdirAll(filepath.Dir(runsLatestPath), 0o755); err != nil {
+		return err
+	}
+	return os.WriteFile(runsLatestPath, []byte(filepath.Base(outDir)), 0o644)
 }
 
 func checkCmd(args []string) error {
@@ -128,7 +166,9 @@ func checkCmd(args []string) error {
 	dir, err := resolveRun(*run)
 	if err != nil {
 		if *run == "" {
-			if _, statErr := os.Stat("../evals/askai/runs/latest"); os.IsNotExist(statErr) {
+			if _, statErr := os.Stat(runsLatestPath); os.IsNotExist(statErr) {
+				// run writes runsLatestPath itself once it finishes, so this
+				// can only say true today: no run has ever completed.
 				fmt.Println("askai-eval check: no run has been recorded yet (evals/askai/runs/latest is absent), so there is nothing to replay. This gate proves nothing until the first run lands.")
 				return nil
 			}
@@ -139,18 +179,19 @@ func checkCmd(args []string) error {
 }
 
 // resolveRun turns a -run flag (possibly empty) into a run directory. Empty
-// reads ../evals/askai/runs/latest. Callers that should treat "no run yet"
-// as a soft no-op (check) special-case the error themselves; judge and
-// report let it fail, because grading or reporting on nothing is not a pass.
+// reads runsLatestPath, which the run command writes once it finishes.
+// Callers that should treat "no run yet" as a soft no-op (check)
+// special-case the error themselves; judge and report let it fail, because
+// grading or reporting on nothing is not a pass.
 func resolveRun(run string) (string, error) {
 	if run != "" {
 		return run, nil
 	}
-	latest, err := os.ReadFile("../evals/askai/runs/latest")
+	latest, err := os.ReadFile(runsLatestPath)
 	if err != nil {
 		return "", fmt.Errorf("no -run and no runs/latest: %w", err)
 	}
-	return filepath.Join("../evals/askai/runs", strings.TrimSpace(string(latest))), nil
+	return filepath.Join(filepath.Dir(runsLatestPath), strings.TrimSpace(string(latest))), nil
 }
 
 func judgeCmd(args []string) error {
@@ -320,24 +361,31 @@ func checkInto(casesDir, runDir string) error {
 	if err := writeJSON(filepath.Join(runDir, "retrieval.json"), retrieval); err != nil {
 		return err
 	}
+	baselinePath := filepath.Join(filepath.Dir(runDir), "baseline.json")
+	_, baselineErr := os.Stat(baselinePath)
+	hadBaseline := baselineErr == nil
 	baseline := map[string]bool{}
-	if raw, err := os.ReadFile(filepath.Join(filepath.Dir(runDir), "baseline.json")); err == nil {
-		var b struct {
-			FailingCases []string `json:"failing_cases"`
-		}
-		if json.Unmarshal(raw, &b) == nil {
-			for _, id := range b.FailingCases {
-				baseline[id] = true
+	if hadBaseline {
+		if raw, err := os.ReadFile(baselinePath); err == nil {
+			var b struct {
+				FailingCases []string `json:"failing_cases"`
+			}
+			if json.Unmarshal(raw, &b) == nil {
+				for _, id := range b.FailingCases {
+					baseline[id] = true
+				}
 			}
 		}
 	}
 	failing := 0
 	newFailures := 0
+	var failingCases []string
 	for _, r := range results {
 		if len(r.Failures) == 0 {
 			continue
 		}
 		failing++
+		failingCases = append(failingCases, r.CaseID)
 		tag := ""
 		if baseline[r.CaseID] {
 			tag = " (baseline)"
@@ -347,6 +395,22 @@ func checkInto(casesDir, runDir string) error {
 		fmt.Printf("%s%s\n  %s\n", r.CaseID, tag, strings.Join(r.Failures, "\n  "))
 	}
 	fmt.Printf("checks: %d failing, %d new since baseline\n", failing, newFailures)
+	// The very first run has nothing to ratchet against. Rather than failing
+	// a command that just succeeded, this run's own failures become the
+	// baseline, and a later run is what tightens the gate.
+	if !hadBaseline {
+		raw, err := json.MarshalIndent(struct {
+			FailingCases []string `json:"failing_cases"`
+		}{FailingCases: failingCases}, "", "  ")
+		if err != nil {
+			return err
+		}
+		if err := os.WriteFile(baselinePath, raw, 0o644); err != nil {
+			return err
+		}
+		fmt.Printf("no baseline existed; wrote one from this run's %d failing cases to %s\n", failing, baselinePath)
+		return nil
+	}
 	if newFailures > 0 {
 		return fmt.Errorf("%d cases newly fail deterministic checks", newFailures)
 	}
