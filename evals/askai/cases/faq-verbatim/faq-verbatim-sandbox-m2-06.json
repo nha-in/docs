@@ -1,0 +1,34 @@
+{
+  "id": "faq-verbatim-sandbox-m2-06",
+  "slice": "faq-verbatim",
+  "class": "how-do-i",
+  "turns": [
+    {
+      "role": "user",
+      "text": "What if patient does not share any ABHA Address with the health facility?"
+    }
+  ],
+  "attachment": null,
+  "page": null,
+  "must_contain": [
+    "the patient can register at the facility by giving name, date of birth, gender and mobile number",
+    "the health facility notifies the HIE-CM of a new health record for that mobile number",
+    "no health record type or demographic detail is shared in that notification, only an SMS is sent to the patient"
+  ],
+  "must_not_contain": [
+    "<MASKED",
+    "i apologize",
+    "i apologise",
+    "let me ",
+    "great question",
+    "the catalogue",
+    "atom"
+  ],
+  "expected_sources": [],
+  "expected_shape": "how-do-i",
+  "expected_behaviour": "answer",
+  "derived_from": null,
+  "source_row": "annexure#sandbox-faq-m2",
+  "catalogue_version": "2026.08.24",
+  "notes": "catalogue gap: the walk in patient registration flow without an existing ABHA address, and the resulting SMS notification, is not documented"
+}
