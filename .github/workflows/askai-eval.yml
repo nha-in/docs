@@ -1,0 +1,93 @@
+# This workflow cannot run yet: it needs the repository variables
+# CHAT_MODEL and EVAL_JUDGE_MODEL, and the secret EVAL_AWS_ROLE_ARN, none of
+# which exist yet. Until the owner sets them, every run fails at the
+# credentials step. That is the honest state, not a skipped job standing in
+# for a passing one.
+name: Ask AI eval
+
+# The judged run needs Bedrock, so it does not run on every push. It runs
+# nightly against main, and on a pull request when someone adds the `eval`
+# label. It answers all 150 cases, grades them, and posts the scorecard with
+# the delta from the last run on main as a comment.
+on:
+  schedule:
+    - cron: "30 21 * * *"   # 03:00 IST
+  pull_request:
+    types: [labeled, synchronize]
+
+permissions:
+  contents: read
+  pull-requests: write
+  id-token: write
+
+jobs:
+  eval:
+    if: github.event_name == 'schedule' || contains(github.event.pull_request.labels.*.name, 'eval')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version: "1.25"
+          cache-dependency-path: mcp/go.sum
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.EVAL_AWS_ROLE_ARN }}
+          aws-region: ${{ vars.AWS_REGION || 'ap-south-1' }}
+      - name: Build the index
+        run: go run ./cmd/indexer -catalogue ../catalogue -out catalogue.db
+        working-directory: mcp
+      - name: Answer and check
+        run: |
+          RUN=ci-$(date +%Y-%m-%d)-$(cat ../catalogue/VERSION)
+          echo "RUN=$RUN" >> "$GITHUB_ENV"
+          go run ./cmd/askai-eval run -cases ../evals/askai/cases -out ../evals/askai/runs/$RUN -temperature 0.1 || true
+        working-directory: mcp
+        env:
+          CHAT_MODEL: ${{ vars.CHAT_MODEL }}
+          EMBED_PROVIDER: bedrock
+          AWS_REGION: ${{ vars.AWS_REGION || 'ap-south-1' }}
+      - name: Judge
+        run: go run ./cmd/askai-eval judge -cases ../evals/askai/cases -run ../evals/askai/runs/$RUN
+        working-directory: mcp
+        env:
+          EVAL_JUDGE_MODEL: ${{ vars.EVAL_JUDGE_MODEL }}
+          AWS_REGION: ${{ vars.AWS_REGION || 'ap-south-1' }}
+      - name: Report against the last run on main
+        id: report
+        run: |
+          LAST=$(cat ../evals/askai/runs/latest)
+          go run ./cmd/askai-eval report -cases ../evals/askai/cases -run ../evals/askai/runs/$RUN -before ../evals/askai/runs/$LAST > ../scorecard.md
+          cat ../scorecard.md
+        working-directory: mcp
+      - uses: actions/upload-artifact@v4
+        with:
+          name: askai-eval-${{ env.RUN }}
+          path: evals/askai/runs/${{ env.RUN }}
+      - name: Comment on the pull request
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const body = '## Ask AI eval\n\n' + fs.readFileSync('scorecard.md', 'utf8');
+            await github.rest.issues.createComment({owner: context.repo.owner, repo: context.repo.repo, issue_number: context.issue.number, body});
+      - name: Gate
+        run: |
+          node -e "
+          const fs = require('fs');
+          if (!fs.existsSync('evals/askai/runs/latest')) {
+            console.log('no previous run to compare against; gate passed');
+            process.exit(0);
+          }
+          const now=require('./evals/askai/runs/'+process.env.RUN+'/scorecard.json');
+          const was=require('./evals/askai/runs/'+fs.readFileSync('evals/askai/runs/latest','utf8').trim()+'/scorecard.json');
+          const bad=[];
+          if (now.overall.factuality>=0 && was.overall.factuality>=0 && now.overall.factuality < was.overall.factuality) bad.push('factuality fell');
+          if (now.overall.uncertainty>=0 && was.overall.uncertainty>=0 && now.overall.uncertainty < was.overall.uncertainty) bad.push('uncertainty fell');
+          if (now.overall.grounding_failures > was.overall.grounding_failures) bad.push('new ungrounded literals');
+          if (bad.length) { console.error(bad.join('; ')); process.exit(1); }
+          console.log('gate passed');"
