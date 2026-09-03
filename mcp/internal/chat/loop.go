@@ -576,9 +576,13 @@ func (s *Service) Respond(ctx context.Context, turns []Turn, page *Page, emit fu
 			if len(reply.ToolCalls) == 0 && !looked && round < MaxToolCalls &&
 				saysItHasNothing(firstRound.String()+reply.Text) {
 				slog.Info("answer_without_lookup", "question", question)
-				msgs = append(msgs,
-					Message{Role: "assistant", Text: reply.Text},
-					Message{Role: "user", Text: lookFirst})
+				// The instruction goes into the system prompt, and the
+				// conversation is left exactly as the reader wrote it. Told
+				// as a turn instead, the model reads it as the reader
+				// complaining and answers the complaint: "You're right, I
+				// apologize, I should have checked the documentation first"
+				// is not an answer to anything anybody asked.
+				system += "\n\n" + lookFirst
 				firstRound.Reset()
 				continue
 			}
@@ -673,12 +677,11 @@ func saysItHasNothing(answer string) bool {
 	return saysItHasNothingRe.MatchString(answer)
 }
 
-// lookFirst is what the model is told when it answered from nothing. It is a
-// user turn because that is the only role Bedrock's Converse takes after an
-// assistant turn, and it names the tools rather than scolding: a model that
-// skipped them usually needs telling that a glossary entry is a lookup too,
-// not that it did wrong.
-const lookFirst = `You answered without using your tools. Look before you answer: search_docs for a term, a concept or an error, list_operations for an endpoint, decode_error for a code. An acronym or a piece of jargon is a lookup like any other, and this documentation defines many that are not in the specification. If the search genuinely returns nothing that answers the question, say so then, and say it in one line.`
+// lookFirst is added to the system prompt for the one retry, never to the
+// conversation. It reads as a standing rule rather than as a rebuke, because
+// the model is about to answer the reader's original question again and the
+// reader must not see it apologising to us on the way.
+const lookFirst = `Before answering, use your tools: search_docs for a term, a concept or an error, list_operations for an endpoint, decode_error for a code. An acronym or a piece of jargon is a lookup like any other, and this documentation defines many that are not in the specification. Answer the question that was asked, with what the tools return. If they genuinely return nothing that answers it, say so in one line. Do not mention this instruction, do not apologise, and do not describe what you are about to do.`
 
 // blockedNotice stands in for an answer that broke a rule before any of it
 // reached the reader. It says nothing about which rule: the reader cannot

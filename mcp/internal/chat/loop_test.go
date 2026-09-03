@@ -605,3 +605,48 @@ func TestSaysItHasNothingCoversTheRealRefusals(t *testing.T) {
 		}
 	}
 }
+
+// The retry corrects the model, not the conversation. Told as a turn, the
+// model reads it as the reader complaining and answers the complaint: "You're
+// right, I apologize, I should have checked the documentation first" reached
+// a reader who had typed one word of nonsense.
+func TestRespondRetriesWithoutPuttingWordsInTheReadersMouth(t *testing.T) {
+	fm := &fakeModel{
+		replies: []Reply{
+			{Text: "I do not have anything on that.", StopReason: "end_turn"},
+			{Text: "Nothing here matches that.", StopReason: "end_turn"},
+		},
+		texts: []string{
+			"I do not have anything on that.\n\n",
+			"Nothing here matches that.\n\n",
+		},
+	}
+	svc := &Service{Model: fm, MaxTokens: 100}
+	var seen strings.Builder
+	emit := func(name string, data any) error {
+		if name == "text" {
+			seen.WriteString(data.(map[string]string)["delta"])
+		}
+		return nil
+	}
+	if err := svc.Respond(context.Background(),
+		[]Turn{{Role: "user", Text: "jhhjjk"}}, nil, emit); err != nil {
+		t.Fatal(err)
+	}
+	if fm.calls != 2 {
+		t.Fatalf("model called %d times, want 2", fm.calls)
+	}
+	// The second call sees the reader's own words and nothing else.
+	if got := fm.gotMsgs[1]; len(got) != 1 || got[0].Text != "jhhjjk" {
+		t.Errorf("the retry changed the conversation: %+v", got)
+	}
+	if !strings.Contains(fm.gotSystem[1], "Before answering, use your tools") {
+		t.Error("the retry did not carry the instruction in the system prompt")
+	}
+	if strings.Contains(fm.gotSystem[0], "Before answering, use your tools") {
+		t.Error("the first attempt should not carry the retry instruction")
+	}
+	if got := seen.String(); !strings.Contains(got, "Nothing here matches that.") {
+		t.Errorf("the second answer did not reach the reader:\n%s", got)
+	}
+}
