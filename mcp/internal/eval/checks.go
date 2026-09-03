@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"regexp"
 	"strings"
+	"unicode"
 
 	"github.com/eka-care/abdm-docs/mcp/internal/guard"
 )
@@ -26,14 +27,26 @@ var (
 	headingRe     = regexp.MustCompile(`(?m)^#{1,6}\s`)
 	listRe        = regexp.MustCompile(`(?m)^\s*(?:[-*]|\d+\.)\s`)
 	codeSpanRe    = regexp.MustCompile("`[^`\n]+`")
+	// abbreviationEndRe matches a known abbreviation ending in the period
+	// sentenceEndRe just found, so "e.g." or "Dr." is not read as closing a
+	// sentence. Checked against the text up to and including that period.
+	abbreviationEndRe = regexp.MustCompile(`(?i)\b(?:e\.g|i\.e|etc|vs|approx|no|dr|mr|mrs|ms)\.$`)
 )
 
+// sentences counts sentence-ending punctuation, skipping one that closes a
+// known abbreviation rather than a sentence.
 func sentences(s string) int {
 	s = strings.TrimSpace(s)
 	if s == "" {
 		return 0
 	}
-	n := len(sentenceEndRe.FindAllStringIndex(s, -1))
+	n := 0
+	for _, m := range sentenceEndRe.FindAllStringIndex(s, -1) {
+		if abbreviationEndRe.MatchString(s[:m[0]+1]) {
+			continue
+		}
+		n++
+	}
 	if n == 0 {
 		return 1
 	}
@@ -48,7 +61,7 @@ func Check(c Case, t Transcript) CheckResult {
 	lower := strings.ToLower(answer)
 
 	for _, p := range append(append([]string{}, forbidden...), c.MustNotContain...) {
-		if strings.Contains(lower, strings.ToLower(p)) {
+		if phraseMatches(lower, p) {
 			add("forbidden: %s", p)
 		}
 	}
@@ -108,6 +121,32 @@ func Check(c Case, t Transcript) CheckResult {
 		add("blocked: the guard withheld the answer")
 	}
 	return CheckResult{CaseID: c.ID, Failures: f}
+}
+
+// phraseMatches reports whether phrase appears in the already lower-cased
+// answer. A bare word, letters only and no space, matches only at word
+// boundaries, so the forbidden entry "atom" does not fire on "atomic". A
+// phrase carrying punctuation or a space, such as "<MASKED" or "let me ",
+// keeps substring matching: it is deliberately partial, and a word boundary
+// would stop it from matching at all.
+func phraseMatches(lower, phrase string) bool {
+	p := strings.ToLower(phrase)
+	if isBareWord(p) {
+		return regexp.MustCompile(`\b` + regexp.QuoteMeta(p) + `\b`).MatchString(lower)
+	}
+	return strings.Contains(lower, p)
+}
+
+func isBareWord(s string) bool {
+	if s == "" {
+		return false
+	}
+	for _, r := range s {
+		if !unicode.IsLetter(r) {
+			return false
+		}
+	}
+	return true
 }
 
 func lastUser(c Case) string {
