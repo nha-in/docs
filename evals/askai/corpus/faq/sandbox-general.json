@@ -1,0 +1,21 @@
+{
+  "source_row": "annexure#sandbox-faq-general",
+  "url": "https://sandbox.abdm.gov.in/sandbox/v3/faq",
+  "fetched": "2026-09-03",
+  "method": "browser: opened the page at desktop width, selected the General FAQs tab, expanded every MuiAccordion via document.querySelectorAll('.MuiAccordionSummary-root').forEach(s=>s.click()), then read each .MuiAccordionDetails-root innerText",
+  "items": [
+    {"n": 1, "question": "I am a developer, and want to build a health repository. How do I get started?", "answer": "Please see the overview of Architecture here . You can see implementers guide"},
+    {"n": 2, "question": "What is Patient App?", "answer": "The Patient App allows a patient to view their health data from the different hospitals, labs and doctors in one place. You can download reference patient Android App. Download .apk file"},
+    {"n": 3, "question": "What Exactly do I need to build?", "answer": "Please refer to implementer's guide section"},
+    {"n": 4, "question": "How do I participate?", "answer": "Please refer to How do I participate? section."},
+    {"n": 5, "question": "Is there a public demo?", "answer": "Not yet, we hope to come up with one soon."},
+    {"n": 6, "question": "What if I require one WASA for all the modules?", "answer": "If one WASA is required for multiple or all the modules, then the same needs to be developed for multiple or all the modules before applying for WASA certificate."},
+    {"n": 7, "question": "Is the WASA required post any changes done in the module(s)/code?", "answer": "Yes, WASA is to be initiated again in case of any changes done in the module(s)/code. However, if the changes are minor, then the said can be ignored. However, if the changes are critical or major in nature and affects any changes in the backend etc., then WASA is mandatory."},
+    {"n": 8, "question": "What should I do if I have some general queries for Sandbox?", "answer": "Raise your concern on dev forum ([https://devforum.ndhm.gov.in/](https://devforum.ndhm.gov.in/)) and clearly mention your client id on the website. You may also refer to [https://abdm.gov.in/home/faq](https://abdm.gov.in/home/faq) for any further"},
+    {"n": 9, "question": "Can integrator go ahead with WASA certification for common Base URL of ABHA functionality instead of separate WASA for IOS app, android App or website?", "answer": "WASA is required for all, i.e., WASA for IOS app, WASA for android app and for website also."},
+    {"n": 10, "question": "Do I require WASA for any additional changes/module added to the Application?", "answer": "Yes, WASA is required for the add-on changes or add-on modules that are to be added in the application. Ensure that certificate for the said application is already issued and valid."},
+    {"n": 11, "question": "Is WASA required for entire application or specific module?", "answer": "The WASA is required for the entire application or specific module as per the requirement. The WASA for entire application is required if no WASA has been conducted for the application before moving to the production. The WASA is required separately for all modules if modules are being developed sequentially. For example, for an application 'XYZ' (in production for which WASA certificate has already been issued) an additional module A has been added. The WASA only needs to be conducted for the sequential module A subtracting the application part 'XYZ'."},
+    {"n": 12, "question": "Is WASA required for Production URL or Staging URL?", "answer": "WASA is always required for hosting application in the production environment. It’s conducted on the Staging URL for which the certificate issued is licensed to the same application in the production."},
+    {"n": 13, "question": "Where should I get WASA done?", "answer": "Please refer: https://www.cert-in.org.in/PDF/Empanel_org_2021.pdf"}
+  ]
+}
