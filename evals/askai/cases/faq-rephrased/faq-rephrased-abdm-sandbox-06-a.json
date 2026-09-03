@@ -1,0 +1,36 @@
+{
+  "id": "faq-rephrased-abdm-sandbox-06-a",
+  "slice": "faq-rephrased",
+  "class": "how-do-i",
+  "turns": [
+    {
+      "role": "user",
+      "text": "how to join abdm sandbox?"
+    }
+  ],
+  "attachment": null,
+  "page": null,
+  "must_contain": [
+    "you register your application on the ABDM sandbox portal",
+    "registering gives you a client id and a client secret",
+    "you must register before you can start integrating your solution"
+  ],
+  "must_not_contain": [
+    "<MASKED",
+    "i apologize",
+    "i apologise",
+    "let me ",
+    "great question",
+    "the catalogue",
+    "atom"
+  ],
+  "expected_sources": [
+    "shared.sandbox.registration-and-credentials"
+  ],
+  "expected_shape": "how-do-i",
+  "expected_behaviour": "answer",
+  "derived_from": "faq-verbatim-abdm-sandbox-06",
+  "source_row": "annexure#abdm-faq-sandbox",
+  "catalogue_version": "2026.08.24",
+  "notes": "variant a of faq-verbatim-abdm-sandbox-06, the same question as a developer in a hurry would type it"
+}

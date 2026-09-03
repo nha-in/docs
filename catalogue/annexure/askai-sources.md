@@ -9,11 +9,11 @@ One row per NHA document. `id` is stable and is what an eval case or an atom cit
 
 | id | url | what | fetched | hash | atoms | cases |
 |---|---|---|---|---|---|---|
-| sandbox-faq-general | https://sandbox.abdm.gov.in/sandbox/v3/faq | NHA sandbox FAQ, the General tab: integration queries raised by integrators, thirteen questions on 2026-09-03 | 2026-09-03 | page | 0 | 0 |
-| sandbox-faq-m1 | https://sandbox.abdm.gov.in/sandbox/v3/faq | NHA sandbox FAQ, the Milestone 1 tab | 2026-09-03 | page | 0 | 0 |
-| sandbox-faq-m2 | https://sandbox.abdm.gov.in/sandbox/v3/faq | NHA sandbox FAQ, the Milestone 2 tab | 2026-09-03 | page | 0 | 0 |
-| sandbox-faq-m3 | https://sandbox.abdm.gov.in/sandbox/v3/faq | NHA sandbox FAQ, the Milestone 3 tab | 2026-09-03 | page | 0 | 0 |
-| abdm-faq-sandbox | https://abdm.gov.in/FAQ | abdm.gov.in FAQ, the Sandbox category | 2026-09-03 | page | 0 | 0 |
+| sandbox-faq-general | https://sandbox.abdm.gov.in/sandbox/v3/faq | NHA sandbox FAQ, the General tab: integration queries raised by integrators, thirteen questions on 2026-09-03 | 2026-09-03 | page | 0 | 15 |
+| sandbox-faq-m1 | https://sandbox.abdm.gov.in/sandbox/v3/faq | NHA sandbox FAQ, the Milestone 1 tab | 2026-09-03 | page | 0 | 17 |
+| sandbox-faq-m2 | https://sandbox.abdm.gov.in/sandbox/v3/faq | NHA sandbox FAQ, the Milestone 2 tab | 2026-09-03 | page | 0 | 17 |
+| sandbox-faq-m3 | https://sandbox.abdm.gov.in/sandbox/v3/faq | NHA sandbox FAQ, the Milestone 3 tab | 2026-09-03 | page | 0 | 16 |
+| abdm-faq-sandbox | https://abdm.gov.in/FAQ | abdm.gov.in FAQ, the Sandbox category | 2026-09-03 | page | 0 | 25 |
 | abdm-faq-abha-number | https://abdm.gov.in/FAQ | abdm.gov.in FAQ, the ABHA Number category | 2026-09-03 | page | 0 | 0 |
 | abdm-faq-hpr | https://abdm.gov.in/FAQ | abdm.gov.in FAQ, the Healthcare Professionals Registry category | 2026-09-03 | page | 0 | 0 |
 | abdm-faq-hfr | https://abdm.gov.in/FAQ | abdm.gov.in FAQ, the Health Facility Registry category | 2026-09-03 | page | 0 | 0 |
