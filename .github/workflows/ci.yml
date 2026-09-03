@@ -1,9 +1,20 @@
+# Repository variables this workflow reads:
+#   SITE_URL  the public site URL, the same variable the site deploy reads.
+#             The two site-build jobs pass it to the build as DOCUSAURUS_URL.
 name: CI
 
 on:
   push:
     branches: [main]
   pull_request:
+
+# build-nav.mjs refuses to build under CI without this, so that llms.txt never
+# ships example.com placeholder URLs to an agent. Two jobs below run the build,
+# lint-tables and build-site, so it is set once here rather than on each of
+# them. The value is where dev-docs-cd.yml actually publishes, so the URLs in a
+# CI artifact are the URLs the pages really carry.
+env:
+  DOCUSAURUS_URL: https://abdm-docs.dev.eka.care
 
 jobs:
   lint-specs:
@@ -92,6 +103,12 @@ jobs:
       # it does not test browser compatibility.
       - run: npx playwright install --with-deps chromium
       - run: npm run build
+        # build-nav refuses to run in CI without the site URL, so llms.txt can
+        # never ship placeholder links. These builds publish nothing, so any
+        # real URL will do; it is the repository variable the deploy reads,
+        # rather than a hostname written into a file both repositories share.
+        env:
+          DOCUSAURUS_URL: ${{ vars.SITE_URL || 'https://abdm-docs.dev.eka.care' }}
       - run: npm run lint:tables
 
   widget:
@@ -117,6 +134,12 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run build
+        # build-nav refuses to run in CI without the site URL, so llms.txt can
+        # never ship placeholder links. These builds publish nothing, so any
+        # real URL will do; it is the repository variable the deploy reads,
+        # rather than a hostname written into a file both repositories share.
+        env:
+          DOCUSAURUS_URL: ${{ vars.SITE_URL || 'https://abdm-docs.dev.eka.care' }}
       # The committed atom to page map must still match what the site
       # publishes. A renamed or deleted page fails here, rather than becoming
       # a dead link in a support answer. Needs the build above for the
