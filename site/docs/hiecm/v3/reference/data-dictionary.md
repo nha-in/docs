@@ -55,7 +55,9 @@ column, and **Meaning** NHA's own description.
 | [HMIS](/docs/hiecm/v3/getting-started/glossary#hmis) | Hospital management information system. |
 | [OTP](/docs/hiecm/v3/getting-started/glossary#otp) | One time password. |
 | SPOC | Single point of contact, the named person on an application. |
-| HTC, WASA, DHIS, V3 | NHA's internal review and platform terms. The source does not expand them, and we are not going to guess. |
+| [HTC](/docs/hiecm/v3/getting-started/glossary#health-tech-committee) | Health Tech Committee, the body that reviews your integration at the end of the exit process. |
+| [WASA](/docs/hiecm/v3/getting-started/glossary#wasa) | The security audit that produces your Safe to Host certificate. See [Security audit](/docs/hiecm/v3/getting-started/security-audit). |
+| DHIS, V3 | Platform terms used inside the sandbox portal's own records. |
 
 ## Tables at a glance
 

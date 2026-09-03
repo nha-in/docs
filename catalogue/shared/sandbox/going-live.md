@@ -73,7 +73,10 @@ as the fuller source:
    undertaking document, and any other supporting document NHA asks for.
 4. **A second demonstration.** NHA's FAQ says that once the earlier steps are complete, the
    ABDM team schedules a demo for the Health Tech Committee (HTC). This is a different
-   demonstration from step 1, to a different audience.
+   demonstration from step 1, to a different audience. The committee's decision is recorded
+   in four review stages, each with its own reviewer, comment and date: the `sd_status`
+   table in the [sandbox data dictionary](/docs/hiecm/v3/reference/data-dictionary) carries
+   `htc1_status` through `htc4_status`.
 
 NHA's FAQ does not say how long any of these four steps take, individually or together.
 NHA's documents do not say what the functional testing report or the undertaking document have
