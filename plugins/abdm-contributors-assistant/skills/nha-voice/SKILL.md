@@ -50,7 +50,7 @@ NHA does not cite NHA. Sourcing is real, and it belongs in frontmatter.
 until proven otherwise.** Not stylistically weak. Wrong. Search the page for
 it and justify every hit or delete it.
 
-There are exactly three justified hits:
+There are exactly four justified hits:
 
 1. **A genuinely external source the reader must go to.** An HL7 value set, the
    Local Government Directory, the FHIR profiles at nrces.in. Those are
@@ -59,6 +59,10 @@ There are exactly three justified hits:
    follow: contacting NHA for production credentials, an approval NHA grants.
    The reader acts on that.
 3. **Glossary and orientation pages** that define what NHA is.
+4. **A string the platform itself emits.** `ABDM-1094` returns "Please contact
+   NHA to enable it", and `AS-1309` returns "As per NHA policy". Those are the
+   bytes on the wire. Transcribe them exactly and never rewrite them for voice:
+   the reader is matching them against a response.
 
 Everything else is the author citing themselves. In particular, every one of
 these is a defect with no exception:
@@ -91,6 +95,21 @@ an internal note that escaped into production.
 
 The reader cannot act on any of it. If a gap is real and load bearing, say
 what is missing in platform terms and what to do instead, then stop.
+
+**A heading can be the memorial, and so can a page title.** These all shipped
+on this portal and all were wrong:
+
+| Memorial | What replaced it |
+|---|---|
+| `## What we have not confirmed` | `## Fetching the public key`, then the fact |
+| `## What is not documented yet` | `## Limits to code against`, holding the same four facts as rules |
+| `## Open questions`, a table of which document contradicts which | `## Confirm at onboarding`, a list of what to hold and what to send meanwhile |
+| `## What is missing here` | `## Field and error reference`, pointing at the Swagger spec |
+| `# What NHA documents without a path`, a whole page | `# M4 operations and fields`, the reference it always was |
+
+The last one is the warning. A page named after its own gap tells every reader
+arriving from search that they have found the wrong page, and it had carried
+that title from the day it was published.
 
 **Provenance is tautological.** NHA publishes this portal, so every fact in it
 comes from NHA. Saying where a fact came from adds nothing the reader can use,
@@ -137,6 +156,33 @@ Never publish doubt as prose. "We have not run this", "we cannot tell you
 which applies", "treat the response shape as unconfirmed" and "read the
 validation error to find out" are all rung zero, and rung zero does not exist.
 
+### Rung 2 has a shape: Confirm at onboarding
+
+Rung 2 is the rung people skip, because two published sources disagreeing feels
+like something to report rather than something to instruct. It is not. Turn the
+disagreement into the instruction that survives it, and give the section a
+heading a reader can act on.
+
+Not this, which is three columns of provenance:
+
+> ## Open questions
+>
+> | Question | What the documents say |
+> | Which way `descriptor.flag` reads | The document says the field sends "flag for in stock or out of stock" and shows `false` in both samples. It does not say which value means which. |
+
+This, which is one instruction:
+
+> ## Confirm at onboarding
+>
+> - **The polarity of `descriptor.flag`.** It arrives as `false` on stocked and unstocked records alike. Do not render "in stock" or "out of stock" from it until the polarity is confirmed.
+
+The reader now knows what to build, what not to ship, and what to ask for. The
+contradiction is still doing its job and no longer needs a paragraph.
+
+When the disagreement is about a code or an enum, the instruction is almost
+always the same: fetch it from the master data call rather than hard coding
+either table.
+
 **Frontmatter is unchanged.** `verification: unverified` stays on the page and
 keeps meaning exactly what it meant. It is metadata: it drives the compiler,
 tells maintainers what to prove next, and travels with the atom. The reader
@@ -169,6 +215,39 @@ the outside observer the rest of this skill removes.
 
 Say "we" only where NHA is genuinely acting on the reader's behalf, and rarely:
 "We issue the token", not "we think", "we believe", "we have not checked".
+
+**This reaches diagram participants and table rows, not only sentences.** A
+mermaid `participant G as NHA gateway` puts the outside observer back into the
+one place a reader looks first. Write `HIE-CM gateway`, `HPR service`,
+`HFR service`, `ABHA service`. Same for a participants table: the gateway is
+"The routing layer", not "NHA's routing layer".
+
+## Where the defect lives is not where it renders
+
+A generated page cannot be fixed. Editing one is lost on the next build, and
+`api/**/endpoints/`, `**/errors.md` and `reference/{authentication,callbacks,error-codes}.md`
+are all generated. When a voice defect renders there, it is in the OpenAPI
+specification's `description` fields or in the atom, and that is where it is
+fixed. Rebuild, then confirm the page.
+
+Two source-side defects are worth naming because both shipped at scale.
+
+**An error table's `source:` note renders.** It carried which spreadsheet a code
+came from, on what date, and which column was ours rather than NHA's. None of it
+is actionable. Say what the column means and stop.
+
+**An atom body can address the wrong reader.** This shipped on 21 endpoint
+pages:
+
+> Not yet observed. NHA's collection saves no response body for this operation,
+> so this catalogue does not state a shape. When you run this against the
+> sandbox, record the exact response here and set `verified.status` to verified
+> with the date and who ran it.
+
+The second sentence instructs a maintainer, in a page an integrator is reading.
+Both sentences collapse to one platform fact: the response body for this
+operation is not yet published. If a note is genuinely for maintainers, it
+belongs in frontmatter or in a comment, never in the body.
 
 ## The benchmark
 
@@ -238,6 +317,11 @@ Reject a draft that trips any of these.
 - [ ] Is "NHA" used possessively about ABDM's own components?
 - [ ] Does "NHA" appear in body prose at all? Every hit must match one of the
       three justified cases in the NHA test, or come out.
+- [ ] Does a heading, or the page title, name a gap rather than a subject?
+- [ ] Does a mermaid participant or a table row carry NHA possessively?
+- [ ] Does a section report a contradiction where it could instruct? See rung 2.
+- [ ] Is the defect on a generated page, meaning the fix belongs in the
+      specification or the atom?
 - [ ] Would an integrator have to know how this portal was built to understand
       the sentence?
 
@@ -249,3 +333,4 @@ The last question is the one that catches what the others miss.
 - Where a page goes and in what order: `docs-ux`
 - Page structure and section headings: `atom-authoring`
 - Review process: `atom-review`
+- What earns a What's New entry, in this voice: `changelog`
