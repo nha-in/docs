@@ -1,3 +1,6 @@
+# Repository variables this workflow reads:
+#   SITE_URL  the public site URL, the same variable the site deploy reads.
+#             The two site-build jobs pass it to the build as DOCUSAURUS_URL.
 name: CI
 
 on:
@@ -100,6 +103,12 @@ jobs:
       # it does not test browser compatibility.
       - run: npx playwright install --with-deps chromium
       - run: npm run build
+        # build-nav refuses to run in CI without the site URL, so llms.txt can
+        # never ship placeholder links. These builds publish nothing, so any
+        # real URL will do; it is the repository variable the deploy reads,
+        # rather than a hostname written into a file both repositories share.
+        env:
+          DOCUSAURUS_URL: ${{ vars.SITE_URL || 'https://abdm-docs.dev.eka.care' }}
       - run: npm run lint:tables
 
   widget:
@@ -125,6 +134,12 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run build
+        # build-nav refuses to run in CI without the site URL, so llms.txt can
+        # never ship placeholder links. These builds publish nothing, so any
+        # real URL will do; it is the repository variable the deploy reads,
+        # rather than a hostname written into a file both repositories share.
+        env:
+          DOCUSAURUS_URL: ${{ vars.SITE_URL || 'https://abdm-docs.dev.eka.care' }}
       # The committed atom to page map must still match what the site
       # publishes. A renamed or deleted page fails here, rather than becoming
       # a dead link in a support answer. Needs the build above for the
