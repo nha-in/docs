@@ -2,7 +2,7 @@
 title: What's new
 sidebar_label: What's new
 sidebar_position: 0
-description: Dated changes to these pages, newest first.
+description: Dated changes to what you can build against, newest first.
 verification: unverified
 source: repository README.md and catalogue/openapi/CONVENTIONS.md
 ---
@@ -11,30 +11,29 @@ import ReleaseGroup from '@site/src/components/docs/ReleaseGroup';
 
 # What's new
 
-Dated changes to these pages, newest first. Each entry links to what you can now
-read or do.
+Changes that affect what you can build against, newest first. Each entry links to what you
+can now read, run or consume.
 
-<ReleaseGroup date="2026-09-02" label="8 changes">
+<ReleaseGroup date="2026-09-03" label="3 changes">
 
-- [Milestones spell CARE, and each one has its own page](/docs/whats-new/2026-09-02#milestones-spell-care-and-each-one-has-its-own-page)
-- [Tell us who you are, and Get started fits itself to you](/docs/whats-new/2026-09-02#tell-us-who-you-are-and-get-started-fits-itself-to-you)
-- [Install tools opens in place](/docs/whats-new/2026-09-02#install-tools-opens-in-place)
-- [Methods are colour coded](/docs/whats-new/2026-09-02#methods-are-colour-coded)
-- [Get started is now a launchpad, not an introduction](/docs/whats-new/2026-09-02#get-started-is-now-a-launchpad-not-an-introduction)
-- [The landing page asks what you are building](/docs/whats-new/2026-09-02#the-landing-page-asks-what-you-are-building)
-- [Every page has Copy page, Open in ChatGPT, Open in Claude and Ask AI](/docs/whats-new/2026-09-02#every-page-has-copy-page-open-in-chatgpt-open-in-claude-and-ask-ai)
-- [The API reference speaks as the API](/docs/whats-new/2026-09-02#the-api-reference-speaks-as-the-api)
+- [The security audit has a page](/docs/whats-new/2026-09-03#the-security-audit-has-a-page)
+- [The milestone pages no longer promise a certification step that does not exist](/docs/whats-new/2026-09-03#the-milestone-pages-no-longer-promise-a-certification-step-that-does-not-exist)
+- [The Health Tech Committee review runs in four stages](/docs/whats-new/2026-09-03#the-health-tech-committee-review-runs-in-four-stages)
 
 </ReleaseGroup>
 
-<ReleaseGroup date="2026-09-01" label="7 changes">
+<ReleaseGroup date="2026-09-02" label="1 change">
+
+- [Every page can be handed to an agent](/docs/whats-new/2026-09-02#every-page-can-be-handed-to-an-agent)
+
+</ReleaseGroup>
+
+<ReleaseGroup date="2026-09-01" label="5 changes">
 
 - [Troubleshooting organised by what you see, not by error code](/docs/whats-new/2026-09-01#troubleshooting-organised-by-what-you-see-not-by-error-code)
-- [The M3 consent journey, drawn in three parts](/docs/whats-new/2026-09-01#the-m3-consent-journey-drawn-in-three-parts)
 - [A first fifteen minutes that needs nothing but a browser](/docs/whats-new/2026-09-01#a-first-fifteen-minutes-that-needs-nothing-but-a-browser)
 - [Going live, in order](/docs/whats-new/2026-09-01#going-live-in-order)
 - [Every doc page serves itself as markdown, for agents and people alike](/docs/whats-new/2026-09-01#every-doc-page-serves-itself-as-markdown-for-agents-and-people-alike)
-- [The homepage asks what you are trying to build](/docs/whats-new/2026-09-01#the-homepage-asks-what-you-are-trying-to-build)
 - [Seven PHR operations renamed](/docs/whats-new/2026-09-01#seven-phr-operations-renamed)
 
 </ReleaseGroup>
@@ -57,7 +56,18 @@ read or do.
 
 </ReleaseGroup>
 
-## How this page gets written
+## What gets an entry
 
-When a source a page here was written from is republished, an entry is added
-with the date, the source that changed, and the pages affected.
+An entry has to change what you build or what you must go back and fix. Six kinds qualify:
+
+| Kind | Example |
+| --- | --- |
+| New coverage | A module, role or gateway you can now build against |
+| A correction | A documented fact was wrong, so what you built against it may be wrong |
+| A source republished | A specification changed, so a documented behaviour changed |
+| An operation renamed, added or withdrawn | Your calls have to change |
+| A new artefact you can consume | An OpenAPI file, an agent skill, an MCP server, the Markdown routes |
+| A procedure documented for the first time | The sandbox exit process, the security audit |
+
+Page layout, navigation, wording and visual changes do not get an entry. They change nothing
+you have to act on, and a changelog that carries them buries the entries that do.
