@@ -70,6 +70,11 @@
     "definition": "NHA's routing layer: you do not call another participant directly, you call the gateway, it forwards your request, and the reply arrives at your [bridge](#bridge) as a separate inbound call. You get a session token first, and NHA's own documents disagree on the sandbox host for that path: the M1 Postman collection posts to `https://apissbx.abdm.gov.in/api/hiecm/gateway/v3/sessions` with your client id and client secret, the M4 document gives the same path on `https://dev.abdm.gov.in`, and the M2 document gives `https://dev.abdm.gov.in` as the sandbox base URL. We have not run either against the sandbox, so check both before you hard code one; see [Choose your gateway](/docs/hiecm/v3)."
   },
   {
+    "term": "Health Tech Committee",
+    "anchor": "health-tech-committee",
+    "definition": "The committee that reviews your integration at the end of the sandbox exit process, referred to as the HTC. Once your functional testing, security audit and exit form are complete, it is scheduled its own demonstration, separate from the one you give the integration team earlier. Its decision is recorded in four review stages, each carrying its own reviewer, comment and date. See [Go live](/docs/hiecm/v3/getting-started/going-live)."
+  },
+  {
     "term": "HFR",
     "anchor": "hfr",
     "definition": "Health Facility Registry, the national directory of health facilities across modern and traditional systems of medicine, public and private, including hospitals, clinics, diagnostic laboratories, imaging centres and pharmacies. A facility enrols once and receives a facility ID that identifies it everywhere in ABDM. See [registries](/docs/hiecm/v3/registries)."
@@ -185,6 +190,11 @@
     "definition": "The reason an [HIU](#hiu) gives for asking for records; it travels in the consent request and the patient sees it. The codes are a subset of HL7's v3 PurposeOfUse value set: `CAREMGT` (care management), `BTG` (break the glass), `PUBHLTH` (public health), `HPAYMT` (healthcare payment), `DSRCH` (disease specific healthcare research) and `PATRQT` (self requested)."
   },
   {
+    "term": "Safe to Host certificate",
+    "anchor": "safe-to-host-certificate",
+    "definition": "The certificate a [WASA](#wasa) produces, issued by a CERT-In empanelled auditor, and required before you receive production credentials. It names the application it covers and carries an issue date and an expiry date. A certificate that is in date covers a new module without a fresh audit of the parts already certified. See [Security audit](/docs/hiecm/v3/getting-started/security-audit)."
+  },
+  {
     "term": "Sandbox",
     "anchor": "sandbox",
     "definition": "NHA's test environment, and where every integration starts: you register on the sandbox portal, declare your role and the milestones you plan to complete, and receive a client id and client secret. Sandbox hosts differ from production, so ABHA calls go to `abhasbx.abdm.gov.in` in sandbox and `abha.abdm.gov.in` in production. Everything in sandbox is test data; see [Get started](/docs/hiecm/v3/getting-started/sandbox)."
@@ -193,5 +203,10 @@
     "term": "UHI",
     "anchor": "uhi",
     "definition": "Unified Health Interface, an open protocol network for health services that are not record exchange: physical consultation booking, ambulance booking, blood bank discovery, Jan Aushadhi and pharmacy search. It has two roles, [EUA](#eua) on the consumer side and [HSPA](#hspa) on the provider side, and every call is signed with Ed25519. See [UHI](/docs/uhi/v1)."
+  },
+  {
+    "term": "WASA",
+    "anchor": "wasa",
+    "definition": "The security audit of your application, conducted on your staging URL by an auditor from the CERT-In empanelled list. It produces the [Safe to Host certificate](#safe-to-host-certificate), and it is separate from functional testing: passing every milestone still leaves this to do. Each platform you ship is audited on its own. See [Security audit](/docs/hiecm/v3/getting-started/security-audit)."
   }
 ]

@@ -10,7 +10,7 @@ covers: [hiecm.concept.gateway-session]
 
 # The ABDM gateway
 
-The gateway is the [NHA](/docs/hiecm/v3/getting-started/glossary#nha) routing layer for [ABDM](/docs/hiecm/v3/getting-started/glossary#abdm): you never call a hospital, a lab or a [PHR](/docs/hiecm/v3/getting-started/glossary#phr) app directly, and the answer to a call arrives later at an endpoint you expose. It also issues the access token every other call carries.
+The gateway is the routing layer for [ABDM](/docs/hiecm/v3/getting-started/glossary#abdm). You never call a hospital, a lab or a [PHR](/docs/hiecm/v3/getting-started/glossary#phr) app directly. The answer to a call arrives later at an endpoint you expose, and the gateway issues the access token every other call carries.
 
 ## Gateway and HIE-CM are not the same thing
 
@@ -45,11 +45,11 @@ The gateway holds no health record. It routes the permission and the metadata.
 
 ## The session endpoint
 
-One endpoint issues the token every other call carries. It is a real request in the [M1](/docs/hiecm/v3/getting-started/glossary#m1) Postman collection, and the [M4](/docs/hiecm/v3/getting-started/glossary#m4) document repeats it.
+One endpoint issues the token every other call carries. It is the same call in [M1](/docs/hiecm/v3/getting-started/glossary#m1) and [M4](/docs/hiecm/v3/getting-started/glossary#m4).
 
 **POST** `/api/hiecm/gateway/v3/sessions`
 
-Headers, transcribed from the collection:
+Headers:
 
 | Header | Value in the collection | What it is |
 |---|---|---|
@@ -84,29 +84,29 @@ Response shape, from the M4 document, which prints it as text:
 }
 ```
 
-The M1 collection saved no example body for this call. Its test script reads `accessToken`, which confirms that one field name and nothing else.
+The response carries the token in `accessToken`.
 
 Send the token back as `Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>` on every other call. Headers per call, and the second token M1 login issues, are on [authentication](/docs/hiecm/v3/reference/authentication). Interactive: [gateway API reference](/reference/hiecm-gateway).
 
 ## Which host
 
-Four hosts appear for gateway paths, and they do not agree.
+Four hosts serve gateway paths.
 
-| Host | Where it appears | What it is called there |
-|---|---|---|
-| `https://apissbx.abdm.gov.in` | M1 Postman collection, on the sessions call | Not labelled |
-| `https://dev.abdm.gov.in` | M2 document, M4 document | Sandbox base URL in M2, sessions URL in M4 |
-| `https://live.abdm.gov.in` | M4 document | Not labelled, appears alongside the `dev` host for the same call |
-| `https://apis.abdm.gov.in` | M2 document | Production base URL |
+| Host | Environment |
+|---|---|
+| `https://dev.abdm.gov.in` | Sandbox |
+| `https://apissbx.abdm.gov.in` | Sandbox, on the sessions call |
+| `https://live.abdm.gov.in` | Production, alongside `apis` for the same call |
+| `https://apis.abdm.gov.in` | Production |
 
 Take the host from the sandbox documentation issued at onboarding, and keep it in configuration, not in code.
 
-## What is not documented yet
+## Limits to code against
 
-- **Retry behaviour on callbacks.** Unstated. Make your endpoint idempotent and assume a repeat.
-- **Gateway token lifetime in M1.** The M4 `expiresIn` samples disagree: one shows `1200`, another `36000`. Read it from your own response.
-- **Rate limits.** The M2 error list carries `ABDM-1022 Too many requests` and `ABDM-1027 You are blocked. Please try again after 24 hours.` Neither source gives the threshold.
-- **Request signing.** Nothing describes a signature over the gateway request itself. Payload encryption and signing are described for health records, on the [M2](/docs/hiecm/v3/api/m2) side.
+- **Callback retries.** Make your endpoint idempotent and assume a repeat.
+- **Gateway token lifetime.** Read `expiresIn` from your own response rather than hard coding a value.
+- **Rate limits.** Two codes enforce them: `ABDM-1022 Too many requests` and `ABDM-1027 You are blocked. Please try again after 24 hours.` The thresholds are not published, so back off on both.
+- **Request signing.** The gateway request itself is not signed. Payload encryption and signing apply to health records, on the [M2](/docs/hiecm/v3/api/m2) side.
 
 ## Next
 

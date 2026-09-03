@@ -1,7 +1,7 @@
 ---
 title: NHCX
 sidebar_label: NHCX
-description: What NHCX is, who is on it, and the index of NHA's own NHCX documents.
+description: What NHCX is, who is on it, and the index of the NHCX documentation set.
 verification: unverified
 source: NHCX__NHCX-Website_DocumentDetails.md
 sidebar_position: 1
@@ -27,23 +27,23 @@ NHCX does appear in the sandbox database. An NHCX application is recorded agains
 
 Claims are not health records. If your product shares or fetches a patient's clinical record, you are on HIE-CM. If it submits or adjudicates an insurance claim, you are on NHCX. A hospital system can end up on both. The two integrations share no API surface.
 
-NHA's index shows the shape of a claim without describing it. A claim is a [FHIR](/docs/nhcx/v1/getting-started/glossary#fhir) bundle. It travels with a protected header that carries a workflow status code. A request cycle is closed by sending a protocol response back. Those are rows 11, 12 and 15 below.
+The documentation set shows the shape of a claim without describing it. A claim is a [FHIR](/docs/nhcx/v1/getting-started/glossary#fhir) bundle. It travels with a protected header that carries a workflow status code. A request cycle is closed by sending a protocol response back. Those are rows 11, 12 and 15 below.
 
 ## Who is on it
 
 | Participant | What it does |
 | --- | --- |
-| Provider | A hospital or clinic. Row 9 below is NHA's list of the use cases a provider has to cover. The index does not name them. |
+| Provider | A hospital or clinic. Row 9 below covers the use cases a provider has to implement. |
 | Payer | An insurer, or a third party administrator acting for one. Row 10 below is the matching list for a payer. |
-| NHCX | NHA's exchange in the middle. Routes between registered participants. |
+| NHCX | The exchange in the middle. Routes between registered participants. |
 
-Both providers and payers onboard as participants, in sandbox first and then in production. NHA's production onboarding document carries the role and registry enums and the validations applied to them.
+Both providers and payers onboard as participants, in sandbox first and then in production. The production onboarding document carries the role and registry enums and the validations applied to them.
 
-## What NHA publishes
+## What is published
 
-The only source for this page is NHA's index of its own NHCX documents. It has 32 numbered rows, each giving a purpose, a document name and a location. It is an index, not a specification. No row carries a request shape, a response shape or an endpoint. Two rows have no document name in the source, and one row is blank apart from its location. Those gaps are marked below.
+The NHCX documentation set has 32 numbered rows, each giving a purpose, a document name and a location. It is an index, not a specification. No row carries a request shape, a response shape or an endpoint. Two rows have no document name in the source, and one row is blank apart from its location. Those gaps are marked below.
 
-NHA gives one location per group of documents, not a URL per file.
+There is one location per group of documents, not a URL per file.
 
 | Location | What is there |
 | --- | --- |
@@ -53,7 +53,7 @@ NHA gives one location per group of documents, not a URL per file.
 
 ## The document index
 
-Row numbers are NHA's, so you can match a line here to a line in NHA's sheet.
+Row numbers match the published index, so you can match a line here to a line there.
 
 ### Onboarding, use cases and specifications
 
@@ -80,12 +80,12 @@ Row numbers are NHA's, so you can match a line here to a line in NHA's sheet.
 | 19 | NHCX Dummy Payer Implementation | Implementation guide for the dummy payer. |
 | 20 | Steps to generate encryption Certificate | How to generate the encryption certificate, a public and private key pair. |
 | 21 | FAQs | Frequently asked questions. |
-| 22 | Common Mistakes while implementing through NHCX | Mistakes NHA sees at the integrator end, and how they are resolved. |
+| 22 | Common Mistakes while implementing through NHCX | Mistakes seen at the integrator end, and how they are resolved. |
 | 23 | Technical Specification, API Specifications | Swagger for the use cases and for the participant service. The source adds a warning: for use case payloads, work from rows 11 and 13 rather than the swagger. The swagger is the relevant source for the participant service APIs. |
 
 ### PMJAY and HMIS supporting documents
 
-PMJAY is the Ayushman Bharat Pradhan Mantri Jan Arogya Yojana scheme. These rows sit under Supporting Documents on NHA's HMIS documents page.
+PMJAY is the Ayushman Bharat Pradhan Mantri Jan Arogya Yojana scheme. These rows sit under Supporting Documents on the HMIS documents page.
 
 | # | Document | What it covers |
 | --- | --- | --- |
@@ -101,11 +101,11 @@ PMJAY is the Ayushman Bharat Pradhan Mantri Jan Arogya Yojana scheme. These rows
 
 ## What is missing here
 
-Everything past the index. We have the title and the purpose of each NHA document, not the endpoints, payloads, status codes or error codes inside them. No NHCX call has been run against a sandbox.
+Everything past the index. This page carries the title and purpose of each document, not the endpoints, payloads, status codes or error codes inside them. No NHCX call is served against a sandbox.
 
 ## Next
 
-- New to NHCX? Start at row 4 above, NHA's sandbox onboarding document.
+- New to NHCX? Start at row 4 above, the sandbox onboarding document.
 - [Choose your gateway](/docs/hiecm/v3)
 - [HIE-CM](/docs/hiecm/v3/)
 - [UHI services](/docs/uhi/v1)

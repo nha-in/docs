@@ -15,7 +15,7 @@ Read [UHI services](/docs/uhi/v1) first, for the `context` block, the acknowledg
 
 ## Where this service stands
 
-NHA describes the full consultation lifecycle as the first phase, live and open for onboarding. Online payment and refunds are the second phase, described as in ideation. Today the only payment model is pay on visit.
+The full consultation lifecycle is the first phase, live and open for onboarding. Online payment and refunds are the second phase, in ideation. Today the only payment model is pay on visit.
 
 ## Service identity
 
@@ -36,7 +36,7 @@ Every call in this service carries these fixed values.
 | [EUA](/docs/uhi/v1/getting-started/glossary#eua) | The patient facing app. Searches, books, shows the PIN and the status. |
 | [HSPA](/docs/uhi/v1/getting-started/glossary#hspa) | The provider platform. Holds doctor profiles and slots, confirms bookings, generates the PIN, drives the lifecycle. |
 | HSP | The hospital, clinic or doctor. The HSPA is its digital interface. |
-| [Gateway](/docs/uhi/v1/getting-started/glossary#gateway) | NHA's routing layer. Involved in discovery only. |
+| [Gateway](/docs/uhi/v1/getting-started/glossary#gateway) | The routing layer. Involved in discovery only. |
 | NHA | Network operator. Governs onboarding, compliance and the protocol. |
 
 ## The flow end to end
@@ -45,7 +45,7 @@ Every call in this service carries these fixed values.
 sequenceDiagram
     participant P as Patient
     participant EUA as Your EUA
-    participant GW as NHA gateway
+    participant GW as HIE-CM gateway
     participant H as HSPA
     P->>EUA: Search for a cardiologist
     EUA->>GW: search (broadcast)
@@ -101,7 +101,7 @@ An EUA exposes these. Everything except the first `on_search` is called by the H
 | `/on_status` | HSPA, direct | Replace your stored order state |
 | `/on_update` | HSPA, direct | Update state and notify the patient |
 | `/on_cancel` | HSPA, direct | Mark the appointment cancelled |
-| `/on_message` | HSPA, direct | Show the message from the provider. NHA marks this mandatory for an EUA |
+| `/on_message` | HSPA, direct | Show the message from the provider. Mandatory for an EUA |
 
 ## Stage 1: discovery
 
@@ -135,7 +135,7 @@ POST https://uhigatewaysandbox.abdm.gov.in/api/v1/uhi/search
 | `provider.descriptor.name` | string | No | Facility name |
 | `provider.id` | string | No | Provider ID, used in the second search |
 
-A search by state and district, from NHA's document:
+A search by state and district:
 
 ```json
 {
@@ -170,11 +170,11 @@ A search by state and district, from NHA's document:
 }
 ```
 
-Three warnings NHA prints against this call:
+Three warnings apply to this call:
 
 - A GPS search needs all three radius fields. Omit any one and the GPS filter is ignored without an error.
 - The `transaction_id` in `search` must match the one in the `on_search` that answers it, or you cannot correlate the response.
-- More filter combinations exist. NHA's Swagger spec is the list.
+- More filter combinations exist. The Swagger spec is the list.
 
 ### First on_search, the catalog
 
@@ -202,7 +202,7 @@ Each matching HSPA answers independently, so you receive several. Aggregate them
 | `catalog.providers[].location.gps` | No | Provider coordinates |
 | `catalog.providers[].location.address` | No | Provider street address |
 
-Trimmed to one provider, from NHA's document:
+Trimmed to one provider:
 
 ```json
 {
@@ -265,7 +265,7 @@ Trimmed to one provider, from NHA's document:
 }
 ```
 
-NHA asks HSPAs to send the full `agent.tags` set including `@abdm/gov.in/hip_id`. That ID is what lets records generated at the visit be pulled later.
+An HSPA sends the full `agent.tags` set including `@abdm/gov.in/hip_id`. That ID is what lets records generated at the visit be pulled later.
 
 ### Second search, direct
 
@@ -362,10 +362,10 @@ Direct to the HSPA. You send the patient's details and the chosen slot. The HSPA
 }
 ```
 
-Two things NHA warns about:
+Two warnings:
 
 - `fulfillment.id` must be exactly the slot UUID from `on_search`. A mismatch makes the HSPA reject the call or fail to hold the slot without telling you.
-- The hold is short. NHA gives 15 minutes as a typical window. If `confirm` does not arrive in time the slot is released and you start again at `init`.
+- The hold is short, typically 15 minutes. If `confirm` does not arrive in time the slot is released and you start again at `init`.
 
 ### on_init, the terms
 
@@ -373,7 +373,7 @@ The HSPA answers with the order ID, an itemised quote, and five term objects the
 
 | Field added by the HSPA | What it is |
 | --- | --- |
-| `order.id` | The HSPA's order ID, generated here. Send it in every later call. NHA recommends an alphanumeric string, for example `AHS12345` |
+| `order.id` | The HSPA's order ID, generated here. Send it in every later call. Use an alphanumeric string, for example `AHS12345` |
 | `order.terms[]` | Five term objects, each with `termsState: "INITIATED"` |
 | `order.quote` | Price breakup: consultation, SGST, CGST, registration |
 | `order.payment.type` | `ON-ORDER`, `FREE` or `PRE-ORDER` |
@@ -425,7 +425,7 @@ The HSPA sets `order.state` to `CONFIRMED` and returns a 4-digit PIN.
 }
 ```
 
-NHA treats the PIN as security-sensitive. Hold it in memory or secure session storage on the EUA. Do not write it to a database or to application logs.
+The PIN is security sensitive. Hold it in memory or secure session storage on the EUA. Do not write it to a database or to application logs.
 
 The HSPA has two more obligations here. It sends an exact copy of the `on_confirm` payload to the gateway audit endpoint listed under [gateway endpoints](#gateway-endpoints), and it sets the communication tags on the fulfilment:
 
@@ -441,13 +441,13 @@ The HSPA has two more obligations here. It sends an exact copy of the `on_confir
 }
 ```
 
-NHA marks `messaging_support` and a helpline number as mandatory in `on_confirm`.
+`messaging_support` and a helpline number are mandatory in `on_confirm`.
 
 ## Stage 3: fulfilment
 
 ### status and on_status
 
-`status` carries only `order.id`. The HSPA answers with the full order object, and you replace your stored state with it. NHA describes this as reconciliation, not a polling loop.
+`status` carries only `order.id`. The HSPA answers with the full order object, and you replace your stored state with it. This is reconciliation, not a polling loop.
 
 ### Order states
 
@@ -539,7 +539,7 @@ The audit copies are an HSPA obligation for compliance traceability, not optiona
 
 ## Cancellation reason codes
 
-NHA fixes the reason codes. You choose the labels your users see.
+The reason codes are fixed. You choose the labels your users see.
 
 ### Patient-initiated, sent in `cancel` with `cancelledby: patient`
 
@@ -578,16 +578,16 @@ NHA fixes the reason codes. You choose the labels your users see.
 
 ## Terms and conditions text
 
-The `on_init` terms array carries the text the patient reads before confirming. NHA publishes sample clauses in section 9 of its document. Two points carry through all of them.
+The `on_init` terms array carries the text the patient reads before confirming. Sample clauses are published. Two points carry through all of them.
 
 - UHI is a technology gateway. It does not supervise providers, does not guarantee outcomes, and does not collect, hold or route any payment.
 - Every payment, refund, cancellation charge and pricing dispute is between the patient and the facility.
 
-## What is missing here
+## Field and error reference
 
-- NHA's document contains architecture and sequence diagrams as images. Those did not convert and are not reproduced.
-- The complete order field reference in NHA's document is longer than the tables here. Use NHA's [Swagger spec](https://uhigatewaysandbox.abdm.gov.in/swagger-ui/index.html?urls.primaryName=v2.0.2#/) for the full list.
-- Error codes for this service are not enumerated in NHA's document. It gives only the shape of the error object: `type` and `code` are mandatory, `path` and `message` are optional. No code list is published, so we do not print one.
+The tables above carry the fields you send and receive most. For the complete order field list, use the [Swagger spec](https://uhigatewaysandbox.abdm.gov.in/swagger-ui/index.html?urls.primaryName=v2.0.2#/).
+
+Error codes for this service are not published as a list. The error object carries `type` and `code`, both mandatory, with `path` and `message` optional.
 
 ## Next
 

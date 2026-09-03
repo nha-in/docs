@@ -20,7 +20,7 @@ Read [Introduction](/docs/uhi/v1) and [UHI gateway](/docs/uhi/v1/concepts/networ
 | [EUA](/docs/uhi/v1/getting-started/glossary#eua) | End User Application | The citizen facing app. Sends the search, receives results at your callback URL, drives booking where the service supports it. |
 | [HSPA](/docs/uhi/v1/getting-started/glossary#hspa) | Health Service Provider Application | The provider platform. Answers searches from its own catalogue and, where the service supports it, runs the booking lifecycle. |
 
-The HSP is the hospital, clinic, doctor, ambulance operator or blood bank, and the HSPA is its digital interface. The [gateway](/docs/uhi/v1/getting-started/glossary#gateway) is [NHA](/docs/uhi/v1/getting-started/glossary#nha)'s routing layer.
+The HSP is the hospital, clinic, doctor, ambulance operator or blood bank, and the HSPA is its digital interface. The [gateway](/docs/uhi/v1/getting-started/glossary#gateway) is the network's routing layer.
 
 ## Which role each service accepts
 
@@ -31,7 +31,7 @@ Four of the seven have a single HSPA that someone else already operates, so your
 | [Physical consultation](/docs/uhi/v1/concepts/services/physical-consultation) | Yes | Yes | Any onboarded provider platform |
 | [Ambulance booking](/docs/uhi/v1/concepts/services/ambulance-booking) | Yes | Yes | Any onboarded ambulance operator platform |
 | [Blood bank](/docs/uhi/v1/concepts/services/blood-bank) | Yes | Yes | Open to both roles. e-RaktKosh is the registered HSPA today |
-| [PM-JAY HEM](/docs/uhi/v1/concepts/services/pmjay-hem) | Yes | No | NHA. The document states there are no third party HSPA integrations |
+| [PM-JAY HEM](/docs/uhi/v1/concepts/services/pmjay-hem) | Yes | No | NHA. There are no third party HSPA integrations |
 | [Jan Aushadhi Kendra](/docs/uhi/v1/concepts/services/jan-aushadhi-kendra) and [medicine search](/docs/uhi/v1/concepts/services/jan-aushadhi-medicine-search) | Yes | Named | PMBI |
 | [AMRIT pharmacy](/docs/uhi/v1/concepts/services/amrit-pharmacy) | Yes | Named | HLL Lifecare Limited |
 
@@ -39,7 +39,7 @@ Two bars on the HSPA role. For blood bank, your inventory data has to be maintai
 
 ## The gate before any of this
 
-Your application must have completed ABDM M2 with [HIE-CM](/docs/uhi/v1/getting-started/glossary#hie-cm). The physical consultation, blood bank and PM-JAY HEM documents each carry the same sentence: an application that has not completed M2 cannot be onboarded onto UHI services. The ambulance booking document sets M2 as the primary prerequisite in its own words. The Jan Aushadhi Kendra and AMRIT pharmacy documents do not mention M2 at all, so treat the gate as applying to them until your NHA contact tells you otherwise.
+Your application must have completed ABDM M2 with [HIE-CM](/docs/uhi/v1/getting-started/glossary#hie-cm). An application that has not completed M2 cannot be onboarded onto UHI services. The gate applies to every service on the network.
 
 If M2 is not done, start at [M2 linking and sharing](/docs/hiecm/v3/api/m2).
 
@@ -51,7 +51,7 @@ Steps 1 to 5 are sandbox. Steps 6 and 7 are production.
 2. **Generate your key pair.** Clone [github.com/NHA-ABDM/UHI](https://github.com/NHA-ABDM/UHI/tree/main/header_generator_utility) and run `Generator.java` with option 1. Send NHA the public key only.
 3. **Fill the onboarding form.** [sandbox.abdm.gov.in](https://sandbox.abdm.gov.in/sandbox/v3/sandbox-registration) asks for your organisation details, your role, your HTTPS sandbox callback URL and your public key.
 4. **Get sandbox access.** NHA emails sandbox credentials. Review the Swagger specification, and ask NHA for the UHI Postman collection for your service.
-5. **Build and test.** Implement the stages your service covers, then run NHA's test cases for your role.
+5. **Build and test.** Implement the stages your service covers, then run the test cases for your role.
 6. **Get sign-off.** NHA reviews your test evidence and confirms in writing. Physical consultation also asks for a demo video.
 7. **Go to production.** NHA promotes your integration. Update `consumer_id`, `consumer_uri`, `provider_id` and `provider_uri` to production values.
 
@@ -75,7 +75,7 @@ Every UHI call is signed with an Ed25519 signature over a BLAKE-512 hash of the 
 It is your `consumer_uri` if you are an EUA, and your `provider_uri` if you are an HSPA. Four rules come out of the documents.
 
 - Publicly accessible over HTTPS. The gateway and the other party call it from outside your network.
-- For an EUA, it must share a domain with your `consumer_id`. NHA's physical consultation document states this in the context field table.
+- For an EUA, it must share a domain with your `consumer_id`.
 - It is where the real answer arrives. The synchronous reply to any UHI call is an ACK receipt, not the business response. Do not block your request thread.
 - You match the answer to your request on `transaction_id`. Several HSPAs can answer one search, and that field is the only thing tying their calls back to yours.
 
@@ -84,9 +84,9 @@ What sits behind that URL depends on your role and how far your service goes.
 | Service and role | Endpoints you expose |
 | --- | --- |
 | EUA, discovery only services | `/on_search` |
-| EUA, ambulance booking (NHA's first phase) | `/on_search`, `/on_init` |
+| EUA, ambulance booking (first phase) | `/on_search`, `/on_init` |
 | EUA, physical consultation | `/on_search`, `/on_init`, `/on_confirm`, `/on_status`, `/on_update`, `/on_cancel`, `/on_message` |
-| HSPA, ambulance booking (NHA's first phase) | `/search`, `/init` |
+| HSPA, ambulance booking (first phase) | `/search`, `/init` |
 | HSPA, physical consultation | `/search`, `/init`, `/confirm`, `/status`, `/cancel`, `/on_update`, `/on_message` |
 
 The discovery only services are blood bank, PM-JAY HEM, Jan Aushadhi Kendra, Jan Aushadhi medicine search and AMRIT pharmacy.
@@ -106,11 +106,11 @@ Those are NHA's own sandbox applications. If you are building an EUA, the refere
 
 The Swagger specification sits at [uhigatewaysandbox.abdm.gov.in/swagger-ui](https://uhigatewaysandbox.abdm.gov.in/swagger-ui/index.html?urls.primaryName=v2.0.2#/). The documents do not agree on a version: physical consultation points at `v2.0.2`, PM-JAY HEM at `v2.0.1`. Check which one your onboarding contact expects.
 
-NHA also publishes the reference EUA and HSPA as APKs, and recordings of its integration support calls, in the reference tables of the physical consultation document.
+The reference EUA and HSPA are also published as APKs, with recordings of the integration support calls.
 
 ## Before you ask for sign-off
 
-NHA's physical consultation document carries a twenty row readiness checklist. These items apply whatever your service.
+A twenty row readiness checklist applies, whatever your service.
 
 - ABDM M2 with HIE-CM is complete.
 - Your Ed25519 key pair is generated and the public key is submitted.
@@ -120,13 +120,13 @@ NHA's physical consultation document carries a twenty row readiness checklist. T
 - Every endpoint your role and service requires is exposed and tested.
 - Discovery is tested across each filter your service supports.
 - Asynchronous handling is tested, including an empty result set and a response that never arrives.
-- NHA's test cases for your role pass, and you have the evidence to show.
+- The test cases for your role pass, and you have the evidence to show.
 
 Services that go beyond discovery add their own items. Physical consultation asks for the booking flow, the PIN, status transitions, terms display and a caching policy with a ceiling of 48 hours.
 
 ## Where to ask
 
-NHA's documents list two support levels. L1 covers technical integration: API errors, signing problems, sandbox access and endpoint configuration. L2 covers the onboarding form, milestone verification and compliance. The named contacts are in the onboarding communication NHA sends you. Use that rather than a name copied from a document that may have moved on.
+There are two support levels. L1 covers technical integration: API errors, signing problems, sandbox access and endpoint configuration. L2 covers the onboarding form, milestone verification and compliance. The named contacts are in the onboarding communication NHA sends you. Use that rather than a name copied from a document that may have moved on.
 
 For anything about these pages rather than about UHI itself, see [support](/docs/support).
 

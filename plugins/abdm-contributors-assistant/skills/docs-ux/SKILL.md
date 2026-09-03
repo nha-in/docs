@@ -37,6 +37,34 @@ On top of the writing guide (plan#p3-5-writing-guide):
 3. **Chronological.** Pages order by when a developer needs them, not alphabetically. Every page shows previous and next, so the reader is always on a step of a journey.
 4. **Progress based.** Long content descends from orientation to verification. The reader who stops halfway has still completed something whole.
 
+### Chronological means the journey terminates
+
+A next step on every page is not enough on its own. Follow each chain to its end
+and check where it puts the reader down.
+
+Every milestone page once ended by pointing at its own API reference or back at
+the milestone list, so a reader could complete M1 through M4 following our own
+next steps and never meet the sandbox exit process. Go live existed, was
+accurate, and was reachable only from a card on the Get started index. The chain
+looped instead of terminating.
+
+Two rules follow:
+
+- **The last page of a chain hands off to what comes after the documentation.** For the provider milestones and the PHR milestones that is Go live, then the security audit.
+- **A page that is a step in someone's build says so, and a page that is a destination says what to do next in the world.** Neither should end on a link back up the tree.
+
+The check is mechanical enough to run by hand: list every page's next steps,
+follow each chain, and name the page each one ends on. A chain that ends on an
+index has not terminated.
+
+### Diataxis is the frame underneath
+
+Where a page goes and what it may contain are the same decision, because the
+folder sets the page type and the type sets the budget. `page-authoring` carries
+the mapping from Diataxis modes to our page types and word budgets. Use it
+before arguing about placement: a page that will not sit in one folder is
+usually a page in two modes.
+
 ## The four tabs
 
 ### Tab 1: Overview
@@ -67,7 +95,13 @@ Phase scope renders honestly: HIE-CM M1 to M3 carry content. UHI and M4 pages sa
 
 ### Tab 3: What's New
 
-The changelog, fed by the update pipeline (plan#p5-update-pipeline). Newest first, each entry linking to the atoms it touched.
+The changelog, fed by the update pipeline (plan#p5-update-pipeline). Newest first, each entry linking to the page it touched.
+
+It is not a build log. An entry has to change what a reader builds or what they
+must go back and fix, which rules out layout, navigation, wording and colour
+however much work those took. `changelog` carries the six qualifying kinds, the
+act-on-it test for borderline cases, and the benchmarks the rule is drawn from.
+Load it before writing or reviewing an entry.
 
 ### Tab 4: Support
 
@@ -100,6 +134,8 @@ The tab and sidebar tree above is what the navigation generator targets. It is p
 Before approving a rendered page:
 
 - Is it inside the right tab and rung of the ladder?
+- Is it in one Diataxis mode, or has a concept page grown build steps?
+- Follow its next steps to the end of the chain. Does the chain terminate, or loop back to an index?
 - Does every mentioned concept, API, error and section link somewhere?
 - Are previous and next steps visible and correct?
 - Does it read chronologically, no forward references the reader has not met?
@@ -114,3 +150,5 @@ Before approving a rendered page:
 - Voice and audience: `nha-voice`
 - What each page body contains: `atom-authoring`
 - Changelog feed: `update-pipeline`
+- What earns a changelog entry: `changelog`
+- Page types, budgets and the Diataxis mapping: `page-authoring`

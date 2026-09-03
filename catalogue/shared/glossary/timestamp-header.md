@@ -55,9 +55,8 @@ clock drift and is rejected. Observed on 25 August 2026, against
   accepted on `POST /v3/phr/app/enrollment/encrypt` with a valid bearer
   token.
 
-NHA's ingested M1 spec agrees: "ISO 8601 UTC timestamp of the request."
-NHA's collection fills the header with Postman's `$isoTimestamp`, which
-emits exactly this format.
+The M1 specification gives the same shape: an ISO 8601 UTC timestamp of
+the request.
 
 ## Before you start
 

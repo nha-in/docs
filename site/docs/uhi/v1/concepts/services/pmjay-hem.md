@@ -11,8 +11,6 @@ source: UHI__UHI_PMJAY_HEM_Onboarding_v1.4.md
 
 PM-JAY is India's national health insurance scheme, and HEM is the Hospital Empanelment Management system that knows which hospitals are empanelled right now. After this page you will know the six ways to search HEM over UHI, and every field that comes back.
 
-One thing to know about the source: the file NHA circulated is named v1.4, and its cover page reads Version 1.1, March 2026. This page follows the document contents.
-
 ## Who does what
 
 This is an [EUA](/docs/uhi/v1/getting-started/glossary#eua) side integration. [NHA](/docs/uhi/v1/getting-started/glossary#nha) runs the single [HSPA](/docs/uhi/v1/getting-started/glossary#hspa). No third party builds one for this service.
@@ -27,7 +25,7 @@ Signing, onboarding and Gateway base URLs are shared across UHI. See [UHI servic
 
 ## Before you onboard
 
-Your application must have completed [HIE-CM](/docs/uhi/v1/getting-started/glossary#hie-cm) Milestone 2 as an [ABDM](/docs/uhi/v1/getting-started/glossary#abdm) compliant application. NHA's document states that applications without M2 cannot be onboarded onto UHI services, PM-JAY HEM included. If you have not done that, start at [M2](/docs/hiecm/v3/api/m2).
+Your application must have completed [HIE-CM](/docs/uhi/v1/getting-started/glossary#hie-cm) Milestone 2 as an [ABDM](/docs/uhi/v1/getting-started/glossary#abdm) compliant application. The network's document states that applications without M2 cannot be onboarded onto UHI services, PM-JAY HEM included. If you have not done that, start at [M2](/docs/hiecm/v3/api/m2).
 
 You also need:
 
@@ -94,7 +92,7 @@ Swap the host for `https://apisprod.nha.gov.in` in production. The rest of the c
 
 ## Sample payloads
 
-NHA's document gives these samples as an abbreviated field listing with dotted paths, not as literal JSON request bodies. They are reproduced in that form below. Build your JSON from the field reference underneath, where the nesting is explicit.
+These samples use an abbreviated field listing with dotted paths rather than literal JSON request bodies. Build your JSON from the field reference underneath, where the nesting is explicit.
 
 The `context` block is identical across all six variants. Only `message.intent` changes.
 
@@ -362,7 +360,7 @@ All fields are mandatory.
 
 ## Known limitations
 
-NHA lists these for the current phase.
+These apply to the current phase.
 
 | Limitation | What to do |
 | --- | --- |
@@ -375,7 +373,7 @@ NHA lists these for the current phase.
 
 ## Testing before go-live
 
-NHA's document carries 29 test cases across five categories, to be run against the UHI sandbox before you request production sign off.
+There are 29 test cases across five categories, to be run against the UHI sandbox before you request production sign off.
 
 | Category | What it checks |
 | --- | --- |
@@ -385,11 +383,11 @@ NHA's document carries 29 test cases across five categories, to be run against t
 | D, user experience | The feature is reachable in three taps or fewer. UHI, PM-JAY and ABDM branding on the search screen. A fallback message when there are no results. A disclaimer on the results screen asking the user to call ahead. |
 | E, edge cases | A large result set from a high density state renders. An empty `providers[]` array shows a fallback and does not crash. A missing `on_search` times out and offers a retry rather than spinning forever. |
 
-None of them has been run. Ask NHA for the full test case sheet and the UHI Postman collection when you onboard.
+Ask for the full test case sheet and the UHI Postman collection when you onboard.
 
 ## Phase scope
 
-NHA's document sets out a three phase plan, and only the first phase, discovery, is open for onboarding. Booking and referral workflows, provider dashboards and CSC kiosk search are named as the second phase. [ABHA](/docs/uhi/v1/getting-started/glossary#abha) linked discharge summaries and multilingual voice are named as the third. NHA has not published dates for either.
+The plan has three phases, and only the first, discovery, is open for onboarding. Booking and referral workflows, provider dashboards and CSC kiosk search are named as the second phase. [ABHA](/docs/uhi/v1/getting-started/glossary#abha) linked discharge summaries and multilingual voice are named as the third. Dates for either are not yet published.
 
 ## Next
 

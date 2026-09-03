@@ -18,7 +18,7 @@ Before working through the checks, confirm more than one endpoint is
 actually failing. If only one call fails while others succeed, read that
 call's own error code on the
 [error codes reference](/docs/hiecm/v3/reference/error-codes) instead.
-Read the response body too, not only the status: NHA's gateway returns a
+Read the response body too, not only the status: the gateway returns a
 code that names the real reason.
 
 ## Work through these in order
