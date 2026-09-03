@@ -42,6 +42,12 @@ x-abdm-sources:
   fetched: '2026-08-25'
   note: NHA's Aarogya Setu collection, 248 requests. Aarogya Setu is NHA's own
     PHR, so it stands in for any PHR implementation.
+- file: catalogue/openapi/corrections/2026-09-03-p-series-descriptions.md
+  role: correction
+  hash: sha256:19ec9c925786ede3b664575f705948a022dcb891316e605ce4f2d2006aeb832d
+  fetched: '2026-09-03'
+  note: One description per operation, written from each operation's own
+    signature. The upstream collection names its requests and describes none.
 servers:
 - url: https://phrsbx.abdm.gov.in
   description: Sandbox host, not yet
@@ -74,6 +80,7 @@ paths:
       tags:
       - ambulance
       summary: STEP 3 - init
+      description: "Initialises an ambulance booking for the service selected from search results. Beckn `init` action; the reply arrives at `on_init`."
       x-abdm-atom: hiecm.endpoint.phr-services-step-3-init
       x-abdm-source-folder: Ambulance service
       requestBody:
@@ -240,6 +247,7 @@ paths:
       tags:
       - ambulance
       summary: STEP 4 - on_init
+      description: "Callback carrying the provider's reply to an ambulance booking `init`: the quote and the terms to confirm."
       x-abdm-atom: hiecm.endpoint.phr-services-step-4-on-init
       x-abdm-source-folder: Ambulance service
       requestBody:
@@ -409,6 +417,7 @@ paths:
       tags:
       - ambulance
       summary: STEP 2 - on_search
+      description: "Callback carrying the ambulance providers and services that matched a search."
       x-abdm-atom: hiecm.endpoint.phr-services-step-2-on-search
       x-abdm-source-folder: Ambulance service
       requestBody:
@@ -556,6 +565,7 @@ paths:
       tags:
       - ambulance
       summary: STEP 1 - search
+      description: "Searches for ambulance services. Beckn `search` action; results arrive at `on_search`."
       x-abdm-atom: hiecm.endpoint.phr-services-step-1-search
       x-abdm-source-folder: Ambulance service
       requestBody:
@@ -821,6 +831,7 @@ paths:
       tags:
       - blood_bank
       summary: 2. POST /api/blood-bank/on_search
+      description: "Callback carrying the blood banks and stock that matched a search."
       x-abdm-atom: hiecm.endpoint.phr-services-2-post-api-blood-bank-on-search
       x-abdm-source-folder: Blood bank service
       requestBody:
@@ -1115,6 +1126,7 @@ paths:
       tags:
       - blood_bank
       summary: 1. POST /api/blood-bank/search
+      description: "Searches for blood banks and blood availability. Beckn `search` action; results arrive at `on_search`."
       x-abdm-atom: hiecm.endpoint.phr-services-1-post-api-blood-bank-search
       x-abdm-source-folder: Blood bank service
       requestBody:
@@ -1272,6 +1284,7 @@ paths:
       tags:
       - nearby_health_search
       summary: Search Facilities Within Radius
+      description: "Finds health facilities within a radius of a point, filtered by ownership, speciality and facility type, with paging."
       x-abdm-atom: hiecm.endpoint.phr-services-search-facilities-within-radius
       x-abdm-source-folder: Nearby-health-Service-search service
       requestBody:
@@ -4457,6 +4470,7 @@ paths:
       tags:
       - pmjay_panel_facility_discovery
       summary: Get Specialists
+      description: "Lists the specialities available for filtering a facility search."
       x-abdm-atom: hiecm.endpoint.phr-services-get-specialists
       x-abdm-source-folder: PMJAY Panel Facility Discovery Service
       responses:
@@ -5218,6 +5232,7 @@ paths:
       tags:
       - teleconsulting
       summary: get Orders by id
+      description: "Returns one teleconsultation order by its order id, with the service, the professional and the fulfilment time."
       x-abdm-atom: hiecm.endpoint.phr-services-get-orders-by-id
       x-abdm-source-folder: Teleconsulting service
       responses:
@@ -5382,6 +5397,7 @@ paths:
       tags:
       - teleconsulting
       summary: get Orders by ABHA id
+      description: "Lists the teleconsultation orders placed by an ABHA address."
       x-abdm-atom: hiecm.endpoint.phr-services-get-orders-by-abha-id
       x-abdm-source-folder: Teleconsulting service
       responses:
@@ -5888,6 +5904,7 @@ paths:
       tags:
       - teleconsulting
       summary: 1. on_search
+      description: "Callback carrying the teleconsultation providers and services that matched a search."
       x-abdm-atom: hiecm.endpoint.phr-services-1-on-search
       x-abdm-source-folder: Teleconsulting service
       requestBody:
@@ -6259,6 +6276,7 @@ paths:
       tags:
       - teleconsulting
       summary: 1. First Search
+      description: "Searches for teleconsultation services by category. Beckn `search` action; results arrive at `on_search`."
       x-abdm-atom: hiecm.endpoint.phr-services-1-first-search
       x-abdm-source-folder: Teleconsulting service
       requestBody:
@@ -6504,6 +6522,7 @@ paths:
       tags:
       - nearby_health_search
       summary: Create
+      description: "Saves a place as a bookmark for the signed-in ABHA address, with a title, address and coordinates."
       x-abdm-atom: hiecm.endpoint.phr-services-create
       x-abdm-source-folder: Nearby-health-Service-search service
       requestBody:
@@ -6686,6 +6705,7 @@ paths:
       tags:
       - nearby_health_search
       summary: Delete
+      description: "Deletes one of the person's saved place bookmarks."
       x-abdm-atom: hiecm.endpoint.phr-services-delete
       parameters:
       - name: id
@@ -6767,6 +6787,7 @@ paths:
       tags:
       - nearby_health_search
       summary: getByAbhaAddress
+      description: "Lists the places the signed-in ABHA address has bookmarked."
       x-abdm-atom: hiecm.endpoint.phr-services-getbyabhaaddress
       x-abdm-source-folder: Nearby-health-Service-search service
       responses:
@@ -6945,6 +6966,7 @@ paths:
       tags:
       - nearby_health_search
       summary: get/summary
+      description: "Lists the person's bookmarked places in summary form: title, address and coordinates."
       x-abdm-atom: hiecm.endpoint.phr-services-get-summary
       x-abdm-source-folder: Nearby-health-Service-search service
       responses:
@@ -7093,6 +7115,7 @@ paths:
       tags:
       - nearby_health_search
       summary: Update
+      description: "Updates the title or address of a saved place bookmark."
       x-abdm-atom: hiecm.endpoint.phr-services-update
       parameters:
       - name: id
@@ -7274,6 +7297,7 @@ paths:
       tags:
       - nearby_health_search
       summary: '{{aarogya-setu-sandbox-url}}api/health/service/doctor/geo-location/search-within-radius'
+      description: "Finds doctors within a radius of a point, filtered by name, speciality, facility ownership and type, with paging."
       x-abdm-atom: hiecm.endpoint.phr-services-aarogya-setu-sandbox-url-api-health-service-doctor-
       x-abdm-source-folder: Nearby-health-Service-search service
       requestBody:
@@ -10320,6 +10344,7 @@ paths:
       tags:
       - nearby_health_search
       summary: Get Languanges
+      description: "Lists the languages a doctor can be filtered by."
       x-abdm-atom: hiecm.endpoint.phr-services-get-languanges
       x-abdm-source-folder: Nearby-health-Service-search service
       responses:
@@ -10568,6 +10593,7 @@ paths:
       tags:
       - nearby_health_search
       summary: '{{aarogya-setu-sandbox-url}}api/health/service/doctor/master/system-of-medicine'
+      description: "Lists the systems of medicine a doctor can be filtered by."
       x-abdm-atom: hiecm.endpoint.phr-services-aarogya-setu-sandbox-url-api-health-service-doc-2
       x-abdm-source-folder: Nearby-health-Service-search service
       responses:
@@ -10793,6 +10819,7 @@ paths:
       tags:
       - nearby_health_search
       summary: search-doctor-by-id
+      description: "Returns a doctor's registry profile by their ABHA number: registration, qualifications, system of medicine and experience."
       x-abdm-atom: hiecm.endpoint.phr-services-search-doctor-by-id
       parameters:
       - name: abhaNumber
@@ -10998,6 +11025,7 @@ paths:
       tags:
       - nearby_health_search
       summary: Get Distinct Category List
+      description: "Lists the distinct facility categories, with the care settings each offers."
       x-abdm-atom: hiecm.endpoint.phr-services-get-distinct-category-list
       x-abdm-source-folder: Nearby-health-Service-search service
       responses:
@@ -11176,6 +11204,7 @@ paths:
       tags:
       - nearby_health_search
       summary: Get Category List
+      description: "Lists the facility categories available for filtering a search."
       x-abdm-atom: hiecm.endpoint.phr-services-get-category-list
       x-abdm-source-folder: Nearby-health-Service-search service
       responses:
@@ -11310,6 +11339,7 @@ paths:
       tags:
       - nearby_health_search
       summary: Get Specialists Category List
+      description: "Lists the specialities available for filtering a facility search."
       x-abdm-atom: hiecm.endpoint.phr-services-get-specialists-category-list
       x-abdm-source-folder: Nearby-health-Service-search service
       responses:
@@ -11972,6 +12002,7 @@ paths:
       tags:
       - nearby_health_search
       summary: Get Doctor Details
+      description: "Lists the doctors at a facility, by the facility's search id."
       x-abdm-atom: hiecm.endpoint.phr-services-get-doctor-details
       parameters:
       - name: searchId
@@ -15434,6 +15465,7 @@ paths:
       tags:
       - nearby_health_search
       summary: Get System of Medicine List
+      description: "Lists the systems of medicine a facility can be filtered by."
       x-abdm-atom: hiecm.endpoint.phr-services-get-system-of-medicine-list
       x-abdm-source-folder: Nearby-health-Service-search service
       responses:
@@ -15578,6 +15610,7 @@ paths:
       tags:
       - nearby_health_search
       summary: Get Facility Details By Search ID
+      description: "Returns a facility's registry entry by its search id, including its contact person and address."
       x-abdm-atom: hiecm.endpoint.phr-services-get-facility-details-by-search-id
       x-abdm-source-folder: Nearby-health-Service-search service
       responses:
@@ -16446,6 +16479,7 @@ paths:
       tags:
       - nhcx
       summary: get-coverage-eligibility
+      description: "Checks whether a person's insurance policy covers them, through the National Health Claims Exchange. The result arrives at `on_check`."
       x-abdm-atom: hiecm.endpoint.phr-services-get-coverage-eligibility
       x-abdm-source-folder: NHCX Service
       requestBody:
@@ -16582,6 +16616,7 @@ paths:
       tags:
       - nhcx
       summary: get-policies
+      description: "Lists the insurance policies held against an ABHA number. `encryptedAbhaNumber` is the ABHA number encrypted."
       x-abdm-atom: hiecm.endpoint.phr-services-get-policies
       x-abdm-source-folder: NHCX Service
       requestBody:
@@ -16719,6 +16754,7 @@ paths:
       tags:
       - nhcx
       summary: search
+      description: "Searches a payer's records for a member's policy through the National Health Claims Exchange. The result arrives at `on_submit`."
       x-abdm-atom: hiecm.endpoint.phr-services-search
       x-abdm-source-folder: NHCX Service
       requestBody:
@@ -16884,6 +16920,7 @@ paths:
       tags:
       - nhcx
       summary: on_check
+      description: "Callback carrying the payer's answer to a coverage eligibility check."
       x-abdm-atom: hiecm.endpoint.phr-services-on-check
       x-abdm-source-folder: NHCX Service
       requestBody:
@@ -16941,6 +16978,7 @@ paths:
       tags:
       - nhcx
       summary: nhcx-onsubscribe
+      description: "Callback confirming a subscription to National Health Claims Exchange notifications."
       x-abdm-atom: hiecm.endpoint.phr-services-nhcx-onsubscribe
       x-abdm-source-folder: NHCX Service
       requestBody:
@@ -16994,6 +17032,7 @@ paths:
       tags:
       - nhcx
       summary: subscribe
+      description: "Subscribes the PHR to National Health Claims Exchange notifications. Confirmation arrives at `on_subscribe`."
       x-abdm-atom: hiecm.endpoint.phr-services-subscribe
       x-abdm-source-folder: NHCX Service
       responses:
@@ -17031,6 +17070,7 @@ paths:
       tags:
       - nhcx
       summary: on_submit
+      description: "Callback carrying the payer's answer to a policy search."
       x-abdm-atom: hiecm.endpoint.phr-services-on-submit
       x-abdm-source-folder: NHCX Service
       requestBody:
@@ -17120,6 +17160,7 @@ paths:
       tags:
       - scan_and_pay
       summary: get details
+      description: "Lists the person's scan and pay requests with the status, order number and transaction id of each."
       x-abdm-atom: hiecm.endpoint.phr-services-get-details
       x-abdm-source-folder: Scan and Pay service
       responses:
@@ -17248,6 +17289,7 @@ paths:
       tags:
       - scan_and_pay
       summary: notify status
+      description: "Returns the payment status of one scan and pay request, with the receipt link once paid."
       x-abdm-atom: hiecm.endpoint.phr-services-notify-status
       parameters:
       - name: id
@@ -17370,6 +17412,7 @@ paths:
       tags:
       - scan_and_pay
       summary: OPENORDER
+      description: "Opens a scan and pay order after the person scans a facility's payment counter QR code."
       x-abdm-atom: hiecm.endpoint.phr-services-openorder
       x-abdm-source-folder: Scan and Pay service
       responses:
@@ -17427,6 +17470,7 @@ paths:
       tags:
       - scan_and_pay
       summary: order-status
+      description: "Returns the status of a scan and pay order by its order number."
       x-abdm-atom: hiecm.endpoint.phr-services-order-status
       x-abdm-source-folder: Scan and Pay service
       requestBody:
@@ -17522,6 +17566,7 @@ paths:
       tags:
       - scan_and_pay
       summary: payment-order
+      description: "Creates the payment order for the procedures selected and returns the UPI intent to pay with."
       x-abdm-atom: hiecm.endpoint.phr-services-payment-order
       x-abdm-source-folder: Scan and Pay service
       requestBody:
@@ -17710,6 +17755,7 @@ paths:
       tags:
       - scan_and_pay
       summary: update payment
+      description: "Records the outcome of a scan and pay payment: the amount, the transaction id and the receipt."
       x-abdm-atom: hiecm.endpoint.phr-services-update-payment
       parameters:
       - name: id
@@ -17837,6 +17883,7 @@ paths:
       tags:
       - teleconsulting
       summary: 4. Confirm
+      description: "Confirms a teleconsultation booking. Beckn `confirm` action; the reply arrives at `on_confirm`."
       x-abdm-atom: hiecm.endpoint.phr-services-4-confirm
       x-abdm-source-folder: Teleconsulting service
       requestBody:
@@ -18419,6 +18466,7 @@ paths:
       tags:
       - teleconsulting
       summary: Get categories
+      description: "Lists the teleconsultation categories available to search in."
       x-abdm-atom: hiecm.endpoint.phr-services-get-categories
       x-abdm-source-folder: Teleconsulting service
       responses:
@@ -20016,6 +20064,7 @@ paths:
       tags:
       - teleconsulting
       summary: Get categories by id
+      description: "Returns one teleconsultation category by its id."
       x-abdm-atom: hiecm.endpoint.phr-services-get-categories-by-id
       x-abdm-source-folder: Teleconsulting service
       responses:
@@ -20047,6 +20096,7 @@ paths:
       tags:
       - teleconsulting
       summary: Get Orders by Abha Id and Type
+      description: "Lists the teleconsultation orders of an ABHA address, filtered by order type."
       x-abdm-atom: hiecm.endpoint.phr-services-get-orders-by-abha-id-and-type
       x-abdm-source-folder: Teleconsulting service
       responses:
@@ -20090,6 +20140,7 @@ paths:
       tags:
       - teleconsulting
       summary: Get Orders by ABHA id desc
+      description: "Lists the teleconsultation orders of an ABHA address, newest first."
       x-abdm-atom: hiecm.endpoint.phr-services-get-orders-by-abha-id-desc
       x-abdm-source-folder: Teleconsulting service
       responses:
@@ -20640,6 +20691,7 @@ paths:
       tags:
       - teleconsulting
       summary: 3. Init
+      description: "Initialises a teleconsultation booking for the service selected. Beckn `init` action; the reply arrives at `on_init`."
       x-abdm-atom: hiecm.endpoint.phr-services-3-init
       x-abdm-source-folder: Teleconsulting service
       requestBody:
@@ -21042,6 +21094,7 @@ paths:
       tags:
       - teleconsulting
       summary: 7 .On_message
+      description: "Sends a message within a teleconsultation. Beckn `message` action."
       x-abdm-atom: hiecm.endpoint.phr-services-7-on-message
       x-abdm-source-folder: Teleconsulting service
       requestBody:
@@ -21293,6 +21346,7 @@ paths:
       tags:
       - teleconsulting
       summary: 6.on_cancel
+      description: "Callback carrying the provider's reply to a teleconsultation cancellation."
       x-abdm-atom: hiecm.endpoint.phr-services-6-on-cancel
       x-abdm-source-folder: Teleconsulting service
       requestBody:
@@ -21410,6 +21464,7 @@ paths:
       tags:
       - teleconsulting
       summary: 4.on_confirm
+      description: "Callback carrying the provider's confirmation of a teleconsultation booking, with the order details."
       x-abdm-atom: hiecm.endpoint.phr-services-4-on-confirm
       x-abdm-source-folder: Teleconsulting service
       requestBody:
@@ -21949,6 +22004,7 @@ paths:
       tags:
       - teleconsulting
       summary: 3. on_init
+      description: "Callback carrying the provider's reply to a teleconsultation `init`: the quote and the terms to confirm."
       x-abdm-atom: hiecm.endpoint.phr-services-3-on-init
       x-abdm-source-folder: Teleconsulting service
       requestBody:
@@ -22446,6 +22502,7 @@ paths:
       tags:
       - teleconsulting
       summary: 2. on_search
+      description: "Callback carrying the teleconsultation providers and services that matched a search."
       x-abdm-atom: hiecm.endpoint.phr-services-2-on-search
       x-abdm-source-folder: Teleconsulting service
       requestBody:
@@ -22858,6 +22915,7 @@ paths:
       tags:
       - teleconsulting
       summary: 5.On status
+      description: "Callback carrying the current status of a teleconsultation order."
       x-abdm-atom: hiecm.endpoint.phr-services-5-on-status
       x-abdm-source-folder: Teleconsulting service
       requestBody:
@@ -23362,6 +23420,7 @@ paths:
       tags:
       - teleconsulting
       summary: 7.on_update
+      description: "Callback carrying the provider's reply to a teleconsultation update."
       x-abdm-atom: hiecm.endpoint.phr-services-7-on-update
       x-abdm-source-folder: Teleconsulting service
       requestBody:
@@ -24059,6 +24118,7 @@ paths:
       tags:
       - teleconsulting
       summary: 2. Second Search
+      description: "Refines a teleconsultation search, for example by provider or time slot. Beckn `search` action; results arrive at `on_search`."
       x-abdm-atom: hiecm.endpoint.phr-services-2-second-search
       x-abdm-source-folder: Teleconsulting service
       requestBody:
@@ -24369,6 +24429,7 @@ paths:
       tags:
       - teleconsulting
       summary: 5. Status
+      description: "Asks for the current status of a teleconsultation order. Beckn `status` action; the reply arrives at `on_status`."
       x-abdm-atom: hiecm.endpoint.phr-services-5-status
       x-abdm-source-folder: Teleconsulting service
       requestBody:
@@ -24534,6 +24595,7 @@ paths:
       tags:
       - teleconsulting
       summary: 6. On_update
+      description: "Updates a teleconsultation order, for example to reschedule. Beckn `update` action; the reply arrives at `on_update`."
       x-abdm-atom: hiecm.endpoint.phr-services-6-on-update
       x-abdm-source-folder: Teleconsulting service
       requestBody:
@@ -25114,6 +25176,7 @@ paths:
       tags:
       - pmjay_panel_facility_discovery
       summary: On Search
+      description: "Callback carrying the PM-JAY empanelled facilities that matched a search."
       x-abdm-atom: hiecm.endpoint.phr-services-on-search
       x-abdm-source-folder: PMJAY Panel Facility Discovery Service
       requestBody:
@@ -41595,6 +41658,7 @@ paths:
       tags:
       - pmjay_panel_facility_discovery
       summary: Rest Search
+      description: "Searches PM-JAY empanelled facilities and returns the results in the same call, without a callback."
       x-abdm-atom: hiecm.endpoint.phr-services-rest-search
       x-abdm-source-folder: PMJAY Panel Facility Discovery Service
       requestBody:
@@ -58139,6 +58203,7 @@ paths:
       tags:
       - pmjay_panel_facility_discovery
       summary: Search
+      description: "Searches PM-JAY empanelled facilities. Beckn `search` action; results arrive at `on_search`."
       x-abdm-atom: hiecm.endpoint.phr-services-search-2
       x-abdm-source-folder: PMJAY Panel Facility Discovery Service
       requestBody:
