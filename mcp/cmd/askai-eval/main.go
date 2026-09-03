@@ -45,6 +45,8 @@ func main() {
 		err = judgeCmd(os.Args[2:])
 	case "report":
 		err = reportCmd(os.Args[2:])
+	case "calibrate":
+		err = calibrateCmd(os.Args[2:])
 	default:
 		err = fmt.Errorf("unknown command %q", os.Args[1])
 	}
@@ -209,6 +211,46 @@ func reportCmd(args []string) error {
 			return err
 		}
 		fmt.Println(eval.Delta(now, was))
+	}
+	return nil
+}
+
+// calibrateCmd checks the judge's grades on a run against the owner's hand
+// grades. It fails clearly rather than reporting a hollow pass when the
+// owner has graded nothing yet, or when no run exists to read judge.json
+// from.
+func calibrateCmd(args []string) error {
+	fs := flag.NewFlagSet("calibrate", flag.ExitOnError)
+	run := fs.String("run", "", "run directory; empty reads runs/latest")
+	grades := fs.String("owner", "../evals/askai/calibration/owner-grades.json", "the owner's grades")
+	fs.Parse(args)
+	dir, err := resolveRun(*run)
+	if err != nil {
+		return fmt.Errorf("calibrate: %w", err)
+	}
+	var owner []struct {
+		ID    string `json:"id"`
+		Grade string `json:"grade"`
+	}
+	if err := readJSON(*grades, &owner); err != nil {
+		return err
+	}
+	var judge []eval.Grade
+	if err := readJSON(filepath.Join(dir, "judge.json"), &judge); err != nil {
+		return err
+	}
+	want := map[string]string{}
+	for _, o := range owner {
+		want[o.ID] = o.Grade
+	}
+	agree, total := eval.Agreement(want, judge)
+	if total == 0 {
+		return fmt.Errorf("calibrate: the owner has graded nothing yet")
+	}
+	pct := 100 * agree / total
+	fmt.Printf("judge agrees with the owner on %d of %d (%d%%)\n", agree, total, pct)
+	if pct < 85 {
+		return fmt.Errorf("calibrate: below 85 percent; fix the rubric, not the owner")
 	}
 	return nil
 }
