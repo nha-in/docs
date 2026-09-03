@@ -27,6 +27,11 @@ var (
 	headingRe     = regexp.MustCompile(`(?m)^#{1,6}\s`)
 	listRe        = regexp.MustCompile(`(?m)^\s*(?:[-*]|\d+\.)\s`)
 	codeSpanRe    = regexp.MustCompile("`[^`\n]+`")
+	// fencedBlockRe matches a whole fenced block, curl and all. codeSpanRe
+	// cannot span the newlines inside one, so a block has to be stripped
+	// first: otherwise every header and path a fenced curl command legally
+	// carries reads as a literal sitting outside a code span.
+	fencedBlockRe = regexp.MustCompile("(?s)```.*?```")
 	// abbreviationEndRe matches a known abbreviation ending in the period
 	// sentenceEndRe just found, so "e.g." or "Dr." is not read as closing a
 	// sentence. Checked against the text up to and including that period.
@@ -80,7 +85,7 @@ func Check(c Case, t Transcript) CheckResult {
 			add("grounding: %s", strings.SplitN(v.Detail, " appears", 2)[0])
 		}
 	}
-	stripped := codeSpanRe.ReplaceAllString(answer, "")
+	stripped := codeSpanRe.ReplaceAllString(fencedBlockRe.ReplaceAllString(answer, ""), "")
 	for _, lit := range guard.Literals(stripped) {
 		add("shape: literal %s outside a code span", lit)
 	}

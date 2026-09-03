@@ -20,6 +20,11 @@ type RunConfig struct {
 	MCPURL           string
 	PromptVersion    string
 	CatalogueVersion string
+	// EmbedProvider and DBPath name the retrieval stack this run answered
+	// against, recorded on every transcript so two runs on different stacks
+	// never compare as if they were the same instrument.
+	EmbedProvider string
+	DBPath        string
 }
 
 func toTurns(c Case) ([]chat.Turn, *chat.Page) {
@@ -51,6 +56,7 @@ func Run(ctx context.Context, cfg RunConfig, cases []Case) (int, error) {
 		svc := &chat.Service{Model: rec, Tools: cfg.Tools, MaxTokens: cfg.MaxTokens, MCPURL: cfg.MCPURL}
 		tr := Transcript{CaseID: c.ID, CatalogueVersion: cfg.CatalogueVersion, ModelID: cfg.ModelID,
 			Temperature: cfg.Temperature, PromptVersion: cfg.PromptVersion,
+			EmbedProvider: cfg.EmbedProvider, DBPath: cfg.DBPath,
 			RecordedAt: time.Now().UTC().Format(time.RFC3339)}
 		var answer, corpus strings.Builder
 		var pendingTools []ToolTrace
@@ -102,7 +108,7 @@ func Run(ctx context.Context, cfg RunConfig, cases []Case) (int, error) {
 		}
 		tr.Answer = strings.TrimSpace(answer.String())
 		tr.Corpus = corpus.String()
-		tr.Blocked = strings.Contains(tr.Answer, "I do not have an answer for that I can stand behind")
+		tr.Blocked = strings.Contains(tr.Answer, chat.BlockedNotice)
 		if err := WriteTranscript(cfg.OutDir, tr); err != nil {
 			return n, err
 		}

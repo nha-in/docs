@@ -25,19 +25,32 @@ type ModelCall struct {
 }
 
 type Transcript struct {
-	CaseID           string        `json:"case_id"`
-	CatalogueVersion string        `json:"catalogue_version"`
-	ModelID          string        `json:"model_id"`
-	Temperature      float64       `json:"temperature"`
-	PromptVersion    string        `json:"prompt_version"`
-	Calls            []ModelCall   `json:"calls"`
-	Answer           string        `json:"answer"`
-	Sources          []chat.Source `json:"sources"`
-	Corpus           string        `json:"corpus"`
-	Blocked          bool          `json:"blocked"`
-	Flags            []string      `json:"flags"`
-	Class            string        `json:"class"`
-	RecordedAt       string        `json:"recorded_at"`
+	CaseID           string  `json:"case_id"`
+	CatalogueVersion string  `json:"catalogue_version"`
+	ModelID          string  `json:"model_id"`
+	Temperature      float64 `json:"temperature"`
+	PromptVersion    string  `json:"prompt_version"`
+	// EmbedProvider and DBPath name the retrieval stack this case was
+	// answered against: which embedder chose the tool results, and which
+	// index snapshot they came from. Two runs on different retrieval stacks
+	// otherwise compare as if they were the same instrument.
+	EmbedProvider string        `json:"embed_provider"`
+	DBPath        string        `json:"db_path"`
+	Calls         []ModelCall   `json:"calls"`
+	Answer        string        `json:"answer"`
+	Sources       []chat.Source `json:"sources"`
+	Corpus        string        `json:"corpus"`
+	Blocked       bool          `json:"blocked"`
+	// Flags is a run error today, not the classifier's flagged rules the
+	// plan describes; see the Class field's comment.
+	Flags []string `json:"flags"`
+	// Class is never written or read yet. It is a placeholder for the
+	// classifier chunk the plan describes, which will fill in the case's
+	// class (define, how-do-i, diagnose, ...) as observed from the answer
+	// rather than only as declared on the case. Neither field carries live
+	// data until that chunk lands.
+	Class      string `json:"class"`
+	RecordedAt string `json:"recorded_at"`
 }
 
 // RecordingModel sits between the loop and the provider and keeps every

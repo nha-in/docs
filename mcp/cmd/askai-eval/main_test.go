@@ -4,11 +4,27 @@ import (
 	"encoding/json"
 	"os"
 	"path/filepath"
+	"strings"
 	"testing"
 
 	"github.com/eka-care/abdm-docs/mcp/internal/chat"
 	"github.com/eka-care/abdm-docs/mcp/internal/eval"
 )
+
+// TestRunRequiresEmbedProviderExplicitly covers I7: the deployment being
+// measured always runs with an explicit retrieval provider, and the server
+// refuses to start without one too. run must fail fast on the same rule
+// rather than silently answering keyword-only, before it ever opens the
+// index or calls Bedrock -- this only holds because the check runs before
+// LoadCases and index.Open, so this test needs neither a cases directory
+// nor a database.
+func TestRunRequiresEmbedProviderExplicitly(t *testing.T) {
+	t.Setenv("EMBED_PROVIDER", "")
+	err := runCmd([]string{"-out", t.TempDir(), "-model", "some-model"})
+	if err == nil || !strings.Contains(err.Error(), "-embed-provider") {
+		t.Fatalf("runCmd without -embed-provider = %v, want an error naming -embed-provider", err)
+	}
+}
 
 func writeCase(t *testing.T, dir string, c eval.Case) {
 	t.Helper()

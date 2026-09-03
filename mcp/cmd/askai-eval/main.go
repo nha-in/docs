@@ -74,12 +74,19 @@ func runCmd(args []string) error {
 	db := fs.String("db", envOr("DB_PATH", "catalogue.db"), "catalogue.db")
 	modelID := fs.String("model", envOr("CHAT_MODEL", ""), "Bedrock model id")
 	region := fs.String("region", envOr("AWS_REGION", ""), "AWS region")
-	provider := fs.String("embed-provider", envOr("EMBED_PROVIDER", "none"), "bedrock, ollama or none")
+	// No default: the deployment being measured always runs with an
+	// explicit choice (the server refuses to start without one too), and a
+	// silent "none" here would answer every case keyword-only without
+	// saying so anywhere the scorecard can be compared against.
+	provider := fs.String("embed-provider", envOr("EMBED_PROVIDER", ""), "bedrock, ollama or none; required, no default")
 	temp := fs.Float64("temperature", 0.1, "sampling temperature")
 	only := fs.String("only", "", "comma separated case ids to run, empty runs all")
 	fs.Parse(args)
 	if *out == "" || *modelID == "" {
 		return fmt.Errorf("run: -out and -model (or CHAT_MODEL) are required")
+	}
+	if *provider == "" {
+		return fmt.Errorf("run: -embed-provider or EMBED_PROVIDER is required (bedrock, ollama or none)")
 	}
 	cases, err := eval.LoadCases(*casesDir)
 	if err != nil {
@@ -123,6 +130,7 @@ func runCmd(args []string) error {
 		OutDir: filepath.Join(*out, "transcripts"), Model: model, ModelID: *modelID,
 		Temperature: *temp, Tools: tools, MaxTokens: 1500,
 		PromptVersion: chat.PromptVersion, CatalogueVersion: r.CatalogueVersion(),
+		EmbedProvider: *provider, DBPath: *db,
 	}, cases)
 	fmt.Printf("answered %d of %d cases into %s\n", n, len(cases), *out)
 	if runErr != nil {
