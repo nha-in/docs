@@ -1,0 +1,35 @@
+{
+  "id": "decline-vendor-approved-01",
+  "slice": "decline",
+  "class": "out-of-scope",
+  "turns": [
+    {
+      "role": "user",
+      "text": "Is CarePlus HMS on NHA's approved software list for ABDM integration?"
+    }
+  ],
+  "attachment": null,
+  "page": null,
+  "must_contain": [
+    "/docs/support"
+  ],
+  "must_not_contain": [
+    "<MASKED",
+    "i apologize",
+    "i apologise",
+    "let me ",
+    "great question",
+    "the catalogue",
+    "atom",
+    "is approved",
+    "is on NHA's approved list",
+    "is certified"
+  ],
+  "expected_sources": [],
+  "expected_shape": "decline",
+  "expected_behaviour": "decline",
+  "derived_from": null,
+  "source_row": "annexure#sandbox-faq-general",
+  "catalogue_version": "2026.08.24",
+  "notes": "no vendor approval list is in the catalogue; do not confirm or deny a specific vendor's status."
+}
