@@ -29,6 +29,10 @@ Fast Healthcare Interoperability Resources, the HL7 standard ABDM uses to carry 
 
 NHA's routing layer: you do not call another participant directly, you call the gateway, it forwards your request, and the reply arrives at your [bridge](/docs/hiecm/v3/getting-started/glossary#bridge) as a separate inbound call. You get a session token first, by posting your client id and client secret to `/api/hiecm/gateway/v3/sessions`. Two sandbox hosts serve that path, `https://apissbx.abdm.gov.in` and `https://dev.abdm.gov.in`. Take the host from your onboarding documentation and keep it in configuration; see [Choose your gateway](/docs/hiecm/v3).
 
+### Health Tech Committee
+
+The committee that reviews your integration at the end of the sandbox exit process, referred to as the HTC. Once your functional testing, security audit and exit form are complete, it is scheduled its own demonstration, separate from the one you give the integration team earlier. Its decision is recorded in four review stages, each carrying its own reviewer, comment and date. See [Go live](/docs/hiecm/v3/getting-started/going-live).
+
 ### HFR
 
 Health Facility Registry, the national directory of health facilities across modern and traditional systems of medicine, public and private, including hospitals, clinics, diagnostic laboratories, imaging centres and pharmacies. A facility enrols once and receives a facility ID that identifies it everywhere in ABDM. See [registries](/docs/hiecm/v3/registries).
@@ -65,6 +69,10 @@ One Time Password: a short code sent to a mobile number or an email address to p
 
 Personal Health Record, a patient facing application: the person logs in with their [ABHA address](#abha-address), discovers records held by facilities they visited, links them, and reads them. PHR apps subscribe to a patient's ABHA address and are notified when a new [care context](/docs/hiecm/v3/getting-started/glossary#care-context) is linked. See [PHR applications](/docs/hiecm/v3/concepts/phr).
 
+### Safe to Host certificate
+
+The certificate a [WASA](#wasa) produces, issued by a CERT-In empanelled auditor, and required before you receive production credentials. It names the application it covers and carries an issue date and an expiry date. A certificate that is in date covers a new module without a fresh audit of the parts already certified. See [Security audit](/docs/hiecm/v3/getting-started/security-audit).
+
 ### Sandbox
 
 NHA's test environment, and where every integration starts: you register on the sandbox portal, declare your role and the milestones you plan to complete, and receive a client id and client secret. Sandbox hosts differ from production, so ABHA calls go to `abhasbx.abdm.gov.in` in sandbox and `abha.abdm.gov.in` in production. Everything in sandbox is test data; see [Get started](/docs/hiecm/v3/getting-started/sandbox).
@@ -76,5 +84,9 @@ Transaction id. Most flows take two or three calls, and the first one returns a 
 ### UHI
 
 Unified Health Interface, an open protocol network for health services that are not record exchange: physical consultation booking, ambulance booking, blood bank discovery, Jan Aushadhi and pharmacy search. It has two roles, [EUA](/docs/uhi/v1/getting-started/glossary#eua) on the consumer side and [HSPA](/docs/uhi/v1/getting-started/glossary#hspa) on the provider side, and every call is signed with Ed25519. See [UHI](/docs/uhi/v1).
+
+### WASA
+
+The security audit of your application, conducted on your staging URL by an auditor from the CERT-In empanelled list. It produces the [Safe to Host certificate](#safe-to-host-certificate), and it is separate from functional testing: passing every milestone still leaves this to do. Each platform you ship is audited on its own. See [Security audit](/docs/hiecm/v3/getting-started/security-audit).
 
 </div>
