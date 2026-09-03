@@ -43,3 +43,67 @@ func TestDeltaNamesTheChange(t *testing.T) {
 		t.Fatalf("delta = %q", d)
 	}
 }
+
+// item D: a slice whose only case is unstable must not read as a factuality
+// regression; it is unmeasured, like a check-only run.
+func TestSliceWithOnlyAnUnstableCaseReportsFactualityUnmeasured(t *testing.T) {
+	cases := []Case{{ID: "u1", Slice: "define", ExpectedBehaviour: "answer"}}
+	grades := []Grade{{CaseID: "u1", Grade: "unstable"}}
+	sc := BuildScorecard(cases, nil, nil, grades)
+	if sc.Overall.Factuality != -1 {
+		t.Fatalf("factuality = %v, want -1 (unmeasured), got a score computed over zero graded cases", sc.Overall.Factuality)
+	}
+	if sc.Overall.Unstable != 1 {
+		t.Fatalf("unstable = %d, want 1", sc.Overall.Unstable)
+	}
+}
+
+// item E: a "?" vote (a total judge failure on that case) must not count
+// toward any denominator either; it is not a grade at all.
+func TestQuestionMarkGradeIsExcludedFromEveryDenominator(t *testing.T) {
+	cases := []Case{{ID: "q1", Slice: "define", ExpectedBehaviour: "answer"}}
+	grades := []Grade{{CaseID: "q1", Grade: "?"}}
+	sc := BuildScorecard(cases, nil, nil, grades)
+	if sc.Overall.Factuality != -1 {
+		t.Fatalf("factuality = %v, want -1 (unmeasured)", sc.Overall.Factuality)
+	}
+}
+
+// item F: comparing a measured run against a check-only baseline (which
+// carries the -1 unmeasured sentinel) must not print a bogus delta like
+// "0.80 (+1.80)".
+func TestDeltaRendersHonestlyWhenTheBeforeSideIsUnmeasured(t *testing.T) {
+	before := Scorecard{Slices: []SliceScore{{Slice: "define", Factuality: -1}}}
+	now := Scorecard{Slices: []SliceScore{{Slice: "define", Factuality: 0.8}}}
+	d := Delta(now, before)
+	if !strings.Contains(d, "0.80 (new)") {
+		t.Fatalf("delta = %q, want an honest \"(new)\" marker", d)
+	}
+	if strings.Contains(d, "+1.80") {
+		t.Fatalf("delta = %q, computed a delta against an unmeasured baseline", d)
+	}
+}
+
+// item F: a slice that ran before but not now must be named as gone, not
+// silently dropped from the table.
+func TestDeltaNamesASliceThatVanished(t *testing.T) {
+	before := Scorecard{Slices: []SliceScore{{Slice: "define", Factuality: 0.5}, {Slice: "decline", Factuality: 0.9}}}
+	now := Scorecard{Slices: []SliceScore{{Slice: "define", Factuality: 0.5}}}
+	d := Delta(now, before)
+	if !strings.Contains(d, "decline") {
+		t.Fatalf("delta does not name the vanished slice: %q", d)
+	}
+}
+
+// item F: reportInto must print one honest table of the run's own numbers,
+// not a delta against an all-zero scorecard.
+func TestTableRendersOneScorecardWithNoDeltas(t *testing.T) {
+	sc := Scorecard{Slices: []SliceScore{{Slice: "define", Factuality: 0.8, Uncertainty: -1, Recall3: 0.5, Grounding: 1, Forbidden: 0}}}
+	tbl := Table(sc)
+	if !strings.Contains(tbl, "0.80") {
+		t.Fatalf("table = %q, missing the factuality value", tbl)
+	}
+	if strings.Contains(tbl, "+") {
+		t.Fatalf("table = %q, a table with no baseline must not print a delta", tbl)
+	}
+}

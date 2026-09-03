@@ -93,16 +93,21 @@ func BuildScorecard(cases []Case, checks []CheckResult, retrieval []RetrievalRes
 				tt.recall += r.Recall3
 				tt.rr += r.RR
 			}
+			// unstable and "?" are not grades: a three way split or a
+			// failed judging call is not evidence the answer regressed, so
+			// neither counts toward any denominator.
 			if g, ok := byGrade[c.ID]; ok {
-				if g.Grade == "unstable" {
+				switch {
+				case g.Grade == "unstable":
 					tt.unstable++
-				}
-				if c.ExpectedBehaviour == "answer" {
+				case g.Grade == "?":
+					// no usable grade; excluded from every denominator
+				case c.ExpectedBehaviour == "answer":
 					tt.answers++
 					if g.Grade == "A" || g.Grade == "B" {
 						tt.abGrades++
 					}
-				} else {
+				default:
 					tt.declines++
 					if g.Grade == "A" {
 						tt.aDeclines++
@@ -119,26 +124,72 @@ func BuildScorecard(cases []Case, checks []CheckResult, retrieval []RetrievalRes
 	return sc
 }
 
+const scoreTableHeader = "| slice | factuality | uncertainty | grounding | forbidden | recall@3 |\n|---|---|---|---|---|---|\n"
+
+// deltaCell renders one dimension's before/after as a Markdown cell. A
+// negative value is the -1 sentinel for "not measured this run", not a
+// score, so it must never be diffed:
+//   - now unmeasured: "n/a", whatever the baseline says.
+//   - now measured but before unmeasured: "<value> (new)", because there is
+//     nothing honest to subtract from.
+//   - both measured: the value and its signed delta.
+func deltaCell(now, was float64) string {
+	switch {
+	case now < 0:
+		return "n/a"
+	case was < 0:
+		return fmt.Sprintf("%.2f (new)", now)
+	default:
+		return fmt.Sprintf("%.2f (%+.2f)", now, now-was)
+	}
+}
+
 // Delta renders the change between two scorecards as a Markdown table, for
-// the pull request comment.
+// the pull request comment. A slice that ran in before but not in now is
+// named as gone rather than silently dropped from the table.
 func Delta(now, before Scorecard) string {
 	prev := map[string]SliceScore{}
 	for _, s := range before.Slices {
 		prev[s.Slice] = s
 	}
+	seen := map[string]bool{}
 	var b strings.Builder
-	b.WriteString("| slice | factuality | uncertainty | grounding | forbidden | recall@3 |\n|---|---|---|---|---|---|\n")
-	f := func(now, was float64) string {
-		if now < 0 {
-			return "n/a"
-		}
-		return fmt.Sprintf("%.2f (%+.2f)", now, now-was)
-	}
+	b.WriteString(scoreTableHeader)
 	for _, s := range now.Slices {
+		seen[s.Slice] = true
 		p := prev[s.Slice]
 		fmt.Fprintf(&b, "| %s | %s | %s | %d (%+d) | %d (%+d) | %s |\n", s.Slice,
-			f(s.Factuality, p.Factuality), f(s.Uncertainty, p.Uncertainty),
-			s.Grounding, s.Grounding-p.Grounding, s.Forbidden, s.Forbidden-p.Forbidden, f(s.Recall3, p.Recall3))
+			deltaCell(s.Factuality, p.Factuality), deltaCell(s.Uncertainty, p.Uncertainty),
+			s.Grounding, s.Grounding-p.Grounding, s.Forbidden, s.Forbidden-p.Forbidden, deltaCell(s.Recall3, p.Recall3))
+	}
+	var gone []string
+	for _, s := range before.Slices {
+		if !seen[s.Slice] {
+			gone = append(gone, s.Slice)
+		}
+	}
+	sort.Strings(gone)
+	for _, name := range gone {
+		fmt.Fprintf(&b, "| %s | gone: this slice ran before but not in this run | | | | |\n", name)
+	}
+	return b.String()
+}
+
+// Table renders one scorecard's own numbers as a Markdown table, with no
+// comparison and no delta. Use this for a run's own report; Delta is for
+// comparing two runs.
+func Table(sc Scorecard) string {
+	cell := func(v float64) string {
+		if v < 0 {
+			return "n/a"
+		}
+		return fmt.Sprintf("%.2f", v)
+	}
+	var b strings.Builder
+	b.WriteString(scoreTableHeader)
+	for _, s := range sc.Slices {
+		fmt.Fprintf(&b, "| %s | %s | %s | %d | %d | %s |\n", s.Slice,
+			cell(s.Factuality), cell(s.Uncertainty), s.Grounding, s.Forbidden, cell(s.Recall3))
 	}
 	return b.String()
 }
