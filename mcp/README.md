@@ -81,6 +81,12 @@ duplicated path.
 The endpoint is off by default. Set `CHAT_MODEL` to a Bedrock model or
 inference-profile id to turn it on; leave it empty and `/api/chat` answers
 404, so a deployment that only wants the MCP server needs no other change.
+The assistant answers strictly from what its tools return, so it runs at a low
+sampling temperature: `CHAT_TEMPERATURE` (default 0.2) keeps quoted literals and
+the tool loop's choices stable, and 0 makes it as deterministic as the model
+allows. The system prompt is sent behind a cache point, so Bedrock charges that
+prefix at the read rate on every turn after the first.
+
 Guardrails are environment-tunable: `CHAT_MAX_TOKENS` (default 1500),
 `CHAT_RATE_PER_MIN` (default 5) and `CHAT_RATE_PER_DAY` (default 100) cap
 one IP's spend, and `ALLOW_ORIGIN` scopes CORS exactly as `/api/search`
