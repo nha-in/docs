@@ -1,7 +1,7 @@
 ---
 title: HPR on UHI
 sidebar_label: HPR
-description: Where a practitioner's HPR ID appears in a UHI catalogue and a UHI order, and the two forms NHA's document prints it in.
+description: Where a practitioner's HPR ID appears in a UHI catalogue and a UHI order, and the two forms it takes.
 verification: unverified
 source: UHI__UHI_Physical_Consultation_v2.0_-_Onboarding_Document.md
 sidebar_position: 2
@@ -23,12 +23,12 @@ names the person a patient is booking: the doctor in a consultation.
 
 ## Two forms of the same identifier
 
-NHA's physical consultation document prints the practitioner two ways in the same sample.
+The practitioner appears two ways in the same sample.
 `agent.id` carries the readable address, `priyamehra@hpr.ndhm`. The tag block beside it carries
 the numeric ID, `@abdm/gov.in/hpr_id`, as `73-5232-1888-8686`.
 
 Send the address in `agent.id`. The tag is optional, and it sits with the other practitioner tags
-NHA lists for the same block: `@abdm/gov.in/experience`, `/languages`, `/education`, `/hpr_id`,
+The same block also carries: `@abdm/gov.in/experience`, `/languages`, `/education`, `/hpr_id`,
 `/hfr_id` and `/hip_id`.
 
 ## Where the ID comes from

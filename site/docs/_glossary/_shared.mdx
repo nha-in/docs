@@ -19,7 +19,7 @@ A readable name on the [HIE-CM](#hie-cm), such as `name@abdm`, used to reach hea
 
 ### ABHA number
 
-A 14 digit identifier issued to a person only after a [KYC](#kyc) check passes, and the identity anchor of ABDM: one person, one number. NHA's M1 document notes that an ABHA number carries a check digit and validates under the Luhn algorithm. See [M1](/docs/hiecm/v3/getting-started/glossary#m1) for how one is created.
+A 14 digit identifier issued to a person only after a [KYC](#kyc) check passes, and the identity anchor of ABDM: one person, one number. An ABHA number carries a check digit and validates under the Luhn algorithm. See [M1](/docs/hiecm/v3/getting-started/glossary#m1) for how one is created.
 
 ### FHIR
 
@@ -27,7 +27,7 @@ Fast Healthcare Interoperability Resources, the HL7 standard ABDM uses to carry 
 
 ### Gateway
 
-NHA's routing layer: you do not call another participant directly, you call the gateway, it forwards your request, and the reply arrives at your [bridge](/docs/hiecm/v3/getting-started/glossary#bridge) as a separate inbound call. You get a session token first, by posting your client id and client secret to `/api/hiecm/gateway/v3/sessions`. Two sandbox hosts serve that path, `https://apissbx.abdm.gov.in` and `https://dev.abdm.gov.in`. Take the host from your onboarding documentation and keep it in configuration; see [Choose your gateway](/docs/hiecm/v3).
+The routing layer for ABDM: you do not call another participant directly, you call the gateway, it forwards your request, and the reply arrives at your [bridge](/docs/hiecm/v3/getting-started/glossary#bridge) as a separate inbound call. You get a session token first, by posting your client id and client secret to `/api/hiecm/gateway/v3/sessions`. Two sandbox hosts serve that path, `https://apissbx.abdm.gov.in` and `https://dev.abdm.gov.in`. Take the host from your onboarding documentation and keep it in configuration; see [Choose your gateway](/docs/hiecm/v3).
 
 ### Health Tech Committee
 
@@ -39,7 +39,7 @@ Health Facility Registry, the national directory of health facilities across mod
 
 ### HIE-CM
 
-Health Information Exchange and Consent Manager, NHA's component that routes exchange requests and manages patient consent. NHA describes it as data blind: it holds identifiers and metadata about [care contexts](/docs/hiecm/v3/getting-started/glossary#care-context), never the content of a record. See [The ABDM gateway](/docs/hiecm/v3/concepts/gateway).
+Health Information Exchange and Consent Manager, the component that routes exchange requests and manages patient consent. It is data blind: it holds identifiers and metadata about [care contexts](/docs/hiecm/v3/getting-started/glossary#care-context), never the content of a record. See [The ABDM gateway](/docs/hiecm/v3/concepts/gateway).
 
 ### HPID
 
@@ -47,7 +47,7 @@ Healthcare Professional ID: a 14 digit number issued to a healthcare professiona
 
 ### HPR
 
-Healthcare Professionals Registry, the national registry of doctors, nurses, pharmacists and other healthcare professionals. Registering a professional there issues an [HPID](#hpid). NHA's M4 document also uses the HPR token when onboarding a facility to the [HFR](#hfr).
+Healthcare Professionals Registry, the national registry of doctors, nurses, pharmacists and other healthcare professionals. Registering a professional there issues an [HPID](#hpid). The HPR token is also used when onboarding a facility to the [HFR](#hfr).
 
 ### KYC
 
@@ -75,7 +75,7 @@ The certificate a [WASA](#wasa) produces, issued by a CERT-In empanelled auditor
 
 ### Sandbox
 
-NHA's test environment, and where every integration starts: you register on the sandbox portal, declare your role and the milestones you plan to complete, and receive a client id and client secret. Sandbox hosts differ from production, so ABHA calls go to `abhasbx.abdm.gov.in` in sandbox and `abha.abdm.gov.in` in production. Everything in sandbox is test data; see [Get started](/docs/hiecm/v3/getting-started/sandbox).
+The ABDM test environment, and where every integration starts: you register on the sandbox portal, declare your role and the milestones you plan to complete, and receive a client id and client secret. Sandbox hosts differ from production, so ABHA calls go to `abhasbx.abdm.gov.in` in sandbox and `abha.abdm.gov.in` in production. Everything in sandbox is test data; see [Get started](/docs/hiecm/v3/getting-started/sandbox).
 
 ### txnId
 

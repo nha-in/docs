@@ -24,7 +24,7 @@ anyone who has a symptom rather than a code.
 ### The M3 consent journey, drawn in three parts
 
 [M3 user journeys](/docs/hiecm/v3/milestones/m3) draws the whole
-[consent](/docs/hiecm/v3/getting-started/glossary#consent-artefact) story as NHA's document
+[consent](/docs/hiecm/v3/getting-started/glossary#consent-artefact) story as the M3 specification
 tells it: raising a consent request, the patient granting or denying it, and fetching the
 records once an artefact exists. Two new flow atoms back the diagrams,
 `hiecm.flow.m3-request-consent` and `hiecm.flow.m3-fetch-records`, so the sequence you read
@@ -33,18 +33,18 @@ here matches what the M3 API reference expects call by call.
 ### A first fifteen minutes that needs nothing but a browser
 
 [Your first fifteen minutes](/docs/hiecm/v3/getting-started/first-fifteen-minutes) gives you
-something to do while NHA reviews your sandbox registration: one gateway session call
+something to do while your sandbox registration is reviewed: one gateway session call
 transcribed from this repository's specification, and your own first call assembled with
 the credential placeholders named for where they come from. The transcribed request is read
 from the OpenAPI spec in this repository, not invented. The spec carries no captured response
 body, only the field list, and the page says plainly which parts are observed and which are
 not yet.
 
-### Going live, in NHA's own order
+### Going live, in order
 
 [Going live](/docs/hiecm/v3/getting-started/going-live) states the sandbox exit process the
-way NHA's FAQ and integration and exit process page describe it, including the Safe to Host
-audit by a CERT-In empanelled auditor, and says plainly where NHA does not publish a detail
+order the exit process runs in, including the Safe to Host audit by a CERT-In
+empanelled auditor, and names what is not yet published
 instead of guessing one in.
 
 ### Every doc page serves itself as markdown, for agents and people alike
@@ -64,10 +64,10 @@ it offers the gateway list. Each goal lands on
 [Milestones](/docs/hiecm/v3/milestones), which gives the
 role and the milestones for that kind of system.
 
-### Seven PHR operations renamed off their Postman "Copy" suffix
+### Seven PHR operations renamed
 
 Seven operations in the P1 through P3 and PHR application services
-references carried a " Copy" suffix inherited from NHA's Postman export.
+references carried a stray " Copy" suffix.
 Each was checked against the operation its name implied it duplicated. None
 turned out to be a true duplicate: five have no other operation to
 duplicate, and the other two point at a different host or a different API

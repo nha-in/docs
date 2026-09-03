@@ -99,13 +99,11 @@ lists the channels.
 
 Milestone 3 (M3) of [ABDM](/docs/hiecm/v3/getting-started/glossary#abdm) is one story in three parts: a doctor asks for a patient's past records, the patient says yes or no, and if yes the records travel. Each part is drawn below, so you can see the round trips before you read the [API reference](/reference/hiecm-m3).
 
-[NHA](/docs/hiecm/v3/getting-started/glossary#nha)'s document carries its own diagrams and screen sequences as images, which did not survive the conversion to text. The diagrams below come from the ordered prose of the same document. The step order is NHA's, the drawing is ours.
-
 | In the diagram | What it is |
 |---|---|
 | Patient | The person whose records these are, acting in their [PHR](/docs/hiecm/v3/getting-started/glossary#phr) app |
 | Your system | The [HIU](/docs/hiecm/v3/getting-started/glossary#hiu): the hospital or app that wants to read the records |
-| NHA gateway | NHA's [gateway](/docs/hiecm/v3/getting-started/glossary#gateway), which routes every call and callback |
+| HIE-CM gateway | The [gateway](/docs/hiecm/v3/getting-started/glossary#gateway), which routes every call and callback |
 | HIE-CM | The [HIE-CM](/docs/hiecm/v3/getting-started/glossary#hie-cm), which holds consent and asks the patient |
 | HIP | The [HIP](/docs/hiecm/v3/getting-started/glossary#hip) that holds the records, in journeys 2 and 3 |
 
@@ -118,7 +116,7 @@ sequenceDiagram
     autonumber
     actor D as Doctor
     participant S as Your system
-    participant G as NHA gateway
+    participant G as HIE-CM gateway
     participant C as HIE-CM
     actor P as Patient
     D->>S: Picks the patient and a date range
@@ -141,7 +139,7 @@ sequenceDiagram
     autonumber
     actor P as Patient
     participant C as HIE-CM
-    participant G as NHA gateway
+    participant G as HIE-CM gateway
     participant S as Your system
     participant H as HIP
     P->>C: Views the request details
@@ -161,7 +159,7 @@ sequenceDiagram
 ```
 
 - A grant carries an expiry. The patient sets when the permission runs out.
-- A grant can produce more than one consent artefact. NHA's M3 document allows this without stating why a given grant produces more than one.
+- A grant can produce more than one consent artefact. Store every id the grant returns.
 - The patient can revoke a granted consent at any time. Your access ends when they do.
 
 ## Journey 3: fetching the records
@@ -172,7 +170,7 @@ With an artefact id you fetch the artefact, then ask for the data it covers. The
 sequenceDiagram
     autonumber
     participant S as Your system
-    participant G as NHA gateway
+    participant G as HIE-CM gateway
     participant C as HIE-CM
     participant H as HIP
     S->>G: Consent fetch with the consent artefact id
@@ -188,9 +186,9 @@ sequenceDiagram
     S->>G: Health information notify, receipt of the data
 ```
 
-The records arrive encrypted, at the data push URL you supplied. Whether that URL must differ from your other registered callback URLs is not documented yet. Your side is simple: decrypt the data, then present it in a readable format.
+The records arrive encrypted, at the data push URL you supplied. Whether that URL must differ from your other registered callback URLs is not yet published. Your side is simple: decrypt the data, then present it in a readable format.
 
-The M3 document does not describe the encryption scheme. It is [ECDH](/docs/hiecm/v3/getting-started/glossary#ecdh) key exchange, specified on the [HIP](/docs/hiecm/v3/getting-started/glossary#hip) side in NHA's M2 document. See [M2](/docs/hiecm/v3/api/m2).
+The scheme is [ECDH](/docs/hiecm/v3/getting-started/glossary#ecdh) key exchange, specified on the [HIP](/docs/hiecm/v3/getting-started/glossary#hip) side. See [M2](/docs/hiecm/v3/api/m2).
 
 ## What the patient sees
 

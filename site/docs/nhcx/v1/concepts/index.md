@@ -1,7 +1,7 @@
 ---
 title: Core concepts
 sidebar_label: What a claim is made of
-description: What a claim is made of on NHCX, read from NHA's document index rather than from a specification.
+description: What a claim is made of on NHCX, at the level the documentation set records.
 verification: unverified
 source: NHCX__NHCX-Website_DocumentDetails.md
 sidebar_position: 4
@@ -9,7 +9,7 @@ sidebar_position: 4
 
 # Core concepts
 
-Everything on this page comes from NHA's index of its own NHCX documents. An index is not a
+This page records what the NHCX documentation set covers. An index is not a
 specification: it names what each document covers without describing it. Nothing here has been
 read from a payload or run against the exchange, and the rows are cited so you can go to the
 source.
@@ -28,7 +28,7 @@ of its own.
 ## A workflow status travels in the protected header
 
 Each message carries a protected header, and in it a workflow status code that says where the
-request has reached. Row 12 is the sheet of those codes. NHA updates it when codes change, which
+request has reached. Row 12 is the sheet of those codes. It is updated when codes change, which
 means the codes are data your integration should read rather than constants to compile in.
 
 ## A request cycle is closed by a protocol response

@@ -103,11 +103,11 @@ Milestone 1 (M1) of [ABDM](/docs/hiecm/v3/getting-started/glossary#abdm) has sev
 
 The diagrams below follow the published step order for each flow.
 
-"ABHA service" is NHA's ABHA API at the base URL on the [M1 overview](/docs/hiecm/v3/api/m1). Your system never calls Aadhaar. NHA's service does that for you.
+"ABHA service" is the ABHA API at the base URL on the [M1 overview](/docs/hiecm/v3/api/m1). Your system never calls Aadhaar. The ABHA service does that for you.
 
 ## Journey 1: ABHA creation by Aadhaar OTP
 
-The person gives their Aadhaar number. NHA sends a one time password ([OTP](/docs/hiecm/v3/getting-started/glossary#otp)) to the mobile registered against that Aadhaar. Once it checks out, the person picks a communication mobile number and an ABHA address, and the ABHA number is issued.
+The person gives their Aadhaar number. The ABHA service sends a one time password ([OTP](/docs/hiecm/v3/getting-started/glossary#otp)) to the mobile registered against that Aadhaar. Once it checks out, the person picks a communication mobile number and an ABHA address, and the ABHA number is issued.
 
 ```mermaid
 sequenceDiagram
@@ -136,7 +136,7 @@ Email verification sits between the mobile step and the address step. It is opti
 
 ## Journey 2: ABHA creation by face authentication
 
-Some people cannot use the OTP route, usually because the mobile registered against their Aadhaar is no longer theirs. Face authentication is NHA's optional alternative. The person authenticates their face through the Aadhaar registered device (RD) service on their own phone, which is how the transaction moves from your screen to theirs.
+Some people cannot use the OTP route, usually because the mobile registered against their Aadhaar is no longer theirs. Face authentication is the optional alternative. The person authenticates their face through the Aadhaar registered device (RD) service on their own phone, which is how the transaction moves from your screen to theirs.
 
 ```mermaid
 sequenceDiagram
@@ -165,7 +165,7 @@ The PID block is encrypted by the capture device and it expires. Send it as soon
 
 ## Journey 3: ABHA creation from an identity document
 
-When neither an Aadhaar OTP nor a face capture is possible, NHA allows enrolment from an identity document. NHA's own collection uses a driving licence.
+When neither an Aadhaar OTP nor a face capture is possible, enrol the person from an identity document. A driving licence is one such document.
 
 ```mermaid
 sequenceDiagram
@@ -187,7 +187,7 @@ The account this produces is restricted until it is upgraded through Aadhaar kno
 
 ## Journey 4: Communication mobile number after enrolment
 
-The Aadhaar linked number is not always the number the person wants health messages on. NHA places this flow after enrolment in all three creation routes: Aadhaar OTP, face authentication and biometrics.
+The Aadhaar linked number is not always the number the person wants health messages on. This flow runs after enrolment in all three creation routes: Aadhaar OTP, face authentication and biometrics.
 
 ```mermaid
 sequenceDiagram
@@ -204,7 +204,7 @@ sequenceDiagram
     A-->>S: Mobile number verified
 ```
 
-NHA's reference screens cover the person giving the number already linked to their Aadhaar. Those screens are images that did not convert, so whether a second OTP is sent in that case is not stated in the text we have.
+A person may give the number already linked to their Aadhaar. Whether that path sends a second OTP is not yet published.
 
 ## Journey 5: ABHA login by mobile number
 
@@ -257,7 +257,7 @@ Encrypt the identifier inside your own system. Do not send the identifier to a r
 
 ## Journey 7: Profile, ABHA card and quick response (QR) code
 
-Once you hold a token for a person, the profile reads are plain calls. NHA groups get profile, QR code and card download as one set.
+Once you hold a token for a person, the profile reads are plain calls. Get profile, QR code and card download form one set.
 
 ```mermaid
 sequenceDiagram
@@ -272,9 +272,8 @@ sequenceDiagram
     A-->>S: QR code
 ```
 
-The card is returned in the response rather than fetched from a separate link. The content type and encoding of the card and QR code responses are not documented yet; see the [APIs](/docs/hiecm/v3/api/m1/apis) page for what is.
+The card is returned in the response rather than fetched from a separate link. The content type and encoding of the card and QR code responses are not yet published. See the [APIs](/docs/hiecm/v3/api/m1/apis) page for the fields that are.
 
-Next: [use cases](/reference/hiecm-m1) for which journeys you must build, then [API reference](/reference/hiecm-m1) for the calls in order.
 
 ## Next
 

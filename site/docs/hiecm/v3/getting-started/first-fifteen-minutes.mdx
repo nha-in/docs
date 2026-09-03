@@ -27,16 +27,16 @@ Have your `clientId` and `clientSecret` in hand. If you do not,
 
 You also need a sandbox test identity: an Aadhaar number issued to you for sandbox use,
 and access to the mobile number registered against it, because that is where the OTP
-goes. NHA does not publish a shared test Aadhaar number, so do not go looking for one in
+goes. There is no shared test Aadhaar number, so do not go looking for one in
 these pages.
 
 ## What this page does with what you type
 
-The calls below go straight from your browser to NHA's hosts. There is no proxy and this
+The calls below go straight from your browser to the ABDM hosts. There is no proxy and this
 site has no server of its own, so nothing you type is sent anywhere else and nothing is
 written to a URL.
 
-- The **Aadhaar number** is encrypted in your browser with NHA's public key before it
+- The **Aadhaar number** is encrypted in your browser with the ABDM public key before it
   leaves the page, and only the encrypted value is posted. The field is masked and the
   raw number is held in the page's memory alone, which the browser discards when you
   close the tab.
@@ -77,9 +77,9 @@ Every step shows you the request it sent and the response it got back, including
 body. A 401 on the session call usually means the credentials or the `X-CM-ID` header, so
 see [Everything returns 401](/docs/hiecm/v3/troubleshooting/everything-returns-401).
 
-A rejected `loginId` may be the encryption rather than the number. NHA's specification does
-not record which RSA padding the service expects, so the runner uses RSA-OAEP, which is the
-only RSA encryption a browser offers, and leaves the digest as a control you can change.
+A rejected `loginId` may be the encryption rather than the number. The runner uses RSA-OAEP,
+which is the only RSA encryption a browser offers, and leaves the digest as a control you
+can change.
 [Encryption](/docs/hiecm/v3/concepts/encryption) sets out what is confirmed and what is
 not.
 

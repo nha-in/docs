@@ -109,9 +109,7 @@ lists the channels.
 
 Milestone 2 (M2) of [ABDM](/docs/hiecm/v3/getting-started/glossary#abdm) has four flows. This page draws each one, so you can see the round trips before you read the detail.
 
-[NHA](/docs/hiecm/v3/getting-started/glossary#nha)'s document carries its own API sequence diagrams as images, which did not survive the conversion to text. The diagrams below come from its numbered process steps. The step order is NHA's, the drawing is ours. Steps given only in prose are drawn in words, not guessed at.
-
-"Your system" is your [HMIS](/docs/hiecm/v3/getting-started/glossary#hmis) or [LMIS](/docs/hiecm/v3/getting-started/glossary#lmis) acting as a [HIP](/docs/hiecm/v3/getting-started/glossary#hip). "HIE-CM" is NHA's [Health Information Exchange and Consent Manager](/docs/hiecm/v3/getting-started/glossary#hie-cm) gateway.
+"Your system" is your [HMIS](/docs/hiecm/v3/getting-started/glossary#hmis) or [LMIS](/docs/hiecm/v3/getting-started/glossary#lmis) acting as a [HIP](/docs/hiecm/v3/getting-started/glossary#hip). "HIE-CM" is the [Health Information Exchange and Consent Manager](/docs/hiecm/v3/getting-started/glossary#hie-cm) gateway.
 
 ## Journey 1: HIP initiated linking
 
@@ -140,7 +138,7 @@ sequenceDiagram
 
 ## Journey 2: Notification to mobile
 
-You hold a mobile number, a name, an age and a gender, but no ABHA address. You cannot link, so you ask NHA to tell the patient a record is waiting.
+You hold a mobile number, a name, an age and a gender, but no ABHA address. You cannot link, so you ask the HIE-CM to tell the patient a record is waiting.
 
 ```mermaid
 sequenceDiagram
@@ -160,7 +158,7 @@ sequenceDiagram
 
 ## Journey 3: Discovery and link
 
-The patient starts [discovery](/docs/hiecm/v3/getting-started/glossary#discovery) from a PHR app and picks the facility they visited. Your system matches them on the identifiers NHA passes you and answers with care contexts.
+The patient starts [discovery](/docs/hiecm/v3/getting-started/glossary#discovery) from a PHR app and picks the facility they visited. Your system matches them on the identifiers the gateway passes you and answers with care contexts.
 
 ```mermaid
 sequenceDiagram
@@ -189,7 +187,7 @@ Step 3 hands you two groups of identifiers.
 
 Step 5 has a hard rule: care context metadata only. No diagnosis, no test result, no report content.
 
-Steps 8 to 11 are drawn in words: NHA describes them in prose and shows the payloads as images. Its error code list names them init, confirm, on-init and on-confirm, so the shape is a gateway request and a callback from you. The fields are not given.
+Steps 8 to 11 are drawn in words. The error codes name them init, confirm, on-init and on-confirm, so the shape is a gateway request and a callback from you. Their fields are not yet published.
 
 ## Journey 4: Health record request and data transfer
 
@@ -215,12 +213,12 @@ sequenceDiagram
     U->>CM: Notify the outcome, success or failure
 ```
 
-Four NHA constraints on step 9, the push.
+Four constraints apply to step 9, the push.
 
 - The HIU supplies the data push URL. It can differ from its registered gateway URL, which keeps the requester harder to identify.
 - The push has a 20 minute window from the start of the request. Past that, expect failure or timeout.
 - Large datasets such as CT or MRI images may be split across multiple parts.
-- For very large files NHA recommends streaming over one whole payload.
+- Stream very large files rather than sending one whole payload.
 
 Encryption uses [ECDH](/docs/hiecm/v3/getting-started/glossary#ecdh), Elliptic Curve Diffie Hellman, over Curve25519. Mechanics: [use cases](/reference/hiecm-m2). Call order: [API reference](/reference/hiecm-m2).
 

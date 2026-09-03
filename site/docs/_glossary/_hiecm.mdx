@@ -7,11 +7,11 @@ These terms belong to HIE-CM: the roles, the consent objects and the four milest
 
 ### Bridge
 
-The set of callback endpoints your system exposes to NHA's [gateway](#gateway); NHA stores one bridge URL for each registered participant and posts callbacks underneath it. NHA's M3 document gives `POST {hiuBridgeUrl}/v0.5/consents/hiu/notify` for an [HIU](#hiu) and `POST {hipBridgeUrl}/v0.5/health-information/hip/request` for a [HIP](#hip). Registering your bridge URL is part of sandbox onboarding.
+The set of callback endpoints your system exposes to the [gateway](#gateway). One bridge URL is stored for each registered participant, and callbacks are posted underneath it. The paths are `POST {hiuBridgeUrl}/v0.5/consents/hiu/notify` for an [HIU](#hiu) and `POST {hipBridgeUrl}/v0.5/health-information/hip/request` for a [HIP](#hip). Registering your bridge URL is part of sandbox onboarding.
 
 ### Care context
 
-A group of a patient's health records, defined by your system. It carries two fields and nothing else: a reference number, which is your own internal identifier, and a display name a person can read, which must not carry clinical detail such as a diagnosis or a test result because it is shown before consent. NHA recommends one care context per outpatient visit and one per inpatient admission.
+A group of a patient's health records, defined by your system. It carries two fields and nothing else: a reference number, which is your own internal identifier, and a display name a person can read, which must not carry clinical detail such as a diagnosis or a test result because it is shown before consent. Use one care context per outpatient visit and one per inpatient admission.
 
 ### Consent artefact
 
@@ -27,7 +27,7 @@ The step where a patient's [PHR](#phr) app asks a facility whether it holds reco
 
 ### ECDH
 
-Elliptic Curve Diffie-Hellman key exchange, used so that only the [HIU](#hiu) that holds a valid consent can read the records a [HIP](#hip) sends. Both sides generate a short lived key pair and a random 32 byte nonce, exchange the public halves, and derive the same session key. NHA's M2 document specifies Curve25519 for the exchange and AES-GCM for the encryption itself.
+Elliptic Curve Diffie-Hellman key exchange, used so that only the [HIU](#hiu) that holds a valid consent can read the records a [HIP](#hip) sends. Both sides generate a short lived key pair and a random 32 byte nonce, exchange the public halves, and derive the same session key. The exchange uses Curve25519, and the encryption itself uses AES-GCM.
 
 ### EMR
 
@@ -35,7 +35,7 @@ Electronic Medical Record system: the clinical system a hospital or a clinic use
 
 ### HI type
 
-Health Information type: the kind of record being asked for or shared, used in consent requests and in data requests. NHA's M3 document lists seven values: `Prescription`, `DiagnosticReport`, `OPConsultation`, `DischargeSummary`, `ImmunizationRecord`, `HealthDocumentRecord` and `WellnessRecord`. The M2 error message for an invalid HI type also lists `Invoice`.
+Health Information type: the kind of record being asked for or shared, used in consent requests and in data requests. There are seven values: `Prescription`, `DiagnosticReport`, `OPConsultation`, `DischargeSummary`, `ImmunizationRecord`, `HealthDocumentRecord` and `WellnessRecord`. The M2 error message for an invalid HI type also lists `Invoice`.
 
 ### HIP
 
@@ -47,11 +47,11 @@ Health Information User: the role for a system that reads someone else's records
 
 ### HMIS
 
-Hospital Management Information System, NHA's term for the software a hospital runs day to day. An HMIS normally integrates as a [HIP](#hip). NHA's M2 document states that implementing every [HI type](#hi-type) is mandatory for an HMIS.
+Hospital Management Information System, the software a hospital runs day to day. An HMIS normally integrates as a [HIP](#hip), and it must implement every [HI type](#hi-type).
 
 ### HRP
 
-Health Repository Provider. NHA's M2 document uses HRP for the system that actually holds the records, and writes it as "HRP/HIP" because the same system usually plays both parts. If you run an [HMIS](#hmis) or an [LMIS](#lmis) and you are integrating M2, HRP means you.
+Health Repository Provider. HRP is the system that actually holds the records, written as "HRP/HIP" because the same system usually plays both parts. If you run an [HMIS](#hmis) or an [LMIS](#lmis) and you are integrating M2, HRP means you.
 
 ### LIMS
 
@@ -59,15 +59,15 @@ Laboratory Information Management System: the system a diagnostic lab uses to re
 
 ### Link token
 
-The token that authorises your system to link a [care context](#care-context) to a patient's [ABHA address](#abha-address); your system obtains it when the patient registers and stores it against that patient. NHA's M2 document gives it a validity of six months and says to validate it before use. If you do not hold a valid one, regenerate it through demographic authentication before you link.
+The token that authorises your system to link a [care context](#care-context) to a patient's [ABHA address](#abha-address); your system obtains it when the patient registers and stores it against that patient. A link token is valid for six months. Validate it before use. If you do not hold a valid one, regenerate it through demographic authentication before you link.
 
 ### LMIS
 
-Laboratory Management Information System, NHA's term for laboratory software. An LMIS sits on the provider facing side of the HIE-CM, the same side an [HMIS](#hmis) does: a [HIP](#hip) whenever it publishes a report, and an [HIU](#hiu) on the rarer occasions it reads a patient's history to interpret a result.
+Laboratory Management Information System, the term for laboratory software. An LMIS sits on the provider facing side of the HIE-CM, the same side an [HMIS](#hmis) does: a [HIP](#hip) whenever it publishes a report, and an [HIU](#hiu) on the rarer occasions it reads a patient's history to interpret a result.
 
 ### M1
 
-Milestone 1, ABHA identity: creating an [ABHA number](#abha-number), logging a person in, reading and updating their profile, downloading the ABHA card, and the [gateway](#gateway) session and token calls that everything else depends on. NHA's M1 document marks most of these APIs mandatory for both private and government integrators, with Aadhaar demographic authentication the exception: mandatory for government integrators, not required for private ones. See [M1](/docs/hiecm/v3/api/m1).
+Milestone 1, ABHA identity: creating an [ABHA number](#abha-number), logging a person in, reading and updating their profile, downloading the ABHA card, and the [gateway](#gateway) session and token calls that everything else depends on. Most of these APIs are mandatory for both private and government integrators, with Aadhaar demographic authentication the exception: mandatory for government integrators, not required for private ones. See [M1](/docs/hiecm/v3/api/m1).
 
 ### M2
 
@@ -79,7 +79,7 @@ Milestone 3, consent and reading records as an [HIU](#hiu): raising a consent re
 
 ### M4
 
-Milestone 4, the registries: creating an [HPID](#hpid) on the [HPR](#hpr) and onboarding a facility to the [HFR](#hfr). NHA's document also calls this NHPR. See [M4](/docs/hiecm/v3/api/m4).
+Milestone 4, the registries: creating an [HPID](#hpid) on the [HPR](#hpr) and onboarding a facility to the [HFR](#hfr). This is also called NHPR. See [M4](/docs/hiecm/v3/api/m4).
 
 ### Purpose of use
 

@@ -1,7 +1,7 @@
 ---
 title: HFR on UHI
 sidebar_label: HFR
-description: The one UHI service that carries an HFR ID, the tag it travels in, and what NHA's document leaves unfilled.
+description: The one UHI service that carries an HFR ID, the tag it travels in, and what is issued at onboarding.
 verification: unverified
 source: UHI__UHI_AMRIT_Pharmacy_OnboardingDoc_v1.0.md, UHI__UHI_Physical_Consultation_v2.0_-_Onboarding_Document.md
 sidebar_position: 3
@@ -20,12 +20,12 @@ clinics, labs, imaging centres and pharmacies. On UHI it names the place behind 
 | `catalog.providers[].fulfillments[].agent.tags` | [Physical consultation](/docs/uhi/v1/concepts/services/physical-consultation), as `/hfr_id` beside the practitioner tags | No |
 
 AMRIT pharmacy is the only UHI service in this portal whose catalogue carries the facility
-identifier as a field of its own. NHA's own document notes it as one of three things that service
+identifier as a field of its own. It is one of three things that service
 adds over the others.
 
 ## What the document does not fill in
 
-NHA prints the value as `<HFR_ID>`, a placeholder, and gives no filled example. The AMRIT page
+The value appears as the placeholder `<HFR_ID>`, with no filled example published. The AMRIT page
 records the same gap for the store hours and the contact block. Treat the field's format as
 whatever the HFR itself issues, and confirm it against a real store entry before you rely on it.
 

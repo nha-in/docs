@@ -52,7 +52,7 @@ Match a response to its request by `context.transaction_id`. Your `consumer_uri`
 | Gateway base URL, sandbox | `https://uhigatewaysandbox.abdm.gov.in/api/v1/uhi/search` | Append `/search` or `/on_search` to the base path |
 | Gateway base URL, production | `https://uhigateway.abdm.gov.in/api/v1/uhi/search` | Append `/search` or `/on_search` to the base path |
 
-NHA's v1.0 document leaves the last three blank in its service identity table, and two of them turn up elsewhere in the same document. See [Open questions](#open-questions). Ask your NHA contact for the registered values before you go to sandbox.
+The last three are issued at onboarding. See [Confirm at onboarding](#confirm-at-onboarding). Ask your contact for the registered values before you go to sandbox.
 
 ## Search filters
 
@@ -109,7 +109,7 @@ The `context` block is identical across all five variants. Only `message.intent`
 }
 ```
 
-NHA's sample sets `category.descriptor` to the literal string `Pharmacy Code`, and the field reference for the same field says it holds the pharmacy code value. Those are two different things. See [Open questions](#open-questions).
+Two values are in circulation for `category.descriptor`: the literal string `Pharmacy Code`, and the pharmacy code value itself. Those are two different things. See [Confirm at onboarding](#confirm-at-onboarding).
 
 ### Search by state and district
 
@@ -271,7 +271,7 @@ Each `providers[]` entry is one AMRIT store. Three things here do not appear in 
 }
 ```
 
-The angle bracket values above are how NHA's document itself prints them. It gives no filled example for the store hours, the contact block or the HFR ID, and no timestamp format for opening and closing times. The two `catalog.descriptor` description fields hold descriptive prose in NHA's sample rather than real values, so they appear here as placeholders too. The sample also carries a `location.radius` block that the field reference does not list.
+The angle bracket values above are placeholders. No filled example is published for the store hours, the contact block or the HFR ID, and no timestamp format for opening and closing times. The two `catalog.descriptor` description fields hold descriptive prose in placeholders rather than real values, so they appear here that way too. The sample also carries a `location.radius` block that the field reference does not list.
 
 ## Field reference
 
@@ -343,15 +343,13 @@ All fields are mandatory and identical across every variant.
 
 Note that `fulfillments[].type` carries the pharmacy type here. In Jan Aushadhi Kendra discovery the same field carries the literal value `contact`. Do not reuse a parser across the two services without checking this field.
 
-## Open questions
+## Confirm at onboarding
 
-This has not been run against sandbox. These are the gaps in NHA's v1.0 document.
+Three values are issued when you onboard. Build the flow and hold these until you have them.
 
-| Question | What the document says |
-| --- | --- |
-| The registered provider ID, provider URL and HSPA public key ID | The service identity table leaves all three blank. The sample `on_search` and the `on_search` context field reference both show `amrit-hspa` and `https://amritpharmacy.gov.in/api/v1/admin/store/`. The public key ID is given nowhere. |
-| What goes in `category.descriptor` for a pharmacy code search | The sample sets both `code` and `name` to the literal string `Pharmacy Code`. The field reference describes the same fields as holding the pharmacy code value. |
-| The format of store opening and closing times | Both are shown as angle bracket placeholders with no example and no stated format. |
+- **Your registered provider ID, provider URL and HSPA public key ID.** Responses carry `amrit-hspa` at `https://amritpharmacy.gov.in/api/v1/admin/store/`. The public key ID is issued to you directly.
+- **What goes in `category.descriptor` for a pharmacy code search.** Both the literal string `Pharmacy Code` and the pharmacy code value are in circulation. Confirm which the HSPA accepts.
+- **The format of store opening and closing times.** No format is published, so read the values back from your first live response rather than parsing to a fixed pattern.
 
 ## Next
 

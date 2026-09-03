@@ -25,7 +25,7 @@ its own: the [HPR](/docs/hiecm/v3/getting-started/glossary#hpr) for professional
 
 ## The order they arrive in
 
-NHA's M4 document says the HFR create call takes a professional token in its header, generated
+The HFR create call takes a professional token in its header, generated
 from an HPR ID and password. Someone in your organisation needs an HPR ID with facility manager
 rights before you can register a facility, and a facility has to be in the HFR before it can
 act as a [HIP](/docs/hiecm/v3/getting-started/glossary#hip) or [HIU](/docs/hiecm/v3/getting-started/glossary#hiu) on

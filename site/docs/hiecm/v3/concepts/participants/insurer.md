@@ -32,7 +32,7 @@ Two gaps to know about before you plan.
   and does not name insurers. [M4](/docs/hiecm/v3/api/m4) is marked as required
   for an HIU, so raise this at onboarding rather than assuming an answer.
 - No NHCX endpoint is documented here yet. Take the claim specification from
-  NHA's own NHCX document set.
+  the NHCX documentation.
 
 ## What you can do
 
