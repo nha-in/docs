@@ -40,6 +40,12 @@ x-abdm-sources:
   fetched: '2026-08-25'
   note: NHA's Aarogya Setu collection, 248 requests. Aarogya Setu is NHA's own
     PHR, so it stands in for any PHR implementation.
+- file: catalogue/openapi/corrections/2026-09-03-p-series-descriptions.md
+  role: correction
+  hash: sha256:19ec9c925786ede3b664575f705948a022dcb891316e605ce4f2d2006aeb832d
+  fetched: '2026-09-03'
+  note: One description per operation, written from each operation's own
+    signature. The upstream collection names its requests and describes none.
 servers:
 - url: https://phrsbx.abdm.gov.in
   description: Sandbox host, not yet
@@ -65,6 +71,7 @@ paths:
       tags:
       - care_context_link
       summary: Bookmark Care Context
+      description: "Bookmarks a linked care context so it is easy to find again in the person's records."
       x-abdm-atom: hiecm.endpoint.p2-bookmark-care-context
       parameters:
       - name: careContextLinkId
@@ -127,6 +134,7 @@ paths:
       tags:
       - care_context_link
       summary: Get Care Context Links
+      description: "Lists the care contexts linked to the signed-in person's ABHA address, with the HIP each came from."
       x-abdm-atom: hiecm.endpoint.p2-get-care-context-links
       x-abdm-source-folder: Care Context Link service
       responses:
@@ -241,6 +249,7 @@ paths:
       tags:
       - care_context_link
       summary: Fetch Care Context Bundle URL
+      description: "Returns the download URLs for the FHIR bundles of one linked care context, with the fetch status."
       x-abdm-atom: hiecm.endpoint.p2-fetch-care-context-bundle-url
       parameters:
       - name: careContextLinkId
@@ -355,6 +364,7 @@ paths:
       tags:
       - care_context_link
       summary: Get Linked HIPs
+      description: "Lists the HIPs linked to the person whose records have not yet been transferred, with the base URL to download from."
       x-abdm-atom: hiecm.endpoint.p2-get-linked-hips
       x-abdm-source-folder: Care Context Link service
       responses:
@@ -466,6 +476,7 @@ paths:
       tags:
       - care_context_link
       summary: Get File Metadata
+      description: "Returns a record file's name, size and chunk size, so it can be downloaded in parts."
       x-abdm-atom: hiecm.endpoint.p2-get-file-metadata
       x-abdm-source-folder: Care Context Link service
       responses:
@@ -519,6 +530,7 @@ paths:
       tags:
       - care_context_link
       summary: Download File Chunk
+      description: "Downloads one chunk of a record file. Use the metadata call for the chunk size."
       x-abdm-atom: hiecm.endpoint.p2-download-file-chunk
       x-abdm-source-folder: Care Context Link service
       responses:
@@ -530,6 +542,7 @@ paths:
       tags:
       - care_context_link
       summary: Get HIP IDs
+      description: "Lists the HIPs whose records have been transferred for the person, with the base URL to download from."
       x-abdm-atom: hiecm.endpoint.p2-get-hip-ids
       x-abdm-source-folder: Care Context Link service
       responses:
@@ -621,6 +634,7 @@ paths:
       tags:
       - care_context_link
       summary: Get Data Flow Part Status
+      description: "Returns the status of one part of a health information transfer, by its transaction id."
       x-abdm-atom: hiecm.endpoint.p2-get-data-flow-part-status
       parameters:
       - name: transactionId
@@ -639,6 +653,7 @@ paths:
       tags:
       - care_context_link
       summary: Get Health Information by Transaction ID
+      description: "Returns the health information received for a transfer, by its transaction id."
       x-abdm-atom: hiecm.endpoint.p2-get-health-information-by-transaction-id
       parameters:
       - name: transactionId
@@ -657,6 +672,7 @@ paths:
       tags:
       - care_context_link
       summary: Health Information On-Request Callback
+      description: "Callback the gateway sends after a health information request: the transaction id for the transfer, or the error that stopped it."
       x-abdm-atom: hiecm.endpoint.p2-health-information-on-request-callback
       x-abdm-source-folder: Care Context Link service
       requestBody:
@@ -716,6 +732,7 @@ paths:
       tags:
       - care_context_link
       summary: Get Links by HIP
+      description: "Lists the person's linked care contexts grouped by HIP."
       x-abdm-atom: hiecm.endpoint.p2-get-links-by-hip
       x-abdm-source-folder: Care Context Link service
       requestBody:
@@ -1052,6 +1069,7 @@ paths:
       tags:
       - care_context_link
       summary: Get All Linked Care Contexts
+      description: "Lists every care context linked to the signed-in person, grouped by HIP."
       x-abdm-atom: hiecm.endpoint.p2-get-all-linked-care-contexts
       x-abdm-source-folder: Care Context Link service
       responses:
@@ -1235,6 +1253,7 @@ paths:
       tags:
       - care_context_link
       summary: Add My Record Bookmark
+      description: "Bookmarks a self-uploaded record by its care context reference."
       x-abdm-atom: hiecm.endpoint.p2-add-my-record-bookmark
       x-abdm-source-folder: Care Context Link service
       requestBody:
@@ -1337,6 +1356,7 @@ paths:
       tags:
       - care_context_link
       summary: Delete My Record Bookmark
+      description: "Removes a bookmark from a self-uploaded record."
       x-abdm-atom: hiecm.endpoint.p2-delete-my-record-bookmark
       x-abdm-source-folder: Care Context Link service
       responses:
@@ -1392,6 +1412,7 @@ paths:
       tags:
       - care_context_link
       summary: Get All Care Context Links for ABHA Address
+      description: "Lists the care context links for an ABHA address with paging and filters: HIP, record type, bookmarked, self-uploaded and date range."
       x-abdm-atom: hiecm.endpoint.p2-get-all-care-context-links-for-abha-address
       x-abdm-source-folder: Care Context Link service
       requestBody:
@@ -1495,6 +1516,7 @@ paths:
       tags:
       - care_context_link
       summary: Post Patient Consent Request
+      description: "Raises a consent request from the person's own PHR for records at the HIPs given, so they can be fetched into the app."
       x-abdm-atom: hiecm.endpoint.p2-post-patient-consent-request
       x-abdm-source-folder: Care Context Link service
       requestBody:
@@ -1538,6 +1560,7 @@ paths:
       tags:
       - care_context_link
       summary: Fetch Patient Health Information
+      description: "Fetches the health information received for the request ids given, with paging."
       x-abdm-atom: hiecm.endpoint.p2-fetch-patient-health-information
       x-abdm-source-folder: Care Context Link service
       requestBody:
@@ -1577,6 +1600,7 @@ paths:
       tags:
       - care_context_link
       summary: Pull Patient Health Information
+      description: "Asks the HIPs given to send the person's records. The data arrives later through the transfer endpoint."
       x-abdm-atom: hiecm.endpoint.p2-pull-patient-health-information
       x-abdm-source-folder: Care Context Link service
       requestBody:
@@ -1611,6 +1635,7 @@ paths:
       tags:
       - care_context_link
       summary: Refresh Patient Health Information
+      description: "Asks the HIPs given to send any records added since the last transfer."
       x-abdm-atom: hiecm.endpoint.p2-refresh-patient-health-information
       x-abdm-source-folder: Care Context Link service
       requestBody:
@@ -1642,6 +1667,7 @@ paths:
       tags:
       - care_context_link
       summary: Fetch Health Information Status
+      description: "Returns the transfer status for the transaction ids given."
       x-abdm-atom: hiecm.endpoint.p2-fetch-health-information-status
       x-abdm-source-folder: Care Context Link service
       requestBody:
@@ -1673,6 +1699,7 @@ paths:
       tags:
       - care_context_link
       summary: Get Patient Transaction IDs by HIPs
+      description: "Returns the transfer transaction ids for a person's records at the HIPs given, under the consent artefacts given."
       x-abdm-atom: hiecm.endpoint.p2-get-patient-transaction-ids-by-hips
       x-abdm-source-folder: Care Context Link service
       requestBody:
@@ -1716,6 +1743,7 @@ paths:
       tags:
       - care_context_link
       summary: PHR - Get All Care Context Links
+      description: "Lists every care context linked to the signed-in person, grouped by HIP."
       x-abdm-atom: hiecm.endpoint.p2-phr-get-all-care-context-links
       x-abdm-source-folder: Care Context Link service
       responses:
@@ -1994,6 +2022,7 @@ paths:
       tags:
       - care_context_link
       summary: PHR - Save Care Context Bundle URL
+      description: "Records where the FHIR bundle for a care context was stored, with its fetch status."
       x-abdm-atom: hiecm.endpoint.p2-phr-save-care-context-bundle-url
       x-abdm-source-folder: Care Context Link service
       requestBody:
@@ -2047,6 +2076,7 @@ paths:
       tags:
       - care_context_link
       summary: PHR - Fetch Care Context Bundle URL
+      description: "Returns the download URLs for the FHIR bundles of one linked care context, with the fetch status."
       x-abdm-atom: hiecm.endpoint.p2-phr-fetch-care-context-bundle-url
       parameters:
       - name: careContextLinkId
@@ -2135,6 +2165,7 @@ paths:
       tags:
       - care_context_link
       summary: PHR - Get Care Context Links
+      description: "Lists the care contexts linked to the signed-in person's ABHA address, with the HIP each came from."
       x-abdm-atom: hiecm.endpoint.p2-phr-get-care-context-links
       x-abdm-source-folder: Care Context Link service
       responses:
@@ -2368,6 +2399,7 @@ paths:
       tags:
       - care_context_link
       summary: PHR - Get Linked HIPs
+      description: "Lists the HIPs whose records have been transferred for the person, with the base URL to download from."
       x-abdm-atom: hiecm.endpoint.p2-phr-get-linked-hips
       x-abdm-source-folder: Care Context Link service
       responses:
@@ -2413,6 +2445,7 @@ paths:
       tags:
       - care_context_link
       summary: PHR - Get File Metadata
+      description: "Returns a record file's name, size and chunk size, so it can be downloaded in parts."
       x-abdm-atom: hiecm.endpoint.p2-phr-get-file-metadata
       x-abdm-source-folder: Care Context Link service
       responses:
@@ -2466,6 +2499,7 @@ paths:
       tags:
       - care_context_link
       summary: PHR - Download File Chunk
+      description: "Downloads one chunk of a record file. Use the metadata call for the chunk size."
       x-abdm-atom: hiecm.endpoint.p2-phr-download-file-chunk
       x-abdm-source-folder: Care Context Link service
       responses:
@@ -2495,6 +2529,7 @@ paths:
       tags:
       - care_context_link
       summary: PHR - Pull Health Information for Care Context
+      description: "Asks a HIP to send the records for one care context. The data arrives later through the transfer endpoint."
       x-abdm-atom: hiecm.endpoint.p2-phr-pull-health-information-for-care-context
       x-abdm-source-folder: Care Context Link service
       requestBody:
@@ -2526,6 +2561,7 @@ paths:
       tags:
       - care_context_link
       summary: PHR - Refresh Patient Health Information
+      description: "Asks the HIPs given to send any records added since the last transfer."
       x-abdm-atom: hiecm.endpoint.p2-phr-refresh-patient-health-information
       x-abdm-source-folder: Care Context Link service
       requestBody:
@@ -2557,6 +2593,7 @@ paths:
       tags:
       - care_context_link
       summary: Mark Linked Facility as Read
+      description: "Marks the records from one HIP as seen, clearing the unread indicator for that facility."
       x-abdm-atom: hiecm.endpoint.p2-mark-linked-facility-as-read
       parameters:
       - name: hipId
@@ -2619,6 +2656,7 @@ paths:
       tags:
       - care_context_link
       summary: Save Care Context Link
+      description: "Records a care context link for a person, with the HIP it came from and whether its data has been transferred."
       x-abdm-atom: hiecm.endpoint.p2-save-care-context-link
       x-abdm-source-folder: Care Context Link service
       requestBody:
@@ -2796,6 +2834,7 @@ paths:
       tags:
       - care_context_link
       summary: Search Care Context Links
+      description: "Searches the person's care context links by the query parameters given."
       x-abdm-atom: hiecm.endpoint.p2-search-care-context-links
       x-abdm-source-folder: Care Context Link service
       responses:
@@ -2807,6 +2846,7 @@ paths:
       tags:
       - care_context_link
       summary: Health Information Data Transfer (HIP to HIU)
+      description: "Receives a page of encrypted health information from a HIP, with the key material needed to decrypt it. Pages arrive in sequence under one transaction id."
       x-abdm-atom: hiecm.endpoint.p2-health-information-data-transfer-hip-to-hiu
       x-abdm-source-folder: Care Context Link service
       requestBody:
@@ -2902,6 +2942,7 @@ paths:
       tags:
       - health_locker
       summary: Public-Health-Lockers-Unsubscribe
+      description: "Ends the person's subscription to a health locker, so it stops receiving their new records."
       x-abdm-atom: hiecm.endpoint.p2-public-health-lockers-unsubscribe
       x-abdm-source-folder: Health locker service
       responses:
@@ -2979,6 +3020,7 @@ paths:
       tags:
       - scan_and_share
       summary: onpatientshare
+      description: "Callback the gateway sends after a profile share at a facility, acknowledging the share request."
       x-abdm-atom: hiecm.endpoint.p2-onpatientshare
       x-abdm-source-folder: Scan and Share service
       requestBody:
@@ -3089,6 +3131,7 @@ paths:
       tags:
       - user_initiated_linking
       summary: call-back link-on-confirm
+      description: "Callback the gateway sends after a link confirmation: the patient's linked care contexts, or the error that stopped it."
       x-abdm-atom: hiecm.endpoint.p2-call-back-link-on-confirm
       x-abdm-source-folder: User Initiated Linking service
       requestBody:
@@ -3162,6 +3205,7 @@ paths:
       tags:
       - user_initiated_linking
       summary: call-back on-init
+      description: "Callback the gateway sends after a link is initiated: the link reference and how the person will authenticate, or the error that stopped it."
       x-abdm-atom: hiecm.endpoint.p2-call-back-on-init
       x-abdm-source-folder: User Initiated Linking service
       responses:
@@ -3173,6 +3217,7 @@ paths:
       tags:
       - health_locker
       summary: Public-Health-Lockers-Subscribe
+      description: "Subscribes the person to a health locker, so their new records are shared with it automatically."
       x-abdm-atom: hiecm.endpoint.p2-public-health-lockers-subscribe
       x-abdm-source-folder: Health locker service
       responses:
@@ -3238,6 +3283,7 @@ paths:
       tags:
       - health_locker
       summary: Public -Get-Subscribed-Lockers-By-PatientId
+      description: "Lists the health lockers a person is subscribed to."
       x-abdm-atom: hiecm.endpoint.p2-public-get-subscribed-lockers-by-patientid
       x-abdm-source-folder: Health locker service
       responses:
@@ -3373,6 +3419,7 @@ paths:
       tags:
       - scan_and_share
       summary: profile share
+      description: "Shares the person's profile with a facility after scanning its counter QR code, so the facility can register them without typing details."
       x-abdm-atom: hiecm.endpoint.p2-profile-share
       x-abdm-source-folder: Scan and Share service
       responses:
@@ -3456,6 +3503,7 @@ paths:
       tags:
       - scan_and_share
       summary: AS - RecordShare on-notify
+      description: "Callback the gateway sends to notify the PHR that a record share has been acted on."
       x-abdm-atom: hiecm.endpoint.p2-as-recordshare-on-notify
       x-abdm-source-folder: Scan and Share service
       requestBody:
@@ -3570,6 +3618,7 @@ paths:
       tags:
       - scan_and_share
       summary: AS - Record On Share
+      description: "Callback the gateway sends with the outcome of a record share request."
       x-abdm-atom: hiecm.endpoint.p2-as-record-on-share
       x-abdm-source-folder: Scan and Share service
       requestBody:
@@ -3653,6 +3702,7 @@ paths:
       tags:
       - scan_and_share
       summary: AS - RecordShare
+      description: "Shares selected records with a facility after scanning its counter QR code."
       x-abdm-atom: hiecm.endpoint.p2-as-recordshare
       x-abdm-source-folder: Scan and Share service
       responses:
@@ -3703,6 +3753,7 @@ paths:
       tags:
       - scan_and_share
       summary: AS - RecordShare History
+      description: "Lists the record shares the person has made, with the sending and receiving facilities and the counter they were shared at."
       x-abdm-atom: hiecm.endpoint.p2-as-recordshare-history
       x-abdm-source-folder: Scan and Share service
       responses:
@@ -3914,6 +3965,7 @@ paths:
       tags:
       - user_initiated_linking
       summary: 03 link-confirm
+      description: "Confirms a user-initiated link with the OTP the HIP sent, completing the link of the discovered care contexts."
       x-abdm-atom: hiecm.endpoint.p2-03-link-confirm
       x-abdm-source-folder: User Initiated Linking service
       requestBody:
@@ -3945,6 +3997,7 @@ paths:
       tags:
       - user_initiated_linking
       summary: 01 discovery
+      description: "Discovers the person's care contexts at a HIP using their demographics and any identifiers they hold there."
       x-abdm-atom: hiecm.endpoint.p2-01-discovery
       x-abdm-source-folder: User Initiated Linking service
       requestBody:
@@ -3998,6 +4051,7 @@ paths:
       tags:
       - user_initiated_linking
       summary: 02 link-init
+      description: "Initiates linking of the care contexts discovered at a HIP. The HIP replies with how the person will authenticate."
       x-abdm-atom: hiecm.endpoint.p2-02-link-init
       x-abdm-source-folder: User Initiated Linking service
       requestBody:
@@ -4065,6 +4119,7 @@ paths:
       tags:
       - user_initiated_linking
       summary: call-back on-discovery
+      description: "Callback the gateway sends with the care contexts discovered at the HIP, or the error that stopped discovery."
       x-abdm-atom: hiecm.endpoint.p2-call-back-on-discovery
       x-abdm-source-folder: User Initiated Linking service
       requestBody:

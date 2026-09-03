@@ -41,6 +41,12 @@ x-abdm-sources:
   fetched: '2026-08-25'
   note: NHA's Aarogya Setu collection, 248 requests. Aarogya Setu is NHA's own
     PHR, so it stands in for any PHR implementation.
+- file: catalogue/openapi/corrections/2026-09-03-p-series-descriptions.md
+  role: correction
+  hash: sha256:19ec9c925786ede3b664575f705948a022dcb891316e605ce4f2d2006aeb832d
+  fetched: '2026-09-03'
+  note: One description per operation, written from each operation's own
+    signature. The upstream collection names its requests and describes none.
 servers:
 - url: https://phrsbx.abdm.gov.in
   description: Sandbox host, not yet
@@ -70,6 +76,7 @@ paths:
       tags:
       - login
       summary: ENCRYPTION
+      description: "Encrypts a value with the ABDM public key so it can be sent in the fields that only accept ciphertext, such as `loginId` and OTP values."
       x-abdm-atom: hiecm.endpoint.p1-encryption
       x-abdm-source-folder: AS Login service
       requestBody:
@@ -97,6 +104,7 @@ paths:
       tags:
       - login
       summary: Update mobile verify OTP
+      description: "Verifies the OTP sent for a mobile number update on an ABHA address. `authData` carries the transaction id and the encrypted OTP."
       x-abdm-atom: hiecm.endpoint.p1-update-mobile-verify-otp
       x-abdm-source-folder: AS Login service
       requestBody:
@@ -155,6 +163,7 @@ paths:
       tags:
       - family_management
       summary: assign
+      description: "Links another ABHA address to the signed-in person's address under a relationship type, so the two profiles are managed as a family."
       x-abdm-atom: hiecm.endpoint.p1-assign
       x-abdm-source-folder: Family Management service
       requestBody:
@@ -243,6 +252,7 @@ paths:
       tags:
       - family_management
       summary: delink
+      description: "Removes the family link between the signed-in person's ABHA address and the related address given."
       x-abdm-atom: hiecm.endpoint.p1-delink
       x-abdm-source-folder: Family Management service
       requestBody:
@@ -333,6 +343,7 @@ paths:
       tags:
       - family_management
       summary: Get Relationship Types
+      description: "Lists the relationship types an address can be assigned under, each with the id `assign` takes."
       x-abdm-atom: hiecm.endpoint.p1-get-relationship-types
       x-abdm-source-folder: Family Management service
       responses:
@@ -412,6 +423,7 @@ paths:
       tags:
       - family_management
       summary: linked-by-me
+      description: "Lists the ABHA addresses the signed-in person has linked to their own as family members."
       x-abdm-atom: hiecm.endpoint.p1-linked-by-me
       x-abdm-source-folder: Family Management service
       responses:
@@ -1003,6 +1015,7 @@ paths:
       tags:
       - family_management
       summary: linked-to-me
+      description: "Lists the ABHA addresses that have linked the signed-in person's address as a family member."
       x-abdm-atom: hiecm.endpoint.p1-linked-to-me
       x-abdm-source-folder: Family Management service
       responses:
@@ -1114,6 +1127,7 @@ paths:
       tags:
       - family_management
       summary: reassign
+      description: "Moves an existing family link to a different relationship type without delinking and assigning again."
       x-abdm-atom: hiecm.endpoint.p1-reassign
       x-abdm-source-folder: Family Management service
       responses:
@@ -1184,6 +1198,7 @@ paths:
       tags:
       - family_management
       summary: unassign
+      description: "Ends the family relationship with the related ABHA address given, on the signed-in person's side."
       x-abdm-atom: hiecm.endpoint.p1-unassign
       x-abdm-source-folder: Family Management service
       requestBody:
@@ -1275,6 +1290,7 @@ paths:
       tags:
       - global_collection
       summary: Session-Token
+      description: "Issues the access token every PHR application call carries as a bearer token, with its refresh token and both expiry windows."
       x-abdm-atom: hiecm.endpoint.p1-session-token
       x-abdm-source-folder: Global Service Collection service
       responses:
@@ -1360,6 +1376,7 @@ paths:
       tags:
       - global_collection
       summary: Certificate
+      description: "Returns the ABDM public key and the encryption algorithm to apply with it. Fetch it before encrypting any value for the PHR application services."
       x-abdm-atom: hiecm.endpoint.p1-certificate
       x-abdm-source-folder: Global Service Collection service
       responses:
@@ -1414,6 +1431,7 @@ paths:
       tags:
       - login
       summary: Session API
+      description: "Issues a gateway session token from a client id and secret. The token is the bearer credential for calls on the gateway host."
       x-abdm-atom: hiecm.endpoint.p1-session-api
       x-abdm-source-folder: AS Login service
       requestBody:
@@ -1449,6 +1467,7 @@ paths:
       tags:
       - profile
       summary: Send ABHA Otp - Link-DeLink
+      description: "Sends an OTP to the ABHA number's registered contact to authorise linking or delinking an ABHA address. `loginId` is encrypted."
       x-abdm-atom: hiecm.endpoint.p1-send-abha-otp-link-delink
       x-abdm-source-folder: As profile service
       requestBody:
@@ -1526,6 +1545,7 @@ paths:
       tags:
       - registration
       summary: 4. Create Custom PHR Address
+      description: "Creates an ABHA address of the person's own choosing, once the registration transaction has been verified."
       x-abdm-atom: hiecm.endpoint.p1-4-create-custom-phr-address
       x-abdm-source-folder: As registration service
       requestBody:
@@ -1557,6 +1577,7 @@ paths:
       tags:
       - registration
       summary: 1. Request OTP
+      description: "Starts ABHA address registration for a person who already holds an ABHA number, by sending an OTP. `loginId` is the encrypted ABHA number or Aadhaar."
       x-abdm-atom: hiecm.endpoint.p1-1-request-otp
       x-abdm-source-folder: As registration service
       requestBody:
@@ -1600,6 +1621,7 @@ paths:
       tags:
       - registration
       summary: 5. Get PHR Suggestions
+      description: "Suggests available ABHA addresses for the registration transaction, built from the person's verified profile."
       x-abdm-atom: hiecm.endpoint.p1-5-get-phr-suggestions
       x-abdm-source-folder: As registration service
       responses:
@@ -1611,6 +1633,7 @@ paths:
       tags:
       - registration
       summary: 2. Verify Aadhaar
+      description: "Verifies the Aadhaar OTP for a registration transaction and records the person's consent to use Aadhaar for ABHA."
       x-abdm-atom: hiecm.endpoint.p1-2-verify-aadhaar
       x-abdm-source-folder: As registration service
       requestBody:
@@ -1671,6 +1694,7 @@ paths:
       tags:
       - registration
       summary: 3. Verify Auth
+      description: "Verifies the OTP for a registration transaction started against an ABHA number. `authData` carries the transaction id and the encrypted OTP."
       x-abdm-atom: hiecm.endpoint.p1-3-verify-auth
       x-abdm-source-folder: As registration service
       requestBody:
@@ -1729,6 +1753,7 @@ paths:
       tags:
       - registration
       summary: 4. Check PHR Address Existence
+      description: "Checks whether an ABHA address is already taken before the person tries to register it."
       x-abdm-atom: hiecm.endpoint.p1-4-check-phr-address-existence
       x-abdm-source-folder: As registration service
       responses:
@@ -1740,6 +1765,7 @@ paths:
       tags:
       - registration
       summary: 2. Get Districts by State Code
+      description: "Lists the districts of a state, keyed by LGD code, for the address section of registration."
       x-abdm-atom: hiecm.endpoint.p1-2-get-districts-by-state-code
       x-abdm-source-folder: As registration service
       responses:
@@ -1751,6 +1777,7 @@ paths:
       tags:
       - registration
       summary: 3. Search LGD by Pin Code
+      description: "Resolves a PIN code to its state and district LGD codes, so the address can be filled from the PIN alone."
       x-abdm-atom: hiecm.endpoint.p1-3-search-lgd-by-pin-code
       x-abdm-source-folder: As registration service
       responses:
@@ -1762,6 +1789,7 @@ paths:
       tags:
       - registration
       summary: 1. Get All States
+      description: "Lists every state with its LGD code, for the address section of registration."
       x-abdm-atom: hiecm.endpoint.p1-1-get-all-states
       x-abdm-source-folder: As registration service
       responses:
@@ -1773,6 +1801,7 @@ paths:
       tags:
       - registration
       summary: 5. Register Details
+      description: "Completes mobile-based registration by submitting the person's profile details against the verified transaction, and creates the ABHA address."
       x-abdm-atom: hiecm.endpoint.p1-5-register-details
       x-abdm-source-folder: As registration service
       requestBody:
@@ -1878,6 +1907,7 @@ paths:
       tags:
       - registration
       summary: 1. Request OTP
+      description: "Starts ABHA address registration for a person with no ABHA number, by sending an OTP to their mobile. `loginId` is the encrypted mobile number."
       x-abdm-atom: hiecm.endpoint.p1-1-request-otp-2
       x-abdm-source-folder: As registration service
       requestBody:
@@ -1921,6 +1951,7 @@ paths:
       tags:
       - registration
       summary: 3. PHR Address Suggestion
+      description: "Suggests available ABHA addresses from the person's name and date of birth, for a mobile-based registration transaction."
       x-abdm-atom: hiecm.endpoint.p1-3-phr-address-suggestion
       x-abdm-source-folder: As registration service
       requestBody:
@@ -1968,6 +1999,7 @@ paths:
       tags:
       - registration
       summary: 2. Verify OTP
+      description: "Verifies the mobile OTP for a registration transaction. `authData` carries the transaction id and the encrypted OTP."
       x-abdm-atom: hiecm.endpoint.p1-2-verify-otp
       x-abdm-source-folder: As registration service
       requestBody:
@@ -2026,6 +2058,7 @@ paths:
       tags:
       - digilocker_apis
       summary: 02 - Get DigiLocker Account [GET]
+      description: "Returns the DigiLocker account linked to the signed-in ABHA address, if one has been connected."
       x-abdm-atom: hiecm.endpoint.p1-02-get-digilocker-account-get
       x-abdm-source-folder: DigiLocker APIs
       responses:
@@ -2037,6 +2070,7 @@ paths:
       tags:
       - digilocker_apis
       summary: 03 - Get Access Token / OAuth Callback [GET]
+      description: "Completes the DigiLocker OAuth flow: exchanges the authorisation code DigiLocker redirected back with for an access token."
       x-abdm-atom: hiecm.endpoint.p1-03-get-access-token-oauth-callback-get
       x-abdm-source-folder: DigiLocker APIs
       responses:
@@ -2048,6 +2082,7 @@ paths:
       tags:
       - digilocker_apis
       summary: 10 - Get HIP Refresh Records [GET]
+      description: "Returns the records a refresh pulled from a HIP into DigiLocker, once the pull has completed."
       x-abdm-atom: hiecm.endpoint.p1-10-get-hip-refresh-records-get
       x-abdm-source-folder: DigiLocker APIs
       responses:
@@ -2059,6 +2094,7 @@ paths:
       tags:
       - digilocker_apis
       summary: 08 - Fetch Incoming Records Bundle [POST]
+      description: "Fetches the FHIR bundle for one care context that a HIP has sent to the person's DigiLocker."
       x-abdm-atom: hiecm.endpoint.p1-08-fetch-incoming-records-bundle-post
       x-abdm-source-folder: DigiLocker APIs
       requestBody:
@@ -2090,6 +2126,7 @@ paths:
       tags:
       - digilocker_apis
       summary: 07 - Fetch Incoming Records List [POST]
+      description: "Lists the records a HIP has sent to the person's DigiLocker within a date range."
       x-abdm-atom: hiecm.endpoint.p1-07-fetch-incoming-records-list-post
       x-abdm-source-folder: DigiLocker APIs
       requestBody:
@@ -2125,6 +2162,7 @@ paths:
       tags:
       - digilocker_apis
       summary: 09 - Pull / Refresh Records [POST]
+      description: "Asks a HIP to send the person's latest records to DigiLocker. The records arrive later; poll the refresh endpoint for them."
       x-abdm-atom: hiecm.endpoint.p1-09-pull-refresh-records-post
       x-abdm-source-folder: DigiLocker APIs
       requestBody:
@@ -2152,6 +2190,7 @@ paths:
       tags:
       - digilocker_apis
       summary: 01 - Get Health Records List [GET]
+      description: "Lists the health records held in the person's DigiLocker."
       x-abdm-atom: hiecm.endpoint.p1-01-get-health-records-list-get
       x-abdm-source-folder: DigiLocker APIs
       responses:
@@ -2163,6 +2202,7 @@ paths:
       tags:
       - digilocker_apis
       summary: 06 - Read Uploaded Record [GET]
+      description: "Returns the content of one record the person uploaded to DigiLocker."
       x-abdm-atom: hiecm.endpoint.p1-06-read-uploaded-record-get
       x-abdm-source-folder: DigiLocker APIs
       responses:
@@ -2174,6 +2214,7 @@ paths:
       tags:
       - digilocker_apis
       summary: 04 - Get Account Status [GET]
+      description: "Reports whether the person's DigiLocker account is connected and ready to receive records."
       x-abdm-atom: hiecm.endpoint.p1-04-get-account-status-get
       x-abdm-source-folder: DigiLocker APIs
       responses:
@@ -2185,6 +2226,7 @@ paths:
       tags:
       - digilocker_apis
       summary: 05 - Upload Record [POST]
+      description: "Uploads a file the person holds into their DigiLocker as a health record."
       x-abdm-atom: hiecm.endpoint.p1-05-upload-record-post
       x-abdm-source-folder: DigiLocker APIs
       requestBody:
@@ -2216,6 +2258,7 @@ paths:
       tags:
       - family_management
       summary: verify and assign
+      description: "Verifies the OTP for a family link transaction and, in the same step, links the given ABHA address under the relationship type. May also unassign a previous address."
       x-abdm-atom: hiecm.endpoint.p1-verify-and-assign
       x-abdm-source-folder: Family Management service
       requestBody:
@@ -2288,6 +2331,7 @@ paths:
       tags:
       - global_collection
       summary: Get District with stateCode
+      description: "Lists the districts of a state with their LGD codes."
       x-abdm-atom: hiecm.endpoint.p1-get-district-with-statecode
       x-abdm-source-folder: Global Service Collection service
       responses:
@@ -2438,6 +2482,7 @@ paths:
       tags:
       - global_collection
       summary: Get lgd with pincode
+      description: "Resolves a PIN code to its state and district LGD codes."
       x-abdm-atom: hiecm.endpoint.p1-get-lgd-with-pincode
       x-abdm-source-folder: Global Service Collection service
       responses:
@@ -2502,6 +2547,7 @@ paths:
       tags:
       - global_collection
       summary: Get States
+      description: "Lists every state with its LGD code."
       x-abdm-atom: hiecm.endpoint.p1-get-states
       x-abdm-source-folder: Global Service Collection service
       responses:
@@ -2648,6 +2694,7 @@ paths:
       tags:
       - global_collection
       summary: getProvidersByID
+      description: "Returns one provider's registry entry: its identifier, facility type, whether it acts as a HIP, and whether it supports scan and pay."
       x-abdm-atom: hiecm.endpoint.p1-getprovidersbyid
       x-abdm-source-folder: Global Service Collection service
       responses:
@@ -2747,6 +2794,7 @@ paths:
       tags:
       - login
       summary: IsKycVerified
+      description: "Reports whether the ABHA address given has completed KYC verification."
       x-abdm-atom: hiecm.endpoint.p1-iskycverified
       x-abdm-source-folder: AS Login service
       requestBody:
@@ -2774,6 +2822,7 @@ paths:
       tags:
       - login
       summary: OTP Request - AADHAR OTP
+      description: "Starts a login by sending an OTP. `loginHint` names what the person is identifying with, and `loginId` is that value encrypted."
       x-abdm-atom: hiecm.endpoint.p1-otp-request-aadhar-otp
       x-abdm-source-folder: AS Login service
       requestBody:
@@ -2863,6 +2912,7 @@ paths:
       tags:
       - login
       summary: Search Auth Methods - ABHAAddress
+      description: "Returns the authentication methods available for an ABHA address, so the login can offer only the ones that will work."
       x-abdm-atom: hiecm.endpoint.p1-search-auth-methods-abhaaddress
       x-abdm-source-folder: AS Login service
       requestBody:
@@ -2890,6 +2940,7 @@ paths:
       tags:
       - login
       summary: Login OTP Verify - AADHAR
+      description: "Verifies the login OTP. On success the response carries the accounts linked to the identifier and a token for each, or a transaction to pick one with."
       x-abdm-atom: hiecm.endpoint.p1-login-otp-verify-aadhar
       x-abdm-source-folder: AS Login service
       requestBody:
@@ -3170,6 +3221,7 @@ paths:
       tags:
       - login
       summary: Verify - User
+      description: "Completes a login that matched more than one account: selects the ABHA address to sign in as and returns its session tokens."
       x-abdm-atom: hiecm.endpoint.p1-verify-user
       x-abdm-source-folder: AS Login service
       requestBody:
@@ -3231,6 +3283,7 @@ paths:
       tags:
       - profile
       summary: De-Link Request
+      description: "Removes the link between the signed-in ABHA address and an ABHA number, against a verified transaction."
       x-abdm-atom: hiecm.endpoint.p1-de-link-request
       x-abdm-source-folder: As profile service
       requestBody:
@@ -3286,6 +3339,7 @@ paths:
       tags:
       - profile
       summary: Send AADHAAR Otp - Link-DeLink
+      description: "Sends an Aadhaar OTP to authorise linking or delinking an ABHA number with the signed-in address. `loginId` is the encrypted Aadhaar."
       x-abdm-atom: hiecm.endpoint.p1-send-aadhaar-otp-link-delink
       x-abdm-source-folder: As profile service
       requestBody:
@@ -3356,6 +3410,7 @@ paths:
       tags:
       - profile
       summary: Verify AADHAAR Otp - Link-DeLink
+      description: "Verifies the Aadhaar OTP for a link or delink transaction and returns the accounts it applies to."
       x-abdm-atom: hiecm.endpoint.p1-verify-aadhaar-otp-link-delink
       x-abdm-source-folder: As profile service
       requestBody:
@@ -3582,6 +3637,7 @@ paths:
       tags:
       - profile
       summary: Get notifications
+      description: "Lists the notifications delivered to the signed-in ABHA address."
       x-abdm-atom: hiecm.endpoint.p1-get-notifications
       x-abdm-source-folder: As profile service
       responses:
@@ -3593,6 +3649,7 @@ paths:
       tags:
       - login
       summary: Update mobile request OTP
+      description: "Sends an OTP to a new mobile number so it can replace the one on the signed-in ABHA address. `loginId` is the encrypted new number."
       x-abdm-atom: hiecm.endpoint.p1-update-mobile-request-otp
       x-abdm-source-folder: AS Login service
       requestBody:
@@ -3640,6 +3697,7 @@ paths:
       tags:
       - profile
       summary: Get Profile
+      description: "Returns the signed-in person's ABHA profile: name, date of birth, gender and contact details."
       x-abdm-atom: hiecm.endpoint.p1-get-profile
       x-abdm-source-folder: As profile service
       responses:
@@ -3792,6 +3850,7 @@ paths:
       tags:
       - profile
       summary: Get PHR Card
+      description: "Returns the person's ABHA card as an image for display or download."
       x-abdm-atom: hiecm.endpoint.p1-get-phr-card
       x-abdm-source-folder: As profile service
       responses:
@@ -3827,6 +3886,7 @@ paths:
       tags:
       - profile
       summary: Link Request
+      description: "Links an ABHA number to the signed-in ABHA address, against a verified transaction."
       x-abdm-atom: hiecm.endpoint.p1-link-request
       x-abdm-source-folder: As profile service
       requestBody:
@@ -3882,6 +3942,7 @@ paths:
       tags:
       - profile
       summary: Get QR Code
+      description: "Returns the QR code that encodes the person's ABHA address, for scanning at a facility."
       x-abdm-atom: hiecm.endpoint.p1-get-qr-code
       x-abdm-source-folder: As profile service
       responses:
@@ -3917,6 +3978,7 @@ paths:
       tags:
       - profile
       summary: Logout
+      description: "Ends the session and invalidates its tokens."
       x-abdm-atom: hiecm.endpoint.p1-logout
       x-abdm-source-folder: As profile service
       responses:
@@ -3972,6 +4034,7 @@ paths:
       tags:
       - profile
       summary: Send ABHA OTP
+      description: "Sends an OTP to the contact registered on the signed-in ABHA address, to authorise a profile change. `loginId` is encrypted."
       x-abdm-atom: hiecm.endpoint.p1-send-abha-otp
       x-abdm-source-folder: As profile service
       requestBody:
@@ -4061,6 +4124,7 @@ paths:
       tags:
       - profile
       summary: Refresh Token
+      description: "Exchanges a refresh token for a new access token, so the session continues without signing in again."
       x-abdm-atom: hiecm.endpoint.p1-refresh-token
       x-abdm-source-folder: As profile service
       responses:
@@ -4130,6 +4194,7 @@ paths:
       tags:
       - profile
       summary: Set the preferred ABHA address
+      description: "Marks one of the person's ABHA addresses as the preferred one, against a verified transaction."
       x-abdm-atom: hiecm.endpoint.p1-set-preferred-abha-address
       x-abdm-source-folder: As profile service
       requestBody:
@@ -4152,6 +4217,7 @@ paths:
       tags:
       - profile
       summary: Switch Profile
+      description: "Lists the other accounts the signed-in person can switch to and opens a transaction for the switch."
       x-abdm-atom: hiecm.endpoint.p1-switch-profile
       x-abdm-source-folder: As profile service
       responses:
@@ -4554,6 +4620,7 @@ paths:
       tags:
       - profile
       summary: Update Profile
+      description: "Updates the signed-in person's profile fields: name, date of birth, gender, contact details and photo."
       x-abdm-atom: hiecm.endpoint.p1-update-profile
       x-abdm-source-folder: As profile service
       requestBody:
@@ -4797,6 +4864,7 @@ paths:
       tags:
       - profile
       summary: Verify ABHA OTP
+      description: "Verifies the OTP sent for a profile change and returns the accounts and tokens it applies to."
       x-abdm-atom: hiecm.endpoint.p1-verify-abha-otp
       x-abdm-source-folder: As profile service
       requestBody:
@@ -5048,6 +5116,7 @@ paths:
       tags:
       - profile
       summary: Verify User Switch Profile
+      description: "Completes a profile switch: selects the ABHA address to continue as and returns its session tokens."
       x-abdm-atom: hiecm.endpoint.p1-verify-user-switch-profile
       x-abdm-source-folder: As profile service
       requestBody:

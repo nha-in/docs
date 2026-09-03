@@ -56,6 +56,10 @@ spec:
             # Claude access lands; empty serves the MCP with chat disabled.
             - name: CHAT_MODEL
               value: ""
+            # The assistant answers from its tools, so variance is a defect:
+            # a low temperature keeps quoted literals and tool choices stable.
+            - name: CHAT_TEMPERATURE
+              value: "0.2"
             - name: AWS_REGION
               value: ap-south-1
             - name: ALLOW_ORIGIN
