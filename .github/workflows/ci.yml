@@ -163,6 +163,11 @@ jobs:
         working-directory: mcp
       - run: go test ./...
         working-directory: mcp
+      # The Ask AI eval's deterministic checks replay the last recorded run,
+      # so they need no model. A case that fails and is not in the baseline
+      # fails the build; the baseline only ever shrinks.
+      - run: go run ./cmd/askai-eval check -cases ../evals/askai/cases
+        working-directory: mcp
       # PR builds are keyword-only: no embedding provider on CI runners. The
       # deploy pipeline resolves EMBED_PROVIDER and rebuilds the snapshot with
       # embeddings for the published image.
