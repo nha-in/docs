@@ -18,7 +18,7 @@ One row per NHA document. `id` is stable and is what an eval case or an atom cit
 | abdm-faq-hpr | https://abdm.gov.in/FAQ | abdm.gov.in FAQ, the Healthcare Professionals Registry category | 2026-09-03 | page | 0 | 0 |
 | abdm-faq-hfr | https://abdm.gov.in/FAQ | abdm.gov.in FAQ, the Health Facility Registry category | 2026-09-03 | page | 0 | 0 |
 | abdm-faq-general | https://abdm.gov.in/FAQ | abdm.gov.in FAQ, the General category | 2026-09-03 | page | 0 | 0 |
-| glossary | site/docs/_glossary/_hiecm.mdx | This portal's glossary, from which the shared glossary atoms were moved | 2026-09-03 | file | 0 | 0 |
-| spec-errors-m1 | catalogue/openapi/hiecm/v3/hiecm-m1.yaml | NHA M1 error table as curated in the catalogue | 2026-09-03 | file | 0 | 0 |
-| spec-errors-m2 | catalogue/openapi/hiecm/v3/hiecm-m2.yaml | NHA M2 error table as curated in the catalogue | 2026-09-03 | file | 0 | 0 |
-| spec-errors-m3 | catalogue/openapi/hiecm/v3/hiecm-m3.yaml | NHA M3 error table as curated in the catalogue | 2026-09-03 | file | 0 | 0 |
+| glossary | site/docs/_glossary/_hiecm.mdx | This portal's glossary, from which the shared glossary atoms were moved | 2026-09-03 | file | 0 | 20 |
+| spec-errors-m1 | catalogue/openapi/hiecm/v3/hiecm-m1.yaml | NHA M1 error table as curated in the catalogue | 2026-09-03 | file | 0 | 4 |
+| spec-errors-m2 | catalogue/openapi/hiecm/v3/hiecm-m2.yaml | NHA M2 error table as curated in the catalogue | 2026-09-03 | file | 0 | 9 |
+| spec-errors-m3 | catalogue/openapi/hiecm/v3/hiecm-m3.yaml | NHA M3 error table as curated in the catalogue | 2026-09-03 | file | 0 | 2 |
