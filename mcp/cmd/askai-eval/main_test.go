@@ -75,10 +75,28 @@ func buildRun(t *testing.T, baselineIDs []string) (casesDir, runDir string) {
 	return casesDir, runDir
 }
 
-func TestCheckIntoNoBaselineFileTreatsFailureAsNew(t *testing.T) {
+// TestCheckIntoNoBaselineFileWritesOneAndPasses covers C3: the very first
+// run has nothing to ratchet against, so it must not fail the command that
+// just produced it. checkInto writes runs/baseline.json from this run's own
+// failures instead, and a later run is what ratchets against it.
+func TestCheckIntoNoBaselineFileWritesOneAndPasses(t *testing.T) {
 	casesDir, runDir := buildRun(t, nil)
-	if err := checkInto(casesDir, runDir); err == nil {
-		t.Fatal("expected an error: no baseline.json at all makes every failure new")
+	if err := checkInto(casesDir, runDir); err != nil {
+		t.Fatalf("the first run must not fail for having no baseline yet: %v", err)
+	}
+	baselinePath := filepath.Join(filepath.Dir(runDir), "baseline.json")
+	raw, err := os.ReadFile(baselinePath)
+	if err != nil {
+		t.Fatalf("checkInto did not write a baseline: %v", err)
+	}
+	var b struct {
+		FailingCases []string `json:"failing_cases"`
+	}
+	if err := json.Unmarshal(raw, &b); err != nil {
+		t.Fatal(err)
+	}
+	if len(b.FailingCases) != 1 || b.FailingCases[0] != "define-hmis-01" {
+		t.Fatalf("baseline.json failing_cases = %v, want [define-hmis-01]", b.FailingCases)
 	}
 }
 
@@ -93,5 +111,32 @@ func TestCheckIntoFailureInBaselinePasses(t *testing.T) {
 	casesDir, runDir := buildRun(t, []string{"define-hmis-01"})
 	if err := checkInto(casesDir, runDir); err != nil {
 		t.Fatalf("a baseline failure should not fail the command: %v", err)
+	}
+}
+
+// TestRecordLatestAndResolveRun covers C1: a run must leave something check,
+// judge, report and calibrate can find without being told -run by hand.
+// Chdir'd into a scratch directory so this never touches the repository's
+// own evals/askai/runs.
+func TestRecordLatestAndResolveRun(t *testing.T) {
+	root := t.TempDir()
+	cwd := filepath.Join(root, "mcp")
+	if err := os.MkdirAll(cwd, 0o755); err != nil {
+		t.Fatal(err)
+	}
+	t.Chdir(cwd)
+	runDir := "../evals/askai/runs/2026-09-03-v1"
+	if err := os.MkdirAll(runDir, 0o755); err != nil {
+		t.Fatal(err)
+	}
+	if err := recordLatest(runDir); err != nil {
+		t.Fatal(err)
+	}
+	got, err := resolveRun("")
+	if err != nil {
+		t.Fatalf("resolveRun after a recorded run: %v", err)
+	}
+	if want := filepath.Clean(runDir); got != want {
+		t.Fatalf("resolveRun(\"\") = %q, want %q", got, want)
 	}
 }
