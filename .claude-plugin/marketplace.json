@@ -8,8 +8,8 @@
   },
   "plugins": [
     {
-      "name": "abdm",
-      "source": "./plugins/abdm",
+      "name": "abdm-integrators-assistant",
+      "source": "./plugins/abdm-integrators-assistant",
       "description": "hiecm-m1-build and hiecm-m1-debug scaffold and debug an ABDM Milestone 1 (ABHA) integration, citing the Catalogue atom behind every call. fhir-generate and fhir-audit build or audit NRCES compliant FHIR document bundles, iterating against the Docs MCP validator until clean.",
       "category": "documentation",
       "keywords": ["abdm", "abha", "hie-cm", "fhir", "nrces", "healthcare", "india-health"],

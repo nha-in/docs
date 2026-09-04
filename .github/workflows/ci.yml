@@ -133,7 +133,7 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
-      - run: npm test --workspace widget
+      - run: npm test --workspace ai-widget
 
   build-site:
     name: Build documentation site

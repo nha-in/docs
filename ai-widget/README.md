@@ -104,8 +104,8 @@ in memory for the session and goes when the tab does.
 
 ## Working on it
 
-    npm run build --workspace widget    # dist/abdm-support-agent.js
-    npm test --workspace widget         # the markdown and the event stream
+    npm run build --workspace ai-widget    # dist/abdm-support-agent.js
+    npm test --workspace ai-widget         # the markdown and the event stream
 
 The docs site builds its own copy into `site/static/agent/` on every
 `prestart` and `prebuild`, so a change here reaches the site by rebuilding it.

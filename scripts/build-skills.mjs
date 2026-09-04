@@ -359,7 +359,7 @@ for (const module of MODULES) {
   );
 }
 
-// The committed skills under plugins/abdm/skills ship too, at the same
+// The committed skills under plugins/abdm-integrators-assistant/skills ship too, at the same
 // /skills/<name>/SKILL.md URLs the compiled module skills get, so the
 // site is the one place an integrator finds every skill. Each gets a
 // manifest entry (kind: guided) so a page can render an install panel
@@ -387,7 +387,7 @@ const GUIDED = {
     example: 'Diagnose this failed ABDM call',
   },
 };
-const pluginDir = join(root, 'plugins', 'abdm', 'skills');
+const pluginDir = join(root, 'plugins', 'abdm-integrators-assistant', 'skills');
 for (const name of readdirSync(pluginDir)) {
   const src = join(pluginDir, name, 'SKILL.md');
   if (!existsSync(src)) continue; // README.md and other non-skill entries
@@ -406,7 +406,7 @@ for (const name of readdirSync(pluginDir)) {
     example: GUIDED[name]?.example ?? '',
   };
   count += 1;
-  console.log(`Copied ${name} from plugins/abdm/skills.`);
+  console.log(`Copied ${name} from plugins/abdm-integrators-assistant/skills.`);
 }
 
 writeFileSync(
@@ -457,7 +457,7 @@ const promptLines = [
   '',
   '```',
   `claude plugin marketplace add ${pluginRepo}`,
-  'claude plugin install abdm@abdm-portal',
+  'claude plugin install abdm-integrators-assistant@abdm-portal',
   '```',
   '',
   'If the marketplace add fails (the repository may not be accessible from here), fall back to the per-file downloads below.',
