@@ -40,6 +40,8 @@ related:
     - hiecm.endpoint.p1-enrollment-address-suggestion
     - hiecm.endpoint.p1-enrollment-address-exists
     - hiecm.endpoint.p1-enrollment-enrol
+    - hiecm.endpoint.p1-encrypt-data-aadhaar-mobile-otp-password
+    - hiecm.endpoint.p1-get-user-profile
   flows:
     - hiecm.flow.p1-login
     - hiecm.flow.p2-discover-and-link

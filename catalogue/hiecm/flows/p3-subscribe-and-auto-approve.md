@@ -37,6 +37,10 @@ related:
   endpoints:
     - hiecm.endpoint.p3-subscription-init
     - hiecm.endpoint.p3-consent-auto-approve
+    - hiecm.endpoint.p3-approve-subscription-request
+    - hiecm.endpoint.p3-consent-enable-auto-approve
+    - hiecm.endpoint.p3-consent-disable-auto-approve
+    - hiecm.endpoint.p3-get-all-subscription-requests-for-an-abha-address
   flows:
     - hiecm.flow.p3-fetch-records
     - hiecm.flow.p1-create-abha-address

@@ -38,6 +38,9 @@ related:
     - hiecm.endpoint.p2-care-context-discover
     - hiecm.endpoint.p2-link-care-context-init
     - hiecm.endpoint.p2-link-care-context-confirm
+    - hiecm.endpoint.p2-all-providers
+    - hiecm.endpoint.p2-provider-by-provider-id
+    - hiecm.endpoint.p2-govt-programs
   flows:
     - hiecm.flow.p2-scan-and-share
     - hiecm.flow.p3-fetch-records

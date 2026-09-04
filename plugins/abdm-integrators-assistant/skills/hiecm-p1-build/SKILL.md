@@ -88,6 +88,28 @@ curl -X POST 'https://abhasbx.abdm.gov.in/abha/api/v3/phr/app/enrollment/enrol' 
   -d '{ "txnId": "22387064-45ea-42d4-b6c5-8b86dbec6fe5", "phrDetails": { "mobile": " *{{encrypted mobile-number }}*", "firstName": "John", "middleName": "", "lastName": "Doe", "yearOfBirth": "1998", "dayOfBirth": "14", "monthOfBirth": "11", "gender": "M", "email": "", "profilePhoto": "{{base-64-encoded-profile-photo}}", "stateCode": "9", "districtCode": "135", "pinCode": 232101, "address": "Street number 4, sector 12", "stateName": "Maharashtra", "districtName": "Nashik", "ABHANumber": "XX-XXXX-XXXX-1234", "abhaAddress": "johndoe@sbx", "password": "*{{encrypted password}}*" } }'
 ```
 
+#### Encrypt data (Aadhaar/Mobile/OTP/Password) (`hiecm.endpoint.p1-encrypt-data-aadhaar-mobile-otp-password`)
+
+```bash
+curl -X GET 'https://dev.abdm.gov.inhttps://abhasbx.abdm.gov.in/abha/api/v3/phr/app/login/public/certificate' \
+  -H 'Authorization: Bearer <ACCESS_TOKEN>' \
+  -H 'REQUEST-ID: <FRESH_UUID>' \
+  -H 'TIMESTAMP: <ISO_8601_TIMESTAMP>' \
+  -H 'Content-Type: application/json' \
+  -d '<REQUEST_BODY>'
+```
+
+#### Get User Profile (`hiecm.endpoint.p1-get-user-profile`)
+
+```bash
+curl -X GET 'https://abhasbx.abdm.gov.in/abha/api/v3/phr/app/login/profile' \
+  -H 'Authorization: Bearer <ACCESS_TOKEN>' \
+  -H 'REQUEST-ID: <FRESH_UUID>' \
+  -H 'TIMESTAMP: <ISO_8601_TIMESTAMP>' \
+  -H 'Content-Type: application/json' \
+  -d '<REQUEST_BODY>'
+```
+
 **Exit condition (Observe until this is true)**
 
 The user holds an ABHA address in the form `username@abdm`, and the
@@ -160,6 +182,39 @@ curl -X POST 'https://abhasbx.abdm.gov.in/abha/api/v3/phr/app/login/verify/user'
   -H 'TIMESTAMP: <ISO_8601_TIMESTAMP>' \
   -H 'Content-Type: application/json' \
   -d '{ "abhaAddress":"johndoe@abdm", "txnId":"*{{transactionId}}*" }'
+```
+
+#### Login using Password Search user (`hiecm.endpoint.p1-login-using-password-search-user`)
+
+```bash
+curl -X POST 'https://abhasbx.abdm.gov.in/abha/api/v3/phr/app/login/search' \
+  -H 'Authorization: Bearer <ACCESS_TOKEN>' \
+  -H 'REQUEST-ID: <FRESH_UUID>' \
+  -H 'TIMESTAMP: <ISO_8601_TIMESTAMP>' \
+  -H 'Content-Type: application/json' \
+  -d '{ "abhaAddress": "johndoe@sbx" }'
+```
+
+#### Generate Refresh Token (`hiecm.endpoint.p1-generate-refresh-token`)
+
+```bash
+curl -X GET 'https://abhasbx.abdm.gov.in/abha/api/v3/phr/app/login/profile/request/token' \
+  -H 'Authorization: Bearer <ACCESS_TOKEN>' \
+  -H 'REQUEST-ID: <FRESH_UUID>' \
+  -H 'TIMESTAMP: <ISO_8601_TIMESTAMP>' \
+  -H 'Content-Type: application/json' \
+  -d '<REQUEST_BODY>'
+```
+
+#### Logout User (`hiecm.endpoint.p1-logout-user`)
+
+```bash
+curl -X GET 'https://abhasbx.abdm.gov.in/abha/api/v3/phr/app/login/profile/request/logout' \
+  -H 'Authorization: Bearer <ACCESS_TOKEN>' \
+  -H 'REQUEST-ID: <FRESH_UUID>' \
+  -H 'TIMESTAMP: <ISO_8601_TIMESTAMP>' \
+  -H 'Content-Type: application/json' \
+  -d '<REQUEST_BODY>'
 ```
 
 **Exit condition (Observe until this is true)**

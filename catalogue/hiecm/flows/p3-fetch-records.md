@@ -35,6 +35,11 @@ verified:
 related:
   endpoints:
     - hiecm.endpoint.p3-consent-fetch
+    - hiecm.endpoint.p3-get-all-consent-request-for-an-abha-address
+    - hiecm.endpoint.p3-get-consent-artefact-details-by-artifact-id
+    - hiecm.endpoint.p3-deny-consent-request
+    - hiecm.endpoint.p3-revoke-consent-request
+    - hiecm.endpoint.p3-request-status
   flows:
     - hiecm.flow.p3-subscribe-and-auto-approve
     - hiecm.flow.p2-discover-and-link

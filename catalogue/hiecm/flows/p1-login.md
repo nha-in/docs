@@ -35,6 +35,9 @@ related:
     - hiecm.endpoint.p1-login-request-otp
     - hiecm.endpoint.p1-login-verify-otp
     - hiecm.endpoint.p1-login-verify-user
+    - hiecm.endpoint.p1-login-using-password-search-user
+    - hiecm.endpoint.p1-generate-refresh-token
+    - hiecm.endpoint.p1-logout-user
   flows:
     - hiecm.flow.p1-create-abha-address
   concepts:
