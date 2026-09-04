@@ -33,7 +33,16 @@ Four things must already be true, each checkable:
 
 **Act: the calls in this flow, in order**
 
-The Catalogue does not yet record this flow's calls as endpoint atoms, so this skill cannot give you the exact requests. Read the operations under /docs/hiecm/v3/api/p3 before acting, and treat the exit condition below as the thing to observe.
+#### Fetch a consent artefact in full (`hiecm.endpoint.p3-consent-fetch`)
+
+```bash
+curl -X POST 'https://dev.abdm.gov.in/api/hiecm/consent/v3/fetch' \
+  -H 'Authorization: Bearer <ACCESS_TOKEN>' \
+  -H 'REQUEST-ID: <FRESH_UUID>' \
+  -H 'TIMESTAMP: <ISO_8601_TIMESTAMP>' \
+  -H 'Content-Type: application/json' \
+  -d '{ "consentId": "d6a83f24-6c96-421e-b8b8-844e5344ef69" }'
+```
 
 **Exit condition (Observe until this is true)**
 
@@ -75,7 +84,27 @@ Three things must already be true, each checkable:
 
 **Act: the calls in this flow, in order**
 
-The Catalogue does not yet record this flow's calls as endpoint atoms, so this skill cannot give you the exact requests. Read the operations under /docs/hiecm/v3/api/p3 before acting, and treat the exit condition below as the thing to observe.
+#### Request a subscription to a person's account (`hiecm.endpoint.p3-subscription-init`)
+
+```bash
+curl -X POST 'https://dev.abdm.gov.in/api/hiecm/subscription-requests/v3/init' \
+  -H 'Authorization: Bearer <ACCESS_TOKEN>' \
+  -H 'REQUEST-ID: <FRESH_UUID>' \
+  -H 'TIMESTAMP: <ISO_8601_TIMESTAMP>' \
+  -H 'Content-Type: application/json' \
+  -d '<REQUEST_BODY>'
+```
+
+#### Set an auto approval policy (`hiecm.endpoint.p3-consent-auto-approve`)
+
+```bash
+curl -X POST 'https://dev.abdm.gov.in/api/hiecm/consent/v3/auto/approve' \
+  -H 'Authorization: Bearer <ACCESS_TOKEN>' \
+  -H 'REQUEST-ID: <FRESH_UUID>' \
+  -H 'TIMESTAMP: <ISO_8601_TIMESTAMP>' \
+  -H 'Content-Type: application/json' \
+  -d '{ "isApplicableForAllHIPs": **true**, "hiu": { "id": "*{{hiu-id}}*" }, "includedSources": [ { "hiTypes": [ "Prescription", "DiagnosticReport", "OPConsultation", "DischargeSummary", "ImmunizationRecord", "HealthDocumentRecord", "WellnessRecord", "Invoice" ], "purpose": { "text": "Care Management", "code": "CAREMGT", "refUri": "www.abdm.gov.in" }, "period": { "from": "2024-11-27T16:21:00.000Z", "to": "2024-12-30T00:00:00.000Z" } } ], "excludedSources": [] }'
+```
 
 **Exit condition (Observe until this is true)**
 

@@ -21,10 +21,19 @@ sources:
     note: >
       The P2 milestone page. The five steps, the 30 second wait and the
       counter name rules come from here.
+  - file: catalogue/openapi/.raw/nha-2026-09-04/ABHA-PHR-V3-Documents.docx
+    fetched: 2026-09-04
+    hash: sha256:99320fbc4b9703fce4afed12d5eb0863431aaea25e814bc3fb9ab974d16acd75
+    note: >
+      NHA's PHR V3 document: 120 operations with their paths, request
+      bodies and error scenarios. It is where the endpoint atoms this
+      flow cites come from.
 verified:
   status: unverified
   against: docs-only
 related:
+  endpoints:
+    - hiecm.endpoint.p2-patient-share
   flows:
     - hiecm.flow.p2-discover-and-link
   concepts:
