@@ -105,10 +105,25 @@ export default function NetworkWeb(): React.ReactNode {
       canvas.width = Math.round(width * ratio);
       canvas.height = Math.round(height * ratio);
       context.setTransform(ratio, 0, 0, ratio, 0, 0);
-      places = PARTICIPANTS.map((p) => ({
-        x: (p.x / 100) * width,
-        y: (p.y / 100) * height,
-      }));
+      // Measured off the icons rather than computed from the percentages. A
+      // node is an icon above a label, centred on its own box, so the point
+      // the percentages name is the middle of that pair: below the icon, in
+      // the gap above the word. Light centred there lit the label and left
+      // the mark it was meant to be lighting hanging over its top edge. The
+      // percentages stay as the fallback for a node whose icon has not laid
+      // out yet.
+      places = icons.map((node, index) => {
+        const mark = node.querySelector('.network-node__icon');
+        const p = PARTICIPANTS[index];
+        if (!mark) {
+          return {x: (p.x / 100) * width, y: (p.y / 100) * height};
+        }
+        const at = mark.getBoundingClientRect();
+        return {
+          x: at.left + at.width / 2 - box.left,
+          y: at.top + at.height / 2 - box.top,
+        };
+      });
     };
 
     const accent = () =>

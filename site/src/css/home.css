@@ -193,6 +193,13 @@
   content: '';
   position: absolute;
   z-index: -1;
+  /* Concentric with the icon, not with the icon and label together. The pair
+     is centred on the node's box, so a glow centred there sits half a line
+     low and lights the word instead of the mark. The icon is 1.375rem tall
+     and first in the column, so its own centre is half that down. */
+  top: 0.6875rem;
+  left: 50%;
+  transform: translate(-50%, -50%);
   width: 7.5rem;
   height: 7.5rem;
   border-radius: 999px;
