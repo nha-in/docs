@@ -27,7 +27,7 @@ built entirely from the catalogue. Nothing under `site/docs` or
 **The widget** is the support agent's user interface as one custom element,
 `<abdm-support-agent>`, built to a self-contained script that goes on any
 page. The docs site embeds it the way any other host would: a script tag and
-an element, no import. See [widget/README.md](widget/README.md).
+an element, no import. See [ai-widget/README.md](ai-widget/README.md).
 
 **The Docs MCP server** is a Go binary that compiles the catalogue into a
 SQLite snapshot and serves it three ways: the MCP protocol for coding
@@ -40,7 +40,7 @@ digests and golden examples from the pinned NRCES implementation guide
 teach an agent to build compliant document bundles in the integrator's own
 codebase, and a structural validator plus an official HL7 validator recipe
 check the result, whether the bundles come from new code or an existing
-FHIR store. See [plugins/abdm/skills/](plugins/abdm/skills/) for the two
+FHIR store. See [plugins/abdm-integrators-assistant/skills/](plugins/abdm-integrators-assistant/skills/) for the two
 guided paths.
 
 **The plan** under `plan/` is the architecture and execution plan, versioned
@@ -54,7 +54,7 @@ it. See [plan/plan-as-source-addendum.md](plan/plan-as-source-addendum.md).
 the plugin for building this portal, not for integrating with ABDM: atom
 authoring, verification, linting, OpenAPI ingestion, docs, skill compilation,
 the update pipeline, the support agent, planning and proof. Four of its skills
-are compiled from the plan above. The separate `plugins/abdm` ships the
+are compiled from the plan above. The separate `plugins/abdm-integrators-assistant` ships the
 compiled integration skills that ABDM integrators install.
 
 ## How retrieval and chat work

@@ -1,5 +1,5 @@
 {
-  "name": "abdm",
+  "name": "abdm-integrators-assistant",
   "displayName": "ABDM Developer Portal",
   "description": "Agent skills for ABDM integration from the ABDM Developer Portal. Compiled from the Catalogue: hiecm-m1-build scaffolds an ABDM Milestone 1 (ABHA) integration flow by flow, hiecm-m1-debug diagnoses a failed M1 call against the Catalogue's error atoms; each cites the atom it came from. Hand-authored: fhir-generate builds NRCES compliant FHIR document bundle generation into the integrator's codebase, fhir-audit checks an existing FHIR store's output, both iterating against the portal's Docs MCP validator.",
   "version": "0.2.0",

@@ -1,5 +1,5 @@
 // Selector + deterministic assembler. Reads M1 Catalogue atoms and writes a
-// draft SKILL.md per target skill under plugins/abdm/skills/<name>/.
+// draft SKILL.md per target skill under plugins/abdm-integrators-assistant/skills/<name>/.
 //
 // This is stage one of the pipeline in `skill-compiler`: select, assemble.
 // The output is deliberately stilted -- a human (or the agent running the
@@ -11,7 +11,7 @@ import { mkdirSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { loadAtoms, root, section } from "./lib/atoms.mjs";
 
-const outDir = join(root, "plugins", "abdm", "skills");
+const outDir = join(root, "plugins", "abdm-integrators-assistant", "skills");
 const { atoms, problems } = loadAtoms();
 if (problems.length) {
   console.warn("Some Catalogue files did not parse as atoms (ignored, not M1's concern):");
