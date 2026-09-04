@@ -85,7 +85,7 @@
 }
 
 .markdown a:not(.card):not(.button):not(.page-actions__item) {
-  color: var(--text-heading);
+  color: var(--accent);
   font-weight: 600;
   text-decoration: underline;
   text-decoration-color: var(--accent-line);
@@ -95,7 +95,7 @@
 }
 
 .markdown a:not(.card):not(.button):not(.page-actions__item):hover {
-  color: var(--accent);
+  color: var(--accent-hover);
   text-decoration-color: var(--accent);
 }
 
