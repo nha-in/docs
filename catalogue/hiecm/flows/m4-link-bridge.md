@@ -22,6 +22,13 @@ sources:
     note: >
       The M4 operations and fields page. The parameter table and the
       three rules on the HIP name come from here.
+  - file: catalogue/openapi/.raw/nha-2026-09-04/HFR-M4-Mar-16-2024.xlsx
+    fetched: 2026-09-04
+    hash: sha256:08073c49d97b0550078995d8ab3b4f5f1ce7f28f6deb6ce6109a34fc0efd474e
+    note: >
+      NHA's HFR test case sheet, 123 cases across search, registration,
+      update and bridge linkage. It names the sandbox host and the
+      operation ids behind the onboarding calls.
 verified:
   status: unverified
   against: docs-only
@@ -89,8 +96,11 @@ The `hipName` is what a person sees in their
 hospital, so it is a naming decision as much as a technical one. NHA's
 worked example builds it from the hospital name plus the bridge name.
 
-Method and path are not published for this call. The parameter table is,
-on the operations page.
+The call has no published path. NHA's HFR test case sheet covers it as
+six cases, HFR-118 to HFR-123, one per field, and points them at the
+Multiple HRP API on `https://facilitysbx.abdm.gov.in`. The parameter
+table is on the operations page. Nothing here has been called from this
+repository.
 
 ## How you know it worked
 

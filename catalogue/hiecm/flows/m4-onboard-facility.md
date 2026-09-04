@@ -23,10 +23,19 @@ sources:
       The M4 operations and fields page. The five call order, the
       mandatory field tables and the conditional rules on detailed
       information come from here.
+  - file: catalogue/openapi/.raw/nha-2026-09-04/HFR-M4-Mar-16-2024.xlsx
+    fetched: 2026-09-04
+    hash: sha256:08073c49d97b0550078995d8ab3b4f5f1ce7f28f6deb6ce6109a34fc0efd474e
+    note: >
+      NHA's HFR test case sheet, 123 cases across search, registration,
+      update and bridge linkage. It names the sandbox host and the
+      operation ids behind the onboarding calls.
 verified:
   status: unverified
   against: docs-only
 related:
+  endpoints:
+    - hiecm.endpoint.m4-hfr-search-facility
   flows:
     - hiecm.flow.m4-create-hpid
     - hiecm.flow.m4-link-bridge
@@ -116,8 +125,22 @@ sequenceDiagram
    `x-hpird-auth` token in the header. Leave `sourceOfInformation` empty
    and the facility is treated as a submitted entity.
 
-Method and path are not published for these five calls. The parameter
-tables are, on the operations page.
+NHA's HFR test case sheet names the sandbox host,
+`https://facilitysbx.abdm.gov.in`, one full path, and the operation id
+behind each of the writes:
+
+| Call | What NHA's sheet gives |
+|---|---|
+| Deduplicate search | `/FacilityManagement/v1.5/facility/search`, and the operation `v15SearchFacilitiesFuzzyPostUsingPOST` |
+| Basic facility information | the operation `v15FacilityBasicInformationUsingPOST` |
+| Additional information | the operation `v15FacilityAdditionalInformationUsingPOST` |
+| Detailed information | the operation `v15FacilityDetailedInformationUsingPOST` |
+| Submit facility | the operation `v15SubmitFacilityDetailsUsingPOST` |
+
+An operation id is not a path. The four writes are addressable through
+that host's own API browser under Onboarding APIs; the parameter tables
+are on the operations page. Nothing here has been called from this
+repository.
 
 ## How you know it worked
 
