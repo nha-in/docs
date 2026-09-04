@@ -62,7 +62,7 @@ The body above is the shape NHA's ingested M2 file declares for this
 operation, with its sample values replaced by named placeholders. It has
 not been sent to the sandbox from this repository.
 
-The request and response schemas for this operation are in `catalogue/openapi/hiecm/v3/hiecm-m2.yaml`, ingested from NHA's file.
+The request and response schemas for this operation are in the M2 specification, published at /specs/hiecm-m2.yaml and rendered field by field at /docs/hiecm/v3/api/m2. It is NHA's file as ingested.
 
 NHA calls this operation `generateLinkToken`.
 

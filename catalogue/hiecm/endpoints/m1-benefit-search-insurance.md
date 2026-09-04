@@ -13,7 +13,7 @@ sources:
   - file: ABDM Sandbox/ABDM/M1 ABHA Collection.postman_collection.json
     status: not-yet-hashed
     note: >
-      Derived from the operation in catalogue/openapi/hiecm-m1.yaml, which
+      Derived from the operation in catalogue/openapi/hiecm/v3/hiecm-m1.yaml, which
       comes from this source.
 verified:
   status: unverified

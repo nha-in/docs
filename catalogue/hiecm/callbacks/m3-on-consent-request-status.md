@@ -43,7 +43,7 @@ This is something ABDM sends to you. It arrives at the URL you registered, not a
 
 ABDM posts to `/api/v3/hiu/consent/request/on-status` on your registered base URL.
 
-The payload shape and an example are in the `webhooks` section of `catalogue/openapi/hiecm/v3/hiecm-m3.yaml`, transcribed from NHA's collection with values scrubbed.
+The payload shape and an example are in the `webhooks` section of the M3 specification, published at /specs/hiecm-m3.yaml, transcribed from NHA's collection with values scrubbed.
 
 Acknowledge with a 202 quickly. Do the work afterwards.
 

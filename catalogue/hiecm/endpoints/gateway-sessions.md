@@ -12,7 +12,7 @@ sources:
   - file: ABDM Sandbox/ABDM/Proposed Simplified Milestone 4 (NHPR).docx
     status: not-yet-hashed
     note: >
-      Derived from the operation in catalogue/openapi/hiecm-gateway.yaml,
+      Derived from the operation in catalogue/openapi/hiecm/v3/hiecm-gateway.yaml,
       which comes from this source.
 verified:
   status: unverified
