@@ -84,7 +84,7 @@ Your `TIMESTAMP` header is in a format the service does not accept, so
 the request was refused before anything else was looked at.
 
 This is a formatting problem, not a clock problem. Its sibling,
-[ABDM-2402](./abdm-2402.md), is the clock drift case: the value is well
+ABDM-2402, is the clock drift case: the value is well
 formed but too far from the gateway's own time. If your value parses as
 ISO 8601 UTC with milliseconds and still fails, read that atom instead.
 
@@ -98,7 +98,7 @@ date library, for example `Instant.now().toString()` in Java or
 hand.
 
 If a well formed UTC value still fails, your clock has probably
-drifted, which is [ABDM-2402](./abdm-2402.md)'s territory.
+drifted, which is ABDM-2402's territory.
 
 If you are matching error codes and never see `ABDM-1016`, check that
 your parser is not doing an exact match on the `code` field. The
@@ -177,3 +177,11 @@ in `X-token`. The two tokens are not interchangeable.
 **Exit condition: the original call now succeeds**
 
 The profile call returns the account you expected, and the identifiers in the response match the person who logged in.
+
+## Where the detail is
+
+- Every operation in this milestone, with its body fields and responses: /docs/hiecm/v3/api/m1
+- The flows as diagrams: /docs/hiecm/v3/milestones/m1
+- Every error code across milestones: /docs/hiecm/v3/reference/error-codes
+- Terms: /docs/hiecm/v3/getting-started/glossary
+

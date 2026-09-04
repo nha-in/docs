@@ -20,10 +20,14 @@ for (const a of atoms.values()) {
   for (const m of a.raw.matchAll(/'(https?:\/\/[^']+)'/g)) KNOWN_PATHS.add(m[1]);
 }
 
-const REQUIRED_SECTIONS = {
-  "hiecm-m1-build": ["## Flows"],
-  "hiecm-m1-debug": ["## Errors"],
-};
+// Compiled OODA skills are named hiecm-<milestone>-build and -debug, so the
+// rule is stated once and applies to every milestone the compiler emits.
+// Naming them one by one is how a new milestone ships unchecked.
+function requiredSections(name) {
+  if (/^hiecm-[a-z0-9]+-build$/.test(name)) return ["## Flows"];
+  if (/^hiecm-[a-z0-9]+-debug$/.test(name)) return ["## Errors"];
+  return null;
+}
 
 let failures = [];
 function fail(skill, msg) { failures.push(`${skill}: ${msg}`); }
@@ -43,7 +47,8 @@ for (const name of readdirSync(skillsDir)) {
   const body = m[2];
   if (raw.includes("—")) fail(name, "em dash found");
 
-  for (const heading of REQUIRED_SECTIONS[name] ?? []) {
+  const required = requiredSections(name);
+  for (const heading of required ?? []) {
     if (!body.includes(heading)) fail(name, `missing required section: ${heading}`);
   }
 
@@ -62,7 +67,7 @@ for (const name of readdirSync(skillsDir)) {
   // These two rules describe the compiled OODA skills (the ones with
   // required sections); hand-authored skills state their own done
   // conditions in prose and are reviewed by hand.
-  if (name in REQUIRED_SECTIONS) {
+  if (required) {
     if (!/Loop limit: \d+ passes? per/.test(body)) fail(name, "no loop limit stated");
     const blocks = body.split(/\n### /).length - 1;
     const exitMentions = (body.match(/Exit condition/g) ?? []).length;

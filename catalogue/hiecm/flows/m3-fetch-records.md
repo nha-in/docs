@@ -77,10 +77,10 @@ Four things must already be true, each checkable:
   [the gateway session](../concepts/gateway-session.md).
 - You have generated an [ECDH](../../shared/glossary/ecdh.md) key pair
   and a 32 byte nonce for this exchange, on Curve25519. NHA's M2 document
-  specifies the scheme; this repository's data flow concept page
-  (`site/docs/hiecm/v3/concepts/data-flow.md`) sets out who generates
-  what and points at NHA's reference implementation, Fidelius, rather
-  than hand rolling it.
+  specifies the scheme; the data flow page at
+  /docs/hiecm/v3/concepts/data-flow sets out who generates what and
+  points at NHA's reference implementation, Fidelius, rather than hand
+  rolling it.
 - You expose a `dataPushUrl` endpoint that can receive encrypted
   [FHIR](../../shared/glossary/fhir.md) bundles: the URL you name in the
   health information request. NHA's M3 file only says to expose one; it

@@ -4,7 +4,7 @@ description: "Use when scaffolding an integration against ABDM Milestone 1 (ABHA
 ---
 # HIE-CM M1 build
 
-Scaffolds an ABDM Milestone 1 integration one flow at a time. M1 covers ABHA creation, login and profile management.
+Scaffolds an ABDM M1 integration one flow at a time. M1 covers ABHA creation, login and profile management.
 
 ## How this skill runs
 
@@ -19,9 +19,9 @@ Loop limit: 8 passes per flow step. Hitting the limit is an escalation: state wh
 **Before you start**
 
 - A client id and secret, and a working session token. See
-  [registration and credentials](../../shared/sandbox/registration-and-credentials.md).
+  registration and credentials.
 - The person's Aadhaar number, encrypted against NHA's public key. See
-  [why identifiers are encrypted](../concepts/encrypted-identifiers.md).
+  why identifiers are encrypted.
 - The person present, because they must read an OTP from their phone.
 - Their explicit consent to create an ABHA, which you send in the
   enrolment call.
@@ -149,8 +149,8 @@ characters, no leading digit, and no leading or trailing dot. Validate
 before submitting so the person is not guessing.
 
 Every call fails with a header error. Check
-[ABDM-2402](../errors/abdm-2402.md) and
-[ABDM-2404](../errors/abdm-2404.md) before assuming the flow is wrong.
+ABDM-2402 and
+ABDM-2404 before assuming the flow is wrong.
 
 ### Create an ABHA from an identity document (`hiecm.flow.m1-create-abha-by-document`)
 
@@ -278,7 +278,7 @@ them.
 **Before you start**
 
 - Everything the OTP route needs. See
-  [create an ABHA using an Aadhaar OTP](m1-create-abha-aadhaar-otp.md).
+  create an ABHA using an Aadhaar OTP.
 - The ABHA app installed on the person's phone, and the Aadhaar RD
   service available to it.
 - A way to show a QR code, because that is how the transaction moves from
@@ -501,7 +501,7 @@ lookup of somebody else's identity.
 
 - A working session token.
 - The person's mobile number, encrypted. See
-  [why identifiers are encrypted](../concepts/encrypted-identifiers.md).
+  why identifiers are encrypted.
 - The person present to read an OTP.
 
 **Act: the calls in this flow, in order**
@@ -584,18 +584,18 @@ The verify call returns a list rather than a token. That is the multi
 account branch, not an error.
 
 The token is rejected on the next call. See
-[ABDM-2401](../errors/abdm-2401.md), and check you are not sending the
+ABDM-2401, and check you are not sending the
 application session token in `X-token`.
 
 Login fails with an authentication error and nothing more specific. See
-[900900](../errors/900900.md).
+900900.
 
 ### Change the mobile number or email on an ABHA profile (`hiecm.flow.m1-update-mobile`)
 
 **Before you start**
 
 - The person logged in, so you hold their `X-token`. See
-  [log somebody in](m1-login-by-mobile.md).
+  log somebody in.
 - The new value, encrypted.
 - The person present, holding the new number, because the OTP goes there.
 
@@ -675,4 +675,12 @@ The scopes do not match between the two calls, and the verify is
 refused. Send the array you sent on the request.
 
 The person is not logged in and the call is refused. See
-[ABDM-2401](../errors/abdm-2401.md).
+ABDM-2401.
+
+## Where the detail is
+
+- Every operation in this milestone, with its body fields and responses: /docs/hiecm/v3/api/m1
+- The flows as diagrams: /docs/hiecm/v3/milestones/m1
+- Every error code across milestones: /docs/hiecm/v3/reference/error-codes
+- Terms: /docs/hiecm/v3/getting-started/glossary
+
