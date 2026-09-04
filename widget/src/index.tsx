@@ -1,6 +1,6 @@
 import {render} from 'preact';
 import {useEffect, useRef, useState} from 'preact/hooks';
-import ChatMarkdown, {CopyButton, absolute} from './markdown';
+import ChatMarkdown, {CopyButton, absolute, headings} from './markdown';
 import {ArrowUp, Paperclip, PenLine, Sparkles, Square, X} from './icons';
 import {readStream, UNREACHABLE, type Source} from './sse';
 import {revealStep} from './pacing';
@@ -260,6 +260,11 @@ function Panel({
   const [turns, setTurns] = useState<Turn[]>([
     apiBase ? LIVE_OPENING : MOCK_OPENING,
   ]);
+  // An attached page names its own sections, and a section heading is a
+  // better opener than a guess. Where there is no page, or the page carries
+  // no headings, the host's own openers stand.
+  const pageOpeners = page ? headings(page.markdown).slice(0, 4) : [];
+  const openers = pageOpeners.length ? pageOpeners : starters;
   const [draft, setDraft] = useState('');
   const [chosen, setChosen] = useState<Attached | null>(null);
   const [attachError, setAttachError] = useState<string | null>(null);
@@ -759,10 +764,12 @@ function Panel({
         )}
 
         {/* The empty state carries the openers, and they go the moment the
-            reader has asked anything of their own. */}
+            reader has asked anything of their own. A reader with a page
+            attached gets that page's own sections instead of the host's four,
+            because those are the questions this page actually answers. */}
         {turns.length === 1 && (
           <div class="ask-ai__starters">
-            {starters.map((q) => (
+            {openers.map((q) => (
               <button
                 key={q}
                 type="button"
@@ -914,6 +921,7 @@ function Widget({
   docsOrigin,
   supportUrl,
   launcher,
+  shortcut,
   open,
   page,
   onDetach,
@@ -925,6 +933,7 @@ function Widget({
   docsOrigin: string;
   supportUrl: string;
   launcher: boolean;
+  shortcut: string;
   open: boolean;
   page: PageAttachment | null;
   onDetach: () => void;
@@ -953,6 +962,10 @@ function Widget({
           <Sparkles />
           {/* The label goes when the bar gets narrow; the mark carries it. */}
           <span class="ask-ai__launcher-label">Ask AI</span>
+          {/* The host's own key for this, if it has bound one. A reader who
+              never looks in a menu learns the shortcut from the thing it
+              opens or not at all. */}
+          {shortcut && <kbd class="ask-ai__launcher-key">{shortcut}</kbd>}
         </button>
       )}
       <Panel
@@ -978,6 +991,8 @@ function Widget({
  *   docs-origin  where citations resolve, since "/docs/..." is wrong on
  *                every host except the docs site itself
  *   launcher     "none" to supply your own trigger and drive `open`
+ *   shortcut     the key the host has bound to open the panel, shown on the
+ *                launcher; the host binds it, this only says what it is
  *   open         present while the panel is showing; the element removes it
  *                and fires a "close" event when the reader dismisses it
  *   question     seeds the composer when the panel opens with an empty box,
@@ -1022,6 +1037,7 @@ class SupportAgentElement extends HTMLElement {
     'docs-origin',
     'support-url',
     'launcher',
+    'shortcut',
     'open',
     'question',
     'starters',
@@ -1084,6 +1100,7 @@ class SupportAgentElement extends HTMLElement {
           `${docsOrigin.replace(/\/$/, '')}/docs/support`
         }
         launcher={this.getAttribute('launcher') !== 'none'}
+        shortcut={this.getAttribute('shortcut') ?? ''}
         open={this.hasAttribute('open')}
         page={this.page}
         onDetach={() => this.attachPage(null)}

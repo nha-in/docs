@@ -111,6 +111,17 @@
   transition: background-color 150ms ease;
 }
 
+/* The key that opens this, on the chip that opens it. Quiet enough that the
+   words still read first. */
+.ask-ai__launcher-key {
+  font-family: inherit;
+  font-size: 0.6875rem;
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: 0.02em;
+  opacity: 0.65;
+}
+
 .ask-ai__launcher:hover {
   background: var(--aa-accent-line);
   color: var(--aa-accent-contrast);
