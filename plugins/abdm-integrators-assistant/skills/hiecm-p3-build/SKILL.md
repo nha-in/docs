@@ -44,6 +44,61 @@ curl -X POST 'https://dev.abdm.gov.in/api/hiecm/consent/v3/fetch' \
   -d '{ "consentId": "d6a83f24-6c96-421e-b8b8-844e5344ef69" }'
 ```
 
+#### Get all consent Request for an ABHA Address (`hiecm.endpoint.p3-get-all-consent-request-for-an-abha-address`)
+
+```bash
+curl -X GET 'https://dev.abdm.gov.in/api/hiecm/consent/v3/request?limit=10&offset=0&status=ALL' \
+  -H 'Authorization: Bearer <ACCESS_TOKEN>' \
+  -H 'REQUEST-ID: <FRESH_UUID>' \
+  -H 'TIMESTAMP: <ISO_8601_TIMESTAMP>' \
+  -H 'Content-Type: application/json' \
+  -d '<REQUEST_BODY>'
+```
+
+#### Get consent-artefact-details-by-artifact-id (`hiecm.endpoint.p3-get-consent-artefact-details-by-artifact-id`)
+
+```bash
+curl -X GET 'https://dev.abdm.gov.in/api/hiecm/consent/v3/artefact/{{consentId}}' \
+  -H 'Authorization: Bearer <ACCESS_TOKEN>' \
+  -H 'REQUEST-ID: <FRESH_UUID>' \
+  -H 'TIMESTAMP: <ISO_8601_TIMESTAMP>' \
+  -H 'Content-Type: application/json' \
+  -d '<REQUEST_BODY>'
+```
+
+#### Deny - Consent Request (`hiecm.endpoint.p3-deny-consent-request`)
+
+```bash
+curl -X POST 'https://dev.abdm.gov.in/api/hiecm/consent/v3/request/{{consentRequestId}}/deny' \
+  -H 'Authorization: Bearer <ACCESS_TOKEN>' \
+  -H 'REQUEST-ID: <FRESH_UUID>' \
+  -H 'TIMESTAMP: <ISO_8601_TIMESTAMP>' \
+  -H 'Content-Type: application/json' \
+  -d '{ "reason": "Not authorized" }'
+```
+
+#### Revoke - Consent Request (`hiecm.endpoint.p3-revoke-consent-request`)
+
+```bash
+curl -X POST 'https://dev.abdm.gov.in/api/hiecm/consent/v3/revoke' \
+  -H 'Authorization: Bearer <ACCESS_TOKEN>' \
+  -H 'REQUEST-ID: <FRESH_UUID>' \
+  -H 'TIMESTAMP: <ISO_8601_TIMESTAMP>' \
+  -H 'Content-Type: application/json' \
+  -d '{ "consents": [ "*{{consentId}}*" ] }'
+```
+
+#### Request status (`hiecm.endpoint.p3-request-status`)
+
+```bash
+curl -X GET 'https://dev.abdm.gov.in/api/hiecm/data-flow/v3/health-information/request/status/{{transactionId}}' \
+  -H 'Authorization: Bearer <ACCESS_TOKEN>' \
+  -H 'REQUEST-ID: <FRESH_UUID>' \
+  -H 'TIMESTAMP: <ISO_8601_TIMESTAMP>' \
+  -H 'Content-Type: application/json' \
+  -d '<REQUEST_BODY>'
+```
+
 **Exit condition (Observe until this is true)**
 
 The records arrive for the care context the notification named, your
@@ -104,6 +159,50 @@ curl -X POST 'https://dev.abdm.gov.in/api/hiecm/consent/v3/auto/approve' \
   -H 'TIMESTAMP: <ISO_8601_TIMESTAMP>' \
   -H 'Content-Type: application/json' \
   -d '{ "isApplicableForAllHIPs": **true**, "hiu": { "id": "*{{hiu-id}}*" }, "includedSources": [ { "hiTypes": [ "Prescription", "DiagnosticReport", "OPConsultation", "DischargeSummary", "ImmunizationRecord", "HealthDocumentRecord", "WellnessRecord", "Invoice" ], "purpose": { "text": "Care Management", "code": "CAREMGT", "refUri": "www.abdm.gov.in" }, "period": { "from": "2024-11-27T16:21:00.000Z", "to": "2024-12-30T00:00:00.000Z" } } ], "excludedSources": [] }'
+```
+
+#### Approve Subscription Request (`hiecm.endpoint.p3-approve-subscription-request`)
+
+```bash
+curl -X POST 'https://dev.abdm.gov.in/api/hiecm/subscription-' \
+  -H 'Authorization: Bearer <ACCESS_TOKEN>' \
+  -H 'REQUEST-ID: <FRESH_UUID>' \
+  -H 'TIMESTAMP: <ISO_8601_TIMESTAMP>' \
+  -H 'Content-Type: application/json' \
+  -d '{ "isApplicableForAllHIPs": **false**, "includedSources": [ { "hiTypes": [ "Prescription", "DiagnosticReport", "OPConsultation", "DischargeSummary", "ImmunizationRecord", "HealthDocumentRecord", "WellnessRecord" , "Invoice" ], "purpose": { "text": "Care Management", "code": "CAREMGT", "refUri": "www.abc.com7" }, "hip": { "id": "HIP\_ID", "name": "HIP\_NAME " }, "categories": [ "DATA", "LINK" ], "period": { "from": "2023-04-27T04:03:40.079Z", "to": "2023-04-27T04:03:40.079Z" } } ] } "LINK", "DATA" ], "period": { "from": "2023-04-04T09:52:39.235Z", "to": "2023-04-20T09:52:39.235Z" } } ], "excludedSources": [ { "hiTypes": [ "PRESCRIPTION" ], "purpose": { "text": "Self Requested", "code": "PATRQT", "refUri": "www.test.com" },'
+```
+
+#### Consent Enable Auto Approve (`hiecm.endpoint.p3-consent-enable-auto-approve`)
+
+```bash
+curl -X POST 'https://dev.abdm.gov.in//api/hiecm/consent/v3/auto/approve/{{consentId}}/enable' \
+  -H 'Authorization: Bearer <ACCESS_TOKEN>' \
+  -H 'REQUEST-ID: <FRESH_UUID>' \
+  -H 'TIMESTAMP: <ISO_8601_TIMESTAMP>' \
+  -H 'Content-Type: application/json' \
+  -d '<REQUEST_BODY>'
+```
+
+#### Consent Disable Auto Approve (`hiecm.endpoint.p3-consent-disable-auto-approve`)
+
+```bash
+curl -X POST 'https://dev.abdm.gov.in/api/hiecm/consent/v3/auto/approve/{{consentId}}/disable' \
+  -H 'Authorization: Bearer <ACCESS_TOKEN>' \
+  -H 'REQUEST-ID: <FRESH_UUID>' \
+  -H 'TIMESTAMP: <ISO_8601_TIMESTAMP>' \
+  -H 'Content-Type: application/json' \
+  -d '<REQUEST_BODY>'
+```
+
+#### Get all subscription requests for an ABHA Address (`hiecm.endpoint.p3-get-all-subscription-requests-for-an-abha-address`)
+
+```bash
+curl -X GET 'https://dev.abdm.gov.in/api/hiecm/subscription-requests/v3/requests' \
+  -H 'Authorization: Bearer <ACCESS_TOKEN>' \
+  -H 'REQUEST-ID: <FRESH_UUID>' \
+  -H 'TIMESTAMP: <ISO_8601_TIMESTAMP>' \
+  -H 'Content-Type: application/json' \
+  -d '<REQUEST_BODY>'
 ```
 
 **Exit condition (Observe until this is true)**

@@ -34,6 +34,7 @@ verified:
 related:
   endpoints:
     - hiecm.endpoint.p2-patient-share
+    - hiecm.endpoint.p2-profile-on-share
   flows:
     - hiecm.flow.p2-discover-and-link
   concepts:

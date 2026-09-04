@@ -48,7 +48,7 @@ curl -X POST 'https://dev.abdm.gov.in/api/hiecm/consent/v3/fetch' \
   -H 'TIMESTAMP: <ISO_8601_TIMESTAMP>' \
   -H 'X-CM-ID: sbx' \
   -H 'Content-Type: application/json' \
-  -d '<REQUEST_BODY>'
+  -d '{ "consentId": "d6a83f24-6c96-421e-b8b8-844e5344ef69" }'
 ```
 
 #### Request a patient's health information (`hiecm.endpoint.m3-hiu-health-information-request`)
@@ -160,7 +160,7 @@ curl -X POST 'https://dev.abdm.gov.in/api/hiecm/consent/v3/request/init' \
   -H 'TIMESTAMP: <ISO_8601_TIMESTAMP>' \
   -H 'X-CM-ID: sbx' \
   -H 'Content-Type: application/json' \
-  -d '<REQUEST_BODY>'
+  -d '{ "consent": { "hip": { "id": "HIP\_ID" }, "hiu": { "id": "HIU\_ID" }, "hiTypes": [ "Prescription", "DiagnosticReport", "DischargeSummary", "ImmunizationRecord", "HealthDocumentRecord", "WellnessRecord", "OPConsultation" , "Invoice" , ], "patient": { "id": "abhaaddress@sbx" }, "purpose": { "code": "CAREMGT", "text": "Care Management", "refUri": "www.abdm.gov.in" }, "requester": { "name": "Dr. Manju", "identifier": { "type": "REGNO", "value": "MH1001", "system": "https://www.mciindia.org" } }, "permission": { "dateRange": { "to": "2024-07-17T12:05:57.151Z", "from": "1924-07-09T12:05:57.151Z" }, "frequency": { "unit": "DAY", "value": 0, "repeats": 0 }, "accessMode": "VIEW", "dataEraseAt": "2124-11-09T00:00:00.000Z" }, "careContexts": [ { "patientReference": "xxxx@sbx", "careContextReference": "COCa496bc2f-ca6c-4af5-b973-02e915fd9815" } ] } }'
 ```
 
 #### Acknowledge a consent notification (`hiecm.endpoint.m3-consent-hiu-on-notify`)
@@ -172,7 +172,7 @@ curl -X POST 'https://dev.abdm.gov.in/api/hiecm/consent/v3/request/hiu/on-notify
   -H 'TIMESTAMP: <ISO_8601_TIMESTAMP>' \
   -H 'X-CM-ID: sbx' \
   -H 'Content-Type: application/json' \
-  -d '<REQUEST_BODY>'
+  -d '{ "acknowledgement": [ { "status": "OK", "consentId": "e3c74829-3f82-4f94-959e-e10f57bcd57b" } ], "error": { "code": "ABDM-1001", "message": "unable to connect database" }, "response": { "requestId": "6f0b4665-a915-4c92-aa36-65afb4a2cd71" } }'
 ```
 
 #### Check the status of a consent request (`hiecm.endpoint.m3-consent-request-status`)
@@ -184,7 +184,7 @@ curl -X POST 'https://dev.abdm.gov.in/api/hiecm/consent/v3/request/status' \
   -H 'TIMESTAMP: <ISO_8601_TIMESTAMP>' \
   -H 'X-CM-ID: sbx' \
   -H 'Content-Type: application/json' \
-  -d '<REQUEST_BODY>'
+  -d '{ "consentRequestId": "05f14b1d-4465-453a-8249-1382d79d271d" }'
 ```
 
 **Exit condition (Observe until this is true)**

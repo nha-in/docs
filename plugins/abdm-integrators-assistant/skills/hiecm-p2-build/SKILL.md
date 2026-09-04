@@ -66,6 +66,39 @@ curl -X POST 'https://dev.abdm.gov.in/api/hiecm/user-initiated-linking/v3/link/c
   -d '<REQUEST_BODY>'
 ```
 
+#### HIE-CM all-providers (`hiecm.endpoint.p2-all-providers`)
+
+```bash
+curl -X GET 'https://dev.abdm.gov.inapi/hiecm/gateway/v3/providers?stateCode=-1&districtCode=-1&name=test' \
+  -H 'Authorization: Bearer <ACCESS_TOKEN>' \
+  -H 'REQUEST-ID: <FRESH_UUID>' \
+  -H 'TIMESTAMP: <ISO_8601_TIMESTAMP>' \
+  -H 'Content-Type: application/json' \
+  -d '<REQUEST_BODY>'
+```
+
+#### HIE-CM provider-by-provider-id (`hiecm.endpoint.p2-provider-by-provider-id`)
+
+```bash
+curl -X GET 'https://dev.abdm.gov.in/api/hiecm/gateway/v3/providers/{{hip-id}}' \
+  -H 'Authorization: Bearer <ACCESS_TOKEN>' \
+  -H 'REQUEST-ID: <FRESH_UUID>' \
+  -H 'TIMESTAMP: <ISO_8601_TIMESTAMP>' \
+  -H 'Content-Type: application/json' \
+  -d '<REQUEST_BODY>'
+```
+
+#### HIE-CM Govt Programs (`hiecm.endpoint.p2-govt-programs`)
+
+```bash
+curl -X GET 'https://dev.abdm.gov.in/api/hiecm/gateway/v3/govt-programs' \
+  -H 'Authorization: Bearer <ACCESS_TOKEN>' \
+  -H 'REQUEST-ID: <FRESH_UUID>' \
+  -H 'TIMESTAMP: <ISO_8601_TIMESTAMP>' \
+  -H 'Content-Type: application/json' \
+  -d '<REQUEST_BODY>'
+```
+
 **Exit condition (Observe until this is true)**
 
 The care contexts the person selected are linked to their ABHA address,
@@ -111,6 +144,17 @@ Three things must already be true, each checkable:
 
 ```bash
 curl -X POST 'https://dev.abdm.gov.in/api/hiecm/patient-share/v3/share' \
+  -H 'Authorization: Bearer <ACCESS_TOKEN>' \
+  -H 'REQUEST-ID: <FRESH_UUID>' \
+  -H 'TIMESTAMP: <ISO_8601_TIMESTAMP>' \
+  -H 'Content-Type: application/json' \
+  -d '<REQUEST_BODY>'
+```
+
+#### Profile on share (`hiecm.endpoint.p2-profile-on-share`)
+
+```bash
+curl -X POST 'https://dev.abdm.gov.in/api/hiecm/patient-share/v3/on-share' \
   -H 'Authorization: Bearer <ACCESS_TOKEN>' \
   -H 'REQUEST-ID: <FRESH_UUID>' \
   -H 'TIMESTAMP: <ISO_8601_TIMESTAMP>' \
