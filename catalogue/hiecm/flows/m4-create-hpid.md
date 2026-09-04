@@ -24,10 +24,21 @@ sources:
       The M4 operations and fields page, compiled from NHA's simplified
       Milestone 4 document. The call order, the code tables and the
       encryption rule come from here.
+  - file: catalogue/openapi/.raw/nha-2026-09-04/HPR-Test-Cases-Final.xlsx
+    fetched: 2026-09-04
+    hash: sha256:257abae73f4c07d5d5145047fa34f63a792783de52dedfc8dd3f5892c52a4eea
+    note: >
+      NHA's HPR test case sheet, 60 cases from HPR-002 to HPR-080. It
+      names the sandbox paths several of these calls use, which no
+      specification in the catalogue had.
 verified:
   status: unverified
   against: docs-only
 related:
+  endpoints:
+    - hiecm.endpoint.m4-hpr-generate-aadhaar-otp
+    - hiecm.endpoint.m4-hpr-demographic-auth-mobile
+    - hiecm.endpoint.m4-hpr-create-hprid
   flows:
     - hiecm.flow.m4-register-professional
     - hiecm.flow.m4-onboard-facility
@@ -131,9 +142,19 @@ sequenceDiagram
 Keep the `hprToken`. Registering the professional's profile carries it in
 the payload, and onboarding a facility needs an HPR token in a header.
 
-Method and path are not published for any of these nine calls. Take them
-from the sandbox documentation for the healthcare professional registry
-and use the field tables on the operations page.
+NHA's HPR test case sheet names the sandbox path for three of these
+calls, all on the host `https://hpridsbx.abdm.gov.in`:
+
+| Step | Path |
+|---|---|
+| Aadhaar OTP, steps 1 to 3 | `/api/v1/registration/aadhaar/generateOtp` |
+| Mobile match, step 5 | `/api/v1/registration/aadhaar/demographicAuthViaMobile` |
+| Create HPID, step 9 | `/api/v1/registration/aadhaar/createHprIdWithPreVerified` |
+
+The remaining calls have no published path. Take them from the sandbox
+documentation for the healthcare professional registry, and use the field
+tables on the operations page. None of the three above has been called
+from this repository.
 
 ## How you know it worked
 

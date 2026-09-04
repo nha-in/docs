@@ -22,10 +22,22 @@ sources:
     note: >
       The M4 operations and fields page. The mandatory documents, the
       degree codes and the master data rule come from here.
+  - file: catalogue/openapi/.raw/nha-2026-09-04/HPR-Test-Cases-Final.xlsx
+    fetched: 2026-09-04
+    hash: sha256:257abae73f4c07d5d5145047fa34f63a792783de52dedfc8dd3f5892c52a4eea
+    note: >
+      NHA's HPR test case sheet, 60 cases from HPR-002 to HPR-080. It
+      names the sandbox paths several of these calls use, which no
+      specification in the catalogue had.
 verified:
   status: unverified
   against: docs-only
 related:
+  endpoints:
+    - hiecm.endpoint.m4-hpr-register-professional
+    - hiecm.endpoint.m4-hpr-fetch-professional-info
+    - hiecm.endpoint.m4-hpr-fetch-documents-list
+    - hiecm.endpoint.m4-hpr-upload-document
   flows:
     - hiecm.flow.m4-create-hpid
     - hiecm.flow.m4-onboard-facility
@@ -98,8 +110,19 @@ sequenceDiagram
    proof of work certificate is mandatory as well when the professional
    works for government, or for both government and private.
 
-Method and path are not published for these calls. Take them from the
-sandbox documentation for the healthcare professional registry.
+NHA's HPR test case sheet names the sandbox paths for this journey, all
+on the host `https://doctorsbx.abdm.gov.in`:
+
+| Call | Path |
+|---|---|
+| Register professional | `/apis/v1/doctors/register-professional-new` |
+| Fetch the professional's details | `/apis/v1/doctors/fetch-professional-info` |
+| Update the professional | `/apis/v1/doctors/update-professional` |
+| Fetch the document list | `/apis/v1/doctors/fetch-documents-list` |
+| Upload one document | `/apis/v1/uploads/upload-document` |
+
+The master data calls have no published path. None of the five above has
+been called from this repository.
 
 ## How you know it worked
 

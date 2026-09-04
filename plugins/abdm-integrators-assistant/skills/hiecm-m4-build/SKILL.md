@@ -36,7 +36,32 @@ Four things must already be true, each checkable:
 
 **Act: the calls in this flow, in order**
 
-The Catalogue does not yet record this flow's calls as endpoint atoms, so this skill cannot give you the exact requests. Read the operations under /docs/hiecm/v3/api/m4 before acting, and treat the exit condition below as the thing to observe.
+#### Send the Aadhaar OTP that starts an HPID (`hiecm.endpoint.m4-hpr-generate-aadhaar-otp`)
+
+```bash
+curl -X POST 'https://hpridsbx.abdm.gov.in/api/v1/registration/aadhaar/generateOtp' \
+  -H 'Authorization: Bearer <ACCESS_TOKEN>' \
+  -H 'Content-Type: application/json' \
+  -d '<REQUEST_BODY>'
+```
+
+#### Check whether the mobile number is the one on the Aadhaar record (`hiecm.endpoint.m4-hpr-demographic-auth-mobile`)
+
+```bash
+curl -X POST 'https://hpridsbx.abdm.gov.in/api/v1/registration/aadhaar/demographicAuthViaMobile' \
+  -H 'Authorization: Bearer <ACCESS_TOKEN>' \
+  -H 'Content-Type: application/json' \
+  -d '<REQUEST_BODY>'
+```
+
+#### Create the HPID (`hiecm.endpoint.m4-hpr-create-hprid`)
+
+```bash
+curl -X POST 'https://hpridsbx.abdm.gov.in/api/v1/registration/aadhaar/createHprIdWithPreVerified' \
+  -H 'Authorization: Bearer <ACCESS_TOKEN>' \
+  -H 'Content-Type: application/json' \
+  -d '<REQUEST_BODY>'
+```
 
 **Exit condition (Observe until this is true)**
 
@@ -120,7 +145,14 @@ Four things must already be true, each checkable:
 
 **Act: the calls in this flow, in order**
 
-The Catalogue does not yet record this flow's calls as endpoint atoms, so this skill cannot give you the exact requests. Read the operations under /docs/hiecm/v3/api/m4 before acting, and treat the exit condition below as the thing to observe.
+#### Search the facility registry before creating anything (`hiecm.endpoint.m4-hfr-search-facility`)
+
+```bash
+curl -X POST 'https://facilitysbx.abdm.gov.in/FacilityManagement/v1.5/facility/search' \
+  -H 'Authorization: Bearer <ACCESS_TOKEN>' \
+  -H 'Content-Type: application/json' \
+  -d '<REQUEST_BODY>'
+```
 
 **Exit condition (Observe until this is true)**
 
@@ -165,7 +197,41 @@ Four things must already be true, each checkable:
 
 **Act: the calls in this flow, in order**
 
-The Catalogue does not yet record this flow's calls as endpoint atoms, so this skill cannot give you the exact requests. Read the operations under /docs/hiecm/v3/api/m4 before acting, and treat the exit condition below as the thing to observe.
+#### Register the professional's profile (`hiecm.endpoint.m4-hpr-register-professional`)
+
+```bash
+curl -X POST 'https://doctorsbx.abdm.gov.in/apis/v1/doctors/register-professional-new' \
+  -H 'Authorization: Bearer <ACCESS_TOKEN>' \
+  -H 'Content-Type: application/json' \
+  -d '<REQUEST_BODY>'
+```
+
+#### Read a professional's profile (`hiecm.endpoint.m4-hpr-fetch-professional-info`)
+
+```bash
+curl -X POST 'https://doctorsbx.abdm.gov.in/apis/v1/doctors/fetch-professional-info' \
+  -H 'Authorization: Bearer <ACCESS_TOKEN>' \
+  -H 'Content-Type: application/json' \
+  -d '<REQUEST_BODY>'
+```
+
+#### List the documents this professional must upload (`hiecm.endpoint.m4-hpr-fetch-documents-list`)
+
+```bash
+curl -X POST 'https://doctorsbx.abdm.gov.in/apis/v1/doctors/fetch-documents-list' \
+  -H 'Authorization: Bearer <ACCESS_TOKEN>' \
+  -H 'Content-Type: application/json' \
+  -d '<REQUEST_BODY>'
+```
+
+#### Upload one of the professional's documents (`hiecm.endpoint.m4-hpr-upload-document`)
+
+```bash
+curl -X POST 'https://doctorsbx.abdm.gov.in/apis/v1/uploads/upload-document' \
+  -H 'Authorization: Bearer <ACCESS_TOKEN>' \
+  -H 'Content-Type: application/json' \
+  -d '<REQUEST_BODY>'
+```
 
 **Exit condition (Observe until this is true)**
 
