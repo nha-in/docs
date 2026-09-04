@@ -41,6 +41,9 @@ export default function Omnibox() {
   const box = React.useRef<HTMLDivElement>(null);
   const panel = React.useRef<HTMLDivElement>(null);
   const [focused, setFocused] = React.useState(false);
+  // What the launcher chip says its key is. Empty until the platform is
+  // known, and on a touch device it stays empty: there is no key to press.
+  const [shortcut, setShortcut] = React.useState('');
   const [active, setActive] = React.useState(-1);
   // The rows live here as well as in the panel, because the arrow keys are
   // caught on the search field and have to know what they are walking.
@@ -161,6 +164,33 @@ export default function Omnibox() {
     };
   }, [rows]);
 
+  // The assistant has a key of its own. Search has the command mark and K;
+  // a reader who wants to ask rather than search should not have to reach for
+  // the pointer to say so. Command or control and I, which no browser claims
+  // on its own. The chip is told what to display rather than working it out,
+  // because the key is bound here, not in the widget.
+  React.useEffect(() => {
+    const ua = navigator.userAgent;
+    if (/Android|iPhone|iPad|iPod/.test(ua)) return;
+    setShortcut(/Mac|iPhone|iPad|iPod/.test(ua) ? '\u2318I' : 'Ctrl I');
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key.toLowerCase() !== 'i') return;
+      if (!(event.metaKey || event.ctrlKey) || event.shiftKey || event.altKey)
+        return;
+      event.preventDefault();
+      const field = box.current?.querySelector<HTMLInputElement>(
+        'input.navbar__search-input',
+      );
+      const asked = field?.value.trim() ?? '';
+      field?.blur();
+      window.dispatchEvent(
+        new CustomEvent('abdm:ask-ai', {detail: {question: asked}}),
+      );
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, []);
+
   return (
     <div ref={box} className="omnibox">
       <SearchBar />
@@ -179,6 +209,7 @@ export default function Omnibox() {
         {...(chatUrl ? {'api-base': chatUrl} : {})}
         docs-origin={siteConfig.url + siteConfig.baseUrl.replace(/\/$/, '')}
         {...(starters ? {starters} : {})}
+        {...(shortcut ? {shortcut} : {})}
         support-url={support}
       />
     </div>

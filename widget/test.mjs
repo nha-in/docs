@@ -8,7 +8,7 @@ import {build} from 'esbuild';
 const out = join(tmpdir(), `abdm-widget-test-${process.pid}.mjs`);
 await build({
   stdin: {
-    contents: `export {toBlocks, absolute} from './src/markdown';
+    contents: `export {toBlocks, absolute, headings} from './src/markdown';
                export {readStream} from './src/sse';
                export {revealStep, THINKING_HOLD, THINKING_BURST} from './src/pacing';`,
     resolveDir: import.meta.dirname,
@@ -21,8 +21,13 @@ await build({
   loader: {'.css': 'text'},
   outfile: out,
 });
-const {toBlocks, absolute, readStream, revealStep, THINKING_HOLD, THINKING_BURST} =
+const {toBlocks, absolute, headings, readStream, revealStep, THINKING_HOLD, THINKING_BURST} =
   await import(out);
+
+// Headings: the second level only, fenced code left alone, markers stripped.
+assert.deepEqual(headings('# Page\n## One\n### Deeper\n## `Two`'), ['One', 'Two']);
+assert.deepEqual(headings('```sh\n## not a heading\n```\n## Real'), ['Real']);
+assert.deepEqual(headings('no headings here'), []);
 
 // Pacing: hold while thinking, drain a share of the backlog, never overrun it.
 assert.equal(revealStep(0, 9999, true, false), 0);

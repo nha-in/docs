@@ -218,3 +218,20 @@ export default function ChatMarkdown({
     </>
   );
 }
+
+/**
+ * The second level headings of a page, in order, with fenced code skipped so
+ * a comment beginning with ## is not mistaken for one. A reader who has a
+ * page attached is better served by that page's own sections than by any four
+ * questions we could guess at.
+ */
+export function headings(text: string): string[] {
+  const found: string[] = [];
+  let fenced = false;
+  for (const line of text.split('\n')) {
+    if (/^\s*```/.test(line)) fenced = !fenced;
+    else if (!fenced && /^##\s+/.test(line))
+      found.push(line.slice(2).replace(/[*`_]/g, '').trim());
+  }
+  return found.filter(Boolean);
+}
