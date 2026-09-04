@@ -20,6 +20,12 @@ Ask the user which of these this project needs, and install only what they name:
 - `hiecm-m2-debug`: diagnosing a failed M2 call
 - `hiecm-m3-build`: scaffolding an M3 integration flow by flow against the sandbox
 - `hiecm-m3-debug`: diagnosing a failed M3 call
+- `hiecm-m4-build`: scaffolding the HPR and HFR registrations M4 asks for
+- `hiecm-m4-debug`: diagnosing a failed M4 registration call
+- `hiecm-p1-build`: scaffolding registration and login in a PHR app
+- `hiecm-p1-debug`: diagnosing a failed call from a PHR app, across P1 to P3
+- `hiecm-p2-build`: scaffolding discovery and linking in a PHR app
+- `hiecm-p3-build`: scaffolding consent and record fetching in a PHR app
 - `fhir-generate`: building NRCES compliant FHIR bundles in this codebase
 - `fhir-audit`: checking an existing FHIR store for NRCES compliance
 
@@ -69,6 +75,12 @@ mkdir -p .claude/skills/abdm-m1 && curl -fsSL /skills/abdm-m1/SKILL.md -o .claud
 - /skills/hiecm-m2-debug/SKILL.md
 - /skills/hiecm-m3-build/SKILL.md
 - /skills/hiecm-m3-debug/SKILL.md
+- /skills/hiecm-m4-build/SKILL.md
+- /skills/hiecm-m4-debug/SKILL.md
+- /skills/hiecm-p1-build/SKILL.md
+- /skills/hiecm-p1-debug/SKILL.md
+- /skills/hiecm-p2-build/SKILL.md
+- /skills/hiecm-p3-build/SKILL.md
 - /skills/fhir-generate/SKILL.md
 - /skills/fhir-audit/SKILL.md
 

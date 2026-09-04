@@ -504,6 +504,36 @@ const GUIDED = {
     title: 'M3 debug',
     example: 'Diagnose this failed consent call',
   },
+  'hiecm-m4-build': {
+    module: 'M4',
+    title: 'M4 build',
+    example: 'Onboard this facility to the HFR and link its HIP bridge',
+  },
+  'hiecm-m4-debug': {
+    module: 'M4',
+    title: 'M4 debug',
+    example: 'Diagnose this failed HFR onboarding call',
+  },
+  'hiecm-p1-build': {
+    module: 'P1',
+    title: 'P1 build',
+    example: 'Add ABHA address creation and the four login routes to this app',
+  },
+  'hiecm-p1-debug': {
+    module: 'P1',
+    title: 'PHR debug',
+    example: 'Diagnose this failed call from a PHR app',
+  },
+  'hiecm-p2-build': {
+    module: 'P2',
+    title: 'P2 build',
+    example: 'Add discovery and linking to this PHR app',
+  },
+  'hiecm-p3-build': {
+    module: 'P3',
+    title: 'P3 build',
+    example: 'Fetch and store the records a linked care context points at',
+  },
 };
 const pluginDir = join(root, 'plugins', 'abdm-integrators-assistant', 'skills');
 for (const name of readdirSync(pluginDir)) {
@@ -555,6 +585,12 @@ const promptSkills = [
   ['hiecm-m2-debug', 'diagnosing a failed M2 call'],
   ['hiecm-m3-build', 'scaffolding an M3 integration flow by flow against the sandbox'],
   ['hiecm-m3-debug', 'diagnosing a failed M3 call'],
+  ['hiecm-m4-build', 'scaffolding the HPR and HFR registrations M4 asks for'],
+  ['hiecm-m4-debug', 'diagnosing a failed M4 registration call'],
+  ['hiecm-p1-build', 'scaffolding registration and login in a PHR app'],
+  ['hiecm-p1-debug', 'diagnosing a failed call from a PHR app, across P1 to P3'],
+  ['hiecm-p2-build', 'scaffolding discovery and linking in a PHR app'],
+  ['hiecm-p3-build', 'scaffolding consent and record fetching in a PHR app'],
   ['fhir-generate', 'building NRCES compliant FHIR bundles in this codebase'],
   ['fhir-audit', 'checking an existing FHIR store for NRCES compliance'],
 ];

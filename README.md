@@ -40,10 +40,11 @@ one for each of M1 to M4, P1 to P3 and the PHR application services, are
 generated from the specifications and carry that module's operations,
 headers, error codes and test matrix. Guided skills are compiled from
 Catalogue atoms and run as observe-orient-decide-act loops against the
-sandbox: `hiecm-m1-build` through `hiecm-m3-build` scaffold a milestone
-flow by flow, and the matching `-debug` skills walk a failed call to a
-named fix. A milestone gets a guided skill only where the Catalogue has
-the flows or errors behind it, which today means M1 to M3. See
+sandbox: `hiecm-m1-build` through `hiecm-m4-build` and `hiecm-p1-build`
+through `hiecm-p3-build` scaffold a milestone flow by flow, and the
+matching `-debug` skills walk a failed call to a named fix. A milestone
+gets a guided skill only where the Catalogue has the flows or errors
+behind it. See
 [plugins/abdm-integrators-assistant/skills/](plugins/abdm-integrators-assistant/skills/).
 
 **FHIR support** covers ABDM's hardest integration step two ways: profile

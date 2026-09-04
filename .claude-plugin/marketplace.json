@@ -10,7 +10,7 @@
     {
       "name": "abdm-integrators-assistant",
       "source": "./plugins/abdm-integrators-assistant",
-      "description": "Build and debug an ABDM integration: hiecm-m1-build, hiecm-m2-build and hiecm-m3-build scaffold each milestone flow by flow against the sandbox, and hiecm-m1-debug, hiecm-m2-debug and hiecm-m3-debug walk a failed call to a named fix, citing the Catalogue atom behind every step. fhir-generate and fhir-audit build or audit NRCES compliant FHIR document bundles, iterating against the Docs MCP validator until clean.",
+      "description": "Build and debug an ABDM integration. Build skills scaffold a milestone flow by flow against the sandbox, M1 to M4 on the provider side and P1 to P3 inside a PHR application. Debug skills walk a failed call to a named fix, citing the Catalogue atom behind every step. fhir-generate and fhir-audit build or audit NRCES compliant FHIR document bundles against the Docs MCP validator.",
       "category": "documentation",
       "keywords": [
         "abdm",

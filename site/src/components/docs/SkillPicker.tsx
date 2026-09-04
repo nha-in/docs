@@ -4,9 +4,9 @@ import {cn} from '@site/src/lib/utils';
 import SkillInstall from './SkillInstall';
 
 /**
- * Choose what you are building; see the one skill that serves it. Sixteen
+ * Choose what you are building; see the one skill that serves it. Twenty two
  * panels stacked whole read as a wall; the choice is the reader's first
- * question anyway, so the page asks it instead of answering all sixteen at
+ * question anyway, so the page asks it instead of answering all of them at
  * once. The chips reuse the install panel's own tab styling.
  *
  * The order is the order a reader arrives in: the module references first,
@@ -89,6 +89,36 @@ const CHOICES: Choice[] = [
     slug: 'hiecm-m3-debug',
     label: 'Debug M3',
     note: 'Matches a failed consent or fetch call to a recorded error and walks to a named fix.',
+  },
+  {
+    slug: 'hiecm-m4-build',
+    label: 'Scaffold M4',
+    note: 'Builds the HPR and HFR registrations in order, each step ending on the registry showing the thing it created.',
+  },
+  {
+    slug: 'hiecm-m4-debug',
+    label: 'Debug M4',
+    note: 'Matches a failed HPR or HFR call to a recorded HIS error and walks to a named fix.',
+  },
+  {
+    slug: 'hiecm-p1-build',
+    label: 'Scaffold P1',
+    note: 'Builds ABHA address creation and all four login routes into a PHR app.',
+  },
+  {
+    slug: 'hiecm-p1-debug',
+    label: 'Debug a PHR app',
+    note: 'The AS error codes, which NHA records once for the whole patient side, so this one covers P1, P2 and P3.',
+  },
+  {
+    slug: 'hiecm-p2-build',
+    label: 'Scaffold P2',
+    note: 'Builds discovery, user initiated linking and scan and share, with the wording NHA specifies for each outcome.',
+  },
+  {
+    slug: 'hiecm-p3-build',
+    label: 'Scaffold P3',
+    note: 'Builds subscriptions, auto approval and the fetch that turns a linked care context into a stored record.',
   },
   {
     slug: 'fhir-generate',

@@ -48,6 +48,49 @@ const MILESTONES = [
       "Use when an ABDM Milestone 2 call fails or a linking or data transfer flow is stuck: matches the error against the Catalogue's M2 error atoms and walks to a named fix, verified by the original step succeeding.",
   },
   {
+    id: "M4",
+    slug: "m4",
+    scope:
+      "creating an HPID, registering a professional on the HPR, onboarding a facility to the HFR, and linking that facility to its bridges",
+    buildDescription:
+      "Use when scaffolding an integration against ABDM Milestone 4, the NHPR (HPID creation, professional registration, facility onboarding, bridge linkage): builds each M4 journey as an observe-orient-decide-act loop, citing the Catalogue atom behind every step.",
+    debugDescription:
+      "Use when an ABDM Milestone 4 call fails or an HPR or HFR registration is stuck: matches the HIS error against the Catalogue's M4 error atoms and walks to a named fix, verified by the original step succeeding.",
+  },
+  {
+    id: "P1",
+    slug: "p1",
+    scope:
+      "registration in a PHR application, the four login routes, and the profile the person holds",
+    buildDescription:
+      "Use when scaffolding the patient side of ABDM Milestone 1 in a PHR application (creating an ABHA address, the four login routes, the profile): builds each P1 flow as an observe-orient-decide-act loop, citing the Catalogue atom behind every step.",
+    // NHA records the PHR error codes once against P1 and they apply across
+    // P1 to P3, so this is the debug skill for the whole patient side.
+    debugDescription:
+      "Use when a call from a PHR application fails anywhere in P1, P2 or P3: matches the AS error against the Catalogue's PHR error atoms, which NHA records once for the whole patient side, and walks to a named fix verified by the original step succeeding.",
+    // The AS codes are the whole patient side, so this skill says so rather
+    // than reading as P1 only and being passed over on a P3 failure.
+    debugCovers: "PHR application call, anywhere in P1, P2 or P3",
+  },
+  {
+    id: "P2",
+    slug: "p2",
+    scope:
+      "discovering records held elsewhere, linking care contexts to a health address, and sharing a profile at a facility",
+    buildDescription:
+      "Use when scaffolding the patient side of ABDM Milestone 2 in a PHR application (discovery, user initiated linking, scan and share at a facility): builds each P2 flow as an observe-orient-decide-act loop, citing the Catalogue atom behind every step.",
+    debugDescription: null,
+  },
+  {
+    id: "P3",
+    slug: "p3",
+    scope:
+      "subscriptions, auto approval policies, and fetching the records a granted consent covers",
+    buildDescription:
+      "Use when scaffolding the patient side of ABDM Milestone 3 in a PHR application (subscriptions, auto approval, granting and revoking consent, fetching records): builds each P3 flow as an observe-orient-decide-act loop, citing the Catalogue atom behind every step.",
+    debugDescription: null,
+  },
+  {
     id: "M3",
     slug: "m3",
     scope: "raising a consent request, tracking it, and fetching the records it covers as an HIU",
@@ -183,7 +226,7 @@ function debugSkill(milestone) {
   return frontmatter(`hiecm-${milestone.slug}-debug`, milestone.debugDescription) + [
     `# HIE-CM ${milestone.id} debug`,
     ``,
-    `Diagnoses a failed ${milestone.id} call. Every error below is an OODA loop: observe the error code and last request id, orient against the matched error atom below (list a second hypothesis if the match is not exact), decide the fix, act, and observe whether the *original* step now succeeds. Applying a fix is not the exit condition; the original step succeeding is.`,
+    `Diagnoses a failed ${milestone.debugCovers ?? `${milestone.id} call`}. Every error below is an OODA loop: observe the error code and last request id, orient against the matched error atom below (list a second hypothesis if the match is not exact), decide the fix, act, and observe whether the *original* step now succeeds. Applying a fix is not the exit condition; the original step succeeding is.`,
     ``,
     `Loop limit: 5 passes per error. Hitting the limit is an escalation: state what was observed, what was tried, and which atom to read, then ask one question.`,
     ``,
@@ -200,7 +243,10 @@ for (const milestone of MILESTONES) {
   if (flowsFor(milestone).length) {
     SKILLS[`hiecm-${milestone.slug}-build`] = () => buildSkill(milestone);
   }
-  if (errorsFor(milestone).length) {
+  // P2 and P3 get no debug skill of their own: NHA records the PHR error
+  // codes once against P1, so a second and third copy of the same errors
+  // would be three skills competing to answer one question.
+  if (errorsFor(milestone).length && milestone.debugDescription) {
     SKILLS[`hiecm-${milestone.slug}-debug`] = () => debugSkill(milestone);
   }
 }
