@@ -51,8 +51,29 @@ curl -X POST 'https://dev.abdm.gov.in/api/hiecm/hip/v3/link/carecontext' \
   -H 'TIMESTAMP: <ISO_8601_TIMESTAMP>' \
   -H 'X-CM-ID: sbx' \
   -H 'Content-Type: application/json' \
-  -d '<REQUEST_BODY>'
+  -d '{
+    "abhaNumber": "<PATIENT_ABHA_NUMBER_14_DIGITS>",
+    "abhaAddress": "<PATIENT_ABHA_ADDRESS>",
+    "patient": [
+      {
+        "referenceNumber": "<YOUR_PATIENT_REFERENCE>",
+        "display": "<PATIENT_NAME_AS_HELD>",
+        "careContexts": [
+          {
+            "referenceNumber": "<YOUR_VISIT_REFERENCE>",
+            "display": "<WHAT_THE_PATIENT_WILL_SEE>"
+          }
+        ],
+        "hiType": ["<HI_TYPE>"],
+        "count": 1
+      }
+    ]
+  }'
 ```
+
+The body above is the shape NHA's ingested M2 file declares for this
+operation, with its sample values replaced by named placeholders. It has
+not been sent to the sandbox from this repository.
 
 The request and response schemas for this operation are in `catalogue/openapi/hiecm/v3/hiecm-m2.yaml`, ingested from NHA's file.
 
