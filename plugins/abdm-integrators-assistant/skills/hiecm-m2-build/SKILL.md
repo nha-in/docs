@@ -27,22 +27,101 @@ Three things must already be true, each checkable:
 
 **Act: the calls in this flow, in order**
 
-The Catalogue does not yet record this flow's calls as endpoint atoms, so this skill cannot give you the exact requests. Read the operations under /docs/hiecm/v3/api/m2 before acting, and treat the exit condition below as the thing to observe.
+#### Generate Link Token (`hiecm.endpoint.m2-generate-link-token`)
+
+```bash
+curl -X POST 'https://dev.abdm.gov.in/api/hiecm/v3/token/generate-token' \
+  -H 'Authorization: Bearer <ACCESS_TOKEN>' \
+  -H 'REQUEST-ID: <FRESH_UUID>' \
+  -H 'TIMESTAMP: <ISO_8601_TIMESTAMP>' \
+  -H 'X-CM-ID: sbx' \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "abhaNumber": <PATIENT_ABHA_NUMBER_14_DIGITS>,
+    "abhaAddress": "<PATIENT_ABHA_ADDRESS>",
+    "name": "<PATIENT_NAME_AS_HELD>",
+    "gender": "<M_F_OR_O>",
+    "yearOfBirth": <PATIENT_YEAR_OF_BIRTH>
+  }'
+```
+
+#### Link care contexts to an ABHA address (`hiecm.endpoint.m2-hip-link-care-context`)
+
+```bash
+curl -X POST 'https://dev.abdm.gov.in/api/hiecm/hip/v3/link/carecontext' \
+  -H 'Authorization: Bearer <ACCESS_TOKEN>' \
+  -H 'REQUEST-ID: <FRESH_UUID>' \
+  -H 'TIMESTAMP: <ISO_8601_TIMESTAMP>' \
+  -H 'X-CM-ID: sbx' \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "abhaNumber": "<PATIENT_ABHA_NUMBER_14_DIGITS>",
+    "abhaAddress": "<PATIENT_ABHA_ADDRESS>",
+    "patient": [
+      {
+        "referenceNumber": "<YOUR_PATIENT_REFERENCE>",
+        "display": "<PATIENT_NAME_AS_HELD>",
+        "careContexts": [
+          {
+            "referenceNumber": "<YOUR_VISIT_REFERENCE>",
+            "display": "<WHAT_THE_PATIENT_WILL_SEE>"
+          }
+        ],
+        "hiType": ["<HI_TYPE>"],
+        "count": 1
+      }
+    ]
+  }'
+```
+
+#### Link Care Context Notify (`hiecm.endpoint.m2-link-care-context-notify`)
+
+```bash
+curl -X POST 'https://dev.abdm.gov.in/api/hiecm/hip/v3/link/context/notify' \
+  -H 'Authorization: Bearer <ACCESS_TOKEN>' \
+  -H 'REQUEST-ID: <FRESH_UUID>' \
+  -H 'TIMESTAMP: <ISO_8601_TIMESTAMP>' \
+  -H 'X-CM-ID: sbx' \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "notification": {
+      "patient": {"id": "<PATIENT_ABHA_ADDRESS>"},
+      "careContext": {
+        "patientReference": "<PATIENT_ABHA_ADDRESS>",
+        "careContextReference": "<YOUR_VISIT_REFERENCE>"
+      },
+      "hiTypes": ["<HI_TYPE>"],
+      "date": "<ISO_8601_TIMESTAMP>",
+      "hip": {
+        "id": "<YOUR_HIP_ID>",
+        "name": "<YOUR_FACILITY_NAME>",
+        "type": "HIP"
+      }
+    }
+  }'
+```
 
 **Exit condition (Observe until this is true)**
 
-The gateway's callback to your registered bridge URL reports success for
-your link request, and the care context then appears when the patient's
-PHR app runs discovery against your facility. Do not treat the
-synchronous acknowledgement alone as success.
+Your bridge receives a POST at `/v3/link/on_carecontext` whose
+`response.requestId` matches the `REQUEST-ID` you sent on the link call,
+carrying a success `status` rather than an `error`. The care context then
+appears when the patient's PHR app runs discovery against your facility.
+
+Do not treat the synchronous acknowledgement on the link call as success.
+It says the request was accepted, not that anything was linked.
 
 ```observation schema=exit-condition
 channel: callback
-path: <YOUR_BRIDGE_URL>/on-link-confirmation
+path: <YOUR_BRIDGE_URL>/v3/link/on_carecontext
 match:
+  response.requestId: <THE_REQUEST_ID_YOU_SENT>
   status: SUCCESS
 timeout_seconds: unknown
-note: exact callback path and timeout unconfirmed until M2 swagger is ingested
+note: >
+  The path and the payload shape are the ones NHA's ingested M2 file
+  declares. The timeout is not published, and no delivery has been
+  observed from this repository.
 ```
 
 **If it goes wrong**
