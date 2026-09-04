@@ -118,8 +118,8 @@ sequenceDiagram
    consent concept page. Call
    [Consent Init Request](../endpoints/m3-consent-request-init.md), which
    posts to `/hiecm/consent/v3/request/init`. The request and response
-   shapes are in `catalogue/openapi/hiecm/v3/hiecm-m3.yaml`, not copied
-   here.
+   shapes are in the M3 specification, published at /specs/hiecm-m3.yaml,
+   rather than copied here.
 2. **Receive the acknowledgement callback.**
    [The consent request was accepted, with its request id](../callbacks/m3-on-consent-request-init.md)
    arrives at `/api/v3/hiu/consent/request/on-init` and carries the
