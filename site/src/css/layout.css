@@ -203,17 +203,22 @@
   color: var(--text-heading);
 }
 
-/* Current page: no fill at all. The row is the current one because its type is
-   half a step heavier, because its colour is the accent against faint
-   siblings, and because of one 2px mark in the gutter. Three quiet signals
-   instead of one loud rectangle, and the mark is the only place the accent is
-   painted as a shape in the whole rail. */
+/* Current page: the accent in type, in the 2px mark in the gutter, and now in
+   the ground under the row. The wash is the faintest step in the palette, so
+   the row reads as the current one from across the rail without becoming a
+   block of colour beside eleven quiet siblings. */
 .menu__link--active,
 .menu__link--active:hover,
 .menu__link--active:not(.menu__link--sublist) {
   color: var(--accent);
-  background: transparent;
+  background: var(--accent-wash);
   font-weight: 500;
+}
+
+/* A category header that is also the current page is a header first, so it
+   keeps the type and the colour and stays off the ground. */
+.menu__list-item-collapsible > .menu__link--active {
+  background: transparent;
 }
 
 .theme-doc-sidebar-container .menu__link--active:not(.menu__link--sublist),

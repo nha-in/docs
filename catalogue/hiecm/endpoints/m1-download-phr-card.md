@@ -45,7 +45,7 @@ curl -X GET 'https://abhasbx.abdm.gov.in/abha/api/v3/phr/web/login/profile/abha/
   -H 'X-CM-ID: sbx'
 ```
 
-The request and response schemas for this operation are in `catalogue/openapi/hiecm/v3/hiecm-m1.yaml`, ingested from NHA's file.
+The request and response schemas for this operation are in the M1 specification, published at /specs/hiecm-m1.yaml and rendered field by field at /docs/hiecm/v3/api/m1. It is NHA's file as ingested.
 
 NHA calls this operation `downloadPhrCard`.
 

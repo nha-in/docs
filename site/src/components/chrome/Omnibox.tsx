@@ -1,6 +1,7 @@
 import React from 'react';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import useBaseUrl from '@docusaurus/useBaseUrl';
+import {useHistory} from '@docusaurus/router';
 import SearchBar from '@theme/SearchBar';
 import QuickActions, {useRows} from './QuickActions';
 import {activePlatform, useRoutePath} from '@site/src/config/navigation';
@@ -38,9 +39,13 @@ export default function Omnibox() {
   const starters = platform ? STARTERS[platform.id] : undefined;
   const chatUrl = siteConfig.customFields?.chatUrl as string | null;
   const support = useBaseUrl('/docs/support');
+  const history = useHistory();
   const box = React.useRef<HTMLDivElement>(null);
   const panel = React.useRef<HTMLDivElement>(null);
   const [focused, setFocused] = React.useState(false);
+  // What the launcher chip says its key is. Empty until the platform is
+  // known, and on a touch device it stays empty: there is no key to press.
+  const [shortcut, setShortcut] = React.useState('');
   const [active, setActive] = React.useState(-1);
   // The rows live here as well as in the panel, because the arrow keys are
   // caught on the search field and have to know what they are walking.
@@ -99,12 +104,40 @@ export default function Omnibox() {
     // the assistant's own chip, not on every keystroke: the chip lives in the
     // widget's shadow root, so this catches the press on the host on the way
     // down, before the widget opens itself.
-    const carry = () => {
+    const carry = (send: boolean) => {
       if (!agent) return;
       const asked = input.value.trim();
       if (asked) agent.setAttribute('question', asked);
-      else agent.removeAttribute('question');
+      else {
+        agent.removeAttribute('question');
+        agent.removeAttribute('send');
+      }
+      // Words the reader has already typed and then pressed the assistant
+      // with are a question they have finished asking. Seeding the composer
+      // and waiting made them press send on their own sentence. Leaving the
+      // field is not asking, so it only seeds, and it must not clear a send
+      // set a moment earlier: pressing the chip blurs the field, so the blur
+      // arrives immediately after the press it belongs to.
+      if (asked && send) agent.setAttribute('send', '');
     };
+
+    /** Hands the field's words to the assistant and lets it answer them. */
+    const askAi = () => {
+      const asked = input.value.trim();
+      input.blur();
+      setFocused(false);
+      window.dispatchEvent(
+        new CustomEvent('abdm:ask-ai', {
+          detail: {question: asked, send: asked !== ''},
+        }),
+      );
+    };
+
+    /** The row the arrow keys are on in the search theme's own results. */
+    const onARow = () =>
+      !!root.querySelector(
+        "[class*='dropdownMenu'] [class*='suggestion'][class*='cursor']",
+      );
     const sync = () => {
       const el = panel.current;
       if (el) el.hidden = input.value.trim() !== '';
@@ -118,14 +151,31 @@ export default function Omnibox() {
     };
     // Late, so a click on a row below lands before the panel goes.
     const onBlur = () => {
-      carry();
+      carry(false);
       window.setTimeout(() => setFocused(false), 140);
     };
     // Up, down and enter belong to these rows only while they are the thing
     // on screen, which is while the field is empty. The moment anything is
     // typed the search theme's own results take the same keys back.
     const onKey = (event: KeyboardEvent) => {
-      if (input.value.trim() !== '') return;
+      // Command or control and return is the assistant, and it is bound on
+      // the window with the assistant's own key, below.
+      if (event.key === 'Enter' && (event.metaKey || event.ctrlKey)) return;
+      if (input.value.trim() !== '') {
+        // Return with no row under the arrow keys used to do nothing at all:
+        // the theme only acts on a selected row, so the most obvious key in
+        // the box was dead. It is the whole search, which is the page that
+        // lists every match.
+        if (event.key === 'Enter' && !onARow()) {
+          event.preventDefault();
+          event.stopPropagation();
+          const asked = input.value.trim();
+          input.blur();
+          setFocused(false);
+          history.push(`/search?q=${encodeURIComponent(asked)}`);
+        }
+        return;
+      }
       if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
         event.preventDefault();
         event.stopPropagation();
@@ -151,15 +201,50 @@ export default function Omnibox() {
     input.addEventListener('focus', onFocus);
     input.addEventListener('blur', onBlur);
     input.addEventListener('keydown', onKey, true);
-    agent?.addEventListener('mousedown', carry, true);
+    const onChip = () => carry(true);
+    agent?.addEventListener('mousedown', onChip, true);
     return () => {
-      agent?.removeEventListener('mousedown', carry, true);
+      agent?.removeEventListener('mousedown', onChip, true);
       input.removeEventListener('input', sync);
       input.removeEventListener('focus', onFocus);
       input.removeEventListener('blur', onBlur);
       input.removeEventListener('keydown', onKey, true);
     };
   }, [rows]);
+
+  // The assistant has a key of its own. Search has the command mark and K;
+  // a reader who wants to ask rather than search should not have to reach for
+  // the pointer to say so. Command or control and I, which no browser claims
+  // on its own. The chip is told what to display rather than working it out,
+  // because the key is bound here, not in the widget.
+  React.useEffect(() => {
+    const ua = navigator.userAgent;
+    if (/Android|iPhone|iPad|iPod/.test(ua)) return;
+    setShortcut(/Mac|iPhone|iPad|iPod/.test(ua) ? '\u2318I' : 'Ctrl I');
+    const onKey = (event: KeyboardEvent) => {
+      if (!(event.metaKey || event.ctrlKey) || event.altKey) return;
+      const field = box.current?.querySelector<HTMLInputElement>(
+        'input.navbar__search-input',
+      );
+      // The key on its own from anywhere on the page, and return while the
+      // caret is in the search field: a reader who has typed a question
+      // there wants it answered rather than matched.
+      const key = event.key.toLowerCase();
+      const opening = key === 'i' && !event.shiftKey;
+      const asking = event.key === 'Enter' && document.activeElement === field;
+      if (!opening && !asking) return;
+      event.preventDefault();
+      const asked = field?.value.trim() ?? '';
+      field?.blur();
+      window.dispatchEvent(
+        new CustomEvent('abdm:ask-ai', {
+          detail: {question: asked, send: asked !== ''},
+        }),
+      );
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, []);
 
   return (
     <div ref={box} className="omnibox">
@@ -179,6 +264,7 @@ export default function Omnibox() {
         {...(chatUrl ? {'api-base': chatUrl} : {})}
         docs-origin={siteConfig.url + siteConfig.baseUrl.replace(/\/$/, '')}
         {...(starters ? {starters} : {})}
+        {...(shortcut ? {shortcut} : {})}
         support-url={support}
       />
     </div>

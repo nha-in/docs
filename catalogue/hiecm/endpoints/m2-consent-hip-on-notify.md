@@ -19,6 +19,12 @@ sources:
     fetched: 2026-08-25
     note: >
       NHA's M2 OpenAPI file.
+  - file: catalogue/openapi/.raw/nha-2026-09-04/ABHA-PHR-V3-Documents.docx
+    fetched: 2026-09-04
+    hash: sha256:99320fbc4b9703fce4afed12d5eb0863431aaea25e814bc3fb9ab974d16acd75
+    note: >
+      NHA's PHR V3 document, section 6.8, which publishes the request
+      body this atom had as a placeholder.
 verified:
   status: unverified
 related:
@@ -55,10 +61,13 @@ curl -X POST 'https://dev.abdm.gov.in/api/hiecm/consent/v3/request/hip/on-notify
   -H 'TIMESTAMP: <ISO_8601_TIMESTAMP>' \
   -H 'X-CM-ID: sbx' \
   -H 'Content-Type: application/json' \
-  -d '<REQUEST_BODY>'
+  -d '{ "acknowledgement": [ { "status": "OK", "consentId": "e3c74829-3f82-4f94-959e-e10f57bcd57b" } ], "error": { "code": "ABDM-1001", "message": "unable to connect database" }, "response": { "requestId": "6f0b4665-a915-4c92-aa36-65afb4a2cd71" } }'
 ```
 
-The request and response schemas for this operation are in `catalogue/openapi/hiecm/v3/hiecm-m2.yaml`, ingested from NHA's file.
+The body above is transcribed from NHA's PHR V3 document, section 6.8, which publishes it for this call. It has not been sent to the
+sandbox from this repository.
+
+The request and response schemas for this operation are in the M2 specification, published at /specs/hiecm-m2.yaml and rendered field by field at /docs/hiecm/v3/api/m2. It is NHA's file as ingested.
 
 NHA calls this operation `consentHipOnNotify`.
 

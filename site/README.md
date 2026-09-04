@@ -34,7 +34,7 @@ The site depends on nothing outside its own origin:
 ## The Ask AI widget
 
 The chip in the top bar is not a component of this site. It is
-`<abdm-support-agent>`, the standalone widget in [../widget](../widget), built
+`<abdm-support-agent>`, the standalone widget in [../ai-widget](../ai-widget), built
 into `static/agent/` on every `prestart` and `prebuild` and loaded by a script
 tag. The site places the element and sets its attributes, exactly as any other
 embedder would, and styles only the box it sits in.

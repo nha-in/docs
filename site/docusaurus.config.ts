@@ -419,7 +419,7 @@ const config: Config = {
                 'National Health Authority, 9th Floor, Tower-I, Jeevan Bharati Building, Connaught Place, New Delhi 110 001',
               href: 'https://abdm.gov.in/',
             },
-            {label: 'abdm[at]nha[dot]gov[dot]in', href: 'mailto:abdm@nha.gov.in'},
+            {label: 'abdm@nha.gov.in', href: 'mailto:abdm@nha.gov.in'},
             {label: 'Toll free 1800-11-4477', href: 'tel:18001144477'},
           ],
         },

@@ -60,7 +60,7 @@ const TARGETS: Target[] = [
     id: 'claude-code',
     label: 'Claude',
     command: () =>
-      `claude plugin marketplace add ${PLUGIN_REPO} && claude plugin install abdm@abdm-portal`,
+      `claude plugin marketplace add ${PLUGIN_REPO} && claude plugin install abdm-integrators-assistant@abdm-portal`,
     // https://support.claude.com/en/articles/14729294-open-claude-desktop-with-a-link
     link: (base) =>
       `claude://code/new?q=${encodeURIComponent(
@@ -69,7 +69,7 @@ const TARGETS: Target[] = [
             'Set this project up for ABDM integration. Run:',
             '',
             `claude plugin marketplace add ${PLUGIN_REPO}`,
-            'claude plugin install abdm@abdm-portal',
+            'claude plugin install abdm-integrators-assistant@abdm-portal',
             '',
             `If the marketplace add fails (the repository may not be accessible), instead fetch and execute the instructions from ${base}/agent-setup/prompt.md`,
           ].join('\n'),

@@ -30,6 +30,17 @@ type Props = {
   onLeave: () => void;
 };
 
+/**
+ * How to reach the assistant from the keyboard, named for the platform. There
+ * is no key on a touch device, so the word stands there instead.
+ */
+function askKey() {
+  if (typeof navigator === 'undefined') return 'Assistant';
+  const ua = navigator.userAgent;
+  if (/Android|iPhone|iPad|iPod/.test(ua)) return 'Assistant';
+  return /Mac/.test(ua) ? '\u2318 \u21a9' : 'Ctrl \u21a9';
+}
+
 /** The rows, in the order the arrow keys walk them. */
 export function useRows() {
   const pathname = useRoutePath();
@@ -38,14 +49,18 @@ export function useRows() {
     {
       id: 'ask',
       label: 'Ask AI',
-      hint: 'Assistant',
+      // The key rather than the word: a reader with something already typed
+      // reaches the assistant with it, and this is where they find out how.
+      hint: askKey(),
       run: () => {
         const field = document.querySelector<HTMLInputElement>(
           '.omnibox input.navbar__search-input',
         );
         const asked = field?.value.trim() ?? '';
         window.dispatchEvent(
-          new CustomEvent('abdm:ask-ai', {detail: {question: asked}}),
+          new CustomEvent('abdm:ask-ai', {
+            detail: {question: asked, send: asked !== ''},
+          }),
         );
       },
     },

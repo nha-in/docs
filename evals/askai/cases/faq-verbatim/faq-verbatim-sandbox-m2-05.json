@@ -1,0 +1,35 @@
+{
+  "id": "faq-verbatim-sandbox-m2-05",
+  "slice": "faq-verbatim",
+  "class": "how-do-i",
+  "turns": [
+    {
+      "role": "user",
+      "text": "Where do I get details of the APIs/ API sequence for milestone M2?"
+    }
+  ],
+  "attachment": null,
+  "page": null,
+  "must_contain": [
+    "the M2 guide covers how to become an HRP and link as a HIP",
+    "the M2 guide covers user initiated linking, and data request and transfer"
+  ],
+  "must_not_contain": [
+    "<MASKED",
+    "i apologize",
+    "i apologise",
+    "let me ",
+    "great question",
+    "the catalogue",
+    "atom"
+  ],
+  "expected_sources": [
+    "hiecm.flow.m2-link-care-context"
+  ],
+  "expected_shape": "how-do-i",
+  "expected_behaviour": "answer",
+  "derived_from": null,
+  "source_row": "annexure#sandbox-faq-m2",
+  "catalogue_version": "2026.08.24",
+  "notes": ""
+}

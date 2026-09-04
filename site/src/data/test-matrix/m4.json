@@ -1,0 +1,1683 @@
+{
+  "module": "M4",
+  "title": "HPR and HFR registration",
+  "groups": [
+    {
+      "id": "hfr-search",
+      "label": "Deduplicate search, run before anything is created",
+      "rows": [
+        {
+          "id": "HFR-001",
+          "type": "Optional",
+          "functionality": "Search through facility id",
+          "expected": "Facility id should get filled",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Facility search. Applies to: All users. Field: facilityId. Steps: 1. Should only accepts the 12 digit alphanumric value. 2 should starts with \"IN\" NHA points this case at https://facilitysbx.abdm.gov.in/swagger-ui.html#/Search/v15SearchFacilitiesFuzzyPostUsingPOST"
+        },
+        {
+          "id": "HFR-002",
+          "type": "Conditional",
+          "functionality": "search through facility name",
+          "expected": "Facility name should get filled",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Facility search. Applies to: All users. Field: facilityName. Mandatory when: Yes (if facilityId not present). Steps: 1. Should accepts alphanumeric value 2.This value can be either full or partial name NHA points this case at https://facilitysbx.abdm.gov.in/swagger-ui.html#/Search/v15SearchFacilitiesFuzzyPostUsingPOST"
+        },
+        {
+          "id": "HFR-003",
+          "type": "Conditional",
+          "functionality": "To fill the facility ownership",
+          "expected": "Facility ownership should get filled",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Facility search. Applies to: All users. Field: ownershipCode. Mandatory when: Yes (if facilityId not present). Steps: 1. Accepted Values as specified in get-master-data API with type=’OWNER’ 2. Should be a dropdown field 3. Only 1 value can be selected NHA points this case at https://facilitysbx.abdm.gov.in/swagger-ui.html#/Search/v15SearchFacilitiesFuzzyPostUsingPOST https://facilitysbx.abdm.gov.in/swagger-ui.html#/Utilities/v15FacilityGetMasterDataUsingGET https://facilitysbx.abdm.gov.in/swagger-ui.html#/Utilities/v15FacilityGetOwnershipSubtypeUsingPOST"
+        },
+        {
+          "id": "HFR-004",
+          "type": "Conditional",
+          "functionality": "To fill the facility state",
+          "expected": "Facility state should get filled",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Facility search. Applies to: All users. Field: State / UT*. Mandatory when: Yes (if facilityId not present). Steps: 1. Get all the master entries by using facility/lgd/states APIs. 2. It should be a dropdown field 3. By default, \"Select State / UT\" should come selected in dropdown. 4. Dropdown should have search functionality. NHA points this case at https://facilitysbx.abdm.gov.in/swagger-ui.html#/Search/v15SearchFacilitiesFuzzyPostUsingPOST https://facilitysbx.abdm.gov.in/swagger-ui.html#/Utilities/v15FacilityGetLGDStatesUsingGET"
+        },
+        {
+          "id": "HFR-005",
+          "type": "Optional",
+          "functionality": "To fill the facility district",
+          "expected": "Facility district should get filled",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Facility search. Applies to: All users. Field: District*. Steps: 1. Get all the master entries by using facility/lgd/districts APIs. 2. It should be a dropdown field 3. By default \"Select District\" should come selected in dropdown. 4. Dropdown should have search functionality. NHA points this case at https://facilitysbx.abdm.gov.in/swagger-ui.html#/Search/v15SearchFacilitiesFuzzyPostUsingPOST https://facilitysbx.abdm.gov.in/swagger-ui.html#/Utilities/v15FacilityGetLGDDistrictsUsingGET"
+        },
+        {
+          "id": "HFR-006",
+          "type": "Optional",
+          "functionality": "To fill the facility sub-district",
+          "expected": "Facility subdistrictshould get filled",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Facility search. Applies to: All users. Field: Sub-district*. Steps: 1. Get all the master entries by using facility/lgd/sub-districts APIs. 2. It should be a dropdown field 3. By default, \"Select Sub-District\" should come selected in dropdown. 3. Dropdown should have search functionality. NHA points this case at https://facilitysbx.abdm.gov.in/swagger-ui.html#/Search/v15SearchFacilitiesFuzzyPostUsingPOST https://facilitysbx.abdm.gov.in/swagger-ui.html#/Utilities/v15FacilityGetLGDSubDistrictsUsingGET"
+        },
+        {
+          "id": "HFR-007",
+          "type": "Optional",
+          "functionality": "To fill the facility pincode",
+          "expected": "Facility pincode should get filled",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Facility search. Applies to: All users. Field: pincode*. Steps: 1. Enter the Pincode 2. Maximum 6 digits are allowed. NHA points this case at https://facilitysbx.abdm.gov.in/swagger-ui.html#/Search/v15SearchFacilitiesFuzzyPostUsingPOST"
+        },
+        {
+          "id": "HFR-008",
+          "type": "Mandatory",
+          "functionality": "To show number of pages",
+          "expected": "should have default value as 1",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Facility search. Applies to: All users. Field: page. Steps: 1. Must have a defaul value (1). 2. if filled it should be in integer only 3. Should not allow alphabets 4. Should not be filed by the end user NHA points this case at https://facilitysbx.abdm.gov.in/swagger-ui.html#/Search/v15SearchFacilitiesFuzzyPostUsingPOST"
+        },
+        {
+          "id": "HFR-009",
+          "type": "Mandatory",
+          "functionality": "To show number of facilities per page",
+          "expected": "should have default value as 10",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Facility search. Applies to: All users. Field: resultsPerPage. Steps: 1. Default value is 10. 2. Should not be filled by end user NHA points this case at https://facilitysbx.abdm.gov.in/swagger-ui.html#/Search/v15SearchFacilitiesFuzzyPostUsingPOST"
+        }
+      ]
+    },
+    {
+      "id": "hfr-registration",
+      "label": "Facility registration: the three writes and the submit",
+      "rows": [
+        {
+          "id": "HFR-010",
+          "type": "Mandatory",
+          "functionality": "To Save the facilty basic details",
+          "expected": "Filled Facility Name",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Facility Registration(Basic demographics of the facility). Applies to: Facilty Manager. Field: Facility Name. Steps: 1. Alphanumeric string that starts with an alphabet. 2. Enter the Facility Name 3. It should be editable. 4. Should not accept special character. 5. It should be more than 4 characters 5. If someone bypass the restrictions system should prompt the alert. For filling the correct name NHA points this case at https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityBasicInformationUsingPOST"
+        },
+        {
+          "id": "HFR-011",
+          "type": "Mandatory",
+          "functionality": "Fill the geographic location",
+          "expected": "Latitude has been filled as per the definition",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Facility Registration(Basic demographics of the facility). Applies to: Facilty Manager. Field: Latitude*. Steps: 1. Use the geolocation API or get the Latitude by searching the facility on map. 2. Real Number ranging from -90.000000 to +90.000000 , with 1-6 decimal places 3. Fill the Latitude of the facility 4. it should be editable NHA points this case at https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityBasicInformationUsingPOST"
+        },
+        {
+          "id": "HFR-012",
+          "type": "Mandatory",
+          "functionality": "Longitude*",
+          "expected": "longitude has been filled as per the definition",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Facility Registration(Basic demographics of the facility). Applies to: Facilty Manager. Field: Longitude*. Steps: 1.Use the geolocation API or get the Latitude by searching the facility on map. 2.Real Number ranging from -180.000000 to +180.000000 with 1-6 decimal places 3. Fill the Longitude of the facility 4. it should be editable NHA points this case at https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityBasicInformationUsingPOST"
+        },
+        {
+          "id": "HFR-013",
+          "type": "Optional",
+          "functionality": "To select the country",
+          "expected": "",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Facility Registration(Basic demographics of the facility). Applies to: Facilty Manager. Field: Country*. Steps: 1.By default Country should be India 2. It should be Non editable NHA points this case at https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityBasicInformationUsingPOST"
+        },
+        {
+          "id": "HFR-014",
+          "type": "Mandatory",
+          "functionality": "To select the State",
+          "expected": "State should get selected",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Facility Registration(Basic demographics of the facility). Applies to: Facilty Manager. Field: State / UT*. Steps: 1. Get all the master entries by using facility/lgd/states APIs. 2. It should be a dropdown field 3. By default, \"Select State / UT\" should come selected in dropdown. 4. Dropdown should have search functionality. NHA points this case at https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityBasicInformationUsingPOST https://facilitysbx.abdm.gov.in/swagger-ui.html#/Utilities/v15FacilityGetLGDStatesUsingGET"
+        },
+        {
+          "id": "HFR-015",
+          "type": "Mandatory",
+          "functionality": "To select the District",
+          "expected": "District should get selected",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Facility Registration(Basic demographics of the facility). Applies to: Facilty Manager. Field: District*. Steps: 1. Get all the master entries by using facility/lgd/districts APIs. 2. It should be a dropdown field 3. By default \"Select District\" should come selected in dropdown. 4. Dropdown should have search functionality. NHA points this case at https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityBasicInformationUsingPOST https://facilitysbx.abdm.gov.in/swagger-ui.html#/Utilities/v15FacilityGetLGDDistrictsUsingGET"
+        },
+        {
+          "id": "HFR-016",
+          "type": "Mandatory",
+          "functionality": "To select the Sub-district",
+          "expected": "Sub-District should get selected",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Facility Registration(Basic demographics of the facility). Applies to: Facilty Manager. Field: Sub-district*. Steps: 1. Get all the master entries by using facility/lgd/sub-districts APIs. 2. It should be a dropdown field 3. By default, \"Select Sub-District\" should come selected in dropdown. 3. Dropdown should have search functionality. NHA points this case at https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityBasicInformationUsingPOST https://facilitysbx.abdm.gov.in/swagger-ui.html#/Utilities/v15FacilityGetLGDSubDistrictsUsingGET"
+        },
+        {
+          "id": "HFR-017",
+          "type": "Mandatory",
+          "functionality": "To fill the facility address",
+          "expected": "Address should get filled",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Facility Registration(Basic demographics of the facility). Applies to: Facilty Manager. Field: Facility Address Line 1*. Steps: 1. Enter the address of the facility 2. It should accept alphanumeric value. 3. Special characters should not be allowed except characters ( . - , / ( ) _ ) NHA points this case at https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityBasicInformationUsingPOST"
+        },
+        {
+          "id": "HFR-018",
+          "type": "Optional",
+          "functionality": "Facility Address Line 2",
+          "expected": "Address should get filled",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Facility Registration(Basic demographics of the facility). Applies to: Facilty Manager. Field: Facility Address Line 2. Steps: 1. Enter the address of the facility 2. It should accept alphanumeric value. 3. Special characters should not be allowed except characters ( . - , / ( ) _ ) NHA points this case at https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityBasicInformationUsingPOST"
+        },
+        {
+          "id": "HFR-019",
+          "type": "Mandatory",
+          "functionality": "To enter the facility pincode",
+          "expected": "Pincode should get filled",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Facility Registration(Basic demographics of the facility). Applies to: Facilty Manager. Field: pincode*. Steps: 1. Enter the Pincode 2. Maximum 6 digits are allowed. NHA points this case at https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityBasicInformationUsingPOST"
+        },
+        {
+          "id": "HFR-020",
+          "type": "Conditional",
+          "functionality": "To select the facility working days",
+          "expected": "working days should get selected",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Facility Registration(Basic demographics of the facility). Applies to: Facilty Manager. Field: workingDays*. Mandatory when: Yes, If facility operational status if Functional. Steps: 1. Accepted codes in backend as specified in get-master-data API with type=’WORKING-DAYS’ 1. It should allow multiple days to select. 2. Should be filled if the operational status is Functional NHA points this case at https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityBasicInformationUsingPOST https://facilitysbx.abdm.gov.in/swagger-ui.html#/Utilities/v15FacilityGetMasterTypesUsingGET https://facilitysbx.abdm.gov.in/swagger-ui.html#/Utilities/v15FacilityGetMasterDataUsingGET"
+        },
+        {
+          "id": "HFR-021",
+          "type": "Mandatory",
+          "functionality": "To fill the opening hours of the facility",
+          "expected": "Facility Timings should get saved",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Facility Registration(Basic demographics of the facility). Applies to: Facilty Manager. Field: timingsOfFacility*. Steps: 1. Accepted format is 10:00 Am – 2:00 PM or 24*7 2. User should enter \"From\" time and \"To\" time. 3. Should only be filled if the respective working day is selected. NHA points this case at https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityBasicInformationUsingPOST"
+        },
+        {
+          "id": "HFR-022",
+          "type": "Mandatory",
+          "functionality": "To select the facility operational status",
+          "expected": "Facility operational status should get filled",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Facility Registration(Basic demographics of the facility). Applies to: Facilty Manager. Field: Facility Operational Status*. Steps: 1. Should be a dropdown field. 2. Accepted codes in beckend as specified in get-master-data API with type=’FAC-STATUS’ NHA points this case at https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityBasicInformationUsingPOST https://facilitysbx.abdm.gov.in/swagger-ui.html#/Utilities/v15FacilityGetMasterTypesUsingGET https://facilitysbx.abdm.gov.in/swagger-ui.html#/Utilities/v15FacilityGetMasterDataUsingGET"
+        },
+        {
+          "id": "HFR-023",
+          "type": "Optional",
+          "functionality": "To enter the facility landline number for public display",
+          "expected": "Landline number should get filled",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Facility Registration(Basic demographics of the facility). Applies to: Facilty Manager. Field: Landline Number(for public display). Steps: 1. Should be a valid 10 digit mobile number 2. Special characters and alphabets are not allowed NHA points this case at https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityBasicInformationUsingPOST"
+        },
+        {
+          "id": "HFR-024",
+          "type": "Optional",
+          "functionality": "To enter the facility mobile number for public display",
+          "expected": "Mobile number should get filled",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Facility Registration(Basic demographics of the facility). Applies to: Facilty Manager. Field: Mobile Number(for public display). Steps: 1. Should be a valid landline number ranging between 6-8 digits NHA points this case at https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityBasicInformationUsingPOST"
+        },
+        {
+          "id": "HFR-025",
+          "type": "Optional",
+          "functionality": "To enter the email for public display",
+          "expected": "Facility email should get filled",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Facility Registration(Basic demographics of the facility). Applies to: Facilty Manager. Field: Facility Email(for public display). Steps: 1. Proper format of email to be followed NHA points this case at https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityBasicInformationUsingPOST"
+        },
+        {
+          "id": "HFR-026",
+          "type": "Optional",
+          "functionality": "To enter the hospital website link",
+          "expected": "Proper Website should get filled",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Facility Registration(Basic demographics of the facility). Applies to: Facilty Manager. Field: Website(for public display). Steps: 1. Must contain Valid Link NHA points this case at https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityBasicInformationUsingPOST"
+        },
+        {
+          "id": "HFR-027",
+          "type": "Optional",
+          "functionality": "facility file Uploads",
+          "expected": "Photograph should get saved",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Facility Registration(Basic demographics of the facility). Applies to: Facilty Manager. Field: Facility Building Photograph. Steps: 1. Maximum allowed file size is 5MB.(Allowed formats: PNG,JPEG,JPG) 2. Single file should be uploaded NHA points this case at https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityBasicInformationUsingPOST"
+        },
+        {
+          "id": "HFR-028",
+          "type": "Optional",
+          "functionality": "Facility Board Photograph",
+          "expected": "Photograph should get saved",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Facility Registration(Basic demographics of the facility). Applies to: Facilty Manager. Field: Facility Board Photograph. Steps: 1. Maximum allowed file size is 5MB.(Allowed formats: PNG,JPEG,JPG) 2. Single file should be uploaded NHA points this case at https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityBasicInformationUsingPOST"
+        },
+        {
+          "id": "HFR-029",
+          "type": "Optional",
+          "functionality": "Address Proof Type",
+          "expected": "Address proof type should get selected",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Facility Registration(Basic demographics of the facility). Applies to: Facilty Manager. Field: Address Proof Type. Steps: 1. Accepted codes as specified in get-master-data API with type=’ADDRESS-PROOF’ 2.Should allo multiple selections NHA points this case at https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityBasicInformationUsingPOST https://facilitysbx.abdm.gov.in/swagger-ui.html#/Utilities/v15FacilityGetMasterTypesUsingGET https://facilitysbx.abdm.gov.in/swagger-ui.html#/Utilities/v15FacilityGetMasterDataUsingGET"
+        },
+        {
+          "id": "HFR-030",
+          "type": "Conditional",
+          "functionality": "Address Proof",
+          "expected": "Address proof should get saved",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Facility Registration(Basic demographics of the facility). Applies to: Facilty Manager. Field: Address Proof. Mandatory when: Yes,If Address Proof Type is selected. Steps: 1. Maximum size allowed for the attachment is 5MB 2. Should allow multiple entries with respect to the address proof selected NHA points this case at https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityBasicInformationUsingPOST"
+        },
+        {
+          "id": "HFR-031",
+          "type": "Mandatory",
+          "functionality": "To provide the ownership details",
+          "expected": "Facility ownership should get saved",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Facility Registration(Basic demographics of the facility). Applies to: Facilty Manager. Field: Facility Ownership*. Steps: 1. Accepted Values as specified in get-master-data API with type=’OWNER’ 2. Should be a dropdown field 3. Only 1 value can be selected NHA points this case at https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityBasicInformationUsingPOST https://facilitysbx.abdm.gov.in/swagger-ui.html#/Utilities/v15FacilityGetMasterTypesUsingGET https://facilitysbx.abdm.gov.in/swagger-ui.html#/Utilities/v15FacilityGetMasterDataUsingGET"
+        },
+        {
+          "id": "HFR-032",
+          "type": "Conditional",
+          "functionality": "Facility Ownership Subtype*",
+          "expected": "Facility ownership subtype should get saved",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Facility Registration(Basic demographics of the facility). Applies to: Facilty Manager. Field: Facility Ownership Subtype*. Mandatory when: Yes(only if ownership is \"govermnet\". Steps: 1. Accepted Values as specified in get-owner-subtype API 2. Should be mandatory only for \"Goverment\" ownership NHA points this case at https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityBasicInformationUsingPOST https://facilitysbx.abdm.gov.in/swagger-ui.html#/Utilities/v15FacilityGetMasterDataUsingGET https://facilitysbx.abdm.gov.in/swagger-ui.html#/Utilities/v15FacilityGetOwnershipSubtypeUsingPOST"
+        },
+        {
+          "id": "HFR-033",
+          "type": "Conditional",
+          "functionality": "Facility Ownership Subtype 2*",
+          "expected": "",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Facility Registration(Basic demographics of the facility). Applies to: Facilty Manager. Field: Facility Ownership Subtype 2*. Mandatory when: Yes (only if ownership Subtype is \"central\". Steps: 1. Accepted values as specified in get-master-data API with type=’CENTRAL-GOVERNMENT’ 2. Should be mandatory only for \"central\" ownership subtype NHA points this case at https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityBasicInformationUsingPOST https://facilitysbx.abdm.gov.in/swagger-ui.html#/Utilities/v15FacilityGetMasterTypesUsingGET https://facilitysbx.abdm.gov.in/swagger-ui.html#/Utilities/v15FacilityGetMasterDataUsingGET"
+        },
+        {
+          "id": "HFR-034",
+          "type": "Mandatory",
+          "functionality": "To provide the details of system of medicine",
+          "expected": "System of medicine should get saved",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Facility Registration(Basic demographics of the facility). Applies to: Facilty Manager. Field: System of Medicine*. Steps: 1. Accepted Values as specified in get-master-data API with type=“MEDICINE”. 2. It sould allow multiple system of medicines NHA points this case at https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityBasicInformationUsingPOST https://facilitysbx.abdm.gov.in/swagger-ui.html#/Utilities/v15FacilityGetMasterTypesUsingGET https://facilitysbx.abdm.gov.in/swagger-ui.html#/Utilities/v15FacilityGetMasterDataUsingGET"
+        },
+        {
+          "id": "HFR-035",
+          "type": "Mandatory",
+          "functionality": "To enter the type of facility",
+          "expected": "Facility Type should get saved",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Facility Registration(Basic demographics of the facility). Applies to: Facilty Manager. Field: Facility Type*. Steps: 1.Accepted codes as specified in fetch-facility-type API. 2. It should be dropdown field. NHA points this case at https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityBasicInformationUsingPOST https://facilitysbx.abdm.gov.in/swagger-ui.html#/Utilities/v15FetchFacilityTypesUsingPOST"
+        },
+        {
+          "id": "HFR-036",
+          "type": "Mandatory",
+          "functionality": "Facility Sub Type*",
+          "expected": "Facility sub type should get saved",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Facility Registration(Basic demographics of the facility). Applies to: Facilty Manager. Field: Facility Sub Type*. Steps: 1. Accepted codes as specified in fetch-facility-sub-type API. 2. It should be dropdown field. NHA points this case at https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityBasicInformationUsingPOST https://facilitysbx.abdm.gov.in/swagger-ui.html#/Utilities/v15FetchFacilitySubTypesUsingPOST"
+        },
+        {
+          "id": "HFR-037",
+          "type": "Mandatory",
+          "functionality": "To enter the type of services provided",
+          "expected": "Multiple type of service should get selected",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Facility Registration(Basic demographics of the facility). Applies to: Facilty Manager. Field: Type of Service*. Steps: 1. Not mandatory for facility type:- Pharmacy,Blood bank,Diagnostic Lab, Imaging Center, Cath lab, Dialysis Center 2. Accepted codes as specified in get-master-data API with type=’SPECIALITY-TYPE’ NHA points this case at https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityBasicInformationUsingPOST https://facilitysbx.abdm.gov.in/swagger-ui.html#/Utilities/v15FacilityGetMasterTypesUsingGET https://facilitysbx.abdm.gov.in/swagger-ui.html#/Utilities/v15FacilityGetMasterDataUsingGET"
+        },
+        {
+          "id": "HFR-038",
+          "type": "Mandatory",
+          "functionality": "To enter the Specialization",
+          "expected": "Multiple Specialization should get selected",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Facility Registration(Basic demographics of the facility). Applies to: Facilty Manager. Field: Specialization*. Steps: 1. Accepted codes as specified in the get-specialities APIwith respect to a system of medicine 2.Mandatory for all facility type except Pharmacy,Blood bank,, Cath lab, Dialysis Center 3. Multiple values can be selected NHA points this case at https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityBasicInformationUsingPOST https://facilitysbx.abdm.gov.in/swagger-ui.html#/Utilities/v15FacilityGetSpecialitiesUsingPOST"
+        },
+        {
+          "id": "HFR-039",
+          "type": "Optional",
+          "functionality": "Linked program Id",
+          "expected": "It should get filled",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Facility Registration(Capture Health program ids). Applies to: Facilty Manager. Field: National Health Resource Repository Unique ID. Steps: 1. Should be a valid NHRR ID NHA points this case at https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityAdditionalInformationUsingPOST"
+        },
+        {
+          "id": "HFR-040",
+          "type": "Optional",
+          "functionality": "National Identification Number",
+          "expected": "It should get filled",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Facility Registration(Capture Health program ids). Applies to: Facilty Manager. Field: National Identification Number. Steps: 1. Should be a valid NIN id NHA points this case at https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityAdditionalInformationUsingPOST"
+        },
+        {
+          "id": "HFR-041",
+          "type": "Optional",
+          "functionality": "Hospital Id as allotted by AB-PMJAY Hospital Empanelment Module.",
+          "expected": "It should get filled",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Facility Registration(Capture Health program ids). Applies to: Facilty Manager. Field: Hospital Id as allotted by AB-PMJAY Hospital Empanelment Module.. Steps: 1. Should be a valid AB-PMJAY Hospital Id NHA points this case at https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityAdditionalInformationUsingPOST"
+        },
+        {
+          "id": "HFR-042",
+          "type": "Optional",
+          "functionality": "Rohini Id",
+          "expected": "It should get filled",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Facility Registration(Capture Health program ids). Applies to: Facilty Manager. Field: Rohini Id. Steps: 1. Should be a valid Rohini Id NHA points this case at https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityAdditionalInformationUsingPOST"
+        },
+        {
+          "id": "HFR-043",
+          "type": "Optional",
+          "functionality": "Unique id in Ex-Servicemen Contributory Health Scheme",
+          "expected": "It should get filled",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Facility Registration(Capture Health program ids). Applies to: Facilty Manager. Field: Unique id in Ex-Servicemen Contributory Health Scheme. Steps: 1. Should be a valid ECHS Id. NHA points this case at https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityAdditionalInformationUsingPOST"
+        },
+        {
+          "id": "HFR-044",
+          "type": "Optional",
+          "functionality": "Unique Id in Central Government Health Scheme",
+          "expected": "It should get filled",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Facility Registration(Capture Health program ids). Applies to: Facilty Manager. Field: Unique Id in Central Government Health Scheme. Steps: 1. Should be a valid CGHS Id. NHA points this case at https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityAdditionalInformationUsingPOST"
+        },
+        {
+          "id": "HFR-045",
+          "type": "Optional",
+          "functionality": "CEA Registration Number",
+          "expected": "It should get filled",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Facility Registration(Capture Health program ids). Applies to: Facilty Manager. Field: CEA Registration Number. Steps: 1. Should be a valid CEA registration number NHA points this case at https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityAdditionalInformationUsingPOST"
+        },
+        {
+          "id": "HFR-046",
+          "type": "Optional",
+          "functionality": "State Insurance Scheme ID",
+          "expected": "It should get filled",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Facility Registration(Capture Health program ids). Applies to: Facilty Manager. Field: State Insurance Scheme ID. Steps: 1. Alphanumeric string NHA points this case at https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityAdditionalInformationUsingPOST"
+        },
+        {
+          "id": "HFR-047",
+          "type": "Mandatory",
+          "functionality": "systemOfMedicineCode",
+          "expected": "System of medicine should get selected",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Facility Registration(Capture facility details information-infrastructure and specialization. Applies to: Facilty Manager. Field: Services/Specialization. Steps: 1. System of medicine codes as saved in Basic-Information API 2. Accepted codes as specified in get-master-data API with type=’MEDICINE’ NHA points this case at https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityDetailedInformationUsingPOST https://facilitysbx.abdm.gov.in/swagger-ui.html#/Utilities/v15FacilityGetMasterTypesUsingGET https://facilitysbx.abdm.gov.in/swagger-ui.html#/Utilities/v15FacilityGetMasterDataUsingGET"
+        },
+        {
+          "id": "HFR-048",
+          "type": "Mandatory",
+          "functionality": "isSpecializationAvalaible",
+          "expected": "",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Facility Registration(Capture facility details information-infrastructure and specialization. Applies to: Facilty Manager. Steps: 1. If the facility offers any specializations or services for this system of medicine code should be Y / N as accepted value"
+        },
+        {
+          "id": "HFR-049",
+          "type": "Conditional",
+          "functionality": "specialities",
+          "expected": "",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Facility Registration(Capture facility details information-infrastructure and specialization. Applies to: Facilty Manager. Mandatory when: Yes, if specializations/ services are offered for this system of medicine. Steps: 1.Only allowed if previous option is Y 2. Multiple selection should be allowed 3. Accepted codes as specified in the get-specialities API with respect to a system of medicine NHA points this case at https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityDetailedInformationUsingPOST https://facilitysbx.abdm.gov.in/swagger-ui.html#/Utilities/v15FacilityGetSpecialitiesUsingPOST"
+        },
+        {
+          "id": "HFR-050",
+          "type": "Optional",
+          "functionality": "countIPDBedsWithoutOxygen",
+          "expected": "Details should get filled",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Facility Registration(Capture facility details information-infrastructure and specialization. Applies to: Facilty Manager. Field: Medical Infrastructure Beds. Steps: 1. Accepts only Numeric Value 2. Not more than 2 charactres alllowed NHA points this case at https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityDetailedInformationUsingPOST"
+        },
+        {
+          "id": "HFR-051",
+          "type": "Optional",
+          "functionality": "countIPDBedsWithOxygen",
+          "expected": "Details should get filled",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Facility Registration(Capture facility details information-infrastructure and specialization. Applies to: Facilty Manager. Steps: 1. Accepts only Numeric Value 2. Not more than 2 charactres alllowed NHA points this case at https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityDetailedInformationUsingPOST"
+        },
+        {
+          "id": "HFR-052",
+          "type": "Optional",
+          "functionality": "countICUBedsWithVentilators",
+          "expected": "Details should get filled",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Facility Registration(Capture facility details information-infrastructure and specialization. Applies to: Facilty Manager. Steps: 1. Accepts only Numeric Value 2. Not more than 2 charactres alllowed NHA points this case at https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityDetailedInformationUsingPOST"
+        },
+        {
+          "id": "HFR-053",
+          "type": "Optional",
+          "functionality": "countICUBedsWithoutVentilators",
+          "expected": "Details should get filled",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Facility Registration(Capture facility details information-infrastructure and specialization. Applies to: Facilty Manager. Steps: 1. Accepts only Numeric Value 2. Not more than 2 charactres alllowed NHA points this case at https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityDetailedInformationUsingPOST"
+        },
+        {
+          "id": "HFR-054",
+          "type": "Optional",
+          "functionality": "countHDUBedsWithFunctionalVentilators",
+          "expected": "Details should get filled",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Facility Registration(Capture facility details information-infrastructure and specialization. Applies to: Facilty Manager. Steps: 1. Accepts only Numeric Value 2. Not more than 2 charactres alllowed NHA points this case at https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityDetailedInformationUsingPOST"
+        },
+        {
+          "id": "HFR-055",
+          "type": "Optional",
+          "functionality": "countHDUBedsWithVentilators",
+          "expected": "Details should get filled",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Facility Registration(Capture facility details information-infrastructure and specialization. Applies to: Facilty Manager. Steps: 1. Accepts only Numeric Value 2. Not more than 2 charactres alllowed NHA points this case at https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityDetailedInformationUsingPOST"
+        },
+        {
+          "id": "HFR-056",
+          "type": "Optional",
+          "functionality": "countHDUBedsWithoutVentilators",
+          "expected": "Details should get filled",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Facility Registration(Capture facility details information-infrastructure and specialization. Applies to: Facilty Manager. Steps: 1. Accepts only Numeric Value 2. Not more than 2 charactres alllowed NHA points this case at https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityDetailedInformationUsingPOST"
+        },
+        {
+          "id": "HFR-057",
+          "type": "Mandatory",
+          "functionality": "totalNumberOfVentilators",
+          "expected": "Details should get filled",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Facility Registration(Capture facility details information-infrastructure and specialization. Applies to: Facilty Manager. Steps: 1. Accepts only Numeric Value 3. Should be total of beds with vantilators 2. Not more than 4 charactres alllowed 4. Should be non edtitable NHA points this case at https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityDetailedInformationUsingPOST"
+        },
+        {
+          "id": "HFR-058",
+          "type": "Optional",
+          "functionality": "countDayCareBedsWithoutOxygen",
+          "expected": "Details should get filled",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Facility Registration(Capture facility details information-infrastructure and specialization. Applies to: Facilty Manager. Steps: 1. Accepts only Numeric Value 2. Not more than 2 charactres alllowed NHA points this case at https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityDetailedInformationUsingPOST"
+        },
+        {
+          "id": "HFR-059",
+          "type": "Optional",
+          "functionality": "countDayCareBedsWithOxygen",
+          "expected": "Details should get filled",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Facility Registration(Capture facility details information-infrastructure and specialization. Applies to: Facilty Manager. Steps: 1. Accepts only Numeric Value 2. Not more than 2 charactres alllowed NHA points this case at https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityDetailedInformationUsingPOST"
+        },
+        {
+          "id": "HFR-060",
+          "type": "Mandatory",
+          "functionality": "totalNumberOfBeds",
+          "expected": "Details should get filled",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Facility Registration(Capture facility details information-infrastructure and specialization. Applies to: Facilty Manager. Steps: 1. Accepts only Numeric Value 3. Should be total of beds without vantilators 2. Not more than 4 charactres alllowed 4. Should be non edtitable NHA points this case at https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityDetailedInformationUsingPOST"
+        },
+        {
+          "id": "HFR-061",
+          "type": "Optional",
+          "functionality": "countDentalChairs",
+          "expected": "Details should get filled",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Facility Registration(Capture facility details information-infrastructure and specialization. Applies to: Facilty Manager. Steps: 1. Accepts only Numeric Value 2. Not more than 2 charactres alllowed NHA points this case at https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityDetailedInformationUsingPOST"
+        },
+        {
+          "id": "HFR-062",
+          "type": "Optional",
+          "functionality": "sourceOfInformation",
+          "expected": "Facility shold get submitted",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Facility submission. Applies to: Facilty Manager. Field: Submit. Steps: 1.Should be a default value not to be filled by the end user 2. Should be valid data source provide by HFR team. If you leave this field empty, then your facility will be considered as Submitted entity. NHA points this case at https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15SubmitFacilityDetailsUsingPOST"
+        },
+        {
+          "id": "HFR-063",
+          "type": "Optional",
+          "functionality": "sourceUniqueID",
+          "expected": "",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Facility submission. Applies to: Facilty Manager. Steps: 1.Should be a default value not to be filled by the end user"
+        }
+      ]
+    },
+    {
+      "id": "hfr-update",
+      "label": "Updating a facility that already exists",
+      "rows": [
+        {
+          "id": "HFR-064",
+          "type": "Mandatory",
+          "functionality": "To edit the facilty basic details",
+          "expected": "Filled Facility Name",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Facility Registration(Basic demographics of the facility). Applies to: Facilty Manager. Field: Facility Name. Steps: 1. Alphanumeric string that starts with an alphabet. 2. Enter the Facility Name 3. It should be editable. 4. Should not accept special character. 5. It should be more than 4 characters 5. If someone bypass the restrictions system should prompt the alert. For filling the correct name NHA points this case at https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityBasicInformationUsingPOST"
+        },
+        {
+          "id": "HFR-065",
+          "type": "Mandatory",
+          "functionality": "Change the geographic location",
+          "expected": "Latitude has been filled as per the definition",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Facility Registration(Basic demographics of the facility). Applies to: Facilty Manager. Field: Latitude*. Steps: 1. Use the geolocation API or get the Latitude by searching the facility on map. 2. Real Number ranging from -90.000000 to +90.000000 , with 1-6 decimal places 3. Fill the Latitude of the facility 4. it should be editable NHA points this case at https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityBasicInformationUsingPOST"
+        },
+        {
+          "id": "HFR-066",
+          "type": "Mandatory",
+          "functionality": "Longitude*",
+          "expected": "longitude has been filled as per the definition",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Facility Registration(Basic demographics of the facility). Applies to: Facilty Manager. Field: Longitude*. Steps: 1.Use the geolocation API or get the Latitude by searching the facility on map. 2.Real Number ranging from -180.000000 to +180.000000 with 1-6 decimal places 3. Fill the Longitude of the facility 4. it should be editable NHA points this case at https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityBasicInformationUsingPOST"
+        },
+        {
+          "id": "HFR-067",
+          "type": "Optional",
+          "functionality": "To select the country",
+          "expected": "",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Facility Registration(Basic demographics of the facility). Applies to: Facilty Manager. Field: Country*. Steps: 1.By default Country should be India 2. It should be Non editable NHA points this case at https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityBasicInformationUsingPOST"
+        },
+        {
+          "id": "HFR-068",
+          "type": "Mandatory",
+          "functionality": "To edit the State",
+          "expected": "State should get selected",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Facility Registration(Basic demographics of the facility). Applies to: Facilty Manager. Field: State / UT*. Steps: 1. Get all the master entries by using facility/lgd/states APIs. 2. It should be a dropdown field 3. By default, \"Select State / UT\" should come selected in dropdown. 4. Dropdown should have search functionality. NHA points this case at https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityBasicInformationUsingPOST https://facilitysbx.abdm.gov.in/swagger-ui.html#/Utilities/v15FacilityGetLGDStatesUsingGET"
+        },
+        {
+          "id": "HFR-069",
+          "type": "Mandatory",
+          "functionality": "To edit the District",
+          "expected": "District should get selected",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Facility Registration(Basic demographics of the facility). Applies to: Facilty Manager. Field: District*. Steps: 1. Get all the master entries by using facility/lgd/districts APIs. 2. It should be a dropdown field 3. By default \"Select District\" should come selected in dropdown. 4. Dropdown should have search functionality. NHA points this case at https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityBasicInformationUsingPOST https://facilitysbx.abdm.gov.in/swagger-ui.html#/Utilities/v15FacilityGetLGDDistrictsUsingGET"
+        },
+        {
+          "id": "HFR-070",
+          "type": "Mandatory",
+          "functionality": "To edit the Sub-district",
+          "expected": "Sub-District should get selected",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Facility Registration(Basic demographics of the facility). Applies to: Facilty Manager. Field: Sub-district*. Steps: 1. Get all the master entries by using facility/lgd/sub-districts APIs. 2. It should be a dropdown field 3. By default, \"Select Sub-District\" should come selected in dropdown. 3. Dropdown should have search functionality. NHA points this case at https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityBasicInformationUsingPOST https://facilitysbx.abdm.gov.in/swagger-ui.html#/Utilities/v15FacilityGetLGDSubDistrictsUsingGET"
+        },
+        {
+          "id": "HFR-071",
+          "type": "Mandatory",
+          "functionality": "To edit the facility address",
+          "expected": "Address should get filled",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Facility Registration(Basic demographics of the facility). Applies to: Facilty Manager. Field: Facility Address Line 1*. Steps: 1. Enter the address of the facility 2. It should accept alphanumeric value. 3. Special characters should not be allowed except characters ( . - , / ( ) _ ) NHA points this case at https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityBasicInformationUsingPOST"
+        },
+        {
+          "id": "HFR-072",
+          "type": "Optional",
+          "functionality": "Facility Address Line 2",
+          "expected": "Address should get filled",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Facility Registration(Basic demographics of the facility). Applies to: Facilty Manager. Field: Facility Address Line 2. Steps: 1. Enter the address of the facility 2. It should accept alphanumeric value. 3. Special characters should not be allowed except characters ( . - , / ( ) _ ) NHA points this case at https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityBasicInformationUsingPOST"
+        },
+        {
+          "id": "HFR-073",
+          "type": "Mandatory",
+          "functionality": "To edit the facility pincode",
+          "expected": "Pincode should get filled",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Facility Registration(Basic demographics of the facility). Applies to: Facilty Manager. Field: pincode*. Steps: 1. Enter the Pincode 2. Maximum 6 digits are allowed. NHA points this case at https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityBasicInformationUsingPOST"
+        },
+        {
+          "id": "HFR-074",
+          "type": "Conditional",
+          "functionality": "To edit the facility working days",
+          "expected": "working days should get selected",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Facility Registration(Basic demographics of the facility). Applies to: Facilty Manager. Field: workingDays*. Mandatory when: Yes, If facility operational status if Functional. Steps: 1. Accepted codes in backend as specified in get-master-data API with type=’WORKING-DAYS’ 1. It should allow multiple days to select. 2. Should be filled if the operational status is Functional NHA points this case at https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityBasicInformationUsingPOST https://facilitysbx.abdm.gov.in/swagger-ui.html#/Utilities/v15FacilityGetMasterTypesUsingGET https://facilitysbx.abdm.gov.in/swagger-ui.html#/Utilities/v15FacilityGetMasterDataUsingGET"
+        },
+        {
+          "id": "HFR-075",
+          "type": "Mandatory",
+          "functionality": "To edit the opening hours of the facility",
+          "expected": "Facility Timings should get saved",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Facility Registration(Basic demographics of the facility). Applies to: Facilty Manager. Field: timingsOfFacility*. Steps: 1. Accepted format is 10:00 Am – 2:00 PM or 24*7 2. User should enter \"From\" time and \"To\" time. 3. Should only be filled if the respective working day is selected. NHA points this case at https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityBasicInformationUsingPOST"
+        },
+        {
+          "id": "HFR-076",
+          "type": "Mandatory",
+          "functionality": "To edit the facility operational status",
+          "expected": "Facility operational status should get filled",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Facility Registration(Basic demographics of the facility). Applies to: Facilty Manager. Field: Facility Operational Status*. Steps: 1. Should be a dropdown field. 2. Accepted codes in beckend as specified in get-master-data API with type=’FAC-STATUS’ NHA points this case at https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityBasicInformationUsingPOST https://facilitysbx.abdm.gov.in/swagger-ui.html#/Utilities/v15FacilityGetMasterTypesUsingGET https://facilitysbx.abdm.gov.in/swagger-ui.html#/Utilities/v15FacilityGetMasterDataUsingGET"
+        },
+        {
+          "id": "HFR-077",
+          "type": "Optional",
+          "functionality": "To eidt the facility landline number for public display",
+          "expected": "Landline number should get filled",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Facility Registration(Basic demographics of the facility). Applies to: Facilty Manager. Field: Landline Number(for public display). Steps: 1. Should be a valid 10 digit mobile number 2. Special characters and alphabets are not allowed NHA points this case at https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityBasicInformationUsingPOST"
+        },
+        {
+          "id": "HFR-078",
+          "type": "Optional",
+          "functionality": "To edit the facility mobile number for public display",
+          "expected": "Mobile number should get filled",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Facility Registration(Basic demographics of the facility). Applies to: Facilty Manager. Field: Mobile Number(for public display). Steps: 1. Should be a valid landline number ranging between 6-8 digits NHA points this case at https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityBasicInformationUsingPOST"
+        },
+        {
+          "id": "HFR-079",
+          "type": "Optional",
+          "functionality": "To edit the email for public display",
+          "expected": "Facility email should get filled",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Facility Registration(Basic demographics of the facility). Applies to: Facilty Manager. Field: Facility Email(for public display). Steps: 1. Proper format of email to be followed NHA points this case at https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityBasicInformationUsingPOST"
+        },
+        {
+          "id": "HFR-080",
+          "type": "Optional",
+          "functionality": "To edit the hospital website link",
+          "expected": "Proper Website should get filled",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Facility Registration(Basic demographics of the facility). Applies to: Facilty Manager. Field: Website(for public display). Steps: 1. Must contain Valid Link NHA points this case at https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityBasicInformationUsingPOST"
+        },
+        {
+          "id": "HFR-081",
+          "type": "Optional",
+          "functionality": "edit facility file Uploads",
+          "expected": "Photograph should get saved",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Facility Registration(Basic demographics of the facility). Applies to: Facilty Manager. Field: Facility Building Photograph. Steps: 1. Maximum allowed file size is 5MB.(Allowed formats: PNG,JPEG,JPG) 2. Single file should be uploaded NHA points this case at https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityBasicInformationUsingPOST"
+        },
+        {
+          "id": "HFR-082",
+          "type": "Optional",
+          "functionality": "Facility Board Photograph",
+          "expected": "Photograph should get saved",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Facility Registration(Basic demographics of the facility). Applies to: Facilty Manager. Field: Facility Board Photograph. Steps: 1. Maximum allowed file size is 5MB.(Allowed formats: PNG,JPEG,JPG) 2. Single file should be uploaded NHA points this case at https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityBasicInformationUsingPOST"
+        },
+        {
+          "id": "HFR-083",
+          "type": "Optional",
+          "functionality": "Address Proof Type",
+          "expected": "Address proof type should get selected",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Facility Registration(Basic demographics of the facility). Applies to: Facilty Manager. Field: Address Proof Type. Steps: 1. Accepted codes as specified in get-master-data API with type=’ADDRESS-PROOF’ 2.Should allo multiple selections NHA points this case at https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityBasicInformationUsingPOST https://facilitysbx.abdm.gov.in/swagger-ui.html#/Utilities/v15FacilityGetMasterTypesUsingGET https://facilitysbx.abdm.gov.in/swagger-ui.html#/Utilities/v15FacilityGetMasterDataUsingGET"
+        },
+        {
+          "id": "HFR-084",
+          "type": "Conditional",
+          "functionality": "Address Proof",
+          "expected": "Address proof should get saved",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Facility Registration(Basic demographics of the facility). Applies to: Facilty Manager. Field: Address Proof. Mandatory when: Yes,If Address Proof Type is selected. Steps: 1. Maximum size allowed for the attachment is 5MB 2. Should allow multiple entries with respect to the address proof selected NHA points this case at https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityBasicInformationUsingPOST"
+        },
+        {
+          "id": "HFR-085",
+          "type": "Mandatory",
+          "functionality": "To edit the ownership details",
+          "expected": "Facility ownership should get saved",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Facility Registration(Basic demographics of the facility). Applies to: Facilty Manager. Field: Facility Ownership*. Steps: 1. Accepted Values as specified in get-master-data API with type=’OWNER’ 2. Should be a dropdown field 3. Only 1 value can be selected NHA points this case at https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityBasicInformationUsingPOST https://facilitysbx.abdm.gov.in/swagger-ui.html#/Utilities/v15FacilityGetMasterTypesUsingGET https://facilitysbx.abdm.gov.in/swagger-ui.html#/Utilities/v15FacilityGetMasterDataUsingGET"
+        },
+        {
+          "id": "HFR-086",
+          "type": "Conditional",
+          "functionality": "Facility Ownership Subtype*",
+          "expected": "Facility ownership subtype should get saved",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Facility Registration(Basic demographics of the facility). Applies to: Facilty Manager. Field: Facility Ownership Subtype*. Mandatory when: Yes(only if ownership is \"govermnet\". Steps: 1. Accepted Values as specified in get-owner-subtype API 2. Should be mandatory only for \"Goverment\" ownership NHA points this case at https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityBasicInformationUsingPOST https://facilitysbx.abdm.gov.in/swagger-ui.html#/Utilities/v15FacilityGetMasterDataUsingGET https://facilitysbx.abdm.gov.in/swagger-ui.html#/Utilities/v15FacilityGetOwnershipSubtypeUsingPOST"
+        },
+        {
+          "id": "HFR-087",
+          "type": "Conditional",
+          "functionality": "Facility Ownership Subtype 2*",
+          "expected": "",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Facility Registration(Basic demographics of the facility). Applies to: Facilty Manager. Field: Facility Ownership Subtype 2*. Mandatory when: Yes (only if ownership Subtype is \"central\". Steps: 1. Accepted values as specified in get-master-data API with type=’CENTRAL-GOVERNMENT’ 2. Should be mandatory only for \"central\" ownership subtype NHA points this case at https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityBasicInformationUsingPOST https://facilitysbx.abdm.gov.in/swagger-ui.html#/Utilities/v15FacilityGetMasterTypesUsingGET https://facilitysbx.abdm.gov.in/swagger-ui.html#/Utilities/v15FacilityGetMasterDataUsingGET"
+        },
+        {
+          "id": "HFR-088",
+          "type": "Mandatory",
+          "functionality": "To edit the details of system of medicine",
+          "expected": "System of medicine should get saved",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Facility Registration(Basic demographics of the facility). Applies to: Facilty Manager. Field: System of Medicine*. Steps: 1. Accepted Values as specified in get-master-data API with type=“MEDICINE”. 2. It sould allow multiple system of medicines NHA points this case at https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityBasicInformationUsingPOST https://facilitysbx.abdm.gov.in/swagger-ui.html#/Utilities/v15FacilityGetMasterTypesUsingGET https://facilitysbx.abdm.gov.in/swagger-ui.html#/Utilities/v15FacilityGetMasterDataUsingGET"
+        },
+        {
+          "id": "HFR-089",
+          "type": "Mandatory",
+          "functionality": "To edit the type of facility",
+          "expected": "Facility Type should get saved",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Facility Registration(Basic demographics of the facility). Applies to: Facilty Manager. Field: Facility Type*. Steps: 1.Accepted codes as specified in fetch-facility-type API. 2. It should be dropdown field. NHA points this case at https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityBasicInformationUsingPOST https://facilitysbx.abdm.gov.in/swagger-ui.html#/Utilities/v15FetchFacilityTypesUsingPOST"
+        },
+        {
+          "id": "HFR-090",
+          "type": "Mandatory",
+          "functionality": "Facility Sub Type*",
+          "expected": "Facility sub type should get saved",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Facility Registration(Basic demographics of the facility). Applies to: Facilty Manager. Field: Facility Sub Type*. Steps: 1. Accepted codes as specified in fetch-facility-sub-type API. 2. It should be dropdown field. NHA points this case at https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityBasicInformationUsingPOST https://facilitysbx.abdm.gov.in/swagger-ui.html#/Utilities/v15FetchFacilitySubTypesUsingPOST"
+        },
+        {
+          "id": "HFR-091",
+          "type": "Mandatory",
+          "functionality": "To edit the type of services provided",
+          "expected": "Multiple type of service should get selected",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Facility Registration(Basic demographics of the facility). Applies to: Facilty Manager. Field: Type of Service*. Steps: 1. Not mandatory for facility type:- Pharmacy,Blood bank,Diagnostic Lab, Imaging Center, Cath lab, Dialysis Center 2. Accepted codes as specified in get-master-data API with type=’SPECIALITY-TYPE’ NHA points this case at https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityBasicInformationUsingPOST https://facilitysbx.abdm.gov.in/swagger-ui.html#/Utilities/v15FacilityGetMasterTypesUsingGET https://facilitysbx.abdm.gov.in/swagger-ui.html#/Utilities/v15FacilityGetMasterDataUsingGET"
+        },
+        {
+          "id": "HFR-092",
+          "type": "Mandatory",
+          "functionality": "To edit the Specialization",
+          "expected": "Multiple Specialization should get selected",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Facility Registration(Basic demographics of the facility). Applies to: Facilty Manager. Field: Specialization*. Steps: 1. Accepted codes as specified in the get-specialities APIwith respect to a system of medicine 2.Mandatory for all facility type except Pharmacy,Blood bank,, Cath lab, Dialysis Center 3. Multiple values can be selected NHA points this case at https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityBasicInformationUsingPOST https://facilitysbx.abdm.gov.in/swagger-ui.html#/Utilities/v15FacilityGetSpecialitiesUsingPOST"
+        },
+        {
+          "id": "HFR-093",
+          "type": "Optional",
+          "functionality": "Edit Linked program Id",
+          "expected": "It should get filled",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Facility Registration(Capture Health program ids). Applies to: Facilty Manager. Field: National Health Resource Repository Unique ID. Steps: 1. Should be a valid NHRR ID NHA points this case at https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityAdditionalInformationUsingPOST"
+        },
+        {
+          "id": "HFR-094",
+          "type": "Optional",
+          "functionality": "National Identification Number",
+          "expected": "It should get filled",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Facility Registration(Capture Health program ids). Applies to: Facilty Manager. Field: National Identification Number. Steps: 1. Should be a valid NIN id NHA points this case at https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityAdditionalInformationUsingPOST"
+        },
+        {
+          "id": "HFR-095",
+          "type": "Optional",
+          "functionality": "Hospital Id as allotted by AB-PMJAY Hospital Empanelment Module.",
+          "expected": "It should get filled",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Facility Registration(Capture Health program ids). Applies to: Facilty Manager. Field: Hospital Id as allotted by AB-PMJAY Hospital Empanelment Module.. Steps: 1. Should be a valid AB-PMJAY Hospital Id NHA points this case at https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityAdditionalInformationUsingPOST"
+        },
+        {
+          "id": "HFR-096",
+          "type": "Optional",
+          "functionality": "Rohini Id",
+          "expected": "It should get filled",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Facility Registration(Capture Health program ids). Applies to: Facilty Manager. Field: Rohini Id. Steps: 1. Should be a valid Rohini Id NHA points this case at https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityAdditionalInformationUsingPOST"
+        },
+        {
+          "id": "HFR-097",
+          "type": "Optional",
+          "functionality": "Unique id in Ex-Servicemen Contributory Health Scheme",
+          "expected": "It should get filled",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Facility Registration(Capture Health program ids). Applies to: Facilty Manager. Field: Unique id in Ex-Servicemen Contributory Health Scheme. Steps: 1. Should be a valid ECHS Id. NHA points this case at https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityAdditionalInformationUsingPOST"
+        },
+        {
+          "id": "HFR-098",
+          "type": "Optional",
+          "functionality": "Unique Id in Central Government Health Scheme",
+          "expected": "It should get filled",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Facility Registration(Capture Health program ids). Applies to: Facilty Manager. Field: Unique Id in Central Government Health Scheme. Steps: 1. Should be a valid CGHS Id. NHA points this case at https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityAdditionalInformationUsingPOST"
+        },
+        {
+          "id": "HFR-099",
+          "type": "Optional",
+          "functionality": "CEA Registration Number",
+          "expected": "It should get filled",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Facility Registration(Capture Health program ids). Applies to: Facilty Manager. Field: CEA Registration Number. Steps: 1. Should be a valid CEA registration number NHA points this case at https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityAdditionalInformationUsingPOST"
+        },
+        {
+          "id": "HFR-100",
+          "type": "Optional",
+          "functionality": "State Insurance Scheme ID",
+          "expected": "It should get filled",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Facility Registration(Capture Health program ids). Applies to: Facilty Manager. Field: State Insurance Scheme ID. Steps: 1. Alphanumeric string NHA points this case at https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityAdditionalInformationUsingPOST"
+        },
+        {
+          "id": "HFR-101",
+          "type": "Mandatory",
+          "functionality": "To edit systemOfMedicine",
+          "expected": "System of medicine should get selected",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Facility Registration(Capture facility details information-infrastructure and specialization. Applies to: Facilty Manager. Field: Services/Specialization. Steps: 1. System of medicine codes as saved in Basic-Information API 2. Accepted codes as specified in get-master-data API with type=’MEDICINE’ NHA points this case at https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityDetailedInformationUsingPOST https://facilitysbx.abdm.gov.in/swagger-ui.html#/Utilities/v15FacilityGetMasterTypesUsingGET https://facilitysbx.abdm.gov.in/swagger-ui.html#/Utilities/v15FacilityGetMasterDataUsingGET"
+        },
+        {
+          "id": "HFR-102",
+          "type": "Mandatory",
+          "functionality": "to edit if Specialization is Avalaible",
+          "expected": "",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Facility Registration(Capture facility details information-infrastructure and specialization. Applies to: Facilty Manager. Steps: 1. If the facility offers any specializations or services for this system of medicine code should be Y / N as accepted value"
+        },
+        {
+          "id": "HFR-103",
+          "type": "Conditional",
+          "functionality": "To edit specialities",
+          "expected": "",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Facility Registration(Capture facility details information-infrastructure and specialization. Applies to: Facilty Manager. Mandatory when: Yes, if specializations/ services are offered for this system of medicine. Steps: 1.Only allowed if previous option is Y 2. Multiple selection should be allowed 3. Accepted codes as specified in the get-specialities API with respect to a system of medicine NHA points this case at https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityDetailedInformationUsingPOST https://facilitysbx.abdm.gov.in/swagger-ui.html#/Utilities/v15FacilityGetSpecialitiesUsingPOST"
+        },
+        {
+          "id": "HFR-104",
+          "type": "Optional",
+          "functionality": "To edit countIPDBedsWithoutOxygen",
+          "expected": "Details should get filled",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Facility Registration(Capture facility details information-infrastructure and specialization. Applies to: Facilty Manager. Field: Medical Infrastructure Beds. Steps: 1. Accepts only Numeric Value 2. Not more than 2 charactres alllowed NHA points this case at https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityDetailedInformationUsingPOST"
+        },
+        {
+          "id": "HFR-105",
+          "type": "Optional",
+          "functionality": "To edit countIPDBedsWithOxygen",
+          "expected": "Details should get filled",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Facility Registration(Capture facility details information-infrastructure and specialization. Applies to: Facilty Manager. Steps: 1. Accepts only Numeric Value 2. Not more than 2 charactres alllowed NHA points this case at https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityDetailedInformationUsingPOST"
+        },
+        {
+          "id": "HFR-106",
+          "type": "Optional",
+          "functionality": "To edit countICUBedsWithVentilators",
+          "expected": "Details should get filled",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Facility Registration(Capture facility details information-infrastructure and specialization. Applies to: Facilty Manager. Steps: 1. Accepts only Numeric Value 2. Not more than 2 charactres alllowed NHA points this case at https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityDetailedInformationUsingPOST"
+        },
+        {
+          "id": "HFR-107",
+          "type": "Optional",
+          "functionality": "To edit countICUBedsWithoutVentilators",
+          "expected": "Details should get filled",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Facility Registration(Capture facility details information-infrastructure and specialization. Applies to: Facilty Manager. Steps: 1. Accepts only Numeric Value 2. Not more than 2 charactres alllowed NHA points this case at https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityDetailedInformationUsingPOST"
+        },
+        {
+          "id": "HFR-108",
+          "type": "Optional",
+          "functionality": "To edit countHDUBedsWithFunctionalVentilators",
+          "expected": "Details should get filled",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Facility Registration(Capture facility details information-infrastructure and specialization. Applies to: Facilty Manager. Steps: 1. Accepts only Numeric Value 2. Not more than 2 charactres alllowed NHA points this case at https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityDetailedInformationUsingPOST"
+        },
+        {
+          "id": "HFR-109",
+          "type": "Optional",
+          "functionality": "To edit countHDUBedsWithVentilators",
+          "expected": "Details should get filled",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Facility Registration(Capture facility details information-infrastructure and specialization. Applies to: Facilty Manager. Steps: 1. Accepts only Numeric Value 2. Not more than 2 charactres alllowed NHA points this case at https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityDetailedInformationUsingPOST"
+        },
+        {
+          "id": "HFR-110",
+          "type": "Optional",
+          "functionality": "To edit countHDUBedsWithoutVentilators",
+          "expected": "Details should get filled",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Facility Registration(Capture facility details information-infrastructure and specialization. Applies to: Facilty Manager. Steps: 1. Accepts only Numeric Value 2. Not more than 2 charactres alllowed NHA points this case at https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityDetailedInformationUsingPOST"
+        },
+        {
+          "id": "HFR-111",
+          "type": "Mandatory",
+          "functionality": "To edit totalNumberOfVentilators",
+          "expected": "Details should get filled",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Facility Registration(Capture facility details information-infrastructure and specialization. Applies to: Facilty Manager. Steps: 1. Accepts only Numeric Value 3. Should be total of beds with vantilators 2. Not more than 4 charactres alllowed 4. Should be non edtitable NHA points this case at https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityDetailedInformationUsingPOST"
+        },
+        {
+          "id": "HFR-112",
+          "type": "Optional",
+          "functionality": "To edit countDayCareBedsWithoutOxygen",
+          "expected": "Details should get filled",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Facility Registration(Capture facility details information-infrastructure and specialization. Applies to: Facilty Manager. Steps: 1. Accepts only Numeric Value 2. Not more than 2 charactres alllowed NHA points this case at https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityDetailedInformationUsingPOST"
+        },
+        {
+          "id": "HFR-113",
+          "type": "Optional",
+          "functionality": "To edit countDayCareBedsWithOxygen",
+          "expected": "Details should get filled",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Facility Registration(Capture facility details information-infrastructure and specialization. Applies to: Facilty Manager. Steps: 1. Accepts only Numeric Value 2. Not more than 2 charactres alllowed NHA points this case at https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityDetailedInformationUsingPOST"
+        },
+        {
+          "id": "HFR-114",
+          "type": "Mandatory",
+          "functionality": "To edit totalNumberOfBeds",
+          "expected": "Details should get filled",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Facility Registration(Capture facility details information-infrastructure and specialization. Applies to: Facilty Manager. Steps: 1. Accepts only Numeric Value 3. Should be total of beds without vantilators 2. Not more than 4 charactres alllowed 4. Should be non edtitable NHA points this case at https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityDetailedInformationUsingPOST"
+        },
+        {
+          "id": "HFR-115",
+          "type": "Optional",
+          "functionality": "To edit countDentalChairs",
+          "expected": "Details should get filled",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Facility Registration(Capture facility details information-infrastructure and specialization. Applies to: Facilty Manager. Steps: 1. Accepts only Numeric Value 2. Not more than 2 charactres alllowed NHA points this case at https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityDetailedInformationUsingPOST"
+        },
+        {
+          "id": "HFR-116",
+          "type": "Optional",
+          "functionality": "sourceOfInformation",
+          "expected": "Facility shold get submitted",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Facility submission. Applies to: Facilty Manager. Field: Submit. Steps: 1.Should be a default value not to be filled by the end user 2. Should be valid data source provide by HFR team. If you leave this field empty, then your facility will be considered as Submitted entity. NHA points this case at https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15SubmitFacilityDetailsUsingPOST"
+        },
+        {
+          "id": "HFR-117",
+          "type": "Optional",
+          "functionality": "sourceUniqueID",
+          "expected": "",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Facility submission. Applies to: Facilty Manager. Steps: 1.Should be a default value not to be filled by the end user"
+        }
+      ]
+    },
+    {
+      "id": "hfr-bridge",
+      "label": "Linking a facility to its bridges",
+      "rows": [
+        {
+          "id": "HFR-118",
+          "type": "Mandatory",
+          "functionality": "Fill the facility Id",
+          "expected": "Facility should get validated",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Bridge linkage. Applies to: Applicable To. Field: Facility id. Steps: 1. Will be validated if present in HFR or not 2. Starting with IN and of 12 characters NHA points this case at https://facilitysbx.abdm.gov.in/swagger-ui.html#/Multiple%20HRP%20API/v1MutipleHRPAddUpdateServicesUsingPOST"
+        },
+        {
+          "id": "HFR-119",
+          "type": "Mandatory",
+          "functionality": "Fill the facility Name",
+          "expected": "Facility Name should fetch",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Bridge linkage. Applies to: Applicable To. Field: Facility name. Steps: 1. Name of the facility to be linked . 2. Should be auto fetched form facility id NHA points this case at https://facilitysbx.abdm.gov.in/swagger-ui.html#/Multiple%20HRP%20API/v1MutipleHRPAddUpdateServicesUsingPOST"
+        },
+        {
+          "id": "HFR-120",
+          "type": "Mandatory",
+          "functionality": "Fill the bridge Id",
+          "expected": "Bridge id should get validated",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Bridge linkage. Applies to: Applicable To. Field: Bridgr id. Steps: 1. Valid Bridge Id to be linked. 2. Alphanumeric and validity to be checked by HIECM 3. Should not be same as already linked bridge id NHA points this case at https://facilitysbx.abdm.gov.in/swagger-ui.html#/Multiple%20HRP%20API/v1MutipleHRPAddUpdateServicesUsingPOST"
+        },
+        {
+          "id": "HFR-121",
+          "type": "Mandatory",
+          "functionality": "Fill the hip Name",
+          "expected": "Valid HIP name should get filled and HIP name should not be repeated",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Bridge linkage. Applies to: Applicable To. Field: HIP name. Steps: 1. To provide uniqueness against each bridges that is linked . HIP name is the name of the hospital which will reflect on ABHA/PHR app when the patent will search for the respective hospital. 2. HIP name can be the Hospital name added with suffix of bridge name. example Hospital name=XYZ and bridge name =BRIDGE TEST, so the HIP name = XYZ BRIDGE. 3. HIP name can not be more than 15 characters., No special character is allowed (%$*#@(~&!), and it should be unique for every bridge for a facility 4. Shoulds not be same as previously created HIP Name NHA points this case at https://facilitysbx.abdm.gov.in/swagger-ui.html#/Multiple%20HRP%20API/v1MutipleHRPAddUpdateServicesUsingPOST"
+        },
+        {
+          "id": "HFR-122",
+          "type": "Mandatory",
+          "functionality": "Fill the HIP type",
+          "expected": "",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Bridge linkage. Applies to: Applicable To. Steps: 1. Should contain HIP / HIU etc 2. Validated by HIECM NHA points this case at https://facilitysbx.abdm.gov.in/swagger-ui.html#/Multiple%20HRP%20API/v1MutipleHRPAddUpdateServicesUsingPOST"
+        },
+        {
+          "id": "HFR-123",
+          "type": "Mandatory",
+          "functionality": "Provide details if the bridge is Active or not",
+          "expected": "",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Bridge linkage. Applies to: Applicable To. Steps: 1. Values shuld be True/false . 2. Accept Boolean value NHA points this case at https://facilitysbx.abdm.gov.in/swagger-ui.html#/Multiple%20HRP%20API/v1MutipleHRPAddUpdateServicesUsingPOST"
+        }
+      ]
+    },
+    {
+      "id": "hpr",
+      "label": "Healthcare professional registration",
+      "rows": [
+        {
+          "id": "HPR-002",
+          "type": "Mandatory",
+          "functionality": "Create your Healthcare Professional ID via Aadhaar",
+          "expected": "The system must provide an option to create HPR through Aadhaar",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Creation of HPR Profile. Applies to: All Integrators for creation of HPR. Field: Create HPRID. Steps: User will have an option to create HPR ID NHA points this case at https://hpridsbx.abdm.gov.in/api/v1/registration/aadhaar/generateOtp"
+        },
+        {
+          "id": "HPR-003",
+          "type": "Mandatory",
+          "functionality": "consent collection",
+          "expected": "Please refer the cell no -M5",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Creation of HPR Profile. Applies to: All Integrators for creation of HPR. Steps: User provides consent for sharing of Aadhaar details and creation of HPR. System records user consent for compliance with Health Data Management Policy. NHA points this case at https://hpridsbx.abdm.gov.in/api/v1/registration/aadhaar/generateOtp"
+        },
+        {
+          "id": "HPR-004",
+          "type": "Mandatory",
+          "functionality": "Suggestions:- Consent collection should be multilingual",
+          "expected": "User provides consent for sharing of Aadhaar details and creation of HPR. System records user consent for compliance with Health Data Management Policy.",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Creation of HPR Profile. Applies to: All Integrators for creation of HPR. Steps: 1. Read consent language. Case 1: Hindi Case 2: for other than english and hindi team will connect with legal team. 2. Agree to the consent language (through 'I agree' checkbox or any other form of signature) NHA points this case at https://hpridsbx.abdm.gov.in/api/v1/registration/aadhaar/generateOtp"
+        },
+        {
+          "id": "HPR-005",
+          "type": "Mandatory",
+          "functionality": "Aadhaar collection and Error Message",
+          "expected": "User is prompted to enter correct Aadhaar Number",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Creation of HPR Profile. Applies to: All Integrators for creation of HPR. Steps: 1. Enter Aadhaar number 2. In case user enters an invalid Aadhaar number (A valid Aadhaar is a 12-digit number), the system shows an error message \"Aadhaar is not valid\". NHA points this case at https://hpridsbx.abdm.gov.in/api/v1/registration/aadhaar/generateOtp"
+        },
+        {
+          "id": "HPR-006",
+          "type": "Mandatory",
+          "functionality": "Captcha",
+          "expected": "system should allow user to enter captcha, before submitting Aadhaar details",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Creation of HPR Profile. Applies to: All Integrators for creation of HPR. Steps: 1. Enter Captcha 1.1 . If Captcha is not correct then system will display a error message \"Capcha verification failed : please enter valid Captch\". 1.2 If Captcha is correct then system will allow to click on submit button. NHA points this case at https://hpridsbx.abdm.gov.in/api/v1/registration/aadhaar/generateOtp"
+        },
+        {
+          "id": "HPR-007",
+          "type": "Mandatory",
+          "functionality": "Aadhaar OTP Collection",
+          "expected": "User receives Aadhaar OTP and System must allow the user to enter Aadhaar OTP.",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Creation of HPR Profile. Applies to: All Integrators for creation of HPR. Steps: 1. Receive OTP on mobile number registered with Aadhaar 2. Enter Aadhaar OTP 3. Incase wrong OTP entered then system will show an error message \"Aadhaar OTP is not valid\". 4. User will be able to enter a valid Aadhaar OTP (A valid Aadhaar OTP is a 6-digit number). Example - Modified text for the \"Please enter 6 -digit OTP sent to Aadhaar linked mobile number \" step during the HPR Creation workflow with “We just sent an OTP on the Mobile Number *******7242 linked with Aadhaar. Enter the OTP below to proceed with HPR creation\". NHA points this case at https://hpridsbx.abdm.gov.in/api/v1/registration/aadhaar/generateOtp"
+        },
+        {
+          "id": "HPR-008",
+          "type": "Mandatory",
+          "functionality": "Resend OTP",
+          "expected": "User will able to send OTP again and verify it",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Creation of HPR Profile. Applies to: All Integrators for creation of HPR. Steps: 1. Click on Resend OTP Button 2. Receive OTP on mobile"
+        },
+        {
+          "id": "HPR-010",
+          "type": "Mandatory",
+          "functionality": "Communication Mobile Number verification-I",
+          "expected": "1. If communication mobile number is same as Aadhaar linked mobile number then it should directly go to HPR creation screen .",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Creation of HPR Profile. Applies to: All Integrators for creation of HPR. Steps: 1. If the Healthcare Professional ID Already Exists then system will show an meesage \"We found your Healthcare Professional ID XXXXXXXXXXXX@hpr.abdm through the same mobile number and Aadhaar ID.\" and user can login via HP ID / Mobile Number / UserName will directed to HPR creation screen. 2 . If the Healthcare Professional ID is not Already Exists then system will display a user interface to create a HPR ID with the following details. 2.1 Photograph:- it will be fetch from the aadhaar database 2.2 FIRST NAME, MIDDLE NAME , LAST NAME, ADDRESS, DATE OF BIRTH IN THE FORMAT OF (DAY, MONTH AND YEAR), GENDER , STATE/UT , DISTRICT- It will automatically fetch from the aadhaar database and set as non -editable. 2.3. Healthcare Professional / User Name / Alais - User will enter the professsional and suggestion APIs also need to integratewith atleast 3 options. Validation rule should be apply: Must contain atleast 4 letters . Please note , we allow alphabets and numbers in the Healthcare Professional ID and do not allow special character except dot(.) 2.4 Healthcare Profesional Category( Doctor/ Nurse) and SubCategory like (Modern Medicine , Ayurveda e.t.c) and it should be drop down input and value should be taken from the master table. 2.5 Healthcare Email ID-System should allow the user to enter email id with the validation. The Validation rules for Email address to be set at the API level, Prefix with an email domein name: 1) presence of special character '@' 2) domain name format 3) absence of spaces 4) Incase email is not valid then System should prompt / display the error message when invalid email is entered. 2.6 : Password-System should allow user to enter Password with validation. The validation rules for entering Password: 1) It should have more than 8 characters, 2) Contains a capital letter, 3) Contains a Lowercase 4) Contains a number, 5) contains a special character 6) System should prompt / display the error message when invalid password is entered. 2.7 confirm Password-System should match the password and confirm password. 1.System should prompt / display the error message when the password and Confirm password does not match. 3. Once User will click on the 'Submit button to create HP ID and user will get the notification via sms NHA points this case at https://hpridsbx.abdm.gov.in/api/v1/registration/aadhaar/demographicAuthViaMobile"
+        },
+        {
+          "id": "HPR-011",
+          "type": "Mandatory",
+          "functionality": "Communication Mobile Number verification-II",
+          "expected": "If communication mobile number is not same as Aadhaar linked mobile number then system must ask for the OTP to verify communication mobile number.",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Creation of HPR Profile. Applies to: All Integrators for creation of HPR. Steps: 1. If the Healthcare Professional ID Already Exists then system will show an meesage \"We found your Healthcare Professional ID XXXXXXXXXXXX@hpr.abdm through the same mobile number and Aadhaar ID.\" and user can login via HP ID / Mobile Number / UserName will directed to HPR creation screen. 2 . If the Healthcare Professional ID is not Already Exists then system will display a user interface to create a HPR ID with the following details. 2.1 Photograph:- it will be fetch from the aadhaar database 2.2 FIRST NAME, MIDDLE NAME , LAST NAME, ADDRESS, DATE OF BIRTH IN THE FORMAT OF (DAY, MONTH AND YEAR), GENDER , STATE/UT , DISTRICT- It will automatically fetch from the aadhaar database and set as non -editable. 2.3. Healthcare Professional / User Name / Alais - User will enter the professsional and suggestion APIs also need to integrate with atleast 3 options. Validation rule should be apply: Must contain atleast 4 letters . Please note , we allow alphabets and numbers in the Healthcare Professional ID and do not allow special character except dot(.) 2.4 Healthcare Profesional Category( Doctor/ Nurse) and SubCategory like (Modern Medicine , Ayurveda e.t.c) and it should be drop down input and value should be taken from the master table. 3. User will click on the 'Submit button to create HP ID.' NHA points this case at https://hpridsbx.abdm.gov.in/api/v1/registration/aadhaar/createHprIdWithPreVerified"
+        },
+        {
+          "id": "HPR-018",
+          "type": "Mandatory",
+          "functionality": "hprToken",
+          "expected": "Received Token",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Creation of HPR Profile. Applies to: All Integrators for creation of HPR. Field: Basic. NHA points this case at https://doctorsbx.abdm.gov.in/apis/v1/doctors/register-professional-new"
+        },
+        {
+          "id": "HPR-019",
+          "type": "Optional",
+          "functionality": "profilePhoto",
+          "expected": "Photo will be displayed",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Creation of HPR Profile. Applies to: All Integrators for creation of HPR. Steps: The photo will be automatically fetched from the Aadhaar database, along with the demographic details including Full Name, Date of Birth, Gender, and KYC status, i.e., Aadhaar Verified. Why edit option is given for photo as it will be automiatically from the Aadhaar database"
+        },
+        {
+          "id": "HPR-020",
+          "type": "Mandatory",
+          "functionality": "Healthcare Professional ID",
+          "expected": "Healthcare Professional ID is successfully genearted",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Creation of HPR Profile. Applies to: All Integrators for creation of HPR. Steps: Healthcare Professional ID and non editable (system generated)"
+        },
+        {
+          "id": "HPR-022",
+          "type": "Optional",
+          "functionality": "Mobile Number",
+          "expected": "input your mobile no for the official communication",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Creation of HPR Profile. Applies to: All Integrators for creation of HPR. Steps: The system will show the communication mobile number along with status i.e Verfied or Not Verified (Non editable)"
+        },
+        {
+          "id": "HPR-024",
+          "type": "Optional",
+          "functionality": "Email and Email Status",
+          "expected": "input your email for the official communication",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Creation of HPR Profile. Applies to: All Integrators for creation of HPR. Steps: The system will show the communication Email along withemail status i.e Verfied or Not Verified (Non eidtable)"
+        },
+        {
+          "id": "HPR-026",
+          "type": "Mandatory",
+          "functionality": "Salutation *",
+          "expected": "The system will provide a salutation as a mandatory field, offering options such as 'Dr,' 'Mr,' 'Ms,' from master data",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Creation of HPR Profile. Applies to: All Integrators for creation of HPR. Field: Personal info. Steps: The user will be able to select their preferred salutation NHA points this case at Use Master Data Sheet (Excel)"
+        },
+        {
+          "id": "HPR-027",
+          "type": "Mandatory",
+          "functionality": "First Name *",
+          "expected": "First name is fetched from the Aadhaar database.",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Creation of HPR Profile. Applies to: All Integrators for creation of HPR. Steps: Fetched First Name from the Aadhaar."
+        },
+        {
+          "id": "HPR-028",
+          "type": "Mandatory",
+          "functionality": "Middle Name",
+          "expected": "Middle Name is fetched from the Aadhaar database.",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Creation of HPR Profile. Applies to: All Integrators for creation of HPR. Steps: Fetched Middle Name from the Aadhaar."
+        },
+        {
+          "id": "HPR-029",
+          "type": "Mandatory",
+          "functionality": "Last Name",
+          "expected": "Last name is fetched from the Aadhaar database.",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Creation of HPR Profile. Applies to: All Integrators for creation of HPR. Steps: Fetched Last Name from the Aadhaar."
+        },
+        {
+          "id": "HPR-030",
+          "type": "Optional",
+          "functionality": "Father's Name",
+          "expected": "User is able to fill the Father's Name.",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Creation of HPR Profile. Applies to: All Integrators for creation of HPR. Steps: Non Mandatory"
+        },
+        {
+          "id": "HPR-031",
+          "type": "Optional",
+          "functionality": "Mother's Name",
+          "expected": "User is able to fill the Mother's Name.",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Creation of HPR Profile. Applies to: All Integrators for creation of HPR. Steps: Non Mandatory"
+        },
+        {
+          "id": "HPR-032",
+          "type": "Optional",
+          "functionality": "Spouse's Name",
+          "expected": "User is able to fill the Spouse Name.",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Creation of HPR Profile. Applies to: All Integrators for creation of HPR. Steps: Non Mandatory NHA points this case at Use Master Data Sheet (Excel)"
+        },
+        {
+          "id": "HPR-033",
+          "type": "Mandatory",
+          "functionality": "Nationality",
+          "expected": "The system should allow the user to select their country from a dropdown menu, with India being the default option",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Creation of HPR Profile. Applies to: All Integrators for creation of HPR. Steps: User is able to select the country NHA points this case at Use Master Data Sheet (Excel)"
+        },
+        {
+          "id": "HPR-036",
+          "type": "Mandatory",
+          "functionality": "Languages spoken *",
+          "expected": "The system should allow the user to input their preferred language by selecting from a multi-selection dropdown menu Kindly Note: Multiple language can be selected",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Creation of HPR Profile. Applies to: All Integrators for creation of HPR. Steps: User is able to fill the language NHA points this case at Use Master Data Sheet (Excel)"
+        },
+        {
+          "id": "HPR-037",
+          "type": "Mandatory",
+          "functionality": "Address as per KYC :",
+          "expected": "The address will be automatically retrieved from the Aadhaar database which will be Non Editable field",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Creation of HPR Profile. Applies to: All Integrators for creation of HPR. Steps: The address is automatically populated."
+        },
+        {
+          "id": "HPR-038",
+          "type": "Optional",
+          "functionality": "Is this communication address same as your address as per KYC ?",
+          "expected": "The system should provide the option for the user to indicate whether the communication address is the same as the address on file in the KYC information or not.\"",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Creation of HPR Profile. Applies to: All Integrators for creation of HPR. Field: Communication ad. Steps: After selection state and District then pincode should be automatically relfected or vice versa"
+        },
+        {
+          "id": "HPR-039",
+          "type": "Optional",
+          "functionality": "Communication Address *",
+          "expected": "The system should allow the user to input their address",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Creation of HPR Profile. Applies to: All Integrators for creation of HPR. Steps: If user want to change the communciation address so he can fillup the complete detail"
+        },
+        {
+          "id": "HPR-040",
+          "type": "Optional",
+          "functionality": "Name *",
+          "expected": "The system should allow the user to input the name of the communication person.",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Creation of HPR Profile. Applies to: All Integrators for creation of HPR."
+        },
+        {
+          "id": "HPR-041",
+          "type": "Optional",
+          "functionality": "Country*",
+          "expected": "The system should allow the user to select their country from a dropdown menu",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Creation of HPR Profile. Applies to: All Integrators for creation of HPR. NHA points this case at Use Master Data Sheet (Excel)"
+        },
+        {
+          "id": "HPR-042",
+          "type": "Optional",
+          "functionality": "State/Union Territory *",
+          "expected": "The system should allow the user to select their communication state from a dropdown menu.",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Creation of HPR Profile. Applies to: All Integrators for creation of HPR. NHA points this case at Use Master Data Sheet (Excel)"
+        },
+        {
+          "id": "HPR-043",
+          "type": "Optional",
+          "functionality": "District *",
+          "expected": "The system should allow the user to select their communication district from a dropdown menu",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Creation of HPR Profile. Applies to: All Integrators for creation of HPR. NHA points this case at Use Master Data Sheet (Excel)"
+        },
+        {
+          "id": "HPR-044",
+          "type": "Optional",
+          "functionality": "Sub District",
+          "expected": "The system should allow the user to select their communication sub-district from a dropdown menu",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Creation of HPR Profile. Applies to: All Integrators for creation of HPR. NHA points this case at Use Master Data Sheet (Excel)"
+        },
+        {
+          "id": "HPR-045",
+          "type": "Optional",
+          "functionality": "City/Town/Village",
+          "expected": "The system should allow the user to input the name of the city.",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Creation of HPR Profile. Applies to: All Integrators for creation of HPR."
+        },
+        {
+          "id": "HPR-046",
+          "type": "Optional",
+          "functionality": "Postal Code(PIN) *",
+          "expected": "The system should allow the user to input the postal code of the communication address.",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Creation of HPR Profile. Applies to: All Integrators for creation of HPR."
+        },
+        {
+          "id": "HPR-054",
+          "type": "Mandatory",
+          "functionality": "category",
+          "expected": "system should allow user to select one category from drop down (Doctor - Modern Medicine, Unani etc.)",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Creation of HPR Profile. Applies to: All Integrators for creation of HPR. Field: Registration. NHA points this case at Use Master Data Sheet (Excel)"
+        },
+        {
+          "id": "HPR-055",
+          "type": "Mandatory",
+          "functionality": "categoryId",
+          "expected": "system should allow user to select categoryId from drop down",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Creation of HPR Profile. Applies to: All Integrators for creation of HPR."
+        },
+        {
+          "id": "HPR-056",
+          "type": "Mandatory",
+          "functionality": "registeredWithCouncil",
+          "expected": "system should allow user to select council from dropdown",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Creation of HPR Profile. Applies to: All Integrators for creation of HPR. NHA points this case at Use Master Data Sheet (Excel)"
+        },
+        {
+          "id": "HPR-057",
+          "type": "Mandatory",
+          "functionality": "registrationNumber",
+          "expected": "system should allow user to input registrationNumber",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Creation of HPR Profile. Applies to: All Integrators for creation of HPR."
+        },
+        {
+          "id": "HPR-058",
+          "type": "Mandatory",
+          "functionality": "registrationDate",
+          "expected": "system should allow user to input registrationDate",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Creation of HPR Profile. Applies to: All Integrators for creation of HPR."
+        },
+        {
+          "id": "HPR-059",
+          "type": "Mandatory",
+          "functionality": "registrationCertificate",
+          "expected": "base64 encoded image",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Creation of HPR Profile. Applies to: All Integrators for creation of HPR."
+        },
+        {
+          "id": "HPR-060",
+          "type": "Optional",
+          "functionality": "isNameDifferentInCertificate",
+          "expected": "system should ask for yes or no if it is yes then ask for document pdf/png/jpeg/jpg upto 5 MB",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Creation of HPR Profile. Applies to: All Integrators for creation of HPR."
+        },
+        {
+          "id": "HPR-061",
+          "type": "Optional",
+          "functionality": "proofOfNameChangeCertificate",
+          "expected": "system should ask for yes or no if it is yes then ask for document pdf/png/jpeg/jpg upto 5 MB",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Creation of HPR Profile. Applies to: All Integrators for creation of HPR."
+        },
+        {
+          "id": "HPR-062",
+          "type": "Mandatory",
+          "functionality": "nameOfDegreeOrDiplomaObtained",
+          "expected": "system should allow user to select name of degree",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Creation of HPR Profile. Applies to: All Integrators for creation of HPR. Field: Qualifications."
+        },
+        {
+          "id": "HPR-063",
+          "type": "Mandatory",
+          "functionality": "country",
+          "expected": "system should allow user to select country from the dropdown",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Creation of HPR Profile. Applies to: All Integrators for creation of HPR. NHA points this case at Use Master Data Sheet (Excel)"
+        },
+        {
+          "id": "HPR-064",
+          "type": "Mandatory",
+          "functionality": "state",
+          "expected": "system should allow user to select communciation state from the dropdown",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Creation of HPR Profile. Applies to: All Integrators for creation of HPR. NHA points this case at Use Master Data Sheet (Excel)"
+        },
+        {
+          "id": "HPR-065",
+          "type": "Mandatory",
+          "functionality": "college",
+          "expected": "system should allow user to select college from the dropdown",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Creation of HPR Profile. Applies to: All Integrators for creation of HPR. NHA points this case at Use Master Data Sheet (Excel)"
+        },
+        {
+          "id": "HPR-066",
+          "type": "Mandatory",
+          "functionality": "university",
+          "expected": "system should allow user to select university from the dropdown",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Creation of HPR Profile. Applies to: All Integrators for creation of HPR. NHA points this case at Use Master Data Sheet (Excel)"
+        },
+        {
+          "id": "HPR-067",
+          "type": "Optional",
+          "functionality": "monthOfAwardingDegreeDiploma",
+          "expected": "system should allow user to input month of awarding degree",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Creation of HPR Profile. Applies to: All Integrators for creation of HPR. Steps: Non Mandatory Selection"
+        },
+        {
+          "id": "HPR-068",
+          "type": "Mandatory",
+          "functionality": "yearOfAwardingDegreeDiploma",
+          "expected": "system should allow user to input year of awarding degree",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Creation of HPR Profile. Applies to: All Integrators for creation of HPR."
+        },
+        {
+          "id": "HPR-069",
+          "type": "Mandatory",
+          "functionality": "degreeCertificate",
+          "expected": "base64 encoded image",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Creation of HPR Profile. Applies to: All Integrators for creation of HPR."
+        },
+        {
+          "id": "HPR-070",
+          "type": "Mandatory",
+          "functionality": "isNameDifferentInCertificate",
+          "expected": "system should allow user to input yes or no if name is different in certificate",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Creation of HPR Profile. Applies to: All Integrators for creation of HPR."
+        },
+        {
+          "id": "HPR-071",
+          "type": "Optional",
+          "functionality": "proofOfNameChangeCertificate",
+          "expected": "Base 64- system should ask for yes or no if it is yes then ask for document pdf/png/jpeg/jpg upto 5 MB",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Creation of HPR Profile. Applies to: All Integrators for creation of HPR."
+        },
+        {
+          "id": "HPR-072",
+          "type": "Mandatory",
+          "functionality": "Are you currentlty working (Yes/No)",
+          "expected": "Dropdown field",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Creation of HPR Profile. Applies to: All Integrators for creation of HPR. Field: Work Detail."
+        },
+        {
+          "id": "HPR-073",
+          "type": "Mandatory",
+          "functionality": "IF No, so please ask the reason for non working",
+          "expected": "Fillup the dropdown menu from master sheet and other free text option should be available for user to enter",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Creation of HPR Profile. Applies to: All Integrators for creation of HPR."
+        },
+        {
+          "id": "HPR-074",
+          "type": "Mandatory",
+          "functionality": "If Yes, So radio button (Govt, Pvt or Both)",
+          "expected": "",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Creation of HPR Profile. Applies to: All Integrators for creation of HPR."
+        },
+        {
+          "id": "HPR-075",
+          "type": "Mandatory",
+          "functionality": "If Govt /Both, so document attachment is mandatory to upload upto 5 mb",
+          "expected": "Need to upload Payslip, recent transfer order etc. (In case of pvt no document is require)",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Creation of HPR Profile. Applies to: All Integrators for creation of HPR."
+        },
+        {
+          "id": "HPR-076",
+          "type": "Mandatory",
+          "functionality": "If Govt/Both so facility decalartion is mandatory (Professinal can search the facility via name/Facility id)",
+          "expected": "",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Creation of HPR Profile. Applies to: All Integrators for creation of HPR. NHA points this case at https://facilitysbx.abdm.gov.in/FacilityManagement/v1.5/facility/search"
+        },
+        {
+          "id": "HPR-077",
+          "type": "Mandatory",
+          "functionality": "Preview Profile & Submit",
+          "expected": "On submit button user profile will submit and message will come on SMS/Email.",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Creation of HPR Profile. Applies to: All Integrators for creation of HPR. NHA points this case at https://doctorsbx.abdm.gov.in/apis/v1/doctors/register-professional-new"
+        },
+        {
+          "id": "HPR-078",
+          "type": "Optional",
+          "functionality": "fetchProfessionalsdetails",
+          "expected": "After successful user creation system will display all the details to user",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Creation of HPR Profile. Applies to: All Integrators for creation of HPR. Steps: for display information system will use fetch professional info API NHA points this case at https://doctorsbx.abdm.gov.in/apis/v1/doctors/fetch-professional-info"
+        },
+        {
+          "id": "HPR-079",
+          "type": "Mandatory",
+          "functionality": "update-professional",
+          "expected": "If user want to update their inputed details in system then system should allow user to update their details",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Creation of HPR Profile. Applies to: All Integrators for creation of HPR. Steps: system will follow 20 to 76 rows to create update payload NHA points this case at https://doctorsbx.abdm.gov.in/apis/v1/doctors/update-professional"
+        },
+        {
+          "id": "HPR-080",
+          "type": "Optional",
+          "functionality": "Upload- Document",
+          "expected": "This API will help integrators, if document is not ready during the HPR creation so professional can upload the document later",
+          "api": null,
+          "webhook": null,
+          "detail": "Function: Creation of HPR Profile. Applies to: All Integrators for creation of HPR. Steps: First API will fetch the document id then in the second api you can upload the document. NHA points this case at https://doctorsbx.abdm.gov.in/apis/v1/doctors/fetch-documents-list https://doctorsbx.abdm.gov.in/apis/v1/uploads/upload-document"
+        }
+      ]
+    }
+  ]
+}

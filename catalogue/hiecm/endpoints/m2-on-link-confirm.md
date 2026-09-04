@@ -16,6 +16,12 @@ sources:
     fetched: 2026-08-25
     note: >
       NHA's M2 OpenAPI file.
+  - file: catalogue/openapi/.raw/nha-2026-09-04/ABHA-PHR-V3-Documents.docx
+    fetched: 2026-09-04
+    hash: sha256:99320fbc4b9703fce4afed12d5eb0863431aaea25e814bc3fb9ab974d16acd75
+    note: >
+      NHA's PHR V3 document, section 10.3.11, which publishes the request
+      body this atom had as a placeholder.
 verified:
   status: unverified
 related:
@@ -49,10 +55,13 @@ curl -X POST 'https://dev.abdm.gov.in/api/hiecm/user-initiated-linking/v3/link/c
   -H 'TIMESTAMP: <ISO_8601_TIMESTAMP>' \
   -H 'X-CM-ID: sbx' \
   -H 'Content-Type: application/json' \
-  -d '<REQUEST_BODY>'
+  -d '{ "patient": [ { "referenceNumber": "4336268d-89a3-4c84-8674-aef42092d9fc", "display": "abcdefgdisplay", "careContexts": [ { "referenceNumber": "1234", "display": "1234-display" } ], "hiType": "PRESCRIPTION", "count": 1 } ], "response": { "requestId": "f207e461-1994-4274-9b86-554384f170ab" } }'
 ```
 
-The request and response schemas for this operation are in `catalogue/openapi/hiecm/v3/hiecm-m2.yaml`, ingested from NHA's file.
+The body above is transcribed from NHA's PHR V3 document, section 10.3.11, which publishes it for this call. It has not been sent to the
+sandbox from this repository.
+
+The request and response schemas for this operation are in the M2 specification, published at /specs/hiecm-m2.yaml and rendered field by field at /docs/hiecm/v3/api/m2. It is NHA's file as ingested.
 
 NHA calls this operation `onLinkConfirm`.
 

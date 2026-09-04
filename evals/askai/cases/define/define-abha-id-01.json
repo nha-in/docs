@@ -1,0 +1,36 @@
+{
+  "id": "define-abha-id-01",
+  "slice": "define",
+  "class": "define",
+  "turns": [
+    {
+      "role": "user",
+      "text": "What is an ABHA ID?"
+    }
+  ],
+  "attachment": null,
+  "page": null,
+  "must_contain": [
+    "ABHA expands to Ayushman Bharat Health Account",
+    "ABHA is the patient's identity in ABDM, in two forms: a 14 digit ABHA number and a readable ABHA address",
+    "ABHA was called Health ID before NHA renamed it"
+  ],
+  "must_not_contain": [
+    "<MASKED",
+    "i apologize",
+    "i apologise",
+    "let me ",
+    "great question",
+    "the catalogue",
+    "atom"
+  ],
+  "expected_sources": [
+    "shared.glossary.abha"
+  ],
+  "expected_shape": "define",
+  "expected_behaviour": "answer",
+  "derived_from": null,
+  "source_row": "annexure#glossary",
+  "catalogue_version": "2026.08.24",
+  "notes": "reader used the phrase 'ABHA ID'; the catalogue's term is simply ABHA, with two distinct forms, the ABHA number and the ABHA address."
+}
