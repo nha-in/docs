@@ -19,6 +19,7 @@ declare module 'react' {
         question?: string;
         starters?: string;
         shortcut?: string;
+        send?: string;
       };
     }
   }
