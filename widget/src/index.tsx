@@ -227,6 +227,7 @@ type PanelProps = {
   open: boolean;
   onClose: () => void;
   question: string;
+  send: boolean;
   starters: string[];
   supportUrl: string;
   page: PageAttachment | null;
@@ -254,6 +255,7 @@ function Panel({
   page,
   onDetach,
   question,
+  send,
   starters,
   supportUrl,
 }: PanelProps) {
@@ -271,6 +273,7 @@ function Panel({
   const [reading, setReading] = useState<string | null>(null);
   const [phase, setPhase] = useState<'idle' | 'thinking' | 'streaming'>('idle');
   const [activity, setActivity] = useState<string | null>(null);
+  const autoAsked = useRef<string | null>(null);
   const dialog = useRef<HTMLDialogElement>(null);
   const thread = useRef<HTMLDivElement>(null);
   const composer = useRef<HTMLTextAreaElement>(null);
@@ -362,9 +365,18 @@ function Panel({
   // that is the question, and can edit it first. An empty box only, so
   // reopening the panel never writes over what they were part way through.
   useEffect(() => {
-    if (!open) return;
-    if (question) setDraft((prior) => prior || question);
-  }, [open, question]);
+    if (!open || !question) return;
+    if (!send) {
+      setDraft((prior) => prior || question);
+      return;
+    }
+    // Asked outright, once. The host says the reader has finished asking, so
+    // pressing send again would be asking them to say it twice; the guard is
+    // what stops a re-render or a second opening from asking it again.
+    if (autoAsked.current === question) return;
+    autoAsked.current = question;
+    void ask(question);
+  }, [open, question, send]);
 
   // The dialog's own state is the source of truth for the browser; the `open`
   // prop drives it. Escape and the backdrop fire "close", which is where the
@@ -926,6 +938,7 @@ function Widget({
   page,
   onDetach,
   question,
+  send,
   starters,
 }: {
   host: HTMLElement;
@@ -938,6 +951,7 @@ function Widget({
   page: PageAttachment | null;
   onDetach: () => void;
   question: string;
+  send: boolean;
   starters: string[];
 }) {
   const close = () => {
@@ -974,6 +988,7 @@ function Widget({
         supportUrl={supportUrl}
         open={open}
         question={question}
+        send={send}
         starters={starters}
         onClose={close}
         page={page}
@@ -997,6 +1012,8 @@ function Widget({
  *                and fires a "close" event when the reader dismisses it
  *   question     seeds the composer when the panel opens with an empty box,
  *                for a host that already has the reader's words
+ *   send         present alongside `question` to ask it outright rather than
+ *                leave it in the composer for the reader to press
  *   starters     the empty state's opening questions, one per line, for a
  *                page that knows what its reader came to do
  *
@@ -1040,6 +1057,7 @@ class SupportAgentElement extends HTMLElement {
     'shortcut',
     'open',
     'question',
+    'send',
     'starters',
     'ground',
   ];
@@ -1105,6 +1123,7 @@ class SupportAgentElement extends HTMLElement {
         page={this.page}
         onDetach={() => this.attachPage(null)}
         question={this.getAttribute('question') ?? ''}
+        send={this.hasAttribute('send')}
         starters={startersFrom(this.getAttribute('starters') ?? '')}
       />,
       this.root!,
