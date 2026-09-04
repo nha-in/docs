@@ -72,6 +72,15 @@
 .landing-hero {
   --exit: 0;
 
+  /* The first screen is the one place the accent is allowed a whole field of
+     its own: a wash off the top, fading into the page before the copy ends,
+     so the statement is read on sage rather than on cream. */
+  background: radial-gradient(
+    150% 95% at 50% -15%,
+    var(--accent-soft) 0%,
+    var(--accent-wash) 45%,
+    transparent 78%
+  );
   position: relative;
   display: flex;
   flex-direction: column;
