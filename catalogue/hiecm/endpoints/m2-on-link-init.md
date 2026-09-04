@@ -55,7 +55,7 @@ curl -X POST 'https://dev.abdm.gov.in/api/hiecm/user-initiated-linking/v3/link/c
   -d '<REQUEST_BODY>'
 ```
 
-The request and response schemas for this operation are in `catalogue/openapi/hiecm/v3/hiecm-m2.yaml`, ingested from NHA's file.
+The request and response schemas for this operation are in the M2 specification, published at /specs/hiecm-m2.yaml and rendered field by field at /docs/hiecm/v3/api/m2. It is NHA's file as ingested.
 
 NHA calls this operation `onLinkInit`.
 

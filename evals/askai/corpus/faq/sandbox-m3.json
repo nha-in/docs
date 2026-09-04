@@ -1,0 +1,17 @@
+{
+  "source_row": "annexure#sandbox-faq-m3",
+  "url": "https://sandbox.abdm.gov.in/sandbox/v3/faq",
+  "fetched": "2026-09-03",
+  "method": "browser: opened the page at desktop width, selected the Milestone #3 tab, expanded every MuiAccordion via document.querySelectorAll('.MuiAccordionSummary-root').forEach(s=>s.click()), then read each .MuiAccordionDetails-root innerText",
+  "items": [
+    {"n": 1, "question": "What is milestone-M3?", "answer": "Milestone M3 is developing Health Information User (HIU) services to provide view of patient’s medical history to authorized healthcare professionals with consent from patient. All the longitudinal health records will be in FHIR format."},
+    {"n": 2, "question": "What is HIU (Health Information User)?", "answer": "HIU is an entity that wants to access digital health information from HIPs, in order to provide services to the patient to whom the information belongs. An HIU can be a hospital, clinic, healthcare technology company, organization working on health analytics, insurers, medical researchers and government entities"},
+    {"n": 3, "question": "Where can I get FHIR bundle samples on Sandbox documentation?", "answer": "Please click on link https://sandbox.abdm.gov.in/docs/main_envelope to find the link for the base FHIR envelope with all the available 7 HI types. https://www.hl7.org/fhir/bundle.html. Sample FHIR bundles for all the available 7 HI types have also been uploaded in link https://sandbox.abdm.gov.in/docs/diagnostic_report"},
+    {"n": 4, "question": "Will HIP or HIU have to store the public / private key at their end?", "answer": "It is required by HIU to store the public / private key as HIU will be require these keys to decrypt the data received by HIP."},
+    {"n": 5, "question": "Is Key generation required every time?", "answer": "Yes"},
+    {"n": 6, "question": "Does HIP send the public key to HIU?", "answer": "HIP along with the health document will send sender public key and receiver nonce."},
+    {"n": 7, "question": "What is generate Key Pair?", "answer": "Generate Key Pair is a Base-64 algorithm that is used to generate key. For details please refer documentation given in the link https://sandbox.abdm.gov.in/docs/data_encrypt_decrypt"},
+    {"n": 8, "question": "Where can I find some reference to health standards (FHIR formats/SNOMED CT) as specified for implementation of ABDM?", "answer": "NRCES website has detailed description on the ABDM profiles and standards to be used. Please refer to below links. \n\na) https://www.nrces.in/ndhm/fhir/r4/index.html\n\nb) https://www.hl7.org/fhir/bundle.html\n\nc) https://www.hl7.org/fhir/datatypes.html#Attachment Video of the workshop conducted for SNOMED implementation and FHIR formats is available on https://m.youtube.com/watch?v=7sCVVHLALNg"},
+    {"n": 9, "question": "What happens when HIU sends requests for a health record?", "answer": "When HIU sends request for sharing historical health data, the flow begins when the HIU (e.g., a Doctor at a Hospital) requests consent to view the patient’s data. Upon receipt of such a request from Gateway, HIECM acknowledges and sends back a consent request ID to the HIU via the gateway. The HIECM then notifies the patient that an HIU has made a consent request. The patient can view the request details and choose to either grant consent or deny it."}
+  ]
+}

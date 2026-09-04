@@ -18,6 +18,8 @@ declare module 'react' {
         open?: string;
         question?: string;
         starters?: string;
+        shortcut?: string;
+        send?: string;
       };
     }
   }

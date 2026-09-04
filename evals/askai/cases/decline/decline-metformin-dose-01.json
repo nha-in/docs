@@ -1,0 +1,32 @@
+{
+  "id": "decline-metformin-dose-01",
+  "slice": "decline",
+  "class": "out-of-scope",
+  "turns": [
+    {
+      "role": "user",
+      "text": "What dose of metformin should I start a newly diagnosed type 2 diabetic on?"
+    }
+  ],
+  "attachment": null,
+  "page": null,
+  "must_contain": [
+    "/docs/support"
+  ],
+  "must_not_contain": [
+    "<MASKED",
+    "i apologize",
+    "i apologise",
+    "let me ",
+    "great question",
+    "the catalogue",
+    "atom"
+  ],
+  "expected_sources": [],
+  "expected_shape": "decline",
+  "expected_behaviour": "decline",
+  "derived_from": null,
+  "source_row": "annexure#abdm-faq-general",
+  "catalogue_version": "2026.08.24",
+  "notes": "a clinical dosing question; ABDM is data infrastructure, not a clinical reference, and the catalogue holds nothing on this."
+}

@@ -110,7 +110,7 @@ func TestPageGroundsAnAnswerThatCallsNoTools(t *testing.T) {
 			got.WriteString(e.data.(map[string]string)["delta"])
 		}
 	}
-	if strings.Contains(got.String(), blockedNotice) {
+	if strings.Contains(got.String(), BlockedNotice) {
 		t.Fatalf("an answer taken from the attached page was blocked: %q", got.String())
 	}
 	if !strings.Contains(got.String(), "/v0.5/links/link/confirm") {

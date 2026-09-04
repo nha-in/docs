@@ -50,7 +50,7 @@ curl -X POST 'https://dev.abdm.gov.in/v4/int/v1/bridges/MutipleHRPAddUpdateServi
   -d '<REQUEST_BODY>'
 ```
 
-The request and response schemas for this operation are in `catalogue/openapi/hiecm/v3/hiecm-gateway.yaml`, ingested from NHA's file.
+The request and response schemas for this operation are in the gateway specification, published at /specs/hiecm-gateway.yaml and rendered field by field at /docs/hiecm/v3/api/gateway. It is NHA's file as ingested.
 
 NHA calls this operation `registerBridgeServices`.
 

@@ -59,7 +59,10 @@ func collectEvents() (func(string, any) error, *[]event) {
 	}, &evs
 }
 
-func TestLoopToolCallThenAnswer(t *testing.T) {
+// toolCallThenAnswer builds the fakeModel and tools every test in this
+// group answers with: one search_docs call, then a text answer.
+func toolCallThenAnswer(t *testing.T) (*fakeModel, []chat.ToolDef) {
+	t.Helper()
 	r := servertest.Reader(t)
 	tools := server.ChatTools(server.NewTools(r, nil).Defs())
 	fm := &fakeModel{
@@ -70,7 +73,14 @@ func TestLoopToolCallThenAnswer(t *testing.T) {
 		},
 		texts: []string{"", "It is ISO 8601 UTC."},
 	}
-	svc := &chat.Service{Model: fm, Tools: tools, MaxTokens: 100}
+	return fm, tools
+}
+
+func TestLoopToolCallThenAnswer(t *testing.T) {
+	fm, tools := toolCallThenAnswer(t)
+	// TraceTools is the eval harness's opt in (internal/eval/runner.go);
+	// this test covers what it turns on.
+	svc := &chat.Service{Model: fm, Tools: tools, MaxTokens: 100, TraceTools: true}
 	emit, evs := collectEvents()
 	err := svc.Respond(context.Background(),
 		[]chat.Turn{{Role: "user", Text: "what is the timestamp format?"}}, nil, emit)
@@ -81,8 +91,9 @@ func TestLoopToolCallThenAnswer(t *testing.T) {
 	for _, e := range *evs {
 		names = append(names, e.name)
 	}
-	// tool event first, then streamed text, then sources, then done
-	want := []string{"tool", "text", "sources", "done"}
+	// tool event before the call, tool_result after it, then streamed text,
+	// then sources, then done.
+	want := []string{"tool", "tool_result", "text", "sources", "done"}
 	if !slices.Equal(names, want) {
 		t.Fatalf("events %v, want %v", names, want)
 	}
@@ -96,6 +107,74 @@ func TestLoopToolCallThenAnswer(t *testing.T) {
 	data, ok := toolEvt.data.(map[string]string)
 	if !ok || data["name"] != "search_docs" || data["detail"] != "timestamp" {
 		t.Errorf("tool event data = %+v", toolEvt.data)
+	}
+	// The tool_result event carries the raw input and output the eval
+	// harness records; it is the recorder's evidence, not the reader's cue.
+	resultEvt := (*evs)[1]
+	rdata, ok := resultEvt.data.(map[string]any)
+	if !ok || rdata["name"] != "search_docs" {
+		t.Errorf("tool_result event data = %+v", resultEvt.data)
+	}
+	if _, ok := rdata["input"].(json.RawMessage); !ok {
+		t.Errorf("tool_result input = %+v, want json.RawMessage", rdata["input"])
+	}
+}
+
+// TestLoopToolResultAbsentWithoutTraceTools covers I10: the tool_result
+// event carries every raw tool payload, so a reader's panel must never
+// receive it. Service.TraceTools defaults to false, which every
+// reader-facing deployment (cmd/docs-mcp/main.go) leaves alone.
+func TestLoopToolResultAbsentWithoutTraceTools(t *testing.T) {
+	fm, tools := toolCallThenAnswer(t)
+	svc := &chat.Service{Model: fm, Tools: tools, MaxTokens: 100}
+	emit, evs := collectEvents()
+	if err := svc.Respond(context.Background(),
+		[]chat.Turn{{Role: "user", Text: "what is the timestamp format?"}}, nil, emit); err != nil {
+		t.Fatal(err)
+	}
+	names := []string{}
+	for _, e := range *evs {
+		names = append(names, e.name)
+	}
+	want := []string{"tool", "text", "sources", "done"}
+	if !slices.Equal(names, want) {
+		t.Fatalf("events %v, want %v (no tool_result without TraceTools)", names, want)
+	}
+}
+
+// TestLoopToolResultGuardsATruncatedToolInput covers the other half of
+// I10: a tool-use input cut off at max_tokens is invalid JSON, and the
+// tool_result event must guard it exactly as the output side is already
+// guarded, rather than let json.Marshal fail and abort the round.
+func TestLoopToolResultGuardsATruncatedToolInput(t *testing.T) {
+	r := servertest.Reader(t)
+	tools := server.ChatTools(server.NewTools(r, nil).Defs())
+	fm := &fakeModel{
+		replies: []chat.Reply{
+			{ToolCalls: []chat.ToolCall{{ID: "t1", Name: "search_docs",
+				Input: json.RawMessage(`{"query":"timestamp"`)}}, StopReason: "tool_use"}, // truncated: no closing brace
+			{Text: "It is ISO 8601 UTC.", StopReason: "end_turn"},
+		},
+		texts: []string{"", "It is ISO 8601 UTC."},
+	}
+	svc := &chat.Service{Model: fm, Tools: tools, MaxTokens: 100, TraceTools: true}
+	emit, evs := collectEvents()
+	if err := svc.Respond(context.Background(),
+		[]chat.Turn{{Role: "user", Text: "what is the timestamp format?"}}, nil, emit); err != nil {
+		t.Fatalf("a truncated tool input aborted the round: %v", err)
+	}
+	var resultEvt *event
+	for i := range *evs {
+		if (*evs)[i].name == "tool_result" {
+			resultEvt = &(*evs)[i]
+		}
+	}
+	if resultEvt == nil {
+		t.Fatal("no tool_result event; the truncated input aborted the round instead of being guarded")
+	}
+	rdata := resultEvt.data.(map[string]any)
+	if _, ok := rdata["input"].(string); !ok {
+		t.Errorf("tool_result input = %+v (%T), want a plain string for invalid JSON", rdata["input"], rdata["input"])
 	}
 }
 

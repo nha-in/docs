@@ -15,6 +15,8 @@ function walk(dir) {
     const p = join(dir, name);
     if (statSync(p).isDirectory()) {
       if (name === "openapi") continue;
+      // Annexure records document sources that atoms cite, not atoms themselves, so they carry no atom frontmatter.
+      if (name === "annexure") continue;
       out.push(...walk(p));
     } else if (
       name.endsWith(".md") &&

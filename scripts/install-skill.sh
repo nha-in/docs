@@ -10,7 +10,7 @@
 # Usage:
 #   scripts/install-skill.sh <skill-name> <target> [--user]
 #
-#   <skill-name>  a directory under plugins/abdm/skills/, e.g. hiecm-m1-build
+#   <skill-name>  a directory under plugins/abdm-integrators-assistant/skills/, e.g. hiecm-m1-build
 #   <target>      claude | cursor | codex | copilot | all
 #   --user        install to the personal/global directory instead of this
 #                 project's. Not supported for copilot: GitHub does not
@@ -24,7 +24,7 @@ skill="${1:-}"; target="${2:-}"; scope="${3:-}"
 [ -n "$skill" ] && [ -n "$target" ] || usage
 
 root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-src="$root/plugins/abdm/skills/$skill"
+src="$root/plugins/abdm-integrators-assistant/skills/$skill"
 [ -d "$src" ] || { echo "No compiled skill at $src. Run: node scripts/compile-skills.mjs" >&2; exit 1; }
 
 user=false

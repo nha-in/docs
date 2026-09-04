@@ -1,0 +1,38 @@
+{
+  "id": "faq-verbatim-sandbox-m2-04",
+  "slice": "faq-verbatim",
+  "class": "define",
+  "turns": [
+    {
+      "role": "user",
+      "text": "What is X-HIP ID / X-HIU-ID / X-CM-ID and how to generate them?"
+    }
+  ],
+  "attachment": null,
+  "page": null,
+  "must_contain": [
+    "X-HIP-ID is obtained by registering as a HIP service after HFR registration",
+    "X-HIU-ID is obtained by registering as a HIU service after HFR registration",
+    "X-CM-ID identifies the HIE-CM, and for the sandbox its value is sbx"
+  ],
+  "must_not_contain": [
+    "<MASKED",
+    "i apologize",
+    "i apologise",
+    "let me ",
+    "great question",
+    "the catalogue",
+    "atom"
+  ],
+  "expected_sources": [
+    "hiecm.endpoint.m1-register-hrp-services",
+    "hiecm.endpoint.gateway-register-bridge-services",
+    "shared.sandbox.going-live"
+  ],
+  "expected_shape": "define",
+  "expected_behaviour": "answer",
+  "derived_from": null,
+  "source_row": "annexure#sandbox-faq-m2",
+  "catalogue_version": "2026.08.24",
+  "notes": ""
+}
