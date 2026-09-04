@@ -4,7 +4,7 @@ sidebar_label: Build with AI
 sidebar_position: 4
 description: Set a coding agent up to build your ABDM integration, from a one-file skill to live retrieval over MCP.
 verification: unverified
-source: scripts/build-skills.mjs, plugins/abdm/skills
+source: scripts/build-skills.mjs, plugins/abdm-integrators-assistant/skills
 ---
 
 import useBaseUrl from '@docusaurus/useBaseUrl';
@@ -45,7 +45,7 @@ One command for both halves: the skills as files and the server as a connection.
 
 ## Install a skill
 
-One file per job. The module skills carry every endpoint, header, error code and test for that milestone; the FHIR skills are guided procedures for building or auditing NRCES compliant bundles.
+One file per job, in three shapes. A module skill carries every endpoint, header, error code and test case for that milestone, provider side (M1 to M4) or patient side (P1 to P3). A scaffold or debug skill is a procedure instead: it works against the sandbox in a loop that ends on an observed result, not on a call returning 200. Those exist for M1 to M3, the milestones the catalogue has flows and errors for. The FHIR skills build or audit NRCES compliant bundles.
 
 <SkillPicker />
 
