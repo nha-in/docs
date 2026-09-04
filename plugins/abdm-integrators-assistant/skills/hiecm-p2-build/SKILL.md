@@ -33,7 +33,38 @@ Four things must already be true, each checkable:
 
 **Act: the calls in this flow, in order**
 
-The Catalogue does not yet record this flow's calls as endpoint atoms, so this skill cannot give you the exact requests. Read the operations under /docs/hiecm/v3/api/p2 before acting, and treat the exit condition below as the thing to observe.
+#### Ask a facility what records it holds (`hiecm.endpoint.p2-care-context-discover`)
+
+```bash
+curl -X POST 'https://dev.abdm.gov.in/api/hiecm/user-initiated-linking/v3/patient/care-context/discover' \
+  -H 'Authorization: Bearer <ACCESS_TOKEN>' \
+  -H 'REQUEST-ID: <FRESH_UUID>' \
+  -H 'TIMESTAMP: <ISO_8601_TIMESTAMP>' \
+  -H 'Content-Type: application/json' \
+  -d '{ "hipId": "ABDM\_HIP", "unverifiedIdentifiers": [ { "type": "ABHA\_ADDRESS", "value": "shaik.XXXX@sbx" } ] }'
+```
+
+#### Start linking the care contexts the person chose (`hiecm.endpoint.p2-link-care-context-init`)
+
+```bash
+curl -X POST 'https://dev.abdm.gov.in/api/hiecm/user-initiated-linking/v3/link/care-context/init' \
+  -H 'Authorization: Bearer <ACCESS_TOKEN>' \
+  -H 'REQUEST-ID: <FRESH_UUID>' \
+  -H 'TIMESTAMP: <ISO_8601_TIMESTAMP>' \
+  -H 'Content-Type: application/json' \
+  -d '{ "transactionId": "66446ece-396b-4f22-a1a6-756196fdffc9", "abhaAddress": "user\_123@sbx", "patient": [ { "referenceNumber": "example01", "careContexts": [ { "referenceNumber": "123" } ], "hiType": "PRESCRIPTION", "count": 1 } ] }'
+```
+
+#### Confirm the link with the code the person received (`hiecm.endpoint.p2-link-care-context-confirm`)
+
+```bash
+curl -X POST 'https://dev.abdm.gov.in/api/hiecm/user-initiated-linking/v3/link/care-context/confirm' \
+  -H 'Authorization: Bearer <ACCESS_TOKEN>' \
+  -H 'REQUEST-ID: <FRESH_UUID>' \
+  -H 'TIMESTAMP: <ISO_8601_TIMESTAMP>' \
+  -H 'Content-Type: application/json' \
+  -d '<REQUEST_BODY>'
+```
 
 **Exit condition (Observe until this is true)**
 
@@ -76,7 +107,16 @@ Three things must already be true, each checkable:
 
 **Act: the calls in this flow, in order**
 
-The Catalogue does not yet record this flow's calls as endpoint atoms, so this skill cannot give you the exact requests. Read the operations under /docs/hiecm/v3/api/p2 before acting, and treat the exit condition below as the thing to observe.
+#### Share the profile with the facility whose code was scanned (`hiecm.endpoint.p2-patient-share`)
+
+```bash
+curl -X POST 'https://dev.abdm.gov.in/api/hiecm/patient-share/v3/share' \
+  -H 'Authorization: Bearer <ACCESS_TOKEN>' \
+  -H 'REQUEST-ID: <FRESH_UUID>' \
+  -H 'TIMESTAMP: <ISO_8601_TIMESTAMP>' \
+  -H 'Content-Type: application/json' \
+  -d '<REQUEST_BODY>'
+```
 
 **Exit condition (Observe until this is true)**
 

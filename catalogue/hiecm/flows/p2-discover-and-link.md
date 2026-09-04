@@ -23,10 +23,21 @@ sources:
       The P2 milestone page, compiled from NHA's PHR application
       document. The discovery fields, the three specified messages, the
       10 second answer and the 2 hour record window come from here.
+  - file: catalogue/openapi/.raw/nha-2026-09-04/ABHA-PHR-V3-Documents.docx
+    fetched: 2026-09-04
+    hash: sha256:99320fbc4b9703fce4afed12d5eb0863431aaea25e814bc3fb9ab974d16acd75
+    note: >
+      NHA's PHR V3 document: 120 operations with their paths, request
+      bodies and error scenarios. It is where the endpoint atoms this
+      flow cites come from.
 verified:
   status: unverified
   against: docs-only
 related:
+  endpoints:
+    - hiecm.endpoint.p2-care-context-discover
+    - hiecm.endpoint.p2-link-care-context-init
+    - hiecm.endpoint.p2-link-care-context-confirm
   flows:
     - hiecm.flow.p2-scan-and-share
     - hiecm.flow.p3-fetch-records
@@ -120,6 +131,9 @@ use it rather than its own:
 | The facility is unreachable | "Couldn't Connect: We are sorry. Unable to contact your hospital. Please try again later" |
 | The person never visited | "No health records found" |
 | Everything is already linked | "No new health record to link: Records of all visits are already linked and there is nothing new to link" |
+
+The three calls this flow makes are published on the consent manager, under
+`/api/hiecm/user-initiated-linking/v3/`. The endpoint atoms carry them.
 
 ## How you know it worked
 

@@ -20,10 +20,21 @@ sources:
     note: >
       The P1 milestone page. The four routes, the auth mode rule and the
       60 second resend rule come from here.
+  - file: catalogue/openapi/.raw/nha-2026-09-04/ABHA-PHR-V3-Documents.docx
+    fetched: 2026-09-04
+    hash: sha256:99320fbc4b9703fce4afed12d5eb0863431aaea25e814bc3fb9ab974d16acd75
+    note: >
+      NHA's PHR V3 document: 120 operations with their paths, request
+      bodies and error scenarios. It is where the endpoint atoms this
+      flow cites come from.
 verified:
   status: unverified
   against: docs-only
 related:
+  endpoints:
+    - hiecm.endpoint.p1-login-request-otp
+    - hiecm.endpoint.p1-login-verify-otp
+    - hiecm.endpoint.p1-login-verify-user
   flows:
     - hiecm.flow.p1-create-abha-address
   concepts:
@@ -81,6 +92,10 @@ The four routes, and what checks each:
 
 A reset password screen belongs behind login, reachable by someone who
 cannot get in.
+
+All four routes share two paths, `/login/request/otp` and `/login/verify`, with the
+`scope` and the login hint saying which route a call belongs to. The endpoint
+atoms carry both, with NHA's own request bodies.
 
 ## How you know it worked
 

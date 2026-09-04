@@ -23,10 +23,23 @@ sources:
       The P1 milestone page, compiled from NHA's PHR application
       document. The two creation paths, the mandatory fields and the KYC
       status rule come from here.
+  - file: catalogue/openapi/.raw/nha-2026-09-04/ABHA-PHR-V3-Documents.docx
+    fetched: 2026-09-04
+    hash: sha256:99320fbc4b9703fce4afed12d5eb0863431aaea25e814bc3fb9ab974d16acd75
+    note: >
+      NHA's PHR V3 document: 120 operations with their paths, request
+      bodies and error scenarios. It is where the endpoint atoms this
+      flow cites come from.
 verified:
   status: unverified
   against: docs-only
 related:
+  endpoints:
+    - hiecm.endpoint.p1-enrollment-request-otp
+    - hiecm.endpoint.p1-enrollment-verify-otp
+    - hiecm.endpoint.p1-enrollment-address-suggestion
+    - hiecm.endpoint.p1-enrollment-address-exists
+    - hiecm.endpoint.p1-enrollment-enrol
   flows:
     - hiecm.flow.p1-login
     - hiecm.flow.p2-discover-and-link
@@ -104,6 +117,10 @@ A Self-Declared profile needs a "Link ABHA number" action of its own. The
 user enters their 14 digit number and validates by Aadhaar OTP or mobile
 OTP. Profile details then follow the ABHA number and the status becomes
 KYC Verified.
+
+NHA's PHR V3 document publishes the paths for this flow on the sandbox host
+`https://abhasbx.abdm.gov.in`, and the endpoint atoms above carry them with
+the request bodies that document gives.
 
 ## How you know it worked
 

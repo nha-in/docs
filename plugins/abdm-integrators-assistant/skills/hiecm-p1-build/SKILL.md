@@ -33,7 +33,60 @@ Four things must already be true, each checkable:
 
 **Act: the calls in this flow, in order**
 
-The Catalogue does not yet record this flow's calls as endpoint atoms, so this skill cannot give you the exact requests. Read the operations under /docs/hiecm/v3/api/p1 before acting, and treat the exit condition below as the thing to observe.
+#### Send the OTP that starts a registration (`hiecm.endpoint.p1-enrollment-request-otp`)
+
+```bash
+curl -X POST 'https://abhasbx.abdm.gov.in/abha/api/v3/phr/app/enrollment/request/otp' \
+  -H 'Authorization: Bearer <ACCESS_TOKEN>' \
+  -H 'REQUEST-ID: <FRESH_UUID>' \
+  -H 'TIMESTAMP: <ISO_8601_TIMESTAMP>' \
+  -H 'Content-Type: application/json' \
+  -d '{ "scope": [ "abha-address-enroll", "mobile-verify" ], "loginHint": "mobile-number", "loginId": "{{encrypted-mobile-number}}", "otpSystem": "abdm" }'
+```
+
+#### Verify the registration OTP (`hiecm.endpoint.p1-enrollment-verify-otp`)
+
+```bash
+curl -X POST 'https://abhasbx.abdm.gov.in/abha/api/v3/phr/app/enrollment/verify' \
+  -H 'Authorization: Bearer <ACCESS_TOKEN>' \
+  -H 'REQUEST-ID: <FRESH_UUID>' \
+  -H 'TIMESTAMP: <ISO_8601_TIMESTAMP>' \
+  -H 'Content-Type: application/json' \
+  -d '{ "scope": [ "abha-address-enroll", "mobile-verify" ], "authData": { "authMethods": [ "otp" ], "otp": { "txnId": "*{{transactionId}}*", "otpValue": "*{{encrypted OTP}}*" } } }'
+```
+
+#### Ask for address suggestions (`hiecm.endpoint.p1-enrollment-address-suggestion`)
+
+```bash
+curl -X POST 'https://abhasbx.abdm.gov.in/abha/api/v3/phr/app/enrollment/suggestion' \
+  -H 'Authorization: Bearer <ACCESS_TOKEN>' \
+  -H 'REQUEST-ID: <FRESH_UUID>' \
+  -H 'TIMESTAMP: <ISO_8601_TIMESTAMP>' \
+  -H 'Content-Type: application/json' \
+  -d '{ "txnId": "*{{transactionId}}*", "firstName": "John", "lastName": "Doe", "dayOfBirth": "14", "monthOfBirth": "11", "yearOfBirth": "1998" }'
+```
+
+#### Check whether an address is taken (`hiecm.endpoint.p1-enrollment-address-exists`)
+
+```bash
+curl -X GET 'https://abhasbx.abdm.gov.in/abha/api/v3/phr/app/enrollment/isExists' \
+  -H 'Authorization: Bearer <ACCESS_TOKEN>' \
+  -H 'REQUEST-ID: <FRESH_UUID>' \
+  -H 'TIMESTAMP: <ISO_8601_TIMESTAMP>' \
+  -H 'Content-Type: application/json' \
+  -d '<REQUEST_BODY>'
+```
+
+#### Create the health address (`hiecm.endpoint.p1-enrollment-enrol`)
+
+```bash
+curl -X POST 'https://abhasbx.abdm.gov.in/abha/api/v3/phr/app/enrollment/enrol' \
+  -H 'Authorization: Bearer <ACCESS_TOKEN>' \
+  -H 'REQUEST-ID: <FRESH_UUID>' \
+  -H 'TIMESTAMP: <ISO_8601_TIMESTAMP>' \
+  -H 'Content-Type: application/json' \
+  -d '{ "txnId": "22387064-45ea-42d4-b6c5-8b86dbec6fe5", "phrDetails": { "mobile": " *{{encrypted mobile-number }}*", "firstName": "John", "middleName": "", "lastName": "Doe", "yearOfBirth": "1998", "dayOfBirth": "14", "monthOfBirth": "11", "gender": "M", "email": "", "profilePhoto": "{{base-64-encoded-profile-photo}}", "stateCode": "9", "districtCode": "135", "pinCode": 232101, "address": "Street number 4, sector 12", "stateName": "Maharashtra", "districtName": "Nashik", "ABHANumber": "XX-XXXX-XXXX-1234", "abhaAddress": "johndoe@sbx", "password": "*{{encrypted password}}*" } }'
+```
 
 **Exit condition (Observe until this is true)**
 
@@ -76,7 +129,38 @@ Four things must already be true, each checkable:
 
 **Act: the calls in this flow, in order**
 
-The Catalogue does not yet record this flow's calls as endpoint atoms, so this skill cannot give you the exact requests. Read the operations under /docs/hiecm/v3/api/p1 before acting, and treat the exit condition below as the thing to observe.
+#### Send the OTP that starts a login (`hiecm.endpoint.p1-login-request-otp`)
+
+```bash
+curl -X POST 'https://abhasbx.abdm.gov.in/abha/api/v3/phr/app/login/request/otp' \
+  -H 'Authorization: Bearer <ACCESS_TOKEN>' \
+  -H 'REQUEST-ID: <FRESH_UUID>' \
+  -H 'TIMESTAMP: <ISO_8601_TIMESTAMP>' \
+  -H 'Content-Type: application/json' \
+  -d '{ "scope": [ "abha-address-login", "mobile-verify" ], "loginHint": "mobile-number", "loginId": "*{{encrypted mobile-number}}*", "otpSystem": "abdm" }'
+```
+
+#### Verify the login OTP (`hiecm.endpoint.p1-login-verify-otp`)
+
+```bash
+curl -X POST 'https://abhasbx.abdm.gov.in/abha/api/v3/phr/app/login/verify' \
+  -H 'Authorization: Bearer <ACCESS_TOKEN>' \
+  -H 'REQUEST-ID: <FRESH_UUID>' \
+  -H 'TIMESTAMP: <ISO_8601_TIMESTAMP>' \
+  -H 'Content-Type: application/json' \
+  -d '{ "scope": [ "abha-address-login", "mobile-verify" ], "authData": { "authMethods": [ "otp" ], "otp": { "txnId": "*{{ transactionId}}*", "otpValue": "*{{encrypted OTP}}*" } } }'
+```
+
+#### Say which address is signing in (`hiecm.endpoint.p1-login-verify-user`)
+
+```bash
+curl -X POST 'https://abhasbx.abdm.gov.in/abha/api/v3/phr/app/login/verify/user' \
+  -H 'Authorization: Bearer <ACCESS_TOKEN>' \
+  -H 'REQUEST-ID: <FRESH_UUID>' \
+  -H 'TIMESTAMP: <ISO_8601_TIMESTAMP>' \
+  -H 'Content-Type: application/json' \
+  -d '{ "abhaAddress":"johndoe@abdm", "txnId":"*{{transactionId}}*" }'
+```
 
 **Exit condition (Observe until this is true)**
 

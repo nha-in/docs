@@ -23,10 +23,20 @@ sources:
       The P3 milestone page, compiled from NHA's PHR application
       document. The four notification kinds, the three auto approval
       steps and the screen requirements come from here.
+  - file: catalogue/openapi/.raw/nha-2026-09-04/ABHA-PHR-V3-Documents.docx
+    fetched: 2026-09-04
+    hash: sha256:99320fbc4b9703fce4afed12d5eb0863431aaea25e814bc3fb9ab974d16acd75
+    note: >
+      NHA's PHR V3 document: 120 operations with their paths, request
+      bodies and error scenarios. It is where the endpoint atoms this
+      flow cites come from.
 verified:
   status: unverified
   against: docs-only
 related:
+  endpoints:
+    - hiecm.endpoint.p3-subscription-init
+    - hiecm.endpoint.p3-consent-auto-approve
   flows:
     - hiecm.flow.p3-fetch-records
     - hiecm.flow.p1-create-abha-address
