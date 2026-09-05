@@ -10,7 +10,7 @@
 # Usage:
 #   scripts/install-skill.sh <skill-name> <target> [--user]
 #
-#   <skill-name>  a directory under plugins/abdm-integrators-assistant/skills/, e.g. hiecm-m1-build
+#   <skill-name>  a directory under plugins/abdm-integrators-assistant/skills/, e.g. abdm-m1
 #   <target>      claude | cursor | codex | copilot | all
 #   --user        install to the personal/global directory instead of this
 #                 project's. Not supported for copilot: GitHub does not

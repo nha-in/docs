@@ -6,30 +6,17 @@ Complete the steps yourself by running the commands directly. Ask the user only 
 
 Ask the user which of these this project needs, and install only what they name:
 
-- `abdm-m1`: ABDM Milestone 1: ABHA identity, login, profile
-- `abdm-m2`: ABDM Milestone 2: linking and sharing records
-- `abdm-m3`: ABDM Milestone 3: consent and fetching
-- `abdm-m4`: ABDM Milestone 4: the HPR and HFR registries
-- `abdm-p1`: ABDM P1: PHR identity and profile, the patient side of M1
-- `abdm-p2`: ABDM P2: PHR linking and records, the patient side of M2
-- `abdm-p3`: ABDM P3: PHR consent and notifications, the patient side of M3
-- `abdm-phr-services`: services a PHR app may offer on top of ABDM, none of them certified
-- `hiecm-m1-build`: scaffolding an M1 integration flow by flow against the sandbox
-- `hiecm-m1-debug`: diagnosing a failed M1 call
-- `hiecm-m2-build`: scaffolding an M2 integration flow by flow against the sandbox
-- `hiecm-m2-debug`: diagnosing a failed M2 call
-- `hiecm-m3-build`: scaffolding an M3 integration flow by flow against the sandbox
-- `hiecm-m3-debug`: diagnosing a failed M3 call
-- `hiecm-m4-build`: scaffolding the HPR and HFR registrations M4 asks for
-- `hiecm-m4-debug`: diagnosing a failed M4 registration call
-- `hiecm-p1-build`: scaffolding registration and login in a PHR app
-- `hiecm-p1-debug`: diagnosing a failed call from a PHR app, across P1 to P3
-- `hiecm-p2-build`: scaffolding discovery and linking in a PHR app
-- `hiecm-p3-build`: scaffolding consent and record fetching in a PHR app
-- `fhir-generate`: building NRCES compliant FHIR bundles in this codebase
-- `fhir-audit`: checking an existing FHIR store for NRCES compliance
+- `abdm-m1`: M1, ABHA identity. Sections: scaffold, integrate, debug, test.
+- `abdm-m2`: M2, linking and sharing. Sections: scaffold, integrate, debug, test.
+- `abdm-m3`: M3, consent and fetching. Sections: scaffold, integrate, debug, test.
+- `abdm-m4`: M4, facility and professional registries. Sections: scaffold, integrate, debug, test.
+- `abdm-p1`: P1, PHR identity and profile. Sections: scaffold, integrate, debug, test.
+- `abdm-p2`: P2, PHR linking and records. Sections: scaffold, integrate, debug, test.
+- `abdm-p3`: P3, PHR consent and notifications. Sections: scaffold, integrate, debug, test.
+- `abdm-phr-services`: PHR application services. Sections: integrate, debug, test.
+- `abdm-fhir`: FHIR, generating and auditing bundles. Sections: generate, audit.
 
-A project that produces FHIR documents from its own code wants `fhir-generate`; one with an existing FHIR store wants `fhir-audit`; most need only one of the two.
+Most projects need one milestone skill to begin with, and `abdm-fhir` alongside it if they produce or hold FHIR documents.
 
 ## 2. Install the skills
 
@@ -54,43 +41,32 @@ codex plugin marketplace add eka-care/abdm-docs
 
 Cursor, GitHub Copilot, VS Code and Kiro read Agent Plugins 1.0, but they install from their own marketplaces rather than from a repository, and this plugin is not listed in one yet. Install the skills directly instead, which is also the fallback anywhere the marketplace add above fails.
 
-Each skill is one markdown file in the cross-agent SKILL.md format. Download each chosen skill into the directory your agent reads skills from:
+Each skill is a folder in the cross-agent Agent Skills format: a `SKILL.md` that routes, and the sections it links to under `references/`, which load only when the work needs them. Download the whole folder into the directory your agent reads skills from:
 
-- Claude Code: `.claude/skills/<name>/SKILL.md`
-- Cursor: `.cursor/skills/<name>/SKILL.md` (it also reads `.claude/skills`)
-- GitHub Copilot: `.github/skills/<name>/SKILL.md`
+- Claude Code: `.claude/skills/<name>/`
+- Cursor: `.cursor/skills/<name>/` (it also reads `.claude/skills`)
+- GitHub Copilot: `.github/skills/<name>/`
 - Any other agent: wherever it reads context from
 
 URLs below are relative to the origin you fetched this file from.
 
-For example:
+`/skills/index.json` lists every skill and the exact files it is made of, so fetch that first and work from it rather than guessing at reference names. For example:
 
 ```
-mkdir -p .claude/skills/abdm-m1 && curl -fsSL /skills/abdm-m1/SKILL.md -o .claude/skills/abdm-m1/SKILL.md
+mkdir -p .claude/skills/abdm-m1/references
+curl -fsSL /skills/abdm-m1/SKILL.md -o .claude/skills/abdm-m1/SKILL.md
+for f in scaffold integrate debug test; do curl -fsSL /skills/abdm-m1/references/$f.md -o .claude/skills/abdm-m1/references/$f.md; done
 ```
 
-- /skills/abdm-m1/SKILL.md
-- /skills/abdm-m2/SKILL.md
-- /skills/abdm-m3/SKILL.md
-- /skills/abdm-m4/SKILL.md
-- /skills/abdm-p1/SKILL.md
-- /skills/abdm-p2/SKILL.md
-- /skills/abdm-p3/SKILL.md
-- /skills/abdm-phr-services/SKILL.md
-- /skills/hiecm-m1-build/SKILL.md
-- /skills/hiecm-m1-debug/SKILL.md
-- /skills/hiecm-m2-build/SKILL.md
-- /skills/hiecm-m2-debug/SKILL.md
-- /skills/hiecm-m3-build/SKILL.md
-- /skills/hiecm-m3-debug/SKILL.md
-- /skills/hiecm-m4-build/SKILL.md
-- /skills/hiecm-m4-debug/SKILL.md
-- /skills/hiecm-p1-build/SKILL.md
-- /skills/hiecm-p1-debug/SKILL.md
-- /skills/hiecm-p2-build/SKILL.md
-- /skills/hiecm-p3-build/SKILL.md
-- /skills/fhir-generate/SKILL.md
-- /skills/fhir-audit/SKILL.md
+- /skills/abdm-m1/
+- /skills/abdm-m2/
+- /skills/abdm-m3/
+- /skills/abdm-m4/
+- /skills/abdm-p1/
+- /skills/abdm-p2/
+- /skills/abdm-p3/
+- /skills/abdm-phr-services/
+- /skills/abdm-fhir/
 
 ## 3. Connect the Docs MCP server
 

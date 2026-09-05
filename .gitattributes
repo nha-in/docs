@@ -7,5 +7,6 @@
 # repository's language statistics. It does not prevent an edit: the generators
 # overwrite these on every build, so a hand edit here is silently lost.
 catalogue/atom-routes.json          linguist-generated=true
+plugins/abdm-integrators-assistant/skills/**  linguist-generated=true
 site/src/data/platforms.json        linguist-generated=true
 site/src/data/reference-links.json  linguist-generated=true
