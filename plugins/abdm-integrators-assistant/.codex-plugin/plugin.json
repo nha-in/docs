@@ -1,0 +1,41 @@
+{
+  "name": "abdm-integrators-assistant",
+  "version": "0.4.0",
+  "description": "Agent skills for ABDM integration from the ABDM Developer Portal, compiled from the Catalogue. Build skills scaffold a milestone flow by flow against the sandbox: hiecm-m1-build to hiecm-m4-build on the provider side, hiecm-p1-build to hiecm-p3-build inside a PHR application. Debug skills walk a failed call to a named fix: hiecm-m1-debug to hiecm-m4-debug, and hiecm-p1-debug for the whole patient side, since NHA records the PHR error codes once. Each cites the atom it came from. Hand-authored: fhir-generate builds NRCES compliant FHIR document bundle generation into the integrator's codebase, fhir-audit checks an existing FHIR store's output.",
+  "author": {
+    "name": "ABDM Developer Portal",
+    "url": "https://github.com/eka-care/abdm-docs"
+  },
+  "homepage": "https://github.com/eka-care/abdm-docs",
+  "repository": "https://github.com/eka-care/abdm-docs",
+  "license": "MIT",
+  "keywords": [
+    "abdm",
+    "abha",
+    "hie-cm",
+    "m1",
+    "m2",
+    "fhir",
+    "nrces",
+    "healthcare",
+    "india-health"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "ABDM Developer Portal",
+    "shortDescription": "Build and debug an ABDM integration, milestone by milestone.",
+    "longDescription": "India's health data network, written as skills an agent reads before it writes code. Build skills scaffold a milestone flow by flow against the sandbox; debug skills walk a failed call to a named fix. Every step cites the documentation page it came from.",
+    "defaultPrompt": [
+      "Add ABHA creation and login to this codebase.",
+      "Link a care context and share records with an HIU.",
+      "This ABDM call is failing. Find out why."
+    ],
+    "developerName": "ABDM Developer Portal working group",
+    "category": "Documentation",
+    "capabilities": [
+      "Read",
+      "Write"
+    ],
+    "websiteURL": "https://github.com/eka-care/abdm-docs"
+  }
+}

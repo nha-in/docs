@@ -1,0 +1,19 @@
+{
+  "name": "abdm-portal",
+  "interface": {
+    "displayName": "ABDM Developer Portal"
+  },
+  "plugins": [
+    {
+      "name": "abdm-integrators-assistant",
+      "source": {
+        "source": "local",
+        "path": "./plugins/abdm-integrators-assistant"
+      },
+      "policy": {
+        "installation": "AVAILABLE"
+      },
+      "category": "Documentation"
+    }
+  ]
+}

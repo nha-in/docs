@@ -61,14 +61,21 @@ export const OVERVIEW = [
   '',
   '- **Skills**: the milestones written as files an agent reads before it writes code. One set up line, any agent.',
   '- **MCP server**: your agent queries these pages as it works, so it retrieves the paragraph it needs instead of loading the site.',
-  '- **Plugin**: Claude Code only. Every skill at once, kept current by `claude plugin update`.',
+  '- **Plugin**: every skill at once, as one package. Claude Code and Codex install it straight from the repository; the other Agent Plugins clients list it through their own marketplaces.',
   '',
   'Which one do you want?',
 ].join('\n');
 
-/** The plugin exists in one agent, so there is nothing to ask about it. */
-export function needsAgent(tool: ToolId): boolean {
-  return tool !== 'plugin';
+/**
+ * Which tools need to know the agent before they can answer.
+ *
+ * All three of them now. The plugin used to be Claude Code's alone; since
+ * Agent Plugins 1.0 it installs in Codex from the same repository, and the
+ * rest of the clients that read the standard get it from their own
+ * marketplaces, which is a different answer again.
+ */
+export function needsAgent(_tool: ToolId): boolean {
+  return true;
 }
 
 export function toolLabel(tool: ToolId): string {
@@ -122,7 +129,9 @@ function fenced(command: string): string {
   return ['```', command, '```'].join('\n');
 }
 
-const PLUGIN_COMMAND = `claude plugin marketplace add ${PLUGIN_REPO} && claude plugin install abdm-integrators-assistant@abdm-portal`;
+const PLUGIN_NAME = 'abdm-integrators-assistant';
+const PLUGIN_COMMAND = `claude plugin marketplace add ${PLUGIN_REPO} && claude plugin install ${PLUGIN_NAME}@abdm-portal`;
+const CODEX_COMMAND = `codex plugin marketplace add ${PLUGIN_REPO}`;
 
 function pluginLink(base: string): string {
   return `claude://code/new?q=${encodeURIComponent(
@@ -183,6 +192,48 @@ function skills(agent: AgentId, named: string | undefined, base: string): Answer
       )} included. The instructions live on this site and are rebuilt with it, so the pasted line cannot go stale.`,
       '',
       fenced(line),
+    ].join('\n'),
+  };
+}
+
+/**
+ * The plugin, per agent.
+ *
+ * Two clients install it from the repository itself and the rest do not, so
+ * this says which is which rather than handing everyone a command that only
+ * works in two places.
+ */
+function plugin(agent: AgentId, named: string | undefined, base: string): Answer {
+  if (agent === 'claude') {
+    return {
+      text: [
+        'Run this in the repository you are integrating. It carries every skill at once, and `claude plugin update` keeps it current.',
+        '',
+        fenced(PLUGIN_COMMAND),
+      ].join('\n'),
+      link: {href: pluginLink(base), label: 'Open in Claude'},
+    };
+  }
+  if (agent === 'codex') {
+    return {
+      text: [
+        `Add the marketplace, then install \`${PLUGIN_NAME}\` from it in Codex's plugin directory.`,
+        '',
+        fenced(CODEX_COMMAND),
+      ].join('\n'),
+    };
+  }
+  // Cursor, and anything else that reads Agent Plugins 1.0, installs from its
+  // own marketplace rather than from a repository. This plugin is not listed
+  // in one yet, and saying so is better than a command that fails.
+  return {
+    text: [
+      `The plugin is packaged to the Agent Plugins 1.0 standard, which ${agentLabel(
+        agent,
+        named,
+      )} reads, but that route installs from the client's own marketplace and this plugin is not listed in one yet.`,
+      '',
+      'The skills are the same content and they install today. Ask for Skills instead.',
     ].join('\n'),
   };
 }
@@ -250,16 +301,7 @@ function mcp(agent: AgentId, named: string | undefined, base: string, url: strin
  */
 export function answer(step: Extract<Step, {at: 'answer'}>, ctx: Context): Answer {
   const base = trimmed(ctx.docsOrigin);
-  if (step.tool === 'plugin') {
-    return {
-      text: [
-        "The plugin is Claude Code's own format, so there is one answer here. Run this in the repository you are integrating, and `claude plugin update` keeps it current.",
-        '',
-        fenced(PLUGIN_COMMAND),
-      ].join('\n'),
-      link: {href: pluginLink(base), label: 'Open in Claude'},
-    };
-  }
+  if (step.tool === 'plugin') return plugin(step.agent, step.named, base);
   if (step.tool === 'mcp') return mcp(step.agent, step.named, base, ctx.mcpUrl);
   return skills(step.agent, step.named, base);
 }
