@@ -1,0 +1,36 @@
+{
+  "id": "faq-verbatim-abdm-sandbox-06",
+  "slice": "faq-verbatim",
+  "class": "how-do-i",
+  "turns": [
+    {
+      "role": "user",
+      "text": "How do I participate in ABDM Sandbox?"
+    }
+  ],
+  "attachment": null,
+  "page": null,
+  "must_contain": [
+    "you register your application on the ABDM sandbox portal",
+    "registering gives you a client id and a client secret",
+    "you must register before you can start integrating your solution"
+  ],
+  "must_not_contain": [
+    "<MASKED",
+    "i apologize",
+    "i apologise",
+    "let me ",
+    "great question",
+    "the catalogue",
+    "atom"
+  ],
+  "expected_sources": [
+    "shared.sandbox.registration-and-credentials"
+  ],
+  "expected_shape": "how-do-i",
+  "expected_behaviour": "answer",
+  "derived_from": null,
+  "source_row": "annexure#abdm-faq-sandbox",
+  "catalogue_version": "2026.08.24",
+  "notes": "NHA's whole answer here is 'Please apply at sanbox.ndhm.gov.in'; the facts in must_contain come from the catalogue's registration atom, not from NHA's own answer."
+}

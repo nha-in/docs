@@ -314,7 +314,7 @@ func TestRespondNeverStreamsACodeBlock(t *testing.T) {
 	}
 	// The narration before the block is held back with it, so the reader is
 	// left with the notice alone rather than half an answer plus a refusal.
-	if !strings.Contains(got, blockedNotice) {
+	if !strings.Contains(got, BlockedNotice) {
 		t.Errorf("no replacement notice, got:\n%s", got)
 	}
 }
@@ -418,7 +418,7 @@ func TestRespondBlocksAnInventedLiteral(t *testing.T) {
 	if strings.Contains(got, "X-Retry-After-Ms") {
 		t.Errorf("an invented header reached the reader: %q", got)
 	}
-	if !strings.Contains(got, blockedNotice) {
+	if !strings.Contains(got, BlockedNotice) {
 		t.Errorf("no replacement notice, got %q", got)
 	}
 }

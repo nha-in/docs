@@ -1,0 +1,37 @@
+{
+  "id": "faq-verbatim-sandbox-m3-07",
+  "slice": "faq-verbatim",
+  "class": "how-do-i",
+  "turns": [
+    {
+      "role": "user",
+      "text": "What happens when HIU sends requests for a health record?"
+    }
+  ],
+  "attachment": null,
+  "page": null,
+  "must_contain": [
+    "the HIU requests consent to view the patient's data through the gateway",
+    "the HIE-CM acknowledges the request and returns a consent request id to the HIU",
+    "the HIE-CM notifies the patient that a consent request has been made",
+    "the patient can view the request details and choose to grant or deny consent"
+  ],
+  "must_not_contain": [
+    "<MASKED",
+    "i apologize",
+    "i apologise",
+    "let me ",
+    "great question",
+    "the catalogue",
+    "atom"
+  ],
+  "expected_sources": [
+    "hiecm.flow.m3-request-consent"
+  ],
+  "expected_shape": "how-do-i",
+  "expected_behaviour": "answer",
+  "derived_from": null,
+  "source_row": "annexure#sandbox-faq-m3",
+  "catalogue_version": "2026.08.24",
+  "notes": ""
+}

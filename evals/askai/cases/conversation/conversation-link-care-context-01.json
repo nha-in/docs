@@ -1,0 +1,48 @@
+{
+  "id": "conversation-link-care-context-01",
+  "slice": "conversation",
+  "class": "diagnose",
+  "turns": [
+    {
+      "role": "user",
+      "text": "My care context link call was rejected, here's the response."
+    },
+    {
+      "role": "assistant",
+      "text": "ABDM-1063 here means the HIP id in your linking request doesn't match the HIP id the link token was issued for. That happens when one system serves several facilities and mixes up their identities."
+    },
+    {
+      "role": "user",
+      "text": "The bundle I sent, which field is wrong?"
+    }
+  ],
+  "attachment": {
+    "name": "response.json",
+    "text": "{\"error\":{\"code\":\"ABDM-1063\",\"message\":\"HIP Id Mismatch\"}}",
+    "kind": ""
+  },
+  "page": null,
+  "must_contain": [
+    "it is not a single field inside the payload, it is which facility identity the call ran as",
+    "fetch the link token under the same HIP id that will send the link request",
+    "audit which facility identity each step in the flow runs as"
+  ],
+  "must_not_contain": [
+    "<MASKED",
+    "i apologize",
+    "i apologise",
+    "let me ",
+    "great question",
+    "the catalogue",
+    "atom"
+  ],
+  "expected_sources": [
+    "hiecm.error.abdm-1063"
+  ],
+  "expected_shape": "diagnose",
+  "expected_behaviour": "answer",
+  "derived_from": null,
+  "source_row": "annexure#spec-errors-m2",
+  "catalogue_version": "2026.08.24",
+  "notes": "attachment sits on the case, not the turn, per the schema; follow-up asks about the bundle it named, and the true answer per the atom is that the mismatch is an identity problem, not a field, so the second answer says that honestly instead of naming a field that does not exist."
+}

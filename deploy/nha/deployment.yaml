@@ -57,9 +57,12 @@ spec:
             - name: CHAT_MODEL
               value: ""
             # The assistant answers from its tools, so variance is a defect:
-            # a low temperature keeps quoted literals and tool choices stable.
+            # a low temperature keeps quoted literals and tool choices
+            # stable. 0.1 to 0.2. Decided 2026-09-03: 0 buys nothing, since
+            # sampling at 0 is still not deterministic, and it flattens
+            # prose.
             - name: CHAT_TEMPERATURE
-              value: "0.2"
+              value: "0.1"
             - name: AWS_REGION
               value: ap-south-1
             - name: ALLOW_ORIGIN

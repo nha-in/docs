@@ -27,7 +27,7 @@ built entirely from the catalogue. Nothing under `site/docs` or
 **The widget** is the support agent's user interface as one custom element,
 `<abdm-support-agent>`, built to a self-contained script that goes on any
 page. The docs site embeds it the way any other host would: a script tag and
-an element, no import. See [widget/README.md](widget/README.md).
+an element, no import. See [ai-widget/README.md](ai-widget/README.md).
 
 **The Docs MCP server** is a Go binary that compiles the catalogue into a
 SQLite snapshot and serves it three ways: the MCP protocol for coding
@@ -35,13 +35,24 @@ agents, the site's search box, and the "Ask AI" widget. See
 [mcp/README.md](mcp/README.md) for configuration, the full tool list, and
 how to run it.
 
+**The integrator's skills** come in two shapes. Per-module reference skills,
+one for each of M1 to M4, P1 to P3 and the PHR application services, are
+generated from the specifications and carry that module's operations,
+headers, error codes and test matrix. Guided skills are compiled from
+Catalogue atoms and run as observe-orient-decide-act loops against the
+sandbox: `hiecm-m1-build` through `hiecm-m4-build` and `hiecm-p1-build`
+through `hiecm-p3-build` scaffold a milestone flow by flow, and the
+matching `-debug` skills walk a failed call to a named fix. A milestone
+gets a guided skill only where the Catalogue has the flows or errors
+behind it. See
+[plugins/abdm-integrators-assistant/skills/](plugins/abdm-integrators-assistant/skills/).
+
 **FHIR support** covers ABDM's hardest integration step two ways: profile
 digests and golden examples from the pinned NRCES implementation guide
 teach an agent to build compliant document bundles in the integrator's own
 codebase, and a structural validator plus an official HL7 validator recipe
 check the result, whether the bundles come from new code or an existing
-FHIR store. See [plugins/abdm/skills/](plugins/abdm/skills/) for the two
-guided paths.
+FHIR store.
 
 **The plan** under `plan/` is the architecture and execution plan, versioned
 with a hash and a manifest so a skill compiled from it can tell when it has
@@ -54,7 +65,7 @@ it. See [plan/plan-as-source-addendum.md](plan/plan-as-source-addendum.md).
 the plugin for building this portal, not for integrating with ABDM: atom
 authoring, verification, linting, OpenAPI ingestion, docs, skill compilation,
 the update pipeline, the support agent, planning and proof. Four of its skills
-are compiled from the plan above. The separate `plugins/abdm` ships the
+are compiled from the plan above. The separate `plugins/abdm-integrators-assistant` ships the
 compiled integration skills that ABDM integrators install.
 
 ## How retrieval and chat work

@@ -49,10 +49,20 @@ curl -X POST 'https://dev.abdm.gov.in/api/hiecm/v3/token/generate-token' \
   -H 'TIMESTAMP: <ISO_8601_TIMESTAMP>' \
   -H 'X-CM-ID: sbx' \
   -H 'Content-Type: application/json' \
-  -d '<REQUEST_BODY>'
+  -d '{
+    "abhaNumber": <PATIENT_ABHA_NUMBER_14_DIGITS>,
+    "abhaAddress": "<PATIENT_ABHA_ADDRESS>",
+    "name": "<PATIENT_NAME_AS_HELD>",
+    "gender": "<M_F_OR_O>",
+    "yearOfBirth": <PATIENT_YEAR_OF_BIRTH>
+  }'
 ```
 
-The request and response schemas for this operation are in `catalogue/openapi/hiecm/v3/hiecm-m2.yaml`, ingested from NHA's file.
+The body above is the shape NHA's ingested M2 file declares for this
+operation, with its sample values replaced by named placeholders. It has
+not been sent to the sandbox from this repository.
+
+The request and response schemas for this operation are in the M2 specification, published at /specs/hiecm-m2.yaml and rendered field by field at /docs/hiecm/v3/api/m2. It is NHA's file as ingested.
 
 NHA calls this operation `generateLinkToken`.
 

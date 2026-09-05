@@ -51,7 +51,7 @@ curl -X POST 'https://abhasbx.abdm.gov.in/abha/api/v3/v1/bridges/MutipleHRPAddUp
   -d '<REQUEST_BODY>'
 ```
 
-The request and response schemas for this operation are in `catalogue/openapi/hiecm/v3/hiecm-m1.yaml`, ingested from NHA's file.
+The request and response schemas for this operation are in the M1 specification, published at /specs/hiecm-m1.yaml and rendered field by field at /docs/hiecm/v3/api/m1. It is NHA's file as ingested.
 
 NHA calls this operation `registerHrpServices`.
 

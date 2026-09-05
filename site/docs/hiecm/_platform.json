@@ -1,8 +1,5 @@
 {
   "label": "HIE-CM",
   "description": "Health Information Exchange and Consent Manager",
-  "position": 1,
-  "versions": {
-    "v2": {"note": "Not published here. NHA has retired it for new integrations."}
-  }
+  "position": 1
 }

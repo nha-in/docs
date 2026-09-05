@@ -84,9 +84,7 @@ export default function PullHome(): null {
       pull.current = 0;
       paint();
       const swap = () => history.push('/');
-      // @ts-expect-error -- not in every lib.dom yet
       if (typeof document.startViewTransition === 'function') {
-        // @ts-expect-error -- see above
         document.startViewTransition(swap);
       } else {
         swap();

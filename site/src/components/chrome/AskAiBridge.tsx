@@ -17,11 +17,11 @@ function agent(): SupportAgent | null {
  * the words the reader already typed, without knowing where the panel lives.
  *
  * Dispatch `window.dispatchEvent(new CustomEvent('abdm:ask-ai', {detail:
- * {page, title, question}}))` and the `<abdm-support-agent>` element in the
- * top bar opens, the same way its own chip opens it, by setting its `open`
- * attribute. `question` seeds the composer, and nothing is sent: the reader
- * still presses send. `page` hands the panel the page as Markdown, so their
- * first question is answered against what they are looking at.
+ * {page, title, question, send}}))` and the `<abdm-support-agent>` element in
+ * the top bar opens, the same way its own chip opens it, by setting its `open`
+ * attribute. `question` seeds the composer, and with `send` it is asked
+ * outright. `page` hands the panel the page as Markdown, so their first
+ * question is answered against what they are looking at.
  *
  * The Markdown is the `index.md` a postbuild step writes beside every route
  * (see scripts/emit-page-markdown.mjs), which is also what Copy for LLM
@@ -40,10 +40,14 @@ export default function AskAiBridge(): null {
     const open = (event: Event) => {
       const el = agent();
       if (!el) return;
-      const {page, title, question} = (event as CustomEvent).detail ?? {};
+      const {page, title, question, send} = (event as CustomEvent).detail ?? {};
       // A caller that already has the reader's words hands them over, and the
-      // panel seeds its composer with them.
+      // panel seeds its composer with them. With `send`, the caller is saying
+      // the reader has finished asking, and the panel answers rather than
+      // waiting to be pressed a second time.
       if (question) el.setAttribute('question', question);
+      if (question && send) el.setAttribute('send', '');
+      else el.removeAttribute('send');
       el.setAttribute('open', '');
       if (!page || !el.attachPage) return;
       const url = `${String(page).replace(/\/$/, '')}/index.md`;

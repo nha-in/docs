@@ -1,0 +1,38 @@
+{
+  "id": "faq-verbatim-sandbox-m1-06",
+  "slice": "faq-verbatim",
+  "class": "compare",
+  "turns": [
+    {
+      "role": "user",
+      "text": "What are the differences between API Version#1 and Version#2?"
+    }
+  ],
+  "attachment": null,
+  "page": null,
+  "must_contain": [
+    "version 2 introduced enhanced security measures over version 1",
+    "sensitive data such as OTP, Aadhaar number, password and username must be encrypted in version 2",
+    "version 2 encryption uses a public certificate obtained from the certificate API",
+    "version 2 uses RSA encryption for this sensitive data"
+  ],
+  "must_not_contain": [
+    "<MASKED",
+    "i apologize",
+    "i apologise",
+    "let me ",
+    "great question",
+    "the catalogue",
+    "atom"
+  ],
+  "expected_sources": [
+    "hiecm.concept.input-encryption",
+    "hiecm.endpoint.m1-get-public-certificate"
+  ],
+  "expected_shape": "compare",
+  "expected_behaviour": "answer",
+  "derived_from": null,
+  "source_row": "annexure#sandbox-faq-m1",
+  "catalogue_version": "2026.08.24",
+  "notes": ""
+}
