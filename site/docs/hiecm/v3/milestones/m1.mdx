@@ -11,6 +11,8 @@ covers: [hiecm.flow.m1-update-mobile]
 ---
 
 import ApiLinks from '@site/src/components/docs/ApiLinks';
+import TestMatrix from '@site/src/components/api/TestMatrix';
+import matrix from '@site/src/data/test-matrix/m1.json';
 
 # M1 Create: ABHA identity
 
@@ -95,7 +97,8 @@ and what each one asks of you.
 
 Sandbox test data is in the [data
 dictionary](/docs/hiecm/v3/reference/data-dictionary). [Support](/docs/support)
-lists the channels.
+lists the channels. The cases NHA runs are on this page, under [test
+cases](#test-cases).
 
 ## The journey, one diagram per flow
 
@@ -274,6 +277,17 @@ sequenceDiagram
 
 The card is returned in the response rather than fetched from a separate link. The content type and encoding of the card and QR code responses are not yet published. See the [APIs](/docs/hiecm/v3/api/m1/apis) page for the fields that are.
 
+
+## Test cases
+
+M1's certification cases are NHA's own, from the ABHA creation and verification
+sheet. Search them, or filter to the mandatory ones.
+
+Every case keeps the id NHA uses, so a case you pass here is a case you can
+name in certification. Cases this portal added rather than took from the sheet
+say so on the case itself.
+
+<TestMatrix matrix={matrix} />
 
 ## Next
 
