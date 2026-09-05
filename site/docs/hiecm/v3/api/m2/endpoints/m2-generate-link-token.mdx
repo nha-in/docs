@@ -2,7 +2,7 @@
 title: "Generate Link Token"
 sidebar_label: "Generate Link Token"
 sidebar_class_name: api-method api-method--post
-description: "Generates a short-lived link token for a specific patient identified by their ABHA number/address."
+description: "Generates a short-lived link token for a specific patient identified by their ABHA number/address. The link token is passed as X-Link-Token header when..."
 hide_table_of_contents: true
 hide_title: true
 wrapperClassName: api-doc
@@ -15,3 +15,7 @@ import ApiEndpoint from '@site/src/components/api/ApiEndpoint';
 import operation from '@site/src/data/api/m2-generate-link-token.json';
 
 <ApiEndpoint operation={operation} />
+
+## Callbacks
+
+- After this call, ABDM posts **The link token m2_generate_link_token generated, or why it failed** to `/v3/hip/token/on-generate-token`. [Open the callback](/docs/hiecm/v3/api/m2/endpoints/m2-on-generate-token-result).

@@ -55,7 +55,7 @@ skills:
 
 ## In plain words
 
-A person signs in to their [PHR](../../shared/glossary/phr.md)
+A person signs in to their [PHR](shared.glossary.phr)
 application in one of four ways, and all four are mandatory. Which
 credential they present decides how they are checked, and one of the four
 also asks them which identity they are signing in as.
@@ -64,10 +64,10 @@ also asks them which identity they are signing in as.
 
 Four things must already be true, each checkable:
 
-- The person holds an [ABHA address](../../shared/glossary/abha-address.md).
+- The person holds an [ABHA address](shared.glossary.abha-address).
   See [create an ABHA address](p1-create-abha-address.md).
 - You hold a gateway session token. See
-  [the gateway session](../concepts/gateway-session.md).
+  [the gateway session](hiecm.concept.gateway-session).
 - You can store a refresh token securely, and you have a sign out that
   clears it.
 - Your application supports more than one user profile per install, with
@@ -80,9 +80,9 @@ The four routes, and what checks each:
 | Route | Checked by |
 |---|---|
 | Mobile number | Mobile OTP, then the user picks which linked ABHA address to sign in as |
-| An address such as `name@abdm` | Password, mobile OTP or Aadhaar OTP, by [auth mode](../../shared/glossary/auth-modes.md) |
+| An address such as `name@abdm` | Password, mobile OTP or Aadhaar OTP, by [auth mode](shared.glossary.auth-modes) |
 | The default `14digit@abdm` address | Mobile OTP or Aadhaar OTP |
-| The 14 digit [ABHA number](../../shared/glossary/abha-number.md) | Mobile OTP or Aadhaar OTP |
+| The 14 digit [ABHA number](shared.glossary.abha-number) | Mobile OTP or Aadhaar OTP |
 
 1. **Take the credential and pick the check.** For an address, the auth
    mode decides between password, mobile OTP and Aadhaar OTP. Do not

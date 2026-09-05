@@ -35,7 +35,7 @@ This is something ABDM sends to you. It arrives at the URL you registered, not a
 
 ## Before you start
 
-- A callback URL registered with ABDM and reachable from the public internet. See [the callback URL](../../shared/sandbox/callback-url.md).
+- A callback URL registered with ABDM and reachable from the public internet. See [the callback URL](shared.sandbox.callback-url).
 - A handler that acknowledges quickly and processes afterwards, because ABDM is waiting.
 - The `REQUEST-ID` of the call this answers, stored when you sent it.
 
@@ -58,5 +58,5 @@ Not yet observed from this repository. Record the first real delivery here.
 - It never arrives. The most common report by far, and nearly always the callback URL: not public, not registered, or too slow.
 - It arrives twice. Deliveries can repeat, so key on the `REQUEST-ID` and make the handler idempotent.
 - It arrives before you stored the request id. Store it before you send, not after.
-- Your handler returns an error and ABDM stops retrying. See [ABDM-9999](../errors/abdm-9999.md).
+- Your handler returns an error and ABDM stops retrying. See [ABDM-9999](hiecm.error.abdm-9999).
 

@@ -32,7 +32,7 @@ Verifies the code and ends the sign in. Where one number carries several address
 
 ## Before you start
 
-- A gateway session token. See [the gateway session](../concepts/gateway-session.md).
+- A gateway session token. See [the gateway session](hiecm.concept.gateway-session).
 - The `txnId` from the login request, and the code, encrypted.
 
 ## What happens

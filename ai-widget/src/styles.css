@@ -466,6 +466,35 @@
   color: var(--aa-heading);
 }
 
+/* The standing offer under every finished answer. It sits below the sources
+   and reads as the next thing to do, so it takes the accent rather than the
+   chip's neutral border, and stays a text sized control: a full width button
+   under a two line answer would outweigh the answer. */
+.ask-ai__install-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  margin-top: 0.625rem;
+  padding: 0.25rem 0.625rem;
+  border: 1px solid var(--aa-accent-line);
+  border-radius: var(--aa-radius-control);
+  background: var(--aa-accent-soft);
+  color: var(--aa-accent);
+  font: inherit;
+  font-size: 0.75rem;
+  line-height: 1.4;
+  cursor: pointer;
+}
+
+.ask-ai__install-cta:hover {
+  border-color: var(--aa-accent);
+}
+
+.ask-ai__install-cta svg {
+  width: 0.875rem;
+  height: 0.875rem;
+}
+
 /* The caret at the end of an answer while it is still arriving. It marks the
    live edge of the text, which is what tells a reader that a pause is the
    model thinking rather than the answer having ended. Only after a paragraph:

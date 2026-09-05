@@ -113,7 +113,7 @@ Picking one role for the company. NHA's own material lists HIP, HIU, HRP
 and health locker together as though an integrator should choose one, and
 they are not comparable: two are directions, one is custody, and the
 fourth is a kind of product. See
-[the two axis decision](../../shared/decisions/role-model-two-axes.md).
+[the two axis decision](shared.decision.role-model-two-axes).
 
 Building a PHR app for M1 alone. The moment it accepts an upload it is
 publishing, and publishing is M2.

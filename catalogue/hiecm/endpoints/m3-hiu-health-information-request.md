@@ -45,7 +45,7 @@ This wording is NHA's own, from the file this operation was ingested from.
 
 ## Before you start
 
-- A gateway access token. See [the gateway session](../concepts/gateway-session.md).
+- A gateway access token. See [the gateway session](hiecm.concept.gateway-session).
 - The right `X-CM-ID` for the environment you are calling.
 
 ## What happens
@@ -57,7 +57,28 @@ curl -X POST 'https://dev.abdm.gov.in/api/hiecm/data-flow/v3/health-information/
   -H 'TIMESTAMP: <ISO_8601_TIMESTAMP>' \
   -H 'X-CM-ID: sbx' \
   -H 'Content-Type: application/json' \
-  -d '<REQUEST_BODY>'
+  -d '{
+  "hiRequest": {
+    "consent": {
+      "id": "consent-art-uuid-001"
+    },
+    "dateRange": {
+      "from": "2023-01-01T00:00:00.000Z",
+      "to": "2024-01-01T00:00:00.000Z"
+    },
+    "dataPushUrl": "https://your-hiu-server.com/abdm/data/push",
+    "keyMaterial": {
+      "cryptoAlg": "ECDH",
+      "curve": "Curve25519",
+      "dhPublicKey": {
+        "expiry": "2024-12-31T00:00:00.000Z",
+        "parameters": "Curve25519/32byte",
+        "keyValue": "base64-encoded-hiu-ecdh-public-key"
+      },
+      "nonce": "base64-encoded-random-nonce-32bytes"
+    }
+  }
+}'
 ```
 
 The request and response schemas for this operation are in the M3 specification, published at /specs/hiecm-m3.yaml and rendered field by field at /docs/hiecm/v3/api/m3. It is NHA's file as ingested.
@@ -72,8 +93,8 @@ It has not been run against the sandbox from this repository, so the schema is w
 
 ## When it goes wrong
 
-- The clock is wrong and every call fails. See [ABDM-2402](../errors/abdm-2402.md).
-- The `REQUEST-ID` is missing, malformed or reused. See [ABDM-2404](../errors/abdm-2404.md).
-- No session token was sent. See [ABDM-2500](../errors/abdm-2500.md).
-- ABDM fails and does not say why. See [ABDM-9999](../errors/abdm-9999.md).
+- The clock is wrong and every call fails. See [ABDM-2402](hiecm.error.abdm-2402).
+- The `REQUEST-ID` is missing, malformed or reused. See [ABDM-2404](hiecm.error.abdm-2404).
+- No session token was sent. See [ABDM-2500](hiecm.error.abdm-2500).
+- ABDM fails and does not say why. See [ABDM-9999](hiecm.error.abdm-9999).
 

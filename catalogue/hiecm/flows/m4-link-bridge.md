@@ -54,10 +54,10 @@ skills:
 ## In plain words
 
 A facility ID on its own moves no records. The facility has to be linked
-to a [bridge](../../shared/glossary/bridge.md), which is the software
+to a [bridge](shared.glossary.bridge), which is the software
 that acts for it on the network, and each link says whether that software
-acts as a [HIP](../../shared/glossary/hip.md), a
-[HIU](../../shared/glossary/hiu.md), or both through separate links.
+acts as a [HIP](shared.glossary.hip), a
+[HIU](shared.glossary.hiu), or both through separate links.
 
 One facility can have several bridges. This is the last registration step
 in front of production for M2 and M3.
@@ -92,7 +92,7 @@ whose software both publishes records and requests them needs a link of
 each type, not one link that claims both.
 
 The `hipName` is what a person sees in their
-[PHR](../../shared/glossary/phr.md) application when they search for this
+[PHR](shared.glossary.phr) application when they search for this
 hospital, so it is a naming decision as much as a technical one. NHA's
 worked example builds it from the hospital name plus the bridge name.
 
@@ -115,9 +115,9 @@ HIU link can raise a consent request.
 The failures the M4 sources document, each with its fix in the linked
 error atom:
 
-- [HIS-1124](../errors/his-1124.md) when a call needs a bridge that is
+- [HIS-1124](hiecm.error.his-1124) when a call needs a bridge that is
   not linked to this facility.
-- [HIS-1128](../errors/his-1128.md) when the HIP name is already in use,
+- [HIS-1128](hiecm.error.his-1128) when the HIP name is already in use,
   which the uniqueness rule makes common on a facility's second bridge.
 - A name longer than 15 characters or carrying a special character,
   rejected as validation rather than as a naming rule.

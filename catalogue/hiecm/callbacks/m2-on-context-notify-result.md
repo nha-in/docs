@@ -39,7 +39,7 @@ back on the call itself.
 ## Before you start
 
 - A callback URL registered with ABDM and reachable from the public
-  internet. See [the callback URL](../../shared/sandbox/callback-url.md).
+  internet. See [the callback URL](shared.sandbox.callback-url).
 - The `REQUEST-ID` of the call this answers, stored before you sent it
   rather than after.
 - A handler that answers quickly and does the work afterwards, because
@@ -94,4 +94,4 @@ here.
   and not a delivery fault. Read the code and stop retrying the original
   call.
 - Your handler returns an error and ABDM stops retrying. See
-  [ABDM-9999](../errors/abdm-9999.md).
+  [ABDM-9999](hiecm.error.abdm-9999).

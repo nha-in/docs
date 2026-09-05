@@ -169,21 +169,131 @@ function firstExample(content) {
   return examples[0]?.value;
 }
 
-function curlFor(operation) {
-  const lines = [`curl --request ${operation.method} \\`];
-  lines.push(`  --url ${operation.server}${operation.path} \\`);
-  for (const header of operation.headers) {
-    const value = header.name.toLowerCase() === 'authorization'
-      ? 'Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>'
-      : header.example ?? `<${header.name.toUpperCase().replace(/-/g, '_')}>`;
-    lines.push(`  --header '${header.name}: ${value}' \\`);
-  }
+const UNDOCUMENTED_BODY = /^Response body:\s*not documented\.?$/i;
+
+// A specification hard wraps its descriptions near column 72, so the first
+// *line* is usually a fragment. Taking it left a quarter of the endpoint
+// pages with a meta description ending mid sentence, and that string is what
+// a link preview shows when somebody pastes the page into a chat. Take the
+// first paragraph, reflow it, drop the inline markdown, and cut on a word
+// boundary rather than mid word.
+function metaDescription(operation) {
+  const source = (operation.description || operation.summary || '').trim();
+  const plain = source
+    .split(/\n{2,}/)[0]
+    .replace(/\s*\n\s*/g, ' ')
+    .replace(/`([^`]+)`/g, '$1')
+    .replace(/\*\*([^*]+)\*\*/g, '$1')
+    .trim();
+  if (plain.length <= 160) return plain;
+  const cut = plain.slice(0, 157);
+  const boundary = cut.lastIndexOf(' ');
+  return `${(boundary > 100 ? cut.slice(0, boundary) : cut).trimEnd()}...`;
+}
+
+// The credentials a call carries come from `security`, which names a scheme,
+// not from the header parameters. A curl assembled only from parameters is
+// therefore missing the one header every authenticated ABDM call needs, and
+// pasting it returns 401. Only the header borne schemes produce a line: a
+// query or cookie scheme belongs elsewhere in the request, and none is
+// declared in this catalogue.
+function securityHeaders(security = []) {
+  return security.flatMap((entry) => {
+    if (entry.type === 'http' && entry.scheme === 'bearer') {
+      return [{name: 'Authorization'}];
+    }
+    if (entry.type === 'apiKey' && entry.in === 'header' && entry.headerName) {
+      return [{name: entry.headerName}];
+    }
+    return [];
+  });
+}
+
+// One request, described once. The three samples below all render from this,
+// so a header added to the curl cannot go missing from the Python.
+function requestFor(operation) {
+  // A scheme whose header is also declared as a parameter keeps the
+  // parameter, because that carries the better example. Anything the
+  // parameters do not cover is added ahead of them.
+  const declared = new Set(operation.headers.map((h) => h.name.toLowerCase()));
+  const headers = [
+    ...securityHeaders(operation.security).filter(
+      (h) => !declared.has(h.name.toLowerCase()),
+    ),
+    ...operation.headers,
+  ].map((header) => ({
+    name: header.name,
+    value:
+      header.name.toLowerCase() === 'authorization'
+        ? 'Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>'
+        : header.example ?? `<${header.name.toUpperCase().replace(/-/g, '_')}>`,
+  }));
   if (operation.requestExample !== undefined) {
-    lines.push(`  --header 'Content-Type: application/json' \\`);
-    lines.push(`  --data '${JSON.stringify(operation.requestExample, null, 2)}'`);
+    headers.push({name: 'Content-Type', value: 'application/json'});
+  }
+  return {
+    method: operation.method,
+    url: `${operation.server}${operation.path}`,
+    headers,
+    body: operation.requestExample,
+  };
+}
+
+function curlFor(operation) {
+  const {method, url, headers, body} = requestFor(operation);
+  const lines = [`curl --request ${method} \\`, `  --url ${url} \\`];
+  for (const header of headers) {
+    lines.push(`  --header '${header.name}: ${header.value}' \\`);
+  }
+  if (body !== undefined) {
+    lines.push(`  --data '${JSON.stringify(body, null, 2)}'`);
   } else {
     lines[lines.length - 1] = lines[lines.length - 1].replace(/ \\$/, '');
   }
+  return lines.join('\n');
+}
+
+// requests and fetch, because they are what an integrator already has: no
+// SDK to install, and nothing here that a reader has to translate back into
+// their own stack. Placeholders keep the curl's shape, so the three samples
+// substitute the same way.
+function pythonFor(operation) {
+  const {method, url, headers, body} = requestFor(operation);
+  const lines = ['import requests', '', `response = requests.${method.toLowerCase()}(`];
+  lines.push(`    ${JSON.stringify(url)},`);
+  lines.push('    headers={');
+  for (const header of headers) {
+    lines.push(`        ${JSON.stringify(header.name)}: ${JSON.stringify(header.value)},`);
+  }
+  lines.push('    },');
+  if (body !== undefined) {
+    const json = JSON.stringify(body, null, 4)
+      .split('\n')
+      .map((line, index) => (index === 0 ? line : `    ${line}`))
+      .join('\n');
+    lines.push(`    json=${json},`);
+  }
+  lines.push(')', '', 'print(response.status_code, response.text)');
+  return lines.join('\n');
+}
+
+function nodeFor(operation) {
+  const {method, url, headers, body} = requestFor(operation);
+  const lines = [`const response = await fetch(${JSON.stringify(url)}, {`];
+  lines.push(`  method: ${JSON.stringify(method)},`);
+  lines.push('  headers: {');
+  for (const header of headers) {
+    lines.push(`    ${JSON.stringify(header.name)}: ${JSON.stringify(header.value)},`);
+  }
+  lines.push('  },');
+  if (body !== undefined) {
+    const json = JSON.stringify(body, null, 2)
+      .split('\n')
+      .map((line, index) => (index === 0 ? line : `  ${line}`))
+      .join('\n');
+    lines.push(`  body: JSON.stringify(${json}),`);
+  }
+  lines.push('});', '', 'console.log(response.status, await response.text());');
   return lines.join('\n');
 }
 
@@ -259,6 +369,29 @@ for (const {platform, version, files} of tree) {
   // index lists it under the module that declares it.
   const operationPage = (moduleDir, id) =>
     `/docs/${platform}/${version}/api/${moduleDir}/endpoints/${slug(id)}`;
+
+  // A status code on a reference page was a dead end. The troubleshooting
+  // section already knows what a blanket 401 means and what a 202 followed by
+  // silence means, and each module's errors page lists the codes it returns,
+  // and none of it was linked from the place the reader meets the failure.
+  // Only HIE-CM v3 has those pages, so only it gets the links.
+  const helpFor = (status, moduleDir) => {
+    if (!isHiecmV3) return undefined;
+    const troubleshooting = (name) => `/docs/${platform}/${version}/troubleshooting/${name}`;
+    if (status === '401') {
+      return {label: 'Everything returns 401', href: troubleshooting('everything-returns-401')};
+    }
+    if (status === '202') {
+      return {label: 'The callback never arrives', href: troubleshooting('callback-never-arrives')};
+    }
+    if (/^[45]/.test(status)) {
+      return {
+        label: 'Error codes for this module',
+        href: `/docs/${platform}/${version}/api/${moduleDir}/errors`,
+      };
+    }
+    return undefined;
+  };
 
   const operations = new Map();
   for (const module of modules) {
@@ -353,14 +486,35 @@ for (const {platform, version, files} of tree) {
       url: s.url,
       description: s.description ?? '',
     }));
-    const security = Object.entries(spec.components?.securitySchemes ?? {}).map(
-      ([name, scheme]) => ({
+    // What a specification *declares* is a superset of what a call
+    // *requires*: m1 declares three schemes and requires one. The requirement
+    // is stated in `security`, on the operation or at root, and reading the
+    // declaration instead is what listed Authorization on the page twice.
+    // An empty `security: []` is a real answer meaning this call takes no
+    // credential, so it is distinguished from the key being absent.
+    const securitySchemes = spec.components?.securitySchemes ?? {};
+    const describeScheme = (name) => {
+      const scheme = securitySchemes[name];
+      if (!scheme) {
+        console.warn(
+          `  ! ${module.file}: security names "${name}", which the specification does not declare`,
+        );
+        return [];
+      }
+      return [{
         name,
         type: scheme.type,
         scheme: scheme.scheme,
+        in: scheme.in,
+        headerName: scheme.name,
         description: scheme.description ?? '',
-      }),
-    );
+      }];
+    };
+    const securityFor = (op) => {
+      const requirement = op.security ?? spec.security ?? [];
+      const names = [...new Set(requirement.flatMap((entry) => Object.keys(entry)))];
+      return names.flatMap(describeScheme);
+    };
     const tagInfo = Object.fromEntries(
       (spec.tags ?? []).map((t) => [t.name, t.description ?? '']),
     );
@@ -386,13 +540,22 @@ for (const {platform, version, files} of tree) {
       const requestSchema = op.requestBody?.content?.['application/json']?.schema;
       const responses = Object.entries(op.responses ?? {}).map(([status, response]) => ({
         status,
-        description: response.description ?? '',
+        // "not documented" is this repo's own placeholder from an early
+        // ingest, not NHA's wording, and it dead ends the reader: it reports
+        // that we failed rather than telling them what to do. The absence is
+        // real and must not be papered over with an invented schema, so the
+        // sentence says what is true and points at the one thing on the page
+        // that will answer it.
+        description: UNDOCUMENTED_BODY.test((response.description ?? '').trim())
+          ? 'The specification does not describe this body. Send the call with Try it to see what comes back.'
+          : response.description ?? '',
         // An explicit example wins; otherwise the response schema supplies
         // one, same as the request side, so a status with a documented body
         // never renders as prose alone.
         example:
           firstExample(response.content) ??
           sampleFromSchema(response.content?.['application/json']?.schema),
+        help: helpFor(status, module.dir),
       }));
 
       const id = op.operationId ?? slug(`${entry.method}-${entry.path}`);
@@ -413,7 +576,7 @@ for (const {platform, version, files} of tree) {
         servers,
         summary: op.summary ?? id,
         description: op.description ?? '',
-        security: op.security === undefined ? security : security.filter((s) => (op.security ?? []).some((entry) => entry[s.name])),
+        security: securityFor(op),
         headers: parameters
           .filter((p) => p.in === 'header')
           .map((p) => ({
@@ -439,6 +602,13 @@ for (const {platform, version, files} of tree) {
         tagDescription: tagInfo[tag] ?? '',
       };
       operation.curl = curlFor(operation);
+      // `curl` stays as it was: the console, the page markdown and llms-full
+      // all read it by that name. The other two sit beside it.
+      operation.samples = [
+        {id: 'curl', label: 'cURL', language: 'bash', code: operation.curl},
+        {id: 'python', label: 'Python', language: 'python', code: pythonFor(operation)},
+        {id: 'node', label: 'Node', language: 'javascript', code: nodeFor(operation)},
+      ];
 
       writeFileSync(
         join(dataDir, `${name}.json`),
@@ -452,9 +622,7 @@ for (const {platform, version, files} of tree) {
         `title: ${JSON.stringify(operation.summary)}`,
         `sidebar_label: ${JSON.stringify(operation.summary)}`,
         `sidebar_class_name: api-method api-method--${operation.method.toLowerCase()}`,
-        `description: ${JSON.stringify(
-          (operation.description || operation.summary).split('\n')[0].slice(0, 160),
-        )}`,
+        `description: ${JSON.stringify(metaDescription(operation))}`,
         'hide_table_of_contents: true',
         'hide_title: true',
         'wrapperClassName: api-doc',

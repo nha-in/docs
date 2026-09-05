@@ -32,7 +32,7 @@ The call that creates the address. Everything before it was checking.
 
 ## Before you start
 
-- A gateway session token. See [the gateway session](../concepts/gateway-session.md).
+- A gateway session token. See [the gateway session](hiecm.concept.gateway-session).
 - A verified transaction, and an address the existence check said is free.
 
 ## What happens

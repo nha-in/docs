@@ -32,7 +32,7 @@ The call behind scan and share. It goes out once the person has agreed, and the 
 
 ## Before you start
 
-- A gateway session token. See [the gateway session](../concepts/gateway-session.md).
+- A gateway session token. See [the gateway session](hiecm.concept.gateway-session).
 - The HIP id and the counter context read out of the scanned code, and the person's agreement in the wording NHA specifies.
 
 ## What happens
@@ -43,7 +43,34 @@ curl -X POST 'https://dev.abdm.gov.in/api/hiecm/patient-share/v3/share' \
   -H 'REQUEST-ID: <FRESH_UUID>' \
   -H 'TIMESTAMP: <ISO_8601_TIMESTAMP>' \
   -H 'Content-Type: application/json' \
-  -d '<REQUEST_BODY>'
+  -d '{
+  "intent": "PROFILE_SHARE",
+  "metaData": {
+    "hipId": "MAYUR_HIP",
+    "context": "ABC123",
+    "hprId": "abdulkalam@abdm",
+    "latitude": "-38.679",
+    "longitude": "58.498"
+  },
+  "profile": {
+    "patient": {
+      "abhaNumber": 91178386101251,
+      "abhaAddress": "9117838@sbx",
+      "name": "User 1",
+      "gender": "M",
+      "dayOfBirth": "10",
+      "monthOfBirth": "10",
+      "yearOfBirth": "1994",
+      "address": {
+        "line": "C/O Sandipan Kshirsagar Ambejogai Road Renuka Nagar",
+        "district": null,
+        "state": null,
+        "pincode": null
+      },
+      "phoneNumber": "9876543210"
+    }
+  }
+}'
 ```
 
 The path, the method and the body come from NHA's PHR V3 document,

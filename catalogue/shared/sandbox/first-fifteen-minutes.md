@@ -36,12 +36,12 @@ related:
 
 ## In plain words
 
-You cannot run a live [ABDM](../glossary/abdm.md) call until
-[NHA](../glossary/nha.md) approves your sandbox registration. NHA's FAQ publishes a maximum
+You cannot run a live [ABDM](shared.glossary.abdm) call until
+[NHA](shared.glossary.nha) approves your sandbox registration. NHA's FAQ publishes a maximum
 for that review: applications are processed within 5 working days. This page gives you a
 genuine fifteen minutes of your own while that runs: with nothing but a browser, read one
 complete transcribed exchange of the
-[gateway session](../../hiecm/concepts/gateway-session.md) call and leave with your own first
+[gateway session](hiecm.concept.gateway-session) call and leave with your own first
 call already written. Applying for sandbox access is a separate step, worth doing first since
 it starts NHA's review clock.
 
@@ -97,7 +97,7 @@ This repository's specification (`catalogue/openapi/hiecm/v3/hiecm-gateway.yaml`
 successful call as answering `200`, with a session created and a bearer token issued. The
 specification carries no captured response body from NHA, only the field list: `accessToken`,
 `expiresIn`, `refreshExpiresIn`, `refreshToken` and `tokenType`. See
-[the endpoint page](../../hiecm/endpoints/gateway-sessions.md) for what each field means.
+[the endpoint page](hiecm.endpoint.gateway-sessions) for what each field means.
 Nothing here invents a body NHA never sent.
 
 ### Your own first call
@@ -139,7 +139,7 @@ with no word, raise it on
 report format.
 
 If your first real call fails with a 401, that is a different problem from registration: see
-[Everything returns 401](../../hiecm/troubleshooting/everything-returns-401.md).
+[Everything returns 401](hiecm.troubleshooting.everything-returns-401).
 
 While NHA reviews your registration, use the wait. See
 [registration and credentials](registration-and-credentials.md) for what to read next: picking

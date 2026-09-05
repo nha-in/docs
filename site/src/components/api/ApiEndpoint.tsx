@@ -8,6 +8,7 @@ import {
   DialogTrigger,
 } from '@site/src/components/ui/dialog';
 import TryIt from './TryIt';
+import Markdown from './Markdown';
 
 export type Field = {
   name: string;
@@ -33,14 +34,29 @@ export type Operation = {
   servers: {url: string; description: string}[];
   summary: string;
   description: string;
-  security: {name: string; type: string; scheme?: string; description: string}[];
+  security: {
+    name: string;
+    type: string;
+    scheme?: string;
+    in?: string;
+    headerName?: string;
+    description: string;
+  }[];
   headers: Field[];
   pathParams: Field[];
   queryParams: Field[];
   body: Field[];
   requestExample?: unknown;
-  responses: {status: string; description: string; example?: unknown}[];
+  responses: {
+    status: string;
+    description: string;
+    example?: unknown;
+    /** Where to read about this failure, when a page for it exists. */
+    help?: {label: string; href: string};
+  }[];
   curl: string;
+  /** The same request in each language the page offers. */
+  samples?: {id: string; label: string; language: string; code: string}[];
   tag: string;
   tagDescription: string;
 };
@@ -56,7 +72,7 @@ function FieldRow({field}: {field: Field}) {
         ) : null}
       </div>
       {field.description ? (
-        <p className="api-field__description">{field.description}</p>
+        <Markdown text={field.description} className="api-field__description" />
       ) : null}
       {field.enum?.length ? (
         <p className="api-field__enum">
@@ -104,6 +120,48 @@ export function CopyButton({value}: {value: string}) {
         <Copy className="size-3.5" aria-hidden="true" />
       )}
     </button>
+  );
+}
+
+/**
+ * The request, in the language the reader works in.
+ *
+ * An older build carried only `curl`, so a page rendered from a stale JSON
+ * still gets its one tab rather than an empty panel.
+ */
+function RequestPanel({operation}: {operation: Operation}) {
+  const samples =
+    operation.samples?.length
+      ? operation.samples
+      : [{id: 'curl', label: 'cURL', language: 'bash', code: operation.curl}];
+  const [active, setActive] = useState(samples[0].id);
+  const current = samples.find((sample) => sample.id === active) ?? samples[0];
+
+  return (
+    <div className="api-panel">
+      <div className="api-panel__head">
+        <span className="api-panel__label">{operation.summary}</span>
+        <div className="api-panel__tabs" role="tablist" aria-label="Request">
+          {samples.map((sample) => (
+            <button
+              key={sample.id}
+              type="button"
+              role="tab"
+              aria-selected={sample.id === current.id}
+              className={
+                sample.id === current.id
+                  ? 'api-panel__tab api-panel__tab--active'
+                  : 'api-panel__tab'
+              }
+              onClick={() => setActive(sample.id)}>
+              {sample.label}
+            </button>
+          ))}
+        </div>
+        <CopyButton value={current.code} />
+      </div>
+      <CodeBlock language={current.language}>{current.code}</CodeBlock>
+    </div>
   );
 }
 
@@ -159,7 +217,7 @@ export default function ApiEndpoint({operation}: {operation: Operation}) {
         <Heading as="h1" className="api-page__title">
           {operation.summary}
         </Heading>
-        {lede ? <p className="api-page__lede">{lede}</p> : null}
+        {lede ? <Markdown text={lede} className="api-page__lede" /> : null}
 
         <div className="api-bar">
           <span
@@ -185,7 +243,7 @@ export default function ApiEndpoint({operation}: {operation: Operation}) {
           )}
         </div>
 
-        {rest ? <p className="api-page__body">{rest}</p> : null}
+        {rest ? <Markdown text={rest} className="api-page__body" /> : null}
 
         {operation.security.length ? (
           <Section title="Authorizations">
@@ -193,7 +251,14 @@ export default function ApiEndpoint({operation}: {operation: Operation}) {
               <FieldRow
                 key={scheme.name}
                 field={{
-                  name: 'Authorization',
+                  // The header a scheme travels in is the scheme's own, not
+                  // always Authorization: an apiKey scheme names its header,
+                  // and labelling X-Token "Authorization" told the reader to
+                  // send the wrong one.
+                  name:
+                    scheme.type === 'apiKey' && scheme.headerName
+                      ? scheme.headerName
+                      : 'Authorization',
                   type: scheme.scheme === 'bearer' ? 'bearer token' : scheme.type,
                   required: true,
                   description: scheme.description,
@@ -243,7 +308,15 @@ export default function ApiEndpoint({operation}: {operation: Operation}) {
                   <code className="api-field__name">{response.status}</code>
                 </div>
                 {response.description ? (
-                  <p className="api-field__description">{response.description}</p>
+                  <Markdown
+                    text={response.description}
+                    className="api-field__description"
+                  />
+                ) : null}
+                {response.help ? (
+                  <p className="api-field__help">
+                    <a href={response.help.href}>{response.help.label}</a>
+                  </p>
                 ) : null}
               </div>
             ))}
@@ -252,14 +325,7 @@ export default function ApiEndpoint({operation}: {operation: Operation}) {
       </div>
 
       <aside className="api-page__aside">
-        <div className="api-panel">
-          <div className="api-panel__head">
-            <span className="api-panel__label">{operation.summary}</span>
-            <span className="api-panel__lang">cURL</span>
-            <CopyButton value={operation.curl} />
-          </div>
-          <CodeBlock language="bash">{operation.curl}</CodeBlock>
-        </div>
+        <RequestPanel operation={operation} />
         <ResponsePanel responses={operation.responses} />
       </aside>
     </div>

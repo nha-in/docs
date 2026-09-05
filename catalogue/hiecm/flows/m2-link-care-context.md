@@ -88,24 +88,24 @@ sequenceDiagram
 ```
 
 1. **Get a link token for the patient.** Call
-   [Generate Link Token](../endpoints/m2-generate-link-token.md), which
+   [Generate Link Token](hiecm.endpoint.m2-generate-link-token), which
    posts to `/hiecm/v3/token/generate-token`. The token does not come
    back on that response. It arrives at your bridge, on
-   [the token callback](../callbacks/m2-on-generate-token-result.md).
+   [the token callback](hiecm.callback.m2-on-generate-token-result).
    Store it against the patient: NHA gives its validity as six months.
 2. **Link the care context.** Call
-   [Link care contexts to an ABHA address](../endpoints/m2-hip-link-care-context.md),
+   [Link care contexts to an ABHA address](hiecm.endpoint.m2-hip-link-care-context),
    which posts to `/hiecm/hip/v3/link/carecontext` and carries the link
    token. The response is an acknowledgement that the request was
    accepted, and nothing more.
 3. **Wait for the outcome on your bridge.** It arrives at
-   [the link callback](../callbacks/m2-on-carecontext-result.md), with
+   [the link callback](hiecm.callback.m2-on-carecontext-result), with
    `response.requestId` matching the `REQUEST-ID` you sent.
 4. **Notify ABDM when a linked care context changes.** Call
-   [Link Care Context Notify](../endpoints/m2-link-care-context-notify.md),
+   [Link Care Context Notify](hiecm.endpoint.m2-link-care-context-notify),
    which posts to `/hiecm/hip/v3/link/context/notify`, and read the
    outcome on
-   [the notify callback](../callbacks/m2-on-context-notify-result.md).
+   [the notify callback](hiecm.callback.m2-on-context-notify-result).
 
 NHA's M2 document presents most request and response tables as
 screenshots. The three calls and three callbacks above are from the

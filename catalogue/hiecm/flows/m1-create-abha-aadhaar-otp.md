@@ -32,17 +32,17 @@ skills:
 This is the route every integrator must implement. The person proves who
 they are with an OTP sent to the mobile registered against their Aadhaar,
 ABDM issues them a fourteen digit
-[ABHA number](../../shared/glossary/abha-number.md), and then they claim
-a memorable [ABHA address](../../shared/glossary/abha-address.md).
+[ABHA number](shared.glossary.abha-number), and then they claim
+a memorable [ABHA address](shared.glossary.abha-address).
 
 NHA marks the other enrolment routes optional. This one is not.
 
 ## Before you start
 
 - A client id and secret, and a working session token. See
-  [registration and credentials](../../shared/sandbox/registration-and-credentials.md).
+  [registration and credentials](shared.sandbox.registration-and-credentials).
 - The person's Aadhaar number, encrypted against NHA's public key. See
-  [why identifiers are encrypted](../concepts/encrypted-identifiers.md).
+  [why identifiers are encrypted](hiecm.concept.encrypted-identifiers).
 - The person present, because they must read an OTP from their phone.
 - Their explicit consent to create an ABHA, which you send in the
   enrolment call.
@@ -111,6 +111,6 @@ characters, no leading digit, and no leading or trailing dot. Validate
 before submitting so the person is not guessing.
 
 Every call fails with a header error. Check
-[ABDM-2402](../errors/abdm-2402.md) and
-[ABDM-2404](../errors/abdm-2404.md) before assuming the flow is wrong.
+[ABDM-2402](hiecm.error.abdm-2402) and
+[ABDM-2404](hiecm.error.abdm-2404) before assuming the flow is wrong.
 

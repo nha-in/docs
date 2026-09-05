@@ -62,10 +62,10 @@ skills:
 ## In plain words
 
 Requesting consent is the M3 step where your system, acting as an
-[HIU](../../shared/glossary/hiu.md), asks a patient for permission to
+[HIU](shared.glossary.hiu), asks a patient for permission to
 read health records held somewhere else. The ask and the permission are
 two different things. A
-[consent artefact](../concepts/consent-artefact.md) exists only if the
+[consent artefact](hiecm.concept.consent-artefact) exists only if the
 patient grants the request. Until then you hold a request id, not a
 right to any record.
 
@@ -74,18 +74,18 @@ right to any record.
 Five things must already be true, each checkable:
 
 - You hold a gateway session token. See
-  [the gateway session](../concepts/gateway-session.md).
+  [the gateway session](hiecm.concept.gateway-session).
 - Your application is registered in the HIU role, with a
-  [bridge](../../shared/glossary/bridge.md) URL the
-  [HIE-CM](../../shared/glossary/hie-cm.md) can route the patient's
+  [bridge](shared.glossary.bridge) URL the
+  [HIE-CM](shared.glossary.hie-cm) can route the patient's
   decision to.
 - Your callback URL is registered with ABDM and reachable from the
   public internet. See
-  [the callback URL](../../shared/sandbox/callback-url.md).
-- You know the patient's [ABHA address](../../shared/glossary/abha-address.md).
-  That is [M1](../../shared/glossary/m1.md)'s job. Without it there is no
+  [the callback URL](shared.sandbox.callback-url).
+- You know the patient's [ABHA address](shared.glossary.abha-address).
+  That is [M1](shared.glossary.m1)'s job. Without it there is no
   one to ask.
-- You have a [purpose of use](../../shared/glossary/purpose-of-use.md)
+- You have a [purpose of use](shared.glossary.purpose-of-use)
   code for the request. NHA's M3 file lists six; an insurer checking a
   claim uses `HPAYMT`.
 
@@ -110,39 +110,39 @@ sequenceDiagram
 ```
 
 1. **Build the consent request and call init.** Name the patient's ABHA
-   address, the [HI types](../../shared/glossary/hi-type.md) wanted, the
+   address, the [HI types](shared.glossary.hi-type) wanted, the
    date range the records must fall in, the purpose code, and the
    expiry you are setting for the request itself, the window the
    patient has to answer. That expiry is not the same as the validity
    period the patient sets when they grant. See the two clocks on the
    consent concept page. Call
-   [Consent Init Request](../endpoints/m3-consent-request-init.md), which
+   [Consent Init Request](hiecm.endpoint.m3-consent-request-init), which
    posts to `/hiecm/consent/v3/request/init`. The request and response
    shapes are in the M3 specification, published at /specs/hiecm-m3.yaml,
    rather than copied here.
 2. **Receive the acknowledgement callback.**
-   [The consent request was accepted, with its request id](../callbacks/m3-on-consent-request-init.md)
+   [The consent request was accepted, with its request id](hiecm.callback.m3-on-consent-request-init)
    arrives at `/api/v3/hiu/consent/request/on-init` and carries the
    consent request id. Store it. Everything that follows keys off it.
 3. **Wait, and poll if you need to show progress.** The patient acts in
    their own time. Call
-   [Consent Request Status](../endpoints/m3-consent-request-status.md)
+   [Consent Request Status](hiecm.endpoint.m3-consent-request-status)
    to read the current state without waiting for the next callback; its
    answer arrives on
-   [the consent manager reports the state of a consent request you asked about](../callbacks/m3-on-consent-request-status.md).
+   [the consent manager reports the state of a consent request you asked about](hiecm.callback.m3-on-consent-request-status).
    NHA's file names five states: `REQUESTED`, `GRANTED`, `DENIED`,
    `EXPIRED`, `REVOKED`.
-4. **The patient grants or denies, in their [PHR](../../shared/glossary/phr.md)
+4. **The patient grants or denies, in their [PHR](shared.glossary.phr)
    app.** This step is not a call your system makes. NHA's document
    places the whole decision on the patient's side, in the app they use.
 5. **The decision arrives on your callback.**
-   [The patient's decision, sent to the requester](../callbacks/m3-on-consent-request-notify-hiu.md)
+   [The patient's decision, sent to the requester](hiecm.callback.m3-on-consent-request-notify-hiu)
    arrives at `/api/v3/hiu/consent/request/notify`, carrying the status
    and, on a grant, the consent artefact ids created against the
    request. Store every id. NHA's M3 document says a granted request
    can produce more than one.
 6. **Acknowledge receipt.** Call
-   [Consent HIU On-Notify](../endpoints/m3-consent-hiu-on-notify.md),
+   [Consent HIU On-Notify](hiecm.endpoint.m3-consent-hiu-on-notify),
    which posts to `/hiecm/consent/v3/request/hiu/on-notify`, so the
    gateway stops retrying delivery.
 
@@ -169,18 +169,18 @@ callback body here and set `verified.status`.
 ## When it goes wrong
 
 - The request sits in `REQUESTED` with no decision. See
-  [consent stuck in Requested](../troubleshooting/consent-stuck-requested.md),
+  [consent stuck in Requested](hiecm.troubleshooting.consent-stuck-requested),
   which covers the request window against the validity period, the two
   separate clocks: running out of the request window moves the state to
   `EXPIRED`, not a change in what a grant would later allow.
 - The on-init or on-notify callback never lands. See
-  [the callback never arrives](../troubleshooting/callback-never-arrives.md).
+  [the callback never arrives](hiecm.troubleshooting.callback-never-arrives).
 - The clock is wrong and every call fails. See
-  [ABDM-2402](../errors/abdm-2402.md).
+  [ABDM-2402](hiecm.error.abdm-2402).
 - The `REQUEST-ID` is missing, malformed or reused. See
-  [ABDM-2404](../errors/abdm-2404.md).
-- No session token was sent. See [ABDM-2500](../errors/abdm-2500.md).
-- ABDM fails and does not say why. See [ABDM-9999](../errors/abdm-9999.md).
+  [ABDM-2404](hiecm.error.abdm-2404).
+- No session token was sent. See [ABDM-2500](hiecm.error.abdm-2500).
+- ABDM fails and does not say why. See [ABDM-9999](hiecm.error.abdm-9999).
 
 Next: once a grant arrives with artefact ids, go to
 [fetch the records](m3-fetch-records.md).

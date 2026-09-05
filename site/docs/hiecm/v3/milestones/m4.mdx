@@ -10,6 +10,9 @@ source: ABDM__Proposed_Simplified_Milestone_4_(NHPR).md
 ---
 
 import ApiLinks from '@site/src/components/docs/ApiLinks';
+import TestMatrix from '@site/src/components/api/TestMatrix';
+import matrix from '@site/src/data/test-matrix/m4.json';
+import SkillInstall from '@site/src/components/docs/SkillInstall';
 
 # M4 Enrol: facilities and professionals
 
@@ -70,12 +73,19 @@ needs an HPR token in the header of the create calls, generated from an HPR ID
 and password. So facility onboarding usually starts with a person getting an
 HPID.
 
+## Build it with an agent
+
+Hand M4 to the agent you already use, as one file it loads once. Install it, or open it there in one click.
+
+<SkillInstall slug="abdm-m4" note="Every M4 call, its error codes and NHA's own test cases in one file: 13 operations, 150 codes, 183 cases." />
+
 ## Certification
 
 M4 has no certification step of its own. One exit process covers the whole
 integration, run once, after every milestone your role needs works end to end.
 See [Going live](/docs/hiecm/v3/getting-started/going-live) for the four steps
-and what each one asks of you.
+and what each one asks of you. The cases NHA runs are on this page, under [test
+cases](#test-cases).
 
 ## The journey, one diagram per flow
 
@@ -233,6 +243,17 @@ The HIP name is what a patient sees in their [ABHA](/docs/hiecm/v3/getting-start
 A facility with a facility ID and a linked HIP bridge can do the [M2](/docs/hiecm/v3/api/m2) work, linking care contexts and sharing records. With a linked HIU bridge it can do the [M3](/docs/hiecm/v3/api/m3) work, requesting consent and fetching records. M4 is the registration step in front of either flow outside sandbox.
 
 Next: [M4 operations and fields](/docs/hiecm/v3/api/m4/undocumented).
+
+## Test cases
+
+M4's certification cases are NHA's own, from the HFR and HPR sheets. Search
+them, or filter to the mandatory ones.
+
+Every case keeps the id NHA uses, so a case you pass here is a case you can
+name in certification. Cases this portal added rather than took from the sheet
+say so on the case itself.
+
+<TestMatrix matrix={matrix} />
 
 ## Next
 

@@ -30,7 +30,7 @@ related:
 
 ImmunizationRecord carries a patient's immunization records, with any
 supporting documents such as a vaccine certificate.
-[NRCES](../glossary/nrces.md) calls it `ImmunizationRecord`.
+[NRCES](shared.glossary.nrces) calls it `ImmunizationRecord`.
 
 ## Before you start
 

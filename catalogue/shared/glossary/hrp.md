@@ -64,7 +64,7 @@ the four were one set of roles to choose from. They are not comparable:
 A single product is usually several of these at once. A hospital system
 is provider facing by position, a HIP or an HIU depending on the call, an
 HRP because it holds the records, and it is sold by a DSC. See
-[roles](../../hiecm/concepts/roles.md).
+[roles](hiecm.concept.roles).
 
 In practice the term shows up when software is registered: the bridge you
 register with the gateway is the technical form of being an HRP, and it

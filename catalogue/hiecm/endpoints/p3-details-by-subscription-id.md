@@ -6,7 +6,7 @@ milestone: P3
 version: abdm-v3
 title: Details-by-Subscription-Id
 summary: >
-  This API endpoint is designed to fetch the user’s subscription details using the subscription ID.
+  Reads a subscription's details from the subscription id.
 sources:
   - file: catalogue/openapi/.raw/nha-2026-09-04/ABHA-PHR-V3-Documents.docx
     fetched: 2026-09-04
@@ -31,7 +31,7 @@ This API endpoint is designed to fetch the user’s subscription details using t
 
 ## Before you start
 
-- A gateway session token. See [the gateway session](../concepts/gateway-session.md).
+- A gateway session token. See [the gateway session](hiecm.concept.gateway-session).
 - The identifiers this call names in its body, held from the step before it.
 
 ## What happens

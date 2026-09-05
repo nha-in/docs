@@ -23,15 +23,15 @@ Four things must already be true, each checkable:
 - A granted consent request, with at least one consent artefact id. See
   request consent.
 - You hold a gateway session token. See
-  the gateway session.
-- You have generated an ECDH key pair
+  the gateway session (hiecm.concept.gateway-session).
+- You have generated an ECDH (shared.glossary.ecdh) key pair
   and a 32 byte nonce for this exchange, on Curve25519. NHA's M2 document
   specifies the scheme; the data flow page at
   /docs/hiecm/v3/concepts/data-flow sets out who generates what and
   points at NHA's reference implementation, Fidelius, rather than hand
   rolling it.
 - You expose a `dataPushUrl` endpoint that can receive encrypted
-  FHIR bundles: the URL you name in the
+  FHIR (shared.glossary.fhir) bundles: the URL you name in the
   health information request. NHA's M3 file only says to expose one; it
   does not say whether that URL must differ from your other registered
   callback URLs. The data flow concept page notes it may differ from
@@ -100,30 +100,30 @@ payload shape here and set `verified.status`.
 **If it goes wrong**
 
 - The chain stops partway between fetch, request and push. See
-  accepted, then nothing,
+  accepted, then nothing (hiecm.troubleshooting.accepted-then-nothing),
   which covers finding which callback in a multi step chain is missing.
 - The consent was valid when you sent the request but is not granted by
   the time the HIP checks it. NHA's own error table names this state,
   not a specific cause; a mid flow revocation is one way it happens. See
-  ABDM-1062. Treat every fetch as a fresh
+  ABDM-1062 (hiecm.error.abdm-1062). Treat every fetch as a fresh
   permission check, not a cached yes.
 - The artefact id is unknown, expired or already used past its window.
-  See ABDM-1112.
+  See ABDM-1112 (hiecm.error.abdm-1112).
 - The push never arrives at your `dataPushUrl`. See
-  the callback never arrives.
+  the callback never arrives (hiecm.troubleshooting.callback-never-arrives).
   Check the `dataPushUrl` you sent on the health information request
   specifically, since it may not be the same endpoint your other
   registered callbacks land on.
 - The clock is wrong and every call fails. See
-  ABDM-2402.
+  ABDM-2402 (hiecm.error.abdm-2402).
 - The `REQUEST-ID` is missing, malformed or reused. See
-  ABDM-2404.
-- No session token was sent. See ABDM-2500.
-- ABDM fails and does not say why. See ABDM-9999.
+  ABDM-2404 (hiecm.error.abdm-2404).
+- No session token was sent. See ABDM-2500 (hiecm.error.abdm-2500).
+- ABDM fails and does not say why. See ABDM-9999 (hiecm.error.abdm-9999).
 
 Next: a decrypted bundle today is not a standing right to fetch again
 tomorrow. Read
-consent, what it authorises and how it ends
+consent, what it authorises and how it ends (hiecm.concept.consent-artefact)
 for when the artefact you just used stops being usable, so you know
 when a repeat fetch needs a fresh consent request instead.
 
@@ -134,18 +134,18 @@ when a repeat fetch needs a fresh consent request instead.
 Five things must already be true, each checkable:
 
 - You hold a gateway session token. See
-  the gateway session.
+  the gateway session (hiecm.concept.gateway-session).
 - Your application is registered in the HIU role, with a
-  bridge URL the
-  HIE-CM can route the patient's
+  bridge (shared.glossary.bridge) URL the
+  HIE-CM (shared.glossary.hie-cm) can route the patient's
   decision to.
 - Your callback URL is registered with ABDM and reachable from the
   public internet. See
-  the callback URL.
-- You know the patient's ABHA address.
-  That is M1's job. Without it there is no
+  the callback URL (shared.sandbox.callback-url).
+- You know the patient's ABHA address (shared.glossary.abha-address).
+  That is M1 (shared.glossary.m1)'s job. Without it there is no
   one to ask.
-- You have a purpose of use
+- You have a purpose of use (shared.glossary.purpose-of-use)
   code for the request. NHA's M3 file lists six; an insurer checking a
   claim uses `HPAYMT`.
 
@@ -210,18 +210,18 @@ callback body here and set `verified.status`.
 **If it goes wrong**
 
 - The request sits in `REQUESTED` with no decision. See
-  consent stuck in Requested,
+  consent stuck in Requested (hiecm.troubleshooting.consent-stuck-requested),
   which covers the request window against the validity period, the two
   separate clocks: running out of the request window moves the state to
   `EXPIRED`, not a change in what a grant would later allow.
 - The on-init or on-notify callback never lands. See
-  the callback never arrives.
+  the callback never arrives (hiecm.troubleshooting.callback-never-arrives).
 - The clock is wrong and every call fails. See
-  ABDM-2402.
+  ABDM-2402 (hiecm.error.abdm-2402).
 - The `REQUEST-ID` is missing, malformed or reused. See
-  ABDM-2404.
-- No session token was sent. See ABDM-2500.
-- ABDM fails and does not say why. See ABDM-9999.
+  ABDM-2404 (hiecm.error.abdm-2404).
+- No session token was sent. See ABDM-2500 (hiecm.error.abdm-2500).
+- ABDM fails and does not say why. See ABDM-9999 (hiecm.error.abdm-9999).
 
 Next: once a grant arrives with artefact ids, go to
 fetch the records.

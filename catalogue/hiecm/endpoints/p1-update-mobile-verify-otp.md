@@ -6,7 +6,7 @@ milestone: P1
 version: abdm-v3
 title: Update Mobile Verify-OTP
 summary: >
-  This API is used to verify OTP and update the mobile number in the system.
+  Verify OTP and update the mobile number in the system.
 sources:
   - file: catalogue/openapi/.raw/nha-2026-09-04/ABHA-PHR-V3-Documents.docx
     fetched: 2026-09-04
@@ -31,7 +31,7 @@ This API is used to verify OTP and update the mobile number in the system.
 
 ## Before you start
 
-- A gateway session token. See [the gateway session](../concepts/gateway-session.md).
+- A gateway session token. See [the gateway session](hiecm.concept.gateway-session).
 - The identifiers this call names in its body, held from the step before it.
 
 ## What happens

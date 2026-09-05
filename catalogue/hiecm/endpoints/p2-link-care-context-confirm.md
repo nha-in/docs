@@ -32,7 +32,7 @@ The last call in user initiated linking. The code proves the person is who the f
 
 ## Before you start
 
-- A gateway session token. See [the gateway session](../concepts/gateway-session.md).
+- A gateway session token. See [the gateway session](hiecm.concept.gateway-session).
 - The code the person received, and the link reference it belongs to.
 
 ## What happens
@@ -43,7 +43,10 @@ curl -X POST 'https://dev.abdm.gov.in/api/hiecm/user-initiated-linking/v3/link/c
   -H 'REQUEST-ID: <FRESH_UUID>' \
   -H 'TIMESTAMP: <ISO_8601_TIMESTAMP>' \
   -H 'Content-Type: application/json' \
-  -d '<REQUEST_BODY>'
+  -d '{
+  "token": 123456,
+  "linkRefNumber": "4336268d-89a3-4c84-8674-aef42092d9fc"
+}'
 ```
 
 The path, the method and the body come from NHA's PHR V3 document,

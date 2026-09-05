@@ -6,7 +6,8 @@ milestone: P2
 version: abdm-v3
 title: HIE-CM callback on health record link init
 summary: >
-  This API will be invoked by the HIE-CM to initiate the linking of patient health records to HIP.
+  Starts the linking of a patient's health records. HIE-CM posts this to
+  your HIP.
 sources:
   - file: catalogue/openapi/.raw/nha-2026-09-04/ABHA-PHR-V3-Documents.docx
     fetched: 2026-09-04
@@ -31,9 +32,9 @@ This API will be invoked by the HIE-CM to initiate the linking of patient health
 
 ## Before you start
 
-- A gateway session token. See [the gateway session](../concepts/gateway-session.md).
+- A gateway session token. See [the gateway session](hiecm.concept.gateway-session).
 - A callback URL registered with ABDM and reachable from the public
-  internet. See [the callback URL](../../shared/sandbox/callback-url.md).
+  internet. See [the callback URL](shared.sandbox.callback-url).
 
 ## What happens
 

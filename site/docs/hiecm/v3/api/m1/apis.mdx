@@ -41,6 +41,22 @@ Profile endpoints need both. That is every path under `profile/account`, includi
 
 The benefit programme APIs under `profile/benefit/` are government integrator only. A private integrator calling them receives `ABDM-1094`. See [errors](/docs/hiecm/v3/api/m1/errors). Child ABHA creation is restricted further, to specific government integrators on leadership approval.
 
+## The BENEFIT_NAME header is spelled four ways
+
+NHA's own files write this header four different ways across requests:
+`BENEFIT_NAME` on most, `Benefit-Name` on demographic authentication and the
+child ABHA calls, `BENEFIT-NAME` on child update and state district search, and
+`Benefit_Name` once. An underscore and a hyphen are different header names on
+the wire, so these are not the same header, and which spelling each endpoint
+actually accepts has not been confirmed against the sandbox.
+
+Send the spelling the endpoint's own page shows, and if a call is rejected for
+a reason you cannot place, try the other spellings before looking elsewhere.
+
+The value is usually `healthid api` or `healthid`, but benefit programme calls
+use others: `COVIN` on an IRIS enrolment and a profile photo update, and a
+`PAN` value that is present but disabled.
+
 ## Every endpoint has its own page
 
 Each M1 endpoint is listed in the sidebar under its group, with its request fields, its recorded responses, and a request you can send from the page. Start at [the endpoint index](/docs/hiecm/v3/api), or read [the call order](/reference/hiecm-m1) first if you have not built the flow yet.

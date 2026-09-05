@@ -1,6 +1,6 @@
 import {test} from 'node:test';
 import assert from 'node:assert';
-import {renderOperationMarkdown, routeFor, stripToMarkdown} from './emit-page-markdown.mjs';
+import {exampleFor, renderOperationMarkdown, routeFor, stripToMarkdown} from './emit-page-markdown.mjs';
 
 test('operation JSON renders to markdown with method, path and curl', () => {
   const op = {
@@ -112,4 +112,30 @@ test('routeFor honours a slug that moves the page off its path', () => {
     '---\ntitle: Get started\nslug: /hiecm/v3\n---\n',
   );
   assert.strictEqual(r, 'docs/hiecm/v3');
+});
+
+test('a response example keeps its shape and loses only repetition', () => {
+  const example = {items: Array.from({length: 40}, (_, i) => ({id: i, name: `row ${i}`}))};
+  const out = JSON.parse(exampleFor(example));
+  assert.strictEqual(out.items.length, 3, 'two entries plus the note');
+  assert.deepStrictEqual(out.items[0], {id: 0, name: 'row 0'});
+  assert.match(out.items[2], /38 more of the same shape/);
+});
+
+test('an example too wide to trim falls back to its shape', () => {
+  const wide = Object.fromEntries(
+    Array.from({length: 400}, (_, i) => [`field${i}`, 'x'.repeat(40)]),
+  );
+  const out = JSON.parse(exampleFor(wide));
+  assert.strictEqual(out.field0, 'string', 'values become their type');
+  assert.strictEqual(Object.keys(out).length, 400, 'every field name survives');
+});
+
+test('a small example is passed through untouched', () => {
+  const small = {txnId: 'abc', status: 'SUCCESS'};
+  assert.deepStrictEqual(JSON.parse(exampleFor(small)), small);
+});
+
+test('no example renders nothing rather than the word undefined', () => {
+  assert.strictEqual(exampleFor(undefined), '');
 });

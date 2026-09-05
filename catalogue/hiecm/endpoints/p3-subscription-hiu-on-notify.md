@@ -31,7 +31,7 @@ This is the API that will be invoked to Health locker/PHR to notify HIECM about 
 
 ## Before you start
 
-- A gateway session token. See [the gateway session](../concepts/gateway-session.md).
+- A gateway session token. See [the gateway session](hiecm.concept.gateway-session).
 - The identifiers this call names in its body, held from the step before it.
 
 ## What happens
@@ -42,7 +42,15 @@ curl -X POST 'https://dev.abdm.gov.in/api/hiecm/subscription-requests/v3/hiu/car
   -H 'REQUEST-ID: <FRESH_UUID>' \
   -H 'TIMESTAMP: <ISO_8601_TIMESTAMP>' \
   -H 'Content-Type: application/json' \
-  -d '<REQUEST_BODY>'
+  -d '{
+  "acknowledgement": {
+    "status": "OK",
+    "eventId": "2b8ddd74-5e5e-475b-8778-21603e05a8b4"
+  },
+  "response": {
+    "requestId": "a4b51f47-f70f-4291-9599-8e39b7893cfc"
+  }
+}'
 ```
 
 The path, the method and the body come from NHA's PHR V3 document,

@@ -32,7 +32,7 @@ A subscription is how an application hears about a new record without polling. I
 
 ## Before you start
 
-- A gateway session token. See [the gateway session](../concepts/gateway-session.md).
+- A gateway session token. See [the gateway session](hiecm.concept.gateway-session).
 - The person's agreement, taken before the request is sent.
 
 ## What happens
@@ -43,7 +43,36 @@ curl -X POST 'https://dev.abdm.gov.in/api/hiecm/subscription-requests/v3/init' \
   -H 'REQUEST-ID: <FRESH_UUID>' \
   -H 'TIMESTAMP: <ISO_8601_TIMESTAMP>' \
   -H 'Content-Type: application/json' \
-  -d '<REQUEST_BODY>'
+  -d '{
+  "subscription": {
+    "purpose": {
+      "text": "Care Management",
+      "code": "CAREMGT",
+      "refUri": "www.abdm.gov.in"
+    },
+    "patient": {
+      "id": "xxxxx@sbx"
+    },
+    "hiu": {
+      "id": "{ Health locker/PHR ID}"
+    },
+    "hips": [
+      {
+        "id": "HIP_ID",
+        "name": "HIP_NAME",
+        "type": "HIP"
+      }
+    ],
+    "categories": [
+      "LINK",
+      "DATA"
+    ],
+    "period": {
+      "from": "2024-06-01T09:00:00.000Z",
+      "to": "2124-12-31T09:00:00.000Z"
+    }
+  }
+}'
 ```
 
 The path, the method and the body come from NHA's PHR V3 document,

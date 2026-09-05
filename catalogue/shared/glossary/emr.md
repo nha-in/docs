@@ -29,7 +29,7 @@ clinic uses to record consultations, prescriptions and results. In ABDM
 an EMR acts as a [HIP](hip.md) when it publishes, so it links care
 contexts in [M2](m2.md), and as an [HIU](hiu.md) when it pulls a
 patient's history from elsewhere, which is [M3](m3.md). Most need both.
-See [roles](../../hiecm/concepts/roles.md) and [Hospital, lab and
+See [roles](hiecm.concept.roles) and [Hospital, lab and
 pharmacy systems](/docs/hiecm/v3/concepts/hip-hiu).
 
 ## Before you start

@@ -213,6 +213,30 @@ function appendToLastTurn(setTurns: Setter, delta: string) {
   });
 }
 
+/**
+ * Asks the host page to open its Install tools pop-up.
+ *
+ * This is the `abdm:ask-ai` bridge pointed the other way: there a page asks
+ * the panel to open, here the panel asks the page for something it cannot
+ * mount itself. A host that handles it calls preventDefault, which is what
+ * dispatchEvent reports back.
+ *
+ * Anywhere that does not, including another site embedding this element, the
+ * reader still reaches the same place by the Build with AI page rather than
+ * pressing a button that does nothing.
+ */
+function openInstallTools(docsOrigin: string) {
+  const handled = !window.dispatchEvent(
+    new CustomEvent('abdm:install-tools', {cancelable: true}),
+  );
+  if (handled) return;
+  window.open(
+    `${docsOrigin.replace(/\/$/, '')}/docs/hiecm/v3/getting-started/build-with-ai`,
+    '_blank',
+    'noopener',
+  );
+}
+
 /** Attaches the citation chips to the last turn in the thread. */
 function attachSources(setTurns: Setter, sources: Source[]) {
   setTurns((prior) => {
@@ -765,6 +789,23 @@ function Panel({
                 ))}
               </div>
             )}
+            {/* Every finished answer offers the tools. The prompt's own
+                closing line is conditional and one per conversation, which
+                is right for prose; this is the standing affordance, so a
+                reader who wants the catalogue inside their agent never has
+                to have been offered it at the right moment. */}
+            {turn.from === 'assistant' &&
+              index > 0 &&
+              turn.text !== '' &&
+              !(busy && index === turns.length - 1) && (
+                <button
+                  type="button"
+                  class="ask-ai__install-cta"
+                  onClick={() => openInstallTools(docsOrigin)}>
+                  <Sparkles />
+                  Install AI tools
+                </button>
+              )}
           </div>
           ),
         )}

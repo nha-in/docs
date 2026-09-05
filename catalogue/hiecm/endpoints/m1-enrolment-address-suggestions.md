@@ -36,7 +36,7 @@ begin or end with a dot.
 
 ## Before you start
 
-- A gateway access token. See [the gateway session](../concepts/gateway-session.md).
+- A gateway access token. See [the gateway session](hiecm.concept.gateway-session).
 
 ## What happens
 
@@ -56,8 +56,8 @@ The response body for this operation is not yet published.
 
 ## When it goes wrong
 
-- The clock is wrong and every call fails. See [ABDM-2402](../errors/abdm-2402.md).
-- The `REQUEST-ID` is missing, malformed or reused. See [ABDM-2404](../errors/abdm-2404.md).
-- No session token was sent. See [ABDM-2500](../errors/abdm-2500.md).
-- ABDM fails and does not say why. See [ABDM-9999](../errors/abdm-9999.md).
+- The clock is wrong and every call fails. See [ABDM-2402](hiecm.error.abdm-2402).
+- The `REQUEST-ID` is missing, malformed or reused. See [ABDM-2404](hiecm.error.abdm-2404).
+- No session token was sent. See [ABDM-2500](hiecm.error.abdm-2500).
+- ABDM fails and does not say why. See [ABDM-9999](hiecm.error.abdm-9999).
 

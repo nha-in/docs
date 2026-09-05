@@ -6,7 +6,8 @@ milestone: P3
 version: abdm-v3
 title: Approve Subscription Request
 summary: >
-  This Api will be invoked by the patient/user from PHR application to approve the subscription request raised by the health locker/PHR
+  Approves a subscription a health locker asked for. The patient makes this
+  call from their PHR application.
 sources:
   - file: catalogue/openapi/.raw/nha-2026-09-04/ABHA-PHR-V3-Documents.docx
     fetched: 2026-09-04
@@ -31,7 +32,7 @@ This Api will be invoked by the patient/user from PHR application to approve the
 
 ## Before you start
 
-- A gateway session token. See [the gateway session](../concepts/gateway-session.md).
+- A gateway session token. See [the gateway session](hiecm.concept.gateway-session).
 - The identifiers this call names in its body, held from the step before it.
 
 ## What happens
