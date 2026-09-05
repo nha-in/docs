@@ -63,6 +63,18 @@ const PACKET_MS = 900; // how long a record takes to travel one link
 const TRAVEL_MS = 3400;
 
 /**
+ * How long the courier waits at a participant before setting off again.
+ *
+ * This is the board's reading time and it is the whole reason it exists.
+ * The wave takes as long as the crossing, so without a pause the board is
+ * mid-turn essentially all the time, and a split-flap caught mid-turn is
+ * half of one message next to half of another: the first version of this
+ * spent its life spelling things like "EBDR DEVELO ERAPORTAL". The courier
+ * now sits still while the flaps hold what they landed on.
+ */
+const DWELL_MS = 4200;
+
+/**
  * Every third delivery goes to the NHA, whose line on the board is the
  * portal's own name. That is what makes the site's identity the thing the
  * board keeps coming back to, on a rhythm rather than on a timer.
@@ -139,6 +151,8 @@ export default function NetworkWeb({
     let idleSince = 0;
     /** Deliveries made, so every third one can be sent home to the NHA. */
     let deliveries = 0;
+    /** While set, the courier is resting at a participant until this time. */
+    let dwellUntil = 0;
     const home = PARTICIPANTS.findIndex((who) => who.id === 'nha');
 
     const measure = () => {
@@ -260,16 +274,11 @@ export default function NetworkWeb({
 
     /** With no pointer, the courier walks its own route so the page moves. */
     const walkIdle = (now: number) => {
-      const from = places[idleFrom];
-      const to = places[idleTo];
-      const t = Math.min(1, (now - idleSince) / TRAVEL_MS);
-      // Ease in and out, so the courier slows into each participant.
-      const eased = t < 0.5 ? 2 * t * t : 1 - (-2 * t + 2) ** 2 / 2;
-      aim = {
-        x: from.x + (to.x - from.x) * eased,
-        y: from.y + (to.y - from.y) * eased,
-      };
-      if (t >= 1) {
+      // Resting at a participant, holding still so the board can be read.
+      if (dwellUntil) {
+        aim = places[idleTo];
+        if (now < dwellUntil) return;
+        dwellUntil = 0;
         idleFrom = idleTo;
         deliveries += 1;
         if (deliveries % HOME_EVERY === 0 && idleFrom !== home) {
@@ -282,7 +291,19 @@ export default function NetworkWeb({
         idleSince = now;
         // The flaps start turning now, on a wave as long as this crossing.
         depart.current?.(PARTICIPANTS[idleTo].id);
+        return;
       }
+
+      const from = places[idleFrom];
+      const to = places[idleTo];
+      const t = Math.min(1, (now - idleSince) / TRAVEL_MS);
+      // Ease in and out, so the courier slows into each participant.
+      const eased = t < 0.5 ? 2 * t * t : 1 - (-2 * t + 2) ** 2 / 2;
+      aim = {
+        x: from.x + (to.x - from.x) * eased,
+        y: from.y + (to.y - from.y) * eased,
+      };
+      if (t >= 1) dwellUntil = now + DWELL_MS;
     };
 
     const draw = (now: number) => {

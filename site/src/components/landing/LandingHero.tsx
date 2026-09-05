@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import Link from '@docusaurus/Link';
 import Heading from '@theme/Heading';
 import BrowserOnly from '@docusaurus/BrowserOnly';
@@ -61,9 +61,11 @@ const RESTING = 'ABDM Developer Portal';
  * delivery there. That is what makes the site's identity the thing the board
  * returns to, on the network's rhythm rather than on a counter of its own.
  */
-const DELIVERED: Record<string, string> = {
+const DELIVERED: Record<string, string | string[]> = {
   citizen: 'Unique health identity',
-  phr: 'Your records, in one place',
+  // A participant with more than one line takes them in turn, so calling
+  // twice at the same door says something new the second time.
+  phr: ['Your records, in one place', 'Unified health services'],
   hospital: 'Interoperable medical records',
   doctor: 'History at the point of care',
   lab: 'Reports that reach you',
@@ -75,7 +77,9 @@ const DELIVERED: Record<string, string> = {
 /** Wide enough for the longest line above, so the flaps never resize. */
 const CELLS = Math.max(
   RESTING.length,
-  ...Object.values(DELIVERED).map((line) => line.length),
+  ...Object.values(DELIVERED)
+    .flat()
+    .map((line) => line.length),
 );
 
 /**
@@ -89,6 +93,10 @@ export default function LandingHero(): React.ReactNode {
   // Set once on mount rather than read per render, so the server and the
   // first client render agree: both of them draw the resting name.
   const [still, setStill] = useState(true);
+  /** The participant the board is already speaking for. */
+  const announced = useRef<string | null>(null);
+  /** How many times each participant has been called at, for the two liners. */
+  const visits = useRef<Record<string, number>>({});
 
   useEffect(() => {
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
@@ -105,8 +113,21 @@ export default function LandingHero(): React.ReactNode {
   // departure to announce. Naming the same line twice costs nothing, because
   // a board already showing a message does not turn for it again.
   const carrying = useCallback((id: string) => {
+    // The arrival that answers a departure names the same participant, and
+    // the board is already showing its line, so the second call is dropped.
+    // Without this a participant with two lines would turn over again in the
+    // air and land on the one it was not announcing.
+    if (announced.current === id) return;
+    announced.current = id;
     const line = DELIVERED[id];
-    if (line) setMessage(line);
+    if (!line) return;
+    if (typeof line === 'string') {
+      setMessage(line);
+      return;
+    }
+    const called = visits.current[id] ?? 0;
+    visits.current[id] = called + 1;
+    setMessage(line[called % line.length]);
   }, []);
 
   return (
