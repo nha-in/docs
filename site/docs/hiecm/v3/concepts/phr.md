@@ -5,6 +5,7 @@ sidebar_position: 8
 sidebar_custom_props:
   roles: [phr]
 description: What a personal health record app does in ABDM, the screens it needs, and the modules you have to build.
+covers: [hiecm.concept.phr-subscriptions]
 verification: unverified
 source: ABDM__NewDocumant_PHR_app.md, ABDM__Proposed_Simplified_Milestone_1.md
 ---
@@ -195,6 +196,38 @@ Once a care context is linked to the user's ABHA address:
 The test cases cover fetching each health information type structured and
 unstructured: diagnostic report, prescription, discharge summary, consultation
 note, immunisation record, wellness record and health document record.
+
+## Subscriptions, and why you need one
+
+A care context can be linked to a person's address by any facility they visit,
+without your application being part of it. A subscription is how you find out:
+a standing watch on one address, delivering to your callback whenever
+something changes.
+
+NHA expects a PHR app to set one up at two moments, when it creates an address
+and when a person signs in with an address it has not seen before. The person
+must be asked to consent to it; signing in does not imply it.
+
+Once approved, four events arrive: a new care context, a modified care
+context, a new consent request, and a new subscription request. Showing them
+on the device is your job, and NHA names a push service as the example rather
+than a requirement.
+
+A request sits in exactly one state, and the same five carry consent requests,
+subscription requests and health locker requests, so one screen serves all
+three.
+
+| Group | State | What it means |
+| --- | --- | --- |
+| Requests | Requested | Sent, and the person has not acted |
+| Requests | Denied | The person refused it |
+| Requests | Expired | The person did not act inside the requester's window |
+| Approved | Granted | The person allowed it |
+| Approved | Revoked | Allowed, then withdrawn |
+
+A subscription is not consent and gives nobody a record. It tells you a record
+exists. Reading it still needs a consent, which is why a subscription usually
+runs alongside an auto approval policy.
 
 ## Discovery and user initiated linking
 

@@ -15,6 +15,13 @@ sources:
     hash: sha256:ec3f4f0f682a59a2e861a762ae86c62e98ae8fa15997ff86f900c89b2e8e0498
     note: >
       NHA's P2 file as ingested on this branch.
+  - file: catalogue/openapi/.raw/nha-2026-09-05/NewDocumant-PHR-app.docx
+    fetched: 2026-09-05
+    hash: sha256:4f8b40b31e894520be49885260912586a3f665933958cc0680ce5a4675704542
+    note: >
+      NHA's PHR application document. Source of the one token rule and of the
+      disagreement between its narrative and its test case over how long a
+      token lasts.
   - file: site/docs/hiecm/v3/milestones/p2.mdx
     fetched: 2026-09-04
     status: not-yet-hashed
@@ -83,9 +90,20 @@ Three things must already be true, each checkable:
 5. **Show the token number** if the facility returned one, because that
    is the thing the person needs at the counter.
 
+6. **Hold the person to one token.** NHA asks that the application not let
+   them generate a second one straight away.
+
 Counter names arrive in the code: up to 20 alphanumeric characters, no
 special characters. A counter name cannot be the facility id, the
 [HPID](shared.glossary.hpid), the HIP id or the HIP name.
+
+**How long a token lasts, and how long before another, are stated twice and
+do not agree.** NHA's narrative says the application must not allow a second
+token for 60 minutes. Its test case for the same screen says the token is
+valid for 30 minutes and that the duration is configurable. Neither has been
+run against the sandbox from here. Build the lock at 60 minutes, which is the
+stricter reading, and treat validity as something the facility sets rather
+than something you can assume.
 
 ## How you know it worked
 
