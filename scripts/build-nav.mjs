@@ -180,6 +180,29 @@ writeFileSync(
 
   writeFileSync(join(root, 'site', 'static', 'llms.txt'), lines.join('\n'));
   console.log(`Built llms.txt from ${pages.length} page(s).`);
+
+  // /robots.txt was a 404 while /sitemap.xml answered, so a crawler had to
+  // guess the sitemap was there. Written here rather than dropped in static/
+  // because Sitemap: takes an absolute URL, and only this file knows the one
+  // this deployment is being built for. The two agent indexes are named for
+  // the same reason: a crawler that reads robots.txt is exactly the visitor
+  // that should be told they exist.
+  writeFileSync(
+    join(root, 'site', 'static', 'robots.txt'),
+    [
+      'User-agent: *',
+      'Allow: /',
+      '',
+      `Sitemap: ${siteUrl}${base}/sitemap.xml`,
+      '',
+      '# Documentation for language models:',
+      `#   ${siteUrl}${base}/llms.txt        an index of the site`,
+      `#   ${siteUrl}${base}/llms-full.txt   every page in one document`,
+      '# Adding .md to any documentation URL returns that page as markdown.',
+      '',
+    ].join('\n'),
+  );
+  console.log('Built robots.txt.');
 }
 
 console.log(
