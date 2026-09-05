@@ -32,7 +32,7 @@ The last call in user initiated linking. The code proves the person is who the f
 
 ## Before you start
 
-- A gateway session token. See [the gateway session](../concepts/gateway-session.md).
+- A gateway session token. See [the gateway session](hiecm.concept.gateway-session).
 - The code the person received, and the link reference it belongs to.
 
 ## What happens

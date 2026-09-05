@@ -36,7 +36,7 @@ token as well.
 ## Before you start
 
 You need a client id and secret from registering on the ABDM sandbox.
-See [registration and credentials](../../shared/sandbox/registration-and-credentials.md).
+See [registration and credentials](shared.sandbox.registration-and-credentials).
 
 ## What happens
 

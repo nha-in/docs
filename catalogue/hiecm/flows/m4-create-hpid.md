@@ -60,15 +60,15 @@ skills:
 
 ## In plain words
 
-An [HPID](../../shared/glossary/hpid.md) is a healthcare professional's
+An [HPID](shared.glossary.hpid) is a healthcare professional's
 identity number in ABDM, 14 digits long, issued by the
-[HPR](../../shared/glossary/hpr.md). This flow is how a person gets one.
+[HPR](shared.glossary.hpr). This flow is how a person gets one.
 They prove who they are against Aadhaar, confirm a mobile number, and
 the registry issues the number and a token that stands for them on later
 calls.
 
 Your system never handles the Aadhaar number or the Aadhaar
-[OTP](../../shared/glossary/otp.md). The professional enters those on a
+[OTP](shared.glossary.otp). The professional enters those on a
 page the HPR hosts. Your system handles a transaction id and a redirect.
 
 Three categories are open today: doctor, nurse and pharmacist.
@@ -78,12 +78,12 @@ Three categories are open today: doctor, nurse and pharmacist.
 Four things must already be true, each checkable:
 
 - You hold a gateway session token. See
-  [the gateway session](../concepts/gateway-session.md). Every call in
+  [the gateway session](hiecm.concept.gateway-session). Every call in
   this flow carries it in `Authorization`.
 - You can redirect the professional to a URL and bring them back. The
   Aadhaar step happens in a browser, not in your API client.
 - You can encrypt a value with NHA's public certificate. See
-  [encrypting an identifier](../concepts/input-encryption.md). The mobile
+  [encrypting an identifier](hiecm.concept.input-encryption). The mobile
   number, the email address and the password all travel encrypted, and
   the certificate is fetched from `/v4/int/api/v1/auth/cert`.
 - You know which category and subcategory the professional falls in, as
@@ -171,9 +171,9 @@ identity, not a registration. See
 The failures the M4 sources document, each with its fix in the linked
 error atom:
 
-- [HIS-3021](../errors/his-3021.md) when an HPID already exists for this
+- [HIS-3021](hiecm.error.his-3021) when an HPID already exists for this
   Aadhaar. Step 4 is what stops you reaching this.
-- [HIS-2045](../errors/his-2045.md) when the session behind the `txnId`
+- [HIS-2045](hiecm.error.his-2045) when the session behind the `txnId`
   has expired, which the five minute URL window makes easy to hit.
 - A bare boolean where your client expected an object, from the optional
   status poll. That is the documented shape, not a fault.

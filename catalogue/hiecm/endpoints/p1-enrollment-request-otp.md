@@ -32,7 +32,7 @@ The first call in creating an address. The `scope` array decides what the code i
 
 ## Before you start
 
-- A gateway session token. See [the gateway session](../concepts/gateway-session.md).
+- A gateway session token. See [the gateway session](hiecm.concept.gateway-session).
 - The mobile number or health account number, encrypted with the public certificate.
 
 ## What happens

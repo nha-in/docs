@@ -28,7 +28,7 @@ When your system creates a health record, ABDM does not want the record.
 It wants to know that a record exists and roughly what it is about, so a
 patient can find it later.
 
-A [care context](../../shared/glossary/care-context.md) is that unit. It
+A [care context](shared.glossary.care-context) is that unit. It
 holds a reference number your system understands, and a display name a
 person recognises.
 

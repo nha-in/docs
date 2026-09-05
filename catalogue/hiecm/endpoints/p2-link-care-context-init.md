@@ -32,7 +32,7 @@ The person has chosen what to link. This starts it, and the facility replies wit
 
 ## Before you start
 
-- A gateway session token. See [the gateway session](../concepts/gateway-session.md).
+- A gateway session token. See [the gateway session](hiecm.concept.gateway-session).
 - Care contexts from a discovery response, filtered so that nothing already linked is offered.
 
 ## What happens

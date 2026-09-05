@@ -57,7 +57,7 @@ use them to check the signature on every callback before your handler does
 any work.
 
 This is separate from the signature you may already have met inside a
-[consent artefact](./consent-artefact.md). That one signs the artefact's
+[consent artefact](hiecm.concept.consent-artefact). That one signs the artefact's
 contents, so it travels with the artefact and proves the artefact was not
 altered. The one on this page signs the delivery, and proves who sent it.
 Verifying one does not verify the other.
@@ -65,9 +65,9 @@ Verifying one does not verify the other.
 ## Before you start
 
 - A callback URL registered with ABDM. See
-  [the callback URL](../../shared/sandbox/callback-url.md).
+  [the callback URL](shared.sandbox.callback-url).
 - An understanding of why a 200 is not an answer, on
-  [asynchronous calls and callbacks](./asynchronous-callbacks.md).
+  [asynchronous calls and callbacks](hiecm.concept.asynchronous-callbacks).
 
 You do not need an access token for this one. The certificates endpoint
 declares no security in the specification, which is what you would expect of
@@ -162,4 +162,4 @@ try block and continues on failure is worse than one that never verified,
 because it reads as safe. Fail closed.
 
 Nothing arrives at all, which is a different problem. See
-[the callback never arrives](../troubleshooting/callback-never-arrives.md).
+[the callback never arrives](hiecm.troubleshooting.callback-never-arrives).

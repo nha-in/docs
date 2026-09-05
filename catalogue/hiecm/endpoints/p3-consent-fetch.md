@@ -32,7 +32,7 @@ A consent id says permission exists. This returns what that permission actually 
 
 ## Before you start
 
-- A gateway session token. See [the gateway session](../concepts/gateway-session.md).
+- A gateway session token. See [the gateway session](hiecm.concept.gateway-session).
 - A consent artefact id from a granted request.
 
 ## What happens

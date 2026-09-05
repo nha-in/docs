@@ -61,7 +61,7 @@ person from the start, so discovery is never needed for them.
 Three things must already be true, each checkable:
 
 - The person is signed in and holds an
-  [ABHA address](../../shared/glossary/abha-address.md). See
+  [ABHA address](shared.glossary.abha-address). See
   [sign a user in](p1-login.md).
 - Your application can read a code and take the two parameters out of the
   URL it holds: the HIP id and a facility defined context such as a
@@ -77,7 +77,7 @@ Three things must already be true, each checkable:
 3. **Take consent in the specified wording.** It covers two things: that
    the ABHA address and profile go to that facility for registration, and
    that the facility may link any records that visit generates.
-4. **Call the [HIE-CM](../../shared/glossary/hie-cm.md) to share the
+4. **Call the [HIE-CM](shared.glossary.hie-cm) to share the
    details,** then wait. The facility is currently expected to answer
    within 30 seconds.
 5. **Show the token number** if the facility returned one, because that
@@ -85,7 +85,7 @@ Three things must already be true, each checkable:
 
 Counter names arrive in the code: up to 20 alphanumeric characters, no
 special characters. A counter name cannot be the facility id, the
-[HPID](../../shared/glossary/hpid.md), the HIP id or the HIP name.
+[HPID](shared.glossary.hpid), the HIP id or the HIP name.
 
 ## How you know it worked
 

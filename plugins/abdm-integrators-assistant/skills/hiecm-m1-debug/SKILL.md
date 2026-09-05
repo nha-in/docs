@@ -84,7 +84,7 @@ Your `TIMESTAMP` header is in a format the service does not accept, so
 the request was refused before anything else was looked at.
 
 This is a formatting problem, not a clock problem. Its sibling,
-ABDM-2402, is the clock drift case: the value is well
+ABDM-2402 (hiecm.error.abdm-2402), is the clock drift case: the value is well
 formed but too far from the gateway's own time. If your value parses as
 ISO 8601 UTC with milliseconds and still fails, read that atom instead.
 
@@ -98,7 +98,7 @@ date library, for example `Instant.now().toString()` in Java or
 hand.
 
 If a well formed UTC value still fails, your clock has probably
-drifted, which is ABDM-2402's territory.
+drifted, which is ABDM-2402 (hiecm.error.abdm-2402)'s territory.
 
 If you are matching error codes and never see `ABDM-1016`, check that
 your parser is not doing an exact match on the `code` field. The

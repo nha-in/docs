@@ -32,7 +32,7 @@ The call behind scan and share. It goes out once the person has agreed, and the 
 
 ## Before you start
 
-- A gateway session token. See [the gateway session](../concepts/gateway-session.md).
+- A gateway session token. See [the gateway session](hiecm.concept.gateway-session).
 - The HIP id and the counter context read out of the scanned code, and the person's agreement in the wording NHA specifies.
 
 ## What happens

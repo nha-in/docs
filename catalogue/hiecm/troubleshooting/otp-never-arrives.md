@@ -33,7 +33,7 @@ skills:
 ## In plain words
 
 You called
-[send an OTP to begin or continue an enrolment](../endpoints/m1-enrolment-request-otp.md)
+[send an OTP to begin or continue an enrolment](hiecm.endpoint.m1-enrolment-request-otp)
 and got back a `txnId`, and the phone you are watching has not received
 anything.
 
@@ -53,12 +53,12 @@ Work through these in order.
    Aadhaar OTP enrolment flow, only the mobile number registered against
    that Aadhaar number receives the OTP, and NHA's flow document is
    explicit that this is not necessarily the phone the person is
-   holding. See [create an ABHA using an Aadhaar OTP](../flows/m1-create-abha-aadhaar-otp.md).
+   holding. See [create an ABHA using an Aadhaar OTP](hiecm.flow.m1-create-abha-aadhaar-otp).
    Confirm which number Aadhaar has on file before assuming delivery
    failed.
 2. **Have you requested an OTP for this transaction more than a few
    times in a short window?** See
-   [ABDM-1022, you have been rate limited](../errors/abdm-1022.md). NHA
+   [ABDM-1022, you have been rate limited](hiecm.error.abdm-1022). NHA
    also publishes `ABDM-2429` with the same meaning. A retry loop that
    fires the request call again on every failure can trigger this
    without the failure ever showing in your own logs, because the rate
@@ -66,7 +66,7 @@ Work through these in order.
    client surfaces it.
 3. **Has the transaction expired before you tried to verify it?** NHA's
    documents do not state how long a `txnId` remains valid. What
-   [the enrolment flow](../flows/m1-create-abha-aadhaar-otp.md) does say
+   [the enrolment flow](hiecm.flow.m1-create-abha-aadhaar-otp) does say
    is that a failed enrolment call should not be retried blindly: start
    a fresh OTP request rather than reusing an old `txnId` if enough time
    has passed that you are unsure it is still live.
@@ -87,7 +87,7 @@ called, the `REQUEST-ID` you sent, the `TIMESTAMP` you sent, and the
 full response body including the `txnId`.
 
 The errors this symptom can surface:
-[ABDM-1022](../errors/abdm-1022.md), rate limited;
-[ABDM-2404](../errors/abdm-2404.md), your `REQUEST-ID` is missing,
-malformed or reused; and [ABDM-9999](../errors/abdm-9999.md), NHA's
+[ABDM-1022](hiecm.error.abdm-1022), rate limited;
+[ABDM-2404](hiecm.error.abdm-2404), your `REQUEST-ID` is missing,
+malformed or reused; and [ABDM-9999](hiecm.error.abdm-9999), NHA's
 catch-all for a failure it does not explain further.

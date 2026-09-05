@@ -54,7 +54,7 @@ skills:
 
 ## In plain words
 
-The [HFR](../../shared/glossary/hfr.md) is the registry of health
+The [HFR](shared.glossary.hfr) is the registry of health
 facilities. Onboarding puts a hospital, clinic, laboratory, imaging
 centre, pharmacy or blood bank in it and issues a facility ID in the form
 `IN` followed by 10 characters, 12 in total.
@@ -72,7 +72,7 @@ Four things must already be true, each checkable:
   password, so it usually starts with a person getting an
   [HPID](m4-create-hpid.md).
 - You hold a gateway session token. See
-  [the gateway session](../concepts/gateway-session.md).
+  [the gateway session](hiecm.concept.gateway-session).
 - You hold the LGD codes for the facility's state, district, sub district
   and village. They come from the Local Government Directory and from the
   LGD lookup calls.
@@ -158,9 +158,9 @@ onboarded anything, whatever the three write calls returned.
 The failures the M4 sources document, each with its fix in the linked
 error atom:
 
-- [HIS-1132](../errors/his-1132.md) when the registry detects a duplicate
+- [HIS-1132](hiecm.error.his-1132) when the registry detects a duplicate
   facility. Step 1 is what stops you reaching this.
-- [HIS-4003](../errors/his-4003.md) when the facility already exists
+- [HIS-4003](hiecm.error.his-4003) when the facility already exists
   under the identifiers you sent.
 - A conditional field rejected on detailed information, because the rule
   that makes it mandatory depends on the facility type and the system of

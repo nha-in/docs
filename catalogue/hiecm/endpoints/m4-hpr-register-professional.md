@@ -34,7 +34,7 @@ An HPID is an identity. This call turns it into a profile.
 
 ## Before you start
 
-- A gateway session token. See [the gateway session](../concepts/gateway-session.md).
+- A gateway session token. See [the gateway session](hiecm.concept.gateway-session).
 - The \`hprToken\` from create HPID, and the council, course, college,
   university, state, district and language codes as codes rather than
   names.
@@ -68,4 +68,4 @@ so treat the response shape as unconfirmed until you have seen one.
 The M4 error codes are the HIS series, listed in full in the M4
 reference. The ones this call reaches most often are a rejected field on
 validation and an expired session behind the transaction id. See
-[HIS-2045](../errors/his-2045.md).
+[HIS-2045](hiecm.error.his-2045).

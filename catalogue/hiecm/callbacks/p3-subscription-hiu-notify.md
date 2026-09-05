@@ -31,9 +31,9 @@ This is the API that will be invoked by the health locker/PHR to notify by HIECM
 
 ## Before you start
 
-- A gateway session token. See [the gateway session](../concepts/gateway-session.md).
+- A gateway session token. See [the gateway session](hiecm.concept.gateway-session).
 - A callback URL registered with ABDM and reachable from the public
-  internet. See [the callback URL](../../shared/sandbox/callback-url.md).
+  internet. See [the callback URL](shared.sandbox.callback-url).
 
 ## What happens
 

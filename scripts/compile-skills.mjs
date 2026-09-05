@@ -121,13 +121,25 @@ const flowsFor = (milestone) =>
 const errorsFor = (milestone) => mine(milestone, "error");
 
 /**
- * Catalogue prose links to other atoms by relative file path, which is right
- * inside the Catalogue and wrong in a compiled skill: the agent reading the
- * skill has no such file, and following the link is a guaranteed dead end.
- * The label survives, the path does not. Where a reader needs more than the
- * label, the footer on every skill says where to look.
+ * Catalogue prose links to other atoms by atom id.
+ *
+ * Stripping those to the bare label, which is what this did while the links
+ * were relative file paths, produced "See registration and credentials.": a
+ * reader told to look at something and given no way to reach it. The id is
+ * kept instead, because the agent reading a compiled skill is exactly the
+ * reader that can call get_atom with it.
+ *
+ * A relative path is still reduced to its label, since that is the dead end
+ * the id replaced. Ordinary links, to a docs route or an external page, are
+ * left as links: those resolve for anybody.
  */
-const deref = (text) => text.replace(/\[([^\]]+)\]\([^)]*\.md(?:#[^)]*)?\)/g, "$1");
+const ATOM_ID = /^[a-z][a-z0-9-]*\.[a-z][a-z0-9-]*\.[a-z0-9.-]+$/;
+const deref = (text) =>
+  text.replace(/\[([^\]]+)\]\(([^)]+)\)/g, (whole, label, href) => {
+    if (ATOM_ID.test(href)) return `${label} (${href})`;
+    if (/\.md(#[^)]*)?$/.test(href)) return label;
+    return whole;
+  });
 
 /** The one place a compiled skill sends a reader who needs more than it carries. */
 const footer = (milestone) => [

@@ -19,9 +19,9 @@ Loop limit: 8 passes per flow step. Hitting the limit is an escalation: state wh
 **Before you start**
 
 - A client id and secret, and a working session token. See
-  registration and credentials.
+  registration and credentials (shared.sandbox.registration-and-credentials).
 - The person's Aadhaar number, encrypted against NHA's public key. See
-  why identifiers are encrypted.
+  why identifiers are encrypted (hiecm.concept.encrypted-identifiers).
 - The person present, because they must read an OTP from their phone.
 - Their explicit consent to create an ABHA, which you send in the
   enrolment call.
@@ -149,8 +149,8 @@ characters, no leading digit, and no leading or trailing dot. Validate
 before submitting so the person is not guessing.
 
 Every call fails with a header error. Check
-ABDM-2402 and
-ABDM-2404 before assuming the flow is wrong.
+ABDM-2402 (hiecm.error.abdm-2402) and
+ABDM-2404 (hiecm.error.abdm-2404) before assuming the flow is wrong.
 
 ### Create an ABHA from an identity document (`hiecm.flow.m1-create-abha-by-document`)
 
@@ -501,7 +501,7 @@ lookup of somebody else's identity.
 
 - A working session token.
 - The person's mobile number, encrypted. See
-  why identifiers are encrypted.
+  why identifiers are encrypted (hiecm.concept.encrypted-identifiers).
 - The person present to read an OTP.
 
 **Act: the calls in this flow, in order**
@@ -584,11 +584,11 @@ The verify call returns a list rather than a token. That is the multi
 account branch, not an error.
 
 The token is rejected on the next call. See
-ABDM-2401, and check you are not sending the
+ABDM-2401 (hiecm.error.abdm-2401), and check you are not sending the
 application session token in `X-token`.
 
 Login fails with an authentication error and nothing more specific. See
-900900.
+900900 (hiecm.error.900900).
 
 ### Change the mobile number or email on an ABHA profile (`hiecm.flow.m1-update-mobile`)
 
@@ -675,7 +675,7 @@ The scopes do not match between the two calls, and the verify is
 refused. Send the array you sent on the request.
 
 The person is not logged in and the call is refused. See
-ABDM-2401.
+ABDM-2401 (hiecm.error.abdm-2401).
 
 ## Where the detail is
 

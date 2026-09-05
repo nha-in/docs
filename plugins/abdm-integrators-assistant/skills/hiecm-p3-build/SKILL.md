@@ -114,7 +114,7 @@ and no records.
 
 The failures these sources document, in rough order of frequency:
 
-- ABDM-1112 when the artefact is expired or has
+- ABDM-1112 (hiecm.error.abdm-1112) when the artefact is expired or has
   been revoked. Revocation is the person exercising a right, so it is a
   state to handle rather than an error to report.
 - Records fetched but not stored, which reads as working until the
@@ -129,7 +129,7 @@ The failures these sources document, in rough order of frequency:
 Three things must already be true, each checkable:
 
 - The person is signed in and holds an
-  ABHA address. See
+  ABHA address (shared.glossary.abha-address). See
   sign a user in.
 - You can receive and surface device notifications, because that is what
   a subscription produces.

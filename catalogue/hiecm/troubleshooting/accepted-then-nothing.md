@@ -47,13 +47,13 @@ outside whichever link is missing, so you have to find which one.
 ## Before you start
 
 - You know which flow you are in: discovery, where a
-  [HIU](../../shared/glossary/hiu.md) or [PHR app](../../shared/glossary/phr.md)
+  [HIU](shared.glossary.hiu) or [PHR app](shared.glossary.phr)
   looks for records at your facility, or linking, where you attach a
   care context to a patient's ABHA address. See
-  [link a care context](../flows/m2-link-care-context.md) for the
+  [link a care context](hiecm.flow.m2-link-care-context) for the
   linking sequence.
 - You have the `REQUEST-ID` from the call where the chain started. See
-  [REQUEST-ID](../../shared/glossary/request-id.md): every callback in
+  [REQUEST-ID](shared.glossary.request-id): every callback in
   the chain should carry it, so it is what lets you find where the chain
   broke.
 
@@ -64,17 +64,17 @@ check each in order from the start:
 
 1. **Discovery request.** Your call to discover a patient produces an
    inbound
-   [discovery request callback](../callbacks/m2-on-discovery-request.md)
+   [discovery request callback](hiecm.callback.m2-on-discovery-request)
    to your bridge. If this has not arrived, the problem is upstream of
    your system entirely; escalate rather than continuing down this list.
 2. **Link initiation.** Starting a link produces an inbound
-   [link init callback](../callbacks/m2-on-link-init.md). If discovery
+   [link init callback](hiecm.callback.m2-on-link-init). If discovery
    completed but this never arrives, the stall is at the handoff into
    linking.
 3. **Link confirmation.** The gateway's callback to your registered URL
    confirming the link is the
-   [link confirm callback](../callbacks/m2-on-link-confirm.md). See
-   [link a care context](../flows/m2-link-care-context.md): do not treat
+   [link confirm callback](hiecm.callback.m2-on-link-confirm). See
+   [link a care context](hiecm.flow.m2-link-care-context): do not treat
    the synchronous acknowledgement to your link request as success. The
    confirmation is this callback, and the care context only becomes
    visible in the patient's PHR app after it arrives.
@@ -105,7 +105,7 @@ receive up to the point it stalled, so NHA can trace the request on
 their side rather than only on yours.
 
 The errors this symptom can surface:
-[ABDM-1056](../errors/abdm-1056.md), the care context is already linked
+[ABDM-1056](hiecm.error.abdm-1056), the care context is already linked
 or the link reference number is invalid; and
-[ABDM-2406](../errors/abdm-2406.md), calls made out of the logical
+[ABDM-2406](hiecm.error.abdm-2406), calls made out of the logical
 sequence.

@@ -32,7 +32,7 @@ Verifies the code. The response is where you learn whether this person already h
 
 ## Before you start
 
-- A gateway session token. See [the gateway session](../concepts/gateway-session.md).
+- A gateway session token. See [the gateway session](hiecm.concept.gateway-session).
 - The `txnId` from the request OTP call, and the code the person typed, encrypted.
 
 ## What happens
