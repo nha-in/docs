@@ -130,6 +130,14 @@ writeFileSync(
     '> Documentation for integrating with ABDM, India\'s health data exchange: the HIE-CM gateway milestones M1 to M3, the ABHA, HPR and HFR registries, and UHI. Nothing here has been run against the ABDM sandbox unless a page says so, so treat request and response shapes as unconfirmed.',
   );
   lines.push('');
+  // The links below are the pages themselves, because this index is written
+  // before the build and cannot know which routes the build produced. Every
+  // one of them also answers as markdown, which is worth saying once here
+  // rather than leaving an agent to fetch a page of HTML shell per link.
+  lines.push(
+    'Add `.md` to any link below to get that page as markdown. `llms-full.txt` beside this file carries every page in one document, and each API module has its own `llms.txt`.',
+  );
+  lines.push('');
   for (const [section, list] of [...bySection].sort()) {
     lines.push(`## ${section}`);
     lines.push('');
