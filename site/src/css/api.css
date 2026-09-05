@@ -55,7 +55,10 @@
   line-height: 1.7;
   color: var(--text-body);
   margin-bottom: 2rem;
-  white-space: pre-line;
+  /* No pre-line here. Specifications hard wrap their descriptions near
+     column 72, and preserving those newlines broke prose into ragged half
+     lines on narrow screens. Markdown.tsx reflows a soft wrap and splits
+     paragraphs on a blank line, which is what the wrapping meant. */
 }
 
 /* The field name is a name, not an inline code chip: typography.css tints
