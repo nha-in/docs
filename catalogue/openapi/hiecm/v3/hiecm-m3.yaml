@@ -279,7 +279,7 @@ paths:
     post:
       tags:
       - consent
-      summary: Acknowledge a consent notification
+      summary: Acknowledge a consent notification, as the HIU
       operationId: m3_consent_hiu_on_notify
       description: |
         Also known as: Consent HIU On-Notify.

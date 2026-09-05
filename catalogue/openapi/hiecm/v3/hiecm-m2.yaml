@@ -515,7 +515,7 @@ paths:
     post:
       tags:
       - data-transfer
-      summary: Acknowledge a consent notification
+      summary: Acknowledge a consent notification, as the HIP
       operationId: m2_consent_hip_on_notify
       description: |
         Also known as: Consent HIP On-Notify.
