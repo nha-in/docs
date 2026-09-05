@@ -13,6 +13,7 @@ covers: [hiecm.flow.m1-update-mobile]
 import ApiLinks from '@site/src/components/docs/ApiLinks';
 import TestMatrix from '@site/src/components/api/TestMatrix';
 import matrix from '@site/src/data/test-matrix/m1.json';
+import SkillInstall from '@site/src/components/docs/SkillInstall';
 
 # M1 Create: ABHA identity
 
@@ -87,6 +88,12 @@ Aadhaar is not an ABDM building block. The ABHA service calls it for you.
 Everything else in M1 is optional for both. Skip all of it and you still
 complete the milestone. The mandatory and optional split, capability by
 capability, is on the [M1 API reference](/reference/hiecm-m1).
+
+## Build it with an agent
+
+Hand M1 to the agent you already use, as one file it loads once. Install it, or open it there in one click.
+
+<SkillInstall slug="abdm-m1" note="Every M1 call, its error codes and NHA's own test cases in one file: 55 operations, 89 codes, 122 cases." />
 
 ## Certification
 
