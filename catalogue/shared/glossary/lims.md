@@ -4,7 +4,7 @@ type: glossary
 gateway: shared
 milestone: n/a
 version: abdm-v3
-title: LIMS, laboratory information management system
+title: LIMS, laboratory information management system, also written LMIS
 summary: >
   The system a diagnostic laboratory uses to manage samples, tests
   and results.
@@ -21,11 +21,12 @@ related:
   glossary: [shared.glossary.hip, shared.glossary.hiu, shared.glossary.m2]
 ---
 
-# LIMS, laboratory information management system
+# LIMS, laboratory information management system, also written LMIS
 
 ## In plain words
 
-Laboratory Information Management System: the system a diagnostic lab
+Laboratory Information Management System, also written LMIS: the system a
+diagnostic lab
 uses to record orders, samples and results. In ABDM a LIMS acts as a
 [HIP](hip.md) when it publishes, linking each report as a care context
 in [M2](m2.md), which is most of what a lab does. It acts as an

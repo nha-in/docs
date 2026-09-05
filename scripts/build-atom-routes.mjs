@@ -225,7 +225,16 @@ for (const [id, atom] of atoms) {
     // place the string appears: "M2" occurs inside the ECDH definition, and
     // a citation that lands a reader on the wrong term is worse than one
     // that lands them on the top of the page.
-    const heading = new RegExp(`^#{2,4}\\s+${term.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\s*$`, "im");
+    // One heading may carry several names for one thing: "### HMIS, HIS,
+    // HIMS" is one entry a search for any of the three should land on, and
+    // each name has an anchor of its own beside the heading. The term counts
+    // as owning the heading wherever it sits in that list, so long as it is a
+    // whole name in it rather than part of another word.
+    const escaped = term.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    const heading = new RegExp(
+      `^#{2,4}\\s+(?:[^\\n]*,\\s*)?${escaped}(?:\\s*,[^\\n]*)?\\s*$`,
+      "im",
+    );
     const owns = candidates.find((p) => heading.test(p.body));
     if (owns) {
       route = owns.route; anchor = slug(term);
