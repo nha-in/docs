@@ -418,6 +418,17 @@ components:
       bearerFormat: JWT
       description: |
         The `accessToken` returned by `POST /api/hiecm/gateway/v3/sessions`. Send it as `Authorization: Bearer <ACCESS_TOKEN>`.
+    # gateway_register_bridge_services asks for this scheme and nothing
+    # declared it, so the operation rendered as taking no credential at all.
+    # The definition is the one m1, m2, m3 and m4 already record under the
+    # same name for the same token, copied rather than decided here.
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: |
+        JWT Bearer token from `POST /api/hiecm/gateway/v3/sessions`.
+        Header: `Authorization: Bearer {accessToken}`
   parameters:
     RequestId:
       name: REQUEST-ID

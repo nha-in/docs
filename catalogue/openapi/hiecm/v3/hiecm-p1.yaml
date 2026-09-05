@@ -5192,8 +5192,7 @@ components:
       type: http
       scheme: bearer
       bearerFormat: JWT
-      description: The access token from the gateway session endpoint, described
-        in hiecm-gateway.yaml.
+      description: The access token from `POST /api/hiecm/gateway/v3/sessions`.
 x-abdm-errors:
   source: Code and message are as published. The action column reads the message
     text by a documented rule. These codes are the PHR facing wording of the core
