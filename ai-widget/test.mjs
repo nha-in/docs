@@ -109,14 +109,14 @@ for (const asked of [
   assert.equal(wantsTools(asked), true, `should offer tools for: ${asked}`);
 }
 
-// The flow: three tools, four agents, and only the plugin skips the agent
-// question because it exists in one agent.
+// The flow: three tools, four agents, and every tool asks which agent. The
+// plugin used to skip that question when it was Claude Code's alone.
 const ctx = {docsOrigin: 'https://d.example/', mcpUrl: 'https://mcp.example/x'};
 assert.deepEqual(TOOLS.map((t) => t.id), ['skills', 'mcp', 'plugin']);
 assert.deepEqual(AGENTS.map((a) => a.id), ['claude', 'codex', 'cursor', 'other']);
-assert.equal(needsAgent('plugin'), false);
-assert.equal(needsAgent('skills'), true);
-assert.equal(needsAgent('mcp'), true);
+for (const tool of ['skills', 'mcp', 'plugin']) {
+  assert.equal(needsAgent(tool), true, `${tool} should ask which agent`);
+}
 
 // Every combination says something, and the command it hands out is fenced
 // so the panel's own code block renders it with its copy button.
@@ -136,6 +136,14 @@ assert.match(answer({at: 'answer', tool: 'skills', agent: 'other', named: 'Zed'}
   /Zed included/);
 assert.match(answer({at: 'answer', tool: 'plugin', agent: 'claude'}, ctx).text,
   /claude plugin marketplace add eka-care\/abdm-docs/);
+// Codex installs the same plugin from the same repository, since Agent
+// Plugins 1.0. Cursor reads the standard but installs from its own
+// marketplace, so it is told that rather than given a command that fails.
+assert.match(answer({at: 'answer', tool: 'plugin', agent: 'codex'}, ctx).text,
+  /codex plugin marketplace add eka-care\/abdm-docs/);
+const cursorPlugin = answer({at: 'answer', tool: 'plugin', agent: 'cursor'}, ctx);
+assert.equal(cursorPlugin.text.includes('```'), false, 'no command Cursor cannot run');
+assert.match(cursorPlugin.text, /not listed in one yet/);
 
 // No MCP address in this build is a sentence, never a placeholder command.
 const locked = answer({at: 'answer', tool: 'mcp', agent: 'claude'},

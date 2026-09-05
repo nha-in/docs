@@ -25,5 +25,10 @@ Two things the index will not route for you, because they are repo-wide:
 - Generated files are never hand-edited. `site/docs/<gateway>/<version>/api/`,
   `site/static/specs/`, `plugins/abdm-integrators-assistant/skills/` and `site/static/llms.txt` are
   build outputs. If one is wrong, the catalogue or the generator is wrong.
+- The plugin's other manifests are generated too. `.claude-plugin/plugin.json`
+  is the source; `plugin.json`, `.codex-plugin/plugin.json` and
+  `.agents/plugins/marketplace.json` come from it through
+  `npm run build:plugins`, so one plugin installs in Claude Code, in Codex and
+  in anything else that reads Agent Plugins 1.0. CI runs `check:plugins`.
 - The plan under `plan/` cannot move without the skills compiled from it moving
   too. `./scripts/plan-check.sh` is the gate, and CI runs it.
