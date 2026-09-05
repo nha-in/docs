@@ -22,7 +22,6 @@ related:
     [
       shared.glossary.hip,
       shared.glossary.hiu,
-      shared.glossary.lmis,
       shared.glossary.ims,
     ]
 ---
@@ -35,9 +34,6 @@ Pharmacy Management System, the software a pharmacy runs to dispense and
 to keep its stock. In ABDM it acts as a [HIP](hip.md) when it links what
 it dispensed, and as an [HIU](hiu.md) when it reads the prescription it
 is dispensing against.
-
-Not to be confused with an [LMIS](lmis.md), which is about stock moving
-through a supply chain rather than about one patient's records.
 
 See [Hospital, lab and pharmacy systems](/docs/hiecm/v3/concepts/hip-hiu).
 
