@@ -6,7 +6,7 @@ milestone: M1
 version: abdm-v3
 title: Auth token API
 summary: >
-  This API will be invoked to generate auth token.
+  Generate auth token.
 sources:
   - file: catalogue/openapi/.raw/nha-2026-09-04/ABHA-PHR-V3-Documents.docx
     fetched: 2026-09-04

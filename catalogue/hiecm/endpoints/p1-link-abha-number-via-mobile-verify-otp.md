@@ -6,7 +6,7 @@ milestone: P1
 version: abdm-v3
 title: Link ABHA number via Mobile-Verify OTP
 summary: >
-  This API is used to verify the OTP in order to link an ABHA number with an ABHA address.
+  Verify the OTP in order to link an ABHA number with an ABHA address.
 sources:
   - file: catalogue/openapi/.raw/nha-2026-09-04/ABHA-PHR-V3-Documents.docx
     fetched: 2026-09-04

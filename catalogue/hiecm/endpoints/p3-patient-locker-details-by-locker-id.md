@@ -6,7 +6,9 @@ milestone: P3
 version: abdm-v3
 title: Patient-locker-details-by-locker-id
 summary: >
-  This API endpoint is used to retrieve the health locker settings of a patient using the locker ID. By invoking this API, users can access detailed information about the configuration and preferences o
+  Retrieve the health locker settings of a patient using the locker ID. By
+  invoking this API, users can access detailed information about the
+  configuration and preferences o
 sources:
   - file: catalogue/openapi/.raw/nha-2026-09-04/ABHA-PHR-V3-Documents.docx
     fetched: 2026-09-04

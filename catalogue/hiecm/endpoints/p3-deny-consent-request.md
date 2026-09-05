@@ -6,7 +6,9 @@ milestone: P3
 version: abdm-v3
 title: Deny - Consent Request
 summary: >
-  This API endpoint is used to deny a consent request from the Personal Health Record (PHR) or mobile application. By invoking this API, users can reject a consent request, preventing the Health Informa
+  Deny a consent request from the Personal Health Record (PHR) or mobile
+  application. By invoking this API, users can reject a consent request,
+  preventing the Health Informa
 sources:
   - file: catalogue/openapi/.raw/nha-2026-09-04/ABHA-PHR-V3-Documents.docx
     fetched: 2026-09-04

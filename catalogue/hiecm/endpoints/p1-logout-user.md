@@ -6,7 +6,7 @@ milestone: P1
 version: abdm-v3
 title: Logout User
 summary: >
-  This Api is used to logout user from their current user login session.
+  Logout user from their current user login session.
 sources:
   - file: catalogue/openapi/.raw/nha-2026-09-04/ABHA-PHR-V3-Documents.docx
     fetched: 2026-09-04

@@ -6,7 +6,9 @@ milestone: P3
 version: abdm-v3
 title: Setup Locker
 summary: >
-  This API endpoint is used to set up a health locker for a patient. By invoking this API, users can configure a secure storage space for the patient’s health records, ensuring that all health informati
+  Set up a health locker for a patient. By invoking this API, users can
+  configure a secure storage space for the patient’s health records,
+  ensuring that all health informati
 sources:
   - file: catalogue/openapi/.raw/nha-2026-09-04/ABHA-PHR-V3-Documents.docx
     fetched: 2026-09-04

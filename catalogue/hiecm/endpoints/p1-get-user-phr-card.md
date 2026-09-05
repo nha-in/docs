@@ -6,7 +6,7 @@ milestone: P1
 version: abdm-v3
 title: Get User PHR Card
 summary: >
-  This Api is used to fetch the PHR Card for respective logged in user.
+  Fetch the PHR Card for respective logged in user.
 sources:
   - file: catalogue/openapi/.raw/nha-2026-09-04/ABHA-PHR-V3-Documents.docx
     fetched: 2026-09-04
