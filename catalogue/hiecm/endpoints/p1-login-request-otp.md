@@ -32,7 +32,7 @@ One endpoint serves all four login routes. The `scope` and the login hint say wh
 
 ## Before you start
 
-- A gateway session token. See [the gateway session](../concepts/gateway-session.md).
+- A gateway session token. See [the gateway session](hiecm.concept.gateway-session).
 - The credential the person presented, encrypted, and the route it belongs to.
 
 ## What happens

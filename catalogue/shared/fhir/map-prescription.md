@@ -34,7 +34,7 @@ related:
 ## In plain words
 
 Prescription carries the medication advice given to a patient, in the
-Pharmacy Council of India's format. [NRCES](../glossary/nrces.md) calls
+Pharmacy Council of India's format. [NRCES](shared.glossary.nrces) calls
 it `PrescriptionRecord`.
 
 ## Before you start

@@ -269,3 +269,67 @@
     padding-left: 0;
   }
 }
+
+/* ---------- the four steps, two by two ----------
+
+   Stacked, the runner is four full width cards and the reader scrolls past
+   three of them to reach the one they are on. Two by two it is one screen: you
+   see the whole shape of the thing you are about to do, which is the point of
+   a quickstart. Four across was tried and dropped, because a quarter of the
+   column is narrower than the prose inside a card wants to be. */
+@media (min-width: 1024px) {
+  .quickstart__steps {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.25rem;
+    /* One box for every card, down the rows as well as along them. 1fr on the
+       implicit rows makes each row as tall as the tallest card in the runner,
+       and the default stretch fills it. Sized to their own content the four
+       read as four different components rather than four steps of one. */
+    grid-auto-rows: 1fr;
+  }
+
+  /* A card this narrow has no room for the marker's gutter, and its two field
+     columns want the whole card. */
+  .quickstart__step-body,
+  .quickstart__locked-note {
+    padding-left: 0;
+  }
+
+  .quickstart__fields,
+  .quickstart__result {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .quickstart__result {
+    display: grid;
+    gap: 0.75rem;
+  }
+
+  .quickstart__step {
+    padding: 1.25rem 1.25rem 1.5rem;
+  }
+}
+
+/* ---------- what was sent and what came back ----------
+   Under the row, at the row's full width. Each entry names the step it belongs
+   to, because the exchange no longer sits inside the card that produced it. */
+.quickstart__log {
+  display: flex;
+  flex-direction: column;
+  gap: 1.75rem;
+  margin-top: 0.75rem;
+}
+
+.quickstart__log-title {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.quickstart__log-entry > .quickstart__panels {
+  margin-top: 0.75rem;
+}

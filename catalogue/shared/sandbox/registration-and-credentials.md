@@ -32,7 +32,7 @@ Everything else in this catalogue assumes you have them.
 
 You need an email address you control and a description of what you are
 building. Have the role in mind before you register: read
-[roles](../../hiecm/concepts/roles.md), because what you register as
+[roles](hiecm.concept.roles), because what you register as
 decides which APIs answer you. Register for what your software does,
 publishing or reading or both, rather than for what kind of product it
 is.
@@ -54,7 +54,7 @@ You have a client id and a client secret, and the session call returns
 an `accessToken` rather than an error. That is the check. Possession of
 the values is not the same as them working.
 
-Run [the session call](../../hiecm/endpoints/gateway-sessions.md) once
+Run [the session call](hiecm.endpoint.gateway-sessions) once
 and keep the response.
 
 ## When it goes wrong

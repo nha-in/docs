@@ -102,6 +102,13 @@ writeFileSync(
         continue;
       }
       if (!/\.mdx?$/.test(entry.name) || entry.name === 'README.md') continue;
+      // One endpoint per line for 299 endpoints made this index 86 KB, most
+      // of it a flat list of calls. Each module already publishes its own
+      // llms.txt naming its endpoints, and those are linked under Optional
+      // below, so the root stays a directory an agent can read in one go and
+      // the call level detail is one hop away in a file sized for the module
+      // being worked on.
+      if (/\/api\/[^/]+\/endpoints$/.test(route)) continue;
       const raw = readFileSync(path, 'utf8');
       const fm = raw.match(/^---\n([\s\S]*?)\n---/)?.[1] ?? '';
       const field = (name) =>
@@ -128,6 +135,14 @@ writeFileSync(
   const lines = ['# ABDM Developer Portal', ''];
   lines.push(
     '> Documentation for integrating with ABDM, India\'s health data exchange: the HIE-CM gateway milestones M1 to M3, the ABHA, HPR and HFR registries, and UHI. Nothing here has been run against the ABDM sandbox unless a page says so, so treat request and response shapes as unconfirmed.',
+  );
+  lines.push('');
+  // The links below are the pages themselves, because this index is written
+  // before the build and cannot know which routes the build produced. Every
+  // one of them also answers as markdown, which is worth saying once here
+  // rather than leaving an agent to fetch a page of HTML shell per link.
+  lines.push(
+    'Add `.md` to any link below to get that page as markdown. Individual API operations are not listed here: each module has its own `llms.txt` naming every call it carries, linked under Optional. `llms-full.txt` beside this file carries every page in one document.',
   );
   lines.push('');
   for (const [section, list] of [...bySection].sort()) {
@@ -165,6 +180,29 @@ writeFileSync(
 
   writeFileSync(join(root, 'site', 'static', 'llms.txt'), lines.join('\n'));
   console.log(`Built llms.txt from ${pages.length} page(s).`);
+
+  // /robots.txt was a 404 while /sitemap.xml answered, so a crawler had to
+  // guess the sitemap was there. Written here rather than dropped in static/
+  // because Sitemap: takes an absolute URL, and only this file knows the one
+  // this deployment is being built for. The two agent indexes are named for
+  // the same reason: a crawler that reads robots.txt is exactly the visitor
+  // that should be told they exist.
+  writeFileSync(
+    join(root, 'site', 'static', 'robots.txt'),
+    [
+      'User-agent: *',
+      'Allow: /',
+      '',
+      `Sitemap: ${siteUrl}${base}/sitemap.xml`,
+      '',
+      '# Documentation for language models:',
+      `#   ${siteUrl}${base}/llms.txt        an index of the site`,
+      `#   ${siteUrl}${base}/llms-full.txt   every page in one document`,
+      '# Adding .md to any documentation URL returns that page as markdown.',
+      '',
+    ].join('\n'),
+  );
+  console.log('Built robots.txt.');
 }
 
 console.log(

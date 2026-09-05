@@ -33,9 +33,9 @@ M1, `loginId` is encrypted rather than raw.
 
 ## Before you start
 
-- A gateway access token. See [the gateway session](../concepts/gateway-session.md).
+- A gateway access token. See [the gateway session](hiecm.concept.gateway-session).
 - A `txnId` from the previous call in the flow. It is not reusable across attempts.
-- The identifier encrypted against NHA's public key. See [why identifiers are encrypted](../concepts/encrypted-identifiers.md).
+- The identifier encrypted against NHA's public key. See [why identifiers are encrypted](hiecm.concept.encrypted-identifiers).
 
 ## What happens
 
@@ -69,8 +69,8 @@ This has not been run against the sandbox from this repository. When you run it,
 
 ## When it goes wrong
 
-- The clock is wrong and every call fails. See [ABDM-2402](../errors/abdm-2402.md).
-- The `REQUEST-ID` is missing, malformed or reused. See [ABDM-2404](../errors/abdm-2404.md).
-- No session token was sent. See [ABDM-2500](../errors/abdm-2500.md).
-- ABDM fails and does not say why. See [ABDM-9999](../errors/abdm-9999.md).
+- The clock is wrong and every call fails. See [ABDM-2402](hiecm.error.abdm-2402).
+- The `REQUEST-ID` is missing, malformed or reused. See [ABDM-2404](hiecm.error.abdm-2404).
+- No session token was sent. See [ABDM-2500](hiecm.error.abdm-2500).
+- ABDM fails and does not say why. See [ABDM-9999](hiecm.error.abdm-9999).
 

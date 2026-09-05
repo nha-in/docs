@@ -67,7 +67,7 @@ it is theirs before they wait for a message.
 NHA's collection performs the first step by calling a remote encryption
 helper, and in two of the four variants a third party website. Do not
 copy that. See
-[encrypting identifiers locally](../decisions/encrypt-locally.md).
+[encrypting identifiers locally](hiecm.decision.encrypt-locally).
 
 ## How you know it worked
 

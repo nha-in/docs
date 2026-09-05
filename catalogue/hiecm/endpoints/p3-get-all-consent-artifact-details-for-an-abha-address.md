@@ -6,7 +6,7 @@ milestone: P3
 version: abdm-v3
 title: Get all consent artifact details for an ABHA Address
 summary: >
-  This API will be invoked by HIU to get the All-consent artifact id for an ABHA Address.
+  Lists every consent artefact held against one ABHA address.
 sources:
   - file: catalogue/openapi/.raw/nha-2026-09-04/ABHA-PHR-V3-Documents.docx
     fetched: 2026-09-04
@@ -31,7 +31,7 @@ This API will be invoked by HIU to get the All-consent artifact id for an ABHA A
 
 ## Before you start
 
-- A gateway session token. See [the gateway session](../concepts/gateway-session.md).
+- A gateway session token. See [the gateway session](hiecm.concept.gateway-session).
 - The identifiers this call names in its body, held from the step before it.
 
 ## What happens

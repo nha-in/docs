@@ -79,6 +79,69 @@ export function stripToMarkdown(src) {
   return body.replace(/\n{3,}/g, '\n\n').trim() + '\n';
 }
 
+// A worked response is the most useful thing here for an agent writing a
+// parser, and the least useful thing to paste whole: two phr-services
+// operations carried 594 KB each, of a Beckn catalogue whose shape repeats
+// down a long array, and response examples were 2.7 MB of a 4.0 MB file.
+//
+// An array says everything it has to say in its first couple of entries, so
+// the rest goes and the count stays. Anything still oversized after that is
+// wide rather than long, and gets its top level shape instead: the field
+// names are what a parser is written against, and the page itself carries
+// the whole thing for anyone who wants it.
+const EXAMPLE_ITEMS = 2;
+const EXAMPLE_BYTES = 4096;
+
+function trimExample(value) {
+  if (Array.isArray(value)) {
+    const kept = value.slice(0, EXAMPLE_ITEMS).map(trimExample);
+    if (value.length > EXAMPLE_ITEMS) {
+      kept.push(`... ${value.length - EXAMPLE_ITEMS} more of the same shape`);
+    }
+    return kept;
+  }
+  if (value && typeof value === 'object') {
+    return Object.fromEntries(
+      Object.entries(value).map(([key, inner]) => [key, trimExample(inner)]),
+    );
+  }
+  return value;
+}
+
+function shapeOf(value) {
+  if (Array.isArray(value)) return 'array';
+  if (value === null) return 'null';
+  if (typeof value !== 'object') return typeof value;
+  return Object.fromEntries(Object.entries(value).map(([key, inner]) => [key, shapeOf(inner)]));
+}
+
+export function exampleFor(value) {
+  if (value === undefined) return '';
+  const trimmed = JSON.stringify(trimExample(value), null, 2);
+  if (trimmed.length <= EXAMPLE_BYTES) return trimmed;
+  // The shape is not capped in turn. It is bounded by how many distinct
+  // fields the schema has rather than by how much data came back, and an
+  // object wide enough to exceed the cap on names alone is one where those
+  // names are exactly what the reader needs. Returning nothing here would
+  // drop the widest responses, which are the ones hardest to guess.
+  return JSON.stringify(shapeOf(value), null, 2);
+}
+
+/** One parameter or body field, as a bullet an agent can read back. */
+function fieldLine(field) {
+  const type = field.type
+    ? ` (${field.type}${field.required ? ', required' : ''})`
+    : '';
+  const enums = field.enum?.length ? ` One of: ${field.enum.join(', ')}.` : '';
+  const description = (field.description ?? '').replace(/\s*\n\s*/g, ' ').trim();
+  return `- \`${field.name}\`${type}${description ? `: ${description}` : ''}${enums}`;
+}
+
+function fieldSection(lines, title, fields) {
+  if (!fields?.length) return;
+  lines.push(`## ${title}`, '', ...fields.map(fieldLine), '');
+}
+
 export function renderOperationMarkdown(op) {
   // The catalogue's generated api/*.json carries `summary`, not `title`;
   // the test above passes `title` directly, so accept either.
@@ -86,6 +149,50 @@ export function renderOperationMarkdown(op) {
   const lines = [`# ${title}`, '', `\`${(op.method ?? '').toUpperCase()} ${op.path ?? ''}\``, ''];
   if (op.description) lines.push(op.description.trim(), '');
   if (op.curl) lines.push('```bash', op.curl.trim(), '```', '');
+
+  // Until now this stopped at the curl, so the corpus an agent reads said
+  // what to send and never what comes back, on an API whose harder half is
+  // the response. Everything below already sits in the operation JSON that
+  // builds the page; it was simply never written out.
+  fieldSection(
+    lines,
+    'Authorization',
+    (op.security ?? []).map((scheme) => ({
+      name:
+        scheme.type === 'apiKey' && scheme.headerName
+          ? scheme.headerName
+          : 'Authorization',
+      type: scheme.scheme === 'bearer' ? 'bearer token' : scheme.type,
+      required: true,
+      description: scheme.description,
+    })),
+  );
+  fieldSection(lines, 'Headers', op.headers);
+  fieldSection(lines, 'Path parameters', op.pathParams);
+  fieldSection(lines, 'Query parameters', op.queryParams);
+  fieldSection(lines, 'Body', op.body);
+
+  if (op.responses?.length) {
+    lines.push('## Responses', '');
+    for (const response of op.responses) {
+      const description = (response.description ?? '').replace(/\s*\n\s*/g, ' ').trim();
+      lines.push(`- \`${response.status}\`${description ? `: ${description}` : ''}`);
+      if (response.help) lines.push(`  See ${response.help.label}: ${response.help.href}`);
+    }
+    lines.push('');
+    // A worked example beats a schema for an agent writing a parser, so the
+    // first success carrying one is shown in full.
+    const shown = op.responses.find(
+      (response) =>
+        String(response.status).startsWith('2') && response.example !== undefined,
+    );
+    if (shown) {
+      const example = exampleFor(shown.example);
+      if (example) {
+        lines.push(`Example ${shown.status} response:`, '', '```json', example, '```', '');
+      }
+    }
+  }
   return lines.join('\n');
 }
 
@@ -149,6 +256,12 @@ function main() {
       continue; // page exists in source but not in this build; skip
     }
     writeFileSync(join(outDir, 'index.md'), md);
+    // The same markdown at <route>.md as well as <route>/index.md. Appending
+    // .md to a documentation URL is the convention agents try first, because
+    // Stripe and Mintlify both serve it, and here it returned the HTML shell:
+    // an agent following its own habit got a page of script tags. Writing the
+    // sibling costs one small file per route and makes the habit work.
+    writeFileSync(`${outDir.replace(/[\\/]+$/, '')}.md`, md);
     full.push(md);
     emitted += 1;
 

@@ -6,7 +6,8 @@ milestone: P3
 version: abdm-v3
 title: GET Patient Subscribed Lockers
 summary: >
-  This endpoint retrieves a list of health lockers associated with a given ABHA address. It includes both active and inactive subscriptions based on the **includeInactive** parameter.
+  Lists the health lockers subscribed to an ABHA address. `includeInactive`
+  decides whether ended subscriptions come back too.
 sources:
   - file: catalogue/openapi/.raw/nha-2026-09-04/ABHA-PHR-V3-Documents.docx
     fetched: 2026-09-04
@@ -31,7 +32,7 @@ This endpoint retrieves a list of health lockers associated with a given ABHA ad
 
 ## Before you start
 
-- A gateway session token. See [the gateway session](../concepts/gateway-session.md).
+- A gateway session token. See [the gateway session](hiecm.concept.gateway-session).
 - The identifiers this call names in its body, held from the step before it.
 
 ## What happens

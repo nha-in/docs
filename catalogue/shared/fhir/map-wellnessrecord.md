@@ -29,7 +29,7 @@ related:
 
 WellnessRecord carries regular wellness data, typically entered through
 a Patient Health Record app: vitals, physical examination, general and
-women's wellness. [NRCES](../glossary/nrces.md) calls it
+women's wellness. [NRCES](shared.glossary.nrces) calls it
 `WellnessRecord`.
 
 ## Before you start

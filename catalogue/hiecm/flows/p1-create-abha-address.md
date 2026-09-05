@@ -62,13 +62,13 @@ skills:
 ## In plain words
 
 Every person on ABDM is known by an
-[ABHA address](../../shared/glossary/abha-address.md), which looks like
+[ABHA address](shared.glossary.abha-address), which looks like
 `username@abdm`. Consent, notifications and record sharing all hang off
 it, so a person with no address cannot take part.
 
-This is the same job [M1](../../shared/glossary/m1.md) does at a hospital
+This is the same job [M1](shared.glossary.m1) does at a hospital
 desk, done instead by the person's own
-[PHR](../../shared/glossary/phr.md) application. Two paths lead to an
+[PHR](shared.glossary.phr) application. Two paths lead to an
 address, and a PHR application builds both.
 
 ## Before you start
@@ -76,14 +76,14 @@ address, and a PHR application builds both.
 Four things must already be true, each checkable:
 
 - You hold a gateway session token. See
-  [the gateway session](../concepts/gateway-session.md).
-- You can send and verify an [OTP](../../shared/glossary/otp.md), and
+  [the gateway session](hiecm.concept.gateway-session).
+- You can send and verify an [OTP](shared.glossary.otp), and
   your screens keep resend locked for 60 seconds in every flow.
 - You can store a refresh token securely, because login follows
   immediately and the application holds the session from here on.
 - You know which path the user is on. A mobile number produces a
-  Self-Declared profile with no [KYC](../../shared/glossary/kyc.md); an
-  existing 14 digit [ABHA number](../../shared/glossary/abha-number.md)
+  Self-Declared profile with no [KYC](shared.glossary.kyc); an
+  existing 14 digit [ABHA number](shared.glossary.abha-number)
   produces a KYC Verified one.
 
 ## What happens

@@ -21,15 +21,15 @@ Loop limit: 8 passes per flow step. Hitting the limit is an escalation: state wh
 Four things must already be true, each checkable:
 
 - The person is signed in and holds an
-  ABHA address. See
+  ABHA address (shared.glossary.abha-address). See
   sign a user in.
 - You hold a verified mobile number for them. Discovery carries it.
 - You can show only participating facilities in the search. A facility
-  qualifies when it is a HIP linked to an
-  HRP.
+  qualifies when it is a HIP (shared.glossary.hip) linked to an
+  HRP (shared.glossary.hrp).
 - You can hold a request open across a callback. Discovery is answered
   asynchronously. See
-  asynchronous callbacks.
+  asynchronous callbacks (hiecm.concept.asynchronous-callbacks).
 
 **Act: the calls in this flow, in order**
 
@@ -130,7 +130,7 @@ The failures these sources document, in rough order of frequency:
 Three things must already be true, each checkable:
 
 - The person is signed in and holds an
-  ABHA address. See
+  ABHA address (shared.glossary.abha-address). See
   sign a user in.
 - Your application can read a code and take the two parameters out of the
   URL it holds: the HIP id and a facility defined context such as a

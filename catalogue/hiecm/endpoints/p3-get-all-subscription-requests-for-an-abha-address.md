@@ -6,7 +6,8 @@ milestone: P3
 version: abdm-v3
 title: Get all subscription requests for an ABHA Address
 summary: >
-  This API endpoint is designed to be invoked by the patient or user through the Personal Health Record (PHR) application to fetch details of their subscription requests. By using this API, patients can
+  Lists the subscription requests standing against one ABHA address. The
+  patient makes this call from their PHR application.
 sources:
   - file: catalogue/openapi/.raw/nha-2026-09-04/ABHA-PHR-V3-Documents.docx
     fetched: 2026-09-04
@@ -31,7 +32,7 @@ This API endpoint is designed to be invoked by the patient or user through the P
 
 ## Before you start
 
-- A gateway session token. See [the gateway session](../concepts/gateway-session.md).
+- A gateway session token. See [the gateway session](hiecm.concept.gateway-session).
 - The identifiers this call names in its body, held from the step before it.
 
 ## What happens

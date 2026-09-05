@@ -32,7 +32,7 @@ One mobile number can hold several addresses. This is the call that says which o
 
 ## Before you start
 
-- A gateway session token. See [the gateway session](../concepts/gateway-session.md).
+- A gateway session token. See [the gateway session](hiecm.concept.gateway-session).
 - A verified login transaction, and the address the person chose.
 
 ## What happens

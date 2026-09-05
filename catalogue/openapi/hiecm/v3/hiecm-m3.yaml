@@ -279,7 +279,7 @@ paths:
     post:
       tags:
       - consent
-      summary: Acknowledge a consent notification
+      summary: Acknowledge a consent notification, as the HIU
       operationId: m3_consent_hiu_on_notify
       description: |
         Also known as: Consent HIU On-Notify.
@@ -1393,7 +1393,7 @@ components:
       scheme: bearer
       bearerFormat: JWT
       description: |
-        The `accessToken` from `POST /api/hiecm/gateway/v3/sessions`, which is described in hiecm-gateway.yaml. Send it as `Authorization: Bearer <ACCESS_TOKEN>`.
+        The `accessToken` from `POST /api/hiecm/gateway/v3/sessions`. Send it as `Authorization: Bearer <ACCESS_TOKEN>`.
     bearerAuth:
       type: http
       scheme: bearer

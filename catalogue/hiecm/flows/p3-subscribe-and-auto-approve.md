@@ -71,7 +71,7 @@ withdraw as they were to give.
 Three things must already be true, each checkable:
 
 - The person is signed in and holds an
-  [ABHA address](../../shared/glossary/abha-address.md). See
+  [ABHA address](shared.glossary.abha-address). See
   [sign a user in](p1-login.md).
 - You can receive and surface device notifications, because that is what
   a subscription produces.
@@ -85,13 +85,13 @@ Three things must already be true, each checkable:
    after the subscription exists.
 2. **Create the subscription.** An approved subscription tells your
    application about four things: a new
-   [care context](../concepts/care-context.md), a modified care context,
+   [care context](hiecm.concept.care-context), a modified care context,
    a new consent request, and a new subscription request. Surface each as
    a device notification.
 3. **Ask whether records may be retrieved automatically.** This is a
    second question, not the same one.
 4. **Set up the auto approval policy with the
-   [HIE-CM](../../shared/glossary/hie-cm.md),** and save the auto
+   [HIE-CM](shared.glossary.hie-cm),** and save the auto
    approval id it returns. Without that id you cannot manage or withdraw
    the policy later.
 

@@ -35,7 +35,7 @@ related:
 OPConsultation captures one outpatient visit: the complaint the patient
 came in with, what the practitioner found and did, and what they
 prescribed or advised next. It is the record
-[NRCES](../glossary/nrces.md) calls `OPConsultRecord`.
+[NRCES](shared.glossary.nrces) calls `OPConsultRecord`.
 
 ## Before you start
 

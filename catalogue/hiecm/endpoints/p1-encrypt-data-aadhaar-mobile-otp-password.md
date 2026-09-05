@@ -31,7 +31,7 @@ NHA's PHR V3 document records this call as Encrypt data (Aadhaar/Mobile/OTP/Pass
 
 ## Before you start
 
-- A gateway session token. See [the gateway session](../concepts/gateway-session.md).
+- A gateway session token. See [the gateway session](hiecm.concept.gateway-session).
 - The identifiers this call names in its body, held from the step before it.
 
 ## What happens

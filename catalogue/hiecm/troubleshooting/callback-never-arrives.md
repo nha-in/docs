@@ -36,14 +36,14 @@ skills:
 
 You made a call, it returned quickly with a 202 or a 200, and nothing
 else has happened since. This is a common report in
-[HIE-CM](../../shared/glossary/hie-cm.md) integration. The checks below
+[HIE-CM](shared.glossary.hie-cm) integration. The checks below
 are in the order this catalogue recommends checking, not a record of
 how often each has turned out to be the actual cause.
 
 That early response only means the gateway accepted your request. In M2
 and M3 the real answer arrives later, as a POST from
-[NHA](../../shared/glossary/nha.md)'s gateway to a URL you registered in
-advance. See [asynchronous calls and callbacks](../concepts/asynchronous-callbacks.md)
+[NHA](shared.glossary.nha)'s gateway to a URL you registered in
+advance. See [asynchronous calls and callbacks](hiecm.concept.asynchronous-callbacks)
 for why this is the normal shape of these flows, not a fault.
 
 ## Before you start
@@ -52,7 +52,7 @@ for why this is the normal shape of these flows, not a fault.
   outright, work through [everything returns 401](everything-returns-401.md)
   or the error atom the response body names instead.
 - You have the `REQUEST-ID` you sent on the original call. See
-  [REQUEST-ID](../../shared/glossary/request-id.md). It is the only
+  [REQUEST-ID](shared.glossary.request-id). It is the only
   reliable way to match a callback to the call that caused it, and NHA
   needs it if you escalate.
 - You can read your callback receiver's logs, or add logging to it if it
@@ -65,14 +65,14 @@ catalogue recommends checking, not a record of how often each has
 turned out to be the actual cause.
 
 1. **Is the callback URL registered with the gateway?** Confirm with
-   [update HIP/HIU bridge callback URL](../endpoints/gateway-update-bridge-url.md).
+   [update HIP/HIU bridge callback URL](hiecm.endpoint.gateway-update-bridge-url).
    A URL you set once in a console but never confirmed against the
    gateway is not the same thing as a registered URL.
 2. **Is that URL reachable from the public internet over HTTPS?** ABDM
    posts to it from outside your network. A URL that only answers on
    your local machine or behind a VPN will never receive anything, and
    nothing tells you that from the original call. See
-   [the callback URL](../../shared/sandbox/callback-url.md).
+   [the callback URL](shared.sandbox.callback-url).
 3. **Did the request expire before the other party answered?** How long
    a request stays live before ABDM gives up is not stated in NHA's
    documents this catalogue has. If you have waited what seems like a
@@ -104,5 +104,5 @@ the right place for a callback that a correctly registered, reachable,
 fast-responding URL still never receives.
 
 The error this symptom can surface once you do get a response is
-[ABDM-9999](../errors/abdm-9999.md), NHA's catch-all for a failure it
+[ABDM-9999](hiecm.error.abdm-9999), NHA's catch-all for a failure it
 does not explain further.

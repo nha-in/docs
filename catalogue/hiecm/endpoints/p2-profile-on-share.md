@@ -6,7 +6,8 @@ milestone: P2
 version: abdm-v3
 title: Profile on share
 summary: >
-  This API will be invoked by HIP to acknowledge the request by the user/patient to share the profile details.
+  Acknowledges a patient's request to share their profile. The HIP makes
+  this call in reply.
 sources:
   - file: catalogue/openapi/.raw/nha-2026-09-04/ABHA-PHR-V3-Documents.docx
     fetched: 2026-09-04
@@ -31,7 +32,7 @@ This API will be invoked by HIP to acknowledge the request by the user/patient t
 
 ## Before you start
 
-- A gateway session token. See [the gateway session](../concepts/gateway-session.md).
+- A gateway session token. See [the gateway session](hiecm.concept.gateway-session).
 - The identifiers this call names in its body, held from the step before it.
 
 ## What happens
@@ -42,7 +43,20 @@ curl -X POST 'https://dev.abdm.gov.in/api/hiecm/patient-share/v3/on-share' \
   -H 'REQUEST-ID: <FRESH_UUID>' \
   -H 'TIMESTAMP: <ISO_8601_TIMESTAMP>' \
   -H 'Content-Type: application/json' \
-  -d '<REQUEST_BODY>'
+  -d '{
+  "acknowledgement": {
+    "abhaAddress": "abc@abdm",
+    "status": "success",
+    "profile": {
+      "context": "43",
+      "tokenNumber": "3",
+      "expiry": "180"
+    }
+  },
+  "response": {
+    "requestId": "f29f0e59-8388-4698-9fe6-05db67aeac46"
+  }
+}'
 ```
 
 The path, the method and the body come from NHA's PHR V3 document,

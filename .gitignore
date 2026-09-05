@@ -55,3 +55,4 @@ site/src/data/api-sidebar.json
 # by scripts/build-skills.mjs and scripts/build-nav.mjs.
 site/src/data/skills.json
 site/static/llms.txt
+site/static/robots.txt

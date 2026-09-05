@@ -133,6 +133,18 @@
     'Liberation Mono', 'Courier New', monospace;
 }
 
+/* The rail is sized for a 1280px window. Opened full screen on a desktop
+   display the article beside it stops at its 51rem measure and the spare width
+   goes to empty gutter, while a deep path in the tree still wraps onto three
+   lines. From here the tree gets some of that width back. The resizer writes
+   an inline value on the root element, so a reader who has set their own width
+   keeps it over this. */
+@media (min-width: 1440px) {
+  :root {
+    --sidebar-width: 21.5rem;
+  }
+}
+
 /**
  * shadcn/ui semantic names, mapped onto the tokens above so its components
  * inherit this palette instead of carrying a second one. The `accent` role in

@@ -6,7 +6,7 @@ milestone: P2
 version: abdm-v3
 title: HIE-CM provider-by-provider-id
 summary: >
-  This API is designed to retrieve the details of a specific provider based on the provided provider ID. When invoked, it queries the system to fetch comprehensive information about the provider identif
+  Reads one provider's details from its provider id.
 sources:
   - file: catalogue/openapi/.raw/nha-2026-09-04/ABHA-PHR-V3-Documents.docx
     fetched: 2026-09-04
@@ -31,7 +31,7 @@ This API is designed to retrieve the details of a specific provider based on the
 
 ## Before you start
 
-- A gateway session token. See [the gateway session](../concepts/gateway-session.md).
+- A gateway session token. See [the gateway session](hiecm.concept.gateway-session).
 - The identifiers this call names in its body, held from the step before it.
 
 ## What happens
