@@ -1,4 +1,4 @@
-These are official instructions from the ABDM Developer Portal (catalogue version 2026.08.24, built 2026-09-04) to set up an AI development environment for integrating with ABDM, India's health data network.
+These are official instructions from the ABDM Developer Portal (catalogue version 2026.08.24, built 2026-09-05) to set up an AI development environment for integrating with ABDM, India's health data network.
 
 Complete the steps yourself by running the commands directly. Ask the user only the questions in step 1.
 
@@ -33,18 +33,26 @@ A project that produces FHIR documents from its own code wants `fhir-generate`; 
 
 ## 2. Install the skills
 
-### Claude Code
+The plugin carries every skill at once and updates in place, so prefer it wherever it installs. It is packaged both to Claude Code's layout and to the Agent Plugins 1.0 standard.
 
-Install the plugin, which carries every skill at once and stays current through `claude plugin update`:
+### Claude Code
 
 ```
 claude plugin marketplace add eka-care/abdm-docs
 claude plugin install abdm-integrators-assistant@abdm-portal
 ```
 
-If the marketplace add fails (the repository may not be accessible from here), fall back to the per-file downloads below.
+### Codex
 
-### Other agents
+Add the marketplace, then install `abdm-integrators-assistant` from the plugin directory:
+
+```
+codex plugin marketplace add eka-care/abdm-docs
+```
+
+### Every other agent
+
+Cursor, GitHub Copilot, VS Code and Kiro read Agent Plugins 1.0, but they install from their own marketplaces rather than from a repository, and this plugin is not listed in one yet. Install the skills directly instead, which is also the fallback anywhere the marketplace add above fails.
 
 Each skill is one markdown file in the cross-agent SKILL.md format. Download each chosen skill into the directory your agent reads skills from:
 
@@ -86,13 +94,7 @@ mkdir -p .claude/skills/abdm-m1 && curl -fsSL /skills/abdm-m1/SKILL.md -o .claud
 
 ## 3. Connect the Docs MCP server
 
-The portal serves its catalogue live over MCP (streamable HTTP). Register it with your agent:
-
-```
-claude mcp add --transport http abdm-docs http://localhost:8080/mcp
-```
-
-For other agents, add an HTTP MCP server named `abdm-docs` at `http://localhost:8080/mcp` using their config format.
+The portal's Docs MCP server is not publicly reachable yet. Skip this step; /docs/hiecm/v3/getting-started/mcp has the current status and the connect instructions for when it opens.
 
 ## 4. Report back
 

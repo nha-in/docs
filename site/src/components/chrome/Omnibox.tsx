@@ -38,6 +38,9 @@ export default function Omnibox() {
   const platform = activePlatform(useRoutePath());
   const starters = platform ? STARTERS[platform.id] : undefined;
   const chatUrl = siteConfig.customFields?.chatUrl as string | null;
+  // The panel hands this out in its install flow. Absent in a build with no
+  // backend, and the flow says so rather than printing a placeholder command.
+  const mcpUrl = siteConfig.customFields?.mcpUrl as string | null;
   const support = useBaseUrl('/docs/support');
   const history = useHistory();
   const box = React.useRef<HTMLDivElement>(null);
@@ -263,6 +266,7 @@ export default function Omnibox() {
       <abdm-support-agent
         {...(chatUrl ? {'api-base': chatUrl} : {})}
         docs-origin={siteConfig.url + siteConfig.baseUrl.replace(/\/$/, '')}
+        {...(mcpUrl ? {'mcp-url': mcpUrl} : {})}
         {...(starters ? {starters} : {})}
         {...(shortcut ? {shortcut} : {})}
         support-url={support}

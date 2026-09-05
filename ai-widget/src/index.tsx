@@ -3,6 +3,17 @@ import {useEffect, useRef, useState} from 'preact/hooks';
 import ChatMarkdown, {CopyButton, absolute, headings} from './markdown';
 import {ArrowUp, Paperclip, PenLine, Sparkles, Square, X} from './icons';
 import {readStream, UNREACHABLE, type Source} from './sse';
+import {
+  AGENTS,
+  TOOLS,
+  agentLabel,
+  answer as scripted,
+  needsAgent,
+  say,
+  wantsTools,
+  type AgentId,
+  type Step,
+} from './install';
 import {revealStep} from './pacing';
 import css from './styles.css';
 
@@ -12,6 +23,12 @@ type Turn = {
   sources?: Source[];
   /** The file that went with this question, kept so a follow-up still has it. */
   file?: Attached;
+  /**
+   * Where the install flow had got to when this turn was written. Present
+   * only on the panel's own scripted turns, which is also what marks them as
+   * not part of the conversation the model is shown.
+   */
+  install?: Step;
 };
 
 /**
@@ -214,27 +231,22 @@ function appendToLastTurn(setTurns: Setter, delta: string) {
 }
 
 /**
- * Asks the host page to open its Install tools pop-up.
+ * Where the tools are offered, and the only place they are.
  *
- * This is the `abdm:ask-ai` bridge pointed the other way: there a page asks
- * the panel to open, here the panel asks the page for something it cannot
- * mount itself. A host that handles it calls preventDefault, which is what
- * dispatchEvent reports back.
- *
- * Anywhere that does not, including another site embedding this element, the
- * reader still reaches the same place by the Build with AI page rather than
- * pressing a button that does nothing.
+ * Under the newest answer, and only when the question it answers sounded
+ * like somebody doing the work rather than reading about it. Once the flow
+ * has been entered the offer goes entirely: it is already in the thread.
+ * Returns the turn index to put it under, or -1 for nowhere.
  */
-function openInstallTools(docsOrigin: string) {
-  const handled = !window.dispatchEvent(
-    new CustomEvent('abdm:install-tools', {cancelable: true}),
-  );
-  if (handled) return;
-  window.open(
-    `${docsOrigin.replace(/\/$/, '')}/docs/hiecm/v3/getting-started/build-with-ai`,
-    '_blank',
-    'noopener',
-  );
+function offerIndex(turns: Turn[]): number {
+  if (turns.some((turn) => turn.install)) return -1;
+  for (let i = turns.length - 1; i > 0; i -= 1) {
+    const turn = turns[i];
+    if (turn.from !== 'assistant' || turn.text === '') continue;
+    const asked = turns[i - 1];
+    return asked?.from === 'you' && wantsTools(asked.text) ? i : -1;
+  }
+  return -1;
 }
 
 /** Attaches the citation chips to the last turn in the thread. */
@@ -248,6 +260,8 @@ function attachSources(setTurns: Setter, sources: Source[]) {
 type PanelProps = {
   apiBase: string;
   docsOrigin: string;
+  /** The Docs MCP server's address, where this build carries one. */
+  mcpUrl: string | null;
   open: boolean;
   onClose: () => void;
   question: string;
@@ -274,6 +288,7 @@ type PanelProps = {
 function Panel({
   apiBase,
   docsOrigin,
+  mcpUrl,
   open,
   onClose,
   page,
@@ -297,6 +312,11 @@ function Panel({
   const [reading, setReading] = useState<string | null>(null);
   const [phase, setPhase] = useState<'idle' | 'thinking' | 'streaming'>('idle');
   const [activity, setActivity] = useState<string | null>(null);
+  // The install flow's one piece of state: the reader has pressed Other and
+  // is typing the name of their agent. Panel level rather than per turn
+  // because only the newest step is ever interactive.
+  const [naming, setNaming] = useState('');
+  const [asking, setAsking] = useState(false);
   const autoAsked = useRef<string | null>(null);
   const dialog = useRef<HTMLDialogElement>(null);
   const thread = useRef<HTMLDivElement>(null);
@@ -577,6 +597,27 @@ function Panel({
     netDone.current = true;
   };
 
+  /**
+   * Moves the install flow on by one step, writing it into the thread the
+   * way an exchange reads: what the reader chose, then the answer to it.
+   *
+   * Nothing here goes to the server. The steps are scripted, so the panel
+   * says them itself rather than asking a model to remember a command.
+   */
+  const walk = (next: Step, chose: string) => {
+    setNaming('');
+    setAsking(false);
+    setTurns((prior) => [
+      ...prior,
+      ...(chose ? [{from: 'you' as const, text: chose}] : []),
+      {
+        from: 'assistant' as const,
+        text: say(next, {docsOrigin, mcpUrl}),
+        install: next,
+      },
+    ]);
+  };
+
   const ask = async (asked: string) => {
     if (!asked || busy) return;
     const file = chosen;
@@ -584,8 +625,12 @@ function Panel({
     setChosen(null);
     setAttachError(null);
 
+    // The install flow's turns are the panel talking to itself. They are in
+    // the thread because the reader had the exchange, but sending them would
+    // put three screens of commands in front of the model on every round
+    // after, and it did not say any of them.
     const history = [
-      ...turns.slice(1),
+      ...turns.slice(1).filter((turn) => !turn.install),
       {from: 'you' as const, text: asked, file: file ?? undefined},
     ];
     setTurns((prior) => [
@@ -678,6 +723,7 @@ function Panel({
   // working; what it says comes from the model's own tool calls once those
   // start arriving.
   const showActivity = phase === 'thinking';
+  const offer = offerIndex(turns);
 
   return (
     <dialog
@@ -789,23 +835,125 @@ function Panel({
                 ))}
               </div>
             )}
-            {/* Every finished answer offers the tools. The prompt's own
-                closing line is conditional and one per conversation, which
-                is right for prose; this is the standing affordance, so a
-                reader who wants the catalogue inside their agent never has
-                to have been offered it at the right moment. */}
-            {turn.from === 'assistant' &&
-              index > 0 &&
-              turn.text !== '' &&
-              !(busy && index === turns.length - 1) && (
-                <button
-                  type="button"
-                  class="ask-ai__install-cta"
-                  onClick={() => openInstallTools(docsOrigin)}>
-                  <Sparkles />
-                  Install AI tools
-                </button>
-              )}
+            {/* The install flow's own controls, on the newest step only.
+                An older step's chips stay on the page as a record of what
+                was chosen, but pressing them again would fork the thread. */}
+            {turn.install && index === turns.length - 1 && (
+              <div class="ask-ai__choices">
+                {turn.install.at === 'tools' &&
+                  TOOLS.map((tool) => (
+                    <button
+                      key={tool.id}
+                      type="button"
+                      class="ask-ai__choice"
+                      onClick={() =>
+                        walk(
+                          needsAgent(tool.id)
+                            ? {at: 'agents', tool: tool.id}
+                            : {at: 'answer', tool: tool.id, agent: 'claude'},
+                          tool.label,
+                        )
+                      }>
+                      {tool.label}
+                    </button>
+                  ))}
+
+                {turn.install.at === 'agents' &&
+                  !asking &&
+                  AGENTS.map((agent) => (
+                    <button
+                      key={agent.id}
+                      type="button"
+                      class="ask-ai__choice"
+                      onClick={() => {
+                        // Other is the one answer that needs a second
+                        // question, so it opens a field instead of moving on.
+                        if (agent.id === 'other') {
+                          setAsking(true);
+                          return;
+                        }
+                        walk(
+                          {
+                            at: 'answer',
+                            tool: (turn.install as {tool: typeof TOOLS[number]['id']}).tool,
+                            agent: agent.id as AgentId,
+                          },
+                          agent.label,
+                        );
+                      }}>
+                      {agent.label}
+                    </button>
+                  ))}
+
+                {turn.install.at === 'agents' && asking && (
+                  <form
+                    class="ask-ai__naming"
+                    onSubmit={(event) => {
+                      event.preventDefault();
+                      const named = naming.trim();
+                      if (!named) return;
+                      walk(
+                        {
+                          at: 'answer',
+                          tool: (turn.install as {tool: typeof TOOLS[number]['id']}).tool,
+                          agent: 'other',
+                          named,
+                        },
+                        named,
+                      );
+                    }}>
+                    <input
+                      class="ask-ai__naming-field"
+                      value={naming}
+                      autoFocus
+                      placeholder="Which agent?"
+                      aria-label="The name of your agent"
+                      onInput={(event) =>
+                        setNaming((event.target as HTMLInputElement).value)
+                      }
+                    />
+                    <button
+                      type="submit"
+                      class="ask-ai__choice"
+                      disabled={naming.trim() === ''}>
+                      <ArrowUp />
+                    </button>
+                  </form>
+                )}
+              </div>
+            )}
+
+            {/* One click into the agent, where the agent has a scheme for
+                it. The line to run is already in the answer above, as the
+                same fenced block every other answer here uses. */}
+            {turn.install?.at === 'answer' &&
+              (() => {
+                const {link} = scripted(turn.install, {docsOrigin, mcpUrl});
+                return link ? (
+                  <a
+                    class="ask-ai__install-cta"
+                    href={link.href}
+                    target="_blank"
+                    rel="noopener noreferrer">
+                    <Sparkles />
+                    {link.label}
+                  </a>
+                ) : null;
+              })()}
+
+            {/* The tools, offered where they would actually help. See
+                offerIndex: under the newest answer, and only to a question
+                that sounded like somebody doing the work. A reader who asked
+                what a care context is gets the sentence and nothing else. */}
+            {index === offer && !(busy && index === turns.length - 1) && (
+              <button
+                type="button"
+                class="ask-ai__install-cta"
+                onClick={() => walk({at: 'tools'}, 'Install AI tools')}>
+                <Sparkles />
+                Install AI tools
+              </button>
+            )}
           </div>
           ),
         )}
@@ -972,6 +1120,7 @@ function Widget({
   host,
   apiBase,
   docsOrigin,
+  mcpUrl,
   supportUrl,
   launcher,
   shortcut,
@@ -985,6 +1134,7 @@ function Widget({
   host: HTMLElement;
   apiBase: string;
   docsOrigin: string;
+  mcpUrl: string | null;
   supportUrl: string;
   launcher: boolean;
   shortcut: string;
@@ -1026,6 +1176,7 @@ function Widget({
       <Panel
         apiBase={apiBase}
         docsOrigin={docsOrigin}
+        mcpUrl={mcpUrl}
         supportUrl={supportUrl}
         open={open}
         question={question}
@@ -1046,6 +1197,8 @@ function Widget({
  *   api-base     the chat server's origin; absent keeps the panel a mock
  *   docs-origin  where citations resolve, since "/docs/..." is wrong on
  *                every host except the docs site itself
+ *   mcp-url      the Docs MCP server's address, for the install flow to hand
+ *                out; absent and the flow says so rather than inventing one
  *   launcher     "none" to supply your own trigger and drive `open`
  *   shortcut     the key the host has bound to open the panel, shown on the
  *                launcher; the host binds it, this only says what it is
@@ -1093,6 +1246,7 @@ class SupportAgentElement extends HTMLElement {
   static observedAttributes = [
     'api-base',
     'docs-origin',
+    'mcp-url',
     'support-url',
     'launcher',
     'shortcut',
@@ -1154,6 +1308,7 @@ class SupportAgentElement extends HTMLElement {
         host={this}
         apiBase={this.getAttribute('api-base') ?? ''}
         docsOrigin={docsOrigin}
+        mcpUrl={this.getAttribute('mcp-url')}
         supportUrl={
           this.getAttribute('support-url') ??
           `${docsOrigin.replace(/\/$/, '')}/docs/support`
