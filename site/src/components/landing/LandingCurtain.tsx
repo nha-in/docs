@@ -228,7 +228,7 @@ export default function LandingCurtain(): React.ReactNode {
         />
         <CurtainThemeToggle />
       </div>
-      <LandingHero onLift={pullUp} />
+      <LandingHero />
     </div>
   );
 }
