@@ -5589,8 +5589,7 @@ components:
       type: http
       scheme: bearer
       bearerFormat: JWT
-      description: The access token from the gateway session endpoint, described
-        in hiecm-gateway.yaml.
+      description: The access token from `POST /api/hiecm/gateway/v3/sessions`.
 x-abdm-errors:
   source: The PHR error codes are the same for every PHR module, so they are recorded
     once against P1 rather than repeated here. See the P1 error page, or the error
