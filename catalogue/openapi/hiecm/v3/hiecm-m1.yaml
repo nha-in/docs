@@ -3563,11 +3563,9 @@ components:
       in: header
       required: false
       description: |
-        The benefit scheme an enrolment belongs to. On enrolment and benefit calls, the value is `healthid api` on the enrol and search calls, and `healthid` on the login OTP and verify calls under Find ABHA and on some of the benefit calls. On the enrolment OTP request the header is present but explicitly disabled, so it is not sent there.
+        The benefit scheme an enrolment belongs to. Send `healthid api` on the enrol and search calls, and `healthid` on the login OTP and verify calls under Find ABHA. On the enrolment OTP request the header is present but explicitly disabled, so it is not sent there.
 
-        This header is spelled four different ways across requests: `BENEFIT_NAME` (most), `Benefit-Name` (demo auth and child ABHA calls), `BENEFIT-NAME` (child update, state district search) and `Benefit_Name` (once). Underscore and hyphen are different header names on the wire. Benefit programme calls also use scheme values beyond healthid: `COVIN` on an IRIS enrol and a profile photo update, and a disabled `PAN`.
-
-        Which spelling is correct has not been confirmed against the sandbox.
+        NHA's files spell this header four different ways and use scheme values beyond healthid. Which spelling each endpoint accepts is not confirmed against the sandbox. The Conventions page for this module lists all four.
       schema:
         type: string
       example: healthid api
