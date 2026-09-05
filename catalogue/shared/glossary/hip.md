@@ -33,7 +33,7 @@ hands over encrypted FHIR bundles when a request backed by consent
 arrives.
 
 A hospital system does this, whether it is called an HMIS, an HIMS, an
-HMS, an EMR or an EHR. So does a lab system, an LIMS or LMIS, and a
+HMS, an EMR or an EHR. So does a lab system, a LIMS, and a
 pharmacy system. So does a PHR app, at the moment a patient uploads a
 record into it. The role is per interaction, and the same product is an
 HIU when it reads instead.

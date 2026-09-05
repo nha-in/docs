@@ -37,7 +37,7 @@ related:
 Health Repository Provider. NHA's M2 document uses HRP for the system
 that actually holds the records, and writes it as "HRP/HIP" because the
 same system usually plays both parts. If you run an [HMIS](hmis.md) or
-an [LMIS](lmis.md) and you are integrating M2, HRP means you.
+a [LIMS](lims.md) and you are integrating M2, HRP means you.
 
 The general form is any entity or solution that manages, stores and
 transacts health records. That is a statement about custody: it says who

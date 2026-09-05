@@ -33,9 +33,9 @@ related:
 
 Information Management System, the umbrella term for the software a
 health facility runs to do its work. Which one it is depends on the
-facility: an [HMIS](hmis.md) or [HIMS](hims.md) in a hospital, an
+facility: an [HMIS](hmis.md) in a hospital, also written HIS or HIMS, an
 [EMR](emr.md) in a clinic, a [LIMS](lims.md) in a laboratory, a
-[PMS](pms.md) in a pharmacy, an [LMIS](lmis.md) for stock.
+[PMS](pms.md) in a pharmacy.
 
 ABDM does not use the term. It matters here because the vendor who
 writes any of those systems has the same integration in front of them:
