@@ -6,7 +6,7 @@ milestone: M2
 version: abdm-v3
 title: GET All Link records
 summary: >
-  This API provide all the linked care contexts for ABHA Address.
+  Lists every care context already linked to an ABHA address.
 sources:
   - file: catalogue/openapi/.raw/nha-2026-09-04/ABHA-PHR-V3-Documents.docx
     fetched: 2026-09-04

@@ -6,7 +6,7 @@ milestone: P3
 version: abdm-v3
 title: Get consent-artefact-details-by-artifact-id
 summary: >
-  This API will be invoked by HIU to get the consent artifact details by artifact id.
+  Reads one consent artefact from its artefact id.
 sources:
   - file: catalogue/openapi/.raw/nha-2026-09-04/ABHA-PHR-V3-Documents.docx
     fetched: 2026-09-04

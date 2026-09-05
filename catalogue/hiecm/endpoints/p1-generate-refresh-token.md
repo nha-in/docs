@@ -6,7 +6,8 @@ milestone: P1
 version: abdm-v3
 title: Generate Refresh Token
 summary: >
-  This API will generate a refresh token when the user provides the R token fetched after login. The refresh token remains valid for 15 days.
+  Exchanges the refresh token from a login for a fresh access token. The
+  refresh token itself stays valid for fifteen days.
 sources:
   - file: catalogue/openapi/.raw/nha-2026-09-04/ABHA-PHR-V3-Documents.docx
     fetched: 2026-09-04

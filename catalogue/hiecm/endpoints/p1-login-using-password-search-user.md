@@ -6,7 +6,8 @@ milestone: P1
 version: abdm-v3
 title: Login using Password Search user
 summary: >
-  This API will internally call service to get the ABHA Address details along with auth methods for given ABHA address as a input.
+  Looks up an ABHA address and returns the authentication methods it
+  accepts, before a login is attempted.
 sources:
   - file: catalogue/openapi/.raw/nha-2026-09-04/ABHA-PHR-V3-Documents.docx
     fetched: 2026-09-04

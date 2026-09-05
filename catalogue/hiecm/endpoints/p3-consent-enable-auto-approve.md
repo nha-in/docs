@@ -6,7 +6,7 @@ milestone: P3
 version: abdm-v3
 title: Consent Enable Auto Approve
 summary: >
-  This API is invoked by the Health Information User (HIU) to enable the automatic approval of consent requests.
+  Turns on automatic approval of consent requests for an HIU.
 sources:
   - file: catalogue/openapi/.raw/nha-2026-09-04/ABHA-PHR-V3-Documents.docx
     fetched: 2026-09-04

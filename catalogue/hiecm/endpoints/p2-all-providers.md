@@ -6,7 +6,8 @@ milestone: P2
 version: abdm-v3
 title: HIE-CM all-providers
 summary: >
-  This API retrieves a list of providers whose names match the specified query parameter. The response includes detailed information about each provider, such as their identifier, facility type, and oth
+  Searches providers by name, returning each one's identifier and facility
+  type.
 sources:
   - file: catalogue/openapi/.raw/nha-2026-09-04/ABHA-PHR-V3-Documents.docx
     fetched: 2026-09-04

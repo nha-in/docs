@@ -6,7 +6,7 @@ milestone: P3
 version: abdm-v3
 title: Consent Disable Auto Approve
 summary: >
-  This API is invoked by the Health Information User (HIU) to disable the automatic approval of consent requests.
+  Turns off automatic approval of consent requests for an HIU.
 sources:
   - file: catalogue/openapi/.raw/nha-2026-09-04/ABHA-PHR-V3-Documents.docx
     fetched: 2026-09-04
