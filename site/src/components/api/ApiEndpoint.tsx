@@ -47,7 +47,13 @@ export type Operation = {
   queryParams: Field[];
   body: Field[];
   requestExample?: unknown;
-  responses: {status: string; description: string; example?: unknown}[];
+  responses: {
+    status: string;
+    description: string;
+    example?: unknown;
+    /** Where to read about this failure, when a page for it exists. */
+    help?: {label: string; href: string};
+  }[];
   curl: string;
   tag: string;
   tagDescription: string;
@@ -262,6 +268,11 @@ export default function ApiEndpoint({operation}: {operation: Operation}) {
                     text={response.description}
                     className="api-field__description"
                   />
+                ) : null}
+                {response.help ? (
+                  <p className="api-field__help">
+                    <a href={response.help.href}>{response.help.label}</a>
+                  </p>
                 ) : null}
               </div>
             ))}
