@@ -169,10 +169,38 @@ function firstExample(content) {
   return examples[0]?.value;
 }
 
+// The credentials a call carries come from `security`, which names a scheme,
+// not from the header parameters. A curl assembled only from parameters is
+// therefore missing the one header every authenticated ABDM call needs, and
+// pasting it returns 401. Only the header borne schemes produce a line: a
+// query or cookie scheme belongs elsewhere in the request, and none is
+// declared in this catalogue.
+function securityHeaders(security = []) {
+  return security.flatMap((entry) => {
+    if (entry.type === 'http' && entry.scheme === 'bearer') {
+      return [{name: 'Authorization'}];
+    }
+    if (entry.type === 'apiKey' && entry.in === 'header' && entry.headerName) {
+      return [{name: entry.headerName}];
+    }
+    return [];
+  });
+}
+
 function curlFor(operation) {
   const lines = [`curl --request ${operation.method} \\`];
   lines.push(`  --url ${operation.server}${operation.path} \\`);
-  for (const header of operation.headers) {
+  // A scheme whose header is also declared as a parameter keeps the
+  // parameter, because that carries the better example. Anything the
+  // parameters do not cover is added ahead of them.
+  const declared = new Set(operation.headers.map((h) => h.name.toLowerCase()));
+  const headers = [
+    ...securityHeaders(operation.security).filter(
+      (h) => !declared.has(h.name.toLowerCase()),
+    ),
+    ...operation.headers,
+  ];
+  for (const header of headers) {
     const value = header.name.toLowerCase() === 'authorization'
       ? 'Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>'
       : header.example ?? `<${header.name.toUpperCase().replace(/-/g, '_')}>`;
@@ -353,14 +381,35 @@ for (const {platform, version, files} of tree) {
       url: s.url,
       description: s.description ?? '',
     }));
-    const security = Object.entries(spec.components?.securitySchemes ?? {}).map(
-      ([name, scheme]) => ({
+    // What a specification *declares* is a superset of what a call
+    // *requires*: m1 declares three schemes and requires one. The requirement
+    // is stated in `security`, on the operation or at root, and reading the
+    // declaration instead is what listed Authorization on the page twice.
+    // An empty `security: []` is a real answer meaning this call takes no
+    // credential, so it is distinguished from the key being absent.
+    const securitySchemes = spec.components?.securitySchemes ?? {};
+    const describeScheme = (name) => {
+      const scheme = securitySchemes[name];
+      if (!scheme) {
+        console.warn(
+          `  ! ${module.file}: security names "${name}", which the specification does not declare`,
+        );
+        return [];
+      }
+      return [{
         name,
         type: scheme.type,
         scheme: scheme.scheme,
+        in: scheme.in,
+        headerName: scheme.name,
         description: scheme.description ?? '',
-      }),
-    );
+      }];
+    };
+    const securityFor = (op) => {
+      const requirement = op.security ?? spec.security ?? [];
+      const names = [...new Set(requirement.flatMap((entry) => Object.keys(entry)))];
+      return names.flatMap(describeScheme);
+    };
     const tagInfo = Object.fromEntries(
       (spec.tags ?? []).map((t) => [t.name, t.description ?? '']),
     );
@@ -413,7 +462,7 @@ for (const {platform, version, files} of tree) {
         servers,
         summary: op.summary ?? id,
         description: op.description ?? '',
-        security: op.security === undefined ? security : security.filter((s) => (op.security ?? []).some((entry) => entry[s.name])),
+        security: securityFor(op),
         headers: parameters
           .filter((p) => p.in === 'header')
           .map((p) => ({
