@@ -72,15 +72,6 @@
 .landing-hero {
   --exit: 0;
 
-  /* The first screen is the one place the accent is allowed a whole field of
-     its own: a wash off the top, fading into the page before the copy ends,
-     so the statement is read on sage rather than on cream. */
-  background: radial-gradient(
-    150% 95% at 50% -15%,
-    var(--accent-soft) 0%,
-    var(--accent-wash) 45%,
-    transparent 78%
-  );
   position: relative;
   display: flex;
   flex-direction: column;
@@ -595,16 +586,28 @@
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  background: var(--page);
+  /* The first screen is the one place the accent is allowed a whole field of
+     its own: a wash off the top, fading into the page before the copy ends,
+     so the statement is read on sage rather than on cream. On the curtain and
+     not on the hero inside it, because a wash that begins at the hero's top
+     edge begins exactly where the bar ends, and that is a line across the
+     page: the bar reads as a band of cream over a green page rather than as
+     part of it. Here it runs the full height, the bar included. */
+  background-color: var(--page);
+  background-image: radial-gradient(
+    150% 95% at 50% -15%,
+    var(--accent-soft) 0%,
+    var(--accent-wash) 45%,
+    transparent 78%
+  );
   transform: translate3d(0, calc(var(--lift) * -100%), 0);
   will-change: transform;
 }
 
-/* Translucent, and fading rather than ending: the bar sits over the network
-   now, so a solid strip would cut the light off in a straight line and a
-   backdrop filter would draw its own rectangle. A gradient to nothing has no
-   edge to see, and still holds enough page colour under the marks to keep
-   them legible. */
+/* No ground of its own. A veil of page colour over the top 64px, even one
+   that fades to nothing, is still 64px the wash behind it does not reach, and
+   it reads as a band of cream laid across a green page. On the landing page
+   this is a row of marks, not a bar. */
 .curtain__bar {
   position: relative;
   z-index: 1;
@@ -614,12 +617,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: linear-gradient(
-    to bottom,
-    color-mix(in srgb, var(--page) 82%, transparent) 0%,
-    color-mix(in srgb, var(--page) 46%, transparent) 62%,
-    transparent 100%
-  );
+  background: transparent;
 }
 
 .curtain__toggle {
