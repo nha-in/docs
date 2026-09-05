@@ -51,6 +51,36 @@ const ARRIVE = 76; // px: close enough to a participant to hand the record over
 const IDLE_AFTER = 10_000; // ms of stillness before the network demonstrates itself
 const PACKET_MS = 900; // how long a record takes to travel one link
 
+/**
+ * How long the courier takes to cross from one participant to the next.
+ *
+ * The board above the statement turns for exactly this long: the flaps start
+ * the moment the courier leaves and the last one lands as it arrives, so the
+ * board is announcing the delivery that is in the air rather than reporting
+ * one that already happened. Change this and change STAGGER_MS in FlapBoard
+ * with it, or the two drift apart.
+ */
+const TRAVEL_MS = 5000;
+
+/**
+ * How long the courier waits at a participant before setting off again.
+ *
+ * This is the board's reading time and it is the whole reason it exists.
+ * The wave takes as long as the crossing, so without a pause the board is
+ * mid-turn essentially all the time, and a split-flap caught mid-turn is
+ * half of one message next to half of another: the first version of this
+ * spent its life spelling things like "EBDR DEVELO ERAPORTAL". The courier
+ * now sits still while the flaps hold what they landed on.
+ */
+const DWELL_MS = 4200;
+
+/**
+ * Every third delivery goes to the NHA, whose line on the board is the
+ * portal's own name. That is what makes the site's identity the thing the
+ * board keeps coming back to, on a rhythm rather than on a timer.
+ */
+const HOME_EVERY = 3;
+
 type Point = {x: number; y: number};
 
 /** 0 at `far` and beyond, 1 at zero distance, eased so there is no visible rim. */
@@ -61,21 +91,29 @@ function falloff(distance: number, far: number) {
 
 export default function NetworkWeb({
   onArrive,
+  onDepart,
 }: {
   /**
-   * Called with a participant's id the moment the courier hands the record
-   * over to them. The board above the statement reads this: it flips when a
-   * record actually lands somewhere, rather than on a timer, so the movement
-   * on the page is one system saying one thing instead of two things moving
-   * at once.
+   * Called when the courier completes a leg of its own route, with the
+   * participant it set out for. This is the itinerary, not proximity: a
+   * courier passes close to plenty of participants it is not visiting, and
+   * the board must not answer to those.
    */
   onArrive?: (id: string) => void;
+  /**
+   * Called with the participant the courier has just set out for, at the
+   * moment it leaves. The board starts turning here, and settles on this
+   * message as the courier lands.
+   */
+  onDepart?: (id: string) => void;
 } = {}): React.ReactNode {
   const wrapRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  // Held in a ref so a new callback identity never restarts the canvas.
+  // Held in refs so a new callback identity never restarts the canvas.
   const arrive = useRef(onArrive);
   arrive.current = onArrive;
+  const depart = useRef(onDepart);
+  depart.current = onDepart;
 
   useEffect(() => {
     const wrap = wrapRef.current;
@@ -110,6 +148,11 @@ export default function NetworkWeb({
     let idleFrom = 0;
     let idleTo = 1;
     let idleSince = 0;
+    /** Deliveries made, so every third one can be sent home to the NHA. */
+    let deliveries = 0;
+    /** While set, the courier is resting at a participant until this time. */
+    let dwellUntil = 0;
+    const home = PARTICIPANTS.findIndex((who) => who.id === 'nha');
 
     const measure = () => {
       const ratio = Math.min(window.devicePixelRatio || 1, 2);
@@ -225,14 +268,33 @@ export default function NetworkWeb({
         packet = {from: holding, to: index, at: now};
       }
       holding = index;
-      arrive.current?.(PARTICIPANTS[index].id);
     };
 
     /** With no pointer, the courier walks its own route so the page moves. */
     const walkIdle = (now: number) => {
+      // Resting at a participant, holding still so the board can be read.
+      if (dwellUntil) {
+        aim = places[idleTo];
+        if (now < dwellUntil) return;
+        dwellUntil = 0;
+        idleFrom = idleTo;
+        deliveries += 1;
+        if (deliveries % HOME_EVERY === 0 && idleFrom !== home) {
+          idleTo = home;
+        } else {
+          do {
+            idleTo = Math.floor(Math.random() * PARTICIPANTS.length);
+          } while (idleTo === idleFrom);
+        }
+        idleSince = now;
+        // The flaps start turning now, on a wave as long as this crossing.
+        depart.current?.(PARTICIPANTS[idleTo].id);
+        return;
+      }
+
       const from = places[idleFrom];
       const to = places[idleTo];
-      const t = Math.min(1, (now - idleSince) / 2200);
+      const t = Math.min(1, (now - idleSince) / TRAVEL_MS);
       // Ease in and out, so the courier slows into each participant.
       const eased = t < 0.5 ? 2 * t * t : 1 - (-2 * t + 2) ** 2 / 2;
       aim = {
@@ -240,11 +302,14 @@ export default function NetworkWeb({
         y: from.y + (to.y - from.y) * eased,
       };
       if (t >= 1) {
-        idleFrom = idleTo;
-        do {
-          idleTo = Math.floor(Math.random() * PARTICIPANTS.length);
-        } while (idleTo === idleFrom);
-        idleSince = now;
+        dwellUntil = now + DWELL_MS;
+        // The itinerary's own arrival, not deliver()'s. deliver() fires for
+        // anyone the courier passes within ARRIVE of, and on a crossing this
+        // long that is several participants it was never going to: the board
+        // was being retargeted mid-wave by near misses, which restarted the
+        // wave from the first cell and made the gaps between messages
+        // anything from 0.8s to 14.5s against a designed 9.2s.
+        arrive.current?.(PARTICIPANTS[idleTo].id);
       }
     };
 
@@ -259,7 +324,12 @@ export default function NetworkWeb({
       const idle = now - lastMove > IDLE_AFTER;
 
       if (idle && !reduced.matches) {
-        if (!idleSince) idleSince = now;
+        // The first leg of a spell needs its own departure: walkIdle only
+        // announces the legs it starts itself, and this one it inherits.
+        if (!idleSince) {
+          idleSince = now;
+          depart.current?.(PARTICIPANTS[idleTo].id);
+        }
         walkIdle(now);
       }
 
