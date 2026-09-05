@@ -310,6 +310,29 @@ for (const {platform, version, files} of tree) {
   const operationPage = (moduleDir, id) =>
     `/docs/${platform}/${version}/api/${moduleDir}/endpoints/${slug(id)}`;
 
+  // A status code on a reference page was a dead end. The troubleshooting
+  // section already knows what a blanket 401 means and what a 202 followed by
+  // silence means, and each module's errors page lists the codes it returns,
+  // and none of it was linked from the place the reader meets the failure.
+  // Only HIE-CM v3 has those pages, so only it gets the links.
+  const helpFor = (status, moduleDir) => {
+    if (!isHiecmV3) return undefined;
+    const troubleshooting = (name) => `/docs/${platform}/${version}/troubleshooting/${name}`;
+    if (status === '401') {
+      return {label: 'Everything returns 401', href: troubleshooting('everything-returns-401')};
+    }
+    if (status === '202') {
+      return {label: 'The callback never arrives', href: troubleshooting('callback-never-arrives')};
+    }
+    if (/^[45]/.test(status)) {
+      return {
+        label: 'Error codes for this module',
+        href: `/docs/${platform}/${version}/api/${moduleDir}/errors`,
+      };
+    }
+    return undefined;
+  };
+
   const operations = new Map();
   for (const module of modules) {
     for (const [path, item] of Object.entries(module.spec.paths ?? {})) {
@@ -472,6 +495,7 @@ for (const {platform, version, files} of tree) {
         example:
           firstExample(response.content) ??
           sampleFromSchema(response.content?.['application/json']?.schema),
+        help: helpFor(status, module.dir),
       }));
 
       const id = op.operationId ?? slug(`${entry.method}-${entry.path}`);
