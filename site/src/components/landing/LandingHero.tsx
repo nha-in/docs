@@ -45,37 +45,42 @@ const gateways = [
   },
 ];
 
+/** What the board rests on, and where it keeps coming back to. */
+const RESTING = 'ABDM Developer Portal';
+
 /**
- * What the board says when a record lands somewhere, by who received it.
+ * What the board says about the delivery in the air, by who is receiving it.
  *
- * Not a rotation on a timer. The message names what the network just did, so
- * whichever one the board happens to be resting on is true of the crossing
- * the reader watched rather than being whatever the clock landed on. Every
- * line is a capability of ABDM, said as an outcome, because a first time
- * visitor does not yet have the vocabulary the documentation uses.
+ * Not a rotation on a timer. The flaps start turning as the courier leaves
+ * and settle as it lands, so the board is announcing the crossing the reader
+ * is watching rather than whatever the clock came round to. Every line is a
+ * capability of ABDM said as an outcome, because a first time visitor does
+ * not yet have the vocabulary the documentation uses.
+ *
+ * The NHA's line is the portal's own name, and NetworkWeb sends every third
+ * delivery there. That is what makes the site's identity the thing the board
+ * returns to, on the network's rhythm rather than on a counter of its own.
  */
-const DELIVERED: Record<string, string> = {
+const DELIVERED: Record<string, string | string[]> = {
   citizen: 'Unique health identity',
-  phr: 'Your records, in one place',
+  // A participant with more than one line takes them in turn, so calling
+  // twice at the same door says something new the second time.
+  phr: ['Your records, in one place', 'Unified health services'],
   hospital: 'Interoperable medical records',
   doctor: 'History at the point of care',
   lab: 'Reports that reach you',
   pharmacy: 'Prescriptions that travel',
   insurer: 'Faster insurance claims',
-  nha: 'Unified health services',
+  nha: RESTING,
 };
-
-/** What the board rests on. The site's own name is the idle state. */
-const RESTING = 'ABDM Developer Portal';
 
 /** Wide enough for the longest line above, so the flaps never resize. */
 const CELLS = Math.max(
   RESTING.length,
-  ...Object.values(DELIVERED).map((line) => line.length),
+  ...Object.values(DELIVERED)
+    .flat()
+    .map((line) => line.length),
 );
-
-/** How long the network stays quiet before the board falls back to the name. */
-const SETTLE_MS = 4200;
 
 /**
  * The statement, the one control and the three gateways.
@@ -88,35 +93,53 @@ export default function LandingHero(): React.ReactNode {
   // Set once on mount rather than read per render, so the server and the
   // first client render agree: both of them draw the resting name.
   const [still, setStill] = useState(true);
-  const quiet = useRef<number | undefined>(undefined);
+  /** The participant the board is already speaking for. */
+  const announced = useRef<string | null>(null);
+  /** How many times each participant has been called at, for the two liners. */
+  const visits = useRef<Record<string, number>>({});
 
   useEffect(() => {
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
     const follow = () => setStill(reduced.matches);
     follow();
     reduced.addEventListener('change', follow);
-    return () => {
-      reduced.removeEventListener('change', follow);
-      window.clearTimeout(quiet.current);
-    };
+    return () => reduced.removeEventListener('change', follow);
   }, []);
 
-  // A record landed. Say what that was, then fall back to the name once the
-  // network has been quiet for a moment, so the resting state is the site's
-  // own identity rather than whichever message happened to be last.
-  const delivered = useCallback((id: string) => {
+  // The courier has set out, or has landed. Both name a participant and both
+  // put that participant's line on the board: the departure is what starts
+  // the flaps turning, and the arrival is what a reader who is driving the
+  // courier with their own pointer gets instead, since a pointer has no
+  // departure to announce. Naming the same line twice costs nothing, because
+  // a board already showing a message does not turn for it again.
+  const carrying = useCallback((id: string) => {
+    // The arrival that answers a departure names the same participant, and
+    // the board is already showing its line, so the second call is dropped.
+    // Without this a participant with two lines would turn over again in the
+    // air and land on the one it was not announcing.
+    if (announced.current === id) return;
+    announced.current = id;
     const line = DELIVERED[id];
     if (!line) return;
-    setMessage(line);
-    window.clearTimeout(quiet.current);
-    quiet.current = window.setTimeout(() => setMessage(RESTING), SETTLE_MS);
+    if (typeof line === 'string') {
+      setMessage(line);
+      return;
+    }
+    const called = visits.current[id] ?? 0;
+    visits.current[id] = called + 1;
+    setMessage(line[called % line.length]);
   }, []);
 
   return (
     <section className="landing-hero">
       {/* The network the page is about, drawn behind the words. */}
       <BrowserOnly>
-        {() => <NetworkWeb onArrive={still ? undefined : delivered} />}
+        {() => (
+          <NetworkWeb
+            onDepart={still ? undefined : carrying}
+            onArrive={still ? undefined : carrying}
+          />
+        )}
       </BrowserOnly>
 
       <div className="landing-hero__copy">

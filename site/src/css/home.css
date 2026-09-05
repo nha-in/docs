@@ -306,22 +306,19 @@
    departure board is a list of things in transit between places, which is the
    claim underneath ABDM and the thing the drawing behind it is doing.
 
-   The mark and the row share a line with no fill and no border around them,
-   so this reads as part of the drawing rather than as a label laid over it. */
+   The emblem sits above the row rather than beside it, and at a size that
+   makes it the mark it is rather than an 18px decoration in a chip. */
 .landing-hero__board {
-  display: inline-flex;
+  display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 0.625rem;
+  gap: 1.125rem;
   margin: 0;
 }
 
-/* The emblem is the node the record leaves from, so it takes the accent's
-   ground rather than sitting on the page unmarked. */
-.landing-hero__board svg,
-.landing-hero__board img {
-  flex: none;
-  width: 1.125rem;
-  height: 1.125rem;
+.landing-hero__board .brand-chip__mark {
+  width: clamp(2.75rem, 1.9rem + 3.4vw, 4rem);
+  height: clamp(2.75rem, 1.9rem + 3.4vw, 4rem);
 }
 
 .flap {
@@ -338,46 +335,96 @@
 }
 
 .flap__cell {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 0.72em;
-  padding: 0.1875rem 0;
-  border-radius: 1px;
+  position: relative;
+  display: inline-block;
+  width: 0.78em;
+  height: 1.55em;
+  border-radius: 2px;
   background: var(--fill-soft);
-  font-family: var(--font-mono, ui-monospace, SFMono-Regular, Menlo, monospace);
-  font-size: 0.75rem;
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
   font-weight: 500;
   line-height: 1;
   letter-spacing: 0;
   color: var(--accent);
-  /* The flap falls from its own top edge, the way the printed half of a
-     Solari board does. One transform per cell, no second element behind it. */
-  transform-origin: 50% 0;
-  animation: flap-turn 260ms cubic-bezier(0.2, 0.8, 0.3, 1) both;
+  /* Shallow, so the fall reads as a flap turning rather than as a card being
+     thrown at the reader. */
+  perspective: 90px;
+  overflow: hidden;
 }
 
-/* A blank flap is a flap, not a gap: it keeps its ground so the board reads
-   as one object with some of its cells empty. */
-.flap__cell:empty {
-  color: transparent;
+/* The hinge. It is the one line that says split-flap before anything moves,
+   which matters more than the movement does: most of the time the board is
+   sitting still and it still has to look like a board. */
+.flap__cell::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  right: 0;
+  left: 0;
+  z-index: 3;
+  height: 1px;
+  background: var(--page);
+  opacity: 0.8;
 }
 
-@keyframes flap-turn {
-  from {
+.flap__face {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backface-visibility: hidden;
+  /* The hinge is the middle of the cell, so that is what it turns about. */
+  transform-origin: 50% 50%;
+}
+
+/* Falls through the first half of the turn, carrying the character that is
+   leaving. Held at the bottom of its arc afterwards so it cannot reappear. */
+.flap__face--out {
+  z-index: 2;
+  animation: flap-fall var(--flap-turn) cubic-bezier(0.45, 0, 0.7, 0.4) both;
+}
+
+/* Waits flat against the back for the first half, then swings up. The two
+   share a duration and a delay, so the second half of one is the first half
+   of the other and the cell is never showing both. */
+.flap__face--in {
+  z-index: 1;
+  animation: flap-rise var(--flap-turn) cubic-bezier(0.3, 0.6, 0.55, 1) both;
+}
+
+@keyframes flap-fall {
+  0% {
+    transform: rotateX(0deg);
+  }
+  50%,
+  100% {
     transform: rotateX(-90deg);
-    opacity: 0.2;
   }
-  to {
-    transform: rotateX(0);
-    opacity: 1;
+}
+
+@keyframes flap-rise {
+  0%,
+  50% {
+    transform: rotateX(90deg);
   }
+  100% {
+    transform: rotateX(0deg);
+  }
+}
+
+/* Slow on purpose. A board that updates faster than it can be read is a
+   transition; one that takes its time is a mechanism, and the mechanism is
+   the point. Matches TURN_MS in FlapBoard.tsx, which cannot read this. */
+.flap {
+  --flap-turn: 420ms;
 }
 
 /* Set, not turned. The board still says what it says; the flaps just do not
    move, which is also the state it renders in on the server and on the first
    client paint, so the two agree. */
-.flap[data-still='true'] .flap__cell {
+.flap[data-still='true'] .flap__face {
   animation: none;
 }
 
@@ -397,20 +444,28 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .flap__cell {
+  .flap__face {
     animation: none;
   }
 }
 
-/* The board is 29 flaps wide, because the longest message is 29 characters.
-   At the size above that is 307px including the mark, which fits a 375px
-   phone and does not fit a 320px one. The flaps get smaller rather than the
-   board getting narrower: a board that drops cells is a board that cannot
-   show its own longest message. */
-@media (max-width: 420px) {
+/* The board is 29 flaps wide, because the longest message is 29 characters,
+   and at the size above that is 345px. A 480px window leaves 432px inside the
+   hero's padding, so the full size holds down to there; below it the flaps get
+   smaller rather than the board getting narrower, because a board that drops
+   cells is a board that cannot show its own longest message. A 375px phone
+   leaves 327px and a 320px one 272px, which is what the two steps are for. */
+@media (max-width: 480px) {
   .flap__cell {
-    width: 0.7em;
-    font-size: 0.625rem;
+    width: 0.78em;
+    font-size: 0.6875rem;
+  }
+}
+
+@media (max-width: 360px) {
+  .flap__cell {
+    width: 0.76em;
+    font-size: 0.5625rem;
   }
 }
 
