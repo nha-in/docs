@@ -11,6 +11,7 @@ covers: [hiecm.flow.m3-request-consent, hiecm.flow.m3-fetch-records]
 ---
 
 import ApiLinks from '@site/src/components/docs/ApiLinks';
+import SkillInstall from '@site/src/components/docs/SkillInstall';
 
 # M3 Retrieve: consent and fetching
 
@@ -83,6 +84,12 @@ opaque strings.
 
 Build for revocation from the start. A consent that worked yesterday can be
 withdrawn today, and that is the system working correctly.
+
+## Build it with an agent
+
+Hand M3 to the agent you already use, as one file it loads once. Install it, or open it there in one click.
+
+<SkillInstall slug="abdm-m3" note="Every M3 call and callback with its error codes in one file: 25 operations, 95 codes." />
 
 ## Certification
 
