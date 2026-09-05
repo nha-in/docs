@@ -43,7 +43,20 @@ curl -X POST 'https://dev.abdm.gov.in/api/hiecm/patient-share/v3/on-share' \
   -H 'REQUEST-ID: <FRESH_UUID>' \
   -H 'TIMESTAMP: <ISO_8601_TIMESTAMP>' \
   -H 'Content-Type: application/json' \
-  -d '<REQUEST_BODY>'
+  -d '{
+  "acknowledgement": {
+    "abhaAddress": "abc@abdm",
+    "status": "success",
+    "profile": {
+      "context": "43",
+      "tokenNumber": "3",
+      "expiry": "180"
+    }
+  },
+  "response": {
+    "requestId": "f29f0e59-8388-4698-9fe6-05db67aeac46"
+  }
+}'
 ```
 
 The path, the method and the body come from NHA's PHR V3 document,
