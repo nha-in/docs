@@ -82,10 +82,10 @@ with a real effect, because a request the person never touches expires on the
 window the requester set, and your interface has to be able to show that
 state.
 
-Approving is `POST /api/consent-management/consent-requests/{consentRequestId}/approve`.
-It has a reference page and no page in this catalogue writes it up, which is
-worth knowing before you go looking: the two beside it, denying and revoking,
-do.
+Approving is `POST /api/consent-management/consent-requests/{consentRequestId}/approve`,
+and its reference page carries the headers and the body. Denying and revoking
+have a written page each as well, which approving does not yet, so read the
+reference for that one rather than looking for prose that is not there.
 
 ### 4. See what is already allowed
 
