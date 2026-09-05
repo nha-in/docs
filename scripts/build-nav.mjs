@@ -102,6 +102,13 @@ writeFileSync(
         continue;
       }
       if (!/\.mdx?$/.test(entry.name) || entry.name === 'README.md') continue;
+      // One endpoint per line for 299 endpoints made this index 86 KB, most
+      // of it a flat list of calls. Each module already publishes its own
+      // llms.txt naming its endpoints, and those are linked under Optional
+      // below, so the root stays a directory an agent can read in one go and
+      // the call level detail is one hop away in a file sized for the module
+      // being worked on.
+      if (/\/api\/[^/]+\/endpoints$/.test(route)) continue;
       const raw = readFileSync(path, 'utf8');
       const fm = raw.match(/^---\n([\s\S]*?)\n---/)?.[1] ?? '';
       const field = (name) =>
@@ -135,7 +142,7 @@ writeFileSync(
   // one of them also answers as markdown, which is worth saying once here
   // rather than leaving an agent to fetch a page of HTML shell per link.
   lines.push(
-    'Add `.md` to any link below to get that page as markdown. `llms-full.txt` beside this file carries every page in one document, and each API module has its own `llms.txt`.',
+    'Add `.md` to any link below to get that page as markdown. Individual API operations are not listed here: each module has its own `llms.txt` naming every call it carries, linked under Optional. `llms-full.txt` beside this file carries every page in one document.',
   );
   lines.push('');
   for (const [section, list] of [...bySection].sort()) {
