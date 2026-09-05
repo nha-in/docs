@@ -29,13 +29,13 @@ The step where a patient's [PHR](#phr) app asks a facility whether it holds reco
 
 Elliptic Curve Diffie-Hellman key exchange, used so that only the [HIU](#hiu) that holds a valid consent can read the records a [HIP](#hip) sends. Both sides generate a short lived key pair and a random 32 byte nonce, exchange the public halves, and derive the same session key. The exchange uses Curve25519, and the encryption itself uses AES-GCM.
 
-### EHR
+<span id="emr"></span><span id="ehr"></span>
 
-Electronic Health Record. The distinction people draw is that an [EMR](#emr) is one provider's record of what happened in their own building, while an EHR is the record that follows the patient across providers. Vendors use the two words for the same product, so read which one a document means from what it describes rather than from the letters. ABDM does not build an EHR as a database: the records stay with the [HIP](#hip) that created them, and the [HIE-CM](/docs/hiecm/v3/getting-started/glossary#hie-cm) plus consent is what lets another provider assemble the picture.
+### EMR, EHR
 
-### EMR
+Electronic Medical Record and Electronic Health Record: the clinical system a hospital or a clinic records consultations, prescriptions and results in. The distinction drawn is that an EMR holds one provider's record of what happened in their own building, and an EHR follows the patient across providers. Vendors use the two words for the same product, so read which one a document means from what it describes rather than from the letters.
 
-Electronic Medical Record system: the clinical system a hospital or a clinic uses to record consultations, prescriptions and results. In ABDM an EMR acts as a [HIP](#hip), so it links care contexts in [M2](#m2). See [Hospital, lab and pharmacy systems](/docs/hiecm/v3/concepts/hip-hiu).
+In ABDM it acts as a [HIP](#hip), linking care contexts in [M2](#m2). ABDM does not build an EHR as a database: the records stay with the HIP that created them, and the [HIE-CM](/docs/hiecm/v3/getting-started/glossary#hie-cm) plus consent is what lets another provider assemble the picture. The patient's own view of it is a [PHR](/docs/hiecm/v3/getting-started/glossary#phr) app. See [Hospital, lab and pharmacy systems](/docs/hiecm/v3/concepts/hip-hiu).
 
 ### HI type
 
