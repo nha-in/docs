@@ -37,7 +37,7 @@ to hang and nothing tells you why.
 You need registered credentials. See
 [registration and credentials](registration-and-credentials.md).
 
-Read [asynchronous calls and callbacks](../../hiecm/concepts/asynchronous-callbacks.md)
+Read [asynchronous calls and callbacks](hiecm.concept.asynchronous-callbacks)
 first, because the shape of the problem matters more than the setup.
 
 ## What happens

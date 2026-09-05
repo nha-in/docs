@@ -30,7 +30,7 @@ related:
 
 HealthDocumentRecord carries unstructured historical health records,
 typically one or more documents a patient uploads through the Health
-Locker. [NRCES](../glossary/nrces.md) calls it `HealthDocumentRecord`.
+Locker. [NRCES](shared.glossary.nrces) calls it `HealthDocumentRecord`.
 
 ## Before you start
 
