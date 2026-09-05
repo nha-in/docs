@@ -39,7 +39,7 @@ family, so the flow has a branch.
 
 - A working session token.
 - The person's mobile number, encrypted. See
-  [why identifiers are encrypted](../concepts/encrypted-identifiers.md).
+  [why identifiers are encrypted](hiecm.concept.encrypted-identifiers).
 - The person present to read an OTP.
 
 ## What happens
@@ -82,9 +82,9 @@ The verify call returns a list rather than a token. That is the multi
 account branch, not an error.
 
 The token is rejected on the next call. See
-[ABDM-2401](../errors/abdm-2401.md), and check you are not sending the
+[ABDM-2401](hiecm.error.abdm-2401), and check you are not sending the
 application session token in `X-token`.
 
 Login fails with an authentication error and nothing more specific. See
-[900900](../errors/900900.md).
+[900900](hiecm.error.900900).
 

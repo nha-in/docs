@@ -63,7 +63,7 @@ skills:
 
 A linked care context says a record exists somewhere. It does not put the
 record in the person's hands. Fetching it is a consent flow, and the
-application runs it as an [HIU](../../shared/glossary/hiu.md), because
+application runs it as an [HIU](shared.glossary.hiu), because
 fetching a person's own records is an HIU flow like any other.
 
 ## Before you start
@@ -107,7 +107,7 @@ sequenceDiagram
 3. **Wait for the grant.** Automatic where a policy exists, otherwise the
    person decides.
 4. **Raise a health information request** with the approved
-   [consent artefact](../concepts/consent-artefact.md).
+   [consent artefact](hiecm.concept.consent-artefact).
 5. **Receive the records** the facility sends across the network.
 6. **Store and display them,** preferably in date order.
 
@@ -137,7 +137,7 @@ and no records.
 
 The failures these sources document, in rough order of frequency:
 
-- [ABDM-1112](../errors/abdm-1112.md) when the artefact is expired or has
+- [ABDM-1112](hiecm.error.abdm-1112) when the artefact is expired or has
   been revoked. Revocation is the person exercising a right, so it is a
   state to handle rather than an error to report.
 - Records fetched but not stored, which reads as working until the

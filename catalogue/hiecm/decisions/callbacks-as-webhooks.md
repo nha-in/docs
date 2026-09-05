@@ -32,7 +32,7 @@ This catalogue uses `webhooks`.
 
 ## Before you start
 
-Read [asynchronous calls and callbacks](../concepts/asynchronous-callbacks.md)
+Read [asynchronous calls and callbacks](hiecm.concept.asynchronous-callbacks)
 so the thing being described is clear before the format choice is.
 
 ## What happens

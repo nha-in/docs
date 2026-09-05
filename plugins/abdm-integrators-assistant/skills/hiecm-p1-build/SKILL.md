@@ -21,14 +21,14 @@ Loop limit: 8 passes per flow step. Hitting the limit is an escalation: state wh
 Four things must already be true, each checkable:
 
 - You hold a gateway session token. See
-  the gateway session.
-- You can send and verify an OTP, and
+  the gateway session (hiecm.concept.gateway-session).
+- You can send and verify an OTP (shared.glossary.otp), and
   your screens keep resend locked for 60 seconds in every flow.
 - You can store a refresh token securely, because login follows
   immediately and the application holds the session from here on.
 - You know which path the user is on. A mobile number produces a
-  Self-Declared profile with no KYC; an
-  existing 14 digit ABHA number
+  Self-Declared profile with no KYC (shared.glossary.kyc); an
+  existing 14 digit ABHA number (shared.glossary.abha-number)
   produces a KYC Verified one.
 
 **Act: the calls in this flow, in order**
@@ -140,10 +140,10 @@ The failures these sources document, in rough order of frequency:
 
 Four things must already be true, each checkable:
 
-- The person holds an ABHA address.
+- The person holds an ABHA address (shared.glossary.abha-address).
   See create an ABHA address.
 - You hold a gateway session token. See
-  the gateway session.
+  the gateway session (hiecm.concept.gateway-session).
 - You can store a refresh token securely, and you have a sign out that
   clears it.
 - Your application supports more than one user profile per install, with

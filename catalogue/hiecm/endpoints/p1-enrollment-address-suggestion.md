@@ -32,7 +32,7 @@ A person should not have to invent an address. This returns candidates for the t
 
 ## Before you start
 
-- A gateway session token. See [the gateway session](../concepts/gateway-session.md).
+- A gateway session token. See [the gateway session](hiecm.concept.gateway-session).
 - The `txnId` from a verified registration.
 
 ## What happens

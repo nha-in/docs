@@ -32,7 +32,7 @@ Discovery asks one facility whether it holds records for this person. The facili
 
 ## Before you start
 
-- A gateway session token. See [the gateway session](../concepts/gateway-session.md).
+- A gateway session token. See [the gateway session](hiecm.concept.gateway-session).
 - The verified mobile number, the health address, and the name, year or date of birth and gender as the facility would hold them.
 
 ## What happens

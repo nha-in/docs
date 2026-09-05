@@ -32,7 +32,7 @@ Without a policy, a person approves a request every time a hospital adds one rec
 
 ## Before you start
 
-- A gateway session token. See [the gateway session](../concepts/gateway-session.md).
+- A gateway session token. See [the gateway session](hiecm.concept.gateway-session).
 - The person's explicit agreement that records may be retrieved automatically, taken as a separate question from the subscription.
 
 ## What happens

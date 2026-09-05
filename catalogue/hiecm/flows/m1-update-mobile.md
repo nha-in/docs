@@ -80,5 +80,5 @@ The scopes do not match between the two calls, and the verify is
 refused. Send the array you sent on the request.
 
 The person is not logged in and the call is refused. See
-[ABDM-2401](../errors/abdm-2401.md).
+[ABDM-2401](hiecm.error.abdm-2401).
 

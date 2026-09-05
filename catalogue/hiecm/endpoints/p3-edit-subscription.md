@@ -31,7 +31,7 @@ This is the API that will be invoked by the patient/user from PHR application to
 
 ## Before you start
 
-- A gateway session token. See [the gateway session](../concepts/gateway-session.md).
+- A gateway session token. See [the gateway session](hiecm.concept.gateway-session).
 - The identifiers this call names in its body, held from the step before it.
 
 ## What happens
@@ -42,7 +42,39 @@ curl -X PUT 'https://dev.abdm.gov.in/api/hiecm/subscription-' \
   -H 'REQUEST-ID: <FRESH_UUID>' \
   -H 'TIMESTAMP: <ISO_8601_TIMESTAMP>' \
   -H 'Content-Type: application/json' \
-  -d '<REQUEST_BODY>'
+  -d '{
+  "hiuId": "<HIU_ID>",
+  "subscriptionEditAndApprovalRequest": {
+    "isApplicableForAllHIPs": true,
+    "includedSources": [
+      {
+        "hiTypes": [
+          "DiagnosticReport",
+          "Prescription",
+          "ImmunizationRecord",
+          "DischargeSummary",
+          "OPConsultation",
+          "HealthDocumentRecord",
+          "WellnessRecord"
+        ],
+        "purpose": {
+          "text": "Care Management",
+          "code": "CAREMGT",
+          "refUri": "www.abdm.gov.in"
+        },
+        "categories": [
+          "DATA",
+          "LINK"
+        ],
+        "period": {
+          "from": "2024-01-09T09:00:00.000Z",
+          "to": "2123-12-31T09:00:00.000Z"
+        }
+      }
+    ],
+    "excludedSources": []
+  }
+}'
 ```
 
 The path, the method and the body come from NHA's PHR V3 document,

@@ -42,7 +42,7 @@ This wording is NHA's own, from the file this operation was ingested from.
 
 ## Before you start
 
-- A gateway access token. See [the gateway session](../concepts/gateway-session.md).
+- A gateway access token. See [the gateway session](hiecm.concept.gateway-session).
 - The right `X-CM-ID` for the environment you are calling.
 
 ## What happens
@@ -75,11 +75,11 @@ public key as base64 DER (SubjectPublicKeyInfo, no PEM armour).
 
 **Resolved, 2026-08-26.** The unproven state recorded on 2026-08-25 is settled: with a correct UTC `TIMESTAMP` the endpoint works. Every failure ever observed against it was the timestamp format, dressed up as a 404.
 
-- A `TIMESTAMP` in IST returned the `ABDM-1016` invalid timestamp rejection wrapped in an HTTP 404. The 404 is misleading: the path is not the problem, the clock format is. Send the `TIMESTAMP` in UTC with milliseconds and a trailing `Z`. See [ABDM-1016](../errors/abdm-1016.md).
+- A `TIMESTAMP` in IST returned the `ABDM-1016` invalid timestamp rejection wrapped in an HTTP 404. The 404 is misleading: the path is not the problem, the clock format is. Send the `TIMESTAMP` in UTC with milliseconds and a trailing `Z`. See [ABDM-1016](hiecm.error.abdm-1016).
 - An earlier guessed path, `/v1/phr/public/certificate`, returned a genuine 404: `{"code":"404","type":"Status report","message":"Not Found"}`. That path does not exist. Do not confuse its honest 404 with the misleading one above.
 - If you need an encrypted value on the sandbox today and this endpoint will not give you the key, [the encrypt helper](m1-encrypt-value.md) was observed working on the sandbox on 2026-08-25. It is a sandbox convenience only; it sends the plaintext to NHA.
-- The clock is wrong and every call fails. See [ABDM-2402](../errors/abdm-2402.md).
-- The `REQUEST-ID` is missing, malformed or reused. See [ABDM-2404](../errors/abdm-2404.md).
-- No session token was sent. See [ABDM-2500](../errors/abdm-2500.md).
-- ABDM fails and does not say why. See [ABDM-9999](../errors/abdm-9999.md).
+- The clock is wrong and every call fails. See [ABDM-2402](hiecm.error.abdm-2402).
+- The `REQUEST-ID` is missing, malformed or reused. See [ABDM-2404](hiecm.error.abdm-2404).
+- No session token was sent. See [ABDM-2500](hiecm.error.abdm-2500).
+- ABDM fails and does not say why. See [ABDM-9999](hiecm.error.abdm-9999).
 

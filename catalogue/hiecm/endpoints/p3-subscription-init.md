@@ -32,7 +32,7 @@ A subscription is how an application hears about a new record without polling. I
 
 ## Before you start
 
-- A gateway session token. See [the gateway session](../concepts/gateway-session.md).
+- A gateway session token. See [the gateway session](hiecm.concept.gateway-session).
 - The person's agreement, taken before the request is sent.
 
 ## What happens

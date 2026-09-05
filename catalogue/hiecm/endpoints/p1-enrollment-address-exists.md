@@ -32,7 +32,7 @@ Checks one address before you try to create it, so a person types a name once ra
 
 ## Before you start
 
-- A gateway session token. See [the gateway session](../concepts/gateway-session.md).
+- A gateway session token. See [the gateway session](hiecm.concept.gateway-session).
 - A candidate address, and the transaction it belongs to.
 
 ## What happens

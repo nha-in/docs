@@ -21,12 +21,12 @@ Loop limit: 8 passes per flow step. Hitting the limit is an escalation: state wh
 Four things must already be true, each checkable:
 
 - You hold a gateway session token. See
-  the gateway session. Every call in
+  the gateway session (hiecm.concept.gateway-session). Every call in
   this flow carries it in `Authorization`.
 - You can redirect the professional to a URL and bring them back. The
   Aadhaar step happens in a browser, not in your API client.
 - You can encrypt a value with NHA's public certificate. See
-  encrypting an identifier. The mobile
+  encrypting an identifier (hiecm.concept.input-encryption). The mobile
   number, the email address and the password all travel encrypted, and
   the certificate is fetched from `/v4/int/api/v1/auth/cert`.
 - You know which category and subcategory the professional falls in, as
@@ -78,9 +78,9 @@ register the professional.
 The failures the M4 sources document, each with its fix in the linked
 error atom:
 
-- HIS-3021 when an HPID already exists for this
+- HIS-3021 (hiecm.error.his-3021) when an HPID already exists for this
   Aadhaar. Step 4 is what stops you reaching this.
-- HIS-2045 when the session behind the `txnId`
+- HIS-2045 (hiecm.error.his-2045) when the session behind the `txnId`
   has expired, which the five minute URL window makes easy to hit.
 - A bare boolean where your client expected an object, from the optional
   status poll. That is the documented shape, not a fault.
@@ -117,9 +117,9 @@ HIU link can raise a consent request.
 The failures the M4 sources document, each with its fix in the linked
 error atom:
 
-- HIS-1124 when a call needs a bridge that is
+- HIS-1124 (hiecm.error.his-1124) when a call needs a bridge that is
   not linked to this facility.
-- HIS-1128 when the HIP name is already in use,
+- HIS-1128 (hiecm.error.his-1128) when the HIP name is already in use,
   which the uniqueness rule makes common on a facility's second bridge.
 - A name longer than 15 characters or carrying a special character,
   rejected as validation rather than as a naming rule.
@@ -135,7 +135,7 @@ Four things must already be true, each checkable:
   password, so it usually starts with a person getting an
   HPID.
 - You hold a gateway session token. See
-  the gateway session.
+  the gateway session (hiecm.concept.gateway-session).
 - You hold the LGD codes for the facility's state, district, sub district
   and village. They come from the Local Government Directory and from the
   LGD lookup calls.
@@ -170,9 +170,9 @@ onboarded anything, whatever the three write calls returned.
 The failures the M4 sources document, each with its fix in the linked
 error atom:
 
-- HIS-1132 when the registry detects a duplicate
+- HIS-1132 (hiecm.error.his-1132) when the registry detects a duplicate
   facility. Step 1 is what stops you reaching this.
-- HIS-4003 when the facility already exists
+- HIS-4003 (hiecm.error.his-4003) when the facility already exists
   under the identifiers you sent.
 - A conditional field rejected on detailed information, because the rule
   that makes it mandatory depends on the facility type and the system of
@@ -189,7 +189,7 @@ Four things must already be true, each checkable:
 - You hold the `hprToken` that create HPID returned. This call carries it
   in the payload, not only in a header.
 - You hold a gateway session token. See
-  the gateway session.
+  the gateway session (hiecm.concept.gateway-session).
 - You have fetched the code lists this call needs. Council, course,
   college, university, state, district and language all go in as codes.
   The call takes codes, not names, and the subcategory codes here are
@@ -249,9 +249,9 @@ where the registration call itself was accepted.
 The failures the M4 sources document, each with its fix in the linked
 error atom:
 
-- HIS-5005 when this professional is already
+- HIS-5005 (hiecm.error.his-5005) when this professional is already
   registered, which is a state to read rather than an error to retry.
-- HIS-5011 when the `hprToken` has expired
+- HIS-5011 (hiecm.error.his-5011) when the `hprToken` has expired
   between creating the HPID and registering the profile.
 - A code that is not on the current master list, which reads as a
   validation failure on a field you believed was correct. Refetch the

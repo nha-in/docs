@@ -25,11 +25,11 @@ related:
 
 A person in ABDM has two identifiers and they do different jobs.
 
-The [ABHA number](../../shared/glossary/abha-number.md) is fourteen
+The [ABHA number](shared.glossary.abha-number) is fourteen
 digits. It is issued after a KYC check and it answers "who is this
 person". It is the trustworthy one, because Aadhaar stood behind it.
 
-The [ABHA address](../../shared/glossary/abha-address.md) looks like
+The [ABHA address](shared.glossary.abha-address) looks like
 `ajeet123@abdm`. It answers "where do this person's records get routed".
 It is the one a person types at a facility, and the one care contexts are
 linked against.

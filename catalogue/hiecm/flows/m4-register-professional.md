@@ -56,12 +56,12 @@ skills:
 
 ## In plain words
 
-An [HPID](../../shared/glossary/hpid.md) says who a professional is. It
+An [HPID](shared.glossary.hpid) says who a professional is. It
 does not say what they are qualified to do. Registering the professional
 adds the qualifications, the council registration and the current place
 of work, and attaches the certificates that back them.
 
-Only after this does the [HPR](../../shared/glossary/hpr.md) hold a
+Only after this does the [HPR](shared.glossary.hpr) hold a
 profile rather than an identity.
 
 ## Before you start
@@ -73,7 +73,7 @@ Four things must already be true, each checkable:
 - You hold the `hprToken` that create HPID returned. This call carries it
   in the payload, not only in a header.
 - You hold a gateway session token. See
-  [the gateway session](../concepts/gateway-session.md).
+  [the gateway session](hiecm.concept.gateway-session).
 - You have fetched the code lists this call needs. Council, course,
   college, university, state, district and language all go in as codes.
   The call takes codes, not names, and the subcategory codes here are
@@ -140,9 +140,9 @@ where the registration call itself was accepted.
 The failures the M4 sources document, each with its fix in the linked
 error atom:
 
-- [HIS-5005](../errors/his-5005.md) when this professional is already
+- [HIS-5005](hiecm.error.his-5005) when this professional is already
   registered, which is a state to read rather than an error to retry.
-- [HIS-5011](../errors/his-5011.md) when the `hprToken` has expired
+- [HIS-5011](hiecm.error.his-5011) when the `hprToken` has expired
   between creating the HPID and registering the profile.
 - A code that is not on the current master list, which reads as a
   validation failure on a field you believed was correct. Refetch the

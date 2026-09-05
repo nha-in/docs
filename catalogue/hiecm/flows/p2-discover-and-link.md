@@ -67,8 +67,8 @@ still holds their records. Discovery is how their own application finds
 those records afterwards, and linking is how the records become part of
 the person's account.
 
-This is the mirror of [M2](../../shared/glossary/m2.md). There, a
-provider publishes a [care context](../concepts/care-context.md). Here,
+This is the mirror of [M2](shared.glossary.m2). There, a
+provider publishes a [care context](hiecm.concept.care-context). Here,
 the person finds one and claims it.
 
 ## Before you start
@@ -76,15 +76,15 @@ the person finds one and claims it.
 Four things must already be true, each checkable:
 
 - The person is signed in and holds an
-  [ABHA address](../../shared/glossary/abha-address.md). See
+  [ABHA address](shared.glossary.abha-address). See
   [sign a user in](p1-login.md).
 - You hold a verified mobile number for them. Discovery carries it.
 - You can show only participating facilities in the search. A facility
-  qualifies when it is a [HIP](../../shared/glossary/hip.md) linked to an
-  [HRP](../../shared/glossary/hrp.md).
+  qualifies when it is a [HIP](shared.glossary.hip) linked to an
+  [HRP](shared.glossary.hrp).
 - You can hold a request open across a callback. Discovery is answered
   asynchronously. See
-  [asynchronous callbacks](../concepts/asynchronous-callbacks.md).
+  [asynchronous callbacks](hiecm.concept.asynchronous-callbacks).
 
 ## What happens
 
@@ -117,7 +117,7 @@ sequenceDiagram
    care context that is already linked. A person offered the same record
    twice cannot tell which of the two is theirs.
 3. **Let the person select and confirm.** The facility sends an
-   [OTP](../../shared/glossary/otp.md) to the mobile number it has
+   [OTP](shared.glossary.otp) to the mobile number it has
    registered, which may not be the one in your application.
 4. **Verify the OTP.** On success the care contexts link to the ABHA
    address.
