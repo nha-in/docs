@@ -6,7 +6,7 @@ milestone: P1
 version: abdm-v3
 title: Update Email Verify-OTP
 summary: >
-  This API is used to verify EMAIL OTP and update the EMAIL in the system.
+  Verify EMAIL OTP and update the EMAIL in the system.
 sources:
   - file: catalogue/openapi/.raw/nha-2026-09-04/ABHA-PHR-V3-Documents.docx
     fetched: 2026-09-04

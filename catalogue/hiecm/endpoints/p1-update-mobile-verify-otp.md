@@ -6,7 +6,7 @@ milestone: P1
 version: abdm-v3
 title: Update Mobile Verify-OTP
 summary: >
-  This API is used to verify OTP and update the mobile number in the system.
+  Verify OTP and update the mobile number in the system.
 sources:
   - file: catalogue/openapi/.raw/nha-2026-09-04/ABHA-PHR-V3-Documents.docx
     fetched: 2026-09-04

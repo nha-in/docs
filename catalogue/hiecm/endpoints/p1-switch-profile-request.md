@@ -6,7 +6,9 @@ milestone: P1
 version: abdm-v3
 title: Switch Profile Request
 summary: >
-  This API will be used to switch between different user profiles (eKYC and non eKYC). If the user has multiple ABHA addresses, then if the user logs in via ABHA number/mobile number then user can switc
+  Switch between different user profiles (eKYC and non eKYC). If the user
+  has multiple ABHA addresses, then if the user logs in via ABHA
+  number/mobile number then user can switc
 sources:
   - file: catalogue/openapi/.raw/nha-2026-09-04/ABHA-PHR-V3-Documents.docx
     fetched: 2026-09-04

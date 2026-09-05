@@ -6,7 +6,7 @@ milestone: P1
 version: abdm-v3
 title: Switch Profile Verify
 summary: >
-  This API will be invoked to verify the profile to which user has switched.
+  Verify the profile to which user has switched.
 sources:
   - file: catalogue/openapi/.raw/nha-2026-09-04/ABHA-PHR-V3-Documents.docx
     fetched: 2026-09-04

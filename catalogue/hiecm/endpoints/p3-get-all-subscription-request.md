@@ -6,7 +6,9 @@ milestone: P3
 version: abdm-v3
 title: Get All Subscription Request
 summary: >
-  This API endpoint is used to retrieve all consent and subscription requests based on specified filters. User can list of requests that match the given criteria, including details about their status, s
+  Retrieve all consent and subscription requests based on specified filters.
+  User can list of requests that match the given criteria, including details
+  about their status, s
 sources:
   - file: catalogue/openapi/.raw/nha-2026-09-04/ABHA-PHR-V3-Documents.docx
     fetched: 2026-09-04

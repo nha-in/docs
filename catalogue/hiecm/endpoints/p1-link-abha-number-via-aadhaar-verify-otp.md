@@ -6,7 +6,7 @@ milestone: P1
 version: abdm-v3
 title: Link ABHA number via AADHAAR-Verify OTP
 summary: >
-  This API is used to verify the OTP in order to Link ABHA number with ABHA Address.
+  Verify the OTP in order to Link ABHA number with ABHA Address.
 sources:
   - file: catalogue/openapi/.raw/nha-2026-09-04/ABHA-PHR-V3-Documents.docx
     fetched: 2026-09-04

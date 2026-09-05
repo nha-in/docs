@@ -6,7 +6,9 @@ milestone: P3
 version: abdm-v3
 title: Revoke - Consent Request
 summary: >
-  This API endpoint is used to revoke a previously approved consent from the Personal Health Record (PHR) or mobile application. By invoking this API, users can withdraw their consent, thereby terminati
+  Revoke a previously approved consent from the Personal Health Record (PHR)
+  or mobile application. By invoking this API, users can withdraw their
+  consent, thereby terminati
 sources:
   - file: catalogue/openapi/.raw/nha-2026-09-04/ABHA-PHR-V3-Documents.docx
     fetched: 2026-09-04

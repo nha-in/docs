@@ -6,7 +6,7 @@ milestone: P1
 version: abdm-v3
 title: Link ABHA number via Mobile-Request OTP
 summary: >
-  This API is used to link an ABHA number with an ABHA address. An OTP will
+  Link an ABHA number with an ABHA address. An OTP will
 sources:
   - file: catalogue/openapi/.raw/nha-2026-09-04/ABHA-PHR-V3-Documents.docx
     fetched: 2026-09-04

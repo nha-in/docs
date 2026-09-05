@@ -6,7 +6,8 @@ milestone: P1
 version: abdm-v3
 title: Get User QR Code
 summary: >
-  This API is used to fetch a QR code for the respective logged-in user. This QR code can be scanned to get the user's details, such as name, gender, address, etc.
+  Fetch a QR code for the respective logged-in user. This QR code can be
+  scanned to get the user's details, such as name, gender, address, etc.
 sources:
   - file: catalogue/openapi/.raw/nha-2026-09-04/ABHA-PHR-V3-Documents.docx
     fetched: 2026-09-04
