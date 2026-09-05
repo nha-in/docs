@@ -259,6 +259,12 @@
   gap: 0.75rem;
 }
 
+/* In the panel head the label already takes the slack, so the language tabs
+   sit against the copy button instead of stretching across it. */
+.api-panel__head .api-panel__tabs {
+  flex: 0 0 auto;
+}
+
 .api-panel__tab {
   border: 0;
   background: transparent;

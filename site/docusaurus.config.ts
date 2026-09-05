@@ -106,7 +106,10 @@ function scalarOnReferencePagesOnly() {
         withFileTypes: true,
       })) {
         if (!entry.isFile() || !entry.name.endsWith('.html')) continue;
-        const file = join(entry.parentPath ?? entry.path, entry.name);
+        // parentPath is Node 20.12 and later; path is the older spelling of
+        // the same thing, and the bundled types only know one of them.
+        const dirent = entry as {parentPath?: string; path?: string};
+        const file = join(dirent.parentPath ?? dirent.path ?? outDir, entry.name);
         const html = readFileSync(file, 'utf8');
         tagPattern.lastIndex = 0;
         if (!tagPattern.test(html)) continue;
