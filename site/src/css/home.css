@@ -312,13 +312,13 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.875rem;
+  gap: 1.125rem;
   margin: 0;
 }
 
 .landing-hero__board .brand-chip__mark {
-  width: clamp(2.25rem, 1.6rem + 2.7vw, 3.25rem);
-  height: clamp(2.25rem, 1.6rem + 2.7vw, 3.25rem);
+  width: clamp(2.75rem, 1.9rem + 3.4vw, 4rem);
+  height: clamp(2.75rem, 1.9rem + 3.4vw, 4rem);
 }
 
 .flap {
@@ -342,7 +342,7 @@
   border-radius: 2px;
   background: var(--fill-soft);
   font-family: var(--font-mono);
-  font-size: 0.75rem;
+  font-size: 0.875rem;
   font-weight: 500;
   line-height: 1;
   letter-spacing: 0;
@@ -449,12 +449,20 @@
   }
 }
 
-/* The board is 29 flaps wide, because the longest message is 29 characters.
-   At the size above that is 299px against the 327px a 375px phone leaves
-   between the hero's padding. A 320px phone leaves 272px, so the flaps get
-   smaller there rather than the board getting narrower: a board that drops
-   cells is a board that cannot show its own longest message. */
-@media (max-width: 420px) {
+/* The board is 29 flaps wide, because the longest message is 29 characters,
+   and at the size above that is 345px. A 480px window leaves 432px inside the
+   hero's padding, so the full size holds down to there; below it the flaps get
+   smaller rather than the board getting narrower, because a board that drops
+   cells is a board that cannot show its own longest message. A 375px phone
+   leaves 327px and a 320px one 272px, which is what the two steps are for. */
+@media (max-width: 480px) {
+  .flap__cell {
+    width: 0.78em;
+    font-size: 0.6875rem;
+  }
+}
+
+@media (max-width: 360px) {
   .flap__cell {
     width: 0.76em;
     font-size: 0.5625rem;
