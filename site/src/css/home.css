@@ -564,6 +564,16 @@
   transition: none;
 }
 
+/* The theme parks its skip link just above the top edge and brings it back on
+   focus. Just above the top edge is exactly where the pull opens its strip,
+   so pulling back to the landing page put "Skip to main content" in it: a bar
+   of chrome nobody asked for, in the one gesture that is meant to show an
+   empty edge. Parked further than the pull can reach. Focus still brings it,
+   which is the only time it is meant to appear. */
+.pull-home a[class*='skipToContent']:not(:focus) {
+  transform: translateY(-200px);
+}
+
 @media (prefers-reduced-motion: reduce) {
   .pull-home {
     transform: none;
