@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 
 /**
  * How long one flap takes to fall, and how far apart the cells start.
@@ -105,20 +105,10 @@ export default function FlapBoard({
   // Held in state rather than derived, because the outgoing face has to
   // survive the render that introduces the incoming one.
   const [{from, to}, setFaces] = useState({from: target, to: target});
-  const settle = useRef<number | undefined>(undefined);
 
   useEffect(() => {
-    if (target === to) return undefined;
-    setFaces((prior) => ({from: prior.to, to: target}));
-    // Once the wave has crossed, the arriving characters become the resting
-    // ones, so the next turn leaves from where this one landed.
-    window.clearTimeout(settle.current);
-    settle.current = window.setTimeout(
-      () => setFaces({from: target, to: target}),
-      cells * STAGGER_MS + TURN_MS + 60,
-    );
-    return () => window.clearTimeout(settle.current);
-  }, [target, to, cells]);
+    setFaces((prior) => (prior.to === target ? prior : {from: prior.to, to: target}));
+  }, [target]);
 
   return (
     <span className="flap" data-still={still ? 'true' : undefined}>
@@ -128,7 +118,11 @@ export default function FlapBoard({
       <span className="flap__row" aria-hidden="true">
         {to.split('').map((char, index) => (
           <Cell
-            key={index}
+            // The pair being turned is in the key, so a new message is a new
+            // element and the CSS animation runs again from the top. Keyed on
+            // the index alone, React updates the character in place and the
+            // flap never turns after the first paint, which is what it did.
+            key={`${index}|${from}|${to}`}
             from={from[index] ?? ' '}
             to={char}
             delay={index * STAGGER_MS}
