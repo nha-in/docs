@@ -8,6 +8,7 @@ import {
   DialogTrigger,
 } from '@site/src/components/ui/dialog';
 import TryIt from './TryIt';
+import Markdown from './Markdown';
 
 export type Field = {
   name: string;
@@ -33,7 +34,14 @@ export type Operation = {
   servers: {url: string; description: string}[];
   summary: string;
   description: string;
-  security: {name: string; type: string; scheme?: string; description: string}[];
+  security: {
+    name: string;
+    type: string;
+    scheme?: string;
+    in?: string;
+    headerName?: string;
+    description: string;
+  }[];
   headers: Field[];
   pathParams: Field[];
   queryParams: Field[];
@@ -56,7 +64,7 @@ function FieldRow({field}: {field: Field}) {
         ) : null}
       </div>
       {field.description ? (
-        <p className="api-field__description">{field.description}</p>
+        <Markdown text={field.description} className="api-field__description" />
       ) : null}
       {field.enum?.length ? (
         <p className="api-field__enum">
@@ -159,7 +167,7 @@ export default function ApiEndpoint({operation}: {operation: Operation}) {
         <Heading as="h1" className="api-page__title">
           {operation.summary}
         </Heading>
-        {lede ? <p className="api-page__lede">{lede}</p> : null}
+        {lede ? <Markdown text={lede} className="api-page__lede" /> : null}
 
         <div className="api-bar">
           <span
@@ -185,7 +193,7 @@ export default function ApiEndpoint({operation}: {operation: Operation}) {
           )}
         </div>
 
-        {rest ? <p className="api-page__body">{rest}</p> : null}
+        {rest ? <Markdown text={rest} className="api-page__body" /> : null}
 
         {operation.security.length ? (
           <Section title="Authorizations">
@@ -193,7 +201,14 @@ export default function ApiEndpoint({operation}: {operation: Operation}) {
               <FieldRow
                 key={scheme.name}
                 field={{
-                  name: 'Authorization',
+                  // The header a scheme travels in is the scheme's own, not
+                  // always Authorization: an apiKey scheme names its header,
+                  // and labelling X-Token "Authorization" told the reader to
+                  // send the wrong one.
+                  name:
+                    scheme.type === 'apiKey' && scheme.headerName
+                      ? scheme.headerName
+                      : 'Authorization',
                   type: scheme.scheme === 'bearer' ? 'bearer token' : scheme.type,
                   required: true,
                   description: scheme.description,
@@ -243,7 +258,10 @@ export default function ApiEndpoint({operation}: {operation: Operation}) {
                   <code className="api-field__name">{response.status}</code>
                 </div>
                 {response.description ? (
-                  <p className="api-field__description">{response.description}</p>
+                  <Markdown
+                    text={response.description}
+                    className="api-field__description"
+                  />
                 ) : null}
               </div>
             ))}

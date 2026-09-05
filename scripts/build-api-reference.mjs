@@ -169,6 +169,26 @@ function firstExample(content) {
   return examples[0]?.value;
 }
 
+// A specification hard wraps its descriptions near column 72, so the first
+// *line* is usually a fragment. Taking it left a quarter of the endpoint
+// pages with a meta description ending mid sentence, and that string is what
+// a link preview shows when somebody pastes the page into a chat. Take the
+// first paragraph, reflow it, drop the inline markdown, and cut on a word
+// boundary rather than mid word.
+function metaDescription(operation) {
+  const source = (operation.description || operation.summary || '').trim();
+  const plain = source
+    .split(/\n{2,}/)[0]
+    .replace(/\s*\n\s*/g, ' ')
+    .replace(/`([^`]+)`/g, '$1')
+    .replace(/\*\*([^*]+)\*\*/g, '$1')
+    .trim();
+  if (plain.length <= 160) return plain;
+  const cut = plain.slice(0, 157);
+  const boundary = cut.lastIndexOf(' ');
+  return `${(boundary > 100 ? cut.slice(0, boundary) : cut).trimEnd()}...`;
+}
+
 // The credentials a call carries come from `security`, which names a scheme,
 // not from the header parameters. A curl assembled only from parameters is
 // therefore missing the one header every authenticated ABDM call needs, and
@@ -501,9 +521,7 @@ for (const {platform, version, files} of tree) {
         `title: ${JSON.stringify(operation.summary)}`,
         `sidebar_label: ${JSON.stringify(operation.summary)}`,
         `sidebar_class_name: api-method api-method--${operation.method.toLowerCase()}`,
-        `description: ${JSON.stringify(
-          (operation.description || operation.summary).split('\n')[0].slice(0, 160),
-        )}`,
+        `description: ${JSON.stringify(metaDescription(operation))}`,
         'hide_table_of_contents: true',
         'hide_title: true',
         'wrapperClassName: api-doc',
