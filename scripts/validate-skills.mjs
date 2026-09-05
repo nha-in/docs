@@ -12,7 +12,7 @@ import { join } from "node:path";
 import { parse } from "yaml";
 import { loadAtoms, root } from "./lib/atoms.mjs";
 
-const skillsDir = join(root, "plugins", "abdm-integrators-assistant", "skills");
+const skillsDir = join(root, "skills-src");
 const { atoms } = loadAtoms();
 
 const KNOWN_PATHS = new Set();
