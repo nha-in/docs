@@ -6,7 +6,7 @@ milestone: P3
 version: abdm-v3
 title: Consent request on-status (Callback)
 summary: >
-  This API is used to send the status of consent request back to HIU through HIE-CM
+  Carries the status of a consent request back to the HIU, through HIE-CM.
 sources:
   - file: catalogue/openapi/.raw/nha-2026-09-04/ABHA-PHR-V3-Documents.docx
     fetched: 2026-09-04

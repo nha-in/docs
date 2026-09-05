@@ -6,7 +6,8 @@ milestone: P3
 version: abdm-v3
 title: Approve Subscription Request – Call Back
 summary: >
-  This Api will be invoked by the patient/user from PHR application to approve the subscription request raised by the Health locker/PHR.
+  Carries the patient's approval of a subscription a health locker asked
+  for.
 sources:
   - file: catalogue/openapi/.raw/nha-2026-09-04/ABHA-PHR-V3-Documents.docx
     fetched: 2026-09-04

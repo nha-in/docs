@@ -6,7 +6,8 @@ milestone: P2
 version: abdm-v3
 title: HIE-CM callback for health record confirmation
 summary: >
-  This API endpoint is designed to be invoked by the patient or user to confirm their health records. By using this API, patients can validate and confirm the linkage of their health information to thei
+  Confirms the patient's health records. The patient makes this call from
+  their PHR application.
 sources:
   - file: catalogue/openapi/.raw/nha-2026-09-04/ABHA-PHR-V3-Documents.docx
     fetched: 2026-09-04
