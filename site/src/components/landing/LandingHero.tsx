@@ -1,9 +1,9 @@
-import React from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import Link from '@docusaurus/Link';
 import Heading from '@theme/Heading';
 import BrowserOnly from '@docusaurus/BrowserOnly';
-import {ChevronDown} from 'lucide-react';
 import NetworkWeb from '@site/src/components/landing/NetworkWeb';
+import FlapBoard from '@site/src/components/landing/FlapBoard';
 import BrandMark from '@site/src/components/chrome/BrandMark';
 import {unfiltered} from '@site/src/config/roles';
 import {
@@ -46,26 +46,87 @@ const gateways = [
 ];
 
 /**
+ * What the board says when a record lands somewhere, by who received it.
+ *
+ * Not a rotation on a timer. The message names what the network just did, so
+ * whichever one the board happens to be resting on is true of the crossing
+ * the reader watched rather than being whatever the clock landed on. Every
+ * line is a capability of ABDM, said as an outcome, because a first time
+ * visitor does not yet have the vocabulary the documentation uses.
+ */
+const DELIVERED: Record<string, string> = {
+  citizen: 'Unique health identity',
+  phr: 'Your records, in one place',
+  hospital: 'Interoperable medical records',
+  doctor: 'History at the point of care',
+  lab: 'Reports that reach you',
+  pharmacy: 'Prescriptions that travel',
+  insurer: 'Faster insurance claims',
+  nha: 'Unified health services',
+};
+
+/** What the board rests on. The site's own name is the idle state. */
+const RESTING = 'ABDM Developer Portal';
+
+/** Wide enough for the longest line above, so the flaps never resize. */
+const CELLS = Math.max(
+  RESTING.length,
+  ...Object.values(DELIVERED).map((line) => line.length),
+);
+
+/** How long the network stays quiet before the board falls back to the name. */
+const SETTLE_MS = 4200;
+
+/**
  * The statement, the one control and the three gateways.
  *
  * Markup only. What lifts it off the references page underneath is the
  * curtain that renders it (components/landing/LandingCurtain).
  */
-export default function LandingHero({
-  onLift,
-}: {
-  /** Runs the same lift the scroll gesture runs. */
-  onLift: () => void;
-}): React.ReactNode {
+export default function LandingHero(): React.ReactNode {
+  const [message, setMessage] = useState(RESTING);
+  // Set once on mount rather than read per render, so the server and the
+  // first client render agree: both of them draw the resting name.
+  const [still, setStill] = useState(true);
+  const quiet = useRef<number | undefined>(undefined);
+
+  useEffect(() => {
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const follow = () => setStill(reduced.matches);
+    follow();
+    reduced.addEventListener('change', follow);
+    return () => {
+      reduced.removeEventListener('change', follow);
+      window.clearTimeout(quiet.current);
+    };
+  }, []);
+
+  // A record landed. Say what that was, then fall back to the name once the
+  // network has been quiet for a moment, so the resting state is the site's
+  // own identity rather than whichever message happened to be last.
+  const delivered = useCallback((id: string) => {
+    const line = DELIVERED[id];
+    if (!line) return;
+    setMessage(line);
+    window.clearTimeout(quiet.current);
+    quiet.current = window.setTimeout(() => setMessage(RESTING), SETTLE_MS);
+  }, []);
+
   return (
     <section className="landing-hero">
       {/* The network the page is about, drawn behind the words. */}
-      <BrowserOnly>{() => <NetworkWeb />}</BrowserOnly>
+      <BrowserOnly>
+        {() => <NetworkWeb onArrive={still ? undefined : delivered} />}
+      </BrowserOnly>
 
       <div className="landing-hero__copy">
-        <p className="brand-chip brand-chip--eyebrow">
+        {/* The board, and the emblem beside it as the node the record leaves
+            from. Not a pill: the mark and the row sit on the same line the
+            links behind them run along, so this reads as part of the drawing
+            rather than as a label laid over it. */}
+        <p className="landing-hero__board">
           <BrandMark />
-          <span className="landing-hero__eyebrow">ABDM Developer Portal</span>
+          <FlapBoard text={message} cells={CELLS} still={still} />
         </p>
         {/* Three lines, set as blocks rather than as `<br>`. A `<br>` hidden
             at narrow widths takes the line break away and leaves nothing in
@@ -107,14 +168,6 @@ export default function LandingHero({
         </div>
       </div>
 
-      {/* The lift is the page's main gesture, so it is advertised. */}
-      <button
-        type="button"
-        className="landing-scroll-hint"
-        onClick={onLift}
-        aria-label="Show the documentation">
-        <ChevronDown className="size-5" aria-hidden="true" />
-      </button>
     </section>
   );
 }

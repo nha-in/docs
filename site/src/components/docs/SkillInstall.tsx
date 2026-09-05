@@ -23,8 +23,8 @@ type Entry = {
   operations?: number;
   codes?: number;
   tests?: number;
-  /** Guided skills only: the SKILL.md frontmatter description. */
-  description?: string;
+  /** The reference files this skill is made of, from the generator. */
+  sections: string[];
 };
 
 type Target = {
@@ -33,7 +33,7 @@ type Target = {
   /** Where this agent reads skills from, for the panel's own copy. */
   dir: string | null;
   /** Built from the published URL, so the command works where the site is. */
-  command: (url: string, slug: string) => string;
+  command: (url: string, slug: string, sections: string[]) => string;
   /** One click into the agent, or null where the agent has no scheme for it. */
   link: ((command: string, module: string) => string) | null;
   note: string;
@@ -59,13 +59,27 @@ function promptFor(command: string, module: string) {
   ].join('\n');
 }
 
+/**
+ * A skill is a folder: the SKILL.md that routes, and the sections it links to
+ * under references/, which an agent loads only when the work needs them.
+ * Fetching the router alone leaves every link in it broken, so every command
+ * here takes the whole folder.
+ */
+function fetchFolder(url: string, slug: string, dir: string, sections: string[]) {
+  const into = `${dir}/${slug}`;
+  return [
+    `mkdir -p ${into}/references`,
+    `curl -fsSL ${url}/skills/${slug}/SKILL.md -o ${into}/SKILL.md`,
+    `for f in ${sections.join(' ')}; do curl -fsSL ${url}/skills/${slug}/references/$f.md -o ${into}/references/$f.md; done`,
+  ].join(' && ');
+}
+
 const TARGETS: Target[] = [
   {
     id: 'claude-code',
     label: 'Claude',
     dir: '.claude/skills',
-    command: (url, slug) =>
-      `mkdir -p .claude/skills/${slug} && curl -fsSL ${url}/skills/${slug}/SKILL.md -o .claude/skills/${slug}/SKILL.md`,
+    command: (url, slug, sections) => fetchFolder(url, slug, '.claude/skills', sections),
     // https://support.claude.com/en/articles/14729294-open-claude-desktop-with-a-link
     link: (command, module) =>
       `claude://code/new?q=${encodeURIComponent(promptFor(command, module))}`,
@@ -74,13 +88,12 @@ const TARGETS: Target[] = [
   {
     id: 'cursor',
     label: 'Cursor',
-    // https://cursor.com/docs/context/mcp... project rules live at
-    // .cursor/rules as .mdc files; a plain .md is ignored. The skill's own
-    // frontmatter already carries a `description`, so Cursor can match it as
-    // an agent-requested rule without edits.
-    dir: '.cursor/rules',
-    command: (url, slug) =>
-      `mkdir -p .cursor/rules && curl -fsSL ${url}/skills/${slug}/SKILL.md -o .cursor/rules/${slug}.mdc`,
+    // Cursor reads Agent Skills natively now (cursor.com/docs/context/skills),
+    // so this is the same folder every other target takes. It used to be
+    // converted into a .mdc project rule, which was the answer before the
+    // format was a standard Cursor implemented.
+    dir: '.cursor/skills',
+    command: (url, slug, sections) => fetchFolder(url, slug, '.cursor/skills', sections),
     // https://cursor.com/docs/integrations/deeplinks. Cursor has no skill
     // install deeplink, but it has a prompt one, so this lands the same way the
     // Claude link does: the command in the composer, waiting to be sent.
@@ -88,14 +101,13 @@ const TARGETS: Target[] = [
       `cursor://anysphere.cursor-deeplink/prompt?text=${encodeURIComponent(
         promptFor(command, module),
       )}`,
-    note: 'Saved as a Cursor project rule. Cursor matches it by its description when a task calls for it.',
+    note: 'Cursor reads this folder as a skill and matches it by its description when a task calls for it.',
   },
   {
     id: 'vscode',
     label: 'VS Code',
     dir: '.github/skills',
-    command: (url, slug) =>
-      `mkdir -p .github/skills/${slug} && curl -fsSL ${url}/skills/${slug}/SKILL.md -o .github/skills/${slug}/SKILL.md`,
+    command: (url, slug, sections) => fetchFolder(url, slug, '.github/skills', sections),
     // VS Code has a deeplink for MCP servers but none for skills, so this
     // target is the command only. Do not invent one.
     link: null,
@@ -105,20 +117,27 @@ const TARGETS: Target[] = [
     id: 'any',
     label: 'Any agent',
     dir: null,
-    command: (url, slug) => `curl -fsSL ${url}/skills/${slug}/SKILL.md`,
+    command: (url, slug, sections) => fetchFolder(url, slug, 'skills', sections),
     link: null,
-    note: 'One markdown file. Put it wherever your agent reads context from.',
+    note: 'One folder. Put it wherever your agent reads skills from.',
   },
 ];
 
-/** What the skill carries, counted from the file the generator wrote. */
+/**
+ * What the skill carries, one row per section the generator actually wrote.
+ *
+ * Driven by entry.sections rather than by a fixed list, so a module with no
+ * scaffolding loop of its own does not get a row promising one.
+ */
+const DETAIL: Record<string, (entry: Entry) => string> = {
+  scaffold: () =>
+    'The loop that builds the module flow by flow against the sandbox, ending on an observed result rather than on a call returning 200.',
+  generate: () => 'Building NRCES compliant bundle generation into a codebase.',
+  audit: () => "Checking an existing FHIR store's output against the same profiles.",
+};
+
 function capabilities(entry: Entry) {
-  // A guided skill is a procedure, not a reference: its own description
-  // says what it does better than counts could.
-  if (entry.kind === 'guided') {
-    return [{label: 'Guided', detail: entry.description ?? ''}];
-  }
-  return [
+  const counted = [
     {
       label: 'Integrate',
       detail:
@@ -141,6 +160,15 @@ function capabilities(entry: Entry) {
           : 'No test matrix exists for this module yet.',
     },
   ];
+  const named = new Map(counted.map((row) => [row.label.toLowerCase(), row]));
+  return entry.sections.map((section) => {
+    const row = named.get(section);
+    if (row) return row;
+    return {
+      label: `${section[0].toUpperCase()}${section.slice(1)}`,
+      detail: DETAIL[section]?.(entry) ?? '',
+    };
+  });
 }
 
 /** Copies the raw SKILL.md text, not just the install command, for a reader
@@ -209,6 +237,8 @@ export default function SkillInstall({slug, note}: SkillInstallProps): React.Rea
   const {siteConfig} = useDocusaurusContext();
   const [target, setTarget] = useState(TARGETS[0]);
   const base = `${siteConfig.url}${siteConfig.baseUrl}`.replace(/\/+$/, '');
+  // The router, for the copy button. The install commands take the whole
+  // folder, because the router alone has links to files that are not there.
   const download = useBaseUrl(`/skills/${slug}/SKILL.md`);
   const entry = (manifest as Record<string, Entry>)[slug];
 
@@ -222,15 +252,21 @@ export default function SkillInstall({slug, note}: SkillInstallProps): React.Rea
         </span>
         <div className="skill-install__body">
           <p className="skill-install__title">
-            {entry.kind === 'guided' ? entry.title : entry.module} agent skill
+            {entry.module} agent skill
           </p>
           <p className="skill-install__note">{note}</p>
         </div>
         <div className="skill-install__actions">
           <CopySkillButton url={download} />
-          <a className="skill-install__download" href={download} download>
+          {/* The router only. Named for what it is, because the folder is
+              what installs and the command above is what fetches it. */}
+          <a
+            className="skill-install__download"
+            href={download}
+            download
+            title="The router. Use the command below to take the references with it.">
             <Download className="size-4" aria-hidden="true" />
-            Download
+            SKILL.md
           </a>
         </div>
       </div>
@@ -261,12 +297,12 @@ export default function SkillInstall({slug, note}: SkillInstallProps): React.Rea
         ))}
       </div>
 
-      <CopyLine value={target.command(base, slug)} />
+      <CopyLine value={target.command(base, slug, entry.sections)} />
 
       {target.link && (
         <a
           className="skill-launch"
-          href={target.link(target.command(base, slug), entry.module)}>
+          href={target.link(target.command(base, slug, entry.sections), entry.module)}>
           <SquareArrowOutUpRight className="size-3.5" aria-hidden="true" />
           Open in {target.label}
         </a>
@@ -281,9 +317,9 @@ export default function SkillInstall({slug, note}: SkillInstallProps): React.Rea
           <li>
             Ask your agent for the job in your own words. "{entry.example}"
             {entry.errorExample ? `, "why am I getting ${entry.errorExample}"` : ''}
-            {entry.kind === 'guided'
-              ? '. The skill loads when the task matches it.'
-              : `, or "write the ${entry.module} tests for this". The skill loads when the task matches it.`}
+            {entry.sections.includes('test')
+              ? `, or "write the ${entry.module} tests for this". The skill loads when the task matches it.`
+              : '. The skill loads when the task matches it.'}
           </li>
           <li>
             Check what it writes against these pages. The skill carries the facts,
