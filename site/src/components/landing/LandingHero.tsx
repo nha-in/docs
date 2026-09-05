@@ -74,8 +74,13 @@ const CELLS = Math.max(
   ...Object.values(DELIVERED).map((line) => line.length),
 );
 
-/** How long the network stays quiet before the board falls back to the name. */
-const SETTLE_MS = 4200;
+/**
+ * How long the network stays quiet before the board falls back to the name.
+ *
+ * Longer than the turn takes to cross the board, or the message would start
+ * leaving before the reader had it.
+ */
+const SETTLE_MS = 6500;
 
 /**
  * The statement, the one control and the three gateways.
