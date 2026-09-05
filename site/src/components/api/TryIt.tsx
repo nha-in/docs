@@ -1,6 +1,6 @@
 import React, {useEffect, useMemo, useState} from 'react';
 import CodeBlock from '@theme/CodeBlock';
-import {ChevronRight, Loader2, Send, X} from 'lucide-react';
+import {ChevronRight, Info, Loader2, Send, X} from 'lucide-react';
 import {
   Collapsible,
   CollapsibleContent,
@@ -11,6 +11,12 @@ import {
   DialogDescription,
   DialogTitle,
 } from '@site/src/components/ui/dialog';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@site/src/components/ui/tooltip';
 import type {Field, Operation} from './ApiEndpoint';
 import {CopyButton} from './ApiEndpoint';
 import type {BodyNode} from './body';
@@ -34,6 +40,19 @@ import {
 // this is the only certificate the console fetches.
 const CERT_PATH = '/v3/profile/public/certificate';
 
+/**
+ * Sandbox or production, read from the description the specification gives the
+ * server rather than guessed from its hostname. Both are on abdm.gov.in and
+ * one of them creates real accounts against real people, so a server whose
+ * description does not say which it is returns null and gets no label. A wrong
+ * label here is worse than none.
+ */
+function environmentOf(description: string): 'Production' | 'Sandbox' | null {
+  if (/\bprod/i.test(description)) return 'Production';
+  if (/sandbox|sbx|\bdev\b/i.test(description)) return 'Sandbox';
+  return null;
+}
+
 /** Refresh REQUEST-ID/TIMESTAMP in a header map, leaving everything else as typed. */
 function withFreshGenerated(current: Record<string, string>): Record<string, string> {
   const generated = perRequestHeaders();
@@ -54,15 +73,19 @@ type Result =
 function Group({
   title,
   count,
+  open = true,
   children,
 }: {
   title: string;
   /** Omitted rather than 0 when there is nothing behind the count to report. */
   count?: number;
+  /** Set false for a band that holds nothing to type. It still opens on a
+      click; it just does not spend a screen of the console saying so. */
+  open?: boolean;
   children: React.ReactNode;
 }) {
   return (
-    <Collapsible defaultOpen className="api-console__section">
+    <Collapsible defaultOpen={open} className="api-console__section">
       <CollapsibleTrigger className="api-console__section-head">
         <ChevronRight className="api-console__caret size-3.5" aria-hidden="true" />
         {title}
@@ -72,6 +95,47 @@ function Group({
       </CollapsibleTrigger>
       <CollapsibleContent>{children}</CollapsibleContent>
     </Collapsible>
+  );
+}
+
+/**
+ * A field's explanation, one hover or one tab stop away rather than a
+ * paragraph under every input. The prose was most of the console's scroll and
+ * almost none of its work. The words are not lost: the tooltip carries them
+ * for a pointer or a keyboard, and the hidden copy beside it is what the
+ * input's `aria-describedby` points at, so a screen reader still reads the
+ * description with the field rather than only on hover.
+ */
+function Hint({id, text}: {id: string; text: string}) {
+  return (
+    <>
+      <TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <button
+              type="button"
+              className="api-console__why"
+              aria-label={`About this field: ${text}`}>
+              <Info className="size-3.5" aria-hidden="true" />
+            </button>
+          </TooltipTrigger>
+          <TooltipContent className="api-console__tip">{text}</TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
+      <span id={id} className="api-console__sr-only">
+        {text}
+      </span>
+    </>
+  );
+}
+
+/** A line of standing advice, with the rest of it behind the mark beside it. */
+function Note({id, short, full}: {id: string; short: string; full: string}) {
+  return (
+    <p className="api-console__note">
+      {short}
+      <Hint id={id} text={full} />
+    </p>
   );
 }
 
@@ -123,6 +187,9 @@ function Row({
           <span className="api-console__required">Required</span>
         ) : null}
         {badge ? <span className="api-console__badge">{badge}</span> : null}
+        {field.description && hintId ? (
+          <Hint id={hintId} text={field.description} />
+        ) : null}
       </label>
       <input
         id={id}
@@ -136,11 +203,6 @@ function Row({
         aria-describedby={hintId}
         onChange={(event) => onChange(event.target.value)}
       />
-      {field.description ? (
-        <p id={hintId} className="api-console__hint">
-          {field.description}
-        </p>
-      ) : null}
     </div>
   );
 }
@@ -271,6 +333,16 @@ export default function TryIt({operation}: {operation: Operation}) {
   // in the session store from an earlier panel; that does not make this
   // operation authorized.
   const hasAuth = operation.security.length > 0;
+  const environment = environmentOf(
+    operation.servers.find((entry) => entry.url === server)?.description ?? '',
+  );
+  // Every header here is filled in for the reader, so the band is opened only
+  // when one of them is theirs to type.
+  const headersAreAutomatic =
+    operation.headers.length > 0 &&
+    operation.headers.every(
+      (field) => GENERATED_HEADERS.has(field.name) || field.name === 'X-CM-ID',
+    );
   const hasBody = operation.method !== 'GET' && operation.method !== 'HEAD';
   const fieldRows = useMemo(() => toTree(operation.body), [operation.body]);
   const canUseFields = leaves(operation.body).length > 0;
@@ -526,16 +598,51 @@ export default function TryIt({operation}: {operation: Operation}) {
         <DialogTitle className="api-console__title">{operation.summary}</DialogTitle>
 
         <code className="api-console__url">
+          {environment ? (
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <span
+                    tabIndex={0}
+                    className={`api-console__env api-console__env--${environment.toLowerCase()}`}>
+                    {environment}
+                  </span>
+                </TooltipTrigger>
+                <TooltipContent className="api-console__tip">
+                  {environment === 'Production'
+                    ? 'The live ABDM environment. A call sent from here acts on real accounts and real records.'
+                    : 'The ABDM sandbox. Test credentials, test identities, nothing that touches a real person.'}
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          ) : null}
           <select
             className="api-console__server"
             aria-label="Server"
             value={server}
             onChange={(event) => setServer(event.target.value)}>
-            {operation.servers.map((entry) => (
-              <option key={entry.url} value={entry.url}>
-                {entry.url}
-              </option>
-            ))}
+            {/* Grouped rather than prefixed: an <optgroup> label shows in the
+                open list and not in the closed control, so the dropdown says
+                which ABDM each host is without repeating the chip beside it.
+                A host whose description does not say goes in ungrouped. */}
+            {(['Sandbox', 'Production', ''] as const).map((group) => {
+              const entries = operation.servers.filter(
+                (entry) => (environmentOf(entry.description) ?? '') === group,
+              );
+              if (!entries.length) return null;
+              const options = entries.map((entry) => (
+                <option key={entry.url} value={entry.url}>
+                  {entry.url}
+                </option>
+              ));
+              return group ? (
+                <optgroup key={group} label={group}>
+                  {options}
+                </optgroup>
+              ) : (
+                <React.Fragment key="ungrouped">{options}</React.Fragment>
+              );
+            })}
           </select>
           {operation.path
             .split('/')
@@ -641,7 +748,10 @@ export default function TryIt({operation}: {operation: Operation}) {
           ) : null}
 
           {operation.headers.length ? (
-            <Group title="Headers" count={operation.headers.length}>
+            <Group
+              title="Headers"
+              count={operation.headers.length}
+              open={!headersAreAutomatic}>
               {operation.headers.map((field) => (
                 <Row
                   key={field.name}
@@ -669,11 +779,11 @@ export default function TryIt({operation}: {operation: Operation}) {
 
           {hasEncrypted ? (
             <Group title="Encryption" count={undefined}>
-              <p className="api-console__note">
-                The marked fields are RSA encrypted in your browser before the request
-                is sent. Type the raw value. Nothing sensitive leaves this page except
-                the ciphertext.
-              </p>
+              <Note
+                id={`try-${operation.id}-enc-note`}
+                short="Type the raw value."
+                full="The marked fields are RSA encrypted in your browser before the request is sent. Nothing sensitive leaves this page except the ciphertext."
+              />
               <div className="api-console__enc-source" role="radiogroup" aria-label="Public key">
                 <label>
                   <input
@@ -822,11 +932,11 @@ export default function TryIt({operation}: {operation: Operation}) {
             </Group>
           ) : null}
 
-          <p className="api-console__note">
-            The request goes straight from this browser to the server you picked.
-            There is no proxy in between. Nothing you type here is stored, apart
-            from the access token, which is held for this browser session only.
-          </p>
+          <Note
+            id={`try-${operation.id}-privacy-note`}
+            short="Sent straight from this browser, with no proxy in between."
+            full="The request goes straight from this browser to the server you picked. Nothing you type here is stored, apart from the access token, which is held for this browser session only."
+          />
         </div>
 
         <div className="api-console__col api-console__col--right">
