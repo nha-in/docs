@@ -60,7 +60,7 @@ const PACKET_MS = 900; // how long a record takes to travel one link
  * one that already happened. Change this and change STAGGER_MS in FlapBoard
  * with it, or the two drift apart.
  */
-const TRAVEL_MS = 3400;
+const TRAVEL_MS = 5000;
 
 /**
  * How long the courier waits at a participant before setting off again.
@@ -94,11 +94,10 @@ export default function NetworkWeb({
   onDepart,
 }: {
   /**
-   * Called with a participant's id the moment the courier hands the record
-   * over to them. The board above the statement reads this: it flips when a
-   * record actually lands somewhere, rather than on a timer, so the movement
-   * on the page is one system saying one thing instead of two things moving
-   * at once.
+   * Called when the courier completes a leg of its own route, with the
+   * participant it set out for. This is the itinerary, not proximity: a
+   * courier passes close to plenty of participants it is not visiting, and
+   * the board must not answer to those.
    */
   onArrive?: (id: string) => void;
   /**
@@ -269,7 +268,6 @@ export default function NetworkWeb({
         packet = {from: holding, to: index, at: now};
       }
       holding = index;
-      arrive.current?.(PARTICIPANTS[index].id);
     };
 
     /** With no pointer, the courier walks its own route so the page moves. */
@@ -303,7 +301,16 @@ export default function NetworkWeb({
         x: from.x + (to.x - from.x) * eased,
         y: from.y + (to.y - from.y) * eased,
       };
-      if (t >= 1) dwellUntil = now + DWELL_MS;
+      if (t >= 1) {
+        dwellUntil = now + DWELL_MS;
+        // The itinerary's own arrival, not deliver()'s. deliver() fires for
+        // anyone the courier passes within ARRIVE of, and on a crossing this
+        // long that is several participants it was never going to: the board
+        // was being retargeted mid-wave by near misses, which restarted the
+        // wave from the first cell and made the gaps between messages
+        // anything from 0.8s to 14.5s against a designed 9.2s.
+        arrive.current?.(PARTICIPANTS[idleTo].id);
+      }
     };
 
     const draw = (now: number) => {

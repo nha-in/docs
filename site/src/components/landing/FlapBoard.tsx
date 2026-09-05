@@ -12,10 +12,10 @@ export const TURN_MS = 420;
  * Cell to cell. Set so the wave takes as long as the courier's crossing
  * (TRAVEL_MS in NetworkWeb): the first flap turns as it leaves and the last
  * lands as it arrives, so the board is announcing the delivery in the air
- * rather than reporting one already made. 29 x 100 + 420 is 3320ms against a
- * 3400ms crossing.
+ * rather than reporting one already made. 29 x 154 + 420 is 4886ms against a
+ * 5000ms crossing.
  */
-export const STAGGER_MS = 100;
+export const STAGGER_MS = 154;
 
 /**
  * A split-flap board, the kind an airport concourse and an Indian railway
