@@ -169,6 +169,8 @@ function firstExample(content) {
   return examples[0]?.value;
 }
 
+const UNDOCUMENTED_BODY = /^Response body:\s*not documented\.?$/i;
+
 // A specification hard wraps its descriptions near column 72, so the first
 // *line* is usually a fragment. Taking it left a quarter of the endpoint
 // pages with a meta description ending mid sentence, and that string is what
@@ -455,7 +457,15 @@ for (const {platform, version, files} of tree) {
       const requestSchema = op.requestBody?.content?.['application/json']?.schema;
       const responses = Object.entries(op.responses ?? {}).map(([status, response]) => ({
         status,
-        description: response.description ?? '',
+        // "not documented" is this repo's own placeholder from an early
+        // ingest, not NHA's wording, and it dead ends the reader: it reports
+        // that we failed rather than telling them what to do. The absence is
+        // real and must not be papered over with an invented schema, so the
+        // sentence says what is true and points at the one thing on the page
+        // that will answer it.
+        description: UNDOCUMENTED_BODY.test((response.description ?? '').trim())
+          ? 'The specification does not describe this body. Send the call with Try it to see what comes back.'
+          : response.description ?? '',
         // An explicit example wins; otherwise the response schema supplies
         // one, same as the request side, so a status with a documented body
         // never renders as prose alone.

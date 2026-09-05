@@ -779,6 +779,7 @@ webhooks:
         '200':
           description: Your bridge accepted the callback. The gateway validates the body
             you send back, so a 200 carrying the wrong body is still a failure.
+      x-abdm-triggered-by: m2_generate_link_token
       x-abdm-atom: hiecm.callback.m2-on-generate-token-result
       tags:
       - webhooks
@@ -804,6 +805,7 @@ webhooks:
         '200':
           description: Your bridge accepted the callback. The gateway validates the body
             you send back, so a 200 carrying the wrong body is still a failure.
+      x-abdm-triggered-by: m2_hip_link_care_context
       x-abdm-atom: hiecm.callback.m2-on-carecontext-result
       tags:
       - webhooks
@@ -829,6 +831,7 @@ webhooks:
         '200':
           description: Your bridge accepted the callback. The gateway validates the body
             you send back, so a 200 carrying the wrong body is still a failure.
+      x-abdm-triggered-by: m2_link_care_context_notify
       x-abdm-atom: hiecm.callback.m2-on-context-notify-result
       tags:
       - webhooks
@@ -854,6 +857,7 @@ webhooks:
         '200':
           description: Your bridge accepted the callback. The gateway validates the body
             you send back, so a 200 carrying the wrong body is still a failure.
+      x-abdm-triggered-by: m2_sms_deep_link_notify
       x-abdm-atom: hiecm.callback.m2-on-sms-notify-result
       tags:
       - webhooks
