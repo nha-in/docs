@@ -8,11 +8,19 @@
   },
   "plugins": [
     {
-      "name": "abdm",
-      "source": "./plugins/abdm",
-      "description": "hiecm-m1-build and hiecm-m1-debug scaffold and debug an ABDM Milestone 1 (ABHA) integration, citing the Catalogue atom behind every call. fhir-generate and fhir-audit build or audit NRCES compliant FHIR document bundles, iterating against the Docs MCP validator until clean.",
+      "name": "abdm-integrators-assistant",
+      "source": "./plugins/abdm-integrators-assistant",
+      "description": "Build and debug an ABDM integration. Build skills scaffold a milestone flow by flow against the sandbox, M1 to M4 on the provider side and P1 to P3 inside a PHR application. Debug skills walk a failed call to a named fix, citing the Catalogue atom behind every step. fhir-generate and fhir-audit build or audit NRCES compliant FHIR document bundles against the Docs MCP validator.",
       "category": "documentation",
-      "keywords": ["abdm", "abha", "hie-cm", "fhir", "nrces", "healthcare", "india-health"],
+      "keywords": [
+        "abdm",
+        "abha",
+        "hie-cm",
+        "fhir",
+        "nrces",
+        "healthcare",
+        "india-health"
+      ],
       "homepage": "https://github.com/eka-care/abdm-docs"
     },
     {

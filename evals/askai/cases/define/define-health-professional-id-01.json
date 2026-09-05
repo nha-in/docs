@@ -1,0 +1,36 @@
+{
+  "id": "define-health-professional-id-01",
+  "slice": "define",
+  "class": "define",
+  "turns": [
+    {
+      "role": "user",
+      "text": "What is a health professional ID in ABDM?"
+    }
+  ],
+  "attachment": null,
+  "page": null,
+  "must_contain": [
+    "the catalogue's term is HPID, healthcare professional ID",
+    "an HPID is created on the HPR",
+    "an HPID is the professional's digital identity across ABDM"
+  ],
+  "must_not_contain": [
+    "<MASKED",
+    "i apologize",
+    "i apologise",
+    "let me ",
+    "great question",
+    "the catalogue",
+    "atom"
+  ],
+  "expected_sources": [
+    "shared.glossary.hpid"
+  ],
+  "expected_shape": "define",
+  "expected_behaviour": "answer",
+  "derived_from": null,
+  "source_row": "annexure#glossary",
+  "catalogue_version": "2026.08.24",
+  "notes": "reader dropped 'healthcare' to 'health'; catalogue spells it healthcare professional ID (HPID). Dropped the disputed claim that HPID is a 14 digit number issued to a healthcare professional or a facility manager after Aadhaar authentication: shared.glossary.hpid states it, but shared.glossary.hpr explicitly retracts both halves, stating a facility manager is not an HPR category and that no fetched NHA page states the identifier's length. The two atoms disagree on the length and on facility managers; Chunk 7 should fix the catalogue."
+}

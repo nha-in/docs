@@ -1,0 +1,45 @@
+{
+  "id": "conversation-public-certificate-01",
+  "slice": "conversation",
+  "class": "meta",
+  "turns": [
+    {
+      "role": "user",
+      "text": "What changed between the M1 API version 1 and version 2?"
+    },
+    {
+      "role": "assistant",
+      "text": "Version 2 introduced enhanced security over version 1: sensitive fields such as OTP, Aadhaar number, password and username must now be encrypted. That encryption uses a public certificate obtained from the certificate API, with RSA encryption for the sensitive fields."
+    },
+    {
+      "role": "user",
+      "text": "Is that certificate endpoint verified?"
+    }
+  ],
+  "attachment": null,
+  "page": null,
+  "must_contain": [
+    "yes, the get public certificate endpoint is verified",
+    "verified against the ABHA sandbox on 2026-08-26",
+    "observed returning an HTTP 200 with the RSA public key as base64 DER",
+    "a correctly formatted UTC TIMESTAMP is what made it succeed"
+  ],
+  "must_not_contain": [
+    "<MASKED",
+    "i apologize",
+    "i apologise",
+    "let me ",
+    "great question",
+    "the catalogue",
+    "atom"
+  ],
+  "expected_sources": [
+    "hiecm.endpoint.m1-get-public-certificate"
+  ],
+  "expected_shape": "meta",
+  "expected_behaviour": "answer",
+  "derived_from": null,
+  "source_row": "annexure#sandbox-faq-m1",
+  "catalogue_version": "2026.08.24",
+  "notes": "follow-up asks about verification status, not ABDM domain content; the second answer is the atom's own verified block."
+}

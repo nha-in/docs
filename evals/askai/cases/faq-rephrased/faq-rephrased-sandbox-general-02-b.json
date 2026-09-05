@@ -1,0 +1,36 @@
+{
+  "id": "faq-rephrased-sandbox-general-02-b",
+  "slice": "faq-rephrased",
+  "class": "define",
+  "turns": [
+    {
+      "role": "user",
+      "text": "what is meaning of Patient App?"
+    }
+  ],
+  "attachment": null,
+  "page": null,
+  "must_contain": [
+    "the patient app lets a patient view their health data from different hospitals, labs and doctors in one place",
+    "it is a reference PHR application available as a downloadable Android app",
+    "a PHR application is the patient's side of ABDM, used to view and link health records"
+  ],
+  "must_not_contain": [
+    "<MASKED",
+    "i apologize",
+    "i apologise",
+    "let me ",
+    "great question",
+    "the catalogue",
+    "atom"
+  ],
+  "expected_sources": [
+    "shared.glossary.phr"
+  ],
+  "expected_shape": "define",
+  "expected_behaviour": "answer",
+  "derived_from": "faq-verbatim-sandbox-general-02",
+  "source_row": "annexure#sandbox-faq-general",
+  "catalogue_version": "2026.08.24",
+  "notes": "variant b of faq-verbatim-sandbox-general-02, the same question in the non-native phrasing a developer might use in a hurry"
+}

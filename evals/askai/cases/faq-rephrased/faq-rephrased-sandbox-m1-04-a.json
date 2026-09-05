@@ -1,0 +1,38 @@
+{
+  "id": "faq-rephrased-sandbox-m1-04-a",
+  "slice": "faq-rephrased",
+  "class": "how-do-i",
+  "turns": [
+    {
+      "role": "user",
+      "text": "what do i need before integrating?"
+    }
+  ],
+  "attachment": null,
+  "page": null,
+  "must_contain": [
+    "you create sandbox user credentials, a client id and a client secret",
+    "you generate an authorization token using the client id and secret",
+    "you register your endpoint URL with the bridges service"
+  ],
+  "must_not_contain": [
+    "<MASKED",
+    "i apologize",
+    "i apologise",
+    "let me ",
+    "great question",
+    "the catalogue",
+    "atom"
+  ],
+  "expected_sources": [
+    "shared.sandbox.registration-and-credentials",
+    "hiecm.concept.gateway-session",
+    "hiecm.endpoint.gateway-register-bridge-services"
+  ],
+  "expected_shape": "how-do-i",
+  "expected_behaviour": "answer",
+  "derived_from": "faq-verbatim-sandbox-m1-04",
+  "source_row": "annexure#sandbox-faq-m1",
+  "catalogue_version": "2026.08.24",
+  "notes": "variant a of faq-verbatim-sandbox-m1-04, the same question as a developer in a hurry would type it"
+}

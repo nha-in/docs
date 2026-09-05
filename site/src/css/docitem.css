@@ -251,14 +251,26 @@
   color: var(--text-heading);
 }
 
-/* The outline marks position on the page, and it changes on every scroll tick.
-   Ink and weight say where you are without a colour flickering down the rail
-   as you read. The accent stays with the sidebar, which marks position in the
-   site and only changes when you navigate. */
+/* The outline marks position on the page. The section being read takes the
+   accent and a mark on the rail beside it, the same two signals the sidebar
+   uses for the current page, so both rails say "here" the same way. */
 .docs-toc .table-of-contents__link--active,
 .docs-toc .table-of-contents__link--active:hover {
-  color: var(--text-heading);
+  position: relative;
+  color: var(--accent);
   font-weight: 500;
+}
+
+.docs-toc .table-of-contents__link--active::before {
+  content: '';
+  position: absolute;
+  inset-inline-start: -0.75rem;
+  top: 50%;
+  width: 2px;
+  height: 0.875rem;
+  margin-top: -0.4375rem;
+  border-radius: 1px;
+  background: var(--accent);
 }
 
 /* ---------- breadcrumbs ----------

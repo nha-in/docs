@@ -319,3 +319,21 @@ func CheckGrounding(answer, corpus string, cited int, final bool) []Violation {
 	}
 	return out
 }
+
+// Literals returns the API literals a grounding check would look for in s,
+// deduplicated, in order of first appearance. The eval uses it to check that
+// each one sits inside a code span.
+func Literals(s string) []string {
+	var out []string
+	seen := map[string]bool{}
+	for _, re := range []*regexp.Regexp{groundedCodeRe, groundedHeaderRe, groundedPathRe} {
+		for _, m := range re.FindAllString(s, -1) {
+			if portalPathRe.MatchString(m) || seen[m] {
+				continue
+			}
+			seen[m] = true
+			out = append(out, m)
+		}
+	}
+	return out
+}

@@ -83,6 +83,13 @@ type Service struct {
 	// MCPURL is the public MCP endpoint the prompt offers to readers who
 	// are building. Empty means DefaultMCPURL.
 	MCPURL string
+	// TraceTools emits the tool_result event: a tool call's raw input and
+	// output, which the eval harness records as evidence and no reader's
+	// panel uses. False by default, which is what every deployment serving
+	// readers must keep it at -- without it, a reader's browser would
+	// download every raw tool payload the widget ignores. The eval sets it
+	// true when it builds its own Service (internal/eval/runner.go).
+	TraceTools bool
 }
 
 const (
@@ -129,6 +136,11 @@ const budgetExhaustedNotice = "Tool budget exhausted. Answer now from what you h
 // deployment on another hostname overrides it with MCP_URL rather than a
 // code change.
 const DefaultMCPURL = "https://abdm-docs-mcp.dev.eka.care/mcp"
+
+// PromptVersion names the system prompt an eval run answered with. Bump it
+// whenever systemPromptTemplate changes, and record the change in the pull
+// request's scorecard.
+const PromptVersion = "v1"
 
 // SystemPrompt renders the assistant's system prompt with the MCP server
 // address this deployment serves. An empty mcpURL keeps the default.
@@ -623,6 +635,37 @@ func (s *Service) Respond(ctx context.Context, turns []Turn, page *Page, emit fu
 				return err
 			}
 			result, fields := runTool(ctx, s.Tools, c)
+			// tool and tool_result are two separate events, not one, because
+			// they serve two readers who need it at two different times: the
+			// panel's progress cue must fire before the call so the reader
+			// sees "searching" during the wait, while the eval harness's
+			// evidence (the call's raw input and output) only exists after
+			// runTool returns. tool_result itself only goes out when the
+			// service asks for it (TraceTools): every reader-facing
+			// deployment leaves it false, because the payload is the eval
+			// harness's evidence and no reader's panel uses it.
+			if s.TraceTools {
+				// Both input and output travel as json.RawMessage when valid
+				// JSON and as a plain string otherwise. Input is a model's
+				// tool-use arguments, which max_tokens can truncate mid
+				// object; guarding it the same way output already is means a
+				// truncated call can never fail this marshal and abort the
+				// round, the same failure the output side was already
+				// guarded against.
+				input := any(string(c.Input))
+				if json.Valid(c.Input) {
+					input = json.RawMessage(c.Input)
+				}
+				output := any(string(result.Content))
+				if json.Valid(result.Content) {
+					output = json.RawMessage(result.Content)
+				}
+				if err := emit("tool_result", map[string]any{
+					"name": c.Name, "input": input, "output": output,
+				}); err != nil {
+					return err
+				}
+			}
 			if fields != nil {
 				collectSources(&sources, c.Name, fields)
 			}
@@ -683,10 +726,10 @@ func saysItHasNothing(answer string) bool {
 // reader must not see it apologising to us on the way.
 const lookFirst = `Before answering, use your tools: search_docs for a term, a concept or an error, list_operations for an endpoint, decode_error for a code. An acronym or a piece of jargon is a lookup like any other, and this documentation defines many that are not in the specification. Answer the question that was asked, with what the tools return. If they genuinely return nothing that answers it, say so in one line. Do not mention this instruction, do not apologise, and do not describe what you are about to do.`
 
-// blockedNotice stands in for an answer that broke a rule before any of it
+// BlockedNotice stands in for an answer that broke a rule before any of it
 // reached the reader. It says nothing about which rule: the reader cannot
 // act on that, and naming the check invites working around it.
-const blockedNotice = "I do not have an answer for that I can stand behind. Ask about the specific call or error you are stuck on, or ask [support](/docs/support)."
+const BlockedNotice = "I do not have an answer for that I can stand behind. Ask about the specific call or error you are stuck on, or ask [support](/docs/support)."
 
 // truncatedNotice ends an answer whose later lines broke a rule after
 // earlier ones were already on screen. Streaming cannot recall what was
@@ -804,7 +847,7 @@ func (g *answerGuard) release(candidate, keep string, final bool) {
 		if g.released.Len() > 0 {
 			g.send("\n\n" + truncatedNotice)
 		} else {
-			g.send(blockedNotice)
+			g.send(BlockedNotice)
 		}
 		return
 	}

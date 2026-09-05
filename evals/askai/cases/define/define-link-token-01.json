@@ -1,0 +1,36 @@
+{
+  "id": "define-link-token-01",
+  "slice": "define",
+  "class": "define",
+  "turns": [
+    {
+      "role": "user",
+      "text": "What is a linktoken in ABDM?"
+    }
+  ],
+  "attachment": null,
+  "page": null,
+  "must_contain": [
+    "the catalogue's term is link token, not linktoken",
+    "a link token authorises your system to link a care context to a patient's ABHA address",
+    "a link token is valid for six months"
+  ],
+  "must_not_contain": [
+    "<MASKED",
+    "i apologize",
+    "i apologise",
+    "let me ",
+    "great question",
+    "the catalogue",
+    "atom"
+  ],
+  "expected_sources": [
+    "shared.glossary.link-token"
+  ],
+  "expected_shape": "define",
+  "expected_behaviour": "answer",
+  "derived_from": null,
+  "source_row": "annexure#glossary",
+  "catalogue_version": "2026.08.24",
+  "notes": "reader ran the two words together as 'linktoken'; catalogue atom shared.glossary.link-token spells it link token, two words."
+}

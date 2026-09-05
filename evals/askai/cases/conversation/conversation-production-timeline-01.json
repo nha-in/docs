@@ -1,0 +1,44 @@
+{
+  "id": "conversation-production-timeline-01",
+  "slice": "conversation",
+  "class": "out-of-scope",
+  "turns": [
+    {
+      "role": "user",
+      "text": "What is the ABDM Sandbox?"
+    },
+    {
+      "role": "assistant",
+      "text": "The sandbox is a space to test your integration before it goes live in the real ecosystem. Systems are tested for robustness and security there first, and once testing is done, a production key is issued so you can begin real operations."
+    },
+    {
+      "role": "user",
+      "text": "Exactly how long after that does NHA actually take to issue the production key?"
+    }
+  ],
+  "attachment": null,
+  "page": null,
+  "must_contain": [
+    "/docs/hiecm/v3/getting-started/going-live"
+  ],
+  "must_not_contain": [
+    "<MASKED",
+    "i apologize",
+    "i apologise",
+    "let me ",
+    "great question",
+    "the catalogue",
+    "atom",
+    "business days",
+    "7 working days",
+    "15 working days",
+    "30 working days"
+  ],
+  "expected_sources": [],
+  "expected_shape": "decline",
+  "expected_behaviour": "decline",
+  "derived_from": null,
+  "source_row": "annexure#abdm-faq-general",
+  "catalogue_version": "2026.08.24",
+  "notes": "the first turn is answerable and true; the follow-up asks for a turnaround duration NHA has not published, so the second answer must decline rather than invent a day count. Replaced the bare 'working days' in must_not_contain with digit-bearing forms: the bare phrase fires as a substring of the honest decline 'NHA has not published how many working days this takes', while a fabricated day count does not."
+}
