@@ -78,3 +78,25 @@ func TestParseAtomIgnoresAnyRouteInFrontmatter(t *testing.T) {
 			a.DocURL, a.DocAnchor)
 	}
 }
+
+// M4 answers with HIS codes and the PHR side with AS codes. Both were absent
+// from the pattern, so decode_error found nothing in a response an integrator
+// pasted, for every code outside the ABDM series.
+func TestExtractErrorCodesCoversRegistryAndPHRSeries(t *testing.T) {
+	for _, tc := range []struct {
+		in   string
+		want string
+	}{
+		{`{"code":"HIS-1132","message":"duplicate facility detected"}`, "HIS-1132"},
+		{"AS-1038 the entered OTP is incorrect", "AS-1038"},
+		{"ABDM-1035", "ABDM-1035"},
+	} {
+		got := ExtractErrorCodes(tc.in)
+		if len(got) != 1 || got[0] != tc.want {
+			t.Errorf("ExtractErrorCodes(%q) = %v, want [%s]", tc.in, got, tc.want)
+		}
+	}
+	if got := ExtractErrorCodes("no codes here"); len(got) != 0 {
+		t.Errorf("expected no codes, got %v", got)
+	}
+}

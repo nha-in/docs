@@ -1,43 +1,44 @@
 ---
-id: hiecm.endpoint.p3-subscription-hiu-notify
-type: endpoint
+id: hiecm.callback.p3-edit-subscription-call-back
+type: callback
 gateway: hiecm
 milestone: P3
 version: abdm-v3
-title: Subscription HIU –notify
+title: Edit Subscription – Call Back
 summary: >
-  This is the API that will be invoked by the health locker/PHR to notify by HIECM about the for link new record.
+  This is the API that will be invoked by the patient to deny the subscription request raise by the PHR health locker.
 sources:
   - file: catalogue/openapi/.raw/nha-2026-09-04/ABHA-PHR-V3-Documents.docx
     fetched: 2026-09-04
     hash: sha256:99320fbc4b9703fce4afed12d5eb0863431aaea25e814bc3fb9ab974d16acd75
     note: >
-      NHA's PHR V3 document, section 8.3.11. The path, the method
+      NHA's PHR V3 document, section 8.3.10. The path, the method
       and the error scenarios below are transcribed from it.
 verified:
   status: unverified
   against: docs-only
 related:
-  concepts: [hiecm.concept.gateway-session]
+  concepts: [hiecm.concept.gateway-session, hiecm.concept.asynchronous-callbacks]
 skills:
   - hiecm-p3-build
 ---
 
-# Subscription HIU –notify
+# Edit Subscription – Call Back
 
 ## In plain words
 
-This is the API that will be invoked by the health locker/PHR to notify by HIECM about the for link new record.
+This is the API that will be invoked by the patient to deny the subscription request raise by the PHR health locker.
 
 ## Before you start
 
 - A gateway session token. See [the gateway session](../concepts/gateway-session.md).
-- The identifiers this call names in its body, held from the step before it.
+- A callback URL registered with ABDM and reachable from the public
+  internet. See [the callback URL](../../shared/sandbox/callback-url.md).
 
 ## What happens
 
 ```bash
-curl -X POST 'https://dev.abdm.gov.in{{' \
+curl -X POST '<YOUR_BRIDGE_URL>/api/v3/hiu/subscription-requests/hiu/notify' \
   -H 'Authorization: Bearer <ACCESS_TOKEN>' \
   -H 'REQUEST-ID: <FRESH_UUID>' \
   -H 'TIMESTAMP: <ISO_8601_TIMESTAMP>' \
@@ -46,7 +47,9 @@ curl -X POST 'https://dev.abdm.gov.in{{' \
 ```
 
 The path, the method and the body come from NHA's PHR V3 document,
-section 8.3.11. That section gives no request body, so the body above is a placeholder rather than a transcription.
+section 8.3.10. It is inbound: ABDM posts it to the base URL you
+registered for your bridge, so the path is relative to that URL and not
+to an ABDM host. That section gives no request body, so the body above is a placeholder rather than a transcription.
 
 ## How you know it worked
 
