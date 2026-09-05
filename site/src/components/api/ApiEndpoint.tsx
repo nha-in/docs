@@ -55,6 +55,8 @@ export type Operation = {
     help?: {label: string; href: string};
   }[];
   curl: string;
+  /** The same request in each language the page offers. */
+  samples?: {id: string; label: string; language: string; code: string}[];
   tag: string;
   tagDescription: string;
 };
@@ -118,6 +120,48 @@ export function CopyButton({value}: {value: string}) {
         <Copy className="size-3.5" aria-hidden="true" />
       )}
     </button>
+  );
+}
+
+/**
+ * The request, in the language the reader works in.
+ *
+ * An older build carried only `curl`, so a page rendered from a stale JSON
+ * still gets its one tab rather than an empty panel.
+ */
+function RequestPanel({operation}: {operation: Operation}) {
+  const samples =
+    operation.samples?.length
+      ? operation.samples
+      : [{id: 'curl', label: 'cURL', language: 'bash', code: operation.curl}];
+  const [active, setActive] = useState(samples[0].id);
+  const current = samples.find((sample) => sample.id === active) ?? samples[0];
+
+  return (
+    <div className="api-panel">
+      <div className="api-panel__head">
+        <span className="api-panel__label">{operation.summary}</span>
+        <div className="api-panel__tabs" role="tablist" aria-label="Request">
+          {samples.map((sample) => (
+            <button
+              key={sample.id}
+              type="button"
+              role="tab"
+              aria-selected={sample.id === current.id}
+              className={
+                sample.id === current.id
+                  ? 'api-panel__tab api-panel__tab--active'
+                  : 'api-panel__tab'
+              }
+              onClick={() => setActive(sample.id)}>
+              {sample.label}
+            </button>
+          ))}
+        </div>
+        <CopyButton value={current.code} />
+      </div>
+      <CodeBlock language={current.language}>{current.code}</CodeBlock>
+    </div>
   );
 }
 
@@ -281,14 +325,7 @@ export default function ApiEndpoint({operation}: {operation: Operation}) {
       </div>
 
       <aside className="api-page__aside">
-        <div className="api-panel">
-          <div className="api-panel__head">
-            <span className="api-panel__label">{operation.summary}</span>
-            <span className="api-panel__lang">cURL</span>
-            <CopyButton value={operation.curl} />
-          </div>
-          <CodeBlock language="bash">{operation.curl}</CodeBlock>
-        </div>
+        <RequestPanel operation={operation} />
         <ResponsePanel responses={operation.responses} />
       </aside>
     </div>

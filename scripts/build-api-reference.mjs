@@ -209,9 +209,9 @@ function securityHeaders(security = []) {
   });
 }
 
-function curlFor(operation) {
-  const lines = [`curl --request ${operation.method} \\`];
-  lines.push(`  --url ${operation.server}${operation.path} \\`);
+// One request, described once. The three samples below all render from this,
+// so a header added to the curl cannot go missing from the Python.
+function requestFor(operation) {
   // A scheme whose header is also declared as a parameter keeps the
   // parameter, because that carries the better example. Anything the
   // parameters do not cover is added ahead of them.
@@ -221,19 +221,79 @@ function curlFor(operation) {
       (h) => !declared.has(h.name.toLowerCase()),
     ),
     ...operation.headers,
-  ];
-  for (const header of headers) {
-    const value = header.name.toLowerCase() === 'authorization'
-      ? 'Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>'
-      : header.example ?? `<${header.name.toUpperCase().replace(/-/g, '_')}>`;
-    lines.push(`  --header '${header.name}: ${value}' \\`);
-  }
+  ].map((header) => ({
+    name: header.name,
+    value:
+      header.name.toLowerCase() === 'authorization'
+        ? 'Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>'
+        : header.example ?? `<${header.name.toUpperCase().replace(/-/g, '_')}>`,
+  }));
   if (operation.requestExample !== undefined) {
-    lines.push(`  --header 'Content-Type: application/json' \\`);
-    lines.push(`  --data '${JSON.stringify(operation.requestExample, null, 2)}'`);
+    headers.push({name: 'Content-Type', value: 'application/json'});
+  }
+  return {
+    method: operation.method,
+    url: `${operation.server}${operation.path}`,
+    headers,
+    body: operation.requestExample,
+  };
+}
+
+function curlFor(operation) {
+  const {method, url, headers, body} = requestFor(operation);
+  const lines = [`curl --request ${method} \\`, `  --url ${url} \\`];
+  for (const header of headers) {
+    lines.push(`  --header '${header.name}: ${header.value}' \\`);
+  }
+  if (body !== undefined) {
+    lines.push(`  --data '${JSON.stringify(body, null, 2)}'`);
   } else {
     lines[lines.length - 1] = lines[lines.length - 1].replace(/ \\$/, '');
   }
+  return lines.join('\n');
+}
+
+// requests and fetch, because they are what an integrator already has: no
+// SDK to install, and nothing here that a reader has to translate back into
+// their own stack. Placeholders keep the curl's shape, so the three samples
+// substitute the same way.
+function pythonFor(operation) {
+  const {method, url, headers, body} = requestFor(operation);
+  const lines = ['import requests', '', `response = requests.${method.toLowerCase()}(`];
+  lines.push(`    ${JSON.stringify(url)},`);
+  lines.push('    headers={');
+  for (const header of headers) {
+    lines.push(`        ${JSON.stringify(header.name)}: ${JSON.stringify(header.value)},`);
+  }
+  lines.push('    },');
+  if (body !== undefined) {
+    const json = JSON.stringify(body, null, 4)
+      .split('\n')
+      .map((line, index) => (index === 0 ? line : `    ${line}`))
+      .join('\n');
+    lines.push(`    json=${json},`);
+  }
+  lines.push(')', '', 'print(response.status_code, response.text)');
+  return lines.join('\n');
+}
+
+function nodeFor(operation) {
+  const {method, url, headers, body} = requestFor(operation);
+  const lines = [`const response = await fetch(${JSON.stringify(url)}, {`];
+  lines.push(`  method: ${JSON.stringify(method)},`);
+  lines.push('  headers: {');
+  for (const header of headers) {
+    lines.push(`    ${JSON.stringify(header.name)}: ${JSON.stringify(header.value)},`);
+  }
+  lines.push('  },');
+  if (body !== undefined) {
+    const json = JSON.stringify(body, null, 2)
+      .split('\n')
+      .map((line, index) => (index === 0 ? line : `  ${line}`))
+      .join('\n');
+    lines.push(`  body: JSON.stringify(${json}),`);
+  }
+  lines.push('});', '', 'console.log(response.status, await response.text());');
   return lines.join('\n');
 }
 
@@ -542,6 +602,13 @@ for (const {platform, version, files} of tree) {
         tagDescription: tagInfo[tag] ?? '',
       };
       operation.curl = curlFor(operation);
+      // `curl` stays as it was: the console, the page markdown and llms-full
+      // all read it by that name. The other two sit beside it.
+      operation.samples = [
+        {id: 'curl', label: 'cURL', language: 'bash', code: operation.curl},
+        {id: 'python', label: 'Python', language: 'python', code: pythonFor(operation)},
+        {id: 'node', label: 'Node', language: 'javascript', code: nodeFor(operation)},
+      ];
 
       writeFileSync(
         join(dataDir, `${name}.json`),
