@@ -3,7 +3,6 @@ import LandingCurtain from '@site/src/components/landing/LandingCurtain';
 import PullHome from '@site/src/components/landing/PullHome';
 import ScrolledFlag from '@site/src/components/chrome/ScrolledFlag';
 import AskAiBridge from '@site/src/components/chrome/AskAiBridge';
-import InstallToolsBridge from '@site/src/components/chrome/InstallToolsBridge';
 
 /**
  * Wraps every page and never unmounts, which is what both of these need: the
@@ -19,7 +18,6 @@ export default function Root({
     <>
       <ScrolledFlag />
       <AskAiBridge />
-      <InstallToolsBridge />
       <LandingCurtain />
       <PullHome />
       {children}

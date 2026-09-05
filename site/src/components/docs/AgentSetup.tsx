@@ -10,9 +10,14 @@ import {cn} from '@site/src/lib/utils';
  * where the agent has a URL scheme (Claude, Cursor), a copyable line where
  * it does not (Codex, anything else). What travels is one line pointing at
  * hosted instructions (agent-setup/prompt.md, regenerated every build), so
- * the pasted prompt can never go stale. Claude Code gets the plugin
- * instead: one marketplace, all four skills, updated by `claude plugin
- * update` rather than by re-downloading files.
+ * the pasted prompt can never go stale.
+ *
+ * Claude Code and Codex get the plugin instead: one marketplace, every skill
+ * at once, updated in place rather than by re-downloading files. Codex can
+ * because the plugin is packaged to Agent Plugins 1.0 as well as to Claude
+ * Code's own layout (see scripts/build-plugin-manifests.mjs). The rest of the
+ * clients that read the standard install from their own marketplaces, which
+ * is not a command anyone can paste, so they keep the prompt.
  */
 
 /** The repository that serves the Claude Code plugin marketplace. Update at
@@ -75,7 +80,7 @@ const TARGETS: Target[] = [
           ].join('\n'),
         ),
       )}`,
-    note: 'The plugin carries all four skills at once, and `claude plugin update` keeps them current.',
+    note: 'The plugin carries every skill at once, and `claude plugin update` keeps them current.',
   },
   {
     id: 'cursor',
@@ -99,10 +104,12 @@ const TARGETS: Target[] = [
       {
         id: 'codex',
         label: 'Codex CLI',
-        command: fetchPrompt,
-        // Codex is a CLI with no URL scheme. Do not invent one.
+        // Codex reads Agent Plugins 1.0, and this repository publishes a
+        // marketplace it can add directly. Codex is a CLI with no URL scheme,
+        // so there is no deeplink. Do not invent one.
+        command: () => `codex plugin marketplace add ${PLUGIN_REPO}`,
         link: null,
-        note: 'Paste into a Codex session. It fetches the current instructions from this site.',
+        note: 'Adds the marketplace. Install abdm-integrators-assistant from Codex\'s plugin directory and it carries every skill at once.',
       },
       {
         id: 'chatgpt',
