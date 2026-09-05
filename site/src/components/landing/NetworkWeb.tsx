@@ -59,9 +59,23 @@ function falloff(distance: number, far: number) {
   return t * t;
 }
 
-export default function NetworkWeb(): React.ReactNode {
+export default function NetworkWeb({
+  onArrive,
+}: {
+  /**
+   * Called with a participant's id the moment the courier hands the record
+   * over to them. The board above the statement reads this: it flips when a
+   * record actually lands somewhere, rather than on a timer, so the movement
+   * on the page is one system saying one thing instead of two things moving
+   * at once.
+   */
+  onArrive?: (id: string) => void;
+} = {}): React.ReactNode {
   const wrapRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  // Held in a ref so a new callback identity never restarts the canvas.
+  const arrive = useRef(onArrive);
+  arrive.current = onArrive;
 
   useEffect(() => {
     const wrap = wrapRef.current;
@@ -211,6 +225,7 @@ export default function NetworkWeb(): React.ReactNode {
         packet = {from: holding, to: index, at: now};
       }
       holding = index;
+      arrive.current?.(PARTICIPANTS[index].id);
     };
 
     /** With no pointer, the courier walks its own route so the page moves. */

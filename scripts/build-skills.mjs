@@ -57,7 +57,7 @@ const MODULES = [
     sample: 'm1_enrolment_by_aadhaar',
     example: 'Add ABHA creation by Aadhaar OTP to this codebase',
     description:
-      'Use when building, debugging or testing ABDM Milestone 1: creating an ABHA number or address, ABHA login, profile management, or the gateway session token. Carries the endpoints, the required headers, the two token rule, the encryption rule, every recorded error code and the M1 test matrix. For a step by step build or a stuck call, use the hiecm-m1-build and hiecm-m1-debug skills instead.',
+      'Use when building, debugging or testing ABDM Milestone 1: creating an ABHA number or address, ABHA login, profile management, or the gateway session token. Carries the endpoints, the required headers, the two token rule, the encryption rule, every recorded error code and the M1 test matrix. Also carries the scaffolding loop that builds it flow by flow and the loop from a failed call to a named fix, in references/.',
     rules: [
       UNVERIFIED,
       'Get an access token first, from the gateway session endpoint. Every other call needs it in `Authorization: Bearer <token>`.',
@@ -74,7 +74,7 @@ const MODULES = [
     spec: 'hiecm-m2.yaml',
     example: 'Link a care context for this patient',
     description:
-      'Use when building, debugging or testing ABDM Milestone 2: care contexts, HIP initiated linking, discovery, and pushing encrypted health records to a requester. Carries the endpoints, the prerequisites, every recorded error code and the M2 test matrix. For a step by step build or a stuck call, use the hiecm-m2-build and hiecm-m2-debug skills instead.',
+      'Use when building, debugging or testing ABDM Milestone 2: care contexts, HIP initiated linking, discovery, and pushing encrypted health records to a requester. Carries the endpoints, the prerequisites, every recorded error code and the M2 test matrix. Also carries the scaffolding loop that builds it flow by flow and the loop from a failed call to a named fix, in references/.',
     rules: [
       UNVERIFIED,
       'You act as the HIP. NHA requires a valid Facility ID and registration in the HIP role before you can create health records and share them.',
@@ -92,7 +92,7 @@ const MODULES = [
     spec: 'hiecm-m3.yaml',
     example: 'Raise a consent request and fetch the records it covers',
     description:
-      'Use when building, debugging or testing ABDM Milestone 3: raising a consent request, tracking its status, reading consent artefacts, and fetching encrypted health records as an HIU. Carries the endpoints, the consent rules, every recorded error code and the M3 test matrix. For a step by step build or a stuck call, use the hiecm-m3-build and hiecm-m3-debug skills instead.',
+      'Use when building, debugging or testing ABDM Milestone 3: raising a consent request, tracking its status, reading consent artefacts, and fetching encrypted health records as an HIU. Carries the endpoints, the consent rules, every recorded error code and the M3 test matrix. Also carries the scaffolding loop that builds it flow by flow and the loop from a failed call to a named fix, in references/.',
     rules: [
       UNVERIFIED,
       'You act as the HIU. The HIE-CM holds the consent and asks the patient on your behalf. No artefact, no records.',
@@ -413,8 +413,113 @@ function build(module) {
   return lines.join('\n');
 }
 
+// ---------------------------------------------------------------------------
+// One skill per module, and the jobs inside it are files.
+//
+// This file has said since it was written that one skill covers the whole
+// module, not one per task, because an agent that is integrating hits an error
+// and then wants to test, all inside one session, and splitting the module
+// across three skills only means it loads three. A second generator then
+// compiled the guided loops as fourteen more top level skills and did exactly
+// that: twenty two skills, three of them about M1, each announcing itself at
+// startup and each sending the reader to the other two.
+//
+// They are sections now. They are separate files rather than one long one
+// because the Agent Skills specification reads SKILL.md in full the moment a
+// skill activates, recommends keeping that under 500 lines, and has
+// references/ for everything else: loaded on demand, named from the router
+// above them. A merged M1 is about 1500 lines, so the router is what SKILL.md
+// holds and the four jobs sit underneath it.
+//
+//   references/scaffold.md   build it, flow by flow, against the sandbox
+//   references/integrate.md  the endpoints, hosts, headers and a full request
+//   references/debug.md      the loop to a named fix, then every error code
+//   references/test.md       the test matrix
+const guidedDir = join(root, 'skills-src');
+
+/** Which generated sections make up which reference file. */
+const INTEGRATE = ['Hosts', 'Endpoints', 'Headers', 'A request, in full'];
+
+/**
+ * Splits a generated skill on its own `## ` headings.
+ *
+ * Reassembling from the finished document rather than building each file
+ * separately keeps one code path producing the prose: a section reads the same
+ * whether it ends up in the router or in a reference beneath it.
+ */
+function sections(markdown) {
+  const found = new Map();
+  for (const part of markdown.split(/\n(?=## )/)) {
+    const heading = part.match(/^## (.+)$/m);
+    if (heading) found.set(heading[1].trim(), part.trim());
+  }
+  return found;
+}
+
+/** Everything above the first `## `: frontmatter, title, provenance. */
+function head(markdown) {
+  return markdown.split(/\n(?=## )/)[0].trim();
+}
+
+/**
+ * A guided loop's body, ready to be a reference.
+ *
+ * The frontmatter goes. A reference is not a skill, and a second `name:` in
+ * the same folder is a second skill to any client that goes looking.
+ */
+function guided(name) {
+  const raw = readFileSync(join(guidedDir, name, 'SKILL.md'), 'utf8');
+  return raw.replace(/^---\n[\s\S]*?\n---\n/, '').trim();
+}
+
+function guidedTitle(name) {
+  const raw = readFileSync(join(guidedDir, name, 'SKILL.md'), 'utf8');
+  return parse(raw.match(/^---\n([\s\S]*?)\n---/)?.[1] ?? '')?.description ?? '';
+}
+
+/**
+ * Which guided loop is which section of which skill.
+ *
+ * P2 and P3 have no debugging loop of their own because NHA records the PHR
+ * error codes once. One loop covers P1 to P3 and it sits with P1, which is
+ * what the two of them point at rather than repeating it.
+ */
+const FOLD = {
+  'abdm-m1': {scaffold: 'hiecm-m1-build', debug: 'hiecm-m1-debug'},
+  'abdm-m2': {scaffold: 'hiecm-m2-build', debug: 'hiecm-m2-debug'},
+  'abdm-m3': {scaffold: 'hiecm-m3-build', debug: 'hiecm-m3-debug'},
+  'abdm-m4': {scaffold: 'hiecm-m4-build', debug: 'hiecm-m4-debug'},
+  'abdm-p1': {scaffold: 'hiecm-p1-build', debug: 'hiecm-p1-debug'},
+  'abdm-p2': {scaffold: 'hiecm-p2-build'},
+  'abdm-p3': {scaffold: 'hiecm-p3-build'},
+};
+
+/** Where a module with no debugging loop of its own sends a reader. */
+const DEBUG_ELSEWHERE = {
+  'abdm-p2': 'abdm-p1',
+  'abdm-p3': 'abdm-p1',
+};
+
 rmSync(outDir, {recursive: true, force: true});
 mkdirSync(outDir, {recursive: true});
+
+// The plugin ships the same nine folders the site serves. It used to ship the
+// fourteen guided loops and nothing else, so the plugin and the site offered
+// different sets under the same names.
+const pluginDir = join(root, 'plugins', 'abdm-integrators-assistant', 'skills');
+rmSync(pluginDir, {recursive: true, force: true});
+mkdirSync(pluginDir, {recursive: true});
+
+/** Writes one skill folder to both places that ship it. */
+function emit(name, files) {
+  for (const base of [outDir, pluginDir]) {
+    const folder = join(base, name);
+    mkdirSync(join(folder, 'references'), {recursive: true});
+    for (const [path, body] of Object.entries(files)) {
+      writeFileSync(join(folder, path), body.endsWith('\n') ? body : `${body}\n`);
+    }
+  }
+}
 
 // What each skill actually turned out to carry. The page renders its capability
 // list from this, so a page can never claim a skill covers something the
@@ -423,7 +528,105 @@ const manifest = {};
 
 let count = 0;
 for (const module of MODULES) {
-  const skill = build(module);
+  const whole = build(module);
+  const parts = sections(whole);
+  const fold = FOLD[module.slug] ?? {};
+
+  const operationCount = operations.filter(
+    (op) => op.moduleId === module.id || op.moduleId === 'gateway',
+  ).length;
+  const codeCount = errorBlocks(module).reduce(
+    (total, {block}) => total + (block.codes?.length ?? 0),
+    0,
+  );
+  const testCount =
+    testMatrix(module)?.groups.reduce((total, group) => total + group.rows.length, 0) ?? 0;
+
+  const files = {};
+  const covers = [];
+
+  if (fold.scaffold) {
+    files['references/scaffold.md'] = guided(fold.scaffold);
+    covers.push(
+      `- **Scaffold.** Build it flow by flow against the sandbox, as a loop that ends on an observed result rather than on a call returning 200. [references/scaffold.md](references/scaffold.md)`,
+    );
+  }
+
+  const integrate = INTEGRATE.map((heading) => parts.get(heading)).filter(Boolean);
+  if (integrate.length) {
+    files['references/integrate.md'] = [
+      `# Integrate ${module.title}`,
+      '',
+      'The calls themselves: where they live, what they need in their headers, and one request written out in full.',
+      '',
+      ...integrate,
+    ].join('\n');
+    covers.push(
+      `- **Integrate.** ${operationCount} operations, with their hosts and headers. [references/integrate.md](references/integrate.md)`,
+    );
+  }
+
+  // The loop first, then the codes. A reader who arrives with a failing call
+  // wants the procedure; the table is what the procedure sends them to.
+  const debugParts = [];
+  if (fold.debug) debugParts.push(guided(fold.debug));
+  const errors = parts.get('Errors');
+  if (errors) {
+    debugParts.push(fold.debug ? `## Every recorded code\n\n${errors.replace(/^## Errors\n+/, '')}` : errors);
+  }
+  if (debugParts.length) {
+    files['references/debug.md'] = fold.debug
+      ? debugParts.join('\n\n')
+      : [
+          `# Debug ${module.title}`,
+          '',
+          DEBUG_ELSEWHERE[module.slug]
+            ? `The loop from a failed call to a named fix is recorded once for the whole patient side, in the ${DEBUG_ELSEWHERE[module.slug]} skill. The codes this module can return are below.`
+            : 'The codes this module can return, with the message and what to do about each.',
+          '',
+          ...debugParts,
+        ].join('\n');
+    covers.push(
+      codeCount
+        ? `- **Debug.** ${
+            fold.debug ? 'The loop from a failed call to a named fix, and ' : ''
+          }${codeCount} recorded error codes. [references/debug.md](references/debug.md)`
+        : `- **Debug.** The loop from a failed call to a named fix. No error code is recorded for this module yet. [references/debug.md](references/debug.md)`,
+    );
+  }
+
+  const tests = parts.get('Test cases');
+  if (tests) {
+    files['references/test.md'] = [
+      `# Test ${module.title}`,
+      '',
+      'Each case names the call it makes and what to see when it passes.',
+      '',
+      tests,
+    ].join('\n');
+    covers.push(
+      `- **Test.** ${testCount} test cases, each with the call it makes and what to see when it passes. [references/test.md](references/test.md)`,
+    );
+  }
+
+  files['SKILL.md'] = [
+    head(whole),
+    '',
+    '## What this skill covers',
+    '',
+    ...covers,
+    '',
+    'Open one when the work calls for it. This file is the map, not the material.',
+    '',
+    parts.get('Before anything else'),
+    '',
+    parts.get('Where the detail is'),
+  ]
+    .filter((part) => part !== undefined)
+    .join('\n');
+
+  emit(module.slug, files);
+
   manifest[module.slug] = {
     module: module.title.split(',')[0],
     title: module.title,
@@ -432,137 +635,82 @@ for (const module of MODULES) {
     // A real code from this module, so the page's example question is one the
     // skill can actually answer.
     errorExample: errorBlocks(module).flatMap(({block}) => block.codes ?? [])[0]?.code ?? null,
-    operations: operations.filter(
-      (op) => op.moduleId === module.id || op.moduleId === 'gateway',
-    ).length,
-    codes: errorBlocks(module).reduce((total, {block}) => total + (block.codes?.length ?? 0), 0),
-    tests:
-      testMatrix(module)?.groups.reduce((total, group) => total + group.rows.length, 0) ?? 0,
+    operations: operationCount,
+    codes: codeCount,
+    tests: testCount,
+    sections: Object.keys(files)
+      .filter((path) => path.startsWith('references/'))
+      .map((path) => path.replace(/^references\/|\.md$/g, '')),
   };
-  const folder = join(outDir, module.slug);
-  mkdirSync(folder, {recursive: true});
-  writeFileSync(join(folder, 'SKILL.md'), skill);
-
-  // No second artifact for Cursor. Agent Skills is an open standard now, and
-  // Cursor, Copilot and Claude all read this same SKILL.md: Cursor from
-  // .cursor/skills and .claude/skills, Copilot from .github/skills and
-  // .claude/skills. The .mdc rule file that used to live here was a conversion
-  // of the same content into an older format nothing needs any more.
 
   count += 1;
+  const size = Object.values(files).reduce((total, body) => total + body.length, 0);
   console.log(
-    `Built ${module.slug}: ${skill.split('\n').length} lines, ${Math.round(
-      skill.length / 1024,
-    )}KB.`,
+    `Built ${module.slug}: ${files['SKILL.md'].split('\n').length} line router, ${
+      Object.keys(files).length - 1
+    } reference(s), ${Math.round(size / 1024)}KB.`,
   );
 }
 
-// The committed skills under plugins/abdm-integrators-assistant/skills ship too, at the same
-// /skills/<name>/SKILL.md URLs the compiled module skills get, so the
-// site is the one place an integrator finds every skill. Each gets a
-// manifest entry (kind: guided) so a page can render an install panel
-// for it; the description comes from the skill's own frontmatter, and
-// the example prompt lives here because the file does not carry one.
-const GUIDED = {
-  'fhir-generate': {
-    module: 'FHIR',
-    title: 'FHIR generate',
-    example: 'Add ABDM compliant FHIR bundle generation to this codebase',
-  },
-  'fhir-audit': {
-    module: 'FHIR',
-    title: 'FHIR audit',
-    example: "Check this FHIR store's bundles for ABDM compliance",
-  },
-  'hiecm-m1-build': {
-    module: 'M1',
-    title: 'M1 build',
-    example: 'Scaffold ABHA creation by Aadhaar OTP, flow by flow',
-  },
-  'hiecm-m1-debug': {
-    module: 'M1',
-    title: 'M1 debug',
-    example: 'Diagnose this failed ABDM call',
-  },
-  'hiecm-m2-build': {
-    module: 'M2',
-    title: 'M2 build',
-    example: 'Link a care context for this patient, flow by flow',
-  },
-  'hiecm-m2-debug': {
-    module: 'M2',
-    title: 'M2 debug',
-    example: 'Diagnose this failed linking call',
-  },
-  'hiecm-m3-build': {
-    module: 'M3',
-    title: 'M3 build',
-    example: 'Raise a consent request and fetch what it covers, flow by flow',
-  },
-  'hiecm-m3-debug': {
-    module: 'M3',
-    title: 'M3 debug',
-    example: 'Diagnose this failed consent call',
-  },
-  'hiecm-m4-build': {
-    module: 'M4',
-    title: 'M4 build',
-    example: 'Onboard this facility to the HFR and link its HIP bridge',
-  },
-  'hiecm-m4-debug': {
-    module: 'M4',
-    title: 'M4 debug',
-    example: 'Diagnose this failed HFR onboarding call',
-  },
-  'hiecm-p1-build': {
-    module: 'P1',
-    title: 'P1 build',
-    example: 'Add ABHA address creation and the four login routes to this app',
-  },
-  'hiecm-p1-debug': {
-    module: 'P1',
-    title: 'PHR debug',
-    example: 'Diagnose this failed call from a PHR app',
-  },
-  'hiecm-p2-build': {
-    module: 'P2',
-    title: 'P2 build',
-    example: 'Add discovery and linking to this PHR app',
-  },
-  'hiecm-p3-build': {
-    module: 'P3',
-    title: 'P3 build',
-    example: 'Fetch and store the records a linked care context points at',
-  },
-};
-const pluginDir = join(root, 'plugins', 'abdm-integrators-assistant', 'skills');
-for (const name of readdirSync(pluginDir)) {
-  const src = join(pluginDir, name, 'SKILL.md');
-  if (!existsSync(src)) continue; // README.md and other non-skill entries
-  const raw = readFileSync(src, 'utf8');
-  const folder = join(outDir, name);
-  mkdirSync(folder, {recursive: true});
-  writeFileSync(join(folder, 'SKILL.md'), raw);
-  const fm = parse(raw.match(/^---\n([\s\S]*?)\n---/)?.[1] ?? '') ?? {};
-  manifest[name] = {
-    kind: 'guided',
-    module: GUIDED[name]?.module ?? 'ABDM',
-    // The heading reads this out loud, so it carries the acronym in the case
-    // the acronym has. The skill's own name stays the file name below it.
-    title: GUIDED[name]?.title ?? fm.name ?? name,
-    description: fm.description ?? '',
-    example: GUIDED[name]?.example ?? '',
-  };
-  count += 1;
-  console.log(`Copied ${name} from plugins/abdm-integrators-assistant/skills.`);
+// FHIR is the one skill with no module behind it: two hand written procedures
+// that were two skills for the same reason the loops were, and are one skill
+// with two references for the same reason they are not any more.
+const FHIR_REFS = [
+  ['generate', 'fhir-generate', 'Build NRCES compliant bundle generation into a codebase.'],
+  ['audit', 'fhir-audit', "Check an existing FHIR store's output against the same profiles."],
+];
+const fhirFiles = {};
+const fhirCovers = [];
+for (const [section, source, what] of FHIR_REFS) {
+  fhirFiles[`references/${section}.md`] = guided(source);
+  fhirCovers.push(
+    `- **${section[0].toUpperCase()}${section.slice(1)}.** ${what} [references/${section}.md](references/${section}.md)`,
+  );
 }
+fhirFiles['SKILL.md'] = [
+  '---',
+  'name: abdm-fhir',
+  'description: Use when producing or checking FHIR for ABDM: building NRCES compliant document bundle generation into a codebase, or auditing the bundles an existing FHIR store already emits. Covers the resource profiles ABDM requires, the Composition rules, and the validator to check against.',
+  '---',
+  '',
+  '# ABDM FHIR',
+  '',
+  `Generated from the ABDM Developer Portal on ${buildDate}, catalogue version ${catalogueVersion}.`,
+  '',
+  `This file is a snapshot. Re-download it from ${skillUrl('abdm-fhir')} when it is older than the work you are doing.`,
+  '',
+  '## What this skill covers',
+  '',
+  ...fhirCovers,
+  '',
+  'Open one when the work calls for it. This file is the map, not the material.',
+  '',
+  '## Before anything else',
+  '',
+  `- ${UNVERIFIED}`,
+  '- A bundle that validates is not a bundle ABDM accepts. The NRCES profiles are the floor, and the milestone the bundle travels under adds its own rules.',
+].join('\n');
+emit('abdm-fhir', fhirFiles);
+manifest['abdm-fhir'] = {
+  module: 'FHIR',
+  title: 'FHIR, generating and auditing bundles',
+  docs: '/docs/hiecm/v3/concepts/fhir',
+  example: 'Add ABDM compliant FHIR bundle generation to this codebase',
+  errorExample: null,
+  operations: 0,
+  codes: 0,
+  tests: 0,
+  sections: FHIR_REFS.map(([section]) => section),
+};
+count += 1;
+console.log('Built abdm-fhir: 2 reference(s) from the hand written procedures.');
 
 writeFileSync(
   join(root, 'site', 'src', 'data', 'skills.json'),
   `${JSON.stringify(manifest, null, 2)}\n`,
 );
 
-console.log(`Compiled ${count} skill(s) into site/static/skills.`);
+console.log(`Compiled ${count} skill(s) into site/static/skills and the plugin.`);
 
 // ---------------------------------------------------------------------------
 // The hosted setup prompt, the pattern Cloudflare's docs use: what a reader
@@ -570,30 +718,10 @@ console.log(`Compiled ${count} skill(s) into site/static/skills.`);
 // this URL, regenerated every build. The pasted prompt therefore cannot go
 // stale, which no inline prompt can promise. AgentSetup.tsx copies the one
 // line; this file is what the agent fetches.
-const promptSkills = [
-  ['abdm-m1', 'ABDM Milestone 1: ABHA identity, login, profile'],
-  ['abdm-m2', 'ABDM Milestone 2: linking and sharing records'],
-  ['abdm-m3', 'ABDM Milestone 3: consent and fetching'],
-  ['abdm-m4', 'ABDM Milestone 4: the HPR and HFR registries'],
-  ['abdm-p1', 'ABDM P1: PHR identity and profile, the patient side of M1'],
-  ['abdm-p2', 'ABDM P2: PHR linking and records, the patient side of M2'],
-  ['abdm-p3', 'ABDM P3: PHR consent and notifications, the patient side of M3'],
-  ['abdm-phr-services', 'services a PHR app may offer on top of ABDM, none of them certified'],
-  ['hiecm-m1-build', 'scaffolding an M1 integration flow by flow against the sandbox'],
-  ['hiecm-m1-debug', 'diagnosing a failed M1 call'],
-  ['hiecm-m2-build', 'scaffolding an M2 integration flow by flow against the sandbox'],
-  ['hiecm-m2-debug', 'diagnosing a failed M2 call'],
-  ['hiecm-m3-build', 'scaffolding an M3 integration flow by flow against the sandbox'],
-  ['hiecm-m3-debug', 'diagnosing a failed M3 call'],
-  ['hiecm-m4-build', 'scaffolding the HPR and HFR registrations M4 asks for'],
-  ['hiecm-m4-debug', 'diagnosing a failed M4 registration call'],
-  ['hiecm-p1-build', 'scaffolding registration and login in a PHR app'],
-  ['hiecm-p1-debug', 'diagnosing a failed call from a PHR app, across P1 to P3'],
-  ['hiecm-p2-build', 'scaffolding discovery and linking in a PHR app'],
-  ['hiecm-p3-build', 'scaffolding consent and record fetching in a PHR app'],
-  ['fhir-generate', 'building NRCES compliant FHIR bundles in this codebase'],
-  ['fhir-audit', 'checking an existing FHIR store for NRCES compliance'],
-];
+const promptSkills = Object.entries(manifest).map(([slug, entry]) => [
+  slug,
+  `${entry.title}. Sections: ${entry.sections.join(', ')}.`,
+]);
 const mcpUrl = process.env.MCP_URL ?? null;
 // The Claude Code plugin marketplace: this repository itself. Update at
 // handover, together with PLUGIN_REPO in site/src/components/docs/AgentSetup.tsx.
@@ -612,7 +740,7 @@ const promptLines = [
   '',
   ...promptSkills.map(([slug, what]) => `- \`${slug}\`: ${what}`),
   '',
-  'A project that produces FHIR documents from its own code wants `fhir-generate`; one with an existing FHIR store wants `fhir-audit`; most need only one of the two.',
+  'Most projects need one milestone skill to begin with, and `abdm-fhir` alongside it if they produce or hold FHIR documents.',
   '',
   '## 2. Install the skills',
   '',
@@ -637,23 +765,25 @@ const promptLines = [
   '',
   'Cursor, GitHub Copilot, VS Code and Kiro read Agent Plugins 1.0, but they install from their own marketplaces rather than from a repository, and this plugin is not listed in one yet. Install the skills directly instead, which is also the fallback anywhere the marketplace add above fails.',
   '',
-  'Each skill is one markdown file in the cross-agent SKILL.md format. Download each chosen skill into the directory your agent reads skills from:',
+  'Each skill is a folder in the cross-agent Agent Skills format: a `SKILL.md` that routes, and the sections it links to under `references/`, which load only when the work needs them. Download the whole folder into the directory your agent reads skills from:',
   '',
-  '- Claude Code: `.claude/skills/<name>/SKILL.md`',
-  '- Cursor: `.cursor/skills/<name>/SKILL.md` (it also reads `.claude/skills`)',
-  '- GitHub Copilot: `.github/skills/<name>/SKILL.md`',
+  '- Claude Code: `.claude/skills/<name>/`',
+  '- Cursor: `.cursor/skills/<name>/` (it also reads `.claude/skills`)',
+  '- GitHub Copilot: `.github/skills/<name>/`',
   '- Any other agent: wherever it reads context from',
   '',
   ...(siteUrl
     ? []
     : ['URLs below are relative to the origin you fetched this file from.', '']),
-  'For example:',
+  `\`${promptRef('/skills/index.json')}\` lists every skill and the exact files it is made of, so fetch that first and work from it rather than guessing at reference names. For example:`,
   '',
   '```',
-  `mkdir -p .claude/skills/abdm-m1 && curl -fsSL ${promptRef('/skills/abdm-m1/SKILL.md')} -o .claude/skills/abdm-m1/SKILL.md`,
+  `mkdir -p .claude/skills/abdm-m1/references`,
+  `curl -fsSL ${promptRef('/skills/abdm-m1/SKILL.md')} -o .claude/skills/abdm-m1/SKILL.md`,
+  `for f in scaffold integrate debug test; do curl -fsSL ${promptRef('/skills/abdm-m1/references')}/$f.md -o .claude/skills/abdm-m1/references/$f.md; done`,
   '```',
   '',
-  ...promptSkills.map(([slug]) => `- ${promptRef(`/skills/${slug}/SKILL.md`)}`),
+  ...promptSkills.map(([slug]) => `- ${promptRef(`/skills/${slug}/`)}`),
   '',
   '## 3. Connect the Docs MCP server',
   '',
@@ -679,6 +809,26 @@ const promptLines = [
   `- The skills are snapshots. The current documentation lives at ${promptRef('/')}; prefer it, and the MCP server when connected, over any downloaded copy that has aged.`,
   '',
 ];
+// What a manual download has to fetch. A skill is a folder now, and an agent
+// following the prompt below should not have to parse Markdown links to learn
+// which files exist.
+writeFileSync(
+  join(outDir, 'index.json'),
+  `${JSON.stringify(
+    {
+      catalogue_version: catalogueVersion,
+      built: buildDate,
+      skills: Object.entries(manifest).map(([slug, entry]) => ({
+        name: slug,
+        title: entry.title,
+        files: ['SKILL.md', ...entry.sections.map((s) => `references/${s}.md`)],
+      })),
+    },
+    null,
+    2,
+  )}\n`,
+);
+
 const promptDir = join(root, 'site', 'static', 'agent-setup');
 mkdirSync(promptDir, {recursive: true});
 writeFileSync(join(promptDir, 'prompt.md'), `${promptLines.join('\n')}\n`);
