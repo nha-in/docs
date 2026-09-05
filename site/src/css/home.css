@@ -299,6 +299,121 @@
   background-color: var(--accent);
 }
 
+/* ---------- the board ----------
+   The pill that used to sit here named the site, which the lockup in the
+   corner and the browser tab already did. This says what the network just
+   carried instead, and it is a row of flaps rather than a chip because a
+   departure board is a list of things in transit between places, which is the
+   claim underneath ABDM and the thing the drawing behind it is doing.
+
+   The mark and the row share a line with no fill and no border around them,
+   so this reads as part of the drawing rather than as a label laid over it. */
+.landing-hero__board {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.625rem;
+  margin: 0;
+}
+
+/* The emblem is the node the record leaves from, so it takes the accent's
+   ground rather than sitting on the page unmarked. */
+.landing-hero__board svg,
+.landing-hero__board img {
+  flex: none;
+  width: 1.125rem;
+  height: 1.125rem;
+}
+
+.flap {
+  display: inline-flex;
+  align-items: center;
+}
+
+/* Fixed cells, not a fixed width: a real board has a set number of flaps and
+   pads the short words with blanks. Nothing here measures text, so a message
+   of a different length cannot move the layout. */
+.flap__row {
+  display: inline-flex;
+  gap: 1px;
+}
+
+.flap__cell {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 0.72em;
+  padding: 0.1875rem 0;
+  border-radius: 1px;
+  background: var(--fill-soft);
+  font-family: var(--font-mono, ui-monospace, SFMono-Regular, Menlo, monospace);
+  font-size: 0.75rem;
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: 0;
+  color: var(--accent);
+  /* The flap falls from its own top edge, the way the printed half of a
+     Solari board does. One transform per cell, no second element behind it. */
+  transform-origin: 50% 0;
+  animation: flap-turn 260ms cubic-bezier(0.2, 0.8, 0.3, 1) both;
+}
+
+/* A blank flap is a flap, not a gap: it keeps its ground so the board reads
+   as one object with some of its cells empty. */
+.flap__cell:empty {
+  color: transparent;
+}
+
+@keyframes flap-turn {
+  from {
+    transform: rotateX(-90deg);
+    opacity: 0.2;
+  }
+  to {
+    transform: rotateX(0);
+    opacity: 1;
+  }
+}
+
+/* Set, not turned. The board still says what it says; the flaps just do not
+   move, which is also the state it renders in on the server and on the first
+   client paint, so the two agree. */
+.flap[data-still='true'] .flap__cell {
+  animation: none;
+}
+
+/* The one name that does not change, for a screen reader. The flaps
+   themselves are aria-hidden: a row of cells turning over every few seconds
+   is a live region nobody wants announced. */
+.flap__label {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .flap__cell {
+    animation: none;
+  }
+}
+
+/* The board is 29 flaps wide, because the longest message is 29 characters.
+   At the size above that is 307px including the mark, which fits a 375px
+   phone and does not fit a 320px one. The flaps get smaller rather than the
+   board getting narrower: a board that drops cells is a board that cannot
+   show its own longest message. */
+@media (max-width: 420px) {
+  .flap__cell {
+    width: 0.7em;
+    font-size: 0.625rem;
+  }
+}
+
 .landing-hero__eyebrow {
   font-size: 0.8125rem;
   font-weight: 500;
@@ -473,45 +588,6 @@
   height: 60vh;
 }
 
-/* ---------- the scroll hint ----------
-   Scrolling is this page's main gesture and it was unadvertised: the hero
-   fills the screen, so there is no visible cut-off edge to suggest anything
-   is below it. The arrow says so, and pressing it does the same thing as the
-   scroll rather than being a second, different control. */
-.landing-scroll-hint {
-  position: absolute;
-  bottom: 2rem;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 1;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 2.5rem;
-  height: 2.5rem;
-  padding: 0;
-  border: 1px solid var(--border);
-  border-radius: 999px;
-  background: var(--surface-sunken);
-  color: var(--text-muted);
-  cursor: pointer;
-  transition: color 150ms ease, border-color 150ms ease, background-color 150ms ease;
-  animation: landing-scroll-nudge 2.4s ease-in-out infinite;
-}
-
-.landing-scroll-hint:hover {
-  color: var(--accent);
-  border-color: var(--accent-line);
-  background: var(--accent-soft);
-}
-
-/* A small, slow fall. Enough to read as "down", not enough to pull the eye off
-   the statement it sits under. */
-@keyframes landing-scroll-nudge {
-  0%, 100% { transform: translateX(-50%) translateY(0); }
-  50%      { transform: translateX(-50%) translateY(0.25rem); }
-}
-
 /* ---------- leaving ----------
    The handoff is a scroll, not a fade: pressing Get started runs the page
    down and the route changes when it arrives, so the button does visibly what
@@ -536,9 +612,6 @@
     transition: none;
   }
 
-  .landing-scroll-hint {
-    animation: none;
-  }
 }
 
 
@@ -679,15 +752,10 @@
   .landing-hero__copy {
     gap: 0.875rem;
   }
-
-  .landing-scroll-hint {
-    bottom: 1rem;
-  }
 }
 
 @media (max-height: 560px) {
-  .landing-hero__lede,
-  .landing-scroll-hint {
+  .landing-hero__lede {
     display: none;
   }
 }
