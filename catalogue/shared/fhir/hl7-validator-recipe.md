@@ -35,8 +35,8 @@ related:
 
 `validate_fhir` (tier 1) is fast and structural. It does not check
 terminology bindings, nested cardinalities, or section slice
-discriminators. The official HL7 [FHIR](../glossary/fhir.md) validator
-does, against the exact same [NRCES](../glossary/nrces.md)
+discriminators. The official HL7 [FHIR](shared.glossary.fhir) validator
+does, against the exact same [NRCES](shared.glossary.nrces)
 implementation guide this catalogue pins. This atom is the runnable
 recipe for that check: download the pinned jar once, then run it
 against any bundle.

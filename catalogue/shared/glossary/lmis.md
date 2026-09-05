@@ -33,7 +33,7 @@ HIE-CM, the same side an [HMIS](hmis.md) sits on.
 It acts as a [HIP](hip.md) whenever it publishes a report, which is
 most of what a lab does, and as an [HIU](hiu.md) on the rarer occasions
 it reads a patient's history to interpret a result. See
-[roles](../../hiecm/concepts/roles.md).
+[roles](hiecm.concept.roles).
 
 ## Before you start
 

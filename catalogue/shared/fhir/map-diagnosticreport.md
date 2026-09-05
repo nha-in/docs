@@ -37,7 +37,7 @@ related:
 
 DiagnosticReport carries a diagnostic report, radiology or laboratory,
 that can be shared across the health ecosystem.
-[NRCES](../glossary/nrces.md) calls it `DiagnosticReportRecord`.
+[NRCES](shared.glossary.nrces) calls it `DiagnosticReportRecord`.
 
 ## Before you start
 
