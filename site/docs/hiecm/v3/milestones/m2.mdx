@@ -11,6 +11,8 @@ covers: [hiecm.flow.m2-link-care-context]
 ---
 
 import ApiLinks from '@site/src/components/docs/ApiLinks';
+import TestMatrix from '@site/src/components/api/TestMatrix';
+import matrix from '@site/src/data/test-matrix/m2.json';
 
 # M2 Attach: linking and sharing
 
@@ -103,7 +105,8 @@ and what each one asks of you.
 
 Test data is in the [data
 dictionary](/docs/hiecm/v3/reference/data-dictionary). [Support](/docs/support)
-lists the channels.
+lists the channels. The cases NHA runs are on this page, under [test
+cases](#test-cases).
 
 ## The journey, one diagram per flow
 
@@ -221,6 +224,17 @@ Four constraints apply to step 9, the push.
 - Stream very large files rather than sending one whole payload.
 
 Encryption uses [ECDH](/docs/hiecm/v3/getting-started/glossary#ecdh), Elliptic Curve Diffie Hellman, over Curve25519. Mechanics: [use cases](/reference/hiecm-m2). Call order: [API reference](/reference/hiecm-m2).
+
+## Test cases
+
+M2's certification cases are NHA's own, from the Building HIP sheet. Search
+them, or filter to the mandatory ones.
+
+Every case keeps the id NHA uses, so a case you pass here is a case you can
+name in certification. Cases this portal added rather than took from the sheet
+say so on the case itself.
+
+<TestMatrix matrix={matrix} />
 
 ## Next
 
