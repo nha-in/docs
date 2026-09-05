@@ -6,7 +6,7 @@ milestone: P3
 version: abdm-v3
 title: Get consent Request details by consent request Id
 summary: >
-  This API will be invoked by HIU to get the consent request by request id.
+  Reads one consent request from its request id.
 sources:
   - file: catalogue/openapi/.raw/nha-2026-09-04/ABHA-PHR-V3-Documents.docx
     fetched: 2026-09-04

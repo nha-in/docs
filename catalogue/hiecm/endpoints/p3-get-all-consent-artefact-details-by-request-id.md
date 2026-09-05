@@ -6,7 +6,7 @@ milestone: P3
 version: abdm-v3
 title: Get All consent-artefact-details-by-request-id
 summary: >
-  This API will be invoked by HIU to get the All-consent artifact details by request id.
+  Lists every consent artefact one consent request produced.
 sources:
   - file: catalogue/openapi/.raw/nha-2026-09-04/ABHA-PHR-V3-Documents.docx
     fetched: 2026-09-04

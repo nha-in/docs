@@ -6,7 +6,8 @@ milestone: P2
 version: abdm-v3
 title: Profile on share
 summary: >
-  This API will be invoked by HIP to acknowledge the request by the user/patient to share the profile details.
+  Acknowledges a patient's request to share their profile. The HIP makes
+  this call in reply.
 sources:
   - file: catalogue/openapi/.raw/nha-2026-09-04/ABHA-PHR-V3-Documents.docx
     fetched: 2026-09-04

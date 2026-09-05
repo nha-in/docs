@@ -6,7 +6,8 @@ milestone: P1
 version: abdm-v3
 title: GET Certificate (Public key)
 summary: >
-  This API will return the certificate (public-key) along with the encryption algorithm.
+  Returns the public certificate and the algorithm to encrypt with, which
+  sensitive fields need before they are sent.
 sources:
   - file: catalogue/openapi/.raw/nha-2026-09-04/ABHA-PHR-V3-Documents.docx
     fetched: 2026-09-04

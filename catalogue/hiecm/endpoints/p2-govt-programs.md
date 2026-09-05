@@ -6,7 +6,7 @@ milestone: P2
 version: abdm-v3
 title: HIE-CM Govt Programs
 summary: >
-  This API is designed to retrieve a list of government programs. When invoked, it queries the system to fetch comprehensive information about various government programs available. This functionality i
+  Lists the government programmes registered on the network.
 sources:
   - file: catalogue/openapi/.raw/nha-2026-09-04/ABHA-PHR-V3-Documents.docx
     fetched: 2026-09-04

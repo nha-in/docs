@@ -6,7 +6,7 @@ milestone: P3
 version: abdm-v3
 title: Get all consent Request for an ABHA Address
 summary: >
-  This API will be invoked by HIU to get the all consent requests for an ABHA Address.
+  Lists every consent request raised against one ABHA address.
 sources:
   - file: catalogue/openapi/.raw/nha-2026-09-04/ABHA-PHR-V3-Documents.docx
     fetched: 2026-09-04
