@@ -6,8 +6,9 @@ milestone: n/a
 version: abdm-v3
 title: PMS, pharmacy management system
 summary: >
-  The system a pharmacy runs to dispense and to hold stock. It reads a
-  prescription as an HIU and links what it dispensed as a HIP.
+  The system a pharmacy runs to dispense and to hold stock. A pharmacy
+  uses it both to read the prescription it is dispensing against and to
+  record what it dispensed.
 sources:
   - file: site/src/components/docs/RoleSelector.tsx
     status: not-yet-hashed
@@ -31,9 +32,9 @@ related:
 ## In plain words
 
 Pharmacy Management System, the software a pharmacy runs to dispense and
-to keep its stock. In ABDM it acts as a [HIP](hip.md) when it links what
-it dispensed, and as an [HIU](hiu.md) when it reads the prescription it
-is dispensing against.
+to keep its stock. A pharmacy uses it to link what it dispensed as the
+[HIP](hip.md), and to read the prescription it is dispensing against as
+the [HIU](hiu.md).
 
 See [Hospital, lab and pharmacy systems](/docs/hiecm/v3/concepts/hip-hiu).
 

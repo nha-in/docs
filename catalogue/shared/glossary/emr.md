@@ -7,7 +7,8 @@ version: abdm-v3
 title: EMR, the clinical system a provider runs, also written EHR
 summary: >
   The system a hospital or clinic records consultations, prescriptions
-  and results in. It acts as a HIP, linking care contexts in M2.
+  and results in. A facility uses it both to publish its own records and
+  to fetch a patient's history from elsewhere.
 sources:
   - file: site/docs/_glossary/_hiecm.mdx
     status: not-yet-hashed
@@ -21,9 +22,11 @@ related:
   glossary:
     [
       shared.glossary.hip,
+      shared.glossary.hiu,
       shared.glossary.hie-cm,
       shared.glossary.phr,
       shared.glossary.m2,
+      shared.glossary.m3,
     ]
 ---
 
@@ -39,11 +42,13 @@ patient across providers. Vendors use the two words for the same product,
 so read which one a document means from what it describes rather than
 from the letters.
 
-In ABDM it acts as a [HIP](hip.md), linking care contexts in
-[M2](m2.md). ABDM does not build an EHR as a database: the records stay
-with the HIP that created them, and the [HIE-CM](hie-cm.md) plus consent
-is what lets another provider assemble the picture. The patient's own
-view of it is a [PHR](phr.md) app.
+A facility uses it to publish records as the [HIP](hip.md), linking care
+contexts in [M2](m2.md), and to fetch a patient's history as the
+[HIU](hiu.md) in [M3](m3.md), so the ABDM work is both. ABDM does not
+build an EHR as a database: the
+records stay with the facility that created them, and the
+[HIE-CM](hie-cm.md) plus consent is what lets another provider assemble
+the picture. The patient's own view of it is a [PHR](phr.md) app.
 
 ## Before you start
 

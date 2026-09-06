@@ -13,7 +13,7 @@
   "must_contain": [
     "the catalogue's term is HMIS, not HIMS",
     "HMIS is NHA's term for the software a hospital runs day to day",
-    "an HMIS normally integrates with ABDM as a HIP",
+    "a facility uses its HMIS to publish records as the HIP and to fetch them as the HIU, so the ABDM work is M2 and M3 either way",
     "an HMIS must implement every HI type, not only the ones it already produces"
   ],
   "must_not_contain": [
@@ -23,7 +23,10 @@
     "let me ",
     "great question",
     "the catalogue",
-    "atom"
+    "atom",
+    "hmis acts as a hip",
+    "hmis is a hip",
+    "hmis is the hip"
   ],
   "expected_sources": [
     "shared.glossary.hmis"

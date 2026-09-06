@@ -22,8 +22,8 @@ Four things must already be true, each checkable:
 
 - The care context is linked to the person's health address. See
   find records held elsewhere and link them.
-- Your application implements the HIU role. A PHR application is an HIU
-  as well, not instead.
+- Your application implements the consent and data flow calls. This is
+  work it does as well as linking, not instead of it.
 - You have a subscription, so you are told when a care context appears or
   changes. See
   subscribe and set an auto approval policy.
@@ -112,7 +112,7 @@ and no records.
 
 **If it goes wrong**
 
-The failures these sources document, in rough order of frequency:
+The failures, in rough order of frequency:
 
 - ABDM-1112 (hiecm.error.abdm-1112) when the artefact is expired or has
   been revoked. Revocation is the person exercising a right, so it is a
@@ -147,7 +147,36 @@ curl -X POST 'https://dev.abdm.gov.in/api/hiecm/subscription-requests/v3/init' \
   -H 'REQUEST-ID: <FRESH_UUID>' \
   -H 'TIMESTAMP: <ISO_8601_TIMESTAMP>' \
   -H 'Content-Type: application/json' \
-  -d '<REQUEST_BODY>'
+  -d '{
+  "subscription": {
+    "purpose": {
+      "text": "Care Management",
+      "code": "CAREMGT",
+      "refUri": "www.abdm.gov.in"
+    },
+    "patient": {
+      "id": "xxxxx@sbx"
+    },
+    "hiu": {
+      "id": "{ Health locker/PHR ID}"
+    },
+    "hips": [
+      {
+        "id": "HIP_ID",
+        "name": "HIP_NAME",
+        "type": "HIP"
+      }
+    ],
+    "categories": [
+      "LINK",
+      "DATA"
+    ],
+    "period": {
+      "from": "2024-06-01T09:00:00.000Z",
+      "to": "2124-12-31T09:00:00.000Z"
+    }
+  }
+}'
 ```
 
 #### Set an auto approval policy (`hiecm.endpoint.p3-consent-auto-approve`)

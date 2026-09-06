@@ -136,8 +136,8 @@ screen if the user is signed in, to login first if not.
 
 ## What you build in M3
 
-Every PHR application must also implement the
-[HIU](/docs/hiecm/v3/getting-started/glossary#hiu) role.
+A citizen fetching records is the [HIU](/docs/hiecm/v3/getting-started/glossary#hiu), so every
+PHR application must implement that side.
 
 ### Subscriptions and notifications
 
@@ -278,13 +278,14 @@ number they gave the facility. A mismatch stops the records being found.
 To be listed, you submit three things at sandbox exit: application name, Play
 Store URL and App Store URL.
 
-## Where a PHR app also acts as a HIP
+## Where the citizen is the HIP
 
-A health locker, letting users upload their own records, puts you briefly on the
-HIP side. A PHR app must accept scanned physical records and
-output from devices such as BP meters, glucose meters, fitness trackers and
-smartwatches. Your app sets the health information type from the contents or from
-user input, and uses `HealthDocumentRecord` when it cannot be determined.
+A citizen pushing a record into your app is the HIP. A health locker, where
+users upload their own records, puts you on that publishing side. A PHR app must
+accept scanned physical records and output from devices such as BP meters,
+glucose meters, fitness trackers and smartwatches. Your app sets the health
+information type from the contents or from user input, and uses
+`HealthDocumentRecord` when it cannot be determined.
 
 An uploaded record is shareable once you have three things: a linking token from
 the M1 APIs, a care context added to the user's ABHA address by HIP initiated

@@ -12,8 +12,8 @@
   "page": null,
   "must_contain": [
     "HIU stands for Health Information User",
-    "HIU is a role a system plays, not a type of system it is",
-    "acting as an HIU means requesting consent, waiting for the patient to grant it, then fetching against the artefact",
+    "HIU is a role an entity takes, not a kind of software, and the software is how the entity takes it",
+    "the entity asking to read records it did not create is the HIU: it requests consent, waits for the patient to grant it, then fetches against the artefact",
     "reading is M3 work"
   ],
   "must_not_contain": [
@@ -23,7 +23,10 @@
     "let me ",
     "great question",
     "the catalogue",
-    "atom"
+    "atom",
+    "a role a system plays",
+    "hiu systems",
+    "a phr app is an hiu"
   ],
   "expected_sources": [
     "shared.glossary.hiu"
