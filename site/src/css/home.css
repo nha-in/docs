@@ -483,11 +483,9 @@
 .landing-hero__statement {
   margin: 0;
   max-width: none;
+  font-family: var(--font-serif);
   font-size: clamp(1.5rem, 0.9rem + 2.4vw, 2.25rem);
   line-height: 1.15;
-  font-family: var(--font-serif);
-  font-size: 2.25rem;
-  line-height: 2.5rem;
   font-weight: 400;
   letter-spacing: -0.01em;
   color: var(--text-heading);
@@ -713,7 +711,16 @@
   z-index: 400;
   display: flex;
   flex-direction: column;
-  overflow: hidden;
+  /* The curtain used to be `overflow: hidden`, which made it exactly one
+     viewport tall and clipped whatever did not fit. On a phone that put the
+     three gateway cards outside the painted area with no way to reach them,
+     because the document does not scroll while the curtain is down and the
+     only gesture that moved anything navigated away instead. It scrolls now.
+     `contain` keeps the gesture in this box rather than chaining it to the
+     document, where a downward swipe becomes Chrome for Android's pull to
+     refresh (CSS Overscroll Behavior 1). */
+  overflow-y: auto;
+  overscroll-behavior: contain;
   /* The first screen is the one place the accent is allowed a whole field of
      its own: a wash off the top, fading into the page before the copy ends,
      so the statement is read on sage rather than on cream. On the curtain and
@@ -783,14 +790,16 @@
   display: block;
 }
 
-/* The hero fills what is left of the curtain, so the fold sits at its foot.
-   `min-height: 0` and a scaled pad, because the curtain is exactly the height
-   of the window: a fixed padding that is comfortable at 900px tall pushes the
-   gateways off the bottom of a 600px one. The curtain does the clipping, so
-   the hero does none: the network reaches up behind the bar. */
+/* The hero fills what is left of the curtain, so the fold sits at its foot,
+   and grows past it when the copy needs more room. It used to carry
+   `min-height: 0`, which lets a flex item shrink below its own contents: on a
+   narrow screen the copy needed about 950px in 748px of curtain and the excess
+   was simply cut, off both ends, because the hero centres what it holds. The
+   auto minimum keeps it at least as tall as its content and the curtain
+   scrolls to the rest. The scaled pad stays: a fixed padding comfortable at
+   900px tall wastes the top of a 600px one. */
 .curtain .landing-hero {
-  flex: 1 1 auto;
-  min-height: 0;
+  flex: 1 0 auto;
   padding: clamp(1rem, 4vh, 3rem) 1.5rem clamp(1.5rem, 6vh, 4rem);
   overflow: visible;
 }
