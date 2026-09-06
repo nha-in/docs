@@ -393,6 +393,27 @@ for (const {platform, version, files} of tree) {
     return undefined;
   };
 
+  // Whether a call has to be implemented is a certification question, and the
+  // certification sheets are the only place it is answered. scripts/build-requirements.mjs
+  // joins the sheets to the specifications and writes `x-abdm-requirement`, so
+  // an operation no sheet names carries no key and the page shows nothing. The
+  // case ids come through with the level, because they are the evidence for
+  // it, and they point at the module's testing page where each case is
+  // written out.
+  const requirementFor = (op, moduleDir) => {
+    const requirement = op['x-abdm-requirement'];
+    if (!requirement?.level) return undefined;
+    return {
+      level: requirement.level,
+      cases: requirement.cases ?? [],
+      conditions: requirement.conditions ?? [],
+      href:
+        isHiecmV3 && /^m[1-4]$/.test(moduleDir)
+          ? `/docs/${platform}/${version}/resources/testing/${moduleDir}`
+          : undefined,
+    };
+  };
+
   const operations = new Map();
   for (const module of modules) {
     for (const [path, item] of Object.entries(module.spec.paths ?? {})) {
@@ -598,6 +619,7 @@ for (const {platform, version, files} of tree) {
         requestExample:
           firstExample(op.requestBody?.content) ?? sampleFromSchema(requestSchema),
         responses,
+        requirement: requirementFor(op, module.dir),
         tag,
         tagDescription: tagInfo[tag] ?? '',
       };
@@ -757,6 +779,11 @@ for (const {platform, version, files} of tree) {
     ...(isHiecmV3
       ? [
           'In M2 and M3 a call is acknowledged now and answered later. The answer arrives as a callback, a POST from ABDM to the URL you registered, declared in the specification as a webhook. Each callback is shown on the call it belongs to, and has a page of its own under that module.',
+          '',
+          // Without this line a reader reads a missing badge as "optional",
+          // which is a claim this portal has not made. The badge is only ever
+          // as wide as the certification sheets are.
+          'A page carries a Mandatory or Conditional badge where a certification case names that call, with the case ids beside it. No badge means no published certification requirement for that module, which is not the same as optional.',
           '',
         ]
       : []),

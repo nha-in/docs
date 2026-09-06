@@ -122,6 +122,9 @@ paths:
   /v3/enrollment/auth/byAbdm:
     post:
       operationId: m1_enrolment_verify_abdm_otp
+      x-abdm-requirement:
+        level: mandatory
+        cases: [CRT_ABHA_101, CRT_ABHA_201, CRT_ABHA_401]
       x-abdm-use-case: ABHA creation, Aadhaar OTP
       tags:
       - abha-creation
@@ -227,6 +230,9 @@ paths:
   /v3/enrollment/enrol/abha-address:
     post:
       operationId: m1_enrolment_claim_abha_address
+      x-abdm-requirement:
+        level: mandatory
+        cases: [CRT_ABHA_101, CRT_ABHA_201]
       x-abdm-use-case: ABHA creation, Aadhaar OTP
       tags:
       - abha-creation
@@ -345,6 +351,9 @@ paths:
   /v3/enrollment/enrol/byAadhaar:
     post:
       operationId: m1_enrolment_by_aadhaar
+      x-abdm-requirement:
+        level: mandatory
+        cases: [CRT_ABHA_101, CRT_ABHA_201, CRT_ABHA_301]
       x-abdm-use-case: ABHA creation, Aadhaar OTP
       tags:
       - abha-creation
@@ -507,6 +516,9 @@ paths:
   /v3/enrollment/enrol/byDocument:
     post:
       operationId: m1_enrolment_by_document
+      x-abdm-requirement:
+        level: optional
+        cases: [CRT_ABHA_401]
       x-abdm-use-case: ABHA creation, driving licence or PAN
       tags:
       - abha-creation
@@ -716,6 +728,9 @@ paths:
   /v3/enrollment/enrol/suggestion:
     get:
       operationId: m1_enrolment_address_suggestions
+      x-abdm-requirement:
+        level: mandatory
+        cases: [CRT_ABHA_101, CRT_ABHA_201]
       x-abdm-use-case: ABHA creation, Aadhaar OTP
       tags:
       - abha-creation
@@ -788,6 +803,9 @@ paths:
   /v3/enrollment/request/otp:
     post:
       operationId: m1_enrolment_request_otp
+      x-abdm-requirement:
+        level: mandatory
+        cases: [CRT_ABHA_101, CRT_ABHA_201, CRT_ABHA_401]
       x-abdm-use-case: ABHA creation, Aadhaar OTP
       tags:
       - abha-creation
@@ -881,6 +899,9 @@ paths:
   /v3.1/profile/login/request/otp:
     post:
       operationId: m1_login_request_otp_v31
+      x-abdm-requirement:
+        level: mandatory
+        cases: [PROF_ABHA_605, VRFY_ABHA_101, VRFY_ABHA_201, VRFY_ABHA_301, VRFY_ABHA_401]
       x-abdm-use-case: ABHA verification, Aadhaar OTP
       tags:
       - abha-login
@@ -934,6 +955,9 @@ paths:
   /v3.1/profile/login/verify:
     post:
       operationId: m1_login_verify_v31
+      x-abdm-requirement:
+        level: mandatory
+        cases: [VRFY_ABHA_101, VRFY_ABHA_201, VRFY_ABHA_301, VRFY_ABHA_401, VRFY_ABHA_501]
       x-abdm-use-case: ABHA verification, Aadhaar OTP
       tags:
       - abha-login
@@ -1119,6 +1143,9 @@ paths:
   /v3/profile/login/request/otp:
     post:
       operationId: m1_login_request_otp
+      x-abdm-requirement:
+        level: mandatory
+        cases: [PROF_ABHA_605, VRFY_ABHA_101, VRFY_ABHA_201, VRFY_ABHA_301, VRFY_ABHA_401]
       x-abdm-use-case: ABHA verification, mobile OTP
       tags:
       - abha-login
@@ -1242,6 +1269,9 @@ paths:
   /v3/profile/login/verify:
     post:
       operationId: m1_login_verify
+      x-abdm-requirement:
+        level: mandatory
+        cases: [VRFY_ABHA_101, VRFY_ABHA_201, VRFY_ABHA_301, VRFY_ABHA_401, VRFY_ABHA_501]
       x-abdm-use-case: ABHA verification, mobile OTP
       tags:
       - abha-login
@@ -1567,6 +1597,9 @@ paths:
   /v3/profile/login/verify/user:
     post:
       operationId: m1_login_select_account
+      x-abdm-requirement:
+        level: mandatory
+        cases: [PROF_ABHA_605, VRFY_ABHA_301]
       x-abdm-use-case: ABHA verification, mobile OTP
       tags:
       - abha-login
@@ -1626,6 +1659,9 @@ paths:
   /v3/profile/account:
     patch:
       operationId: m1_profile_update_account
+      x-abdm-requirement:
+        level: mandatory
+        cases: [CRT_ABHA_101, CRT_ABHA_201, CRT_ABHA_301, PROF_ABHA_602, VRFY_ABHA_101, VRFY_ABHA_201, VRFY_ABHA_301, VRFY_ABHA_401, VRFY_ABHA_501]
       x-abdm-use-case: Profile update
       tags:
       - abha-profile
@@ -1901,6 +1937,9 @@ paths:
       x-abdm-atom: hiecm.endpoint.m1-profile-update-account
     get:
       operationId: m1_profile_get_account
+      x-abdm-requirement:
+        level: mandatory
+        cases: [CRT_ABHA_101, CRT_ABHA_201, CRT_ABHA_301, PROF_ABHA_602, VRFY_ABHA_101, VRFY_ABHA_201, VRFY_ABHA_301, VRFY_ABHA_401, VRFY_ABHA_501]
       x-abdm-use-case: Share patient profile
       tags:
       - abha-profile
@@ -1940,6 +1979,9 @@ paths:
   /v3/profile/account/abha-card:
     get:
       operationId: m1_profile_get_abha_card
+      x-abdm-requirement:
+        level: mandatory
+        cases: [CRT_ABHA_101, CRT_ABHA_201, CRT_ABHA_301, VRFY_ABHA_101, VRFY_ABHA_201, VRFY_ABHA_301, VRFY_ABHA_401, VRFY_ABHA_501]
       x-abdm-use-case: ABHA QR code
       tags:
       - abha-profile
@@ -2086,6 +2128,9 @@ paths:
   /v3/profile/account/request/otp:
     post:
       operationId: m1_profile_request_otp
+      x-abdm-requirement:
+        level: optional
+        cases: [PROF_ABHA_601, PROF_ABHA_603, PROF_ABHA_604, PROF_ABHA_605]
       x-abdm-use-case: Profile update
       tags:
       - abha-profile
@@ -2176,6 +2221,9 @@ paths:
   /v3/profile/account/verify:
     post:
       operationId: m1_profile_verify_otp
+      x-abdm-requirement:
+        level: optional
+        cases: [PROF_ABHA_601, PROF_ABHA_603, PROF_ABHA_604, PROF_ABHA_605]
       x-abdm-use-case: Profile update
       tags:
       - abha-profile
@@ -3112,6 +3160,9 @@ paths:
       - PHR & ABHA Address
       summary: Search ABHA Address, Get Auth Methods
       operationId: m1_phr_search_abha_address
+      x-abdm-requirement:
+        level: mandatory
+        cases: [VRFY_ABHA_102, VRFY_ABHA_202]
       description: Look up available authentication methods for a given ABHA Address
         before login.
       parameters:
@@ -3155,6 +3206,9 @@ paths:
       - PHR & ABHA Address
       summary: Send OTP for ABHA Address Login
       operationId: m1_phr_request_otp
+      x-abdm-requirement:
+        level: mandatory
+        cases: [VRFY_ABHA_102, VRFY_ABHA_202]
       description: |
         Send OTP to login via ABHA Address.
 
@@ -3216,6 +3270,9 @@ paths:
       - PHR & ABHA Address
       summary: Verify OTP / Biometric for ABHA Address Login
       operationId: m1_phr_verify
+      x-abdm-requirement:
+        level: mandatory
+        cases: [VRFY_ABHA_102, VRFY_ABHA_202]
       description: Complete the ABHA Address login with OTP or biometric.
       parameters:
       - $ref: '#/components/parameters/RequestId'
@@ -3275,6 +3332,9 @@ paths:
       - PHR & ABHA Address
       summary: Get PHR Profile
       operationId: m1_get_phr_profile
+      x-abdm-requirement:
+        level: mandatory
+        cases: [VRFY_ABHA_102, VRFY_ABHA_202]
       description: Retrieve the authenticated user's PHR profile after ABHA Address
         login.
       parameters:
@@ -3306,6 +3366,9 @@ paths:
       - PHR & ABHA Address
       summary: Download PHR Card
       operationId: m1_download_phr_card
+      x-abdm-requirement:
+        level: mandatory
+        cases: [VRFY_ABHA_102, VRFY_ABHA_202]
       description: Download the PHR / ABHA Address card image.
       parameters:
       - $ref: '#/components/parameters/RequestId'
@@ -3460,6 +3523,9 @@ paths:
       - Scan & Share
       summary: Send Share Acknowledgement (HIP → Gateway)
       operationId: m1_on_share_acknowledgement
+      x-abdm-requirement:
+        level: mandatory
+        cases: [SHARE_PATIENT_PROFILE_701]
       description: |
         HIP sends an acknowledgement back to the ABDM Gateway after receiving
         and processing the patient's shared profile.
