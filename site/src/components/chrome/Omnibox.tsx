@@ -2,6 +2,7 @@ import React from 'react';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import useBaseUrl from '@docusaurus/useBaseUrl';
 import {useHistory} from '@docusaurus/router';
+import {useWindowSize} from '@docusaurus/theme-common';
 import SearchBar from '@theme/SearchBar';
 import QuickActions, {useRows} from './QuickActions';
 import {activePlatform, useRoutePath} from '@site/src/config/navigation';
@@ -35,6 +36,8 @@ const STARTERS: Record<string, string> = {
 
 export default function Omnibox() {
   const {siteConfig} = useDocusaurusContext();
+  // 'mobile' below 996px, the same breakpoint the chrome's own rules use.
+  const windowSize = useWindowSize();
   const platform = activePlatform(useRoutePath());
   const starters = platform ? STARTERS[platform.id] : undefined;
   const chatUrl = siteConfig.customFields?.chatUrl as string | null;
@@ -263,7 +266,14 @@ export default function Omnibox() {
           /docs/... link is wrong on every host except this one. An absent
           api-base leaves the panel a labelled mock, which is what preview
           builds ship. */}
+      {/* The chip goes on a phone, because the bar has room for one control
+          and search is the one a reader needs there. It goes by the element's
+          own launcher attribute rather than by hiding the element: the panel
+          is a dialog inside this element, so display:none on the host took
+          the assistant with it and every other way in, "Ask about this page"
+          and the quick action, fired and showed nothing at all. */}
       <abdm-support-agent
+        {...(windowSize === 'mobile' ? {launcher: 'none'} : {})}
         {...(chatUrl ? {'api-base': chatUrl} : {})}
         docs-origin={siteConfig.url + siteConfig.baseUrl.replace(/\/$/, '')}
         {...(mcpUrl ? {'mcp-url': mcpUrl} : {})}

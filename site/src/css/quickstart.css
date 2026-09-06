@@ -82,7 +82,7 @@
    line instead of dragging them down. */
 .quickstart__fields {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(15rem, 100%), 1fr));
   align-items: start;
   gap: 1.25rem;
   width: 100%;
@@ -130,6 +130,21 @@
   background: var(--surface-raised);
   border: 1px solid var(--border-strong);
   border-radius: 0.375rem;
+}
+
+/* WebKit zooms the page whenever a focused control's font is under 16px, and
+   it does not zoom back out on blur, so the reader is left on a page wider
+   than the screen and pinches out by hand. 16px is the threshold, and raising
+   the font is the only fix that keeps pinch zoom: suppressing it with
+   maximum-scale or user-scalable=no fails WCAG 2.2 SC 1.4.4 Resize Text, and
+   iOS has ignored both since iOS 10 in any case. The height goes up with it,
+   since 36px was already under Apple's 44pt touch target. */
+@media (max-width: 768px) {
+  .quickstart__input {
+    height: auto;
+    min-height: 2.75rem;
+    font-size: 1rem;
+  }
 }
 
 .quickstart__input:focus-visible {
