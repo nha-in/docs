@@ -112,8 +112,15 @@ export default function NetworkWeb({
    * onto. Not the itinerary: this is somebody pointing at a node and asking
    * what it is, so the board answers briefly and the walk takes over again
    * once the pointer goes still.
+   *
+   * Called with `null` when the pointer is moving and the light is on nobody.
+   * The board has no question to answer then, so it goes back to the portal's
+   * own name rather than holding the last node's line. Without this a reader
+   * who points at the pharmacy and then moves away reads "Prescriptions that
+   * travel" for as long as they keep the pointer moving, which says the board
+   * is stuck rather than that it is answering them.
    */
-  onPoint?: (id: string) => void;
+  onPoint?: (id: string | null) => void;
 } = {}): React.ReactNode {
   const wrapRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -162,7 +169,11 @@ export default function NetworkWeb({
     let deliveries = 0;
     /** While set, the courier is resting at a participant until this time. */
     let dwellUntil = 0;
-    /** The participant the board has already answered for under the pointer. */
+    /**
+     * The participant the board has already answered for under the pointer.
+     * `-1` before the pointer has asked anything, `-2` once it has been told
+     * the light is on nobody, so neither is announced twice running.
+     */
     let pointed = -1;
     const home = PARTICIPANTS.findIndex((who) => who.id === 'nha');
 
@@ -368,7 +379,19 @@ export default function NetworkWeb({
         pointed = onto;
         point.current?.(PARTICIPANTS[onto].id);
       }
-      if (settled < 0.2) pointed = -1;
+      // Adrift: the pointer is live and the light has left every node. Say so
+      // once, on the frame the light is released, and let the board decide
+      // what to show with no participant to speak for. While the walk owns the
+      // board this is skipped, because the itinerary is announcing its own
+      // legs and a gap between two of them is not a released pointer.
+      if (settled < 0.2) {
+        if (!idle && pointed !== -2) {
+          pointed = -2;
+          point.current?.(null);
+        } else if (idle) {
+          pointed = -1;
+        }
+      }
 
       const anchor = places[onto];
       // Released, `settled` runs back down to zero and the courier is the
