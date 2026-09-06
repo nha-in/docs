@@ -212,6 +212,42 @@ const show = (list, limit = 40) => {
   if (list.length > limit) console.log(`  ... and ${list.length - limit} more`);
 };
 
+// The glossary partials render as a two column grid, and the grid takes its
+// columns from strict heading, paragraph, heading, paragraph order: docitem.css
+// drops each element into the next cell rather than laying entries out as rows.
+// Anything else inside that div, an anchor span or a second paragraph, shifts
+// every following term into the definition column and the table reads as
+// nonsense from there down. That shipped once without anyone noticing, so it is
+// checked here rather than left to the eye.
+const glossaryDir = join(root, 'site', 'docs', '_glossary');
+for (const name of readdirSync(glossaryDir).filter((f) => f.endsWith('.mdx'))) {
+  const opened = readFileSync(join(glossaryDir, name), 'utf8').split(
+    '<div className="glossary">',
+  )[1];
+  if (!opened) continue;
+  const blocks = opened
+    .split('</div>')[0]
+    .split(/\n\s*\n/)
+    .map((block) => block.trim())
+    .filter(Boolean);
+  blocks.forEach((block, index) => {
+    const isHeading = block.startsWith('###');
+    if (isHeading === (index % 2 === 0)) return;
+    const term = blocks
+      .slice(0, index + 1)
+      .reverse()
+      .find((b) => b.startsWith('###'));
+    const after = term
+      ? ` after "${term.replace(/^###\s*/, '').replace(/<[^>]*>/g, '').slice(0, 40)}"`
+      : '';
+    errors.push(
+      `site/docs/_glossary/${name}: the glossary grid takes one paragraph per term, and ` +
+        `block ${index + 1} is ${isHeading ? 'a heading where a definition belongs' : 'an extra paragraph or element'}` +
+        `${after}. Merge it into the single paragraph, or put anchors inside the heading.`,
+    );
+  });
+}
+
 console.log(`${checked} page(s) checked against the content paradigm.`);
 
 if (overBudget.length) {
