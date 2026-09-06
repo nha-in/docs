@@ -37,11 +37,12 @@ facility: an [HMIS](hmis.md) in a hospital, also written HIS or HIMS, an
 [EMR](emr.md) in a clinic, a [LIMS](lims.md) in a laboratory, a
 [PMS](pms.md) in a pharmacy.
 
-ABDM does not use the term. It matters here because the vendor who
-writes any of those systems has the same integration in front of them:
-the facility is a [HIP](hip.md) when it publishes a record and an
-[HIU](hiu.md) when it fetches one, so the code is M2 and M3 either way.
-See [roles](hiecm.concept.roles).
+On the [HIE-CM](hie-cm.md) the position value for software that acts for
+a facility is `ims`, against `phr` for software that acts for a citizen.
+The vendor who writes any of those systems has the same integration in
+front of them: the facility is the [HIP](hip.md) when it publishes a
+record and the [HIU](hiu.md) when it fetches one, so the code is M2 and
+M3 either way. See [roles](../../hiecm/concepts/roles.md).
 
 ## Before you start
 

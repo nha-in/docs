@@ -16,8 +16,8 @@ and every page answers the same three questions: who you are, what you can do,
 and why it is worth taking part.
 
 Two of the eight do not integrate with anything. A citizen carries an identity
-and makes decisions. We run the network and issue the identifiers. The other six
-build software.
+and makes decisions. We run the network and issue the identifiers. The other
+six build software.
 
 | Participant | Who they are |
 | --- | --- |
@@ -30,13 +30,17 @@ build software.
 | [PHR app](./phr) | The citizen's own app: identity, linking, consent and records |
 | [NHA](./nha) | The National Health Authority, which runs the gateways and the registries |
 
-## A role is not a kind of company
+## A role belongs to the entity, not the software
 
 [HIP](/docs/hiecm/v3/getting-started/glossary#hip) and
-[HIU](/docs/hiecm/v3/getting-started/glossary#hiu) are directions of travel, not
-categories of business. The same system publishes a record as a HIP and reads
-one as an HIU. So a hospital, a laboratory and a pharmacy sit in the same role
-and differ only in the records they hold.
+[HIU](/docs/hiecm/v3/getting-started/glossary#hiu) are roles an entity takes,
+not kinds of software and not kinds of company. Whoever holds a record and
+publishes it is the HIP: a facility publishing through its
+[HMIS](/docs/hiecm/v3/getting-started/glossary#hmis), or a citizen pushing a
+record from their PHR app. Whoever asks to read records they did not create is
+the HIU, and an insurer or a referral service asks while holding neither an
+ABHA address nor a facility ID. So a hospital, a laboratory and a pharmacy sit
+in the same position and differ only in the records they hold.
 
 ## Next
 

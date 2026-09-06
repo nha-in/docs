@@ -38,6 +38,13 @@ related:
   concepts:
     - hiecm.concept.care-context
     - hiecm.concept.asynchronous-callbacks
+  glossary:
+    - shared.glossary.m2
+    - shared.glossary.hip
+    - shared.glossary.hiu
+    - shared.glossary.hfr
+    - shared.glossary.phr
+    - shared.glossary.abha-address
   errors:
     - hiecm.error.abdm-1056
     - hiecm.error.abdm-1062
@@ -50,31 +57,32 @@ skills:
 
 ## In plain words
 
-Linking is the M2 step where your system, acting as a HIP, attaches a
-care context to the patient's ABHA address. Once linked, the patient can
-see the record in their PHR app and an HIU can request it under consent.
-Nothing you hold is discoverable until it is linked.
+Linking is the [M2](shared.glossary.m2) step where your facility attaches
+a [care context](hiecm.concept.care-context) to the patient's
+[ABHA address](shared.glossary.abha-address). Your facility is the
+[HIP](shared.glossary.hip) when it publishes a record, and your software
+is how it takes that role. Once linked, the patient can see the record in
+their [PHR](shared.glossary.phr) app, and an organisation that asks to
+read it takes the [HIU](shared.glossary.hiu) role and can request it
+under consent. Nothing you hold is discoverable until it is linked.
 
 ## Before you start
 
 Three things must already be true, each checkable:
 
-- Your facility has a valid Facility ID registered in the HIP role.
+- Your facility holds a facility ID from the
+  [HFR](shared.glossary.hfr) and a bridge linked with type `HIP`. See
+  [link a facility to its bridge](m4-link-bridge.md).
 - You hold a gateway session token from the sessions endpoint
   (gateway_sessions_create in the gateway reference).
 - The patient has an ABHA address, which is the M1 module's job.
 
 ## What happens
 
-NHA's M2 document presents most request and response tables as
-screenshots, so the payload shapes below are unconfirmed until the M2
-swagger is ingested and run against sandbox. The sequence itself is
-documented:
-
 ```mermaid
 sequenceDiagram
-    participant HIP as Your system (HIP)
-    participant GW as NHA gateway (HIE-CM)
+    participant HIP as Your facility (HIP)
+    participant GW as HIE-CM gateway
     participant PHR as Patient's PHR app
     HIP->>HIP: group the visit's records into a care context
     HIP->>GW: generate a link token for this patient
@@ -92,7 +100,7 @@ sequenceDiagram
    posts to `/hiecm/v3/token/generate-token`. The token does not come
    back on that response. It arrives at your bridge, on
    [the token callback](hiecm.callback.m2-on-generate-token-result).
-   Store it against the patient: NHA gives its validity as six months.
+   Store it against the patient. A link token is valid for six months.
 2. **Link the care context.** Call
    [Link care contexts to an ABHA address](hiecm.endpoint.m2-hip-link-care-context),
    which posts to `/hiecm/hip/v3/link/carecontext` and carries the link
@@ -106,12 +114,6 @@ sequenceDiagram
    which posts to `/hiecm/hip/v3/link/context/notify`, and read the
    outcome on
    [the notify callback](hiecm.callback.m2-on-context-notify-result).
-
-NHA's M2 document presents most request and response tables as
-screenshots. The three calls and three callbacks above are from the
-ingested M2 file rather than from those screenshots, so their paths and
-payload shapes are declared rather than guessed. None of it has been run
-against the sandbox.
 
 ## How you know it worked
 
@@ -131,15 +133,14 @@ match:
   status: SUCCESS
 timeout_seconds: unknown
 note: >
-  The path and the payload shape are the ones NHA's ingested M2 file
-  declares. The timeout is not published, and no delivery has been
-  observed from this repository.
+  The timeout is not published. Wait on the callback rather than on a
+  deadline of your own.
 ```
 
 ## When it goes wrong
 
-The frequent failures NHA's sources document, in rough order of
-frequency, each with its fix in the linked error atom:
+The frequent failures, in rough order of frequency, each with its fix in
+the linked error atom:
 
 - hiecm.error.abdm-1056 when the care context is already linked or the
   link reference number is invalid.

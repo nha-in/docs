@@ -9,7 +9,7 @@
     },
     {
       "role": "assistant",
-      "text": "HIP is something a system does, not something a system is. Any system acts as a HIP the moment it publishes a record: it links care contexts to a patient's ABHA address, answers discovery requests, and hands over encrypted FHIR bundles once a consented request arrives. Publishing is M2 work."
+      "text": "HIP is a role an entity takes, not a kind of software. A facility or a citizen is the HIP in the moment it publishes a record: it links care contexts to a patient's ABHA address, answers discovery requests, and hands over encrypted FHIR bundles once a request backed by consent arrives. A facility does this through its HMIS, a citizen through a PHR app. Publishing is M2 work."
     },
     {
       "role": "user",
@@ -19,7 +19,7 @@
   "attachment": null,
   "page": null,
   "must_contain": [
-    "HIU is the role a system plays when it asks to read someone else's health records",
+    "HIU is the role an entity takes when it asks to read records it did not create, and the software is how it asks",
     "it requests consent, waits for the patient to grant it, then fetches against the artefact",
     "it never gets data without a granted consent artefact, and the patient can revoke at any time",
     "reading is M3 work"
@@ -31,7 +31,9 @@
     "let me ",
     "great question",
     "the catalogue",
-    "atom"
+    "atom",
+    "a role a system plays",
+    "something a system does"
   ],
   "expected_sources": [
     "shared.glossary.hiu"
@@ -41,5 +43,5 @@
   "derived_from": null,
   "source_row": "annexure#glossary",
   "catalogue_version": "2026.08.24",
-  "notes": "user corrects the assistant to the other role; the second answer is hiu.md's own plain-words text, not a rehash of the HIP answer."
+  "notes": "user corrects the assistant to the other role; the second answer is hiu.md's own plain-words text, not a rehash of the HIP answer. The seeded HIP turn keeps the entity as the subject, so the case never invites the assistant to carry the software-as-role error into its second answer."
 }

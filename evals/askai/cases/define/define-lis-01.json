@@ -13,7 +13,7 @@
   "must_contain": [
     "the catalogue's term is LIMS, not LIS",
     "LIMS is the system a diagnostic laboratory uses to manage samples, tests and results",
-    "a LIMS acts as a HIP when it publishes, linking each report as its own care context"
+    "a laboratory uses its LIMS to publish as the HIP, linking each report as its own care context, and to fetch a patient's history as the HIU"
   ],
   "must_not_contain": [
     "<MASKED",
@@ -22,7 +22,10 @@
     "let me ",
     "great question",
     "the catalogue",
-    "atom"
+    "atom",
+    "lims acts as a hip",
+    "lims is a hip",
+    "lims is the hip"
   ],
   "expected_sources": [
     "shared.glossary.lims"

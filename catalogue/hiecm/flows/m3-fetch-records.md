@@ -76,25 +76,23 @@ Four things must already be true, each checkable:
 - You hold a gateway session token. See
   [the gateway session](hiecm.concept.gateway-session).
 - You have generated an [ECDH](shared.glossary.ecdh) key pair
-  and a 32 byte nonce for this exchange, on Curve25519. NHA's M2 document
-  specifies the scheme; the data flow page at
-  /docs/hiecm/v3/concepts/data-flow sets out who generates what and
-  points at NHA's reference implementation, Fidelius, rather than hand
-  rolling it.
+  and a 32 byte nonce for this exchange, on Curve25519. The data flow
+  page at /docs/hiecm/v3/concepts/data-flow sets out who generates what.
+  Use Fidelius, the reference implementation, rather than hand rolling
+  the scheme.
 - You expose a `dataPushUrl` endpoint that can receive encrypted
   [FHIR](shared.glossary.fhir) bundles: the URL you name in the
-  health information request. NHA's M3 file only says to expose one; it
-  does not say whether that URL must differ from your other registered
-  callback URLs. The data flow concept page notes it may differ from
-  your registered gateway URL, not that it must.
+  health information request. Name the exact URL you will receive the
+  push on, and treat it as its own route rather than assuming your
+  other registered callbacks serve it.
 
 ## What happens
 
 ```mermaid
 sequenceDiagram
-    participant HIU as Your system (HIU)
-    participant GW as NHA gateway
-    participant HIP as HIP
+    participant HIU as Your organisation (HIU)
+    participant GW as HIE-CM gateway
+    participant HIP as The facility (HIP)
     HIU->>GW: POST /hiecm/consent/v3/fetch (consent artefact id)
     GW-->>HIU: callback to /api/v3/hiu/consent/on-fetch with the artefact
     HIU->>HIU: generate ECDH key pair and nonce
@@ -111,8 +109,8 @@ sequenceDiagram
    `/hiecm/consent/v3/fetch` with the consent artefact id from the
    grant. The answer arrives on
    [the consent artefact detail, fetched by artefact id](hiecm.callback.m3-on-consent-fetch)
-   at `/api/v3/hiu/consent/on-fetch`. NHA's file says this carries the
-   exact care contexts approved, the HI types permitted, the date range,
+   at `/api/v3/hiu/consent/on-fetch`. It carries the exact care contexts
+   approved, the HI types permitted, the date range,
    the data erase date, and the HIP and
    [HIU](shared.glossary.hiu) identifiers. Store it: the health
    information request needs the artefact detail, not the id alone.
@@ -136,9 +134,8 @@ sequenceDiagram
    ABDM endpoint. It lands directly on your own server, from the HIP.
 5. **Decrypt.** Derive the same session key from your private key and
    the HIP's public key, carried in the push payload's `keyMaterial`, and
-   decrypt. NHA's M3 document does not describe the cipher; it is
-   specified on the HIP side in NHA's M2 document, reproduced in the
-   data flow concept page above.
+   decrypt. The cipher is specified on the HIP side, and the data flow
+   concept page above reproduces it.
 6. **Acknowledge the transfer.** Call
    [HIU Data Flow Notification](hiecm.endpoint.m3-hiu-data-flow-notify),
    which posts to `/hiecm/data-flow/v3/health-information/notify` with
@@ -154,18 +151,13 @@ match:
   notification.statusNotification.sessionStatus: TRANSFERRED
 timeout_seconds: unknown
 note: >
-  NHA's M3 file documents no payload shape for what arrives at your
-  dataPushUrl, so no field name from that push is confirmed here. What
-  is confirmed, from hiecm-m3.yaml, is the field you send once every
-  care context in the artefact has decrypted: notification.statusNotification.sessionStatus
-  set to TRANSFERRED on the data flow notify call. Treat that outbound
-  call, not an inbound field name, as the exit signal until the push
-  payload itself has been observed.
+  The payload shape of what arrives at your dataPushUrl is not yet
+  published, so no field name from that push is named here. The field
+  you send once every care context in the artefact has decrypted is
+  notification.statusNotification.sessionStatus, set to TRANSFERRED on
+  the data flow notify call. Treat that outbound call, not an inbound
+  field name, as the exit signal.
 ```
-
-Not yet observed against the sandbox. This repository has not run a
-fetch through to a decrypted bundle. When it has, record the real
-payload shape here and set `verified.status`.
 
 ## When it goes wrong
 
@@ -173,17 +165,16 @@ payload shape here and set `verified.status`.
   [accepted, then nothing](hiecm.troubleshooting.accepted-then-nothing),
   which covers finding which callback in a multi step chain is missing.
 - The consent was valid when you sent the request but is not granted by
-  the time the HIP checks it. NHA's own error table names this state,
-  not a specific cause; a mid flow revocation is one way it happens. See
+  the time the HIP checks it. The error names this state, not a specific
+  cause, and a mid flow revocation is one way it happens. See
   [ABDM-1062](hiecm.error.abdm-1062). Treat every fetch as a fresh
   permission check, not a cached yes.
 - The artefact id is unknown, expired or already used past its window.
   See [ABDM-1112](hiecm.error.abdm-1112).
 - The push never arrives at your `dataPushUrl`. See
   [the callback never arrives](hiecm.troubleshooting.callback-never-arrives).
-  Check the `dataPushUrl` you sent on the health information request
-  specifically, since it may not be the same endpoint your other
-  registered callbacks land on.
+  Check the `dataPushUrl` you sent on the health information request,
+  not your other registered callback URLs.
 - The clock is wrong and every call fails. See
   [ABDM-2402](hiecm.error.abdm-2402).
 - The `REQUEST-ID` is missing, malformed or reused. See

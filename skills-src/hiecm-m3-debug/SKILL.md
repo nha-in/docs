@@ -23,8 +23,8 @@ Like the HIP version, this is a registration problem.
 Confirm the entity is registered in the HIU role and that you are sending
 the HIU id rather than the HIP id.
 
-If your product holds both, keep them in separate configuration values so
-they cannot be swapped.
+If you hold both ids, keep them in separate configuration values so they
+cannot be swapped.
 
 **Exit condition: the original call now succeeds**
 

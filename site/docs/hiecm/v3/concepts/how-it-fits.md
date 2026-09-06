@@ -1,7 +1,7 @@
 ---
 title: How the pieces fit
 sidebar_label: How the pieces fit
-description: The registries, the HIE-CM gateway and the roles your system takes, and where a health record actually lives.
+description: The registries, the HIE-CM gateway, the two roles a record moves between, and where a health record actually lives.
 verification: unverified
 source: ABDM__Proposed_Simplified_Milestone_1.md, ABDM__Proposed_Simplified_Milestone_2.md, ABDM__Proposed_Simplified_Milestone_3.md, ABDM__Proposed_Simplified_Milestone_4_(NHPR).md
 sidebar_position: 1
@@ -11,7 +11,7 @@ sidebar_position: 1
 
 [ABDM](/docs/hiecm/v3/getting-started/glossary#abdm) has three moving parts: registries that
 issue identifiers, the [HIE-CM](/docs/hiecm/v3/getting-started/glossary#hie-cm) gateway that
-routes requests and holds consent, and the role your system takes.
+routes requests and holds consent, and the two roles a record moves between.
 
 ## Identity comes first
 
@@ -42,15 +42,18 @@ every call carries.
 
 ## Your role decides what you build
 
-A role is what your system does in an exchange, not what kind of product it is. A hospital that
-shares discharge summaries and pulls earlier prescriptions is a HIP for the first and an HIU for
-the second. See [HIP and HIU](/docs/hiecm/v3/concepts/hip-hiu).
+Whoever holds a record and publishes it is the [HIP](/docs/hiecm/v3/getting-started/glossary#hip).
+Whoever asks to read records they did not create is the [HIU](/docs/hiecm/v3/getting-started/glossary#hiu).
+A hospital that shares discharge summaries and pulls earlier prescriptions is the HIP for the
+first and the HIU for the second. See [HIP and HIU](/docs/hiecm/v3/concepts/hip-hiu).
 
-| Role | What it does | Milestone |
-| --- | --- | --- |
-| [HIP](/docs/hiecm/v3/getting-started/glossary#hip) | Holds records it created, links them to a patient, sends them under a valid consent | [M2](/docs/hiecm/v3/api/m2) |
-| [HIU](/docs/hiecm/v3/getting-started/glossary#hiu) | Asks for records held elsewhere, under a consent the patient granted | [M3](/docs/hiecm/v3/api/m3) |
-| [PHR](/docs/hiecm/v3/getting-started/glossary#phr) | The patient's own app: holds the ABHA address, carries consent decisions, shows records | [M1](/docs/hiecm/v3/api/m1) and M3 |
+| Role | Who takes it | What it does | Milestone |
+| --- | --- | --- | --- |
+| HIP | A facility, through its [HMIS](/docs/hiecm/v3/getting-started/glossary#hmis). A citizen, through their PHR app | Links records to a patient, sends them under a valid consent | [M2](/docs/hiecm/v3/api/m2) |
+| HIU | Another facility, a citizen's PHR app, an insurer, a referral service, an analytics service | Raises a consent request, then fetches records held elsewhere | [M3](/docs/hiecm/v3/api/m3) |
+
+A citizen's [PHR](/docs/hiecm/v3/getting-started/glossary#phr) app takes both. The citizen is the
+HIP when they push a record from it, and the HIU when they fetch one.
 
 ## Records stay where they were created
 
@@ -81,5 +84,5 @@ authorises facility registration.
 
 ## Next
 
-[Your integration path](/docs/hiecm/v3/milestones) for what your role has to
+[Your integration path](/docs/hiecm/v3/milestones) for what each role has to
 build.

@@ -61,10 +61,11 @@ skills:
 
 ## In plain words
 
-Requesting consent is the M3 step where your system, acting as an
-[HIU](shared.glossary.hiu), asks a patient for permission to
-read health records held somewhere else. The ask and the permission are
-two different things. A
+Requesting consent is the M3 step where your organisation asks a patient
+for permission to read health records held somewhere else. Your
+organisation is the [HIU](shared.glossary.hiu) whenever it asks to read
+records it did not create, and your software is how it asks. The ask and
+the permission are two different things. A
 [consent artefact](hiecm.concept.consent-artefact) exists only if the
 patient grants the request. Until then you hold a request id, not a
 right to any record.
@@ -75,10 +76,10 @@ Five things must already be true, each checkable:
 
 - You hold a gateway session token. See
   [the gateway session](hiecm.concept.gateway-session).
-- Your application is registered in the HIU role, with a
-  [bridge](shared.glossary.bridge) URL the
-  [HIE-CM](shared.glossary.hie-cm) can route the patient's
-  decision to.
+- Your organisation holds a [bridge](shared.glossary.bridge) linked in
+  the `HIU` type, so the [HIE-CM](shared.glossary.hie-cm) can route the
+  patient's decision to it. For a facility, that link is the last step of
+  [linking a facility to its bridge](m4-link-bridge.md).
 - Your callback URL is registered with ABDM and reachable from the
   public internet. See
   [the callback URL](shared.sandbox.callback-url).
@@ -86,26 +87,22 @@ Five things must already be true, each checkable:
   That is [M1](shared.glossary.m1)'s job. Without it there is no
   one to ask.
 - You have a [purpose of use](shared.glossary.purpose-of-use)
-  code for the request. NHA's M3 file lists six; an insurer checking a
+  code for the request. There are six codes, and an insurer checking a
   claim uses `HPAYMT`.
 
 ## What happens
 
 ```mermaid
 sequenceDiagram
-    participant HIU as Your system (HIU)
-    participant GW as NHA gateway
-    participant CM as HIE-CM
+    participant HIU as Your organisation (HIU)
+    participant GW as HIE-CM gateway
     participant PHR as Patient's PHR app
     HIU->>GW: POST /hiecm/consent/v3/request/init (date range, HI types, purpose, expiry)
-    GW->>CM: forwards the request
-    CM-->>GW: acknowledges, creates a request id
     GW-->>HIU: callback to /api/v3/hiu/consent/request/on-init with the request id
-    CM->>PHR: notifies the patient of the request
-    Note over HIU,CM: your system waits. Poll request status if you need to show progress.
-    PHR->>CM: patient grants or denies
-    CM->>GW: notify the decision, with artefact ids on a grant
-    GW-->>HIU: callback to /api/v3/hiu/consent/request/notify
+    GW->>PHR: notifies the patient of the request
+    Note over HIU,GW: your system waits. Poll request status if you need to show progress.
+    PHR->>GW: patient grants or denies
+    GW-->>HIU: callback to /api/v3/hiu/consent/request/notify, with artefact ids on a grant
     HIU->>GW: POST /hiecm/consent/v3/request/hiu/on-notify, acknowledge receipt
 ```
 
@@ -130,17 +127,16 @@ sequenceDiagram
    to read the current state without waiting for the next callback; its
    answer arrives on
    [the consent manager reports the state of a consent request you asked about](hiecm.callback.m3-on-consent-request-status).
-   NHA's file names five states: `REQUESTED`, `GRANTED`, `DENIED`,
-   `EXPIRED`, `REVOKED`.
+   A consent request is in one of five states: `REQUESTED`, `GRANTED`,
+   `DENIED`, `EXPIRED`, `REVOKED`.
 4. **The patient grants or denies, in their [PHR](shared.glossary.phr)
-   app.** This step is not a call your system makes. NHA's document
-   places the whole decision on the patient's side, in the app they use.
+   app.** This step is not a call your system makes. The whole decision
+   happens on the patient's side, in the app they use.
 5. **The decision arrives on your callback.**
    [The patient's decision, sent to the requester](hiecm.callback.m3-on-consent-request-notify-hiu)
    arrives at `/api/v3/hiu/consent/request/notify`, carrying the status
    and, on a grant, the consent artefact ids created against the
-   request. Store every id. NHA's M3 document says a granted request
-   can produce more than one.
+   request. Store every id. A granted request can produce more than one.
 6. **Acknowledge receipt.** Call
    [Consent HIU On-Notify](hiecm.endpoint.m3-consent-hiu-on-notify),
    which posts to `/hiecm/consent/v3/request/hiu/on-notify`, so the
@@ -156,15 +152,9 @@ match:
 timeout_seconds: unknown
 note: >
   the payload also carries at least one id in notification.consentArtefacts.
-  Both fields are named in hiecm-m3.yaml's request body schema for this
-  callback. NHA's M3 file does not state how long the patient has to
-  act; that window is the one you set on the init call, not a gateway
-  timeout.
+  How long the patient has to act is the window you set on the init
+  call, not a gateway timeout.
 ```
-
-Not yet observed against the sandbox. This repository has not run a
-consent request through to a grant. When it has, record the real
-callback body here and set `verified.status`.
 
 ## When it goes wrong
 

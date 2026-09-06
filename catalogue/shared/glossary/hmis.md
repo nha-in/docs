@@ -6,8 +6,9 @@ milestone: n/a
 version: abdm-v3
 title: HMIS, HIS or HIMS, the software a hospital runs
 summary: >
-  The day to day software of a hospital, under any of its three names. It
-  publishes records as a HIP and fetches them as an HIU.
+  The day to day software of a hospital, under any of its three names. A
+  hospital uses it both to publish its own records and to fetch a
+  patient's history from elsewhere.
 sources:
   - file: site/docs/_glossary/_hiecm.mdx
     status: not-yet-hashed
@@ -38,14 +39,14 @@ Information System, HIS is Hospital Information System, and HIMS is
 Hospital Information Management System. One system, three names, one
 integration.
 
-In ABDM it acts as a [HIP](hip.md) when it publishes a record and an
-[HIU](hiu.md) when it fetches one, so most need M2 and M3 rather than one
+A facility uses it to publish records as the [HIP](hip.md) and to fetch
+them as the [HIU](hiu.md), so the ABDM work is M2 and M3 rather than one
 or the other. It must implement every [HI type](hi-type.md). See
-[roles](hiecm.concept.roles).
+[roles](../../hiecm/concepts/roles.md).
 
-`HIS-` is also the prefix on every error code the HPR and the HFR return.
-Those are [M4](m4.md) registry errors and have nothing to do with hospital
-software.
+`HIS-` is also the prefix on every error code the [HPR](hpr.md) and the
+[HFR](hfr.md) return. Those are [M4](m4.md) registry errors and have
+nothing to do with hospital software.
 
 ## Before you start
 
