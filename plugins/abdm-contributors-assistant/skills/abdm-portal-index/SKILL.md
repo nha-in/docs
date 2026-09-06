@@ -1,9 +1,9 @@
 ---
 name: abdm-portal-index
 description: Router for all ABDM Developer Portal build work. Use this FIRST whenever anyone asks about building, planning, writing, reviewing, compiling, publishing or testing the ABDM Catalogue, the self-hosted docs site, the agent skills, the Docs MCP server, the update pipeline, or the portal's schedule and scope. Triggers include "write an atom", "review this page", "the catalogue", "lint failed", "compile the skills", "which milestone am I on", "what ships Friday", "is this DPG compliant", "ingest NHA swagger", "the support agent", and any mention of HIE-CM or ABDM documentation work. Route from here rather than guessing which skill applies.
-plan_version: 2026.08.31
+plan_version: 2026.09.07
 plan_source: abdm-v1-phase1-architecture-and-plan.md
-plan_hash: sha256:4be567f1afffd4389e5a8e8d4444b9f90a2ca17bb1393f28afb15405fe97e4fa
+plan_hash: sha256:5a499e31695353bb361b3ce1717c2791a3a59f249ba7337093180834e0dc4741
 compiled_from_plan: true
 ---
 
@@ -40,7 +40,7 @@ The only skill an agent needs loaded to know what else exists. Read the decision
 
 3. **Rendering it for humans**
    - Docusaurus site, self-hosted Scalar references, local search, footer version stamp: `scalar-docs`
-   - Site structure, the four tabs, the module page ladder, page placement: `docs-ux`
+   - Site structure, the five tabs, the module page ladder, page placement: `docs-ux`
    - The Docs MCP server and what it is for: `scalar-docs`, then `support-agent`
 
 4. **Compiling it for machines**
