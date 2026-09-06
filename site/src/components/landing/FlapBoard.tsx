@@ -18,6 +18,16 @@ export const TURN_MS = 420;
 export const STAGGER_MS = 154;
 
 /**
+ * Cell to cell when the board is answering a pointer rather than a delivery.
+ *
+ * A reader holding the cursor over a node asked a question and is waiting for
+ * the answer. The delivery pace is right for something they are watching
+ * happen and far too slow for something they asked for: 29 x 26 + 420 is a
+ * little over a second, against nearly five.
+ */
+export const BRIEF_STAGGER_MS = 26;
+
+/**
  * A split-flap board, the kind an airport concourse and an Indian railway
  * platform used to run.
  *
@@ -92,6 +102,7 @@ export default function FlapBoard({
   text,
   cells,
   still,
+  stagger = STAGGER_MS,
 }: {
   /** What the board should be showing. */
   text: string;
@@ -99,6 +110,8 @@ export default function FlapBoard({
   cells: number;
   /** True to set the text without turning the flaps. */
   still?: boolean;
+  /** How far apart the cells start, so a pointer can be answered faster. */
+  stagger?: number;
 }): React.ReactNode {
   const target = laid(text, cells);
   // What the board is showing right now, and what it is turning away from.
@@ -125,7 +138,7 @@ export default function FlapBoard({
             key={`${index}|${from}|${to}`}
             from={from[index] ?? ' '}
             to={char}
-            delay={index * STAGGER_MS}
+            delay={index * stagger}
             still={Boolean(still)}
           />
         ))}

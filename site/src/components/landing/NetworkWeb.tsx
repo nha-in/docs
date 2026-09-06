@@ -48,7 +48,7 @@ const LINKS = PARTICIPANTS.flatMap((from, i) =>
 
 const REACH = 260; // px: how far the courier's light carries
 const ARRIVE = 76; // px: close enough to a participant to hand the record over
-const IDLE_AFTER = 10_000; // ms of stillness before the network demonstrates itself
+const IDLE_AFTER = 3_000; // ms of stillness before the network demonstrates itself
 const PACKET_MS = 900; // how long a record takes to travel one link
 
 /**
@@ -92,6 +92,7 @@ function falloff(distance: number, far: number) {
 export default function NetworkWeb({
   onArrive,
   onDepart,
+  onPoint,
 }: {
   /**
    * Called when the courier completes a leg of its own route, with the
@@ -106,6 +107,13 @@ export default function NetworkWeb({
    * message as the courier lands.
    */
   onDepart?: (id: string) => void;
+  /**
+   * Called with a participant the reader's own pointer has settled the light
+   * onto. Not the itinerary: this is somebody pointing at a node and asking
+   * what it is, so the board answers briefly and the walk takes over again
+   * once the pointer goes still.
+   */
+  onPoint?: (id: string) => void;
 } = {}): React.ReactNode {
   const wrapRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -114,6 +122,8 @@ export default function NetworkWeb({
   arrive.current = onArrive;
   const depart = useRef(onDepart);
   depart.current = onDepart;
+  const point = useRef(onPoint);
+  point.current = onPoint;
 
   useEffect(() => {
     const wrap = wrapRef.current;
@@ -152,6 +162,8 @@ export default function NetworkWeb({
     let deliveries = 0;
     /** While set, the courier is resting at a participant until this time. */
     let dwellUntil = 0;
+    /** The participant the board has already answered for under the pointer. */
+    let pointed = -1;
     const home = PARTICIPANTS.findIndex((who) => who.id === 'nha');
 
     const measure = () => {
@@ -347,6 +359,17 @@ export default function NetworkWeb({
       settled = reduced.matches
         ? Number(over)
         : settled + ((over ? 1 : 0) - settled) * (1 - Math.exp(-elapsed / 90));
+      // Settled under the reader's own pointer, rather than arrived on the
+      // walk. Announced past the half way point so a pointer crossing a node
+      // on its way somewhere else does not set the board off, and released
+      // again once the light has left, so coming back to the same node asks
+      // the question a second time.
+      if (!idle && over && settled > 0.6 && onto !== pointed) {
+        pointed = onto;
+        point.current?.(PARTICIPANTS[onto].id);
+      }
+      if (settled < 0.2) pointed = -1;
+
       const anchor = places[onto];
       // Released, `settled` runs back down to zero and the courier is the
       // pointer again, wherever the pointer has got to by then.

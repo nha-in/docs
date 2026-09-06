@@ -31,7 +31,20 @@ const docsRoot = join(root, "site", "docs");
 const outFile = join(root, "catalogue", "atom-routes.json");
 const sitemap = join(root, "site", "build", "sitemap.xml");
 
-const slug = (s) => s.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+// Tags first, then the slug. A heading may carry markup, and the glossary's do:
+// each term keeps an anchor element per spelling so a link to any of its names
+// lands, and those sit inside the heading because a sibling of one is a cell of
+// its own in the glossary's two column grid. Docusaurus slugs the heading's text
+// and ignores the markup, so stripping tags here is what keeps this agreeing
+// with the page. Without it a heading produced
+// "span-id-emr-span-span-id-ehr-span-emr-ehr" and every citation of that atom
+// pointed at an anchor that does not exist.
+const slug = (s) =>
+  s
+    .replace(/<[^>]*>/g, "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "");
 
 // The atom writes <ABHA_NUMBER> where the spec writes {abhaNumber}.
 const normPath = (p) =>
@@ -227,15 +240,20 @@ for (const [id, atom] of atoms) {
     // that lands them on the top of the page.
     // One heading may carry several names for one thing: "### HMIS, HIS,
     // HIMS" is one entry a search for any of the three should land on, and
-    // each name has an anchor of its own beside the heading. The term counts
+    // each name has an anchor of its own inside the heading. The term counts
     // as owning the heading wherever it sits in that list, so long as it is a
-    // whole name in it rather than part of another word.
+    // whole name in it rather than part of another word. Tags are stripped
+    // first: those anchor elements sit at the head of the line, before the
+    // term, and a heading that opens with markup matched nothing here and fell
+    // through to the loose search below, which anchors on whatever heading
+    // precedes the first mention of the term.
     const escaped = term.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
     const heading = new RegExp(
       `^#{2,4}\\s+(?:[^\\n]*,\\s*)?${escaped}(?:\\s*,[^\\n]*)?\\s*$`,
       "im",
     );
-    const owns = candidates.find((p) => heading.test(p.body));
+    const bare = (page) => page.body.replace(/<[^>]*>/g, "");
+    const owns = candidates.find((p) => heading.test(bare(p)));
     if (owns) {
       route = owns.route; anchor = slug(term);
       rule = `term defined under its own heading on ${basename(owns.route)}`;
