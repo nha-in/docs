@@ -128,6 +128,11 @@ paths:
       - hip-linking
       summary: Generate Link Token
       operationId: m2_generate_link_token
+      x-abdm-requirement:
+        level: conditional
+        cases: [HIP_INTI_LINK_501]
+        conditions:
+          - "Mandatory for the Government Integartors / Private Integrators"
       description: |
         Generates a short-lived link token for a specific patient identified by their ABHA number/address.
         The link token is passed as `X-Link-Token` header when calling the care context linking API.
@@ -181,6 +186,11 @@ paths:
       - hip-linking
       summary: Link care contexts to an ABHA address
       operationId: m2_hip_link_care_context
+      x-abdm-requirement:
+        level: conditional
+        cases: [HIP_INTI_LINK_501]
+        conditions:
+          - "Mandatory for the Government Integartors / Private Integrators"
       description: |
         Also known as: HIP Initiated Care Context Linking (Single or Multiple).
         Links one or more care contexts (health records) to a patient's ABHA address.
@@ -257,6 +267,11 @@ paths:
       - hip-linking
       summary: Link Care Context Notify
       operationId: m2_link_care_context_notify
+      x-abdm-requirement:
+        level: conditional
+        cases: [HIP_INTI_LINK_501]
+        conditions:
+          - "Mandatory for the Government Integartors / Private Integrators"
       description: |
         Sends an explicit notification to the ABDM Gateway about a newly linked care context.
         This is called after successful care context linking to ensure the patient's ABHA App
@@ -311,6 +326,11 @@ paths:
       - deep-linking
       summary: Send an SMS with a deep link to the ABHA App
       operationId: m2_sms_deep_link_notify
+      x-abdm-requirement:
+        level: mandatory
+        cases: [HIP_INIT_NOTIFY_HIECM, HIP_INTI_LINK_501]
+        conditions:
+          - "Mandatory for the Government Integartors / Private Integrators"
       description: |
         Also known as: SMS Deep Link Notify.
         Requests ABDM to send an SMS to a patient's mobile number containing a deep link
@@ -517,6 +537,9 @@ paths:
       - data-transfer
       summary: Acknowledge a consent notification, as the HIP
       operationId: m2_consent_hip_on_notify
+      x-abdm-requirement:
+        level: mandatory
+        cases: [HIP_INIT_SHARE_CARECONTEXT]
       description: |
         Also known as: Consent HIP On-Notify.
         **Async Callback:** After ABDM Gateway sends a consent grant notification to the HIP bridge URL
@@ -556,6 +579,9 @@ paths:
       - data-transfer
       summary: Acknowledge a health information data request
       operationId: m2_hip_health_information_on_request
+      x-abdm-requirement:
+        level: mandatory
+        cases: [HIP_INIT_SHARE_CARECONTEXT]
       description: |
         Also known as: HIP Health Information Response.
         **Async Callback:** After ABDM Gateway sends a health information request to the HIP bridge URL
@@ -594,6 +620,9 @@ paths:
       - data-transfer
       summary: Notify the gateway that a data transfer finished
       operationId: m2_hip_data_flow_notify
+      x-abdm-requirement:
+        level: mandatory
+        cases: [HIP_INIT_SHARE_CARECONTEXT, HIU_FLOW_101]
       description: |
         Also known as: HIP Data Flow Notification.
         After successfully pushing all encrypted FHIR health data to the HIU's `dataPushUrl`,

@@ -2694,7 +2694,7 @@ paths:
       tags:
       - global_collection
       summary: getProvidersByID
-      description: "Returns one provider's registry entry: its identifier, facility type, whether it acts as a HIP, and whether it supports scan and pay."
+      description: "Returns one provider's registry entry: its identifier, facility type, whether it is registered in the HIP role, and whether it supports scan and pay."
       x-abdm-atom: hiecm.endpoint.p1-getprovidersbyid
       x-abdm-source-folder: Global Service Collection service
       responses:
