@@ -13,7 +13,7 @@ import generatedPlatforms from '../data/platforms.json';
 import generatedReferenceLinks from '../data/reference-links.json';
 
 export type Tab = {
-  id: 'overview' | 'api' | 'whats-new' | 'support';
+  id: 'overview' | 'api' | 'resources' | 'whats-new' | 'support';
   label: string;
   to: string;
   /** Route prefix that marks this tab active. */
@@ -52,16 +52,36 @@ export type Platform = {
 // entry here; this file never lists platforms by hand.
 export const platforms: Platform[] = generatedPlatforms;
 
-export type TabId = 'overview' | 'api' | 'whats-new' | 'support';
+export type TabId = 'overview' | 'api' | 'resources' | 'whats-new' | 'support';
 
 // The default platform is the picker's first entry; a tab opened with no
 // gateway chosen lands there.
 export const tabs: Tab[] = [
   {id: 'overview', label: 'Docs', to: platforms[0].to, match: '/docs/'},
   {id: 'api', label: 'API references', to: platforms[0].apiTo, match: '/api'},
+  {
+    id: 'resources',
+    label: 'Developer resources',
+    to: `${platforms[0].to}/resources`,
+    match: '/resources',
+  },
   {id: 'whats-new', label: "What's new", to: '/docs/whats-new', match: '/docs/whats-new'},
   {id: 'support', label: 'Support', to: '/docs/support', match: '/docs/support'},
 ];
+
+/**
+ * The gateways that publish a Developer resources section.
+ *
+ * The tab is per gateway, the way API references is, but the section exists
+ * only where its folder does. The tab strip renders on every page, so an
+ * unconditional `<platform>/resources` is a broken link on every page of a
+ * gateway without one. Those gateways get the default gateway's resources
+ * instead, which is what the two site-wide tabs already do.
+ *
+ * Listed here because platforms.json carries no resources field. Move it into
+ * scripts/build-nav.mjs when a second gateway publishes one.
+ */
+const RESOURCES_GATEWAYS = new Set(['hiecm']);
 
 /** The href for a tab, keeping the gateway the reader already chose. */
 export function tabHref(tab: Tab, pathname: string): string {
@@ -74,6 +94,9 @@ export function tabHref(tab: Tab, pathname: string): string {
   }
   if (tab.id === 'api') {
     return `${platform.to}/api`;
+  }
+  if (tab.id === 'resources') {
+    return RESOURCES_GATEWAYS.has(platform.id) ? `${platform.to}/resources` : tab.to;
   }
   return tab.to;
 }
@@ -114,8 +137,24 @@ export function isApiRoute(pathname: string): boolean {
 }
 
 /**
+ * True when a route belongs to the Developer resources side of a gateway.
+ *
+ * One folder, `resources/`, matched as a whole path segment at the end of a
+ * path as well as in the middle, so the tab landing page counts the same as a
+ * test case page beneath it.
+ *
+ * Kept separate from isApiRoute rather than folded into it: a resources page
+ * lights its own tab and shows its own sidebar, and the two questions have
+ * different answers.
+ */
+export function isResourcesRoute(pathname: string): boolean {
+  return /\/resources(\/|$)/.test(pathname);
+}
+
+/**
  * Which tab a route belongs to. The two short tabs own their own prefixes.
- * Everything else under a gateway is either its API section or its overview.
+ * Everything else under a gateway is its API section, its Developer resources
+ * section, or its overview.
  */
 export function activeTab(pathname: string): Tab | undefined {
   const short = tabs.find(
@@ -128,9 +167,12 @@ export function activeTab(pathname: string): Tab | undefined {
   }
   const platform = activePlatform(pathname);
   if (platform) {
-    return isApiRoute(pathname)
-      ? tabs.find((tab) => tab.id === 'api')
-      : tabs.find((tab) => tab.id === 'overview');
+    const id = isResourcesRoute(pathname)
+      ? 'resources'
+      : isApiRoute(pathname)
+        ? 'api'
+        : 'overview';
+    return tabs.find((tab) => tab.id === id);
   }
   return undefined;
 }
