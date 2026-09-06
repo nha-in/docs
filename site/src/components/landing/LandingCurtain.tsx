@@ -159,12 +159,31 @@ export default function LandingCurtain(): React.ReactNode {
     let touchFrom = 0;
     let touchTravel = 0;
 
-    // Any downward intent commits the whole lift. The curtain used to track
-    // the gesture proportionally, which read as considered until a mild
-    // scroll left it stalled halfway across the screen; a curtain either
+    /**
+     * Whether the curtain has been read to the end.
+     *
+     * The curtain scrolls now, because on a narrow screen its content is
+     * taller than the window. So a downward gesture has two jobs, and the
+     * order matters: it scrolls the curtain first, and only lifts it once
+     * there is nothing left below. Lifting on the first flick is what put the
+     * gateway cards out of reach on a phone, since the one gesture that could
+     * have scrolled to them navigated away instead.
+     *
+     * The 2px allowance is for fractional scroll heights, which any zoom
+     * level or a device pixel ratio that is not a whole number produces.
+     */
+    const readToTheEnd = () => {
+      const el = surface.current;
+      if (!el) return true;
+      return el.scrollTop + el.clientHeight >= el.scrollHeight - 2;
+    };
+
+    // Any downward intent at the foot commits the whole lift. The curtain used
+    // to track the gesture proportionally, which read as considered until a
+    // mild scroll left it stalled halfway across the screen; a curtain either
     // covers the stage or it has gone.
     const onWheel = (event: WheelEvent) => {
-      if (event.deltaY > 0) pullUp();
+      if (event.deltaY > 0 && readToTheEnd()) pullUp();
     };
     const onTouchStart = (event: TouchEvent) => {
       touchFrom = event.touches[0]?.clientY ?? 0;
@@ -174,12 +193,21 @@ export default function LandingCurtain(): React.ReactNode {
       const y = event.touches[0]?.clientY ?? 0;
       touchTravel += touchFrom - y;
       touchFrom = y;
-      if (touchTravel > TOUCH_COMMIT) pullUp();
+      if (touchTravel > TOUCH_COMMIT && readToTheEnd()) pullUp();
     };
+    // The keyboard keeps its own way through, and it is the reason the lift
+    // is not a gesture-only exit: WCAG 2.2 SC 2.1.1. Arrow and PageDown scroll
+    // the curtain while there is more of it, and lift it at the foot, which is
+    // what those keys do in any other scroller.
     const onKey = (event: KeyboardEvent) => {
-      if (['PageDown', 'ArrowDown', ' ', 'Enter'].includes(event.key)) {
+      if (!['PageDown', 'ArrowDown', ' ', 'Enter'].includes(event.key)) return;
+      if (event.key === 'Enter' || readToTheEnd()) {
         pullUp();
+        return;
       }
+      const el = surface.current;
+      el?.scrollBy({top: event.key === 'ArrowDown' ? 80 : el.clientHeight * 0.9});
+      event.preventDefault();
     };
 
     window.addEventListener('wheel', onWheel, {passive: true});
