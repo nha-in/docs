@@ -280,10 +280,17 @@ main .container:has(> .docs-article-row) {
   padding-top: 0;
 }
 
+/* The horizontal padding is fluid because it is the inner of two gutters: the
+   theme's own `.container` contributes 1.5rem per side on top of it, and at
+   2rem that came to 112px of a 375px screen, leaving a 263px column and a
+   33 character line. Bringhurst puts a readable measure at 45 to 75 characters
+   and WCAG 2.2 SC 1.4.8 caps the other end at 80, so 33 is well under. It
+   scales rather than stepping at a breakpoint, and is unchanged from 1130px up,
+   where it reaches the 2rem it always was. */
 .docs-content {
   max-width: var(--content-max);
   margin: 0 auto;
-  padding: 2.5rem 2rem 5rem;
+  padding: 2.5rem clamp(1rem, 0.586rem + 1.77vw, 2rem) 5rem;
 }
 
 .docs-eyebrow {

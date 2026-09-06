@@ -553,9 +553,11 @@
     pointer-events: none;
   }
 
-  .omnibox abdm-support-agent {
-    display: none;
-  }
+  /* The chip is dropped by the element's own launcher attribute now, set in
+     Omnibox from the window size. It used to be hidden here, which hid the
+     element, and the panel is a dialog inside that element: the assistant
+     became unreachable on every phone and every trigger for it failed in
+     silence. Do not put display:none back on this host. */
 
   /* The hint and the clear button are placed against the full width field,
      88px in from its right edge. Against a 32px puck that lands them out in
