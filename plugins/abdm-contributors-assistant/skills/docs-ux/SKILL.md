@@ -1,6 +1,6 @@
 ---
 name: docs-ux
-description: The UI and information architecture of the ABDM Developer Portal docs site, in the Mintlify style of code.claude.com/docs and developer.eka.care. Covers the four tabs (Overview, API References, What's New, Support), the module page ladder from overview to test cases, the chrome features (language selector, AI assistant, spotlight search), and the interlinking and chronological-progress rules. Use when deciding where a page goes, how a module's content is ordered, what the navigation generator must produce, or reviewing whether a rendered page follows the site structure.
+description: The UI and information architecture of the ABDM Developer Portal docs site, in the Mintlify style of code.claude.com/docs and developer.eka.care. Covers the five tabs (Overview, API References, Developer resources, What's New, Support), the module page ladder from overview to certification, the chrome features (language selector, AI assistant, spotlight search), and the interlinking and chronological-progress rules. Use when deciding where a page goes, how a module's content is ordered, what the navigation generator must produce, or reviewing whether a rendered page follows the site structure.
 ---
 
 # Docs UX
@@ -65,7 +65,7 @@ the mapping from Diataxis modes to our page types and word budgets. Use it
 before arguing about placement: a page that will not sit in one folder is
 usually a page in two modes.
 
-## The four tabs
+## The five tabs
 
 ### Tab 1: Overview
 
@@ -76,7 +76,10 @@ The landing tab. In order:
 3. ABDM glossary
 4. Building blocks:
    - Gateways
-     - HIE-CM: modules M1 to M4, and the roles that use them (PHR; information management systems: HMIS, EMR, LIMS, pharmacy systems; HIP; HIU)
+     - HIE-CM: modules M1 to M4, and the software that uses them (PHR apps;
+       information management systems: HMIS, EMR, LIMS, pharmacy systems). An
+       entity takes the HIP role through that software when it publishes and
+       the HIU role when it fetches.
      - UHI: roles HSPA and EUA
      - NHCX
    - Registries: ABHA; NHPR (HPR, HFR)
@@ -93,7 +96,18 @@ Descend by choice, never by listing everything flat:
 
 Phase scope renders honestly: HIE-CM M1 to M3 carry content. UHI and M4 pages say Phase 2 and stop. NHCX says out of scope. See the phase table in `abdm-portal-index`.
 
-### Tab 3: What's New
+### Tab 3: Developer resources
+
+Routes are `/docs/<gateway>/<version>/resources/`. It holds:
+
+1. Test cases, one page per module, each stated functionally and technically
+2. Workflows and video explanations, as they are written
+
+Test cases live here rather than on the module page because certifying and
+integrating are different sittings. The module page links here from its
+Certification section.
+
+### Tab 4: What's New
 
 The changelog, fed by the update pipeline (plan#p5-update-pipeline). Newest first, each entry linking to the page it touched.
 
@@ -103,7 +117,7 @@ however much work those took. `changelog` carries the six qualifying kinds, the
 act-on-it test for borderline cases, and the benchmarks the rule is drawn from.
 Load it before writing or reviewing an entry.
 
-### Tab 4: Support
+### Tab 5: Support
 
 Contact emails and channels, and links to connectors. Short. A support tab that tries to be documentation duplicates tab 2.
 
@@ -119,9 +133,9 @@ Every module (M1, M2, M3) walks the same ladder, in this order. The compiler and
 6. **API sequence**: APIs and webhooks in call order
 7. **Per API and webhook**: what to call, what to pass, what comes back
 8. **Errors**: mapping and handling, each linking to its error atom
-9. **Test cases**, each stated twice:
-   - Functional: what the test accomplishes, in a layman's words
-   - Technical: the exact success and failure conditions
+9. **Certification**: a pointer to the module's test case page in Developer
+   resources, which states each test twice, functionally in a layman's words
+   and technically as the exact success and failure conditions
 
 The ladder is chronological on purpose. A developer reading top to bottom is also integrating in the right order.
 
