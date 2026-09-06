@@ -82,12 +82,14 @@ Three failures have specified copy.
 
 Records should arrive within 2 hours.
 
-## Where your app also acts as a HIP
+## Where the citizen is the HIP
 
-A health locker, letting users upload their own records, puts you briefly on
-the HIP side. An uploaded record is shareable once you hold three things: a
-link token from the M1 APIs, a care context added by HIP initiated linking from
-[M2 Attach](./m2), and the M2 health information transfer APIs.
+A citizen pushing a record into your app is the HIP. A health locker, where
+users upload their own records, puts you on that publishing side.
+
+An uploaded record is shareable once you hold three things: a link token from
+the M1 APIs, a care context added by HIP initiated linking from [M2
+Attach](./m2), and the M2 health information transfer APIs.
 
 Set the health information type from the contents or from user input. Use
 `HealthDocumentRecord` when it cannot be determined.
