@@ -116,13 +116,23 @@ export default function LandingHero(): React.ReactNode {
   // courier with their own pointer gets instead, since a pointer has no
   // departure to announce. Naming the same line twice costs nothing, because
   // a board already showing a message does not turn for it again.
-  const carrying = useCallback((id: string, pace = STAGGER_MS) => {
+  const carrying = useCallback((id: string | null, pace = STAGGER_MS) => {
     // The arrival that answers a departure names the same participant, and
     // the board is already showing its line, so the second call is dropped.
     // Without this a participant with two lines would turn over again in the
-    // air and land on the one it was not announcing.
+    // air and land on the one it was not announcing. The same guard collapses
+    // the repeated releases a moving pointer sends.
     if (announced.current === id) return;
     announced.current = id;
+    // Nobody to speak for. A pointer moving across empty canvas is not asking
+    // about a participant, so the board answers with the portal's own name
+    // instead of holding whichever node it last passed. The walk takes the
+    // board back once the pointer has been still long enough.
+    if (id === null) {
+      setStagger(BRIEF_STAGGER_MS);
+      setMessage(RESTING);
+      return;
+    }
     const line = DELIVERED[id];
     if (!line) return;
     setStagger(pace);
