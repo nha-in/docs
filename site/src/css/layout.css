@@ -463,3 +463,16 @@ main .container:has(> .docs-article-row) {
 [class*='skipToContent']:focus {
   transform: none;
 }
+
+/* ---------- page actions, under a thumb ----------
+   The row under the page lede is four text buttons 29px tall, which is a
+   comfortable line of type and too short to tap. A minimum height takes each
+   one to 44px without moving the labels, since the row centres what it holds;
+   the dividers between them grow with the buttons, which is the only visible
+   difference. The row already wraps, so the extra height costs the page a line
+   or two on the narrowest screens and nothing else. */
+@media (pointer: coarse) {
+  .page-actions .page-actions__item {
+    min-height: 2.75rem;
+  }
+}
