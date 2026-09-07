@@ -148,7 +148,18 @@ export default function Omnibox() {
       const el = panel.current;
       if (el) el.hidden = input.value.trim() !== '';
     };
+    // The close is deferred, so a focus arriving inside the delay has to be
+    // able to call it off. Without this the panel never opened on the first
+    // press of the shortcut or the first click of the field: the search theme
+    // loads its index on that first focus and initialises autocomplete, which
+    // moves the input inside a wrapper it builds, and moving a focused element
+    // blurs and refocuses it. The blur booked the close, the refocus opened
+    // the panel, and the close then landed on top of it 140ms later. Every
+    // focus after that one found the index already loaded and worked, which is
+    // what made it look intermittent rather than broken.
+    let closing = 0;
     const onFocus = () => {
+      window.clearTimeout(closing);
       setFocused(true);
       setActive(-1);
       // The panel mounts on the render this focus causes, so it is synced on
@@ -158,7 +169,7 @@ export default function Omnibox() {
     // Late, so a click on a row below lands before the panel goes.
     const onBlur = () => {
       carry(false);
-      window.setTimeout(() => setFocused(false), 140);
+      closing = window.setTimeout(() => setFocused(false), 140);
     };
     // Up, down and enter belong to these rows only while they are the thing
     // on screen, which is while the field is empty. The moment anything is
@@ -210,6 +221,7 @@ export default function Omnibox() {
     const onChip = () => carry(true);
     agent?.addEventListener('mousedown', onChip, true);
     return () => {
+      window.clearTimeout(closing);
       agent?.removeEventListener('mousedown', onChip, true);
       input.removeEventListener('input', sync);
       input.removeEventListener('focus', onFocus);
@@ -248,8 +260,14 @@ export default function Omnibox() {
         }),
       );
     };
-    window.addEventListener('keydown', onKey);
-    return () => window.removeEventListener('keydown', onKey);
+    // Capture, not bubble. The search theme's autocomplete binds return on
+    // the field for its own selected row and stops the event there, so a
+    // bubbling listener never saw command and return: a reader who had typed
+    // a question and pressed the one combination the chip advertises got a
+    // search result instead of an answer. Nothing here acts on a key it does
+    // not own, so running first costs the field nothing.
+    window.addEventListener('keydown', onKey, true);
+    return () => window.removeEventListener('keydown', onKey, true);
   }, []);
 
   return (
