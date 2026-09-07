@@ -6,9 +6,9 @@ milestone: M4
 version: abdm-v3
 title: Link a facility to its bridge
 summary: >
-  Connect an onboarded facility to the software that will act for it, as
-  a provider of records, a requester of them, or both, and name it as
-  patients will see it.
+  Connect an onboarded facility to the software that will act for it,
+  say whether the facility publishes records through it, fetches them, or
+  both, and name it as patients will see it.
 sources:
   - file: catalogue/openapi/hiecm/v3/hiecm-m4.yaml
     fetched: 2026-09-04
@@ -55,9 +55,10 @@ skills:
 
 A facility ID on its own moves no records. The facility has to be linked
 to a [bridge](shared.glossary.bridge), which is the software
-that acts for it on the network, and each link says whether that software
-acts as a [HIP](shared.glossary.hip), a
-[HIU](shared.glossary.hiu), or both through separate links.
+that acts for it on the network. Each link says which role the facility
+takes through that software: [HIP](shared.glossary.hip) when it publishes
+records, [HIU](shared.glossary.hiu) when it fetches them, or both through
+separate links.
 
 One facility can have several bridges. This is the last registration step
 in front of production for M2 and M3.
@@ -88,19 +89,18 @@ flowchart LR
 
 One call carries six values: `facilityId`, `facilityName`, `bridgeId`,
 `hipName`, `type` and `active`. The `type` is `HIP` or `HIU`. A facility
-whose software both publishes records and requests them needs a link of
-each type, not one link that claims both.
+that both publishes records and requests them needs a link of each type,
+not one link that claims both.
 
 The `hipName` is what a person sees in their
 [PHR](shared.glossary.phr) application when they search for this
-hospital, so it is a naming decision as much as a technical one. NHA's
-worked example builds it from the hospital name plus the bridge name.
+hospital, so it is a naming decision as much as a technical one. Build
+it from the hospital name plus the bridge name.
 
-The call has no published path. NHA's HFR test case sheet covers it as
-six cases, HFR-118 to HFR-123, one per field, and points them at the
-Multiple HRP API on `https://facilitysbx.abdm.gov.in`. The parameter
-table is on the operations page. Nothing here has been called from this
-repository.
+The method and path for this call are not yet published. Six test cases
+cover it, HFR-118 to HFR-123, one per field, against the Multiple HRP API
+on `https://facilitysbx.abdm.gov.in`. The parameter table is on the
+operations page.
 
 ## How you know it worked
 
@@ -112,8 +112,7 @@ HIU link can raise a consent request.
 
 ## When it goes wrong
 
-The failures the M4 sources document, each with its fix in the linked
-error atom:
+The failures you will see, each with its fix in the linked error atom:
 
 - [HIS-1124](hiecm.error.his-1124) when a call needs a bridge that is
   not linked to this facility.

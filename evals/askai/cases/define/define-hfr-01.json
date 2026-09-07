@@ -13,7 +13,7 @@
   "must_contain": [
     "HFR stands for Health Facility Registry",
     "HFR holds health facilities of every kind, public and private",
-    "a facility must exist in HFR and be linked to software before that software can act as a HIP",
+    "a facility must exist in HFR, and be linked to the software that acts for it, before that facility can be the HIP",
     "the HFR ID is the HIP ID, the same identifier"
   ],
   "must_not_contain": [
@@ -23,7 +23,8 @@
     "let me ",
     "great question",
     "the catalogue",
-    "atom"
+    "atom",
+    "before that software can act as a hip"
   ],
   "expected_sources": [
     "shared.glossary.hfr"

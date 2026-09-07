@@ -16,7 +16,9 @@ Loop limit: 8 passes per flow step. Hitting the limit is an escalation: state wh
 
 Three things must already be true, each checkable:
 
-- Your facility has a valid Facility ID registered in the HIP role.
+- Your facility holds a facility ID from the
+  HFR (shared.glossary.hfr) and a bridge linked with type `HIP`. See
+  link a facility to its bridge.
 - You hold a gateway session token from the sessions endpoint
   (gateway_sessions_create in the gateway reference).
 - The patient has an ABHA address, which is the M1 module's job.
@@ -115,15 +117,14 @@ match:
   status: SUCCESS
 timeout_seconds: unknown
 note: >
-  The path and the payload shape are the ones NHA's ingested M2 file
-  declares. The timeout is not published, and no delivery has been
-  observed from this repository.
+  The timeout is not published. Wait on the callback rather than on a
+  deadline of your own.
 ```
 
 **If it goes wrong**
 
-The frequent failures NHA's sources document, in rough order of
-frequency, each with its fix in the linked error atom:
+The frequent failures, in rough order of frequency, each with its fix in
+the linked error atom:
 
 - hiecm.error.abdm-1056 when the care context is already linked or the
   link reference number is invalid.

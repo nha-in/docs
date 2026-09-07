@@ -11,7 +11,7 @@
   "attachment": null,
   "page": null,
   "must_contain": [
-    "a facility must exist in the HFR and be linked to the software that acts for it before that software can act as a HIP",
+    "a facility must exist in the HFR, and be linked to the software that acts for it, before that facility can be the HIP",
     "the HFR ID is the HIP ID"
   ],
   "must_not_contain": [
@@ -23,7 +23,8 @@
     "the catalogue",
     "atom",
     "approved by NHA",
-    "this is approved by nha"
+    "this is approved by nha",
+    "before that software can act as a hip"
   ],
   "expected_sources": [
     "shared.glossary.hfr"

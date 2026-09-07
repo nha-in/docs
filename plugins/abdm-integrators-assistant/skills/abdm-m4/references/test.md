@@ -4,9 +4,9 @@ Each case names the call it makes and what to see when it passes.
 
 ## Test cases
 
-183 cases, from NHA's M4 matrix for HPR and HFR registration. "Mandatory" is NHA's own marking.
+184 cases, from NHA's M4 matrix for HPR and HFR registration. "Mandatory" is NHA's own marking.
 
-### Deduplicate search, run before anything is created
+### Search facility: Search API
 
 | Case | Type | What it proves | Call | Passes when |
 | --- | --- | --- | --- | --- |
@@ -20,19 +20,19 @@ Each case names the call it makes and what to see when it passes.
 | `HFR-008` | Mandatory | To show number of pages |  | should have default value as 1 |
 | `HFR-009` | Mandatory | To show number of facilities per page |  | should have default value as 10 |
 
-### Facility registration: the three writes and the submit
+### Registration: Registration Basic API
 
 | Case | Type | What it proves | Call | Passes when |
 | --- | --- | --- | --- | --- |
 | `HFR-010` | Mandatory | To Save the facilty basic details |  | Filled Facility Name |
 | `HFR-011` | Mandatory | Fill the geographic location |  | Latitude has been filled as per the definition |
-| `HFR-012` | Mandatory | Longitude* |  | longitude has been filled as per the definition |
-| `HFR-013` | Optional | To select the country |  |  |
+| `HFR-012` | Mandatory | HFR-012 |  | longitude has been filled as per the definition |
+| `HFR-013` | Unmarked | To select the country |  |  |
 | `HFR-014` | Mandatory | To select the State |  | State should get selected |
 | `HFR-015` | Mandatory | To select the District |  | District should get selected |
 | `HFR-016` | Mandatory | To select the Sub-district |  | Sub-District should get selected |
 | `HFR-017` | Mandatory | To fill the facility address |  | Address should get filled |
-| `HFR-018` | Optional | Facility Address Line 2 |  | Address should get filled |
+| `HFR-018` | Optional | HFR-018 |  | Address should get filled |
 | `HFR-019` | Mandatory | To enter the facility pincode |  | Pincode should get filled |
 | `HFR-020` | Conditional | To select the facility working days |  | working days should get selected |
 | `HFR-021` | Mandatory | To fill the opening hours of the facility |  | Facility Timings should get saved |
@@ -42,25 +42,35 @@ Each case names the call it makes and what to see when it passes.
 | `HFR-025` | Optional | To enter the email for public display |  | Facility email should get filled |
 | `HFR-026` | Optional | To enter the hospital website link |  | Proper Website should get filled |
 | `HFR-027` | Optional | facility file Uploads |  | Photograph should get saved |
-| `HFR-028` | Optional | Facility Board Photograph |  | Photograph should get saved |
-| `HFR-029` | Optional | Address Proof Type |  | Address proof type should get selected |
-| `HFR-030` | Conditional | Address Proof |  | Address proof should get saved |
+| `HFR-028` | Optional | HFR-028 |  | Photograph should get saved |
+| `HFR-029` | Optional | HFR-029 |  | Address proof type should get selected |
+| `HFR-030` | Conditional | HFR-030 |  | Address proof should get saved |
 | `HFR-031` | Mandatory | To provide the ownership details |  | Facility ownership should get saved |
-| `HFR-032` | Conditional | Facility Ownership Subtype* |  | Facility ownership subtype should get saved |
-| `HFR-033` | Conditional | Facility Ownership Subtype 2* |  |  |
+| `HFR-032` | Conditional | HFR-032 |  | Facility ownership subtype should get saved |
+| `HFR-033` | Conditional | HFR-033 |  |  |
 | `HFR-034` | Mandatory | To provide the details of system of medicine |  | System of medicine should get saved |
 | `HFR-035` | Mandatory | To enter the type of facility |  | Facility Type should get saved |
-| `HFR-036` | Mandatory | Facility Sub Type* |  | Facility sub type should get saved |
+| `HFR-036` | Mandatory | HFR-036 |  | Facility sub type should get saved |
 | `HFR-037` | Mandatory | To enter the type of services provided |  | Multiple type of service should get selected |
 | `HFR-038` | Mandatory | To enter the Specialization |  | Multiple Specialization should get selected |
+
+### Registration: Registration Additional API
+
+| Case | Type | What it proves | Call | Passes when |
+| --- | --- | --- | --- | --- |
 | `HFR-039` | Optional | Linked program Id |  | It should get filled |
-| `HFR-040` | Optional | National Identification Number |  | It should get filled |
-| `HFR-041` | Optional | Hospital Id as allotted by AB-PMJAY Hospital Empanelment Module. |  | It should get filled |
-| `HFR-042` | Optional | Rohini Id |  | It should get filled |
-| `HFR-043` | Optional | Unique id in Ex-Servicemen Contributory Health Scheme |  | It should get filled |
-| `HFR-044` | Optional | Unique Id in Central Government Health Scheme |  | It should get filled |
-| `HFR-045` | Optional | CEA Registration Number |  | It should get filled |
-| `HFR-046` | Optional | State Insurance Scheme ID |  | It should get filled |
+| `HFR-040` | Optional | HFR-040 |  | It should get filled |
+| `HFR-041` | Optional | HFR-041 |  | It should get filled |
+| `HFR-042` | Optional | HFR-042 |  | It should get filled |
+| `HFR-043` | Optional | HFR-043 |  | It should get filled |
+| `HFR-044` | Optional | HFR-044 |  | It should get filled |
+| `HFR-045` | Optional | HFR-045 |  | It should get filled |
+| `HFR-046` | Optional | HFR-046 |  | It should get filled |
+
+### Registration: Registration Detailed API
+
+| Case | Type | What it proves | Call | Passes when |
+| --- | --- | --- | --- | --- |
 | `HFR-047` | Mandatory | systemOfMedicineCode |  | System of medicine should get selected |
 | `HFR-048` | Mandatory | isSpecializationAvalaible |  |  |
 | `HFR-049` | Conditional | specialities |  |  |
@@ -76,22 +86,27 @@ Each case names the call it makes and what to see when it passes.
 | `HFR-059` | Optional | countDayCareBedsWithOxygen |  | Details should get filled |
 | `HFR-060` | Mandatory | totalNumberOfBeds |  | Details should get filled |
 | `HFR-061` | Optional | countDentalChairs |  | Details should get filled |
+
+### Registration: Registration Submit API
+
+| Case | Type | What it proves | Call | Passes when |
+| --- | --- | --- | --- | --- |
 | `HFR-062` | Optional | sourceOfInformation |  | Facility shold get submitted |
 | `HFR-063` | Optional | sourceUniqueID |  |  |
 
-### Updating a facility that already exists
+### Facility update: Registration Basic details update API
 
 | Case | Type | What it proves | Call | Passes when |
 | --- | --- | --- | --- | --- |
 | `HFR-064` | Mandatory | To edit the facilty basic details |  | Filled Facility Name |
 | `HFR-065` | Mandatory | Change the geographic location |  | Latitude has been filled as per the definition |
-| `HFR-066` | Mandatory | Longitude* |  | longitude has been filled as per the definition |
-| `HFR-067` | Optional | To select the country |  |  |
+| `HFR-066` | Mandatory | HFR-066 |  | longitude has been filled as per the definition |
+| `HFR-067` | Unmarked | To select the country |  |  |
 | `HFR-068` | Mandatory | To edit the State |  | State should get selected |
 | `HFR-069` | Mandatory | To edit the District |  | District should get selected |
 | `HFR-070` | Mandatory | To edit the Sub-district |  | Sub-District should get selected |
 | `HFR-071` | Mandatory | To edit the facility address |  | Address should get filled |
-| `HFR-072` | Optional | Facility Address Line 2 |  | Address should get filled |
+| `HFR-072` | Optional | HFR-072 |  | Address should get filled |
 | `HFR-073` | Mandatory | To edit the facility pincode |  | Pincode should get filled |
 | `HFR-074` | Conditional | To edit the facility working days |  | working days should get selected |
 | `HFR-075` | Mandatory | To edit the opening hours of the facility |  | Facility Timings should get saved |
@@ -101,25 +116,35 @@ Each case names the call it makes and what to see when it passes.
 | `HFR-079` | Optional | To edit the email for public display |  | Facility email should get filled |
 | `HFR-080` | Optional | To edit the hospital website link |  | Proper Website should get filled |
 | `HFR-081` | Optional | edit facility file Uploads |  | Photograph should get saved |
-| `HFR-082` | Optional | Facility Board Photograph |  | Photograph should get saved |
-| `HFR-083` | Optional | Address Proof Type |  | Address proof type should get selected |
-| `HFR-084` | Conditional | Address Proof |  | Address proof should get saved |
+| `HFR-082` | Optional | HFR-082 |  | Photograph should get saved |
+| `HFR-083` | Optional | HFR-083 |  | Address proof type should get selected |
+| `HFR-084` | Conditional | HFR-084 |  | Address proof should get saved |
 | `HFR-085` | Mandatory | To edit the ownership details |  | Facility ownership should get saved |
-| `HFR-086` | Conditional | Facility Ownership Subtype* |  | Facility ownership subtype should get saved |
-| `HFR-087` | Conditional | Facility Ownership Subtype 2* |  |  |
+| `HFR-086` | Conditional | HFR-086 |  | Facility ownership subtype should get saved |
+| `HFR-087` | Conditional | HFR-087 |  |  |
 | `HFR-088` | Mandatory | To edit the details of system of medicine |  | System of medicine should get saved |
 | `HFR-089` | Mandatory | To edit the type of facility |  | Facility Type should get saved |
-| `HFR-090` | Mandatory | Facility Sub Type* |  | Facility sub type should get saved |
+| `HFR-090` | Mandatory | HFR-090 |  | Facility sub type should get saved |
 | `HFR-091` | Mandatory | To edit the type of services provided |  | Multiple type of service should get selected |
 | `HFR-092` | Mandatory | To edit the Specialization |  | Multiple Specialization should get selected |
+
+### Facility update: Registration Additional details update API
+
+| Case | Type | What it proves | Call | Passes when |
+| --- | --- | --- | --- | --- |
 | `HFR-093` | Optional | Edit Linked program Id |  | It should get filled |
-| `HFR-094` | Optional | National Identification Number |  | It should get filled |
-| `HFR-095` | Optional | Hospital Id as allotted by AB-PMJAY Hospital Empanelment Module. |  | It should get filled |
-| `HFR-096` | Optional | Rohini Id |  | It should get filled |
-| `HFR-097` | Optional | Unique id in Ex-Servicemen Contributory Health Scheme |  | It should get filled |
-| `HFR-098` | Optional | Unique Id in Central Government Health Scheme |  | It should get filled |
-| `HFR-099` | Optional | CEA Registration Number |  | It should get filled |
-| `HFR-100` | Optional | State Insurance Scheme ID |  | It should get filled |
+| `HFR-094` | Optional | HFR-094 |  | It should get filled |
+| `HFR-095` | Optional | HFR-095 |  | It should get filled |
+| `HFR-096` | Optional | HFR-096 |  | It should get filled |
+| `HFR-097` | Optional | HFR-097 |  | It should get filled |
+| `HFR-098` | Optional | HFR-098 |  | It should get filled |
+| `HFR-099` | Optional | HFR-099 |  | It should get filled |
+| `HFR-100` | Optional | HFR-100 |  | It should get filled |
+
+### Facility update: Registration Detailed details update API
+
+| Case | Type | What it proves | Call | Passes when |
+| --- | --- | --- | --- | --- |
 | `HFR-101` | Mandatory | To edit systemOfMedicine |  | System of medicine should get selected |
 | `HFR-102` | Mandatory | to edit if Specialization is Avalaible |  |  |
 | `HFR-103` | Conditional | To edit specialities |  |  |
@@ -135,21 +160,32 @@ Each case names the call it makes and what to see when it passes.
 | `HFR-113` | Optional | To edit countDayCareBedsWithOxygen |  | Details should get filled |
 | `HFR-114` | Mandatory | To edit totalNumberOfBeds |  | Details should get filled |
 | `HFR-115` | Optional | To edit countDentalChairs |  | Details should get filled |
+
+### Facility update: Registration Resubmit API
+
+| Case | Type | What it proves | Call | Passes when |
+| --- | --- | --- | --- | --- |
 | `HFR-116` | Optional | sourceOfInformation |  | Facility shold get submitted |
 | `HFR-117` | Optional | sourceUniqueID |  |  |
 
-### Linking a facility to its bridges
+### Bridge linkage: Bridge linkage
 
 | Case | Type | What it proves | Call | Passes when |
 | --- | --- | --- | --- | --- |
 | `HFR-118` | Mandatory | Fill the facility Id |  | Facility should get validated |
 | `HFR-119` | Mandatory | Fill the facility Name |  | Facility Name should fetch |
 | `HFR-120` | Mandatory | Fill the bridge Id |  | Bridge id should get validated |
-| `HFR-121` | Mandatory | Fill the hip Name |  | Valid HIP name should get filled and HIP name should not be repeated |
+| `HFR-121` | Mandatory | Fill the hip Name |  | Valid HIP name should get filled |
 | `HFR-122` | Mandatory | Fill the HIP type |  |  |
 | `HFR-123` | Mandatory | Provide details if the bridge is Active or not |  |  |
 
-### Healthcare professional registration
+### Bridge linkage: Second Bridge linkage
+
+| Case | Type | What it proves | Call | Passes when |
+| --- | --- | --- | --- | --- |
+| `HFR-121` | Mandatory | Fill the hip Name |  | Valid HIP name should get filled and HIP name should not be repeated |
+
+### HPR: Fetch Professionals details (HPR-002 to HPR-011)
 
 | Case | Type | What it proves | Call | Passes when |
 | --- | --- | --- | --- | --- |
@@ -162,6 +198,11 @@ Each case names the call it makes and what to see when it passes.
 | `HPR-008` | Mandatory | Resend OTP |  | User will able to send OTP again and verify it |
 | `HPR-010` | Mandatory | Communication Mobile Number verification-I |  | 1. If communication mobile number is same as Aadhaar linked mobile number then it should directly go to HPR c… |
 | `HPR-011` | Mandatory | Communication Mobile Number verification-II |  | If communication mobile number is not same as Aadhaar linked mobile number then system must ask for the OTP t… |
+
+### HPR: Register In HPR
+
+| Case | Type | What it proves | Call | Passes when |
+| --- | --- | --- | --- | --- |
 | `HPR-018` | Mandatory | hprToken |  | Received Token |
 | `HPR-019` | Optional | profilePhoto |  | Photo will be displayed |
 | `HPR-020` | Mandatory | Healthcare Professional ID |  | Healthcare Professional ID is successfully genearted |
@@ -210,6 +251,21 @@ Each case names the call it makes and what to see when it passes.
 | `HPR-075` | Mandatory | If Govt /Both, so document attachment is mandatory to upload upto 5 mb |  | Need to upload Payslip, recent transfer order etc. (In case of pvt no document is require) |
 | `HPR-076` | Mandatory | If Govt/Both so facility decalartion is mandatory (Professinal can search the facility via name/Facility id) |  |  |
 | `HPR-077` | Mandatory | Preview Profile & Submit |  | On submit button user profile will submit and message will come on SMS/Email. |
+
+### HPR: Fetch Professionals details (HPR-078)
+
+| Case | Type | What it proves | Call | Passes when |
+| --- | --- | --- | --- | --- |
 | `HPR-078` | Optional | fetchProfessionalsdetails |  | After successful user creation system will display all the details to user |
+
+### HPR: Update Professionals details
+
+| Case | Type | What it proves | Call | Passes when |
+| --- | --- | --- | --- | --- |
 | `HPR-079` | Mandatory | update-professional |  | If user want to update their inputed details in system then system should allow user to update their details |
+
+### HPR: Upload Document API
+
+| Case | Type | What it proves | Call | Passes when |
+| --- | --- | --- | --- | --- |
 | `HPR-080` | Optional | Upload- Document |  | This API will help integrators, if document is not ready during the HPR creation so professional can upload t… |
