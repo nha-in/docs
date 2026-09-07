@@ -3,7 +3,7 @@ import Link from '@docusaurus/Link';
 import Heading from '@theme/Heading';
 import BrowserOnly from '@docusaurus/BrowserOnly';
 import NetworkWeb from '@site/src/components/landing/NetworkWeb';
-import FlapBoard, {BRIEF_STAGGER_MS, STAGGER_MS} from '@site/src/components/landing/FlapBoard';
+import FlapBoard from '@site/src/components/landing/FlapBoard';
 import BrandMark from '@site/src/components/chrome/BrandMark';
 import {unfiltered} from '@site/src/config/roles';
 import {
@@ -90,10 +90,6 @@ const CELLS = Math.max(
  */
 export default function LandingHero(): React.ReactNode {
   const [message, setMessage] = useState(RESTING);
-  // How fast the flaps turn for whatever is on the board now. A delivery is
-  // watched, so it takes the crossing's pace. A pointer is a question, so it
-  // gets answered.
-  const [stagger, setStagger] = useState(STAGGER_MS);
   // Set once on mount rather than read per render, so the server and the
   // first client render agree: both of them draw the resting name.
   const [still, setStill] = useState(true);
@@ -116,7 +112,7 @@ export default function LandingHero(): React.ReactNode {
   // courier with their own pointer gets instead, since a pointer has no
   // departure to announce. Naming the same line twice costs nothing, because
   // a board already showing a message does not turn for it again.
-  const carrying = useCallback((id: string | null, pace = STAGGER_MS) => {
+  const carrying = useCallback((id: string | null) => {
     // The arrival that answers a departure names the same participant, and
     // the board is already showing its line, so the second call is dropped.
     // Without this a participant with two lines would turn over again in the
@@ -129,13 +125,11 @@ export default function LandingHero(): React.ReactNode {
     // instead of holding whichever node it last passed. The walk takes the
     // board back once the pointer has been still long enough.
     if (id === null) {
-      setStagger(BRIEF_STAGGER_MS);
       setMessage(RESTING);
       return;
     }
     const line = DELIVERED[id];
     if (!line) return;
-    setStagger(pace);
     if (typeof line === 'string') {
       setMessage(line);
       return;
@@ -153,9 +147,7 @@ export default function LandingHero(): React.ReactNode {
           <NetworkWeb
             onDepart={still ? undefined : carrying}
             onArrive={still ? undefined : carrying}
-            onPoint={
-              still ? undefined : (id) => carrying(id, BRIEF_STAGGER_MS)
-            }
+            onPoint={still ? undefined : carrying}
           />
         )}
       </BrowserOnly>
@@ -167,12 +159,7 @@ export default function LandingHero(): React.ReactNode {
             rather than as a label laid over it. */}
         <p className="landing-hero__board">
           <BrandMark />
-          <FlapBoard
-            text={message}
-            cells={CELLS}
-            still={still}
-            stagger={stagger}
-          />
+          <FlapBoard text={message} cells={CELLS} still={still} />
         </p>
         {/* Three lines, set as blocks rather than as `<br>`. A `<br>` hidden
             at narrow widths takes the line break away and leaves nothing in
