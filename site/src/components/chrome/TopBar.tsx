@@ -3,7 +3,7 @@ import Link from '@docusaurus/Link';
 import useBaseUrl from '@docusaurus/useBaseUrl';
 import ThemedImage from '@theme/ThemedImage';
 import NavbarColorModeToggle from '@theme/Navbar/ColorModeToggle';
-import {Check, ChevronDown, Languages, MoreHorizontal} from 'lucide-react';
+import {Check, ChevronDown, Languages, MoreHorizontal, Sparkles} from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -145,9 +145,13 @@ function GatewayMenu() {
 }
 
 /**
- * The landing page's own bar: the two official marks on the left, the colour
- * mode control on the right, and nothing else. The ways into the documentation
- * sit under the call to action, where a reader is already looking.
+ * The landing page's own bar: the publisher's mark, and nothing else. The ways
+ * into the documentation sit under the call to action, where a reader is
+ * already looking.
+ *
+ * It is drawn under the curtain, which covers the viewport on exactly these
+ * routes and carries its own bar. What is left here is what a reader sees if
+ * the curtain has not painted yet.
  */
 function LandingBar() {
   return (
@@ -164,7 +168,17 @@ function LandingBar() {
           alt="National Health Authority"
         />
       </div>
-      <NavbarColorModeToggle className="topbar-toggle" />
+      {/* No colour mode control here. The curtain draws its own bar over this
+          one, with its own mark and its own toggle, and it renders on exactly
+          the routes this bar does, so a second toggle underneath was two
+          controls at the same corner of the screen with only the upper one
+          reachable. It was also the one control on the site that never got a
+          thumb sized box, because the rule that grew the others is written
+          against `.topbar` and this bar is `.landing-bar`.
+
+          The curtain writes the same storage slot through Docusaurus' own
+          helper, so the site stays in one state (LandingCurtain explains why
+          it cannot use the theme's toggle). */}
     </nav>
   );
 }
@@ -187,6 +201,24 @@ function OverflowMenu() {
         <MoreHorizontal className="size-5" aria-hidden="true" />
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-56">
+        {/* The assistant's own chip is not drawn at these widths: the bar has
+            room for one control in the middle and search is the one a reader
+            needs there, so Omnibox passes the element `launcher: none`. That
+            left the assistant with no visible way in on a phone at all, since
+            the quick actions only appear once the search field is focused and
+            empty. It opens the same way every other caller does, through the
+            event AskAiBridge listens for, rather than by reaching into the
+            element. */}
+        <DropdownMenuItem
+          onSelect={() =>
+            window.dispatchEvent(
+              new CustomEvent('abdm:ask-ai', {detail: {question: '', send: false}}),
+            )
+          }>
+          <Sparkles className="size-4" aria-hidden="true" />
+          Ask AI
+        </DropdownMenuItem>
+        <DropdownMenuSeparator />
         <DropdownMenuItem asChild>
           <a href={sandboxLinks.home} target="_blank" rel="noopener noreferrer">
             <SandboxMark />
