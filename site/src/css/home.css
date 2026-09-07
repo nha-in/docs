@@ -854,6 +854,17 @@
   color: var(--text-heading);
 }
 
+/* The only control on the landing page, and at 32px it was a third short of
+   what a thumb needs. The bar is 64px tall and spaces its two ends apart, so
+   the box grows inwards from the right margin and the glyph inside it stays
+   centred where it was. */
+@media (pointer: coarse) {
+  .curtain__toggle {
+    width: 2.75rem;
+    height: 2.75rem;
+  }
+}
+
 .curtain__mark {
   display: block;
   width: auto;

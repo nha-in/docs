@@ -317,7 +317,13 @@
   --search-local-muted-color: var(--text-faint);
 }
 
-/* Left edge and width, against the theme's own inline-level !important. */
+/* Left edge and width, against the theme's own inline-level !important.
+
+   The height is bounded in dvh and the panel scrolls, which is the second half
+   of the keyboard fix in docusaurus.config.ts. `dvh` is the viewport as it is
+   now rather than as it was before the keyboard opened, so a long result list
+   ends above the keyboard instead of running under it. The viewport tag keeps
+   the panel on screen; this keeps its contents reachable once it is. */
 .omnibox [class*='dropdownMenu'] {
   left: 0 !important;
   right: auto !important;
@@ -325,6 +331,9 @@
   padding: 0.375rem;
   border: 1px solid var(--border);
   border-radius: var(--radius-panel);
+  max-height: calc(100dvh - var(--topbar-height) - 1.5rem);
+  overflow-y: auto;
+  overscroll-behavior: contain;
 }
 
 /* The theme hashes its own class names, so the rows are matched on the stable
@@ -696,4 +705,101 @@
 .quick-actions__row--active {
   background: var(--accent-soft);
   color: var(--text-heading);
+}
+
+/* ---------- thumbs ---------- */
+
+/* The bar's controls were laid out for a mouse: 32px and 36px boxes, which is
+   what a cursor needs and about two thirds of what a thumb does. WCAG 2.5.5
+   asks for 44px and both phone platforms ask for the same, so under a coarse
+   pointer every control in the bar grows to 44px with padding, leaving the
+   glyphs the size they already were.
+
+   The width has to come from somewhere. At 360px the bar had exactly zero
+   slack left, so three 44px boxes do not fit beside a 16px gap: the gap drops
+   to 8px, which is still 36px of clear space between two glyphs once each is
+   padded, and the side padding drops to the 20px the navigation row directly
+   beneath the bar already uses, so the brand and that row's label now start on
+   the same line instead of 4px apart.
+
+   Scoped to the width where the bar has already collapsed to brand, gateway,
+   search puck, overflow and toggle. Above it the bar carries the sandbox and
+   repository marks as well, and growing one control there and not its
+   neighbours would read worse than leaving all of them at 36. */
+@media (pointer: coarse) and (max-width: 996px) {
+  .topbar {
+    gap: 0.5rem;
+    padding: 0 1.25rem;
+  }
+
+  /* A link, not a box, so the height comes from a minimum rather than a fixed
+     size: the lockup inside it still sets how tall the mark is drawn. */
+  .topbar-brand {
+    min-height: 2.75rem;
+  }
+
+  /* The colour mode control is a button inside a wrapper the theme's own
+     module sizes to 32px. The wrapper is what the row lays out, so it has to
+     grow with the button: left at 32 it let the 44px button hang 12px past its
+     slot, which at 360px put the button 8px from the screen edge instead of
+     the 20px every other control keeps. The wrapper needs the extra class to
+     outrank the module, which is loaded after this file. */
+  .topbar-overflow,
+  .topbar .topbar-toggle,
+  .topbar-toggle button {
+    width: 2.75rem;
+    height: 2.75rem;
+  }
+
+  /* The gateway is text, so it is already wide enough; only its height was
+     short. */
+  .topbar-gateway {
+    min-height: 2.75rem;
+  }
+
+  /* The search puck. Its magnifier is drawn by the search theme as background
+     art inset from the left edge, so the padding that makes the box 44px wide
+     has to be that same 44px, or the box grows out from under its own glyph. */
+  .omnibox .navbar__search-input {
+    width: 2.75rem;
+    height: 2.75rem;
+    padding-left: 2.75rem;
+  }
+
+  .omnibox .navbar__search-input:focus,
+  .omnibox [class*='focused_'] .navbar__search-input {
+    width: 100%;
+  }
+}
+
+/* The navigation sheet's close mark, which is the only visible way to dismiss
+   the sheet: a reader who cannot hit it is stuck behind it. The button is the
+   sheet primitive's own, placed by utility classes 16px in from the top right
+   corner with no padding at all, so its box was exactly its 16px glyph. The
+   padding takes the box to 44px and the offset gives back what the padding
+   added, which leaves the glyph drawn where it always was. */
+@media (pointer: coarse) {
+  [data-slot='sheet-content'] > button.absolute {
+    padding: 0.875rem;
+    top: 0.125rem;
+    right: 0.125rem;
+  }
+
+  /* Everything a thumb can reach inside the two menus the bar opens, not only
+     the marks that open them. Growing a trigger to 44px and leaving the rows
+     it reveals at 32px moves the problem one tap along: the reader lands the
+     first tap and misses the second, which is worse than missing the first,
+     because by then they think the control worked.
+
+     The drawer's own list is the larger half of it. Its tabs and its
+     navigation links were 32px, and there are 27 of them against the one
+     close mark that had been fixed. */
+  [data-slot='dropdown-menu-content'] [data-slot='dropdown-menu-item'],
+  [data-slot='dropdown-menu-content'] a,
+  [data-slot='sheet-content'] .mobile-nav-tab,
+  [data-slot='sheet-content'] .menu__link {
+    min-height: 2.75rem;
+    display: flex;
+    align-items: center;
+  }
 }

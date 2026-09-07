@@ -390,6 +390,18 @@
   color: var(--accent);
 }
 
+/* The console's own two controls, on a thumb. Send was 90x36 and the close
+   mark 32x32, which is the same miss as the bar's: a dialog a reader can now
+   open and still not comfortably submit or dismiss. Coarse pointers only, so
+   the desktop console keeps its proportions. */
+@media (pointer: coarse) {
+  .api-console__send,
+  .api-console__close {
+    min-height: 2.75rem;
+    min-width: 2.75rem;
+  }
+}
+
 /* ---------- the console ---------- */
 
 /* The frame is a fixed height flex column, and it hides its own overflow. The
