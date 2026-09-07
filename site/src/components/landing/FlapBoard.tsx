@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 
 /**
  * How long one flap takes to fall, and how far apart the cells start.
@@ -28,6 +28,28 @@ export const TURN_MS = 420;
  * the way a departure board is read while the train is still coming in.
  */
 export const STAGGER_MS = 26;
+
+/**
+ * How long a cell holds a character while the board is still working.
+ *
+ * One turn, so a cell lands and immediately begins the next: the board reads
+ * as running rather than as stuttering. Rolling cells turn together with no
+ * stagger, which is what makes the staggered landing legible as an arrival
+ * rather than as more of the same.
+ */
+const ROLL_MS = TURN_MS;
+
+/** The characters a cell runs through on its way to the one it will keep. */
+const ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+
+/** A boardful of characters that mean nothing, for a board still working. */
+function scrambled(cells: number) {
+  let out = '';
+  for (let index = 0; index < cells; index += 1) {
+    out += ALPHABET[Math.floor(Math.random() * ALPHABET.length)];
+  }
+  return out;
+}
 
 /**
  * A split-flap board, the kind an airport concourse and an Indian railway
@@ -104,15 +126,43 @@ export default function FlapBoard({
   text,
   cells,
   still,
+  rolling,
 }: {
-  /** What the board should be showing. */
+  /** What the board should be showing once it has finished working. */
   text: string;
   /** How many flaps the board has. Sized for the longest message it carries. */
   cells: number;
   /** True to set the text without turning the flaps. */
   still?: boolean;
+  /**
+   * True while the delivery this board is announcing is still in the air.
+   *
+   * A real board does not know its message before the train does. This one
+   * used to: the flaps settled about a second into a five second crossing and
+   * then sat reading the answer while the courier was still halfway there,
+   * which made the drawing beneath it look like it was catching up with the
+   * board rather than the board reporting it. While this is true the cells run
+   * through characters that mean nothing, and the message lands when the
+   * courier does.
+   */
+  rolling?: boolean;
 }): React.ReactNode {
-  const target = laid(text, cells);
+  const settled = useMemo(() => laid(text, cells), [text, cells]);
+  const [target, setTarget] = useState(settled);
+
+  // Rolling wins over the message: a message that changed while the courier
+  // was in the air is the destination it is heading for, not something to show
+  // yet. Stopping puts the real one up, which is the arrival.
+  useEffect(() => {
+    if (!rolling || still) {
+      setTarget(settled);
+      return undefined;
+    }
+    setTarget(scrambled(cells));
+    const spin = window.setInterval(() => setTarget(scrambled(cells)), ROLL_MS);
+    return () => window.clearInterval(spin);
+  }, [rolling, still, settled, cells]);
+
   // What the board is showing right now, and what it is turning away from.
   // Held in state rather than derived, because the outgoing face has to
   // survive the render that introduces the incoming one.
@@ -137,7 +187,9 @@ export default function FlapBoard({
             key={`${index}|${from}|${to}`}
             from={from[index] ?? ' '}
             to={char}
-            delay={index * STAGGER_MS}
+            // No stagger while it is running, so the ripple belongs to the
+            // arrival and reads as one.
+            delay={rolling ? 0 : index * STAGGER_MS}
             still={Boolean(still)}
           />
         ))}
