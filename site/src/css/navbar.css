@@ -453,27 +453,32 @@
   }
 }
 
-/* The box is centred on the bar, so the bar has to keep the middle clear.
-   Under this width the brand's own chip is what gives, since the NHA lockup
-   beside it already names the publisher.
+/* The chip goes where it does not fit, and there are two ways not to fit.
 
-   The chip goes whole. Hiding only the wordmark left the pill behind with
-   nothing in it but a 20px emblem, which does not read as a mark: it reads as
-   a control that failed to load. One breakpoint, and the bar goes from
-   lockup-plus-chip straight to lockup.
+   Between 997 and 1319 the search field is centred on the bar and the bar has
+   to keep the middle clear. With the chip in the row the left cluster ends at
+   x=446 whatever the window is doing, and the field's left edge is
+   (viewport - 384) / 2: at 1100 that is 358, so the field is drawn 88px over
+   the gateway switcher and the switcher's right half is unclickable. It
+   clears at 1320. Below 997 the field is not in the middle at all: it
+   collapses to a 34px puck in the right cluster, which is why the chip is
+   welcome again there, and hiding it through that whole range was the bug.
+   At 996 the bar carries the chip and everything else inside 972px.
 
-   1319 is measured, not chosen. The chip is 228px, and while it is in the row
-   the left cluster ends at x=460 whatever the window is doing. The field is
-   centred, so its left edge is (viewport - 384) / 2: at 1201 that is 409 and
-   the field is drawn 51px over the gateway switcher, at 1300 it is still 2px
-   over, and it clears at 1320. The band was 119px wide and the switcher's
-   right half was unclickable inside it.
+   Below 577 it stops being about the middle and starts being about the total:
+   the bar's content with the chip is 550px wide, so the row overflows the
+   viewport and the theme toggle goes off the right edge. 576 leaves ten
+   pixels in hand.
 
-   That is the same rule the 996 breakpoint below is written for, and it is
-   worth stating once: a centred box's room is the distance to the wider of the
-   two clusters, not the gap between them. Anything added to either side moves
-   this number, so measure it again rather than nudging it. */
-@media (max-width: 1319px) {
+   The chip goes whole, both times. Hiding only the wordmark left the pill
+   behind with nothing in it but a 20px emblem, which does not read as a mark:
+   it reads as a control that failed to load.
+
+   One rule underlies all of it and is worth stating once: a centred box's
+   room is the distance to the wider of the two clusters, not the gap between
+   them. Anything added to either side moves these numbers, so measure them
+   again rather than nudging them. */
+@media (max-width: 576px), (min-width: 997px) and (max-width: 1319px) {
   .topbar-brand .brand-chip {
     display: none;
   }

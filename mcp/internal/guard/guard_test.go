@@ -27,6 +27,9 @@ func TestCheckAnswerAllowsTheAnswersWeWant(t *testing.T) {
 		"uncertainty in plain words": "We have not run this against sandbox yet, so treat the response shape as unconfirmed.",
 		"a docs link":                "The codes are listed under [Error codes](/docs/hiecm/v3/reference/error-codes).",
 		"the word atomic in prose":   "The write is atomic, so a partial link cannot be left behind.",
+		"a sequence diagram": "The linking call and its callback run in this order:\n\n" +
+			"```mermaid\nsequenceDiagram\n  HIU->>Gateway: POST /consents\n" +
+			"  Gateway-->>HIU: on-init\n```",
 	}
 	for name, answer := range good {
 		if v := CheckAnswer(answer); len(v) != 0 {
