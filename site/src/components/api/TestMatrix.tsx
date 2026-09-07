@@ -2,6 +2,7 @@ import React, {useMemo, useState} from 'react';
 import Link from '@docusaurus/Link';
 import {ChevronDown, ChevronRight, Search} from 'lucide-react';
 import {cn} from '@site/src/lib/utils';
+import apiRoutes from '@site/src/data/api-routes.json';
 
 export type MatrixRow = {
   id: string;
@@ -17,8 +18,8 @@ export type MatrixRow = {
   functionality: string;
   expected: string;
   /**
-   * `method` is null where the source names a call and states no HTTP method
-   * for it, which NHA's M2 document does for health-information/notify.
+   * A call named by a case this portal wrote, rather than by a sheet. Carries
+   * no method where the source states none.
    */
   api?: {method?: string | null; path: string; to?: string | null} | null;
   /** The calls NHA's sheet names for this case, as absolute URLs. */
@@ -37,6 +38,24 @@ export type Matrix = {
   module: string;
   title: string;
   groups: MatrixGroup[];
+};
+
+type RouteEntry = {
+  key: string;
+  hosts: string[];
+  kind: 'operation' | 'callback';
+  operationId: string;
+  method: string;
+  path: string;
+  summary: string;
+  route: string;
+  callbacks: {
+    method: string;
+    path: string;
+    summary: string;
+    route: string;
+    relation: string;
+  }[];
 };
 
 const ALL = 'All types';
@@ -65,20 +84,86 @@ function typeClass(type: string) {
   return `matrix__type--${type.toLowerCase().replace(/\s+/g, '-')}`;
 }
 
+// ---------------------------------------------------------------------------
+// Joining a case to the pages for the calls it names.
+//
+// A sheet names a call as a URL and this site publishes it at a route, and the
+// two are matched on the segments that identify an operation rather than on
+// the whole URL. scripts/lib/api-join.mjs holds the same reduction, and
+// build-api-reference.mjs writes api-routes.json with it, so this is the third
+// reader of one rule rather than a fourth spelling of it.
+
+const NOISE = new Set([
+  '',
+  'api',
+  'apis',
+  'abha',
+  'gateway',
+  'hiecm',
+  'v1',
+  'v1.5',
+  'v2',
+  'v3',
+  'v3.1',
+  'v0.5',
+]);
+
+function joinKey(url: string) {
+  const path = String(url)
+    .replace(/^https?:\/\/[^/]+/, '')
+    .replace(/\/v3enrollment\//, '/v3/enrollment/')
+    .split('?')[0]
+    .split('#')[0];
+  return path
+    .split('/')
+    .map((part) => part.toLowerCase())
+    .filter((part) => !NOISE.has(part))
+    .join('/');
+}
+
+function hostOf(url: string) {
+  const match = /^https?:\/\/([^/]+)/.exec(String(url));
+  return match ? match[1].toLowerCase() : '';
+}
+
+const byKey = new Map<string, RouteEntry[]>();
+for (const entry of apiRoutes as RouteEntry[]) {
+  const found = byKey.get(entry.key);
+  if (found) {
+    found.push(entry);
+  } else {
+    byKey.set(entry.key, [entry]);
+  }
+}
+
 /**
- * The readable part of a call NHA names. Most entries are endpoint URLs, whose
- * path identifies the call. The HFR sheets point at Swagger anchors instead,
- * where the path is always /swagger-ui.html and the operation sits in the
- * fragment, so the fragment wins there.
+ * The published call a sheet's URL names, or nothing.
+ *
+ * The host narrows it where the path alone is ambiguous: `phr/app/enrollment/
+ * encrypt` is an operation in both the M1 and the P1 specification, and only
+ * the host the sheet names tells them apart. Where the host matches nothing,
+ * the path is still taken, because a sheet naming a sandbox host for a call
+ * published against production is a difference in environment, not in call.
+ */
+function resolve(url: string): RouteEntry | undefined {
+  const found = byKey.get(joinKey(url));
+  if (!found?.length) return undefined;
+  const host = hostOf(url);
+  return found.find((entry) => entry.hosts.includes(host)) ?? found[0];
+}
+
+/**
+ * The readable part of a call. Most entries are endpoint URLs, whose path
+ * identifies the call. The HFR sheets point at Swagger anchors instead, where
+ * the path is always /swagger-ui.html and the operation sits in the fragment,
+ * so the fragment wins there.
  */
 function shortPath(url: string) {
   try {
     const parsed = new URL(url);
     if (parsed.hash) {
       const tail = parsed.hash.split('/').filter(Boolean).pop();
-      if (tail) {
-        return decodeURIComponent(tail);
-      }
+      if (tail) return decodeURIComponent(tail);
     }
     return parsed.pathname;
   } catch {
@@ -86,10 +171,84 @@ function shortPath(url: string) {
   }
 }
 
-function matches(row: MatrixRow, query: string) {
-  if (!query) {
-    return true;
+type Call = {
+  method?: string | null;
+  path: string;
+  route?: string | null;
+  title?: string;
+};
+
+/**
+ * The calls a case makes and the callbacks it receives, as two lists.
+ *
+ * Which is which is not in the sheet. A sheet lists a use case's calls in one
+ * column and mixes them freely: M2's linking cases name `/link/carecontext`,
+ * which you call, beside `/consent/request/hip/on-notify`, which you receive.
+ * The specification is what knows, because one sits under `paths` and the
+ * other under `webhooks`, so the split is made on what resolving the URL
+ * finds rather than on the shape of the path.
+ *
+ * The callbacks column has a second source. A case that names only the call it
+ * makes still shows what that call answers with, wherever the specification
+ * pairs them with x-abdm-triggered-by or x-abdm-answered-by. Nothing is
+ * inferred beyond those two: a call with no stated pairing contributes no
+ * callback.
+ */
+function callsOf(row: MatrixRow): {endpoints: Call[]; callbacks: Call[]} {
+  const endpoints: Call[] = [];
+  const callbacks: Call[] = [];
+  const seen = new Set<string>();
+
+  const add = (list: Call[], call: Call) => {
+    const id = `${call.route ?? ''}|${call.path}`;
+    if (seen.has(id)) return;
+    seen.add(id);
+    list.push(call);
+  };
+
+  for (const url of row.apis ?? []) {
+    const entry = resolve(url);
+    if (!entry) {
+      // NHA names a call this portal does not publish. Every one of these is
+      // an M4 call on the HPR or HFR hosts, which have no specification here
+      // because M4 is phase 2. Showing the path unlinked says so without
+      // pretending there is a page behind it.
+      add(endpoints, {path: shortPath(url), title: url});
+      continue;
+    }
+    add(entry.kind === 'callback' ? callbacks : endpoints, {
+      method: entry.method,
+      path: entry.path,
+      route: entry.route,
+      title: entry.summary,
+    });
+    for (const hook of entry.callbacks) {
+      add(callbacks, {
+        method: hook.method,
+        path: hook.path,
+        route: hook.route,
+        title: hook.summary,
+      });
+    }
   }
+
+  // A case this portal wrote names its call directly rather than as a URL.
+  if (row.api) {
+    add(endpoints, {
+      method: row.api.method,
+      path: row.api.path,
+      route: row.api.to,
+    });
+  }
+  if (row.webhook) {
+    add(callbacks, {method: row.webhook.method, path: row.webhook.path});
+  }
+  return {endpoints, callbacks};
+}
+
+function matches(row: MatrixRow, query: string) {
+  if (!query) return true;
+  const {endpoints, callbacks} = callsOf(row);
   const haystack = [
     row.id,
     row.type,
@@ -97,9 +256,7 @@ function matches(row: MatrixRow, query: string) {
     row.functionality,
     row.expected,
     row.detail ?? '',
-    row.api?.path ?? '',
-    row.webhook?.path ?? '',
-    ...(row.apis ?? []).map(shortPath),
+    ...[...endpoints, ...callbacks].map((call) => call.path),
   ]
     .join(' ')
     .toLowerCase();
@@ -107,50 +264,70 @@ function matches(row: MatrixRow, query: string) {
 }
 
 function MethodChip({method}: {method?: string | null}) {
-  if (!method) {
-    return null;
+  if (!method) return null;
+  return (
+    <span className={`api-chip api-chip--${method.toLowerCase()}`}>{method}</span>
+  );
+}
+
+/**
+ * One column of calls. Linked where a page exists, plain where none does.
+ *
+ * The label is for the narrow layout. Under 1100px the four columns stack and
+ * the header row is hidden, which left two lists of paths one above the other
+ * with nothing saying which was the calls you make and which the callbacks you
+ * receive. It is hidden again wherever the header row is doing that job.
+ */
+function CallList({calls, label}: {calls: Call[]; label: string}) {
+  if (calls.length === 0) {
+    return (
+      <span className="matrix__calls">
+        <span className="matrix__calls-label">{label}</span>
+        <span className="matrix__empty">&mdash;</span>
+      </span>
+    );
   }
   return (
-    <span className={`api-chip api-chip--${method.toLowerCase()}`}>
-      {method}
+    <span className="matrix__calls">
+      <span className="matrix__calls-label">{label}</span>
+      {calls.map((call) => {
+        const body = (
+          <>
+            <MethodChip method={call.method} />
+            <code>{call.path}</code>
+          </>
+        );
+        return call.route ? (
+          <Link
+            key={`${call.route}|${call.path}`}
+            to={call.route}
+            className="matrix__call matrix__call--link"
+            title={call.title}>
+            {body}
+          </Link>
+        ) : (
+          <span
+            key={`plain|${call.path}`}
+            className="matrix__call"
+            title={call.title}>
+            {body}
+          </span>
+        );
+      })}
     </span>
   );
 }
 
-function ApiCell({row}: {row: MatrixRow}) {
-  if (row.api) {
-    const label = (
-      <>
-        <MethodChip method={row.api.method} />
-        <code>{row.api.path}</code>
-      </>
-    );
-    return row.api.to ? (
-      <Link to={row.api.to} className="matrix__api matrix__api--link card">
-        {label}
-      </Link>
-    ) : (
-      <span className="matrix__api">{label}</span>
-    );
-  }
-  if (row.apis?.length) {
-    return (
-      <span className="matrix__apis">
-        {row.apis.map((url) => (
-          <code key={url} className="matrix__path" title={url}>
-            {shortPath(url)}
-          </code>
-        ))}
-      </span>
-    );
-  }
-  return <span className="matrix__empty">&mdash;</span>;
-}
-
 /**
- * One module's use cases, the steps inside each, and the call every step makes.
- * A reader scanning for "which endpoint does this journey use" reads down the
- * REST API column; a reader building the journey reads the rows in order.
+ * One module's certification cases, four columns wide.
+ *
+ * It was six, and two of them were failing to earn their width. The id sat in
+ * a column of its own and the marking in another, both of them narrow and
+ * both of them describing the same thing the use case column already named, so
+ * a reader scanning for a case read across three columns to identify one row.
+ * They are one cell now, which is also what makes room for the two that
+ * matter: the calls a case exercises and the callbacks it receives, each
+ * linked to the reference page for it.
  *
  * The filter buttons are the markings this matrix actually carries, so no case
  * can sit under a marking there is no way to filter for, and the tally says
@@ -164,9 +341,7 @@ export default function TestMatrix({matrix}: {matrix: Matrix}) {
   const filters = useMemo(() => {
     const present = new Set<string>();
     for (const group of matrix.groups) {
-      for (const row of group.rows) {
-        present.add(row.type);
-      }
+      for (const row of group.rows) present.add(row.type);
     }
     const rank = (type: string) => {
       const index = TYPE_ORDER.indexOf(type);
@@ -205,7 +380,7 @@ export default function TestMatrix({matrix}: {matrix: Matrix}) {
           <input
             type="search"
             className="matrix__search-input"
-            placeholder="Search steps, endpoints, results"
+            placeholder="Search cases, endpoints, results"
             value={query}
             onChange={(event) => setQuery(event.target.value)}
             aria-label="Search this module"
@@ -239,12 +414,10 @@ export default function TestMatrix({matrix}: {matrix: Matrix}) {
         </div>
 
         <div className="matrix__head" role="row">
-          <span>ID</span>
-          <span>Type</span>
-          <span>What it does</span>
+          <span>Use case</span>
+          <span>Endpoints</span>
+          <span>Callbacks</span>
           <span>Expected result</span>
-          <span>Endpoint</span>
-          <span>Callback</span>
         </div>
 
         {groups.length === 0 ? (
@@ -258,10 +431,7 @@ export default function TestMatrix({matrix}: {matrix: Matrix}) {
               className="matrix__group-head"
               aria-expanded={isOpen(group.id)}
               onClick={() =>
-                setOpen((current) => ({
-                  ...current,
-                  [group.id]: !isOpen(group.id),
-                }))
+                setOpen((current) => ({...current, [group.id]: !isOpen(group.id)}))
               }>
               {isOpen(group.id) ? (
                 <ChevronDown className="size-3.5 shrink-0" aria-hidden="true" />
@@ -273,45 +443,35 @@ export default function TestMatrix({matrix}: {matrix: Matrix}) {
             </button>
 
             {isOpen(group.id)
-              ? group.rows.map((row) => (
-                  <div key={row.id} className="matrix__row">
-                    <code className="matrix__id">{row.id}</code>
-                    <span
-                      className={cn('matrix__type', typeClass(row.type))}
-                      title={TYPE_NOTE[row.type]}>
-                      {row.type}
-                    </span>
-                    <span className="matrix__what">
-                      <span className="matrix__what-title">
-                        {row.functionality}
-                      </span>
-                      <span className="matrix__what-group">{group.label}</span>
-                    </span>
-                    <span className="matrix__expected">
-                      {row.expected}
-                      {row.condition ? (
-                        <span className="matrix__condition">
-                          <span className="matrix__condition-label">
-                            Applies when
+              ? group.rows.map((row) => {
+                  const {endpoints, callbacks} = callsOf(row);
+                  return (
+                    <div key={row.id + row.functionality} className="matrix__row">
+                      <span className="matrix__case">
+                        <span className="matrix__case-title">{row.functionality}</span>
+                        <span className="matrix__case-meta">
+                          <span
+                            className={cn('matrix__type', typeClass(row.type))}
+                            title={TYPE_NOTE[row.type]}>
+                            {row.type}
                           </span>
-                          {row.condition}
+                          <code className="matrix__id">{row.id}</code>
                         </span>
-                      ) : null}
-                      {row.detail ? (
-                        <span className="matrix__detail">{row.detail}</span>
-                      ) : null}
-                    </span>
-                    <ApiCell row={row} />
-                    {row.webhook ? (
-                      <span className="matrix__api">
-                        <MethodChip method={row.webhook.method} />
-                        <code>{row.webhook.path}</code>
+                        {row.condition ? (
+                          <span className="matrix__condition">{row.condition}</span>
+                        ) : null}
                       </span>
-                    ) : (
-                      <span className="matrix__empty">&mdash;</span>
-                    )}
-                  </div>
-                ))
+                      <CallList calls={endpoints} label="Endpoints" />
+                      <CallList calls={callbacks} label="Callbacks" />
+                      <span className="matrix__expected">
+                        {row.expected}
+                        {row.detail ? (
+                          <span className="matrix__detail">{row.detail}</span>
+                        ) : null}
+                      </span>
+                    </div>
+                  );
+                })
               : null}
           </div>
         ))}
