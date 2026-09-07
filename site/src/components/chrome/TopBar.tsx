@@ -255,8 +255,9 @@ export default function TopBar() {
 
   return (
     <nav className="navbar navbar--fixed-top topbar" aria-label="Site">
-      {/* The wordmark is hidden under 576px, so the name is on the link itself:
-          without it the brand link is an empty decorative image on a phone. */}
+      {/* The chip carrying the name is hidden at two ranges (navbar.css says
+          which and why), so the name is on the link itself: without it the
+          brand link is an empty decorative image wherever the chip is gone. */}
       <Link to="/" className="topbar-brand" aria-label="ABDM Developer Portal">
         {/* The authority that runs the network, not the mission's mark: the
             bar names the publisher, the landing page shows both. */}

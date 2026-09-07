@@ -1,6 +1,7 @@
 import {useEffect, useState} from 'preact/hooks';
 import type {ComponentChildren} from 'preact';
 import {Check, Copy} from './icons';
+import {ASSET_BASE, loadScript} from './assets';
 
 /**
  * Renders the small markdown subset the support agent emits: paragraphs,
@@ -99,9 +100,109 @@ export function CopyButton({
   );
 }
 
+/**
+ * A mermaid diagram, drawn in the reader's browser.
+ *
+ * The documentation carries diagrams of its own, written as fenced mermaid
+ * blocks inside the pages the agent's tools return, and the agent may quote
+ * one back when it is the answer. This is what turns the quoted block into a
+ * picture. Until it existed the block arrived as diagram source under the
+ * words "here it is rendered", which is worse than not offering. The agent
+ * never composes one: that rule is in its playbook, because a diagram is a
+ * statement about the order of calls in a health network.
+ *
+ * mermaid is three and a half megabytes, so it is not in this bundle. It sits
+ * beside the widget and is fetched the first time a diagram actually appears,
+ * the same arrangement the PDF reader and the OCR engine use. A reader who
+ * never asks for a diagram never pays for one.
+ *
+ * The source is shown instead if the load fails or the diagram will not
+ * parse. A model can emit invalid mermaid, and a broken picture that hides
+ * what it was trying to say is worse than the text it came from.
+ */
+let ready: Promise<any> | null = null;
+
+function mermaidLib(): Promise<any> {
+  ready ??= loadScript(`${ASSET_BASE}mermaid.min.js`).then(() => {
+    const lib = (globalThis as unknown as {mermaid?: any}).mermaid;
+    if (!lib) throw new Error('mermaid loaded but registered nothing');
+    lib.initialize({
+      startOnLoad: false,
+      // The model's text reaches mermaid, so labels are escaped rather than
+      // parsed as HTML. This is the library's own strictest setting.
+      securityLevel: 'strict',
+      theme: dark() ? 'dark' : 'default',
+      fontFamily: 'inherit',
+    });
+    return lib;
+  });
+  return ready;
+}
+
+/** The colour scheme the diagram is being drawn into. */
+function dark(): boolean {
+  const stated = document.documentElement.dataset.theme;
+  if (stated === 'dark') return true;
+  if (stated === 'light') return false;
+  return globalThis.matchMedia?.('(prefers-color-scheme: dark)').matches ?? false;
+}
+
+let drawn = 0;
+
+function Diagram({text}: {text: string}) {
+  const [svg, setSvg] = useState('');
+  const [failed, setFailed] = useState(false);
+
+  useEffect(() => {
+    let live = true;
+    setFailed(false);
+    setSvg('');
+    drawn += 1;
+    const id = `ask-ai-diagram-${drawn}`;
+    mermaidLib()
+      .then((lib) => lib.render(id, text))
+      .then((result: {svg: string}) => {
+        if (live) setSvg(result.svg);
+      })
+      .catch(() => {
+        if (live) setFailed(true);
+        // mermaid leaves the element it measured in on a parse failure.
+        document.getElementById(id)?.remove();
+        document.getElementById(`d${id}`)?.remove();
+      });
+    return () => {
+      live = false;
+    };
+  }, [text]);
+
+  if (failed) {
+    return (
+      <div class="ask-ai__code">
+        <pre>
+          <code>{text}</code>
+        </pre>
+        <CopyButton
+          text={text}
+          label="Copy diagram source"
+          className="ask-ai__code-copy"
+        />
+      </div>
+    );
+  }
+  // The markup is mermaid's own output, not the model's: the model's text
+  // reached it as diagram source and came back as shapes and escaped labels.
+  return (
+    <div
+      class="ask-ai__diagram"
+      // eslint-disable-next-line react/no-danger
+      dangerouslySetInnerHTML={{__html: svg}}
+    />
+  );
+}
+
 type Block =
   | {kind: 'p'; text: string}
-  | {kind: 'code'; text: string}
+  | {kind: 'code'; text: string; lang: string; closed: boolean}
   | {kind: 'ul' | 'ol'; items: string[]};
 
 const BULLET = /^\s*[-*]\s+(.*)$/;
@@ -112,6 +213,7 @@ export function toBlocks(text: string): Block[] {
   let list: {kind: 'ul' | 'ol'; items: string[]} | null = null;
   let para: string[] = [];
   let code: string[] | null = null;
+  let lang = '';
 
   const flushPara = () => {
     if (para.length > 0) {
@@ -129,13 +231,17 @@ export function toBlocks(text: string): Block[] {
   for (const line of text.split('\n')) {
     if (line.trimStart().startsWith('```')) {
       if (code) {
-        blocks.push({kind: 'code', text: code.join('\n')});
+        blocks.push({kind: 'code', text: code.join('\n'), lang, closed: true});
         code = null;
+        lang = '';
       } else {
         flushPara();
         flushList();
-        // The info string (```json) is dropped: nothing here highlights, and
-        // showing it would put a stray word above the sample.
+        // The info string is kept but never shown: nothing here highlights,
+        // and a stray word above the sample helps nobody. It is kept because
+        // one value of it is not a label at all. ```mermaid is a picture, and
+        // the block below draws it.
+        lang = line.trim().slice(3).trim().toLowerCase();
         code = [];
       }
       continue;
@@ -173,7 +279,7 @@ export function toBlocks(text: string): Block[] {
     para.push(line.replace(/^#{1,4}\s+/, '').trim());
   }
   // A fence still open at the end of the text is a code block mid-stream.
-  if (code) blocks.push({kind: 'code', text: code.join('\n')});
+  if (code) blocks.push({kind: 'code', text: code.join('\n'), lang, closed: false});
   flushPara();
   flushList();
   return blocks;
@@ -193,6 +299,11 @@ export default function ChatMarkdown({
           return <p key={i}>{renderInline(block.text, docsOrigin)}</p>;
         }
         if (block.kind === 'code') {
+          // Only once the fence has closed: half a diagram is a syntax error,
+          // and mermaid draws syntax errors as a red box rather than throwing.
+          if (block.lang === 'mermaid' && block.closed) {
+            return <Diagram key={i} text={block.text} />;
+          }
           return (
             <div key={i} class="ask-ai__code">
               <pre>

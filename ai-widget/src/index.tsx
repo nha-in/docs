@@ -15,6 +15,7 @@ import {
   type Step,
 } from './install';
 import {revealStep} from './pacing';
+import {ASSET_BASE, loadScript} from './assets';
 import css from './styles.css';
 
 type Turn = {
@@ -55,39 +56,6 @@ const ATTACH_MAX_CHARS = 20000;
 /** A text file is small. A scan or a screenshot is not, so it gets its own cap. */
 const ATTACH_MAX_BYTES = 256 * 1024;
 const ATTACH_MAX_BINARY_BYTES = 8 * 1024 * 1024;
-
-/**
- * Where the readers live: beside this script, wherever it was served from.
- *
- * currentScript is read at load, while the script is still executing, since
- * it is null by the time anything here runs. The widget embeds on other
- * people's pages, so this cannot be a path on the host page.
- */
-const ASSET_BASE = (() => {
-  const src = (document.currentScript as HTMLScriptElement | null)?.src;
-  try {
-    return new URL('vendor/', src ?? '/agent/').href;
-  } catch {
-    return '/agent/vendor/';
-  }
-})();
-
-const loaded = new Map<string, Promise<void>>();
-
-/** Loads a classic script once, and hands every later caller the same promise. */
-function loadScript(url: string): Promise<void> {
-  const already = loaded.get(url);
-  if (already) return already;
-  const pending = new Promise<void>((resolve, reject) => {
-    const el = document.createElement('script');
-    el.src = url;
-    el.onload = () => resolve();
-    el.onerror = () => reject(new Error(`could not load ${url}`));
-    document.head.append(el);
-  });
-  loaded.set(url, pending);
-  return pending;
-}
 
 /**
  * Reads the text a PDF already carries. A scan with no text layer comes back
@@ -285,6 +253,108 @@ type PanelProps = {
  * widget knowing anything about them, and it brings Escape, the backdrop and
  * focus containment with it.
  */
+/** How wide the panel may be dragged, in pixels. */
+const PANEL_MIN = 320;
+const PANEL_MAX = 960;
+const PANEL_WIDTH_KEY = 'abdm-ask-ai-width';
+
+/**
+ * True while the left edge is being dragged, and for the click that ends the
+ * drag. The panel closes on a click that lands on the dialog itself, which is
+ * how a click on the backdrop dismisses it, and a drag that finishes anywhere
+ * left of the panel ends exactly there: mouse down on the handle, mouse up on
+ * the page, and the click goes to their common ancestor, which is the dialog.
+ * So narrowing the panel used to shut it.
+ */
+let resizing = false;
+
+/**
+ * The panel's left edge, as something you can pull.
+ *
+ * The panel is a fixed 26rem, which is the right width for a paragraph and
+ * the wrong width for the things it also shows: a sequence diagram, a curl
+ * command with a long URL, a table of headers. Rather than guess a wider
+ * default and make every short answer sit in a column of whitespace, the
+ * reader sets it, and the width they set is remembered for their next visit.
+ *
+ * Pointer events rather than mouse events, so a pen and a trackpad work the
+ * same way, with a capture so the drag survives the pointer leaving the
+ * handle. There is no handle on a touch screen: the panel is the full width
+ * of the viewport there, and there is nothing to drag it to.
+ */
+function ResizeGrip({dialog}: {dialog: {current: HTMLDialogElement | null}}) {
+  const [dragging, setDragging] = useState(false);
+
+  // The width is written onto the element rather than held in state, because
+  // a re-render per pointer move is a re-render of everything in the panel,
+  // and one of the things in the panel is a diagram.
+  useEffect(() => {
+    const saved = Number(localStorage.getItem(PANEL_WIDTH_KEY));
+    if (saved >= PANEL_MIN && dialog.current) {
+      dialog.current.style.setProperty('--aa-panel-width', `${saved}px`);
+    }
+  }, []);
+
+  const start = (event: PointerEvent) => {
+    const panel = dialog.current;
+    if (!panel) return;
+    event.preventDefault();
+    resizing = true;
+    setDragging(true);
+    (event.target as Element).setPointerCapture(event.pointerId);
+    const move = (moved: PointerEvent) => {
+      // The panel is docked right, so its width is whatever is left of the
+      // viewport once the pointer has taken its share.
+      const wanted = window.innerWidth - moved.clientX;
+      const width = Math.min(
+        Math.max(wanted, PANEL_MIN),
+        Math.min(PANEL_MAX, window.innerWidth),
+      );
+      panel.style.setProperty('--aa-panel-width', `${Math.round(width)}px`);
+    };
+    const stop = () => {
+      // Cleared after the click this pointer up is about to produce, not
+      // before it.
+      setTimeout(() => {
+        resizing = false;
+      }, 0);
+      setDragging(false);
+      window.removeEventListener('pointermove', move);
+      window.removeEventListener('pointerup', stop);
+      window.removeEventListener('pointercancel', stop);
+      const set = panel.style.getPropertyValue('--aa-panel-width');
+      if (set) localStorage.setItem(PANEL_WIDTH_KEY, String(parseInt(set, 10)));
+    };
+    window.addEventListener('pointermove', move);
+    window.addEventListener('pointerup', stop);
+    window.addEventListener('pointercancel', stop);
+  };
+
+  return (
+    <div
+      class={`ask-ai__grip${dragging ? ' ask-ai__grip--dragging' : ''}`}
+      role="separator"
+      aria-orientation="vertical"
+      aria-label="Resize the panel"
+      tabIndex={0}
+      onPointerDown={start}
+      onKeyDown={(event) => {
+        // The keyboard reaches it too: a control only a pointer can work is
+        // a control some readers do not have.
+        const step =
+          event.key === 'ArrowLeft' ? 32 : event.key === 'ArrowRight' ? -32 : 0;
+        if (!step || !dialog.current) return;
+        event.preventDefault();
+        const now = dialog.current.getBoundingClientRect().width;
+        const width = Math.min(Math.max(now + step, PANEL_MIN), PANEL_MAX);
+        dialog.current.style.setProperty('--aa-panel-width', `${width}px`);
+        localStorage.setItem(PANEL_WIDTH_KEY, String(width));
+      }}>
+      <span class="ask-ai__grip-bar" aria-hidden="true" />
+    </div>
+  );
+}
+
 function Panel({
   apiBase,
   docsOrigin,
@@ -733,8 +803,9 @@ function Panel({
       onClose={onClose}
       onCancel={onClose}
       onClick={(event) => {
-        if (event.target === dialog.current) onClose();
+        if (event.target === dialog.current && !resizing) onClose();
       }}>
+      <ResizeGrip dialog={dialog} />
       <div class="ask-ai__head">
         <h2 class="ask-ai__title">
           Ask AI
