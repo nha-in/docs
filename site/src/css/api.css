@@ -1181,10 +1181,34 @@ label.api-console__ident {
   opacity: 0.75;
 }
 
+/* The matrix is data, not prose, so it leaves the reading measure behind on a
+   screen wide enough to spare it.
+
+   --content-max is 51rem, which is the 45 to 75 character line a paragraph
+   wants and a four column reference table cannot use: at 1400px it left each
+   call column 144px, so `/hiecm/consent/v3/request/init` wrapped over three
+   lines. The table widens from the centre of the column it sits in, so the
+   prose above and below it keeps its measure and the table keeps its middle.
+   Bounded by the viewport rather than by a fixed width, so it never reaches
+   under the sidebar or off the right edge. */
+@media (min-width: 1280px) {
+  .matrix {
+    --matrix-width: min(60rem, calc(100vw - 26rem));
+    width: max(100%, var(--matrix-width));
+    margin-inline-start: calc((100% - max(100%, var(--matrix-width))) / 2);
+  }
+}
+
+/* Use case, endpoints, callbacks, expected result. The id and the marking used
+   to hold two narrow columns of their own, describing the row the use case
+   column had already named, so identifying one case meant reading across three
+   columns. They sit inside the use case now, which is what makes room for the
+   two columns that were not there: the calls a case exercises and the
+   callbacks it receives. */
 .matrix__head,
 .matrix__row {
   display: grid;
-  grid-template-columns: 8rem 6.5rem minmax(0, 1.1fr) minmax(0, 1.4fr) minmax(0, 1fr) minmax(0, 0.7fr);
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1.35fr);
   gap: 1.25rem;
   align-items: start;
   padding: 0.875rem 1.25rem;
@@ -1292,41 +1316,32 @@ label.api-console__ident {
 
 /* NHA's own wording for a conditional marking. A badge saying "Conditional"
    does not tell a reader which condition they are under, so the sentence sits
-   with the rest of the row's detail rather than in the type cell. */
+   under the marking rather than being lost behind it. */
 .matrix__condition {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.375rem;
-  align-items: baseline;
   font-size: 0.75rem;
   line-height: 1.15rem;
   color: var(--text-muted);
 }
 
-.matrix__condition-label {
-  padding: 0.0625rem 0.375rem;
-  border-radius: var(--radius-chip);
-  background: var(--method-put-soft);
-  color: var(--method-put);
-  font-size: 0.6875rem;
-  font-weight: 600;
-  white-space: nowrap;
-}
-
-.matrix__what {
+.matrix__case {
   display: flex;
   flex-direction: column;
-  gap: 0.125rem;
+  gap: 0.3125rem;
+  min-width: 0;
 }
 
-.matrix__what-title {
+.matrix__case-title {
   font-weight: 600;
   color: var(--text-heading);
 }
 
-.matrix__what-group {
-  font-size: 0.75rem;
-  color: var(--text-faint);
+/* The marking and the id, on one line under the title. Together they are what
+   a reader quotes when they report a result, so they stay adjacent. */
+.matrix__case-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
 }
 
 .matrix__expected {
@@ -1342,36 +1357,27 @@ label.api-console__ident {
   color: var(--text-faint);
 }
 
-.matrix__api {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.375rem;
-  min-width: 0;
-  flex-wrap: wrap;
-}
-
-.matrix__api code {
-  font-family: var(--font-mono);
-  font-size: 0.6875rem;
-  color: var(--text-body);
-  background: transparent;
-  border: 0;
-  padding: 0;
-  /* Same rule as the markdown tables: break a run that cannot fit, never a
-     word that could. */
-  overflow-wrap: break-word;
-}
-
-/* The calls NHA's sheet names for a case. There is often more than one, and
-   they carry no method, so they stack as bare paths. */
-.matrix__apis {
+/* A use case usually names several calls, so they stack. Each is a link to the
+   reference page for it, except the ones this portal does not publish, which
+   are the M4 calls on the HPR and HFR hosts and render as plain paths. */
+.matrix__calls {
   display: flex;
   flex-direction: column;
-  gap: 0.1875rem;
+  gap: 0.25rem;
   min-width: 0;
 }
 
-.matrix__path {
+/* Block, not flex. Side by side, the chip took its width off the front of the
+   path and the path wrapped in the ~100px left over, breaking
+   `/hiecm/consent/v3/request/init` across three lines. Inline, the chip sits at
+   the head of the first line and the path flows under it across the whole
+   cell. */
+.matrix__call {
+  display: block;
+  min-width: 0;
+}
+
+.matrix__call code {
   font-family: var(--font-mono);
   font-size: 0.6875rem;
   line-height: 1.05rem;
@@ -1379,15 +1385,37 @@ label.api-console__ident {
   background: transparent;
   border: 0;
   padding: 0;
-  overflow-wrap: break-word;
+  /* `anywhere` rather than `break-word`, and both of these matter. A path has
+     no spaces, so its min-content width is the whole string, and a grid column
+     sized minmax(0, 1fr) still refuses to go under that: the paths overflowed
+     into the next column and sat on top of it. `anywhere` is the one value
+     that lets a break count towards min-content, and min-width releases the
+     flex item so the break is allowed to happen. */
+  min-width: 0;
+  overflow-wrap: anywhere;
 }
 
-.matrix__api--link:hover {
+.matrix__call--link:hover {
   text-decoration: none;
 }
 
-.matrix__api--link:hover code {
+.matrix__call--link:hover code {
   color: var(--accent);
+}
+
+/* Only where the header row is not naming the columns. See CallList. */
+.matrix__calls-label {
+  display: none;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+}
+
+.matrix__call .api-chip {
+  margin-right: 0.375rem;
+  vertical-align: baseline;
 }
 
 .matrix__empty {
@@ -1408,12 +1436,12 @@ label.api-console__ident {
 
   .matrix__row {
     grid-template-columns: minmax(0, 1fr);
-    gap: 0.5rem;
+    gap: 0.75rem;
     padding: 1rem 1.25rem;
   }
 
-  .matrix__type {
-    order: -1;
+  .matrix__calls-label {
+    display: block;
   }
 }
 
