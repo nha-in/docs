@@ -124,7 +124,12 @@ paths:
       operationId: m1_enrolment_verify_abdm_otp
       x-abdm-requirement:
         level: mandatory
-        cases: [CRT_ABHA_101, CRT_ABHA_201, CRT_ABHA_401]
+        cases: [CRT_ABHA_101, CRT_ABHA_102, CRT_ABHA_103, CRT_ABHA_104, CRT_ABHA_105, CRT_ABHA_106, CRT_ABHA_107, CRT_ABHA_108, CRT_ABHA_109, CRT_ABHA_112, CRT_ABHA_113, CRT_ABHA_114, CRT_ABHA_115, CRT_ABHA_201, CRT_ABHA_202, CRT_ABHA_203, CRT_ABHA_204, CRT_ABHA_205, CRT_ABHA_206, CRT_ABHA_207, CRT_ABHA_208, CRT_ABHA_209, CRT_ABHA_210, CRT_ABHA_401, CRT_ABHA_402, CRT_ABHA_403, CRT_ABHA_404, CRT_ABHA_405, CRT_ABHA_406, CRT_ABHA_407, CRT_ABHA_408, CRT_ABHA_410, CRT_ABHA_411]
+        conditions:
+          - "Either of the test cases CRT_ABHA_114 or CRT_ABHA_115 is mandatory for Governement Optional for Private"
+          - "Either of the test cases CRT_ABHA_209 or CRT_ABHA_210 is mandatory for Governement Optional for Private"
+          - "Mandatory for Private"
+          - "Mandatory for Private /Government (Optional for integrated program using demo auth as they have default ABHA address generated)"
       x-abdm-use-case: ABHA creation, Aadhaar OTP
       tags:
       - abha-creation
@@ -232,7 +237,12 @@ paths:
       operationId: m1_enrolment_claim_abha_address
       x-abdm-requirement:
         level: mandatory
-        cases: [CRT_ABHA_101, CRT_ABHA_201]
+        cases: [CRT_ABHA_101, CRT_ABHA_102, CRT_ABHA_103, CRT_ABHA_104, CRT_ABHA_105, CRT_ABHA_106, CRT_ABHA_107, CRT_ABHA_108, CRT_ABHA_109, CRT_ABHA_112, CRT_ABHA_113, CRT_ABHA_114, CRT_ABHA_115, CRT_ABHA_201, CRT_ABHA_202, CRT_ABHA_203, CRT_ABHA_204, CRT_ABHA_205, CRT_ABHA_206, CRT_ABHA_207, CRT_ABHA_208, CRT_ABHA_209, CRT_ABHA_210]
+        conditions:
+          - "Either of the test cases CRT_ABHA_114 or CRT_ABHA_115 is mandatory for Governement Optional for Private"
+          - "Either of the test cases CRT_ABHA_209 or CRT_ABHA_210 is mandatory for Governement Optional for Private"
+          - "Mandatory for Private"
+          - "Mandatory for Private /Government (Optional for integrated program using demo auth as they have default ABHA address generated)"
       x-abdm-use-case: ABHA creation, Aadhaar OTP
       tags:
       - abha-creation
@@ -353,7 +363,13 @@ paths:
       operationId: m1_enrolment_by_aadhaar
       x-abdm-requirement:
         level: mandatory
-        cases: [CRT_ABHA_101, CRT_ABHA_201, CRT_ABHA_301]
+        cases: [CRT_ABHA_101, CRT_ABHA_102, CRT_ABHA_103, CRT_ABHA_104, CRT_ABHA_105, CRT_ABHA_106, CRT_ABHA_107, CRT_ABHA_108, CRT_ABHA_109, CRT_ABHA_112, CRT_ABHA_113, CRT_ABHA_114, CRT_ABHA_115, CRT_ABHA_201, CRT_ABHA_202, CRT_ABHA_203, CRT_ABHA_204, CRT_ABHA_205, CRT_ABHA_206, CRT_ABHA_207, CRT_ABHA_208, CRT_ABHA_209, CRT_ABHA_210, CRT_ABHA_301, CRT_ABHA_302, CRT_ABHA_303, CRT_ABHA_304, CRT_ABHA_305, CRT_ABHA_306, CRT_ABHA_307, CRT_ABHA_308, CRT_ABHA_309]
+        conditions:
+          - "Either of the test cases CRT_ABHA_114 or CRT_ABHA_115 is mandatory for Governement Optional for Private"
+          - "Either of the test cases CRT_ABHA_209 or CRT_ABHA_210 is mandatory for Governement Optional for Private"
+          - "Either of the test cases CRT_ABHA_308 or CRT_ABHA_309 is mandatory for Governement Optional for Private"
+          - "Mandatory for Private"
+          - "Mandatory for Private /Government (Optional for integrated program using demo auth as they have default ABHA address generated)"
       x-abdm-use-case: ABHA creation, Aadhaar OTP
       tags:
       - abha-creation
@@ -518,7 +534,7 @@ paths:
       operationId: m1_enrolment_by_document
       x-abdm-requirement:
         level: optional
-        cases: [CRT_ABHA_401]
+        cases: [CRT_ABHA_401, CRT_ABHA_402, CRT_ABHA_403, CRT_ABHA_404, CRT_ABHA_405, CRT_ABHA_406, CRT_ABHA_407, CRT_ABHA_408, CRT_ABHA_410, CRT_ABHA_411]
       x-abdm-use-case: ABHA creation, driving licence or PAN
       tags:
       - abha-creation
@@ -730,7 +746,12 @@ paths:
       operationId: m1_enrolment_address_suggestions
       x-abdm-requirement:
         level: mandatory
-        cases: [CRT_ABHA_101, CRT_ABHA_201]
+        cases: [CRT_ABHA_101, CRT_ABHA_102, CRT_ABHA_103, CRT_ABHA_104, CRT_ABHA_105, CRT_ABHA_106, CRT_ABHA_107, CRT_ABHA_108, CRT_ABHA_109, CRT_ABHA_112, CRT_ABHA_113, CRT_ABHA_114, CRT_ABHA_115, CRT_ABHA_201, CRT_ABHA_202, CRT_ABHA_203, CRT_ABHA_204, CRT_ABHA_205, CRT_ABHA_206, CRT_ABHA_207, CRT_ABHA_208, CRT_ABHA_209, CRT_ABHA_210]
+        conditions:
+          - "Either of the test cases CRT_ABHA_114 or CRT_ABHA_115 is mandatory for Governement Optional for Private"
+          - "Either of the test cases CRT_ABHA_209 or CRT_ABHA_210 is mandatory for Governement Optional for Private"
+          - "Mandatory for Private"
+          - "Mandatory for Private /Government (Optional for integrated program using demo auth as they have default ABHA address generated)"
       x-abdm-use-case: ABHA creation, Aadhaar OTP
       tags:
       - abha-creation
@@ -805,7 +826,12 @@ paths:
       operationId: m1_enrolment_request_otp
       x-abdm-requirement:
         level: mandatory
-        cases: [CRT_ABHA_101, CRT_ABHA_201, CRT_ABHA_401]
+        cases: [CRT_ABHA_101, CRT_ABHA_102, CRT_ABHA_103, CRT_ABHA_104, CRT_ABHA_105, CRT_ABHA_106, CRT_ABHA_107, CRT_ABHA_108, CRT_ABHA_109, CRT_ABHA_112, CRT_ABHA_113, CRT_ABHA_114, CRT_ABHA_115, CRT_ABHA_201, CRT_ABHA_202, CRT_ABHA_203, CRT_ABHA_204, CRT_ABHA_205, CRT_ABHA_206, CRT_ABHA_207, CRT_ABHA_208, CRT_ABHA_209, CRT_ABHA_210, CRT_ABHA_401, CRT_ABHA_402, CRT_ABHA_403, CRT_ABHA_404, CRT_ABHA_405, CRT_ABHA_406, CRT_ABHA_407, CRT_ABHA_408, CRT_ABHA_410, CRT_ABHA_411]
+        conditions:
+          - "Either of the test cases CRT_ABHA_114 or CRT_ABHA_115 is mandatory for Governement Optional for Private"
+          - "Either of the test cases CRT_ABHA_209 or CRT_ABHA_210 is mandatory for Governement Optional for Private"
+          - "Mandatory for Private"
+          - "Mandatory for Private /Government (Optional for integrated program using demo auth as they have default ABHA address generated)"
       x-abdm-use-case: ABHA creation, Aadhaar OTP
       tags:
       - abha-creation
@@ -901,7 +927,7 @@ paths:
       operationId: m1_login_request_otp_v31
       x-abdm-requirement:
         level: mandatory
-        cases: [PROF_ABHA_605, VRFY_ABHA_101, VRFY_ABHA_201, VRFY_ABHA_301, VRFY_ABHA_401]
+        cases: [PROF_ABHA_605, VRFY_ABHA_101, VRFY_ABHA_201, VRFY_ABHA_301, VRFY_ABHA_302, VRFY_ABHA_303, VRFY_ABHA_304, VRFY_ABHA_305, VRFY_ABHA_401, VRFY_ABHA_402, VRFY_ABHA_403, VRFY_ABHA_404, VRFY_ABHA_405]
       x-abdm-use-case: ABHA verification, Aadhaar OTP
       tags:
       - abha-login
@@ -957,7 +983,7 @@ paths:
       operationId: m1_login_verify_v31
       x-abdm-requirement:
         level: mandatory
-        cases: [VRFY_ABHA_101, VRFY_ABHA_201, VRFY_ABHA_301, VRFY_ABHA_401, VRFY_ABHA_501]
+        cases: [VRFY_ABHA_101, VRFY_ABHA_201, VRFY_ABHA_301, VRFY_ABHA_302, VRFY_ABHA_303, VRFY_ABHA_304, VRFY_ABHA_305, VRFY_ABHA_401, VRFY_ABHA_402, VRFY_ABHA_403, VRFY_ABHA_404, VRFY_ABHA_405, VRFY_ABHA_501]
       x-abdm-use-case: ABHA verification, Aadhaar OTP
       tags:
       - abha-login
@@ -1145,7 +1171,7 @@ paths:
       operationId: m1_login_request_otp
       x-abdm-requirement:
         level: mandatory
-        cases: [PROF_ABHA_605, VRFY_ABHA_101, VRFY_ABHA_201, VRFY_ABHA_301, VRFY_ABHA_401]
+        cases: [PROF_ABHA_605, VRFY_ABHA_101, VRFY_ABHA_201, VRFY_ABHA_301, VRFY_ABHA_302, VRFY_ABHA_303, VRFY_ABHA_304, VRFY_ABHA_305, VRFY_ABHA_401, VRFY_ABHA_402, VRFY_ABHA_403, VRFY_ABHA_404, VRFY_ABHA_405]
       x-abdm-use-case: ABHA verification, mobile OTP
       tags:
       - abha-login
@@ -1271,7 +1297,7 @@ paths:
       operationId: m1_login_verify
       x-abdm-requirement:
         level: mandatory
-        cases: [VRFY_ABHA_101, VRFY_ABHA_201, VRFY_ABHA_301, VRFY_ABHA_401, VRFY_ABHA_501]
+        cases: [VRFY_ABHA_101, VRFY_ABHA_201, VRFY_ABHA_301, VRFY_ABHA_302, VRFY_ABHA_303, VRFY_ABHA_304, VRFY_ABHA_305, VRFY_ABHA_401, VRFY_ABHA_402, VRFY_ABHA_403, VRFY_ABHA_404, VRFY_ABHA_405, VRFY_ABHA_501]
       x-abdm-use-case: ABHA verification, mobile OTP
       tags:
       - abha-login
@@ -1599,7 +1625,7 @@ paths:
       operationId: m1_login_select_account
       x-abdm-requirement:
         level: mandatory
-        cases: [PROF_ABHA_605, VRFY_ABHA_301]
+        cases: [PROF_ABHA_605, VRFY_ABHA_301, VRFY_ABHA_302, VRFY_ABHA_303, VRFY_ABHA_304, VRFY_ABHA_305]
       x-abdm-use-case: ABHA verification, mobile OTP
       tags:
       - abha-login
@@ -1661,7 +1687,13 @@ paths:
       operationId: m1_profile_update_account
       x-abdm-requirement:
         level: mandatory
-        cases: [CRT_ABHA_101, CRT_ABHA_201, CRT_ABHA_301, PROF_ABHA_602, VRFY_ABHA_101, VRFY_ABHA_201, VRFY_ABHA_301, VRFY_ABHA_401, VRFY_ABHA_501]
+        cases: [CRT_ABHA_101, CRT_ABHA_102, CRT_ABHA_103, CRT_ABHA_104, CRT_ABHA_105, CRT_ABHA_106, CRT_ABHA_107, CRT_ABHA_108, CRT_ABHA_109, CRT_ABHA_112, CRT_ABHA_113, CRT_ABHA_114, CRT_ABHA_115, CRT_ABHA_201, CRT_ABHA_202, CRT_ABHA_203, CRT_ABHA_204, CRT_ABHA_205, CRT_ABHA_206, CRT_ABHA_207, CRT_ABHA_208, CRT_ABHA_209, CRT_ABHA_210, CRT_ABHA_301, CRT_ABHA_302, CRT_ABHA_303, CRT_ABHA_304, CRT_ABHA_305, CRT_ABHA_306, CRT_ABHA_307, CRT_ABHA_308, CRT_ABHA_309, PROF_ABHA_602, VRFY_ABHA_101, VRFY_ABHA_201, VRFY_ABHA_301, VRFY_ABHA_302, VRFY_ABHA_303, VRFY_ABHA_304, VRFY_ABHA_305, VRFY_ABHA_401, VRFY_ABHA_402, VRFY_ABHA_403, VRFY_ABHA_404, VRFY_ABHA_405, VRFY_ABHA_501]
+        conditions:
+          - "Either of the test cases CRT_ABHA_114 or CRT_ABHA_115 is mandatory for Governement Optional for Private"
+          - "Either of the test cases CRT_ABHA_209 or CRT_ABHA_210 is mandatory for Governement Optional for Private"
+          - "Either of the test cases CRT_ABHA_308 or CRT_ABHA_309 is mandatory for Governement Optional for Private"
+          - "Mandatory for Private"
+          - "Mandatory for Private /Government (Optional for integrated program using demo auth as they have default ABHA address generated)"
       x-abdm-use-case: Profile update
       tags:
       - abha-profile
@@ -1939,7 +1971,13 @@ paths:
       operationId: m1_profile_get_account
       x-abdm-requirement:
         level: mandatory
-        cases: [CRT_ABHA_101, CRT_ABHA_201, CRT_ABHA_301, PROF_ABHA_602, VRFY_ABHA_101, VRFY_ABHA_201, VRFY_ABHA_301, VRFY_ABHA_401, VRFY_ABHA_501]
+        cases: [CRT_ABHA_101, CRT_ABHA_102, CRT_ABHA_103, CRT_ABHA_104, CRT_ABHA_105, CRT_ABHA_106, CRT_ABHA_107, CRT_ABHA_108, CRT_ABHA_109, CRT_ABHA_112, CRT_ABHA_113, CRT_ABHA_114, CRT_ABHA_115, CRT_ABHA_201, CRT_ABHA_202, CRT_ABHA_203, CRT_ABHA_204, CRT_ABHA_205, CRT_ABHA_206, CRT_ABHA_207, CRT_ABHA_208, CRT_ABHA_209, CRT_ABHA_210, CRT_ABHA_301, CRT_ABHA_302, CRT_ABHA_303, CRT_ABHA_304, CRT_ABHA_305, CRT_ABHA_306, CRT_ABHA_307, CRT_ABHA_308, CRT_ABHA_309, PROF_ABHA_602, VRFY_ABHA_101, VRFY_ABHA_201, VRFY_ABHA_301, VRFY_ABHA_302, VRFY_ABHA_303, VRFY_ABHA_304, VRFY_ABHA_305, VRFY_ABHA_401, VRFY_ABHA_402, VRFY_ABHA_403, VRFY_ABHA_404, VRFY_ABHA_405, VRFY_ABHA_501]
+        conditions:
+          - "Either of the test cases CRT_ABHA_114 or CRT_ABHA_115 is mandatory for Governement Optional for Private"
+          - "Either of the test cases CRT_ABHA_209 or CRT_ABHA_210 is mandatory for Governement Optional for Private"
+          - "Either of the test cases CRT_ABHA_308 or CRT_ABHA_309 is mandatory for Governement Optional for Private"
+          - "Mandatory for Private"
+          - "Mandatory for Private /Government (Optional for integrated program using demo auth as they have default ABHA address generated)"
       x-abdm-use-case: Share patient profile
       tags:
       - abha-profile
@@ -1981,7 +2019,13 @@ paths:
       operationId: m1_profile_get_abha_card
       x-abdm-requirement:
         level: mandatory
-        cases: [CRT_ABHA_101, CRT_ABHA_201, CRT_ABHA_301, VRFY_ABHA_101, VRFY_ABHA_201, VRFY_ABHA_301, VRFY_ABHA_401, VRFY_ABHA_501]
+        cases: [CRT_ABHA_101, CRT_ABHA_102, CRT_ABHA_103, CRT_ABHA_104, CRT_ABHA_105, CRT_ABHA_106, CRT_ABHA_107, CRT_ABHA_108, CRT_ABHA_109, CRT_ABHA_112, CRT_ABHA_113, CRT_ABHA_114, CRT_ABHA_115, CRT_ABHA_201, CRT_ABHA_202, CRT_ABHA_203, CRT_ABHA_204, CRT_ABHA_205, CRT_ABHA_206, CRT_ABHA_207, CRT_ABHA_208, CRT_ABHA_209, CRT_ABHA_210, CRT_ABHA_301, CRT_ABHA_302, CRT_ABHA_303, CRT_ABHA_304, CRT_ABHA_305, CRT_ABHA_306, CRT_ABHA_307, CRT_ABHA_308, CRT_ABHA_309, VRFY_ABHA_101, VRFY_ABHA_201, VRFY_ABHA_301, VRFY_ABHA_302, VRFY_ABHA_303, VRFY_ABHA_304, VRFY_ABHA_305, VRFY_ABHA_401, VRFY_ABHA_402, VRFY_ABHA_403, VRFY_ABHA_404, VRFY_ABHA_405, VRFY_ABHA_501]
+        conditions:
+          - "Either of the test cases CRT_ABHA_114 or CRT_ABHA_115 is mandatory for Governement Optional for Private"
+          - "Either of the test cases CRT_ABHA_209 or CRT_ABHA_210 is mandatory for Governement Optional for Private"
+          - "Either of the test cases CRT_ABHA_308 or CRT_ABHA_309 is mandatory for Governement Optional for Private"
+          - "Mandatory for Private"
+          - "Mandatory for Private /Government (Optional for integrated program using demo auth as they have default ABHA address generated)"
       x-abdm-use-case: ABHA QR code
       tags:
       - abha-profile

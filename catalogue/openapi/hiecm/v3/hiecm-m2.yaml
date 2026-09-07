@@ -130,7 +130,7 @@ paths:
       operationId: m2_generate_link_token
       x-abdm-requirement:
         level: conditional
-        cases: [HIP_INTI_LINK_501]
+        cases: [HIP_INTI_LINK_501, HIP_INTI_LINK_502, HIP_INTI_LINK_503, HIP_INTI_LINK_504, HIP_INTI_LINK_505, HIP_INTI_LINK_506]
         conditions:
           - "Mandatory for the Government Integartors / Private Integrators"
       description: |
@@ -188,7 +188,7 @@ paths:
       operationId: m2_hip_link_care_context
       x-abdm-requirement:
         level: conditional
-        cases: [HIP_INTI_LINK_501]
+        cases: [HIP_INTI_LINK_501, HIP_INTI_LINK_502, HIP_INTI_LINK_503, HIP_INTI_LINK_504, HIP_INTI_LINK_505, HIP_INTI_LINK_506]
         conditions:
           - "Mandatory for the Government Integartors / Private Integrators"
       description: |
@@ -269,7 +269,7 @@ paths:
       operationId: m2_link_care_context_notify
       x-abdm-requirement:
         level: conditional
-        cases: [HIP_INTI_LINK_501]
+        cases: [HIP_INTI_LINK_501, HIP_INTI_LINK_502, HIP_INTI_LINK_503, HIP_INTI_LINK_504, HIP_INTI_LINK_505, HIP_INTI_LINK_506]
         conditions:
           - "Mandatory for the Government Integartors / Private Integrators"
       description: |
@@ -328,7 +328,7 @@ paths:
       operationId: m2_sms_deep_link_notify
       x-abdm-requirement:
         level: mandatory
-        cases: [HIP_INIT_NOTIFY_HIECM, HIP_INTI_LINK_501]
+        cases: [HIP_INIT_NOTIFY_HIECM, HIP_INTI_LINK_501, HIP_INTI_LINK_502, HIP_INTI_LINK_503, HIP_INTI_LINK_504, HIP_INTI_LINK_505, HIP_INTI_LINK_506]
         conditions:
           - "Mandatory for the Government Integartors / Private Integrators"
       description: |
@@ -379,6 +379,9 @@ paths:
       - user-linking
       summary: On Discovery, HIP responds with found care contexts
       operationId: m2_on_discover_care_contexts
+      x-abdm-requirement:
+        level: mandatory
+        cases: [USER_INIT_LINK_602, USER_INIT_LINK_603, USER_INIT_LINK_604, USER_INIT_LINK_605, USER_INIT_LINK_606, USER_INIT_LINK_607]
       description: |
         **Async Callback:** After receiving a discovery request at the HIP bridge URL
         (`{bridgeUrl}/v0.5/care-contexts/discover`), the HIP calls this Gateway endpoint
@@ -436,6 +439,9 @@ paths:
       # The v3 user-initiated linking operation owns m2_on_link_init; this
       # v0.5 webhook keeps the receive name so the two stay distinct.
       operationId: m2_receive_link_init
+      x-abdm-requirement:
+        level: mandatory
+        cases: [USER_INIT_LINK_602, USER_INIT_LINK_603, USER_INIT_LINK_604, USER_INIT_LINK_605, USER_INIT_LINK_606, USER_INIT_LINK_607]
       description: |
         **Async Callback:** After receiving a link init request at the HIP bridge URL
         (`{bridgeUrl}/v0.5/links/link/init`), the HIP calls this Gateway endpoint to
@@ -488,6 +494,9 @@ paths:
       # The v3 user-initiated linking operation owns m2_on_link_confirm; this
       # v0.5 webhook keeps the receive name so the two stay distinct.
       operationId: m2_receive_link_confirm
+      x-abdm-requirement:
+        level: mandatory
+        cases: [USER_INIT_LINK_602, USER_INIT_LINK_603, USER_INIT_LINK_604, USER_INIT_LINK_605, USER_INIT_LINK_606, USER_INIT_LINK_607]
       description: |
         **Async Callback:** After receiving a link confirm request at the HIP bridge URL
         (`{bridgeUrl}/v0.5/links/link/confirm`) with the patient's OTP, the HIP validates
@@ -622,7 +631,9 @@ paths:
       operationId: m2_hip_data_flow_notify
       x-abdm-requirement:
         level: mandatory
-        cases: [HIP_INIT_SHARE_CARECONTEXT, HIU_FLOW_101]
+        cases: [HIP_INIT_SHARE_CARECONTEXT, HIU_FLOW_101, HIU_FLOW_102, HIU_FLOW_103, HIU_FLOW_104, HIU_FLOW_105, HIU_FLOW_106, HIU_FLOW_107, HIU_FLOW_108, HIU_FLOW_109, HIU_FLOW_110, HIU_FLOW_111, HIU_FLOW_112, HIU_FLOW_113]
+        conditions:
+          - "Any one of them is mandatory"
       description: |
         Also known as: HIP Data Flow Notification.
         After successfully pushing all encrypted FHIR health data to the HIU's `dataPushUrl`,
