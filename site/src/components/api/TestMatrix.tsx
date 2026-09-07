@@ -319,7 +319,8 @@ function CallList({calls, label}: {calls: Call[]; label: string}) {
 }
 
 /**
- * One module's certification cases, four columns wide.
+ * One module's certification cases, four columns wide, or three where the
+ * module has no callbacks at all. See hasCallbacks.
  *
  * It was six, and two of them were failing to earn their width. The id sat in
  * a column of its own and the marking in another, both of them narrow and
@@ -366,6 +367,28 @@ export default function TestMatrix({matrix}: {matrix: Matrix}) {
     [matrix.groups, query, filter],
   );
 
+  /**
+   * Whether the callbacks column has anything to say in this matrix.
+   *
+   * M1 declares no webhooks at all, because ABHA identity is synchronous, and
+   * M4's cases name calls on the HPR and HFR hosts, which have no
+   * specification here because M4 is phase 2. So in those two matrices every
+   * row's callback list is empty, and the column spent a quarter of the width
+   * on 306 em dashes, each one labelled CALLBACKS again on a phone. Where even
+   * one row has a callback the column stays exactly as it is, em dashes and
+   * all, because there an empty cell is information about that case.
+   *
+   * Judged over the whole matrix rather than the filtered rows, so the columns
+   * do not appear and disappear underneath a reader who is typing.
+   */
+  const hasCallbacks = useMemo(
+    () =>
+      matrix.groups.some((group) =>
+        group.rows.some((row) => callsOf(row).callbacks.length > 0),
+      ),
+    [matrix.groups],
+  );
+
   const total = matrix.groups.reduce((sum, group) => sum + group.rows.length, 0);
   const shown = groups.reduce((sum, group) => sum + group.rows.length, 0);
 
@@ -373,7 +396,7 @@ export default function TestMatrix({matrix}: {matrix: Matrix}) {
   const isOpen = (id: string) => open[id] ?? searching;
 
   return (
-    <div className="matrix">
+    <div className={cn('matrix', !hasCallbacks && 'matrix--no-callbacks')}>
       <div className="matrix__controls">
         <div className="matrix__search">
           <Search className="size-4 shrink-0" aria-hidden="true" />
@@ -416,7 +439,7 @@ export default function TestMatrix({matrix}: {matrix: Matrix}) {
         <div className="matrix__head" role="row">
           <span>Use case</span>
           <span>Endpoints</span>
-          <span>Callbacks</span>
+          {hasCallbacks ? <span>Callbacks</span> : null}
           <span>Expected result</span>
         </div>
 
@@ -462,7 +485,9 @@ export default function TestMatrix({matrix}: {matrix: Matrix}) {
                         ) : null}
                       </span>
                       <CallList calls={endpoints} label="Endpoints" />
-                      <CallList calls={callbacks} label="Callbacks" />
+                      {hasCallbacks ? (
+                        <CallList calls={callbacks} label="Callbacks" />
+                      ) : null}
                       <span className="matrix__expected">
                         {row.expected}
                         {row.detail ? (
