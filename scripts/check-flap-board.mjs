@@ -102,10 +102,10 @@ try {
     await board(page), isResting);
 
   // And the walk still owns the board once the pointer stops. This is the
-  // slow half of the check, and it is the one worth having: the board must be
-  // turning through characters for as long as the courier is crossing, and
-  // must land on a real line only when it arrives. Sampling is the only way to
-  // see that from outside, because both states are just text in the cells.
+  // slow half of the check and the one worth having: the board holds the line
+  // it is showing for the whole crossing and turns over when the courier
+  // arrives, so at no moment does it show anything that is not one of its own
+  // lines. Sampling is the only way to see that from outside.
   const LINES = [
     RESTING,
     'Unique health identity',
@@ -119,22 +119,35 @@ try {
   ].map(letters);
   const isALine = (text) => LINES.includes(letters(text));
 
-  let sawRolling = false;
-  let sawLanded = false;
-  // Long enough for the walk to start (IDLE_AFTER), cross (TRAVEL_MS) and rest
-  // (DWELL_MS), with room for a second leg.
-  for (let waited = 0; waited < 14_000; waited += 200) {
+  // A sample only counts once the board has held it still for three reads in
+  // a row. The cells turn one after another, so a sample taken mid turn reads
+  // as half of the old line and half of the new one, which is neither and is
+  // not a defect. A whole turn finishes well inside 600ms, so nothing that is
+  // still turning survives the hold, and what does survive is what a reader
+  // actually gets to read.
+  const seen = new Set();
+  const strays = new Set();
+  let held = null;
+  let holds = 0;
+  // Long enough for the walk to start (IDLE_AFTER), make a delivery and rest,
+  // with room for a second one.
+  for (let waited = 0; waited < 16_000; waited += 200) {
     await page.waitForTimeout(200);
     const showing = await board(page);
     if (!letters(showing)) continue;
-    if (isALine(showing)) sawLanded = true;
-    else sawRolling = true;
-    if (sawRolling && sawLanded) break;
+    if (letters(showing) === held) holds += 1;
+    else {
+      held = letters(showing);
+      holds = 1;
+    }
+    if (holds !== 3) continue;
+    if (isALine(showing)) seen.add(letters(showing));
+    else strays.add(showing);
   }
-  check('the flaps keep turning while the courier is crossing',
-    sawRolling, Boolean);
-  check('and land on a real line when it arrives',
-    sawLanded, Boolean);
+  check('the walk turns the board over to another of its lines',
+    seen.size, (n) => n >= 2);
+  check('and every line it settles on is one of its own',
+    [...strays], (list) => list.length === 0);
 } finally {
   await browser.close();
 }
