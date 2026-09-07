@@ -93,6 +93,20 @@ export default function LandingHero(): React.ReactNode {
   // Set once on mount rather than read per render, so the server and the
   // first client render agree: both of them draw the resting name.
   const [still, setStill] = useState(true);
+  /**
+   * True on a screen too small for the drawing to be worth running.
+   *
+   * The network is a pointer instrument: it lights the participant under the
+   * cursor and the board answers for it. A phone has no cursor, so all a
+   * reader gets is eight nodes and their links drawn across the statement they
+   * are trying to read, at a size where the nodes are unlabelled dots. It is
+   * also a requestAnimationFrame loop running behind a page nobody can play
+   * with, on the device most likely to be on a battery.
+   *
+   * Matched to the width the stylesheet sets the compact hero at, and false
+   * for the server and the first client render so the two agree.
+   */
+  const [compact, setCompact] = useState(false);
   /** The participant the board is already speaking for. */
   const announced = useRef<string | null>(null);
   /** How many times each participant has been called at, for the two liners. */
@@ -104,6 +118,14 @@ export default function LandingHero(): React.ReactNode {
     follow();
     reduced.addEventListener('change', follow);
     return () => reduced.removeEventListener('change', follow);
+  }, []);
+
+  useEffect(() => {
+    const narrow = window.matchMedia('(max-width: 768px)');
+    const follow = () => setCompact(narrow.matches);
+    follow();
+    narrow.addEventListener('change', follow);
+    return () => narrow.removeEventListener('change', follow);
   }, []);
 
   // The courier has set out, or has landed. Both name a participant and both
@@ -141,16 +163,19 @@ export default function LandingHero(): React.ReactNode {
 
   return (
     <section className="landing-hero">
-      {/* The network the page is about, drawn behind the words. */}
-      <BrowserOnly>
-        {() => (
-          <NetworkWeb
-            onDepart={still ? undefined : carrying}
-            onArrive={still ? undefined : carrying}
-            onPoint={still ? undefined : carrying}
-          />
-        )}
-      </BrowserOnly>
+      {/* The network the page is about, drawn behind the words, on a screen
+          with room for it and a pointer to drive it. */}
+      {compact ? null : (
+        <BrowserOnly>
+          {() => (
+            <NetworkWeb
+              onDepart={still ? undefined : carrying}
+              onArrive={still ? undefined : carrying}
+              onPoint={still ? undefined : carrying}
+            />
+          )}
+        </BrowserOnly>
+      )}
 
       <div className="landing-hero__copy">
         {/* The board, and the emblem beside it as the node the record leaves
