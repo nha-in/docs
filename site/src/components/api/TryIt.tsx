@@ -1,4 +1,4 @@
-import React, {useEffect, useMemo, useState} from 'react';
+import React, {useEffect, useMemo, useRef, useState} from 'react';
 import CodeBlock from '@theme/CodeBlock';
 import {ChevronRight, Info, Loader2, Send, X} from 'lucide-react';
 import {
@@ -51,6 +51,20 @@ function environmentOf(description: string): 'Production' | 'Sandbox' | null {
   if (/\bprod/i.test(description)) return 'Production';
   if (/sandbox|sbx|\bdev\b/i.test(description)) return 'Sandbox';
   return null;
+}
+
+/**
+ * The lede is one paragraph of the operation's markdown description, rendered
+ * as text rather than through the MDX pipeline, so an inline code span arrived
+ * as literal backticks: "Send the `txnId` from the OTP request". The same
+ * string is code on the page body. Backticks are the only markup NHA's
+ * summaries use, so that is all this turns back into elements.
+ */
+function withInlineCode(text: string): React.ReactNode[] {
+  // A capturing split alternates plain text and the contents of each span.
+  return text
+    .split(/`([^`]+)`/g)
+    .map((part, index) => (index % 2 ? <code key={index}>{part}</code> : part));
 }
 
 /** Refresh REQUEST-ID/TIMESTAMP in a header map, leaving everything else as typed. */
@@ -310,6 +324,20 @@ export default function TryIt({operation}: {operation: Operation}) {
 
   // Another panel, or another page in this tab, may set the token first.
   useEffect(() => subscribeToken(setToken), []);
+
+  // Where focus lands when the console opens.
+  //
+  // The dialog's focus scope otherwise sends it to the first tabbable thing
+  // inside, which is the environment chip, and that chip's tooltip opens on
+  // focus. At phone widths the header wraps, so the tooltip is drawn straight
+  // over the Send button and the close X and the reader can neither submit nor
+  // close. Claiming focus for the frame here settles it: a child's effect runs
+  // before its parent's, so the focus scope finds focus already inside the
+  // dialog and leaves it where it is.
+  const frame = useRef<HTMLFormElement>(null);
+  useEffect(() => {
+    frame.current?.focus();
+  }, []);
 
   // X-CM-ID is a property of the host, not something to type: keep it in step
   // with the server the reader picked.
@@ -588,6 +616,8 @@ export default function TryIt({operation}: {operation: Operation}) {
 
   return (
     <form
+      ref={frame}
+      tabIndex={-1}
       className="api-console__frame"
       onSubmit={send}
       aria-busy={result.state === 'sending'}>
@@ -608,7 +638,10 @@ export default function TryIt({operation}: {operation: Operation}) {
                     {environment}
                   </span>
                 </TooltipTrigger>
-                <TooltipContent className="api-console__tip">
+                {/* Below the chip, not above it. This one sits in the URL bar,
+                    which wraps under the button row on a phone, so a tooltip
+                    on the default side lands on top of Send and the close X. */}
+                <TooltipContent side="bottom" className="api-console__tip">
                   {environment === 'Production'
                     ? 'The live ABDM environment. A call sent from here acts on real accounts and real records.'
                     : 'The ABDM sandbox. Test credentials, test identities, nothing that touches a real person.'}
@@ -686,7 +719,7 @@ export default function TryIt({operation}: {operation: Operation}) {
       </header>
 
       <DialogDescription className="api-console__lede">
-        {operation.description.split('\n\n')[0] || operation.summary}
+        {withInlineCode(operation.description.split('\n\n')[0] || operation.summary)}
       </DialogDescription>
 
       <div className="api-console__body">

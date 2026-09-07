@@ -10,15 +10,10 @@
 // never do. So the marking is joined from the sheets, and an operation no
 // sheet names carries no marking at all.
 //
-// The join. A sheet writes a call as a full URL and a specification writes it
-// as a server plus a path, and the two disagree on routing segments: the
-// sheets say `/hiecm/api/v3/consent/request/hip/on-notify` where the
-// specification says server `https://dev.abdm.gov.in/api` plus path
-// `/hiecm/consent/v3/request/hip/on-notify`. Comparing the strings finds 30 of
-// 59. Dropping the segments that are routing furniture (`api`, `abha`,
-// `gateway`, `hiecm`, and every version segment) and comparing what is left
-// finds 41, and every remaining miss is an M4 call on the HPR or HFR hosts,
-// which have no specification here because M4 is phase 2.
+// The join is in scripts/lib/api-join.mjs, shared with build-api-reference
+// .mjs so the certification level and the matrix's own endpoint links are
+// matched the same way. Every call that fails to join is an M4 one on the HPR
+// or HFR hosts, which have no specification here because M4 is phase 2.
 //
 // One operation, several cases. An endpoint is usually named by more than one
 // case, and the cases can disagree: `enrolment/enrol/byAadhaar` is mandatory
@@ -35,43 +30,11 @@ import {join, dirname, basename} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {parse} from 'yaml';
 import {listSpecs} from './specs.mjs';
+import {joinKey, hostOf} from './lib/api-join.mjs';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const matrixDir = join(root, 'site', 'src', 'data', 'test-matrix');
 const MODULES = ['m1', 'm2', 'm3', 'm4'];
-
-// Segments that route rather than identify. They sit on one side of the join
-// and not the other, which is why a string comparison misses a third of them.
-const NOISE = new Set([
-  '', 'api', 'apis', 'abha', 'gateway', 'hiecm',
-  'v1', 'v1.5', 'v2', 'v3', 'v3.1', 'v0.5',
-]);
-
-// One typo in NHA's own sheet, recorded rather than worked around silently.
-// The M1 sheet writes `/abha/api/v3enrollment/auth/byAbdm` with the slash
-// missing, which is the only call in five sheets that fails to join for a
-// reason that is not "M4 has no specification here". Left uncorrected it drops
-// a mandatory operation off the reference.
-const TYPOS = [[/\/v3enrollment\//, '/v3/enrollment/']];
-
-/** A URL or a path reduced to the segments that identify the operation. */
-function joinKey(url) {
-  let path = String(url)
-    .replace(/^https?:\/\/[^/]+/, '')
-    .split('?')[0]
-    .split('#')[0];
-  for (const [wrong, right] of TYPOS) path = path.replace(wrong, right);
-  return path
-    .split('/')
-    .map((part) => part.toLowerCase())
-    .filter((part) => !NOISE.has(part))
-    .join('/');
-}
-
-function hostOf(url) {
-  const match = /^https?:\/\/([^/]+)/.exec(String(url));
-  return match ? match[1].toLowerCase() : '';
-}
 
 // Strongest first: a call named by one mandatory case is mandatory, whatever
 // else names it. `Unmarked` and `Portal check` never set a level, because

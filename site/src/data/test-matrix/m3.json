@@ -30,7 +30,14 @@
           "condition": "",
           "functionality": "Consent Request Initiation",
           "expected": "Consent Request is initiated and sent to the patient PHR app of the patient.",
-          "apis": [],
+          "apis": [
+            "https://dev.abdm.gov.in/api/hiecm/consent/v3/request/init",
+            "https://dev.abdm.gov.in/api/hiecm/consent/v3/request/status",
+            "https://dev.abdm.gov.in/api/hiecm/consent/v3/request/hiu/on-notify",
+            "https://dev.abdm.gov.in/api/hiecm/consent/v3/fetch",
+            "https://dev.abdm.gov.in/api/hiecm/data-flow/v3/health-information/request",
+            "https://dev.abdm.gov.in/api/hiecm/data-flow/v3/health-information/notify"
+          ],
           "api": null,
           "webhook": null,
           "detail": "Test: HIU creates consent request for health records Steps: 1. Enter purpose for consent request 2. Enter duration and expiry of consent request 3. Enter Health Info type (all or any of the 7 Health Info types) 4. Initiate Request"
@@ -41,7 +48,14 @@
           "condition": "",
           "functionality": "Notification to PHR",
           "expected": "Consent Request notification should be available on the patient patient PHR app of the patient. Patient will open the notification to approve pr deny the consent.",
-          "apis": [],
+          "apis": [
+            "https://dev.abdm.gov.in/api/hiecm/consent/v3/request/init",
+            "https://dev.abdm.gov.in/api/hiecm/consent/v3/request/status",
+            "https://dev.abdm.gov.in/api/hiecm/consent/v3/request/hiu/on-notify",
+            "https://dev.abdm.gov.in/api/hiecm/consent/v3/fetch",
+            "https://dev.abdm.gov.in/api/hiecm/data-flow/v3/health-information/request",
+            "https://dev.abdm.gov.in/api/hiecm/data-flow/v3/health-information/notify"
+          ],
           "api": null,
           "webhook": null,
           "detail": "Test: Once the consent request created then notification goes to the patient patient patient PHR app Steps: 1. Patient logs in to patient patient PHR app. 2. Check if consent request has been recieved on the patient patient PHR app 3. Approve Consent or Deny Consent"
@@ -52,7 +66,14 @@
           "condition": "",
           "functionality": "Listing of Consent Requests",
           "expected": "HIU user should be able to view the list of consent requests created",
-          "apis": [],
+          "apis": [
+            "https://dev.abdm.gov.in/api/hiecm/consent/v3/request/init",
+            "https://dev.abdm.gov.in/api/hiecm/consent/v3/request/status",
+            "https://dev.abdm.gov.in/api/hiecm/consent/v3/request/hiu/on-notify",
+            "https://dev.abdm.gov.in/api/hiecm/consent/v3/fetch",
+            "https://dev.abdm.gov.in/api/hiecm/data-flow/v3/health-information/request",
+            "https://dev.abdm.gov.in/api/hiecm/data-flow/v3/health-information/notify"
+          ],
           "api": null,
           "webhook": null,
           "detail": "Test: The system should be able to view the list of consent requests inititated for patient. Steps: 1. List of consent requests should include - ABHA number/address, patient name, date of creation, date of expiry and status of request"
@@ -63,7 +84,14 @@
           "condition": "",
           "functionality": "Consent Request is Denied",
           "expected": "HIU user should not be able to view the health data for the denied consent request",
-          "apis": [],
+          "apis": [
+            "https://dev.abdm.gov.in/api/hiecm/consent/v3/request/init",
+            "https://dev.abdm.gov.in/api/hiecm/consent/v3/request/status",
+            "https://dev.abdm.gov.in/api/hiecm/consent/v3/request/hiu/on-notify",
+            "https://dev.abdm.gov.in/api/hiecm/consent/v3/fetch",
+            "https://dev.abdm.gov.in/api/hiecm/data-flow/v3/health-information/request",
+            "https://dev.abdm.gov.in/api/hiecm/data-flow/v3/health-information/notify"
+          ],
           "api": null,
           "webhook": null,
           "detail": "Test: The HIU system should not fetch health data for a denied consent request Steps: 1. Deny Consent Request on patient patient patient PHR app 2. Check if data is accessible on the HIU application Kindly Note: Display the timestamp for the Denied consent request"
@@ -74,7 +102,14 @@
           "condition": "Any one of them is mandatory",
           "functionality": "Consent Request is Approved",
           "expected": "The HIU system would fetch health data for the approved consent request. When the request has been edited with HI Types, Health Infor from date, Health Info To date and Expiry date with time then the update request information should be visible in HIU Portal. Kindly Note: Display the timestamp for the Grant consent request",
-          "apis": [],
+          "apis": [
+            "https://dev.abdm.gov.in/api/hiecm/consent/v3/request/init",
+            "https://dev.abdm.gov.in/api/hiecm/consent/v3/request/status",
+            "https://dev.abdm.gov.in/api/hiecm/consent/v3/request/hiu/on-notify",
+            "https://dev.abdm.gov.in/api/hiecm/consent/v3/fetch",
+            "https://dev.abdm.gov.in/api/hiecm/data-flow/v3/health-information/request",
+            "https://dev.abdm.gov.in/api/hiecm/data-flow/v3/health-information/notify"
+          ],
           "api": null,
           "webhook": null,
           "detail": "Test: The HIU system would fetch health data for the approved consent request. When the request has been edited with HI Types, Health Infor from date, Health Info To date and Expiry date with time then the update request information should be visible in HIU Portal. Kindly Note: Display the timestamp for the Grant consent request"
@@ -85,7 +120,14 @@
           "condition": "Any one of them is mandatory",
           "functionality": "Fetch health data for (HI Type = DiagnostocReport Structured/Un-Structured)",
           "expected": "HIU user should be able to view the health data of selected HI type from HIU application.",
-          "apis": [],
+          "apis": [
+            "https://dev.abdm.gov.in/api/hiecm/consent/v3/request/init",
+            "https://dev.abdm.gov.in/api/hiecm/consent/v3/request/status",
+            "https://dev.abdm.gov.in/api/hiecm/consent/v3/request/hiu/on-notify",
+            "https://dev.abdm.gov.in/api/hiecm/consent/v3/fetch",
+            "https://dev.abdm.gov.in/api/hiecm/data-flow/v3/health-information/request",
+            "https://dev.abdm.gov.in/api/hiecm/data-flow/v3/health-information/notify"
+          ],
           "api": null,
           "webhook": null,
           "detail": "Test: Fetch health data for (HI Type = DiagnostocReport Structured/Un-Structured) Steps: 1. Approve Consent Request on patient patient patient PHR app 2. Check if data is accessible on the HIU application 3. Integrator to dispclay the FHIR bundle for that health record."
@@ -96,7 +138,14 @@
           "condition": "Any one of them is mandatory",
           "functionality": "Fetch health data for (HI Type = Prescription-Structured/Un-Structured)",
           "expected": "HIU user should be able to view the health data of selected HI type from HIU application.",
-          "apis": [],
+          "apis": [
+            "https://dev.abdm.gov.in/api/hiecm/consent/v3/request/init",
+            "https://dev.abdm.gov.in/api/hiecm/consent/v3/request/status",
+            "https://dev.abdm.gov.in/api/hiecm/consent/v3/request/hiu/on-notify",
+            "https://dev.abdm.gov.in/api/hiecm/consent/v3/fetch",
+            "https://dev.abdm.gov.in/api/hiecm/data-flow/v3/health-information/request",
+            "https://dev.abdm.gov.in/api/hiecm/data-flow/v3/health-information/notify"
+          ],
           "api": null,
           "webhook": null,
           "detail": "Test: Fetch health data for (HI Type = Prescription-Structured/Un-Structured) Steps: 1. Approve Consent Request on patient patient patient PHR app 2. Check if data is accessible on the HIU application 3. Integrator to dispclay the FHIR bundle for that health record."
@@ -107,7 +156,14 @@
           "condition": "Any one of them is mandatory",
           "functionality": "Fetch health data for (HI Type = DischargeSummary-Structured/Un-Structured)",
           "expected": "HIU user should be able to view the health data of selected HI type from HIU application.",
-          "apis": [],
+          "apis": [
+            "https://dev.abdm.gov.in/api/hiecm/consent/v3/request/init",
+            "https://dev.abdm.gov.in/api/hiecm/consent/v3/request/status",
+            "https://dev.abdm.gov.in/api/hiecm/consent/v3/request/hiu/on-notify",
+            "https://dev.abdm.gov.in/api/hiecm/consent/v3/fetch",
+            "https://dev.abdm.gov.in/api/hiecm/data-flow/v3/health-information/request",
+            "https://dev.abdm.gov.in/api/hiecm/data-flow/v3/health-information/notify"
+          ],
           "api": null,
           "webhook": null,
           "detail": "Test: Fetch health data for (HI Type = DischargeSummary-Structured/Un-Structured) Steps: 1. Approve Consent Request on patient patient patient PHR app 2. Check if data is accessible on the HIU application 3. Integrator to dispclay the FHIR bundle for that health record."
@@ -118,7 +174,14 @@
           "condition": "Any one of them is mandatory",
           "functionality": "Fetch health data for (HI Type = CosultingNote-Structured/Un-Structured)",
           "expected": "HIU user should be able to view the health data of selected HI type from HIU application.",
-          "apis": [],
+          "apis": [
+            "https://dev.abdm.gov.in/api/hiecm/consent/v3/request/init",
+            "https://dev.abdm.gov.in/api/hiecm/consent/v3/request/status",
+            "https://dev.abdm.gov.in/api/hiecm/consent/v3/request/hiu/on-notify",
+            "https://dev.abdm.gov.in/api/hiecm/consent/v3/fetch",
+            "https://dev.abdm.gov.in/api/hiecm/data-flow/v3/health-information/request",
+            "https://dev.abdm.gov.in/api/hiecm/data-flow/v3/health-information/notify"
+          ],
           "api": null,
           "webhook": null,
           "detail": "Test: Fetch health data for (HI Type = CosultingNote-Structured/Un-Structured) Steps: 1. Approve Consent Request on patient patient patient PHR app 2. Check if data is accessible on the HIU application 3. Integrator to dispclay the FHIR bundle for that health record."
@@ -129,7 +192,14 @@
           "condition": "Any one of them is mandatory",
           "functionality": "Fetch health data for (HI Type = Immunization record-Structured/Un-Structured)",
           "expected": "HIU user should be able to view the health data of selected HI type from HIU application.",
-          "apis": [],
+          "apis": [
+            "https://dev.abdm.gov.in/api/hiecm/consent/v3/request/init",
+            "https://dev.abdm.gov.in/api/hiecm/consent/v3/request/status",
+            "https://dev.abdm.gov.in/api/hiecm/consent/v3/request/hiu/on-notify",
+            "https://dev.abdm.gov.in/api/hiecm/consent/v3/fetch",
+            "https://dev.abdm.gov.in/api/hiecm/data-flow/v3/health-information/request",
+            "https://dev.abdm.gov.in/api/hiecm/data-flow/v3/health-information/notify"
+          ],
           "api": null,
           "webhook": null,
           "detail": "Test: Fetch health data for (HI Type = Immunization record-Structured/Un-Structured) Steps: 1. Approve Consent Request on patient patient patient PHR app 2. Check if data is accessible on the HIU application. 3. Integrator to dispclay the FHIR bundle for that health record."
@@ -140,7 +210,14 @@
           "condition": "Any one of them is mandatory",
           "functionality": "Fetch health data for (HI Type = Health Record-Structured/Un-Structured)",
           "expected": "HIU user should be able to view the health data of selected HI type from HIU application.",
-          "apis": [],
+          "apis": [
+            "https://dev.abdm.gov.in/api/hiecm/consent/v3/request/init",
+            "https://dev.abdm.gov.in/api/hiecm/consent/v3/request/status",
+            "https://dev.abdm.gov.in/api/hiecm/consent/v3/request/hiu/on-notify",
+            "https://dev.abdm.gov.in/api/hiecm/consent/v3/fetch",
+            "https://dev.abdm.gov.in/api/hiecm/data-flow/v3/health-information/request",
+            "https://dev.abdm.gov.in/api/hiecm/data-flow/v3/health-information/notify"
+          ],
           "api": null,
           "webhook": null,
           "detail": "Test: Fetch health data for (HI Type = Health Record-Structured/Un-Structured) Steps: 1. Approve Consent Request on patient patient patient PHR app 2. Check if data is accessible on the HIU application 3. Integrator to dispclay the FHIR bundle for that health record."
@@ -151,7 +228,14 @@
           "condition": "Any one of them is mandatory",
           "functionality": "Fetch health data for (HI Type = Wellness Record-Structured/Un-Structured)",
           "expected": "HIU user should be able to view the health data of selected HI type from HIU application.",
-          "apis": [],
+          "apis": [
+            "https://dev.abdm.gov.in/api/hiecm/consent/v3/request/init",
+            "https://dev.abdm.gov.in/api/hiecm/consent/v3/request/status",
+            "https://dev.abdm.gov.in/api/hiecm/consent/v3/request/hiu/on-notify",
+            "https://dev.abdm.gov.in/api/hiecm/consent/v3/fetch",
+            "https://dev.abdm.gov.in/api/hiecm/data-flow/v3/health-information/request",
+            "https://dev.abdm.gov.in/api/hiecm/data-flow/v3/health-information/notify"
+          ],
           "api": null,
           "webhook": null,
           "detail": "Test: Fetch health data for (HI Type = Wellness Record-Structured/Un-Structured) Steps: 1. Approve Consent Request on patient patient patient PHR app 2. Check if data is accessible on the HIU application 3. Integrator to dispclay the FHIR bundle for that health record."

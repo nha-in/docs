@@ -97,7 +97,9 @@ paths:
       operationId: m3_consent_request_init
       x-abdm-requirement:
         level: mandatory
-        cases: [HIU_FLOW_101]
+        cases: [HIU_FLOW_101, HIU_FLOW_102, HIU_FLOW_103, HIU_FLOW_104, HIU_FLOW_105, HIU_FLOW_106, HIU_FLOW_107, HIU_FLOW_108, HIU_FLOW_109, HIU_FLOW_110, HIU_FLOW_111, HIU_FLOW_112, HIU_FLOW_113]
+        conditions:
+          - "Any one of them is mandatory"
       description: |
         Also known as: Consent Init Request.
         Initiates a new consent request for a patient's health records.
@@ -216,7 +218,9 @@ paths:
       operationId: m3_consent_request_status
       x-abdm-requirement:
         level: mandatory
-        cases: [HIU_FLOW_101]
+        cases: [HIU_FLOW_101, HIU_FLOW_102, HIU_FLOW_103, HIU_FLOW_104, HIU_FLOW_105, HIU_FLOW_106, HIU_FLOW_107, HIU_FLOW_108, HIU_FLOW_109, HIU_FLOW_110, HIU_FLOW_111, HIU_FLOW_112, HIU_FLOW_113]
+        conditions:
+          - "Any one of them is mandatory"
       description: |
         Also known as: Consent Request Status.
         Checks the current status of a previously initiated consent request.
@@ -289,7 +293,9 @@ paths:
       operationId: m3_consent_hiu_on_notify
       x-abdm-requirement:
         level: mandatory
-        cases: [HIU_FLOW_101]
+        cases: [HIU_FLOW_101, HIU_FLOW_102, HIU_FLOW_103, HIU_FLOW_104, HIU_FLOW_105, HIU_FLOW_106, HIU_FLOW_107, HIU_FLOW_108, HIU_FLOW_109, HIU_FLOW_110, HIU_FLOW_111, HIU_FLOW_112, HIU_FLOW_113]
+        conditions:
+          - "Any one of them is mandatory"
       description: |
         Also known as: Consent HIU On-Notify.
         **Async Callback:** After ABDM Gateway sends a consent grant/deny notification to the HIU
@@ -346,7 +352,9 @@ paths:
       operationId: m3_consent_fetch
       x-abdm-requirement:
         level: mandatory
-        cases: [HIU_FLOW_101]
+        cases: [HIU_FLOW_101, HIU_FLOW_102, HIU_FLOW_103, HIU_FLOW_104, HIU_FLOW_105, HIU_FLOW_106, HIU_FLOW_107, HIU_FLOW_108, HIU_FLOW_109, HIU_FLOW_110, HIU_FLOW_111, HIU_FLOW_112, HIU_FLOW_113]
+        conditions:
+          - "Any one of them is mandatory"
       description: |
         Also known as: Consent Fetch.
         Fetches the full consent artefact for a given consent artefact ID.
@@ -412,7 +420,9 @@ paths:
       operationId: m3_hiu_health_information_request
       x-abdm-requirement:
         level: mandatory
-        cases: [HIU_FLOW_101]
+        cases: [HIU_FLOW_101, HIU_FLOW_102, HIU_FLOW_103, HIU_FLOW_104, HIU_FLOW_105, HIU_FLOW_106, HIU_FLOW_107, HIU_FLOW_108, HIU_FLOW_109, HIU_FLOW_110, HIU_FLOW_111, HIU_FLOW_112, HIU_FLOW_113]
+        conditions:
+          - "Any one of them is mandatory"
       description: |
         Also known as: HIU Health Information Request.
         Requests health data from the HIP for a specific consent artefact.
@@ -486,7 +496,9 @@ paths:
       operationId: m3_hiu_data_flow_notify
       x-abdm-requirement:
         level: mandatory
-        cases: [HIP_INIT_SHARE_CARECONTEXT, HIU_FLOW_101]
+        cases: [HIP_INIT_SHARE_CARECONTEXT, HIU_FLOW_101, HIU_FLOW_102, HIU_FLOW_103, HIU_FLOW_104, HIU_FLOW_105, HIU_FLOW_106, HIU_FLOW_107, HIU_FLOW_108, HIU_FLOW_109, HIU_FLOW_110, HIU_FLOW_111, HIU_FLOW_112, HIU_FLOW_113]
+        conditions:
+          - "Any one of them is mandatory"
       description: |
         Also known as: HIU Data Flow Notification.
         After receiving all FHIR health data at the `dataPushUrl`, the HIU calls this endpoint

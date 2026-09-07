@@ -451,21 +451,12 @@
 
 /* The board is 29 flaps wide, because the longest message is 29 characters,
    and at the size above that is 345px. A 480px window leaves 432px inside the
-   hero's padding, so the full size holds down to there; below it the flaps get
-   smaller rather than the board getting narrower, because a board that drops
-   cells is a board that cannot show its own longest message. A 375px phone
-   leaves 327px and a 320px one 272px, which is what the two steps are for. */
-@media (max-width: 480px) {
+   hero's padding, so the full size holds down to there, and below 768px the
+   board is not a board at all: see the narrow section. */
+@media (min-width: 769px) and (max-width: 900px) {
   .flap__cell {
-    width: 0.78em;
-    font-size: 0.6875rem;
-  }
-}
-
-@media (max-width: 360px) {
-  .flap__cell {
-    width: 0.76em;
-    font-size: 0.5625rem;
+    width: 0.82em;
+    font-size: 0.75rem;
   }
 }
 
@@ -614,7 +605,7 @@
   .landing-hero {
     align-items: flex-start;
     text-align: left;
-    padding: 4rem 1.5rem 5rem;
+    padding: 3rem 1.25rem 4rem;
   }
 
   .landing-hero__statement {
@@ -626,6 +617,95 @@
      is a real space in the markup, so the words stay apart. */
   .landing-hero__line {
     display: inline;
+  }
+
+  /* The flaps come off.
+
+     A split-flap board is 29 cells wide because its longest message is 29
+     characters, and the cells cannot be dropped without the board being unable
+     to show that message. On a 360px phone that leaves 6.8px a cell, which is
+     smaller than the type inside it: the row rendered as a strip of grey
+     blocks with a few readable letters in the middle, and the blanks that pad
+     the message out to 29 read as missing rather than as empty flaps.
+
+     Below this width it is the name, set once, in the same letterspaced caps
+     the flaps were carrying. Nothing is lost from the page: the board's job
+     here is to say what the site is, and the mechanism it says it with needs
+     room this screen does not have. The label was already in the markup for a
+     screen reader, so it becomes visible rather than being added. */
+  .flap__row {
+    display: none;
+  }
+
+  .flap__label {
+    position: static;
+    width: auto;
+    height: auto;
+    margin: 0;
+    overflow: visible;
+    clip-path: none;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+
+  .landing-hero__board {
+    align-items: flex-start;
+    gap: 0.875rem;
+  }
+
+  /* One card is one line of intent and the gateway it belongs to, side by
+     side. Stacked and centred they ran to 110px each, so the three of them
+     took 404px of a 740px screen and the last one sat below the fold on the
+     first paint. */
+  .landing-hero__goals {
+    margin-top: 2rem;
+    align-self: stretch;
+    align-items: stretch;
+  }
+
+  .landing-hero__goals-list {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.625rem;
+  }
+
+  .landing-hero__goal {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    width: auto;
+    gap: 1rem;
+    padding: 0.875rem 1rem;
+    text-align: left;
+  }
+
+  .landing-hero__goal-short {
+    flex: 0 0 auto;
+  }
+}
+
+/* A short phone, which is most of them held in one hand with a browser bar at
+   each end. At 360x640 the three cards ended 1px past the fold, at 767x600
+   3px and in landscape 22px: reachable, because the curtain scrolls and the
+   handoff only commits at its foot, but a first screen that ends a pixel into
+   the third card reads as a page that did not fit. The room comes out of the
+   hero's own padding, which is generous because it was written for a screen
+   with a drawing behind it. */
+@media (max-width: 900px) and (max-height: 700px) {
+  .landing-hero {
+    padding-top: 1.75rem;
+    padding-bottom: 1.75rem;
+  }
+
+  .landing-hero__goals {
+    margin-top: 1.5rem;
+  }
+
+  .landing-hero__board {
+    gap: 0.625rem;
   }
 }
 
@@ -774,6 +854,17 @@
   color: var(--text-heading);
 }
 
+/* The only control on the landing page, and at 32px it was a third short of
+   what a thumb needs. The bar is 64px tall and spaces its two ends apart, so
+   the box grows inwards from the right margin and the glyph inside it stays
+   centred where it was. */
+@media (pointer: coarse) {
+  .curtain__toggle {
+    width: 2.75rem;
+    height: 2.75rem;
+  }
+}
+
 .curtain__mark {
   display: block;
   width: auto;
@@ -818,8 +909,27 @@
   }
 }
 
-@media (max-height: 560px) {
+/* A 360x640 Android with its browser bars showing is a 568px viewport, which
+   is the commonest phone this page will ever be opened on, and there the three
+   cards ended 58px past the fold: the whole reason to have a card for NHCX is
+   that a reader sees there are three choices. The board's own name and the
+   statement stay, because they are what the page is; the lede is the sentence
+   that can go, and the space around everything else tightens with it. */
+@media (max-height: 620px) {
   .landing-hero__lede {
     display: none;
+  }
+
+  .landing-hero__copy {
+    gap: 0.625rem;
+  }
+
+  .landing-hero__goals {
+    margin-top: 1.125rem;
+  }
+
+  .landing-hero__board .brand-chip__mark {
+    width: 2.25rem;
+    height: 2.25rem;
   }
 }
