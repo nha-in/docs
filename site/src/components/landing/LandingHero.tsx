@@ -90,6 +90,9 @@ const CELLS = Math.max(
  */
 export default function LandingHero(): React.ReactNode {
   const [message, setMessage] = useState(RESTING);
+  // True while a delivery is in the air, which is what keeps the flaps turning
+  // until it lands rather than settling a second into a five second crossing.
+  const [rolling, setRolling] = useState(false);
   // Set once on mount rather than read per render, so the server and the
   // first client render agree: both of them draw the resting name.
   const [still, setStill] = useState(true);
@@ -128,18 +131,20 @@ export default function LandingHero(): React.ReactNode {
     return () => narrow.removeEventListener('change', follow);
   }, []);
 
-  // The courier has set out, or has landed. Both name a participant and both
-  // put that participant's line on the board: the departure is what starts
-  // the flaps turning, and the arrival is what a reader who is driving the
-  // courier with their own pointer gets instead, since a pointer has no
-  // departure to announce. Naming the same line twice costs nothing, because
-  // a board already showing a message does not turn for it again.
+  /**
+   * The courier has landed, or the pointer has settled: either way the board
+   * has something to say and says it now.
+   *
+   * A departure does not come through here any more. It starts the flaps
+   * running (below) and nothing else, because the message belongs to the
+   * arrival: a board that knows the answer while the delivery is still in the
+   * air is a board the drawing beneath it is chasing.
+   */
   const carrying = useCallback((id: string | null) => {
-    // The arrival that answers a departure names the same participant, and
-    // the board is already showing its line, so the second call is dropped.
-    // Without this a participant with two lines would turn over again in the
-    // air and land on the one it was not announcing. The same guard collapses
-    // the repeated releases a moving pointer sends.
+    setRolling(false);
+    // The same participant twice running is the same line, and a board already
+    // showing a message does not turn for it again. This is also what
+    // collapses the repeated releases a moving pointer sends.
     if (announced.current === id) return;
     announced.current = id;
     // Nobody to speak for. A pointer moving across empty canvas is not asking
@@ -161,6 +166,16 @@ export default function LandingHero(): React.ReactNode {
     setMessage(line[called % line.length]);
   }, []);
 
+  /**
+   * The courier has set out. The flaps run for as long as the crossing takes
+   * and the message lands with it.
+   *
+   * The participant is deliberately not read here. Which line goes up is
+   * decided on arrival, so a crossing that is interrupted by the reader's own
+   * pointer never puts up a message for a delivery that did not happen.
+   */
+  const departing = useCallback(() => setRolling(true), []);
+
   return (
     <section className="landing-hero">
       {/* The network the page is about, drawn behind the words, on a screen
@@ -169,7 +184,7 @@ export default function LandingHero(): React.ReactNode {
         <BrowserOnly>
           {() => (
             <NetworkWeb
-              onDepart={still ? undefined : carrying}
+              onDepart={still ? undefined : departing}
               onArrive={still ? undefined : carrying}
               onPoint={still ? undefined : carrying}
             />
@@ -184,7 +199,12 @@ export default function LandingHero(): React.ReactNode {
             rather than as a label laid over it. */}
         <p className="landing-hero__board">
           <BrandMark />
-          <FlapBoard text={message} cells={CELLS} still={still} />
+          <FlapBoard
+            text={message}
+            cells={CELLS}
+            still={still}
+            rolling={rolling}
+          />
         </p>
         {/* Three lines, set as blocks rather than as `<br>`. A `<br>` hidden
             at narrow widths takes the line break away and leaves nothing in
