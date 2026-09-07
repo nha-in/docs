@@ -267,12 +267,46 @@ div[class^='codeBlockTitle'] {
   padding-inline: var(--table-bleed);
 }
 
-/* Layer 3, made visible: a fade on the right edge while there is more to
-   reach. `scroll-timeline` would hide it at the end of the scroll, but is not
-   in Safari, so the fade is constant and only present when the box actually
-   scrolls, which is the part that matters. */
+/* Not fixed here, and the attempt is worth recording so it is not made again.
+
+   Two tables are wider than their container even at 1440: the errors table's
+   "What to do" column sits past the right edge, and the base URL table on the
+   HIP and HIU page cuts its production URL. Both are one unbreakable run
+   setting the column's minimum, a 124 character hi_type list in one and a 42
+   character URL in the other, and `overflow-wrap: anywhere` on table cells does
+   make both fit.
+
+   It was measured and taken back out. `anywhere` also lets a column shrink
+   below its longest word, so it needs a floor, and a floor wide enough to keep
+   words whole is wide enough to push other tables over: three that fitted
+   started scrolling, three that scrolled scrolled further, and ten grew by more
+   than a quarter of their height. Worse, it broke the URLs it was meant to
+   save inside the domain name, `https://abhasbx.abdm.gov.in/abh` over
+   `a/api/v3/`, which is harder to read than the clipping was.
+
+   So both tables scroll, which they always did: `.table-scroll` below is a
+   real scrollport and nothing is unreachable. What was missing was any sign
+   that it scrolls, and that is what the cue below adds. A narrower fix would
+   have to break the specific run rather than every cell, which means the
+   error table's own generator rather than this file. */
+
+/* The fade that comment promises. A phone draws no scrollbar until you are
+   already scrolling, so a row that continues past the right edge said so with
+   nothing at all. Same two background layers as `.docusaurus-mermaid-container`
+   in mdx.css, for the same reason: a shadow pinned to the right edge of the
+   box, and over it a patch of page colour pinned to the right edge of the
+   content, which `local` attachment moves with the table. It arrives at the
+   box's edge exactly when the reader reaches the end of the row and puts the
+   shadow out, so the shadow only ever means "there is more this way". A table
+   that fits shows nothing: the two edges coincide from the start. */
 .markdown .table-scroll {
   scrollbar-width: thin;
+  background-image: linear-gradient(to left, var(--page), transparent),
+    radial-gradient(farthest-side at 100% 50%, var(--border-strong), transparent);
+  background-position: right, right;
+  background-size: 2rem 100%, 1.25rem 100%;
+  background-repeat: no-repeat;
+  background-attachment: local, scroll;
 }
 
 .markdown .table-scroll::-webkit-scrollbar {
