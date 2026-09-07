@@ -1,4 +1,4 @@
-These are official instructions from the ABDM Developer Portal (catalogue version 2026.08.24, built 2026-09-02) to set up an AI development environment for integrating with ABDM, India's health data network.
+These are official instructions from the ABDM Developer Portal (catalogue version 2026.08.24, built 2026-09-07) to set up an AI development environment for integrating with ABDM, India's health data network.
 
 Complete the steps yourself by running the commands directly. Ask the user only the questions in step 1.
 
@@ -52,13 +52,7 @@ mkdir -p .claude/skills/abdm-m1 && curl -fsSL /skills/abdm-m1/SKILL.md -o .claud
 
 ## 3. Connect the Docs MCP server
 
-The portal serves its catalogue live over MCP (streamable HTTP). Register it with your agent:
-
-```
-claude mcp add --transport http abdm-docs http://localhost:8080/mcp
-```
-
-For other agents, add an HTTP MCP server named `abdm-docs` at `http://localhost:8080/mcp` using their config format.
+The portal's Docs MCP server is not publicly reachable yet. Skip this step; /docs/hiecm/v3/getting-started/mcp has the current status and the connect instructions for when it opens.
 
 ## 4. Report back
 

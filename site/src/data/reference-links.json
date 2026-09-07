@@ -34,5 +34,21 @@
   {
     "label": "PHR application services",
     "to": "/reference/hiecm-phr-services"
+  },
+  {
+    "label": "NHCX biometric authentication",
+    "to": "/reference/nhcx-biometric"
+  },
+  {
+    "label": "NHCX session token",
+    "to": "/reference/nhcx-gateway"
+  },
+  {
+    "label": "NHCX participant service",
+    "to": "/reference/nhcx-participant"
+  },
+  {
+    "label": "NHCX use case endpoints",
+    "to": "/reference/nhcx-usecases"
   }
 ]

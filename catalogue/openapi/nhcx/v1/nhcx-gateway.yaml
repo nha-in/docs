@@ -1,0 +1,148 @@
+openapi: 3.1.1
+info:
+  title: NHCX session token
+  version: abdm-v3
+  summary: The ABDM session token every NHCX call carries.
+  description: >
+    NHCX does not issue its own credentials. Every call to the participant
+    service, the use case endpoints and the biometric proxy carries a bearer
+    token minted by the ABDM gateway from the client ID and secret an
+    integrator already holds from Milestone 1.
+
+
+    The token is short lived and the published documents disagree on how
+    short, quoting five minutes, twenty minutes and a hundred minutes in
+    different places. Build for the strictest: refresh on a timer, and treat
+    any 401 as "fetch a new token and retry once" rather than as a failure.
+  contact:
+    name: NHCX integration support
+    url: https://hcxsbx.abdm.gov.in/#/documents
+    email: hcx.integration@nha.gov.in
+  x-abdm-gateway: nhcx
+  x-abdm-module: gateway
+  x-abdm-phase: 1
+  x-abdm-roles: [provider, payer, tpa]
+x-abdm-sources:
+  - url: https://hcxsbx.abdm.gov.in/#/documents
+    role: upstream
+    status: not-yet-hashed
+    note: >
+      Authenticating with NHCX, and NHCX FAQs v1.2 items 2, 3 and 20. The
+      sessions call has no Postman collection of its own on the portal; the
+      shape here is the ABDM gateway v3 sessions call as used against the
+      sandbox on 5 and 6 September 2026.
+servers:
+  - url: https://dev.abdm.gov.in
+    description: Sandbox ABDM gateway
+tags:
+  - name: Sessions
+    description: Minting and refreshing the bearer token.
+paths:
+  /api/hiecm/gateway/v3/sessions:
+    post:
+      operationId: nhcx_sessions_create
+      tags: [Sessions]
+      summary: Mint a session token from client credentials
+      description: >
+        Exchanges the Milestone 1 client ID and secret for a bearer token.
+        The token goes on every later NHCX call in the `bearer_auth` header,
+        with the word `Bearer` and a space in front of it.
+
+
+        An older address, `/gateway/v0.5/sessions`, appears throughout the
+        portal's earlier documents. It takes the client ID and secret alone,
+        without the three headers below and without `grantType`, and returns
+        the same body. Treat it as superseded.
+      security: []
+      parameters:
+        - name: REQUEST-ID
+          in: header
+          required: true
+          description: A fresh UUID generated for every call. Sending the same one twice is refused.
+          schema:
+            type: string
+            format: uuid
+          example: 607f0d74-0913-4345-afd0-70123442eb64
+        - name: TIMESTAMP
+          in: header
+          required: true
+          description: >
+            Current time in UTC, ISO 8601 with milliseconds and a trailing Z.
+            A drifted clock is refused, so take the time from the system.
+          schema:
+            type: string
+          example: "2026-09-04T06:15:51.975Z"
+        - name: X-CM-ID
+          in: header
+          required: true
+          description: The environment. `sbx` on the sandbox, lowercase.
+          schema:
+            type: string
+          example: sbx
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [clientId, clientSecret, grantType]
+              properties:
+                clientId:
+                  type: string
+                  description: The ABDM sandbox client ID from Milestone 1.
+                clientSecret:
+                  type: string
+                  description: The matching client secret. Never log it.
+                grantType:
+                  type: string
+                  const: client_credentials
+                  description: >
+                    Required on the v3 address. The older v0.5 address omitted
+                    it, which is why a request copied from an old sample is
+                    rejected here.
+            example:
+              clientId: "<your client id>"
+              clientSecret: "<your client secret>"
+              grantType: client_credentials
+      responses:
+        "200":
+          description: A token, with its lifetime in seconds.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  accessToken: {type: string}
+                  expiresIn: {type: integer, description: Lifetime in seconds.}
+                  refreshToken: {type: string}
+                  refreshTokenIn: {type: integer}
+                  tokenType: {type: string, example: bearer}
+              example:
+                accessToken: eyJhbGciOiJSUzI1NiIs...
+                expiresIn: 300
+                refreshTokenIn: 300
+                refreshToken: eyJhbGciOiJSUzI1NiIs...
+                tokenType: bearer
+        "401":
+          description: >
+            Wrong client ID or secret, or Milestone 1 is not complete.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code: {type: string}
+                  message: {type: string}
+components:
+  securitySchemes:
+    bearer_auth:
+      type: apiKey
+      in: header
+      name: bearer_auth
+      description: >
+        The session token, prefixed with `Bearer ` and a space. Note the
+        header name: NHCX's own endpoints read `bearer_auth`, not
+        `Authorization`. The biometric endpoints read `Authorization`
+        instead, and the safe course is to send both with the same value.
+security:
+  - bearer_auth: []
