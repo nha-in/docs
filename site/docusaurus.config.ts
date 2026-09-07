@@ -465,6 +465,41 @@ const config: Config = {
 
   themeConfig: {
     image: 'img/social-card.jpg',
+    /**
+     * What a link to this site unfurls into, beyond the four tags Docusaurus
+     * emits on its own.
+     *
+     * It already writes og:title, og:description, og:url, og:locale, og:image
+     * and twitter:card, which is enough for a preview to work and not enough
+     * for it to work everywhere. The gaps are the ones that make a card appear
+     * on one platform and not the next:
+     *
+     * `og:type` is required by the Open Graph protocol, and a document without
+     * it is not a valid Open Graph document. Parsers differ on what to do
+     * about that: some infer a page, some fall back to a bare link.
+     *
+     * The image dimensions are what let a card be laid out before the image
+     * has been fetched. A scraper that will not block on a download has to
+     * decide between a large card and a small one with nothing to go on, and
+     * the ones that guess, guess small. They are stated rather than measured,
+     * so they have to match static/img/social-card.jpg, which is 1200x630, the
+     * size every platform asks for.
+     *
+     * None of this is a change of behaviour on this site. It is the same card,
+     * described completely enough that a reader of the tags does not have to
+     * guess at the rest.
+     */
+    metadata: [
+      {property: 'og:type', content: 'website'},
+      {property: 'og:site_name', content: 'ABDM Developer Portal'},
+      {property: 'og:image:width', content: '1200'},
+      {property: 'og:image:height', content: '630'},
+      {property: 'og:image:type', content: 'image/jpeg'},
+      {
+        property: 'og:image:alt',
+        content: 'ABDM Developer Portal, the National Health Authority',
+      },
+    ],
     colorMode: {
       respectPrefersColorScheme: true,
     },
