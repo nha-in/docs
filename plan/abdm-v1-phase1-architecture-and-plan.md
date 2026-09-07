@@ -245,14 +245,15 @@ Four principles govern every page, on top of the writing guide (§3.5):
 - Simple language, and never an em dash.
 - Interlinked. Every mention of a concept, API, error or section is a hyperlink to its atom. No dead-end mentions.
 - Chronological. A reader is always on a step of a journey, with the previous and next step visible. Pages order by when a developer needs them, not alphabetically.
-- Progress based. A module page walks one ladder: overview and prerequisites, user journey with flow diagrams, use cases, agent skill install CTA per agent (Claude, Cursor and others), implementation methodology with mandatory and optional paths, API sequence with webhooks, per-API explanation, error mapping, then test cases stated functionally and technically.
+- Progress based. A module page walks one ladder: overview and prerequisites, user journey with flow diagrams, use cases, agent skill install CTA per agent (Claude, Cursor and others), implementation methodology with mandatory and optional paths, API sequence with webhooks, per-API explanation, error mapping, then a Certification section pointing at the module's test cases in Developer resources.
 
-Four tabs:
+Five tabs:
 
 1. **Overview.** ABDM in plain words, get started and sandbox signup, the glossary, and the building blocks tree: gateways (HIE-CM with its modules and roles PHR, HMIS, EMR, LIMS, pharmacy, HIP, HIU; UHI with HSPA and EUA; NHCX), registries (ABHA, NHPR with HPR and HFR), and what you can build.
 2. **API References.** Choose gateway, then role, then module, then descend the module ladder above. Depth differs by module and every page says which depth it is: HIE-CM M1 to M3 have atoms behind them, M4 and the PHR modules P1 to P3 and PHR application services render from their specifications with no atoms behind them, UHI has orientation pages and no specification, and NHCX has orientation pages that point at NHA's own documents.
-3. **What's New.** The changelog, fed by the update pipeline (§5).
-4. **Support.** Contact channels and links to connectors.
+3. **Developer resources.** Routes are `/docs/<gateway>/<version>/resources/`. It holds the test cases, one page per module, stated functionally and technically, moved off the module page so a reader certifying is not scrolling an integration guide. Workflows and video explanations land here as they are written.
+4. **What's New.** The changelog, fed by the update pipeline (§5).
+5. **Support.** Contact channels and links to connectors.
 
 The tab and sidebar tree is the specification the navigation generator (§3.6) targets. It is still generated from atom frontmatter, never hand-edited. Full detail lives in the `docs-ux` skill.
 

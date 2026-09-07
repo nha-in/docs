@@ -45,7 +45,7 @@ Two mismatches. The M3 table displays `HealthDocumentRecord` as "Record artifact
 
 ## Which resources a record carries
 
-The reference [HIU](/docs/hiecm/v3/getting-started/glossary#hiu) service supports these resources inside a bundle.
+The reference service on the [HIU](/docs/hiecm/v3/getting-started/glossary#hiu) side supports these resources inside a bundle.
 
 - **Clinical content:** `Observation`, `Condition`, `MedicationRequest`, `DocumentReference`, `DiagnosticReport`, `Procedure`.
 - **Context and reference entities:** `Medication`, `Practitioner`, `Patient`, `Organization`, `Encounter`.
@@ -102,7 +102,7 @@ A bundle on its own is a bag of resources. The Composition turns it into a docum
 | `type` | Must be `document` |
 | `meta.versionId` | Set it on the bundle, so updates can be checked against the latest version |
 | `entry[].fullUrl` | A logical URL of the form `resource-type/id`, resolvable inside the bundle. Never an absolute URL. |
-| `Composition.attester.party` | References an `Organization` whose `identifier.value` is your [HIP](/docs/hiecm/v3/getting-started/glossary#hip) id as registered in the facility registry. Mode is `official`. |
+| `Composition.attester.party` | References an `Organization` whose `identifier.value` is the facility's [HIP](/docs/hiecm/v3/getting-started/glossary#hip) id as registered in the facility registry. Mode is `official`. |
 | `Composition.section.entry[]` | Top level resources only. Referenced resources such as Patient, Encounter and Practitioner belong in the bundle, not in the section entries. |
 
 The attester rule has an environment trap. The organization identifier system is the ABDM facility registry at [nhpr.abdm.gov.in](https://nhpr.abdm.gov.in/nhpr/v4/home) for production and [hspsbx.abdm.gov.in](https://hspsbx.abdm.gov.in/nhpr/v4/home) for sandbox. A bundle that passes in sandbox with the sandbox value is not right in production.

@@ -80,8 +80,8 @@ Four things must already be true, each checkable:
   [sign a user in](p1-login.md).
 - You hold a verified mobile number for them. Discovery carries it.
 - You can show only participating facilities in the search. A facility
-  qualifies when it is a [HIP](shared.glossary.hip) linked to an
-  [HRP](shared.glossary.hrp).
+  qualifies when it is registered in the [HIP](shared.glossary.hip) role
+  with an active bridge link.
 - You can hold a request open across a callback. Discovery is answered
   asynchronously. See
   [asynchronous callbacks](hiecm.concept.asynchronous-callbacks).

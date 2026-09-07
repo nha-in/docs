@@ -114,8 +114,7 @@ HIU link can raise a consent request.
 
 **If it goes wrong**
 
-The failures the M4 sources document, each with its fix in the linked
-error atom:
+The failures you will see, each with its fix in the linked error atom:
 
 - HIS-1124 (hiecm.error.his-1124) when a call needs a bridge that is
   not linked to this facility.

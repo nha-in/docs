@@ -31,7 +31,7 @@ Elliptic Curve Diffie-Hellman key exchange, used so that only the [HIU](#hiu) th
 
 ### <span id="emr"></span><span id="ehr"></span>EMR, EHR
 
-Electronic Medical Record and Electronic Health Record: the clinical system a hospital or a clinic records consultations, prescriptions and results in. The distinction drawn is that an EMR holds one provider's record of what happened in their own building and an EHR follows the patient across providers, but vendors use the two words for the same product. In ABDM it acts as a [HIP](#hip), linking care contexts in [M2](#m2). ABDM does not build an EHR as a database: the records stay with the HIP that created them, and the [HIE-CM](/docs/hiecm/v3/getting-started/glossary#hie-cm) plus consent is what lets another provider assemble the picture. See [Hospital, lab and pharmacy systems](/docs/hiecm/v3/concepts/hip-hiu).
+Electronic Medical Record and Electronic Health Record: the clinical system a hospital or a clinic records consultations, prescriptions and results in. The distinction drawn is that an EMR holds one provider's record of what happened in their own building and an EHR follows the patient across providers, but vendors use the two words for the same product. A facility uses it to publish records as the [HIP](#hip), linking care contexts in [M2](#m2), and to fetch them as the [HIU](#hiu) in [M3](#m3). ABDM does not build an EHR as a database: the records stay with the facility that created them, and the [HIE-CM](/docs/hiecm/v3/getting-started/glossary#hie-cm) plus consent is what lets another provider assemble the picture. See [Hospital, lab and pharmacy systems](/docs/hiecm/v3/concepts/hip-hiu).
 
 ### HI type
 
@@ -39,27 +39,27 @@ Health Information type: the kind of record being asked for or shared, used in c
 
 ### HIP
 
-Health Information Provider: the role for a system that creates health records and shares them, such as a hospital, laboratory or pharmacy system. A HIP links [care contexts](#care-context) to a patient's [ABHA address](#abha-address), answers [discovery](#discovery), and sends encrypted records when a valid [consent artefact](#consent-artefact) exists. [M2](#m2) is the HIP milestone.
+Health Information Provider: the role an entity takes when it publishes a health record. A hospital, laboratory or pharmacy takes it through its own software, and a citizen takes it through a [PHR](#phr) app. The HIP links [care contexts](#care-context) to a patient's [ABHA address](#abha-address), answers [discovery](#discovery), and sends encrypted records when a valid [consent artefact](#consent-artefact) exists. [M2](#m2) is the HIP milestone.
 
 ### HIU
 
-Health Information User: the role for a system that reads someone else's records, such as a doctor's console, an insurer, a referral tool or an analytics product. An HIU raises a consent request, waits for the patient's decision, and fetches data only under a granted [consent artefact](#consent-artefact). [M3](#m3) is the HIU milestone.
+Health Information User: whoever asks to read records they did not create is the HIU. A facility asks through a doctor's console or its [HMIS](#hmis), a citizen asks through a [PHR](#phr) app or a health locker, and an insurer, a referral tool or an analytics product asks while holding neither an [ABHA address](#abha-address) nor a facility ID. The HIU raises a consent request, waits for the patient's decision, and fetches data only under a granted [consent artefact](#consent-artefact). [M3](#m3) is the HIU milestone.
 
 ### <span id="hmis"></span><span id="his"></span><span id="hims"></span>HMIS, HIS, HIMS
 
-The software a hospital runs day to day: registration, visits, orders, results and billing. Three names for it: HMIS is Hospital Management Information System, HIS is Hospital Information System, HIMS is Hospital Information Management System. In ABDM it acts as a [HIP](#hip) when it publishes a record and an [HIU](#hiu) when it fetches one, so most need [M2](#m2) and [M3](#m3) rather than one or the other, and it must implement every [HI type](#hi-type). Note that `HIS-` is also the prefix on every error code the HPR and the HFR return: those are [M4](#m4) registry errors and nothing to do with hospital software. See [Hospital, lab and pharmacy systems](/docs/hiecm/v3/concepts/hip-hiu).
+The software a hospital runs day to day: registration, visits, orders, results and billing. Three names for it: HMIS is Hospital Management Information System, HIS is Hospital Information System, HIMS is Hospital Information Management System. A facility uses it to publish records as the [HIP](#hip) and to fetch them as the [HIU](#hiu), so the ABDM work is [M2](#m2) and [M3](#m3) either way, and it must implement every [HI type](#hi-type). Note that `HIS-` is also the prefix on every error code the HPR and the HFR return: those are [M4](#m4) registry errors and nothing to do with hospital software. See [Hospital, lab and pharmacy systems](/docs/hiecm/v3/concepts/hip-hiu).
 
 ### HRP
 
-Health Repository Provider. HRP is the system that actually holds the records, written as "HRP/HIP" because the same system usually plays both parts. If you run an [HMIS](#hmis) or a [LIMS](#lims) and you are integrating M2, HRP means you.
+Health Repository Provider. HRP is whoever holds the records, which is custody rather than a direction of travel. That is the facility in most integrations, and its repository software is how the facility holds them. Where a facility's records sit with another organisation, that organisation is the HRP. HRP and HIP are written together as "HRP/HIP" because the entity holding the records is usually the entity publishing them. If you run an [HMIS](#hmis) or a [LIMS](#lims) for a facility integrating [M2](#m2), that facility is the HRP. One repository can hold the records of many facilities.
 
 ### IMS
 
-Information Management System, the umbrella term for the software a health facility runs: an [HMIS](#hmis) in a hospital, an [EMR](#emr) in a clinic, a [LIMS](#lims) in a laboratory, a [PMS](#pms) in a pharmacy. ABDM does not use the term, and it does not matter which one you build: the facility is a [HIP](#hip) when it publishes and an [HIU](#hiu) when it fetches, so the work is [M2](#m2) and [M3](#m3) either way.
+Information Management System, the umbrella term for the software a health facility runs: an [HMIS](#hmis) in a hospital, an [EMR](#emr) in a clinic, a [LIMS](#lims) in a laboratory, a [PMS](#pms) in a pharmacy. It names a category of software, not a role, and it does not matter which one you build: the facility is the [HIP](#hip) when it publishes and the [HIU](#hiu) when it fetches, so the work is [M2](#m2) and [M3](#m3) either way.
 
 ### <span id="lims"></span><span id="lmis"></span>LIMS, LMIS
 
-Laboratory Information Management System, also written LMIS: the system a diagnostic lab uses to record orders, samples and results. In ABDM a LIMS acts as a [HIP](#hip) when it publishes, linking each report as a care context in [M2](#m2), which is most of what a lab does. It acts as an [HIU](#hiu) on the rarer occasions it reads a patient's history. See [Hospital, lab and pharmacy systems](/docs/hiecm/v3/concepts/hip-hiu).
+Laboratory Information Management System, also written LMIS: the system a diagnostic lab uses to record orders, samples and results. A laboratory uses it to publish records as the [HIP](#hip), linking each report as a care context in [M2](#m2), which is most of what a lab does, and to fetch them as the [HIU](#hiu) on the rarer occasions it reads a patient's history. See [Hospital, lab and pharmacy systems](/docs/hiecm/v3/concepts/hip-hiu).
 
 ### Link token
 
@@ -83,7 +83,7 @@ Milestone 4, the registries: creating an [HPID](#hpid) on the [HPR](#hpr) and on
 
 ### PMS
 
-Pharmacy Management System: the software a pharmacy runs to dispense and to keep its stock. It acts as an [HIU](#hiu) when it reads the prescription it is dispensing against, and as a [HIP](#hip) when it links what it dispensed. See [Hospital, lab and pharmacy systems](/docs/hiecm/v3/concepts/hip-hiu).
+Pharmacy Management System: the software a pharmacy runs to dispense and to keep its stock. A pharmacy uses it to fetch the prescription it is dispensing against as the [HIU](#hiu), and to publish what it dispensed as the [HIP](#hip). See [Hospital, lab and pharmacy systems](/docs/hiecm/v3/concepts/hip-hiu).
 
 ### Purpose of use
 

@@ -48,11 +48,11 @@ once, at the end, and it is separate from any one milestone's certification.
 ## Before you start
 
 Have every milestone your role needs already certified. The
-[milestones page](/docs/hiecm/v3/milestones)'s role table says which milestones
-apply to a [PHR](shared.glossary.phr) application, a [HIP](shared.glossary.hip) or a
-[HIU](shared.glossary.hiu); see [roles](hiecm.concept.roles) for what those positions
-mean. NHA's FAQ describes the exit process as something you run after integration is complete,
-not milestone by milestone.
+[milestones page](/docs/hiecm/v3/milestones) has a row per entity you build for, a
+facility, an insurer or a citizen, and says which milestones each one needs. See
+[roles](hiecm.concept.roles) for which role that entity takes on a given call. NHA's FAQ
+describes the exit process as something you run after integration is complete, not milestone by
+milestone.
 
 You also need the [Safe to Host certificate](wasa.md) NHA requires before production, which is
 its own separate audit.

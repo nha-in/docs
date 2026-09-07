@@ -25,8 +25,8 @@ Four things must already be true, each checkable:
   sign a user in.
 - You hold a verified mobile number for them. Discovery carries it.
 - You can show only participating facilities in the search. A facility
-  qualifies when it is a HIP (shared.glossary.hip) linked to an
-  HRP (shared.glossary.hrp).
+  qualifies when it is registered in the HIP (shared.glossary.hip) role
+  with an active bridge link.
 - You can hold a request open across a callback. Discovery is answered
   asynchronously. See
   asynchronous callbacks (hiecm.concept.asynchronous-callbacks).
@@ -63,7 +63,10 @@ curl -X POST 'https://dev.abdm.gov.in/api/hiecm/user-initiated-linking/v3/link/c
   -H 'REQUEST-ID: <FRESH_UUID>' \
   -H 'TIMESTAMP: <ISO_8601_TIMESTAMP>' \
   -H 'Content-Type: application/json' \
-  -d '<REQUEST_BODY>'
+  -d '{
+  "token": 123456,
+  "linkRefNumber": "4336268d-89a3-4c84-8674-aef42092d9fc"
+}'
 ```
 
 #### HIE-CM all-providers (`hiecm.endpoint.p2-all-providers`)
@@ -148,7 +151,34 @@ curl -X POST 'https://dev.abdm.gov.in/api/hiecm/patient-share/v3/share' \
   -H 'REQUEST-ID: <FRESH_UUID>' \
   -H 'TIMESTAMP: <ISO_8601_TIMESTAMP>' \
   -H 'Content-Type: application/json' \
-  -d '<REQUEST_BODY>'
+  -d '{
+  "intent": "PROFILE_SHARE",
+  "metaData": {
+    "hipId": "MAYUR_HIP",
+    "context": "ABC123",
+    "hprId": "abdulkalam@abdm",
+    "latitude": "-38.679",
+    "longitude": "58.498"
+  },
+  "profile": {
+    "patient": {
+      "abhaNumber": 91178386101251,
+      "abhaAddress": "9117838@sbx",
+      "name": "User 1",
+      "gender": "M",
+      "dayOfBirth": "10",
+      "monthOfBirth": "10",
+      "yearOfBirth": "1994",
+      "address": {
+        "line": "C/O Sandipan Kshirsagar Ambejogai Road Renuka Nagar",
+        "district": null,
+        "state": null,
+        "pincode": null
+      },
+      "phoneNumber": "9876543210"
+    }
+  }
+}'
 ```
 
 #### Profile on share (`hiecm.endpoint.p2-profile-on-share`)
@@ -159,7 +189,20 @@ curl -X POST 'https://dev.abdm.gov.in/api/hiecm/patient-share/v3/on-share' \
   -H 'REQUEST-ID: <FRESH_UUID>' \
   -H 'TIMESTAMP: <ISO_8601_TIMESTAMP>' \
   -H 'Content-Type: application/json' \
-  -d '<REQUEST_BODY>'
+  -d '{
+  "acknowledgement": {
+    "abhaAddress": "abc@abdm",
+    "status": "success",
+    "profile": {
+      "context": "43",
+      "tokenNumber": "3",
+      "expiry": "180"
+    }
+  },
+  "response": {
+    "requestId": "f29f0e59-8388-4698-9fe6-05db67aeac46"
+  }
+}'
 ```
 
 **Exit condition (Observe until this is true)**

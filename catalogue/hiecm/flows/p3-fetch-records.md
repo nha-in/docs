@@ -63,8 +63,9 @@ skills:
 
 A linked care context says a record exists somewhere. It does not put the
 record in the person's hands. Fetching it is a consent flow, and the
-application runs it as an [HIU](shared.glossary.hiu), because
-fetching a person's own records is an HIU flow like any other.
+person is the [HIU](shared.glossary.hiu) when their records are fetched
+from the facility that holds them. Your application is how they take that
+role, so this is an HIU flow like any other.
 
 ## Before you start
 
@@ -72,8 +73,8 @@ Four things must already be true, each checkable:
 
 - The care context is linked to the person's health address. See
   [find records held elsewhere and link them](p2-discover-and-link.md).
-- Your application implements the HIU role. A PHR application is an HIU
-  as well, not instead.
+- Your application implements the consent and data flow calls. This is
+  work it does as well as linking, not instead of it.
 - You have a subscription, so you are told when a care context appears or
   changes. See
   [subscribe and set an auto approval policy](p3-subscribe-and-auto-approve.md).
@@ -135,7 +136,7 @@ and no records.
 
 ## When it goes wrong
 
-The failures these sources document, in rough order of frequency:
+The failures, in rough order of frequency:
 
 - [ABDM-1112](hiecm.error.abdm-1112) when the artefact is expired or has
   been revoked. Revocation is the person exercising a right, so it is a

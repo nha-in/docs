@@ -2,17 +2,17 @@
 title: Pharmacy
 sidebar_label: Pharmacy
 sidebar_position: 5
-description: A pharmacy is a HIP like a hospital, with a narrower record surface. What differs, and what runs on another gateway.
+description: A pharmacy takes the same roles as a hospital, with a narrower record surface. What differs, and what runs on another gateway.
 verification: unverified
 source: site/docs/hiecm/v3/registries/nhpr/hfr.md, site/docs/hiecm/v3/concepts/hip-hiu.md, site/docs/hiecm/v3/concepts/fhir.md, site/docs/hiecm/v3/registries/nhpr/hpr.md
 ---
 
 # Pharmacy
 
-A pharmacy is a [HIP](/docs/hiecm/v3/getting-started/glossary#hip), the same
-role a hospital takes. The calls, the linking and the encryption are identical.
-What changes is the records you hold, and one thing that is not on this gateway
-at all.
+A pharmacy publishes records as the
+[HIP](/docs/hiecm/v3/getting-started/glossary#hip), the same role a hospital
+takes. The calls, the linking and the encryption are identical. What changes is
+the records you hold, and one thing that is not on this gateway at all.
 
 ## Who you are in ABDM
 

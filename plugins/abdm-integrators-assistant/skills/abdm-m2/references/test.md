@@ -48,36 +48,36 @@ Each case names the call it makes and what to see when it passes.
 
 | Case | Type | What it proves | Call | Passes when |
 | --- | --- | --- | --- | --- |
-| `HIP_INIT_GRANT_CONSENT_` | Mandatory | HIP must save consent (s)granted for a ABHA address in their system |  | Consent request seen in HMIS |
+| `HIP_INIT_GRANT_CONSENT_` | Conditional | HIP must save consent (s)granted for a ABHA address in their system |  | Consent request seen in HMIS |
 
 ### Revoke Consent Request
 
 | Case | Type | What it proves | Call | Passes when |
 | --- | --- | --- | --- | --- |
-| `HIP_INIT_REVOKE_CONSENT` | Mandatory | HIP must delete consents for a ABHA address in their system when it is revoked |  | Consent revoked seen in HMIS |
+| `HIP_INIT_REVOKE_CONSENT` | Conditional | HIP must delete consents for a ABHA address in their system when it is revoked |  | Consent revoked seen in HMIS |
 
 ### Exprire Consent Request
 
 | Case | Type | What it proves | Call | Passes when |
 | --- | --- | --- | --- | --- |
-| `HIP_INIT_EXPIRE_CONSENT` | Mandatory | HIP must delete consents for a ABHA address in their system when it is expired |  | Consent expired seen in HMIS |
+| `HIP_INIT_EXPIRE_CONSENT` | Conditional | HIP must delete consents for a ABHA address in their system when it is expired |  | Consent expired seen in HMIS |
 
 ### HIP Initiated Health Record Linking Using Demographic Auth
 
 | Case | Type | What it proves | Call | Passes when |
 | --- | --- | --- | --- | --- |
-| `HIP_INTI_LINK_501` | Mandatory | Link record via Demographic Auth |  | HIP should have all the demographic details like Name , Date of Birth, Gender and Mobile number. |
-| `HIP_INTI_LINK_502` | Mandatory | Sharing demographic details |  | HIP should have all the demographic details like Name , Date of Birth, Gender and Mobile number |
-| `HIP_INTI_LINK_503` | Mandatory | Validate the demographic details |  | The demographic details should be validated by gateway. The linking token generated on successful authenticat… |
-| `HIP_INTI_LINK_504` | Mandatory | Creation of Linking Token |  | New Linking token should be created |
-| `HIP_INTI_LINK_505` | Mandatory | Linking of Health Records |  | Health record linking can now be initiated using the generated linking token. User can now pull the linked he… |
-| `HIP_INTI_LINK_506` | Mandatory | Pull Records |  | Health record linking can now be initiated using the generated linking token. User can now pull the linked he… |
+| `HIP_INTI_LINK_501` | Conditional | Link record via Demographic Auth |  | HIP should have all the demographic details like Name , Date of Birth, Gender and Mobile number. |
+| `HIP_INTI_LINK_502` | Conditional | Sharing demographic details |  | HIP should have all the demographic details like Name , Date of Birth, Gender and Mobile number |
+| `HIP_INTI_LINK_503` | Conditional | Validate the demographic details |  | The demographic details should be validated by gateway. The linking token generated on successful authenticat… |
+| `HIP_INTI_LINK_504` | Conditional | Creation of Linking Token |  | New Linking token should be created |
+| `HIP_INTI_LINK_505` | Conditional | Linking of Health Records |  | Health record linking can now be initiated using the generated linking token. User can now pull the linked he… |
+| `HIP_INTI_LINK_506` | Conditional | Pull Records |  | Health record linking can now be initiated using the generated linking token. User can now pull the linked he… |
 
 ### User Initiated Health Record Linking
 
 | Case | Type | What it proves | Call | Passes when |
 | --- | --- | --- | --- | --- |
-| `USER_INIT_LINK_601` | Optional | Login into PHR App |  | The User should be able to login into PHR app |
+| `USER_INIT_LINK_601` | Unmarked | Login into PHR App |  | The User should be able to login into PHR app |
 | `USER_INIT_LINK_602` | Mandatory | Search for Facility/ HIP |  | The user should be able to search for the Health provider. |
 | `USER_INIT_LINK_603` | Mandatory | Share User Profile Details with Facility/ HIP |  | The Gateway send the request to the HIP to identify the patient in th HIP System. The Facility/ HIP will rece… |
 | `USER_INIT_LINK_604` | Mandatory | Fetch Health Records |  | In case Health Records are available with Facility/ HIP, the user will receive the list of health records ava… |
@@ -101,13 +101,13 @@ Each case names the call it makes and what to see when it passes.
 
 | Case | Type | What it proves | Call | Passes when |
 | --- | --- | --- | --- | --- |
-| `LNK_01` | Mandatory | Group every new record into a care context |  | Two visits for one patient show as two entries in a PHR app, each named so the patient knows which visit it w… |
-| `LNK_02` | Mandatory | Store the link token at registration and validate it before every use |  | Linking works while the token is valid. An expired or missing token triggers regeneration, not a link attempt. |
-| `LNK_03` | Mandatory | Link a care context for a patient who gave you their ABHA address |  | The link is acknowledged and the record appears in the patient's PHR app with no action from the patient. |
-| `NTF_01` | Conditional | Tell NHA a record is ready for a patient who has no ABHA address |  | The patient receives an SMS with a link that opens a PHR app, or offers to install one. |
-| `DSC_01` | Mandatory | Match an inbound discovery request and return the patient's care contexts | webhook `[object Object]` | A patient who has visited your facility sees their visits, named recognisably. A patient who has never visite… |
-| `DAT_01` | Mandatory | Validate a FHIR bundle against the NRCeS implementation guide |  | The validator reports no structural or profile error, for one bundle per HI type you support. |
-| `DAT_02` | Mandatory | Refuse a health information request that falls outside the consent | webhook `[object Object]` | Nothing is sent, and the failure carries the matching error code. |
-| `DAT_03` | Mandatory | Encrypt a bundle so only the requester can read it |  | Decrypting your output with the matching private key returns the original bundle byte for byte. |
-| `DAT_04` | NHA procedure | Deliver a record you created to the ABHA PHR app end to end |  | The record displays, readable, in the ABHA PHR app, without you touching the app in between. |
-| `DAT_05` | Mandatory | Close the transfer with a completion notification, inside the timeout | `null health-information/notify` | A transfer that succeeded is recorded as succeeded on both sides, within 20 minutes of the request arriving. |
+| `LNK_01` | Portal check | Group every new record into a care context |  | Two visits for one patient show as two entries in a PHR app, each named so the patient knows which visit it w… |
+| `LNK_02` | Portal check | Store the link token at registration and validate it before every use |  | Linking works while the token is valid. An expired or missing token triggers regeneration, not a link attempt. |
+| `LNK_03` | Portal check | Link a care context for a patient who gave you their ABHA address |  | The link is acknowledged and the record appears in the patient's PHR app with no action from the patient. |
+| `NTF_01` | Portal check | Tell NHA a record is ready for a patient who has no ABHA address |  | The patient receives an SMS with a link that opens a PHR app, or offers to install one. |
+| `DSC_01` | Portal check | Match an inbound discovery request and return the patient's care contexts | webhook `[object Object]` | A patient who has visited your facility sees their visits, named recognisably. A patient who has never visite… |
+| `DAT_01` | Portal check | Validate a FHIR bundle against the NRCeS implementation guide |  | The validator reports no structural or profile error, for one bundle per HI type you support. |
+| `DAT_02` | Portal check | Refuse a health information request that falls outside the consent | webhook `[object Object]` | Nothing is sent, and the failure carries the matching error code. |
+| `DAT_03` | Portal check | Encrypt a bundle so only the requester can read it |  | Decrypting your output with the matching private key returns the original bundle byte for byte. |
+| `DAT_04` | Portal check | Deliver a record you created to the ABHA PHR app end to end |  | The record displays, readable, in the ABHA PHR app, without you touching the app in between. |
+| `DAT_05` | Portal check | Close the transfer with a completion notification, inside the timeout | `null health-information/notify` | A transfer that succeeded is recorded as succeeded on both sides, within 20 minutes of the request arriving. |

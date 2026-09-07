@@ -25,17 +25,15 @@ Four things must already be true, each checkable:
 - You hold a gateway session token. See
   the gateway session (hiecm.concept.gateway-session).
 - You have generated an ECDH (shared.glossary.ecdh) key pair
-  and a 32 byte nonce for this exchange, on Curve25519. NHA's M2 document
-  specifies the scheme; the data flow page at
-  /docs/hiecm/v3/concepts/data-flow sets out who generates what and
-  points at NHA's reference implementation, Fidelius, rather than hand
-  rolling it.
+  and a 32 byte nonce for this exchange, on Curve25519. The data flow
+  page at /docs/hiecm/v3/concepts/data-flow sets out who generates what.
+  Use Fidelius, the reference implementation, rather than hand rolling
+  the scheme.
 - You expose a `dataPushUrl` endpoint that can receive encrypted
   FHIR (shared.glossary.fhir) bundles: the URL you name in the
-  health information request. NHA's M3 file only says to expose one; it
-  does not say whether that URL must differ from your other registered
-  callback URLs. The data flow concept page notes it may differ from
-  your registered gateway URL, not that it must.
+  health information request. Name the exact URL you will receive the
+  push on, and treat it as its own route rather than assuming your
+  other registered callbacks serve it.
 
 **Act: the calls in this flow, in order**
 
@@ -60,7 +58,28 @@ curl -X POST 'https://dev.abdm.gov.in/api/hiecm/data-flow/v3/health-information/
   -H 'TIMESTAMP: <ISO_8601_TIMESTAMP>' \
   -H 'X-CM-ID: sbx' \
   -H 'Content-Type: application/json' \
-  -d '<REQUEST_BODY>'
+  -d '{
+  "hiRequest": {
+    "consent": {
+      "id": "consent-art-uuid-001"
+    },
+    "dateRange": {
+      "from": "2023-01-01T00:00:00.000Z",
+      "to": "2024-01-01T00:00:00.000Z"
+    },
+    "dataPushUrl": "https://your-hiu-server.com/abdm/data/push",
+    "keyMaterial": {
+      "cryptoAlg": "ECDH",
+      "curve": "Curve25519",
+      "dhPublicKey": {
+        "expiry": "2024-12-31T00:00:00.000Z",
+        "parameters": "Curve25519/32byte",
+        "keyValue": "base64-encoded-hiu-ecdh-public-key"
+      },
+      "nonce": "base64-encoded-random-nonce-32bytes"
+    }
+  }
+}'
 ```
 
 #### Notify the gateway that data was received (`hiecm.endpoint.m3-hiu-data-flow-notify`)
@@ -72,7 +91,33 @@ curl -X POST 'https://dev.abdm.gov.in/api/hiecm/data-flow/v3/health-information/
   -H 'TIMESTAMP: <ISO_8601_TIMESTAMP>' \
   -H 'X-CM-ID: sbx' \
   -H 'Content-Type: application/json' \
-  -d '<REQUEST_BODY>'
+  -d '{
+  "notification": {
+    "consentId": "consent-art-uuid-001",
+    "transactionId": "txn-uuid-data-001",
+    "doneAt": "2024-01-15T10:30:00.000Z",
+    "notifier": {
+      "type": "HIU",
+      "id": "HIU_SERVICE_ID"
+    },
+    "statusNotification": {
+      "sessionStatus": "RECEIVED",
+      "hipId": "HIP_SERVICE_ID",
+      "statusResponses": [
+        {
+          "careContextReference": "VISIT-2024-001",
+          "hiStatus": "OK",
+          "description": "Data received and decrypted successfully"
+        },
+        {
+          "careContextReference": "LAB-2024-001",
+          "hiStatus": "OK",
+          "description": "Data received and decrypted successfully"
+        }
+      ]
+    }
+  }
+}'
 ```
 
 **Exit condition (Observe until this is true)**
@@ -84,18 +129,13 @@ match:
   notification.statusNotification.sessionStatus: TRANSFERRED
 timeout_seconds: unknown
 note: >
-  NHA's M3 file documents no payload shape for what arrives at your
-  dataPushUrl, so no field name from that push is confirmed here. What
-  is confirmed, from hiecm-m3.yaml, is the field you send once every
-  care context in the artefact has decrypted: notification.statusNotification.sessionStatus
-  set to TRANSFERRED on the data flow notify call. Treat that outbound
-  call, not an inbound field name, as the exit signal until the push
-  payload itself has been observed.
+  The payload shape of what arrives at your dataPushUrl is not yet
+  published, so no field name from that push is named here. The field
+  you send once every care context in the artefact has decrypted is
+  notification.statusNotification.sessionStatus, set to TRANSFERRED on
+  the data flow notify call. Treat that outbound call, not an inbound
+  field name, as the exit signal.
 ```
-
-Not yet observed against the sandbox. This repository has not run a
-fetch through to a decrypted bundle. When it has, record the real
-payload shape here and set `verified.status`.
 
 **If it goes wrong**
 
@@ -103,17 +143,16 @@ payload shape here and set `verified.status`.
   accepted, then nothing (hiecm.troubleshooting.accepted-then-nothing),
   which covers finding which callback in a multi step chain is missing.
 - The consent was valid when you sent the request but is not granted by
-  the time the HIP checks it. NHA's own error table names this state,
-  not a specific cause; a mid flow revocation is one way it happens. See
+  the time the HIP checks it. The error names this state, not a specific
+  cause, and a mid flow revocation is one way it happens. See
   ABDM-1062 (hiecm.error.abdm-1062). Treat every fetch as a fresh
   permission check, not a cached yes.
 - The artefact id is unknown, expired or already used past its window.
   See ABDM-1112 (hiecm.error.abdm-1112).
 - The push never arrives at your `dataPushUrl`. See
   the callback never arrives (hiecm.troubleshooting.callback-never-arrives).
-  Check the `dataPushUrl` you sent on the health information request
-  specifically, since it may not be the same endpoint your other
-  registered callbacks land on.
+  Check the `dataPushUrl` you sent on the health information request,
+  not your other registered callback URLs.
 - The clock is wrong and every call fails. See
   ABDM-2402 (hiecm.error.abdm-2402).
 - The `REQUEST-ID` is missing, malformed or reused. See
@@ -135,10 +174,10 @@ Five things must already be true, each checkable:
 
 - You hold a gateway session token. See
   the gateway session (hiecm.concept.gateway-session).
-- Your application is registered in the HIU role, with a
-  bridge (shared.glossary.bridge) URL the
-  HIE-CM (shared.glossary.hie-cm) can route the patient's
-  decision to.
+- Your organisation holds a bridge (shared.glossary.bridge) linked in
+  the `HIU` type, so the HIE-CM (shared.glossary.hie-cm) can route the
+  patient's decision to it. For a facility, that link is the last step of
+  linking a facility to its bridge.
 - Your callback URL is registered with ABDM and reachable from the
   public internet. See
   the callback URL (shared.sandbox.callback-url).
@@ -146,7 +185,7 @@ Five things must already be true, each checkable:
   That is M1 (shared.glossary.m1)'s job. Without it there is no
   one to ask.
 - You have a purpose of use (shared.glossary.purpose-of-use)
-  code for the request. NHA's M3 file lists six; an insurer checking a
+  code for the request. There are six codes, and an insurer checking a
   claim uses `HPAYMT`.
 
 **Act: the calls in this flow, in order**
@@ -197,15 +236,9 @@ match:
 timeout_seconds: unknown
 note: >
   the payload also carries at least one id in notification.consentArtefacts.
-  Both fields are named in hiecm-m3.yaml's request body schema for this
-  callback. NHA's M3 file does not state how long the patient has to
-  act; that window is the one you set on the init call, not a gateway
-  timeout.
+  How long the patient has to act is the window you set on the init
+  call, not a gateway timeout.
 ```
-
-Not yet observed against the sandbox. This repository has not run a
-consent request through to a grant. When it has, record the real
-callback body here and set `verified.status`.
 
 **If it goes wrong**
 

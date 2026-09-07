@@ -91,6 +91,72 @@
 .api-chip--patch  { background: var(--method-patch-soft);  color: var(--method-patch); }
 .api-chip--delete { background: var(--method-delete-soft); color: var(--method-delete); }
 
+/* ---------- certification requirement ---------- */
+
+/* The same marking the testing pages show, in the same colours, because it is
+   the same marking from the same certification cases. A reader who filtered
+   the testing page to Mandatory should recognise the badge here without
+   learning a second vocabulary. */
+.api-requirement {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+  margin: 0 0 1.5rem;
+}
+
+.api-requirement__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.5rem;
+}
+
+.api-requirement__level {
+  padding: 0.125rem 0.5rem;
+  border-radius: var(--radius-chip);
+  background: var(--surface-sunken);
+  color: var(--text-muted);
+  font-size: 0.6875rem;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.api-requirement__level--mandatory {
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+.api-requirement__level--conditional {
+  background: var(--method-put-soft);
+  color: var(--method-put);
+}
+
+/* The condition itself, verbatim. "Conditional" on its own leaves the reader
+   unable to tell whether the condition is theirs. */
+.api-page .api-requirement__note {
+  font-size: 0.8125rem;
+  line-height: 1.4;
+  color: var(--text-body);
+}
+
+/* The case ids are the evidence for the level, so they are readable rather
+   than tucked into a tooltip. */
+.api-page .api-requirement__cases {
+  margin: 0;
+  font-size: 0.75rem;
+  line-height: 1.5;
+  color: var(--text-muted);
+}
+
+.api-page .api-requirement__cases code {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  color: inherit;
+  background: transparent;
+  border: 0;
+  padding: 0;
+}
+
 /* ---------- the request bar ---------- */
 
 .api-bar {
@@ -1106,6 +1172,15 @@ label.api-console__ident {
   font-weight: 600;
 }
 
+/* How many cases the current search and filter leave standing, so a reader
+   counting them can see when they are looking at a subset. */
+.matrix__tally {
+  margin-left: auto;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  opacity: 0.75;
+}
+
 .matrix__head,
 .matrix__row {
   display: grid;
@@ -1194,9 +1269,48 @@ label.api-console__ident {
   white-space: nowrap;
 }
 
+/* The five markings the build script can produce. Mandatory and Conditional
+   both carry certification weight, so both are coloured; Optional and Unmarked
+   are the quiet default above. Portal check is outlined rather than filled,
+   because it is this portal's suggestion and not a marking NHA gave. */
 .matrix__type--mandatory {
   background: var(--accent-soft);
   color: var(--accent);
+}
+
+.matrix__type--conditional {
+  background: var(--method-put-soft);
+  color: var(--method-put);
+}
+
+.matrix__type--portal-check {
+  background: transparent;
+  color: var(--text-muted);
+  border: 1px dashed var(--text-faint);
+  padding: 0 0.4375rem;
+}
+
+/* NHA's own wording for a conditional marking. A badge saying "Conditional"
+   does not tell a reader which condition they are under, so the sentence sits
+   with the rest of the row's detail rather than in the type cell. */
+.matrix__condition {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.375rem;
+  align-items: baseline;
+  font-size: 0.75rem;
+  line-height: 1.15rem;
+  color: var(--text-muted);
+}
+
+.matrix__condition-label {
+  padding: 0.0625rem 0.375rem;
+  border-radius: var(--radius-chip);
+  background: var(--method-put-soft);
+  color: var(--method-put);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  white-space: nowrap;
 }
 
 .matrix__what {
@@ -1245,6 +1359,26 @@ label.api-console__ident {
   padding: 0;
   /* Same rule as the markdown tables: break a run that cannot fit, never a
      word that could. */
+  overflow-wrap: break-word;
+}
+
+/* The calls NHA's sheet names for a case. There is often more than one, and
+   they carry no method, so they stack as bare paths. */
+.matrix__apis {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1875rem;
+  min-width: 0;
+}
+
+.matrix__path {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  line-height: 1.05rem;
+  color: var(--text-body);
+  background: transparent;
+  border: 0;
+  padding: 0;
   overflow-wrap: break-word;
 }
 

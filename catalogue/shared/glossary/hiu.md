@@ -6,8 +6,8 @@ milestone: n/a
 version: abdm-v3
 title: HIU, Health Information User
 summary: >
-  The role played by a system that asks to read someone else's health
-  records.
+  The role taken by whoever asks to read health records they did not
+  create.
 sources:
   - file: ABDM Sandbox/ABDM/Proposed Simplified Milestone 3.docx
     status: not-yet-hashed
@@ -24,17 +24,18 @@ related:
 
 ## In plain words
 
-HIU is something a system does, not something a system is. Any system
-acts as an HIU in the moment it asks to read records it did not create:
-it requests consent, waits for the patient to grant it, then fetches
-against the artefact. It never gets data without one, and the patient
-can revoke at any time.
+Whoever asks to read records they did not create is the HIU. Asking means
+requesting consent, waiting for the patient to grant it, then fetching
+against the artefact. There is no data without one, and the patient can
+revoke at any time.
 
-A doctor's console does this, and so does an insurer, a referral system
-or an analytics product. So does a hospital system, an HMIS or EMR,
-whenever it pulls a patient's history from elsewhere rather than serving
-its own records. So does a PHR app fetching records on the patient's
-behalf. The same product is a HIP when it publishes instead.
+A facility asks through a doctor's console, an [HMIS](hmis.md) or an
+[EMR](emr.md), whenever it pulls a patient's history from elsewhere
+rather than serving its own records. A citizen asks when their
+[PHR](phr.md) app or health locker fetches records on their behalf. An
+insurer, a referral service or an analytics service asks while holding
+neither an [ABHA](abha.md) address nor a facility ID. An entity
+publishing a record is the [HIP](hip.md) in that moment instead.
 
 Reading is M3 work.
 

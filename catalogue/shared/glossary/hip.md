@@ -6,8 +6,8 @@ milestone: n/a
 version: abdm-v3
 title: HIP, Health Information Provider
 summary: >
-  The role played by a system that holds health records and shares
-  them when a consented request arrives.
+  The role an entity takes when it publishes a record and hands it over
+  when a consented request arrives.
 sources:
   - file: ABDM Sandbox/ABDM/Proposed Simplified Milestone 2.docx
     status: not-yet-hashed
@@ -26,17 +26,17 @@ related:
 
 ## In plain words
 
-HIP is something a system does, not something a system is. Any system
-acts as a HIP in the moment it publishes a record: it links care
-contexts to a patient's ABHA address, answers discovery requests, and
-hands over encrypted FHIR bundles when a request backed by consent
-arrives.
+Whoever holds a record and publishes it is the HIP. That is a facility
+publishing through its [HMIS](hmis.md), or a citizen pushing a record
+from their [PHR](phr.md) app. The HIP links care contexts to a patient's
+[ABHA](abha.md) address, answers discovery requests, and hands over
+encrypted FHIR bundles when a request backed by consent arrives.
 
-A hospital system does this, whether it is called an HMIS, an HIMS, an
-HMS, an EMR or an EHR. So does a lab system, a LIMS, and a
-pharmacy system. So does a PHR app, at the moment a patient uploads a
-record into it. The role is per interaction, and the same product is an
-HIU when it reads instead.
+A facility publishes through whatever software it runs, whether that is
+called an HMIS, an HIMS, an HMS, an [EMR](emr.md) or an EHR, a
+[LIMS](lims.md) in a laboratory or a [PMS](pms.md) in a pharmacy. The
+role is per interaction, and the same entity is the [HIU](hiu.md) when
+it fetches instead.
 
 Publishing is M2 work.
 
@@ -54,5 +54,7 @@ You have understood this when you can say what HIP is without using the acronym 
 
 ## When it goes wrong
 
-A single product is often both a HIP and an HIU. The roles are per interaction, not per company.
+Reading the role onto the product. One entity takes both roles through
+the same software, so the roles are per interaction, not per product and
+not per company.
 

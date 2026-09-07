@@ -46,10 +46,10 @@ outside whichever link is missing, so you have to find which one.
 
 ## Before you start
 
-- You know which flow you are in: discovery, where a
-  [HIU](shared.glossary.hiu) or [PHR app](shared.glossary.phr)
-  looks for records at your facility, or linking, where you attach a
-  care context to a patient's ABHA address. See
+- You know which flow you are in: discovery, where whoever is asking
+  takes the [HIU](shared.glossary.hiu) role and looks for records at
+  your facility, or linking, where you attach a care context to a
+  patient's ABHA address. See
   [link a care context](hiecm.flow.m2-link-care-context) for the
   linking sequence.
 - You have the `REQUEST-ID` from the call where the chain started. See
@@ -77,7 +77,8 @@ check each in order from the start:
    [link a care context](hiecm.flow.m2-link-care-context): do not treat
    the synchronous acknowledgement to your link request as success. The
    confirmation is this callback, and the care context only becomes
-   visible in the patient's PHR app after it arrives.
+   visible in the patient's [PHR](shared.glossary.phr) app after it
+   arrives.
 4. **`REQUEST-ID` reuse.** If you generated the same `REQUEST-ID` for
    more than one call in the chain, or reused one from an earlier
    attempt, responses and callbacks can no longer be told apart.

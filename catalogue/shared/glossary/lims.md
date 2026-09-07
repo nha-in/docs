@@ -26,13 +26,11 @@ related:
 ## In plain words
 
 Laboratory Information Management System, also written LMIS: the system a
-diagnostic lab
-uses to record orders, samples and results. In ABDM a LIMS acts as a
-[HIP](hip.md) when it publishes, linking each report as a care context
-in [M2](m2.md), which is most of what a lab does. It acts as an
-[HIU](hiu.md) on the rarer occasions it reads a patient's history.
-See [Hospital, lab and pharmacy systems](/docs/hiecm/v3/concepts/hip-
-hiu).
+diagnostic lab uses to record orders, samples and results. A laboratory
+uses it to publish as the [HIP](hip.md), linking each report as a care
+context in [M2](m2.md), which is most of what a lab does, and to fetch a
+patient's history as the [HIU](hiu.md) on the rarer occasions it needs to.
+See [Hospital, lab and pharmacy systems](/docs/hiecm/v3/concepts/hip-hiu).
 
 ## Before you start
 
