@@ -101,10 +101,40 @@ try {
   check('moving away from every participant sends the board home',
     await board(page), isResting);
 
-  // And the walk still owns the board once the pointer stops.
-  await page.waitForTimeout(IDLE_AFTER + 2500);
-  check('the idle walk takes the board back over',
-    await board(page), (t) => letters(t).length > 0);
+  // And the walk still owns the board once the pointer stops. This is the
+  // slow half of the check, and it is the one worth having: the board must be
+  // turning through characters for as long as the courier is crossing, and
+  // must land on a real line only when it arrives. Sampling is the only way to
+  // see that from outside, because both states are just text in the cells.
+  const LINES = [
+    RESTING,
+    'Unique health identity',
+    'Your records, in one place',
+    'Unified health services',
+    'Interoperable medical records',
+    'History at the point of care',
+    'Reports that reach you',
+    'Prescriptions that travel',
+    'Faster insurance claims',
+  ].map(letters);
+  const isALine = (text) => LINES.includes(letters(text));
+
+  let sawRolling = false;
+  let sawLanded = false;
+  // Long enough for the walk to start (IDLE_AFTER), cross (TRAVEL_MS) and rest
+  // (DWELL_MS), with room for a second leg.
+  for (let waited = 0; waited < 14_000; waited += 200) {
+    await page.waitForTimeout(200);
+    const showing = await board(page);
+    if (!letters(showing)) continue;
+    if (isALine(showing)) sawLanded = true;
+    else sawRolling = true;
+    if (sawRolling && sawLanded) break;
+  }
+  check('the flaps keep turning while the courier is crossing',
+    sawRolling, Boolean);
+  check('and land on a real line when it arrives',
+    sawLanded, Boolean);
 } finally {
   await browser.close();
 }
