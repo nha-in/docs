@@ -60,3 +60,10 @@ for (const variant of ['relaxedsimd-lstm', 'simd-lstm', 'lstm']) {
   copy(pkg('tesseract.js-core', `tesseract-core-${variant}.wasm`));
 }
 copy(pkg('@tesseract.js-data/eng', '4.0.0/eng.traineddata.gz'), 'lang/eng.traineddata.gz');
+
+// mermaid, for the diagrams the assistant draws. One self-contained UMD
+// bundle that registers globalThis.mermaid, so it loads with the same script
+// tag the OCR engine does. It is the largest thing here and the answer to a
+// question most readers never ask, which is exactly why it is beside the
+// widget rather than in it.
+copy(pkg('mermaid', 'dist/mermaid.min.js'));

@@ -46,7 +46,16 @@ assert.deepEqual(toBlocks('one\ntwo'), [{kind: 'p', text: 'one two'}]);
 assert.deepEqual(toBlocks('- a\n- b'), [{kind: 'ul', items: ['a', 'b']}]);
 assert.deepEqual(toBlocks('1. a\n2. b'), [{kind: 'ol', items: ['a', 'b']}]);
 assert.deepEqual(toBlocks('```json\n{"a":1}'), [
-  {kind: 'code', text: '{"a":1}'},
+  {kind: 'code', text: '{"a":1}', lang: 'json', closed: false},
+]);
+
+// A diagram is only a diagram once its fence has closed. Half of one is a
+// syntax error, and mermaid draws syntax errors rather than throwing them.
+assert.deepEqual(toBlocks('```mermaid\nsequenceDiagram\n```'), [
+  {kind: 'code', text: 'sequenceDiagram', lang: 'mermaid', closed: true},
+]);
+assert.deepEqual(toBlocks('```mermaid\nsequenceDiagram'), [
+  {kind: 'code', text: 'sequenceDiagram', lang: 'mermaid', closed: false},
 ]);
 
 // Links resolve against the docs origin, and only http(s) survives.
