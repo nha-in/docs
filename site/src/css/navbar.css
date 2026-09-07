@@ -445,10 +445,27 @@
 }
 
 /* The box is centred on the bar, so the bar has to keep the middle clear.
-   Under this width the brand's own wordmark is what gives, since the NHA
-   lockup beside it already names the publisher. */
-@media (max-width: 1200px) {
-  .topbar-wordmark {
+   Under this width the brand's own chip is what gives, since the NHA lockup
+   beside it already names the publisher.
+
+   The chip goes whole. Hiding only the wordmark left the pill behind with
+   nothing in it but a 20px emblem, which does not read as a mark: it reads as
+   a control that failed to load. One breakpoint, and the bar goes from
+   lockup-plus-chip straight to lockup.
+
+   1319 is measured, not chosen. The chip is 228px, and while it is in the row
+   the left cluster ends at x=460 whatever the window is doing. The field is
+   centred, so its left edge is (viewport - 384) / 2: at 1201 that is 409 and
+   the field is drawn 51px over the gateway switcher, at 1300 it is still 2px
+   over, and it clears at 1320. The band was 119px wide and the switcher's
+   right half was unclickable inside it.
+
+   That is the same rule the 996 breakpoint below is written for, and it is
+   worth stating once: a centred box's room is the distance to the wider of the
+   two clusters, not the gap between them. Anything added to either side moves
+   this number, so measure it again rather than nudging it. */
+@media (max-width: 1319px) {
+  .topbar-brand .brand-chip {
     display: none;
   }
 }
@@ -472,12 +489,6 @@
     align-items: center;
     justify-content: flex-end;
     margin-left: auto;
-  }
-
-  /* The lockup and the emblem beside it are two marks saying the same thing,
-     and the emblem is the one the bar can do without at this width. */
-  .topbar-brand .brand-chip {
-    display: none;
   }
 
   .omnibox {
