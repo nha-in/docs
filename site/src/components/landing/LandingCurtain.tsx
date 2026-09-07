@@ -178,22 +178,52 @@ export default function LandingCurtain(): React.ReactNode {
       return el.scrollTop + el.clientHeight >= el.scrollHeight - 2;
     };
 
+    /**
+     * Whether the foot was already reached when this gesture began.
+     *
+     * Being at the foot is not enough on its own, because a gesture can arrive
+     * there part way through itself. On a phone the curtain overflows by only
+     * about thirty pixels, so a single ordinary swipe scrolled those thirty
+     * and then, still under the same finger, met the foot and lifted: the
+     * third gateway card was scrolled into view and navigated away from in one
+     * motion, and only a deliberate short swipe could read it. One wheel notch
+     * did the same on a short window.
+     *
+     * So the gesture that scrolls is never the gesture that lifts. Reaching
+     * the foot ends one gesture's work, and the next one leaves. That is what
+     * a scroller does everywhere else: you feel the end, then you push again.
+     */
+    let footWasReached = false;
+
     // Any downward intent at the foot commits the whole lift. The curtain used
     // to track the gesture proportionally, which read as considered until a
     // mild scroll left it stalled halfway across the screen; a curtain either
     // covers the stage or it has gone.
     const onWheel = (event: WheelEvent) => {
-      if (event.deltaY > 0 && readToTheEnd()) pullUp();
+      if (event.deltaY <= 0) {
+        footWasReached = readToTheEnd();
+        return;
+      }
+      if (readToTheEnd()) {
+        if (footWasReached) pullUp();
+        // This notch is the one that arrived. The next one leaves.
+        footWasReached = true;
+        return;
+      }
+      footWasReached = false;
     };
     const onTouchStart = (event: TouchEvent) => {
       touchFrom = event.touches[0]?.clientY ?? 0;
       touchTravel = 0;
+      footWasReached = readToTheEnd();
     };
     const onTouchMove = (event: TouchEvent) => {
       const y = event.touches[0]?.clientY ?? 0;
       touchTravel += touchFrom - y;
       touchFrom = y;
-      if (touchTravel > TOUCH_COMMIT && readToTheEnd()) pullUp();
+      if (touchTravel > TOUCH_COMMIT && readToTheEnd() && footWasReached) {
+        pullUp();
+      }
     };
     // The keyboard keeps its own way through, and it is the reason the lift
     // is not a gesture-only exit: WCAG 2.2 SC 2.1.1. Arrow and PageDown scroll
