@@ -1,7 +1,10 @@
 # Reference
 
-Material that is true across every module of NHCX. `authentication.md`,
-`callbacks.md` and `error-codes.md` are generated from the OpenAPI specs on
-every build; hand-written pages (like a data dictionary) live alongside them
-with a `sidebar_position`.
+Cross-module reference material for the API references tab. NHCX has none
+today: the prose reference pages (use cases, workflow codes, PMJAY use
+cases, FHIR bundles) render in the Docs tab under `exchanges/` and
+`fhir-reference/`, because they are documentation rather than machine
+contracts.
 
+The API references tab is generated from `catalogue/openapi/nhcx/v1/`.
+Nothing is hand-written here.

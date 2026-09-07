@@ -1,0 +1,255 @@
+openapi: 3.1.1
+info:
+  title: NHCX biometric authentication
+  version: abdm-v3
+  summary: The PMJAY beneficiary authentication APIs, outside the NHCX message set.
+  description: >
+    PMJAY requires the beneficiary to be verified biometrically at
+    registration and again at discharge. These calls are not NHCX exchanges:
+    they carry no JWE, no FHIR bundle and no workflow code, and they read
+    `Authorization` rather than `bearer_auth`. They are a separate API a
+    PMJAY integrator must implement alongside the claim exchanges.
+
+
+    On success the system holds a user token valid for 30 minutes, with a
+    refresh token. That token rides in the header of the eligibility check
+    and the preauthorisation, and a fresh authentication is required at
+    discharge for the claim.
+
+
+    Build all three methods. Fingerprint and iris are an init-then-verify
+    pair on the biometric service. Face is a separate flow on the ABDM proxy:
+    initiate, show the patient a QR code to scan in the ABHA app, poll until
+    the capture completes, then verify with the Aadhaar number encrypted
+    under the key the portal supplies.
+
+
+    Where biometrics are not possible, the scheme's authentication consent
+    questionnaire stands in. The one case with no fallback is a cyclic
+    procedure, where a live capture is required at every visit.
+  contact:
+    name: NHCX integration support
+    url: https://hcxsbx.abdm.gov.in/#/documents
+    email: hcx.integration@nha.gov.in
+  x-abdm-gateway: nhcx
+  x-abdm-module: biometric
+  x-abdm-phase: 1
+  x-abdm-roles: [provider]
+x-abdm-sources:
+  - file: NHCX-site/hmisdocuments/Biometric Authentication APIs Postman Collection.zip
+    role: upstream
+    status: not-yet-hashed
+    note: ABHA-Proxy collection, 3 requests.
+  - file: NHCX-site/hmisdocuments/FaceAuth Postman Collection.zip
+    role: upstream
+    status: not-yet-hashed
+    note: FaceAuth collection, 3 requests.
+servers:
+  - url: https://apisbx.abdm.gov.in
+    description: Sandbox. The two flows sit under different path prefixes on the same host.
+tags:
+  - name: Fingerprint and iris
+    description: The init-then-verify pair, under /hcx/abha/biometric.
+  - name: Face
+    description: The QR-and-poll flow, under /pmjay/sbxhcx/abdmproxy/abha/biometric.
+paths:
+  /hcx/abha/biometric/auth/init:
+    post:
+      operationId: nhcx_biometric_auth_init
+      tags: [Fingerprint and iris]
+      summary: Start a biometric authentication
+      description: >
+        Opens an authentication transaction against the beneficiary's ABHA
+        number and returns a transaction id the verify call quotes back.
+        `authMode` picks the method.
+      parameters:
+        - {name: process, in: header, required: true, description: "The stage this authentication is for, for example Discharge on a cyclic visit.", schema: {type: string}}
+        - {name: payerid, in: header, required: true, description: The scheme payer's participant code., schema: {type: string}}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [scope, loginId, authMode]
+              properties:
+                scope:
+                  type: array
+                  items: {type: string}
+                  description: "`[abha-login, aadhaar-bio-verify]`, or the face or iris equivalent."
+                loginHint: {type: string, example: abha-number}
+                loginId: {type: string, description: The beneficiary's ABHA number.}
+                otpSystem: {type: string, example: aadhaar}
+                authMode:
+                  type: string
+                  enum: [FINGERPRINT, IRIS, FACE_AUTH]
+            example:
+              scope: [abha-login, aadhaar-bio-verify]
+              loginHint: abha-number
+              loginId: 91-XXXX-XXXX-0302
+              otpSystem: aadhaar
+              authMode: FINGERPRINT
+      responses:
+        "200":
+          description: A transaction id to quote on the verify call.
+  /hcx/abha/biometric/auth/verify:
+    post:
+      operationId: nhcx_biometric_auth_verify
+      tags: [Fingerprint and iris]
+      summary: Verify the captured biometric
+      description: >
+        Sends the captured PID block against the transaction opened by init.
+        On success the response carries the user token that rides on the
+        eligibility check and the preauthorisation.
+      parameters:
+        - {name: process, in: header, required: true, schema: {type: string}}
+        - {name: payerid, in: header, required: true, schema: {type: string}}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [scope, authData, authMode]
+              properties:
+                scope: {type: array, items: {type: string}}
+                authMode: {type: string, enum: [FINGERPRINT, IRIS, FACE_AUTH]}
+                authData:
+                  type: object
+                  properties:
+                    authMethods:
+                      type: array
+                      items: {type: string, enum: [bio, iris, face, otp]}
+                    bio:
+                      type: object
+                      properties:
+                        txnId: {type: string, format: uuid}
+                        fingerPrintAuthPid: {type: string}
+                    iris:
+                      type: object
+                      properties:
+                        txnId: {type: string, format: uuid}
+                        irisAuthPid: {type: string}
+                    face:
+                      type: object
+                      properties:
+                        txnId: {type: string, format: uuid}
+                        faceAuthPid: {type: string}
+                    otp:
+                      type: object
+                      properties:
+                        txnId: {type: string, format: uuid}
+                        otpValue: {type: string}
+      responses:
+        "200":
+          description: A user token valid for 30 minutes, with a refresh token.
+  /hcx/abha/biometric/auth/refresh/token:
+    get:
+      operationId: nhcx_biometric_auth_refresh_token
+      tags: [Fingerprint and iris]
+      summary: Refresh the user token
+      description: >
+        Extends the 30 minute user token through a long transaction. A
+        refresh token is not accepted in place of a live capture on a cyclic
+        procedure's per-visit authentication; only for the final claim.
+      parameters:
+        - {name: R-token, in: header, required: true, description: The refresh token from the verify call., schema: {type: string}}
+        - {name: TIMESTAMP, in: header, required: true, schema: {type: string}}
+        - {name: REQUEST-ID, in: header, required: true, schema: {type: string, format: uuid}}
+        - {name: payerid, in: header, required: true, schema: {type: string}}
+        - {name: process, in: header, required: true, schema: {type: string}}
+      responses:
+        "200":
+          description: A refreshed user token.
+  /pmjay/sbxhcx/abdmproxy/abha/biometric/faceauth/init:
+    post:
+      operationId: nhcx_biometric_faceauth_init
+      tags: [Face]
+      summary: Start a face authentication
+      description: >
+        Opens the face flow and returns a transaction id. The patient then
+        scans a QR code in the ABHA app; the capture is collected by polling
+        the PID endpoint below.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [scope]
+              properties:
+                scope:
+                  type: array
+                  items: {type: string}
+            example:
+              scope: [abha-enrol, face-auth]
+      responses:
+        "200":
+          description: A transaction id for the capture and verify calls.
+  /pmjay/sbxhcx/abdmproxy/abha/biometric/capture/pid:
+    post:
+      operationId: nhcx_biometric_faceauth_capture_pid
+      tags: [Face]
+      summary: Poll for the captured face PID
+      description: >
+        Polled after init until the patient has completed the capture in the
+        ABHA app. Returns the PID block the verify call sends.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [txnId]
+              properties:
+                txnId: {type: string, format: uuid}
+      responses:
+        "200":
+          description: The captured PID, once the patient has completed the scan.
+  /pmjay/sbxhcx/abdmproxy/abha/biometric/v2/auth/verify:
+    post:
+      operationId: nhcx_biometric_faceauth_verify
+      tags: [Face]
+      summary: Verify a face capture against Aadhaar
+      description: >
+        Completes the face flow. The `aadhaar` field is the beneficiary's
+        Aadhaar number encrypted under the public key the portal supplies,
+        not the twelve digits in the clear. Do not log it, do not display it,
+        and do not validate it as a number.
+      parameters:
+        - {name: payerid, in: header, required: true, schema: {type: string}}
+        - {name: process, in: header, required: true, schema: {type: string}}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [authData]
+              properties:
+                authData:
+                  type: object
+                  properties:
+                    authMethods:
+                      type: array
+                      items: {type: string, enum: [face_auth]}
+                    face:
+                      type: object
+                      properties:
+                        txnId: {type: string, format: uuid}
+                        aadhaar:
+                          type: string
+                          description: The Aadhaar number encrypted under the portal's public key.
+      responses:
+        "200":
+          description: A user token valid for 30 minutes, with a refresh token.
+components:
+  securitySchemes:
+    Authorization:
+      type: http
+      scheme: bearer
+      description: >
+        The ABDM session token. Note that these endpoints read
+        `Authorization`, where the NHCX message endpoints read `bearer_auth`.
+security:
+  - Authorization: []

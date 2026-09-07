@@ -1,0 +1,480 @@
+openapi: 3.1.1
+info:
+  title: NHCX participant service
+  version: abdm-v3
+  summary: Registering on the exchange, finding who to send to, and linking policies.
+  description: >
+    The registry half of NHCX. None of these calls carries a FHIR bundle and
+    none of them is encrypted: they are how a participant joins the network,
+    how participants find and address each other, and how a payer links a
+    policy to the beneficiary who holds it.
+
+
+    Sandbox and production differ. Sandbox is one call each way. Production
+    adds a one-time passcode to the registered mobile number at every step,
+    so nobody can register a hospital they do not control, and the two
+    confirmation calls are GETs.
+  contact:
+    name: NHCX integration support
+    url: https://hcxsbx.abdm.gov.in/#/documents
+    email: hcx.integration@nha.gov.in
+  x-abdm-gateway: nhcx
+  x-abdm-module: participant
+  x-abdm-phase: 1
+  x-abdm-roles: [provider, payer, tpa]
+x-abdm-sources:
+  - file: NHCX-site/documents/AWS(Sandbox) NHCX-OnBoarding APIs Postman Collection.zip
+    role: upstream
+    status: not-yet-hashed
+    note: SANDBOX_NHCX-OnBoarding APIs, 2 requests.
+  - file: NHCX-site/documents/AWS(PROD) NHCX-OnBoarding APIs Postman Collection.zip
+    role: upstream
+    status: not-yet-hashed
+    note: PROD_NHCX-OnBoarding APIs, 4 requests.
+  - file: NHCX-site/documents/AWS(Sandbox) PARTICIPANT SERVICE APIs Postman Collection.zip
+    role: upstream
+    status: not-yet-hashed
+    note: SANDBOX-Participant_APIs, 5 requests.
+  - url: https://hcxsbx.abdm.gov.in/participanthcxservice/swagger-ui/index.html
+    role: upstream
+    status: not-yet-fetched
+    note: NHA's own Swagger for this service, live on the sandbox portal.
+servers:
+  - url: https://apisbx.abdm.gov.in/pmjay/sbxhcx/participanthcxservice
+    description: Sandbox participant service
+  - url: https://apisprod.nha.gov.in/pmjay/hcx/participanthcxservice
+    description: Production participant service
+tags:
+  - name: Onboarding
+    description: Creating and updating the participant record that is your identity on the exchange.
+  - name: Discovery
+    description: Finding the participant a message goes to, and the key to seal it with.
+  - name: Policy linking
+    description: The payer side. Linking a policy to the ABHA number that will be used to find it.
+paths:
+  /participant/create:
+    post:
+      operationId: nhcx_participant_create_sandbox
+      tags: [Onboarding]
+      summary: Create a participant record (sandbox)
+      description: >
+        Creates your identity on the sandbox exchange in one call, with no
+        passcode step. The response carries the participant code that becomes
+        `x-hcx-sender_code` on everything you send from then on. A hospital
+        group creates one participant per facility, each with its own HFR ID,
+        using the same credentials.
+      parameters:
+        - {name: Accept, in: header, required: true, schema: {type: string, const: application/json}}
+        - {name: source, in: header, required: false, description: "Set to `internal` on the sandbox.", schema: {type: string}}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [linked_registry_codes, registryid, roles, primaryMobile, encryption_cert]
+              properties:
+                linked_registry_codes:
+                  type: array
+                  items: {type: string, enum: ["10001", "10002", "10003", "10004"]}
+                  description: "Which registry vouches for you. 10001 HFR, 10002 NIN, 10003 ROHINI, 10004 payer registry."
+                registryid:
+                  type: string
+                  description: On the sandbox, your ABDM client ID. In production, the HFR ID for a hospital or the IRDAI ID for a payer.
+                participant_name: {type: string}
+                scheme_code: {type: string, example: PMJAY}
+                state: {type: string}
+                district: {type: string}
+                roles:
+                  type: array
+                  items: {type: string, enum: ["10001","10002","10003","10004","10005","10006","10007","10008","10009"]}
+                  description: >
+                    10001 provider, 10002 payer, 10003 TPA, 10004 regulator,
+                    10005 research, 10006 insurance marketplace, 10007 scheme
+                    sponsor, 10008 another exchange, 10009 patient app.
+                primaryEmail: {type: string, format: email}
+                phone: {type: array, items: {type: string}}
+                primaryMobile: {type: string, description: Must be the number on the HFR record, or for a payer the one NHA holds.}
+                signing_cert_path: {type: string, description: Optional. Leave empty.}
+                encryption_cert:
+                  type: string
+                  description: Your X.509 certificate as a single base64 string. It begins `LS0tLS1CRUdJTi`.
+                endpoint_url:
+                  type: string
+                  description: >
+                    The base of your callback server, sometimes called the
+                    bridge URL. A domain name over HTTPS, hosted in India. The
+                    exchange appends the callback path to it.
+            example:
+              linked_registry_codes: ["10001"]
+              registryid: "<your ABDM client id>"
+              participant_name: Test Hospital
+              scheme_code: PMJAY
+              state: Haryana
+              district: Panchkula
+              roles: ["10001"]
+              primaryEmail: integration@hospital.example
+              phone: ["01123456789"]
+              primaryMobile: "9876543210"
+              signing_cert_path: ""
+              encryption_cert: "<contents of certificate.b64>"
+              endpoint_url: https://nhcx.hospital.example
+      responses:
+        "200":
+          description: The participant code, which is your address on the exchange.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  participant_code: {type: string, example: 1000004446@hcx}
+  /participant/update:
+    post:
+      operationId: nhcx_participant_update_sandbox
+      tags: [Onboarding]
+      summary: Update a participant record (sandbox)
+      description: >
+        The same shape as create, keyed on the participant code. Used to
+        change the encryption certificate or the callback address.
+      parameters:
+        - {name: Accept, in: header, required: true, schema: {type: string, const: application/json}}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [participant_code]
+              properties:
+                participant_code: {type: string, example: 1000004446@hcx}
+                participant_name: {type: string}
+                scheme_code: {type: string}
+                roles: {type: array, items: {type: string}}
+                primaryEmail: {type: string, format: email}
+                phone: {type: array, items: {type: string}}
+                primaryMobile: {type: string}
+                endpoint_url: {type: string}
+                signing_cert_path: {type: string}
+                encryption_cert: {type: string}
+      responses:
+        "200": {description: The record is updated.}
+  /v2/participant/create:
+    post:
+      operationId: nhcx_participant_create_production
+      tags: [Onboarding]
+      summary: Create a participant record (production, step 1 of 4)
+      description: >
+        Production onboarding is four calls. This is the first. It returns a
+        participant ID and a transaction ID, and sends a passcode to the
+        registered mobile number. The participant exists but is pending until
+        the passcode is confirmed. Passcodes and transaction IDs last 24
+        hours; lose one and you repeat the step.
+      parameters:
+        - {name: Accept, in: header, required: true, schema: {type: string, const: application/json}}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [registrytype, registryid, role, mobilenumber, email]
+              properties:
+                registrytype: {type: string, enum: ["10001","10002","10003","10004"]}
+                registryid:
+                  type: string
+                  description: >
+                    The HFR ID for a provider. For a payer or TPA the IRDAI
+                    registry ID, sent without leading zeros, so 0123 becomes 123.
+                role: {type: array, items: {type: string}}
+                endpoint_url: {type: string, description: May be left empty here and set at the configure step.}
+                mobilenumber: {type: string, description: Must match the number on the HFR record exactly.}
+                email: {type: string, format: email}
+            example:
+              registrytype: "10001"
+              registryid: "<HFR ID>"
+              role: ["10001"]
+              endpoint_url: ""
+              mobilenumber: "<mobile on the HFR record>"
+              email: integration@hospital.example
+      responses:
+        "200":
+          description: A participant ID and a transaction ID. A passcode is sent to the mobile number.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  participantid: {type: string}
+                  transactionid: {type: string}
+  /validate:
+    get:
+      operationId: nhcx_participant_validate_create
+      tags: [Onboarding]
+      summary: Confirm the create passcode (production, step 2 of 4)
+      description: >
+        Confirms the passcode sent by the create call and makes the
+        participant active. Note the method: both confirmation calls are
+        GETs, not POSTs.
+      parameters:
+        - {name: transactionId, in: query, required: true, schema: {type: string}}
+        - {name: passcode, in: query, required: true, schema: {type: string}}
+        - {name: Accept, in: header, required: true, schema: {type: string, const: application/json}}
+      responses:
+        "200": {description: The participant is active.}
+  /v2/participant/update:
+    post:
+      operationId: nhcx_participant_update_production
+      tags: [Onboarding]
+      summary: Configure certificate and callback (production, step 3 of 4)
+      description: >
+        Sends the encryption certificate and the callback address. A second
+        transaction ID and passcode arrive on the registered mobile.
+      parameters:
+        - {name: Accept, in: header, required: true, schema: {type: string, const: application/json}}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [participantcode]
+              properties:
+                participantcode: {type: string, example: 12345678934@hcx}
+                encryptioncert: {type: string, description: The X.509 certificate as a single base64 string.}
+                endpointurl: {type: string, description: The bridge URL the exchange will call back on.}
+      responses:
+        "200":
+          description: A second transaction ID, pending its passcode.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  transactionid: {type: string}
+  /update/validate:
+    get:
+      operationId: nhcx_participant_validate_update
+      tags: [Onboarding]
+      summary: Confirm the update passcode (production, step 4 of 4)
+      description: The certificate and address go live. The exchange can now reach you.
+      parameters:
+        - {name: transactionId, in: query, required: true, schema: {type: string}}
+        - {name: passcode, in: query, required: true, schema: {type: string}}
+        - {name: Accept, in: header, required: true, schema: {type: string, const: application/json}}
+      responses:
+        "200": {description: The certificate and callback address are live.}
+  /v2/update/cert:
+    post:
+      operationId: nhcx_participant_update_certificate
+      tags: [Onboarding]
+      summary: Replace only the encryption certificate (production)
+      description: >
+        A shorter path that skips the passcode, for the yearly key rotation
+        NHA recommends. Not present in the Postman collection; documented on
+        the onboarding page.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [participantId, certificate]
+              properties:
+                participantId: {type: string}
+                certificate: {type: string, description: The new X.509 certificate, base64 encoded.}
+      responses:
+        "200": {description: The certificate is replaced.}
+  /fetch/participants/list:
+    post:
+      operationId: nhcx_participant_list
+      tags: [Discovery]
+      summary: List participants by role
+      description: >
+        How a hospital system builds its list of payers, and how a payer
+        finds hospitals. The list is not searchable by name on the server
+        side: fetch it, filter by name in your own code, and cache it for the
+        day, because it changes rarely.
+      parameters:
+        - {name: Accept, in: header, required: true, schema: {type: string, const: application/json}}
+        - {name: X-CM-ID, in: header, required: false, schema: {type: string, example: sbx}}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [role]
+              properties:
+                role: {type: string, enum: [PAYER, PROVIDER, TPA]}
+                fromdate: {type: string, description: "Registration date lower bound, dd/MM/yyyy only.", example: 01/04/2021}
+                todate: {type: string, description: "Registration date upper bound, dd/MM/yyyy only.", example: 31/03/2027}
+                entitytype: {type: string, description: "Optional. `Gov` narrows to government schemes; omit for everyone."}
+      responses:
+        "200":
+          description: Participant records, each with its code, name, roles and entity type.
+  /fetch/certs:
+    post:
+      operationId: nhcx_participant_fetch_certificate
+      tags: [Discovery]
+      summary: Fetch a participant's public key
+      description: >
+        Returns the key material to seal a message for that participant, as
+        PEM text. Usually a full X.509 certificate; for a participant who
+        registered a bare key, an SPKI public key instead. Try the
+        certificate import first and fall back to the key. The handbook's
+        rule of thumb is that anything under about 400 bytes is a bare key.
+
+
+        Fetch against the `processingid` from the policy lookup, not the
+        insurer's `payerid`. Cache by participant code for 24 hours.
+      parameters:
+        - {name: Accept, in: header, required: true, schema: {type: string, const: application/json}}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [participantid]
+              properties:
+                participantid: {type: string, example: 1000003538@hcx}
+      responses:
+        "200":
+          description: >
+            Key material in PEM text. None of the published sources gives the
+            JSON envelope it arrives in, so inspect one response before
+            writing the parser.
+  /participant/get/policies:
+    post:
+      operationId: nhcx_participant_get_policies
+      tags: [Discovery]
+      summary: Look up a beneficiary's policies
+      description: >
+        Given something that identifies the patient, returns every policy
+        linked to them. The three identifier types are not equal: try
+        `AbhaNumber` first, then `MemberId`, then `MobileNo`, and stop at the
+        first that returns a policy.
+
+
+        What comes back decides the address on every later envelope.
+        `processingid` is the recipient, not `payerid`. Pointing at `payerid`
+        is the portal's seventh most common mistake.
+      parameters:
+        - {name: Accept, in: header, required: true, schema: {type: string, const: application/json}}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [identifiertype, identifiervalue]
+              properties:
+                identifiertype: {type: string, enum: [AbhaNumber, MemberId, MobileNo]}
+                identifiervalue: {type: string, description: "The ABHA number without hyphens, the member ID, or the mobile number."}
+            example:
+              identifiertype: AbhaNumber
+              identifiervalue: "91123456781234"
+      responses:
+        "200":
+          description: One entry per policy.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  policies:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        payerid: {type: string, description: The insurer's participant code. Goes inside the bundle as the insurer.}
+                        processingid: {type: string, description: Who processes claims for this policy. This is the recipient on the envelope.}
+                        memberid: {type: string, description: Identifies the beneficiary in eligibility and claim bundles.}
+                        productid: {type: string, description: The product code, used to fetch the insurance plan.}
+                        productname: {type: string, description: Human readable.}
+              example:
+                policies:
+                  - payerid: 1518@hcx
+                    processingid: 1000000109@hcx
+                    memberid: MD5SLS4X5
+                    productid: PMJAY/HP/S/G
+                    productname: PMJAY Himachal Pradesh
+  /participant/link/abha/policy:
+    post:
+      operationId: nhcx_participant_link_abha_policy
+      tags: [Policy linking]
+      summary: Link a policy to an ABHA number
+      description: >
+        The payer's half, performed when the policy is written or renewed. It
+        is what makes the beneficiary findable by ABHA number at the point of
+        care. Only the participants named as `payerid` or `processingid` may
+        change the link later, and the exchange checks the caller's token
+        against them, so the linking job must run under the same credentials
+        that created the participant.
+      parameters:
+        - {name: Accept, in: header, required: true, schema: {type: string, const: application/json}}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [requestid, payerid, processingid, memberid, policies]
+              properties:
+                requestid: {type: string, format: uuid}
+                abhanumber: {type: string, description: The policy holder's ABHA number, without hyphens.}
+                mobilenumber: {type: string}
+                memberid: {type: string, description: The policy holder ID.}
+                payerid: {type: string, description: The insurer's own participant code. Every insurer has one, even when it works through a TPA.}
+                processingid: {type: string, description: The TPA's participant code, or the insurer's own if it processes its own claims.}
+                policies:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      productid: {type: string}
+                      productname: {type: string}
+      responses:
+        "200": {description: The policy is linked.}
+  /participant/delink/abha/policy:
+    post:
+      operationId: nhcx_participant_delink_abha_policy
+      tags: [Policy linking]
+      summary: Remove a policy link
+      description: >
+        Only products already on the link can be removed; naming one that is
+        not there returns "There is no policies with requested details". The
+        commonest reason to de-link is a change of TPA, and there is no edit
+        call, so plan that as a batch job.
+      parameters:
+        - {name: Accept, in: header, required: true, schema: {type: string, const: application/json}}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [requestid, payerid, processingid, memberid, policies]
+              properties:
+                requestid: {type: string, format: uuid}
+                payerid: {type: string}
+                processingid: {type: string}
+                memberid: {type: string}
+                policies:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      productid: {type: string}
+                      productname: {type: string}
+      responses:
+        "200": {description: The link is removed.}
+components:
+  securitySchemes:
+    bearer_auth:
+      type: apiKey
+      in: header
+      name: bearer_auth
+      description: The ABDM session token, prefixed with `Bearer ` and a space.
+security:
+  - bearer_auth: []
