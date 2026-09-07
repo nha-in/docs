@@ -31,7 +31,15 @@
           "condition": "",
           "functionality": "Consent collection",
           "expected": "User provides consent for sharing of Aadhaar details and creation of ABHA. System records user consent for compliance with Health Data Management Policy.",
-          "apis": [],
+          "apis": [
+            "https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/request/otp",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/enrol/byAadhaar",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/auth/byAbdm",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/enrol/suggestion",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/enrol/abha-address",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account/abha-card"
+          ],
           "api": null,
           "webhook": null,
           "detail": "Test: The system must display the consent language/ disclaimer language and collect user's consent as per the ABDM published consent. Refer Cell No-: M14 Steps: 1. Read consent language 2. Agree to the consent language (through 'I agree' checkbox or any other form of signature)"
@@ -42,7 +50,15 @@
           "condition": "",
           "functionality": "Suggestions:- Consent collection should be multilingual",
           "expected": "User provides consent for sharing of Aadhaar details and creation of ABHA. System records user consent for compliance with Health Data Management Policy.",
-          "apis": [],
+          "apis": [
+            "https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/request/otp",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/enrol/byAadhaar",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/auth/byAbdm",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/enrol/suggestion",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/enrol/abha-address",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account/abha-card"
+          ],
           "api": null,
           "webhook": null,
           "detail": "Test: The system should be able to provide the consent in languages other than English also Steps: 1. Read consent language 2. Agree to the consent language (through 'I agree' checkbox or any other form of signature)"
@@ -53,7 +69,15 @@
           "condition": "",
           "functionality": "Aadhaar collection and Error Message",
           "expected": "User is prompted to enter correct Aadhaar Number In case user enters an invalid Aadhaar number (A valid Aadhaar is a 12-digit number), the system shows an error message \"Aadhaar Number is not valid\".",
-          "apis": [],
+          "apis": [
+            "https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/request/otp",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/enrol/byAadhaar",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/auth/byAbdm",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/enrol/suggestion",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/enrol/abha-address",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account/abha-card"
+          ],
           "api": null,
           "webhook": null,
           "detail": "Test: System must allow the user to enter Aadhaar Number and the system will display an error message for invalid Aadhaar Number Steps: 1. Enter Aadhaar number"
@@ -64,7 +88,15 @@
           "condition": "",
           "functionality": "Aadhaar OTP Collection",
           "expected": "User will be able to enter a valid Aadhaar OTP (A valid Aadhaar OTP is a 6-digit number). Example - Modified text for the \"Please enter 6 -digit OTP sent to Aadhaar linked mobile number \" step during the ABHA Creation workflow with “We just sent an OTP on the Mobile Number *******XXXX linked with Aadhaar. Enter the OTP below to proceed with ABHA creation\".",
-          "apis": [],
+          "apis": [
+            "https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/request/otp",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/enrol/byAadhaar",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/auth/byAbdm",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/enrol/suggestion",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/enrol/abha-address",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account/abha-card"
+          ],
           "api": null,
           "webhook": null,
           "detail": "Test: User receives Aadhaar OTP and System must allow the user to enter Aadhaar OTP. Steps: 1. Receive OTP on mobile number registered with Aadhaar 2. Enter Aadhaar OTP"
@@ -75,7 +107,15 @@
           "condition": "",
           "functionality": "Resend OTP",
           "expected": "User will able to send OTP again and verify it",
-          "apis": [],
+          "apis": [
+            "https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/request/otp",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/enrol/byAadhaar",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/auth/byAbdm",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/enrol/suggestion",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/enrol/abha-address",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account/abha-card"
+          ],
           "api": null,
           "webhook": null,
           "detail": "Test: System may activate the Resend OTP button maximum 2 times after 60 seconds Steps: 1. Click on Resend OTP Button 2. Receive OTP on mobile"
@@ -86,7 +126,15 @@
           "condition": "",
           "functionality": "OTP based Aadhaar Authentication",
           "expected": "System authenticates the user's Aadhaar through OTP In case of incorrect OTP, the system displays an error In case of correct OTP, the system allows the user to proceed",
-          "apis": [],
+          "apis": [
+            "https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/request/otp",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/enrol/byAadhaar",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/auth/byAbdm",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/enrol/suggestion",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/enrol/abha-address",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account/abha-card"
+          ],
           "api": null,
           "webhook": null,
           "detail": "Test: System must verify the OTP Steps: Click on verify button (For Resend and Send) It is recommended that verify button be auto enabled"
@@ -97,7 +145,15 @@
           "condition": "",
           "functionality": "Communication Mobile Number verification-I",
           "expected": "Redirect to the ABHA creation screen.",
-          "apis": [],
+          "apis": [
+            "https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/request/otp",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/enrol/byAadhaar",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/auth/byAbdm",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/enrol/suggestion",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/enrol/abha-address",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account/abha-card"
+          ],
           "api": null,
           "webhook": null,
           "detail": "Applies to: Note: Many integrating entities have not implemented API for OTP not to be sent in case communication mobile is same as Aadhaar linked mobile. In that case the test scenario detailed under sl. No 1.8 will only be considered. However, it is recommended that API = checkAndGenerateMobileOTP be implemented. This will reduce one step of OTP verification in case communication mobile is same as the Aadhaar linked mobile. Test: 1. If communication mobile number is same as Aadhaar linked mobile number then it should directly go to ABHA creation screen . 2. Alternatively , Integrators may also prompt for OTP again from the user and then post verification of OTP user can go to ABHA creation screen. Steps: This is applicable for testcase cell no -G20 , point no-1 1. System will check entered mobile is same as Aadhaar linked mobile number. If returns true then user will directed to ABHA creation screen. 2. For point number 2 step are already mentioned in test case cell no- G20 , point no-2"
@@ -108,7 +164,15 @@
           "condition": "",
           "functionality": "Communication Mobile Number verification-II",
           "expected": "System verifies the communication mobile number",
-          "apis": [],
+          "apis": [
+            "https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/request/otp",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/enrol/byAadhaar",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/auth/byAbdm",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/enrol/suggestion",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/enrol/abha-address",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account/abha-card"
+          ],
           "api": null,
           "webhook": null,
           "detail": "Test: If communication mobile number is not same as Aadhaar linked mobile number then system must ask for the OTP to verify comuncation mobile number. Steps: 1. System must verify the mobile number. 1. System must send OTP on mobile number 2. User enters the OTP and clicks on verify 3. In case of incorrect OTP, the system displays an error 4. In case of correct OTP, the system allows the user to proceed"
@@ -119,7 +183,15 @@
           "condition": "Mandatory for Private /Government (Optional for integrated program using demo auth as they have default ABHA address generated)",
           "functionality": "Suggested ABHA Address",
           "expected": "System should prompt / display the available or suggested ABHA addresses. System should allow the user to proceed with the enterered ABHA Address. In case, entered ABHA address is already in use then system should allow the user to input and proceed with any one of the suggested ABHA address.",
-          "apis": [],
+          "apis": [
+            "https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/request/otp",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/enrol/byAadhaar",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/auth/byAbdm",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/enrol/suggestion",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/enrol/abha-address",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account/abha-card"
+          ],
           "api": null,
           "webhook": null,
           "detail": "Test: 1. The system should allow the user to select the ABHA address giving atleast 3 available suggestions 2. Otherwise the system should have a provision to create a ABHA address with ABHA address Policy and validation rule should be print beside the field where ABHA Address is entered. Validation rules on ABHA Address to be set at the API level: 1. Minimum length - 8 characters 2. Maximum length - 18 characters 3. Special characters allowed - 1 dot (.) and/or 1 underscore (_) 4. Special character dot and underscore should be in between. Special characters cannot be in the beginning or at the end 5. Alphanumeric - only numbers, only letters or any combination of numbers and letters is allowed. Steps: 1. Governemnt integrator may use the option for creating default ABHA address. However, it is recommended that user-defined or system suggested ABHA address be used 2. System should have a provision for private integrators to proceed with the suggested ABHA address. 3. If beneficary use the existing ABHA address then system displays the \"ABHA Address is already exist\"."
@@ -130,7 +202,15 @@
           "condition": "",
           "functionality": "Display of ABHA Number",
           "expected": "User should be able to view the generated ABHA Number and linked ABHA address",
-          "apis": [],
+          "apis": [
+            "https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/request/otp",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/enrol/byAadhaar",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/auth/byAbdm",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/enrol/suggestion",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/enrol/abha-address",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account/abha-card"
+          ],
           "api": null,
           "webhook": null,
           "detail": "Test: System must display the created ABHA Number Steps: 1. System shows the 14-digit ABHA number and ABHA address generated"
@@ -141,7 +221,15 @@
           "condition": "Mandatory for Private",
           "functionality": "View and Download ABHA details. (If integrators is generating ABHA card)",
           "expected": "User should be able to view their ABHA Card with all the demographc details as mentioned in cell H26",
-          "apis": [],
+          "apis": [
+            "https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/request/otp",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/enrol/byAadhaar",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/auth/byAbdm",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/enrol/suggestion",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/enrol/abha-address",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account/abha-card"
+          ],
           "api": null,
           "webhook": null,
           "detail": "Test: System must have a provision to View / Download ABHA card Steps: 1. System should show the user their ABHA Card 2. ABHA Card should be generated by API and should contain - a. ABHA Number (Mandatory) b. User Photo-Optional c. ABHA QR code d. date of birth and gender e. ABHA Address"
@@ -152,7 +240,15 @@
           "condition": "Either of the test cases CRT_ABHA_114 or CRT_ABHA_115 is mandatory for Governement Optional for Private",
           "functionality": "View and Download ABHA details. (If integrators is not generating ABHA card)",
           "expected": "User should be able to view card with ABHA number and ABHA address and the details should be saved in HIMS system and linked with the HIMS unique beneficary 's ID.g or as per their business requirement.",
-          "apis": [],
+          "apis": [
+            "https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/request/otp",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/enrol/byAadhaar",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/auth/byAbdm",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/enrol/suggestion",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/enrol/abha-address",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account/abha-card"
+          ],
           "api": null,
           "webhook": null,
           "detail": "Test: System must have a provision to View details like ABHA number and ABHA address in the card (either ABHA card or any card being generated for their program/scheme/entity) Steps: 1. If Integrator is not generating ABHA card then They print the mentioned information on their program/scheme or any other card a. ABHA Number (Mandatory) b. ABHA Address"
@@ -188,7 +284,15 @@
           "condition": "",
           "functionality": "Consent collection",
           "expected": "User provides consent for sharing of Aadhaar details and creation of ABHA. System records user consent for compliance with Health Data Management Policy.",
-          "apis": [],
+          "apis": [
+            "https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/enrol/byAadhaar",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/request/otp",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/auth/byAbdm",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/enrol/suggestion",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/enrol/abha-address",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account/abha-card"
+          ],
           "api": null,
           "webhook": null,
           "detail": "Test: The system must display the consent language/ disclaimer language and collect user's consent as per the ABDM published consent. Refer Cell No-: M14 Steps: 1. Read consent language 2. Agree to the consent language (through 'I agree' checkbox or any other form of signature)"
@@ -199,7 +303,15 @@
           "condition": "",
           "functionality": "Suggestions:- Consent collection should be multilingual",
           "expected": "User provides consent for sharing of Aadhaar details and creation of ABHA. System records user consent for compliance with Health Data Management Policy.",
-          "apis": [],
+          "apis": [
+            "https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/enrol/byAadhaar",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/request/otp",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/auth/byAbdm",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/enrol/suggestion",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/enrol/abha-address",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account/abha-card"
+          ],
           "api": null,
           "webhook": null,
           "detail": "Test: The system should be able to provide the consent in languages other than English also Steps: 1. Read consent language 2. Agree to the consent language (through 'I agree' checkbox or any other form of signature)"
@@ -210,7 +322,15 @@
           "condition": "",
           "functionality": "Aadhaar collection and Error Message",
           "expected": "User is prompted to enter correct Aadhaar Number In case user enters an invalid Aadhaar number (A valid Aadhaar is a 12-digit number), the system shows an error message \"Aadhaar Number is not valid\".",
-          "apis": [],
+          "apis": [
+            "https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/enrol/byAadhaar",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/request/otp",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/auth/byAbdm",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/enrol/suggestion",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/enrol/abha-address",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account/abha-card"
+          ],
           "api": null,
           "webhook": null,
           "detail": "Test: System must allow the user to enter Aadhaar Number and the system will display an error message for invalid Aadhaar Number Steps: 1. Enter Aadhaar number"
@@ -221,7 +341,15 @@
           "condition": "",
           "functionality": "Biometric based Aadhaar Authentication",
           "expected": "System authenticates the user's Aadhaar though user's biometrics In case of incorrect biometrics, the system displays an error In case of correct biometrics, the system allows the user to proceed",
-          "apis": [],
+          "apis": [
+            "https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/enrol/byAadhaar",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/request/otp",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/auth/byAbdm",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/enrol/suggestion",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/enrol/abha-address",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account/abha-card"
+          ],
           "api": null,
           "webhook": null,
           "detail": "Test: System must verify the biometrics (fingerprint or face) of the user Steps: 1. Scan biometrics (Fingerprint) 2. Click on verify button"
@@ -232,7 +360,15 @@
           "condition": "",
           "functionality": "Communication Mobile Number verification-I",
           "expected": "Redirect to the ABHA creation screen.",
-          "apis": [],
+          "apis": [
+            "https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/enrol/byAadhaar",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/request/otp",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/auth/byAbdm",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/enrol/suggestion",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/enrol/abha-address",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account/abha-card"
+          ],
           "api": null,
           "webhook": null,
           "detail": "Applies to: Note: Many integrating entities have not implemented API for OTP not to be sent in case communication mobile is same as Aadhaar linked mobile. In that case the test scenario detailed under sl. No 2.6 will only be considered. However, it is recommended that API = checkAndGenerateMobileOTP be implemented. This will reduce one step of OTP verification in case communication mobile is same as the Aadhaar linked mobile. Test: 1. If communication mobile number is same as Aadhaar linked mobile number then it should directly go to ABHA creation screen . 2. Alternatively , Integrators may also prompt for OTP again from the user and then post verification of OTP user can go to ABHA creation screen. Steps: This is applicable for testcase cell no -G20 , point no-1 1. System will check entered mobile is same as Aadhaar linked mobile number. If returns true then user will directed to ABHA creation screen. 2. For point number 2 step are already mentioned in test case cell no- G20 , point no-2"
@@ -243,7 +379,15 @@
           "condition": "",
           "functionality": "Communication Mobile Number verification-II",
           "expected": "System verifies the communication mobile number",
-          "apis": [],
+          "apis": [
+            "https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/enrol/byAadhaar",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/request/otp",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/auth/byAbdm",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/enrol/suggestion",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/enrol/abha-address",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account/abha-card"
+          ],
           "api": null,
           "webhook": null,
           "detail": "Test: If communication mobile number is not same as Aadhaar linked mobile number then system must ask for the OTP to verify comuncation mobile number. Steps: 1. System must verify the mobile number. 1. System must send OTP on mobile number 2. User enters the OTP and clicks on verify 3. In case of incorrect OTP, the system displays an error 4. In case of correct OTP, the system allows the user to proceed"
@@ -254,7 +398,15 @@
           "condition": "",
           "functionality": "Display of ABHA Number",
           "expected": "User should be able to view the generated ABHA Number",
-          "apis": [],
+          "apis": [
+            "https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/enrol/byAadhaar",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/request/otp",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/auth/byAbdm",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/enrol/suggestion",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/enrol/abha-address",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account/abha-card"
+          ],
           "api": null,
           "webhook": null,
           "detail": "Test: System must display the created ABHA Number Steps: 1. System shows the 14-digit ABHA number and ABHA address generated"
@@ -265,7 +417,15 @@
           "condition": "Mandatory for Private",
           "functionality": "View and Download ABHA details. (If integrators is generating ABHA card)",
           "expected": "User should be able to view their ABHA Card",
-          "apis": [],
+          "apis": [
+            "https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/enrol/byAadhaar",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/request/otp",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/auth/byAbdm",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/enrol/suggestion",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/enrol/abha-address",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account/abha-card"
+          ],
           "api": null,
           "webhook": null,
           "detail": "Test: System must have a provision to View / Download ABHA card Steps: 1. System should show the user their ABHA Card 2. ABHA Card should be generated by API and should contain - a. ABHA Number (Mandatory) b. User Photo-Optional c. ABHA QR code d. date of birth and gender e. ABHA Address"
@@ -276,7 +436,15 @@
           "condition": "Either of the test cases CRT_ABHA_209 or CRT_ABHA_210 is mandatory for Governement Optional for Private",
           "functionality": "View and Download ABHA details. (If integrators is not generating ABHA card)",
           "expected": "User should be able to view card with ABHA number and ABHA address and the details should be saved in HIMS system and linked with the HIMS unique beneficary 's ID.g or as per their business requirement.",
-          "apis": [],
+          "apis": [
+            "https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/enrol/byAadhaar",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/request/otp",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/auth/byAbdm",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/enrol/suggestion",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/enrol/abha-address",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account/abha-card"
+          ],
           "api": null,
           "webhook": null,
           "detail": "Test: System must have a provision to View details like ABHA number and ABHA address in the card (either ABHA card or any card being generated for their program/scheme/entity) Steps: 1. If Integrator is not generating ABHA card then They print the mentioned information on their program/scheme or any other card a. ABHA Number (Mandatory) b. ABHA Address"
@@ -308,7 +476,11 @@
           "condition": "",
           "functionality": "Consent collection",
           "expected": "User provides consent for sharing of Aadhaar details and creation of ABHA. System records user consent for compliance with Health Data Management Policy.",
-          "apis": [],
+          "apis": [
+            "https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/enrol/byAadhaar",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account/abha-card"
+          ],
           "api": null,
           "webhook": null,
           "detail": "Test: The system must display the consent language/ disclaimer language and collect user's consent as per the ABDM published consent. Refer Cell No-: M14 Steps: 1. Read consent language 2. Agree to the consent language (through 'I agree' checkbox or any other form of signature)"
@@ -319,7 +491,11 @@
           "condition": "",
           "functionality": "Suggestions:- Consent collection should be multilingual",
           "expected": "User provides consent for sharing of Aadhaar details and creation of ABHA. System records user consent for compliance with Health Data Management Policy.",
-          "apis": [],
+          "apis": [
+            "https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/enrol/byAadhaar",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account/abha-card"
+          ],
           "api": null,
           "webhook": null,
           "detail": "Test: The system should be able to provide the consent in languages other than English also Steps: 1. Read consent language 2. Agree to the consent language (through 'I agree' checkbox or any other form of signature)"
@@ -330,7 +506,11 @@
           "condition": "",
           "functionality": "Aadhaar collection and Error Message",
           "expected": "User is prompted to enter correct Aadhaar Number In case user enters an invalid Aadhaar number (A valid Aadhaar is a 12-digit number), the system shows an error message \"Aadhaar Number is not valid\".",
-          "apis": [],
+          "apis": [
+            "https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/enrol/byAadhaar",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account/abha-card"
+          ],
           "api": null,
           "webhook": null,
           "detail": "Test: System must allow the user to enter Aadhaar Number and the system will display an error message for invalid Aadhaar Number Steps: 1. Enter Aadhaar number"
@@ -341,7 +521,11 @@
           "condition": "",
           "functionality": "Demographic Information based authentication",
           "expected": "1. System authenticates the user's Aadhaar though user's demographic data. 2.The fields for name, date of birth, and gender are set as non-editable, while the remaining fields can be open for editing i.e (Address, Email , Mobile Number, State, district , City e.t.c)",
-          "apis": [],
+          "apis": [
+            "https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/enrol/byAadhaar",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account/abha-card"
+          ],
           "api": null,
           "webhook": null,
           "detail": "Test: System must verify the demographic information of the user against their Aadhaar Steps: 1. Enter beneficiary's name, date of birth, gender, Aadhaar Number, Mobile Number, Address, State name, and district name in accordance with the details on their Aadhaar card. 2. Case 1:If the beneficiary has an existing ABHA address, it should be displayed on both the ABHA card and the ABHA profile. OR Case 2: If beneficary want to create a customize ABHA address then same ABHA address should be displayed on both the ABHA card and the ABHA profile. 3 : Case 3 : If the beneficiary have no ABHA address then system will create a Default ABHA Address ( ABHA Number @sbx) and same ABHA address should be displayed on both the ABHA card and the ABHA profile. (Mandatory ) 4. If a beneficiary's deatils are matched with Aadhaaar information then system will not allow to create ABHA. 5. If If a beneficiary's deatils are matched with Aadhaaar information then system will allow to create ABHA ."
@@ -352,7 +536,11 @@
           "condition": "",
           "functionality": "Profile Completion",
           "expected": "System should accepts user's profile information -",
-          "apis": [],
+          "apis": [
+            "https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/enrol/byAadhaar",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account/abha-card"
+          ],
           "api": null,
           "webhook": null,
           "detail": "Test: System should accepts user's profile information - Steps: 1. System auto-populates beneficiary's name, date of birth, gender, Aadhaar number, mobile number, address, state name, district name and ABHA Number. 2.The fields for name, date of birth, and gender are set as non-editable, while the remaining fields can be open for editing."
@@ -363,7 +551,11 @@
           "condition": "",
           "functionality": "Display of ABHA Number",
           "expected": "User should be able to view the generated ABHA Number",
-          "apis": [],
+          "apis": [
+            "https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/enrol/byAadhaar",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account/abha-card"
+          ],
           "api": null,
           "webhook": null,
           "detail": "Test: System must display the created ABHA Number Steps: 1. The system displays the 14-digit ABHA number and generates the corresponding ABHA Address, adhering to the implementation chosen by integrators, either as a default setting or a customized one."
@@ -374,7 +566,11 @@
           "condition": "Mandatory for Private",
           "functionality": "View and Download ABHA details. (If integrators is generating ABHA card)",
           "expected": "User should be able to view their ABHA Card",
-          "apis": [],
+          "apis": [
+            "https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/enrol/byAadhaar",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account/abha-card"
+          ],
           "api": null,
           "webhook": null,
           "detail": "Test: System must have a provision to View / Download ABHA card Steps: 1. System should show the user their ABHA Card 2. ABHA Card should be generated by API and should contain - a. ABHA Number (Mandatory) b. ABHA QR code c. Name, date of birth and gender d. ABHA Address"
@@ -385,7 +581,11 @@
           "condition": "Either of the test cases CRT_ABHA_308 or CRT_ABHA_309 is mandatory for Governement Optional for Private",
           "functionality": "View and Download ABHA details. (If integrators is not generating ABHA card)",
           "expected": "User should be able to view card with ABHA number and ABHA address.and the details should be saved in HIMS system and linked with the HIMS unique beneficary 's ID.g or as per their business requirement.",
-          "apis": [],
+          "apis": [
+            "https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/enrol/byAadhaar",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account/abha-card"
+          ],
           "api": null,
           "webhook": null,
           "detail": "Test: System must have a provision to View details like ABHA number and ABHA address in the card (either ABHA card or any card being generated for their program/scheme/entity) Steps: 1. If Integrator is not generating ABHA card then They print the mentioned information on their program/scheme or any other card with the beneficiary's demographic details. a. ABHA Number (Mandatory) b. ABHA Address"
@@ -417,7 +617,11 @@
           "condition": "",
           "functionality": "Consent Collection",
           "expected": "User provides consent for sharing of Aadhaar details and creation of ABHA. System records user consent for compliance with Health Data Management Policy.",
-          "apis": [],
+          "apis": [
+            "https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/request/otp",
+            "https://abhasbx.abdm.gov.in/abha/api/v3enrollment/auth/byAbdm",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/enrol/byDocument"
+          ],
           "api": null,
           "webhook": null,
           "detail": "Test: The System must display the consent/ disclaimer language and collect user's consent Steps: 1. Read the consent language 2. Agree to the consent language (through 'I agree' checkbox or any other form of signature)"
@@ -428,7 +632,11 @@
           "condition": "",
           "functionality": "Communication Mobile Number",
           "expected": "User will be able to enter their Mobile Number",
-          "apis": [],
+          "apis": [
+            "https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/request/otp",
+            "https://abhasbx.abdm.gov.in/abha/api/v3enrollment/auth/byAbdm",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/enrol/byDocument"
+          ],
           "api": null,
           "webhook": null,
           "detail": "Test: System must collect the communication mobile number Steps: 1. Enters a valid mobile number for communication purpose"
@@ -439,7 +647,11 @@
           "condition": "",
           "functionality": "Mobile Number Verification",
           "expected": "In case of incorrect OTP, the system displays an error In case of correct OTP, the system allows the user to proceed",
-          "apis": [],
+          "apis": [
+            "https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/request/otp",
+            "https://abhasbx.abdm.gov.in/abha/api/v3enrollment/auth/byAbdm",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/enrol/byDocument"
+          ],
           "api": null,
           "webhook": null,
           "detail": "Test: System must verify the provided mobile number Steps: 1. Receive OTP on mobile number 2. Enter the OTP and clicks on verify"
@@ -450,7 +662,11 @@
           "condition": "",
           "functionality": "Document Verification",
           "expected": "System validates user's Driving License / PAN",
-          "apis": [],
+          "apis": [
+            "https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/request/otp",
+            "https://abhasbx.abdm.gov.in/abha/api/v3enrollment/auth/byAbdm",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/enrol/byDocument"
+          ],
           "api": null,
           "webhook": null,
           "detail": "Test: System must verify the provided document - Driving License / PAN Steps: 1. Enter the Driving License / PAN number 2. Enter name, date of birth and gender as per the document. 3. successfully verification will generate enrollment number 4. With this enrollment number patient/ user will approach with any ABDM facilty for creation of ABHA number ."
@@ -461,7 +677,11 @@
           "condition": "",
           "functionality": "Document Upload",
           "expected": "Document photos are uploaded in the system",
-          "apis": [],
+          "apis": [
+            "https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/request/otp",
+            "https://abhasbx.abdm.gov.in/abha/api/v3enrollment/auth/byAbdm",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/enrol/byDocument"
+          ],
           "api": null,
           "webhook": null,
           "detail": "Test: System must allow upload of front and back page of the Driving licence/ PAN Steps: 1. Upload the front and back page of the document i.e Driving License / PAN."
@@ -472,7 +692,11 @@
           "condition": "",
           "functionality": "Manual Verification and ABHA Creation",
           "expected": "Documents are manually verified. In case the document is valid, the operator approves ABHA creation. In case the document is invalid, the operator rejects the ABHA creation.",
-          "apis": [],
+          "apis": [
+            "https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/request/otp",
+            "https://abhasbx.abdm.gov.in/abha/api/v3enrollment/auth/byAbdm",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/enrol/byDocument"
+          ],
           "api": null,
           "webhook": null,
           "detail": "Test: System Operator / healthcare worker must manually check the documents - Driving License / PAN Steps: 1. A healthcare worker/ system operator manually verifies the Driving License / PAN"
@@ -483,7 +707,11 @@
           "condition": "",
           "functionality": "Display of ABHA Number",
           "expected": "User should be able to view the generated ABHA Number",
-          "apis": [],
+          "apis": [
+            "https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/request/otp",
+            "https://abhasbx.abdm.gov.in/abha/api/v3enrollment/auth/byAbdm",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/enrol/byDocument"
+          ],
           "api": null,
           "webhook": null,
           "detail": "Test: System should display the created ABHA Number Steps: 1. Show the 14-digit ABHA number generated 2. Show ABHA Number instead of Health ID"
@@ -494,7 +722,11 @@
           "condition": "",
           "functionality": "View and Download ABHA details. (If integrators is generating ABHA card)",
           "expected": "User should be able to view their ABHA Card and the details should be saved in HIMS system and linked with the HIMS unique beneficary 's ID.g or as per their business requirement.",
-          "apis": [],
+          "apis": [
+            "https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/request/otp",
+            "https://abhasbx.abdm.gov.in/abha/api/v3enrollment/auth/byAbdm",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/enrol/byDocument"
+          ],
           "api": null,
           "webhook": null,
           "detail": "Test: System must have a provision to View / Download ABHA card Steps: 1. System should show the user their ABHA Card 2. ABHA Card should be generated by API and should contain - a. ABHA Number (Mandatory) b. User Photo-Optional c. ABHA QR code d. date of birth and gender e. ABHA Address"
@@ -505,7 +737,11 @@
           "condition": "",
           "functionality": "View and Download ABHA details. (If integrators is not generating ABHA card)",
           "expected": "User should be able to view card with ABHA number and ABHA address.",
-          "apis": [],
+          "apis": [
+            "https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/request/otp",
+            "https://abhasbx.abdm.gov.in/abha/api/v3enrollment/auth/byAbdm",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/enrol/byDocument"
+          ],
           "api": null,
           "webhook": null,
           "detail": "Test: If Integrator is not generating ABHA card. Steps: 1. If Integrator is not generating ABHA card then They print the mentioned information on their own card. a. ABHA Number (Mandatory) b. ABHA Address"
@@ -617,7 +853,13 @@
           "condition": "",
           "functionality": "ABHA Details not exists to communicated Mobile Number",
           "expected": "System will display an error message i.e. \" ABHA Number not found We did not find any ABHA number linked to this mobile number. Please use ABHA linked mobile number\" Kindly Note: System should allow to create ABHA option should be open.",
-          "apis": [],
+          "apis": [
+            "https://abhasbx.abdm.gov.in/abha/api/v3/profile/login/request/otp",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/profile/login/verify",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/profile/login/verify/user",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account/abha-card"
+          ],
           "api": null,
           "webhook": null,
           "detail": "Test: ABHA Details not exists to communicated Mobile Number Steps: 1. Incase ABHA Details not exists to communicated Mobile Number in ABHA system."
@@ -628,7 +870,13 @@
           "condition": "",
           "functionality": "ABHA Details exists to communicated Mobile Number.",
           "expected": "1. Fetching ABHA Details. 2. Register and Linked in their HIMS OR OR benefciary can download the ABHA card.",
-          "apis": [],
+          "apis": [
+            "https://abhasbx.abdm.gov.in/abha/api/v3/profile/login/request/otp",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/profile/login/verify",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/profile/login/verify/user",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account/abha-card"
+          ],
           "api": null,
           "webhook": null,
           "detail": "Test: ABHA Details exists to communicated Mobile Number. Steps: 1. Incase ABHA Details exists to communicated Mobile Number. 1.1. If ABHA Details exists to comunication mobile number exists in ABHA system , In case ' Yes' then system will display a message \"ABHA Exists to communication Mobile\" and user will receive the OTP i.e \"OTP sent to ABHA linked mobile number ending with ******XXXX\" and then Upon verification completion, the system will display a list of ABHA numbers linked to the mobile number, including the following details: Name, ABHA Number, ABHA Address, and the beneficiary's photograph. When the user attempts to link selected ABHA details, the system will verify if the selected record is present in the HIMS system. If so, it will display a message indicating that the record is already linked in the HIMS with the HIMS beneficiary's ID. 1.2 If the selected ABHA Profile is not present in HIMS, the system will allow it to be Register and linked in their HIMS beneficary's ID or proceed as per bussiness requirement OR benefciary can download the ABHA card (Optional)"
@@ -639,7 +887,13 @@
           "condition": "",
           "functionality": "Incorrect OTP",
           "expected": "Display relevant error messgae.",
-          "apis": [],
+          "apis": [
+            "https://abhasbx.abdm.gov.in/abha/api/v3/profile/login/request/otp",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/profile/login/verify",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/profile/login/verify/user",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account/abha-card"
+          ],
           "api": null,
           "webhook": null,
           "detail": "Test: Incorrect OTP Steps: 1. In case of incorrect OTP, the verification fails and display the relevant message."
@@ -650,7 +904,13 @@
           "condition": "",
           "functionality": "Resend OTP Functionality",
           "expected": "Resend OTP Functionality",
-          "apis": [],
+          "apis": [
+            "https://abhasbx.abdm.gov.in/abha/api/v3/profile/login/request/otp",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/profile/login/verify",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/profile/login/verify/user",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account/abha-card"
+          ],
           "api": null,
           "webhook": null,
           "detail": "Test: Resend OTP Functionality Steps: 1. System may activate the Resend OTP button maximum 2 times after 60 seconds in the OTP not received."
@@ -683,7 +943,12 @@
           "condition": "",
           "functionality": "Incorrect OTP",
           "expected": "Display relevant error messgae.",
-          "apis": [],
+          "apis": [
+            "https://abhasbx.abdm.gov.in/abha/api/v3/profile/login/request/otp",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/profile/login/verify",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account/abha-card"
+          ],
           "api": null,
           "webhook": null,
           "detail": "Test: Incorrect OTP Steps: 1. In case of incorrect OTP, the verification fails and display the relevant message."
@@ -694,7 +959,12 @@
           "condition": "",
           "functionality": "ABHA Details not exists to Aadhaar Number",
           "expected": "Display relevant error messgae.",
-          "apis": [],
+          "apis": [
+            "https://abhasbx.abdm.gov.in/abha/api/v3/profile/login/request/otp",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/profile/login/verify",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account/abha-card"
+          ],
           "api": null,
           "webhook": null,
           "detail": "Test: ABHA Details not exists to Aadhaar Number Steps: 1. Beneficary enter Aadhaar Number . 2. Beneficary will receive the OTP i.e \"OTP sent to Aadhaar linked mobile number ending with ******XXXX\" 3. After OTP verfication then system will display \"NO ABHA user registered with this Aadhaar Number\". 4. The system should have a provision to create ABHA."
@@ -705,7 +975,12 @@
           "condition": "",
           "functionality": "ABHA Details exists to Aadhaar Number",
           "expected": "1. Display ABHA Profile details. 2. Download ABHA Card. 3. Register and linked in their HIMS beneficary's ID or proceed as per bussiness requirement .",
-          "apis": [],
+          "apis": [
+            "https://abhasbx.abdm.gov.in/abha/api/v3/profile/login/request/otp",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/profile/login/verify",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account/abha-card"
+          ],
           "api": null,
           "webhook": null,
           "detail": "Test: ABHA Details exists to Aadhaar Number Steps: 1. Enter Aadhaar Number. 2. Beneficary will receive the OTP i.e \"OTP sent to Aadhaar linked mobile number ending with ******XXXX\" . 3. After the OTP verfication. If ABHA Number exists then system will display Beneficary ABHA profile details and user can download the ABHA card. 4. If ABHA Profile is not present in HIMS, the system will allow it to be Register and linked in their HIMS beneficary's ID or proceed as per bussiness requirement ."
@@ -716,7 +991,12 @@
           "condition": "",
           "functionality": "Resend OTP Functionality",
           "expected": "Display relevant error messgae.",
-          "apis": [],
+          "apis": [
+            "https://abhasbx.abdm.gov.in/abha/api/v3/profile/login/request/otp",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/profile/login/verify",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account/abha-card"
+          ],
           "api": null,
           "webhook": null,
           "detail": "Test: Resend OTP Functionality Steps: 1. System may activate the Resend OTP button maximum 2 times after 60 seconds in the OTP not received."

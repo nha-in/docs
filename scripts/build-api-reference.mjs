@@ -12,6 +12,7 @@ import {join, dirname} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {parse} from 'yaml';
 import {listSpecTree} from './specs.mjs';
+import {joinKey, hostOf} from './lib/api-join.mjs';
 
 /**
  * Write a page this script owns, refusing to destroy one a person wrote.
@@ -33,6 +34,12 @@ function writeGenerated(path, content) {
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const dataDir = join(root, 'site', 'src', 'data', 'api');
 const sidebarFile = join(root, 'site', 'src', 'data', 'api-sidebar.json');
+// Where a call NHA names in a certification sheet is published here, and what
+// it answers with. The test matrix joins its rows against this rather than
+// carrying routes of its own, because a route is decided by this script and an
+// atom written before the site is built cannot know one.
+const routesFile = join(root, 'site', 'src', 'data', 'api-routes.json');
+const apiRoutes = [];
 
 const METHODS = ['get', 'put', 'post', 'delete', 'patch', 'options', 'head'];
 
@@ -460,6 +467,62 @@ for (const {platform, version, files} of tree) {
         pairingByCallback.set(id, entry);
       }
     }
+  }
+
+  // One row per operation and per callback, keyed the way a sheet's URL
+  // reduces, so the test matrix can turn "NHA names this call" into a link to
+  // the page for it.
+  //
+  // Callbacks are in here as rows of their own, not only as the `callbacks`
+  // of an operation, and that is the half that matters. A certification sheet
+  // lists a use case's calls in one column and mixes the two freely: M2's
+  // linking cases name `/link/carecontext`, which is a call you make, beside
+  // `/consent/request/hip/on-notify`, which is one you receive. Which is
+  // which is not in the sheet, it is in the specification, where one sits
+  // under `paths` and the other under `webhooks`. So the kind travels with
+  // the row and the matrix splits its two columns on it rather than guessing
+  // from the path.
+  //
+  // The `callbacks` list is the second source, and it reaches what the sheets
+  // do not name: a use case that names only the call it makes still shows the
+  // callback that call produces, where the specification pairs them with
+  // x-abdm-triggered-by or x-abdm-answered-by.
+  for (const module of modules) {
+    const hosts = (module.spec.servers ?? []).map((server) => hostOf(server.url));
+    const collect = (kind, section) => {
+      for (const [path, item] of Object.entries(section ?? {})) {
+        for (const method of METHODS) {
+          const op = item?.[method];
+          if (!op) continue;
+          const id = op.operationId ?? slug(`${method}-${path}`);
+          apiRoutes.push({
+            key: joinKey(path),
+            // Kept as a list because a specification can serve one path on
+            // more than one host, and a sheet names exactly one of them.
+            hosts,
+            kind,
+            operationId: id,
+            module: module.label,
+            moduleDir: module.dir,
+            method: method.toUpperCase(),
+            path,
+            summary: (op.summary ?? id).trim(),
+            route: operationPage(module.dir, id),
+            // Taken from the pairing above rather than guessed at, so a call
+            // with no stated pairing carries none.
+            callbacks: (callbacksByOperation.get(id) ?? []).map((entry) => ({
+              method: entry.method,
+              path: entry.path,
+              summary: entry.summary,
+              route: entry.route,
+              relation: entry.relation,
+            })),
+          });
+        }
+      }
+    };
+    collect('operation', module.spec.paths);
+    collect('callback', module.spec.webhooks);
   }
 
   /** The Callbacks section appended to an operation's page, if it has any. */
@@ -1124,10 +1187,20 @@ for (const {platform, version, files} of tree) {
 }
 
 writeFileSync(sidebarFile, `${JSON.stringify(sidebar, null, 2)}\n`);
+// Sorted, so the file's diff is the operations that changed rather than the
+// order the specs happened to be read in.
+apiRoutes.sort((a, b) => a.operationId.localeCompare(b.operationId));
+writeFileSync(routesFile, `${JSON.stringify(apiRoutes, null, 2)}\n`);
+const hooks = apiRoutes.filter((entry) => entry.kind === 'callback').length;
+const withCallbacks = apiRoutes.filter((entry) => entry.callbacks.length > 0).length;
 console.log(
   `Built ${count} endpoint page(s) from ${tree
     .map((pv) => `${pv.platform}/${pv.version} (${pv.files.length} spec(s))`)
     .join(', ')}.`,
+);
+console.log(
+  `  api-routes.json: ${apiRoutes.length - hooks} operation(s) and ${hooks} callback(s), ` +
+    `${withCallbacks} of them paired.`,
 );
 
 // A hand written page sitting where a generated one goes is a conflict only a

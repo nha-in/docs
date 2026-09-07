@@ -36,14 +36,24 @@ Optional is what published HFR-002, a field NHA requires whenever no facility
 id is given, as a case an integrator may skip. They become Conditional and
 carry NHA's own wording, unedited.
 
-A marking cell is sometimes merged down a run of rows, which openpyxl reads as
-one value followed by blanks. Inheritance is taken from the sheet's own merged
-ranges rather than from the last value seen, because the two disagree: in the
-M3 sheet "Any one of them is mandatory" is merged across HIU_FLOW_106 to 113
-and nothing else, while carrying the last value down would have applied it to
-every case after 113 as well. Two cases across all five sheets carry no marking
-and sit in no merge. Those are published as Unmarked, because NHA left them
-blank and calling them Optional would be this portal deciding.
+A cell is sometimes merged down a run of rows, which openpyxl reads as one
+value followed by blanks. Two columns need that merge read back out.
+
+The marking column. Inheritance is taken from the sheet's own merged ranges
+rather than from the last value seen, because the two disagree: in the M3 sheet
+"Any one of them is mandatory" is merged across HIU_FLOW_106 to 113 and nothing
+else, while carrying the last value down would have applied it to every case
+after 113 as well. Two cases across all five sheets carry no marking and sit in
+no merge. Those are published as Unmarked, because NHA left them blank and
+calling them Optional would be this portal deciding.
+
+The API column, and this one decides how much of the sheet is usable. NHA
+lists a use case's calls once, in a cell merged down every case in that use
+case, so the calls belong to the whole run and not to the row they are printed
+on. Reading only the printed row found the calls for 17 of M1's 66 cases, 4 of
+M2's 36 and 1 of M3's 16, and left every other case looking as though NHA had
+named no call for it. Reading the merge finds them for 66, 30 and 13. The HFR
+and HPR sheets print a URL on each row instead and are unaffected.
 
 Two sheets repeat themselves, and they repeat differently. The HFR bridge
 linkage worksheet lists HFR-118 to HFR-123 twice, character for character:
@@ -185,13 +195,14 @@ def extract(path, sheet_prefix=None):
     return groups
 
 
-def merged_marking(sheet, column_index):
-    """Row number to marking text, for every row a merge in that column covers.
+def merged_down(sheet, column_index):
+    """Row number to cell text, for every row a merge in that column covers.
 
     openpyxl puts a merged range's value in its top left cell and leaves the
     rest of the range empty. This expands the range back out, so a case sitting
     in the middle of "Any one of them is mandatory" reads that marking rather
-    than a blank.
+    than a blank, and a case sitting under a use case's list of calls reads the
+    list rather than nothing.
     """
     if column_index is None:
         return {}
@@ -222,7 +233,8 @@ def extract_sheet(sheet, sheet_prefix, name_the_sheet):
     if header is None:
         return []
     column = columns(numbered[header][1])
-    inherited = merged_marking(sheet, column.get("type"))
+    inherited = merged_down(sheet, column.get("type"))
+    shared_apis = merged_down(sheet, column.get("apis"))
     groups, current = [], None
 
     def start(label):
@@ -280,7 +292,11 @@ def extract_sheet(sheet, sheet_prefix, name_the_sheet):
         if cell("steps"):
             detail.append(f"Steps: {cell('steps')}")
 
-        urls = list(dict.fromkeys(re.findall(r"https?://[^\s,)\"]+", cell("apis"))))
+        # The row's own cell first, then the merge it sits inside. A row that
+        # prints its own calls is naming them for itself; a blank row inside a
+        # merge is covered by the use case's list above it.
+        listed = cell("apis") or shared_apis.get(number, "")
+        urls = list(dict.fromkeys(re.findall(r"https?://[^\s,)\"]+", listed)))
         urls = [u.rstrip(".").rstrip(",") for u in urls]
 
         current["rows"].append({
