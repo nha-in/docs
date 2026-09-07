@@ -37,7 +37,7 @@ export default function ApiLinks({module}: {module: Module}): ReactNode {
   const docs = `/docs/hiecm/v3/api/${module}`;
   return (
     <CardGroup cols={2}>
-      <Card title={`${name} API reference`} icon="book-open" href={docs}>
+      <Card title={`Try the ${name} APIs`} icon="book-open" href={docs}>
         Every call in {name}, one page each: the headers it needs, the payload
         it takes, the callback it triggers, and a request builder you can fire
         at the sandbox.
