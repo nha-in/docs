@@ -54,13 +54,25 @@ const PACKET_MS = 900; // how long a record takes to travel one link
 /**
  * How long the courier takes to cross from one participant to the next.
  *
- * The board above the statement is set going by the departure and settles
- * about a second later, well before the courier lands. It used to turn for
- * exactly this long, which made a delivery and a pointer flip the board two
- * visibly different ways; the board now has one pace for both (STAGGER_MS in
- * FlapBoard) and this constant no longer has to agree with it.
+ * The board says nothing while a crossing is under way: it holds the line it
+ * is showing and turns over on arrival, so this constant sets the pace of the
+ * walk and nothing else. It used to set the length of the board's turn as
+ * well, which is why it once had to agree with FlapBoard.
  */
 const TRAVEL_MS = 5000;
+
+/**
+ * How far along a crossing the courier counts as having got there.
+ *
+ * Not 1. The easing slows the courier into each participant, so the last
+ * three percent of the distance takes the last six hundred milliseconds of
+ * the crossing: the courier is sitting on the node, to the pixel, well before
+ * the leg is arithmetically over. Announcing on the last frame put a visible
+ * wait between the record landing and the board saying what it was. On a
+ * four hundred pixel leg this fires within twelve pixels of the node, which
+ * is inside the node's own circle.
+ */
+const LANDED = 0.97;
 
 /**
  * How long the courier waits at a participant before setting off again.
@@ -91,7 +103,6 @@ function falloff(distance: number, far: number) {
 
 export default function NetworkWeb({
   onArrive,
-  onDepart,
   onPoint,
 }: {
   /**
@@ -101,12 +112,6 @@ export default function NetworkWeb({
    * the board must not answer to those.
    */
   onArrive?: (id: string) => void;
-  /**
-   * Called with the participant the courier has just set out for, at the
-   * moment it leaves. The board starts turning here, and settles on this
-   * message as the courier lands.
-   */
-  onDepart?: (id: string) => void;
   /**
    * Called with a participant the reader's own pointer has settled the light
    * onto. Not the itinerary: this is somebody pointing at a node and asking
@@ -127,8 +132,6 @@ export default function NetworkWeb({
   // Held in refs so a new callback identity never restarts the canvas.
   const arrive = useRef(onArrive);
   arrive.current = onArrive;
-  const depart = useRef(onDepart);
-  depart.current = onDepart;
   const point = useRef(onPoint);
   point.current = onPoint;
 
@@ -167,6 +170,8 @@ export default function NetworkWeb({
     let idleSince = 0;
     /** Deliveries made, so every third one can be sent home to the NHA. */
     let deliveries = 0;
+    /** True once this leg's arrival has been announced to the board. */
+    let landed = false;
     /** While set, the courier is resting at a participant until this time. */
     let dwellUntil = 0;
     /**
@@ -310,8 +315,7 @@ export default function NetworkWeb({
           } while (idleTo === idleFrom);
         }
         idleSince = now;
-        // The flaps start turning now, on a wave as long as this crossing.
-        depart.current?.(PARTICIPANTS[idleTo].id);
+        landed = false;
         return;
       }
 
@@ -324,16 +328,16 @@ export default function NetworkWeb({
         x: from.x + (to.x - from.x) * eased,
         y: from.y + (to.y - from.y) * eased,
       };
-      if (t >= 1) {
-        dwellUntil = now + DWELL_MS;
-        // The itinerary's own arrival, not deliver()'s. deliver() fires for
-        // anyone the courier passes within ARRIVE of, and on a crossing this
-        // long that is several participants it was never going to: the board
-        // was being retargeted mid-wave by near misses, which restarted the
-        // wave from the first cell and made the gaps between messages
-        // anything from 0.8s to 14.5s against a designed 9.2s.
+      // The itinerary's own arrival, not deliver()'s. deliver() fires for
+      // anyone the courier passes within ARRIVE of, and on a crossing this
+      // long that is several participants it was never going to: the board
+      // was being retargeted by near misses, which made the gaps between
+      // messages anything from 0.8s to 14.5s against a designed 9.2s.
+      if (eased >= LANDED && !landed) {
+        landed = true;
         arrive.current?.(PARTICIPANTS[idleTo].id);
       }
+      if (t >= 1) dwellUntil = now + DWELL_MS;
     };
 
     const draw = (now: number) => {
@@ -347,12 +351,7 @@ export default function NetworkWeb({
       const idle = now - lastMove > IDLE_AFTER;
 
       if (idle && !reduced.matches) {
-        // The first leg of a spell needs its own departure: walkIdle only
-        // announces the legs it starts itself, and this one it inherits.
-        if (!idleSince) {
-          idleSince = now;
-          depart.current?.(PARTICIPANTS[idleTo].id);
-        }
+        if (!idleSince) idleSince = now;
         walkIdle(now);
       }
 
