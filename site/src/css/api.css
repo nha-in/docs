@@ -420,6 +420,13 @@
   margin: 0;
 }
 
+/* The frame takes focus itself when the console opens, so that the dialog does
+   not hand it to the first control in the header. It is never a tab stop, so
+   the ring would only ever mark that opening move. */
+.api-console__frame:focus {
+  outline: none;
+}
+
 .api-console__head {
   display: flex;
   flex: 0 0 auto;
@@ -672,6 +679,10 @@ label.api-console__ident {
   background: transparent;
   border: 0;
   padding: 0;
+  /* A field name is one unbreakable word, and a narrow label track let it run
+     out of its own column and under the input, which paints over it: readers
+     saw a half erased "fingerPrintAuthPid". It wraps instead. */
+  overflow-wrap: anywhere;
 }
 
 .api-console__type {
@@ -967,8 +978,20 @@ label.api-console__ident {
     max-width: none;
   }
 
+  /* Not a grid here, and that is the fix rather than a simplification.
+     Stacked, the two panes were two rows of a grid whose container has a
+     definite height, and the tracks came out at half of it each: 215px rows at
+     360px wide, holding a form 2593px tall. The panes give up their own
+     scrolling at this width (the rule below), so those 2378px neither scrolled
+     nor clipped. They were painted over the pane underneath, which put the
+     code sample across three of the four header fields and made the console
+     impossible to fill in on a phone. Track sizing would not release them:
+     align-content: start packs tracks, it does not size them.
+
+     As blocks there are no tracks to size. Each pane is as tall as its own
+     content and the body scrolls the pair, which is what overflow-y is for. */
   .api-console__body {
-    grid-template-columns: minmax(0, 1fr);
+    display: block;
     overflow-y: auto;
     overscroll-behavior: contain;
   }
@@ -987,6 +1010,18 @@ label.api-console__ident {
   .api-console__pane--curl {
     max-height: 22rem;
     overflow: auto;
+  }
+}
+
+/* A phone. The label needs the full width and so does the value, so they stop
+   sharing a line: side by side, the input's track took 9rem of a 360px screen
+   and left the names and the type chips squeezed into what was left. The label
+   sits above its own input instead. */
+@media (max-width: 640px) {
+  .api-console__row {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.375rem;
+    align-items: start;
   }
 }
 
@@ -1109,14 +1144,23 @@ label.api-console__ident {
   outline: none;
 }
 
+/* Wraps, because the number of buttons is the data's rather than the design's.
+   It was three fixed types and is now up to six, one per marking the module
+   actually carries, and six in a row that cannot wrap ran 40px past a 360px
+   phone: the page scrolled sideways and the last two filters could not be
+   reached without panning. */
 .matrix__filters {
   display: flex;
+  flex-wrap: wrap;
   gap: 0.375rem;
 }
 
 .matrix__filter {
-  height: 2.375rem;
-  padding: 0 0.875rem;
+  /* A minimum rather than a height: at 38px these were under a comfortable tap
+     target, and a fixed height also pushed the label out of the button on the
+     phone widths where "All types" wraps to two lines. */
+  min-height: 2.5rem;
+  padding: 0.4375rem 0.875rem;
   border: 1px solid var(--border);
   border-radius: var(--radius-control);
   background: var(--surface);
@@ -1212,6 +1256,21 @@ label.api-console__ident {
   gap: 1.25rem;
   align-items: start;
   padding: 0.875rem 1.25rem;
+}
+
+/* Three tracks where the module declares no callbacks anywhere, M1 and M4
+   being the two, and the callbacks column's share of the width goes to the
+   endpoints and the expected result rather than to a column of em dashes. The
+   component drops the cells; this only re-sizes what is left.
+
+   Bounded above 1100px on purpose. The single column stacking below that lives
+   in a max-width query, which cannot outrank a class on an ancestor, so an
+   unguarded modifier would hold three tracks on a phone. */
+@media (min-width: 1101px) {
+  .matrix--no-callbacks .matrix__head,
+  .matrix--no-callbacks .matrix__row {
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 1.5fr) minmax(0, 1.85fr);
+  }
 }
 
 .matrix__head {
