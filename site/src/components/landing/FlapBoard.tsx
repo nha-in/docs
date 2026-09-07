@@ -8,24 +8,26 @@ import React, {useEffect, useState} from 'react';
  * the point. These match the CSS, which cannot read them.
  */
 export const TURN_MS = 420;
-/**
- * Cell to cell. Set so the wave takes as long as the courier's crossing
- * (TRAVEL_MS in NetworkWeb): the first flap turns as it leaves and the last
- * lands as it arrives, so the board is announcing the delivery in the air
- * rather than reporting one already made. 29 x 154 + 420 is 4886ms against a
- * 5000ms crossing.
- */
-export const STAGGER_MS = 154;
 
 /**
- * Cell to cell when the board is answering a pointer rather than a delivery.
+ * Cell to cell, one pace for every message.
  *
- * A reader holding the cursor over a node asked a question and is waiting for
- * the answer. The delivery pace is right for something they are watching
- * happen and far too slow for something they asked for: 29 x 26 + 420 is a
- * little over a second, against nearly five.
+ * There were two. A delivery turned at 154ms a cell so the wave lasted as long
+ * as the courier's crossing, and a pointer was answered at 26ms because a
+ * reader who asked a question is waiting for it. Both were defensible on their
+ * own and wrong together: the same board flipped two different ways depending
+ * on what had set it off, which reads as a fault rather than as a choice.
+ *
+ * One pace, and it is the fast one, because that is what the board being
+ * imitated does. A Solari board ripples across in about a second and settles;
+ * it does not spend five seconds arriving. 29 x 26 + 420 is a little over a
+ * second, which is the length of a real one.
+ *
+ * The board is still driven by the network rather than by a timer: a departure
+ * is what sets the flaps going. It now settles well before the courier lands,
+ * the way a departure board is read while the train is still coming in.
  */
-export const BRIEF_STAGGER_MS = 26;
+export const STAGGER_MS = 26;
 
 /**
  * A split-flap board, the kind an airport concourse and an Indian railway
@@ -102,7 +104,6 @@ export default function FlapBoard({
   text,
   cells,
   still,
-  stagger = STAGGER_MS,
 }: {
   /** What the board should be showing. */
   text: string;
@@ -110,8 +111,6 @@ export default function FlapBoard({
   cells: number;
   /** True to set the text without turning the flaps. */
   still?: boolean;
-  /** How far apart the cells start, so a pointer can be answered faster. */
-  stagger?: number;
 }): React.ReactNode {
   const target = laid(text, cells);
   // What the board is showing right now, and what it is turning away from.
@@ -138,7 +137,7 @@ export default function FlapBoard({
             key={`${index}|${from}|${to}`}
             from={from[index] ?? ' '}
             to={char}
-            delay={index * stagger}
+            delay={index * STAGGER_MS}
             still={Boolean(still)}
           />
         ))}

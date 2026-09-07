@@ -1,11 +1,11 @@
 /**
  * mdx: owned by the mdx component set.
  *
- * Card, CardGroup, Steps, Expandable and ParamField. Every colour, radius and
- * face is a token; nothing here is a literal. These rules sit outside any
- * cascade layer, so they beat both the Tailwind utility layer that the shadcn
- * primitives carry and, by source order, the .markdown prose defaults in
- * typography.css.
+ * Card, CardGroup, Steps, Expandable, ParamField and the container the theme
+ * puts around a mermaid diagram. Every colour, radius and face is a token;
+ * nothing here is a literal. These rules sit outside any cascade layer, so they
+ * beat both the Tailwind utility layer that the shadcn primitives carry and, by
+ * source order, the .markdown prose defaults in typography.css.
  */
 
 /* ---------- Card ---------- */
@@ -339,4 +339,78 @@ li.docs-step:last-child {
   margin-top: -0.25rem;
   padding-left: 0.75rem;
   font-size: 0.8125rem;
+}
+
+/* ---------- Mermaid ----------
+ *
+ * Mermaid gives every diagram `width="100%"` and an inline
+ * `max-width: <viewBox width>px`, so the width attribute always wins and the
+ * drawing is squeezed into whatever column it lands in. On a 360px phone that
+ * column is 280px, which drew the 1408px sequence diagram on the M2 page at a
+ * scale of about 0.2: labels a pixel or two tall, the whole flow a grey smudge.
+ * These diagrams are how the milestone pages explain a flow, so shrinking one
+ * to fit is the page failing at its own job.
+ *
+ * The diagram keeps its size and the box scrolls instead, the same trade
+ * `.table-scroll` makes in typography.css. `overflow-x: auto` also means the
+ * overflow ends here rather than at the page, so a wide diagram never makes the
+ * document scroll sideways.
+ */
+.docusaurus-mermaid-container {
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scrollbar-width: thin;
+}
+
+/* Narrow screens only, and that boundary is the whole point of the rule.
+   Scrolling is better than shrinking when shrinking makes the drawing
+   unreadable, and worse than shrinking when it does not: a reader on a desktop
+   could see a whole flow at 0.5 scale and now sees half of one at full size,
+   having been given a scrollbar to solve a problem they did not have. Below
+   this width the column is 280px to 360px and no amount of scale keeps a
+   1408px diagram legible, so the trade goes the other way.
+
+   There is no CSS keyword for "be as wide as your own max-width", and the
+   natural width has to come from each diagram rather than from a constant
+   here, since they range from 1099px to 1445px on one page alone. So width is
+   set past any diagram anyone will draw and the inline max-width, which
+   mermaid computed from that diagram's own viewBox, clamps it back to exactly
+   that. A diagram narrower than the column is left at its own size rather than
+   stretched, which is what mermaid does when nothing constrains it. */
+@media (max-width: 996px) {
+  .docusaurus-mermaid-container svg {
+    width: 100000px;
+  }
+}
+
+.docusaurus-mermaid-container::-webkit-scrollbar {
+  height: 0.5rem;
+}
+
+.docusaurus-mermaid-container::-webkit-scrollbar-thumb {
+  background: var(--border-strong);
+  border-radius: 999px;
+}
+
+/* A phone draws no scrollbar until you are already scrolling, so the fact that
+   the diagram continues past the right edge has to be visible in the box
+   itself. Two background layers say so without dimming any of the drawing,
+   since a background sits behind the svg:
+
+   - a shadow pinned to the right edge of the box, which `scroll` attachment
+     keeps in place while the diagram slides under it;
+   - over it, a patch of page colour pinned to the right edge of the content,
+     which `local` attachment moves with the diagram. It arrives at the box's
+     edge exactly when the reader reaches the end of the diagram and puts the
+     shadow out, so the shadow only ever means "there is more this way".
+
+   A diagram that fits needs no cue and gets none: with nothing to scroll the
+   two edges coincide and the patch covers the shadow from the start. */
+.docusaurus-mermaid-container {
+  background-image: linear-gradient(to left, var(--page), transparent),
+    radial-gradient(farthest-side at 100% 50%, var(--border-strong), transparent);
+  background-position: right, right;
+  background-size: 2rem 100%, 1.25rem 100%;
+  background-repeat: no-repeat;
+  background-attachment: local, scroll;
 }

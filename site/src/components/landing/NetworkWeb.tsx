@@ -54,11 +54,11 @@ const PACKET_MS = 900; // how long a record takes to travel one link
 /**
  * How long the courier takes to cross from one participant to the next.
  *
- * The board above the statement turns for exactly this long: the flaps start
- * the moment the courier leaves and the last one lands as it arrives, so the
- * board is announcing the delivery that is in the air rather than reporting
- * one that already happened. Change this and change STAGGER_MS in FlapBoard
- * with it, or the two drift apart.
+ * The board above the statement is set going by the departure and settles
+ * about a second later, well before the courier lands. It used to turn for
+ * exactly this long, which made a delivery and a pointer flip the board two
+ * visibly different ways; the board now has one pace for both (STAGGER_MS in
+ * FlapBoard) and this constant no longer has to agree with it.
  */
 const TRAVEL_MS = 5000;
 

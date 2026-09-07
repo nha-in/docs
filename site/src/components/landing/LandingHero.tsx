@@ -3,7 +3,7 @@ import Link from '@docusaurus/Link';
 import Heading from '@theme/Heading';
 import BrowserOnly from '@docusaurus/BrowserOnly';
 import NetworkWeb from '@site/src/components/landing/NetworkWeb';
-import FlapBoard, {BRIEF_STAGGER_MS, STAGGER_MS} from '@site/src/components/landing/FlapBoard';
+import FlapBoard from '@site/src/components/landing/FlapBoard';
 import BrandMark from '@site/src/components/chrome/BrandMark';
 import {unfiltered} from '@site/src/config/roles';
 import {
@@ -90,13 +90,23 @@ const CELLS = Math.max(
  */
 export default function LandingHero(): React.ReactNode {
   const [message, setMessage] = useState(RESTING);
-  // How fast the flaps turn for whatever is on the board now. A delivery is
-  // watched, so it takes the crossing's pace. A pointer is a question, so it
-  // gets answered.
-  const [stagger, setStagger] = useState(STAGGER_MS);
   // Set once on mount rather than read per render, so the server and the
   // first client render agree: both of them draw the resting name.
   const [still, setStill] = useState(true);
+  /**
+   * True on a screen too small for the drawing to be worth running.
+   *
+   * The network is a pointer instrument: it lights the participant under the
+   * cursor and the board answers for it. A phone has no cursor, so all a
+   * reader gets is eight nodes and their links drawn across the statement they
+   * are trying to read, at a size where the nodes are unlabelled dots. It is
+   * also a requestAnimationFrame loop running behind a page nobody can play
+   * with, on the device most likely to be on a battery.
+   *
+   * Matched to the width the stylesheet sets the compact hero at, and false
+   * for the server and the first client render so the two agree.
+   */
+  const [compact, setCompact] = useState(false);
   /** The participant the board is already speaking for. */
   const announced = useRef<string | null>(null);
   /** How many times each participant has been called at, for the two liners. */
@@ -110,13 +120,21 @@ export default function LandingHero(): React.ReactNode {
     return () => reduced.removeEventListener('change', follow);
   }, []);
 
+  useEffect(() => {
+    const narrow = window.matchMedia('(max-width: 768px)');
+    const follow = () => setCompact(narrow.matches);
+    follow();
+    narrow.addEventListener('change', follow);
+    return () => narrow.removeEventListener('change', follow);
+  }, []);
+
   // The courier has set out, or has landed. Both name a participant and both
   // put that participant's line on the board: the departure is what starts
   // the flaps turning, and the arrival is what a reader who is driving the
   // courier with their own pointer gets instead, since a pointer has no
   // departure to announce. Naming the same line twice costs nothing, because
   // a board already showing a message does not turn for it again.
-  const carrying = useCallback((id: string | null, pace = STAGGER_MS) => {
+  const carrying = useCallback((id: string | null) => {
     // The arrival that answers a departure names the same participant, and
     // the board is already showing its line, so the second call is dropped.
     // Without this a participant with two lines would turn over again in the
@@ -129,13 +147,11 @@ export default function LandingHero(): React.ReactNode {
     // instead of holding whichever node it last passed. The walk takes the
     // board back once the pointer has been still long enough.
     if (id === null) {
-      setStagger(BRIEF_STAGGER_MS);
       setMessage(RESTING);
       return;
     }
     const line = DELIVERED[id];
     if (!line) return;
-    setStagger(pace);
     if (typeof line === 'string') {
       setMessage(line);
       return;
@@ -147,18 +163,19 @@ export default function LandingHero(): React.ReactNode {
 
   return (
     <section className="landing-hero">
-      {/* The network the page is about, drawn behind the words. */}
-      <BrowserOnly>
-        {() => (
-          <NetworkWeb
-            onDepart={still ? undefined : carrying}
-            onArrive={still ? undefined : carrying}
-            onPoint={
-              still ? undefined : (id) => carrying(id, BRIEF_STAGGER_MS)
-            }
-          />
-        )}
-      </BrowserOnly>
+      {/* The network the page is about, drawn behind the words, on a screen
+          with room for it and a pointer to drive it. */}
+      {compact ? null : (
+        <BrowserOnly>
+          {() => (
+            <NetworkWeb
+              onDepart={still ? undefined : carrying}
+              onArrive={still ? undefined : carrying}
+              onPoint={still ? undefined : carrying}
+            />
+          )}
+        </BrowserOnly>
+      )}
 
       <div className="landing-hero__copy">
         {/* The board, and the emblem beside it as the node the record leaves
@@ -167,12 +184,7 @@ export default function LandingHero(): React.ReactNode {
             rather than as a label laid over it. */}
         <p className="landing-hero__board">
           <BrandMark />
-          <FlapBoard
-            text={message}
-            cells={CELLS}
-            still={still}
-            stagger={stagger}
-          />
+          <FlapBoard text={message} cells={CELLS} still={still} />
         </p>
         {/* Three lines, set as blocks rather than as `<br>`. A `<br>` hidden
             at narrow widths takes the line break away and leaves nothing in

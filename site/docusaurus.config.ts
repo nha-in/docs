@@ -272,6 +272,29 @@ const config: Config = {
   ],
 
   headTags: [
+    // The soft keyboard resizes the page rather than sliding it out from under
+    // the chrome.
+    //
+    // The default is `resizes-visual`: opening a keyboard shrinks the visual
+    // viewport and leaves the layout viewport alone, so a `position: sticky`
+    // element stays pinned to a top that is now scrolled out of sight. The top
+    // bar is sticky (Infima's navbar--fixed-top), and the search panel is
+    // positioned against it, so tapping search on a phone opened a panel and
+    // the keyboard took the bar and the panel off screen together: the reader
+    // typed into a field they could no longer see.
+    //
+    // `resizes-content` makes the keyboard shrink the layout viewport instead,
+    // which is what keeps sticky chrome where the reader can see it. Declared
+    // here rather than in the theme's own tag because Docusaurus emits that one
+    // through Helmet and head tags are written after it, so this is the one the
+    // browser reads last.
+    {
+      tagName: 'meta',
+      attributes: {
+        name: 'viewport',
+        content: 'width=device-width, initial-scale=1.0, interactive-widget=resizes-content',
+      },
+    },
     {
       tagName: 'link',
       attributes: {
