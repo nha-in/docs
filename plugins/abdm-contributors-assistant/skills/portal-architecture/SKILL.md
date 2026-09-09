@@ -1,9 +1,9 @@
 ---
 name: portal-architecture
 description: 'The architecture of the ABDM Developer Portal: the four building blocks, how the Catalogue compiles into docs, skills and MCP surfaces, the seven binding principles, the atom model, and what is deliberately excluded from V1. Use whenever someone asks how the portal fits together, why a design decision was made, whether something belongs in V1, where a new capability should live, or proposes a change to the structure. Also use before designing any new component so it lands in the right layer instead of beside it.'
-plan_version: 2026.09.07
+plan_version: 2026.09.09
 plan_source: abdm-v1-phase1-architecture-and-plan.md
-plan_hash: sha256:5a499e31695353bb361b3ce1717c2791a3a59f249ba7337093180834e0dc4741
+plan_hash: sha256:4ed2a64425a34e2613dec935deeb950b56de34305c7c5f7388d39afbce12d1d9
 compiled_from_plan: true
 ---
 
@@ -11,7 +11,7 @@ compiled_from_plan: true
 
 ## The one-paragraph version
 
-One knowledge Catalogue of India's health gateways, scoped in phases: HIE-CM M1 to M3 carry atoms in Phase 1, while HIE-CM M4, the PHR modules, UHI and NHCX carry specifications or pages ahead of their atoms. Every gateway is open to atoms; which ones have them is a question of what the schedule reached. It is written so a first-day developer can follow it and structured so a machine can compile it. A self-hosted Docusaurus site with Scalar's open source reference component renders the human side; our own Go MCP server with hybrid retrieval serves the machine side. A build pipeline compiles the same Catalogue into agent skills, a plugin, an index and the MCP's snapshot, and re-runs whenever NHA changes something. Everything is FOSS, self-hosted, and runs without Eka.
+One knowledge Catalogue of India's health gateways, scoped in phases: HIE-CM carries atoms across M1 to M4 and the PHR modules P1 to P3, while PHR application services, UHI and NHCX carry specifications or pages ahead of their atoms. Every gateway is open to atoms; which ones have them is a question of what the schedule reached. It is written so a first-day developer can follow it and structured so a machine can compile it. A self-hosted Docusaurus site with Scalar's open source reference component renders the human side; our own Go MCP server with hybrid retrieval serves the machine side. A build pipeline compiles the same Catalogue into agent skills, a plugin, an index and the MCP's snapshot, and re-runs whenever NHA changes something. Everything is FOSS, self-hosted, and runs without Eka.
 
 ## The four building blocks
 
@@ -43,7 +43,7 @@ A principle without an enforcement mechanism is a wish. Each of these has one.
 
 | # | Principle | Enforced by |
 |---|---|---|
-| P1 | Scope is phased and declared, never implied, and what exists is declared separately from what is verified: HIE-CM M1 to M3 carry atoms now, and M4, the PHR modules, UHI and NHCX carry specifications or pages without atoms | Mandatory `gateway` field, and that is all of it. No gateway is refused by lint. A coverage gate refusing to build on zero verified atoms is wanted and not implemented, so the phasing half of P1 is held by review, not by CI. Do not cite it as a gate. |
+| P1 | Scope is phased and declared, never implied, and what exists is declared separately from what is verified: HIE-CM M1 to M4 and P1 to P3 carry atoms now, and PHR application services, UHI and NHCX carry specifications or pages without atoms | Mandatory `gateway` field, and that is all of it. No gateway is refused by lint. A coverage gate refusing to build on zero verified atoms is wanted and not implemented, so the phasing half of P1 is held by review, not by CI. Do not cite it as a gate. |
 | P2 | Documentation is the knowledge base that powers everything | Skills, llms.txt, MCP resources and the support agent are build outputs. `scripts/validate-skills.mjs` fails CI on a cited atom id or curl target the Catalogue does not define. It does not check every identifier. |
 | P3 | No em dashes, write like a person | A CI rule blocks U+2014. The writing guide is in the repo and in the compiler prompt. |
 | P4 | Human and machine readable from one source | Typed atoms: frontmatter is the machine half, body is the human half, structured blocks are fenced with a declared schema. |
@@ -92,21 +92,21 @@ Use this when someone proposes a capability and you need to place it.
 
 Scope is phased, and phase is not the only axis. Keep two claims apart at all times. **Exists** means a file is in the repository and a page renders from it. **Verified** means the call was made against the sandbox and the response recorded in an atom. A specification existing is not evidence that any operation in it works.
 
-What exists: `catalogue/openapi/hiecm/v3/` holds nine specifications carrying 289 operations, the gateway plus M1, M2, M3, M4, P1, P2, P3 and PHR application services. The site renders 348 HIE-CM pages, 302 of them generated, alongside 16 UHI pages and 5 NHCX pages.
+What exists: `catalogue/openapi/hiecm/v3/` holds nine specifications carrying 282 operations, the gateway plus M1, M2, M3, M4, P1, P2, P3 and PHR application services. The site renders 383 HIE-CM pages, 329 of them generated, alongside 16 UHI pages and 5 NHCX pages.
 
-What is verified: 142 atoms are indexed, 138 `unverified` and 4 `verified`. Every atom is HIE-CM or shared: 122 HIE-CM, of which 120 sit on M1 to M3 and 2 are decision atoms carrying `n/a`, plus 20 shared atoms, which lint requires to carry `n/a`. There are no M4 atoms, no PHR module atoms, no UHI atoms and no NHCX atoms.
+What is verified: 319 atoms are indexed, 311 `unverified`, 4 `draft` and 4 `verified`. Every atom is HIE-CM or shared: 251 HIE-CM, of which 249 sit on M1 to M4 and P1 to P3 and 2 are decision atoms carrying `n/a`, plus 68 shared atoms, which lint requires to carry `n/a`. There are no PHR application services atoms, no UHI atoms and no NHCX atoms.
 
-**NHCX, pages today and atoms open.** NHCX has site pages and no atoms, and the gap is a schedule rather than a rule. Atoms: there are none, because Phase 1's time went to HIE-CM M1 to M3. `scripts/lint-atoms.mjs` accepts `gateway: nhcx` alongside `hiecm`, `uhi` and `shared`, so an NHCX atom lints clean the day somebody writes one. Pages: `site/docs/nhcx/` renders 5 pages covering what NHCX is, who is on it, its registries and its glossary, `catalogue/nhcx/` and `catalogue/openapi/nhcx/v1/` exist as folder structure holding no atom and no specification, and `CONTRIBUTING.md` documents the NHCX provider and payer roles. Nothing enforces that second half, because those are ordinary hand-written site pages. So, in both directions: do not tell anyone NHCX is absent from the repository, because its pages ship, and do not tell anyone NHCX atoms are forbidden, because they are merely unwritten.
+**NHCX, pages today and atoms open.** NHCX has site pages and no atoms, and the gap is a schedule rather than a rule. Atoms: there are none, because the time went to HIE-CM. `scripts/lint-atoms.mjs` accepts `gateway: nhcx` alongside `hiecm`, `uhi` and `shared`, so an NHCX atom lints clean the day somebody writes one. Pages: `site/docs/nhcx/` renders 5 pages covering what NHCX is, who is on it, its registries and its glossary, `catalogue/nhcx/` and `catalogue/openapi/nhcx/v1/` exist as folder structure holding no atom and no specification, and `CONTRIBUTING.md` documents the NHCX provider and payer roles. Nothing enforces that second half, because those are ordinary hand-written site pages. So, in both directions: do not tell anyone NHCX is absent from the repository, because its pages ship, and do not tell anyone NHCX atoms are forbidden, because they are merely unwritten.
 
-Out of Phase 1 is not an empty page. UHI and NHCX have orientation pages built from NHA's own documents: what it is, whether the reader needs it, where NHA documents it. M4 and the PHR modules go further, because they have specification files, so their reference pages are generated and every operation appears. What none of them has is an atom, which is where the plain words, the worked example and the recorded sandbox response live. The landing page, the index skill and the frontmatter all carry the phase.
+Out of Phase 1 is not an empty page. UHI and NHCX have orientation pages built from NHA's own documents: what it is, whether the reader needs it, where NHA documents it. PHR application services goes further, because it has a specification file, so its reference pages are generated and every operation appears. What none of the three has is an atom, which is where the plain words, the worked example and the recorded sandbox response live. The landing page, the index skill and the frontmatter all carry the phase.
 
-One gateway at three milestones, fully proven, beats three gateways half-written. Generated reference pages are cheap, because they fall out of a specification file, which is why M4 and the PHR modules render at all. Atoms are expensive, because each one is written and then proven, which is why they stop at M1 to M3. A confident wrong page is harmful; a generated page that says it is unverified is honest. What is never acceptable is something shaped like a proven reference that has not been run. Repeat that whenever someone suggests slipping UHI or the PHR modules into Phase 1 "since the pages already render".
+One gateway written out beats three gateways half-written. Generated reference pages are cheap, because they fall out of a specification file, which is why every HIE-CM module renders. Atoms are expensive, because each one is written and then proven, and the writing has since reached M4 and P1 to P3 while the proving has not moved: 4 of the 319 carry a recorded sandbox response. A confident wrong page is harmful; a generated page that says it is unverified is honest. What is never acceptable is something shaped like a proven reference that has not been run. Repeat that whenever someone suggests slipping UHI into Phase 1 "since the pages already render".
 
 ## Explicitly not in V1
 
 Naming these prevents scope creep by accretion.
 
-- Atoms and skills for HIE-CM M4, for the PHR modules P1 to P3 and PHR application services, and for UHI. Their specifications and generated reference pages are already in the repository; only the atoms and skills are Phase 2
+- Atoms for PHR application services, and atoms and skills for UHI. Their specifications or generated reference pages are already in the repository; only the atoms and skills are Phase 2. HIE-CM M4 and P1 to P3 have come off this list: they carry atoms and compiled skills, and what they lack is verification
 - NHCX atoms and NHCX skills, in V1 only. Nothing rejects them: the gateway lints clean and Phase 2 may add them. NHCX site pages are not on this list: they exist and they ship
 - The conformance harness, ledger, gate and simulators
 - Execute-mode MCP exposed publicly
