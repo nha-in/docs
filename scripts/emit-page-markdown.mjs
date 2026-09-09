@@ -78,11 +78,69 @@ function flattenCodeBlocks($, root) {
 }
 
 /**
+ * Docusaurus renders mermaid in the browser, so a diagram is simply not in
+ * the built HTML: no source, no SVG, nothing to convert. It is the one thing
+ * a page's markdown source still carries that its HTML does not, and the
+ * milestone and concept pages carry 24 of them, so the fences are read back
+ * from source and put under the heading they followed.
+ */
+function mermaidBlocks(src) {
+  const out = [];
+  const lines = src.split('\n');
+  let heading = null;
+  for (let i = 0; i < lines.length; i += 1) {
+    const h = /^#{1,6}\s+(.*)$/.exec(lines[i]);
+    if (h) {
+      heading = h[1].trim();
+      continue;
+    }
+    if (!/^\s*```mermaid\s*$/.test(lines[i])) continue;
+    const block = [lines[i]];
+    for (i += 1; i < lines.length; i += 1) {
+      block.push(lines[i]);
+      if (/^\s*```\s*$/.test(lines[i])) break;
+    }
+    out.push({heading, block: block.join('\n')});
+  }
+  return out;
+}
+
+export function restoreMermaid(md, src) {
+  const blocks = mermaidBlocks(src ?? '');
+  if (!blocks.length) return md;
+  const byHeading = new Map();
+  const loose = [];
+  for (const {heading, block} of blocks) {
+    if (!heading) {
+      loose.push(block);
+      continue;
+    }
+    if (!byHeading.has(heading)) byHeading.set(heading, []);
+    byHeading.get(heading).push(block);
+  }
+  const out = [];
+  for (const line of md.split('\n')) {
+    out.push(line);
+    const h = /^#{1,6}\s+(.*)$/.exec(line);
+    if (!h) continue;
+    const group = byHeading.get(h[1].trim());
+    if (!group) continue;
+    for (const block of group) out.push('', block);
+    byHeading.delete(h[1].trim());
+  }
+  // A heading the conversion reworded still leaves its diagram on the page,
+  // at the end rather than nowhere.
+  for (const group of byHeading.values()) for (const block of group) out.push('', block);
+  for (const block of loose) out.push('', block);
+  return out.join('\n');
+}
+
+/**
  * One built page's content as markdown, or null when the page carries no
  * content container. Null means the build's template changed shape, which
  * the caller reports rather than papering over with an empty file.
  */
-export function htmlToMarkdown(html) {
+export function htmlToMarkdown(html, src) {
   const $ = load(html);
   const root = $(CONTENT).first();
   if (!root.length) return null;
@@ -99,7 +157,7 @@ export function htmlToMarkdown(html) {
     .filter((_, node) => node.type === 'comment')
     .remove();
   flattenCodeBlocks($, root);
-  const md = String(pipeline.processSync(root.html() ?? ''));
+  const md = restoreMermaid(String(pipeline.processSync(root.html() ?? '')), src);
   return `${md.replace(/\n{3,}/g, '\n\n').trim()}\n`;
 }
 
@@ -286,7 +344,7 @@ function main() {
         skipped += 1;
         continue;
       }
-      md = htmlToMarkdown(readFileSync(html, 'utf8'));
+      md = htmlToMarkdown(readFileSync(html, 'utf8'), raw);
       if (md === null) {
         unrendered.push(route);
         continue;
