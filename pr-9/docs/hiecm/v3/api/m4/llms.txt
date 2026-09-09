@@ -1,0 +1,11 @@
+# M4
+
+> Every page of the M4 module of the ABDM Developer Portal, fetchable as markdown.
+
+## Pages
+
+- [M4 HPR and HFR](https://nha-in.github.io/docs/pr-9/docs/hiecm/v3/api/m4): M4 base URLs and the HPR and HFR operations.
+- [List the specialities a facility can declare](https://nha-in.github.io/docs/pr-9/docs/hiecm/v3/api/m4/endpoints/m4-hfr-get-specialities): One of the two HFR master data calls whose path appears in text. Not
+- [Log in to the HPR with a username and password](https://nha-in.github.io/docs/pr-9/docs/hiecm/v3/api/m4/endpoints/m4-hpr-login-password): One of the five HPR login routes, and the only one with a published
+- [M4 HPR and HFR errors](https://nha-in.github.io/docs/pr-9/docs/hiecm/v3/api/m4/errors): What M4 HPR and HFR returns when a call fails, and what to do about it.
+- [M4 operations and fields](https://nha-in.github.io/docs/pr-9/docs/hiecm/v3/api/m4/undocumented): Every M4 call for the HPR and the HFR, with its parameters, codes and rules, including the calls whose path is not yet published.

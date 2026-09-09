@@ -1,0 +1,1086 @@
+<!doctype html><html lang=en dir=ltr class="docs-wrapper plugin-docs plugin-id-default docs-version-current docs-doc-page docs-doc-id-hiecm/v3/api/m4/undocumented" data-has-hydrated=false><head><meta charset=UTF-8><title data-rh=true>M4 operations and fields | ABDM Developer Portal</title><meta data-rh=true name=viewport content="width=device-width, initial-scale=1.0"/><meta data-rh=true name=twitter:card content=summary_large_image /><meta data-rh=true property=og:image content=https://nha-in.github.io/docs/pr-9/img/social-card.jpg /><meta data-rh=true name=twitter:image content=https://nha-in.github.io/docs/pr-9/img/social-card.jpg /><meta data-rh=true property=og:url content=https://nha-in.github.io/docs/pr-9/docs/hiecm/v3/api/m4/undocumented /><meta data-rh=true property=og:locale content=en /><meta data-rh=true name=docsearch:language content=en /><meta data-rh=true name=docusaurus_version content=current /><meta data-rh=true name=docsearch:version content=current /><meta data-rh=true property=og:title content="M4 operations and fields | ABDM Developer Portal"/><meta data-rh=true name=description content="Every M4 call for the HPR and the HFR, with its parameters, codes and rules, including the calls whose path is not yet published."/><meta data-rh=true property=og:description content="Every M4 call for the HPR and the HFR, with its parameters, codes and rules, including the calls whose path is not yet published."/><link data-rh=true rel=icon href=/docs/pr-9/img/favicon.svg /><link data-rh=true rel=canonical href=https://nha-in.github.io/docs/pr-9/docs/hiecm/v3/api/m4/undocumented /><link data-rh=true rel=alternate href=https://nha-in.github.io/docs/pr-9/docs/hiecm/v3/api/m4/undocumented hreflang=en /><link data-rh=true rel=alternate href=https://nha-in.github.io/docs/pr-9/docs/hiecm/v3/api/m4/undocumented hreflang=x-default /><script data-rh=true type=application/ld+json>{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","item":"https://nha-in.github.io/docs/pr-9/docs/hiecm/v3/api/","name":"APIs","position":1},{"@type":"ListItem","item":"https://nha-in.github.io/docs/pr-9/docs/hiecm/v3/api/m4/","name":"M4 HPR and HFR","position":2},{"@type":"ListItem","item":"https://nha-in.github.io/docs/pr-9/docs/hiecm/v3/api/m4/undocumented","name":"Operations and fields","position":3}]}</script><link rel="alternate icon" type=image/png href=/docs/pr-9/img/favicon.png><link rel=apple-touch-icon href=/docs/pr-9/img/apple-touch-icon.png><script src=/docs/pr-9/agent/abdm-support-agent.js defer></script><link rel=stylesheet href=/docs/pr-9/assets/css/styles.a51ce804.css /><script src=/docs/pr-9/assets/js/runtime~main.7af0ca8f.js defer></script><script src=/docs/pr-9/assets/js/main.715d9a6d.js defer></script></head><body><svg style="display: none;"><defs>
+<symbol id=theme-svg-external-link viewBox="0 0 24 24"><path fill=currentColor d="M21 13v10h-21v-19h12v2h-10v15h17v-8h2zm3-12h-10.988l4.035 4-6.977 7.07 2.828 2.828 6.977-7.07 4.125 4.172v-11z"/></symbol>
+</defs></svg>
+<script>!function(){var t=function(){try{return new URLSearchParams(window.location.search).get("docusaurus-theme")}catch(t){}}()||function(){try{return window.localStorage.getItem("theme-23c")}catch(t){}}();document.documentElement.setAttribute("data-theme",t||(window.matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light")),document.documentElement.setAttribute("data-theme-choice",t||"system")}(),function(){try{for(var[t,e]of new URLSearchParams(window.location.search).entries())if(t.startsWith("docusaurus-data-")){var a=t.replace("docusaurus-data-","data-");document.documentElement.setAttribute(a,e)}}catch(t){}}()</script><script src=/docs/pr-9/vendor/scalar/standalone.js></script>
+<script src=/docs/pr-9/vendor/scalar/standalone.js></script>
+<script src=/docs/pr-9/vendor/scalar/standalone.js></script>
+<script src=/docs/pr-9/vendor/scalar/standalone.js></script>
+<script src=/docs/pr-9/vendor/scalar/standalone.js></script>
+<script src=/docs/pr-9/vendor/scalar/standalone.js></script>
+<script src=/docs/pr-9/vendor/scalar/standalone.js></script>
+<script src=/docs/pr-9/vendor/scalar/standalone.js></script>
+<script src=/docs/pr-9/vendor/scalar/standalone.js></script>
+<script src=/docs/pr-9/vendor/scalar/standalone.js></script>
+<script src=/docs/pr-9/vendor/scalar/standalone.js></script>
+<script src=/docs/pr-9/vendor/scalar/standalone.js></script>
+<script src=/docs/pr-9/vendor/scalar/standalone.js></script><div id=__docusaurus><link rel=preload as=image href=/docs/pr-9/img/nha-logo.svg /><link rel=preload as=image href=/docs/pr-9/img/nha-logo-dark.svg /><div role=region aria-label="Skip to main content"><a class=skipToContent_fXgn href=#__docusaurus_skipToContent_fallback>Skip to main content</a></div><nav class="navbar navbar--fixed-top topbar" aria-label=Site><a class=topbar-brand aria-label="ABDM Developer Portal" href=/docs/pr-9/><img src=/docs/pr-9/img/nha-logo.svg alt="" class="topbar-logo themedComponent_siVc themedComponent--light_hHel"/><img src=/docs/pr-9/img/nha-logo-dark.svg alt="" class="topbar-logo themedComponent_siVc themedComponent--dark_yETr"/><span class=brand-chip><span aria-hidden=true class=brand-chip__mark style='-webkit-mask-image:url("/docs/pr-9/img/ashoka-emblem-mark.svg");mask-image:url("/docs/pr-9/img/ashoka-emblem-mark.svg")'></span><span class=topbar-wordmark>ABDM Developer Portal</span></span></a><button type=button id=radix-_R_16akl_ aria-haspopup=menu aria-expanded=false data-state=closed data-slot=dropdown-menu-trigger class="topbar-action topbar-gateway" aria-label="Gateway: HIE-CM">HIE-CM<svg xmlns=http://www.w3.org/2000/svg width=24 height=24 viewBox="0 0 24 24" fill=none stroke=currentColor stroke-width=2 stroke-linecap=round stroke-linejoin=round class="lucide lucide-chevron-down size-3.5" aria-hidden=true><path d="m6 9 6 6 6-6"/></svg></button><div class=topbar-center><div class=omnibox><div class="navbar__search searchBarContainer_bpSG" dir=ltr><svg aria-hidden=true class=searchIcon_qjAM focusable=false viewBox="0 0 16 16"><path fill=currentColor d="M6.02945 10.20327a4.17382 4.17382 0 1 1 4.17382-4.17382 4.15609 4.15609 0 0 1-4.17382 4.17382Zm9.69195 4.2199-4.8225-4.82338A5.88021 5.88021 0 0 0 12.058 6.02856 6.00467 6.00467 0 1 0 9.59979 10.8989l4.82338 4.82338a.89729.89729 0 0 0 1.29912 0 .89749.89749 0 0 0-.00087-1.29909Z"/></svg><input placeholder=Search aria-label=Search class="navbar__search-input searchInput_T5pz" value="" /><div class="loadingRing_hScY searchBarLoadingRing_dMau"><div></div><div></div><div></div><div></div></div></div><abdm-support-agent docs-origin=https://nha-in.github.io/docs/pr-9 starters="I want to create an ABHA
+I want to share health records
+What format does the TIMESTAMP header need?
+What does ABDM-1016 mean and how do I fix it?" support-url=/docs/pr-9/docs/support></abdm-support-agent></div></div><div class=topbar-actions><a class="topbar-action topbar-action--icon" href=https://sandbox.abdm.gov.in target=_blank rel="noopener noreferrer" aria-label="ABDM sandbox" data-state=closed data-slot=tooltip-trigger><svg viewBox="1 1.8 22 16" width=26 height=19 fill=none stroke=currentColor stroke-width=1.5 stroke-linecap=round stroke-linejoin=round aria-hidden=true><path d="M12 2.2 22.4 8.2 12 14.2 1.6 8.2Z"/><path d="M1.6 8.2v3.1L12 17.3l10.4-6V8.2"/><path d="M9.2 6.4 6.4 8.2l2.8 1.8M14.8 6.4l2.8 1.8-2.8 1.8M13.4 5.3l-2.8 6"/></svg></a><a class="topbar-action topbar-action--icon" href=https://github.com/nha-in target=_blank rel="noopener noreferrer" aria-label="GitHub repository"><svg viewBox="0 0 16 16" width=16 height=16 aria-hidden=true fill=currentColor><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82a7.4 7.4 0 0 1 2-.27c.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg></a><button type=button id=radix-_R_e6akl_ aria-haspopup=menu aria-expanded=false data-state=closed data-slot=dropdown-menu-trigger class="topbar-action topbar-locale"><svg xmlns=http://www.w3.org/2000/svg width=24 height=24 viewBox="0 0 24 24" fill=none stroke=currentColor stroke-width=2 stroke-linecap=round stroke-linejoin=round class="lucide lucide-languages size-4" aria-hidden=true><path d="m5 8 6 6"/><path d="m4 14 6-6 2-3"/><path d="M2 5h12"/><path d="M7 2h1"/><path d="m22 22-5-10-5 10"/><path d="M14 18h6"/></svg>English<svg xmlns=http://www.w3.org/2000/svg width=24 height=24 viewBox="0 0 24 24" fill=none stroke=currentColor stroke-width=2 stroke-linecap=round stroke-linejoin=round class="lucide lucide-chevron-down size-3.5" aria-hidden=true><path d="m6 9 6 6 6-6"/></svg></button></div><button type=button id=radix-_R_2makl_ aria-haspopup=menu aria-expanded=false data-state=closed data-slot=dropdown-menu-trigger class="topbar-action topbar-action--icon topbar-overflow" aria-label=More><svg xmlns=http://www.w3.org/2000/svg width=24 height=24 viewBox="0 0 24 24" fill=none stroke=currentColor stroke-width=2 stroke-linecap=round stroke-linejoin=round class="lucide lucide-ellipsis size-5" aria-hidden=true><circle cx=12 cy=12 r=1 /><circle cx=19 cy=12 r=1 /><circle cx=5 cy=12 r=1 /></svg></button><div class="toggle_vylO topbar-toggle"><button class="clean-btn toggleButton_gllP toggleButtonDisabled_aARS" type=button disabled title="system mode" aria-label="Switch between dark and light mode (currently system mode)"><svg xmlns=http://www.w3.org/2000/svg width=24 height=24 viewBox="0 0 24 24" fill=none stroke=currentColor stroke-width=1.5 stroke-linecap=round stroke-linejoin=round class="lucide lucide-sun toggleIcon_g3eP lightToggleIcon_pyhR" aria-hidden=true><circle cx=12 cy=12 r=4 /><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg><svg xmlns=http://www.w3.org/2000/svg width=24 height=24 viewBox="0 0 24 24" fill=none stroke=currentColor stroke-width=1.5 stroke-linecap=round stroke-linejoin=round class="lucide lucide-moon toggleIcon_g3eP darkToggleIcon_wfgR" aria-hidden=true><path d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401"/></svg><svg xmlns=http://www.w3.org/2000/svg width=24 height=24 viewBox="0 0 24 24" fill=none stroke=currentColor stroke-width=1.5 stroke-linecap=round stroke-linejoin=round class="lucide lucide-laptop toggleIcon_g3eP systemToggleIcon_QzmC" aria-hidden=true><path d="M18 5a2 2 0 0 1 2 2v8.526a2 2 0 0 0 .212.897l1.068 2.127a1 1 0 0 1-.9 1.45H3.62a1 1 0 0 1-.9-1.45l1.068-2.127A2 2 0 0 0 4 15.526V7a2 2 0 0 1 2-2z"/><path d="M20.054 15.987H3.946"/></svg></button></div></nav><nav class=docs-tabs aria-label="Documentation sections"><a class=docs-tab href=/docs/pr-9/docs/hiecm/v3>Docs</a><a class="docs-tab docs-tab--active" aria-current=page href=/docs/pr-9/docs/hiecm/v3/api>API references</a><a class=docs-tab href=/docs/pr-9/docs/whats-new>What's new</a><a class=docs-tab href=/docs/pr-9/docs/support>Support</a></nav><button type=button aria-haspopup=dialog aria-expanded=false data-state=closed data-slot=sheet-trigger class=nav-row aria-label="Open navigation"><svg xmlns=http://www.w3.org/2000/svg width=24 height=24 viewBox="0 0 24 24" fill=none stroke=currentColor stroke-width=2 stroke-linecap=round stroke-linejoin=round class="lucide lucide-menu size-4" aria-hidden=true><path d="M4 5h16"/><path d="M4 12h16"/><path d="M4 19h16"/></svg><span class=nav-row__label>Navigation</span><span class=nav-row__here>API references</span><svg xmlns=http://www.w3.org/2000/svg width=24 height=24 viewBox="0 0 24 24" fill=none stroke=currentColor stroke-width=2 stroke-linecap=round stroke-linejoin=round class="lucide lucide-chevron-down size-4 nav-row__chevron" aria-hidden=true><path d="m6 9 6 6 6-6"/></svg></button><div id=__docusaurus_skipToContent_fallback class="theme-layout-main main-wrapper mainWrapper_z2l0"><div class=docsWrapper_hBAB><button aria-label="Scroll back to top" class="clean-btn theme-back-to-top-button backToTopButton_sjWU" type=button></button><div class=docRoot_UBD9><aside class="theme-doc-sidebar-container docSidebarContainer_YfHR"><div class=sidebarViewport_aRkj><div class=docs-sidebar><div class=docs-sidebar__head><div class=sidebar-pickers><button type=button aria-haspopup=dialog aria-expanded=false data-state=closed data-slot=popover-trigger class=sidebar-settings aria-label="Settings. Version V3 Role Everything"><svg xmlns=http://www.w3.org/2000/svg width=24 height=24 viewBox="0 0 24 24" fill=none stroke=currentColor stroke-width=2 stroke-linecap=round stroke-linejoin=round class="lucide lucide-sliders-horizontal size-4 shrink-0" aria-hidden=true><path d="M10 5H3"/><path d="M12 19H3"/><path d="M14 3v4"/><path d="M16 17v4"/><path d="M21 12h-9"/><path d="M21 19h-5"/><path d="M21 5h-7"/><path d="M8 10v4"/><path d="M8 12H3"/></svg><span class=sidebar-settings__summary>V3<!-- --> · <!-- -->Everything</span></button></div><button type=button class=sidebar-fold title="Collapse sidebar" aria-label="Collapse sidebar"><svg xmlns=http://www.w3.org/2000/svg width=24 height=24 viewBox="0 0 24 24" fill=none stroke=currentColor stroke-width=2 stroke-linecap=round stroke-linejoin=round class="lucide lucide-panel-left-close size-4" aria-hidden=true><rect width=18 height=18 x=3 y=3 rx=2 /><path d="M9 3v18"/><path d="m16 15-3-3 3-3"/></svg></button></div><nav aria-label="Docs sidebar" class="menu thin-scrollbar menu_SIkG"><ul class="theme-doc-sidebar-menu menu__list"><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-1 menu__list-item"><div class=menu__list-item-collapsible><a class="categoryLink_byQd menu__link menu__link--sublist menu__link--active" href=/docs/pr-9/docs/hiecm/v3/api/><span class=categoryLinkLabel_W154>APIs</span></a><button aria-label="Collapse sidebar category 'APIs'" aria-expanded=true type=button class="clean-btn menu__caret"></button></div><ul class=menu__list><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-2 menu__list-item menu__list-item--collapsed"><div class=menu__list-item-collapsible><a class="categoryLink_byQd menu__link menu__link--sublist" tabindex=0 href=/docs/pr-9/docs/hiecm/v3/api/gateway/><span class=categoryLinkLabel_W154>Gateway session</span></a><button aria-label="Expand sidebar category 'Gateway session'" aria-expanded=false type=button class="clean-btn menu__caret"></button></div><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-2 menu__list-item menu__list-item--collapsed"><div class=menu__list-item-collapsible><a class="categoryLink_byQd menu__link menu__link--sublist" tabindex=0 href=/docs/pr-9/docs/hiecm/v3/api/m1/><span class=categoryLinkLabel_W154>M1 ABHA identity</span></a><button aria-label="Expand sidebar category 'M1 ABHA identity'" aria-expanded=false type=button class="clean-btn menu__caret"></button></div><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-2 menu__list-item menu__list-item--collapsed"><div class=menu__list-item-collapsible><a class="categoryLink_byQd menu__link menu__link--sublist" tabindex=0 href=/docs/pr-9/docs/hiecm/v3/api/m2/><span class=categoryLinkLabel_W154>M2 Linking and sharing</span></a><button aria-label="Expand sidebar category 'M2 Linking and sharing'" aria-expanded=false type=button class="clean-btn menu__caret"></button></div><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-2 menu__list-item menu__list-item--collapsed"><div class=menu__list-item-collapsible><a class="categoryLink_byQd menu__link menu__link--sublist" tabindex=0 href=/docs/pr-9/docs/hiecm/v3/api/m3/><span class=categoryLinkLabel_W154>M3 Consent and fetching</span></a><button aria-label="Expand sidebar category 'M3 Consent and fetching'" aria-expanded=false type=button class="clean-btn menu__caret"></button></div><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-2 menu__list-item"><div class=menu__list-item-collapsible><a class="categoryLink_byQd menu__link menu__link--sublist menu__link--active" tabindex=0 href=/docs/pr-9/docs/hiecm/v3/api/m4/><span class=categoryLinkLabel_W154>M4 HPR and HFR</span></a><button aria-label="Collapse sidebar category 'M4 HPR and HFR'" aria-expanded=true type=button class="clean-btn menu__caret"></button></div><ul class=menu__list><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-3 menu__list-item menu__list-item--collapsed"><div class=menu__list-item-collapsible><a class="categoryLink_byQd menu__link menu__link--sublist menu__link--sublist-caret" role=button aria-expanded=false tabindex=0 href=/docs/pr-9/docs/hiecm/v3/api/m4/endpoints/m4-hpr-login-password><span class=categoryLinkLabel_W154>HPR login</span></a></div><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-3 menu__list-item menu__list-item--collapsed"><div class=menu__list-item-collapsible><a class="categoryLink_byQd menu__link menu__link--sublist menu__link--sublist-caret" role=button aria-expanded=false tabindex=0 href=/docs/pr-9/docs/hiecm/v3/api/m4/endpoints/m4-hfr-get-specialities><span class=categoryLinkLabel_W154>HFR master data</span></a></div><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-3 menu__list-item"><a class="menu__link menu__link--active" aria-current=page tabindex=0 href=/docs/pr-9/docs/hiecm/v3/api/m4/undocumented><span class=linkLabel_WmDU>Operations and fields</span></a><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-3 menu__list-item"><a class=menu__link tabindex=0 href=/docs/pr-9/docs/hiecm/v3/api/m4/errors><span class=linkLabel_WmDU>Errors</span></a></ul><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-2 menu__list-item menu__list-item--collapsed"><div class=menu__list-item-collapsible><a class="categoryLink_byQd menu__link menu__link--sublist" tabindex=0 href=/docs/pr-9/docs/hiecm/v3/api/p1/><span class=categoryLinkLabel_W154>P1 PHR identity and profile</span></a><button aria-label="Expand sidebar category 'P1 PHR identity and profile'" aria-expanded=false type=button class="clean-btn menu__caret"></button></div><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-2 menu__list-item menu__list-item--collapsed"><div class=menu__list-item-collapsible><a class="categoryLink_byQd menu__link menu__link--sublist" tabindex=0 href=/docs/pr-9/docs/hiecm/v3/api/p2/><span class=categoryLinkLabel_W154>P2 PHR linking and records</span></a><button aria-label="Expand sidebar category 'P2 PHR linking and records'" aria-expanded=false type=button class="clean-btn menu__caret"></button></div><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-2 menu__list-item menu__list-item--collapsed"><div class=menu__list-item-collapsible><a class="categoryLink_byQd menu__link menu__link--sublist" tabindex=0 href=/docs/pr-9/docs/hiecm/v3/api/p3/><span class=categoryLinkLabel_W154>P3 PHR consent and notifications</span></a><button aria-label="Expand sidebar category 'P3 PHR consent and notifications'" aria-expanded=false type=button class="clean-btn menu__caret"></button></div><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-2 menu__list-item menu__list-item--collapsed"><div class=menu__list-item-collapsible><a class="categoryLink_byQd menu__link menu__link--sublist" tabindex=0 href=/docs/pr-9/docs/hiecm/v3/api/phr-services/><span class=categoryLinkLabel_W154>PHR application services</span></a><button aria-label="Expand sidebar category 'PHR application services'" aria-expanded=false type=button class="clean-btn menu__caret"></button></div></ul><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-1 menu__list-item"><div class=menu__list-item-collapsible><a class="categoryLink_byQd menu__link menu__link--sublist menu__link--sublist-caret" role=button aria-expanded=true href=/docs/pr-9/docs/hiecm/v3/reference/authentication><span class=categoryLinkLabel_W154>References</span></a></div><ul class=menu__list><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class=menu__link tabindex=0 href=/docs/pr-9/docs/hiecm/v3/reference/authentication><span class=linkLabel_WmDU>Authentication</span></a><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class=menu__link tabindex=0 href=/docs/pr-9/docs/hiecm/v3/reference/error-codes><span class=linkLabel_WmDU>Error codes</span></a><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class=menu__link tabindex=0 href=/docs/pr-9/docs/hiecm/v3/reference/data-dictionary><span class=linkLabel_WmDU>Data dictionary</span></a></ul><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-1 menu__list-item"><div class=menu__list-item-collapsible><a class="categoryLink_byQd menu__link menu__link--sublist" href=/docs/pr-9/docs/hiecm/v3/troubleshooting/><span class=categoryLinkLabel_W154>Troubleshooting</span></a><button aria-label="Collapse sidebar category 'Troubleshooting'" aria-expanded=true type=button class="clean-btn menu__caret"></button></div><ul class=menu__list><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class=menu__link tabindex=0 href=/docs/pr-9/docs/hiecm/v3/troubleshooting/callback-never-arrives><span class=linkLabel_WmDU>Callback never arrives</span></a><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class=menu__link tabindex=0 href=/docs/pr-9/docs/hiecm/v3/troubleshooting/everything-returns-401><span class=linkLabel_WmDU>Everything returns 401</span></a><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class=menu__link tabindex=0 href=/docs/pr-9/docs/hiecm/v3/troubleshooting/otp-never-arrives><span class=linkLabel_WmDU>OTP never arrives</span></a><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class=menu__link tabindex=0 href=/docs/pr-9/docs/hiecm/v3/troubleshooting/accepted-then-nothing><span class=linkLabel_WmDU>Accepted, then nothing</span></a><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class=menu__link tabindex=0 href=/docs/pr-9/docs/hiecm/v3/troubleshooting/consent-stuck-requested><span class=linkLabel_WmDU>Consent stuck in Requested</span></a></ul></ul></nav><div role=separator aria-orientation=vertical aria-label="Resize the sidebar" tabindex=0 class=sidebar-resizer><span class=sidebar-resizer__grip aria-hidden=true></span></div></div></div></aside><main class=docMainContainer_TBSr><div class="container padding-top--md padding-bottom--lg"><div class=docs-article-row><div class=docs-article-main><div class=docs-content><article><nav class="theme-doc-breadcrumbs breadcrumbsContainer_Z_bl" aria-label=Breadcrumbs><ul class=breadcrumbs><li class=breadcrumbs__item><a aria-label="Home page" class=breadcrumbs__link href=/docs/pr-9/><svg viewBox="0 0 24 24" class=breadcrumbHomeIcon_YNFT><path d="M10 19v-5h4v5c0 .55.45 1 1 1h3c.55 0 1-.45 1-1v-7h1.7c.46 0 .68-.57.33-.87L12.67 3.6c-.38-.34-.96-.34-1.34 0l-8.36 7.53c-.34.3-.13.87.33.87H5v7c0 .55.45 1 1 1h3c.55 0 1-.45 1-1z" fill=currentColor /></svg></a><li class=breadcrumbs__item><a class=breadcrumbs__link href=/docs/pr-9/docs/hiecm/v3/api/><span>APIs</span></a><li class=breadcrumbs__item><a class=breadcrumbs__link href=/docs/pr-9/docs/hiecm/v3/api/m4/><span>M4 HPR and HFR</span></a><li class="breadcrumbs__item breadcrumbs__item--active"><span class=breadcrumbs__link>Operations and fields</span></ul></nav><div class="tocCollapsible_ETCw theme-doc-toc-mobile tocMobile_ITEo"><button type=button class="clean-btn tocCollapsibleButton_TO0P">On this page</button></div><div><div class="theme-doc-markdown markdown"><header><h1>M4 operations and fields</h1></header>
+<p>Every Milestone 4 call for the <a class="" href=/docs/pr-9/docs/hiecm/v3/getting-started/glossary#hpr>HPR</a>
+and the <a class="" href=/docs/pr-9/docs/hiecm/v3/getting-started/glossary#hfr>HFR</a>, with its parameters,
+its codes and the rules that apply to it. Two operations carry a published path
+and have their own pages under APIs. The rest are here.</p>
+<div class="theme-admonition theme-admonition-caution admonition_xJq3 alert alert--warning"><div class=admonitionHeading_Gvgb><span class=admonitionIcon_Rf37><svg viewBox="0 0 16 16"><path fill-rule=evenodd d="M8.893 1.5c-.183-.31-.52-.5-.887-.5s-.703.19-.886.5L.138 13.499a.98.98 0 0 0 0 1.001c.193.31.53.501.886.501h13.964c.367 0 .704-.19.877-.5a1.03 1.03 0 0 0 .01-1.002L8.893 1.5zm.133 11.497H6.987v-2.003h2.039v2.003zm0-3.004H6.987V5.987h2.039v4.006z"/></svg></span>Where do I get the paths this page does not give?</div><div class=admonitionContent_BuS1><p>Method and path are not yet published for most calls below. Take them from the
+sandbox documentation, and use this page for the fields, codes and rules.</div></div>
+<h2 class="anchor anchorTargetStickyNavbar_tleR" id=session-token>Session token<a href=#session-token class=hash-link aria-label="Direct link to Session token" title="Direct link to Session token" translate=no>​</a></h2>
+<p>The first call you make. Same session pattern as <a class="" href=/docs/pr-9/docs/hiecm/v3/api/m1>M1</a>, issued by the <a class="" href=/docs/pr-9/docs/hiecm/v3/getting-started/glossary#hie-cm>HIE-CM</a> gateway.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class=table-scroll role=region tabindex=0><table><thead><tr><th><th><tbody><tr><td>Method<td><code>POST</code><tr><td>URL<td><code>https://dev.abdm.gov.in/api/hiecm/gateway/v3/sessions</code><tr><td>URL, second host<td><code>https://live.abdm.gov.in/api/hiecm/gateway/v3/sessions</code></table></div>
+<p>Both hosts are listed under <a class="" href=/docs/pr-9/docs/hiecm/v3/api/m4#base-urls>Base URLs</a>.</p>
+<p>Headers:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class=table-scroll role=region tabindex=0><table><thead><tr><th>Header<th>Value<tbody><tr><td><code>REQUEST-ID</code><td>A fresh UUID for each call, for end to end tracing<tr><td><code>TIMESTAMP</code><td>The time the request was made, ISO 8601<tr><td><code>X-CM-ID</code><td><code>sbx</code> in sandbox, <code>abdm</code> in production</table></div>
+<p>Request body:</p>
+<div class="language-json codeBlockContainer_Ckt0 theme-code-block" style="--prism-background-color:hsl(230, 1%, 98%);--prism-color:hsl(230, 8%, 24%)"><div class=codeBlockContent_QJqH><pre tabindex=0 class="prism-code language-json codeBlock_bY9V thin-scrollbar" style="background-color:hsl(230, 1%, 98%);color:hsl(230, 8%, 24%)"><code class=codeBlockLines_e6Vv><div class=token-line style="color:hsl(230, 8%, 24%)"><span class="token punctuation" style="color:hsl(119, 34%, 47%)">{</span><span class="token plain"></span><br/></div><div class=token-line style="color:hsl(230, 8%, 24%)"><span class="token plain">  </span><span class="token property" style="color:hsl(5, 74%, 59%)">"clientId"</span><span class="token operator" style="color:hsl(221, 87%, 60%)">:</span><span class="token plain"> </span><span class="token string" style="color:hsl(119, 34%, 47%)">"&lt;CLIENT_ID_FROM_SANDBOX_SIGNUP>"</span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">,</span><span class="token plain"></span><br/></div><div class=token-line style="color:hsl(230, 8%, 24%)"><span class="token plain">  </span><span class="token property" style="color:hsl(5, 74%, 59%)">"clientSecret"</span><span class="token operator" style="color:hsl(221, 87%, 60%)">:</span><span class="token plain"> </span><span class="token string" style="color:hsl(119, 34%, 47%)">"&lt;CLIENT_SECRET_FROM_SANDBOX_SIGNUP>"</span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">,</span><span class="token plain"></span><br/></div><div class=token-line style="color:hsl(230, 8%, 24%)"><span class="token plain">  </span><span class="token property" style="color:hsl(5, 74%, 59%)">"grantType"</span><span class="token operator" style="color:hsl(221, 87%, 60%)">:</span><span class="token plain"> </span><span class="token string" style="color:hsl(119, 34%, 47%)">"client_credentials"</span><span class="token plain"></span><br/></div><div class=token-line style="color:hsl(230, 8%, 24%)"><span class="token plain"></span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">}</span><br/></div></code></pre></div></div>
+<p>Response shape:</p>
+<div class="language-json codeBlockContainer_Ckt0 theme-code-block" style="--prism-background-color:hsl(230, 1%, 98%);--prism-color:hsl(230, 8%, 24%)"><div class=codeBlockContent_QJqH><pre tabindex=0 class="prism-code language-json codeBlock_bY9V thin-scrollbar" style="background-color:hsl(230, 1%, 98%);color:hsl(230, 8%, 24%)"><code class=codeBlockLines_e6Vv><div class=token-line style="color:hsl(230, 8%, 24%)"><span class="token punctuation" style="color:hsl(119, 34%, 47%)">{</span><span class="token plain"></span><br/></div><div class=token-line style="color:hsl(230, 8%, 24%)"><span class="token plain">  </span><span class="token property" style="color:hsl(5, 74%, 59%)">"accessToken"</span><span class="token operator" style="color:hsl(221, 87%, 60%)">:</span><span class="token plain"> </span><span class="token string" style="color:hsl(119, 34%, 47%)">"&lt;JWT>"</span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">,</span><span class="token plain"></span><br/></div><div class=token-line style="color:hsl(230, 8%, 24%)"><span class="token plain">  </span><span class="token property" style="color:hsl(5, 74%, 59%)">"expiresIn"</span><span class="token operator" style="color:hsl(221, 87%, 60%)">:</span><span class="token plain"> </span><span class="token number" style="color:hsl(35, 99%, 36%)">1200</span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">,</span><span class="token plain"></span><br/></div><div class=token-line style="color:hsl(230, 8%, 24%)"><span class="token plain">  </span><span class="token property" style="color:hsl(5, 74%, 59%)">"refreshExpiresIn"</span><span class="token operator" style="color:hsl(221, 87%, 60%)">:</span><span class="token plain"> </span><span class="token number" style="color:hsl(35, 99%, 36%)">1800</span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">,</span><span class="token plain"></span><br/></div><div class=token-line style="color:hsl(230, 8%, 24%)"><span class="token plain">  </span><span class="token property" style="color:hsl(5, 74%, 59%)">"refreshToken"</span><span class="token operator" style="color:hsl(221, 87%, 60%)">:</span><span class="token plain"> </span><span class="token string" style="color:hsl(119, 34%, 47%)">"&lt;JWT>"</span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">,</span><span class="token plain"></span><br/></div><div class=token-line style="color:hsl(230, 8%, 24%)"><span class="token plain">  </span><span class="token property" style="color:hsl(5, 74%, 59%)">"tokenType"</span><span class="token operator" style="color:hsl(221, 87%, 60%)">:</span><span class="token plain"> </span><span class="token string" style="color:hsl(119, 34%, 47%)">"bearer"</span><span class="token plain"></span><br/></div><div class=token-line style="color:hsl(230, 8%, 24%)"><span class="token plain"></span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">}</span><br/></div></code></pre></div></div>
+<p>Read <code>expiresIn</code> from your own response rather than hard coding a value.</p>
+<p>Every later call carries this token. The <code>Authorization</code> header value is the word <code>Bearer</code>, one space, then the access token.</p>
+<h2 class="anchor anchorTargetStickyNavbar_tleR" id=encryption>Encryption<a href=#encryption class=hash-link aria-label="Direct link to Encryption" title="Direct link to Encryption" translate=no>​</a></h2>
+<p>Three fields below are sent encrypted: the mobile number in mobile match, the <a class="" href=/docs/pr-9/docs/hiecm/v3/getting-started/glossary#otp>OTP</a> in the HPR mobile login, and the email and password in create HPID. All use the same public certificate, so fetch it once.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class=table-scroll role=region tabindex=0><table><thead><tr><th><th><tbody><tr><td>Method<td><code>GET</code><tr><td>Sandbox URL<td><code>https://apihspsbx.abdm.gov.in/v4/int/api/v1/auth/cert</code><tr><td>Production URL<td><code>https://apinhpr.abdm.gov.in/v4/int/api/v1/auth/cert</code></table></div>
+<p>The response is a PEM public key, beginning <code>-----BEGIN PUBLIC KEY-----</code>. The cipher is <code>RSA/ECB/PKCS1Padding</code>.</p>
+<h2 class="anchor anchorTargetStickyNavbar_tleR" id=hpid-creation>HPID creation<a href=#hpid-creation class=hash-link aria-label="Direct link to HPID creation" title="Direct link to HPID creation" translate=no>​</a></h2>
+<p>Nine calls, in order. Method and path are not yet published for these.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class=table-scroll role=region tabindex=0><table><thead><tr><th>Step<th>Call<th>What it does<th>Detail we have<tbody><tr><td>1<td>Generate Aadhaar link<td>Returns a <code>txnId</code> and a temporary URL for the professional to complete Aadhaar authentication on. The URL expires after 5 minutes<td>Behaviour only<tr><td>2<td>Check Aadhaar authentication status<td>Optional polling. Takes the <code>txnId</code>. Returns a bare boolean, not an object<td>Behaviour only<tr><td>3<td>Verify OTP and fetch user details<td>Takes the <code>txnId</code>. Returns demographic and address details from Aadhaar, with the mobile number masked<td>Behaviour only<tr><td>4<td>Check HPID exists by Aadhaar<td>Returns the <a class="" href=/docs/pr-9/docs/hiecm/v3/getting-started/glossary#hpid>HPID</a> already registered for this Aadhaar, if there is one<td>Behaviour only<tr><td>5<td>Mobile match<td>Checks whether the mobile number is the one on the Aadhaar record. The mobile number is encrypted. The response field is <code>demographicAuthViaMobile</code><td>Behaviour only<tr><td>6<td>Generate mobile OTP<td>Only if <code>demographicAuthViaMobile</code> is false. Takes the mobile number and the <code>txnId</code><td>Behaviour only<tr><td>7<td>Verify mobile OTP<td>Takes the OTP and the <code>txnId</code><td>Behaviour only<tr><td>8<td>Username suggestions<td>Takes the <code>txnId</code>. Returns suggested HPR usernames<td>Behaviour only<tr><td>9<td>Create HPID<td>Takes the professional's details. Email and password are encrypted with the public certificate. Returns the HPID and an <code>hprToken</code><td>Code tables below</table></div>
+<h3 class="anchor anchorTargetStickyNavbar_tleR" id=codes-for-create-hpid>Codes for create HPID<a href=#codes-for-create-hpid class=hash-link aria-label="Direct link to Codes for create HPID" title="Direct link to Codes for create HPID" translate=no>​</a></h3>
+<p>Category:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class=table-scroll role=region tabindex=0><table><thead><tr><th>Code<th>Name<tbody><tr><td>1<td>Doctor<tr><td>2<td>Nurse<tr><td>6<td>Pharmacist</table></div>
+<p>Subcategory, as used by create HPID:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class=table-scroll role=region tabindex=0><table><thead><tr><th>Code<th>Name<th>HPR type<tbody><tr><td>1<td>Modern Medicine<td>doctor<tr><td>2<td>Dentist<td>doctor<tr><td>3<td>Ayurveda<td>doctor<tr><td>4<td>Unani<td>doctor<tr><td>5<td>Siddha<td>doctor<tr><td>6<td>Homoeopathy<td>doctor<tr><td>89<td>Sowa-Rigpa<td>doctor<tr><td>220<td>Yoga and Naturopathy<td>doctor<tr><td>7<td>Registered Auxiliary Nurse Midwife (RANM)<td>nurse<tr><td>8<td>Registered Nurse (RN)<td>nurse<tr><td>9<td>Registered Nurse and Registered Midwife (RN and RM)<td>nurse<tr><td>10<td>Registered Lady Health Visitor (RLHV)<td>nurse<tr><td>33<td>Pharmacist<td>pharmacist</table></div>
+<p>Role:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class=table-scroll role=region tabindex=0><table><thead><tr><th>Code<th>Name<tbody><tr><td>1<td>Healthcare Professional<tr><td>2<td>Facility Manager<tr><td>3<td>Healthcare Professional and Facility Manager</table></div>
+<div class="theme-admonition theme-admonition-note admonition_xJq3 alert alert--secondary"><div class=admonitionHeading_Gvgb><span class=admonitionIcon_Rf37><svg viewBox="0 0 14 16"><path fill-rule=evenodd d="M6.3 5.69a.942.942 0 0 1-.28-.7c0-.28.09-.52.28-.7.19-.18.42-.28.7-.28.28 0 .52.09.7.28.18.19.28.42.28.7 0 .28-.09.52-.28.7a1 1 0 0 1-.7.3c-.28 0-.52-.11-.7-.3zM8 7.99c-.02-.25-.11-.48-.31-.69-.2-.19-.42-.3-.69-.31H6c-.27.02-.48.13-.69.31-.2.2-.3.44-.31.69h1v3c.02.27.11.5.31.69.2.2.42.31.69.31h1c.27 0 .48-.11.69-.31.2-.19.3-.42.31-.69H8V7.98v.01zM7 2.3c-3.14 0-5.7 2.54-5.7 5.68 0 3.14 2.56 5.7 5.7 5.7s5.7-2.55 5.7-5.7c0-3.15-2.56-5.69-5.7-5.69v.01zM7 .98c3.86 0 7 3.14 7 7s-3.14 7-7 7-7-3.12-7-7 3.14-7 7-7z"/></svg></span>The subcategory codes differ between calls</div><div class=admonitionContent_BuS1><p>Register professional and update professional use a second subcategory table, and
+its codes differ from the create HPID table above.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class=table-scroll role=region tabindex=0><table><thead><tr><th>Subcategory<th>Code<tbody><tr><td>Dentistry<td>2<tr><td>Homoeopathy<td>3<tr><td>Ayurveda<td>4<tr><td>Unani<td>5<tr><td>Siddha<td>6<tr><td>Sowa-Rigpa<td>7<tr><td>Nurse categories<td>8 to 11<tr><td>Pharmacist<td>13<tr><td>Yoga and Naturopathy<td>14</table></div><p>Fetch the codes from the HPRID subcategories master API rather than hard coding
+either table. See <a href=#hpr-master-data class="">HPR master data</a>.</div></div>
+<h2 class="anchor anchorTargetStickyNavbar_tleR" id=getting-an-hpr-token>Getting an HPR token<a href=#getting-an-hpr-token class=hash-link aria-label="Direct link to Getting an HPR token" title="Direct link to Getting an HPR token" translate=no>​</a></h2>
+<p>The HPR token is not the gateway access token: it represents the professional, not your client. There are three ways to get one, and all three carry the gateway access token in the <code>Authorization</code> header as well.</p>
+<h3 class="anchor anchorTargetStickyNavbar_tleR" id=login-by-password>Login by password<a href=#login-by-password class=hash-link aria-label="Direct link to Login by password" title="Direct link to Login by password" translate=no>​</a></h3>
+<p>One call. The professional supplies their HPR ID and password.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class=table-scroll role=region tabindex=0><table><thead><tr><th><th><tbody><tr><td>Method<td><code>POST</code><tr><td>Path<td><code>/v4/int/api/v1/auth/authPassword</code></table></div>
+<div class="language-json codeBlockContainer_Ckt0 theme-code-block" style="--prism-background-color:hsl(230, 1%, 98%);--prism-color:hsl(230, 8%, 24%)"><div class=codeBlockContent_QJqH><pre tabindex=0 class="prism-code language-json codeBlock_bY9V thin-scrollbar" style="background-color:hsl(230, 1%, 98%);color:hsl(230, 8%, 24%)"><code class=codeBlockLines_e6Vv><div class=token-line style="color:hsl(230, 8%, 24%)"><span class="token punctuation" style="color:hsl(119, 34%, 47%)">{</span><span class="token plain"></span><br/></div><div class=token-line style="color:hsl(230, 8%, 24%)"><span class="token plain">  </span><span class="token property" style="color:hsl(5, 74%, 59%)">"idType"</span><span class="token operator" style="color:hsl(221, 87%, 60%)">:</span><span class="token plain"> </span><span class="token string" style="color:hsl(119, 34%, 47%)">"hpr_id"</span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">,</span><span class="token plain"></span><br/></div><div class=token-line style="color:hsl(230, 8%, 24%)"><span class="token plain">  </span><span class="token property" style="color:hsl(5, 74%, 59%)">"domainName"</span><span class="token operator" style="color:hsl(221, 87%, 60%)">:</span><span class="token plain"> </span><span class="token string" style="color:hsl(119, 34%, 47%)">"@hpr.abdm"</span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">,</span><span class="token plain"></span><br/></div><div class=token-line style="color:hsl(230, 8%, 24%)"><span class="token plain">  </span><span class="token property" style="color:hsl(5, 74%, 59%)">"hprId"</span><span class="token operator" style="color:hsl(221, 87%, 60%)">:</span><span class="token plain"> </span><span class="token string" style="color:hsl(119, 34%, 47%)">"&lt;USERNAME_CHOSEN_AT_CREATE_HPID>@hpr.abdm"</span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">,</span><span class="token plain"></span><br/></div><div class=token-line style="color:hsl(230, 8%, 24%)"><span class="token plain">  </span><span class="token property" style="color:hsl(5, 74%, 59%)">"password"</span><span class="token operator" style="color:hsl(221, 87%, 60%)">:</span><span class="token plain"> </span><span class="token string" style="color:hsl(119, 34%, 47%)">"&lt;PASSWORD_THE_PROFESSIONAL_SET>"</span><span class="token plain"></span><br/></div><div class=token-line style="color:hsl(230, 8%, 24%)"><span class="token plain"></span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">}</span><br/></div></code></pre></div></div>
+<p>The <code>token</code> in the response is the HPR token. The HPR Swagger page at <code>https://apihspsbx.abdm.gov.in/v4/int/swagger-ui/index.html?urls.primaryName=HPR</code> lets you try the call in a browser.</p>
+<p>The sample <code>expiresIn</code> is <code>1739710198</code>, which reads as a Unix timestamp rather than seconds. The other two login flows return <code>1800</code>. The call has not been run, so which reading is right is unknown.</p>
+<h3 class="anchor anchorTargetStickyNavbar_tleR" id=login-by-mobile-otp>Login by mobile OTP<a href=#login-by-mobile-otp class=hash-link aria-label="Direct link to Login by mobile OTP" title="Direct link to Login by mobile OTP" translate=no>​</a></h3>
+<p>Four calls.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class=table-scroll role=region tabindex=0><table><thead><tr><th>Step<th>Method and path<th>Body<tbody><tr><td>1. Send OTP<td><code>POST /v4/int/api/v2/auth/loginViaMobileSendOTP</code><td><code>{ "mobile": "9999999999" }</code><tr><td>2. Get public certificate<td><code>GET /v4/int/api/v1/auth/cert</code><td>None<tr><td>3. Verify OTP<td>Path not confirmed, see below<td><code>{ "txnId": "&lt;TXN_ID_FROM_STEP_1>", "otp": "&lt;OTP_ENCRYPTED_WITH_THE_PUBLIC_CERT>", "mobile": "&lt;MOBILE_NUMBER>" }</code><tr><td>4. Login with HPR ID<td><code>POST /v4/int/api/v2/auth/login/userAuthorizedToken</code><td><code>{ "hpId": "&lt;HPR_ID_FROM_STEP_3>", "txnId": "&lt;TXN_ID_FROM_STEP_3>" }</code></table></div>
+<p>The verify OTP path is not yet published: the published value repeats the send OTP path, <code>loginViaMobileSendOTP</code>. Take the verify endpoint from the HPR Swagger page.</p>
+<p>Step 1 response:</p>
+<div class="language-json codeBlockContainer_Ckt0 theme-code-block" style="--prism-background-color:hsl(230, 1%, 98%);--prism-color:hsl(230, 8%, 24%)"><div class=codeBlockContent_QJqH><pre tabindex=0 class="prism-code language-json codeBlock_bY9V thin-scrollbar" style="background-color:hsl(230, 1%, 98%);color:hsl(230, 8%, 24%)"><code class=codeBlockLines_e6Vv><div class=token-line style="color:hsl(230, 8%, 24%)"><span class="token punctuation" style="color:hsl(119, 34%, 47%)">{</span><span class="token plain"></span><br/></div><div class=token-line style="color:hsl(230, 8%, 24%)"><span class="token plain">  </span><span class="token property" style="color:hsl(5, 74%, 59%)">"txnId"</span><span class="token operator" style="color:hsl(221, 87%, 60%)">:</span><span class="token plain"> </span><span class="token string" style="color:hsl(119, 34%, 47%)">"061c660d-8752-4639-945d-e77a7ea6f564"</span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">,</span><span class="token plain"></span><br/></div><div class=token-line style="color:hsl(230, 8%, 24%)"><span class="token plain">  </span><span class="token property" style="color:hsl(5, 74%, 59%)">"mobileNumber"</span><span class="token operator" style="color:hsl(221, 87%, 60%)">:</span><span class="token plain"> </span><span class="token null keyword" style="color:hsl(301, 63%, 40%)">null</span><span class="token plain"></span><br/></div><div class=token-line style="color:hsl(230, 8%, 24%)"><span class="token plain"></span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">}</span><br/></div></code></pre></div></div>
+<p>Step 3 response, listing the HPR IDs linked to that mobile number:</p>
+<div class="language-json codeBlockContainer_Ckt0 theme-code-block" style="--prism-background-color:hsl(230, 1%, 98%);--prism-color:hsl(230, 8%, 24%)"><div class=codeBlockContent_QJqH><pre tabindex=0 class="prism-code language-json codeBlock_bY9V thin-scrollbar" style="background-color:hsl(230, 1%, 98%);color:hsl(230, 8%, 24%)"><code class=codeBlockLines_e6Vv><div class=token-line style="color:hsl(230, 8%, 24%)"><span class="token punctuation" style="color:hsl(119, 34%, 47%)">{</span><span class="token plain"></span><br/></div><div class=token-line style="color:hsl(230, 8%, 24%)"><span class="token plain">  </span><span class="token property" style="color:hsl(5, 74%, 59%)">"txnId"</span><span class="token operator" style="color:hsl(221, 87%, 60%)">:</span><span class="token plain"> </span><span class="token string" style="color:hsl(119, 34%, 47%)">"fc6d879c-e535-4ff1-9443-5dc6031efcc1"</span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">,</span><span class="token plain"></span><br/></div><div class=token-line style="color:hsl(230, 8%, 24%)"><span class="token plain">  </span><span class="token property" style="color:hsl(5, 74%, 59%)">"mobileLinkedHpIdDTO"</span><span class="token operator" style="color:hsl(221, 87%, 60%)">:</span><span class="token plain"> </span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">[</span><span class="token plain"></span><br/></div><div class=token-line style="color:hsl(230, 8%, 24%)"><span class="token plain">    </span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">{</span><span class="token plain"></span><br/></div><div class=token-line style="color:hsl(230, 8%, 24%)"><span class="token plain">      </span><span class="token property" style="color:hsl(5, 74%, 59%)">"hprIdNumber"</span><span class="token operator" style="color:hsl(221, 87%, 60%)">:</span><span class="token plain"> </span><span class="token string" style="color:hsl(119, 34%, 47%)">"**-****-0326-3829"</span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">,</span><span class="token plain"></span><br/></div><div class=token-line style="color:hsl(230, 8%, 24%)"><span class="token plain">      </span><span class="token property" style="color:hsl(5, 74%, 59%)">"name"</span><span class="token operator" style="color:hsl(221, 87%, 60%)">:</span><span class="token plain"> </span><span class="token string" style="color:hsl(119, 34%, 47%)">"Test"</span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">,</span><span class="token plain"></span><br/></div><div class=token-line style="color:hsl(230, 8%, 24%)"><span class="token plain">      </span><span class="token property" style="color:hsl(5, 74%, 59%)">"hprId"</span><span class="token operator" style="color:hsl(221, 87%, 60%)">:</span><span class="token plain"> </span><span class="token string" style="color:hsl(119, 34%, 47%)">"*****@hpr.abdm"</span><span class="token plain"></span><br/></div><div class=token-line style="color:hsl(230, 8%, 24%)"><span class="token plain">    </span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">}</span><span class="token plain"></span><br/></div><div class=token-line style="color:hsl(230, 8%, 24%)"><span class="token plain">  </span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">]</span><span class="token plain"></span><br/></div><div class=token-line style="color:hsl(230, 8%, 24%)"><span class="token plain"></span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">}</span><br/></div></code></pre></div></div>
+<p>Step 4 response, which is the HPR token:</p>
+<div class="language-json codeBlockContainer_Ckt0 theme-code-block" style="--prism-background-color:hsl(230, 1%, 98%);--prism-color:hsl(230, 8%, 24%)"><div class=codeBlockContent_QJqH><pre tabindex=0 class="prism-code language-json codeBlock_bY9V thin-scrollbar" style="background-color:hsl(230, 1%, 98%);color:hsl(230, 8%, 24%)"><code class=codeBlockLines_e6Vv><div class=token-line style="color:hsl(230, 8%, 24%)"><span class="token punctuation" style="color:hsl(119, 34%, 47%)">{</span><span class="token plain"></span><br/></div><div class=token-line style="color:hsl(230, 8%, 24%)"><span class="token plain">  </span><span class="token property" style="color:hsl(5, 74%, 59%)">"token"</span><span class="token operator" style="color:hsl(221, 87%, 60%)">:</span><span class="token plain"> </span><span class="token string" style="color:hsl(119, 34%, 47%)">"&lt;HPR_TOKEN_JWT>"</span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">,</span><span class="token plain"></span><br/></div><div class=token-line style="color:hsl(230, 8%, 24%)"><span class="token plain">  </span><span class="token property" style="color:hsl(5, 74%, 59%)">"expiresIn"</span><span class="token operator" style="color:hsl(221, 87%, 60%)">:</span><span class="token plain"> </span><span class="token number" style="color:hsl(35, 99%, 36%)">1800</span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">,</span><span class="token plain"></span><br/></div><div class=token-line style="color:hsl(230, 8%, 24%)"><span class="token plain">  </span><span class="token property" style="color:hsl(5, 74%, 59%)">"refreshToken"</span><span class="token operator" style="color:hsl(221, 87%, 60%)">:</span><span class="token plain"> </span><span class="token string" style="color:hsl(119, 34%, 47%)">"&lt;REFRESH_JWT>"</span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">,</span><span class="token plain"></span><br/></div><div class=token-line style="color:hsl(230, 8%, 24%)"><span class="token plain">  </span><span class="token property" style="color:hsl(5, 74%, 59%)">"refreshExpiresIn"</span><span class="token operator" style="color:hsl(221, 87%, 60%)">:</span><span class="token plain"> </span><span class="token number" style="color:hsl(35, 99%, 36%)">10800</span><span class="token plain"></span><br/></div><div class=token-line style="color:hsl(230, 8%, 24%)"><span class="token plain"></span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">}</span><br/></div></code></pre></div></div>
+<h3 class="anchor anchorTargetStickyNavbar_tleR" id=login-by-aadhaar-otp>Login by Aadhaar OTP<a href=#login-by-aadhaar-otp class=hash-link aria-label="Direct link to Login by Aadhaar OTP" title="Direct link to Login by Aadhaar OTP" translate=no>​</a></h3>
+<p>Two calls.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class=table-scroll role=region tabindex=0><table><thead><tr><th>Step<th>Method and path<th>Body<tbody><tr><td>1. Send OTP<td><code>POST /v4/int/api/v1/auth/init</code><td><code>{ "idType": "hpr_id", "domainName": "@hpr.abdm", "authMethod": "AADHAAR_OTP", "hprId": "&lt;HPR_ID>" }</code><tr><td>2. Verify OTP<td><code>POST /v4/int/api/v1/auth/confirmWithAadhaarOtp</code><td><code>{ "otp": "&lt;OTP>", "txnId": "&lt;TXN_ID_FROM_STEP_1>" }</code></table></div>
+<p>Step 1 returns <code>{ "txnId": "..." }</code>. Step 2 returns the same token object as step 4 of the mobile flow.</p>
+<h2 class="anchor anchorTargetStickyNavbar_tleR" id=register-professional>Register professional<a href=#register-professional class=hash-link aria-label="Direct link to Register professional" title="Direct link to Register professional" translate=no>​</a></h2>
+<p>The one HPR write call with a published path.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class=table-scroll role=region tabindex=0><table><thead><tr><th><th><tbody><tr><td>Method<td><code>POST</code><tr><td>Sandbox URL<td><code>https://apihspsbx.abdm.gov.in/v4/int/apis/v1/doctors/register-professional-new</code></table></div>
+<p>The <code>hprToken</code> from create HPID goes in the payload, not the header. The gateway access token goes in the <code>Authorization</code> header.</p>
+<p>The payload is grouped into personal information, communication address, registration data, qualification data and current work details. Selected fields and their rules:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class=table-scroll role=region tabindex=0><table><thead><tr><th>Field<th>Mandatory<th>Notes<tbody><tr><td><code>hprToken</code><td>Yes<td>From create HPID, or from a login call<tr><td><code>healthProfessionalType</code><td>Yes<td><code>doctor</code>, <code>nurse</code> or <code>pharmacist</code>. An empty or wrong value makes the whole request invalid<tr><td><code>salutation</code>, <code>firstName</code><td>Yes<td><code>middleName</code> and <code>lastName</code> are optional<tr><td><code>nationality</code><td>Yes<td>ID from the countries master<tr><td><code>languagesSpoken</code><td>Yes<td>Comma separated master codes, for example <code>1,5</code><tr><td><code>isCommunicationAddressAsPerKYC</code><td>No<td><code>0</code> means the communication address fields below become mandatory. <code>1</code> means they do not<tr><td><code>category</code><td>Yes<td>Category code, for example <code>1</code> for doctor<tr><td><code>categoryId</code><td>Yes<td>Subcategory code, for example <code>1</code> for Modern Medicine<tr><td><code>registeredWithCouncil</code>, <code>registrationNumber</code><td>Yes<td>Council ID comes from the councils master<tr><td><code>nameOfDegreeOrDiplomaObtained</code><td>Yes<td>ID from the courses master<tr><td><code>college</code>, <code>university</code><td>Yes<td>IDs from the master data. Send <code>0</code> for "Any Other"<tr><td><code>yearOfAwardingDegreeDiploma</code><td>Yes<td><code>monthOfAwardingDegreeDiploma</code> is optional<tr><td><code>currentlyWorking</code><td>Yes<td><code>0</code> or <code>1</code>. If <code>0</code>, <code>reasonForNotWorking</code> becomes mandatory<tr><td><code>chooseWorkStatus</code><td>Yes<td><code>0</code> private, <code>1</code> government, <code>2</code> both<tr><td><code>ministry</code><td>Conditional<td>Mandatory when <code>chooseWorkStatus</code> is <code>1</code> or <code>2</code>. Values from the get all ministry master<tr><td><code>isPermanentOrRenewable</code><td>Conditional<td>Mandatory for a doctor. If <code>Renewable</code>, <code>renewableDueDate</code> is mandatory. Not required for a nurse</table></div>
+<p>Three conditional rules apply separately:</p>
+<ul>
+<li class="">When <code>chooseWorkStatus</code> is <code>1</code> or <code>2</code>, <code>category</code> inside <code>personalInformation</code> must be <code>C</code> for central government or <code>S</code> for state. When it is <code>0</code>, send an empty string. Mandatory either way.</li>
+<li class="">When <code>chooseWorkStatus</code> is <code>1</code> or <code>2</code>, <code>facilityDeclarationData</code> is mandatory.</li>
+<li class="">Without <code>facilityId</code>, then <code>facilityName</code>, <code>facilityAddress</code>, <code>facilityPincode</code>, state, district and <code>facilityType</code> are mandatory. With it, <code>facilityDepartment</code> and <code>facilityDesignation</code> are mandatory.</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_tleR" id=degree-codes>Degree codes<a href=#degree-codes class=hash-link aria-label="Direct link to Degree codes" title="Direct link to Degree codes" translate=no>​</a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class=table-scroll role=region tabindex=0><table><thead><tr><th>Code<th>Degree<th>System of medicine<tbody><tr><td>4060<td>MBBS<td>Modern Medicine<tr><td>4074<td>BDS<td>Dentistry<tr><td>4079<td>BAMS<td>Ayurvedic<tr><td>4082<td>BUMS<td>Unani<tr><td>61<td>BSMS<td>Siddha<tr><td>74<td>BTMS<td>Sowa-Rigpa<tr><td>40<td>BHMS<td>Homoeopathy<tr><td>9568<td>BPharm<td>Pharmacist</table></div>
+<h3 class="anchor anchorTargetStickyNavbar_tleR" id=attachments>Attachments<a href=#attachments class=hash-link aria-label="Direct link to Attachments" title="Direct link to Attachments" translate=no>​</a></h3>
+<p>Every attachment in the payload uses the same shape:</p>
+<div class="language-json codeBlockContainer_Ckt0 theme-code-block" style="--prism-background-color:hsl(230, 1%, 98%);--prism-color:hsl(230, 8%, 24%)"><div class=codeBlockContent_QJqH><pre tabindex=0 class="prism-code language-json codeBlock_bY9V thin-scrollbar" style="background-color:hsl(230, 1%, 98%);color:hsl(230, 8%, 24%)"><code class=codeBlockLines_e6Vv><div class=token-line style="color:hsl(230, 8%, 24%)"><span class="token punctuation" style="color:hsl(119, 34%, 47%)">{</span><span class="token plain"></span><br/></div><div class=token-line style="color:hsl(230, 8%, 24%)"><span class="token plain">  </span><span class="token property" style="color:hsl(5, 74%, 59%)">"fileType"</span><span class="token operator" style="color:hsl(221, 87%, 60%)">:</span><span class="token plain"> </span><span class="token string" style="color:hsl(119, 34%, 47%)">"image/jpeg"</span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">,</span><span class="token plain"></span><br/></div><div class=token-line style="color:hsl(230, 8%, 24%)"><span class="token plain">  </span><span class="token property" style="color:hsl(5, 74%, 59%)">"data"</span><span class="token operator" style="color:hsl(221, 87%, 60%)">:</span><span class="token plain"> </span><span class="token string" style="color:hsl(119, 34%, 47%)">"&lt;BASE64_ENCODED_FILE>"</span><span class="token plain"></span><br/></div><div class=token-line style="color:hsl(230, 8%, 24%)"><span class="token plain"></span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">}</span><br/></div></code></pre></div></div>
+<p>Accepted file types are JPEG, PNG and PDF, sent in <code>fileType</code>. Read the exact value back from your own response rather than hard coding one.</p>
+<h3 class="anchor anchorTargetStickyNavbar_tleR" id=a-note-on-nurses>A note on nurses<a href=#a-note-on-nurses class=hash-link aria-label="Direct link to A note on nurses" title="Direct link to A note on nurses" translate=no>​</a></h3>
+<p>The SMD ID identifies doctors only. Searching nurse colleges by SMD returns a null college or university name. That is expected, not a failure. For nurses, SMD is always null.</p>
+<h2 class="anchor anchorTargetStickyNavbar_tleR" id=the-other-professional-calls>The other professional calls<a href=#the-other-professional-calls class=hash-link aria-label="Direct link to The other professional calls" title="Direct link to The other professional calls" translate=no>​</a></h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class=table-scroll role=region tabindex=0><table><thead><tr><th>Call<th>Published parameters<th>Path<tbody><tr><td>Retrieve professional document list<td><code>hprid</code><td>Not in text<tr><td>Upload documents<td><code>hpr_token</code>, <code>document_id</code>, <code>document_type</code>, <code>data</code> (base64)<td>Not in text<tr><td>Update professional<td>The same field table as register professional, with <code>hprToken</code> from a login call<td>Not in text<tr><td>Fetch professional details<td><code>id</code> (HPR ID, mandatory), <code>name</code> (minimum 3 letters), <code>contactNumber</code>, <code>state</code>, <code>registrationNumber</code>, <code>stateCouncilName</code><td>Not in text<tr><td>Search facility from HPR<td><code>ownershipCode</code>, <code>stateLGDCode</code>, <code>districtLGDCode</code>, <code>subdistrictLGDCode</code>, <code>pincode</code>, <code>facilityName</code>, <code>facilityId</code>, <code>page</code>, <code>resultsPerPage</code><td>Not in text</table></div>
+<p>Upload rules: profile photo 1 MB or smaller, other documents 5 MB or smaller, accepted types png, jpeg, jpg and PDF. The document types are <code>profilePhoto</code>, <code>degreeCertificate</code>, <code>registrationCertificate</code>, <code>proofOfWorkCertificate</code>, <code>proofOfNameChangeRegCertificate</code> and <code>proofOfNameChangeQualCertificate</code>. Which identifier you send as <code>document_id</code> depends on the type:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class=table-scroll role=region tabindex=0><table><thead><tr><th>Document type<th>Identifier to use<tbody><tr><td><code>profilePhoto</code><td>Parent identifier<tr><td><code>degreeCertificate</code><td>Qualification block identifier<tr><td><code>registrationCertificate</code><td>Registration block identifier<tr><td><code>proofOfWorkCertificate</code><td>Parent identifier<tr><td><code>proofOfNameChangeRegCertificate</code><td>Registration block identifier<tr><td><code>proofOfNameChangeQualCertificate</code><td>Qualification block identifier</table></div>
+<h2 class="anchor anchorTargetStickyNavbar_tleR" id=hfr-onboarding>HFR onboarding<a href=#hfr-onboarding class=hash-link aria-label="Direct link to HFR onboarding" title="Direct link to HFR onboarding" translate=no>​</a></h2>
+<p>Five calls, in order. Method and path are not yet published; the parameter tables are.</p>
+<h3 class="anchor anchorTargetStickyNavbar_tleR" id=1-deduplicate-search>1. Deduplicate search<a href=#1-deduplicate-search class=hash-link aria-label="Direct link to 1. Deduplicate search" title="Direct link to 1. Deduplicate search" translate=no>​</a></h3>
+<p>Run this before you create anything, so you do not create a second record for a facility that already exists.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class=table-scroll role=region tabindex=0><table><thead><tr><th>Param<th>Required<th>Notes<tbody><tr><td><code>facilityId</code><td>No<td>6 digit numeric facility unique ID<tr><td><code>name</code><td>Yes<td>Alphanumeric, one space between words<tr><td><code>address</code><td>No<td>Alphanumeric plus <code>-_.(),/</code><tr><td><code>district</code><td>Yes<td>District LGD code<tr><td><code>subDistrict</code><td>Yes<td>Sub district LGD code<tr><td><code>village</code><td>No<td>Village LGD code<tr><td><code>geolocation</code><td>No<td>Latitude and longitude, 1 to 6 decimal places</table></div>
+<p>LGD codes come from the Local Government Directory at <a href=https://lgdirectory.gov.in/ target=_blank rel="noopener noreferrer" class="">lgdirectory.gov.in</a>, and from the LGD lookup calls below.</p>
+<h3 class="anchor anchorTargetStickyNavbar_tleR" id=2-basic-facility-information>2. Basic facility information<a href=#2-basic-facility-information class=hash-link aria-label="Direct link to 2. Basic facility information" title="Direct link to 2. Basic facility information" translate=no>​</a></h3>
+<p>Creates the record and returns a tracking ID that acts as the facility ID for every later call. Needs an HPR token in the header, generated from an HPR ID and password.</p>
+<p>Mandatory fields:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class=table-scroll role=region tabindex=0><table><thead><tr><th>Param<th>Notes<tbody><tr><td><code>facilityName</code><td>First character must be a letter or a digit<tr><td><code>ownershipCode</code><td><code>G</code> government, <code>P</code> private, <code>PP</code> public private<tr><td><code>ownershipSubTypeCode</code><td><code>C</code> or <code>S</code> when ownership is <code>G</code>. <code>P</code> or <code>NP</code> when ownership is <code>P</code> or <code>PP</code><tr><td><code>ownershipSubTypeCode2</code><td>From the ownership subtype call<tr><td><code>workingInPsu</code>, <code>facPsuName</code><td>Only when ownership is <code>G</code> and subtype is <code>C</code><tr><td><code>systemOfMedicineCode</code><td>From master data with <code>type=MEDICINE</code>. Comma separate for several<tr><td><code>facilityTypeCode</code>, <code>facilitySubType</code><td>From the facility type and facility subtype calls<tr><td><code>specialityTypeCode</code><td>From master data with <code>type=SPECIALITY-TYPE</code><tr><td><code>facilityOperationalStatus</code><td>From master data with <code>type=FACSTATUS</code><tr><td><code>typeOfServiceCode</code><td>From master data with <code>type=TYPESERVICE</code>. Not required for diagnostic laboratory, imaging centre, cath laboratory, dialysis centre, blood bank or pharmacy<tr><td><code>facilityAddressDetails</code><td>Country, state, district and sub district LGD codes, address line 1, pincode, latitude and longitude<tr><td><code>facilityUploads</code><td><code>facilityBoardPhoto</code> and <code>facilityBuildingPhoto</code>, each as a <code>name</code> and a base64 <code>value</code>, maximum 5 MB, extension in the name matching the file<tr><td><code>timingsOfFacility</code><td><code>workingDays</code> and <code>openingHours</code>, mandatory when the facility is functional. Hours accept <code>10:00 AM-2:00 PM</code> or <code>24*7</code></table></div>
+<p>Optional fields include <code>facilityRegion</code> (<code>R</code> rural or <code>U</code> urban), the contact block, the address proof block and <code>abdmCompliantSoftware</code>.</p>
+<h3 class="anchor anchorTargetStickyNavbar_tleR" id=3-additional-information>3. Additional information<a href=#3-additional-information class=hash-link aria-label="Direct link to 3. Additional information" title="Direct link to 3. Additional information" translate=no>​</a></h3>
+<p>The tracking ID plus yes or no flags, each answered with a code from master data <code>type=GENERAL-INFO-OPTIONS</code>: <code>hasDialysisCenter</code>, <code>hasPharmacy</code>, <code>hasBloodBank</code>, <code>hasCathLab</code>, <code>hasDiagnosticLab</code>, <code>hasImagingCenter</code>. With an imaging centre, <code>servicesByImagingCenter</code> carries a service code and equipment count per service.</p>
+<p>It also carries the facility's existing scheme identifiers, all optional: <code>nhrrId</code>, <code>nin</code>, <code>abpmjayId</code>, <code>rohiniId</code>, <code>echsId</code>, <code>cghsId</code>, <code>ceaRegistration</code> and <code>stateInsuranceSchemeId</code>.</p>
+<h3 class="anchor anchorTargetStickyNavbar_tleR" id=4-detailed-information>4. Detailed information<a href=#4-detailed-information class=hash-link aria-label="Direct link to 4. Detailed information" title="Direct link to 4. Detailed information" translate=no>​</a></h3>
+<p>The tracking ID plus the sections that apply, which depends on the facility type, the type of service and the system of medicine. The rules:</p>
+<ul>
+<li class="">Specialities are required for most facility types, but not for blood bank, cath laboratory, diagnostic laboratory, dialysis centre, imaging centre or pharmacy.</li>
+<li class="">Medical infrastructure is mandatory for IPD and day care. For IPD at least one bed count must be greater than zero; for day care at least one day care bed count must be.</li>
+<li class="">For OPD where the system of medicine is dentistry, <code>countDentalChairs</code> is mandatory.</li>
+<li class="">For imaging centre, diagnostic laboratory, blood bank and pharmacy, medical infrastructure is not required.</li>
+<li class=""><code>totalNumberOfBeds</code> must be equal to or greater than the sum of the individual bed counts.</li>
+<li class="">The pharmacy, blood bank, diagnostic and imaging sections are each required when the facility is of that type or offers that service.</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_tleR" id=5-submit-facility>5. Submit facility<a href=#5-submit-facility class=hash-link aria-label="Direct link to 5. Submit facility" title="Direct link to 5. Submit facility" translate=no>​</a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class=table-scroll role=region tabindex=0><table><thead><tr><th>Param<th>Required<th>Notes<tbody><tr><td><code>trackingId</code><td>Yes<td>From the basic information call<tr><td><code>sourceOfInformation</code><td>No<td>Leave empty and the facility is treated as a submitted entity<tr><td><code>sourceUniqueID</code><td>No<td>The facility's ID in your own source system</table></div>
+<p>Needs an <code>x-hpird-auth</code> token in the header. Until you make this call the facility stays in draft.</p>
+<h2 class="anchor anchorTargetStickyNavbar_tleR" id=bridge-linkage>Bridge linkage<a href=#bridge-linkage class=hash-link aria-label="Direct link to Bridge linkage" title="Direct link to Bridge linkage" translate=no>​</a></h2>
+<p>Links one facility to one or more bridges. Path not in text.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class=table-scroll role=region tabindex=0><table><thead><tr><th>Param<th>Required<th>Notes<tbody><tr><td><code>facilityId</code><td>Yes<td>Starts with <code>IN</code>, 12 characters in total<tr><td><code>facilityName</code><td>Yes<td>Alphanumeric plus <code>-_.(),/</code><tr><td><code>bridgeId</code><td>Yes<td>Alphanumeric<tr><td><code>hipName</code><td>Yes<td>The name a patient sees in their <a class="" href=/docs/pr-9/docs/hiecm/v3/getting-started/glossary#abha>ABHA</a> or <a class="" href=/docs/pr-9/docs/hiecm/v3/getting-started/glossary#phr>PHR</a> app. 15 characters or fewer, no special characters, unique for every bridge on a facility<tr><td><code>type</code><td>Yes<td><code>HIP</code> or <code>HIU</code><tr><td><code>active</code><td>Yes<td><code>true</code> or <code>false</code></table></div>
+<h2 class="anchor anchorTargetStickyNavbar_tleR" id=hfr-search-and-master-data>HFR search and master data<a href=#hfr-search-and-master-data class=hash-link aria-label="Direct link to HFR search and master data" title="Direct link to HFR search and master data" translate=no>​</a></h2>
+<p>Paths are not yet published. Two appear inside other parameter descriptions: <code>v1.5/facility/fetchfacilitytype</code> and <code>/v1.5/facility/get-specialities</code>.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class=table-scroll role=region tabindex=0><table><thead><tr><th>Call<th>Parameters<th>Notes<tbody><tr><td>Master types<td>None<td>A GET. Returns the list of master data set types<tr><td>Master data<td><code>type</code><td>The type comes from master types<tr><td>LGD states<td>None<td>A GET. Returns states with their districts nested<tr><td>LGD districts<td><code>stateCode</code><td><tr><td>LGD sub districts<td><code>districtCode</code><td><tr><td>Facility type<td><code>ownershipCode</code>, <code>systemOfMedicineCode</code><td>Ownership accepts <code>G</code> or <code>P</code> here<tr><td>Facility subtype<td><code>facilityTypeCode</code><td><tr><td>Ownership subtype<td><code>ownershipCode</code>, <code>ownerSubtypeCode</code><td><tr><td>Get specialities<td><code>systemOfMedicineCode</code><td>One system of medicine per call<tr><td>PSU details by ministry<td>Ministry code from ownership subtype<td><tr><td>Search facility<td>Either <code>facilityId</code>, or <code>ownershipCode</code> with <code>stateLGDCode</code> and <code>facilityName</code>. Plus <code>page</code> (minimum 1) and <code>resultsPerPage</code> (minimum 10)<td>Fuzzy match on name, exact match on everything else<tr><td>Nearby search<td><code>centerLat</code>, <code>centerLon</code>, <code>radiusInKm</code>, <code>from</code>, <code>size</code> are mandatory. <code>abdmSoftware</code>, <code>facilityOwnership</code>, <code>hospitalSpecialityType</code>, <code>speciality</code> and <code>facilityName</code> are optional filters<td>Results are ordered by distance, nearest first<tr><td>Send OTP to contact<td><code>facilityId</code><td>Returns a transaction ID and sends an OTP to the facility's registered mobile<tr><td>Validate OTP<td><code>facilityId</code>, <code>sourceId</code>, <code>otp</code>, <code>source</code>, <code>transactionId</code><td><code>source</code> accepts <code>Government programs</code></table></div>
+<h2 class="anchor anchorTargetStickyNavbar_tleR" id=hpr-master-data>HPR master data<a href=#hpr-master-data class=hash-link aria-label="Direct link to HPR master data" title="Direct link to HPR master data" translate=no>​</a></h2>
+<p>There are 17 master data calls, in four groups:</p>
+<ul>
+<li class="">Qualifications: system of medicine, medical councils, languages, universities, courses, colleges</li>
+<li class="">Geography: countries, states, districts, sub districts</li>
+<li class="">Nursing bodies: nurse affiliated boards, nurse councils, nurse college by state, affiliated board by state councils</li>
+<li class="">Classification: get all ministry, HPRID categories, HPRID subcategories</li>
+</ul>
+<p>The only master data paths the document carries in text:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class=table-scroll role=region tabindex=0><table><thead><tr><th>Call<th>Method and path<tbody><tr><td>Countries<td><code>GET /v4/int/apis/v1/masters/countries/{country_id}</code><tr><td>States<td><code>GET /v4/int/apis/v1/masters/states/{state_id}</code><tr><td>Districts<td><code>GET /v4/int/apis/v1/masters/district/{state_id}</code><tr><td>Sub districts<td><code>GET /v4/int/apis/v1/masters/sub-districts/{district_id}</code><tr><td>Languages<td><code>GET /v4/int/apis/v1/masters/languages/{language_id}</code><tr><td>Courses<td><code>GET /v4/int/apis/v1/masters/courses</code><tr><td>Nurse affiliated boards<td><code>GET /v4/int/apis/v1/masters/affiliated-board</code></table></div>
+<p>Three appear as complete URLs: countries, states and nurse affiliated boards. The other four appear only as path fragments inside field descriptions, so the <code>/v4/int/</code> prefix on those is our reading of the base URL, not a quote.</p>
+<p>Path variables are optional. Drop one and you get the full list. Countries returns:</p>
+<div class="language-json codeBlockContainer_Ckt0 theme-code-block" style="--prism-background-color:hsl(230, 1%, 98%);--prism-color:hsl(230, 8%, 24%)"><div class=codeBlockContent_QJqH><pre tabindex=0 class="prism-code language-json codeBlock_bY9V thin-scrollbar" style="background-color:hsl(230, 1%, 98%);color:hsl(230, 8%, 24%)"><code class=codeBlockLines_e6Vv><div class=token-line style="color:hsl(230, 8%, 24%)"><span class="token punctuation" style="color:hsl(119, 34%, 47%)">{</span><span class="token plain"></span><br/></div><div class=token-line style="color:hsl(230, 8%, 24%)"><span class="token plain">  </span><span class="token property" style="color:hsl(5, 74%, 59%)">"id"</span><span class="token operator" style="color:hsl(221, 87%, 60%)">:</span><span class="token plain"> </span><span class="token number" style="color:hsl(35, 99%, 36%)">356</span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">,</span><span class="token plain"></span><br/></div><div class=token-line style="color:hsl(230, 8%, 24%)"><span class="token plain">  </span><span class="token property" style="color:hsl(5, 74%, 59%)">"alpha_2_code"</span><span class="token operator" style="color:hsl(221, 87%, 60%)">:</span><span class="token plain"> </span><span class="token string" style="color:hsl(119, 34%, 47%)">"IN"</span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">,</span><span class="token plain"></span><br/></div><div class=token-line style="color:hsl(230, 8%, 24%)"><span class="token plain">  </span><span class="token property" style="color:hsl(5, 74%, 59%)">"alpha_3_code"</span><span class="token operator" style="color:hsl(221, 87%, 60%)">:</span><span class="token plain"> </span><span class="token string" style="color:hsl(119, 34%, 47%)">"IND"</span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">,</span><span class="token plain"></span><br/></div><div class=token-line style="color:hsl(230, 8%, 24%)"><span class="token plain">  </span><span class="token property" style="color:hsl(5, 74%, 59%)">"enShortName"</span><span class="token operator" style="color:hsl(221, 87%, 60%)">:</span><span class="token plain"> </span><span class="token string" style="color:hsl(119, 34%, 47%)">"India"</span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">,</span><span class="token plain"></span><br/></div><div class=token-line style="color:hsl(230, 8%, 24%)"><span class="token plain">  </span><span class="token property" style="color:hsl(5, 74%, 59%)">"nationality"</span><span class="token operator" style="color:hsl(221, 87%, 60%)">:</span><span class="token plain"> </span><span class="token string" style="color:hsl(119, 34%, 47%)">"Indian"</span><span class="token plain"></span><br/></div><div class=token-line style="color:hsl(230, 8%, 24%)"><span class="token plain"></span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">}</span><br/></div></code></pre></div></div>
+<p>Two calls take parameters:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class=table-scroll role=region tabindex=0><table><thead><tr><th>Call<th>Parameters<tbody><tr><td>HPRID categories<td><code>role</code>: <code>1</code> healthcare professional, <code>2</code> facility manager, <code>3</code> both<tr><td>HPRID subcategories<td><code>role</code> as above, plus <code>categoryCode</code> from the categories call</table></div>
+<p>A published system of medicine table carries a twelfth row, <code>12 Registered Pharmacist</code>, filed under <code>nurse</code>. Fetch the list from the master API rather than copying either table.</p>
+<h2 class="anchor anchorTargetStickyNavbar_tleR" id=error-codes>Error codes<a href=#error-codes class=hash-link aria-label="Direct link to Error codes" title="Direct link to Error codes" translate=no>​</a></h2>
+<p>There are 150 error codes, all prefixed <code>HIS-</code>, in six groups.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class=table-scroll role=region tabindex=0><table><thead><tr><th>Range<th>What it covers<th>Examples<tbody><tr><td><code>HIS-400</code> to <code>HIS-504</code><td>The HTTP level failures<td><code>HIS-401</code> user is not authorized, <code>HIS-403</code> forbidden, <code>HIS-503</code> requested service is unavailable<tr><td><code>HIS-1xxx</code><td>Validation and facility errors, 103 of them<td><code>HIS-1002</code> the field value should not be empty, <code>HIS-1124</code> bridge not linked, <code>HIS-1128</code> HIP name already exists, <code>HIS-1132</code> duplicate facility detected<tr><td><code>HIS-2xxx</code><td>Aadhaar, OTP and session errors<td><code>HIS-2022</code> invalid OTP, <code>HIS-2031</code> request expired, <code>HIS-2045</code> session expired<tr><td><code>HIS-3xxx</code><td>Aadhaar data and HPID state<td><code>HIS-3001</code> resident data not available, <code>HIS-3021</code> HPRID already exists, <code>HIS-3031</code> invalid token<tr><td><code>HIS-4xxx</code><td>Facility record errors<td><code>HIS-4003</code> facility already exists, <code>HIS-4032</code> invalid state code, <code>HIS-4055</code> invalid image format<tr><td><code>HIS-5xxx</code><td>Registration workflow errors<td><code>HIS-5005</code> already registered, <code>HIS-5011</code> token expired</table></div>
+<p>The full list is in the sandbox documentation for the <a href="https://sandbox.abdm.gov.in/sandbox/v3/new-documentation?doc=healthcare-professional-registry" target=_blank rel="noopener noreferrer" class="">healthcare professional registry</a>.</p>
+<h2 class="anchor anchorTargetStickyNavbar_tleR" id=where-to-go-next>Where to go next<a href=#where-to-go-next class=hash-link aria-label="Direct link to Where to go next" title="Direct link to Where to go next" translate=no>​</a></h2>
+<ul>
+<li class="">The interactive reference: <a class="" href=/docs/pr-9/reference/hiecm-m4>M4 API reference</a>.</li>
+<li class="">The order of calls, as diagrams: <a class="" href=/docs/pr-9/docs/hiecm/v3/milestones/m4>M4 user journeys</a>.</li>
+<li class="">A path missing here that you need now: ask on <a class="" href=/docs/pr-9/docs/support>support</a>.</li>
+</ul></div></div><footer class="theme-doc-footer docusaurus-mt-lg"><div class="row margin-top--sm theme-doc-footer-edit-meta-row"><div class="col noPrint_WFHX"></div><div class="col lastUpdated_JAkA"><span class=theme-last-updated>Last updated<!-- --> on <b><time datetime=2026-09-09T06:37:16.000Z itemprop=dateModified>Sep 9, 2026</time></b></span></div></div></footer></article><nav class=page-next aria-label="Where to go next"><a class="next-step card" href=/docs/pr-9/docs/hiecm/v3/api/m4/errors><span class=next-step__eyebrow>Next</span><span class=next-step__label>Errors<svg xmlns=http://www.w3.org/2000/svg width=24 height=24 viewBox="0 0 24 24" fill=none stroke=currentColor stroke-width=2 stroke-linecap=round stroke-linejoin=round class="lucide lucide-arrow-right size-4" aria-hidden=true><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></span></a></nav></div></div><div class=docs-toc-col><nav aria-labelledby=docs-toc-heading class="docs-toc thin-scrollbar theme-doc-toc-desktop"><p id=docs-toc-heading class=docs-toc-heading>On this page<ul class="table-of-contents table-of-contents__left-border"><li><a href=#session-token class="table-of-contents__link toc-highlight">Session token</a><li><a href=#encryption class="table-of-contents__link toc-highlight">Encryption</a><li><a href=#hpid-creation class="table-of-contents__link toc-highlight">HPID creation</a><ul><li><a href=#codes-for-create-hpid class="table-of-contents__link toc-highlight">Codes for create HPID</a></ul><li><a href=#getting-an-hpr-token class="table-of-contents__link toc-highlight">Getting an HPR token</a><ul><li><a href=#login-by-password class="table-of-contents__link toc-highlight">Login by password</a><li><a href=#login-by-mobile-otp class="table-of-contents__link toc-highlight">Login by mobile OTP</a><li><a href=#login-by-aadhaar-otp class="table-of-contents__link toc-highlight">Login by Aadhaar OTP</a></ul><li><a href=#register-professional class="table-of-contents__link toc-highlight">Register professional</a><ul><li><a href=#degree-codes class="table-of-contents__link toc-highlight">Degree codes</a><li><a href=#attachments class="table-of-contents__link toc-highlight">Attachments</a><li><a href=#a-note-on-nurses class="table-of-contents__link toc-highlight">A note on nurses</a></ul><li><a href=#the-other-professional-calls class="table-of-contents__link toc-highlight">The other professional calls</a><li><a href=#hfr-onboarding class="table-of-contents__link toc-highlight">HFR onboarding</a><ul><li><a href=#1-deduplicate-search class="table-of-contents__link toc-highlight">1. Deduplicate search</a><li><a href=#2-basic-facility-information class="table-of-contents__link toc-highlight">2. Basic facility information</a><li><a href=#3-additional-information class="table-of-contents__link toc-highlight">3. Additional information</a><li><a href=#4-detailed-information class="table-of-contents__link toc-highlight">4. Detailed information</a><li><a href=#5-submit-facility class="table-of-contents__link toc-highlight">5. Submit facility</a></ul><li><a href=#bridge-linkage class="table-of-contents__link toc-highlight">Bridge linkage</a><li><a href=#hfr-search-and-master-data class="table-of-contents__link toc-highlight">HFR search and master data</a><li><a href=#hpr-master-data class="table-of-contents__link toc-highlight">HPR master data</a><li><a href=#error-codes class="table-of-contents__link toc-highlight">Error codes</a><li><a href=#where-to-go-next class="table-of-contents__link toc-highlight">Where to go next</a></ul></nav></div></div></div></main></div></div></div><footer class="theme-layout-footer footer"><div class="container container-fluid"><div class="row footer__links"><div class="theme-layout-footer-column col footer__col"><div class=footer__title>Contact</div><ul class="footer__items clean-list"><li class=footer__item><a href=https://abdm.gov.in/ target=_blank rel="noopener noreferrer" class=footer__link-item>National Health Authority, 9th Floor, Tower-I, Jeevan Bharati Building, Connaught Place, New Delhi 110 001<svg width=13.5 height=13.5 aria-label="(opens in new tab)" class=iconExternalLink_nPIU><use href=#theme-svg-external-link /></svg></a><li class=footer__item><a href=mailto:abdm@nha.gov.in target=_blank rel="noopener noreferrer" class=footer__link-item>abdm[at]nha[dot]gov[dot]in<svg width=13.5 height=13.5 aria-label="(opens in new tab)" class=iconExternalLink_nPIU><use href=#theme-svg-external-link /></svg></a><li class=footer__item><a href=tel:18001144477 target=_blank rel="noopener noreferrer" class=footer__link-item>Toll free 1800-11-4477<svg width=13.5 height=13.5 aria-label="(opens in new tab)" class=iconExternalLink_nPIU><use href=#theme-svg-external-link /></svg></a></ul></div><div class="theme-layout-footer-column col footer__col"><div class=footer__title>Important links</div><ul class="footer__items clean-list"><li class=footer__item><a href=https://www.mohfw.gov.in/ target=_blank rel="noopener noreferrer" class=footer__link-item>Ministry of Health & Family Welfare<svg width=13.5 height=13.5 aria-label="(opens in new tab)" class=iconExternalLink_nPIU><use href=#theme-svg-external-link /></svg></a><li class=footer__item><a href=https://abha.abdm.gov.in/ target=_blank rel="noopener noreferrer" class=footer__link-item>Ayushman Bharat Health Account (ABHA)<svg width=13.5 height=13.5 aria-label="(opens in new tab)" class=iconExternalLink_nPIU><use href=#theme-svg-external-link /></svg></a><li class=footer__item><a href=https://nhpr.abdm.gov.in/ target=_blank rel="noopener noreferrer" class=footer__link-item>Healthcare Professionals Registry (HPR)<svg width=13.5 height=13.5 aria-label="(opens in new tab)" class=iconExternalLink_nPIU><use href=#theme-svg-external-link /></svg></a><li class=footer__item><a href=https://facility.abdm.gov.in/ target=_blank rel="noopener noreferrer" class=footer__link-item>Health Facility Registry (HFR)<svg width=13.5 height=13.5 aria-label="(opens in new tab)" class=iconExternalLink_nPIU><use href=#theme-svg-external-link /></svg></a><li class=footer__item><a href=https://grievance.abdm.gov.in/ target=_blank rel="noopener noreferrer" class=footer__link-item>Grievance portal<svg width=13.5 height=13.5 aria-label="(opens in new tab)" class=iconExternalLink_nPIU><use href=#theme-svg-external-link /></svg></a></ul></div><div class="theme-layout-footer-column col footer__col"><div class=footer__title>Policies</div><ul class="footer__items clean-list"><li class=footer__item><a href=https://abdm.gov.in/terms-condition target=_blank rel="noopener noreferrer" class=footer__link-item>Terms and conditions<svg width=13.5 height=13.5 aria-label="(opens in new tab)" class=iconExternalLink_nPIU><use href=#theme-svg-external-link /></svg></a><li class=footer__item><a href=https://abdm.gov.in/website-policy target=_blank rel="noopener noreferrer" class=footer__link-item>Website policies<svg width=13.5 height=13.5 aria-label="(opens in new tab)" class=iconExternalLink_nPIU><use href=#theme-svg-external-link /></svg></a><li class=footer__item><a href=https://abdm.gov.in/strapicms/uploads/health_management_policy_bac9429a79.pdf target=_blank rel="noopener noreferrer" class=footer__link-item>Health Data Management Policy<svg width=13.5 height=13.5 aria-label="(opens in new tab)" class=iconExternalLink_nPIU><use href=#theme-svg-external-link /></svg></a><li class=footer__item><a href=https://abdm.gov.in/strapicms/uploads/privacypolicy_178041845b.pdf target=_blank rel="noopener noreferrer" class=footer__link-item>Data privacy policy<svg width=13.5 height=13.5 aria-label="(opens in new tab)" class=iconExternalLink_nPIU><use href=#theme-svg-external-link /></svg></a></ul></div></div><div class="footer__bottom text--center"><div class=footer__copyright>This website belongs to the National Health Authority, Ministry of Health and Family Welfare, Government of India · Catalogue 2026.08.24</div></div></div></footer></div></body>

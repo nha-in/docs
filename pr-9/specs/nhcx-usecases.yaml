@@ -1,0 +1,881 @@
+openapi: 3.1.1
+info:
+  title: NHCX use case endpoints
+  version: abdm-v3
+  summary: The ten claim exchanges, each an action endpoint and its callback.
+  description: >
+    Every substantive NHCX exchange is an asynchronous pair. The initiator
+    posts a sealed message to an action endpoint and gets a receipt. The
+    responder does its work, then posts the outcome to the matching `on_`
+    endpoint, and the exchange delivers it to the initiator's registered
+    bridge URL.
+
+
+    Every request body on this service is the same one-field object carrying
+    a JWE. The exchange reads only the protected header, which is why every
+    operation below shares one request schema: what separates a
+    preauthorisation from an enhancement is the workflow code in that header,
+    not the path and not the body.
+
+
+    The `on_` paths appear twice in an integration. You POST to them here to
+    deliver your answer, and the exchange POSTs the same shape to your own
+    bridge URL to deliver someone else's. The webhooks section describes that
+    second half.
+  contact:
+    name: NHCX integration support
+    url: https://hcxsbx.abdm.gov.in/#/documents
+    email: hcx.integration@nha.gov.in
+  x-abdm-gateway: nhcx
+  x-abdm-module: usecases
+  x-abdm-phase: 1
+  x-abdm-roles: [provider, payer, tpa, regulator]
+x-abdm-sources:
+  - file: NHCX-site/documents/AWS(Sandbox) NHCX USECASE Postman Collection.zip
+    role: upstream
+    status: not-yet-hashed
+    note: AWS(Sandbox)-NHCX USECASE POSTMAN COLLECTION, 20 requests.
+  - url: https://hcxsbx.abdm.gov.in/#/technical-specifications/api-specifications
+    role: upstream
+    status: not-yet-fetched
+    note: >
+      NHA publishes a Swagger UI per service on the sandbox portal, one each
+      for coverage eligibility, preauth, claim, communication, payment,
+      status, task, search, insurance plan and subscription. The portal warns
+      that for use case payloads its value-set sheets and code snippets are
+      the authority rather than the Swagger.
+  - url: https://hcxsbx.abdm.gov.in/#/documents
+    role: upstream
+    status: not-yet-hashed
+    note: Workflow Status Sheets (18 Aug 2026), for the codes named on each operation.
+servers:
+  - url: https://apisbx.abdm.gov.in/hcx
+    description: Sandbox use case endpoints
+tags:
+  - name: Coverage eligibility
+    description: Is this policy in force, what does it cover, and what will a package need.
+  - name: Insurance plan
+    description: The policy as data, fetched once per policy and cached.
+  - name: Preauthorisation
+    description: Approval before treatment, and the cycle of enhancement, resubmission and query around it.
+  - name: Claim
+    description: The request for payment at discharge, and its adjudication.
+  - name: Task
+    description: Cancel, reprocess and shortfall, told apart by the Task's code.
+  - name: Communication
+    description: The payer's channel for alerts, grievances and changes.
+  - name: Search
+    description: Claim lookup by a provider, a regulator or a scheme sponsor.
+  - name: Predetermination
+    description: What the payer would pay, without committing anyone.
+  - name: Payment
+    description: Notices as money moves, and the provider's acknowledgement.
+  - name: Status
+    description: The state of a request already triggered.
+paths:
+  /v1/coverageeligibility/check:
+    post:
+      operationId: nhcx_coverageeligibility_check
+      tags: [Coverage eligibility]
+      summary: "Coverage eligibility: send the request"
+      description: >
+        Ask whether a policy is in force, what it covers, and what a package will need. `purpose` decides which of the four questions is being asked: validation, discovery, benefits or auth-requirements.
+
+
+        The body is one JSON object with a single `payload` field carrying the
+        JWE. The exchange answers `202 Accepted` with a receipt; the decision
+        arrives later on the matching callback.
+
+
+        Workflow codes: none listed. The check sits alongside registration, code 10, and admission, code 11.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/JWERequest'
+      responses:
+        "202":
+          description: Accepted and queued for the recipient. This is not the decision.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Receipt'
+        "400":
+          description: The envelope failed validation. Nothing about the sealed bundle shows up here.
+        "401":
+          description: The token is missing, malformed or expired. Fetch a new one and retry once.
+  /v1/coverageeligibility/on_check:
+    post:
+      operationId: nhcx_coverageeligibility_on_check
+      tags: [Coverage eligibility]
+      summary: "Coverage eligibility: deliver the answer"
+      description: >
+        Answer an eligibility check with a CoverageEligibilityResponse. The payer may instead answer with a forward instruction, asking the exchange to pass the same request to another payer.
+
+
+        The body is one JSON object with a single `payload` field carrying the
+        JWE. The exchange answers `202 Accepted` with a receipt; the decision
+        arrives later on the matching callback.
+
+
+        Workflow codes: none listed. The check sits alongside registration, code 10, and admission, code 11.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/JWERequest'
+      responses:
+        "202":
+          description: Accepted and queued for the recipient. This is not the decision.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Receipt'
+        "400":
+          description: The envelope failed validation. Nothing about the sealed bundle shows up here.
+        "401":
+          description: The token is missing, malformed or expired. Fetch a new one and retry once.
+  /v1/insuranceplan/request:
+    post:
+      operationId: nhcx_insuranceplan_request
+      tags: [Insurance plan]
+      summary: "Insurance plan: send the request"
+      description: >
+        Ask a payer for the plan behind a policy. The body is a Task with code `poll`, keyed on policy number and provider ID. Sent once per policy the hospital handles, not once per patient.
+
+
+        The body is one JSON object with a single `payload` field carrying the
+        JWE. The exchange answers `202 Accepted` with a receipt; the decision
+        arrives later on the matching callback.
+
+
+        Workflow codes: none listed.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/JWERequest'
+      responses:
+        "202":
+          description: Accepted and queued for the recipient. This is not the decision.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Receipt'
+        "400":
+          description: The envelope failed validation. Nothing about the sealed bundle shows up here.
+        "401":
+          description: The token is missing, malformed or expired. Fetch a new one and retry once.
+  /v1/insuranceplan/on_request:
+    post:
+      operationId: nhcx_insuranceplan_on_request
+      tags: [Insurance plan]
+      summary: "Insurance plan: deliver the answer"
+      description: >
+        Answer with the insurance plan, scoped to the requesting provider's empanelment. A scheme plan is package-based and can run to 21 MB; a private insurer's is coverage-based.
+
+
+        The body is one JSON object with a single `payload` field carrying the
+        JWE. The exchange answers `202 Accepted` with a receipt; the decision
+        arrives later on the matching callback.
+
+
+        Workflow codes: none listed.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/JWERequest'
+      responses:
+        "202":
+          description: Accepted and queued for the recipient. This is not the decision.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Receipt'
+        "400":
+          description: The envelope failed validation. Nothing about the sealed bundle shows up here.
+        "401":
+          description: The token is missing, malformed or expired. Fetch a new one and retry once.
+  /v1/preauth/submit:
+    post:
+      operationId: nhcx_preauth_submit
+      tags: [Preauthorisation]
+      summary: "Preauthorisation: send the request"
+      description: >
+        Submit a preauthorisation, a resubmission, an enhancement, or an answer to a query. All four carry the same Claim bundle with `use` set to `preauthorization`; the workflow code in the header is what tells them apart.
+
+
+        The body is one JSON object with a single `payload` field carrying the
+        JWE. The exchange answers `202 Accepted` with a receipt; the decision
+        arrives later on the matching callback.
+
+
+        Workflow codes: 12 new, 121 resubmission, 13 enhancement, 19 a query answer under PMJAY; the payer answers 20 received, 21 approved, 23 rejected, 24 queried.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/JWERequest'
+      responses:
+        "202":
+          description: Accepted and queued for the recipient. This is not the decision.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Receipt'
+        "400":
+          description: The envelope failed validation. Nothing about the sealed bundle shows up here.
+        "401":
+          description: The token is missing, malformed or expired. Fetch a new one and retry once.
+  /v1/preauth/on_submit:
+    post:
+      operationId: nhcx_preauth_on_submit
+      tags: [Preauthorisation]
+      summary: "Preauthorisation: deliver the answer"
+      description: >
+        Return the adjudicated preauthorisation as a ClaimResponse. Read `outcome` and the adjudication reason together: `complete` alone means approved or rejected.
+
+
+        The body is one JSON object with a single `payload` field carrying the
+        JWE. The exchange answers `202 Accepted` with a receipt; the decision
+        arrives later on the matching callback.
+
+
+        Workflow codes: 12 new, 121 resubmission, 13 enhancement, 19 a query answer under PMJAY; the payer answers 20 received, 21 approved, 23 rejected, 24 queried.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/JWERequest'
+      responses:
+        "202":
+          description: Accepted and queued for the recipient. This is not the decision.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Receipt'
+        "400":
+          description: The envelope failed validation. Nothing about the sealed bundle shows up here.
+        "401":
+          description: The token is missing, malformed or expired. Fetch a new one and retry once.
+  /v1/claim/submit:
+    post:
+      operationId: nhcx_claim_submit
+      tags: [Claim]
+      summary: "Claim: send the request"
+      description: >
+        Submit the claim at discharge, or a provisional discharge submission, or an answer to a query on a claim. The same Claim resource as the preauthorisation with `use` switched to `claim`.
+
+
+        The body is one JSON object with a single `payload` field carrying the
+        JWE. The exchange answers `202 Accepted` with a receipt; the decision
+        arrives later on the matching callback.
+
+
+        Workflow codes: 15 the claim, 151 a query answer, 14 a provisional discharge submission; the payer answers 25 received, 26 approved, 27 queried, 28 in process, 29 forwarded, 291 denied.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/JWERequest'
+      responses:
+        "202":
+          description: Accepted and queued for the recipient. This is not the decision.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Receipt'
+        "400":
+          description: The envelope failed validation. Nothing about the sealed bundle shows up here.
+        "401":
+          description: The token is missing, malformed or expired. Fetch a new one and retry once.
+  /v1/claim/on_submit:
+    post:
+      operationId: nhcx_claim_on_submit
+      tags: [Claim]
+      summary: "Claim: deliver the answer"
+      description: >
+        Return the adjudicated claim. Several interim answers may arrive on one correlation ID before the final one; only the final carries `response.complete`.
+
+
+        The body is one JSON object with a single `payload` field carrying the
+        JWE. The exchange answers `202 Accepted` with a receipt; the decision
+        arrives later on the matching callback.
+
+
+        Workflow codes: 15 the claim, 151 a query answer, 14 a provisional discharge submission; the payer answers 25 received, 26 approved, 27 queried, 28 in process, 29 forwarded, 291 denied.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/JWERequest'
+      responses:
+        "202":
+          description: Accepted and queued for the recipient. This is not the decision.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Receipt'
+        "400":
+          description: The envelope failed validation. Nothing about the sealed bundle shows up here.
+        "401":
+          description: The token is missing, malformed or expired. Fetch a new one and retry once.
+  /v1/task/submit:
+    post:
+      operationId: nhcx_task_submit
+      tags: [Task]
+      summary: "Task: send the request"
+      description: >
+        One endpoint, several jobs, told apart by the Task's code and reason. Cancel a preauthorisation, reprocess a rejected claim, or claim a shortfall on a partly paid one. A supporting document is mandatory on a reprocess.
+
+
+        The body is one JSON object with a single `payload` field carrying the
+        JWE. The exchange answers `202 Accepted` with a receipt; the decision
+        arrives later on the matching callback.
+
+
+        Workflow codes: PC01 cancel, 36 reprocess or shortfall; the payer answers 251 acknowledged, 252 approved, 253 rejected, 254 queried, PC02 cancellation done.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/JWERequest'
+      responses:
+        "202":
+          description: Accepted and queued for the recipient. This is not the decision.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Receipt'
+        "400":
+          description: The envelope failed validation. Nothing about the sealed bundle shows up here.
+        "401":
+          description: The token is missing, malformed or expired. Fetch a new one and retry once.
+  /v1/task/on_submit:
+    post:
+      operationId: nhcx_task_on_submit
+      tags: [Task]
+      summary: "Task: deliver the answer"
+      description: >
+        Answer a Task with a Task whose output references a ClaimResponse, read by the same parser as any other decision.
+
+
+        The body is one JSON object with a single `payload` field carrying the
+        JWE. The exchange answers `202 Accepted` with a receipt; the decision
+        arrives later on the matching callback.
+
+
+        Workflow codes: PC01 cancel, 36 reprocess or shortfall; the payer answers 251 acknowledged, 252 approved, 253 rejected, 254 queried, PC02 cancellation done.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/JWERequest'
+      responses:
+        "202":
+          description: Accepted and queued for the recipient. This is not the decision.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Receipt'
+        "400":
+          description: The envelope failed validation. Nothing about the sealed bundle shows up here.
+        "401":
+          description: The token is missing, malformed or expired. Fetch a new one and retry once.
+  /v1/communication/request:
+    post:
+      operationId: nhcx_communication_request
+      tags: [Communication]
+      summary: "Communication: send the request"
+      description: >
+        The payer's asynchronous channel to the provider. Raise a turnaround-time alert, pass on a grievance, announce a wallet or policy change, ask for information outside a formal query, or acknowledge an arbitration request.
+
+
+        The body is one JSON object with a single `payload` field carrying the
+        JWE. The exchange answers `202 Accepted` with a receipt; the decision
+        arrives later on the matching callback.
+
+
+        Workflow codes: as carried on the payer's request.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/JWERequest'
+      responses:
+        "202":
+          description: Accepted and queued for the recipient. This is not the decision.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Receipt'
+        "400":
+          description: The envelope failed validation. Nothing about the sealed bundle shows up here.
+        "401":
+          description: The token is missing, malformed or expired. Fetch a new one and retry once.
+  /v1/communication/on_request:
+    post:
+      operationId: nhcx_communication_on_request
+      tags: [Communication]
+      summary: "Communication: deliver the answer"
+      description: >
+        Acknowledge or answer a communication. Send the acknowledgement within the 30 second window whether or not the underlying issue is resolved.
+
+
+        The body is one JSON object with a single `payload` field carrying the
+        JWE. The exchange answers `202 Accepted` with a receipt; the decision
+        arrives later on the matching callback.
+
+
+        Workflow codes: as carried on the payer's request.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/JWERequest'
+      responses:
+        "202":
+          description: Accepted and queued for the recipient. This is not the decision.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Receipt'
+        "400":
+          description: The envelope failed validation. Nothing about the sealed bundle shows up here.
+        "401":
+          description: The token is missing, malformed or expired. Fetch a new one and retry once.
+  /v1/search/submit:
+    post:
+      operationId: nhcx_search_submit
+      tags: [Search]
+      summary: "Search: send the request"
+      description: >
+        Search claim information across payers. A provider may search only its own cases; a regulator or scheme sponsor may search any.
+
+
+        The body is one JSON object with a single `payload` field carrying the
+        JWE. The exchange answers `202 Accepted` with a receipt; the decision
+        arrives later on the matching callback.
+
+
+        Workflow codes: none listed.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/JWERequest'
+      responses:
+        "202":
+          description: Accepted and queued for the recipient. This is not the decision.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Receipt'
+        "400":
+          description: The envelope failed validation. Nothing about the sealed bundle shows up here.
+        "401":
+          description: The token is missing, malformed or expired. Fetch a new one and retry once.
+  /v1/search/on_submit:
+    post:
+      operationId: nhcx_search_on_submit
+      tags: [Search]
+      summary: "Search: deliver the answer"
+      description: >
+        Answer a search with the matching ClaimResponse resources.
+
+
+        The body is one JSON object with a single `payload` field carrying the
+        JWE. The exchange answers `202 Accepted` with a receipt; the decision
+        arrives later on the matching callback.
+
+
+        Workflow codes: none listed.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/JWERequest'
+      responses:
+        "202":
+          description: Accepted and queued for the recipient. This is not the decision.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Receipt'
+        "400":
+          description: The envelope failed validation. Nothing about the sealed bundle shows up here.
+        "401":
+          description: The token is missing, malformed or expired. Fetch a new one and retry once.
+  /v1/predetermination/submit:
+    post:
+      operationId: nhcx_predetermination_submit
+      tags: [Predetermination]
+      summary: "Predetermination: send the request"
+      description: >
+        Ask what the payer would pay for a proposed course of treatment, without committing the provider to deliver it and without reserving a benefit. Reuses the Claim bundle with `use` set to `predetermination`.
+
+
+        The body is one JSON object with a single `payload` field carrying the
+        JWE. The exchange answers `202 Accepted` with a receipt; the decision
+        arrives later on the matching callback.
+
+
+        Workflow codes: none listed.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/JWERequest'
+      responses:
+        "202":
+          description: Accepted and queued for the recipient. This is not the decision.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Receipt'
+        "400":
+          description: The envelope failed validation. Nothing about the sealed bundle shows up here.
+        "401":
+          description: The token is missing, malformed or expired. Fetch a new one and retry once.
+  /v1/predetermination/on_submit:
+    post:
+      operationId: nhcx_predetermination_on_submit
+      tags: [Predetermination]
+      summary: "Predetermination: deliver the answer"
+      description: >
+        Answer with what the payer would approve. Defined by the specification and never observed in a published payload.
+
+
+        The body is one JSON object with a single `payload` field carrying the
+        JWE. The exchange answers `202 Accepted` with a receipt; the decision
+        arrives later on the matching callback.
+
+
+        Workflow codes: none listed.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/JWERequest'
+      responses:
+        "202":
+          description: Accepted and queued for the recipient. This is not the decision.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Receipt'
+        "400":
+          description: The envelope failed validation. Nothing about the sealed bundle shows up here.
+        "401":
+          description: The token is missing, malformed or expired. Fetch a new one and retry once.
+  /v1/paymentnotice/request:
+    post:
+      operationId: nhcx_paymentnotice_request
+      tags: [Payment]
+      summary: "Payment: send the request"
+      description: >
+        Tell the provider that money has moved against an approved claim. Three notices can arrive for one case as the transfer progresses, and only the last carries the bank reference.
+
+
+        The body is one JSON object with a single `payload` field carrying the
+        JWE. The exchange answers `202 Accepted` with a receipt; the decision
+        arrives later on the matching callback.
+
+
+        Workflow codes: 30 initiated, 31 processed, 33 settled; 17 for the acknowledgement.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/JWERequest'
+      responses:
+        "202":
+          description: Accepted and queued for the recipient. This is not the decision.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Receipt'
+        "400":
+          description: The envelope failed validation. Nothing about the sealed bundle shows up here.
+        "401":
+          description: The token is missing, malformed or expired. Fetch a new one and retry once.
+  /v1/paymentnotice/on_request:
+    post:
+      operationId: nhcx_paymentnotice_on_request
+      tags: [Payment]
+      summary: "Payment: deliver the answer"
+      description: >
+        Acknowledge a payment notice. The portal's Payment document puts the acknowledgement here; the PMJAY handbook puts it on /v1/task/submit. Confirm which the payer expects.
+
+
+        The body is one JSON object with a single `payload` field carrying the
+        JWE. The exchange answers `202 Accepted` with a receipt; the decision
+        arrives later on the matching callback.
+
+
+        Workflow codes: 30 initiated, 31 processed, 33 settled; 17 for the acknowledgement.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/JWERequest'
+      responses:
+        "202":
+          description: Accepted and queued for the recipient. This is not the decision.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Receipt'
+        "400":
+          description: The envelope failed validation. Nothing about the sealed bundle shows up here.
+        "401":
+          description: The token is missing, malformed or expired. Fetch a new one and retry once.
+  /v1/status:
+    post:
+      operationId: nhcx_status_check
+      tags: [Status]
+      summary: "Status: ask where a request has got to"
+      description: >
+        Ask the exchange for the state of a request already triggered, so neither side has to infer what happened from silence.
+
+
+        The body is one JSON object with a single `payload` field carrying the
+        JWE. The exchange answers `202 Accepted` with a receipt; the decision
+        arrives later on the matching callback.
+
+
+        Workflow codes: none listed.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/JWERequest'
+      responses:
+        "202":
+          description: Accepted and queued for the recipient. This is not the decision.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Receipt'
+        "400":
+          description: The envelope failed validation. Nothing about the sealed bundle shows up here.
+        "401":
+          description: The token is missing, malformed or expired. Fetch a new one and retry once.
+  /v1/on_status:
+    post:
+      operationId: nhcx_status_on_check
+      tags: [Status]
+      summary: "Status: deliver the state"
+      description: >
+        Deliver the state of a request back to whoever asked for it.
+
+
+        The body is one JSON object with a single `payload` field carrying the
+        JWE. The exchange answers `202 Accepted` with a receipt; the decision
+        arrives later on the matching callback.
+
+
+        Workflow codes: none listed.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/JWERequest'
+      responses:
+        "202":
+          description: Accepted and queued for the recipient. This is not the decision.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Receipt'
+        "400":
+          description: The envelope failed validation. Nothing about the sealed bundle shows up here.
+        "401":
+          description: The token is missing, malformed or expired. Fetch a new one and retry once.
+webhooks:
+  delivery:
+    post:
+      operationId: nhcx_webhook_delivery
+      summary: The exchange delivers a message to your bridge URL
+      description: >
+        The exchange POSTs to your registered `endpoint_url` plus the path of
+        the exchange concerned, so a preauthorisation decision arrives at
+        `<endpoint_url>/v1/preauth/on_submit`. Build one handler and route by
+        path.
+
+
+        Answer within 30 seconds with `202` and the receipt, then process.
+        Anything slower, including a slow `200`, is read as a failed delivery
+        and retried up to five times before the correlation ID is retired.
+
+
+        Two body shapes arrive. `JWEPayload` carries a sealed bundle.
+        `ProtocolResponse` carries a refusal, with the `x-hcx-` fields in the
+        clear and the reason in `x-hcx-error_details`.
+
+
+        The exchange signs its calls to you with a JWT in the authorisation
+        header. No published source gives the public key to verify against,
+        an address to fetch it from, or the name of the header it arrives in,
+        so build the check and treat a missing key as a deliberate, logged,
+        temporary state rather than a silent default.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              oneOf:
+                - $ref: '#/components/schemas/JWERequest'
+                - $ref: '#/components/schemas/ProtocolResponse'
+      responses:
+        "202":
+          description: Required. Anything else is treated as a failed delivery.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Receipt'
+  error:
+    post:
+      operationId: nhcx_webhook_error
+      summary: The exchange reports a message it could not deliver
+      description: >
+        Every participant must host `/v1/error`. The exchange calls it to
+        report a request that could not be delivered after five attempts.
+        Without it, a sender never learns that its request died.
+
+
+        This is the one path that carries neither of the two usual shapes. It
+        has no `payload` and no `x-hcx-` fields: what arrives is a plain JSON
+        report whose field names are not published. Store it whole rather
+        than parsing it against a fixed schema, and still answer `202`.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              description: An unpublished report shape. Store it whole.
+              additionalProperties: true
+      responses:
+        "202":
+          description: Required, even though the body is not a shape you recognise.
+components:
+  securitySchemes:
+    bearer_auth:
+      type: apiKey
+      in: header
+      name: bearer_auth
+      description: The ABDM session token, prefixed with `Bearer ` and a space.
+  schemas:
+    JWERequest:
+      type: object
+      required: [payload]
+      properties:
+        type:
+          type: string
+          const: JWEPayload
+          description: Present on a delivery to your bridge URL. Not sent on a call to the gateway.
+        payload:
+          type: string
+          description: >
+            The message as a JWE in compact serialisation: five base64url
+            parts joined by dots. The protected header carries the `x-hcx-`
+            routing fields in the clear; the FHIR bundle is sealed with the
+            recipient's public key and the exchange cannot read it.
+
+
+            Use `alg` `RSA-OAEP-256` with `enc` `A256GCM`. One protocol page
+            says `RSA-OAEP`; the handbook, the samples and the Postman bodies
+            all say `-256`.
+
+
+            The header fields are `x-hcx-sender_code`,
+            `x-hcx-recipient_code`, `x-hcx-api_call_id`, `x-hcx-request_id`,
+            `x-hcx-correlation_id`, `x-hcx-workflow_id`, `x-hcx-timestamp`,
+            `x-hcx-status` and `x-hcx-ben-abha-id`.
+      example:
+        payload: eyJhbGciOiJSU0EtT0FFUC0yNTYiLCJlbmMiOiJBMjU2R0NNIi....
+    ProtocolResponse:
+      type: object
+      description: >
+        A refusal delivered in the clear, when the recipient could not
+        decrypt the bundle or the bundle failed validation.
+      required: [type]
+      properties:
+        type:
+          type: string
+          const: ProtocolResponse
+        x-hcx-sender_code: {type: string}
+        x-hcx-recipient_code: {type: string}
+        x-hcx-api_call_id: {type: string, format: uuid}
+        x-hcx-correlation_id: {type: string, format: uuid}
+        x-hcx-workflow_id: {type: string}
+        x-hcx-timestamp: {type: string}
+        x-hcx-status:
+          type: string
+          const: response.error
+        x-hcx-entity-type: {type: string}
+        x-hcx-error_details:
+          type: object
+          properties:
+            code: {type: string}
+            message: {type: string}
+            trace: {type: string}
+    Receipt:
+      type: object
+      description: >
+        The acknowledgement both the exchange and your own callback return.
+        It says the message was taken in. It is never the decision.
+      properties:
+        timestamp: {type: string}
+        api_call_id: {type: string, format: uuid}
+        correlation_id: {type: string, format: uuid}
+        result:
+          type: object
+          properties:
+            sender_code: {type: string}
+            recipient_code: {type: string}
+            entity_type: {type: string, example: preauth}
+            protocol_status:
+              type: string
+              enum: [request.queued, request.dispatched, request.error]
+        error:
+          type: object
+          properties:
+            code: {type: string}
+            message: {type: string}
+      example:
+        timestamp: 04/09/2026 11:46:35:120
+        api_call_id: a1b2c3d4-e5f6-4890-abcd-ef1234567890
+        correlation_id: 11223344-5566-4788-99aa-bbccddeeff00
+        result:
+          sender_code: 1000004446@hcx
+          recipient_code: 1000003538@hcx
+          entity_type: preauth
+          protocol_status: request.queued
+        error:
+          code: ""
+          message: ""
+security:
+  - bearer_auth: []

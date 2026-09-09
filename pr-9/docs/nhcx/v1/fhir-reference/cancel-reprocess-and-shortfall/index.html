@@ -1,0 +1,293 @@
+<!doctype html><html lang=en dir=ltr class="docs-wrapper plugin-docs plugin-id-default docs-version-current docs-doc-page docs-doc-id-nhcx/v1/fhir-reference/cancel-reprocess-and-shortfall" data-has-hydrated=false><head><meta charset=UTF-8><title data-rh=true>Cancel, reprocess and shortfall | ABDM Developer Portal</title><meta data-rh=true name=viewport content="width=device-width, initial-scale=1.0"/><meta data-rh=true name=twitter:card content=summary_large_image /><meta data-rh=true property=og:image content=https://nha-in.github.io/docs/pr-9/img/social-card.jpg /><meta data-rh=true name=twitter:image content=https://nha-in.github.io/docs/pr-9/img/social-card.jpg /><meta data-rh=true property=og:url content=https://nha-in.github.io/docs/pr-9/docs/nhcx/v1/fhir-reference/cancel-reprocess-and-shortfall /><meta data-rh=true property=og:locale content=en /><meta data-rh=true name=docsearch:language content=en /><meta data-rh=true name=docusaurus_version content=current /><meta data-rh=true name=docsearch:version content=current /><meta data-rh=true property=og:title content="Cancel, reprocess and shortfall | ABDM Developer Portal"/><meta data-rh=true name=description content="Three post-decision exchanges on one endpoint pair, told apart only by Task.code, with samples for one of the three."/><meta data-rh=true property=og:description content="Three post-decision exchanges on one endpoint pair, told apart only by Task.code, with samples for one of the three."/><link data-rh=true rel=icon href=/docs/pr-9/img/favicon.svg /><link data-rh=true rel=canonical href=https://nha-in.github.io/docs/pr-9/docs/nhcx/v1/fhir-reference/cancel-reprocess-and-shortfall /><link data-rh=true rel=alternate href=https://nha-in.github.io/docs/pr-9/docs/nhcx/v1/fhir-reference/cancel-reprocess-and-shortfall hreflang=en /><link data-rh=true rel=alternate href=https://nha-in.github.io/docs/pr-9/docs/nhcx/v1/fhir-reference/cancel-reprocess-and-shortfall hreflang=x-default /><script data-rh=true type=application/ld+json>{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","item":"https://nha-in.github.io/docs/pr-9/docs/nhcx/v1/fhir-reference/cancel-reprocess-and-shortfall","name":"Cancel, reprocess and shortfall","position":1}]}</script><link rel="alternate icon" type=image/png href=/docs/pr-9/img/favicon.png><link rel=apple-touch-icon href=/docs/pr-9/img/apple-touch-icon.png><script src=/docs/pr-9/agent/abdm-support-agent.js defer></script><link rel=stylesheet href=/docs/pr-9/assets/css/styles.a51ce804.css /><script src=/docs/pr-9/assets/js/runtime~main.7af0ca8f.js defer></script><script src=/docs/pr-9/assets/js/main.715d9a6d.js defer></script></head><body><svg style="display: none;"><defs>
+<symbol id=theme-svg-external-link viewBox="0 0 24 24"><path fill=currentColor d="M21 13v10h-21v-19h12v2h-10v15h17v-8h2zm3-12h-10.988l4.035 4-6.977 7.07 2.828 2.828 6.977-7.07 4.125 4.172v-11z"/></symbol>
+</defs></svg>
+<script>!function(){var t=function(){try{return new URLSearchParams(window.location.search).get("docusaurus-theme")}catch(t){}}()||function(){try{return window.localStorage.getItem("theme-23c")}catch(t){}}();document.documentElement.setAttribute("data-theme",t||(window.matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light")),document.documentElement.setAttribute("data-theme-choice",t||"system")}(),function(){try{for(var[t,e]of new URLSearchParams(window.location.search).entries())if(t.startsWith("docusaurus-data-")){var a=t.replace("docusaurus-data-","data-");document.documentElement.setAttribute(a,e)}}catch(t){}}()</script><script src=/docs/pr-9/vendor/scalar/standalone.js></script>
+<script src=/docs/pr-9/vendor/scalar/standalone.js></script>
+<script src=/docs/pr-9/vendor/scalar/standalone.js></script>
+<script src=/docs/pr-9/vendor/scalar/standalone.js></script>
+<script src=/docs/pr-9/vendor/scalar/standalone.js></script>
+<script src=/docs/pr-9/vendor/scalar/standalone.js></script>
+<script src=/docs/pr-9/vendor/scalar/standalone.js></script>
+<script src=/docs/pr-9/vendor/scalar/standalone.js></script>
+<script src=/docs/pr-9/vendor/scalar/standalone.js></script>
+<script src=/docs/pr-9/vendor/scalar/standalone.js></script>
+<script src=/docs/pr-9/vendor/scalar/standalone.js></script>
+<script src=/docs/pr-9/vendor/scalar/standalone.js></script>
+<script src=/docs/pr-9/vendor/scalar/standalone.js></script><div id=__docusaurus><link rel=preload as=image href=/docs/pr-9/img/nha-logo.svg /><link rel=preload as=image href=/docs/pr-9/img/nha-logo-dark.svg /><div role=region aria-label="Skip to main content"><a class=skipToContent_fXgn href=#__docusaurus_skipToContent_fallback>Skip to main content</a></div><nav class="navbar navbar--fixed-top topbar" aria-label=Site><a class=topbar-brand aria-label="ABDM Developer Portal" href=/docs/pr-9/><img src=/docs/pr-9/img/nha-logo.svg alt="" class="topbar-logo themedComponent_siVc themedComponent--light_hHel"/><img src=/docs/pr-9/img/nha-logo-dark.svg alt="" class="topbar-logo themedComponent_siVc themedComponent--dark_yETr"/><span class=brand-chip><span aria-hidden=true class=brand-chip__mark style='-webkit-mask-image:url("/docs/pr-9/img/ashoka-emblem-mark.svg");mask-image:url("/docs/pr-9/img/ashoka-emblem-mark.svg")'></span><span class=topbar-wordmark>ABDM Developer Portal</span></span></a><button type=button id=radix-_R_16akl_ aria-haspopup=menu aria-expanded=false data-state=closed data-slot=dropdown-menu-trigger class="topbar-action topbar-gateway" aria-label="Gateway: NHCX">NHCX<svg xmlns=http://www.w3.org/2000/svg width=24 height=24 viewBox="0 0 24 24" fill=none stroke=currentColor stroke-width=2 stroke-linecap=round stroke-linejoin=round class="lucide lucide-chevron-down size-3.5" aria-hidden=true><path d="m6 9 6 6 6-6"/></svg></button><div class=topbar-center><div class=omnibox><div class="navbar__search searchBarContainer_bpSG" dir=ltr><svg aria-hidden=true class=searchIcon_qjAM focusable=false viewBox="0 0 16 16"><path fill=currentColor d="M6.02945 10.20327a4.17382 4.17382 0 1 1 4.17382-4.17382 4.15609 4.15609 0 0 1-4.17382 4.17382Zm9.69195 4.2199-4.8225-4.82338A5.88021 5.88021 0 0 0 12.058 6.02856 6.00467 6.00467 0 1 0 9.59979 10.8989l4.82338 4.82338a.89729.89729 0 0 0 1.29912 0 .89749.89749 0 0 0-.00087-1.29909Z"/></svg><input placeholder=Search aria-label=Search class="navbar__search-input searchInput_T5pz" value="" /><div class="loadingRing_hScY searchBarLoadingRing_dMau"><div></div><div></div><div></div><div></div></div></div><abdm-support-agent docs-origin=https://nha-in.github.io/docs/pr-9 support-url=/docs/pr-9/docs/support></abdm-support-agent></div></div><div class=topbar-actions><a class="topbar-action topbar-action--icon" href=https://sandbox.abdm.gov.in target=_blank rel="noopener noreferrer" aria-label="ABDM sandbox" data-state=closed data-slot=tooltip-trigger><svg viewBox="1 1.8 22 16" width=26 height=19 fill=none stroke=currentColor stroke-width=1.5 stroke-linecap=round stroke-linejoin=round aria-hidden=true><path d="M12 2.2 22.4 8.2 12 14.2 1.6 8.2Z"/><path d="M1.6 8.2v3.1L12 17.3l10.4-6V8.2"/><path d="M9.2 6.4 6.4 8.2l2.8 1.8M14.8 6.4l2.8 1.8-2.8 1.8M13.4 5.3l-2.8 6"/></svg></a><a class="topbar-action topbar-action--icon" href=https://github.com/nha-in target=_blank rel="noopener noreferrer" aria-label="GitHub repository"><svg viewBox="0 0 16 16" width=16 height=16 aria-hidden=true fill=currentColor><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82a7.4 7.4 0 0 1 2-.27c.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg></a><button type=button id=radix-_R_e6akl_ aria-haspopup=menu aria-expanded=false data-state=closed data-slot=dropdown-menu-trigger class="topbar-action topbar-locale"><svg xmlns=http://www.w3.org/2000/svg width=24 height=24 viewBox="0 0 24 24" fill=none stroke=currentColor stroke-width=2 stroke-linecap=round stroke-linejoin=round class="lucide lucide-languages size-4" aria-hidden=true><path d="m5 8 6 6"/><path d="m4 14 6-6 2-3"/><path d="M2 5h12"/><path d="M7 2h1"/><path d="m22 22-5-10-5 10"/><path d="M14 18h6"/></svg>English<svg xmlns=http://www.w3.org/2000/svg width=24 height=24 viewBox="0 0 24 24" fill=none stroke=currentColor stroke-width=2 stroke-linecap=round stroke-linejoin=round class="lucide lucide-chevron-down size-3.5" aria-hidden=true><path d="m6 9 6 6 6-6"/></svg></button></div><button type=button id=radix-_R_2makl_ aria-haspopup=menu aria-expanded=false data-state=closed data-slot=dropdown-menu-trigger class="topbar-action topbar-action--icon topbar-overflow" aria-label=More><svg xmlns=http://www.w3.org/2000/svg width=24 height=24 viewBox="0 0 24 24" fill=none stroke=currentColor stroke-width=2 stroke-linecap=round stroke-linejoin=round class="lucide lucide-ellipsis size-5" aria-hidden=true><circle cx=12 cy=12 r=1 /><circle cx=19 cy=12 r=1 /><circle cx=5 cy=12 r=1 /></svg></button><div class="toggle_vylO topbar-toggle"><button class="clean-btn toggleButton_gllP toggleButtonDisabled_aARS" type=button disabled title="system mode" aria-label="Switch between dark and light mode (currently system mode)"><svg xmlns=http://www.w3.org/2000/svg width=24 height=24 viewBox="0 0 24 24" fill=none stroke=currentColor stroke-width=1.5 stroke-linecap=round stroke-linejoin=round class="lucide lucide-sun toggleIcon_g3eP lightToggleIcon_pyhR" aria-hidden=true><circle cx=12 cy=12 r=4 /><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg><svg xmlns=http://www.w3.org/2000/svg width=24 height=24 viewBox="0 0 24 24" fill=none stroke=currentColor stroke-width=1.5 stroke-linecap=round stroke-linejoin=round class="lucide lucide-moon toggleIcon_g3eP darkToggleIcon_wfgR" aria-hidden=true><path d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401"/></svg><svg xmlns=http://www.w3.org/2000/svg width=24 height=24 viewBox="0 0 24 24" fill=none stroke=currentColor stroke-width=1.5 stroke-linecap=round stroke-linejoin=round class="lucide lucide-laptop toggleIcon_g3eP systemToggleIcon_QzmC" aria-hidden=true><path d="M18 5a2 2 0 0 1 2 2v8.526a2 2 0 0 0 .212.897l1.068 2.127a1 1 0 0 1-.9 1.45H3.62a1 1 0 0 1-.9-1.45l1.068-2.127A2 2 0 0 0 4 15.526V7a2 2 0 0 1 2-2z"/><path d="M20.054 15.987H3.946"/></svg></button></div></nav><nav class=docs-tabs aria-label="Documentation sections"><a class="docs-tab docs-tab--active" aria-current=page href=/docs/pr-9/docs/nhcx/v1>Docs</a><a class=docs-tab href=/docs/pr-9/docs/nhcx/v1/api>API references</a><a class=docs-tab href=/docs/pr-9/docs/whats-new>What's new</a><a class=docs-tab href=/docs/pr-9/docs/support>Support</a></nav><button type=button aria-haspopup=dialog aria-expanded=false data-state=closed data-slot=sheet-trigger class=nav-row aria-label="Open navigation"><svg xmlns=http://www.w3.org/2000/svg width=24 height=24 viewBox="0 0 24 24" fill=none stroke=currentColor stroke-width=2 stroke-linecap=round stroke-linejoin=round class="lucide lucide-menu size-4" aria-hidden=true><path d="M4 5h16"/><path d="M4 12h16"/><path d="M4 19h16"/></svg><span class=nav-row__label>Navigation</span><span class=nav-row__here>Docs</span><svg xmlns=http://www.w3.org/2000/svg width=24 height=24 viewBox="0 0 24 24" fill=none stroke=currentColor stroke-width=2 stroke-linecap=round stroke-linejoin=round class="lucide lucide-chevron-down size-4 nav-row__chevron" aria-hidden=true><path d="m6 9 6 6 6-6"/></svg></button><div id=__docusaurus_skipToContent_fallback class="theme-layout-main main-wrapper mainWrapper_z2l0"><div class=docsWrapper_hBAB><button aria-label="Scroll back to top" class="clean-btn theme-back-to-top-button backToTopButton_sjWU" type=button></button><div class=docRoot_UBD9><aside class="theme-doc-sidebar-container docSidebarContainer_YfHR"><div class=sidebarViewport_aRkj><div class=docs-sidebar><div class=docs-sidebar__head><div class=sidebar-pickers><button type=button aria-haspopup=dialog aria-expanded=false data-state=closed data-slot=popover-trigger class=sidebar-settings aria-label="Settings. Role Everything"><svg xmlns=http://www.w3.org/2000/svg width=24 height=24 viewBox="0 0 24 24" fill=none stroke=currentColor stroke-width=2 stroke-linecap=round stroke-linejoin=round class="lucide lucide-sliders-horizontal size-4 shrink-0" aria-hidden=true><path d="M10 5H3"/><path d="M12 19H3"/><path d="M14 3v4"/><path d="M16 17v4"/><path d="M21 12h-9"/><path d="M21 19h-5"/><path d="M21 5h-7"/><path d="M8 10v4"/><path d="M8 12H3"/></svg><span class=sidebar-settings__summary>Everything</span></button></div><button type=button class=sidebar-fold title="Collapse sidebar" aria-label="Collapse sidebar"><svg xmlns=http://www.w3.org/2000/svg width=24 height=24 viewBox="0 0 24 24" fill=none stroke=currentColor stroke-width=2 stroke-linecap=round stroke-linejoin=round class="lucide lucide-panel-left-close size-4" aria-hidden=true><rect width=18 height=18 x=3 y=3 rx=2 /><path d="M9 3v18"/><path d="m16 15-3-3 3-3"/></svg></button></div><nav aria-label="Docs sidebar" class="menu thin-scrollbar menu_SIkG"><ul class="theme-doc-sidebar-menu menu__list"><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-1 menu__list-item"><a class=menu__link href=/docs/pr-9/docs/nhcx/v1/><span class=linkLabel_WmDU>NHCX</span></a><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-1 menu__list-item"><div class=menu__list-item-collapsible><a class="categoryLink_byQd menu__link menu__link--sublist" href=/docs/pr-9/docs/nhcx/v1/getting-started/><span class=categoryLinkLabel_W154>Get started</span></a><button aria-label="Collapse sidebar category 'Get started'" aria-expanded=true type=button class="clean-btn menu__caret"></button></div><ul class=menu__list><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class=menu__link tabindex=0 href=/docs/pr-9/docs/nhcx/v1/getting-started/glossary><span class=linkLabel_WmDU>Glossary</span></a><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class=menu__link tabindex=0 href=/docs/pr-9/docs/nhcx/v1/getting-started/session-token><span class=linkLabel_WmDU>Session token</span></a><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class=menu__link tabindex=0 href=/docs/pr-9/docs/nhcx/v1/getting-started/your-certificate><span class=linkLabel_WmDU>Your certificate</span></a><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class=menu__link tabindex=0 href=/docs/pr-9/docs/nhcx/v1/getting-started/participant-record><span class=linkLabel_WmDU>Participant record</span></a><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class=menu__link tabindex=0 href=/docs/pr-9/docs/nhcx/v1/getting-started/finding-participants-and-policies><span class=linkLabel_WmDU>Finding participants and policies</span></a><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class=menu__link tabindex=0 href=/docs/pr-9/docs/nhcx/v1/getting-started/recipient-certificate><span class=linkLabel_WmDU>Recipient certificate</span></a><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class=menu__link tabindex=0 href=/docs/pr-9/docs/nhcx/v1/getting-started/building-and-sending-a-jwe><span class=linkLabel_WmDU>Building and sending a JWE</span></a><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class=menu__link tabindex=0 href=/docs/pr-9/docs/nhcx/v1/getting-started/receiving-a-callback><span class=linkLabel_WmDU>Receiving a callback</span></a><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class=menu__link tabindex=0 href=/docs/pr-9/docs/nhcx/v1/getting-started/nhcx-adapter><span class=linkLabel_WmDU>NHCX adapter</span></a><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class=menu__link tabindex=0 href=/docs/pr-9/docs/nhcx/v1/getting-started/nhcx-glossary><span class=linkLabel_WmDU>NHCX glossary</span></a></ul><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-1 menu__list-item menu__list-item--collapsed"><div class=menu__list-item-collapsible><a class="categoryLink_byQd menu__link menu__link--sublist" href=/docs/pr-9/docs/nhcx/v1/registries/><span class=categoryLinkLabel_W154>Registries</span></a><button aria-label="Expand sidebar category 'Registries'" aria-expanded=false type=button class="clean-btn menu__caret"></button></div><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-1 menu__list-item menu__list-item--collapsed"><div class=menu__list-item-collapsible><a class="categoryLink_byQd menu__link menu__link--sublist" href=/docs/pr-9/docs/nhcx/v1/concepts/><span class=categoryLinkLabel_W154>Core concepts</span></a><button aria-label="Expand sidebar category 'Core concepts'" aria-expanded=false type=button class="clean-btn menu__caret"></button></div><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-1 menu__list-item menu__list-item--collapsed"><div class=menu__list-item-collapsible><a class="categoryLink_byQd menu__link menu__link--sublist" href=/docs/pr-9/docs/nhcx/v1/building-a-provider/><span class=categoryLinkLabel_W154>Building a provider</span></a><button aria-label="Expand sidebar category 'Building a provider'" aria-expanded=false type=button class="clean-btn menu__caret"></button></div><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-1 menu__list-item menu__list-item--collapsed"><div class=menu__list-item-collapsible><a class="categoryLink_byQd menu__link menu__link--sublist" href=/docs/pr-9/docs/nhcx/v1/building-a-payer/><span class=categoryLinkLabel_W154>Building a payer</span></a><button aria-label="Expand sidebar category 'Building a payer'" aria-expanded=false type=button class="clean-btn menu__caret"></button></div><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-1 menu__list-item menu__list-item--collapsed"><div class=menu__list-item-collapsible><a class="categoryLink_byQd menu__link menu__link--sublist" href=/docs/pr-9/docs/nhcx/v1/exchanges/><span class=categoryLinkLabel_W154>Exchanges and codes</span></a><button aria-label="Expand sidebar category 'Exchanges and codes'" aria-expanded=false type=button class="clean-btn menu__caret"></button></div><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-1 menu__list-item"><div class=menu__list-item-collapsible><a class="categoryLink_byQd menu__link menu__link--sublist menu__link--sublist-caret menu__link--active" role=button aria-expanded=true href=/docs/pr-9/docs/nhcx/v1/fhir-reference/bundles-and-conventions><span class=categoryLinkLabel_W154>FHIR reference</span></a></div><ul class=menu__list><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class=menu__link tabindex=0 href=/docs/pr-9/docs/nhcx/v1/fhir-reference/bundles-and-conventions><span class=linkLabel_WmDU>Bundles and conventions</span></a><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class=menu__link tabindex=0 href=/docs/pr-9/docs/nhcx/v1/fhir-reference/coverage-eligibility-request><span class=linkLabel_WmDU>Coverage eligibility request</span></a><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class=menu__link tabindex=0 href=/docs/pr-9/docs/nhcx/v1/fhir-reference/coverage-eligibility-response><span class=linkLabel_WmDU>Coverage eligibility response</span></a><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class=menu__link tabindex=0 href=/docs/pr-9/docs/nhcx/v1/fhir-reference/insurance-plan-request><span class=linkLabel_WmDU>Insurance plan request</span></a><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class=menu__link tabindex=0 href=/docs/pr-9/docs/nhcx/v1/fhir-reference/insurance-plan-response><span class=linkLabel_WmDU>Insurance plan response</span></a><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class=menu__link tabindex=0 href=/docs/pr-9/docs/nhcx/v1/fhir-reference/insurance-plan-response-package-based><span class=linkLabel_WmDU>Plan: package-based (scheme)</span></a><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class=menu__link tabindex=0 href=/docs/pr-9/docs/nhcx/v1/fhir-reference/insurance-plan-response-coverage-based><span class=linkLabel_WmDU>Plan: coverage-based (private)</span></a><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class=menu__link tabindex=0 href=/docs/pr-9/docs/nhcx/v1/fhir-reference/preauthorisation-request><span class=linkLabel_WmDU>Preauthorisation request</span></a><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class=menu__link tabindex=0 href=/docs/pr-9/docs/nhcx/v1/fhir-reference/preauthorisation-response><span class=linkLabel_WmDU>Preauthorisation response</span></a><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class=menu__link tabindex=0 href=/docs/pr-9/docs/nhcx/v1/fhir-reference/preauthorisation-enhancement><span class=linkLabel_WmDU>Preauthorisation enhancement</span></a><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class=menu__link tabindex=0 href=/docs/pr-9/docs/nhcx/v1/fhir-reference/preauthorisation-query-and-answer><span class=linkLabel_WmDU>Preauthorisation query and answer</span></a><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class=menu__link tabindex=0 href=/docs/pr-9/docs/nhcx/v1/fhir-reference/claim-request><span class=linkLabel_WmDU>Claim request</span></a><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class=menu__link tabindex=0 href=/docs/pr-9/docs/nhcx/v1/fhir-reference/claim-response><span class=linkLabel_WmDU>Claim response</span></a><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class=menu__link tabindex=0 href=/docs/pr-9/docs/nhcx/v1/fhir-reference/claim-query-and-answer><span class=linkLabel_WmDU>Claim query and answer</span></a><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class="menu__link menu__link--active" aria-current=page tabindex=0 href=/docs/pr-9/docs/nhcx/v1/fhir-reference/cancel-reprocess-and-shortfall><span class=linkLabel_WmDU>Cancel, reprocess and shortfall</span></a><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class=menu__link tabindex=0 href=/docs/pr-9/docs/nhcx/v1/fhir-reference/payment-notice-and-acknowledgement><span class=linkLabel_WmDU>Payment notice and acknowledgement</span></a><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class=menu__link tabindex=0 href=/docs/pr-9/docs/nhcx/v1/fhir-reference/communication><span class=linkLabel_WmDU>Communication</span></a><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class=menu__link tabindex=0 href=/docs/pr-9/docs/nhcx/v1/fhir-reference/predetermination-status-and-search><span class=linkLabel_WmDU>Predetermination, status and search</span></a><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class=menu__link tabindex=0 href=/docs/pr-9/docs/nhcx/v1/fhir-reference/codes-and-value-sets><span class=linkLabel_WmDU>Codes and value sets</span></a><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class=menu__link tabindex=0 href=/docs/pr-9/docs/nhcx/v1/fhir-reference/sample-bundles><span class=linkLabel_WmDU>Sample bundles</span></a></ul></ul></nav><div role=separator aria-orientation=vertical aria-label="Resize the sidebar" tabindex=0 class=sidebar-resizer><span class=sidebar-resizer__grip aria-hidden=true></span></div></div></div></aside><main class=docMainContainer_TBSr><div class="container padding-top--md padding-bottom--lg"><div class=docs-article-row><div class=docs-article-main><div class=docs-content><article><nav class="theme-doc-breadcrumbs breadcrumbsContainer_Z_bl" aria-label=Breadcrumbs><ul class=breadcrumbs><li class=breadcrumbs__item><a aria-label="Home page" class=breadcrumbs__link href=/docs/pr-9/><svg viewBox="0 0 24 24" class=breadcrumbHomeIcon_YNFT><path d="M10 19v-5h4v5c0 .55.45 1 1 1h3c.55 0 1-.45 1-1v-7h1.7c.46 0 .68-.57.33-.87L12.67 3.6c-.38-.34-.96-.34-1.34 0l-8.36 7.53c-.34.3-.13.87.33.87H5v7c0 .55.45 1 1 1h3c.55 0 1-.45 1-1z" fill=currentColor /></svg></a><li class=breadcrumbs__item><span class=breadcrumbs__link>FHIR reference</span><li class="breadcrumbs__item breadcrumbs__item--active"><span class=breadcrumbs__link>Cancel, reprocess and shortfall</span></ul></nav><div class="tocCollapsible_ETCw theme-doc-toc-mobile tocMobile_ITEo"><button type=button class="clean-btn tocCollapsibleButton_TO0P">On this page</button></div><div><div class="theme-doc-markdown markdown"><header><h1>Cancel, reprocess and shortfall</h1></header>
+<p>Three post-decision exchanges share one endpoint pair, <code>/v1/task/submit</code> outbound and <code>/v1/task/on_submit</code> inbound. All three are <code>Task</code> bundles. <code>Task.code</code> is the only thing that separates them, so the code has to be right or the payer routes the message to the wrong queue. Cancellation has samples on both sides. Reprocess is specified element by element and has no sample. Shortfall is barely specified at all.</p>
+<!-- -->
+<h2 class="anchor anchorTargetStickyNavbar_tleR" id=in-short>In short<a href=#in-short class=hash-link aria-label="Direct link to In short" title="Direct link to In short" translate=no>​</a></h2>
+<ul>
+<li class="">Three post-decision exchanges share <code>/v1/task/submit</code> and <code>/v1/task/on_submit</code>.</li>
+<li class=""><code>Task.code</code> is the only thing separating them, so it has to be right or the payer routes to the wrong queue.</li>
+<li class="">Cancellation has samples on both sides. Reprocess is specified but unsampled. Shortfall is barely specified.</li>
+<li class="">The word "shortfall" appears once in the whole published corpus.</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_tleR" id=cancel-the-request-bundle>Cancel: the request bundle<a href=#cancel-the-request-bundle class=hash-link aria-label="Direct link to Cancel: the request bundle" title="Direct link to Cancel: the request bundle" translate=no>​</a></h2>
+<p>The provider withdraws a preauthorisation it has already submitted. The bundle is small. There is no <code>Claim</code> in it and no <code>Patient</code>.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class=table-scroll role=region tabindex=0><table><thead><tr><th style=text-align:left>#<th style=text-align:left>Resource<th style=text-align:left>What it is for<tbody><tr><td style=text-align:left>1<td style=text-align:left><code>Task</code><td style=text-align:left>The cancellation instruction. Carries the reason and the two case identifiers<tr><td style=text-align:left>2<td style=text-align:left><code>Organization</code><td style=text-align:left>The provider, <code>NPI</code> <code>IN1910000151</code>, named "Usha Kiron"<tr><td style=text-align:left>3<td style=text-align:left><code>Organization</code><td style=text-align:left>The payer, <code>NIIP</code> <code>1518</code>, named "SHA HP"</table></div>
+<p>Entry 1 uses a <code>urn:uuid:</code> <code>fullUrl</code>. Entries 2 and 3 use absolute URLs, and <code>Task.requester</code> and <code>Task.owner</code> point at those URLs. Both styles appear in one bundle.</p>
+<h3 class="anchor anchorTargetStickyNavbar_tleR" id=the-fields-that-matter>The fields that matter<a href=#the-fields-that-matter class=hash-link aria-label="Direct link to The fields that matter" title="Direct link to The fields that matter" translate=no>​</a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class=table-scroll role=region tabindex=0><table><thead><tr><th style=text-align:left>Path<th style=text-align:left>Value in the sample<tbody><tr><td style=text-align:left><code>Task.status</code><td style=text-align:left><code>requested</code><tr><td style=text-align:left><code>Task.intent</code><td style=text-align:left><code>order</code><tr><td style=text-align:left><code>Task.code.coding.system</code><td style=text-align:left><code>http://terminology.hl7.org/CodeSystem/financialtaskcode</code><tr><td style=text-align:left><code>Task.code.coding.code</code><td style=text-align:left><code>cancel</code>, with no <code>display</code><tr><td style=text-align:left><code>Task.reasonCode.coding.system</code><td style=text-align:left><code>https://nrces.in/ndhm/fhir/r4/CodeSystem/ndhm-reason-code</code><tr><td style=text-align:left><code>Task.reasonCode.coding.code</code><td style=text-align:left><code>treatmentplanchanged</code><tr><td style=text-align:left><code>Task.input[0].type.coding.code</code><td style=text-align:left><code>claimNumber</code>, system <code>.../ndhm-task-input-type-code</code><tr><td style=text-align:left><code>Task.input[0].valueString</code><td style=text-align:left><code>VB26AA2600001</code><tr><td style=text-align:left><code>Task.input[1].type.coding.code</code><td style=text-align:left><code>initimationNumber</code><tr><td style=text-align:left><code>Task.input[1].valueString</code><td style=text-align:left><code>VB26AA2600001</code></table></div>
+<p><strong>Send <code>initimationNumber</code>, not <code>intimationNumber</code>.</strong> The misspelling is in the live payload and in the NHCX value set, which lists the input type as <code>InitimationNumber</code>. The PMJAY handbook writes <code>intimationNumber</code> correctly in its cancellation table, then flags in its reprocess table that the real payload uses <code>initimationNumber</code>. Match the payer, not the prose. Both inputs carry the same value in the sample, so the sandbox does not distinguish the case number from the intimation number.</p>
+<h3 class="anchor anchorTargetStickyNavbar_tleR" id=cancellation-reasons>Cancellation reasons<a href=#cancellation-reasons class=hash-link aria-label="Direct link to Cancellation reasons" title="Direct link to Cancellation reasons" translate=no>​</a></h3>
+<p>All from <code>https://nrces.in/ndhm/fhir/r4/CodeSystem/ndhm-reason-code</code>.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class=table-scroll role=region tabindex=0><table><thead><tr><th style=text-align:left>Code<th style=text-align:left>Meaning<tbody><tr><td style=text-align:left><code>treatmentplanchanged</code><td style=text-align:left>The clinician changed the approach during hospitalisation<tr><td style=text-align:left><code>patientrequest</code><td style=text-align:left>The patient left or moved to another hospital<tr><td style=text-align:left><code>financialconstraints</code><td style=text-align:left>The patient cannot meet the uncovered cost<tr><td style=text-align:left><code>alternativetreatment</code><td style=text-align:left>A different procedure was chosen<tr><td style=text-align:left><code>duplicateclaim</code><td style=text-align:left>The preauthorisation was submitted twice<tr><td style=text-align:left><code>administrativeerror</code><td style=text-align:left>The original submission carried wrong data<tr><td style=text-align:left><code>other</code><td style=text-align:left>Anything else; explain in <code>Task.description</code></table></div>
+<h2 class="anchor anchorTargetStickyNavbar_tleR" id=cancel-the-response-bundle>Cancel: the response bundle<a href=#cancel-the-response-bundle class=hash-link aria-label="Direct link to Cancel: the response bundle" title="Direct link to Cancel: the response bundle" translate=no>​</a></h2>
+<p>The payer answers on <code>/v1/task/on_submit</code>. Every resource carries a <code>SUBSETTED</code> meta tag, so treat the bundle as a summary and not as a full record.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class=table-scroll role=region tabindex=0><table><thead><tr><th style=text-align:left>#<th style=text-align:left>Resource<th style=text-align:left>What it is for<tbody><tr><td style=text-align:left>1<td style=text-align:left><code>Task</code><td style=text-align:left>The outcome wrapper. <code>output[0]</code> is a reference to the <code>ClaimResponse</code><tr><td style=text-align:left>2<td style=text-align:left><code>ClaimResponse</code><td style=text-align:left>The adjudication result for the cancelled case<tr><td style=text-align:left>3<td style=text-align:left><code>Patient</code><td style=text-align:left>Identifier only, PMJAY ID <code>MD5SLS4X5</code><tr><td style=text-align:left>4<td style=text-align:left><code>Organization</code><td style=text-align:left>The payer, <code>1518</code><tr><td style=text-align:left>5<td style=text-align:left><code>Organization</code><td style=text-align:left>The provider, bare numeric <code>1652</code>, named "CITY SUPERSPECIALITY HOSPITAL"<tr><td style=text-align:left>6<td style=text-align:left><code>Coverage</code><td style=text-align:left>Policy <code>PMJAY/HP/S/G</code>, class <code>PMJAY/HP/S/2024/R2</code></table></div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class=table-scroll role=region tabindex=0><table><thead><tr><th style=text-align:left>Path<th style=text-align:left>Value in the sample<tbody><tr><td style=text-align:left><code>Task.status</code><td style=text-align:left><code>completed</code><tr><td style=text-align:left><code>Task.code.coding.system</code><td style=text-align:left><code>http://hl7.org/fhir/CodeSystem/task-code</code><tr><td style=text-align:left><code>Task.code.coding.code</code><td style=text-align:left><code>approve</code>, display "Activate/approve the focal resource"<tr><td style=text-align:left><code>Task.output[0].type.coding</code><td style=text-align:left><code>include</code>, system <code>.../financialtaskinputtype</code><tr><td style=text-align:left><code>Task.output[0].valueReference</code><td style=text-align:left>The <code>ClaimResponse</code> in entry 2<tr><td style=text-align:left><code>ClaimResponse.outcome</code><td style=text-align:left><code>complete</code><tr><td style=text-align:left><code>ClaimResponse.adjudication[0].category</code><td style=text-align:left><code>status</code>, with <code>reason</code> <code>cancelled</code><tr><td style=text-align:left><code>ClaimResponse.total[0]</code><td style=text-align:left><code>benefit</code>, <code>2700.00</code></table></div>
+<p>Read the cancellation outcome from <code>ClaimResponse.adjudication[0].reason.coding.code</code>, which is <code>cancelled</code>. Do not read it from <code>outcome</code>, which is <code>complete</code> because the request was fully processed, and do not read it from <code>Task.code</code>.</p>
+<h2 class="anchor anchorTargetStickyNavbar_tleR" id=what-the-samples-show>What the samples show<a href=#what-the-samples-show class=hash-link aria-label="Direct link to What the samples show" title="Direct link to What the samples show" translate=no>​</a></h2>
+<p><code>preauth/cancel/preauth_cancel_req.txt</code>, 3,242 bytes, three entries. <code>preauth/cancel/preauth_cancel_response.txt</code>, 6,603 bytes, six entries. Both cover preauthorisation <code>VB26AA2600001</code> on 26 February 2026. There is no claim cancellation sample and none where the payer refuses a cancellation.</p>
+<h2 class="anchor anchorTargetStickyNavbar_tleR" id=reprocess-specified-not-sampled>Reprocess: specified, not sampled<a href=#reprocess-specified-not-sampled class=hash-link aria-label="Direct link to Reprocess: specified, not sampled" title="Direct link to Reprocess: specified, not sampled" translate=no>​</a></h2>
+<p>The archive carries an empty <code>reprocess/</code> directory. A sample was scoped and never produced. Everything below comes from the PMJAY handbook section 10 and the NHCX Reprocess sheet, and none of it has been observed on the wire.</p>
+<p>Reprocess is the appeal. The provider uses it when a claim was rejected or approved for less than the claimed amount, and has new evidence or a disputed reading of policy.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class=table-scroll role=region tabindex=0><table><thead><tr><th style=text-align:left>Path<th style=text-align:left>Specified value<tbody><tr><td style=text-align:left><code>Task.status</code>, <code>Task.intent</code><td style=text-align:left><code>requested</code>, <code>order</code><tr><td style=text-align:left><code>Task.code</code><td style=text-align:left><code>reprocess</code>, system <code>.../financialtaskcode</code>, display "Reprocess"<tr><td style=text-align:left><code>Task.reasonCode.coding.code</code><td style=text-align:left><code>rejectiondisputed</code> in the handbook's table. The value set instead defines <code>claimrejected</code>, <code>partialpayment</code>, <code>erroneousclaim</code>, <code>referred</code>, <code>erroneousregistration</code> and <code>wrongdiagnosis</code>. <code>rejectiondisputed</code> is not in the value set<tr><td style=text-align:left><code>Task.basedOn[0].reference</code><td style=text-align:left>The original <code>Claim</code>, for example <code>Claim/VB26AA2600001</code><tr><td style=text-align:left><code>Task.for.reference</code><td style=text-align:left>The <code>Patient</code><tr><td style=text-align:left><code>Task.input[0]</code><td style=text-align:left><code>claimNumber</code> with the case number<tr><td style=text-align:left><code>Task.input[1]</code><td style=text-align:left><code>intimationNumber</code>, which the handbook itself annotates as <code>initimationNumber</code> in the real payload<tr><td style=text-align:left><code>Task.input[2]</code><td style=text-align:left>Optional <code>supportingDocument</code>, free text or a document reference</table></div>
+<p>Workflow codes: <strong>18</strong> on submission, <strong>251</strong> when the payer acknowledges receipt, <strong>252</strong> approved, <strong>253</strong> rejected, <strong>254</strong> queried. The handbook's provider-side table gives <strong>36</strong>, CLAIM_ARBITRATION_REQUEST_SUBMITTED, for the same act, and the workflow sheet lists 36 as "Claim Arbitration Intimation". Two codes for one submission. Confirm which the payer accepts before you build.</p>
+<p>The answer arrives as a <code>Task</code> with <code>status = completed</code> whose <code>output[].valueReference</code> resolves to a <code>ClaimResponse</code> inside the same bundle. Parse that <code>ClaimResponse</code> with the parser you already use for a claim response. The cancel response above proves the shape works, since it uses the same <code>output</code> and <code>include</code> mechanism.</p>
+<h2 class="anchor anchorTargetStickyNavbar_tleR" id=shortfall>Shortfall<a href=#shortfall class=hash-link aria-label="Direct link to Shortfall" title="Direct link to Shortfall" translate=no>​</a></h2>
+<p>The word "shortfall" appears exactly once in the whole documentation mirror. It is in the FAQs, describing the cap on an Erroneous claim. The amount claimed cannot exceed the difference between the claimed and the approved figure, so a case claimed at 10,000 and paid at 6,000 supports a further request of at most 4,000. There is no shortfall <code>Task.code</code>, no shortfall reason code, and no shortfall sample.</p>
+<p>What is real is the mechanism the provider chapters describe. A shortfall is raised as a reprocess with <code>reasonCode</code> <code>partialpayment</code>, only after the payment cycle completes on workflow 33, and the supporting evidence rides as a <code>Task.input</code> attachment. Treat "shortfall" as an operational word for a reprocess, not as a distinct exchange.</p>
+<h2 class="anchor anchorTargetStickyNavbar_tleR" id=traps>Traps<a href=#traps class=hash-link aria-label="Direct link to Traps" title="Direct link to Traps" translate=no>​</a></h2>
+<ul>
+<li class=""><strong>Three <code>Task</code> code systems across four <code>Task</code> exchanges.</strong> The cancel request uses <code>financialtaskcode|cancel</code>, the cancel response <code>task-code|approve</code> from a third system and saying "approve" about a cancellation, the payment notice <code>ndhm-task-codes|deliver</code>. Switch on system and code together, never on the code alone.</li>
+<li class=""><strong><code>Claim.type</code> flips inpatient to outpatient.</strong> The preauthorisation request for <code>VB26AA2600001</code> carries <code>737481003</code> "Inpatient care management (procedure)". The cancel response for the same case number carries <code>737492002</code> "Outpatient care management (procedure)". Nothing in the case changed. Do not use the payer's <code>Claim.type</code> to update your record.</li>
+<li class=""><strong>The payer identifier system is misspelled.</strong> The cancel response bundle identifier uses <code>https://payer.pmajy.nha.gov.in</code>, with <code>pmajy</code> for <code>pmjay</code>. The request uses the correct spelling. Match on the identifier value, never on the system string.</li>
+<li class=""><strong>Provider identity changes shape.</strong> The request names the provider <code>IN1910000151</code>; the response names it <code>1652</code> with a different organisation name. Both are the same hospital.</li>
+<li class=""><strong>The cancelled case still reports money.</strong> <code>total[benefit]</code> remains <code>2700.00</code> on a cancelled preauthorisation. Zero the figure yourself once the adjudication reason reads <code>cancelled</code>.</li>
+<li class=""><strong>Workflow codes for cancellation disagree.</strong> The workflow sheet gives <code>PC01</code> for the request and <code>PC02</code> for the answer. The handbook gives <code>122</code> in its lifecycle prose, section 8.6 and Appendix B, while the same sheet uses <code>R122</code> for a reimbursement claim reprocess. Make the code configurable per payer.</li>
+</ul></div></div><footer class="theme-doc-footer docusaurus-mt-lg"><div class="row margin-top--sm theme-doc-footer-edit-meta-row"><div class="col noPrint_WFHX"></div><div class="col lastUpdated_JAkA"><span class=theme-last-updated>Last updated<!-- --> on <b><time datetime=2026-09-09T06:37:16.000Z itemprop=dateModified>Sep 9, 2026</time></b></span></div></div></footer></article><nav class=page-next aria-label="Where to go next"><a class="next-step card" href=/docs/pr-9/docs/nhcx/v1/fhir-reference/payment-notice-and-acknowledgement><span class=next-step__eyebrow>Next</span><span class=next-step__label>Payment notice and acknowledgement<svg xmlns=http://www.w3.org/2000/svg width=24 height=24 viewBox="0 0 24 24" fill=none stroke=currentColor stroke-width=2 stroke-linecap=round stroke-linejoin=round class="lucide lucide-arrow-right size-4" aria-hidden=true><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></span></a><div class=page-next__nearby><p class=page-next__heading>Also in this section<ul class=page-next__links><li><a class="page-next__link card" href=/docs/pr-9/docs/nhcx/v1/fhir-reference/bundles-and-conventions>Bundles and conventions</a><li><a class="page-next__link card" href=/docs/pr-9/docs/nhcx/v1/fhir-reference/coverage-eligibility-request>Coverage eligibility request</a><li><a class="page-next__link card" href=/docs/pr-9/docs/nhcx/v1/fhir-reference/coverage-eligibility-response>Coverage eligibility response</a><li><a class="page-next__link card" href=/docs/pr-9/docs/nhcx/v1/fhir-reference/insurance-plan-request>Insurance plan request</a></ul></div></nav></div></div><div class=docs-toc-col><nav aria-labelledby=docs-toc-heading class="docs-toc thin-scrollbar theme-doc-toc-desktop"><p id=docs-toc-heading class=docs-toc-heading>On this page<ul class="table-of-contents table-of-contents__left-border"><li><a href=#in-short class="table-of-contents__link toc-highlight">In short</a><li><a href=#cancel-the-request-bundle class="table-of-contents__link toc-highlight">Cancel: the request bundle</a><ul><li><a href=#the-fields-that-matter class="table-of-contents__link toc-highlight">The fields that matter</a><li><a href=#cancellation-reasons class="table-of-contents__link toc-highlight">Cancellation reasons</a></ul><li><a href=#cancel-the-response-bundle class="table-of-contents__link toc-highlight">Cancel: the response bundle</a><li><a href=#what-the-samples-show class="table-of-contents__link toc-highlight">What the samples show</a><li><a href=#reprocess-specified-not-sampled class="table-of-contents__link toc-highlight">Reprocess: specified, not sampled</a><li><a href=#shortfall class="table-of-contents__link toc-highlight">Shortfall</a><li><a href=#traps class="table-of-contents__link toc-highlight">Traps</a></ul></nav></div></div></div></main></div></div></div><footer class="theme-layout-footer footer"><div class="container container-fluid"><div class="row footer__links"><div class="theme-layout-footer-column col footer__col"><div class=footer__title>Contact</div><ul class="footer__items clean-list"><li class=footer__item><a href=https://abdm.gov.in/ target=_blank rel="noopener noreferrer" class=footer__link-item>National Health Authority, 9th Floor, Tower-I, Jeevan Bharati Building, Connaught Place, New Delhi 110 001<svg width=13.5 height=13.5 aria-label="(opens in new tab)" class=iconExternalLink_nPIU><use href=#theme-svg-external-link /></svg></a><li class=footer__item><a href=mailto:abdm@nha.gov.in target=_blank rel="noopener noreferrer" class=footer__link-item>abdm[at]nha[dot]gov[dot]in<svg width=13.5 height=13.5 aria-label="(opens in new tab)" class=iconExternalLink_nPIU><use href=#theme-svg-external-link /></svg></a><li class=footer__item><a href=tel:18001144477 target=_blank rel="noopener noreferrer" class=footer__link-item>Toll free 1800-11-4477<svg width=13.5 height=13.5 aria-label="(opens in new tab)" class=iconExternalLink_nPIU><use href=#theme-svg-external-link /></svg></a></ul></div><div class="theme-layout-footer-column col footer__col"><div class=footer__title>Important links</div><ul class="footer__items clean-list"><li class=footer__item><a href=https://www.mohfw.gov.in/ target=_blank rel="noopener noreferrer" class=footer__link-item>Ministry of Health & Family Welfare<svg width=13.5 height=13.5 aria-label="(opens in new tab)" class=iconExternalLink_nPIU><use href=#theme-svg-external-link /></svg></a><li class=footer__item><a href=https://abha.abdm.gov.in/ target=_blank rel="noopener noreferrer" class=footer__link-item>Ayushman Bharat Health Account (ABHA)<svg width=13.5 height=13.5 aria-label="(opens in new tab)" class=iconExternalLink_nPIU><use href=#theme-svg-external-link /></svg></a><li class=footer__item><a href=https://nhpr.abdm.gov.in/ target=_blank rel="noopener noreferrer" class=footer__link-item>Healthcare Professionals Registry (HPR)<svg width=13.5 height=13.5 aria-label="(opens in new tab)" class=iconExternalLink_nPIU><use href=#theme-svg-external-link /></svg></a><li class=footer__item><a href=https://facility.abdm.gov.in/ target=_blank rel="noopener noreferrer" class=footer__link-item>Health Facility Registry (HFR)<svg width=13.5 height=13.5 aria-label="(opens in new tab)" class=iconExternalLink_nPIU><use href=#theme-svg-external-link /></svg></a><li class=footer__item><a href=https://grievance.abdm.gov.in/ target=_blank rel="noopener noreferrer" class=footer__link-item>Grievance portal<svg width=13.5 height=13.5 aria-label="(opens in new tab)" class=iconExternalLink_nPIU><use href=#theme-svg-external-link /></svg></a></ul></div><div class="theme-layout-footer-column col footer__col"><div class=footer__title>Policies</div><ul class="footer__items clean-list"><li class=footer__item><a href=https://abdm.gov.in/terms-condition target=_blank rel="noopener noreferrer" class=footer__link-item>Terms and conditions<svg width=13.5 height=13.5 aria-label="(opens in new tab)" class=iconExternalLink_nPIU><use href=#theme-svg-external-link /></svg></a><li class=footer__item><a href=https://abdm.gov.in/website-policy target=_blank rel="noopener noreferrer" class=footer__link-item>Website policies<svg width=13.5 height=13.5 aria-label="(opens in new tab)" class=iconExternalLink_nPIU><use href=#theme-svg-external-link /></svg></a><li class=footer__item><a href=https://abdm.gov.in/strapicms/uploads/health_management_policy_bac9429a79.pdf target=_blank rel="noopener noreferrer" class=footer__link-item>Health Data Management Policy<svg width=13.5 height=13.5 aria-label="(opens in new tab)" class=iconExternalLink_nPIU><use href=#theme-svg-external-link /></svg></a><li class=footer__item><a href=https://abdm.gov.in/strapicms/uploads/privacypolicy_178041845b.pdf target=_blank rel="noopener noreferrer" class=footer__link-item>Data privacy policy<svg width=13.5 height=13.5 aria-label="(opens in new tab)" class=iconExternalLink_nPIU><use href=#theme-svg-external-link /></svg></a></ul></div></div><div class="footer__bottom text--center"><div class=footer__copyright>This website belongs to the National Health Authority, Ministry of Health and Family Welfare, Government of India · Catalogue 2026.08.24</div></div></div></footer></div></body>
