@@ -3,80 +3,104 @@
 // page as markdown, plus llms-full.txt and per-module llms.txt indexes.
 // Runs as the site's postbuild step; reads the finished build, never edits
 // source. Routes come from the same walk build-atom-routes validates.
+//
+// The body is rendered from the built HTML, not from the .mdx source. Source
+// is the wrong input, because half of what these pages say lives inside React
+// components and no regex over JSX can read it. The stripper this replaced
+// deleted every card, table and install command it recognised as a component,
+// and passed through the `export const` blocks it did not, so Build with AI
+// arrived carrying raw JSX and none of its commands. The built page is what a
+// reader actually gets, so it is what the markdown is made of.
 import {readFileSync, writeFileSync, existsSync, readdirSync, statSync} from 'node:fs';
 import {join, relative, dirname} from 'node:path';
+import {load} from 'cheerio';
+import {unified} from 'unified';
+import rehypeParse from 'rehype-parse';
+import rehypeRemark from 'rehype-remark';
+import remarkGfm from 'remark-gfm';
+import remarkStringify from 'remark-stringify';
 
 const SITE = join(import.meta.dirname, '..', 'site');
 const BUILD = join(SITE, 'build');
 const DOCS_SRC = join(SITE, 'docs');
 const API_DATA = join(SITE, 'src', 'data', 'api');
 
-// Splits markdown on fenced code blocks (``` or ~~~, with an optional info
-// string such as ```tsx) so JSX stripping can skip fenced content entirely.
-// Line-based, not a single regex, so it can handle a fence indented under a
-// list item (any amount of leading whitespace, not capped at three spaces)
-// and an unterminated fence that CommonMark treats as running to EOF.
-// Returns alternating {fenced: false} prose and {fenced: true} code groups
-// that partition the input's lines, so joining them with '\n' reproduces it.
-function splitOnFences(text) {
-  const lines = text.split('\n');
-  const openRe = /^[ \t]*(`{3,}|~{3,})/;
-  const groups = [];
-  let i = 0;
-  let prose = [];
-  while (i < lines.length) {
-    const open = openRe.exec(lines[i]);
-    if (!open) {
-      prose.push(lines[i]);
-      i += 1;
-      continue;
-    }
-    if (prose.length) {
-      groups.push({fenced: false, lines: prose});
-      prose = [];
-    }
-    const marker = open[1][0];
-    const minLen = open[1].length;
-    const closeRe = new RegExp(`^[ \\t]*\\${marker}{${minLen},}[ \\t]*$`);
-    const fenceLines = [lines[i]];
-    let j = i + 1;
-    while (j < lines.length) {
-      fenceLines.push(lines[j]);
-      const closed = closeRe.test(lines[j]);
-      j += 1;
-      if (closed) break;
-    }
-    // If no closing fence was found, j has reached lines.length and the
-    // fence (correctly) swallowed every remaining line, to EOF.
-    groups.push({fenced: true, lines: fenceLines});
-    i = j;
-  }
-  if (prose.length) groups.push({fenced: false, lines: prose});
-  return groups;
+// Docusaurus's own content container. Everything outside it is chrome the
+// markdown has no use for: breadcrumbs, the table of contents, the sidebars,
+// the previous and next pager.
+const CONTENT = '.theme-doc-markdown';
+
+// Chrome that sits inside it. A button does nothing in a text file, and an
+// icon is decoration carrying no text, so both go before conversion.
+const CHROME = 'button, svg, .hash-link, .pagination-nav, [aria-hidden="true"]';
+
+const pipeline = unified()
+  .use(rehypeParse, {fragment: true})
+  .use(rehypeRemark)
+  .use(remarkGfm)
+  .use(remarkStringify, {bullet: '-', fences: true, rule: '-'});
+
+/**
+ * A tab panel makes no sense without its tab. Radix names each panel's
+ * trigger with `aria-labelledby`, so the label is recoverable; without it
+ * several alternatives run together in the markdown with nothing to tell
+ * them apart. Runs before CHROME is stripped, because the trigger is a
+ * button and stripping takes the label with it.
+ */
+function labelTabPanels($, root) {
+  root.find('[role="tabpanel"]').each((_, el) => {
+    const panel = $(el);
+    // A panel whose first child is a visually hidden label already names
+    // itself, for a screen reader and for this, so leave it alone.
+    if (panel.children().first().hasClass('sr-only')) return;
+    const id = panel.attr('aria-labelledby');
+    if (!id || id.includes('"')) return;
+    const label = $(`[id="${id}"]`).text().trim();
+    if (label) panel.prepend(`<p><strong>${label}</strong></p>`);
+  });
 }
 
-// Drops JSX component lines the markdown reader cannot use; keeps prose.
-// Only ever called on non-fenced segments.
-function stripJsx(text) {
-  return text
-    .replace(/^<([A-Z]\w*)(?:\s[^>]*)?\/>$/gm, '')
-    // Closing tag must match the opening tag name, so a run of different
-    // sibling components cannot match past the wrong closer.
-    .replace(/^<([A-Z]\w*)[^>]*>[\s\S]*?^<\/\1>$/gm, '');
+/**
+ * Prism renders a code block as a tree of coloured spans and puts the
+ * language on the `<pre>`, where hast-util-to-mdast does not look for it.
+ * Flattening to one `<code class="language-x">` carrying the text gets a
+ * fenced block with its language instead of a run of styled fragments.
+ */
+function flattenCodeBlocks($, root) {
+  root.find('pre').each((_, el) => {
+    const pre = $(el);
+    const classes = `${pre.attr('class') ?? ''} ${pre.find('code').attr('class') ?? ''}`;
+    const lang = /language-([\w-]+)/.exec(classes)?.[1];
+    const code = $('<code>').text(pre.text());
+    if (lang) code.addClass(`language-${lang}`);
+    pre.replaceWith($('<pre>').append(code));
+  });
 }
 
-export function stripToMarkdown(src) {
-  let body = src.replace(/^---\n[\s\S]*?\n---\n/, '');
-  body = body.replace(/^import .*$/gm, '');
-  body = splitOnFences(body)
-    .map((group) => {
-      const text = group.lines.join('\n');
-      return group.fenced ? text : stripJsx(text);
-    })
-    .join('\n');
-  const title = /title:\s*"?([^"\n]+)"?/.exec(src)?.[1];
-  if (title && !new RegExp(`^# `, 'm').test(body)) body = `# ${title}\n\n${body}`;
-  return body.replace(/\n{3,}/g, '\n\n').trim() + '\n';
+/**
+ * One built page's content as markdown, or null when the page carries no
+ * content container. Null means the build's template changed shape, which
+ * the caller reports rather than papering over with an empty file.
+ */
+export function htmlToMarkdown(html) {
+  const $ = load(html);
+  const root = $(CONTENT).first();
+  if (!root.length) return null;
+  labelTabPanels($, root);
+  root.find(CHROME).remove();
+  // React separates two adjacent text nodes with an empty comment when it
+  // renders to HTML. Left in, each one splits its enclosing link in two, so
+  // `Open in Claude` arrived as an empty-looking link followed by a second
+  // copy of the same URL.
+  root
+    .find('*')
+    .addBack()
+    .contents()
+    .filter((_, node) => node.type === 'comment')
+    .remove();
+  flattenCodeBlocks($, root);
+  const md = String(pipeline.processSync(root.html() ?? ''));
+  return `${md.replace(/\n{3,}/g, '\n\n').trim()}\n`;
 }
 
 // A worked response is the most useful thing here for an agent writing a
@@ -228,6 +252,7 @@ function main() {
   const full = [];
   let emitted = 0;
   let skipped = 0;
+  const unrendered = [];
   // module id -> [{title, route}], for the per-module llms.txt under hiecm/v3/api.
   const apiModulePages = new Map();
 
@@ -237,23 +262,36 @@ function main() {
     if (/[\\/]_glossary[\\/]/.test(src)) continue; // partials, not routes
 
     const raw = readFileSync(src, 'utf8');
-    let md;
-    let title;
-    const opImport = /from '@site\/src\/data\/api\/([\w-]+)\.json'/.exec(raw);
-    if (opImport && existsSync(join(API_DATA, `${opImport[1]}.json`))) {
-      const op = JSON.parse(readFileSync(join(API_DATA, `${opImport[1]}.json`), 'utf8'));
-      md = renderOperationMarkdown(op);
-      title = op.title ?? op.summary ?? '';
-    } else {
-      md = stripToMarkdown(raw);
-      title = /title:\s*"?([^"\n]+)"?/.exec(raw)?.[1] ?? md.match(/^#\s+(.+)$/m)?.[1] ?? '';
-    }
-
     const route = routeFor(src, raw);
     const outDir = join(BUILD, route);
     if (!existsSync(outDir)) {
       skipped += 1;
       continue; // page exists in source but not in this build; skip
+    }
+
+    let md;
+    let title;
+    const opImport = /from '@site\/src\/data\/api\/([\w-]+)\.json'/.exec(raw);
+    if (opImport && existsSync(join(API_DATA, `${opImport[1]}.json`))) {
+      // An operation page renders from its own JSON rather than from the
+      // built HTML: the JSON carries the headers, parameters, responses and
+      // worked example in full, and the page shows them through a reference
+      // component that reads worse linearised than the source data does.
+      const op = JSON.parse(readFileSync(join(API_DATA, `${opImport[1]}.json`), 'utf8'));
+      md = renderOperationMarkdown(op);
+      title = op.title ?? op.summary ?? '';
+    } else {
+      const html = join(outDir, 'index.html');
+      if (!existsSync(html)) {
+        skipped += 1;
+        continue;
+      }
+      md = htmlToMarkdown(readFileSync(html, 'utf8'));
+      if (md === null) {
+        unrendered.push(route);
+        continue;
+      }
+      title = /title:\s*"?([^"\n]+)"?/.exec(raw)?.[1] ?? md.match(/^#\s+(.+)$/m)?.[1] ?? '';
     }
     writeFileSync(join(outDir, 'index.md'), md);
     // The same markdown at <route>.md as well as <route>/index.md. Appending
@@ -313,6 +351,13 @@ function main() {
   console.log(
     `emit-page-markdown: ${emitted} pages emitted, ${skipped} skipped (no matching build route), llms-full.txt written, ${apiModulePages.size} module llms.txt file(s) written.`,
   );
+  if (unrendered.length) {
+    console.error(
+      `emit-page-markdown: ${unrendered.length} built page(s) carried no ${CONTENT} container, so no markdown was written for them. The theme's markup has changed shape.`,
+    );
+    for (const route of unrendered) console.error(`  ${route}`);
+    process.exit(1);
+  }
 }
 
 if (process.argv[1] === new URL(import.meta.url).pathname) main();

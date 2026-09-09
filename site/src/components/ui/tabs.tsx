@@ -82,6 +82,13 @@ function TabsContent({
   return (
     <TabsPrimitive.Content
       data-slot="tabs-content"
+      // Every panel renders and Radix hides the inactive ones with `hidden`,
+      // rather than the inactive ones not existing. The screen is unchanged.
+      // What changes is the built HTML, which is what an agent fetching this
+      // page as markdown reads: without this it gets whichever tab happened
+      // to be selected, and on Build with AI that is half the install
+      // instructions. See scripts/emit-page-markdown.mjs.
+      forceMount
       className={cn("flex-1 outline-none", className)}
       {...props}
     />
