@@ -242,9 +242,18 @@ function ResponsePanel({responses}: {responses: Operation['responses']}) {
         ) : null}
       </div>
       {current.example !== undefined ? (
-        <CodeBlock language="json">
-          {JSON.stringify(current.example, null, 2)}
-        </CodeBlock>
+        <>
+          <CodeBlock language="json">
+            {JSON.stringify(current.example, null, 2)}
+          </CodeBlock>
+          {/* NHA publishes field lists rather than captured bodies, so this is
+              built from the schema. Saying so stops a schema default being
+              read as a value the gateway returned. */}
+          <p className="api-panel__note">
+            Generated from the schema. The values are placeholders, not a
+            captured response.
+          </p>
+        </>
       ) : (
         <p className="api-panel__empty">{current.description}</p>
       )}
