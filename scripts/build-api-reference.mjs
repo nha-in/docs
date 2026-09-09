@@ -737,7 +737,9 @@ for (const {platform, version, files} of tree) {
         'Error codes',
         'Every error code the specifications carry, with its message and what to do.',
         3,
-        ['hiecm.concept.error-codes'],
+        // Only the HIE-CM page covers this atom. A second platform claiming the
+        // same id would take its route in atom-routes.json.
+        isHiecmV3 ? ['hiecm.concept.error-codes'] : [],
       ),
       '# Error codes',
       '',
