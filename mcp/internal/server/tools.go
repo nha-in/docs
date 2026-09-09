@@ -4,6 +4,8 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"regexp"
+	"strings"
 
 	"github.com/eka-care/abdm-docs/mcp/internal/catalogue"
 	"github.com/eka-care/abdm-docs/mcp/internal/chat"
@@ -227,14 +229,40 @@ func (t *Tools) ListOperations(ctx context.Context, in listOpsIn) (map[string]an
 }
 
 func (t *Tools) GetOperation(ctx context.Context, in getOpIn) (map[string]any, error) {
-	frag, err := t.r.GetOperation(in.OperationID)
+	frag, module, err := t.r.GetOperation(in.OperationID)
 	if err != nil {
 		return nil, err
 	}
-	return t.versioned(map[string]any{
+	out := map[string]any{
 		"operation_id": in.OperationID,
 		"spec":         json.RawMessage(frag),
-	}), nil
+	}
+	if path := operationDocPath(module, in.OperationID); path != "" {
+		out["doc_path"] = path
+	}
+	return t.versioned(out), nil
+}
+
+// nonAlphanumeric matches the run-collapsing the site's route generator does
+// in scripts/build-api-reference.mjs. Keep the two in step: an operation id is
+// snake_case and its route is hyphenated, so without this an agent holding
+// `gateway_sessions_create` cannot reach
+// `/docs/hiecm/v3/api/gateway/endpoints/gateway-sessions-create`.
+var nonAlphanumeric = regexp.MustCompile(`[^a-zA-Z0-9]+`)
+
+// operationDocPath is site-relative rather than absolute because the server is
+// not told where it is published. Every operation it indexes is HIE-CM v3
+// today, which is the one assumption here; a second gateway means carrying the
+// gateway and version through the index alongside the module.
+func operationDocPath(module, operationID string) string {
+	if module == "" || operationID == "" {
+		return ""
+	}
+	slug := strings.Trim(nonAlphanumeric.ReplaceAllString(operationID, "-"), "-")
+	if slug == "" {
+		return ""
+	}
+	return "/docs/hiecm/v3/api/" + module + "/endpoints/" + strings.ToLower(slug)
 }
 
 func (t *Tools) CatalogueInfo(ctx context.Context, in emptyIn) (map[string]any, error) {
