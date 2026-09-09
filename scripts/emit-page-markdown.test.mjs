@@ -143,3 +143,27 @@ test('htmlToMarkdown keeps a table', () => {
 test('htmlToMarkdown returns null when the build carries no content container', () => {
   assert.strictEqual(htmlToMarkdown('<html><body><div id="other">x</div></body></html>'), null);
 });
+
+test('htmlToMarkdown puts a mermaid diagram back under its heading', () => {
+  const src = [
+    '## The whole path',
+    '',
+    '```mermaid',
+    'sequenceDiagram',
+    '    HIU->>GW: request',
+    '```',
+    '',
+    '## Stage 1',
+  ].join('\n');
+  // Docusaurus renders mermaid in the browser, so the built HTML has nothing
+  // between the two headings.
+  const md = htmlToMarkdown(page('<h2>The whole path</h2><h2>Stage 1</h2>'), src);
+  assert.match(md, /## The whole path\n\n```mermaid\nsequenceDiagram\n {4}HIU->>GW: request\n```/);
+  assert.match(md, /## Stage 1/);
+});
+
+test('htmlToMarkdown keeps a diagram whose heading did not survive conversion', () => {
+  const src = '## Gone\n\n```mermaid\ngraph TD\n```\n';
+  const md = htmlToMarkdown(page('<p>No headings here.</p>'), src);
+  assert.match(md, /```mermaid\ngraph TD\n```/);
+});
