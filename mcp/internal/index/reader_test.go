@@ -270,11 +270,14 @@ func TestFHIRProfileRoundTrip(t *testing.T) {
 
 func TestGetOperationAndStats(t *testing.T) {
 	r := openFixture(t, false)
-	raw, err := r.GetOperation("linkAddContexts")
+	raw, module, err := r.GetOperation("linkAddContexts")
+	if module != "m2" {
+		t.Errorf("module = %q, want m2", module)
+	}
 	if err != nil || len(raw) == 0 {
 		t.Fatalf("raw=%q err=%v", raw, err)
 	}
-	if _, err := r.GetOperation("nope"); err == nil {
+	if _, _, err := r.GetOperation("nope"); err == nil {
 		t.Fatal("want NotFoundError")
 	}
 	v, err := r.GetOperationValidation("linkAddContexts")
