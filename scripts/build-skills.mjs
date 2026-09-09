@@ -115,7 +115,7 @@ const MODULES = [
     rules: [
       UNVERIFIED,
       'Neither registry moves a health record. M4 establishes who the professional is and what the facility is, so every record flow has a verified provider behind it.',
-      'M4 blocks M2 and M3 in production. Without a facility in the HFR and a bridge linked to it, you cannot share as a HIP or fetch as an HIU.',
+      'M2 and M3 need a facility in the HFR and a bridge linked to it before records flow in production. M4 is the API route to that. Registering the facility by hand on the NHPR portal is the other route, and a product that takes it never builds M4.',
       'The HPR comes first. Onboarding a facility needs an HPR token, which needs a person who already holds an HPID.',
       'Creating an HPID returns an `hprToken`. Keep it: the register professional call carries it in its payload.',
       'A facility ID is `IN` followed by 10 characters. An HPID is 14 digits.',
