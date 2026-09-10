@@ -92,6 +92,19 @@ func TestCheckLiteralOutsideCodeSpan(t *testing.T) {
 	}
 }
 
+// TestCheckDeclineOverBudget covers the OverBudget check being scoped to
+// the "answer" case only: a decline answer past the 80 word ceiling must
+// still be flagged, not silently pass because it never took the "answer"
+// branch of the switch.
+func TestCheckDeclineOverBudget(t *testing.T) {
+	c := declineCase()
+	long := strings.Repeat("word ", 100) + "Ask [support](/docs/support)."
+	r := Check(c, Transcript{CaseID: c.ID, Answer: long})
+	if !hasPrefix(r.Failures, "budget: decline answer is") {
+		t.Errorf("an over budget decline answer was not flagged: %v", r.Failures)
+	}
+}
+
 func contains(list []string, s string) bool {
 	for _, x := range list {
 		if x == s {
