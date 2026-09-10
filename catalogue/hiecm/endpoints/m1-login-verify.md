@@ -83,6 +83,8 @@ NHA's own collection records responses for this operation at status 200, 400, 40
 
 Read the body rather than only the status. Several of NHA's saved failures return a body that names the problem while the status alone does not.
 
+The recorded 200 gives `expiresIn: 1800`, so the user token you then send in `X-token` lasts thirty minutes, and `refreshExpiresIn: 1296000`, fifteen days for the refresh token. Read both from the response rather than assuming them. This is a different clock from the gateway session token in `Authorization`, which has its own lifetime.
+
 This has not been run against the sandbox from this repository. When you run it, record the response here and set `verified.status` accordingly.
 
 ## When it goes wrong
