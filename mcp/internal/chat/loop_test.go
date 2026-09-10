@@ -646,8 +646,11 @@ func TestRespondRetriesWithoutPuttingWordsInTheReadersMouth(t *testing.T) {
 	if fm.calls != 2 {
 		t.Fatalf("model called %d times, want 2", fm.calls)
 	}
-	// The second call sees the reader's own words and nothing else.
-	if got := fm.gotMsgs[1]; len(got) != 1 || got[0].Text != "jhhjjk" {
+	// The second call sees the reader's own words, with the shape block that
+	// rides along on every call, and nothing else: no apology, no retry
+	// instruction, no mention of the first attempt.
+	want := ShapeBlock("define") + "\n\n" + "jhhjjk"
+	if got := fm.gotMsgs[1]; len(got) != 1 || got[0].Text != want {
 		t.Errorf("the retry changed the conversation: %+v", got)
 	}
 	if !strings.Contains(fm.gotSystem[1], "Before answering, use your tools") {
@@ -895,5 +898,36 @@ func TestRespondPreRetrievesOnAShortFollowUp(t *testing.T) {
 	}
 	if !strings.Contains(sawQuery, "create an ABHA") || !strings.Contains(sawQuery, "address") {
 		t.Errorf("lookup query = %q, want it to carry the previous turn", sawQuery)
+	}
+}
+
+func TestSystemPromptIsStableAndShapeAndPageRideInTheUserTurn(t *testing.T) {
+	var systems []string
+	var lastUsers []string
+	m := &fakeModel{
+		replies: []Reply{{Text: "ok", StopReason: "end_turn"}, {Text: "ok", StopReason: "end_turn"}},
+		onStream: func(system string, tools []ToolDef, msgs []Message) {
+			systems = append(systems, system)
+			lastUsers = append(lastUsers, msgs[len(msgs)-1].Text)
+		}}
+	svc := &Service{Model: m, MaxTokens: 100}
+	page := &Page{Title: "M1", URL: "/docs/hiecm/v3/milestones/m1", Markdown: "# M1\nSeven journeys."}
+	if err := svc.Respond(context.Background(), []Turn{{Role: "user", Text: "what is an abha"}}, page, func(string, any) error { return nil }); err != nil {
+		t.Fatal(err)
+	}
+	if err := svc.Respond(context.Background(), []Turn{{Role: "user", Text: "how do i link a record"}}, nil, func(string, any) error { return nil }); err != nil {
+		t.Fatal(err)
+	}
+	if systems[0] != systems[1] {
+		t.Error("system prompt must be byte identical across questions and with or without a page")
+	}
+	if !strings.Contains(lastUsers[1], "<answer_shape") {
+		t.Errorf("shape block missing from the user turn: %q", lastUsers[1])
+	}
+	if !strings.Contains(lastUsers[0], "Seven journeys.") {
+		t.Errorf("page text did not move into the user turn: %q", lastUsers[0])
+	}
+	if len(strings.Fields(systems[0])) > 650 {
+		t.Errorf("core prompt is %d words, want at most 650", len(strings.Fields(systems[0])))
 	}
 }
