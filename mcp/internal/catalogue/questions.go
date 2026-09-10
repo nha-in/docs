@@ -8,6 +8,11 @@ import (
 	"strings"
 )
 
+// QuestionsHeading marks the synthetic chunk that carries an atom's
+// questions for embedding. The indexer sets it on that chunk and search.go
+// checks it, so the two cannot drift on what "the questions chunk" means.
+const QuestionsHeading = "Questions this answers"
+
 // AtomQuestions is what a reader might type that this atom answers,
 // generated once per catalogue version by a strong model and committed.
 // BodyHash is the atom body the questions were written against, so a

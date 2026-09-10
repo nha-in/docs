@@ -152,8 +152,8 @@ func run(catDir, outPath, nrcesPath string, emb embed.Embedder) error {
 			if q, ok := questions[a.ID]; ok && len(q.Questions) > 0 {
 				all = append(all, catalogue.Chunk{
 					AtomID:  a.ID,
-					Heading: "Questions this answers",
-					Text:    a.Title + "\nQuestions this answers:\n" + strings.Join(q.Questions, "\n"),
+					Heading: catalogue.QuestionsHeading,
+					Text:    a.Title + "\n" + catalogue.QuestionsHeading + ":\n" + strings.Join(q.Questions, "\n"),
 				})
 			}
 		}
