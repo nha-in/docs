@@ -133,10 +133,15 @@ sequenceDiagram
 
 ### Then the mobile number
 
-The mobile number is confirmed before the HPID is created, by a fast path or a slow one. Send it encrypted: fetch the public certificate from `/v4/int/api/v1/auth/cert`, encrypt with `RSA/ECB/PKCS1Padding`, send the encrypted value.
+Step 13 decides what happens next. An existing HPID means the professional is already registered: log them in and skip the rest of this journey. A returning professional can also skip Aadhaar entirely and log in by mobile OTP or by password. Both routes are in [M4 operations and fields](/docs/hiecm/v3/api/m4/undocumented#login-by-mobile-otp).
+
+No HPID means you confirm the mobile number before creating one, by a fast path or a slow one. Send it encrypted: fetch the public certificate from `/v4/int/api/v1/auth/cert`, encrypt with `RSA/ECB/PKCS1Padding`, send the encrypted value.
 
 ```mermaid
 flowchart TD
+    Z{"HPID already exists<br/>for this Aadhaar?"}
+    Z -- "Yes" --> Y["Log the professional in.<br/>Journey 1 is done."]
+    Z -- "No" --> A
     A["Call the mobile match API<br/>with the encrypted mobile number"] --> B{"demographicAuthViaMobile"}
     B -- true --> C["Mobile number is already verified.<br/>Skip OTP entirely."]
     B -- false --> D["Generate mobile OTP<br/>with mobile and txnId"]
