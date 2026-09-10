@@ -7,6 +7,8 @@ import (
 	"strings"
 	"testing"
 	"unicode/utf8"
+
+	"github.com/eka-care/abdm-docs/mcp/internal/guard"
 )
 
 // fakeModel scripts a sequence of replies, one per call, in order. texts[i],
@@ -26,12 +28,20 @@ type fakeModel struct {
 	calls     int
 	gotMsgs   [][]Message
 	gotSystem []string
+	// onStream, when set, is called on every Stream invocation with exactly
+	// what the model saw: the tools it was offered and the messages it was
+	// given. Tests use it to check the routed tool set and the pre-retrieved
+	// pack without adding yet more slices this struct has to record.
+	onStream func(system string, tools []ToolDef, msgs []Message)
 }
 
 func (f *fakeModel) Stream(ctx context.Context, system string, tools []ToolDef,
 	msgs []Message, maxTokens int, onText func(string)) (Reply, error) {
 	f.gotMsgs = append(f.gotMsgs, msgs)
 	f.gotSystem = append(f.gotSystem, system)
+	if f.onStream != nil {
+		f.onStream(system, tools, msgs)
+	}
 	i := f.calls
 	f.calls++
 	if i < len(f.texts) && f.texts[i] != "" {
@@ -671,5 +681,47 @@ func TestCollectSourcesFromPassages(t *testing.T) {
 	}
 	if sources[0].ID != "hiecm.glossary.abha-address" || sources[1].ID != "hiecm.glossary.abha-number" {
 		t.Errorf("sources = %+v", sources)
+	}
+}
+
+func TestRespondPreRetrievesAndExposesRoutedTools(t *testing.T) {
+	var sawTools []string
+	var sawFirstUser string
+	m := &fakeModel{
+		replies: []Reply{{Text: "An ABHA address is the handle.", StopReason: "end_turn"}},
+		onStream: func(system string, tools []ToolDef, msgs []Message) {
+			for _, td := range tools {
+				sawTools = append(sawTools, td.Name)
+			}
+			sawFirstUser = msgs[len(msgs)-1].Text
+		},
+	}
+	svc := &Service{Model: m, MaxTokens: 100,
+		Lookup: func(ctx context.Context, q string) (json.RawMessage, []Source, guard.PackFacts, error) {
+			return json.RawMessage(`{"passages":[{"id":"shared.glossary.abha-address","title":"ABHA address"}]}`),
+				[]Source{{ID: "shared.glossary.abha-address", Title: "ABHA address"}}, guard.PackFacts{}, nil
+		},
+		ToolsFor: func(q string, att bool) []ToolDef {
+			return []ToolDef{{Name: "search_docs"}, {Name: "decode_error"}}
+		},
+	}
+	var sources []Source
+	emit := func(event string, data any) error {
+		if event == "sources" {
+			sources = data.([]Source)
+		}
+		return nil
+	}
+	if err := svc.Respond(context.Background(), []Turn{{Role: "user", Text: "what is an abha address"}}, nil, emit); err != nil {
+		t.Fatal(err)
+	}
+	if len(sawTools) != 2 {
+		t.Errorf("tools exposed = %v, want the two routed ones", sawTools)
+	}
+	if !strings.Contains(sawFirstUser, "shared.glossary.abha-address") {
+		t.Errorf("passage pack was not placed in the user turn: %q", sawFirstUser)
+	}
+	if len(sources) != 1 {
+		t.Errorf("pre-retrieved passages must count as sources, got %v", sources)
 	}
 }

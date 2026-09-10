@@ -90,6 +90,13 @@ type Service struct {
 	// download every raw tool payload the widget ignores. The eval sets it
 	// true when it builds its own Service (internal/eval/runner.go).
 	TraceTools bool
+	// Lookup pre-retrieves a passage pack for the question before the
+	// first model call. nil means no pre-retrieval (tests, or a caller
+	// that wants the old behaviour).
+	Lookup func(ctx context.Context, question string) (json.RawMessage, []Source, guard.PackFacts, error)
+	// ToolsFor returns the tools to expose for this question. nil means
+	// s.Tools unchanged.
+	ToolsFor func(question string, hasAttachment bool) []ToolDef
 }
 
 const (
@@ -587,6 +594,42 @@ func (s *Service) Respond(ctx context.Context, turns []Turn, page *Page, emit fu
 	}
 	onText := g.write
 
+	// looked tracks whether a lookup has happened this turn, so the
+	// answered-without-looking retry below never fires after a
+	// pre-retrieval already looked on the reader's behalf.
+	looked := false
+
+	// tools is what this question may call: the fixed s.Tools unless a
+	// router narrows it. ToolsFor runs before the first model call, not
+	// per round, because the route is a property of the question, not of
+	// where the conversation happens to be when a round starts.
+	tools := s.Tools
+	if s.ToolsFor != nil {
+		tools = s.ToolsFor(question, lastUserAttachment(turns) != nil)
+	}
+	// facts is read by Task E3's shape check; kept here so pre-retrieval
+	// computes it once rather than that check re-deriving it from the pack.
+	var facts guard.PackFacts
+	if s.Lookup != nil {
+		pack, packSources, f, err := s.Lookup(ctx, question)
+		if err != nil {
+			slog.Warn("pre-retrieval failed, continuing without it", "error", err)
+		} else if len(pack) > 0 {
+			facts = f
+			for _, src := range packSources {
+				addSource(&sources, src)
+			}
+			g.corpus.Write(pack)
+			// The pack rides in the last user turn, never the system prompt:
+			// the Bedrock cache point sits after the system text, and a
+			// per-question system suffix would defeat it on every call.
+			last := &msgs[len(msgs)-1]
+			last.Text = "<passages>\n" + string(pack) + "\n</passages>\n\n" + last.Text
+			looked = true // pre-retrieval is a lookup; do not send lookFirst
+		}
+	}
+	_ = facts // used by the shape check in Task E3
+
 	// Round one is written into a holding pen rather than to the reader.
 	//
 	// The model almost always calls a tool first, and text from a round that
@@ -607,7 +650,7 @@ func (s *Service) Respond(ctx context.Context, turns []Turn, page *Page, emit fu
 	}
 
 	runRound := func() (Reply, error) {
-		reply, err := s.Model.Stream(ctx, system, s.Tools, msgs, s.MaxTokens, onFirst)
+		reply, err := s.Model.Stream(ctx, system, tools, msgs, s.MaxTokens, onFirst)
 		if err != nil {
 			return reply, err
 		}
@@ -617,7 +660,6 @@ func (s *Service) Respond(ctx context.Context, turns []Turn, page *Page, emit fu
 		return reply, nil
 	}
 
-	looked := false
 	for round := 1; round <= MaxToolCalls; round++ {
 		reply, err := runRound()
 		if err != nil {
@@ -679,7 +721,7 @@ func (s *Service) Respond(ctx context.Context, turns []Turn, page *Page, emit fu
 			if err := emit("tool", map[string]string{"name": c.Name, "detail": toolDetail(c)}); err != nil {
 				return err
 			}
-			result, fields := runTool(ctx, s.Tools, c)
+			result, fields := runTool(ctx, tools, c)
 			// tool and tool_result are two separate events, not one, because
 			// they serve two readers who need it at two different times: the
 			// panel's progress cue must fire before the call so the reader
