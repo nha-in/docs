@@ -61,12 +61,16 @@ func main() {
 }
 
 func run(catDir, outPath, nrcesPath string, emb embed.Embedder) error {
-	var atoms []catalogue.Atom
 	var ops []catalogue.Operation
 	var specErrors []catalogue.SpecErrorCode
 	hashes := map[string]string{}
 
-	err := filepath.WalkDir(catDir, func(path string, d fs.DirEntry, err error) error {
+	atoms, err := catalogue.LoadAtoms(catDir)
+	if err != nil {
+		return err
+	}
+
+	err = filepath.WalkDir(catDir, func(path string, d fs.DirEntry, err error) error {
 		if err != nil {
 			return err
 		}
@@ -86,22 +90,7 @@ func run(catDir, outPath, nrcesPath string, emb embed.Embedder) error {
 		if err != nil {
 			return err
 		}
-		relSlash := filepath.ToSlash(rel)
 		switch {
-		case strings.HasSuffix(path, ".md") && (relSlash == "openapi" || strings.HasPrefix(relSlash, "openapi/")):
-			// Spec-area documentation (e.g. openapi/CONVENTIONS.md) is not an atom
-			// and is not hashed; skip it silently.
-			return nil
-		case strings.HasSuffix(path, string(os.PathSeparator)+"README.md") || relSlash == "README.md":
-			// READMEs are contributor notes for the folder they sit in, not
-			// atoms; skip them silently wherever they are.
-			return nil
-		case strings.HasSuffix(path, ".md"):
-			a, err := catalogue.ParseAtom(rel, content)
-			if err != nil {
-				return err
-			}
-			atoms = append(atoms, a)
 		case strings.HasPrefix(rel, "openapi"+string(os.PathSeparator)) &&
 			strings.HasSuffix(path, ".yaml") &&
 			!strings.Contains(rel, "corrections") &&
