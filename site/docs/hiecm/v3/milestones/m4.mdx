@@ -88,9 +88,10 @@ testing use cases](/docs/hiecm/v3/resources/testing/m4).
 
 ## The journey, one diagram per flow
 
-Milestone 4 of [ABDM](/docs/hiecm/v3/getting-started/glossary#abdm) has three journeys:
+Milestone 4 of [ABDM](/docs/hiecm/v3/getting-started/glossary#abdm) has four journeys:
 
-- A professional gets an [HPID](/docs/hiecm/v3/getting-started/glossary#hpid) and an [HPR](/docs/hiecm/v3/getting-started/glossary#hpr) profile.
+- A professional gets an [HPID](/docs/hiecm/v3/getting-started/glossary#hpid).
+- That professional's [HPR](/docs/hiecm/v3/getting-started/glossary#hpr) profile is registered against the HPID. The identity and the profile are two jobs, not one.
 - A facility manager onboards a facility to the [HFR](/docs/hiecm/v3/getting-started/glossary#hfr).
 - A facility links its bridges, so it can publish records as the [HIP](/docs/hiecm/v3/getting-started/glossary#hip) and fetch them as the [HIU](/docs/hiecm/v3/getting-started/glossary#hiu) through its software.
 
@@ -100,7 +101,7 @@ This page shows the order of calls in each. Field lists are on the [operations a
 These diagrams follow the published order of steps.
 :::
 
-## Journey 1: a professional gets an HPID
+## Journey 1: create an HPID for a professional
 
 The professional authenticates against Aadhaar on a hosted page. Your system never handles the Aadhaar number or [OTP](/docs/hiecm/v3/getting-started/glossary#otp): it handles the transaction ID and redirects to a URL the HPR service returns, valid for five minutes. After that, call generate Aadhaar link again.
 
@@ -145,9 +146,9 @@ flowchart TD
 
 Create HPID returns an `hprToken`. Keep it: the register professional call needs it.
 
-### Then the profile
+## Journey 2: register the professional on the HPR
 
-The HPID is an identity, not a profile. Registering the professional adds qualifications, council registration and current work.
+The HPID is an identity, not a profile. Registering the professional adds qualifications, council registration and current work. It needs the `hprToken` journey 1 returned.
 
 ```mermaid
 sequenceDiagram
@@ -170,7 +171,7 @@ Two documents are mandatory, the degree certificate and the registration certifi
 
 Register professional takes codes, not names. Fetch council, course, college, university, state, district and language from the master APIs first.
 
-## Journey 2: a facility onboards to the HFR
+## Journey 3: a facility onboards to the HFR
 
 Onboarding is one search, three writes and a submit, each write adding a layer of detail. Stop before submit and the facility stays in draft, invisible to ABDM.
 
@@ -224,7 +225,7 @@ sequenceDiagram
     H-->>S: Validation result
 ```
 
-## Journey 3: linking bridges to a facility
+## Journey 4: linking bridges to a facility
 
 A facility ID alone does not make records flow. The facility has to be linked to a bridge, each link marked HIP or HIU. One facility can have several.
 
