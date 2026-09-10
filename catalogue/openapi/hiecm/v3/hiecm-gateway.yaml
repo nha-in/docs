@@ -10,6 +10,7 @@ info:
     module: gateway
     label: Gateway session
     position: 1
+    icon: key-round
   title: ABDM gateway sessions
   summary: Exchange a client id and client secret for the access token every other
     ABDM call needs.

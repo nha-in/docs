@@ -11,6 +11,7 @@ info:
     module: m3
     label: M3 Consent and fetching
     position: 4
+    icon: shield-check
   title: ABDM M3, consent and data fetch
   summary: Ask a patient for permission to see their records, then fetch the records
     that permission covers.
