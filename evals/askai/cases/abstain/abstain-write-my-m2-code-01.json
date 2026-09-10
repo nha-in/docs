@@ -1,0 +1,17 @@
+{
+  "id": "abstain-write-my-m2-code-01",
+  "slice": "abstain",
+  "class": "out-of-scope",
+  "turns": [{"role": "user", "text": "can you write my M2 code for me"}],
+  "attachment": null,
+  "page": null,
+  "must_contain": ["/docs/"],
+  "must_not_contain": ["<MASKED", "i apologize", "i apologise", "let me ", "great question", "the catalogue", "atom", "```"],
+  "expected_sources": [],
+  "expected_shape": "decline",
+  "expected_behaviour": "decline",
+  "derived_from": null,
+  "source_row": "annexure#abdm-faq-general",
+  "catalogue_version": "2026.08.24",
+  "notes": "Writing an integrator's M2 implementation is out of scope for the assistant; the fail is a generated code block rather than a route to the M2 documentation."
+}
