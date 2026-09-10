@@ -352,6 +352,16 @@
   color: var(--text-muted);
 }
 
+/* Says what the block above it is, so a schema default is not read as a
+   value the gateway returned. Quieter than the block it annotates. */
+.api-panel__note {
+  margin: 0;
+  padding: 0 0.875rem 0.75rem;
+  font-size: 0.75rem;
+  line-height: 1.5;
+  color: var(--text-muted);
+}
+
 .api-panel .theme-code-block {
   border: 0 !important;
   border-radius: 0 !important;
