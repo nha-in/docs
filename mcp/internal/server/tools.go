@@ -572,3 +572,41 @@ func (t *Tools) Defs() []ToolDef {
 		},
 	}
 }
+
+const chatSearchDescription = "Call this when the answer is not already in the passages you were given, or the reader asks a follow-up that needs something new. It searches this portal's documentation and returns the matching pages in full, with their related pages named. Send the reader's own words as the query."
+
+// ChatToolsFor is the chat loop's view of the tools: only the names the
+// router chose, and search_docs bound to Lookup rather than to the
+// snippet search the MCP serves. The MCP keeps the granular tools; the
+// chat model gets the composite under a name it already knows.
+func (t *Tools) ChatToolsFor(names []string) []chat.ToolDef {
+	byName := map[string]ToolDef{}
+	for _, d := range t.Defs() {
+		byName[d.Name] = d
+	}
+	var out []chat.ToolDef
+	for _, n := range names {
+		if n == "search_docs" {
+			out = append(out, chat.ToolDef{
+				Name: "search_docs", Description: chatSearchDescription,
+				InputSchema: mustSchemaFor[lookupIn](),
+				Call: func(ctx context.Context, raw json.RawMessage) (map[string]any, error) {
+					var in lookupIn
+					if err := json.Unmarshal(raw, &in); err != nil {
+						return nil, err
+					}
+					pack, err := t.Lookup(ctx, in)
+					if err != nil {
+						return nil, err
+					}
+					return t.versioned(map[string]any{"passages": pack.Passages, "related": pack.Related}), nil
+				},
+			})
+			continue
+		}
+		if d, ok := byName[n]; ok {
+			out = append(out, chat.ToolDef{Name: d.Name, Description: d.Description, InputSchema: d.InputSchema, Call: d.Call})
+		}
+	}
+	return out
+}

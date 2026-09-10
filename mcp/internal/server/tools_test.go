@@ -47,6 +47,40 @@ func TestToolDefCallSearch(t *testing.T) {
 	}
 }
 
+// newTestTools builds a Tools over the fixture snapshot with a fake
+// embedder, the same setup TestLookupOpensTopHitsAndWalksOneHop uses, so
+// Lookup (and anything bound to it) has real hits to return.
+func newTestTools(t *testing.T) *Tools {
+	t.Helper()
+	return NewTools(fixtureReader(t, true), embed.NewFake(64))
+}
+
+func keys(m map[string]any) []string {
+	out := make([]string, 0, len(m))
+	for k := range m {
+		out = append(out, k)
+	}
+	return out
+}
+
+func TestChatToolsForBindsSearchDocsToLookup(t *testing.T) {
+	tools := newTestTools(t)
+	defs := tools.ChatToolsFor([]string{"search_docs", "decode_error"})
+	if len(defs) != 2 || defs[0].Name != "search_docs" || defs[1].Name != "decode_error" {
+		t.Fatalf("got %+v", defs)
+	}
+	out, err := defs[0].Call(context.Background(), json.RawMessage(`{"query":"link care contexts"}`))
+	if err != nil {
+		t.Fatal(err)
+	}
+	if _, ok := out["passages"]; !ok {
+		t.Errorf("chat search_docs must return a passage pack, got keys %v", keys(out))
+	}
+	if !strings.Contains(defs[0].Description, "Call this when") {
+		t.Errorf("description must state when to call it, got %q", defs[0].Description)
+	}
+}
+
 func defByName(t *testing.T, defs []ToolDef, name string) ToolDef {
 	t.Helper()
 	for _, d := range defs {

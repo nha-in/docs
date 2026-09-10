@@ -650,3 +650,26 @@ func TestRespondRetriesWithoutPuttingWordsInTheReadersMouth(t *testing.T) {
 		t.Errorf("the second answer did not reach the reader:\n%s", got)
 	}
 }
+
+// TestCollectSourcesFromPassages covers the composite search_docs the chat
+// loop calls (server.Tools.ChatToolsFor binds search_docs to Lookup): its
+// result carries "passages" rather than "hits", and every passage must
+// still become a source.
+func TestCollectSourcesFromPassages(t *testing.T) {
+	var sources []Source
+	result := map[string]any{
+		"passages": []map[string]any{
+			{"id": "hiecm.glossary.abha-address", "title": "ABHA address",
+				"verification_status": "verified", "doc_url": "/docs/glossary/abha-address"},
+			{"id": "hiecm.glossary.abha-number", "title": "ABHA number",
+				"verification_status": "verified", "doc_url": "/docs/glossary/abha-number"},
+		},
+	}
+	collectSources(&sources, "search_docs", result)
+	if len(sources) != 2 {
+		t.Fatalf("got %d sources, want 2: %+v", len(sources), sources)
+	}
+	if sources[0].ID != "hiecm.glossary.abha-address" || sources[1].ID != "hiecm.glossary.abha-number" {
+		t.Errorf("sources = %+v", sources)
+	}
+}
