@@ -35,6 +35,19 @@ type RunConfig struct {
 	DBPath        string
 }
 
+// lastUserMessageText returns the text of the last user message in msgs, or
+// "" if there is none. It is the pack, the page and the question the model
+// actually saw, so a corpus built from it grounds exactly what the model
+// could ground an answer on.
+func lastUserMessageText(msgs []chat.Message) string {
+	for i := len(msgs) - 1; i >= 0; i-- {
+		if msgs[i].Role == "user" {
+			return msgs[i].Text
+		}
+	}
+	return ""
+}
+
 func toTurns(c Case) ([]chat.Turn, *chat.Page) {
 	turns := make([]chat.Turn, 0, len(c.Turns))
 	for i, t := range c.Turns {
@@ -129,6 +142,15 @@ func Run(ctx context.Context, cfg RunConfig, cases []Case) (int, error) {
 			}
 			tr.Calls[i].ToolResults = pendingTools[ti : ti+k]
 			ti += k
+		}
+		// The pre-retrieved pack never appears as a tool_result event (it is
+		// prepended straight into the last user message by the chat loop),
+		// so the corpus built above from tool_result alone is missing it.
+		// The grounding check would then score every literal the model
+		// correctly quoted from the pack as an invention. rec.Calls[0] is
+		// the first model call of the turn, the one the pack rides on.
+		if len(rec.Calls) > 0 {
+			corpus.WriteString(lastUserMessageText(rec.Calls[0].Messages))
 		}
 		tr.Answer = strings.TrimSpace(answer.String())
 		tr.Corpus = corpus.String()
