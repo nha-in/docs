@@ -1,0 +1,78 @@
+// Package route decides, before any model call, what shape of answer a
+// question wants and which tools that shape may use. It is rules, not a
+// model: the rules are cheap, testable, and wrong in ways that can be read.
+package route
+
+import (
+	"regexp"
+	"strings"
+
+	"github.com/eka-care/abdm-docs/mcp/internal/catalogue"
+)
+
+type Shape string
+
+const (
+	Define   Shape = "define"
+	HowDoI   Shape = "how-do-i"
+	Diagnose Shape = "diagnose"
+	Compare  Shape = "compare"
+	Meta     Shape = "meta"
+)
+
+type Input struct {
+	Question      string
+	HasAttachment bool
+}
+
+type Result struct {
+	Shape        Shape
+	ErrorCodes   []string
+	OperationRef string
+	Tools        []string
+}
+
+var (
+	pathRe = regexp.MustCompile(`(?i)\b(?:GET|POST|PUT|PATCH|DELETE)?\s*(/(?:api|v3|v3\.1|hiecm|abha|phr)[A-Za-z0-9/_{}.\-]*)`)
+	opIDRe = regexp.MustCompile(`\b([a-z][a-z0-9]*(?:_[a-z0-9]+){2,})\b`)
+	failRe = regexp.MustCompile(`(?i)\b(fail|failing|error|returns? \d{3}|got \d{3}|\b4\d\d\b|\b5\d\d\b|not working|stuck|rejected|invalid)\b`)
+	compRe = regexp.MustCompile(`(?i)\b(difference|differ|vs\.?|versus|same as|the same as|compare|which one)\b`)
+	metaRe = regexp.MustCompile(`(?i)\b(catalogue version|which version|how (?:old|current)|last updated|built)\b`)
+	whRe   = regexp.MustCompile(`(?i)^(what is|what's|whats|what are|define|meaning of|explain)\b`)
+)
+
+func Route(in Input) Result {
+	q := strings.TrimSpace(in.Question)
+	r := Result{ErrorCodes: catalogue.ExtractErrorCodes(q)}
+	if m := pathRe.FindStringSubmatch(q); m != nil {
+		r.OperationRef = m[1]
+	} else if m := opIDRe.FindStringSubmatch(q); m != nil {
+		r.OperationRef = m[1]
+	}
+	words := strings.Fields(q)
+
+	switch {
+	case in.HasAttachment, len(r.ErrorCodes) > 0, failRe.MatchString(q):
+		r.Shape = Diagnose
+	case metaRe.MatchString(q):
+		r.Shape = Meta
+	case compRe.MatchString(q):
+		r.Shape = Compare
+	case whRe.MatchString(q), len(words) <= 3 && !strings.Contains(q, "?") && !strings.HasPrefix(strings.ToLower(q), "how"):
+		r.Shape = Define
+	default:
+		r.Shape = HowDoI
+	}
+
+	r.Tools = []string{"search_docs"}
+	if len(r.ErrorCodes) > 0 || (r.Shape == Diagnose && r.OperationRef == "") {
+		r.Tools = append(r.Tools, "decode_error")
+	}
+	if r.OperationRef != "" {
+		r.Tools = append(r.Tools, "get_operation")
+	}
+	if in.HasAttachment {
+		r.Tools = append(r.Tools, "validate_request")
+	}
+	return r
+}
