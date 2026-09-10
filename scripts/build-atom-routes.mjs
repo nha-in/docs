@@ -268,10 +268,15 @@ for (const [id, atom] of atoms) {
   }
 
   if (!route && type === "flow") {
-    const mod = (id.match(/\.(m\d)-/) ?? [])[1];
+    // The patient side has journey pages too, at /milestones/p1 to p3. This
+    // matched `m\d` only, so every P series flow fell through to "no rule
+    // matched" and had no page anywhere: an answer citing one could offer the
+    // reader no link, and the mobile number route to an ABHA address was
+    // reachable from nothing.
+    const mod = (id.match(/\.([mp]\d)-/) ?? [])[1];
     const jp = pages.find((p) => new RegExp(`/milestones/${mod}$`).test(p.route));
     if (jp) {
-      const words = id.split(".").pop().replace(/^m\d-/, "").split("-").filter((w) => w.length > 2);
+      const words = id.split(".").pop().replace(/^[mp]\d-/, "").split("-").filter((w) => w.length > 2);
       let best = null, bestScore = 0;
       for (const m of jp.body.matchAll(/^##\s+(.+)$/gm)) {
         const h = m[1].trim(), hs = slug(h);
@@ -300,6 +305,32 @@ for (const [id, atom] of atoms) {
   });
 }
 
+// ---------- Coverage gate ----------
+// The count of atoms with no page was written into this file on every run and
+// nothing ever read it back, so 8 of 19 flows sat with `route: null` through a
+// green CI. An Ask AI answer cited one of them and had no link to offer,
+// which is how that was eventually noticed: by a reader, not by a check.
+//
+// Only `flow` is gated. The other types still have unmapped members, and a
+// gate that fails on day one gets switched off rather than fixed. Widen this
+// set as a type reaches zero, never before.
+const GATED_TYPES = new Set(["flow"]);
+
+function reportCoverage(rows) {
+  const missing = rows.filter((r) => !r.route && GATED_TYPES.has(r.type));
+  if (!missing.length) return true;
+  console.error(
+    `\n${missing.length} ${[...GATED_TYPES].join("/")} atom(s) have no page, which this gate does not allow:`,
+  );
+  for (const r of missing) console.error(`  ${r.atom}: ${r.rule}`);
+  console.error(
+    "\nGive each one a page: add a heading on its module's journey page that\n" +
+      "shares two or more words with the atom id, or claim it explicitly with\n" +
+      "covers: in that page's frontmatter.",
+  );
+  return false;
+}
+
 rows.sort((a, b) => a.atom.localeCompare(b.atom));
 
 const mapped = rows.filter((r) => r.route).length;
@@ -321,6 +352,7 @@ if (check) {
     console.error("No site build found, so routes were not validated. Run npm run build first.");
     process.exit(1);
   }
+  if (!reportCoverage(rows)) process.exit(1);
   console.log(`atom-routes.json is current: ${mapped}/${rows.length} atoms mapped, validated against the build.`);
 } else {
   writeFileSync(outFile, payload);
@@ -332,6 +364,12 @@ if (check) {
   if (unmapped.length) {
     console.log(`\n${unmapped.length} atom(s) with no page:`);
     for (const r of unmapped) console.log(`  ${r.atom}: ${r.rule}`);
+  }
+  // Written and reported here, enforced on --check. Say it at authoring time
+  // too, so the person who introduced it sees it before CI does.
+  if (!reportCoverage(rows)) {
+    console.error("\nThis fails `npm run check:routes`, which CI runs.");
+    process.exitCode = 1;
   }
   const review = rows.filter((r) => r.confidence === "needs review");
   if (review.length) {
