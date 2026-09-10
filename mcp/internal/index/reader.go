@@ -326,16 +326,20 @@ func (r *Reader) SpecErrorCodes(code string) ([]catalogue.SpecErrorCode, error) 
 	return out, rows.Err()
 }
 
-func (r *Reader) GetOperation(id string) (json.RawMessage, error) {
-	var raw string
-	err := r.db.QueryRow(`SELECT spec_json FROM operations WHERE operation_id = ?`, id).Scan(&raw)
+// GetOperation returns the operation fragment and the module it belongs to.
+// The module is what turns an operation id into the page that documents it,
+// which the caller cannot work out on its own: ids are snake_case and the
+// site's routes are hyphenated.
+func (r *Reader) GetOperation(id string) (json.RawMessage, string, error) {
+	var raw, module string
+	err := r.db.QueryRow(`SELECT spec_json, module FROM operations WHERE operation_id = ?`, id).Scan(&raw, &module)
 	if err == sql.ErrNoRows {
-		return nil, &NotFoundError{ID: id, Closest: r.closest("operations", "operation_id", id)}
+		return nil, "", &NotFoundError{ID: id, Closest: r.closest("operations", "operation_id", id)}
 	}
 	if err != nil {
-		return nil, err
+		return nil, "", err
 	}
-	return json.RawMessage(raw), nil
+	return json.RawMessage(raw), module, nil
 }
 
 type OperationValidation struct {
