@@ -48,6 +48,26 @@ func lastUserMessageText(msgs []chat.Message) string {
 	return ""
 }
 
+// stripAnswerShape removes the <answer_shape ...>...</answer_shape> block
+// the chat loop prepends to the last user message (see shapes.go). It is
+// the prompt's own instructions, not documentation, and its exemplars carry
+// literals like error codes that never came from a passage: left in the
+// grounding corpus, they would make every genuinely invented answer that
+// happens to echo the example read as grounded. The passages and the page
+// text sharing that same message are real documentation and stay.
+func stripAnswerShape(s string) string {
+	start := strings.Index(s, "<answer_shape")
+	if start < 0 {
+		return s
+	}
+	end := strings.Index(s[start:], "</answer_shape>")
+	if end < 0 {
+		return s
+	}
+	end += start + len("</answer_shape>")
+	return s[:start] + s[end:]
+}
+
 func toTurns(c Case) ([]chat.Turn, *chat.Page) {
 	turns := make([]chat.Turn, 0, len(c.Turns))
 	for i, t := range c.Turns {
@@ -150,7 +170,7 @@ func Run(ctx context.Context, cfg RunConfig, cases []Case) (int, error) {
 		// correctly quoted from the pack as an invention. rec.Calls[0] is
 		// the first model call of the turn, the one the pack rides on.
 		if len(rec.Calls) > 0 {
-			corpus.WriteString(lastUserMessageText(rec.Calls[0].Messages))
+			corpus.WriteString(stripAnswerShape(lastUserMessageText(rec.Calls[0].Messages)))
 		}
 		tr.Answer = strings.TrimSpace(answer.String())
 		tr.Corpus = corpus.String()
