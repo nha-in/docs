@@ -1,9 +1,9 @@
 ---
 name: abdm-portal-index
 description: Router for all ABDM Developer Portal build work. Use this FIRST whenever anyone asks about building, planning, writing, reviewing, compiling, publishing or testing the ABDM Catalogue, the self-hosted docs site, the agent skills, the Docs MCP server, the update pipeline, or the portal's schedule and scope. Triggers include "write an atom", "review this page", "the catalogue", "lint failed", "compile the skills", "which milestone am I on", "what ships Friday", "is this DPG compliant", "ingest NHA swagger", "the support agent", and any mention of HIE-CM or ABDM documentation work. Route from here rather than guessing which skill applies.
-plan_version: 2026.09.07
+plan_version: 2026.09.09
 plan_source: abdm-v1-phase1-architecture-and-plan.md
-plan_hash: sha256:5a499e31695353bb361b3ce1717c2791a3a59f249ba7337093180834e0dc4741
+plan_hash: sha256:4ed2a64425a34e2613dec935deeb950b56de34305c7c5f7388d39afbce12d1d9
 compiled_from_plan: true
 ---
 
@@ -55,15 +55,16 @@ The only skill an agent needs loaded to know what else exists. Read the decision
 
 ## Which gateway, which phase
 
-Scope is phased, and phase is not the same as existence. Before promising anything, say two separate things: whether it exists in the repository, and whether it is verified. Across the whole Catalogue 142 atoms are indexed, 138 `unverified` and 4 `verified`. The rows below account for all 142.
+Scope is phased, and phase is not the same as existence. Before promising anything, say two separate things: whether it exists in the repository, and whether it is verified. Across the whole Catalogue 319 atoms are indexed, 311 `unverified`, 4 `draft` and 4 `verified`. The rows below account for all 319. Note the shape of it: authoring has reached every HIE-CM module, verification has reached four atoms.
 
 | Gateway and module | Atoms | What exists in the repository | What an agent may claim |
 |---|---|---|---|
-| HIE-CM M1, M2, M3 | 120, of which 3 verified | `hiecm-m1.yaml`, `hiecm-m2.yaml`, `hiecm-m3.yaml`, 44, 16 and 12 operations | Only what the atom records. 3 M1 atoms are verified against sandbox: `m1-encrypt-value` and `m1-get-public-certificate`, whose curls ran as written, and `hiecm.error.abdm-1016`, an error atom that carries no curl and was verified by observing the code. The other 117 are unverified: say so before quoting one. |
-| HIE-CM M4 | zero | `hiecm-m4.yaml`, 2 operations, 7 generated pages | Point at the generated pages and say they are unverified. Do not improvise a flow, an error table or a curl from the specification. Atoms and skills are Phase 2. |
-| HIE-CM P1, P2, P3, PHR application services | zero | `hiecm-p1.yaml`, `hiecm-p2.yaml`, `hiecm-p3.yaml`, `hiecm-phr-services.yaml`, 63, 49, 35 and 61 operations, 220 generated pages | As for M4. The specifications exist and render. No operation in them has been run. |
+| HIE-CM M1, M2, M3 | 139, of which 3 verified | `hiecm-m1.yaml`, `hiecm-m2.yaml`, `hiecm-m3.yaml`, 44, 10 and 7 operations | Only what the atom records. 3 M1 atoms are verified against sandbox: `m1-encrypt-value` and `m1-get-public-certificate`, whose curls ran as written, and `hiecm.error.abdm-1016`, an error atom that carries no curl and was verified by observing the code. The other 136 are unverified: say so before quoting one. |
+| HIE-CM M4 | 20, none verified | `hiecm-m4.yaml`, 2 operations, 6 generated pages, and `abdm-m4` compiles | What the atoms record, and always that no M4 call has been run against sandbox. The atoms carry the registration order, the identifier formats and NHA's test cases, so quote them rather than improvising from the specification. |
+| HIE-CM P1, P2, P3 | 90, none verified | `hiecm-p1.yaml`, `hiecm-p2.yaml`, `hiecm-p3.yaml`, 63, 49 and 35 operations, 156 generated pages, and `abdm-p1`, `abdm-p2`, `abdm-p3` compile | As for M4. The atoms carry the patient-side flows and the AS error codes. No operation in them has been run. |
+| HIE-CM PHR application services | zero | `hiecm-phr-services.yaml`, 61 operations, 64 generated pages. `abdm-phr-services` compiles from the specification, not from atoms | Point at the generated pages and say they are unverified. Do not improvise a flow, an error table or a curl from the specification. Atoms are Phase 2. |
 | UHI | zero | 16 site pages. `catalogue/openapi/uhi/v1/` holds a conventions README and no specification file | Orientation only, and say it is unverified. Atoms and skills are Phase 2. |
-| Shared, plus the 2 HIE-CM decision atoms | 22, of which 1 verified | Glossary, FHIR and sandbox atoms that belong to no single milestone, all carrying `milestone: n/a` | Cite them freely for any gateway. 1 is verified, the other 21 are unverified. These 22 plus the 120 above are the whole 142. |
+| Shared, plus the 2 HIE-CM decision atoms | 70, of which 1 verified and 4 draft | Glossary, FHIR and sandbox atoms that belong to no single milestone, all carrying `milestone: n/a` | Cite them freely for any gateway. 1 is verified, 4 are draft and the rest are unverified. These 70 plus the 249 above are the whole 319. |
 | NHCX | zero | 5 site pages. `catalogue/nhcx/` is folder structure holding no atom, and `catalogue/openapi/nhcx/v1/` holds a conventions README and no specification file | Say both halves. NHCX pages exist, so send readers to them rather than claiming NHCX is absent. NHCX atoms do not exist yet, and nothing rejects one: `scripts/lint-atoms.mjs` accepts `gateway: nhcx` alongside `hiecm`, `uhi` and `shared`. Atoms and skills are Phase 2, the same as UHI. |
 
 ## Skills
