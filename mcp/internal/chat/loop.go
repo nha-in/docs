@@ -610,12 +610,17 @@ func (s *Service) Respond(ctx context.Context, turns []Turn, page *Page, emit fu
 	// facts is read by Task E3's shape check; kept here so pre-retrieval
 	// computes it once rather than that check re-deriving it from the pack.
 	var facts guard.PackFacts
+	// packHadContent is separate from looked: looked also turns true on an
+	// ordinary tool call, but the answer_denies_with_pack signal below cares
+	// specifically about a pack pre-retrieval put in front of the model.
+	packHadContent := false
 	if s.Lookup != nil {
 		pack, packSources, f, err := s.Lookup(ctx, question)
 		if err != nil {
 			slog.Warn("pre-retrieval failed, continuing without it", "error", err)
 		} else if len(pack) > 0 {
 			facts = f
+			packHadContent = true
 			for _, src := range packSources {
 				addSource(&sources, src)
 			}
@@ -689,6 +694,14 @@ func (s *Service) Respond(ctx context.Context, turns []Turn, page *Page, emit fu
 			firstRound.Reset()
 		}
 		if len(reply.ToolCalls) == 0 {
+			// A pack was in front of the model and it still denied having
+			// anything: the retry above is suppressed on a pre-retrieved
+			// turn (looked is already true), so this is the only signal
+			// left that the model looked past a pack that answered the
+			// question. No behaviour change, just visibility.
+			if packHadContent && saysItHasNothing(reply.Text) {
+				slog.Info("answer_denies_with_pack", "question", question)
+			}
 			// The guard holds text back until it is known to be safe, so the
 			// last of an answer is emitted here rather than during the round.
 			// A client that went away is therefore first seen at this flush,
