@@ -4,6 +4,7 @@ import {
   Card,
   CardGroup,
   Expandable,
+  LegacyAnchor,
   ParamField,
   Step,
   Steps,
@@ -37,4 +38,5 @@ export default {
   Step,
   Expandable,
   ParamField,
+  LegacyAnchor,
 };
