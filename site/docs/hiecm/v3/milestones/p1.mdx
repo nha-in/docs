@@ -7,6 +7,7 @@ sidebar_custom_props:
 description: 'The patient side of M1: how a person registers in your PHR app, logs in four ways, and holds their own profile and ABHA card.'
 verification: unverified
 source: ABDM__NewDocumant_PHR_app.md, catalogue/openapi/hiecm/v3/hiecm-p1.yaml
+covers: [hiecm.flow.p1-login]
 ---
 
 import ApiLinks from '@site/src/components/docs/ApiLinks';
@@ -76,7 +77,8 @@ then follow the ABHA number, and the status changes to KYC Verified.
 
 ## Login
 
-All four routes are mandatory.
+Sign a user in to a PHR application by any of four routes, all of them
+mandatory.
 
 | Route | Validated by |
 | --- | --- |
