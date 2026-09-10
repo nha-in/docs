@@ -165,3 +165,11 @@ button:disabled,
   outline: 2px solid var(--accent);
   outline-offset: 2px;
 }
+
+/* Tab panels all render, so the built HTML carries every variant for anyone
+   reading a page as markdown (scripts/emit-page-markdown.mjs). Radix drops
+   the `hidden` attribute once forceMount is set, so hiding the inactive ones
+   on screen is this rule's job. */
+[data-slot='tabs-content'][data-state='inactive'] {
+  display: none;
+}
