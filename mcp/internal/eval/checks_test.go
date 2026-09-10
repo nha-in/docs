@@ -105,6 +105,25 @@ func TestCheckDeclineOverBudget(t *testing.T) {
 	}
 }
 
+// TestCheckBudgetsOnTranscriptClassNotExpectedShape covers the mismatch
+// between a decline case's ExpectedShape and the shape the loop actually
+// routed the question to (t.Class): route.Route has no decline shape, so a
+// decline case's question still routes to some other shape, and the budget
+// check must judge the answer against that routed ceiling, not against
+// "decline"'s 80-word ceiling.
+func TestCheckBudgetsOnTranscriptClassNotExpectedShape(t *testing.T) {
+	c := declineCase()
+	answer := strings.Repeat("word ", 200) + "Ask [support](/docs/support)."
+	routed := Check(c, Transcript{CaseID: c.ID, Answer: answer, Class: "how-do-i"})
+	if hasPrefix(routed.Failures, "budget:") {
+		t.Errorf("a 200-word answer is under how-do-i's 260 ceiling, must not be flagged: %v", routed.Failures)
+	}
+	fallback := Check(c, Transcript{CaseID: c.ID, Answer: answer, Class: ""})
+	if !hasPrefix(fallback.Failures, "budget: decline answer is") {
+		t.Errorf("an empty Class must fall back to ExpectedShape's 80-word ceiling: %v", fallback.Failures)
+	}
+}
+
 func contains(list []string, s string) bool {
 	for _, x := range list {
 		if x == s {

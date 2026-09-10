@@ -44,11 +44,13 @@ type Transcript struct {
 	// Flags is a run error today, not the classifier's flagged rules the
 	// plan describes; see the Class field's comment.
 	Flags []string `json:"flags"`
-	// Class is never written or read yet. It is a placeholder for the
-	// classifier chunk the plan describes, which will fill in the case's
-	// class (define, how-do-i, diagnose, ...) as observed from the answer
-	// rather than only as declared on the case. Neither field carries live
-	// data until that chunk lands.
+	// Class is the shape route.Route chose for the last user turn (define,
+	// how-do-i, diagnose, compare, meta), recorded so a check can budget on
+	// what the loop actually routed to rather than on the case author's
+	// ExpectedShape. route.Route has no decline shape, so a decline case
+	// still carries whatever shape its question routed to here; checks.go
+	// falls back to ExpectedShape when Class is empty, which happens only
+	// for a transcript recorded before this field was written.
 	Class      string `json:"class"`
 	RecordedAt string `json:"recorded_at"`
 }
