@@ -35,6 +35,7 @@ info:
     module: phr-services
     label: PHR application services
     position: 9
+    icon: smartphone
 x-abdm-sources:
 - file: catalogue/openapi/.raw/aarogya-setu.postman_collection.json
   role: upstream

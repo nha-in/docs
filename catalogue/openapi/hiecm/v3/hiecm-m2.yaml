@@ -10,6 +10,7 @@ info:
     module: m2
     label: M2 Linking and sharing
     position: 3
+    icon: link
   title: ABDM M2, care context linking and data sharing
   summary: Tell ABDM that a patient has records at your facility, and hand those
     records over when a consented request arrives.
