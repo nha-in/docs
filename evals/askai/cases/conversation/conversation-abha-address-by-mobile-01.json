@@ -37,7 +37,7 @@
   "expected_shape": "how-do-i",
   "expected_behaviour": "answer",
   "derived_from": null,
-  "source_row": "annexure#phr-v3-registration",
+  "source_row": "annexure#phr-v3-documents",
   "catalogue_version": "2026.08.24",
   "notes": "The first turn is correct and stays correct: the ABHA number does need Aadhaar. The follow-up is where a real session went wrong, answering that an ABHA address needs an ABHA number and so needs Aadhaar too. It does not. The flow atom records both paths and the KYC consequence, and until the P series flows were given routes it had no page to cite, which is the retrieval failure this case guards."
 }

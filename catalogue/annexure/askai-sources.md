@@ -19,6 +19,7 @@ One row per NHA document. `id` is stable and is what an eval case or an atom cit
 | abdm-faq-hfr | https://abdm.gov.in/FAQ | abdm.gov.in FAQ, the Health Facility Registry category | 2026-09-03 | page | 0 | 0 |
 | abdm-faq-general | https://abdm.gov.in/FAQ | abdm.gov.in FAQ, the General category | 2026-09-03 | page | 0 | 12 |
 | glossary | site/docs/_glossary/_hiecm.mdx | This portal's glossary, from which the shared glossary atoms were moved | 2026-09-03 | sha256:b38e31aa0161e094 | 0 | 23 |
+| phr-v3-documents | catalogue/openapi/.raw/nha-2026-09-04/ABHA-PHR-V3-Documents.docx | NHA's ABHA and PHR V3 document, supplied directly rather than published at a URL: the patient side operations with their paths, request bodies and error scenarios | 2026-09-04 | sha256:99320fbc4b9703fc | 0 | 1 |
 | spec-errors-m1 | catalogue/openapi/hiecm/v3/hiecm-m1.yaml | NHA M1 error table as curated in the catalogue | 2026-09-03 | sha256:48351b6fef3958c3 | 0 | 5 |
 | spec-errors-m2 | catalogue/openapi/hiecm/v3/hiecm-m2.yaml | NHA M2 error table as curated in the catalogue | 2026-09-03 | sha256:0fac31a008fe78b2 | 0 | 10 |
 | spec-errors-m3 | catalogue/openapi/hiecm/v3/hiecm-m3.yaml | NHA M3 error table as curated in the catalogue | 2026-09-03 | sha256:490efae0c96f0f93 | 0 | 2 |
