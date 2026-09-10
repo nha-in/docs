@@ -182,3 +182,28 @@ func TestCheckMustNotContainKeepsPartialMatching(t *testing.T) {
 		t.Fatalf("a partial must_not_contain entry stopped matching: %v", r.Failures)
 	}
 }
+
+func TestToolCallsAndRetrievalHit(t *testing.T) {
+	c := Case{ID: "x", ExpectedBehaviour: "answer", ExpectedShape: "how-do-i",
+		ExpectedSources: []string{"hiecm.flow.p1-create-abha-address"}}
+	tr := Transcript{
+		Answer:  "Use the mobile route.",
+		Sources: []chat.Source{{ID: "hiecm.flow.p1-create-abha-address"}},
+		Calls: []ModelCall{
+			{Reply: chat.Reply{ToolCalls: []chat.ToolCall{{Name: "search_docs"}, {Name: "get_atom"}}}},
+			{Reply: chat.Reply{ToolCalls: []chat.ToolCall{{Name: "related_atoms"}}}},
+			{Reply: chat.Reply{}},
+		},
+	}
+	got := Check(c, tr)
+	if got.ToolCalls != 3 {
+		t.Errorf("ToolCalls = %d, want 3", got.ToolCalls)
+	}
+	if !got.RetrievalHit {
+		t.Errorf("RetrievalHit should be true when an expected source was retrieved")
+	}
+	tr.Sources = nil
+	if Check(c, tr).RetrievalHit {
+		t.Errorf("RetrievalHit should be false when no expected source was retrieved")
+	}
+}
