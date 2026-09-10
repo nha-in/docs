@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"path/filepath"
+	"strings"
 	"testing"
 
 	"github.com/eka-care/abdm-docs/mcp/internal/chat"
@@ -207,5 +208,30 @@ func TestLastUserMessageText(t *testing.T) {
 		if got := lastUserMessageText(c.msgs); got != c.want {
 			t.Errorf("%s: lastUserMessageText = %q, want %q", c.name, got, c.want)
 		}
+	}
+}
+
+// TestStripAnswerShapeDropsTheExemplarButKeepsTheDocumentation covers the
+// finding that the answer_shape block's own exemplar text, which can carry
+// a literal like an error code that never came from a passage, must not
+// enter the grounding corpus, while the passages and page text sharing that
+// same message are real documentation and must survive.
+func TestStripAnswerShapeDropsTheExemplarButKeepsTheDocumentation(t *testing.T) {
+	msg := "<passages>\nABDM-2000 is an invalid TIMESTAMP header.\n</passages>\n\n" +
+		`<answer_shape name="diagnose" budget="200 words">` + "\n" +
+		"Example:\nABDM-1016 is NHA's code for an invalid TIMESTAMP header.\n" +
+		"</answer_shape>\n\nwhy do I get ABDM-2000"
+	got := stripAnswerShape(msg)
+	if !strings.Contains(got, "ABDM-2000") {
+		t.Errorf("the passage's own identifier must survive stripping: %q", got)
+	}
+	if strings.Contains(got, "ABDM-1016") {
+		t.Errorf("the exemplar identifier inside answer_shape must not survive stripping: %q", got)
+	}
+	if strings.Contains(got, "<answer_shape") || strings.Contains(got, "</answer_shape>") {
+		t.Errorf("the answer_shape tags themselves must not survive stripping: %q", got)
+	}
+	if !strings.Contains(got, "why do I get ABDM-2000") {
+		t.Errorf("the reader's own question must survive stripping: %q", got)
 	}
 }
