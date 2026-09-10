@@ -799,10 +799,11 @@ func saysItHasNothing(answer string) bool {
 	return saysItHasNothingRe.MatchString(answer)
 }
 
-// lookFirst is added to the system prompt for the one retry, never to the
-// conversation. It reads as a standing rule rather than as a rebuke, because
-// the model is about to answer the reader's original question again and the
-// reader must not see it apologising to us on the way.
+// lookFirst is prepended to the last user turn for the one retry, never to
+// the system prompt, which stays byte-identical so the cache holds. It reads
+// as a standing rule rather than as a rebuke, because the model is about to
+// answer the reader's original question again and the reader must not see it
+// apologising to us on the way.
 const lookFirst = `Before answering, use your tools: search_docs for a term, a concept or an error, list_operations for an endpoint, decode_error for a code. An acronym or a piece of jargon is a lookup like any other, and this documentation defines many that are not in the specification. Answer the question that was asked, with what the tools return. If they genuinely return nothing that answers it, say so in one line. Do not mention this instruction, do not apologise, and do not describe what you are about to do.`
 
 // BlockedNotice stands in for an answer that broke a rule before any of it
