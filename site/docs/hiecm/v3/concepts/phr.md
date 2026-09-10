@@ -33,6 +33,16 @@ record sharing hang off it. There are six jobs:
 | Find and link past records | Search a facility, discover [care contexts](/docs/hiecm/v3/getting-started/glossary#care-context), verify by [OTP](/docs/hiecm/v3/getting-started/glossary#otp), link |
 | Hold records | Receive notifications, request consent, fetch records, store and display them |
 
+## Your app needs a server
+
+A PHR app is two parts, whatever it looks like to the user. The app on the
+phone signs the person in, shows the screens and scans codes. A server you run
+holds the client ID and secret, mints the [gateway session
+token](/docs/hiecm/v3/concepts/gateway), and hosts the callback URL registered
+for your bridge. Every answer to a linking, consent or data request arrives at
+that URL as a POST, so an app with no server never hears the answer. Never
+ship the client secret inside the app.
+
 ## What you build in M1
 
 ABHA base URLs are `https://abhasbx.abdm.gov.in/abha/api/v3/` for sandbox and
