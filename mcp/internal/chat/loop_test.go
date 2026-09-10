@@ -455,15 +455,22 @@ func TestRespondBlocksAnInventedLiteral(t *testing.T) {
 // exactly why this is here: the tool call that identifies the words as
 // narration arrives after the words do, so nothing about the text itself can
 // catch it.
+// TestRespondDropsNarrationBeforeAToolCall covers a fix, not just the
+// original behaviour: narration is two complete paragraphs, the first
+// ending in a blank line before the tool call. g.write releases a
+// complete paragraph the moment it sees one, so routing this text through
+// onText before g.drop() (the old code) would let that first paragraph
+// reach the reader; discarding held directly (the fix) must drop both.
 func TestRespondDropsNarrationBeforeAToolCall(t *testing.T) {
+	narration := "Let me get the full glossary entry for care context.\n\nI will check the definitions module now."
 	fm := &fakeModel{
 		replies: []Reply{
-			{Text: "Let me get the full glossary entry for care context:",
+			{Text: narration,
 				ToolCalls:  []ToolCall{{ID: "t1", Name: "no_such_tool", Input: json.RawMessage(`{}`)}},
 				StopReason: "tool_use"},
 			{Text: "A care context groups a patient's records.", StopReason: "end_turn"},
 		},
-		texts: []string{"Let me get the full glossary entry for care context:",
+		texts: []string{narration,
 			"A care context groups a patient's records."},
 	}
 	svc := &Service{Model: fm, MaxTokens: 100}
@@ -478,7 +485,7 @@ func TestRespondDropsNarrationBeforeAToolCall(t *testing.T) {
 		t.Fatal(err)
 	}
 	got := seen.String()
-	if strings.Contains(got, "Let me get") {
+	if strings.Contains(got, "Let me get") || strings.Contains(got, "I will check") {
 		t.Errorf("narration reached the reader:\n%s", got)
 	}
 	if !strings.Contains(got, "A care context groups") {
