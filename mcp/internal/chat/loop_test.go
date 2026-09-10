@@ -725,3 +725,83 @@ func TestRespondPreRetrievesAndExposesRoutedTools(t *testing.T) {
 		t.Errorf("pre-retrieved passages must count as sources, got %v", sources)
 	}
 }
+
+// TestRespondDeniesWithPackDoesNotRetry pins the behaviour half of finding
+// 2: a pre-retrieved pack sets looked, so a model that answers "I don't
+// have that" anyway is never sent the lookFirst retry. Only one reply is
+// scripted, so a retry attempt (which would index replies[1]) panics
+// instead of silently passing.
+func TestRespondDeniesWithPackDoesNotRetry(t *testing.T) {
+	m := &fakeModel{
+		replies: []Reply{{Text: "I do not have anything on that.", StopReason: "end_turn"}},
+		texts:   []string{"I do not have anything on that.\n\n"},
+	}
+	svc := &Service{Model: m, MaxTokens: 100,
+		Lookup: func(ctx context.Context, q string) (json.RawMessage, []Source, guard.PackFacts, error) {
+			return json.RawMessage(`{"passages":[{"id":"shared.glossary.abha-address","title":"ABHA address"}]}`),
+				[]Source{{ID: "shared.glossary.abha-address", Title: "ABHA address"}}, guard.PackFacts{}, nil
+		},
+	}
+	var got strings.Builder
+	emit := func(event string, data any) error {
+		if event == "text" {
+			got.WriteString(data.(map[string]string)["delta"])
+		}
+		return nil
+	}
+	if err := svc.Respond(context.Background(), []Turn{{Role: "user", Text: "what is an abha address"}}, nil, emit); err != nil {
+		t.Fatal(err)
+	}
+	if m.calls != 1 {
+		t.Errorf("model called %d times, want exactly 1 (no retry once a pack was pre-retrieved)", m.calls)
+	}
+	if got.String() == "" {
+		t.Error("the answer must still be released to the reader")
+	}
+}
+
+// TestRespondContinuesWhenLookupFails covers finding 3: a Lookup that
+// errors must not stop the turn. The model still gets the routed tool set
+// from ToolsFor and still answers, and since no pack was written the user
+// turn is left exactly as the reader wrote it, with no <passages> wrapper.
+func TestRespondContinuesWhenLookupFails(t *testing.T) {
+	var sawTools []string
+	var sawFirstUser string
+	m := &fakeModel{
+		replies: []Reply{{Text: "An ABHA address is the handle.", StopReason: "end_turn"}},
+		texts:   []string{"An ABHA address is the handle.\n\n"},
+		onStream: func(system string, tools []ToolDef, msgs []Message) {
+			for _, td := range tools {
+				sawTools = append(sawTools, td.Name)
+			}
+			sawFirstUser = msgs[len(msgs)-1].Text
+		},
+	}
+	svc := &Service{Model: m, MaxTokens: 100,
+		Lookup: func(ctx context.Context, q string) (json.RawMessage, []Source, guard.PackFacts, error) {
+			return nil, nil, guard.PackFacts{}, errors.New("index unavailable")
+		},
+		ToolsFor: func(q string, att bool) []ToolDef {
+			return []ToolDef{{Name: "search_docs"}, {Name: "decode_error"}}
+		},
+	}
+	var got strings.Builder
+	emit := func(event string, data any) error {
+		if event == "text" {
+			got.WriteString(data.(map[string]string)["delta"])
+		}
+		return nil
+	}
+	if err := svc.Respond(context.Background(), []Turn{{Role: "user", Text: "what is an abha address"}}, nil, emit); err != nil {
+		t.Fatal(err)
+	}
+	if got.String() == "" {
+		t.Error("a failed pre-retrieval must not stop the turn from being answered")
+	}
+	if len(sawTools) != 2 {
+		t.Errorf("tools exposed = %v, want the two routed ones even when Lookup fails", sawTools)
+	}
+	if strings.HasPrefix(sawFirstUser, "<passages>") {
+		t.Errorf("no pack was retrieved, the user turn must not carry a passages wrapper: %q", sawFirstUser)
+	}
+}
