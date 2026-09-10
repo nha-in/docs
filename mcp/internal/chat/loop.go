@@ -477,10 +477,34 @@ func sourceFromFields(fields map[string]any) Source {
 	return Source{ID: id, Title: title, Status: status, URL: href}
 }
 
+// passageFields normalizes a search_docs result's "passages" field into the
+// map shape sourceFromFields reads. In process, a chat search_docs call
+// (server.Tools.ChatToolsFor) returns passages as a []server.Passage, a
+// concrete type this package cannot name without an import cycle; a
+// round trip through JSON is what reads its id, title, verification_status
+// and doc_url fields generically, the same trick the wire encoding already
+// performs when a result travels to a real client.
+func passageFields(v any) []map[string]any {
+	if v == nil {
+		return nil
+	}
+	b, err := json.Marshal(v)
+	if err != nil {
+		return nil
+	}
+	var out []map[string]any
+	if err := json.Unmarshal(b, &out); err != nil {
+		return nil
+	}
+	return out
+}
+
 // collectSources folds one successful tool call's result into sources,
 // deterministically: a get_atom call contributes its one atom; a
-// search_docs call contributes its top 3 hits. Dedup keeps the first
-// occurrence of each id and caps the total at maxSources.
+// search_docs call contributes its top 3 hits (the MCP's own search_docs)
+// or every passage (the chat loop's composite lookup bound to that name).
+// Dedup keeps the first occurrence of each id and caps the total at
+// maxSources.
 func collectSources(sources *[]Source, name string, result map[string]any) {
 	switch name {
 	case "get_atom":
@@ -492,6 +516,9 @@ func collectSources(sources *[]Source, name string, result map[string]any) {
 				break
 			}
 			addSource(sources, sourceFromFields(h))
+		}
+		for _, p := range passageFields(result["passages"]) {
+			addSource(sources, sourceFromFields(p))
 		}
 	}
 }
