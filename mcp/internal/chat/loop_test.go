@@ -616,10 +616,13 @@ func TestSaysItHasNothingCoversTheRealRefusals(t *testing.T) {
 	}
 }
 
-// The retry corrects the model, not the conversation. Told as a turn, the
-// model reads it as the reader complaining and answers the complaint: "You're
-// right, I apologize, I should have checked the documentation first" reached
-// a reader who had typed one word of nonsense.
+// The retry corrects the model, not the conversation, and it does so from
+// the user turn rather than the system prompt: the system string must stay
+// byte identical on every call so the Bedrock cache point holds, retry or
+// not. Told as a reply, the model reads it as the reader complaining and
+// answers the complaint: "You're right, I apologize, I should have checked
+// the documentation first" reached a reader who had typed one word of
+// nonsense.
 func TestRespondRetriesWithoutPuttingWordsInTheReadersMouth(t *testing.T) {
 	fm := &fakeModel{
 		replies: []Reply{
@@ -646,18 +649,21 @@ func TestRespondRetriesWithoutPuttingWordsInTheReadersMouth(t *testing.T) {
 	if fm.calls != 2 {
 		t.Fatalf("model called %d times, want 2", fm.calls)
 	}
-	// The second call sees the reader's own words, with the shape block that
-	// rides along on every call, and nothing else: no apology, no retry
-	// instruction, no mention of the first attempt.
-	want := ShapeBlock("define") + "\n\n" + "jhhjjk"
+	// The second call sees the lookFirst instruction ahead of the shape
+	// block and the reader's own words, and nothing else: no apology, no
+	// mention of the first attempt.
+	want := lookFirst + "\n\n" + ShapeBlock("define") + "\n\n" + "jhhjjk"
 	if got := fm.gotMsgs[1]; len(got) != 1 || got[0].Text != want {
 		t.Errorf("the retry changed the conversation: %+v", got)
 	}
-	if !strings.Contains(fm.gotSystem[1], "Before answering, use your tools") {
-		t.Error("the retry did not carry the instruction in the system prompt")
+	if strings.Contains(fm.gotSystem[1], "Before answering, use your tools") {
+		t.Error("the retry instruction must not land in the system prompt")
 	}
 	if strings.Contains(fm.gotSystem[0], "Before answering, use your tools") {
 		t.Error("the first attempt should not carry the retry instruction")
+	}
+	if fm.gotSystem[0] != fm.gotSystem[1] {
+		t.Error("system prompt must be byte identical across the retry")
 	}
 	if got := seen.String(); !strings.Contains(got, "Nothing here matches that.") {
 		t.Errorf("the second answer did not reach the reader:\n%s", got)
@@ -843,8 +849,12 @@ func TestRespondZeroHitLookupLeavesTheOldPath(t *testing.T) {
 	if strings.Contains(firstUser, "<passages>") {
 		t.Errorf("a zero-hit lookup must not prepend a passages block: %q", firstUser)
 	}
-	if !strings.Contains(m.gotSystem[1], lookFirst) {
-		t.Error("the second call must carry the lookFirst instruction")
+	secondUser := m.gotMsgs[1][len(m.gotMsgs[1])-1].Text
+	if !strings.Contains(secondUser, lookFirst) {
+		t.Error("the second call must carry the lookFirst instruction in the user turn")
+	}
+	if m.gotSystem[0] != m.gotSystem[1] {
+		t.Error("system prompt must be byte identical across the retry")
 	}
 }
 
@@ -927,7 +937,32 @@ func TestSystemPromptIsStableAndShapeAndPageRideInTheUserTurn(t *testing.T) {
 	if !strings.Contains(lastUsers[0], "Seven journeys.") {
 		t.Errorf("page text did not move into the user turn: %q", lastUsers[0])
 	}
-	if len(strings.Fields(systems[0])) > 700 {
-		t.Errorf("core prompt is %d words, want at most 700", len(strings.Fields(systems[0])))
+	if len(strings.Fields(systems[0])) > 720 {
+		t.Errorf("core prompt is %d words, want at most 720", len(strings.Fields(systems[0])))
+	}
+
+	// The fixed order the comment above promises: passages, when there are
+	// any, then the page, then the shape block, and only then the reader's
+	// own words. This service has no Lookup, so the first call (page,
+	// question) is the one that can pin page < shape < question; the
+	// second (no page) pins shape < question on its own.
+	pageIdx := strings.Index(lastUsers[0], "Seven journeys.")
+	shapeIdx0 := strings.Index(lastUsers[0], "<answer_shape")
+	questionIdx0 := strings.Index(lastUsers[0], "what is an abha")
+	if pageIdx < 0 || shapeIdx0 < 0 || questionIdx0 < 0 {
+		t.Fatalf("expected page, shape block and question all present: %q", lastUsers[0])
+	}
+	if !(pageIdx < shapeIdx0 && shapeIdx0 < questionIdx0) {
+		t.Errorf("order must be page < shape < question, got page=%d shape=%d question=%d in %q",
+			pageIdx, shapeIdx0, questionIdx0, lastUsers[0])
+	}
+	shapeIdx1 := strings.Index(lastUsers[1], "<answer_shape")
+	questionIdx1 := strings.Index(lastUsers[1], "how do i link a record")
+	if shapeIdx1 < 0 || questionIdx1 < 0 {
+		t.Fatalf("expected shape block and question both present: %q", lastUsers[1])
+	}
+	if !(shapeIdx1 < questionIdx1) {
+		t.Errorf("order must be shape < question, got shape=%d question=%d in %q",
+			shapeIdx1, questionIdx1, lastUsers[1])
 	}
 }
