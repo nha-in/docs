@@ -125,10 +125,10 @@ func runCmd(args []string) error {
 	if err != nil {
 		return err
 	}
-	tools := server.ChatTools(server.NewTools(r, emb).Defs())
+	chatTools := server.NewTools(r, emb)
 	n, runErr := eval.Run(context.Background(), eval.RunConfig{
 		OutDir: filepath.Join(*out, "transcripts"), Model: model, ModelID: *modelID,
-		Temperature: *temp, Tools: tools, MaxTokens: 1500,
+		Temperature: *temp, Tools: server.ChatTools(chatTools.Defs()), RoutedTools: chatTools, MaxTokens: 1500,
 		PromptVersion: chat.PromptVersion, CatalogueVersion: r.CatalogueVersion(),
 		EmbedProvider: *provider, DBPath: *db,
 	}, cases)

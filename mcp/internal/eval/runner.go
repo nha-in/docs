@@ -8,16 +8,24 @@ import (
 	"time"
 
 	"github.com/eka-care/abdm-docs/mcp/internal/chat"
+	"github.com/eka-care/abdm-docs/mcp/internal/server"
 )
 
 type RunConfig struct {
-	OutDir           string
-	Model            chat.Model
-	ModelID          string
-	Temperature      float64
-	Tools            []chat.ToolDef
-	MaxTokens        int
-	MCPURL           string
+	OutDir      string
+	Model       chat.Model
+	ModelID     string
+	Temperature float64
+	// Tools is the fixed tool set a run answers with when RoutedTools is
+	// nil: every case sees the same tools, the pre-C4 behaviour.
+	Tools     []chat.ToolDef
+	MaxTokens int
+	MCPURL    string
+	// RoutedTools switches a run onto the routed retrieval path: each case
+	// pre-retrieves a passage pack and is offered only the tools its
+	// question routes to, through server.ChatHooks. nil keeps Tools as the
+	// fixed set above, matching a run built before this existed.
+	RoutedTools      *server.Tools
 	PromptVersion    string
 	CatalogueVersion string
 	// EmbedProvider and DBPath name the retrieval stack this run answered
@@ -57,6 +65,9 @@ func Run(ctx context.Context, cfg RunConfig, cases []Case) (int, error) {
 		// the raw input and output this loop records below, and nothing
 		// serving a real reader should ever turn it on.
 		svc := &chat.Service{Model: rec, Tools: cfg.Tools, MaxTokens: cfg.MaxTokens, MCPURL: cfg.MCPURL, TraceTools: true}
+		if cfg.RoutedTools != nil {
+			svc.Lookup, svc.ToolsFor = server.ChatHooks(cfg.RoutedTools)
+		}
 		tr := Transcript{CaseID: c.ID, CatalogueVersion: cfg.CatalogueVersion, ModelID: cfg.ModelID,
 			Temperature: cfg.Temperature, PromptVersion: cfg.PromptVersion,
 			EmbedProvider: cfg.EmbedProvider, DBPath: cfg.DBPath,

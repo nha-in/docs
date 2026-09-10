@@ -12,7 +12,9 @@ import (
 	"github.com/eka-care/abdm-docs/mcp/internal/chat"
 	"github.com/eka-care/abdm-docs/mcp/internal/embed"
 	"github.com/eka-care/abdm-docs/mcp/internal/fhir"
+	"github.com/eka-care/abdm-docs/mcp/internal/guard"
 	"github.com/eka-care/abdm-docs/mcp/internal/index"
+	"github.com/eka-care/abdm-docs/mcp/internal/route"
 	"github.com/google/jsonschema-go/jsonschema"
 )
 
@@ -609,4 +611,42 @@ func (t *Tools) ChatToolsFor(names []string) []chat.ToolDef {
 		}
 	}
 	return out
+}
+
+// ChatHooks builds the two hooks a routed chat.Service needs: a Lookup
+// that pre-retrieves a passage pack and reports what it found as
+// guard.PackFacts, and a ToolsFor that asks the router which tools a
+// question may use. Both close over lookupIn, which is unexported, so the
+// wiring lives here rather than in cmd/docs-mcp or the eval runner, the two
+// places that build a chat.Service.
+func ChatHooks(tools *Tools) (
+	lookup func(ctx context.Context, q string) (json.RawMessage, []chat.Source, guard.PackFacts, error),
+	toolsFor func(q string, hasAttachment bool) []chat.ToolDef,
+) {
+	lookup = func(ctx context.Context, q string) (json.RawMessage, []chat.Source, guard.PackFacts, error) {
+		pack, err := tools.Lookup(ctx, lookupIn{Query: q})
+		if err != nil {
+			return nil, nil, guard.PackFacts{}, err
+		}
+		b, err := json.Marshal(pack)
+		if err != nil {
+			return nil, nil, guard.PackFacts{}, err
+		}
+		var srcs []chat.Source
+		var facts guard.PackFacts
+		for _, p := range pack.Passages {
+			srcs = append(srcs, chat.Source{ID: p.ID, Title: p.Title, URL: p.DocURL, Status: p.VerificationStatus})
+			if p.Type == "flow" {
+				facts.FlowTitles = append(facts.FlowTitles, p.Title)
+			}
+		}
+		lower := strings.ToLower(string(b))
+		facts.MentionsABHANumber = strings.Contains(lower, "abha number")
+		facts.MentionsABHAAddress = strings.Contains(lower, "abha address")
+		return b, srcs, facts, nil
+	}
+	toolsFor = func(q string, hasAttachment bool) []chat.ToolDef {
+		return tools.ChatToolsFor(route.Route(route.Input{Question: q, HasAttachment: hasAttachment}).Tools)
+	}
+	return lookup, toolsFor
 }
