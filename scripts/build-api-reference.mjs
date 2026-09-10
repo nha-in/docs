@@ -346,6 +346,11 @@ for (const {platform, version, files} of tree) {
         id: portal.module ?? stem,
         label: portal.label ?? spec.info?.title ?? stem,
         position: portal.position,
+        // A lucide name, matched by a sidebar-icon--* rule in sidebar.css. A
+        // module that declares none falls back to the neutral mark the same
+        // stylesheet gives every other group, so a new specification renders
+        // correctly before anyone has picked its icon.
+        icon: portal.icon,
         dir: portal.module ?? stem,
         file: file.name,
         route: `/reference/${stem}`,
@@ -760,7 +765,17 @@ for (const {platform, version, files} of tree) {
     mkdirSync(join(docsDir, module.dir), {recursive: true});
     writeFileSync(
       join(docsDir, module.dir, '_category_.json'),
-      `${JSON.stringify({label: module.label, position: moduleIndex + 2}, null, 2)}\n`,
+      `${JSON.stringify(
+        {
+          label: module.label,
+          position: moduleIndex + 2,
+          ...(module.icon && {
+            className: `sidebar-icon sidebar-icon--${module.icon}`,
+          }),
+        },
+        null,
+        2,
+      )}\n`,
     );
     if (entries.length > 0) {
       writeFileSync(

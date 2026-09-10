@@ -34,6 +34,7 @@ info:
     module: p1
     label: P1 PHR identity and profile
     position: 6
+    icon: user-round
 x-abdm-sources:
 - file: catalogue/openapi/.raw/aarogya-setu.postman_collection.json
   role: upstream
