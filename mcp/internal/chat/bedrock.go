@@ -143,10 +143,12 @@ func toBedrockTools(defs []ToolDef) (*types.ToolConfiguration, error) {
 //
 // The prompt is identical on every request and on every turn of the tool loop,
 // so the cache point lets Bedrock charge the prefix at the read rate instead of
-// resending it at full price. The tool definitions sit in the same stable
-// prefix. Anything after it, the question and the retrieved documentation,
-// differs per request and is not cacheable. An empty prompt gets no blocks at
-// all: a lone cache point is a request Bedrock rejects.
+// resending it at full price. The cache point precedes the tool definitions
+// (passed separately, see toBedrockTools), which are routed per question, so a
+// different routed tool set never invalidates this cache. Anything after the
+// system blocks, the question and the retrieved documentation, differs per
+// request and is not cacheable. An empty prompt gets no blocks at all: a lone
+// cache point is a request Bedrock rejects.
 func systemBlocksFor(system string) []types.SystemContentBlock {
 	if system == "" {
 		return nil
