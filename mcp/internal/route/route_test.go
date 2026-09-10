@@ -19,7 +19,7 @@ func TestRoute(t *testing.T) {
 		{"is abha number the same as abha address", false, Compare, []string{"search_docs"}},
 		{"difference between HIP and HIU", false, Compare, []string{"search_docs"}},
 		{"getting ABDM-1016 on sessions", false, Diagnose, []string{"search_docs", "decode_error"}},
-		{"what headers does POST /api/hiecm/gateway/v3/sessions need", false, HowDoI, []string{"search_docs", "get_operation"}},
+		{"what headers does POST /api/hiecm/gateway/v3/sessions need", false, HowDoI, []string{"search_docs", "list_operations"}},
 		{"gateway_sessions_create returns 401", false, Diagnose, []string{"search_docs", "get_operation"}},
 		{"why is this failing", true, Diagnose, []string{"search_docs", "decode_error", "validate_request"}},
 		{"which version of the catalogue is this", false, Meta, []string{"search_docs"}},
