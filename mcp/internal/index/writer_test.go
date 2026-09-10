@@ -72,6 +72,7 @@ type fixtureOpt func(*fixtureConfig)
 type fixtureConfig struct {
 	fhirDigests  []fhir.ProfileDigest
 	fhirExamples map[string][]byte
+	questions    map[string]catalogue.AtomQuestions
 }
 
 // withFHIR seeds the snapshot's fhir_profiles and fhir_examples tables.
@@ -79,6 +80,13 @@ func withFHIR(digests []fhir.ProfileDigest, examples map[string][]byte) fixtureO
 	return func(c *fixtureConfig) {
 		c.fhirDigests = digests
 		c.fhirExamples = examples
+	}
+}
+
+// withQuestions seeds the atoms_fts questions column.
+func withQuestions(qs map[string]catalogue.AtomQuestions) fixtureOpt {
+	return func(c *fixtureConfig) {
+		c.questions = qs
 	}
 }
 
@@ -118,11 +126,22 @@ func buildFixtureDB(t *testing.T, withVectors bool, opts ...fixtureOpt) string {
 		chunks = nil
 	}
 	dbPath := filepath.Join(t.TempDir(), "catalogue.db")
-	if err := Build(dbPath, atoms, fixtureOps(), fixtureSpecErrors(),
+	questions := cfg.questions
+	if questions == nil {
+		questions = map[string]catalogue.AtomQuestions{}
+	}
+	if err := Build(dbPath, atoms, questions, fixtureOps(), fixtureSpecErrors(),
 		cfg.fhirDigests, cfg.fhirExamples, chunks, meta); err != nil {
 		t.Fatal(err)
 	}
 	return dbPath
+}
+
+// buildTestIndexWithQuestions builds a keyword-only fixture snapshot with
+// the given questions seeded into atoms_fts, and opens it.
+func buildTestIndexWithQuestions(t *testing.T, qs map[string]catalogue.AtomQuestions) *Reader {
+	t.Helper()
+	return buildFixture(t, withQuestions(qs))
 }
 
 func TestBuildWritesAllTables(t *testing.T) {
@@ -172,7 +191,7 @@ func TestBuildNormalizesSpecErrorCodes(t *testing.T) {
 		{Code: "abdm-1016: ", Message: "m", Action: "a", Module: "m1"},
 	}
 	meta := Meta{CatalogueVersion: "v", BuiltAt: "t"}
-	if err := Build(dbPath, nil, nil, specErrs, nil, nil, nil, meta); err != nil {
+	if err := Build(dbPath, nil, nil, nil, specErrs, nil, nil, nil, meta); err != nil {
 		t.Fatal(err)
 	}
 	db, err := sql.Open("sqlite", dbPath)
@@ -210,7 +229,7 @@ func TestBuildRoundTripsDocLinkColumns(t *testing.T) {
 		Body: "b", SourcePath: "hiecm/errors/abdm-1035.md",
 		DocURL: "/docs/hiecm/v3/reference/error-codes", DocAnchor: "m2-linking-and-sharing",
 	}
-	if err := Build(dbPath, []catalogue.Atom{atom}, nil, nil, nil, nil, nil,
+	if err := Build(dbPath, []catalogue.Atom{atom}, nil, nil, nil, nil, nil, nil,
 		Meta{CatalogueVersion: "v", BuiltAt: "t"}); err != nil {
 		t.Fatal(err)
 	}

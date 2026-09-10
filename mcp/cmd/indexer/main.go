@@ -118,6 +118,14 @@ func run(catDir, outPath, nrcesPath string, emb embed.Embedder) error {
 		return err
 	}
 
+	questions, err := catalogue.ReadQuestions(filepath.Join(catDir, "shared", "atom-questions.json"))
+	if err != nil {
+		return fmt.Errorf("read atom questions: %w", err)
+	}
+	if len(questions) == 0 {
+		fmt.Fprintln(os.Stderr, "no atom-questions.json, naive phrasings will match on prose only")
+	}
+
 	var chunks []index.EmbeddedChunk
 	meta := index.Meta{SourceHashes: hashes,
 		BuiltAt: time.Now().UTC().Format(time.RFC3339)}
@@ -141,6 +149,13 @@ func run(catDir, outPath, nrcesPath string, emb embed.Embedder) error {
 		var all []catalogue.Chunk
 		for _, a := range atoms {
 			all = append(all, catalogue.ChunkAtom(a)...)
+			if q, ok := questions[a.ID]; ok && len(q.Questions) > 0 {
+				all = append(all, catalogue.Chunk{
+					AtomID:  a.ID,
+					Heading: "Questions this answers",
+					Text:    a.Title + "\nQuestions this answers:\n" + strings.Join(q.Questions, "\n"),
+				})
+			}
 		}
 		for start := 0; start < len(all); start += embedBatch {
 			end := min(start+embedBatch, len(all))
@@ -191,7 +206,7 @@ func run(catDir, outPath, nrcesPath string, emb embed.Embedder) error {
 		slog.Info("fhir indexed", "version", ig.Version, "profiles", len(fhirDigests), "examples", len(fhirExamples))
 	}
 
-	if err := index.Build(outPath, atoms, ops, specErrors, fhirDigests, fhirExamples, chunks, meta); err != nil {
+	if err := index.Build(outPath, atoms, questions, ops, specErrors, fhirDigests, fhirExamples, chunks, meta); err != nil {
 		return err
 	}
 	mode := "keyword-only"

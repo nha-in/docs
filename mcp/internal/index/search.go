@@ -51,7 +51,7 @@ func (r *Reader) ftsSearch(query, atomType, milestone string, limit int) ([]Sear
         WHERE atoms_fts MATCH ?
           AND (? = '' OR a.type = ?)
           AND (? = '' OR a.milestone = ?)
-        ORDER BY bm25(atoms_fts, 0.0, 5.0, 3.0, 1.0, 8.0)
+        ORDER BY bm25(atoms_fts, 0.0, 5.0, 3.0, 1.0, 8.0, 6.0)
         LIMIT ?`,
 		match, atomType, atomType, milestone, milestone, limit)
 	if err != nil {
