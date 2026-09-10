@@ -1,4 +1,5 @@
 {
   "label": "P3 PHR consent and notifications",
-  "position": 9
+  "position": 9,
+  "className": "sidebar-icon sidebar-icon--bell"
 }

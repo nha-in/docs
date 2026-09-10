@@ -33,6 +33,7 @@ info:
     module: p2
     label: P2 PHR linking and records
     position: 7
+    icon: files
 x-abdm-sources:
 - file: catalogue/openapi/.raw/aarogya-setu.postman_collection.json
   role: upstream

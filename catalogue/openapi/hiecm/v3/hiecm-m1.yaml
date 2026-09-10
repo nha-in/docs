@@ -11,6 +11,7 @@ info:
     module: m1
     label: M1 ABHA identity
     position: 2
+    icon: id-card
   title: ABDM M1, ABHA identity
   summary: Create, find, log into and manage an ABHA, the health account that
     identifies a patient across ABDM.

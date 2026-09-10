@@ -5,6 +5,7 @@ description: What NHCX is, who is on it, and the index of the NHCX documentation
 verification: unverified
 source: NHCX__NHCX-Website_DocumentDetails.md
 sidebar_position: 1
+sidebar_class_name: sidebar-icon sidebar-icon--compass
 ---
 
 # NHCX
