@@ -281,6 +281,31 @@ sequenceDiagram
 
 The card is returned in the response rather than fetched from a separate link. The content type and encoding of the card and QR code responses are not yet published. See the [APIs](/docs/hiecm/v3/api/m1/apis) page for the fields that are.
 
+
+## Creating an ABHA address without an ABHA number
+
+Every journey above issues an [ABHA number](/docs/hiecm/v3/getting-started/glossary#abha-number)
+first and attaches an [ABHA address](/docs/hiecm/v3/getting-started/glossary#abha-address)
+to it, and each one needs Aadhaar or an identity document. A common question
+is whether a mobile number on its own is enough. Through M1 it is not: every
+M1 enrolment route starts from Aadhaar or a document.
+
+It is enough on the patient side. A
+[PHR](/docs/hiecm/v3/getting-started/glossary#phr) application registers a
+person from a mobile number and the OTP sent to it, and the person ends up
+with an ABHA address and no ABHA number. That profile is marked
+Self-Declared: it carries no [KYC](/docs/hiecm/v3/getting-started/glossary#kyc),
+the person types their own demographics, and the ABHA number appears only if
+they link one later. The route is
+[P1 Identity, creating an ABHA address](/docs/hiecm/v3/milestones/p1#creating-an-abha-address),
+and it uses the PHR application endpoints in
+[the P1 reference](/docs/hiecm/v3/api/p1), not the M1 enrolment calls above.
+
+Which matters for what you are building. A hospital system registering a
+walk-in patient needs the KYC verified identity these seven journeys produce.
+An application the person holds themselves can start them on a mobile number
+and ask for Aadhaar later, which is a shorter first screen.
+
 ## Next
 
 - The flows as diagrams: [the journey below](#the-journey-one-diagram-per-flow).

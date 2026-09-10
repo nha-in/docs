@@ -268,10 +268,15 @@ for (const [id, atom] of atoms) {
   }
 
   if (!route && type === "flow") {
-    const mod = (id.match(/\.(m\d)-/) ?? [])[1];
+    // The patient side has journey pages too, at /milestones/p1 to p3. This
+    // matched `m\d` only, so every P series flow fell through to "no rule
+    // matched" and had no page anywhere: an answer citing one could offer the
+    // reader no link, and the mobile number route to an ABHA address was
+    // reachable from nothing.
+    const mod = (id.match(/\.([mp]\d)-/) ?? [])[1];
     const jp = pages.find((p) => new RegExp(`/milestones/${mod}$`).test(p.route));
     if (jp) {
-      const words = id.split(".").pop().replace(/^m\d-/, "").split("-").filter((w) => w.length > 2);
+      const words = id.split(".").pop().replace(/^[mp]\d-/, "").split("-").filter((w) => w.length > 2);
       let best = null, bestScore = 0;
       for (const m of jp.body.matchAll(/^##\s+(.+)$/gm)) {
         const h = m[1].trim(), hs = slug(h);
