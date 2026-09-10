@@ -65,8 +65,8 @@ func keys(m map[string]any) []string {
 
 func TestChatToolsForBindsSearchDocsToLookup(t *testing.T) {
 	tools := newTestTools(t)
-	defs := tools.ChatToolsFor([]string{"search_docs", "decode_error"})
-	if len(defs) != 2 || defs[0].Name != "search_docs" || defs[1].Name != "decode_error" {
+	defs := tools.ChatToolsFor([]string{"search_docs", "decode_error", "list_operations"})
+	if len(defs) != 3 || defs[0].Name != "search_docs" || defs[1].Name != "decode_error" || defs[2].Name != "list_operations" {
 		t.Fatalf("got %+v", defs)
 	}
 	out, err := defs[0].Call(context.Background(), json.RawMessage(`{"query":"link care contexts"}`))

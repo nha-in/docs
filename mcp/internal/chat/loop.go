@@ -615,7 +615,14 @@ func (s *Service) Respond(ctx context.Context, turns []Turn, page *Page, emit fu
 	// specifically about a pack pre-retrieval put in front of the model.
 	packHadContent := false
 	if s.Lookup != nil {
-		pack, packSources, f, err := s.Lookup(ctx, question)
+		// The lookup query is masked the same way the conversation is: this
+		// is a health system, and a follow-up that repeats a patient
+		// identifier from the reader's own question must not reach the
+		// embedder or the index unmasked.
+		lq, _ := guard.MaskPII(lookupQuery(turns))
+		lookupCtx, cancel := context.WithTimeout(ctx, toolCallTimeout)
+		pack, packSources, f, err := s.Lookup(lookupCtx, lq)
+		cancel()
 		if err != nil {
 			slog.Warn("pre-retrieval failed, continuing without it", "error", err)
 		} else if len(pack) > 0 {
@@ -700,7 +707,8 @@ func (s *Service) Respond(ctx context.Context, turns []Turn, page *Page, emit fu
 			// left that the model looked past a pack that answered the
 			// question. No behaviour change, just visibility.
 			if packHadContent && saysItHasNothing(reply.Text) {
-				slog.Info("answer_denies_with_pack", "question", question)
+				maskedQuestion, _ := guard.MaskPII(question)
+				slog.Info("answer_denies_with_pack", "question", maskedQuestion)
 			}
 			// The guard holds text back until it is known to be safe, so the
 			// last of an answer is emitted here rather than during the round.
@@ -977,4 +985,39 @@ func lastUserText(turns []Turn) string {
 		}
 	}
 	return ""
+}
+
+// previousUserText returns the user turn before the last one, or "" if
+// there isn't one.
+func previousUserText(turns []Turn) string {
+	last := -1
+	for i := len(turns) - 1; i >= 0; i-- {
+		if turns[i].Role == "user" {
+			last = i
+			break
+		}
+	}
+	for i := last - 1; i >= 0; i-- {
+		if turns[i].Role == "user" {
+			return turns[i].Text
+		}
+	}
+	return ""
+}
+
+// lookupQuery builds the text pre-retrieval routes and retrieves on. Routing
+// itself still runs on the last user turn alone, but a short follow-up ("and
+// the address?") carries too little on its own for either the router or the
+// index to find anything: at most four words with an earlier user turn to
+// draw on, the query is the previous turn's text plus this one, so "and the
+// address?" after "how do I create an ABHA" still retrieves the flow.
+func lookupQuery(turns []Turn) string {
+	last := lastUserText(turns)
+	if len(strings.Fields(last)) > 4 {
+		return last
+	}
+	if prev := previousUserText(turns); prev != "" {
+		return prev + " " + last
+	}
+	return last
 }

@@ -805,3 +805,95 @@ func TestRespondContinuesWhenLookupFails(t *testing.T) {
 		t.Errorf("no pack was retrieved, the user turn must not carry a passages wrapper: %q", sawFirstUser)
 	}
 }
+
+// TestRespondZeroHitLookupLeavesTheOldPath covers finding 2: a pack with no
+// passages must read as no lookup at all, not as a pack that answered the
+// question. ChatHooks now turns a zero-hit Lookup into a nil pack (tested in
+// package server), and this pins what the loop does with that nil: looked
+// stays false, so a refusal reached without a tool call still gets the
+// lookFirst retry.
+func TestRespondZeroHitLookupLeavesTheOldPath(t *testing.T) {
+	m := &fakeModel{
+		replies: []Reply{
+			{Text: "I do not have anything on that.", StopReason: "end_turn"},
+			{Text: "Here is what I found.", StopReason: "end_turn"},
+		},
+		texts: []string{
+			"I do not have anything on that.\n\n",
+			"Here is what I found.\n\n",
+		},
+	}
+	svc := &Service{Model: m, MaxTokens: 100,
+		Lookup: func(ctx context.Context, q string) (json.RawMessage, []Source, guard.PackFacts, error) {
+			return nil, nil, guard.PackFacts{}, nil
+		},
+	}
+	emit, _ := collectEvents()
+	if err := svc.Respond(context.Background(),
+		[]Turn{{Role: "user", Text: "what is a widget"}}, nil, emit); err != nil {
+		t.Fatal(err)
+	}
+	if m.calls != 2 {
+		t.Fatalf("model called %d times, want 2 (the lookFirst retry must fire)", m.calls)
+	}
+	firstUser := m.gotMsgs[0][len(m.gotMsgs[0])-1].Text
+	if strings.Contains(firstUser, "<passages>") {
+		t.Errorf("a zero-hit lookup must not prepend a passages block: %q", firstUser)
+	}
+	if !strings.Contains(m.gotSystem[1], lookFirst) {
+		t.Error("the second call must carry the lookFirst instruction")
+	}
+}
+
+func TestLookupQueryUsesThePreviousTurnForAShortFollowUp(t *testing.T) {
+	turns := []Turn{
+		{Role: "user", Text: "how do I create an ABHA"},
+		{Role: "assistant", Text: "Use the M1 flow."},
+		{Role: "user", Text: "and the address?"},
+	}
+	got := lookupQuery(turns)
+	if !strings.Contains(got, "create an ABHA") || !strings.Contains(got, "address") {
+		t.Errorf("lookupQuery(%v) = %q, want it to carry both turns", turns, got)
+	}
+}
+
+func TestLookupQueryLeavesALongTurnAlone(t *testing.T) {
+	turns := []Turn{
+		{Role: "user", Text: "how do I create an ABHA"},
+		{Role: "assistant", Text: "Use the M1 flow."},
+		{Role: "user", Text: "what does the linkAddContexts operation require"},
+	}
+	got := lookupQuery(turns)
+	if got != "what does the linkAddContexts operation require" {
+		t.Errorf("lookupQuery(%v) = %q, want the last turn alone", turns, got)
+	}
+}
+
+// TestRespondPreRetrievesOnAShortFollowUp covers finding 5 end to end: the
+// pre-retrieval query for "and the address?" must carry the previous turn,
+// or a follow-up like it can never find the flow it is asking to continue.
+func TestRespondPreRetrievesOnAShortFollowUp(t *testing.T) {
+	var sawQuery string
+	m := &fakeModel{
+		replies: []Reply{{Text: "The address is the second step.", StopReason: "end_turn"}},
+		texts:   []string{"The address is the second step.\n\n"},
+	}
+	svc := &Service{Model: m, MaxTokens: 100,
+		Lookup: func(ctx context.Context, q string) (json.RawMessage, []Source, guard.PackFacts, error) {
+			sawQuery = q
+			return nil, nil, guard.PackFacts{}, nil
+		},
+	}
+	emit, _ := collectEvents()
+	turns := []Turn{
+		{Role: "user", Text: "how do I create an ABHA"},
+		{Role: "assistant", Text: "Use the M1 flow."},
+		{Role: "user", Text: "and the address?"},
+	}
+	if err := svc.Respond(context.Background(), turns, nil, emit); err != nil {
+		t.Fatal(err)
+	}
+	if !strings.Contains(sawQuery, "create an ABHA") || !strings.Contains(sawQuery, "address") {
+		t.Errorf("lookup query = %q, want it to carry the previous turn", sawQuery)
+	}
+}
