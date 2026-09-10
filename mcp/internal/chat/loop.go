@@ -752,11 +752,12 @@ func (s *Service) Respond(ctx context.Context, turns []Turn, page *Page, emit fu
 		// the model narrating its own plumbing: "let me look up the glossary
 		// entry", which the prompt bans and a reader should never see. The
 		// tool call is the proof, and it arrives after the words do, which is
-		// why this cannot be a rule on the text itself. Routing it through
-		// onText/g.drop rather than discarding held directly keeps the guard's
-		// own bookkeeping (pending, released) consistent with every other
-		// path that hands it text.
-		onText(held.String())
+		// why this cannot be a rule on the text itself. held is discarded
+		// directly, never through onText/g.write: g.write releases a
+		// complete paragraph the moment it sees one, so routing narration
+		// through it would let whole paragraphs reach the reader before
+		// g.drop() ever ran. g.drop() still clears the guard's own pending
+		// buffer, kept consistent with every other path that hands it text.
 		held.Reset()
 		g.drop()
 		looked = true
