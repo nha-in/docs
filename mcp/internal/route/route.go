@@ -84,7 +84,13 @@ func Route(in Input) Result {
 	if len(r.ErrorCodes) > 0 || (r.Shape == Diagnose && r.OperationRef == "") {
 		r.Tools = append(r.Tools, "decode_error")
 	}
-	if r.OperationRef != "" {
+	if strings.HasPrefix(r.OperationRef, "/") {
+		// A path-shaped ref ("/api/hiecm/gateway/v3/sessions") is not an
+		// operationId: get_operation only resolves exact ids, so handing it
+		// out here would give the model a tool it can only call by
+		// guessing. list_operations can search by path instead.
+		r.Tools = append(r.Tools, "list_operations")
+	} else if r.OperationRef != "" {
 		r.Tools = append(r.Tools, "get_operation")
 	}
 	if in.HasAttachment {
