@@ -4,7 +4,7 @@ The instrument that scores the assistant's answers. Read the design in
 `docs/superpowers/specs/2026-09-03-askai-excellence-design.md` first.
 
 - `corpus/` is NHA's own words, harvested verbatim. Never edited.
-- `cases/` is the golden set: one JSON file per case, six slices.
+- `cases/` is the golden set: one JSON file per case, nine slices.
 - `calibration/owner-grades.json` is the owner's hand grading of 30 cases,
   which the judge must agree with before it grades anything.
 - `runs/` is written by the harness. `runs/latest` names the run CI replays.
@@ -25,7 +25,9 @@ judged numbers once grading has run.
 
 A scorecard reports, per slice: factuality (share of A or B on answer
 cases), uncertainty (share of correct declines), grounding failures,
-forbidden phrases, shape failures, recall at 3 and MRR.
+forbidden phrases, shape failures, recall at 3 and MRR, mean tool calls,
+and retrieval hit rate (share of answered cases with expected sources that
+retrieved at least one of them).
 
 ## Gates
 

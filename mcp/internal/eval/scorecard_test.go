@@ -146,3 +146,50 @@ func TestTableRendersOneScorecardWithNoDeltas(t *testing.T) {
 		t.Fatalf("table = %q, a table with no baseline must not print a delta", tbl)
 	}
 }
+
+// TestZeroAnsweredSliceReportsToolCallsAndHitRateUnmeasured covers finding 3:
+// a slice with nothing answered must render "n/a" for mean tool calls and
+// retrieval hit rate, the same as every other unmeasured column, not the
+// fabricated "0.0 | 0%" a bare division guard leaves behind.
+func TestZeroAnsweredSliceReportsToolCallsAndHitRateUnmeasured(t *testing.T) {
+	cases := []Case{{ID: "d1", Slice: "define", ExpectedBehaviour: "answer", ExpectedSources: []string{"x"}}}
+	sc := BuildScorecard(cases, nil, nil, nil)
+	if sc.Overall.MeanToolCalls != -1 {
+		t.Fatalf("mean tool calls = %v, want -1 (unmeasured)", sc.Overall.MeanToolCalls)
+	}
+	if sc.Overall.RetrievalHitRate != -1 {
+		t.Fatalf("retrieval hit rate = %v, want -1 (unmeasured)", sc.Overall.RetrievalHitRate)
+	}
+	tbl := Table(sc)
+	if strings.Count(tbl, "n/a") < 2 {
+		t.Fatalf("table = %q, want n/a for both mean tool calls and retrieval hit rate", tbl)
+	}
+}
+
+// TestSliceWithOnlyNoExpectedSourceCasesReportsHitRateUnmeasured covers
+// finding 4: a decline/abstain slice, where every case has no expected
+// sources, must not read as a 100% retrieval hit rate. It is not a
+// retrieval measurement at all.
+func TestSliceWithOnlyNoExpectedSourceCasesReportsHitRateUnmeasured(t *testing.T) {
+	cases := []Case{{ID: "x1", Slice: "decline", ExpectedBehaviour: "decline"}}
+	checks := CheckAll(cases, map[string]Transcript{
+		"x1": {CaseID: "x1", Answer: "See /docs/support."},
+	})
+	sc := BuildScorecard(cases, checks, nil, nil)
+	if sc.Overall.RetrievalHitRate != -1 {
+		t.Fatalf("retrieval hit rate = %v, want -1 (unmeasured, no case in this slice has expected sources)", sc.Overall.RetrievalHitRate)
+	}
+}
+
+// TestDeltaDoesNotDiffAgainstUnmeasuredToolCallsOrHitRate covers finding 3's
+// consequence: a baseline scorecard written before these two fields existed
+// unmarshals them as zero, not as the -1 sentinel. Delta must still not
+// print a fabricated improvement against that zero.
+func TestDeltaDoesNotDiffAgainstUnmeasuredToolCallsOrHitRate(t *testing.T) {
+	before := Scorecard{Slices: []SliceScore{{Slice: "define", MeanToolCalls: -1, RetrievalHitRate: -1}}}
+	now := Scorecard{Slices: []SliceScore{{Slice: "define", MeanToolCalls: 3, RetrievalHitRate: 0.8}}}
+	d := Delta(now, before)
+	if !strings.Contains(d, "3.00 (new)") || !strings.Contains(d, "0.80 (new)") {
+		t.Fatalf("delta = %q, want honest \"(new)\" markers for both columns", d)
+	}
+}
