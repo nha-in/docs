@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"github.com/eka-care/abdm-docs/mcp/internal/chat"
+	"github.com/eka-care/abdm-docs/mcp/internal/route"
 	"github.com/eka-care/abdm-docs/mcp/internal/server"
 )
 
@@ -101,9 +102,15 @@ func Run(ctx context.Context, cfg RunConfig, cases []Case) (int, error) {
 		if cfg.RoutedTools != nil {
 			svc.Lookup, svc.ToolsFor = server.ChatHooks(cfg.RoutedTools)
 		}
+		// Class mirrors the shape route.Route assigns the last user turn in
+		// the chat loop (see loop.go's own route.Route call), so a check can
+		// budget on what the loop actually routed to.
+		class := string(route.Route(route.Input{
+			Question: lastUser(c), HasAttachment: c.Attachment != nil,
+		}).Shape)
 		tr := Transcript{CaseID: c.ID, CatalogueVersion: cfg.CatalogueVersion, ModelID: cfg.ModelID,
 			Temperature: cfg.Temperature, PromptVersion: cfg.PromptVersion,
-			EmbedProvider: cfg.EmbedProvider, DBPath: cfg.DBPath,
+			EmbedProvider: cfg.EmbedProvider, DBPath: cfg.DBPath, Class: class,
 			RecordedAt: time.Now().UTC().Format(time.RFC3339)}
 		var answer, corpus strings.Builder
 		var pendingTools []ToolTrace

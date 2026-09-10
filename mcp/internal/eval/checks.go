@@ -122,8 +122,19 @@ func Check(c Case, t Transcript) CheckResult {
 			add("decline: no route")
 		}
 	}
-	if n, max, over := guard.OverBudget(c.ExpectedShape, answer); over {
-		add("budget: %s answer is %d words, over %d", c.ExpectedShape, n, max)
+	// Budget on the shape the loop actually routed to (t.Class), not the
+	// case author's ExpectedShape: route.Route has no decline shape, so a
+	// decline case routes to whatever shape its question would otherwise
+	// take, and judging its answer against ExpectedShape's ceiling checks
+	// it against a budget the loop never applied. t.Class is empty only for
+	// a transcript recorded before this field existed; fall back to
+	// ExpectedShape there.
+	budgetShape := t.Class
+	if budgetShape == "" {
+		budgetShape = c.ExpectedShape
+	}
+	if n, max, over := guard.OverBudget(budgetShape, answer); over {
+		add("budget: %s answer is %d words, over %d", budgetShape, n, max)
 	}
 	if t.Blocked {
 		add("blocked: the guard withheld the answer")
