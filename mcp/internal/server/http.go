@@ -118,7 +118,7 @@ func Handler(r *index.Reader, emb embed.Embedder, allowOrigin string, chatSvc *c
 			writeJSON(w, 400, map[string]string{"error": err.Error()})
 			return
 		}
-		ctx, cancel := context.WithTimeout(req.Context(), 60*time.Second)
+		ctx, cancel := context.WithTimeout(req.Context(), 90*time.Second)
 		defer cancel()
 		sw, err := chat.NewSSEWriter(w)
 		if err != nil {
