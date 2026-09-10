@@ -33,6 +33,7 @@ info:
     module: p3
     label: P3 PHR consent and notifications
     position: 8
+    icon: bell
 x-abdm-sources:
 - file: catalogue/openapi/.raw/aarogya-setu.postman_collection.json
   role: upstream
