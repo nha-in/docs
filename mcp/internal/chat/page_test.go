@@ -23,6 +23,12 @@ func samplePage() *Page {
 }
 
 func TestPageIsCarriedAsContextNotAsATurn(t *testing.T) {
+	// The page rides in the last user turn, not the system prompt: the
+	// system prompt has to stay byte identical with or without a page (see
+	// TestSystemPromptIsStableAndShapeAndPageRideInTheUserTurn), so this is
+	// the only place left for it to travel. It is still not a turn of its
+	// own, which is what would make the model answer it as if the reader
+	// had asked about it directly rather than asked their own question.
 	page := samplePage()
 	fm := &fakeModel{replies: []Reply{{Text: "ok", StopReason: "end_turn"}}, texts: []string{"ok\n"}}
 	svc := &Service{Model: fm, MaxTokens: 100}
@@ -31,17 +37,16 @@ func TestPageIsCarriedAsContextNotAsATurn(t *testing.T) {
 		[]Turn{{Role: "user", Text: "what does this endpoint need?"}}, page, emit); err != nil {
 		t.Fatal(err)
 	}
-	system := fm.gotSystem[0]
-	for _, want := range []string{page.Title, page.URL, page.Markdown} {
-		if !strings.Contains(system, want) {
-			t.Errorf("system prompt is missing %q from the attached page", want)
-		}
+	if fm.gotSystem[0] != SystemPrompt("") {
+		t.Errorf("the attached page changed the system prompt: %q", fm.gotSystem[0])
 	}
-	// The reader did not type the page, so it must not reach the model as a
-	// message, which is what would make the model answer it as a question.
-	for i, m := range fm.gotMsgs[0] {
-		if strings.Contains(m.Text, "linkRefNumber") {
-			t.Fatalf("message %d carries the page markdown as a turn: %q", i, m.Text)
+	if len(fm.gotMsgs[0]) != 1 {
+		t.Fatalf("the page arrived as a turn of its own: %+v", fm.gotMsgs[0])
+	}
+	got := fm.gotMsgs[0][0].Text
+	for _, want := range []string{page.Title, page.URL, page.Markdown, "what does this endpoint need?"} {
+		if !strings.Contains(got, want) {
+			t.Errorf("the last user turn is missing %q: %q", want, got)
 		}
 	}
 }
