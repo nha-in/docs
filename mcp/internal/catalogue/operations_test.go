@@ -265,3 +265,73 @@ components:
 func containsString(b []byte, s string) bool {
 	return len(b) > 0 && bytes.Contains(b, []byte(s))
 }
+
+// SpecJSON is the blob get_operation hands an agent, so a $ref left in it is
+// a dangling pointer: the agent has no components section to resolve it
+// against. Parameters, request body and responses all reach it by reference
+// in NHA's specifications.
+func TestParseOperationsInlinesRefsInSpecJSON(t *testing.T) {
+	spec := []byte(`openapi: 3.0.3
+info: {title: x, version: v}
+paths:
+  /sessions:
+    post:
+      operationId: gateway_sessions_create
+      summary: Create a session
+      parameters:
+        - $ref: '#/components/parameters/RequestId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SessionRequest'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SessionResponse'
+components:
+  parameters:
+    RequestId:
+      name: REQUEST-ID
+      in: header
+      required: true
+      schema: {type: string, format: uuid}
+  schemas:
+    SessionRequest:
+      type: object
+      required: [clientId]
+      properties:
+        clientId: {type: string}
+    SessionResponse:
+      type: object
+      properties:
+        accessToken: {type: string}
+`)
+	p := filepath.Join(t.TempDir(), "sessions.yaml")
+	if err := os.WriteFile(p, spec, 0o644); err != nil {
+		t.Fatal(err)
+	}
+	ops, err := ParseOperations(p)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(ops) != 1 {
+		t.Fatalf("expected 1 operation, got %d", len(ops))
+	}
+	op := ops[0]
+
+	if containsString(op.SpecJSON, "$ref") {
+		t.Errorf("SpecJSON still carries a $ref: %s", op.SpecJSON)
+	}
+	// The point of inlining is that the content arrives, not merely that the
+	// marker is gone.
+	for _, want := range []string{"REQUEST-ID", "clientId", "accessToken"} {
+		if !containsString(op.SpecJSON, want) {
+			t.Errorf("SpecJSON lost %q after inlining: %s", want, op.SpecJSON)
+		}
+	}
+}

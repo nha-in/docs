@@ -128,6 +128,77 @@ func inlineRefs(ref *openapi3.SchemaRef, depth int) {
 	}
 }
 
+// inlineOperationRefs clears every $ref marker reachable from one operation,
+// so marshalling it yields a self-contained document. inlineRefs above covers
+// schemas only, and a schema is not the only thing an operation reaches by
+// reference: NHA's specifications put the shared REQUEST-ID, TIMESTAMP and
+// X-CM-ID headers in components/parameters and point at them. Until this ran,
+// the blob get_operation returns carried pointers into a components section
+// the caller never receives, so an agent reading it saw
+// `#/components/parameters/RequestId` and had no way to resolve it.
+func inlineOperationRefs(op *openapi3.Operation) {
+	if op == nil {
+		return
+	}
+	for _, p := range op.Parameters {
+		inlineParameterRef(p)
+	}
+	if op.RequestBody != nil {
+		op.RequestBody.Ref = ""
+		if op.RequestBody.Value != nil {
+			inlineContentRefs(op.RequestBody.Value.Content)
+		}
+	}
+	if op.Responses == nil {
+		return
+	}
+	for _, r := range op.Responses.Map() {
+		if r == nil {
+			continue
+		}
+		r.Ref = ""
+		if r.Value == nil {
+			continue
+		}
+		inlineContentRefs(r.Value.Content)
+		for _, h := range r.Value.Headers {
+			if h == nil {
+				continue
+			}
+			h.Ref = ""
+			if h.Value != nil {
+				inlineParameterRef(&openapi3.ParameterRef{Value: &h.Value.Parameter})
+			}
+		}
+	}
+}
+
+func inlineParameterRef(p *openapi3.ParameterRef) {
+	if p == nil {
+		return
+	}
+	p.Ref = ""
+	if p.Value == nil {
+		return
+	}
+	inlineRefs(p.Value.Schema, 0)
+	inlineContentRefs(p.Value.Content)
+}
+
+func inlineContentRefs(content openapi3.Content) {
+	for _, media := range content {
+		if media == nil {
+			continue
+		}
+		inlineRefs(media.Schema, 0)
+		for _, ex := range media.Examples {
+			if ex != nil {
+				ex.Ref = ""
+			}
+		}
+	}
+}
+
 // ParseOperations keeps the operations-only view of ParseSpec.
 func ParseOperations(specPath string) ([]Operation, error) {
 	data, err := ParseSpec(specPath)
@@ -155,6 +226,10 @@ func ParseSpec(specPath string) (SpecData, error) {
 			if op.OperationID == "" {
 				return SpecData{}, fmt.Errorf("%s: %s %s has no operationId; record a correction per openapi-ingest", specPath, method, path)
 			}
+			// Inline before marshalling, not after: SpecJSON is what
+			// get_operation hands back, and a caller holding it has no
+			// components section to resolve a $ref against.
+			inlineOperationRefs(op)
 			frag, err := json.Marshal(op)
 			if err != nil {
 				return SpecData{}, fmt.Errorf("%s: marshal %s: %w", specPath, op.OperationID, err)
@@ -166,7 +241,7 @@ func ParseSpec(specPath string) (SpecData, error) {
 			var reqSchema []byte
 			if op.RequestBody != nil && op.RequestBody.Value != nil {
 				if media := op.RequestBody.Value.Content.Get("application/json"); media != nil && media.Schema != nil {
-					inlineRefs(media.Schema, 0)
+					// Already inlined by inlineOperationRefs above.
 					reqSchema, err = json.Marshal(media.Schema)
 					if err != nil {
 						return SpecData{}, fmt.Errorf("%s: request schema %s: %w", specPath, op.OperationID, err)
