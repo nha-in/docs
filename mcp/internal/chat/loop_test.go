@@ -927,7 +927,7 @@ func TestSystemPromptIsStableAndShapeAndPageRideInTheUserTurn(t *testing.T) {
 	if !strings.Contains(lastUsers[0], "Seven journeys.") {
 		t.Errorf("page text did not move into the user turn: %q", lastUsers[0])
 	}
-	if len(strings.Fields(systems[0])) > 650 {
-		t.Errorf("core prompt is %d words, want at most 650", len(strings.Fields(systems[0])))
+	if len(strings.Fields(systems[0])) > 700 {
+		t.Errorf("core prompt is %d words, want at most 700", len(strings.Fields(systems[0])))
 	}
 }

@@ -38,9 +38,9 @@ A HIP publishes records it created and a HIU requests records held elsewhere; th
 </answer_shape>`,
 
 	"meta": `<answer_shape name="meta" budget="100 words">
-Answer the question about this documentation itself in one or two sentences, from catalogue_info. Give the version and the build date if asked.
+Answer the question about this documentation itself in one or two sentences, from the passages and your search results. If the version is not in them, say so rather than guessing.
 Example:
-This documentation is catalogue version 2026.08.24, built 2026-09-07. Every answer here comes from it and names its sources.
+This documentation is catalogue version 2026.08.24. Every answer here comes from it and names its sources.
 </answer_shape>`,
 
 	"decline": `<answer_shape name="decline" budget="60 words">
@@ -50,12 +50,19 @@ NHCX claim endpoints are not documented on this portal. The NHCX section at /doc
 </answer_shape>`,
 }
 
+// standingDecline is appended to every answer_shape block: whatever shape
+// the router picked, the model is still free to drop it and decline instead
+// when the passages and its tools do not cover the question, rather than
+// forcing an answer into a shape that does not fit one it does not have.
+const standingDecline = "\nIf the passages and your tools do not cover the question, drop this shape and decline in two sentences that name the nearest /docs/ page and the support route."
+
 // ShapeBlock returns the user-turn text for the given answer shape. An
 // unknown shape falls back to how-do-i, the shape a question defaults to
 // when route.Route cannot tell what else it is.
 func ShapeBlock(shape string) string {
-	if b, ok := shapeBlocks[shape]; ok {
-		return b
+	b, ok := shapeBlocks[shape]
+	if !ok {
+		b = shapeBlocks["how-do-i"]
 	}
-	return shapeBlocks["how-do-i"]
+	return b + standingDecline
 }
