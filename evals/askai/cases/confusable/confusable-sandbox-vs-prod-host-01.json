@@ -8,8 +8,8 @@
   "must_contain": [
     "the sandbox host is dev.abdm.gov.in for the gateway"
   ],
-  "must_not_contain": ["<MASKED", "i apologize", "i apologise", "let me ", "great question", "the catalogue", "atom", "use the production host in the sandbox"],
-  "expected_sources": ["hiecm.concept.gateway-session"],
+  "must_not_contain": ["<MASKED", "i apologize", "i apologise", "let me ", "great question", "the catalogue", "atom", "you use the production host in the sandbox"],
+  "expected_sources": ["shared.sandbox.going-live"],
   "expected_shape": "compare",
   "expected_behaviour": "answer",
   "derived_from": null,
