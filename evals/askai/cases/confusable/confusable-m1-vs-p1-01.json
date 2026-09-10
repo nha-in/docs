@@ -1,0 +1,20 @@
+{
+  "id": "confusable-m1-vs-p1-01",
+  "slice": "confusable",
+  "class": "compare",
+  "turns": [{"role": "user", "text": "whats the difference between M1 and P1"}],
+  "attachment": null,
+  "page": null,
+  "must_contain": [
+    "M1 is the provider side, a hospital system creating and reading an ABHA",
+    "P1 is the patient side, a PHR application the person holds"
+  ],
+  "must_not_contain": ["<MASKED", "i apologize", "i apologise", "let me ", "great question", "the catalogue", "atom", "P1 is part of M1"],
+  "expected_sources": ["hiecm.flow.p1-create-abha-address", "hiecm.flow.m1-create-abha-aadhaar-otp"],
+  "expected_shape": "compare",
+  "expected_behaviour": "answer",
+  "derived_from": null,
+  "source_row": "annexure#phr-v3-documents",
+  "catalogue_version": "2026.08.24",
+  "notes": "Source lines: catalogue/shared/glossary/m1.md, 'Milestone 1, ABHA identity: creating an ABHA number, logging a person in, reading and updating their profile'; catalogue/hiecm/flows/p1-create-abha-address.md:7, 'title: Create an ABHA address in a PHR application'; catalogue/hiecm/endpoints/p1-login-verify-otp.md:62, 'recorded once against P1 for the whole patient side'."
+}
