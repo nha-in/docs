@@ -622,18 +622,18 @@ func (s *Service) Respond(ctx context.Context, turns []Turn, page *Page, emit fu
 	// answer whose shape or word budget the checks reject before a reader
 	// sees it. Held text can still be thrown away and asked for again.
 	var held strings.Builder
-	holding := true
 	onFirst := func(delta string) {
-		if holding {
-			held.WriteString(delta)
-			return
-		}
-		onText(delta)
+		held.WriteString(delta)
 	}
 	// retried tracks the shape/budget retry (Task E3), separate from looked:
 	// a lookFirst retry and a shape retry are different failures and a turn
 	// may spend both, up to MaxToolCalls.
 	retried := false
+	// lookFirstSent tracks the lookFirst retry the same way retried tracks
+	// the shape retry: once this turn has already been told to look, a
+	// second decline gets no second retry, it just releases like any other
+	// answer.
+	lookFirstSent := false
 
 	runRound := func() (Reply, error) {
 		reply, err := s.Model.Stream(ctx, system, tools, msgs, s.MaxTokens, onFirst)
@@ -657,8 +657,9 @@ func (s *Service) Respond(ctx context.Context, turns []Turn, page *Page, emit fu
 			// go, told plainly to look, and the first attempt is discarded
 			// unread. One extra call, and only on a turn that skipped the
 			// tools entirely.
-			if !looked && round < MaxToolCalls && saysItHasNothing(held.String()) {
-				slog.Info("answer_without_lookup", "question", question)
+			if !looked && !lookFirstSent && round < MaxToolCalls && saysItHasNothing(held.String()) {
+				maskedQuestion, _ := guard.MaskPII(question)
+				slog.Info("answer_without_lookup", "question", maskedQuestion)
 				// The instruction goes into the user turn's prefix, ahead of
 				// the reader's own words, never into the system prompt: system
 				// must stay byte identical on every call for the cache point
@@ -666,7 +667,15 @@ func (s *Service) Respond(ctx context.Context, turns []Turn, page *Page, emit fu
 				// the reader complaining and answer the complaint: "You're
 				// right, I apologize, I should have checked the documentation
 				// first" is not an answer to anything anybody asked.
+				//
+				// last is re-derived here rather than reused from the pointer
+				// taken before the round loop: a shape retry (Task E3) appends
+				// to msgs and can reallocate the backing array, which would
+				// leave that earlier pointer writing into a slice the loop no
+				// longer uses.
+				last := &msgs[len(msgs)-1]
 				last.Text = lookFirst + "\n\n" + last.Text
+				lookFirstSent = true
 				held.Reset()
 				continue
 			}
@@ -677,9 +686,12 @@ func (s *Service) Respond(ctx context.Context, turns []Turn, page *Page, emit fu
 			// recall what is already on screen. Held text can still be thrown
 			// away and asked for again, once.
 			answer := held.String()
-			failures := guard.CheckShape(shape, answer, facts)
-			if n, max, over := guard.OverBudget(shape, answer); over {
-				failures = append(failures, fmt.Sprintf("over budget: %d words, limit %d", n, max))
+			var failures []string
+			if strings.TrimSpace(answer) != "" {
+				failures = guard.CheckShape(shape, answer, facts)
+				if n, max, over := guard.OverBudget(shape, answer); over {
+					failures = append(failures, fmt.Sprintf("over budget: %d words, limit %d", n, max))
+				}
 			}
 			if len(failures) > 0 && !retried && round < MaxToolCalls {
 				retried = true
