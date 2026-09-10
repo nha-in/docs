@@ -6,6 +6,7 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/eka-care/abdm-docs/mcp/internal/catalogue"
 	"github.com/eka-care/abdm-docs/mcp/internal/embed"
 )
 
@@ -103,5 +104,24 @@ func TestSearchTypeFilter(t *testing.T) {
 		if h.Type != "flow" {
 			t.Errorf("filter leaked: %+v", h)
 		}
+	}
+}
+
+func TestNaivePhrasingFindsAtomThroughQuestions(t *testing.T) {
+	// Build the index the way the existing tests do, but pass a questions
+	// map for one atom that carries a phrasing its body never uses.
+	qs := map[string]catalogue.AtomQuestions{
+		"hiecm.flow.m2-link-care-context": {
+			BodyHash:  "sha256:test",
+			Questions: []string{"how do i attach a hospital visit to a patient health id"},
+		},
+	}
+	r := buildTestIndexWithQuestions(t, qs) // helper mirroring the existing builder, with the extra arg
+	hits, err := r.Search(context.Background(), "attach hospital visit to health id", "", "", 5, nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(hits) == 0 || hits[0].ID != "hiecm.flow.m2-link-care-context" {
+		t.Fatalf("top hit = %+v, want the linking flow", hits)
 	}
 }
