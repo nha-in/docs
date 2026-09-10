@@ -1,0 +1,27 @@
+# The outcome of a care context linking call you made
+
+`POST /v3/link/on_carecontext`
+
+Hosted by your bridge, not by ABDM. The gateway calls this endpoint at the callback URL registered for your bridge, so the path above is relative to that URL. This is the result leg for `m2_hip_link_care_context`.
+
+`response.requestId` echoes the REQUEST-ID you sent to m2_hip_link_care_context.
+
+```bash
+curl --request POST \
+  --url https://dev.abdm.gov.in/api/v3/link/on_carecontext \
+  --header 'REQUEST-ID: 5f7a4a1e-59ba-4c0c-9e0c-8e6b3b6e2f11' \
+  --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
+  --header 'X-HIP-ID: IN2810014366' \
+  --header 'Content-Type: application/json' \
+  --data '{
+  "abhaAddress": "<ABHA_ADDRESS>",
+  "status": "<STATUS>",
+  "error": {
+    "code": "<CODE>",
+    "message": "<MESSAGE>"
+  },
+  "response": {
+    "requestId": "<REQUEST_ID>"
+  }
+}'
+```

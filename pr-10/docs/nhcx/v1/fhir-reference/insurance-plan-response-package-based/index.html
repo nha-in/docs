@@ -1,0 +1,378 @@
+<!doctype html><html lang=en dir=ltr class="docs-wrapper plugin-docs plugin-id-default docs-version-current docs-doc-page docs-doc-id-nhcx/v1/fhir-reference/insurance-plan-response-package-based" data-has-hydrated=false><head><meta charset=UTF-8><title data-rh=true>Insurance plan response, package-based | ABDM Developer Portal</title><meta data-rh=true name=viewport content="width=device-width, initial-scale=1.0"/><meta data-rh=true name=twitter:card content=summary_large_image /><meta data-rh=true property=og:image content=https://nha-in.github.io/docs/pr-10/img/social-card.jpg /><meta data-rh=true name=twitter:image content=https://nha-in.github.io/docs/pr-10/img/social-card.jpg /><meta data-rh=true property=og:url content=https://nha-in.github.io/docs/pr-10/docs/nhcx/v1/fhir-reference/insurance-plan-response-package-based /><meta data-rh=true property=og:locale content=en /><meta data-rh=true name=docsearch:language content=en /><meta data-rh=true name=docusaurus_version content=current /><meta data-rh=true name=docsearch:version content=current /><meta data-rh=true property=og:title content="Insurance plan response, package-based | ABDM Developer Portal"/><meta data-rh=true name=description content="The scheme shape, and the only one with a real payload: two parallel structures, 32 categories, sixteen flags per package."/><meta data-rh=true property=og:description content="The scheme shape, and the only one with a real payload: two parallel structures, 32 categories, sixteen flags per package."/><link data-rh=true rel=icon href=/docs/pr-10/img/favicon.svg /><link data-rh=true rel=canonical href=https://nha-in.github.io/docs/pr-10/docs/nhcx/v1/fhir-reference/insurance-plan-response-package-based /><link data-rh=true rel=alternate href=https://nha-in.github.io/docs/pr-10/docs/nhcx/v1/fhir-reference/insurance-plan-response-package-based hreflang=en /><link data-rh=true rel=alternate href=https://nha-in.github.io/docs/pr-10/docs/nhcx/v1/fhir-reference/insurance-plan-response-package-based hreflang=x-default /><script data-rh=true type=application/ld+json>{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","item":"https://nha-in.github.io/docs/pr-10/docs/nhcx/v1/fhir-reference/insurance-plan-response-package-based","name":"Plan: package-based (scheme)","position":1}]}</script><link rel="alternate icon" type=image/png href=/docs/pr-10/img/favicon.png><link rel=apple-touch-icon href=/docs/pr-10/img/apple-touch-icon.png><script src=/docs/pr-10/agent/abdm-support-agent.js defer></script><link rel=stylesheet href=/docs/pr-10/assets/css/styles.a51ce804.css /><script src=/docs/pr-10/assets/js/runtime~main.d6a0dbfa.js defer></script><script src=/docs/pr-10/assets/js/main.0518435a.js defer></script></head><body><svg style="display: none;"><defs>
+<symbol id=theme-svg-external-link viewBox="0 0 24 24"><path fill=currentColor d="M21 13v10h-21v-19h12v2h-10v15h17v-8h2zm3-12h-10.988l4.035 4-6.977 7.07 2.828 2.828 6.977-7.07 4.125 4.172v-11z"/></symbol>
+</defs></svg>
+<script>!function(){var t=function(){try{return new URLSearchParams(window.location.search).get("docusaurus-theme")}catch(t){}}()||function(){try{return window.localStorage.getItem("theme-734")}catch(t){}}();document.documentElement.setAttribute("data-theme",t||(window.matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light")),document.documentElement.setAttribute("data-theme-choice",t||"system")}(),function(){try{for(var[t,e]of new URLSearchParams(window.location.search).entries())if(t.startsWith("docusaurus-data-")){var a=t.replace("docusaurus-data-","data-");document.documentElement.setAttribute(a,e)}}catch(t){}}()</script><script src=/docs/pr-10/vendor/scalar/standalone.js></script>
+<script src=/docs/pr-10/vendor/scalar/standalone.js></script>
+<script src=/docs/pr-10/vendor/scalar/standalone.js></script>
+<script src=/docs/pr-10/vendor/scalar/standalone.js></script>
+<script src=/docs/pr-10/vendor/scalar/standalone.js></script>
+<script src=/docs/pr-10/vendor/scalar/standalone.js></script>
+<script src=/docs/pr-10/vendor/scalar/standalone.js></script>
+<script src=/docs/pr-10/vendor/scalar/standalone.js></script>
+<script src=/docs/pr-10/vendor/scalar/standalone.js></script>
+<script src=/docs/pr-10/vendor/scalar/standalone.js></script>
+<script src=/docs/pr-10/vendor/scalar/standalone.js></script>
+<script src=/docs/pr-10/vendor/scalar/standalone.js></script>
+<script src=/docs/pr-10/vendor/scalar/standalone.js></script><div id=__docusaurus><link rel=preload as=image href=/docs/pr-10/img/nha-logo.svg /><link rel=preload as=image href=/docs/pr-10/img/nha-logo-dark.svg /><div role=region aria-label="Skip to main content"><a class=skipToContent_fXgn href=#__docusaurus_skipToContent_fallback>Skip to main content</a></div><nav class="navbar navbar--fixed-top topbar" aria-label=Site><a class=topbar-brand aria-label="ABDM Developer Portal" href=/docs/pr-10/><img src=/docs/pr-10/img/nha-logo.svg alt="" class="topbar-logo themedComponent_siVc themedComponent--light_hHel"/><img src=/docs/pr-10/img/nha-logo-dark.svg alt="" class="topbar-logo themedComponent_siVc themedComponent--dark_yETr"/><span class=brand-chip><span aria-hidden=true class=brand-chip__mark style='-webkit-mask-image:url("/docs/pr-10/img/ashoka-emblem-mark.svg");mask-image:url("/docs/pr-10/img/ashoka-emblem-mark.svg")'></span><span class=topbar-wordmark>ABDM Developer Portal</span></span></a><button type=button id=radix-_R_16akl_ aria-haspopup=menu aria-expanded=false data-state=closed data-slot=dropdown-menu-trigger class="topbar-action topbar-gateway" aria-label="Gateway: NHCX">NHCX<svg xmlns=http://www.w3.org/2000/svg width=24 height=24 viewBox="0 0 24 24" fill=none stroke=currentColor stroke-width=2 stroke-linecap=round stroke-linejoin=round class="lucide lucide-chevron-down size-3.5" aria-hidden=true><path d="m6 9 6 6 6-6"/></svg></button><div class=topbar-center><div class=omnibox><div class="navbar__search searchBarContainer_bpSG" dir=ltr><svg aria-hidden=true class=searchIcon_qjAM focusable=false viewBox="0 0 16 16"><path fill=currentColor d="M6.02945 10.20327a4.17382 4.17382 0 1 1 4.17382-4.17382 4.15609 4.15609 0 0 1-4.17382 4.17382Zm9.69195 4.2199-4.8225-4.82338A5.88021 5.88021 0 0 0 12.058 6.02856 6.00467 6.00467 0 1 0 9.59979 10.8989l4.82338 4.82338a.89729.89729 0 0 0 1.29912 0 .89749.89749 0 0 0-.00087-1.29909Z"/></svg><input placeholder=Search aria-label=Search class="navbar__search-input searchInput_T5pz" value="" /><div class="loadingRing_hScY searchBarLoadingRing_dMau"><div></div><div></div><div></div><div></div></div></div><abdm-support-agent docs-origin=https://nha-in.github.io/docs/pr-10 support-url=/docs/pr-10/docs/support></abdm-support-agent></div></div><div class=topbar-actions><a class="topbar-action topbar-action--icon" href=https://sandbox.abdm.gov.in target=_blank rel="noopener noreferrer" aria-label="ABDM sandbox" data-state=closed data-slot=tooltip-trigger><svg viewBox="1 1.8 22 16" width=26 height=19 fill=none stroke=currentColor stroke-width=1.5 stroke-linecap=round stroke-linejoin=round aria-hidden=true><path d="M12 2.2 22.4 8.2 12 14.2 1.6 8.2Z"/><path d="M1.6 8.2v3.1L12 17.3l10.4-6V8.2"/><path d="M9.2 6.4 6.4 8.2l2.8 1.8M14.8 6.4l2.8 1.8-2.8 1.8M13.4 5.3l-2.8 6"/></svg></a><a class="topbar-action topbar-action--icon" href=https://github.com/nha-in target=_blank rel="noopener noreferrer" aria-label="GitHub repository"><svg viewBox="0 0 16 16" width=16 height=16 aria-hidden=true fill=currentColor><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82a7.4 7.4 0 0 1 2-.27c.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg></a><button type=button id=radix-_R_e6akl_ aria-haspopup=menu aria-expanded=false data-state=closed data-slot=dropdown-menu-trigger class="topbar-action topbar-locale"><svg xmlns=http://www.w3.org/2000/svg width=24 height=24 viewBox="0 0 24 24" fill=none stroke=currentColor stroke-width=2 stroke-linecap=round stroke-linejoin=round class="lucide lucide-languages size-4" aria-hidden=true><path d="m5 8 6 6"/><path d="m4 14 6-6 2-3"/><path d="M2 5h12"/><path d="M7 2h1"/><path d="m22 22-5-10-5 10"/><path d="M14 18h6"/></svg>English<svg xmlns=http://www.w3.org/2000/svg width=24 height=24 viewBox="0 0 24 24" fill=none stroke=currentColor stroke-width=2 stroke-linecap=round stroke-linejoin=round class="lucide lucide-chevron-down size-3.5" aria-hidden=true><path d="m6 9 6 6 6-6"/></svg></button></div><button type=button id=radix-_R_2makl_ aria-haspopup=menu aria-expanded=false data-state=closed data-slot=dropdown-menu-trigger class="topbar-action topbar-action--icon topbar-overflow" aria-label=More><svg xmlns=http://www.w3.org/2000/svg width=24 height=24 viewBox="0 0 24 24" fill=none stroke=currentColor stroke-width=2 stroke-linecap=round stroke-linejoin=round class="lucide lucide-ellipsis size-5" aria-hidden=true><circle cx=12 cy=12 r=1 /><circle cx=19 cy=12 r=1 /><circle cx=5 cy=12 r=1 /></svg></button><div class="toggle_vylO topbar-toggle"><button class="clean-btn toggleButton_gllP toggleButtonDisabled_aARS" type=button disabled title="system mode" aria-label="Switch between dark and light mode (currently system mode)"><svg xmlns=http://www.w3.org/2000/svg width=24 height=24 viewBox="0 0 24 24" fill=none stroke=currentColor stroke-width=1.5 stroke-linecap=round stroke-linejoin=round class="lucide lucide-sun toggleIcon_g3eP lightToggleIcon_pyhR" aria-hidden=true><circle cx=12 cy=12 r=4 /><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg><svg xmlns=http://www.w3.org/2000/svg width=24 height=24 viewBox="0 0 24 24" fill=none stroke=currentColor stroke-width=1.5 stroke-linecap=round stroke-linejoin=round class="lucide lucide-moon toggleIcon_g3eP darkToggleIcon_wfgR" aria-hidden=true><path d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401"/></svg><svg xmlns=http://www.w3.org/2000/svg width=24 height=24 viewBox="0 0 24 24" fill=none stroke=currentColor stroke-width=1.5 stroke-linecap=round stroke-linejoin=round class="lucide lucide-laptop toggleIcon_g3eP systemToggleIcon_QzmC" aria-hidden=true><path d="M18 5a2 2 0 0 1 2 2v8.526a2 2 0 0 0 .212.897l1.068 2.127a1 1 0 0 1-.9 1.45H3.62a1 1 0 0 1-.9-1.45l1.068-2.127A2 2 0 0 0 4 15.526V7a2 2 0 0 1 2-2z"/><path d="M20.054 15.987H3.946"/></svg></button></div></nav><nav class=docs-tabs aria-label="Documentation sections"><a class="docs-tab docs-tab--active" aria-current=page href=/docs/pr-10/docs/nhcx/v1>Docs</a><a class=docs-tab href=/docs/pr-10/docs/nhcx/v1/api>API references</a><a class=docs-tab href=/docs/pr-10/docs/whats-new>What's new</a><a class=docs-tab href=/docs/pr-10/docs/support>Support</a></nav><button type=button aria-haspopup=dialog aria-expanded=false data-state=closed data-slot=sheet-trigger class=nav-row aria-label="Open navigation"><svg xmlns=http://www.w3.org/2000/svg width=24 height=24 viewBox="0 0 24 24" fill=none stroke=currentColor stroke-width=2 stroke-linecap=round stroke-linejoin=round class="lucide lucide-menu size-4" aria-hidden=true><path d="M4 5h16"/><path d="M4 12h16"/><path d="M4 19h16"/></svg><span class=nav-row__label>Navigation</span><span class=nav-row__here>Docs</span><svg xmlns=http://www.w3.org/2000/svg width=24 height=24 viewBox="0 0 24 24" fill=none stroke=currentColor stroke-width=2 stroke-linecap=round stroke-linejoin=round class="lucide lucide-chevron-down size-4 nav-row__chevron" aria-hidden=true><path d="m6 9 6 6 6-6"/></svg></button><div id=__docusaurus_skipToContent_fallback class="theme-layout-main main-wrapper mainWrapper_z2l0"><div class=docsWrapper_hBAB><button aria-label="Scroll back to top" class="clean-btn theme-back-to-top-button backToTopButton_sjWU" type=button></button><div class=docRoot_UBD9><aside class="theme-doc-sidebar-container docSidebarContainer_YfHR"><div class=sidebarViewport_aRkj><div class=docs-sidebar><div class=docs-sidebar__head><div class=sidebar-pickers><button type=button aria-haspopup=dialog aria-expanded=false data-state=closed data-slot=popover-trigger class=sidebar-settings aria-label="Settings. Role Everything"><svg xmlns=http://www.w3.org/2000/svg width=24 height=24 viewBox="0 0 24 24" fill=none stroke=currentColor stroke-width=2 stroke-linecap=round stroke-linejoin=round class="lucide lucide-sliders-horizontal size-4 shrink-0" aria-hidden=true><path d="M10 5H3"/><path d="M12 19H3"/><path d="M14 3v4"/><path d="M16 17v4"/><path d="M21 12h-9"/><path d="M21 19h-5"/><path d="M21 5h-7"/><path d="M8 10v4"/><path d="M8 12H3"/></svg><span class=sidebar-settings__summary>Everything</span></button></div><button type=button class=sidebar-fold title="Collapse sidebar" aria-label="Collapse sidebar"><svg xmlns=http://www.w3.org/2000/svg width=24 height=24 viewBox="0 0 24 24" fill=none stroke=currentColor stroke-width=2 stroke-linecap=round stroke-linejoin=round class="lucide lucide-panel-left-close size-4" aria-hidden=true><rect width=18 height=18 x=3 y=3 rx=2 /><path d="M9 3v18"/><path d="m16 15-3-3 3-3"/></svg></button></div><nav aria-label="Docs sidebar" class="menu thin-scrollbar menu_SIkG"><ul class="theme-doc-sidebar-menu menu__list"><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-1 menu__list-item"><a class=menu__link href=/docs/pr-10/docs/nhcx/v1/><span class=linkLabel_WmDU>NHCX</span></a><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-1 menu__list-item"><div class=menu__list-item-collapsible><a class="categoryLink_byQd menu__link menu__link--sublist" href=/docs/pr-10/docs/nhcx/v1/getting-started/><span class=categoryLinkLabel_W154>Get started</span></a><button aria-label="Collapse sidebar category 'Get started'" aria-expanded=true type=button class="clean-btn menu__caret"></button></div><ul class=menu__list><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class=menu__link tabindex=0 href=/docs/pr-10/docs/nhcx/v1/getting-started/glossary><span class=linkLabel_WmDU>Glossary</span></a><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class=menu__link tabindex=0 href=/docs/pr-10/docs/nhcx/v1/getting-started/session-token><span class=linkLabel_WmDU>Session token</span></a><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class=menu__link tabindex=0 href=/docs/pr-10/docs/nhcx/v1/getting-started/your-certificate><span class=linkLabel_WmDU>Your certificate</span></a><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class=menu__link tabindex=0 href=/docs/pr-10/docs/nhcx/v1/getting-started/participant-record><span class=linkLabel_WmDU>Participant record</span></a><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class=menu__link tabindex=0 href=/docs/pr-10/docs/nhcx/v1/getting-started/finding-participants-and-policies><span class=linkLabel_WmDU>Finding participants and policies</span></a><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class=menu__link tabindex=0 href=/docs/pr-10/docs/nhcx/v1/getting-started/recipient-certificate><span class=linkLabel_WmDU>Recipient certificate</span></a><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class=menu__link tabindex=0 href=/docs/pr-10/docs/nhcx/v1/getting-started/building-and-sending-a-jwe><span class=linkLabel_WmDU>Building and sending a JWE</span></a><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class=menu__link tabindex=0 href=/docs/pr-10/docs/nhcx/v1/getting-started/receiving-a-callback><span class=linkLabel_WmDU>Receiving a callback</span></a><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class=menu__link tabindex=0 href=/docs/pr-10/docs/nhcx/v1/getting-started/nhcx-adapter><span class=linkLabel_WmDU>NHCX adapter</span></a><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class=menu__link tabindex=0 href=/docs/pr-10/docs/nhcx/v1/getting-started/nhcx-glossary><span class=linkLabel_WmDU>NHCX glossary</span></a></ul><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-1 menu__list-item menu__list-item--collapsed"><div class=menu__list-item-collapsible><a class="categoryLink_byQd menu__link menu__link--sublist" href=/docs/pr-10/docs/nhcx/v1/registries/><span class=categoryLinkLabel_W154>Registries</span></a><button aria-label="Expand sidebar category 'Registries'" aria-expanded=false type=button class="clean-btn menu__caret"></button></div><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-1 menu__list-item menu__list-item--collapsed"><div class=menu__list-item-collapsible><a class="categoryLink_byQd menu__link menu__link--sublist" href=/docs/pr-10/docs/nhcx/v1/concepts/><span class=categoryLinkLabel_W154>Core concepts</span></a><button aria-label="Expand sidebar category 'Core concepts'" aria-expanded=false type=button class="clean-btn menu__caret"></button></div><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-1 menu__list-item menu__list-item--collapsed"><div class=menu__list-item-collapsible><a class="categoryLink_byQd menu__link menu__link--sublist" href=/docs/pr-10/docs/nhcx/v1/building-a-provider/><span class=categoryLinkLabel_W154>Building a provider</span></a><button aria-label="Expand sidebar category 'Building a provider'" aria-expanded=false type=button class="clean-btn menu__caret"></button></div><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-1 menu__list-item menu__list-item--collapsed"><div class=menu__list-item-collapsible><a class="categoryLink_byQd menu__link menu__link--sublist" href=/docs/pr-10/docs/nhcx/v1/building-a-payer/><span class=categoryLinkLabel_W154>Building a payer</span></a><button aria-label="Expand sidebar category 'Building a payer'" aria-expanded=false type=button class="clean-btn menu__caret"></button></div><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-1 menu__list-item menu__list-item--collapsed"><div class=menu__list-item-collapsible><a class="categoryLink_byQd menu__link menu__link--sublist" href=/docs/pr-10/docs/nhcx/v1/exchanges/><span class=categoryLinkLabel_W154>Exchanges and codes</span></a><button aria-label="Expand sidebar category 'Exchanges and codes'" aria-expanded=false type=button class="clean-btn menu__caret"></button></div><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-1 menu__list-item"><div class=menu__list-item-collapsible><a class="categoryLink_byQd menu__link menu__link--sublist menu__link--sublist-caret menu__link--active" role=button aria-expanded=true href=/docs/pr-10/docs/nhcx/v1/fhir-reference/bundles-and-conventions><span class=categoryLinkLabel_W154>FHIR reference</span></a></div><ul class=menu__list><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class=menu__link tabindex=0 href=/docs/pr-10/docs/nhcx/v1/fhir-reference/bundles-and-conventions><span class=linkLabel_WmDU>Bundles and conventions</span></a><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class=menu__link tabindex=0 href=/docs/pr-10/docs/nhcx/v1/fhir-reference/coverage-eligibility-request><span class=linkLabel_WmDU>Coverage eligibility request</span></a><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class=menu__link tabindex=0 href=/docs/pr-10/docs/nhcx/v1/fhir-reference/coverage-eligibility-response><span class=linkLabel_WmDU>Coverage eligibility response</span></a><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class=menu__link tabindex=0 href=/docs/pr-10/docs/nhcx/v1/fhir-reference/insurance-plan-request><span class=linkLabel_WmDU>Insurance plan request</span></a><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class=menu__link tabindex=0 href=/docs/pr-10/docs/nhcx/v1/fhir-reference/insurance-plan-response><span class=linkLabel_WmDU>Insurance plan response</span></a><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class="menu__link menu__link--active" aria-current=page tabindex=0 href=/docs/pr-10/docs/nhcx/v1/fhir-reference/insurance-plan-response-package-based><span class=linkLabel_WmDU>Plan: package-based (scheme)</span></a><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class=menu__link tabindex=0 href=/docs/pr-10/docs/nhcx/v1/fhir-reference/insurance-plan-response-coverage-based><span class=linkLabel_WmDU>Plan: coverage-based (private)</span></a><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class=menu__link tabindex=0 href=/docs/pr-10/docs/nhcx/v1/fhir-reference/preauthorisation-request><span class=linkLabel_WmDU>Preauthorisation request</span></a><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class=menu__link tabindex=0 href=/docs/pr-10/docs/nhcx/v1/fhir-reference/preauthorisation-response><span class=linkLabel_WmDU>Preauthorisation response</span></a><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class=menu__link tabindex=0 href=/docs/pr-10/docs/nhcx/v1/fhir-reference/preauthorisation-enhancement><span class=linkLabel_WmDU>Preauthorisation enhancement</span></a><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class=menu__link tabindex=0 href=/docs/pr-10/docs/nhcx/v1/fhir-reference/preauthorisation-query-and-answer><span class=linkLabel_WmDU>Preauthorisation query and answer</span></a><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class=menu__link tabindex=0 href=/docs/pr-10/docs/nhcx/v1/fhir-reference/claim-request><span class=linkLabel_WmDU>Claim request</span></a><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class=menu__link tabindex=0 href=/docs/pr-10/docs/nhcx/v1/fhir-reference/claim-response><span class=linkLabel_WmDU>Claim response</span></a><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class=menu__link tabindex=0 href=/docs/pr-10/docs/nhcx/v1/fhir-reference/claim-query-and-answer><span class=linkLabel_WmDU>Claim query and answer</span></a><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class=menu__link tabindex=0 href=/docs/pr-10/docs/nhcx/v1/fhir-reference/cancel-reprocess-and-shortfall><span class=linkLabel_WmDU>Cancel, reprocess and shortfall</span></a><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class=menu__link tabindex=0 href=/docs/pr-10/docs/nhcx/v1/fhir-reference/payment-notice-and-acknowledgement><span class=linkLabel_WmDU>Payment notice and acknowledgement</span></a><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class=menu__link tabindex=0 href=/docs/pr-10/docs/nhcx/v1/fhir-reference/communication><span class=linkLabel_WmDU>Communication</span></a><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class=menu__link tabindex=0 href=/docs/pr-10/docs/nhcx/v1/fhir-reference/predetermination-status-and-search><span class=linkLabel_WmDU>Predetermination, status and search</span></a><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class=menu__link tabindex=0 href=/docs/pr-10/docs/nhcx/v1/fhir-reference/codes-and-value-sets><span class=linkLabel_WmDU>Codes and value sets</span></a><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class=menu__link tabindex=0 href=/docs/pr-10/docs/nhcx/v1/fhir-reference/sample-bundles><span class=linkLabel_WmDU>Sample bundles</span></a></ul></ul></nav><div role=separator aria-orientation=vertical aria-label="Resize the sidebar" tabindex=0 class=sidebar-resizer><span class=sidebar-resizer__grip aria-hidden=true></span></div></div></div></aside><main class=docMainContainer_TBSr><div class="container padding-top--md padding-bottom--lg"><div class=docs-article-row><div class=docs-article-main><div class=docs-content><article><nav class="theme-doc-breadcrumbs breadcrumbsContainer_Z_bl" aria-label=Breadcrumbs><ul class=breadcrumbs><li class=breadcrumbs__item><a aria-label="Home page" class=breadcrumbs__link href=/docs/pr-10/><svg viewBox="0 0 24 24" class=breadcrumbHomeIcon_YNFT><path d="M10 19v-5h4v5c0 .55.45 1 1 1h3c.55 0 1-.45 1-1v-7h1.7c.46 0 .68-.57.33-.87L12.67 3.6c-.38-.34-.96-.34-1.34 0l-8.36 7.53c-.34.3-.13.87.33.87H5v7c0 .55.45 1 1 1h3c.55 0 1-.45 1-1z" fill=currentColor /></svg></a><li class=breadcrumbs__item><span class=breadcrumbs__link>FHIR reference</span><li class="breadcrumbs__item breadcrumbs__item--active"><span class=breadcrumbs__link>Plan: package-based (scheme)</span></ul></nav><div class="tocCollapsible_ETCw theme-doc-toc-mobile tocMobile_ITEo"><button type=button class="clean-btn tocCollapsibleButton_TO0P">On this page</button></div><div><div class="theme-doc-markdown markdown"><header><h1>Insurance plan response, package-based</h1></header>
+<p>The shape every government scheme sends, and the only one with a real payload behind it. PMJAY uses it throughout. A package is a named procedure at a fixed, all-inclusive rate, and the plan carries every package the hospital may bill along with the rules that govern each one.</p>
+<p>The shared parts of the bundle, the plan header and the caching rules are in the previous chapter. This chapter is the package-based body.</p>
+<h2 class="anchor anchorTargetStickyNavbar_tleR" id=in-short>In short<a href=#in-short class=hash-link aria-label="Direct link to In short" title="Direct link to In short" translate=no>​</a></h2>
+<ul>
+<li class="">The scheme shape, and the only one with a real payload behind it: 2,217 entries.</li>
+<li class="">The packages exist in two parallel structures, and neither is complete on its own. You have to join them on the package code.</li>
+<li class="">Sixteen claim-condition flags per package decide what the treatment screen may offer and what it must cap.</li>
+<li class="">Every flag is a string, and <code>"N"</code> is truthy in most languages. Compare against the literal <code>"Y"</code>.</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_tleR" id=two-parallel-structures-for-one-set-of-packages>Two parallel structures for one set of packages<a href=#two-parallel-structures-for-one-set-of-packages class=hash-link aria-label="Direct link to Two parallel structures for one set of packages" title="Direct link to Two parallel structures for one set of packages" translate=no>​</a></h2>
+<p>Nothing outside the payload documents this.</p>
+<p><code>InsurancePlan.coverage[]</code> and <code>InsurancePlan.plan[0].specificCost[]</code> each hold the same 32 specialty categories, and each of those holds the same benefit codes. 2,881 benefit entries on each side, 1,727 distinct package codes, and the two sets of codes intersect exactly. Neither side is complete on its own.</p>
+<!-- -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class=table-scroll role=region tabindex=0><table><thead><tr><th style=text-align:left>Side<th style=text-align:left>Carries<th style=text-align:left>Path to a package<tbody><tr><td style=text-align:left><code>coverage[]</code><td style=text-align:left>The rules. Flags, document requirements, questionnaire links, and <code>limit[]</code> rates<td style=text-align:left><code>coverage[].benefit[].type.coding.code</code><tr><td style=text-align:left><code>plan[0].specificCost[]</code><td style=text-align:left>The money. <code>cost[]</code> lines by type, with stratification qualifiers<td style=text-align:left><code>plan[0].specificCost[].benefit[].type.coding.code</code></table></div>
+<p>Load both, index both by package code, and join. If you read only <code>specificCost</code> you will price a package correctly and never learn that it is government-reserved. If you read only <code>coverage</code> you will know every rule and have no cost line.</p>
+<p>The two sides also disagree on which system the package code belongs to. Under <code>coverage</code> it is <code>https://nrces.in/ndhm/fhir/r4/ValueSet/ndhm-productorservice</code>. Under <code>specificCost</code> it is <code>http://hl7.org/fhir/ValueSet/procedure-category</code>. Same code, same resource, two systems, both of them ValueSet URLs where a CodeSystem URL belongs.</p>
+<h2 class="anchor anchorTargetStickyNavbar_tleR" id=the-32-categories>The 32 categories<a href=#the-32-categories class=hash-link aria-label="Direct link to The 32 categories" title="Direct link to The 32 categories" translate=no>​</a></h2>
+<p><code>coverage[].type.coding</code> and <code>specificCost[].category.coding</code> both bind to <code>https://nrces.in/ndhm/fhir/r4/ValueSet/ndhm-benefitcategory</code>. The two-letter codes and their package counts in this plan:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class=table-scroll role=region tabindex=0><table><thead><tr><th style=text-align:left>Code<th style=text-align:left>Category<th style=text-align:left>Packages<th style=text-align:left>Code<th style=text-align:left>Category<th style=text-align:left>Packages<tbody><tr><td style=text-align:left><code>SV</code><td style=text-align:left>Cardio-thoracic & Vascular surgery<td style=text-align:left>527<td style=text-align:left><code>SM</code><td style=text-align:left>Oral & Maxillofacial Surgery<td style=text-align:left>32<tr><td style=text-align:left><code>SS</code><td style=text-align:left>Paediatric Surgery<td style=text-align:left>238<td style=text-align:left><code>MM</code><td style=text-align:left>Mental Disorders Packages<td style=text-align:left>27<tr><td style=text-align:left><code>SC</code><td style=text-align:left>Surgical Oncology<td style=text-align:left>228<td style=text-align:left><code>BM</code><td style=text-align:left>Burns Management<td style=text-align:left>27<tr><td style=text-align:left><code>SG</code><td style=text-align:left>General Surgery<td style=text-align:left>220<td style=text-align:left><code>ST</code><td style=text-align:left>Polytrauma<td style=text-align:left>24<tr><td style=text-align:left><code>SB</code><td style=text-align:left>Orthopaedics<td style=text-align:left>216<td style=text-align:left><code>IN</code><td style=text-align:left>Interventional Neuroradiology<td style=text-align:left>24<tr><td style=text-align:left><code>MO</code><td style=text-align:left>Medical Oncology<td style=text-align:left>185<td style=text-align:left><code>HM</code><td style=text-align:left>High end Medicine<td style=text-align:left>19<tr><td style=text-align:left><code>MG</code><td style=text-align:left>General Medicine<td style=text-align:left>181<td style=text-align:left><code>MN</code><td style=text-align:left>Neo-natal care Packages<td style=text-align:left>17<tr><td style=text-align:left><code>MP</code><td style=text-align:left>Paediatric Medical management<td style=text-align:left>146<td style=text-align:left><code>HD</code><td style=text-align:left>High end Diagnostics<td style=text-align:left>13<tr><td style=text-align:left><code>SU</code><td style=text-align:left>Urology<td style=text-align:left>139<td style=text-align:left><code>OT</code><td style=text-align:left>Organ & Tissue transplant<td style=text-align:left>11<tr><td style=text-align:left><code>SO</code><td style=text-align:left>Obstetrics & Gynaecology<td style=text-align:left>120<td style=text-align:left><code>HP</code><td style=text-align:left>High end procedures<td style=text-align:left>10<tr><td style=text-align:left><code>SN</code><td style=text-align:left>Neurosurgery<td style=text-align:left>110<td style=text-align:left><code>ER</code><td style=text-align:left>Emergency Room Packages<td style=text-align:left>6<tr><td style=text-align:left><code>SL</code><td style=text-align:left>Otorhinolaryngology<td style=text-align:left>94<td style=text-align:left><code>ID</code><td style=text-align:left>Infectious Diseases<td style=text-align:left>5<tr><td style=text-align:left><code>MC</code><td style=text-align:left>Cardiology<td style=text-align:left>74<td style=text-align:left><code>PM</code><td style=text-align:left>Palliative Medicine<td style=text-align:left>1<tr><td style=text-align:left><code>SE</code><td style=text-align:left>Opthalmology<td style=text-align:left>67<td style=text-align:left><code>TG</code><td style=text-align:left>Transegender Procedure<td style=text-align:left>1<tr><td style=text-align:left><code>MR</code><td style=text-align:left>Radiation Oncology<td style=text-align:left>48<td style=text-align:left><code>DL</code><td style=text-align:left>Diagnostic Laboratory<td style=text-align:left>1<tr><td style=text-align:left><code>SP</code><td style=text-align:left>Plastic and reconstructive Surgery<td style=text-align:left>37<td style=text-align:left><code>US</code><td style=text-align:left>Unspecified Surgical Package<td style=text-align:left>33</table></div>
+<p>Codes beginning <code>S</code> are surgical, <code>M</code> medical. The displays are misspelled in two places, <code>Opthalmology</code> and <code>Transegender Procedure</code>, and you must store them exactly as sent, because a preauthorisation whose display differs from the plan's is rejected on the display.</p>
+<h2 class="anchor anchorTargetStickyNavbar_tleR" id=claim-condition-the-flags>Claim-Condition: the flags<a href=#claim-condition-the-flags class=hash-link aria-label="Direct link to Claim-Condition: the flags" title="Direct link to Claim-Condition: the flags" translate=no>​</a></h2>
+<p>Under <code>coverage[].benefit[].extension</code> with url <code>https://nrces.in/ndhm/fhir/r4/StructureDefinition/Claim-Condition</code>. Sixteen sub-extension names in this plan, each a <code>valueString</code> of <code>Y</code>, <code>N</code>, an integer or a word. 2,261 of the 2,881 benefit entries carry the full set; the remaining 620 are implants and carry only <code>ParentProcedure</code>.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class=table-scroll role=region tabindex=0><table><thead><tr><th style=text-align:left>Flag<th style=text-align:left>Values in this plan<th style=text-align:left>What it governs<tbody><tr><td style=text-align:left><code>ProcedureType</code><td style=text-align:left><code>Surgical</code> 1,493, <code>Medical</code> 420, <code>Conservative</code> 348<td style=text-align:left>Which clinical pathway and which document set applies<tr><td style=text-align:left><code>GovtReserved</code><td style=text-align:left><code>N</code> 2,243, <code>Y</code> 18<td style=text-align:left><code>Y</code> means only a government hospital may bill it. Hide it in a private facility<tr><td style=text-align:left><code>ApprovalNotRequired</code><td style=text-align:left><code>N</code> 1,321, <code>Y</code> 940<td style=text-align:left><code>Y</code> means treat without waiting for a preauthorisation decision<tr><td style=text-align:left><code>EnhancementAllowed</code><td style=text-align:left><code>N</code> 1,924, <code>Y</code> 337<td style=text-align:left><code>Y</code> means an enhancement request will be entertained. <code>N</code> means the first approval is the ceiling<tr><td style=text-align:left><code>ScheduledTATApproval</code><td style=text-align:left><code>Y</code> 2,237, <code>N</code> 24<td style=text-align:left><code>Y</code> means the package auto-approves if the payer does not respond inside the turnaround window<tr><td style=text-align:left><code>QuantityAllowed</code><td style=text-align:left><code>1</code> on 2,259, <code>4</code> on 2<td style=text-align:left>Maximum quantity per approval<tr><td style=text-align:left><code>IsDayCare</code><td style=text-align:left><code>N</code> 1,770, <code>Y</code> 491<td style=text-align:left>Day-care procedure, no overnight stay expected<tr><td style=text-align:left><code>ImplantApplicable</code><td style=text-align:left><code>N</code> 1,909, <code>Y</code> 352<td style=text-align:left>Whether an implant line may be added<tr><td style=text-align:left><code>MultipleImplantsAllowed</code>, <code>MaximumImplantsAllowed</code><td style=text-align:left><code>N</code> 2,257 / <code>1</code> 2,257<td style=text-align:left>Implant count rules<tr><td style=text-align:left><code>StratificationAllowed</code><td style=text-align:left><code>N</code> 1,785, <code>Y</code> 476<td style=text-align:left>Whether a bed-category or dosage line may be added<tr><td style=text-align:left><code>MultipleStratificationAllowed</code>, <code>MaximumStratificationAllowed</code><td style=text-align:left><code>N</code> 1,788 / <code>1</code> 2,257<td style=text-align:left>Stratification count rules<tr><td style=text-align:left><code>CyclicProcedure</code>, <code>MaximumCyclesAllowed</code><td style=text-align:left><code>N</code> 2,258 / <code>0</code> 2,259<td style=text-align:left>Repeatable under one approval, and how many times<tr><td style=text-align:left><code>ParentProcedure</code><td style=text-align:left>620, a <code>valueCodeableConcept</code><td style=text-align:left>On implant benefits. Names the package the implant may accompany</table></div>
+<p>Every flag except <code>ParentProcedure</code> is a string. <code>"N"</code> is truthy in most languages. Compare against the literal <code>"Y"</code>.</p>
+<p>These are the flags that make the treatment screen behave. <code>GovtReserved</code> decides what is offered at all. <code>ApprovalNotRequired</code> and <code>ScheduledTATApproval</code> decide whether the clinician waits. <code>EnhancementAllowed</code> decides whether the enhancement path exists at the point a case runs over, and the three maxima are the validation limits for the item lines. None of them are re-stated in the preauthorisation response, so a system that does not cache the plan cannot enforce any of them.</p>
+<h2 class="anchor anchorTargetStickyNavbar_tleR" id=cost-and-limit>Cost and limit<a href=#cost-and-limit class=hash-link aria-label="Direct link to Cost and limit" title="Direct link to Cost and limit" translate=no>​</a></h2>
+<p>The money is split across the two structures, and it splits by kind.</p>
+<p>Under <code>plan[0].specificCost[].benefit[].cost[]</code>, each line has a <code>type</code> and a <code>value</code> in INR:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class=table-scroll role=region tabindex=0><table><thead><tr><th style=text-align:left><code>cost.type.coding.code</code><th style=text-align:left>Lines<th style=text-align:left>Meaning<tbody><tr><td style=text-align:left><code>Procedure</code><td style=text-align:left>1,795<td style=text-align:left>The base package rate<tr><td style=text-align:left><code>Stratification</code><td style=text-align:left>1,644<td style=text-align:left>An alternative rate for a bed category or dosage, named in <code>cost.qualifiers[]</code><tr><td style=text-align:left><code>Implant</code><td style=text-align:left>620<td style=text-align:left>An implant amount, added over the package rate</table></div>
+<p>All three carry the system <code>https://www.nrces.in/ndhm/fhir/r4/CodeSystem/ndhm-plan-type</code>. That is the plan-type code system being used for cost types, with a <code>www.</code> prefix that appears nowhere else in the corpus, and the displays contain the typo <code>proudct</code>. Stratification qualifiers bind to <code>https://nrces.in/ndhm/fhir/r4/ValueSet/ndhm-productorservice</code>, with codes like <code>STRAT006a</code> <code>Routine Ward</code> and <code>STRAT006d</code> <code>ICU - With Ventilator</code>.</p>
+<p>Under <code>coverage[].benefit[].limit[]</code> the same amounts appear again as <code>value.value</code> and <code>value.unit</code> of <code>INR</code>, with <code>code.coding</code> naming either the package or the stratification. Package <code>MG004A</code> "Dengue fever" has a base limit of <strong>0 INR</strong> and stratification limits of 1,800, 2,700, 3,600 and 4,500. A base rate of zero is not an error and not a free package; it means the payable amount is entirely determined by the bed category chosen. Do not treat 0 as missing data, and do not submit a zero-value item line.</p>
+<h2 class="anchor anchorTargetStickyNavbar_tleR" id=supporting-information-requirements>Supporting information requirements<a href=#supporting-information-requirements class=hash-link aria-label="Direct link to Supporting information requirements" title="Direct link to Supporting information requirements" translate=no>​</a></h2>
+<p>Two levels, and three different extension shapes.</p>
+<p><strong>Plan level</strong>, sixteen <code>Claim-SupportingInfoRequirement</code> extensions directly on <code>InsurancePlan.extension</code>. One is proof of identity: category <code>POI</code> <code>Proof of identity</code>, code <code>ADN</code> <code>Aadhaar Number</code>, and it uses the sub-extension urls <code>SupportInfoCategory</code> and <code>SupportInfoCode</code>. The other fifteen use the urls <code>category</code>, <code>code</code> and <code>documentationUrl</code>, are all category <code>INF</code> and code <code>ODN</code> <code>Other document</code>, and each points at one of the fifteen policy-level questionnaires.</p>
+<p><strong>Package level</strong>, on <code>coverage[].benefit[].extension</code>. 13,109 nested document requirements and 2,200 questionnaire links.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class=table-scroll role=region tabindex=0><table><thead><tr><th style=text-align:left>Shape<th style=text-align:left>Count<th style=text-align:left>Category<th style=text-align:left>Code<th style=text-align:left>Points at<tbody><tr><td style=text-align:left>Nested, one sub-extension per document<td style=text-align:left>13,109<td style=text-align:left><code>DIA</code> <code>Diagnostic report</code><td style=text-align:left><code>MAND0006</code> and similar, from <code>.../ValueSet/ndhm-supportinginfo-code</code><td style=text-align:left>Nothing. Names a document you must attach<tr><td style=text-align:left>Flat, with <code>documentationUrl</code><td style=text-align:left>2,200<td style=text-align:left><code>INF</code><td style=text-align:left><code>STG</code> <code>Standard Treatment Guidelines</code><td style=text-align:left>An STG questionnaire</table></div>
+<p>The nested form buries each requirement one level deeper, under a url of the shape <code>.../Claim-SupportingInfoRequirement/MG004A/100409/MAND0409</code>, which encodes the package code, an internal id and the document code. The flat form puts <code>category</code>, <code>code</code> and <code>documentationUrl</code> directly under the extension. A parser that assumes one shape will silently drop the other. Recurse.</p>
+<p>Typical package-level document codes include <code>MAND0006</code> "Detailed discharge summary", <code>MAND0062</code> "Detailed ICPs", <code>MAND0063</code> "Treatment details", <code>MAND0064</code> "All investigations reports" and <code>MAND0408</code> "Clinical notes detailing history and Admission notes showing vitals and examination findings". These are the checklist a hospital sees before it can submit.</p>
+<h2 class="anchor anchorTargetStickyNavbar_tleR" id=the-questionnaires>The questionnaires<a href=#the-questionnaires class=hash-link aria-label="Direct link to The questionnaires" title="Direct link to The questionnaires" translate=no>​</a></h2>
+<p>2,215 entries, 1,461 distinct. Two kinds.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class=table-scroll role=region tabindex=0><table><thead><tr><th style=text-align:left>Kind<th style=text-align:left>Distinct<th style=text-align:left><code>fullUrl</code> shape<th style=text-align:left>Titles<tbody><tr><td style=text-align:left>Policy level<td style=text-align:left>15<td style=text-align:left><code>https://payer.gov.in/policy/questionnaire/{id}</code><td style=text-align:left>Named forms<tr><td style=text-align:left>STG<td style=text-align:left>1,446<td style=text-align:left><code>https://payer.gov.in/policy/stgquestionnaire/{id}</code><td style=text-align:left>All titled <code>STG Questionnaire</code></table></div>
+<p>The fifteen policy-level forms are Discharge Information, General Findings, Personal History, Family History, Admission Details, Hospital Bill Details and Query Response. Then Authentication Consent, Death, Leaving Against Medical Advice (LAMA), Discharge Against Medical Advice (DAMA), General Medicine, Discharge Consent, Live Discharge and Patient Payment Consent.</p>
+<p>Across all 2,215 there are 10,504 items: 10,463 <code>choice</code>, 20 <code>attachment</code>, 12 <code>dateTime</code> and 9 <code>string</code>. All but 20 are <code>required: true</code>. <code>choice</code> items carry <code>answerOption[].valueString</code> rather than a coded answer, usually just <code>Yes</code> and <code>No</code>.</p>
+<p>The provider renders these and returns a <code>QuestionnaireResponse</code>, referenced from a supporting-info entry under category <code>INF</code>. The <code>documentationUrl</code> in the plan is the <code>Questionnaire.url</code> the response must point back to.</p>
+<h2 class="anchor anchorTargetStickyNavbar_tleR" id=traps>Traps<a href=#traps class=hash-link aria-label="Direct link to Traps" title="Direct link to Traps" translate=no>​</a></h2>
+<p><strong>Duplicate entries.</strong> 2,215 <code>Questionnaire</code> entries carry 1,461 distinct <code>fullUrl</code> values. Six distinct STG forms appear 20 times each, byte-identical every time. Deduplicate on <code>fullUrl</code> before storing, or your form table will be half redundant.</p>
+<p><strong>The STG questionnaires put the question in <code>prefix</code>, not <code>text</code>.</strong> All 10,425 STG items have a <code>prefix</code> and no <code>text</code>. All 79 policy-level items have a <code>text</code> and no <code>prefix</code>. A renderer that reads <code>item.text</code>, which is the correct FHIR field for the question, will draw 1,446 forms of blank rows with answer buttons. Read <code>text</code> and fall back to <code>prefix</code>.</p>
+<p><strong><code>STG</code> is bound to the category system, not the code system.</strong> In all 2,200 flat requirements the <code>code</code> sub-extension carries system <code>https://nrces.in/ndhm/fhir/r4/CodeSystem/ndhm-supportinginfo-category</code> with code <code>STG</code>. <code>STG</code> is a supporting-info code, not a category. The same defect appears in the preauthorisation and claim requests, in the opposite direction. Match on the code.</p>
+<p><strong>Extension urls change case and form between the two structures.</strong> Under <code>coverage</code> the condition extension url is the absolute <code>https://nrces.in/ndhm/fhir/r4/StructureDefinition/Claim-Condition</code>. Under <code>specificCost</code> it is the bare relative string <code>claim-condition</code>. A matcher keyed on the full url finds 2,261 of them and covers all 620 that carry <code>ParentProcedure</code> on the cost side.</p>
+<p><strong>The plan declares no profile.</strong> <code>InsurancePlan.meta</code> carries only a <code>SUBSETTED</code> tag. There is no <code>meta.profile</code> on the plan, the payer <code>Organization</code> or any <code>Questionnaire</code>. Every provider-generated resource in the corpus declares its NRCeS profile. Do not make profile presence a parse precondition.</p>
+<p><strong>Several documented elements are simply absent.</strong> There is no <code>plan.identifier</code>, no <code>plan.network</code>, no <code>coverage.network</code>, no <code>endpoint</code>, and no <code>claim-exclusion</code> extension anywhere in the resource. Waiting periods, pre-existing-condition rules and excluded procedures are specified as plan-level extensions and this plan carries none of them. Treat every one of those as optional.</p>
+<p><strong>1,727 codes, 2,881 entries.</strong> 543 package codes appear more than once, one of them 52 times. The repeats are implant codes, which appear once per parent procedure they may accompany. Key your index on the pair of package code and parent, or on the element <code>id</code>, not on the package code alone.</div></div><footer class="theme-doc-footer docusaurus-mt-lg"><div class="row margin-top--sm theme-doc-footer-edit-meta-row"><div class="col noPrint_WFHX"></div><div class="col lastUpdated_JAkA"><span class=theme-last-updated>Last updated<!-- --> on <b><time datetime=2026-09-10T07:33:14.000Z itemprop=dateModified>Sep 10, 2026</time></b></span></div></div></footer></article><nav class=page-next aria-label="Where to go next"><a class="next-step card" href=/docs/pr-10/docs/nhcx/v1/fhir-reference/insurance-plan-response-coverage-based><span class=next-step__eyebrow>Next</span><span class=next-step__label>Plan: coverage-based (private)<svg xmlns=http://www.w3.org/2000/svg width=24 height=24 viewBox="0 0 24 24" fill=none stroke=currentColor stroke-width=2 stroke-linecap=round stroke-linejoin=round class="lucide lucide-arrow-right size-4" aria-hidden=true><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></span></a><div class=page-next__nearby><p class=page-next__heading>Also in this section<ul class=page-next__links><li><a class="page-next__link card" href=/docs/pr-10/docs/nhcx/v1/fhir-reference/bundles-and-conventions>Bundles and conventions</a><li><a class="page-next__link card" href=/docs/pr-10/docs/nhcx/v1/fhir-reference/coverage-eligibility-request>Coverage eligibility request</a><li><a class="page-next__link card" href=/docs/pr-10/docs/nhcx/v1/fhir-reference/coverage-eligibility-response>Coverage eligibility response</a><li><a class="page-next__link card" href=/docs/pr-10/docs/nhcx/v1/fhir-reference/insurance-plan-request>Insurance plan request</a></ul></div></nav></div></div><div class=docs-toc-col><nav aria-labelledby=docs-toc-heading class="docs-toc thin-scrollbar theme-doc-toc-desktop"><p id=docs-toc-heading class=docs-toc-heading>On this page<ul class="table-of-contents table-of-contents__left-border"><li><a href=#in-short class="table-of-contents__link toc-highlight">In short</a><li><a href=#two-parallel-structures-for-one-set-of-packages class="table-of-contents__link toc-highlight">Two parallel structures for one set of packages</a><li><a href=#the-32-categories class="table-of-contents__link toc-highlight">The 32 categories</a><li><a href=#claim-condition-the-flags class="table-of-contents__link toc-highlight">Claim-Condition: the flags</a><li><a href=#cost-and-limit class="table-of-contents__link toc-highlight">Cost and limit</a><li><a href=#supporting-information-requirements class="table-of-contents__link toc-highlight">Supporting information requirements</a><li><a href=#the-questionnaires class="table-of-contents__link toc-highlight">The questionnaires</a><li><a href=#traps class="table-of-contents__link toc-highlight">Traps</a></ul></nav></div></div></div></main></div></div></div><footer class="theme-layout-footer footer"><div class="container container-fluid"><div class="row footer__links"><div class="theme-layout-footer-column col footer__col"><div class=footer__title>Contact</div><ul class="footer__items clean-list"><li class=footer__item><a href=https://abdm.gov.in/ target=_blank rel="noopener noreferrer" class=footer__link-item>National Health Authority, 9th Floor, Tower-I, Jeevan Bharati Building, Connaught Place, New Delhi 110 001<svg width=13.5 height=13.5 aria-label="(opens in new tab)" class=iconExternalLink_nPIU><use href=#theme-svg-external-link /></svg></a><li class=footer__item><a href=mailto:abdm@nha.gov.in target=_blank rel="noopener noreferrer" class=footer__link-item>abdm[at]nha[dot]gov[dot]in<svg width=13.5 height=13.5 aria-label="(opens in new tab)" class=iconExternalLink_nPIU><use href=#theme-svg-external-link /></svg></a><li class=footer__item><a href=tel:18001144477 target=_blank rel="noopener noreferrer" class=footer__link-item>Toll free 1800-11-4477<svg width=13.5 height=13.5 aria-label="(opens in new tab)" class=iconExternalLink_nPIU><use href=#theme-svg-external-link /></svg></a></ul></div><div class="theme-layout-footer-column col footer__col"><div class=footer__title>Important links</div><ul class="footer__items clean-list"><li class=footer__item><a href=https://www.mohfw.gov.in/ target=_blank rel="noopener noreferrer" class=footer__link-item>Ministry of Health & Family Welfare<svg width=13.5 height=13.5 aria-label="(opens in new tab)" class=iconExternalLink_nPIU><use href=#theme-svg-external-link /></svg></a><li class=footer__item><a href=https://abha.abdm.gov.in/ target=_blank rel="noopener noreferrer" class=footer__link-item>Ayushman Bharat Health Account (ABHA)<svg width=13.5 height=13.5 aria-label="(opens in new tab)" class=iconExternalLink_nPIU><use href=#theme-svg-external-link /></svg></a><li class=footer__item><a href=https://nhpr.abdm.gov.in/ target=_blank rel="noopener noreferrer" class=footer__link-item>Healthcare Professionals Registry (HPR)<svg width=13.5 height=13.5 aria-label="(opens in new tab)" class=iconExternalLink_nPIU><use href=#theme-svg-external-link /></svg></a><li class=footer__item><a href=https://facility.abdm.gov.in/ target=_blank rel="noopener noreferrer" class=footer__link-item>Health Facility Registry (HFR)<svg width=13.5 height=13.5 aria-label="(opens in new tab)" class=iconExternalLink_nPIU><use href=#theme-svg-external-link /></svg></a><li class=footer__item><a href=https://grievance.abdm.gov.in/ target=_blank rel="noopener noreferrer" class=footer__link-item>Grievance portal<svg width=13.5 height=13.5 aria-label="(opens in new tab)" class=iconExternalLink_nPIU><use href=#theme-svg-external-link /></svg></a></ul></div><div class="theme-layout-footer-column col footer__col"><div class=footer__title>Policies</div><ul class="footer__items clean-list"><li class=footer__item><a href=https://abdm.gov.in/terms-condition target=_blank rel="noopener noreferrer" class=footer__link-item>Terms and conditions<svg width=13.5 height=13.5 aria-label="(opens in new tab)" class=iconExternalLink_nPIU><use href=#theme-svg-external-link /></svg></a><li class=footer__item><a href=https://abdm.gov.in/website-policy target=_blank rel="noopener noreferrer" class=footer__link-item>Website policies<svg width=13.5 height=13.5 aria-label="(opens in new tab)" class=iconExternalLink_nPIU><use href=#theme-svg-external-link /></svg></a><li class=footer__item><a href=https://abdm.gov.in/strapicms/uploads/health_management_policy_bac9429a79.pdf target=_blank rel="noopener noreferrer" class=footer__link-item>Health Data Management Policy<svg width=13.5 height=13.5 aria-label="(opens in new tab)" class=iconExternalLink_nPIU><use href=#theme-svg-external-link /></svg></a><li class=footer__item><a href=https://abdm.gov.in/strapicms/uploads/privacypolicy_178041845b.pdf target=_blank rel="noopener noreferrer" class=footer__link-item>Data privacy policy<svg width=13.5 height=13.5 aria-label="(opens in new tab)" class=iconExternalLink_nPIU><use href=#theme-svg-external-link /></svg></a></ul></div></div><div class="footer__bottom text--center"><div class=footer__copyright>This website belongs to the National Health Authority, Ministry of Health and Family Welfare, Government of India · Catalogue 2026.08.24</div></div></div></footer></div></body>

@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunk_abdm_docs_site=self.webpackChunk_abdm_docs_site||[]).push([["2915"],{53134(e,d,a){a.r(d),a.d(d,{__iconNode:()=>t,default:()=>_});var s=a(34438);let t=[["path",{d:"m18 16 4-4-4-4",key:"1inbqp"}],["path",{d:"m6 8-4 4 4 4",key:"15zrgr"}],["path",{d:"m14.5 4-5 16",key:"e7oirm"}]],_=(0,s.A)("code-xml",t)}}]);
