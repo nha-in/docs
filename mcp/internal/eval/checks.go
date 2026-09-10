@@ -114,6 +114,9 @@ func Check(c Case, t Transcript) CheckResult {
 				add("shape: define has %d sentences", n)
 			}
 		}
+		if n, max, over := guard.OverBudget(c.ExpectedShape, answer); over {
+			add("budget: %s answer is %d words, over %d", c.ExpectedShape, n, max)
+		}
 	case "decline":
 		if n := sentences(answer); n > 2 {
 			add("decline: %d sentences", n)
