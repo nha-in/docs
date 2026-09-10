@@ -38,6 +38,38 @@ func TestCheckShapeOnlyDemandsRoutesWithASibling(t *testing.T) {
 	}
 }
 
+// TestCheckShapeObjectPhraseSplitsSiblingsFromLookalikes covers the real
+// case that broke the old shared-first-three-words rule: "Create an ABHA
+// address in a PHR application" starts with the same three words as the
+// three M1 create routes, but its object phrase ("create an abha address")
+// differs from theirs ("create an abha"), so it is never grouped with them
+// and an answer naming only the three M1 routes passes.
+func TestCheckShapeObjectPhraseSplitsSiblingsFromLookalikes(t *testing.T) {
+	pack := PackFacts{FlowTitles: []string{
+		"Create an ABHA using an Aadhaar OTP",
+		"Create an ABHA using Aadhaar face authentication",
+		"Create an ABHA from an identity document",
+		"Create an ABHA address in a PHR application",
+	}}
+	answer := "Three routes: Aadhaar OTP, face authentication, and an identity document such as a driving licence."
+	if f := CheckShape("how-do-i", answer, pack); len(f) != 0 {
+		t.Errorf("the PHR-application title has a different object phrase and must not be demanded, got %v", f)
+	}
+}
+
+// TestCheckShapeNoConnectorNeverASibling covers a title with no connector
+// word at all: it has no object phrase, so it can never be grouped with
+// another title, even one with identical wording.
+func TestCheckShapeNoConnectorNeverASibling(t *testing.T) {
+	pack := PackFacts{FlowTitles: []string{
+		"Manage your ABHA profile",
+		"Manage your ABHA profile",
+	}}
+	if f := CheckShape("how-do-i", "Nothing about profiles here.", pack); len(f) != 0 {
+		t.Errorf("a title with no connector word must never be demanded of the answer, got %v", f)
+	}
+}
+
 func TestCheckShapeDisambiguatesIdentifiers(t *testing.T) {
 	pack := PackFacts{MentionsABHANumber: true, MentionsABHAAddress: true}
 	vague := "You need Aadhaar to create it. Then choose a username."
