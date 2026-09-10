@@ -101,6 +101,8 @@ This page shows the order of calls in each. Field lists are on the [operations a
 These diagrams follow the published order of steps.
 :::
 
+<LegacyAnchor id="journey-1-a-professional-gets-an-hpid" />
+
 ## Journey 1: create an HPID for a professional
 
 The professional authenticates against Aadhaar on a hosted page. Your system never handles the Aadhaar number or [OTP](/docs/hiecm/v3/getting-started/glossary#otp): it handles the transaction ID and redirects to a URL the HPR service returns, valid for five minutes. After that, call generate Aadhaar link again.
@@ -146,6 +148,8 @@ flowchart TD
 
 Create HPID returns an `hprToken`. Keep it: the register professional call needs it.
 
+<LegacyAnchor id="then-the-profile" />
+
 ## Journey 2: register the professional on the HPR
 
 The HPID is an identity, not a profile. Registering the professional adds qualifications, council registration and current work. It needs the `hprToken` journey 1 returned.
@@ -170,6 +174,8 @@ sequenceDiagram
 Two documents are mandatory, the degree certificate and the registration certificate. A proof of work certificate is mandatory too when the professional works for government, or for both government and private.
 
 Register professional takes codes, not names. Fetch council, course, college, university, state, district and language from the master APIs first.
+
+<LegacyAnchor id="journey-2-a-facility-onboards-to-the-hfr" />
 
 ## Journey 3: a facility onboards to the HFR
 
@@ -224,6 +230,8 @@ sequenceDiagram
     S->>H: Validate OTP, with facilityId, sourceId, otp, source and transactionId
     H-->>S: Validation result
 ```
+
+<LegacyAnchor id="journey-3-linking-bridges-to-a-facility" />
 
 ## Journey 4: linking bridges to a facility
 
