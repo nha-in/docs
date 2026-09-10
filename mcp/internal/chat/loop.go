@@ -589,7 +589,6 @@ func (s *Service) Respond(ctx context.Context, turns []Turn, page *Page, emit fu
 			looked = true // pre-retrieval is a lookup; do not send lookFirst
 		}
 	}
-	_ = facts // used by the shape check in Task E3
 
 	// The last user turn carries everything that varies per question, in
 	// one place and in a fixed order: the passages retrieved for it, the
@@ -612,24 +611,29 @@ func (s *Service) Respond(ctx context.Context, turns []Turn, page *Page, emit fu
 	last := &msgs[len(msgs)-1]
 	last.Text = prefix + last.Text
 
-	// Round one is written into a holding pen rather than to the reader.
+	// Every round is written into a holding pen rather than to the reader.
 	//
 	// The model almost always calls a tool first, and text from a round that
 	// ends in a tool call is narration that gets dropped anyway, so this
 	// costs nothing in the common case. What it buys is the uncommon one: an
 	// answer produced without looking anything up, which reads exactly like a
 	// researched one and is how "I do not have a definition for HIMS" reaches
-	// a reader while the glossary entry sits in the index. Held text can
-	// still be thrown away and asked for again.
-	var firstRound strings.Builder
+	// a reader while the glossary entry sits in the index, and (Task E3) an
+	// answer whose shape or word budget the checks reject before a reader
+	// sees it. Held text can still be thrown away and asked for again.
+	var held strings.Builder
 	holding := true
 	onFirst := func(delta string) {
 		if holding {
-			firstRound.WriteString(delta)
+			held.WriteString(delta)
 			return
 		}
 		onText(delta)
 	}
+	// retried tracks the shape/budget retry (Task E3), separate from looked:
+	// a lookFirst retry and a shape retry are different failures and a turn
+	// may spend both, up to MaxToolCalls.
+	retried := false
 
 	runRound := func() (Reply, error) {
 		reply, err := s.Model.Stream(ctx, system, tools, msgs, s.MaxTokens, onFirst)
@@ -647,15 +651,13 @@ func (s *Service) Respond(ctx context.Context, turns []Turn, page *Page, emit fu
 		if err != nil {
 			return err
 		}
-		if holding {
-			holding = false
+		if len(reply.ToolCalls) == 0 {
 			// An answer with no tool call behind it is the model working from
 			// training rather than from this documentation. It gets one more
 			// go, told plainly to look, and the first attempt is discarded
 			// unread. One extra call, and only on a turn that skipped the
 			// tools entirely.
-			if len(reply.ToolCalls) == 0 && !looked && round < MaxToolCalls &&
-				saysItHasNothing(firstRound.String()+reply.Text) {
+			if !looked && round < MaxToolCalls && saysItHasNothing(held.String()) {
 				slog.Info("answer_without_lookup", "question", question)
 				// The instruction goes into the user turn's prefix, ahead of
 				// the reader's own words, never into the system prompt: system
@@ -665,13 +667,31 @@ func (s *Service) Respond(ctx context.Context, turns []Turn, page *Page, emit fu
 				// right, I apologize, I should have checked the documentation
 				// first" is not an answer to anything anybody asked.
 				last.Text = lookFirst + "\n\n" + last.Text
-				firstRound.Reset()
+				held.Reset()
 				continue
 			}
-			onText(firstRound.String())
-			firstRound.Reset()
-		}
-		if len(reply.ToolCalls) == 0 {
+
+			// The answer is held until it passes the shape and budget checks
+			// (Task E3): a reader must never see a draft that names the wrong
+			// number of routes or blows the word budget, and streaming cannot
+			// recall what is already on screen. Held text can still be thrown
+			// away and asked for again, once.
+			answer := held.String()
+			failures := guard.CheckShape(shape, answer, facts)
+			if n, max, over := guard.OverBudget(shape, answer); over {
+				failures = append(failures, fmt.Sprintf("over budget: %d words, limit %d", n, max))
+			}
+			if len(failures) > 0 && !retried && round < MaxToolCalls {
+				retried = true
+				slog.Info("answer_failed_shape_check", "shape", shape, "failures", failures)
+				msgs = append(msgs,
+					Message{Role: "assistant", Text: answer},
+					Message{Role: "user", Text: "Your answer failed these checks: " + strings.Join(failures, "; ") +
+						". Rewrite it once, inside the word budget, naming every route the passages carry. Do not apologise or mention the checks."})
+				held.Reset()
+				continue
+			}
+
 			// A pack was in front of the model and it still denied having
 			// anything: the retry above is suppressed on a pre-retrieved
 			// turn (looked is already true), so this is the only signal
@@ -681,6 +701,13 @@ func (s *Service) Respond(ctx context.Context, turns []Turn, page *Page, emit fu
 				maskedQuestion, _ := guard.MaskPII(question)
 				slog.Info("answer_denies_with_pack", "question", maskedQuestion)
 			}
+			// The reader sees only the corrected answer: onText releases the
+			// whole held answer, the same guard that streaming would have run
+			// it through, and the flush below is what actually sends it (the
+			// guard still buffers a paragraph at a time until it knows the
+			// text is safe).
+			onText(answer)
+			held.Reset()
 			// The guard holds text back until it is known to be safe, so the
 			// last of an answer is emitted here rather than during the round.
 			// A client that went away is therefore first seen at this flush,
@@ -704,7 +731,12 @@ func (s *Service) Respond(ctx context.Context, turns []Turn, page *Page, emit fu
 		// the model narrating its own plumbing: "let me look up the glossary
 		// entry", which the prompt bans and a reader should never see. The
 		// tool call is the proof, and it arrives after the words do, which is
-		// why this cannot be a rule on the text itself.
+		// why this cannot be a rule on the text itself. Routing it through
+		// onText/g.drop rather than discarding held directly keeps the guard's
+		// own bookkeeping (pending, released) consistent with every other
+		// path that hands it text.
+		onText(held.String())
+		held.Reset()
 		g.drop()
 		looked = true
 
@@ -770,6 +802,18 @@ func (s *Service) Respond(ctx context.Context, turns []Turn, page *Page, emit fu
 			msgs = append(msgs, Message{Role: "user", Text: budgetExhaustedNotice})
 			if _, err := runRound(); err != nil {
 				return err
+			}
+			// The tool budget is spent, so this forced answer gets no shape
+			// retry: it is released as-is, the same way it would have
+			// streamed straight through before Task E3 held every round.
+			onText(held.String())
+			held.Reset()
+			g.flush()
+			if textErr != nil {
+				return textErr
+			}
+			if g.blocked && g.released.Len() == 0 {
+				return s.finish(nil, emit)
 			}
 			return s.finish(sources, emit)
 		}
