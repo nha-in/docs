@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"log/slog"
 	"regexp"
 	"strings"
 
@@ -173,6 +174,43 @@ const (
 	lookupOpened = 3
 )
 
+// atomOpener is the slice of *index.Reader that openPassage needs, cut out
+// so a test can stub a GetAtom failure without needing a real index that can
+// be made to fail cleanly.
+type atomOpener interface {
+	GetAtom(id string) (catalogue.Atom, error)
+	RelatedAtoms(id string) ([]index.RelatedGroup, error)
+}
+
+// openPassage builds the full-body passage and its one-hop related atoms
+// for a top-3 search hit. When the atom can't be opened, a summary is
+// better than a missing passage, so it degrades to the search hit's
+// summary and skips the related walk for that hit; the warning is how an
+// index-integrity problem (a search hit whose atom no longer opens)
+// becomes visible instead of silently returning a snippet.
+func openPassage(r atomOpener, h index.SearchHit) (Passage, []map[string]string) {
+	p := Passage{ID: h.ID, Type: h.Type, Milestone: h.Milestone, Title: h.Title,
+		VerificationStatus: h.VerificationStatus, DocURL: index.DocLink(h.DocURL, h.DocAnchor),
+		Body: h.Summary}
+	a, err := r.GetAtom(h.ID)
+	if err != nil {
+		slog.Warn("lookup: could not open atom, returning its summary", "id", h.ID, "error", err)
+		return p, nil
+	}
+	p.Body = a.Body
+	var related []map[string]string
+	groups, err := r.RelatedAtoms(h.ID)
+	if err == nil {
+		for _, g := range groups {
+			for _, ref := range g.Atoms {
+				related = append(related, map[string]string{
+					"id": ref.ID, "type": g.Type, "title": ref.Title})
+			}
+		}
+	}
+	return p, related
+}
+
 // Lookup is search, open and walk in one call. The chat model used to
 // chain search_docs, get_atom and related_atoms itself and often stopped
 // at a 200 character snippet; a cheap model stops there more often. Doing
@@ -189,22 +227,14 @@ func (t *Tools) Lookup(ctx context.Context, in lookupIn) (PassagePack, error) {
 			VerificationStatus: h.VerificationStatus, DocURL: index.DocLink(h.DocURL, h.DocAnchor),
 			Body: h.Summary}
 		if i < lookupOpened {
-			a, err := t.r.GetAtom(h.ID)
-			if err == nil {
-				p.Body = a.Body
-				groups, err := t.r.RelatedAtoms(h.ID)
-				if err == nil {
-					for _, g := range groups {
-						for _, ref := range g.Atoms {
-							if seenRelated[ref.ID] {
-								continue
-							}
-							seenRelated[ref.ID] = true
-							pack.Related = append(pack.Related, map[string]string{
-								"id": ref.ID, "type": g.Type, "title": ref.Title})
-						}
-					}
+			var related []map[string]string
+			p, related = openPassage(t.r, h)
+			for _, ref := range related {
+				if seenRelated[ref["id"]] {
+					continue
 				}
+				seenRelated[ref["id"]] = true
+				pack.Related = append(pack.Related, ref)
 			}
 		}
 		pack.Passages = append(pack.Passages, p)

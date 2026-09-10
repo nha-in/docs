@@ -3,9 +3,11 @@ package server
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"strings"
 	"testing"
 
+	"github.com/eka-care/abdm-docs/mcp/internal/catalogue"
 	"github.com/eka-care/abdm-docs/mcp/internal/embed"
 	"github.com/eka-care/abdm-docs/mcp/internal/index"
 )
@@ -144,5 +146,36 @@ func TestLookupOpensTopHitsAndWalksOneHop(t *testing.T) {
 	}
 	if len(pack.Related) == 0 {
 		t.Error("expected at least one related atom one hop out")
+	}
+}
+
+// failingOpener stubs atomOpener with a GetAtom that always errors, so
+// openPassage's degrade-to-summary branch can be exercised without needing
+// a real index that can be made to fail GetAtom while still returning the
+// hit from Search.
+type failingOpener struct{}
+
+func (failingOpener) GetAtom(id string) (catalogue.Atom, error) {
+	return catalogue.Atom{}, fmt.Errorf("atom %s: simulated open failure", id)
+}
+
+// RelatedAtoms is never reached on this path (openPassage returns before
+// calling it when GetAtom fails); it only exists to satisfy atomOpener.
+func (failingOpener) RelatedAtoms(id string) ([]index.RelatedGroup, error) {
+	return nil, nil
+}
+
+func TestOpenPassageDegradesToSummaryOnGetAtomError(t *testing.T) {
+	hit := index.SearchHit{ID: "hiecm.flow.m2-link-care-context", Type: "flow",
+		Title: "Link a care context", Summary: "the search hit's own summary"}
+	p, related := openPassage(failingOpener{}, hit)
+	if p.Body != hit.Summary {
+		t.Errorf("Body = %q, want the search hit's summary %q", p.Body, hit.Summary)
+	}
+	if p.ID != hit.ID || p.Title != hit.Title {
+		t.Errorf("passage fields not carried through from the hit: %+v", p)
+	}
+	if related != nil {
+		t.Errorf("related = %v, want nil: the related walk must be skipped when GetAtom fails", related)
 	}
 }
