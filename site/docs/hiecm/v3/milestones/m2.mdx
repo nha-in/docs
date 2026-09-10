@@ -139,12 +139,20 @@ sequenceDiagram
     S->>S: New health record created
     S->>S: Assign the record to a care context
     S->>CM: Link the care context, carrying the link token
-    CM-->>S: Link acknowledged
+    CM-->>S: 202 Accepted, nothing decided yet
+    CM->>S: Callback on your bridge with the outcome
+    Note over S: Match response.requestId to the REQUEST-ID you sent
     CM->>A: Notify every PHR app subscribed to that ABHA address
 ```
 
+Step 8 is the acknowledgement. Step 9 is the answer. The link is confirmed only when the callback arrives at `/v3/link/on_carecontext` on your bridge carrying `status`, so do not mark a record as linked on the strength of the 202. See [the outcome of a care context linking call](/docs/hiecm/v3/api/m2/endpoints/m2-on-carecontext-result).
+
+:::note[Which steps are callbacks?]
+A step drawn from the HIE-CM to your system is a POST to the callback URL registered for your bridge. It arrives on its own. Do not poll for it.
+:::
+
 - **No valid [link token](/docs/hiecm/v3/getting-started/glossary#link-token).** Validate the stored token before use, with a tool such as JWT.io. If it is expired or missing, regenerate it through demographic authentication.
-- **An existing care context gains new records.** The step 8 notification fires for that too, not only for a new context.
+- **An existing care context gains new records.** The step 10 notification fires for that too, not only for a new context.
 
 ## Journey 2: Notification to mobile
 
