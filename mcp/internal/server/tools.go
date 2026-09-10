@@ -3,6 +3,7 @@ package server
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"log/slog"
 	"regexp"
@@ -15,6 +16,7 @@ import (
 	"github.com/eka-care/abdm-docs/mcp/internal/guard"
 	"github.com/eka-care/abdm-docs/mcp/internal/index"
 	"github.com/eka-care/abdm-docs/mcp/internal/route"
+	"github.com/getkin/kin-openapi/openapi3"
 	"github.com/google/jsonschema-go/jsonschema"
 )
 
@@ -46,6 +48,9 @@ const (
 		"Accepts the profile name or the ABDM hiType. Use this when writing or fixing bundle generation code."
 	getFhirExampleDescription = "A known-good document bundle for one ABDM record type, taken from the NRCES implementation guide's own examples. " +
 		"Use it as the reference shape when scaffolding generation code."
+	validateRequestDescription = "Validate a candidate request body against an operation's schema, locally, before calling the sandbox. " +
+		"Also reminds you of required headers and parameters, which body validation cannot see. " +
+		"Use this before writing request code for any operation."
 )
 
 type searchIn struct {
@@ -61,6 +66,11 @@ type getAtomIn struct {
 
 type decodeIn struct {
 	Input string `json:"input" jsonschema:"an error code or a raw gateway response body"`
+}
+
+type validateIn struct {
+	OperationID string `json:"operation_id" jsonschema:"the operationId from list_operations"`
+	Body        string `json:"body" jsonschema:"the candidate request body as raw JSON"`
 }
 
 type emptyIn struct{}
@@ -310,6 +320,54 @@ func (t *Tools) DecodeError(ctx context.Context, in decodeIn) (map[string]any, e
 		matches[code] = match
 	}
 	return t.versioned(map[string]any{"codes": codes, "matches": matches}), nil
+}
+
+// ValidateRequest checks a candidate body against an operation's stored
+// request schema. A missing or unresolvable operation is returned as an
+// error for the caller to format (mcp.go's notFoundOrErr does this for the
+// MCP wire surface); a body that fails to parse or fails schema validation
+// is not an error, it is the answer, reported as valid: false with errors.
+func (t *Tools) ValidateRequest(ctx context.Context, in validateIn) (map[string]any, error) {
+	v, err := t.r.GetOperationValidation(in.OperationID)
+	if err != nil {
+		return nil, err
+	}
+	base := map[string]any{
+		"operation_id":        in.OperationID,
+		"required_parameters": v.RequiredParams,
+	}
+	if v.RequestSchemaJSON == nil {
+		base["valid"] = false
+		base["errors"] = []string{"this operation has no application/json request schema; nothing to validate against"}
+		return t.versioned(base), nil
+	}
+	var payload any
+	if err := json.Unmarshal([]byte(in.Body), &payload); err != nil {
+		base["valid"] = false
+		base["errors"] = []string{"body is not valid JSON: " + err.Error()}
+		return t.versioned(base), nil
+	}
+	var schema openapi3.Schema
+	if err := json.Unmarshal(v.RequestSchemaJSON, &schema); err != nil {
+		return nil, fmt.Errorf("stored schema for %s: %w", in.OperationID, err)
+	}
+	var errs []string
+	if err := schema.VisitJSON(payload, openapi3.MultiErrors()); err != nil {
+		var multi openapi3.MultiError
+		if errors.As(err, &multi) {
+			for _, e := range multi {
+				errs = append(errs, e.Error())
+			}
+		} else {
+			errs = append(errs, err.Error())
+		}
+	}
+	base["valid"] = len(errs) == 0
+	if errs == nil {
+		errs = []string{}
+	}
+	base["errors"] = errs
+	return t.versioned(base), nil
 }
 
 func (t *Tools) ListOperations(ctx context.Context, in listOpsIn) (map[string]any, error) {
@@ -602,6 +660,20 @@ func (t *Tools) ChatToolsFor(names []string) []chat.ToolDef {
 						return nil, err
 					}
 					return t.versioned(map[string]any{"passages": pack.Passages, "related": pack.Related}), nil
+				},
+			})
+			continue
+		}
+		if n == "validate_request" {
+			out = append(out, chat.ToolDef{
+				Name: "validate_request", Description: validateRequestDescription,
+				InputSchema: mustSchemaFor[validateIn](),
+				Call: func(ctx context.Context, raw json.RawMessage) (map[string]any, error) {
+					var in validateIn
+					if err := json.Unmarshal(raw, &in); err != nil {
+						return nil, err
+					}
+					return t.ValidateRequest(ctx, in)
 				},
 			})
 			continue

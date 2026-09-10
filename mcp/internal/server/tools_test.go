@@ -81,6 +81,26 @@ func TestChatToolsForBindsSearchDocsToLookup(t *testing.T) {
 	}
 }
 
+func TestChatToolsForBindsValidateRequest(t *testing.T) {
+	r := fixtureReader(t, false)
+	tools := NewTools(r, nil)
+	defs := tools.ChatToolsFor([]string{"search_docs", "validate_request"})
+	if len(defs) != 2 || defs[0].Name != "search_docs" || defs[1].Name != "validate_request" {
+		t.Fatalf("got %+v", defs)
+	}
+	out, err := defs[1].Call(context.Background(), json.RawMessage(
+		`{"operation_id":"linkAddContexts","body":"{\"abhaNumber\":\"91-1234\"}"}`))
+	if err != nil {
+		t.Fatal(err)
+	}
+	if out["valid"] != true {
+		t.Errorf("valid body rejected: %v", out)
+	}
+	if _, ok := out["required_parameters"]; !ok {
+		t.Errorf("chat validate_request must return required_parameters, got keys %v", keys(out))
+	}
+}
+
 func defByName(t *testing.T, defs []ToolDef, name string) ToolDef {
 	t.Helper()
 	for _, d := range defs {
