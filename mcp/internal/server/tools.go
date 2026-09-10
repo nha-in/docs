@@ -146,6 +146,72 @@ func (t *Tools) GetAtom(ctx context.Context, in getAtomIn) (map[string]any, erro
 	return t.versioned(fields), nil
 }
 
+type lookupIn struct {
+	Query     string `json:"query" jsonschema:"what the reader asked, in their words"`
+	Milestone string `json:"milestone,omitempty" jsonschema:"M1..M4, P1..P3 to narrow, else empty"`
+}
+
+type Passage struct {
+	ID                 string `json:"id"`
+	Type               string `json:"type"`
+	Milestone          string `json:"milestone"`
+	Title              string `json:"title"`
+	VerificationStatus string `json:"verification_status"`
+	DocURL             string `json:"doc_url"`
+	Body               string `json:"body"` // full body for the top hits, summary for the rest
+}
+
+type PassagePack struct {
+	Passages []Passage `json:"passages"`
+	// Related are one hop out from the top hits: id and title only, so
+	// the model knows a sibling exists without paying to read it.
+	Related []map[string]string `json:"related"`
+}
+
+const (
+	lookupHits   = 5
+	lookupOpened = 3
+)
+
+// Lookup is search, open and walk in one call. The chat model used to
+// chain search_docs, get_atom and related_atoms itself and often stopped
+// at a 200 character snippet; a cheap model stops there more often. Doing
+// the chain in code costs nothing the model can get wrong.
+func (t *Tools) Lookup(ctx context.Context, in lookupIn) (PassagePack, error) {
+	hits, err := t.r.Search(ctx, in.Query, "", in.Milestone, lookupHits, t.emb)
+	if err != nil {
+		return PassagePack{}, err
+	}
+	var pack PassagePack
+	seenRelated := map[string]bool{}
+	for i, h := range hits {
+		p := Passage{ID: h.ID, Type: h.Type, Milestone: h.Milestone, Title: h.Title,
+			VerificationStatus: h.VerificationStatus, DocURL: index.DocLink(h.DocURL, h.DocAnchor),
+			Body: h.Summary}
+		if i < lookupOpened {
+			a, err := t.r.GetAtom(h.ID)
+			if err == nil {
+				p.Body = a.Body
+				groups, err := t.r.RelatedAtoms(h.ID)
+				if err == nil {
+					for _, g := range groups {
+						for _, ref := range g.Atoms {
+							if seenRelated[ref.ID] {
+								continue
+							}
+							seenRelated[ref.ID] = true
+							pack.Related = append(pack.Related, map[string]string{
+								"id": ref.ID, "type": g.Type, "title": ref.Title})
+						}
+					}
+				}
+			}
+		}
+		pack.Passages = append(pack.Passages, p)
+	}
+	return pack, nil
+}
+
 func (t *Tools) RelatedAtoms(ctx context.Context, in getAtomIn) (map[string]any, error) {
 	groups, err := t.r.RelatedAtoms(in.ID)
 	if err != nil {

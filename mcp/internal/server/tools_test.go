@@ -6,6 +6,7 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/eka-care/abdm-docs/mcp/internal/embed"
 	"github.com/eka-care/abdm-docs/mcp/internal/index"
 )
 
@@ -120,5 +121,28 @@ func TestToolDefCallGetFHIRExample(t *testing.T) {
 
 	if _, err := def.Call(context.Background(), json.RawMessage(`{"record_type":"NoSuchType"}`)); err == nil {
 		t.Fatal("want an error for an unknown record type")
+	}
+}
+
+func TestLookupOpensTopHitsAndWalksOneHop(t *testing.T) {
+	r := fixtureReader(t, true)
+	tools := NewTools(r, embed.NewFake(64))
+	pack, err := tools.Lookup(context.Background(), lookupIn{Query: "link care contexts"})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(pack.Passages) == 0 || len(pack.Passages) > 5 {
+		t.Fatalf("passages = %d, want 1..5", len(pack.Passages))
+	}
+	if pack.Passages[0].Body == "" {
+		t.Error("top passage must carry the full body, not a snippet")
+	}
+	for i, p := range pack.Passages {
+		if i >= 3 && len(p.Body) > 600 {
+			t.Errorf("passage %d past the top three should be a summary, got %d chars", i, len(p.Body))
+		}
+	}
+	if len(pack.Related) == 0 {
+		t.Error("expected at least one related atom one hop out")
 	}
 }
