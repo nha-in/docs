@@ -21,6 +21,11 @@ var (
 	// stopping it from matching a terminal punctuation mark right away.
 	listMarkerRe = regexp.MustCompile(`^\s*(?:\d+[.)]|[-*])\s+`)
 	stopWords    = map[string]bool{"a": true, "an": true, "the": true, "using": true, "from": true, "create": true, "with": true, "to": true, "of": true, "and": true, "for": true, "in": true}
+	// connectorWords are the words a title splits at to find its object
+	// phrase (see splitAtConnector): "Create an ABHA address in a PHR
+	// application" splits at "in", not at the shared "create an abha"
+	// prefix its sibling titles also start with.
+	connectorWords = map[string]bool{"using": true, "from": true, "by": true, "with": true, "via": true, "through": true, "in": true, "on": true, "without": true, "when": true}
 )
 
 // firstSentence returns the first sentence of answer, with a leading list
@@ -50,22 +55,27 @@ func titleWords(title string) []string {
 	return words
 }
 
-// sharedPrefix is the first three words of a title, lowercased. Flow titles
-// that share this prefix are siblings in the same flow family: "Create an
-// ABHA using Aadhaar OTP" and "Create an ABHA using face authentication"
-// share "create an abha".
-func sharedPrefix(words []string) string {
-	n := 3
-	if len(words) < n {
-		n = len(words)
+// splitAtConnector splits a title's words at its first connector word (the
+// set in connectorWords: using, from, by, with, via, through, in, on,
+// without, when). The words before the connector are the object phrase;
+// the words after are what distinguishes this title from its siblings.
+// "Create an ABHA using an Aadhaar OTP" splits at "using" into object
+// "create an abha" and rest "an aadhaar otp". A title with no connector
+// word returns ok=false: it has no object phrase to share with a sibling,
+// so it is never treated as one.
+func splitAtConnector(words []string) (object, rest []string, ok bool) {
+	for i, w := range words {
+		if connectorWords[w] {
+			return words[:i], words[i+1:], true
+		}
 	}
-	return strings.Join(words[:n], " ")
+	return nil, nil, false
 }
 
 // routeKey is the two most specific words of a title's words, lowercased:
-// for the suffix after a flow's shared prefix, "using Aadhaar face
-// authentication" -> "face authentication". An answer names the route when
-// both words appear within four words of each other, in either order.
+// for the words after a title's connector, "aadhaar face authentication"
+// -> "face authentication". An answer names the route when both words
+// appear within four words of each other, in either order.
 func routeKey(words []string) []string {
 	var out []string
 	for _, w := range words {
@@ -97,31 +107,39 @@ func namesRoute(answer string, key []string) bool {
 // ABHA identifiers were in play. Only shapes that explain a procedure or a
 // comparison are checked; a definition or a decline has no routes to omit.
 //
-// A route is only demanded of the answer when it has a sibling: titles are
-// grouped by their shared first-three-words prefix (sharedPrefix), and only
-// groups of two or more are checked. A title alone in its group describes
-// one flow on its own terms and nothing forces its wording into a two-word
-// key, so it is never checked.
+// A route is only demanded of the answer when it has a sibling: each title
+// is split at its first connector word (splitAtConnector) into an object
+// phrase and a rest; titles are grouped by object phrase, and only groups
+// of two or more are checked. A title with no connector is never a
+// sibling, and a title alone in its group describes one flow on its own
+// terms and nothing forces its wording into a two-word key, so neither is
+// ever checked. This keeps "Create an ABHA address in a PHR application"
+// (object "create an abha address") out of the group of "Create an ABHA
+// using an Aadhaar OTP" and its two siblings (object "create an abha"),
+// even though all four titles start with "Create an ABHA".
 func CheckShape(shape, answer string, pack PackFacts) []string {
 	if shape != "how-do-i" && shape != "compare" && shape != "diagnose" {
 		return nil
 	}
 	var f []string
 	groups := map[string]int{}
-	titleWordsByTitle := make([][]string, len(pack.FlowTitles))
+	objectByTitle := make([]string, len(pack.FlowTitles))
+	restByTitle := make([][]string, len(pack.FlowTitles))
+	okByTitle := make([]bool, len(pack.FlowTitles))
 	for i, t := range pack.FlowTitles {
-		w := titleWords(t)
-		titleWordsByTitle[i] = w
-		groups[sharedPrefix(w)]++
+		object, rest, ok := splitAtConnector(titleWords(t))
+		objectByTitle[i] = strings.Join(object, " ")
+		restByTitle[i] = rest
+		okByTitle[i] = ok
+		if ok {
+			groups[objectByTitle[i]]++
+		}
 	}
 	for i, t := range pack.FlowTitles {
-		w := titleWordsByTitle[i]
-		p := sharedPrefix(w)
-		if groups[p] < 2 {
+		if !okByTitle[i] || groups[objectByTitle[i]] < 2 {
 			continue
 		}
-		suffix := w[len(strings.Fields(p)):]
-		if !namesRoute(answer, routeKey(suffix)) {
+		if !namesRoute(answer, routeKey(restByTitle[i])) {
 			f = append(f, fmt.Sprintf("route not named: %s", t))
 		}
 	}
