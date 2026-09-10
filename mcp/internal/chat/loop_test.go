@@ -914,6 +914,9 @@ func TestRespondRetriesOnceWhenTheShapeCheckFails(t *testing.T) {
 	if strings.Contains(out.String(), "two routes") || !strings.Contains(out.String(), "Three routes") {
 		t.Errorf("reader must see only the corrected answer, got %q", out.String())
 	}
+	if len(m.gotSystem) != 2 || m.gotSystem[0] != m.gotSystem[1] {
+		t.Errorf("system prompt must be byte identical across the retry, got %+v", m.gotSystem)
+	}
 }
 
 // TestRespondShapeRetryFiresAtMostOnce covers the brief's step 3 note: the
@@ -952,6 +955,77 @@ func TestRespondShapeRetryFiresAtMostOnce(t *testing.T) {
 	}
 	if !strings.Contains(out.String(), "Still only two") {
 		t.Errorf("the second answer must be released as-is, got %q", out.String())
+	}
+	if len(m.gotSystem) != 2 || m.gotSystem[0] != m.gotSystem[1] {
+		t.Errorf("system prompt must be byte identical across the retry, got %+v", m.gotSystem)
+	}
+}
+
+// TestRespondLookFirstFiresAtMostOnce covers the fix for the once-only latch
+// a previous commit deleted: a model that declines on every call, with
+// nothing to look up, gets exactly one lookFirst retry, not one per round.
+// Before the fix, lookFirstSent did not exist and the branch fired again on
+// every subsequent decline up to MaxToolCalls.
+func TestRespondLookFirstFiresAtMostOnce(t *testing.T) {
+	fm := &fakeModel{next: func(msgs []Message) Reply {
+		return Reply{Text: "I do not have anything on that.", StopReason: "end_turn"}
+	}}
+	svc := &Service{Model: fm, MaxTokens: 100}
+	emit, _ := collectEvents()
+	if err := svc.Respond(context.Background(),
+		[]Turn{{Role: "user", Text: "jhhjjk"}}, nil, emit); err != nil {
+		t.Fatal(err)
+	}
+	if fm.calls != 2 {
+		t.Fatalf("model called %d times, want 2 (original + one lookFirst retry)", fm.calls)
+	}
+	final := fm.gotMsgs[len(fm.gotMsgs)-1]
+	var all strings.Builder
+	for _, m := range final {
+		all.WriteString(m.Text)
+	}
+	if n := strings.Count(all.String(), lookFirst); n != 1 {
+		t.Errorf("final messages carry lookFirst %d times, want exactly 1: %+v", n, final)
+	}
+	if len(fm.gotSystem) != 2 || fm.gotSystem[0] != fm.gotSystem[1] {
+		t.Errorf("system prompt must be byte identical across the retry, got %+v", fm.gotSystem)
+	}
+}
+
+// TestRespondLookFirstAfterAShapeRetryUsesTheFreshLastMessage covers the
+// stale-pointer fix: last was captured once before the round loop, so a
+// shape retry (which appends to msgs and can reallocate its backing array)
+// left the lookFirst branch writing into a slice the loop no longer used.
+// Round 1 answers over budget (a shape retry), round 2 declines (a lookFirst
+// retry), round 3 answers cleanly; the lookFirst instruction must land on
+// the message the third call actually sees.
+func TestRespondLookFirstAfterAShapeRetryUsesTheFreshLastMessage(t *testing.T) {
+	overBudget := strings.Repeat("word ", 200)
+	calls := 0
+	var lastUsers []string
+	m := &fakeModel{next: func(msgs []Message) Reply {
+		calls++
+		lastUsers = append(lastUsers, msgs[len(msgs)-1].Text)
+		switch calls {
+		case 1:
+			return Reply{Text: overBudget, StopReason: "end_turn"}
+		case 2:
+			return Reply{Text: "I do not have anything on that.", StopReason: "end_turn"}
+		default:
+			return Reply{Text: "Here is the definition.", StopReason: "end_turn"}
+		}
+	}}
+	svc := &Service{Model: m, MaxTokens: 1000}
+	emit, _ := collectEvents()
+	if err := svc.Respond(context.Background(),
+		[]Turn{{Role: "user", Text: "jhhjjk"}}, nil, emit); err != nil {
+		t.Fatal(err)
+	}
+	if calls != 3 {
+		t.Fatalf("model called %d times, want 3 (shape retry, then lookFirst retry, then a clean answer)", calls)
+	}
+	if !strings.Contains(lastUsers[2], lookFirst) {
+		t.Errorf("the third call's last user message must carry lookFirst, got %q", lastUsers[2])
 	}
 }
 
