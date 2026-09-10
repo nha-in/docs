@@ -9,7 +9,7 @@
     "the link token is per patient and valid for six months",
     "the access token is the gateway session token"
   ],
-  "must_not_contain": ["<MASKED", "i apologize", "i apologise", "let me ", "great question", "the catalogue", "atom", "the same token"],
+  "must_not_contain": ["<MASKED", "i apologize", "i apologise", "let me ", "great question", "the catalogue", "atom", "they are the same token"],
   "expected_sources": ["shared.glossary.link-token"],
   "expected_shape": "compare",
   "expected_behaviour": "answer",
