@@ -86,6 +86,10 @@ func run(catDir, outPath, nrcesPath string, emb embed.Embedder) error {
 			return nil
 		}
 		rel, _ := filepath.Rel(catDir, path)
+		// Check suffix early to avoid reading non-.yaml files
+		if !strings.HasSuffix(path, ".yaml") {
+			return nil
+		}
 		content, err := os.ReadFile(path)
 		if err != nil {
 			return err

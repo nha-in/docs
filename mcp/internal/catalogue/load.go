@@ -30,6 +30,10 @@ func LoadAtoms(catDir string) ([]Atom, error) {
 			return nil
 		}
 		rel, _ := filepath.Rel(catDir, path)
+		// Check suffix early to avoid reading non-.md files
+		if !strings.HasSuffix(path, ".md") {
+			return nil
+		}
 		content, err := os.ReadFile(path)
 		if err != nil {
 			return err
