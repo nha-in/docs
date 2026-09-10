@@ -1,4 +1,5 @@
 {
   "label": "Services",
-  "position": 2
+  "position": 2,
+  "className": "sidebar-icon sidebar-icon--layers"
 }

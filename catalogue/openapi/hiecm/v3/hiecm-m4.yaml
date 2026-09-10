@@ -16,6 +16,7 @@ info:
     module: m4
     label: M4 HPR and HFR
     position: 5
+    icon: building-2
   title: ABDM M4, HPR and HFR registration
   summary: Register healthcare professionals and facilities in the HPR and the
     HFR.
