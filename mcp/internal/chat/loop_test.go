@@ -6,6 +6,7 @@ import (
 	"errors"
 	"strings"
 	"testing"
+	"time"
 	"unicode/utf8"
 
 	"github.com/eka-care/abdm-docs/mcp/internal/guard"
@@ -958,6 +959,42 @@ func TestRespondShapeRetryFiresAtMostOnce(t *testing.T) {
 	}
 	if len(m.gotSystem) != 2 || m.gotSystem[0] != m.gotSystem[1] {
 		t.Errorf("system prompt must be byte identical across the retry, got %+v", m.gotSystem)
+	}
+}
+
+// TestRespondSkipsShapeRetryWithLittleDeadlineLeft covers the deadline
+// guard: a retry costs a whole extra model call, and with less than 20s
+// left on the request context there is no time left to spend on one. The
+// first, flawed answer is released as-is instead of being discarded for a
+// retry that might not finish before the deadline.
+func TestRespondSkipsShapeRetryWithLittleDeadlineLeft(t *testing.T) {
+	calls := 0
+	m := &fakeModel{next: func(msgs []Message) Reply {
+		calls++
+		return Reply{Text: "There are two routes: Aadhaar OTP and face authentication.", StopReason: "end_turn"}
+	}}
+	svc := &Service{Model: m, MaxTokens: 100,
+		Lookup: func(ctx context.Context, q string) (json.RawMessage, []Source, guard.PackFacts, error) {
+			return json.RawMessage(`{"passages":[]}`), nil, guard.PackFacts{FlowTitles: []string{
+				"Create an ABHA using an Aadhaar OTP", "Create an ABHA using Aadhaar face authentication", "Create an ABHA from an identity document"}}, nil
+		}}
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+	var out strings.Builder
+	emit := func(event string, data any) error {
+		if event == "text" {
+			out.WriteString(data.(map[string]string)["delta"])
+		}
+		return nil
+	}
+	if err := svc.Respond(ctx, []Turn{{Role: "user", Text: "how do i create abha"}}, nil, emit); err != nil {
+		t.Fatal(err)
+	}
+	if calls != 1 {
+		t.Fatalf("model called %d times, want 1 (no retry with <20s left on the deadline)", calls)
+	}
+	if !strings.Contains(out.String(), "two routes") {
+		t.Errorf("the flawed first answer must be released as-is, got %q", out.String())
 	}
 }
 

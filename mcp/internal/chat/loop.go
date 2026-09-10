@@ -693,7 +693,16 @@ func (s *Service) Respond(ctx context.Context, turns []Turn, page *Page, emit fu
 					failures = append(failures, fmt.Sprintf("over budget: %d words, limit %d", n, max))
 				}
 			}
-			if len(failures) > 0 && !retried && round < MaxToolCalls {
+			// A retry costs a whole extra model call, and the handler's
+			// deadline (see server/http.go) has to cover it. With less than
+			// 20s left there is no time left to spend on one: the reader
+			// gets the flawed answer rather than a request that times out
+			// with nothing at all.
+			if dl, ok := ctx.Deadline(); ok && time.Until(dl) < 20*time.Second {
+				if len(failures) > 0 {
+					slog.Info("answer_failed_shape_check", "shape", shape, "failures", failures, "retry_skipped", "deadline")
+				}
+			} else if len(failures) > 0 && !retried && round < MaxToolCalls {
 				retried = true
 				slog.Info("answer_failed_shape_check", "shape", shape, "failures", failures)
 				msgs = append(msgs,
