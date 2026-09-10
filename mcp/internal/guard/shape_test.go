@@ -18,6 +18,26 @@ func TestCheckShapeNamesEveryRoute(t *testing.T) {
 	}
 }
 
+// TestCheckShapeOnlyDemandsRoutesWithASibling covers the sharedPrefix
+// grouping: "Find somebody's ABHA when they do not know it" and "Log
+// somebody in to their existing ABHA" are each alone in their group (no
+// other flow title shares their first three words), so neither is ever
+// demanded of the answer, even though an answer naming only the three
+// create routes never mentions either of them.
+func TestCheckShapeOnlyDemandsRoutesWithASibling(t *testing.T) {
+	pack := PackFacts{FlowTitles: []string{
+		"Create an ABHA using an Aadhaar OTP",
+		"Create an ABHA using Aadhaar face authentication",
+		"Create an ABHA from an identity document",
+		"Find somebody's ABHA when they do not know it",
+		"Log somebody in to their existing ABHA",
+	}}
+	answer := "Three routes: Aadhaar OTP, face authentication, and an identity document such as a driving licence."
+	if f := CheckShape("how-do-i", answer, pack); len(f) != 0 {
+		t.Errorf("a title alone in its group must not be demanded of the answer, got %v", f)
+	}
+}
+
 func TestCheckShapeDisambiguatesIdentifiers(t *testing.T) {
 	pack := PackFacts{MentionsABHANumber: true, MentionsABHAAddress: true}
 	vague := "You need Aadhaar to create it. Then choose a username."
@@ -27,6 +47,22 @@ func TestCheckShapeDisambiguatesIdentifiers(t *testing.T) {
 	clear := "An ABHA address needs no ABHA number: a mobile OTP is enough."
 	if f := CheckShape("how-do-i", clear, pack); len(f) != 0 {
 		t.Errorf("first sentence names the identifier, got %v", f)
+	}
+}
+
+func TestCheckShapeFirstSentenceStripsListMarker(t *testing.T) {
+	pack := PackFacts{MentionsABHANumber: true, MentionsABHAAddress: true}
+	answer := "1. Use an ABHA number to log in."
+	if f := CheckShape("how-do-i", answer, pack); len(f) != 0 {
+		t.Errorf("a leading list marker must not stop the identifier from being read, got %v", f)
+	}
+}
+
+func TestCheckShapeFirstSentenceFallsBackToFirstLine(t *testing.T) {
+	pack := PackFacts{MentionsABHANumber: true, MentionsABHAAddress: true}
+	answer := "An ABHA address needs no ABHA number\nmore text"
+	if f := CheckShape("how-do-i", answer, pack); len(f) != 0 {
+		t.Errorf("a first line with no terminal punctuation must still be read, got %v", f)
 	}
 }
 
