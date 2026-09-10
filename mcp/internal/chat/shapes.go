@@ -4,10 +4,6 @@ package chat
 // travels in the user turn so the system prompt stays byte-identical and
 // cached. Each block: the skeleton, the budget, one exemplar. A cheap
 // model told the shape and shown one example of it stops varying.
-var shapeBudget = map[string]int{
-	"define": 120, "how-do-i": 200, "diagnose": 200, "compare": 200, "meta": 100, "decline": 60,
-}
-
 var shapeBlocks = map[string]string{
 	"define": `<answer_shape name="define" budget="120 words">
 Say what it is in one sentence, then who it matters to and the one thing people get wrong about it. No list, no headings, at most four sentences.
