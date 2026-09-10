@@ -12,6 +12,15 @@ import (
 type CheckResult struct {
 	CaseID   string   `json:"case_id"`
 	Failures []string `json:"failures"`
+	// ToolCalls is how many tool calls the model made to produce the
+	// answer. Cheap models compound error per sequential call, so the
+	// mean over a run is a quality number, not a cost number.
+	ToolCalls int `json:"tool_calls"`
+	// RetrievalHit is whether any expected source was retrieved at all.
+	// Scored apart from the criteria because retrieval and generation fail
+	// differently: a wrong answer with the right atom in hand is a prompt
+	// problem, a wrong answer with the wrong atom is an index problem.
+	RetrievalHit bool `json:"retrieval_hit"`
 }
 
 // forbidden is what no answer may say, whatever the case. The case adds its
@@ -125,7 +134,19 @@ func Check(c Case, t Transcript) CheckResult {
 	if t.Blocked {
 		add("blocked: the guard withheld the answer")
 	}
-	return CheckResult{CaseID: c.ID, Failures: f}
+	calls := 0
+	for _, mc := range t.Calls {
+		calls += len(mc.Reply.ToolCalls)
+	}
+	hit := len(c.ExpectedSources) == 0
+	for _, want := range c.ExpectedSources {
+		for _, s := range t.Sources {
+			if s.ID == want {
+				hit = true
+			}
+		}
+	}
+	return CheckResult{CaseID: c.ID, Failures: f, ToolCalls: calls, RetrievalHit: hit}
 }
 
 // phraseMatches reports whether phrase appears in the already lower-cased
