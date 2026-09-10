@@ -23,6 +23,9 @@ func TestRoute(t *testing.T) {
 		{"gateway_sessions_create returns 401", false, Diagnose, []string{"search_docs", "get_operation"}},
 		{"why is this failing", true, Diagnose, []string{"search_docs", "decode_error", "validate_request"}},
 		{"which version of the catalogue is this", false, Meta, []string{"search_docs"}},
+		{"link record", false, HowDoI, []string{"search_docs"}},
+		{"create abha", false, HowDoI, []string{"search_docs"}},
+		{"what makes an address invalid", false, Define, []string{"search_docs"}},
 	}
 	for _, c := range cases {
 		got := Route(Input{Question: c.q, HasAttachment: c.att})

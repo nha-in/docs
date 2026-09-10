@@ -38,8 +38,18 @@ var (
 	failRe = regexp.MustCompile(`(?i)\b(fail|failing|error|returns? \d{3}|got \d{3}|\b4\d\d\b|\b5\d\d\b|not working|stuck|rejected|invalid)\b`)
 	compRe = regexp.MustCompile(`(?i)\b(difference|differ|vs\.?|versus|same as|the same as|compare|which one)\b`)
 	metaRe = regexp.MustCompile(`(?i)\b(catalogue version|which version|how (?:old|current)|last updated|built)\b`)
-	whRe   = regexp.MustCompile(`(?i)^(what is|what's|whats|what are|define|meaning of|explain)\b`)
+	whRe   = regexp.MustCompile(`(?i)^(what is|what's|whats|what are|what makes|define|meaning of|explain)\b`)
 )
+
+// imperativeVerbs are bare how-to imperatives ("link record", "reset
+// password"). Checked by first word only, lowercased, so a definitional use
+// of the same word later in a longer question ("what makes an address
+// invalid") never matches here.
+var imperativeVerbs = map[string]bool{
+	"create": true, "link": true, "get": true, "send": true, "register": true,
+	"delete": true, "reset": true, "update": true, "share": true, "fetch": true,
+	"verify": true, "add": true, "make": true, "generate": true,
+}
 
 func Route(in Input) Result {
 	q := strings.TrimSpace(in.Question)
@@ -52,13 +62,19 @@ func Route(in Input) Result {
 	words := strings.Fields(q)
 
 	switch {
-	case in.HasAttachment, len(r.ErrorCodes) > 0, failRe.MatchString(q):
+	case in.HasAttachment, len(r.ErrorCodes) > 0:
 		r.Shape = Diagnose
-	case metaRe.MatchString(q):
-		r.Shape = Meta
+	case whRe.MatchString(q):
+		r.Shape = Define
+	case failRe.MatchString(q):
+		r.Shape = Diagnose
 	case compRe.MatchString(q):
 		r.Shape = Compare
-	case whRe.MatchString(q), len(words) <= 3 && !strings.Contains(q, "?") && !strings.HasPrefix(strings.ToLower(q), "how"):
+	case metaRe.MatchString(q):
+		r.Shape = Meta
+	case len(words) > 0 && imperativeVerbs[strings.ToLower(words[0])]:
+		r.Shape = HowDoI
+	case len(words) <= 3 && !strings.Contains(q, "?") && !strings.HasPrefix(strings.ToLower(q), "how"):
 		r.Shape = Define
 	default:
 		r.Shape = HowDoI
