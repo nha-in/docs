@@ -700,6 +700,14 @@ func ChatHooks(tools *Tools) (
 		if err != nil {
 			return nil, nil, guard.PackFacts{}, err
 		}
+		if len(pack.Passages) == 0 {
+			// An empty pack must read as no lookup at all: {"passages":null,
+			// "related":null} still marshals to a non-empty byte slice, so
+			// leaving this out would make every zero-hit lookup look like a
+			// pack that answered the question, permanently disabling the
+			// lookFirst retry for it.
+			return nil, nil, guard.PackFacts{}, nil
+		}
 		b, err := json.Marshal(pack)
 		if err != nil {
 			return nil, nil, guard.PackFacts{}, err
