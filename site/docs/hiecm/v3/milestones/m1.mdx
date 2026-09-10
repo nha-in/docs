@@ -43,6 +43,7 @@ skips M1.
 | ABHA creation | Verify the person against Aadhaar, attach a mobile number and an ABHA address |
 | ABHA login | Sign in a holder by mobile number, Aadhaar number, ABHA number or ABHA address |
 | Profile management | Read the profile, show the ABHA card and QR code, change the mobile number, redo KYC |
+| Scan and share | Register a patient who scanned your counter QR code, and hand them a queue token |
 
 M1 moves no health records. [M2 Attach](./m2) links them. [M3
 Retrieve](./m3) fetches them with consent.
@@ -106,11 +107,38 @@ cases](/docs/hiecm/v3/resources/testing/m1).
 
 ## The journey, one diagram per flow
 
-Milestone 1 (M1) of [ABDM](/docs/hiecm/v3/getting-started/glossary#abdm) has seven journeys. Three of them create an [ABHA](/docs/hiecm/v3/getting-started/glossary#abha), by Aadhaar OTP, by face authentication or from an identity document. The other four attach a communication mobile number, log an existing holder in, find an ABHA the person has forgotten, and read the profile. Each is drawn below at step level, so you see the round trips before you read the [API reference](/reference/hiecm-m1).
+Milestone 1 (M1) of [ABDM](/docs/hiecm/v3/getting-started/glossary#abdm) has eight journeys. Three of them create an [ABHA](/docs/hiecm/v3/getting-started/glossary#abha), by Aadhaar OTP, by face authentication or from an identity document. Four more attach a communication mobile number, log an existing holder in, find an ABHA the person has forgotten, and read the profile. The last registers a patient who scanned your counter code. Each is drawn below at step level, so you see the round trips before you read the [API reference](/reference/hiecm-m1).
 
 The diagrams below follow the published step order for each flow.
 
 "ABHA service" is the ABHA API at the base URL on the [M1 overview](/docs/hiecm/v3/api/m1). Your system never calls Aadhaar. The ABHA service does that for you.
+
+### Which journey applies
+
+Start from what the person in front of you has.
+
+```mermaid
+flowchart TD
+    A{"Does the person<br/>already hold an ABHA?"}
+    A -- "No" --> B{"What can they<br/>authenticate with?"}
+    B -- "Aadhaar linked mobile" --> J1["Journey 1<br/>Aadhaar OTP"]
+    B -- "Face, through the ABHA app" --> J2["Journey 2<br/>Face authentication"]
+    B -- "Identity document only" --> J3["Journey 3<br/>Document, restricted account"]
+    J1 --> M{"Wants health messages on a<br/>different mobile number?"}
+    J2 --> M
+    M -- "Yes" --> J4["Journey 4<br/>Communication mobile"]
+    M -- "No" --> ADDR["Pick an ABHA address,<br/>ABHA number issued"]
+    J4 --> ADDR
+    A -- "Yes" --> C{"What do they remember?"}
+    C -- "Mobile number" --> J5["Journey 5<br/>Login by mobile, then pick the account"]
+    C -- "Aadhaar number, ABHA number<br/>or ABHA address" --> L["Request a challenge, verify it"]
+    C -- "Nothing they are sure of" --> J6["Journey 6<br/>Find the ABHA, then prove it"]
+    A -- "Scanned your counter code" --> J8["Journey 8<br/>Scan and share"]
+    ADDR --> J7["Journey 7<br/>Profile, card and QR code"]
+    J5 --> J7
+    L --> J7
+    J6 --> J7
+```
 
 ## Journey 1: ABHA creation by Aadhaar OTP
 
@@ -281,6 +309,34 @@ sequenceDiagram
 
 The card is returned in the response rather than fetched from a separate link. The content type and encoding of the card and QR code responses are not yet published. See the [APIs](/docs/hiecm/v3/api/m1/apis) page for the fields that are.
 
+## Journey 8: A patient shares their profile at your counter
+
+Your facility prints a QR code at each counter. It holds a URL with two parameters: your HIP id and a counter context such as `OPD1`. The patient scans it in their [PHR](/docs/hiecm/v3/getting-started/glossary#phr) app, agrees to share, and their profile arrives on your bridge. Nobody types a name at the desk, and every record from that visit links to the right ABHA address from the start.
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor P as Patient
+    participant A as Patient's PHR app
+    participant CM as HIE-CM
+    participant S as Your system
+    P->>A: Scans the counter QR code, agrees to share
+    A->>CM: Share the profile with this HIP and counter
+    CM->>S: POST /patient-share/v3/share on your bridge
+    Note over CM,S: intent PROFILE_SHARE, metaData.hipId, metaData.context, profile.patient
+    S-->>CM: 200, profile received
+    S->>S: Register the patient, assign a queue token
+    S->>CM: POST /patient-share/v3/on-share with status and tokenNumber
+    CM-->>A: Token number to show the patient
+```
+
+Step 3 is a callback on the URL registered for your bridge, not a call you make. Answer it with a 200 at once and do the registration afterwards. Step 7 is your reply: `acknowledgement.status` is `SUCCESS` with `profile.tokenNumber` and the same `context`, or `FAILURE` with an `error` code and message.
+
+The patient's app holds its screen open for 30 seconds. Send the acknowledgement inside that window or the patient sees no token.
+
+`profile.patient` carries the ABHA number, the ABHA address, name, gender, date of birth, mobile number, address and a KYC photo. Match on the ABHA address. The counter context is yours to define: up to 20 alphanumeric characters, and never the facility id, the HIP id or the HIP name.
+
+The two calls: [receive a patient's shared profile](/docs/hiecm/v3/api/m1/endpoints/m1-receive-patient-share) and [send the share acknowledgement](/docs/hiecm/v3/api/m1/endpoints/m1-on-share-acknowledgement). The patient's side is [P2 Linking and records](./p2#scan-and-share-at-a-facility).
 
 ## Creating an ABHA address without an ABHA number
 
