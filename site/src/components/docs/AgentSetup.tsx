@@ -139,7 +139,6 @@ export default function AgentSetup(): React.ReactNode {
   const [surface, setSurface] = useState<Surface>(surfacesOf(TARGETS[0])[0]);
   const [copied, setCopied] = useState(false);
   const base = `${siteConfig.url}${siteConfig.baseUrl}`.replace(/\/+$/, '');
-  const command = surface.command(base);
 
   return (
     <aside className="agent-setup">
@@ -162,6 +161,7 @@ export default function AgentSetup(): React.ReactNode {
             key={option.id}
             type="button"
             role="tab"
+            id={`agent-setup-tab-${option.id}`}
             aria-selected={option.id === target.id}
             className={cn(
               'skill-install__target',
@@ -190,6 +190,7 @@ export default function AgentSetup(): React.ReactNode {
               key={option.id}
               type="button"
               role="tab"
+              id={`agent-setup-tab-${option.id}`}
               aria-selected={option.id === surface.id}
               className={cn(
                 'skill-install__target',
@@ -205,33 +206,54 @@ export default function AgentSetup(): React.ReactNode {
         </div>
       )}
 
-      <div className="skill-cmd">
-        <code className="skill-cmd__text">{command}</code>
-        <button
-          type="button"
-          className="skill-cmd__copy"
-          aria-label={copied ? 'Copied' : 'Copy'}
-          onClick={() => {
-            navigator.clipboard?.writeText(command);
-            setCopied(true);
-            window.setTimeout(() => setCopied(false), 2000);
-          }}>
-          {copied ? (
-            <Check className="size-3.5" aria-hidden="true" />
-          ) : (
-            <Copy className="size-3.5" aria-hidden="true" />
-          )}
-        </button>
-      </div>
+      {/* Every surface renders and the unselected ones carry `hidden`, so the
+          screen shows one and the built HTML carries all of them. That HTML is
+          what an agent fetching this page as markdown reads, and rendering
+          only the selected surface left it with one install line out of five,
+          missing the one line that works for any agent at all. See
+          scripts/emit-page-markdown.mjs. */}
+      {TARGETS.flatMap(surfacesOf).map((option) => {
+        const line = option.command(base);
+        const active = option.id === surface.id;
+        return (
+          <div
+            key={option.id}
+            role="tabpanel"
+            aria-labelledby={`agent-setup-tab-${option.id}`}
+            hidden={!active}>
+            <p className="sr-only"><strong>{option.label}</strong></p>
+            <div className="skill-cmd">
+              <code className="skill-cmd__text">{line}</code>
+              {active && (
+                <button
+                  type="button"
+                  className="skill-cmd__copy"
+                  aria-label={copied ? 'Copied' : 'Copy'}
+                  onClick={() => {
+                    navigator.clipboard?.writeText(line);
+                    setCopied(true);
+                    window.setTimeout(() => setCopied(false), 2000);
+                  }}>
+                  {copied ? (
+                    <Check className="size-3.5" aria-hidden="true" />
+                  ) : (
+                    <Copy className="size-3.5" aria-hidden="true" />
+                  )}
+                </button>
+              )}
+            </div>
 
-      {surface.link && (
-        <a className="skill-launch" href={surface.link(base)}>
-          <SquareArrowOutUpRight className="size-3.5" aria-hidden="true" />
-          Open in {surface.label}
-        </a>
-      )}
+            {option.link && (
+              <a className="skill-launch" href={option.link(base)}>
+                <SquareArrowOutUpRight className="size-3.5" aria-hidden="true" />
+                Open in {option.label}
+              </a>
+            )}
 
-      <p className="skill-install__hint">{surface.note}</p>
+            <p className="skill-install__hint">{option.note}</p>
+          </div>
+        );
+      })}
 
       <p className="agent-setup__mcp">
         <Database className="size-3.5" aria-hidden="true" />

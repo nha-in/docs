@@ -1,6 +1,6 @@
 import {test} from 'node:test';
 import assert from 'node:assert';
-import {exampleFor, renderOperationMarkdown, routeFor, stripToMarkdown} from './emit-page-markdown.mjs';
+import {exampleFor, htmlToMarkdown, renderOperationMarkdown, routeFor} from './emit-page-markdown.mjs';
 
 test('operation JSON renders to markdown with method, path and curl', () => {
   const op = {
@@ -16,15 +16,6 @@ test('operation JSON renders to markdown with method, path and curl', () => {
   assert.match(md, /```bash\ncurl --request POST/);
 });
 
-test('mdx page strips frontmatter and imports, keeps body and title', () => {
-  const src = `---\ntitle: "What you can build"\ndescription: d\n---\n\nimport X from '@site/x';\n\n# What you can build\n\nBody text.`;
-  const md = stripToMarkdown(src);
-  assert.match(md, /^# What you can build/);
-  assert.match(md, /Body text\./);
-  assert.doesNotMatch(md, /import X/);
-  assert.doesNotMatch(md, /^---/m);
-});
-
 test('operation JSON with real catalogue field names (summary, no title) still renders', () => {
   const op = {
     summary: 'Find Bridge Service by Service ID',
@@ -36,62 +27,6 @@ test('operation JSON with real catalogue field names (summary, no title) still r
   const md = renderOperationMarkdown(op);
   assert.match(md, /^# Find Bridge Service by Service ID/);
   assert.match(md, /GET \/api\/hiecm\/gateway\/v3\/bridge-service\/serviceId\/\{serviceId\}/);
-});
-
-test('stripToMarkdown removes a self-closing JSX component line', () => {
-  const src = `# Title\n\nBefore.\n\n<McpInstall />\n\nAfter.\n`;
-  const md = stripToMarkdown(src);
-  assert.doesNotMatch(md, /McpInstall/);
-  assert.match(md, /Before\./);
-  assert.match(md, /After\./);
-});
-
-test('stripToMarkdown removes a paired JSX component block', () => {
-  const src = `# Title\n\nBefore.\n\n<Admonition>\n  Some warning text.\n</Admonition>\n\nAfter.\n`;
-  const md = stripToMarkdown(src);
-  assert.doesNotMatch(md, /Admonition/);
-  assert.doesNotMatch(md, /Some warning text\./);
-  assert.match(md, /Before\./);
-  assert.match(md, /After\./);
-});
-
-test('stripToMarkdown preserves a fenced code block containing JSX-looking lines byte for byte', () => {
-  const src = "# Code\n\n```tsx\n<Foo>\n  bar\n</Foo>\n```\n\nDone.\n";
-  const md = stripToMarkdown(src);
-  assert.match(md, /```tsx\n<Foo>\n {2}bar\n<\/Foo>\n```/);
-  assert.match(md, /Done\./);
-});
-
-test('stripToMarkdown leaves prose containing a bare < character untouched', () => {
-  const src = `# Title\n\nKeep retrying while a < b holds true.\n`;
-  const md = stripToMarkdown(src);
-  assert.match(md, /a < b holds true\./);
-});
-
-test('stripToMarkdown preserves an indented fence inside a list item byte for byte', () => {
-  const src = [
-    '# Title',
-    '',
-    '1. Step one',
-    '',
-    '   ```tsx',
-    '<Foo>',
-    '  bar',
-    '</Foo>',
-    '   ```',
-    '',
-    '2. Step two',
-    '',
-  ].join('\n');
-  const md = stripToMarkdown(src);
-  assert.match(md, /```tsx\n<Foo>\n {2}bar\n<\/Foo>\n {3}```/);
-  assert.match(md, /2\. Step two/);
-});
-
-test('stripToMarkdown preserves an unterminated fence at end of file byte for byte', () => {
-  const src = '# Title\n\n```tsx\n<Foo>\n  bar\n</Foo>\n';
-  const md = stripToMarkdown(src);
-  assert.match(md, /```tsx\n<Foo>\n {2}bar\n<\/Foo>/);
 });
 
 test('routeFor follows the file path when no slug is set', () => {
@@ -138,4 +73,97 @@ test('a small example is passed through untouched', () => {
 
 test('no example renders nothing rather than the word undefined', () => {
   assert.strictEqual(exampleFor(undefined), '');
+});
+
+// The page body now comes from the built HTML, so these guard the two ways
+// the JSX stripper it replaced got a page wrong: content that lived inside a
+// component was deleted, and a construct the grammar did not recognise came
+// through as raw JSX.
+
+const page = (body) =>
+  '<html><body><nav>Breadcrumbs</nav>' +
+  `<div class="theme-doc-markdown markdown">${body}</div>` +
+  '<div class="theme-doc-toc-desktop">On this page</div></body></html>';
+
+test('htmlToMarkdown takes the content container and leaves the chrome around it', () => {
+  const md = htmlToMarkdown(page('<h1>Build with AI</h1><p>Body text.</p>'));
+  assert.match(md, /^# Build with AI/);
+  assert.match(md, /Body text\./);
+  assert.doesNotMatch(md, /Breadcrumbs/);
+  assert.doesNotMatch(md, /On this page/);
+});
+
+test('htmlToMarkdown keeps a component-rendered card link, which the stripper deleted', () => {
+  const md = htmlToMarkdown(
+    page(
+      '<div class="card-group"><a href="/docs/hiecm/v3/getting-started/sandbox">' +
+        'Get your sandbox credentials</a></div>',
+    ),
+  );
+  assert.match(md, /\[Get your sandbox credentials\]\(\/docs\/hiecm\/v3\/getting-started\/sandbox\)/);
+});
+
+test('htmlToMarkdown keeps every tab panel and names it after its trigger', () => {
+  const md = htmlToMarkdown(
+    page(
+      '<div><button id="t-cli" role="tab">Claude Code (CLI)</button>' +
+        '<button id="t-generic" role="tab">Claude Desktop / generic</button>' +
+        '<div role="tabpanel" aria-labelledby="t-cli"><p>claude mcp add abdm-docs</p></div>' +
+        '<div role="tabpanel" aria-labelledby="t-generic" hidden>' +
+        '<p>Paste this JSON config</p></div></div>',
+    ),
+  );
+  assert.match(md, /\*\*Claude Code \(CLI\)\*\*/);
+  assert.match(md, /claude mcp add abdm-docs/);
+  // The panel that is not on screen is the one an agent would otherwise
+  // never see, and on Build with AI it is half the install instructions.
+  assert.match(md, /\*\*Claude Desktop \/ generic\*\*/);
+  assert.match(md, /Paste this JSON config/);
+});
+
+test('htmlToMarkdown flattens a Prism block to a fence carrying its language', () => {
+  const md = htmlToMarkdown(
+    page(
+      '<pre class="prism-code language-bash"><code>' +
+        '<span class="token">curl</span> <span class="token">-X POST</span></code></pre>',
+    ),
+  );
+  assert.match(md, /```bash\ncurl -X POST\n```/);
+  assert.doesNotMatch(md, /span|token/);
+});
+
+test('htmlToMarkdown keeps a table', () => {
+  const md = htmlToMarkdown(
+    page('<table><thead><tr><th>Gateway</th></tr></thead><tbody><tr><td>HIE-CM</td></tr></tbody></table>'),
+  );
+  assert.match(md, /\| Gateway\s+\|/);
+  assert.match(md, /\| HIE-CM\s+\|/);
+});
+
+test('htmlToMarkdown returns null when the build carries no content container', () => {
+  assert.strictEqual(htmlToMarkdown('<html><body><div id="other">x</div></body></html>'), null);
+});
+
+test('htmlToMarkdown puts a mermaid diagram back under its heading', () => {
+  const src = [
+    '## The whole path',
+    '',
+    '```mermaid',
+    'sequenceDiagram',
+    '    HIU->>GW: request',
+    '```',
+    '',
+    '## Stage 1',
+  ].join('\n');
+  // Docusaurus renders mermaid in the browser, so the built HTML has nothing
+  // between the two headings.
+  const md = htmlToMarkdown(page('<h2>The whole path</h2><h2>Stage 1</h2>'), src);
+  assert.match(md, /## The whole path\n\n```mermaid\nsequenceDiagram\n {4}HIU->>GW: request\n```/);
+  assert.match(md, /## Stage 1/);
+});
+
+test('htmlToMarkdown keeps a diagram whose heading did not survive conversion', () => {
+  const src = '## Gone\n\n```mermaid\ngraph TD\n```\n';
+  const md = htmlToMarkdown(page('<p>No headings here.</p>'), src);
+  assert.match(md, /```mermaid\ngraph TD\n```/);
 });
