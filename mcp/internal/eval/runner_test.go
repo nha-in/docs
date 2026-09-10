@@ -183,3 +183,29 @@ func TestRunRecordsAnErroredToolCallWithoutAbortingTheRun(t *testing.T) {
 		t.Fatalf("errored tool output must still be valid JSON: %s", tr.Calls[0].ToolResults[0].Output)
 	}
 }
+
+// TestLastUserMessageText covers finding 1: the corpus the grounding check
+// scores against must include the pre-retrieved pack, and the pack never
+// appears as a tool_result event -- it rides in the last user message of
+// the first model call instead.
+func TestLastUserMessageText(t *testing.T) {
+	cases := []struct {
+		name string
+		msgs []chat.Message
+		want string
+	}{
+		{"no messages", nil, ""},
+		{"last message is the user's", []chat.Message{
+			{Role: "user", Text: "<passages>\npack\n</passages>\n\nwhat is an abha address"},
+		}, "<passages>\npack\n</passages>\n\nwhat is an abha address"},
+		{"last message is the assistant's", []chat.Message{
+			{Role: "user", Text: "question"},
+			{Role: "assistant", Text: "answer"},
+		}, "question"},
+	}
+	for _, c := range cases {
+		if got := lastUserMessageText(c.msgs); got != c.want {
+			t.Errorf("%s: lastUserMessageText = %q, want %q", c.name, got, c.want)
+		}
+	}
+}
