@@ -145,9 +145,11 @@ const budgetExhaustedNotice = "Tool budget exhausted. Answer now from what you h
 // code change.
 const DefaultMCPURL = "https://abdm-docs-mcp.dev.eka.care/mcp"
 
-// PromptVersion names the system prompt an eval run answered with. Bump it
-// whenever systemPromptTemplate changes, and record the change in the pull
-// request's scorecard.
+// PromptVersion names the system prompt an eval run answered with. It
+// covers both systemPromptTemplate and the shape blocks in shapes.go, since
+// an answer's shape is as much a part of what was asked of the model as the
+// system prompt is. Bump it whenever either changes, and record the change
+// in the pull request's scorecard.
 const PromptVersion = "v3"
 
 // SystemPrompt renders the assistant's system prompt with the MCP server
@@ -600,6 +602,10 @@ func (s *Service) Respond(ctx context.Context, turns []Turn, page *Page, emit fu
 	}).Shape)
 	prefix := passagesPrefix
 	if page.attached() {
+		// The page is not run through MaskPII the way the reader's own text
+		// is (see line 305): it is a page this site published, not
+		// something a reader typed, so there is no reader PII in it to
+		// catch.
 		prefix += page.prompt() + "\n\n"
 	}
 	prefix += ShapeBlock(shape) + "\n\n"
@@ -651,13 +657,14 @@ func (s *Service) Respond(ctx context.Context, turns []Turn, page *Page, emit fu
 			if len(reply.ToolCalls) == 0 && !looked && round < MaxToolCalls &&
 				saysItHasNothing(firstRound.String()+reply.Text) {
 				slog.Info("answer_without_lookup", "question", question)
-				// The instruction goes into the system prompt, and the
-				// conversation is left exactly as the reader wrote it. Told
-				// as a turn instead, the model reads it as the reader
-				// complaining and answers the complaint: "You're right, I
-				// apologize, I should have checked the documentation first"
-				// is not an answer to anything anybody asked.
-				system += "\n\n" + lookFirst
+				// The instruction goes into the user turn's prefix, ahead of
+				// the reader's own words, never into the system prompt: system
+				// must stay byte identical on every call for the cache point
+				// to hold. Told as a reply instead, the model would read it as
+				// the reader complaining and answer the complaint: "You're
+				// right, I apologize, I should have checked the documentation
+				// first" is not an answer to anything anybody asked.
+				last.Text = lookFirst + "\n\n" + last.Text
 				firstRound.Reset()
 				continue
 			}
