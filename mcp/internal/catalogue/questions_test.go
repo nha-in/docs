@@ -16,6 +16,17 @@ func TestCleanQuestionsFiltersNoise(t *testing.T) {
 	}
 }
 
+// Fixed value the JS lint (scripts/lint-atom-questions.mjs) must reproduce
+// byte for byte, since it hashes atom bodies the same way for staleness
+// checks. See task-B4-report.md for the matching Node run.
+func TestBodyHashKnownValue(t *testing.T) {
+	got := BodyHash(Atom{Body: "hello\n"})
+	want := "sha256:5891b5b522d5df08"
+	if got != want {
+		t.Fatalf("BodyHash(%q) = %q, want %q", "hello\n", got, want)
+	}
+}
+
 func TestBodyHashChangesWithBody(t *testing.T) {
 	a := Atom{ID: "x", Body: "one"}
 	b := Atom{ID: "x", Body: "two"}

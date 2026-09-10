@@ -14,6 +14,7 @@
     "start": "npm start --workspace site",
     "build": "npm run build --workspace site",
     "lint:atoms": "node scripts/lint-atoms.mjs",
+    "lint:questions": "node scripts/lint-atom-questions.mjs",
     "lint:sources": "node scripts/check-source-freshness.mjs",
     "compile:skills": "node scripts/compile-skills.mjs",
     "build:plugins": "node scripts/build-plugin-manifests.mjs",
