@@ -1,0 +1,20 @@
+{
+  "id": "confusable-link-vs-access-token-01",
+  "slice": "confusable",
+  "class": "compare",
+  "turns": [{"role": "user", "text": "is the link token the access token?"}],
+  "attachment": null,
+  "page": null,
+  "must_contain": [
+    "the link token is per patient and valid for six months",
+    "the access token is the gateway session token"
+  ],
+  "must_not_contain": ["<MASKED", "i apologize", "i apologise", "let me ", "great question", "the catalogue", "atom", "the same token"],
+  "expected_sources": ["shared.glossary.link-token"],
+  "expected_shape": "compare",
+  "expected_behaviour": "answer",
+  "derived_from": null,
+  "source_row": "annexure#glossary",
+  "catalogue_version": "2026.08.24",
+  "notes": "Source lines: catalogue/shared/glossary/link-token.md, 'your system obtains it when the patient registers and stores it against that patient. NHA's M2 document gives it a validity of six months'; catalogue/hiecm/concepts/gateway-session.md, 'The session token says which application is calling.'"
+}

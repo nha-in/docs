@@ -1,0 +1,20 @@
+{
+  "id": "confusable-txnid-vs-requestid-01",
+  "slice": "confusable",
+  "class": "compare",
+  "turns": [{"role": "user", "text": "is txnId the same as REQUEST-ID?"}],
+  "attachment": null,
+  "page": null,
+  "must_contain": [
+    "REQUEST-ID is a fresh UUID you send on every call",
+    "txnId is returned by the service and carried through one flow"
+  ],
+  "must_not_contain": ["<MASKED", "i apologize", "i apologise", "let me ", "great question", "the catalogue", "atom", "the same value"],
+  "expected_sources": ["shared.glossary.request-id", "shared.glossary.txn-id"],
+  "expected_shape": "compare",
+  "expected_behaviour": "answer",
+  "derived_from": null,
+  "source_row": "annexure#glossary",
+  "catalogue_version": "2026.08.24",
+  "notes": "Source lines: catalogue/shared/glossary/request-id.md, 'Every ABDM call carries a REQUEST-ID header holding a UUID you generate.'; catalogue/shared/glossary/txn-id.md, 'The first call returns a txnId, and the following calls send it back so ABDM knows which attempt they belong to. It is short lived and single purpose.'"
+}

@@ -1,0 +1,20 @@
+{
+  "id": "confusable-abha-vs-abdm-01",
+  "slice": "confusable",
+  "class": "compare",
+  "turns": [{"role": "user", "text": "is ABHA the same as ABDM?"}],
+  "attachment": null,
+  "page": null,
+  "must_contain": [
+    "ABDM is the mission and the network",
+    "ABHA is the person's health account on it"
+  ],
+  "must_not_contain": ["<MASKED", "i apologize", "i apologise", "let me ", "great question", "the catalogue", "atom", "ABHA is another name for ABDM"],
+  "expected_sources": ["shared.glossary.abdm", "shared.glossary.abha"],
+  "expected_shape": "compare",
+  "expected_behaviour": "answer",
+  "derived_from": null,
+  "source_row": "annexure#glossary",
+  "catalogue_version": "2026.08.24",
+  "notes": "Source lines: catalogue/shared/glossary/abdm.md, 'ABDM stands for Ayushman Bharat Digital Mission. It is the national programme that gives every person a health identity...'; catalogue/shared/glossary/abha.md, 'ABHA expands to Ayushman Bharat Health Account.'"
+}
