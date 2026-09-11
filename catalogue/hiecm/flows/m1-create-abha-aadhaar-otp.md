@@ -10,6 +10,13 @@ summary: >
   with an OTP, create their ABHA number, then let them choose an
   address.
 sources:
+  - file: catalogue/openapi/.raw/nha-2026-09-11/Proposed M1 Flow for Integrators.docx
+    fetched: 2026-09-11
+    hash: sha256:b258dff5698a3e70d63694ef48464510ecb05f10a168e8f34676dc64d5dc3da5
+    note: >
+      NHA's proposed simplified M1 flow, recorded as annexure#m1-simplified-flow.
+      Which routes are mandatory, and for which kind of integrator, comes
+      from it.
   - file: ABDM Sandbox/ABDM/M1 ABHA Collection.postman_collection.json
     status: not-yet-hashed
     note: >
@@ -35,7 +42,11 @@ ABDM issues them a fourteen digit
 [ABHA number](shared.glossary.abha-number), and then they claim
 a memorable [ABHA address](shared.glossary.abha-address).
 
-NHA marks the other enrolment routes optional. This one is not.
+NHA makes this route mandatory for every integrator, private or
+government. Face authentication and the fingerprint and iris routes are
+optional for both. Demographic authentication is mandatory for government
+integrators and is not asked of private ones. See
+[creation by demographic authentication](hiecm.flow.m1-create-abha-demographic-auth).
 
 ## Before you start
 
