@@ -106,8 +106,8 @@ The person at the counter cannot act on a code. They can act on what to do next.
 | Show the masked destination before the wait | The search response names the mobile the OTP went to, which stops somebody waiting for a message that will never arrive |
 | Say upfront when the account will be restricted | Otherwise the person meets the limit later, when something unrelated fails |
 | Answer scan and share inside thirty seconds | The patient's screen is open for that long, and an acknowledgement after it shows them nothing |
-| Keep theming in one configuration object | Confirm it once per facility, rather than asking again on every screen |
-| Aadhaar numbers, OTPs and passwords never reach a log or a database | Store a mobile number as its last four digits if you need it for display |
+| Offer the login methods the account actually has | `authMethods` on the profile says which ones the person can use. A screen offering an Aadhaar OTP to a profile with no Aadhaar behind it fails for a reason nobody can see |
+| Aadhaar numbers, one time passwords and passwords never reach a log or a database | Encrypting a value and then logging the plain one is the same leak, moved. See [encryption](/docs/hiecm/v3/concepts/encryption) |
 
 The first four are journey specific and each is explained where it happens, on
 [the M1 journeys](/docs/hiecm/v3/milestones/m1).
