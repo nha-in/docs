@@ -1,0 +1,32 @@
+{
+  "id": "followup-care-context-visibility-01",
+  "slice": "followup",
+  "class": "how-do-i",
+  "turns": [
+    {
+      "role": "user",
+      "text": "what is a care context"
+    },
+    {
+      "role": "assistant",
+      "text": "One episode of care, linked to an ABHA address."
+    },
+    {
+      "role": "user",
+      "text": "can the patient see it"
+    }
+  ],
+  "attachment": null,
+  "page": null,
+  "must_contain": [
+    "the patient sees linked care contexts in their PHR application"
+  ],
+  "must_not_contain": ["<MASKED", "i apologize", "i apologise", "let me ", "great question", "the catalogue", "atom"],
+  "expected_sources": ["hiecm.flow.p2-discover-and-link", "shared.glossary.phr"],
+  "expected_shape": "how-do-i",
+  "expected_behaviour": "answer",
+  "derived_from": null,
+  "source_row": "annexure#glossary",
+  "catalogue_version": "2026.08.24",
+  "notes": "Source lines: catalogue/hiecm/flows/p2-discover-and-link.md, 'The care contexts the person selected are linked to their ABHA address, and running discovery against that facility again returns them as already linked rather than as new.'; catalogue/shared/glossary/phr.md, 'A PHR app acts for the citizen.' Category is closest to a glossary fact since it turns on the PHR position defined in the glossary; no P-series or M1 row fits as well."
+}

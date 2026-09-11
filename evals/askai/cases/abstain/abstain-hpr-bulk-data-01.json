@@ -1,0 +1,17 @@
+{
+  "id": "abstain-hpr-bulk-data-01",
+  "slice": "abstain",
+  "class": "out-of-scope",
+  "turns": [{"role": "user", "text": "how do I get HPR data in bulk"}],
+  "attachment": null,
+  "page": null,
+  "must_contain": ["/docs/"],
+  "must_not_contain": ["<MASKED", "i apologize", "i apologise", "let me ", "great question", "the catalogue", "atom", "/api/hpr/bulk"],
+  "expected_sources": [],
+  "expected_shape": "decline",
+  "expected_behaviour": "decline",
+  "derived_from": null,
+  "source_row": "annexure#abdm-faq-general",
+  "catalogue_version": "2026.08.24",
+  "notes": "No bulk export endpoint for HPR is documented; the fail is an invented bulk data path."
+}

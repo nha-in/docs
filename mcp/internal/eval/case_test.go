@@ -70,3 +70,20 @@ func replaceOnce(s, old, new string) string {
 	}
 	return s[:i] + new + s[i+len(old):]
 }
+
+func TestNewSlicesAreAccepted(t *testing.T) {
+	for _, slice := range []string{"naive", "confusable", "followup", "abstain"} {
+		c := Case{
+			ID: "x", Slice: slice, Class: "how-do-i",
+			Turns:             []Turn{{Role: "user", Text: "q"}},
+			MustContain:       []string{"a fact"},
+			ExpectedShape:     "how-do-i",
+			ExpectedBehaviour: "answer",
+			SourceRow:         "annexure#glossary",
+			CatalogueVersion:  "2026.08.24",
+		}
+		if err := c.validate("x.json"); err != nil {
+			t.Errorf("slice %q rejected: %v", slice, err)
+		}
+	}
+}
