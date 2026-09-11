@@ -1,0 +1,38 @@
+{
+  "id": "conversation-abha-creation-routes-complete-01",
+  "slice": "conversation",
+  "class": "how-do-i",
+  "turns": [
+    {
+      "role": "user",
+      "text": "how can I create abha?"
+    }
+  ],
+  "attachment": null,
+  "page": null,
+  "must_contain": [
+    "there are three creation routes: Aadhaar OTP, which is the mandatory one, Aadhaar face authentication, and enrolment from an identity document",
+    "the ABHA number is the 14 digit identifier and the ABHA address is the readable handle, and creating an ABHA means getting both",
+    "the identity document route produces an account restricted until the person completes Aadhaar KYC"
+  ],
+  "must_not_contain": [
+    "<MASKED",
+    "i apologize",
+    "i apologise",
+    "let me ",
+    "great question",
+    "the catalogue",
+    "atom",
+    "there are two main routes"
+  ],
+  "expected_sources": [
+    "hiecm.flow.m1-create-abha-aadhaar-otp",
+    "hiecm.flow.m1-create-abha-by-document"
+  ],
+  "expected_shape": "how-do-i",
+  "expected_behaviour": "answer",
+  "derived_from": null,
+  "source_row": "annexure#m1-abha-collection",
+  "catalogue_version": "2026.08.24",
+  "notes": "A real session answered this with two of the three routes expanded in full prose, never naming the third, never separating the ABHA number from the ABHA address, and never mentioning what the document route costs. Every fact needed was in reach. This case grades completeness: all three routes named, the two identifiers told apart, and the KYC restriction stated. It is a how-do-i, so the 260 word budget in checks.go applies to it as well, which is the point: naming three routes briefly has to beat explaining two at length."
+}
