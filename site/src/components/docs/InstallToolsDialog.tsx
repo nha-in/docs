@@ -18,9 +18,15 @@ export type InstallToolsDialogProps = {
 };
 
 /**
- * The "Install tools" pop-up: a centred dialog reusing the three panels the
- * Build with AI page already built (AgentSetup, SkillPicker, McpInstall),
+ * The "Install AI tools" pop-up: a centred dialog reusing the three panels the
+ * Build with AI page already built (McpInstall, AgentSetup, SkillPicker),
  * behind tabs instead of stacked one after another.
+ *
+ * It is that page in brief, so it says the same things in the same order and
+ * with the same names. A reader who opens this and then opens the page should
+ * meet no new vocabulary: the server first and recommended, the plugin as the
+ * one command that sets up both, the skills as files. The leads below are the
+ * page's three cards, shortened.
  *
  * Those three assume they render inside a doc page's MDX body, which
  * Docusaurus wraps in a `.markdown` element: most of their text (titles,
@@ -40,27 +46,42 @@ export default function InstallToolsDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="flex max-h-[85vh] flex-col gap-0 p-0 sm:max-w-[720px]">
         <DialogHeader className="gap-1 p-6 pb-4">
-          <DialogTitle>Install tools</DialogTitle>
+          <DialogTitle>Install AI tools</DialogTitle>
           <DialogDescription>
-            Give your coding agent everything on this site.
+            Every fact on this site is a public URL. Three ways to put it in
+            front of your coding agent, and they combine.
           </DialogDescription>
         </DialogHeader>
 
         <div className="markdown overflow-y-auto px-6" style={{maxHeight: '80vh'}}>
-          <Tabs defaultValue="agent-setup">
+          <Tabs defaultValue="mcp">
             <TabsList>
-              <TabsTrigger value="agent-setup">Agent setup</TabsTrigger>
-              <TabsTrigger value="skills">Skills</TabsTrigger>
-              <TabsTrigger value="mcp">MCP server</TabsTrigger>
+              <TabsTrigger value="mcp">Docs MCP server</TabsTrigger>
+              <TabsTrigger value="plugin">AI plugin</TabsTrigger>
+              <TabsTrigger value="skills">Agent skills</TabsTrigger>
             </TabsList>
-            <TabsContent value="agent-setup">
+            <TabsContent value="mcp">
+              <p className="install-tools__lead">
+                Recommended. This documentation live, queried a paragraph at a
+                time as your agent works. It cannot go stale, because it is this
+                site answering.
+              </p>
+              <McpInstall />
+            </TabsContent>
+            <TabsContent value="plugin">
+              <p className="install-tools__lead">
+                One command that sets your agent up with both of the others: the
+                skills as files, the server as a connection.
+              </p>
               <AgentSetup />
             </TabsContent>
             <TabsContent value="skills">
+              <p className="install-tools__lead">
+                One file per job, carrying a whole milestone: every endpoint,
+                header, error code and test. Works offline, and ages until you
+                update it.
+              </p>
               <SkillPicker />
-            </TabsContent>
-            <TabsContent value="mcp">
-              <McpInstall />
             </TabsContent>
           </Tabs>
         </div>
