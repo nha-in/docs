@@ -5,6 +5,7 @@ sidebar_position: 6
 description: An insurer reads records as an HIU under consent, and settles claims on NHCX, a separate gateway with its own onboarding.
 verification: unverified
 source: catalogue/shared/glossary/hiu.md, site/docs/hiecm/v3/concepts/consent.md, site/docs/hiecm/v3/concepts/data-flow.md, site/docs/nhcx/v1/index.md, site/docs/hiecm/v3/milestones/index.mdx
+sidebar_class_name: sidebar-icon sidebar-icon--receipt-indian-rupee
 ---
 
 # Insurer

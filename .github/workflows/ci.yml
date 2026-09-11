@@ -170,6 +170,10 @@ jobs:
       # a dead link in a support answer. Needs the build above for the
       # sitemap it validates against.
       - run: npm run check:routes
+      # The committed icon stylesheet must match the icons the sidebar names.
+      # Catches a page whose front matter names an icon nobody rebuilt for,
+      # which would otherwise render the neutral fallback and look deliberate.
+      - run: npm run check:icons
       - uses: actions/upload-artifact@v4
         with:
           name: site-build

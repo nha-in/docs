@@ -1,5 +1,6 @@
 {
   "label": "Testing use cases",
   "position": 2,
-  "collapsed": false
+  "collapsed": false,
+  "className": "sidebar-icon sidebar-icon--flask-conical"
 }

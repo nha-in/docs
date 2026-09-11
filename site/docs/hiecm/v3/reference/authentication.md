@@ -6,6 +6,7 @@ description: The credentials every ABDM call carries, and the headers that go wi
 verification: unverified
 source: the published OpenAPI specifications
 generated: true
+sidebar_class_name: sidebar-icon sidebar-icon--lock-keyhole
 ---
 
 # Authentication

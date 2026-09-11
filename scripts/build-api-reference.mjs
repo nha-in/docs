@@ -933,7 +933,10 @@ for (const {platform, version, files} of tree) {
   // scripts/build-atom-routes.mjs reads it to point a support answer at a
   // real page. On a generated page it has to be emitted here: hand-adding it
   // to the file works until the next generator run silently drops it.
-  const frontMatter = (title, label, description, position, covers = []) =>
+  // The sidebar icon has to be emitted here for the same reason as covers:
+  // these pages are generated, so front matter added by hand survives until
+  // the next run and then disappears. See the `sidebar-icons` skill.
+  const frontMatter = (title, label, description, position, covers = [], icon = null) =>
     [
       '---',
       `title: ${title}`,
@@ -943,6 +946,7 @@ for (const {platform, version, files} of tree) {
       'verification: unverified',
       'source: the published OpenAPI specifications',
       'generated: true',
+      ...(icon ? [`sidebar_class_name: sidebar-icon sidebar-icon--${icon}`] : []),
       ...(covers.length ? [`covers: [${covers.join(', ')}]`] : []),
       '---',
       '',
@@ -956,6 +960,8 @@ for (const {platform, version, files} of tree) {
         'Authentication',
         'The credentials every ABDM call carries, and the headers that go with them.',
         1,
+        [],
+        'lock-keyhole',
       ),
       '# Authentication',
       '',
@@ -1011,6 +1017,7 @@ for (const {platform, version, files} of tree) {
         'Every error code the specifications carry, with its message and what to do.',
         3,
         ['hiecm.concept.error-codes'],
+        'circle-alert',
       ),
       '# Error codes',
       '',

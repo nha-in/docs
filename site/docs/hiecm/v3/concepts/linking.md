@@ -6,6 +6,7 @@ verification: unverified
 source: ABDM__Proposed_Simplified_Milestone_2.md, ABDM__NewDocumant_PHR_app.md
 sidebar_position: 3
 covers: [hiecm.concept.care-context]
+sidebar_class_name: sidebar-icon sidebar-icon--link
 ---
 
 # Care contexts and linking

@@ -5,6 +5,7 @@ description: The Health Facility Registry, what a facility record holds, the fiv
 verification: unverified
 source: ABDM__Proposed_Simplified_Milestone_4_(NHPR).md, ABDM__Proposed_Simplified_Milestone_2.md
 sidebar_position: 2
+sidebar_class_name: sidebar-icon sidebar-icon--building
 ---
 
 # HFR, the facility registry
