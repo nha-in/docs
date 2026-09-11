@@ -105,7 +105,7 @@
 }
 
 /* ---------- page actions ----------
- * Ask about this page, Copy for LLM, View as Markdown, Install tools: one
+ * Ask about this page, Copy for LLM, View as Markdown, Install AI tools: one
  * line of text buttons with hairline dividers between them, under the lede,
  * above a rule, the layout the reference documentation site uses. The slot
  * is inserted after the lede at hydration (theme/DocItem/Content/index.tsx).
