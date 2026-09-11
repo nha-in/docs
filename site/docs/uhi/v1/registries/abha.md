@@ -5,6 +5,7 @@ description: Where a patient's ABHA address appears in UHI messages, in which se
 verification: unverified
 source: UHI__UHI_Physical_Consultation_v2.0_-_Onboarding_Document.md, UHI__UHI_AmbulanceBooking_Onboarding_v1.1-July2026.md
 sidebar_position: 1
+sidebar_class_name: sidebar-icon sidebar-icon--id-card
 ---
 
 # ABHA on UHI

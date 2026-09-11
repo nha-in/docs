@@ -5,6 +5,7 @@ description: Where a practitioner's HPR ID appears in a UHI catalogue and a UHI 
 verification: unverified
 source: UHI__UHI_Physical_Consultation_v2.0_-_Onboarding_Document.md
 sidebar_position: 2
+sidebar_class_name: sidebar-icon sidebar-icon--stethoscope
 ---
 
 # HPR on UHI

@@ -6,6 +6,7 @@ verification: unverified
 source: ABDM__Proposed_Simplified_Milestone_1.md, ABDM__NewDocumant_PHR_app.md, ABDM__M1_ABHA_Collection.postman_collection.md
 sidebar_position: 1
 covers: [hiecm.concept.abha-number-and-address, hiecm.concept.abha-address-policy]
+sidebar_class_name: sidebar-icon sidebar-icon--id-card
 ---
 
 # ABHA, the patient registry

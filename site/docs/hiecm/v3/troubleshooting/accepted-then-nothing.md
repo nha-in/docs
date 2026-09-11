@@ -6,6 +6,7 @@ verification: unverified
 source: site/docs/api/hie-cm/index.md, ABDM__Proposed_Simplified_Milestone_2.md
 sidebar_position: 4
 covers: [hiecm.troubleshooting.accepted-then-nothing]
+sidebar_class_name: sidebar-icon sidebar-icon--hourglass
 ---
 
 # Accepted, then nothing
