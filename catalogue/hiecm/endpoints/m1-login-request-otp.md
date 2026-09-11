@@ -31,11 +31,17 @@ Starts a login. `loginHint` selects what the person is identifying
 themselves with: `mobile`, `aadhaar` or `abha-number`. As everywhere in
 M1, `loginId` is encrypted rather than raw.
 
+The shape you encrypt matters. On `abha-number` the plaintext is the 14
+digits with their dashes, `NN-NNNN-NNNN-NNNN`, for example
+`91-1234-5678-9015`. The bare digits are refused. On `mobile` it is 10
+digits with no country code, and on `aadhaar` 12 digits with no spaces.
+See [why identifiers are encrypted](hiecm.concept.encrypted-identifiers).
+
 ## Before you start
 
 - A gateway access token. See [the gateway session](hiecm.concept.gateway-session).
 - A `txnId` from the previous call in the flow. It is not reusable across attempts.
-- The identifier encrypted against NHA's public key. See [why identifiers are encrypted](hiecm.concept.encrypted-identifiers).
+- The identifier in the plaintext shape for its `loginHint`, then encrypted against NHA's public key. See [why identifiers are encrypted](hiecm.concept.encrypted-identifiers).
 
 ## What happens
 
@@ -57,6 +63,28 @@ curl -X POST 'https://abhasbx.abdm.gov.in/abha/api/v3/profile/login/request/otp'
 }'
 ```
 
+Logging in by ABHA number with a mobile OTP is the same call with a
+different hint, and the plaintext behind `<ENCRYPTED_ABHA_NUMBER>` is
+`91-1234-5678-9015`, dashes and all:
+
+```bash
+curl -X POST 'https://abhasbx.abdm.gov.in/abha/api/v3/profile/login/request/otp' \
+  -H 'Authorization: Bearer <ACCESS_TOKEN>' \
+  -H 'REQUEST-ID: <FRESH_UUID>' \
+  -H 'TIMESTAMP: <ISO_8601_TIMESTAMP>' \
+  -H 'BENEFIT_NAME: <BENEFIT_SCHEME_NAME>' \
+  -H 'Content-Type: application/json' \
+  -d '{
+  "scope": [
+    "abha-login",
+    "mobile-verify"
+  ],
+  "loginHint": "abha-number",
+  "loginId": "<ENCRYPTED_ABHA_NUMBER>",
+  "otpSystem": "abdm"
+}'
+```
+
 Every placeholder in angle brackets is something you supply. `REQUEST-ID` is a UUID you generate for this call and log before sending.
 
 ## How you know it worked
@@ -65,10 +93,22 @@ NHA's own collection records responses for this operation at status 200, 401, an
 
 Read the body rather than only the status. Several of NHA's saved failures return a body that names the problem while the status alone does not.
 
-This has not been run against the sandbox from this repository. When you run it, record the response here and set `verified.status` accordingly.
+The two refusals below were observed on the sandbox on 2026-09-11 by an
+integrator and reported to this portal, not run from this repository, so
+the atom stays unverified. When you run the whole call here, record the
+response and set `verified.status` accordingly.
 
 ## When it goes wrong
 
+- The ABHA number was encrypted without its dashes. The response is
+  `400 {"loginId": "LoginId is invalid"}`, observed on the sandbox on
+  2026-09-11. Put the dashes back and send it again.
+- `400 {"loginId": "Invalid LoginId"}` is a different failure with a
+  similar message: the service could not decrypt the value at all, which
+  is a key or a padding problem rather than a format one.
+- `404 {"error": {"code": "ABDM-1114", "message": "User not found."}}`
+  means the value decrypted and passed its format check, and no account
+  holds that number.
 - The clock is wrong and every call fails. See [ABDM-2402](hiecm.error.abdm-2402).
 - The `REQUEST-ID` is missing, malformed or reused. See [ABDM-2404](hiecm.error.abdm-2404).
 - No session token was sent. See [ABDM-2500](hiecm.error.abdm-2500).
