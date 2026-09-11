@@ -278,7 +278,11 @@ for (const [id, atom] of atoms) {
     if (jp) {
       const words = id.split(".").pop().replace(/^[mp]\d-/, "").split("-").filter((w) => w.length > 2);
       let best = null, bestScore = 0;
-      for (const m of jp.body.matchAll(/^##\s+(.+)$/gm)) {
+      // Third level headings count too. M1 groups its flows under two tracks,
+      // ABHA with Aadhaar and ABHA address with a mobile number, so the flow
+      // a reader wants is an `###` under one of them. Matching `##` alone sent
+      // every M1 flow to the nearest track heading, or to nothing.
+      for (const m of jp.body.matchAll(/^#{2,3}\s+(.+)$/gm)) {
         const h = m[1].trim(), hs = slug(h);
         const score = words.filter((w) => hs.includes(w)).length;
         if (score > bestScore) { bestScore = score; best = h; }
