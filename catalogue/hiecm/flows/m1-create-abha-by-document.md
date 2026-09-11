@@ -7,13 +7,21 @@ version: abdm-v3
 title: Create an ABHA from an identity document
 summary: >
   The route for someone who cannot complete Aadhaar authentication at
-  all, using a document such as a driving licence.
+  all, using a document such as a driving licence. NHA does not recommend
+  it to integrators and left it out of the simplified M1 flow.
 sources:
   - file: ABDM Sandbox/ABDM/M1 ABHA Collection.postman_collection.json
     status: not-yet-hashed
     note: >
       NHA's own M1 collection. The step order in this flow is the order of
       the requests in NHA's folder for it.
+  - file: catalogue/openapi/.raw/nha-2026-09-11/Proposed M1 Flow for Integrators.docx
+    fetched: 2026-09-11
+    hash: sha256:b258dff5698a3e70d63694ef48464510ecb05f10a168e8f34676dc64d5dc3da5
+    note: >
+      NHA's proposed simplified M1 flow, recorded as annexure#m1-simplified-flow.
+      This route is not in it. NHA's review of 2026-09-11 says it is not
+      recommended for integrators.
 verified:
   status: unverified
 related:
@@ -25,6 +33,11 @@ skills:
 # Create an ABHA from an identity document
 
 ## In plain words
+
+NHA does not recommend this route to integrators. Their review of
+2026-09-11 asked for it to come out of the recommended M1 flow, and it is
+not in the simplified flow they supplied with that review. It is kept
+here because the call is in the specification and people find it there.
 
 When neither an Aadhaar OTP nor a biometric capture is possible, NHA
 allows enrolment from an identity document. NHA's collection uses a
