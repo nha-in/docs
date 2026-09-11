@@ -50,6 +50,24 @@ One file per job, in three shapes. A module skill carries every endpoint, header
 
 <SkillPicker />
 
+## Prompting an agent to build against ABDM
+
+An agent that has this site still writes a plausible integration rather than a
+correct one unless you tell it what to check. Five instructions carry most of
+the difference.
+
+| Tell it | Because |
+| --- | --- |
+| Look the operation up before writing the call, rather than recalling it | These APIs change, and a model's memory of a payload is a snapshot of whatever it was trained on. The MCP server above is this site answering live |
+| Ask which table holds patients before writing an upsert | Otherwise it invents a schema, and you get a migration you did not want against a model you do not have |
+| Ask which layer you are building against: prebuilt UI, a hosted redirect, or raw calls | The answer changes every file it writes, and it can differ per milestone |
+| Reproduce a failure with one minimal call, capturing headers and ids, before changing code | A fix written against a guess passes nothing and hides the real failure |
+| Say "not captured" rather than filling a gap in a bug report | An invented request id sends whoever reads it down a path that does not exist |
+
+Point it at [Build it well](/docs/hiecm/v3/getting-started/build-it-well) for the
+handling rules themselves: what to validate, what each error means, what is safe
+to retry, and what the screen should say.
+
 ## Read this site as an agent
 
 export const ReadAsAgent = () => {
