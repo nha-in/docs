@@ -2798,10 +2798,10 @@
     {
       "atom": "shared.glossary.request-id",
       "type": "glossary",
-      "route": "/docs/hiecm/v3/getting-started/sandbox",
-      "anchor": "3-register-your-callback-url",
-      "link": "/docs/hiecm/v3/getting-started/sandbox#3-register-your-callback-url",
-      "rule": "term defined on sandbox",
+      "route": "/docs/hiecm/v3/getting-started/build-it-well",
+      "anchor": "validate-before-you-send",
+      "link": "/docs/hiecm/v3/getting-started/build-it-well#validate-before-you-send",
+      "rule": "term defined on build-it-well",
       "confidence": "derived"
     },
     {
@@ -2825,10 +2825,10 @@
     {
       "atom": "shared.glossary.timestamp-header",
       "type": "glossary",
-      "route": "/docs/hiecm/v3/reference/authentication",
-      "anchor": "gateway-session",
-      "link": "/docs/hiecm/v3/reference/authentication#gateway-session",
-      "rule": "term defined on authentication",
+      "route": "/docs/hiecm/v3/getting-started/build-it-well",
+      "anchor": "validate-before-you-send",
+      "link": "/docs/hiecm/v3/getting-started/build-it-well#validate-before-you-send",
+      "rule": "term defined on build-it-well",
       "confidence": "derived"
     },
     {
