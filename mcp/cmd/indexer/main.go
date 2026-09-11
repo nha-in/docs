@@ -61,12 +61,16 @@ func main() {
 }
 
 func run(catDir, outPath, nrcesPath string, emb embed.Embedder) error {
-	var atoms []catalogue.Atom
 	var ops []catalogue.Operation
 	var specErrors []catalogue.SpecErrorCode
 	hashes := map[string]string{}
 
-	err := filepath.WalkDir(catDir, func(path string, d fs.DirEntry, err error) error {
+	atoms, err := catalogue.LoadAtoms(catDir)
+	if err != nil {
+		return err
+	}
+
+	err = filepath.WalkDir(catDir, func(path string, d fs.DirEntry, err error) error {
 		if err != nil {
 			return err
 		}
@@ -82,26 +86,15 @@ func run(catDir, outPath, nrcesPath string, emb embed.Embedder) error {
 			return nil
 		}
 		rel, _ := filepath.Rel(catDir, path)
+		// Check suffix early to avoid reading non-.yaml files
+		if !strings.HasSuffix(path, ".yaml") {
+			return nil
+		}
 		content, err := os.ReadFile(path)
 		if err != nil {
 			return err
 		}
-		relSlash := filepath.ToSlash(rel)
 		switch {
-		case strings.HasSuffix(path, ".md") && (relSlash == "openapi" || strings.HasPrefix(relSlash, "openapi/")):
-			// Spec-area documentation (e.g. openapi/CONVENTIONS.md) is not an atom
-			// and is not hashed; skip it silently.
-			return nil
-		case strings.HasSuffix(path, string(os.PathSeparator)+"README.md") || relSlash == "README.md":
-			// READMEs are contributor notes for the folder they sit in, not
-			// atoms; skip them silently wherever they are.
-			return nil
-		case strings.HasSuffix(path, ".md"):
-			a, err := catalogue.ParseAtom(rel, content)
-			if err != nil {
-				return err
-			}
-			atoms = append(atoms, a)
 		case strings.HasPrefix(rel, "openapi"+string(os.PathSeparator)) &&
 			strings.HasSuffix(path, ".yaml") &&
 			!strings.Contains(rel, "corrections") &&
@@ -123,6 +116,14 @@ func run(catDir, outPath, nrcesPath string, emb embed.Embedder) error {
 
 	if err := applyDocRoutes(catDir, atoms); err != nil {
 		return err
+	}
+
+	questions, err := catalogue.ReadQuestions(filepath.Join(catDir, "shared", "atom-questions.json"))
+	if err != nil {
+		return fmt.Errorf("read atom questions: %w", err)
+	}
+	if len(questions) == 0 {
+		fmt.Fprintln(os.Stderr, "no atom-questions.json, naive phrasings will match on prose only")
 	}
 
 	var chunks []index.EmbeddedChunk
@@ -148,6 +149,13 @@ func run(catDir, outPath, nrcesPath string, emb embed.Embedder) error {
 		var all []catalogue.Chunk
 		for _, a := range atoms {
 			all = append(all, catalogue.ChunkAtom(a)...)
+			if q, ok := questions[a.ID]; ok && len(q.Questions) > 0 {
+				all = append(all, catalogue.Chunk{
+					AtomID:  a.ID,
+					Heading: catalogue.QuestionsHeading,
+					Text:    a.Title + "\n" + catalogue.QuestionsHeading + ":\n" + strings.Join(q.Questions, "\n"),
+				})
+			}
 		}
 		for start := 0; start < len(all); start += embedBatch {
 			end := min(start+embedBatch, len(all))
@@ -198,7 +206,7 @@ func run(catDir, outPath, nrcesPath string, emb embed.Embedder) error {
 		slog.Info("fhir indexed", "version", ig.Version, "profiles", len(fhirDigests), "examples", len(fhirExamples))
 	}
 
-	if err := index.Build(outPath, atoms, ops, specErrors, fhirDigests, fhirExamples, chunks, meta); err != nil {
+	if err := index.Build(outPath, atoms, questions, ops, specErrors, fhirDigests, fhirExamples, chunks, meta); err != nil {
 		return err
 	}
 	mode := "keyword-only"

@@ -125,7 +125,7 @@ func buildServerFixtureDB(t *testing.T, withVectors bool) string {
 		chunks = nil
 	}
 	dbPath := filepath.Join(t.TempDir(), "catalogue.db")
-	if err := index.Build(dbPath, atoms, fixtureOps(), fixtureSpecErrors(),
+	if err := index.Build(dbPath, atoms, nil, fixtureOps(), fixtureSpecErrors(),
 		fixtureFHIRDigests(), fixtureFHIRExamples(), chunks, meta); err != nil {
 		t.Fatal(err)
 	}

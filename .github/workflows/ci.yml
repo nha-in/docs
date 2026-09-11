@@ -40,6 +40,7 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run lint:atoms
+      - run: npm run lint:questions
 
   lint-sources:
     name: Check source freshness
