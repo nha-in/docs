@@ -1,0 +1,156 @@
+// The sidebar's icon stylesheet, built from the icons the sidebar actually
+// names.
+//
+// A contributor names an icon in one of three places, depending on what owns
+// the row: `className` in a folder's _category_.json, `sidebar_class_name` in
+// a page's front matter, or `x-portal.icon` in a module's specification, which
+// build-api-reference.mjs turns into the first of those. Nobody writes CSS.
+//
+// This script reads every name back out, resolves each one against the
+// installed lucide, and writes one rule per name into site/src/css/
+// sidebar-icons.css. The glyph is emitted as a mask rather than an image,
+// which is what lets it take the row's own colour through hover and the accent
+// active state. The base box, the size step below the top level and the
+// neutral fallback live in sidebar.css beside the rest of the sidebar, because
+// they are layout rather than artwork.
+//
+// A name lucide does not have is a hard failure here rather than a silent
+// fallback on the site. That is the whole reason this runs in the build: a
+// typo in front matter used to render as the neutral mark and look deliberate.
+//
+// Run with --check to fail rather than write, which is what CI does.
+import {readFileSync, writeFileSync, readdirSync, existsSync} from 'node:fs';
+import {dirname, join} from 'node:path';
+import {fileURLToPath} from 'node:url';
+
+const root = join(dirname(fileURLToPath(import.meta.url)), '..');
+const check = process.argv.includes('--check');
+
+const ICON_DIR = join(root, 'node_modules', 'lucide-react', 'dist', 'esm', 'icons');
+const OUT = join(root, 'site', 'src', 'css', 'sidebar-icons.css');
+const DOCS = join(root, 'site', 'docs');
+
+/** The mark a group falls back to when it names no icon of its own. Always
+    emitted, because sidebar.css references it whether or not a row names it. */
+const FALLBACK = 'list';
+
+const NAME_PATTERN = /sidebar-icon--([a-z0-9-]+)/g;
+
+/** Every icon name mentioned anywhere the sidebar is described. */
+function collectNames() {
+  const names = new Set([FALLBACK]);
+  const add = (text) => {
+    for (const [, name] of text.matchAll(NAME_PATTERN)) names.add(name);
+  };
+
+  const walk = (dir) => {
+    for (const entry of readdirSync(dir, {withFileTypes: true})) {
+      const path = join(dir, entry.name);
+      if (entry.isDirectory()) {
+        walk(path);
+      } else if (entry.name === '_category_.json' || /\.mdx?$/.test(entry.name)) {
+        add(readFileSync(path, 'utf8'));
+      }
+    }
+  };
+  walk(DOCS);
+
+  // The three API tab sections are declared in the sidebar config rather than
+  // in a folder, because they group folders that sit in another tab.
+  add(readFileSync(join(root, 'site', 'sidebars.ts'), 'utf8'));
+  return [...names].sort();
+}
+
+/** lucide ships each icon as an array of [tag, attributes]. Rebuild the SVG
+    from it rather than copying path data into this file, so an icon set
+    upgrade reaches the sidebar the same way it reaches the cards. */
+async function svgFor(name) {
+  const file = join(ICON_DIR, `${name}.mjs`);
+  if (!existsSync(file)) return null;
+  const {__iconNode} = await import(`file://${file}`);
+  const body = __iconNode
+    .map(
+      ([tag, attrs]) =>
+        `<${tag} ${Object.entries(attrs)
+          .filter(([key]) => key !== 'key')
+          .map(([key, value]) => `${key}="${value}"`)
+          .join(' ')}/>`,
+    )
+    .join('');
+  return (
+    `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" ` +
+    `stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">` +
+    `${body}</svg>`
+  );
+}
+
+/** A data URI a CSS url() can carry unquoted trouble-free: single quotes for
+    the attributes, and the three characters that would end the value early. */
+const dataUri = (svg) =>
+  `url("data:image/svg+xml,${svg
+    .replace(/\s+/g, ' ')
+    .trim()
+    .replace(/"/g, "'")
+    .replace(/#/g, '%23')
+    .replace(/</g, '%3C')
+    .replace(/>/g, '%3E')}")`;
+
+const names = collectNames();
+const missing = [];
+const rules = [];
+
+for (const name of names) {
+  const svg = await svgFor(name);
+  if (!svg) {
+    missing.push(name);
+    continue;
+  }
+  rules.push(
+    `.sidebar-icon--${name} > .menu__list-item-collapsible > .menu__link::before,\n` +
+      `.sidebar-icon--${name} > .menu__link::before {\n` +
+      `  --sidebar-icon: ${dataUri(svg)};\n` +
+      `}\n`,
+  );
+}
+
+if (missing.length > 0) {
+  console.error(
+    `build-sidebar-icons: ${missing.length} icon name(s) are not in lucide: ${missing.join(', ')}`,
+  );
+  console.error(
+    '  fix: check the spelling against https://lucide.dev/icons, which is the set the',
+  );
+  console.error(
+    '       site already uses. A name with no icon renders the neutral fallback, which',
+  );
+  console.error('       is why this is an error rather than a warning.');
+  process.exit(1);
+}
+
+const fallbackUri = dataUri(await svgFor(FALLBACK));
+
+const output =
+  `/* Generated by scripts/build-sidebar-icons.mjs. Do not edit.\n` +
+  `   One rule per icon the sidebar names, resolved from the installed lucide.\n` +
+  `   To add one, name it where the row is declared and rebuild. The box these\n` +
+  `   rules fill is in sidebar.css. */\n\n` +
+  `:root {\n` +
+  `  /* What a group falls back to when it names no icon. sidebar.css reads it. */\n` +
+  `  --sidebar-icon-fallback: ${fallbackUri};\n` +
+  `}\n\n` +
+  rules.join('\n');
+
+const existing = existsSync(OUT) ? readFileSync(OUT, 'utf8') : '';
+
+if (check) {
+  if (existing !== output) {
+    console.error(
+      'site/src/css/sidebar-icons.css is out of date. Run: node scripts/build-sidebar-icons.mjs',
+    );
+    process.exit(1);
+  }
+  console.log(`sidebar-icons.css is current: ${rules.length} icon(s)`);
+} else {
+  writeFileSync(OUT, output);
+  console.log(`Built sidebar-icons.css: ${rules.length} icon(s) from ${names.length} name(s).`);
+}

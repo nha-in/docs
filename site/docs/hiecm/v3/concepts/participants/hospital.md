@@ -5,6 +5,7 @@ sidebar_position: 3
 description: The facility ID a hospital holds, the HIP and HIU roles it takes, and what registering on ABDM gets it.
 verification: unverified
 source: site/docs/hiecm/v3/registries/nhpr/hfr.md, site/docs/hiecm/v3/concepts/hip-hiu.md, site/docs/hiecm/v3/concepts/linking.md, site/docs/hiecm/v3/concepts/data-flow.md, site/docs/hiecm/v3/milestones/index.mdx
+sidebar_class_name: sidebar-icon sidebar-icon--hospital
 ---
 
 # Hospital

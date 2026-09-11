@@ -6,6 +6,7 @@ verification: unverified
 source: catalogue/openapi/hiecm/v3/hiecm-gateway.yaml
 sidebar_position: 10
 covers: [hiecm.concept.callback-authenticity]
+sidebar_class_name: sidebar-icon sidebar-icon--signature
 ---
 
 # Proving a callback came from ABDM

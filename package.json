@@ -29,6 +29,8 @@
     "build:requirements": "node scripts/build-requirements.mjs",
     "check:requirements": "node scripts/build-requirements.mjs --check",
     "lint:annexure": "node scripts/lint-annexure.mjs",
+    "build:icons": "node scripts/build-sidebar-icons.mjs",
+    "check:icons": "node scripts/build-sidebar-icons.mjs --check",
     "build:routes": "node scripts/build-atom-routes.mjs",
     "check:routes": "node scripts/build-atom-routes.mjs --check",
     "build:widget": "npm run build --workspace ai-widget",

@@ -5,6 +5,7 @@ sidebar_position: 8
 description: The National Health Authority runs ABDM. What it operates, what it issues, and what that gives the systems on the network.
 verification: unverified
 source: site/docs/_glossary/_shared.mdx, site/docs/hiecm/v3/concepts/gateway.md, site/docs/hiecm/v3/registries/index.md, site/docs/hiecm/v3/concepts/how-it-fits.md, site/docs/hiecm/v3/milestones/m4.mdx
+sidebar_class_name: sidebar-icon sidebar-icon--landmark
 ---
 
 # NHA

@@ -5,6 +5,7 @@ sidebar_position: 2
 description: The HPR ID a healthcare professional holds, how it is issued, and what it unlocks for the facility they work in.
 verification: unverified
 source: site/docs/hiecm/v3/registries/nhpr/hpr.md, site/docs/hiecm/v3/registries/nhpr/hfr.md, site/docs/hiecm/v3/milestones/m4.mdx, site/docs/hiecm/v3/concepts/how-it-fits.md
+sidebar_class_name: sidebar-icon sidebar-icon--user-round-cog
 ---
 
 # Doctor

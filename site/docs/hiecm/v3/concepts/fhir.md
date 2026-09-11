@@ -5,6 +5,7 @@ description: The R4 profiles ABDM uses, the document bundle every record travels
 verification: unverified
 source: ABDM__Proposed_Simplified_Milestone_2.md, ABDM__Proposed_Simplified_Milestone_3.md
 sidebar_position: 6
+sidebar_class_name: sidebar-icon sidebar-icon--file-heart
 ---
 
 # FHIR and health record formats

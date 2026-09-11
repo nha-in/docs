@@ -6,6 +6,7 @@ verification: unverified
 source: ABDM__Proposed_Simplified_Milestone_1.md, the M1 Postman collection
 sidebar_position: 9
 covers: [hiecm.concept.encrypted-identifiers, hiecm.concept.input-encryption, hiecm.decision.encrypt-locally]
+sidebar_class_name: sidebar-icon sidebar-icon--lock
 ---
 
 # Encryption

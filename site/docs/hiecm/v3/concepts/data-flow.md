@@ -5,6 +5,7 @@ description: The path a health record takes from the system that asks for it to 
 verification: unverified
 source: ABDM__Proposed_Simplified_Milestone_2.md, ABDM__Proposed_Simplified_Milestone_3.md
 sidebar_position: 5
+sidebar_class_name: sidebar-icon sidebar-icon--arrow-right-left
 ---
 
 # How a record travels

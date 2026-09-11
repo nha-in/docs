@@ -5,6 +5,7 @@ sidebar_position: 1
 description: What an ABHA gives a person, what consent means in practice, and what a citizen controls on the network.
 verification: unverified
 source: site/docs/hiecm/v3/registries/abha.md, site/docs/hiecm/v3/concepts/consent.md, site/docs/hiecm/v3/concepts/phr.md, site/docs/hiecm/v3/concepts/linking.md
+sidebar_class_name: sidebar-icon sidebar-icon--user-round
 ---
 
 # Citizen

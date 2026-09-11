@@ -5,6 +5,7 @@ description: How an application joins the UHI network, from the M2 gate to sandb
 verification: unverified
 source: UHI__UHI_Physical_Consultation_v2.0_-_Onboarding_Document.md, UHI__UHI_AmbulanceBooking_Onboarding_v1.1-July2026.md, UHI__UHI_BloodBank_Onboarding_v1.0.md, UHI__UHI_PMJAY_HEM_Onboarding_v1.4.md, UHI__UHI_JanAushadhiKendra_OnboardingDoc_v1.0.md, UHI__UHI_AMRIT_Pharmacy_OnboardingDoc_v1.0.md
 sidebar_position: 1
+sidebar_class_name: sidebar-icon sidebar-icon--door-open
 ---
 
 # Onboarding to UHI

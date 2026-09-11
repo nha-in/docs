@@ -202,6 +202,7 @@ Pages carrying `generated: true` in frontmatter come from `scripts/build-api-ref
 ## Related
 
 - The prose rules underneath this paradigm: `writing-guide`
+- The icon the page shows in the sidebar: `sidebar-icons`
 - Voice, which outranks every rule here: `nha-voice`
 - Site structure, tabs and the module page ladder: `docs-ux`
 - The Scalar docs site and its build: `scalar-docs`

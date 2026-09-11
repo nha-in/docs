@@ -5,6 +5,7 @@ sidebar_position: 1
 description: Doctor discovery, appointment booking, PIN check-in and the full appointment lifecycle on UHI.
 verification: unverified
 source: UHI__UHI_Physical_Consultation_v2.0_-_Onboarding_Document.md
+sidebar_class_name: sidebar-icon sidebar-icon--stethoscope
 ---
 
 # Physical consultation
