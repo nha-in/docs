@@ -177,6 +177,15 @@ Email verification sits between the mobile step and the address step. It is opti
 
 Some people cannot use the OTP route, usually because the mobile registered against their Aadhaar is no longer theirs. Face authentication is the optional alternative. The person authenticates their face through the Aadhaar registered device (RD) service on their own phone, which is how the transaction moves from your screen to theirs.
 
+NHA files both calls in this journey under the use case "ABHA creation,
+Aadhaar biometric", and their summaries read "face or biometric". Do not
+read that as a fingerprint or iris route you can build. The only request
+recorded against either call sends the scope `face-auth`, the specification
+names no biometric scope beside it, and nothing has been run against the
+sandbox either way. If you need fingerprint or iris enrolment, treat it as
+named by NHA and unproven here, and confirm with NHA before you design
+around it.
+
 ```mermaid
 sequenceDiagram
     autonumber
@@ -226,7 +235,7 @@ The account this produces is restricted until it is upgraded through Aadhaar kno
 
 ## Journey 4: Communication mobile number after enrolment
 
-The Aadhaar linked number is not always the number the person wants health messages on. This flow runs after enrolment in all three creation routes: Aadhaar OTP, face authentication and biometrics.
+The Aadhaar linked number is not always the number the person wants health messages on. This flow runs after enrolment in all three creation routes: Aadhaar OTP, face authentication and identity document.
 
 ```mermaid
 sequenceDiagram
