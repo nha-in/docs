@@ -31,7 +31,11 @@ skips M1.
   records.
 - Nothing runs until the gateway session call returns an access token.
 - Two tokens exist and are not interchangeable: the gateway token in
-  `Authorization`, the user token in `X-token`.
+  `Authorization`, the user token in `X-token`. NHA's recorded login
+  response gives the user token thirty minutes (`expiresIn: 1800`) and its
+  refresh token fifteen days (`refreshExpiresIn: 1296000`). Read both back
+  from the response rather than assuming them, and plan a refresh before
+  the thirty minutes run out.
 - Aadhaar numbers, mobile numbers, [OTP](/docs/hiecm/v3/getting-started/glossary#otp)
   values and passwords travel RSA encrypted.
 
