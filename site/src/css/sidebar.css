@@ -770,6 +770,16 @@ body.is-resizing-sidebar {
   color: var(--text-heading);
 }
 
+/* The lead line above each panel in the Install AI tools pop-up. It carries
+   the Build with AI page's card copy, so it reads as body text rather than as
+   part of the panel it introduces. */
+.markdown .install-tools__lead {
+  margin: 0 0 1rem;
+  font-size: 0.9375rem;
+  line-height: 1.5rem;
+  color: var(--text-muted);
+}
+
 .markdown .skill-install__note {
   margin: 0;
   font-size: 0.9375rem;
@@ -916,7 +926,7 @@ body.is-resizing-sidebar {
   min-width: 0;
   /* Wrap rather than scroll. The scroll had its bar hidden, so a command
      longer than the box simply looked cut off, which is how the plugin
-     install line read inside the Install tools dialog. A command is meant to
+     install line read inside the Install AI tools dialog. A command is meant to
      be read before it is copied. */
   white-space: pre-wrap;
   overflow-wrap: anywhere;

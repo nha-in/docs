@@ -144,7 +144,7 @@ body {
 
 /* Tailwind v4 dropped the browser's old `cursor: pointer` on buttons, so
    every control built on a <button> stopped saying it was clickable: the
-   tabs in the Install tools panel, the copy buttons, the role cards. The
+   tabs in the Install AI tools panel, the copy buttons, the role cards. The
    individual files that set it were each patching one instance of a
    site-wide change. One rule, on everything that is actually a control, and
    the disabled ones say so instead. */
