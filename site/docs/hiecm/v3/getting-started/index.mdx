@@ -18,9 +18,16 @@ Connect your application to India's health data network.
 ## What ABDM is
 
 The Ayushman Bharat Digital Mission is India's national health data network. It
-gives every person one health identity, an
-[ABHA](/docs/hiecm/v3/getting-started/glossary#abha), and lets the systems that
-hold their records exchange those records with the person's consent.
+identifies both sides of a visit and lets the systems that hold the records
+exchange them with the person's consent.
+
+Two identities carry that. The care seeker has an
+[ABHA](/docs/hiecm/v3/getting-started/glossary#abha), one health identity per
+person. The care provider has two: an
+[HPR](/docs/hiecm/v3/getting-started/glossary#hpr) ID for the professional and an
+[HFR](/docs/hiecm/v3/getting-started/glossary#hfr) facility ID for the place. You
+create the first in [M1](/docs/hiecm/v3/milestones/m1) and the other two in
+[M4](/docs/hiecm/v3/milestones/m4).
 
 There is no central store of health records. Records stay in the system that
 created them. What the network moves is a request, a consent and, once that
@@ -58,7 +65,7 @@ More ways to set one up are on [Build with AI](/docs/hiecm/v3/getting-started/bu
     Register and get a client id and secret.
   </Card>
   <Card title="Quickstart" icon="terminal" href="/docs/hiecm/v3/getting-started/first-fifteen-minutes">
-    Create your first ABHA live, with your own credentials.
+    Create your first test ABHA live, with your own credentials.
   </Card>
   <Card title="Milestones" icon="milestone" href="/docs/hiecm/v3/milestones">
     The four milestones and what each one gets you.
