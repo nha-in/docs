@@ -7,6 +7,7 @@ import (
 	"sort"
 	"strings"
 
+	"github.com/eka-care/abdm-docs/mcp/internal/catalogue"
 	"github.com/eka-care/abdm-docs/mcp/internal/embed"
 )
 
@@ -51,7 +52,7 @@ func (r *Reader) ftsSearch(query, atomType, milestone string, limit int) ([]Sear
         WHERE atoms_fts MATCH ?
           AND (? = '' OR a.type = ?)
           AND (? = '' OR a.milestone = ?)
-        ORDER BY bm25(atoms_fts, 0.0, 5.0, 3.0, 1.0, 8.0)
+        ORDER BY bm25(atoms_fts, 0.0, 5.0, 3.0, 1.0, 8.0, 6.0)
         LIMIT ?`,
 		match, atomType, atomType, milestone, milestone, limit)
 	if err != nil {
@@ -77,7 +78,7 @@ func (r *Reader) vectorSearch(ctx context.Context, query, atomType, milestone st
 		return nil, fmt.Errorf("embed query: %w", err)
 	}
 	rows, err := r.db.Query(`
-        SELECT c.atom_id, c.text, c.embedding,
+        SELECT c.atom_id, c.heading, c.text, c.embedding,
                a.type, a.milestone, a.title, a.summary, a.verification_status,
                a.doc_url, a.doc_anchor
         FROM chunks c JOIN atoms a ON a.id = c.atom_id
@@ -95,18 +96,25 @@ func (r *Reader) vectorSearch(ctx context.Context, query, atomType, milestone st
 	}
 	best := map[string]scored{}
 	for rows.Next() {
-		var atomID, text string
+		var atomID, heading, text string
 		var blob []byte
 		var h SearchHit
-		if err := rows.Scan(&atomID, &text, &blob, &h.Type, &h.Milestone,
+		if err := rows.Scan(&atomID, &heading, &text, &blob, &h.Type, &h.Milestone,
 			&h.Title, &h.Summary, &h.VerificationStatus, &h.DocURL, &h.DocAnchor); err != nil {
 			return nil, err
 		}
 		h.ID = atomID
-		if len(text) > 200 {
-			text = text[:200] + "..."
+		if heading == catalogue.QuestionsHeading {
+			// This chunk exists so a naive phrasing can find the atom, not
+			// to be read: it is a list of other questions, not the answer.
+			// Score it, but show the atom's summary as the snippet.
+			h.Snippet = h.Summary
+		} else {
+			if len(text) > 200 {
+				text = text[:200] + "..."
+			}
+			h.Snippet = text
 		}
-		h.Snippet = text
 		s := embed.Cosine(qv[0], blobToVec(blob))
 		if prev, ok := best[atomID]; !ok || s > prev.score {
 			best[atomID] = scored{hit: h, score: s}

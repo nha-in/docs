@@ -31,8 +31,8 @@ type Meta struct {
 	Vocabulary string
 }
 
-func Build(dbPath string, atoms []catalogue.Atom, ops []catalogue.Operation,
-	specErrors []catalogue.SpecErrorCode, fhirDigests []fhir.ProfileDigest,
+func Build(dbPath string, atoms []catalogue.Atom, questions map[string]catalogue.AtomQuestions,
+	ops []catalogue.Operation, specErrors []catalogue.SpecErrorCode, fhirDigests []fhir.ProfileDigest,
 	fhirExamples map[string][]byte, chunks []EmbeddedChunk, meta Meta) error {
 	_ = os.Remove(dbPath)
 	db, err := sql.Open("sqlite", dbPath)
@@ -54,9 +54,10 @@ func Build(dbPath string, atoms []catalogue.Atom, ops []catalogue.Operation,
 			a.VerificationStatus, a.Body, a.SourcePath, a.DocURL, a.DocAnchor); err != nil {
 			return fmt.Errorf("atom %s: %w", a.ID, err)
 		}
+		qs := strings.Join(questions[a.ID].Questions, "\n")
 		if _, err := tx.Exec(
-			`INSERT INTO atoms_fts (id, title, summary, body, error_codes) VALUES (?,?,?,?,?)`,
-			a.ID, a.Title, a.Summary, a.Body, strings.Join(a.ErrorCodes, " ")); err != nil {
+			`INSERT INTO atoms_fts (id, title, summary, body, error_codes, questions) VALUES (?,?,?,?,?,?)`,
+			a.ID, a.Title, a.Summary, a.Body, strings.Join(a.ErrorCodes, " "), qs); err != nil {
 			return fmt.Errorf("atom fts %s: %w", a.ID, err)
 		}
 		for relation, ids := range a.Related {
