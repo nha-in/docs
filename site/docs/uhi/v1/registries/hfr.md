@@ -5,6 +5,7 @@ description: The one UHI service that carries an HFR ID, the tag it travels in, 
 verification: unverified
 source: UHI__UHI_AMRIT_Pharmacy_OnboardingDoc_v1.0.md, UHI__UHI_Physical_Consultation_v2.0_-_Onboarding_Document.md
 sidebar_position: 3
+sidebar_class_name: sidebar-icon sidebar-icon--building
 ---
 
 # HFR on UHI

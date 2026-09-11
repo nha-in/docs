@@ -6,6 +6,7 @@ verification: unverified
 source: M1 ABHA Collection.postman_collection.json
 sidebar_position: 3
 covers: [hiecm.troubleshooting.otp-never-arrives]
+sidebar_class_name: sidebar-icon sidebar-icon--message-square-warning
 ---
 
 # The OTP never arrives

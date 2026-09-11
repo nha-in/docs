@@ -5,6 +5,7 @@ sidebar_position: 2
 description: Find PM-JAY empanelled hospitals over UHI by state, district, speciality, facility name, pincode or GPS.
 verification: unverified
 source: UHI__UHI_PMJAY_HEM_Onboarding_v1.4.md
+sidebar_class_name: sidebar-icon sidebar-icon--hospital
 ---
 
 # PM-JAY HEM hospital discovery

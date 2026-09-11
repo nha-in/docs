@@ -6,6 +6,7 @@ verification: unverified
 source: ABDM__Proposed_Simplified_Milestone_3.md, ABDM__NewDocumant_PHR_app.md
 sidebar_position: 5
 covers: [hiecm.troubleshooting.consent-stuck-requested]
+sidebar_class_name: sidebar-icon sidebar-icon--circle-pause
 ---
 
 # Consent stuck in Requested

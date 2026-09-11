@@ -5,6 +5,7 @@ description: The Healthcare Professionals Registry, the HPID, what identifies a 
 verification: unverified
 source: ABDM__Proposed_Simplified_Milestone_4_(NHPR).md
 sidebar_position: 1
+sidebar_class_name: sidebar-icon sidebar-icon--stethoscope
 ---
 
 # HPR, the professional registry

@@ -6,6 +6,7 @@ verification: unverified
 source: ABDM__Proposed_Simplified_Milestone_2.md
 sidebar_position: 2
 covers: [hiecm.troubleshooting.everything-returns-401]
+sidebar_class_name: sidebar-icon sidebar-icon--shield-x
 ---
 
 # Everything returns 401

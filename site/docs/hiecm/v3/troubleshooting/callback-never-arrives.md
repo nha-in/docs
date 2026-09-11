@@ -6,6 +6,7 @@ verification: unverified
 source: ABDM__Proposed_Simplified_Milestone_2.md, ABDM__Proposed_Simplified_Milestone_1.md
 sidebar_position: 1
 covers: [hiecm.troubleshooting.callback-never-arrives]
+sidebar_class_name: sidebar-icon sidebar-icon--satellite-dish
 ---
 
 # The callback never arrives

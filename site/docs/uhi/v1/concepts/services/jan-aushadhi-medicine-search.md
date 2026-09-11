@@ -5,6 +5,7 @@ sidebar_position: 6
 description: Search the Jan Aushadhi medicine catalogue, then find the Kendras that stock a chosen medicine.
 verification: unverified
 source: UHI__JanAushadhiKendra_medicineSearch_v0.3.md, UHI__UHI_JanAushadhiKendra_search_v0.3.md
+sidebar_class_name: sidebar-icon sidebar-icon--search
 ---
 
 # Jan Aushadhi medicine search
