@@ -23,6 +23,10 @@ type SliceScore struct {
 	Recall3     float64 `json:"recall_at_3"`
 	MRR         float64 `json:"mrr"`
 	Unstable    int     `json:"unstable"`
+	// MeanToolCalls and RetrievalHitRate come from CheckResult, so they
+	// cover every answered case, not just the ones a judge scored.
+	MeanToolCalls    float64 `json:"mean_tool_calls"`
+	RetrievalHitRate float64 `json:"retrieval_hit_rate"`
 }
 
 type Scorecard struct {
@@ -40,12 +44,18 @@ type tally struct {
 	grounding, forbidden, shape                                     int
 	answered, graded                                                int
 	recall, rr                                                      float64
+	toolCalls                                                       int
+	// retrievalCases and retrievalHits cover only answered cases that have
+	// expected sources: a case with none is not a retrieval measurement, so
+	// it must not sit in either the numerator or the denominator (finding 4).
+	retrievalCases, retrievalHits int
 }
 
 func (t tally) score(name string) SliceScore {
 	s := SliceScore{Slice: name, Cases: t.cases, Answered: t.answered, Graded: t.graded,
 		Grounding: t.grounding, Forbidden: t.forbidden,
-		Shape: t.shape, Unstable: t.unstable, Factuality: -1, Uncertainty: -1, Recall3: -1, MRR: -1}
+		Shape: t.shape, Unstable: t.unstable, Factuality: -1, Uncertainty: -1, Recall3: -1, MRR: -1,
+		MeanToolCalls: -1, RetrievalHitRate: -1}
 	if t.answers > 0 {
 		s.Factuality = float64(t.abGrades) / float64(t.answers)
 	}
@@ -55,6 +65,12 @@ func (t tally) score(name string) SliceScore {
 	if t.scored > 0 {
 		s.Recall3 = t.recall / float64(t.scored)
 		s.MRR = t.rr / float64(t.scored)
+	}
+	if t.answered > 0 {
+		s.MeanToolCalls = float64(t.toolCalls) / float64(t.answered)
+	}
+	if t.retrievalCases > 0 {
+		s.RetrievalHitRate = float64(t.retrievalHits) / float64(t.retrievalCases)
 	}
 	return s
 }
@@ -102,6 +118,13 @@ func BuildScorecard(cases []Case, checks []CheckResult, retrieval []RetrievalRes
 			tt.cases++
 			if caseAnswered(byCheck, c.ID) {
 				tt.answered++
+				tt.toolCalls += byCheck[c.ID].ToolCalls
+				if len(c.ExpectedSources) > 0 {
+					tt.retrievalCases++
+					if byCheck[c.ID].RetrievalHit {
+						tt.retrievalHits++
+					}
+				}
 			}
 			for _, f := range byCheck[c.ID].Failures {
 				switch {
@@ -154,7 +177,7 @@ func BuildScorecard(cases []Case, checks []CheckResult, retrieval []RetrievalRes
 	return sc
 }
 
-const scoreTableHeader = "| slice | cases | answered | graded | factuality | uncertainty | grounding | forbidden | recall@3 |\n|---|---|---|---|---|---|---|---|---|\n"
+const scoreTableHeader = "| slice | cases | answered | graded | factuality | uncertainty | grounding | forbidden | recall@3 | mean tool calls | retrieval hit rate |\n|---|---|---|---|---|---|---|---|---|---|---|\n"
 
 // deltaCell renders one dimension's before/after as a Markdown cell. A
 // negative value is the -1 sentinel for "not measured this run", not a
@@ -188,10 +211,11 @@ func Delta(now, before Scorecard) string {
 	for _, s := range now.Slices {
 		seen[s.Slice] = true
 		p := prev[s.Slice]
-		fmt.Fprintf(&b, "| %s | %d | %d (%+d) | %d (%+d) | %s | %s | %d (%+d) | %d (%+d) | %s |\n", s.Slice,
+		fmt.Fprintf(&b, "| %s | %d | %d (%+d) | %d (%+d) | %s | %s | %d (%+d) | %d (%+d) | %s | %s | %s |\n", s.Slice,
 			s.Cases, s.Answered, s.Answered-p.Answered, s.Graded, s.Graded-p.Graded,
 			deltaCell(s.Factuality, p.Factuality), deltaCell(s.Uncertainty, p.Uncertainty),
-			s.Grounding, s.Grounding-p.Grounding, s.Forbidden, s.Forbidden-p.Forbidden, deltaCell(s.Recall3, p.Recall3))
+			s.Grounding, s.Grounding-p.Grounding, s.Forbidden, s.Forbidden-p.Forbidden, deltaCell(s.Recall3, p.Recall3),
+			deltaCell(s.MeanToolCalls, p.MeanToolCalls), deltaCell(s.RetrievalHitRate, p.RetrievalHitRate))
 	}
 	var gone []string
 	for _, s := range before.Slices {
@@ -201,7 +225,7 @@ func Delta(now, before Scorecard) string {
 	}
 	sort.Strings(gone)
 	for _, name := range gone {
-		fmt.Fprintf(&b, "| %s | gone: this slice ran before but not in this run | | | | | | | |\n", name)
+		fmt.Fprintf(&b, "| %s | gone: this slice ran before but not in this run | | | | | | | | | |\n", name)
 	}
 	return b.String()
 }
@@ -219,8 +243,9 @@ func Table(sc Scorecard) string {
 	var b strings.Builder
 	b.WriteString(scoreTableHeader)
 	for _, s := range sc.Slices {
-		fmt.Fprintf(&b, "| %s | %d | %d | %d | %s | %s | %d | %d | %s |\n", s.Slice,
-			s.Cases, s.Answered, s.Graded, cell(s.Factuality), cell(s.Uncertainty), s.Grounding, s.Forbidden, cell(s.Recall3))
+		fmt.Fprintf(&b, "| %s | %d | %d | %d | %s | %s | %d | %d | %s | %s | %s |\n", s.Slice,
+			s.Cases, s.Answered, s.Graded, cell(s.Factuality), cell(s.Uncertainty), s.Grounding, s.Forbidden, cell(s.Recall3),
+			cell(s.MeanToolCalls), cell(s.RetrievalHitRate))
 	}
 	return b.String()
 }

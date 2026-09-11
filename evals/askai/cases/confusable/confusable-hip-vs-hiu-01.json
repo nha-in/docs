@@ -1,0 +1,20 @@
+{
+  "id": "confusable-hip-vs-hiu-01",
+  "slice": "confusable",
+  "class": "compare",
+  "turns": [{"role": "user", "text": "am I a HIP or a HIU?"}],
+  "attachment": null,
+  "page": null,
+  "must_contain": [
+    "a HIP publishes records it created and a HIU requests records held elsewhere",
+    "one system can be both, and the role is per interaction"
+  ],
+  "must_not_contain": ["<MASKED", "i apologize", "i apologise", "let me ", "great question", "the catalogue", "atom", "HIP and HIU are the same"],
+  "expected_sources": ["shared.glossary.hip", "shared.glossary.hiu"],
+  "expected_shape": "compare",
+  "expected_behaviour": "answer",
+  "derived_from": null,
+  "source_row": "annexure#glossary",
+  "catalogue_version": "2026.08.24",
+  "notes": "Source lines: catalogue/hiecm/concepts/roles.md, 'The entity publishing a record is the HIP... The entity fetching one is the HIU. This changes call by call, and either entity can take either role.'; catalogue/shared/glossary/hip.md, 'The role is per interaction, not per product and not per company.'"
+}

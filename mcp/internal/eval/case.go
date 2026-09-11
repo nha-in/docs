@@ -49,7 +49,8 @@ type Case struct {
 }
 
 var (
-	slices     = set("faq-verbatim", "faq-rephrased", "define", "diagnose", "decline", "conversation")
+	slices = set("faq-verbatim", "faq-rephrased", "define", "diagnose", "decline", "conversation",
+		"naive", "confusable", "followup", "abstain")
 	classes    = set("define", "how-do-i", "diagnose", "compare", "meta", "out-of-scope", "unclear")
 	shapes     = set("define", "how-do-i", "diagnose", "compare", "meta", "decline")
 	behaviours = set("answer", "decline")
@@ -69,7 +70,7 @@ func (c *Case) validate(file string) error {
 		return fail("id", "must equal the file name")
 	}
 	if !slices[c.Slice] {
-		return fail("slice", "not one of the six slices")
+		return fail("slice", "not a known slice")
 	}
 	if !classes[c.Class] {
 		return fail("class", "not a known class")
