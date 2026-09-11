@@ -23,10 +23,20 @@ related:
 
 ## In plain words
 
-Across M1, the value you put in `loginId` is not the raw Aadhaar or
-mobile number. It is that value encrypted against NHA's public key.
+Across M1, the value you put in `loginId` is not the raw Aadhaar,
+ABHA or mobile number. It is that value encrypted against NHA's public
+key.
 
 The same applies to OTP values on several calls.
+
+What you encrypt has a shape, and the service checks it after it
+decrypts. An ABHA number is `NN-NNNN-NNNN-NNNN`, dashes included, for
+example `91-1234-5678-9015`. An Aadhaar number is 12 digits with no
+spaces. A mobile number is 10 digits with no country code. Encrypting an
+ABHA number as 14 bare digits is rejected: a login OTP request sent that
+way on the sandbox on 2026-09-11 returned
+`400 {"loginId": "LoginId is invalid"}`, and the same number with its
+dashes passed validation and went on to look the account up.
 
 ## Before you start
 
@@ -68,4 +78,10 @@ pointed at third party websites. Encrypt locally.
 
 Logging the plain value before encryption. That is the same leak, moved
 into your log store.
+
+Encrypting the right value in the wrong shape. Two refusals read almost
+the same and mean different things. `"loginId": "Invalid LoginId"` means
+the service could not decrypt what you sent, which is a key or a padding
+problem. `"loginId": "LoginId is invalid"` means it decrypted and then
+failed a format rule, so the plaintext shape is wrong.
 
