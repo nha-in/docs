@@ -166,3 +166,4 @@ Before approving a rendered page:
 - Changelog feed: `update-pipeline`
 - What earns a changelog entry: `changelog`
 - Page types, budgets and the Diataxis mapping: `page-authoring`
+- The icon on a sidebar row, and how to choose it: `sidebar-icons`
