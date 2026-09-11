@@ -7,6 +7,8 @@ import (
 	"strings"
 	"testing"
 	"unicode/utf8"
+
+	"github.com/eka-care/abdm-docs/mcp/internal/guard"
 )
 
 // fakeModel scripts a sequence of replies, one per call, in order. texts[i],
@@ -26,12 +28,20 @@ type fakeModel struct {
 	calls     int
 	gotMsgs   [][]Message
 	gotSystem []string
+	// onStream, when set, is called on every Stream invocation with exactly
+	// what the model saw: the tools it was offered and the messages it was
+	// given. Tests use it to check the routed tool set and the pre-retrieved
+	// pack without adding yet more slices this struct has to record.
+	onStream func(system string, tools []ToolDef, msgs []Message)
 }
 
 func (f *fakeModel) Stream(ctx context.Context, system string, tools []ToolDef,
 	msgs []Message, maxTokens int, onText func(string)) (Reply, error) {
 	f.gotMsgs = append(f.gotMsgs, msgs)
 	f.gotSystem = append(f.gotSystem, system)
+	if f.onStream != nil {
+		f.onStream(system, tools, msgs)
+	}
 	i := f.calls
 	f.calls++
 	if i < len(f.texts) && f.texts[i] != "" {
@@ -648,5 +658,242 @@ func TestRespondRetriesWithoutPuttingWordsInTheReadersMouth(t *testing.T) {
 	}
 	if got := seen.String(); !strings.Contains(got, "Nothing here matches that.") {
 		t.Errorf("the second answer did not reach the reader:\n%s", got)
+	}
+}
+
+// TestCollectSourcesFromPassages covers the composite search_docs the chat
+// loop calls (server.Tools.ChatToolsFor binds search_docs to Lookup): its
+// result carries "passages" rather than "hits", and every passage must
+// still become a source.
+func TestCollectSourcesFromPassages(t *testing.T) {
+	var sources []Source
+	result := map[string]any{
+		"passages": []map[string]any{
+			{"id": "hiecm.glossary.abha-address", "title": "ABHA address",
+				"verification_status": "verified", "doc_url": "/docs/glossary/abha-address"},
+			{"id": "hiecm.glossary.abha-number", "title": "ABHA number",
+				"verification_status": "verified", "doc_url": "/docs/glossary/abha-number"},
+		},
+	}
+	collectSources(&sources, "search_docs", result)
+	if len(sources) != 2 {
+		t.Fatalf("got %d sources, want 2: %+v", len(sources), sources)
+	}
+	if sources[0].ID != "hiecm.glossary.abha-address" || sources[1].ID != "hiecm.glossary.abha-number" {
+		t.Errorf("sources = %+v", sources)
+	}
+}
+
+func TestRespondPreRetrievesAndExposesRoutedTools(t *testing.T) {
+	var sawTools []string
+	var sawFirstUser string
+	m := &fakeModel{
+		replies: []Reply{{Text: "An ABHA address is the handle.", StopReason: "end_turn"}},
+		onStream: func(system string, tools []ToolDef, msgs []Message) {
+			for _, td := range tools {
+				sawTools = append(sawTools, td.Name)
+			}
+			sawFirstUser = msgs[len(msgs)-1].Text
+		},
+	}
+	svc := &Service{Model: m, MaxTokens: 100,
+		Lookup: func(ctx context.Context, q string) (json.RawMessage, []Source, guard.PackFacts, error) {
+			return json.RawMessage(`{"passages":[{"id":"shared.glossary.abha-address","title":"ABHA address"}]}`),
+				[]Source{{ID: "shared.glossary.abha-address", Title: "ABHA address"}}, guard.PackFacts{}, nil
+		},
+		ToolsFor: func(q string, att bool) []ToolDef {
+			return []ToolDef{{Name: "search_docs"}, {Name: "decode_error"}}
+		},
+	}
+	var sources []Source
+	emit := func(event string, data any) error {
+		if event == "sources" {
+			sources = data.([]Source)
+		}
+		return nil
+	}
+	if err := svc.Respond(context.Background(), []Turn{{Role: "user", Text: "what is an abha address"}}, nil, emit); err != nil {
+		t.Fatal(err)
+	}
+	if len(sawTools) != 2 {
+		t.Errorf("tools exposed = %v, want the two routed ones", sawTools)
+	}
+	if !strings.Contains(sawFirstUser, "shared.glossary.abha-address") {
+		t.Errorf("passage pack was not placed in the user turn: %q", sawFirstUser)
+	}
+	if len(sources) != 1 {
+		t.Errorf("pre-retrieved passages must count as sources, got %v", sources)
+	}
+}
+
+// TestRespondDeniesWithPackDoesNotRetry pins the behaviour half of finding
+// 2: a pre-retrieved pack sets looked, so a model that answers "I don't
+// have that" anyway is never sent the lookFirst retry. Only one reply is
+// scripted, so a retry attempt (which would index replies[1]) panics
+// instead of silently passing.
+func TestRespondDeniesWithPackDoesNotRetry(t *testing.T) {
+	m := &fakeModel{
+		replies: []Reply{{Text: "I do not have anything on that.", StopReason: "end_turn"}},
+		texts:   []string{"I do not have anything on that.\n\n"},
+	}
+	svc := &Service{Model: m, MaxTokens: 100,
+		Lookup: func(ctx context.Context, q string) (json.RawMessage, []Source, guard.PackFacts, error) {
+			return json.RawMessage(`{"passages":[{"id":"shared.glossary.abha-address","title":"ABHA address"}]}`),
+				[]Source{{ID: "shared.glossary.abha-address", Title: "ABHA address"}}, guard.PackFacts{}, nil
+		},
+	}
+	var got strings.Builder
+	emit := func(event string, data any) error {
+		if event == "text" {
+			got.WriteString(data.(map[string]string)["delta"])
+		}
+		return nil
+	}
+	if err := svc.Respond(context.Background(), []Turn{{Role: "user", Text: "what is an abha address"}}, nil, emit); err != nil {
+		t.Fatal(err)
+	}
+	if m.calls != 1 {
+		t.Errorf("model called %d times, want exactly 1 (no retry once a pack was pre-retrieved)", m.calls)
+	}
+	if got.String() == "" {
+		t.Error("the answer must still be released to the reader")
+	}
+}
+
+// TestRespondContinuesWhenLookupFails covers finding 3: a Lookup that
+// errors must not stop the turn. The model still gets the routed tool set
+// from ToolsFor and still answers, and since no pack was written the user
+// turn is left exactly as the reader wrote it, with no <passages> wrapper.
+func TestRespondContinuesWhenLookupFails(t *testing.T) {
+	var sawTools []string
+	var sawFirstUser string
+	m := &fakeModel{
+		replies: []Reply{{Text: "An ABHA address is the handle.", StopReason: "end_turn"}},
+		texts:   []string{"An ABHA address is the handle.\n\n"},
+		onStream: func(system string, tools []ToolDef, msgs []Message) {
+			for _, td := range tools {
+				sawTools = append(sawTools, td.Name)
+			}
+			sawFirstUser = msgs[len(msgs)-1].Text
+		},
+	}
+	svc := &Service{Model: m, MaxTokens: 100,
+		Lookup: func(ctx context.Context, q string) (json.RawMessage, []Source, guard.PackFacts, error) {
+			return nil, nil, guard.PackFacts{}, errors.New("index unavailable")
+		},
+		ToolsFor: func(q string, att bool) []ToolDef {
+			return []ToolDef{{Name: "search_docs"}, {Name: "decode_error"}}
+		},
+	}
+	var got strings.Builder
+	emit := func(event string, data any) error {
+		if event == "text" {
+			got.WriteString(data.(map[string]string)["delta"])
+		}
+		return nil
+	}
+	if err := svc.Respond(context.Background(), []Turn{{Role: "user", Text: "what is an abha address"}}, nil, emit); err != nil {
+		t.Fatal(err)
+	}
+	if got.String() == "" {
+		t.Error("a failed pre-retrieval must not stop the turn from being answered")
+	}
+	if len(sawTools) != 2 {
+		t.Errorf("tools exposed = %v, want the two routed ones even when Lookup fails", sawTools)
+	}
+	if strings.HasPrefix(sawFirstUser, "<passages>") {
+		t.Errorf("no pack was retrieved, the user turn must not carry a passages wrapper: %q", sawFirstUser)
+	}
+}
+
+// TestRespondZeroHitLookupLeavesTheOldPath covers finding 2: a pack with no
+// passages must read as no lookup at all, not as a pack that answered the
+// question. ChatHooks now turns a zero-hit Lookup into a nil pack (tested in
+// package server), and this pins what the loop does with that nil: looked
+// stays false, so a refusal reached without a tool call still gets the
+// lookFirst retry.
+func TestRespondZeroHitLookupLeavesTheOldPath(t *testing.T) {
+	m := &fakeModel{
+		replies: []Reply{
+			{Text: "I do not have anything on that.", StopReason: "end_turn"},
+			{Text: "Here is what I found.", StopReason: "end_turn"},
+		},
+		texts: []string{
+			"I do not have anything on that.\n\n",
+			"Here is what I found.\n\n",
+		},
+	}
+	svc := &Service{Model: m, MaxTokens: 100,
+		Lookup: func(ctx context.Context, q string) (json.RawMessage, []Source, guard.PackFacts, error) {
+			return nil, nil, guard.PackFacts{}, nil
+		},
+	}
+	emit, _ := collectEvents()
+	if err := svc.Respond(context.Background(),
+		[]Turn{{Role: "user", Text: "what is a widget"}}, nil, emit); err != nil {
+		t.Fatal(err)
+	}
+	if m.calls != 2 {
+		t.Fatalf("model called %d times, want 2 (the lookFirst retry must fire)", m.calls)
+	}
+	firstUser := m.gotMsgs[0][len(m.gotMsgs[0])-1].Text
+	if strings.Contains(firstUser, "<passages>") {
+		t.Errorf("a zero-hit lookup must not prepend a passages block: %q", firstUser)
+	}
+	if !strings.Contains(m.gotSystem[1], lookFirst) {
+		t.Error("the second call must carry the lookFirst instruction")
+	}
+}
+
+func TestLookupQueryUsesThePreviousTurnForAShortFollowUp(t *testing.T) {
+	turns := []Turn{
+		{Role: "user", Text: "how do I create an ABHA"},
+		{Role: "assistant", Text: "Use the M1 flow."},
+		{Role: "user", Text: "and the address?"},
+	}
+	got := lookupQuery(turns)
+	if !strings.Contains(got, "create an ABHA") || !strings.Contains(got, "address") {
+		t.Errorf("lookupQuery(%v) = %q, want it to carry both turns", turns, got)
+	}
+}
+
+func TestLookupQueryLeavesALongTurnAlone(t *testing.T) {
+	turns := []Turn{
+		{Role: "user", Text: "how do I create an ABHA"},
+		{Role: "assistant", Text: "Use the M1 flow."},
+		{Role: "user", Text: "what does the linkAddContexts operation require"},
+	}
+	got := lookupQuery(turns)
+	if got != "what does the linkAddContexts operation require" {
+		t.Errorf("lookupQuery(%v) = %q, want the last turn alone", turns, got)
+	}
+}
+
+// TestRespondPreRetrievesOnAShortFollowUp covers finding 5 end to end: the
+// pre-retrieval query for "and the address?" must carry the previous turn,
+// or a follow-up like it can never find the flow it is asking to continue.
+func TestRespondPreRetrievesOnAShortFollowUp(t *testing.T) {
+	var sawQuery string
+	m := &fakeModel{
+		replies: []Reply{{Text: "The address is the second step.", StopReason: "end_turn"}},
+		texts:   []string{"The address is the second step.\n\n"},
+	}
+	svc := &Service{Model: m, MaxTokens: 100,
+		Lookup: func(ctx context.Context, q string) (json.RawMessage, []Source, guard.PackFacts, error) {
+			sawQuery = q
+			return nil, nil, guard.PackFacts{}, nil
+		},
+	}
+	emit, _ := collectEvents()
+	turns := []Turn{
+		{Role: "user", Text: "how do I create an ABHA"},
+		{Role: "assistant", Text: "Use the M1 flow."},
+		{Role: "user", Text: "and the address?"},
+	}
+	if err := svc.Respond(context.Background(), turns, nil, emit); err != nil {
+		t.Fatal(err)
+	}
+	if !strings.Contains(sawQuery, "create an ABHA") || !strings.Contains(sawQuery, "address") {
+		t.Errorf("lookup query = %q, want it to carry the previous turn", sawQuery)
 	}
 }

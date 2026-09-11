@@ -90,6 +90,13 @@ type Service struct {
 	// download every raw tool payload the widget ignores. The eval sets it
 	// true when it builds its own Service (internal/eval/runner.go).
 	TraceTools bool
+	// Lookup pre-retrieves a passage pack for the question before the
+	// first model call. nil means no pre-retrieval (tests, or a caller
+	// that wants the old behaviour).
+	Lookup func(ctx context.Context, question string) (json.RawMessage, []Source, guard.PackFacts, error)
+	// ToolsFor returns the tools to expose for this question. nil means
+	// s.Tools unchanged.
+	ToolsFor func(question string, hasAttachment bool) []ToolDef
 }
 
 const (
@@ -477,10 +484,34 @@ func sourceFromFields(fields map[string]any) Source {
 	return Source{ID: id, Title: title, Status: status, URL: href}
 }
 
+// passageFields normalizes a search_docs result's "passages" field into the
+// map shape sourceFromFields reads. In process, a chat search_docs call
+// (server.Tools.ChatToolsFor) returns passages as a []server.Passage, a
+// concrete type this package cannot name without an import cycle; a
+// round trip through JSON is what reads its id, title, verification_status
+// and doc_url fields generically, the same trick the wire encoding already
+// performs when a result travels to a real client.
+func passageFields(v any) []map[string]any {
+	if v == nil {
+		return nil
+	}
+	b, err := json.Marshal(v)
+	if err != nil {
+		return nil
+	}
+	var out []map[string]any
+	if err := json.Unmarshal(b, &out); err != nil {
+		return nil
+	}
+	return out
+}
+
 // collectSources folds one successful tool call's result into sources,
 // deterministically: a get_atom call contributes its one atom; a
-// search_docs call contributes its top 3 hits. Dedup keeps the first
-// occurrence of each id and caps the total at maxSources.
+// search_docs call contributes its top 3 hits (the MCP's own search_docs)
+// or every passage (the chat loop's composite lookup bound to that name).
+// Dedup keeps the first occurrence of each id and caps the total at
+// maxSources.
 func collectSources(sources *[]Source, name string, result map[string]any) {
 	switch name {
 	case "get_atom":
@@ -492,6 +523,9 @@ func collectSources(sources *[]Source, name string, result map[string]any) {
 				break
 			}
 			addSource(sources, sourceFromFields(h))
+		}
+		for _, p := range passageFields(result["passages"]) {
+			addSource(sources, sourceFromFields(p))
 		}
 	}
 }
@@ -560,6 +594,54 @@ func (s *Service) Respond(ctx context.Context, turns []Turn, page *Page, emit fu
 	}
 	onText := g.write
 
+	// looked tracks whether a lookup has happened this turn, so the
+	// answered-without-looking retry below never fires after a
+	// pre-retrieval already looked on the reader's behalf.
+	looked := false
+
+	// tools is what this question may call: the fixed s.Tools unless a
+	// router narrows it. ToolsFor runs before the first model call, not
+	// per round, because the route is a property of the question, not of
+	// where the conversation happens to be when a round starts.
+	tools := s.Tools
+	if s.ToolsFor != nil {
+		tools = s.ToolsFor(question, lastUserAttachment(turns) != nil)
+	}
+	// facts is read by Task E3's shape check; kept here so pre-retrieval
+	// computes it once rather than that check re-deriving it from the pack.
+	var facts guard.PackFacts
+	// packHadContent is separate from looked: looked also turns true on an
+	// ordinary tool call, but the answer_denies_with_pack signal below cares
+	// specifically about a pack pre-retrieval put in front of the model.
+	packHadContent := false
+	if s.Lookup != nil {
+		// The lookup query is masked the same way the conversation is: this
+		// is a health system, and a follow-up that repeats a patient
+		// identifier from the reader's own question must not reach the
+		// embedder or the index unmasked.
+		lq, _ := guard.MaskPII(lookupQuery(turns))
+		lookupCtx, cancel := context.WithTimeout(ctx, toolCallTimeout)
+		pack, packSources, f, err := s.Lookup(lookupCtx, lq)
+		cancel()
+		if err != nil {
+			slog.Warn("pre-retrieval failed, continuing without it", "error", err)
+		} else if len(pack) > 0 {
+			facts = f
+			packHadContent = true
+			for _, src := range packSources {
+				addSource(&sources, src)
+			}
+			g.corpus.Write(pack)
+			// The pack rides in the last user turn, never the system prompt:
+			// the Bedrock cache point sits after the system text, and a
+			// per-question system suffix would defeat it on every call.
+			last := &msgs[len(msgs)-1]
+			last.Text = "<passages>\n" + string(pack) + "\n</passages>\n\n" + last.Text
+			looked = true // pre-retrieval is a lookup; do not send lookFirst
+		}
+	}
+	_ = facts // used by the shape check in Task E3
+
 	// Round one is written into a holding pen rather than to the reader.
 	//
 	// The model almost always calls a tool first, and text from a round that
@@ -580,7 +662,7 @@ func (s *Service) Respond(ctx context.Context, turns []Turn, page *Page, emit fu
 	}
 
 	runRound := func() (Reply, error) {
-		reply, err := s.Model.Stream(ctx, system, s.Tools, msgs, s.MaxTokens, onFirst)
+		reply, err := s.Model.Stream(ctx, system, tools, msgs, s.MaxTokens, onFirst)
 		if err != nil {
 			return reply, err
 		}
@@ -590,7 +672,6 @@ func (s *Service) Respond(ctx context.Context, turns []Turn, page *Page, emit fu
 		return reply, nil
 	}
 
-	looked := false
 	for round := 1; round <= MaxToolCalls; round++ {
 		reply, err := runRound()
 		if err != nil {
@@ -620,6 +701,15 @@ func (s *Service) Respond(ctx context.Context, turns []Turn, page *Page, emit fu
 			firstRound.Reset()
 		}
 		if len(reply.ToolCalls) == 0 {
+			// A pack was in front of the model and it still denied having
+			// anything: the retry above is suppressed on a pre-retrieved
+			// turn (looked is already true), so this is the only signal
+			// left that the model looked past a pack that answered the
+			// question. No behaviour change, just visibility.
+			if packHadContent && saysItHasNothing(reply.Text) {
+				maskedQuestion, _ := guard.MaskPII(question)
+				slog.Info("answer_denies_with_pack", "question", maskedQuestion)
+			}
 			// The guard holds text back until it is known to be safe, so the
 			// last of an answer is emitted here rather than during the round.
 			// A client that went away is therefore first seen at this flush,
@@ -652,7 +742,7 @@ func (s *Service) Respond(ctx context.Context, turns []Turn, page *Page, emit fu
 			if err := emit("tool", map[string]string{"name": c.Name, "detail": toolDetail(c)}); err != nil {
 				return err
 			}
-			result, fields := runTool(ctx, s.Tools, c)
+			result, fields := runTool(ctx, tools, c)
 			// tool and tool_result are two separate events, not one, because
 			// they serve two readers who need it at two different times: the
 			// panel's progress cue must fire before the call so the reader
@@ -895,4 +985,39 @@ func lastUserText(turns []Turn) string {
 		}
 	}
 	return ""
+}
+
+// previousUserText returns the user turn before the last one, or "" if
+// there isn't one.
+func previousUserText(turns []Turn) string {
+	last := -1
+	for i := len(turns) - 1; i >= 0; i-- {
+		if turns[i].Role == "user" {
+			last = i
+			break
+		}
+	}
+	for i := last - 1; i >= 0; i-- {
+		if turns[i].Role == "user" {
+			return turns[i].Text
+		}
+	}
+	return ""
+}
+
+// lookupQuery builds the text pre-retrieval routes and retrieves on. Routing
+// itself still runs on the last user turn alone, but a short follow-up ("and
+// the address?") carries too little on its own for either the router or the
+// index to find anything: at most four words with an earlier user turn to
+// draw on, the query is the previous turn's text plus this one, so "and the
+// address?" after "how do I create an ABHA" still retrieves the flow.
+func lookupQuery(turns []Turn) string {
+	last := lastUserText(turns)
+	if len(strings.Fields(last)) > 4 {
+		return last
+	}
+	if prev := previousUserText(turns); prev != "" {
+		return prev + " " + last
+	}
+	return last
 }
