@@ -13,19 +13,22 @@ sidebar_position: 1
 issue identifiers, the [HIE-CM](/docs/hiecm/v3/getting-started/glossary#hie-cm) gateway that
 routes requests and holds consent, and the two roles a record moves between.
 
-## Identity comes first
+## Two identities come first
 
-Every call carries an identifier issued by a registry. Creating that entry comes first.
+Every call carries an identifier issued by a registry, and there are two kinds of
+entity to identify: the care seeker, and the care provider giving them care.
+Creating those entries comes before anything else.
 
-| Registry | Identifies | Identifier | Written by |
-| --- | --- | --- | --- |
-| [ABHA](/docs/hiecm/v3/registries/abha) | A patient | 14 digit ABHA number, plus an ABHA address | [M1](/docs/hiecm/v3/api/m1) |
-| [HPR](/docs/hiecm/v3/registries/nhpr/hpr) | A doctor, nurse, pharmacist or facility manager | HPR ID | [M4](/docs/hiecm/v3/api/m4) |
-| [HFR](/docs/hiecm/v3/registries/nhpr/hfr) | A hospital, clinic, lab or pharmacy | Facility ID | [M4](/docs/hiecm/v3/api/m4) |
+| Identity | Registry | Who it identifies | Identifier | Written by |
+| --- | --- | --- | --- | --- |
+| Care seeker | [ABHA](/docs/hiecm/v3/registries/abha) | A patient | 14 digit ABHA number, plus an ABHA address | [M1](/docs/hiecm/v3/api/m1) |
+| Care provider | [HPR](/docs/hiecm/v3/registries/nhpr/hpr) | A doctor, nurse, pharmacist or facility manager | HPR ID | [M4](/docs/hiecm/v3/api/m4) |
+| Care provider | [HFR](/docs/hiecm/v3/registries/nhpr/hfr) | A hospital, clinic, lab or pharmacy | Facility ID | [M4](/docs/hiecm/v3/api/m4) |
 
-[ABHA](/docs/hiecm/v3/getting-started/glossary#abha) is the patient side.
+[ABHA](/docs/hiecm/v3/getting-started/glossary#abha) is the care seeker's.
 [HPR](/docs/hiecm/v3/getting-started/glossary#hpr) and
-[HFR](/docs/hiecm/v3/getting-started/glossary#hfr) sit together under NHPR, the provider side.
+[HFR](/docs/hiecm/v3/getting-started/glossary#hfr) sit together under NHPR and are
+the care provider's: one for the professional, one for the place.
 [Registries](/docs/hiecm/v3/registries) has what each one holds.
 
 ## The gateway sits in the middle
@@ -40,20 +43,27 @@ artefacts, never the record itself. It does not access or store health record co
 [The ABDM gateway](/docs/hiecm/v3/concepts/gateway) covers the gateway and the session token
 every call carries.
 
-## Your role decides what you build
+## Your role is IMS or PHR
 
-Whoever holds a record and publishes it is the [HIP](/docs/hiecm/v3/getting-started/glossary#hip).
-Whoever asks to read records they did not create is the [HIU](/docs/hiecm/v3/getting-started/glossary#hiu).
-A hospital that shares discharge summaries and pulls earlier prescriptions is the HIP for the
-first and the HIU for the second. See [HIP and HIU](/docs/hiecm/v3/concepts/hip-hiu).
+There are two integrator roles on HIE-CM, and your product is one of them for its
+whole life. What decides it is which entity your software acts for.
 
-| Role | Who takes it | What it does | Milestone |
-| --- | --- | --- | --- |
-| HIP | A facility, through its [HMIS](/docs/hiecm/v3/getting-started/glossary#hmis). A citizen, through their PHR app | Links records to a patient, sends them under a valid consent | [M2](/docs/hiecm/v3/api/m2) |
-| HIU | Another facility, a citizen's PHR app, an insurer, a referral service, an analytics service | Raises a consent request, then fetches records held elsewhere | [M3](/docs/hiecm/v3/api/m3) |
+| Role | It acts for | What you build |
+| --- | --- | --- |
+| [IMS](/docs/hiecm/v3/getting-started/glossary#ims) | A care provider. An HMIS in a hospital, an EMR in a clinic, a LIMS in a laboratory, a PMS in a pharmacy | [M1](/docs/hiecm/v3/milestones/m1) to [M4](/docs/hiecm/v3/milestones/m4) |
+| [PHR](/docs/hiecm/v3/getting-started/glossary#phr) | A care seeker, who holds their own records and gives consent | [P1](/docs/hiecm/v3/milestones/p1) to [P3](/docs/hiecm/v3/milestones/p3) |
 
-A citizen's [PHR](/docs/hiecm/v3/getting-started/glossary#phr) app takes both. The citizen is the
-HIP when they push a record from it, and the HIU when they fetch one.
+[HIP](/docs/hiecm/v3/getting-started/glossary#hip) and
+[HIU](/docs/hiecm/v3/getting-started/glossary#hiu) are not a third and a fourth
+role, and they are not something you register as. They are the two ends of one
+record moving: whoever publishes it is the HIP for that exchange, and whoever
+asks to read one they did not create is the HIU.
+
+Both roles are both. A hospital is the HIP when it shares a discharge summary and
+the HIU when it pulls an earlier prescription, through the same IMS. A citizen is
+the HIP when they push a record from their PHR application and the HIU when they
+fetch one. It changes call by call, which is why neither is a thing you can
+build once and be. See [HIP and HIU](/docs/hiecm/v3/concepts/hip-hiu).
 
 ## Records stay where they were created
 
