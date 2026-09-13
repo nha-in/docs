@@ -1,255 +1,628 @@
+# NHCX ABHA biometric authentication, from the NHCX package's Bruno folder apis/14-biometric.
+#
+# Written by the package's system/build-ekadocs.mjs (make ekadocs); change the .bru
+# requests there and port again rather than editing this file.
+#
+# Rules this file follows: catalogue/openapi/CONVENTIONS.md
 openapi: 3.1.1
 info:
-  title: NHCX biometric authentication
-  version: abdm-v3
-  summary: The PMJAY beneficiary authentication APIs, outside the NHCX message set.
-  description: >
-    PMJAY requires the beneficiary to be verified biometrically at
-    registration and again at discharge. These calls are not NHCX exchanges:
-    they carry no JWE, no FHIR bundle and no workflow code, and they read
-    `Authorization` rather than `bearer_auth`. They are a separate API a
-    PMJAY integrator must implement alongside the claim exchanges.
+  x-portal:
+    module: biometric
+    label: ABHA biometric authentication
+    position: 14
+  title: NHCX ABHA biometric authentication
+  summary: PMJAY requires proof that the beneficiary was physically present.
+  description: |-
+    The ABHA biometric authentication calls on the National Health Claims Exchange (NHCX): 6 operations.
 
+    PMJAY requires proof that the beneficiary was physically present.
 
-    On success the system holds a user token valid for 30 minutes, with a
-    refresh token. That token rides in the header of the eligibility check
-    and the preauthorisation, and a fresh authentication is required at
-    discharge for the claim.
+    Guides that use these calls: [Biometric authentication](/docs/nhcx/v1/roles/provider/biometric-authentication).
 
+    Production address for the NHCX exchange: shared by NHA after sandbox exit.
 
-    Build all three methods. Fingerprint and iris are an init-then-verify
-    pair on the biometric service. Face is a separate flow on the ABDM proxy:
-    initiate, show the patient a QR code to scan in the ABHA app, poll until
-    the capture completes, then verify with the Aadhaar number encrypted
-    under the key the portal supplies.
-
-
-    Where biometrics are not possible, the scheme's authentication consent
-    questionnaire stands in. The one case with no fallback is a cyclic
-    procedure, where a live capture is required at every visit.
+    Production address for the ABDM proxy: not published. Confirm at onboarding.
+  version: nhcx-v1
+  license:
+    name: MIT
+    identifier: MIT
   contact:
-    name: NHCX integration support
-    url: https://hcxsbx.abdm.gov.in/#/documents
-    email: hcx.integration@nha.gov.in
+    name: NHCX sandbox
+    url: https://hcxsbx.abdm.gov.in
   x-abdm-gateway: nhcx
   x-abdm-module: biometric
   x-abdm-phase: 1
-  x-abdm-roles: [provider]
+  x-abdm-roles:
+    - provider
 x-abdm-sources:
-  - file: NHCX-site/hmisdocuments/Biometric Authentication APIs Postman Collection.zip
+  - file: nhcx-package/apis/14-biometric
     role: upstream
-    status: not-yet-hashed
-    note: ABHA-Proxy collection, 3 requests.
-  - file: NHCX-site/hmisdocuments/FaceAuth Postman Collection.zip
+    hash: sha256:67a84b282e192889df0e71793d38df1c4e3615dce1337beb40f13737036b8100
+    note: The package's Bruno collection, one request per operation.
+  - file: nhcx-package/baseurl.yaml
     role: upstream
-    status: not-yet-hashed
-    note: FaceAuth collection, 3 requests.
+    hash: sha256:47d8412abbfc53b1e1038410e7980eee029d7b1be5082f4ae6c1d4e16ae0dd0f
+    note: The sandbox and production hosts.
 servers:
   - url: https://apisbx.abdm.gov.in
-    description: Sandbox. The two flows sit under different path prefixes on the same host.
+    description: Sandbox.
 tags:
-  - name: Fingerprint and iris
-    description: The init-then-verify pair, under /hcx/abha/biometric.
-  - name: Face
-    description: The QR-and-poll flow, under /pmjay/sbxhcx/abdmproxy/abha/biometric.
+  - name: ABHA biometric authentication
+    description: PMJAY requires proof that the beneficiary was physically present.
+security:
+  - bearerAuth: []
 paths:
   /hcx/abha/biometric/auth/init:
     post:
-      operationId: nhcx_biometric_auth_init
-      tags: [Fingerprint and iris]
-      summary: Start a biometric authentication
-      description: >
-        Opens an authentication transaction against the beneficiary's ABHA
-        number and returns a transaction id the verify call quotes back.
-        `authMode` picks the method.
+      operationId: biometric_auth_init
+      x-abdm-use-case: ABHA biometric authentication
+      tags:
+        - ABHA biometric authentication
+      summary: Biometric auth init
+      description: |-
+        Starts a fingerprint or iris authentication of a PMJAY beneficiary against the ABHA registry and returns the `txnId` the verify call needs.
+
+        ### Business purpose
+
+        PMJAY requires proof that the beneficiary was physically present. A hospital proves it by authenticating them against their ABHA, biometrically, and the user token that results rides on the eligibility check, the pre-authorisation and the claim. A request without it, and without the consent form that stands in for it, is refused by name. These are ABDM calls built for the PMJAY payer, not NHCX calls: no JWE and no callbacks.
+
+        ### When to use
+
+        At the desk with the beneficiary present: at admission with `process` `Preauth`, and at discharge, and at every visit of a cyclic case, with `process` `Discharge`. `scope` selects the modality, `aadhaar-bio-verify` for fingerprint and `aadhaar-iris-verify` for iris. `authMode` is `FINGERPRINT` or `IRIS`. The NHCX-PMJAY-HMIS Integration Guide and the Biometric Authentication APIs Postman collection also list face on this call, `aadhaar-face-verify` with `FACE_AUTH`, but show no face request made this way; the face path documented end to end is `Face auth init` on the ABDM proxy host. `payerid` names the scheme payer the authentication is performed for.
+
+        ### Preconditions
+
+        - The beneficiary's ABHA is linked to their PMJAY card. Where it is not, biometric authentication does not apply and the scheme's existing KYC protocols are followed.
+        - The ABDM session token on `Authorization: Bearer`, not on `bearer_auth`.
+        - `loginId` is the ABHA number with hyphens, the opposite of the envelope convention.
+        - A capture device, whose capture needs the wrapped Aadhaar data hash built with `lr` set to `Y`.
+
+        ### Postconditions
+
+        Returns the `txnId` that `Biometric auth verify` quotes, with a message saying the authentication request was sent.
+
+        ### Common mistakes
+
+        - Sending the token on `bearer_auth` only, which gets a `401` that looks like an expired token.
+        - Calling it on the face-authentication host. Fingerprint and iris sit under `/hcx/abha/biometric/`, face under `/pmjay/sbxhcx/abdmproxy/abha/biometric/`.
+        - Stripping the hyphens from `loginId`.
+        - Building the wrapped Aadhaar data hash with `lr` as `N`, which the biometric APIs answer with `K-547`.
+
+        ### Best practices
+
+        - Implement fingerprint, iris and face. Each is mandatory, because any one of them may be the only one that works for a given patient.
+        - Set `process` from the stage of the case, not from a constant.
+        - Record the transaction ID, the method and the moment it succeeded against the case.
+
+        ### Related scenario
+
+        A PMJAY beneficiary arrives for admission. The desk posts this request with `scope` `["abha-login", "aadhaar-bio-verify"]`, `authMode` `FINGERPRINT`, the ABHA number with hyphens, `process` `Preauth` and the scheme payer's code, and gets a `txnId` back. The fingerprint is captured on the device and sent with that `txnId` to `Biometric auth verify`.
+
+        ### Specification
+
+        Chapter [Biometric authentication](/docs/nhcx/v1/roles/provider/biometric-authentication) of the NHCX integration specification.
+      security: []
       parameters:
-        - {name: process, in: header, required: true, description: "The stage this authentication is for, for example Discharge on a cyclic visit.", schema: {type: string}}
-        - {name: payerid, in: header, required: true, description: The scheme payer's participant code., schema: {type: string}}
+        - $ref: "#/components/parameters/Process"
+        - $ref: "#/components/parameters/Payerid"
       requestBody:
         required: true
         content:
           application/json:
             schema:
               type: object
-              required: [scope, loginId, authMode]
               properties:
                 scope:
                   type: array
-                  items: {type: string}
-                  description: "`[abha-login, aadhaar-bio-verify]`, or the face or iris equivalent."
-                loginHint: {type: string, example: abha-number}
-                loginId: {type: string, description: The beneficiary's ABHA number.}
-                otpSystem: {type: string, example: aadhaar}
+                  items:
+                    type: string
+                loginHint:
+                  type: string
+                loginId:
+                  type: string
+                otpSystem:
+                  type: string
                 authMode:
                   type: string
-                  enum: [FINGERPRINT, IRIS, FACE_AUTH]
             example:
-              scope: [abha-login, aadhaar-bio-verify]
+              scope:
+                - abha-login
+                - aadhaar-bio-verify
               loginHint: abha-number
-              loginId: 91-XXXX-XXXX-0302
+              loginId: 91-XXXX-XXXX-1234
               otpSystem: aadhaar
               authMode: FINGERPRINT
       responses:
         "200":
-          description: A transaction id to quote on the verify call.
+          description: Returns the `txnId` that `Biometric auth verify` quotes, with a message saying the authentication request was sent.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  txnId:
+                    type: string
+                  authMode: {}
+                  message:
+                    type: string
+                  status: {}
+              example:
+                txnId: 8c8a12e3-xxxx-4278-xxxx-10acffa44f07
+                authMode: null
+                message: FingerPrint authentication request successfully sent.
+                status: null
   /hcx/abha/biometric/auth/verify:
     post:
-      operationId: nhcx_biometric_auth_verify
-      tags: [Fingerprint and iris]
-      summary: Verify the captured biometric
-      description: >
-        Sends the captured PID block against the transaction opened by init.
-        On success the response carries the user token that rides on the
-        eligibility check and the preauthorisation.
+      operationId: biometric_auth_verify
+      x-abdm-use-case: ABHA biometric authentication
+      tags:
+        - ABHA biometric authentication
+      summary: Biometric auth verify
+      description: |-
+        Completes the authentication started by `Biometric auth init` with the captured PID block, and returns the beneficiary's user token, valid thirty minutes.
+
+        ### Business purpose
+
+        The user token this call returns is the proof of presence PMJAY asks for. It rides on the eligibility check, the pre-authorisation and the claim. Without it a request must carry the plan's consent questionnaire instead, or it is refused: `PAYR-1256` at the pre-authorisation, `PAYR-1363` at the claim.
+
+        ### When to use
+
+        Immediately after the capture. `authMethods` is `bio` for fingerprint and `iris` for iris, and the matching object carries the `txnId` from init and the device's PID block, in `fingerPrintAuthPid` or `irisAuthPid` accordingly. The same two sources that list a face mode on `Biometric auth init` give it here as `authMethods` `face`, with the capture in `authData.face.faceAuthPid`.
+
+        ### Preconditions
+
+        - A `txnId` from `Biometric auth init` for the same modality.
+        - The PID block from the capture device.
+        - The same headers as init: `Authorization: Bearer <session token>`, `process` and `payerid`.
+
+        ### Postconditions
+
+        On success it returns `authResult` `success`, a user `token` with `expiresIn` 1800 seconds, a `refreshToken` with `refreshExpiresIn` 1296000 seconds, fifteen days, and the ABHA `accounts` matched.
+
+        ### Common mistakes
+
+        - Putting the PID block under the wrong key for the modality.
+        - Holding the token against the session rather than the case. If it lapses mid-case and cannot be refreshed, a fresh authentication is needed.
+        - Standing a refreshed token in for a capture at a cyclic visit. Every visit needs a real capture.
+
+        ### Best practices
+
+        - Store the user token and its expiry against the case.
+        - Store the refresh token, and refresh automatically for the duration of the transaction cycle.
+        - Keep nothing from the ABHA profile beyond what the encounter needs.
+
+        ### Related scenario
+
+        Right after the fingerprint capture, the desk posts the `txnId` from init and the device's PID block in `fingerPrintAuthPid`, with `authMethods` `["bio"]`. The answer carries a thirty-minute token and a fifteen-day refresh token. The token goes on the header of the eligibility check and the pre-authorisation, and both tokens are stored against the case.
+
+        ### Specification
+
+        Chapter [Biometric authentication](/docs/nhcx/v1/roles/provider/biometric-authentication) of the NHCX integration specification.
+      security: []
       parameters:
-        - {name: process, in: header, required: true, schema: {type: string}}
-        - {name: payerid, in: header, required: true, schema: {type: string}}
+        - $ref: "#/components/parameters/Process"
+        - $ref: "#/components/parameters/Payerid"
       requestBody:
         required: true
         content:
           application/json:
             schema:
               type: object
-              required: [scope, authData, authMode]
-              properties:
-                scope: {type: array, items: {type: string}}
-                authMode: {type: string, enum: [FINGERPRINT, IRIS, FACE_AUTH]}
-                authData:
-                  type: object
-                  properties:
-                    authMethods:
-                      type: array
-                      items: {type: string, enum: [bio, iris, face, otp]}
-                    bio:
-                      type: object
-                      properties:
-                        txnId: {type: string, format: uuid}
-                        fingerPrintAuthPid: {type: string}
-                    iris:
-                      type: object
-                      properties:
-                        txnId: {type: string, format: uuid}
-                        irisAuthPid: {type: string}
-                    face:
-                      type: object
-                      properties:
-                        txnId: {type: string, format: uuid}
-                        faceAuthPid: {type: string}
-                    otp:
-                      type: object
-                      properties:
-                        txnId: {type: string, format: uuid}
-                        otpValue: {type: string}
-      responses:
-        "200":
-          description: A user token valid for 30 minutes, with a refresh token.
-  /hcx/abha/biometric/auth/refresh/token:
-    get:
-      operationId: nhcx_biometric_auth_refresh_token
-      tags: [Fingerprint and iris]
-      summary: Refresh the user token
-      description: >
-        Extends the 30 minute user token through a long transaction. A
-        refresh token is not accepted in place of a live capture on a cyclic
-        procedure's per-visit authentication; only for the final claim.
-      parameters:
-        - {name: R-token, in: header, required: true, description: The refresh token from the verify call., schema: {type: string}}
-        - {name: TIMESTAMP, in: header, required: true, schema: {type: string}}
-        - {name: REQUEST-ID, in: header, required: true, schema: {type: string, format: uuid}}
-        - {name: payerid, in: header, required: true, schema: {type: string}}
-        - {name: process, in: header, required: true, schema: {type: string}}
-      responses:
-        "200":
-          description: A refreshed user token.
-  /pmjay/sbxhcx/abdmproxy/abha/biometric/faceauth/init:
-    post:
-      operationId: nhcx_biometric_faceauth_init
-      tags: [Face]
-      summary: Start a face authentication
-      description: >
-        Opens the face flow and returns a transaction id. The patient then
-        scans a QR code in the ABHA app; the capture is collected by polling
-        the PID endpoint below.
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              required: [scope]
               properties:
                 scope:
                   type: array
-                  items: {type: string}
+                  items:
+                    type: string
+                authData:
+                  type: object
+                  properties:
+                    authMethods:
+                      type: array
+                      items:
+                        type: string
+                    bio:
+                      type: object
+                      properties:
+                        txnId:
+                          type: string
+                        fingerPrintAuthPid:
+                          type: string
+                authMode:
+                  type: string
             example:
-              scope: [abha-enrol, face-auth]
+              scope:
+                - abha-login
+                - aadhaar-bio-verify
+              authData:
+                authMethods:
+                  - bio
+                bio:
+                  txnId: <txn id>
+                  fingerPrintAuthPid: <pid block>
+              authMode: FINGERPRINT
       responses:
         "200":
-          description: A transaction id for the capture and verify calls.
+          description: On success it returns `authResult` `success`, a user `token` with `expiresIn` 1800 seconds, a `refreshToken` with `refreshExpiresIn` 1296000 seconds, fifteen days, and the ABHA `accounts` matched.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  txnId:
+                    type: string
+                  authResult:
+                    type: string
+                  message:
+                    type: string
+                  token:
+                    type: string
+                  refreshToken:
+                    type: string
+                  expiresIn:
+                    type: integer
+                  refreshExpiresIn:
+                    type: integer
+                  accounts:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        ABHANumber:
+                          type: string
+                        name:
+                          type: string
+                        status:
+                          type: string
+              example:
+                txnId: d21b3db9-478a-xxxx-xxxx-8f75e7f86b9f
+                authResult: success
+                message: … verified successfully
+                token: eyZhx….
+                refreshToken: eyZhx….
+                expiresIn: 1800
+                refreshExpiresIn: 1296000
+                accounts:
+                  - ABHANumber: 91-XXXX-XXXX-1234
+                    name: …
+                    status: ACTIVE
+  /hcx/abha/biometric/auth/refresh/token:
+    get:
+      operationId: biometric_auth_refresh_token
+      x-abdm-use-case: ABHA biometric authentication
+      tags:
+        - ABHA biometric authentication
+      summary: Biometric auth refresh token
+      description: |-
+        Exchanges the refresh token from `Biometric auth verify` for a new thirty-minute user token without a fresh capture.
+
+        ### Business purpose
+
+        A beneficiary's user token lasts thirty minutes, and a case lasts much longer. The refresh keeps a case authenticated through its transaction cycle without bringing the patient back to the device each time the token lapses.
+
+        ### When to use
+
+        When the user token has lapsed during a transaction cycle. Refresh automatically for the duration of the cycle. Each refresh returns a new refresh token whose fifteen days run from that moment, and the portal's advice is to refresh once within every ten days and store the new token, which keeps a chain alive indefinitely.
+
+        ### Preconditions
+
+        - A refresh token from `Biometric auth verify` or an earlier refresh, less than fifteen days old, sent on `R-token` as `Bearer <refresh token>`.
+        - The ABDM session token on `Authorization`, with `payerid` and `process`.
+
+        ### Postconditions
+
+        Returns a new user token and a new refresh token. The new refresh token replaces the old one.
+
+        ### Common mistakes
+
+        - Sending the refresh token on `Authorization` instead of `R-token`.
+        - Keeping the old refresh token after a refresh.
+        - Using a refresh where a capture is required. On a cyclic procedure the payer pays only for cycles with a live biometric, and a refresh token is accepted only at the final claim. Every visit needs a real capture with `process` `Discharge`.
+
+        ### Best practices
+
+        - Refresh within every ten days and store the new token.
+        - Refresh automatically while a case is open. If the token has lapsed and cannot be refreshed, start a fresh authentication.
+
+        ### Related scenario
+
+        A beneficiary's eligibility was checked with a fresh token at admission, but the pre-authorisation is ready only after the thirty minutes have passed. The integration sends the stored refresh token on `R-token` to this endpoint, receives a new user token and a new refresh token, sends the user token on the pre-authorisation, and stores the new refresh token against the case.
+
+        ### Specification
+
+        Chapter [Biometric authentication](/docs/nhcx/v1/roles/provider/biometric-authentication) of the NHCX integration specification.
+      security: []
+      parameters:
+        - $ref: "#/components/parameters/RToken"
+        - $ref: "#/components/parameters/Payerid"
+        - $ref: "#/components/parameters/Process"
+      responses:
+        "200":
+          description: Returns a new user token and a new refresh token.
+  /pmjay/sbxhcx/abdmproxy/abha/biometric/faceauth/init:
+    post:
+      operationId: biometric_faceauth_init
+      x-abdm-use-case: ABHA biometric authentication
+      tags:
+        - ABHA biometric authentication
+      summary: Face auth init
+      description: |-
+        Starts a face authentication on the ABDM proxy host and returns the `txnId` the rest of the face flow quotes.
+
+        ### Business purpose
+
+        Face authentication is the method that works when fingerprint and iris do not. The capture happens on the patient's own phone, in the ABHA app, rather than on a hospital device. A case authenticated by fingerprint at admission can be authenticated by face at discharge, because the methods do not have to match across a case.
+
+        ### When to use
+
+        When fingerprint and iris are not possible for the patient. Face authentication runs on a different host from the other two modalities and takes three calls and a QR code: this call, a QR code the patient scans, polling `Face auth capture PID`, then `Face auth verify`.
+
+        ### Preconditions
+
+        - The ABDM session token on `Authorization`, with a fresh `REQUEST-ID` and the current `TIMESTAMP`.
+        - The request sent to the ABDM proxy host, under `/pmjay/sbxhcx/abdmproxy/abha/biometric/`.
+        - `scope` is `["abha-enrol", "face-auth"]`.
+        - The patient has the ABHA app on a phone.
+
+        ### Postconditions
+
+        Returns a `txnId`. Render `https://phrsbx.abdm.gov.in/face-auth?txnId=<txnId>` as a QR code. The patient scans it with the ABHA app and completes the face scan there.
+
+        ### Common mistakes
+
+        - Sending it to the fingerprint host, which fails in a way that looks like a routing problem rather than a configuration one.
+        - Waiting for a callback. There is none, and the capture is polled.
+        - Treating face as optional. All three methods are mandatory to implement.
+
+        ### Best practices
+
+        - Keep both biometric base paths in configuration.
+        - Record the `txnId` against the case as soon as it arrives.
+
+        ### Related scenario
+
+        A patient authenticated by fingerprint at admission cannot be captured on the device at discharge. The desk calls this endpoint, shows the QR code built from the `txnId`, and the patient scans it with the ABHA app. The desk polls `Face auth capture PID` until the capture is complete, then calls `Face auth verify`.
+
+        ### Specification
+
+        Chapter [Biometric authentication](/docs/nhcx/v1/roles/provider/biometric-authentication) of the NHCX integration specification.
+      security: []
+      parameters:
+        - $ref: "#/components/parameters/RequestId"
+        - $ref: "#/components/parameters/Timestamp"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                scope:
+                  type: array
+                  items:
+                    type: string
+            example:
+              scope:
+                - abha-enrol
+                - face-auth
+      responses:
+        "200":
+          description: Returns a `txnId`.
   /pmjay/sbxhcx/abdmproxy/abha/biometric/capture/pid:
     post:
-      operationId: nhcx_biometric_faceauth_capture_pid
-      tags: [Face]
-      summary: Poll for the captured face PID
-      description: >
-        Polled after init until the patient has completed the capture in the
-        ABHA app. Returns the PID block the verify call sends.
+      operationId: biometric_faceauth_capture_pid
+      x-abdm-use-case: ABHA biometric authentication
+      tags:
+        - ABHA biometric authentication
+      summary: Face auth capture PID
+      description: |-
+        Polls for the face capture the patient completes in the ABHA app after scanning the QR code for the `txnId` from `Face auth init`.
+
+        ### Business purpose
+
+        The face capture happens on the patient's phone, out of the hospital system's sight. This call is how the hospital learns that it has finished. It is the step between showing the QR code and verifying.
+
+        ### When to use
+
+        After showing the QR code and before `Face auth verify`, repeatedly until the capture is complete. There is no callback.
+
+        ### Preconditions
+
+        - A `txnId` from `Face auth init`.
+        - The patient has scanned the QR code built from it.
+        - The ABDM session token on `Authorization`, with a fresh `REQUEST-ID` and the current `TIMESTAMP`. No source sends `process` or `payerid` on this call.
+        - The request sent to the ABDM proxy host.
+
+        ### Postconditions
+
+        Answers `PENDING` with `Awaiting PID capture` until the patient finishes, then `COMPLETE` with `PID capture successful`. On `COMPLETE`, move on to `Face auth verify`.
+
+        ### Common mistakes
+
+        - Waiting for a callback instead of polling.
+        - Calling `Face auth verify` before this answers `COMPLETE`.
+        - Sending it to the fingerprint host.
+
+        ### Best practices
+
+        - Poll while the QR code is on screen, and stop when the answer is `COMPLETE`.
+        - Show the desk that the capture is pending, so the patient is not asked to scan twice.
+
+        ### Related scenario
+
+        The desk has shown the QR code for a discharge face authentication. It polls this endpoint with the `txnId` and gets `PENDING` while the patient completes the scan in the ABHA app. The next poll answers `COMPLETE`, and the desk calls `Face auth verify`.
+
+        ### Specification
+
+        Chapter [Biometric authentication](/docs/nhcx/v1/roles/provider/biometric-authentication) of the NHCX integration specification.
+      security: []
+      parameters:
+        - $ref: "#/components/parameters/RequestId"
+        - $ref: "#/components/parameters/Timestamp"
       requestBody:
         required: true
         content:
           application/json:
             schema:
               type: object
-              required: [txnId]
               properties:
-                txnId: {type: string, format: uuid}
+                txnId:
+                  type: string
+            example:
+              txnId: <txn id>
       responses:
         "200":
-          description: The captured PID, once the patient has completed the scan.
+          description: Answers `PENDING` with `Awaiting PID capture` until the patient finishes, then `COMPLETE` with `PID capture successful`.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  message:
+                    type: string
+              example:
+                status: COMPLETE
+                message: PID capture successful
   /pmjay/sbxhcx/abdmproxy/abha/biometric/v2/auth/verify:
     post:
-      operationId: nhcx_biometric_faceauth_verify
-      tags: [Face]
-      summary: Verify a face capture against Aadhaar
-      description: >
-        Completes the face flow. The `aadhaar` field is the beneficiary's
-        Aadhaar number encrypted under the public key the portal supplies,
-        not the twelve digits in the clear. Do not log it, do not display it,
-        and do not validate it as a number.
+      operationId: biometric_faceauth_v2_auth_verify
+      x-abdm-use-case: ABHA biometric authentication
+      tags:
+        - ABHA biometric authentication
+      summary: Face auth verify
+      description: |-
+        Completes a face authentication with the encrypted Aadhaar number, the Aadhaar-linked mobile and the `txnId`, and returns the beneficiary's user token.
+
+        ### Business purpose
+
+        It completes the face method with the same outcome as fingerprint and iris: the user token that proves presence to the scheme and rides on the eligibility check, the pre-authorisation and the claim.
+
+        ### When to use
+
+        After `Face auth capture PID` answers `COMPLETE`.
+
+        ### Preconditions
+
+        - The `txnId` from `Face auth init`, with the capture reported `COMPLETE`.
+        - `aadhaar` is the Aadhaar number encrypted with the X.509 public key the portal publishes, using the transformation `RSA/ECB/OAEPWithSHA-1AndMGF1Padding`. The ciphertext is roughly 680 base64 characters for a 4096-bit key.
+        - `mobile` is the Aadhaar-linked mobile number.
+        - `authMethods` is `["face_auth"]` and `authMode` is `FACE_AUTH`.
+        - The ABDM session token on `Authorization`, with a fresh `REQUEST-ID`, the current `TIMESTAMP`, `payerid` and `process`, sent to the ABDM proxy host.
+
+        ### Postconditions
+
+        Returns the same token pair as `Biometric auth verify`, a thirty-minute user token and a fifteen-day refresh token, plus a full ABHA profile: name, date of birth, gender, photo, address, state and district.
+
+        ### Common mistakes
+
+        - Sending the Aadhaar number in the clear.
+        - Validating the ciphertext as a twelve-digit number.
+        - Logging or storing the encrypted Aadhaar value.
+        - Sending it to the fingerprint host.
+
+        ### Best practices
+
+        - Never log or store the encrypted Aadhaar value.
+        - Take from the ABHA profile only what the record needs.
+        - Store the user token and its expiry against the case.
+
+        ### Related scenario
+
+        The capture for a discharge face authentication has answered `COMPLETE`. The desk encrypts the patient's Aadhaar number with the portal's public key, posts it here with the `txnId` and the Aadhaar-linked mobile, and receives the token pair and the ABHA profile. It stores the token against the case, keeps only the profile fields the record needs, and discards the encrypted value.
+
+        ### Specification
+
+        Chapter [Biometric authentication](/docs/nhcx/v1/roles/provider/biometric-authentication) of the NHCX integration specification.
+      security: []
       parameters:
-        - {name: payerid, in: header, required: true, schema: {type: string}}
-        - {name: process, in: header, required: true, schema: {type: string}}
+        - $ref: "#/components/parameters/RequestId"
+        - $ref: "#/components/parameters/Timestamp"
+        - $ref: "#/components/parameters/Payerid"
+        - $ref: "#/components/parameters/Process"
       requestBody:
         required: true
         content:
           application/json:
             schema:
               type: object
-              required: [authData]
               properties:
                 authData:
                   type: object
                   properties:
                     authMethods:
                       type: array
-                      items: {type: string, enum: [face_auth]}
+                      items:
+                        type: string
                     face:
                       type: object
                       properties:
-                        txnId: {type: string, format: uuid}
+                        txnId:
+                          type: string
                         aadhaar:
                           type: string
-                          description: The Aadhaar number encrypted under the portal's public key.
+                        mobile:
+                          type: string
+                authMode:
+                  type: string
+            example:
+              authData:
+                authMethods:
+                  - face_auth
+                face:
+                  txnId: <txn id>
+                  aadhaar: <encrypted aadhaar>
+                  mobile: <aadhaar mobile>
+              authMode: FACE_AUTH
       responses:
         "200":
-          description: A user token valid for 30 minutes, with a refresh token.
+          description: "Returns the same token pair as `Biometric auth verify`, a thirty-minute user token and a fifteen-day refresh token, plus a full ABHA profile: name, date of birth, gender, photo, address, state and district."
 components:
   securitySchemes:
-    Authorization:
+    bearerAuth:
       type: http
       scheme: bearer
-      description: >
-        The ABDM session token. Note that these endpoints read
-        `Authorization`, where the NHCX message endpoints read `bearer_auth`.
-security:
-  - Authorization: []
+      description: "On every NHCX call, the token goes in a header called `bearer_auth`, with the word `Bearer` and a space in front. The sources are not unanimous: the authentication page and the FAQ both write the example as `Authorization`, and the notification endpoint uses `Authorization`. The safe course, and what the adapter does, is to send both headers with the same value."
+  parameters:
+    Process:
+      name: process
+      in: header
+      required: true
+      description: No source puts `process` or `payerid` on `faceauth/init` or `capture/pid`.
+      schema:
+        type: string
+      example: Preauth
+    Payerid:
+      name: payerid
+      in: header
+      required: true
+      description: "`payerid` is the insurer's own participant code. Every insurer has one, even when it works through a TPA."
+      schema:
+        type: string
+      example: <payer code>
+    RToken:
+      name: R-token
+      in: header
+      required: true
+      description: Sent on this call, as the package's request carries it.
+      schema:
+        type: string
+      example: Bearer <refresh token>
+    RequestId:
+      name: REQUEST-ID
+      in: header
+      required: true
+      description: "`REQUEST-ID` is a fresh UUID that you generate for every call. Sending the same one twice is the mistake to avoid; generate it, do not copy it from an example."
+      schema:
+        type: string
+      example: <uuid>
+    Timestamp:
+      name: TIMESTAMP
+      in: header
+      required: true
+      description: "`TIMESTAMP` is the current time in UTC, ISO 8601 with milliseconds and a trailing `Z`, as in `2026-09-04T06:15:51.975Z`. A clock that has drifted will be refused, so take the time from the system rather than constructing it by hand. How to produce it in each language is at the end of this chapter."
+      schema:
+        type: string
+      example: <iso timestamp>
+x-abdm-errors:
+  notes: "Codes any exchange call can meet are recorded once, in the [Other](/docs/nhcx/v1/api/other) specification: the gateway's NHCX- codes, the standard payer codes, and the reference payer's structure and transport codes. The reference payer's other codes sit with the exchange they reject: coverage eligibility, preauthorisation, claim and insurance plan. [Reading error codes](/docs/nhcx/v1/reference/error-code-guide) explains the code spaces."
