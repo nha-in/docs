@@ -36,19 +36,59 @@
     "to": "/reference/hiecm-phr-services"
   },
   {
-    "label": "NHCX biometric authentication",
+    "label": "Session",
+    "to": "/reference/nhcx-session"
+  },
+  {
+    "label": "Coverage eligibility",
+    "to": "/reference/nhcx-eligibility"
+  },
+  {
+    "label": "Pre-authorisation",
+    "to": "/reference/nhcx-preauth"
+  },
+  {
+    "label": "Predetermination",
+    "to": "/reference/nhcx-predetermination"
+  },
+  {
+    "label": "Claim",
+    "to": "/reference/nhcx-claim"
+  },
+  {
+    "label": "Payment notice",
+    "to": "/reference/nhcx-payment-notice"
+  },
+  {
+    "label": "Communication",
+    "to": "/reference/nhcx-communication"
+  },
+  {
+    "label": "Status and search",
+    "to": "/reference/nhcx-status"
+  },
+  {
+    "label": "Insurance plan",
+    "to": "/reference/nhcx-insurance-plan"
+  },
+  {
+    "label": "Participant registry",
+    "to": "/reference/nhcx-registry"
+  },
+  {
+    "label": "Onboarding",
+    "to": "/reference/nhcx-onboarding"
+  },
+  {
+    "label": "PMJAY adjudicator",
+    "to": "/reference/nhcx-adjudicator"
+  },
+  {
+    "label": "Other",
+    "to": "/reference/nhcx-other"
+  },
+  {
+    "label": "ABHA biometric authentication",
     "to": "/reference/nhcx-biometric"
-  },
-  {
-    "label": "NHCX session token",
-    "to": "/reference/nhcx-gateway"
-  },
-  {
-    "label": "NHCX participant service",
-    "to": "/reference/nhcx-participant"
-  },
-  {
-    "label": "NHCX use case endpoints",
-    "to": "/reference/nhcx-usecases"
   }
 ]
