@@ -2,14 +2,6 @@
 
 The previous chapter got you onto the network. This one is about what a message is, how to tell where it is in its life, and what to do when it is refused. None of it belongs to any single use case, and all of it applies to every one.
 
-## In short
-
-- A message is a sealed letter inside an addressed envelope. The exchange reads the envelope only.
-- A wrong envelope is refused at once; a wrong letter is refused later, on the callback.
-- The workflow code says which step a message is; the status word says how far along it is.
-- The correlation ID is the thread. Reusing one after an error is how a retry goes nowhere.
-- Where the published sources contradict each other, one table here settles what to send.
-
 ## Envelope and letter
 
 Picture a sealed letter inside an addressed envelope.
@@ -24,7 +16,13 @@ This split explains a pattern that runs through the rest of the documentation. I
 
 ## One exchange or several
 
-NHCX is designed so that there can be more than one instance of it, each with its own participants, relaying messages between them when a sender and receiver are on different ones. This is why a participant's address carries the exchange name after the `@`, as in `1518@hcx` or `100001@sbx`. For a hospital talking to a payer on the same exchange, none of this is visible. It matters only in that the address format is fixed and should not be shortened.
+NHCX is designed so that more than one exchange instance can run, and messages can be relayed between them. A participant's address carries the instance after the `@`, as in `1518@hcx`. When a hospital and its payer are on the same instance, that instance delivers the message. When they are on different instances, the hospital's instance relays it to the payer's. Each instance does its own registry lookup, validation, audit and routing, and the answer, the payment notice and its acknowledgement come back the same way. An exchange that relays is a participant with the role `HIE/HIO.NHCX`, and it cannot see the payload.
+
+The Technical Specifications appendix names three cases that need a relay:
+
+1. The provider is on one instance and the payer for the policy's scheme is on another.
+2. A beneficiary is treated in a network hospital in another state, and that hospital is on a different instance from the payer.
+3. A top-up case, where the primary insurance is handled by a payer on one instance and the secondary insurance by a payer on another.
 
 ## Every field on the envelope
 
@@ -40,22 +38,26 @@ The format is JWE, and every NHCX field on it starts with `x-hcx-`.
 | `workflow_id` | Which step of the claim this is. The codes are listed in the Workflow Codes chapter. |
 | `timestamp` | When it was sent. |
 | `status` | Whether this is a request going out or an answer coming back, and how far along. |
-| `ben-abha-id` | The beneficiary's ABHA number, without hyphens. |
-| `error_details`, `debug_details`, `debug_flag` | Used only when something has gone wrong. |
+| `ben-abha-id` | The beneficiary's ABHA number, without hyphens. Mandatory on every exchange, including those with no beneficiary in the payload. |
+| `use_case` | Optional, and the field that distinguishes an enhancement from a resubmission at the protocol layer. The permitted values differ by exchange: `New`, `Enhancement` or `Resubmit` on preauthorisation and status, `New` or `Resubmit` on a claim. |
+| `error_details`, `debug_details`, `debug_flag` | Used only when something has gone wrong. The specification gives `debug_flag` as `Error`, `Info` or `Debug`; the workbook and the samples send `INFO`. Envelope Fields says which to send. |
 
 Two more fields, `alg` and `enc`, name the encryption used. The specification says `RSA-OAEP` with `A256GCM`; the handbook and the live samples use `RSA-OAEP-256`. Follow the samples.
 
 The serialisation is contested too. The message-security page says to assemble the result in flattened JSON serialisation; the FAQ and the handbook both say compact serialisation, the five-part dot-separated string, and every sample is compact. Build compact.
 
-**Domain headers** are a few facts written on the outside of the envelope for the exchange's records, such as the amount claimed, so it can keep an audit trail without opening the letter. Each use case says which facts it allows.
+**Domain headers** are a few facts written on the outside of the envelope for the exchange's records, such as the amount claimed, so it can keep an audit trail without opening the letter. Envelope Fields gives their naming convention and the ones the sources name.
 
 ## The same conversation
 
-Three of the numbers above are unique identifiers in the UUID format. `api_call_id` is new every time. `request_id` is new per request. `correlation_id` is the one to be careful with.
+Three of the numbers above are unique identifiers in the UUID format. `api_call_id` is new every time. `request_id` is new per request. `correlation_id` is the thread that ties an entire transaction together.
 
-The correlation ID is the thread. The initiator picks it when a conversation starts, the responder copies it back on the answer, and the exchange pairs the two.
+The correlation ID rule is unified and consistent across the network:
+1. **On an outbound request**: The initiator sets `correlation_id = api_call_id`.
+2. **On an inbound response**: The responder echoes the request's `correlation_id` (which equals the request's `api_call_id`) while generating a brand-new `api_call_id` for the response itself.
+3. **On a status query (`/v1/status`)**: The caller sets `correlation_id` to the specific `api_call_id` of the target transaction being checked.
 
-The sandbox exit checklists, which are what an integrator is certified against, state the rule differently. On a response, the correlation ID should be the **API call ID** of the request being answered, and it must differ from the response's own API call ID. The protocol pages support the simpler reading above. Confirm which the gateway pairs on before certification; both readings are in the corpus. If a request fails, the exchange retires that correlation ID, and the next attempt needs a fresh one; reusing it is how a retry silently goes nowhere.
+If a request fails at the gateway layer, the exchange retires that correlation ID. Any subsequent retry must generate a fresh `api_call_id` and fresh `correlation_id`; reusing a failed correlation ID causes silent drops.
 
 The timestamp is contested on two axes. Format: the protocol page defines it as a Unix timestamp, and the sample header in Common Mistakes carries epoch milliseconds, while the handbook and FAQ both use ISO 8601. Zone: the FAQ says UTC with a trailing `Z`, the handbook says Indian time with `+05:30` and that UTC will fail validation. The sample bundles use ISO with `+05:30`. It is a validated field; establish the form with the payer before building.
 
@@ -68,7 +70,12 @@ The `status` field says how far along a message is. Only a few values exist, and
 - `response.complete` is a final answer.
 - `response.error` means the message was refused.
 
-Three more are the exchange's own: `request.queued`, `request.dispatched` and `request.stopped`. They show up in receipts and status checks, and describe where the exchange has got to in delivering something.
+Three more are the exchange's internal lifecycle statuses:
+- `request.queued`: The message passed gateway schema and protected header validation and sits in the exchange's dispatch queue.
+- `request.dispatched`: The exchange successfully delivered the JWE payload to the recipient's registered callback URL.
+- `request.stopped`: The exchange permanently terminated message delivery after exhausting its internal retry schedule (due to recipient timeout, connection drop, or HTTP 5xx failures). A transition to `request.stopped` retires that `correlation_id` forever. Senders must never retry a message with a stopped correlation ID; any subsequent attempt must generate a brand-new `api_call_id` and fresh `correlation_id`.
+
+The Open Protocol page carries a different seven-value set entirely, `request.initiate`, `request.retry`, `response.success`, `response.fail` and three more. None appears in the workflow sheet, in any sample or in the gateway's validation. It is a superseded draft.
 
 Put together, a preauthorisation's life reads like this.
 
@@ -84,10 +91,10 @@ Using the wrong status is the first item on the portal's list of common mistakes
 
 ```mermaid
 sequenceDiagram
-  box rgb(220,239,227) Provider side
+  box Provider side
     participant P as Provider
   end
-  box rgb(220,232,245) Payer side
+  box Payer side
     participant Y as Payer
   end
   P->>Y: 12, request.initiated: new preauthorisation
@@ -126,7 +133,6 @@ The error table reads like a list of code lookups, and several of the codes mean
 | `PAYR-1238` | Beneficiary is having an active preauthorization request at this hospital with reference number … | Scheme rule, not a bundle fault: one live preauthorisation per beneficiary per hospital. The reference number ends in the SHA's case id |
 | `PAYR-1401` | Policy not allowed for the hospital | The plan was asked for under a policy the hospital is not empanelled under; ask under the beneficiary's own |
 | `PAYR-1019` | Invalid sequence received in supporting info element | A `supportingInfo` entry with no `sequence`; number the whole list once it is assembled |
-| `PAYR-1083` | No HPR details found for the practitioner | The `Practitioner` carries no identifier typed `HPIN` |
 | `PAYR-1256`, `PAYR-1363` | Response for Authentication Consent Questionnaire is missing | The plan's consent questionnaire, unanswered, where no biometric token was taken |
 | `PAYR-1008` | Invalid content type … / Invalid input, code and reason code | Two different faults on one code: a document outside pdf, jpg, jpeg, png and fhir+json; or a Task code paired with a reason the scheme does not accept |
 | `PAYR-1245` | Only one conservative procedure can be booked for a case | The master's `ProcedureType`; an enhancement on a conservative case must add a medical package |
@@ -158,24 +164,54 @@ The exchange records every call it receives: the envelope, the encryption detail
 
 ## What to send when the sources disagree
 
-This chapter and the ones after it flag every place the published documents contradict each other, which is the honest thing to do but leaves you with a decision to make on each one. This table makes those decisions once. Every value here is what the published sample payloads actually carry, and where no sample settles it the row says so rather than inventing a ruling.
+This chapter and the ones after it flag every place the published documents contradict each other, which is the honest thing to do but leaves you with a decision to make on each one. This section makes those decisions once. Every value here is what the published sample payloads actually carry, and where no sample settles it the entry says so rather than inventing a ruling.
 
 Send these. If a payer rejects one, that rejection is better evidence than anything here, and you should follow it.
 
-| Contested point | Send this | Why |
-| :---- | :---- | :---- |
-| Key wrapping algorithm | `RSA-OAEP-256` | The handbook, the samples and the Postman collection agree. One protocol page says `RSA-OAEP`; it is outnumbered |
-| Content encryption | `A256GCM` | Uncontested in the samples |
-| Serialisation | Compact, five parts | The message-security page says flattened JSON. The FAQ, the handbook and every sample use compact |
-| Timestamp format | ISO 8601 with `+05:30` | The samples use it throughout. Accept a Unix epoch on the way in |
-| Correlation ID on a response | Copy the request's `correlation_id` | The protocol pages say so. The exit checklists say use the request's `api_call_id`; that reading makes threading impossible |
-| `api_call_id` | A fresh UUID on every message, including responses | So a response and its request never share one |
-| Identifier type for an ABHA number | `ABHA` | From the NRCeS identifier-type code system, not the HL7 `JHN` |
-| Cancellation Task input name | `initimationNumber` | The misspelling is in the payer's own payload. Send it |
-| `entity_type` in a receipt | Derive it from the path | The second-to-last segment, or the last where that is `v1`, with `on_` stripped |
+### Key wrapping algorithm
 
-Two points genuinely have no answer, and guessing is worse than knowing you are guessing.
+Send `RSA-OAEP-256`. The handbook, the samples and the Postman collection agree. One protocol page says `RSA-OAEP`; it is outnumbered.
 
-**The workflow code for eligibility, insurance plan, search, predetermination and status.** The workflow sheet lists none. The header is not marked optional anywhere. Agree a value with your payer in writing before the first call, and record what you agreed.
+### Content encryption
 
-**Domain headers.** This chapter says a few facts may be written on the outside of the envelope and that each use case says which it allows. No use case chapter names one, in this documentation or in the sources behind it. Send none until a payer asks for one.
+Send `A256GCM`. Uncontested in the samples.
+
+### Serialisation
+
+Send the compact serialisation, five parts. The message-security page says flattened JSON. The FAQ, the handbook and every sample use compact.
+
+### Timestamp format
+
+Send ISO 8601 with `+05:30`. The samples use it throughout. Accept a Unix epoch on the way in.
+
+### Correlation ID on a response
+
+Copy the request's `correlation_id`. Settled. On a **request** set it to that message's own `api_call_id`; on a **response** echo the request's `correlation_id`. The workbook has 25 correlation rows: 8 state the request half, 16 the response half, and 1 gives the status enquiry its own rule. The two halves are one rule, not a clash. Envelope Fields has the table.
+
+### api_call_id
+
+Send a fresh UUID on every message, including responses. So a response and its request never share one.
+
+### Identifier type for an ABHA number
+
+Send `ABHA`. From the NRCeS identifier-type code system, not the HL7 `JHN`.
+
+### Cancellation Task input name
+
+Send `intimationNumber`, on the cancel Task as on the reprocess.
+
+### entity_type in a receipt
+
+Derive it from the path. The second-to-last segment, or the last where that is `v1`, with `on_` stripped.
+
+Two points looked unanswerable in earlier versions of this documentation. Both are answered in the sources, and the answers are recorded here.
+
+**The workflow code for eligibility, insurance plan, search, predetermination and status.** The workflow sheet lists none because the header is optional. `x-hcx-workflow_id` is marked Optional on all twenty-five rows on which it appears, across all ten sheets of the NHCX Requests and Responses workbook, including the CoverageEligibility and Insurance Plan sheets. Send the step code where the sheet gives one. Send nothing where it does not. There is nothing to negotiate.
+
+The field also carries two readings, which is why it looks unresolved. The Workflow Status Sheet treats it as a step code; the protocol pages define it as an identifier that "may span over a series of message exchanges" for one case. Envelope Fields sets both out.
+
+**Domain headers.** These are named, and they have a convention. The format is `x-hcx-<use_case_name>-<parameter_name>`, with the use case under sixteen characters and the parameter under thirty-two. The Notification Integration document names four in use: `x-hcx-amount_submitted`, `x-hcx-benefit-category_type`, `x-hcx-benefit_code` and `x-hcx-action`. The eObjects page adds a `Usage` header on the Claim carrying `preauthorization` or `claim`. And the access-control policy requires an insurance marketplace to carry the beneficiary's consent in a domain header before it may be given individual claim data.
+
+Send none to a payer that has not asked for one. But they exist, and Envelope Fields collects them.
+
+The full field table, with the obligation of every header and the rules that govern it, is Envelope Fields in the Reference section. Every error code either side can send is Error Codes in the same section.

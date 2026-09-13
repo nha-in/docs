@@ -4,25 +4,12 @@ Before a message can be sealed, two questions have to be answered: who is it goi
 
 ```mermaid
 flowchart LR
-  classDef provider fill:#DCEFE3,stroke:#2E7D4F,color:#1B2431
-  classDef payer fill:#DCE8F5,stroke:#2B5C9E,color:#1B2431
-  classDef exchange fill:#E3F0F0,stroke:#0F6E70,color:#1B2431
-  classDef other fill:#EEF1F4,stroke:#7A8797,color:#1B2431
   A[List participants by role] --> B[Choose the insurer]
   B --> C[Look up the patient's policies]
   C --> D{processingid}
   D --> E[Fetch that participant's certificate]
   E --> F[Seal and send]
-  class A,B,C,E,F provider
-  class D other
 ```
-
-## In short
-
-- Two lookups answer who a message goes to and which policy it is about.
-- Identifiers are not equal: try ABHA number, then member ID, then mobile.
-- Address the envelope to `processingid`, not `payerid`. That is the portal's seventh most common mistake.
-- Linking is the payer's half, done when the policy is written, and it is why ABHA lookup works at all.
 
 ## Listing participants
 
@@ -33,14 +20,15 @@ curl --location --request POST 'https://apisbx.abdm.gov.in/pmjay/sbxhcx/particip
   --header 'Accept: application/json' \
   --header 'Content-Type: application/json' \
   --header 'bearer_auth: Bearer <access token>' \
-  --header 'X-CM-ID: sbx' \
   --data-raw '{
     "role": "PAYER",
     "fromdate": "01/04/2021",
-    "todate": "31/03/2027",
+    "todate": "20/03/2026",
     "entitytype": "Gov"
   }'
 ```
+
+[Fetch participants list in the API reference](/docs/nhcx/v1/api/registry/endpoints/registry-fetch-participants-list)
 
 - `role` is `PAYER`, `PROVIDER` or `TPA`.
 - `fromdate` and `todate` bound the registration date, in `dd/MM/yyyy` only.
@@ -61,9 +49,11 @@ curl --location --request POST 'https://apisbx.abdm.gov.in/pmjay/sbxhcx/particip
   --header 'bearer_auth: Bearer <access token>' \
   --data-raw '{
     "identifiertype": "AbhaNumber",
-    "identifiervalue": "91123456781234"
+    "identifiervalue": "12345678910111"
   }'
 ```
+
+[Get beneficiary policies in the API reference](/docs/nhcx/v1/api/registry/endpoints/registry-participant-get-policies)
 
 `identifiertype` is one of three, and they are not equal. Try them in this order and stop at the first that returns a policy:
 
@@ -109,18 +99,22 @@ curl --location --request POST 'https://apisbx.abdm.gov.in/pmjay/sbxhcx/particip
   --header 'Content-Type: application/json' \
   --header 'bearer_auth: Bearer <access token>' \
   --data-raw '{
-    "requestid": "e011c4a2-0f3a-4b7e-9c21-50d06af51555",
-    "abhanumber": "91123456781234",
+    "requestid": "7f3f2a4e-0c6b-4b7a-9e2d-2c1f8a5b6d90",
+    "abhanumber": "12345678910111",
     "mobilenumber": "9876543210",
-    "memberid": "Cust00085",
-    "payerid": "1518@hcx",
-    "processingid": "1000000109@hcx",
+    "memberid": "MEM-2026-000123",
+    "payerid": "100234@sbx",
     "policies": [
-      { "productid": "Prod01", "productname": "Active Assure" },
-      { "productid": "Prod02", "productname": "Life Insurance Policy" }
-    ]
+      {
+        "productid": "PRD-FLOATER-01",
+        "productname": "Family Floater Gold"
+      }
+    ],
+    "processingid": "100235@sbx"
   }'
 ```
+
+[Link ABHA number to policies in the API reference](/docs/nhcx/v1/api/registry/endpoints/registry-participant-link-abha-policy)
 
 - `requestid` is a fresh UUID.
 - `payerid` is the insurer's own participant code. Every insurer has one, even when it works through a TPA.
@@ -137,15 +131,20 @@ curl --location --request POST 'https://apisbx.abdm.gov.in/pmjay/sbxhcx/particip
   --header 'Content-Type: application/json' \
   --header 'bearer_auth: Bearer <access token>' \
   --data-raw '{
-    "requestid": "5f314cf3-8a1d-4e60-b7c9-585b5d7d0bc0",
-    "payerid": "1518@hcx",
-    "processingid": "1000000109@hcx",
-    "memberid": "Cust00085",
+    "requestid": "9a7c5e3d-1b2f-4c8a-b6d4-0e9f8a7b6c55",
+    "payerid": "100234@sbx",
+    "memberid": "MEM-2026-000123",
     "policies": [
-      { "productid": "Prod01", "productname": "Active Assure" }
-    ]
+      {
+        "productid": "PRD-FLOATER-01",
+        "productname": "Family Floater Gold"
+      }
+    ],
+    "processingid": "100235@sbx"
   }'
 ```
+
+[De-link ABHA policies in the API reference](/docs/nhcx/v1/api/registry/endpoints/registry-participant-delink-abha-policy)
 
 Only products already on the link can be removed; naming one that is not there returns "There is no policies with requested details".
 

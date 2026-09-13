@@ -1,74 +1,81 @@
-# NHCX
+# Introduction
 
-The Ayushman Bharat Digital Mission ([ABDM](/docs/nhcx/v1/getting-started/glossary#abdm)) is India's national
-health data network, run by the National Health Authority ([NHA](/docs/nhcx/v1/getting-started/glossary#nha)).
-It is three gateways, not one, and this section documents the third of them.
+## What it is
 
-[NHCX](/docs/nhcx/v1/getting-started/glossary#nhcx) is the National Health Claims Exchange. It carries insurance
-claims and their responses between providers and payers. This section covers the exchange as NHA
-defines it for any payer, and PMJAY as the scheme that runs on it with its own rules.
+The National Health Claims Exchange is a single road between hospitals and insurers. A hospital asks whether a patient is covered, asks permission to treat, sends the bill, and gets paid. Today each of those steps runs differently for every insurer. On the exchange they run the same way for all of them.
 
-## In short
+It carries the whole journey: checking cover before admission, getting treatment approved, submitting the claim at discharge, being paid, and arguing when the answer is wrong. Every step is a message out and an answer back later, so nothing is left hanging and there is a record of both halves.
 
-- A hospital connects once and an insurer connects once, each to the exchange. Either can then reach the other.
-- Every substantive exchange is asynchronous: a request out, a receipt, and the answer later on a callback.
-- Every message is a FHIR bundle sealed for the recipient inside a JWE envelope the exchange can route but not read.
-- Both sides build the same base framework first, then the use cases their role needs.
-- PMJAY runs the same endpoints with scheme rules layered on top.
+Hospitals, insurers, patients, regulators and observers all connect to it the same way.
 
-## Where to start
+NHCX is developed under the Ayushman Bharat Digital Mission (ABDM) by the National Health Authority (NHA), in consultation with the Insurance Regulatory and Development Authority of India (IRDAI). The idea is to introduce a platform of exchange to Providers and Payers so that both can transfer digitised health records and other pertinent information directly, in a machine readable format, to their counterpart.
 
-| If you are | Start at |
-| --- | --- |
-| Deciding whether to build | [What NHCX is](/docs/nhcx/v1/concepts/what-nhcx-is), then [claim settlement](/docs/nhcx/v1/concepts/claim-settlement) and [the NHCX way](/docs/nhcx/v1/concepts/nhcx-way-of-claim-settlement) |
-| Running a claims desk | [Claim settlement](/docs/nhcx/v1/concepts/claim-settlement), then [Building a provider](/docs/nhcx/v1/building-a-provider) or [Building a payer](/docs/nhcx/v1/building-a-payer) |
-| Designing the screens | The [provider UI guide](/docs/nhcx/v1/building-a-provider/ui-guide) or the [payer UI guide](/docs/nhcx/v1/building-a-payer/ui-guide) |
-| Engineering a provider | [Get started](/docs/nhcx/v1/getting-started) end to end, then [Building a provider](/docs/nhcx/v1/building-a-provider) |
-| Engineering a payer | [Get started](/docs/nhcx/v1/getting-started) end to end, then [Building a payer](/docs/nhcx/v1/building-a-payer) |
-| Integrating without building the protocol | The [NHCX adapter](/docs/nhcx/v1/getting-started/nhcx-adapter), then the FHIR reference for the bundles you still write |
-| Going live against PMJAY | The [PMJAY sandbox run](/docs/nhcx/v1/building-a-provider/pmjay-sandbox-run), then [PMJAY provider](/docs/nhcx/v1/building-a-provider/pmjay-provider) |
-| Writing bundles | [Bundles and conventions](/docs/nhcx/v1/fhir-reference/bundles-and-conventions), then the chapter for your exchange |
-| Looking something up | [Workflow codes](/docs/nhcx/v1/exchanges/workflow-codes), the [NHCX glossary](/docs/nhcx/v1/getting-started/nhcx-glossary), [codes and value sets](/docs/nhcx/v1/fhir-reference/codes-and-value-sets) |
+## What NHCX aims to achieve
 
-## Who is on it
+NHA states five objectives for the exchange.
 
-| Participant | What it does |
-| --- | --- |
-| Provider | A hospital or clinic, identified by its Health Facility Registry entry. |
-| Payer | An insurance company, or a government agency paying for a scheme. |
-| TPA | A third-party administrator processing claims for an insurer. On the network it behaves as a payer. |
-| Regulator | IRDAI and bodies like it, which can search claims across every payer. |
-| Scheme sponsor | The owner of a programme, for example NHA for Ayushman Bharat. |
-| Patient app | A personal health record app receiving notifications for a beneficiary. |
-| NHCX | The exchange in the middle, routing between registered participants. |
+- **Wider cover.** Bring new kinds of claim onto the network, including outpatient (OPD) visits and pharmacy bills, so insurance is not only about hospital stays.
+- **Faster money.** Shorten the time between treatment and payment, and make cashless treatment workable even in small hospitals.
+- **Room to innovate.** Give insurers the structured data they need to automate decisions and to spot fraud.
+- **One way of doing things.** A single, rule-based process that both sides trust, instead of every insurer running its own.
+- **A better patient experience.** Fewer forms, fewer delays, fewer surprises at discharge.
 
-Both providers and payers onboard as participants, in sandbox first and then in production.
-[Participants and policies](/docs/nhcx/v1/registries/participants-and-policies) covers how that
-works and how a beneficiary is matched to a policy.
+Underneath all five sits one requirement. A hospital's software and an insurer's software are built by different people on different technology, and a message has to mean exactly the same thing at both ends. That is why everything on the exchange is written in one agreed format, with agreed words for diagnoses, procedures and test results. How Claims Move on NHCX introduces that format, and Bundles and Conventions in the FHIR Reference sets out its rules.
 
-## HIE-CM or NHCX
+## NHCX operating framework
 
-Claims are not health records. If your product shares or fetches a patient's clinical record, you
-are on HIE-CM. If it submits or adjudicates an insurance claim, you are on NHCX. A hospital system
-can end up on both. The two integrations share no API surface.
+A stock exchange works because a buyer and a seller each connect to the exchange rather than to each other. NHCX works the same way. A hospital connects once, an insurer connects once, and from then on either can reach the other without having built anything specific to them.
 
-## What is verified and what is not
+## What NHCX is made of
 
-Coverage eligibility in all four purposes, the insurance plan, the preauthorisation, an
-enhancement, the claim, and the Payer Service adjudication of all three were run against the SHA
-HP sandbox payer on 5 and 6 September 2026, end to end to an approved claim. That run is recorded
-in the [PMJAY sandbox run](/docs/nhcx/v1/building-a-provider/pmjay-sandbox-run).
+It helps to think of NHCX as three rulebooks and one referee.
 
-Everything else is built from NHA's published documents, collections and sample payloads. Where
-those documents disagree with each other, the pages say so and name which reading the live samples
-follow rather than picking silently.
+- **The protocol** says how a message travels: how it is addressed, sealed, acknowledged and answered. It is deliberately like email: a message goes to the exchange, the exchange passes it on, and the reply comes back the same way.
+- **The data specifications** say what goes inside a message. Claims, policies, payments and the rest are written as FHIR records, using profiles published by NRCeS, so that both sides read the same thing.
+- **The operational guidelines** say who may join, how they are checked, what they may do, and how they can be removed.
+- **NHA is the referee.** It publishes the rules, runs the exchange, and works with NRCeS and IRDAI to change them.
 
-## Next
+The portal also publishes a live Swagger specification for each of the exchange's services, and Environments and Addresses in the Reference section lists them.
 
-- [Get started](/docs/nhcx/v1/getting-started), the base framework every participant builds
-- [Core concepts](/docs/nhcx/v1/concepts), what a claim is made of
-- [Exchanges and codes](/docs/nhcx/v1/exchanges), every endpoint with its callback and workflow code
-- [FHIR reference](/docs/nhcx/v1/fhir-reference/bundles-and-conventions), what goes inside the sealed payload
-- [API references](/docs/nhcx/v1/api), the 41 operations as interactive OpenAPI
-- [Choose your gateway](/docs/hiecm/v3)
-- [Support](/docs/support), for anything about these pages rather than about NHCX itself
+Five principles run through all of it. The rules are **open**, published under a permissive licence so anyone can build against them. They are **evolvable**, so a scheme can add what it needs without breaking everyone else. They are **minimal**, so they are easy to understand and do not hold back innovation. They protect **privacy and security**, with sealed contents and tamper-proof records. And they are **unbundled**, so a participant can adopt one part without adopting all of it.
+
+## Who is on the network
+
+Most of this documentation talks about two parties, the hospital and the insurer. The network recognises more.
+
+- **Providers.** Hospitals and clinics, identified by their Health Facility Registry entry.
+- **Payers.** Insurance companies, and the government agencies that pay for schemes.
+- **TPAs.** Third-party administrators who process claims on an insurer's behalf. On the network a TPA behaves like a payer.
+- **Regulators.** IRDAI and bodies like it, who can search claims across every payer.
+- **Scheme sponsors.** The owner of a programme, for example NHA for Ayushman Bharat, with payer-level access.
+- **Researchers and insurance marketplaces.** Given aggregated or consented data only.
+- **Patient apps.** Personal health record apps that receive notifications on a beneficiary's behalf.
+- **Other exchanges.** NHCX is designed so that more than one instance can exist and relay to each other.
+
+```mermaid
+flowchart LR
+  H1[Hospital] --- X((NHCX))
+  H2[Clinic] --- X
+  A[Patient app] --- X
+  X --- P1[Insurer]
+  X --- P2[Government scheme]
+  X --- T[TPA]
+  X --- R[Regulator]
+  X --- N[Another exchange]
+```
+
+Each role comes with a fixed list of what it may send and receive. A hospital can ask about eligibility and submit claims; it cannot search another hospital's claims. A regulator can search; it cannot submit.
+
+## What changes in practice
+
+Four things are different once a hospital is on the exchange, and the rest of this documentation is about making them work.
+
+**Records go across as records.** A hospital's software already holds the diagnosis, the test results and the treatment as data. Today most of it is printed or turned into a picture before it is sent, and the insurer's software cannot read a picture. On the exchange it goes across as data and stays readable.
+
+**That makes automatic decisions possible.** An insurer can only decide a claim by machine if it can read the values. A blood test sent as ten separate results can be checked automatically; the same test sent as a scan cannot.
+
+**One place to type things.** The hospital's own system becomes the single place the information is entered, rather than being re-keyed into an insurer's portal afterwards. Most rejections on technical grounds come from that second typing.
+
+**Any hospital can reach any insurer.** A small hospital that could never afford to integrate with thirty insurers separately can integrate once.
+
+How Claims Move on NHCX follows a claim from admission to payment, in the ordinary language of the people who do it, before any of this becomes technical.

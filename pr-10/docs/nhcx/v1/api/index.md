@@ -4,35 +4,86 @@ Every endpoint below is generated from the specification that declares it. Each 
 
 This page lists every module, including any that the role you have chosen does not use. The sidebar shows only yours.
 
-## NHCX biometric authentication
+## Session
 
-6 endpoints across 2 use cases: Fingerprint and iris, Face. Each endpoint has its own page in the sidebar.
+1 endpoint across 1 use case: Session. Each endpoint has its own page in the sidebar.
+
+[Read the whole specification](/reference/nhcx-session)
+
+## Coverage eligibility
+
+6 endpoints across 3 use cases: Coverage eligibility, Adapter, Webhooks. Each endpoint has its own page in the sidebar.
+
+[Read the whole specification](/reference/nhcx-eligibility)
+
+## Pre-authorisation
+
+6 endpoints across 3 use cases: Pre-authorisation, Adapter, Webhooks. Each endpoint has its own page in the sidebar.
+
+[Read the whole specification](/reference/nhcx-preauth)
+
+## Predetermination
+
+4 endpoints across 2 use cases: Predetermination, Webhooks. Each endpoint has its own page in the sidebar.
+
+[Read the whole specification](/reference/nhcx-predetermination)
+
+## Claim
+
+6 endpoints across 3 use cases: Claim, Adapter, Webhooks. Each endpoint has its own page in the sidebar.
+
+[Read the whole specification](/reference/nhcx-claim)
+
+## Payment notice
+
+6 endpoints across 3 use cases: Payment notice, Adapter, Webhooks. Each endpoint has its own page in the sidebar.
+
+[Read the whole specification](/reference/nhcx-payment-notice)
+
+## Communication
+
+6 endpoints across 3 use cases: Communication, Adapter, Webhooks. Each endpoint has its own page in the sidebar.
+
+[Read the whole specification](/reference/nhcx-communication)
+
+## Status and search
+
+6 endpoints across 2 use cases: Status and search, Webhooks. Each endpoint has its own page in the sidebar.
+
+[Read the whole specification](/reference/nhcx-status)
+
+## Insurance plan
+
+6 endpoints across 3 use cases: Insurance plan, Adapter, Webhooks. Each endpoint has its own page in the sidebar.
+
+[Read the whole specification](/reference/nhcx-insurance-plan)
+
+## Participant registry
+
+23 endpoints across 1 use case: Participant registry. Each endpoint has its own page in the sidebar.
+
+[Read the whole specification](/reference/nhcx-registry)
+
+## Onboarding
+
+5 endpoints across 1 use case: Onboarding. Each endpoint has its own page in the sidebar.
+
+[Read the whole specification](/reference/nhcx-onboarding)
+
+## PMJAY adjudicator
+
+4 endpoints across 1 use case: PMJAY adjudicator. Each endpoint has its own page in the sidebar.
+
+[Read the whole specification](/reference/nhcx-adjudicator)
+
+## Other
+
+18 endpoints across 3 use cases: Other, Adapter, Webhooks. Each endpoint has its own page in the sidebar.
+
+[Read the whole specification](/reference/nhcx-other)
+
+## ABHA biometric authentication
+
+6 endpoints across 1 use case: ABHA biometric authentication. Each endpoint has its own page in the sidebar.
 
 [Read the whole specification](/reference/nhcx-biometric)
-
-## NHCX session token
-
-1 endpoint across 1 use case: Sessions. Each endpoint has its own page in the sidebar.
-
-[Read the whole specification](/reference/nhcx-gateway)
-
-## NHCX participant service
-
-12 endpoints across 3 use cases: Onboarding, Discovery, Policy linking. Each endpoint has its own page in the sidebar.
-
-[Read the whole specification](/reference/nhcx-participant)
-
-## NHCX use case endpoints
-
-22 endpoints across 11 use cases: Coverage eligibility, Insurance plan, Preauthorisation, Claim, Task, Communication, Search, Predetermination, Payment, Status, Endpoints. Each endpoint has its own page in the sidebar.
-
-[Read the whole specification](/reference/nhcx-usecases)
-
-## Callbacks with no documented trigger
-
-2 callbacks are declared at module level with no call named against them. Which call produces each one is not documented, so this page does not say.
-
-| Module | Method | Arrives at | What it carries |
-| --- | --- | --- | --- |
-| NHCX use case endpoints | <span class="api-chip api-chip--post">POST</span> | [`delivery`](/docs/nhcx/v1/api/nhcx-usecases/endpoints/nhcx-webhook-delivery) | The exchange delivers a message to your bridge URL |
-| NHCX use case endpoints | <span class="api-chip api-chip--post">POST</span> | [`error`](/docs/nhcx/v1/api/nhcx-usecases/endpoints/nhcx-webhook-error) | The exchange reports a message it could not deliver |

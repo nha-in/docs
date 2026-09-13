@@ -1,0 +1,846 @@
+# NHCX payment notice, from the NHCX package's Bruno folder apis/06-payment-notice.
+#
+# Written by the package's system/build-ekadocs.mjs (make ekadocs); change the .bru
+# requests there and port again rather than editing this file.
+#
+# Rules this file follows: catalogue/openapi/CONVENTIONS.md
+openapi: 3.1.1
+info:
+  x-portal:
+    module: payment-notice
+    label: Payment notice
+    position: 6
+  title: NHCX payment notice
+  summary: Every other flow exchanges decisions; the payment notice is the only one that tells the hospital whether the money actually moved.
+  description: |-
+    The Payment notice calls on the National Health Claims Exchange (NHCX): 4 operations, and 2 callbacks you host.
+
+    Every other flow exchanges decisions; the payment notice is the only one that tells the hospital whether the money actually moved.
+
+    Guides that use these calls: [Payment notice and acknowledgement](/docs/nhcx/v1/reference/fhir/payment-notice-and-acknowledgement).
+
+    Production address for the NHCX exchange: shared by NHA after sandbox exit.
+  version: nhcx-v1
+  license:
+    name: MIT
+    identifier: MIT
+  contact:
+    name: NHCX sandbox
+    url: https://hcxsbx.abdm.gov.in
+  x-abdm-gateway: nhcx
+  x-abdm-module: payment-notice
+  x-abdm-phase: 1
+  x-abdm-roles:
+    - provider
+    - payer
+x-abdm-sources:
+  - file: nhcx-package/apis/06-payment-notice
+    role: upstream
+    hash: sha256:ecbc5eba98524e6d102f3375c652f11a4aab2a32272cbef94c0993e8efe0d0f6
+    note: The package's Bruno collection, one request per operation.
+  - file: nhcx-package/baseurl.yaml
+    role: upstream
+    hash: sha256:47d8412abbfc53b1e1038410e7980eee029d7b1be5082f4ae6c1d4e16ae0dd0f
+    note: The sandbox and production hosts.
+servers:
+  - url: https://apisbx.abdm.gov.in/hcx
+    description: Sandbox, NHCX exchange.
+tags:
+  - name: Payment notice
+    description: Every other flow exchanges decisions; the payment notice is the only one that tells the hospital whether the money actually moved.
+  - name: Adapter
+    description: Exposed for the NHCX adapter deployment rather than for direct integration.
+security:
+  - bearerAuth: []
+paths:
+  /v1/paymentnotice/request:
+    post:
+      operationId: payment_notice_v1_paymentnotice_request
+      x-abdm-use-case: Payment notice
+      tags:
+        - Payment notice
+      summary: Payment notice request
+      description: |-
+        Payer pushes a Task bundle with PaymentNotice and PaymentReconciliation (amount, TDS, UTR) to the provider via NHCX after approving a claim.
+
+        ### Business purpose
+
+        Every other flow exchanges decisions; the payment notice is the only one that tells the hospital whether the money actually moved. It formally notifies the provider that a payment has been initiated, processed or settled against an approved claim, carrying the net amount, TDS deduction, payment date and the UTR. Hospitals need it to reconcile bank receipts to claims and close the episode; payers need it as the structured, auditable record of settlement.
+
+        ### When to use
+
+        Payer-initiated, after the final claim is approved (workflow 26). The same bundle shape is sent up to three times as the money progresses: 30 PAYMENT_INITIATED, 31 PAYMENT_PROCESSED and 33 PAYMENT_SETTLED, when the UTR becomes available in PaymentReconciliation.paymentIdentifier.value. The NHA status sheet frames these as x-hcx-status request.initiated because the payer is authoring a new request to the provider; the workbook sample shows x-hcx-workflow_id 11 as a placeholder. The bundle is a Task with code deliver and status requested, plus PaymentNotice (paymentStatus paid), PaymentReconciliation and both Organisations.
+
+        ### Preconditions
+
+        - The claim has received a response.complete approval and a payment has been initiated in the payer's banking system.
+        - The payer holds a valid Bearer token and has fetched the provider's certificate; the bundle is JWE-encrypted for the provider.
+        - Protected header carries request.initiated, a fresh correlation UUID for this notice cycle (the workbook says same as the API caller ID), the payer as sender and the provider as recipient, and an IST timestamp.
+        - PaymentNotice.amount and PaymentReconciliation.paymentAmount carry the net amount; detail lines itemise TDS and Payment; the claim number is carried as identifier type CLN.
+        - Valid provider bank details exist on the payer side (PAYR-1020 otherwise).
+
+        ### Postconditions
+
+        NHCX returns HTTP 202 Accepted with a StatusSuccessResponse acknowledgement (entity_type payment) and forwards the bundle asynchronously to the provider's registered callback endpoint, which must acknowledge with 202 within 30 seconds. The provider then sends its own acknowledgement Task (status completed, output paymentack, workflow 17) on /v1/paymentnotice/on_request; only after that acknowledgement is the payment lifecycle considered closed. Protocol failures at the provider come back as a ProtocolResponse with x-hcx-error_details. Statuses 400, 404 and 500 carry the same schema.
+
+        ### Common mistakes
+
+        - Provider side: expecting a Claim or ClaimResponse; the payment notice is a Task bundle and the money fields live in PaymentReconciliation.
+        - Provider side: reading the UTR before workflow 33, or parsing the scroll-style UTR (for example UTR000000000001) as a bank RRN.
+        - Provider side: relying on Task.description text for logic; the published sample contains a typo (Recived the payment).
+        - Provider side: returning 200 or a malformed body on receipt, which triggers five retries and deletion.
+        - Payer side: sending the notice before the claim is closed by response.complete, or without valid provider bank details (PAYR-1020).
+        - Both sides: the FAQ's sandbox base URL for payment notice is printed without a slash between host and path; cross-check against the endpoint index.
+
+        ### Best practices
+
+        - Payer: send 30, 31 and 33 as the transfer progresses and populate paymentIdentifier with the UTR at 33; keep TDS and Payment detail lines consistent with the gross claim amount.
+        - Provider: persist the UTR, TDS and net amount against the claim for audit and dispute resolution, and mark the claim SETTLED only on 33.
+        - Provider: acknowledge with 202 within 30 seconds, be idempotent on correlation ID, then send the paymentack Task.
+        - Both: note the source conflict on whether the acknowledgement goes to /v1/paymentnotice/on_request or /v1/task/submit; the API contract supports on_request, so confirm with the counterparty during onboarding.
+        - Both: use IST timestamps and echo the correlation ID through the acknowledgement.
+
+        ### Related scenario
+
+        Three days after approving claim CL0000000001 for 2430 INR, the state health agency initiates a bank transfer of 2187 INR after 243 INR TDS. Its bridge builds a Task bundle with code deliver, a PaymentNotice with amount 2187 and status paid, and a PaymentReconciliation with the TDS and Payment detail lines, and posts it to /v1/paymentnotice/request under workflow 30. NHCX returns 202 and delivers it to the hospital, which acknowledges within 30 seconds. When the transfer settles the payer sends a second notice under 33 carrying the UTR; the hospital persists it and responds on /v1/paymentnotice/on_request with a paymentack Task.
+
+        ### Specification
+
+        Chapter [Payment notice and acknowledgement](/docs/nhcx/v1/reference/fhir/payment-notice-and-acknowledgement) of the NHCX integration specification.
+      parameters:
+        - $ref: "#/components/parameters/BearerAuth"
+        - $ref: "#/components/parameters/XHcxSenderCode"
+        - $ref: "#/components/parameters/XHcxRecipientCode"
+        - $ref: "#/components/parameters/XHcxApiCallId"
+        - $ref: "#/components/parameters/XHcxRequestId"
+        - $ref: "#/components/parameters/XHcxCorrelationId"
+        - $ref: "#/components/parameters/XHcxWorkflowId"
+        - $ref: "#/components/parameters/XHcxTimestamp"
+        - $ref: "#/components/parameters/XHcxStatus"
+        - $ref: "#/components/parameters/XHcxBenAbhaId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                payload:
+                  type: string
+            example:
+              payload: eyJhbGciOiJSU0EtT0FFUC0yNTYiLCJlbmMiOiJBMjU2R0NNIiwieC1oY3gtc2VuZGVyX2NvZGUiOi4uLn0.encrypted_key.iv.ciphertext.tag
+      responses:
+        "202":
+          description: NHCX returns HTTP 202 Accepted with a StatusSuccessResponse acknowledgement (entity_type payment) and forwards the bundle asynchronously to the provider's registered callback endpoint, which must acknowledge with 202 within 30 seconds.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  timestamp:
+                    type: string
+                  api_call_id:
+                    type: string
+                  correlation_id:
+                    type: string
+                  result:
+                    type: object
+                    properties:
+                      sender_code:
+                        type: string
+                      recipient_code:
+                        type: string
+                      entity_type:
+                        type: string
+                      protocol_status:
+                        type: string
+                  error:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                      message:
+                        type: string
+              example:
+                timestamp: 27/02/2026 15:36:09:004
+                api_call_id: c3d2e1f0-a9b8-4c7d-9e6f-5a4b3c2d1e0f
+                correlation_id: c3d2e1f0-a9b8-4c7d-9e6f-5a4b3c2d1e0f
+                result:
+                  sender_code: 1518@hcx
+                  recipient_code: 1000004446@hcx
+                  entity_type: payment
+                  protocol_status: request.queued
+                error:
+                  code: ""
+                  message: ""
+  /internal/v1/paymentnotice/request:
+    post:
+      operationId: payment_notice_internal_v1_paymentnotice_request
+      x-abdm-use-case: Adapter
+      tags:
+        - Adapter
+      summary: Payment notice request (internal) (adapter)
+      description: |-
+        Internal twin of /v1/paymentnotice/request (operationId paymentNoticeRequestPostInternal) with the same JWEPayload body and response set. Exposed for the NHCX adapter deployment rather than for direct integration.
+
+        ### Business purpose
+
+        The paymentnotice service publishes its request operation twice, at /v1 and at /internal/v1, with identical descriptions, request bodies and response sets. Only the operationId differs, by an Internal suffix. The /internal prefix is the route the NHCX adapter sits on: a participant running the adapter alongside its own system calls the internal path, and the adapter handles the encryption, headers and gateway hop. A participant integrating directly against NHCX calls the public path and does that work itself. No separate business purpose is documented for the internal route beyond that.
+
+        ### When to use
+
+        Use it only when you are running the NHCX adapter and it is configured to serve this path; otherwise call /v1/paymentnotice/request. Everything else is unchanged: the same JWEPayload body, the same x-hcx-* protected header, the same workflow discriminators and the same asynchronous callback. The specs do not document what makes the internal variant different beyond the operationId, so treat it as a mirror of the public path and confirm with NHCX onboarding before pointing production at it.
+
+        ### Preconditions
+
+        Identical to /v1/paymentnotice/request. Nothing additional is documented for the internal route, beyond an adapter deployment that actually serves the /internal prefix.
+
+        ### Postconditions
+
+        NHCX returns HTTP 202 Accepted with a StatusSuccessResponse acknowledgement (entity_type payment) and forwards the bundle asynchronously to the provider's registered callback endpoint, which must acknowledge with 202 within 30 seconds. The provider then sends its own acknowledgement Task (status completed, output paymentack, workflow 17) on /v1/paymentnotice/on_request; only after that acknowledgement is the payment lifecycle considered closed. Protocol failures at the provider come back as a ProtocolResponse with x-hcx-error_details. Statuses 400, 404 and 500 carry the same schema.
+
+        ### Common mistakes
+
+        - Assuming a different body or different semantics for the internal route; the spec gives it the same JWEPayload body and the same responses.
+        - Calling it without an adapter deployment behind it and then chasing a 404.
+        - Every pitfall of the public path applies unchanged.
+
+        ### Best practices
+
+        - Default to /v1/paymentnotice/request and keep the internal path as a configuration option only.
+        - Share one client implementation across both paths, so header hygiene, encryption and correlation handling cannot diverge between them.
+        - Record which variant carried each correlation ID, for support conversations.
+
+        ### Related scenario
+
+        A vendor reading the paymentnotice OpenAPI document sees paymentNoticeRequestPostInternal sitting beside its public twin and asks which one to build against. The answer is the public path, unless NHCX onboarding has given them an adapter deployment, in which case the adapter takes the bundle unencrypted on the internal path and does the JWE and the gateway hop for them. The end-to-end flow is identical either way.
+
+        ### Specification
+
+        Chapter [Payment notice and acknowledgement](/docs/nhcx/v1/reference/fhir/payment-notice-and-acknowledgement) of the NHCX integration specification.
+      parameters:
+        - $ref: "#/components/parameters/BearerAuth"
+        - $ref: "#/components/parameters/XHcxSenderCode"
+        - $ref: "#/components/parameters/XHcxRecipientCode"
+        - $ref: "#/components/parameters/XHcxApiCallId"
+        - $ref: "#/components/parameters/XHcxRequestId"
+        - $ref: "#/components/parameters/XHcxCorrelationId"
+        - $ref: "#/components/parameters/XHcxWorkflowId"
+        - $ref: "#/components/parameters/XHcxTimestamp"
+        - $ref: "#/components/parameters/XHcxStatus"
+        - $ref: "#/components/parameters/XHcxBenAbhaId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                payload:
+                  type: string
+            example:
+              payload: eyJhbGciOiJSU0EtT0FFUC0yNTYiLCJlbmMiOiJBMjU2R0NNIiwieC1oY3gtc2VuZGVyX2NvZGUiOi4uLn0.encrypted_key.iv.ciphertext.tag
+      responses:
+        "202":
+          description: NHCX returns HTTP 202 Accepted with a StatusSuccessResponse acknowledgement (entity_type payment) and forwards the bundle asynchronously to the provider's registered callback endpoint, which must acknowledge with 202 within 30 seconds.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  timestamp:
+                    type: string
+                  api_call_id:
+                    type: string
+                  correlation_id:
+                    type: string
+                  result:
+                    type: object
+                    properties:
+                      sender_code:
+                        type: string
+                      recipient_code:
+                        type: string
+                      entity_type:
+                        type: string
+                      protocol_status:
+                        type: string
+                  error:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                      message:
+                        type: string
+              example:
+                timestamp: 27/02/2026 15:36:09:004
+                api_call_id: c3d2e1f0-a9b8-4c7d-9e6f-5a4b3c2d1e0f
+                correlation_id: c3d2e1f0-a9b8-4c7d-9e6f-5a4b3c2d1e0f
+                result:
+                  sender_code: 1518@hcx
+                  recipient_code: 1000004446@hcx
+                  entity_type: payment
+                  protocol_status: request.queued
+                error:
+                  code: ""
+                  message: ""
+  /v1/paymentnotice/on_request:
+    post:
+      operationId: payment_notice_v1_paymentnotice_on_request
+      x-abdm-use-case: Payment notice
+      tags:
+        - Payment notice
+      summary: Payment notice acknowledgement
+      description: |-
+        Provider acknowledges a payment notice with a Task bundle (status completed, output paymentack), closing the payment lifecycle via NHCX.
+
+        ### Business purpose
+
+        The acknowledgement confirms to the payer that the provider has received and recorded the payment notice for a specific claim. It closes the payment lifecycle from the provider side and completes the audit trail from claim approval through settlement. Failure to acknowledge does not block the payer, but the acknowledgement is required for complete lifecycle tracking, which matters for reconciliation, dispute resolution and scheme reporting.
+
+        ### When to use
+
+        Called by the provider after processing a /v1/paymentnotice/request message, using the same correlation ID, with x-hcx-workflow_id 17 PAYMENT_RECEIVED and x-hcx-status response.complete (the NHA sheet lists 17 Payment Notice Received as response.complete). The plaintext is a Task with status completed, intent order, code status from the HL7 financialtaskcode system, output[0] paymentack (Payment is acknowledged) and output[1] claimNumber carrying the acknowledged claim number; Task.requester is the provider and Task.owner the payer, the reverse of the notice. The handbook narrative alternatively places this acknowledgement on /v1/task/submit; the OpenAPI contract and the Payment use-case document support this endpoint.
+
+        ### Preconditions
+
+        - A payment notice with this correlation ID has been received and acknowledged with 202 (NHCX-1010 if NHCX has no record of it).
+        - The provider holds a valid Bearer token and the payer's certificate, and encrypts the acknowledgement Task for the payer.
+        - x-hcx-correlation_id echoes the notice; x-hcx-api_call_id is new; the provider is sender and the payer is recipient.
+        - Task.output[0].valueCodeableConcept.coding.code is paymentack and Task.output[1].valueString is the claim number from the notice; Task.status is completed.
+        - x-hcx-status is response.complete, or response.error with x-hcx-error_details for a protocol-level problem.
+
+        ### Postconditions
+
+        NHCX returns HTTP 202 Accepted with a StatusSuccessResponse acknowledgement (entity_type payment) and forwards the Task to the payer asynchronously; the payer's endpoint must acknowledge with 202 within 30 seconds or NHCX retries up to five times. If the payer cannot process the acknowledgement (invalid provider, decryption failure, missing mandatory protocol attributes) it returns a protocol response with x-hcx-error_details populated. On success the payment lifecycle for that claim is closed on both sides.
+
+        ### Common mistakes
+
+        - Sending the acknowledgement as a JWEPayload of a different resource type or with the workbook's alternative output text (ACKNOWLEDGED, RECEIVED) instead of paymentack.
+        - Keeping the notice's Task direction; on the acknowledgement requester must be the provider and owner the payer.
+        - Minting a new correlation ID instead of echoing the notice's, or reusing a correlation ID that NHCX has deleted after failed deliveries.
+        - Using the wrong status; the response leg carries response.complete, not request.initiated.
+        - Skipping the acknowledgement altogether because the payer is not blocked by it, which leaves the lifecycle open in NHCX tracking.
+        - Payer side: returning 200 or a non-conforming body on receipt, which is treated as an error and retried.
+
+        ### Best practices
+
+        - Send the acknowledgement only after the UTR, TDS and net amount have been persisted against the claim.
+        - Echo the claim number from PaymentNotice.identifier (type CLN) into Task.output[1].valueString so the payer can match it without decrypting the original.
+        - Confirm with the payer during onboarding whether it expects the acknowledgement here or on /v1/task/submit, given the documented source conflict.
+        - Be idempotent: if the same notice is redelivered, acknowledge again with the same content rather than creating a second ledger entry.
+        - Log api_call_id and correlation ID for the acknowledgement so the closed lifecycle can be evidenced.
+
+        ### Related scenario
+
+        The hospital finance team receives the settlement notice under workflow 33 for claim CL0000000001 with UTR UTR000000000001, net 2187 INR and TDS 243 INR. After matching the bank credit and persisting the UTR, the HMIS builds a Task with status completed, code status, output paymentack and claimNumber CL0000000001, encrypts it for the payer and posts it to /v1/paymentnotice/on_request under workflow 17 with the notice's correlation ID. NHCX returns 202 and delivers it to the payer's bridge, which acknowledges within 30 seconds; the claim is now closed on both ledgers.
+
+        ### Specification
+
+        Chapter [Payment notice and acknowledgement](/docs/nhcx/v1/reference/fhir/payment-notice-and-acknowledgement) of the NHCX integration specification.
+      parameters:
+        - $ref: "#/components/parameters/BearerAuth"
+        - name: x-hcx-sender_code
+          in: header
+          required: true
+          description: Your participant code. Mandatory on the envelope.
+          schema:
+            type: string
+          example: 1000004446@hcx
+        - name: x-hcx-recipient_code
+          in: header
+          required: true
+          description: The recipient's. For a provider, the processor code from the policy lookup. Mandatory on the envelope.
+          schema:
+            type: string
+          example: 1518@hcx
+        - $ref: "#/components/parameters/XHcxApiCallId"
+        - $ref: "#/components/parameters/XHcxRequestId"
+        - $ref: "#/components/parameters/XHcxCorrelationId"
+        - name: x-hcx-workflow_id
+          in: header
+          required: false
+          description: Which step, or which case. See the two readings below. Optional on the envelope.
+          schema:
+            type: string
+          example: "17"
+        - $ref: "#/components/parameters/XHcxTimestamp"
+        - name: x-hcx-status
+          in: header
+          required: true
+          description: Where this message stands. Values below. Mandatory on the envelope.
+          schema:
+            type: string
+          example: response.complete
+        - $ref: "#/components/parameters/XHcxBenAbhaId"
+        - $ref: "#/components/parameters/XHcxDebugFlag"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                payload:
+                  type: string
+            example:
+              payload: eyJhbGciOiJSU0EtT0FFUC0yNTYiLCJlbmMiOiJBMjU2R0NNIiwieC1oY3gtc2VuZGVyX2NvZGUiOi4uLn0.encrypted_key.iv.ciphertext.tag
+      responses:
+        "202":
+          description: NHCX returns HTTP 202 Accepted with a StatusSuccessResponse acknowledgement (entity_type payment) and forwards the Task to the payer asynchronously; the payer's endpoint must acknowledge with 202 within 30 seconds or NHCX retries up to five times.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  timestamp:
+                    type: string
+                  api_call_id:
+                    type: string
+                  correlation_id:
+                    type: string
+                  result:
+                    type: object
+                    properties:
+                      sender_code:
+                        type: string
+                      recipient_code:
+                        type: string
+                      entity_type:
+                        type: string
+                      protocol_status:
+                        type: string
+                  error:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                      message:
+                        type: string
+              example:
+                timestamp: 27/02/2026 10:06:19:310
+                api_call_id: b1a2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d
+                correlation_id: c3d2e1f0-a9b8-4c7d-9e6f-5a4b3c2d1e0f
+                result:
+                  sender_code: 1000004446@hcx
+                  recipient_code: 1518@hcx
+                  entity_type: payment
+                  protocol_status: request.dispatched
+                error:
+                  code: ""
+                  message: ""
+  /internal/v1/paymentnotice/on_request:
+    post:
+      operationId: payment_notice_internal_v1_paymentnotice_on_request
+      x-abdm-use-case: Adapter
+      tags:
+        - Adapter
+      summary: Payment notice acknowledgement (internal) (adapter)
+      description: |-
+        Internal twin of /v1/paymentnotice/on_request (operationId paymentNoticeOnRequestPostInternal) with the same JWEPayload body and response set. Exposed for the NHCX adapter deployment rather than for direct integration.
+
+        ### Business purpose
+
+        The paymentnotice service publishes its on_request operation twice, at /v1 and at /internal/v1, with identical descriptions, request bodies and response sets. Only the operationId differs, by an Internal suffix. The /internal prefix is the route the NHCX adapter sits on: a participant running the adapter alongside its own system calls the internal path, and the adapter handles the encryption, headers and gateway hop. A participant integrating directly against NHCX calls the public path and does that work itself. No separate business purpose is documented for the internal route beyond that.
+
+        ### When to use
+
+        Use it only when you are running the NHCX adapter and it is configured to serve this path; otherwise call /v1/paymentnotice/on_request. Everything else is unchanged: the same JWEPayload body, the same x-hcx-* protected header, the same workflow discriminators and the same asynchronous callback. The specs do not document what makes the internal variant different beyond the operationId, so treat it as a mirror of the public path and confirm with NHCX onboarding before pointing production at it.
+
+        ### Preconditions
+
+        Identical to /v1/paymentnotice/on_request. Nothing additional is documented for the internal route, beyond an adapter deployment that actually serves the /internal prefix.
+
+        ### Postconditions
+
+        NHCX returns HTTP 202 Accepted with a StatusSuccessResponse acknowledgement (entity_type payment) and forwards the Task to the payer asynchronously; the payer's endpoint must acknowledge with 202 within 30 seconds or NHCX retries up to five times. If the payer cannot process the acknowledgement (invalid provider, decryption failure, missing mandatory protocol attributes) it returns a protocol response with x-hcx-error_details populated. On success the payment lifecycle for that claim is closed on both sides.
+
+        ### Common mistakes
+
+        - Assuming a different body or different semantics for the internal route; the spec gives it the same JWEPayload body and the same responses.
+        - Calling it without an adapter deployment behind it and then chasing a 404.
+        - Every pitfall of the public path applies unchanged.
+
+        ### Best practices
+
+        - Default to /v1/paymentnotice/on_request and keep the internal path as a configuration option only.
+        - Share one client implementation across both paths, so header hygiene, encryption and correlation handling cannot diverge between them.
+        - Record which variant carried each correlation ID, for support conversations.
+
+        ### Related scenario
+
+        A vendor reading the paymentnotice OpenAPI document sees paymentNoticeOnRequestPostInternal sitting beside its public twin and asks which one to build against. The answer is the public path, unless NHCX onboarding has given them an adapter deployment, in which case the adapter takes the bundle unencrypted on the internal path and does the JWE and the gateway hop for them. The end-to-end flow is identical either way.
+
+        ### Specification
+
+        Chapter [Payment notice and acknowledgement](/docs/nhcx/v1/reference/fhir/payment-notice-and-acknowledgement) of the NHCX integration specification.
+      parameters:
+        - $ref: "#/components/parameters/BearerAuth"
+        - name: x-hcx-sender_code
+          in: header
+          required: true
+          description: Your participant code. Mandatory on the envelope.
+          schema:
+            type: string
+          example: 1000004446@hcx
+        - name: x-hcx-recipient_code
+          in: header
+          required: true
+          description: The recipient's. For a provider, the processor code from the policy lookup. Mandatory on the envelope.
+          schema:
+            type: string
+          example: 1518@hcx
+        - $ref: "#/components/parameters/XHcxApiCallId"
+        - $ref: "#/components/parameters/XHcxRequestId"
+        - $ref: "#/components/parameters/XHcxCorrelationId"
+        - name: x-hcx-workflow_id
+          in: header
+          required: false
+          description: Which step, or which case. See the two readings below. Optional on the envelope.
+          schema:
+            type: string
+          example: "17"
+        - $ref: "#/components/parameters/XHcxTimestamp"
+        - name: x-hcx-status
+          in: header
+          required: true
+          description: Where this message stands. Values below. Mandatory on the envelope.
+          schema:
+            type: string
+          example: response.complete
+        - $ref: "#/components/parameters/XHcxBenAbhaId"
+        - $ref: "#/components/parameters/XHcxDebugFlag"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                payload:
+                  type: string
+            example:
+              payload: eyJhbGciOiJSU0EtT0FFUC0yNTYiLCJlbmMiOiJBMjU2R0NNIiwieC1oY3gtc2VuZGVyX2NvZGUiOi4uLn0.encrypted_key.iv.ciphertext.tag
+      responses:
+        "202":
+          description: NHCX returns HTTP 202 Accepted with a StatusSuccessResponse acknowledgement (entity_type payment) and forwards the Task to the payer asynchronously; the payer's endpoint must acknowledge with 202 within 30 seconds or NHCX retries up to five times.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  timestamp:
+                    type: string
+                  api_call_id:
+                    type: string
+                  correlation_id:
+                    type: string
+                  result:
+                    type: object
+                    properties:
+                      sender_code:
+                        type: string
+                      recipient_code:
+                        type: string
+                      entity_type:
+                        type: string
+                      protocol_status:
+                        type: string
+                  error:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                      message:
+                        type: string
+              example:
+                timestamp: 27/02/2026 10:06:19:310
+                api_call_id: b1a2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d
+                correlation_id: c3d2e1f0-a9b8-4c7d-9e6f-5a4b3c2d1e0f
+                result:
+                  sender_code: 1000004446@hcx
+                  recipient_code: 1518@hcx
+                  entity_type: payment
+                  protocol_status: request.dispatched
+                error:
+                  code: ""
+                  message: ""
+webhooks:
+  v1_paymentnotice_request:
+    post:
+      operationId: payment_notice_webhook_v1_paymentnotice_request
+      x-abdm-triggered-by: payment_notice_v1_paymentnotice_request
+      x-abdm-use-case: Webhooks
+      tags:
+        - Payment notice
+      summary: Receive payment notice request
+      description: |-
+        Hosted by the provider. The exchange posts this message to the `endpoint_url` you registered, at `/v1/paymentnotice/request`, with the headers and the sealed payload the sender posted. Answer HTTP 202 with the receipt first and process afterwards; [Receiving a callback](/docs/nhcx/v1/getting-started/receiving-a-callback) has the rules.
+
+        Payer pushes a Task bundle with PaymentNotice and PaymentReconciliation (amount, TDS, UTR) to the provider via NHCX after approving a claim.
+      parameters:
+        - $ref: "#/components/parameters/BearerAuth"
+        - $ref: "#/components/parameters/XHcxSenderCode"
+        - $ref: "#/components/parameters/XHcxRecipientCode"
+        - $ref: "#/components/parameters/XHcxApiCallId"
+        - $ref: "#/components/parameters/XHcxRequestId"
+        - $ref: "#/components/parameters/XHcxCorrelationId"
+        - $ref: "#/components/parameters/XHcxWorkflowId"
+        - $ref: "#/components/parameters/XHcxTimestamp"
+        - $ref: "#/components/parameters/XHcxStatus"
+        - $ref: "#/components/parameters/XHcxBenAbhaId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                payload:
+                  type: string
+            example:
+              payload: eyJhbGciOiJSU0EtT0FFUC0yNTYiLCJlbmMiOiJBMjU2R0NNIiwieC1oY3gtc2VuZGVyX2NvZGUiOi4uLn0.encrypted_key.iv.ciphertext.tag
+      responses:
+        "202":
+          description: Received. The receipt names the message it answers; the answer itself follows as a call of your own.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  timestamp:
+                    type: string
+                  api_call_id:
+                    type: string
+                  correlation_id:
+                    type: string
+                  result:
+                    type: object
+                    properties:
+                      sender_code:
+                        type: string
+                      recipient_code:
+                        type: string
+                      entity_type:
+                        type: string
+                      protocol_status:
+                        type: string
+                  error:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                      message:
+                        type: string
+              example:
+                timestamp: 04/09/2026 11:46:41:305
+                api_call_id: <from the incoming header>
+                correlation_id: <from the incoming header>
+                result:
+                  sender_code: 1000003538@hcx
+                  recipient_code: 1000004446@hcx
+                  entity_type: preauth
+                  protocol_status: request.queued
+                error:
+                  code: ""
+                  message: ""
+  v1_paymentnotice_on_request:
+    post:
+      operationId: payment_notice_webhook_v1_paymentnotice_on_request
+      x-abdm-triggered-by: payment_notice_v1_paymentnotice_on_request
+      x-abdm-use-case: Webhooks
+      tags:
+        - Payment notice
+      summary: Receive payment notice acknowledgement
+      description: |-
+        Hosted by the payer. The exchange posts this message to the `endpoint_url` you registered, at `/v1/paymentnotice/on_request`, with the headers and the sealed payload the sender posted. Answer HTTP 202 with the receipt first and process afterwards; [Receiving a callback](/docs/nhcx/v1/getting-started/receiving-a-callback) has the rules.
+
+        Provider acknowledges a payment notice with a Task bundle (status completed, output paymentack), closing the payment lifecycle via NHCX.
+      parameters:
+        - $ref: "#/components/parameters/BearerAuth"
+        - name: x-hcx-sender_code
+          in: header
+          required: true
+          description: Your participant code. Mandatory on the envelope.
+          schema:
+            type: string
+          example: 1000004446@hcx
+        - name: x-hcx-recipient_code
+          in: header
+          required: true
+          description: The recipient's. For a provider, the processor code from the policy lookup. Mandatory on the envelope.
+          schema:
+            type: string
+          example: 1518@hcx
+        - $ref: "#/components/parameters/XHcxApiCallId"
+        - $ref: "#/components/parameters/XHcxRequestId"
+        - $ref: "#/components/parameters/XHcxCorrelationId"
+        - name: x-hcx-workflow_id
+          in: header
+          required: false
+          description: Which step, or which case. See the two readings below. Optional on the envelope.
+          schema:
+            type: string
+          example: "17"
+        - $ref: "#/components/parameters/XHcxTimestamp"
+        - name: x-hcx-status
+          in: header
+          required: true
+          description: Where this message stands. Values below. Mandatory on the envelope.
+          schema:
+            type: string
+          example: response.complete
+        - $ref: "#/components/parameters/XHcxBenAbhaId"
+        - $ref: "#/components/parameters/XHcxDebugFlag"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                payload:
+                  type: string
+            example:
+              payload: eyJhbGciOiJSU0EtT0FFUC0yNTYiLCJlbmMiOiJBMjU2R0NNIiwieC1oY3gtc2VuZGVyX2NvZGUiOi4uLn0.encrypted_key.iv.ciphertext.tag
+      responses:
+        "202":
+          description: Received. The receipt names the message it answers; the answer itself follows as a call of your own.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  timestamp:
+                    type: string
+                  api_call_id:
+                    type: string
+                  correlation_id:
+                    type: string
+                  result:
+                    type: object
+                    properties:
+                      sender_code:
+                        type: string
+                      recipient_code:
+                        type: string
+                      entity_type:
+                        type: string
+                      protocol_status:
+                        type: string
+                  error:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                      message:
+                        type: string
+              example:
+                timestamp: 04/09/2026 11:46:41:305
+                api_call_id: <from the incoming header>
+                correlation_id: <from the incoming header>
+                result:
+                  sender_code: 1000003538@hcx
+                  recipient_code: 1000004446@hcx
+                  entity_type: preauth
+                  protocol_status: request.queued
+                error:
+                  code: ""
+                  message: ""
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      description: "On every NHCX call, the token goes in a header called `bearer_auth`, with the word `Bearer` and a space in front. The sources are not unanimous: the authentication page and the FAQ both write the example as `Authorization`, and the notification endpoint uses `Authorization`. The safe course, and what the adapter does, is to send both headers with the same value."
+  parameters:
+    BearerAuth:
+      name: bearer_auth
+      in: header
+      required: true
+      description: It is `bearer_auth`, not `Authorization`, on NHCX's own endpoints.
+      schema:
+        type: string
+      example: Bearer <access token>
+    XHcxSenderCode:
+      name: x-hcx-sender_code
+      in: header
+      required: true
+      description: Your participant code. Mandatory on the envelope.
+      schema:
+        type: string
+      example: 1518@hcx
+    XHcxRecipientCode:
+      name: x-hcx-recipient_code
+      in: header
+      required: true
+      description: The recipient's. For a provider, the processor code from the policy lookup. Mandatory on the envelope.
+      schema:
+        type: string
+      example: 1000004446@hcx
+    XHcxApiCallId:
+      name: x-hcx-api_call_id
+      in: header
+      required: true
+      description: Fresh on every message, including responses. Mandatory on the envelope.
+      schema:
+        type: string
+      example: <uuid>
+    XHcxRequestId:
+      name: x-hcx-request_id
+      in: header
+      required: false
+      description: One per originating request. The Open Protocol page marks it Mandatory; the Technical Specifications page marks it Optional. Optional on the envelope.
+      schema:
+        type: string
+      example: <uuid>
+    XHcxCorrelationId:
+      name: x-hcx-correlation_id
+      in: header
+      required: true
+      description: The thread. See the rule below. Mandatory on the envelope.
+      schema:
+        type: string
+      example: <uuid>
+    XHcxWorkflowId:
+      name: x-hcx-workflow_id
+      in: header
+      required: false
+      description: Which step, or which case. See the two readings below. Optional on the envelope.
+      schema:
+        type: string
+      example: "30"
+    XHcxTimestamp:
+      name: x-hcx-timestamp
+      in: header
+      required: true
+      description: See the format note below. Mandatory on the envelope.
+      schema:
+        type: string
+      example: <iso timestamp>
+    XHcxStatus:
+      name: x-hcx-status
+      in: header
+      required: true
+      description: Where this message stands. Values below. Mandatory on the envelope.
+      schema:
+        type: string
+      example: request.initiated
+    XHcxBenAbhaId:
+      name: x-hcx-ben-abha-id
+      in: header
+      required: true
+      description: The beneficiary's ABHA number. Mandatory on every exchange, including those with no beneficiary in the payload. Mandatory on the envelope.
+      schema:
+        type: string
+      example: "91711234567890"
+    XHcxDebugFlag:
+      name: x-hcx-debug_flag
+      in: header
+      required: false
+      description: "`Error`, `Info` or `Debug`. A server may ignore it. Optional on the envelope."
+      schema:
+        type: string
+      example: INFO
+x-abdm-errors:
+  notes: "Codes any exchange call can meet are recorded once, in the [Other](/docs/nhcx/v1/api/other) specification: the gateway's NHCX- codes, the standard payer codes, and the reference payer's structure and transport codes. The reference payer's other codes sit with the exchange they reject: coverage eligibility, preauthorisation, claim and insurance plan. [Reading error codes](/docs/nhcx/v1/reference/error-code-guide) explains the code spaces."

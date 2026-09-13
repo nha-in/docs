@@ -2,13 +2,6 @@
 
 A message on the exchange is a JSON Web Encryption token: a readable protected header and an encrypted body, serialised as five base64url parts joined by dots. The body is a FHIR bundle. This chapter builds one with an empty bundle, so that what you are testing is the envelope and the plumbing, not the FHIR.
 
-## In short
-
-- A message is a JWE: a readable protected header and an encrypted FHIR bundle, compact serialised.
-- Use `RSA-OAEP-256` with `A256GCM`. One protocol page says `RSA-OAEP`, and the samples outnumber it.
-- The three IDs are fresh UUIDs; only `correlation_id` is reused, on the answer.
-- A `202` back means the envelope was valid and the message queued. It is not the decision.
-
 ## The protected header
 
 Every field the exchange needs to route and log the message. All the `x-hcx-` names are fixed.
@@ -54,50 +47,39 @@ This is a valid FHIR Bundle with nothing in it. The exchange will accept it, bec
 
 The recipe, from the message-security page. Base64url the header, generate a random content key, and encrypt that key with the recipient's public key using RSA-OAEP. Generate an IV, encrypt the bundle with AES-256-GCM using the header as additional authenticated data, and join the five parts. A JOSE library does all of it.
 
-Python, with `jwcrypto` and `cryptography`:
+```js
+bundle = json.encode(fhirBundle)
 
-```python
+header = {
+    "alg": "RSA-OAEP-256",
+    "enc": "A256GCM",
+    "x-hcx-sender_code":    sender,
+    "x-hcx-recipient_code": recipient,
+    "x-hcx-api_call_id":    randomUUID(),
+    "x-hcx-request_id":     randomUUID(),
+    "x-hcx-correlation_id": correlationId,
+    "x-hcx-workflow_id":    workflowId,
+    "x-hcx-timestamp":      currentISTTimestamp(),
+    "x-hcx-status":         "request.initiated",
+    "x-hcx-ben-abha-id":    abhaId
+}
 
-from datetime import datetime, timezone, timedelta
-from cryptography import x509
-from cryptography.hazmat.primitives import serialization
-from jwcrypto import jwk, jwe
+jwe = jose.encrypt(
+    plaintext       = bundle,
+    recipientKey    = recipientPublicKey,       // from the certificate fetched in the previous chapter
+    protectedHeader = header,
+    algorithm       = "RSA-OAEP-256",
+    encryption      = "A256GCM"
+)
 
-def public_key_from_pem(pem: bytes) -> jwk.JWK:
-    """Accepts an X.509 certificate or a bare SPKI public key."""
-    try:
-        cert = x509.load_pem_x509_certificate(pem)
-        pem = cert.public_key().public_bytes(
-            serialization.Encoding.PEM,
-            serialization.PublicFormat.SubjectPublicKeyInfo)
-    except ValueError:
-        pass  # already a bare public key
-    return jwk.JWK.from_pem(pem)
-
-def now_ist() -> str:
-    return datetime.now(timezone(timedelta(hours=5, minutes=30))).isoformat(timespec="seconds")
-
-def seal(bundle: dict, recipient_pem: bytes, sender: str, recipient: str,
-         workflow: str, correlation_id: str, abha: str) -> str:
-    header = {
-        "alg": "RSA-OAEP-256", "enc": "A256GCM",
-        "x-hcx-sender_code": sender,
-        "x-hcx-recipient_code": recipient,
-        "x-hcx-api_call_id": str(uuid.uuid4()),
-        "x-hcx-request_id": str(uuid.uuid4()),
-        "x-hcx-correlation_id": correlation_id,
-        "x-hcx-workflow_id": workflow,
-        "x-hcx-timestamp": now_ist(),
-        "x-hcx-status": "request.initiated",
-        "x-hcx-ben-abha-id": abha,
-    }
-    token = jwe.JWE(json.dumps(bundle).encode(), protected=json.dumps(header))
-    token.add_recipient(public_key_from_pem(recipient_pem))
-    return token.serialize(compact=True)
+body = { "payload": jwe }
 ```
 
-The result is one long string with four dots in it. That is the whole message.
+:::warning
+This is pseudo-code, not something to paste. Use your language's JOSE library: `jose` on Node, `jwcrypto` on Python, Nimbus on Java, `System.IdentityModel.Tokens.Jwt` or `jose-jwt` on .NET.
+:::
 
+The result is one long string with four dots in it. That is the whole message.
 Java users can take the portal's `JWEPayloadUtil` sample as-is; it does the same thing with Nimbus, `JWEAlgorithm.RSA_OAEP_256` and `EncryptionMethod.A256GCM`, passing the `x-hcx-` fields as custom header parameters.
 
 ## Sending it
@@ -109,8 +91,22 @@ curl --location --request POST 'https://apisbx.abdm.gov.in/hcx/v1/preauth/submit
   --header 'Accept: application/json' \
   --header 'Content-Type: application/json' \
   --header 'bearer_auth: Bearer <access token>' \
-  --data-raw '{ "payload": "eyJhbGciOiJSU0EtT0FFUC0yNTYiLCJlbmMiOiJBMjU2R0NNIi...." }'
+  --header 'x-hcx-sender_code: 1000004446@hcx' \
+  --header 'x-hcx-recipient_code: 1518@hcx' \
+  --header 'x-hcx-api_call_id: <uuid>' \
+  --header 'x-hcx-request_id: <uuid>' \
+  --header 'x-hcx-correlation_id: <uuid>' \
+  --header 'x-hcx-workflow_id: 12' \
+  --header 'x-hcx-timestamp: <iso timestamp>' \
+  --header 'x-hcx-status: request.initiated' \
+  --header 'x-hcx-ben-abha-id: 91711234567890' \
+  --header 'x-hcx-use_case: New' \
+  --data-raw '{
+    "payload": "eyJhbGciOiJSU0EtT0FFUC0yNTYiLCJlbmMiOiJBMjU2R0NNIiwieC1oY3gtc2VuZGVyX2NvZGUiOi4uLn0.encrypted_key.iv.ciphertext.tag"
+  }'
 ```
+
+[Pre-authorisation submit in the API reference](/docs/nhcx/v1/api/preauth/endpoints/preauth-v1-preauth-submit)
 
 ## What comes straight back
 

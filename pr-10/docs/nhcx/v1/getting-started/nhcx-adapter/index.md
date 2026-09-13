@@ -1,6 +1,6 @@
-# NHCX adapter
+# NHCX adapter (Optional)
 
-Everything in the eight chapters before this one is work you do once and then maintain for ever:
+Everything in the nine chapters before this one is work you do once and then maintain for ever:
 
 - Minting a token and refreshing it.
 - Fetching the recipient's certificate and caching it.
@@ -11,14 +11,6 @@ Everything in the eight chapters before this one is work you do once and then ma
 The NHCX Adapter does all of it for you. It is a single binary that sits between your hospital or payer system and the exchange. Your system speaks plain JSON and plain FHIR to it over your own network; it speaks the protocol to NHCX. Nothing else about your system has to change.
 
 Read this chapter after the rest of Getting Started rather than instead of it. The adapter hides the protocol, it does not abolish it, and when something goes wrong the error you get back is a protocol error.
-
-## In short
-
-- One binary sits between your system and the exchange: you speak plain FHIR, it speaks the protocol.
-- It does three jobs: send, deliver, and certificates. It does not queue, retry, or build bundles.
-- `nhcx-adapter check` runs five checks, and the certificate check catches the commonest cause of unreadable messages.
-- Bind it to loopback: the compatibility routes under `/internal/` have no authentication.
-- It removes the protocol work, not the need to know what you are sending.
 
 ## What it does
 
@@ -32,17 +24,11 @@ Three jobs, and they map onto the three hard parts of the protocol.
 
 ```mermaid
 flowchart LR
-  classDef provider fill:#DCEFE3,stroke:#2E7D4F,color:#1B2431
-  classDef exchange fill:#E3F0F0,stroke:#0F6E70,color:#1B2431
-  classDef other fill:#EEF1F4,stroke:#7A8797,color:#1B2431
   HMIS[Your system] -->|plain FHIR| A[Adapter]
   A -->|sealed| X((NHCX))
   X -->|sealed| A
   A -->|plain FHIR| HMIS
   A -.->|certificates, token| R[Participant registry]
-  class HMIS provider
-  class A other
-  class X,R exchange
 ```
 
 ## What it does not do
@@ -167,7 +153,7 @@ curl -s http://127.0.0.1:8090/out/v1/preauth/submit \
   -d '{"recipient": "1000004805@hcx", "fhir": { "resourceType": "Bundle", "...": "..." }}'
 ```
 
-The answer carries the exchange's own status code, the headers that were built for you and the identifiers you will need later:
+Response:
 
 ```json
 { "ok": true,
