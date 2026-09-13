@@ -1,1 +1,0 @@
-"use strict";(self.webpackChunk_abdm_docs_site=self.webpackChunk_abdm_docs_site||[]).push([["8352"],{33155(e,c,a){a.r(c),a.d(c,{__iconNode:()=>s,default:()=>t});var d=a(34438);let s=[["path",{d:"M15.6 2.7a10 10 0 1 0 5.7 5.7",key:"1e0p6d"}],["circle",{cx:"12",cy:"12",r:"2",key:"1c9p78"}],["path",{d:"M13.4 10.6 19 5",key:"1kr7tw"}]],t=(0,d.A)("circle-gauge",s)}}]);

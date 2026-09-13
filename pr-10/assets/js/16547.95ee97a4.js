@@ -1,1 +1,0 @@
-"use strict";(self.webpackChunk_abdm_docs_site=self.webpackChunk_abdm_docs_site||[]).push([["16547"],{49006(e,s,t){t.r(s),t.d(s,{__iconNode:()=>d,default:()=>k});var a=t(34438);let d=[["path",{d:"M15 4 5 9",key:"14bkc9"}],["path",{d:"m15 8.5-10 5",key:"1grtsx"}],["path",{d:"M18 12a9 9 0 0 1-9 9V3",key:"1sst7f"}]],k=(0,a.A)("turkish-lira",d)}}]);
