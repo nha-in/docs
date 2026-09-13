@@ -269,9 +269,9 @@
     {
       "atom": "hiecm.endpoint.gateway-sessions",
       "type": "endpoint",
-      "route": "/docs/nhcx/v1/api/nhcx-gateway/endpoints/nhcx-sessions-create",
+      "route": "/docs/nhcx/v1/api/session/endpoints/session-session-token",
       "anchor": null,
-      "link": "/docs/nhcx/v1/api/nhcx-gateway/endpoints/nhcx-sessions-create",
+      "link": "/docs/nhcx/v1/api/session/endpoints/session-session-token",
       "rule": "method and path join, module unconfirmed",
       "confidence": "needs review"
     },
@@ -1520,10 +1520,10 @@
     {
       "atom": "shared.glossary.key-material",
       "type": "glossary",
-      "route": "/docs/nhcx/v1/getting-started/recipient-certificate",
+      "route": "/docs/nhcx/v1/getting-started/fetching-a-recipient-certificate",
       "anchor": "what-comes-back",
-      "link": "/docs/nhcx/v1/getting-started/recipient-certificate#what-comes-back",
-      "rule": "term defined on recipient-certificate",
+      "link": "/docs/nhcx/v1/getting-started/fetching-a-recipient-certificate#what-comes-back",
+      "rule": "term defined on fetching-a-recipient-certificate",
       "confidence": "derived"
     },
     {
@@ -1682,10 +1682,10 @@
     {
       "atom": "shared.glossary.snomed-ct",
       "type": "glossary",
-      "route": "/docs/nhcx/v1/getting-started/nhcx-glossary",
+      "route": "/docs/nhcx/v1/getting-started/glossary",
       "anchor": "organisations-and-programmes",
-      "link": "/docs/nhcx/v1/getting-started/nhcx-glossary#organisations-and-programmes",
-      "rule": "term defined on nhcx-glossary",
+      "link": "/docs/nhcx/v1/getting-started/glossary#organisations-and-programmes",
+      "rule": "term defined on glossary",
       "confidence": "derived"
     },
     {

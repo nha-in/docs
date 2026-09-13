@@ -83,7 +83,10 @@ const pages = files.filter((f) => !isPartial(f)).map((f) => {
 // whole body: slicing first can cut a heading line in half and yield a
 // truncated anchor that does not exist on the rendered page.
 function headingFor(body, needle) {
-  const i = body.toLowerCase().indexOf(needle.toLowerCase());
+  return headingAt(body, body.toLowerCase().indexOf(needle.toLowerCase()));
+}
+
+function headingAt(body, i) {
   if (i < 0) return null;
   // Both levels: a glossary term is a "### Term", and landing a reader on
   // the term beats landing them on the section that contains it.
@@ -221,22 +224,39 @@ for (const [id, atom] of atoms) {
     // terms like X-CM-ID are defined where they are used, not in the list.
     const candidates = [glossaryPage, ...pages.filter((p) => /\/reference\/|\/getting-started\//.test(p.route))]
       .filter(Boolean);
+    // The atom's own gateway is searched first, and a shared atom counts
+    // HIE-CM as its own.
+    const home = `/docs/${fm.gateway === "shared" ? "hiecm" : fm.gateway}/`;
+    const mine = candidates.filter((p) => p.route.startsWith(home));
+    const others = candidates.filter((p) => !p.route.startsWith(home));
+    const glossaries = candidates.filter((p) => /glossary$/.test(p.route));
+    const esc = term.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
     // A glossary term must anchor on its own heading, never on the first
     // place the string appears: "M2" occurs inside the ECDH definition, and
     // a citation that lands a reader on the wrong term is worse than one
     // that lands them on the top of the page.
-    const heading = new RegExp(`^#{2,4}\\s+${term.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\s*$`, "im");
-    const owns = candidates.find((p) => heading.test(p.body));
-    if (owns) {
-      route = owns.route; anchor = slug(term);
-      rule = `term defined under its own heading on ${basename(owns.route)}`;
-      confidence = "derived";
-    }
-    const page = owns ? null : candidates.find((p) => p.body.toLowerCase().includes(term.toLowerCase()));
-    if (page) {
-      const h = headingFor(page.body, term);
-      route = page.route; anchor = h ? slug(h) : null;
-      rule = `term defined on ${basename(page.route)}`; confidence = "derived";
+    const heading = new RegExp(`^#{2,4}\\s+${esc}\\s*$`, "im");
+    // Anywhere else the term must stand as a whole word: "DSC" is not "DSCHD".
+    const word = new RegExp(`(?<![A-Za-z0-9])${esc}(?![A-Za-z0-9])`, "i");
+    // First match wins. A heading on another gateway's glossary is still a
+    // definition, so EUA and HSPA keep their UHI entries. A heading on another
+    // gateway's reference page is only a field that shares the name: NHCX's
+    // "## Timestamp" is a Unix time envelope field, and must not take the
+    // TIMESTAMP header atom from the HIE-CM page that agrees with it.
+    const passes = [[mine, heading], [glossaries, heading], [mine, word], [others, heading], [others, word]];
+    for (const [where, re] of passes) {
+      const page = where.find((p) => re.test(p.body));
+      if (!page) continue;
+      route = page.route; confidence = "derived";
+      if (re === heading) {
+        anchor = slug(term);
+        rule = `term defined under its own heading on ${basename(page.route)}`;
+      } else {
+        const h = headingAt(page.body, page.body.search(word));
+        anchor = h ? slug(h) : null;
+        rule = `term defined on ${basename(page.route)}`;
+      }
+      break;
     }
   }
 
