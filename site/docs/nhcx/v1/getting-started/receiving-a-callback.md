@@ -1,23 +1,16 @@
 ---
 title: Receiving a callback
 sidebar_label: Receiving a callback
-description: Hosting the endpoint every answer arrives on, returning the receipt in time, and opening the sealed message.
+sidebar_position: 9
+description: Asynchronous callback listener and 202 receipt handling
 verification: unverified
-source: "API Response Handling to avoid Failures; NHCX FAQs v1.2 #14, #21; API Security page, securing participant system APIs; NHCX Integration Handbook §2.5; NHCX Code Snippets references for payload preparation, decryption; AWS Sandbox NHCX USECASE Postman collection"
-sidebar_position: 8
+source: nhcx-package/docs/02-Getting Started/09-Receiving a Callback.md
+generated: true
 ---
 
 # Receiving a callback
 
 Every answer on the exchange arrives at your server, not in the response to your call. This chapter builds the endpoint that receives it, and closes the loop opened in the previous one.
-
-## In short
-
-- Every answer arrives at your server, not in the response to your call.
-- Answer within 30 seconds with `202` and the receipt, then process. Anything slower reads as a failed delivery.
-- Two body shapes arrive: `JWEPayload` with a sealed bundle, and `ProtocolResponse` with a refusal in the clear.
-- `/v1/error` carries neither shape and must still be answered `202`.
-- The exchange signs its calls to you, but no published source gives the key to verify against.
 
 ## What to host
 
@@ -75,9 +68,9 @@ A POST with a JSON body of two fields:
 
 `/v1/error` is the exception to the two shapes above. It carries no `payload` and no `x-hcx-` fields. What arrives is a plain JSON report of the request the exchange gave up on, with the rejection details. Its field names are not published, so do not parse it against a fixed schema. Store it whole, and answer it with `202` and the receipt like every other delivery. Fill in whatever identifiers the report happens to carry, and leave the rest of the receipt empty. Do not answer `/v1/error` with a `4xx` because the body is not a shape you recognise. Every delivery the exchange makes to you, on any of the paths listed above, is answered `202`.
 
-The exchange signs its calls to you with a JWT (RS256, its own private key) in the authorisation header. Validate the signature against the NHCX public key before trusting anything in the body.
+The exchange signs its calls to you with a JWT: RS256 over its own private key, carrying the claims `jti`, `iss`, `sub` (the same value as `iss`), `iat` and `exp`. Validate the signature against the NHCX public key before trusting anything in the body.
 
-**This is the one instruction in this documentation you cannot follow from it.** No published source gives the NHCX public key or an address to fetch it from. None gives the name of the header it arrives in, or the claims to expect inside it. Every integration built from these documents alone has therefore shipped with signature checking disabled, because the alternative, rejecting everything, makes the endpoint useless.
+**This is the one instruction in this documentation you cannot follow from it.** The API Security page gives the algorithm and the claims above, but no published source gives the NHCX public key or an address to fetch it from, and none names the header the token arrives in. Every integration built from these documents alone has therefore shipped with signature checking disabled, because the alternative, rejecting everything, makes the endpoint useless.
 
 Do not leave that as an accident. Build the check, put the key in configuration, and treat a missing key as a deliberate, logged, temporary state rather than a silent default. Ask for the key during onboarding, at the same time you register your endpoint, and turn the check on the day you get it. Until then your callback address is an unauthenticated endpoint that accepts patient data. Keep it behind whatever else you have: an allow-list of the exchange's addresses, mutual TLS at your edge, a shared secret in a header the exchange agrees to send.
 
@@ -106,25 +99,33 @@ HTTP status `202`. Not `200`, not an empty body. For a `JWEPayload` the header f
 
 ## Opening it
 
-```python
-import json
-from jwcrypto import jwk, jwe
+The mirror of sealing. Read the body, decide which of the two shapes it is, and for a `JWEPayload` unwrap the compact string with your own private key, the one behind the certificate on your participant record. The protected header comes out of the token in the clear; the bundle is the decrypted plaintext.
 
-PRIVATE_KEY = jwk.JWK.from_pem(open("private.key", "rb").read())
+```text
+body = json.decode(httpRequest.body)
 
-def open_message(body: dict) -> tuple[dict, dict | None]:
-    """Returns (header, bundle). bundle is None for a protocol response."""
-    if body.get("type") == "ProtocolResponse":
-        header = {k: v for k, v in body.items() if k.startswith("x-hcx-")}
-        return header, None
-    token = jwe.JWE()
-    token.deserialize(body["payload"], key=PRIVATE_KEY)
-    header = dict(token.jose_header)
-    bundle = json.loads(token.payload)
-    return header, bundle
+if body.type == "ProtocolResponse":
+    header = fields of body whose name starts with "x-hcx-"
+    bundle = none
+else:
+    token = jose.decrypt(
+        compact    = body.payload,
+        privateKey = ourPrivateKey,             // PKCS8, the pair of the registered certificate
+        algorithm  = "RSA-OAEP-256",
+        encryption = "A256GCM"
+    )
+    header = token.protectedHeader
+    bundle = json.decode(token.plaintext)
+
+respond 202 with the receipt above
+handle(header, bundle)
 ```
 
-`openssl genpkey` wrote the private key in PKCS8 form, which is what `from_pem` expects. If decryption fails, the message was sealed with a certificate that is not the one on your participant record; go back to the update call and check what is registered.
+:::warning
+This is pseudo-code, not something to paste. Use the same JOSE library you sealed with; decrypting is the reverse call on the same object.
+:::
+
+`openssl genpkey` wrote the private key in PKCS8 form, which is what every JOSE library loads directly. If decryption fails, the message was sealed with a certificate that is not the one on your participant record; go back to the update call and check what is registered.
 
 ## Then, in order
 
@@ -146,11 +147,13 @@ curl --location --request POST 'https://apisbx.abdm.gov.in/pmjay/sbxhcx/dummyhcx
   --header 'Content-Type: application/json' \
   --header 'bearer_auth: Bearer <access token>' \
   --data-raw '{
-    "action": "Reject",
+    "action": "Approve",
     "method": "Preauth",
-    "correlationId": "<the correlation id you sent>"
+    "correlationId": "<correlation id>"
   }'
 ```
+
+[Dummy payer, act on a request in the API reference](/docs/nhcx/v1/api/adjudicator/endpoints/adjudicator-dummy-payer-process-request)
 
 `action` is `Approve`, `Reject` or `Query`; `method` is `Preauth` or `Claim`. Your `/v1/preauth/on_submit` then receives the answer, either a sealed `ClaimResponse` or a `ProtocolResponse` carrying the refusal, with the correlation ID you sent. A `Query` action makes the dummy payer raise a communication request instead, which you answer on `/v1/communication/on_request` before the decision arrives.
 

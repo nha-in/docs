@@ -1,10 +1,11 @@
 ---
 title: PMJAY on NHCX
 sidebar_label: PMJAY on NHCX
-description: What changes when the payer is PMJAY, why the scheme is moving off TMS, and the five stages of an integrator's journey.
+sidebar_position: 8
+description: What the Ayushman Bharat scheme changes on the network
 verification: unverified
-source: "NHCX-PMJAY-HMIS Integration Overview; NHCX-PMJAY-HMIS Integration Guide, FRD v1.0 (Mar 2026); PMJAY Hospital Migration to HMIS via NHCX; NHCX PMJAY Integration Handbook v1.0 (Aug 2026); NHCX FAQs v1.2 #18"
-sidebar_position: 6
+source: nhcx-package/docs/01-Overview/08-PMJAY on NHCX.md
+generated: true
 ---
 
 # PMJAY on NHCX
@@ -14,14 +15,6 @@ Ayushman Bharat Pradhan Mantri Jan Arogya Yojana, known as PMJAY, was launched o
 Claim adjudication under PMJAY runs through three integrated systems: the Beneficiary Identification System (BIS), the Transaction Management System (TMS), and the Hospital Empanelment Module (HEM). The key decisions sit in TMS, taken at preauthorisation by the Preauthorisation Processing Doctor (PPD) and at settlement by the Claim Processing Doctor (CPD).
 
 The previous chapters described how a claim moves between a Provider and a private insurer over NHCX. This chapter covers what changes when the Payer is PMJAY.
-
-## In short
-
-- PMJAY is the world's largest health assurance scheme, running on the same NHCX endpoints as any payer.
-- Claims processing today depends on the TMS provider system, which forces double data entry.
-- An ABDM-enabled HMIS integrated with NHCX can run PMJAY workflows inside its own system.
-- Four things differ from a private insurer: the InsurancePlan, biometrics, structured documents, and how queries travel.
-- Going live is a mapping: NHA links the hospital's HEM ID to its NHCX participant ID by hand.
 
 ## The problem with a TMS-only workflow
 
@@ -67,7 +60,7 @@ Set against the flows in the NHCX Use Cases chapter, the picture is:
 
 - **Get Insurance Plan, Get Policy, Coverage Eligibility Check, Claim Submission, Payment Notice and Status Check** behave the same as on any NHCX integration.
 - **Preauthorisation** behaves the same, except that mandatory biometric authentication of the beneficiary must be completed before it is submitted.
-- **Communication Request** is not used for document queries, which travel on the preauthorisation and claim endpoints instead. It is used for turnaround-time alerts, grievances, wallet and policy updates, and arbitration acknowledgements.
+- **Communication Request** is not used for document queries, which travel on the preauthorisation and claim endpoints instead. It is used for turnaround-time alerts, grievances, wallet and policy updates, and arbitration acknowledgements. A private insurer does the opposite: its query is the Communication Request itself. Payer flexibility, later in this section, sets the two query modes side by side.
 
 ## The integrator journey
 

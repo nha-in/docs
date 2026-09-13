@@ -1,22 +1,16 @@
 ---
 title: Your certificate
 sidebar_label: Your certificate
-description: Making the RSA key pair and self-signed X.509 certificate that lets other participants seal messages for you.
+sidebar_position: 4
+description: RSA-2048 key pair generation and self-signed certificate assembly
 verification: unverified
-source: Steps to generate encryption Certificate (NHA); Message Security and Integrity page, key rotation; NHCX Integration Handbook §3.3; NHCX Code Snippets references for payload preparation
-sidebar_position: 3
+source: nhcx-package/docs/02-Getting Started/04-Your Certificate.md
+generated: true
 ---
 
 # Your certificate
 
 Every message on the exchange is sealed for the receiver. For anyone to send you anything, you need a key pair: a private half you keep, and a public half, wrapped in a certificate, that you publish through your participant record.
-
-## In short
-
-- Three openssl commands make a 2048-bit RSA key and a self-signed X.509 certificate valid for a year.
-- The private key never leaves your server. The certificate goes to the participant record, base64 encoded.
-- Note the expiry: when the certificate lapses, every sender's encryption for you fails.
-- Other participants may hand you a bare SPKI key instead of a certificate, so handle both.
 
 ## Making the key pair
 
