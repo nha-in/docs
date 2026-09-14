@@ -183,9 +183,11 @@ The profile call returns the account you expected, and the identifiers in the re
 
 ## Every recorded code
 
-### Four error shapes, not one
+### Six error shapes, not one
 
-Do not write a parser that expects a single shape.
+Do not write a parser that expects a single shape. Four come from the ABHA
+service and its gateway. The fifth is an empty body. The sixth comes from
+the registries and hides its real code one level down.
 
 ### Shape 1: the wrapped ABDM error
 
@@ -274,6 +276,38 @@ SHA-1. The plaintext shape for every encrypted field is in
 ```
 
 A numeric code, not an `ABDM-` code, plus a `description` field the other shapes lack. This comes from the API gateway in front of the ABHA service, before your request reaches the business logic. It almost always means the `Authorization` header is wrong or expired.
+
+`900901` is a bad token. `900902` is no token at all, observed on the NHPR
+host. Match the family, not the single code.
+
+### Shape 5: the empty body
+
+An HTTP 401 with a zero length body and no JSON at all, observed on
+`/v3/phr/web/login/profile/abha-profile` when no user token was sent. There
+is nothing to parse and nothing to match. Code that assumes every failure
+carries a body throws here, on a response that means something simple.
+
+### Shape 6: the registry error, with the real code nested
+
+```json
+{
+    "code": "HIS-422",
+    "message": "Unable to process the current request due to some wrong data entered.",
+    "details": [
+        {"message": "You are not allowed to access this API", "code": "HIS-403", "attribute": null}
+    ]
+}
+```
+
+The registries return a `HIS-` family rather than `ABDM-`, and the top level
+code is not the cause. `HIS-422` and its message say the data was wrong. The
+real reason is in `details[0]`: `HIS-403`, not permitted. The HTTP status
+disagrees with the nested code too, arriving as 422 for what is an
+authorisation failure.
+
+Read `details[0].code` before the top level one on any `HIS-` response, and
+show `details[0].message` to whoever is debugging. Acting on the outer code
+sends you to check your payload for a problem that is not there.
 
 ### Codes
 
