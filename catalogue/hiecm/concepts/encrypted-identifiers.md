@@ -20,6 +20,8 @@ related:
   concepts: [hiecm.concept.input-encryption]
   endpoints: [hiecm.endpoint.m1-login-request-otp, hiecm.endpoint.m1-get-public-certificate]
   tests: [hiecm.test.m1-encryption-padding]
+skills:
+  - hiecm-m1-build
 ---
 
 # Why identifiers are encrypted, and where to do it
