@@ -46,6 +46,10 @@ Register one base URL. We post to paths under it, and every callback carries the
 you sent on the original call, so you can match the answer to the question. Each path is named on
 the page of the call it belongs to, in the [API reference](/docs/hiecm/v3/api).
 
+One URL covers your whole integration, however many facilities it serves. It belongs to your
+bridge, never to a facility, and the callback names the facility it is for in its own header. See
+[one bridge, many facilities](/docs/hiecm/v3/concepts/how-it-fits#one-bridge-many-facilities).
+
 <SandboxAction action="callbackUrl">Open the sandbox</SandboxAction>
 
 Two things about that URL decide whether your integration works:

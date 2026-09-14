@@ -1469,7 +1469,10 @@ components:
       in: header
       required: true
       description: |
-        Identifier of the health information user the request or callback is intended for.
+        Identifier of the health information user the request or callback is
+        intended for. This is per facility, and it is what a callback arriving
+        at your one bridge URL is routed on. The bridge URL and your credentials
+        belong to the integration, not to the facility.
       schema:
         type: string
       example: IN2810014366
