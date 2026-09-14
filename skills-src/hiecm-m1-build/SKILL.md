@@ -210,16 +210,40 @@ operations while sending creation to a hosted page is a reasonable split, and
 a common one: login is a handful of calls, and creation carries the identity
 methods and the most screens.
 
-#### Suggested: one entry rather than a menu
+#### Suggested: one screen that does not ask login or create
 
-Asking "do you want to log in or create an ABHA?" puts a question to the
-person that they often cannot answer. One entry that resolves to either
-outcome avoids it: take a mobile number, send an OTP, and read what comes
-back. An existing account means sign in, none means offer to create one.
+Asking "do you want to log in or create an ABHA?" puts a question to the person
+that they often cannot answer. The shape that avoids it is one screen titled
+for both outcomes, which takes an identifier and lets the response decide.
 
-A chooser is the better shape where the desk genuinely knows, for example a
-counter that only ever registers new patients, or a kiosk placed next to a
-sign that says what it is for.
+Worked shape for that first screen, in the order the person meets it:
+
+1. **A step indicator showing the whole journey.** Four dots, the first one
+   filled. A person who can see the end of a queue waits differently from one
+   who cannot, and this is the cheapest thing on the screen.
+2. **A title that covers both outcomes.** "Login or Create your ABHA" commits
+   to neither and needs no decision from the person.
+3. **Two identifier choices, one marked as recommended.** Aadhaar earns the
+   recommendation because it is the only route that ends in a KYC verified ABHA
+   number. Mobile sits beside it for the person who does not have their Aadhaar
+   to hand. Two is a glance; five is a decision.
+4. **The input shaped like the thing.** An Aadhaar number in three groups of
+   four is easier to read back off a card than twelve unbroken digits. A mobile
+   number gets a country prefix shown rather than typed.
+5. **The rest behind a disclosure.** "Other login options" collapsed, holding
+   ABHA number and ABHA address. They are there for the person who has one, and
+   invisible to everyone else.
+6. **Consent inline, not as a step.** One line above the button naming what
+   proceeding agrees to.
+7. **The button disabled until the input is valid.** The first OTP a person
+   wastes is the one sent to a half typed number.
+
+That is one question on screen one, and the ladder of identifier types is
+three deep rather than flat: recommended, alternative, and disclosed.
+
+A chooser up front is the better shape where the desk genuinely knows, for
+example a counter that only ever registers new patients, or a kiosk placed
+next to a sign that says what it is for.
 
 #### Holds regardless: look before you create, by whatever means
 
@@ -238,16 +262,33 @@ mobile OTP journey suggested above is only one of the ways:
 Any of these satisfies the rule. Whatever your journey looks like, creation is
 the branch taken when the look came back empty.
 
-Which of the three you can lean on depends on what is published. The
-verification response carries the accounts, and its body is not yet published
-here, so a journey that branches on a field inside it is branching on something
-you will have to read off your own first sandbox call.
+The verification response is what most journeys branch on, and it carries
+everything the branch needs:
 
-Search for a profile is the one lookup whose
-success body is recorded: `ABHANumber`, `name`, `kycStatus`, `gender` and
-`mobile`. If you want the look-before-you-create step to rest on a documented
-shape rather than on an observation you make yourself, that is the operation to
-build it from.
+```response
+{
+  "txnId": "<TXN_ID>",
+  "authResult": "success",
+  "token": "<TOKEN>",
+  "expiresIn": 1800,
+  "refreshToken": "<REFRESHTOKEN>",
+  "accounts": [
+    {"ABHANumber": "<ABHA_NUMBER>", "preferredAbhaAddress": "<ABHA_ADDRESS>",
+     "name": "<NAME>", "status": "<STATUS>", "mobileVerified": true}
+  ]
+}
+```
+
+Read `accounts` before anything else:
+
+| What you get | What it means | Where the person goes |
+|---|---|---|
+| One account | They have an ABHA and it is unambiguous | Signed in. Store the number and the address |
+| More than one | One mobile carries several ABHA accounts | A chooser, then select the account with the chosen `ABHANumber` and the same `txnId`, which returns the final token |
+| None | Nobody holds an ABHA on that identifier | The create branch, if you offer one |
+
+More than one account is common enough to design for rather than treat as an
+edge case: a shared family handset is the ordinary cause.
 
 One caution about the empty answer, which decides how much you can lean on it.
 A lookup that finds no account and a lookup whose encrypted identifier the
@@ -336,6 +377,22 @@ than counting attempts yourself.
 digits, because a person with two phones needs to know. Put a visible wait on
 the resend button rather than leaving it live, since the fastest route to a
 locked transaction is a person pressing it four times.
+
+#### Suggested: let the response drive the next screen
+
+A journey hard coded as a fixed sequence has to be edited every time ABDM adds
+a branch. A journey that renders whichever screen the last response implies
+does not.
+
+The states worth having a screen for are the ones the responses can put you in:
+an identifier is needed, an OTP is needed, an OTP needs confirming, an account
+needs choosing, something needs creating, and the journey is finished. Name
+them in your own code, map each response to one of them, and let the screen
+follow the state rather than the call site.
+
+The practical gain is the account chooser. A journey written as a straight line
+from OTP to signed in has nowhere to put the second account, and the shared
+family handset is where it is discovered.
 
 #### Suggested: branding as configuration
 
