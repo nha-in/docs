@@ -52,8 +52,10 @@ flow rather than about the padding.
 - The public certificate, fetched and armoured. See
   [get RSA public certificate](../endpoints/m1-get-public-certificate.md).
   It arrives as base64 DER and your library needs PEM.
-- A mobile number you control, so you can confirm the OTP arrives. The
-  assertion below does not need you to read the OTP.
+- A mobile number you control AND that is registered against an ABHA
+  account. This is the load bearing precondition. A number that is not registered returns the same refusal as bad ciphertext does, so the value you send has to be a real one. The
+  assertion below does not need you to read the OTP, only to receive a
+  200.
 
 ## What happens
 
@@ -90,6 +92,12 @@ where `pem` is the `publicKey` from the certificate call wrapped in
 Run this call against `/v3/profile/login/request/otp` and nowhere else.
 `/v3/enrollment/request/otp` refuses every input with the same body, so
 a padding matrix run against it excludes the correct answer.
+
+The login endpoint only tells them apart when the plaintext is a
+registered number. Sending a correctly encrypted `9999999999` there
+returns `400 {"loginId": "Invalid Mobile Number"}`, exactly what a
+wrong padding returns. The 200 is the signal, and only a real number
+can produce it.
 
 ## How you know it worked
 
