@@ -28,6 +28,17 @@ Open one when the work calls for it. This file is the map, not the material.
 - Never show a care context that is already linked.
 - Send the data transfer request within 5 minutes of the user asking for their records.
 
+## Practices that hold across every call
+
+- Read the body, not only the status. A refusal often names the field in its body while the status says nothing useful, and a bad clock can arrive as a 404.
+- Prove an assumption against a call that is able to disagree with you. An endpoint that refuses every input with one message cannot tell you which input was right, and testing against it turns a correct answer into a ruled out one.
+- Suspect the transport before the data. When a call refuses a value you believe in, check the encryption, the headers and the clock before you doubt the number. Those failures are reported as if the value were wrong.
+- Do not carry an encryption path from one module to another. The padding, the certificate and the key size belong to the registry you are calling, and a path that works in one module produces a value another cannot read.
+- Never log a sensitive value before you encrypt it, and never send one to a remote service to be encrypted. Both move the leak rather than removing it.
+- Generate a fresh REQUEST-ID for every call and log it before sending. Once a call has failed it is the only handle on it.
+- Send TIMESTAMP in UTC with milliseconds and a trailing Z. Local time is refused, sometimes as a 404.
+- Cache a public certificate with a validity window rather than forever. A rotation fails every encrypted call at once, and a cache with no expiry cannot recover on its own.
+
 ## Where the detail is
 
 - Every endpoint, with its body fields and responses: /docs/hiecm/v3/api/p2

@@ -8,6 +8,200 @@ Every flow below is an OODA loop, not a recipe: observe the actual state (last r
 
 Loop limit: 8 passes per flow step. Hitting the limit is an escalation: state what was observed, what was tried, and which atom to read, then ask one question.
 
+## Rules to hold before you call anything
+
+#### Why identifiers are encrypted, and where to do it (`hiecm.concept.encrypted-identifiers`)
+
+Across M1, the value you put in `loginId` is not the raw Aadhaar,
+ABHA or mobile number. It is that value encrypted against NHA's public
+key.
+
+The same applies to OTP values on several calls.
+
+What you encrypt has a shape, and the service checks it after it
+decrypts. An ABHA number is `NN-NNNN-NNNN-NNNN`, dashes included, for
+example `91-1234-5678-9015`. An Aadhaar number is 12 digits with no
+spaces. A mobile number is 10 digits with no country code. Encrypting an
+ABHA number as 14 bare digits is rejected: a login OTP request sent that
+way on the sandbox on 2026-09-11 returned
+`400 {"loginId": "LoginId is invalid"}`, and the same number with its
+dashes passed validation and went on to look the account up.
+
+The model is straightforward: NHA publishes a public key, you encrypt
+locally, only NHA can decrypt.
+
+```mermaid
+graph LR
+  A["Aadhaar or mobile<br/>in your server"] -->|RSA with NHA public key| B["encrypted value"]
+  B -->|loginId| C[ABDM]
+  C -->|private key| D["plain value, inside NHA"]
+```
+
+NHA's collection also contains a hosted helper that encrypts a value for
+you, and two third party encryption websites. Those are conveniences for
+trying a flow by hand.
+
+#### The padding
+
+Encrypt with RSA-OAEP, using SHA-1 for both the digest and the mask
+generation function. In Java that transformation is
+`RSA/ECB/OAEPWithSHA-1AndMGF1Padding`. In Node it is
+`crypto.publicEncrypt({ key, padding: crypto.constants.RSA_PKCS1_OAEP_PADDING, oaepHash: 'sha1' }, ...)`.
+Send the result base64 encoded.
+
+PKCS#1 v1.5 is refused. So is OAEP with SHA-256. Neither refusal names
+encryption, so a wrong padding reads back to you as a wrong value. The
+call for each language, and the padding the older API families take,
+is in encrypting sensitive inputs.
+
+#### Encrypting sensitive inputs, Aadhaar, mobile, OTP and passwords (`hiecm.concept.input-encryption`)
+
+Five kinds of values never travel raw in an M1 request body: Aadhaar
+numbers, mobile numbers, email addresses, OTP values and passwords. Each
+one is RSA encrypted with NHA's public certificate first, then base64 of
+the ciphertext goes in the field. That is why the API pages write
+placeholders like `<RSA_ENCRYPTED_AADHAAR_NUMBER>`: the field name says
+what goes in, the placeholder says it must already be encrypted.
+
+The model is public key encryption: NHA publishes the public half, you
+encrypt with it, only NHA's private half can decrypt. Your system never
+needs a secret to do this, only the current certificate.
+
+Two ways to produce an encrypted value:
+
+1. **Locally, against NHA's published public key. This is the
+   production path.** NHA's M1 document names a `public/certificate`
+   API for fetching the public key, listed again under developer
+   utilities. In the document as we received it, the curl example and
+   the response are screenshots that did not convert to text, so the
+   full URL, the headers and the response shape are not recorded here,
+   and the Postman collection does not contain the call. The
+   verification task below closes this gap.
+2. **NHA's encrypt helper, for trying a flow by hand only.** The
+   endpoint atom hiecm.endpoint.m1-encrypt-value documents it and why
+   it must never be a production path: sending an Aadhaar or mobile
+   number to a remote endpoint so it can be encrypted defeats the point
+   of encrypting it.
+
+For checking your local encryption by hand, NHA's document points at
+the RSA tool at devbeaver.com. Do not paste live personal data into a
+third party tool; use test values.
+
+#### The padding depends on which API family you are calling
+
+This is the part that costs people days, and it is not stated in NHA's
+prose documents. There is no single ABDM padding scheme. The scheme
+that works is a property of the API family, and the same integrator
+often needs both:
+
+| Calling | Padding | Key |
+|---|---|---|
+| V3 ABHA and PHR registration and login, the flows this catalogue documents | RSA OAEP with SHA-1 | the certificate from `/v3/profile/public/certificate`, 4096 bit |
+| Older healthid API family, V1 and V2 | RSA PKCS1 v1.5 | a separate healthid public key, 4096 bit |
+| NHPR, the M4 professional registry | RSA PKCS1 v1.5 | a separate NHPR public key, 2048 bit |
+
+**For everything in this catalogue's M1 scope, use OAEP with SHA-1.**
+Note the hash: OAEP defaults to SHA-256 in most libraries, and SHA-256
+here is rejected. The digest must be SHA-1 for both the OAEP hash and
+the MGF1 mask generation, which is the library default when SHA-1 is
+passed as the hash. Output is the raw ciphertext, standard base64
+encoded, into the field.
+
+```
+Go      rsa.EncryptOAEP(sha1.New(), rand.Reader, pub, []byte(value), nil)
+Python  public_key.encrypt(value, padding.OAEP(
+            mgf=padding.MGF1(hashes.SHA1()), algorithm=hashes.SHA1(), label=None))
+Java    Cipher.getInstance("RSA/ECB/OAEPWithSHA-1AndMGF1Padding")
+Node    crypto.publicEncrypt({key, padding: RSA_PKCS1_OAEP_PADDING,
+            oaepHash: "sha1"}, buf)
+```
+
+Each key is an RSA public key in X.509 SubjectPublicKeyInfo form. The
+V3 certificate endpoint returns it as bare base64 DER, with no
+`-----BEGIN PUBLIC KEY-----` armour, so add the armour before your
+library will load it. Working integrations pin the key rather than
+fetching it per request, and refresh it on rotation.
+
+The evidence: a production V3 integration running against ABDM uses
+OAEP with SHA-1 for the V3 registration and login flows, and PKCS1 v1.5
+for the healthid and NHPR families, with a distinct key per family.
+NHA's own published code corroborates the PKCS1 v1.5 half: the UHI
+backend states `Cipher.getInstance("RSA/ECB/PKCS1Padding")` outright,
+and NHA's ABHA application encrypts through a library whose RSA default
+is PKCS1 v1.5. No NHA published source in reach states the V3 OAEP
+parameters, which is exactly why integrators reading only the documents
+get this wrong.
+
+The V3 certificate call is settled:
+`GET /v3/profile/public/certificate` returns
+`{"publicKey": "<base64 DER>"}`, documented in
+get RSA public certificate.
+The rotation policy for each key is not published. Cache the
+certificate with a validity window rather than forever.
+
+```observation schema=precondition
+requires: the public key for the API family you are calling
+settled:
+  - v3 padding: RSA OAEP, SHA-1 for both digest and MGF1
+  - healthid and nhpr padding: RSA PKCS1 v1.5
+  - key format: X.509 SubjectPublicKeyInfo, one key per API family. The
+    V3 endpoint returns it as base64 DER with no PEM armour
+  - ciphertext encoding: standard base64
+unknowns:
+  - rotation policy per key
+closed_by: sandbox verification run, recorded in this atom
+```
+
+## Prove these before you build a flow
+
+### Prove your encryption padding before you build anything else (`hiecm.test.m1-encryption-padding`)
+
+Encrypt the 10 digit mobile number, no country code, with RSA-OAEP and
+SHA-1 for both the digest and the mask generation function. Base64 the
+ciphertext. Send it as `loginId`:
+
+```bash
+curl -X POST 'https://abhasbx.abdm.gov.in/abha/api/v3/profile/login/request/otp' \
+  -H 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
+  -H 'REQUEST-ID: <FRESH_UUID>' \
+  -H 'TIMESTAMP: <UTC_ISO_8601_WITH_MILLISECONDS_AND_Z>' \
+  -H 'Content-Type: application/json' \
+  -d '{
+  "scope": ["abha-login", "mobile-verify"],
+  "loginHint": "mobile",
+  "loginId": "<MOBILE_ENCRYPTED_OAEP_SHA1_BASE64>",
+  "otpSystem": "abdm"
+}'
+```
+
+In Node the encryption is:
+
+```js
+crypto.publicEncrypt(
+  { key: pem, padding: crypto.constants.RSA_PKCS1_OAEP_PADDING, oaepHash: 'sha1' },
+  Buffer.from(mobile, 'utf8'),
+).toString('base64')
+```
+
+where `pem` is the `publicKey` from the certificate call wrapped in
+`-----BEGIN PUBLIC KEY-----` armour at 64 characters per line.
+
+Run this call against `/v3/profile/login/request/otp` and nowhere else.
+`/v3/enrollment/request/otp` refuses every input with the same body, so
+a padding matrix run against it excludes the correct answer.
+
+**Exit condition (Observe until this is true)**
+
+You receive 200 and a body carrying `txnId` and a message naming the
+last four digits of the mobile:
+
+```response
+{"txnId": "<TXN_ID>", "message": "OTP sent to mobile number ending with ******<LAST4>"}
+```
+
+An OTP arrives on that phone. The padding is right and the certificate
+is right. Build the rest of M1 on that code path.
+
 ## Flows
 
 ### Create an ABHA using an Aadhaar OTP (`hiecm.flow.m1-create-abha-aadhaar-otp`)
@@ -16,7 +210,7 @@ Loop limit: 8 passes per flow step. Hitting the limit is an escalation: state wh
 
 - A client id and secret, and a working session token. See
   registration and credentials (shared.sandbox.registration-and-credentials).
-- The person's Aadhaar number, encrypted against NHA's public key. See
+- The person's Aadhaar number, encrypted with RSA-OAEP with SHA-1, base64 encoded, under the 4096-bit certificate from `/v3/profile/public/certificate`. PKCS#1 v1.5 and OAEP with SHA-256 are both refused, and neither refusal names encryption. See
   why identifiers are encrypted (hiecm.concept.encrypted-identifiers).
 - The person present, because they must read an OTP from their phone.
 - Their explicit consent to create an ABHA, which you send in the
@@ -277,6 +471,10 @@ them.
   the gateway session (hiecm.concept.gateway-session).
 - The public certificate, because the Aadhaar number is encrypted before
   it is sent. See fetch the public certificate (hiecm.endpoint.m1-get-public-certificate).
+  It arrives as base64 DER and needs PEM armour before your library will
+  load it.
+- The padding, which is RSA-OAEP with SHA-1, base64 encoded, under the 4096-bit certificate from `/v3/profile/public/certificate`. PKCS#1 v1.5 and OAEP with SHA-256 are both refused, and neither refusal names encryption. See
+  why identifiers are encrypted (hiecm.concept.encrypted-identifiers).
 - The person's name exactly as Aadhaar holds it, their date of birth and
   their gender. A near miss on any of them is a refusal, not a warning.
 - Their consent, recorded the same way the other enrolment routes record it.
@@ -580,7 +778,8 @@ repository, so treat the step order as documented rather than proven.
 **Before you start**
 
 - A working session token.
-- The identifier the person remembers, encrypted.
+- The identifier the person remembers, encrypted with RSA-OAEP with SHA-1, base64 encoded, under the 4096-bit certificate from `/v3/profile/public/certificate`. PKCS#1 v1.5 and OAEP with SHA-256 are both refused, and neither refusal names encryption. See
+  why identifiers are encrypted (hiecm.concept.encrypted-identifiers).
 - The person present to read an OTP.
 
 **Act: the calls in this flow, in order**
@@ -689,7 +888,7 @@ lookup of somebody else's identity.
 **Before you start**
 
 - A working session token.
-- The person's mobile number, encrypted. See
+- The person's mobile number, encrypted with RSA-OAEP with SHA-1, base64 encoded, under the 4096-bit certificate from `/v3/profile/public/certificate`. PKCS#1 v1.5 and OAEP with SHA-256 are both refused, and neither refusal names encryption. See
   why identifiers are encrypted (hiecm.concept.encrypted-identifiers).
 - The person present to read an OTP.
 
@@ -785,7 +984,8 @@ Login fails with an authentication error and nothing more specific. See
 
 - The person logged in, so you hold their `X-token`. See
   log somebody in.
-- The new value, encrypted.
+- The new value, encrypted with RSA-OAEP with SHA-1, base64 encoded, under the 4096-bit certificate from `/v3/profile/public/certificate`. PKCS#1 v1.5 and OAEP with SHA-256 are both refused, and neither refusal names encryption. See
+  why identifiers are encrypted (hiecm.concept.encrypted-identifiers).
 - The person present, holding the new number, because the OTP goes there.
 
 **Act: the calls in this flow, in order**
