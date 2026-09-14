@@ -1,6 +1,6 @@
 # ABDM Developer Portal
 
-> Documentation for integrating with ABDM, India's health data exchange: the HIE-CM gateway milestones M1 to M3, the ABHA, HPR and HFR registries, and UHI. Nothing here has been run against the ABDM sandbox unless a page says so, so treat request and response shapes as unconfirmed.
+> Documentation for integrating with ABDM, India's health data exchange: the HIE-CM gateway milestones M1 to M3, the ABHA, HPR and HFR registries, UHI, and the NHCX claims exchange between hospitals and insurers. Nothing here has been run against the ABDM sandbox unless a page says so, so treat request and response shapes as unconfirmed.
 
 ## docs/hiecm
 
@@ -512,18 +512,22 @@
 - [PMJAY use cases](https://nha-in.github.io/docs/pr-10/docs/nhcx/v1/concepts/pmjay-use-cases): PMJAY-specific use cases D1 to D13
 - [Workflow Codes](https://nha-in.github.io/docs/pr-10/docs/nhcx/v1/concepts/workflow-codes): The 74 workflow IDs and their message directions
 - [Base URLs](https://nha-in.github.io/docs/pr-10/docs/nhcx/v1/getting-started/base-urls): Every service's base in the sandbox and in production, from `baseurl.yaml`
+- [Build with AI](https://nha-in.github.io/docs/pr-10/docs/nhcx/v1/getting-started/build-with-ai): Give your coding agent the NHCX documentation and skills: over the Docs MCP server, as agent skills, or as Markdown it fetches.
 - [Building and sending a JWE](https://nha-in.github.io/docs/pr-10/docs/nhcx/v1/getting-started/building-and-sending-a-jwe): RSA-OAEP-256 + A256GCM compact serialisation
 - [Creating and updating a participant](https://nha-in.github.io/docs/pr-10/docs/nhcx/v1/getting-started/creating-and-updating-a-participant): Registry onboarding and participant updates
 - [Fetching a recipient certificate](https://nha-in.github.io/docs/pr-10/docs/nhcx/v1/getting-started/fetching-a-recipient-certificate): Certificate discovery and caching discipline
 - [Finding participants and policies](https://nha-in.github.io/docs/pr-10/docs/nhcx/v1/getting-started/finding-participants-and-policies): Search endpoints and policy resolution
+- [Get your sandbox credentials](https://nha-in.github.io/docs/pr-10/docs/nhcx/v1/getting-started/get-your-sandbox-credentials): Register the organisation, get an ABDM client ID and secret, take NHCX sandbox roles, and meet the dummy payer
 - [Glossary](https://nha-in.github.io/docs/pr-10/docs/nhcx/v1/getting-started/glossary): Definitive glossary of protocol, healthcare, and scheme terms
 - [NHCX adapter (Optional)](https://nha-in.github.io/docs/pr-10/docs/nhcx/v1/getting-started/nhcx-adapter): Turnkey protocol adapter implementation, optional
+- [Quickstart](https://nha-in.github.io/docs/pr-10/docs/nhcx/v1/getting-started/quickstart): Three calls with only your credentials: a session token, the dummy payer's registry record, and its certificate
 - [Receiving a callback](https://nha-in.github.io/docs/pr-10/docs/nhcx/v1/getting-started/receiving-a-callback): Asynchronous callback listener and 202 receipt handling
 - [Session token](https://nha-in.github.io/docs/pr-10/docs/nhcx/v1/getting-started/session-token): Minting and refreshing ABDM gateway session JWTs
 - [Status and search](https://nha-in.github.io/docs/pr-10/docs/nhcx/v1/getting-started/status-and-search): Status checking (`/v1/status`) and search queries (`/v1/search/submit`)
 - [The base framework](https://nha-in.github.io/docs/pr-10/docs/nhcx/v1/getting-started/the-base-framework): Six-step base client architecture
 - [Your certificate](https://nha-in.github.io/docs/pr-10/docs/nhcx/v1/getting-started/your-certificate): RSA-2048 key pair generation and self-signed certificate assembly
 - [Going live](https://nha-in.github.io/docs/pr-10/docs/nhcx/v1/go-live): Sandbox exit, production credentials, registering in production, switching addresses, the network path, the PMJAY cutover and the pilot
+- [Security audit](https://nha-in.github.io/docs/pr-10/docs/nhcx/v1/go-live/security-audit): The security tests for your role, the WASA audit, STQC or CERT-In review, and the certificates production asks for
 - [Access control and roles](https://nha-in.github.io/docs/pr-10/docs/nhcx/v1/reference/access-control-and-roles): Role permissions, search rights, consent headers, and registry attributes (`payment_details`)
 - [Authentication](https://nha-in.github.io/docs/pr-10/docs/nhcx/v1/reference/authentication): The credentials every ABDM call carries, and the headers that go with them.
 - [Envelope fields](https://nha-in.github.io/docs/pr-10/docs/nhcx/v1/reference/envelope-fields): Full JWE header table, obligations, and correlation rules
@@ -573,6 +577,13 @@
 - [Provider checklist](https://nha-in.github.io/docs/pr-10/docs/nhcx/v1/roles/provider/provider-checklist): Sandbox exit list, 29 test cases by family (T-ML1, T-PLN, T-ELG, T-PRE, T-CLM, T-PAY, T-COM, T-CBK, T-SES), first-week failures
 - [Registration and eligibility](https://nha-in.github.io/docs/pr-10/docs/nhcx/v1/roles/provider/registration-and-eligibility): Patient intake, Aadhaar eKYC and biometrics, and the coverage check
 - [Provider UI guide](https://nha-in.github.io/docs/pr-10/docs/nhcx/v1/roles/provider/ui-guide): Provider desk wireframes and UX recommendations
+- [When something breaks](https://nha-in.github.io/docs/pr-10/docs/nhcx/v1/troubleshooting): Find the symptom you see, not the error code, and open the chapter that walks its checks
+- [Accepted with 202, and no callback arrives](https://nha-in.github.io/docs/pr-10/docs/nhcx/v1/troubleshooting/accepted-then-no-callback): The exchange answered 202 and no callback followed: the six checks in order
+- [Every NHCX call returns 401](https://nha-in.github.io/docs/pr-10/docs/nhcx/v1/troubleshooting/every-call-returns-401): Every endpoint fails the same way: the token, its prefix, its header or its environment
+- [Responses arrive against the wrong request](https://nha-in.github.io/docs/pr-10/docs/nhcx/v1/troubleshooting/responses-arrive-against-the-wrong-request): Answers on the wrong case, duplicates refused, callbacks unmatched: correlation and API call IDs
+- [The payer rejects your FHIR bundle](https://nha-in.github.io/docs/pr-10/docs/nhcx/v1/troubleshooting/the-payer-rejects-your-bundle): `PAYR-1004`, `PAYR-1008` and the missing identifier codes: validate, then check shape, identifiers and attachments
+- [The recipient cannot decrypt your message](https://nha-in.github.io/docs/pr-10/docs/nhcx/v1/troubleshooting/the-recipient-cannot-decrypt): A `PAYR-1001` protocol response: the certificate, its cache, the algorithms and the compact form
+- [Your callback URL is rejected or never called](https://nha-in.github.io/docs/pr-10/docs/nhcx/v1/troubleshooting/your-callback-url-is-rejected): The endpoint update is refused, or nothing ever reaches your server
 
 ## docs/support
 
@@ -605,6 +616,7 @@
 - [1 September 2026](https://nha-in.github.io/docs/pr-10/docs/whats-new/2026-09-01): What changed in these pages on 1 September 2026.
 - [2 September 2026](https://nha-in.github.io/docs/pr-10/docs/whats-new/2026-09-02): What changed in these pages on 2 September 2026.
 - [3 September 2026](https://nha-in.github.io/docs/pr-10/docs/whats-new/2026-09-03): What changed in these pages on 3 September 2026.
+- [15 September 2026](https://nha-in.github.io/docs/pr-10/docs/whats-new/2026-09-15): What changed in these pages on 15 September 2026.
 
 ## Optional
 
@@ -618,3 +630,17 @@
 - [P2 module index](https://nha-in.github.io/docs/pr-10/docs/hiecm/v3/api/p2/llms.txt): per-page links for the P2 module.
 - [P3 module index](https://nha-in.github.io/docs/pr-10/docs/hiecm/v3/api/p3/llms.txt): per-page links for the P3 module.
 - [PHR-SERVICES module index](https://nha-in.github.io/docs/pr-10/docs/hiecm/v3/api/phr-services/llms.txt): per-page links for the PHR-SERVICES module.
+- [NHCX PMJAY adjudicator module index](https://nha-in.github.io/docs/pr-10/docs/nhcx/v1/api/adjudicator/llms.txt): per-page links for the NHCX PMJAY adjudicator module.
+- [NHCX ABHA biometric authentication module index](https://nha-in.github.io/docs/pr-10/docs/nhcx/v1/api/biometric/llms.txt): per-page links for the NHCX ABHA biometric authentication module.
+- [NHCX Claim module index](https://nha-in.github.io/docs/pr-10/docs/nhcx/v1/api/claim/llms.txt): per-page links for the NHCX Claim module.
+- [NHCX Communication module index](https://nha-in.github.io/docs/pr-10/docs/nhcx/v1/api/communication/llms.txt): per-page links for the NHCX Communication module.
+- [NHCX Coverage eligibility module index](https://nha-in.github.io/docs/pr-10/docs/nhcx/v1/api/eligibility/llms.txt): per-page links for the NHCX Coverage eligibility module.
+- [NHCX Insurance plan module index](https://nha-in.github.io/docs/pr-10/docs/nhcx/v1/api/insurance-plan/llms.txt): per-page links for the NHCX Insurance plan module.
+- [NHCX Onboarding module index](https://nha-in.github.io/docs/pr-10/docs/nhcx/v1/api/onboarding/llms.txt): per-page links for the NHCX Onboarding module.
+- [NHCX Other module index](https://nha-in.github.io/docs/pr-10/docs/nhcx/v1/api/other/llms.txt): per-page links for the NHCX Other module.
+- [NHCX Payment notice module index](https://nha-in.github.io/docs/pr-10/docs/nhcx/v1/api/payment-notice/llms.txt): per-page links for the NHCX Payment notice module.
+- [NHCX Pre-authorisation module index](https://nha-in.github.io/docs/pr-10/docs/nhcx/v1/api/preauth/llms.txt): per-page links for the NHCX Pre-authorisation module.
+- [NHCX Predetermination module index](https://nha-in.github.io/docs/pr-10/docs/nhcx/v1/api/predetermination/llms.txt): per-page links for the NHCX Predetermination module.
+- [NHCX Participant registry module index](https://nha-in.github.io/docs/pr-10/docs/nhcx/v1/api/registry/llms.txt): per-page links for the NHCX Participant registry module.
+- [NHCX Session module index](https://nha-in.github.io/docs/pr-10/docs/nhcx/v1/api/session/llms.txt): per-page links for the NHCX Session module.
+- [NHCX Status and search module index](https://nha-in.github.io/docs/pr-10/docs/nhcx/v1/api/status/llms.txt): per-page links for the NHCX Status and search module.

@@ -17,9 +17,7 @@ info:
 
     Claims are often not fully approved first time, for mundane reasons: missing documents, policy interpretation differences, package or pricing discrepancies.
 
-    Guides that use these calls: [Cancel, reprocess and shortfall](/docs/nhcx/v1/reference/fhir/cancel-reprocess-and-shortfall), [Predetermination, status and search](/docs/nhcx/v1/reference/fhir/predetermination-status-and-search), [Notifications and patient apps](/docs/nhcx/v1/reference/notifications-and-patient-apps).
-
-    Production address for the NHCX exchange: shared by NHA after sandbox exit.
+    Guides that use these calls: [Cancel, reprocess and shortfall](/docs/nhcx/v1/reference/fhir/cancel-reprocess-and-shortfall), [Predetermination, status and search](/docs/nhcx/v1/reference/fhir/predetermination-status-and-search), [Notifications and patient apps](/docs/nhcx/v1/reference/notifications-and-patient-apps), [Accepted with 202, and no callback arrives](/docs/nhcx/v1/troubleshooting/accepted-then-no-callback).
 
     Production address for the NHCX portal: not published.
   version: nhcx-v1
@@ -42,7 +40,7 @@ x-abdm-sources:
     note: The package's Bruno collection, one request per operation.
   - file: nhcx-package/baseurl.yaml
     role: upstream
-    hash: sha256:47d8412abbfc53b1e1038410e7980eee029d7b1be5082f4ae6c1d4e16ae0dd0f
+    hash: sha256:88515b7b29c6b349a131e016c80774436ea16a29738db743b4cc3a24cbd42453
     note: The sandbox and production hosts.
   - file: nhcx-package/nhcx-error.yaml
     role: upstream
@@ -51,6 +49,8 @@ x-abdm-sources:
 servers:
   - url: https://apisbx.abdm.gov.in/hcx
     description: Sandbox, NHCX exchange.
+  - url: https://apisprod.nha.gov.in/hcx
+    description: Production.
 tags:
   - name: Other
     description: "Claims are often not fully approved first time, for mundane reasons: missing documents, policy interpretation differences, package or pricing discrepancies."
@@ -62,6 +62,7 @@ paths:
   /v1/task/submit:
     post:
       operationId: other_v1_task_submit
+      x-abdm-atom: nhcx.endpoint.task-submit
       x-abdm-use-case: Other
       tags:
         - Other
@@ -184,6 +185,7 @@ paths:
   /v1/task/on_submit:
     post:
       operationId: other_v1_task_on_submit
+      x-abdm-atom: nhcx.endpoint.task-on-submit
       x-abdm-use-case: Other
       tags:
         - Other
@@ -591,6 +593,7 @@ paths:
   /v1/notification/subscribe:
     post:
       operationId: other_v1_notification_subscribe
+      x-abdm-atom: nhcx.endpoint.notification-subscribe
       x-abdm-use-case: Other
       tags:
         - Other
@@ -1391,6 +1394,7 @@ paths:
   /v1/on_status:
     post:
       operationId: other_v1_on_status
+      x-abdm-atom: nhcx.endpoint.on-status
       x-abdm-use-case: Other
       tags:
         - Other
@@ -1680,6 +1684,7 @@ webhooks:
   v1_task_submit:
     post:
       operationId: other_webhook_v1_task_submit
+      x-abdm-atom: nhcx.callback.task-submit
       x-abdm-triggered-by: other_v1_task_submit
       x-abdm-use-case: Webhooks
       tags:
@@ -1758,6 +1763,7 @@ webhooks:
   v1_task_on_submit:
     post:
       operationId: other_webhook_v1_task_on_submit
+      x-abdm-atom: nhcx.callback.task-on-submit
       x-abdm-triggered-by: other_v1_task_on_submit
       x-abdm-use-case: Webhooks
       tags:
@@ -1860,6 +1866,7 @@ webhooks:
   v1_on_status:
     post:
       operationId: other_webhook_v1_on_status
+      x-abdm-atom: nhcx.callback.on-status
       x-abdm-triggered-by: other_v1_on_status
       x-abdm-use-case: Webhooks
       tags:
@@ -1959,6 +1966,7 @@ webhooks:
   v1_error:
     post:
       operationId: other_webhook_v1_error
+      x-abdm-atom: nhcx.callback.error
       x-abdm-triggered-by: other_v1_error
       x-abdm-use-case: Webhooks
       tags:

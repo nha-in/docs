@@ -1,0 +1,14 @@
+# NHCX Payment notice
+
+> Every page of the NHCX Payment notice module of the ABDM Developer Portal, fetchable as markdown.
+
+## Pages
+
+- [Payment notice](https://nha-in.github.io/docs/pr-10/docs/nhcx/v1/api/payment-notice): The Payment notice calls on NHCX: what each one does, the hosts they go to, and the guides that use them.
+- [Payment notice acknowledgement (internal) (adapter)](https://nha-in.github.io/docs/pr-10/docs/nhcx/v1/api/payment-notice/endpoints/payment-notice-internal-v1-paymentnotice-on-request): Internal twin of /v1/paymentnotice/on_request (operationId paymentNoticeOnRequestPostInternal) with the same JWEPayload body and response set. Exposed for the N
+- [Payment notice request (internal) (adapter)](https://nha-in.github.io/docs/pr-10/docs/nhcx/v1/api/payment-notice/endpoints/payment-notice-internal-v1-paymentnotice-request): Internal twin of /v1/paymentnotice/request (operationId paymentNoticeRequestPostInternal) with the same JWEPayload body and response set. Exposed for the NHCX a
+- [Payment notice acknowledgement](https://nha-in.github.io/docs/pr-10/docs/nhcx/v1/api/payment-notice/endpoints/payment-notice-v1-paymentnotice-on-request): Provider acknowledges a payment notice with a Task bundle (status completed, output paymentack), closing the payment lifecycle via NHCX.
+- [Payment notice request](https://nha-in.github.io/docs/pr-10/docs/nhcx/v1/api/payment-notice/endpoints/payment-notice-v1-paymentnotice-request): Payer pushes a Task bundle with PaymentNotice and PaymentReconciliation (amount, TDS, UTR) to the provider via NHCX after approving a claim.
+- [Receive payment notice acknowledgement](https://nha-in.github.io/docs/pr-10/docs/nhcx/v1/api/payment-notice/endpoints/payment-notice-webhook-v1-paymentnotice-on-request): Hosted by the payer. The exchange posts this message to the `endpoint_url` you registered, at `/v1/paymentnotice/on_request`, with the headers and the sealed pa
+- [Receive payment notice request](https://nha-in.github.io/docs/pr-10/docs/nhcx/v1/api/payment-notice/endpoints/payment-notice-webhook-v1-paymentnotice-request): Hosted by the provider. The exchange posts this message to the `endpoint_url` you registered, at `/v1/paymentnotice/request`, with the headers and the sealed pa
+- [Payment notice errors](https://nha-in.github.io/docs/pr-10/docs/nhcx/v1/api/payment-notice/errors): What Payment notice returns when a call fails, and what to do about it.

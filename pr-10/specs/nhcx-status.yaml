@@ -17,9 +17,7 @@ info:
 
     Asynchronous exchanges lose messages, stall in queues and outlive the shift of the desk operator who started them.
 
-    Guides that use these calls: [Predetermination, status and search](/docs/nhcx/v1/reference/fhir/predetermination-status-and-search).
-
-    Production address for the NHCX exchange: shared by NHA after sandbox exit.
+    Guides that use these calls: [Predetermination, status and search](/docs/nhcx/v1/reference/fhir/predetermination-status-and-search), [Accepted with 202, and no callback arrives](/docs/nhcx/v1/troubleshooting/accepted-then-no-callback), [Responses arrive against the wrong request](/docs/nhcx/v1/troubleshooting/responses-arrive-against-the-wrong-request).
   version: nhcx-v1
   license:
     name: MIT
@@ -40,11 +38,13 @@ x-abdm-sources:
     note: The package's Bruno collection, one request per operation.
   - file: nhcx-package/baseurl.yaml
     role: upstream
-    hash: sha256:47d8412abbfc53b1e1038410e7980eee029d7b1be5082f4ae6c1d4e16ae0dd0f
+    hash: sha256:88515b7b29c6b349a131e016c80774436ea16a29738db743b4cc3a24cbd42453
     note: The sandbox and production hosts.
 servers:
   - url: https://apisbx.abdm.gov.in/hcx
     description: Sandbox, NHCX exchange.
+  - url: https://apisprod.nha.gov.in/hcx
+    description: Production.
 tags:
   - name: Status and search
     description: Asynchronous exchanges lose messages, stall in queues and outlive the shift of the desk operator who started them.
@@ -54,6 +54,7 @@ paths:
   /v1/status:
     post:
       operationId: status_v1_status
+      x-abdm-atom: nhcx.endpoint.status
       x-abdm-use-case: Status and search
       tags:
         - Status and search
@@ -174,6 +175,7 @@ paths:
   /v1/search/submit:
     post:
       operationId: status_v1_search_submit
+      x-abdm-atom: nhcx.endpoint.search-submit
       x-abdm-use-case: Status and search
       tags:
         - Status and search
@@ -299,6 +301,7 @@ paths:
   /v1/search/on_submit:
     post:
       operationId: status_v1_search_on_submit
+      x-abdm-atom: nhcx.endpoint.search-on-submit
       x-abdm-use-case: Status and search
       tags:
         - Status and search
@@ -442,6 +445,7 @@ webhooks:
   v1_status:
     post:
       operationId: status_webhook_v1_status
+      x-abdm-atom: nhcx.callback.status
       x-abdm-triggered-by: status_v1_status
       x-abdm-use-case: Webhooks
       tags:
@@ -519,6 +523,7 @@ webhooks:
   v1_search_submit:
     post:
       operationId: status_webhook_v1_search_submit
+      x-abdm-atom: nhcx.callback.search-submit
       x-abdm-triggered-by: status_v1_search_submit
       x-abdm-use-case: Webhooks
       tags:
@@ -602,6 +607,7 @@ webhooks:
   v1_search_on_submit:
     post:
       operationId: status_webhook_v1_search_on_submit
+      x-abdm-atom: nhcx.callback.search-on-submit
       x-abdm-triggered-by: status_v1_search_on_submit
       x-abdm-use-case: Webhooks
       tags:

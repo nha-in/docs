@@ -1,0 +1,14 @@
+# NHCX Coverage eligibility
+
+> Every page of the NHCX Coverage eligibility module of the ABDM Developer Portal, fetchable as markdown.
+
+## Pages
+
+- [Coverage eligibility](https://nha-in.github.io/docs/pr-10/docs/nhcx/v1/api/eligibility): The Coverage eligibility calls on NHCX: what each one does, the hosts they go to, and the guides that use them.
+- [Coverage eligibility check (internal) (adapter)](https://nha-in.github.io/docs/pr-10/docs/nhcx/v1/api/eligibility/endpoints/eligibility-internal-v1-coverageeligibility-check): Internal twin of /v1/coverageeligibility/check with the same JWEPayload body and response set; only the operationId differs.
+- [Coverage eligibility callback (internal) (adapter)](https://nha-in.github.io/docs/pr-10/docs/nhcx/v1/api/eligibility/endpoints/eligibility-internal-v1-coverageeligibility-on-check): Internal twin of /v1/coverageeligibility/on_check taking the same bare object body; only the operationId differs.
+- [Coverage eligibility check](https://nha-in.github.io/docs/pr-10/docs/nhcx/v1/api/eligibility/endpoints/eligibility-v1-coverageeligibility-check): Provider asks the payer, via NHCX, whether a beneficiary's policy is in force, what it covers and which documents a preauth will need.
+- [Coverage eligibility callback](https://nha-in.github.io/docs/pr-10/docs/nhcx/v1/api/eligibility/endpoints/eligibility-v1-coverageeligibility-on-check): Payer returns the CoverageEligibilityResponse (policy in force, benefits, auth requirements) or an error to the provider through NHCX.
+- [Receive coverage eligibility check](https://nha-in.github.io/docs/pr-10/docs/nhcx/v1/api/eligibility/endpoints/eligibility-webhook-v1-coverageeligibility-check): Hosted by the payer. The exchange posts this message to the `endpoint_url` you registered, at `/v1/coverageeligibility/check`, with the headers and the sealed p
+- [Receive coverage eligibility callback](https://nha-in.github.io/docs/pr-10/docs/nhcx/v1/api/eligibility/endpoints/eligibility-webhook-v1-coverageeligibility-on-check): Hosted by the provider. The exchange posts this message to the `endpoint_url` you registered, at `/v1/coverageeligibility/on_check`, with the headers and the se
+- [Coverage eligibility errors](https://nha-in.github.io/docs/pr-10/docs/nhcx/v1/api/eligibility/errors): What Coverage eligibility returns when a call fails, and what to do about it.

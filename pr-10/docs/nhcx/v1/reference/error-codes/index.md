@@ -1,5 +1,7 @@
 # Error codes
 
+Seeing a symptom rather than a code? Start at [Troubleshooting](/docs/nhcx/v1/troubleshooting/).
+
 Generated from the specifications. A code is on this page because a specification records it.
 
 ## Coverage eligibility, Reference Payer

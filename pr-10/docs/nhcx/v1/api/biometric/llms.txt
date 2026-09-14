@@ -1,0 +1,14 @@
+# NHCX ABHA biometric authentication
+
+> Every page of the NHCX ABHA biometric authentication module of the ABDM Developer Portal, fetchable as markdown.
+
+## Pages
+
+- [ABHA biometric authentication](https://nha-in.github.io/docs/pr-10/docs/nhcx/v1/api/biometric): The ABHA biometric authentication calls on NHCX: what each one does, the hosts they go to, and the guides that use them.
+- [Biometric auth init](https://nha-in.github.io/docs/pr-10/docs/nhcx/v1/api/biometric/endpoints/biometric-auth-init): Starts a fingerprint or iris authentication of a PMJAY beneficiary against the ABHA registry and returns the `txnId` the verify call needs.
+- [Biometric auth refresh token](https://nha-in.github.io/docs/pr-10/docs/nhcx/v1/api/biometric/endpoints/biometric-auth-refresh-token): Exchanges the refresh token from `Biometric auth verify` for a new thirty-minute user token without a fresh capture.
+- [Biometric auth verify](https://nha-in.github.io/docs/pr-10/docs/nhcx/v1/api/biometric/endpoints/biometric-auth-verify): Completes the authentication started by `Biometric auth init` with the captured PID block, and returns the beneficiary's user token, valid thirty minutes.
+- [Face auth capture PID](https://nha-in.github.io/docs/pr-10/docs/nhcx/v1/api/biometric/endpoints/biometric-faceauth-capture-pid): Polls for the face capture the patient completes in the ABHA app after scanning the QR code for the `txnId` from `Face auth init`.
+- [Face auth init](https://nha-in.github.io/docs/pr-10/docs/nhcx/v1/api/biometric/endpoints/biometric-faceauth-init): Starts a face authentication on the ABDM proxy host and returns the `txnId` the rest of the face flow quotes.
+- [Face auth verify](https://nha-in.github.io/docs/pr-10/docs/nhcx/v1/api/biometric/endpoints/biometric-faceauth-v2-auth-verify): Completes a face authentication with the encrypted Aadhaar number, the Aadhaar-linked mobile and the `txnId`, and returns the beneficiary's user token.
+- [ABHA biometric authentication errors](https://nha-in.github.io/docs/pr-10/docs/nhcx/v1/api/biometric/errors): What ABHA biometric authentication returns when a call fails, and what to do about it.

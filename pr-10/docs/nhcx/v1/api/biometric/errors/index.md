@@ -1,5 +1,7 @@
 # ABHA biometric authentication errors
 
+Seeing a symptom rather than a code? Start at [Troubleshooting](/docs/nhcx/v1/troubleshooting/).
+
 Codes any exchange call can meet are recorded once, in the [Other](/docs/nhcx/v1/api/other) specification: the gateway's NHCX- codes, the standard payer codes, and the reference payer's structure and transport codes. The reference payer's other codes sit with the exchange they reject: coverage eligibility, preauthorisation, claim and insurance plan. [Reading error codes](/docs/nhcx/v1/reference/error-code-guide) explains the code spaces.
 
 The ABHA biometric authentication specification records no error code yet. That is a gap in the specification, not a promise that this module cannot fail.

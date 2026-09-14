@@ -1,0 +1,14 @@
+# NHCX Claim
+
+> Every page of the NHCX Claim module of the ABDM Developer Portal, fetchable as markdown.
+
+## Pages
+
+- [Claim](https://nha-in.github.io/docs/pr-10/docs/nhcx/v1/api/claim): The Claim calls on NHCX: what each one does, the hosts they go to, and the guides that use them.
+- [Claim callback (internal) (adapter)](https://nha-in.github.io/docs/pr-10/docs/nhcx/v1/api/claim/endpoints/claim-internal-v1-claim-on-submit): Internal twin of /v1/claim/on_submit (operationId claimOnSubmitPostInternal) taking the same bare object body.
+- [Claim submit (internal) (adapter)](https://nha-in.github.io/docs/pr-10/docs/nhcx/v1/api/claim/endpoints/claim-internal-v1-claim-submit): Internal twin of /v1/claim/submit (operationId claimSubmitPostInternal) with the same JWEPayload body and response set.
+- [Claim callback](https://nha-in.github.io/docs/pr-10/docs/nhcx/v1/api/claim/endpoints/claim-v1-claim-on-submit): Payer returns interim (response.partial) and final (response.complete) ClaimResponseBundles for a claim to the provider via NHCX.
+- [Claim submit](https://nha-in.github.io/docs/pr-10/docs/nhcx/v1/api/claim/endpoints/claim-v1-claim-submit): Provider submits the final itemised Claim bundle (Claim.use claim), or a claim query response or resubmission; NHCX routes it to the payer.
+- [Receive claim callback](https://nha-in.github.io/docs/pr-10/docs/nhcx/v1/api/claim/endpoints/claim-webhook-v1-claim-on-submit): Hosted by the provider. The exchange posts this message to the `endpoint_url` you registered, at `/v1/claim/on_submit`, with the headers and the sealed payload
+- [Receive claim submit](https://nha-in.github.io/docs/pr-10/docs/nhcx/v1/api/claim/endpoints/claim-webhook-v1-claim-submit): Hosted by the payer. The exchange posts this message to the `endpoint_url` you registered, at `/v1/claim/submit`, with the headers and the sealed payload the se
+- [Claim errors](https://nha-in.github.io/docs/pr-10/docs/nhcx/v1/api/claim/errors): What Claim returns when a call fails, and what to do about it.

@@ -18,8 +18,6 @@ info:
     Policies have traditionally been PDFs that hospital desks interpret by hand, producing ambiguity about benefits, claim conditions and documents, and rework and rejections downstream.
 
     Guides that use these calls: [Insurance plan request](/docs/nhcx/v1/reference/fhir/insurance-plan-request), [Insurance plan response](/docs/nhcx/v1/reference/fhir/insurance-plan-response-overview).
-
-    Production address for the NHCX exchange: shared by NHA after sandbox exit.
   version: nhcx-v1
   license:
     name: MIT
@@ -40,7 +38,7 @@ x-abdm-sources:
     note: The package's Bruno collection, one request per operation.
   - file: nhcx-package/baseurl.yaml
     role: upstream
-    hash: sha256:47d8412abbfc53b1e1038410e7980eee029d7b1be5082f4ae6c1d4e16ae0dd0f
+    hash: sha256:88515b7b29c6b349a131e016c80774436ea16a29738db743b4cc3a24cbd42453
     note: The sandbox and production hosts.
   - file: nhcx-package/nhcx-error.yaml
     role: upstream
@@ -49,6 +47,8 @@ x-abdm-sources:
 servers:
   - url: https://apisbx.abdm.gov.in/hcx
     description: Sandbox, NHCX exchange.
+  - url: https://apisprod.nha.gov.in/hcx
+    description: Production.
 tags:
   - name: Insurance plan
     description: Policies have traditionally been PDFs that hospital desks interpret by hand, producing ambiguity about benefits, claim conditions and documents, and rework and rejections downstream.
@@ -60,6 +60,7 @@ paths:
   /v1/insuranceplan/request:
     post:
       operationId: insurance_plan_v1_insuranceplan_request
+      x-abdm-atom: nhcx.endpoint.insuranceplan-request
       x-abdm-use-case: Insurance plan
       tags:
         - Insurance plan
@@ -182,6 +183,7 @@ paths:
   /v1/insuranceplan/on_request:
     post:
       operationId: insurance_plan_v1_insuranceplan_on_request
+      x-abdm-atom: nhcx.endpoint.insuranceplan-on-request
       x-abdm-use-case: Insurance plan
       tags:
         - Insurance plan
@@ -573,6 +575,7 @@ webhooks:
   v1_insuranceplan_request:
     post:
       operationId: insurance_plan_webhook_v1_insuranceplan_request
+      x-abdm-atom: nhcx.callback.insuranceplan-request
       x-abdm-triggered-by: insurance_plan_v1_insuranceplan_request
       x-abdm-use-case: Webhooks
       tags:
@@ -651,6 +654,7 @@ webhooks:
   v1_insuranceplan_on_request:
     post:
       operationId: insurance_plan_webhook_v1_insuranceplan_on_request
+      x-abdm-atom: nhcx.callback.insuranceplan-on-request
       x-abdm-triggered-by: insurance_plan_v1_insuranceplan_on_request
       x-abdm-use-case: Webhooks
       tags:

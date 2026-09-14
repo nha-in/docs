@@ -4,6 +4,8 @@ Every endpoint below is generated from the specification that declares it. Each 
 
 This page lists every module, including any that the role you have chosen does not use. The sidebar shows only yours.
 
+A use-case call is acknowledged at once and answered later. NHCX delivers your message to the recipient's registered address, and the answer reaches yours the same way. Each is declared in the specification as a webhook, shown on the call that produces it, with a page of its own under that module.
+
 ## Session
 
 1 endpoint across 1 use case: Session. Each endpoint has its own page in the sidebar.

@@ -43,7 +43,7 @@ Fetch your own certificate back from the production registry, and check that it 
 
 ## 4. Switch the addresses
 
-Every base URL changes. Base URLs, in Getting Started, lists them for both environments. The participant service's production address is published; the exchange's production base is shared after sandbox exit. Keep every base in configuration, and check each one against your onboarding letter.
+Every base URL changes. Base URLs, in Getting Started, lists them for both environments. The exchange's production base is `https://apisprod.nha.gov.in/hcx`, and the participant service's production address is published too. Keep every base in configuration, and check each one against your onboarding letter.
 
 If you run the NHCX Adapter, set `env` to `production`, confirm `auth.mode` with your onboarding contact, and expect the API key to be required. Its production addresses follow the pattern of swapping the sandbox hostnames, which is an inference, so override any that differ from your letter.
 

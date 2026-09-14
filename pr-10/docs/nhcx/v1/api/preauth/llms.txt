@@ -1,0 +1,14 @@
+# NHCX Pre-authorisation
+
+> Every page of the NHCX Pre-authorisation module of the ABDM Developer Portal, fetchable as markdown.
+
+## Pages
+
+- [Pre-authorisation](https://nha-in.github.io/docs/pr-10/docs/nhcx/v1/api/preauth): The Pre-authorisation calls on NHCX: what each one does, the hosts they go to, and the guides that use them.
+- [Pre-authorisation callback (internal) (adapter)](https://nha-in.github.io/docs/pr-10/docs/nhcx/v1/api/preauth/endpoints/preauth-internal-v1-preauth-on-submit): Internal twin of /v1/preauth/on_submit (operationId preauthOnSubmitPostInternal) with the same JWEPayload body and response set. Exposed for the NHCX adapter de
+- [Pre-authorisation submit (internal) (adapter)](https://nha-in.github.io/docs/pr-10/docs/nhcx/v1/api/preauth/endpoints/preauth-internal-v1-preauth-submit): Internal twin of /v1/preauth/submit (operationId preauthSubmitPostInternal) with the same JWEPayload body and response set. Exposed for the NHCX adapter deploym
+- [Pre-authorisation callback](https://nha-in.github.io/docs/pr-10/docs/nhcx/v1/api/preauth/endpoints/preauth-v1-preauth-on-submit): Payer returns the ClaimResponseBundle for a pre-authorisation (approved, partially approved, queried or rejected) to the provider via NHCX.
+- [Pre-authorisation submit](https://nha-in.github.io/docs/pr-10/docs/nhcx/v1/api/preauth/endpoints/preauth-v1-preauth-submit): Provider submits, resubmits, enhances or answers a query on a pre-authorisation Claim bundle (Claim.use preauthorization); NHCX routes it to the payer.
+- [Receive pre-authorisation callback](https://nha-in.github.io/docs/pr-10/docs/nhcx/v1/api/preauth/endpoints/preauth-webhook-v1-preauth-on-submit): Hosted by the provider. The exchange posts this message to the `endpoint_url` you registered, at `/v1/preauth/on_submit`, with the headers and the sealed payloa
+- [Receive pre-authorisation submit](https://nha-in.github.io/docs/pr-10/docs/nhcx/v1/api/preauth/endpoints/preauth-webhook-v1-preauth-submit): Hosted by the payer. The exchange posts this message to the `endpoint_url` you registered, at `/v1/preauth/submit`, with the headers and the sealed payload the
+- [Pre-authorisation errors](https://nha-in.github.io/docs/pr-10/docs/nhcx/v1/api/preauth/errors): What Pre-authorisation returns when a call fails, and what to do about it.

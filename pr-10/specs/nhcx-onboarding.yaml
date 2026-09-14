@@ -17,7 +17,7 @@ info:
 
     Nothing moves through NHCX until both the sender and the recipient exist in the participant registry, which the platform treats as the source of truth for who may exchange claims data.
 
-    Guides that use these calls: [Creating and updating a participant](/docs/nhcx/v1/getting-started/creating-and-updating-a-participant).
+    Guides that use these calls: [Creating and updating a participant](/docs/nhcx/v1/getting-started/creating-and-updating-a-participant), [Your callback URL is rejected or never called](/docs/nhcx/v1/troubleshooting/your-callback-url-is-rejected).
   version: nhcx-v1
   license:
     name: MIT
@@ -38,7 +38,7 @@ x-abdm-sources:
     note: The package's Bruno collection, one request per operation.
   - file: nhcx-package/baseurl.yaml
     role: upstream
-    hash: sha256:47d8412abbfc53b1e1038410e7980eee029d7b1be5082f4ae6c1d4e16ae0dd0f
+    hash: sha256:88515b7b29c6b349a131e016c80774436ea16a29738db743b4cc3a24cbd42453
     note: The sandbox and production hosts.
 servers:
   - url: https://apisbx.abdm.gov.in/pmjay/sbxhcx/participanthcxservice
@@ -54,6 +54,7 @@ paths:
   /participant/create:
     post:
       operationId: onboarding_participant_create
+      x-abdm-atom: nhcx.endpoint.participant-create
       x-abdm-use-case: Onboarding
       tags:
         - Onboarding
@@ -177,6 +178,7 @@ paths:
   /v2/participant/create:
     post:
       operationId: onboarding_v2_participant_create
+      x-abdm-atom: nhcx.endpoint.v2-participant-create
       x-abdm-use-case: Onboarding
       tags:
         - Onboarding
@@ -477,6 +479,7 @@ paths:
   /validate:
     get:
       operationId: onboarding_validate
+      x-abdm-atom: nhcx.endpoint.validate
       x-abdm-use-case: Onboarding
       tags:
         - Onboarding
@@ -557,6 +560,7 @@ paths:
   /update/validate:
     get:
       operationId: onboarding_update_validate
+      x-abdm-atom: nhcx.endpoint.update-validate
       x-abdm-use-case: Onboarding
       tags:
         - Onboarding

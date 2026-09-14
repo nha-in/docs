@@ -1,0 +1,14 @@
+# NHCX Insurance plan
+
+> Every page of the NHCX Insurance plan module of the ABDM Developer Portal, fetchable as markdown.
+
+## Pages
+
+- [Insurance plan](https://nha-in.github.io/docs/pr-10/docs/nhcx/v1/api/insurance-plan): The Insurance plan calls on NHCX: what each one does, the hosts they go to, and the guides that use them.
+- [Insurance plan callback (internal variant) (adapter)](https://nha-in.github.io/docs/pr-10/docs/nhcx/v1/api/insurance-plan/endpoints/insurance-plan-internal-v1-insuranceplan-on-request): Internal twin of /v1/insuranceplan/on_request: the payer InsuranceplanBundle callback with identical semantics, distinct operationId.
+- [Insurance plan request (internal variant) (adapter)](https://nha-in.github.io/docs/pr-10/docs/nhcx/v1/api/insurance-plan/endpoints/insurance-plan-internal-v1-insuranceplan-request): Internal twin of /v1/insuranceplan/request on the insuranceplanhcxservice: same TaskBundle payload, same 202 envelope, distinct operationId.
+- [Insurance plan callback](https://nha-in.github.io/docs/pr-10/docs/nhcx/v1/api/insurance-plan/endpoints/insurance-plan-v1-insuranceplan-on-request): Payer returns the InsurancePlan collection Bundle (InsurancePlan, Organization, optional Questionnaire) under the request correlation id.
+- [Insurance plan request](https://nha-in.github.io/docs/pr-10/docs/nhcx/v1/api/insurance-plan/endpoints/insurance-plan-v1-insuranceplan-request): Provider sends a Task with code poll naming a policy number and/or its HFR id to fetch the payer's machine-readable InsurancePlan for that pairing.
+- [Receive insurance plan callback](https://nha-in.github.io/docs/pr-10/docs/nhcx/v1/api/insurance-plan/endpoints/insurance-plan-webhook-v1-insuranceplan-on-request): Hosted by the provider. The exchange posts this message to the `endpoint_url` you registered, at `/v1/insuranceplan/on_request`, with the headers and the sealed
+- [Receive insurance plan request](https://nha-in.github.io/docs/pr-10/docs/nhcx/v1/api/insurance-plan/endpoints/insurance-plan-webhook-v1-insuranceplan-request): Hosted by the payer. The exchange posts this message to the `endpoint_url` you registered, at `/v1/insuranceplan/request`, with the headers and the sealed paylo
+- [Insurance plan errors](https://nha-in.github.io/docs/pr-10/docs/nhcx/v1/api/insurance-plan/errors): What Insurance plan returns when a call fails, and what to do about it.

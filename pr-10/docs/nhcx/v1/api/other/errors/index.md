@@ -1,5 +1,7 @@
 # Other errors
 
+Seeing a symptom rather than a code? Start at [Troubleshooting](/docs/nhcx/v1/troubleshooting/).
+
 Codes any exchange call can meet are recorded once, in the [Other](/docs/nhcx/v1/api/other) specification: the gateway's NHCX- codes, the standard payer codes, and the reference payer's structure and transport codes. The reference payer's other codes sit with the exchange they reject: coverage eligibility, preauthorisation, claim and insurance plan. [Reading error codes](/docs/nhcx/v1/reference/error-code-guide) explains the code spaces.
 
 18 codes from PAYR-1003 to PAYR-1020 mean one thing on the standard payer sheet and another on the reference payer's sheet. Read the code together with its message.

@@ -83,7 +83,7 @@ Sandbox addresses:
 - Participant service: `https://apisbx.abdm.gov.in/pmjay/sbxhcx/participanthcxservice`
 - Use cases: `https://apisbx.abdm.gov.in/hcx/v1`
 
-The production participant service is at `https://apisprod.nha.gov.in/pmjay/hcx/participanthcxservice`. The production use-case address is shared after sandbox exit.
+The production participant service is at `https://apisprod.nha.gov.in/pmjay/hcx/participanthcxservice`. The production use-case address is `https://apisprod.nha.gov.in/hcx`.
 
 ## Certificates and encryption
 

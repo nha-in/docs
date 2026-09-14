@@ -1,0 +1,14 @@
+# NHCX Communication
+
+> Every page of the NHCX Communication module of the ABDM Developer Portal, fetchable as markdown.
+
+## Pages
+
+- [Communication](https://nha-in.github.io/docs/pr-10/docs/nhcx/v1/api/communication): The Communication calls on NHCX: what each one does, the hosts they go to, and the guides that use them.
+- [Communication acknowledgement callback (internal variant) (adapter)](https://nha-in.github.io/docs/pr-10/docs/nhcx/v1/api/communication/endpoints/communication-internal-v1-communication-on-request): Internal twin of /v1/communication/on_request: the provider acknowledgement Task bundle, operationId communicationOnRequestPostInternal.
+- [Communication request (internal variant) (adapter)](https://nha-in.github.io/docs/pr-10/docs/nhcx/v1/api/communication/endpoints/communication-internal-v1-communication-request): Internal twin of /v1/communication/request: same JWEPayload body, description and 202 envelope, operationId communicationRequestPostInternal.
+- [Communication acknowledgement callback](https://nha-in.github.io/docs/pr-10/docs/nhcx/v1/api/communication/endpoints/communication-v1-communication-on-request): Provider returns the acknowledgement Task bundle for a payer communication, echoing the reason code and correlation id so the payer can close the loop.
+- [Communication request](https://nha-in.github.io/docs/pr-10/docs/nhcx/v1/api/communication/endpoints/communication-v1-communication-request): Payer pushes a Task plus Communication bundle to a provider mid-claim: TAT alerts, wallet or policy changes, grievances or extra-information requests.
+- [Receive communication acknowledgement callback](https://nha-in.github.io/docs/pr-10/docs/nhcx/v1/api/communication/endpoints/communication-webhook-v1-communication-on-request): Hosted by the payer. The exchange posts this message to the `endpoint_url` you registered, at `/v1/communication/on_request`, with the headers and the sealed pa
+- [Receive communication request](https://nha-in.github.io/docs/pr-10/docs/nhcx/v1/api/communication/endpoints/communication-webhook-v1-communication-request): Hosted by the provider. The exchange posts this message to the `endpoint_url` you registered, at `/v1/communication/request`, with the headers and the sealed pa
+- [Communication errors](https://nha-in.github.io/docs/pr-10/docs/nhcx/v1/api/communication/errors): What Communication returns when a call fails, and what to do about it.
