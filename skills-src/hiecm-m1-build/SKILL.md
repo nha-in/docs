@@ -173,6 +173,110 @@ unknowns:
 closed_by: sandbox verification run, recorded in this atom
 ```
 
+#### Designing the ABHA journey a person actually walks through (`hiecm.concept.m1-journey-design`)
+
+M1 gives you around forty operations. A person standing at a registration
+counter should meet one screen with one question on it. Everything below is
+about closing that gap, because an integration that exposes the operations
+as a menu is the one that gets abandoned at the desk.
+
+Three ways to put ABHA in a product, in increasing order of control and of
+work:
+
+| Shape | You write | Use it when |
+|---|---|---|
+| Redirect or QR to a hosted page | No frontend code | A counter, a kiosk, a poster, or a pilot |
+| An embedded component in your own page | A mount point and callbacks | The journey sits inside your own registration screen |
+| The operations directly | Every screen | A native app, or a journey nobody else's UI fits |
+
+ABDM publishes the operations. The first two shapes are things you or a
+vendor build on top of them, so choosing one is a build or buy decision
+rather than a question about ABDM.
+
+#### One entry, not a menu
+
+Do not ask "do you want to log in or create an ABHA?". The person at the desk
+usually does not know. Take one identifier, then decide for them.
+
+A single entry that resolves to either outcome is the default journey. Take a
+mobile number, send an OTP, and read what comes back: an existing account
+means sign in, no account means offer to create one. The person answers one
+question and your code branches, rather than the other way round.
+
+Offer a chooser only where the desk genuinely knows, for example a counter
+that only ever registers new patients.
+
+#### Read the response before you create anything
+
+This is the rule that prevents the worst outcome in M1, which is a person
+holding two ABHA numbers.
+
+After an OTP verification, the response tells you whether accounts already
+exist for that identifier. When it does, sign the person into the existing
+account rather than continuing into creation. Treat "create" as the branch you
+take when the lookup came back empty, never as the branch you take by default.
+A duplicate is not corrected by a later call, and the patient carries it.
+
+#### Make it skippable, and say so on the screen
+
+A person may decline, may not have an Aadhaar-linked mobile to hand, or may be
+in a queue. Registration must complete without an ABHA, and your screen should
+say that before they feel cornered.
+
+Your patient record is keyed by your own number, not by an ABHA. When the
+journey is skipped, return the identifier you already had, mark the record as
+having no ABHA, and offer the journey again later from the chart. See
+ABHA number and address for what you store when
+it does complete.
+
+#### Five ways to create, and when each one is right
+
+Show one. Choose it from what the desk holds, and keep the others behind a
+"try another way" affordance for when the first fails.
+
+| Method | Gives you | Reach for it when |
+|---|---|---|
+| Aadhaar OTP | A KYC verified ABHA number | The default. The person has their Aadhaar-linked phone |
+| Mobile OTP | An ABHA address, not KYC verified | No Aadhaar to hand. Upgrade to KYC later |
+| Face authentication | A KYC verified ABHA number | The Aadhaar-linked phone is not with them, and a camera is |
+| A document | An ABHA from an accepted identity document | Neither Aadhaar nor its mobile is available |
+| Child ABHA | An ABHA held under a parent | The patient is a minor |
+
+Demographic authentication exists as a sixth path and is exact: a near miss on
+name, date of birth or gender is a refusal rather than a warning. See
+create by demographic authentication.
+
+#### The journeys that are not creation
+
+An M1 surface is more than a registration form. Each of these is its own
+placement in a product, and each is worth designing separately:
+
+- **Find an existing ABHA**, when the person has one and cannot remember it.
+  See find an ABHA.
+- **Upgrade an address to KYC verified**, for an account made by mobile OTP.
+- **Show the card and the QR code**, which is what a patient is asked for at a
+  counter.
+- **Share a profile at the counter**, by displaying a QR the patient scans with
+  their own app, so your desk types nothing.
+- **Update the profile**, including the mobile number, which changes often and
+  is the most common reason a person returns to this surface.
+
+#### OTP screens
+
+The OTP screen is where journeys are lost, so it carries its own rules. Show
+which number the code went to, masked to the last four digits, because a
+person with two phones needs to know. Provide a resend, and hold the
+transaction id across it rather than starting again. State the wait before the
+person starts pressing resend: repeated attempts lock the transaction, and the
+error that follows names the attempt count rather than the wait. Never
+persist the code, and never log it.
+
+#### Branding belongs in configuration
+
+Colours, a logo and a language are configuration, not code. Read them from
+whatever the deployment already uses. A journey that needs a rebuild to change
+a colour will be forked by the first customer who asks.
+
 ## Prove these before you build a flow
 
 ### Prove your encryption padding before you build anything else (`hiecm.test.m1-encryption-padding`)
