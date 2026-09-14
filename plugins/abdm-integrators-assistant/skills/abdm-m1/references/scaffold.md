@@ -197,8 +197,14 @@ work:
 | The operations directly | Every screen | A native app, or a journey nobody else's UI fits |
 
 ABDM publishes the operations. The first two shapes are things you or a
-vendor build on top of them, so choosing one is a build or buy decision
-rather than a question about ABDM.
+vendor build on top of them, so choosing one is a build or buy decision rather
+than a question about ABDM. If nobody has built the hosted page for your
+deployment, that row is not available to you whatever the table says.
+
+The choice is per journey, not per integration. Driving login from the
+operations while sending creation to a hosted page is a reasonable split, and
+a common one: login is a handful of calls, and creation carries the identity
+methods and the most screens.
 
 #### Suggested: one entry rather than a menu
 
@@ -211,15 +217,41 @@ A chooser is the better shape where the desk genuinely knows, for example a
 counter that only ever registers new patients, or a kiosk placed next to a
 sign that says what it is for.
 
-#### Holds regardless: read the response before you create anything
+#### Holds regardless: look before you create, by whatever means
 
-After an OTP verification the response tells you whether accounts already
-exist for that identifier. Continuing into creation when it does leaves the
-person holding two ABHA numbers, and no operation in M1 merges them
-afterwards. The patient carries the duplicate.
+Creation with an account already in existence leaves the person holding two
+ABHA numbers, and no operation in M1 merges them afterwards. The patient
+carries the duplicate.
 
-Whatever your journey looks like, creation is the branch taken when the
-lookup came back empty.
+The rule is that you look first. It is not a rule about how you look, and the
+mobile OTP journey suggested above is only one of the ways:
+
+- Verify an OTP and read the accounts the response carries.
+- Search for the person before you begin.
+- Ask, where the desk can reasonably ask, and trust the answer enough to check
+  it.
+
+Any of these satisfies the rule. Whatever your journey looks like, creation is
+the branch taken when the look came back empty.
+
+Which of the three you can lean on depends on what is published. The
+verification response carries the accounts, and its body is not yet published
+here, so a journey that branches on a field inside it is branching on something
+you will have to read off your own first sandbox call.
+
+Search for a profile is the one lookup whose
+success body is recorded: `ABHANumber`, `name`, `kycStatus`, `gender` and
+`mobile`. If you want the look-before-you-create step to rest on a documented
+shape rather than on an observation you make yourself, that is the operation to
+build it from.
+
+One caution about the empty answer, which decides how much you can lean on it.
+A lookup that finds no account and a lookup whose encrypted identifier the
+service could not read can present the same way. So an empty result means
+"nothing found for what the service received", which is only "this person has
+no ABHA" once you know the service received what you sent. Prove the
+encryption path first, once, and the empty answer becomes trustworthy. See
+why identifiers are encrypted.
 
 #### Holds regardless: an ABHA is optional to your record
 
@@ -236,11 +268,14 @@ it does complete.
 
 #### Five ways to create, and the condition each one answers
 
-Which of these you offer, and how many at once, is yours. The suggestion is to
-show one chosen from what the desk already holds and keep the rest behind a
-"try another way" affordance, because a desk asked to pick a method has to
-understand all five. A kiosk with time to explain may reasonably show them
-all.
+Most integrations ship one of these. The table is here so you can pick the one
+that matches your desk, not so you can implement it.
+
+Which you offer, and how many at once, is yours. Showing one chosen from what
+the desk already holds is the suggestion, because a desk asked to pick has to
+understand all five. A kiosk with room to explain may reasonably show more.
+Shipping one and saying "no ABHA today" to everyone else is a legitimate first
+version, because an ABHA is optional to your record.
 
 | Method | Gives you | Reach for it when |
 |---|---|---|
@@ -276,14 +311,27 @@ One platform fact and several suggestions, and it is worth knowing which is
 which.
 
 **Holds regardless:** attempts are counted against the transaction, not
-against the person. Repeated sends lock that transaction, and the error names
-the attempt count rather than the wait. A fresh transaction is the recovery,
-not a retry of the spent one. The code is never persisted and never logged.
+against the person, and a transaction has a limited number of them. The code is
+never persisted and never logged.
+
+That gives a resend button two different jobs either side of one boundary, and
+getting them the wrong way round is how a receptionist reaches a dead
+transaction:
+
+| The person presses resend | What to do |
+|---|---|
+| The transaction still has attempts | Reuse the same transaction id. Starting a new one throws away a live transaction for no reason |
+| The transaction is locked | The transaction is spent. Start a fresh one. Retrying this one cannot recover it |
+
+The number of attempts a transaction allows is not published, and the refusal
+names the attempt count rather than the wait remaining, so a client cannot
+compute how long to disable the button. Read the refusal and start again rather
+than counting attempts yourself.
 
 **Suggested:** show which number the code went to, masked to the last four
-digits, because a person with two phones needs to know. Hold the transaction
-id across a resend rather than restarting. Put the wait on the screen before
-the person starts pressing the button.
+digits, because a person with two phones needs to know. Put a visible wait on
+the resend button rather than leaving it live, since the fastest route to a
+locked transaction is a person pressing it four times.
 
 #### Suggested: branding as configuration
 
