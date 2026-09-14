@@ -95,6 +95,11 @@ const MODULES = [
       'Every certificate arrives as bare base64 DER with no PEM armour, whatever the field name suggests. Add the armour, wrapping at 64 characters per line, before your library will load it.',
       'Prove the padding before building a flow, with a mobile that is registered against an ABHA account. `POST /v3/profile/login/request/otp` with `loginHint: "mobile"` returns 200 and a `txnId` when the padding is right, and `Invalid Mobile Number` when it is wrong. The number has to be a real one: an unregistered number returns that same refusal whatever the padding, so it proves nothing. `/v3/enrollment/request/otp` refuses every input identically and cannot tell you either way.',
       'One path serves several jobs. The `scope` array in the body picks which one, so read it before assuming an endpoint does one thing.',
+      'Build the journey, not the menu. M1 has around forty operations and a person at a counter should meet one screen with one question on it. Take one identifier, send one OTP, and branch on what comes back rather than asking the person whether they want to log in or register.',
+      'Read the accounts on the verification response before you create anything. Creating when an account already exists leaves the patient holding two ABHA numbers, and nothing later merges them. Treat creation as the branch you take when the lookup came back empty.',
+      'Registration must complete without an ABHA, and the screen should say so. The patient record is keyed by your own number; ABHA is an overlay the person may decline, may postpone, or may not have the Aadhaar-linked phone for today.',
+      'Show one creation method, chosen from what the desk already holds, and keep the rest behind a "try another way" affordance. There are five: Aadhaar OTP, mobile OTP, face authentication, an identity document, and a child ABHA under a parent, plus demographic authentication as an exact-match sixth.',
+      'The surface is more than a registration form. Finding a forgotten ABHA, upgrading a mobile-made address to KYC, showing the card and QR, sharing a profile by QR at the counter, and updating a mobile number are each their own placement in a product. Design them separately rather than nesting them in one screen.',
     ],
   },
   {
