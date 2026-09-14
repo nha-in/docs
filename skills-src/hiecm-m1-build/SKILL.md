@@ -175,6 +175,22 @@ closed_by: sandbox verification run, recorded in this atom
 
 #### A suggested ABHA journey, and what holds if you design your own (`hiecm.concept.m1-journey-design`)
 
+Start from why a front desk adopts ABHA at all, because it decides the shape
+of everything else.
+
+It is not the identifier. It is that the receptionist stops typing. A verified
+ABHA profile carries the whole registration form already: given, middle and
+family name, day, month and year of birth, gender, mobile, email, the full
+address with its state, district, subdistrict, village and ward names and their
+LGD codes, the pincode, and a photograph. A desk that reads that profile enters
+nothing and corrects little.
+
+So the ABHA step comes **before** your registration form, and fills it. A
+journey that registers the patient first and offers ABHA afterwards has already
+spent the keystrokes it existed to save, and leaves ABHA looking like an
+identifier to file rather than the reason the queue moved faster. If you build
+one thing from this page, build that order.
+
 ABDM publishes operations, not a user experience. How your registration
 screen looks and what it asks first is yours to decide, and a product that
 knows its own counter will often beat the default below.
@@ -209,6 +225,35 @@ The choice is per journey, not per integration. Driving login from the
 operations while sending creation to a hosted page is a reasonable split, and
 a common one: login is a handful of calls, and creation carries the identity
 methods and the most screens.
+
+#### Holds regardless: the profile is the point, so fetch it before you type
+
+Two ways the profile reaches your desk, and the first one asks nothing of your
+receptionist at all.
+
+**The patient scans your counter.** You display a QR carrying your facility id
+and a counter id. The patient scans it with their own PHR application, consents
+there, and ABDM posts their profile to your registered callback. Nobody at your
+desk types, asks or verifies anything: the record simply arrives, already
+consented. See receive a shared patient profile.
+This needs a registered facility and a reachable callback, which is the price of
+the cheapest desk experience available.
+
+**Your desk asks for an identifier.** Where the patient has no PHR application,
+or the queue will not wait for one, run the identifier journey below. It ends in
+a token, and that token reads
+the profile.
+
+Either way the registration form is the **destination**: it opens already
+filled, and the receptionist confirms rather than enters. Manual entry is the
+fallback for a person with no ABHA, not the default path with ABHA bolted on
+afterwards.
+
+One caution worth designing for. The profile is what ABDM holds, not what your
+clinician sees in front of them. Names get transliterated, an address may be
+years old, and a shared mobile may belong to a relative. Present the filled form
+for confirmation rather than saving it unseen, and keep your own record editable
+afterwards.
 
 #### Suggested: one screen that does not ask login or create
 
