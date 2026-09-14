@@ -102,6 +102,32 @@ methods and the most screens.
 
 ## What happens
 
+### The flow, in full
+
+Everything after this section is detail on one of these five steps. If you read
+nothing else, read this.
+
+1. **Start registering the patient.** Your own record, your own number. This
+   completes whatever happens next.
+2. **Ask whether they have an ABHA.** One question, yes or no. No means the
+   form is typed by hand and the patient is treated exactly the same.
+3. **Take one identifier.** Aadhaar or mobile, and where the desk knows, an
+   ABHA number or address. Aadhaar is the one to recommend: it is the only
+   route ending in a KYC verified ABHA number.
+   **Then, under Aadhaar only, how they prove it is theirs:** an OTP to the
+   linked phone, a face scan, or a fingerprint or iris reader. A mobile takes
+   the OTP sent to it and offers no second question.
+4. **Log in or create, decided by the answer and not by the person.** The
+   response says whether an account exists. One account signs them in, several
+   means ask which, none means offer to create. Never ask the person at the
+   desk which of these they want.
+5. **Fill your form from the profile.** Name, date of birth, gender, mobile
+   and address arrive from it. The receptionist reads them back and corrects
+   what is wrong, rather than typing them.
+
+Step 5 is the reason the other four are worth doing. Step 4 is where a
+duplicate ABHA is created if the branch is wrong.
+
 ### Holds regardless: the profile is the point, so fetch it before you type
 
 Two ways the profile reaches your desk, and the first one asks nothing of your
