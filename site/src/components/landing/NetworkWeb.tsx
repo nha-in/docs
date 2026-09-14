@@ -29,35 +29,60 @@ import {
  */
 
 /**
- * The cast. Positions are percentages of the hero, kept out of the copy.
+ * The cast, standing on the vertices of a regular octagon around the copy.
  *
- * A percentage is only safe where the copy is not. The words keep their size
- * while a short window loses its, so a share of the height that cleared the
- * gateway cards at 900px tall rode up onto them at 700px: Pharmacy sat inside
- * the right hand card, and Hospital and Diagnostics had a single pixel of
- * clearance under the row. `foot` takes a node off the share and stands it in
- * a fixed strip at the bottom of the hero, which is below the copy at every
- * height; the two that use it are aligned with Doctor and PHR above them, so
- * the cast frames the words rather than drifting into them. Their `y` is the
- * strip in round numbers, for the fallback below to use.
+ * `at` is the vertex's angle in degrees, anticlockwise from the right of the
+ * ring, so the eight sit exactly 45 degrees apart and the shape is the
+ * argument rather than eight positions that happened to look right. The ring
+ * is turned 22.5 degrees off the axes, which leaves its top and its bottom
+ * empty and puts a pair either side of each instead. That is what the copy
+ * needs: the emblem and the board sit at the top of it, and a vertex landing
+ * on the vertical centre line would land on them.
+ *
+ * The order round the ring is the order the cast was already in, so nothing
+ * moves further than the nearest vertex. Reading clockwise from the top left:
+ * the Citizen, the app they hold, who pays, who dispenses, who tests, who
+ * treats, who governs, and who prescribes.
+ *
+ * Where the ring is and how big it is belongs to the stylesheet, because the
+ * radius has to answer to the copy's width and the window's height at the
+ * same time. See `--ring-x` and `--ring-y` in home.css.
  */
 const PARTICIPANTS = [
-  {id: 'citizen', label: 'Citizen', Icon: User, x: 50, y: 7, small: true},
-  {id: 'phr', label: 'PHR app', Icon: Smartphone, x: 79, y: 17},
-  {id: 'insurer', label: 'Insurer', Icon: ShieldCheck, x: 92, y: 45, small: true},
-  // Half way down, which is the one share of the height that is never level
-  // with the gateway cards. They sit at the bottom of a copy block that is
-  // centred, so the row starts below the midline whatever the window does:
-  // at 74% this node was inside the right hand card on any laptop, and at
-  // anything past 50% it comes back on a tall enough screen.
-  {id: 'pharmacy', label: 'Pharmacy', Icon: Pill, x: 82, y: 50},
-  // Bottom centre is left clear: the scroll cue lives there.
-  {id: 'lab', label: 'Diagnostics', Icon: FlaskConical, x: 79, y: 96, small: true, foot: true},
-  {id: 'hospital', label: 'Hospital', Icon: Building2, x: 21, y: 96, small: true, foot: true},
-  {id: 'nha', label: 'NHA', Icon: Landmark, x: 8, y: 45},
-  {id: 'doctor', label: 'Doctor', Icon: Stethoscope, x: 21, y: 17, small: true},
+  {id: 'citizen', label: 'Citizen', Icon: User, at: 112.5, small: true},
+  {id: 'phr', label: 'PHR app', Icon: Smartphone, at: 67.5},
+  {id: 'insurer', label: 'Insurer', Icon: ShieldCheck, at: 22.5, small: true},
+  {id: 'pharmacy', label: 'Pharmacy', Icon: Pill, at: -22.5},
+  {id: 'lab', label: 'Diagnostics', Icon: FlaskConical, at: -67.5, small: true},
+  {id: 'hospital', label: 'Hospital', Icon: Building2, at: -112.5, small: true},
+  {id: 'nha', label: 'NHA', Icon: Landmark, at: -157.5},
+  {id: 'doctor', label: 'Doctor', Icon: Stethoscope, at: 157.5, small: true},
 ];
 
+/**
+ * Each vertex as a unit vector, which is what the stylesheet multiplies the
+ * ring's radii by. Computed here rather than written into the table, so the
+ * table stays eight angles 45 degrees apart and cannot drift out of true.
+ * `y` is negated because the screen's runs downwards.
+ */
+const VERTICES = PARTICIPANTS.map(({at}) => ({
+  ux: Math.cos((at * Math.PI) / 180),
+  uy: -Math.sin((at * Math.PI) / 180),
+}));
+
+/**
+ * The octagon's long unit, cos 22.5 degrees.
+ *
+ * Every vertex is (+-LONG, +-SHORT) or (+-SHORT, +-LONG) of the two radii, so
+ * a vertex clears the copy as soon as its long axis does: the four at the
+ * sides clear it across, the four at the ends clear it above and below. That
+ * is the whole of the sizing rule below.
+ */
+const LONG = Math.cos((22.5 * Math.PI) / 180);
+
+/** Half a node, plus room to breathe, in px. The label is the wide part. */
+const CLEAR_X = 44;
+const CLEAR_Y = 26;
 /** Every pair, once. The claim ABDM makes is that any of these can exchange. */
 const LINKS = PARTICIPANTS.flatMap((from, i) =>
   PARTICIPANTS.slice(i + 1).map((to) => [i, PARTICIPANTS.indexOf(to)] as const),
@@ -199,6 +224,49 @@ export default function NetworkWeb({
     let pointed = -1;
     const home = PARTICIPANTS.findIndex((who) => who.id === 'nha');
 
+    const layer = wrap.querySelector<HTMLElement>('.network-web__nodes');
+    const copy = wrap.parentElement?.querySelector('.landing-hero__copy');
+
+    /**
+     * Size the ring against the copy it is drawn around.
+     *
+     * The stylesheet cannot do this on its own, which is what the shares of
+     * the window it used to be given kept getting wrong. The copy's height is
+     * its content's and it does not sit on the middle of the window, so a
+     * ring measured from the window drifts onto the words as the window
+     * changes: it was how a node ended up inside a gateway card.
+     *
+     * Each radius is put half way between the smallest that clears the copy
+     * and the largest the layer has room for, so the ring stands as far out
+     * as the page allows and never closer in than the words need. On a window
+     * too small for both, room wins, because a node off the edge of the page
+     * is a worse answer than a node near the words.
+     */
+    const size = (box: DOMRect) => {
+      if (!layer || !copy) return;
+      const c = copy.getBoundingClientRect();
+      const cy = c.top + c.height / 2 - box.top;
+      const clears = (half: number, clear: number) => (half + clear) / LONG;
+      const fits = (room: number, clear: number) => Math.max(0, room - clear) / LONG;
+      const between = (needs: number, room: number) =>
+        room < needs ? room : (needs + room) / 2;
+      const needsX = clears(c.width / 2, CLEAR_X);
+      const needsY = clears(c.height / 2, CLEAR_Y);
+      const roomX = fits(width / 2, CLEAR_X);
+      const roomY = fits(Math.min(cy, height - cy), CLEAR_Y);
+      layer.style.setProperty('--ring-cy', `${Math.round(cy)}px`);
+      layer.style.setProperty('--ring-x', `${Math.round(between(needsX, roomX))}px`);
+      layer.style.setProperty('--ring-y', `${Math.round(between(needsY, roomY))}px`);
+      // A window with no room for the ring gets no drawing. Both cliffs are
+      // real and neither is a width: at 1024x640 the copy fills the hero top
+      // to bottom, and at 820 wide the card row leaves no gutter to stand a
+      // node in. Measured rather than declared as a breakpoint, because what
+      // decides it is the copy's own size, and a breakpoint would have to
+      // guess that. Hidden rather than unmounted, so the boxes this pass
+      // reads stay measurable and the ring comes back when the room does.
+      wrap.dataset.ring = roomX >= needsX && roomY >= needsY ? 'clear' : 'crowded';
+    };
+
     const measure = () => {
       const ratio = Math.min(window.devicePixelRatio || 1, 2);
       const box = canvas.getBoundingClientRect();
@@ -207,25 +275,28 @@ export default function NetworkWeb({
       canvas.width = Math.round(width * ratio);
       canvas.height = Math.round(height * ratio);
       context.setTransform(ratio, 0, 0, ratio, 0, 0);
+      // Before the icons are read, because it is what moves them.
+      size(box);
       // Measured off the icons rather than computed from the percentages. A
       // node is an icon above a label, centred on its own box, so the point
       // the percentages name is the middle of that pair: below the icon, in
       // the gap above the word. Light centred there lit the label and left
       // the mark it was meant to be lighting hanging over its top edge. The
-      // percentages stay as the fallback for a node whose icon has not laid
-      // out yet.
+      // vertex stands in for a node whose icon has not laid out yet.
       places = icons.map((node, index) => {
         const mark = node.querySelector('.network-node__icon');
-        const p = PARTICIPANTS[index];
+        const vertex = VERTICES[index];
         const at = mark?.getBoundingClientRect();
-        // A zero box is a node the stylesheet is not laying out: a window
-        // both narrow and short drops the two at the foot, because there is
-        // no room left for them beside the gateway cards. Its percentage
-        // stands in, so the mesh keeps its shape and only the icon goes.
-        // Measuring the zero box instead would put the node at the top left
-        // corner of the page and run every one of its links there.
+        // A zero box is a node that is not laid out. Its vertex stands in on
+        // a ring of roughly the right size, so the mesh keeps its shape and
+        // only the icon goes. Measuring the zero box instead would put the
+        // node at the top left corner of the page and run every one of its
+        // links there.
         if (!at || !at.width) {
-          return {x: (p.x / 100) * width, y: (p.y / 100) * height};
+          return {
+            x: width / 2 + vertex.ux * width * 0.38,
+            y: height / 2 + vertex.uy * height * 0.4,
+          };
         }
         return {
           x: at.left + at.width / 2 - box.left,
@@ -579,9 +650,16 @@ export default function NetworkWeb({
 
     const onResize = () => measure();
     window.addEventListener('resize', onResize);
+    // The ring is sized off the copy, so it has to be re-measured whenever the
+    // copy changes shape and not only when the window does. A web font
+    // arriving re-wraps the statement, which moves the ring's centre and its
+    // height, and a resize listener would not hear about it.
+    const watch = copy ? new ResizeObserver(onResize) : null;
+    if (copy) watch?.observe(copy);
     window.addEventListener('pointermove', onPointer, {passive: true});
     return () => {
       cancelAnimationFrame(frame);
+      watch?.disconnect();
       window.removeEventListener('resize', onResize);
       window.removeEventListener('pointermove', onPointer);
     };
@@ -594,18 +672,22 @@ export default function NetworkWeb({
           documentation rather than an illustration of it. */}
       <canvas className="network-web__canvas" ref={canvasRef} aria-hidden="true" />
       <nav className="network-web__nodes" aria-label="Who takes part in ABDM">
-        {PARTICIPANTS.map(({id, label, Icon, x, y, small, foot}) => (
+        {PARTICIPANTS.map(({id, label, Icon, small}, index) => (
           <Link
             key={id}
             to={`/docs/hiecm/v3/concepts/participants/${id}`}
             data-participant={id}
-            className={`network-node${small ? '' : ' network-node--wide'}${
-              foot ? ' network-node--foot' : ''
-            }`}
-            // Custom properties rather than `left` and `top` directly: an
-            // inline property beats any rule, so a node placed this way could
-            // not be moved by a media query.
-            style={{'--x': `${x}%`, '--y': `${y}%`} as React.CSSProperties}>
+            className={`network-node${small ? '' : ' network-node--wide'}`}
+            // The vertex, not the position. The stylesheet owns the ring's
+            // centre and its two radii, because both have to answer to the
+            // copy in front of them; all a node carries is which way out of
+            // the centre it stands.
+            style={
+              {
+                '--ux': VERTICES[index].ux.toFixed(4),
+                '--uy': VERTICES[index].uy.toFixed(4),
+              } as React.CSSProperties
+            }>
             <Icon className="network-node__icon" strokeWidth={1.5} aria-hidden="true" />
             <span className="network-node__label">{label}</span>
           </Link>
