@@ -7,9 +7,8 @@ version: abdm-v3
 title: Get RSA Public Certificate
 summary: >
   Where you get the public key to encrypt an Aadhaar number, mobile
-  number, OTP or password: this call fetches NHA's RSA certificate, the
-  PEM public key used for M1 input encryption. Unproven on the sandbox:
-  it was never observed succeeding as of 2026-08-25.
+  number, OTP or password. The key arrives as base64 DER, not PEM, and
+  it is 4096-bit. Encrypt with RSA-OAEP and SHA-1 under it.
 sources:
   - file: catalogue/openapi/.raw/ABDM_M1_API_Swagger.yaml
     hash: sha256:14bbfcbe0fc38e13a485d2a8fcfd6dc6d84e89d4f2e6b743cb85a238a3c18873
@@ -71,10 +70,25 @@ public key as base64 DER (SubjectPublicKeyInfo, no PEM armour).
 {"publicKey": "MIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEAstWB95C5pHLXiYW59qyO..."}
 ```
 
+The key is 4096-bit. Add the PEM armour yourself before your crypto
+library will load it: a `-----BEGIN PUBLIC KEY-----` line, the base64
+wrapped at 64 characters per line, then `-----END PUBLIC KEY-----`.
+
+Encrypt under this key with RSA-OAEP, SHA-1 for both the digest and the
+mask generation function. See
+[why identifiers are encrypted](../concepts/encrypted-identifiers.md).
+
 ## When it goes wrong
 
 **Resolved, 2026-08-26.** The unproven state recorded on 2026-08-25 is settled: with a correct UTC `TIMESTAMP` the endpoint works. Every failure ever observed against it was the timestamp format, dressed up as a 404.
 
+- Your crypto library rejects the key. You passed the value straight
+  through without adding PEM armour. `publicKey` carries DER, whatever
+  the field name suggests.
+- The value encrypts without error and the receiving call refuses it.
+  Check the padding before the plaintext. PKCS#1 v1.5 and OAEP with
+  SHA-256 both encrypt cleanly here and are both refused there. See
+  [prove your encryption padding](../tests/m1-encryption-padding.md).
 - A `TIMESTAMP` in IST returned the `ABDM-1016` invalid timestamp rejection wrapped in an HTTP 404. The 404 is misleading: the path is not the problem, the clock format is. Send the `TIMESTAMP` in UTC with milliseconds and a trailing `Z`. See [ABDM-1016](hiecm.error.abdm-1016).
 - An earlier guessed path, `/v1/phr/public/certificate`, returned a genuine 404: `{"code":"404","type":"Status report","message":"Not Found"}`. That path does not exist. Do not confuse its honest 404 with the misleading one above.
 - If you need an encrypted value on the sandbox today and this endpoint will not give you the key, [the encrypt helper](m1-encrypt-value.md) was observed working on the sandbox on 2026-08-25. It is a sandbox convenience only; it sends the plaintext to NHA.

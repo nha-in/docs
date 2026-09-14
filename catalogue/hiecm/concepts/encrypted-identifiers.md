@@ -6,9 +6,9 @@ milestone: M1
 version: abdm-v3
 title: Why identifiers are encrypted, and where to do it
 summary: >
-  An Aadhaar number, a mobile number or an OTP is RSA encrypted against
-  NHA's public key before it is sent, and doing that remotely defeats
-  the point.
+  An Aadhaar number, a mobile number or an OTP is encrypted with
+  RSA-OAEP and SHA-1 against the published certificate before it is
+  sent, and doing that remotely defeats the point.
 sources:
   - file: ABDM Sandbox/ABDM/M1 ABHA Collection.postman_collection.json
     status: not-yet-hashed
@@ -17,6 +17,9 @@ verified:
   status: unverified
 related:
   decisions: [hiecm.decision.encrypt-locally]
+  concepts: [hiecm.concept.input-encryption]
+  endpoints: [hiecm.endpoint.m1-login-request-otp, hiecm.endpoint.m1-get-public-certificate]
+  tests: [hiecm.test.m1-encryption-padding]
 ---
 
 # Why identifiers are encrypted, and where to do it
@@ -60,6 +63,19 @@ NHA's collection also contains a hosted helper that encrypts a value for
 you, and two third party encryption websites. Those are conveniences for
 trying a flow by hand.
 
+### The padding
+
+Encrypt with RSA-OAEP, using SHA-1 for both the digest and the mask
+generation function. In Java that transformation is
+`RSA/ECB/OAEPWithSHA-1AndMGF1Padding`. In Node it is
+`crypto.publicEncrypt({ key, padding: crypto.constants.RSA_PKCS1_OAEP_PADDING, oaepHash: 'sha1' }, ...)`.
+Send the result base64 encoded.
+
+PKCS#1 v1.5 is refused. So is OAEP with SHA-256. Neither refusal names
+encryption, so a wrong padding reads back to you as a wrong value. The
+call for each language, and the padding the older API families take,
+is in [encrypting sensitive inputs](input-encryption.md).
+
 ## How you know it worked
 
 You have understood this when you can answer both of these.
@@ -68,6 +84,16 @@ You have understood this when you can answer both of these.
   1. Where in your architecture does the raw Aadhaar number exist, and for
      how long?
   2. What is wrong with calling a remote endpoint to encrypt it?
+
+You have proved it when a call accepts your ciphertext. Send the
+encrypted value to `POST /v3/profile/login/request/otp` as `loginId`,
+with `loginHint: "mobile"`. You receive 200, a `txnId`, and a message
+naming the last four digits of the mobile. An OTP arrives on that
+phone.
+
+`400 {"loginId": "Invalid Mobile Number"}` for a mobile number you know
+is correct means your padding is wrong, not your number. See
+[prove your encryption padding](../tests/m1-encryption-padding.md).
 
 ## When it goes wrong
 
@@ -79,9 +105,14 @@ pointed at third party websites. Encrypt locally.
 Logging the plain value before encryption. That is the same leak, moved
 into your log store.
 
-Encrypting the right value in the wrong shape. Two refusals read almost
-the same and mean different things. `"loginId": "Invalid LoginId"` means
-the service could not decrypt what you sent, which is a key or a padding
-problem. `"loginId": "LoginId is invalid"` means it decrypted and then
-failed a format rule, so the plaintext shape is wrong.
+Encrypting the right value in the wrong shape. `"loginId": "LoginId is
+invalid"` means the value decrypted and the plaintext failed a format
+rule. An ABHA number keeps its dashes, `NN-NNNN-NNNN-NNNN`.
+
+Reading `"loginId": "Invalid LoginId"` as a decryption failure.
+`/v3/enrollment/request/otp` returns that body for plaintext, for an
+empty string, for base64 that is not ciphertext, and for a correctly
+encrypted value alike, so on that endpoint it tells you nothing. Test
+encryption against `/v3/profile/login/request/otp` instead, which
+answers differently for a value it could use and one it could not.
 

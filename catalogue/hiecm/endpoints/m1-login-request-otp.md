@@ -18,7 +18,8 @@ verified:
 related:
   errors: [hiecm.error.abdm-2402, hiecm.error.abdm-2404, hiecm.error.abdm-2500, hiecm.error.abdm-9999]
   flows: [hiecm.flow.m1-login-by-mobile, hiecm.flow.m1-find-abha]
-  concepts: [hiecm.concept.gateway-session]
+  concepts: [hiecm.concept.gateway-session, hiecm.concept.encrypted-identifiers, hiecm.concept.input-encryption]
+  tests: [hiecm.test.m1-encryption-padding]
 skills:
   - hiecm-m1-build
 ---
@@ -93,10 +94,12 @@ NHA's own collection records responses for this operation at status 200, 401, an
 
 Read the body rather than only the status. Several of NHA's saved failures return a body that names the problem while the status alone does not.
 
-The two refusals below were observed on the sandbox on 2026-09-11 by an
-integrator and reported to this portal, not run from this repository, so
-the atom stays unverified. When you run the whole call here, record the
-response and set `verified.status` accordingly.
+This call is also how you prove your encryption. Send a mobile number
+you control, encrypted with RSA-OAEP and SHA-1 under the published
+certificate. A right padding returns 200 with a `txnId` and a message
+naming the last four digits. A wrong padding returns
+`400 {"loginId": "Invalid Mobile Number"}` for a number you know is
+correct. See [prove your encryption padding](../tests/m1-encryption-padding.md).
 
 ## When it goes wrong
 
@@ -104,8 +107,10 @@ response and set `verified.status` accordingly.
   `400 {"loginId": "LoginId is invalid"}`, observed on the sandbox on
   2026-09-11. Put the dashes back and send it again.
 - `400 {"loginId": "Invalid LoginId"}` is a different failure with a
-  similar message: the service could not decrypt the value at all, which
-  is a key or a padding problem rather than a format one.
+  similar message. On this endpoint it means the value was refused
+  without a format reason: check the padding and the key. On
+  `/v3/enrollment/request/otp` the same body is returned for every
+  input, so it carries no cause there.
 - `404 {"error": {"code": "ABDM-1114", "message": "User not found."}}`
   means the value decrypted and passed its format check, and no account
   holds that number.
