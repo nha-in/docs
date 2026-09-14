@@ -38,7 +38,7 @@ Generated from the specifications. Every scheme and header below is declared in 
 | `REQUEST-ID` | yes | Unique UUID v4 per request. Used for idempotency and distributed tracing. Generate a fresh UUID for every call. |
 | `TIMESTAMP` | yes | ISO 8601 UTC timestamp of the request. |
 | `X-token` | no | The user scoped token returned when a person logs in or verifies an OTP. Profile calls act on one account, so they need this in addition to the gateway token. Required on the calls that read or change a specific person's account. The value carries a `Bearer ` prefix, exactly like the Authorization header. Sending the bare token reads as an invalid token error. |
-| `BENEFIT_NAME` | no | The benefit scheme an enrolment belongs to. Send `healthid api` on the enrol and search calls, and `healthid` on the login OTP and verify calls under Find ABHA. On the enrolment OTP request the header is present but explicitly disabled, so it is not sent there. NHA's files spell this header four different ways and use scheme values beyond healthid. Which spelling each endpoint accepts is not confirmed against the sandbox. The Conventions page for this module lists all four. |
+| `BENEFIT_NAME` | no | The benefit scheme an enrolment belongs to. Send `healthid api` on the enrol and search calls, and `healthid` on the login OTP and verify calls under Find ABHA. On the enrolment OTP request the header is present but explicitly disabled, so it is not sent there. A login OTP request sent with `healthid api` rather than `healthid` was accepted on the sandbox on 2026-09-11, so the login calls may take either. NHA's files spell this header four different ways and use scheme values beyond healthid. Which spelling each endpoint accepts is not confirmed against the sandbox. The Conventions page for this module lists all four. |
 | `T-token` | no | The transaction token that carries state between the two halves of a login. Returned by the verify call and sent back on the account selection call. Like X-token, the value carries a `Bearer ` prefix in every one of the recorded requests. |
 | `R-token` | no | The refresh token, sent when asking for a new user token without making the person log in again. Like X-token, the value carries a `Bearer ` prefix. |
 | `aadhaarNumber` | yes | The person's Aadhaar number, RSA encrypted against the ABDM public key and sent as a header rather than in a body. The recorded value is an encrypted blob, never the raw number: encrypt it the same way as an enrolment `loginId`. See the input encryption concept atom for the padding rules. |
@@ -58,8 +58,8 @@ Generated from the specifications. Every scheme and header below is declared in 
 | `TIMESTAMP` | yes | The current time in ISO 8601, UTC, with milliseconds and a `Z` suffix, from a synchronised clock. The sandbox rejects IST and accepts UTC. |
 | `X-CM-ID` | yes | Which consent manager you are talking to. `sbx` on the sandbox and `abdm` in production. A dedicated error code exists for an invalid value here, which tells you how often it is wrong. |
 | `X-Link-Token` | yes | Short-lived link token generated via POST /hiecm/v3/token/generate-token |
-| `X-HIP-ID` | yes | Identifier of the Health Information Provider the request or callback belongs to. |
-| `X-HIU-ID` | yes | Identifier of the Health Information User the request or callback belongs to. |
+| `X-HIP-ID` | yes | Identifier of the Health Information Provider the request or callback belongs to. This is per facility, and it is what a callback arriving at your one bridge URL is routed on. The bridge URL and your credentials belong to the integration, not to the facility. |
+| `X-HIU-ID` | yes | Identifier of the Health Information User the request or callback belongs to. This is per facility, and it is what a callback arriving at your one bridge URL is routed on. |
 
 ## M3 Consent and fetching
 
@@ -72,7 +72,7 @@ Generated from the specifications. Every scheme and header below is declared in 
 | `REQUEST-ID` | yes | A fresh UUID that you generate for this request. The callback that answers it carries the same value. In M3 a single consent can produce several callbacks, so keep the mapping from request id to consent request id rather than relying on ordering. |
 | `TIMESTAMP` | yes | The current time in ISO 8601 UTC, with milliseconds and the `Z` suffix. The gateway rejects a request whose timestamp has drifted too far from its own clock, so take this from a synchronised clock rather than from a local one. |
 | `X-CM-ID` | yes | Which consent manager you are talking to. `sbx` on the sandbox and `abdm` in production. |
-| `X-HIU-ID` | yes | Identifier of the health information user the request or callback is intended for. |
+| `X-HIU-ID` | yes | Identifier of the health information user the request or callback is intended for. This is per facility, and it is what a callback arriving at your one bridge URL is routed on. The bridge URL and your credentials belong to the integration, not to the facility. |
 
 ## M4 HPR and HFR
 

@@ -1181,6 +1181,14 @@ paths:
         Starts a login. `loginHint` selects what the person is identifying
         themselves with: `mobile`, `aadhaar` or `abha-number`. As everywhere in
         M1, `loginId` is encrypted rather than raw.
+
+        The shape you encrypt matters, because the service validates the
+        plaintext after it decrypts. On `abha-number` that is the fourteen
+        digits with their dashes, `NN-NNNN-NNNN-NNNN`, for example
+        `91-1234-5678-9015`. The bare digits are refused with
+        `400 {"loginId": "LoginId is invalid"}`, observed on the sandbox on
+        11 September 2026. On `mobile` the plaintext is ten digits with no
+        country code, and on `aadhaar` twelve digits with no spaces.
       parameters:
       - $ref: '#/components/parameters/RequestId'
       - $ref: '#/components/parameters/Timestamp'
@@ -1198,8 +1206,20 @@ paths:
                     type: string
                 loginHint:
                   type: string
+                  description: What the person is identifying themselves with.
+                  enum:
+                  - mobile
+                  - aadhaar
+                  - abha-number
                 loginId:
                   type: string
+                  description: |
+                    The identifier for that `loginHint`, RSA encrypted against
+                    the ABDM public certificate and base64 encoded. The
+                    plaintext shape is checked after decryption: an ABHA number
+                    is `NN-NNNN-NNNN-NNNN` with its dashes, a mobile number is
+                    ten digits with no country code, an Aadhaar number is
+                    twelve digits with no spaces.
                 otpSystem:
                   type: string
                 txnId:
@@ -1219,23 +1239,29 @@ paths:
                   loginHint: mobile
                   loginId: <ENCRYPTED_MOBILE_NUMBER>
                   otpSystem: abdm
-              login_abha_via_aadhaar_number:
-                summary: login abha via aadhaar number
+              login_abha_number_via_aadhaar_otp:
+                summary: login by ABHA number, Aadhaar OTP
+                description: |
+                  The plaintext behind the encrypted value keeps its dashes,
+                  for example `91-1234-5678-9015`.
                 value:
                   scope:
                   - abha-login
                   - aadhaar-verify
                   loginHint: abha-number
-                  loginId: <ABHA_NUMBER_ENCRYPTION>
+                  loginId: <ENCRYPTED_NN-NNNN-NNNN-NNNN>
                   otpSystem: aadhaar
-              login_via_abha_number_mobile_otp:
-                summary: login via abha number mobile otp
+              login_abha_number_via_mobile_otp:
+                summary: login by ABHA number, mobile OTP
+                description: |
+                  The plaintext behind the encrypted value keeps its dashes,
+                  for example `91-1234-5678-9015`.
                 value:
                   scope:
                   - abha-login
                   - mobile-verify
                   loginHint: abha-number
-                  loginId: <ENCRYPTED_A_B_H_A_NUMBER>
+                  loginId: <ENCRYPTED_NN-NNNN-NNNN-NNNN>
                   otpSystem: abdm
       responses:
         '200':
@@ -3676,6 +3702,8 @@ components:
       description: |
         The benefit scheme an enrolment belongs to. Send `healthid api` on the enrol and search calls, and `healthid` on the login OTP and verify calls under Find ABHA. On the enrolment OTP request the header is present but explicitly disabled, so it is not sent there.
 
+        A login OTP request sent with `healthid api` rather than `healthid` was accepted on the sandbox on 2026-09-11, so the login calls may take either.
+
         NHA's files spell this header four different ways and use scheme values beyond healthid. Which spelling each endpoint accepts is not confirmed against the sandbox. The Conventions page for this module lists all four.
       schema:
         type: string
@@ -5572,9 +5600,23 @@ components:
                 scope: Invalid Scope
                 timestamp: '2024-05-10 11:13:04'
             invalid_login_id:
+              summary: the value could not be decrypted
+              description: |
+                The key or the padding is wrong, or the value was never
+                encrypted.
               value:
                 loginId: Invalid LoginId
                 timestamp: '2024-05-10 11:15:14'
+            login_id_wrong_shape:
+              summary: the plaintext failed a format rule
+              description: |
+                It decrypted, and the shape was wrong. An ABHA number sent as
+                fourteen bare digits returns this; it needs its dashes,
+                `NN-NNNN-NNNN-NNNN`. Observed on the sandbox on 11 September
+                2026.
+              value:
+                loginId: LoginId is invalid
+                timestamp: '2026-09-11 16:15:00'
             invalid_login_hint:
               value:
                 loginHint: Invalid LoginHint
@@ -5660,6 +5702,18 @@ x-abdm-errors:
     ```
 
     Treat every key except `timestamp` as a field name. These always arrive as HTTP 400.
+
+    Two of these read almost the same and mean opposite halves of the same step.
+
+    | Body | What failed | What to change |
+    |---|---|---|
+    | `{"loginId": "Invalid LoginId"}` | The service could not decrypt the value | The key or the padding. Observed with the wrong padding on 2026-09-09 |
+    | `{"loginId": "LoginId is invalid"}` | It decrypted, then the plaintext failed a format rule | The plaintext shape. Observed with an ABHA number sent as 14 bare digits on 2026-09-11 |
+
+    The second is the one that costs an afternoon, because the value really was
+    encrypted and really was the right number. An ABHA number keeps its dashes,
+    `NN-NNNN-NNNN-NNNN`. The plaintext shape for every encrypted field is in
+    [encryption](/docs/hiecm/v3/concepts/encryption).
 
     ### Shape 4: the API gateway error
 

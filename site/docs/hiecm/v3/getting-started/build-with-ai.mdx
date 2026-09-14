@@ -50,6 +50,24 @@ One file per job, in three shapes. A module skill carries every endpoint, header
 
 <SkillPicker />
 
+## Prompting an agent to build against ABDM
+
+An agent with this site loaded still writes a plausible integration rather than a
+correct one, because the parts of ABDM that catch people are the parts a model
+cannot infer. Tell it these, and check its output against them.
+
+| Tell it | Because |
+| --- | --- |
+| Look the operation up here before writing the call | NHA's v3 differs from the v1 and v2 an agent was trained on. The MCP server above is this site answering live, so it cannot be recalling an older shape |
+| Identifiers are encrypted, and the plaintext has a shape | An agent encrypts what looks like the value. An ABHA number keeps its dashes, and the bare digits are refused. See [encryption](/docs/hiecm/v3/concepts/encryption) |
+| Callbacks are how the answer arrives, from M2 onward | Left alone, an agent writes a synchronous call and a response handler for a flow where the 202 means accepted and nothing else. See [the gateway](/docs/hiecm/v3/concepts/gateway) |
+| Do not invent an error code or an endpoint | Both exist here in full. An invented `ABDM-` code is indistinguishable from a real one until somebody hits it |
+| Aadhaar numbers, one time passwords and passwords never reach a log, a fixture or a test | An agent writing test data will otherwise put a real looking Aadhaar number in your repository |
+
+Point it at [Build it well](/docs/hiecm/v3/getting-started/build-it-well) for the
+handling rules themselves: what to validate, what each error means, what is safe
+to retry, and what the screen should say.
+
 ## Read this site as an agent
 
 export const ReadAsAgent = () => {
