@@ -45,18 +45,35 @@ NHA's collection also contains a hosted helper that encrypts a value for
 you, and two third party encryption websites. Those are conveniences for
 trying a flow by hand.
 
-#### The padding
+#### The padding comes with the key
 
-Encrypt with RSA-OAEP, using SHA-1 for both the digest and the mask
-generation function. In Java that transformation is
-`RSA/ECB/OAEPWithSHA-1AndMGF1Padding`. In Node it is
+The certificate response carries the algorithm next to the key:
+
+```response
+{
+  "publicKey": "<base64 DER>",
+  "encryptionAlgorithm": "RSA/ECB/OAEPWithSHA-1AndMGF1Padding"
+}
+```
+
+Read `encryptionAlgorithm` and encrypt with what it names. It is a Java
+transformation string, so translate it for your language rather than
+assuming: `RSA/ECB/OAEPWithSHA-1AndMGF1Padding` means RSA-OAEP with
+SHA-1 for both the digest and the mask generation function, which in
+Node is
 `crypto.publicEncrypt({ key, padding: crypto.constants.RSA_PKCS1_OAEP_PADDING, oaepHash: 'sha1' }, ...)`.
 Send the result base64 encoded.
 
-PKCS#1 v1.5 is refused. So is OAEP with SHA-256. Neither refusal names
-encryption, so a wrong padding reads back to you as a wrong value. The
-call for each language, and the padding the older API families take,
-is in encrypting sensitive inputs.
+Hard coding the padding works until the field changes, and then fails
+in a way that looks like a bad value rather than a stale constant. Code
+that reads the field survives a rotation. Code that cannot recognise
+what the field names should refuse to encrypt rather than fall back to
+a default.
+
+PKCS#1 v1.5 is refused today, and so is OAEP with SHA-256. Neither
+refusal names encryption. The call for each language, and the padding
+the older API families take, is in
+encrypting sensitive inputs.
 
 #### Encrypting sensitive inputs, Aadhaar, mobile, OTP and passwords (`hiecm.concept.input-encryption`)
 

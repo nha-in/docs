@@ -29,6 +29,12 @@ Do not write a parser that expects a single shape.
 
 The code lives at `error.code`. This comes from the ABHA service's own business logic.
 
+Do not compare that code with string equality. It is not always a clean
+token: a failed session call returned `{"error":{"code":"ABDM-9999: ",
+"message":"Invalid user credentials"}}`, with a trailing colon and space
+inside the code. Trim it and match on the `ABDM-nnnn` prefix, or the branch
+you wrote for that code never runs.
+
 ### Shape 2: the flat ABDM error
 
 ```json

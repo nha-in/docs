@@ -88,10 +88,12 @@ should read this shape instead.
 
 - You encrypt with this helper and the receiving call still refuses the
   value. This endpoint returns 256 byte ciphertext, so it holds a 2048
-  bit key, while
-  [the published certificate](m1-get-public-certificate.md) is
-  4096-bit. The two are not interchangeable. Encrypt under the
-  published certificate for the M1 enrolment and login calls.
+  bit key. That is the PHR login key, published at
+  [its own certificate endpoint](p1-get-certificate-public-key.md), and
+  not the 4096-bit key at
+  [the profile certificate endpoint](m1-get-public-certificate.md) that
+  the M1 enrolment and login calls want. Encrypt under the profile
+  certificate for those.
 - The clock is wrong and every call fails. See [ABDM-2402](hiecm.error.abdm-2402).
 - The `REQUEST-ID` is missing, malformed or reused. See [ABDM-2404](hiecm.error.abdm-2404).
 - No session token was sent. See [ABDM-2500](hiecm.error.abdm-2500).
