@@ -29,7 +29,7 @@ Open one when the work calls for it. This file is the map, not the material.
 - PKCS#1 v1.5 is refused, and so is OAEP with SHA-256. Neither refusal names encryption, so a wrong padding reads back as a wrong value.
 - More than one certificate is published and they are not interchangeable. `/v3/profile/public/certificate` is 4096-bit and `/v3/phr/app/login/public/certificate` is 2048-bit, both naming the same algorithm. Ciphertext length tells them apart: 512 bytes against 256. The helper at `/v3/phr/app/enrollment/encrypt` uses the 2048 bit key.
 - Every certificate arrives as bare base64 DER with no PEM armour, whatever the field name suggests. Add the armour, wrapping at 64 characters per line, before your library will load it.
-- Prove the padding before building a flow. `POST /v3/profile/login/request/otp` with `loginHint: "mobile"` returns 200 and a `txnId` when it is right, and `Invalid Mobile Number` when it is wrong. `/v3/enrollment/request/otp` refuses every input identically, so it cannot tell you.
+- Prove the padding before building a flow, with a mobile that is registered against an ABHA account. `POST /v3/profile/login/request/otp` with `loginHint: "mobile"` returns 200 and a `txnId` when the padding is right, and `Invalid Mobile Number` when it is wrong. The number has to be a real one: an unregistered number returns that same refusal whatever the padding, so it proves nothing. `/v3/enrollment/request/otp` refuses every input identically and cannot tell you either way.
 - One path serves several jobs. The `scope` array in the body picks which one, so read it before assuming an endpoint does one thing.
 
 ## Practices that hold across every call

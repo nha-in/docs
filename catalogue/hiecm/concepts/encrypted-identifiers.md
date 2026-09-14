@@ -122,8 +122,8 @@ naming the last four digits of the mobile. An OTP arrives on that
 phone.
 
 `400 {"loginId": "Invalid Mobile Number"}` for a mobile number you know
-is correct means your padding is wrong, not your number. See
-[prove your encryption padding](../tests/m1-encryption-padding.md).
+is registered means your padding is wrong, not your number. A number that is not registered returns the same refusal as bad ciphertext does, so the value you send has to be a real one.
+See [prove your encryption padding](../tests/m1-encryption-padding.md).
 
 ## When it goes wrong
 
@@ -142,7 +142,14 @@ rule. An ABHA number keeps its dashes, `NN-NNNN-NNNN-NNNN`.
 Reading `"loginId": "Invalid LoginId"` as a decryption failure.
 `/v3/enrollment/request/otp` returns that body for plaintext, for an
 empty string, for base64 that is not ciphertext, and for a correctly
-encrypted value alike, so on that endpoint it tells you nothing. Test
-encryption against `/v3/profile/login/request/otp` instead, which
-answers differently for a value it could use and one it could not.
+encrypted value alike, so on that endpoint it tells you nothing.
+
+Testing your padding with a number nobody has registered. Send a
+correctly encrypted `9999999999` to
+`/v3/profile/login/request/otp` and you get
+`400 {"loginId": "Invalid Mobile Number"}`, the same body a wrong
+padding produces. That endpoint separates a usable value from an
+unusable one only when the plaintext is a mobile that actually exists:
+then the right padding returns 200 and a `txnId`, and a wrong one
+returns the refusal. Use a number you hold. A number that is not registered returns the same refusal as bad ciphertext does, so the value you send has to be a real one.
 

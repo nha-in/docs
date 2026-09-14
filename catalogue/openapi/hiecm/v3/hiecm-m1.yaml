@@ -5731,10 +5731,17 @@ x-abdm-errors:
     included, which is how a wrong padding survives a test that looks thorough.
 
     Test encryption against `POST /v3/profile/login/request/otp` with
-    `loginHint: "mobile"` instead. It answers differently for a value it could
-    use and one it could not: 200 with a `txnId` when the padding is right,
-    `Invalid Mobile Number` when it is wrong. The padding is RSA-OAEP with
-    SHA-1. The plaintext shape for every encrypted field is in
+    `loginHint: "mobile"` instead, and with a number that is registered against
+    an ABHA account. The 200 is the signal: a right padding returns it with a
+    `txnId`, a wrong one returns `Invalid Mobile Number`.
+
+    The number has to be a real one. A correctly encrypted `9999999999` returns
+    that same `Invalid Mobile Number`, because the value decrypted fine and
+    named nobody. With an unregistered number this endpoint is as uninformative
+    as the enrolment one.
+
+    The algorithm is published: read `encryptionAlgorithm` from the certificate
+    response. The plaintext shape for every encrypted field is in
     [encryption](/docs/hiecm/v3/concepts/encryption).
 
     ### Shape 4: the API gateway error

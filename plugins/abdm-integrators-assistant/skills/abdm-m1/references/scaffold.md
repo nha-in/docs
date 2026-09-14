@@ -207,6 +207,12 @@ Run this call against `/v3/profile/login/request/otp` and nowhere else.
 `/v3/enrollment/request/otp` refuses every input with the same body, so
 a padding matrix run against it excludes the correct answer.
 
+The login endpoint only tells them apart when the plaintext is a
+registered number. Sending a correctly encrypted `9999999999` there
+returns `400 {"loginId": "Invalid Mobile Number"}`, exactly what a
+wrong padding returns. The 200 is the signal, and only a real number
+can produce it.
+
 **Exit condition (Observe until this is true)**
 
 You receive 200 and a body carrying `txnId` and a message naming the
