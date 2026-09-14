@@ -20,6 +20,7 @@
             "https://dev.abdm.gov.in/api/hiecm/data-flow/v3/health-information/request",
             "https://dev.abdm.gov.in/api/hiecm/data-flow/v3/health-information/notify"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Test: The System should have a provision to find the patient using ABHA Number or ABHA Address Steps: 1. Enter ABHA Address/ ABHA Number 2. Select/Verification Find Patient(Search/Verification with ABHA number or ABHA address)"
@@ -38,6 +39,7 @@
             "https://dev.abdm.gov.in/api/hiecm/data-flow/v3/health-information/request",
             "https://dev.abdm.gov.in/api/hiecm/data-flow/v3/health-information/notify"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Test: HIU creates consent request for health records Steps: 1. Enter purpose for consent request 2. Enter duration and expiry of consent request 3. Enter Health Info type (all or any of the 7 Health Info types) 4. Initiate Request"
@@ -56,6 +58,7 @@
             "https://dev.abdm.gov.in/api/hiecm/data-flow/v3/health-information/request",
             "https://dev.abdm.gov.in/api/hiecm/data-flow/v3/health-information/notify"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Test: Once the consent request created then notification goes to the patient patient patient PHR app Steps: 1. Patient logs in to patient patient PHR app. 2. Check if consent request has been recieved on the patient patient PHR app 3. Approve Consent or Deny Consent"
@@ -74,6 +77,7 @@
             "https://dev.abdm.gov.in/api/hiecm/data-flow/v3/health-information/request",
             "https://dev.abdm.gov.in/api/hiecm/data-flow/v3/health-information/notify"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Test: The system should be able to view the list of consent requests inititated for patient. Steps: 1. List of consent requests should include - ABHA number/address, patient name, date of creation, date of expiry and status of request"
@@ -92,6 +96,7 @@
             "https://dev.abdm.gov.in/api/hiecm/data-flow/v3/health-information/request",
             "https://dev.abdm.gov.in/api/hiecm/data-flow/v3/health-information/notify"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Test: The HIU system should not fetch health data for a denied consent request Steps: 1. Deny Consent Request on patient patient patient PHR app 2. Check if data is accessible on the HIU application Kindly Note: Display the timestamp for the Denied consent request"
@@ -110,6 +115,7 @@
             "https://dev.abdm.gov.in/api/hiecm/data-flow/v3/health-information/request",
             "https://dev.abdm.gov.in/api/hiecm/data-flow/v3/health-information/notify"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Test: The HIU system would fetch health data for the approved consent request. When the request has been edited with HI Types, Health Infor from date, Health Info To date and Expiry date with time then the update request information should be visible in HIU Portal. Kindly Note: Display the timestamp for the Grant consent request"
@@ -128,6 +134,7 @@
             "https://dev.abdm.gov.in/api/hiecm/data-flow/v3/health-information/request",
             "https://dev.abdm.gov.in/api/hiecm/data-flow/v3/health-information/notify"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Test: Fetch health data for (HI Type = DiagnostocReport Structured/Un-Structured) Steps: 1. Approve Consent Request on patient patient patient PHR app 2. Check if data is accessible on the HIU application 3. Integrator to dispclay the FHIR bundle for that health record."
@@ -146,6 +153,7 @@
             "https://dev.abdm.gov.in/api/hiecm/data-flow/v3/health-information/request",
             "https://dev.abdm.gov.in/api/hiecm/data-flow/v3/health-information/notify"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Test: Fetch health data for (HI Type = Prescription-Structured/Un-Structured) Steps: 1. Approve Consent Request on patient patient patient PHR app 2. Check if data is accessible on the HIU application 3. Integrator to dispclay the FHIR bundle for that health record."
@@ -164,6 +172,7 @@
             "https://dev.abdm.gov.in/api/hiecm/data-flow/v3/health-information/request",
             "https://dev.abdm.gov.in/api/hiecm/data-flow/v3/health-information/notify"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Test: Fetch health data for (HI Type = DischargeSummary-Structured/Un-Structured) Steps: 1. Approve Consent Request on patient patient patient PHR app 2. Check if data is accessible on the HIU application 3. Integrator to dispclay the FHIR bundle for that health record."
@@ -182,6 +191,7 @@
             "https://dev.abdm.gov.in/api/hiecm/data-flow/v3/health-information/request",
             "https://dev.abdm.gov.in/api/hiecm/data-flow/v3/health-information/notify"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Test: Fetch health data for (HI Type = CosultingNote-Structured/Un-Structured) Steps: 1. Approve Consent Request on patient patient patient PHR app 2. Check if data is accessible on the HIU application 3. Integrator to dispclay the FHIR bundle for that health record."
@@ -200,6 +210,7 @@
             "https://dev.abdm.gov.in/api/hiecm/data-flow/v3/health-information/request",
             "https://dev.abdm.gov.in/api/hiecm/data-flow/v3/health-information/notify"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Test: Fetch health data for (HI Type = Immunization record-Structured/Un-Structured) Steps: 1. Approve Consent Request on patient patient patient PHR app 2. Check if data is accessible on the HIU application. 3. Integrator to dispclay the FHIR bundle for that health record."
@@ -218,6 +229,7 @@
             "https://dev.abdm.gov.in/api/hiecm/data-flow/v3/health-information/request",
             "https://dev.abdm.gov.in/api/hiecm/data-flow/v3/health-information/notify"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Test: Fetch health data for (HI Type = Health Record-Structured/Un-Structured) Steps: 1. Approve Consent Request on patient patient patient PHR app 2. Check if data is accessible on the HIU application 3. Integrator to dispclay the FHIR bundle for that health record."
@@ -236,6 +248,7 @@
             "https://dev.abdm.gov.in/api/hiecm/data-flow/v3/health-information/request",
             "https://dev.abdm.gov.in/api/hiecm/data-flow/v3/health-information/notify"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Test: Fetch health data for (HI Type = Wellness Record-Structured/Un-Structured) Steps: 1. Approve Consent Request on patient patient patient PHR app 2. Check if data is accessible on the HIU application 3. Integrator to dispclay the FHIR bundle for that health record."
@@ -253,6 +266,7 @@
           "functionality": "Revoke Consent",
           "expected": "The patient patient PHR app user should have an option to revoke consent",
           "apis": [],
+          "apisNote": "No API",
           "api": null,
           "webhook": null,
           "detail": "Applies to: patient patient PHR apps. Test: The patient patient PHR app should provide an option to revoke consent. Steps: 1. Login to patient patient PHR app 2. Revoke consent for one HIU 3. Check if health record is visible in HIU application Kindly Note: Display the timestamp for the revoked consent request"
@@ -264,6 +278,7 @@
           "functionality": "Revoke Consent",
           "expected": "The health record should not be available to the HIU application after consent is revoked. Consent request list should be updated.",
           "apis": [],
+          "apisNote": "No API",
           "api": null,
           "webhook": null,
           "detail": "Applies to: HIU. Test: HIUs should not be able to view health records if the consent is revoked. Steps: 1. Check list of consent requests to view revoked consents. 2. Check if health record is visible in case the consent is revoked. 3. The consent list must be updated with consent which are revoked."
@@ -281,6 +296,7 @@
           "functionality": "Consent Expiry",
           "expected": "HIUs should not be able to view health records after expiry of consent. Consent request list should be updated.",
           "apis": [],
+          "apisNote": "No API",
           "api": null,
           "webhook": null,
           "detail": "Test: The HIU should not be able to view the health data of an expired consent request Steps: 1. Provide consent with a short expiry period 2. Check status of consent after expiry 3. Check if health record is visible to HIU after consent expiry. 3. The consent list must be updated with consent which are expired. Kindly Note: Display the timestamp for the Expired consent request"
@@ -293,7 +309,9 @@
       "rows": [
         {
           "condition": "",
-          "apis": [],
+          "apis": [
+            "https://dev.abdm.gov.in/api/hiecm/consent/v3/request/init"
+          ],
           "id": "CNS_01",
           "type": "Portal check",
           "functionality": "Raise a consent request for a patient's previous records",
@@ -307,11 +325,16 @@
             "method": "POST",
             "path": "/api/v3/hiu/consent/request/on-init"
           },
-          "detail": "Not an NHA test case. It sat under 'Consent request'. Name the patient by ABHA address, give the purpose of use code, the HI types wanted and the from and to dates. The result arrives on the callback, not in the response body. Store the request id: every later consent step quotes it. Needs sandbox credentials, an access token, a registered callback URL the gateway can reach, and a patient with an ABHA address holding at least one record at a HIP. Without that last one a request can be granted and still return no records, and you cannot tell a working integration from a broken one. NHA's M3 document publishes every request and response as a screenshot, so no field list and no HTTP method converted for this step."
+          "detail": "Not an NHA test case. It sat under 'Consent request'. Name the patient by ABHA address, give the purpose of use code, the HI types wanted and the from and to dates. The result arrives on the callback, not in the response body. Store the request id: every later consent step quotes it. Needs sandbox credentials, an access token, a registered callback URL the gateway can reach, and a patient with an ABHA address holding at least one record at a HIP. Without that last one a request can be granted and still return no records, and you cannot tell a working integration from a broken one. NHA's M3 document publishes every request and response as a screenshot, so no field list and no HTTP method converted for this step.",
+          "atoms": [
+            "hiecm.endpoint.m3-consent-request-init"
+          ]
         },
         {
           "condition": "",
-          "apis": [],
+          "apis": [
+            "https://dev.abdm.gov.in/api/hiecm/consent/v3/request/status"
+          ],
           "id": "CNS_02",
           "type": "Portal check",
           "functionality": "Poll the request status before the patient acts",
@@ -325,11 +348,16 @@
             "method": "POST",
             "path": null
           },
-          "detail": "Not an NHA test case. It sat under 'Consent request'. Give the request id. NHA gives three states: Requested, the patient has not responded yet; Granted, the patient approved; Denied, the patient refused. The status call exists because the flow is asynchronous, so use it rather than waiting on a callback that may not come. The on-status callback path is the one path in this sequence NHA's document does not state."
+          "detail": "Not an NHA test case. It sat under 'Consent request'. Give the request id. NHA gives three states: Requested, the patient has not responded yet; Granted, the patient approved; Denied, the patient refused. The status call exists because the flow is asynchronous, so use it rather than waiting on a callback that may not come. The on-status callback path is the one path in this sequence NHA's document does not state.",
+          "atoms": [
+            "hiecm.endpoint.m3-consent-request-status"
+          ]
         },
         {
           "condition": "",
-          "apis": [],
+          "apis": [
+            "https://dev.abdm.gov.in/api/hiecm/consent/v3/request/hiu/on-notify"
+          ],
           "id": "CNS_03",
           "type": "Portal check",
           "functionality": "Handle a consent request that produces no on-init callback at all",
@@ -343,11 +371,16 @@
             "method": "POST",
             "path": "/api/v3/hiu/consent/request/on-init"
           },
-          "detail": "Not an NHA test case. It sat under 'Consent request'. Most M3 results arrive at your callback URL, not in a response body. A consent request that is accepted and never calls back is a registration or reachability fault, not a consent fault. This case breaks in production if you skip it in sandbox."
+          "detail": "Not an NHA test case. It sat under 'Consent request'. Most M3 results arrive at your callback URL, not in a response body. A consent request that is accepted and never calls back is a registration or reachability fault, not a consent fault. This case breaks in production if you skip it in sandbox.",
+          "atoms": [
+            "hiecm.endpoint.m3-consent-hiu-on-notify"
+          ]
         },
         {
           "condition": "",
-          "apis": [],
+          "apis": [
+            "https://dev.abdm.gov.in/api/hiecm/consent/v3/request/init"
+          ],
           "id": "CNS_04",
           "type": "Portal check",
           "functionality": "Send one consent request per purpose of use code you will use in production",
@@ -361,11 +394,16 @@
             "method": "POST",
             "path": "/api/v3/hiu/consent/request/on-init"
           },
-          "detail": "Not an NHA test case. It sat under 'Consent request'. The purpose of use says why you want the health information. NHA takes six codes from the HL7 v3 PurposeOfUse value set: CAREMGT for care management, BTG for break the glass, PUBHLTH for public health, HPAYMT for healthcare payment, DSRCH for disease specific healthcare research and PATRQT for self-requested. A code you never send in sandbox is a code you have never tested."
+          "detail": "Not an NHA test case. It sat under 'Consent request'. The purpose of use says why you want the health information. NHA takes six codes from the HL7 v3 PurposeOfUse value set: CAREMGT for care management, BTG for break the glass, PUBHLTH for public health, HPAYMT for healthcare payment, DSRCH for disease specific healthcare research and PATRQT for self-requested. A code you never send in sandbox is a code you have never tested.",
+          "atoms": [
+            "hiecm.endpoint.m3-consent-request-init"
+          ]
         },
         {
           "condition": "",
-          "apis": [],
+          "apis": [
+            "https://dev.abdm.gov.in/api/hiecm/consent/v3/request/init"
+          ],
           "id": "CNS_05",
           "type": "Portal check",
           "functionality": "Send one consent request per HI type you will display",
@@ -379,11 +417,16 @@
             "method": "POST",
             "path": "/api/v3/hiu/consent/request/on-init"
           },
-          "detail": "Not an NHA test case. It sat under 'Consent request'. NHA supports seven HI types as of writing: Prescription, DiagnosticReport, OPConsultation, DischargeSummary, ImmunizationRecord, HealthDocumentRecord and WellnessRecord. Ask for the types you will show. A request for everything is easier for the patient to refuse. A type you never send in sandbox is a type you have never tested."
+          "detail": "Not an NHA test case. It sat under 'Consent request'. NHA supports seven HI types as of writing: Prescription, DiagnosticReport, OPConsultation, DischargeSummary, ImmunizationRecord, HealthDocumentRecord and WellnessRecord. Ask for the types you will show. A request for everything is easier for the patient to refuse. A type you never send in sandbox is a type you have never tested.",
+          "atoms": [
+            "hiecm.endpoint.m3-consent-request-init"
+          ]
         },
         {
           "condition": "",
-          "apis": [],
+          "apis": [
+            "https://dev.abdm.gov.in/api/hiecm/consent/v3/request/hiu/on-notify"
+          ],
           "id": "GRT_01",
           "type": "Portal check",
           "functionality": "Receive a grant and acknowledge the consent artefact ids",
@@ -397,11 +440,16 @@
             "method": "POST",
             "path": "/api/v3/hiu/consent/request/notify"
           },
-          "detail": "Not an NHA test case. It sat under 'Consent grant and denial'. There is no API for the grant itself. The patient acts in their PHR app and sets an expiry date and time. The notify callback carries every consent artefact id created against the request. Acknowledge with the consent artefact id and the request id. The gateway separately notifies the record holder at `/api/v3/consent/request/hip/notify` with all care context references, which is why a HIP accepts your later data request. NHA's document corrects the bridge URL for the HIU notification to `POST {hiuBridgeUrl}/v0.5/consents/hiu/notify`, hosted on the bridge base URL registered for that participant."
+          "detail": "Not an NHA test case. It sat under 'Consent grant and denial'. There is no API for the grant itself. The patient acts in their PHR app and sets an expiry date and time. The notify callback carries every consent artefact id created against the request. Acknowledge with the consent artefact id and the request id. The gateway separately notifies the record holder at `/api/v3/consent/request/hip/notify` with all care context references, which is why a HIP accepts your later data request. NHA's document corrects the bridge URL for the HIU notification to `POST {hiuBridgeUrl}/v0.5/consents/hiu/notify`, hosted on the bridge base URL registered for that participant.",
+          "atoms": [
+            "hiecm.endpoint.m3-consent-hiu-on-notify"
+          ]
         },
         {
           "condition": "",
-          "apis": [],
+          "apis": [
+            "https://dev.abdm.gov.in/api/hiecm/consent/v3/request/hiu/on-notify"
+          ],
           "id": "GRT_02",
           "type": "Portal check",
           "functionality": "Handle a denial on a second request",
@@ -411,11 +459,16 @@
             "method": "POST",
             "path": "/api/v3/hiu/consent/request/notify"
           },
-          "detail": "Not an NHA test case. It sat under 'Consent grant and denial'. A denial gives you a status and nothing else. There is no partial result to fall back on, and no preview state in M3: before consent the doctor's console shows nothing. Your system stops here rather than retrying the same request."
+          "detail": "Not an NHA test case. It sat under 'Consent grant and denial'. A denial gives you a status and nothing else. There is no partial result to fall back on, and no preview state in M3: before consent the doctor's console shows nothing. Your system stops here rather than retrying the same request.",
+          "atoms": [
+            "hiecm.endpoint.m3-consent-hiu-on-notify"
+          ]
         },
         {
           "condition": "",
-          "apis": [],
+          "apis": [
+            "https://dev.abdm.gov.in/api/hiecm/consent/v3/request/hiu/on-notify"
+          ],
           "id": "GRT_03",
           "type": "Portal check",
           "functionality": "Handle a grant that produces more than one artefact",
@@ -429,11 +482,16 @@
             "method": "POST",
             "path": "/api/v3/hiu/consent/request/notify"
           },
-          "detail": "Not an NHA test case. It sat under 'Consent grant and denial'. One consent request can produce several artefacts, one per record holder. Records held at two hospitals produce two artefacts. Handling only the first is a common bug, and it breaks in production if you skip it in sandbox."
+          "detail": "Not an NHA test case. It sat under 'Consent grant and denial'. One consent request can produce several artefacts, one per record holder. Records held at two hospitals produce two artefacts. Handling only the first is a common bug, and it breaks in production if you skip it in sandbox.",
+          "atoms": [
+            "hiecm.endpoint.m3-consent-hiu-on-notify"
+          ]
         },
         {
           "condition": "",
-          "apis": [],
+          "apis": [
+            "https://dev.abdm.gov.in/api/hiecm/consent/v3/fetch"
+          ],
           "id": "ART_01",
           "type": "Portal check",
           "functionality": "Fetch a consent artefact by id",
@@ -447,11 +505,16 @@
             "method": "POST",
             "path": "/api/v3/hiu/consent/on-fetch"
           },
-          "detail": "Not an NHA test case. It sat under 'Consent artefact handling'. The artefact is the approved permission: who, what, why, which date range, until when. NHA describes the on-fetch payload as carrying the patient's health information as permitted by the consent. No artefact, no records."
+          "detail": "Not an NHA test case. It sat under 'Consent artefact handling'. The artefact is the approved permission: who, what, why, which date range, until when. NHA describes the on-fetch payload as carrying the patient's health information as permitted by the consent. No artefact, no records.",
+          "atoms": [
+            "hiecm.endpoint.m3-consent-fetch"
+          ]
         },
         {
           "condition": "",
-          "apis": [],
+          "apis": [
+            "https://dev.abdm.gov.in/api/hiecm/consent/v3/fetch"
+          ],
           "id": "ART_02",
           "type": "Portal check",
           "functionality": "Stop fetching once the consent has expired",
@@ -462,11 +525,16 @@
             "to": null
           },
           "webhook": null,
-          "detail": "Not an NHA test case. It sat under 'Consent artefact handling'. Expiry is a real deadline, set by the patient at the moment they grant. Fetch inside it, or raise a new consent request. NHA's M3 document states no error code and no response body for a fetch after expiry, so record what your system observes."
+          "detail": "Not an NHA test case. It sat under 'Consent artefact handling'. Expiry is a real deadline, set by the patient at the moment they grant. Fetch inside it, or raise a new consent request. NHA's M3 document states no error code and no response body for a fetch after expiry, so record what your system observes.",
+          "atoms": [
+            "hiecm.endpoint.m3-consent-fetch"
+          ]
         },
         {
           "condition": "",
-          "apis": [],
+          "apis": [
+            "https://dev.abdm.gov.in/api/hiecm/data-flow/v3/health-information/request"
+          ],
           "id": "DAT_01",
           "type": "Portal check",
           "functionality": "Request the health information under a granted consent",
@@ -480,18 +548,26 @@
             "method": "POST",
             "path": "/api/v3/hiu/health-information/on-request"
           },
-          "detail": "Not an NHA test case. It sat under 'Data fetch'. Quote the consent id and the request id, and supply the data push URL here. The callback is an acknowledgement, not the data. NHA's document corrects the bridge URL for the onward request to the record holder to `POST {hipBridgeUrl}/v0.5/health-information/hip/request`, hosted on the bridge base URL registered for that participant."
+          "detail": "Not an NHA test case. It sat under 'Data fetch'. Quote the consent id and the request id, and supply the data push URL here. The callback is an acknowledgement, not the data. NHA's document corrects the bridge URL for the onward request to the record holder to `POST {hipBridgeUrl}/v0.5/health-information/hip/request`, hosted on the bridge base URL registered for that participant.",
+          "atoms": [
+            "hiecm.endpoint.m3-hiu-health-information-request"
+          ]
         },
         {
           "condition": "",
-          "apis": [],
+          "apis": [
+            "https://dev.abdm.gov.in/api/hiecm/data-flow/v3/health-information/request"
+          ],
           "id": "DAT_02",
           "type": "Portal check",
           "functionality": "Receive the encrypted records",
           "expected": "Encrypted records arrive at the data push callback URL you supplied.",
           "api": null,
           "webhook": null,
-          "detail": "Not an NHA test case. It sat under 'Data fetch'. Inbound. The records arrive at the same callback URL you gave as the data push URL in the health information request. NHA's M3 document fixes no path for it, because the URL is yours, and states no HTTP method."
+          "detail": "Not an NHA test case. It sat under 'Data fetch'. Inbound. The records arrive at the same callback URL you gave as the data push URL in the health information request. NHA's M3 document fixes no path for it, because the URL is yours, and states no HTTP method.",
+          "atoms": [
+            "hiecm.endpoint.m3-hiu-health-information-request"
+          ]
         },
         {
           "condition": "",
@@ -502,7 +578,8 @@
           "expected": "The records read as FHIR content your system can display, as plain text or structured output.",
           "api": null,
           "webhook": null,
-          "detail": "Not an NHA test case. It sat under 'Data fetch'. Two jobs, in NHA's framing: decrypt the data, then present it in a format a person can read. NHA's M3 document does not specify the encryption scheme. It is ECDH key exchange, specified on the HIP side in NHA's M2 document. Once the records render, the doctor's console shows the patient's history."
+          "detail": "Not an NHA test case. It sat under 'Data fetch'. Two jobs, in NHA's framing: decrypt the data, then present it in a format a person can read. NHA's M3 document does not specify the encryption scheme. It is ECDH key exchange, specified on the HIP side in NHA's M2 document. Once the records render, the doctor's console shows the patient's history.",
+          "apisNote": "No single call: this check decrypts and renders records, which happens in your client."
         },
         {
           "condition": "",
@@ -517,11 +594,14 @@
             "to": null
           },
           "webhook": null,
-          "detail": "Not an NHA test case. It sat under 'Data fetch'. Ask for several HI types for a patient who holds records for only some of them. The missing types are absent from the result, not an error. This breaks in production if you skip it in sandbox."
+          "detail": "Not an NHA test case. It sat under 'Data fetch'. Ask for several HI types for a patient who holds records for only some of them. The missing types are absent from the result, not an error. This breaks in production if you skip it in sandbox.",
+          "apisNote": "No single call: this check renders a partial result, which is a display behaviour."
         },
         {
           "condition": "",
-          "apis": [],
+          "apis": [
+            "https://dev.abdm.gov.in/api/hiecm/data-flow/v3/health-information/notify"
+          ],
           "id": "DAT_05",
           "type": "Portal check",
           "functionality": "Notify receipt and close the transaction",
@@ -532,11 +612,16 @@
             "to": null
           },
           "webhook": null,
-          "detail": "Not an NHA test case. It sat under 'Data fetch'. Send this once the data has arrived at your data push URL. It tells the gateway you received the data, and it is the step that closes the transaction."
+          "detail": "Not an NHA test case. It sat under 'Data fetch'. Send this once the data has arrived at your data push URL. It tells the gateway you received the data, and it is the step that closes the transaction.",
+          "atoms": [
+            "hiecm.endpoint.m3-hiu-data-flow-notify"
+          ]
         },
         {
           "condition": "",
-          "apis": [],
+          "apis": [
+            "https://dev.abdm.gov.in/api/hiecm/consent/v3/fetch"
+          ],
           "id": "REV_01",
           "type": "Portal check",
           "functionality": "Stop fetching once the patient revokes consent",
@@ -547,7 +632,10 @@
             "to": null
           },
           "webhook": null,
-          "detail": "Not an NHA test case. It sat under 'Consent revocation'. The patient can withdraw a consent they already granted, at any time. Revocation can land between a successful fetch and the next one, and it can arrive after you have read the data. Treat it as a stop signal for further fetches, and follow your own retention policy for what you already hold. NHA's M3 document names no revocation endpoint and no error code for a fetch after revocation, so record what your system observes."
+          "detail": "Not an NHA test case. It sat under 'Consent revocation'. The patient can withdraw a consent they already granted, at any time. Revocation can land between a successful fetch and the next one, and it can arrive after you have read the data. Treat it as a stop signal for further fetches, and follow your own retention policy for what you already hold. NHA's M3 document names no revocation endpoint and no error code for a fetch after revocation, so record what your system observes.",
+          "atoms": [
+            "hiecm.endpoint.m3-consent-fetch"
+          ]
         }
       ]
     }
