@@ -7,7 +7,7 @@ These terms belong to HIE-CM: the roles, the consent objects and the four milest
 
 ### Bridge
 
-The set of callback endpoints your system exposes to the [gateway](#gateway). One bridge URL is stored for each registered participant, and callbacks are posted underneath it. The paths are `POST {hiuBridgeUrl}/v0.5/consents/hiu/notify` for an [HIU](#hiu) and `POST {hipBridgeUrl}/v0.5/health-information/hip/request` for a [HIP](#hip). Registering your bridge URL is part of sandbox onboarding.
+The set of callback endpoints your system exposes to the [gateway](#gateway). A bridge is your integration, not a facility: one bridge URL is stored for each registered participant, every facility you link to that bridge shares it, and callbacks are posted underneath it. The paths are `POST {hiuBridgeUrl}/v0.5/consents/hiu/notify` for an [HIU](#hiu) and `POST {hipBridgeUrl}/v0.5/health-information/hip/request` for a [HIP](#hip). Registering your bridge URL is part of sandbox onboarding.
 
 ### Care context
 
