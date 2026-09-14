@@ -4,11 +4,11 @@ type: concept
 gateway: hiecm
 milestone: M1
 version: abdm-v3
-title: Designing the ABHA journey a person actually walks through
+title: A suggested ABHA journey, and what holds if you design your own
 summary: >
-  M1 is a set of calls, but a person at a counter meets it as one screen with
-  one question on it. This is how to shape that, and which of the calls each
-  shape needs.
+  One worked default for the screens an M1 integration needs, offered as a
+  starting point rather than a requirement, next to the short list of
+  platform facts that constrain any design you build instead.
 sources:
   - file: catalogue/openapi/hiecm/v3/hiecm-m1.yaml
     status: not-yet-hashed
@@ -32,14 +32,25 @@ skills:
   - hiecm-m1-build
 ---
 
-# Designing the ABHA journey a person actually walks through
+# A suggested ABHA journey, and what holds if you design your own
 
 ## In plain words
 
-M1 gives you around forty operations. A person standing at a registration
-counter should meet one screen with one question on it. Everything below is
-about closing that gap, because an integration that exposes the operations
-as a menu is the one that gets abandoned at the desk.
+ABDM publishes operations, not a user experience. How your registration
+screen looks and what it asks first is yours to decide, and a product that
+knows its own counter will often beat the default below.
+
+M1 gives you around forty operations, and the gap between that and one
+screen at a desk is where most of the design work is. So this page carries
+two different kinds of thing, and they are not weighted the same:
+
+- **A suggested journey.** One worked default that gets a person through the
+  desk. Take it as a starting point, change what does not fit, or ignore it.
+- **What holds regardless.** A short list of platform facts that constrain
+  any design. These are not suggestions, and a journey that ignores them
+  fails whoever built it.
+
+Read the second list even if you skip the first.
 
 Three ways to put ABHA in a product, in increasing order of control and of
 work:
@@ -68,46 +79,47 @@ rather than a question about ABDM.
 
 ## What happens
 
-### One entry, not a menu
+### Suggested: one entry rather than a menu
 
-Do not ask "do you want to log in or create an ABHA?". The person at the desk
-usually does not know. Take one identifier, then decide for them.
+Asking "do you want to log in or create an ABHA?" puts a question to the
+person that they often cannot answer. One entry that resolves to either
+outcome avoids it: take a mobile number, send an OTP, and read what comes
+back. An existing account means sign in, none means offer to create one.
 
-A single entry that resolves to either outcome is the default journey. Take a
-mobile number, send an OTP, and read what comes back: an existing account
-means sign in, no account means offer to create one. The person answers one
-question and your code branches, rather than the other way round.
+A chooser is the better shape where the desk genuinely knows, for example a
+counter that only ever registers new patients, or a kiosk placed next to a
+sign that says what it is for.
 
-Offer a chooser only where the desk genuinely knows, for example a counter
-that only ever registers new patients.
+### Holds regardless: read the response before you create anything
 
-### Read the response before you create anything
+After an OTP verification the response tells you whether accounts already
+exist for that identifier. Continuing into creation when it does leaves the
+person holding two ABHA numbers, and no operation in M1 merges them
+afterwards. The patient carries the duplicate.
 
-This is the rule that prevents the worst outcome in M1, which is a person
-holding two ABHA numbers.
+Whatever your journey looks like, creation is the branch taken when the
+lookup came back empty.
 
-After an OTP verification, the response tells you whether accounts already
-exist for that identifier. When it does, sign the person into the existing
-account rather than continuing into creation. Treat "create" as the branch you
-take when the lookup came back empty, never as the branch you take by default.
-A duplicate is not corrected by a later call, and the patient carries it.
+### Holds regardless: an ABHA is optional to your record
 
-### Make it skippable, and say so on the screen
+A person may decline, may not have their Aadhaar-linked mobile to hand, or may
+be in a queue. ABDM does not require that they hold an ABHA to be treated, and
+your patient record is keyed by your own number rather than by one.
 
-A person may decline, may not have an Aadhaar-linked mobile to hand, or may be
-in a queue. Registration must complete without an ABHA, and your screen should
-say that before they feel cornered.
-
-Your patient record is keyed by your own number, not by an ABHA. When the
-journey is skipped, return the identifier you already had, mark the record as
-having no ABHA, and offer the journey again later from the chart. See
+So a journey that cannot complete without an ABHA blocks care, which is a
+product decision worth making deliberately rather than by omission. The
+suggested shape is to return the identifier you already had, mark the record
+as having none, and offer the journey again from the chart. See
 [ABHA number and address](abha-number-and-address.md) for what you store when
 it does complete.
 
-### Five ways to create, and when each one is right
+### Five ways to create, and the condition each one answers
 
-Show one. Choose it from what the desk holds, and keep the others behind a
-"try another way" affordance for when the first fails.
+Which of these you offer, and how many at once, is yours. The suggestion is to
+show one chosen from what the desk already holds and keep the rest behind a
+"try another way" affordance, because a desk asked to pick a method has to
+understand all five. A kiosk with time to explain may reasonably show them
+all.
 
 | Method | Gives you | Reach for it when |
 |---|---|---|
@@ -123,8 +135,9 @@ name, date of birth or gender is a refusal rather than a warning. See
 
 ### The journeys that are not creation
 
-An M1 surface is more than a registration form. Each of these is its own
-placement in a product, and each is worth designing separately:
+An M1 surface is more than a registration form. These are the other placements
+the operations support, listed so that a design of your own can account for
+them rather than discovering them later:
 
 - **Find an existing ABHA**, when the person has one and cannot remember it.
   See [find an ABHA](../flows/m1-find-abha.md).
@@ -138,48 +151,60 @@ placement in a product, and each is worth designing separately:
 
 ### OTP screens
 
-The OTP screen is where journeys are lost, so it carries its own rules. Show
-which number the code went to, masked to the last four digits, because a
-person with two phones needs to know. Provide a resend, and hold the
-transaction id across it rather than starting again. State the wait before the
-person starts pressing resend: repeated attempts lock the transaction, and the
-error that follows names the attempt count rather than the wait. Never
-persist the code, and never log it.
+One platform fact and several suggestions, and it is worth knowing which is
+which.
 
-### Branding belongs in configuration
+**Holds regardless:** attempts are counted against the transaction, not
+against the person. Repeated sends lock that transaction, and the error names
+the attempt count rather than the wait. A fresh transaction is the recovery,
+not a retry of the spent one. The code is never persisted and never logged.
 
-Colours, a logo and a language are configuration, not code. Read them from
-whatever the deployment already uses. A journey that needs a rebuild to change
-a colour will be forked by the first customer who asks.
+**Suggested:** show which number the code went to, masked to the last four
+digits, because a person with two phones needs to know. Hold the transaction
+id across a resend rather than restarting. Put the wait on the screen before
+the person starts pressing the button.
+
+### Suggested: branding as configuration
+
+Colours, a logo and a language read from whatever the deployment already uses,
+rather than compiled in. A journey that needs a rebuild to change a colour
+gets forked by the first customer who asks. This is ordinary product practice
+rather than anything ABDM requires.
 
 ## How you know it worked
 
-Watch one person through the desk, twice.
+Whatever journey you build, watch one person through the desk twice. These two
+observations hold for any design, including one that looks nothing like the
+suggestion above.
 
-The first completes the journey: they answer one question, receive one OTP, and
-your patient record now carries an ABHA number and an ABHA address alongside
-your own patient number. Nothing about the flow required your receptionist to
-know which of the five creation methods was used.
+The first person completes it: your patient record now carries an ABHA number
+and an ABHA address alongside your own patient number, and your receptionist
+did not have to know which creation method produced them.
 
 The second declines. Registration completes anyway, the record is created
-without an ABHA, and the offer is still available from their chart the next
-time they attend. Nothing is blocked, and no error is shown.
+without an ABHA, and the offer is still reachable from their chart next time.
+Nothing is blocked and no error is shown.
 
-If either person had to be told what an ABHA is before the screen made sense,
-the screen is not finished.
+Then run the one case that catches the expensive mistake: put a person who
+already holds an ABHA through the path a new patient takes. They should end up
+signed in to the account they had. A second ABHA number here is the failure
+that no later call repairs.
 
 ## When it goes wrong
 
 - A person ends up with two ABHA numbers. The journey branched into creation
   without reading the accounts already on the verification response. Fix the
-  branch, not the data: nothing here merges two numbers afterwards.
+  branch, not the data: nothing here merges two numbers afterwards. This is
+  the one failure worth designing around before anything else.
 - The OTP transaction locks part way through a queue. Attempts are counted per
   transaction, so a resend button with no wait state spends them in seconds.
   Show the wait, and start a fresh transaction rather than retrying a spent one.
 - Registration stalls because the person has no Aadhaar-linked phone. Offer the
   next method rather than the same one again, and keep the skip visible.
-- The desk is asked to choose a creation method. Choose it from what the desk
-  holds, and offer the rest only after one fails.
+- The desk is asked to choose a creation method and cannot. Either choose it
+  from what the desk already holds, or make the screen explain the five well
+  enough that choosing is reasonable. Both are valid; showing five unexplained
+  options is the version that stalls.
 - An encrypted field is refused and the screen shows the person that their
   number is wrong. It usually is not. See
   [why identifiers are encrypted](encrypted-identifiers.md) before you put that
