@@ -105,6 +105,10 @@ export default function LandingHero(): React.ReactNode {
    *
    * Matched to the width the stylesheet sets the compact hero at, and false
    * for the server and the first client render so the two agree.
+   *
+   * This is not the only thing that can put the drawing away. A window with
+   * no room for the ring around the copy hides it too, and that one is
+   * measured rather than declared: see the sizing pass in NetworkWeb.
    */
   const [compact, setCompact] = useState(false);
   /** The participant the board is already speaking for. */
