@@ -62,16 +62,28 @@ No code at all. The key names the field you got wrong. Several bad fields produc
 
 Treat every key except `timestamp` as a field name. These always arrive as HTTP 400.
 
-Two of these read almost the same and mean opposite halves of the same step.
+Two of these read almost the same. Only one of them tells you anything.
 
-| Body | What failed | What to change |
-|---|---|---|
-| `{"loginId": "Invalid LoginId"}` | The service could not decrypt the value | The key or the padding. Observed with the wrong padding on 2026-09-09 |
-| `{"loginId": "LoginId is invalid"}` | It decrypted, then the plaintext failed a format rule | The plaintext shape. Observed with an ABHA number sent as 14 bare digits on 2026-09-11 |
+| Body | What it tells you |
+|---|---|
+| `{"loginId": "LoginId is invalid"}` | It decrypted. The plaintext failed a format rule |
+| `{"loginId": "Invalid LoginId"}` | On the enrolment endpoint, nothing at all |
 
-The second is the one that costs an afternoon, because the value really was
+The first is the one that costs an afternoon, because the value really was
 encrypted and really was the right number. An ABHA number keeps its dashes,
-`NN-NNNN-NNNN-NNNN`. The plaintext shape for every encrypted field is in
+`NN-NNNN-NNNN-NNNN`.
+
+The second carries no diagnostic value on `/v3/enrollment/request/otp`. That
+endpoint returns it for plaintext, for an empty string, for base64 that is
+not ciphertext, and for a correctly encrypted value alike. A padding matrix
+run against it returns the same refusal for every row, the correct row
+included, which is how a wrong padding survives a test that looks thorough.
+
+Test encryption against `POST /v3/profile/login/request/otp` with
+`loginHint: "mobile"` instead. It answers differently for a value it could
+use and one it could not: 200 with a `txnId` when the padding is right,
+`Invalid Mobile Number` when it is wrong. The padding is RSA-OAEP with
+SHA-1. The plaintext shape for every encrypted field is in
 [encryption](/docs/hiecm/v3/concepts/encryption).
 
 ### Shape 4: the API gateway error
