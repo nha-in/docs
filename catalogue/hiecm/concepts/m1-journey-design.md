@@ -37,6 +37,22 @@ skills:
 
 ## In plain words
 
+Start from why a front desk adopts ABHA at all, because it decides the shape
+of everything else.
+
+It is not the identifier. It is that the receptionist stops typing. A verified
+ABHA profile carries the whole registration form already: given, middle and
+family name, day, month and year of birth, gender, mobile, email, the full
+address with its state, district, subdistrict, village and ward names and their
+LGD codes, the pincode, and a photograph. A desk that reads that profile enters
+nothing and corrects little.
+
+So the ABHA step comes **before** your registration form, and fills it. A
+journey that registers the patient first and offers ABHA afterwards has already
+spent the keystrokes it existed to save, and leaves ABHA looking like an
+identifier to file rather than the reason the queue moved faster. If you build
+one thing from this page, build that order.
+
 ABDM publishes operations, not a user experience. How your registration
 screen looks and what it asks first is yours to decide, and a product that
 knows its own counter will often beat the default below.
@@ -85,6 +101,35 @@ methods and the most screens.
   screen.
 
 ## What happens
+
+### Holds regardless: the profile is the point, so fetch it before you type
+
+Two ways the profile reaches your desk, and the first one asks nothing of your
+receptionist at all.
+
+**The patient scans your counter.** You display a QR carrying your facility id
+and a counter id. The patient scans it with their own PHR application, consents
+there, and ABDM posts their profile to your registered callback. Nobody at your
+desk types, asks or verifies anything: the record simply arrives, already
+consented. See [receive a shared patient profile](../endpoints/m1-receive-patient-share.md).
+This needs a registered facility and a reachable callback, which is the price of
+the cheapest desk experience available.
+
+**Your desk asks for an identifier.** Where the patient has no PHR application,
+or the queue will not wait for one, run the identifier journey below. It ends in
+a token, and that token reads
+[the profile](../endpoints/m1-profile-get-account.md).
+
+Either way the registration form is the **destination**: it opens already
+filled, and the receptionist confirms rather than enters. Manual entry is the
+fallback for a person with no ABHA, not the default path with ABHA bolted on
+afterwards.
+
+One caution worth designing for. The profile is what ABDM holds, not what your
+clinician sees in front of them. Names get transliterated, an address may be
+years old, and a shared mobile may belong to a relative. Present the filled form
+for confirmation rather than saving it unseen, and keep your own record editable
+afterwards.
 
 ### Suggested: one screen that does not ask login or create
 
@@ -283,9 +328,15 @@ Whatever journey you build, watch one person through the desk twice. These two
 observations hold for any design, including one that looks nothing like the
 suggestion above.
 
-The first person completes it: your patient record now carries an ABHA number
-and an ABHA address alongside your own patient number, and your receptionist
-did not have to know which creation method produced them.
+The first person completes it, and the test is what your receptionist typed.
+Their name, date of birth, gender, mobile and address arrived from the profile
+and appeared in your form already filled. The receptionist read them back,
+corrected nothing or one field, and saved. Your patient record now carries an
+ABHA number and an ABHA address alongside your own patient number.
+
+Count the keystrokes. If that registration took as many as a patient with no
+ABHA, the integration is filing an identifier rather than saving anybody time,
+and the order of your screens is the first thing to look at.
 
 The second declines. Registration completes anyway, the record is created
 without an ABHA, and the offer is still reachable from their chart next time.
@@ -308,6 +359,11 @@ tell you your own design works.
 
 ## When it goes wrong
 
+- The desk types everything and then links an ABHA. The integration works, the
+  certification passes, and nobody at the counter can say what it was for. This
+  is the most common way an M1 integration disappoints the people who paid for
+  it, and it is an ordering mistake rather than a technical one. Fetch the
+  profile first and let it fill the form.
 - A person ends up with two ABHA numbers. The journey branched into creation
   without reading the accounts already on the verification response. Fix the
   branch, not the data: nothing here merges two numbers afterwards. This is
