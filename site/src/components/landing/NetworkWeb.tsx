@@ -28,15 +28,32 @@ import {
  * read the same participant table.
  */
 
-/** The cast. Positions are percentages of the hero, kept out of the copy. */
+/**
+ * The cast. Positions are percentages of the hero, kept out of the copy.
+ *
+ * A percentage is only safe where the copy is not. The words keep their size
+ * while a short window loses its, so a share of the height that cleared the
+ * gateway cards at 900px tall rode up onto them at 700px: Pharmacy sat inside
+ * the right hand card, and Hospital and Diagnostics had a single pixel of
+ * clearance under the row. `foot` takes a node off the share and stands it in
+ * a fixed strip at the bottom of the hero, which is below the copy at every
+ * height; the two that use it are aligned with Doctor and PHR above them, so
+ * the cast frames the words rather than drifting into them. Their `y` is the
+ * strip in round numbers, for the fallback below to use.
+ */
 const PARTICIPANTS = [
   {id: 'citizen', label: 'Citizen', Icon: User, x: 50, y: 7, small: true},
   {id: 'phr', label: 'PHR app', Icon: Smartphone, x: 79, y: 17},
   {id: 'insurer', label: 'Insurer', Icon: ShieldCheck, x: 92, y: 45, small: true},
-  {id: 'pharmacy', label: 'Pharmacy', Icon: Pill, x: 82, y: 74},
+  // Half way down, which is the one share of the height that is never level
+  // with the gateway cards. They sit at the bottom of a copy block that is
+  // centred, so the row starts below the midline whatever the window does:
+  // at 74% this node was inside the right hand card on any laptop, and at
+  // anything past 50% it comes back on a tall enough screen.
+  {id: 'pharmacy', label: 'Pharmacy', Icon: Pill, x: 82, y: 50},
   // Bottom centre is left clear: the scroll cue lives there.
-  {id: 'lab', label: 'Diagnostics', Icon: FlaskConical, x: 64, y: 88, small: true},
-  {id: 'hospital', label: 'Hospital', Icon: Building2, x: 36, y: 88, small: true},
+  {id: 'lab', label: 'Diagnostics', Icon: FlaskConical, x: 79, y: 96, small: true, foot: true},
+  {id: 'hospital', label: 'Hospital', Icon: Building2, x: 21, y: 96, small: true, foot: true},
   {id: 'nha', label: 'NHA', Icon: Landmark, x: 8, y: 45},
   {id: 'doctor', label: 'Doctor', Icon: Stethoscope, x: 21, y: 17, small: true},
 ];
@@ -200,10 +217,16 @@ export default function NetworkWeb({
       places = icons.map((node, index) => {
         const mark = node.querySelector('.network-node__icon');
         const p = PARTICIPANTS[index];
-        if (!mark) {
+        const at = mark?.getBoundingClientRect();
+        // A zero box is a node the stylesheet is not laying out: a window
+        // both narrow and short drops the two at the foot, because there is
+        // no room left for them beside the gateway cards. Its percentage
+        // stands in, so the mesh keeps its shape and only the icon goes.
+        // Measuring the zero box instead would put the node at the top left
+        // corner of the page and run every one of its links there.
+        if (!at || !at.width) {
           return {x: (p.x / 100) * width, y: (p.y / 100) * height};
         }
-        const at = mark.getBoundingClientRect();
         return {
           x: at.left + at.width / 2 - box.left,
           y: at.top + at.height / 2 - box.top,
@@ -571,13 +594,18 @@ export default function NetworkWeb({
           documentation rather than an illustration of it. */}
       <canvas className="network-web__canvas" ref={canvasRef} aria-hidden="true" />
       <nav className="network-web__nodes" aria-label="Who takes part in ABDM">
-        {PARTICIPANTS.map(({id, label, Icon, x, y, small}) => (
+        {PARTICIPANTS.map(({id, label, Icon, x, y, small, foot}) => (
           <Link
             key={id}
             to={`/docs/hiecm/v3/concepts/participants/${id}`}
             data-participant={id}
-            className={`network-node${small ? '' : ' network-node--wide'}`}
-            style={{left: `${x}%`, top: `${y}%`}}>
+            className={`network-node${small ? '' : ' network-node--wide'}${
+              foot ? ' network-node--foot' : ''
+            }`}
+            // Custom properties rather than `left` and `top` directly: an
+            // inline property beats any rule, so a node placed this way could
+            // not be moved by a media query.
+            style={{'--x': `${x}%`, '--y': `${y}%`} as React.CSSProperties}>
             <Icon className="network-node__icon" strokeWidth={1.5} aria-hidden="true" />
             <span className="network-node__label">{label}</span>
           </Link>
