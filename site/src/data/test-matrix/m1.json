@@ -21,6 +21,7 @@
             "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account",
             "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account/abha-card"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Test: The system must provide an option to create ABHA through Aadhaar OTP"
@@ -40,6 +41,7 @@
             "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account",
             "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account/abha-card"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Test: The system must display the consent language/ disclaimer language and collect user's consent as per the ABDM published consent. Refer Cell No-: M14 Steps: 1. Read consent language 2. Agree to the consent language (through 'I agree' checkbox or any other form of signature)"
@@ -59,6 +61,7 @@
             "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account",
             "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account/abha-card"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Test: The system should be able to provide the consent in languages other than English also Steps: 1. Read consent language 2. Agree to the consent language (through 'I agree' checkbox or any other form of signature)"
@@ -78,6 +81,7 @@
             "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account",
             "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account/abha-card"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Test: System must allow the user to enter Aadhaar Number and the system will display an error message for invalid Aadhaar Number Steps: 1. Enter Aadhaar number"
@@ -97,6 +101,7 @@
             "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account",
             "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account/abha-card"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Test: User receives Aadhaar OTP and System must allow the user to enter Aadhaar OTP. Steps: 1. Receive OTP on mobile number registered with Aadhaar 2. Enter Aadhaar OTP"
@@ -116,6 +121,7 @@
             "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account",
             "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account/abha-card"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Test: System may activate the Resend OTP button maximum 2 times after 60 seconds Steps: 1. Click on Resend OTP Button 2. Receive OTP on mobile"
@@ -135,6 +141,7 @@
             "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account",
             "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account/abha-card"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Test: System must verify the OTP Steps: Click on verify button (For Resend and Send) It is recommended that verify button be auto enabled"
@@ -154,6 +161,7 @@
             "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account",
             "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account/abha-card"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Applies to: Note: Many integrating entities have not implemented API for OTP not to be sent in case communication mobile is same as Aadhaar linked mobile. In that case the test scenario detailed under sl. No 1.8 will only be considered. However, it is recommended that API = checkAndGenerateMobileOTP be implemented. This will reduce one step of OTP verification in case communication mobile is same as the Aadhaar linked mobile. Test: 1. If communication mobile number is same as Aadhaar linked mobile number then it should directly go to ABHA creation screen . 2. Alternatively , Integrators may also prompt for OTP again from the user and then post verification of OTP user can go to ABHA creation screen. Steps: This is applicable for testcase cell no -G20 , point no-1 1. System will check entered mobile is same as Aadhaar linked mobile number. If returns true then user will directed to ABHA creation screen. 2. For point number 2 step are already mentioned in test case cell no- G20 , point no-2"
@@ -173,6 +181,7 @@
             "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account",
             "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account/abha-card"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Test: If communication mobile number is not same as Aadhaar linked mobile number then system must ask for the OTP to verify comuncation mobile number. Steps: 1. System must verify the mobile number. 1. System must send OTP on mobile number 2. User enters the OTP and clicks on verify 3. In case of incorrect OTP, the system displays an error 4. In case of correct OTP, the system allows the user to proceed"
@@ -192,6 +201,7 @@
             "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account",
             "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account/abha-card"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Test: 1. The system should allow the user to select the ABHA address giving atleast 3 available suggestions 2. Otherwise the system should have a provision to create a ABHA address with ABHA address Policy and validation rule should be print beside the field where ABHA Address is entered. Validation rules on ABHA Address to be set at the API level: 1. Minimum length - 8 characters 2. Maximum length - 18 characters 3. Special characters allowed - 1 dot (.) and/or 1 underscore (_) 4. Special character dot and underscore should be in between. Special characters cannot be in the beginning or at the end 5. Alphanumeric - only numbers, only letters or any combination of numbers and letters is allowed. Steps: 1. Governemnt integrator may use the option for creating default ABHA address. However, it is recommended that user-defined or system suggested ABHA address be used 2. System should have a provision for private integrators to proceed with the suggested ABHA address. 3. If beneficary use the existing ABHA address then system displays the \"ABHA Address is already exist\"."
@@ -211,6 +221,7 @@
             "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account",
             "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account/abha-card"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Test: System must display the created ABHA Number Steps: 1. System shows the 14-digit ABHA number and ABHA address generated"
@@ -230,6 +241,7 @@
             "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account",
             "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account/abha-card"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Test: System must have a provision to View / Download ABHA card Steps: 1. System should show the user their ABHA Card 2. ABHA Card should be generated by API and should contain - a. ABHA Number (Mandatory) b. User Photo-Optional c. ABHA QR code d. date of birth and gender e. ABHA Address"
@@ -249,6 +261,7 @@
             "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account",
             "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account/abha-card"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Test: System must have a provision to View details like ABHA number and ABHA address in the card (either ABHA card or any card being generated for their program/scheme/entity) Steps: 1. If Integrator is not generating ABHA card then They print the mentioned information on their program/scheme or any other card a. ABHA Number (Mandatory) b. ABHA Address"
@@ -274,6 +287,7 @@
             "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account",
             "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account/abha-card"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Test: The system must provide an option to create ABHA through Aadhaar Biometric"
@@ -293,6 +307,7 @@
             "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account",
             "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account/abha-card"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Test: The system must display the consent language/ disclaimer language and collect user's consent as per the ABDM published consent. Refer Cell No-: M14 Steps: 1. Read consent language 2. Agree to the consent language (through 'I agree' checkbox or any other form of signature)"
@@ -312,6 +327,7 @@
             "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account",
             "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account/abha-card"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Test: The system should be able to provide the consent in languages other than English also Steps: 1. Read consent language 2. Agree to the consent language (through 'I agree' checkbox or any other form of signature)"
@@ -331,6 +347,7 @@
             "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account",
             "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account/abha-card"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Test: System must allow the user to enter Aadhaar Number and the system will display an error message for invalid Aadhaar Number Steps: 1. Enter Aadhaar number"
@@ -350,6 +367,7 @@
             "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account",
             "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account/abha-card"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Test: System must verify the biometrics (fingerprint or face) of the user Steps: 1. Scan biometrics (Fingerprint) 2. Click on verify button"
@@ -369,6 +387,7 @@
             "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account",
             "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account/abha-card"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Applies to: Note: Many integrating entities have not implemented API for OTP not to be sent in case communication mobile is same as Aadhaar linked mobile. In that case the test scenario detailed under sl. No 2.6 will only be considered. However, it is recommended that API = checkAndGenerateMobileOTP be implemented. This will reduce one step of OTP verification in case communication mobile is same as the Aadhaar linked mobile. Test: 1. If communication mobile number is same as Aadhaar linked mobile number then it should directly go to ABHA creation screen . 2. Alternatively , Integrators may also prompt for OTP again from the user and then post verification of OTP user can go to ABHA creation screen. Steps: This is applicable for testcase cell no -G20 , point no-1 1. System will check entered mobile is same as Aadhaar linked mobile number. If returns true then user will directed to ABHA creation screen. 2. For point number 2 step are already mentioned in test case cell no- G20 , point no-2"
@@ -388,6 +407,7 @@
             "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account",
             "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account/abha-card"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Test: If communication mobile number is not same as Aadhaar linked mobile number then system must ask for the OTP to verify comuncation mobile number. Steps: 1. System must verify the mobile number. 1. System must send OTP on mobile number 2. User enters the OTP and clicks on verify 3. In case of incorrect OTP, the system displays an error 4. In case of correct OTP, the system allows the user to proceed"
@@ -407,6 +427,7 @@
             "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account",
             "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account/abha-card"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Test: System must display the created ABHA Number Steps: 1. System shows the 14-digit ABHA number and ABHA address generated"
@@ -426,6 +447,7 @@
             "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account",
             "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account/abha-card"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Test: System must have a provision to View / Download ABHA card Steps: 1. System should show the user their ABHA Card 2. ABHA Card should be generated by API and should contain - a. ABHA Number (Mandatory) b. User Photo-Optional c. ABHA QR code d. date of birth and gender e. ABHA Address"
@@ -445,6 +467,7 @@
             "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account",
             "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account/abha-card"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Test: System must have a provision to View details like ABHA number and ABHA address in the card (either ABHA card or any card being generated for their program/scheme/entity) Steps: 1. If Integrator is not generating ABHA card then They print the mentioned information on their program/scheme or any other card a. ABHA Number (Mandatory) b. ABHA Address"
@@ -466,6 +489,7 @@
             "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account",
             "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account/abha-card"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Test: The system must provide an option to create ABHA through Aadhaar Demographic/ Offline Mode"
@@ -481,6 +505,7 @@
             "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account",
             "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account/abha-card"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Test: The system must display the consent language/ disclaimer language and collect user's consent as per the ABDM published consent. Refer Cell No-: M14 Steps: 1. Read consent language 2. Agree to the consent language (through 'I agree' checkbox or any other form of signature)"
@@ -496,6 +521,7 @@
             "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account",
             "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account/abha-card"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Test: The system should be able to provide the consent in languages other than English also Steps: 1. Read consent language 2. Agree to the consent language (through 'I agree' checkbox or any other form of signature)"
@@ -511,6 +537,7 @@
             "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account",
             "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account/abha-card"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Test: System must allow the user to enter Aadhaar Number and the system will display an error message for invalid Aadhaar Number Steps: 1. Enter Aadhaar number"
@@ -526,6 +553,7 @@
             "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account",
             "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account/abha-card"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Test: System must verify the demographic information of the user against their Aadhaar Steps: 1. Enter beneficiary's name, date of birth, gender, Aadhaar Number, Mobile Number, Address, State name, and district name in accordance with the details on their Aadhaar card. 2. Case 1:If the beneficiary has an existing ABHA address, it should be displayed on both the ABHA card and the ABHA profile. OR Case 2: If beneficary want to create a customize ABHA address then same ABHA address should be displayed on both the ABHA card and the ABHA profile. 3 : Case 3 : If the beneficiary have no ABHA address then system will create a Default ABHA Address ( ABHA Number @sbx) and same ABHA address should be displayed on both the ABHA card and the ABHA profile. (Mandatory ) 4. If a beneficiary's deatils are matched with Aadhaaar information then system will not allow to create ABHA. 5. If If a beneficiary's deatils are matched with Aadhaaar information then system will allow to create ABHA ."
@@ -541,6 +569,7 @@
             "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account",
             "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account/abha-card"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Test: System should accepts user's profile information - Steps: 1. System auto-populates beneficiary's name, date of birth, gender, Aadhaar number, mobile number, address, state name, district name and ABHA Number. 2.The fields for name, date of birth, and gender are set as non-editable, while the remaining fields can be open for editing."
@@ -556,6 +585,7 @@
             "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account",
             "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account/abha-card"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Test: System must display the created ABHA Number Steps: 1. The system displays the 14-digit ABHA number and generates the corresponding ABHA Address, adhering to the implementation chosen by integrators, either as a default setting or a customized one."
@@ -571,6 +601,7 @@
             "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account",
             "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account/abha-card"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Test: System must have a provision to View / Download ABHA card Steps: 1. System should show the user their ABHA Card 2. ABHA Card should be generated by API and should contain - a. ABHA Number (Mandatory) b. ABHA QR code c. Name, date of birth and gender d. ABHA Address"
@@ -586,6 +617,7 @@
             "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account",
             "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account/abha-card"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Test: System must have a provision to View details like ABHA number and ABHA address in the card (either ABHA card or any card being generated for their program/scheme/entity) Steps: 1. If Integrator is not generating ABHA card then They print the mentioned information on their program/scheme or any other card with the beneficiary's demographic details. a. ABHA Number (Mandatory) b. ABHA Address"
@@ -607,6 +639,7 @@
             "https://abhasbx.abdm.gov.in/abha/api/v3enrollment/auth/byAbdm",
             "https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/enrol/byDocument"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Test: The system must provide an option to create ABHA through Driving License / PAN"
@@ -622,6 +655,7 @@
             "https://abhasbx.abdm.gov.in/abha/api/v3enrollment/auth/byAbdm",
             "https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/enrol/byDocument"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Test: The System must display the consent/ disclaimer language and collect user's consent Steps: 1. Read the consent language 2. Agree to the consent language (through 'I agree' checkbox or any other form of signature)"
@@ -637,6 +671,7 @@
             "https://abhasbx.abdm.gov.in/abha/api/v3enrollment/auth/byAbdm",
             "https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/enrol/byDocument"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Test: System must collect the communication mobile number Steps: 1. Enters a valid mobile number for communication purpose"
@@ -652,6 +687,7 @@
             "https://abhasbx.abdm.gov.in/abha/api/v3enrollment/auth/byAbdm",
             "https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/enrol/byDocument"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Test: System must verify the provided mobile number Steps: 1. Receive OTP on mobile number 2. Enter the OTP and clicks on verify"
@@ -667,6 +703,7 @@
             "https://abhasbx.abdm.gov.in/abha/api/v3enrollment/auth/byAbdm",
             "https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/enrol/byDocument"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Test: System must verify the provided document - Driving License / PAN Steps: 1. Enter the Driving License / PAN number 2. Enter name, date of birth and gender as per the document. 3. successfully verification will generate enrollment number 4. With this enrollment number patient/ user will approach with any ABDM facilty for creation of ABHA number ."
@@ -682,6 +719,7 @@
             "https://abhasbx.abdm.gov.in/abha/api/v3enrollment/auth/byAbdm",
             "https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/enrol/byDocument"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Test: System must allow upload of front and back page of the Driving licence/ PAN Steps: 1. Upload the front and back page of the document i.e Driving License / PAN."
@@ -697,6 +735,7 @@
             "https://abhasbx.abdm.gov.in/abha/api/v3enrollment/auth/byAbdm",
             "https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/enrol/byDocument"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Test: System Operator / healthcare worker must manually check the documents - Driving License / PAN Steps: 1. A healthcare worker/ system operator manually verifies the Driving License / PAN"
@@ -712,6 +751,7 @@
             "https://abhasbx.abdm.gov.in/abha/api/v3enrollment/auth/byAbdm",
             "https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/enrol/byDocument"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Test: System should display the created ABHA Number Steps: 1. Show the 14-digit ABHA number generated 2. Show ABHA Number instead of Health ID"
@@ -727,6 +767,7 @@
             "https://abhasbx.abdm.gov.in/abha/api/v3enrollment/auth/byAbdm",
             "https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/enrol/byDocument"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Test: System must have a provision to View / Download ABHA card Steps: 1. System should show the user their ABHA Card 2. ABHA Card should be generated by API and should contain - a. ABHA Number (Mandatory) b. User Photo-Optional c. ABHA QR code d. date of birth and gender e. ABHA Address"
@@ -742,6 +783,7 @@
             "https://abhasbx.abdm.gov.in/abha/api/v3enrollment/auth/byAbdm",
             "https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/enrol/byDocument"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Test: If Integrator is not generating ABHA card. Steps: 1. If Integrator is not generating ABHA card then They print the mentioned information on their own card. a. ABHA Number (Mandatory) b. ABHA Address"
@@ -764,6 +806,7 @@
             "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account",
             "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account/abha-card"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Test: System must allow ABHA Number verification using Aadhaar OTP Steps: 1. Share ABHA Number or ABHA Address 2. Receive OTP on the Aadhaar linked mobile number 3. Enter the OTP. 4. System may activate the Resend OTP button maximum 2 times after 60 seconds in the OTP not received. 5. If beneficiary updates their mobile number in the HIMS system and It is advisable to provide users with the option to update their mobile number in the ABHA profile with (Yes/No) using the profile API you should be able to update the details."
@@ -781,6 +824,7 @@
             "https://abhasbx.abdm.gov.in/abha/api/v3/phr/web/login/profile/abha-profile",
             "https://abhasbx.abdm.gov.in/abha/api/v3/phr/web/login/profile/abha/phr-card"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Test: System must allow ABHA Address verification using Aadhaar OTP Steps: 1. Share ABHA Number or ABHA Address. 2. Receive OTP on the Aadhaar linked mobile number. 3. Enter the OTP. 4. System may activate the Resend OTP button maximum 2 times after 60 seconds in the OTP not received. 5. If beneficiary updates their mobile number in the HIMS system and It is advisable to provide users with the option to update their mobile number in the ABHA profile with (Yes/No) using the profile API you should be able to update the details."
@@ -803,6 +847,7 @@
             "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account",
             "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account/abha-card"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Test: System must allow ABHA Number verification using mobile OTP(ABHA Linked Mobile Number ) Steps: 1. Share ABHA Number or ABHA Address 2. Receive OTP on the Communication mobile number 3. Enter the OTP. 4. System may activate the Resend OTP button maximum 2 times after 60 seconds in the OTP not received. 5. If beneficiary updates their mobile number in the HIMS system and It is advisable to provide users with the option to update their mobile number in the ABHA profile with (Yes/No) using the profile API you should be able to update the details."
@@ -820,6 +865,7 @@
             "https://abhasbx.abdm.gov.in/abha/api/v3/phr/web/login/profile/abha-profile",
             "https://abhasbx.abdm.gov.in/abha/api/v3/phr/web/login/profile/abha/phr-card"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Test: System must allow ABHA Address verification using mobile OTP(ABHA Linked Mobile Number ) Steps: 1. Share ABHA Number or ABHA Address 2. Receive OTP on the Communication mobile number 3. Enter the OTP. 4. System may activate the Resend OTP button maximum 2 times after 60 seconds in the OTP not received. 5. If beneficiary updates their mobile number in the HIMS system and It is advisable to provide users with the option to update their mobile number in the ABHA profile with (Yes/No) using the profile API you should be able to update the details."
@@ -843,6 +889,7 @@
             "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account",
             "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account/abha-card"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Test: System must allow ABHA retrieval using communication mobile OTP Steps: 1. If the user enters a in-valid mobile number(communication) then system will display an error message \" Please enter a valid mobile number\"."
@@ -860,6 +907,7 @@
             "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account",
             "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account/abha-card"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Test: ABHA Details not exists to communicated Mobile Number Steps: 1. Incase ABHA Details not exists to communicated Mobile Number in ABHA system."
@@ -877,6 +925,7 @@
             "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account",
             "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account/abha-card"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Test: ABHA Details exists to communicated Mobile Number. Steps: 1. Incase ABHA Details exists to communicated Mobile Number. 1.1. If ABHA Details exists to comunication mobile number exists in ABHA system , In case ' Yes' then system will display a message \"ABHA Exists to communication Mobile\" and user will receive the OTP i.e \"OTP sent to ABHA linked mobile number ending with ******XXXX\" and then Upon verification completion, the system will display a list of ABHA numbers linked to the mobile number, including the following details: Name, ABHA Number, ABHA Address, and the beneficiary's photograph. When the user attempts to link selected ABHA details, the system will verify if the selected record is present in the HIMS system. If so, it will display a message indicating that the record is already linked in the HIMS with the HIMS beneficiary's ID. 1.2 If the selected ABHA Profile is not present in HIMS, the system will allow it to be Register and linked in their HIMS beneficary's ID or proceed as per bussiness requirement OR benefciary can download the ABHA card (Optional)"
@@ -894,6 +943,7 @@
             "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account",
             "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account/abha-card"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Test: Incorrect OTP Steps: 1. In case of incorrect OTP, the verification fails and display the relevant message."
@@ -911,6 +961,7 @@
             "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account",
             "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account/abha-card"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Test: Resend OTP Functionality Steps: 1. System may activate the Resend OTP button maximum 2 times after 60 seconds in the OTP not received."
@@ -933,6 +984,7 @@
             "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account",
             "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account/abha-card"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Test: System must allow ABHA retrieval using Aadhaar Number Steps: 1.If the user enters wrong Aadhaar Number then system will display an error message \"Invalid LoginId\" or some relevant message i.e \"Aadhaar Number is not valid\"."
@@ -949,6 +1001,7 @@
             "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account",
             "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account/abha-card"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Test: Incorrect OTP Steps: 1. In case of incorrect OTP, the verification fails and display the relevant message."
@@ -965,6 +1018,7 @@
             "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account",
             "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account/abha-card"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Test: ABHA Details not exists to Aadhaar Number Steps: 1. Beneficary enter Aadhaar Number . 2. Beneficary will receive the OTP i.e \"OTP sent to Aadhaar linked mobile number ending with ******XXXX\" 3. After OTP verfication then system will display \"NO ABHA user registered with this Aadhaar Number\". 4. The system should have a provision to create ABHA."
@@ -981,6 +1035,7 @@
             "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account",
             "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account/abha-card"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Test: ABHA Details exists to Aadhaar Number Steps: 1. Enter Aadhaar Number. 2. Beneficary will receive the OTP i.e \"OTP sent to Aadhaar linked mobile number ending with ******XXXX\" . 3. After the OTP verfication. If ABHA Number exists then system will display Beneficary ABHA profile details and user can download the ABHA card. 4. If ABHA Profile is not present in HIMS, the system will allow it to be Register and linked in their HIMS beneficary's ID or proceed as per bussiness requirement ."
@@ -997,6 +1052,7 @@
             "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account",
             "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account/abha-card"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Test: Resend OTP Functionality Steps: 1. System may activate the Resend OTP button maximum 2 times after 60 seconds in the OTP not received."
@@ -1018,6 +1074,7 @@
             "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account",
             "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account/abha-card"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "NHA gives this id to more than one case. Test: System must allow ABHA Number verification using Biometric scan Steps: 1. Share ABHA Number or ABHA Address 2. Scan fingerprint or face"
@@ -1029,6 +1086,7 @@
           "functionality": "ABHA Address verification using Aadhaar Biometric - Fingerprint",
           "expected": "In case the biometrics match, the verification is complete and the System can fetch user's ABHA profile - name, date of birth, gender, mobile number, photo and address, ABHA Number , ABHA Address and other details from the APIs. In case the biometrics do not match, the verification fails.",
           "apis": [],
+          "apisNote": "No API",
           "api": null,
           "webhook": null,
           "detail": "Test: System must allow ABHA Address verification using Biometric scan Steps: 1. Share ABHA Number or ABHA Address 2. Scan fingerprint or face"
@@ -1046,6 +1104,7 @@
           "functionality": "Reading ABHA Profile Info using ABHA QR Code",
           "expected": "System reads the user information from the ABHA QR code - name, date of birth, gender, mobile and other details into the system for registration.",
           "apis": [],
+          "apisNote": "No APIs",
           "api": null,
           "webhook": null,
           "detail": "NHA gives this id to more than one case. Test: System must allow scanning of ABHA QR code to read the ABHA information Steps: 1. EMR/HMIS scans the user's ABHA QR code"
@@ -1066,6 +1125,7 @@
             "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account/request/otp",
             "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account/verify"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Test: System must allow the user to update their Mobile number Steps: 1. Enter new mobile number 2. Enter OTP 3. Enter Password/ OTP on old mobile number"
@@ -1079,6 +1139,7 @@
           "apis": [
             "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Test: System must allow the user to update their Photo Steps: 1. Click on Edit Photo 2. Upload new photo"
@@ -1093,6 +1154,7 @@
             "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account/request/otp",
             "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account/verify"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Test: System must allow the user to update their Email Steps: 1. Enter new Email ID 2. Enter OTP"
@@ -1107,6 +1169,7 @@
             "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account/request/otp",
             "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account/verify"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Test: System must allow the user to perform re-KYC Steps: 1. Click on re-KYC option 2. Enter OTP received on Aadhaar linked mobile numer"
@@ -1123,6 +1186,7 @@
             "https://abhasbx.abdm.gov.in/abha/api/v3/profile/login/request/otp",
             "https://abhasbx.abdm.gov.in/abha/api/v3/profile/login/verify/user"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Test: System must allow the user to Delete/ Deactivate ABHA Steps: 1. Click on Delete/ Deactivate ABHA 2. Enter OTP received on mobile number to confirm deletion/ deactivation 3. Try to login again using the same ABHA"
@@ -1140,6 +1204,7 @@
           "functionality": "Verify one ABHA Number is linked to the unique patient ID in HIMS",
           "expected": "HIMS is able to tag Patient ID with ABHA number.",
           "apis": [],
+          "apisNote": "NO APIs",
           "api": null,
           "webhook": null,
           "detail": "Test: Intergrator's HIMS System should allow tagging of one ABHA Number with unique patient Id. Steps: ABHA Number should be validated in the database if already exists before creating a new patient id to avoid tagging of multiple patient id with same ABHA Number. Kindly Note: This test scenario is applicable for both new and existing beneficiaries and linking will be happens with ABHA creation and verification flow."
@@ -1159,6 +1224,7 @@
           "apis": [
             "https://dev.abdm.gov.in/api/hiecm/patient-share/v3/on-share"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Test: User will scan the QR code which is placed the facility premises Steps: 1. Log into PHR app. 2. User will scan the QR code which is placed at the facility premises/registration desk. 3. Post scanning, patient profile details are displayed including ABHA number, ABHA address, Name, Gender, DoB, Mobile No and Address. Below this consent language is displayed - \"Your consent to the above information to be shared with <HIP Name>. They can use this information for your registration and linking your health records\" and both \"Cancel\" / \"Share\" buttons are provided. 4.Check that after clicking on \"Share\" button, user profile is successfully shared with the HIP and if user click on \"Cancel\" button then user profile is not shared with the HIP. 5. User clicks on share and gets a token number. 6. User clicks on ok and gets token number with validity of 30 minutes."
@@ -1171,7 +1237,9 @@
       "rows": [
         {
           "condition": "",
-          "apis": [],
+          "apis": [
+            "https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/enrol/byAadhaar"
+          ],
           "id": "B1",
           "type": "Portal check",
           "functionality": "Create the ABHA number",
@@ -1182,11 +1250,16 @@
             "to": "/docs/hiecm/v3/api/m1/endpoints/m1-enrolment-by-aadhaar"
           },
           "webhook": null,
-          "detail": "Not an NHA test case. It sat under 'ABHA creation, Aadhaar OTP'. Send the txnId and the encrypted OTP. Success is HTTP 200 carrying ABHAProfile.ABHANumber, tokens.token and tokens.refreshToken. The number matches 91-\\d{4}-\\d{4}-\\d{4} and passes the Luhn checksum on its 14 digits. A 400 whose body key is txnId means the wrong transaction id. A 422 with ABDM-1204 means Aadhaar rejected the attempt, and the UIDAI code inside the message says why."
+          "detail": "Not an NHA test case. It sat under 'ABHA creation, Aadhaar OTP'. Send the txnId and the encrypted OTP. Success is HTTP 200 carrying ABHAProfile.ABHANumber, tokens.token and tokens.refreshToken. The number matches 91-\\d{4}-\\d{4}-\\d{4} and passes the Luhn checksum on its 14 digits. A 400 whose body key is txnId means the wrong transaction id. A 422 with ABDM-1204 means Aadhaar rejected the attempt, and the UIDAI code inside the message says why.",
+          "atoms": [
+            "hiecm.endpoint.m1-enrolment-by-aadhaar"
+          ]
         },
         {
           "condition": "",
-          "apis": [],
+          "apis": [
+            "https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/enrol/byAadhaar"
+          ],
           "id": "B2",
           "type": "Portal check",
           "functionality": "Reject a wrong Aadhaar OTP",
@@ -1197,11 +1270,16 @@
             "to": "/docs/hiecm/v3/api/m1/endpoints/m1-enrolment-by-aadhaar"
           },
           "webhook": null,
-          "detail": "Not an NHA test case. It sat under 'ABHA creation, Aadhaar OTP'. Repeat the OTP request, then send a deliberately wrong encrypted OTP. Success is a non 200 with no ABHAProfile.ABHANumber in the body. The exact code for a wrong Aadhaar OTP is not transcribed in either source, so assert on the absence of the field and on the status, not on a code. Check your own database too: a failed enrolment must leave no partial patient record."
+          "detail": "Not an NHA test case. It sat under 'ABHA creation, Aadhaar OTP'. Repeat the OTP request, then send a deliberately wrong encrypted OTP. Success is a non 200 with no ABHAProfile.ABHANumber in the body. The exact code for a wrong Aadhaar OTP is not transcribed in either source, so assert on the absence of the field and on the status, not on a code. Check your own database too: a failed enrolment must leave no partial patient record.",
+          "atoms": [
+            "hiecm.endpoint.m1-enrolment-by-aadhaar"
+          ]
         },
         {
           "condition": "",
-          "apis": [],
+          "apis": [
+            "https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/enrol/byAadhaar"
+          ],
           "id": "B3",
           "type": "Portal check",
           "functionality": "Reject a reused transaction id",
@@ -1212,11 +1290,16 @@
             "to": "/docs/hiecm/v3/api/m1/endpoints/m1-enrolment-by-aadhaar"
           },
           "webhook": null,
-          "detail": "Not an NHA test case. It sat under 'ABHA creation, Aadhaar OTP'. Take a txnId from a completed enrolment and send it again. Success is HTTP 400 with a body key of txnId and the value Invalid Transaction Id, or an equivalent rejection. HTTP 200 and a second ABHA number is a failure."
+          "detail": "Not an NHA test case. It sat under 'ABHA creation, Aadhaar OTP'. Take a txnId from a completed enrolment and send it again. Success is HTTP 400 with a body key of txnId and the value Invalid Transaction Id, or an equivalent rejection. HTTP 200 and a second ABHA number is a failure.",
+          "atoms": [
+            "hiecm.endpoint.m1-enrolment-by-aadhaar"
+          ]
         },
         {
           "condition": "",
-          "apis": [],
+          "apis": [
+            "https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/auth/byAbdm"
+          ],
           "id": "C1",
           "type": "Portal check",
           "functionality": "Verify the communication mobile",
@@ -1227,11 +1310,16 @@
             "to": "/docs/hiecm/v3/api/m1/endpoints/m1-enrolment-verify-abdm-otp"
           },
           "webhook": null,
-          "detail": "Not an NHA test case. It sat under 'ABHA creation, Aadhaar OTP'. Send the same scope and the encrypted OTP. Success is HTTP 200 here and a profile readback whose mobile equals the number you sent. A profile whose mobile is still the Aadhaar linked number is a failure."
+          "detail": "Not an NHA test case. It sat under 'ABHA creation, Aadhaar OTP'. Send the same scope and the encrypted OTP. Success is HTTP 200 here and a profile readback whose mobile equals the number you sent. A profile whose mobile is still the Aadhaar linked number is a failure.",
+          "atoms": [
+            "hiecm.endpoint.m1-enrolment-verify-abdm-otp"
+          ]
         },
         {
           "condition": "",
-          "apis": [],
+          "apis": [
+            "https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/request/otp"
+          ],
           "id": "C2",
           "type": "Portal check",
           "functionality": "Keep the two OTP systems apart",
@@ -1242,11 +1330,16 @@
             "to": "/docs/hiecm/v3/api/m1/endpoints/m1-enrolment-by-aadhaar"
           },
           "webhook": null,
-          "detail": "Not an NHA test case. It sat under 'ABHA creation, Aadhaar OTP'. Take a valid mobile OTP obtained with otpSystem \"abdm\" and send it to enrol by Aadhaar instead of to auth/byAbdm. Success is a non 200, proving your routing is by scope. HTTP 200 means something sends both codes to the same endpoint. Sandbox lets that pass. Production will not."
+          "detail": "Not an NHA test case. It sat under 'ABHA creation, Aadhaar OTP'. Take a valid mobile OTP obtained with otpSystem \"abdm\" and send it to enrol by Aadhaar instead of to auth/byAbdm. Success is a non 200, proving your routing is by scope. HTTP 200 means something sends both codes to the same endpoint. Sandbox lets that pass. Production will not.",
+          "atoms": [
+            "hiecm.endpoint.m1-enrolment-request-otp"
+          ]
         },
         {
           "condition": "",
-          "apis": [],
+          "apis": [
+            "https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/request/otp"
+          ],
           "id": "C3",
           "type": "Portal check",
           "functionality": "Accept a non Aadhaar mobile number",
@@ -1257,11 +1350,16 @@
             "to": "/docs/hiecm/v3/api/m1/endpoints/m1-enrolment-request-otp"
           },
           "webhook": null,
-          "detail": "Not an NHA test case. It sat under 'ABHA creation, Aadhaar OTP'. Run the mobile request and verify pair with a number different from the one the Aadhaar OTP went to. Success is HTTP 200 on both calls and a profile whose mobile is the new number. A rejection naming loginId points at your encryption, not at the number."
+          "detail": "Not an NHA test case. It sat under 'ABHA creation, Aadhaar OTP'. Run the mobile request and verify pair with a number different from the one the Aadhaar OTP went to. Success is HTTP 200 on both calls and a profile whose mobile is the new number. A rejection naming loginId points at your encryption, not at the number.",
+          "atoms": [
+            "hiecm.endpoint.m1-enrolment-request-otp"
+          ]
         },
         {
           "condition": "",
-          "apis": [],
+          "apis": [
+            "https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/enrol/abha-address"
+          ],
           "id": "B4",
           "type": "Portal check",
           "functionality": "Link the chosen ABHA address",
@@ -1272,22 +1370,32 @@
             "to": "/docs/hiecm/v3/api/m1/endpoints/m1-enrolment-claim-abha-address"
           },
           "webhook": null,
-          "detail": "Not an NHA test case. It sat under 'ABHA creation, Aadhaar OTP'. Send the chosen address with preferred: 1. Success is HTTP 200 with healthIdNumber in the body, and a later profile read whose preferredAbhaAddress starts with the address you sent. A different address, or an auto generated one built from the ABHA number, is a failure. Enrolment ends here."
+          "detail": "Not an NHA test case. It sat under 'ABHA creation, Aadhaar OTP'. Send the chosen address with preferred: 1. Success is HTTP 200 with healthIdNumber in the body, and a later profile read whose preferredAbhaAddress starts with the address you sent. A different address, or an auto generated one built from the ABHA number, is a failure. Enrolment ends here.",
+          "atoms": [
+            "hiecm.endpoint.m1-enrolment-claim-abha-address"
+          ]
         },
         {
           "condition": "",
-          "apis": [],
+          "apis": [
+            "https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/enrol/capturePID"
+          ],
           "id": "CRT_BIO_201",
           "type": "Portal check",
           "functionality": "Capture a fingerprint or iris",
           "expected": "An Aadhaar registered device produces a signed capture of the person's fingerprint or iris.",
           "api": null,
           "webhook": null,
-          "detail": "Not an NHA test case. It sat under 'ABHA creation, Aadhaar biometric'. The device encrypts and digitally signs the PID block. UIDAI publishes the approved devices at uidai.gov.in. NHA's M1 document shows this step only as screenshots, so the fields are not transcribed."
+          "detail": "Not an NHA test case. It sat under 'ABHA creation, Aadhaar biometric'. The device encrypts and digitally signs the PID block. UIDAI publishes the approved devices at uidai.gov.in. NHA's M1 document shows this step only as screenshots, so the fields are not transcribed.",
+          "atoms": [
+            "hiecm.endpoint.m1-enrolment-capture-pid"
+          ]
         },
         {
           "condition": "",
-          "apis": [],
+          "apis": [
+            "https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/enrol/byAadhaar"
+          ],
           "id": "CRT_BIO_202",
           "type": "Portal check",
           "functionality": "Create the ABHA from the scan",
@@ -1298,11 +1406,16 @@
             "to": "/docs/hiecm/v3/api/m1/endpoints/m1-enrolment-by-aadhaar"
           },
           "webhook": null,
-          "detail": "Not an NHA test case. It sat under 'ABHA creation, Aadhaar biometric'. Fingerprint and iris are two flows in NHA's document and both run against this call with the signed data block and the Aadhaar details. The request body is not transcribed. After enrolment this route continues with the same mobile, optional email, address and link steps as the Aadhaar OTP route."
+          "detail": "Not an NHA test case. It sat under 'ABHA creation, Aadhaar biometric'. Fingerprint and iris are two flows in NHA's document and both run against this call with the signed data block and the Aadhaar details. The request body is not transcribed. After enrolment this route continues with the same mobile, optional email, address and link steps as the Aadhaar OTP route.",
+          "atoms": [
+            "hiecm.endpoint.m1-enrolment-by-aadhaar"
+          ]
         },
         {
           "condition": "",
-          "apis": [],
+          "apis": [
+            "https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/enrol/auth/init"
+          ],
           "id": "CRT_BIO_203",
           "type": "Portal check",
           "functionality": "Start a face authentication",
@@ -1313,11 +1426,16 @@
             "to": "/docs/hiecm/v3/api/m1/endpoints/m1-enrolment-face-auth-init"
           },
           "webhook": null,
-          "detail": "Not an NHA test case. It sat under 'ABHA creation, Aadhaar biometric'. Send scope [\"abha-enrol\",\"face-auth\"]. Turn the returned txnId into a QR code and show it. The person opens the ABHA app, taps Portal Face Auth, scans the code, and completes face authentication through the Aadhaar registered device service. Plan the screen that tells them to install the app first."
+          "detail": "Not an NHA test case. It sat under 'ABHA creation, Aadhaar biometric'. Send scope [\"abha-enrol\",\"face-auth\"]. Turn the returned txnId into a QR code and show it. The person opens the ABHA app, taps Portal Face Auth, scans the code, and completes face authentication through the Aadhaar registered device service. Plan the screen that tells them to install the app first.",
+          "atoms": [
+            "hiecm.endpoint.m1-enrolment-face-auth-init"
+          ]
         },
         {
           "condition": "",
-          "apis": [],
+          "apis": [
+            "https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/enrol/capturePID"
+          ],
           "id": "CRT_BIO_204",
           "type": "Portal check",
           "functionality": "Poll for the captured block",
@@ -1328,11 +1446,16 @@
             "to": "/docs/hiecm/v3/api/m1/endpoints/m1-enrolment-capture-pid"
           },
           "webhook": null,
-          "detail": "Not an NHA test case. It sat under 'ABHA creation, Aadhaar biometric'. This call answers HTTP 200 every time, so branch on status: PENDING, then VERIFIED, then COMPLETE. Stop at COMPLETE. Your system drives this loop. M1 has no callbacks and NHA never calls you."
+          "detail": "Not an NHA test case. It sat under 'ABHA creation, Aadhaar biometric'. This call answers HTTP 200 every time, so branch on status: PENDING, then VERIFIED, then COMPLETE. Stop at COMPLETE. Your system drives this loop. M1 has no callbacks and NHA never calls you.",
+          "atoms": [
+            "hiecm.endpoint.m1-enrolment-capture-pid"
+          ]
         },
         {
           "condition": "",
-          "apis": [],
+          "apis": [
+            "https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/enrol/byAadhaar"
+          ],
           "id": "CRT_BIO_205",
           "type": "Portal check",
           "functionality": "Create the ABHA from the face",
@@ -1343,11 +1466,16 @@
             "to": "/docs/hiecm/v3/api/m1/endpoints/m1-enrolment-by-aadhaar"
           },
           "webhook": null,
-          "detail": "Not an NHA test case. It sat under 'ABHA creation, Aadhaar biometric'. Send authMethods [\"face_auth\"] with the transaction id, then continue at the communication mobile step of the Aadhaar OTP route."
+          "detail": "Not an NHA test case. It sat under 'ABHA creation, Aadhaar biometric'. Send authMethods [\"face_auth\"] with the transaction id, then continue at the communication mobile step of the Aadhaar OTP route.",
+          "atoms": [
+            "hiecm.endpoint.m1-enrolment-by-aadhaar"
+          ]
         },
         {
           "condition": "",
-          "apis": [],
+          "apis": [
+            "https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/enrol/byAadhaar"
+          ],
           "id": "CRT_DEMO_301",
           "type": "Portal check",
           "functionality": "Create the ABHA from demographics",
@@ -1358,11 +1486,16 @@
             "to": "/docs/hiecm/v3/api/m1/endpoints/m1-enrolment-by-aadhaar"
           },
           "webhook": null,
-          "detail": "Not an NHA test case. It sat under 'ABHA creation, demographic authentication'. One call, with authMethods [\"demo_auth\"] and a demo_auth object holding the encrypted Aadhaar number, name, date of birth, gender, state code and district code, plus a consent block of code abha-enrollment and version 1.4. Mobile, address, profile photo, pincode and consentHealthId are optional in that object. NHA marks this route mandatory for government integrators and not required for private ones."
+          "detail": "Not an NHA test case. It sat under 'ABHA creation, demographic authentication'. One call, with authMethods [\"demo_auth\"] and a demo_auth object holding the encrypted Aadhaar number, name, date of birth, gender, state code and district code, plus a consent block of code abha-enrollment and version 1.4. Mobile, address, profile photo, pincode and consentHealthId are optional in that object. NHA marks this route mandatory for government integrators and not required for private ones.",
+          "atoms": [
+            "hiecm.endpoint.m1-enrolment-by-aadhaar"
+          ]
         },
         {
           "condition": "",
-          "apis": [],
+          "apis": [
+            "https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/profile/children"
+          ],
           "id": "CRT_DEMO_302",
           "type": "Portal check",
           "functionality": "List the child accounts",
@@ -1373,11 +1506,16 @@
             "to": "/docs/hiecm/v3/api/m1/endpoints/m1-enrolment-list-children"
           },
           "webhook": null,
-          "detail": "Not an NHA test case. It sat under 'ABHA creation, demographic authentication'. A child ABHA is issued for a child under six with no Aadhaar number, on the consent of a parent or guardian, and it links to the parent's ABHA number. NHA reaches it through government health programmes and restricts it to government integrators by leadership approval. Skip it unless NHA has enabled it for you."
+          "detail": "Not an NHA test case. It sat under 'ABHA creation, demographic authentication'. A child ABHA is issued for a child under six with no Aadhaar number, on the consent of a parent or guardian, and it links to the parent's ABHA number. NHA reaches it through government health programmes and restricts it to government integrators by leadership approval. Skip it unless NHA has enabled it for you.",
+          "atoms": [
+            "hiecm.endpoint.m1-enrolment-list-children"
+          ]
         },
         {
           "condition": "",
-          "apis": [],
+          "apis": [
+            "https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/request/otp"
+          ],
           "id": "CRT_DOC_401",
           "type": "Portal check",
           "functionality": "Request a mobile OTP",
@@ -1388,11 +1526,16 @@
             "to": "/docs/hiecm/v3/api/m1/endpoints/m1-enrolment-request-otp"
           },
           "webhook": null,
-          "detail": "Not an NHA test case. It sat under 'ABHA creation, driving licence or PAN'. Send scope [\"abha-enrol\",\"mobile-verify\",\"dl-flow\"], loginHint \"mobile\", otpSystem \"abdm\" and the encrypted mobile number. The third scope value is what marks this as the document route."
+          "detail": "Not an NHA test case. It sat under 'ABHA creation, driving licence or PAN'. Send scope [\"abha-enrol\",\"mobile-verify\",\"dl-flow\"], loginHint \"mobile\", otpSystem \"abdm\" and the encrypted mobile number. The third scope value is what marks this as the document route.",
+          "atoms": [
+            "hiecm.endpoint.m1-enrolment-request-otp"
+          ]
         },
         {
           "condition": "",
-          "apis": [],
+          "apis": [
+            "https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/auth/byAbdm"
+          ],
           "id": "CRT_DOC_402",
           "type": "Portal check",
           "functionality": "Verify the mobile OTP",
@@ -1403,11 +1546,16 @@
             "to": "/docs/hiecm/v3/api/m1/endpoints/m1-enrolment-verify-abdm-otp"
           },
           "webhook": null,
-          "detail": "Not an NHA test case. It sat under 'ABHA creation, driving licence or PAN'. Send the same three scope values, authMethods [\"otp\"], the txnId from the request and the encrypted OTP."
+          "detail": "Not an NHA test case. It sat under 'ABHA creation, driving licence or PAN'. Send the same three scope values, authMethods [\"otp\"], the txnId from the request and the encrypted OTP.",
+          "atoms": [
+            "hiecm.endpoint.m1-enrolment-verify-abdm-otp"
+          ]
         },
         {
           "condition": "",
-          "apis": [],
+          "apis": [
+            "https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/enrol/byDocument"
+          ],
           "id": "CRT_DOC_403",
           "type": "Portal check",
           "functionality": "Create the ABHA from the document",
@@ -1418,11 +1566,16 @@
             "to": "/docs/hiecm/v3/api/m1/endpoints/m1-enrolment-by-document"
           },
           "webhook": null,
-          "detail": "Not an NHA test case. It sat under 'ABHA creation, driving licence or PAN'. The body carries txnId, documentType, documentId, the name parts, dob, gender, front and back photos, address, state, district, pinCode and a consent block. NHA's collection uses a driving licence. The account created this way is restricted until it is upgraded through Aadhaar KYC, so tell the person that rather than letting them discover it later."
+          "detail": "Not an NHA test case. It sat under 'ABHA creation, driving licence or PAN'. The body carries txnId, documentType, documentId, the name parts, dob, gender, front and back photos, address, state, district, pinCode and a consent block. NHA's collection uses a driving licence. The account created this way is restricted until it is upgraded through Aadhaar KYC, so tell the person that rather than letting them discover it later.",
+          "atoms": [
+            "hiecm.endpoint.m1-enrolment-by-document"
+          ]
         },
         {
           "condition": "",
-          "apis": [],
+          "apis": [
+            "https://abhasbx.abdm.gov.in/abha/api/v3/profile/login/request/otp"
+          ],
           "id": "VER_AADHAAR_501",
           "type": "Portal check",
           "functionality": "Request a login OTP from Aadhaar",
@@ -1433,11 +1586,16 @@
             "to": "/docs/hiecm/v3/api/m1/endpoints/m1-login-request-otp"
           },
           "webhook": null,
-          "detail": "Not an NHA test case. It sat under 'ABHA verification, Aadhaar OTP'. For a person who typed their 14 digit ABHA number, send loginHint \"abha-number\", scope [\"abha-login\",\"aadhaar-verify\"] and otpSystem \"aadhaar\". Keep the txnId."
+          "detail": "Not an NHA test case. It sat under 'ABHA verification, Aadhaar OTP'. For a person who typed their 14 digit ABHA number, send loginHint \"abha-number\", scope [\"abha-login\",\"aadhaar-verify\"] and otpSystem \"aadhaar\". Keep the txnId.",
+          "atoms": [
+            "hiecm.endpoint.m1-login-request-otp"
+          ]
         },
         {
           "condition": "",
-          "apis": [],
+          "apis": [
+            "https://abhasbx.abdm.gov.in/abha/api/v3/profile/login/verify"
+          ],
           "id": "D2",
           "type": "Portal check",
           "functionality": "Verify the login OTP",
@@ -1448,11 +1606,16 @@
             "to": "/docs/hiecm/v3/api/m1/endpoints/m1-login-verify"
           },
           "webhook": null,
-          "detail": "Not an NHA test case. It sat under 'ABHA verification, Aadhaar OTP'. Run it twice: once with scope [\"abha-login\",\"aadhaar-verify\"] and otpSystem \"aadhaar\", once with scope [\"abha-login\",\"mobile-verify\"] and otpSystem \"abdm\". Both runs pass with HTTP 200, authResult of success, and a non empty token, refreshToken and numeric expiresIn. A 400 naming scope means the scope values differ between the request and the verify call. They must be identical."
+          "detail": "Not an NHA test case. It sat under 'ABHA verification, Aadhaar OTP'. Run it twice: once with scope [\"abha-login\",\"aadhaar-verify\"] and otpSystem \"aadhaar\", once with scope [\"abha-login\",\"mobile-verify\"] and otpSystem \"abdm\". Both runs pass with HTTP 200, authResult of success, and a non empty token, refreshToken and numeric expiresIn. A 400 naming scope means the scope values differ between the request and the verify call. They must be identical.",
+          "atoms": [
+            "hiecm.endpoint.m1-login-verify"
+          ]
         },
         {
           "condition": "",
-          "apis": [],
+          "apis": [
+            "https://abhasbx.abdm.gov.in/abha/api/v3/profile/login/request/otp"
+          ],
           "id": "VER_AADHAAR_502",
           "type": "Portal check",
           "functionality": "Request an Aadhaar login OTP",
@@ -1463,11 +1626,16 @@
             "to": "/docs/hiecm/v3/api/m1/endpoints/m1-login-request-otp-v31"
           },
           "webhook": null,
-          "detail": "Not an NHA test case. It sat under 'ABHA verification, Aadhaar OTP'. Send scope [\"abha-login\",\"aadhaar-verify\",\"aadhaar-otp-verify\"], loginHint \"aadhaar\" and otpSystem \"aadhaar\". This route sits on the v3.1 base URL at https://abhasbx.abdm.gov.in/abha/api/v3.1/. The rest of M1 is on v3."
+          "detail": "Not an NHA test case. It sat under 'ABHA verification, Aadhaar OTP'. Send scope [\"abha-login\",\"aadhaar-verify\",\"aadhaar-otp-verify\"], loginHint \"aadhaar\" and otpSystem \"aadhaar\". This route sits on the v3.1 base URL at https://abhasbx.abdm.gov.in/abha/api/v3.1/. The rest of M1 is on v3.",
+          "atoms": [
+            "hiecm.endpoint.m1-login-request-otp"
+          ]
         },
         {
           "condition": "",
-          "apis": [],
+          "apis": [
+            "https://abhasbx.abdm.gov.in/abha/api/v3/profile/login/verify"
+          ],
           "id": "VER_AADHAAR_503",
           "type": "Portal check",
           "functionality": "Verify the Aadhaar login OTP",
@@ -1478,11 +1646,16 @@
             "to": "/docs/hiecm/v3/api/m1/endpoints/m1-login-verify-v31"
           },
           "webhook": null,
-          "detail": "Not an NHA test case. It sat under 'ABHA verification, Aadhaar OTP'. Send the same three scope values as the request, the txnId and the encrypted OTP. You receive token, refreshToken and expiresIn."
+          "detail": "Not an NHA test case. It sat under 'ABHA verification, Aadhaar OTP'. Send the same three scope values as the request, the txnId and the encrypted OTP. You receive token, refreshToken and expiresIn.",
+          "atoms": [
+            "hiecm.endpoint.m1-login-verify"
+          ]
         },
         {
           "condition": "",
-          "apis": [],
+          "apis": [
+            "https://abhasbx.abdm.gov.in/abha/api/v3/profile/login/request/otp"
+          ],
           "id": "VER_MOBILE_601",
           "type": "Portal check",
           "functionality": "Request a login OTP by mobile",
@@ -1493,11 +1666,16 @@
             "to": "/docs/hiecm/v3/api/m1/endpoints/m1-login-request-otp"
           },
           "webhook": null,
-          "detail": "Not an NHA test case. It sat under 'ABHA verification, mobile OTP'. Send scope [\"abha-login\",\"mobile-verify\"], loginHint \"mobile\" and otpSystem \"abdm\". Success is HTTP 200 with a txnId and a message naming the masked mobile. Show that message to the person."
+          "detail": "Not an NHA test case. It sat under 'ABHA verification, mobile OTP'. Send scope [\"abha-login\",\"mobile-verify\"], loginHint \"mobile\" and otpSystem \"abdm\". Success is HTTP 200 with a txnId and a message naming the masked mobile. Show that message to the person.",
+          "atoms": [
+            "hiecm.endpoint.m1-login-request-otp"
+          ]
         },
         {
           "condition": "",
-          "apis": [],
+          "apis": [
+            "https://abhasbx.abdm.gov.in/abha/api/v3/profile/login/verify"
+          ],
           "id": "VER_MOBILE_602",
           "type": "Portal check",
           "functionality": "Verify the mobile OTP",
@@ -1508,11 +1686,16 @@
             "to": "/docs/hiecm/v3/api/m1/endpoints/m1-login-verify"
           },
           "webhook": null,
-          "detail": "Not an NHA test case. It sat under 'ABHA verification, mobile OTP'. Send the txnId and the encrypted OTP. Success is HTTP 200. One mobile number can hold several ABHA accounts, so a third call follows."
+          "detail": "Not an NHA test case. It sat under 'ABHA verification, mobile OTP'. Send the txnId and the encrypted OTP. Success is HTTP 200. One mobile number can hold several ABHA accounts, so a third call follows.",
+          "atoms": [
+            "hiecm.endpoint.m1-login-verify"
+          ]
         },
         {
           "condition": "",
-          "apis": [],
+          "apis": [
+            "https://abhasbx.abdm.gov.in/abha/api/v3/profile/login/verify/user"
+          ],
           "id": "D1",
           "type": "Portal check",
           "functionality": "Pick an account and sign in",
@@ -1523,11 +1706,16 @@
             "to": "/docs/hiecm/v3/api/m1/endpoints/m1-login-select-account"
           },
           "webhook": null,
-          "detail": "Not an NHA test case. It sat under 'ABHA verification, mobile OTP'. Send the ABHA number the person picked, with the transaction token in the T-token header. Success is HTTP 200 with token and refreshToken in the body. A 400 here usually means T-token is missing. It is the only M1 call that uses that header. The collection has no shortcut for a number with exactly one ABHA behind it, so build all three calls."
+          "detail": "Not an NHA test case. It sat under 'ABHA verification, mobile OTP'. Send the ABHA number the person picked, with the transaction token in the T-token header. Success is HTTP 200 with token and refreshToken in the body. A 400 here usually means T-token is missing. It is the only M1 call that uses that header. The collection has no shortcut for a number with exactly one ABHA behind it, so build all three calls.",
+          "atoms": [
+            "hiecm.endpoint.m1-login-select-account"
+          ]
         },
         {
           "condition": "",
-          "apis": [],
+          "apis": [
+            "https://abhasbx.abdm.gov.in/abha/api/v3/profile/login/verify"
+          ],
           "id": "D3",
           "type": "Portal check",
           "functionality": "Reject a wrong login OTP",
@@ -1538,11 +1726,17 @@
             "to": "/docs/hiecm/v3/api/m1/endpoints/m1-login-verify"
           },
           "webhook": null,
-          "detail": "Not an NHA test case. It sat under 'ABHA verification, mobile OTP'. Request a login OTP, then verify with a wrong encrypted OTP. Success is a non 200 with no token in the body. HTTP 200, or any token present, is a failure. Check your session store holds nothing for that person afterwards."
+          "detail": "Not an NHA test case. It sat under 'ABHA verification, mobile OTP'. Request a login OTP, then verify with a wrong encrypted OTP. Success is a non 200 with no token in the body. HTTP 200, or any token present, is a failure. Check your session store holds nothing for that person afterwards.",
+          "atoms": [
+            "hiecm.endpoint.m1-login-verify"
+          ]
         },
         {
           "condition": "",
-          "apis": [],
+          "apis": [
+            "https://abhasbx.abdm.gov.in/abha/api/v3/profile/login/request/otp",
+            "https://abhasbx.abdm.gov.in/abha/api/v3/profile/login/verify"
+          ],
           "id": "VER_MOBILE_603",
           "type": "Portal check",
           "functionality": "Sign in by ABHA number",
@@ -1553,11 +1747,17 @@
             "to": "/docs/hiecm/v3/api/m1/endpoints/m1-login-request-otp"
           },
           "webhook": null,
-          "detail": "Not an NHA test case. It sat under 'ABHA verification, mobile OTP'. Two calls, the same pair as the Aadhaar route with loginHint \"abha-number\", scope [\"abha-login\",\"mobile-verify\"] and otpSystem \"abdm\". There is also a password route: one call to verify a login with scope [\"abha-login\",\"password-verify\"] and an authData.password object holding the ABHA number and the encrypted password. No OTP request comes first."
+          "detail": "Not an NHA test case. It sat under 'ABHA verification, mobile OTP'. Two calls, the same pair as the Aadhaar route with loginHint \"abha-number\", scope [\"abha-login\",\"mobile-verify\"] and otpSystem \"abdm\". There is also a password route: one call to verify a login with scope [\"abha-login\",\"password-verify\"] and an authData.password object holding the ABHA number and the encrypted password. No OTP request comes first.",
+          "atoms": [
+            "hiecm.endpoint.m1-login-request-otp",
+            "hiecm.endpoint.m1-login-verify"
+          ]
         },
         {
           "condition": "",
-          "apis": [],
+          "apis": [
+            "https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/enrol/auth/init"
+          ],
           "id": "VER_BIO_701",
           "type": "Portal check",
           "functionality": "Start a face login transaction",
@@ -1568,11 +1768,16 @@
             "to": "/docs/hiecm/v3/api/m1/endpoints/m1-enrolment-face-auth-init"
           },
           "webhook": null,
-          "detail": "Not an NHA test case. It sat under 'ABHA verification, biometric'. NHA's collection reuses the enrolment auth init call to get the txnId that the login QR code is built from."
+          "detail": "Not an NHA test case. It sat under 'ABHA verification, biometric'. NHA's collection reuses the enrolment auth init call to get the txnId that the login QR code is built from.",
+          "atoms": [
+            "hiecm.endpoint.m1-enrolment-face-auth-init"
+          ]
         },
         {
           "condition": "",
-          "apis": [],
+          "apis": [
+            "https://abhasbx.abdm.gov.in/abha/api/v3/profile/login/verify"
+          ],
           "id": "VER_BIO_702",
           "type": "Portal check",
           "functionality": "Verify the face capture",
@@ -1583,11 +1788,16 @@
             "to": "/docs/hiecm/v3/api/m1/endpoints/m1-login-verify-v31"
           },
           "webhook": null,
-          "detail": "Not an NHA test case. It sat under 'ABHA verification, biometric'. This verify sits on the v3.1 base URL, not v3. NHA's collection has a variant that carries the PID block and one that does not."
+          "detail": "Not an NHA test case. It sat under 'ABHA verification, biometric'. This verify sits on the v3.1 base URL, not v3. NHA's collection has a variant that carries the PID block and one that does not.",
+          "atoms": [
+            "hiecm.endpoint.m1-login-verify"
+          ]
         },
         {
           "condition": "",
-          "apis": [],
+          "apis": [
+            "https://abhasbx.abdm.gov.in/abha/api/v3/profile/login/verify"
+          ],
           "id": "VER_BIO_703",
           "type": "Portal check",
           "functionality": "Sign in by fingerprint or iris",
@@ -1598,11 +1808,16 @@
             "to": "/docs/hiecm/v3/api/m1/endpoints/m1-login-verify-v31"
           },
           "webhook": null,
-          "detail": "Not an NHA test case. It sat under 'ABHA verification, biometric'. Fingerprint and iris are separate requests in NHA's collection against the same v3.1 verify call. NHA's M1 document shows the request bodies only as screenshots, so the fields are not transcribed. Write the checks from what you observe against sandbox."
+          "detail": "Not an NHA test case. It sat under 'ABHA verification, biometric'. Fingerprint and iris are separate requests in NHA's collection against the same v3.1 verify call. NHA's M1 document shows the request bodies only as screenshots, so the fields are not transcribed. Write the checks from what you observe against sandbox.",
+          "atoms": [
+            "hiecm.endpoint.m1-login-verify"
+          ]
         },
         {
           "condition": "",
-          "apis": [],
+          "apis": [
+            "https://abhasbx.abdm.gov.in/abha/api/v3/phr/app/enrollment/encrypt"
+          ],
           "id": "FND_MOBILE_801",
           "type": "Portal check",
           "functionality": "Encrypt the mobile number",
@@ -1613,11 +1828,16 @@
             "to": "/docs/hiecm/v3/api/m1/endpoints/m1-encrypt-value"
           },
           "webhook": null,
-          "detail": "Not an NHA test case. It sat under 'Fetch ABHA by mobile number'. Post the plain value and use the encryptedData that comes back. This is what NHA's collection does for the find ABHA flow. The other option is to fetch NHA's public certificate and encrypt locally, better for production because the plain value never leaves your system."
+          "detail": "Not an NHA test case. It sat under 'Fetch ABHA by mobile number'. Post the plain value and use the encryptedData that comes back. This is what NHA's collection does for the find ABHA flow. The other option is to fetch NHA's public certificate and encrypt locally, better for production because the plain value never leaves your system.",
+          "atoms": [
+            "hiecm.endpoint.m1-encrypt-value"
+          ]
         },
         {
           "condition": "",
-          "apis": [],
+          "apis": [
+            "https://abhasbx.abdm.gov.in/abha/api/v3/profile/login/search"
+          ],
           "id": "FND_MOBILE_802",
           "type": "Portal check",
           "functionality": "Search for the accounts",
@@ -1628,11 +1848,16 @@
             "to": "/docs/hiecm/v3/api/m1/endpoints/m1-find-abha-search"
           },
           "webhook": null,
-          "detail": "Not an NHA test case. It sat under 'Fetch ABHA by mobile number'. Send scope [\"search-abha\"] and the encrypted mobile. Keep the transaction id. The two pieces of evidence in NHA's collection disagree on the response shape, so confirm it against sandbox before you rely on it."
+          "detail": "Not an NHA test case. It sat under 'Fetch ABHA by mobile number'. Send scope [\"search-abha\"] and the encrypted mobile. Keep the transaction id. The two pieces of evidence in NHA's collection disagree on the response shape, so confirm it against sandbox before you rely on it.",
+          "atoms": [
+            "hiecm.endpoint.m1-login-search"
+          ]
         },
         {
           "condition": "",
-          "apis": [],
+          "apis": [
+            "https://abhasbx.abdm.gov.in/abha/api/v3/profile/login/request/otp"
+          ],
           "id": "FND_MOBILE_803",
           "type": "Portal check",
           "functionality": "Request a login OTP",
@@ -1643,11 +1868,16 @@
             "to": "/docs/hiecm/v3/api/m1/endpoints/m1-login-request-otp"
           },
           "webhook": null,
-          "detail": "Not an NHA test case. It sat under 'Fetch ABHA by mobile number'. Send scope [\"abha-login\",\"search-abha\",\"mobile-verify\"], loginHint \"index\", and the search transaction id in txnId."
+          "detail": "Not an NHA test case. It sat under 'Fetch ABHA by mobile number'. Send scope [\"abha-login\",\"search-abha\",\"mobile-verify\"], loginHint \"index\", and the search transaction id in txnId.",
+          "atoms": [
+            "hiecm.endpoint.m1-login-request-otp"
+          ]
         },
         {
           "condition": "",
-          "apis": [],
+          "apis": [
+            "https://abhasbx.abdm.gov.in/abha/api/v3/profile/login/verify"
+          ],
           "id": "FND_MOBILE_804",
           "type": "Portal check",
           "functionality": "Verify the OTP and sign in",
@@ -1658,11 +1888,16 @@
             "to": "/docs/hiecm/v3/api/m1/endpoints/m1-login-verify"
           },
           "webhook": null,
-          "detail": "Not an NHA test case. It sat under 'Fetch ABHA by mobile number'. Send scope [\"abha-login\",\"mobile-verify\"] with the encrypted OTP. You receive the user token."
+          "detail": "Not an NHA test case. It sat under 'Fetch ABHA by mobile number'. Send scope [\"abha-login\",\"mobile-verify\"] with the encrypted OTP. You receive the user token.",
+          "atoms": [
+            "hiecm.endpoint.m1-login-verify"
+          ]
         },
         {
           "condition": "",
-          "apis": [],
+          "apis": [
+            "https://abhasbx.abdm.gov.in/abha/api/v3/profile/benefit/search/abhaByAadhaar"
+          ],
           "id": "FND_AADHAAR_901",
           "type": "Portal check",
           "functionality": "Find the ABHA behind an Aadhaar",
@@ -1673,11 +1908,16 @@
             "to": "/docs/hiecm/v3/api/m1/endpoints/m1-benefit-find-abha-by-aadhaar"
           },
           "webhook": null,
-          "detail": "Not an NHA test case. It sat under 'Fetch ABHA by Aadhaar number'. A benefit scheme lookup, not a general search. The Aadhaar value is encrypted. NHA restricts the benefit endpoints to government integrators."
+          "detail": "Not an NHA test case. It sat under 'Fetch ABHA by Aadhaar number'. A benefit scheme lookup, not a general search. The Aadhaar value is encrypted. NHA restricts the benefit endpoints to government integrators.",
+          "atoms": [
+            "hiecm.endpoint.m1-benefit-find-abha-by-aadhaar"
+          ]
         },
         {
           "condition": "",
-          "apis": [],
+          "apis": [
+            "https://abhasbx.abdm.gov.in/abha/api/v3/profile/benefit/search/aadhaarByAbha"
+          ],
           "id": "FND_AADHAAR_902",
           "type": "Portal check",
           "functionality": "Find the Aadhaar behind an ABHA",
@@ -1688,7 +1928,10 @@
             "to": "/docs/hiecm/v3/api/m1/endpoints/m1-benefit-find-aadhaar-by-abha"
           },
           "webhook": null,
-          "detail": "Not an NHA test case. It sat under 'Fetch ABHA by Aadhaar number'. The other half of the same pair in NHA's collection, under the same government only restriction."
+          "detail": "Not an NHA test case. It sat under 'Fetch ABHA by Aadhaar number'. The other half of the same pair in NHA's collection, under the same government only restriction.",
+          "atoms": [
+            "hiecm.endpoint.m1-benefit-find-aadhaar-by-abha"
+          ]
         },
         {
           "condition": "",
@@ -1699,11 +1942,14 @@
           "expected": "A private integrator is turned away from the benefit endpoints.",
           "api": null,
           "webhook": null,
-          "detail": "Not an NHA test case. It sat under 'Fetch ABHA by Aadhaar number'. As a private integrator, call any profile/benefit/ endpoint. Expect HTTP 401 with ABDM-1094. The result is quoted from a saved example in NHA's collection."
+          "detail": "Not an NHA test case. It sat under 'Fetch ABHA by Aadhaar number'. As a private integrator, call any profile/benefit/ endpoint. Expect HTTP 401 with ABDM-1094. The result is quoted from a saved example in NHA's collection.",
+          "apisNote": "No single call: this check whichever endpoint your client is not entitled to."
         },
         {
           "condition": "",
-          "apis": [],
+          "apis": [
+            "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account/qrCode"
+          ],
           "id": "QR_ABHA_1001",
           "type": "Portal check",
           "functionality": "Get the ABHA QR code",
@@ -1714,11 +1960,16 @@
             "to": "/docs/hiecm/v3/api/m1/endpoints/m1-profile-get-qr-code"
           },
           "webhook": null,
-          "detail": "Not an NHA test case. It sat under 'ABHA QR code'. Gateway token in Authorization, user token in X-token, the same two headers as the profile call. The response shape is not transcribed, because NHA's document shows it as a screenshot."
+          "detail": "Not an NHA test case. It sat under 'ABHA QR code'. Gateway token in Authorization, user token in X-token, the same two headers as the profile call. The response shape is not transcribed, because NHA's document shows it as a screenshot.",
+          "atoms": [
+            "hiecm.endpoint.m1-profile-get-qr-code"
+          ]
         },
         {
           "condition": "",
-          "apis": [],
+          "apis": [
+            "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account/abha-card"
+          ],
           "id": "QR_ABHA_1002",
           "type": "Portal check",
           "functionality": "Generate the ABHA card",
@@ -1729,11 +1980,16 @@
             "to": "/docs/hiecm/v3/api/m1/endpoints/m1-profile-get-abha-card"
           },
           "webhook": null,
-          "detail": "Not an NHA test case. It sat under 'ABHA QR code'. Same two headers. NHA shows the card arriving inside the response rather than as a URL to fetch, and the response shape is not transcribed."
+          "detail": "Not an NHA test case. It sat under 'ABHA QR code'. Same two headers. NHA shows the card arriving inside the response rather than as a URL to fetch, and the response shape is not transcribed.",
+          "atoms": [
+            "hiecm.endpoint.m1-profile-get-abha-card"
+          ]
         },
         {
           "condition": "",
-          "apis": [],
+          "apis": [
+            "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account/download-abha-card"
+          ],
           "id": "QR_ABHA_1003",
           "type": "Portal check",
           "functionality": "Download the ABHA card",
@@ -1744,7 +2000,10 @@
             "to": "/docs/hiecm/v3/api/m1/endpoints/m1-profile-download-abha-card"
           },
           "webhook": null,
-          "detail": "Not an NHA test case. It sat under 'ABHA QR code'. Same two headers. The response shape is not transcribed."
+          "detail": "Not an NHA test case. It sat under 'ABHA QR code'. Same two headers. The response shape is not transcribed.",
+          "atoms": [
+            "hiecm.endpoint.m1-profile-download-abha-card"
+          ]
         },
         {
           "condition": "",
@@ -1755,11 +2014,14 @@
           "expected": "The card and the QR code both come back and can be shown to the person.",
           "api": null,
           "webhook": null,
-          "detail": "Not an NHA test case. It sat under 'ABHA QR code'. Call all three of the above. Success is HTTP 200 from each with a non empty body. Any non 200 is a failure. Because the response shapes are not transcribed in either source, assert on the status and a non empty body, then record what you actually received."
+          "detail": "Not an NHA test case. It sat under 'ABHA QR code'. Call all three of the above. Success is HTTP 200 from each with a non empty body. Any non 200 is a failure. Because the response shapes are not transcribed in either source, assert on the status and a non empty body, then record what you actually received.",
+          "apisNote": "No single call: this check renders a card and a QR code, which no single response proves."
         },
         {
           "condition": "",
-          "apis": [],
+          "apis": [
+            "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account/request/otp"
+          ],
           "id": "UPD_ABHA_1101",
           "type": "Portal check",
           "functionality": "Request a new number OTP",
@@ -1770,11 +2032,16 @@
             "to": "/docs/hiecm/v3/api/m1/endpoints/m1-profile-request-otp"
           },
           "webhook": null,
-          "detail": "Not an NHA test case. It sat under 'Profile update'. Send scope [\"abha-profile\",\"mobile-verify\"] and the new number, encrypted. Both the gateway token and the user token are needed. Success is HTTP 200 with a txnId."
+          "detail": "Not an NHA test case. It sat under 'Profile update'. Send scope [\"abha-profile\",\"mobile-verify\"] and the new number, encrypted. Both the gateway token and the user token are needed. Success is HTTP 200 with a txnId.",
+          "atoms": [
+            "hiecm.endpoint.m1-profile-request-otp"
+          ]
         },
         {
           "condition": "",
-          "apis": [],
+          "apis": [
+            "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account/verify"
+          ],
           "id": "C4",
           "type": "Portal check",
           "functionality": "Verify the profile change",
@@ -1785,11 +2052,16 @@
             "to": "/docs/hiecm/v3/api/m1/endpoints/m1-profile-verify-otp"
           },
           "webhook": null,
-          "detail": "Not an NHA test case. It sat under 'Profile update'. Send the same scope and the encrypted OTP. Success is HTTP 200 followed by a profile read showing the new mobile. A 400 with {\"message\": \"Invalid X-token\"} means you sent the gateway token where the user token belongs. Both headers are needed here. The verify response body is not transcribed, so assert on the status and the readback, not on a field in the response."
+          "detail": "Not an NHA test case. It sat under 'Profile update'. Send the same scope and the encrypted OTP. Success is HTTP 200 followed by a profile read showing the new mobile. A 400 with {\"message\": \"Invalid X-token\"} means you sent the gateway token where the user token belongs. Both headers are needed here. The verify response body is not transcribed, so assert on the status and the readback, not on a field in the response.",
+          "atoms": [
+            "hiecm.endpoint.m1-profile-verify-otp"
+          ]
         },
         {
           "condition": "",
-          "apis": [],
+          "apis": [
+            "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account"
+          ],
           "id": "UPD_ABHA_1102",
           "type": "Portal check",
           "functionality": "Change email, password or KYC",
@@ -1800,11 +2072,16 @@
             "to": "/docs/hiecm/v3/api/m1/endpoints/m1-profile-request-otp"
           },
           "webhook": null,
-          "detail": "Not an NHA test case. It sat under 'Profile update'. The email update, password change, re-KYC, delete and deactivate flows use the same request and verify pair with a different second scope value. NHA marks re-KYC optional for private and government integrators alike."
+          "detail": "Not an NHA test case. It sat under 'Profile update'. The email update, password change, re-KYC, delete and deactivate flows use the same request and verify pair with a different second scope value. NHA marks re-KYC optional for private and government integrators alike.",
+          "atoms": [
+            "hiecm.endpoint.m1-profile-update-account"
+          ]
         },
         {
           "condition": "",
-          "apis": [],
+          "apis": [
+            "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account"
+          ],
           "id": "UPD_ABHA_1103",
           "type": "Portal check",
           "functionality": "Update self declared details",
@@ -1815,11 +2092,16 @@
             "to": "/docs/hiecm/v3/api/m1/endpoints/m1-profile-update-account"
           },
           "webhook": null,
-          "detail": "Not an NHA test case. It sat under 'Profile update'. Changing a mobile number or an email address is not done here. Those need the OTP pair above, because NHA verifies the new value before accepting it. NHA's collection uses this call to change the profile photo."
+          "detail": "Not an NHA test case. It sat under 'Profile update'. Changing a mobile number or an email address is not done here. Those need the OTP pair above, because NHA verifies the new value before accepting it. NHA's collection uses this call to change the profile photo.",
+          "atoms": [
+            "hiecm.endpoint.m1-profile-update-account"
+          ]
         },
         {
           "condition": "",
-          "apis": [],
+          "apis": [
+            "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account"
+          ],
           "id": "E1",
           "type": "Portal check",
           "functionality": "Read the profile back",
@@ -1830,11 +2112,16 @@
             "to": "/docs/hiecm/v3/api/m1/endpoints/m1-profile-get-account"
           },
           "webhook": null,
-          "detail": "Not an NHA test case. It sat under 'Share patient profile'. Gateway token in Authorization, user token in X-token, both required. Success is HTTP 200 with ABHANumber, preferredAbhaAddress and mobile matching what was created, and non empty name, gender and the three date of birth fields. An ABHA number that is not the one you logged in as means the user token belongs to a different session, so check you are not reusing a token across test runs. The field list comes from a saved example on the PATCH of the same path, not on the GET."
+          "detail": "Not an NHA test case. It sat under 'Share patient profile'. Gateway token in Authorization, user token in X-token, both required. Success is HTTP 200 with ABHANumber, preferredAbhaAddress and mobile matching what was created, and non empty name, gender and the three date of birth fields. An ABHA number that is not the one you logged in as means the user token belongs to a different session, so check you are not reusing a token across test runs. The field list comes from a saved example on the PATCH of the same path, not on the GET.",
+          "atoms": [
+            "hiecm.endpoint.m1-profile-get-account"
+          ]
         },
         {
           "condition": "",
-          "apis": [],
+          "apis": [
+            "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account"
+          ],
           "id": "E2",
           "type": "Portal check",
           "functionality": "Check both tokens are needed",
@@ -1845,22 +2132,32 @@
             "to": "/docs/hiecm/v3/api/m1/endpoints/m1-profile-get-account"
           },
           "webhook": null,
-          "detail": "Not an NHA test case. It sat under 'Share patient profile'. Call it three times: with both headers, with Authorization only, and with X-token only. Success is HTTP 200 with both and a non 200 for each of the other two. If X-token alone works, your gateway token is being read from somewhere else, such as a proxy that injects it."
+          "detail": "Not an NHA test case. It sat under 'Share patient profile'. Call it three times: with both headers, with Authorization only, and with X-token only. Success is HTTP 200 with both and a non 200 for each of the other two. If X-token alone works, your gateway token is being read from somewhere else, such as a proxy that injects it.",
+          "atoms": [
+            "hiecm.endpoint.m1-profile-get-account"
+          ]
         },
         {
           "condition": "",
-          "apis": [],
+          "apis": [
+            "https://abhasbx.abdm.gov.in/abha/api/v3/patient-share/v3/share"
+          ],
           "id": "SHR_ABHA_1201",
           "type": "Portal check",
           "functionality": "Share the profile at the desk",
           "expected": "The person shares their ABHA address and profile with the facility after consenting.",
           "api": null,
           "webhook": null,
-          "detail": "Not an NHA test case. It sat under 'Share patient profile'. NHA puts this outside the M1 API set. The facility shows a QR code carrying a hip-id and a counter-id. The person scans it with a PHR app, the app shows everything that will be shared and takes consent in NHA's wording, and only then calls the HIE-CM to share the details. The facility can return a token number. NHA's PHR app test pack marks the scan and share steps mandatory."
+          "detail": "Not an NHA test case. It sat under 'Share patient profile'. NHA puts this outside the M1 API set. The facility shows a QR code carrying a hip-id and a counter-id. The person scans it with a PHR app, the app shows everything that will be shared and takes consent in NHA's wording, and only then calls the HIE-CM to share the details. The facility can return a token number. NHA's PHR app test pack marks the scan and share steps mandatory.",
+          "atoms": [
+            "hiecm.endpoint.m1-receive-patient-share"
+          ]
         },
         {
           "condition": "",
-          "apis": [],
+          "apis": [
+            "https://dev.abdm.gov.inapi/hiecm/gateway/v3/session"
+          ],
           "id": "A1",
           "type": "Portal check",
           "functionality": "Get a gateway access token",
@@ -1871,11 +2168,16 @@
             "to": "/docs/hiecm/v3/api/gateway/endpoints/gateway-sessions-create"
           },
           "webhook": null,
-          "detail": "Not an NHA test case. It sat under 'Session and tokens'. Send your sandbox client id and secret with grantType \"client_credentials\". Success is HTTP 200 with a non empty accessToken. Every later call carries it in the Authorization header. A 401 with {\"code\": \"900901\"} means the credentials are wrong, not the request. Check the X-CM-ID: sbx header, which the sessions call needs and no other M1 call has."
+          "detail": "Not an NHA test case. It sat under 'Session and tokens'. Send your sandbox client id and secret with grantType \"client_credentials\". Success is HTTP 200 with a non empty accessToken. Every later call carries it in the Authorization header. A 401 with {\"code\": \"900901\"} means the credentials are wrong, not the request. Check the X-CM-ID: sbx header, which the sessions call needs and no other M1 call has.",
+          "atoms": [
+            "hiecm.endpoint.m1-auth-token"
+          ]
         },
         {
           "condition": "",
-          "apis": [],
+          "apis": [
+            "https://abhasbx.abdm.gov.in/abha/api/v3/profile/public/certificate"
+          ],
           "id": "A3",
           "type": "Portal check",
           "functionality": "Encrypt the sensitive fields",
@@ -1886,11 +2188,16 @@
             "to": "/docs/hiecm/v3/api/m1/endpoints/m1-encrypt-value"
           },
           "webhook": null,
-          "detail": "Not an NHA test case. It sat under 'Session and tokens'. Encrypt every Aadhaar number, mobile number, email address, OTP value and password before you send it. Success is HTTP 200 with encryptedData present, not equal to the input, and longer than it. Also a failure: any place in your own code where a plain Aadhaar number, mobile number or OTP reaches a request body. Grep for it."
+          "detail": "Not an NHA test case. It sat under 'Session and tokens'. Encrypt every Aadhaar number, mobile number, email address, OTP value and password before you send it. Success is HTTP 200 with encryptedData present, not equal to the input, and longer than it. Also a failure: any place in your own code where a plain Aadhaar number, mobile number or OTP reaches a request body. Grep for it.",
+          "atoms": [
+            "hiecm.endpoint.m1-get-public-certificate"
+          ]
         },
         {
           "condition": "",
-          "apis": [],
+          "apis": [
+            "https://dev.abdm.gov.inapi/hiecm/gateway/v3/session"
+          ],
           "id": "A2",
           "type": "Portal check",
           "functionality": "Reject a call with no token",
@@ -1901,11 +2208,16 @@
             "to": "/docs/hiecm/v3/api/m1/endpoints/m1-profile-get-account"
           },
           "webhook": null,
-          "detail": "Not an NHA test case. It sat under 'Session and tokens'. Call the profile with the Authorization header removed. Success is HTTP 401 with a code of 900901 or an error.code. HTTP 200 means something other than NHA is answering you, most likely a cached response. Stop and find out what."
+          "detail": "Not an NHA test case. It sat under 'Session and tokens'. Call the profile with the Authorization header removed. Success is HTTP 401 with a code of 900901 or an error.code. HTTP 200 means something other than NHA is answering you, most likely a cached response. Stop and find out what.",
+          "atoms": [
+            "hiecm.endpoint.m1-auth-token"
+          ]
         },
         {
           "condition": "",
-          "apis": [],
+          "apis": [
+            "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account/request/token"
+          ],
           "id": "D4",
           "type": "Portal check",
           "functionality": "Refresh the user token",
@@ -1916,11 +2228,16 @@
             "to": "/docs/hiecm/v3/api/m1/endpoints/m1-token-refresh"
           },
           "webhook": null,
-          "detail": "Not an NHA test case. It sat under 'Session and tokens'. The one saved login example gives the user token an expiresIn of 1800 seconds. Wait past it and a profile call returns a non 200, one shape being a 400 with {\"message\": \"Invalid X-token\"}. Put the refresh token in the R-token header, not X-token and not the body. Success is HTTP 200 with a new token and refreshToken, and a profile call that then succeeds. Store the new refresh token and treat the old one as spent. Neither source says whether the old one keeps working."
+          "detail": "Not an NHA test case. It sat under 'Session and tokens'. The one saved login example gives the user token an expiresIn of 1800 seconds. Wait past it and a profile call returns a non 200, one shape being a 400 with {\"message\": \"Invalid X-token\"}. Put the refresh token in the R-token header, not X-token and not the body. Success is HTTP 200 with a new token and refreshToken, and a profile call that then succeeds. Store the new refresh token and treat the old one as spent. Neither source says whether the old one keeps working.",
+          "atoms": [
+            "hiecm.endpoint.m1-token-refresh"
+          ]
         },
         {
           "condition": "",
-          "apis": [],
+          "apis": [
+            "https://abhasbx.abdm.gov.in/abha/api/v3/profile/account/request/logout"
+          ],
           "id": "D5",
           "type": "Portal check",
           "functionality": "End the session",
@@ -1931,7 +2248,10 @@
             "to": "/docs/hiecm/v3/api/m1/endpoints/m1-profile-logout"
           },
           "webhook": null,
-          "detail": "Not an NHA test case. It sat under 'Session and tokens'. Success is HTTP 200 with {\"message\": \"You have been logged out\"}, then a non 200 from a profile call made with the same user token. A profile call that still returns HTTP 200 and profile data is a failure."
+          "detail": "Not an NHA test case. It sat under 'Session and tokens'. Success is HTTP 200 with {\"message\": \"You have been logged out\"}, then a non 200 from a profile call made with the same user token. A profile call that still returns HTTP 200 and profile data is a failure.",
+          "atoms": [
+            "hiecm.endpoint.m1-profile-logout"
+          ]
         },
         {
           "condition": "",
@@ -1942,7 +2262,8 @@
           "expected": "A wrong URL gives a clear not found.",
           "api": null,
           "webhook": null,
-          "detail": "Not an NHA test case. It sat under 'Session and tokens'. Call profile/lo/verify instead of profile/login/verify. Expect HTTP 404 with \"No matching resource found for given API Request\"."
+          "detail": "Not an NHA test case. It sat under 'Session and tokens'. Call profile/lo/verify instead of profile/login/verify. Expect HTTP 404 with \"No matching resource found for given API Request\".",
+          "apisNote": "No single call: this check any unknown path, so no one call represents it."
         },
         {
           "condition": "",
@@ -1957,7 +2278,8 @@
             "to": "/docs/hiecm/v3/api/m1/endpoints/m1-login-verify"
           },
           "webhook": null,
-          "detail": "Not an NHA test case. It sat under 'Session and tokens'. POST an empty body to verify a login. Expect HTTP 400 with both scope and authData as keys in the response."
+          "detail": "Not an NHA test case. It sat under 'Session and tokens'. POST an empty body to verify a login. Expect HTTP 400 with both scope and authData as keys in the response.",
+          "apisNote": "No single call: this check any call with an empty body."
         },
         {
           "condition": "",
@@ -1968,18 +2290,24 @@
           "expected": "A broken Authorization value is refused.",
           "api": null,
           "webhook": null,
-          "detail": "Not an NHA test case. It sat under 'Session and tokens'. Send a malformed Authorization value to any M1 call. Expect HTTP 401 with a code of 900901."
+          "detail": "Not an NHA test case. It sat under 'Session and tokens'. Send a malformed Authorization value to any M1 call. Expect HTTP 401 with a code of 900901.",
+          "apisNote": "No single call: this check any call with a malformed token."
         },
         {
           "condition": "",
-          "apis": [],
+          "apis": [
+            "https://abhasbx.abdm.gov.in/abha/api/v3/profile/login/request/otp"
+          ],
           "id": "F4",
           "type": "Portal check",
           "functionality": "Reject a short ABHA number",
           "expected": "A 13 digit ABHA number is refused.",
           "api": null,
           "webhook": null,
-          "detail": "Not an NHA test case. It sat under 'Session and tokens'. Send a 13 digit ABHA number to any endpoint that takes one. Expect HTTP 400 with ABDM-1013, Invalid ABHA Number."
+          "detail": "Not an NHA test case. It sat under 'Session and tokens'. Send a 13 digit ABHA number to any endpoint that takes one. Expect HTTP 400 with ABDM-1013, Invalid ABHA Number.",
+          "atoms": [
+            "hiecm.endpoint.m1-login-request-otp"
+          ]
         }
       ]
     }
