@@ -241,13 +241,20 @@ nothing else, read this.
    **Then, under Aadhaar only, how they prove it is theirs:** an OTP to the
    linked phone, a face scan, or a fingerprint or iris reader. A mobile takes
    the OTP sent to it and offers no second question.
-4. **Log in or create, decided by the answer and not by the person.** The
-   response says whether an account exists. One account signs them in, several
-   means ask which, none means offer to create. Never ask the person at the
-   desk which of these they want.
-5. **Fill your form from the profile.** Name, date of birth, gender, mobile
-   and address arrive from it. The receptionist reads them back and corrects
-   what is wrong, rather than typing them.
+4. **Log in or create, decided by the answer and not by the person.** Every
+   identifier starts on the login path, Aadhaar included. The response says
+   whether an account exists: one or several means log in, none means offer to
+   create. Never ask the person at the desk which of these they want.
+
+   Two things here are load bearing and are covered below: an identifier wired
+   straight to the enrolment path creates a second ABHA for anybody who already
+   has one, and the token a login verification returns is not yet the token a
+   profile call accepts.
+5. **Fill your form from what came back.** The accounts array on the
+   verification already carries the name, gender, date of birth and photograph,
+   so the form can fill the moment the OTP verifies. The profile call adds the
+   address and its codes. Either way the receptionist reads the form back and
+   corrects it rather than typing it.
 
 Step 5 is the reason the other four are worth doing. Step 4 is where a
 duplicate ABHA is created if the branch is wrong.
@@ -315,6 +322,30 @@ three deep rather than flat: recommended, alternative, and disclosed.
 A chooser up front is the better shape where the desk genuinely knows, for
 example a counter that only ever registers new patients, or a kiosk placed
 next to a sign that says what it is for.
+
+#### Holds regardless: Aadhaar is a login identifier too
+
+An Aadhaar number identifies a person who may already hold an ABHA. Wiring it
+to the enrolment path because enrolment is where Aadhaar is most discussed
+sends every one of those people to create a second number, and `abha-enrol` in
+the scope array is the signature of that mistake.
+
+Send every identifier to the login path first and let the answer decide. The
+scope pairs differ between the two paths, so getting this wrong surfaces as
+`ABDM-1107`, invalid combinations of scopes, rather than as anything that
+mentions duplicates. See ABDM-1107.
+
+#### Holds regardless: the login token is not the profile token
+
+A login verification returns a token, and it is a transfer token rather than a
+session token. Its JWT says `"typ": "Transfer"` and it lives five minutes.
+Exchange it at the account selection call for the session token, and do that
+whatever the length of the accounts array, including one.
+
+A profile call sent the transfer token refuses it as `ABDM-1094`, "X-token
+expired", or as "Invalid X-token" depending on the header shape. Neither says
+the wrong kind of token was sent, and both were observed on a token one second
+old. See verify a login OTP.
 
 #### Holds regardless: look before you create, by whatever means
 

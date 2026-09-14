@@ -67,6 +67,33 @@ You have understood this when you can answer both of these.
   2. A profile read returns an authorisation error although the session
      token is fresh. What is missing?
 
+### Two tokens, and `ABDM-1094` rarely means what it says
+
+The gateway access token goes in `Authorization` with a `Bearer ` prefix, the
+way every other API you have used expects. The user token goes in `X-token`,
+and NHA's own specification writes that one as `X-Token: {token}` with no
+prefix.
+
+What was observed on the sandbox on 2026-09-14, one second after a login
+returned its token, is that a profile call refuses it either way:
+
+| Sent as | Refusal |
+|---|---|
+| `X-token: Bearer <token>` | `401 {"code": "ABDM-1094", "message": "X-token expired"}` |
+| `X-token: <token>` | `400 {"message": "Invalid X-token"}` |
+
+Both refusals were on a token one second old, so neither is about age. The
+cause in that case was the kind of token rather than the header shape: a login
+verification returns a transfer token, not a session token, and it has to be
+exchanged first. See
+[verify a login OTP](../endpoints/m1-login-verify.md).
+
+So read `ABDM-1094` on a profile call as "this token is not the one this call
+wants", and work through three things in order: is it the exchanged session
+token rather than the transfer token, is the prefix right, and only then, has
+it aged out. The message names the last of the three and it is the least
+likely.
+
 ## When it goes wrong
 
 Hardcoding a token lifetime. NHA has changed it, so read `expiresIn`
