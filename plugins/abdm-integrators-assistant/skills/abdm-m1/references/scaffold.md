@@ -352,28 +352,38 @@ as having none, and offer the journey again from the chart. See
 ABHA number and address for what you store when
 it does complete.
 
-#### Five ways to create, and the condition each one answers
+#### Identifiers and auth methods are two different questions
 
-Most integrations ship one of these. The table is here so you can pick the one
-that matches your desk, not so you can implement it.
+Listing "Aadhaar OTP" and "face authentication" side by side as though they
+were alternatives is the mistake that makes this look like five choices. They
+are two questions, and the second only appears under one answer to the first.
 
-Which you offer, and how many at once, is yours. Showing one chosen from what
-the desk already holds is the suggestion, because a desk asked to pick has to
-understand all five. A kiosk with room to explain may reasonably show more.
-Shipping one and saying "no ABHA today" to everyone else is a legitimate first
-version, because an ABHA is optional to your record.
+**Which identifier does the person have?** ABDM accepts four:
 
-| Method | Gives you | Reach for it when |
-|---|---|---|
-| Aadhaar OTP | A KYC verified ABHA number | The default. The person has their Aadhaar-linked phone |
-| Mobile OTP | An ABHA address, not KYC verified | No Aadhaar to hand. Upgrade to KYC later |
-| Face authentication | A KYC verified ABHA number | The Aadhaar-linked phone is not with them, and a camera is |
-| A document | An ABHA from an accepted identity document | Neither Aadhaar nor its mobile is available |
-| Child ABHA | An ABHA held under a parent | The patient is a minor |
+| Identifier | Ends in |
+|---|---|
+| Aadhaar | A KYC verified ABHA number, which is why it is the one to recommend |
+| Mobile | An ABHA address, upgradeable to KYC later |
+| ABHA number | Sign in to an account they already hold |
+| ABHA address | Sign in to an account they already hold |
 
-Demographic authentication exists as a sixth path and is exact: a near miss on
-name, date of birth or gender is a refusal rather than a warning. See
-create by demographic authentication.
+**How do they prove it is theirs?** That is `authMethods`, and ABDM's own values
+are `otp`, `bio`, `face`, `iris`, `child` and `demo_auth`. Aadhaar accepts the
+range; a mobile accepts the OTP sent to it and nothing else.
+
+| Auth method | Reach for it when |
+|---|---|
+| OTP | The default. The Aadhaar linked phone is with them |
+| Face | That phone is not with them, and a camera is |
+| Fingerprint or iris | A reader is at the desk |
+| Demographic | Nothing else is available. It is exact: a near miss on name, date of birth or gender is a refusal rather than a warning |
+
+A child ABHA is created under a parent who is already signed in, so it is a
+different journey rather than another method on this screen.
+
+So the screen asks for an identifier, and offers the auth methods underneath it
+only where there is more than one to offer. Most integrations ship Aadhaar with
+OTP and mobile with OTP, and add the rest when a desk asks for them.
 
 #### The journeys that are not creation
 
