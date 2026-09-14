@@ -58,8 +58,8 @@ Generated from the specifications. Every scheme and header below is declared in 
 | `TIMESTAMP` | yes | The current time in ISO 8601, UTC, with milliseconds and a `Z` suffix, from a synchronised clock. The sandbox rejects IST and accepts UTC. |
 | `X-CM-ID` | yes | Which consent manager you are talking to. `sbx` on the sandbox and `abdm` in production. A dedicated error code exists for an invalid value here, which tells you how often it is wrong. |
 | `X-Link-Token` | yes | Short-lived link token generated via POST /hiecm/v3/token/generate-token |
-| `X-HIP-ID` | yes | Identifier of the Health Information Provider the request or callback belongs to. |
-| `X-HIU-ID` | yes | Identifier of the Health Information User the request or callback belongs to. |
+| `X-HIP-ID` | yes | Identifier of the Health Information Provider the request or callback belongs to. This is per facility, and it is what a callback arriving at your one bridge URL is routed on. The bridge URL and your credentials belong to the integration, not to the facility. |
+| `X-HIU-ID` | yes | Identifier of the Health Information User the request or callback belongs to. This is per facility, and it is what a callback arriving at your one bridge URL is routed on. |
 
 ## M3 Consent and fetching
 
@@ -72,7 +72,7 @@ Generated from the specifications. Every scheme and header below is declared in 
 | `REQUEST-ID` | yes | A fresh UUID that you generate for this request. The callback that answers it carries the same value. In M3 a single consent can produce several callbacks, so keep the mapping from request id to consent request id rather than relying on ordering. |
 | `TIMESTAMP` | yes | The current time in ISO 8601 UTC, with milliseconds and the `Z` suffix. The gateway rejects a request whose timestamp has drifted too far from its own clock, so take this from a synchronised clock rather than from a local one. |
 | `X-CM-ID` | yes | Which consent manager you are talking to. `sbx` on the sandbox and `abdm` in production. |
-| `X-HIU-ID` | yes | Identifier of the health information user the request or callback is intended for. |
+| `X-HIU-ID` | yes | Identifier of the health information user the request or callback is intended for. This is per facility, and it is what a callback arriving at your one bridge URL is routed on. The bridge URL and your credentials belong to the integration, not to the facility. |
 
 ## M4 HPR and HFR
 

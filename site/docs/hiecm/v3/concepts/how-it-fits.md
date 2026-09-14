@@ -14,6 +14,13 @@ sidebar_class_name: sidebar-icon sidebar-icon--puzzle
 issue identifiers, the [HIE-CM](/docs/hiecm/v3/getting-started/glossary#hie-cm) gateway that
 routes requests and holds consent, and the two roles a record moves between.
 
+## In short
+
+- Two identities come first: the care seeker's ABHA, and the care provider's HPR and HFR.
+- There are two integrator roles, IMS or PHR. HIP and HIU are not roles, they are the two ends of one record moving.
+- Two configuration levels: your integration is one bridge, and every facility it serves links to that bridge. Neither is set inside the other.
+- Records never move to a centre. A pointer and a consent move, then the record goes point to point.
+
 ## Two identities come first
 
 Every call carries an identifier issued by a registry, and there are two kinds of
@@ -60,11 +67,41 @@ role, and they are not something you register as. They are the two ends of one
 record moving: whoever publishes it is the HIP for that exchange, and whoever
 asks to read one they did not create is the HIU.
 
-Both roles are both. A hospital is the HIP when it shares a discharge summary and
-the HIU when it pulls an earlier prescription, through the same IMS. A citizen is
-the HIP when they push a record from their PHR application and the HIU when they
-fetch one. It changes call by call, which is why neither is a thing you can
-build once and be. See [HIP and HIU](/docs/hiecm/v3/concepts/hip-hiu).
+Both roles are both, and it changes call by call:
+
+- A hospital is the HIP when it shares a discharge summary, and the HIU when it pulls an earlier prescription, through the same IMS.
+- A citizen is the HIP when they push a record from their PHR application, and the HIU when they fetch one.
+
+Neither is a thing you can build once and be. See
+[HIP and HIU](/docs/hiecm/v3/concepts/hip-hiu).
+
+## One bridge, many facilities
+
+Two levels of configuration exist and they are easy to confuse. Your integration
+registers once, as a bridge. The facilities it serves register separately and
+are linked to that bridge. One bridge serves every facility linked to it,
+whether that is one facility or a hundred.
+
+Decide which level a setting belongs to before you build a settings screen for
+it. Nothing about your integration is configured per facility, and nothing about
+a facility is configured in your integration's own credentials.
+
+| Setting | Level | Where it is set |
+| --- | --- | --- |
+| Client id and client secret | Your integration, one of each | [Sandbox registration](/docs/hiecm/v3/getting-started/sandbox) |
+| Bridge callback URL | Your integration, one | [Sandbox registration](/docs/hiecm/v3/getting-started/sandbox#3-register-your-callback-url) |
+| Facility ID | Each facility | [HFR onboarding](/docs/hiecm/v3/milestones/m4#journey-3-a-facility-onboards-to-the-hfr) |
+| `hipId`, `hipName`, `hipType` | Each facility, once per bridge it links to | [The bridge linkage call](/docs/hiecm/v3/milestones/m4#journey-4-linking-bridges-to-a-facility) |
+
+Every callback for every facility arrives at the one bridge URL. The header says
+which facility it belongs to: `X-HIP-ID` in [M2](/docs/hiecm/v3/api/m2), and
+`X-HIU-ID` in M2 and [M3](/docs/hiecm/v3/api/m3). That header is what your
+handler routes a callback on, and the facility ID is what your records key to.
+
+A callback URL kept in a facility's settings is a design error, and so is a
+client secret. Either survives the first facility and fails on the next. See
+[the headers](/docs/hiecm/v3/reference/authentication) for what travels on each
+call.
 
 ## Records stay where they were created
 
