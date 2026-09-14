@@ -15,7 +15,8 @@
 //
 // Output under site/static/skills is a build output. Edit the specs, the test
 // matrix and the pages, not the skill.
-import {readFileSync, writeFileSync, mkdirSync, rmSync, readdirSync, existsSync} from 'node:fs';
+import {readFileSync, writeFileSync, mkdirSync, rmSync, readdirSync, existsSync, cpSync} from 'node:fs';
+import {execFileSync} from 'node:child_process';
 import {join, dirname} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {parse} from 'yaml';
@@ -359,7 +360,8 @@ for (const module of MODULES) {
   );
 }
 
-// The committed skills under plugins/abdm/skills ship too, at the same
+// The committed skills under plugins/abdm/skills and plugins/nhcx/skills
+// ship too, at the same
 // /skills/<name>/SKILL.md URLs the compiled module skills get, so the
 // site is the one place an integrator finds every skill. Each gets a
 // manifest entry (kind: guided) so a page can render an install panel
@@ -386,15 +388,127 @@ const GUIDED = {
     title: 'M1 debug',
     example: 'Diagnose this failed ABDM call',
   },
+  'nhcx-coverage': {
+    module: 'NHCX',
+    title: 'NHCX coverage',
+    example: 'Add NHCX policy search and coverage eligibility to this hospital system',
+  },
+  'nhcx-insurance': {
+    module: 'NHCX',
+    title: 'NHCX insurance plan',
+    example: "Fetch the payer's NHCX package master and quote treatment lines from it",
+  },
+  'nhcx-preauth': {
+    module: 'NHCX',
+    title: 'NHCX pre-authorisation',
+    example: 'Add NHCX pre-authorisation to this claims desk',
+  },
+  'nhcx-claim': {
+    module: 'NHCX',
+    title: 'NHCX claim',
+    example: 'File the NHCX claim at discharge from this system',
+  },
+  'nhcx-payment': {
+    module: 'NHCX',
+    title: 'NHCX payment',
+    example: 'Record and acknowledge NHCX payment notices',
+  },
+  'nhcx-communication': {
+    module: 'NHCX',
+    title: 'NHCX communication',
+    example: "Handle the payer's NHCX communication requests in this system",
+  },
+  'nhcx-reprocess': {
+    module: 'NHCX',
+    title: 'NHCX reprocess',
+    example: 'Ask the payer to reprocess a rejected NHCX claim',
+  },
 };
-const pluginDir = join(root, 'plugins', 'abdm', 'skills');
-for (const name of readdirSync(pluginDir)) {
+const countFiles = (dir) =>
+  readdirSync(dir, {withFileTypes: true}).reduce(
+    (n, entry) => n + (entry.isDirectory() ? countFiles(join(dir, entry.name)) : 1),
+    0,
+  );
+// A skill folder with the NHCX shape (a "What this skill covers" table in its
+// SKILL.md, and the test and error references beside it) is counted from its
+// own files, so its install panel shows what it holds the way a module skill's
+// does:
+//   Integrate  the calls its Wire row names, each with its reverse leg when a
+//              published specification carries one
+//   Test       its test-case matrix rows for the use cases it names, leaving out
+//              rows that make no call
+//   Debug      the distinct error codes its errors reference carries
+const specPaths = readdirSync(dataDir)
+  .filter((file) => file.endsWith('.json'))
+  .map((file) => String(JSON.parse(readFileSync(join(dataDir, file), 'utf8')).path ?? ''));
+const published = (path) => specPaths.some((p) => p.endsWith(`/${path}`));
+const cellOf = (text, label) => new RegExp(`^\\| ${label} \\| (.+) \\|$`, 'm').exec(text)?.[1] ?? '';
+function useCaseCounts(dir) {
+  const testingFile = join(dir, 'references', 'testing-knowledge.md');
+  const errorsFile = join(dir, 'references', 'errors-and-debugging.md');
+  const skill = readFileSync(join(dir, 'SKILL.md'), 'utf8');
+  const wire = cellOf(skill, 'Wire');
+  const uses = cellOf(skill, 'Use cases');
+  if (!wire || !uses || !existsSync(testingFile) || !existsSync(errorsFile)) return null;
+
+  const calls = new Set();
+  let resource = '';
+  for (const [, token] of wire.matchAll(/`((?:v1\/)?[a-z]+(?:\/[a-z_]+)+|on_[a-z_]+)`/g)) {
+    // A bare `on_check` belongs to the resource named just before it.
+    const path = token.startsWith('on_') && resource ? `${resource}/${token}` : token;
+    if (path.startsWith('v1/')) resource = path.split('/').slice(0, 2).join('/');
+    calls.add(path);
+    if (!path.startsWith('v1/')) continue;
+    const last = path.split('/').pop();
+    const reverse = path.replace(/[^/]+$/, last.startsWith('on_') ? last.slice(3) : `on_${last}`);
+    if (published(reverse)) calls.add(reverse);
+  }
+
+  const wanted = [];
+  for (const part of uses.replace(/\(.*?\)/g, '').split(/[;,]| and /)) {
+    const range = /\b([A-E])(\d+) to \1?(\d+)\b/.exec(part);
+    if (range) {
+      for (let i = Number(range[2]); i <= Number(range[3]); i += 1) wanted.push({code: `${range[1]}${i}`});
+      continue;
+    }
+    const one = /\b([A-E]\d+)\b(?:\s+(cancel|reprocess))?/i.exec(part);
+    if (one) wanted.push({code: one[1], qualifier: one[2]?.toLowerCase()});
+  }
+  const matrix = (readFileSync(testingFile, 'utf8').split('## 3. The test-case matrix')[1] ?? '').split('Cross-cutting rows')[0];
+  const tests = [...matrix.matchAll(/^\| ([A-E]\d+)([^|]*) \|[^|]*\|[^|]*\| ([^|]*) \|/gm)].filter(
+    ([, code, rest, callCell]) =>
+      callCell.trim() !== 'none' &&
+      wanted.some((w) => w.code === code && (!w.qualifier || rest.toLowerCase().includes(w.qualifier))),
+  ).length;
+
+  const codes = new Set(
+    readFileSync(errorsFile, 'utf8').match(/\b(?:NHCX-\d{3,4}|PAYR-\d{4}|ERR-[A-Z]+-[A-Z]+-\d+)\b/g) ?? [],
+  ).size;
+  return {operations: calls.size, codes, tests};
+}
+
+const pluginDirs = ['abdm', 'nhcx']
+  .map((plugin) => join(root, 'plugins', plugin, 'skills'))
+  .filter((dir) => existsSync(dir));
+for (const pluginDir of pluginDirs) for (const name of readdirSync(pluginDir)) {
   const src = join(pluginDir, name, 'SKILL.md');
   if (!existsSync(src)) continue; // README.md and other non-skill entries
   const raw = readFileSync(src, 'utf8');
   const folder = join(outDir, name);
-  mkdirSync(folder, {recursive: true});
-  writeFileSync(join(folder, 'SKILL.md'), raw);
+  // The whole folder ships, not only SKILL.md: a skill such as nhcx-claim
+  // points into the stages, templates and scripts beside it, and a SKILL.md
+  // served alone would send an agent to files it cannot reach.
+  cpSync(join(pluginDir, name), folder, {recursive: true});
+  const files = countFiles(join(pluginDir, name));
+  const counts = files > 1 ? useCaseCounts(join(pluginDir, name)) : null;
+  // A skill of more than one file also ships as one archive, which is what
+  // the install commands fetch for it. COPYFILE_DISABLE keeps macOS tar from
+  // adding its ._ metadata files.
+  if (files > 1) {
+    execFileSync('tar', ['-czf', join(outDir, `${name}.tar.gz`), '-C', pluginDir, name], {
+      env: {...process.env, COPYFILE_DISABLE: '1'},
+    });
+  }
   const fm = parse(raw.match(/^---\n([\s\S]*?)\n---/)?.[1] ?? '') ?? {};
   manifest[name] = {
     kind: 'guided',
@@ -404,9 +518,11 @@ for (const name of readdirSync(pluginDir)) {
     title: GUIDED[name]?.title ?? fm.name ?? name,
     description: fm.description ?? '',
     example: GUIDED[name]?.example ?? '',
+    ...(files > 1 ? {folder: true, files} : {}),
+    ...(counts ?? {}),
   };
   count += 1;
-  console.log(`Copied ${name} from plugins/abdm/skills.`);
+  console.log(`Copied ${name} from ${pluginDir.slice(root.length + 1)}.`);
 }
 
 writeFileSync(
@@ -428,6 +544,13 @@ const promptSkills = [
   ['abdm-m3', 'ABDM Milestone 3: consent and fetching'],
   ['fhir-generate', 'building NRCES compliant FHIR bundles in this codebase'],
   ['fhir-audit', 'checking an existing FHIR store for NRCES compliance'],
+  ['nhcx-coverage', 'NHCX: policy search and coverage eligibility'],
+  ['nhcx-insurance', "NHCX: the payer's insurance plan, its package master"],
+  ['nhcx-preauth', 'NHCX: pre-authorisation'],
+  ['nhcx-claim', 'NHCX: the discharge and the claim'],
+  ['nhcx-payment', 'NHCX: payment notices and their acknowledgement'],
+  ['nhcx-communication', 'NHCX: communication requests'],
+  ['nhcx-reprocess', 'NHCX: reprocess, release and status enquiries'],
 ];
 const mcpUrl = process.env.MCP_URL ?? null;
 // The Claude Code plugin marketplace: this repository itself. Update at
@@ -449,15 +572,18 @@ const promptLines = [
   '',
   'A project that produces FHIR documents from its own code wants `fhir-generate`; one with an existing FHIR store wants `fhir-audit`; most need only one of the two.',
   '',
+  'An NHCX claims integration wants the NHCX skill for each use case it builds, in episode order from `nhcx-coverage`. Each installs and runs alone.',
+  '',
   '## 2. Install the skills',
   '',
   '### Claude Code',
   '',
-  'Install the plugin, which carries every skill at once and stays current through `claude plugin update`:',
+  'Install the plugins, which carry the skills and stay current through `claude plugin update`. `abdm` carries the ABDM skills; add `nhcx` only for an NHCX integration:',
   '',
   '```',
   `claude plugin marketplace add ${pluginRepo}`,
   'claude plugin install abdm@abdm-portal',
+  'claude plugin install nhcx@abdm-portal',
   '```',
   '',
   'If the marketplace add fails (the repository may not be accessible from here), fall back to the per-file downloads below.',
@@ -480,7 +606,19 @@ const promptLines = [
   `mkdir -p .claude/skills/abdm-m1 && curl -fsSL ${promptRef('/skills/abdm-m1/SKILL.md')} -o .claude/skills/abdm-m1/SKILL.md`,
   '```',
   '',
-  ...promptSkills.map(([slug]) => `- ${promptRef(`/skills/${slug}/SKILL.md`)}`),
+  ...promptSkills
+    .filter(([slug]) => !manifest[slug]?.folder)
+    .map(([slug]) => `- ${promptRef(`/skills/${slug}/SKILL.md`)}`),
+  '',
+  'A skill that is a folder ships as one archive. Its SKILL.md points at the files beside it, so unpack the whole folder into the same skills directory, for example:',
+  '',
+  '```',
+  `mkdir -p .claude/skills && curl -fsSL ${promptRef('/skills/nhcx-coverage.tar.gz')} | tar -xz -C .claude/skills`,
+  '```',
+  '',
+  ...promptSkills
+    .filter(([slug]) => manifest[slug]?.folder)
+    .map(([slug]) => `- ${promptRef(`/skills/${slug}.tar.gz`)}`),
   '',
   '## 3. Connect the Docs MCP server',
   '',

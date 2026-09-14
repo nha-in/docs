@@ -17,7 +17,7 @@ info:
 
     A PMJAY case is not decided over NHCX.
 
-    Guides that use these calls: [Receiving a callback](/docs/nhcx/v1/getting-started/receiving-a-callback), [PMJAY sandbox run](/docs/nhcx/v1/roles/provider/pmjay-sandbox-run), [PMJAY adjudication APIs](/docs/nhcx/v1/roles/provider/pmjay-adjudication-apis).
+    Guides that use these calls: [Receiving a callback](/docs/nhcx/v1/getting-started/receiving-a-callback), [Get your sandbox credentials](/docs/nhcx/v1/getting-started/get-your-sandbox-credentials), [PMJAY sandbox run](/docs/nhcx/v1/roles/provider/pmjay-sandbox-run), [PMJAY adjudication APIs](/docs/nhcx/v1/roles/provider/pmjay-adjudication-apis).
 
     Production address for the PMJAY payer service, role lookup: not published. Confirm at onboarding.
 
@@ -43,7 +43,7 @@ x-abdm-sources:
     note: The package's Bruno collection, one request per operation.
   - file: nhcx-package/baseurl.yaml
     role: upstream
-    hash: sha256:47d8412abbfc53b1e1038410e7980eee029d7b1be5082f4ae6c1d4e16ae0dd0f
+    hash: sha256:88515b7b29c6b349a131e016c80774436ea16a29738db743b4cc3a24cbd42453
     note: The sandbox and production hosts.
 servers:
   - url: https://apisbx.abdm.gov.in/pmjay/sbxhcx/dummyhcxpayer
@@ -57,6 +57,7 @@ paths:
   /pmjay/sbxhcx/nhcxpayerservice/v1/get/user-role:
     post:
       operationId: adjudicator_adjudicator_role
+      x-abdm-atom: nhcx.endpoint.payer-service-get-user-role
       x-abdm-use-case: PMJAY adjudicator
       tags:
         - PMJAY adjudicator
@@ -138,6 +139,7 @@ paths:
   /pmjay/hcx/nhcxpayerservice/wrapper/process/case:
     post:
       operationId: adjudicator_adjudicator_process
+      x-abdm-atom: nhcx.endpoint.payer-service-process-case
       x-abdm-use-case: PMJAY adjudicator
       tags:
         - PMJAY adjudicator
@@ -250,6 +252,7 @@ paths:
   /process/request:
     post:
       operationId: adjudicator_dummy_payer_process_request
+      x-abdm-atom: nhcx.endpoint.dummy-payer-process-request
       x-abdm-use-case: PMJAY adjudicator
       tags:
         - PMJAY adjudicator
@@ -319,6 +322,7 @@ paths:
   /paymentNotice/init:
     post:
       operationId: adjudicator_dummy_payer_paymentnotice_init
+      x-abdm-atom: nhcx.endpoint.dummy-payer-paymentnotice-init
       x-abdm-use-case: PMJAY adjudicator
       tags:
         - PMJAY adjudicator

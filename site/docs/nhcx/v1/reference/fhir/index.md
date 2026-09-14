@@ -10,7 +10,7 @@ generated: true
 
 # Bundles and conventions
 
-Everything that crosses the exchange is one FHIR R4 Bundle of type `collection`, built to the NRCeS profiles for NHCX. The bundles in this reference are generic: any payer on the exchange takes them, private insurers and TPAs regulated by IRDAI as well as government schemes. Each chapter shows the generic bundle for one exchange in one direction, then what PMJAY changes and what PMJAY requires on top. This chapter holds the rules every bundle obeys before any exchange is considered.
+Everything that crosses the exchange is one FHIR R4 Bundle of type `collection`, built to the NRCeS profiles for NHCX. The bundles in this reference are generic: any payer on the exchange takes them, private insurers and TPAs regulated by IRDAI as well as government schemes. Each chapter shows the generic bundle for one exchange in one direction, then what PMJAY changes and what PMJAY requires on top. The package's sample collection is read the same way: a provider's bundles are either examples written to this specification or captures from the sandbox run against the PMJAY payer, and a payer's are either the generic payer's or PMJAY's own. This chapter holds the rules every bundle obeys before any exchange is considered.
 
 ## Rules
 

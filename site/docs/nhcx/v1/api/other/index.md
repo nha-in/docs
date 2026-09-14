@@ -47,11 +47,13 @@ The exchange posts these to the `endpoint_url` you registered. Answer each with 
 | Environment | Base URL |
 | --- | --- |
 | Sandbox, NHCX exchange. | `https://apisbx.abdm.gov.in/hcx` |
+| Production. | `https://apisprod.nha.gov.in/hcx` |
 
 ## Guides that use these calls
 
 - [Cancel, reprocess and shortfall](/docs/nhcx/v1/reference/fhir/cancel-reprocess-and-shortfall)
 - [Predetermination, status and search](/docs/nhcx/v1/reference/fhir/predetermination-status-and-search)
 - [Notifications and patient apps](/docs/nhcx/v1/reference/notifications-and-patient-apps)
+- [Accepted with 202, and no callback arrives](/docs/nhcx/v1/troubleshooting/accepted-then-no-callback)
 
 The whole specification, with a request you can send from the page, is the [Other API reference](/reference/nhcx-other).

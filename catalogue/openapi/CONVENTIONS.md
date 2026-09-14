@@ -13,6 +13,32 @@ without three different shapes of truth.
 | `hiecm-m2.yaml` | Care context linking and HIP data sharing | `dev.abdm.gov.in` |
 | `hiecm-m3.yaml` | Consent and HIU data fetch | `dev.abdm.gov.in` |
 | `hiecm-m4.yaml` | HPR and HFR registration. Phase 2, nothing written | `apihspsbx.abdm.gov.in` |
+| `hiecm-p1.yaml`, `hiecm-p2.yaml`, `hiecm-p3.yaml` | The PHR modules P1 to P3 | `phrsbx.abdm.gov.in` |
+| `hiecm-phr-services.yaml` | PHR application services | `phrsbx.abdm.gov.in` |
+
+The NHCX files under `nhcx/v1/` are one per module of the exchange, and are
+not written in this repository. The NHCX package writes them with
+`make ekadocs` (`system/build-ekadocs.mjs`) from its Bruno collection, and
+replaces them on every port, so a change goes into the package and is ported
+again. The port sets `x-abdm-atom` on every operation and webhook whose method
+and path an NHCX endpoint or callback atom names in its title.
+
+| File | Module | Gateway host |
+|---|---|---|
+| `nhcx-session.yaml` | Session token, the ABDM gateway's | `dev.abdm.gov.in` |
+| `nhcx-registry.yaml` | Participant registry: search, details, certificates, policies | `apisbx.abdm.gov.in` |
+| `nhcx-onboarding.yaml` | Creating and validating a participant | `apisbx.abdm.gov.in` |
+| `nhcx-eligibility.yaml` | Coverage eligibility | `apisbx.abdm.gov.in` |
+| `nhcx-insurance-plan.yaml` | Insurance plan | `apisbx.abdm.gov.in` |
+| `nhcx-preauth.yaml` | Pre-authorisation | `apisbx.abdm.gov.in` |
+| `nhcx-predetermination.yaml` | Predetermination | `apisbx.abdm.gov.in` |
+| `nhcx-claim.yaml` | Claim | `apisbx.abdm.gov.in` |
+| `nhcx-payment-notice.yaml` | Payment notice | `apisbx.abdm.gov.in` |
+| `nhcx-communication.yaml` | Communication | `apisbx.abdm.gov.in` |
+| `nhcx-status.yaml` | Status and search | `apisbx.abdm.gov.in` |
+| `nhcx-other.yaml` | Task, notification subscription, the error callback | `apisbx.abdm.gov.in` |
+| `nhcx-biometric.yaml` | ABHA biometric authentication | `apisbx.abdm.gov.in` |
+| `nhcx-adjudicator.yaml` | The PMJAY payer service and the sandbox dummy payer | `apisbx.abdm.gov.in` |
 
 Every file is self-contained. No `$ref` reaches across files, because the
 site serves each spec as a static file and an unresolvable reference renders
@@ -98,7 +124,7 @@ specification must carry.
 | Extension | Where | What it carries |
 |---|---|---|
 | `x-abdm-gateway` | `info` | `hiecm`, `uhi`, `nhcx` or `shared`. All four are accepted. |
-| `x-abdm-module` | `info` | `gateway`, `M1`, `M2`, `M3`, `M4` |
+| `x-abdm-module` | `info` | HIE-CM: `gateway`, `M1`, `M2`, `M3`, `M4`. NHCX: the module id, as `claim` or `registry` |
 | `x-abdm-phase` | `info` | `1` for what ships now, `2` for declared but unwritten |
 | `x-abdm-roles` | `info` | Which integrator roles call this module |
 | `x-abdm-sources` | root | Where the content came from, with fetch status |

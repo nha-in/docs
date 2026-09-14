@@ -6,6 +6,8 @@ description: Asynchronous callback listener and 202 receipt handling
 verification: unverified
 source: nhcx-package/docs/02-Getting Started/09-Receiving a Callback.md
 generated: true
+covers:
+  - nhcx.sandbox.callback-url-requirements
 ---
 
 # Receiving a callback

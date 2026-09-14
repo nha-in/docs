@@ -117,11 +117,55 @@ export function routeFor(srcPath, raw) {
   return join('docs', r);
 }
 
+/**
+ * The API module a published route belongs to, on any gateway:
+ * docs/<platform>/<version>/api/<module>/... The per-module llms.txt is keyed
+ * by all three, because two gateways may each have a module of the same name.
+ */
+export function apiModuleFor(route) {
+  const m = /^docs[\\/]([\w-]+)[\\/]([\w.-]+)[\\/]api[\\/]([\w-]+)([\\/]|$)/.exec(route);
+  if (!m) return null;
+  const [, platform, version, moduleId] = m;
+  return {platform, version, moduleId, key: `${platform}/${version}/${moduleId}`};
+}
+
+/**
+ * The name a module's llms.txt goes by. HIE-CM modules keep the bare id they
+ * have always had (M1, GATEWAY). Another gateway's module takes its label from
+ * the API sidebar the reference build writes, prefixed with the gateway, so
+ * NHCX's claim module reads "NHCX Claim" and never a bare "CLAIM".
+ */
+export function moduleLabel({platform, version, moduleId}, sidebar = []) {
+  if (platform === 'hiecm') return moduleId.toUpperCase();
+  const entry = sidebar.find(
+    (s) => s.platform === platform && s.version === version && s.moduleId === moduleId,
+  );
+  return `${platform.toUpperCase()} ${entry?.label ?? moduleId}`;
+}
+
+/** One module's llms.txt, in the same llmstxt.org shape as the root file. */
+export function moduleLlmsTxt(label, pages, siteUrl, base) {
+  const lines = [
+    `# ${label}`,
+    '',
+    `> Every page of the ${label} module of the ABDM Developer Portal, fetchable as markdown.`,
+    '',
+    '## Pages',
+    '',
+  ];
+  for (const p of [...pages].sort((a, b) => a.route.localeCompare(b.route))) {
+    lines.push(`- [${p.title}](${siteUrl}${base}/${p.route})${p.description ? `: ${p.description}` : ''}`);
+  }
+  lines.push('');
+  return lines.join('\n');
+}
+
 function main() {
   const full = [];
   let emitted = 0;
   let skipped = 0;
-  // module id -> [{title, route}], for the per-module llms.txt under hiecm/v3/api.
+  // platform/version/module -> {module, pages}, for the per-module llms.txt
+  // under each gateway's api folder.
   const apiModulePages = new Map();
 
   for (const src of walk(DOCS_SRC)) {
@@ -152,13 +196,12 @@ function main() {
     full.push(md);
     emitted += 1;
 
-    const moduleMatch = /^docs[\\/]hiecm[\\/]v3[\\/]api[\\/]([\w-]+)([\\/]|$)/.exec(route);
-    if (moduleMatch) {
-      const moduleId = moduleMatch[1];
+    const module = apiModuleFor(route);
+    if (module) {
       const description =
         /^description:\s*"?([^"\n]+)"?/m.exec(raw)?.[1]?.trim() ?? '';
-      if (!apiModulePages.has(moduleId)) apiModulePages.set(moduleId, []);
-      apiModulePages.get(moduleId).push({title, route, description});
+      if (!apiModulePages.has(module.key)) apiModulePages.set(module.key, {module, pages: []});
+      apiModulePages.get(module.key).pages.push({title, route, description});
     }
   }
 
@@ -177,24 +220,15 @@ function main() {
 
   // Same llmstxt.org shape as the root llms.txt (build-nav.mjs): H1, a `>`
   // summary, one `## section`, then `- [Title](url): description` lines.
-  for (const [moduleId, pages] of apiModulePages) {
-    pages.sort((a, b) => a.route.localeCompare(b.route));
-    const outDir = join(BUILD, 'docs', 'hiecm', 'v3', 'api', moduleId);
+  const sidebarFile = join(SITE, 'src', 'data', 'api-sidebar.json');
+  const sidebar = existsSync(sidebarFile) ? JSON.parse(readFileSync(sidebarFile, 'utf8')) : [];
+  for (const {module, pages} of apiModulePages.values()) {
+    const outDir = join(BUILD, 'docs', module.platform, module.version, 'api', module.moduleId);
     if (!existsSync(outDir)) continue;
-    const label = moduleId.toUpperCase();
-    const lines = [
-      `# ${label}`,
-      '',
-      `> Every page of the ${label} module of the ABDM Developer Portal, fetchable as markdown.`,
-      '',
-      '## Pages',
-      '',
-    ];
-    for (const p of pages) {
-      lines.push(`- [${p.title}](${siteUrl}${base}/${p.route})${p.description ? `: ${p.description}` : ''}`);
-    }
-    lines.push('');
-    writeFileSync(join(outDir, 'llms.txt'), lines.join('\n'));
+    writeFileSync(
+      join(outDir, 'llms.txt'),
+      moduleLlmsTxt(moduleLabel(module, sidebar), pages, siteUrl, base),
+    );
   }
 
   console.log(

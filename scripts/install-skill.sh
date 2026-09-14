@@ -10,7 +10,8 @@
 # Usage:
 #   scripts/install-skill.sh <skill-name> <target> [--user]
 #
-#   <skill-name>  a directory under plugins/abdm/skills/, e.g. hiecm-m1-build
+#   <skill-name>  a directory under plugins/abdm/skills/ or plugins/nhcx/skills/,
+#                 e.g. hiecm-m1-build or nhcx-coverage
 #   <target>      claude | cursor | codex | copilot | all
 #   --user        install to the personal/global directory instead of this
 #                 project's. Not supported for copilot: GitHub does not
@@ -24,8 +25,11 @@ skill="${1:-}"; target="${2:-}"; scope="${3:-}"
 [ -n "$skill" ] && [ -n "$target" ] || usage
 
 root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-src="$root/plugins/abdm/skills/$skill"
-[ -d "$src" ] || { echo "No compiled skill at $src. Run: node scripts/compile-skills.mjs" >&2; exit 1; }
+src=""
+for plugin in abdm nhcx; do
+  if [ -d "$root/plugins/$plugin/skills/$skill" ]; then src="$root/plugins/$plugin/skills/$skill"; break; fi
+done
+[ -n "$src" ] || { echo "No skill named $skill under plugins/abdm/skills or plugins/nhcx/skills. For a compiled skill, run: node scripts/compile-skills.mjs" >&2; exit 1; }
 
 user=false
 if [ "$scope" = "--user" ]; then user=true; elif [ -n "$scope" ]; then usage; fi

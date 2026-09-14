@@ -52,5 +52,8 @@ Every NHCX API call, whether a registry lookup, a certificate fetch or a claim s
 - [Creating and updating a participant](/docs/nhcx/v1/getting-started/creating-and-updating-a-participant)
 - [Finding participants and policies](/docs/nhcx/v1/getting-started/finding-participants-and-policies)
 - [Fetching a recipient certificate](/docs/nhcx/v1/getting-started/fetching-a-recipient-certificate)
+- [Get your sandbox credentials](/docs/nhcx/v1/getting-started/get-your-sandbox-credentials)
+- [Quickstart](/docs/nhcx/v1/getting-started/quickstart)
+- [The recipient cannot decrypt your message](/docs/nhcx/v1/troubleshooting/the-recipient-cannot-decrypt)
 
 The whole specification, with a request you can send from the page, is the [Participant registry API reference](/reference/nhcx-registry).

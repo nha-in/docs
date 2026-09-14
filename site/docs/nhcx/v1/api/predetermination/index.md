@@ -33,6 +33,7 @@ The exchange posts these to the `endpoint_url` you registered. Answer each with 
 | Environment | Base URL |
 | --- | --- |
 | Sandbox, NHCX exchange. | `https://apisbx.abdm.gov.in/hcx` |
+| Production. | `https://apisprod.nha.gov.in/hcx` |
 
 ## Guides that use these calls
 

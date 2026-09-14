@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import {cn} from '@site/src/lib/utils';
 import SkillInstall from './SkillInstall';
+import manifest from '@site/src/data/skills.json';
 
 /**
  * Choose what you are building; see the one skill that serves it. Five
@@ -43,8 +44,60 @@ const CHOICES: Choice[] = [
   },
 ];
 
-export default function SkillPicker(): React.ReactNode {
-  const [choice, setChoice] = useState(CHOICES[0]);
+// One skill per NHCX use case, in episode order. Each is a folder that
+// installs and runs alone.
+const NHCX_CHOICES: Choice[] = [
+  {
+    slug: 'nhcx-coverage',
+    label: 'Coverage',
+    note: 'Finds the policy, opens the claim episode on it, and asks the payer whether the cover is in force.',
+  },
+  {
+    slug: 'nhcx-insurance',
+    label: 'Insurance plan',
+    note: "Requests the payer's package master once per facility and policy, reuses it, and quotes treatment lines from it.",
+  },
+  {
+    slug: 'nhcx-preauth',
+    label: 'Pre-authorisation',
+    note: 'Sends the pre-authorisation, answers its queries, raises enhancements, cancels, and asks for a predetermination.',
+  },
+  {
+    slug: 'nhcx-claim',
+    label: 'Claim',
+    note: "Records the discharge, files the claim under the pre-authorisation's number, and reads the decision.",
+  },
+  {
+    slug: 'nhcx-payment',
+    label: 'Payment',
+    note: "Records the payer's payment notice once against its claim, and acknowledges it at once.",
+  },
+  {
+    slug: 'nhcx-communication',
+    label: 'Communication',
+    note: "Sorts the payer's messages into queries and notifications, acknowledges notifications, and answers queries.",
+  },
+  {
+    slug: 'nhcx-reprocess',
+    label: 'Reprocess and status',
+    note: 'Reopens a decided claim, asks for the balance of a short payment, and asks where a case stands.',
+  },
+];
+
+const SETS: Record<string, Choice[]> = {abdm: CHOICES, nhcx: NHCX_CHOICES};
+
+/** A skill of more than one file downloads as its archive, not its SKILL.md. */
+const isFolder = (slug: string) =>
+  (manifest as Record<string, {folder?: boolean}>)[slug]?.folder === true;
+
+type SkillPickerProps = {
+  /** Which gateway's skills to offer: ABDM's by default, or NHCX's. */
+  set?: 'abdm' | 'nhcx';
+};
+
+export default function SkillPicker({set = 'abdm'}: SkillPickerProps): React.ReactNode {
+  const choices = SETS[set] ?? CHOICES;
+  const [choice, setChoice] = useState(choices[0]);
   const {siteConfig} = useDocusaurusContext();
   const base = `${siteConfig.url}${siteConfig.baseUrl}`.replace(/\/+$/, '');
 
@@ -54,7 +107,7 @@ export default function SkillPicker(): React.ReactNode {
         className="skill-install__targets skill-picker__choices"
         role="tablist"
         aria-label="What are you building?">
-        {CHOICES.map((option) => (
+        {choices.map((option) => (
           <button
             key={option.slug}
             type="button"
@@ -71,15 +124,22 @@ export default function SkillPicker(): React.ReactNode {
       </div>
       <SkillInstall key={choice.slug} slug={choice.slug} note={choice.note} />
 
-      {/* No packaged bundle exists yet (site/static/skills carries one
-          SKILL.md per slug, no zip or index), so this lists each file
-          directly rather than claiming a "download all" archive. */}
+      {/* No packaged bundle exists (site/static/skills carries one folder per
+          slug, plus an archive for a skill of more than one file, and no
+          index), so this lists each skill rather than claiming a "download
+          all" archive. */}
       <details className="skill-how skill-picker__all">
         <summary className="skill-how__summary">Download all skills</summary>
         <ul className="skill-picker__all-list">
-          {CHOICES.map((option) => (
+          {choices.map((option) => (
             <li key={option.slug}>
-              <a href={`${base}/skills/${option.slug}/SKILL.md`} download>
+              <a
+                href={
+                  isFolder(option.slug)
+                    ? `${base}/skills/${option.slug}.tar.gz`
+                    : `${base}/skills/${option.slug}/SKILL.md`
+                }
+                download>
                 {option.label}
               </a>
             </li>

@@ -12,7 +12,11 @@ import { join } from "node:path";
 import { parse } from "yaml";
 import { loadAtoms, root } from "./lib/atoms.mjs";
 
-const skillsDir = join(root, "plugins", "abdm", "skills");
+// Every plugin that ships skills: abdm's compiled and hand-authored ones, and
+// nhcx's hand-authored ones.
+const skillsDirs = ["abdm", "nhcx"]
+  .map((plugin) => join(root, "plugins", plugin, "skills"))
+  .filter((dir) => existsSync(dir));
 const { atoms } = loadAtoms();
 
 const KNOWN_PATHS = new Set();
@@ -28,7 +32,7 @@ const REQUIRED_SECTIONS = {
 let failures = [];
 function fail(skill, msg) { failures.push(`${skill}: ${msg}`); }
 
-for (const name of readdirSync(skillsDir)) {
+for (const skillsDir of skillsDirs) for (const name of readdirSync(skillsDir)) {
   const file = join(skillsDir, name, "SKILL.md");
   if (!existsSync(file)) continue; // README.md and other non-skill entries
   const raw = readFileSync(file, "utf8");

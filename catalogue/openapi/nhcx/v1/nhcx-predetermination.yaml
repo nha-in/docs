@@ -18,8 +18,6 @@ info:
     A hospital planning a treatment can learn the benefit a payer would approve for it before the patient is admitted, and plan the admission and the patient's share of the cost around the answer.
 
     Guides that use these calls: [Predetermination, status and search](/docs/nhcx/v1/reference/fhir/predetermination-status-and-search).
-
-    Production address for the NHCX exchange: shared by NHA after sandbox exit.
   version: nhcx-v1
   license:
     name: MIT
@@ -40,11 +38,13 @@ x-abdm-sources:
     note: The package's Bruno collection, one request per operation.
   - file: nhcx-package/baseurl.yaml
     role: upstream
-    hash: sha256:47d8412abbfc53b1e1038410e7980eee029d7b1be5082f4ae6c1d4e16ae0dd0f
+    hash: sha256:88515b7b29c6b349a131e016c80774436ea16a29738db743b4cc3a24cbd42453
     note: The sandbox and production hosts.
 servers:
   - url: https://apisbx.abdm.gov.in/hcx
     description: Sandbox, NHCX exchange.
+  - url: https://apisprod.nha.gov.in/hcx
+    description: Production.
 tags:
   - name: Predetermination
     description: A hospital planning a treatment can learn the benefit a payer would approve for it before the patient is admitted, and plan the admission and the patient's share of the cost around the answer.
@@ -54,6 +54,7 @@ paths:
   /v1/predetermination/submit:
     post:
       operationId: predetermination_v1_predetermination_submit
+      x-abdm-atom: nhcx.endpoint.predetermination-submit
       x-abdm-use-case: Predetermination
       tags:
         - Predetermination
@@ -151,6 +152,7 @@ paths:
   /v1/predetermination/on_submit:
     post:
       operationId: predetermination_v1_predetermination_on_submit
+      x-abdm-atom: nhcx.endpoint.predetermination-on-submit
       x-abdm-use-case: Predetermination
       tags:
         - Predetermination
@@ -254,6 +256,7 @@ webhooks:
   v1_predetermination_submit:
     post:
       operationId: predetermination_webhook_v1_predetermination_submit
+      x-abdm-atom: nhcx.callback.predetermination-submit
       x-abdm-triggered-by: predetermination_v1_predetermination_submit
       x-abdm-use-case: Webhooks
       tags:
@@ -329,6 +332,7 @@ webhooks:
   v1_predetermination_on_submit:
     post:
       operationId: predetermination_webhook_v1_predetermination_on_submit
+      x-abdm-atom: nhcx.callback.predetermination-on-submit
       x-abdm-triggered-by: predetermination_v1_predetermination_on_submit
       x-abdm-use-case: Webhooks
       tags:

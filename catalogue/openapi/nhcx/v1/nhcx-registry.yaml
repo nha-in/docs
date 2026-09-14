@@ -17,7 +17,7 @@ info:
 
     Every NHCX API call, whether a registry lookup, a certificate fetch or a claim submission, is rejected unless it carries a valid Bearer token, so this is the first call any integration makes and the first thing to check when a working integration starts failing.
 
-    Guides that use these calls: [Creating and updating a participant](/docs/nhcx/v1/getting-started/creating-and-updating-a-participant), [Finding participants and policies](/docs/nhcx/v1/getting-started/finding-participants-and-policies), [Fetching a recipient certificate](/docs/nhcx/v1/getting-started/fetching-a-recipient-certificate).
+    Guides that use these calls: [Creating and updating a participant](/docs/nhcx/v1/getting-started/creating-and-updating-a-participant), [Finding participants and policies](/docs/nhcx/v1/getting-started/finding-participants-and-policies), [Fetching a recipient certificate](/docs/nhcx/v1/getting-started/fetching-a-recipient-certificate), [Get your sandbox credentials](/docs/nhcx/v1/getting-started/get-your-sandbox-credentials), [Quickstart](/docs/nhcx/v1/getting-started/quickstart), [The recipient cannot decrypt your message](/docs/nhcx/v1/troubleshooting/the-recipient-cannot-decrypt).
   version: nhcx-v1
   license:
     name: MIT
@@ -38,7 +38,7 @@ x-abdm-sources:
     note: The package's Bruno collection, one request per operation.
   - file: nhcx-package/baseurl.yaml
     role: upstream
-    hash: sha256:47d8412abbfc53b1e1038410e7980eee029d7b1be5082f4ae6c1d4e16ae0dd0f
+    hash: sha256:88515b7b29c6b349a131e016c80774436ea16a29738db743b4cc3a24cbd42453
     note: The sandbox and production hosts.
 servers:
   - url: https://apisbx.abdm.gov.in/pmjay/sbxhcx/participanthcxservice
@@ -54,6 +54,7 @@ paths:
   /get/session:
     post:
       operationId: registry_get_session
+      x-abdm-atom: nhcx.endpoint.get-session
       x-abdm-use-case: Participant registry
       tags:
         - Participant registry
@@ -148,6 +149,7 @@ paths:
   /participant/update:
     post:
       operationId: registry_participant_update
+      x-abdm-atom: nhcx.endpoint.participant-update
       x-abdm-use-case: Participant registry
       tags:
         - Participant registry
@@ -261,6 +263,7 @@ paths:
   /v2/participant/update:
     post:
       operationId: registry_v2_participant_update
+      x-abdm-atom: nhcx.endpoint.v2-participant-update
       x-abdm-use-case: Participant registry
       tags:
         - Participant registry
@@ -352,6 +355,7 @@ paths:
   /participant/search:
     post:
       operationId: registry_participant_search
+      x-abdm-atom: nhcx.endpoint.participant-search
       x-abdm-use-case: Participant registry
       tags:
         - Participant registry
@@ -473,6 +477,7 @@ paths:
   /participant/details:
     post:
       operationId: registry_participant_details
+      x-abdm-atom: nhcx.endpoint.participant-details
       x-abdm-use-case: Participant registry
       tags:
         - Participant registry
@@ -590,6 +595,7 @@ paths:
   /fetch/participants/list:
     post:
       operationId: registry_fetch_participants_list
+      x-abdm-atom: nhcx.endpoint.fetch-participants-list
       x-abdm-use-case: Participant registry
       tags:
         - Participant registry
@@ -695,6 +701,7 @@ paths:
   /fetch/certs:
     post:
       operationId: registry_fetch_certs
+      x-abdm-atom: nhcx.endpoint.fetch-certs
       x-abdm-use-case: Participant registry
       tags:
         - Participant registry
@@ -855,6 +862,7 @@ paths:
   /v2/update/cert:
     post:
       operationId: registry_v2_update_cert
+      x-abdm-atom: nhcx.endpoint.v2-update-cert
       x-abdm-use-case: Participant registry
       tags:
         - Participant registry
@@ -1013,6 +1021,7 @@ paths:
   /participant/link/abha/policy:
     post:
       operationId: registry_participant_link_abha_policy
+      x-abdm-atom: nhcx.endpoint.participant-link-abha-policy
       x-abdm-use-case: Participant registry
       tags:
         - Participant registry
@@ -1119,6 +1128,7 @@ paths:
   /V2/participant/link/abha/policy:
     post:
       operationId: registry_v2_participant_link_abha_policy
+      x-abdm-atom: nhcx.endpoint.v2-participant-link-abha-policy
       x-abdm-use-case: Participant registry
       tags:
         - Participant registry
@@ -1396,6 +1406,7 @@ paths:
   /participant/delink/abha/policy:
     post:
       operationId: registry_participant_delink_abha_policy
+      x-abdm-atom: nhcx.endpoint.participant-delink-abha-policy
       x-abdm-use-case: Participant registry
       tags:
         - Participant registry
@@ -1496,6 +1507,7 @@ paths:
   /V2/participant/delink/abha/policy:
     post:
       operationId: registry_v2_participant_delink_abha_policy
+      x-abdm-atom: nhcx.endpoint.v2-participant-delink-abha-policy
       x-abdm-use-case: Participant registry
       tags:
         - Participant registry
@@ -1598,6 +1610,7 @@ paths:
   /participant/get/policies:
     post:
       operationId: registry_participant_get_policies
+      x-abdm-atom: nhcx.endpoint.participant-get-policies
       x-abdm-use-case: Participant registry
       tags:
         - Participant registry
@@ -1695,6 +1708,7 @@ paths:
   /V2/participant/get/policies:
     post:
       operationId: registry_v2_participant_get_policies
+      x-abdm-atom: nhcx.endpoint.v2-participant-get-policies
       x-abdm-use-case: Participant registry
       tags:
         - Participant registry

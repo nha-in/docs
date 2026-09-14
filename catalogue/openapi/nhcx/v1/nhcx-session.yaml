@@ -17,7 +17,7 @@ info:
 
     The token does not come from NHCX.
 
-    Guides that use these calls: [Session token](/docs/nhcx/v1/getting-started/session-token).
+    Guides that use these calls: [Session token](/docs/nhcx/v1/getting-started/session-token), [Quickstart](/docs/nhcx/v1/getting-started/quickstart).
   version: nhcx-v1
   license:
     name: MIT
@@ -38,7 +38,7 @@ x-abdm-sources:
     note: The package's Bruno collection, one request per operation.
   - file: nhcx-package/baseurl.yaml
     role: upstream
-    hash: sha256:47d8412abbfc53b1e1038410e7980eee029d7b1be5082f4ae6c1d4e16ae0dd0f
+    hash: sha256:88515b7b29c6b349a131e016c80774436ea16a29738db743b4cc3a24cbd42453
     note: The sandbox and production hosts.
 servers:
   - url: https://dev.abdm.gov.in
@@ -54,6 +54,7 @@ paths:
   /api/hiecm/gateway/v3/sessions:
     post:
       operationId: session_session_token
+      x-abdm-atom: nhcx.endpoint.session-token
       x-abdm-use-case: Session
       tags:
         - Session

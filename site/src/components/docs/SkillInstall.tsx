@@ -25,6 +25,9 @@ type Entry = {
   tests?: number;
   /** Guided skills only: the SKILL.md frontmatter description. */
   description?: string;
+  /** A skill of more than one file, installed from /skills/<slug>.tar.gz. */
+  folder?: boolean;
+  files?: number;
 };
 
 type Target = {
@@ -33,11 +36,18 @@ type Target = {
   /** Where this agent reads skills from, for the panel's own copy. */
   dir: string | null;
   /** Built from the published URL, so the command works where the site is. */
-  command: (url: string, slug: string) => string;
+  command: (url: string, slug: string, folder?: boolean) => string;
   /** One click into the agent, or null where the agent has no scheme for it. */
   link: ((command: string, module: string) => string) | null;
   note: string;
+  /** The note for a skill that is a folder. */
+  folderNote: string;
 };
+
+// A folder skill ships as /skills/<slug>.tar.gz and unpacks to <dir>/<slug>/,
+// so its SKILL.md keeps beside it the files it points to.
+const unpack = (url: string, slug: string, dir: string) =>
+  `mkdir -p ${dir} && curl -fsSL ${url}/skills/${slug}.tar.gz | tar -xz -C ${dir}`;
 
 /**
  * The prompt a one click launch lands in the agent's composer.
@@ -64,12 +74,15 @@ const TARGETS: Target[] = [
     id: 'claude-code',
     label: 'Claude',
     dir: '.claude/skills',
-    command: (url, slug) =>
-      `mkdir -p .claude/skills/${slug} && curl -fsSL ${url}/skills/${slug}/SKILL.md -o .claude/skills/${slug}/SKILL.md`,
+    command: (url, slug, folder) =>
+      folder
+        ? unpack(url, slug, '.claude/skills')
+        : `mkdir -p .claude/skills/${slug} && curl -fsSL ${url}/skills/${slug}/SKILL.md -o .claude/skills/${slug}/SKILL.md`,
     // https://support.claude.com/en/articles/14729294-open-claude-desktop-with-a-link
     link: (command, module) =>
       `claude://code/new?q=${encodeURIComponent(promptFor(command, module))}`,
     note: 'Drops the skill into this project. Claude loads it when a task matches.',
+    folderNote: 'Unpacks the skill folder into this project. Claude loads it when a task matches.',
   },
   {
     id: 'cursor',
@@ -79,8 +92,10 @@ const TARGETS: Target[] = [
     // frontmatter already carries a `description`, so Cursor can match it as
     // an agent-requested rule without edits.
     dir: '.cursor/rules',
-    command: (url, slug) =>
-      `mkdir -p .cursor/rules && curl -fsSL ${url}/skills/${slug}/SKILL.md -o .cursor/rules/${slug}.mdc`,
+    command: (url, slug, folder) =>
+      folder
+        ? unpack(url, slug, '.cursor/skills')
+        : `mkdir -p .cursor/rules && curl -fsSL ${url}/skills/${slug}/SKILL.md -o .cursor/rules/${slug}.mdc`,
     // https://cursor.com/docs/integrations/deeplinks. Cursor has no skill
     // install deeplink, but it has a prompt one, so this lands the same way the
     // Claude link does: the command in the composer, waiting to be sent.
@@ -89,33 +104,47 @@ const TARGETS: Target[] = [
         promptFor(command, module),
       )}`,
     note: 'Saved as a Cursor project rule. Cursor matches it by its description when a task calls for it.',
+    folderNote: 'Unpacks the skill folder under .cursor/skills, since one rule file cannot hold the files the skill points to.',
   },
   {
     id: 'vscode',
     label: 'VS Code',
     dir: '.github/skills',
-    command: (url, slug) =>
-      `mkdir -p .github/skills/${slug} && curl -fsSL ${url}/skills/${slug}/SKILL.md -o .github/skills/${slug}/SKILL.md`,
+    command: (url, slug, folder) =>
+      folder
+        ? unpack(url, slug, '.github/skills')
+        : `mkdir -p .github/skills/${slug} && curl -fsSL ${url}/skills/${slug}/SKILL.md -o .github/skills/${slug}/SKILL.md`,
     // VS Code has a deeplink for MCP servers but none for skills, so this
     // target is the command only. Do not invent one.
     link: null,
     note: 'GitHub Copilot reads this on every surface your team uses, not only your editor.',
+    folderNote: 'Unpacks the skill folder under .github/skills, which GitHub Copilot reads on every surface your team uses.',
   },
   {
     id: 'any',
     label: 'Any agent',
     dir: null,
-    command: (url, slug) => `curl -fsSL ${url}/skills/${slug}/SKILL.md`,
+    command: (url, slug, folder) =>
+      folder
+        ? `curl -fsSL ${url}/skills/${slug}.tar.gz | tar -xz`
+        : `curl -fsSL ${url}/skills/${slug}/SKILL.md`,
     link: null,
     note: 'One markdown file. Put it wherever your agent reads context from.',
+    folderNote: 'A folder: SKILL.md and the files it points to. Keep them together wherever your agent reads skills from.',
   },
 ];
 
-/** What the skill carries, counted from the file the generator wrote. */
+/** "1 operation", "31 operations". */
+const count = (n: number, one: string, many: string) => `${n} ${n === 1 ? one : many}`;
+
+/** What the skill carries, counted from the files the build wrote. */
 function capabilities(entry: Entry) {
-  // A guided skill is a procedure, not a reference: its own description
-  // says what it does better than counts could.
-  if (entry.kind === 'guided') {
+  // A guided skill that carries no counts is a procedure, not a reference:
+  // its own description says what it does better than counts could. One the
+  // build could count, such as an NHCX skill, gets the same three rows as a
+  // module skill.
+  const counted = [entry.operations, entry.codes, entry.tests].some((n) => n !== undefined);
+  if (entry.kind === 'guided' && !counted) {
     return [{label: 'Guided', detail: entry.description ?? ''}];
   }
   return [
@@ -123,21 +152,21 @@ function capabilities(entry: Entry) {
       label: 'Integrate',
       detail:
         (entry.operations ?? 0) > 0
-          ? `${entry.operations} operations, with their hosts, headers and the rules that hold across them.`
+          ? `${count(entry.operations ?? 0, 'operation', 'operations')}, with their hosts, headers and the rules that hold across them.`
           : 'No operation is recorded for this module yet.',
     },
     {
       label: 'Debug',
       detail:
         (entry.codes ?? 0) > 0
-          ? `${entry.codes} recorded error codes, each with its message and what to do about it.`
+          ? `${count(entry.codes ?? 0, 'recorded error code', 'recorded error codes')}, each with its message and what to do about it.`
           : 'No error code is recorded for this module yet.',
     },
     {
       label: 'Test',
       detail:
         (entry.tests ?? 0) > 0
-          ? `${entry.tests} test cases, each with the call it makes and what to see when it passes.`
+          ? `${count(entry.tests ?? 0, 'test case', 'test cases')}, each with the call it makes and what to see when it passes.`
           : 'No test matrix exists for this module yet.',
     },
   ];
@@ -209,8 +238,9 @@ export default function SkillInstall({slug, note}: SkillInstallProps): React.Rea
   const {siteConfig} = useDocusaurusContext();
   const [target, setTarget] = useState(TARGETS[0]);
   const base = `${siteConfig.url}${siteConfig.baseUrl}`.replace(/\/+$/, '');
-  const download = useBaseUrl(`/skills/${slug}/SKILL.md`);
   const entry = (manifest as Record<string, Entry>)[slug];
+  const folder = entry?.folder === true;
+  const download = useBaseUrl(folder ? `/skills/${slug}.tar.gz` : `/skills/${slug}/SKILL.md`);
 
   if (!entry) return null;
 
@@ -227,7 +257,7 @@ export default function SkillInstall({slug, note}: SkillInstallProps): React.Rea
           <p className="skill-install__note">{note}</p>
         </div>
         <div className="skill-install__actions">
-          <CopySkillButton url={download} />
+          {!folder && <CopySkillButton url={download} />}
           <a className="skill-install__download" href={download} download>
             <Download className="size-4" aria-hidden="true" />
             Download
@@ -261,18 +291,18 @@ export default function SkillInstall({slug, note}: SkillInstallProps): React.Rea
         ))}
       </div>
 
-      <CopyLine value={target.command(base, slug)} />
+      <CopyLine value={target.command(base, slug, folder)} />
 
       {target.link && (
         <a
           className="skill-launch"
-          href={target.link(target.command(base, slug), entry.module)}>
+          href={target.link(target.command(base, slug, folder), entry.module)}>
           <SquareArrowOutUpRight className="size-3.5" aria-hidden="true" />
           Open in {target.label}
         </a>
       )}
 
-      <p className="skill-install__hint">{target.note}</p>
+      <p className="skill-install__hint">{folder ? target.folderNote : target.note}</p>
 
       <details className="skill-how">
         <summary className="skill-how__summary">How to use it</summary>

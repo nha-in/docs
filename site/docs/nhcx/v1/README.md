@@ -12,5 +12,6 @@ rather than editing a page here.
 | `registries/` | Overview tab: participants and policies | `docs/01-Overview/03-Participants and Policies.md` |
 | `concepts/` | Overview tab: how a claim moves, use cases, workflow codes, PMJAY | `docs/01-Overview` |
 | `go-live/` | Overview tab: leaving the sandbox | `docs/07-Go Live` |
+| `troubleshooting/` | Overview tab: what to check, by the symptom you see | `docs/08-Troubleshooting` |
 | `api/` | API references tab: one module per Bruno folder | `apis/` |
 | `reference/` | API references tab: lookups, and the FHIR bundles under `fhir/` | `docs/06-Reference`, `docs/05-FHIR Reference` |

@@ -18,8 +18,6 @@ info:
     Coverage eligibility is the pre-check a hospital desk runs before committing a patient to a cashless pathway.
 
     Guides that use these calls: [Coverage eligibility request](/docs/nhcx/v1/reference/fhir/coverage-eligibility-request), [Coverage eligibility response](/docs/nhcx/v1/reference/fhir/coverage-eligibility-response).
-
-    Production address for the NHCX exchange: shared by NHA after sandbox exit.
   version: nhcx-v1
   license:
     name: MIT
@@ -40,7 +38,7 @@ x-abdm-sources:
     note: The package's Bruno collection, one request per operation.
   - file: nhcx-package/baseurl.yaml
     role: upstream
-    hash: sha256:47d8412abbfc53b1e1038410e7980eee029d7b1be5082f4ae6c1d4e16ae0dd0f
+    hash: sha256:88515b7b29c6b349a131e016c80774436ea16a29738db743b4cc3a24cbd42453
     note: The sandbox and production hosts.
   - file: nhcx-package/nhcx-error.yaml
     role: upstream
@@ -49,6 +47,8 @@ x-abdm-sources:
 servers:
   - url: https://apisbx.abdm.gov.in/hcx
     description: Sandbox, NHCX exchange.
+  - url: https://apisprod.nha.gov.in/hcx
+    description: Production.
 tags:
   - name: Coverage eligibility
     description: Coverage eligibility is the pre-check a hospital desk runs before committing a patient to a cashless pathway.
@@ -60,6 +60,7 @@ paths:
   /v1/coverageeligibility/check:
     post:
       operationId: eligibility_v1_coverageeligibility_check
+      x-abdm-atom: nhcx.endpoint.coverageeligibility-check
       x-abdm-use-case: Coverage eligibility
       tags:
         - Coverage eligibility
@@ -182,6 +183,7 @@ paths:
   /v1/coverageeligibility/on_check:
     post:
       operationId: eligibility_v1_coverageeligibility_on_check
+      x-abdm-atom: nhcx.endpoint.coverageeligibility-on-check
       x-abdm-use-case: Coverage eligibility
       tags:
         - Coverage eligibility
@@ -561,6 +563,7 @@ webhooks:
   v1_coverageeligibility_check:
     post:
       operationId: eligibility_webhook_v1_coverageeligibility_check
+      x-abdm-atom: nhcx.callback.coverageeligibility-check
       x-abdm-triggered-by: eligibility_v1_coverageeligibility_check
       x-abdm-use-case: Webhooks
       tags:
@@ -639,6 +642,7 @@ webhooks:
   v1_coverageeligibility_on_check:
     post:
       operationId: eligibility_webhook_v1_coverageeligibility_on_check
+      x-abdm-atom: nhcx.callback.coverageeligibility-on-check
       x-abdm-triggered-by: eligibility_v1_coverageeligibility_on_check
       x-abdm-use-case: Webhooks
       tags:
