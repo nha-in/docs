@@ -30,6 +30,7 @@ A PMJAY case is not decided over NHCX.
 ## Guides that use these calls
 
 - [Receiving a callback](/docs/nhcx/v1/getting-started/receiving-a-callback)
+- [Get your sandbox credentials](/docs/nhcx/v1/getting-started/get-your-sandbox-credentials)
 - [PMJAY sandbox run](/docs/nhcx/v1/roles/provider/pmjay-sandbox-run)
 - [PMJAY adjudication APIs](/docs/nhcx/v1/roles/provider/pmjay-adjudication-apis)
 

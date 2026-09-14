@@ -1,6 +1,13 @@
 import {test} from 'node:test';
 import assert from 'node:assert';
-import {renderOperationMarkdown, routeFor, stripToMarkdown} from './emit-page-markdown.mjs';
+import {
+  apiModuleFor,
+  moduleLabel,
+  moduleLlmsTxt,
+  renderOperationMarkdown,
+  routeFor,
+  stripToMarkdown,
+} from './emit-page-markdown.mjs';
 
 test('operation JSON renders to markdown with method, path and curl', () => {
   const op = {
@@ -112,4 +119,52 @@ test('routeFor honours a slug that moves the page off its path', () => {
     '---\ntitle: Get started\nslug: /hiecm/v3\n---\n',
   );
   assert.strictEqual(r, 'docs/hiecm/v3');
+});
+
+test('apiModuleFor finds the module of an HIE-CM and an NHCX route', () => {
+  assert.deepStrictEqual(apiModuleFor('docs/hiecm/v3/api/m1/endpoints/m1-token-refresh'), {
+    platform: 'hiecm', version: 'v3', moduleId: 'm1', key: 'hiecm/v3/m1',
+  });
+  assert.deepStrictEqual(apiModuleFor('docs/nhcx/v1/api/claim'), {
+    platform: 'nhcx', version: 'v1', moduleId: 'claim', key: 'nhcx/v1/claim',
+  });
+  assert.strictEqual(apiModuleFor('docs/nhcx/v1/api'), null);
+  assert.strictEqual(apiModuleFor('docs/nhcx/v1/getting-started/session-token'), null);
+});
+
+test('moduleLabel keeps HIE-CM ids bare and names another gateway from the sidebar', () => {
+  const sidebar = [{platform: 'nhcx', version: 'v1', moduleId: 'claim', label: 'Claim'}];
+  assert.strictEqual(moduleLabel({platform: 'hiecm', version: 'v3', moduleId: 'm1'}, sidebar), 'M1');
+  assert.strictEqual(moduleLabel({platform: 'nhcx', version: 'v1', moduleId: 'claim'}, sidebar), 'NHCX Claim');
+  // No sidebar entry: fall back to the gateway and the module id.
+  assert.strictEqual(moduleLabel({platform: 'nhcx', version: 'v1', moduleId: 'preauth'}, sidebar), 'NHCX preauth');
+});
+
+test('moduleLlmsTxt writes an HIE-CM module exactly as before and an NHCX module under its label', () => {
+  const pages = [
+    {title: 'B', route: 'docs/hiecm/v3/api/m1/endpoints/b', description: ''},
+    {title: 'A', route: 'docs/hiecm/v3/api/m1', description: 'The module.'},
+  ];
+  assert.strictEqual(
+    moduleLlmsTxt('M1', pages, 'https://x.example', ''),
+    [
+      '# M1',
+      '',
+      '> Every page of the M1 module of the ABDM Developer Portal, fetchable as markdown.',
+      '',
+      '## Pages',
+      '',
+      '- [A](https://x.example/docs/hiecm/v3/api/m1): The module.',
+      '- [B](https://x.example/docs/hiecm/v3/api/m1/endpoints/b)',
+      '',
+    ].join('\n'),
+  );
+  const nhcx = moduleLlmsTxt(
+    'NHCX Claim',
+    [{title: 'Claim submit', route: 'docs/nhcx/v1/api/claim/endpoints/claim-v1-claim-submit', description: ''}],
+    'https://x.example',
+    '/base',
+  );
+  assert.match(nhcx, /^# NHCX Claim\n/);
+  assert.match(nhcx, /- \[Claim submit\]\(https:\/\/x\.example\/base\/docs\/nhcx\/v1\/api\/claim\/endpoints\/claim-v1-claim-submit\)/);
 });

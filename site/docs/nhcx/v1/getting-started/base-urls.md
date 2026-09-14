@@ -6,6 +6,8 @@ description: Every service's base in the sandbox and in production, from `baseur
 verification: unverified
 source: nhcx-package/docs/02-Getting Started/02-Base URLs.md
 generated: true
+covers:
+  - nhcx.sandbox.environments-and-base-urls
 ---
 
 # Base URLs
@@ -23,7 +25,7 @@ Every NHCX call is a base URL followed by a path. The paths are the same in the 
 | Service | Sandbox | Production |
 | :---- | :---- | :---- |
 | ABDM session token | `https://dev.abdm.gov.in` | `https://apis.abdm.gov.in`. ABDM's published production gateway. Confirm it in your onboarding letter. |
-| NHCX exchange | `https://apisbx.abdm.gov.in/hcx` | Shared by NHA after sandbox exit. |
+| NHCX exchange | `https://apisbx.abdm.gov.in/hcx` | `https://apisprod.nha.gov.in/hcx` |
 | Participant service | `https://apisbx.abdm.gov.in/pmjay/sbxhcx/participanthcxservice` | `https://apisprod.nha.gov.in/pmjay/hcx/participanthcxservice` |
 | ABDM proxy | `https://apisbx.abdm.gov.in/pmjay/sbxhcx/abdmproxy` | Not published. Confirm at onboarding. |
 | PMJAY payer service, role lookup | `https://apisbx.abdm.gov.in` | Not published. Confirm at onboarding. |
@@ -58,7 +60,7 @@ On the sandbox, a preauthorisation is therefore posted to `https://apisbx.abdm.g
 
 ## Production
 
-The participant service's production address is published, and so is ABDM's production gateway. NHA shares the exchange's production base after sandbox exit. The NHCX Adapter assumes the pattern of swapping the sandbox hostname for the others, but that is an inference. Check every production base against your onboarding letter before you switch.
+The exchange's production base is `https://apisprod.nha.gov.in/hcx`. The participant service's production address is published, and so is ABDM's production gateway. The NHCX Adapter assumes the pattern of swapping the sandbox hostname for the others, but that is an inference. Check every production base against your onboarding letter before you switch.
 
 ## Next steps
 

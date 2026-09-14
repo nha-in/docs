@@ -35,9 +35,12 @@ The exchange posts these to the `endpoint_url` you registered. Answer each with 
 | Environment | Base URL |
 | --- | --- |
 | Sandbox, NHCX exchange. | `https://apisbx.abdm.gov.in/hcx` |
+| Production. | `https://apisprod.nha.gov.in/hcx` |
 
 ## Guides that use these calls
 
 - [Predetermination, status and search](/docs/nhcx/v1/reference/fhir/predetermination-status-and-search)
+- [Accepted with 202, and no callback arrives](/docs/nhcx/v1/troubleshooting/accepted-then-no-callback)
+- [Responses arrive against the wrong request](/docs/nhcx/v1/troubleshooting/responses-arrive-against-the-wrong-request)
 
 The whole specification, with a request you can send from the page, is the [Status and search API reference](/reference/nhcx-status).

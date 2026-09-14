@@ -22,7 +22,7 @@ Started, explains how a path is appended to them and what is easy to get wrong.
 | Service | Sandbox | Production |
 | :---- | :---- | :---- |
 | ABDM session token | `https://dev.abdm.gov.in` | `https://apis.abdm.gov.in`. ABDM's published production gateway. Confirm it in your onboarding letter. |
-| NHCX exchange | `https://apisbx.abdm.gov.in/hcx` | Shared by NHA after sandbox exit. |
+| NHCX exchange | `https://apisbx.abdm.gov.in/hcx` | `https://apisprod.nha.gov.in/hcx` |
 | Participant service | `https://apisbx.abdm.gov.in/pmjay/sbxhcx/participanthcxservice` | `https://apisprod.nha.gov.in/pmjay/hcx/participanthcxservice` |
 | ABDM proxy | `https://apisbx.abdm.gov.in/pmjay/sbxhcx/abdmproxy` | Not published. Confirm at onboarding. |
 | PMJAY payer service, role lookup | `https://apisbx.abdm.gov.in` | Not published. Confirm at onboarding. |

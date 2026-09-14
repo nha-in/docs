@@ -55,7 +55,9 @@ the plugin for building this portal, not for integrating with ABDM: atom
 authoring, verification, linting, OpenAPI ingestion, docs, skill compilation,
 the update pipeline, the support agent, planning and proof. Four of its skills
 are compiled from the plan above. The separate `plugins/abdm` ships the
-compiled integration skills that ABDM integrators install.
+compiled integration skills that ABDM integrators install, and
+[plugins/nhcx](plugins/nhcx) ships seven NHCX agent skills, one per NHCX use
+case, for building claims into a hospital system or a claims desk.
 
 ## How retrieval and chat work
 

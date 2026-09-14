@@ -32,5 +32,6 @@ Nothing moves through NHCX until both the sender and the recipient exist in the 
 ## Guides that use these calls
 
 - [Creating and updating a participant](/docs/nhcx/v1/getting-started/creating-and-updating-a-participant)
+- [Your callback URL is rejected or never called](/docs/nhcx/v1/troubleshooting/your-callback-url-is-rejected)
 
 The whole specification, with a request you can send from the page, is the [Onboarding API reference](/reference/nhcx-onboarding).

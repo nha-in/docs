@@ -19,8 +19,6 @@ info:
 
     Guides that use these calls: [Biometric authentication](/docs/nhcx/v1/roles/provider/biometric-authentication).
 
-    Production address for the NHCX exchange: shared by NHA after sandbox exit.
-
     Production address for the ABDM proxy: not published. Confirm at onboarding.
   version: nhcx-v1
   license:
@@ -41,7 +39,7 @@ x-abdm-sources:
     note: The package's Bruno collection, one request per operation.
   - file: nhcx-package/baseurl.yaml
     role: upstream
-    hash: sha256:47d8412abbfc53b1e1038410e7980eee029d7b1be5082f4ae6c1d4e16ae0dd0f
+    hash: sha256:88515b7b29c6b349a131e016c80774436ea16a29738db743b4cc3a24cbd42453
     note: The sandbox and production hosts.
 servers:
   - url: https://apisbx.abdm.gov.in
@@ -55,6 +53,7 @@ paths:
   /hcx/abha/biometric/auth/init:
     post:
       operationId: biometric_auth_init
+      x-abdm-atom: nhcx.endpoint.abha-biometric-auth-init
       x-abdm-use-case: ABHA biometric authentication
       tags:
         - ABHA biometric authentication
@@ -154,6 +153,7 @@ paths:
   /hcx/abha/biometric/auth/verify:
     post:
       operationId: biometric_auth_verify
+      x-abdm-atom: nhcx.endpoint.abha-biometric-auth-verify
       x-abdm-use-case: ABHA biometric authentication
       tags:
         - ABHA biometric authentication
@@ -288,6 +288,7 @@ paths:
   /hcx/abha/biometric/auth/refresh/token:
     get:
       operationId: biometric_auth_refresh_token
+      x-abdm-atom: nhcx.endpoint.abha-biometric-auth-refresh-token
       x-abdm-use-case: ABHA biometric authentication
       tags:
         - ABHA biometric authentication
@@ -341,6 +342,7 @@ paths:
   /pmjay/sbxhcx/abdmproxy/abha/biometric/faceauth/init:
     post:
       operationId: biometric_faceauth_init
+      x-abdm-atom: nhcx.endpoint.abha-biometric-faceauth-init
       x-abdm-use-case: ABHA biometric authentication
       tags:
         - ABHA biometric authentication
@@ -410,6 +412,7 @@ paths:
   /pmjay/sbxhcx/abdmproxy/abha/biometric/capture/pid:
     post:
       operationId: biometric_faceauth_capture_pid
+      x-abdm-atom: nhcx.endpoint.abha-biometric-capture-pid
       x-abdm-use-case: ABHA biometric authentication
       tags:
         - ABHA biometric authentication
@@ -487,6 +490,7 @@ paths:
   /pmjay/sbxhcx/abdmproxy/abha/biometric/v2/auth/verify:
     post:
       operationId: biometric_faceauth_v2_auth_verify
+      x-abdm-atom: nhcx.endpoint.abha-biometric-v2-auth-verify
       x-abdm-use-case: ABHA biometric authentication
       tags:
         - ABHA biometric authentication

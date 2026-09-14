@@ -122,11 +122,23 @@ for (const p of pages) {
   if (m) apiPageByOperation.set(m[1], p.route);
 }
 const apiPageByMethodPath = new Map();
+// An operation names the atom that documents it with x-abdm-atom, which the
+// generated page data carries as `atom`. That is operation identity, so it is
+// tried before the file name and before the method and path fallback. One atom
+// can be named on both the call you make and the webhook you receive, so the
+// page of each kind is kept: an endpoint atom takes the call's page, a callback
+// atom the webhook's.
+const apiPageByAtom = new Map();
 for (const [name, route] of apiPageByOperation) {
   const jf = join(root, "site", "src", "data", "api", `${name}.json`);
   if (!existsSync(jf)) continue;
   try {
     const op = JSON.parse(readFileSync(jf, "utf8"));
+    if (op.atom) {
+      const joined = apiPageByAtom.get(op.atom) ?? {};
+      joined[op.kind === "callback" ? "callback" : "operation"] ??= route;
+      apiPageByAtom.set(op.atom, joined);
+    }
     const method = String(op.method ?? op.httpMethod ?? "").toUpperCase();
     const path = op.path ?? op.url ?? "";
     if (method && path) apiPageByMethodPath.set(`${method} ${normPath(path)}`, route);
@@ -135,7 +147,17 @@ for (const [name, route] of apiPageByOperation) {
 
 const pageAt = (re) => pages.find((p) => re.test(p.route));
 const callbacksPage = pageAt(/\/reference\/callbacks$/);
-const errorsPage = pageAt(/\/reference\/error-codes$/);
+// Every gateway version generates its own error code page, and codes can share
+// a number across gateways, so an error atom is looked up on its own gateway's
+// page first.
+const errorsPages = pages.filter((p) => /\/reference\/error-codes$/.test(p.route));
+const errorsPagesFor = (gateway) => {
+  const home = `/docs/${gateway === "shared" ? "hiecm" : gateway}/`;
+  return [
+    ...errorsPages.filter((p) => p.route.startsWith(home)),
+    ...errorsPages.filter((p) => !p.route.startsWith(home)),
+  ];
+};
 const glossaryPage = pageAt(/glossary$/);
 
 function requestKey(body) {
@@ -185,7 +207,10 @@ for (const [id, atom] of atoms) {
 
   if (!route && (type === "endpoint" || type === "callback")) {
     const stem = basename(file).replace(/\.md$/, "");
-    const byOperation = apiPageByOperation.has(stem) ? apiPageByOperation.get(stem) : null;
+    const joined = apiPageByAtom.get(id) ?? {};
+    const sameKind = type === "callback" ? joined.callback : joined.operation;
+    const otherKind = type === "callback" ? joined.operation : joined.callback;
+    const byOperation = sameKind ?? apiPageByOperation.get(stem) ?? otherKind ?? null;
     if (byOperation) {
       route = byOperation; rule = "same spec operation as the generated API page";
       confidence = "derived";
@@ -210,8 +235,18 @@ for (const [id, atom] of atoms) {
 
   if (!route && type === "error") {
     const raw = (id.match(/\.([a-z]*-?\d+)$/) ?? [])[1];
-    const code = raw ? raw.toUpperCase().replace(/^([A-Z]+)(\d)/, "$1-$2") : null;
-    if (code && errorsPage?.body.toUpperCase().includes(code)) {
+    const short = raw ? raw.toUpperCase().replace(/^([A-Z]+)(\d)/, "$1-$2") : null;
+    // A code with more than one prefix, such as ERR-PYR-CLM-007, is the whole id tail.
+    const codes = [...new Set([id.split(".").pop().toUpperCase(), short].filter(Boolean))];
+    // Whole codes only: NHCX-100 must not match inside NHCX-1006.
+    const whole = (c) => new RegExp(`(?<![A-Z0-9-])${c.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}(?![0-9])`);
+    let code = null;
+    const errorsPage = errorsPagesFor(fm.gateway).find((p) => {
+      const upper = p.body.toUpperCase();
+      code = codes.find((c) => whole(c).test(upper)) ?? null;
+      return code !== null;
+    });
+    if (errorsPage) {
       const h = headingFor(errorsPage.body, code);
       route = errorsPage.route; anchor = h ? slug(h) : null;
       rule = `error code listed on the error codes page`; confidence = "derived";

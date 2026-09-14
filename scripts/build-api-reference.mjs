@@ -36,6 +36,25 @@ const sidebarFile = join(root, 'site', 'src', 'data', 'api-sidebar.json');
 
 const METHODS = ['get', 'put', 'post', 'delete', 'patch', 'options', 'head'];
 
+// What is particular to each gateway version's generated pages: the atoms its
+// API index and its error code page are the published home for, what the index
+// says about callbacks, and who posts a callback. A second gateway claiming the
+// same atom would take its route in atom-routes.json, so each lists only its own.
+const GATEWAYS = {
+  'hiecm/v3': {
+    poster: 'ABDM',
+    indexCovers: ['hiecm.concept.asynchronous-callbacks', 'hiecm.decision.callbacks-as-webhooks'],
+    errorCodesCovers: ['hiecm.concept.error-codes'],
+    callbacksNote:
+      'In M2 and M3 a call is acknowledged now and answered later. The answer arrives as a callback, a POST from ABDM to the URL you registered, declared in the specification as a webhook. Each callback is shown on the call it belongs to, and has a page of its own under that module.',
+  },
+  'nhcx/v1': {
+    poster: 'NHCX',
+    callbacksNote:
+      "A use-case call is acknowledged at once and answered later. NHCX delivers your message to the recipient's registered address, and the answer reaches yours the same way. Each is declared in the specification as a webhook, shown on the call that produces it, with a page of its own under that module.",
+  },
+};
+
 // Acronyms stay in capitals wherever a label is built from an identifier.
 // A key like `x-abdm-errors-uidai` used to render as the heading "uidai
 // codes", which reads as a typo and is one.
@@ -208,10 +227,19 @@ for (const platform of readdirSync(catalogueDir, {withFileTypes: true})) {
   if (!existsSync(flowsDir)) continue;
   for (const file of readdirSync(flowsDir)) {
     if (!file.endsWith('.md')) continue;
-    const match = readFileSync(join(flowsDir, file), 'utf8').match(/endpoints: \[([^\]]+)\]/);
-    if (!match) continue;
-    match[1].split(',').forEach((id, index) => {
-      const atom = id.trim();
+    const text = readFileSync(join(flowsDir, file), 'utf8');
+    let listed = text.match(/endpoints: \[([^\]]+)\]/)?.[1].split(',');
+    if (!listed) {
+      // A block list, one "- id" per line, as the NHCX flow atoms write it.
+      try {
+        listed = parse(text.match(/^---\n([\s\S]*?)\n---/)?.[1] ?? '')?.related?.endpoints;
+      } catch (error) {
+        console.warn(`${platform.name}/flows/${file}: frontmatter is not valid YAML, so its steps do not order the sidebar. ${error.message}`);
+      }
+    }
+    if (!Array.isArray(listed)) continue;
+    listed.forEach((id, index) => {
+      const atom = String(id).trim();
       if (!flowStep.has(atom)) flowStep.set(atom, index + 1);
     });
   }
@@ -238,9 +266,20 @@ for (const {platform, version, files} of tree) {
     .sort((a, b) => (a.position ?? 999) - (b.position ?? 999) || a.file.localeCompare(b.file));
 
   const docsDir = join(root, 'site', 'docs', platform, version, 'api');
-  // Only HIE-CM v3 has a troubleshooting section and the callback atoms today;
-  // the other gateways would link to pages and claim atoms that do not exist.
-  const isHiecmV3 = platform === 'hiecm' && version === 'v3';
+  const gateway = GATEWAYS[`${platform}/${version}`] ?? {};
+  const poster = gateway.poster ?? platform.toUpperCase();
+  // Error pages point at the gateway's troubleshooting section only when it has
+  // one: a troubleshooting/ folder, or failing that a reference/troubleshooting
+  // page. Linking to a section that does not exist fails the build.
+  const versionDir = join(root, 'site', 'docs', platform, version);
+  const troubleshootingRoute = existsSync(join(versionDir, 'troubleshooting'))
+    ? `/docs/${platform}/${version}/troubleshooting/`
+    : existsSync(join(versionDir, 'reference', 'troubleshooting.md'))
+      ? `/docs/${platform}/${version}/reference/troubleshooting`
+      : null;
+  const troubleshootingLine = troubleshootingRoute
+    ? [`Seeing a symptom rather than a code? Start at [Troubleshooting](${troubleshootingRoute}).`, '']
+    : [];
   for (const module of modules) {
     rmSync(join(docsDir, module.dir, 'endpoints'), {recursive: true, force: true});
   }
@@ -319,8 +358,8 @@ for (const {platform, version, files} of tree) {
       // or the one you send in reply, and each bullet says which it is.
       ...entries.map((entry) =>
         entry.relation === 'triggered-by'
-          ? `- After this call, ABDM posts **${entry.summary}** to \`${entry.path}\`. [Open the callback](${entry.route}).`
-          : `- You make this call in reply to **${entry.summary}**, which ABDM posts to \`${entry.path}\`. [Open the callback](${entry.route}).`,
+          ? `- After this call, ${poster} posts **${entry.summary}** to \`${entry.path}\`. [Open the callback](${entry.route}).`
+          : `- You make this call in reply to **${entry.summary}**, which ${poster} posts to \`${entry.path}\`. [Open the callback](${entry.route}).`,
       ),
       '',
     ];
@@ -437,6 +476,9 @@ for (const {platform, version, files} of tree) {
         responses,
         tag,
         tagDescription: tagInfo[tag] ?? '',
+        // The catalogue atom this operation is documented by, which
+        // scripts/build-atom-routes.mjs joins the atom to this page with.
+        atom: op['x-abdm-atom'] ?? null,
       };
       operation.curl = curlFor(operation);
 
@@ -572,12 +614,9 @@ for (const {platform, version, files} of tree) {
     'verification: unverified',
     'source: the published OpenAPI specifications',
     'generated: true',
-    // This page is where the callbacks concept and the decision to declare
-    // them as webhooks are published, now that there is no page of nothing but
-    // callbacks. Both atoms are HIE-CM's, so only its index claims them.
-    ...(isHiecmV3
-      ? ['covers: [hiecm.concept.asynchronous-callbacks, hiecm.decision.callbacks-as-webhooks]']
-      : []),
+    // This page is where a gateway's callbacks concept is published, now that
+    // there is no page of nothing but callbacks. GATEWAYS names each one's atoms.
+    ...(gateway.indexCovers?.length ? [`covers: [${gateway.indexCovers.join(', ')}]`] : []),
     '---',
     '',
     '# API references',
@@ -586,12 +625,7 @@ for (const {platform, version, files} of tree) {
     '',
     'This page lists every module, including any that the role you have chosen does not use. The sidebar shows only yours.',
     '',
-    ...(isHiecmV3
-      ? [
-          'In M2 and M3 a call is acknowledged now and answered later. The answer arrives as a callback, a POST from ABDM to the URL you registered, declared in the specification as a webhook. Each callback is shown on the call it belongs to, and has a page of its own under that module.',
-          '',
-        ]
-      : []),
+    ...(gateway.callbacksNote ? [gateway.callbacksNote, ''] : []),
   ];
 
   for (const module of modules) {
@@ -737,18 +771,11 @@ for (const {platform, version, files} of tree) {
         'Error codes',
         'Every error code the specifications carry, with its message and what to do.',
         3,
-        // Only the HIE-CM page covers this atom. A second platform claiming the
-        // same id would take its route in atom-routes.json.
-        isHiecmV3 ? ['hiecm.concept.error-codes'] : [],
+        gateway.errorCodesCovers ?? [],
       ),
       '# Error codes',
       '',
-      // Only hiecm/v3 has a troubleshooting section today; other platforms
-      // and other versions of hiecm would link to a page that does not
-      // exist.
-      ...(isHiecmV3
-        ? [`Seeing a symptom rather than a code? Start at [Troubleshooting](/docs/${platform}/${version}/troubleshooting/).`, '']
-        : []),
+      ...troubleshootingLine,
       'Generated from the specifications. A code is on this page because a specification records it.',
       '',
     ];
@@ -836,9 +863,7 @@ for (const {platform, version, files} of tree) {
       '',
       `# ${module.label} errors`,
       '',
-      ...(isHiecmV3
-        ? [`Seeing a symptom rather than a code? Start at [Troubleshooting](/docs/${platform}/${version}/troubleshooting/).`, '']
-        : []),
+      ...troubleshootingLine,
     ];
 
     if (notes.length) {

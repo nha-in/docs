@@ -28,5 +28,6 @@ The token does not come from NHCX.
 ## Guides that use these calls
 
 - [Session token](/docs/nhcx/v1/getting-started/session-token)
+- [Quickstart](/docs/nhcx/v1/getting-started/quickstart)
 
 The whole specification, with a request you can send from the page, is the [Session API reference](/reference/nhcx-session).

@@ -8,6 +8,7 @@
 import {existsSync, readFileSync, readdirSync, writeFileSync} from 'node:fs';
 import {join, dirname} from 'node:path';
 import {fileURLToPath} from 'node:url';
+import {moduleLabel} from './emit-page-markdown.mjs';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const docsRoot = join(root, 'site', 'docs');
@@ -127,7 +128,7 @@ writeFileSync(
 
   const lines = ['# ABDM Developer Portal', ''];
   lines.push(
-    '> Documentation for integrating with ABDM, India\'s health data exchange: the HIE-CM gateway milestones M1 to M3, the ABHA, HPR and HFR registries, and UHI. Nothing here has been run against the ABDM sandbox unless a page says so, so treat request and response shapes as unconfirmed.',
+    '> Documentation for integrating with ABDM, India\'s health data exchange: the HIE-CM gateway milestones M1 to M3, the ABHA, HPR and HFR registries, UHI, and the NHCX claims exchange between hospitals and insurers. Nothing here has been run against the ABDM sandbox unless a page says so, so treat request and response shapes as unconfirmed.',
   );
   lines.push('');
   for (const [section, list] of [...bySection].sort()) {
@@ -145,19 +146,35 @@ writeFileSync(
   lines.push(
     `- [Agent skills](${siteUrl}${base}/skills): one markdown file per module, carrying its endpoints, error codes and test cases.`,
   );
-  // One llms.txt per HIE-CM API module (m1, m2, ..., gateway, p1, ...), so
-  // an agent does not have to guess the module's llms.txt URL. Written by
-  // scripts/emit-page-markdown.mjs as a postbuild step; listed here from
-  // the same docs tree so a module without a build directory is not listed.
-  const apiDir = join(docsRoot, 'hiecm', 'v3', 'api');
-  if (existsSync(apiDir)) {
-    const moduleIds = readdirSync(apiDir, {withFileTypes: true})
-      .filter((e) => e.isDirectory() && !e.name.startsWith('_') && !e.name.startsWith('.'))
+  // One llms.txt per API module of every gateway (HIE-CM m1, m2, ...,
+  // gateway, p1, ...; NHCX claim, preauth, ...), so an agent does not have to
+  // guess a module's llms.txt URL. Written by scripts/emit-page-markdown.mjs
+  // as a postbuild step; listed here from the same docs tree so a module
+  // without a build directory is not listed. HIE-CM is listed first.
+  const visible = (e) => e.isDirectory() && !e.name.startsWith('_') && !e.name.startsWith('.');
+  const apiRoots = [];
+  for (const platform of readdirSync(docsRoot, {withFileTypes: true}).filter(visible)) {
+    for (const version of readdirSync(join(docsRoot, platform.name), {withFileTypes: true}).filter(visible)) {
+      const dir = join(docsRoot, platform.name, version.name, 'api');
+      if (existsSync(dir)) apiRoots.push({platform: platform.name, version: version.name, dir});
+    }
+  }
+  const hiecmFirst = (p) => (p === 'hiecm' ? 0 : 1);
+  apiRoots.sort(
+    (a, b) =>
+      hiecmFirst(a.platform) - hiecmFirst(b.platform) ||
+      a.platform.localeCompare(b.platform) ||
+      a.version.localeCompare(b.version),
+  );
+  for (const {platform, version, dir} of apiRoots) {
+    const moduleIds = readdirSync(dir, {withFileTypes: true})
+      .filter(visible)
       .map((e) => e.name)
       .sort();
     for (const moduleId of moduleIds) {
+      const label = moduleLabel({platform, version, moduleId}, apiSidebar);
       lines.push(
-        `- [${moduleId.toUpperCase()} module index](${siteUrl}${base}/docs/hiecm/v3/api/${moduleId}/llms.txt): per-page links for the ${moduleId.toUpperCase()} module.`,
+        `- [${label} module index](${siteUrl}${base}/docs/${platform}/${version}/api/${moduleId}/llms.txt): per-page links for the ${label} module.`,
       );
     }
   }
