@@ -135,6 +135,40 @@ The original call returns a non 401 response. For the benefit name case,
 NHA's own collection uses the exact registered name, such as
 `healthid api`.
 
+### ABDM-1107, invalid combinations of scopes (`hiecm.error.abdm-1107`)
+
+**Observed as**
+
+`scope` is an array, and the operations care about the combination rather than
+about any one value in it. This code means the combination you sent is not one
+this operation accepts, or is not the one the transaction was opened with.
+
+```response
+{"error": {"code": "ABDM-1107", "message": "Invalid combinations of scopes"}}
+```
+
+Observed on the sandbox on 2026-09-14: an enrolment OTP request sent
+`["abha-enrol"]` and returned 200, and the verification that followed reused
+`["abha-enrol"]` and was refused with this code.
+
+**Fix**
+
+- You reused one scope across a whole journey. Read the scope off the example
+  for the operation you are calling, not off the one before it.
+- You are on the enrolment path and meant to be on the login path. Aadhaar is a
+  login identifier as well as an enrolment one, and the scope is the first
+  place the two diverge. A patient who already holds an ABHA belongs on the
+  login path, and sending them down enrolment creates a second ABHA number that
+  nothing merges. See designing the ABHA journey.
+- The transaction was opened for something else. `txnId` carries the scope it
+  was created with, so a transaction cannot be reused across journeys.
+
+**Exit condition: the original call now succeeds**
+
+The call the refusal came from returns its own success body instead: a login
+verification returns `authResult: "success"` with a token and an accounts
+array, and an enrolment verification continues the enrolment.
+
 ### ABDM-1407, the person's account is switched off (`hiecm.error.abdm-1407`)
 
 **Observed as**
