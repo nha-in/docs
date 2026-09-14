@@ -6,9 +6,10 @@ milestone: M1
 version: abdm-v3
 title: Why identifiers are encrypted, and where to do it
 summary: >
-  An Aadhaar number, a mobile number or an OTP is encrypted with
-  RSA-OAEP and SHA-1 against the published certificate before it is
-  sent, and doing that remotely defeats the point.
+  An Aadhaar number, a mobile number or an OTP is encrypted against a
+  published certificate before it is sent, using the algorithm that
+  certificate names in its own response. Doing the encryption remotely
+  defeats the point.
 sources:
   - file: ABDM Sandbox/ABDM/M1 ABHA Collection.postman_collection.json
     status: not-yet-hashed
@@ -45,9 +46,19 @@ dashes passed validation and went on to look the account up.
 
 ## Before you start
 
-You need NHA's public key, which is fetched from the certificate
-endpoint. Read [the gateway session](gateway-session.md) first, since
-that call needs a token like any other.
+You need the certificate, which carries both the public key and the
+algorithm to use it with. Fetch it from
+[the certificate endpoint](../endpoints/m1-get-public-certificate.md).
+Read [the gateway session](gateway-session.md) first, since that call
+needs a token like any other.
+
+More than one certificate is published, and they are not
+interchangeable. The profile certificate is 4096-bit. The PHR login
+certificate at
+[its own endpoint](../endpoints/p1-get-certificate-public-key.md) is
+2048-bit. Both name the same algorithm. Encrypting under the wrong one
+is refused by the field validator, which names the business field and
+never mentions the key.
 
 ## What happens
 
@@ -65,18 +76,35 @@ NHA's collection also contains a hosted helper that encrypts a value for
 you, and two third party encryption websites. Those are conveniences for
 trying a flow by hand.
 
-### The padding
+### The padding comes with the key
 
-Encrypt with RSA-OAEP, using SHA-1 for both the digest and the mask
-generation function. In Java that transformation is
-`RSA/ECB/OAEPWithSHA-1AndMGF1Padding`. In Node it is
+The certificate response carries the algorithm next to the key:
+
+```response
+{
+  "publicKey": "<base64 DER>",
+  "encryptionAlgorithm": "RSA/ECB/OAEPWithSHA-1AndMGF1Padding"
+}
+```
+
+Read `encryptionAlgorithm` and encrypt with what it names. It is a Java
+transformation string, so translate it for your language rather than
+assuming: `RSA/ECB/OAEPWithSHA-1AndMGF1Padding` means RSA-OAEP with
+SHA-1 for both the digest and the mask generation function, which in
+Node is
 `crypto.publicEncrypt({ key, padding: crypto.constants.RSA_PKCS1_OAEP_PADDING, oaepHash: 'sha1' }, ...)`.
 Send the result base64 encoded.
 
-PKCS#1 v1.5 is refused. So is OAEP with SHA-256. Neither refusal names
-encryption, so a wrong padding reads back to you as a wrong value. The
-call for each language, and the padding the older API families take,
-is in [encrypting sensitive inputs](input-encryption.md).
+Hard coding the padding works until the field changes, and then fails
+in a way that looks like a bad value rather than a stale constant. Code
+that reads the field survives a rotation. Code that cannot recognise
+what the field names should refuse to encrypt rather than fall back to
+a default.
+
+PKCS#1 v1.5 is refused today, and so is OAEP with SHA-256. Neither
+refusal names encryption. The call for each language, and the padding
+the older API families take, is in
+[encrypting sensitive inputs](input-encryption.md).
 
 ## How you know it worked
 
