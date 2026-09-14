@@ -167,6 +167,11 @@
   --lit: 0;
 
   position: absolute;
+  /* Placed from the properties the component writes rather than from `left`
+     and `top` set inline, so a media query can still move a node: an inline
+     property beats every rule in this file. */
+  left: var(--x);
+  top: var(--y);
   text-decoration: none;
   transform: translate(-50%, -50%);
   display: flex;
@@ -176,6 +181,45 @@
   color: var(--accent);
   opacity: calc(0.28 + var(--lit) * 0.72);
   transition: opacity 200ms ease;
+}
+
+/* The two at the foot of the ring stand in a strip at the bottom of the hero
+   rather than at a share of its height. The share was the defect: the copy
+   keeps its size while a short window loses its, so 88% of a 900px hero sat
+   clear of the gateway cards and 88% of a 700px one sat on top of them. The
+   strip sits in the hero's bottom padding, so it is under the copy at every
+   height the copy fits into, and that leaves the pair free to line up with
+   Doctor and PHR above them. */
+.network-node--foot {
+  top: auto;
+  bottom: 0.75rem;
+  transform: translate(-50%, 0);
+}
+
+/* The strip closes up on a short window, where the copy has taken the hero's
+   bottom padding for itself. Measured on this hero: at 1150x700 the strip is
+   64px and the pair clears the card row, at 1150x680 it is 53px and does not.
+   Below that the pair steps out into the gutters beside the cards rather than
+   standing under them. */
+@media (max-height: 699px) {
+  .network-node--foot[data-participant='hospital'] {
+    left: 7%;
+  }
+
+  .network-node--foot[data-participant='lab'] {
+    left: 93%;
+  }
+}
+
+/* And a window that is narrow as well as short has neither. The card row is
+   44rem whatever the window does, so the gutter beside it is only wide enough
+   for a labelled node from about 912px out; below that, with the strip already
+   gone, the pair has nowhere left to stand and is the next part that can go,
+   after the lede and the scroll cue. */
+@media (max-width: 911px) and (max-height: 699px) {
+  .network-node--foot {
+    display: none;
+  }
 }
 
 /* The sage light, behind the icon rather than on it, so the glow reads as
