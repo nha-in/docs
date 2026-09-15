@@ -10,13 +10,16 @@ Generated from the ABDM Developer Portal on 2026-09-15, catalogue version 2026.0
 This file is a snapshot. Re-download it from the portal's /skills/abdm-phr-services/SKILL.md path when it is older than the work you are doing.
 If the abdm-docs MCP server is connected, trust its answers over this file: it serves the current catalogue and stamps every response with its catalogue_version, which you can compare against the version above.
 
-## What this skill covers
+## What you can do with PHR application services
+
+
+## What is in this folder
 
 - **Integrate.** 72 operations, with their hosts and headers. [references/integrate.md](references/integrate.md)
 - **Debug.** The loop from a failed call to a named fix. No error code is recorded for this module yet. [references/debug.md](references/debug.md)
 - **Test.** 0 test cases, each with the call it makes and what to see when it passes. [references/test.md](references/test.md)
 
-Open one when the work calls for it. This file is the map, not the material.
+This file is the map. Each line above is a file beside it, opened one at a time rather than read through.
 
 ## Before anything else
 
