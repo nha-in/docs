@@ -299,6 +299,17 @@ def extract_sheet(sheet, sheet_prefix, name_the_sheet):
         urls = list(dict.fromkeys(re.findall(r"https?://[^\s,)\"]+", listed)))
         urls = [u.rstrip(".").rstrip(",") for u in urls]
 
+        # NHA does not always put URLs in the API column. Sometimes it writes a
+        # sentence: "No API" where a case has no V3 call, or "Use Master Data
+        # Sheet (Excel)" where the values come from a spreadsheet rather than an
+        # endpoint. Keeping only the URLs threw that away, so a case NHA had
+        # deliberately marked as having no call became indistinguishable from a
+        # cell nobody filled in. Both then read as a gap in this portal.
+        #
+        # 13 cases say "No API" and 14 point at the master data sheet. The note
+        # is NHA's own words, trimmed of line breaks and nothing else.
+        note = "" if urls else " ".join(listed.split())
+
         current["rows"].append({
             "id": identifier,
             "type": kind,
@@ -310,6 +321,9 @@ def extract_sheet(sheet, sheet_prefix, name_the_sheet):
             # The calls NHA points this case at, as URLs, so the site can join
             # them to operations rather than reading them out of prose.
             "apis": urls,
+            # What NHA wrote where the calls would go, when it wrote something
+            # other than a URL. Empty when the cell held URLs or was blank.
+            "apisNote": note,
             "api": None,
             "webhook": None,
             "detail": " ".join(detail).strip(),
@@ -389,6 +403,57 @@ def slugs(groups):
     return groups
 
 
+PORTAL_CALLS = ROOT / "catalogue" / "test-matrix-portal-calls.json"
+
+
+def atom_urls():
+    """Every endpoint atom's recorded curl target, keyed by atom id.
+
+    The portal's own checks name the atom they exercise, never a URL. The URL
+    is read from the atom here, so the matrix cannot drift from the endpoint
+    page and nobody has to retype a host into a data file.
+    """
+    found = {}
+    for md in sorted((ROOT / "catalogue").rglob("endpoints/*.md")):
+        text = md.read_text()
+        identifier = re.search(r"^id:\s*(\S+)", text, re.M)
+        if not identifier:
+            continue
+        # The first curl in the body is the operation's own call. Fenced bash
+        # blocks wrap long lines with a backslash, so join before matching.
+        joined = re.sub(r"\\\n\s*", " ", text)
+        target = re.search(r"curl\s+(?:-X\s+(\w+)\s+)?'(https?://[^']+)'", joined)
+        if target:
+            found[identifier.group(1)] = target.group(2)
+    return found
+
+
+def portal_calls(name, rows):
+    """Attach each portal check's calls, resolved from the atoms it names."""
+    if not PORTAL_CALLS.exists():
+        return 0, 0
+    mapping = json.loads(PORTAL_CALLS.read_text())
+    urls = atom_urls()
+    named = mapping.get(name, {})
+    behavioural = mapping.get("behavioural", {}).get(name, {})
+    resolved = missing = 0
+    for row in rows:
+        atoms = named.get(row["id"])
+        if atoms:
+            found = [urls[a] for a in atoms if a in urls]
+            if found:
+                row["apis"] = found
+                row["atoms"] = atoms
+                resolved += 1
+            else:
+                missing += 1
+        elif row["id"] in behavioural:
+            # Not one call. Attaching one would test something the check does
+            # not describe, which is worse than leaving it open.
+            row["apisNote"] = f"No single call: this check {behavioural[row['id']]}."
+    return resolved, missing
+
+
 def carried_over(path, nha_ids):
     """The portal's own cases from the previous matrix, minus anything NHA covers."""
     if not path.exists():
@@ -428,6 +493,9 @@ def build(name, spec):
     nha_ids = {row["id"] for group in groups for row in group["rows"]}
     extra = carried_over(OUT / f"{name}.json", nha_ids)
     if extra:
+        resolved, missing = portal_calls(name, extra["rows"])
+        if missing:
+            print(f"  {name}: {missing} portal check(s) name an atom with no recorded curl")
         groups.append(extra)
     built = {"module": spec["module"], "title": spec["title"], "groups": groups}
     return built, repeated

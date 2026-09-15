@@ -111,15 +111,40 @@ const market = JSON.parse(
 );
 
 /**
- * Whether Agent Plugins 1.0 can carry this plugin whole. Skills and MCP
- * servers are the only two component types version 1 defines.
+ * Component folders a plugin keeps for Claude Code, having accepted that the
+ * standard cannot carry them.
+ *
+ * Agent Plugins 1.0 defines skills and MCP servers and nothing else, so
+ * anything else is left behind wherever the standard is read. Whether that is
+ * acceptable is a question about the particular plugin, not a rule:
+ *
+ *   The contributors' assistant is mostly its commands and agents. Publishing
+ *   the skills alone would put a plugin in another client that is missing most
+ *   of itself, so it is not published there and declares nothing here.
+ *
+ *   The integrators' assistant is its skills. Its commands and agents are
+ *   entry points into them, useful in Claude Code and no loss elsewhere, so it
+ *   declares them and publishes the skills.
+ *
+ * A folder not declared here still blocks publication, which is what keeps
+ * this a decision someone made rather than one that happened.
  */
-function portable(dir) {
-  return (
-    existsSync(join(dir, 'skills')) &&
-    !existsSync(join(dir, 'commands')) &&
-    !existsSync(join(dir, 'agents')) &&
-    !existsSync(join(dir, 'hooks'))
+const CLAUDE_ONLY = {
+  'abdm-integrators-assistant': ['commands', 'agents'],
+};
+
+const COMPONENTS = ['commands', 'agents', 'hooks'];
+
+/**
+ * Whether Agent Plugins 1.0 can carry enough of this plugin to be worth
+ * publishing: it has skills, and every component the standard cannot carry is
+ * one this plugin has declared it will leave behind.
+ */
+function portable(dir, name) {
+  if (!existsSync(join(dir, 'skills'))) return false;
+  const declared = CLAUDE_ONLY[name] ?? [];
+  return COMPONENTS.every(
+    (part) => !existsSync(join(dir, part)) || declared.includes(part),
   );
 }
 
@@ -127,11 +152,19 @@ const carried = [];
 
 for (const entry of market.plugins) {
   const dir = join(root, entry.source);
-  if (!portable(dir)) continue;
+  const claudePath = join(dir, '.claude-plugin', 'plugin.json');
+  if (!existsSync(claudePath)) continue;
+  const claude = JSON.parse(readFileSync(claudePath, 'utf8'));
+  if (!portable(dir, claude.name)) continue;
 
-  const claude = JSON.parse(
-    readFileSync(join(dir, '.claude-plugin', 'plugin.json'), 'utf8'),
+  const left = (CLAUDE_ONLY[claude.name] ?? []).filter((part) =>
+    existsSync(join(dir, part)),
   );
+  if (left.length) {
+    console.log(
+      `${claude.name}: publishing skills only. ${left.join(' and ')} stay Claude Code's.`,
+    );
+  }
   const storefront = STOREFRONT[claude.name];
   if (!storefront) {
     throw new Error(`No storefront copy for the portable plugin ${claude.name}`);

@@ -15,6 +15,7 @@
           "apis": [
             "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Search/v15SearchFacilitiesFuzzyPostUsingPOST"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Function: Facility search. Applies to: All users. Field: facilityId. Steps: 1. Should only accepts the 12 digit alphanumric value. 2 should starts with \"IN\""
@@ -28,6 +29,7 @@
           "apis": [
             "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Search/v15SearchFacilitiesFuzzyPostUsingPOST"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Field: facilityName. Steps: 1. Should accepts alphanumeric value 2.This value can be either full or partial name"
@@ -43,6 +45,7 @@
             "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Utilities/v15FacilityGetMasterDataUsingGET",
             "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Utilities/v15FacilityGetOwnershipSubtypeUsingPOST"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Field: ownershipCode. Steps: 1. Accepted Values as specified in get-master-data API with type=’OWNER’ 2. Should be a dropdown field 3. Only 1 value can be selected"
@@ -57,6 +60,7 @@
             "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Search/v15SearchFacilitiesFuzzyPostUsingPOST",
             "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Utilities/v15FacilityGetLGDStatesUsingGET"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Field: State / UT*. Steps: 1. Get all the master entries by using facility/lgd/states APIs. 2. It should be a dropdown field 3. By default, \"Select State / UT\" should come selected in dropdown. 4. Dropdown should have search functionality."
@@ -71,6 +75,7 @@
             "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Search/v15SearchFacilitiesFuzzyPostUsingPOST",
             "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Utilities/v15FacilityGetLGDDistrictsUsingGET"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Field: District*. Steps: 1. Get all the master entries by using facility/lgd/districts APIs. 2. It should be a dropdown field 3. By default \"Select District\" should come selected in dropdown. 4. Dropdown should have search functionality."
@@ -85,6 +90,7 @@
             "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Search/v15SearchFacilitiesFuzzyPostUsingPOST",
             "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Utilities/v15FacilityGetLGDSubDistrictsUsingGET"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Field: Sub-district*. Steps: 1. Get all the master entries by using facility/lgd/sub-districts APIs. 2. It should be a dropdown field 3. By default, \"Select Sub-District\" should come selected in dropdown. 3. Dropdown should have search functionality."
@@ -98,6 +104,7 @@
           "apis": [
             "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Search/v15SearchFacilitiesFuzzyPostUsingPOST"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Field: pincode*. Steps: 1. Enter the Pincode 2. Maximum 6 digits are allowed."
@@ -111,6 +118,7 @@
           "apis": [
             "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Search/v15SearchFacilitiesFuzzyPostUsingPOST"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Field: page. Steps: 1. Must have a defaul value (1). 2. if filled it should be in integer only 3. Should not allow alphabets 4. Should not be filed by the end user"
@@ -124,6 +132,7 @@
           "apis": [
             "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Search/v15SearchFacilitiesFuzzyPostUsingPOST"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Field: resultsPerPage. Steps: 1. Default value is 10. 2. Should not be filled by end user"
@@ -143,6 +152,7 @@
           "apis": [
             "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityBasicInformationUsingPOST"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Function: Facility Registration(Basic demographics of the facility). Applies to: Facilty Manager. Field: Facility Name. Steps: 1. Alphanumeric string that starts with an alphabet. 2. Enter the Facility Name 3. It should be editable. 4. Should not accept special character. 5. It should be more than 4 characters 5. If someone bypass the restrictions system should prompt the alert. For filling the correct name"
@@ -156,6 +166,7 @@
           "apis": [
             "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityBasicInformationUsingPOST"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Field: Latitude*. Steps: 1. Use the geolocation API or get the Latitude by searching the facility on map. 2. Real Number ranging from -90.000000 to +90.000000 , with 1-6 decimal places 3. Fill the Latitude of the facility 4. it should be editable"
@@ -169,6 +180,7 @@
           "apis": [
             "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityBasicInformationUsingPOST"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Field: Longitude*. Steps: 1.Use the geolocation API or get the Latitude by searching the facility on map. 2.Real Number ranging from -180.000000 to +180.000000 with 1-6 decimal places 3. Fill the Longitude of the facility 4. it should be editable"
@@ -182,6 +194,7 @@
           "apis": [
             "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityBasicInformationUsingPOST"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Field: Country*. Steps: 1.By default Country should be India 2. It should be Non editable"
@@ -196,6 +209,7 @@
             "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityBasicInformationUsingPOST",
             "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Utilities/v15FacilityGetLGDStatesUsingGET"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Field: State / UT*. Steps: 1. Get all the master entries by using facility/lgd/states APIs. 2. It should be a dropdown field 3. By default, \"Select State / UT\" should come selected in dropdown. 4. Dropdown should have search functionality."
@@ -210,6 +224,7 @@
             "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityBasicInformationUsingPOST",
             "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Utilities/v15FacilityGetLGDDistrictsUsingGET"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Field: District*. Steps: 1. Get all the master entries by using facility/lgd/districts APIs. 2. It should be a dropdown field 3. By default \"Select District\" should come selected in dropdown. 4. Dropdown should have search functionality."
@@ -224,6 +239,7 @@
             "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityBasicInformationUsingPOST",
             "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Utilities/v15FacilityGetLGDSubDistrictsUsingGET"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Field: Sub-district*. Steps: 1. Get all the master entries by using facility/lgd/sub-districts APIs. 2. It should be a dropdown field 3. By default, \"Select Sub-District\" should come selected in dropdown. 3. Dropdown should have search functionality."
@@ -237,6 +253,7 @@
           "apis": [
             "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityBasicInformationUsingPOST"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Field: Facility Address Line 1*. Steps: 1. Enter the address of the facility 2. It should accept alphanumeric value. 3. Special characters should not be allowed except characters ( . - , / ( ) _ )"
@@ -250,6 +267,7 @@
           "apis": [
             "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityBasicInformationUsingPOST"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Field: Facility Address Line 2. Steps: 1. Enter the address of the facility 2. It should accept alphanumeric value. 3. Special characters should not be allowed except characters ( . - , / ( ) _ )"
@@ -263,6 +281,7 @@
           "apis": [
             "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityBasicInformationUsingPOST"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Field: pincode*. Steps: 1. Enter the Pincode 2. Maximum 6 digits are allowed."
@@ -278,6 +297,7 @@
             "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Utilities/v15FacilityGetMasterTypesUsingGET",
             "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Utilities/v15FacilityGetMasterDataUsingGET"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Field: workingDays*. Steps: 1. Accepted codes in backend as specified in get-master-data API with type=’WORKING-DAYS’ 1. It should allow multiple days to select. 2. Should be filled if the operational status is Functional"
@@ -291,6 +311,7 @@
           "apis": [
             "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityBasicInformationUsingPOST"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Field: timingsOfFacility*. Steps: 1. Accepted format is 10:00 Am – 2:00 PM or 24*7 2. User should enter \"From\" time and \"To\" time. 3. Should only be filled if the respective working day is selected."
@@ -306,6 +327,7 @@
             "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Utilities/v15FacilityGetMasterTypesUsingGET",
             "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Utilities/v15FacilityGetMasterDataUsingGET"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Field: Facility Operational Status*. Steps: 1. Should be a dropdown field. 2. Accepted codes in beckend as specified in get-master-data API with type=’FAC-STATUS’"
@@ -319,6 +341,7 @@
           "apis": [
             "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityBasicInformationUsingPOST"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Field: Landline Number(for public display). Steps: 1. Should be a valid 10 digit mobile number 2. Special characters and alphabets are not allowed"
@@ -332,6 +355,7 @@
           "apis": [
             "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityBasicInformationUsingPOST"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Field: Mobile Number(for public display). Steps: 1. Should be a valid landline number ranging between 6-8 digits"
@@ -345,6 +369,7 @@
           "apis": [
             "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityBasicInformationUsingPOST"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Field: Facility Email(for public display). Steps: 1. Proper format of email to be followed"
@@ -358,6 +383,7 @@
           "apis": [
             "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityBasicInformationUsingPOST"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Field: Website(for public display). Steps: 1. Must contain Valid Link"
@@ -371,6 +397,7 @@
           "apis": [
             "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityBasicInformationUsingPOST"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Field: Facility Building Photograph. Steps: 1. Maximum allowed file size is 5MB.(Allowed formats: PNG,JPEG,JPG) 2. Single file should be uploaded"
@@ -384,6 +411,7 @@
           "apis": [
             "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityBasicInformationUsingPOST"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Field: Facility Board Photograph. Steps: 1. Maximum allowed file size is 5MB.(Allowed formats: PNG,JPEG,JPG) 2. Single file should be uploaded"
@@ -399,6 +427,7 @@
             "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Utilities/v15FacilityGetMasterTypesUsingGET",
             "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Utilities/v15FacilityGetMasterDataUsingGET"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Field: Address Proof Type. Steps: 1. Accepted codes as specified in get-master-data API with type=’ADDRESS-PROOF’ 2.Should allo multiple selections"
@@ -412,6 +441,7 @@
           "apis": [
             "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityBasicInformationUsingPOST"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Field: Address Proof. Steps: 1. Maximum size allowed for the attachment is 5MB 2. Should allow multiple entries with respect to the address proof selected"
@@ -427,6 +457,7 @@
             "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Utilities/v15FacilityGetMasterTypesUsingGET",
             "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Utilities/v15FacilityGetMasterDataUsingGET"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Field: Facility Ownership*. Steps: 1. Accepted Values as specified in get-master-data API with type=’OWNER’ 2. Should be a dropdown field 3. Only 1 value can be selected"
@@ -442,6 +473,7 @@
             "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Utilities/v15FacilityGetMasterDataUsingGET",
             "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Utilities/v15FacilityGetOwnershipSubtypeUsingPOST"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Field: Facility Ownership Subtype*. Steps: 1. Accepted Values as specified in get-owner-subtype API 2. Should be mandatory only for \"Goverment\" ownership"
@@ -457,6 +489,7 @@
             "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Utilities/v15FacilityGetMasterTypesUsingGET",
             "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Utilities/v15FacilityGetMasterDataUsingGET"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Field: Facility Ownership Subtype 2*. Steps: 1. Accepted values as specified in get-master-data API with type=’CENTRAL-GOVERNMENT’ 2. Should be mandatory only for \"central\" ownership subtype"
@@ -472,6 +505,7 @@
             "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Utilities/v15FacilityGetMasterTypesUsingGET",
             "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Utilities/v15FacilityGetMasterDataUsingGET"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Field: System of Medicine*. Steps: 1. Accepted Values as specified in get-master-data API with type=“MEDICINE”. 2. It sould allow multiple system of medicines"
@@ -486,6 +520,7 @@
             "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityBasicInformationUsingPOST",
             "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Utilities/v15FetchFacilityTypesUsingPOST"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Field: Facility Type*. Steps: 1.Accepted codes as specified in fetch-facility-type API. 2. It should be dropdown field."
@@ -500,6 +535,7 @@
             "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityBasicInformationUsingPOST",
             "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Utilities/v15FetchFacilitySubTypesUsingPOST"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Field: Facility Sub Type*. Steps: 1. Accepted codes as specified in fetch-facility-sub-type API. 2. It should be dropdown field."
@@ -515,6 +551,7 @@
             "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Utilities/v15FacilityGetMasterTypesUsingGET",
             "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Utilities/v15FacilityGetMasterDataUsingGET"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Field: Type of Service*. Steps: 1. Not mandatory for facility type:- Pharmacy,Blood bank,Diagnostic Lab, Imaging Center, Cath lab, Dialysis Center 2. Accepted codes as specified in get-master-data API with type=’SPECIALITY-TYPE’"
@@ -529,6 +566,7 @@
             "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityBasicInformationUsingPOST",
             "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Utilities/v15FacilityGetSpecialitiesUsingPOST"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Field: Specialization*. Steps: 1. Accepted codes as specified in the get-specialities APIwith respect to a system of medicine 2.Mandatory for all facility type except Pharmacy,Blood bank,, Cath lab, Dialysis Center 3. Multiple values can be selected"
@@ -548,6 +586,7 @@
           "apis": [
             "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityAdditionalInformationUsingPOST"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Function: Facility Registration(Capture Health program ids). Field: National Health Resource Repository Unique ID. Steps: 1. Should be a valid NHRR ID"
@@ -561,6 +600,7 @@
           "apis": [
             "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityAdditionalInformationUsingPOST"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Field: National Identification Number. Steps: 1. Should be a valid NIN id"
@@ -574,6 +614,7 @@
           "apis": [
             "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityAdditionalInformationUsingPOST"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Field: Hospital Id as allotted by AB-PMJAY Hospital Empanelment Module.. Steps: 1. Should be a valid AB-PMJAY Hospital Id"
@@ -587,6 +628,7 @@
           "apis": [
             "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityAdditionalInformationUsingPOST"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Field: Rohini Id. Steps: 1. Should be a valid Rohini Id"
@@ -600,6 +642,7 @@
           "apis": [
             "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityAdditionalInformationUsingPOST"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Field: Unique id in Ex-Servicemen Contributory Health Scheme. Steps: 1. Should be a valid ECHS Id."
@@ -613,6 +656,7 @@
           "apis": [
             "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityAdditionalInformationUsingPOST"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Field: Unique Id in Central Government Health Scheme. Steps: 1. Should be a valid CGHS Id."
@@ -626,6 +670,7 @@
           "apis": [
             "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityAdditionalInformationUsingPOST"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Field: CEA Registration Number. Steps: 1. Should be a valid CEA registration number"
@@ -639,6 +684,7 @@
           "apis": [
             "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityAdditionalInformationUsingPOST"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Field: State Insurance Scheme ID. Steps: 1. Alphanumeric string"
@@ -660,6 +706,7 @@
             "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Utilities/v15FacilityGetMasterTypesUsingGET",
             "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Utilities/v15FacilityGetMasterDataUsingGET"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Function: Facility Registration(Capture facility details information-infrastructure and specialization. Field: Services/Specialization. Steps: 1. System of medicine codes as saved in Basic-Information API 2. Accepted codes as specified in get-master-data API with type=’MEDICINE’"
@@ -671,6 +718,7 @@
           "functionality": "isSpecializationAvalaible",
           "expected": "",
           "apis": [],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Steps: 1. If the facility offers any specializations or services for this system of medicine code should be Y / N as accepted value"
@@ -685,6 +733,7 @@
             "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityDetailedInformationUsingPOST",
             "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Utilities/v15FacilityGetSpecialitiesUsingPOST"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Steps: 1.Only allowed if previous option is Y 2. Multiple selection should be allowed 3. Accepted codes as specified in the get-specialities API with respect to a system of medicine"
@@ -698,6 +747,7 @@
           "apis": [
             "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityDetailedInformationUsingPOST"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Field: Medical Infrastructure Beds. Steps: 1. Accepts only Numeric Value 2. Not more than 2 charactres alllowed"
@@ -711,6 +761,7 @@
           "apis": [
             "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityDetailedInformationUsingPOST"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Steps: 1. Accepts only Numeric Value 2. Not more than 2 charactres alllowed"
@@ -724,6 +775,7 @@
           "apis": [
             "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityDetailedInformationUsingPOST"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Steps: 1. Accepts only Numeric Value 2. Not more than 2 charactres alllowed"
@@ -737,6 +789,7 @@
           "apis": [
             "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityDetailedInformationUsingPOST"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Steps: 1. Accepts only Numeric Value 2. Not more than 2 charactres alllowed"
@@ -750,6 +803,7 @@
           "apis": [
             "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityDetailedInformationUsingPOST"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Steps: 1. Accepts only Numeric Value 2. Not more than 2 charactres alllowed"
@@ -763,6 +817,7 @@
           "apis": [
             "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityDetailedInformationUsingPOST"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Steps: 1. Accepts only Numeric Value 2. Not more than 2 charactres alllowed"
@@ -776,6 +831,7 @@
           "apis": [
             "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityDetailedInformationUsingPOST"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Steps: 1. Accepts only Numeric Value 2. Not more than 2 charactres alllowed"
@@ -789,6 +845,7 @@
           "apis": [
             "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityDetailedInformationUsingPOST"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Steps: 1. Accepts only Numeric Value 3. Should be total of beds with vantilators 2. Not more than 4 charactres alllowed 4. Should be non edtitable"
@@ -802,6 +859,7 @@
           "apis": [
             "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityDetailedInformationUsingPOST"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Steps: 1. Accepts only Numeric Value 2. Not more than 2 charactres alllowed"
@@ -815,6 +873,7 @@
           "apis": [
             "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityDetailedInformationUsingPOST"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Steps: 1. Accepts only Numeric Value 2. Not more than 2 charactres alllowed"
@@ -828,6 +887,7 @@
           "apis": [
             "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityDetailedInformationUsingPOST"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Steps: 1. Accepts only Numeric Value 3. Should be total of beds without vantilators 2. Not more than 4 charactres alllowed 4. Should be non edtitable"
@@ -841,6 +901,7 @@
           "apis": [
             "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityDetailedInformationUsingPOST"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Steps: 1. Accepts only Numeric Value 2. Not more than 2 charactres alllowed"
@@ -860,6 +921,7 @@
           "apis": [
             "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15SubmitFacilityDetailsUsingPOST"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Function: Facility submission. Field: Submit. Steps: 1.Should be a default value not to be filled by the end user 2. Should be valid data source provide by HFR team. If you leave this field empty, then your facility will be considered as Submitted entity."
@@ -871,6 +933,7 @@
           "functionality": "sourceUniqueID",
           "expected": "",
           "apis": [],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Steps: 1.Should be a default value not to be filled by the end user"
@@ -890,6 +953,7 @@
           "apis": [
             "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityBasicInformationUsingPOST"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Function: Facility Registration(Basic demographics of the facility). Applies to: Facilty Manager. Field: Facility Name. Steps: 1. Alphanumeric string that starts with an alphabet. 2. Enter the Facility Name 3. It should be editable. 4. Should not accept special character. 5. It should be more than 4 characters 5. If someone bypass the restrictions system should prompt the alert. For filling the correct name"
@@ -903,6 +967,7 @@
           "apis": [
             "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityBasicInformationUsingPOST"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Field: Latitude*. Steps: 1. Use the geolocation API or get the Latitude by searching the facility on map. 2. Real Number ranging from -90.000000 to +90.000000 , with 1-6 decimal places 3. Fill the Latitude of the facility 4. it should be editable"
@@ -916,6 +981,7 @@
           "apis": [
             "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityBasicInformationUsingPOST"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Field: Longitude*. Steps: 1.Use the geolocation API or get the Latitude by searching the facility on map. 2.Real Number ranging from -180.000000 to +180.000000 with 1-6 decimal places 3. Fill the Longitude of the facility 4. it should be editable"
@@ -929,6 +995,7 @@
           "apis": [
             "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityBasicInformationUsingPOST"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Field: Country*. Steps: 1.By default Country should be India 2. It should be Non editable"
@@ -943,6 +1010,7 @@
             "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityBasicInformationUsingPOST",
             "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Utilities/v15FacilityGetLGDStatesUsingGET"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Field: State / UT*. Steps: 1. Get all the master entries by using facility/lgd/states APIs. 2. It should be a dropdown field 3. By default, \"Select State / UT\" should come selected in dropdown. 4. Dropdown should have search functionality."
@@ -957,6 +1025,7 @@
             "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityBasicInformationUsingPOST",
             "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Utilities/v15FacilityGetLGDDistrictsUsingGET"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Field: District*. Steps: 1. Get all the master entries by using facility/lgd/districts APIs. 2. It should be a dropdown field 3. By default \"Select District\" should come selected in dropdown. 4. Dropdown should have search functionality."
@@ -971,6 +1040,7 @@
             "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityBasicInformationUsingPOST",
             "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Utilities/v15FacilityGetLGDSubDistrictsUsingGET"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Field: Sub-district*. Steps: 1. Get all the master entries by using facility/lgd/sub-districts APIs. 2. It should be a dropdown field 3. By default, \"Select Sub-District\" should come selected in dropdown. 3. Dropdown should have search functionality."
@@ -984,6 +1054,7 @@
           "apis": [
             "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityBasicInformationUsingPOST"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Field: Facility Address Line 1*. Steps: 1. Enter the address of the facility 2. It should accept alphanumeric value. 3. Special characters should not be allowed except characters ( . - , / ( ) _ )"
@@ -997,6 +1068,7 @@
           "apis": [
             "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityBasicInformationUsingPOST"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Field: Facility Address Line 2. Steps: 1. Enter the address of the facility 2. It should accept alphanumeric value. 3. Special characters should not be allowed except characters ( . - , / ( ) _ )"
@@ -1010,6 +1082,7 @@
           "apis": [
             "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityBasicInformationUsingPOST"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Field: pincode*. Steps: 1. Enter the Pincode 2. Maximum 6 digits are allowed."
@@ -1025,6 +1098,7 @@
             "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Utilities/v15FacilityGetMasterTypesUsingGET",
             "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Utilities/v15FacilityGetMasterDataUsingGET"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Field: workingDays*. Steps: 1. Accepted codes in backend as specified in get-master-data API with type=’WORKING-DAYS’ 1. It should allow multiple days to select. 2. Should be filled if the operational status is Functional"
@@ -1038,6 +1112,7 @@
           "apis": [
             "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityBasicInformationUsingPOST"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Field: timingsOfFacility*. Steps: 1. Accepted format is 10:00 Am – 2:00 PM or 24*7 2. User should enter \"From\" time and \"To\" time. 3. Should only be filled if the respective working day is selected."
@@ -1053,6 +1128,7 @@
             "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Utilities/v15FacilityGetMasterTypesUsingGET",
             "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Utilities/v15FacilityGetMasterDataUsingGET"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Field: Facility Operational Status*. Steps: 1. Should be a dropdown field. 2. Accepted codes in beckend as specified in get-master-data API with type=’FAC-STATUS’"
@@ -1066,6 +1142,7 @@
           "apis": [
             "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityBasicInformationUsingPOST"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Field: Landline Number(for public display). Steps: 1. Should be a valid 10 digit mobile number 2. Special characters and alphabets are not allowed"
@@ -1079,6 +1156,7 @@
           "apis": [
             "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityBasicInformationUsingPOST"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Field: Mobile Number(for public display). Steps: 1. Should be a valid landline number ranging between 6-8 digits"
@@ -1092,6 +1170,7 @@
           "apis": [
             "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityBasicInformationUsingPOST"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Field: Facility Email(for public display). Steps: 1. Proper format of email to be followed"
@@ -1105,6 +1184,7 @@
           "apis": [
             "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityBasicInformationUsingPOST"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Field: Website(for public display). Steps: 1. Must contain Valid Link"
@@ -1118,6 +1198,7 @@
           "apis": [
             "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityBasicInformationUsingPOST"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Field: Facility Building Photograph. Steps: 1. Maximum allowed file size is 5MB.(Allowed formats: PNG,JPEG,JPG) 2. Single file should be uploaded"
@@ -1131,6 +1212,7 @@
           "apis": [
             "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityBasicInformationUsingPOST"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Field: Facility Board Photograph. Steps: 1. Maximum allowed file size is 5MB.(Allowed formats: PNG,JPEG,JPG) 2. Single file should be uploaded"
@@ -1146,6 +1228,7 @@
             "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Utilities/v15FacilityGetMasterTypesUsingGET",
             "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Utilities/v15FacilityGetMasterDataUsingGET"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Field: Address Proof Type. Steps: 1. Accepted codes as specified in get-master-data API with type=’ADDRESS-PROOF’ 2.Should allo multiple selections"
@@ -1159,6 +1242,7 @@
           "apis": [
             "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityBasicInformationUsingPOST"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Field: Address Proof. Steps: 1. Maximum size allowed for the attachment is 5MB 2. Should allow multiple entries with respect to the address proof selected"
@@ -1174,6 +1258,7 @@
             "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Utilities/v15FacilityGetMasterTypesUsingGET",
             "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Utilities/v15FacilityGetMasterDataUsingGET"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Field: Facility Ownership*. Steps: 1. Accepted Values as specified in get-master-data API with type=’OWNER’ 2. Should be a dropdown field 3. Only 1 value can be selected"
@@ -1189,6 +1274,7 @@
             "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Utilities/v15FacilityGetMasterDataUsingGET",
             "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Utilities/v15FacilityGetOwnershipSubtypeUsingPOST"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Field: Facility Ownership Subtype*. Steps: 1. Accepted Values as specified in get-owner-subtype API 2. Should be mandatory only for \"Goverment\" ownership"
@@ -1204,6 +1290,7 @@
             "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Utilities/v15FacilityGetMasterTypesUsingGET",
             "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Utilities/v15FacilityGetMasterDataUsingGET"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Field: Facility Ownership Subtype 2*. Steps: 1. Accepted values as specified in get-master-data API with type=’CENTRAL-GOVERNMENT’ 2. Should be mandatory only for \"central\" ownership subtype"
@@ -1219,6 +1306,7 @@
             "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Utilities/v15FacilityGetMasterTypesUsingGET",
             "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Utilities/v15FacilityGetMasterDataUsingGET"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Field: System of Medicine*. Steps: 1. Accepted Values as specified in get-master-data API with type=“MEDICINE”. 2. It sould allow multiple system of medicines"
@@ -1233,6 +1321,7 @@
             "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityBasicInformationUsingPOST",
             "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Utilities/v15FetchFacilityTypesUsingPOST"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Field: Facility Type*. Steps: 1.Accepted codes as specified in fetch-facility-type API. 2. It should be dropdown field."
@@ -1247,6 +1336,7 @@
             "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityBasicInformationUsingPOST",
             "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Utilities/v15FetchFacilitySubTypesUsingPOST"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Field: Facility Sub Type*. Steps: 1. Accepted codes as specified in fetch-facility-sub-type API. 2. It should be dropdown field."
@@ -1262,6 +1352,7 @@
             "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Utilities/v15FacilityGetMasterTypesUsingGET",
             "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Utilities/v15FacilityGetMasterDataUsingGET"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Field: Type of Service*. Steps: 1. Not mandatory for facility type:- Pharmacy,Blood bank,Diagnostic Lab, Imaging Center, Cath lab, Dialysis Center 2. Accepted codes as specified in get-master-data API with type=’SPECIALITY-TYPE’"
@@ -1276,6 +1367,7 @@
             "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityBasicInformationUsingPOST",
             "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Utilities/v15FacilityGetSpecialitiesUsingPOST"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Field: Specialization*. Steps: 1. Accepted codes as specified in the get-specialities APIwith respect to a system of medicine 2.Mandatory for all facility type except Pharmacy,Blood bank,, Cath lab, Dialysis Center 3. Multiple values can be selected"
@@ -1295,6 +1387,7 @@
           "apis": [
             "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityAdditionalInformationUsingPOST"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Function: Facility Registration(Capture Health program ids). Field: National Health Resource Repository Unique ID. Steps: 1. Should be a valid NHRR ID"
@@ -1308,6 +1401,7 @@
           "apis": [
             "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityAdditionalInformationUsingPOST"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Field: National Identification Number. Steps: 1. Should be a valid NIN id"
@@ -1321,6 +1415,7 @@
           "apis": [
             "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityAdditionalInformationUsingPOST"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Field: Hospital Id as allotted by AB-PMJAY Hospital Empanelment Module.. Steps: 1. Should be a valid AB-PMJAY Hospital Id"
@@ -1334,6 +1429,7 @@
           "apis": [
             "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityAdditionalInformationUsingPOST"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Field: Rohini Id. Steps: 1. Should be a valid Rohini Id"
@@ -1347,6 +1443,7 @@
           "apis": [
             "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityAdditionalInformationUsingPOST"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Field: Unique id in Ex-Servicemen Contributory Health Scheme. Steps: 1. Should be a valid ECHS Id."
@@ -1360,6 +1457,7 @@
           "apis": [
             "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityAdditionalInformationUsingPOST"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Field: Unique Id in Central Government Health Scheme. Steps: 1. Should be a valid CGHS Id."
@@ -1373,6 +1471,7 @@
           "apis": [
             "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityAdditionalInformationUsingPOST"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Field: CEA Registration Number. Steps: 1. Should be a valid CEA registration number"
@@ -1386,6 +1485,7 @@
           "apis": [
             "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityAdditionalInformationUsingPOST"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Field: State Insurance Scheme ID. Steps: 1. Alphanumeric string"
@@ -1407,6 +1507,7 @@
             "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Utilities/v15FacilityGetMasterTypesUsingGET",
             "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Utilities/v15FacilityGetMasterDataUsingGET"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Function: Facility Registration(Capture facility details information-infrastructure and specialization. Field: Services/Specialization. Steps: 1. System of medicine codes as saved in Basic-Information API 2. Accepted codes as specified in get-master-data API with type=’MEDICINE’"
@@ -1418,6 +1519,7 @@
           "functionality": "to edit if Specialization is Avalaible",
           "expected": "",
           "apis": [],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Steps: 1. If the facility offers any specializations or services for this system of medicine code should be Y / N as accepted value"
@@ -1432,6 +1534,7 @@
             "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityDetailedInformationUsingPOST",
             "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Utilities/v15FacilityGetSpecialitiesUsingPOST"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Steps: 1.Only allowed if previous option is Y 2. Multiple selection should be allowed 3. Accepted codes as specified in the get-specialities API with respect to a system of medicine"
@@ -1445,6 +1548,7 @@
           "apis": [
             "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityDetailedInformationUsingPOST"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Field: Medical Infrastructure Beds. Steps: 1. Accepts only Numeric Value 2. Not more than 2 charactres alllowed"
@@ -1458,6 +1562,7 @@
           "apis": [
             "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityDetailedInformationUsingPOST"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Steps: 1. Accepts only Numeric Value 2. Not more than 2 charactres alllowed"
@@ -1471,6 +1576,7 @@
           "apis": [
             "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityDetailedInformationUsingPOST"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Steps: 1. Accepts only Numeric Value 2. Not more than 2 charactres alllowed"
@@ -1484,6 +1590,7 @@
           "apis": [
             "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityDetailedInformationUsingPOST"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Steps: 1. Accepts only Numeric Value 2. Not more than 2 charactres alllowed"
@@ -1497,6 +1604,7 @@
           "apis": [
             "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityDetailedInformationUsingPOST"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Steps: 1. Accepts only Numeric Value 2. Not more than 2 charactres alllowed"
@@ -1510,6 +1618,7 @@
           "apis": [
             "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityDetailedInformationUsingPOST"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Steps: 1. Accepts only Numeric Value 2. Not more than 2 charactres alllowed"
@@ -1523,6 +1632,7 @@
           "apis": [
             "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityDetailedInformationUsingPOST"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Steps: 1. Accepts only Numeric Value 2. Not more than 2 charactres alllowed"
@@ -1536,6 +1646,7 @@
           "apis": [
             "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityDetailedInformationUsingPOST"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Steps: 1. Accepts only Numeric Value 3. Should be total of beds with vantilators 2. Not more than 4 charactres alllowed 4. Should be non edtitable"
@@ -1549,6 +1660,7 @@
           "apis": [
             "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityDetailedInformationUsingPOST"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Steps: 1. Accepts only Numeric Value 2. Not more than 2 charactres alllowed"
@@ -1562,6 +1674,7 @@
           "apis": [
             "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityDetailedInformationUsingPOST"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Steps: 1. Accepts only Numeric Value 2. Not more than 2 charactres alllowed"
@@ -1575,6 +1688,7 @@
           "apis": [
             "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityDetailedInformationUsingPOST"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Steps: 1. Accepts only Numeric Value 3. Should be total of beds without vantilators 2. Not more than 4 charactres alllowed 4. Should be non edtitable"
@@ -1588,6 +1702,7 @@
           "apis": [
             "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15FacilityDetailedInformationUsingPOST"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Steps: 1. Accepts only Numeric Value 2. Not more than 2 charactres alllowed"
@@ -1607,6 +1722,7 @@
           "apis": [
             "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Onboarding%20APIs/v15SubmitFacilityDetailsUsingPOST"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Function: Facility submission. Field: Submit. Steps: 1.Should be a default value not to be filled by the end user 2. Should be valid data source provide by HFR team. If you leave this field empty, then your facility will be considered as Submitted entity."
@@ -1618,6 +1734,7 @@
           "functionality": "sourceUniqueID",
           "expected": "",
           "apis": [],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Steps: 1.Should be a default value not to be filled by the end user"
@@ -1637,6 +1754,7 @@
           "apis": [
             "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Multiple%20HRP%20API/v1MutipleHRPAddUpdateServicesUsingPOST"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Function: Bridge linkage. Field: Facility id. Steps: 1. Will be validated if present in HFR or not 2. Starting with IN and of 12 characters"
@@ -1650,6 +1768,7 @@
           "apis": [
             "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Multiple%20HRP%20API/v1MutipleHRPAddUpdateServicesUsingPOST"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Field: Facility name. Steps: 1. Name of the facility to be linked . 2. Should be auto fetched form facility id"
@@ -1663,6 +1782,7 @@
           "apis": [
             "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Multiple%20HRP%20API/v1MutipleHRPAddUpdateServicesUsingPOST"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Field: Bridgr id. Steps: 1. Valid Bridge Id to be linked. 2. Alphanumeric and validity to be checked by HIECM"
@@ -1676,6 +1796,7 @@
           "apis": [
             "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Multiple%20HRP%20API/v1MutipleHRPAddUpdateServicesUsingPOST"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "NHA gives this id to more than one case. Field: HIP name. Steps: 1. To provide uniqueness against each bridges that is linked . HIP name is the name of the hospital which will reflect on ABHA/PHR app when the patent will search for the respective hospital. 2. HIP name can be the Hospital name added with suffix of bridge name. example Hospital name=XYZ and bridge name =BRIDGE TEST, so the HIP name = XYZ BRIDGE. 3. HIP name can not be more than 15 characters., No special character is allowed (%$*#@(~&!), and it should be unique for every bridge for a facility"
@@ -1689,6 +1810,7 @@
           "apis": [
             "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Multiple%20HRP%20API/v1MutipleHRPAddUpdateServicesUsingPOST"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Steps: 1. Should contain HIP / HIU etc 2. Validated by HIECM"
@@ -1702,6 +1824,7 @@
           "apis": [
             "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Multiple%20HRP%20API/v1MutipleHRPAddUpdateServicesUsingPOST"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Steps: 1. Values shuld be True/false . 2. Accept Boolean value"
@@ -1721,6 +1844,7 @@
           "apis": [
             "https://facilitysbx.abdm.gov.in/swagger-ui.html#/Multiple%20HRP%20API/v1MutipleHRPAddUpdateServicesUsingPOST"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "NHA gives this id to more than one case. Field: HIP name. Steps: 1. To provide uniqueness against each bridges that is linked . HIP name is the name of the hospital which will reflect on ABHA/PHR app when the patent will search for the respective hospital. 2. HIP name can be the Hospital name added with suffix of bridge name. example Hospital name=XYZ and bridge name =BRIDGE TEST, so the HIP name = XYZ BRIDGE. 3. HIP name can not be more than 15 characters., No special character is allowed (%$*#@(~&!), and it should be unique for every bridge for a facility 4. Shoulds not be same as previously created HIP Name"
@@ -1740,6 +1864,7 @@
           "apis": [
             "https://hpridsbx.abdm.gov.in/api/v1/registration/aadhaar/generateOtp"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Feature: Create HPRID. Function: Creation of HPR Profile. Applies to: All Integrators for creation of HPR. Test: The system must provide an option to create HPR through Aadhaar Steps: User will have an option to create HPR ID"
@@ -1753,6 +1878,7 @@
           "apis": [
             "https://hpridsbx.abdm.gov.in/api/v1/registration/aadhaar/generateOtp"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Test: The system must display the consent language/ disclaimer language and collect user's consent as per the ABDM published consent. Steps: User provides consent for sharing of Aadhaar details and creation of HPR. System records user consent for compliance with Health Data Management Policy."
@@ -1766,6 +1892,7 @@
           "apis": [
             "https://hpridsbx.abdm.gov.in/api/v1/registration/aadhaar/generateOtp"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Test: The system should be able to provide the consent in languages other than English also . Steps: 1. Read consent language. Case 1: Hindi Case 2: for other than english and hindi team will connect with legal team. 2. Agree to the consent language (through 'I agree' checkbox or any other form of signature)"
@@ -1779,6 +1906,7 @@
           "apis": [
             "https://hpridsbx.abdm.gov.in/api/v1/registration/aadhaar/generateOtp"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Test: After successful user creation system will display all the details to user Steps: 1. Enter Aadhaar number 2. In case user enters an invalid Aadhaar number (A valid Aadhaar is a 12-digit number), the system shows an error message \"Aadhaar is not valid\"."
@@ -1792,6 +1920,7 @@
           "apis": [
             "https://hpridsbx.abdm.gov.in/api/v1/registration/aadhaar/generateOtp"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Test: system should allow user to enter captcha, before submitting Aadhaar details Steps: 1. Enter Captcha 1.1 . If Captcha is not correct then system will display a error message \"Capcha verification failed : please enter valid Captch\". 1.2 If Captcha is correct then system will allow to click on submit button."
@@ -1805,6 +1934,7 @@
           "apis": [
             "https://hpridsbx.abdm.gov.in/api/v1/registration/aadhaar/generateOtp"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Test: User receives Aadhaar OTP and System must allow the user to enter Aadhaar OTP. Steps: 1. Receive OTP on mobile number registered with Aadhaar 2. Enter Aadhaar OTP 3. Incase wrong OTP entered then system will show an error message \"Aadhaar OTP is not valid\". 4. User will be able to enter a valid Aadhaar OTP (A valid Aadhaar OTP is a 6-digit number). Example - Modified text for the \"Please enter 6 -digit OTP sent to Aadhaar linked mobile number \" step during the HPR Creation workflow with “We just sent an OTP on the Mobile Number *******7242 linked with Aadhaar. Enter the OTP below to proceed with HPR creation\"."
@@ -1816,6 +1946,7 @@
           "functionality": "Resend OTP",
           "expected": "User will able to send OTP again and verify it",
           "apis": [],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Test: System may activate the Resend OTP button atleast 2 times after 60 seconds and resend funcationality block for 30 minutes. Steps: 1. Click on Resend OTP Button 2. Receive OTP on mobile"
@@ -1829,6 +1960,7 @@
           "apis": [
             "https://hpridsbx.abdm.gov.in/api/v1/registration/aadhaar/demographicAuthViaMobile"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Test: 1. If communication mobile number is same as Aadhaar linked mobile number then it should directly go to HPR creation screen . Steps: 1. If the Healthcare Professional ID Already Exists then system will show an meesage \"We found your Healthcare Professional ID XXXXXXXXXXXX@hpr.abdm through the same mobile number and Aadhaar ID.\" and user can login via HP ID / Mobile Number / UserName will directed to HPR creation screen. 2 . If the Healthcare Professional ID is not Already Exists then system will display a user interface to create a HPR ID with the following details. 2.1 Photograph:- it will be fetch from the aadhaar database 2.2 FIRST NAME, MIDDLE NAME , LAST NAME, ADDRESS, DATE OF BIRTH IN THE FORMAT OF (DAY, MONTH AND YEAR), GENDER , STATE/UT , DISTRICT- It will automatically fetch from the aadhaar database and set as non -editable. 2.3. Healthcare Professional / User Name / Alais - User will enter the professsional and suggestion APIs also need to integratewith atleast 3 options. Validation rule should be apply: Must contain atleast 4 letters . Please note , we allow alphabets and numbers in the Healthcare Professional ID and do not allow special character except dot(.) 2.4 Healthcare Profesional Category( Doctor/ Nurse) and SubCategory like (Modern Medicine , Ayurveda e.t.c) and it should be drop down input and value should be taken from the master table. 2.5 Healthcare Email ID-System should allow the user to enter email id with the validation. The Validation rules for Email address to be set at the API level, Prefix with an email domein name: 1) presence of special character '@' 2) domain name format 3) absence of spaces 4) Incase email is not valid then System should prompt / display the error message when invalid email is entered. 2.6 : Password-System should allow user to enter Password with validation. The validation rules for entering Password: 1) It should have more than 8 characters, 2) Contains a capital letter, 3) Contains a Lowercase 4) Contains a number, 5) contains a special character 6) System should prompt / display the error message when invalid password is entered. 2.7 confirm Password-System should match the password and confirm password. 1.System should prompt / display the error message when the password and Confirm password does not match. 3. Once User will click on the 'Submit button to create HP ID and user will get the notification via sms"
@@ -1842,6 +1974,7 @@
           "apis": [
             "https://hpridsbx.abdm.gov.in/api/v1/registration/aadhaar/createHprIdWithPreVerified"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Test: If communication mobile number is not same as Aadhaar linked mobile number then system must ask for the OTP to verify communication mobile number. Steps: 1. If the Healthcare Professional ID Already Exists then system will show an meesage \"We found your Healthcare Professional ID XXXXXXXXXXXX@hpr.abdm through the same mobile number and Aadhaar ID.\" and user can login via HP ID / Mobile Number / UserName will directed to HPR creation screen. 2 . If the Healthcare Professional ID is not Already Exists then system will display a user interface to create a HPR ID with the following details. 2.1 Photograph:- it will be fetch from the aadhaar database 2.2 FIRST NAME, MIDDLE NAME , LAST NAME, ADDRESS, DATE OF BIRTH IN THE FORMAT OF (DAY, MONTH AND YEAR), GENDER , STATE/UT , DISTRICT- It will automatically fetch from the aadhaar database and set as non -editable. 2.3. Healthcare Professional / User Name / Alais - User will enter the professsional and suggestion APIs also need to integrate with atleast 3 options. Validation rule should be apply: Must contain atleast 4 letters . Please note , we allow alphabets and numbers in the Healthcare Professional ID and do not allow special character except dot(.) 2.4 Healthcare Profesional Category( Doctor/ Nurse) and SubCategory like (Modern Medicine , Ayurveda e.t.c) and it should be drop down input and value should be taken from the master table. 3. User will click on the 'Submit button to create HP ID.'"
@@ -1861,6 +1994,7 @@
           "apis": [
             "https://doctorsbx.abdm.gov.in/apis/v1/doctors/register-professional-new"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Feature: Basic. Test: User will received this token while create HPRID"
@@ -1872,6 +2006,7 @@
           "functionality": "profilePhoto",
           "expected": "Photo will be displayed",
           "apis": [],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Steps: The photo will be automatically fetched from the Aadhaar database, along with the demographic details including Full Name, Date of Birth, Gender, and KYC status, i.e., Aadhaar Verified. Why edit option is given for photo as it will be automiatically from the Aadhaar database"
@@ -1883,6 +2018,7 @@
           "functionality": "Healthcare Professional ID",
           "expected": "Healthcare Professional ID is successfully genearted",
           "apis": [],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Steps: Healthcare Professional ID and non editable (system generated)"
@@ -1894,6 +2030,7 @@
           "functionality": "Mobile Number",
           "expected": "input your mobile no for the official communication",
           "apis": [],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Test: input your mobile no for the official communication Steps: The system will show the communication mobile number along with status i.e Verfied or Not Verified (Non editable)"
@@ -1905,6 +2042,7 @@
           "functionality": "Email and Email Status",
           "expected": "input your email for the official communication",
           "apis": [],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Test: input your email for the official communication Steps: The system will show the communication Email along withemail status i.e Verfied or Not Verified (Non eidtable)"
@@ -1916,6 +2054,7 @@
           "functionality": "Salutation *",
           "expected": "The system will provide a salutation as a mandatory field, offering options such as 'Dr,' 'Mr,' 'Ms,' from master data",
           "apis": [],
+          "apisNote": "Use Master Data Sheet (Excel)",
           "api": null,
           "webhook": null,
           "detail": "Feature: Personal info. Test: The system will provide a salutation as a mandatory field, offering options such as 'Dr,' 'Mr,' 'Ms,' from master data Steps: The user will be able to select their preferred salutation"
@@ -1927,6 +2066,7 @@
           "functionality": "First Name *",
           "expected": "First name is fetched from the Aadhaar database.",
           "apis": [],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Test: The First Name will be automatically retrieved from the Aadhaar database which will be Non Editable field Steps: Fetched First Name from the Aadhaar."
@@ -1938,6 +2078,7 @@
           "functionality": "Middle Name",
           "expected": "Middle Name is fetched from the Aadhaar database.",
           "apis": [],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Test: The Middle Name will be automatically retrieved from the Aadhaar database which will be Non Editable field Steps: Fetched Middle Name from the Aadhaar."
@@ -1949,6 +2090,7 @@
           "functionality": "Last Name",
           "expected": "Last name is fetched from the Aadhaar database.",
           "apis": [],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Test: The Last Name will be automatically retrieved from the Aadhaar database which will be Non Editable field Steps: Fetched Last Name from the Aadhaar."
@@ -1960,6 +2102,7 @@
           "functionality": "Father's Name",
           "expected": "User is able to fill the Father's Name.",
           "apis": [],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Test: The system should allow to user to input their Father's Name Steps: Non Mandatory"
@@ -1971,6 +2114,7 @@
           "functionality": "Mother's Name",
           "expected": "User is able to fill the Mother's Name.",
           "apis": [],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Test: The system should allow to user to input their Mother's Name Steps: Non Mandatory"
@@ -1982,6 +2126,7 @@
           "functionality": "Spouse's Name",
           "expected": "User is able to fill the Spouse Name.",
           "apis": [],
+          "apisNote": "Use Master Data Sheet (Excel)",
           "api": null,
           "webhook": null,
           "detail": "Test: The system should allow to user to input their Spouse 's Name Steps: Non Mandatory"
@@ -1993,6 +2138,7 @@
           "functionality": "Nationality",
           "expected": "The system should allow the user to select their country from a dropdown menu, with India being the default option",
           "apis": [],
+          "apisNote": "Use Master Data Sheet (Excel)",
           "api": null,
           "webhook": null,
           "detail": "Test: The system should allow the user to select their country from a dropdown menu, with India being the default option Steps: User is able to select the country"
@@ -2004,6 +2150,7 @@
           "functionality": "Languages spoken *",
           "expected": "The system should allow the user to input their preferred language by selecting from a multi-selection dropdown menu Kindly Note: Multiple language can be selected",
           "apis": [],
+          "apisNote": "Use Master Data Sheet (Excel)",
           "api": null,
           "webhook": null,
           "detail": "Test: The system should allow the user to input their preferred language by selecting from a multi-selection dropdown menu Kindly Note: Multiple language can be selected Steps: User is able to fill the language"
@@ -2015,6 +2162,7 @@
           "functionality": "Address as per KYC :",
           "expected": "The address will be automatically retrieved from the Aadhaar database which will be Non Editable field",
           "apis": [],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Test: The address will be automatically retrieved from the Aadhaar database which will be Non Editable field Steps: The address is automatically populated."
@@ -2026,6 +2174,7 @@
           "functionality": "Is this communication address same as your address as per KYC ?",
           "expected": "The system should provide the option for the user to indicate whether the communication address is the same as the address on file in the KYC information or not.\"",
           "apis": [],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Feature: Communication ad. Test: The system should provide the option for the user to indicate whether the communication address is the same as the address on file in the KYC information or not.\" Steps: After selection state and District then pincode should be automatically relfected or vice versa"
@@ -2037,6 +2186,7 @@
           "functionality": "Communication Address *",
           "expected": "The system should allow the user to input their address",
           "apis": [],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Test: The system should allow the user to input their address Steps: If user want to change the communciation address so he can fillup the complete detail"
@@ -2048,6 +2198,7 @@
           "functionality": "Name *",
           "expected": "The system should allow the user to input the name of the communication person.",
           "apis": [],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Test: The system should allow the user to input the name of the communication person."
@@ -2059,6 +2210,7 @@
           "functionality": "Country*",
           "expected": "The system should allow the user to select their country from a dropdown menu",
           "apis": [],
+          "apisNote": "Use Master Data Sheet (Excel)",
           "api": null,
           "webhook": null,
           "detail": "Test: The system should allow the user to select their country from a dropdown menu"
@@ -2070,6 +2222,7 @@
           "functionality": "State/Union Territory *",
           "expected": "The system should allow the user to select their communication state from a dropdown menu.",
           "apis": [],
+          "apisNote": "Use Master Data Sheet (Excel)",
           "api": null,
           "webhook": null,
           "detail": "Test: The system should allow the user to select their communication state from a dropdown menu."
@@ -2081,6 +2234,7 @@
           "functionality": "District *",
           "expected": "The system should allow the user to select their communication district from a dropdown menu",
           "apis": [],
+          "apisNote": "Use Master Data Sheet (Excel)",
           "api": null,
           "webhook": null,
           "detail": "Test: The system should allow the user to select their communication district from a dropdown menu"
@@ -2092,6 +2246,7 @@
           "functionality": "Sub District",
           "expected": "The system should allow the user to select their communication sub-district from a dropdown menu",
           "apis": [],
+          "apisNote": "Use Master Data Sheet (Excel)",
           "api": null,
           "webhook": null,
           "detail": "Test: The system should allow the user to select their communication sub-district from a dropdown menu"
@@ -2103,6 +2258,7 @@
           "functionality": "City/Town/Village",
           "expected": "The system should allow the user to input the name of the city.",
           "apis": [],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Test: The system should allow the user to input the name of the city."
@@ -2114,6 +2270,7 @@
           "functionality": "Postal Code(PIN) *",
           "expected": "The system should allow the user to input the postal code of the communication address.",
           "apis": [],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Test: The system should allow the user to input the postal code of the communication address."
@@ -2125,6 +2282,7 @@
           "functionality": "category",
           "expected": "system should allow user to select one category from drop down (Doctor - Modern Medicine, Unani etc.)",
           "apis": [],
+          "apisNote": "Use Master Data Sheet (Excel)",
           "api": null,
           "webhook": null,
           "detail": "Feature: Registration. Test: system should allow user to select one category from drop down (Doctor - Modern Medicine, Unani etc.)"
@@ -2136,6 +2294,7 @@
           "functionality": "categoryId",
           "expected": "system should allow user to select categoryId from drop down",
           "apis": [],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Test: system should allow user to select categoryId from drop down"
@@ -2147,6 +2306,7 @@
           "functionality": "registeredWithCouncil",
           "expected": "system should allow user to select council from dropdown",
           "apis": [],
+          "apisNote": "Use Master Data Sheet (Excel)",
           "api": null,
           "webhook": null,
           "detail": "Test: system should allow user to select council from dropdown"
@@ -2158,6 +2318,7 @@
           "functionality": "registrationNumber",
           "expected": "system should allow user to input registrationNumber",
           "apis": [],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Test: system should allow user to input registrationNumber"
@@ -2169,6 +2330,7 @@
           "functionality": "registrationDate",
           "expected": "system should allow user to input registrationDate",
           "apis": [],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Test: system should allow user to input registrationDate"
@@ -2180,6 +2342,7 @@
           "functionality": "registrationCertificate",
           "expected": "base64 encoded image",
           "apis": [],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Test: base64 encoded image"
@@ -2191,6 +2354,7 @@
           "functionality": "isNameDifferentInCertificate",
           "expected": "system should ask for yes or no if it is yes then ask for document pdf/png/jpeg/jpg upto 5 MB",
           "apis": [],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Test: system should ask for yes or no if it is yes then ask for document pdf/png/jpeg/jpg upto 5 MB"
@@ -2202,6 +2366,7 @@
           "functionality": "proofOfNameChangeCertificate",
           "expected": "system should ask for yes or no if it is yes then ask for document pdf/png/jpeg/jpg upto 5 MB",
           "apis": [],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Test: system should ask for yes or no if it is yes then ask for document pdf/png/jpeg/jpg upto 5 MB"
@@ -2213,6 +2378,7 @@
           "functionality": "nameOfDegreeOrDiplomaObtained",
           "expected": "system should allow user to select name of degree",
           "apis": [],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Feature: Qualifications. Test: system should allow user to select name of degree"
@@ -2224,6 +2390,7 @@
           "functionality": "country",
           "expected": "system should allow user to select country from the dropdown",
           "apis": [],
+          "apisNote": "Use Master Data Sheet (Excel)",
           "api": null,
           "webhook": null,
           "detail": "Test: system should allow user to select country from the dropdown"
@@ -2235,6 +2402,7 @@
           "functionality": "state",
           "expected": "system should allow user to select communciation state from the dropdown",
           "apis": [],
+          "apisNote": "Use Master Data Sheet (Excel)",
           "api": null,
           "webhook": null,
           "detail": "Test: system should allow user to select communciation state from the dropdown"
@@ -2246,6 +2414,7 @@
           "functionality": "college",
           "expected": "system should allow user to select college from the dropdown",
           "apis": [],
+          "apisNote": "Use Master Data Sheet (Excel)",
           "api": null,
           "webhook": null,
           "detail": "Test: system should allow user to select college from the dropdown"
@@ -2257,6 +2426,7 @@
           "functionality": "university",
           "expected": "system should allow user to select university from the dropdown",
           "apis": [],
+          "apisNote": "Use Master Data Sheet (Excel)",
           "api": null,
           "webhook": null,
           "detail": "Test: system should allow user to select university from the dropdown"
@@ -2268,6 +2438,7 @@
           "functionality": "monthOfAwardingDegreeDiploma",
           "expected": "system should allow user to input month of awarding degree",
           "apis": [],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Test: system should allow user to input month of awarding degree Steps: Non Mandatory Selection"
@@ -2279,6 +2450,7 @@
           "functionality": "yearOfAwardingDegreeDiploma",
           "expected": "system should allow user to input year of awarding degree",
           "apis": [],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Test: system should allow user to input year of awarding degree"
@@ -2290,6 +2462,7 @@
           "functionality": "degreeCertificate",
           "expected": "base64 encoded image",
           "apis": [],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Test: base64 encoded image"
@@ -2301,6 +2474,7 @@
           "functionality": "isNameDifferentInCertificate",
           "expected": "system should allow user to input yes or no if name is different in certificate",
           "apis": [],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Test: system should allow user to input yes or no if name is different in certificate"
@@ -2312,6 +2486,7 @@
           "functionality": "proofOfNameChangeCertificate",
           "expected": "Base 64- system should ask for yes or no if it is yes then ask for document pdf/png/jpeg/jpg upto 5 MB",
           "apis": [],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Test: Base 64- system should ask for yes or no if it is yes then ask for document pdf/png/jpeg/jpg upto 5 MB"
@@ -2323,6 +2498,7 @@
           "functionality": "Are you currentlty working (Yes/No)",
           "expected": "Dropdown field",
           "apis": [],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Feature: Work Detail. Test: Dropdown field"
@@ -2334,6 +2510,7 @@
           "functionality": "IF No, so please ask the reason for non working",
           "expected": "Fillup the dropdown menu from master sheet and other free text option should be available for user to enter",
           "apis": [],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Test: Fillup the dropdown menu from master sheet and other free text option should be available for user to enter"
@@ -2345,6 +2522,7 @@
           "functionality": "If Yes, So radio button (Govt, Pvt or Both)",
           "expected": "",
           "apis": [],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": ""
@@ -2356,6 +2534,7 @@
           "functionality": "If Govt /Both, so document attachment is mandatory to upload upto 5 mb",
           "expected": "Need to upload Payslip, recent transfer order etc. (In case of pvt no document is require)",
           "apis": [],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Test: Need to upload Payslip, recent transfer order etc. (In case of pvt no document is require)"
@@ -2369,6 +2548,7 @@
           "apis": [
             "https://facilitysbx.abdm.gov.in/FacilityManagement/v1.5/facility/search"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": ""
@@ -2382,6 +2562,7 @@
           "apis": [
             "https://doctorsbx.abdm.gov.in/apis/v1/doctors/register-professional-new"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Test: On submit button user profile will submit and message will come on SMS/Email."
@@ -2401,6 +2582,7 @@
           "apis": [
             "https://doctorsbx.abdm.gov.in/apis/v1/doctors/fetch-professional-info"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Test: After successful user creation system will display all the details to user Steps: for display information system will use fetch professional info API"
@@ -2420,6 +2602,7 @@
           "apis": [
             "https://doctorsbx.abdm.gov.in/apis/v1/doctors/update-professional"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Test: If user want to update their inputed details in system then system should allow user to update their details Steps: system will follow 20 to 76 rows to create update payload"
@@ -2440,6 +2623,7 @@
             "https://doctorsbx.abdm.gov.in/apis/v1/doctors/fetch-documents-list",
             "https://doctorsbx.abdm.gov.in/apis/v1/uploads/upload-document"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Test: This API will help integrators, if document is not ready during the HPR creation so professional can upload the document later Steps: First API will fetch the document id then in the second api you can upload the document."
