@@ -115,6 +115,21 @@ const flowsFor = (milestone) =>
   );
 
 /**
+ * The concepts and tests a build skill carries. Both opt in the way a flow
+ * does, by naming the skill in `skills`.
+ *
+ * Until this existed a build skill compiled from flows alone, so a rule
+ * written in a concept atom reached the docs site and never reached an agent.
+ * That is how the M1 encryption padding sat correct in
+ * hiecm.concept.input-encryption while the only padding on the agent surface
+ * was the NHPR's PKCS1, and an integrator lost a day to it.
+ */
+const optedIn = (milestone, type) =>
+  mine(milestone, type).filter((a) =>
+    (a.fm.skills ?? []).includes(`hiecm-${milestone.slug}-build`),
+  );
+
+/**
  * The errors a debug skill carries: every error atom recorded against the
  * milestone, not only those that name the skill. An error an agent can hit is
  * an error the debug skill should recognise.
@@ -168,6 +183,59 @@ function frontmatter(name, description) {
   return `---\nname: ${name}\ndescription: "${escaped}"\n---\n`;
 }
 
+/**
+ * A concept's own subheadings are spliced in under a `####` block here, so
+ * they have to sink with it. Left at `###` they outrank the block holding
+ * them, and the skill validator counts each one as an OODA loop owing an exit
+ * condition it will never have.
+ */
+const demote = (text) => text.replace(/^(#{3,})(?= )/gm, "#$1");
+
+/**
+ * A concept an agent must hold before it writes a call. Its mechanics live in
+ * "What happens", which is where a padding, a token rule or a key format is
+ * actually written down.
+ */
+function conceptSections(milestone) {
+  const concepts = optedIn(milestone, "concept");
+  if (!concepts.length) return [];
+  return [
+    `## Rules to hold before you call anything`,
+    ``,
+    concepts.map((c) => [
+      `#### ${c.fm.title} (\`${c.fm.id}\`)`,
+      ``,
+      demote(deref(section(c.body, "In plain words"))),
+      ``,
+      demote(deref(section(c.body, "What happens"))),
+    ].join("\n")).join("\n\n"),
+    ``,
+  ];
+}
+
+/**
+ * A check that settles a precondition in one call, so a wrong assumption is
+ * caught before it is built on rather than after.
+ */
+function testSections(milestone) {
+  const tests = optedIn(milestone, "test");
+  if (!tests.length) return [];
+  return [
+    `## Prove these before you build a flow`,
+    ``,
+    tests.map((t) => [
+      `### ${t.fm.title} (\`${t.fm.id}\`)`,
+      ``,
+      demote(deref(section(t.body, "What happens"))),
+      ``,
+      `**Exit condition (Observe until this is true)**`,
+      ``,
+      deref(section(t.body, "How you know it worked")),
+    ].join("\n")).join("\n\n"),
+    ``,
+  ];
+}
+
 function buildSkill(milestone) {
   const flows = flowsFor(milestone);
   const flowSections = flows.map((flow) => {
@@ -211,6 +279,8 @@ function buildSkill(milestone) {
     ``,
     `Loop limit: 8 passes per flow step. Hitting the limit is an escalation: state what was observed, what was tried, and which atom to read, then ask one question.`,
     ``,
+    ...conceptSections(milestone),
+    ...testSections(milestone),
     `## Flows`,
     ``,
     flowSections.join("\n\n"),
@@ -279,6 +349,8 @@ console.log("");
 for (const milestone of MILESTONES) {
   const f = flowsFor(milestone).length;
   const e = errorsFor(milestone).length;
-  console.log(`${milestone.id}: ${f} flow(s), ${e} error(s) fed this compile.`);
+  const c = optedIn(milestone, "concept").length;
+  const t = optedIn(milestone, "test").length;
+  console.log(`${milestone.id}: ${f} flow(s), ${c} concept(s), ${t} test(s), ${e} error(s) fed this compile.`);
 }
 console.log(`This is a draft. Run the constrained prose pass, then node scripts/validate-skills.mjs.`);
