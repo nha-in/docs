@@ -1,0 +1,9 @@
+{
+  "label": "Building a payer",
+  "position": 2,
+  "customProps": {
+    "roles": [
+      "payer"
+    ]
+  }
+}
