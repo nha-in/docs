@@ -1,0 +1,21 @@
+{
+  "mode": "integrate",
+  "transport": {"kind": "", "send": "", "receive": "", "policies": "", "thread": "", "fetch_missed": "", "stub": ""},
+  "config": {"transport_kind": "", "participant_code": "", "cases_dir": "", "hfr_id": "", "client_id": "", "client_secret": "", "private_key": "", "inbound_auth": "", "adapter_url": "", "adapter_api_key": ""},
+  "tests": {"path": "", "command": ""},
+  "modules": [
+    {"id": "7.1", "name": "config-and-transport", "skills": {}, "files": [], "depends_on": [], "held_to": ["references/transport-knowledge.md section 2"], "copy_from": ["7.1 Pseudo code", "references/transport-knowledge.md section 3"], "tables": [], "screens": []},
+    {"id": "7.2", "name": "storage", "skills": {}, "files": [], "depends_on": ["7.1"], "held_to": ["nhcx-build/mapping.json"], "copy_from": ["7.2 Pseudo code"], "tables": [], "screens": []},
+    {"id": "7.3", "name": "callback-and-archive", "skills": {}, "files": [], "depends_on": ["7.1", "7.2"], "held_to": ["references/transport-knowledge.md sections 2 and 3.9"], "copy_from": ["7.3 Pseudo code"], "tables": [], "screens": []},
+    {"id": "7.4", "name": "policy-and-coverage", "skills": {}, "files": [], "depends_on": ["7.3"], "held_to": ["nhcx-package/fhir/B1/discovery.json", "nhcx-package/fhir/B1/validation.json", "nhcx-package/fhir/B1/benefits.json"], "copy_from": ["7.4 Pseudo code", "fhir/FHIR.md section 2"], "tables": [], "screens": []},
+    {"id": "7.5", "name": "insurance-plan", "skills": {}, "files": [], "depends_on": ["7.4"], "held_to": ["nhcx-package/fhir/B2/insurance-plan-request.json"], "copy_from": ["7.5 Pseudo code", "fhir/FHIR.md section 3"], "tables": [], "screens": []},
+    {"id": "7.6", "name": "auth-requirements", "skills": {}, "files": [], "depends_on": ["7.5"], "held_to": ["nhcx-package/fhir/B1/auth-requirements.json"], "copy_from": ["7.6 Pseudo code", "fhir/FHIR.md section 2"], "tables": [], "screens": []},
+    {"id": "7.7", "name": "claim-bundle", "skills": {}, "files": [], "depends_on": ["7.6"], "held_to": ["nhcx-package/fhir/B3/preauth-request.json", "nhcx-package/fhir/B3/preauth-enhancement.json", "nhcx-package/fhir/B3/preauth-queryupdate.json", "nhcx-package/fhir/B5/claim-request.json", "nhcx-package/fhir/B5/claim-queryupdate.json"], "copy_from": ["7.7 Pseudo code", "fhir/FHIR.md section 4"], "tables": [], "screens": []},
+    {"id": "7.8", "name": "claim-response-reader", "skills": {}, "files": [], "depends_on": ["7.7"], "held_to": ["nhcx-package/fhir/C5", "nhcx-package/fhir/C7"], "copy_from": ["7.8 Pseudo code", "fhir/FHIR.md section 5"], "tables": [], "screens": []},
+    {"id": "7.9", "name": "tasks", "skills": {}, "files": [], "depends_on": ["7.8"], "held_to": ["nhcx-package/fhir/B3/preauth-cancel.json", "nhcx-package/fhir/B5/claim-reprocess.json", "nhcx-package/fhir/B5/claim-release.json"], "copy_from": ["7.9 Pseudo code", "fhir/FHIR.md section 6"], "tables": [], "screens": []},
+    {"id": "7.10", "name": "communication-and-payment", "skills": {}, "files": [], "depends_on": ["7.9", "7.11"], "held_to": ["nhcx-package/fhir/B4/communication-response.json", "nhcx-package/fhir/B7/payment-notice-ack.json"], "copy_from": ["7.10 Pseudo code", "fhir/FHIR.md sections 7 and 8"], "tables": [], "screens": []},
+    {"id": "7.11", "name": "state-and-payer-adapters", "skills": {}, "files": [], "depends_on": ["7.2"], "held_to": ["references/flow-knowledge.md sections 2 to 4"], "copy_from": ["7.11 Pseudo code", "references/flow-knowledge.md sections 2 to 4"], "tables": [], "screens": []},
+    {"id": "7.12", "name": "screens", "skills": {}, "files": [], "depends_on": ["7.11", "7.10"], "held_to": ["the two honesty rules"], "copy_from": ["7.12 Pseudo code", "ui/UI-GUIDE.md"], "tables": [], "screens": []},
+    {"id": "7.13", "name": "standalone-shell", "skills": {}, "files": [], "depends_on": ["7.2"], "held_to": ["nhcx-build/3-discovery.md"], "copy_from": ["7.13 Pseudo code"], "tables": [], "screens": [], "applies": "standalone only"}
+  ]
+}

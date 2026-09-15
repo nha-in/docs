@@ -1,113 +1,91 @@
 ---
-title: NHCX
-sidebar_label: NHCX
-description: What NHCX is, who is on it, and the index of the NHCX documentation set.
-verification: unverified
-source: NHCX__NHCX-Website_DocumentDetails.md
+title: Introduction
+sidebar_label: Introduction
 sidebar_position: 1
-sidebar_class_name: sidebar-icon sidebar-icon--compass
+description: What NHCX is, objectives, participants, machine-readable specifications
+verification: unverified
+source: nhcx-package/docs/01-Overview/01-Introduction.md
+generated: true
 ---
 
-# NHCX
+# Introduction
 
-The Ayushman Bharat Digital Mission ([ABDM](/docs/nhcx/v1/getting-started/glossary#abdm)) is India's national
-health data network, run by the National Health Authority ([NHA](/docs/nhcx/v1/getting-started/glossary#nha)).
-It is three gateways, not one, and this section documents the third of them.
+## What it is
 
-[NHCX](/docs/nhcx/v1/getting-started/glossary#nhcx) is the National Health Claims Exchange, the third [ABDM](/docs/nhcx/v1/getting-started/glossary#abdm) gateway, carrying insurance claims and their responses between providers and payers. After this page you will know who is on NHCX and which of [NHA](/docs/nhcx/v1/getting-started/glossary#nha)'s own documents to open next.
+The National Health Claims Exchange is a single road between hospitals and insurers. A hospital asks whether a patient is covered, asks permission to treat, sends the bill, and gets paid. Today each of those steps runs differently for every insurer. On the exchange they run the same way for all of them.
 
-## What is not here
+It carries the whole journey: checking cover before admission, getting treatment approved, submitting the claim at discharge, being paid, and arguing when the answer is wrong. Every step is a message out and an answer back later, so nothing is left hanging and there is a record of both halves.
 
-No endpoint on this gateway has been documented here yet. No endpoint reference, no sequence diagrams, no error tables, no test cases.
+Hospitals, insurers, patients, regulators and observers all connect to it the same way.
 
-The [HIE-CM](/docs/nhcx/v1/getting-started/glossary#hie-cm) and [UHI](/docs/nhcx/v1/getting-started/glossary#uhi) gateways are documented at [milestones](/docs/hiecm/v3/milestones) and [UHI](/docs/uhi/v1). NHCX sits outside both, on its own sandbox, with its own onboarding, participant registry and document set.
+NHCX is developed under the Ayushman Bharat Digital Mission (ABDM) by the National Health Authority (NHA), in consultation with the Insurance Regulatory and Development Authority of India (IRDAI). The idea is to introduce a platform of exchange to Providers and Payers so that both can transfer digitised health records and other pertinent information directly, in a machine readable format, to their counterpart.
 
-NHCX does appear in the sandbox database. An NHCX application is recorded against your organisation, and the column list for it is the [`nhcx_exit` table](/docs/hiecm/v3/reference/data-dictionary#nhcx_exit).
+## What NHCX aims to achieve
 
-## HIE-CM or NHCX
+NHA states five objectives for the exchange.
 
-Claims are not health records. If your product shares or fetches a patient's clinical record, you are on HIE-CM. If it submits or adjudicates an insurance claim, you are on NHCX. A hospital system can end up on both. The two integrations share no API surface.
+- **Wider cover.** Bring new kinds of claim onto the network, including outpatient (OPD) visits and pharmacy bills, so insurance is not only about hospital stays.
+- **Faster money.** Shorten the time between treatment and payment, and make cashless treatment workable even in small hospitals.
+- **Room to innovate.** Give insurers the structured data they need to automate decisions and to spot fraud.
+- **One way of doing things.** A single, rule-based process that both sides trust, instead of every insurer running its own.
+- **A better patient experience.** Fewer forms, fewer delays, fewer surprises at discharge.
 
-The documentation set shows the shape of a claim without describing it. A claim is a [FHIR](/docs/nhcx/v1/getting-started/glossary#fhir) bundle. It travels with a protected header that carries a workflow status code. A request cycle is closed by sending a protocol response back. Those are rows 11, 12 and 15 below.
+Underneath all five sits one requirement. A hospital's software and an insurer's software are built by different people on different technology, and a message has to mean exactly the same thing at both ends. That is why everything on the exchange is written in one agreed format, with agreed words for diagnoses, procedures and test results. How Claims Move on NHCX introduces that format, and Bundles and Conventions in the FHIR Reference sets out its rules.
 
-## Who is on it
+## NHCX operating framework
 
-| Participant | What it does |
-| --- | --- |
-| Provider | A hospital or clinic. Row 9 below covers the use cases a provider has to implement. |
-| Payer | An insurer, or a third party administrator acting for one. Row 10 below is the matching list for a payer. |
-| NHCX | The exchange in the middle. Routes between registered participants. |
+A stock exchange works because a buyer and a seller each connect to the exchange rather than to each other. NHCX works the same way. A hospital connects once, an insurer connects once, and from then on either can reach the other without having built anything specific to them.
 
-Both providers and payers onboard as participants, in sandbox first and then in production. The production onboarding document carries the role and registry enums and the validations applied to them.
+## What NHCX is made of
 
-## What is published
+It helps to think of NHCX as three rulebooks and one referee.
 
-The NHCX documentation set has 32 numbered rows, each giving a purpose, a document name and a location. It is an index, not a specification. No row carries a request shape, a response shape or an endpoint. Two rows have no document name in the source, and one row is blank apart from its location. Those gaps are marked below.
+- **The protocol** says how a message travels: how it is addressed, sealed, acknowledged and answered. It is deliberately like email: a message goes to the exchange, the exchange passes it on, and the reply comes back the same way.
+- **The data specifications** say what goes inside a message. Claims, policies, payments and the rest are written as FHIR records, using profiles published by NRCeS, so that both sides read the same thing.
+- **The operational guidelines** say who may join, how they are checked, what they may do, and how they can be removed.
+- **NHA is the referee.** It publishes the rules, runs the exchange, and works with NRCeS and IRDAI to change them.
 
-There is one location per group of documents, not a URL per file.
+The portal also publishes a live Swagger specification for each of the exchange's services, and Environments and Addresses in the Reference section lists them.
 
-| Location | What is there |
-| --- | --- |
-| [hcxsbx.abdm.gov.in/#/documents](https://hcxsbx.abdm.gov.in/#/documents) | Onboarding, use cases, payload references, error handling, Postman collections and FAQs. Rows 1 to 22. |
-| [hcxsbx.abdm.gov.in/#/technical-specifications/api-specifications](https://hcxsbx.abdm.gov.in/#/technical-specifications/api-specifications) | Swagger for the use case APIs and the participant service. Row 23. |
-| [hcxsbx.abdm.gov.in/#/hmisdocuments](https://hcxsbx.abdm.gov.in/#/hmisdocuments) | The Supporting Documents section of that page holds the PMJAY and [HMIS](/docs/hiecm/v3/getting-started/glossary#hmis) material. Rows 24 to 32. |
+Five principles run through all of it. The rules are **open**, published under a permissive licence so anyone can build against them. They are **evolvable**, so a scheme can add what it needs without breaking everyone else. They are **minimal**, so they are easy to understand and do not hold back innovation. They protect **privacy and security**, with sealed contents and tamper-proof records. And they are **unbundled**, so a participant can adopt one part without adopting all of it.
 
-## The document index
+## Who is on the network
 
-Row numbers match the published index, so you can match a line here to a line there.
+Most of this documentation talks about two parties, the hospital and the insurer. The network recognises more.
 
-### Onboarding, use cases and specifications
+- **Providers.** Hospitals and clinics, identified by their Health Facility Registry entry.
+- **Payers.** Insurance companies, and the government agencies that pay for schemes.
+- **TPAs.** Third-party administrators who process claims on an insurer's behalf. On the network a TPA behaves like a payer.
+- **Regulators.** IRDAI and bodies like it, who can search claims across every payer.
+- **Scheme sponsors.** The owner of a programme, for example NHA for Ayushman Bharat, with payer-level access.
+- **Researchers and insurance marketplaces.** Given aggregated or consented data only.
+- **Patient apps.** Personal health record apps that receive notifications on a beneficiary's behalf.
+- **Other exchanges.** NHCX is designed so that more than one instance can exist and relay to each other.
 
-| # | Document | What it covers |
-| --- | --- | --- |
-| 1 | NHCX Usecases | High level introduction to the NHCX use cases. |
-| 2 | Standards for NHCX | Standards followed in NHCX, and an introduction to FHIR. |
-| 3 | Name not given in the source | How to generate a token using the ABDM API for the NHCX APIs. |
-| 4 | Onboarding providers and payers in Sandbox | How to onboard participants in sandbox. |
-| 5 | Onboarding providers and payers in Production | How to onboard participants in production. Includes the role and registry enums, and the validations imposed. |
-| 6 | AWS(Sandbox)NHCX-OnBoarding APIs Postman Collection | Postman collection for participant onboarding in sandbox. A zip file. |
-| 7 | AWS(PROD)_NHCX-OnBoarding APIs Postman Collection | Postman collection for participant onboarding in production. A zip file. |
-| 8 | Policy Linking and De-Linking Process | Policy linking and de-linking validations, and API implementation detail, for payer and TPA. |
-| 9 | NHCX Provider Side Use Cases, Sandbox Exit Process | Which use cases a provider must cover: which API, at whose end, which bundle, which status, and the callback logic. |
-| 10 | NHCX Payer Side Use Cases, Sandbox Exit Process | The same list for a payer. |
-| 11 | NHCX Requests and Responses for UseCases | Which value sets to use when building FHIR bundles, which bundle to use, and which values are mandatory. One tab per use case. A spreadsheet. |
-| 12 | Workflow Status Sheets (with Codes) | The workflow codes to send in the protected header. A spreadsheet, updated when codes change. |
-| 13 | NHCX Code Snippets references for payload preparation | Reference code snippets for preparing use case payloads. |
-| 14 | Implementation Guide for Adoption of FHIR in ABDM and NHCX | The FHIR implementation guide for both. |
-| 15 | API Response Handling to avoid Failures | How to handle error scenarios, and how to send the protocol response that closes the request cycle. |
-| 16 | AWS(Sandbox)-PARTICIPANT SERVICE_APIs Postman Collection | Postman collection for the participant service APIs in sandbox. A zip file. |
-| 17 | AWS(Sandbox)-NHCX USECASE Postman Collection | Postman collection for the use case APIs in sandbox. A zip file. |
-| 18 | Standard Error Codes | Every error code and scenario, by use case, for the bridge and for NHCX. A spreadsheet. |
-| 19 | NHCX Dummy Payer Implementation | Implementation guide for the dummy payer. |
-| 20 | Steps to generate encryption Certificate | How to generate the encryption certificate, a public and private key pair. |
-| 21 | FAQs | Frequently asked questions. |
-| 22 | Common Mistakes while implementing through NHCX | Mistakes seen at the integrator end, and how they are resolved. |
-| 23 | Technical Specification, API Specifications | Swagger for the use cases and for the participant service. The source adds a warning: for use case payloads, work from rows 11 and 13 rather than the swagger. The swagger is the relevant source for the participant service APIs. |
+```mermaid
+flowchart LR
+  H1[Hospital] --- X((NHCX))
+  H2[Clinic] --- X
+  A[Patient app] --- X
+  X --- P1[Insurer]
+  X --- P2[Government scheme]
+  X --- T[TPA]
+  X --- R[Regulator]
+  X --- N[Another exchange]
+```
 
-### PMJAY and HMIS supporting documents
+Each role comes with a fixed list of what it may send and receive. A hospital can ask about eligibility and submit claims; it cannot search another hospital's claims. A regulator can search; it cannot submit.
 
-PMJAY is the Ayushman Bharat Pradhan Mantri Jan Arogya Yojana scheme. These rows sit under Supporting Documents on the HMIS documents page.
+## What changes in practice
 
-| # | Document | What it covers |
-| --- | --- | --- |
-| 24 | NHCX PMJAY Integration Handbook | The integration handbook for an HMIS. |
-| 25 | Insurance Plan IG | Implementation guide for the insurance plan bundle. |
-| 26 | NHCX_APIs to be called based on scenario | A roadmap for an HMIS: which NHCX APIs to call in which scenario. |
-| 27 | NHCX-PMJAY-HMIS Integration Overview | Overview of the integration. |
-| 28 | NHCX-PMJAY-HMIS Integration Guide | The integration guide. |
-| 29 | Name not given in the source | Sample FHIR. |
-| 30 | Biometric Authentication APIs Postman Collection | Postman collection for the biometric authentication APIs. |
-| 31 | NHCX-PMJAY-HMIS Test Cases | Test cases for the integration. |
-| 32 | Row blank in the source | The source row carries a location and nothing else. |
+Four things are different once a hospital is on the exchange, and the rest of this documentation is about making them work.
 
-## What is missing here
+**Records go across as records.** A hospital's software already holds the diagnosis, the test results and the treatment as data. Today most of it is printed or turned into a picture before it is sent, and the insurer's software cannot read a picture. On the exchange it goes across as data and stays readable.
 
-Everything past the index. This page carries the title and purpose of each document, not the endpoints, payloads, status codes or error codes inside them. No NHCX call is served against a sandbox.
+**That makes automatic decisions possible.** An insurer can only decide a claim by machine if it can read the values. A blood test sent as ten separate results can be checked automatically; the same test sent as a scan cannot.
 
-## Next
+**One place to type things.** The hospital's own system becomes the single place the information is entered, rather than being re-keyed into an insurer's portal afterwards. Most rejections on technical grounds come from that second typing.
 
-- New to NHCX? Start at row 4 above, the sandbox onboarding document.
-- [Choose your gateway](/docs/hiecm/v3)
-- [HIE-CM](/docs/hiecm/v3/)
-- [UHI services](/docs/uhi/v1)
-- [Support](/docs/support), for anything about these pages rather than about NHCX itself
+**Any hospital can reach any insurer.** A small hospital that could never afford to integrate with thirty insurers separately can integrate once.
+
+How Claims Move on NHCX follows a claim from admission to payment, in the ordinary language of the people who do it, before any of this becomes technical.
