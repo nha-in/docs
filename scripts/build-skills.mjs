@@ -16,6 +16,7 @@
 // Output under site/static/skills is a build output. Edit the specs, the test
 // matrix and the pages, not the skill.
 import {readFileSync, writeFileSync, mkdirSync, rmSync, readdirSync, existsSync} from 'node:fs';
+import {createHash} from 'node:crypto';
 import {join, dirname} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {parse} from 'yaml';
@@ -818,6 +819,64 @@ writeFileSync(
 );
 
 console.log(`Compiled ${count} skill(s) into site/static/skills and the plugin.`);
+
+// ---------------------------------------------------------------------------
+// The version gate.
+//
+// A plugin is cached by name and version. Change what a skill says without
+// changing the version and `claude plugin install` reports "already installed"
+// and leaves yesterday's copy in place: no error, no warning, and the reader
+// never learns that the thing they are following is stale. That happened here
+// on 15 September 2026, when two merged pull requests of skill changes reached
+// nobody who already had the plugin.
+//
+// So the content is hashed and the hash is committed next to the version. When
+// the content moves and the version has not, this refuses to finish and names
+// the version to set. It fails at the moment the mistake is made rather than
+// leaving it to be discovered by somebody reading the wrong instructions.
+const stamp = join(root, 'plugins', 'abdm-integrators-assistant', '.skills-version');
+const pluginManifest = join(root, 'plugins', 'abdm-integrators-assistant', '.claude-plugin', 'plugin.json');
+const version = JSON.parse(readFileSync(pluginManifest, 'utf8')).version;
+
+const hashOf = (dir) => {
+  const walk = (d) => readdirSync(d, {withFileTypes: true}).flatMap((e) => {
+    const full = join(d, e.name);
+    return e.isDirectory() ? walk(full) : [full];
+  });
+  // Sorted, so the digest depends on content and not on directory order.
+  const files = walk(dir).sort();
+  const h = createHash('sha256');
+  for (const f of files) { h.update(f.slice(dir.length)); h.update(readFileSync(f)); }
+  return h.digest('hex').slice(0, 16);
+};
+
+const digest = hashOf(pluginDir);
+const previous = existsSync(stamp)
+  ? JSON.parse(readFileSync(stamp, 'utf8'))
+  : {version: null, digest: null};
+
+if (previous.digest && previous.digest !== digest && previous.version === version) {
+  const [maj, min] = version.split('.');
+  console.error([
+    '',
+    `The compiled skills changed but the plugin version is still ${version}.`,
+    '',
+    'Anyone who already installed this plugin will keep the old skills: the',
+    'installer reports "already installed" and refreshes nothing, because the',
+    'cache is keyed by version.',
+    '',
+    `Set "version" to ${maj}.${Number(min) + 1}.0 in`,
+    '  plugins/abdm-integrators-assistant/.claude-plugin/plugin.json',
+    'then run: npm run build:plugins && node scripts/build-skills.mjs',
+    '',
+  ].join('\n'));
+  process.exit(1);
+}
+
+writeFileSync(stamp, `${JSON.stringify({version, digest}, null, 2)}\n`);
+if (previous.version !== version) {
+  console.log(`Skills stamped at version ${version}, content ${digest}.`);
+}
 
 // ---------------------------------------------------------------------------
 // The hosted setup prompt, the pattern Cloudflare's docs use: what a reader
