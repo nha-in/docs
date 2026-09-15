@@ -10,14 +10,23 @@ Generated from the ABDM Developer Portal on 2026-09-15, catalogue version 2026.0
 This file is a snapshot. Re-download it from the portal's /skills/abdm-m2/SKILL.md path when it is older than the work you are doing.
 If the abdm-docs MCP server is connected, trust its answers over this file: it serves the current catalogue and stamps every response with its catalogue_version, which you can compare against the version above.
 
-## What this skill covers
+## What you can do with M2
+
+- Tell ABDM a patient had a visit with you, so their records can be found later.
+- Answer a discovery request when somebody looks for that patient.
+- Send records out encrypted when a consent says you must, and tell the gateway you have finished.
+- Hold and refresh the per patient link token the linking calls need.
+
+What it cannot do yet matters as much. Read **Before anything else** below before assuming a capability is one endpoint away.
+
+## What is in this folder
 
 - **Scaffold.** Build it flow by flow against the sandbox, as a loop that ends on an observed result rather than on a call returning 200. [references/scaffold.md](references/scaffold.md)
 - **Integrate.** 31 operations, with their hosts and headers. [references/integrate.md](references/integrate.md)
 - **Debug.** The loop from a failed call to a named fix, and 120 recorded error codes. [references/debug.md](references/debug.md)
 - **Test.** 46 test cases, each with the call it makes and what to see when it passes. [references/test.md](references/test.md)
 
-Open one when the work calls for it. This file is the map, not the material.
+This file is the map. Each line above is a file beside it, opened one at a time rather than read through.
 
 ## Before anything else
 
