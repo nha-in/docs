@@ -10,14 +10,25 @@ Generated from the ABDM Developer Portal on 2026-09-15, catalogue version 2026.0
 This file is a snapshot. Re-download it from the portal's /skills/abdm-m1/SKILL.md path when it is older than the work you are doing.
 If the abdm-docs MCP server is connected, trust its answers over this file: it serves the current catalogue and stamps every response with its catalogue_version, which you can compare against the version above.
 
-## What this skill covers
+## What you can do with M1
+
+- Create an ABHA for somebody who has none: by Aadhaar, by mobile, by an identity document, by face or fingerprint, or under a parent for a child.
+- Log in somebody who already has one, by Aadhaar, mobile, ABHA number or ABHA address.
+- Read their profile, which carries the whole registration form: names, date of birth, gender, mobile, address with its codes, and a photograph.
+- Find an ABHA somebody has forgotten, and tell two accounts on one mobile apart.
+- Show the ABHA card and QR code, and take a profile a patient shares by QR at your counter.
+- Update a profile, change a mobile, and upgrade a mobile made address to KYC verified.
+
+What it cannot do yet matters as much. Read **Before anything else** below before assuming a capability is one endpoint away.
+
+## What is in this folder
 
 - **Scaffold.** Build it flow by flow against the sandbox, as a loop that ends on an observed result rather than on a call returning 200. [references/scaffold.md](references/scaffold.md)
 - **Integrate.** 55 operations, with their hosts and headers. [references/integrate.md](references/integrate.md)
 - **Debug.** The loop from a failed call to a named fix, and 89 recorded error codes. [references/debug.md](references/debug.md)
 - **Test.** 122 test cases, each with the call it makes and what to see when it passes. [references/test.md](references/test.md)
 
-Open one when the work calls for it. This file is the map, not the material.
+This file is the map. Each line above is a file beside it, opened one at a time rather than read through.
 
 ## Before anything else
 

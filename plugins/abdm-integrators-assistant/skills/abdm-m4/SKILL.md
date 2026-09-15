@@ -10,14 +10,23 @@ Generated from the ABDM Developer Portal on 2026-09-15, catalogue version 2026.0
 This file is a snapshot. Re-download it from the portal's /skills/abdm-m4/SKILL.md path when it is older than the work you are doing.
 If the abdm-docs MCP server is connected, trust its answers over this file: it serves the current catalogue and stamps every response with its catalogue_version, which you can compare against the version above.
 
-## What this skill covers
+## What you can do with M4
+
+- Create an HPID for a professional and register them in the HPR.
+- Register a facility in the HFR and carry it through to submission, without which it stays a draft nobody can see.
+- Link a facility to a bridge and mark each link HIP or HIU, which is what makes records flow.
+- Fetch the council, course, college, university and geography codes these calls take instead of names.
+
+What it cannot do yet matters as much. Read **Before anything else** below before assuming a capability is one endpoint away.
+
+## What is in this folder
 
 - **Scaffold.** Build it flow by flow against the sandbox, as a loop that ends on an observed result rather than on a call returning 200. [references/scaffold.md](references/scaffold.md)
 - **Integrate.** 13 operations, with their hosts and headers. [references/integrate.md](references/integrate.md)
 - **Debug.** The loop from a failed call to a named fix, and 150 recorded error codes. [references/debug.md](references/debug.md)
 - **Test.** 184 test cases, each with the call it makes and what to see when it passes. [references/test.md](references/test.md)
 
-Open one when the work calls for it. This file is the map, not the material.
+This file is the map. Each line above is a file beside it, opened one at a time rather than read through.
 
 ## Before anything else
 
