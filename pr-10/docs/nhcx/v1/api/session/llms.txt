@@ -1,8 +1,0 @@
-# NHCX Session
-
-> Every page of the NHCX Session module of the ABDM Developer Portal, fetchable as markdown.
-
-## Pages
-
-- [Session](https://nha-in.github.io/docs/pr-10/docs/nhcx/v1/api/session): The Session calls on NHCX: what each one does, the hosts they go to, and the guides that use them.
-- [Session token](https://nha-in.github.io/docs/pr-10/docs/nhcx/v1/api/session/endpoints/session-session-token): Mints the ABDM gateway session token that every NHCX call carries, from the client ID and secret issued for Milestone 1.

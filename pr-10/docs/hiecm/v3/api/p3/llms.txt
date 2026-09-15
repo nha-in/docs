@@ -8,7 +8,7 @@
 - [Add Feedback](https://nha-in.github.io/docs/pr-10/docs/hiecm/v3/api/p3/endpoints/p3-add-feedback): Records feedback from the person, with a title and body, against their ABHA.
 - [Add new Notification](https://nha-in.github.io/docs/pr-10/docs/hiecm/v3/api/p3/endpoints/p3-add-new-notification): Creates a push notification for a person.
 - [App Notification Token](https://nha-in.github.io/docs/pr-10/docs/hiecm/v3/api/p3/endpoints/p3-app-notification-token): Returns the device token registered for push notifications to the signed-in person.
-- [Approve Consent Request](https://nha-in.github.io/docs/pr-10/docs/hiecm/v3/api/p3/endpoints/p3-approve-consent-request): Approves a consent request. `consents` names the HIPs and care contexts the person is granting, and the artefact ids come back.
+- [Approve Consent Request](https://nha-in.github.io/docs/pr-10/docs/hiecm/v3/api/p3/endpoints/p3-approve-consent-request): Approves a consent request. consents names the HIPs and care contexts the person is granting, and the artefact ids come back.
 - [Approve Subscription Request](https://nha-in.github.io/docs/pr-10/docs/hiecm/v3/api/p3/endpoints/p3-approve-subscription-request): Approves a subscription request for the sources included and not the ones excluded, or for every HIP.
 - [Clear Notification](https://nha-in.github.io/docs/pr-10/docs/hiecm/v3/api/p3/endpoints/p3-clear-notification): Clears the push notifications given from the person's list.
 - [Consent Auto Approve](https://nha-in.github.io/docs/pr-10/docs/hiecm/v3/api/p3/endpoints/p3-consent-auto-approve): Creates an auto-approval policy: consent requests from the HIU named are approved without asking, for the sources included and not the ones excluded.

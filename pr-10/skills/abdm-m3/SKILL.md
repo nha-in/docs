@@ -1,20 +1,32 @@
 ---
 name: abdm-m3
-description: Use when building, debugging or testing ABDM Milestone 3: raising a consent request, tracking its status, reading consent artefacts, and fetching encrypted health records as an HIU. Carries the endpoints, the consent rules, every recorded error code and the M3 test matrix.
+description: Use when building, debugging or testing ABDM Milestone 3: raising a consent request, tracking its status, reading consent artefacts, and fetching encrypted health records as an HIU. Carries the endpoints, the consent rules, every recorded error code and the M3 test matrix. Also carries the scaffolding loop that builds it flow by flow and the loop from a failed call to a named fix, in references/.
 ---
 
 # ABDM M3, consent and fetching
 
-Generated from the ABDM Developer Portal on 2026-09-14, catalogue version 2026.08.24. Every fact below comes from a page in that portal, which is the place to look when this file does not carry enough.
+Generated from the ABDM Developer Portal on 2026-09-15, catalogue version 2026.08.24. Every fact below comes from a page in that portal, which is the place to look when this file does not carry enough.
 
 This file is a snapshot. Re-download it from https://nha-in.github.io/docs/pr-10/skills/abdm-m3/SKILL.md when it is older than the work you are doing.
 If the abdm-docs MCP server is connected, trust its answers over this file: it serves the current catalogue and stamps every response with its catalogue_version, which you can compare against the version above.
 
-## What this skill covers
+## What you can do with M3
 
-- **Integrate.** 25 operations, with their hosts and headers.
-- **Debug.** 95 recorded error codes, with the message and what to do.
-- **Test.** 16 test cases, each with the call it makes and what to see when it passes.
+- Ask a patient, through their consent manager, for records another provider holds.
+- Track that request through a grant, a denial, a revocation and an expiry.
+- Receive the encrypted records on your callback, decrypt them, and acknowledge receipt.
+- Handle one request that produces several consent artefacts, which is the normal case.
+
+What it cannot do yet matters as much. Read **Before anything else** below before assuming a capability is one endpoint away.
+
+## What is in this folder
+
+- **Scaffold.** Build it flow by flow against the sandbox, as a loop that ends on an observed result rather than on a call returning 200. [references/scaffold.md](references/scaffold.md)
+- **Integrate.** 25 operations, with their hosts and headers. [references/integrate.md](references/integrate.md)
+- **Debug.** The loop from a failed call to a named fix, and 95 recorded error codes. [references/debug.md](references/debug.md)
+- **Test.** 32 test cases, each with the call it makes and what to see when it passes. [references/test.md](references/test.md)
+
+This file is the map. Each line above is a file beside it, opened one at a time rather than read through.
 
 ## Before anything else
 
@@ -25,257 +37,29 @@ If the abdm-docs MCP server is connected, trust its answers over this file: it s
 - Records arrive encrypted on your callback URL. Decrypt them, then acknowledge receipt to the gateway.
 - NHA's schema declares `consentId` and `consentRequestId` as UUIDs while NHA's own examples give values that are not. Do not validate them as UUIDs. Recorded as correction C3 in catalogue/openapi/corrections.
 
-## Hosts
+## Practices that hold across every call
 
-- `https://dev.abdm.gov.in` Sandbox. Pair it with the `X-CM-ID: sbx` header.
-- `https://apis.abdm.gov.in` Production. Pair it with the `X-CM-ID: abdm` header.
-- `https://dev.abdm.gov.in/api` ABDM Gateway (Dev / Sandbox)
-- `https://apis.abdm.gov.in/api` ABDM Gateway (Production)
-- `https://apihspsbx.abdm.gov.in` HSP Registry (Sandbox)
-
-## Endpoints
-
-25 operations, grouped by the journey they belong to.
-
-### bridge
-
-| Method | Path | What it does |
-| --- | --- | --- |
-| `POST` | `/v4/int/v1/bridges/MutipleHRPAddUpdateServices` | Register / Update Bridge Services (HIU) |
-
-### consent
-
-| Method | Path | What it does |
-| --- | --- | --- |
-| `POST` | `/hiecm/consent/v3/fetch` | Fetch the full consent artefact |
-| `POST` | `/hiecm/consent/v3/request/hiu/on-notify` | Acknowledge a consent notification |
-| `POST` | `/hiecm/consent/v3/request/init` | Initiate a consent request |
-| `POST` | `/hiecm/consent/v3/request/status` | Check the status of a consent request |
-
-### data-retrieval
-
-| Method | Path | What it does |
-| --- | --- | --- |
-| `POST` | `/hiecm/data-flow/v3/health-information/notify` | Notify the gateway that data was received |
-| `POST` | `/hiecm/data-flow/v3/health-information/request` | Request a patient's health information |
-| `GET` | `/hiecm/data-flow/v3/health-information/request/status/{transaction-id}` | Health Information Request Status |
-
-### Gateway & Bridge
-
-| Method | Path | What it does |
-| --- | --- | --- |
-| `GET` | `/api/hiecm/gateway/v3/.well-known/openid-configuration` | Get OIDC Discovery Document |
-| `GET` | `/api/hiecm/gateway/v3/bridge-service/serviceId/{serviceId}` | Find Bridge Service by Service ID |
-| `GET` | `/api/hiecm/gateway/v3/bridge-services` | List All Bridge Services |
-| `PATCH` | `/api/hiecm/gateway/v3/bridge/url` | Update HIP/HIU Bridge Callback URL |
-| `GET` | `/api/hiecm/gateway/v3/certs` | Get Gateway JWKS Certificates |
-
-### Provider directory
-
-| Method | Path | What it does |
-| --- | --- | --- |
-| `GET` | `/api/hiecm/gateway/v3/govt-programs` | List government programs |
-| `GET` | `/api/hiecm/gateway/v3/health-lockers` | List health-locker-enabled providers |
-| `GET` | `/api/hiecm/gateway/v3/providers` | List providers by name |
-| `GET` | `/api/hiecm/gateway/v3/providers/{provider-id}` | Get a provider by id |
-
-### Session and tokens
-
-| Method | Path | What it does |
-| --- | --- | --- |
-| `POST` | `/api/hiecm/gateway/v3/sessions` | Create a session and get an access token |
-
-### webhooks
-
-| Method | Path | What it does |
-| --- | --- | --- |
-| `POST` | `/api/v3/consent/request/hip/notify` | The patient's decision, sent to the record holder |
-| `POST` | `/api/v3/hiu/consent/on-fetch` | The consent artefact detail, fetched by artefact id |
-| `POST` | `/api/v3/hiu/consent/request/notify` | The patient's decision, sent to the requester |
-| `POST` | `/api/v3/hiu/consent/request/on-init` | The consent request was accepted, with its request id |
-| `POST` | `/api/v3/hiu/consent/request/on-status` | The consent manager reports the state of a consent request you asked about. |
-| `POST` | `/api/v3/hiu/health-information/on-request` | Acknowledgement of a health information request |
-| `POST` | `/health-information/transfer` | The encrypted health data itself, pushed to the URL you supplied |
-
-## Headers
-
-| Header | What it is |
-| --- | --- |
-| `REQUEST-ID` | A fresh UUID that you generate for this request. The callback that answers it carries the same value. In M3 a… |
-| `TIMESTAMP` | The current time in ISO 8601 UTC, with milliseconds and the `Z` suffix. The gateway rejects a request whose t… |
-| `X-CM-ID` | Which consent manager you are talking to. `sbx` on the sandbox and `abdm` in production. |
-| `X-HIU-ID` | Identifier of the health information user the request or callback is intended for. |
-
-## A request, in full
-
-```bash
-curl --request POST \
-  --url https://dev.abdm.gov.in/v4/int/v1/bridges/MutipleHRPAddUpdateServices \
-  --header 'Content-Type: application/json' \
-  --data '{
-  "facilityId": "IN07100XXXXX",
-  "facilityName": "City Health HIU",
-  "HRP": [
-    {
-      "bridgeId": "BRIDGE_HIU_001",
-      "hipName": "City Health HIU",
-      "type": "HIU",
-      "active": true
-    }
-  ]
-}'
-```
-
-## Errors
-
-### Codes
-
-Code, message and error name are as published. The action column reads the message text by a documented rule, and says Unclassified where the rule could not classify one.
-
-| Code | Message | What to do |
-| --- | --- | --- |
-| `ABDM-1000` | Unable to connect the database | Retry |
-| `ABDM-1001` | Subscription source update returned empty | Unclassified |
-| `ABDM-1002` | Invalid frequency unit, it must be in HOUR, WEEK, DAY, MONTH, YEAR | Fix request |
-| `ABDM-1003` | Email Gateway is unavailable | Retry |
-| `ABDM-1004` | SMS Gateway is unavailable | Retry |
-| `ABDM-1005` | Invalid receiver | Fix request |
-| `ABDM-1006` | Invalid HIType, it must be in Prescription,DiagnosticReport,OPConsultation,DischargeSummary,ImmunizationRecor… | Fix request |
-| `ABDM-1007` | Connection failed due to timeout | Retry |
-| `ABDM-1008` | SMS service currently disabled | Unclassified |
-| `ABDM-1009` | Email service currently disabled | Unclassified |
-| `ABDM-1010` | No pending care context found for this abha address | Unclassified |
-| `ABDM-1011` | Gateway database unavailable | Retry |
-| `ABDM-1012` | No records found against the ABHA Address | Unclassified |
-| `ABDM-1013` | Invalid ABHA Number | Fix request |
-| `ABDM-1014` | Invalid Mobile Email | Fix request |
-| `ABDM-1015` | Invalid Response | Fix request |
-| `ABDM-1016` | Invalid Timestamp | Fix request |
-| `ABDM-1017` | Invalid Transaction Id | Fix request |
-| `ABDM-1018` | Share Profile database unavailable | Retry |
-| `ABDM-1019` | Dependent Service Unavailable | Retry |
-| `ABDM-1020` | Unknown database | Unclassified |
-| `ABDM-1021` | Lack of required priviledges | Fix request |
-| `ABDM-1022` | Too many requests | Retry |
-| `ABDM-1023` | Invalid User | Fix request |
-| `ABDM-1024` | Dependent service unavailable | Retry |
-| `ABDM-1025` | Invalid ServiceId | Fix request |
-| `ABDM-1026` | Bridge Id not found | Fix request |
-| `ABDM-1027` | You are blocked. Please try again after 24 hours. | Cannot proceed |
-| `ABDM-1028` | HIP is unavailable | Retry |
-| `ABDM-1029` | Redis server is unavailable | Retry |
-| `ABDM-1030` | Request id not found | Fix request |
-| `ABDM-1031` | Invalid reason. Reason should not be null or empty and should contains only alphabets, dot(.) and comma(,) | Fix request |
-| `ABDM-1032` | Invalid header | Fix request |
-| `ABDM-1033` | HIU is unavailable | Retry |
-| `ABDM-1034` | Notification service unavailable | Retry |
-| `ABDM-1035` | OTP does not matched | Unclassified |
-| `ABDM-1039` | Invalid Consent request id | Cannot proceed |
-| `ABDM-1040` | Invalid Locker ID | Fix request |
-| `ABDM-1041` | Invalid Acknowledgement | Fix request |
-| `ABDM-1046` | Invalid Purpose | Fix request |
-| `ABDM-1047` | Purpose does not exist | Fix request |
-| `ABDM-1048` | Timeout | Retry |
-| `ABDM-1051` | Invalid ABHA Number or ABHA Address | Fix request |
-| `ABDM-1054` | Invalid Subscription Request Id | Fix request |
-| `ABDM-1057` | Invalid Care Contexts | Fix request |
-| `ABDM-1058` | Invalid HI Types | Fix request |
-| `ABDM-1060` | Invalid Patient Reference Number | Fix request |
-| `ABDM-1061` | Consent artefact expired | Cannot proceed |
-| `ABDM-1062` | ABHA number mismatch with Link token), | Fix request |
-| `ABDM-1063` | HIP Id mismatch with Link token | Fix request |
-| `ABDM-1064` | request with this request id already exists | Fix request |
-| `ABDM-1065` | Health facility does not exist | Fix request |
-| `ABDM-1070` | Duplicate consent request | Cannot proceed |
-| `ABDM-1071` | User doesn't belongs to same organisation | Unclassified |
-| `ABDM-1072` | Included source size must be at least 1 | Unclassified |
-| `ABDM-1074` | HIP object cannot be null in excluded sources | Fix request |
-| `ABDM-1075` | HIP object cannot be null in included sources | Fix request |
-| `ABDM-1077` | Auto approval policy id doesn't exist. | Unclassified |
-| `ABDM-1078` | Failed to upload documents | Unclassified |
-| `ABDM-1079` | Auto approval id is already disabled | Fix request |
-| `ABDM-1080` | Subscription request may be already approved or denied | Fix request |
-| `ABDM-1081` | Please upload registration certificate of your organisation | Unclassified |
-| `ABDM-1082` | Please upload authority letter from your organisation | Unclassified |
-| `ABDM-1083` | User doesn't belongs to same organisation | Unclassified |
-| `ABDM-1084` | The Details fetched from Aadhaar is not matching with our database. Please select the correct details to proc… | Unclassified |
-| `ABDM-1085` | ABHA number mismatch with X Auth token | Fix request |
-| `ABDM-1099` | Invalid event Id, it cannot be null | Fix request |
-| `ABDM-1100` | You have requested multiple OTPs Or Exceeded maximum number of attempts for OTP match in this transaction. Pl… | Retry |
-| `ABDM-1112` | The provided gender does not match the gender in DigiLocker records | Unclassified |
-| `ABDM-1113` | Duplicate health information provider data flow response data flow resoponse | Fix request |
-| `ABDM-1116` | generate_and_save_link_token : 'NoneType' object has no attribute 'get' | Unclassified |
-| `ABDM-1117` | Auto approval id is already active | Fix request |
-| `ABDM-1118` | Login via ABHA Number OTP is not allowed | Fix request |
-| `ABDM-1119` | Login via Aadhaar OTP is not allowed | Fix request |
-| `ABDM-1120` | No care context is available for this patient. | Unclassified |
-| `ABDM-1144` | Incorrect facility ID or password. | Fix request |
-| `ABDM-1145` | Subscription is already disabled | Fix request |
-| `ABDM-1146` | Subscription is not in revoked state | Unclassified |
-| `ABDM-1147` | Subscription is not in granted state | Unclassified |
-| `ABDM-1148` | Subscription id does not belong to the patient | Unclassified |
-| `ABDM-1151` | Health locker is already setup for the user | Fix request |
-| `ABDM-1152` | Subscription not found for the locker | Fix request |
-| `ABDM-1153` | Unable to create Consent Auto Approval for the health locker | Cannot proceed |
-| `ABDM-1154` | Unable to save user health locker | Unclassified |
-| `ABDM-1170` | Invalid ABHA address | Fix request |
-| `ABDM-1401` | Your mobile number is not linked to the ABHA number. Please update your mobile number in ABHA or try to regis… | Unclassified |
-| `ABDM-1402` | Transaction Id is not matching with response | Unclassified |
-| `ABDM-1403` | As per NHA policy, you have exceeded ABHA address creation limit, please link your ABHA address to ABHA numbe… | Unclassified |
-| `ABDM-1404` | Patient record share detail not found | Fix request |
-| `ABDM-1405` | Invalid health information status | Fix request |
-| `ABDM-1406` | Invalid session status, Status should be TRANSFERRED, PARTIAL_TRANSFERRED or FAILED | Fix request |
-| `ABDM-1407` | The ABHA Number associated with this ABHA Address is currently deactivated. Please reactivate it. | Cannot proceed |
-| `ABDM-1408` | Invalid API sequence flow, please follow logical flow | Fix request |
-| `ABDM-8877` | HIP did not acknowledge the HIP consent notify. Please try again after some time | Cannot proceed |
-| `ABDM-9999` | Invalid purpose text, it must be in Care Management, Break the Glass, Public Health, Healthcare Payment, Dise… | Fix request |
-
-A code you meet that is not above is one the specifications do not carry yet. Read the code together with the message: a code can appear twice with different meanings.
-
-## Test cases
-
-16 cases, from NHA's M3 matrix for Consent management and health record fetch. "Mandatory" is NHA's own marking.
-
-### Consent request
-
-| Case | Type | What it proves | Call | Passes when |
-| --- | --- | --- | --- | --- |
-| `CNS_01` | Core path | Raise a consent request for a patient's previous records | `null /api/hiecm/consent/v3/request/init` | You receive an on-init callback carrying a consent request id. |
-| `CNS_02` | Core path | Poll the request status before the patient acts | `null /api/hiecm/consent/v3/request/status` | Status comes back `Requested`. |
-| `CNS_03` | Edge path | Handle a consent request that produces no on-init callback at all | `null /api/hiecm/consent/v3/request/init` | The on-init callback arrives at your registered URL. Nothing arriving means the URL is not registered or not … |
-| `CNS_04` | Coverage | Send one consent request per purpose of use code you will use in production | `null /api/hiecm/consent/v3/request/init` | Each code is accepted and reaches the patient's PHR app. |
-| `CNS_05` | Coverage | Send one consent request per HI type you will display | `null /api/hiecm/consent/v3/request/init` | Each type is accepted, and your system renders what comes back for it. |
-
-### Consent grant and denial
-
-| Case | Type | What it proves | Call | Passes when |
-| --- | --- | --- | --- | --- |
-| `GRT_01` | Core path | Receive a grant and acknowledge the consent artefact ids | `null /api/hiecm/consent/v3/request/hiu/on-notify` | You receive a notify callback with one or more consent artefact ids and the request id. |
-| `GRT_02` | Core path | Handle a denial on a second request | webhook `/api/v3/hiu/consent/request/notify` | You receive a notify callback with status `Denied` and no artefact ids. |
-| `GRT_03` | Edge path | Handle a grant that produces more than one artefact | `null /api/hiecm/consent/v3/fetch` | Every artefact id in the notify callback is fetched and used, not only the first. |
-
-### Consent artefact handling
-
-| Case | Type | What it proves | Call | Passes when |
-| --- | --- | --- | --- | --- |
-| `ART_01` | Core path | Fetch a consent artefact by id | `null /api/hiecm/consent/v3/fetch` | You receive an on-fetch callback for the artefact id you quoted. |
-| `ART_02` | Edge path | Stop fetching once the consent has expired | `null /api/hiecm/consent/v3/fetch` | The fetch fails and your code stops, rather than retrying forever. |
-
-### Data fetch
-
-| Case | Type | What it proves | Call | Passes when |
-| --- | --- | --- | --- | --- |
-| `DAT_01` | Core path | Request the health information under a granted consent | `null /api/hiecm/data-flow/v3/health-information/request` | You receive an on-request callback with a transaction id, request id and status. |
-| `DAT_02` | Core path | Receive the encrypted records |  | Encrypted records arrive at the data push callback URL you supplied. |
-| `DAT_03` | Core path | Decrypt the records and render them |  | The records read as FHIR content your system can display, as plain text or structured output. |
-| `DAT_04` | Edge path | Render a partial result when only some requested HI types exist | `null /api/hiecm/data-flow/v3/health-information/request` | The types that exist render. Your system does not treat the missing ones as a failure. |
-| `DAT_05` | Core path | Notify receipt and close the transaction | `null /api/hiecm/data-flow/v3/health-information/notify` | You call health information notify and the transaction closes. |
-
-### Consent revocation
-
-| Case | Type | What it proves | Call | Passes when |
-| --- | --- | --- | --- | --- |
-| `REV_01` | Edge path | Stop fetching once the patient revokes consent | `null /api/hiecm/consent/v3/fetch` | The fetch fails and your system stops. Access ends from the point of revocation. |
+- Read the body, not only the status. A refusal often names the field in its body while the status says nothing useful, and a bad clock can arrive as a 404.
+- When ABDM publishes a value, read it rather than hard coding what it currently says. That covers a parameter, such as the encryption algorithm the certificate endpoints return beside the key, and it covers an enumeration: councils, courses, states, districts, purposes and HI types all have master data calls, and a table typed into your source is a table that goes stale silently. Refuse to act on a published value you do not recognise rather than falling back to a default.
+- Read every field in a response, not the one you came for. The M1 certificate call returns the padding next to the key, and a catalogue that recorded only the key cost an integrator a day rediscovering it.
+- Prove an assumption against a call that is able to disagree with you. An endpoint that refuses every input with one message cannot tell you which input was right, and testing against it turns a correct answer into a ruled out one.
+- Suspect the transport before the data. When a call refuses a value you believe in, check the encryption, the headers and the clock before you doubt the number. Those failures are reported as if the value were wrong.
+- Do not carry an encryption path from one module to another. The padding, the certificate and the key size belong to the registry you are calling, and a path that works in one module produces a value another cannot read.
+- Never log a sensitive value before you encrypt it, and never send one to a remote service to be encrypted. Both move the leak rather than removing it.
+- Generate a fresh REQUEST-ID for every call and log it before sending. Once a call has failed it is the only handle on it.
+- Check the host on any sample before you copy it. Published samples mix production and sandbox hosts while describing sandbox behaviour, so a request copied whole can be correct in every respect except where it is pointed. This costs an afternoon because the failure looks like credentials.
+- Do not validate an identifier more strictly than the platform does. A schema that types a field as a UUID is not a promise that the values are UUIDs, and ABDM ships examples that are not. Refusing a value ABDM would have accepted turns your own client into the thing that broke, and the rejection never reaches a log anyone is reading.
+- Read a plural response as plural. A verification returns an accounts array, a consent request produces more than one artefact, and taking the first element is the bug that assigns a visit to the wrong record or drops half a fetch. Store the collection and decide from its length; length one is a case, not the normal case.
+- A documented callback path is not a documented callback payload. Several ABDM callbacks name a route and record no body anywhere, so a handler written against an assumed shape fails on the first real delivery, asynchronously, where nobody is watching. Log the whole body on arrival before you parse it.
+- Decode a token before you use it. A call that hands you a token has not necessarily handed you the token the next call wants: an M1 login returns one whose JWT payload reads `"typ": "Transfer"`, and every profile call refuses it while blaming its age. The claims are base64 and need no library, and reading them turns a confusing refusal into an obvious one.
+- When a journey carries the same parameter through two calls, check whether it is the same value in both. An array like `scope` is a combination the operation validates as a whole, and the combination can legitimately change between opening a transaction and confirming it. Reusing the opening value is refused as though the parameter itself were wrong.
+- Do not infer which path an identifier belongs to from where that identifier is most discussed. Aadhaar fills ABDM's enrolment documentation and is also a login identifier, so wiring it to enrolment quietly creates a second account for everyone who already holds one. Send every identifier to the lookup first and let the answer pick the path.
+- Do not match an error code with string equality. ABDM returns codes carrying trailing punctuation and whitespace, observed as `"code": "ABDM-9999: "`. Trim and compare on the prefix, or the branch you wrote for that code never runs.
+- A failure does not always carry a body. An HTTP 401 with zero bytes was observed on a PHR profile call with no user token. Handle the empty body before you parse, or your client throws on the simplest failure there is.
+- On a `HIS-` response from the registries, read `details[0].code` before the top level `code`. The outer code and the HTTP status describe the wrong thing: a 422 saying the data was wrong carried `HIS-403`, not permitted, one level down. Acting on the outer code sends you hunting through a payload that is fine.
+- Repeated bad credentials lock the client. Eight consecutive failed session calls locked a sandbox client for about eight minutes, and every attempt in that window returned `Invalid user credentials`, which reads as a wrong secret rather than a temporary lock. Back off on an auth failure rather than retrying, and never loop a credential check.
+- Send TIMESTAMP in UTC with milliseconds and a trailing Z. Local time is refused, sometimes as a 404.
+- Cache a public certificate with a validity window rather than forever. A rotation fails every encrypted call at once, and a cache with no expiry cannot recover on its own.
 
 ## Where the detail is
 
