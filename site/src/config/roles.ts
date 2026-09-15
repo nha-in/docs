@@ -19,9 +19,10 @@ export type Role = {
   /** One line under the label in the picker. */
   description: string;
   /**
-   * The `x-abdm-roles` values this choice covers. An information management
-   * system acts as a HIP when it publishes and an HIU when it reads, so one
-   * choice covers several declared roles.
+   * The `x-abdm-roles` values this choice covers. A facility is the HIP when it
+   * publishes through its information management system and the HIU when it
+   * fetches through the same system, so one choice covers several declared
+   * roles.
    */
   covers: string[];
 };

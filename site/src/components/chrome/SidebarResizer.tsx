@@ -35,6 +35,17 @@ export default function SidebarResizer(): React.ReactNode {
     window.localStorage.setItem(KEY, String(clamped));
   }, []);
 
+  /**
+   * Back to the stylesheet's width rather than to a number typed in here. The
+   * default is not one value any more: it widens on a large desktop window, so
+   * a literal would reset a full screen reader to the narrow rail.
+   */
+  const reset = useCallback(() => {
+    width.current = 0;
+    document.documentElement.style.removeProperty('--sidebar-width');
+    window.localStorage.removeItem(KEY);
+  }, []);
+
   useEffect(() => {
     if (!dragging) {
       return undefined;
@@ -69,7 +80,7 @@ export default function SidebarResizer(): React.ReactNode {
         event.preventDefault();
         setDragging(true);
       }}
-      onDoubleClick={() => set(256)}
+      onDoubleClick={reset}
       onKeyDown={(event) => {
         if (event.key === 'ArrowLeft') {
           event.preventDefault();
@@ -79,7 +90,7 @@ export default function SidebarResizer(): React.ReactNode {
           set(current() + STEP);
         } else if (event.key === 'Home') {
           event.preventDefault();
-          set(256);
+          reset();
         }
       }}>
       <span className="sidebar-resizer__grip" aria-hidden="true" />

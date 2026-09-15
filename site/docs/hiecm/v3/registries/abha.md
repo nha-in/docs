@@ -5,7 +5,8 @@ description: The registry that identifies patients, the 14 digit ABHA number, th
 verification: unverified
 source: ABDM__Proposed_Simplified_Milestone_1.md, ABDM__NewDocumant_PHR_app.md, ABDM__M1_ABHA_Collection.postman_collection.md
 sidebar_position: 1
-covers: [hiecm.concept.abha-number-and-address]
+covers: [hiecm.concept.abha-number-and-address, hiecm.concept.abha-address-policy]
+sidebar_class_name: sidebar-icon sidebar-icon--id-card
 ---
 
 # ABHA, the patient registry
@@ -63,6 +64,39 @@ These rules apply:
 - A 10 digit mobile number as an address is restricted and not created.
 
 Minimum length differs by flow. Validate against the error the endpoint returns rather than assuming one rule across all of them.
+
+## What an address is allowed to be
+
+NHA validates the address on creation, so a form that accepts what NHA refuses
+produces a failure the person cannot act on. Letters, digits and a single dot
+are allowed, and beyond that:
+
+- It cannot begin with a digit.
+- It cannot begin or end with a dot.
+- An all digit address is allowed for an ABHA number and nothing else, which
+  is what makes the default `14digit@abdm` legal.
+
+Three shapes read as though they should work and do not. A ten digit mobile
+number as an address is restricted. An ABHA number as an address you create is
+not allowed, although the default one is issued automatically and signing in
+with it works on both web and mobile. And anything failing the rules above is
+refused at creation rather than at submission.
+
+:::caution[The minimum length is stated twice, differently]
+NHA's PHR document gives the minimum as 4 characters in its narrative and as 8
+in the test case for creating an address by mobile number. Neither has been
+run against the sandbox from here. Build to 8, which is the stricter reading.
+:::
+
+A password is created alongside the address: at least 8 characters, at least
+one uppercase letter, one lowercase letter, one digit and one symbol, no
+spaces, and no more than two consecutive characters or keyboard keys. NHA
+describes enforcing it as optional for the application, not the password
+itself as optional.
+
+Offer suggestions rather than an empty box and a policy. Two calls exist for
+it, address suggestions and address exists, and NHA asks that suggestions be
+built from the person's name and the username part of their email.
 
 ## What an ABHA record holds
 

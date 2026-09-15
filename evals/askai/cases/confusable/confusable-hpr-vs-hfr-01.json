@@ -1,0 +1,20 @@
+{
+  "id": "confusable-hpr-vs-hfr-01",
+  "slice": "confusable",
+  "class": "compare",
+  "turns": [{"role": "user", "text": "do I register on HPR or HFR?"}],
+  "attachment": null,
+  "page": null,
+  "must_contain": [
+    "the HPR registers a healthcare professional and issues an HPID",
+    "the HFR registers a facility and issues a facility ID"
+  ],
+  "must_not_contain": ["<MASKED", "i apologize", "i apologise", "let me ", "great question", "the catalogue", "atom", "HPR and HFR are the same registry"],
+  "expected_sources": ["shared.glossary.hpr", "shared.glossary.hfr"],
+  "expected_shape": "compare",
+  "expected_behaviour": "answer",
+  "derived_from": null,
+  "source_row": "annexure#glossary",
+  "catalogue_version": "2026.08.24",
+  "notes": "Source lines: catalogue/shared/glossary/hpr.md, 'HPR holds verified healthcare professionals... Registration issues a Healthcare Professional ID'; catalogue/shared/glossary/hfr.md:58, 'M2 assumes a facility id that HFR issued.' Substitution: the table's HPID literal is written as 'HPID' rather than a separate glossary id; the existing id is shared.glossary.hpr, whose entry defines the HPID issuance."
+}

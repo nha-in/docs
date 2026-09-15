@@ -6,9 +6,9 @@ milestone: n/a
 version: abdm-v3
 title: DSC, Digital Solution Company
 summary: >
-  NHA's term for the company that builds ABDM compliant software for
-  patients or health facilities. It is the entity that certifies, as
-  distinct from the software that integrates.
+  The company that builds ABDM compliant software for patients or health
+  facilities. It is the entity that certifies, as distinct from the
+  software that integrates.
 sources:
   - url: https://sandbox.abdm.gov.in/sandbox/v3/new-documentation
     status: docs-only
@@ -28,9 +28,9 @@ related:
 
 ## In plain words
 
-A DSC is the company that makes the software. NHA's own words: an
-organization that provides software to patients or health facilities,
-and the primary user of the sandbox.
+A DSC is the company that makes the software: an organisation that
+provides software to patients or health facilities, and the primary user
+of the sandbox.
 
 If you are reading this because you build an HMIS, an EMR, a lab system
 or a patient app and you want to connect it to ABDM, you are a DSC. The
@@ -54,8 +54,10 @@ interchange. Your client id identifies your software. The facility id
 identifies whose records you are acting on, and it travels in the
 `X-HIP-ID` header per call.
 
-Certification is per milestone, and the milestones follow what your
-software does rather than what kind of product it is.
+Certification is per milestone, and the milestones follow what the entity
+you act for does with records rather than what kind of product you sell.
+A facility that publishes records needs M2, and one that reads them needs
+M3, through the one product.
 
 ## How you know it worked
 

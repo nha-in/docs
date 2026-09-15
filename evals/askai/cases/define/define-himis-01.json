@@ -1,0 +1,40 @@
+{
+  "id": "define-himis-01",
+  "slice": "define",
+  "class": "define",
+  "turns": [
+    {
+      "role": "user",
+      "text": "What is HIMS in the ABDM context?"
+    }
+  ],
+  "attachment": null,
+  "page": null,
+  "must_contain": [
+    "the catalogue's term is HMIS, not HIMS",
+    "HMIS is NHA's term for the software a hospital runs day to day",
+    "a facility uses its HMIS to publish records as the HIP and to fetch them as the HIU, so the ABDM work is M2 and M3 either way",
+    "an HMIS must implement every HI type, not only the ones it already produces"
+  ],
+  "must_not_contain": [
+    "<MASKED",
+    "i apologize",
+    "i apologise",
+    "let me ",
+    "great question",
+    "the catalogue",
+    "atom",
+    "hmis acts as a hip",
+    "hmis is a hip",
+    "hmis is the hip"
+  ],
+  "expected_sources": [
+    "shared.glossary.hmis"
+  ],
+  "expected_shape": "define",
+  "expected_behaviour": "answer",
+  "derived_from": null,
+  "source_row": "annexure#glossary",
+  "catalogue_version": "2026.08.24",
+  "notes": "reader spelled it HIMS; catalogue atom shared.glossary.hmis spells it HMIS (hospital management information system)."
+}

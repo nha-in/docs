@@ -5,6 +5,7 @@ sidebar_position: 4
 description: The tables and columns behind the ABDM sandbox portal, grouped by what each one records.
 verification: unverified
 source: Data_Dictionary__Sandboxdb_data_dictionary_v1.0.md
+sidebar_class_name: sidebar-icon sidebar-icon--table-2
 ---
 
 # Sandbox data dictionary

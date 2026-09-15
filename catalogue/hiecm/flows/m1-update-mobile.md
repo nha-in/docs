@@ -39,7 +39,8 @@ scope.
 
 - The person logged in, so you hold their `X-token`. See
   [log somebody in](m1-login-by-mobile.md).
-- The new value, encrypted.
+- The new value, encrypted with RSA-OAEP with SHA-1, base64 encoded, under the 4096-bit certificate from `/v3/profile/public/certificate`. PKCS#1 v1.5 and OAEP with SHA-256 are both refused, and neither refusal names encryption. See
+  [why identifiers are encrypted](hiecm.concept.encrypted-identifiers).
 - The person present, holding the new number, because the OTP goes there.
 
 ## What happens
@@ -80,5 +81,5 @@ The scopes do not match between the two calls, and the verify is
 refused. Send the array you sent on the request.
 
 The person is not logged in and the call is refused. See
-[ABDM-2401](../errors/abdm-2401.md).
+[ABDM-2401](hiecm.error.abdm-2401).
 

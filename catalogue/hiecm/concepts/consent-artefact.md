@@ -24,10 +24,10 @@ related:
 ## In plain words
 
 Nothing in ABDM lets one party read another's records by asking nicely.
-An [HIU](../../shared/glossary/hiu.md) raises a consent request against
+An [HIU](shared.glossary.hiu) raises a consent request against
 the patient's ABHA address. The patient grants or denies it. If granted,
 the consent manager issues
-[consent artefacts](../../shared/glossary/consent-artefact.md) and the
+[consent artefacts](shared.glossary.consent-artefact) and the
 HIU fetches against those.
 
 ## Before you start

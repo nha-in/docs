@@ -35,7 +35,7 @@ mean the work happened.
 ## Before you start
 
 You need a publicly reachable callback URL registered with ABDM. See
-[the callback URL](../../shared/sandbox/callback-url.md).
+[the callback URL](shared.sandbox.callback-url).
 
 ## What happens
 
@@ -58,7 +58,7 @@ callbacks do not arrive in the order you sent the requests.
 
 In this catalogue these callbacks are described as OpenAPI 3.1
 `webhooks` inside the module spec that owns them. See
-[callbacks as webhooks](../decisions/callbacks-as-webhooks.md).
+[callbacks as webhooks](hiecm.decision.callbacks-as-webhooks).
 
 ## How you know it worked
 
@@ -72,7 +72,7 @@ You have understood this when you can answer both of these.
 ## When it goes wrong
 
 It never arrives. Check the callback URL first: not public, not registered, or not
-responding fast enough. See [the callback never arrives](../troubleshooting/callback-never-arrives.md)
+responding fast enough. See [the callback never arrives](hiecm.troubleshooting.callback-never-arrives)
 for the checks in the order this catalogue recommends, not a record of how often each has been
 the actual cause.
 

@@ -1,0 +1,246 @@
+{
+ "_note": "Which documented call each check this portal wrote exercises. The checks are the portal's own, not NHA certification cases, so naming their calls completes our content rather than inventing an NHA requirement. Values are atom ids: the build reads each atom's recorded curl, so no URL is written here by hand. An empty list with a reason is the honest answer for a check that is not one call.",
+ "m1": {
+  "A1": [
+   "hiecm.endpoint.m1-auth-token"
+  ],
+  "A2": [
+   "hiecm.endpoint.m1-auth-token"
+  ],
+  "A3": [
+   "hiecm.endpoint.m1-get-public-certificate"
+  ],
+  "B1": [
+   "hiecm.endpoint.m1-enrolment-by-aadhaar"
+  ],
+  "B2": [
+   "hiecm.endpoint.m1-enrolment-by-aadhaar"
+  ],
+  "B3": [
+   "hiecm.endpoint.m1-enrolment-by-aadhaar"
+  ],
+  "B4": [
+   "hiecm.endpoint.m1-enrolment-claim-abha-address"
+  ],
+  "C1": [
+   "hiecm.endpoint.m1-enrolment-verify-abdm-otp"
+  ],
+  "C2": [
+   "hiecm.endpoint.m1-enrolment-request-otp"
+  ],
+  "C3": [
+   "hiecm.endpoint.m1-enrolment-request-otp"
+  ],
+  "C4": [
+   "hiecm.endpoint.m1-profile-verify-otp"
+  ],
+  "D1": [
+   "hiecm.endpoint.m1-login-select-account"
+  ],
+  "D2": [
+   "hiecm.endpoint.m1-login-verify"
+  ],
+  "D3": [
+   "hiecm.endpoint.m1-login-verify"
+  ],
+  "D4": [
+   "hiecm.endpoint.m1-token-refresh"
+  ],
+  "D5": [
+   "hiecm.endpoint.m1-profile-logout"
+  ],
+  "E1": [
+   "hiecm.endpoint.m1-profile-get-account"
+  ],
+  "E2": [
+   "hiecm.endpoint.m1-profile-get-account"
+  ],
+  "CRT_BIO_201": [
+   "hiecm.endpoint.m1-enrolment-capture-pid"
+  ],
+  "CRT_BIO_202": [
+   "hiecm.endpoint.m1-enrolment-by-aadhaar"
+  ],
+  "CRT_BIO_203": [
+   "hiecm.endpoint.m1-enrolment-face-auth-init"
+  ],
+  "CRT_BIO_204": [
+   "hiecm.endpoint.m1-enrolment-capture-pid"
+  ],
+  "CRT_BIO_205": [
+   "hiecm.endpoint.m1-enrolment-by-aadhaar"
+  ],
+  "CRT_DEMO_301": [
+   "hiecm.endpoint.m1-enrolment-by-aadhaar"
+  ],
+  "CRT_DEMO_302": [
+   "hiecm.endpoint.m1-enrolment-list-children"
+  ],
+  "CRT_DOC_401": [
+   "hiecm.endpoint.m1-enrolment-request-otp"
+  ],
+  "CRT_DOC_402": [
+   "hiecm.endpoint.m1-enrolment-verify-abdm-otp"
+  ],
+  "CRT_DOC_403": [
+   "hiecm.endpoint.m1-enrolment-by-document"
+  ],
+  "VER_AADHAAR_501": [
+   "hiecm.endpoint.m1-login-request-otp"
+  ],
+  "VER_AADHAAR_502": [
+   "hiecm.endpoint.m1-login-request-otp"
+  ],
+  "VER_AADHAAR_503": [
+   "hiecm.endpoint.m1-login-verify"
+  ],
+  "VER_MOBILE_601": [
+   "hiecm.endpoint.m1-login-request-otp"
+  ],
+  "VER_MOBILE_602": [
+   "hiecm.endpoint.m1-login-verify"
+  ],
+  "VER_MOBILE_603": [
+   "hiecm.endpoint.m1-login-request-otp",
+   "hiecm.endpoint.m1-login-verify"
+  ],
+  "VER_BIO_701": [
+   "hiecm.endpoint.m1-enrolment-face-auth-init"
+  ],
+  "VER_BIO_702": [
+   "hiecm.endpoint.m1-login-verify"
+  ],
+  "VER_BIO_703": [
+   "hiecm.endpoint.m1-login-verify"
+  ],
+  "FND_MOBILE_801": [
+   "hiecm.endpoint.m1-encrypt-value"
+  ],
+  "FND_MOBILE_802": [
+   "hiecm.endpoint.m1-login-search"
+  ],
+  "FND_MOBILE_803": [
+   "hiecm.endpoint.m1-login-request-otp"
+  ],
+  "FND_MOBILE_804": [
+   "hiecm.endpoint.m1-login-verify"
+  ],
+  "FND_AADHAAR_901": [
+   "hiecm.endpoint.m1-benefit-find-abha-by-aadhaar"
+  ],
+  "FND_AADHAAR_902": [
+   "hiecm.endpoint.m1-benefit-find-aadhaar-by-abha"
+  ],
+  "QR_ABHA_1001": [
+   "hiecm.endpoint.m1-profile-get-qr-code"
+  ],
+  "QR_ABHA_1002": [
+   "hiecm.endpoint.m1-profile-get-abha-card"
+  ],
+  "QR_ABHA_1003": [
+   "hiecm.endpoint.m1-profile-download-abha-card"
+  ],
+  "UPD_ABHA_1101": [
+   "hiecm.endpoint.m1-profile-request-otp"
+  ],
+  "UPD_ABHA_1102": [
+   "hiecm.endpoint.m1-profile-update-account"
+  ],
+  "UPD_ABHA_1103": [
+   "hiecm.endpoint.m1-profile-update-account"
+  ],
+  "SHR_ABHA_1201": [
+   "hiecm.endpoint.m1-receive-patient-share"
+  ],
+  "F4": [
+   "hiecm.endpoint.m1-login-request-otp"
+  ]
+ },
+ "m2": {
+  "LNK_01": [
+   "hiecm.endpoint.m2-hip-link-care-context"
+  ],
+  "LNK_02": [
+   "hiecm.endpoint.m2-generate-link-token"
+  ],
+  "LNK_03": [
+   "hiecm.endpoint.m2-hip-link-care-context"
+  ],
+  "NTF_01": [
+   "hiecm.endpoint.m2-sms-deep-link-notify"
+  ],
+  "DSC_01": [
+   "hiecm.endpoint.m2-on-discover-care-contexts"
+  ],
+  "DAT_02": [
+   "hiecm.endpoint.m2-hip-health-information-on-request"
+  ],
+  "DAT_04": [
+   "hiecm.endpoint.m2-hip-health-information-on-request"
+  ],
+  "DAT_05": [
+   "hiecm.endpoint.m2-hip-data-flow-notify"
+  ]
+ },
+ "m3": {
+  "CNS_01": [
+   "hiecm.endpoint.m3-consent-request-init"
+  ],
+  "CNS_02": [
+   "hiecm.endpoint.m3-consent-request-status"
+  ],
+  "CNS_03": [
+   "hiecm.endpoint.m3-consent-hiu-on-notify"
+  ],
+  "CNS_04": [
+   "hiecm.endpoint.m3-consent-request-init"
+  ],
+  "CNS_05": [
+   "hiecm.endpoint.m3-consent-request-init"
+  ],
+  "GRT_01": [
+   "hiecm.endpoint.m3-consent-hiu-on-notify"
+  ],
+  "GRT_02": [
+   "hiecm.endpoint.m3-consent-hiu-on-notify"
+  ],
+  "GRT_03": [
+   "hiecm.endpoint.m3-consent-hiu-on-notify"
+  ],
+  "ART_01": [
+   "hiecm.endpoint.m3-consent-fetch"
+  ],
+  "ART_02": [
+   "hiecm.endpoint.m3-consent-fetch"
+  ],
+  "DAT_01": [
+   "hiecm.endpoint.m3-hiu-health-information-request"
+  ],
+  "DAT_02": [
+   "hiecm.endpoint.m3-hiu-health-information-request"
+  ],
+  "DAT_05": [
+   "hiecm.endpoint.m3-hiu-data-flow-notify"
+  ],
+  "REV_01": [
+   "hiecm.endpoint.m3-consent-fetch"
+  ]
+ },
+ "behavioural": {
+  "m1": {
+   "E3": "renders a card and a QR code, which no single response proves",
+   "F1": "any unknown path, so no one call represents it",
+   "F2": "any call with an empty body",
+   "F3": "any call with a malformed token",
+   "F5": "whichever endpoint your client is not entitled to"
+  },
+  "m2": {
+   "DAT_01": "validates a FHIR bundle against the NRCeS guide, which is a validator run rather than an ABDM call",
+   "DAT_03": "encrypts a bundle, which is checked by decrypting it rather than by a response"
+  },
+  "m3": {
+   "DAT_03": "decrypts and renders records, which happens in your client",
+   "DAT_04": "renders a partial result, which is a display behaviour"
+  }
+ }
+}

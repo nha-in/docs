@@ -1,0 +1,17 @@
+{
+  "id": "abstain-m3-postman-collection-01",
+  "slice": "abstain",
+  "class": "out-of-scope",
+  "turns": [{"role": "user", "text": "give me the postman collection for M3 callbacks"}],
+  "attachment": null,
+  "page": null,
+  "must_contain": ["/docs/"],
+  "must_not_contain": ["<MASKED", "i apologize", "i apologise", "let me ", "great question", "the catalogue", "atom", "M3 Callbacks.postman_collection.json"],
+  "expected_sources": [],
+  "expected_shape": "decline",
+  "expected_behaviour": "decline",
+  "derived_from": null,
+  "source_row": "annexure#abdm-faq-general",
+  "catalogue_version": "2026.08.24",
+  "notes": "No published NHA postman collection for M3 callbacks is in the catalogue; the fail is an invented collection name."
+}

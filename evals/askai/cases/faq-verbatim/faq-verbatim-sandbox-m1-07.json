@@ -1,0 +1,37 @@
+{
+  "id": "faq-verbatim-sandbox-m1-07",
+  "slice": "faq-verbatim",
+  "class": "define",
+  "turns": [
+    {
+      "role": "user",
+      "text": "What are the different methods for ABHA registration?"
+    }
+  ],
+  "attachment": null,
+  "page": null,
+  "must_contain": [
+    "registration via Aadhaar uses Aadhaar OTP verification and returns the full profile with the ABHA number",
+    "registration via mobile is being deprecated",
+    "registration via other ID documents such as driving licence needs a linked mobile number and OTP verification"
+  ],
+  "must_not_contain": [
+    "<MASKED",
+    "i apologize",
+    "i apologise",
+    "let me ",
+    "great question",
+    "the catalogue",
+    "atom"
+  ],
+  "expected_sources": [
+    "hiecm.flow.m1-create-abha-aadhaar-otp",
+    "hiecm.flow.m1-create-abha-by-document"
+  ],
+  "expected_shape": "define",
+  "expected_behaviour": "answer",
+  "derived_from": null,
+  "source_row": "annexure#sandbox-faq-m1",
+  "catalogue_version": "2026.08.24",
+  "notes": ""
+}

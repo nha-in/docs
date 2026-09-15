@@ -1,0 +1,40 @@
+{
+  "id": "define-hiu-01",
+  "slice": "define",
+  "class": "define",
+  "turns": [
+    {
+      "role": "user",
+      "text": "What is HIU?"
+    }
+  ],
+  "attachment": null,
+  "page": null,
+  "must_contain": [
+    "HIU stands for Health Information User",
+    "HIU is a role an entity takes, not a kind of software, and the software is how the entity takes it",
+    "the entity asking to read records it did not create is the HIU: it requests consent, waits for the patient to grant it, then fetches against the artefact",
+    "reading is M3 work"
+  ],
+  "must_not_contain": [
+    "<MASKED",
+    "i apologize",
+    "i apologise",
+    "let me ",
+    "great question",
+    "the catalogue",
+    "atom",
+    "a role a system plays",
+    "hiu systems",
+    "a phr app is an hiu"
+  ],
+  "expected_sources": [
+    "shared.glossary.hiu"
+  ],
+  "expected_shape": "define",
+  "expected_behaviour": "answer",
+  "derived_from": null,
+  "source_row": "annexure#glossary",
+  "catalogue_version": "2026.08.24",
+  "notes": "asked using the catalogue's own spelling."
+}

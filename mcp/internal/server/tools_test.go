@@ -3,9 +3,12 @@ package server
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"strings"
 	"testing"
 
+	"github.com/eka-care/abdm-docs/mcp/internal/catalogue"
+	"github.com/eka-care/abdm-docs/mcp/internal/embed"
 	"github.com/eka-care/abdm-docs/mcp/internal/index"
 )
 
@@ -41,6 +44,60 @@ func TestToolDefCallSearch(t *testing.T) {
 	}
 	if _, ok := out["catalogue_version"]; !ok {
 		t.Fatalf("search result missing catalogue_version: %v", out)
+	}
+}
+
+// newTestTools builds a Tools over the fixture snapshot with a fake
+// embedder, the same setup TestLookupOpensTopHitsAndWalksOneHop uses, so
+// Lookup (and anything bound to it) has real hits to return.
+func newTestTools(t *testing.T) *Tools {
+	t.Helper()
+	return NewTools(fixtureReader(t, true), embed.NewFake(64))
+}
+
+func keys(m map[string]any) []string {
+	out := make([]string, 0, len(m))
+	for k := range m {
+		out = append(out, k)
+	}
+	return out
+}
+
+func TestChatToolsForBindsSearchDocsToLookup(t *testing.T) {
+	tools := newTestTools(t)
+	defs := tools.ChatToolsFor([]string{"search_docs", "decode_error", "list_operations"})
+	if len(defs) != 3 || defs[0].Name != "search_docs" || defs[1].Name != "decode_error" || defs[2].Name != "list_operations" {
+		t.Fatalf("got %+v", defs)
+	}
+	out, err := defs[0].Call(context.Background(), json.RawMessage(`{"query":"link care contexts"}`))
+	if err != nil {
+		t.Fatal(err)
+	}
+	if _, ok := out["passages"]; !ok {
+		t.Errorf("chat search_docs must return a passage pack, got keys %v", keys(out))
+	}
+	if !strings.Contains(defs[0].Description, "Call this when") {
+		t.Errorf("description must state when to call it, got %q", defs[0].Description)
+	}
+}
+
+func TestChatToolsForBindsValidateRequest(t *testing.T) {
+	r := fixtureReader(t, false)
+	tools := NewTools(r, nil)
+	defs := tools.ChatToolsFor([]string{"search_docs", "validate_request"})
+	if len(defs) != 2 || defs[0].Name != "search_docs" || defs[1].Name != "validate_request" {
+		t.Fatalf("got %+v", defs)
+	}
+	out, err := defs[1].Call(context.Background(), json.RawMessage(
+		`{"operation_id":"linkAddContexts","body":"{\"abhaNumber\":\"91-1234\"}"}`))
+	if err != nil {
+		t.Fatal(err)
+	}
+	if out["valid"] != true {
+		t.Errorf("valid body rejected: %v", out)
+	}
+	if _, ok := out["required_parameters"]; !ok {
+		t.Errorf("chat validate_request must return required_parameters, got keys %v", keys(out))
 	}
 }
 
@@ -120,5 +177,59 @@ func TestToolDefCallGetFHIRExample(t *testing.T) {
 
 	if _, err := def.Call(context.Background(), json.RawMessage(`{"record_type":"NoSuchType"}`)); err == nil {
 		t.Fatal("want an error for an unknown record type")
+	}
+}
+
+func TestLookupOpensTopHitsAndWalksOneHop(t *testing.T) {
+	r := fixtureReader(t, true)
+	tools := NewTools(r, embed.NewFake(64))
+	pack, err := tools.Lookup(context.Background(), lookupIn{Query: "link care contexts"})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(pack.Passages) == 0 || len(pack.Passages) > 5 {
+		t.Fatalf("passages = %d, want 1..5", len(pack.Passages))
+	}
+	if pack.Passages[0].Body == "" {
+		t.Error("top passage must carry the full body, not a snippet")
+	}
+	for i, p := range pack.Passages {
+		if i >= 3 && len(p.Body) > 600 {
+			t.Errorf("passage %d past the top three should be a summary, got %d chars", i, len(p.Body))
+		}
+	}
+	if len(pack.Related) == 0 {
+		t.Error("expected at least one related atom one hop out")
+	}
+}
+
+// failingOpener stubs atomOpener with a GetAtom that always errors, so
+// openPassage's degrade-to-summary branch can be exercised without needing
+// a real index that can be made to fail GetAtom while still returning the
+// hit from Search.
+type failingOpener struct{}
+
+func (failingOpener) GetAtom(id string) (catalogue.Atom, error) {
+	return catalogue.Atom{}, fmt.Errorf("atom %s: simulated open failure", id)
+}
+
+// RelatedAtoms is never reached on this path (openPassage returns before
+// calling it when GetAtom fails); it only exists to satisfy atomOpener.
+func (failingOpener) RelatedAtoms(id string) ([]index.RelatedGroup, error) {
+	return nil, nil
+}
+
+func TestOpenPassageDegradesToSummaryOnGetAtomError(t *testing.T) {
+	hit := index.SearchHit{ID: "hiecm.flow.m2-link-care-context", Type: "flow",
+		Title: "Link a care context", Summary: "the search hit's own summary"}
+	p, related := openPassage(failingOpener{}, hit)
+	if p.Body != hit.Summary {
+		t.Errorf("Body = %q, want the search hit's summary %q", p.Body, hit.Summary)
+	}
+	if p.ID != hit.ID || p.Title != hit.Title {
+		t.Errorf("passage fields not carried through from the hit: %+v", p)
+	}
+	if related != nil {
+		t.Errorf("related = %v, want nil: the related walk must be skipped when GetAtom fails", related)
 	}
 }

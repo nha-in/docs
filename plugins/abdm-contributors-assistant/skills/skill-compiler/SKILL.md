@@ -32,7 +32,7 @@ Catalogue atoms                  Plan (abdm-v1-phase1-architecture-and-plan.md)
    -> Templates      one per skill kind: index, orient, build, test, debug, bundle
    -> Compiler       deterministic assembly, then a constrained prose pass
    -> Validator      identifiers, links, sections, frontmatter, em dashes
-   -> Output         plugins/abdm/skills/*/SKILL.md + references/ + scripts/
+   -> Output         plugins/abdm-integrators-assistant/skills/*/SKILL.md + references/ + scripts/
    -> Index          generated last, by walking the atom graph
    -> Bundle         plugin manifest, plus per-skill install
 ```

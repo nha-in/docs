@@ -8,9 +8,11 @@ description: What Milestone 2 gives you, the prerequisites that block it, the re
 verification: unverified
 source: ABDM__Proposed_Simplified_Milestone_2.md
 covers: [hiecm.flow.m2-link-care-context]
+sidebar_class_name: sidebar-icon sidebar-icon--paperclip
 ---
 
 import ApiLinks from '@site/src/components/docs/ApiLinks';
+import SkillInstall from '@site/src/components/docs/SkillInstall';
 
 # M2 Attach: linking and sharing
 
@@ -26,8 +28,10 @@ encrypted records when a consented request arrives.
 
 ## In short
 
-- You act as the [HIP](/docs/hiecm/v3/getting-started/glossary#hip). A valid
-  facility ID and HIP registration come first, from [M4 Enrol](./m4).
+- Your facility is the [HIP](/docs/hiecm/v3/getting-started/glossary#hip) when
+  it publishes a record, and your software is how it publishes. A valid facility
+  ID and registration in the HIP role come first, either from the NHPR portal by
+  hand or by building [M4 Enrol](./m4).
 - M2 is keyed to an ABHA address, so [M1 Create](./m1) has to work before M2
   can.
 - Hold a [link token](/docs/hiecm/v3/getting-started/glossary#link-token) per
@@ -51,15 +55,15 @@ Requesting records from other facilities is [M3 Retrieve](./m3).
 
 ## Who needs it
 
-Hospital, lab, pharmacy and imaging systems that generate records. A PHR app
-needs the patient side of M2 only, and only if it lets users upload their own
-records.
+Hospitals, laboratories, pharmacies and imaging centres, through the software
+they record care in. A citizen pushing their own records from a PHR app builds
+[P2 Linking and records](./p2), the patient side of M2.
 
 ## Prerequisites
 
-1. A valid facility ID and registration in the HIP role. That authorises you to
-   create health records and share them with PHR and
-   [HIU](/docs/hiecm/v3/getting-started/glossary#hiu) systems. It comes from
+1. A valid facility ID and registration in the HIP role. That authorises your
+   facility to create health records and share them with whoever asks to read
+   them as the [HIU](/docs/hiecm/v3/getting-started/glossary#hiu). It comes from
    [M4 Enrol](./m4).
 2. A working [M1 Create](./m1) integration. Linking is keyed to an ABHA
    address.
@@ -94,6 +98,12 @@ structured bundle with coded clinical data.
 An [HMIS](/docs/hiecm/v3/getting-started/glossary#hmis) must implement every
 [HI type](/docs/hiecm/v3/getting-started/glossary#hi-type).
 
+## Build it with an agent
+
+Hand M2 to the agent you already use, as one file it loads once. Install it, or open it there in one click.
+
+<SkillInstall slug="abdm-m2" note="Every M2 call and callback, its error codes and its certification cases in one file: 31 operations, 120 codes, 46 cases." />
+
 ## Certification
 
 M2 has no certification step of its own. One exit process covers the whole
@@ -103,13 +113,14 @@ and what each one asks of you.
 
 Test data is in the [data
 dictionary](/docs/hiecm/v3/reference/data-dictionary). [Support](/docs/support)
-lists the channels.
+lists the channels. The cases you are certified against are in [M2 testing use
+cases](/docs/hiecm/v3/resources/testing/m2).
 
 ## The journey, one diagram per flow
 
 Milestone 2 (M2) of [ABDM](/docs/hiecm/v3/getting-started/glossary#abdm) has four flows. This page draws each one, so you can see the round trips before you read the detail.
 
-"Your system" is your [HMIS](/docs/hiecm/v3/getting-started/glossary#hmis) or [LMIS](/docs/hiecm/v3/getting-started/glossary#lmis) acting as a [HIP](/docs/hiecm/v3/getting-started/glossary#hip). "HIE-CM" is the [Health Information Exchange and Consent Manager](/docs/hiecm/v3/getting-started/glossary#hie-cm) gateway.
+"Your system" is the [HMIS](/docs/hiecm/v3/getting-started/glossary#hmis) or [LMIS](/docs/hiecm/v3/getting-started/glossary#lmis) your facility publishes through. "HIE-CM" is the [Health Information Exchange and Consent Manager](/docs/hiecm/v3/getting-started/glossary#hie-cm) gateway.
 
 ## Journey 1: HIP initiated linking
 
@@ -129,12 +140,20 @@ sequenceDiagram
     S->>S: New health record created
     S->>S: Assign the record to a care context
     S->>CM: Link the care context, carrying the link token
-    CM-->>S: Link acknowledged
+    CM-->>S: 202 Accepted, nothing decided yet
+    CM->>S: Callback on your bridge with the outcome
+    Note over S: Match response.requestId to the REQUEST-ID you sent
     CM->>A: Notify every PHR app subscribed to that ABHA address
 ```
 
+Step 8 is the acknowledgement. Step 9 is the answer. The link is confirmed only when the callback arrives at `/v3/link/on_carecontext` on your bridge carrying `status`, so do not mark a record as linked on the strength of the 202. See [the outcome of a care context linking call](/docs/hiecm/v3/api/m2/endpoints/m2-on-carecontext-result).
+
+:::note[Which steps are callbacks?]
+A step drawn from the HIE-CM to your system is a POST to the callback URL registered for your bridge. It arrives on its own. Do not poll for it.
+:::
+
 - **No valid [link token](/docs/hiecm/v3/getting-started/glossary#link-token).** Validate the stored token before use, with a tool such as JWT.io. If it is expired or missing, regenerate it through demographic authentication.
-- **An existing care context gains new records.** The step 8 notification fires for that too, not only for a new context.
+- **An existing care context gains new records.** The step 10 notification fires for that too, not only for a new context.
 
 ## Journey 2: Notification to mobile
 
@@ -191,7 +210,7 @@ Steps 8 to 11 are drawn in words. The error codes name them init, confirm, on-in
 
 ## Journey 4: Health record request and data transfer
 
-An [HIU](/docs/hiecm/v3/getting-started/glossary#hiu), a PHR app or another facility, asks for records under a [consent artefact](/docs/hiecm/v3/getting-started/glossary#consent-artefact) the patient granted.
+Another facility, an insurer or a citizen's PHR app asks for records under a [consent artefact](/docs/hiecm/v3/getting-started/glossary#consent-artefact) the patient granted. Whoever asks is the [HIU](/docs/hiecm/v3/getting-started/glossary#hiu).
 
 ```mermaid
 sequenceDiagram

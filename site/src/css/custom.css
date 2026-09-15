@@ -12,6 +12,7 @@
 @import './layout.css';
 @import './navbar.css';
 @import './sidebar.css';
+@import './sidebar-icons.css';
 @import './docitem.css';
 @import './mdx.css';
 @import './home.css';
@@ -144,7 +145,7 @@ body {
 
 /* Tailwind v4 dropped the browser's old `cursor: pointer` on buttons, so
    every control built on a <button> stopped saying it was clickable: the
-   tabs in the Install tools panel, the copy buttons, the role cards. The
+   tabs in the Install AI tools panel, the copy buttons, the role cards. The
    individual files that set it were each patching one instance of a
    site-wide change. One rule, on everything that is actually a control, and
    the disabled ones say so instead. */
@@ -164,4 +165,12 @@ button:disabled,
 :focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 2px;
+}
+
+/* Tab panels all render, so the built HTML carries every variant for anyone
+   reading a page as markdown (scripts/emit-page-markdown.mjs). Radix drops
+   the `hidden` attribute once forceMount is set, so hiding the inactive ones
+   on screen is this rule's job. */
+[data-slot='tabs-content'][data-state='inactive'] {
+  display: none;
 }

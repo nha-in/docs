@@ -1,0 +1,23 @@
+---
+title: 10 September 2026
+sidebar_label: 10 September 2026
+sidebar_position: 1
+hide_title: true
+description: What changed in these pages on 10 September 2026.
+verification: unverified
+source: catalogue/openapi/hiecm/v3/hiecm-m2.yaml, catalogue/openapi/hiecm/v3/hiecm-m1.yaml
+---
+
+import ReleaseGroup from '@site/src/components/docs/ReleaseGroup';
+
+<ReleaseGroup date="2026-09-10" as="h1">
+
+### A care context is linked when the callback says so, not when the call returns
+
+The M2 linking journey showed the link confirmed on the linking call itself. The call
+returns 202 and decides nothing. The outcome arrives later as a POST to
+`/v3/link/on_carecontext` on your bridge, carrying `status` and the `REQUEST-ID` you sent.
+If you marked records as linked on the 202, go back and key that on the callback instead.
+[M2 Attach, journey 1](/docs/hiecm/v3/milestones/m2#journey-1-hip-initiated-linking).
+
+</ReleaseGroup>

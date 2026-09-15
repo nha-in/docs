@@ -26,13 +26,12 @@ related:
 HFR holds health facilities of every kind, public and private: hospitals,
 clinics, diagnostic laboratories, imaging centres, pharmacies and blood
 banks, across modern and traditional systems of medicine. A facility must
-exist here, and be linked to the software that acts for it, before that
-software can act as a HIP.
+exist here, and be linked to the software that acts for it, before the
+facility can be the HIP.
 
-The identifier HFR issues is the same identifier you send as the HIP.
-NHA states it plainly: the HFR ID is the HIP ID. There is no separate
-registration that turns a facility into a HIP, which is why
-`X-HIP-ID` carries a facility code.
+The identifier HFR issues is the same identifier you send as the HIP: the
+HFR ID is the HIP ID. There is no separate registration that turns a
+facility into a HIP, which is why `X-HIP-ID` carries a facility code.
 
 A facility is registered by its facility manager, who needs a Healthcare
 Professional ID to do it. Registration is a self declaration followed by

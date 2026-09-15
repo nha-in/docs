@@ -5,6 +5,7 @@ description: The Health Facility Registry, what a facility record holds, the fiv
 verification: unverified
 source: ABDM__Proposed_Simplified_Milestone_4_(NHPR).md, ABDM__Proposed_Simplified_Milestone_2.md
 sidebar_position: 2
+sidebar_class_name: sidebar-icon sidebar-icon--building
 ---
 
 # HFR, the facility registry
@@ -68,7 +69,7 @@ One parameter name carries two different formats. Take the format from the refer
 
 ## Bridge linkage
 
-A bridge is your software's connection to ABDM. Registering a facility gives it an identity; linking a bridge makes your system resolvable as that facility's HIP or [HIU](/docs/hiecm/v3/getting-started/glossary#hiu), so records flow to it. The call takes a facility ID, the facility name, a bridge ID, a HIP name, a type of `HIP` or `HIU`, and an active flag.
+A bridge is your software's connection to ABDM. Registering a facility gives it an identity; linking a bridge makes your system resolvable as that facility, in the HIP or [HIU](/docs/hiecm/v3/getting-started/glossary#hiu) direction, so records flow to it. The call takes a facility ID, the facility name, a bridge ID, a HIP name, a type of `HIP` or `HIU`, and an active flag.
 
 The HIP name is the one field a patient sees. It is the name shown in the [ABHA](/docs/hiecm/v3/getting-started/glossary#abha) or [PHR](/docs/hiecm/v3/getting-started/glossary#phr) app when the patient searches for the hospital. It must be 15 characters or fewer, carry no special characters, and be unique for every bridge within a facility. The suggested pattern is the hospital name plus the bridge name: hospital XYZ on bridge BRIDGE TEST becomes `XYZ BRIDGE`. Fifteen characters is short, so pick what a patient will recognise.
 

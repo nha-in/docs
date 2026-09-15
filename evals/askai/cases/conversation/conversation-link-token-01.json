@@ -1,0 +1,44 @@
+{
+  "id": "conversation-link-token-01",
+  "slice": "conversation",
+  "class": "define",
+  "turns": [
+    {
+      "role": "user",
+      "text": "What is a link token?"
+    },
+    {
+      "role": "assistant",
+      "text": "A link token is what authorises your system to link a care context to a patient's ABHA address. Your system obtains it when the patient registers, and stores it against that patient."
+    },
+    {
+      "role": "user",
+      "text": "Does it expire?"
+    }
+  ],
+  "attachment": null,
+  "page": null,
+  "must_contain": [
+    "NHA's M2 document gives the link token a validity of six months",
+    "validate it before use rather than assuming it is still good",
+    "if it has expired, regenerate it through demographic authentication before linking"
+  ],
+  "must_not_contain": [
+    "<MASKED",
+    "i apologize",
+    "i apologise",
+    "let me ",
+    "great question",
+    "the catalogue",
+    "atom"
+  ],
+  "expected_sources": [
+    "shared.glossary.link-token"
+  ],
+  "expected_shape": "define",
+  "expected_behaviour": "answer",
+  "derived_from": null,
+  "source_row": "annexure#glossary",
+  "catalogue_version": "2026.08.24",
+  "notes": "pronoun follow-up refers back to the link token; the second answer is the same glossary atom's own expiry and revalidation guidance, so it stays consistent with the first answer."
+}

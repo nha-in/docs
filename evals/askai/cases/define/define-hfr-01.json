@@ -1,0 +1,38 @@
+{
+  "id": "define-hfr-01",
+  "slice": "define",
+  "class": "define",
+  "turns": [
+    {
+      "role": "user",
+      "text": "What is HFR?"
+    }
+  ],
+  "attachment": null,
+  "page": null,
+  "must_contain": [
+    "HFR stands for Health Facility Registry",
+    "HFR holds health facilities of every kind, public and private",
+    "a facility must exist in HFR, and be linked to the software that acts for it, before that facility can be the HIP",
+    "the HFR ID is the HIP ID, the same identifier"
+  ],
+  "must_not_contain": [
+    "<MASKED",
+    "i apologize",
+    "i apologise",
+    "let me ",
+    "great question",
+    "the catalogue",
+    "atom",
+    "before that software can act as a hip"
+  ],
+  "expected_sources": [
+    "shared.glossary.hfr"
+  ],
+  "expected_shape": "define",
+  "expected_behaviour": "answer",
+  "derived_from": null,
+  "source_row": "annexure#glossary",
+  "catalogue_version": "2026.08.24",
+  "notes": "asked using the catalogue's own spelling."
+}

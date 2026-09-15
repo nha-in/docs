@@ -28,19 +28,61 @@ import {
  * read the same participant table.
  */
 
-/** The cast. Positions are percentages of the hero, kept out of the copy. */
+/**
+ * The cast, standing on the vertices of a regular octagon around the copy.
+ *
+ * `at` is the vertex's angle in degrees, anticlockwise from the right of the
+ * ring, so the eight sit exactly 45 degrees apart and the shape is the
+ * argument rather than eight positions that happened to look right. The ring
+ * is turned 22.5 degrees off the axes, which leaves its top and its bottom
+ * empty and puts a pair either side of each instead. That is what the copy
+ * needs: the emblem and the board sit at the top of it, and a vertex landing
+ * on the vertical centre line would land on them.
+ *
+ * The order round the ring is the order the cast was already in, so nothing
+ * moves further than the nearest vertex. Reading clockwise from the top left:
+ * the Citizen, the app they hold, who pays, who dispenses, who tests, who
+ * treats, who governs, and who prescribes.
+ *
+ * Where the ring is and how big it is belongs to the stylesheet, because the
+ * radius has to answer to the copy's width and the window's height at the
+ * same time. See `--ring-x` and `--ring-y` in home.css.
+ */
 const PARTICIPANTS = [
-  {id: 'citizen', label: 'Citizen', Icon: User, x: 50, y: 7, small: true},
-  {id: 'phr', label: 'PHR app', Icon: Smartphone, x: 79, y: 17},
-  {id: 'insurer', label: 'Insurer', Icon: ShieldCheck, x: 92, y: 45, small: true},
-  {id: 'pharmacy', label: 'Pharmacy', Icon: Pill, x: 82, y: 74},
-  // Bottom centre is left clear: the scroll cue lives there.
-  {id: 'lab', label: 'Diagnostics', Icon: FlaskConical, x: 64, y: 88, small: true},
-  {id: 'hospital', label: 'Hospital', Icon: Building2, x: 36, y: 88, small: true},
-  {id: 'nha', label: 'NHA', Icon: Landmark, x: 8, y: 45},
-  {id: 'doctor', label: 'Doctor', Icon: Stethoscope, x: 21, y: 17, small: true},
+  {id: 'citizen', label: 'Citizen', Icon: User, at: 112.5, small: true},
+  {id: 'phr', label: 'PHR app', Icon: Smartphone, at: 67.5},
+  {id: 'insurer', label: 'Insurer', Icon: ShieldCheck, at: 22.5, small: true},
+  {id: 'pharmacy', label: 'Pharmacy', Icon: Pill, at: -22.5},
+  {id: 'lab', label: 'Diagnostics', Icon: FlaskConical, at: -67.5, small: true},
+  {id: 'hospital', label: 'Hospital', Icon: Building2, at: -112.5, small: true},
+  {id: 'nha', label: 'NHA', Icon: Landmark, at: -157.5},
+  {id: 'doctor', label: 'Doctor', Icon: Stethoscope, at: 157.5, small: true},
 ];
 
+/**
+ * Each vertex as a unit vector, which is what the stylesheet multiplies the
+ * ring's radii by. Computed here rather than written into the table, so the
+ * table stays eight angles 45 degrees apart and cannot drift out of true.
+ * `y` is negated because the screen's runs downwards.
+ */
+const VERTICES = PARTICIPANTS.map(({at}) => ({
+  ux: Math.cos((at * Math.PI) / 180),
+  uy: -Math.sin((at * Math.PI) / 180),
+}));
+
+/**
+ * The octagon's long unit, cos 22.5 degrees.
+ *
+ * Every vertex is (+-LONG, +-SHORT) or (+-SHORT, +-LONG) of the two radii, so
+ * a vertex clears the copy as soon as its long axis does: the four at the
+ * sides clear it across, the four at the ends clear it above and below. That
+ * is the whole of the sizing rule below.
+ */
+const LONG = Math.cos((22.5 * Math.PI) / 180);
+
+/** Half a node, plus room to breathe, in px. The label is the wide part. */
+const CLEAR_X = 44;
+const CLEAR_Y = 26;
 /** Every pair, once. The claim ABDM makes is that any of these can exchange. */
 const LINKS = PARTICIPANTS.flatMap((from, i) =>
   PARTICIPANTS.slice(i + 1).map((to) => [i, PARTICIPANTS.indexOf(to)] as const),
@@ -48,8 +90,50 @@ const LINKS = PARTICIPANTS.flatMap((from, i) =>
 
 const REACH = 260; // px: how far the courier's light carries
 const ARRIVE = 76; // px: close enough to a participant to hand the record over
-const IDLE_AFTER = 10_000; // ms of stillness before the network demonstrates itself
+const IDLE_AFTER = 3_000; // ms of stillness before the network demonstrates itself
 const PACKET_MS = 900; // how long a record takes to travel one link
+
+/**
+ * How long the courier takes to cross from one participant to the next.
+ *
+ * The board says nothing while a crossing is under way: it holds the line it
+ * is showing and turns over on arrival, so this constant sets the pace of the
+ * walk and nothing else. It used to set the length of the board's turn as
+ * well, which is why it once had to agree with FlapBoard.
+ */
+const TRAVEL_MS = 5000;
+
+/**
+ * How far along a crossing the courier counts as having got there.
+ *
+ * Not 1. The easing slows the courier into each participant, so the last
+ * three percent of the distance takes the last six hundred milliseconds of
+ * the crossing: the courier is sitting on the node, to the pixel, well before
+ * the leg is arithmetically over. Announcing on the last frame put a visible
+ * wait between the record landing and the board saying what it was. On a
+ * four hundred pixel leg this fires within twelve pixels of the node, which
+ * is inside the node's own circle.
+ */
+const LANDED = 0.97;
+
+/**
+ * How long the courier waits at a participant before setting off again.
+ *
+ * This is the board's reading time and it is the whole reason it exists.
+ * The wave takes as long as the crossing, so without a pause the board is
+ * mid-turn essentially all the time, and a split-flap caught mid-turn is
+ * half of one message next to half of another: the first version of this
+ * spent its life spelling things like "EBDR DEVELO ERAPORTAL". The courier
+ * now sits still while the flaps hold what they landed on.
+ */
+const DWELL_MS = 4200;
+
+/**
+ * Every third delivery goes to the NHA, whose line on the board is the
+ * portal's own name. That is what makes the site's identity the thing the
+ * board keeps coming back to, on a rhythm rather than on a timer.
+ */
+const HOME_EVERY = 3;
 
 type Point = {x: number; y: number};
 
@@ -59,9 +143,39 @@ function falloff(distance: number, far: number) {
   return t * t;
 }
 
-export default function NetworkWeb(): React.ReactNode {
+export default function NetworkWeb({
+  onArrive,
+  onPoint,
+}: {
+  /**
+   * Called when the courier completes a leg of its own route, with the
+   * participant it set out for. This is the itinerary, not proximity: a
+   * courier passes close to plenty of participants it is not visiting, and
+   * the board must not answer to those.
+   */
+  onArrive?: (id: string) => void;
+  /**
+   * Called with a participant the reader's own pointer has settled the light
+   * onto. Not the itinerary: this is somebody pointing at a node and asking
+   * what it is, so the board answers briefly and the walk takes over again
+   * once the pointer goes still.
+   *
+   * Called with `null` when the pointer is moving and the light is on nobody.
+   * The board has no question to answer then, so it goes back to the portal's
+   * own name rather than holding the last node's line. Without this a reader
+   * who points at the pharmacy and then moves away reads "Prescriptions that
+   * travel" for as long as they keep the pointer moving, which says the board
+   * is stuck rather than that it is answering them.
+   */
+  onPoint?: (id: string | null) => void;
+} = {}): React.ReactNode {
   const wrapRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  // Held in refs so a new callback identity never restarts the canvas.
+  const arrive = useRef(onArrive);
+  arrive.current = onArrive;
+  const point = useRef(onPoint);
+  point.current = onPoint;
 
   useEffect(() => {
     const wrap = wrapRef.current;
@@ -96,6 +210,62 @@ export default function NetworkWeb(): React.ReactNode {
     let idleFrom = 0;
     let idleTo = 1;
     let idleSince = 0;
+    /** Deliveries made, so every third one can be sent home to the NHA. */
+    let deliveries = 0;
+    /** True once this leg's arrival has been announced to the board. */
+    let landed = false;
+    /** While set, the courier is resting at a participant until this time. */
+    let dwellUntil = 0;
+    /**
+     * The participant the board has already answered for under the pointer.
+     * `-1` before the pointer has asked anything, `-2` once it has been told
+     * the light is on nobody, so neither is announced twice running.
+     */
+    let pointed = -1;
+    const home = PARTICIPANTS.findIndex((who) => who.id === 'nha');
+
+    const layer = wrap.querySelector<HTMLElement>('.network-web__nodes');
+    const copy = wrap.parentElement?.querySelector('.landing-hero__copy');
+
+    /**
+     * Size the ring against the copy it is drawn around.
+     *
+     * The stylesheet cannot do this on its own, which is what the shares of
+     * the window it used to be given kept getting wrong. The copy's height is
+     * its content's and it does not sit on the middle of the window, so a
+     * ring measured from the window drifts onto the words as the window
+     * changes: it was how a node ended up inside a gateway card.
+     *
+     * Each radius is put half way between the smallest that clears the copy
+     * and the largest the layer has room for, so the ring stands as far out
+     * as the page allows and never closer in than the words need. On a window
+     * too small for both, room wins, because a node off the edge of the page
+     * is a worse answer than a node near the words.
+     */
+    const size = (box: DOMRect) => {
+      if (!layer || !copy) return;
+      const c = copy.getBoundingClientRect();
+      const cy = c.top + c.height / 2 - box.top;
+      const clears = (half: number, clear: number) => (half + clear) / LONG;
+      const fits = (room: number, clear: number) => Math.max(0, room - clear) / LONG;
+      const between = (needs: number, room: number) =>
+        room < needs ? room : (needs + room) / 2;
+      const needsX = clears(c.width / 2, CLEAR_X);
+      const needsY = clears(c.height / 2, CLEAR_Y);
+      const roomX = fits(width / 2, CLEAR_X);
+      const roomY = fits(Math.min(cy, height - cy), CLEAR_Y);
+      layer.style.setProperty('--ring-cy', `${Math.round(cy)}px`);
+      layer.style.setProperty('--ring-x', `${Math.round(between(needsX, roomX))}px`);
+      layer.style.setProperty('--ring-y', `${Math.round(between(needsY, roomY))}px`);
+      // A window with no room for the ring gets no drawing. Both cliffs are
+      // real and neither is a width: at 1024x640 the copy fills the hero top
+      // to bottom, and at 820 wide the card row leaves no gutter to stand a
+      // node in. Measured rather than declared as a breakpoint, because what
+      // decides it is the copy's own size, and a breakpoint would have to
+      // guess that. Hidden rather than unmounted, so the boxes this pass
+      // reads stay measurable and the ring comes back when the room does.
+      wrap.dataset.ring = roomX >= needsX && roomY >= needsY ? 'clear' : 'crowded';
+    };
 
     const measure = () => {
       const ratio = Math.min(window.devicePixelRatio || 1, 2);
@@ -105,10 +275,34 @@ export default function NetworkWeb(): React.ReactNode {
       canvas.width = Math.round(width * ratio);
       canvas.height = Math.round(height * ratio);
       context.setTransform(ratio, 0, 0, ratio, 0, 0);
-      places = PARTICIPANTS.map((p) => ({
-        x: (p.x / 100) * width,
-        y: (p.y / 100) * height,
-      }));
+      // Before the icons are read, because it is what moves them.
+      size(box);
+      // Measured off the icons rather than computed from the percentages. A
+      // node is an icon above a label, centred on its own box, so the point
+      // the percentages name is the middle of that pair: below the icon, in
+      // the gap above the word. Light centred there lit the label and left
+      // the mark it was meant to be lighting hanging over its top edge. The
+      // vertex stands in for a node whose icon has not laid out yet.
+      places = icons.map((node, index) => {
+        const mark = node.querySelector('.network-node__icon');
+        const vertex = VERTICES[index];
+        const at = mark?.getBoundingClientRect();
+        // A zero box is a node that is not laid out. Its vertex stands in on
+        // a ring of roughly the right size, so the mesh keeps its shape and
+        // only the icon goes. Measuring the zero box instead would put the
+        // node at the top left corner of the page and run every one of its
+        // links there.
+        if (!at || !at.width) {
+          return {
+            x: width / 2 + vertex.ux * width * 0.38,
+            y: height / 2 + vertex.uy * height * 0.4,
+          };
+        }
+        return {
+          x: at.left + at.width / 2 - box.left,
+          y: at.top + at.height / 2 - box.top,
+        };
+      });
     };
 
     const accent = () =>
@@ -200,22 +394,44 @@ export default function NetworkWeb(): React.ReactNode {
 
     /** With no pointer, the courier walks its own route so the page moves. */
     const walkIdle = (now: number) => {
+      // Resting at a participant, holding still so the board can be read.
+      if (dwellUntil) {
+        aim = places[idleTo];
+        if (now < dwellUntil) return;
+        dwellUntil = 0;
+        idleFrom = idleTo;
+        deliveries += 1;
+        if (deliveries % HOME_EVERY === 0 && idleFrom !== home) {
+          idleTo = home;
+        } else {
+          do {
+            idleTo = Math.floor(Math.random() * PARTICIPANTS.length);
+          } while (idleTo === idleFrom);
+        }
+        idleSince = now;
+        landed = false;
+        return;
+      }
+
       const from = places[idleFrom];
       const to = places[idleTo];
-      const t = Math.min(1, (now - idleSince) / 2200);
+      const t = Math.min(1, (now - idleSince) / TRAVEL_MS);
       // Ease in and out, so the courier slows into each participant.
       const eased = t < 0.5 ? 2 * t * t : 1 - (-2 * t + 2) ** 2 / 2;
       aim = {
         x: from.x + (to.x - from.x) * eased,
         y: from.y + (to.y - from.y) * eased,
       };
-      if (t >= 1) {
-        idleFrom = idleTo;
-        do {
-          idleTo = Math.floor(Math.random() * PARTICIPANTS.length);
-        } while (idleTo === idleFrom);
-        idleSince = now;
+      // The itinerary's own arrival, not deliver()'s. deliver() fires for
+      // anyone the courier passes within ARRIVE of, and on a crossing this
+      // long that is several participants it was never going to: the board
+      // was being retargeted by near misses, which made the gaps between
+      // messages anything from 0.8s to 14.5s against a designed 9.2s.
+      if (eased >= LANDED && !landed) {
+        landed = true;
+        arrive.current?.(PARTICIPANTS[idleTo].id);
       }
+      if (t >= 1) dwellUntil = now + DWELL_MS;
     };
 
     const draw = (now: number) => {
@@ -247,6 +463,29 @@ export default function NetworkWeb(): React.ReactNode {
       settled = reduced.matches
         ? Number(over)
         : settled + ((over ? 1 : 0) - settled) * (1 - Math.exp(-elapsed / 90));
+      // Settled under the reader's own pointer, rather than arrived on the
+      // walk. Announced past the half way point so a pointer crossing a node
+      // on its way somewhere else does not set the board off, and released
+      // again once the light has left, so coming back to the same node asks
+      // the question a second time.
+      if (!idle && over && settled > 0.6 && onto !== pointed) {
+        pointed = onto;
+        point.current?.(PARTICIPANTS[onto].id);
+      }
+      // Adrift: the pointer is live and the light has left every node. Say so
+      // once, on the frame the light is released, and let the board decide
+      // what to show with no participant to speak for. While the walk owns the
+      // board this is skipped, because the itinerary is announcing its own
+      // legs and a gap between two of them is not a released pointer.
+      if (settled < 0.2) {
+        if (!idle && pointed !== -2) {
+          pointed = -2;
+          point.current?.(null);
+        } else if (idle) {
+          pointed = -1;
+        }
+      }
+
       const anchor = places[onto];
       // Released, `settled` runs back down to zero and the courier is the
       // pointer again, wherever the pointer has got to by then.
@@ -411,9 +650,16 @@ export default function NetworkWeb(): React.ReactNode {
 
     const onResize = () => measure();
     window.addEventListener('resize', onResize);
+    // The ring is sized off the copy, so it has to be re-measured whenever the
+    // copy changes shape and not only when the window does. A web font
+    // arriving re-wraps the statement, which moves the ring's centre and its
+    // height, and a resize listener would not hear about it.
+    const watch = copy ? new ResizeObserver(onResize) : null;
+    if (copy) watch?.observe(copy);
     window.addEventListener('pointermove', onPointer, {passive: true});
     return () => {
       cancelAnimationFrame(frame);
+      watch?.disconnect();
       window.removeEventListener('resize', onResize);
       window.removeEventListener('pointermove', onPointer);
     };
@@ -426,13 +672,22 @@ export default function NetworkWeb(): React.ReactNode {
           documentation rather than an illustration of it. */}
       <canvas className="network-web__canvas" ref={canvasRef} aria-hidden="true" />
       <nav className="network-web__nodes" aria-label="Who takes part in ABDM">
-        {PARTICIPANTS.map(({id, label, Icon, x, y, small}) => (
+        {PARTICIPANTS.map(({id, label, Icon, small}, index) => (
           <Link
             key={id}
             to={`/docs/hiecm/v3/concepts/participants/${id}`}
             data-participant={id}
             className={`network-node${small ? '' : ' network-node--wide'}`}
-            style={{left: `${x}%`, top: `${y}%`}}>
+            // The vertex, not the position. The stylesheet owns the ring's
+            // centre and its two radii, because both have to answer to the
+            // copy in front of them; all a node carries is which way out of
+            // the centre it stands.
+            style={
+              {
+                '--ux': VERTICES[index].ux.toFixed(4),
+                '--uy': VERTICES[index].uy.toFixed(4),
+              } as React.CSSProperties
+            }>
             <Icon className="network-node__icon" strokeWidth={1.5} aria-hidden="true" />
             <span className="network-node__label">{label}</span>
           </Link>

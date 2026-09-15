@@ -40,6 +40,7 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run lint:atoms
+      - run: npm run lint:questions
 
   lint-sources:
     name: Check source freshness
@@ -52,6 +53,30 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run lint:sources
+
+  lint-annexure:
+    name: Check annexure citations resolve
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run lint:annexure
+
+  check-plugin-manifests:
+    name: Check the cross-client plugin manifests are current
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run check:plugins
 
   validate-skills:
     name: Validate compiled agent skills
@@ -121,7 +146,7 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
-      - run: npm test --workspace widget
+      - run: npm test --workspace ai-widget
 
   build-site:
     name: Build documentation site
@@ -145,6 +170,10 @@ jobs:
       # a dead link in a support answer. Needs the build above for the
       # sitemap it validates against.
       - run: npm run check:routes
+      # The committed icon stylesheet must match the icons the sidebar names.
+      # Catches a page whose front matter names an icon nobody rebuilt for,
+      # which would otherwise render the neutral fallback and look deliberate.
+      - run: npm run check:icons
       - uses: actions/upload-artifact@v4
         with:
           name: site-build
@@ -162,6 +191,11 @@ jobs:
       - run: go vet ./...
         working-directory: mcp
       - run: go test ./...
+        working-directory: mcp
+      # The Ask AI eval's deterministic checks replay the last recorded run,
+      # so they need no model. A case that fails and is not in the baseline
+      # fails the build; the baseline only ever shrinks.
+      - run: go run ./cmd/askai-eval check -cases ../evals/askai/cases
         working-directory: mcp
       # PR builds are keyword-only: no embedding provider on CI runners. The
       # deploy pipeline resolves EMBED_PROVIDER and rebuilds the snapshot with
@@ -181,7 +215,7 @@ jobs:
       - run: ./scripts/plan-check.sh
 
   plugin-validate:
-    name: Validate the contributor's assistant plugin
+    name: Validate both plugins
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -193,6 +227,10 @@ jobs:
         run: |
           claude plugin validate .claude-plugin/marketplace.json --strict
           claude plugin validate ./plugins/abdm-contributors-assistant --strict
+          # The plugin integrators install was never validated here, so a
+          # broken manifest or a malformed skill would have reached them
+          # rather than this job.
+          claude plugin validate ./plugins/abdm-integrators-assistant --strict
       - name: agent frontmatter parses
         run: python3 scripts/check-agent-frontmatter.py
       - name: no skill shares a name with a command

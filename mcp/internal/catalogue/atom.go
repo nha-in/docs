@@ -49,7 +49,10 @@ type frontmatter struct {
 	} `yaml:"verified"`
 }
 
-var errCodeRe = regexp.MustCompile(`\b(?:ABDM|GATEWAY|MIS|EKA)-\d{3,5}\b`)
+// HIS is M4's registry series and AS is the PHR series NHA records once
+// against P1. Both were missing, so decode_error answered "no error codes
+// found" for 572 codes the catalogue holds.
+var errCodeRe = regexp.MustCompile(`\b(?:ABDM|GATEWAY|MIS|EKA|HIS|AS)-\d{3,5}\b`)
 
 func ExtractErrorCodes(s string) []string {
 	set := map[string]bool{}

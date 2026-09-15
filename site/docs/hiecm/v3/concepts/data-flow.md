@@ -5,6 +5,7 @@ description: The path a health record takes from the system that asks for it to 
 verification: unverified
 source: ABDM__Proposed_Simplified_Milestone_2.md, ABDM__Proposed_Simplified_Milestone_3.md
 sidebar_position: 5
+sidebar_class_name: sidebar-icon sidebar-icon--arrow-right-left
 ---
 
 # How a record travels
@@ -13,10 +14,10 @@ In [ABDM](/docs/hiecm/v3/getting-started/glossary#abdm) the request goes through
 
 ## The two sides
 
-| Role | What it does here | Milestone |
-| --- | --- | --- |
-| [HIU](/docs/hiecm/v3/getting-started/glossary#hiu) | Holds a granted [consent artefact](/docs/hiecm/v3/getting-started/glossary#consent-artefact), asks for the records it covers, receives them and decrypts them | [M3](/docs/hiecm/v3/api/m3) |
-| [HIP](/docs/hiecm/v3/getting-started/glossary#hip) | Holds the records, validates the consent, packages, encrypts, signs and pushes | [M2](/docs/hiecm/v3/api/m2) |
+| Role | Who takes it | What it does here | Milestone |
+| --- | --- | --- | --- |
+| [HIU](/docs/hiecm/v3/getting-started/glossary#hiu) | The organisation or citizen asking | Holds a granted [consent artefact](/docs/hiecm/v3/getting-started/glossary#consent-artefact), asks for the records it covers, receives them and decrypts them | [M3](/docs/hiecm/v3/api/m3) |
+| [HIP](/docs/hiecm/v3/getting-started/glossary#hip) | The citizen or facility holding the record | Holds the records, validates the consent, packages, encrypts, signs and pushes | [M2](/docs/hiecm/v3/api/m2) |
 
 The HIE-CM sits between them for the request and the notifications, and never sees a record.
 
@@ -123,7 +124,7 @@ Two reference implementations exist. Fidelius, at [github.com/sukreet/fidelius](
 
 ## Where this is implemented
 
-- [Hospital, lab and pharmacy systems](/docs/hiecm/v3/concepts/hip-hiu), which of the two sides you are.
+- [Hospital, lab and pharmacy systems](/docs/hiecm/v3/concepts/hip-hiu), which side the facility you act for is on.
 - [M2, linking and sharing](/docs/hiecm/v3/api/m2), the sending side.
 - [M3, consent and fetching](/docs/hiecm/v3/api/m3), the receiving side.
 - [Consent](/docs/hiecm/v3/concepts/consent), the artefact this flow depends on.

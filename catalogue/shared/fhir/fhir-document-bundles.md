@@ -37,21 +37,21 @@ related:
 
 ## In plain words
 
-A [FHIR](../glossary/fhir.md) document bundle is how a health record
-actually travels through [ABDM](../glossary/abdm.md). It is one JSON
+A [FHIR](shared.glossary.fhir) document bundle is how a health record
+actually travels through [ABDM](shared.glossary.abdm). It is one JSON
 payload: `resourceType: Bundle`, `type: document`, and a `Composition`
 resource as the very first entry. The Composition is the index: it
 says what the document is, who it is about, who wrote it, and which of
 the bundle's other resources belong to which section. Everything ABDM
 calls a "record", a consultation note, a lab report, a prescription, is
-one of these bundles, shaped by one of seven [NRCES](../glossary/nrces.md)
+one of these bundles, shaped by one of seven [NRCES](shared.glossary.nrces)
 profiles.
 
 ## Before you start
 
-Nothing beyond two terms: what FHIR is ([shared.glossary.fhir](../glossary/fhir.md))
+Nothing beyond two terms: what FHIR is ([shared.glossary.fhir](shared.glossary.fhir))
 and who publishes the Indian profiles a bundle must satisfy
-([shared.glossary.nrces](../glossary/nrces.md)).
+([shared.glossary.nrces](shared.glossary.nrces)).
 
 ## What happens
 
@@ -83,8 +83,8 @@ which is not itself a record type. It fixes `Bundle.type` to
 the wrong (or no) record profile on its Composition is still rejected;
 the envelope and the record profile are two separate checks.
 
-Getting the bundle from your system to the [HIU](../glossary/hiu.md) is
-the M2/M3 data push: the [HIP](../glossary/hip.md) builds the bundle,
+Getting the bundle from your system to the [HIU](shared.glossary.hiu) is
+the M2/M3 data push: the [HIP](shared.glossary.hip) builds the bundle,
 encrypts it (ECDH, Curve25519, using a shared secret derived from the
 HIU's public key), and pushes the encrypted, base64 content to the
 HIU's `dataPushUrl`. `hiType` travels alongside so the receiving side

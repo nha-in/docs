@@ -1,0 +1,20 @@
+{
+  "id": "confusable-session-vs-user-token-01",
+  "slice": "confusable",
+  "class": "compare",
+  "turns": [{"role": "user", "text": "which token goes in the header?"}],
+  "attachment": null,
+  "page": null,
+  "must_contain": [
+    "the gateway session token goes in Authorization and the user token from login goes in X-token",
+    "they are two tokens with two lifetimes"
+  ],
+  "must_not_contain": ["<MASKED", "i apologize", "i apologise", "let me ", "great question", "the catalogue", "atom", "they are the same token"],
+  "expected_sources": ["hiecm.endpoint.gateway-sessions", "hiecm.endpoint.m1-login-verify"],
+  "expected_shape": "compare",
+  "expected_behaviour": "answer",
+  "derived_from": null,
+  "source_row": "annexure#sandbox-faq-m1",
+  "catalogue_version": "2026.08.24",
+  "notes": "Source lines: catalogue/hiecm/endpoints/gateway-sessions.md:32, 'API accepts in the Authorization header.'; catalogue/hiecm/endpoints/m1-login-verify.md:10,32, 'afterwards as the X-token header.'; catalogue/hiecm/concepts/gateway-session.md, 'Two tokens exist in M1 and they are not interchangeable.' Substitution: the brief cites annexure#m1-abha-collection, which does not exist on this branch (it lives on an unmerged branch); used annexure#sandbox-faq-m1 per project ruling."
+}

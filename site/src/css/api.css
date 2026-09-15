@@ -55,7 +55,10 @@
   line-height: 1.7;
   color: var(--text-body);
   margin-bottom: 2rem;
-  white-space: pre-line;
+  /* No pre-line here. Specifications hard wrap their descriptions near
+     column 72, and preserving those newlines broke prose into ragged half
+     lines on narrow screens. Markdown.tsx reflows a soft wrap and splits
+     paragraphs on a blank line, which is what the wrapping meant. */
 }
 
 /* The field name is a name, not an inline code chip: typography.css tints
@@ -87,6 +90,72 @@
 .api-chip--put    { background: var(--method-put-soft);    color: var(--method-put); }
 .api-chip--patch  { background: var(--method-patch-soft);  color: var(--method-patch); }
 .api-chip--delete { background: var(--method-delete-soft); color: var(--method-delete); }
+
+/* ---------- certification requirement ---------- */
+
+/* The same marking the testing pages show, in the same colours, because it is
+   the same marking from the same certification cases. A reader who filtered
+   the testing page to Mandatory should recognise the badge here without
+   learning a second vocabulary. */
+.api-requirement {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+  margin: 0 0 1.5rem;
+}
+
+.api-requirement__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.5rem;
+}
+
+.api-requirement__level {
+  padding: 0.125rem 0.5rem;
+  border-radius: var(--radius-chip);
+  background: var(--surface-sunken);
+  color: var(--text-muted);
+  font-size: 0.6875rem;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.api-requirement__level--mandatory {
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+.api-requirement__level--conditional {
+  background: var(--method-put-soft);
+  color: var(--method-put);
+}
+
+/* The condition itself, verbatim. "Conditional" on its own leaves the reader
+   unable to tell whether the condition is theirs. */
+.api-page .api-requirement__note {
+  font-size: 0.8125rem;
+  line-height: 1.4;
+  color: var(--text-body);
+}
+
+/* The case ids are the evidence for the level, so they are readable rather
+   than tucked into a tooltip. */
+.api-page .api-requirement__cases {
+  margin: 0;
+  font-size: 0.75rem;
+  line-height: 1.5;
+  color: var(--text-muted);
+}
+
+.api-page .api-requirement__cases code {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  color: inherit;
+  background: transparent;
+  border: 0;
+  padding: 0;
+}
 
 /* ---------- the request bar ---------- */
 
@@ -199,6 +268,13 @@
   color: var(--text-body);
 }
 
+/* Where to read about a failure, shown against the status that produces it. */
+.api-page .api-field__help {
+  margin: 0.375rem 0 0;
+  font-size: 0.8125rem;
+  line-height: 1.5;
+}
+
 .api-page .api-field__enum {
   margin: 0.375rem 0 0;
   font-size: 0.8125rem;
@@ -249,6 +325,12 @@
   gap: 0.75rem;
 }
 
+/* In the panel head the label already takes the slack, so the language tabs
+   sit against the copy button instead of stretching across it. */
+.api-panel__head .api-panel__tabs {
+  flex: 0 0 auto;
+}
+
 .api-panel__tab {
   border: 0;
   background: transparent;
@@ -266,6 +348,16 @@
   margin: 0;
   padding: 0.875rem;
   font-size: 0.8125rem;
+  line-height: 1.5;
+  color: var(--text-muted);
+}
+
+/* Says what the block above it is, so a schema default is not read as a
+   value the gateway returned. Quieter than the block it annotates. */
+.api-panel__note {
+  margin: 0;
+  padding: 0 0.875rem 0.75rem;
+  font-size: 0.75rem;
   line-height: 1.5;
   color: var(--text-muted);
 }
@@ -308,6 +400,18 @@
   color: var(--accent);
 }
 
+/* The console's own two controls, on a thumb. Send was 90x36 and the close
+   mark 32x32, which is the same miss as the bar's: a dialog a reader can now
+   open and still not comfortably submit or dismiss. Coarse pointers only, so
+   the desktop console keeps its proportions. */
+@media (pointer: coarse) {
+  .api-console__send,
+  .api-console__close {
+    min-height: 2.75rem;
+    min-width: 2.75rem;
+  }
+}
+
 /* ---------- the console ---------- */
 
 /* The frame is a fixed height flex column, and it hides its own overflow. The
@@ -336,6 +440,13 @@
   min-height: 0;
   height: 100%;
   margin: 0;
+}
+
+/* The frame takes focus itself when the console opens, so that the dialog does
+   not hand it to the first control in the header. It is never a tab stop, so
+   the ring would only ever mark that opening move. */
+.api-console__frame:focus {
+  outline: none;
 }
 
 .api-console__head {
@@ -590,6 +701,10 @@ label.api-console__ident {
   background: transparent;
   border: 0;
   padding: 0;
+  /* A field name is one unbreakable word, and a narrow label track let it run
+     out of its own column and under the input, which paints over it: readers
+     saw a half erased "fingerPrintAuthPid". It wraps instead. */
+  overflow-wrap: anywhere;
 }
 
 .api-console__type {
@@ -612,12 +727,30 @@ label.api-console__ident {
   color: var(--text-faint);
 }
 
-.api-console__hint {
-  grid-column: 1 / -1;
-  margin: 0;
-  font-size: 0.75rem;
+/* The mark that carries a field's description. Faint until it is wanted, so a
+   row of them reads as punctuation rather than as a column of icons. */
+.api-console__why {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--text-faint);
+  cursor: help;
+}
+
+.api-console__why:hover,
+.api-console__why:focus-visible {
+  color: var(--accent);
+}
+
+/* Wider than the tooltip default, which sizes to its content and turns a
+   sentence into a column. */
+.api-console__tip {
+  max-width: 22rem;
   line-height: 1.45;
-  color: var(--text-muted);
+  text-align: left;
 }
 
 .api-console__input {
@@ -714,10 +847,42 @@ label.api-console__ident {
 }
 
 .api-console__note {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
   margin: 1.5rem 0 0;
   font-size: 0.75rem;
   line-height: 1.45;
   color: var(--text-muted);
+}
+
+/* Which ABDM the console is pointed at, said in the bar that holds the URL.
+   Sandbox is quiet. Production is not: the same call that made a test account
+   a moment ago makes a real one here, and the reader gets one glance to
+   notice. */
+.api-console__env {
+  flex: 0 0 auto;
+  margin-right: 0.375rem;
+  padding: 0.0625rem 0.375rem;
+  border-radius: 0.25rem;
+  font-family: var(--font-sans);
+  font-size: 0.625rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  cursor: help;
+}
+
+.api-console__env--sandbox {
+  background: var(--surface);
+  color: var(--text-muted);
+  border: 1px solid var(--border);
+}
+
+.api-console__env--production {
+  background: color-mix(in srgb, var(--destructive) 12%, transparent);
+  color: color-mix(in srgb, var(--destructive) 85%, var(--text-heading));
+  border: 1px solid color-mix(in srgb, var(--destructive) 35%, transparent);
 }
 
 /* The right column is a flex column rather than a scroller: the cURL keeps its
@@ -835,8 +1000,20 @@ label.api-console__ident {
     max-width: none;
   }
 
+  /* Not a grid here, and that is the fix rather than a simplification.
+     Stacked, the two panes were two rows of a grid whose container has a
+     definite height, and the tracks came out at half of it each: 215px rows at
+     360px wide, holding a form 2593px tall. The panes give up their own
+     scrolling at this width (the rule below), so those 2378px neither scrolled
+     nor clipped. They were painted over the pane underneath, which put the
+     code sample across three of the four header fields and made the console
+     impossible to fill in on a phone. Track sizing would not release them:
+     align-content: start packs tracks, it does not size them.
+
+     As blocks there are no tracks to size. Each pane is as tall as its own
+     content and the body scrolls the pair, which is what overflow-y is for. */
   .api-console__body {
-    grid-template-columns: minmax(0, 1fr);
+    display: block;
     overflow-y: auto;
     overscroll-behavior: contain;
   }
@@ -855,6 +1032,18 @@ label.api-console__ident {
   .api-console__pane--curl {
     max-height: 22rem;
     overflow: auto;
+  }
+}
+
+/* A phone. The label needs the full width and so does the value, so they stop
+   sharing a line: side by side, the input's track took 9rem of a 360px screen
+   and left the names and the type chips squeezed into what was left. The label
+   sits above its own input instead. */
+@media (max-width: 640px) {
+  .api-console__row {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.375rem;
+    align-items: start;
   }
 }
 
@@ -977,14 +1166,23 @@ label.api-console__ident {
   outline: none;
 }
 
+/* Wraps, because the number of buttons is the data's rather than the design's.
+   It was three fixed types and is now up to six, one per marking the module
+   actually carries, and six in a row that cannot wrap ran 40px past a 360px
+   phone: the page scrolled sideways and the last two filters could not be
+   reached without panning. */
 .matrix__filters {
   display: flex;
+  flex-wrap: wrap;
   gap: 0.375rem;
 }
 
 .matrix__filter {
-  height: 2.375rem;
-  padding: 0 0.875rem;
+  /* A minimum rather than a height: at 38px these were under a comfortable tap
+     target, and a fixed height also pushed the label out of the button on the
+     phone widths where "All types" wraps to two lines. */
+  min-height: 2.5rem;
+  padding: 0.4375rem 0.875rem;
   border: 1px solid var(--border);
   border-radius: var(--radius-control);
   background: var(--surface);
@@ -1040,13 +1238,61 @@ label.api-console__ident {
   font-weight: 600;
 }
 
+/* How many cases the current search and filter leave standing, so a reader
+   counting them can see when they are looking at a subset. */
+.matrix__tally {
+  margin-left: auto;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  opacity: 0.75;
+}
+
+/* The matrix is data, not prose, so it leaves the reading measure behind on a
+   screen wide enough to spare it.
+
+   --content-max is 51rem, which is the 45 to 75 character line a paragraph
+   wants and a four column reference table cannot use: at 1400px it left each
+   call column 144px, so `/hiecm/consent/v3/request/init` wrapped over three
+   lines. The table widens from the centre of the column it sits in, so the
+   prose above and below it keeps its measure and the table keeps its middle.
+   Bounded by the viewport rather than by a fixed width, so it never reaches
+   under the sidebar or off the right edge. */
+@media (min-width: 1280px) {
+  .matrix {
+    --matrix-width: min(60rem, calc(100vw - 26rem));
+    width: max(100%, var(--matrix-width));
+    margin-inline-start: calc((100% - max(100%, var(--matrix-width))) / 2);
+  }
+}
+
+/* Use case, endpoints, callbacks, expected result. The id and the marking used
+   to hold two narrow columns of their own, describing the row the use case
+   column had already named, so identifying one case meant reading across three
+   columns. They sit inside the use case now, which is what makes room for the
+   two columns that were not there: the calls a case exercises and the
+   callbacks it receives. */
 .matrix__head,
 .matrix__row {
   display: grid;
-  grid-template-columns: 8rem 6.5rem minmax(0, 1.1fr) minmax(0, 1.4fr) minmax(0, 1fr) minmax(0, 0.7fr);
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1.35fr);
   gap: 1.25rem;
   align-items: start;
   padding: 0.875rem 1.25rem;
+}
+
+/* Three tracks where the module declares no callbacks anywhere, M1 and M4
+   being the two, and the callbacks column's share of the width goes to the
+   endpoints and the expected result rather than to a column of em dashes. The
+   component drops the cells; this only re-sizes what is left.
+
+   Bounded above 1100px on purpose. The single column stacking below that lives
+   in a max-width query, which cannot outrank a class on an ancestor, so an
+   unguarded modifier would hold three tracks on a phone. */
+@media (min-width: 1101px) {
+  .matrix--no-callbacks .matrix__head,
+  .matrix--no-callbacks .matrix__row {
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 1.5fr) minmax(0, 1.85fr);
+  }
 }
 
 .matrix__head {
@@ -1128,25 +1374,55 @@ label.api-console__ident {
   white-space: nowrap;
 }
 
+/* The five markings the build script can produce. Mandatory and Conditional
+   both carry certification weight, so both are coloured; Optional and Unmarked
+   are the quiet default above. Portal check is outlined rather than filled,
+   because it is this portal's suggestion and not a marking NHA gave. */
 .matrix__type--mandatory {
   background: var(--accent-soft);
   color: var(--accent);
 }
 
-.matrix__what {
-  display: flex;
-  flex-direction: column;
-  gap: 0.125rem;
+.matrix__type--conditional {
+  background: var(--method-put-soft);
+  color: var(--method-put);
 }
 
-.matrix__what-title {
+.matrix__type--portal-check {
+  background: transparent;
+  color: var(--text-muted);
+  border: 1px dashed var(--text-faint);
+  padding: 0 0.4375rem;
+}
+
+/* NHA's own wording for a conditional marking. A badge saying "Conditional"
+   does not tell a reader which condition they are under, so the sentence sits
+   under the marking rather than being lost behind it. */
+.matrix__condition {
+  font-size: 0.75rem;
+  line-height: 1.15rem;
+  color: var(--text-muted);
+}
+
+.matrix__case {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3125rem;
+  min-width: 0;
+}
+
+.matrix__case-title {
   font-weight: 600;
   color: var(--text-heading);
 }
 
-.matrix__what-group {
-  font-size: 0.75rem;
-  color: var(--text-faint);
+/* The marking and the id, on one line under the title. Together they are what
+   a reader quotes when they report a result, so they stay adjacent. */
+.matrix__case-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
 }
 
 .matrix__expected {
@@ -1162,36 +1438,78 @@ label.api-console__ident {
   color: var(--text-faint);
 }
 
-.matrix__api {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.375rem;
+/* A use case usually names several calls, so they stack. Each is a link to the
+   reference page for it, except the ones this portal does not publish, which
+   are the M4 calls on the HPR and HFR hosts and render as plain paths. */
+.matrix__calls {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
   min-width: 0;
-  flex-wrap: wrap;
 }
 
-.matrix__api code {
+/* Block, not flex. Side by side, the chip took its width off the front of the
+   path and the path wrapped in the ~100px left over, breaking
+   `/hiecm/consent/v3/request/init` across three lines. Inline, the chip sits at
+   the head of the first line and the path flows under it across the whole
+   cell. */
+.matrix__call {
+  display: block;
+  min-width: 0;
+}
+
+.matrix__call code {
   font-family: var(--font-mono);
   font-size: 0.6875rem;
+  line-height: 1.05rem;
   color: var(--text-body);
   background: transparent;
   border: 0;
   padding: 0;
-  /* Same rule as the markdown tables: break a run that cannot fit, never a
-     word that could. */
-  overflow-wrap: break-word;
+  /* `anywhere` rather than `break-word`, and both of these matter. A path has
+     no spaces, so its min-content width is the whole string, and a grid column
+     sized minmax(0, 1fr) still refuses to go under that: the paths overflowed
+     into the next column and sat on top of it. `anywhere` is the one value
+     that lets a break count towards min-content, and min-width releases the
+     flex item so the break is allowed to happen. */
+  min-width: 0;
+  overflow-wrap: anywhere;
 }
 
-.matrix__api--link:hover {
+.matrix__call--link:hover {
   text-decoration: none;
 }
 
-.matrix__api--link:hover code {
+.matrix__call--link:hover code {
   color: var(--accent);
+}
+
+/* Only where the header row is not naming the columns. See CallList. */
+.matrix__calls-label {
+  display: none;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+}
+
+.matrix__call .api-chip {
+  margin-right: 0.375rem;
+  vertical-align: baseline;
 }
 
 .matrix__empty {
   color: var(--text-faint);
+}
+
+/* What NHA wrote where the calls would go, when it was a sentence rather than
+   a URL. Distinct from the dash, which means the cell was blank. */
+.matrix__note {
+  color: var(--text-muted);
+  font-size: 0.8125rem;
+  font-style: italic;
+  line-height: 1.4;
 }
 
 .matrix__none {
@@ -1208,12 +1526,12 @@ label.api-console__ident {
 
   .matrix__row {
     grid-template-columns: minmax(0, 1fr);
-    gap: 0.5rem;
+    gap: 0.75rem;
     padding: 1rem 1.25rem;
   }
 
-  .matrix__type {
-    order: -1;
+  .matrix__calls-label {
+    display: block;
   }
 }
 

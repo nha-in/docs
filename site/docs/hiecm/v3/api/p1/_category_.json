@@ -1,4 +1,5 @@
 {
   "label": "P1 PHR identity and profile",
-  "position": 7
+  "position": 7,
+  "className": "sidebar-icon sidebar-icon--user-round"
 }

@@ -97,7 +97,7 @@ The fix for a mismatch: re-derive the atoms or specs that recorded the old hash,
 
 ## `npm run validate:skills` (`scripts/validate-skills.mjs`)
 
-Runs after `compile:skills` and validates the compiled output in `plugins/abdm/skills/` against the Catalogue it was built from: frontmatter, atom citations, curl targets, and OODA loop structure.
+Runs after `compile:skills` and validates the compiled output in `plugins/abdm-integrators-assistant/skills/` against the Catalogue it was built from: frontmatter, atom citations, curl targets, and OODA loop structure.
 
 | Fails on | Message (verbatim) | Fix |
 |---|---|---|

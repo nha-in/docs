@@ -359,7 +359,7 @@ The agent must be embeddable anywhere: the docs site, the developer console, a p
 
 **The backend is already surface-agnostic.** `/api/chat` streams over server-sent events with its own rate limiter, and `/api/search` sits beside it. Neither knows anything about the docs site. The one change still outstanding is that `ALLOW_ORIGIN` becomes an allowlist of embedding origins rather than a single value, with the response echoing the matched origin and refusing anything else. Until that lands there is exactly one embedding origin, which is the docs site.
 
-**What the widget is.** `widget/` builds to one self-contained script, 13KB gzipped, that registers `<abdm-support-agent>`. Its README is the embedder's page.
+**What the widget is.** `ai-widget/` builds to one self-contained script, 13KB gzipped, that registers `<abdm-support-agent>`. Its README is the embedder's page.
 
 - **One custom element**, registered by a single script tag from a versioned URL. No framework required on the host page, and no assumption that the host is Docusaurus or React. Preact is bundled inside it.
 - **Shadow DOM for isolation.** The host page's styles cannot reach into the widget and the widget's styles cannot leak out. Colour crosses that boundary by custom property, so a host that defines its own design tokens gets a panel that matches, and one that defines nothing gets a palette that follows `prefers-color-scheme`.
@@ -395,7 +395,7 @@ The agent must be embeddable anywhere: the docs site, the developer console, a p
 ## Related
 
 - The agent's contract with the Catalogue: `support-agent` skill
-- The embeddable frontend: [the widget README](../widget/README.md)
+- The embeddable frontend: [the widget README](../ai-widget/README.md)
 - Prose rules: `writing-guide` skill
 - Server and tools: [the server README](README.md)
 - Turning a gap into published content: `atom-authoring` skill

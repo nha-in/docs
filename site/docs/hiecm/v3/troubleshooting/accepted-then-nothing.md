@@ -6,6 +6,7 @@ verification: unverified
 source: site/docs/api/hie-cm/index.md, ABDM__Proposed_Simplified_Milestone_2.md
 sidebar_position: 4
 covers: [hiecm.troubleshooting.accepted-then-nothing]
+sidebar_class_name: sidebar-icon sidebar-icon--hourglass
 ---
 
 # Accepted, then nothing
@@ -17,10 +18,12 @@ the outside whichever link in that chain is missing, so you have to find
 which one.
 
 Before working through the checks, know which flow you are in.
-[Discovery](/docs/hiecm/v3/getting-started/glossary#discovery) is a
-[HIU](/docs/hiecm/v3/getting-started/glossary#hiu) or
-[PHR](/docs/hiecm/v3/getting-started/glossary#phr) app looking for
-records at your facility. Linking is you attaching a
+[Discovery](/docs/hiecm/v3/getting-started/glossary#discovery) is
+whoever asks to read records, in the
+[HIU](/docs/hiecm/v3/getting-started/glossary#hiu) direction, looking
+for what your facility holds: a patient's
+[PHR](/docs/hiecm/v3/getting-started/glossary#phr) app, another
+facility, an insurer or a referral service. Linking is you attaching a
 [care context](/docs/hiecm/v3/concepts/linking) to a patient's
 [ABHA address](/docs/hiecm/v3/getting-started/glossary#abha-address).
 You also need the `REQUEST-ID` from the call where the chain started:

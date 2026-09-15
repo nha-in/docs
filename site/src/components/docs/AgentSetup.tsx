@@ -10,9 +10,14 @@ import {cn} from '@site/src/lib/utils';
  * where the agent has a URL scheme (Claude, Cursor), a copyable line where
  * it does not (Codex, anything else). What travels is one line pointing at
  * hosted instructions (agent-setup/prompt.md, regenerated every build), so
- * the pasted prompt can never go stale. Claude Code gets the plugin
- * instead: one marketplace, all four skills, updated by `claude plugin
- * update` rather than by re-downloading files.
+ * the pasted prompt can never go stale.
+ *
+ * Claude Code and Codex get the plugin instead: one marketplace, every skill
+ * at once, updated in place rather than by re-downloading files. Codex can
+ * because the plugin is packaged to Agent Plugins 1.0 as well as to Claude
+ * Code's own layout (see scripts/build-plugin-manifests.mjs). The rest of the
+ * clients that read the standard install from their own marketplaces, which
+ * is not a command anyone can paste, so they keep the prompt.
  */
 
 /** The repository that serves the Claude Code plugin marketplace. Update at
@@ -60,7 +65,7 @@ const TARGETS: Target[] = [
     id: 'claude-code',
     label: 'Claude',
     command: () =>
-      `claude plugin marketplace add ${PLUGIN_REPO} && claude plugin install abdm@abdm-portal`,
+      `claude plugin marketplace add ${PLUGIN_REPO} && claude plugin install abdm-integrators-assistant@abdm-portal`,
     // https://support.claude.com/en/articles/14729294-open-claude-desktop-with-a-link
     link: (base) =>
       `claude://code/new?q=${encodeURIComponent(
@@ -69,13 +74,13 @@ const TARGETS: Target[] = [
             'Set this project up for ABDM integration. Run:',
             '',
             `claude plugin marketplace add ${PLUGIN_REPO}`,
-            'claude plugin install abdm@abdm-portal',
+            'claude plugin install abdm-integrators-assistant@abdm-portal',
             '',
             `If the marketplace add fails (the repository may not be accessible), instead fetch and execute the instructions from ${base}/agent-setup/prompt.md`,
           ].join('\n'),
         ),
       )}`,
-    note: 'The plugin carries all four skills at once, and `claude plugin update` keeps them current.',
+    note: 'The plugin carries every skill at once, and `claude plugin update` keeps them current.',
   },
   {
     id: 'cursor',
@@ -99,10 +104,12 @@ const TARGETS: Target[] = [
       {
         id: 'codex',
         label: 'Codex CLI',
-        command: fetchPrompt,
-        // Codex is a CLI with no URL scheme. Do not invent one.
+        // Codex reads Agent Plugins 1.0, and this repository publishes a
+        // marketplace it can add directly. Codex is a CLI with no URL scheme,
+        // so there is no deeplink. Do not invent one.
+        command: () => `codex plugin marketplace add ${PLUGIN_REPO}`,
         link: null,
-        note: 'Paste into a Codex session. It fetches the current instructions from this site.',
+        note: 'Adds the marketplace. Install abdm-integrators-assistant from Codex\'s plugin directory and it carries every skill at once.',
       },
       {
         id: 'chatgpt',
@@ -132,7 +139,6 @@ export default function AgentSetup(): React.ReactNode {
   const [surface, setSurface] = useState<Surface>(surfacesOf(TARGETS[0])[0]);
   const [copied, setCopied] = useState(false);
   const base = `${siteConfig.url}${siteConfig.baseUrl}`.replace(/\/+$/, '');
-  const command = surface.command(base);
 
   return (
     <aside className="agent-setup">
@@ -155,6 +161,7 @@ export default function AgentSetup(): React.ReactNode {
             key={option.id}
             type="button"
             role="tab"
+            id={`agent-setup-tab-${option.id}`}
             aria-selected={option.id === target.id}
             className={cn(
               'skill-install__target',
@@ -183,6 +190,7 @@ export default function AgentSetup(): React.ReactNode {
               key={option.id}
               type="button"
               role="tab"
+              id={`agent-setup-tab-${option.id}`}
               aria-selected={option.id === surface.id}
               className={cn(
                 'skill-install__target',
@@ -198,33 +206,54 @@ export default function AgentSetup(): React.ReactNode {
         </div>
       )}
 
-      <div className="skill-cmd">
-        <code className="skill-cmd__text">{command}</code>
-        <button
-          type="button"
-          className="skill-cmd__copy"
-          aria-label={copied ? 'Copied' : 'Copy'}
-          onClick={() => {
-            navigator.clipboard?.writeText(command);
-            setCopied(true);
-            window.setTimeout(() => setCopied(false), 2000);
-          }}>
-          {copied ? (
-            <Check className="size-3.5" aria-hidden="true" />
-          ) : (
-            <Copy className="size-3.5" aria-hidden="true" />
-          )}
-        </button>
-      </div>
+      {/* Every surface renders and the unselected ones carry `hidden`, so the
+          screen shows one and the built HTML carries all of them. That HTML is
+          what an agent fetching this page as markdown reads, and rendering
+          only the selected surface left it with one install line out of five,
+          missing the one line that works for any agent at all. See
+          scripts/emit-page-markdown.mjs. */}
+      {TARGETS.flatMap(surfacesOf).map((option) => {
+        const line = option.command(base);
+        const active = option.id === surface.id;
+        return (
+          <div
+            key={option.id}
+            role="tabpanel"
+            aria-labelledby={`agent-setup-tab-${option.id}`}
+            hidden={!active}>
+            <p className="sr-only"><strong>{option.label}</strong></p>
+            <div className="skill-cmd">
+              <code className="skill-cmd__text">{line}</code>
+              {active && (
+                <button
+                  type="button"
+                  className="skill-cmd__copy"
+                  aria-label={copied ? 'Copied' : 'Copy'}
+                  onClick={() => {
+                    navigator.clipboard?.writeText(line);
+                    setCopied(true);
+                    window.setTimeout(() => setCopied(false), 2000);
+                  }}>
+                  {copied ? (
+                    <Check className="size-3.5" aria-hidden="true" />
+                  ) : (
+                    <Copy className="size-3.5" aria-hidden="true" />
+                  )}
+                </button>
+              )}
+            </div>
 
-      {surface.link && (
-        <a className="skill-launch" href={surface.link(base)}>
-          <SquareArrowOutUpRight className="size-3.5" aria-hidden="true" />
-          Open in {surface.label}
-        </a>
-      )}
+            {option.link && (
+              <a className="skill-launch" href={option.link(base)}>
+                <SquareArrowOutUpRight className="size-3.5" aria-hidden="true" />
+                Open in {option.label}
+              </a>
+            )}
 
-      <p className="skill-install__hint">{surface.note}</p>
+            <p className="skill-install__hint">{option.note}</p>
+          </div>
+        );
+      })}
 
       <p className="agent-setup__mcp">
         <Database className="size-3.5" aria-hidden="true" />

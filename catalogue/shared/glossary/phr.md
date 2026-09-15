@@ -28,17 +28,18 @@ A PHR app is the patient's side of ABDM. It is where somebody creates an
 ABHA, discovers records held at facilities they visited, links them, and
 approves or denies consent requests from providers.
 
-PHR is a position, meaning which side of the HIE-CM you sit on. The
-provider side is held by hospital and lab systems. Position is fixed for
-the life of an application, unlike HIP and HIU, which describe single
-interactions and which a PHR app takes on as well.
+PHR is a position, meaning which of the two entities your software acts
+for. A PHR app acts for the citizen, and a hospital or laboratory system
+acts for the facility on the other side of the [HIE-CM](hie-cm.md).
+Position is fixed for the life of an application, unlike HIP and HIU,
+which describe single interactions and which the citizen takes through
+the app.
 
 If you are building for the patient rather than for a facility, you are
 building a PHR app, and M1 is where you start. It is not where you stop.
-A PHR app that lets a patient upload a record is publishing, which is
-HIP behaviour and M2 work. NHA's own sandbox documentation carries the
-question of what a PHR does in M2, which is a fair sign that starting at
-M1 and stopping there is the common mistake.
+A citizen who uploads a record into your PHR app is publishing, which is
+HIP behaviour and M2 work. Starting at M1 and stopping there is the
+common mistake.
 
 ## Before you start
 

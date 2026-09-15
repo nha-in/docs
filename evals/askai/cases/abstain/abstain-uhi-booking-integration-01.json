@@ -1,0 +1,17 @@
+{
+  "id": "abstain-uhi-booking-integration-01",
+  "slice": "abstain",
+  "class": "out-of-scope",
+  "turns": [{"role": "user", "text": "how do I integrate with UHI booking"}],
+  "attachment": null,
+  "page": null,
+  "must_contain": ["/docs/"],
+  "must_not_contain": ["<MASKED", "i apologize", "i apologise", "let me ", "great question", "the catalogue", "atom", "/api/uhi"],
+  "expected_sources": [],
+  "expected_shape": "decline",
+  "expected_behaviour": "decline",
+  "derived_from": null,
+  "source_row": "annexure#abdm-faq-general",
+  "catalogue_version": "2026.08.24",
+  "notes": "UHI booking is a separate gateway this portal does not document; the fail is an invented UHI booking path."
+}

@@ -39,11 +39,13 @@ type scriptedModel struct {
 	texts     []string
 	calls     int
 	gotSystem []string
+	gotMsgs   [][]chat.Message
 }
 
 func (f *scriptedModel) Stream(ctx context.Context, system string, tools []chat.ToolDef,
 	msgs []chat.Message, maxTokens int, onText func(string)) (chat.Reply, error) {
 	f.gotSystem = append(f.gotSystem, system)
+	f.gotMsgs = append(f.gotMsgs, msgs)
 	i := f.calls
 	f.calls++
 	if i < len(f.texts) && f.texts[i] != "" {
@@ -130,10 +132,17 @@ func TestChatEndpointCarriesTheAttachedPage(t *testing.T) {
 	if rec.Code != 200 {
 		t.Fatalf("status %d, body %s", rec.Code, rec.Body.String())
 	}
-	if len(fm.gotSystem) == 0 || !strings.Contains(fm.gotSystem[0], "/v0.5/links/link/confirm") {
+	// The page rides in the last user turn, not the system prompt: the
+	// system prompt stays byte identical whether a page is attached or not,
+	// so the cache point after it is hit on every request.
+	if len(fm.gotMsgs) == 0 || len(fm.gotMsgs[0]) == 0 {
 		t.Fatal("the attached page never reached the model")
 	}
-	if !strings.Contains(fm.gotSystem[0], "Link a care context") {
+	got := fm.gotMsgs[0][len(fm.gotMsgs[0])-1].Text
+	if !strings.Contains(got, "/v0.5/links/link/confirm") {
+		t.Fatal("the attached page never reached the model")
+	}
+	if !strings.Contains(got, "Link a care context") {
 		t.Error("the attached page's title never reached the model")
 	}
 }

@@ -19,6 +19,12 @@ sources:
     fetched: 2026-08-25
     note: >
       NHA's M3 OpenAPI file.
+  - file: catalogue/openapi/.raw/nha-2026-09-04/ABHA-PHR-V3-Documents.docx
+    fetched: 2026-09-04
+    hash: sha256:99320fbc4b9703fce4afed12d5eb0863431aaea25e814bc3fb9ab974d16acd75
+    note: >
+      NHA's PHR V3 document, section 6.9, which publishes the request
+      body this atom had as a placeholder.
 verified:
   status: unverified
 related:
@@ -46,7 +52,7 @@ This wording is NHA's own, from the file this operation was ingested from.
 
 ## Before you start
 
-- A gateway access token. See [the gateway session](../concepts/gateway-session.md).
+- A gateway access token. See [the gateway session](hiecm.concept.gateway-session).
 - The right `X-CM-ID` for the environment you are calling.
 
 ## What happens
@@ -58,10 +64,13 @@ curl -X POST 'https://dev.abdm.gov.in/api/hiecm/consent/v3/request/status' \
   -H 'TIMESTAMP: <ISO_8601_TIMESTAMP>' \
   -H 'X-CM-ID: sbx' \
   -H 'Content-Type: application/json' \
-  -d '<REQUEST_BODY>'
+  -d '{ "consentRequestId": "05f14b1d-4465-453a-8249-1382d79d271d" }'
 ```
 
-The request and response schemas for this operation are in `catalogue/openapi/hiecm/v3/hiecm-m3.yaml`, ingested from NHA's file.
+The body above is transcribed from NHA's PHR V3 document, section 6.9, which publishes it for this call. It has not been sent to the
+sandbox from this repository.
+
+The request and response schemas for this operation are in the M3 specification, published at /specs/hiecm-m3.yaml and rendered field by field at /docs/hiecm/v3/api/m3. It is NHA's file as ingested.
 
 NHA calls this operation `consentRequestStatus`.
 
@@ -73,8 +82,8 @@ It has not been run against the sandbox from this repository, so the schema is w
 
 ## When it goes wrong
 
-- The clock is wrong and every call fails. See [ABDM-2402](../errors/abdm-2402.md).
-- The `REQUEST-ID` is missing, malformed or reused. See [ABDM-2404](../errors/abdm-2404.md).
-- No session token was sent. See [ABDM-2500](../errors/abdm-2500.md).
-- ABDM fails and does not say why. See [ABDM-9999](../errors/abdm-9999.md).
+- The clock is wrong and every call fails. See [ABDM-2402](hiecm.error.abdm-2402).
+- The `REQUEST-ID` is missing, malformed or reused. See [ABDM-2404](hiecm.error.abdm-2404).
+- No session token was sent. See [ABDM-2500](hiecm.error.abdm-2500).
+- ABDM fails and does not say why. See [ABDM-9999](hiecm.error.abdm-9999).
 

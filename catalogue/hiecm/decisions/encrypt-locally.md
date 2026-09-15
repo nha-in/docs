@@ -33,7 +33,7 @@ Do it locally.
 
 ## Before you start
 
-Read [why identifiers are encrypted](../concepts/encrypted-identifiers.md).
+Read [why identifiers are encrypted](hiecm.concept.encrypted-identifiers).
 
 ## What happens
 

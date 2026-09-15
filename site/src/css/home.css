@@ -139,6 +139,14 @@
   -webkit-mask-composite: source-in;
 }
 
+/* No room for the ring around the copy, so no ring. `visibility` and not
+   `display`, because the sizing pass has to keep reading this layer's box to
+   know when the room comes back. It also takes the nodes out of the tab
+   order, which is right: they are links nobody can see. */
+.network-web[data-ring='crowded'] {
+  visibility: hidden;
+}
+
 .network-web__canvas {
   display: block;
   width: 100%;
@@ -152,6 +160,24 @@
    does not, so the drawing stays decoration and only the participants are
    clickable. */
 .network-web__nodes {
+  /* The ring the cast stands on. A node carries only its vertex, a unit
+     vector out of the centre; the centre and the two radii are one set of
+     numbers for all eight, which is what makes the eight a shape rather than
+     eight positions that happened to look right.
+
+     Two radii and not one, because the hero is wide and the copy inside it is
+     tall. A circle big enough to clear the gateway cards either side would
+     put its top and bottom vertices off the page, so the octagon is stretched
+     to the shape of the room it is standing in.
+
+     These three are what the measure pass in NetworkWeb overwrites once it
+     has read the copy. They are the values for the frame before it runs, and
+     for a copy it cannot find: a ring on the middle of the window, roughly
+     the right size, rather than eight nodes stacked on the centre. */
+  --ring-cy: 50%;
+  --ring-x: 38%;
+  --ring-y: 41%;
+
   position: absolute;
   inset: 0;
   /* The layer above sets `pointer-events: none` so the drawing never eats a
@@ -167,6 +193,12 @@
   --lit: 0;
 
   position: absolute;
+  /* The vertex, scaled by the ring's radii and hung off its centre. The
+     centre is the copy's, not the layer's: this layer reaches up under the
+     top bar so the courier's light is not cut off by it, and the copy does
+     not sit on the middle of it. */
+  left: calc(50% + var(--ring-x) * var(--ux));
+  top: calc(var(--ring-cy) + var(--ring-y) * var(--uy));
   text-decoration: none;
   transform: translate(-50%, -50%);
   display: flex;
@@ -184,6 +216,13 @@
   content: '';
   position: absolute;
   z-index: -1;
+  /* Concentric with the icon, not with the icon and label together. The pair
+     is centred on the node's box, so a glow centred there sits half a line
+     low and lights the word instead of the mark. The icon is 1.375rem tall
+     and first in the column, so its own centre is half that down. */
+  top: 0.6875rem;
+  left: 50%;
+  transform: translate(-50%, -50%);
   width: 7.5rem;
   height: 7.5rem;
   border-radius: 999px;
@@ -292,6 +331,167 @@
   background-color: var(--accent);
 }
 
+/* ---------- the board ----------
+   The pill that used to sit here named the site, which the lockup in the
+   corner and the browser tab already did. This says what the network just
+   carried instead, and it is a row of flaps rather than a chip because a
+   departure board is a list of things in transit between places, which is the
+   claim underneath ABDM and the thing the drawing behind it is doing.
+
+   The emblem sits above the row rather than beside it, and at a size that
+   makes it the mark it is rather than an 18px decoration in a chip. */
+.landing-hero__board {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.125rem;
+  margin: 0;
+}
+
+.landing-hero__board .brand-chip__mark {
+  width: clamp(2.75rem, 1.9rem + 3.4vw, 4rem);
+  height: clamp(2.75rem, 1.9rem + 3.4vw, 4rem);
+}
+
+.flap {
+  display: inline-flex;
+  align-items: center;
+}
+
+/* Fixed cells, not a fixed width: a real board has a set number of flaps and
+   pads the short words with blanks. Nothing here measures text, so a message
+   of a different length cannot move the layout. */
+.flap__row {
+  display: inline-flex;
+  gap: 1px;
+}
+
+.flap__cell {
+  position: relative;
+  display: inline-block;
+  width: 0.78em;
+  height: 1.55em;
+  border-radius: 2px;
+  background: var(--fill-soft);
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: 0;
+  color: var(--accent);
+  /* Shallow, so the fall reads as a flap turning rather than as a card being
+     thrown at the reader. */
+  perspective: 90px;
+  overflow: hidden;
+}
+
+/* The hinge. It is the one line that says split-flap before anything moves,
+   which matters more than the movement does: most of the time the board is
+   sitting still and it still has to look like a board. */
+.flap__cell::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  right: 0;
+  left: 0;
+  z-index: 3;
+  height: 1px;
+  background: var(--page);
+  opacity: 0.8;
+}
+
+.flap__face {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backface-visibility: hidden;
+  /* The hinge is the middle of the cell, so that is what it turns about. */
+  transform-origin: 50% 50%;
+}
+
+/* Falls through the first half of the turn, carrying the character that is
+   leaving. Held at the bottom of its arc afterwards so it cannot reappear. */
+.flap__face--out {
+  z-index: 2;
+  animation: flap-fall var(--flap-turn) cubic-bezier(0.45, 0, 0.7, 0.4) both;
+}
+
+/* Waits flat against the back for the first half, then swings up. The two
+   share a duration and a delay, so the second half of one is the first half
+   of the other and the cell is never showing both. */
+.flap__face--in {
+  z-index: 1;
+  animation: flap-rise var(--flap-turn) cubic-bezier(0.3, 0.6, 0.55, 1) both;
+}
+
+@keyframes flap-fall {
+  0% {
+    transform: rotateX(0deg);
+  }
+  50%,
+  100% {
+    transform: rotateX(-90deg);
+  }
+}
+
+@keyframes flap-rise {
+  0%,
+  50% {
+    transform: rotateX(90deg);
+  }
+  100% {
+    transform: rotateX(0deg);
+  }
+}
+
+/* Slow on purpose. A board that updates faster than it can be read is a
+   transition; one that takes its time is a mechanism, and the mechanism is
+   the point. Matches TURN_MS in FlapBoard.tsx, which cannot read this. */
+.flap {
+  --flap-turn: 420ms;
+}
+
+/* Set, not turned. The board still says what it says; the flaps just do not
+   move, which is also the state it renders in on the server and on the first
+   client paint, so the two agree. */
+.flap[data-still='true'] .flap__face {
+  animation: none;
+}
+
+/* The one name that does not change, for a screen reader. The flaps
+   themselves are aria-hidden: a row of cells turning over every few seconds
+   is a live region nobody wants announced. */
+.flap__label {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .flap__face {
+    animation: none;
+  }
+}
+
+/* The board is 29 flaps wide, because the longest message is 29 characters,
+   and at the size above that is 345px. A 480px window leaves 432px inside the
+   hero's padding, so the full size holds down to there, and below 768px the
+   board is not a board at all: see the narrow section. */
+@media (min-width: 769px) and (max-width: 900px) {
+  .flap__cell {
+    width: 0.82em;
+    font-size: 0.75rem;
+  }
+}
+
 .landing-hero__eyebrow {
   font-size: 0.8125rem;
   font-weight: 500;
@@ -306,11 +506,9 @@
 .landing-hero__statement {
   margin: 0;
   max-width: none;
+  font-family: var(--font-serif);
   font-size: clamp(1.5rem, 0.9rem + 2.4vw, 2.25rem);
   line-height: 1.15;
-  font-family: var(--font-serif);
-  font-size: 2.25rem;
-  line-height: 2.5rem;
   font-weight: 400;
   letter-spacing: -0.01em;
   color: var(--text-heading);
@@ -439,7 +637,7 @@
   .landing-hero {
     align-items: flex-start;
     text-align: left;
-    padding: 4rem 1.5rem 5rem;
+    padding: 3rem 1.25rem 4rem;
   }
 
   .landing-hero__statement {
@@ -451,6 +649,95 @@
      is a real space in the markup, so the words stay apart. */
   .landing-hero__line {
     display: inline;
+  }
+
+  /* The flaps come off.
+
+     A split-flap board is 29 cells wide because its longest message is 29
+     characters, and the cells cannot be dropped without the board being unable
+     to show that message. On a 360px phone that leaves 6.8px a cell, which is
+     smaller than the type inside it: the row rendered as a strip of grey
+     blocks with a few readable letters in the middle, and the blanks that pad
+     the message out to 29 read as missing rather than as empty flaps.
+
+     Below this width it is the name, set once, in the same letterspaced caps
+     the flaps were carrying. Nothing is lost from the page: the board's job
+     here is to say what the site is, and the mechanism it says it with needs
+     room this screen does not have. The label was already in the markup for a
+     screen reader, so it becomes visible rather than being added. */
+  .flap__row {
+    display: none;
+  }
+
+  .flap__label {
+    position: static;
+    width: auto;
+    height: auto;
+    margin: 0;
+    overflow: visible;
+    clip-path: none;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+
+  .landing-hero__board {
+    align-items: flex-start;
+    gap: 0.875rem;
+  }
+
+  /* One card is one line of intent and the gateway it belongs to, side by
+     side. Stacked and centred they ran to 110px each, so the three of them
+     took 404px of a 740px screen and the last one sat below the fold on the
+     first paint. */
+  .landing-hero__goals {
+    margin-top: 2rem;
+    align-self: stretch;
+    align-items: stretch;
+  }
+
+  .landing-hero__goals-list {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.625rem;
+  }
+
+  .landing-hero__goal {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    width: auto;
+    gap: 1rem;
+    padding: 0.875rem 1rem;
+    text-align: left;
+  }
+
+  .landing-hero__goal-short {
+    flex: 0 0 auto;
+  }
+}
+
+/* A short phone, which is most of them held in one hand with a browser bar at
+   each end. At 360x640 the three cards ended 1px past the fold, at 767x600
+   3px and in landscape 22px: reachable, because the curtain scrolls and the
+   handoff only commits at its foot, but a first screen that ends a pixel into
+   the third card reads as a page that did not fit. The room comes out of the
+   hero's own padding, which is generous because it was written for a screen
+   with a drawing behind it. */
+@media (max-width: 900px) and (max-height: 700px) {
+  .landing-hero {
+    padding-top: 1.75rem;
+    padding-bottom: 1.75rem;
+  }
+
+  .landing-hero__goals {
+    margin-top: 1.5rem;
+  }
+
+  .landing-hero__board {
+    gap: 0.625rem;
   }
 }
 
@@ -464,45 +751,6 @@
    is the gesture's runway, not a section. */
 .landing-scroll-cue {
   height: 60vh;
-}
-
-/* ---------- the scroll hint ----------
-   Scrolling is this page's main gesture and it was unadvertised: the hero
-   fills the screen, so there is no visible cut-off edge to suggest anything
-   is below it. The arrow says so, and pressing it does the same thing as the
-   scroll rather than being a second, different control. */
-.landing-scroll-hint {
-  position: absolute;
-  bottom: 2rem;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 1;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 2.5rem;
-  height: 2.5rem;
-  padding: 0;
-  border: 1px solid var(--border);
-  border-radius: 999px;
-  background: var(--surface-sunken);
-  color: var(--text-muted);
-  cursor: pointer;
-  transition: color 150ms ease, border-color 150ms ease, background-color 150ms ease;
-  animation: landing-scroll-nudge 2.4s ease-in-out infinite;
-}
-
-.landing-scroll-hint:hover {
-  color: var(--accent);
-  border-color: var(--accent-line);
-  background: var(--accent-soft);
-}
-
-/* A small, slow fall. Enough to read as "down", not enough to pull the eye off
-   the statement it sits under. */
-@keyframes landing-scroll-nudge {
-  0%, 100% { transform: translateX(-50%) translateY(0); }
-  50%      { transform: translateX(-50%) translateY(0.25rem); }
 }
 
 /* ---------- leaving ----------
@@ -529,9 +777,6 @@
     transition: none;
   }
 
-  .landing-scroll-hint {
-    animation: none;
-  }
 }
 
 
@@ -546,6 +791,16 @@
 
 .pull-home[data-pulling='true'] {
   transition: none;
+}
+
+/* The theme parks its skip link just above the top edge and brings it back on
+   focus. Just above the top edge is exactly where the pull opens its strip,
+   so pulling back to the landing page put "Skip to main content" in it: a bar
+   of chrome nobody asked for, in the one gesture that is meant to show an
+   empty edge. Parked further than the pull can reach. Focus still brings it,
+   which is the only time it is meant to appear. */
+.pull-home a[class*='skipToContent']:not(:focus) {
+  transform: translateY(-200px);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -568,17 +823,38 @@
   z-index: 400;
   display: flex;
   flex-direction: column;
-  overflow: hidden;
-  background: var(--page);
+  /* The curtain used to be `overflow: hidden`, which made it exactly one
+     viewport tall and clipped whatever did not fit. On a phone that put the
+     three gateway cards outside the painted area with no way to reach them,
+     because the document does not scroll while the curtain is down and the
+     only gesture that moved anything navigated away instead. It scrolls now.
+     `contain` keeps the gesture in this box rather than chaining it to the
+     document, where a downward swipe becomes Chrome for Android's pull to
+     refresh (CSS Overscroll Behavior 1). */
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  /* The first screen is the one place the accent is allowed a whole field of
+     its own: a wash off the top, fading into the page before the copy ends,
+     so the statement is read on sage rather than on cream. On the curtain and
+     not on the hero inside it, because a wash that begins at the hero's top
+     edge begins exactly where the bar ends, and that is a line across the
+     page: the bar reads as a band of cream over a green page rather than as
+     part of it. Here it runs the full height, the bar included. */
+  background-color: var(--page);
+  background-image: radial-gradient(
+    150% 95% at 50% -15%,
+    var(--accent-soft) 0%,
+    var(--accent-wash) 45%,
+    transparent 78%
+  );
   transform: translate3d(0, calc(var(--lift) * -100%), 0);
   will-change: transform;
 }
 
-/* Translucent, and fading rather than ending: the bar sits over the network
-   now, so a solid strip would cut the light off in a straight line and a
-   backdrop filter would draw its own rectangle. A gradient to nothing has no
-   edge to see, and still holds enough page colour under the marks to keep
-   them legible. */
+/* No ground of its own. A veil of page colour over the top 64px, even one
+   that fades to nothing, is still 64px the wash behind it does not reach, and
+   it reads as a band of cream laid across a green page. On the landing page
+   this is a row of marks, not a bar. */
 .curtain__bar {
   position: relative;
   z-index: 1;
@@ -588,12 +864,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: linear-gradient(
-    to bottom,
-    color-mix(in srgb, var(--page) 82%, transparent) 0%,
-    color-mix(in srgb, var(--page) 46%, transparent) 62%,
-    transparent 100%
-  );
+  background: transparent;
 }
 
 .curtain__toggle {
@@ -615,6 +886,17 @@
   color: var(--text-heading);
 }
 
+/* The only control on the landing page, and at 32px it was a third short of
+   what a thumb needs. The bar is 64px tall and spaces its two ends apart, so
+   the box grows inwards from the right margin and the glyph inside it stays
+   centred where it was. */
+@media (pointer: coarse) {
+  .curtain__toggle {
+    width: 2.75rem;
+    height: 2.75rem;
+  }
+}
+
 .curtain__mark {
   display: block;
   width: auto;
@@ -631,14 +913,16 @@
   display: block;
 }
 
-/* The hero fills what is left of the curtain, so the fold sits at its foot.
-   `min-height: 0` and a scaled pad, because the curtain is exactly the height
-   of the window: a fixed padding that is comfortable at 900px tall pushes the
-   gateways off the bottom of a 600px one. The curtain does the clipping, so
-   the hero does none: the network reaches up behind the bar. */
+/* The hero fills what is left of the curtain, so the fold sits at its foot,
+   and grows past it when the copy needs more room. It used to carry
+   `min-height: 0`, which lets a flex item shrink below its own contents: on a
+   narrow screen the copy needed about 950px in 748px of curtain and the excess
+   was simply cut, off both ends, because the hero centres what it holds. The
+   auto minimum keeps it at least as tall as its content and the curtain
+   scrolls to the rest. The scaled pad stays: a fixed padding comfortable at
+   900px tall wastes the top of a 600px one. */
 .curtain .landing-hero {
-  flex: 1 1 auto;
-  min-height: 0;
+  flex: 1 0 auto;
   padding: clamp(1rem, 4vh, 3rem) 1.5rem clamp(1.5rem, 6vh, 4rem);
   overflow: visible;
 }
@@ -655,15 +939,29 @@
   .landing-hero__copy {
     gap: 0.875rem;
   }
-
-  .landing-scroll-hint {
-    bottom: 1rem;
-  }
 }
 
-@media (max-height: 560px) {
-  .landing-hero__lede,
-  .landing-scroll-hint {
+/* A 360x640 Android with its browser bars showing is a 568px viewport, which
+   is the commonest phone this page will ever be opened on, and there the three
+   cards ended 58px past the fold: the whole reason to have a card for NHCX is
+   that a reader sees there are three choices. The board's own name and the
+   statement stay, because they are what the page is; the lede is the sentence
+   that can go, and the space around everything else tightens with it. */
+@media (max-height: 620px) {
+  .landing-hero__lede {
     display: none;
+  }
+
+  .landing-hero__copy {
+    gap: 0.625rem;
+  }
+
+  .landing-hero__goals {
+    margin-top: 1.125rem;
+  }
+
+  .landing-hero__board .brand-chip__mark {
+    width: 2.25rem;
+    height: 2.25rem;
   }
 }

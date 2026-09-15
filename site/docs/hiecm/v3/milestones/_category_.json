@@ -1,5 +1,6 @@
 {
   "label": "Milestones",
   "position": 2,
-  "collapsed": false
+  "collapsed": false,
+  "className": "sidebar-icon sidebar-icon--milestone"
 }

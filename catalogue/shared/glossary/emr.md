@@ -4,10 +4,11 @@ type: glossary
 gateway: shared
 milestone: n/a
 version: abdm-v3
-title: EMR, electronic medical record system
+title: EMR, the clinical system a provider runs, also written EHR
 summary: >
-  The clinical system a hospital or clinic uses to record
-  consultations, prescriptions and results.
+  The system a hospital or clinic records consultations, prescriptions
+  and results in. A facility uses it both to publish its own records and
+  to fetch a patient's history from elsewhere.
 sources:
   - file: site/docs/_glossary/_hiecm.mdx
     status: not-yet-hashed
@@ -17,20 +18,37 @@ sources:
 verified:
   status: unverified
 related:
-  concepts: []
+  concepts: [hiecm.concept.roles]
+  glossary:
+    [
+      shared.glossary.hip,
+      shared.glossary.hiu,
+      shared.glossary.hie-cm,
+      shared.glossary.phr,
+      shared.glossary.m2,
+      shared.glossary.m3,
+    ]
 ---
 
-# EMR, electronic medical record system
+# EMR, the clinical system a provider runs, also written EHR
 
 ## In plain words
 
-Electronic Medical Record system: the clinical system a hospital or a
-clinic uses to record consultations, prescriptions and results. In ABDM
-an EMR acts as a [HIP](hip.md) when it publishes, so it links care
-contexts in [M2](m2.md), and as an [HIU](hiu.md) when it pulls a
-patient's history from elsewhere, which is [M3](m3.md). Most need both.
-See [roles](../../hiecm/concepts/roles.md) and [Hospital, lab and
-pharmacy systems](/docs/hiecm/v3/concepts/hip-hiu).
+Electronic Medical Record and Electronic Health Record: the clinical
+system a hospital or a clinic records consultations, prescriptions and
+results in. The distinction drawn is that an EMR holds one provider's
+record of what happened in their own building, and an EHR follows the
+patient across providers. Vendors use the two words for the same product,
+so read which one a document means from what it describes rather than
+from the letters.
+
+A facility uses it to publish records as the [HIP](hip.md), linking care
+contexts in [M2](m2.md), and to fetch a patient's history as the
+[HIU](hiu.md) in [M3](m3.md), so the ABDM work is both. ABDM does not
+build an EHR as a database: the
+records stay with the facility that created them, and the
+[HIE-CM](hie-cm.md) plus consent is what lets another provider assemble
+the picture. The patient's own view of it is a [PHR](phr.md) app.
 
 ## Before you start
 
@@ -42,9 +60,11 @@ Nothing happens here. This entry defines a term, it does not describe a call.
 
 ## How you know it worked
 
-You have understood this when you can say which direction an EMR is acting in for a given call, and which milestone that direction needs.
+You have understood this when you can say where a patient's records
+physically sit in ABDM, which is not in one central store.
 
 ## When it goes wrong
 
-Waiting for a record to be requested before linking it. Nothing an EMR
-holds is discoverable until its care context is linked.
+Looking for the call that returns a patient's whole health record. There
+is no such call. You ask for consent, and you fetch from each holder the
+consent covers.
