@@ -5,6 +5,7 @@ sidebar_position: 6
 description: An insurer reads records as an HIU under consent, and settles claims on NHCX, a separate gateway with its own onboarding.
 verification: unverified
 source: catalogue/shared/glossary/hiu.md, site/docs/hiecm/v3/concepts/consent.md, site/docs/hiecm/v3/concepts/data-flow.md, site/docs/nhcx/v1/index.md, site/docs/hiecm/v3/milestones/index.mdx
+sidebar_class_name: sidebar-icon sidebar-icon--receipt-indian-rupee
 ---
 
 # Insurer
@@ -15,24 +16,24 @@ the [HIE-CM](/docs/hiecm/v3/getting-started/glossary#hie-cm). Claims move on
 
 ## Who you are in ABDM
 
-On the HIE-CM you are an
-[HIU](/docs/hiecm/v3/getting-started/glossary#hiu), a health information user.
-That is a direction, not a category of company: you act as an HIU whenever you
-ask to read records you did not create.
+On the HIE-CM you take the
+[HIU](/docs/hiecm/v3/getting-started/glossary#hiu) role, health information
+user. That is a direction, not a category of company. Your organisation is the
+HIU whenever it asks to read records it did not create, and your software is how
+it asks.
 
 On NHCX you are a payer, which covers an insurer or a third party administrator
 acting for one. You onboard as a participant, in sandbox first and then in
 production.
 
-Two gaps to know about before you plan.
+## Confirm at onboarding
 
-- Which registry issues an insurer an identifier for the HIE-CM is not
-  documented here. The [HFR](/docs/hiecm/v3/getting-started/glossary#hfr) lists
-  hospitals, clinics, laboratories, imaging centres, pharmacies and blood banks,
-  and does not name insurers. [M4](/docs/hiecm/v3/api/m4) is marked as required
-  for an HIU, so raise this at onboarding rather than assuming an answer.
-- No NHCX endpoint is documented here yet. Take the claim specification from
-  the NHCX documentation.
+- **Which registry entry your organisation holds on the HIE-CM.** The
+  [HFR](/docs/hiecm/v3/getting-started/glossary#hfr) lists hospitals, clinics,
+  laboratories, imaging centres, pharmacies and blood banks, and does not list
+  insurers. Do not scope your build around a facility ID.
+  [M4](/docs/hiecm/v3/api/m4) is required for an HIU, so ask which entry you
+  register against before you plan that work. Build M1 and M3 meanwhile.
 
 ## What you can do
 

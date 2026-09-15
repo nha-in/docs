@@ -6,48 +6,23 @@ verification: unverified
 source: catalogue/openapi/hiecm/v3/hiecm-gateway.yaml
 sidebar_position: 3
 covers: [shared.sandbox.first-fifteen-minutes]
+sidebar_class_name: sidebar-icon sidebar-icon--zap
 ---
 
 import Quickstart from '@site/src/components/docs/Quickstart';
 
 # Quickstart
 
-You create an [ABHA](/docs/hiecm/v3/getting-started/glossary#abha) here, with your own
+You create a test [ABHA](/docs/hiecm/v3/getting-started/glossary#abha) here, with your own
 sandbox credentials, in four calls that run live from this page: create a session,
 encrypt the Aadhaar number, request an OTP, create the account.
 
-Whatever you are building, you need this. A hospital creates an ABHA at the registration
-desk, a lab creates one before it files a report, a personal health record app creates
-one when somebody signs up.
-
 ## Before you start
 
-Have your `clientId` and `clientSecret` in hand. If you do not,
-[get your sandbox credentials](/docs/hiecm/v3/getting-started/sandbox) first.
-
-You also need a sandbox test identity: an Aadhaar number issued to you for sandbox use,
-and access to the mobile number registered against it, because that is where the OTP
-goes. There is no shared test Aadhaar number, so do not go looking for one in
-these pages.
-
-## What this page does with what you type
-
-The calls below go straight from your browser to the ABDM hosts. There is no proxy and this
-site has no server of its own, so nothing you type is sent anywhere else and nothing is
-written to a URL.
-
-- The **Aadhaar number** is encrypted in your browser with the ABDM public key before it
-  leaves the page, and only the encrypted value is posted. The field is masked and the
-  raw number is held in the page's memory alone, which the browser discards when you
-  close the tab.
-- The **client secret** and the **OTP** are handled the same way: masked, never stored,
-  never in a URL.
-- The **access token** from step 1 is held in `sessionStorage` for this tab, so every
-  Try It console on this site can use it without you pasting it again. Closing the tab
-  ends it.
-
-Use a sandbox test identity. Do not put a real person's Aadhaar number into a page you
-are trying out.
+Have your `clientId` and `clientSecret`
+([get them](/docs/hiecm/v3/getting-started/sandbox)) and a sandbox test identity: an
+Aadhaar number issued to you for sandbox use, with access to the mobile number registered
+against it, because that is where the OTP goes.
 
 <Quickstart />
 
@@ -73,9 +48,10 @@ what order.
 
 ## If a call fails
 
-Every step shows you the request it sent and the response it got back, including the error
-body. A 401 on the session call usually means the credentials or the `X-CM-ID` header, so
-see [Everything returns 401](/docs/hiecm/v3/troubleshooting/everything-returns-401).
+Under the four steps you get the request each call sent and the response it got back,
+including the error body. A 401 on the session call usually means the credentials or the
+`X-CM-ID` header, so see
+[Everything returns 401](/docs/hiecm/v3/troubleshooting/everything-returns-401).
 
 A rejected `loginId` may be the encryption rather than the number. The runner uses RSA-OAEP,
 which is the only RSA encryption a browser offers, and leaves the digest as a control you

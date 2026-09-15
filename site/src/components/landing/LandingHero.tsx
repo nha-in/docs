@@ -1,9 +1,9 @@
-import React from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import Link from '@docusaurus/Link';
 import Heading from '@theme/Heading';
 import BrowserOnly from '@docusaurus/BrowserOnly';
-import {ChevronDown} from 'lucide-react';
 import NetworkWeb from '@site/src/components/landing/NetworkWeb';
+import FlapBoard from '@site/src/components/landing/FlapBoard';
 import BrandMark from '@site/src/components/chrome/BrandMark';
 import {unfiltered} from '@site/src/config/roles';
 import {
@@ -45,27 +45,154 @@ const gateways = [
   },
 ];
 
+/** What the board rests on, and where it keeps coming back to. */
+const RESTING = 'ABDM Developer Portal';
+
+/**
+ * What the board says about the delivery in the air, by who is receiving it.
+ *
+ * Not a rotation on a timer. The flaps start turning as the courier leaves
+ * and settle as it lands, so the board is announcing the crossing the reader
+ * is watching rather than whatever the clock came round to. Every line is a
+ * capability of ABDM said as an outcome, because a first time visitor does
+ * not yet have the vocabulary the documentation uses.
+ *
+ * The NHA's line is the portal's own name, and NetworkWeb sends every third
+ * delivery there. That is what makes the site's identity the thing the board
+ * returns to, on the network's rhythm rather than on a counter of its own.
+ */
+const DELIVERED: Record<string, string | string[]> = {
+  citizen: 'Unique health identity',
+  // A participant with more than one line takes them in turn, so calling
+  // twice at the same door says something new the second time.
+  phr: ['Your records, in one place', 'Unified health services'],
+  hospital: 'Interoperable medical records',
+  doctor: 'History at the point of care',
+  lab: 'Reports that reach you',
+  pharmacy: 'Prescriptions that travel',
+  insurer: 'Faster insurance claims',
+  nha: RESTING,
+};
+
+/** Wide enough for the longest line above, so the flaps never resize. */
+const CELLS = Math.max(
+  RESTING.length,
+  ...Object.values(DELIVERED)
+    .flat()
+    .map((line) => line.length),
+);
+
 /**
  * The statement, the one control and the three gateways.
  *
  * Markup only. What lifts it off the references page underneath is the
  * curtain that renders it (components/landing/LandingCurtain).
  */
-export default function LandingHero({
-  onLift,
-}: {
-  /** Runs the same lift the scroll gesture runs. */
-  onLift: () => void;
-}): React.ReactNode {
+export default function LandingHero(): React.ReactNode {
+  const [message, setMessage] = useState(RESTING);
+  // Set once on mount rather than read per render, so the server and the
+  // first client render agree: both of them draw the resting name.
+  const [still, setStill] = useState(true);
+  /**
+   * True on a screen too small for the drawing to be worth running.
+   *
+   * The network is a pointer instrument: it lights the participant under the
+   * cursor and the board answers for it. A phone has no cursor, so all a
+   * reader gets is eight nodes and their links drawn across the statement they
+   * are trying to read, at a size where the nodes are unlabelled dots. It is
+   * also a requestAnimationFrame loop running behind a page nobody can play
+   * with, on the device most likely to be on a battery.
+   *
+   * Matched to the width the stylesheet sets the compact hero at, and false
+   * for the server and the first client render so the two agree.
+   *
+   * This is not the only thing that can put the drawing away. A window with
+   * no room for the ring around the copy hides it too, and that one is
+   * measured rather than declared: see the sizing pass in NetworkWeb.
+   */
+  const [compact, setCompact] = useState(false);
+  /** The participant the board is already speaking for. */
+  const announced = useRef<string | null>(null);
+  /** How many times each participant has been called at, for the two liners. */
+  const visits = useRef<Record<string, number>>({});
+
+  useEffect(() => {
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const follow = () => setStill(reduced.matches);
+    follow();
+    reduced.addEventListener('change', follow);
+    return () => reduced.removeEventListener('change', follow);
+  }, []);
+
+  useEffect(() => {
+    const narrow = window.matchMedia('(max-width: 768px)');
+    const follow = () => setCompact(narrow.matches);
+    follow();
+    narrow.addEventListener('change', follow);
+    return () => narrow.removeEventListener('change', follow);
+  }, []);
+
+  /**
+   * The courier has landed, or the pointer has settled: either way the board
+   * has something to say and says it now.
+   *
+   * A departure does not come through here. Nothing happens on the board while
+   * a delivery is crossing: it holds the line it is showing and turns over
+   * when the courier arrives, so the flaps are the arrival rather than a
+   * commentary on the journey.
+   */
+  const carrying = useCallback((id: string | null) => {
+    // The same participant twice running is the same line, and a board already
+    // showing a message does not turn for it again. This is also what
+    // collapses the repeated releases a moving pointer sends.
+    if (announced.current === id) return;
+    announced.current = id;
+    // Nobody to speak for. A pointer moving across empty canvas is not asking
+    // about a participant, so the board answers with the portal's own name
+    // instead of holding whichever node it last passed. The walk takes the
+    // board back once the pointer has been still long enough.
+    if (id === null) {
+      setMessage(RESTING);
+      return;
+    }
+    const line = DELIVERED[id];
+    if (!line) return;
+    if (typeof line === 'string') {
+      setMessage(line);
+      return;
+    }
+    const called = visits.current[id] ?? 0;
+    visits.current[id] = called + 1;
+    setMessage(line[called % line.length]);
+  }, []);
+
   return (
     <section className="landing-hero">
-      {/* The network the page is about, drawn behind the words. */}
-      <BrowserOnly>{() => <NetworkWeb />}</BrowserOnly>
+      {/* The network the page is about, drawn behind the words, on a screen
+          with room for it and a pointer to drive it.
+
+          No onDepart: a departure changes nothing on the board. The message
+          belongs to the arrival, and to a pointer that has settled on a node
+          and asked. */}
+      {compact ? null : (
+        <BrowserOnly>
+          {() => (
+            <NetworkWeb
+              onArrive={still ? undefined : carrying}
+              onPoint={still ? undefined : carrying}
+            />
+          )}
+        </BrowserOnly>
+      )}
 
       <div className="landing-hero__copy">
-        <p className="brand-chip brand-chip--eyebrow">
+        {/* The board, and the emblem beside it as the node the record leaves
+            from. Not a pill: the mark and the row sit on the same line the
+            links behind them run along, so this reads as part of the drawing
+            rather than as a label laid over it. */}
+        <p className="landing-hero__board">
           <BrandMark />
-          <span className="landing-hero__eyebrow">ABDM Developer Portal</span>
+          <FlapBoard text={message} cells={CELLS} still={still} />
         </p>
         {/* Three lines, set as blocks rather than as `<br>`. A `<br>` hidden
             at narrow widths takes the line break away and leaves nothing in
@@ -107,14 +234,6 @@ export default function LandingHero({
         </div>
       </div>
 
-      {/* The lift is the page's main gesture, so it is advertised. */}
-      <button
-        type="button"
-        className="landing-scroll-hint"
-        onClick={onLift}
-        aria-label="Show the documentation">
-        <ChevronDown className="size-5" aria-hidden="true" />
-      </button>
     </section>
   );
 }

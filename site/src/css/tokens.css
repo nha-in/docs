@@ -84,6 +84,10 @@
   --accent-contrast: #ffffff;
   --accent-soft: hsl(140 30% 34% / 0.1);
   --accent-line: hsl(140 30% 34% / 0.4);
+  /* The faintest step, for a field rather than a mark: the ground behind a
+     current row, and the wash behind the landing statement. Soft enough that
+     text on it keeps its own contrast. */
+  --accent-wash: hsl(140 30% 34% / 0.055);
 
   /* HTTP method colours. GET and POST previously both fell through to the
      accent, so a read and a write looked identical in the sidebar and on the
@@ -127,6 +131,18 @@
   --font-serif: Georgia, 'Times New Roman', Times, serif;
   --font-mono: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Monaco, Consolas,
     'Liberation Mono', 'Courier New', monospace;
+}
+
+/* The rail is sized for a 1280px window. Opened full screen on a desktop
+   display the article beside it stops at its 51rem measure and the spare width
+   goes to empty gutter, while a deep path in the tree still wraps onto three
+   lines. From here the tree gets some of that width back. The resizer writes
+   an inline value on the root element, so a reader who has set their own width
+   keeps it over this. */
+@media (min-width: 1440px) {
+  :root {
+    --sidebar-width: 21.5rem;
+  }
 }
 
 /**
@@ -190,6 +206,7 @@
   --accent-contrast: #0d0d0d;
   --accent-soft: hsl(134 20% 72% / 0.12);
   --accent-line: hsl(134 20% 72% / 0.4);
+  --accent-wash: hsl(134 20% 72% / 0.07);
 
   /* Method colours, lifted for dark ground. */
   --method-get: #7fb4f0;

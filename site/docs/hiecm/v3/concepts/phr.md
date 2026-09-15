@@ -5,8 +5,10 @@ sidebar_position: 8
 sidebar_custom_props:
   roles: [phr]
 description: What a personal health record app does in ABDM, the screens it needs, and the modules you have to build.
+covers: [hiecm.concept.phr-subscriptions]
 verification: unverified
 source: ABDM__NewDocumant_PHR_app.md, ABDM__Proposed_Simplified_Milestone_1.md
+sidebar_class_name: sidebar-icon sidebar-icon--app-window
 ---
 
 # PHR applications
@@ -31,6 +33,16 @@ record sharing hang off it. There are six jobs:
 | Share a profile at a facility | Scan the facility QR code, consent, receive a queue token |
 | Find and link past records | Search a facility, discover [care contexts](/docs/hiecm/v3/getting-started/glossary#care-context), verify by [OTP](/docs/hiecm/v3/getting-started/glossary#otp), link |
 | Hold records | Receive notifications, request consent, fetch records, store and display them |
+
+## Your app needs a server
+
+A PHR app is two parts, whatever it looks like to the user. The app on the
+phone signs the person in, shows the screens and scans codes. A server you run
+holds the client ID and secret, mints the [gateway session
+token](/docs/hiecm/v3/concepts/gateway), and hosts the callback URL registered
+for your bridge. Every answer to a linking, consent or data request arrives at
+that URL as a POST, so an app with no server never hears the answer. Never
+ship the client secret inside the app.
 
 ## What you build in M1
 
@@ -135,8 +147,8 @@ screen if the user is signed in, to login first if not.
 
 ## What you build in M3
 
-Every PHR application must also implement the
-[HIU](/docs/hiecm/v3/getting-started/glossary#hiu) role.
+A citizen fetching records is the [HIU](/docs/hiecm/v3/getting-started/glossary#hiu), so every
+PHR application must implement that side.
 
 ### Subscriptions and notifications
 
@@ -196,6 +208,38 @@ The test cases cover fetching each health information type structured and
 unstructured: diagnostic report, prescription, discharge summary, consultation
 note, immunisation record, wellness record and health document record.
 
+## Subscriptions, and why you need one
+
+A care context can be linked to a person's address by any facility they visit,
+without your application being part of it. A subscription is how you find out:
+a standing watch on one address, delivering to your callback whenever
+something changes.
+
+NHA expects a PHR app to set one up at two moments, when it creates an address
+and when a person signs in with an address it has not seen before. The person
+must be asked to consent to it; signing in does not imply it.
+
+Once approved, four events arrive: a new care context, a modified care
+context, a new consent request, and a new subscription request. Showing them
+on the device is your job, and NHA names a push service as the example rather
+than a requirement.
+
+A request sits in exactly one state, and the same five carry consent requests,
+subscription requests and health locker requests, so one screen serves all
+three.
+
+| Group | State | What it means |
+| --- | --- | --- |
+| Requests | Requested | Sent, and the person has not acted |
+| Requests | Denied | The person refused it |
+| Requests | Expired | The person did not act inside the requester's window |
+| Approved | Granted | The person allowed it |
+| Approved | Revoked | Allowed, then withdrawn |
+
+A subscription is not consent and gives nobody a record. It tells you a record
+exists. Reading it still needs a consent, which is why a subscription usually
+runs alongside an auto approval policy.
+
 ## Discovery and user initiated linking
 
 For a facility the user visited without giving an ABHA address, or for old
@@ -245,13 +289,14 @@ number they gave the facility. A mismatch stops the records being found.
 To be listed, you submit three things at sandbox exit: application name, Play
 Store URL and App Store URL.
 
-## Where a PHR app also acts as a HIP
+## Where the citizen is the HIP
 
-A health locker, letting users upload their own records, puts you briefly on the
-HIP side. A PHR app must accept scanned physical records and
-output from devices such as BP meters, glucose meters, fitness trackers and
-smartwatches. Your app sets the health information type from the contents or from
-user input, and uses `HealthDocumentRecord` when it cannot be determined.
+A citizen pushing a record into your app is the HIP. A health locker, where
+users upload their own records, puts you on that publishing side. A PHR app must
+accept scanned physical records and output from devices such as BP meters,
+glucose meters, fitness trackers and smartwatches. Your app sets the health
+information type from the contents or from user input, and uses
+`HealthDocumentRecord` when it cannot be determined.
 
 An uploaded record is shareable once you have three things: a linking token from
 the M1 APIs, a care context added to the user's ABHA address by HIP initiated

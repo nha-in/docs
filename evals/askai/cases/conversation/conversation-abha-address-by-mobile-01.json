@@ -1,0 +1,43 @@
+{
+  "id": "conversation-abha-address-by-mobile-01",
+  "slice": "conversation",
+  "class": "how-do-i",
+  "turns": [
+    {
+      "role": "user",
+      "text": "can you create abha number without aadhar and just with mobile number?"
+    },
+    {
+      "role": "assistant",
+      "text": "No. ABHA creation requires Aadhaar verification. The mandatory enrolment route is to verify the person against their Aadhaar with an OTP sent to the mobile registered with Aadhaar, then issue the ABHA number. There is an optional face authentication route for someone who cannot receive an Aadhaar OTP, but that still uses Aadhaar."
+    },
+    {
+      "role": "user",
+      "text": "what about abha address?"
+    }
+  ],
+  "attachment": null,
+  "page": null,
+  "must_contain": [
+    "a mobile number and the OTP sent to it are enough for an ABHA address, with no Aadhaar and no ABHA number",
+    "that path produces a Self-Declared profile carrying no KYC, and the ABHA number appears only if the person links one later",
+    "this is the PHR application route on the patient side, not an M1 enrolment call a hospital system can make"
+  ],
+  "must_not_contain": [
+    "<MASKED",
+    "i apologize",
+    "i apologise",
+    "let me ",
+    "great question",
+    "the catalogue",
+    "atom",
+    "you first need an ABHA number"
+  ],
+  "expected_sources": ["hiecm.flow.p1-create-abha-address"],
+  "expected_shape": "how-do-i",
+  "expected_behaviour": "answer",
+  "derived_from": null,
+  "source_row": "annexure#phr-v3-documents",
+  "catalogue_version": "2026.08.24",
+  "notes": "The first turn is correct and stays correct: the ABHA number does need Aadhaar. The follow-up is where a real session went wrong, answering that an ABHA address needs an ABHA number and so needs Aadhaar too. It does not. The flow atom records both paths and the KYC consequence, and until the P series flows were given routes it had no page to cite, which is the retrieval failure this case guards."
+}

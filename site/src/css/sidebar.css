@@ -138,6 +138,78 @@
   font-weight: 600;
 }
 
+/* ---------- section icons ----------
+   A mark on a group or a page, so a reader scanning the rail lands on a shape
+   before a word. It is a mask rather than an image, which is what lets the
+   glyph take the row's own colour through every state the rules above set:
+   heading normally, accent when that row is the page you are on. An image
+   would have needed a second file per theme.
+
+   This block is the box. The glyph in it comes from sidebar-icons.css, which
+   scripts/build-sidebar-icons.mjs writes from the icons the sidebar names, so
+   nobody adds CSS to add an icon. Name it where the row is declared:
+   `className` in a folder's _category_.json, `sidebar_class_name` in a page's
+   front matter, or `x-portal.icon` in a module's specification. The
+   `sidebar-icons` skill covers choosing one.
+
+   A group that names nothing still gets a mark: every top level category
+   falls back to the neutral list glyph, so a section added tomorrow keeps its
+   label on the same left edge as the rest and reads as deliberate rather than
+   half built. Naming an icon overrides the fallback, which works because the
+   generated rules carry the same specificity and are imported later.
+
+   No prefix on these selectors: the mobile menu renders the same items
+   through DocSidebarItems, so it takes the marks too. */
+
+.theme-doc-sidebar-item-category-level-1
+  > .menu__list-item-collapsible
+  > .menu__link::before,
+.sidebar-icon > .menu__list-item-collapsible > .menu__link::before,
+.sidebar-icon > .menu__link::before {
+  content: '';
+  flex: none;
+  width: 1rem;
+  height: 1rem;
+  margin-right: 0.5rem;
+  background: currentColor;
+  opacity: 0.7;
+  /* The neutral mark, for a group that names no icon of its own. The generated
+     rules override it, and they carry the same specificity and are imported
+     later, so naming an icon wins. */
+  --sidebar-icon: var(--sidebar-icon-fallback);
+  -webkit-mask: var(--sidebar-icon) center / contain no-repeat;
+  mask: var(--sidebar-icon) center / contain no-repeat;
+}
+
+/* Below the top level the label steps down a size and a weight, so the mark
+   steps down with it rather than out-weighing the words beside it. A leaf row
+   is quieter still: it is one page among a list, not a group heading. */
+.theme-doc-sidebar-item-category:not(.theme-doc-sidebar-item-category-level-1)
+  > .menu__list-item-collapsible
+  > .menu__link::before {
+  width: 0.875rem;
+  height: 0.875rem;
+  margin-right: 0.4375rem;
+  opacity: 0.6;
+}
+
+.sidebar-icon.theme-doc-sidebar-item-link > .menu__link::before {
+  width: 0.875rem;
+  height: 0.875rem;
+  margin-right: 0.4375rem;
+  opacity: 0.55;
+}
+
+/* The row is the page you are on. The label already goes accent; the mark
+   drops its dimming so the two read as one object. */
+.sidebar-icon > .menu__list-item-collapsible > .menu__link--active::before,
+.sidebar-icon > .menu__link--active::before,
+.theme-doc-sidebar-item-category-level-1
+  > .menu__list-item-collapsible
+  > .menu__link--active::before {
+  opacity: 1;
+}
+
 /* ---------- the expand and collapse mark ----------
    Two borders on an empty box, rotated. Drawn rather than fetched so it takes
    currentColor and a token, which the data URI it replaces could not: that one
@@ -604,6 +676,16 @@ body.is-resizing-sidebar {
   color: var(--text-heading);
 }
 
+/* The lead line above each panel in the Install AI tools pop-up. It carries
+   the Build with AI page's card copy, so it reads as body text rather than as
+   part of the panel it introduces. */
+.markdown .install-tools__lead {
+  margin: 0 0 1rem;
+  font-size: 0.9375rem;
+  line-height: 1.5rem;
+  color: var(--text-muted);
+}
+
 .markdown .skill-install__note {
   margin: 0;
   font-size: 0.9375rem;
@@ -750,7 +832,7 @@ body.is-resizing-sidebar {
   min-width: 0;
   /* Wrap rather than scroll. The scroll had its bar hidden, so a command
      longer than the box simply looked cut off, which is how the plugin
-     install line read inside the Install tools dialog. A command is meant to
+     install line read inside the Install AI tools dialog. A command is meant to
      be read before it is copied. */
   white-space: pre-wrap;
   overflow-wrap: anywhere;

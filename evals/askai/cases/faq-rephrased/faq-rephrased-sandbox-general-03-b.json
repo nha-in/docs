@@ -1,0 +1,36 @@
+{
+  "id": "faq-rephrased-sandbox-general-03-b",
+  "slice": "faq-rephrased",
+  "class": "how-do-i",
+  "turns": [
+    {
+      "role": "user",
+      "text": "what if I require only one WASA for the all modules?"
+    }
+  ],
+  "attachment": null,
+  "page": null,
+  "must_contain": [
+    "a single WASA certificate can cover multiple or all modules",
+    "every module the certificate is meant to cover must already be built before you apply",
+    "you cannot certify a module that has not been developed yet"
+  ],
+  "must_not_contain": [
+    "<MASKED",
+    "i apologize",
+    "i apologise",
+    "let me ",
+    "great question",
+    "the catalogue",
+    "atom"
+  ],
+  "expected_sources": [
+    "shared.sandbox.wasa"
+  ],
+  "expected_shape": "how-do-i",
+  "expected_behaviour": "answer",
+  "derived_from": "faq-verbatim-sandbox-general-03",
+  "source_row": "annexure#sandbox-faq-general",
+  "catalogue_version": "2026.08.24",
+  "notes": "variant b of faq-verbatim-sandbox-general-03, the same question in the non-native phrasing a developer might use in a hurry"
+}

@@ -34,6 +34,7 @@ info:
     module: p1
     label: P1 PHR identity and profile
     position: 6
+    icon: user-round
 x-abdm-sources:
 - file: catalogue/openapi/.raw/aarogya-setu.postman_collection.json
   role: upstream
@@ -1576,7 +1577,7 @@ paths:
       operationId: p1_1_request_otp
       tags:
       - registration
-      summary: 1. Request OTP
+      summary: 1. Request OTP for an ABHA registration
       description: "Starts ABHA address registration for a person who already holds an ABHA number, by sending an OTP. `loginId` is the encrypted ABHA number or Aadhaar."
       x-abdm-atom: hiecm.endpoint.p1-1-request-otp
       x-abdm-source-folder: As registration service
@@ -1906,7 +1907,7 @@ paths:
       operationId: p1_1_request_otp_2
       tags:
       - registration
-      summary: 1. Request OTP
+      summary: 1. Request OTP for a PHR registration
       description: "Starts ABHA address registration for a person with no ABHA number, by sending an OTP to their mobile. `loginId` is the encrypted mobile number."
       x-abdm-atom: hiecm.endpoint.p1-1-request-otp-2
       x-abdm-source-folder: As registration service
@@ -2694,7 +2695,7 @@ paths:
       tags:
       - global_collection
       summary: getProvidersByID
-      description: "Returns one provider's registry entry: its identifier, facility type, whether it acts as a HIP, and whether it supports scan and pay."
+      description: "Returns one provider's registry entry: its identifier, facility type, whether it is registered in the HIP role, and whether it supports scan and pay."
       x-abdm-atom: hiecm.endpoint.p1-getprovidersbyid
       x-abdm-source-folder: Global Service Collection service
       responses:
@@ -5192,8 +5193,7 @@ components:
       type: http
       scheme: bearer
       bearerFormat: JWT
-      description: The access token from the gateway session endpoint, described
-        in hiecm-gateway.yaml.
+      description: The access token from `POST /api/hiecm/gateway/v3/sessions`.
 x-abdm-errors:
   source: Code and message are as published. The action column reads the message
     text by a documented rule. These codes are the PHR facing wording of the core

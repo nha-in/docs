@@ -10,6 +10,13 @@ summary: >
   with an OTP, create their ABHA number, then let them choose an
   address.
 sources:
+  - file: catalogue/openapi/.raw/nha-2026-09-11/Proposed M1 Flow for Integrators.docx
+    fetched: 2026-09-11
+    hash: sha256:b258dff5698a3e70d63694ef48464510ecb05f10a168e8f34676dc64d5dc3da5
+    note: >
+      NHA's proposed simplified M1 flow, recorded as annexure#m1-simplified-flow.
+      Which routes are mandatory, and for which kind of integrator, comes
+      from it.
   - file: ABDM Sandbox/ABDM/M1 ABHA Collection.postman_collection.json
     status: not-yet-hashed
     note: >
@@ -32,17 +39,21 @@ skills:
 This is the route every integrator must implement. The person proves who
 they are with an OTP sent to the mobile registered against their Aadhaar,
 ABDM issues them a fourteen digit
-[ABHA number](../../shared/glossary/abha-number.md), and then they claim
-a memorable [ABHA address](../../shared/glossary/abha-address.md).
+[ABHA number](shared.glossary.abha-number), and then they claim
+a memorable [ABHA address](shared.glossary.abha-address).
 
-NHA marks the other enrolment routes optional. This one is not.
+NHA makes this route mandatory for every integrator, private or
+government. Face authentication and the fingerprint and iris routes are
+optional for both. Demographic authentication is mandatory for government
+integrators and is not asked of private ones. See
+[creation by demographic authentication](hiecm.flow.m1-create-abha-demographic-auth).
 
 ## Before you start
 
 - A client id and secret, and a working session token. See
-  [registration and credentials](../../shared/sandbox/registration-and-credentials.md).
-- The person's Aadhaar number, encrypted against NHA's public key. See
-  [why identifiers are encrypted](../concepts/encrypted-identifiers.md).
+  [registration and credentials](shared.sandbox.registration-and-credentials).
+- The person's Aadhaar number, encrypted with RSA-OAEP with SHA-1, base64 encoded, under the 4096-bit certificate from `/v3/profile/public/certificate`. PKCS#1 v1.5 and OAEP with SHA-256 are both refused, and neither refusal names encryption. See
+  [why identifiers are encrypted](hiecm.concept.encrypted-identifiers).
 - The person present, because they must read an OTP from their phone.
 - Their explicit consent to create an ABHA, which you send in the
   enrolment call.
@@ -111,6 +122,6 @@ characters, no leading digit, and no leading or trailing dot. Validate
 before submitting so the person is not guessing.
 
 Every call fails with a header error. Check
-[ABDM-2402](../errors/abdm-2402.md) and
-[ABDM-2404](../errors/abdm-2404.md) before assuming the flow is wrong.
+[ABDM-2402](hiecm.error.abdm-2402) and
+[ABDM-2404](hiecm.error.abdm-2404) before assuming the flow is wrong.
 

@@ -13,7 +13,7 @@ sources:
   - file: ABDM Sandbox/ABDM/M1 ABHA Collection.postman_collection.json
     status: not-yet-hashed
     note: >
-      Derived from the operation in catalogue/openapi/hiecm-m1.yaml, which
+      Derived from the operation in catalogue/openapi/hiecm/v3/hiecm-m1.yaml, which
       comes from this source.
 verified:
   status: unverified
@@ -34,7 +34,7 @@ missing. Handle all four.
 
 ## Before you start
 
-- A gateway access token. See [the gateway session](../concepts/gateway-session.md).
+- A gateway access token. See [the gateway session](hiecm.concept.gateway-session).
 - The ABHA number to act on, in NHA's hyphenated form.
 
 ## What happens
@@ -58,9 +58,9 @@ This has not been run against the sandbox from this repository. When you run it,
 
 ## When it goes wrong
 
-- The clock is wrong and every call fails. See [ABDM-2402](../errors/abdm-2402.md).
-- The `REQUEST-ID` is missing, malformed or reused. See [ABDM-2404](../errors/abdm-2404.md).
-- No session token was sent. See [ABDM-2500](../errors/abdm-2500.md).
-- The ABHA number is wrong or wrongly formatted. See [ABDM-1013](../errors/abdm-1013.md).
-- ABDM fails and does not say why. See [ABDM-9999](../errors/abdm-9999.md).
+- The clock is wrong and every call fails. See [ABDM-2402](hiecm.error.abdm-2402).
+- The `REQUEST-ID` is missing, malformed or reused. See [ABDM-2404](hiecm.error.abdm-2404).
+- No session token was sent. See [ABDM-2500](hiecm.error.abdm-2500).
+- The ABHA number is wrong or wrongly formatted. See [ABDM-1013](hiecm.error.abdm-1013).
+- ABDM fails and does not say why. See [ABDM-9999](hiecm.error.abdm-9999).
 

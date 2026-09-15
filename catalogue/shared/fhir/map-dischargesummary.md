@@ -28,8 +28,8 @@ related:
 ## In plain words
 
 DischargeSummary is the discharge summary record for the
-[ABDM](../glossary/abdm.md) HDE data set,
-[NRCES](../glossary/nrces.md)'s `DischargeSummaryRecord` profile. It
+[ABDM](shared.glossary.abdm) HDE data set,
+[NRCES](shared.glossary.nrces)'s `DischargeSummaryRecord` profile. It
 documents a patient's hospital stay at the point they leave.
 
 ## Before you start

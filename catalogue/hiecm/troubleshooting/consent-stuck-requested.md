@@ -39,11 +39,11 @@ kept them from ever seeing it.
 ## Before you start
 
 - The request itself was accepted. See
-  [consent init request](../endpoints/m3-consent-request-init.md): NHA's
+  [consent init request](hiecm.endpoint.m3-consent-request-init): NHA's
   gateway notifies the patient through the ABHA App on acceptance, so an
   accepted request should have produced a notification somewhere.
 - You can check the request's current state with
-  [consent request status](../endpoints/m3-consent-request-status.md)
+  [consent request status](hiecm.endpoint.m3-consent-request-status)
   rather than only waiting.
 
 ## What happens
@@ -53,7 +53,7 @@ Work through these in order.
 1. **Does the patient's app show the request at all?** NHA's M3 document
    says the gateway notifies the patient through the ABHA App when a
    consent request is raised. If the patient uses a third party
-   [PHR app](../../shared/glossary/phr.md) instead of the ABHA App, that
+   [PHR app](shared.glossary.phr) instead of the ABHA App, that
    app needs an approved subscription with
    the gateway to be notified of a new consent request; without one, the
    request can sit unseen even though it was accepted. This catalogue
@@ -64,11 +64,11 @@ Work through these in order.
    access lasts once granted; this catalogue calls these the two
    clocks. Running out of the request window moves the state to
    Expired, not Requested, so checking the current state with
-   [consent request status](../endpoints/m3-consent-request-status.md)
+   [consent request status](hiecm.endpoint.m3-consent-request-status)
    tells you if this has already happened.
-3. **Was it raised against the right [ABHA address](../../shared/glossary/abha-address.md)?**
+3. **Was it raised against the right [ABHA address](shared.glossary.abha-address)?**
    An address that is malformed or does not exist produces
-   [ABDM-1170](../errors/abdm-1170.md) and the request goes nowhere. A
+   [ABDM-1170](hiecm.error.abdm-1170) and the request goes nowhere. A
    syntactically valid address that belongs to a different real patient
    will not error at all: the request is delivered and seen, just by
    the wrong person, not the one you meant. Getting the address right
@@ -76,7 +76,7 @@ Work through these in order.
 
 ## How you know it worked
 
-[Consent request status](../endpoints/m3-consent-request-status.md)
+[Consent request status](hiecm.endpoint.m3-consent-request-status)
 reports Granted or Denied rather than Requested. A Granted result also
 carries the id of at least one consent artefact; NHA's M3 document
 states a granted request can produce more than one.
@@ -90,8 +90,8 @@ and there is no call that makes them decide faster. If you believe the
 patient acted and the state did not change, escalate on the NHA dev
 forum. Report the consent request id, the `REQUEST-ID` from the init
 call, the `TIMESTAMP`, and the response from
-[consent request status](../endpoints/m3-consent-request-status.md).
+[consent request status](hiecm.endpoint.m3-consent-request-status).
 
 The error this symptom can surface:
-[ABDM-1170](../errors/abdm-1170.md), the ABHA address is malformed or
+[ABDM-1170](hiecm.error.abdm-1170), the ABHA address is malformed or
 does not exist.

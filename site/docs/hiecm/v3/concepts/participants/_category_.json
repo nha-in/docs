@@ -1,5 +1,6 @@
 {
   "label": "Ecosystem participants",
   "position": 1,
-  "collapsed": false
+  "collapsed": false,
+  "className": "sidebar-icon sidebar-icon--users"
 }

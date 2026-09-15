@@ -1,0 +1,32 @@
+{
+  "id": "followup-session-token-lifetime-01",
+  "slice": "followup",
+  "class": "how-do-i",
+  "turns": [
+    {
+      "role": "user",
+      "text": "how do I get a session token"
+    },
+    {
+      "role": "assistant",
+      "text": "POST to the gateway sessions endpoint with your client id and secret."
+    },
+    {
+      "role": "user",
+      "text": "how long does it last"
+    }
+  ],
+  "attachment": null,
+  "page": null,
+  "must_contain": [
+    "read expiresIn from the response rather than assuming a lifetime"
+  ],
+  "must_not_contain": ["<MASKED", "i apologize", "i apologise", "let me ", "great question", "the catalogue", "atom"],
+  "expected_sources": ["hiecm.endpoint.gateway-sessions", "hiecm.concept.gateway-session"],
+  "expected_shape": "how-do-i",
+  "expected_behaviour": "answer",
+  "derived_from": null,
+  "source_row": "annexure#sandbox-faq-m1",
+  "catalogue_version": "2026.08.24",
+  "notes": "Source lines: catalogue/hiecm/endpoints/gateway-sessions.md:37, 'The token is short lived. Read expiresIn from the response rather than assuming a duration, and refresh before it runs out instead of waiting for a 401.'; catalogue/hiecm/concepts/gateway-session.md:72, 'Hardcoding a token lifetime. NHA has changed it, so read expiresIn rather than assuming.' This is an M1 endpoint fact, the category the brief pairs with annexure#m1-abha-collection; that row does not exist on this branch (it lives on an unmerged branch), so annexure#sandbox-faq-m1 is used per project ruling."
+}

@@ -47,10 +47,16 @@ export default function PullHome(): null {
       return undefined;
     }
 
-    // The body, not the route's own wrapper: a route change replaces the
-    // wrapper, and the class would then be sitting on a detached node while
-    // the page the reader is looking at has none.
-    const page = document.body;
+    // Docusaurus' own root, not the route's wrapper and not the body. Not
+    // the wrapper because a route change replaces it, leaving the class on a
+    // detached node while the page the reader is looking at has none. Not the
+    // body because a transform on it makes the body the containing block for
+    // every fixed element in the page: the dialog overlay then scrolled with
+    // the document and left the foot of the window undimmed, and any other
+    // fixed chrome would have gone the same way. This root survives a route
+    // change and holds nothing that is portalled to the body.
+    const page = document.getElementById('__docusaurus');
+    if (!page) return undefined;
     wrap.current = page;
     page.classList.add('pull-home');
 
@@ -84,9 +90,7 @@ export default function PullHome(): null {
       pull.current = 0;
       paint();
       const swap = () => history.push('/');
-      // @ts-expect-error -- not in every lib.dom yet
       if (typeof document.startViewTransition === 'function') {
-        // @ts-expect-error -- see above
         document.startViewTransition(swap);
       } else {
         swap();

@@ -36,12 +36,12 @@ related:
 
 ## In plain words
 
-You cannot run a live [ABDM](../glossary/abdm.md) call until
-[NHA](../glossary/nha.md) approves your sandbox registration. NHA's FAQ publishes a maximum
+You cannot run a live [ABDM](shared.glossary.abdm) call until
+[NHA](shared.glossary.nha) approves your sandbox registration. NHA's FAQ publishes a maximum
 for that review: applications are processed within 5 working days. This page gives you a
 genuine fifteen minutes of your own while that runs: with nothing but a browser, read one
 complete transcribed exchange of the
-[gateway session](../../hiecm/concepts/gateway-session.md) call and leave with your own first
+[gateway session](hiecm.concept.gateway-session) call and leave with your own first
 call already written. Applying for sandbox access is a separate step, worth doing first since
 it starts NHA's review clock.
 
@@ -59,10 +59,9 @@ Apply first, then spend fifteen minutes of your own on the two steps below.
    NHA's review clock, so do it before anything else. See
    [registration and credentials](registration-and-credentials.md).
 2. **Read one transcribed exchange, about 5 minutes.** Below is the gateway session call, the
-   one every other ABDM call depends on, transcribed from this repository's specification. It
-   is **not run live**: nobody has executed this call from this repository, and the header and
-   body values shown are generated example values from the specification, not values NHA has
-   returned.
+   one every other ABDM call depends on. The header and body values shown are example values
+   from the specification rather than a recorded response, so read the shape and expect your
+   own values to differ.
 3. **Assemble your own first call, about 10 minutes.** A filled in curl with placeholders named
    for where each value comes from, so the moment your credentials arrive, pasting them in is
    the only step left.
@@ -97,7 +96,7 @@ This repository's specification (`catalogue/openapi/hiecm/v3/hiecm-gateway.yaml`
 successful call as answering `200`, with a session created and a bearer token issued. The
 specification carries no captured response body from NHA, only the field list: `accessToken`,
 `expiresIn`, `refreshExpiresIn`, `refreshToken` and `tokenType`. See
-[the endpoint page](../../hiecm/endpoints/gateway-sessions.md) for what each field means.
+[the endpoint page](hiecm.endpoint.gateway-sessions) for what each field means.
 Nothing here invents a body NHA never sent.
 
 ### Your own first call
@@ -122,6 +121,26 @@ curl --request POST \
 Save it. When NHA emails your client id and client secret, this is the one paste away from
 your first real call.
 
+### What you test M1 with
+
+Everything in the sandbox is test data, and no test identities are published
+with it. There is no fixture Aadhaar number and no fixed OTP: an OTP goes to
+whichever handset the identifier is registered against, and a real one
+receives it.
+
+So plan for this before you reach your first OTP call:
+
+- **A mobile you can read an SMS on.** This unlocks the whole login journey,
+  and it is the cheapest thing to arrange. Your own is fine.
+- **An Aadhaar whose linked mobile you hold**, if you intend to build ABHA
+  creation or anything that ends in a KYC verified ABHA number. Without one
+  you can build and read the creation calls but never complete them.
+
+Two consequences worth designing around. Never point an OTP call at a number
+nobody on your team answers, because a real person receives that message. And
+attempts are counted against the transaction rather than against you, so a
+retry loop against one number spends the transaction rather than trying again.
+
 ## How you know it worked
 
 For the transcribed exchange, you can now say what the session endpoint returns and where the
@@ -139,7 +158,7 @@ with no word, raise it on
 report format.
 
 If your first real call fails with a 401, that is a different problem from registration: see
-[Everything returns 401](../../hiecm/troubleshooting/everything-returns-401.md).
+[Everything returns 401](hiecm.troubleshooting.everything-returns-401).
 
 While NHA reviews your registration, use the wait. See
 [registration and credentials](registration-and-credentials.md) for what to read next: picking

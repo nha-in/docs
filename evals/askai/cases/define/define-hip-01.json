@@ -1,0 +1,40 @@
+{
+  "id": "define-hip-01",
+  "slice": "define",
+  "class": "define",
+  "turns": [
+    {
+      "role": "user",
+      "text": "What is HIP?"
+    }
+  ],
+  "attachment": null,
+  "page": null,
+  "must_contain": [
+    "HIP stands for Health Information Provider",
+    "HIP is a role an entity takes, not a kind of software, and the software is how the entity takes it",
+    "the entity publishing the record is the HIP: a facility publishing through its HMIS, or a citizen pushing from a PHR app, links care contexts to a patient's ABHA address, answers discovery requests, and hands over encrypted FHIR bundles when a request backed by consent arrives",
+    "publishing is M2 work"
+  ],
+  "must_not_contain": [
+    "<MASKED",
+    "i apologize",
+    "i apologise",
+    "let me ",
+    "great question",
+    "the catalogue",
+    "atom",
+    "a role a system plays",
+    "hip systems",
+    "an hmis is a hip"
+  ],
+  "expected_sources": [
+    "shared.glossary.hip"
+  ],
+  "expected_shape": "define",
+  "expected_behaviour": "answer",
+  "derived_from": null,
+  "source_row": "annexure#glossary",
+  "catalogue_version": "2026.08.24",
+  "notes": "asked using the catalogue's own spelling."
+}

@@ -1,0 +1,20 @@
+{
+  "id": "confusable-number-vs-address-01",
+  "slice": "confusable",
+  "class": "compare",
+  "turns": [{"role": "user", "text": "is abha number and abha address the same?"}],
+  "attachment": null,
+  "page": null,
+  "must_contain": [
+    "the ABHA number is the 14 digit identifier and the ABHA address is the readable handle such as name@abdm",
+    "a person can hold several addresses but one number"
+  ],
+  "must_not_contain": ["<MASKED", "i apologize", "i apologise", "let me ", "great question", "the catalogue", "atom", "they are the same"],
+  "expected_sources": ["shared.glossary.abha-number", "shared.glossary.abha-address"],
+  "expected_shape": "compare",
+  "expected_behaviour": "answer",
+  "derived_from": null,
+  "source_row": "annexure#glossary",
+  "catalogue_version": "2026.08.24",
+  "notes": "Source lines: catalogue/shared/glossary/abha-number.md, 'An ABHA number is fourteen digits, usually written as 91-1234-5678-9012.'; catalogue/shared/glossary/abha-address.md, 'An ABHA address looks like an email address, for example ajeet123@abdm on production'; catalogue/hiecm/concepts/abha-number-and-address.md:75, 'A person can hold several addresses and can add more later, so the number is the stable identity and the address is the routing handle.' Fails on the wrong claim, not on a missing phrase."
+}

@@ -191,8 +191,10 @@
   /* Centred on the bar, so the room it has is the distance from the middle to
      whichever cluster is wider, not the space between them. 26rem is that
      clearance doubled: enough for the brand and the gateway on the left. */
-  width: min(21rem, calc(100vw - 30rem));
+  width: min(24rem, calc(100vw - 30rem));
   transform: translate(-50%, -50%);
+  /* One width for both panels that drop from this field. */
+  --omnibox-panel: min(26rem, calc(100vw - 2rem));
 }
 
 /* The assistant, inside the field rather than beside it. The element brings
@@ -209,7 +211,7 @@
    shows the hint while the field is empty and swaps in the clear button once
    it is not. Both sit left of the assistant chip, which owns the right edge. */
 .omnibox [class*='searchHintContainer'] {
-  right: 5.5rem;
+  right: 7.25rem;
   gap: 0.125rem;
 }
 
@@ -226,7 +228,7 @@
 }
 
 .omnibox [class*='searchBarContainer'] [class*='searchClearButton'] {
-  right: 5.75rem;
+  right: 7.5rem;
 }
 
 /* The search theme ships its own markup and hashed module classes, so match
@@ -250,7 +252,7 @@
 .omnibox .navbar__search-input {
   width: 100%;
   height: 2.25rem;
-  padding: 0 8.5rem 0 2.25rem;
+  padding: 0 10.25rem 0 2.25rem;
   font-family: var(--font-sans);
   font-size: 0.875rem;
   line-height: 1.25rem;
@@ -294,16 +296,71 @@
   color: var(--text-faint);
 }
 
-/* Result panel: keep it on the site palette rather than the theme default. */
+/* The results panel and the quick actions are one panel wearing two sets of
+   content. They drop from the same field into the same place, and only one is
+   ever on screen, so a reader who types a letter should see rows appear in the
+   panel they were already looking at, not a second control with its own width,
+   its own edge and its own idea of what a row looks like. The theme's own
+   variables carry what they can; the rest is matched here. */
 .omnibox {
   --search-local-modal-background: var(--surface-raised);
-  --search-local-modal-shadow: 0 1px 2px rgb(0 0 0 / 0.04), 0 12px 32px rgb(0 0 0 / 0.12);
-  --search-local-hit-background: var(--surface-sunken);
+  --search-local-modal-shadow: 0 1rem 2rem rgb(0 0 0 / 0.14);
+  --search-local-modal-width: var(--omnibox-panel);
+  --search-local-modal-width-sm: var(--omnibox-panel);
+  --search-local-hit-background: transparent;
   --search-local-hit-shadow: none;
   --search-local-hit-color: var(--text-body);
-  --search-local-hit-active-color: var(--accent-contrast);
+  --search-local-hit-active-color: var(--text-heading);
+  --search-local-hit-height: 2rem;
+  --search-local-spacing: 0.625rem;
   --search-local-highlight-color: var(--accent);
   --search-local-muted-color: var(--text-faint);
+}
+
+/* Left edge and width, against the theme's own inline-level !important.
+
+   The height is bounded in dvh and the panel scrolls, which is the second half
+   of the keyboard fix in docusaurus.config.ts. `dvh` is the viewport as it is
+   now rather than as it was before the keyboard opened, so a long result list
+   ends above the keyboard instead of running under it. The viewport tag keeps
+   the panel on screen; this keeps its contents reachable once it is. */
+.omnibox [class*='dropdownMenu'] {
+  left: 0 !important;
+  right: auto !important;
+  margin-top: 0.5rem;
+  padding: 0.375rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-panel);
+  max-height: calc(100dvh - var(--topbar-height) - 1.5rem);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+/* The theme hashes its own class names, so the rows are matched on the stable
+   fragment rather than the whole name. */
+.omnibox [class*='dropdownMenu'] [class*='suggestion'] {
+  border-radius: var(--radius-control);
+  font-size: 0.8125rem;
+}
+
+/* The row under the pointer and the row under the arrow keys are the same
+   row, and it is the quick actions' row: a tinted ground, not a solid fill.
+   The fragment is matched twice because the theme's own rule for the cursor
+   row is otherwise of equal weight and loads after this file. */
+.omnibox [class*='dropdownMenu'] [class*='suggestion']:hover,
+.omnibox
+  [class*='dropdownMenu']
+  [class*='suggestion'][class*='suggestion'][class*='cursor'] {
+  background-color: var(--accent-soft);
+}
+
+.omnibox [class*='dropdownMenu'] [class*='hitFooter'] {
+  margin-top: 0.25rem;
+  padding: 0.375rem 0.625rem 0.125rem;
+  color: var(--text-faint);
+  font-size: 0.6875rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
 }
 
 /* ---------- overlays ---------- */
@@ -396,11 +453,33 @@
   }
 }
 
-/* The box is centred on the bar, so the bar has to keep the middle clear.
-   Under this width the brand's own wordmark is what gives, since the NHA
-   lockup beside it already names the publisher. */
-@media (max-width: 1200px) {
-  .topbar-wordmark {
+/* The chip goes where it does not fit, and there are two ways not to fit.
+
+   Between 997 and 1319 the search field is centred on the bar and the bar has
+   to keep the middle clear. With the chip in the row the left cluster ends at
+   x=446 whatever the window is doing, and the field's left edge is
+   (viewport - 384) / 2: at 1100 that is 358, so the field is drawn 88px over
+   the gateway switcher and the switcher's right half is unclickable. It
+   clears at 1320. Below 997 the field is not in the middle at all: it
+   collapses to a 34px puck in the right cluster, which is why the chip is
+   welcome again there, and hiding it through that whole range was the bug.
+   At 996 the bar carries the chip and everything else inside 972px.
+
+   Below 577 it stops being about the middle and starts being about the total:
+   the bar's content with the chip is 550px wide, so the row overflows the
+   viewport and the theme toggle goes off the right edge. 576 leaves ten
+   pixels in hand.
+
+   The chip goes whole, both times. Hiding only the wordmark left the pill
+   behind with nothing in it but a 20px emblem, which does not read as a mark:
+   it reads as a control that failed to load.
+
+   One rule underlies all of it and is worth stating once: a centred box's
+   room is the distance to the wider of the two clusters, not the gap between
+   them. Anything added to either side moves these numbers, so measure them
+   again rather than nudging them. */
+@media (max-width: 576px), (min-width: 997px) and (max-width: 1319px) {
+  .topbar-brand .brand-chip {
     display: none;
   }
 }
@@ -424,12 +503,6 @@
     align-items: center;
     justify-content: flex-end;
     margin-left: auto;
-  }
-
-  /* The lockup and the emblem beside it are two marks saying the same thing,
-     and the emblem is the one the bar can do without at this width. */
-  .topbar-brand .brand-chip {
-    display: none;
   }
 
   .omnibox {
@@ -505,9 +578,11 @@
     pointer-events: none;
   }
 
-  .omnibox abdm-support-agent {
-    display: none;
-  }
+  /* The chip is dropped by the element's own launcher attribute now, set in
+     Omnibox from the window size. It used to be hidden here, which hid the
+     element, and the panel is a dialog inside that element: the assistant
+     became unreachable on every phone and every trigger for it failed in
+     silence. Do not put display:none back on this host. */
 
   /* The hint and the clear button are placed against the full width field,
      88px in from its right edge. Against a 32px puck that lands them out in
@@ -581,7 +656,7 @@
   position: absolute;
   top: calc(100% + 0.5rem);
   left: 0;
-  right: 0;
+  width: var(--omnibox-panel);
   z-index: 2;
   padding: 0.375rem;
   border: 1px solid var(--border);
@@ -635,4 +710,101 @@
 .quick-actions__row--active {
   background: var(--accent-soft);
   color: var(--text-heading);
+}
+
+/* ---------- thumbs ---------- */
+
+/* The bar's controls were laid out for a mouse: 32px and 36px boxes, which is
+   what a cursor needs and about two thirds of what a thumb does. WCAG 2.5.5
+   asks for 44px and both phone platforms ask for the same, so under a coarse
+   pointer every control in the bar grows to 44px with padding, leaving the
+   glyphs the size they already were.
+
+   The width has to come from somewhere. At 360px the bar had exactly zero
+   slack left, so three 44px boxes do not fit beside a 16px gap: the gap drops
+   to 8px, which is still 36px of clear space between two glyphs once each is
+   padded, and the side padding drops to the 20px the navigation row directly
+   beneath the bar already uses, so the brand and that row's label now start on
+   the same line instead of 4px apart.
+
+   Scoped to the width where the bar has already collapsed to brand, gateway,
+   search puck, overflow and toggle. Above it the bar carries the sandbox and
+   repository marks as well, and growing one control there and not its
+   neighbours would read worse than leaving all of them at 36. */
+@media (pointer: coarse) and (max-width: 996px) {
+  .topbar {
+    gap: 0.5rem;
+    padding: 0 1.25rem;
+  }
+
+  /* A link, not a box, so the height comes from a minimum rather than a fixed
+     size: the lockup inside it still sets how tall the mark is drawn. */
+  .topbar-brand {
+    min-height: 2.75rem;
+  }
+
+  /* The colour mode control is a button inside a wrapper the theme's own
+     module sizes to 32px. The wrapper is what the row lays out, so it has to
+     grow with the button: left at 32 it let the 44px button hang 12px past its
+     slot, which at 360px put the button 8px from the screen edge instead of
+     the 20px every other control keeps. The wrapper needs the extra class to
+     outrank the module, which is loaded after this file. */
+  .topbar-overflow,
+  .topbar .topbar-toggle,
+  .topbar-toggle button {
+    width: 2.75rem;
+    height: 2.75rem;
+  }
+
+  /* The gateway is text, so it is already wide enough; only its height was
+     short. */
+  .topbar-gateway {
+    min-height: 2.75rem;
+  }
+
+  /* The search puck. Its magnifier is drawn by the search theme as background
+     art inset from the left edge, so the padding that makes the box 44px wide
+     has to be that same 44px, or the box grows out from under its own glyph. */
+  .omnibox .navbar__search-input {
+    width: 2.75rem;
+    height: 2.75rem;
+    padding-left: 2.75rem;
+  }
+
+  .omnibox .navbar__search-input:focus,
+  .omnibox [class*='focused_'] .navbar__search-input {
+    width: 100%;
+  }
+}
+
+/* The navigation sheet's close mark, which is the only visible way to dismiss
+   the sheet: a reader who cannot hit it is stuck behind it. The button is the
+   sheet primitive's own, placed by utility classes 16px in from the top right
+   corner with no padding at all, so its box was exactly its 16px glyph. The
+   padding takes the box to 44px and the offset gives back what the padding
+   added, which leaves the glyph drawn where it always was. */
+@media (pointer: coarse) {
+  [data-slot='sheet-content'] > button.absolute {
+    padding: 0.875rem;
+    top: 0.125rem;
+    right: 0.125rem;
+  }
+
+  /* Everything a thumb can reach inside the two menus the bar opens, not only
+     the marks that open them. Growing a trigger to 44px and leaving the rows
+     it reveals at 32px moves the problem one tap along: the reader lands the
+     first tap and misses the second, which is worse than missing the first,
+     because by then they think the control worked.
+
+     The drawer's own list is the larger half of it. Its tabs and its
+     navigation links were 32px, and there are 27 of them against the one
+     close mark that had been fixed. */
+  [data-slot='dropdown-menu-content'] [data-slot='dropdown-menu-item'],
+  [data-slot='dropdown-menu-content'] a,
+  [data-slot='sheet-content'] .mobile-nav-tab,
+  [data-slot='sheet-content'] .menu__link {
+    min-height: 2.75rem;
+    display: flex;
+    align-items: center;
+  }
 }

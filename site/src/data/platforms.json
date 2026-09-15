@@ -9,10 +9,6 @@
       {
         "label": "V3",
         "to": "/docs/hiecm/v3"
-      },
-      {
-        "label": "V2",
-        "note": "Not published here. NHA has retired it for new integrations."
       }
     ],
     "apiTo": "/docs/hiecm/v3/api",

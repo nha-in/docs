@@ -5,6 +5,7 @@ sidebar_position: 4
 description: Find an ambulance nearby and get a quote from the provider, using the two call pairs live in this service today.
 verification: unverified
 source: UHI__UHI_AmbulanceBooking_Onboarding_v1.1-July2026.md
+sidebar_class_name: sidebar-icon sidebar-icon--ambulance
 ---
 
 # Ambulance booking

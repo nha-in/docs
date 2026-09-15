@@ -50,7 +50,7 @@ Work through these in order.
 
 1. **Has your session token expired?** Session tokens are short lived.
    Read `expiresIn` from the response of
-   [create a session and get an access token](../endpoints/gateway-sessions.md)
+   [create a session and get an access token](hiecm.endpoint.gateway-sessions)
    rather than assuming a duration, and re-run that call for a fresh
    token instead of retrying the failing call with the old one.
 2. **Are you calling the wrong environment's base URL?** A sandbox
@@ -61,13 +61,13 @@ Work through these in order.
    against.
 3. **Is your clock wrong?** The `TIMESTAMP` header has to be close to
    the gateway's own clock, in ISO 8601 UTC. See
-   [ABDM-2402, your clock is wrong](../errors/abdm-2402.md): a container
+   [ABDM-2402, your clock is wrong](hiecm.error.abdm-2402): a container
    host that was suspended and resumed is the usual cause, because its
    clock resumes behind.
 4. **Is `X-CM-ID` missing or wrong for this environment?** Look at the
    literal value you sent, not the value you meant to send: `sbx` on
    the sandbox, `abdm` in production. See
-   [ABDM-2403](../errors/abdm-2403.md). This header names the consent
+   [ABDM-2403](hiecm.error.abdm-2403). This header names the consent
    manager you are pointed at, and the wrong value fails every call the
    same way a missing session token does.
 
@@ -87,8 +87,8 @@ Report the API you called, the `REQUEST-ID` you sent, the `TIMESTAMP`
 you sent, and the full response body, not just the status.
 
 The errors this symptom can surface:
-[ABDM-2402](../errors/abdm-2402.md), your clock is wrong;
-[ABDM-2403](../errors/abdm-2403.md), you are pointed at the wrong consent
-manager; [ABDM-2500](../errors/abdm-2500.md), you did not send a session
-token; and [ABDM-1032](../errors/abdm-1032.md), a required header is
+[ABDM-2402](hiecm.error.abdm-2402), your clock is wrong;
+[ABDM-2403](hiecm.error.abdm-2403), you are pointed at the wrong consent
+manager; [ABDM-2500](hiecm.error.abdm-2500), you did not send a session
+token; and [ABDM-1032](hiecm.error.abdm-1032), a required header is
 absent or malformed and NHA is not saying which one.

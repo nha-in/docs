@@ -5,7 +5,8 @@ API references, generated from [`../catalogue`](../catalogue). Nothing
 under `docs/`, `static/specs/` or `static/skills/` is hand-edited — all
 three are overwritten by the build: pages from the catalogue's atoms,
 specs from its OpenAPI files, and skills by `scripts/build-skills.mjs`
-(which also copies in the committed skills from `plugins/abdm/skills/` and `plugins/nhcx/skills/`).
+(which also copies in the committed skills from
+`plugins/abdm-integrators-assistant/skills/` and `plugins/nhcx/skills/`).
 
 ```bash
 npm install
@@ -34,7 +35,7 @@ The site depends on nothing outside its own origin:
 ## The Ask AI widget
 
 The chip in the top bar is not a component of this site. It is
-`<abdm-support-agent>`, the standalone widget in [../widget](../widget), built
+`<abdm-support-agent>`, the standalone widget in [../ai-widget](../ai-widget), built
 into `static/agent/` on every `prestart` and `prebuild` and loaded by a script
 tag. The site places the element and sets its attributes, exactly as any other
 embedder would, and styles only the box it sits in.

@@ -1,1 +1,6 @@
-{"label": "Troubleshooting", "position": 6, "collapsed": false}
+{
+  "label": "Troubleshooting",
+  "position": 6,
+  "collapsed": false,
+  "className": "sidebar-icon sidebar-icon--life-buoy"
+}

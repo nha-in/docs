@@ -5,6 +5,7 @@ sidebar_position: 7
 description: 'The citizen facing app: what identifies it, the three milestones it builds, and why it is where consent happens.'
 verification: unverified
 source: site/docs/hiecm/v3/concepts/phr.md, site/docs/hiecm/v3/milestones/p1.mdx, site/docs/hiecm/v3/milestones/p3.mdx, catalogue/hiecm/concepts/roles.md, site/docs/hiecm/v3/concepts/gateway.md
+sidebar_class_name: sidebar-icon sidebar-icon--smartphone
 ---
 
 # PHR app
@@ -14,20 +15,21 @@ and are the place where every consent decision is taken.
 
 ## Who you are in ABDM
 
-A [PHR](/docs/hiecm/v3/getting-started/glossary#phr) application sits on the
-citizen facing side of the
-[HIE-CM](/docs/hiecm/v3/getting-started/glossary#hie-cm). A provider facing
-system sits on the other. That position is fixed for the life of your product.
+A [PHR](/docs/hiecm/v3/getting-started/glossary#phr) application acts for the
+citizen, and a citizen and a facility sit on opposite sides of the
+[HIE-CM](/docs/hiecm/v3/getting-started/glossary#hie-cm). That position is fixed
+for the life of your product.
 
 You hold no registry identifier of your own. Your users hold the
 [ABHA](/docs/hiecm/v3/getting-started/glossary#abha) numbers and addresses, and
 everything routes on the address. Your own credentials are the client id and
 client secret issued at sandbox signup, which you exchange for a session token.
 
-Within that position you take both directions. You are an
-[HIU](/docs/hiecm/v3/getting-started/glossary#hiu) whenever you fetch a user's
-records, and a [HIP](/docs/hiecm/v3/getting-started/glossary#hip) the moment a
-user uploads one into you.
+Within that position the citizen takes both directions through your app. Your
+user is the [HIU](/docs/hiecm/v3/getting-started/glossary#hiu) whenever you
+fetch their records, and the
+[HIP](/docs/hiecm/v3/getting-started/glossary#hip) the moment they link or push
+one from your app.
 
 To be listed for deep links, submit three things at sandbox exit: your
 application name, your Play Store URL and your App Store URL.

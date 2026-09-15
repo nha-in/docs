@@ -11,6 +11,7 @@ info:
     module: m1
     label: M1 ABHA identity
     position: 2
+    icon: id-card
   title: ABDM M1, ABHA identity
   summary: Create, find, log into and manage an ABHA, the health account that
     identifies a patient across ABDM.
@@ -122,6 +123,14 @@ paths:
   /v3/enrollment/auth/byAbdm:
     post:
       operationId: m1_enrolment_verify_abdm_otp
+      x-abdm-requirement:
+        level: mandatory
+        cases: [CRT_ABHA_101, CRT_ABHA_102, CRT_ABHA_103, CRT_ABHA_104, CRT_ABHA_105, CRT_ABHA_106, CRT_ABHA_107, CRT_ABHA_108, CRT_ABHA_109, CRT_ABHA_112, CRT_ABHA_113, CRT_ABHA_114, CRT_ABHA_115, CRT_ABHA_201, CRT_ABHA_202, CRT_ABHA_203, CRT_ABHA_204, CRT_ABHA_205, CRT_ABHA_206, CRT_ABHA_207, CRT_ABHA_208, CRT_ABHA_209, CRT_ABHA_210, CRT_ABHA_401, CRT_ABHA_402, CRT_ABHA_403, CRT_ABHA_404, CRT_ABHA_405, CRT_ABHA_406, CRT_ABHA_407, CRT_ABHA_408, CRT_ABHA_410, CRT_ABHA_411]
+        conditions:
+          - "Either of the test cases CRT_ABHA_114 or CRT_ABHA_115 is mandatory for Governement Optional for Private"
+          - "Either of the test cases CRT_ABHA_209 or CRT_ABHA_210 is mandatory for Governement Optional for Private"
+          - "Mandatory for Private"
+          - "Mandatory for Private /Government (Optional for integrated program using demo auth as they have default ABHA address generated)"
       x-abdm-use-case: ABHA creation, Aadhaar OTP
       tags:
       - abha-creation
@@ -227,6 +236,14 @@ paths:
   /v3/enrollment/enrol/abha-address:
     post:
       operationId: m1_enrolment_claim_abha_address
+      x-abdm-requirement:
+        level: mandatory
+        cases: [CRT_ABHA_101, CRT_ABHA_102, CRT_ABHA_103, CRT_ABHA_104, CRT_ABHA_105, CRT_ABHA_106, CRT_ABHA_107, CRT_ABHA_108, CRT_ABHA_109, CRT_ABHA_112, CRT_ABHA_113, CRT_ABHA_114, CRT_ABHA_115, CRT_ABHA_201, CRT_ABHA_202, CRT_ABHA_203, CRT_ABHA_204, CRT_ABHA_205, CRT_ABHA_206, CRT_ABHA_207, CRT_ABHA_208, CRT_ABHA_209, CRT_ABHA_210]
+        conditions:
+          - "Either of the test cases CRT_ABHA_114 or CRT_ABHA_115 is mandatory for Governement Optional for Private"
+          - "Either of the test cases CRT_ABHA_209 or CRT_ABHA_210 is mandatory for Governement Optional for Private"
+          - "Mandatory for Private"
+          - "Mandatory for Private /Government (Optional for integrated program using demo auth as they have default ABHA address generated)"
       x-abdm-use-case: ABHA creation, Aadhaar OTP
       tags:
       - abha-creation
@@ -345,6 +362,15 @@ paths:
   /v3/enrollment/enrol/byAadhaar:
     post:
       operationId: m1_enrolment_by_aadhaar
+      x-abdm-requirement:
+        level: mandatory
+        cases: [CRT_ABHA_101, CRT_ABHA_102, CRT_ABHA_103, CRT_ABHA_104, CRT_ABHA_105, CRT_ABHA_106, CRT_ABHA_107, CRT_ABHA_108, CRT_ABHA_109, CRT_ABHA_112, CRT_ABHA_113, CRT_ABHA_114, CRT_ABHA_115, CRT_ABHA_201, CRT_ABHA_202, CRT_ABHA_203, CRT_ABHA_204, CRT_ABHA_205, CRT_ABHA_206, CRT_ABHA_207, CRT_ABHA_208, CRT_ABHA_209, CRT_ABHA_210, CRT_ABHA_301, CRT_ABHA_302, CRT_ABHA_303, CRT_ABHA_304, CRT_ABHA_305, CRT_ABHA_306, CRT_ABHA_307, CRT_ABHA_308, CRT_ABHA_309]
+        conditions:
+          - "Either of the test cases CRT_ABHA_114 or CRT_ABHA_115 is mandatory for Governement Optional for Private"
+          - "Either of the test cases CRT_ABHA_209 or CRT_ABHA_210 is mandatory for Governement Optional for Private"
+          - "Either of the test cases CRT_ABHA_308 or CRT_ABHA_309 is mandatory for Governement Optional for Private"
+          - "Mandatory for Private"
+          - "Mandatory for Private /Government (Optional for integrated program using demo auth as they have default ABHA address generated)"
       x-abdm-use-case: ABHA creation, Aadhaar OTP
       tags:
       - abha-creation
@@ -507,6 +533,9 @@ paths:
   /v3/enrollment/enrol/byDocument:
     post:
       operationId: m1_enrolment_by_document
+      x-abdm-requirement:
+        level: optional
+        cases: [CRT_ABHA_401, CRT_ABHA_402, CRT_ABHA_403, CRT_ABHA_404, CRT_ABHA_405, CRT_ABHA_406, CRT_ABHA_407, CRT_ABHA_408, CRT_ABHA_410, CRT_ABHA_411]
       x-abdm-use-case: ABHA creation, driving licence or PAN
       tags:
       - abha-creation
@@ -716,6 +745,14 @@ paths:
   /v3/enrollment/enrol/suggestion:
     get:
       operationId: m1_enrolment_address_suggestions
+      x-abdm-requirement:
+        level: mandatory
+        cases: [CRT_ABHA_101, CRT_ABHA_102, CRT_ABHA_103, CRT_ABHA_104, CRT_ABHA_105, CRT_ABHA_106, CRT_ABHA_107, CRT_ABHA_108, CRT_ABHA_109, CRT_ABHA_112, CRT_ABHA_113, CRT_ABHA_114, CRT_ABHA_115, CRT_ABHA_201, CRT_ABHA_202, CRT_ABHA_203, CRT_ABHA_204, CRT_ABHA_205, CRT_ABHA_206, CRT_ABHA_207, CRT_ABHA_208, CRT_ABHA_209, CRT_ABHA_210]
+        conditions:
+          - "Either of the test cases CRT_ABHA_114 or CRT_ABHA_115 is mandatory for Governement Optional for Private"
+          - "Either of the test cases CRT_ABHA_209 or CRT_ABHA_210 is mandatory for Governement Optional for Private"
+          - "Mandatory for Private"
+          - "Mandatory for Private /Government (Optional for integrated program using demo auth as they have default ABHA address generated)"
       x-abdm-use-case: ABHA creation, Aadhaar OTP
       tags:
       - abha-creation
@@ -764,11 +801,11 @@ paths:
         required: true
         description: |
           The user scoped token returned when a person logs in or verifies an
-          OTP. Required on this operation. See the shared `XToken` parameter
-          for the general description and the `Bearer ` prefix rule.
+          OTP. Required on this operation. See the shared `XToken` parameter,
+          and note that this header takes the bare token with no prefix.
         schema:
           type: string
-        example: Bearer <X_TOKEN_FROM_LOGIN_VERIFY>
+        example: <X_TOKEN_FROM_LOGIN_VERIFY>
       responses:
         '200':
           description: The children linked to the parent ABHA, with their count.
@@ -788,6 +825,14 @@ paths:
   /v3/enrollment/request/otp:
     post:
       operationId: m1_enrolment_request_otp
+      x-abdm-requirement:
+        level: mandatory
+        cases: [CRT_ABHA_101, CRT_ABHA_102, CRT_ABHA_103, CRT_ABHA_104, CRT_ABHA_105, CRT_ABHA_106, CRT_ABHA_107, CRT_ABHA_108, CRT_ABHA_109, CRT_ABHA_112, CRT_ABHA_113, CRT_ABHA_114, CRT_ABHA_115, CRT_ABHA_201, CRT_ABHA_202, CRT_ABHA_203, CRT_ABHA_204, CRT_ABHA_205, CRT_ABHA_206, CRT_ABHA_207, CRT_ABHA_208, CRT_ABHA_209, CRT_ABHA_210, CRT_ABHA_401, CRT_ABHA_402, CRT_ABHA_403, CRT_ABHA_404, CRT_ABHA_405, CRT_ABHA_406, CRT_ABHA_407, CRT_ABHA_408, CRT_ABHA_410, CRT_ABHA_411]
+        conditions:
+          - "Either of the test cases CRT_ABHA_114 or CRT_ABHA_115 is mandatory for Governement Optional for Private"
+          - "Either of the test cases CRT_ABHA_209 or CRT_ABHA_210 is mandatory for Governement Optional for Private"
+          - "Mandatory for Private"
+          - "Mandatory for Private /Government (Optional for integrated program using demo auth as they have default ABHA address generated)"
       x-abdm-use-case: ABHA creation, Aadhaar OTP
       tags:
       - abha-creation
@@ -881,6 +926,9 @@ paths:
   /v3.1/profile/login/request/otp:
     post:
       operationId: m1_login_request_otp_v31
+      x-abdm-requirement:
+        level: mandatory
+        cases: [PROF_ABHA_605, VRFY_ABHA_101, VRFY_ABHA_201, VRFY_ABHA_301, VRFY_ABHA_302, VRFY_ABHA_303, VRFY_ABHA_304, VRFY_ABHA_305, VRFY_ABHA_401, VRFY_ABHA_402, VRFY_ABHA_403, VRFY_ABHA_404, VRFY_ABHA_405]
       x-abdm-use-case: ABHA verification, Aadhaar OTP
       tags:
       - abha-login
@@ -934,6 +982,9 @@ paths:
   /v3.1/profile/login/verify:
     post:
       operationId: m1_login_verify_v31
+      x-abdm-requirement:
+        level: mandatory
+        cases: [VRFY_ABHA_101, VRFY_ABHA_201, VRFY_ABHA_301, VRFY_ABHA_302, VRFY_ABHA_303, VRFY_ABHA_304, VRFY_ABHA_305, VRFY_ABHA_401, VRFY_ABHA_402, VRFY_ABHA_403, VRFY_ABHA_404, VRFY_ABHA_405, VRFY_ABHA_501]
       x-abdm-use-case: ABHA verification, Aadhaar OTP
       tags:
       - abha-login
@@ -1119,6 +1170,9 @@ paths:
   /v3/profile/login/request/otp:
     post:
       operationId: m1_login_request_otp
+      x-abdm-requirement:
+        level: mandatory
+        cases: [PROF_ABHA_605, VRFY_ABHA_101, VRFY_ABHA_201, VRFY_ABHA_301, VRFY_ABHA_302, VRFY_ABHA_303, VRFY_ABHA_304, VRFY_ABHA_305, VRFY_ABHA_401, VRFY_ABHA_402, VRFY_ABHA_403, VRFY_ABHA_404, VRFY_ABHA_405]
       x-abdm-use-case: ABHA verification, mobile OTP
       tags:
       - abha-login
@@ -1127,6 +1181,14 @@ paths:
         Starts a login. `loginHint` selects what the person is identifying
         themselves with: `mobile`, `aadhaar` or `abha-number`. As everywhere in
         M1, `loginId` is encrypted rather than raw.
+
+        The shape you encrypt matters, because the service validates the
+        plaintext after it decrypts. On `abha-number` that is the fourteen
+        digits with their dashes, `NN-NNNN-NNNN-NNNN`, for example
+        `91-1234-5678-9015`. The bare digits are refused with
+        `400 {"loginId": "LoginId is invalid"}`, observed on the sandbox on
+        11 September 2026. On `mobile` the plaintext is ten digits with no
+        country code, and on `aadhaar` twelve digits with no spaces.
       parameters:
       - $ref: '#/components/parameters/RequestId'
       - $ref: '#/components/parameters/Timestamp'
@@ -1144,8 +1206,20 @@ paths:
                     type: string
                 loginHint:
                   type: string
+                  description: What the person is identifying themselves with.
+                  enum:
+                  - mobile
+                  - aadhaar
+                  - abha-number
                 loginId:
                   type: string
+                  description: |
+                    The identifier for that `loginHint`, RSA encrypted against
+                    the ABDM public certificate and base64 encoded. The
+                    plaintext shape is checked after decryption: an ABHA number
+                    is `NN-NNNN-NNNN-NNNN` with its dashes, a mobile number is
+                    ten digits with no country code, an Aadhaar number is
+                    twelve digits with no spaces.
                 otpSystem:
                   type: string
                 txnId:
@@ -1165,23 +1239,29 @@ paths:
                   loginHint: mobile
                   loginId: <ENCRYPTED_MOBILE_NUMBER>
                   otpSystem: abdm
-              login_abha_via_aadhaar_number:
-                summary: login abha via aadhaar number
+              login_abha_number_via_aadhaar_otp:
+                summary: login by ABHA number, Aadhaar OTP
+                description: |
+                  The plaintext behind the encrypted value keeps its dashes,
+                  for example `91-1234-5678-9015`.
                 value:
                   scope:
                   - abha-login
                   - aadhaar-verify
                   loginHint: abha-number
-                  loginId: <ABHA_NUMBER_ENCRYPTION>
+                  loginId: <ENCRYPTED_NN-NNNN-NNNN-NNNN>
                   otpSystem: aadhaar
-              login_via_abha_number_mobile_otp:
-                summary: login via abha number mobile otp
+              login_abha_number_via_mobile_otp:
+                summary: login by ABHA number, mobile OTP
+                description: |
+                  The plaintext behind the encrypted value keeps its dashes,
+                  for example `91-1234-5678-9015`.
                 value:
                   scope:
                   - abha-login
                   - mobile-verify
                   loginHint: abha-number
-                  loginId: <ENCRYPTED_A_B_H_A_NUMBER>
+                  loginId: <ENCRYPTED_NN-NNNN-NNNN-NNNN>
                   otpSystem: abdm
       responses:
         '200':
@@ -1242,6 +1322,9 @@ paths:
   /v3/profile/login/verify:
     post:
       operationId: m1_login_verify
+      x-abdm-requirement:
+        level: mandatory
+        cases: [VRFY_ABHA_101, VRFY_ABHA_201, VRFY_ABHA_301, VRFY_ABHA_302, VRFY_ABHA_303, VRFY_ABHA_304, VRFY_ABHA_305, VRFY_ABHA_401, VRFY_ABHA_402, VRFY_ABHA_403, VRFY_ABHA_404, VRFY_ABHA_405, VRFY_ABHA_501]
       x-abdm-use-case: ABHA verification, mobile OTP
       tags:
       - abha-login
@@ -1567,6 +1650,9 @@ paths:
   /v3/profile/login/verify/user:
     post:
       operationId: m1_login_select_account
+      x-abdm-requirement:
+        level: mandatory
+        cases: [PROF_ABHA_605, VRFY_ABHA_301, VRFY_ABHA_302, VRFY_ABHA_303, VRFY_ABHA_304, VRFY_ABHA_305]
       x-abdm-use-case: ABHA verification, mobile OTP
       tags:
       - abha-login
@@ -1626,6 +1712,15 @@ paths:
   /v3/profile/account:
     patch:
       operationId: m1_profile_update_account
+      x-abdm-requirement:
+        level: mandatory
+        cases: [CRT_ABHA_101, CRT_ABHA_102, CRT_ABHA_103, CRT_ABHA_104, CRT_ABHA_105, CRT_ABHA_106, CRT_ABHA_107, CRT_ABHA_108, CRT_ABHA_109, CRT_ABHA_112, CRT_ABHA_113, CRT_ABHA_114, CRT_ABHA_115, CRT_ABHA_201, CRT_ABHA_202, CRT_ABHA_203, CRT_ABHA_204, CRT_ABHA_205, CRT_ABHA_206, CRT_ABHA_207, CRT_ABHA_208, CRT_ABHA_209, CRT_ABHA_210, CRT_ABHA_301, CRT_ABHA_302, CRT_ABHA_303, CRT_ABHA_304, CRT_ABHA_305, CRT_ABHA_306, CRT_ABHA_307, CRT_ABHA_308, CRT_ABHA_309, PROF_ABHA_602, VRFY_ABHA_101, VRFY_ABHA_201, VRFY_ABHA_301, VRFY_ABHA_302, VRFY_ABHA_303, VRFY_ABHA_304, VRFY_ABHA_305, VRFY_ABHA_401, VRFY_ABHA_402, VRFY_ABHA_403, VRFY_ABHA_404, VRFY_ABHA_405, VRFY_ABHA_501]
+        conditions:
+          - "Either of the test cases CRT_ABHA_114 or CRT_ABHA_115 is mandatory for Governement Optional for Private"
+          - "Either of the test cases CRT_ABHA_209 or CRT_ABHA_210 is mandatory for Governement Optional for Private"
+          - "Either of the test cases CRT_ABHA_308 or CRT_ABHA_309 is mandatory for Governement Optional for Private"
+          - "Mandatory for Private"
+          - "Mandatory for Private /Government (Optional for integrated program using demo auth as they have default ABHA address generated)"
       x-abdm-use-case: Profile update
       tags:
       - abha-profile
@@ -1901,6 +1996,15 @@ paths:
       x-abdm-atom: hiecm.endpoint.m1-profile-update-account
     get:
       operationId: m1_profile_get_account
+      x-abdm-requirement:
+        level: mandatory
+        cases: [CRT_ABHA_101, CRT_ABHA_102, CRT_ABHA_103, CRT_ABHA_104, CRT_ABHA_105, CRT_ABHA_106, CRT_ABHA_107, CRT_ABHA_108, CRT_ABHA_109, CRT_ABHA_112, CRT_ABHA_113, CRT_ABHA_114, CRT_ABHA_115, CRT_ABHA_201, CRT_ABHA_202, CRT_ABHA_203, CRT_ABHA_204, CRT_ABHA_205, CRT_ABHA_206, CRT_ABHA_207, CRT_ABHA_208, CRT_ABHA_209, CRT_ABHA_210, CRT_ABHA_301, CRT_ABHA_302, CRT_ABHA_303, CRT_ABHA_304, CRT_ABHA_305, CRT_ABHA_306, CRT_ABHA_307, CRT_ABHA_308, CRT_ABHA_309, PROF_ABHA_602, VRFY_ABHA_101, VRFY_ABHA_201, VRFY_ABHA_301, VRFY_ABHA_302, VRFY_ABHA_303, VRFY_ABHA_304, VRFY_ABHA_305, VRFY_ABHA_401, VRFY_ABHA_402, VRFY_ABHA_403, VRFY_ABHA_404, VRFY_ABHA_405, VRFY_ABHA_501]
+        conditions:
+          - "Either of the test cases CRT_ABHA_114 or CRT_ABHA_115 is mandatory for Governement Optional for Private"
+          - "Either of the test cases CRT_ABHA_209 or CRT_ABHA_210 is mandatory for Governement Optional for Private"
+          - "Either of the test cases CRT_ABHA_308 or CRT_ABHA_309 is mandatory for Governement Optional for Private"
+          - "Mandatory for Private"
+          - "Mandatory for Private /Government (Optional for integrated program using demo auth as they have default ABHA address generated)"
       x-abdm-use-case: Share patient profile
       tags:
       - abha-profile
@@ -1916,11 +2020,11 @@ paths:
         required: true
         description: |
           The user scoped token returned when a person logs in or verifies an
-          OTP. Required on this operation. See the shared `XToken` parameter
-          for the general description and the `Bearer ` prefix rule.
+          OTP. Required on this operation. See the shared `XToken` parameter,
+          and note that this header takes the bare token with no prefix.
         schema:
           type: string
-        example: Bearer <X_TOKEN_FROM_LOGIN_VERIFY>
+        example: <X_TOKEN_FROM_LOGIN_VERIFY>
       responses:
         '200':
           description: The response.
@@ -1940,6 +2044,15 @@ paths:
   /v3/profile/account/abha-card:
     get:
       operationId: m1_profile_get_abha_card
+      x-abdm-requirement:
+        level: mandatory
+        cases: [CRT_ABHA_101, CRT_ABHA_102, CRT_ABHA_103, CRT_ABHA_104, CRT_ABHA_105, CRT_ABHA_106, CRT_ABHA_107, CRT_ABHA_108, CRT_ABHA_109, CRT_ABHA_112, CRT_ABHA_113, CRT_ABHA_114, CRT_ABHA_115, CRT_ABHA_201, CRT_ABHA_202, CRT_ABHA_203, CRT_ABHA_204, CRT_ABHA_205, CRT_ABHA_206, CRT_ABHA_207, CRT_ABHA_208, CRT_ABHA_209, CRT_ABHA_210, CRT_ABHA_301, CRT_ABHA_302, CRT_ABHA_303, CRT_ABHA_304, CRT_ABHA_305, CRT_ABHA_306, CRT_ABHA_307, CRT_ABHA_308, CRT_ABHA_309, VRFY_ABHA_101, VRFY_ABHA_201, VRFY_ABHA_301, VRFY_ABHA_302, VRFY_ABHA_303, VRFY_ABHA_304, VRFY_ABHA_305, VRFY_ABHA_401, VRFY_ABHA_402, VRFY_ABHA_403, VRFY_ABHA_404, VRFY_ABHA_405, VRFY_ABHA_501]
+        conditions:
+          - "Either of the test cases CRT_ABHA_114 or CRT_ABHA_115 is mandatory for Governement Optional for Private"
+          - "Either of the test cases CRT_ABHA_209 or CRT_ABHA_210 is mandatory for Governement Optional for Private"
+          - "Either of the test cases CRT_ABHA_308 or CRT_ABHA_309 is mandatory for Governement Optional for Private"
+          - "Mandatory for Private"
+          - "Mandatory for Private /Government (Optional for integrated program using demo auth as they have default ABHA address generated)"
       x-abdm-use-case: ABHA QR code
       tags:
       - abha-profile
@@ -1954,11 +2067,11 @@ paths:
         required: true
         description: |
           The user scoped token returned when a person logs in or verifies an
-          OTP. Required on this operation. See the shared `XToken` parameter
-          for the general description and the `Bearer ` prefix rule.
+          OTP. Required on this operation. See the shared `XToken` parameter,
+          and note that this header takes the bare token with no prefix.
         schema:
           type: string
-        example: Bearer <X_TOKEN_FROM_LOGIN_VERIFY>
+        example: <X_TOKEN_FROM_LOGIN_VERIFY>
       responses:
         '200':
           description: "Response body: not documented."
@@ -2007,11 +2120,11 @@ paths:
         required: true
         description: |
           The user scoped token returned when a person logs in or verifies an
-          OTP. Required on this operation. See the shared `XToken` parameter
-          for the general description and the `Bearer ` prefix rule.
+          OTP. Required on this operation. See the shared `XToken` parameter,
+          and note that this header takes the bare token with no prefix.
         schema:
           type: string
-        example: Bearer <X_TOKEN_FROM_LOGIN_VERIFY>
+        example: <X_TOKEN_FROM_LOGIN_VERIFY>
       responses:
         '200':
           description: "Response body: not documented."
@@ -2043,11 +2156,11 @@ paths:
         required: true
         description: |
           The user scoped token returned when a person logs in or verifies an
-          OTP. Required on this operation. See the shared `XToken` parameter
-          for the general description and the `Bearer ` prefix rule.
+          OTP. Required on this operation. See the shared `XToken` parameter,
+          and note that this header takes the bare token with no prefix.
         schema:
           type: string
-        example: Bearer <X_TOKEN_FROM_LOGIN_VERIFY>
+        example: <X_TOKEN_FROM_LOGIN_VERIFY>
       responses:
         '200':
           description: Confirmation that the session ended.
@@ -2086,6 +2199,9 @@ paths:
   /v3/profile/account/request/otp:
     post:
       operationId: m1_profile_request_otp
+      x-abdm-requirement:
+        level: optional
+        cases: [PROF_ABHA_601, PROF_ABHA_603, PROF_ABHA_604, PROF_ABHA_605]
       x-abdm-use-case: Profile update
       tags:
       - abha-profile
@@ -2102,11 +2218,11 @@ paths:
         required: true
         description: |
           The user scoped token returned when a person logs in or verifies an
-          OTP. Required on this operation. See the shared `XToken` parameter
-          for the general description and the `Bearer ` prefix rule.
+          OTP. Required on this operation. See the shared `XToken` parameter,
+          and note that this header takes the bare token with no prefix.
         schema:
           type: string
-        example: Bearer <X_TOKEN_FROM_LOGIN_VERIFY>
+        example: <X_TOKEN_FROM_LOGIN_VERIFY>
       requestBody:
         required: true
         content:
@@ -2176,6 +2292,9 @@ paths:
   /v3/profile/account/verify:
     post:
       operationId: m1_profile_verify_otp
+      x-abdm-requirement:
+        level: optional
+        cases: [PROF_ABHA_601, PROF_ABHA_603, PROF_ABHA_604, PROF_ABHA_605]
       x-abdm-use-case: Profile update
       tags:
       - abha-profile
@@ -2191,11 +2310,11 @@ paths:
         required: true
         description: |
           The user scoped token returned when a person logs in or verifies an
-          OTP. Required on this operation. See the shared `XToken` parameter
-          for the general description and the `Bearer ` prefix rule.
+          OTP. Required on this operation. See the shared `XToken` parameter,
+          and note that this header takes the bare token with no prefix.
         schema:
           type: string
-        example: Bearer <X_TOKEN_FROM_LOGIN_VERIFY>
+        example: <X_TOKEN_FROM_LOGIN_VERIFY>
       requestBody:
         required: true
         content:
@@ -3112,6 +3231,9 @@ paths:
       - PHR & ABHA Address
       summary: Search ABHA Address, Get Auth Methods
       operationId: m1_phr_search_abha_address
+      x-abdm-requirement:
+        level: mandatory
+        cases: [VRFY_ABHA_102, VRFY_ABHA_202]
       description: Look up available authentication methods for a given ABHA Address
         before login.
       parameters:
@@ -3155,6 +3277,9 @@ paths:
       - PHR & ABHA Address
       summary: Send OTP for ABHA Address Login
       operationId: m1_phr_request_otp
+      x-abdm-requirement:
+        level: mandatory
+        cases: [VRFY_ABHA_102, VRFY_ABHA_202]
       description: |
         Send OTP to login via ABHA Address.
 
@@ -3216,6 +3341,9 @@ paths:
       - PHR & ABHA Address
       summary: Verify OTP / Biometric for ABHA Address Login
       operationId: m1_phr_verify
+      x-abdm-requirement:
+        level: mandatory
+        cases: [VRFY_ABHA_102, VRFY_ABHA_202]
       description: Complete the ABHA Address login with OTP or biometric.
       parameters:
       - $ref: '#/components/parameters/RequestId'
@@ -3275,6 +3403,9 @@ paths:
       - PHR & ABHA Address
       summary: Get PHR Profile
       operationId: m1_get_phr_profile
+      x-abdm-requirement:
+        level: mandatory
+        cases: [VRFY_ABHA_102, VRFY_ABHA_202]
       description: Retrieve the authenticated user's PHR profile after ABHA Address
         login.
       parameters:
@@ -3306,6 +3437,9 @@ paths:
       - PHR & ABHA Address
       summary: Download PHR Card
       operationId: m1_download_phr_card
+      x-abdm-requirement:
+        level: mandatory
+        cases: [VRFY_ABHA_102, VRFY_ABHA_202]
       description: Download the PHR / ABHA Address card image.
       parameters:
       - $ref: '#/components/parameters/RequestId'
@@ -3460,6 +3594,9 @@ paths:
       - Scan & Share
       summary: Send Share Acknowledgement (HIP → Gateway)
       operationId: m1_on_share_acknowledgement
+      x-abdm-requirement:
+        level: mandatory
+        cases: [SHARE_PATIENT_PROFILE_701]
       description: |
         HIP sends an acknowledgement back to the ABDM Gateway after receiving
         and processing the patient's shared profile.
@@ -3508,7 +3645,7 @@ components:
       scheme: bearer
       bearerFormat: JWT
       description: |
-        The `accessToken` from `POST /api/hiecm/gateway/v3/sessions`, which is described in hiecm-gateway.yaml. Send it as `Authorization: Bearer <ACCESS_TOKEN>`.
+        The `accessToken` from `POST /api/hiecm/gateway/v3/sessions`. Send it as `Authorization: Bearer <ACCESS_TOKEN>`.
     bearerAuth:
       type: http
       scheme: bearer
@@ -3554,20 +3691,20 @@ components:
       description: |
         The user scoped token returned when a person logs in or verifies an OTP. Profile calls act on one account, so they need this in addition to the gateway token. Required on the calls that read or change a specific person's account.
 
-        The value carries a `Bearer ` prefix, exactly like the Authorization header. Sending the bare token reads as an invalid token error.
+        Send the bare token. Unlike the Authorization header this one carries no `Bearer ` prefix, and adding one is refused as `ABDM-1094` with the message `X-token expired`. That message names the wrong thing: a token rejected one second after it was issued has not expired, it was malformed. Check the prefix before the lifetime.
       schema:
         type: string
-      example: Bearer <X_TOKEN_FROM_LOGIN_VERIFY>
+      example: <X_TOKEN_FROM_LOGIN_VERIFY>
     BenefitName:
       name: BENEFIT_NAME
       in: header
       required: false
       description: |
-        The benefit scheme an enrolment belongs to. On enrolment and benefit calls, the value is `healthid api` on the enrol and search calls, and `healthid` on the login OTP and verify calls under Find ABHA and on some of the benefit calls. On the enrolment OTP request the header is present but explicitly disabled, so it is not sent there.
+        The benefit scheme an enrolment belongs to. Send `healthid api` on the enrol and search calls, and `healthid` on the login OTP and verify calls under Find ABHA. On the enrolment OTP request the header is present but explicitly disabled, so it is not sent there.
 
-        This header is spelled four different ways across requests: `BENEFIT_NAME` (most), `Benefit-Name` (demo auth and child ABHA calls), `BENEFIT-NAME` (child update, state district search) and `Benefit_Name` (once). Underscore and hyphen are different header names on the wire. Benefit programme calls also use scheme values beyond healthid: `COVIN` on an IRIS enrol and a profile photo update, and a disabled `PAN`.
+        A login OTP request sent with `healthid api` rather than `healthid` was accepted on the sandbox on 2026-09-11, so the login calls may take either.
 
-        Which spelling is correct has not been confirmed against the sandbox.
+        NHA's files spell this header four different ways and use scheme values beyond healthid. Which spelling each endpoint accepts is not confirmed against the sandbox. The Conventions page for this module lists all four.
       schema:
         type: string
       example: healthid api
@@ -5463,9 +5600,25 @@ components:
                 scope: Invalid Scope
                 timestamp: '2024-05-10 11:13:04'
             invalid_login_id:
+              summary: the value was refused, without saying why
+              description: |
+                On the login endpoint this means the padding, the key or the
+                plaintext is wrong. On `/v3/enrollment/request/otp` it is
+                returned for every input, correctly encrypted ones included,
+                so do not read a cause into it there.
               value:
                 loginId: Invalid LoginId
                 timestamp: '2024-05-10 11:15:14'
+            login_id_wrong_shape:
+              summary: the plaintext failed a format rule
+              description: |
+                It decrypted, and the shape was wrong. An ABHA number sent as
+                fourteen bare digits returns this; it needs its dashes,
+                `NN-NNNN-NNNN-NNNN`. Observed on the sandbox on 11 September
+                2026.
+              value:
+                loginId: LoginId is invalid
+                timestamp: '2026-09-11 16:15:00'
             invalid_login_hint:
               value:
                 loginHint: Invalid LoginHint
@@ -5502,9 +5655,11 @@ components:
             $ref: '#/components/schemas/ErrorResponse'
 x-abdm-errors:
   notes: |
-    ## Four error shapes, not one
+    ## Six error shapes, not one
 
-    Do not write a parser that expects a single shape.
+    Do not write a parser that expects a single shape. Four come from the ABHA
+    service and its gateway. The fifth is an empty body. The sixth comes from
+    the registries and hides its real code one level down.
 
     ### Shape 1: the wrapped ABDM error
 
@@ -5518,6 +5673,12 @@ x-abdm-errors:
     ```
 
     The code lives at `error.code`. This comes from the ABHA service's own business logic.
+
+    Do not compare that code with string equality. It is not always a clean
+    token: a failed session call returned `{"error":{"code":"ABDM-9999: ",
+    "message":"Invalid user credentials"}}`, with a trailing colon and space
+    inside the code. Trim it and match on the `ABDM-nnnn` prefix, or the branch
+    you wrote for that code never runs.
 
     ### Shape 2: the flat ABDM error
 
@@ -5552,6 +5713,37 @@ x-abdm-errors:
 
     Treat every key except `timestamp` as a field name. These always arrive as HTTP 400.
 
+    Two of these read almost the same. Only one of them tells you anything.
+
+    | Body | What it tells you |
+    |---|---|
+    | `{"loginId": "LoginId is invalid"}` | It decrypted. The plaintext failed a format rule |
+    | `{"loginId": "Invalid LoginId"}` | On the enrolment endpoint, nothing at all |
+
+    The first is the one that costs an afternoon, because the value really was
+    encrypted and really was the right number. An ABHA number keeps its dashes,
+    `NN-NNNN-NNNN-NNNN`.
+
+    The second carries no diagnostic value on `/v3/enrollment/request/otp`. That
+    endpoint returns it for plaintext, for an empty string, for base64 that is
+    not ciphertext, and for a correctly encrypted value alike. A padding matrix
+    run against it returns the same refusal for every row, the correct row
+    included, which is how a wrong padding survives a test that looks thorough.
+
+    Test encryption against `POST /v3/profile/login/request/otp` with
+    `loginHint: "mobile"` instead, and with a number that is registered against
+    an ABHA account. The 200 is the signal: a right padding returns it with a
+    `txnId`, a wrong one returns `Invalid Mobile Number`.
+
+    The number has to be a real one. A correctly encrypted `9999999999` returns
+    that same `Invalid Mobile Number`, because the value decrypted fine and
+    named nobody. With an unregistered number this endpoint is as uninformative
+    as the enrolment one.
+
+    The algorithm is published: read `encryptionAlgorithm` from the certificate
+    response. The plaintext shape for every encrypted field is in
+    [encryption](/docs/hiecm/v3/concepts/encryption).
+
     ### Shape 4: the API gateway error
 
     ```json
@@ -5563,6 +5755,38 @@ x-abdm-errors:
     ```
 
     A numeric code, not an `ABDM-` code, plus a `description` field the other shapes lack. This comes from the API gateway in front of the ABHA service, before your request reaches the business logic. It almost always means the `Authorization` header is wrong or expired.
+
+    `900901` is a bad token. `900902` is no token at all, observed on the NHPR
+    host. Match the family, not the single code.
+
+    ### Shape 5: the empty body
+
+    An HTTP 401 with a zero length body and no JSON at all, observed on
+    `/v3/phr/web/login/profile/abha-profile` when no user token was sent. There
+    is nothing to parse and nothing to match. Code that assumes every failure
+    carries a body throws here, on a response that means something simple.
+
+    ### Shape 6: the registry error, with the real code nested
+
+    ```json
+    {
+        "code": "HIS-422",
+        "message": "Unable to process the current request due to some wrong data entered.",
+        "details": [
+            {"message": "You are not allowed to access this API", "code": "HIS-403", "attribute": null}
+        ]
+    }
+    ```
+
+    The registries return a `HIS-` family rather than `ABDM-`, and the top level
+    code is not the cause. `HIS-422` and its message say the data was wrong. The
+    real reason is in `details[0]`: `HIS-403`, not permitted. The HTTP status
+    disagrees with the nested code too, arriving as 422 for what is an
+    authorisation failure.
+
+    Read `details[0].code` before the top level one on any `HIS-` response, and
+    show `details[0].message` to whoever is debugging. Acting on the outer code
+    sends you to check your payload for a problem that is not there.
   source: Code, message and error name are as published. The action column reads
     the message text by a documented rule, and says Unclassified where the rule
     could not classify one.

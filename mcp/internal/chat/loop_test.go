@@ -6,7 +6,10 @@ import (
 	"errors"
 	"strings"
 	"testing"
+	"time"
 	"unicode/utf8"
+
+	"github.com/eka-care/abdm-docs/mcp/internal/guard"
 )
 
 // fakeModel scripts a sequence of replies, one per call, in order. texts[i],
@@ -26,12 +29,36 @@ type fakeModel struct {
 	calls     int
 	gotMsgs   [][]Message
 	gotSystem []string
+	// onStream, when set, is called on every Stream invocation with exactly
+	// what the model saw: the tools it was offered and the messages it was
+	// given. Tests use it to check the routed tool set and the pre-retrieved
+	// pack without adding yet more slices this struct has to record.
+	onStream func(system string, tools []ToolDef, msgs []Message)
+	// next, when set, computes this call's Reply from the messages the model
+	// saw, in place of the fixed replies/texts slices -- a retry test wants
+	// to inspect what the retry actually put in the conversation before
+	// deciding what to answer with. Its Text streams through onText exactly
+	// as a real model's would (bedrock.go's streamAssembler folds the same
+	// text into both onText and Reply.Text), so callers need not also stream
+	// it themselves.
+	next func(msgs []Message) Reply
 }
 
 func (f *fakeModel) Stream(ctx context.Context, system string, tools []ToolDef,
 	msgs []Message, maxTokens int, onText func(string)) (Reply, error) {
 	f.gotMsgs = append(f.gotMsgs, msgs)
 	f.gotSystem = append(f.gotSystem, system)
+	if f.onStream != nil {
+		f.onStream(system, tools, msgs)
+	}
+	if f.next != nil {
+		f.calls++
+		reply := f.next(msgs)
+		if reply.Text != "" {
+			onText(reply.Text)
+		}
+		return reply, nil
+	}
 	i := f.calls
 	f.calls++
 	if i < len(f.texts) && f.texts[i] != "" {
@@ -314,7 +341,7 @@ func TestRespondNeverStreamsACodeBlock(t *testing.T) {
 	}
 	// The narration before the block is held back with it, so the reader is
 	// left with the notice alone rather than half an answer plus a refusal.
-	if !strings.Contains(got, blockedNotice) {
+	if !strings.Contains(got, BlockedNotice) {
 		t.Errorf("no replacement notice, got:\n%s", got)
 	}
 }
@@ -418,7 +445,7 @@ func TestRespondBlocksAnInventedLiteral(t *testing.T) {
 	if strings.Contains(got, "X-Retry-After-Ms") {
 		t.Errorf("an invented header reached the reader: %q", got)
 	}
-	if !strings.Contains(got, blockedNotice) {
+	if !strings.Contains(got, BlockedNotice) {
 		t.Errorf("no replacement notice, got %q", got)
 	}
 }
@@ -428,15 +455,22 @@ func TestRespondBlocksAnInventedLiteral(t *testing.T) {
 // exactly why this is here: the tool call that identifies the words as
 // narration arrives after the words do, so nothing about the text itself can
 // catch it.
+// TestRespondDropsNarrationBeforeAToolCall covers a fix, not just the
+// original behaviour: narration is two complete paragraphs, the first
+// ending in a blank line before the tool call. g.write releases a
+// complete paragraph the moment it sees one, so routing this text through
+// onText before g.drop() (the old code) would let that first paragraph
+// reach the reader; discarding held directly (the fix) must drop both.
 func TestRespondDropsNarrationBeforeAToolCall(t *testing.T) {
+	narration := "Let me get the full glossary entry for care context.\n\nI will check the definitions module now."
 	fm := &fakeModel{
 		replies: []Reply{
-			{Text: "Let me get the full glossary entry for care context:",
+			{Text: narration,
 				ToolCalls:  []ToolCall{{ID: "t1", Name: "no_such_tool", Input: json.RawMessage(`{}`)}},
 				StopReason: "tool_use"},
 			{Text: "A care context groups a patient's records.", StopReason: "end_turn"},
 		},
-		texts: []string{"Let me get the full glossary entry for care context:",
+		texts: []string{narration,
 			"A care context groups a patient's records."},
 	}
 	svc := &Service{Model: fm, MaxTokens: 100}
@@ -451,7 +485,7 @@ func TestRespondDropsNarrationBeforeAToolCall(t *testing.T) {
 		t.Fatal(err)
 	}
 	got := seen.String()
-	if strings.Contains(got, "Let me get") {
+	if strings.Contains(got, "Let me get") || strings.Contains(got, "I will check") {
 		t.Errorf("narration reached the reader:\n%s", got)
 	}
 	if !strings.Contains(got, "A care context groups") {
@@ -603,5 +637,547 @@ func TestSaysItHasNothingCoversTheRealRefusals(t *testing.T) {
 		if saysItHasNothing(answer) {
 			t.Errorf("a real answer was taken for a refusal: %q", answer)
 		}
+	}
+}
+
+// The retry corrects the model, not the conversation, and it does so from
+// the user turn rather than the system prompt: the system string must stay
+// byte identical on every call so the Bedrock cache point holds, retry or
+// not. Told as a reply, the model reads it as the reader complaining and
+// answers the complaint: "You're right, I apologize, I should have checked
+// the documentation first" reached a reader who had typed one word of
+// nonsense.
+func TestRespondRetriesWithoutPuttingWordsInTheReadersMouth(t *testing.T) {
+	fm := &fakeModel{
+		replies: []Reply{
+			{Text: "I do not have anything on that.", StopReason: "end_turn"},
+			{Text: "Nothing here matches that.", StopReason: "end_turn"},
+		},
+		texts: []string{
+			"I do not have anything on that.\n\n",
+			"Nothing here matches that.\n\n",
+		},
+	}
+	svc := &Service{Model: fm, MaxTokens: 100}
+	var seen strings.Builder
+	emit := func(name string, data any) error {
+		if name == "text" {
+			seen.WriteString(data.(map[string]string)["delta"])
+		}
+		return nil
+	}
+	if err := svc.Respond(context.Background(),
+		[]Turn{{Role: "user", Text: "jhhjjk"}}, nil, emit); err != nil {
+		t.Fatal(err)
+	}
+	if fm.calls != 2 {
+		t.Fatalf("model called %d times, want 2", fm.calls)
+	}
+	// The second call sees the lookFirst instruction ahead of the shape
+	// block and the reader's own words, and nothing else: no apology, no
+	// mention of the first attempt.
+	want := lookFirst + "\n\n" + ShapeBlock("define") + "\n\n" + "jhhjjk"
+	if got := fm.gotMsgs[1]; len(got) != 1 || got[0].Text != want {
+		t.Errorf("the retry changed the conversation: %+v", got)
+	}
+	if strings.Contains(fm.gotSystem[1], "Before answering, use your tools") {
+		t.Error("the retry instruction must not land in the system prompt")
+	}
+	if strings.Contains(fm.gotSystem[0], "Before answering, use your tools") {
+		t.Error("the first attempt should not carry the retry instruction")
+	}
+	if fm.gotSystem[0] != fm.gotSystem[1] {
+		t.Error("system prompt must be byte identical across the retry")
+	}
+	if got := seen.String(); !strings.Contains(got, "Nothing here matches that.") {
+		t.Errorf("the second answer did not reach the reader:\n%s", got)
+	}
+}
+
+// TestCollectSourcesFromPassages covers the composite search_docs the chat
+// loop calls (server.Tools.ChatToolsFor binds search_docs to Lookup): its
+// result carries "passages" rather than "hits", and every passage must
+// still become a source.
+func TestCollectSourcesFromPassages(t *testing.T) {
+	var sources []Source
+	result := map[string]any{
+		"passages": []map[string]any{
+			{"id": "hiecm.glossary.abha-address", "title": "ABHA address",
+				"verification_status": "verified", "doc_url": "/docs/glossary/abha-address"},
+			{"id": "hiecm.glossary.abha-number", "title": "ABHA number",
+				"verification_status": "verified", "doc_url": "/docs/glossary/abha-number"},
+		},
+	}
+	collectSources(&sources, "search_docs", result)
+	if len(sources) != 2 {
+		t.Fatalf("got %d sources, want 2: %+v", len(sources), sources)
+	}
+	if sources[0].ID != "hiecm.glossary.abha-address" || sources[1].ID != "hiecm.glossary.abha-number" {
+		t.Errorf("sources = %+v", sources)
+	}
+}
+
+func TestRespondPreRetrievesAndExposesRoutedTools(t *testing.T) {
+	var sawTools []string
+	var sawFirstUser string
+	m := &fakeModel{
+		replies: []Reply{{Text: "An ABHA address is the handle.", StopReason: "end_turn"}},
+		onStream: func(system string, tools []ToolDef, msgs []Message) {
+			for _, td := range tools {
+				sawTools = append(sawTools, td.Name)
+			}
+			sawFirstUser = msgs[len(msgs)-1].Text
+		},
+	}
+	svc := &Service{Model: m, MaxTokens: 100,
+		Lookup: func(ctx context.Context, q string) (json.RawMessage, []Source, guard.PackFacts, error) {
+			return json.RawMessage(`{"passages":[{"id":"shared.glossary.abha-address","title":"ABHA address"}]}`),
+				[]Source{{ID: "shared.glossary.abha-address", Title: "ABHA address"}}, guard.PackFacts{}, nil
+		},
+		ToolsFor: func(q string, att bool) []ToolDef {
+			return []ToolDef{{Name: "search_docs"}, {Name: "decode_error"}}
+		},
+	}
+	var sources []Source
+	emit := func(event string, data any) error {
+		if event == "sources" {
+			sources = data.([]Source)
+		}
+		return nil
+	}
+	if err := svc.Respond(context.Background(), []Turn{{Role: "user", Text: "what is an abha address"}}, nil, emit); err != nil {
+		t.Fatal(err)
+	}
+	if len(sawTools) != 2 {
+		t.Errorf("tools exposed = %v, want the two routed ones", sawTools)
+	}
+	if !strings.Contains(sawFirstUser, "shared.glossary.abha-address") {
+		t.Errorf("passage pack was not placed in the user turn: %q", sawFirstUser)
+	}
+	if len(sources) != 1 {
+		t.Errorf("pre-retrieved passages must count as sources, got %v", sources)
+	}
+}
+
+// TestRespondDeniesWithPackDoesNotRetry pins the behaviour half of finding
+// 2: a pre-retrieved pack sets looked, so a model that answers "I don't
+// have that" anyway is never sent the lookFirst retry. Only one reply is
+// scripted, so a retry attempt (which would index replies[1]) panics
+// instead of silently passing.
+func TestRespondDeniesWithPackDoesNotRetry(t *testing.T) {
+	m := &fakeModel{
+		replies: []Reply{{Text: "I do not have anything on that.", StopReason: "end_turn"}},
+		texts:   []string{"I do not have anything on that.\n\n"},
+	}
+	svc := &Service{Model: m, MaxTokens: 100,
+		Lookup: func(ctx context.Context, q string) (json.RawMessage, []Source, guard.PackFacts, error) {
+			return json.RawMessage(`{"passages":[{"id":"shared.glossary.abha-address","title":"ABHA address"}]}`),
+				[]Source{{ID: "shared.glossary.abha-address", Title: "ABHA address"}}, guard.PackFacts{}, nil
+		},
+	}
+	var got strings.Builder
+	emit := func(event string, data any) error {
+		if event == "text" {
+			got.WriteString(data.(map[string]string)["delta"])
+		}
+		return nil
+	}
+	if err := svc.Respond(context.Background(), []Turn{{Role: "user", Text: "what is an abha address"}}, nil, emit); err != nil {
+		t.Fatal(err)
+	}
+	if m.calls != 1 {
+		t.Errorf("model called %d times, want exactly 1 (no retry once a pack was pre-retrieved)", m.calls)
+	}
+	if got.String() == "" {
+		t.Error("the answer must still be released to the reader")
+	}
+}
+
+// TestRespondContinuesWhenLookupFails covers finding 3: a Lookup that
+// errors must not stop the turn. The model still gets the routed tool set
+// from ToolsFor and still answers, and since no pack was written the user
+// turn is left exactly as the reader wrote it, with no <passages> wrapper.
+func TestRespondContinuesWhenLookupFails(t *testing.T) {
+	var sawTools []string
+	var sawFirstUser string
+	m := &fakeModel{
+		replies: []Reply{{Text: "An ABHA address is the handle.", StopReason: "end_turn"}},
+		texts:   []string{"An ABHA address is the handle.\n\n"},
+		onStream: func(system string, tools []ToolDef, msgs []Message) {
+			for _, td := range tools {
+				sawTools = append(sawTools, td.Name)
+			}
+			sawFirstUser = msgs[len(msgs)-1].Text
+		},
+	}
+	svc := &Service{Model: m, MaxTokens: 100,
+		Lookup: func(ctx context.Context, q string) (json.RawMessage, []Source, guard.PackFacts, error) {
+			return nil, nil, guard.PackFacts{}, errors.New("index unavailable")
+		},
+		ToolsFor: func(q string, att bool) []ToolDef {
+			return []ToolDef{{Name: "search_docs"}, {Name: "decode_error"}}
+		},
+	}
+	var got strings.Builder
+	emit := func(event string, data any) error {
+		if event == "text" {
+			got.WriteString(data.(map[string]string)["delta"])
+		}
+		return nil
+	}
+	if err := svc.Respond(context.Background(), []Turn{{Role: "user", Text: "what is an abha address"}}, nil, emit); err != nil {
+		t.Fatal(err)
+	}
+	if got.String() == "" {
+		t.Error("a failed pre-retrieval must not stop the turn from being answered")
+	}
+	if len(sawTools) != 2 {
+		t.Errorf("tools exposed = %v, want the two routed ones even when Lookup fails", sawTools)
+	}
+	if strings.HasPrefix(sawFirstUser, "<passages>") {
+		t.Errorf("no pack was retrieved, the user turn must not carry a passages wrapper: %q", sawFirstUser)
+	}
+}
+
+// TestRespondZeroHitLookupLeavesTheOldPath covers finding 2: a pack with no
+// passages must read as no lookup at all, not as a pack that answered the
+// question. ChatHooks now turns a zero-hit Lookup into a nil pack (tested in
+// package server), and this pins what the loop does with that nil: looked
+// stays false, so a refusal reached without a tool call still gets the
+// lookFirst retry.
+func TestRespondZeroHitLookupLeavesTheOldPath(t *testing.T) {
+	m := &fakeModel{
+		replies: []Reply{
+			{Text: "I do not have anything on that.", StopReason: "end_turn"},
+			{Text: "Here is what I found.", StopReason: "end_turn"},
+		},
+		texts: []string{
+			"I do not have anything on that.\n\n",
+			"Here is what I found.\n\n",
+		},
+	}
+	svc := &Service{Model: m, MaxTokens: 100,
+		Lookup: func(ctx context.Context, q string) (json.RawMessage, []Source, guard.PackFacts, error) {
+			return nil, nil, guard.PackFacts{}, nil
+		},
+	}
+	emit, _ := collectEvents()
+	if err := svc.Respond(context.Background(),
+		[]Turn{{Role: "user", Text: "what is a widget"}}, nil, emit); err != nil {
+		t.Fatal(err)
+	}
+	if m.calls != 2 {
+		t.Fatalf("model called %d times, want 2 (the lookFirst retry must fire)", m.calls)
+	}
+	firstUser := m.gotMsgs[0][len(m.gotMsgs[0])-1].Text
+	if strings.Contains(firstUser, "<passages>") {
+		t.Errorf("a zero-hit lookup must not prepend a passages block: %q", firstUser)
+	}
+	secondUser := m.gotMsgs[1][len(m.gotMsgs[1])-1].Text
+	if !strings.Contains(secondUser, lookFirst) {
+		t.Error("the second call must carry the lookFirst instruction in the user turn")
+	}
+	if m.gotSystem[0] != m.gotSystem[1] {
+		t.Error("system prompt must be byte identical across the retry")
+	}
+}
+
+// TestRespondRetriesOnceWhenTheShapeCheckFails is Task E3's step 1: an
+// answer that names too few routes fails guard.CheckShape against the pack's
+// facts, gets one retry told exactly what failed, and only the corrected
+// answer reaches the reader.
+func TestRespondRetriesOnceWhenTheShapeCheckFails(t *testing.T) {
+	replies := []Reply{
+		{Text: "There are two routes: Aadhaar OTP and face authentication.", StopReason: "end_turn"},
+		{Text: "Three routes: Aadhaar OTP, face authentication, and an identity document.", StopReason: "end_turn"},
+	}
+	calls := 0
+	var lastUser string
+	m := &fakeModel{next: func(msgs []Message) Reply {
+		calls++
+		lastUser = msgs[len(msgs)-1].Text
+		return replies[calls-1]
+	}}
+	svc := &Service{Model: m, MaxTokens: 100,
+		Lookup: func(ctx context.Context, q string) (json.RawMessage, []Source, guard.PackFacts, error) {
+			return json.RawMessage(`{"passages":[]}`), nil, guard.PackFacts{FlowTitles: []string{
+				"Create an ABHA using an Aadhaar OTP", "Create an ABHA using Aadhaar face authentication", "Create an ABHA from an identity document"}}, nil
+		}}
+	var out strings.Builder
+	emit := func(event string, data any) error {
+		if event == "text" {
+			out.WriteString(data.(map[string]string)["delta"])
+		}
+		return nil
+	}
+	if err := svc.Respond(context.Background(), []Turn{{Role: "user", Text: "how do i create abha"}}, nil, emit); err != nil {
+		t.Fatal(err)
+	}
+	if calls != 2 {
+		t.Fatalf("model called %d times, want 2 (one retry)", calls)
+	}
+	if !strings.Contains(lastUser, "route not named") {
+		t.Errorf("retry must tell the model what failed, got %q", lastUser)
+	}
+	if strings.Contains(out.String(), "two routes") || !strings.Contains(out.String(), "Three routes") {
+		t.Errorf("reader must see only the corrected answer, got %q", out.String())
+	}
+	if len(m.gotSystem) != 2 || m.gotSystem[0] != m.gotSystem[1] {
+		t.Errorf("system prompt must be byte identical across the retry, got %+v", m.gotSystem)
+	}
+}
+
+// TestRespondShapeRetryFiresAtMostOnce covers the brief's step 3 note: the
+// shape retry is a separate boolean from the lookFirst retry (a turn can
+// spend both, up to MaxToolCalls), and even when the second answer still
+// fails the checks it is released as-is rather than retried again. Only two
+// replies are scripted, so a third retry attempt would panic on an
+// out-of-range index instead of silently passing.
+func TestRespondShapeRetryFiresAtMostOnce(t *testing.T) {
+	replies := []Reply{
+		{Text: "There are two routes: Aadhaar OTP and face authentication.", StopReason: "end_turn"},
+		{Text: "Still only two: Aadhaar OTP and face authentication.", StopReason: "end_turn"},
+	}
+	calls := 0
+	m := &fakeModel{next: func(msgs []Message) Reply {
+		calls++
+		return replies[calls-1]
+	}}
+	svc := &Service{Model: m, MaxTokens: 100,
+		Lookup: func(ctx context.Context, q string) (json.RawMessage, []Source, guard.PackFacts, error) {
+			return json.RawMessage(`{"passages":[]}`), nil, guard.PackFacts{FlowTitles: []string{
+				"Create an ABHA using an Aadhaar OTP", "Create an ABHA using Aadhaar face authentication", "Create an ABHA from an identity document"}}, nil
+		}}
+	var out strings.Builder
+	emit := func(event string, data any) error {
+		if event == "text" {
+			out.WriteString(data.(map[string]string)["delta"])
+		}
+		return nil
+	}
+	if err := svc.Respond(context.Background(), []Turn{{Role: "user", Text: "how do i create abha"}}, nil, emit); err != nil {
+		t.Fatal(err)
+	}
+	if calls != 2 {
+		t.Fatalf("model called %d times, want 2 (the retry fires once, even though the second answer also fails)", calls)
+	}
+	if !strings.Contains(out.String(), "Still only two") {
+		t.Errorf("the second answer must be released as-is, got %q", out.String())
+	}
+	if len(m.gotSystem) != 2 || m.gotSystem[0] != m.gotSystem[1] {
+		t.Errorf("system prompt must be byte identical across the retry, got %+v", m.gotSystem)
+	}
+}
+
+// TestRespondSkipsShapeRetryWithLittleDeadlineLeft covers the deadline
+// guard: a retry costs a whole extra model call, and with less than 20s
+// left on the request context there is no time left to spend on one. The
+// first, flawed answer is released as-is instead of being discarded for a
+// retry that might not finish before the deadline.
+func TestRespondSkipsShapeRetryWithLittleDeadlineLeft(t *testing.T) {
+	calls := 0
+	m := &fakeModel{next: func(msgs []Message) Reply {
+		calls++
+		return Reply{Text: "There are two routes: Aadhaar OTP and face authentication.", StopReason: "end_turn"}
+	}}
+	svc := &Service{Model: m, MaxTokens: 100,
+		Lookup: func(ctx context.Context, q string) (json.RawMessage, []Source, guard.PackFacts, error) {
+			return json.RawMessage(`{"passages":[]}`), nil, guard.PackFacts{FlowTitles: []string{
+				"Create an ABHA using an Aadhaar OTP", "Create an ABHA using Aadhaar face authentication", "Create an ABHA from an identity document"}}, nil
+		}}
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+	var out strings.Builder
+	emit := func(event string, data any) error {
+		if event == "text" {
+			out.WriteString(data.(map[string]string)["delta"])
+		}
+		return nil
+	}
+	if err := svc.Respond(ctx, []Turn{{Role: "user", Text: "how do i create abha"}}, nil, emit); err != nil {
+		t.Fatal(err)
+	}
+	if calls != 1 {
+		t.Fatalf("model called %d times, want 1 (no retry with <20s left on the deadline)", calls)
+	}
+	if !strings.Contains(out.String(), "two routes") {
+		t.Errorf("the flawed first answer must be released as-is, got %q", out.String())
+	}
+}
+
+// TestRespondLookFirstFiresAtMostOnce covers the fix for the once-only latch
+// a previous commit deleted: a model that declines on every call, with
+// nothing to look up, gets exactly one lookFirst retry, not one per round.
+// Before the fix, lookFirstSent did not exist and the branch fired again on
+// every subsequent decline up to MaxToolCalls.
+func TestRespondLookFirstFiresAtMostOnce(t *testing.T) {
+	fm := &fakeModel{next: func(msgs []Message) Reply {
+		return Reply{Text: "I do not have anything on that.", StopReason: "end_turn"}
+	}}
+	svc := &Service{Model: fm, MaxTokens: 100}
+	emit, _ := collectEvents()
+	if err := svc.Respond(context.Background(),
+		[]Turn{{Role: "user", Text: "jhhjjk"}}, nil, emit); err != nil {
+		t.Fatal(err)
+	}
+	if fm.calls != 2 {
+		t.Fatalf("model called %d times, want 2 (original + one lookFirst retry)", fm.calls)
+	}
+	final := fm.gotMsgs[len(fm.gotMsgs)-1]
+	var all strings.Builder
+	for _, m := range final {
+		all.WriteString(m.Text)
+	}
+	if n := strings.Count(all.String(), lookFirst); n != 1 {
+		t.Errorf("final messages carry lookFirst %d times, want exactly 1: %+v", n, final)
+	}
+	if len(fm.gotSystem) != 2 || fm.gotSystem[0] != fm.gotSystem[1] {
+		t.Errorf("system prompt must be byte identical across the retry, got %+v", fm.gotSystem)
+	}
+}
+
+// TestRespondLookFirstAfterAShapeRetryUsesTheFreshLastMessage covers the
+// stale-pointer fix: last was captured once before the round loop, so a
+// shape retry (which appends to msgs and can reallocate its backing array)
+// left the lookFirst branch writing into a slice the loop no longer used.
+// Round 1 answers over budget (a shape retry), round 2 declines (a lookFirst
+// retry), round 3 answers cleanly; the lookFirst instruction must land on
+// the message the third call actually sees.
+func TestRespondLookFirstAfterAShapeRetryUsesTheFreshLastMessage(t *testing.T) {
+	overBudget := strings.Repeat("word ", 200)
+	calls := 0
+	var lastUsers []string
+	m := &fakeModel{next: func(msgs []Message) Reply {
+		calls++
+		lastUsers = append(lastUsers, msgs[len(msgs)-1].Text)
+		switch calls {
+		case 1:
+			return Reply{Text: overBudget, StopReason: "end_turn"}
+		case 2:
+			return Reply{Text: "I do not have anything on that.", StopReason: "end_turn"}
+		default:
+			return Reply{Text: "Here is the definition.", StopReason: "end_turn"}
+		}
+	}}
+	svc := &Service{Model: m, MaxTokens: 1000}
+	emit, _ := collectEvents()
+	if err := svc.Respond(context.Background(),
+		[]Turn{{Role: "user", Text: "jhhjjk"}}, nil, emit); err != nil {
+		t.Fatal(err)
+	}
+	if calls != 3 {
+		t.Fatalf("model called %d times, want 3 (shape retry, then lookFirst retry, then a clean answer)", calls)
+	}
+	if !strings.Contains(lastUsers[2], lookFirst) {
+		t.Errorf("the third call's last user message must carry lookFirst, got %q", lastUsers[2])
+	}
+}
+
+func TestLookupQueryUsesThePreviousTurnForAShortFollowUp(t *testing.T) {
+	turns := []Turn{
+		{Role: "user", Text: "how do I create an ABHA"},
+		{Role: "assistant", Text: "Use the M1 flow."},
+		{Role: "user", Text: "and the address?"},
+	}
+	got := lookupQuery(turns)
+	if !strings.Contains(got, "create an ABHA") || !strings.Contains(got, "address") {
+		t.Errorf("lookupQuery(%v) = %q, want it to carry both turns", turns, got)
+	}
+}
+
+func TestLookupQueryLeavesALongTurnAlone(t *testing.T) {
+	turns := []Turn{
+		{Role: "user", Text: "how do I create an ABHA"},
+		{Role: "assistant", Text: "Use the M1 flow."},
+		{Role: "user", Text: "what does the linkAddContexts operation require"},
+	}
+	got := lookupQuery(turns)
+	if got != "what does the linkAddContexts operation require" {
+		t.Errorf("lookupQuery(%v) = %q, want the last turn alone", turns, got)
+	}
+}
+
+// TestRespondPreRetrievesOnAShortFollowUp covers finding 5 end to end: the
+// pre-retrieval query for "and the address?" must carry the previous turn,
+// or a follow-up like it can never find the flow it is asking to continue.
+func TestRespondPreRetrievesOnAShortFollowUp(t *testing.T) {
+	var sawQuery string
+	m := &fakeModel{
+		replies: []Reply{{Text: "The address is the second step.", StopReason: "end_turn"}},
+		texts:   []string{"The address is the second step.\n\n"},
+	}
+	svc := &Service{Model: m, MaxTokens: 100,
+		Lookup: func(ctx context.Context, q string) (json.RawMessage, []Source, guard.PackFacts, error) {
+			sawQuery = q
+			return nil, nil, guard.PackFacts{}, nil
+		},
+	}
+	emit, _ := collectEvents()
+	turns := []Turn{
+		{Role: "user", Text: "how do I create an ABHA"},
+		{Role: "assistant", Text: "Use the M1 flow."},
+		{Role: "user", Text: "and the address?"},
+	}
+	if err := svc.Respond(context.Background(), turns, nil, emit); err != nil {
+		t.Fatal(err)
+	}
+	if !strings.Contains(sawQuery, "create an ABHA") || !strings.Contains(sawQuery, "address") {
+		t.Errorf("lookup query = %q, want it to carry the previous turn", sawQuery)
+	}
+}
+
+func TestSystemPromptIsStableAndShapeAndPageRideInTheUserTurn(t *testing.T) {
+	var systems []string
+	var lastUsers []string
+	m := &fakeModel{
+		replies: []Reply{{Text: "ok", StopReason: "end_turn"}, {Text: "ok", StopReason: "end_turn"}},
+		onStream: func(system string, tools []ToolDef, msgs []Message) {
+			systems = append(systems, system)
+			lastUsers = append(lastUsers, msgs[len(msgs)-1].Text)
+		}}
+	svc := &Service{Model: m, MaxTokens: 100}
+	page := &Page{Title: "M1", URL: "/docs/hiecm/v3/milestones/m1", Markdown: "# M1\nSeven journeys."}
+	if err := svc.Respond(context.Background(), []Turn{{Role: "user", Text: "what is an abha"}}, page, func(string, any) error { return nil }); err != nil {
+		t.Fatal(err)
+	}
+	if err := svc.Respond(context.Background(), []Turn{{Role: "user", Text: "how do i link a record"}}, nil, func(string, any) error { return nil }); err != nil {
+		t.Fatal(err)
+	}
+	if systems[0] != systems[1] {
+		t.Error("system prompt must be byte identical across questions and with or without a page")
+	}
+	if !strings.Contains(lastUsers[1], "<answer_shape") {
+		t.Errorf("shape block missing from the user turn: %q", lastUsers[1])
+	}
+	if !strings.Contains(lastUsers[0], "Seven journeys.") {
+		t.Errorf("page text did not move into the user turn: %q", lastUsers[0])
+	}
+	if len(strings.Fields(systems[0])) > 720 {
+		t.Errorf("core prompt is %d words, want at most 720", len(strings.Fields(systems[0])))
+	}
+
+	// The fixed order the comment above promises: passages, when there are
+	// any, then the page, then the shape block, and only then the reader's
+	// own words. This service has no Lookup, so the first call (page,
+	// question) is the one that can pin page < shape < question; the
+	// second (no page) pins shape < question on its own.
+	pageIdx := strings.Index(lastUsers[0], "Seven journeys.")
+	shapeIdx0 := strings.Index(lastUsers[0], "<answer_shape")
+	questionIdx0 := strings.Index(lastUsers[0], "what is an abha")
+	if pageIdx < 0 || shapeIdx0 < 0 || questionIdx0 < 0 {
+		t.Fatalf("expected page, shape block and question all present: %q", lastUsers[0])
+	}
+	if !(pageIdx < shapeIdx0 && shapeIdx0 < questionIdx0) {
+		t.Errorf("order must be page < shape < question, got page=%d shape=%d question=%d in %q",
+			pageIdx, shapeIdx0, questionIdx0, lastUsers[0])
+	}
+	shapeIdx1 := strings.Index(lastUsers[1], "<answer_shape")
+	questionIdx1 := strings.Index(lastUsers[1], "how do i link a record")
+	if shapeIdx1 < 0 || questionIdx1 < 0 {
+		t.Fatalf("expected shape block and question both present: %q", lastUsers[1])
+	}
+	if !(shapeIdx1 < questionIdx1) {
+		t.Errorf("order must be shape < question, got shape=%d question=%d in %q",
+			shapeIdx1, questionIdx1, lastUsers[1])
 	}
 }

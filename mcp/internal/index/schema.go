@@ -16,7 +16,7 @@ CREATE TABLE atoms (
     doc_anchor TEXT NOT NULL
 );
 CREATE VIRTUAL TABLE atoms_fts USING fts5(
-    id UNINDEXED, title, summary, body, error_codes
+    id UNINDEXED, title, summary, body, error_codes, questions
 );
 CREATE TABLE operations (
     operation_id TEXT PRIMARY KEY,

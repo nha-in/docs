@@ -150,9 +150,18 @@ var fenceRe = regexp.MustCompile("(?s)```([^\n]*)\n(.*?)```")
 // tool and is a statement of a documented request rather than code for
 // somebody's codebase. Response bodies and headers are documentation too.
 // Anything else is a language the reader would paste into their project.
+//
+// mermaid is here for the same reason as json: it is a description, not a
+// program, and nothing in one can be pasted into an integration, which is
+// what the rule below this is actually protecting. The playbook lets the
+// agent show a diagram this documentation already carries, copied out of a
+// page its tools returned, and never one of its own. That is a rule about
+// provenance, which this file cannot see: a block that arrives here is
+// judged only on being a diagram rather than a program.
 var allowedFence = map[string]bool{
 	"": true, "curl": true, "bash": true, "sh": true, "shell": true,
 	"json": true, "http": true, "yaml": true, "yml": true, "text": true,
+	"mermaid": true,
 }
 
 // codeTokens appear in a block that claims no language but is plainly code.
@@ -316,6 +325,24 @@ func CheckGrounding(answer, corpus string, cited int, final bool) []Violation {
 			Rule:   "ungrounded_answer",
 			Detail: "the answer states API specifics but drew on no source",
 		})
+	}
+	return out
+}
+
+// Literals returns the API literals a grounding check would look for in s,
+// deduplicated, in order of first appearance. The eval uses it to check that
+// each one sits inside a code span.
+func Literals(s string) []string {
+	var out []string
+	seen := map[string]bool{}
+	for _, re := range []*regexp.Regexp{groundedCodeRe, groundedHeaderRe, groundedPathRe} {
+		for _, m := range re.FindAllString(s, -1) {
+			if portalPathRe.MatchString(m) || seen[m] {
+				continue
+			}
+			seen[m] = true
+			out = append(out, m)
+		}
 	}
 	return out
 }

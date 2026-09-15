@@ -14,7 +14,6 @@ import (
 	"github.com/eka-care/abdm-docs/mcp/internal/embed"
 	"github.com/eka-care/abdm-docs/mcp/internal/fhir"
 	"github.com/eka-care/abdm-docs/mcp/internal/index"
-	"github.com/getkin/kin-openapi/openapi3"
 	"github.com/google/jsonschema-go/jsonschema"
 	"github.com/modelcontextprotocol/go-sdk/mcp"
 )
@@ -188,56 +187,15 @@ func NewMCPServer(r *index.Reader, emb embed.Embedder) *mcp.Server {
 		return jsonResult(out)
 	})
 
-	type validateIn struct {
-		OperationID string `json:"operation_id" jsonschema:"the operationId from list_operations"`
-		Body        string `json:"body" jsonschema:"the candidate request body as raw JSON"`
-	}
 	mcp.AddTool(s, &mcp.Tool{
-		Name: "validate_request",
-		Description: "Validate a candidate request body against an operation's schema, locally, before calling the sandbox. " +
-			"Also reminds you of required headers and parameters, which body validation cannot see. " +
-			"Use this before writing request code for any operation.",
+		Name:        "validate_request",
+		Description: validateRequestDescription,
 	}, func(ctx context.Context, req *mcp.CallToolRequest, in validateIn) (*mcp.CallToolResult, any, error) {
-		v, err := r.GetOperationValidation(in.OperationID)
+		out, err := tools.ValidateRequest(ctx, in)
 		if err != nil {
 			return notFoundOrErr(err)
 		}
-		base := map[string]any{
-			"operation_id":        in.OperationID,
-			"required_parameters": v.RequiredParams,
-		}
-		if v.RequestSchemaJSON == nil {
-			base["valid"] = false
-			base["errors"] = []string{"this operation has no application/json request schema; nothing to validate against"}
-			return jsonResult(versioned(base))
-		}
-		var payload any
-		if err := json.Unmarshal([]byte(in.Body), &payload); err != nil {
-			base["valid"] = false
-			base["errors"] = []string{"body is not valid JSON: " + err.Error()}
-			return jsonResult(versioned(base))
-		}
-		var schema openapi3.Schema
-		if err := json.Unmarshal(v.RequestSchemaJSON, &schema); err != nil {
-			return nil, nil, fmt.Errorf("stored schema for %s: %w", in.OperationID, err)
-		}
-		var errs []string
-		if err := schema.VisitJSON(payload, openapi3.MultiErrors()); err != nil {
-			var multi openapi3.MultiError
-			if errors.As(err, &multi) {
-				for _, e := range multi {
-					errs = append(errs, e.Error())
-				}
-			} else {
-				errs = append(errs, err.Error())
-			}
-		}
-		base["valid"] = len(errs) == 0
-		if errs == nil {
-			errs = []string{}
-		}
-		base["errors"] = errs
-		return jsonResult(versioned(base))
+		return jsonResult(out)
 	})
 
 	// loadAllDigests loads every indexed profile digest once and caches it

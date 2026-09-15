@@ -37,7 +37,8 @@ The proof step is the point. Search alone tells you an account exists.
 ## Before you start
 
 - A working session token.
-- The identifier the person remembers, encrypted.
+- The identifier the person remembers, encrypted with RSA-OAEP with SHA-1, base64 encoded, under the 4096-bit certificate from `/v3/profile/public/certificate`. PKCS#1 v1.5 and OAEP with SHA-256 are both refused, and neither refusal names encryption. See
+  [why identifiers are encrypted](hiecm.concept.encrypted-identifiers).
 - The person present to read an OTP.
 
 ## What happens
@@ -67,7 +68,7 @@ it is theirs before they wait for a message.
 NHA's collection performs the first step by calling a remote encryption
 helper, and in two of the four variants a third party website. Do not
 copy that. See
-[encrypting identifiers locally](../decisions/encrypt-locally.md).
+[encrypting identifiers locally](hiecm.decision.encrypt-locally).
 
 ## How you know it worked
 

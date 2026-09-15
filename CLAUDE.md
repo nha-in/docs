@@ -23,7 +23,18 @@ is a rule you follow rather than a gate that stops you.
 Two things the index will not route for you, because they are repo-wide:
 
 - Generated files are never hand-edited. `site/docs/<gateway>/<version>/api/`,
-  `site/static/specs/`, `plugins/abdm/skills/` and `site/static/llms.txt` are
+  `site/static/specs/`, `plugins/abdm-integrators-assistant/skills/` and `site/static/llms.txt` are
   build outputs. If one is wrong, the catalogue or the generator is wrong.
+- Skills ship as one folder per module: a `SKILL.md` that routes, and the
+  scaffold, integrate, debug and test sections under `references/`. The guided
+  loops are authored in `skills-src/` and folded in by
+  `scripts/build-skills.mjs`, which writes the same nine folders to
+  `site/static/skills/` and to the plugin. Edit `skills-src/`, never either
+  output.
+- The plugin's other manifests are generated too. `.claude-plugin/plugin.json`
+  is the source; `plugin.json`, `.codex-plugin/plugin.json` and
+  `.agents/plugins/marketplace.json` come from it through
+  `npm run build:plugins`, so one plugin installs in Claude Code, in Codex and
+  in anything else that reads Agent Plugins 1.0. CI runs `check:plugins`.
 - The plan under `plan/` cannot move without the skills compiled from it moving
   too. `./scripts/plan-check.sh` is the gate, and CI runs it.

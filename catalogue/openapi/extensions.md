@@ -1,6 +1,6 @@
 # The `x-` extensions these specifications use
 
-Fourteen vendor extensions carry the metadata that OpenAPI has no field for.
+Fifteen vendor extensions carry the metadata that OpenAPI has no field for.
 Four things read them: the site build, the skill compiler, the Go MCP server and
 the linters. When four consumers read a vocabulary only its authors know, it
 drifts, so every extension in use is listed here with a real example, and with
@@ -84,6 +84,32 @@ cheaper to fix now than 289 operations are to backfill.
       operationId: p1_encryption_copy
       x-abdm-atom: hiecm.endpoint.p1-encryption-copy
 ```
+
+### `x-abdm-requirement`
+
+Whether a call has to be implemented to certify, joined from the certification
+sheets by `scripts/build-requirements.mjs` and never written by hand. `level` is
+`mandatory`, `conditional` or `optional`; `cases` names every certification case
+that exercises the call, which is the evidence for the level; `conditions`
+carries the sheet's own wording where the marking is conditional, verbatim.
+
+```yaml
+      operationId: m2_sms_deep_link_notify
+      x-abdm-requirement:
+        level: mandatory
+        cases: [HIP_INIT_NOTIFY_HIECM, HIP_INTI_LINK_501]
+        conditions:
+          - "Mandatory for the Government Integartors / Private Integrators"
+```
+
+Written by `scripts/build-requirements.mjs`, which also checks the specs are up
+to date with `--check`. Read by `scripts/build-api-reference.mjs`, which carries
+it into the per-operation JSON so the endpoint page can badge the call.
+
+It is on 35 of 299 operations, and the absence is load bearing: sheets exist for
+M1, M2, M3 and M4 only, and the M4 sheets name calls on the HPR and HFR hosts
+that have no specification here. An operation with no key is one no case names.
+That is not the same as optional, and nothing may render it as optional.
 
 ### `x-abdm-use-case`
 

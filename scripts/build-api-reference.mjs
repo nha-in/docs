@@ -12,6 +12,7 @@ import {join, dirname} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {parse} from 'yaml';
 import {listSpecTree} from './specs.mjs';
+import {joinKey, hostOf} from './lib/api-join.mjs';
 
 /**
  * Write a page this script owns, refusing to destroy one a person wrote.
@@ -33,27 +34,14 @@ function writeGenerated(path, content) {
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const dataDir = join(root, 'site', 'src', 'data', 'api');
 const sidebarFile = join(root, 'site', 'src', 'data', 'api-sidebar.json');
+// Where a call NHA names in a certification sheet is published here, and what
+// it answers with. The test matrix joins its rows against this rather than
+// carrying routes of its own, because a route is decided by this script and an
+// atom written before the site is built cannot know one.
+const routesFile = join(root, 'site', 'src', 'data', 'api-routes.json');
+const apiRoutes = [];
 
 const METHODS = ['get', 'put', 'post', 'delete', 'patch', 'options', 'head'];
-
-// What is particular to each gateway version's generated pages: the atoms its
-// API index and its error code page are the published home for, what the index
-// says about callbacks, and who posts a callback. A second gateway claiming the
-// same atom would take its route in atom-routes.json, so each lists only its own.
-const GATEWAYS = {
-  'hiecm/v3': {
-    poster: 'ABDM',
-    indexCovers: ['hiecm.concept.asynchronous-callbacks', 'hiecm.decision.callbacks-as-webhooks'],
-    errorCodesCovers: ['hiecm.concept.error-codes'],
-    callbacksNote:
-      'In M2 and M3 a call is acknowledged now and answered later. The answer arrives as a callback, a POST from ABDM to the URL you registered, declared in the specification as a webhook. Each callback is shown on the call it belongs to, and has a page of its own under that module.',
-  },
-  'nhcx/v1': {
-    poster: 'NHCX',
-    callbacksNote:
-      "A use-case call is acknowledged at once and answered later. NHCX delivers your message to the recipient's registered address, and the answer reaches yours the same way. Each is declared in the specification as a webhook, shown on the call that produces it, with a page of its own under that module.",
-  },
-};
 
 // Acronyms stay in capitals wherever a label is built from an identifier.
 // A key like `x-abdm-errors-uidai` used to render as the heading "uidai
@@ -188,21 +176,131 @@ function firstExample(content) {
   return examples[0]?.value;
 }
 
-function curlFor(operation) {
-  const lines = [`curl --request ${operation.method} \\`];
-  lines.push(`  --url ${operation.server}${operation.path} \\`);
-  for (const header of operation.headers) {
-    const value = header.name.toLowerCase() === 'authorization'
-      ? 'Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>'
-      : header.example ?? `<${header.name.toUpperCase().replace(/-/g, '_')}>`;
-    lines.push(`  --header '${header.name}: ${value}' \\`);
-  }
+const UNDOCUMENTED_BODY = /^Response body:\s*not documented\.?$/i;
+
+// A specification hard wraps its descriptions near column 72, so the first
+// *line* is usually a fragment. Taking it left a quarter of the endpoint
+// pages with a meta description ending mid sentence, and that string is what
+// a link preview shows when somebody pastes the page into a chat. Take the
+// first paragraph, reflow it, drop the inline markdown, and cut on a word
+// boundary rather than mid word.
+function metaDescription(operation) {
+  const source = (operation.description || operation.summary || '').trim();
+  const plain = source
+    .split(/\n{2,}/)[0]
+    .replace(/\s*\n\s*/g, ' ')
+    .replace(/`([^`]+)`/g, '$1')
+    .replace(/\*\*([^*]+)\*\*/g, '$1')
+    .trim();
+  if (plain.length <= 160) return plain;
+  const cut = plain.slice(0, 157);
+  const boundary = cut.lastIndexOf(' ');
+  return `${(boundary > 100 ? cut.slice(0, boundary) : cut).trimEnd()}...`;
+}
+
+// The credentials a call carries come from `security`, which names a scheme,
+// not from the header parameters. A curl assembled only from parameters is
+// therefore missing the one header every authenticated ABDM call needs, and
+// pasting it returns 401. Only the header borne schemes produce a line: a
+// query or cookie scheme belongs elsewhere in the request, and none is
+// declared in this catalogue.
+function securityHeaders(security = []) {
+  return security.flatMap((entry) => {
+    if (entry.type === 'http' && entry.scheme === 'bearer') {
+      return [{name: 'Authorization'}];
+    }
+    if (entry.type === 'apiKey' && entry.in === 'header' && entry.headerName) {
+      return [{name: entry.headerName}];
+    }
+    return [];
+  });
+}
+
+// One request, described once. The three samples below all render from this,
+// so a header added to the curl cannot go missing from the Python.
+function requestFor(operation) {
+  // A scheme whose header is also declared as a parameter keeps the
+  // parameter, because that carries the better example. Anything the
+  // parameters do not cover is added ahead of them.
+  const declared = new Set(operation.headers.map((h) => h.name.toLowerCase()));
+  const headers = [
+    ...securityHeaders(operation.security).filter(
+      (h) => !declared.has(h.name.toLowerCase()),
+    ),
+    ...operation.headers,
+  ].map((header) => ({
+    name: header.name,
+    value:
+      header.name.toLowerCase() === 'authorization'
+        ? 'Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>'
+        : header.example ?? `<${header.name.toUpperCase().replace(/-/g, '_')}>`,
+  }));
   if (operation.requestExample !== undefined) {
-    lines.push(`  --header 'Content-Type: application/json' \\`);
-    lines.push(`  --data '${JSON.stringify(operation.requestExample, null, 2)}'`);
+    headers.push({name: 'Content-Type', value: 'application/json'});
+  }
+  return {
+    method: operation.method,
+    url: `${operation.server}${operation.path}`,
+    headers,
+    body: operation.requestExample,
+  };
+}
+
+function curlFor(operation) {
+  const {method, url, headers, body} = requestFor(operation);
+  const lines = [`curl --request ${method} \\`, `  --url ${url} \\`];
+  for (const header of headers) {
+    lines.push(`  --header '${header.name}: ${header.value}' \\`);
+  }
+  if (body !== undefined) {
+    lines.push(`  --data '${JSON.stringify(body, null, 2)}'`);
   } else {
     lines[lines.length - 1] = lines[lines.length - 1].replace(/ \\$/, '');
   }
+  return lines.join('\n');
+}
+
+// requests and fetch, because they are what an integrator already has: no
+// SDK to install, and nothing here that a reader has to translate back into
+// their own stack. Placeholders keep the curl's shape, so the three samples
+// substitute the same way.
+function pythonFor(operation) {
+  const {method, url, headers, body} = requestFor(operation);
+  const lines = ['import requests', '', `response = requests.${method.toLowerCase()}(`];
+  lines.push(`    ${JSON.stringify(url)},`);
+  lines.push('    headers={');
+  for (const header of headers) {
+    lines.push(`        ${JSON.stringify(header.name)}: ${JSON.stringify(header.value)},`);
+  }
+  lines.push('    },');
+  if (body !== undefined) {
+    const json = JSON.stringify(body, null, 4)
+      .split('\n')
+      .map((line, index) => (index === 0 ? line : `    ${line}`))
+      .join('\n');
+    lines.push(`    json=${json},`);
+  }
+  lines.push(')', '', 'print(response.status_code, response.text)');
+  return lines.join('\n');
+}
+
+function nodeFor(operation) {
+  const {method, url, headers, body} = requestFor(operation);
+  const lines = [`const response = await fetch(${JSON.stringify(url)}, {`];
+  lines.push(`  method: ${JSON.stringify(method)},`);
+  lines.push('  headers: {');
+  for (const header of headers) {
+    lines.push(`    ${JSON.stringify(header.name)}: ${JSON.stringify(header.value)},`);
+  }
+  lines.push('  },');
+  if (body !== undefined) {
+    const json = JSON.stringify(body, null, 2)
+      .split('\n')
+      .map((line, index) => (index === 0 ? line : `  ${line}`))
+      .join('\n');
+    lines.push(`  body: JSON.stringify(${json}),`);
+  }
+  lines.push('});', '', 'console.log(response.status, await response.text());');
   return lines.join('\n');
 }
 
@@ -227,19 +325,10 @@ for (const platform of readdirSync(catalogueDir, {withFileTypes: true})) {
   if (!existsSync(flowsDir)) continue;
   for (const file of readdirSync(flowsDir)) {
     if (!file.endsWith('.md')) continue;
-    const text = readFileSync(join(flowsDir, file), 'utf8');
-    let listed = text.match(/endpoints: \[([^\]]+)\]/)?.[1].split(',');
-    if (!listed) {
-      // A block list, one "- id" per line, as the NHCX flow atoms write it.
-      try {
-        listed = parse(text.match(/^---\n([\s\S]*?)\n---/)?.[1] ?? '')?.related?.endpoints;
-      } catch (error) {
-        console.warn(`${platform.name}/flows/${file}: frontmatter is not valid YAML, so its steps do not order the sidebar. ${error.message}`);
-      }
-    }
-    if (!Array.isArray(listed)) continue;
-    listed.forEach((id, index) => {
-      const atom = String(id).trim();
+    const match = readFileSync(join(flowsDir, file), 'utf8').match(/endpoints: \[([^\]]+)\]/);
+    if (!match) continue;
+    match[1].split(',').forEach((id, index) => {
+      const atom = id.trim();
       if (!flowStep.has(atom)) flowStep.set(atom, index + 1);
     });
   }
@@ -257,6 +346,11 @@ for (const {platform, version, files} of tree) {
         id: portal.module ?? stem,
         label: portal.label ?? spec.info?.title ?? stem,
         position: portal.position,
+        // A lucide name, matched by a sidebar-icon--* rule in sidebar.css. A
+        // module that declares none falls back to the neutral mark the same
+        // stylesheet gives every other group, so a new specification renders
+        // correctly before anyone has picked its icon.
+        icon: portal.icon,
         dir: portal.module ?? stem,
         file: file.name,
         route: `/reference/${stem}`,
@@ -266,20 +360,9 @@ for (const {platform, version, files} of tree) {
     .sort((a, b) => (a.position ?? 999) - (b.position ?? 999) || a.file.localeCompare(b.file));
 
   const docsDir = join(root, 'site', 'docs', platform, version, 'api');
-  const gateway = GATEWAYS[`${platform}/${version}`] ?? {};
-  const poster = gateway.poster ?? platform.toUpperCase();
-  // Error pages point at the gateway's troubleshooting section only when it has
-  // one: a troubleshooting/ folder, or failing that a reference/troubleshooting
-  // page. Linking to a section that does not exist fails the build.
-  const versionDir = join(root, 'site', 'docs', platform, version);
-  const troubleshootingRoute = existsSync(join(versionDir, 'troubleshooting'))
-    ? `/docs/${platform}/${version}/troubleshooting/`
-    : existsSync(join(versionDir, 'reference', 'troubleshooting.md'))
-      ? `/docs/${platform}/${version}/reference/troubleshooting`
-      : null;
-  const troubleshootingLine = troubleshootingRoute
-    ? [`Seeing a symptom rather than a code? Start at [Troubleshooting](${troubleshootingRoute}).`, '']
-    : [];
+  // Only HIE-CM v3 has a troubleshooting section and the callback atoms today;
+  // the other gateways would link to pages and claim atoms that do not exist.
+  const isHiecmV3 = platform === 'hiecm' && version === 'v3';
   for (const module of modules) {
     rmSync(join(docsDir, module.dir, 'endpoints'), {recursive: true, force: true});
   }
@@ -298,6 +381,50 @@ for (const {platform, version, files} of tree) {
   // index lists it under the module that declares it.
   const operationPage = (moduleDir, id) =>
     `/docs/${platform}/${version}/api/${moduleDir}/endpoints/${slug(id)}`;
+
+  // A status code on a reference page was a dead end. The troubleshooting
+  // section already knows what a blanket 401 means and what a 202 followed by
+  // silence means, and each module's errors page lists the codes it returns,
+  // and none of it was linked from the place the reader meets the failure.
+  // Only HIE-CM v3 has those pages, so only it gets the links.
+  const helpFor = (status, moduleDir) => {
+    if (!isHiecmV3) return undefined;
+    const troubleshooting = (name) => `/docs/${platform}/${version}/troubleshooting/${name}`;
+    if (status === '401') {
+      return {label: 'Everything returns 401', href: troubleshooting('everything-returns-401')};
+    }
+    if (status === '202') {
+      return {label: 'The callback never arrives', href: troubleshooting('callback-never-arrives')};
+    }
+    if (/^[45]/.test(status)) {
+      return {
+        label: 'Error codes for this module',
+        href: `/docs/${platform}/${version}/api/${moduleDir}/errors`,
+      };
+    }
+    return undefined;
+  };
+
+  // Whether a call has to be implemented is a certification question, and the
+  // certification sheets are the only place it is answered. scripts/build-requirements.mjs
+  // joins the sheets to the specifications and writes `x-abdm-requirement`, so
+  // an operation no sheet names carries no key and the page shows nothing. The
+  // case ids come through with the level, because they are the evidence for
+  // it, and they point at the module's testing page where each case is
+  // written out.
+  const requirementFor = (op, moduleDir) => {
+    const requirement = op['x-abdm-requirement'];
+    if (!requirement?.level) return undefined;
+    return {
+      level: requirement.level,
+      cases: requirement.cases ?? [],
+      conditions: requirement.conditions ?? [],
+      href:
+        isHiecmV3 && /^m[1-4]$/.test(moduleDir)
+          ? `/docs/${platform}/${version}/resources/testing/${moduleDir}`
+          : undefined,
+    };
+  };
 
   const operations = new Map();
   for (const module of modules) {
@@ -347,6 +474,62 @@ for (const {platform, version, files} of tree) {
     }
   }
 
+  // One row per operation and per callback, keyed the way a sheet's URL
+  // reduces, so the test matrix can turn "NHA names this call" into a link to
+  // the page for it.
+  //
+  // Callbacks are in here as rows of their own, not only as the `callbacks`
+  // of an operation, and that is the half that matters. A certification sheet
+  // lists a use case's calls in one column and mixes the two freely: M2's
+  // linking cases name `/link/carecontext`, which is a call you make, beside
+  // `/consent/request/hip/on-notify`, which is one you receive. Which is
+  // which is not in the sheet, it is in the specification, where one sits
+  // under `paths` and the other under `webhooks`. So the kind travels with
+  // the row and the matrix splits its two columns on it rather than guessing
+  // from the path.
+  //
+  // The `callbacks` list is the second source, and it reaches what the sheets
+  // do not name: a use case that names only the call it makes still shows the
+  // callback that call produces, where the specification pairs them with
+  // x-abdm-triggered-by or x-abdm-answered-by.
+  for (const module of modules) {
+    const hosts = (module.spec.servers ?? []).map((server) => hostOf(server.url));
+    const collect = (kind, section) => {
+      for (const [path, item] of Object.entries(section ?? {})) {
+        for (const method of METHODS) {
+          const op = item?.[method];
+          if (!op) continue;
+          const id = op.operationId ?? slug(`${method}-${path}`);
+          apiRoutes.push({
+            key: joinKey(path),
+            // Kept as a list because a specification can serve one path on
+            // more than one host, and a sheet names exactly one of them.
+            hosts,
+            kind,
+            operationId: id,
+            module: module.label,
+            moduleDir: module.dir,
+            method: method.toUpperCase(),
+            path,
+            summary: (op.summary ?? id).trim(),
+            route: operationPage(module.dir, id),
+            // Taken from the pairing above rather than guessed at, so a call
+            // with no stated pairing carries none.
+            callbacks: (callbacksByOperation.get(id) ?? []).map((entry) => ({
+              method: entry.method,
+              path: entry.path,
+              summary: entry.summary,
+              route: entry.route,
+              relation: entry.relation,
+            })),
+          });
+        }
+      }
+    };
+    collect('operation', module.spec.paths);
+    collect('callback', module.spec.webhooks);
+  }
+
   /** The Callbacks section appended to an operation's page, if it has any. */
   function callbackSection(operationId) {
     const entries = callbacksByOperation.get(operationId) ?? [];
@@ -358,8 +541,8 @@ for (const {platform, version, files} of tree) {
       // or the one you send in reply, and each bullet says which it is.
       ...entries.map((entry) =>
         entry.relation === 'triggered-by'
-          ? `- After this call, ${poster} posts **${entry.summary}** to \`${entry.path}\`. [Open the callback](${entry.route}).`
-          : `- You make this call in reply to **${entry.summary}**, which ${poster} posts to \`${entry.path}\`. [Open the callback](${entry.route}).`,
+          ? `- After this call, ABDM posts **${entry.summary}** to \`${entry.path}\`. [Open the callback](${entry.route}).`
+          : `- You make this call in reply to **${entry.summary}**, which ABDM posts to \`${entry.path}\`. [Open the callback](${entry.route}).`,
       ),
       '',
     ];
@@ -392,14 +575,35 @@ for (const {platform, version, files} of tree) {
       url: s.url,
       description: s.description ?? '',
     }));
-    const security = Object.entries(spec.components?.securitySchemes ?? {}).map(
-      ([name, scheme]) => ({
+    // What a specification *declares* is a superset of what a call
+    // *requires*: m1 declares three schemes and requires one. The requirement
+    // is stated in `security`, on the operation or at root, and reading the
+    // declaration instead is what listed Authorization on the page twice.
+    // An empty `security: []` is a real answer meaning this call takes no
+    // credential, so it is distinguished from the key being absent.
+    const securitySchemes = spec.components?.securitySchemes ?? {};
+    const describeScheme = (name) => {
+      const scheme = securitySchemes[name];
+      if (!scheme) {
+        console.warn(
+          `  ! ${module.file}: security names "${name}", which the specification does not declare`,
+        );
+        return [];
+      }
+      return [{
         name,
         type: scheme.type,
         scheme: scheme.scheme,
+        in: scheme.in,
+        headerName: scheme.name,
         description: scheme.description ?? '',
-      }),
-    );
+      }];
+    };
+    const securityFor = (op) => {
+      const requirement = op.security ?? spec.security ?? [];
+      const names = [...new Set(requirement.flatMap((entry) => Object.keys(entry)))];
+      return names.flatMap(describeScheme);
+    };
     const tagInfo = Object.fromEntries(
       (spec.tags ?? []).map((t) => [t.name, t.description ?? '']),
     );
@@ -425,13 +629,22 @@ for (const {platform, version, files} of tree) {
       const requestSchema = op.requestBody?.content?.['application/json']?.schema;
       const responses = Object.entries(op.responses ?? {}).map(([status, response]) => ({
         status,
-        description: response.description ?? '',
+        // "not documented" is this repo's own placeholder from an early
+        // ingest, not NHA's wording, and it dead ends the reader: it reports
+        // that we failed rather than telling them what to do. The absence is
+        // real and must not be papered over with an invented schema, so the
+        // sentence says what is true and points at the one thing on the page
+        // that will answer it.
+        description: UNDOCUMENTED_BODY.test((response.description ?? '').trim())
+          ? 'The specification does not describe this body. Send the call with Try it to see what comes back.'
+          : response.description ?? '',
         // An explicit example wins; otherwise the response schema supplies
         // one, same as the request side, so a status with a documented body
         // never renders as prose alone.
         example:
           firstExample(response.content) ??
           sampleFromSchema(response.content?.['application/json']?.schema),
+        help: helpFor(status, module.dir),
       }));
 
       const id = op.operationId ?? slug(`${entry.method}-${entry.path}`);
@@ -452,7 +665,7 @@ for (const {platform, version, files} of tree) {
         servers,
         summary: op.summary ?? id,
         description: op.description ?? '',
-        security: op.security === undefined ? security : security.filter((s) => (op.security ?? []).some((entry) => entry[s.name])),
+        security: securityFor(op),
         headers: parameters
           .filter((p) => p.in === 'header')
           .map((p) => ({
@@ -474,13 +687,18 @@ for (const {platform, version, files} of tree) {
         requestExample:
           firstExample(op.requestBody?.content) ?? sampleFromSchema(requestSchema),
         responses,
+        requirement: requirementFor(op, module.dir),
         tag,
         tagDescription: tagInfo[tag] ?? '',
-        // The catalogue atom this operation is documented by, which
-        // scripts/build-atom-routes.mjs joins the atom to this page with.
-        atom: op['x-abdm-atom'] ?? null,
       };
       operation.curl = curlFor(operation);
+      // `curl` stays as it was: the console, the page markdown and llms-full
+      // all read it by that name. The other two sit beside it.
+      operation.samples = [
+        {id: 'curl', label: 'cURL', language: 'bash', code: operation.curl},
+        {id: 'python', label: 'Python', language: 'python', code: pythonFor(operation)},
+        {id: 'node', label: 'Node', language: 'javascript', code: nodeFor(operation)},
+      ];
 
       writeFileSync(
         join(dataDir, `${name}.json`),
@@ -494,9 +712,7 @@ for (const {platform, version, files} of tree) {
         `title: ${JSON.stringify(operation.summary)}`,
         `sidebar_label: ${JSON.stringify(operation.summary)}`,
         `sidebar_class_name: api-method api-method--${operation.method.toLowerCase()}`,
-        `description: ${JSON.stringify(
-          (operation.description || operation.summary).split('\n')[0].slice(0, 160),
-        )}`,
+        `description: ${JSON.stringify(metaDescription(operation))}`,
         'hide_table_of_contents: true',
         'hide_title: true',
         'wrapperClassName: api-doc',
@@ -549,7 +765,17 @@ for (const {platform, version, files} of tree) {
     mkdirSync(join(docsDir, module.dir), {recursive: true});
     writeFileSync(
       join(docsDir, module.dir, '_category_.json'),
-      `${JSON.stringify({label: module.label, position: moduleIndex + 2}, null, 2)}\n`,
+      `${JSON.stringify(
+        {
+          label: module.label,
+          position: moduleIndex + 2,
+          ...(module.icon && {
+            className: `sidebar-icon sidebar-icon--${module.icon}`,
+          }),
+        },
+        null,
+        2,
+      )}\n`,
     );
     if (entries.length > 0) {
       writeFileSync(
@@ -614,9 +840,12 @@ for (const {platform, version, files} of tree) {
     'verification: unverified',
     'source: the published OpenAPI specifications',
     'generated: true',
-    // This page is where a gateway's callbacks concept is published, now that
-    // there is no page of nothing but callbacks. GATEWAYS names each one's atoms.
-    ...(gateway.indexCovers?.length ? [`covers: [${gateway.indexCovers.join(', ')}]`] : []),
+    // This page is where the callbacks concept and the decision to declare
+    // them as webhooks are published, now that there is no page of nothing but
+    // callbacks. Both atoms are HIE-CM's, so only its index claims them.
+    ...(isHiecmV3
+      ? ['covers: [hiecm.concept.asynchronous-callbacks, hiecm.decision.callbacks-as-webhooks]']
+      : []),
     '---',
     '',
     '# API references',
@@ -625,7 +854,17 @@ for (const {platform, version, files} of tree) {
     '',
     'This page lists every module, including any that the role you have chosen does not use. The sidebar shows only yours.',
     '',
-    ...(gateway.callbacksNote ? [gateway.callbacksNote, ''] : []),
+    ...(isHiecmV3
+      ? [
+          'In M2 and M3 a call is acknowledged now and answered later. The answer arrives as a callback, a POST from ABDM to the URL you registered, declared in the specification as a webhook. Each callback is shown on the call it belongs to, and has a page of its own under that module.',
+          '',
+          // Without this line a reader reads a missing badge as "optional",
+          // which is a claim this portal has not made. The badge is only ever
+          // as wide as the certification sheets are.
+          'A page carries a Mandatory or Conditional badge where a certification case names that call, with the case ids beside it. No badge means no published certification requirement for that module, which is not the same as optional.',
+          '',
+        ]
+      : []),
   ];
 
   for (const module of modules) {
@@ -694,7 +933,10 @@ for (const {platform, version, files} of tree) {
   // scripts/build-atom-routes.mjs reads it to point a support answer at a
   // real page. On a generated page it has to be emitted here: hand-adding it
   // to the file works until the next generator run silently drops it.
-  const frontMatter = (title, label, description, position, covers = []) =>
+  // The sidebar icon has to be emitted here for the same reason as covers:
+  // these pages are generated, so front matter added by hand survives until
+  // the next run and then disappears. See the `sidebar-icons` skill.
+  const frontMatter = (title, label, description, position, covers = [], icon = null) =>
     [
       '---',
       `title: ${title}`,
@@ -704,6 +946,7 @@ for (const {platform, version, files} of tree) {
       'verification: unverified',
       'source: the published OpenAPI specifications',
       'generated: true',
+      ...(icon ? [`sidebar_class_name: sidebar-icon sidebar-icon--${icon}`] : []),
       ...(covers.length ? [`covers: [${covers.join(', ')}]`] : []),
       '---',
       '',
@@ -717,6 +960,8 @@ for (const {platform, version, files} of tree) {
         'Authentication',
         'The credentials every ABDM call carries, and the headers that go with them.',
         1,
+        [],
+        'lock-keyhole',
       ),
       '# Authentication',
       '',
@@ -771,11 +1016,17 @@ for (const {platform, version, files} of tree) {
         'Error codes',
         'Every error code the specifications carry, with its message and what to do.',
         3,
-        gateway.errorCodesCovers ?? [],
+        ['hiecm.concept.error-codes'],
+        'circle-alert',
       ),
       '# Error codes',
       '',
-      ...troubleshootingLine,
+      // Only hiecm/v3 has a troubleshooting section today; other platforms
+      // and other versions of hiecm would link to a page that does not
+      // exist.
+      ...(isHiecmV3
+        ? [`Seeing a symptom rather than a code? Start at [Troubleshooting](/docs/${platform}/${version}/troubleshooting/).`, '']
+        : []),
       'Generated from the specifications. A code is on this page because a specification records it.',
       '',
     ];
@@ -863,7 +1114,9 @@ for (const {platform, version, files} of tree) {
       '',
       `# ${module.label} errors`,
       '',
-      ...troubleshootingLine,
+      ...(isHiecmV3
+        ? [`Seeing a symptom rather than a code? Start at [Troubleshooting](/docs/${platform}/${version}/troubleshooting/).`, '']
+        : []),
     ];
 
     if (notes.length) {
@@ -956,10 +1209,20 @@ for (const {platform, version, files} of tree) {
 }
 
 writeFileSync(sidebarFile, `${JSON.stringify(sidebar, null, 2)}\n`);
+// Sorted, so the file's diff is the operations that changed rather than the
+// order the specs happened to be read in.
+apiRoutes.sort((a, b) => a.operationId.localeCompare(b.operationId));
+writeFileSync(routesFile, `${JSON.stringify(apiRoutes, null, 2)}\n`);
+const hooks = apiRoutes.filter((entry) => entry.kind === 'callback').length;
+const withCallbacks = apiRoutes.filter((entry) => entry.callbacks.length > 0).length;
 console.log(
   `Built ${count} endpoint page(s) from ${tree
     .map((pv) => `${pv.platform}/${pv.version} (${pv.files.length} spec(s))`)
     .join(', ')}.`,
+);
+console.log(
+  `  api-routes.json: ${apiRoutes.length - hooks} operation(s) and ${hooks} callback(s), ` +
+    `${withCallbacks} of them paired.`,
 );
 
 // A hand written page sitting where a generated one goes is a conflict only a

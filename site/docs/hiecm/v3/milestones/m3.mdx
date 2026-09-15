@@ -8,15 +8,17 @@ description: What Milestone 3 gives you, who asks the patient for consent, what 
 verification: unverified
 source: ABDM__Proposed_Simplified_Milestone_3.md
 covers: [hiecm.flow.m3-request-consent, hiecm.flow.m3-fetch-records]
+sidebar_class_name: sidebar-icon sidebar-icon--download
 ---
 
 import ApiLinks from '@site/src/components/docs/ApiLinks';
+import SkillInstall from '@site/src/components/docs/SkillInstall';
 
 # M3 Retrieve: consent and fetching
 
-In Milestone 3 your system asks a patient for permission to see health records
-held elsewhere, then fetches them. You are the
-[HIU](/docs/hiecm/v3/getting-started/glossary#hiu). The
+In Milestone 3 your organisation asks a patient for permission to read health
+records it did not create, then fetches them. Your organisation is the
+[HIU](/docs/hiecm/v3/getting-started/glossary#hiu), and your software is how it asks. The
 [HIE-CM](/docs/hiecm/v3/getting-started/glossary#hie-cm) holds the consent,
 asks the patient on your behalf, and on a grant returns a [consent
 artefact](/docs/hiecm/v3/getting-started/glossary#consent-artefact) id. No
@@ -52,15 +54,20 @@ records held elsewhere builds both.
 
 ## Who needs it
 
-Any system that reads records it does not hold: a hospital pulling a patient's
-history, a clinical decision tool, an insurer, and every
-[PHR](/docs/hiecm/v3/getting-started/glossary#phr) app.
+Whoever asks to read records they did not create. A hospital pulling a
+patient's history, an insurer settling a claim, a referral service, a clinical
+decision tool, and a citizen whose
+[PHR](/docs/hiecm/v3/getting-started/glossary#phr) app fetches their records.
 
 ## Prerequisites
 
 1. A working [M1 Create](./m1) integration, so you hold a session token and an
    ABHA address for the patient.
-2. A registered HIU bridge against a facility ID, from [M4 Enrol](./m4).
+2. Registration in the HIU role, from [M4 Enrol](./m4). A facility registers
+   an HIU bridge against its facility ID. The
+   [HFR](/docs/hiecm/v3/getting-started/glossary#hfr) does not list insurers,
+   so confirm which entry your organisation registers against. M4 blocks
+   production, not your sandbox build.
 3. A callback URL the gateway can reach, and a key pair for decryption.
 
 The patient must be known to you by ABHA address first. One concrete route: the
@@ -84,6 +91,12 @@ opaque strings.
 Build for revocation from the start. A consent that worked yesterday can be
 withdrawn today, and that is the system working correctly.
 
+## Build it with an agent
+
+Hand M3 to the agent you already use, as one file it loads once. Install it, or open it there in one click.
+
+<SkillInstall slug="abdm-m3" note="Every M3 call and callback with its error codes in one file: 25 operations, 95 codes." />
+
 ## Certification
 
 M3 has no certification step of its own. One exit process covers the whole
@@ -93,7 +106,8 @@ and what each one asks of you.
 
 Test data is in the [data
 dictionary](/docs/hiecm/v3/reference/data-dictionary). [Support](/docs/support)
-lists the channels.
+lists the channels. The cases you are certified against are in [M3 testing use
+cases](/docs/hiecm/v3/resources/testing/m3).
 
 ## The journey, one diagram per flow
 
@@ -102,10 +116,10 @@ Milestone 3 (M3) of [ABDM](/docs/hiecm/v3/getting-started/glossary#abdm) is one 
 | In the diagram | What it is |
 |---|---|
 | Patient | The person whose records these are, acting in their [PHR](/docs/hiecm/v3/getting-started/glossary#phr) app |
-| Your system | The [HIU](/docs/hiecm/v3/getting-started/glossary#hiu): the hospital or app that wants to read the records |
+| Your system | The software your organisation asks through |
 | HIE-CM gateway | The [gateway](/docs/hiecm/v3/getting-started/glossary#gateway), which routes every call and callback |
 | HIE-CM | The [HIE-CM](/docs/hiecm/v3/getting-started/glossary#hie-cm), which holds consent and asks the patient |
-| HIP | The [HIP](/docs/hiecm/v3/getting-started/glossary#hip) that holds the records, in journeys 2 and 3 |
+| HIP | The facility holding the records. It is the [HIP](/docs/hiecm/v3/getting-started/glossary#hip) when it publishes them, in journeys 2 and 3 |
 
 ## Journey 1: raising a consent request
 

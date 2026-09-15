@@ -43,6 +43,45 @@ export default function ContentWrapper(props: Props): React.ReactNode {
     };
   }, [props.children]);
 
+  /**
+   * A mermaid diagram that scrolls has to be reachable by a keyboard.
+   *
+   * On a narrow screen the diagram keeps its own size and its box scrolls
+   * (site/src/css/mdx.css), which a mouse can do and a keyboard cannot: a
+   * scroll container is only focusable if something says so, and Docusaurus
+   * renders the container itself with no role, no label and no tab stop. So a
+   * reader on a phone with a keyboard, or anyone using a screen reader, was
+   * told there was a diagram and given no way to see the half of it that was
+   * off screen. WCAG 2.1 SC 2.1.1.
+   *
+   * Tagged here rather than in the mermaid component because the container is
+   * Docusaurus' own markup and this wrapper already owns reaching into the
+   * rendered article.
+   */
+  useEffect(() => {
+    const article = root.current;
+    if (!article) return undefined;
+    const tag = () => {
+      for (const box of article.querySelectorAll<HTMLElement>(
+        '.docusaurus-mermaid-container',
+      )) {
+        if (box.dataset.scrollable === 'true') continue;
+        box.dataset.scrollable = 'true';
+        box.setAttribute('role', 'region');
+        box.setAttribute('tabindex', '0');
+        box.setAttribute('aria-label', 'Diagram, scrollable');
+      }
+    };
+    // Mermaid renders its diagrams asynchronously, so the containers do not
+    // exist on this effect's first pass and tagging once found nothing. The
+    // observer catches them whenever they arrive, and the data attribute keeps
+    // the work to each container once.
+    tag();
+    const watch = new MutationObserver(tag);
+    watch.observe(article, {childList: true, subtree: true});
+    return () => watch.disconnect();
+  }, [props.children]);
+
   return (
     <div ref={root}>
       <Content {...props} />

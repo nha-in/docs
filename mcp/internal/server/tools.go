@@ -3,13 +3,20 @@ package server
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
+	"log/slog"
+	"regexp"
+	"strings"
 
 	"github.com/eka-care/abdm-docs/mcp/internal/catalogue"
 	"github.com/eka-care/abdm-docs/mcp/internal/chat"
 	"github.com/eka-care/abdm-docs/mcp/internal/embed"
 	"github.com/eka-care/abdm-docs/mcp/internal/fhir"
+	"github.com/eka-care/abdm-docs/mcp/internal/guard"
 	"github.com/eka-care/abdm-docs/mcp/internal/index"
+	"github.com/eka-care/abdm-docs/mcp/internal/route"
+	"github.com/getkin/kin-openapi/openapi3"
 	"github.com/google/jsonschema-go/jsonschema"
 )
 
@@ -41,6 +48,9 @@ const (
 		"Accepts the profile name or the ABDM hiType. Use this when writing or fixing bundle generation code."
 	getFhirExampleDescription = "A known-good document bundle for one ABDM record type, taken from the NRCES implementation guide's own examples. " +
 		"Use it as the reference shape when scaffolding generation code."
+	validateRequestDescription = "Validate a candidate request body against an operation's schema, locally, before calling the sandbox. " +
+		"Also reminds you of required headers and parameters, which body validation cannot see. " +
+		"Use this before writing request code for any operation."
 )
 
 type searchIn struct {
@@ -56,6 +66,11 @@ type getAtomIn struct {
 
 type decodeIn struct {
 	Input string `json:"input" jsonschema:"an error code or a raw gateway response body"`
+}
+
+type validateIn struct {
+	OperationID string `json:"operation_id" jsonschema:"the operationId from list_operations"`
+	Body        string `json:"body" jsonschema:"the candidate request body as raw JSON"`
 }
 
 type emptyIn struct{}
@@ -144,6 +159,101 @@ func (t *Tools) GetAtom(ctx context.Context, in getAtomIn) (map[string]any, erro
 	return t.versioned(fields), nil
 }
 
+type lookupIn struct {
+	Query     string `json:"query" jsonschema:"what the reader asked, in their words"`
+	Milestone string `json:"milestone,omitempty" jsonschema:"M1..M4, P1..P3 to narrow, else empty"`
+}
+
+type Passage struct {
+	ID                 string `json:"id"`
+	Type               string `json:"type"`
+	Milestone          string `json:"milestone"`
+	Title              string `json:"title"`
+	VerificationStatus string `json:"verification_status"`
+	DocURL             string `json:"doc_url"`
+	Body               string `json:"body"` // full body for the top hits, summary for the rest
+}
+
+type PassagePack struct {
+	Passages []Passage `json:"passages"`
+	// Related are one hop out from the top hits: id and title only, so
+	// the model knows a sibling exists without paying to read it.
+	Related []map[string]string `json:"related"`
+}
+
+const (
+	lookupHits   = 5
+	lookupOpened = 3
+)
+
+// atomOpener is the slice of *index.Reader that openPassage needs, cut out
+// so a test can stub a GetAtom failure without needing a real index that can
+// be made to fail cleanly.
+type atomOpener interface {
+	GetAtom(id string) (catalogue.Atom, error)
+	RelatedAtoms(id string) ([]index.RelatedGroup, error)
+}
+
+// openPassage builds the full-body passage and its one-hop related atoms
+// for a top-3 search hit. When the atom can't be opened, a summary is
+// better than a missing passage, so it degrades to the search hit's
+// summary and skips the related walk for that hit; the warning is how an
+// index-integrity problem (a search hit whose atom no longer opens)
+// becomes visible instead of silently returning a snippet.
+func openPassage(r atomOpener, h index.SearchHit) (Passage, []map[string]string) {
+	p := Passage{ID: h.ID, Type: h.Type, Milestone: h.Milestone, Title: h.Title,
+		VerificationStatus: h.VerificationStatus, DocURL: index.DocLink(h.DocURL, h.DocAnchor),
+		Body: h.Summary}
+	a, err := r.GetAtom(h.ID)
+	if err != nil {
+		slog.Warn("lookup: could not open atom, returning its summary", "id", h.ID, "error", err)
+		return p, nil
+	}
+	p.Body = a.Body
+	var related []map[string]string
+	groups, err := r.RelatedAtoms(h.ID)
+	if err == nil {
+		for _, g := range groups {
+			for _, ref := range g.Atoms {
+				related = append(related, map[string]string{
+					"id": ref.ID, "type": g.Type, "title": ref.Title})
+			}
+		}
+	}
+	return p, related
+}
+
+// Lookup is search, open and walk in one call. The chat model used to
+// chain search_docs, get_atom and related_atoms itself and often stopped
+// at a 200 character snippet; a cheap model stops there more often. Doing
+// the chain in code costs nothing the model can get wrong.
+func (t *Tools) Lookup(ctx context.Context, in lookupIn) (PassagePack, error) {
+	hits, err := t.r.Search(ctx, in.Query, "", in.Milestone, lookupHits, t.emb)
+	if err != nil {
+		return PassagePack{}, err
+	}
+	var pack PassagePack
+	seenRelated := map[string]bool{}
+	for i, h := range hits {
+		p := Passage{ID: h.ID, Type: h.Type, Milestone: h.Milestone, Title: h.Title,
+			VerificationStatus: h.VerificationStatus, DocURL: index.DocLink(h.DocURL, h.DocAnchor),
+			Body: h.Summary}
+		if i < lookupOpened {
+			var related []map[string]string
+			p, related = openPassage(t.r, h)
+			for _, ref := range related {
+				if seenRelated[ref["id"]] {
+					continue
+				}
+				seenRelated[ref["id"]] = true
+				pack.Related = append(pack.Related, ref)
+			}
+		}
+		pack.Passages = append(pack.Passages, p)
+	}
+	return pack, nil
+}
+
 func (t *Tools) RelatedAtoms(ctx context.Context, in getAtomIn) (map[string]any, error) {
 	groups, err := t.r.RelatedAtoms(in.ID)
 	if err != nil {
@@ -212,6 +322,54 @@ func (t *Tools) DecodeError(ctx context.Context, in decodeIn) (map[string]any, e
 	return t.versioned(map[string]any{"codes": codes, "matches": matches}), nil
 }
 
+// ValidateRequest checks a candidate body against an operation's stored
+// request schema. A missing or unresolvable operation is returned as an
+// error for the caller to format (mcp.go's notFoundOrErr does this for the
+// MCP wire surface); a body that fails to parse or fails schema validation
+// is not an error, it is the answer, reported as valid: false with errors.
+func (t *Tools) ValidateRequest(ctx context.Context, in validateIn) (map[string]any, error) {
+	v, err := t.r.GetOperationValidation(in.OperationID)
+	if err != nil {
+		return nil, err
+	}
+	base := map[string]any{
+		"operation_id":        in.OperationID,
+		"required_parameters": v.RequiredParams,
+	}
+	if v.RequestSchemaJSON == nil {
+		base["valid"] = false
+		base["errors"] = []string{"this operation has no application/json request schema; nothing to validate against"}
+		return t.versioned(base), nil
+	}
+	var payload any
+	if err := json.Unmarshal([]byte(in.Body), &payload); err != nil {
+		base["valid"] = false
+		base["errors"] = []string{"body is not valid JSON: " + err.Error()}
+		return t.versioned(base), nil
+	}
+	var schema openapi3.Schema
+	if err := json.Unmarshal(v.RequestSchemaJSON, &schema); err != nil {
+		return nil, fmt.Errorf("stored schema for %s: %w", in.OperationID, err)
+	}
+	var errs []string
+	if err := schema.VisitJSON(payload, openapi3.MultiErrors()); err != nil {
+		var multi openapi3.MultiError
+		if errors.As(err, &multi) {
+			for _, e := range multi {
+				errs = append(errs, e.Error())
+			}
+		} else {
+			errs = append(errs, err.Error())
+		}
+	}
+	base["valid"] = len(errs) == 0
+	if errs == nil {
+		errs = []string{}
+	}
+	base["errors"] = errs
+	return t.versioned(base), nil
+}
+
 func (t *Tools) ListOperations(ctx context.Context, in listOpsIn) (map[string]any, error) {
 	ops, err := t.r.ListOperations(in.Tag, in.Module, in.Q)
 	if err != nil {
@@ -227,14 +385,40 @@ func (t *Tools) ListOperations(ctx context.Context, in listOpsIn) (map[string]an
 }
 
 func (t *Tools) GetOperation(ctx context.Context, in getOpIn) (map[string]any, error) {
-	frag, err := t.r.GetOperation(in.OperationID)
+	frag, module, err := t.r.GetOperation(in.OperationID)
 	if err != nil {
 		return nil, err
 	}
-	return t.versioned(map[string]any{
+	out := map[string]any{
 		"operation_id": in.OperationID,
 		"spec":         json.RawMessage(frag),
-	}), nil
+	}
+	if path := operationDocPath(module, in.OperationID); path != "" {
+		out["doc_path"] = path
+	}
+	return t.versioned(out), nil
+}
+
+// nonAlphanumeric matches the run-collapsing the site's route generator does
+// in scripts/build-api-reference.mjs. Keep the two in step: an operation id is
+// snake_case and its route is hyphenated, so without this an agent holding
+// `gateway_sessions_create` cannot reach
+// `/docs/hiecm/v3/api/gateway/endpoints/gateway-sessions-create`.
+var nonAlphanumeric = regexp.MustCompile(`[^a-zA-Z0-9]+`)
+
+// operationDocPath is site-relative rather than absolute because the server is
+// not told where it is published. Every operation it indexes is HIE-CM v3
+// today, which is the one assumption here; a second gateway means carrying the
+// gateway and version through the index alongside the module.
+func operationDocPath(module, operationID string) string {
+	if module == "" || operationID == "" {
+		return ""
+	}
+	slug := strings.Trim(nonAlphanumeric.ReplaceAllString(operationID, "-"), "-")
+	if slug == "" {
+		return ""
+	}
+	return "/docs/hiecm/v3/api/" + module + "/endpoints/" + strings.ToLower(slug)
 }
 
 func (t *Tools) CatalogueInfo(ctx context.Context, in emptyIn) (map[string]any, error) {
@@ -447,4 +631,102 @@ func (t *Tools) Defs() []ToolDef {
 			},
 		},
 	}
+}
+
+const chatSearchDescription = "Call this when the answer is not already in the passages you were given, or the reader asks a follow-up that needs something new. It searches this portal's documentation and returns the matching pages in full, with their related pages named. Send the reader's own words as the query."
+
+// ChatToolsFor is the chat loop's view of the tools: only the names the
+// router chose, and search_docs bound to Lookup rather than to the
+// snippet search the MCP serves. The MCP keeps the granular tools; the
+// chat model gets the composite under a name it already knows.
+func (t *Tools) ChatToolsFor(names []string) []chat.ToolDef {
+	byName := map[string]ToolDef{}
+	for _, d := range t.Defs() {
+		byName[d.Name] = d
+	}
+	var out []chat.ToolDef
+	for _, n := range names {
+		if n == "search_docs" {
+			out = append(out, chat.ToolDef{
+				Name: "search_docs", Description: chatSearchDescription,
+				InputSchema: mustSchemaFor[lookupIn](),
+				Call: func(ctx context.Context, raw json.RawMessage) (map[string]any, error) {
+					var in lookupIn
+					if err := json.Unmarshal(raw, &in); err != nil {
+						return nil, err
+					}
+					pack, err := t.Lookup(ctx, in)
+					if err != nil {
+						return nil, err
+					}
+					return t.versioned(map[string]any{"passages": pack.Passages, "related": pack.Related}), nil
+				},
+			})
+			continue
+		}
+		if n == "validate_request" {
+			out = append(out, chat.ToolDef{
+				Name: "validate_request", Description: validateRequestDescription,
+				InputSchema: mustSchemaFor[validateIn](),
+				Call: func(ctx context.Context, raw json.RawMessage) (map[string]any, error) {
+					var in validateIn
+					if err := json.Unmarshal(raw, &in); err != nil {
+						return nil, err
+					}
+					return t.ValidateRequest(ctx, in)
+				},
+			})
+			continue
+		}
+		if d, ok := byName[n]; ok {
+			out = append(out, chat.ToolDef{Name: d.Name, Description: d.Description, InputSchema: d.InputSchema, Call: d.Call})
+		}
+	}
+	return out
+}
+
+// ChatHooks builds the two hooks a routed chat.Service needs: a Lookup
+// that pre-retrieves a passage pack and reports what it found as
+// guard.PackFacts, and a ToolsFor that asks the router which tools a
+// question may use. Both close over lookupIn, which is unexported, so the
+// wiring lives here rather than in cmd/docs-mcp or the eval runner, the two
+// places that build a chat.Service.
+func ChatHooks(tools *Tools) (
+	lookup func(ctx context.Context, q string) (json.RawMessage, []chat.Source, guard.PackFacts, error),
+	toolsFor func(q string, hasAttachment bool) []chat.ToolDef,
+) {
+	lookup = func(ctx context.Context, q string) (json.RawMessage, []chat.Source, guard.PackFacts, error) {
+		pack, err := tools.Lookup(ctx, lookupIn{Query: q})
+		if err != nil {
+			return nil, nil, guard.PackFacts{}, err
+		}
+		if len(pack.Passages) == 0 {
+			// An empty pack must read as no lookup at all: {"passages":null,
+			// "related":null} still marshals to a non-empty byte slice, so
+			// leaving this out would make every zero-hit lookup look like a
+			// pack that answered the question, permanently disabling the
+			// lookFirst retry for it.
+			return nil, nil, guard.PackFacts{}, nil
+		}
+		b, err := json.Marshal(pack)
+		if err != nil {
+			return nil, nil, guard.PackFacts{}, err
+		}
+		var srcs []chat.Source
+		var facts guard.PackFacts
+		for _, p := range pack.Passages {
+			srcs = append(srcs, chat.Source{ID: p.ID, Title: p.Title, URL: p.DocURL, Status: p.VerificationStatus})
+			if p.Type == "flow" {
+				facts.FlowTitles = append(facts.FlowTitles, p.Title)
+			}
+		}
+		lower := strings.ToLower(string(b))
+		facts.MentionsABHANumber = strings.Contains(lower, "abha number")
+		facts.MentionsABHAAddress = strings.Contains(lower, "abha address")
+		return b, srcs, facts, nil
+	}
+	toolsFor = func(q string, hasAttachment bool) []chat.ToolDef {
+		return tools.ChatToolsFor(route.Route(route.Input{Question: q, HasAttachment: hasAttachment}).Tools)
+	}
+	return lookup, toolsFor
 }

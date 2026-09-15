@@ -5,6 +5,7 @@ sidebar_position: 2
 description: The HPR ID a healthcare professional holds, how it is issued, and what it unlocks for the facility they work in.
 verification: unverified
 source: site/docs/hiecm/v3/registries/nhpr/hpr.md, site/docs/hiecm/v3/registries/nhpr/hfr.md, site/docs/hiecm/v3/milestones/m4.mdx, site/docs/hiecm/v3/concepts/how-it-fits.md
+sidebar_class_name: sidebar-icon sidebar-icon--user-round-cog
 ---
 
 # Doctor
@@ -30,9 +31,10 @@ Three categories can enrol today: doctor, nurse and pharmacist. You also declare
 a system of medicine. A role code says what you are on the registry: 1 for a
 healthcare professional, 2 for a facility manager, 3 for both.
 
-Your HPR ID identifies you as a professional. It does not make your software a
-participant, and it is not the [HFR](/docs/hiecm/v3/getting-started/glossary#hfr)
-facility ID your hospital holds.
+Your HPR ID identifies you as a professional. It does not put your software on
+the network, and it is not the
+[HFR](/docs/hiecm/v3/getting-started/glossary#hfr) facility ID your hospital
+holds.
 
 ## What you can do
 

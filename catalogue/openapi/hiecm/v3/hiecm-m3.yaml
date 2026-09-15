@@ -11,6 +11,7 @@ info:
     module: m3
     label: M3 Consent and fetching
     position: 4
+    icon: shield-check
   title: ABDM M3, consent and data fetch
   summary: Ask a patient for permission to see their records, then fetch the records
     that permission covers.
@@ -95,6 +96,11 @@ paths:
       - consent
       summary: Initiate a consent request
       operationId: m3_consent_request_init
+      x-abdm-requirement:
+        level: mandatory
+        cases: [HIU_FLOW_101, HIU_FLOW_102, HIU_FLOW_103, HIU_FLOW_104, HIU_FLOW_105, HIU_FLOW_106, HIU_FLOW_107, HIU_FLOW_108, HIU_FLOW_109, HIU_FLOW_110, HIU_FLOW_111, HIU_FLOW_112, HIU_FLOW_113]
+        conditions:
+          - "Any one of them is mandatory"
       description: |
         Also known as: Consent Init Request.
         Initiates a new consent request for a patient's health records.
@@ -211,6 +217,11 @@ paths:
       - consent
       summary: Check the status of a consent request
       operationId: m3_consent_request_status
+      x-abdm-requirement:
+        level: mandatory
+        cases: [HIU_FLOW_101, HIU_FLOW_102, HIU_FLOW_103, HIU_FLOW_104, HIU_FLOW_105, HIU_FLOW_106, HIU_FLOW_107, HIU_FLOW_108, HIU_FLOW_109, HIU_FLOW_110, HIU_FLOW_111, HIU_FLOW_112, HIU_FLOW_113]
+        conditions:
+          - "Any one of them is mandatory"
       description: |
         Also known as: Consent Request Status.
         Checks the current status of a previously initiated consent request.
@@ -279,8 +290,13 @@ paths:
     post:
       tags:
       - consent
-      summary: Acknowledge a consent notification
+      summary: Acknowledge a consent notification, as the HIU
       operationId: m3_consent_hiu_on_notify
+      x-abdm-requirement:
+        level: mandatory
+        cases: [HIU_FLOW_101, HIU_FLOW_102, HIU_FLOW_103, HIU_FLOW_104, HIU_FLOW_105, HIU_FLOW_106, HIU_FLOW_107, HIU_FLOW_108, HIU_FLOW_109, HIU_FLOW_110, HIU_FLOW_111, HIU_FLOW_112, HIU_FLOW_113]
+        conditions:
+          - "Any one of them is mandatory"
       description: |
         Also known as: Consent HIU On-Notify.
         **Async Callback:** After ABDM Gateway sends a consent grant/deny notification to the HIU
@@ -335,6 +351,11 @@ paths:
       - consent
       summary: Fetch the full consent artefact
       operationId: m3_consent_fetch
+      x-abdm-requirement:
+        level: mandatory
+        cases: [HIU_FLOW_101, HIU_FLOW_102, HIU_FLOW_103, HIU_FLOW_104, HIU_FLOW_105, HIU_FLOW_106, HIU_FLOW_107, HIU_FLOW_108, HIU_FLOW_109, HIU_FLOW_110, HIU_FLOW_111, HIU_FLOW_112, HIU_FLOW_113]
+        conditions:
+          - "Any one of them is mandatory"
       description: |
         Also known as: Consent Fetch.
         Fetches the full consent artefact for a given consent artefact ID.
@@ -398,6 +419,11 @@ paths:
       - data-retrieval
       summary: Request a patient's health information
       operationId: m3_hiu_health_information_request
+      x-abdm-requirement:
+        level: mandatory
+        cases: [HIU_FLOW_101, HIU_FLOW_102, HIU_FLOW_103, HIU_FLOW_104, HIU_FLOW_105, HIU_FLOW_106, HIU_FLOW_107, HIU_FLOW_108, HIU_FLOW_109, HIU_FLOW_110, HIU_FLOW_111, HIU_FLOW_112, HIU_FLOW_113]
+        conditions:
+          - "Any one of them is mandatory"
       description: |
         Also known as: HIU Health Information Request.
         Requests health data from the HIP for a specific consent artefact.
@@ -469,6 +495,11 @@ paths:
       - data-retrieval
       summary: Notify the gateway that data was received
       operationId: m3_hiu_data_flow_notify
+      x-abdm-requirement:
+        level: mandatory
+        cases: [HIP_INIT_SHARE_CARECONTEXT, HIU_FLOW_101, HIU_FLOW_102, HIU_FLOW_103, HIU_FLOW_104, HIU_FLOW_105, HIU_FLOW_106, HIU_FLOW_107, HIU_FLOW_108, HIU_FLOW_109, HIU_FLOW_110, HIU_FLOW_111, HIU_FLOW_112, HIU_FLOW_113]
+        conditions:
+          - "Any one of them is mandatory"
       description: |
         Also known as: HIU Data Flow Notification.
         After receiving all FHIR health data at the `dataPushUrl`, the HIU calls this endpoint
@@ -1393,7 +1424,7 @@ components:
       scheme: bearer
       bearerFormat: JWT
       description: |
-        The `accessToken` from `POST /api/hiecm/gateway/v3/sessions`, which is described in hiecm-gateway.yaml. Send it as `Authorization: Bearer <ACCESS_TOKEN>`.
+        The `accessToken` from `POST /api/hiecm/gateway/v3/sessions`. Send it as `Authorization: Bearer <ACCESS_TOKEN>`.
     bearerAuth:
       type: http
       scheme: bearer
@@ -1438,7 +1469,10 @@ components:
       in: header
       required: true
       description: |
-        Identifier of the health information user the request or callback is intended for.
+        Identifier of the health information user the request or callback is
+        intended for. This is per facility, and it is what a callback arriving
+        at your one bridge URL is routed on. The bridge URL and your credentials
+        belong to the integration, not to the facility.
       schema:
         type: string
       example: IN2810014366

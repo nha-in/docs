@@ -203,17 +203,22 @@
   color: var(--text-heading);
 }
 
-/* Current page: no fill at all. The row is the current one because its type is
-   half a step heavier, because its colour is the accent against faint
-   siblings, and because of one 2px mark in the gutter. Three quiet signals
-   instead of one loud rectangle, and the mark is the only place the accent is
-   painted as a shape in the whole rail. */
+/* Current page: the accent in type, in the 2px mark in the gutter, and now in
+   the ground under the row. The wash is the faintest step in the palette, so
+   the row reads as the current one from across the rail without becoming a
+   block of colour beside eleven quiet siblings. */
 .menu__link--active,
 .menu__link--active:hover,
 .menu__link--active:not(.menu__link--sublist) {
   color: var(--accent);
-  background: transparent;
+  background: var(--accent-wash);
   font-weight: 500;
+}
+
+/* A category header that is also the current page is a header first, so it
+   keeps the type and the colour and stays off the ground. */
+.menu__list-item-collapsible > .menu__link--active {
+  background: transparent;
 }
 
 .theme-doc-sidebar-container .menu__link--active:not(.menu__link--sublist),
@@ -275,10 +280,17 @@ main .container:has(> .docs-article-row) {
   padding-top: 0;
 }
 
+/* The horizontal padding is fluid because it is the inner of two gutters: the
+   theme's own `.container` contributes 1.5rem per side on top of it, and at
+   2rem that came to 112px of a 375px screen, leaving a 263px column and a
+   33 character line. Bringhurst puts a readable measure at 45 to 75 characters
+   and WCAG 2.2 SC 1.4.8 caps the other end at 80, so 33 is well under. It
+   scales rather than stepping at a breakpoint, and is unchanged from 1130px up,
+   where it reaches the 2rem it always was. */
 .docs-content {
   max-width: var(--content-max);
   margin: 0 auto;
-  padding: 2.5rem 2rem 5rem;
+  padding: 2.5rem clamp(1rem, 0.586rem + 1.77vw, 2rem) 5rem;
 }
 
 .docs-eyebrow {
@@ -450,4 +462,17 @@ main .container:has(> .docs-article-row) {
 
 [class*='skipToContent']:focus {
   transform: none;
+}
+
+/* ---------- page actions, under a thumb ----------
+   The row under the page lede is four text buttons 29px tall, which is a
+   comfortable line of type and too short to tap. A minimum height takes each
+   one to 44px without moving the labels, since the row centres what it holds;
+   the dividers between them grow with the buttons, which is the only visible
+   difference. The row already wraps, so the extra height costs the page a line
+   or two on the narrowest screens and nothing else. */
+@media (pointer: coarse) {
+  .page-actions .page-actions__item {
+    min-height: 2.75rem;
+  }
 }

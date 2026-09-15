@@ -4,10 +4,11 @@ type: glossary
 gateway: shared
 milestone: n/a
 version: abdm-v3
-title: HMIS, hospital management information system
+title: HMIS, HIS or HIMS, the software a hospital runs
 summary: >
-  NHA's term for the software a hospital runs day to day, which
-  normally integrates as a HIP.
+  The day to day software of a hospital, under any of its three names. A
+  hospital uses it both to publish its own records and to fetch a
+  patient's history from elsewhere.
 sources:
   - file: site/docs/_glossary/_hiecm.mdx
     status: not-yet-hashed
@@ -17,22 +18,35 @@ sources:
 verified:
   status: unverified
 related:
-  concepts: []
+  concepts: [hiecm.concept.roles]
+  glossary:
+    [
+      shared.glossary.hip,
+      shared.glossary.hiu,
+      shared.glossary.hi-type,
+      shared.glossary.ims,
+      shared.glossary.m4,
+    ]
 ---
 
-# HMIS, hospital management information system
+# HMIS, HIS or HIMS, the software a hospital runs
 
 ## In plain words
 
-Hospital Management Information System, NHA's term for the software a
-hospital runs day to day. NHA's M2 document states that implementing
-every [HI type](hi-type.md) is mandatory for an HMIS.
+The software a hospital runs day to day: registration, visits, orders,
+results and billing. It goes by three names. HMIS is Hospital Management
+Information System, HIS is Hospital Information System, and HIMS is
+Hospital Information Management System. One system, three names, one
+integration.
 
-An HMIS is a position: it is the provider facing side of the HIE-CM, as
-against a [PHR app](phr.md) on the citizen side. It acts as a
-[HIP](hip.md) when it publishes a record and as an [HIU](hiu.md) when it
-fetches one, so most of them need M2 and M3 rather than one or the
-other. See [roles](../../hiecm/concepts/roles.md).
+A facility uses it to publish records as the [HIP](hip.md) and to fetch
+them as the [HIU](hiu.md), so the ABDM work is M2 and M3 rather than one
+or the other. It must implement every [HI type](hi-type.md). See
+[roles](../../hiecm/concepts/roles.md).
+
+`HIS-` is also the prefix on every error code the [HPR](hpr.md) and the
+[HFR](hfr.md) return. Those are [M4](m4.md) registry errors and have
+nothing to do with hospital software.
 
 ## Before you start
 
@@ -44,9 +58,10 @@ Nothing happens here. This entry defines a term, it does not describe a call.
 
 ## How you know it worked
 
-You have understood this when you can say which ABDM role an HMIS plays and how many HI types it has to support.
+You have understood this when you can say which ABDM role a hospital plays
+when it publishes a record, and which when it reads one.
 
 ## When it goes wrong
 
-Implementing only the HI types you already produce. NHA's M2 document
-makes every HI type mandatory for an HMIS.
+Implementing only the HI types you already produce. Every HI type is
+mandatory for a hospital system.

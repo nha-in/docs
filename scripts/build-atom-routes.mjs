@@ -31,7 +31,20 @@ const docsRoot = join(root, "site", "docs");
 const outFile = join(root, "catalogue", "atom-routes.json");
 const sitemap = join(root, "site", "build", "sitemap.xml");
 
-const slug = (s) => s.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+// Tags first, then the slug. A heading may carry markup, and the glossary's do:
+// each term keeps an anchor element per spelling so a link to any of its names
+// lands, and those sit inside the heading because a sibling of one is a cell of
+// its own in the glossary's two column grid. Docusaurus slugs the heading's text
+// and ignores the markup, so stripping tags here is what keeps this agreeing
+// with the page. Without it a heading produced
+// "span-id-emr-span-span-id-ehr-span-emr-ehr" and every citation of that atom
+// pointed at an anchor that does not exist.
+const slug = (s) =>
+  s
+    .replace(/<[^>]*>/g, "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "");
 
 // The atom writes <ABHA_NUMBER> where the spec writes {abhaNumber}.
 const normPath = (p) =>
@@ -83,10 +96,7 @@ const pages = files.filter((f) => !isPartial(f)).map((f) => {
 // whole body: slicing first can cut a heading line in half and yield a
 // truncated anchor that does not exist on the rendered page.
 function headingFor(body, needle) {
-  return headingAt(body, body.toLowerCase().indexOf(needle.toLowerCase()));
-}
-
-function headingAt(body, i) {
+  const i = body.toLowerCase().indexOf(needle.toLowerCase());
   if (i < 0) return null;
   // Both levels: a glossary term is a "### Term", and landing a reader on
   // the term beats landing them on the section that contains it.
@@ -122,23 +132,11 @@ for (const p of pages) {
   if (m) apiPageByOperation.set(m[1], p.route);
 }
 const apiPageByMethodPath = new Map();
-// An operation names the atom that documents it with x-abdm-atom, which the
-// generated page data carries as `atom`. That is operation identity, so it is
-// tried before the file name and before the method and path fallback. One atom
-// can be named on both the call you make and the webhook you receive, so the
-// page of each kind is kept: an endpoint atom takes the call's page, a callback
-// atom the webhook's.
-const apiPageByAtom = new Map();
 for (const [name, route] of apiPageByOperation) {
   const jf = join(root, "site", "src", "data", "api", `${name}.json`);
   if (!existsSync(jf)) continue;
   try {
     const op = JSON.parse(readFileSync(jf, "utf8"));
-    if (op.atom) {
-      const joined = apiPageByAtom.get(op.atom) ?? {};
-      joined[op.kind === "callback" ? "callback" : "operation"] ??= route;
-      apiPageByAtom.set(op.atom, joined);
-    }
     const method = String(op.method ?? op.httpMethod ?? "").toUpperCase();
     const path = op.path ?? op.url ?? "";
     if (method && path) apiPageByMethodPath.set(`${method} ${normPath(path)}`, route);
@@ -147,17 +145,7 @@ for (const [name, route] of apiPageByOperation) {
 
 const pageAt = (re) => pages.find((p) => re.test(p.route));
 const callbacksPage = pageAt(/\/reference\/callbacks$/);
-// Every gateway version generates its own error code page, and codes can share
-// a number across gateways, so an error atom is looked up on its own gateway's
-// page first.
-const errorsPages = pages.filter((p) => /\/reference\/error-codes$/.test(p.route));
-const errorsPagesFor = (gateway) => {
-  const home = `/docs/${gateway === "shared" ? "hiecm" : gateway}/`;
-  return [
-    ...errorsPages.filter((p) => p.route.startsWith(home)),
-    ...errorsPages.filter((p) => !p.route.startsWith(home)),
-  ];
-};
+const errorsPage = pageAt(/\/reference\/error-codes$/);
 const glossaryPage = pageAt(/glossary$/);
 
 function requestKey(body) {
@@ -207,10 +195,7 @@ for (const [id, atom] of atoms) {
 
   if (!route && (type === "endpoint" || type === "callback")) {
     const stem = basename(file).replace(/\.md$/, "");
-    const joined = apiPageByAtom.get(id) ?? {};
-    const sameKind = type === "callback" ? joined.callback : joined.operation;
-    const otherKind = type === "callback" ? joined.operation : joined.callback;
-    const byOperation = sameKind ?? apiPageByOperation.get(stem) ?? otherKind ?? null;
+    const byOperation = apiPageByOperation.has(stem) ? apiPageByOperation.get(stem) : null;
     if (byOperation) {
       route = byOperation; rule = "same spec operation as the generated API page";
       confidence = "derived";
@@ -235,18 +220,8 @@ for (const [id, atom] of atoms) {
 
   if (!route && type === "error") {
     const raw = (id.match(/\.([a-z]*-?\d+)$/) ?? [])[1];
-    const short = raw ? raw.toUpperCase().replace(/^([A-Z]+)(\d)/, "$1-$2") : null;
-    // A code with more than one prefix, such as ERR-PYR-CLM-007, is the whole id tail.
-    const codes = [...new Set([id.split(".").pop().toUpperCase(), short].filter(Boolean))];
-    // Whole codes only: NHCX-100 must not match inside NHCX-1006.
-    const whole = (c) => new RegExp(`(?<![A-Z0-9-])${c.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}(?![0-9])`);
-    let code = null;
-    const errorsPage = errorsPagesFor(fm.gateway).find((p) => {
-      const upper = p.body.toUpperCase();
-      code = codes.find((c) => whole(c).test(upper)) ?? null;
-      return code !== null;
-    });
-    if (errorsPage) {
+    const code = raw ? raw.toUpperCase().replace(/^([A-Z]+)(\d)/, "$1-$2") : null;
+    if (code && errorsPage?.body.toUpperCase().includes(code)) {
       const h = headingFor(errorsPage.body, code);
       route = errorsPage.route; anchor = h ? slug(h) : null;
       rule = `error code listed on the error codes page`; confidence = "derived";
@@ -259,49 +234,55 @@ for (const [id, atom] of atoms) {
     // terms like X-CM-ID are defined where they are used, not in the list.
     const candidates = [glossaryPage, ...pages.filter((p) => /\/reference\/|\/getting-started\//.test(p.route))]
       .filter(Boolean);
-    // The atom's own gateway is searched first, and a shared atom counts
-    // HIE-CM as its own.
-    const home = `/docs/${fm.gateway === "shared" ? "hiecm" : fm.gateway}/`;
-    const mine = candidates.filter((p) => p.route.startsWith(home));
-    const others = candidates.filter((p) => !p.route.startsWith(home));
-    const glossaries = candidates.filter((p) => /glossary$/.test(p.route));
-    const esc = term.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
     // A glossary term must anchor on its own heading, never on the first
     // place the string appears: "M2" occurs inside the ECDH definition, and
     // a citation that lands a reader on the wrong term is worse than one
     // that lands them on the top of the page.
-    const heading = new RegExp(`^#{2,4}\\s+${esc}\\s*$`, "im");
-    // Anywhere else the term must stand as a whole word: "DSC" is not "DSCHD".
-    const word = new RegExp(`(?<![A-Za-z0-9])${esc}(?![A-Za-z0-9])`, "i");
-    // First match wins. A heading on another gateway's glossary is still a
-    // definition, so EUA and HSPA keep their UHI entries. A heading on another
-    // gateway's reference page is only a field that shares the name: NHCX's
-    // "## Timestamp" is a Unix time envelope field, and must not take the
-    // TIMESTAMP header atom from the HIE-CM page that agrees with it.
-    const passes = [[mine, heading], [glossaries, heading], [mine, word], [others, heading], [others, word]];
-    for (const [where, re] of passes) {
-      const page = where.find((p) => re.test(p.body));
-      if (!page) continue;
-      route = page.route; confidence = "derived";
-      if (re === heading) {
-        anchor = slug(term);
-        rule = `term defined under its own heading on ${basename(page.route)}`;
-      } else {
-        const h = headingAt(page.body, page.body.search(word));
-        anchor = h ? slug(h) : null;
-        rule = `term defined on ${basename(page.route)}`;
-      }
-      break;
+    // One heading may carry several names for one thing: "### HMIS, HIS,
+    // HIMS" is one entry a search for any of the three should land on, and
+    // each name has an anchor of its own inside the heading. The term counts
+    // as owning the heading wherever it sits in that list, so long as it is a
+    // whole name in it rather than part of another word. Tags are stripped
+    // first: those anchor elements sit at the head of the line, before the
+    // term, and a heading that opens with markup matched nothing here and fell
+    // through to the loose search below, which anchors on whatever heading
+    // precedes the first mention of the term.
+    const escaped = term.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    const heading = new RegExp(
+      `^#{2,4}\\s+(?:[^\\n]*,\\s*)?${escaped}(?:\\s*,[^\\n]*)?\\s*$`,
+      "im",
+    );
+    const bare = (page) => page.body.replace(/<[^>]*>/g, "");
+    const owns = candidates.find((p) => heading.test(bare(p)));
+    if (owns) {
+      route = owns.route; anchor = slug(term);
+      rule = `term defined under its own heading on ${basename(owns.route)}`;
+      confidence = "derived";
+    }
+    const page = owns ? null : candidates.find((p) => p.body.toLowerCase().includes(term.toLowerCase()));
+    if (page) {
+      const h = headingFor(page.body, term);
+      route = page.route; anchor = h ? slug(h) : null;
+      rule = `term defined on ${basename(page.route)}`; confidence = "derived";
     }
   }
 
   if (!route && type === "flow") {
-    const mod = (id.match(/\.(m\d)-/) ?? [])[1];
+    // The patient side has journey pages too, at /milestones/p1 to p3. This
+    // matched `m\d` only, so every P series flow fell through to "no rule
+    // matched" and had no page anywhere: an answer citing one could offer the
+    // reader no link, and the mobile number route to an ABHA address was
+    // reachable from nothing.
+    const mod = (id.match(/\.([mp]\d)-/) ?? [])[1];
     const jp = pages.find((p) => new RegExp(`/milestones/${mod}$`).test(p.route));
     if (jp) {
-      const words = id.split(".").pop().replace(/^m\d-/, "").split("-").filter((w) => w.length > 2);
+      const words = id.split(".").pop().replace(/^[mp]\d-/, "").split("-").filter((w) => w.length > 2);
       let best = null, bestScore = 0;
-      for (const m of jp.body.matchAll(/^##\s+(.+)$/gm)) {
+      // Third level headings count too. M1 groups its flows under two tracks,
+      // ABHA with Aadhaar and ABHA address with a mobile number, so the flow
+      // a reader wants is an `###` under one of them. Matching `##` alone sent
+      // every M1 flow to the nearest track heading, or to nothing.
+      for (const m of jp.body.matchAll(/^#{2,3}\s+(.+)$/gm)) {
         const h = m[1].trim(), hs = slug(h);
         const score = words.filter((w) => hs.includes(w)).length;
         if (score > bestScore) { bestScore = score; best = h; }
@@ -328,6 +309,32 @@ for (const [id, atom] of atoms) {
   });
 }
 
+// ---------- Coverage gate ----------
+// The count of atoms with no page was written into this file on every run and
+// nothing ever read it back, so 8 of 19 flows sat with `route: null` through a
+// green CI. An Ask AI answer cited one of them and had no link to offer,
+// which is how that was eventually noticed: by a reader, not by a check.
+//
+// Only `flow` is gated. The other types still have unmapped members, and a
+// gate that fails on day one gets switched off rather than fixed. Widen this
+// set as a type reaches zero, never before.
+const GATED_TYPES = new Set(["flow"]);
+
+function reportCoverage(rows) {
+  const missing = rows.filter((r) => !r.route && GATED_TYPES.has(r.type));
+  if (!missing.length) return true;
+  console.error(
+    `\n${missing.length} ${[...GATED_TYPES].join("/")} atom(s) have no page, which this gate does not allow:`,
+  );
+  for (const r of missing) console.error(`  ${r.atom}: ${r.rule}`);
+  console.error(
+    "\nGive each one a page: add a heading on its module's journey page that\n" +
+      "shares two or more words with the atom id, or claim it explicitly with\n" +
+      "covers: in that page's frontmatter.",
+  );
+  return false;
+}
+
 rows.sort((a, b) => a.atom.localeCompare(b.atom));
 
 const mapped = rows.filter((r) => r.route).length;
@@ -349,6 +356,7 @@ if (check) {
     console.error("No site build found, so routes were not validated. Run npm run build first.");
     process.exit(1);
   }
+  if (!reportCoverage(rows)) process.exit(1);
   console.log(`atom-routes.json is current: ${mapped}/${rows.length} atoms mapped, validated against the build.`);
 } else {
   writeFileSync(outFile, payload);
@@ -360,6 +368,12 @@ if (check) {
   if (unmapped.length) {
     console.log(`\n${unmapped.length} atom(s) with no page:`);
     for (const r of unmapped) console.log(`  ${r.atom}: ${r.rule}`);
+  }
+  // Written and reported here, enforced on --check. Say it at authoring time
+  // too, so the person who introduced it sees it before CI does.
+  if (!reportCoverage(rows)) {
+    console.error("\nThis fails `npm run check:routes`, which CI runs.");
+    process.exitCode = 1;
   }
   const review = rows.filter((r) => r.confidence === "needs review");
   if (review.length) {

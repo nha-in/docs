@@ -1,16 +1,16 @@
 {
   "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
   "name": "abdm-portal",
-  "description": "The ABDM Developer Portal: integration skills for ABDM and NHCX integrators, and the contributor's assistant for building the portal itself",
+  "description": "The ABDM Developer Portal: integration skills for ABDM integrators, and the contributor's assistant for building the portal itself",
   "owner": {
     "name": "ABDM Developer Portal working group",
     "url": "https://github.com/eka-care/abdm-docs"
   },
   "plugins": [
     {
-      "name": "abdm",
-      "source": "./plugins/abdm",
-      "description": "hiecm-m1-build and hiecm-m1-debug scaffold and debug an ABDM Milestone 1 (ABHA) integration, citing the Catalogue atom behind every call. fhir-generate and fhir-audit build or audit NRCES compliant FHIR document bundles, iterating against the Docs MCP validator until clean.",
+      "name": "abdm-integrators-assistant",
+      "source": "./plugins/abdm-integrators-assistant",
+      "description": "Build and debug an ABDM integration. Build skills scaffold a milestone flow by flow against the sandbox, M1 to M4 on the provider side and P1 to P3 inside a PHR application. Debug skills walk a failed call to a named fix, citing the Catalogue atom behind every step. fhir-generate and fhir-audit build or audit NRCES compliant FHIR document bundles against the Docs MCP validator.",
       "category": "documentation",
       "keywords": [
         "abdm",
@@ -18,22 +18,6 @@
         "hie-cm",
         "fhir",
         "nrces",
-        "healthcare",
-        "india-health"
-      ],
-      "homepage": "https://github.com/eka-care/abdm-docs"
-    },
-    {
-      "name": "nhcx",
-      "source": "./plugins/nhcx",
-      "description": "One agent skill per NHCX use case, in episode order: coverage, insurance plan, pre-authorisation, claim, payment, communication and reprocess. Each builds its use case into a hospital information system or a claims desk, held to the NHCX package's pinned FHIR bundles.",
-      "category": "documentation",
-      "keywords": [
-        "nhcx",
-        "claims",
-        "insurance",
-        "pmjay",
-        "fhir",
         "healthcare",
         "india-health"
       ],

@@ -1,6 +1,12 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {useLocation} from '@docusaurus/router';
 import {ClipboardList, Download, Sparkles} from 'lucide-react';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@site/src/components/ui/tooltip';
 import InstallToolsDialog from './InstallToolsDialog';
 
 type Status = 'idle' | 'copied' | 'unavailable';
@@ -44,7 +50,7 @@ function MarkdownMark(): React.ReactNode {
  * site lays out its own: one line of text buttons with dividers between
  * them, under the page's lede, above a rule. Ask about this page opens the
  * site's own assistant; Copy for LLM copies the page as Markdown; View as
- * Markdown opens it; Install tools opens the install pop-up (InstallToolsDialog).
+ * Markdown opens it; Install AI tools opens the install pop-up (InstallToolsDialog).
  *
  * Copy and View read the `index.md` a postbuild step writes beside every
  * route (see scripts/emit-page-markdown.mjs), so neither exists in
@@ -106,13 +112,25 @@ export default function PageActions(): React.ReactNode {
         <MarkdownMark />
         View as Markdown
       </a>
-      <button
-        type="button"
-        className="page-actions__item"
-        onClick={() => setInstallOpen(true)}>
-        <Download className="page-actions__icon" aria-hidden="true" />
-        Install tools
-      </button>
+      {/* The label says what the button does; the tooltip says what you get,
+          because "install" on its own reads as an install of this site. */}
+      <TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <button
+              type="button"
+              className="page-actions__item"
+              onClick={() => setInstallOpen(true)}>
+              <Download className="page-actions__icon" aria-hidden="true" />
+              Install AI tools
+            </button>
+          </TooltipTrigger>
+          <TooltipContent>
+            Give your coding agent this site: the Docs MCP server, the plugin,
+            or a skill file.
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
       {/* Visually hidden but announced: a button's own label change is not
           reliably read out by a screen reader, so the result is also spoken
           through this live region. */}

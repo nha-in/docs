@@ -13,11 +13,14 @@ declare module 'react' {
       > & {
         'api-base'?: string;
         'docs-origin'?: string;
+        'mcp-url'?: string;
         'support-url'?: string;
         launcher?: string;
         open?: string;
         question?: string;
         starters?: string;
+        shortcut?: string;
+        send?: string;
       };
     }
   }

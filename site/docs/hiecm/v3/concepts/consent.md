@@ -5,7 +5,8 @@ description: What a consent request is, what a consent artefact is, who holds it
 verification: unverified
 source: ABDM__Proposed_Simplified_Milestone_3.md, ABDM__NewDocumant_PHR_app.md, ABDM__Proposed_Simplified_Milestone_2.md
 sidebar_position: 4
-covers: [hiecm.concept.consent-artefact]
+covers: [hiecm.concept.consent-artefact, hiecm.concept.consent-in-a-phr-app]
+sidebar_class_name: sidebar-icon sidebar-icon--shield-check
 ---
 
 # Consent
@@ -56,6 +57,28 @@ Two clocks run here. The **request window** is how long the patient has to answe
 
 A consent request must display the requesting HIU, the purpose of data access, the data types requested, the date range, the consent validity period and the request status. Where permitted, the patient may modify four of those before approving: access duration, record date range, data categories and validity period. The consent you get back can be narrower than the one you asked for, so read the artefact.
 
+## The five things a PHR app must let a person do
+
+Consent is granted by a person, and the PHR app is where they do it. NHA sets
+a floor of five capabilities, and an app missing one leaves a person able to
+give access they cannot inspect, change or withdraw.
+
+1. **See the request**, with the HIU asking, the purpose, the record types,
+   the date range of records, how long the consent would last, and its status.
+2. **Change it before allowing it**, where the request permits: the access
+   duration, the record date range, the categories shared, and the validity
+   period. This is the one most often left out, and the one that turns a
+   consent screen into a negotiation rather than a demand.
+3. **Allow or refuse it.** NHA's own flow names three outcomes, not two:
+   approve, reject and ignore. An ignored request expires on the requester's
+   window, and the interface has to show that state.
+4. **See what is already allowed**, so the person can tell which
+   organisations hold access right now. A list of past decisions is not the
+   same thing.
+5. **Take it back** at any time. Two things follow: the status updates at the
+   consent manager, and sharing under that consent stops immediately, not at
+   the end of the period.
+
 ## Purpose of use codes
 
 Why you want the records. See [purpose of use](/docs/hiecm/v3/getting-started/glossary#purpose-of-use). These codes are a subset of the HL7 v3 PurposeOfUse value set at [terminology.hl7.org](http://terminology.hl7.org/ValueSet/v3-PurposeOfUse).
@@ -103,7 +126,7 @@ An auto approval policy works like this: the patient authorises the app once, th
 
 ## Where this is implemented
 
-- [Hospital, lab and pharmacy systems](/docs/hiecm/v3/concepts/hip-hiu), the HIP and HIU roles.
+- [Hospital, lab and pharmacy systems](/docs/hiecm/v3/concepts/hip-hiu), the facility taking each role.
 - [The ABDM gateway](/docs/hiecm/v3/concepts/gateway), which holds every artefact here.
 - [M3, consent and fetching](/docs/hiecm/v3/api/m3), the requesting side.
 - [M2, linking and sharing](/docs/hiecm/v3/api/m2), what a record holder validates.
