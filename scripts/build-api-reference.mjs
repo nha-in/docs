@@ -7,12 +7,14 @@
 // position}); the filename stem is the Scalar route (/reference/<stem>).
 // Everything under .../api/<module>/endpoints, the generated reference pages
 // and site/src/data/api are build outputs. Edit the specs, not the output.
-import {existsSync, readFileSync, writeFileSync, mkdirSync, rmSync, readdirSync} from 'node:fs';
+import {existsSync, readFileSync, writeFileSync, mkdirSync, rmSync} from 'node:fs';
 import {join, dirname} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {parse} from 'yaml';
 import {listSpecTree} from './specs.mjs';
 import {joinKey, hostOf} from './lib/api-join.mjs';
+import {loadJourneys, operationIndex, stepDataName} from './lib/journeys.mjs';
+import {errorsFromSpec} from './lib/spec-errors.mjs';
 
 /**
  * Write a page this script owns, refusing to destroy one a person wrote.
@@ -42,27 +44,6 @@ const routesFile = join(root, 'site', 'src', 'data', 'api-routes.json');
 const apiRoutes = [];
 
 const METHODS = ['get', 'put', 'post', 'delete', 'patch', 'options', 'head'];
-
-// Acronyms stay in capitals wherever a label is built from an identifier.
-// A key like `x-abdm-errors-uidai` used to render as the heading "uidai
-// codes", which reads as a typo and is one.
-const ACRONYMS = new Set([
-  'abdm', 'abha', 'api', 'apis', 'eua', 'fhir', 'hfr', 'hip', 'hiu', 'hpr',
-  'hspa', 'jwt', 'kyc', 'nha', 'nhcx', 'otp', 'phr', 'qr', 'rsa', 'sms',
-  'uhi', 'uidai', 'url', 'uuid',
-]);
-
-const label = (text) =>
-  String(text)
-    .split(/[\s_-]+/)
-    .filter(Boolean)
-    .map((word) =>
-      ACRONYMS.has(word.toLowerCase())
-        ? word.toUpperCase()
-        : word.charAt(0).toUpperCase() + word.slice(1),
-    )
-    .join(' ');
-
 
 const slug = (s) =>
   s
@@ -312,27 +293,12 @@ const tree = listSpecTree();
 const sidebar = [];
 let count = 0;
 
-// The journey order is defined in exactly one place: each flow atom's
-// `related.endpoints` list, which names its endpoint atoms in execution
-// order. Operations link back to their atom via `x-abdm-atom`, so the
-// sidebar can follow the journey without the order being copied anywhere.
-// First flow to name an atom wins; an atom no flow names keeps spec order.
-const flowStep = new Map();
-const catalogueDir = join(root, 'catalogue');
-for (const platform of readdirSync(catalogueDir, {withFileTypes: true})) {
-  if (!platform.isDirectory()) continue;
-  const flowsDir = join(catalogueDir, platform.name, 'flows');
-  if (!existsSync(flowsDir)) continue;
-  for (const file of readdirSync(flowsDir)) {
-    if (!file.endsWith('.md')) continue;
-    const match = readFileSync(join(flowsDir, file), 'utf8').match(/endpoints: \[([^\]]+)\]/);
-    if (!match) continue;
-    match[1].split(',').forEach((id, index) => {
-      const atom = id.trim();
-      if (!flowStep.has(atom)) flowStep.set(atom, index + 1);
-    });
-  }
-}
+// The journey order is defined in exactly one place: the journey files under
+// catalogue/openapi/hiecm/v3/journeys. Each names its steps as operationIds,
+// in the order a reader walks them, so the sidebar follows the journey
+// without the order being copied anywhere else.
+const journeys = loadJourneys();
+const opIndex = operationIndex();
 
 for (const {platform, version, files} of tree) {
   // A spec places itself: info.x-portal names the module folder, the sidebar
@@ -403,27 +369,6 @@ for (const {platform, version, files} of tree) {
       };
     }
     return undefined;
-  };
-
-  // Whether a call has to be implemented is a certification question, and the
-  // certification sheets are the only place it is answered. scripts/build-requirements.mjs
-  // joins the sheets to the specifications and writes `x-abdm-requirement`, so
-  // an operation no sheet names carries no key and the page shows nothing. The
-  // case ids come through with the level, because they are the evidence for
-  // it, and they point at the module's testing page where each case is
-  // written out.
-  const requirementFor = (op, moduleDir) => {
-    const requirement = op['x-abdm-requirement'];
-    if (!requirement?.level) return undefined;
-    return {
-      level: requirement.level,
-      cases: requirement.cases ?? [],
-      conditions: requirement.conditions ?? [],
-      href:
-        isHiecmV3 && /^m[1-4]$/.test(moduleDir)
-          ? `/docs/${platform}/${version}/resources/testing/${moduleDir}`
-          : undefined,
-    };
   };
 
   const operations = new Map();
@@ -604,11 +549,13 @@ for (const {platform, version, files} of tree) {
       const names = [...new Set(requirement.flatMap((entry) => Object.keys(entry)))];
       return names.flatMap(describeScheme);
     };
-    const tagInfo = Object.fromEntries(
-      (spec.tags ?? []).map((t) => [t.name, t.description ?? '']),
-    );
-
     const byTag = new Map();
+
+    // An operation a journey names is published under that journey, once per
+    // journey that names it. What is left over is everything no journey walks.
+    const named = new Set(
+      [...(journeys.get(module.id) ?? [])].flatMap((j) => j.steps.map((s) => s.op)),
+    );
 
     const entries = [];
     for (const [path, item] of Object.entries(spec.paths ?? {})) {
@@ -649,10 +596,9 @@ for (const {platform, version, files} of tree) {
 
       const id = op.operationId ?? slug(`${entry.method}-${entry.path}`);
       const name = slug(id);
-      // The reader picks a journey, not an OpenAPI tag. `x-abdm-use-case` names
-      // the journey; the tag is the fallback for a spec that has not been
-      // annotated yet.
-      const tag = op['x-abdm-use-case'] ?? op.tags?.[0] ?? 'Endpoints';
+      // The reader picks a journey. Everything the journeys do not name falls
+      // into one group at the end rather than into tags of its own.
+      const tag = 'Other operations';
 
       const operation = {
         id,
@@ -687,9 +633,7 @@ for (const {platform, version, files} of tree) {
         requestExample:
           firstExample(op.requestBody?.content) ?? sampleFromSchema(requestSchema),
         responses,
-        requirement: requirementFor(op, module.dir),
         tag,
-        tagDescription: tagInfo[tag] ?? '',
       };
       operation.curl = curlFor(operation);
       // `curl` stays as it was: the console, the page markdown and llms-full
@@ -736,26 +680,74 @@ for (const {platform, version, files} of tree) {
       ].join('\n');
       writeFileSync(join(endpointsDir, `${name}.mdx`), frontMatter);
 
-      if (!byTag.has(tag)) byTag.set(tag, []);
-      byTag.get(tag).push({
-        type: 'doc',
-        id: `${platform}/${version}/api/${module.dir}/endpoints/${name}`,
-        label: operation.summary,
-        className: `api-method api-method--${operation.method.toLowerCase()}`,
-        // Journey position within the use case, straight from the flow
-        // atom that names this operation's atom. Not stored in the spec:
-        // the flow atom is the one place the order is defined.
-        step: flowStep.get(op['x-abdm-atom']) ?? Infinity,
-      });
+      if (!named.has(id)) {
+        if (!byTag.has(tag)) byTag.set(tag, []);
+        byTag.get(tag).push({
+          type: 'doc',
+          id: `${platform}/${version}/api/${module.dir}/endpoints/${name}`,
+          label: operation.summary,
+          className: `api-method api-method--${operation.method.toLowerCase()}`,
+        });
+      }
       count += 1;
     }
 
-    // Within a use case the reader walks a journey, so annotated steps come
-    // first in their stated order; unannotated operations keep the spec's
-    // own order after them. The sort is stable, so ties do not reshuffle.
-    for (const items of byTag.values()) {
-      items.sort((a, b) => a.step - b.step);
-      for (const item of items) delete item.step;
+    // ---- one page per journey step ----
+    //
+    // A call more than one journey names gets a page under each of them,
+    // opening on that journey's own request example, so every method reads
+    // as a complete sequence rather than sending the reader elsewhere.
+    const journeyGroups = [];
+    for (const journey of journeys.get(module.id) ?? []) {
+      const items = [];
+      journey.steps.forEach((step, i) => {
+        const entry = opIndex.get(step.op);
+        if (!entry) throw new Error(`${module.id}/${journey.id}: unknown operation ${step.op}`);
+        const baseFile = join(dataDir, `${slug(step.op)}.json`);
+        if (!existsSync(baseFile)) {
+          throw new Error(
+            `${module.id}/${journey.id} step ${i + 1}: ${step.op} has no generated page yet. ` +
+              'A journey may only name an operation from its own module or from one built before it.',
+          );
+        }
+        const base = JSON.parse(readFileSync(baseFile, 'utf8'));
+        const nn = String(i + 1).padStart(2, '0');
+        const stepped = {...base, journey: {id: journey.id, title: journey.title, step: i + 1, of: journey.steps.length, optional: Boolean(step.optional)}};
+        if (step.example) {
+          const ex = entry.op.requestBody?.content?.['application/json']?.examples?.[step.example];
+          if (!ex) throw new Error(`${module.id}/${journey.id} step ${i + 1}: no example "${step.example}" on ${step.op}`);
+          stepped.requestExample = ex.value;
+          stepped.exampleName = step.example;
+          stepped.curl = curlFor(stepped);
+          stepped.samples = [
+            {id: 'curl', label: 'cURL', language: 'bash', code: stepped.curl},
+            {id: 'python', label: 'Python', language: 'python', code: pythonFor(stepped)},
+            {id: 'node', label: 'Node', language: 'javascript', code: nodeFor(stepped)},
+          ];
+        }
+        const dataName = stepDataName(step.op, journey.id, i);
+        writeFileSync(join(dataDir, `${dataName}.json`), `${JSON.stringify(stepped, null, 2)}\n`);
+        const dir = join(docsDir, module.dir, 'endpoints', journey.id);
+        mkdirSync(dir, {recursive: true});
+        const title = `${i + 1}. ${stepped.summary}${step.optional ? ' (optional)' : ''}`;
+        writeFileSync(join(dir, `${nn}-${slug(step.op)}.mdx`), [
+          '---',
+          `title: ${JSON.stringify(title)}`,
+          `sidebar_label: ${JSON.stringify(title)}`,
+          `sidebar_class_name: api-method api-method--${stepped.method.toLowerCase()}`,
+          `description: ${JSON.stringify(metaDescription(stepped))}`,
+          'hide_table_of_contents: true', 'hide_title: true', 'wrapperClassName: api-doc',
+          'verification: unverified', `source: ${module.file}`, 'generated: true',
+          '---', '',
+          "import ApiEndpoint from '@site/src/components/api/ApiEndpoint';",
+          `import operation from '@site/src/data/api/${dataName}.json';`,
+          '', '<ApiEndpoint operation={operation} />', '',
+          ...(entry.kind === 'callback' ? callbackOriginSection(step.op, module.file) : callbackSection(step.op)),
+        ].join('\n'));
+        items.push({type: 'doc', id: `${platform}/${version}/api/${module.dir}/endpoints/${journey.id}/${nn}-${slug(step.op)}`, label: title, className: `api-method api-method--${stepped.method.toLowerCase()}`});
+        count += 1;
+      });
+      journeyGroups.push({label: journey.title, items});
     }
 
     // The module folder is a sidebar category. Its label and order come from
@@ -784,17 +776,21 @@ for (const {platform, version, files} of tree) {
       );
     }
 
-    // Use cases whose tags share the part before the comma are one family:
+    // Journeys whose titles share the part before the comma are one family:
     // "ABHA creation, Aadhaar OTP" and "ABHA creation, Aadhaar biometric" fold
     // into an "ABHA creation" section with the variants as children. The split
-    // is presentation only; the tag in the specification stays the one name.
+    // is presentation only; the title in the journey file stays the one name.
+    // Journeys come first and the leftovers last.
     const pretty = (tag) =>
       /[A-Z]/.test(tag)
         ? tag
         : tag.replace(/-/g, ' ').replace(/^./, (c) => c.toUpperCase());
     const families = new Map();
-    for (const [tag, items] of byTag.entries()) {
-      const label = pretty(tag);
+    for (const {label: title, items} of [
+      ...journeyGroups,
+      ...[...byTag.entries()].map(([label, items]) => ({label, items})),
+    ]) {
+      const label = pretty(title);
       const comma = label.indexOf(', ');
       const family = comma === -1 ? label : label.slice(0, comma);
       if (!families.has(family)) families.set(family, []);
@@ -840,12 +836,6 @@ for (const {platform, version, files} of tree) {
     'verification: unverified',
     'source: the published OpenAPI specifications',
     'generated: true',
-    // This page is where the callbacks concept and the decision to declare
-    // them as webhooks are published, now that there is no page of nothing but
-    // callbacks. Both atoms are HIE-CM's, so only its index claims them.
-    ...(isHiecmV3
-      ? ['covers: [hiecm.concept.asynchronous-callbacks, hiecm.decision.callbacks-as-webhooks]']
-      : []),
     '---',
     '',
     '# API references',
@@ -857,11 +847,6 @@ for (const {platform, version, files} of tree) {
     ...(isHiecmV3
       ? [
           'In M2 and M3 a call is acknowledged now and answered later. The answer arrives as a callback, a POST from ABDM to the URL you registered, declared in the specification as a webhook. Each callback is shown on the call it belongs to, and has a page of its own under that module.',
-          '',
-          // Without this line a reader reads a missing badge as "optional",
-          // which is a claim this portal has not made. The badge is only ever
-          // as wide as the certification sheets are.
-          'A page carries a Mandatory or Conditional badge where a certification case names that call, with the case ids beside it. No badge means no published certification requirement for that module, which is not the same as optional.',
           '',
         ]
       : []),
@@ -1008,7 +993,7 @@ for (const {platform, version, files} of tree) {
     writeGenerated(join(refDir, 'authentication.md'), `${lines.join('\n')}\n`);
   }
 
-  // ---- error codes: the x-abdm-errors blocks ----
+  // ---- error codes: every code the response examples return ----
   {
     const lines = [
       frontMatter(
@@ -1027,57 +1012,17 @@ for (const {platform, version, files} of tree) {
       ...(isHiecmV3
         ? [`Seeing a symptom rather than a code? Start at [Troubleshooting](/docs/${platform}/${version}/troubleshooting/).`, '']
         : []),
-      'Generated from the specifications. A code is on this page because a specification records it.',
+      'A code is on this page because a response example in a specification returns it.',
       '',
     ];
     let total = 0;
     for (const module of modules) {
-      const spec = module.spec;
-      const blocks = Object.keys(spec)
-        .filter((key) => key.startsWith('x-abdm-errors'))
-        .map((key) => [key, spec[key]]);
-      for (const [key, block] of blocks) {
-        const ranges = block?.ranges ?? [];
-        if (ranges.length) {
-          lines.push(`## ${module.label}`);
-          lines.push('');
-          if (block.source) {
-            lines.push(String(block.source).replace(/\s+/g, ' ').trim());
-            lines.push('');
-          }
-          lines.push('| Range | What it covers | Examples |');
-          lines.push('| --- | --- | --- |');
-          for (const entry of ranges) {
-            lines.push(
-              `| \`${entry.range}\` | ${entry.covers} | ${entry.examples} |`,
-            );
-          }
-          lines.push('');
-        }
-        const codes = block?.codes ?? [];
-        if (codes.length === 0) continue;
-        total += codes.length;
-        const suffix = key.replace('x-abdm-errors', '').replace(/^-/, '');
-        lines.push(`## ${module.label}${suffix ? `, ${label(suffix)}` : ''}`);
-        lines.push('');
-        if (block.source) {
-          lines.push(block.source);
-          lines.push('');
-        }
-        const withHttp = codes.some((c) => c.http !== undefined);
-        lines.push(
-          withHttp ? '| Code | HTTP | Message | What to do |' : '| Code | Message | What to do |',
-        );
-        lines.push(withHttp ? '| --- | --- | --- | --- |' : '| --- | --- | --- |');
-        for (const entry of codes) {
-          const cells = [`\`${entry.code}\``];
-          if (withHttp) cells.push(entry.http ?? '');
-          cells.push((entry.message ?? '').replace(/\|/g, '\\|'));
-          cells.push(entry.action ?? '');
-          lines.push(`| ${cells.join(' | ')} |`);
-        }
-        lines.push('');
-      }
+      const codes = errorsFromSpec(module.spec);
+      if (!codes.length) continue;
+      total += codes.length;
+      lines.push(`## ${module.label}`, '', '| Code | HTTP | Message | Returned by |', '| --- | --- | --- | --- |');
+      for (const e of codes) lines.push(`| \`${e.code}\` | ${e.http} | ${e.message.replace(/\|/g, '\\|')} | \`${e.operationId}\` |`);
+      lines.push('');
     }
     lines.push(
       `${total} code${total === 1 ? '' : 's'} are recorded. A code you meet that is not here is one the specifications do not carry yet.`,
@@ -1090,16 +1035,12 @@ for (const {platform, version, files} of tree) {
   // ---- one error page per module, from that module's own records ----
   for (const module of modules) {
     const spec = module.spec;
-    const blocks = Object.keys(spec)
-      .filter((key) => key.startsWith('x-abdm-errors'))
-      .map((key) => [key, spec[key]]);
-    // A spec with no error records and no webhooks (the gateway session) gets
-    // no errors page; a module in the async flows keeps one even before any
-    // code is recorded, so the gap is stated rather than hidden.
-    if (blocks.length === 0 && Object.keys(spec.webhooks ?? {}).length === 0) continue;
-    const codes = blocks.flatMap(([, block]) => block?.codes ?? []);
-    const ranges = blocks.flatMap(([, block]) => block?.ranges ?? []);
-    const notes = blocks.map(([, block]) => block?.notes).filter(Boolean);
+    const codes = errorsFromSpec(spec);
+    // A spec whose examples return no code and that has no webhooks (the
+    // gateway session) gets no errors page; a module in the async flows keeps
+    // one even before any code is recorded, so the gap is stated rather than
+    // hidden.
+    if (!codes.length && !Object.keys(spec.webhooks ?? {}).length) continue;
 
     const lines = [
       '---',
@@ -1119,48 +1060,11 @@ for (const {platform, version, files} of tree) {
         : []),
     ];
 
-    if (notes.length) {
-      lines.push(notes.join('\n\n').trim());
-      lines.push('');
-    }
-
     if (codes.length) {
-      for (const [key, block] of blocks) {
-        const rows = block?.codes ?? [];
-        if (!rows.length) continue;
-        const suffix = key.replace('x-abdm-errors', '').replace(/^-/, '');
-        lines.push(`## ${suffix ? `${label(suffix)} codes` : 'Codes'}`);
-        lines.push('');
-        if (block.source) {
-          lines.push(String(block.source).replace(/\s+/g, ' ').trim());
-          lines.push('');
-        }
-        const withHttp = rows.some((row) => row.http !== undefined);
-        lines.push(withHttp ? '| Code | HTTP | Message | What to do |' : '| Code | Message | What to do |');
-        lines.push(withHttp ? '| --- | --- | --- | --- |' : '| --- | --- | --- |');
-        for (const row of rows) {
-          const cells = [`\`${row.code}\``];
-          if (withHttp) cells.push(row.http ?? '');
-          cells.push((row.message ?? '').replace(/\|/g, '\\|'));
-          cells.push(row.action ?? '');
-          lines.push(`| ${cells.join(' | ')} |`);
-        }
-        lines.push('');
-      }
-    }
-
-    if (ranges.length) {
-      lines.push('## Code ranges');
+      lines.push('## Codes', '', '| Code | HTTP | Message | Returned by |', '| --- | --- | --- | --- |');
+      for (const e of codes) lines.push(`| \`${e.code}\` | ${e.http} | ${e.message.replace(/\|/g, '\\|')} | \`${e.operationId}\` |`);
       lines.push('');
-      lines.push('| Range | What it covers | Examples |');
-      lines.push('| --- | --- | --- |');
-      for (const entry of ranges) {
-        lines.push(`| \`${entry.range}\` | ${entry.covers} | ${entry.examples} |`);
-      }
-      lines.push('');
-    }
-
-    if (!codes.length && !ranges.length) {
+    } else {
       lines.push(
         `The ${module.label} specification records no error code yet. That is a gap in the specification, not a promise that this module cannot fail.`,
       );
