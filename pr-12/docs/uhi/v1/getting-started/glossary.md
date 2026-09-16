@@ -1,0 +1,103 @@
+# Glossary
+
+Every term the UHI documentation links to. Each row keeps its own anchor, so a link like `#eua` lands on the right row. HIE-CM's own vocabulary, the roles and the consent objects, is in the [HIE-CM glossary](/docs/pr-12/docs/hiecm/v3/getting-started/glossary).
+
+## Across ABDM
+
+These terms mean the same thing on every ABDM gateway.
+
+### ABDM
+
+Ayushman Bharat Digital Mission, India's national programme for digital health, run by the [NHA](#nha). ABDM sets the identifiers, the registries and the exchange rules that let a health record move from the system that created it to the person it belongs to.
+
+### ABHA
+
+Ayushman Bharat Health Account. It comes in two forms people confuse: the 14 digit [ABHA number](#abha-number) and the readable [ABHA address](#abha-address). When a document says "the patient's ABHA", work out which of the two it means before you write code against it.
+
+### ABHA address
+
+A readable name on the [HIE-CM](#hie-cm), such as `name@abdm`, used to reach health records and share them with a provider. Every ABHA number is issued a default address made from the number itself: `14digit@sbx` in [sandbox](#sandbox), `14digit@abdm` in production. A person can also create an ABHA address without holding an ABHA number, using mobile number, name, age and gender.
+
+### ABHA number
+
+A 14 digit identifier issued to a person only after a [KYC](#kyc) check passes, and the identity anchor of ABDM: one person, one number. An ABHA number carries a check digit and validates under the Luhn algorithm. See [M1](/docs/pr-12/docs/hiecm/v3/getting-started/glossary#m1) for how one is created.
+
+### FHIR
+
+Fast Healthcare Interoperability Resources, the HL7 standard ABDM uses to carry health records. ABDM uses FHIR R4 with the profiles published by NRCES at [nrces.in/ndhm/fhir/r4](https://nrces.in/ndhm/fhir/r4/index.html). Every record you share travels as a FHIR bundle of type `document` whose first entry is a Composition.
+
+### Gateway
+
+The routing layer for ABDM: you do not call another participant directly, you call the gateway, it forwards your request, and the reply arrives at your [bridge](/docs/pr-12/docs/hiecm/v3/getting-started/glossary#bridge) as a separate inbound call. You get a session token first, by posting your client id and client secret to `/api/hiecm/gateway/v3/sessions`. Two sandbox hosts serve that path, `https://apissbx.abdm.gov.in` and `https://dev.abdm.gov.in`. Take the host from your onboarding documentation and keep it in configuration; see [Choose your gateway](/docs/pr-12/docs/hiecm/v3).
+
+### Health Tech Committee
+
+The committee that reviews your integration at the end of the sandbox exit process, referred to as the HTC. Once your functional testing, security audit and exit form are complete, it is scheduled its own demonstration, separate from the one you give the integration team earlier. Its decision is recorded in four review stages, each carrying its own reviewer, comment and date. See [Go live](/docs/pr-12/docs/hiecm/v3/getting-started/going-live).
+
+### HFR
+
+Health Facility Registry, the national directory of health facilities across modern and traditional systems of medicine, public and private, including hospitals, clinics, diagnostic laboratories, imaging centres and pharmacies. A facility enrols once and receives a facility ID that identifies it everywhere in ABDM. See [registries](/docs/pr-12/docs/hiecm/v3/registries).
+
+### HIE-CM
+
+Health Information Exchange and Consent Manager, the component that routes exchange requests and manages patient consent. It is data blind: it holds identifiers and metadata about [care contexts](/docs/pr-12/docs/hiecm/v3/getting-started/glossary#care-context), never the content of a record. See [The ABDM gateway](/docs/pr-12/docs/hiecm/v3/concepts/gateway).
+
+### HPID
+
+Healthcare Professional ID: a 14 digit number issued to a healthcare professional or a facility manager after Aadhaar authentication. It is the professional's digital identity across ABDM, and it is created on the [HPR](#hpr). See [M4](/docs/pr-12/docs/hiecm/v3/getting-started/glossary#m4).
+
+### HPR
+
+Healthcare Professionals Registry, the national registry of doctors, nurses, pharmacists and other healthcare professionals. Registering a professional there issues an [HPID](#hpid). The HPR token is also used when onboarding a facility to the [HFR](#hfr).
+
+### KYC
+
+Know Your Customer: the identity check that must pass before an [ABHA number](#abha-number) is issued. In ABDM the check runs against Aadhaar, by one of four methods: an [OTP](#otp) to the Aadhaar linked mobile number, face authentication, fingerprint or IRIS capture on a registered device, or a demographic match. Re-KYC repeats the check on an ABHA number that already exists.
+
+### NHA
+
+National Health Authority, the government body that runs ABDM, publishes its specifications, and operates both the [sandbox](#sandbox) and the production gateways.
+
+### NHCX
+
+National Health Claims Exchange, ABDM's network for insurance claims between providers and payers, with its own sandbox and its own document set at [hcxsbx.abdm.gov.in](https://hcxsbx.abdm.gov.in). See [NHCX](/docs/pr-12/docs/nhcx/v1).
+
+### OTP
+
+One Time Password: a short code sent to a mobile number or an email address to prove the person holds it. ABDM uses OTPs at many points: Aadhaar [KYC](#kyc), mobile number verification during ABHA creation, and login. An OTP is always paired with a transaction id from the call that requested it.
+
+### PHR
+
+Personal Health Record, a patient facing application: the person logs in with their [ABHA address](#abha-address), discovers records held by facilities they visited, links them, and reads them. PHR apps subscribe to a patient's ABHA address and are notified when a new [care context](/docs/pr-12/docs/hiecm/v3/getting-started/glossary#care-context) is linked. See [PHR applications](/docs/pr-12/docs/hiecm/v3/concepts/phr).
+
+### Safe to Host certificate
+
+The certificate a [WASA](#wasa) produces, issued by a CERT-In empanelled auditor, and required before you receive production credentials. It names the application it covers and carries an issue date and an expiry date. A certificate that is in date covers a new module without a fresh audit of the parts already certified. See [Security audit](/docs/pr-12/docs/hiecm/v3/getting-started/security-audit).
+
+### Sandbox
+
+The ABDM test environment, and where every integration starts: you register on the sandbox portal, declare your role and the milestones you plan to complete, and receive a client id and client secret. Sandbox hosts differ from production, so ABHA calls go to `abhasbx.abdm.gov.in` in sandbox and `abha.abdm.gov.in` in production. Everything in sandbox is test data; see [Get started](/docs/pr-12/docs/hiecm/v3/getting-started/sandbox).
+
+### txnId
+
+Transaction id. Most flows take two or three calls, and the first one returns a `txnId` that the calls after it send back, so ABDM knows which attempt they belong to. It is short lived and single purpose. It is not a session and it is not a token: holding a `txnId` does not authenticate you, and it stops working once the flow it belongs to finishes or expires.
+
+### UHI
+
+Unified Health Interface, an open protocol network for health services that are not record exchange: physical consultation booking, ambulance booking, blood bank discovery, Jan Aushadhi and pharmacy search. It has two roles, [EUA](/docs/pr-12/docs/uhi/v1/getting-started/glossary#eua) on the consumer side and [HSPA](/docs/pr-12/docs/uhi/v1/getting-started/glossary#hspa) on the provider side, and every call is signed with Ed25519. See [UHI](/docs/pr-12/docs/uhi/v1).
+
+### WASA
+
+The security audit of your application, conducted on your staging URL by an auditor from the CERT-In empanelled list. It produces the [Safe to Host certificate](#safe-to-host-certificate), and it is separate from functional testing: passing every milestone still leaves this to do. Each platform you ship is audited on its own. See [Security audit](/docs/pr-12/docs/hiecm/v3/getting-started/security-audit).
+
+## On UHI
+
+These terms belong to UHI: the two applications on either side of a booking.
+
+### EUA
+
+End User Application: in [UHI](#uhi), the consumer facing side, the app a patient or a caregiver uses to search for a service and book it. It sends a signed request to the UHI gateway and receives responses at its own callback URL. See [UHI](/docs/pr-12/docs/uhi/v1).
+
+### HSPA
+
+Health Service Provider Application: in [UHI](#uhi), the provider side system that receives requests and responds to them, such as an ambulance operator's dispatch platform, a blood bank management system or a pharmacy's stock system. It is the counterpart of the [EUA](#eua).

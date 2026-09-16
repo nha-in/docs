@@ -1,0 +1,43 @@
+# P3
+
+> Every page of the P3 module of the ABDM Developer Portal, fetchable as markdown.
+
+## Pages
+
+- [P3 PHR consent and notifications](https://nha-in.github.io/docs/pr-12/docs/hiecm/v3/api/p3): How a patient grants, reviews and revokes consent, and how they are told any of it happened.
+- [Add Feedback](https://nha-in.github.io/docs/pr-12/docs/hiecm/v3/api/p3/endpoints/p3-add-feedback): Records feedback from the person, with a title and body, against their ABHA.
+- [Add new Notification](https://nha-in.github.io/docs/pr-12/docs/hiecm/v3/api/p3/endpoints/p3-add-new-notification): Creates a push notification for a person.
+- [App Notification Token](https://nha-in.github.io/docs/pr-12/docs/hiecm/v3/api/p3/endpoints/p3-app-notification-token): Returns the device token registered for push notifications to the signed-in person.
+- [Approve Consent Request](https://nha-in.github.io/docs/pr-12/docs/hiecm/v3/api/p3/endpoints/p3-approve-consent-request): Approves a consent request. consents names the HIPs and care contexts the person is granting, and the artefact ids come back.
+- [Approve Subscription Request](https://nha-in.github.io/docs/pr-12/docs/hiecm/v3/api/p3/endpoints/p3-approve-subscription-request): Approves a subscription request for the sources included and not the ones excluded, or for every HIP.
+- [Clear Notification](https://nha-in.github.io/docs/pr-12/docs/hiecm/v3/api/p3/endpoints/p3-clear-notification): Clears the push notifications given from the person's list.
+- [Consent Auto Approve](https://nha-in.github.io/docs/pr-12/docs/hiecm/v3/api/p3/endpoints/p3-consent-auto-approve): Creates an auto-approval policy: consent requests from the HIU named are approved without asking, for the sources included and not the ones excluded.
+- [Delete push notification](https://nha-in.github.io/docs/pr-12/docs/hiecm/v3/api/p3/endpoints/p3-delete-push-notification): Deletes a scheduled push notification by its id.
+- [Deny Consent Request](https://nha-in.github.io/docs/pr-12/docs/hiecm/v3/api/p3/endpoints/p3-deny-consent-request): Denies a consent request, with the reason the person gave.
+- [Deny Subscription Request](https://nha-in.github.io/docs/pr-12/docs/hiecm/v3/api/p3/endpoints/p3-deny-subscription-request): Denies a subscription request, so the HIU is not notified of the person's new care contexts.
+- [Disable Auto Approval](https://nha-in.github.io/docs/pr-12/docs/hiecm/v3/api/p3/endpoints/p3-disable-auto-approval): Turns off an auto-approval policy, so later consent requests it would have matched wait for the person again.
+- [Edit Subscription](https://nha-in.github.io/docs/pr-12/docs/hiecm/v3/api/p3/endpoints/p3-edit-subscription): Edits a subscription and approves it in the same step, changing which HIPs and categories the HIU is subscribed to.
+- [Enable Auto Approval](https://nha-in.github.io/docs/pr-12/docs/hiecm/v3/api/p3/endpoints/p3-enable-auto-approval): Turns an auto-approval policy back on.
+- [Get All Consent Artefacts by ABHA Address](https://nha-in.github.io/docs/pr-12/docs/hiecm/v3/api/p3/endpoints/p3-get-all-consent-artefacts-by-abha-address): Lists the consent artefacts granted by the signed-in ABHA address, with paging.
+- [Get All Consent Artefacts by Request ID](https://nha-in.github.io/docs/pr-12/docs/hiecm/v3/api/p3/endpoints/p3-get-all-consent-artefacts-by-request-id): Lists the consent artefacts created when a request was approved, one per HIP.
+- [Get All HIU Subscription Requests](https://nha-in.github.io/docs/pr-12/docs/hiecm/v3/api/p3/endpoints/p3-get-all-hiu-subscription-requests): Lists the subscription requests HIUs have raised against the signed-in ABHA address, with paging.
+- [Get all notification details](https://nha-in.github.io/docs/pr-12/docs/hiecm/v3/api/p3/endpoints/p3-get-all-notification-details): Lists the person's push notifications with their read state and the unread count.
+- [Get Consent Artefact by Artefact ID](https://nha-in.github.io/docs/pr-12/docs/hiecm/v3/api/p3/endpoints/p3-get-consent-artefact-by-artefact-id): Returns one consent artefact with its signature and current status.
+- [Get Consent Request by Request ID](https://nha-in.github.io/docs/pr-12/docs/hiecm/v3/api/p3/endpoints/p3-get-consent-request-by-request-id): Returns one consent request: who is asking, for what purpose, which record types, and its current status.
+- [Get Consent Request List](https://nha-in.github.io/docs/pr-12/docs/hiecm/v3/api/p3/endpoints/p3-get-consent-request-list): Lists the consent requests raised against the signed-in ABHA address, with paging.
+- [Get Links](https://nha-in.github.io/docs/pr-12/docs/hiecm/v3/api/p3/endpoints/p3-get-links): Lists the person's linked care contexts at the HIPs given, for choosing what to grant in a consent.
+- [GET-scheduled push Notifications](https://nha-in.github.io/docs/pr-12/docs/hiecm/v3/api/p3/endpoints/p3-get-scheduled-push-notifications): Lists the push notifications scheduled for later delivery, with their processing state.
+- [Get Subscription Details by Request ID](https://nha-in.github.io/docs/pr-12/docs/hiecm/v3/api/p3/endpoints/p3-get-subscription-details-by-request-id): Returns one subscription request with its status and details, by the request id.
+- [Get Subscription Details by Subscription ID](https://nha-in.github.io/docs/pr-12/docs/hiecm/v3/api/p3/endpoints/p3-get-subscription-details-by-subscription-id): Returns one subscription with its details, by the subscription id.
+- [HIU Consent Notification](https://nha-in.github.io/docs/pr-12/docs/hiecm/v3/api/p3/endpoints/p3-hiu-consent-notification): Notification the gateway sends a HIU when a consent request is granted, denied, revoked or expires.
+- [HIU Consent Request On-Init (Callback)](https://nha-in.github.io/docs/pr-12/docs/hiecm/v3/api/p3/endpoints/p3-hiu-consent-request-on-init-callback): Callback the gateway sends after a consent request is raised: the request id to track it by, or the error that stopped it.
+- [HIU On-Fetch (Consent Artefact Fetch Callback)](https://nha-in.github.io/docs/pr-12/docs/hiecm/v3/api/p3/endpoints/p3-hiu-on-fetch-consent-artefact-fetch-callback): Callback the gateway sends with a consent artefact the HIU asked to fetch, or the error that stopped it.
+- [Init Consent Request](https://nha-in.github.io/docs/pr-12/docs/hiecm/v3/api/p3/endpoints/p3-init-consent-request): Raises a consent request as a HIU: names the patient, the purpose, the record types and the period of care wanted.
+- [Initiate Subscription Request](https://nha-in.github.io/docs/pr-12/docs/hiecm/v3/api/p3/endpoints/p3-initiate-subscription-request): Raises a subscription request as a HIU: asks to be notified when the patient links new care contexts at the HIPs and categories named, for a period.
+- [Post - add App Notification Token](https://nha-in.github.io/docs/pr-12/docs/hiecm/v3/api/p3/endpoints/p3-post-add-app-notification-token): Registers a device token for push notifications, with the operating system it belongs to.
+- [Revoke Consent](https://nha-in.github.io/docs/pr-12/docs/hiecm/v3/api/p3/endpoints/p3-revoke-consent): Revokes the consent artefacts given, so the HIUs holding them can no longer fetch under them.
+- [Schedule-push-notification - internal](https://nha-in.github.io/docs/pr-12/docs/hiecm/v3/api/p3/endpoints/p3-schedule-push-notification-internal): Schedules a push notification to a person for a given time, for example a medication reminder.
+- [Set Up Subscription for Aarogya Setu](https://nha-in.github.io/docs/pr-12/docs/hiecm/v3/api/p3/endpoints/p3-set-up-subscription-for-aarogya-setu): Sets up the PHR application's own subscription, so it is notified when the person links new care contexts.
+- [Single/Multiple Notification read](https://nha-in.github.io/docs/pr-12/docs/hiecm/v3/api/p3/endpoints/p3-single-multiple-notification-read): Marks one or more push notifications as read.
+- [Update-scheduled push notification](https://nha-in.github.io/docs/pr-12/docs/hiecm/v3/api/p3/endpoints/p3-update-scheduled-push-notification): Changes the delivery time of a scheduled push notification.
+- [P3 PHR consent and notifications errors](https://nha-in.github.io/docs/pr-12/docs/hiecm/v3/api/p3/errors): What P3 PHR consent and notifications returns when a call fails, and what to do about it.
