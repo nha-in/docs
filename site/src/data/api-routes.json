@@ -760,13 +760,13 @@
       "apis.abdm.gov.in"
     ],
     "kind": "operation",
-    "operationId": "m2_post_user_initiated_linking_v3_patient_care_context_on_discover",
+    "operationId": "m2_post_user_initiated_linking_v3_patient_care_context_on_8c9340",
     "module": "M2 Linking and sharing",
     "moduleDir": "m2",
     "method": "POST",
     "path": "/api/hiecm/user-initiated-linking/v3/patient/care-context/on-discover",
     "summary": "HMIS/LIMS/HIP has to ensure that only unlinked records of the patient has to be shared through this API.",
-    "route": "/docs/hiecm/v3/api/m2/endpoints/m2-post-user-initiated-linking-v3-patient-care-context-on-discover",
+    "route": "/docs/hiecm/v3/api/m2/endpoints/m2-post-user-initiated-linking-v3-patient-care-context-on-8c9340",
     "callbacks": []
   },
   {
@@ -952,13 +952,13 @@
       "apis.abdm.gov.in"
     ],
     "kind": "operation",
-    "operationId": "m3_get_data_flow_v3_health_information_request_status_transaction_id",
+    "operationId": "m3_get_data_flow_v3_health_information_request_status_tra_550104",
     "module": "M3 Consent and fetching",
     "moduleDir": "m3",
     "method": "GET",
     "path": "/api/hiecm/data-flow/v3/health-information/request/status/{transaction-id}",
     "summary": "API to get the current status of the Health Information Request.",
-    "route": "/docs/hiecm/v3/api/m3/endpoints/m3-get-data-flow-v3-health-information-request-status-transaction-id",
+    "route": "/docs/hiecm/v3/api/m3/endpoints/m3-get-data-flow-v3-health-information-request-status-tra-550104",
     "callbacks": []
   },
   {
@@ -1728,13 +1728,13 @@
       "apihspsbx.abdm.gov.in"
     ],
     "kind": "operation",
-    "operationId": "m4_post_facilitymanagement_v1_5_facility_bygeolocation_searchfacilityandinfrastructurewithinradiuswithfilter",
+    "operationId": "m4_post_facilitymanagement_v1_5_facility_bygeolocation_se_907b10",
     "module": "M4 HPR and HFR",
     "moduleDir": "m4",
     "method": "POST",
     "path": "/FacilityManagement/v1.5/facility/bygeoLocation/searchFacilityAndInfrastructureWithinRadiusWithFilter",
     "summary": "Get Facility And Infrastructure Within Radius With Filter",
-    "route": "/docs/hiecm/v3/api/m4/endpoints/m4-post-facilitymanagement-v1-5-facility-bygeolocation-searchfacilityandinfrastructurewithinradiuswithfilter",
+    "route": "/docs/hiecm/v3/api/m4/endpoints/m4-post-facilitymanagement-v1-5-facility-bygeolocation-se-907b10",
     "callbacks": []
   },
   {
@@ -3732,13 +3732,13 @@
       "apis.abdm.gov.in"
     ],
     "kind": "operation",
-    "operationId": "scan-and-pay_post_scan_gateway_v3_patient_scan_pay_on_order_status",
+    "operationId": "scan-and-pay_post_scan_gateway_v3_patient_scan_pay_on_ord_21f376",
     "module": "Scan and Pay",
     "moduleDir": "scan-and-pay",
     "method": "POST",
     "path": "/api/hiecm/scan-gateway/v3/patient/scan-pay/on-order-status",
     "summary": "This is an API is called by HIP to check the status of reports.",
-    "route": "/docs/hiecm/v3/api/scan-and-pay/endpoints/scan-and-pay-post-scan-gateway-v3-patient-scan-pay-on-order-status",
+    "route": "/docs/hiecm/v3/api/scan-and-pay/endpoints/scan-and-pay-post-scan-gateway-v3-patient-scan-pay-on-ord-21f376",
     "callbacks": []
   },
   {
@@ -3812,13 +3812,13 @@
       "apis.abdm.gov.in"
     ],
     "kind": "operation",
-    "operationId": "subscription_post_subscription_requests_v3_hiu_care_context_on_notify",
+    "operationId": "subscription_post_subscription_requests_v3_hiu_care_conte_96bc45",
     "module": "Subscriptions",
     "moduleDir": "subscription",
     "method": "POST",
     "path": "/api/hiecm/subscription-requests/v3/hiu/care-context/on-notify",
     "summary": "This API will be invoked by the HIU to respond to /api/v3/hiu/subscription/notify.",
-    "route": "/docs/hiecm/v3/api/subscription/endpoints/subscription-post-subscription-requests-v3-hiu-care-context-on-notify",
+    "route": "/docs/hiecm/v3/api/subscription/endpoints/subscription-post-subscription-requests-v3-hiu-care-conte-96bc45",
     "callbacks": []
   },
   {
