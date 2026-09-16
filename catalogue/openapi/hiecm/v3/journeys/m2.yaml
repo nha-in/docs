@@ -11,7 +11,7 @@
   title: User-initiated-linking
   steps:
     - op: m2_post_v3_hip_patient_care_context_discover
-    - op: m2_post_user_initiated_linking_v3_patient_care_context_on_discover
+    - op: m2_post_user_initiated_linking_v3_patient_care_context_on_8c9340
     - op: m2_post_v3_hip_link_care_context_init
     - op: m2_post_user_initiated_linking_v3_link_care_context_on_init
     - op: m2_post_v3_hip_link_care_context_confirm

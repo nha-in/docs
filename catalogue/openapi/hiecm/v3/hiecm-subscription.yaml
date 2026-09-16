@@ -502,7 +502,7 @@ paths:
     post:
       tags:
         - subscription-hiu
-      operationId: subscription_post_subscription_requests_v3_hiu_care_context_on_notify
+      operationId: subscription_post_subscription_requests_v3_hiu_care_conte_96bc45
       summary: This API will be invoked by the HIU to respond to /api/v3/hiu/subscription/notify.
       description: This API endpoint is designed to be invoked by the Health Information User (HIU) to respond to notifications received from the /api/v3/hiu/subscription/notify API. By using this API, the HIU can acknowledge and process notifications related to care context subscriptions, ensuring that the system accurately reflects the status and actions taken. This functionality is essential for maintaining the integrity and synchronization of care context subscription requests, supporting efficient and transparent health information exchange within the healthcare ecosystem.
       security:

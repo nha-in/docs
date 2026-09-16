@@ -98,7 +98,7 @@ curl --request POST \
 
 Inbound to your bridge at `/api/v3/hiu/subscription/notify`. Acknowledge it and continue.
 
-#### 6. This API will be invoked by the HIU to respond to /api/v3/hiu/subscription/notify. (`subscription_post_subscription_requests_v3_hiu_care_context_on_notify`)
+#### 6. This API will be invoked by the HIU to respond to /api/v3/hiu/subscription/notify. (`subscription_post_subscription_requests_v3_hiu_care_conte_96bc45`)
 
 ```bash
 curl --request POST \

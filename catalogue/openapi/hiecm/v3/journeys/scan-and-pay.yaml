@@ -8,7 +8,7 @@
     - op: scan-and-pay_post_scan_gateway_v3_patient_scan_pay_notify
     - op: scan-and-pay_post_v3_patient_scan_pay_on_notify
     - op: scan-and-pay_post_v3_patient_scan_pay_order_status
-    - op: scan-and-pay_post_scan_gateway_v3_patient_scan_pay_on_order_status
+    - op: scan-and-pay_post_scan_gateway_v3_patient_scan_pay_on_ord_21f376
 - id: scan-and-pay-utility
   title: Utility
   steps:

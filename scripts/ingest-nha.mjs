@@ -129,6 +129,10 @@ for (const {file, place} of FILES) {
       // 1. operationId
       const nhaId = copy.operationId;
       let id = `${module}_${method}_${slug(path.replace(/^\/(abha\/api|api\/hiecm|api|apis)\//, '/'))}`;
+      // An MCP tool name is at most 64 characters, and a tool generator derives
+      // it from operationId. A long path would otherwise produce an id no tool
+      // can carry, so it is cut and a hash of the full id restores uniqueness.
+      if (id.length > 64) id = `${id.slice(0, 57)}_${createHash('sha256').update(id).digest('hex').slice(0, 6)}`;
       let n = 2; while (ids.has(id)) id = `${id}_${n++}`;
       ids.add(id);
       copy.operationId = id;

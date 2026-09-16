@@ -959,7 +959,7 @@ paths:
     post:
       tags:
         - Search
-      operationId: m4_post_facilitymanagement_v1_5_facility_bygeolocation_searchfacilityandinfrastructurewithinradiuswithfilter
+      operationId: m4_post_facilitymanagement_v1_5_facility_bygeolocation_se_907b10
       requestBody:
         content:
           application/json:

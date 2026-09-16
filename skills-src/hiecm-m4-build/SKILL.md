@@ -560,7 +560,7 @@ A 200 whose body matches:
 
 **Act: the calls in this journey, in order**
 
-#### 1. Get Facility And Infrastructure Within Radius With Filter (`m4_post_facilitymanagement_v1_5_facility_bygeolocation_searchfacilityandinfrastructurewithinradiuswithfilter`)
+#### 1. Get Facility And Infrastructure Within Radius With Filter (`m4_post_facilitymanagement_v1_5_facility_bygeolocation_se_907b10`)
 
 ```bash
 curl --request POST \

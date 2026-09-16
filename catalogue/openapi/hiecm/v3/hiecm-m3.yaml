@@ -1504,7 +1504,7 @@ paths:
     get:
       tags:
         - consent-management-data-flow-hiu
-      operationId: m3_get_data_flow_v3_health_information_request_status_transaction_id
+      operationId: m3_get_data_flow_v3_health_information_request_status_tra_550104
       summary: API to get the current status of the Health Information Request.
       description: This API endpoint allows Health Information Users (HIU) and Health Information Providers (HIP) to retrieve the current status of a specific Health Information Request. By providing the unique transaction ID, users can query the system to obtain real-time updates on the processing state of their request. This functionality is crucial for ensuring transparency and efficient communication between stakeholders in the health information exchange ecosystem. The API supports various status checks, including pending, in-progress, completed, and failed states.
       security:

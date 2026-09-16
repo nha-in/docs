@@ -84,7 +84,7 @@ Inbound to your bridge at `/v3/patient/scan-pay/on-notify`. Acknowledge it and c
 
 Inbound to your bridge at `/v3/patient/scan-pay/order-status`. Acknowledge it and continue.
 
-#### 8. This is an API is called by HIP to check the status of reports. (`scan-and-pay_post_scan_gateway_v3_patient_scan_pay_on_order_status`)
+#### 8. This is an API is called by HIP to check the status of reports. (`scan-and-pay_post_scan_gateway_v3_patient_scan_pay_on_ord_21f376`)
 
 ```bash
 curl --request POST \

@@ -38,7 +38,7 @@
 - id: m4-search
   title: Search
   steps:
-    - op: m4_post_facilitymanagement_v1_5_facility_bygeolocation_searchfacilityandinfrastructurewithinradiuswithfilter
+    - op: m4_post_facilitymanagement_v1_5_facility_bygeolocation_se_907b10
     - op: m4_post_facilitymanagement_v1_5_facility_search
 - id: m4-hfr-hrp-linkage-apis
   title: HFR-HRP Linkage APIs

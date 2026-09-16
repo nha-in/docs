@@ -639,7 +639,7 @@ paths:
     post:
       tags:
         - abdm-user-initiated-linking-hip
-      operationId: m2_post_user_initiated_linking_v3_patient_care_context_on_discover
+      operationId: m2_post_user_initiated_linking_v3_patient_care_context_on_8c9340
       summary: HMIS/LIMS/HIP has to ensure that only unlinked records of the patient has to be shared through this API.
       description: This API endpoint is invoked by the Hospital Management Information System (HMIS) or Laboratory Information Management System (LIMS) or HIP application to share the response of the /api/hiecm/user-initiated-linking/v3/patient/care-context/on-discover API. It facilitates the communication of discovered health records back to the patient or user. By using this API, the HMIS/LIMS application ensures that the patient’s health information is accurately and promptly shared, supporting efficient and transparent health information exchange. This process is crucial for maintaining the integrity and continuity of patient care, enabling patients to have comprehensive access to their health records.
       security:

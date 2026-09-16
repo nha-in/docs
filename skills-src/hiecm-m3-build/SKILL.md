@@ -230,7 +230,7 @@ curl --request POST \
 }'
 ```
 
-#### 12. API to get the current status of the Health Information Request. (`m3_get_data_flow_v3_health_information_request_status_transaction_id`)
+#### 12. API to get the current status of the Health Information Request. (`m3_get_data_flow_v3_health_information_request_status_tra_550104`)
 
 ```bash
 curl --request GET \

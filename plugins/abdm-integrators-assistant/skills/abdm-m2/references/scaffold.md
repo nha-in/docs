@@ -122,7 +122,7 @@ A 200 response. The specification gives no body for it, so read what comes back.
 
 Inbound to your bridge at `/api/v3/hip/patient/care-context/discover`. Acknowledge it and continue.
 
-#### 2. HMIS/LIMS/HIP has to ensure that only unlinked records of the patient has to be shared through this API. (`m2_post_user_initiated_linking_v3_patient_care_context_on_discover`)
+#### 2. HMIS/LIMS/HIP has to ensure that only unlinked records of the patient has to be shared through this API. (`m2_post_user_initiated_linking_v3_patient_care_context_on_8c9340`)
 
 ```bash
 curl --request POST \

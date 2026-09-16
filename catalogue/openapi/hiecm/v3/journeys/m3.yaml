@@ -12,4 +12,4 @@
     - op: m3_post_data_flow_v3_health_information_request
     - op: m3_post_v3_hiu_health_information_on_request
     - op: m3_post_data_flow_v3_health_information_notify
-    - op: m3_get_data_flow_v3_health_information_request_status_transaction_id
+    - op: m3_get_data_flow_v3_health_information_request_status_tra_550104
