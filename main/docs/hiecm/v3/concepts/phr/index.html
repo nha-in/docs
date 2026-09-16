@@ -1,0 +1,438 @@
+<!doctype html><html lang=en dir=ltr class="docs-wrapper plugin-docs plugin-id-default docs-version-current docs-doc-page docs-doc-id-hiecm/v3/concepts/phr" data-has-hydrated=false><head><meta charset=UTF-8><title data-rh=true>PHR applications | ABDM Developer Portal</title><meta data-rh=true name=viewport content="width=device-width, initial-scale=1.0"/><meta data-rh=true name=twitter:card content=summary_large_image /><meta data-rh=true property=og:image content=https://nha-in.github.io/docs/main/img/social-card.jpg /><meta data-rh=true name=twitter:image content=https://nha-in.github.io/docs/main/img/social-card.jpg /><meta data-rh=true property=og:url content=https://nha-in.github.io/docs/main/docs/hiecm/v3/concepts/phr /><meta data-rh=true property=og:locale content=en /><meta data-rh=true name=docsearch:language content=en /><meta data-rh=true property=og:type content=website /><meta data-rh=true property=og:site_name content="ABDM Developer Portal"/><meta data-rh=true property=og:image:width content=1200 /><meta data-rh=true property=og:image:height content=630 /><meta data-rh=true property=og:image:type content=image/jpeg /><meta data-rh=true property=og:image:alt content="ABDM Developer Portal, the National Health Authority"/><meta data-rh=true name=docusaurus_version content=current /><meta data-rh=true name=docsearch:version content=current /><meta data-rh=true property=og:title content="PHR applications | ABDM Developer Portal"/><meta data-rh=true name=description content="What a personal health record app does in ABDM, the screens it needs, and the modules you have to build."/><meta data-rh=true property=og:description content="What a personal health record app does in ABDM, the screens it needs, and the modules you have to build."/><link data-rh=true rel=icon href=/docs/main/img/favicon.svg /><link data-rh=true rel=canonical href=https://nha-in.github.io/docs/main/docs/hiecm/v3/concepts/phr /><link data-rh=true rel=alternate href=https://nha-in.github.io/docs/main/docs/hiecm/v3/concepts/phr hreflang=en /><link data-rh=true rel=alternate href=https://nha-in.github.io/docs/main/docs/hiecm/v3/concepts/phr hreflang=x-default /><script data-rh=true type=application/ld+json>{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","item":"https://nha-in.github.io/docs/main/docs/hiecm/v3/concepts/phr","name":"PHR apps","position":1}]}</script><meta name=viewport content="width=device-width, initial-scale=1.0, interactive-widget=resizes-content"><link rel="alternate icon" type=image/png href=/docs/main/img/favicon.png><link rel=apple-touch-icon href=/docs/main/img/apple-touch-icon.png><script src=/docs/main/agent/abdm-support-agent.js defer></script><link rel=stylesheet href=/docs/main/assets/css/styles.236cda6b.css /><script src=/docs/main/assets/js/runtime~main.a1942f89.js defer></script><script src=/docs/main/assets/js/main.b1e03353.js defer></script></head><body><svg style="display: none;"><defs>
+<symbol id=theme-svg-external-link viewBox="0 0 24 24"><path fill=currentColor d="M21 13v10h-21v-19h12v2h-10v15h17v-8h2zm3-12h-10.988l4.035 4-6.977 7.07 2.828 2.828 6.977-7.07 4.125 4.172v-11z"/></symbol>
+</defs></svg>
+<script>!function(){var t=function(){try{return new URLSearchParams(window.location.search).get("docusaurus-theme")}catch(t){}}()||function(){try{return window.localStorage.getItem("theme-af8")}catch(t){}}();document.documentElement.setAttribute("data-theme",t||(window.matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light")),document.documentElement.setAttribute("data-theme-choice",t||"system")}(),function(){try{for(var[t,e]of new URLSearchParams(window.location.search).entries())if(t.startsWith("docusaurus-data-")){var a=t.replace("docusaurus-data-","data-");document.documentElement.setAttribute(a,e)}}catch(t){}}()</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div id=__docusaurus><link rel=preload as=image href=/docs/main/img/nha-logo.svg /><link rel=preload as=image href=/docs/main/img/nha-logo-dark.svg /><div role=region aria-label="Skip to main content"><a class=skipToContent_fXgn href=#__docusaurus_skipToContent_fallback>Skip to main content</a></div><nav class="navbar navbar--fixed-top topbar" aria-label=Site><a class=topbar-brand aria-label="ABDM Developer Portal" href=/docs/main/><img src=/docs/main/img/nha-logo.svg alt="" class="topbar-logo themedComponent_siVc themedComponent--light_hHel"/><img src=/docs/main/img/nha-logo-dark.svg alt="" class="topbar-logo themedComponent_siVc themedComponent--dark_yETr"/><span class=brand-chip><span aria-hidden=true class=brand-chip__mark style='-webkit-mask-image:url("/docs/main/img/ashoka-emblem-mark.svg");mask-image:url("/docs/main/img/ashoka-emblem-mark.svg")'></span><span class=topbar-wordmark>ABDM Developer Portal</span></span></a><button type=button id=radix-_R_16akl_ aria-haspopup=menu aria-expanded=false data-state=closed data-slot=dropdown-menu-trigger class="topbar-action topbar-gateway" aria-label="Gateway: HIE-CM">HIE-CM<svg xmlns=http://www.w3.org/2000/svg width=24 height=24 viewBox="0 0 24 24" fill=none stroke=currentColor stroke-width=2 stroke-linecap=round stroke-linejoin=round class="lucide lucide-chevron-down size-3.5" aria-hidden=true><path d="m6 9 6 6 6-6"/></svg></button><div class=topbar-center><div class=omnibox><div class="navbar__search searchBarContainer_bpSG" dir=ltr><svg aria-hidden=true class=searchIcon_qjAM focusable=false viewBox="0 0 16 16"><path fill=currentColor d="M6.02945 10.20327a4.17382 4.17382 0 1 1 4.17382-4.17382 4.15609 4.15609 0 0 1-4.17382 4.17382Zm9.69195 4.2199-4.8225-4.82338A5.88021 5.88021 0 0 0 12.058 6.02856 6.00467 6.00467 0 1 0 9.59979 10.8989l4.82338 4.82338a.89729.89729 0 0 0 1.29912 0 .89749.89749 0 0 0-.00087-1.29909Z"/></svg><input placeholder=Search aria-label=Search class="navbar__search-input searchInput_T5pz" value="" /><div class="loadingRing_hScY searchBarLoadingRing_dMau"><div></div><div></div><div></div><div></div></div></div><abdm-support-agent docs-origin=https://nha-in.github.io/docs/main starters="I want to create an ABHA
+I want to share health records
+What format does the TIMESTAMP header need?
+What does ABDM-1016 mean and how do I fix it?" support-url=/docs/main/docs/support></abdm-support-agent></div></div><div class=topbar-actions><a class="topbar-action topbar-action--icon" href=https://sandbox.abdm.gov.in target=_blank rel="noopener noreferrer" aria-label="ABDM sandbox" data-state=closed data-slot=tooltip-trigger><svg viewBox="1 1.8 22 16" width=26 height=19 fill=none stroke=currentColor stroke-width=1.5 stroke-linecap=round stroke-linejoin=round aria-hidden=true><path d="M12 2.2 22.4 8.2 12 14.2 1.6 8.2Z"/><path d="M1.6 8.2v3.1L12 17.3l10.4-6V8.2"/><path d="M9.2 6.4 6.4 8.2l2.8 1.8M14.8 6.4l2.8 1.8-2.8 1.8M13.4 5.3l-2.8 6"/></svg></a><a class="topbar-action topbar-action--icon" href=https://github.com/nha-in target=_blank rel="noopener noreferrer" aria-label="GitHub repository"><svg viewBox="0 0 16 16" width=16 height=16 aria-hidden=true fill=currentColor><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82a7.4 7.4 0 0 1 2-.27c.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg></a><button type=button id=radix-_R_e6akl_ aria-haspopup=menu aria-expanded=false data-state=closed data-slot=dropdown-menu-trigger class="topbar-action topbar-locale"><svg xmlns=http://www.w3.org/2000/svg width=24 height=24 viewBox="0 0 24 24" fill=none stroke=currentColor stroke-width=2 stroke-linecap=round stroke-linejoin=round class="lucide lucide-languages size-4" aria-hidden=true><path d="m5 8 6 6"/><path d="m4 14 6-6 2-3"/><path d="M2 5h12"/><path d="M7 2h1"/><path d="m22 22-5-10-5 10"/><path d="M14 18h6"/></svg>English<svg xmlns=http://www.w3.org/2000/svg width=24 height=24 viewBox="0 0 24 24" fill=none stroke=currentColor stroke-width=2 stroke-linecap=round stroke-linejoin=round class="lucide lucide-chevron-down size-3.5" aria-hidden=true><path d="m6 9 6 6 6-6"/></svg></button></div><button type=button id=radix-_R_2makl_ aria-haspopup=menu aria-expanded=false data-state=closed data-slot=dropdown-menu-trigger class="topbar-action topbar-action--icon topbar-overflow" aria-label=More><svg xmlns=http://www.w3.org/2000/svg width=24 height=24 viewBox="0 0 24 24" fill=none stroke=currentColor stroke-width=2 stroke-linecap=round stroke-linejoin=round class="lucide lucide-ellipsis size-5" aria-hidden=true><circle cx=12 cy=12 r=1 /><circle cx=19 cy=12 r=1 /><circle cx=5 cy=12 r=1 /></svg></button><div class="toggle_vylO topbar-toggle"><button class="clean-btn toggleButton_gllP toggleButtonDisabled_aARS" type=button disabled title="system mode" aria-label="Switch between dark and light mode (currently system mode)"><svg xmlns=http://www.w3.org/2000/svg width=24 height=24 viewBox="0 0 24 24" fill=none stroke=currentColor stroke-width=1.5 stroke-linecap=round stroke-linejoin=round class="lucide lucide-sun toggleIcon_g3eP lightToggleIcon_pyhR" aria-hidden=true><circle cx=12 cy=12 r=4 /><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg><svg xmlns=http://www.w3.org/2000/svg width=24 height=24 viewBox="0 0 24 24" fill=none stroke=currentColor stroke-width=1.5 stroke-linecap=round stroke-linejoin=round class="lucide lucide-moon toggleIcon_g3eP darkToggleIcon_wfgR" aria-hidden=true><path d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401"/></svg><svg xmlns=http://www.w3.org/2000/svg width=24 height=24 viewBox="0 0 24 24" fill=none stroke=currentColor stroke-width=1.5 stroke-linecap=round stroke-linejoin=round class="lucide lucide-laptop toggleIcon_g3eP systemToggleIcon_QzmC" aria-hidden=true><path d="M18 5a2 2 0 0 1 2 2v8.526a2 2 0 0 0 .212.897l1.068 2.127a1 1 0 0 1-.9 1.45H3.62a1 1 0 0 1-.9-1.45l1.068-2.127A2 2 0 0 0 4 15.526V7a2 2 0 0 1 2-2z"/><path d="M20.054 15.987H3.946"/></svg></button></div></nav><nav class=docs-tabs aria-label="Documentation sections"><a class="docs-tab docs-tab--active" aria-current=page href=/docs/main/docs/hiecm/v3>Docs</a><a class=docs-tab href=/docs/main/docs/hiecm/v3/api>API references</a><a class=docs-tab href=/docs/main/docs/hiecm/v3/resources>Developer resources</a><a class=docs-tab href=/docs/main/docs/whats-new>What's new</a><a class=docs-tab href=/docs/main/docs/support>Support</a></nav><button type=button aria-haspopup=dialog aria-expanded=false data-state=closed data-slot=sheet-trigger class=nav-row aria-label="Open navigation"><svg xmlns=http://www.w3.org/2000/svg width=24 height=24 viewBox="0 0 24 24" fill=none stroke=currentColor stroke-width=2 stroke-linecap=round stroke-linejoin=round class="lucide lucide-menu size-4" aria-hidden=true><path d="M4 5h16"/><path d="M4 12h16"/><path d="M4 19h16"/></svg><span class=nav-row__label>Navigation</span><span class=nav-row__here>Docs</span><svg xmlns=http://www.w3.org/2000/svg width=24 height=24 viewBox="0 0 24 24" fill=none stroke=currentColor stroke-width=2 stroke-linecap=round stroke-linejoin=round class="lucide lucide-chevron-down size-4 nav-row__chevron" aria-hidden=true><path d="m6 9 6 6 6-6"/></svg></button><div id=__docusaurus_skipToContent_fallback class="theme-layout-main main-wrapper mainWrapper_z2l0"><div class=docsWrapper_hBAB><button aria-label="Scroll back to top" class="clean-btn theme-back-to-top-button backToTopButton_sjWU" type=button></button><div class=docRoot_UBD9><aside class="theme-doc-sidebar-container docSidebarContainer_YfHR"><div class=sidebarViewport_aRkj><div class=docs-sidebar><div class=docs-sidebar__head><div class=sidebar-pickers><button type=button aria-haspopup=dialog aria-expanded=false data-state=closed data-slot=popover-trigger class=sidebar-settings aria-label="Settings. Role Everything"><svg xmlns=http://www.w3.org/2000/svg width=24 height=24 viewBox="0 0 24 24" fill=none stroke=currentColor stroke-width=2 stroke-linecap=round stroke-linejoin=round class="lucide lucide-sliders-horizontal size-4 shrink-0" aria-hidden=true><path d="M10 5H3"/><path d="M12 19H3"/><path d="M14 3v4"/><path d="M16 17v4"/><path d="M21 12h-9"/><path d="M21 19h-5"/><path d="M21 5h-7"/><path d="M8 10v4"/><path d="M8 12H3"/></svg><span class=sidebar-settings__summary>Everything</span></button></div><button type=button class=sidebar-fold title="Collapse sidebar" aria-label="Collapse sidebar"><svg xmlns=http://www.w3.org/2000/svg width=24 height=24 viewBox="0 0 24 24" fill=none stroke=currentColor stroke-width=2 stroke-linecap=round stroke-linejoin=round class="lucide lucide-panel-left-close size-4" aria-hidden=true><rect width=18 height=18 x=3 y=3 rx=2 /><path d="M9 3v18"/><path d="m16 15-3-3 3-3"/></svg></button></div><nav aria-label="Docs sidebar" class="menu thin-scrollbar menu_SIkG"><ul class="theme-doc-sidebar-menu menu__list"><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-1 menu__list-item sidebar-icon sidebar-icon--rocket"><div class=menu__list-item-collapsible><a class="categoryLink_byQd menu__link menu__link--sublist" href=/docs/main/docs/hiecm/v3><span class=categoryLinkLabel_W154>Get started</span></a><button aria-label="Collapse sidebar category 'Get started'" aria-expanded=true type=button class="clean-btn menu__caret"></button></div><ul class=menu__list><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item sidebar-icon sidebar-icon--key-round"><a class=menu__link tabindex=0 href=/docs/main/docs/hiecm/v3/getting-started/sandbox><span class=linkLabel_WmDU>Get your sandbox credentials</span></a><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item sidebar-icon sidebar-icon--zap"><a class=menu__link tabindex=0 href=/docs/main/docs/hiecm/v3/getting-started/first-fifteen-minutes><span class=linkLabel_WmDU>Quickstart</span></a><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item sidebar-icon sidebar-icon--bot"><a class=menu__link tabindex=0 href=/docs/main/docs/hiecm/v3/getting-started/build-with-ai><span class=linkLabel_WmDU>Build with AI</span></a><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item sidebar-icon sidebar-icon--hard-hat"><a class=menu__link tabindex=0 href=/docs/main/docs/hiecm/v3/getting-started/build-it-well><span class=linkLabel_WmDU>Build it well</span></a><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item sidebar-icon sidebar-icon--badge-check"><a class=menu__link tabindex=0 href=/docs/main/docs/hiecm/v3/getting-started/security-audit><span class=linkLabel_WmDU>Security audit</span></a><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item sidebar-icon sidebar-icon--plane-takeoff"><a class=menu__link tabindex=0 href=/docs/main/docs/hiecm/v3/getting-started/going-live><span class=linkLabel_WmDU>Go live</span></a><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item sidebar-icon sidebar-icon--book-a"><a class=menu__link tabindex=0 href=/docs/main/docs/hiecm/v3/getting-started/glossary><span class=linkLabel_WmDU>Glossary</span></a></ul><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-1 menu__list-item sidebar-icon sidebar-icon--milestone"><div class=menu__list-item-collapsible><a class="categoryLink_byQd menu__link menu__link--sublist" href=/docs/main/docs/hiecm/v3/milestones><span class=categoryLinkLabel_W154>Milestones</span></a><button aria-label="Collapse sidebar category 'Milestones'" aria-expanded=true type=button class="clean-btn menu__caret"></button></div><ul class=menu__list><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item sidebar-icon sidebar-icon--user-round-plus"><a class=menu__link tabindex=0 href=/docs/main/docs/hiecm/v3/milestones/m1><span class=linkLabel_WmDU>M1 Create</span></a><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item sidebar-icon sidebar-icon--paperclip"><a class=menu__link tabindex=0 href=/docs/main/docs/hiecm/v3/milestones/m2><span class=linkLabel_WmDU>M2 Attach</span></a><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item sidebar-icon sidebar-icon--download"><a class=menu__link tabindex=0 href=/docs/main/docs/hiecm/v3/milestones/m3><span class=linkLabel_WmDU>M3 Retrieve</span></a><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item sidebar-icon sidebar-icon--clipboard-pen"><a class=menu__link tabindex=0 href=/docs/main/docs/hiecm/v3/milestones/m4><span class=linkLabel_WmDU>M4 Enrol</span></a><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item sidebar-icon sidebar-icon--contact-round"><a class=menu__link tabindex=0 href=/docs/main/docs/hiecm/v3/milestones/p1><span class=linkLabel_WmDU>P1 Identity</span></a><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item sidebar-icon sidebar-icon--link-2"><a class=menu__link tabindex=0 href=/docs/main/docs/hiecm/v3/milestones/p2><span class=linkLabel_WmDU>P2 Linking</span></a><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item sidebar-icon sidebar-icon--file-check"><a class=menu__link tabindex=0 href=/docs/main/docs/hiecm/v3/milestones/p3><span class=linkLabel_WmDU>P3 Consent</span></a></ul><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-1 menu__list-item menu__list-item--collapsed sidebar-icon sidebar-icon--database"><div class=menu__list-item-collapsible><a class="categoryLink_byQd menu__link menu__link--sublist" href=/docs/main/docs/hiecm/v3/registries/><span class=categoryLinkLabel_W154>Registries</span></a><button aria-label="Expand sidebar category 'Registries'" aria-expanded=false type=button class="clean-btn menu__caret"></button></div><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-1 menu__list-item sidebar-icon sidebar-icon--shapes"><div class=menu__list-item-collapsible><a class="categoryLink_byQd menu__link menu__link--sublist menu__link--sublist-caret menu__link--active" role=button aria-expanded=true href=/docs/main/docs/hiecm/v3/concepts/how-it-fits><span class=categoryLinkLabel_W154>Core concepts</span></a></div><ul class=menu__list><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item sidebar-icon sidebar-icon--puzzle"><a class=menu__link tabindex=0 href=/docs/main/docs/hiecm/v3/concepts/how-it-fits><span class=linkLabel_WmDU>How the pieces fit</span></a><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-2 menu__list-item sidebar-icon sidebar-icon--users"><div class=menu__list-item-collapsible><a class="categoryLink_byQd menu__link menu__link--sublist" tabindex=0 href=/docs/main/docs/hiecm/v3/concepts/participants/><span class=categoryLinkLabel_W154>Ecosystem participants</span></a><button aria-label="Collapse sidebar category 'Ecosystem participants'" aria-expanded=true type=button class="clean-btn menu__caret"></button></div><ul class=menu__list><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-3 menu__list-item sidebar-icon sidebar-icon--user-round"><a class=menu__link tabindex=0 href=/docs/main/docs/hiecm/v3/concepts/participants/citizen><span class=linkLabel_WmDU>Citizen</span></a><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-3 menu__list-item sidebar-icon sidebar-icon--user-round-cog"><a class=menu__link tabindex=0 href=/docs/main/docs/hiecm/v3/concepts/participants/doctor><span class=linkLabel_WmDU>Doctor</span></a><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-3 menu__list-item sidebar-icon sidebar-icon--hospital"><a class=menu__link tabindex=0 href=/docs/main/docs/hiecm/v3/concepts/participants/hospital><span class=linkLabel_WmDU>Hospital</span></a><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-3 menu__list-item sidebar-icon sidebar-icon--flask-conical"><a class=menu__link tabindex=0 href=/docs/main/docs/hiecm/v3/concepts/participants/lab><span class=linkLabel_WmDU>Diagnostics</span></a><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-3 menu__list-item sidebar-icon sidebar-icon--pill"><a class=menu__link tabindex=0 href=/docs/main/docs/hiecm/v3/concepts/participants/pharmacy><span class=linkLabel_WmDU>Pharmacy</span></a><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-3 menu__list-item sidebar-icon sidebar-icon--receipt-indian-rupee"><a class=menu__link tabindex=0 href=/docs/main/docs/hiecm/v3/concepts/participants/insurer><span class=linkLabel_WmDU>Insurer</span></a><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-3 menu__list-item sidebar-icon sidebar-icon--smartphone"><a class=menu__link tabindex=0 href=/docs/main/docs/hiecm/v3/concepts/participants/phr><span class=linkLabel_WmDU>PHR app</span></a><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-3 menu__list-item sidebar-icon sidebar-icon--landmark"><a class=menu__link tabindex=0 href=/docs/main/docs/hiecm/v3/concepts/participants/nha><span class=linkLabel_WmDU>NHA</span></a></ul><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item sidebar-icon sidebar-icon--server"><a class=menu__link tabindex=0 href=/docs/main/docs/hiecm/v3/concepts/hip-hiu><span class=linkLabel_WmDU>Information Management Systems</span></a><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item sidebar-icon sidebar-icon--link"><a class=menu__link tabindex=0 href=/docs/main/docs/hiecm/v3/concepts/linking><span class=linkLabel_WmDU>Linking</span></a><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item sidebar-icon sidebar-icon--shield-check"><a class=menu__link tabindex=0 href=/docs/main/docs/hiecm/v3/concepts/consent><span class=linkLabel_WmDU>Consent</span></a><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item sidebar-icon sidebar-icon--arrow-right-left"><a class=menu__link tabindex=0 href=/docs/main/docs/hiecm/v3/concepts/data-flow><span class=linkLabel_WmDU>Data flow</span></a><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item sidebar-icon sidebar-icon--file-heart"><a class=menu__link tabindex=0 href=/docs/main/docs/hiecm/v3/concepts/fhir><span class=linkLabel_WmDU>FHIR</span></a><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item sidebar-icon sidebar-icon--route"><a class=menu__link tabindex=0 href=/docs/main/docs/hiecm/v3/concepts/gateway><span class=linkLabel_WmDU>Gateway</span></a><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item sidebar-icon sidebar-icon--app-window"><a class="menu__link menu__link--active" aria-current=page tabindex=0 href=/docs/main/docs/hiecm/v3/concepts/phr><span class=linkLabel_WmDU>PHR apps</span></a><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item sidebar-icon sidebar-icon--lock"><a class=menu__link tabindex=0 href=/docs/main/docs/hiecm/v3/concepts/encryption><span class=linkLabel_WmDU>Encryption</span></a><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item sidebar-icon sidebar-icon--signature"><a class=menu__link tabindex=0 href=/docs/main/docs/hiecm/v3/concepts/callback-authenticity><span class=linkLabel_WmDU>Callback authenticity</span></a></ul></ul></nav><div role=separator aria-orientation=vertical aria-label="Resize the sidebar" tabindex=0 class=sidebar-resizer><span class=sidebar-resizer__grip aria-hidden=true></span></div></div></div></aside><main class=docMainContainer_TBSr><div class="container padding-top--md padding-bottom--lg"><div class=docs-article-row><div class=docs-article-main><div class=docs-content><article><nav class="theme-doc-breadcrumbs breadcrumbsContainer_Z_bl" aria-label=Breadcrumbs><ul class=breadcrumbs><li class=breadcrumbs__item><a aria-label="Home page" class=breadcrumbs__link href=/docs/main/><svg viewBox="0 0 24 24" class=breadcrumbHomeIcon_YNFT><path d="M10 19v-5h4v5c0 .55.45 1 1 1h3c.55 0 1-.45 1-1v-7h1.7c.46 0 .68-.57.33-.87L12.67 3.6c-.38-.34-.96-.34-1.34 0l-8.36 7.53c-.34.3-.13.87.33.87H5v7c0 .55.45 1 1 1h3c.55 0 1-.45 1-1z" fill=currentColor /></svg></a><li class=breadcrumbs__item><span class=breadcrumbs__link>Core concepts</span><li class="breadcrumbs__item breadcrumbs__item--active"><span class=breadcrumbs__link>PHR apps</span></ul></nav><div class="tocCollapsible_ETCw theme-doc-toc-mobile tocMobile_ITEo"><button type=button class="clean-btn tocCollapsibleButton_TO0P">On this page</button></div><div><div class="theme-doc-markdown markdown"><header><h1>PHR applications</h1></header>
+<p>A <a class="" href=/docs/main/docs/hiecm/v3/getting-started/glossary#phr>PHR</a> application is the patient's app in
+<a class="" href=/docs/main/docs/hiecm/v3/getting-started/glossary#abdm>ABDM</a>: it holds a person's
+<a class="" href=/docs/main/docs/hiecm/v3/getting-started/glossary#abha>ABHA</a> address, finds their records, takes consent and
+shows the records back. You build <a class="" href=/docs/main/docs/hiecm/v3/api/m1>M1</a> for identity,
+<a class="" href=/docs/main/docs/hiecm/v3/api/m3>M3</a> for consent and record fetching, and some
+<a class="" href=/docs/main/docs/hiecm/v3/api/m2>M2</a> if users upload their own records.</p>
+<h2 class="anchor anchorTargetStickyNavbar_tleR" id=what-a-phr-app-does>What a PHR app does<a href=#what-a-phr-app-does class=hash-link aria-label="Direct link to What a PHR app does" title="Direct link to What a PHR app does" translate=no>​</a></h2>
+<p>Every user needs an ABHA address, <code>username@abdm</code>. Consent, notifications and
+record sharing hang off it. There are six jobs:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class=table-scroll role=region tabindex=0><table><thead><tr><th>Job<th>What the user sees<tbody><tr><td>Create or link an ABHA address<td>Register with a mobile number, or with an existing 14 digit ABHA number<tr><td>Log in<td>Mobile number, ABHA address, default <code>14digit@abdm</code> address, or ABHA number<tr><td>Manage a profile<td>Demographics, photo, password, QR code, downloadable ABHA card<tr><td>Share a profile at a facility<td>Scan the facility QR code, consent, receive a queue token<tr><td>Find and link past records<td>Search a facility, discover <a class="" href=/docs/main/docs/hiecm/v3/getting-started/glossary#care-context>care contexts</a>, verify by <a class="" href=/docs/main/docs/hiecm/v3/getting-started/glossary#otp>OTP</a>, link<tr><td>Hold records<td>Receive notifications, request consent, fetch records, store and display them</table></div>
+<h2 class="anchor anchorTargetStickyNavbar_tleR" id=your-app-needs-a-server>Your app needs a server<a href=#your-app-needs-a-server class=hash-link aria-label="Direct link to Your app needs a server" title="Direct link to Your app needs a server" translate=no>​</a></h2>
+<p>A PHR app is two parts, whatever it looks like to the user. The app on the
+phone signs the person in, shows the screens and scans codes. A server you run
+holds the client ID and secret, mints the <a class="" href=/docs/main/docs/hiecm/v3/concepts/gateway>gateway session
+token</a>, and hosts the callback URL registered
+for your bridge. Every answer to a linking, consent or data request arrives at
+that URL as a POST, so an app with no server never hears the answer. Never
+ship the client secret inside the app.</p>
+<h2 class="anchor anchorTargetStickyNavbar_tleR" id=what-you-build-in-m1>What you build in M1<a href=#what-you-build-in-m1 class=hash-link aria-label="Direct link to What you build in M1" title="Direct link to What you build in M1" translate=no>​</a></h2>
+<p>ABHA base URLs are <code>https://abhasbx.abdm.gov.in/abha/api/v3/</code> for sandbox and
+<code>https://abha.abdm.gov.in/api/abha/v3/</code> for production. PHR enrolment uses
+<code>https://abhasbx.abdm.gov.in/abha/api/v3/phr/app/enrollment/request/otp</code>.</p>
+<h3 class="anchor anchorTargetStickyNavbar_tleR" id=creating-an-abha-address>Creating an ABHA address<a href=#creating-an-abha-address class=hash-link aria-label="Direct link to Creating an ABHA address" title="Direct link to Creating an ABHA address" translate=no>​</a></h3>
+<p>Build both paths.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class=table-scroll role=region tabindex=0><table><thead><tr><th>Path<th>Validated by<th>Profile details<th>Result<tbody><tr><td>Mobile number<td>Mobile OTP<td>The user types them<td><strong>Self-Declared</strong>, no <a class="" href=/docs/main/docs/hiecm/v3/getting-started/glossary#kyc>KYC</a><tr><td>14 digit ABHA number<td>Aadhaar OTP or mobile OTP<td>Returned by the ABHA system<td><strong>KYC Verified</strong></table></div>
+<p>On the mobile number path, first name, year of birth, gender, address, state,
+district and pin code are mandatory; middle name, last name, day and month of
+birth are optional.</p>
+<p>After validation on either path, show the ABHA addresses already linked to that
+mobile number or ABHA number, so the user picks one instead of creating a
+duplicate. ABDM wants one address per person.</p>
+<p>Address rules:</p>
+<ul>
+<li class="">Letters, numbers and a dot only.</li>
+<li class="">Cannot begin with a number, and cannot begin or end with a dot.</li>
+<li class="">All numeric is allowed only for the <code>14digit@abdm</code> form.</li>
+<li class="">Creating a <code>10digitmobile@abdm</code> address is currently blocked.</li>
+<li class="">Creating a <code>14digit@abdm</code> address is not allowed, but a user can log in with
+one. Every 14 digit ABHA number is issued a default address of this shape,
+written as <code>14digit@sbx</code> or <code>14digit@abdm</code>. Which environment uses which
+suffix is not documented yet.</li>
+<li class="">Minimum length is stated twice and the statements disagree: 4 characters in the
+prose and the ABHA number test cases, 8 in the mobile number test case table.
+Unresolved against the sandbox, so validate against the API response.</li>
+<li class="">Password, where you collect one: 8 characters or longer, one A to Z, one a to z,
+one digit, one symbol, no spaces, no more than 2 consecutive characters or
+keyboard keys. Password validation is now optional.</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_tleR" id=linking-an-abha-number-to-an-abha-address>Linking an ABHA number to an ABHA address<a href=#linking-an-abha-number-to-an-abha-address class=hash-link aria-label="Direct link to Linking an ABHA number to an ABHA address" title="Direct link to Linking an ABHA number to an ABHA address" translate=no>​</a></h3>
+<p>The ABHA number is the KYC verified identity; the ABHA address is what shares
+records. A user can hold several ABHA addresses but only one ABHA number.</p>
+<p>A Self-Declared profile needs a "Link ABHA number" action: enter the 14 digit
+number, validate by Aadhaar OTP or mobile OTP. Profile details then follow the
+ABHA number, the number becomes visible, and the status changes to KYC Verified.</p>
+<h3 class="anchor anchorTargetStickyNavbar_tleR" id=login>Login<a href=#login class=hash-link aria-label="Direct link to Login" title="Direct link to Login" translate=no>​</a></h3>
+<p>All four routes are mandatory.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class=table-scroll role=region tabindex=0><table><thead><tr><th>Route<th>Validated by<tbody><tr><td>Mobile number<td>Mobile OTP, then the user picks which linked ABHA address to sign in as<tr><td>An easy to remember address such as <code>name@abdm</code><td>Password, mobile OTP or Aadhaar OTP, by auth mode<tr><td>The default <code>14digit@abdm</code> address<td>Mobile OTP or Aadhaar OTP<tr><td>The 14 digit ABHA number<td>Mobile OTP or Aadhaar OTP</table></div>
+<p>Resend OTP unlocks after 60 seconds in every flow. You also need a reset password
+screen behind login with a confirmation message, secure storage of the refresh
+token to extend the session, and more than one user profile per install with sign
+in and sign out.</p>
+<h3 class="anchor anchorTargetStickyNavbar_tleR" id=profile-card-and-qr-code>Profile, card and QR code<a href=#profile-card-and-qr-code class=hash-link aria-label="Direct link to Profile, card and QR code" title="Direct link to Profile, card and QR code" translate=no>​</a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class=table-scroll role=region tabindex=0><table><thead><tr><th>Element<th>What it holds<tbody><tr><td>Profile screen<td>Editable demographics. KYC Verified with a green tick when an ABHA number is linked, Self-Declared with an exclamation mark when it is not<tr><td>ABHA number<td>Visible only on a KYC Verified profile<tr><td>ABHA address card, a PDF<td>Profile photo, full name, ABHA number as <code>91-0098-2416-3421</code> if one is linked, ABHA address, QR code, date of birth, gender, mobile number<tr><td>Editable, KYC Verified<td>Mobile number, with an OTP to the new number, and address<tr><td>Editable, Self-Declared<td>The same, plus photo, full name, gender and date of birth</table></div>
+<h3 class="anchor anchorTargetStickyNavbar_tleR" id=scan-and-share-at-a-facility>Scan and share at a facility<a href=#scan-and-share-at-a-facility class=hash-link aria-label="Direct link to Scan and share at a facility" title="Direct link to Scan and share at a facility" translate=no>​</a></h3>
+<p>The facility displays a QR code holding a URL with two parameters: the
+<a class="" href=/docs/main/docs/hiecm/v3/getting-started/glossary#hip>HIP</a> ID and a facility defined context such as a
+counter code. Your app scans it, then:</p>
+<ol>
+<li class="">Shows the user what will be shared.</li>
+<li class="">Takes consent in ABDM's specified wording, covering sharing the ABHA address
+and profile information with that facility for registration, and the facility
+linking any records it generates.</li>
+<li class="">Calls the <a class="" href=/docs/main/docs/hiecm/v3/getting-started/glossary#hie-cm>HIE-CM</a> API to share the details.</li>
+<li class="">Waits for the facility, currently expected to respond within 30 seconds.</li>
+<li class="">Displays the token number if the facility returned one.</li>
+</ol>
+<p>Two time limits are in the source and we have tested neither: the functionality
+overview blocks a second token for 60 minutes, the test cases show the token as
+valid for the next 30 minutes and configurable.</p>
+<p>Counter names arrive in the QR code: up to 20 alphanumeric characters, no special
+characters, examples OPD, OPD1, OPD cardio, IPD1, Pharmacy. A counter name cannot
+be the <a class="" href=/docs/main/docs/hiecm/v3/getting-started/glossary#hfr>HFR</a> facility ID, the
+<a class="" href=/docs/main/docs/hiecm/v3/getting-started/glossary#hpid>HPID</a>, the HIP ID or the HIP name.</p>
+<p>Opened from a third party scanner or the phone camera, go to the share profile
+screen if the user is signed in, to login first if not.</p>
+<h2 class="anchor anchorTargetStickyNavbar_tleR" id=what-you-build-in-m3>What you build in M3<a href=#what-you-build-in-m3 class=hash-link aria-label="Direct link to What you build in M3" title="Direct link to What you build in M3" translate=no>​</a></h2>
+<p>A citizen fetching records is the <a class="" href=/docs/main/docs/hiecm/v3/getting-started/glossary#hiu>HIU</a>, so every
+PHR application must implement that side.</p>
+<h3 class="anchor anchorTargetStickyNavbar_tleR" id=subscriptions-and-notifications>Subscriptions and notifications<a href=#subscriptions-and-notifications class=hash-link aria-label="Direct link to Subscriptions and notifications" title="Direct link to Subscriptions and notifications" translate=no>​</a></h3>
+<p>A subscription is how your app hears about changes to a user's ABHA address. Set
+one up when you create an ABHA address, and when a user logs in with an address
+your install has not seen. Ask the user for consent first.</p>
+<p>An approved subscription notifies your app of a new care context, a modified care
+context, a new consent request and a new subscription request. Surface these as
+device notifications, for example through Firebase on Android. You need screens to
+list subscriptions, approve, deny and edit them, where editing covers health
+information types, types of visit and the time period.</p>
+<h3 class="anchor anchorTargetStickyNavbar_tleR" id=auto-approval>Auto approval<a href=#auto-approval class=hash-link aria-label="Direct link to Auto approval" title="Direct link to Auto approval" translate=no>​</a></h3>
+<p>So the user does not approve a request every time a hospital adds a record:</p>
+<ol>
+<li class="">Ask the user to confirm your app may retrieve new linked records automatically.</li>
+<li class="">Set up an auto approval policy with the HIE-CM.</li>
+<li class="">Save the auto approval ID the HIE-CM returns.</li>
+</ol>
+<p>While the policy is active, the consent request you raise on a new or updated care
+context notification is granted immediately and you fetch and store the record.
+The user must be able to disable a policy. A request then arrives for each record.</p>
+<h3 class="anchor anchorTargetStickyNavbar_tleR" id=consent-management>Consent management<a href=#consent-management class=hash-link aria-label="Direct link to Consent management" title="Direct link to Consent management" translate=no>​</a></h3>
+<p>You build five capabilities:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class=table-scroll role=region tabindex=0><table><thead><tr><th>Capability<th>What it covers<tbody><tr><td>View requests<td>Requesting HIU, purpose, data types, date range, validity, status<tr><td>Modify a request<td>Access duration, record date range, data categories, validity period<tr><td>Grant or deny<td>The decision goes back to the HIE-CM<tr><td>View active consents<td>Who currently has access, and to what<tr><td>Revoke<td>Withdraw at any time. Sharing under that consent stops immediately</table></div>
+<p>The Consents tab and the Subscriptions tab group state the same way: a Requests
+section holding Requested, Denied and Expired, and an Approved section holding
+Granted and Revoked.</p>
+<h3 class="anchor anchorTargetStickyNavbar_tleR" id=fetching-and-displaying-records>Fetching and displaying records<a href=#fetching-and-displaying-records class=hash-link aria-label="Direct link to Fetching and displaying records" title="Direct link to Fetching and displaying records" translate=no>​</a></h3>
+<p>Once a care context is linked to the user's ABHA address:</p>
+<ol>
+<li class="">Your app receives the notification.</li>
+<li class="">It creates a consent request for that record and sends it to the HIE-CM.</li>
+<li class="">The consent is granted, automatically if a policy exists, otherwise by the
+user.</li>
+<li class="">It raises a health information request with the approved
+<a class="" href=/docs/main/docs/hiecm/v3/getting-started/glossary#consent-artefact>consent artefact</a>.</li>
+<li class="">The HIP sends the records across the network.</li>
+<li class="">Your app stores them for long term access and displays them, preferably in
+chronological order.</li>
+</ol>
+<p>The test cases cover fetching each health information type structured and
+unstructured: diagnostic report, prescription, discharge summary, consultation
+note, immunisation record, wellness record and health document record.</p>
+<h2 class="anchor anchorTargetStickyNavbar_tleR" id=subscriptions-and-why-you-need-one>Subscriptions, and why you need one<a href=#subscriptions-and-why-you-need-one class=hash-link aria-label="Direct link to Subscriptions, and why you need one" title="Direct link to Subscriptions, and why you need one" translate=no>​</a></h2>
+<p>A care context can be linked to a person's address by any facility they visit,
+without your application being part of it. A subscription is how you find out:
+a standing watch on one address, delivering to your callback whenever
+something changes.</p>
+<p>NHA expects a PHR app to set one up at two moments, when it creates an address
+and when a person signs in with an address it has not seen before. The person
+must be asked to consent to it; signing in does not imply it.</p>
+<p>Once approved, four events arrive: a new care context, a modified care
+context, a new consent request, and a new subscription request. Showing them
+on the device is your job, and NHA names a push service as the example rather
+than a requirement.</p>
+<p>A request sits in exactly one state, and the same five carry consent requests,
+subscription requests and health locker requests, so one screen serves all
+three.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class=table-scroll role=region tabindex=0><table><thead><tr><th>Group<th>State<th>What it means<tbody><tr><td>Requests<td>Requested<td>Sent, and the person has not acted<tr><td>Requests<td>Denied<td>The person refused it<tr><td>Requests<td>Expired<td>The person did not act inside the requester's window<tr><td>Approved<td>Granted<td>The person allowed it<tr><td>Approved<td>Revoked<td>Allowed, then withdrawn</table></div>
+<p>A subscription is not consent and gives nobody a record. It tells you a record
+exists. Reading it still needs a consent, which is why a subscription usually
+runs alongside an auto approval policy.</p>
+<h2 class="anchor anchorTargetStickyNavbar_tleR" id=discovery-and-user-initiated-linking>Discovery and user initiated linking<a href=#discovery-and-user-initiated-linking class=hash-link aria-label="Direct link to Discovery and user initiated linking" title="Direct link to Discovery and user initiated linking" translate=no>​</a></h2>
+<p>For a facility the user visited without giving an ABHA address, or for old
+records.</p>
+<p>The user searches for the facility by name. Only facilities participating in ABDM
+appear, and the facility must be a HIP linked to an
+<a class="" href=/docs/main/docs/hiecm/v3/getting-started/glossary#hrp>HRP</a>. Your app sends a discovery request to the
+HIE-CM carrying name, year or date of birth, gender, verified mobile number, ABHA
+address, and optionally a patient registration number issued by that provider. The
+HIP is expected to respond within 10 seconds.</p>
+<p>Care contexts already linked must not be shown again. When everything is linked,
+show the message "All your existing records are linked. No additional records
+available for linking".</p>
+<p>The user selects care contexts and confirms, the HIP sends an OTP to the
+registered mobile number, and on successful verification the care contexts link to
+the ABHA address.</p>
+<p>The same flow works for government health programmes such as CoWIN, AB-PMJAY,
+e-Sanjeevani OPD, e-Sanjeevani HWC and RCH, with a programme specific optional
+field such as the PMJAY ID or the CoWIN registered mobile number.</p>
+<p>Three failures have specified copy:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class=table-scroll role=region tabindex=0><table><thead><tr><th>Situation<th>Message<tbody><tr><td>The HIP is unreachable<td>"Couldn't Connect: We are sorry. Unable to contact your hospital. Please try again later"<tr><td>The user never visited the facility<td>"No health records found"<tr><td>Everything is already linked<td>"No new health record to link: Records of all visits are already linked and there is nothing new to link"</table></div>
+<p>Send the data transfer request within 5 minutes of the user tapping Pull Records.
+Records should arrive within 2 hours.</p>
+<h2 class="anchor anchorTargetStickyNavbar_tleR" id=deep-links>Deep links<a href=#deep-links class=hash-link aria-label="Direct link to Deep links" title="Direct link to Deep links" translate=no>​</a></h2>
+<p>A patient who registers at a facility without an ABHA address gets an SMS carrying
+a deep link of the form <code>phr.abdm.gov.in/uhi/(hipcode)</code>. Tapping it lists approved
+ABHA mobile applications in random order, filtered to the user's operating system.</p>
+<p>Your app must accept the HIPCODE parameter. Launched through a deep link, it must
+skip its normal login or home screen and go straight into discovery for that
+HIPCODE, guiding the user to enter the same name, date of birth, gender and mobile
+number they gave the facility. A mismatch stops the records being found.</p>
+<p>To be listed, you submit three things at sandbox exit: application name, Play
+Store URL and App Store URL.</p>
+<h2 class="anchor anchorTargetStickyNavbar_tleR" id=where-the-citizen-is-the-hip>Where the citizen is the HIP<a href=#where-the-citizen-is-the-hip class=hash-link aria-label="Direct link to Where the citizen is the HIP" title="Direct link to Where the citizen is the HIP" translate=no>​</a></h2>
+<p>A citizen pushing a record into your app is the HIP. A health locker, where
+users upload their own records, puts you on that publishing side. A PHR app must
+accept scanned physical records and output from devices such as BP meters,
+glucose meters, fitness trackers and smartwatches. Your app sets the health
+information type from the contents or from user input, and uses
+<code>HealthDocumentRecord</code> when it cannot be determined.</p>
+<p>An uploaded record is shareable once you have three things: a linking token from
+the M1 APIs, a care context added to the user's ABHA address by HIP initiated
+linking from <a class="" href=/docs/main/docs/hiecm/v3/api/m2>M2</a>, and the M2 health information transfer
+APIs.</p>
+<h2 class="anchor anchorTargetStickyNavbar_tleR" id=what-you-do-not-need-to-build>What you do not need to build<a href=#what-you-do-not-need-to-build class=hash-link aria-label="Direct link to What you do not need to build" title="Direct link to What you do not need to build" translate=no>​</a></h2>
+<ul>
+<li class=""><strong>Facility side clinical records.</strong> No <a class="" href=/docs/main/docs/hiecm/v3/getting-started/glossary#fhir>FHIR</a>
+bundles from a hospital or lab system, other than records your users upload.</li>
+<li class=""><strong><a class="" href=/docs/main/docs/hiecm/v3/getting-started/glossary#hpr>HPR</a> and HFR registration.</strong> M4 covers the
+professional and facility registries.</li>
+<li class=""><strong><a class="" href=/docs/main/docs/hiecm/v3/getting-started/glossary#uhi>UHI</a>.</strong> Consultation, ambulance and pharmacy
+booking runs on a separate gateway.</li>
+<li class=""><strong><a class="" href=/docs/main/docs/hiecm/v3/getting-started/glossary#nhcx>NHCX</a>.</strong> Claims and insurance exchange runs on a
+separate gateway.</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_tleR" id=what-to-read-next>What to read next<a href=#what-to-read-next class=hash-link aria-label="Direct link to What to read next" title="Direct link to What to read next" translate=no>​</a></h2>
+<ul>
+<li class=""><a class="" href=/docs/main/docs/hiecm/v3/api/m1>M1 overview</a> for ABHA creation, login and session APIs,
+and the <a class="" href=/docs/main/reference/hiecm-m1>M1 API reference</a>.</li>
+<li class=""><a class="" href=/docs/main/docs/hiecm/v3/api/m3>M3 overview</a> for consent, subscriptions and data fetch,
+and the <a class="" href=/docs/main/reference/hiecm-m3>M3 API reference</a>.</li>
+<li class=""><a class="" href=/docs/main/docs/hiecm/v3/api/m2>M2 overview</a> if you are building a health locker, and the
+<a class="" href=/docs/main/reference/hiecm-m2>M2 API reference</a>.</li>
+<li class=""><a class="" href=/docs/main/docs/hiecm/v3/getting-started/sandbox>Get started</a> for sandbox signup and your first call.</li>
+<li class=""><a class="" href=/docs/main/docs/hiecm/v3/concepts/hip-hiu>Hospital, lab and pharmacy systems</a> for the
+other side of every flow on this page.</li>
+</ul></div></div><footer class="theme-doc-footer docusaurus-mt-lg"><div class="row margin-top--sm theme-doc-footer-edit-meta-row"><div class="col noPrint_WFHX"></div><div class="col lastUpdated_JAkA"><span class=theme-last-updated>Last updated<!-- --> on <b><time datetime=2026-09-16T13:49:33.000Z itemprop=dateModified>Sep 16, 2026</time></b></span></div></div></footer></article><nav class=page-next aria-label="Where to go next"><a class="next-step card" href=/docs/main/docs/hiecm/v3/concepts/encryption><span class=next-step__eyebrow>Next</span><span class=next-step__label>Encryption<svg xmlns=http://www.w3.org/2000/svg width=24 height=24 viewBox="0 0 24 24" fill=none stroke=currentColor stroke-width=2 stroke-linecap=round stroke-linejoin=round class="lucide lucide-arrow-right size-4" aria-hidden=true><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></span></a><div class=page-next__nearby><p class=page-next__heading>Also in this section<ul class=page-next__links><li><a class="page-next__link card" href=/docs/main/docs/hiecm/v3/concepts/how-it-fits>How the pieces fit</a><li><a class="page-next__link card" href=/docs/main/docs/hiecm/v3/concepts/hip-hiu>Information Management Systems</a><li><a class="page-next__link card" href=/docs/main/docs/hiecm/v3/concepts/linking>Linking</a><li><a class="page-next__link card" href=/docs/main/docs/hiecm/v3/concepts/consent>Consent</a></ul></div></nav></div></div><div class=docs-toc-col><nav aria-labelledby=docs-toc-heading class="docs-toc thin-scrollbar theme-doc-toc-desktop"><p id=docs-toc-heading class=docs-toc-heading>On this page<ul class="table-of-contents table-of-contents__left-border"><li><a href=#what-a-phr-app-does class="table-of-contents__link toc-highlight">What a PHR app does</a><li><a href=#your-app-needs-a-server class="table-of-contents__link toc-highlight">Your app needs a server</a><li><a href=#what-you-build-in-m1 class="table-of-contents__link toc-highlight">What you build in M1</a><ul><li><a href=#creating-an-abha-address class="table-of-contents__link toc-highlight">Creating an ABHA address</a><li><a href=#linking-an-abha-number-to-an-abha-address class="table-of-contents__link toc-highlight">Linking an ABHA number to an ABHA address</a><li><a href=#login class="table-of-contents__link toc-highlight">Login</a><li><a href=#profile-card-and-qr-code class="table-of-contents__link toc-highlight">Profile, card and QR code</a><li><a href=#scan-and-share-at-a-facility class="table-of-contents__link toc-highlight">Scan and share at a facility</a></ul><li><a href=#what-you-build-in-m3 class="table-of-contents__link toc-highlight">What you build in M3</a><ul><li><a href=#subscriptions-and-notifications class="table-of-contents__link toc-highlight">Subscriptions and notifications</a><li><a href=#auto-approval class="table-of-contents__link toc-highlight">Auto approval</a><li><a href=#consent-management class="table-of-contents__link toc-highlight">Consent management</a><li><a href=#fetching-and-displaying-records class="table-of-contents__link toc-highlight">Fetching and displaying records</a></ul><li><a href=#subscriptions-and-why-you-need-one class="table-of-contents__link toc-highlight">Subscriptions, and why you need one</a><li><a href=#discovery-and-user-initiated-linking class="table-of-contents__link toc-highlight">Discovery and user initiated linking</a><li><a href=#deep-links class="table-of-contents__link toc-highlight">Deep links</a><li><a href=#where-the-citizen-is-the-hip class="table-of-contents__link toc-highlight">Where the citizen is the HIP</a><li><a href=#what-you-do-not-need-to-build class="table-of-contents__link toc-highlight">What you do not need to build</a><li><a href=#what-to-read-next class="table-of-contents__link toc-highlight">What to read next</a></ul></nav></div></div></div></main></div></div></div><footer class="theme-layout-footer footer"><div class="container container-fluid"><div class="row footer__links"><div class="theme-layout-footer-column col footer__col"><div class=footer__title>Contact</div><ul class="footer__items clean-list"><li class=footer__item><a href=https://abdm.gov.in/ target=_blank rel="noopener noreferrer" class=footer__link-item>National Health Authority, 9th Floor, Tower-I, Jeevan Bharati Building, Connaught Place, New Delhi 110 001<svg width=13.5 height=13.5 aria-label="(opens in new tab)" class=iconExternalLink_nPIU><use href=#theme-svg-external-link /></svg></a><li class=footer__item><a href=mailto:abdm@nha.gov.in target=_blank rel="noopener noreferrer" class=footer__link-item>abdm@nha.gov.in<svg width=13.5 height=13.5 aria-label="(opens in new tab)" class=iconExternalLink_nPIU><use href=#theme-svg-external-link /></svg></a><li class=footer__item><a href=tel:18001144477 target=_blank rel="noopener noreferrer" class=footer__link-item>Toll free 1800-11-4477<svg width=13.5 height=13.5 aria-label="(opens in new tab)" class=iconExternalLink_nPIU><use href=#theme-svg-external-link /></svg></a></ul></div><div class="theme-layout-footer-column col footer__col"><div class=footer__title>Important links</div><ul class="footer__items clean-list"><li class=footer__item><a href=https://www.mohfw.gov.in/ target=_blank rel="noopener noreferrer" class=footer__link-item>Ministry of Health & Family Welfare<svg width=13.5 height=13.5 aria-label="(opens in new tab)" class=iconExternalLink_nPIU><use href=#theme-svg-external-link /></svg></a><li class=footer__item><a href=https://abha.abdm.gov.in/ target=_blank rel="noopener noreferrer" class=footer__link-item>Ayushman Bharat Health Account (ABHA)<svg width=13.5 height=13.5 aria-label="(opens in new tab)" class=iconExternalLink_nPIU><use href=#theme-svg-external-link /></svg></a><li class=footer__item><a href=https://nhpr.abdm.gov.in/ target=_blank rel="noopener noreferrer" class=footer__link-item>Healthcare Professionals Registry (HPR)<svg width=13.5 height=13.5 aria-label="(opens in new tab)" class=iconExternalLink_nPIU><use href=#theme-svg-external-link /></svg></a><li class=footer__item><a href=https://facility.abdm.gov.in/ target=_blank rel="noopener noreferrer" class=footer__link-item>Health Facility Registry (HFR)<svg width=13.5 height=13.5 aria-label="(opens in new tab)" class=iconExternalLink_nPIU><use href=#theme-svg-external-link /></svg></a><li class=footer__item><a href=https://grievance.abdm.gov.in/ target=_blank rel="noopener noreferrer" class=footer__link-item>Grievance portal<svg width=13.5 height=13.5 aria-label="(opens in new tab)" class=iconExternalLink_nPIU><use href=#theme-svg-external-link /></svg></a></ul></div><div class="theme-layout-footer-column col footer__col"><div class=footer__title>Policies</div><ul class="footer__items clean-list"><li class=footer__item><a href=https://abdm.gov.in/terms-condition target=_blank rel="noopener noreferrer" class=footer__link-item>Terms and conditions<svg width=13.5 height=13.5 aria-label="(opens in new tab)" class=iconExternalLink_nPIU><use href=#theme-svg-external-link /></svg></a><li class=footer__item><a href=https://abdm.gov.in/website-policy target=_blank rel="noopener noreferrer" class=footer__link-item>Website policies<svg width=13.5 height=13.5 aria-label="(opens in new tab)" class=iconExternalLink_nPIU><use href=#theme-svg-external-link /></svg></a><li class=footer__item><a href=https://abdm.gov.in/strapicms/uploads/health_management_policy_bac9429a79.pdf target=_blank rel="noopener noreferrer" class=footer__link-item>Health Data Management Policy<svg width=13.5 height=13.5 aria-label="(opens in new tab)" class=iconExternalLink_nPIU><use href=#theme-svg-external-link /></svg></a><li class=footer__item><a href=https://abdm.gov.in/strapicms/uploads/privacypolicy_178041845b.pdf target=_blank rel="noopener noreferrer" class=footer__link-item>Data privacy policy<svg width=13.5 height=13.5 aria-label="(opens in new tab)" class=iconExternalLink_nPIU><use href=#theme-svg-external-link /></svg></a></ul></div></div><div class="footer__bottom text--center"><div class=footer__copyright>This website belongs to the National Health Authority, Ministry of Health and Family Welfare, Government of India · Catalogue 2026.08.24</div></div></div></footer></div></body>
