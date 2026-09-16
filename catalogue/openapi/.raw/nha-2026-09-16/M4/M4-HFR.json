@@ -1,0 +1,4817 @@
+{
+    "openapi": "3.0.1",
+    "info": {
+        "title": "Health Facility Registry APIs",
+        "version": "1.0.0"
+    },
+    "externalDocs": {
+        "description": "HFR API Documentation",
+        "url": "https://sandboxcmssbx.abdm.gov.in/uploads/HFR_Documentation_SBX_Updated_08_04_2026_bd4a65ba44_2_0ae63ba293.pdf"
+    },
+    "servers": [
+        {
+            "url": "https://apihspsbx.abdm.gov.in/v4/int"
+        }
+    ],
+    "security": [
+        {
+            "BearerAuth": []
+        }
+    ],
+    "paths": {
+        "/aadhaar/generateLink": {
+            "post": {
+                "tags": [
+                    "Registration API's Collection Via Aadhaar"
+                ],
+                "operationId": "generateAadhaarLink",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/AadharGenerateLinkRequest"
+                            },
+                            "example": {
+                                "scopes": [
+                                    "nhpr-register"
+                                ],
+                                "source": "NHPR"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AadharGenerateLinkResponse"
+                                },
+                                "example": {
+                                    "txnId": "de4ff682-fcc6-4bcf-a978-0dbb19a288b4",
+                                    "mobileNumber": "******1234"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/aadhaar/isAuthenticated": {
+            "post": {
+                "tags": [
+                    "Registration API's Collection Via Aadhaar"
+                ],
+                "operationId": "isAadhaarAuthenticated",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/AadhaarGetTransactionRequest"
+                            },
+                            "example": {
+                                "txnId": "259813b1-a339-4482-8df5-16ee45b8dcf2"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "boolean"
+                                },
+                                "example": true
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/v2/registration/aadhaar/verifyOTP": {
+            "post": {
+                "tags": [
+                    "Registration API's Collection Via Aadhaar"
+                ],
+                "operationId": "verifyOtp",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/AadhaarGetTransactionRequest"
+                            },
+                            "example": {
+                                "txnId": "de4ff682-fcc6-4bcf-a978-0dbb19a288b4"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AadharVerifyResponsePayload"
+                                },
+                                "example": {
+                                    "txnId": "951b4258-2ac7-432c-8dbf-6ed990757b88",
+                                    "mobileNumber": null,
+                                    "photo": "<BASE64 ENCODED STRING>",
+                                    "gender": "M",
+                                    "name": "Ayushman Bharat Mission",
+                                    "email": null,
+                                    "pincode": "201005",
+                                    "birthdate": "01-11-1990",
+                                    "careOf": "RAJPAL SHARMA",
+                                    "house": "PLOT NO 84 B,D-201,EURO APARTMENT",
+                                    "street": "SECTOR 5 RAJENDER NAGAR",
+                                    "landmark": null,
+                                    "locality": "NEAR AGRASEN BHAWAN",
+                                    "villageTownCity": "Sahibabad",
+                                    "subDist": null,
+                                    "district": "Ghaziabad",
+                                    "state": "Uttar Pradesh",
+                                    "postOffice": "Sahibabad",
+                                    "address": "9th Floor, Tower-l, Jeevan Bharati Building, Connaught Place, New Delhi - 110001"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/v2/registration/aadhaar/demographicAuthViaMobile": {
+            "post": {
+                "tags": [
+                    "Registration API's Collection Via Aadhaar"
+                ],
+                "operationId": "demographicAuthViaMobile",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/HPRIDGenerateMobileOTPResponseDTO"
+                            },
+                            "example": {
+                                "txnId": "de4ff682-fcc6-4bcf-a978-0dbb19a288b4",
+                                "mobileNumber": "JrHfDROoEcsYJ41g2wdkicsI7mT1ATCP347iqwBhWbfaEIgZ03/WHAYvDHRG2WXl4HBNuP2orD+3O75pN0xFhOz4oLXrePAxKTLK8uG5jdeAiGE2lKwOrShq9/gg+BckrQcDYjpMUePRuDau4mqLHa8FdSCQ8npGPY9KCpD2hZkscWNqZR68gRo/EwpY4u32kDzv5i1K/s+A7FNVwXqZS5AK2BadEhG5drSRk7P83eFxJZUlwtsvDK6iipOsM4VtMXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/MobileDemographicAuthResponseModel"
+                                },
+                                "example": {
+                                    "verified": true,
+                                    "errorCode": null,
+                                    "reason": null,
+                                    "uidaiToken": null
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/registration/aadhaar/checkHpIdAccountExist": {
+            "post": {
+                "tags": [
+                    "Registration API's Collection Via Aadhaar"
+                ],
+                "operationId": "accountExist",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/AccountExistPayload"
+                            },
+                            "example": {
+                                "txnId": "de4ff682-fcc6-4bcf-a978-0dbb19a288b4"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AccountExistResponsePayload"
+                                },
+                                "example": {
+                                    "token": "<JWT TOKEN>",
+                                    "hprIdNumber": "71-2665-5777-2713",
+                                    "categoryId": 100,
+                                    "subCategoryId": 85,
+                                    "txnId": "79dbf65d-affa-4249-8935-3d01676d8b82",
+                                    "name": "Ayushman Bharat Mission",
+                                    "gender": "M",
+                                    "yearOfBirth": "1990",
+                                    "monthOfBirth": "11",
+                                    "dayOfBirth": "1",
+                                    "firstName": "Ayushman",
+                                    "middleName": "",
+                                    "lastName": "Mission",
+                                    "stateCode": "9",
+                                    "districtCode": "145",
+                                    "stateName": "Uttar Pradesh",
+                                    "districtName": "Ghaziabad",
+                                    "address": "9th Floor, Tower-l, Jeevan Bharati Building, Connaught Place, New Delhi - 110001",
+                                    "pincode": "201005",
+                                    "profilePhoto": "<BASE64 ENCODED STRING>",
+                                    "mobile": null,
+                                    "hprId": "anujsharma1990@hpr.abdm",
+                                    "new": false
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/registration/aadhaar/hpid/suggestion": {
+            "post": {
+                "tags": [
+                    "Registration API's Collection Via Aadhaar"
+                ],
+                "operationId": "getSuggesstion",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/HpIdSuggestionRequst"
+                            },
+                            "example": {
+                                "txnId": "a825f76b-0696-40f3-864c-5a3a5b389a83"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "string"
+                                    }
+                                },
+                                "example": [
+                                    "anujsharma"
+                                ]
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/registration/aadhaar/generateMobileOTP": {
+            "post": {
+                "tags": [
+                    "Registration API's Collection Via Aadhaar"
+                ],
+                "operationId": "generateMobileOtp",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/HPRIDGenerateMobileOTPRequestDTO"
+                            },
+                            "example": {
+                                "mobile": "981065XXXX",
+                                "txnId": "de4ff682-fcc6-4bcf-a978-0dbb19a288b4"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HPRIDGenerateMobileOTPResponseDTO"
+                                },
+                                "example": {
+                                    "txnId": "951b4258-2ac7-432c-8dbf-6ed990757b88",
+                                    "mobileNumber": null
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/registration/aadhaar/verifyMobileOTP": {
+            "post": {
+                "tags": [
+                    "Registration API's Collection Via Aadhaar"
+                ],
+                "operationId": "verifyMobileOTP",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/HPRIDVerifyMobileOTPRequestDTO"
+                            },
+                            "example": {
+                                "otp": "<BASE64 ENCODED STRING>",
+                                "txnId": "de4ff682-fcc6-4bcf-a978-0dbb19a288b4"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HPRIDVerifyMobileOTPResponseDTO"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/v2/registration/aadhaar/createHprIdWithPreVerified": {
+            "post": {
+                "tags": [
+                    "Registration API's Collection Via Aadhaar"
+                ],
+                "operationId": "createHprIdV2",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CreateAccountWithPreVerifiedAadhaar"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CreateAccountJwtResponse"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/search/address/filter/deduplicate": {
+            "post": {
+                "tags": [
+                    "Onboarding APIs"
+                ],
+                "operationId": "getFilteredAddressPost",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/AddressFilterRequest"
+                            },
+                            "example": {
+                                "name": "Jethana",
+                                "address": "amt",
+                                "district": "511",
+                                "subDistrict": "5271",
+                                "village": "",
+                                "geolocation": "",
+                                "facilityId": "69765"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/DeduplicateResponseDto"
+                                    }
+                                },
+                                "example": [
+                                    {
+                                        "nhrr_facility_id": null,
+                                        "facility_central": "",
+                                        "fac_contact_per_desg": null,
+                                        "e_hospital_id": null,
+                                        "lst_upd_dt": "2024-04-09T08:08:53.224Z",
+                                        "fac_alt_contact_per_name": null,
+                                        "hrp_source": null,
+                                        "emr_software": "",
+                                        "source": "HFR",
+                                        "fac_contact_per_landline_no": null,
+                                        "mobile_no": "",
+                                        "power_backup_it": null,
+                                        "abdm_software": null,
+                                        "facility_operational_status": "F",
+                                        "crt_dt": "2024-04-03T10:35:29.942Z",
+                                        "cea_id": null,
+                                        "hospital_speciality_type": null,
+                                        "hospital_link_to_colg": null,
+                                        "pincode": "518301",
+                                        "type_of_service_other": null,
+                                        "fac_alt_contact_per_landline_no": null,
+                                        "facility_type": "2",
+                                        "crt_usr": "71-2824-6403-7827",
+                                        "country": "India",
+                                        "sub_district": {
+                                            "locId": "5271",
+                                            "locType": "SDT",
+                                            "locName": "Adoni",
+                                            "census2001Code": "22  ",
+                                            "census2011Code": "05271",
+                                            "ssCode": null,
+                                            "locParntId": "511",
+                                            "locLocalName": null,
+                                            "crtUsr": "LGDAPI",
+                                            "updUsr": null,
+                                            "hfrYn": "Y",
+                                            "stateShortName": null,
+                                            "nhrrStateCode": null,
+                                            "nhrrDistrictCode": null,
+                                            "activeYn": "Y"
+                                        },
+                                        "submit_flag": null,
+                                        "mobile_no_per_country_code": null,
+                                        "ehospitalid": null,
+                                        "echs_id": null,
+                                        "fac_contact_per_surname": "Roy",
+                                        "book_app_url": "",
+                                        "facility_website": "",
+                                        "fac_alt_contact_per_mobile_no": null,
+                                        "hmis_code": null,
+                                        "pharmacy_software_name": null,
+                                        "fac_contact_per_std_code": null,
+                                        "ufid": null,
+                                        "form3": null,
+                                        "lmis_ris_name": null,
+                                        "fac_contact_per_email_verified": "user@abdm.com",
+                                        "power_backup": null,
+                                        "fac_contact_per_country_code": null,
+                                        "emr_software_other": null,
+                                        "geolocation": "26.91785800000001,75.80129199999999",
+                                        "open_time": null,
+                                        "emr_system": "N",
+                                        "hospital_cnt_link_colg": null,
+                                        "district": {
+                                            "locId": "511",
+                                            "locType": "DT",
+                                            "locName": "Kurnool",
+                                            "census2001Code": "21",
+                                            "census2011Code": "552",
+                                            "ssCode": "",
+                                            "locParntId": "28",
+                                            "locLocalName": "Kurnool                                           ",
+                                            "crtUsr": "LGDAPI",
+                                            "updUsr": "LGDAPI",
+                                            "hfrYn": "Y",
+                                            "stateShortName": null,
+                                            "nhrrStateCode": null,
+                                            "nhrrDistrictCode": "21",
+                                            "activeYn": "Y"
+                                        },
+                                        "fac_contact_per_middle_name": "",
+                                        "facility_pan": null,
+                                        "health_wellness_center": null,
+                                        "colg_cnt_link_hospital": null,
+                                        "fac_alt_contact_per_desg": null,
+                                        "private_profit_type": "",
+                                        "form1": null,
+                                        "facility_owner_private": "",
+                                        "fac_contact_per_name": "Tejeshvi",
+                                        "facility_sub_type": "30",
+                                        "address2": "",
+                                        "hours_of_operation": null,
+                                        "stinsid": null,
+                                        "lst_upd_usr": null,
+                                        "facility_gst": null,
+                                        "state": {
+                                            "locId": "28",
+                                            "locType": "ST",
+                                            "locName": "Andhra Pradesh",
+                                            "census2001Code": "28",
+                                            "census2011Code": "28",
+                                            "ssCode": null,
+                                            "locParntId": "0",
+                                            "locLocalName": "Andhra Pradesh",
+                                            "crtUsr": "LGDAPI",
+                                            "updUsr": "LGDAPI",
+                                            "hfrYn": "Y",
+                                            "stateShortName": "AP",
+                                            "nhrrStateCode": "28",
+                                            "nhrrDistrictCode": null,
+                                            "activeYn": "Y"
+                                        },
+                                        "fac_contact_per_prefix": null,
+                                        "year_of_establishment": null,
+                                        "pharmacy_information_system": null,
+                                        "pharmacy_is_name": null,
+                                        "fac_unique_id": "69711",
+                                        "declared_by": "hfr",
+                                        "address_proof_2": null,
+                                        "fac_email_verified": "No",
+                                        "address1": "Pisangan Ajmer",
+                                        "facility_region": null,
+                                        "e_arogya": null,
+                                        "facility_subtype_other": null,
+                                        "active_yn": "Y",
+                                        "facility_owner_govt": "",
+                                        "fac_alt_contact_per_surname": null,
+                                        "name_asin_pancard": null,
+                                        "form2": null,
+                                        "identification_number": null,
+                                        "facility_tan": null,
+                                        "pmjay_id": null,
+                                        "rohini_id": null,
+                                        "e_sushrut_id": null,
+                                        "lmis_ris_availaible": null,
+                                        "terms_agree_flag": null,
+                                        "any_other_system": "",
+                                        "address_proof_3": null,
+                                        "facility_name": "Jethana",
+                                        "days_of_operation": "Mon; Tue; Wed; Thu; Fri; Sat",
+                                        "facility_ownership": "G",
+                                        "alternate_contact_dtls": null,
+                                        "hrp_source_fac_id": null,
+                                        "facility_email": "",
+                                        "address_proof": "EBill",
+                                        "fac_alt_contact_per_std_code": null,
+                                        "fac_alt_contact_per_email_verified": null,
+                                        "about_us": null,
+                                        "fac_alt_contact_per_middle_name": null,
+                                        "pharmacy_software": null,
+                                        "system_of_medicine": "M",
+                                        "fac_contact_per_mobile_no": "******2125",
+                                        "pharmacy_software_other": null,
+                                        "mobileno_verified": "No",
+                                        "facility_type_other": null,
+                                        "private_not_profit_type": "",
+                                        "alt_health_dtls": null,
+                                        "fac_alt_contact_per_country_code": null,
+                                        "close_time": null,
+                                        "fac_alt_contact_per_prefix": null,
+                                        "owner_subtype": "S",
+                                        "entity_type": "",
+                                        "vilage_city_town": {
+                                            "locId": "",
+                                            "locType": null,
+                                            "locName": null,
+                                            "census2001Code": null,
+                                            "census2011Code": null,
+                                            "ssCode": null,
+                                            "locParntId": null,
+                                            "locLocalName": null,
+                                            "crtUsr": null,
+                                            "updUsr": null,
+                                            "hfrYn": null,
+                                            "stateShortName": null,
+                                            "nhrrStateCode": null,
+                                            "nhrrDistrictCode": null,
+                                            "activeYn": null
+                                        },
+                                        "net_available": null,
+                                        "health_id": "71-2824-6403-7827",
+                                        "landline_no": "",
+                                        "type_of_service": "OPD",
+                                        "fac_contact_per_email": "user@abdm.com",
+                                        "progress_value": null,
+                                        "it_available": null,
+                                        "alternate_id": "IN2810001372",
+                                        "app_submitted_date": "2024-04-03T10:35:29.942Z",
+                                        "std_code": null,
+                                        "status": "Draft",
+                                        "cghs_id": null,
+                                        "nhrr_form_id": null,
+                                        "facility_central_other": null,
+                                        "fac_alt_contact_per_email": null,
+                                        "distances": "0"
+                                    }
+                                ]
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/v1.5/facility/basic-information": {
+            "post": {
+                "tags": [
+                    "Onboarding APIs"
+                ],
+                "operationId": "v15BasicFacilityInformation",
+                "parameters": [
+                    {
+                        "name": "x-hprid-auth",
+                        "in": "header",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/FacilityBasicInformationRequest"
+                            },
+                            "example": {
+                                "trackingId": "",
+                                "facilityInformation": {
+                                    "facilityName": "Sahyadri Hospital",
+                                    "facilityAddressDetails": {
+                                        "country": "India",
+                                        "stateLGDCode": "24",
+                                        "districtLGDCode": "438",
+                                        "subDistrictLGDCode": "6512",
+                                        "facilityRegion": "U",
+                                        "villageCityTownLGDCode": "",
+                                        "addressLine1": "townhall, Pune",
+                                        "addressLine2": "Pune",
+                                        "pincode": "382350",
+                                        "latitude": "23.068570",
+                                        "longitude": "23.068570"
+                                    },
+                                    "facilityContactInformation": {
+                                        "facilityEmailId": "user@abdm.com",
+                                        "facilityContactNumber": "976243xxxx",
+                                        "websiteLink": "nha.abdm.gov.in",
+                                        "facilityLandlineNumber": "",
+                                        "facilityStdCode": ""
+                                    },
+                                    "ownershipCode": "G",
+                                    "ownershipSubTypeCode": "C",
+                                    "ownershipSubTypeCode2": "MOHF",
+                                    "systemOfMedicineCode": "M,D,UN",
+                                    "typeOfServiceCode": "IPD,OPD",
+                                    "facilityTypeCode": "5",
+                                    "specialityTypeCode": "SINGLE",
+                                    "facilityUploads": {
+                                        "facilityBoardPhoto": {
+                                            "name": "",
+                                            "value": ""
+                                        },
+                                        "facilityBuildingPhoto": {
+                                            "name": "",
+                                            "value": ""
+                                        }
+                                    },
+                                    "facilitySubType": "47",
+                                    "facilityOperationalStatus": "F",
+                                    "timingsOfFacility": [
+                                        {
+                                            "workingDays": "MON",
+                                            "openingHours": "9:00 AM - 6:00 PM"
+                                        },
+                                        {
+                                            "workingDays": "TUE",
+                                            "openingHours": "9:00 AM - 4:00 PM"
+                                        },
+                                        {
+                                            "workingDays": "WED",
+                                            "openingHours": "9:00 AM - 6:00 PM"
+                                        }
+                                    ],
+                                    "abdmCompliantSoftware": [
+                                        {
+                                            "existingSoftwares": [
+                                                ""
+                                            ],
+                                            "anyOther": ""
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/FacilityOnboardResponse"
+                                },
+                                "example": {
+                                    "trackingId": "76803",
+                                    "status": "success",
+                                    "message": "Facility is saved successfully",
+                                    "errorStatus": null
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/v1.5/facility/additional-information": {
+            "post": {
+                "tags": [
+                    "Onboarding APIs"
+                ],
+                "operationId": "v15FacilityAdditionalInformation",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/FacilityAdditionalInformationRequest"
+                            },
+                            "example": {
+                                "trackingId": "80266",
+                                "linkedProgramIds": {
+                                    "nhrrId": "1234",
+                                    "nin": "1234",
+                                    "abpmjayId": "1234",
+                                    "rohiniId": "1234",
+                                    "echsId": "1234",
+                                    "cghsId": "1234",
+                                    "ceaRegistration": "1234",
+                                    "stateInsuranceSchemeId": "1234"
+                                },
+                                "generalInformation": {
+                                    "hasDialysisCenter": "YALL",
+                                    "hasPharmacy": "YALL",
+                                    "hasBloodBank": "YALL",
+                                    "hasCathLab": "YALL",
+                                    "hasDiagnosticLab": "YALL",
+                                    "hasImagingCenter": "YALL",
+                                    "servicesByImagingCenter": [
+                                        {
+                                            "service": "S36",
+                                            "count": 7
+                                        },
+                                        {
+                                            "service": "S16",
+                                            "count": 5
+                                        },
+                                        {
+                                            "service": "S23",
+                                            "count": 3
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/FacilityOnboardResponse"
+                                },
+                                "example": {
+                                    "trackingId": "76803",
+                                    "status": "Created",
+                                    "message": "Facility details have been saved successfully. Please login at https://nhpr.abdm.gov.in/ and submit your facility details for approval.",
+                                    "errorStatus": null
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/v1.5/facility/detailed-information": {
+            "post": {
+                "tags": [
+                    "Onboarding APIs"
+                ],
+                "operationId": "v15FacilityDetailedInformation",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/FacilityDetailedInformationRequest"
+                            },
+                            "example": {
+                                "trackingId": "80266",
+                                "specialities": [
+                                    {
+                                        "systemOfMedicineCode": "M",
+                                        "isSpecializationAvalaible": "Y",
+                                        "specialities": [
+                                            "S29",
+                                            "S30",
+                                            "S31"
+                                        ]
+                                    },
+                                    {
+                                        "systemOfMedicineCode": "D",
+                                        "isSpecializationAvalaible": "Y",
+                                        "specialities": [
+                                            "S50",
+                                            "S51",
+                                            "S46"
+                                        ]
+                                    },
+                                    {
+                                        "systemOfMedicineCode": "UN",
+                                        "isSpecializationAvalaible": "Y",
+                                        "specialities": [
+                                            "S68",
+                                            "S168",
+                                            "S100"
+                                        ]
+                                    }
+                                ],
+                                "medicalInfrastructure": {
+                                    "countIPDBedsWithoutOxygen": 2,
+                                    "countIPDBedsWithOxygen": 3,
+                                    "countICUBedsWithVentilators": 4,
+                                    "countICUBedsWithoutVentilators": 1,
+                                    "countHDUBedsWithVentilators": 5,
+                                    "countHDUBedsWithoutVentilators": 6,
+                                    "totalNumberOfVentilators": 7,
+                                    "countDayCareBedsWithoutOxygen": 8,
+                                    "countDayCareBedsWithOxygen": 9,
+                                    "countDentalChairs": 1,
+                                    "totalNumberOfBeds": 4
+                                },
+                                "pharmacyDetails": {
+                                    "isJanAushadhiKendra": "Y",
+                                    "janAushadhiKendraId": "jan-id",
+                                    "drugLicenseNumber": "test1234",
+                                    "pharmacyGstinNumber": "testg1234",
+                                    "pharmacistRegistrationNumber": "reg1234"
+                                },
+                                "bloodBankDetails": {
+                                    "isFacilityRegisteredInERaktkosh": "N",
+                                    "eRaktoshId": "Y",
+                                    "bloodBankLicenseNumber": "345-test-regno",
+                                    "bloodStorageCenters": "Y",
+                                    "storageCentersCount": 7,
+                                    "bloodCollectedPerAnnum": "5",
+                                    "bloodRequiredPerAnnum": "6"
+                                },
+                                "imagingServices": [
+                                    {
+                                        "service": "S136",
+                                        "count": 77
+                                    },
+                                    {
+                                        "service": "S139",
+                                        "count": 99
+                                    },
+                                    {
+                                        "service": "S138",
+                                        "count": 76
+                                    }
+                                ],
+                                "diagnosticServices": [
+                                    ""
+                                ]
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/FacilityOnboardResponse"
+                                },
+                                "example": {
+                                    "trackingId": "76803",
+                                    "status": "Saved",
+                                    "message": "Facility details have been saved successfully. Please login at \" + hfrUrl\n\" and submit your facility details for approval.",
+                                    "errorStatus": null
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/v1.5/facility/submit-facility": {
+            "post": {
+                "tags": [
+                    "Onboarding APIs"
+                ],
+                "operationId": "v15SubmitFacilityDetails",
+                "parameters": [
+                    {
+                        "name": "x-hprid-auth",
+                        "in": "header",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "x-hprid-auth-verifier",
+                        "in": "header",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/FacilitySubmitDetails"
+                            },
+                            "example": {
+                                "trackingId": "80266",
+                                "sourceOfInformation": "HRP_SUB_1",
+                                "sourceUniqueID": "1234",
+                                "facilitySuperUser": "STATE_SUPER_1"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/FacilitySubmitResponse"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/bridges/MutipleHRPAddUpdateServices": {
+            "post": {
+                "tags": [
+                    "Multiple HRP API"
+                ],
+                "operationId": "facilityAddAndUpdate",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/BridgeAddUpdateRequestDTO"
+                            },
+                            "example": {
+                                "facilityId": "IN0610090166",
+                                "facilityName": "Singla Eye Center",
+                                "HRP": [
+                                    {
+                                        "bridgeId": "SBX_00XXXX",
+                                        "hipName": "Singla Eye Center",
+                                        "type": "HIP",
+                                        "active": true
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/getPsuDetailsByMinistry": {
+            "get": {
+                "tags": [
+                    "Utilities"
+                ],
+                "operationId": "getPsuData",
+                "parameters": [
+                    {
+                        "name": "ministry",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/FacilityManagement/v1.5/facility/bygeoLocation/searchFacilityAndInfrastructureWithinRadiusWithFilter": {
+            "post": {
+                "tags": [
+                    "Search"
+                ],
+                "operationId": "getFacilityAndInfrastructureWithinRadiusWithFilter",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/HFRSearchWithinRadiusRequest"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/FacilityWithInfrastructureSearchResponseDTO"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/FacilityManagement/v1.5/facility/search": {
+            "post": {
+                "tags": [
+                    "Search"
+                ],
+                "operationId": "searchFacility",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/SearchFacilityRequestDTO"
+                            },
+                            "example": {
+                                "ownershipCode": "P",
+                                "subDistrictLGDCode": "",
+                                "pincode": "",
+                                "facilityName": "hospital",
+                                "facilityId": "",
+                                "page": 1,
+                                "resultsPerPage": 10,
+                                "stateLGDCode": "27",
+                                "districtLGDCode": ""
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/FacilitySearchResponse"
+                                },
+                                "example": {
+                                    "facilities": [
+                                        {
+                                            "ownership": "GOVERNMENT",
+                                            "systemOfMedicineCode": "P,M",
+                                            "systemOfMedicine": "Physiotherapy,Modern Medicine(Allopathy)",
+                                            "facilityType": "Hospital",
+                                            "stateName": "Bihar",
+                                            "stateLGDCode": "10",
+                                            "districtName": "Patna",
+                                            "districtLGDCode": "212",
+                                            "subDistrictName": "Patna Rural",
+                                            "subDistrictLGDCode": "1400",
+                                            "villageCityTownName": null,
+                                            "villageCityTownLGDCode": null,
+                                            "address": "Behind P ans M Mall Patliputra Industrial Area, ",
+                                            "pincode": "800010",
+                                            "latitude": "25.635802000000098",
+                                            "longitude": "85.10391099999993",
+                                            "facilityId": "",
+                                            "facilityName": "Asian City Hospital",
+                                            "facilityStatus": "Submitted",
+                                            "ownershipCode": "G",
+                                            "facilityTypeCode": "H"
+                                        }
+                                    ],
+                                    "message": "Request processed successfully",
+                                    "totalFacilities": 1,
+                                    "numberOfPages": 1
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/v1.5/facility/fetch-facility-Sub-type": {
+            "post": {
+                "tags": [
+                    "Utilities"
+                ],
+                "operationId": "getAllFacilitySubTypeByFacilityType",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UtilityFacilitySubTypeReqDto"
+                            },
+                            "example": {
+                                "facilityTypeCode": "2"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object"
+                                },
+                                "example": {
+                                    "type": "FACILITY-SUB-TYPE",
+                                    "data": [
+                                        {
+                                            "code": "29",
+                                            "value": "Any Other"
+                                        },
+                                        {
+                                            "code": "1",
+                                            "value": "Block Primary Health Centre"
+                                        },
+                                        {
+                                            "code": "40",
+                                            "value": "Dispensary"
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/v1.5/facility/fetch-facility-type": {
+            "post": {
+                "tags": [
+                    "Utilities"
+                ],
+                "operationId": "getAllFacilityTypeByOwnershipAndSysOfMed",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UtilityFacilityTypeReqDto"
+                            },
+                            "example": {
+                                "ownershipCode": "G",
+                                "systemOfMedicineCode": "M"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object"
+                                },
+                                "example": {
+                                    "type": "FACILITY-TYPE",
+                                    "data": [
+                                        {
+                                            "code": "9",
+                                            "value": "Blood Bank"
+                                        },
+                                        {
+                                            "code": "74",
+                                            "value": "Imaging Center"
+                                        },
+                                        {
+                                            "code": "35",
+                                            "value": "Day Care center "
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/v1.5/facility/get-master-data": {
+            "get": {
+                "tags": [
+                    "Utilities"
+                ],
+                "operationId": "getMasterData",
+                "parameters": [
+                    {
+                        "name": "type",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UtilityTypeDataResDto"
+                                },
+                                "example": {
+                                    "type": "MEDICINE",
+                                    "data": [
+                                        {
+                                            "code": "H",
+                                            "value": "Homeopathy"
+                                        },
+                                        {
+                                            "code": "UN",
+                                            "value": "Unani"
+                                        },
+                                        {
+                                            "code": "SD",
+                                            "value": "Siddha"
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/v1.5/facility/get-master-types": {
+            "get": {
+                "tags": [
+                    "Utilities"
+                ],
+                "operationId": "getAllMasterType",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/MasterTypeResponseDto"
+                                },
+                                "example": {
+                                    "masterTypes": [
+                                        {
+                                            "type": "MEDICINE",
+                                            "desc": "System Of Medicine"
+                                        },
+                                        {
+                                            "type": "OWNER",
+                                            "desc": "Ownership Of Facility"
+                                        },
+                                        {
+                                            "type": "OWNER-SUBTYPE",
+                                            "desc": "Ownership Subtype Of Facility"
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/v1.5/facility/get-owner-subtype": {
+            "post": {
+                "tags": [
+                    "Utilities"
+                ],
+                "operationId": "getAllSubTypesByOwnerShipTypeAndSubType",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/SubTypeUtilityRequestDto"
+                            },
+                            "example": {
+                                "ownershipCode": "P",
+                                "ownerSubtypeCode": "NP"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object"
+                                },
+                                "example": {
+                                    "type": "CENTRAL-GOVERNMENT",
+                                    "data": [
+                                        {
+                                            "code": "MOHF",
+                                            "value": "Mo Health and Family Welfare"
+                                        },
+                                        {
+                                            "code": "MOR",
+                                            "value": "Mo Railways"
+                                        },
+                                        {
+                                            "code": "MOP",
+                                            "value": "Mo Power"
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/v1.5/facility/get-specialities": {
+            "post": {
+                "tags": [
+                    "Utilities"
+                ],
+                "operationId": "getAllSpecialitiesBySystemOfMedicineCode",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/SpecialitiesUtilityRequestDto"
+                            },
+                            "example": {
+                                "systemOfMedicineCode": "D"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object"
+                                },
+                                "example": {
+                                    "type": "SPECIALITIES",
+                                    "data": [
+                                        {
+                                            "code": "D-S44",
+                                            "value": "OralMedicine and Radiology"
+                                        },
+                                        {
+                                            "code": "D-S46",
+                                            "value": "Oral& Maxillofacial Surgery"
+                                        },
+                                        {
+                                            "code": "D-S45",
+                                            "value": "Periodontology"
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/v1.5/facility/lgd/districts": {
+            "get": {
+                "tags": [
+                    "Utilities"
+                ],
+                "operationId": "getAllDistrictByStateId",
+                "parameters": [
+                    {
+                        "name": "stateCode",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/UtilityCodeNameResDto"
+                                    }
+                                },
+                                "example": [
+                                    {
+                                        "code": "1",
+                                        "name": "Anantnag"
+                                    },
+                                    {
+                                        "code": "623",
+                                        "name": "Bandipora"
+                                    },
+                                    {
+                                        "code": "3",
+                                        "name": "Baramulla"
+                                    }
+                                ]
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/v1.5/facility/lgd/states": {
+            "get": {
+                "tags": [
+                    "Utilities"
+                ],
+                "operationId": "getAllStatesByLGD",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/StatesUtilityResponseDto"
+                                    }
+                                },
+                                "example": [
+                                    {
+                                        "code": "35",
+                                        "name": "Andaman And Nicobar Islands",
+                                        "districts": [
+                                            {
+                                                "code": "603",
+                                                "name": "Nicobars"
+                                            },
+                                            {
+                                                "code": "632",
+                                                "name": "North And Middle Andaman"
+                                            },
+                                            {
+                                                "code": "602",
+                                                "name": "South Andamans"
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "code": "28",
+                                        "name": "Andhra Pradesh",
+                                        "districts": [
+                                            {
+                                                "code": "745",
+                                                "name": "Alluri Sitharama Raju"
+                                            },
+                                            {
+                                                "code": "744",
+                                                "name": "Anakapalli"
+                                            },
+                                            {
+                                                "code": "502",
+                                                "name": "Ananthapuramu"
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "code": "12",
+                                        "name": "Arunachal Pradesh",
+                                        "districts": [
+                                            {
+                                                "code": "628",
+                                                "name": "Anjaw"
+                                            },
+                                            {
+                                                "code": "229",
+                                                "name": "Changlang"
+                                            },
+                                            {
+                                                "code": "230",
+                                                "name": "Dibang Valley"
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/v1.5/facility/lgd/subdistricts": {
+            "get": {
+                "tags": [
+                    "Utilities"
+                ],
+                "operationId": "getAllSubDistrictByDistrictCode",
+                "parameters": [
+                    {
+                        "name": "districtCode",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/UtilityCodeNameResDto"
+                                    }
+                                },
+                                "example": [
+                                    {
+                                        "code": "6752",
+                                        "name": "Assar"
+                                    },
+                                    {
+                                        "code": "65",
+                                        "name": "Bhaderwah"
+                                    },
+                                    {
+                                        "code": "6747",
+                                        "name": "Bhagwah"
+                                    }
+                                ]
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/v1.5/facility/sendOtpToContact": {
+            "post": {
+                "tags": [
+                    "HFR-HRP Linkage APIs"
+                ],
+                "operationId": "sendOtpToContact",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/FacilityContactDetails"
+                            },
+                            "example": {
+                                "facilityId": "IN2810002702"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/FacilityOtpResponse"
+                                },
+                                "example": {
+                                    "facilityId": "IN0610089709",
+                                    "status": "Success",
+                                    "message": "Otp sent successfully! Please keep transaction id for future reference",
+                                    "transactionId": "3cf3de44-94a4-4f77-b7f9-de6ec86785b3",
+                                    "errorStatus": null
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/v1.5/facility/validateOtp": {
+            "post": {
+                "tags": [
+                    "HFR-HRP Linkage APIs"
+                ],
+                "operationId": "validateOtp",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ValidateOtpRequestDto"
+                            },
+                            "example": {
+                                "facilityId": "IN2810002702",
+                                "sourceId": "AB-PMJAY",
+                                "otp": "885210",
+                                "source": "AB-PMJAY",
+                                "transactionId": "2ddfc7ec-9a9f-412c-8c50-c2be92da5781"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ValidateOtpResponse"
+                                },
+                                "example": {
+                                    "facilityId": "IN2810002702",
+                                    "status": "success",
+                                    "message": "OTP validated successfully!!! Hospital id linked to HFR",
+                                    "errorStatus": null
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "AadhaarGetTransactionRequest": {
+                "type": "object",
+                "properties": {
+                    "txnId": {
+                        "type": "string"
+                    }
+                }
+            },
+            "AadharVerifyResponsePayload": {
+                "type": "object",
+                "properties": {
+                    "txnId": {
+                        "type": "string"
+                    },
+                    "mobileNumber": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "photo": {
+                        "type": "string"
+                    },
+                    "gender": {
+                        "type": "string"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "email": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "pincode": {
+                        "type": "string"
+                    },
+                    "birthdate": {
+                        "type": "string"
+                    },
+                    "careOf": {
+                        "type": "string"
+                    },
+                    "house": {
+                        "type": "string"
+                    },
+                    "street": {
+                        "type": "string"
+                    },
+                    "landmark": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "locality": {
+                        "type": "string"
+                    },
+                    "villageTownCity": {
+                        "type": "string"
+                    },
+                    "subDist": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "district": {
+                        "type": "string"
+                    },
+                    "state": {
+                        "type": "string"
+                    },
+                    "postOffice": {
+                        "type": "string"
+                    },
+                    "address": {
+                        "type": "string"
+                    }
+                }
+            },
+            "HPRIDGenerateMobileOTPResponseDTO": {
+                "type": "object",
+                "properties": {
+                    "txnId": {
+                        "type": "string"
+                    },
+                    "mobileNumber": {
+                        "type": "string",
+                        "nullable": true
+                    }
+                }
+            },
+            "MobileDemographicAuthResponseModel": {
+                "type": "object",
+                "properties": {
+                    "verified": {
+                        "type": "boolean"
+                    }
+                }
+            },
+            "CreateAccountWithPreVerifiedAadhaar": {
+                "required": [
+                    "email",
+                    "txnId"
+                ],
+                "type": "object",
+                "properties": {
+                    "idType": {
+                        "type": "string",
+                        "example": "hpr_id"
+                    },
+                    "domainName": {
+                        "type": "string",
+                        "example": "@hpr.abdm"
+                    },
+                    "email": {
+                        "type": "string",
+                        "description": "Email Address of the user.",
+                        "example": "user@abdm.com"
+                    },
+                    "firstName": {
+                        "type": "string",
+                        "description": "First Name of the user).",
+                        "example": "Ayushman"
+                    },
+                    "middleName": {
+                        "type": "string",
+                        "description": "Middle name of the user ",
+                        "example": "Bharat"
+                    },
+                    "lastName": {
+                        "type": "string",
+                        "description": "Last name of the user ",
+                        "example": "Mission"
+                    },
+                    "password": {
+                        "type": "string",
+                        "description": "Passwords for authentication",
+                        "example": "Ayushman@143"
+                    },
+                    "profilePhoto": {
+                        "type": "string",
+                        "description": "Profile photo of the user (Uploaded by the user).",
+                        "example": "<BASE64 ENCODED STRING>"
+                    },
+                    "txnId": {
+                        "type": "string",
+                        "description": "Transaction ID",
+                        "format": "uuid",
+                        "example": "c3b0c27d-e19d-4244-b8bb-3fa19285054a"
+                    },
+                    "hprId": {
+                        "type": "string",
+                        "description": "Healthcare Professional ID Alias.",
+                        "example": "user@hpr.abdm"
+                    },
+                    "sourceType": {
+                        "type": "string",
+                        "enum": [
+                            "DRIVING_LICENSE",
+                            "AADHAAR"
+                        ]
+                    },
+                    "hpCategoryCode": {
+                        "type": "integer",
+                        "format": "int32",
+                        "example": 1
+                    },
+                    "hpSubCategoryCode": {
+                        "type": "integer",
+                        "format": "int32",
+                        "example": 1
+                    },
+                    "clientId": {
+                        "type": "string",
+                        "example": "V4"
+                    },
+                    "stateCode": {
+                        "type": "string"
+                    },
+                    "districtCode": {
+                        "type": "string"
+                    },
+                    "council": {
+                        "type": "boolean"
+                    },
+                    "role": {
+                        "type": "integer",
+                        "format": "int32"
+                    }
+                }
+            },
+            "CreateAccountJwtResponse": {
+                "type": "object",
+                "properties": {
+                    "token": {
+                        "type": "string"
+                    },
+                    "hprIdNumber": {
+                        "type": "string"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "gender": {
+                        "type": "string"
+                    },
+                    "yearOfBirth": {
+                        "type": "string"
+                    },
+                    "monthOfBirth": {
+                        "type": "string"
+                    },
+                    "dayOfBirth": {
+                        "type": "string"
+                    },
+                    "firstName": {
+                        "type": "string"
+                    },
+                    "hprId": {
+                        "type": "string"
+                    },
+                    "lastName": {
+                        "type": "string"
+                    },
+                    "middleName": {
+                        "type": "string"
+                    },
+                    "stateCode": {
+                        "type": "string"
+                    },
+                    "districtCode": {
+                        "type": "string"
+                    },
+                    "subDistrictCode": {
+                        "type": "string"
+                    },
+                    "subDistrictName": {
+                        "type": "string"
+                    },
+                    "stateName": {
+                        "type": "string"
+                    },
+                    "districtName": {
+                        "type": "string"
+                    },
+                    "email": {
+                        "type": "string"
+                    },
+                    "kycPhoto": {
+                        "type": "string"
+                    },
+                    "mobile": {
+                        "type": "string"
+                    },
+                    "categoryId": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "subCategoryId": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "role": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "authMethods": {
+                        "uniqueItems": true,
+                        "type": "array",
+                        "items": {
+                            "type": "string",
+                            "enum": [
+                                "AADHAAR_OTP",
+                                "MOBILE_OTP",
+                                "PASSWORD",
+                                "DEMOGRAPHICS",
+                                "AADHAAR_BIO",
+                                "EMAIL_OTP",
+                                "MOBILE_OTP_RESET_PASSWROD",
+                                "FACE_AUTH"
+                            ]
+                        }
+                    },
+                    "new": {
+                        "type": "boolean"
+                    }
+                }
+            },
+            "VerifyOtpRequest": {
+                "type": "object",
+                "properties": {
+                    "txnId": {
+                        "type": "string"
+                    },
+                    "otp": {
+                        "type": "string"
+                    }
+                }
+            },
+            "VerifyDoctorOtpResponse": {
+                "type": "object",
+                "properties": {
+                    "message": {
+                        "type": "string"
+                    },
+                    "verified": {
+                        "type": "boolean"
+                    }
+                }
+            },
+            "SendOtpIfDoctorVerifiedRequest": {
+                "type": "object",
+                "properties": {
+                    "hprId": {
+                        "type": "string"
+                    },
+                    "mobileNumber": {
+                        "type": "string"
+                    }
+                }
+            },
+            "SendOtpIfDoctorVerifiedResponse": {
+                "type": "object",
+                "properties": {
+                    "txnId": {
+                        "type": "string"
+                    },
+                    "message": {
+                        "type": "string"
+                    },
+                    "mobileNumber": {
+                        "type": "string"
+                    }
+                }
+            },
+            "HPRIDVerifyMobileOTPRequestDTO": {
+                "type": "object",
+                "properties": {
+                    "otp": {
+                        "type": "string"
+                    },
+                    "txnId": {
+                        "type": "string"
+                    }
+                }
+            },
+            "HPRIDVerifyMobileOTPResponseDTO": {
+                "type": "object",
+                "properties": {
+                    "txnId": {
+                        "type": "string"
+                    },
+                    "mobileNumber": {
+                        "type": "string"
+                    }
+                }
+            },
+            "HpIdSuggestionRequst": {
+                "required": [
+                    "txnId"
+                ],
+                "type": "object",
+                "properties": {
+                    "txnId": {
+                        "type": "string",
+                        "description": "Based on UUID",
+                        "example": "a825f76b-0696-40f3-864c-5a3a5b389a83"
+                    }
+                }
+            },
+            "HPRIDGenerateMobileOTPRequestDTO": {
+                "type": "object",
+                "properties": {
+                    "mobile": {
+                        "type": "string"
+                    },
+                    "txnId": {
+                        "type": "string"
+                    }
+                }
+            },
+            "AccountExistPayload": {
+                "type": "object",
+                "properties": {
+                    "txnId": {
+                        "type": "string"
+                    },
+                    "preverifiedCheck": {
+                        "type": "boolean"
+                    }
+                }
+            },
+            "AccountExistResponsePayload": {
+                "type": "object",
+                "properties": {
+                    "token": {
+                        "type": "string"
+                    },
+                    "hprIdNumber": {
+                        "type": "string"
+                    },
+                    "categoryId": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "categoryName": {
+                        "type": "string"
+                    },
+                    "subCategoryId": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "categorySubName": {
+                        "type": "string"
+                    },
+                    "txnId": {
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "gender": {
+                        "type": "string"
+                    },
+                    "yearOfBirth": {
+                        "type": "string"
+                    },
+                    "monthOfBirth": {
+                        "type": "string"
+                    },
+                    "dayOfBirth": {
+                        "type": "string"
+                    },
+                    "firstName": {
+                        "type": "string"
+                    },
+                    "middleName": {
+                        "type": "string"
+                    },
+                    "lastName": {
+                        "type": "string"
+                    },
+                    "stateCode": {
+                        "type": "string"
+                    },
+                    "districtCode": {
+                        "type": "string"
+                    },
+                    "stateName": {
+                        "type": "string"
+                    },
+                    "districtName": {
+                        "type": "string"
+                    },
+                    "address": {
+                        "type": "string"
+                    },
+                    "pincode": {
+                        "type": "string"
+                    },
+                    "profilePhoto": {
+                        "type": "string"
+                    },
+                    "mobile": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "hprId": {
+                        "type": "string"
+                    },
+                    "new": {
+                        "type": "boolean"
+                    }
+                }
+            },
+            "RetriveHprIdMobilePayLoad": {
+                "required": [
+                    "firstName",
+                    "gender",
+                    "name",
+                    "otp",
+                    "txnId",
+                    "yearOfBirth"
+                ],
+                "type": "object",
+                "properties": {
+                    "txnId": {
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "gender": {
+                        "pattern": "^(M|F|O|U)$",
+                        "type": "string"
+                    },
+                    "yearOfBirth": {
+                        "pattern": "^(\\d{4})$",
+                        "type": "string"
+                    },
+                    "monthOfBirth": {
+                        "pattern": "^(0?[1-9]|1[012])$",
+                        "type": "string"
+                    },
+                    "dayOfBirth": {
+                        "pattern": "^(0?[1-9]|[12][0-9]|3[01])$",
+                        "type": "string"
+                    },
+                    "firstName": {
+                        "type": "string"
+                    },
+                    "lastName": {
+                        "type": "string"
+                    },
+                    "middleName": {
+                        "type": "string"
+                    },
+                    "otp": {
+                        "type": "string"
+                    }
+                }
+            },
+            "RetrieveHprIdPayloadResponse": {
+                "type": "object",
+                "properties": {
+                    "hprId": {
+                        "type": "string"
+                    },
+                    "hprIdNumber": {
+                        "type": "string"
+                    },
+                    "token": {
+                        "type": "string"
+                    }
+                }
+            },
+            "SendOtpRequest": {
+                "type": "object",
+                "properties": {
+                    "mobileNumber": {
+                        "type": "string"
+                    },
+                    "email": {
+                        "type": "string"
+                    },
+                    "type": {
+                        "type": "string"
+                    },
+                    "hpid": {
+                        "type": "string"
+                    }
+                }
+            },
+            "SendOtpResponse": {
+                "type": "object",
+                "properties": {
+                    "txnId": {
+                        "type": "string"
+                    },
+                    "msg": {
+                        "type": "string"
+                    },
+                    "mobileNumber": {
+                        "type": "string"
+                    }
+                }
+            },
+            "BridgeAddUpdateRequestDTO": {
+                "required": [
+                    "facilityId",
+                    "facilityName"
+                ],
+                "type": "object",
+                "properties": {
+                    "facilityId": {
+                        "pattern": "^IN\\d+$",
+                        "type": "string"
+                    },
+                    "facilityName": {
+                        "type": "string"
+                    },
+                    "HRP": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/MultipleHRPRequest"
+                        }
+                    }
+                }
+            },
+            "MultipleHRPRequest": {
+                "required": [
+                    "active",
+                    "bridgeId",
+                    "hipName",
+                    "type"
+                ],
+                "type": "object",
+                "properties": {
+                    "bridgeId": {
+                        "type": "string"
+                    },
+                    "hipName": {
+                        "type": "string"
+                    },
+                    "type": {
+                        "type": "string"
+                    },
+                    "active": {
+                        "type": "boolean"
+                    }
+                }
+            },
+            "AadhaarVerifyOtpRequestDto": {
+                "type": "object",
+                "properties": {
+                    "aadhaarNumber": {
+                        "type": "string"
+                    },
+                    "otp": {
+                        "type": "string"
+                    },
+                    "faceAuthPid": {
+                        "type": "string"
+                    },
+                    "aadhaarLogType": {
+                        "type": "string"
+                    },
+                    "transactionId": {
+                        "type": "string"
+                    },
+                    "txnId": {
+                        "type": "string"
+                    }
+                }
+            },
+            "AuthRequestDto": {
+                "type": "object",
+                "properties": {
+                    "authType": {
+                        "type": "string",
+                        "enum": [
+                            "AADHAAR_OTP",
+                            "USERNAME_PASSWORD",
+                            "MOBILE_OTP"
+                        ]
+                    },
+                    "hprId": {
+                        "type": "string"
+                    },
+                    "password": {
+                        "type": "string"
+                    },
+                    "aadhaar": {
+                        "type": "string"
+                    },
+                    "mobileNumber": {
+                        "type": "string"
+                    },
+                    "txnId": {
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "otp": {
+                        "type": "string"
+                    },
+                    "resend": {
+                        "type": "boolean"
+                    },
+                    "aadhaarVerifyOtpRequestDto": {
+                        "$ref": "#/components/schemas/AadhaarVerifyOtpRequestDto"
+                    }
+                }
+            },
+            "UserDTO": {
+                "type": "object",
+                "properties": {
+                    "hprIdNumber": {
+                        "type": "string"
+                    },
+                    "hprId": {
+                        "type": "string"
+                    },
+                    "mobile": {
+                        "type": "string"
+                    },
+                    "firstName": {
+                        "type": "string"
+                    },
+                    "middleName": {
+                        "type": "string"
+                    },
+                    "lastName": {
+                        "type": "string"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "yearOfBirth": {
+                        "type": "string"
+                    },
+                    "dayOfBirth": {
+                        "type": "string"
+                    },
+                    "monthOfBirth": {
+                        "type": "string"
+                    },
+                    "gender": {
+                        "type": "string"
+                    },
+                    "email": {
+                        "type": "string"
+                    },
+                    "profilePhoto": {
+                        "type": "string"
+                    },
+                    "stateCode": {
+                        "type": "string"
+                    },
+                    "districtCode": {
+                        "type": "string"
+                    },
+                    "subDistrictCode": {
+                        "type": "string"
+                    },
+                    "villageCode": {
+                        "type": "string"
+                    },
+                    "townCode": {
+                        "type": "string"
+                    },
+                    "wardCode": {
+                        "type": "string"
+                    },
+                    "pinCode": {
+                        "type": "string"
+                    },
+                    "address": {
+                        "type": "string"
+                    },
+                    "kycPhoto": {
+                        "type": "string"
+                    },
+                    "stateName": {
+                        "type": "string"
+                    },
+                    "districtName": {
+                        "type": "string"
+                    },
+                    "subdistrictName": {
+                        "type": "string"
+                    },
+                    "villageName": {
+                        "type": "string"
+                    },
+                    "townName": {
+                        "type": "string"
+                    },
+                    "wardName": {
+                        "type": "string"
+                    },
+                    "authMethods": {
+                        "uniqueItems": true,
+                        "type": "array",
+                        "items": {
+                            "type": "string",
+                            "enum": [
+                                "AADHAAR_OTP",
+                                "MOBILE_OTP",
+                                "PASSWORD",
+                                "DEMOGRAPHICS",
+                                "AADHAAR_BIO",
+                                "EMAIL_OTP",
+                                "MOBILE_OTP_RESET_PASSWROD",
+                                "FACE_AUTH"
+                            ]
+                        }
+                    },
+                    "kycVerified": {
+                        "type": "boolean"
+                    },
+                    "verificationType": {
+                        "type": "string"
+                    },
+                    "verificationStatus": {
+                        "type": "string"
+                    },
+                    "categoryId": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "categoryName": {
+                        "type": "string"
+                    },
+                    "categorySubId": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "categorySubName": {
+                        "type": "string"
+                    },
+                    "token": {
+                        "type": "string"
+                    },
+                    "hprIdCategories": {
+                        "type": "array",
+                        "items": {
+                            "type": "integer",
+                            "format": "int32"
+                        }
+                    },
+                    "fileEntityProfileId": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "fileEntityKycId": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "role": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "hprProfileId": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "new": {
+                        "type": "boolean"
+                    },
+                    "emailVerified": {
+                        "type": "boolean"
+                    },
+                    "xmluidexist": {
+                        "type": "boolean"
+                    }
+                }
+            },
+            "TxnResponse": {
+                "type": "object",
+                "properties": {
+                    "txnId": {
+                        "type": "string",
+                        "description": "Based on UUID",
+                        "format": "uuid",
+                        "example": "a825f76b-0696-40f3-864c-5a3a5b389a83"
+                    },
+                    "mobileNumber": {
+                        "type": "string",
+                        "example": "******2125"
+                    },
+                    "msg": {
+                        "type": "string"
+                    },
+                    "verified": {
+                        "type": "boolean"
+                    }
+                }
+            },
+            "ValidateOtpRequestDto": {
+                "type": "object",
+                "properties": {
+                    "facilityId": {
+                        "type": "string"
+                    },
+                    "sourceId": {
+                        "type": "string"
+                    },
+                    "otp": {
+                        "type": "string"
+                    },
+                    "source": {
+                        "type": "string"
+                    },
+                    "transactionId": {
+                        "type": "string"
+                    }
+                }
+            },
+            "ErrorStatus": {
+                "type": "object",
+                "properties": {
+                    "field": {
+                        "type": "string"
+                    },
+                    "message": {
+                        "type": "string"
+                    }
+                }
+            },
+            "ValidateOtpResponse": {
+                "type": "object",
+                "properties": {
+                    "facilityId": {
+                        "type": "string"
+                    },
+                    "status": {
+                        "type": "string"
+                    },
+                    "message": {
+                        "type": "string"
+                    },
+                    "errorStatus": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/ErrorStatus"
+                        },
+                        "nullable": true
+                    }
+                }
+            },
+            "FacilitySubmitDetails": {
+                "required": [
+                    "trackingId"
+                ],
+                "type": "object",
+                "properties": {
+                    "trackingId": {
+                        "pattern": "^[0-9]+$",
+                        "type": "string"
+                    },
+                    "sourceOfInformation": {
+                        "type": "string"
+                    },
+                    "sourceUniqueID": {
+                        "type": "string"
+                    },
+                    "facilitySuperUser": {
+                        "type": "string"
+                    }
+                }
+            },
+            "FacilitySubmitResponse": {
+                "type": "object",
+                "properties": {
+                    "facilityId": {
+                        "type": "string"
+                    },
+                    "status": {
+                        "type": "string"
+                    },
+                    "message": {
+                        "type": "string"
+                    }
+                }
+            },
+            "FacilityContactDetails": {
+                "type": "object",
+                "properties": {
+                    "facilityId": {
+                        "type": "string"
+                    }
+                }
+            },
+            "FacilityOtpResponse": {
+                "type": "object",
+                "properties": {
+                    "facilityId": {
+                        "type": "string"
+                    },
+                    "status": {
+                        "type": "string"
+                    },
+                    "message": {
+                        "type": "string"
+                    },
+                    "transactionId": {
+                        "type": "string"
+                    },
+                    "errorStatus": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/ErrorStatus"
+                        },
+                        "nullable": true
+                    }
+                }
+            },
+            "SpecialitiesUtilityRequestDto": {
+                "required": [
+                    "systemOfMedicineCode"
+                ],
+                "type": "object",
+                "properties": {
+                    "systemOfMedicineCode": {
+                        "pattern": "^([Aa]|[Dd]|[Dd][Ii][Aa][Gg]|[Hh]|[Ii][Mm][Aa][Gg][Ee]|[Mm]|[Pp]|[Ss][Dd]|[Ss][Rr]|[Uu][Nn]|[Yy][Nn])$",
+                        "type": "string"
+                    }
+                }
+            },
+            "SubTypeUtilityRequestDto": {
+                "required": [
+                    "ownerSubtypeCode",
+                    "ownershipCode"
+                ],
+                "type": "object",
+                "properties": {
+                    "ownershipCode": {
+                        "maxLength": 2,
+                        "minLength": 0,
+                        "pattern": "^([Gg]|[Pp]|[Pp][Pp])$",
+                        "type": "string"
+                    },
+                    "ownerSubtypeCode": {
+                        "pattern": "^([Cc]|[Pp]|[Nn][Pp])$",
+                        "type": "string"
+                    }
+                }
+            },
+            "UtilityFacilityTypeReqDto": {
+                "required": [
+                    "ownershipCode",
+                    "systemOfMedicineCode"
+                ],
+                "type": "object",
+                "properties": {
+                    "ownershipCode": {
+                        "maxLength": 2,
+                        "minLength": 0,
+                        "pattern": "^([Gg]|[Pp]|[Pp][Pp])$",
+                        "type": "string"
+                    },
+                    "systemOfMedicineCode": {
+                        "pattern": "^[A-Za-z\\s,]*$",
+                        "type": "string"
+                    }
+                }
+            },
+            "UtilityFacilitySubTypeReqDto": {
+                "required": [
+                    "facilityTypeCode"
+                ],
+                "type": "object",
+                "properties": {
+                    "facilityTypeCode": {
+                        "pattern": "^[0-9\\s]*$",
+                        "type": "string"
+                    }
+                }
+            },
+            "FacilityBloodBankDetails": {
+                "type": "object",
+                "properties": {
+                    "isFacilityRegisteredInERaktkosh": {
+                        "type": "string"
+                    },
+                    "eRaktoshId": {
+                        "type": "string"
+                    },
+                    "bloodBankLicenseNumber": {
+                        "type": "string"
+                    },
+                    "bloodStorageCenters": {
+                        "type": "string"
+                    },
+                    "storageCentersCount": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "bloodCollectedPerAnnum": {
+                        "type": "string"
+                    },
+                    "bloodRequiredPerAnnum": {
+                        "type": "string"
+                    }
+                }
+            },
+            "FacilityDetailedInformationRequest": {
+                "type": "object",
+                "properties": {
+                    "trackingId": {
+                        "type": "string"
+                    },
+                    "specialities": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/FacilitySpecialities"
+                        }
+                    },
+                    "medicalInfrastructure": {
+                        "$ref": "#/components/schemas/FacilityMedicalInfrastructure"
+                    },
+                    "pharmacyDetails": {
+                        "$ref": "#/components/schemas/FacilityPharmacyDetails"
+                    },
+                    "bloodBankDetails": {
+                        "$ref": "#/components/schemas/FacilityBloodBankDetails"
+                    },
+                    "imagingServices": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/FacilityImagingServices"
+                        }
+                    },
+                    "diagnosticServices": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "FacilityImagingServices": {
+                "type": "object",
+                "properties": {
+                    "service": {
+                        "type": "string"
+                    },
+                    "count": {
+                        "type": "integer",
+                        "format": "int32"
+                    }
+                }
+            },
+            "FacilityMedicalInfrastructure": {
+                "type": "object",
+                "properties": {
+                    "countLevel1IcuBedWithOutVentilators": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "countIPDBedsWithoutOxygen": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "countIPDBedsWithOxygen": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "countICUBedsWithVentilators": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "countICUBedsWithoutVentilators": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "countHDUBedsWithVentilators": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "countHDUBedsWithoutVentilators": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "totalNumberOfVentilators": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "countDayCareBedsWithoutOxygen": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "countDayCareBedsWithOxygen": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "countDentalChairs": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "totalNumberOfBeds": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "hasIcuBeds": {
+                        "type": "string"
+                    },
+                    "countLevel1IcuBedWithVentilators": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "CountLevel1IcuBedWithOutVentilators": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "countLevel2IcuBeds": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "countLevel3IcuBeds": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "isIcuContactSameAsManager": {
+                        "type": "string"
+                    },
+                    "cmoMoIcuControlMobile": {
+                        "type": "string"
+                    }
+                }
+            },
+            "FacilityPharmacyDetails": {
+                "type": "object",
+                "properties": {
+                    "isJanAushadhiKendra": {
+                        "type": "string"
+                    },
+                    "janAushadhiKendraId": {
+                        "type": "string"
+                    },
+                    "drugLicenseNumber": {
+                        "type": "string"
+                    },
+                    "pharmacyGstinNumber": {
+                        "type": "string"
+                    },
+                    "pharmacistRegistrationNumber": {
+                        "type": "string"
+                    }
+                }
+            },
+            "FacilitySpecialities": {
+                "type": "object",
+                "properties": {
+                    "systemOfMedicineCode": {
+                        "type": "string"
+                    },
+                    "isSpecializationAvalaible": {
+                        "type": "string"
+                    },
+                    "specialities": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "FacilityOnboardResponse": {
+                "type": "object",
+                "properties": {
+                    "trackingId": {
+                        "type": "string"
+                    },
+                    "status": {
+                        "type": "string"
+                    },
+                    "message": {
+                        "type": "string"
+                    },
+                    "errorStatus": {
+                        "type": "array",
+                        "items": {
+                            "type": "object"
+                        },
+                        "nullable": true
+                    }
+                }
+            },
+            "AbdmCompliantSoftware": {
+                "type": "object",
+                "properties": {
+                    "existingSoftwares": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "anyOther": {
+                        "type": "string"
+                    }
+                }
+            },
+            "FacilityBasicAttachment": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string"
+                    },
+                    "value": {
+                        "type": "string"
+                    }
+                }
+            },
+            "FacilityBasicInfoAddress": {
+                "type": "object",
+                "properties": {
+                    "country": {
+                        "type": "string"
+                    },
+                    "stateLGDCode": {
+                        "type": "string"
+                    },
+                    "districtLGDCode": {
+                        "type": "string"
+                    },
+                    "subDistrictLGDCode": {
+                        "type": "string"
+                    },
+                    "facilityRegion": {
+                        "type": "string"
+                    },
+                    "villageCityTownLGDCode": {
+                        "type": "string"
+                    },
+                    "addressLine1": {
+                        "type": "string"
+                    },
+                    "addressLine2": {
+                        "type": "string"
+                    },
+                    "pincode": {
+                        "type": "string"
+                    },
+                    "latitude": {
+                        "type": "string"
+                    },
+                    "longitude": {
+                        "type": "string"
+                    }
+                }
+            },
+            "FacilityBasicInfoAddressProof": {
+                "type": "object",
+                "properties": {
+                    "addressProofType": {
+                        "type": "string"
+                    },
+                    "addressProofAttachment": {
+                        "$ref": "#/components/schemas/FacilityBasicAttachment"
+                    }
+                }
+            },
+            "FacilityBasicInfoContact": {
+                "type": "object",
+                "properties": {
+                    "facilityEmailId": {
+                        "type": "string"
+                    },
+                    "facilityContactNumber": {
+                        "type": "string"
+                    },
+                    "websiteLink": {
+                        "type": "string"
+                    },
+                    "facilityLandlineNumber": {
+                        "type": "string"
+                    },
+                    "facilityStdCode": {
+                        "type": "string"
+                    }
+                }
+            },
+            "FacilityBasicInfoUploads": {
+                "type": "object",
+                "properties": {
+                    "facilityBoardPhoto": {
+                        "$ref": "#/components/schemas/FacilityBasicAttachment"
+                    },
+                    "facilityBuildingPhoto": {
+                        "$ref": "#/components/schemas/FacilityBasicAttachment"
+                    }
+                }
+            },
+            "FacilityBasicInformation": {
+                "type": "object",
+                "properties": {
+                    "facilityName": {
+                        "type": "string"
+                    },
+                    "facilityAddressDetails": {
+                        "$ref": "#/components/schemas/FacilityBasicInfoAddress"
+                    },
+                    "facilityContactInformation": {
+                        "$ref": "#/components/schemas/FacilityBasicInfoContact"
+                    },
+                    "ownershipCode": {
+                        "type": "string"
+                    },
+                    "ownershipSubTypeCode": {
+                        "type": "string"
+                    },
+                    "ownershipSubTypeCode2": {
+                        "type": "string"
+                    },
+                    "typeOfServiceCode": {
+                        "type": "string"
+                    },
+                    "systemOfMedicineCode": {
+                        "type": "string"
+                    },
+                    "facilityTypeCode": {
+                        "type": "string"
+                    },
+                    "specialityTypeCode": {
+                        "type": "string"
+                    },
+                    "facilityUploads": {
+                        "$ref": "#/components/schemas/FacilityBasicInfoUploads"
+                    },
+                    "facilityAddressProof": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/FacilityBasicInfoAddressProof"
+                        }
+                    },
+                    "facilitySubType": {
+                        "type": "string"
+                    },
+                    "workingInPsu": {
+                        "type": "boolean"
+                    },
+                    "facPsuName": {
+                        "type": "string"
+                    },
+                    "facilityOperationalStatus": {
+                        "type": "string"
+                    },
+                    "timingsOfFacility": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/FacilityTimings"
+                        }
+                    },
+                    "abdmCompliantSoftware": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/AbdmCompliantSoftware"
+                        }
+                    }
+                }
+            },
+            "FacilityBasicInformationRequest": {
+                "type": "object",
+                "properties": {
+                    "facilityInformation": {
+                        "$ref": "#/components/schemas/FacilityBasicInformation"
+                    },
+                    "trackingId": {
+                        "type": "string"
+                    }
+                }
+            },
+            "FacilityTimings": {
+                "type": "object",
+                "properties": {
+                    "workingDays": {
+                        "type": "string"
+                    },
+                    "openingHours": {
+                        "type": "string"
+                    }
+                }
+            },
+            "FacilityAdditionalInformationRequest": {
+                "required": [
+                    "trackingId"
+                ],
+                "type": "object",
+                "properties": {
+                    "trackingId": {
+                        "pattern": "^[0-9]+$",
+                        "type": "string"
+                    },
+                    "linkedProgramIds": {
+                        "$ref": "#/components/schemas/FacilityLinkedProgramIds"
+                    },
+                    "generalInformation": {
+                        "$ref": "#/components/schemas/FacilityGeneralInformation"
+                    }
+                }
+            },
+            "FacilityGeneralInformation": {
+                "type": "object",
+                "properties": {
+                    "hasDialysisCenter": {
+                        "pattern": "^(YALL|YIN|N)$",
+                        "type": "string"
+                    },
+                    "hasPharmacy": {
+                        "pattern": "^(YALL|YIN|N)$",
+                        "type": "string"
+                    },
+                    "hasBloodBank": {
+                        "pattern": "^(YALL|YIN|N)$",
+                        "type": "string"
+                    },
+                    "hasCathLab": {
+                        "pattern": "^(YALL|YIN|N)$",
+                        "type": "string"
+                    },
+                    "hasDiagnosticLab": {
+                        "pattern": "^(YALL|YIN|N)$",
+                        "type": "string"
+                    },
+                    "hasImagingCenter": {
+                        "type": "string"
+                    },
+                    "servicesByImagingCenter": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/FacilityServices"
+                        }
+                    }
+                }
+            },
+            "FacilityLinkedProgramIds": {
+                "type": "object",
+                "properties": {
+                    "nhrrId": {
+                        "type": "string"
+                    },
+                    "nin": {
+                        "type": "string"
+                    },
+                    "abpmjayId": {
+                        "type": "string"
+                    },
+                    "rohiniId": {
+                        "type": "string"
+                    },
+                    "echsId": {
+                        "type": "string"
+                    },
+                    "cghsId": {
+                        "type": "string"
+                    },
+                    "ceaRegistration": {
+                        "type": "string"
+                    },
+                    "stateInsuranceSchemeId": {
+                        "type": "string"
+                    }
+                }
+            },
+            "FacilityServices": {
+                "type": "object",
+                "properties": {
+                    "service": {
+                        "type": "string"
+                    },
+                    "count": {
+                        "minimum": 0,
+                        "type": "integer",
+                        "format": "int32"
+                    }
+                }
+            },
+            "AddressFilterRequest": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string"
+                    },
+                    "address": {
+                        "type": "string"
+                    },
+                    "district": {
+                        "type": "string"
+                    },
+                    "subDistrict": {
+                        "type": "string"
+                    },
+                    "village": {
+                        "type": "string"
+                    },
+                    "geolocation": {
+                        "type": "string"
+                    },
+                    "facilityId": {
+                        "type": "string"
+                    }
+                }
+            },
+            "DeduplicateResponseDto": {
+                "type": "object",
+                "properties": {
+                    "facility_name": {
+                        "type": "string"
+                    },
+                    "alternate_id": {
+                        "type": "string"
+                    },
+                    "sub_district": {
+                        "type": "object",
+                        "properties": {
+                            "locId": {
+                                "type": "string"
+                            },
+                            "locType": {
+                                "type": "string"
+                            },
+                            "locName": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "district": {
+                        "type": "object",
+                        "properties": {
+                            "locId": {
+                                "type": "string"
+                            },
+                            "locType": {
+                                "type": "string"
+                            },
+                            "locName": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "state": {
+                        "type": "object",
+                        "properties": {
+                            "locId": {
+                                "type": "string"
+                            },
+                            "locType": {
+                                "type": "string"
+                            },
+                            "locName": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "distances": {
+                        "type": "string"
+                    }
+                }
+            },
+            "UpdateAccountWebRequest": {
+                "type": "object",
+                "properties": {
+                    "firstName": {
+                        "type": "string",
+                        "description": "First Name of the user).",
+                        "example": "Ayushman"
+                    },
+                    "lastName": {
+                        "type": "string",
+                        "description": "Last name of the user ",
+                        "example": "Mission"
+                    },
+                    "middleName": {
+                        "type": "string",
+                        "description": "Middle name of the user ",
+                        "example": "Bharat"
+                    },
+                    "hprId": {
+                        "type": "string",
+                        "description": "Healthcare Professional ID Alias.",
+                        "example": "user@hpr.abdm"
+                    },
+                    "password": {
+                        "type": "string",
+                        "description": "User Authentication password.",
+                        "example": "Abdm@143"
+                    },
+                    "email": {
+                        "type": "string",
+                        "description": "Email Address of the user.",
+                        "example": "user@abdm.com"
+                    },
+                    "profilePhoto": {
+                        "type": "string",
+                        "description": "Profile photo of the user (Uploaded by the user).",
+                        "example": "<BASE64 ENCODED STRING>"
+                    },
+                    "stateCode": {
+                        "type": "string",
+                        "description": "State Code of the user (LGD).",
+                        "example": "7"
+                    },
+                    "districtCode": {
+                        "type": "string",
+                        "description": "District Code of the user (LGD).",
+                        "example": "71"
+                    },
+                    "subdistrictCode": {
+                        "type": "string",
+                        "description": "Sub District Code of the user (LGD).",
+                        "example": "1"
+                    },
+                    "villageCode": {
+                        "type": "string",
+                        "description": "Village Code of the user (LGD)."
+                    },
+                    "townCode": {
+                        "type": "string",
+                        "description": "Town Code of the user (LGD)."
+                    },
+                    "wardCode": {
+                        "type": "string",
+                        "description": "Ward Code of the user (LGD)."
+                    },
+                    "pincode": {
+                        "type": "integer",
+                        "description": "Pincode of the user.",
+                        "format": "int32",
+                        "example": 110001
+                    },
+                    "address": {
+                        "type": "string",
+                        "description": "Address of the user.",
+                        "example": "9th Floor, Tower-l, Jeevan Bharati Building, Connaught Place, New Delhi - 110001"
+                    },
+                    "yearOfBirth": {
+                        "type": "string",
+                        "description": "Year of birth of the user.",
+                        "example": "2021"
+                    },
+                    "monthOfBirth": {
+                        "type": "string",
+                        "description": "Month of birth of the user.",
+                        "example": "8"
+                    },
+                    "dayOfBirth": {
+                        "type": "string",
+                        "description": "Day of birth of the user.",
+                        "example": "15"
+                    },
+                    "hpCategoryCode": {
+                        "type": "string",
+                        "example": "1"
+                    },
+                    "hpSubCategoryCode": {
+                        "type": "string",
+                        "example": "1"
+                    },
+                    "txnId": {
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "role": {
+                        "type": "string"
+                    },
+                    "consentToDelete": {
+                        "type": "boolean"
+                    }
+                }
+            },
+            "HidOtpWebRequestPaylaod": {
+                "required": [
+                    "txnId"
+                ],
+                "type": "object",
+                "properties": {
+                    "newPassword": {
+                        "type": "string",
+                        "description": "Encrypted new Password."
+                    },
+                    "otp": {
+                        "type": "string",
+                        "description": "Encrypted OTP."
+                    },
+                    "txnId": {
+                        "type": "string",
+                        "format": "uuid"
+                    }
+                }
+            },
+            "PasswordChangeDTO": {
+                "type": "object",
+                "properties": {
+                    "message": {
+                        "type": "string"
+                    }
+                }
+            },
+            "ValidateAaddhaarDemographicMobileResponseDTO": {
+                "type": "object",
+                "properties": {
+                    "verified": {
+                        "type": "boolean"
+                    },
+                    "txnId": {
+                        "type": "string"
+                    }
+                }
+            },
+            "HidChangePasswordRequestPayload": {
+                "type": "object",
+                "properties": {
+                    "oldPassword": {
+                        "type": "string"
+                    },
+                    "newPassword": {
+                        "type": "string"
+                    },
+                    "txnId": {
+                        "type": "string"
+                    },
+                    "hprID": {
+                        "type": "string"
+                    },
+                    "otp": {
+                        "type": "string"
+                    }
+                },
+                "description": "Shared by /password/recover/byMobile/verifyMobileOTP (txnId, otp) and /password/change/byPassword (oldPassword, newPassword), per the official HPID \"Change password\" document."
+            },
+            "CategoryRequest": {
+                "required": [
+                    "hprId"
+                ],
+                "type": "object",
+                "properties": {
+                    "hprId": {
+                        "type": "string"
+                    },
+                    "categories": {
+                        "type": "object",
+                        "additionalProperties": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "TokenRequestDTO": {
+                "type": "object",
+                "properties": {
+                    "txnId": {
+                        "type": "string"
+                    },
+                    "issueToken": {
+                        "type": "string"
+                    },
+                    "token": {
+                        "type": "string"
+                    }
+                }
+            },
+            "TokenResponseDTO": {
+                "type": "object",
+                "properties": {
+                    "hbi": {
+                        "type": "boolean"
+                    },
+                    "docid": {
+                        "type": "string"
+                    },
+                    "status": {
+                        "type": "string"
+                    },
+                    "siteUrl": {
+                        "type": "string"
+                    },
+                    "token": {
+                        "type": "string"
+                    }
+                }
+            },
+            "LoginDTO": {
+                "type": "object",
+                "properties": {
+                    "username": {
+                        "type": "string"
+                    },
+                    "password": {
+                        "type": "string"
+                    },
+                    "resend": {
+                        "type": "boolean"
+                    }
+                }
+            },
+            "LoginResponseDTO": {
+                "type": "object",
+                "properties": {
+                    "token": {
+                        "type": "string"
+                    },
+                    "ncToken": {
+                        "type": "string"
+                    }
+                }
+            },
+            "AadhaarGenerateOTPResponseDTO": {
+                "type": "object",
+                "properties": {
+                    "status": {
+                        "type": "string"
+                    },
+                    "txnId": {
+                        "type": "string"
+                    }
+                }
+            },
+            "EmailOTPVerificationRequestDTO": {
+                "type": "object",
+                "properties": {
+                    "hpr_token": {
+                        "type": "string"
+                    },
+                    "hpr_id": {
+                        "type": "string"
+                    },
+                    "officialEmail": {
+                        "type": "string"
+                    },
+                    "emailOtp": {
+                        "type": "integer",
+                        "format": "int32"
+                    }
+                }
+            },
+            "EmailOTPVerificationResponseDTO": {
+                "type": "object",
+                "properties": {
+                    "status": {
+                        "type": "string"
+                    },
+                    "msg": {
+                        "type": "string"
+                    }
+                }
+            },
+            "EmailAuthRequestDto": {
+                "type": "object",
+                "properties": {
+                    "emailAddress": {
+                        "type": "string"
+                    },
+                    "otp_type": {
+                        "type": "string"
+                    }
+                }
+            },
+            "EmailAuthResponseDto": {
+                "type": "object",
+                "properties": {
+                    "msg": {
+                        "type": "string"
+                    },
+                    "status": {
+                        "type": "string"
+                    }
+                }
+            },
+            "AadhaarGenerateOTPRequestDTO": {
+                "required": [
+                    "hpr_token",
+                    "officialMobile"
+                ],
+                "type": "object",
+                "properties": {
+                    "hpr_token": {
+                        "type": "string"
+                    },
+                    "officialMobile": {
+                        "type": "string"
+                    }
+                }
+            },
+            "SendVerifyOtpRequestDto": {
+                "type": "object",
+                "properties": {
+                    "mobile": {
+                        "type": "string"
+                    },
+                    "txnId": {
+                        "type": "string"
+                    },
+                    "otp": {
+                        "type": "string"
+                    },
+                    "hpid": {
+                        "type": "string"
+                    }
+                }
+            },
+            "MobileLinkedHpIdDto": {
+                "type": "object",
+                "properties": {
+                    "hprIdNumber": {
+                        "type": "string"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "hprId": {
+                        "type": "string"
+                    },
+                    "categoryId": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "subCategoryId": {
+                        "type": "integer",
+                        "format": "int32"
+                    }
+                }
+            },
+            "SendVerifyOtpResponseDto": {
+                "type": "object",
+                "properties": {
+                    "txnId": {
+                        "type": "string"
+                    },
+                    "mobileLinkedHpIdDTO": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/MobileLinkedHpIdDto"
+                        }
+                    },
+                    "mobileNumber": {
+                        "type": "string"
+                    }
+                }
+            },
+            "AadhaarAuthRequestDTO": {
+                "type": "object",
+                "properties": {
+                    "idType": {
+                        "type": "string"
+                    },
+                    "domainName": {
+                        "type": "string"
+                    },
+                    "authMethod": {
+                        "type": "string"
+                    },
+                    "hprId": {
+                        "type": "string"
+                    }
+                }
+            },
+            "AadhaarAuthResponseDTO": {
+                "type": "object",
+                "properties": {
+                    "transactionId": {
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "mobileNumber": {
+                        "type": "string"
+                    }
+                }
+            },
+            "AadhaarAuthVerifyRequestDTO": {
+                "type": "object",
+                "properties": {
+                    "otp": {
+                        "type": "string"
+                    },
+                    "txnId": {
+                        "type": "string",
+                        "format": "uuid"
+                    }
+                }
+            },
+            "AadhaarAuthVerifyResponseDTO": {
+                "type": "object",
+                "properties": {
+                    "token": {
+                        "type": "string"
+                    },
+                    "expiresIn": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "refreshToken": {
+                        "type": "string"
+                    },
+                    "refreshExpiresIn": {
+                        "type": "integer",
+                        "format": "int32"
+                    }
+                }
+            },
+            "LoginViaPasswordRequestDto": {
+                "type": "object",
+                "properties": {
+                    "idType": {
+                        "type": "string"
+                    },
+                    "domainName": {
+                        "type": "string"
+                    },
+                    "hprId": {
+                        "type": "string"
+                    },
+                    "password": {
+                        "type": "string"
+                    }
+                }
+            },
+            "LoginViaPasswordResponseDto": {
+                "type": "object",
+                "properties": {
+                    "token": {
+                        "type": "string"
+                    },
+                    "expiresIn": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "refreshToken": {
+                        "type": "string"
+                    },
+                    "refreshExpiresIn": {
+                        "type": "integer",
+                        "format": "int64"
+                    }
+                }
+            },
+            "AadharGenerateLinkRequest": {
+                "type": "object",
+                "properties": {
+                    "scopes": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "source": {
+                        "type": "string"
+                    }
+                }
+            },
+            "AadharGenerateLinkResponse": {
+                "type": "object",
+                "properties": {
+                    "status": {
+                        "type": "string"
+                    },
+                    "txnId": {
+                        "type": "string"
+                    },
+                    "url": {
+                        "type": "string"
+                    }
+                }
+            },
+            "SearchFacilityRequestDTO": {
+                "type": "object",
+                "properties": {
+                    "ownershipCode": {
+                        "type": "string"
+                    },
+                    "subDistrictLGDCode": {
+                        "type": "string"
+                    },
+                    "pincode": {
+                        "type": "string"
+                    },
+                    "facilityName": {
+                        "type": "string"
+                    },
+                    "facilityId": {
+                        "type": "string"
+                    },
+                    "page": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "resultsPerPage": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "stateLGDCode": {
+                        "type": "string"
+                    },
+                    "districtLGDCode": {
+                        "type": "string"
+                    }
+                }
+            },
+            "FacilitySearchResponse": {
+                "type": "object",
+                "properties": {
+                    "facilities": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/SearchFacilityResponseDTO"
+                        }
+                    },
+                    "message": {
+                        "type": "string"
+                    },
+                    "totalFacilities": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "numberOfPages": {
+                        "type": "integer",
+                        "format": "int32"
+                    }
+                }
+            },
+            "SearchFacilityResponseDTO": {
+                "type": "object",
+                "properties": {
+                    "ownership": {
+                        "type": "string"
+                    },
+                    "systemOfMedicineCode": {
+                        "type": "string"
+                    },
+                    "systemOfMedicine": {
+                        "type": "string"
+                    },
+                    "facilityType": {
+                        "type": "string"
+                    },
+                    "workingInPsu": {
+                        "type": "boolean"
+                    },
+                    "facPsuName": {
+                        "type": "string"
+                    },
+                    "stateName": {
+                        "type": "string"
+                    },
+                    "stateLGDCode": {
+                        "type": "string"
+                    },
+                    "districtName": {
+                        "type": "string"
+                    },
+                    "districtLGDCode": {
+                        "type": "string"
+                    },
+                    "subDistrictName": {
+                        "type": "string"
+                    },
+                    "subDistrictLGDCode": {
+                        "type": "string"
+                    },
+                    "villageCityTownName": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "villageCityTownLGDCode": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "address": {
+                        "type": "string"
+                    },
+                    "pincode": {
+                        "type": "string"
+                    },
+                    "latitude": {
+                        "type": "string"
+                    },
+                    "longitude": {
+                        "type": "string"
+                    },
+                    "facilityId": {
+                        "type": "string"
+                    },
+                    "facilityName": {
+                        "type": "string"
+                    },
+                    "facilityStatus": {
+                        "type": "string"
+                    },
+                    "ownershipCode": {
+                        "type": "string"
+                    },
+                    "govtCategory": {
+                        "type": "string"
+                    },
+                    "govtMinistries": {
+                        "type": "string"
+                    },
+                    "facilityTypeCode": {
+                        "type": "string"
+                    }
+                }
+            },
+            "HFRSearchWithinRadiusRequest": {
+                "type": "object",
+                "properties": {
+                    "centerLat": {
+                        "type": "string"
+                    },
+                    "centerLon": {
+                        "type": "string"
+                    },
+                    "radiusInKm": {
+                        "type": "string"
+                    },
+                    "speciality": {
+                        "type": "string"
+                    },
+                    "facilityOwnership": {
+                        "type": "string"
+                    },
+                    "abdmSoftware": {
+                        "type": "string"
+                    },
+                    "hospitalSpecialityType": {
+                        "type": "string"
+                    },
+                    "facilityName": {
+                        "type": "string"
+                    },
+                    "facilityStatus": {
+                        "type": "string"
+                    },
+                    "som": {
+                        "type": "string"
+                    },
+                    "gender": {
+                        "type": "string"
+                    },
+                    "doctorName": {
+                        "type": "string"
+                    },
+                    "doctorSystemOfMedicine": {
+                        "type": "string"
+                    },
+                    "languages": {
+                        "type": "string"
+                    },
+                    "isIcuBedsAvailable": {
+                        "type": "string"
+                    },
+                    "size": {
+                        "type": "string"
+                    },
+                    "from": {
+                        "type": "string"
+                    }
+                }
+            },
+            "FacilitySpecialitiesResponseDTO": {
+                "type": "object",
+                "properties": {
+                    "systemOfMedicine": {
+                        "type": "string"
+                    },
+                    "specialities": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "services": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "FacilityTimingsResponseDTO": {
+                "type": "object",
+                "properties": {
+                    "workingDays": {
+                        "type": "string"
+                    },
+                    "operationalHours": {
+                        "type": "object"
+                    }
+                }
+            },
+            "FacilityWithInfrastructureSearchResponseDTO": {
+                "type": "object",
+                "properties": {
+                    "searchCountTotal": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "recordList": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/FacilityWithPublicConsentAndInfrastructureDisplayResponseDTO"
+                        }
+                    }
+                }
+            },
+            "FacilityWithPublicConsentAndInfrastructureDisplayResponseDTO": {
+                "type": "object",
+                "properties": {
+                    "mobile_no": {
+                        "type": "string"
+                    },
+                    "abdm_software": {
+                        "type": "string"
+                    },
+                    "pincode": {
+                        "type": "string"
+                    },
+                    "facility_type": {
+                        "type": "string"
+                    },
+                    "sub_district": {
+                        "type": "string"
+                    },
+                    "book_app_url": {
+                        "type": "string"
+                    },
+                    "facility_website": {
+                        "type": "string"
+                    },
+                    "geolocation": {
+                        "type": "string"
+                    },
+                    "district": {
+                        "type": "string"
+                    },
+                    "address2": {
+                        "type": "string"
+                    },
+                    "state": {
+                        "type": "string"
+                    },
+                    "fac_unique_id": {
+                        "type": "string"
+                    },
+                    "address1": {
+                        "type": "string"
+                    },
+                    "facility_subtype_other": {
+                        "type": "string"
+                    },
+                    "facility_name": {
+                        "type": "string"
+                    },
+                    "facility_ownership": {
+                        "type": "string"
+                    },
+                    "facility_email": {
+                        "type": "string"
+                    },
+                    "system_of_medicine": {
+                        "type": "string"
+                    },
+                    "systemOfMedicine": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/SOMListResponse"
+                        }
+                    },
+                    "owner_subtype": {
+                        "type": "string"
+                    },
+                    "landline_no": {
+                        "type": "string"
+                    },
+                    "alternate_id": {
+                        "type": "string"
+                    },
+                    "distances": {
+                        "type": "string"
+                    },
+                    "speciality": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "lastUpdatedDate": {
+                        "type": "string"
+                    },
+                    "boardPhoto": {
+                        "type": "string",
+                        "format": "byte"
+                    },
+                    "buildPhoto": {
+                        "type": "string",
+                        "format": "byte"
+                    },
+                    "countIPDBedsWithoutOxygen": {
+                        "type": "string"
+                    },
+                    "countIPDBedsWithOxygen": {
+                        "type": "string"
+                    },
+                    "countICUBedsWithVentilators": {
+                        "type": "string"
+                    },
+                    "countICUBedsWithoutVentilators": {
+                        "type": "string"
+                    },
+                    "countHDUBedsWithVentilators": {
+                        "type": "string"
+                    },
+                    "countHDUBedsWithoutVentilators": {
+                        "type": "string"
+                    },
+                    "totalNumberOfVentilators": {
+                        "type": "string"
+                    },
+                    "countDayCareBedsWithoutOxygen": {
+                        "type": "string"
+                    },
+                    "countDayCareBedsWithOxygen": {
+                        "type": "string"
+                    },
+                    "countDentalChairs": {
+                        "type": "string"
+                    },
+                    "totalNumberOfBeds": {
+                        "type": "string"
+                    },
+                    "facilityTimings": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/FacilityTimingsResponseDTO"
+                        }
+                    },
+                    "Facility specialization/services": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/FacilitySpecialitiesResponseDTO"
+                        }
+                    }
+                }
+            },
+            "SOMListResponse": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string"
+                    },
+                    "value": {
+                        "type": "string"
+                    }
+                }
+            },
+            "ForgetUserEntityResponseDTO": {
+                "type": "object",
+                "properties": {
+                    "hprIdNumber": {
+                        "type": "string"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "authMethods": {
+                        "type": "array",
+                        "items": {
+                            "type": "string",
+                            "enum": [
+                                "AADHAAR_OTP",
+                                "MOBILE_OTP",
+                                "PASSWORD",
+                                "DEMOGRAPHICS",
+                                "AADHAAR_BIO",
+                                "EMAIL_OTP",
+                                "MOBILE_OTP_RESET_PASSWROD",
+                                "FACE_AUTH"
+                            ]
+                        }
+                    },
+                    "hprId": {
+                        "type": "string"
+                    },
+                    "categoryId": {
+                        "type": "string"
+                    },
+                    "subCategoryId": {
+                        "type": "string"
+                    }
+                }
+            },
+            "UserEntityResponseDTO": {
+                "type": "object",
+                "properties": {
+                    "hprIdNumber": {
+                        "type": "string"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "hprId": {
+                        "type": "string"
+                    },
+                    "categoryName": {
+                        "type": "string"
+                    },
+                    "categorySubName": {
+                        "type": "string"
+                    }
+                }
+            },
+            "UserProfileResponseDto": {
+                "type": "object",
+                "properties": {
+                    "hprIdNumber": {
+                        "type": "string"
+                    },
+                    "hprId": {
+                        "type": "string"
+                    },
+                    "mobile": {
+                        "type": "string"
+                    },
+                    "firstName": {
+                        "type": "string"
+                    },
+                    "middleName": {
+                        "type": "string"
+                    },
+                    "lastName": {
+                        "type": "string"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "yearOfBirth": {
+                        "type": "string"
+                    },
+                    "dayOfBirth": {
+                        "type": "string"
+                    },
+                    "monthOfBirth": {
+                        "type": "string"
+                    },
+                    "gender": {
+                        "type": "string"
+                    },
+                    "email": {
+                        "type": "string"
+                    },
+                    "profilePhoto": {
+                        "type": "string"
+                    },
+                    "stateCode": {
+                        "type": "string"
+                    },
+                    "districtCode": {
+                        "type": "string"
+                    },
+                    "subDistrictCode": {
+                        "type": "string"
+                    },
+                    "villageCode": {
+                        "type": "string"
+                    },
+                    "townCode": {
+                        "type": "string"
+                    },
+                    "wardCode": {
+                        "type": "string"
+                    },
+                    "pincode": {
+                        "type": "string"
+                    },
+                    "address": {
+                        "type": "string"
+                    },
+                    "kycPhoto": {
+                        "type": "string"
+                    },
+                    "stateName": {
+                        "type": "string"
+                    },
+                    "districtName": {
+                        "type": "string"
+                    },
+                    "subdistrictName": {
+                        "type": "string"
+                    },
+                    "villageName": {
+                        "type": "string"
+                    },
+                    "townName": {
+                        "type": "string"
+                    },
+                    "wardName": {
+                        "type": "string"
+                    },
+                    "authMethods": {
+                        "type": "array",
+                        "items": {
+                            "type": "string",
+                            "enum": [
+                                "AADHAAR_OTP",
+                                "MOBILE_OTP",
+                                "PASSWORD",
+                                "DEMOGRAPHICS",
+                                "AADHAAR_BIO",
+                                "EMAIL_OTP",
+                                "MOBILE_OTP_RESET_PASSWROD",
+                                "FACE_AUTH"
+                            ]
+                        }
+                    },
+                    "kycVerified": {
+                        "type": "boolean"
+                    },
+                    "verificationStatus": {
+                        "type": "string"
+                    },
+                    "categoryId": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "categoryName": {
+                        "type": "string"
+                    },
+                    "categorySubId": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "categorySubName": {
+                        "type": "string"
+                    },
+                    "emailVerified": {
+                        "type": "boolean"
+                    },
+                    "role": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "new": {
+                        "type": "boolean"
+                    }
+                }
+            },
+            "ProfileResponseDTO": {
+                "type": "object",
+                "properties": {
+                    "pdf": {
+                        "type": "string",
+                        "format": "byte"
+                    }
+                }
+            },
+            "UtilityCodeNameResDto": {
+                "type": "object",
+                "properties": {
+                    "code": {
+                        "type": "string"
+                    },
+                    "name": {
+                        "type": "string"
+                    }
+                }
+            },
+            "StatesUtilityResponseDto": {
+                "type": "object",
+                "properties": {
+                    "code": {
+                        "type": "string"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "districts": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/UtilityCodeNameResDto"
+                        }
+                    }
+                }
+            },
+            "MasterTypeResponseDto": {
+                "type": "object",
+                "properties": {
+                    "masterTypes": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/UtilityTypeDescSubResDto"
+                        }
+                    }
+                }
+            },
+            "UtilityTypeDescSubResDto": {
+                "type": "object",
+                "properties": {
+                    "type": {
+                        "type": "string"
+                    },
+                    "desc": {
+                        "type": "string"
+                    }
+                }
+            },
+            "UtilityCodeValueResDto": {
+                "type": "object",
+                "properties": {
+                    "code": {
+                        "type": "string"
+                    },
+                    "value": {
+                        "type": "string"
+                    }
+                }
+            },
+            "UtilityTypeDataResDto": {
+                "type": "object",
+                "properties": {
+                    "type": {
+                        "type": "string"
+                    },
+                    "data": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/UtilityCodeValueResDto"
+                        }
+                    }
+                }
+            },
+            "HpSubCategoriesDTO": {
+                "type": "object",
+                "properties": {
+                    "code": {
+                        "type": "string",
+                        "example": "1"
+                    },
+                    "Modern Medicine": {
+                        "type": "string",
+                        "example": "1"
+                    }
+                }
+            },
+            "HpCategoriesDTO": {
+                "type": "object",
+                "properties": {
+                    "code": {
+                        "type": "integer",
+                        "format": "int32",
+                        "example": 1
+                    },
+                    "name": {
+                        "type": "string",
+                        "example": "Doctor"
+                    },
+                    "subCategories": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/HpSubCategoriesDTO"
+                        }
+                    },
+                    "districts": {
+                        "type": "array",
+                        "writeOnly": true,
+                        "items": {
+                            "$ref": "#/components/schemas/HpSubCategoriesDTO"
+                        }
+                    }
+                }
+            },
+            "PublicCertificateRequestDto": {
+                "type": "object",
+                "properties": {
+                    "mobile": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "securitySchemes": {
+            "BearerAuth": {
+                "type": "http",
+                "scheme": "bearer",
+                "bearerFormat": "JWT"
+            }
+        }
+    }
+}
