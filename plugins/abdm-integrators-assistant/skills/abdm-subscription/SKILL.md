@@ -1,28 +1,22 @@
 ---
-name: abdm-m4
-description: Use when building, debugging or testing ABDM Milestone 4, the NHPR: creating an HPID, registering a healthcare professional on the HPR, onboarding a facility to the HFR, and linking that facility to its HIP or HIU bridges. Carries the operations NHA has published, the registration order, every recorded error code and the identifier formats.
+name: abdm-subscription
+description: Use when building, debugging or testing ABDM subscriptions: subscribing an HIU to changes on an ABHA address, and health lockers.
 ---
 
-# ABDM M4, facility and professional registries
+# ABDM Subscriptions and health lockers
 
 Generated from the ABDM Developer Portal on 2026-09-16, catalogue version 2026.08.24. Every fact below comes from a page in that portal, which is the place to look when this file does not carry enough.
 
-This file is a snapshot. Re-download it from the portal's /skills/abdm-m4/SKILL.md path when it is older than the work you are doing.
+This file is a snapshot. Re-download it from the portal's /skills/abdm-subscription/SKILL.md path when it is older than the work you are doing.
 If the abdm-docs MCP server is connected, trust its answers over this file: it serves the current catalogue and stamps every response with its catalogue_version, which you can compare against the version above.
 
-## What you can do with M4
+## What you can do with Subscriptions and health lockers
 
-- Create an HPID for a professional and register them in the HPR.
-- Register a facility in the HFR and carry it through to submission, without which it stays a draft nobody can see.
-- Link a facility to a bridge and mark each link HIP or HIU, which is what makes records flow.
-- Fetch the council, course, college, university and geography codes these calls take instead of names.
-
-What it cannot do yet matters as much. Read **Before anything else** below before assuming a capability is one endpoint away.
 
 ## What is in this folder
 
 - **Scaffold.** Build it flow by flow against the sandbox, as a loop that ends on an observed result rather than on a call returning 200. [references/scaffold.md](references/scaffold.md)
-- **Integrate.** 226 operations, with their hosts and headers. [references/integrate.md](references/integrate.md)
+- **Integrate.** 40 operations, with their hosts and headers. [references/integrate.md](references/integrate.md)
 - **Debug.** No error code is recorded for this module yet. [references/debug.md](references/debug.md)
 
 This file is the map. Each line above is a file beside it, opened one at a time rather than read through.
@@ -30,14 +24,6 @@ This file is the map. Each line above is a file beside it, opened one at a time 
 ## Before anything else
 
 - Nothing here has been run against the ABDM sandbox. Treat request and response shapes as unconfirmed, and check a response before you rely on its shape.
-- Neither registry moves a health record. M4 establishes who the professional is and what the facility is, so every record flow has a verified provider behind it.
-- M2 and M3 need a facility in the HFR and a bridge linked to it before records flow in production. M4 is the API route to that. Registering the facility by hand on the NHPR portal is the other route, and a product that takes it never builds M4.
-- The HPR comes first. Onboarding a facility needs an HPR token, which needs a person who already holds an HPID.
-- Creating an HPID returns an `hprToken`. Keep it: the register professional call carries it in its payload.
-- A facility ID is `IN` followed by 10 characters. An HPID is 14 digits.
-- Facility onboarding is one search, three writes and a submit, all keyed to the `trackingId` the first write returns. Stop before submit and the facility stays in draft, invisible to ABDM.
-- Register professional takes codes, not names. Fetch council, course, college, university, state, district and language from the master data APIs first.
-- A facility ID alone does not make records flow. Link the facility to a bridge and mark each link HIP or HIU. The HIP name is what a patient sees in their PHR app: 15 characters or fewer, no special characters, and unique for every bridge on that facility.
 
 ## Practices that hold across every call
 
@@ -65,7 +51,6 @@ This file is the map. Each line above is a file beside it, opened one at a time 
 
 ## Where the detail is
 
-- Every endpoint, with its body fields and responses: /docs/hiecm/v3/api/m4
-- The flows as diagrams: /docs/hiecm/v3/milestones/m4
+- Every endpoint, with its body fields and responses: /docs/hiecm/v3/api/subscription
 - Every error code across modules: /docs/hiecm/v3/reference/error-codes
 - Terms: /docs/hiecm/v3/getting-started/glossary

@@ -1,3 +1,7 @@
+---
+name: hiecm-m2-build
+description: "Use when scaffolding an integration against ABDM M2 (care contexts, HIP initiated linking, discovery, and pushing encrypted records to a requester): builds each journey as an observe-orient-decide-act loop against the sandbox."
+---
 # HIE-CM m2 build
 
 Scaffolds an ABDM m2 integration one journey at a time. It covers care contexts, HIP initiated linking, discovery, and pushing encrypted records to a requester.

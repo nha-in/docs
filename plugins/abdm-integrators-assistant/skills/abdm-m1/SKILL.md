@@ -1,11 +1,11 @@
 ---
 name: abdm-m1
-description: Use when building, debugging or testing ABDM Milestone 1: creating an ABHA number or address, ABHA login, profile management, or the gateway session token. Carries the endpoints, the required headers, the two token rule, the encryption rule, every recorded error code and the M1 test matrix. Also carries the scaffolding loop that builds it flow by flow and the loop from a failed call to a named fix, in references/.
+description: Use when building, debugging or testing ABDM Milestone 1: creating an ABHA number or address, ABHA login, profile management, or the gateway session token. Carries the endpoints, the required headers, the two token rule, the encryption rule and every recorded error code. Also carries the scaffolding loop that builds it flow by flow and the loop from a failed call to a named fix, in references/.
 ---
 
 # ABDM M1, ABHA identity
 
-Generated from the ABDM Developer Portal on 2026-09-15, catalogue version 2026.08.24. Every fact below comes from a page in that portal, which is the place to look when this file does not carry enough.
+Generated from the ABDM Developer Portal on 2026-09-16, catalogue version 2026.08.24. Every fact below comes from a page in that portal, which is the place to look when this file does not carry enough.
 
 This file is a snapshot. Re-download it from the portal's /skills/abdm-m1/SKILL.md path when it is older than the work you are doing.
 If the abdm-docs MCP server is connected, trust its answers over this file: it serves the current catalogue and stamps every response with its catalogue_version, which you can compare against the version above.
@@ -24,9 +24,8 @@ What it cannot do yet matters as much. Read **Before anything else** below befor
 ## What is in this folder
 
 - **Scaffold.** Build it flow by flow against the sandbox, as a loop that ends on an observed result rather than on a call returning 200. [references/scaffold.md](references/scaffold.md)
-- **Integrate.** 55 operations, with their hosts and headers. [references/integrate.md](references/integrate.md)
-- **Debug.** The loop from a failed call to a named fix, and 89 recorded error codes. [references/debug.md](references/debug.md)
-- **Test.** 122 test cases, each with the call it makes and what to see when it passes. [references/test.md](references/test.md)
+- **Integrate.** 160 operations, with their hosts and headers. [references/integrate.md](references/integrate.md)
+- **Debug.** The loop from a failed call to a named fix, and 14 recorded error codes. [references/debug.md](references/debug.md)
 
 This file is the map. Each line above is a file beside it, opened one at a time rather than read through.
 
@@ -87,5 +86,4 @@ This file is the map. Each line above is a file beside it, opened one at a time 
 - Every endpoint, with its body fields and responses: /docs/hiecm/v3/api/m1
 - The flows as diagrams: /docs/hiecm/v3/milestones/m1
 - Every error code across modules: /docs/hiecm/v3/reference/error-codes
-- Sandbox test data: /docs/hiecm/v3/reference/data-dictionary
 - Terms: /docs/hiecm/v3/getting-started/glossary

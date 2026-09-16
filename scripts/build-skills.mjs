@@ -10,19 +10,18 @@
 // three jobs are sections instead:
 //
 //   Integrate  the endpoints, hosts and headers, from the specifications
-//   Debug      every recorded error code, from the specs' x-abdm-errors blocks
-//   Test       the test matrix, from site/src/data/test-matrix
+//   Debug      every error code the specification's examples return
 //
-// Output under site/static/skills is a build output. Edit the specs, the test
-// matrix and the pages, not the skill.
+// Output under site/static/skills is a build output. Edit the specs and the
+// pages, not the skill.
 import {readFileSync, writeFileSync, mkdirSync, rmSync, readdirSync, existsSync} from 'node:fs';
 import {join, dirname} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {parse} from 'yaml';
+import {errorsFromSpec} from './lib/spec-errors.mjs';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const dataDir = join(root, 'site', 'src', 'data', 'api');
-const testDir = join(root, 'site', 'src', 'data', 'test-matrix');
 const specDir = join(root, 'catalogue', 'openapi', 'hiecm', 'v3');
 const outDir = join(root, 'site', 'static', 'skills');
 
@@ -77,15 +76,26 @@ const PRACTICES = (() => {
 
 const MODULES = [
   {
+    id: 'gateway',
+    slug: 'abdm-gateway',
+    title: 'Gateway, sessions and the bridge registry',
+    docs: '/docs/hiecm/v3/api/gateway',
+    spec: 'hiecm-gateway.yaml',
+    journey: null,
+    example: 'Get a gateway access token and register this bridge',
+    description:
+      'Use when building, debugging or testing the ABDM gateway: the gateway session and bridge registry.',
+    rules: [UNVERIFIED],
+  },
+  {
     id: 'm1',
     slug: 'abdm-m1',
     title: 'M1, ABHA identity',
     docs: '/docs/hiecm/v3/api/m1',
     spec: 'hiecm-m1.yaml',
-    sample: 'm1_enrolment_by_aadhaar',
     example: 'Add ABHA creation by Aadhaar OTP to this codebase',
     description:
-      'Use when building, debugging or testing ABDM Milestone 1: creating an ABHA number or address, ABHA login, profile management, or the gateway session token. Carries the endpoints, the required headers, the two token rule, the encryption rule, every recorded error code and the M1 test matrix. Also carries the scaffolding loop that builds it flow by flow and the loop from a failed call to a named fix, in references/.',
+      'Use when building, debugging or testing ABDM Milestone 1: creating an ABHA number or address, ABHA login, profile management, or the gateway session token. Carries the endpoints, the required headers, the two token rule, the encryption rule and every recorded error code. Also carries the scaffolding loop that builds it flow by flow and the loop from a failed call to a named fix, in references/.',
     rules: [
       PARTLY_VERIFIED.m1,
       'Get an access token first, from the gateway session endpoint. Every other call needs it in `Authorization: Bearer <token>`.',
@@ -122,16 +132,14 @@ const MODULES = [
     spec: 'hiecm-m2.yaml',
     example: 'Link a care context for this patient',
     description:
-      'Use when building, debugging or testing ABDM Milestone 2: care contexts, HIP initiated linking, discovery, and pushing encrypted health records to a requester. Carries the endpoints, the prerequisites, every recorded error code and the M2 test matrix. Also carries the scaffolding loop that builds it flow by flow and the loop from a failed call to a named fix, in references/.',
+      'Use when building, debugging or testing ABDM Milestone 2: care contexts, HIP initiated linking, discovery, and pushing encrypted health records to a requester. Carries the endpoints, the prerequisites and every recorded error code. Also carries the scaffolding loop that builds it flow by flow and the loop from a failed call to a named fix, in references/.',
     rules: [
       UNVERIFIED,
       'You act as the HIP. NHA requires a valid Facility ID and registration in the HIP role before you can create health records and share them.',
       'M2 is keyed to an ABHA address, so a working M1 integration comes first.',
-      'Hold a link token per patient, stored at registration. NHA gives its validity as six months and says to validate it before use. If you hold no valid one, regenerate it using demographic authentication.',
       'Records go out as FHIR R4 conforming to the ABDM profiles at https://nrces.in/ndhm/fhir/r4/index.html.',
       'You are the side that encrypts, and the parameters arrive from the requester rather than from you. The health information request carries `keyMaterial` with `cryptoAlg: ECDH`, `curve: Curve25519`, the requester\'s `dhPublicKey` and a 32 byte `nonce`. Generate your own Curve25519 pair and your own 32 byte nonce, and send your public key and nonce back with the data so the requester can derive the same secret.',
       'The key derivation and the symmetric cipher applied over that shared secret are not yet published. Confirm both at onboarding before you ship, rather than inferring them from a sample.',
-      'Four callbacks name a path and carry no payload in either of NHA sources: discovery, link init, link confirm and consent notify. Do not assume a body for those.',
     ],
   },
   {
@@ -142,17 +150,15 @@ const MODULES = [
     spec: 'hiecm-m3.yaml',
     example: 'Raise a consent request and fetch the records it covers',
     description:
-      'Use when building, debugging or testing ABDM Milestone 3: raising a consent request, tracking its status, reading consent artefacts, and fetching encrypted health records as an HIU. Carries the endpoints, the consent rules, every recorded error code and the M3 test matrix. Also carries the scaffolding loop that builds it flow by flow and the loop from a failed call to a named fix, in references/.',
+      'Use when building, debugging or testing ABDM Milestone 3: raising a consent request, tracking its status, reading consent artefacts, and fetching encrypted health records as an HIU. Carries the endpoints, the consent rules and every recorded error code. Also carries the scaffolding loop that builds it flow by flow and the loop from a failed call to a named fix, in references/.',
     rules: [
       UNVERIFIED,
       'You act as the HIU. The HIE-CM holds the consent and asks the patient on your behalf. No artefact, no records.',
       'The patient must be known to you by ABHA address before you can raise a request.',
       'One consent request can produce more than one artefact. Store the request id and every artefact id.',
       'Records arrive encrypted on your callback URL. Decrypt them, then acknowledge receipt to the gateway.',
-      "NHA's schema declares `consentId` and `consentRequestId` as UUIDs while NHA's own examples give values that are not. Do not validate them as UUIDs. Recorded as correction C3 in catalogue/openapi/corrections.",
     ],
   },
-
   {
     id: 'm4',
     slug: 'abdm-m4',
@@ -172,79 +178,43 @@ const MODULES = [
       'Facility onboarding is one search, three writes and a submit, all keyed to the `trackingId` the first write returns. Stop before submit and the facility stays in draft, invisible to ABDM.',
       'Register professional takes codes, not names. Fetch council, course, college, university, state, district and language from the master data APIs first.',
       'A facility ID alone does not make records flow. Link the facility to a bridge and mark each link HIP or HIU. The HIP name is what a patient sees in their PHR app: 15 characters or fewer, no special characters, and unique for every bridge on that facility.',
-      'Send the mobile number encrypted. Fetch the public certificate from `/v4/int/api/v1/auth/cert` and encrypt with `RSA/ECB/PKCS1Padding`. That padding and that certificate belong to the NHPR registry alone. M1 uses RSA-OAEP with SHA-1 under a different certificate, so do not carry either across.',
-      'Several published M4 samples show the production host while describing sandbox behaviour. Check the host before you copy a sample.',
     ],
   },
   {
-    id: 'p1',
-    slug: 'abdm-p1',
-    title: 'P1, PHR identity and profile',
-    docs: '/docs/hiecm/v3/api/p1',
-    example: 'Register a new user in this PHR app and log them in',
-    spec: 'hiecm-p1.yaml',
-    description:
-      "Use when building, debugging or testing ABDM P1, the patient side of Milestone 1: registration in a PHR application, the four login routes, profile management, the ABHA card, and the family members a user manages. Carries the endpoints, the required headers, every recorded error code and the account rules.",
-    rules: [
-      UNVERIFIED,
-      'P1 is the patient side of M1. M1 is how a hospital system creates an ABHA; P1 is how the person\'s own application does it and maintains the account afterwards.',
-      'Every user needs an ABHA address, `username@abdm`. Consent, notifications and record sharing all hang off it.',
-      'Build both creation paths: by mobile number, and by an existing 14 digit ABHA number.',
-      'All four login routes are mandatory.',
-      'A user can hold several ABHA addresses but only one ABHA number.',
-    ],
-  },
-  {
-    id: 'p2',
-    slug: 'abdm-p2',
-    title: 'P2, PHR linking and records',
-    docs: '/docs/hiecm/v3/api/p2',
-    example: 'Discover records held elsewhere and link them to this ABHA address',
-    spec: 'hiecm-p2.yaml',
-    description:
-      'Use when building, debugging or testing ABDM P2, the patient side of Milestone 2: discovering records held elsewhere, linking care contexts to an ABHA address, and pulling those records into a PHR application. Carries the endpoints, the timing rules the network enforces, every recorded error code and the discovery rules.',
-    rules: [
-      UNVERIFIED,
-      'P2 is the mirror of M2. M2 is a provider publishing a record; P2 is the patient discovering it and linking it to their own ABHA address.',
-      'Discovery is for facilities the user visited without giving an ABHA address, and for older records.',
-      'A HIP is expected to answer a discovery request within 10 seconds.',
-      'Never show a care context that is already linked.',
-      'Send the data transfer request within 5 minutes of the user asking for their records.',
-    ],
-  },
-  {
-    id: 'p3',
-    slug: 'abdm-p3',
-    title: 'P3, PHR consent and notifications',
-    docs: '/docs/hiecm/v3/api/p3',
-    example: 'Grant a consent request in this PHR app and fetch what it covers',
-    spec: 'hiecm-p3.yaml',
-    description:
-      "Use when building, debugging or testing ABDM P3, the patient side of Milestone 3: subscriptions, auto approval policies, granting and revoking consent, and fetching the records a grant covers. Carries the endpoints, the notification rules, every recorded error code and the consent rules.",
-    rules: [
-      UNVERIFIED,
-      'P3 is the other side of M3. M3 is a requester asking for records; P3 is the patient deciding, and being told each time.',
-      'A PHR application implements the HIU role as well, because fetching a user\'s own records is an HIU flow.',
-      'Build for revocation from the start. A consent that worked yesterday can be withdrawn today, and that is the system working correctly.',
-      "A subscription is how the application hears about changes to a user's ABHA address. Set one up at address creation and at first login on a new install.",
-      'An auto approval policy stops the user approving a request every time a hospital adds a record, and the user must be able to disable a policy at any time.',
-    ],
-  },
-  {
-    id: 'phr-services',
-    slug: 'abdm-phr-services',
-    title: 'PHR application services',
-    docs: '/docs/hiecm/v3/api/phr-services',
+    id: 'phr',
+    slug: 'abdm-phr',
+    title: 'PHR, the patient side',
+    docs: '/docs/hiecm/v3/api/phr',
+    spec: 'hiecm-phr.yaml',
     journey: null,
-    example: 'Add nearby facility search to this PHR app',
-    spec: 'hiecm-phr-services.yaml',
+    example: 'Register a new user in this PHR app and link their records',
     description:
-      'Use when building services a PHR application offers on top of ABDM: teleconsultation, nearby facility search, ambulance booking, blood bank search, scan and pay, PMJAY facility discovery and NHCX coverage lookups. None of it is required to certify as a PHR application.',
-    rules: [
-      UNVERIFIED,
-      'None of this is a certification milestone. Nothing here is required to certify as a PHR application, and building none of it is a valid choice.',
-      'These operations sit apart from P1 to P3 so that nothing here implies a PHR application must build them.',
-    ],
+      'Use when building, debugging or testing the ABDM PHR application side: the patient side, covering ABHA address, login, discovery, linking, consent and lockers.',
+    rules: [UNVERIFIED],
+  },
+  {
+    id: 'subscription',
+    slug: 'abdm-subscription',
+    title: 'Subscriptions and health lockers',
+    docs: '/docs/hiecm/v3/api/subscription',
+    spec: 'hiecm-subscription.yaml',
+    journey: null,
+    example: 'Subscribe this HIU to changes on an ABHA address',
+    description:
+      'Use when building, debugging or testing ABDM subscriptions: subscribing an HIU to changes on an ABHA address, and health lockers.',
+    rules: [UNVERIFIED],
+  },
+  {
+    id: 'scan-and-pay',
+    slug: 'abdm-scan-and-pay',
+    title: 'Scan and pay',
+    docs: '/docs/hiecm/v3/api/scan-and-pay',
+    spec: 'hiecm-scan-and-pay.yaml',
+    journey: null,
+    example: 'Open an order at this counter and take payment from a PHR app',
+    description:
+      'Use when building, debugging or testing ABDM scan and pay: open orders, patient selection and payment status between a facility and a PHR app.',
+    rules: [UNVERIFIED],
   },
 ];
 
@@ -259,22 +229,10 @@ function truncate(text, limit) {
 
 const cell = (text) => truncate(text, 110).replace(/\|/g, '\\|');
 
-/** Every x-abdm-errors block the module's specification carries. */
-function errorBlocks(module) {
+/** Every error code the module's specification examples return. */
+function moduleCodes(module) {
   const path = join(specDir, module.spec);
-  if (!existsSync(path)) return [];
-  const spec = parse(readFileSync(path, 'utf8'));
-  return Object.keys(spec)
-    .filter((key) => key.startsWith('x-abdm-errors'))
-    .map((key) => ({
-      suffix: key.replace('x-abdm-errors', '').replace(/^-/, ''),
-      block: spec[key] ?? {},
-    }));
-}
-
-function testMatrix(module) {
-  const path = join(testDir, `${module.id}.json`);
-  return existsSync(path) ? JSON.parse(readFileSync(path, 'utf8')) : null;
+  return existsSync(path) ? errorsFromSpec(parse(readFileSync(path, 'utf8'))) : [];
 }
 
 function build(module) {
@@ -288,10 +246,8 @@ function build(module) {
     ).entries(),
   ];
 
-  const blocks = errorBlocks(module);
-  const matrix = testMatrix(module);
-  const codeCount = blocks.reduce((total, {block}) => total + (block.codes?.length ?? 0), 0);
-  const testCount = matrix?.groups.reduce((total, group) => total + group.rows.length, 0) ?? 0;
+  const codes = moduleCodes(module);
+  const codeCount = codes.length;
 
   const lines = [];
   lines.push('---');
@@ -321,12 +277,6 @@ function build(module) {
       ? `- **Debug.** ${codeCount} recorded error codes, with the message and what to do.`
       : '- **Debug.** No error code is recorded for this module yet.',
   );
-  lines.push(
-    testCount
-      ? `- **Test.** ${testCount} test cases, each with the call it makes and what to see when it passes.`
-      : '- **Test.** No test matrix exists for this module yet.',
-  );
-  lines.push('');
 
   lines.push('## Before anything else');
   lines.push('');
@@ -392,28 +342,15 @@ function build(module) {
     );
     lines.push('');
   }
-  for (const {suffix, block} of blocks) {
-    const codes = block.codes ?? [];
-    if (block.notes) {
-      lines.push(block.notes.trim().replace(/^#+ /gm, '### '));
-      lines.push('');
-    }
-    if (codes.length === 0) continue;
-    lines.push(`### Codes${suffix ? `, ${suffix}` : ''}`);
+  if (codeCount) {
+    lines.push('### Codes');
     lines.push('');
-    if (block.source) {
-      lines.push(String(block.source).replace(/\s+/g, ' ').trim());
-      lines.push('');
-    }
-    const withHttp = codes.some((entry) => entry.http !== undefined);
-    lines.push(withHttp ? '| Code | HTTP | Message | What to do |' : '| Code | Message | What to do |');
-    lines.push(withHttp ? '| --- | --- | --- | --- |' : '| --- | --- | --- |');
+    lines.push('| Code | HTTP | Message | Returned by |');
+    lines.push('| --- | --- | --- | --- |');
     for (const entry of codes) {
-      const cells = [`\`${entry.code}\``];
-      if (withHttp) cells.push(entry.http ?? '');
-      cells.push(cell(entry.message));
-      cells.push(cell(entry.action));
-      lines.push(`| ${cells.join(' | ')} |`);
+      lines.push(
+        `| \`${entry.code}\` | ${entry.http} | ${cell(entry.message)} | \`${entry.operationId}\` |`,
+      );
     }
     lines.push('');
   }
@@ -421,31 +358,6 @@ function build(module) {
     'A code you meet that is not above is one the specifications do not carry yet. Read the code together with the message: a code can appear twice with different meanings.',
   );
   lines.push('');
-
-  lines.push('## Test cases');
-  lines.push('');
-  if (!matrix) {
-    lines.push('No test matrix exists for this module yet.');
-    lines.push('');
-  } else {
-    lines.push(
-      `${testCount} cases, from NHA's ${matrix.module} matrix for ${matrix.title}. "Mandatory" is NHA's own marking.`,
-    );
-    lines.push('');
-    for (const group of matrix.groups) {
-      lines.push(`### ${group.label}`);
-      lines.push('');
-      lines.push('| Case | Type | What it proves | Call | Passes when |');
-      lines.push('| --- | --- | --- | --- | --- |');
-      for (const row of group.rows) {
-        const call = row.api ? `\`${row.api.method} ${row.api.path}\`` : row.webhook ? `webhook \`${row.webhook.path ?? row.webhook}\`` : '';
-        lines.push(
-          `| \`${row.id}\` | ${row.type} | ${cell(row.functionality)} | ${call} | ${cell(row.expected)} |`,
-        );
-      }
-      lines.push('');
-    }
-  }
 
   lines.push('## Where the detail is');
   lines.push('');
@@ -456,7 +368,6 @@ function build(module) {
     );
   }
   lines.push(`- Every error code across modules: /docs/hiecm/v3/reference/error-codes`);
-  lines.push(`- Sandbox test data: /docs/hiecm/v3/reference/data-dictionary`);
   lines.push(`- Terms: /docs/hiecm/v3/getting-started/glossary`);
   lines.push('');
 
@@ -539,9 +450,6 @@ const CAPABILITIES = {
     'Link a facility to a bridge and mark each link HIP or HIU, which is what makes records flow.',
     'Fetch the council, course, college, university and geography codes these calls take instead of names.',
   ],
-  p1: ['Everything M1 covers, from inside a patient facing PHR application rather than a provider system.'],
-  p2: ['Share a patient profile from their own application, including the counter QR flow.'],
-  p3: ['Manage consents from inside a PHR application, including auto approval policies.'],
 };
 
 function capabilities(module) {
@@ -562,8 +470,9 @@ function head(markdown) {
  * the same folder is a second skill to any client that goes looking.
  */
 function guided(name) {
-  const raw = readFileSync(join(guidedDir, name, 'SKILL.md'), 'utf8');
-  return raw.replace(/^---\n[\s\S]*?\n---\n/, '').trim();
+  const file = join(guidedDir, name, 'SKILL.md');
+  if (!existsSync(file)) return '';
+  return readFileSync(file, 'utf8').replace(/^---\n[\s\S]*?\n---\n/, '').trim();
 }
 
 function guidedTitle(name) {
@@ -571,35 +480,20 @@ function guidedTitle(name) {
   return parse(raw.match(/^---\n([\s\S]*?)\n---/)?.[1] ?? '')?.description ?? '';
 }
 
-/**
- * Which guided loop is which section of which skill.
- *
- * P2 and P3 have no debugging loop of their own because NHA records the PHR
- * error codes once. One loop covers P1 to P3 and it sits with P1, which is
- * what the two of them point at rather than repeating it.
- */
-const FOLD = {
-  'abdm-m1': {scaffold: 'hiecm-m1-build', debug: 'hiecm-m1-debug'},
-  'abdm-m2': {scaffold: 'hiecm-m2-build', debug: 'hiecm-m2-debug'},
-  'abdm-m3': {scaffold: 'hiecm-m3-build', debug: 'hiecm-m3-debug'},
-  'abdm-m4': {scaffold: 'hiecm-m4-build', debug: 'hiecm-m4-debug'},
-  'abdm-p1': {scaffold: 'hiecm-p1-build', debug: 'hiecm-p1-debug'},
-  'abdm-p2': {scaffold: 'hiecm-p2-build'},
-  'abdm-p3': {scaffold: 'hiecm-p3-build'},
-};
-
-/** Where a module with no debugging loop of its own sends a reader. */
-const DEBUG_ELSEWHERE = {
-  'abdm-p2': 'abdm-p1',
-  'abdm-p3': 'abdm-p1',
-};
+/** Which guided loop is which section of which skill. */
+const FOLD = Object.fromEntries(
+  MODULES.map((module) => [
+    module.slug,
+    {scaffold: `hiecm-${module.id}-build`, debug: `hiecm-${module.id}-debug`},
+  ]),
+);
 
 rmSync(outDir, {recursive: true, force: true});
 mkdirSync(outDir, {recursive: true});
 
-// The plugin ships the same nine folders the site serves. It used to ship the
-// fourteen guided loops and nothing else, so the plugin and the site offered
-// different sets under the same names.
+// The plugin ships the same folders the site serves: one per module, plus
+// abdm-fhir. It used to ship the guided loops and nothing else, so the plugin
+// and the site offered different sets under the same names.
 const pluginDir = join(root, 'plugins', 'abdm-integrators-assistant', 'skills');
 rmSync(pluginDir, {recursive: true, force: true});
 mkdirSync(pluginDir, {recursive: true});
@@ -620,7 +514,6 @@ function emit(name, files) {
 // generator did not put in it.
 const manifest = {};
 
-let count = 0;
 for (const module of MODULES) {
   const whole = build(module);
   const parts = sections(whole);
@@ -629,18 +522,15 @@ for (const module of MODULES) {
   const operationCount = operations.filter(
     (op) => op.moduleId === module.id || op.moduleId === 'gateway',
   ).length;
-  const codeCount = errorBlocks(module).reduce(
-    (total, {block}) => total + (block.codes?.length ?? 0),
-    0,
-  );
-  const testCount =
-    testMatrix(module)?.groups.reduce((total, group) => total + group.rows.length, 0) ?? 0;
+  const codes = moduleCodes(module);
+  const codeCount = codes.length;
 
   const files = {};
   const covers = [];
 
-  if (fold.scaffold) {
-    files['references/scaffold.md'] = guided(fold.scaffold);
+  const scaffold = fold.scaffold ? guided(fold.scaffold) : '';
+  if (scaffold) {
+    files['references/scaffold.md'] = scaffold;
     covers.push(
       `- **Scaffold.** Build it flow by flow against the sandbox, as a loop that ends on an observed result rather than on a call returning 200. [references/scaffold.md](references/scaffold.md)`,
     );
@@ -663,43 +553,30 @@ for (const module of MODULES) {
   // The loop first, then the codes. A reader who arrives with a failing call
   // wants the procedure; the table is what the procedure sends them to.
   const debugParts = [];
-  if (fold.debug) debugParts.push(guided(fold.debug));
+  const debugLoop = fold.debug ? guided(fold.debug) : '';
+  if (debugLoop) debugParts.push(debugLoop);
   const errors = parts.get('Errors');
   if (errors) {
-    debugParts.push(fold.debug ? `## Every recorded code\n\n${errors.replace(/^## Errors\n+/, '')}` : errors);
+    debugParts.push(debugLoop ? `## Every recorded code\n\n${errors.replace(/^## Errors\n+/, '')}` : errors);
   }
   if (debugParts.length) {
-    files['references/debug.md'] = fold.debug
+    files['references/debug.md'] = debugLoop
       ? debugParts.join('\n\n')
       : [
           `# Debug ${module.title}`,
           '',
-          DEBUG_ELSEWHERE[module.slug]
-            ? `The loop from a failed call to a named fix is recorded once for the whole patient side, in the ${DEBUG_ELSEWHERE[module.slug]} skill. The codes this module can return are below.`
-            : 'The codes this module can return, with the message and what to do about each.',
+          'The codes this module can return, with the message and the operation that returns each.',
           '',
           ...debugParts,
         ].join('\n');
     covers.push(
       codeCount
         ? `- **Debug.** ${
-            fold.debug ? 'The loop from a failed call to a named fix, and ' : ''
+            debugLoop ? 'The loop from a failed call to a named fix, and ' : ''
           }${codeCount} recorded error codes. [references/debug.md](references/debug.md)`
-        : `- **Debug.** The loop from a failed call to a named fix. No error code is recorded for this module yet. [references/debug.md](references/debug.md)`,
-    );
-  }
-
-  const tests = parts.get('Test cases');
-  if (tests) {
-    files['references/test.md'] = [
-      `# Test ${module.title}`,
-      '',
-      'Each case names the call it makes and what to see when it passes.',
-      '',
-      tests,
-    ].join('\n');
-    covers.push(
-      `- **Test.** ${testCount} test cases, each with the call it makes and what to see when it passes. [references/test.md](references/test.md)`,
+        : `- **Debug.** ${
+            debugLoop ? 'The loop from a failed call to a named fix. ' : ''
+          }No error code is recorded for this module yet. [references/debug.md](references/debug.md)`,
     );
   }
 
@@ -737,16 +614,14 @@ for (const module of MODULES) {
     example: module.example,
     // A real code from this module, so the page's example question is one the
     // skill can actually answer.
-    errorExample: errorBlocks(module).flatMap(({block}) => block.codes ?? [])[0]?.code ?? null,
+    errorExample: codes[0]?.code ?? null,
     operations: operationCount,
     codes: codeCount,
-    tests: testCount,
     sections: Object.keys(files)
       .filter((path) => path.startsWith('references/'))
       .map((path) => path.replace(/^references\/|\.md$/g, '')),
   };
 
-  count += 1;
   const size = Object.values(files).reduce((total, body) => total + body.length, 0);
   console.log(
     `Built ${module.slug}: ${files['SKILL.md'].split('\n').length} line router, ${
@@ -806,10 +681,8 @@ manifest['abdm-fhir'] = {
   errorExample: null,
   operations: 0,
   codes: 0,
-  tests: 0,
   sections: FHIR_REFS.map(([section]) => section),
 };
-count += 1;
 console.log('Built abdm-fhir: 2 reference(s) from the hand written procedures.');
 
 writeFileSync(
@@ -817,7 +690,7 @@ writeFileSync(
   `${JSON.stringify(manifest, null, 2)}\n`,
 );
 
-console.log(`Compiled ${count} skill(s) into site/static/skills and the plugin.`);
+console.log(`Compiled ${MODULES.length + 1} skill(s) into site/static/skills and the plugin.`);
 
 // ---------------------------------------------------------------------------
 // The hosted setup prompt, the pattern Cloudflare's docs use: what a reader
@@ -887,7 +760,7 @@ const promptLines = [
   '```',
   `mkdir -p .claude/skills/abdm-m1/references`,
   `curl -fsSL ${promptRef('/skills/abdm-m1/SKILL.md')} -o .claude/skills/abdm-m1/SKILL.md`,
-  `for f in scaffold integrate debug test; do curl -fsSL ${promptRef('/skills/abdm-m1/references')}/$f.md -o .claude/skills/abdm-m1/references/$f.md; done`,
+  `for f in scaffold integrate debug; do curl -fsSL ${promptRef('/skills/abdm-m1/references')}/$f.md -o .claude/skills/abdm-m1/references/$f.md; done`,
   '```',
   '',
   ...promptSkills.map(([slug]) => `- ${promptRef(`/skills/${slug}/`)}`),

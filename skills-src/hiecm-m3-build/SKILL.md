@@ -1,3 +1,7 @@
+---
+name: hiecm-m3-build
+description: "Use when scaffolding an integration against ABDM M3 (raising a consent request, tracking it, and fetching the records it covers as an HIU): builds each journey as an observe-orient-decide-act loop against the sandbox."
+---
 # HIE-CM m3 build
 
 Scaffolds an ABDM m3 integration one journey at a time. It covers raising a consent request, tracking it, and fetching the records it covers as an HIU.

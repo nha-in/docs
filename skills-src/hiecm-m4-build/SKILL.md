@@ -1,3 +1,7 @@
+---
+name: hiecm-m4-build
+description: "Use when scaffolding an integration against ABDM M4 (creating an HPID, registering a professional on the HPR, and onboarding a facility to the HFR): builds each journey as an observe-orient-decide-act loop against the sandbox."
+---
 # HIE-CM m4 build
 
 Scaffolds an ABDM m4 integration one journey at a time. It covers creating an HPID, registering a professional on the HPR, and onboarding a facility to the HFR.

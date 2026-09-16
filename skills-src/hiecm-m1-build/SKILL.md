@@ -1,3 +1,7 @@
+---
+name: hiecm-m1-build
+description: "Use when scaffolding an integration against ABDM M1 (ABHA creation, login and profile management): builds each journey as an observe-orient-decide-act loop against the sandbox."
+---
 # HIE-CM m1 build
 
 Scaffolds an ABDM m1 integration one journey at a time. It covers ABHA creation, login and profile management.
