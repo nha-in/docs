@@ -79,3 +79,47 @@ site/docs/hiecm/v3/milestones/m1.mdx:190:This table is NHA's, from the proposed 
 site/docs/whats-new/2026-08-25.mdx:17:Aarogya Setu is the reference PHR, and it is now ingested and
 site/docs/whats-new/2026-08-25.mdx:28:Aarogya Setu. No OpenAPI file is published for this role yet, so these are
 ```
+
+## Pages under api/ touched by the reset
+
+The final-review fix wave removed two pages from the generated API tree and trimmed four more. Everything below is for a content session to pick up.
+
+Deleted:
+
+- `site/docs/hiecm/v3/api/m4/undocumented.md`. It said two M4 operations carried a published path and the rest did not. The final set publishes 100 M4 operations, each with its own page, so the page described a state that no longer exists. It cited `ABDM__Proposed_Simplified_Milestone_4_(NHPR).md`.
+- `site/docs/hiecm/v3/api/m1/apis.mdx`. It named NHA's M1 Postman collection as the only M1 source with real request text, and said the public certificate call had no published URL, headers or response body. The M1 swagger of 16 September supplies all three, and `m1_get_v3_profile_public_certificate` has its own page. It cited `ABDM__M1_ABHA_Collection.postman_collection.md`.
+
+Trimmed, frontmatter only except where noted:
+
+- `site/docs/hiecm/v3/api/m1/index.mdx`: `source: ABDM__Proposed_Simplified_Milestone_1.md` removed, and the "Let's build" choice in the `PathChoices` block removed because it pointed at the deleted `api/m1/apis` page.
+- `site/docs/hiecm/v3/api/m2/index.mdx`: `source: ABDM__Proposed_Simplified_Milestone_2.md` removed.
+- `site/docs/hiecm/v3/api/m3/index.mdx`: `source: ABDM__Proposed_Simplified_Milestone_3.md` removed.
+- `site/docs/hiecm/v3/api/m4/index.mdx`: `source: ABDM__Proposed_Simplified_Milestone_4_(NHPR).md` removed.
+
+Inbound links now broken, all from hand-written pages a content session owns:
+
+```
+site/docs/hiecm/v3/registries/abha.md:116                  -> api/m1/apis
+site/docs/hiecm/v3/milestones/m1.mdx:467                   -> api/m1/apis
+site/docs/whats-new/2026-08-24.mdx:64                      -> api/m1/apis
+site/docs/hiecm/v3/registries/nhpr/index.md:32             -> api/m4/undocumented
+site/docs/hiecm/v3/registries/nhpr/hpr.md:50,84,98,121,128 -> api/m4/undocumented
+site/docs/hiecm/v3/registries/nhpr/hfr.md:31,104           -> api/m4/undocumented
+site/docs/hiecm/v3/milestones/m4.mdx:99,137,259,267        -> api/m4/undocumented
+```
+
+## Retired atom ids and documents still named outside site/docs
+
+The residue grep was run over the whole tree outside `.git`, `docs/superpowers`, `.claude`, `evals` and `mcp`. Fixed in place: the two sandbox atoms and the two plugin command files, which carried live links to atoms the reset deleted. Left for a content session, because each is an illustration of the atom schema rather than a claim that a particular atom exists, and the `hiecm.*` atom namespace now has no members at all:
+
+```
+plugins/abdm-contributors-assistant/skills/atom-authoring/SKILL.md:24,43,44,45,46
+plugins/abdm-contributors-assistant/skills/ooda-skill-authoring/SKILL.md:76
+plugins/abdm-contributors-assistant/skills/support-agent/SKILL.md:48
+plugins/abdm-contributors-assistant/skills/abdm-portal-index/SKILL.md:62
+plan/abdm-v1-phase1-architecture-and-plan.md:126,144,145,146,147,307
+plan/plan-history/*.md (dated archives, not to be edited)
+catalogue/openapi/extensions.md:76,97 (x-abdm-atom, an extension nothing reads)
+```
+
+`abdm-portal-index/SKILL.md:62` is the urgent one: its status table still counts 319 atoms across `hiecm`, `uhi` and `nhcx`. The catalogue now holds 57, all under `shared`.
