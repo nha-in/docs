@@ -72,8 +72,8 @@ and are never rendered either.
 Drop an OpenAPI 3.1 file at `catalogue/openapi/<platform>/<version>/<name>.yaml`.
 The build generates, per spec:
 
-- one documentation page per operation and webhook, grouped by use case
-  (`x-abdm-use-case`, falling back to tags), under the module's sidebar entry
+- one documentation page per operation and webhook, grouped by tag, under
+  the module's sidebar entry
 - an interactive Scalar reference at `/reference/<name>` (the filename stem)
 - the aggregated Authentication, Callbacks and Error codes reference pages
 

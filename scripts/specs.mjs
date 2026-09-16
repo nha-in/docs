@@ -15,8 +15,9 @@ export function listSpecs(dir = specsRoot) {
   return readdirSync(dir, {withFileTypes: true}).flatMap((entry) => {
     const full = join(dir, entry.name);
     if (entry.isDirectory()) {
-      // .raw holds the untouched downloads, not specs the site serves.
-      return entry.name.startsWith('.') ? [] : listSpecs(full);
+      // .raw holds the untouched downloads, and journeys/ holds step lists
+      // read through lib/journeys.mjs. Neither is an OpenAPI document.
+      return entry.name.startsWith('.') || entry.name === 'journeys' ? [] : listSpecs(full);
     }
     return /\.(yaml|json)$/.test(entry.name) ? [{name: entry.name, path: full}] : [];
   });

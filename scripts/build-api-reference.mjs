@@ -7,7 +7,7 @@
 // position}); the filename stem is the Scalar route (/reference/<stem>).
 // Everything under .../api/<module>/endpoints, the generated reference pages
 // and site/src/data/api are build outputs. Edit the specs, not the output.
-import {existsSync, readFileSync, writeFileSync, mkdirSync, rmSync} from 'node:fs';
+import {existsSync, readdirSync, readFileSync, writeFileSync, mkdirSync, rmSync} from 'node:fs';
 import {join, dirname} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {parse} from 'yaml';
@@ -331,6 +331,17 @@ for (const {platform, version, files} of tree) {
   const isHiecmV3 = platform === 'hiecm' && version === 'v3';
   for (const module of modules) {
     rmSync(join(docsDir, module.dir, 'endpoints'), {recursive: true, force: true});
+  }
+  // A module folder left behind by a specification that no longer exists still
+  // imports the data files this run deletes, which fails the site build. The
+  // generator owns this folder, so it removes what it does not write.
+  if (existsSync(docsDir)) {
+    const kept = new Set(modules.map((m) => m.dir));
+    for (const entry of readdirSync(docsDir, {withFileTypes: true})) {
+      if (entry.isDirectory() && !kept.has(entry.name)) {
+        rmSync(join(docsDir, entry.name), {recursive: true, force: true});
+      }
+    }
   }
 
   // ---- which call each callback belongs to ----
@@ -732,6 +743,10 @@ for (const {platform, version, files} of tree) {
         const title = `${i + 1}. ${stepped.summary}${step.optional ? ' (optional)' : ''}`;
         writeFileSync(join(dir, `${nn}-${slug(step.op)}.mdx`), [
           '---',
+          // The step number stays in the id. Docusaurus strips an "NN-" file
+          // prefix by default, which collides when one journey names the same
+          // operation twice, and leaves the sidebar ids below pointing nowhere.
+          `id: ${nn}-${slug(step.op)}`,
           `title: ${JSON.stringify(title)}`,
           `sidebar_label: ${JSON.stringify(title)}`,
           `sidebar_class_name: api-method api-method--${stepped.method.toLowerCase()}`,
