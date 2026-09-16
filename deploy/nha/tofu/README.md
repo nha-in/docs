@@ -14,8 +14,9 @@ and `backend_alb.tf`. They add to the existing state; nothing already there chan
 | `deploy.sh` | publishes the site and docs-mcp into the above; not a Tofu file, stays in this repository |
 
 What they rely on from the root: `module.vpc`, `module.ecs_cluster`, `module.kms_key`,
-`aws_security_group.nlb_sg`, `local.tags`, and the variables `environment`, `aws_region`,
-`aws_account_id`.
+`aws_security_group.nlb_sg`, `aws_security_group.vpc_endpoints` (the group on the ECR, logs and
+SSM interface endpoints; docs-mcp adds an ingress rule to it), `local.tags`, and the variables
+`environment`, `aws_region`, `aws_account_id`.
 
 ## Deploy
 
@@ -101,3 +102,8 @@ no NAT, no default route, only VPC endpoints, with `kms.tf`, `ecs_cluster.tf`, `
 X86_64 default, the shared security group). From inside that VPC: health, search, CORS, the MCP
 protocol end to end against two tasks, a task kill with no failed health checks, and a broken
 deploy rolled back by the circuit breaker with no failed health checks. Plan clean afterwards.
+
+One gap that harness did not catch: its interface endpoints admitted the whole VPC CIDR, while
+NHA's admit only their shared task security group. The first live deploy failed on that
+(`ResourceInitializationError ... api.ecr ... i/o timeout`); the rule in
+`abdm_docs_mcp_ecs_task.tf` that admits docs-mcp at those endpoints is the fix.

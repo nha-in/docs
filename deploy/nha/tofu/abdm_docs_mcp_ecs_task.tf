@@ -111,6 +111,20 @@ resource "aws_security_group_rule" "abdm_docs_allow_nlb_mcp" {
   source_security_group_id = aws_security_group.nlb_sg.id
 }
 
+# The ECR, logs and SSM interface endpoints (vpc_endpoints.tf) admit only allow_database, the
+# security group the experience tasks carry. docs-mcp keeps its own group and needs the same
+# reach for image pulls and log delivery, so it is admitted by name instead of being given the
+# database group.
+resource "aws_security_group_rule" "abdm_docs_mcp_to_vpc_endpoints" {
+  description              = "Allow HTTPS from docs-mcp tasks to the ECR, logs and SSM endpoints"
+  type                     = "ingress"
+  security_group_id        = aws_security_group.vpc_endpoints.id
+  from_port                = 443
+  to_port                  = 443
+  protocol                 = "tcp"
+  source_security_group_id = module.abdm_docs_mcp_service_task.service_security_group_id
+}
+
 resource "aws_iam_policy" "abdm_docs_mcp_bedrock" {
   name        = "ohn-${var.environment}-abdm-docs-mcp-bedrock"
   path        = "/"
