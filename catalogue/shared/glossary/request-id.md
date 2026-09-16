@@ -11,7 +11,7 @@ summary: >
 sources:
   - file: catalogue/openapi/.raw/nha-2026-09-16/hiecm/gateway.yaml
     fetched: 2026-09-16
-    hash: sha256:e7ca9d3e54d6e6c864f3f1ef7b2422a322c38f6ef0bf64e421c57960b8851dc7
+    hash: sha256:d3bc599054c2570a50818ca54906c44cf652ad6f813473e8ac243667da4e9300
 verified:
   status: unverified
 related: {}

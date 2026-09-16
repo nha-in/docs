@@ -452,12 +452,12 @@ paths:
                   value:
                     txnId: 23acf181-339d-4771-b532-5c5df4a28d19
                     healthIdNumber: 91-7561-4088-XXXX
-                    preferredAbhaAddress: johndoe@sbx
+                    preferredAbhaAddress: <ABHA_ADDRESS>
                 Positive flow:
                   value:
                     txnId: 23acf181-339d-4771-b532-5c5df4a28d19
                     healthIdNumber: 91-7561-4088-XXXX
-                    preferredAbhaAddress: johndoe@sbx
+                    preferredAbhaAddress: <ABHA_ADDRESS>
         '400':
           description: The 400 response code indicates a bad request. In this context, it refers to various errors encountered during the operation of the Suggestion API.<br><br> <p><strong>Types of Suggestion API Errors:</strong></p> <ol> <li><strong>Invalid Preferred Flag:</strong> This error occurs when the transaction ID provided in the request is invalid. The transaction ID is essential for tracking the request and ensuring that the correct information is processed. An invalid transaction ID means the server cannot verify the request, leading to a failure in enrolling the ABHA address. .</li> </ol> <ol start="2"> <li><strong>Invalid Transaction Id:</strong>This error occurs when the preferred flag provided in the request is invalid. The preferred flag indicates the user’s preference for the suggested ABHA address. An invalid preferred flag means the server cannot process the user’s preference correctly, leading to a failure in enrolling the ABHA address.</li> </ol>
           content:
@@ -811,7 +811,7 @@ paths:
                             items:
                               type: string
                             example:
-                              - 9137868352XXXX@abdm
+                              - <ABHA_ADDRESS>
                           districtCode:
                             type: string
                             example: '490'
@@ -843,7 +843,7 @@ paths:
                         example: 91-5054-5533-XXXX
                       healthId:
                         type: string
-                        example: 9150545533XXXX@sbx
+                        example: <ABHA_ADDRESS>
                       mobile:
                         type: string
                         example: '******0903'
@@ -923,10 +923,10 @@ paths:
                       lastName: Doe
                       dob: 26-06-1999
                       gender: M
-                      photo: /9j/4AAQSkZJRgABAgAAAQABAAD/2wBD /9j/4AAQSkZJRgABAgAAAQABAAD/2wBD
+                      photo: <BASE64_PHOTO> <BASE64_PHOTO>
                       mobile: '******0903'
                       phrAddress:
-                        - johndoe@sbx
+                        - <ABHA_ADDRESS>
                       address: LOHARA, AT POST LOHARA TQ PACHORA DIST JALGAON, Lohara, Pachora, Jalgaon, Maharashtra
                       districtCode: '478'
                       stateCode: '27'
@@ -980,7 +980,7 @@ paths:
                       mobile: '******0903'
                       email: null
                       phrAddress:
-                        - johndoe@sbx
+                        - <ABHA_ADDRESS>
                       districtCode: '490'
                       stateCode: '27'
                       abhaType: CHILD
@@ -1005,7 +1005,7 @@ paths:
                       gender: F
                       mobile: '******0903'
                       phrAddress:
-                        - johndoe@sbx
+                        - <ABHA_ADDRESS>
                       districtCode: '490'
                       stateCode: '27'
                       abhaType: CHILD
@@ -1017,7 +1017,7 @@ paths:
                 DemoAuth API - In case of Existing ABHA Number:
                   value:
                     healthIdNumber: 91-5006-4247-XXXX
-                    healthId: 9150064247XXXX@sbx
+                    healthId: <ABHA_ADDRESS>
                     mobile: '******0903'
                     firstName: John
                     middleName: ''
@@ -1045,7 +1045,7 @@ paths:
                 DemoAuth API - New ABHA creation:
                   value:
                     healthIdNumber: 91-5054-5533-XXXX
-                    healthId: 9150545533XXXX@sbx
+                    healthId: <ABHA_ADDRESS>
                     mobile: '******0903'
                     firstName: John
                     middleName: ''
@@ -1083,10 +1083,10 @@ paths:
                       lastName: Doe
                       dob: 26-06-1999
                       gender: M
-                      photo: /9j/4AAQSkZJRgABAgAAAQABAAD/2wBD
+                      photo: <BASE64_PHOTO>
                       mobile: '******0903'
                       phrAddress:
-                        - johndoe@sbx
+                        - <ABHA_ADDRESS>
                       address: LOHARA, AT POST LOHARA TQ PACHORA DIST JALGAON, Lohara, Pachora, Jalgaon, Maharashtra
                       districtCode: '478'
                       stateCode: '27'
@@ -1522,7 +1522,7 @@ paths:
                     example: c6a49f66-c740-4a7d-a93d-8c0431bbb8f3
                   message:
                     type: string
-                    example: OTP is sent to Aadhaar registered mobile number ending with*******0903,OTP sent to Aadhaar registered mobile number ending with ******0903,OTP sent to email address ending with joh**********@example.com
+                    example: OTP is sent to Aadhaar registered mobile number ending with*******0903,OTP sent to Aadhaar registered mobile number ending with ******0903,OTP sent to email address ending with <EMAIL>
               examples:
                 ABHA Creation via Aadhaar OTP-REQUEST OTP FOR AADHAAR AUTHENTICATION:
                   value:
@@ -1539,7 +1539,7 @@ paths:
                 Email Verify via OTP-positive flow:
                   value:
                     txnId: 37d8d312-35a0-41e7-a6e4-1074eb18a5fa
-                    message: OTP sent to email address ending with joh**********@example.com
+                    message: OTP sent to email address ending with <EMAIL>
                 positive flow:
                   value:
                     txnId: 37d8d312-35a0-41e7-a6e4-1074eb18a5fa
@@ -1804,7 +1804,7 @@ paths:
                 value:
                   txnId: 27d444b7-2a3d-46d8-bf67-e5590b6c46b6
                   phrDetails:
-                    mobile: /9j/4AAQSkZJRgABAgAAAQABAAD/2wBD
+                    mobile: <BASE64_PHOTO>
                     firstName: John
                     middleName: ''
                     lastName: Doe
@@ -1820,8 +1820,8 @@ paths:
                     districtName: Nashik
                     districtCode: '123'
                     pinCode: '422003'
-                    abhaAddress: johndoe@sbx
-                    password: /9j/4AAQSkZJRgABAgAAAQABAAD/2wBD
+                    abhaAddress: <ABHA_ADDRESS>
+                    password: <BASE64_PHOTO>
               Enroll ABHA Address (2):
                 summary: Enrolment via ABHA Number-ABHA OTP › Enroll ABHA Address
                 value:
@@ -1835,15 +1835,15 @@ paths:
                     yearOfBirth: '2000'
                     gender: M
                     email: ''
-                    mobile: /9j/4AAQSkZJRgABAgAAAQABAAD/2wBD
+                    mobile: <BASE64_PHOTO>
                     address: Shivaji Nagar
                     stateName: Maharashtra
                     stateCode: '27'
                     districtName: Nashik
                     districtCode: '123'
                     pinCode: '422003'
-                    abhaAddress: johndoe@sbx
-                    password: /9j/4AAQSkZJRgABAgAAAQABAAD/2wBD
+                    abhaAddress: <ABHA_ADDRESS>
+                    password: <BASE64_PHOTO>
               Enroll ABHA Address (3):
                 summary: Enrolment via ABHA Number-Aadhaar OTP › Enroll ABHA Address
                 value:
@@ -1857,15 +1857,15 @@ paths:
                     yearOfBirth: '1992'
                     gender: M
                     email: ''
-                    mobile: /9j/4AAQSkZJRgABAgAAAQABAAD/2wBD
+                    mobile: <BASE64_PHOTO>
                     address: House No 620, Main road Adgaon Nashik Mah
                     stateName: Maharashtra
                     stateCode: '27'
                     districtName: Nashik
                     districtCode: '123'
                     pinCode: '422003'
-                    abhaAddress: johndoe@sbx
-                    password: /9j/4AAQSkZJRgABAgAAAQABAAD/2wBD
+                    abhaAddress: <ABHA_ADDRESS>
+                    password: <BASE64_PHOTO>
       responses:
         '200':
           description: OK
@@ -1945,16 +1945,16 @@ paths:
                       yearOfBirth: '1998'
                       dateOfBirth: 14-11-1978
                       gender: M
-                      email: joh**********@example.com
+                      email: <EMAIL>
                       mobile: '******1234'
                       address: street number 4, sector 12
                       stateName: Maharashtra
                       districtName: Nashik
                       pinCode: '123456'
                       abhaAddress:
-                        - john.doe1@sbx
-                        - johndoe@sbx
-                        - johndoe1@sbx
+                        - <ABHA_ADDRESS>
+                        - <ABHA_ADDRESS>
+                        - <ABHA_ADDRESS>
                       stateCode: '27'
                       districtCode: '123'
                     tokens:
@@ -1976,16 +1976,16 @@ paths:
                       yearOfBirth: '1976'
                       dateOfBirth: 14-11-1976
                       gender: M
-                      email: johndoe@example.com
+                      email: <EMAIL>
                       mobile: '******0903'
                       address: House No 620, Main road Adgaon Nashik Mah
                       stateName: Maharashtra
                       districtName: Nashik
                       pinCode: '422003'
                       abhaAddress:
-                        - johndoe@sbx
-                        - johndoe@sbx
-                        - johndoe@sbx
+                        - <ABHA_ADDRESS>
+                        - <ABHA_ADDRESS>
+                        - <ABHA_ADDRESS>
                       stateCode: '27'
                       districtCode: '123'
                     tokens:
@@ -2007,16 +2007,16 @@ paths:
                       yearOfBirth: '1976'
                       dateOfBirth: 14-11-1976
                       gender: M
-                      email: johndoe@example.com
+                      email: <EMAIL>
                       mobile: '******0903'
                       address: House No 620, Main road Adgaon Nashik Mah
                       stateName: Maharashtra
                       districtName: Nashik
                       pinCode: '422003'
                       abhaAddress:
-                        - johndoe@sbx
-                        - johndoe@sbx
-                        - johndoe@sbx
+                        - <ABHA_ADDRESS>
+                        - <ABHA_ADDRESS>
+                        - <ABHA_ADDRESS>
                       stateCode: '27'
                       districtCode: '123'
                     tokens:
@@ -2780,7 +2780,7 @@ paths:
                     message: OTP Verified Successfully
                     authResult: success
                     users:
-                      - abhaAddress: johndoe@sbx
+                      - abhaAddress: <ABHA_ADDRESS>
                         fullName: John Doe
                         abhaNumber: XX-XXXX-XXXX-1234
                         status: ACTIVE
@@ -2796,12 +2796,12 @@ paths:
                     message: OTP Verified Successfully
                     authResult: success
                     users:
-                      - abhaAddress: johndoe@sbx
+                      - abhaAddress: <ABHA_ADDRESS>
                         fullName: John Doe
                         abhaNumber: 91-5326-6278-XXXX
                         status: ACTIVE
                         kycStatus: VERIFIED
-                      - abhaAddress: johndoe@sbx
+                      - abhaAddress: <ABHA_ADDRESS>
                         fullName: John Doe
                         abhaNumber: 91-5326-6278-XXXX
                         status: ACTIVE
@@ -2817,7 +2817,7 @@ paths:
                         monthOfBirth: '11'
                         gender: M
                         email: null
-                        profilePhoto: /9j/4AAQSkZJRgABAgAAAQABAAD/2wBD
+                        profilePhoto: <BASE64_PHOTO>
                         status: ACTIVE
                         stateCode: '27'
                         districtCode: '487'
@@ -2827,7 +2827,7 @@ paths:
                         wardCode: null
                         pincode: '422003'
                         address: house no-620, main road, Pune, Maharashtra
-                        kycPhoto: /9j/4AAQSkZJRgABAgAAAQABAAD/2wBD
+                        kycPhoto: <BASE64_PHOTO>
                         stateName: MAHARASHTRA
                         districtName: PUNE
                         subdistrictName: PUNE
@@ -2844,7 +2844,7 @@ paths:
                         verificationType: AADHAAR
                         emailVerified: null
                         ABHANumber: 91-5326-6278-XXXX
-                        preferredAbhaAddress: johndoe@sbx
+                        preferredAbhaAddress: <ABHA_ADDRESS>
                     tokens:
                       token: <JWT TOKEN>
                       expiresIn: 1800
@@ -2856,12 +2856,12 @@ paths:
                     message: OTP Verified Successfully
                     authResult: success
                     users:
-                      - abhaAddress: johndoe@sbx
+                      - abhaAddress: <ABHA_ADDRESS>
                         fullName: John Doe
                         abhaNumber: 91-5326-6278-XXXX
                         status: ACTIVE
                         kycStatus: VERIFIED
-                      - abhaAddress: johndoe@sbx
+                      - abhaAddress: <ABHA_ADDRESS>
                         fullName: John Doe
                         abhaNumber: 91-5326-6278-XXXX
                         status: ACTIVE
@@ -2877,7 +2877,7 @@ paths:
                         monthOfBirth: '11'
                         gender: M
                         email: null
-                        profilePhoto: /9j/4AAQSkZJRgABAgAAAQABAAD/2wBD
+                        profilePhoto: <BASE64_PHOTO>
                         status: ACTIVE
                         stateCode: '27'
                         districtCode: '487'
@@ -2887,7 +2887,7 @@ paths:
                         wardCode: null
                         pincode: '422003'
                         address: house no-620, main road, Pune, Maharashtra
-                        kycPhoto: /9j/4AAQSkZJRgABAgAAAQABAAD/2wBD
+                        kycPhoto: <BASE64_PHOTO>
                         stateName: MAHARASHTRA
                         districtName: PUNE
                         subdistrictName: PUNE
@@ -2904,7 +2904,7 @@ paths:
                         verificationType: AADHAAR
                         emailVerified: null
                         ABHANumber: 91-5326-6278-XXXX
-                        preferredAbhaAddress: johndoe@sbx
+                        preferredAbhaAddress: <ABHA_ADDRESS>
                     tokens:
                       token: <JWT TOKEN>
                       expiresIn: 1800
@@ -3072,7 +3072,7 @@ paths:
               examples:
                 Get Profile:
                   value:
-                    abhaAddress: johndoe@sbx
+                    abhaAddress: <ABHA_ADDRESS>
                     fullName: John Doe
                     firstName: John
                     middleName: ''
@@ -3082,7 +3082,7 @@ paths:
                     yearOfBirth: '1995'
                     dateOfBirth: 14-11-1995
                     gender: M
-                    email: johndoe@example.com
+                    email: <EMAIL>
                     mobile: '******0903'
                     abhaNumber: 91-5326-6278-XXXX
                     address: House No 620, Main road Adgaon Nashik Mah
@@ -3531,7 +3531,7 @@ paths:
                     - abha-login
                     - mobile-verify
                   loginHint: abha-number
-                  loginId: /9j/4AAQSkZJRgABAgAAAQABAAD/2wBD
+                  loginId: <BASE64_PHOTO>
                   otpSystem: abdm
               Send AADHAAR Otp - Link-DeLink:
                 summary: P2 - via Aadhaar OTP › Send AADHAAR Otp - Link-DeLink
@@ -3540,7 +3540,7 @@ paths:
                     - abha-login
                     - aadhaar-verify
                   loginHint: abha-number
-                  loginId: /9j/4AAQSkZJRgABAgAAAQABAAD/2wBD
+                  loginId: <BASE64_PHOTO>
                   otpSystem: aadhaar
       responses:
         '200':
@@ -3832,15 +3832,15 @@ paths:
                   value:
                     txnId: baeb429f-4ff0-42e3-abd6-fb55fa0f5bf1
                     users:
-                      - abhaAddress: johndoe@sbx
+                      - abhaAddress: <ABHA_ADDRESS>
                         fullName: John Doe
                         status: ACTIVE
                         kycStatus: PENDING
-                      - abhaAddress: johndoe@sbx
+                      - abhaAddress: <ABHA_ADDRESS>
                         fullName: John Doe
                         status: ACTIVE
                         kycStatus: PENDING
-                      - abhaAddress: johndoe@sbx
+                      - abhaAddress: <ABHA_ADDRESS>
                         fullName: John Doe
                         status: ACTIVE
                         kycStatus: PENDING
@@ -3938,7 +3938,7 @@ paths:
                   monthOfBirth: '05'
                   yearOfBirth: '1997'
                   gender: M
-                  email: johndoe@example.com
+                  email: <EMAIL>
                   mobile: '******0903'
                   address: Patoda, Yeola, Nashik, Maharashtra1
                   stateName: Maharashtra
@@ -4009,7 +4009,7 @@ paths:
               examples:
                 Update Profile:
                   value:
-                    abhaAddress: johndoe@sbx
+                    abhaAddress: <ABHA_ADDRESS>
                     fullName: John Doe
                     firstName: John
                     middleName: ''
@@ -4201,7 +4201,7 @@ paths:
                     authMethods:
                       - password
                     password:
-                      abhaAddress: johndoe@sbx
+                      abhaAddress: <ABHA_ADDRESS>
                       password: '{{encryptedData}}'
               Verify ABHA Otp - Link-DeLink:
                 summary: P2 - via ABHA OTP › Verify ABHA Otp - Link-DeLink
@@ -4226,7 +4226,7 @@ paths:
                       - otp
                     otp:
                       txnId: 37d8d312-35a0-41e7-a6e4-1074eb18a5fa
-                      otpValue: /9j/4AAQSkZJRgABAgAAAQABAAD/2wBD
+                      otpValue: <BASE64_PHOTO>
       responses:
         '200':
           description: OK
@@ -4364,25 +4364,25 @@ paths:
                     message: Mobile Number linked successfully
                     authResult: success
                     users:
-                      - abhaAddress: johndoe@sbx
+                      - abhaAddress: <ABHA_ADDRESS>
                 Verify Password - Update Password:
                   value:
                     message: Password updated successfully
                     authResult: success
                     users:
-                      - abhaAddress: johndoe@sbx
+                      - abhaAddress: <ABHA_ADDRESS>
                 Verify ABHA Otp - Link-DeLink:
                   value:
                     txnId: d8bd3f91-e615-4bd8-a6b5-f18f07cad1b7
                     message: OTP Verified Successfully
                     authResult: success
                     users:
-                      - abhaAddress: johndoe@sbx
+                      - abhaAddress: <ABHA_ADDRESS>
                         fullName: John Doe
                         abhaNumber: 91-5326-6278-XXXX
                         status: ACTIVE
                         kycStatus: VERIFIED
-                      - abhaAddress: johndoe@sbx
+                      - abhaAddress: <ABHA_ADDRESS>
                         fullName: John Doe
                         abhaNumber: 91-5326-6278-XXXX
                         status: ACTIVE
@@ -4398,7 +4398,7 @@ paths:
                         monthOfBirth: '11'
                         gender: M
                         email: null
-                        profilePhoto: /9j/4AAQSkZJRgABAgAAAQABAAD/2wBD
+                        profilePhoto: <BASE64_PHOTO>
                         status: ACTIVE
                         stateCode: '27'
                         districtCode: '487'
@@ -4408,7 +4408,7 @@ paths:
                         wardCode: null
                         pincode: '422003'
                         address: house no-620, main road, Nashik, Nashik, Maharashtra
-                        kycPhoto: /9j/4AAQSkZJRgABAgAAAQABAAD/2wBD
+                        kycPhoto: <BASE64_PHOTO>
                         stateName: MAHARASHTRA
                         districtName: NASHIK
                         subdistrictName: NASHIK
@@ -4425,7 +4425,7 @@ paths:
                         verificationType: AADHAAR
                         emailVerified: null
                         ABHANumber: 91-5326-6278-XXXX
-                        preferredAbhaAddress: johndoe@sbx
+                        preferredAbhaAddress: <ABHA_ADDRESS>
                     tokens:
                       token: <JWT TOKEN>
                       expiresIn: 1800
@@ -4443,12 +4443,12 @@ paths:
                     message: OTP Verified Successfully
                     authResult: success
                     users:
-                      - abhaAddress: johndoe@sbx
+                      - abhaAddress: <ABHA_ADDRESS>
                         fullName: John Doe
                         abhaNumber: 91-5326-6278-XXXX
                         status: ACTIVE
                         kycStatus: VERIFIED
-                      - abhaAddress: johndoe@sbx
+                      - abhaAddress: <ABHA_ADDRESS>
                         fullName: John Doe
                         abhaNumber: 91-5326-6278-XXXX
                         status: ACTIVE
@@ -4464,7 +4464,7 @@ paths:
                         monthOfBirth: '11'
                         gender: M
                         email: null
-                        profilePhoto: /9j/4AAQSkZJRgABAgAAAQABAAD/2wBD
+                        profilePhoto: <BASE64_PHOTO>
                         status: ACTIVE
                         stateCode: '27'
                         districtCode: '487'
@@ -4474,7 +4474,7 @@ paths:
                         wardCode: null
                         pincode: '422003'
                         address: house no-620, main road, Nashik, Nashik, Maharashtra
-                        kycPhoto: /9j/4AAQSkZJRgABAgAAAQABAAD/2wBD
+                        kycPhoto: <BASE64_PHOTO>
                         stateName: MAHARASHTRA
                         districtName: NASHIK
                         subdistrictName: NASHIK
@@ -4491,7 +4491,7 @@ paths:
                         verificationType: AADHAAR
                         emailVerified: null
                         ABHANumber: 91-5326-6278-XXXX
-                        preferredAbhaAddress: johndoe@sbx
+                        preferredAbhaAddress: <ABHA_ADDRESS>
                     tokens:
                       token: <JWT TOKEN>
                       expiresIn: 1800
@@ -4678,7 +4678,7 @@ paths:
               Verify User Switch Profile:
                 summary: P2 - Switch Profile › Verify User Switch Profile
                 value:
-                  abhaAddress: johndoe@sbx
+                  abhaAddress: <ABHA_ADDRESS>
                   txnId: 37d8d312-35a0-41e7-a6e4-1074eb18a5fa
       responses:
         '200':
@@ -4882,7 +4882,7 @@ paths:
                     - aadhaar-verify
                     - aadhaar-otp-verify
                   loginHint: aadhaar
-                  loginId: /9j/4AAQSkZJRgABAgAAAQABAAD/2wBD
+                  loginId: <BASE64_PHOTO>
                   otpSystem: aadhaar
       responses:
         '200':
@@ -4904,7 +4904,7 @@ paths:
                 OTP Request - Email:
                   value:
                     txnId: b81a963d-4b97-48b4-9f9f-acf9f13afab7
-                    message: OTP is sent to email ending with joh**********@example.com
+                    message: OTP is sent to email ending with <EMAIL>
                 OTP Request - ABHAADDRES Mobile:
                   value:
                     txnId: 48895712-9363-455b-937b-31e02fb71640
@@ -4920,7 +4920,7 @@ paths:
                 OTP Request - ABHAADDRES Email:
                   value:
                     txnId: 48895712-9363-455b-937b-31e02fb71640
-                    message: OTP is sent to email ending with joh**********@example.com
+                    message: OTP is sent to email ending with <EMAIL>
                 200 OK:
                   value:
                     txnId: c9ca1085-77f4-4848-a51e-f710edce0f98
@@ -5108,7 +5108,7 @@ paths:
               Search Auth Methods - ABHAAddress:
                 summary: P1 - Login via ABHA Address - Password › Search Auth Methods - ABHAAddress
                 value:
-                  abhaAddress: johndoe@sbx
+                  abhaAddress: <ABHA_ADDRESS>
       responses:
         '200':
           description: OK
@@ -5141,7 +5141,7 @@ paths:
                 Search Auth Methods - ABHAAddress:
                   value:
                     healthIdNumber: 91-5326-6278-XXXX
-                    abhaAddress: johndoe@sbx
+                    abhaAddress: <ABHA_ADDRESS>
                     authMethods:
                       - MOBILE_OTP
                       - PASSWORD
@@ -5152,7 +5152,7 @@ paths:
                 Search Auth Methods - ABHAAddress-ABHA no. not linked:
                   value:
                     healthIdNumber: null
-                    abhaAddress: johndoe@sbx
+                    abhaAddress: <ABHA_ADDRESS>
                     authMethods:
                       - EMAIL_OTP
                       - MOBILE_OTP
@@ -5349,8 +5349,8 @@ paths:
                     authMethods:
                       - password
                     password:
-                      abhaAddress: johndoe@sbx
-                      password: /9j/4AAQSkZJRgABAgAAAQABAAD/2wBD
+                      abhaAddress: <ABHA_ADDRESS>
+                      password: <BASE64_PHOTO>
               Login OTP Verify - ABHAADDRESS Email:
                 summary: P1 - Login via ABHA Address - Email OTP › Login OTP Verify - ABHAADDRESS Email
                 value:
@@ -5375,7 +5375,7 @@ paths:
                       - otp
                     otp:
                       txnId: c51ad4d8-ae92-4509-8fb9-b91dea948492
-                      otpValue: /9j/4AAQSkZJRgABAgAAAQABAAD/2wBD
+                      otpValue: <BASE64_PHOTO>
       responses:
         '200':
           description: OK
@@ -5507,17 +5507,17 @@ paths:
                     message: OTP verified successfully
                     authResult: success
                     users:
-                      - abhaAddress: johndoe@sbx
+                      - abhaAddress: <ABHA_ADDRESS>
                         fullName: John Doe
                         abhaNumber: 91-5326-6278-XXXX
                         status: ACTIVE
                         kycStatus: VERIFIED
-                      - abhaAddress: johndoe@sbx
+                      - abhaAddress: <ABHA_ADDRESS>
                         fullName: John Doe
                         abhaNumber: 91-5326-6278-XXXX
                         status: ACTIVE
                         kycStatus: PENDING
-                      - abhaAddress: johndoe@sbx
+                      - abhaAddress: <ABHA_ADDRESS>
                         fullName: John Doe
                         status: ACTIVE
                         kycStatus: PENDING
@@ -5538,7 +5538,7 @@ paths:
                     message: OTP verified successfully
                     authResult: success
                     users:
-                      - abhaAddress: johndoe@sbx
+                      - abhaAddress: <ABHA_ADDRESS>
                         fullName: John Doe
                         abhaNumber: 91-5326-6278-XXXX
                         status: ACTIVE
@@ -5566,17 +5566,17 @@ paths:
                     message: OTP verified successfully
                     authResult: success
                     users:
-                      - abhaAddress: johndoe@sbx
+                      - abhaAddress: <ABHA_ADDRESS>
                         fullName: John Doe
                         abhaNumber: 91-5326-6278-XXXX
                         status: ACTIVE
                         kycStatus: VERIFIED
-                      - abhaAddress: johndoe@sbx
+                      - abhaAddress: <ABHA_ADDRESS>
                         fullName: John Doe
                         abhaNumber: 91-5326-6278-XXXX
                         status: ACTIVE
                         kycStatus: PENDING
-                      - abhaAddress: johndoe@sbx
+                      - abhaAddress: <ABHA_ADDRESS>
                         fullName: John Doe
                         status: ACTIVE
                         kycStatus: PENDING
@@ -5591,12 +5591,12 @@ paths:
                     message: OTP Verified Successfully
                     authResult: success
                     users:
-                      - abhaAddress: johndoe@sbx
+                      - abhaAddress: <ABHA_ADDRESS>
                         fullName: John Doe
                         abhaNumber: 91-5326-6278-XXXX
                         status: ACTIVE
                         kycStatus: VERIFIED
-                      - abhaAddress: johndoe@sbx
+                      - abhaAddress: <ABHA_ADDRESS>
                         fullName: John Doe
                         abhaNumber: 91-5326-6278-XXXX
                         status: ACTIVE
@@ -5612,7 +5612,7 @@ paths:
                         monthOfBirth: '11'
                         gender: M
                         email: null
-                        profilePhoto: /9j/4AAQSkZJRgABAgAAAQABAAD/2wBD
+                        profilePhoto: <BASE64_PHOTO>
                         status: ACTIVE
                         stateCode: '27'
                         districtCode: '487'
@@ -5622,7 +5622,7 @@ paths:
                         wardCode: null
                         pincode: '422003'
                         address: house no-620, main road, Nashik, Nashik, Maharashtra
-                        kycPhoto: /9j/4AAQSkZJRgABAgAAAQABAAD/2wBD
+                        kycPhoto: <BASE64_PHOTO>
                         stateName: MAHARASHTRA
                         districtName: NASHIK
                         subdistrictName: NASHIK
@@ -5639,7 +5639,7 @@ paths:
                         verificationType: AADHAAR
                         emailVerified: null
                         ABHANumber: 91-5326-6278-XXXX
-                        preferredAbhaAddress: johndoe@sbx
+                        preferredAbhaAddress: <ABHA_ADDRESS>
                     tokens:
                       token: <JWT TOKEN>
                       expiresIn: 1800
@@ -5657,12 +5657,12 @@ paths:
                     message: OTP Verified Successfully
                     authResult: success
                     users:
-                      - abhaAddress: johndoe@sbx
+                      - abhaAddress: <ABHA_ADDRESS>
                         fullName: John Doe
                         abhaNumber: 91-5326-6278-XXXX
                         status: ACTIVE
                         kycStatus: VERIFIED
-                      - abhaAddress: johndoe@sbx
+                      - abhaAddress: <ABHA_ADDRESS>
                         fullName: John Doe
                         abhaNumber: 91-5326-6278-XXXX
                         status: ACTIVE
@@ -5678,7 +5678,7 @@ paths:
                         monthOfBirth: '11'
                         gender: M
                         email: null
-                        profilePhoto: /9j/4AAQSkZJRgABAgAAAQABAAD/2wBD
+                        profilePhoto: <BASE64_PHOTO>
                         status: ACTIVE
                         stateCode: '27'
                         districtCode: '487'
@@ -5688,7 +5688,7 @@ paths:
                         wardCode: null
                         pincode: '422003'
                         address: house no-620, main road, Nashik, Nashik, Maharashtra
-                        kycPhoto: /9j/4AAQSkZJRgABAgAAAQABAAD/2wBD
+                        kycPhoto: <BASE64_PHOTO>
                         stateName: MAHARASHTRA
                         districtName: NASHIK
                         subdistrictName: NASHIK
@@ -5705,7 +5705,7 @@ paths:
                         verificationType: AADHAAR
                         emailVerified: null
                         ABHANumber: 91-5326-6278-XXXX
-                        preferredAbhaAddress: johndoe@sbx
+                        preferredAbhaAddress: <ABHA_ADDRESS>
                     tokens:
                       token: <JWT TOKEN>
                       expiresIn: 1800
@@ -5716,7 +5716,7 @@ paths:
                     message: Password verified successfully
                     authResult: success
                     users:
-                      - abhaAddress: johndoe@sbx
+                      - abhaAddress: <ABHA_ADDRESS>
                         fullName: John Doe
                         abhaNumber: 91-5326-6278-XXXX
                         status: ACTIVE
@@ -5737,7 +5737,7 @@ paths:
                     message: OTP verified successfully
                     authResult: success
                     users:
-                      - abhaAddress: johndoe@sbx
+                      - abhaAddress: <ABHA_ADDRESS>
                         fullName: John Doe
                         abhaNumber: 91-5326-6278-XXXX
                         status: ACTIVE
@@ -5759,17 +5759,17 @@ paths:
                     message: OTP verified successfully
                     authResult: success
                     users:
-                      - abhaAddress: johndoe@sbx
+                      - abhaAddress: <ABHA_ADDRESS>
                         fullName: John Doe
                         abhaNumber: 91-7760-2330-XXXX
                         status: ACTIVE
                         kycStatus: VERIFIED
-                      - abhaAddress: johndoe@sbx
+                      - abhaAddress: <ABHA_ADDRESS>
                         fullName: John Doe
                         abhaNumber: 91-7760-2330-XXXX
                         status: ACTIVE
                         kycStatus: VERIFIED
-                    preferredAbhaAddress: johndoe@sbx
+                    preferredAbhaAddress: <ABHA_ADDRESS>
                     tokens:
                       token: <JWT TOKEN>
                       expiresIn: 300
@@ -5975,32 +5975,32 @@ paths:
               Verify User:
                 summary: Enrolment via ABHA Number-ABHA OTP › Verify User
                 value:
-                  abhaAddress: johndoe@sbx
+                  abhaAddress: <ABHA_ADDRESS>
                   txnId: 37d8d312-35a0-41e7-a6e4-1074eb18a5fa
               Verify - User:
                 summary: P1 - Login via Mobile Number › Verify - User
                 value:
-                  abhaAddress: johndoe@sbx
+                  abhaAddress: <ABHA_ADDRESS>
                   txnId: 48bc0a00-1127-459c-b040-8147f4ccc11a
               Verify - User (2):
                 summary: P1 - Login via Email (optional) › Verify - User
                 value:
-                  abhaAddress: johndoe@sbx
+                  abhaAddress: <ABHA_ADDRESS>
                   txnId: 37d8d312-35a0-41e7-a6e4-1074eb18a5fa
               Verify - User (3):
                 summary: P1 - Login via ABHA Number-Aadhaar OTP › Verify - User
                 value:
-                  abhaAddress: johndoe@sbx
+                  abhaAddress: <ABHA_ADDRESS>
                   txnId: 37d8d312-35a0-41e7-a6e4-1074eb18a5fa
               Verify - User (4):
                 summary: P1 - Login via ABHA Number-ABHA OTP › Verify - User
                 value:
-                  abhaAddress: johndoe@sbx
+                  abhaAddress: <ABHA_ADDRESS>
                   txnId: 37d8d312-35a0-41e7-a6e4-1074eb18a5fa
               Verify - User (5):
                 summary: P1 - Login via Aadhaar- OTP › Verify - User
                 value:
-                  abhaAddress: johndoe@sbx
+                  abhaAddress: <ABHA_ADDRESS>
                   txnId: c51ad4d8-ae92-4509-8fb9-b91dea948492
       responses:
         '200':
@@ -6170,7 +6170,7 @@ paths:
                     example: 91-7561-4088-XXXX
                   preferredAbhaAddress:
                     type: string
-                    example: username1997@sbx
+                    example: <ABHA_ADDRESS>
                   mobile:
                     type: string
                     example: '******0903'
@@ -6200,7 +6200,7 @@ paths:
                     example: M
                   profilePhoto:
                     type: string
-                    example: /9j/4AAQSkZJRgABAgAAAQABAAD/2wBD
+                    example: <BASE64_PHOTO>
                   status:
                     type: string
                     example: ACTIVE
@@ -6218,7 +6218,7 @@ paths:
                     example: LOHARA, AT POST LOHARA TQ PACHORA DIST JALGAON, Lohara, Pachora, Jalgaon, Maharashtra
                   kycPhoto:
                     type: string
-                    example: /9j/4AAQSkZJRgABAgAAAQABAAD/2wBD
+                    example: <BASE64_PHOTO>
                   stateName:
                     type: string
                     example: MAHARASHTRA
@@ -6299,7 +6299,7 @@ paths:
                 Profile Management-Positive flow:
                   value:
                     ABHANumber: 91-7561-4088-XXXX
-                    preferredAbhaAddress: johndoe@sbx
+                    preferredAbhaAddress: <ABHA_ADDRESS>
                     mobile: '******0903'
                     firstName: John
                     middleName: ''
@@ -6309,13 +6309,13 @@ paths:
                     dayOfBirth: '26'
                     monthOfBirth: '06'
                     gender: M
-                    profilePhoto: /9j/4AAQSkZJRgABAgAAAQABAAD/2wBD
+                    profilePhoto: <BASE64_PHOTO>
                     status: ACTIVE
                     stateCode: '27'
                     districtCode: '478'
                     pincode: '424201'
                     address: LOHARA, AT POST LOHARA TQ PACHORA DIST JALGAON, Lohara, Pachora, Jalgaon, Maharashtra
-                    kycPhoto: /9j/4AAQSkZJRgABAgAAAQABAAD/2wBD
+                    kycPhoto: <BASE64_PHOTO>
                     stateName: MAHARASHTRA
                     districtName: JALGAON
                     subdistrictName: JALGAON
@@ -6345,7 +6345,7 @@ paths:
                 Positive flow:
                   value:
                     ABHANumber: 91-7561-4088-XXXX
-                    preferredAbhaAddress: johndoe@sbx
+                    preferredAbhaAddress: <ABHA_ADDRESS>
                     mobile: '******0903'
                     firstName: John
                     middleName: ''
@@ -6355,13 +6355,13 @@ paths:
                     dayOfBirth: '26'
                     monthOfBirth: '06'
                     gender: M
-                    profilePhoto: /9j/4AAQSkZJRgABAgAAAQABAAD/2wBD
+                    profilePhoto: <BASE64_PHOTO>
                     status: ACTIVE
                     stateCode: '27'
                     districtCode: '478'
                     pincode: '424201'
                     address: LOHARA, AT POST LOHARA TQ PACHORA DIST JALGAON, Lohara, Pachora, Jalgaon, Maharashtra
-                    kycPhoto: /9j/4AAQSkZJRgABAgAAAQABAAD/2wBD
+                    kycPhoto: <BASE64_PHOTO>
                     stateName: MAHARASHTRA
                     districtName: JALGAON
                     subdistrictName: JALGAON
@@ -6801,7 +6801,7 @@ paths:
                                 id:
                                   type: string
                                   nullable: false
-                                  example: abdulkalam@abdm
+                                  example: <ABHA_ADDRESS>
                                   description: The abha address of the patient
                             hip:
                               type: object
@@ -6878,7 +6878,7 @@ paths:
                                 name:
                                   type: string
                                   nullable: false
-                                  example: abdulkalam@abdm
+                                  example: <ABHA_ADDRESS>
                                   description: The name of the requester
                                 identifier:
                                   type: object
@@ -7255,7 +7255,7 @@ paths:
                           id:
                             type: string
                             nullable: false
-                            example: abdulkalam@abdm
+                            example: <ABHA_ADDRESS>
                             description: The abha address of the patient
                       hip:
                         type: object
@@ -7332,7 +7332,7 @@ paths:
                           name:
                             type: string
                             nullable: false
-                            example: abdulkalam@abdm
+                            example: <ABHA_ADDRESS>
                             description: The name of the requester
                           identifier:
                             type: object
@@ -7710,7 +7710,7 @@ paths:
                             id:
                               type: string
                               nullable: false
-                              example: abdulkalam@abdm
+                              example: <ABHA_ADDRESS>
                               description: The abha address of the patient
                         hip:
                           type: object
@@ -7787,7 +7787,7 @@ paths:
                             name:
                               type: string
                               nullable: false
-                              example: abdulkalam@abdm
+                              example: <ABHA_ADDRESS>
                               description: The name of the requester
                             identifier:
                               type: object
@@ -9163,7 +9163,7 @@ paths:
                             id:
                               type: string
                               nullable: false
-                              example: abdulkalam@abdm
+                              example: <ABHA_ADDRESS>
                               description: The abha address of the patient
                         hip:
                           type: object
@@ -9240,7 +9240,7 @@ paths:
                             name:
                               type: string
                               nullable: false
-                              example: abdulkalam@abdm
+                              example: <ABHA_ADDRESS>
                               description: The name of the requester
                             identifier:
                               type: object
@@ -9584,7 +9584,7 @@ paths:
                       id:
                         type: string
                         nullable: false
-                        example: abdulkalam@abdm
+                        example: <ABHA_ADDRESS>
                         description: The abha address of the patient
                   hip:
                     type: object
@@ -9661,7 +9661,7 @@ paths:
                       name:
                         type: string
                         nullable: false
-                        example: abdulkalam@abdm
+                        example: <ABHA_ADDRESS>
                         description: The name of the requester
                       identifier:
                         type: object
@@ -11002,7 +11002,7 @@ paths:
                         id:
                           type: string
                           nullable: false
-                          example: abdulkalam@abdm
+                          example: <ABHA_ADDRESS>
                           description: The abha address of the patient. It must start with Alphanumeric . and  _  in the middle and must be ending with @abdm or @sbx. Allows alpha numeric character and special characters like ^[a-zA-Z0-9][a-zA-Z0-9_.\-!]+[a-zA-Z0-9]@(abdm|sbx)$
                     hip:
                       type: object
@@ -11079,7 +11079,7 @@ paths:
                         name:
                           type: string
                           nullable: false
-                          example: abdulkalam@abdm
+                          example: <ABHA_ADDRESS>
                           description: The name of the requester
                         identifier:
                           type: object
@@ -11208,7 +11208,7 @@ paths:
                       - DiagnosticReport
                       - OPConsultation
                     patient:
-                      id: '****test@abdm'
+                      id: '****<ABHA_ADDRESS>'
                     purpose:
                       code: CAREMGT
                       text: Care Management
@@ -13317,13 +13317,13 @@ paths:
                   type: string
                   format: uri
                   nullable: false
-                  example: https://webhook.site/
+                  example: <YOUR_CALLBACK_URL>
                   description: The bridge URL to be updated
             examples:
               update-bridge-url:
                 summary: Gateway › update-bridge-url
                 value:
-                  url: https://webhook.site/9de329de-4ee0-4ee0-4ee0-e2817e6880e0
+                  url: <YOUR_CALLBACK_URL>
       responses:
         '202':
           description: Accepted
@@ -14479,7 +14479,7 @@ paths:
                 abhaAddress:
                   type: string
                   nullable: false
-                  example: abc@abdm
+                  example: <ABHA_ADDRESS>
                   description: The abha address of the patient. Should start with Alphanumeric . and  _  in the middle and must be ending with @abdm or @sbx also allows alpha numeric character and special characters like ^[a-zA-Z0-9][a-zA-Z0-9_.]+[a-zA-Z0-9]@(abdm|sbx)$
                 patient:
                   type: array
@@ -14546,7 +14546,7 @@ paths:
               link-care-context:
                 summary: P2 -  Initiated Linking › link-care-context
                 value:
-                  abhaAddress: abc@abdm
+                  abhaAddress: <ABHA_ADDRESS>
                   patient:
                     - referenceNumber: TMH-PUID-001
                       display: Blood Test
@@ -14712,7 +14712,7 @@ paths:
                         id:
                           type: string
                           nullable: false
-                          example: sample@sbx
+                          example: <ABHA_ADDRESS>
                           description: The abha address of the patient
                     careContext:
                       type: object
@@ -14724,7 +14724,7 @@ paths:
                         patientReference:
                           type: string
                           nullable: false
-                          example: sample@sbx
+                          example: <ABHA_ADDRESS>
                           description: '"A patient identifier with which patient is registered in the facility/hospital"'
                         careContextReference:
                           type: string
@@ -14772,9 +14772,9 @@ paths:
                 value:
                   notification:
                     patient:
-                      id: sample@sbx
+                      id: <ABHA_ADDRESS>
                     careContext:
-                      patientReference: sample@sbx
+                      patientReference: <ABHA_ADDRESS>
                       careContextReference: Test-2
                     hiTypes:
                       - DiagnosticReport
@@ -14940,7 +14940,7 @@ paths:
                     properties:
                       id:
                         type: string
-                        example: abc@abdm
+                        example: <ABHA_ADDRESS>
                       links:
                         type: array
                         items:
@@ -15318,7 +15318,7 @@ paths:
                         abhaAddress:
                           type: string
                           nullable: false
-                          example: abc@abdm
+                          example: <ABHA_ADDRESS>
                           description: The abha address of the patient. Should start with Alphanumeric . and  _  in the middle and must be ending with @abdm or @sbx and Allows alpha numeric character and special characters like ^[a-zA-Z0-9][a-zA-Z0-9_.\-!]+[a-zA-Z0-9]@(abdm|sbx)$
                         profile:
                           type: object
@@ -15379,7 +15379,7 @@ paths:
                 value:
                   acknowledgement:
                     status: SUCCESS
-                    abhaAddress: abc@abdm
+                    abhaAddress: <ABHA_ADDRESS>
                     profile:
                       context: 18235d89-cb13-479d-ad71-7a57d5f669a8
                       tokenNumber: '12'
@@ -15611,7 +15611,7 @@ paths:
                           type: string
                           nullable: false
                           format: email
-                          example: abdulkalam@abdm
+                          example: <ABHA_ADDRESS>
                         tokenNumber:
                           type: string
                           description: Token number at the HMIS/LMIS to be provided to the patient.
@@ -15892,7 +15892,7 @@ paths:
                     hprId:
                       type: string
                       nullable: true
-                      example: abdulkalam@hpr.abdm
+                      example: <EMAIL>
                       description: Healthcare Professionals Registry id. Allows alpha numeric character and special characters like [a-zA-Z0-9][a-zA-Z0-9_.]+[a-zA-Z0-9]@(dr.abdm|hpr.abdm)$|^[1-9][0-9]{13}$
                     latitude:
                       type: number
@@ -15927,12 +15927,12 @@ paths:
                         abhaNumber:
                           type: string
                           nullable: true
-                          example: 91-7507-6821-7770
+                          example: <ABHA_NUMBER>
                           description: The abha number of the patient. Should be only 14 digit. Allows alpha numeric character and special characters like ^(\\d+-?){13}\\d$
                         abhaAddress:
                           type: string
                           nullable: false
-                          example: abc@sbx
+                          example: <ABHA_ADDRESS>
                           description: The abha address of the patient. Should start with Alphanumeric . and  _  in the middle and must be ending with @abdm or @sbx and Allows alpha numeric character and special characters like ^[a-zA-Z0-9][a-zA-Z0-9_.\-!]+[a-zA-Z0-9]@(abdm|sbx)$
                         name:
                           type: string
@@ -15997,7 +15997,7 @@ paths:
                         phoneNumber:
                           type: string
                           nullable: true
-                          example: '9876543210'
+                          example: '<MOBILE_NUMBER>'
                           description: The mobile number of the patient. Must be 10 digit and contain only 0-9 and it allows only numbers like ^(\+\d{1,3}[- ]?)?\d{10}$
             examples:
               01 profile-share:
@@ -16007,12 +16007,12 @@ paths:
                   metaData:
                     hipId: HIP_1
                     context: '123456'
-                    hprId: johndoe@example.com
+                    hprId: <EMAIL>
                     latitude: -38.671
                     longitude: 58.498
                   profile:
                     patient:
-                      abhaAddress: abc@sbx
+                      abhaAddress: <ABHA_ADDRESS>
                       name: John Doe
                       gender: M
                       dayOfBirth: '15'
@@ -16930,7 +16930,7 @@ paths:
                       id:
                         type: string
                         nullable: false
-                        example: radhikha@sbx
+                        example: <ABHA_ADDRESS>
                         description: The abha address of the patient. Must start with Alphanumeric . and  _  in the middle and must be ending with @abdm or @sbx
                   requester:
                     type: object
@@ -16943,7 +16943,7 @@ paths:
                       id:
                         type: string
                         nullable: false
-                        example: radhikha@sbx
+                        example: <ABHA_ADDRESS>
                       name:
                         type: string
                         nullable: false
@@ -17965,7 +17965,7 @@ paths:
                         id:
                           type: string
                           nullable: false
-                          example: radhikha@sbx
+                          example: <ABHA_ADDRESS>
                           description: The abha address of the patient. Must start with Alphanumeric . and  _  in the middle and must be ending with @abdm or @sbx. Allows alpha numeric character and special characters like ^[a-zA-Z0-9][a-zA-Z0-9_.\\-!]+[a-zA-Z0-9]@(abdm|sbx)$
                     hiu:
                       type: object
@@ -18049,7 +18049,7 @@ paths:
                       code: CAREMGT
                       refUri: https://www.abdm.gov.in
                     patient:
-                      id: radhikha@sbx
+                      id: <ABHA_ADDRESS>
                     hiu:
                       id: INDIA_HIU
                     hips:
@@ -18696,7 +18696,7 @@ paths:
                     patientId:
                       type: string
                       nullable: false
-                      example: sample@sbx
+                      example: <ABHA_ADDRESS>
                       description: abha address of the patient.Allows alpha numeric character and special characters like ^[a-zA-Z0-9][a-zA-Z0-9_.\\-!]+[a-zA-Z0-9]@(abdm|sbx)$
                     dateCreated:
                       type: string
@@ -18923,7 +18923,7 @@ paths:
                             id:
                               type: string
                               nullable: false
-                              example: radhikha@sbx
+                              example: <ABHA_ADDRESS>
                               description: The abha address of the patient. Must start with Alphanumeric . and  _  in the middle and must be ending with @abdm or @sbx
                         requester:
                           type: object
@@ -18936,7 +18936,7 @@ paths:
                             id:
                               type: string
                               nullable: false
-                              example: radhikha@sbx
+                              example: <ABHA_ADDRESS>
                             name:
                               type: string
                               nullable: false
@@ -19089,7 +19089,7 @@ paths:
                         patientId:
                           type: string
                           nullable: false
-                          example: sample@sbx
+                          example: <ABHA_ADDRESS>
                         isActive:
                           type: boolean
                           nullable: false
@@ -19665,7 +19665,7 @@ paths:
                                 id:
                                   type: string
                                   nullable: false
-                                  example: abdulkalam@abdm
+                                  example: <ABHA_ADDRESS>
                                   description: The abha address of the patient
                             hip:
                               type: object
@@ -19722,7 +19722,7 @@ paths:
                                 name:
                                   type: string
                                   nullable: false
-                                  example: abdulkalam@abdm
+                                  example: <ABHA_ADDRESS>
                                   description: The name of the requester
                                 identifier:
                                   type: object
@@ -19913,7 +19913,7 @@ paths:
                                 id:
                                   type: string
                                   nullable: false
-                                  example: radhikha@sbx
+                                  example: <ABHA_ADDRESS>
                                   description: The abha address of the patient. Must start with Alphanumeric . and  _  in the middle and must be ending with @abdm or @sbx
                             purpose:
                               type: object
@@ -20234,7 +20234,7 @@ paths:
                   patientId:
                     type: string
                     nullable: false
-                    example: sample@sbx
+                    example: <ABHA_ADDRESS>
                     description: abha address of the patient. Allows alpha numeric character and special characters like ^[a-zA-Z0-9][a-zA-Z0-9_.\\-!]+[a-zA-Z0-9]@(abdm|sbx)$
                   requesterType:
                     type: string
@@ -20309,7 +20309,7 @@ paths:
                           id:
                             type: string
                             nullable: false
-                            example: radhikha@sbx
+                            example: <ABHA_ADDRESS>
                             description: The abha address of the patient. Must start with Alphanumeric . and  _  in the middle and must be ending with @abdm or @sbx. Allows alpha numeric character and special characters like ^[a-zA-Z0-9][a-zA-Z0-9_.\\-!]+[a-zA-Z0-9]@(abdm|sbx)$
                       hiu:
                         type: object
@@ -20399,7 +20399,7 @@ paths:
                   healthIdNumber:
                     type: string
                     nullable: false
-                    example: 91-7507-6821-7770
+                    example: <ABHA_NUMBER>
                     description: abha number of the user.
         '400':
           description: Bad Request
@@ -20684,7 +20684,7 @@ paths:
                             id:
                               type: string
                               nullable: false
-                              example: radhikha@sbx
+                              example: <ABHA_ADDRESS>
                               description: The abha address of the patient. Must start with Alphanumeric . and  _  in the middle and must be ending with @abdm or @sbx. Allows alpha numeric character and special characters like ^[a-zA-Z0-9][a-zA-Z0-9_.\\-!]+[a-zA-Z0-9]@(abdm|sbx)$
                         hiu:
                           type: object
@@ -21274,7 +21274,7 @@ paths:
                       referenceNumber:
                         type: string
                         nullable: false
-                        example: sample@sbx
+                        example: <ABHA_ADDRESS>
                         description: A patient identifier with which patient is registered in the facility/hospital.Allows alpha numeric characters and special characters like "^[a-zA-Z0-9_\\-@,. ()/:\\\\]{0,255}$"
                       display:
                         type: string
@@ -21324,7 +21324,7 @@ paths:
                 value:
                   transactionId: 37d8d312-35a0-41e7-a6e4-1074eb18a5fa
                   patient:
-                    - referenceNumber: sample@sbx
+                    - referenceNumber: <ABHA_ADDRESS>
                       display: Test
                       careContexts:
                         - referenceNumber: Test 10
@@ -21479,7 +21479,7 @@ paths:
                       referenceNumber:
                         type: string
                         nullable: false
-                        example: abc123@sbx
+                        example: <ABHA_ADDRESS>
                         description: |
                           A patient identifier with which patient is registered in the facility/hospital.Allows alpha numeric characters and special characters like "^[a-zA-Z0-9_\\-@,. ()/:\\\\]{0,255}$"
                       display:
@@ -21567,7 +21567,7 @@ paths:
                 summary: P2 - User Initiated Linking › 06 link-on-confirm
                 value:
                   patient:
-                    - referenceNumber: abc123@sbx
+                    - referenceNumber: <ABHA_ADDRESS>
                       display: Test
                       careContexts:
                         - referenceNumber: Test 10
@@ -22150,7 +22150,7 @@ paths:
                       referenceNumber:
                         type: string
                         nullable: false
-                        example: abc123@sbx
+                        example: <ABHA_ADDRESS>
                         description: A patient identifier with which patient is registered in the facility/hospital.Allows alpha numeric characters and special characters like "^[a-zA-Z0-9_\\-@,. ()/:\\\\]{0,255}$"
                       display:
                         type: string
@@ -22247,7 +22247,7 @@ paths:
                 value:
                   transactionId: 37d8d312-35a0-41e7-a6e4-1074eb18a5fa
                   patient:
-                    - referenceNumber: abc123@sbx
+                    - referenceNumber: <ABHA_ADDRESS>
                       display: Test
                       careContexts:
                         - referenceNumber: Test 10
@@ -22403,7 +22403,7 @@ paths:
                 abhaAddress:
                   type: string
                   nullable: true
-                  example: abc@abdm
+                  example: <ABHA_ADDRESS>
                   description: abhaAddress of the user/patient. Allows alpha numeric character and special characters like ^[a-zA-Z0-9][a-zA-Z0-9_.]+[a-zA-Z0-9]@(abdm|sbx)$
                 name:
                   type: string
@@ -22424,7 +22424,7 @@ paths:
               generate-link-token:
                 summary: P2 -  Initiated Linking › generate-link-token
                 value:
-                  abhaAddress: abc@abdm
+                  abhaAddress: <ABHA_ADDRESS>
                   name: John Doe
                   gender: M
                   yearOfBirth: 1984

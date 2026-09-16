@@ -83,7 +83,7 @@ paths:
                     id:
                       type: string
                       nullable: false
-                      example: abc@abdm
+                      example: <ABHA_ADDRESS>
                       description: A patient identifier with which patient is registered in the facility/hospital
                     verifiedIdentifiers:
                       type: array
@@ -312,7 +312,7 @@ paths:
                       referenceNumber:
                         type: string
                         nullable: false
-                        example: abc123@sbx
+                        example: <ABHA_ADDRESS>
                         description: >-
                           A patient identifier with which patient is registered in the facility/hospital.Allows alpha numeric characters and special characters like "^[a-zA-Z0-9_\\-@,. ()/:\\\\]{0,255}$"
                       display:
@@ -557,7 +557,7 @@ paths:
                 abhaAddress:
                   type: string
                   nullable: false
-                  example: sample@sbx
+                  example: <ABHA_ADDRESS>
                   description: A patient identifier with which patient is registered in the facility/hospital.Allows alpha numeric characters and special characters like "^[a-zA-Z0-9_\-@,. ()/:\\]{0,255}$"
                 patient:
                   type: array
@@ -656,7 +656,7 @@ paths:
                     example: "992242c9-6628-412e-b323-681e612e188c"
                   abhaAddress:
                     type: string
-                    example: "nithishjanithi@sbx"
+                    example: "<ABHA_ADDRESS>"
                   patient:
                     type: array
                     items:
@@ -666,7 +666,7 @@ paths:
                           type: string
                           description: >-
                             Reference number used while linking the health records of the patient.
-                          example: "nithishjanithi@sbx"
+                          example: "<ABHA_ADDRESS>"
                         careContexts:
                           type: array
                           description: >-
@@ -700,9 +700,9 @@ paths:
                 Success:
                   value:
                     transactionId: "c1ce50dc-d1f7-4a31-987a-c6bf6d08ad5a"
-                    abhaAddress: "nithishjanithi@sbx"
+                    abhaAddress: "<ABHA_ADDRESS>"
                     patient:
-                    - referenceNumber: "nithishjanithi@sbx"
+                    - referenceNumber: "<ABHA_ADDRESS>"
                       careContexts:
                       - referenceNumber: "New test 1"
                       hiType: "OPConsultation"
@@ -1250,7 +1250,7 @@ paths:
                       referenceNumber:
                         type: string
                         nullable: false
-                        example: abc123@sbx
+                        example: <ABHA_ADDRESS>
                         description: >
                           A patient identifier with which patient is registered in the facility/hospital.Allows alpha numeric characters and special characters like "^[a-zA-Z0-9_\\-@,. ()/:\\\\]{0,255}$"
                       display:
@@ -1476,7 +1476,7 @@ paths:
           format: bearer
           minimum: 1
           maximum: 100
-          example: eyJhbGciOiJSUzUxMiJ9.eyJzdWIiOiJ2YXNhbnRoYWt1bWFyLmtlc2F2
+          example: <TOKEN>
 
       requestBody:
         required: true
@@ -2003,7 +2003,7 @@ paths:
           format: bearer
           minimum: 1
           maximum: 100
-          example: eyJhbGciOiJSUzUxMiJ9.eyJzdWIiOiJ2YXNhbnRoYWt1bWFyLmtlc2F2
+          example: <TOKEN>
 
       requestBody:
         required: true
@@ -2037,7 +2037,7 @@ paths:
                       referenceNumber:
                         type: string
                         nullable: false
-                        example: sample@sbx
+                        example: <ABHA_ADDRESS>
                         description: >-
                           A patient identifier with which patient is registered in the facility/hospital.Allows alpha numeric characters and special characters like "^[a-zA-Z0-9_\\-@,. ()/:\\\\]{0,255}$"
                       display:
@@ -2460,7 +2460,7 @@ paths:
           format: bearer
           minimum: 1
           maximum: 100
-          example: eyJhbGciOiJSUzUxMiJ9.eyJzdWIiOiJ2YXNhbnRoYWt1bWFyLmtlc2F2
+          example: <TOKEN>
 
       requestBody:
         required: true

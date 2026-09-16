@@ -24,11 +24,11 @@ curl --request POST \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
   --header 'X-CM-ID: sbx' \
   --header 'X-HIP-ID: IN2810014366' \
-  --header 'X-LINK-TOKEN: eyJhbGciOiJSUzUxMiJ9.eyJzdWIiOiJ2YXNhbnRoYWt1bWFyLmtlc2F2' \
+  --header 'X-LINK-TOKEN: <TOKEN>' \
   --header 'Content-Type: application/json' \
   --data '{
   "abhaNumber": 12345678901234,
-  "abhaAddress": "abc@abdm",
+  "abhaAddress": "<ABHA_ADDRESS>",
   "patient": [
     {
       "referenceNumber": "TMH-PUID-001",
@@ -64,10 +64,10 @@ curl --request POST \
   --data '{
   "notification": {
     "patient": {
-      "id": "sample@sbx"
+      "id": "<ABHA_ADDRESS>"
     },
     "careContext": {
-      "patientReference": "sample@sbx",
+      "patientReference": "<ABHA_ADDRESS>",
       "careContextReference": "b009a970-8b04-4779-abd1-b50f113245bf"
     },
     "hiTypes": [
@@ -136,7 +136,7 @@ curl --request POST \
   "transactionId": "f901b782-bfdf-4224-9f8d-da2cadc20c0d",
   "patient": [
     {
-      "referenceNumber": "abc123@sbx",
+      "referenceNumber": "<ABHA_ADDRESS>",
       "display": "12345",
       "careContexts": [
         {
@@ -213,7 +213,7 @@ curl --request POST \
   --data '{
   "patient": [
     {
-      "referenceNumber": "abc123@sbx",
+      "referenceNumber": "<ABHA_ADDRESS>",
       "display": "12345",
       "careContexts": [
         {
@@ -256,7 +256,7 @@ curl --request POST \
   --header 'Content-Type: application/json' \
   --data '{
   "abhaNumber": 12345678901234,
-  "abhaAddress": "abc@abdm",
+  "abhaAddress": "<ABHA_ADDRESS>",
   "name": "first_name + middle_name + last_name",
   "gender": "M",
   "yearOfBirth": 9999
@@ -319,7 +319,7 @@ curl --request POST \
       "consentId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
       "createdAt": "2024-05-01T05:10:20.123Z",
       "patient": {
-        "id": "abdulkalam@abdm"
+        "id": "<ABHA_ADDRESS>"
       },
       "careContexts": [
         {
@@ -346,7 +346,7 @@ curl --request POST \
         "id": "abdm"
       },
       "requester": {
-        "name": "abdulkalam@abdm",
+        "name": "<ABHA_ADDRESS>",
         "identifier": {
           "value": "REG1",
           "type": "MH1001",

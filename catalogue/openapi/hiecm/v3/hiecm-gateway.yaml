@@ -23,7 +23,7 @@ info:
 x-abdm-sources:
   - file: catalogue/openapi/.raw/nha-2026-09-16/hiecm/gateway.yaml
     role: upstream
-    hash: sha256:e7ca9d3e54d6e6c864f3f1ef7b2422a322c38f6ef0bf64e421c57960b8851dc7
+    hash: sha256:d3bc599054c2570a50818ca54906c44cf652ad6f813473e8ac243667da4e9300
     fetched: "2026-09-16"
 servers:
   - url: https://dev.abdm.gov.in
@@ -531,7 +531,7 @@ paths:
                   type: string
                   format: uri
                   nullable: false
-                  example: https://webhook.site/
+                  example: <YOUR_CALLBACK_URL>
                   description: The bridge URL to be updated
       security:
         - bearerAuth: []
@@ -1555,7 +1555,7 @@ paths:
                     type: string
                     format: bearer
                     nullable: false
-                    example: eyJhbGciOiJSUzUxMiJ9.eyJzdWIiOiJ2YXNhbnRoYWt1bWFyLmtlc2F2YW5Ac2J4IiwiY2xpZW50SWQiOiJzYngiLCJzeXN0ZW0iOiJBQkhBLUEiLCJyZXF1ZXN0ZXJJZCI6IlBIUi1XRUIiLCJwaHJNb2JpbGUiOm51bGwsImV4cCI6MTY2NzI5ODExNSwiaWF0IjoxNjY3MjkwOTE1LCJwaHJBZGRyZXNzIjoidmFzYW50aGFrdW1hci5rZXNhdmFuQHNieCIsInR4bklkIjoiYjEwMGM4ZDMtNTE1ZC00YWFiLTg1OWQtYzNlMTUwOTE3ZGY1In0.YXw7gzMY-U5Yg41xZdkWr6v0ly2LJL9qMKBsaydlzq7lP7Yd-BIshwWdUAJQInUG2MRoAzSzCKfSLCL9XHMkFgxXE1hTsaHzr_LjXJ--Sj48ftSTrPt5EfVbGVN6ZGv0pY8N1DlUopo7SDzolKjuLaVviLY8OUhX5COQfHtMyJce2oKtmmrl24N_fdEuHVq_4diJ_ZBKRxkpjYYT8myqelMqJbXJW50r6wyPkvBExM0MLz0g2vAZM1g7JqD9e7yWizH7OFtqLsUUC0ksTVwhxEFnki32GpkxEEuJqbB6t9BJXlZeQGX4K0WfCZA6dWtEZcY8HJE4EIQeCfRH5VCjyA
+                    example: <TOKEN>
                   expiresIn:
                     type: integer
                     nullable: false
@@ -1568,7 +1568,7 @@ paths:
                     type: string
                     format: bearer
                     nullable: false
-                    example: eyJhbGciOiJSUzUxMiJ9.eyJzdWIiOiJ2YXNhbnRoYWt1bWFyLmtlc2F2YW5Ac2J4IiwiY2xpZW50SWQiOiJzYngiLCJzeXN0ZW0iOiJBQkhBLUEiLCJyZXF1ZXN0ZXJJZCI6IlBIUi1XRUIiLCJwaHJNb2JpbGUiOm51bGwsImV4cCI6MTY2NzI5ODExNSwiaWF0IjoxNjY3MjkwOTE1LCJwaHJBZGRyZXNzIjoidmFzYW50aGFrdW1hci5rZXNhdmFuQHNieCIsInR4bklkIjoiYjEwMGM4ZDMtNTE1ZC00YWFiLTg1OWQtYzNlMTUwOTE3ZGY1In0.YXw7gzMY-U5Yg41xZdkWr6v0ly2LJL9qMKBsaydlzq7lP7Yd-BIshwWdUAJQInUG2MRoAzSzCKfSLCL9XHMkFgxXE1hTsaHzr_LjXJ--Sj48ftSTrPt5EfVbGVN6ZGv0pY8N1DlUopo7SDzolKjuLaVviLY8OUhX5COQfHtMyJce2oKtmmrl24N_fdEuHVq_4diJ_ZBKRxkpjYYT8myqelMqJbXJW50r6wyPkvBExM0MLz0g2vAZM1g7JqD9e7yWizH7OFtqLsUUC0ksTVwhxEFnki32GpkxEEuJqbB6t9BJXlZeQGX4K0WfCZA6dWtEZcY8HJE4EIQeCfRH5VCjyA
+                    example: <TOKEN>
                   tokenType:
                     type: string
                     nullable: false

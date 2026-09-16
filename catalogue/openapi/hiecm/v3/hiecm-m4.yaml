@@ -22,15 +22,15 @@ info:
 x-abdm-sources:
   - file: catalogue/openapi/.raw/nha-2026-09-16/M4/M4-HFR.json
     role: upstream
-    hash: sha256:26948ced727b5d372b3809ab8a41c562870bcda12bd0fa956e5d46b24ef77b11
+    hash: sha256:69729e97853c7ec991903f80807079305c978e24892e31f1fdaa76c759a5a075
     fetched: "2026-09-16"
   - file: catalogue/openapi/.raw/nha-2026-09-16/M4/M4-HPID.json
     role: upstream
-    hash: sha256:6608da5913b7b0327dd04bc3e9ae05c4fcd59508e697f30060bc9a862af9d4bc
+    hash: sha256:a439c18663297b665f636ed8ddae63dbf9cd3b67152c4e542522c26acb23574d
     fetched: "2026-09-16"
   - file: catalogue/openapi/.raw/nha-2026-09-16/M4/M4-HPR.json
     role: upstream
-    hash: sha256:f91492230d57ac9c50d538e9127f505ab3b04dc845c95055f45a590660a4fed9
+    hash: sha256:e4cf07d50cf6798dd7cf948e92d73b1ebda9eb08e4ef50de142dc932ee39eb01
     fetched: "2026-09-16"
 servers:
   - url: https://apihspsbx.abdm.gov.in/v4/int
@@ -238,7 +238,7 @@ paths:
                 $ref: "#/components/schemas/AccountExistResponsePayload"
               example:
                 token: <JWT TOKEN>
-                hprIdNumber: 71-2665-5777-2713
+                hprIdNumber: <HPR_ID>
                 categoryId: 100
                 subCategoryId: 85
                 txnId: 79dbf65d-affa-4249-8935-3d01676d8b82
@@ -258,7 +258,7 @@ paths:
                 pincode: "201005"
                 profilePhoto: <BASE64 ENCODED STRING>
                 mobile: null
-                hprId: anujsharma1990@hpr.abdm
+                hprId: <EMAIL>
                 new: false
         "404":
           description: Not Found
@@ -442,7 +442,7 @@ paths:
                   type_of_service_other: null
                   fac_alt_contact_per_landline_no: null
                   facility_type: "2"
-                  crt_usr: 71-2824-6403-7827
+                  crt_usr: <HPR_ID>
                   country: India
                   sub_district:
                     locId: "5271"
@@ -474,11 +474,11 @@ paths:
                   ufid: null
                   form3: null
                   lmis_ris_name: null
-                  fac_contact_per_email_verified: user@abdm.com
+                  fac_contact_per_email_verified: <ABHA_ADDRESS>.com
                   power_backup: null
                   fac_contact_per_country_code: null
                   emr_software_other: null
-                  geolocation: 26.91785800000001,75.80129199999999
+                  geolocation: 26.<ABHA_NUMBER>,75.80129199999999
                   open_time: null
                   emr_system: N
                   hospital_cnt_link_colg: null
@@ -596,10 +596,10 @@ paths:
                     nhrrDistrictCode: null
                     activeYn: null
                   net_available: null
-                  health_id: 71-2824-6403-7827
+                  health_id: <HPR_ID>
                   landline_no: ""
                   type_of_service: OPD
-                  fac_contact_per_email: user@abdm.com
+                  fac_contact_per_email: <ABHA_ADDRESS>.com
                   progress_value: null
                   it_available: null
                   alternate_id: IN2810001372
@@ -653,7 +653,7 @@ paths:
                   latitude: "23.068570"
                   longitude: "23.068570"
                 facilityContactInformation:
-                  facilityEmailId: user@abdm.com
+                  facilityEmailId: <ABHA_ADDRESS>.com
                   facilityContactNumber: 976243xxxx
                   websiteLink: nha.abdm.gov.in
                   facilityLandlineNumber: ""
@@ -1659,7 +1659,7 @@ paths:
             schema:
               $ref: "#/components/schemas/EmailAuthRequestDto"
             example:
-              emailAddress: user@abdm.com
+              emailAddress: <ABHA_ADDRESS>.com
               otp_type: ""
         required: true
       responses:
@@ -1727,7 +1727,7 @@ paths:
             schema:
               $ref: "#/components/schemas/EmailAuthRequestDto"
             example:
-              emailAddress: user@abdm.com
+              emailAddress: <ABHA_ADDRESS>.com
               otp_type: ""
         required: true
       responses:
@@ -1738,7 +1738,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/EmailAuthResponseDto"
               example:
-                emailAddress: user@abdm.com
+                emailAddress: <ABHA_ADDRESS>.com
                 otp_type: ""
         "404":
           description: Not Found
@@ -1762,7 +1762,7 @@ paths:
             example:
               hpr_token: <JWT TOKEN>
               hpr_id: 71-2665-5777-XXXX
-              officialEmail: user@abdm.com
+              officialEmail: <ABHA_ADDRESS>.com
               emailOtp: 515999
         required: true
       responses:
@@ -2010,7 +2010,7 @@ paths:
             schema:
               $ref: "#/components/schemas/CategoryRequest"
             example:
-              hprId: 71-3663-1868-2415
+              hprId: <HPR_ID>
       responses:
         "200":
           description: OK
@@ -2265,8 +2265,8 @@ paths:
               schema:
                 $ref: "#/components/schemas/UserProfileResponseDto_HPID"
               example:
-                hprIdNumber: 71-4668-0700-3832
-                hprId: ravibolla@hpr.abdm
+                hprIdNumber: <HPR_ID>
+                hprId: <EMAIL>
                 mobile: "******2125"
                 firstName: Ayushman
                 middleName: Bharat
@@ -2276,7 +2276,7 @@ paths:
                 dayOfBirth: "14"
                 monthOfBirth: "5"
                 gender: M
-                email: user@abdm.com
+                email: <ABHA_ADDRESS>.com
                 profilePhoto: <BASE64 ENCODED STRING>
                 stateCode: "27"
                 districtCode: "490"
@@ -2437,7 +2437,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/RetrieveHprIdPayloadResponse"
               example:
-                hprId: amol.hudekar@hpr.abdm
+                hprId: <EMAIL>
                 hprIdNumber: 71-1********-0212
                 token: <JWT TOKEN>
         "404":
@@ -2554,13 +2554,13 @@ paths:
               schema:
                 $ref: "#/components/schemas/ForgetUserEntityResponseDTO"
               example:
-                hprIdNumber: 71-1227-4427-0212
+                hprIdNumber: <HPR_ID>
                 name: Ayushman Bharat Mission
                 authMethods:
                   - PASSWORD
                   - MOBILE_OTP
                   - AADHAAR_OTP
-                hprId: amol.xxxxx@hpr.abdm
+                hprId: <EMAIL>
                 categoryId: "1"
                 subCategoryId: "1"
         "404":
@@ -2593,13 +2593,13 @@ paths:
                 items:
                   $ref: "#/components/schemas/ForgetUserEntityResponseDTO"
               example:
-                - hprIdNumber: 71-1227-4427-0212
+                - hprIdNumber: <HPR_ID>
                   name: Ayushman Bharat Mission
                   authMethods:
                     - PASSWORD
                     - MOBILE_OTP
                     - AADHAAR_OTP
-                  hprId: amol.xxxxx@hpr.abdm
+                  hprId: <EMAIL>
                   categoryId: "1"
                   subCategoryId: "1"
         "404":
@@ -2812,7 +2812,7 @@ paths:
                 status: "true"
                 message: Congratulations! Your profile has been submitted successfully for verification.
                 error: null
-                hprId: 71-7507-6401-7665
+                hprId: <HPR_ID>
         "404":
           description: Not Found
           content:
@@ -2949,7 +2949,7 @@ paths:
                 status: "true"
                 message: Congratulations! Your profile has been submitted successfully for verification.
                 error: null
-                hprId: 71-7507-6401-7665
+                hprId: <HPR_ID>
         "404":
           description: Not Found
           content:
@@ -2984,7 +2984,7 @@ paths:
                   profileDetails:
                     profilePhoto:
                       id: 30106
-                      data: /9j/4AAQSkZJRgABAgAAAQABAAD/2wBD
+                      data: <BASE64_PHOTO>
                     proofOfWorkCertificate:
                       id: 30106
                       data: JVBERi0xLjMK
@@ -3112,7 +3112,7 @@ paths:
                           universityName: Rajiv Gandhi University Of Health Sciences (rguhs)
                           qualificationYear: "2024"
                           qualificationMonth: ""
-                      hpr_id: 71-7507-6401-7665
+                      hpr_id: <HPR_ID>
                       application_status: null
                       is_council_verified: "true"
                       is_work_verified: null
@@ -4091,7 +4091,7 @@ components:
         email:
           type: string
           description: Email Address of the user.
-          example: user@abdm.com
+          example: <ABHA_ADDRESS>.com
         firstName:
           type: string
           description: First Name of the user).
@@ -4120,7 +4120,7 @@ components:
         hprId:
           type: string
           description: Healthcare Professional ID Alias.
-          example: user@hpr.abdm
+          example: <EMAIL>
         sourceType:
           type: string
           enum:
@@ -5131,7 +5131,7 @@ components:
         hprId:
           type: string
           description: Healthcare Professional ID Alias.
-          example: user@hpr.abdm
+          example: <EMAIL>
         password:
           type: string
           description: User Authentication password.
@@ -5139,7 +5139,7 @@ components:
         email:
           type: string
           description: Email Address of the user.
-          example: user@abdm.com
+          example: <ABHA_ADDRESS>.com
         profilePhoto:
           type: string
           description: Profile photo of the user (Uploaded by the user).

@@ -78,7 +78,7 @@ paths:
                 abhaAddress:
                   type: string
                   nullable: true
-                  example: abc@abdm
+                  example: <ABHA_ADDRESS>
                   description: abhaAddress of the user/patient. Allows alpha numeric character and special characters like ^[a-zA-Z0-9][a-zA-Z0-9_.]+[a-zA-Z0-9]@(abdm|sbx)$
                 name:
                   type: string
@@ -246,13 +246,13 @@ paths:
                   abhaAddress:
                     type: string
                     nullable: false
-                    example: abc@abdm
+                    example: <ABHA_ADDRESS>
                   linkToken:
                     type: string
                     format: bearer
                     nullable: true
                     example: >-
-                      eyJhbGciOiJSUzUxMiJ9.eyJzdWIiOiJ2YXNhbnRoYWt1bWFyLmtlc2F2
+                      <TOKEN>
                   response:
                     type: object
                     nullable: false

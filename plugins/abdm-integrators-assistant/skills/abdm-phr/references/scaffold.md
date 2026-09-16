@@ -33,7 +33,7 @@ A 200 whose body matches:
 ```json
 {
   "Patient": {
-    "id": "abc@abdm",
+    "id": "<ABHA_ADDRESS>",
     "links": [
       {
         "hip": {
@@ -71,7 +71,7 @@ curl --request POST \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
   --header 'X-CM-ID: sbx' \
   --header 'X-HIU-ID: IN2810014366' \
-  --header 'X-AUTH-TOKEN: eyJhbGciOiJSUzUxMiJ9.eyJzdWIiOiJ2YXNhbnRoYWt1bWFyLmtlc2F2' \
+  --header 'X-AUTH-TOKEN: <TOKEN>' \
   --header 'Content-Type: application/json' \
   --data '{
   "hip": {
@@ -100,13 +100,13 @@ curl --request POST \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
   --header 'X-CM-ID: sbx' \
   --header 'X-HIU-ID: IN2810014366' \
-  --header 'X-AUTH-TOKEN: eyJhbGciOiJSUzUxMiJ9.eyJzdWIiOiJ2YXNhbnRoYWt1bWFyLmtlc2F2' \
+  --header 'X-AUTH-TOKEN: <TOKEN>' \
   --header 'Content-Type: application/json' \
   --data '{
   "transactionId": "f901b782-bfdf-4224-9f8d-da2cadc20c0d",
   "patient": [
     {
-      "referenceNumber": "sample@sbx",
+      "referenceNumber": "<ABHA_ADDRESS>",
       "display": "Test",
       "careContexts": [
         {
@@ -135,7 +135,7 @@ curl --request POST \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
   --header 'X-CM-ID: sbx' \
   --header 'X-HIU-ID: IN2810014366' \
-  --header 'X-AUTH-TOKEN: eyJhbGciOiJSUzUxMiJ9.eyJzdWIiOiJ2YXNhbnRoYWt1bWFyLmtlc2F2' \
+  --header 'X-AUTH-TOKEN: <TOKEN>' \
   --header 'Content-Type: application/json' \
   --data '{
   "token": 123456,
@@ -165,21 +165,21 @@ curl --request POST \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
   --header 'X-CM-ID: sbx' \
   --header 'X-HIU-ID: HIU_ID' \
-  --header 'X-AUTH-TOKEN: Bearer eyJhbGciOiJSUzUxMiJ9.eyJzdWIiOiJ2YXNhbnRoYWt1bWFyLmtlc2F2' \
+  --header 'X-AUTH-TOKEN: Bearer <TOKEN>' \
   --header 'Content-Type: application/json' \
   --data '{
   "intent": "PROFILE_SHARE",
   "metaData": {
     "hipId": "HIP_1",
     "context": "6",
-    "hprId": "abdulkalam@hpr.abdm",
+    "hprId": "<EMAIL>",
     "latitude": 20.5937,
     "longitude": 78.9629
   },
   "profile": {
     "patient": {
-      "abhaNumber": "91-7507-6821-7770",
-      "abhaAddress": "abc@sbx",
+      "abhaNumber": "<ABHA_NUMBER>",
+      "abhaAddress": "<ABHA_ADDRESS>",
       "name": "Abdul Kalam",
       "gender": "M",
       "dayOfBirth": "1",
@@ -191,7 +191,7 @@ curl --request POST \
         "state": "Tamil Nadu",
         "pincode": "641050"
       },
-      "phoneNumber": "9876543210"
+      "phoneNumber": "<MOBILE_NUMBER>"
     }
   }
 }'
@@ -210,7 +210,7 @@ curl --request GET \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
   --header 'X-CM-ID: sbx' \
-  --header 'X-AUTH-TOKEN: Bearer eyJhbGciOiJSUzUxMiJ9.eyJzdWIiOiJ2YXNhbnRoYWt1bWFyLmtlc2F2'
+  --header 'X-AUTH-TOKEN: Bearer <TOKEN>'
 ```
 
 **Exit condition (Observe until this is true)**
@@ -234,7 +234,7 @@ curl --request POST \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
   --header 'X-CM-ID: sbx' \
-  --header 'X-AUTH-TOKEN: eyJhbGciOiJSUzUxMiJ9.eyJzdWIiOiJ2YXNhbnRoYWt1bWFyLmtlc2F2' \
+  --header 'X-AUTH-TOKEN: <TOKEN>' \
   --header 'Content-Type: application/json' \
   --data '{
   "consents": [
@@ -280,7 +280,7 @@ curl --request POST \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
   --header 'X-CM-ID: sbx' \
-  --header 'X-AUTH-TOKEN: eyJhbGciOiJSUzUxMiJ9.eyJzdWIiOiJ2YXNhbnRoYWt1bWFyLmtlc2F2' \
+  --header 'X-AUTH-TOKEN: <TOKEN>' \
   --header 'Content-Type: application/json' \
   --data '{
   "reason": "Not authorized"
@@ -296,7 +296,7 @@ curl --request POST \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
   --header 'X-CM-ID: sbx' \
-  --header 'X-AUTH-TOKEN: eyJhbGciOiJSUzUxMiJ9.eyJzdWIiOiJ2YXNhbnRoYWt1bWFyLmtlc2F2' \
+  --header 'X-AUTH-TOKEN: <TOKEN>' \
   --header 'Content-Type: application/json' \
   --data '{
   "consents": [
@@ -314,7 +314,7 @@ curl --request GET \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
   --header 'X-CM-ID: sbx' \
-  --header 'X-AUTH-TOKEN: eyJhbGciOiJSUzUxMiJ9.eyJzdWIiOiJ2YXNhbnRoYWt1bWFyLmtlc2F2'
+  --header 'X-AUTH-TOKEN: <TOKEN>'
 ```
 
 #### 5. This is ABDM HIE-CM API called to fetch all the consent request details of a patient. (`phr_get_consent_v3_request`)
@@ -326,7 +326,7 @@ curl --request GET \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
   --header 'X-CM-ID: sbx' \
-  --header 'X-AUTH-TOKEN: eyJhbGciOiJSUzUxMiJ9.eyJzdWIiOiJ2YXNhbnRoYWt1bWFyLmtlc2F2'
+  --header 'X-AUTH-TOKEN: <TOKEN>'
 ```
 
 #### 6. This is ABDM HIE-CM API called to fetch all the consent artefact details associated with a consent request request-id. (`phr_get_consent_v3_artefact_request_request_id`)
@@ -338,7 +338,7 @@ curl --request GET \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
   --header 'X-CM-ID: sbx' \
-  --header 'X-AUTH-TOKEN: eyJhbGciOiJSUzUxMiJ9.eyJzdWIiOiJ2YXNhbnRoYWt1bWFyLmtlc2F2'
+  --header 'X-AUTH-TOKEN: <TOKEN>'
 ```
 
 #### 7. This is ABDM HIE-CM API called to fetch the consent artefact details associated with the artefact-id. (`phr_get_consent_v3_artefact_artefact_id`)
@@ -350,7 +350,7 @@ curl --request GET \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
   --header 'X-CM-ID: sbx' \
-  --header 'X-AUTH-TOKEN: eyJhbGciOiJSUzUxMiJ9.eyJzdWIiOiJ2YXNhbnRoYWt1bWFyLmtlc2F2'
+  --header 'X-AUTH-TOKEN: <TOKEN>'
 ```
 
 #### 8. This is ABDM HIE-CM API called to fetch all the consent artefact details of a patient. (`phr_get_consent_v3_artefact`)
@@ -362,7 +362,7 @@ curl --request GET \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
   --header 'X-CM-ID: sbx' \
-  --header 'X-AUTH-TOKEN: eyJhbGciOiJSUzUxMiJ9.eyJzdWIiOiJ2YXNhbnRoYWt1bWFyLmtlc2F2'
+  --header 'X-AUTH-TOKEN: <TOKEN>'
 ```
 
 #### 9. This is ABDM HIE-CM API called to setup an auto-approval policy for given HIU. (`phr_post_consent_v3_auto_approve`)
@@ -374,7 +374,7 @@ curl --request POST \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
   --header 'X-CM-ID: sbx' \
-  --header 'X-AUTH-TOKEN: eyJhbGciOiJSUzUxMiJ9.eyJzdWIiOiJ2YXNhbnRoYWt1bWFyLmtlc2F2' \
+  --header 'X-AUTH-TOKEN: <TOKEN>' \
   --header 'Content-Type: application/json' \
   --data '{
   "isApplicableForAllHIPs": false,
@@ -437,7 +437,7 @@ curl --request POST \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
   --header 'X-CM-ID: sbx' \
-  --header 'X-AUTH-TOKEN: eyJhbGciOiJSUzUxMiJ9.eyJzdWIiOiJ2YXNhbnRoYWt1bWFyLmtlc2F2'
+  --header 'X-AUTH-TOKEN: <TOKEN>'
 ```
 
 #### 11. This is ABDM HIE-CM API called to enable the auto-approval policy. (`phr_post_consent_v3_auto_approve_auto_approval_id_enable`)
@@ -449,7 +449,7 @@ curl --request POST \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
   --header 'X-CM-ID: sbx' \
-  --header 'X-AUTH-TOKEN: eyJhbGciOiJSUzUxMiJ9.eyJzdWIiOiJ2YXNhbnRoYWt1bWFyLmtlc2F2'
+  --header 'X-AUTH-TOKEN: <TOKEN>'
 ```
 
 **Exit condition (Observe until this is true)**
@@ -479,7 +479,7 @@ curl --request GET \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
   --header 'X-CM-ID: sbx' \
-  --header 'X-AUTH-TOKEN: eyJhbGciOiJSUzUxMiJ9.eyJzdWIiOiJ2YXNhbnRoYWt1bWFyLmtlc2F2'
+  --header 'X-AUTH-TOKEN: <TOKEN>'
 ```
 
 #### 2. This API will be invoked by the patient/user from PHR application to approve subscription request. (`phr_post_subscription_requests_v3_request_id_approve`)
@@ -491,7 +491,7 @@ curl --request POST \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
   --header 'X-CM-ID: sbx' \
-  --header 'X-AUTH-TOKEN: eyJhbGciOiJSUzUxMiJ9.eyJzdWIiOiJ2YXNhbnRoYWt1bWFyLmtlc2F2' \
+  --header 'X-AUTH-TOKEN: <TOKEN>' \
   --header 'Content-Type: application/json' \
   --data '{
   "isApplicableForAllHIPs": false,
@@ -555,7 +555,7 @@ curl --request POST \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
   --header 'X-CM-ID: sbx' \
-  --header 'X-AUTH-TOKEN: eyJhbGciOiJSUzUxMiJ9.eyJzdWIiOiJ2YXNhbnRoYWt1bWFyLmtlc2F2' \
+  --header 'X-AUTH-TOKEN: <TOKEN>' \
   --header 'Content-Type: application/json' \
   --data '{
   "reason": "Subscription denied."
@@ -571,7 +571,7 @@ curl --request PUT \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
   --header 'X-CM-ID: sbx' \
-  --header 'X-AUTH-TOKEN: eyJhbGciOiJSUzUxMiJ9.eyJzdWIiOiJ2YXNhbnRoYWt1bWFyLmtlc2F2' \
+  --header 'X-AUTH-TOKEN: <TOKEN>' \
   --header 'Content-Type: application/json' \
   --data '{
   "hiuId": "INDIA_HIU",
@@ -640,7 +640,7 @@ curl --request POST \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
   --header 'X-CM-ID: sbx' \
-  --header 'X-AUTH-TOKEN: eyJhbGciOiJSUzUxMiJ9.eyJzdWIiOiJ2YXNhbnRoYWt1bWFyLmtlc2F2'
+  --header 'X-AUTH-TOKEN: <TOKEN>'
 ```
 
 #### 6. This API will be invoked to disable the subscription by subscription id. (`phr_post_subscription_requests_v3_disable_subscription_id`)
@@ -652,7 +652,7 @@ curl --request POST \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
   --header 'X-CM-ID: sbx' \
-  --header 'X-AUTH-TOKEN: eyJhbGciOiJSUzUxMiJ9.eyJzdWIiOiJ2YXNhbnRoYWt1bWFyLmtlc2F2'
+  --header 'X-AUTH-TOKEN: <TOKEN>'
 ```
 
 #### 7. This API will be invoked by the patient/user from PHR application to fetch his/her subscription details by subscription id. (`phr_get_subscription_requests_v3_subscription_id`)
@@ -664,7 +664,7 @@ curl --request GET \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
   --header 'X-CM-ID: sbx' \
-  --header 'X-AUTH-TOKEN: eyJhbGciOiJSUzUxMiJ9.eyJzdWIiOiJ2YXNhbnRoYWt1bWFyLmtlc2F2'
+  --header 'X-AUTH-TOKEN: <TOKEN>'
 ```
 
 #### 8. This API will be invoked by the patient/user from PHR application to fetch his/her subscription details by subscription request id. (`phr_get_subscription_requests_v3_request_request_id`)
@@ -676,7 +676,7 @@ curl --request GET \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
   --header 'X-CM-ID: sbx' \
-  --header 'X-AUTH-TOKEN: eyJhbGciOiJSUzUxMiJ9.eyJzdWIiOiJ2YXNhbnRoYWt1bWFyLmtlc2F2'
+  --header 'X-AUTH-TOKEN: <TOKEN>'
 ```
 
 #### 9. This API will be invoked to get all the consent and subscription requests with given filters. (`phr_get_subscription_requests_v3_patients_requests`)
@@ -688,7 +688,7 @@ curl --request GET \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
   --header 'X-CM-ID: sbx' \
-  --header 'X-AUTH-TOKEN: eyJhbGciOiJSUzUxMiJ9.eyJzdWIiOiJ2YXNhbnRoYWt1bWFyLmtlc2F2'
+  --header 'X-AUTH-TOKEN: <TOKEN>'
 ```
 
 #### 10. This API will be invoked to get health locker settings of a patient by locker id. (`phr_get_subscription_requests_v3_patients_lockers_lockerid`)
@@ -700,7 +700,7 @@ curl --request GET \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
   --header 'X-CM-ID: sbx' \
-  --header 'X-AUTH-TOKEN: eyJhbGciOiJSUzUxMiJ9.eyJzdWIiOiJ2YXNhbnRoYWt1bWFyLmtlc2F2'
+  --header 'X-AUTH-TOKEN: <TOKEN>'
 ```
 
 #### 11. The API provides the list of health locker that the ABHA address is subscribed to. (`phr_get_subscription_requests_v3_patients_lockers`)
@@ -712,7 +712,7 @@ curl --request GET \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
   --header 'X-CM-ID: sbx' \
-  --header 'X-AUTH-TOKEN: eyJhbGciOiJSUzUxMiJ9.eyJzdWIiOiJ2YXNhbnRoYWt1bWFyLmtlc2F2'
+  --header 'X-AUTH-TOKEN: <TOKEN>'
 ```
 
 **Exit condition (Observe until this is true)**
@@ -725,7 +725,7 @@ A 200 whose body matches:
     "id": 212,
     "lockerId": "HIU_V3",
     "lockerName": "HIU_V3",
-    "patientId": "sample@sbx",
+    "patientId": "<ABHA_ADDRESS>",
     "dateCreated": "2024-03-15T01:49:16.316Z",
     "dateModified": "2024-03-120T01:49:16.316Z",
     "isActive": true
@@ -746,7 +746,7 @@ curl --request POST \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
   --header 'X-CM-ID: sbx' \
-  --header 'X-AUTH-TOKEN: eyJhbGciOiJSUzUxMiJ9.eyJzdWIiOiJ2YXNhbnRoYWt1bWFyLmtlc2F2' \
+  --header 'X-AUTH-TOKEN: <TOKEN>' \
   --header 'X-HIU-ID: IN2810014366' \
   --header 'Content-Type: application/json' \
   --data '{
@@ -758,7 +758,7 @@ curl --request POST \
   "profile": {
     "patient": {
       "abhaNumber": "91-7507-xxxx-xxxx",
-      "abhaAddress": "abc@sbx",
+      "abhaAddress": "<ABHA_ADDRESS>",
       "name": "name",
       "gender": "M",
       "dayOfBirth": "string",
@@ -789,7 +789,7 @@ curl --request POST \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
   --header 'X-CM-ID: sbx' \
-  --header 'X-AUTH-TOKEN: eyJhbGciOiJSUzUxMiJ9.eyJzdWIiOiJ2YXNhbnRoYWt1bWFyLmtlc2F2' \
+  --header 'X-AUTH-TOKEN: <TOKEN>' \
   --header 'X-HIU-ID: IN2810014366' \
   --header 'Content-Type: application/json' \
   --data '"<VALUE>"'
@@ -825,13 +825,13 @@ curl --request POST \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
   --header 'X-CM-ID: sbx' \
-  --header 'X-AUTH-TOKEN: eyJhbGciOiJSUzUxMiJ9.eyJzdWIiOiJ2YXNhbnRoYWt1bWFyLmtlc2F2' \
+  --header 'X-AUTH-TOKEN: <TOKEN>' \
   --header 'X-HIU-ID: IN2810014366' \
   --header 'Content-Type: application/json' \
   --data '{
   "queryStatus": {
     "orderNumber": "string",
-    "abhaAddress": "abha@sbx",
+    "abhaAddress": "<ABHA_ADDRESS>",
     "openOrderRequestId": "0d8bd16b-117c-4d07-9916-109fe3a9ab88"
   }
 }'
@@ -860,7 +860,7 @@ curl --request POST \
   --data '{
   "txnId": "27d444b7-2a3d-46d8-bf67-e5590b6c46b6",
   "phrDetails": {
-    "mobile": "/9j/4AAQSkZJRgABAgAAAQABAAD/2wBD",
+    "mobile": "<BASE64_PHOTO>",
     "firstName": "John",
     "middleName": "",
     "lastName": "Doe",
@@ -876,8 +876,8 @@ curl --request POST \
     "districtName": "Nashik",
     "districtCode": "123",
     "pinCode": "422003",
-    "abhaAddress": "johndoe@sbx",
-    "password": "/9j/4AAQSkZJRgABAgAAAQABAAD/2wBD"
+    "abhaAddress": "<ABHA_ADDRESS>",
+    "password": "<BASE64_PHOTO>"
   }
 }'
 ```
@@ -965,7 +965,7 @@ A 200 whose body matches:
   "authResult": "success",
   "users": [
     {
-      "abhaAddress": "johndoe@sbx",
+      "abhaAddress": "<ABHA_ADDRESS>",
       "fullName": "John Doe",
       "abhaNumber": "XX-XXXX-XXXX-1234",
       "status": "ACTIVE",
@@ -1073,7 +1073,7 @@ curl --request POST \
   "monthOfBirth": "05",
   "yearOfBirth": "1997",
   "gender": "M",
-  "email": "johndoe@example.com",
+  "email": "<EMAIL>",
   "mobile": "******0903",
   "address": "Patoda, Yeola, Nashik, Maharashtra1",
   "stateName": "Maharashtra",
@@ -1177,7 +1177,7 @@ curl --request POST \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
   --header 'Content-Type: application/json' \
   --data '{
-  "abhaAddress": "johndoe@sbx",
+  "abhaAddress": "<ABHA_ADDRESS>",
   "txnId": "37d8d312-35a0-41e7-a6e4-1074eb18a5fa"
 }'
 ```
@@ -1219,7 +1219,7 @@ curl --request POST \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
   --header 'Content-Type: application/json' \
   --data '{
-  "abhaAddress": "johndoe@sbx",
+  "abhaAddress": "<ABHA_ADDRESS>",
   "txnId": "37d8d312-35a0-41e7-a6e4-1074eb18a5fa"
 }'
 ```
@@ -1298,21 +1298,21 @@ A 200 whose body matches:
   "authResult": "success",
   "users": [
     {
-      "abhaAddress": "johndoe@sbx",
+      "abhaAddress": "<ABHA_ADDRESS>",
       "fullName": "John Doe",
       "abhaNumber": "91-5326-6278-XXXX",
       "status": "ACTIVE",
       "kycStatus": "VERIFIED"
     },
     {
-      "abhaAddress": "johndoe@sbx",
+      "abhaAddress": "<ABHA_ADDRESS>",
       "fullName": "John Doe",
       "abhaNumber": "91-5326-6278-XXXX",
       "status": "ACTIVE",
       "kycStatus": "PENDING"
     },
     {
-      "abhaAddress": "johndoe@sbx",
+      "abhaAddress": "<ABHA_ADDRESS>",
       "fullName": "John Doe",
       "status": "ACTIVE",
       "kycStatus": "PENDING"
@@ -1340,7 +1340,7 @@ curl --request POST \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
   --header 'Content-Type: application/json' \
   --data '{
-  "abhaAddress": "johndoe@sbx"
+  "abhaAddress": "<ABHA_ADDRESS>"
 }'
 ```
 
@@ -1351,7 +1351,7 @@ A 200 whose body matches:
 ```json
 {
   "healthIdNumber": "91-5326-6278-XXXX",
-  "abhaAddress": "johndoe@sbx",
+  "abhaAddress": "<ABHA_ADDRESS>",
   "authMethods": [
     "MOBILE_OTP",
     "PASSWORD",

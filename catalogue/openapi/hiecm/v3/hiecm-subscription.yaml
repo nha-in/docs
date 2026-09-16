@@ -22,7 +22,7 @@ info:
 x-abdm-sources:
   - file: catalogue/openapi/.raw/nha-2026-09-16/hiecm/subscription.yaml
     role: upstream
-    hash: sha256:7697e2f1445968038f56a8795f73fd49e73cba74ce2bc30920572c602010f7bf
+    hash: sha256:19e2be6557790fecf8f9b5e2374ee25bb5e432b6aa11a9f673d93a0228eb61b0
     fetched: "2026-09-16"
 servers:
   - url: https://dev.abdm.gov.in
@@ -132,7 +132,7 @@ paths:
                         id:
                           type: string
                           nullable: false
-                          example: radhikha@sbx
+                          example: <ABHA_ADDRESS>
                           description: The abha address of the patient. Must start with Alphanumeric . and  _  in the middle and must be ending with @abdm or @sbx. Allows alpha numeric character and special characters like ^[a-zA-Z0-9][a-zA-Z0-9_.\\-!]+[a-zA-Z0-9]@(abdm|sbx)$
                     hiu:
                       type: object
@@ -729,7 +729,7 @@ paths:
             format: bearer
             minimum: 1
             maximum: 100
-          example: eyJhbGciOiJSUzUxMiJ9.eyJzdWIiOiJ2YXNhbnRoYWt1bWFyLmtlc2F2
+          example: <TOKEN>
           description: JWT Authentication token issued by ABDM after successful validation of username and password
         - name: X-LOCKER-ID
           in: header
@@ -1119,7 +1119,7 @@ webhooks:
                             id:
                               type: string
                               nullable: false
-                              example: radhikha@sbx
+                              example: <ABHA_ADDRESS>
                               description: |-
                                 The abha address of the patient. Must start with Alphanumeric . and  _  in the middle and must be ending with @abdm or @sbx.Allows alpha numeric character and special characters like
                                  ^[a-zA-Z0-9][a-zA-Z0-9_.\\-!]+[a-zA-Z0-9]@(abdm|sbx)$
@@ -1461,7 +1461,7 @@ webhooks:
                             id:
                               type: string
                               nullable: false
-                              example: radhikha@sbx
+                              example: <ABHA_ADDRESS>
                               description: The abha address of the patient. Must start with Alphanumeric . and  _  in the middle and must be ending with @abdm or @sbx and Allows alpha numeric character and special characters like ^[a-zA-Z0-9][a-zA-Z0-9_.\\-!]+[a-zA-Z0-9]@(abdm|sbx)$
                         hip:
                           type: object

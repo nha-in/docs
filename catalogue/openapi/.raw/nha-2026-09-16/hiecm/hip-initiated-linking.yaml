@@ -61,7 +61,7 @@ paths:
         required: true
         schema:
           type: string
-          example: eyJhbGciOiJSUzUxMiJ9.eyJzdWIiOiJ2YXNhbnRoYWt1bWFyLmtlc2F2
+          example: <TOKEN>
         description: >-
           JWT Authentication token which was issued by ABDM after successful validation of username and password
       requestBody:
@@ -82,7 +82,7 @@ paths:
                 abhaAddress:
                   type: string
                   nullable: false
-                  example: abc@abdm
+                  example: <ABHA_ADDRESS>
                   description: >-
                     The abha address of the patient. Should start with Alphanumeric . and  _  in the middle and must be ending with @abdm or @sbx also allows alpha numeric character and special characters like ^[a-zA-Z0-9][a-zA-Z0-9_.]+[a-zA-Z0-9]@(abdm|sbx)$
                 patient:
@@ -301,7 +301,7 @@ paths:
                   abhaAddress:
                     type: string
                     nullable: false
-                    example: abc@abdm
+                    example: <ABHA_ADDRESS>
                   status:
                     type: string
                     enum:
@@ -607,7 +607,7 @@ paths:
                         id:
                           type: string
                           nullable: false
-                          example: sample@sbx
+                          example: <ABHA_ADDRESS>
                           description: The abha address of the patient
                     careContext:
                       type: object
@@ -620,7 +620,7 @@ paths:
                         patientReference:
                           type: string
                           nullable: false
-                          example: sample@sbx
+                          example: <ABHA_ADDRESS>
                           description: >-
                             "A patient identifier with which patient is registered in the facility/hospital"
                         careContextReference:
@@ -1392,7 +1392,7 @@ paths:
                     properties:
                       id:
                         type: string
-                        example: "abc@abdm"
+                        example: "<ABHA_ADDRESS>"
                       links:
                         type: array
                         items:

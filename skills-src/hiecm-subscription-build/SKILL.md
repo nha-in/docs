@@ -36,7 +36,7 @@ curl --request POST \
       "refUri": "https://abc.def.in"
     },
     "patient": {
-      "id": "radhikha@sbx"
+      "id": "<ABHA_ADDRESS>"
     },
     "hiu": {
       "id": "INDIA_HIU",
@@ -140,7 +140,7 @@ curl --request POST \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
   --header 'X-CM-ID: sbx' \
-  --header 'X-AUTH-TOKEN: eyJhbGciOiJSUzUxMiJ9.eyJzdWIiOiJ2YXNhbnRoYWt1bWFyLmtlc2F2' \
+  --header 'X-AUTH-TOKEN: <TOKEN>' \
   --header 'X-LOCKER-ID: <X_LOCKER_ID>'
 ```
 

@@ -126,14 +126,14 @@ curl --request POST \
   --data '{
   "idType": "hpr_id",
   "domainName": "@hpr.abdm",
-  "email": "user@abdm.com",
+  "email": "<ABHA_ADDRESS>.com",
   "firstName": "Ayushman",
   "middleName": "Bharat",
   "lastName": "Mission",
   "password": "Ayushman@143",
   "profilePhoto": "<BASE64 ENCODED STRING>",
   "txnId": "c3b0c27d-e19d-4244-b8bb-3fa19285054a",
-  "hprId": "user@hpr.abdm",
+  "hprId": "<EMAIL>",
   "sourceType": "DRIVING_LICENSE",
   "hpCategoryCode": 1,
   "hpSubCategoryCode": 1,
@@ -197,7 +197,7 @@ curl --request POST \
       "longitude": "23.068570"
     },
     "facilityContactInformation": {
-      "facilityEmailId": "user@abdm.com",
+      "facilityEmailId": "<ABHA_ADDRESS>.com",
       "facilityContactNumber": "976243xxxx",
       "websiteLink": "nha.abdm.gov.in",
       "facilityLandlineNumber": "",
@@ -790,7 +790,7 @@ curl --request POST \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'Content-Type: application/json' \
   --data '{
-  "emailAddress": "user@abdm.com",
+  "emailAddress": "<ABHA_ADDRESS>.com",
   "otp_type": ""
 }'
 ```
@@ -816,7 +816,7 @@ curl --request POST \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'Content-Type: application/json' \
   --data '{
-  "emailAddress": "user@abdm.com",
+  "emailAddress": "<ABHA_ADDRESS>.com",
   "otp_type": ""
 }'
 ```
@@ -831,7 +831,7 @@ curl --request POST \
   --data '{
   "hpr_token": "<JWT TOKEN>",
   "hpr_id": "71-2665-5777-XXXX",
-  "officialEmail": "user@abdm.com",
+  "officialEmail": "<ABHA_ADDRESS>.com",
   "emailOtp": 515999
 }'
 ```
@@ -923,9 +923,9 @@ curl --request POST \
   "firstName": "Ayushman",
   "lastName": "Mission",
   "middleName": "Bharat",
-  "hprId": "user@hpr.abdm",
+  "hprId": "<EMAIL>",
   "password": "Abdm@143",
-  "email": "user@abdm.com",
+  "email": "<ABHA_ADDRESS>.com",
   "profilePhoto": "<BASE64 ENCODED STRING>",
   "stateCode": "7",
   "districtCode": "71",
@@ -1016,7 +1016,7 @@ curl --request POST \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'Content-Type: application/json' \
   --data '{
-  "hprId": "71-3663-1868-2415"
+  "hprId": "<HPR_ID>"
 }'
 ```
 
@@ -1281,14 +1281,14 @@ A 200 whose body matches:
 ```json
 [
   {
-    "hprIdNumber": "71-1227-4427-0212",
+    "hprIdNumber": "<HPR_ID>",
     "name": "Ayushman Bharat Mission",
     "authMethods": [
       "PASSWORD",
       "MOBILE_OTP",
       "AADHAAR_OTP"
     ],
-    "hprId": "amol.xxxxx@hpr.abdm",
+    "hprId": "<EMAIL>",
     "categoryId": "1",
     "subCategoryId": "1"
   }
@@ -1657,7 +1657,7 @@ A 200 whose body matches:
             "qualificationMonth": ""
           }
         ],
-        "hpr_id": "71-7507-6401-7665",
+        "hpr_id": "<HPR_ID>",
         "application_status": null,
         "is_council_verified": "true",
         "is_work_verified": null,

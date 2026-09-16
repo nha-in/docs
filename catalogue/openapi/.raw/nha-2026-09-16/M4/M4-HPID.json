@@ -249,7 +249,7 @@
                                 },
                                 "example": {
                                     "token": "<JWT TOKEN>",
-                                    "hprIdNumber": "71-2665-5777-2713",
+                                    "hprIdNumber": "<HPR_ID>",
                                     "categoryId": 100,
                                     "subCategoryId": 85,
                                     "txnId": "79dbf65d-affa-4249-8935-3d01676d8b82",
@@ -269,7 +269,7 @@
                                     "pincode": "201005",
                                     "profilePhoto": "<BASE64 ENCODED STRING>",
                                     "mobile": null,
-                                    "hprId": "anujsharma1990@hpr.abdm",
+                                    "hprId": "<EMAIL>",
                                     "new": false
                                 }
                             }
@@ -764,7 +764,7 @@
                                 "$ref": "#/components/schemas/EmailAuthRequestDto"
                             },
                             "example": {
-                                "emailAddress": "user@abdm.com",
+                                "emailAddress": "<ABHA_ADDRESS>.com",
                                 "otp_type": ""
                             }
                         }
@@ -862,7 +862,7 @@
                                 "$ref": "#/components/schemas/EmailAuthRequestDto"
                             },
                             "example": {
-                                "emailAddress": "user@abdm.com",
+                                "emailAddress": "<ABHA_ADDRESS>.com",
                                 "otp_type": ""
                             }
                         }
@@ -878,7 +878,7 @@
                                     "$ref": "#/components/schemas/EmailAuthResponseDto"
                                 },
                                 "example": {
-                                    "emailAddress": "user@abdm.com",
+                                    "emailAddress": "<ABHA_ADDRESS>.com",
                                     "otp_type": ""
                                 }
                             }
@@ -912,7 +912,7 @@
                             "example": {
                                 "hpr_token": "<JWT TOKEN>",
                                 "hpr_id": "71-2665-5777-XXXX",
-                                "officialEmail": "user@abdm.com",
+                                "officialEmail": "<ABHA_ADDRESS>.com",
                                 "emailOtp": 515999
                             }
                         }
@@ -1293,7 +1293,7 @@
                                 "$ref": "#/components/schemas/CategoryRequest"
                             },
                             "example": {
-                                "hprId": "71-3663-1868-2415"
+                                "hprId": "<HPR_ID>"
                             }
                         }
                     }
@@ -1667,8 +1667,8 @@
                                     "$ref": "#/components/schemas/UserProfileResponseDto"
                                 },
                                 "example": {
-                                    "hprIdNumber": "71-4668-0700-3832",
-                                    "hprId": "ravibolla@hpr.abdm",
+                                    "hprIdNumber": "<HPR_ID>",
+                                    "hprId": "<EMAIL>",
                                     "mobile": "******2125",
                                     "firstName": "Ayushman",
                                     "middleName": "Bharat",
@@ -1678,7 +1678,7 @@
                                     "dayOfBirth": "14",
                                     "monthOfBirth": "5",
                                     "gender": "M",
-                                    "email": "user@abdm.com",
+                                    "email": "<ABHA_ADDRESS>.com",
                                     "profilePhoto": "<BASE64 ENCODED STRING>",
                                     "stateCode": "27",
                                     "districtCode": "490",
@@ -1903,7 +1903,7 @@
                                     "$ref": "#/components/schemas/RetrieveHprIdPayloadResponse"
                                 },
                                 "example": {
-                                    "hprId": "amol.hudekar@hpr.abdm",
+                                    "hprId": "<EMAIL>",
                                     "hprIdNumber": "71-1********-0212",
                                     "token": "<JWT TOKEN>"
                                 }
@@ -2075,14 +2075,14 @@
                                     "$ref": "#/components/schemas/ForgetUserEntityResponseDTO"
                                 },
                                 "example": {
-                                    "hprIdNumber": "71-1227-4427-0212",
+                                    "hprIdNumber": "<HPR_ID>",
                                     "name": "Ayushman Bharat Mission",
                                     "authMethods": [
                                         "PASSWORD",
                                         "MOBILE_OTP",
                                         "AADHAAR_OTP"
                                     ],
-                                    "hprId": "amol.xxxxx@hpr.abdm",
+                                    "hprId": "<EMAIL>",
                                     "categoryId": "1",
                                     "subCategoryId": "1"
                                 }
@@ -2131,14 +2131,14 @@
                                 },
                                 "example": [
                                     {
-                                        "hprIdNumber": "71-1227-4427-0212",
+                                        "hprIdNumber": "<HPR_ID>",
                                         "name": "Ayushman Bharat Mission",
                                         "authMethods": [
                                             "PASSWORD",
                                             "MOBILE_OTP",
                                             "AADHAAR_OTP"
                                         ],
-                                        "hprId": "amol.xxxxx@hpr.abdm",
+                                        "hprId": "<EMAIL>",
                                         "categoryId": "1",
                                         "subCategoryId": "1"
                                     }
@@ -2383,7 +2383,7 @@
                     "email": {
                         "type": "string",
                         "description": "Email Address of the user.",
-                        "example": "user@abdm.com"
+                        "example": "<ABHA_ADDRESS>.com"
                     },
                     "firstName": {
                         "type": "string",
@@ -2419,7 +2419,7 @@
                     "hprId": {
                         "type": "string",
                         "description": "Healthcare Professional ID Alias.",
-                        "example": "user@hpr.abdm"
+                        "example": "<EMAIL>"
                     },
                     "sourceType": {
                         "type": "string",
@@ -3102,7 +3102,7 @@
                     "hprId": {
                         "type": "string",
                         "description": "Healthcare Professional ID Alias.",
-                        "example": "user@hpr.abdm"
+                        "example": "<EMAIL>"
                     },
                     "password": {
                         "type": "string",
@@ -3112,7 +3112,7 @@
                     "email": {
                         "type": "string",
                         "description": "Email Address of the user.",
-                        "example": "user@abdm.com"
+                        "example": "<ABHA_ADDRESS>.com"
                     },
                     "profilePhoto": {
                         "type": "string",

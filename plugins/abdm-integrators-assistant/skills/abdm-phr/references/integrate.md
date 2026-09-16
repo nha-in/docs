@@ -190,7 +190,7 @@ curl --request POST \
   --data '{
   "txnId": "27d444b7-2a3d-46d8-bf67-e5590b6c46b6",
   "phrDetails": {
-    "mobile": "/9j/4AAQSkZJRgABAgAAAQABAAD/2wBD",
+    "mobile": "<BASE64_PHOTO>",
     "firstName": "John",
     "middleName": "",
     "lastName": "Doe",
@@ -206,8 +206,8 @@ curl --request POST \
     "districtName": "Nashik",
     "districtCode": "123",
     "pinCode": "422003",
-    "abhaAddress": "johndoe@sbx",
-    "password": "/9j/4AAQSkZJRgABAgAAAQABAAD/2wBD"
+    "abhaAddress": "<ABHA_ADDRESS>",
+    "password": "<BASE64_PHOTO>"
   }
 }'
 ```

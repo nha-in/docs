@@ -11,13 +11,18 @@ import {createHash} from 'node:crypto';
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const RAW = join(root, 'catalogue', 'openapi', '.raw', 'nha-2026-09-16');
 const MANIFEST = join(RAW, 'MANIFEST.md');
-const REDACT = ['abha/M1 ABHA Swagger 1.yaml', 'abha/M1 ABHA Collection.json', 'phr/PHR and locker.postman_collection.json'];
+// One policy for the whole raw set. The shapes that carried personal data in
+// the three files redacted first also sat in files the manifest had called
+// byte-exact, so every file the walker finds goes through the same rules.
+const redacted = () => true;
 
 // Order matters: tokens before anything that could match inside a token,
 // addresses before emails.
 const RULES = [
   ['photo', /(profilePhoto["']?\s*:\s*["']?)[A-Za-z0-9+/=]{100,}/g, '$1<BASE64_PHOTO>'],
-  ['photo', /(?:\/9j\/|\biVBORw0)[A-Za-z0-9+/=]{100,}/g, '<BASE64_PHOTO>'],
+  // NHA truncates some of these to a couple of dozen characters and reuses the
+  // JPEG header as a generic base64 example, so the threshold is low.
+  ['photo', /(?:\/9j\/|\biVBORw0)[A-Za-z0-9+/=]{8,}/g, '<BASE64_PHOTO>'],
   ['pid-block', /(fingerPrintAuthPid|faceAuthPid|irisAuthPid|"?Pid"?|pid)(\\?["']?\s*:\s*\\?["']?)[A-Za-z0-9+/=]{200,}/g, '$1$2<PID_BLOCK>'],
   ['token', /\{\{(?:bearer_token|json_web_token)_[a-z0-9]+\}\}[A-Za-z0-9_.-]*/g, '<TOKEN>'],
   ['token', /\beyJ[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]{10,}(?:\.[A-Za-z0-9_-]+)?/g, '<TOKEN>'],
@@ -26,10 +31,11 @@ const RULES = [
   ['email', /\b[\w.+*-]+@[\w-]+\.[\w.-]+\b/g, '<EMAIL>'],
   ['abha-number', /\b91-\d{4}-\d{4}-\d{4}\b/g, '<ABHA_NUMBER>'],
   ['abha-number', /\b91\d{12}\b/g, '<ABHA_NUMBER>'],
+  ['hpr-id', /\b7\d-\d{4}-\d{4}-\d{4}\b/g, '<HPR_ID>'],
   ['abha-number', /\b\d{2}-\d{4}-\d{4}-\d{4}\b/g, '<ABHA_NUMBER>'],
   ['mobile', /\b[6-9]\d{9}\b/g, '<MOBILE_NUMBER>'],
   ['internal-host', /https?:\/\/[a-z0-9.-]+\.abdm\.gov\.internal(?::\d+)?/g, 'https://abhasbx.abdm.gov.in'],
-  ['third-party-url', /https?:\/\/webhook\.site\/[A-Za-z0-9-]+/g, '<YOUR_CALLBACK_URL>'],
+  ['third-party-url', /https?:\/\/webhook\.site(?:\/[A-Za-z0-9-]*)?/g, '<YOUR_CALLBACK_URL>'],
 ];
 
 const sha = (buf) => createHash('sha256').update(buf).digest('hex');
@@ -63,23 +69,23 @@ for (const file of walk(RAW).sort()) {
   // are carried forward and the new rules add to them.
   const counts = {};
   for (const m of (recorded.get(rel) ?? '').matchAll(/([a-z-]+) (\d+)/g)) counts[m[1]] = Number(m[2]);
-  if (REDACT.includes(rel)) {
+  if (redacted(rel)) {
     for (const [name, re, to] of RULES) {
       text = text.replace(re, (whole, g1, g2) => { counts[name] = (counts[name] ?? 0) + 1; return to.replace('$1', g1 ?? '').replace('$2', g2 ?? ''); });
     }
     if (text !== before.toString('utf8')) writeFileSync(file, text);
   }
   const after = readFileSync(file);
-  const original = REDACT.includes(rel) ? originals.get(rel) : sha(before);
+  const original = redacted(rel) ? originals.get(rel) : sha(before);
   if (!original) throw new Error(`no original hash for ${rel}: pass ORIGINAL_HASHES on the first run`);
-  const redactions = Object.entries(counts).map(([k, v]) => `${k} ${v}`).join(', ') || (REDACT.includes(rel) ? recorded.get(rel) : '') || 'none';
+  const redactions = Object.entries(counts).map(([k, v]) => `${k} ${v}`).join(', ') || (redacted(rel) ? recorded.get(rel) : '') || 'none';
   rows.push({rel, committed: sha(after), original, redactions});
 }
 
 const lines = [
   '# NHA final set, 16 September 2026',
   '',
-  'Every file NHA supplied, with the sha256 of the bytes committed here. Two files carried personal data (sandbox tokens decoding to mobile numbers, ABHA numbers and addresses; internal hostnames) and are committed redacted. The sha256 of the original bytes is recorded so a reissued file can be matched, and the originals are held outside git.',
+  'Every file NHA supplied, with the sha256 of the bytes committed here. Every one of them is redacted by the same rules, because sandbox tokens, mobile numbers, ABHA numbers and addresses, HPR identifiers, photographs and internal hostnames turned up across the set rather than in a few files. Each row records the sha256 of the original bytes so a reissued file can be matched, and the originals are held outside git.',
   '',
   'The M1 collection of 15 September sits beside the set because it supplies the order of M1 calls, and nothing else.',
   '',

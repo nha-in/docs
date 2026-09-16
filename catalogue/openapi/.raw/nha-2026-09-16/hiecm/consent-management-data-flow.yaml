@@ -132,7 +132,7 @@ paths:
                             id:
                               type: string
                               nullable: false
-                              example: abdulkalam@abdm
+                              example: <ABHA_ADDRESS>
                               description: The abha address of the patient. Allows alpha numeric character and special characters like ^[a-zA-Z0-9][a-zA-Z0-9_.]+[a-zA-Z0-9]@(abdm|sbx)$
                         careContexts:
                           type: array
@@ -262,7 +262,7 @@ paths:
                             name:
                               type: string
                               nullable: false
-                              example: abdulkalam@abdm
+                              example: <ABHA_ADDRESS>
                               description: The name of the requester
                             identifier:
                               type: object
@@ -1528,7 +1528,7 @@ paths:
                         id:
                           type: string
                           nullable: false
-                          example: abdulkalam@abdm
+                          example: <ABHA_ADDRESS>
                           description: The abha address of the patient. It must start with Alphanumeric . and  _  in the middle and must be ending with @abdm or @sbx. Allows alpha numeric character and special characters like ^[a-zA-Z0-9][a-zA-Z0-9_.\-!]+[a-zA-Z0-9]@(abdm|sbx)$
                     hip:
                       type: object
@@ -1615,7 +1615,7 @@ paths:
                         name:
                           type: string
                           nullable: false
-                          example: abdulkalam@abdm
+                          example: <ABHA_ADDRESS>
                           description: The name of the requester
                         identifier:
                           type: object
@@ -3355,7 +3355,7 @@ paths:
                             id:
                               type: string
                               nullable: false
-                              example: abdulkalam@abdm
+                              example: <ABHA_ADDRESS>
                               description: The abha address of the patient. allows alpha numeric character and special characters like ^[a-zA-Z0-9][a-zA-Z0-9_.]+[a-zA-Z0-9]@(abdm|sbx)$
                         purpose:
                           type: object
@@ -3405,7 +3405,7 @@ paths:
                             name:
                               type: string
                               nullable: false
-                              example: abdulkalam@abdm
+                              example: <ABHA_ADDRESS>
                               description: The name of the requester
                             identifier:
                               type: object
@@ -4715,7 +4715,7 @@ paths:
           format: bearer
           minimum: 1
           maximum: 100
-          example: eyJhbGciOiJSUzUxMiJ9.eyJzdWIiOiJ2YXNhbnRoYWt1bWFyLmtlc2F2
+          example: <TOKEN>
 
       - name: request-id
         in: path
@@ -5089,7 +5089,7 @@ paths:
           format: bearer
           minimum: 1
           maximum: 100
-          example: eyJhbGciOiJSUzUxMiJ9.eyJzdWIiOiJ2YXNhbnRoYWt1bWFyLmtlc2F2
+          example: <TOKEN>
 
       - name: request-id
         in: path
@@ -5284,7 +5284,7 @@ paths:
           format: bearer
           minimum: 1
           maximum: 100
-          example: eyJhbGciOiJSUzUxMiJ9.eyJzdWIiOiJ2YXNhbnRoYWt1bWFyLmtlc2F2
+          example: <TOKEN>
 
       requestBody:
         required: true
@@ -5483,7 +5483,7 @@ paths:
           format: bearer
           minimum: 1
           maximum: 100
-          example: eyJhbGciOiJSUzUxMiJ9.eyJzdWIiOiJ2YXNhbnRoYWt1bWFyLmtlc2F2
+          example: <TOKEN>
 
       - name: request-id
         in: path
@@ -5546,7 +5546,7 @@ paths:
                       id:
                         type: string
                         nullable: false
-                        example: abdulkalam@abdm
+                        example: <ABHA_ADDRESS>
                         description: The abha address of the patient
                   hip:
                     type: object
@@ -5633,7 +5633,7 @@ paths:
                       name:
                         type: string
                         nullable: false
-                        example: abdulkalam@abdm
+                        example: <ABHA_ADDRESS>
                         description: The name of the requester
                       identifier:
                         type: object
@@ -5938,7 +5938,7 @@ paths:
           format: bearer
           minimum: 1
           maximum: 100
-          example: eyJhbGciOiJSUzUxMiJ9.eyJzdWIiOiJ2YXNhbnRoYWt1bWFyLmtlc2F2
+          example: <TOKEN>
 
       - name: limit
         in: query
@@ -6040,7 +6040,7 @@ paths:
                             id:
                               type: string
                               nullable: false
-                              example: abdulkalam@abdm
+                              example: <ABHA_ADDRESS>
                               description: The abha address of the patient
                         hip:
                           type: object
@@ -6127,7 +6127,7 @@ paths:
                             name:
                               type: string
                               nullable: false
-                              example: abdulkalam@abdm
+                              example: <ABHA_ADDRESS>
                               description: The name of the requester
                             identifier:
                               type: object
@@ -6438,7 +6438,7 @@ paths:
           format: bearer
           minimum: 1
           maximum: 100
-          example: eyJhbGciOiJSUzUxMiJ9.eyJzdWIiOiJ2YXNhbnRoYWt1bWFyLmtlc2F2
+          example: <TOKEN>
 
       - name: request-id
         in: path
@@ -6529,7 +6529,7 @@ paths:
                             id:
                               type: string
                               nullable: false
-                              example: abdulkalam@abdm
+                              example: <ABHA_ADDRESS>
                               description: The abha address of the patient
                         hip:
                           type: object
@@ -6616,7 +6616,7 @@ paths:
                             name:
                               type: string
                               nullable: false
-                              example: abdulkalam@abdm
+                              example: <ABHA_ADDRESS>
                               description: The name of the requester
                             identifier:
                               type: object
@@ -6936,7 +6936,7 @@ paths:
           format: bearer
           minimum: 1
           maximum: 100
-          example: eyJhbGciOiJSUzUxMiJ9.eyJzdWIiOiJ2YXNhbnRoYWt1bWFyLmtlc2F2
+          example: <TOKEN>
 
       - name: artefact-id
         in: path
@@ -7024,7 +7024,7 @@ paths:
                           id:
                             type: string
                             nullable: false
-                            example: abdulkalam@abdm
+                            example: <ABHA_ADDRESS>
                             description: The abha address of the patient
                       hip:
                         type: object
@@ -7111,7 +7111,7 @@ paths:
                           name:
                             type: string
                             nullable: false
-                            example: abdulkalam@abdm
+                            example: <ABHA_ADDRESS>
                             description: The name of the requester
                           identifier:
                             type: object
@@ -7428,7 +7428,7 @@ paths:
           format: bearer
           minimum: 1
           maximum: 100
-          example: eyJhbGciOiJSUzUxMiJ9.eyJzdWIiOiJ2YXNhbnRoYWt1bWFyLmtlc2F2
+          example: <TOKEN>
 
       - name: limit
         in: query
@@ -7551,7 +7551,7 @@ paths:
                                 id:
                                   type: string
                                   nullable: false
-                                  example: abdulkalam@abdm
+                                  example: <ABHA_ADDRESS>
                                   description: The abha address of the patient
                             hip:
                               type: object
@@ -7638,7 +7638,7 @@ paths:
                                 name:
                                   type: string
                                   nullable: false
-                                  example: abdulkalam@abdm
+                                  example: <ABHA_ADDRESS>
                                   description: The name of the requester
                                 identifier:
                                   type: object
@@ -7959,7 +7959,7 @@ paths:
           format: bearer
           minimum: 1
           maximum: 100
-          example: eyJhbGciOiJSUzUxMiJ9.eyJzdWIiOiJ2YXNhbnRoYWt1bWFyLmtlc2F2
+          example: <TOKEN>
 
       requestBody:
         required: true
@@ -8410,7 +8410,7 @@ paths:
           format: bearer
           minimum: 1
           maximum: 100
-          example: eyJhbGciOiJSUzUxMiJ9.eyJzdWIiOiJ2YXNhbnRoYWt1bWFyLmtlc2F2
+          example: <TOKEN>
 
       - name: auto-approval-id
         in: path
@@ -8622,7 +8622,7 @@ paths:
           format: bearer
           minimum: 1
           maximum: 100
-          example: eyJhbGciOiJSUzUxMiJ9.eyJzdWIiOiJ2YXNhbnRoYWt1bWFyLmtlc2F2
+          example: <TOKEN>
 
       - name: auto-approval-id
         in: path

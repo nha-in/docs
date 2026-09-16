@@ -249,7 +249,7 @@
                                 },
                                 "example": {
                                     "token": "<JWT TOKEN>",
-                                    "hprIdNumber": "71-2665-5777-2713",
+                                    "hprIdNumber": "<HPR_ID>",
                                     "categoryId": 100,
                                     "subCategoryId": 85,
                                     "txnId": "79dbf65d-affa-4249-8935-3d01676d8b82",
@@ -269,7 +269,7 @@
                                     "pincode": "201005",
                                     "profilePhoto": "<BASE64 ENCODED STRING>",
                                     "mobile": null,
-                                    "hprId": "anujsharma1990@hpr.abdm",
+                                    "hprId": "<EMAIL>",
                                     "new": false
                                 }
                             }
@@ -622,7 +622,7 @@
                                     "status": "true",
                                     "message": "Congratulations! Your profile has been submitted successfully for verification.",
                                     "error": null,
-                                    "hprId": "71-7507-6401-7665"
+                                    "hprId": "<HPR_ID>"
                                 }
                             }
                         }
@@ -793,7 +793,7 @@
                                     "status": "true",
                                     "message": "Congratulations! Your profile has been submitted successfully for verification.",
                                     "error": null,
-                                    "hprId": "71-7507-6401-7665"
+                                    "hprId": "<HPR_ID>"
                                 }
                             }
                         }
@@ -843,7 +843,7 @@
                                         "profileDetails": {
                                             "profilePhoto": {
                                                 "id": 30106,
-                                                "data": "/9j/4AAQSkZJRgABAgAAAQABAAD/2wBD"
+                                                "data": "<BASE64_PHOTO>"
                                             },
                                             "proofOfWorkCertificate": {
                                                 "id": 30106,
@@ -1028,7 +1028,7 @@
                                                         "qualificationMonth": ""
                                                     }
                                                 ],
-                                                "hpr_id": "71-7507-6401-7665",
+                                                "hpr_id": "<HPR_ID>",
                                                 "application_status": null,
                                                 "is_council_verified": "true",
                                                 "is_work_verified": null,
@@ -2452,7 +2452,7 @@
                     "email": {
                         "type": "string",
                         "description": "Email Address of the user.",
-                        "example": "user@abdm.com"
+                        "example": "<ABHA_ADDRESS>.com"
                     },
                     "firstName": {
                         "type": "string",
@@ -2488,7 +2488,7 @@
                     "hprId": {
                         "type": "string",
                         "description": "Healthcare Professional ID Alias.",
-                        "example": "user@hpr.abdm"
+                        "example": "<EMAIL>"
                     },
                     "sourceType": {
                         "type": "string",
@@ -3208,7 +3208,7 @@
                     "hprId": {
                         "type": "string",
                         "description": "Healthcare Professional ID Alias.",
-                        "example": "user@hpr.abdm"
+                        "example": "<EMAIL>"
                     },
                     "password": {
                         "type": "string",
@@ -3218,7 +3218,7 @@
                     "email": {
                         "type": "string",
                         "description": "Email Address of the user.",
-                        "example": "user@abdm.com"
+                        "example": "<ABHA_ADDRESS>.com"
                     },
                     "profilePhoto": {
                         "type": "string",

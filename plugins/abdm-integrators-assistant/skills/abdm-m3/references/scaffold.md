@@ -32,7 +32,7 @@ curl --request POST \
       "refUri": "www.abc.com"
     },
     "patient": {
-      "id": "abdulkalam@abdm"
+      "id": "<ABHA_ADDRESS>"
     },
     "hip": {
       "id": "cowin_hip_01",
@@ -51,7 +51,7 @@ curl --request POST \
       }
     ],
     "requester": {
-      "name": "abdulkalam@abdm",
+      "name": "<ABHA_ADDRESS>",
       "identifier": {
         "value": "REG1",
         "type": "MH1001",

@@ -47,7 +47,7 @@ curl --request PATCH \
   --header 'X-CM-ID: sbx' \
   --header 'Content-Type: application/json' \
   --data '{
-  "url": "https://webhook.site/"
+  "url": "<YOUR_CALLBACK_URL>"
 }'
 ```
 

@@ -253,7 +253,7 @@
                                 },
                                 "example": {
                                     "token": "<JWT TOKEN>",
-                                    "hprIdNumber": "71-2665-5777-2713",
+                                    "hprIdNumber": "<HPR_ID>",
                                     "categoryId": 100,
                                     "subCategoryId": 85,
                                     "txnId": "79dbf65d-affa-4249-8935-3d01676d8b82",
@@ -273,7 +273,7 @@
                                     "pincode": "201005",
                                     "profilePhoto": "<BASE64 ENCODED STRING>",
                                     "mobile": null,
-                                    "hprId": "anujsharma1990@hpr.abdm",
+                                    "hprId": "<EMAIL>",
                                     "new": false
                                 }
                             }
@@ -532,7 +532,7 @@
                                         "type_of_service_other": null,
                                         "fac_alt_contact_per_landline_no": null,
                                         "facility_type": "2",
-                                        "crt_usr": "71-2824-6403-7827",
+                                        "crt_usr": "<HPR_ID>",
                                         "country": "India",
                                         "sub_district": {
                                             "locId": "5271",
@@ -565,11 +565,11 @@
                                         "ufid": null,
                                         "form3": null,
                                         "lmis_ris_name": null,
-                                        "fac_contact_per_email_verified": "user@abdm.com",
+                                        "fac_contact_per_email_verified": "<ABHA_ADDRESS>.com",
                                         "power_backup": null,
                                         "fac_contact_per_country_code": null,
                                         "emr_software_other": null,
-                                        "geolocation": "26.91785800000001,75.80129199999999",
+                                        "geolocation": "26.<ABHA_NUMBER>,75.80129199999999",
                                         "open_time": null,
                                         "emr_system": "N",
                                         "hospital_cnt_link_colg": null,
@@ -690,10 +690,10 @@
                                             "activeYn": null
                                         },
                                         "net_available": null,
-                                        "health_id": "71-2824-6403-7827",
+                                        "health_id": "<HPR_ID>",
                                         "landline_no": "",
                                         "type_of_service": "OPD",
-                                        "fac_contact_per_email": "user@abdm.com",
+                                        "fac_contact_per_email": "<ABHA_ADDRESS>.com",
                                         "progress_value": null,
                                         "it_available": null,
                                         "alternate_id": "IN2810001372",
@@ -763,7 +763,7 @@
                                         "longitude": "23.068570"
                                     },
                                     "facilityContactInformation": {
-                                        "facilityEmailId": "user@abdm.com",
+                                        "facilityEmailId": "<ABHA_ADDRESS>.com",
                                         "facilityContactNumber": "976243xxxx",
                                         "websiteLink": "nha.abdm.gov.in",
                                         "facilityLandlineNumber": "",
@@ -2083,7 +2083,7 @@
                     "email": {
                         "type": "string",
                         "description": "Email Address of the user.",
-                        "example": "user@abdm.com"
+                        "example": "<ABHA_ADDRESS>.com"
                     },
                     "firstName": {
                         "type": "string",
@@ -2119,7 +2119,7 @@
                     "hprId": {
                         "type": "string",
                         "description": "Healthcare Professional ID Alias.",
-                        "example": "user@hpr.abdm"
+                        "example": "<EMAIL>"
                     },
                     "sourceType": {
                         "type": "string",
@@ -3609,7 +3609,7 @@
                     "hprId": {
                         "type": "string",
                         "description": "Healthcare Professional ID Alias.",
-                        "example": "user@hpr.abdm"
+                        "example": "<EMAIL>"
                     },
                     "password": {
                         "type": "string",
@@ -3619,7 +3619,7 @@
                     "email": {
                         "type": "string",
                         "description": "Email Address of the user.",
-                        "example": "user@abdm.com"
+                        "example": "<ABHA_ADDRESS>.com"
                     },
                     "profilePhoto": {
                         "type": "string",

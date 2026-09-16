@@ -28,7 +28,7 @@ paths:
         **Hosted by the HIP/HIU, not by ABDM.** ABDM calls this endpoint at the callback URL registered for your bridge, so the path below is relative to that URL.
         
         This is a API will be invoked to the <b>HIP</b> to share the response of HIECM's /api/hiecm/patient-share/v3/share API. <ol type='1'> <li> <b>Header</b>  <ol type='a'> <br/> <li>REQUEST-ID unique UUID[ Example: 18235d89-cb13-479d-ad71-7a57d5f669a8 ]</li> <li>TIMESTAMP  actual time of the requested was initiated[ Example: 2022-10-06T10:10:00.587Z ]</li> <li>X-HIP-ID</li> 
-        <li>Authorization will be provided by the gateway session API after the successful verification of client ID and Secret [ Example: eyJhbGciOiJSUzUxMiJ9.eyJzdWIiOiJ2YXNhbnRoYWt1bWFyLmtlc2F2 ]</li></ol> </li> <br/><li> <b>Request Body</b> <ol type='a'><br/> <li>intent This is a key value pair  which contains the purpose [ Example: {purpose: PROFILE_SHARE } ]</li> <li>metaData This is a key value pair which contains the location longitude and latitude[ Example: {hip_id: ABDM_HIP, context: 123, lat: 20.5937 long: 78.9629} ]</li> <li>profile which contains user details.</li> </ol></ol>
+        <li>Authorization will be provided by the gateway session API after the successful verification of client ID and Secret [ Example: <TOKEN> ]</li></ol> </li> <br/><li> <b>Request Body</b> <ol type='a'><br/> <li>intent This is a key value pair  which contains the purpose [ Example: {purpose: PROFILE_SHARE } ]</li> <li>metaData This is a key value pair which contains the location longitude and latitude[ Example: {hip_id: ABDM_HIP, context: 123, lat: 20.5937 long: 78.9629} ]</li> <li>profile which contains user details.</li> </ol></ol>
     
       security:
         - bearerAuth: []
@@ -101,7 +101,7 @@ paths:
                     hprId:
                       type: string
                       nullable: true
-                      example: abdulkalam@hpr.abdm
+                      example: <EMAIL>
                       description: Healthcare Professionals Registry id. Allows alpha numeric character and special characters like [a-zA-Z0-9][a-zA-Z0-9_.]+[a-zA-Z0-9]@(dr.abdm|hpr.abdm)$|^[1-9][0-9]{13}$
                     latitude:
                       type: number
@@ -136,13 +136,13 @@ paths:
                         abhaNumber:
                           type: string
                           nullable: true
-                          example: 91-7507-6821-7770
+                          example: <ABHA_NUMBER>
                           description: >-
                             The abha number of the patient.It should be passed based on the X-AUTH-TOKEN. Should be only 14 digit. Allows alpha numeric character and special characters like ^(\\d+-?){13}\\d$
                         abhaAddress:
                           type: string
                           nullable: false
-                          example: abc@sbx
+                          example: <ABHA_ADDRESS>
                           description: >-
                             The abha address of the patient. Should start with Alphanumeric . and  _  in the middle and must be ending with @abdm or @sbx and Allows alpha numeric character and special characters like ^[a-zA-Z0-9][a-zA-Z0-9_.\-!]+[a-zA-Z0-9]@(abdm|sbx)$
                         name:
@@ -213,7 +213,7 @@ paths:
                         phoneNumber:
                           type: string
                           nullable: true
-                          example: '9876543210'
+                          example: '<MOBILE_NUMBER>'
                           description: >-
                             The mobile number of the patient. Must be 10 digit and contain only 0-9 and it allows only numbers like ^(\+\d{1,3}[- ]?)?\d{10}$
       responses:
@@ -362,7 +362,7 @@ paths:
       summary: >-
         This API will be invoked by the HIP for sharing the response of HIECM's /api/hiecm/patient-share/v3/on-share API
       description: >-
-        This is a API will be invoked by the <b>HIP</b> to share the response of HIECM's /api/hiecm/patient-share/v3/on-share API. <ol type='1'> <li> <b>Header</b>  <ol type='a'> <br/> <li>AUTHORIZATION will be provided by the gateway session API after the successful verification of client ID and Secret [ Example: eyJhbGciOiJSUzUxMiJ9.eyJzdWIiOiJ2YXNhbnRoYWt1bWFyLmtlc2F2 ]</li> <li>REQUEST-ID unique UUID[ Example: 18235d89-cb13-479d-ad71-7a57d5f669a8 ]</li> <li>TIMESTAMP  actual time of the requested was initiated[ Example: 2022-10-06T10:10:00.587Z ]</li> <li>X-CM-ID  consent manager ID[ Example: sbx ]</li> </ol> </li> <br/> <li> <b>Request Body</b> <ol type='a'><br/><li>Incase of success scenario,acknowledgement is mandatory and error is optional </li> <li>Incase of failure scenario,error is mandatory and acknowledgment is optional</li> <li>response is mandatory object in both the cases</li> </ol>
+        This is a API will be invoked by the <b>HIP</b> to share the response of HIECM's /api/hiecm/patient-share/v3/on-share API. <ol type='1'> <li> <b>Header</b>  <ol type='a'> <br/> <li>AUTHORIZATION will be provided by the gateway session API after the successful verification of client ID and Secret [ Example: <TOKEN> ]</li> <li>REQUEST-ID unique UUID[ Example: 18235d89-cb13-479d-ad71-7a57d5f669a8 ]</li> <li>TIMESTAMP  actual time of the requested was initiated[ Example: 2022-10-06T10:10:00.587Z ]</li> <li>X-CM-ID  consent manager ID[ Example: sbx ]</li> </ol> </li> <br/> <li> <b>Request Body</b> <ol type='a'><br/><li>Incase of success scenario,acknowledgement is mandatory and error is optional </li> <li>Incase of failure scenario,error is mandatory and acknowledgment is optional</li> <li>response is mandatory object in both the cases</li> </ol>
      
       security:
         - bearerAuth: []
@@ -421,7 +421,7 @@ paths:
                         abhaAddress:
                           type: string
                           nullable: false
-                          example: abc@abdm
+                          example: <ABHA_ADDRESS>
                           description: >-
                             The abha address of the patient. Should start with Alphanumeric . and  _  in the middle and must be ending with @abdm or @sbx and Allows alpha numeric character and special characters like ^[a-zA-Z0-9][a-zA-Z0-9_.\-!]+[a-zA-Z0-9]@(abdm|sbx)$
                         profile:
@@ -666,7 +666,7 @@ paths:
       summary: >-
         This API will be invoked from the PHR-HIU application for sharing the patient/user profile with the HMIS/LIMS.
       description: >-
-        This is a API will be invoked from the <b>PHR-HIU</b> to share the user/patient profile with HMIS/LIMS. <ol type='1'> <li> <b>Header</b>  <ol type='a'> <br/> <li>Authorization will be provided by the gateway session API after the successful verification of client ID and Secret [ Example: eyJhbGciOiJSUzUxMiJ9.eyJzdWIiOiJ2YXNhbnRoYWt1bWFyLmtlc2F2 ]</li> <li>REQUEST-ID unique UUID[ Example: 18235d89-cb13-479d-ad71-7a57d5f669a8 ]</li> <li>TIMESTAMP  actual time of the requested was initiated[ Example: 2022-10-06T10:10:00.587Z ]</li> <li>X-AUTH-TOKEN JWT Authentication token which was issued by ABDM after successful validation of username and password[ Example: eyJhbGciOiJSUzUxMiJ9.eyJzdWIiOiJ2YXNhbnRoYWt1bWFyLmtlc2F2 ]</li> <li>X-CM-ID  consent manager ID[ Example: sbx ]</li> <li>X-HIU-ID  HIU ID[ Example: HIU ]</li> </ol> </li> <br/> <li> <b>Request Body</b> <ol type='a'><br/> <li>intent This is a key value pair  which contains the purpose [ Example: {purpose: PROFILE_SHARE } ]</li> <li>metaData This is a key value pair which contains the location longitude and latitude[ Example: {hip_id: ABDM_HIP, context: 123, lat: 20.5937 long: 78.9629} ]</li> <li>profile which contains user details.</li> </ol> </ol>
+        This is a API will be invoked from the <b>PHR-HIU</b> to share the user/patient profile with HMIS/LIMS. <ol type='1'> <li> <b>Header</b>  <ol type='a'> <br/> <li>Authorization will be provided by the gateway session API after the successful verification of client ID and Secret [ Example: <TOKEN> ]</li> <li>REQUEST-ID unique UUID[ Example: 18235d89-cb13-479d-ad71-7a57d5f669a8 ]</li> <li>TIMESTAMP  actual time of the requested was initiated[ Example: 2022-10-06T10:10:00.587Z ]</li> <li>X-AUTH-TOKEN JWT Authentication token which was issued by ABDM after successful validation of username and password[ Example: <TOKEN> ]</li> <li>X-CM-ID  consent manager ID[ Example: sbx ]</li> <li>X-HIU-ID  HIU ID[ Example: HIU ]</li> </ol> </li> <br/> <li> <b>Request Body</b> <ol type='a'><br/> <li>intent This is a key value pair  which contains the purpose [ Example: {purpose: PROFILE_SHARE } ]</li> <li>metaData This is a key value pair which contains the location longitude and latitude[ Example: {hip_id: ABDM_HIP, context: 123, lat: 20.5937 long: 78.9629} ]</li> <li>profile which contains user details.</li> </ol> </ol>
   
       security:
         - bearerAuth: []
@@ -712,7 +712,7 @@ paths:
             format: bearer
             minimum: 1
             maximum: 100
-            example: Bearer eyJhbGciOiJSUzUxMiJ9.eyJzdWIiOiJ2YXNhbnRoYWt1bWFyLmtlc2F2
+            example: Bearer <TOKEN>
       requestBody:
         required: true
         content:
@@ -757,7 +757,7 @@ paths:
                     hprId:
                       type: string
                       nullable: true
-                      example: abdulkalam@hpr.abdm
+                      example: <EMAIL>
                       description: Healthcare Professionals Registry id. Allows alpha numeric character and special characters like [a-zA-Z0-9][a-zA-Z0-9_.]+[a-zA-Z0-9]@(dr.abdm|hpr.abdm)$|^[1-9][0-9]{13}$
                     latitude:
                       type: number
@@ -792,13 +792,13 @@ paths:
                         abhaNumber:
                           type: string
                           nullable: true
-                          example: 91-7507-6821-7770
+                          example: <ABHA_NUMBER>
                           description: >-
                             The abha number of the patient. Should be only 14 digit. Allows alpha numeric character and special characters like ^(\\d+-?){13}\\d$
                         abhaAddress:
                           type: string
                           nullable: false
-                          example: abc@sbx
+                          example: <ABHA_ADDRESS>
                           description: >-
                             The abha address of the patient. Should start with Alphanumeric . and  _  in the middle and must be ending with @abdm or @sbx and Allows alpha numeric character and special characters like ^[a-zA-Z0-9][a-zA-Z0-9_.\-!]+[a-zA-Z0-9]@(abdm|sbx)$
                         name:
@@ -869,7 +869,7 @@ paths:
                         phoneNumber:
                           type: string
                           nullable: true
-                          example: '9876543210'
+                          example: '<MOBILE_NUMBER>'
                           description: >-
                             The mobile number of the patient. Must be 10 digit and contain only 0-9 and it allows only numbers like ^(\+\d{1,3}[- ]?)?\d{10}$
 
@@ -1060,7 +1060,7 @@ paths:
       description: >-
         **Hosted by the HIP/HIU, not by ABDM.** ABDM calls this endpoint at the callback URL registered for your bridge, so the path below is relative to that URL.
         
-        This is a API will be invoked by <b>HIU</b> to share the response of HIECM's /api/hiecm/patient-share/v3/on-share API. <ol type='1'> <li> <b>Header</b>  <ol type='a'> <br/> <li>Authorization will be provided by the gateway session API after the successful verification of client ID and Secret [ Example: eyJhbGciOiJSUzUxMiJ9.eyJzdWIiOiJ2YXNhbnRoYWt1bWFyLmtlc2F2 ]</li> <li>REQUEST-ID unique UUID[ Example: 18235d89-cb13-479d-ad71-7a57d5f669a8 ]</li> <li>TIMESTAMP  actual time of the requested was initiated[ Example: 2022-10-06T10:10:00.587Z ]</li> <li>X-HIU-ID  HIU ID[ Example: HIU ]</li> </ol> </li> <br/> <li> <b>Request Body</b> <ol type='a'><br/> <li>Incase of success scenario,acknowledgement is mandatory and error is optional</li> <li>Incase if failure scenario,error is mandatory and acknowledgment is optional</li> <li>response is mandatory object in both the cases</li> </ol> </ol>
+        This is a API will be invoked by <b>HIU</b> to share the response of HIECM's /api/hiecm/patient-share/v3/on-share API. <ol type='1'> <li> <b>Header</b>  <ol type='a'> <br/> <li>Authorization will be provided by the gateway session API after the successful verification of client ID and Secret [ Example: <TOKEN> ]</li> <li>REQUEST-ID unique UUID[ Example: 18235d89-cb13-479d-ad71-7a57d5f669a8 ]</li> <li>TIMESTAMP  actual time of the requested was initiated[ Example: 2022-10-06T10:10:00.587Z ]</li> <li>X-HIU-ID  HIU ID[ Example: HIU ]</li> </ol> </li> <br/> <li> <b>Request Body</b> <ol type='a'><br/> <li>Incase of success scenario,acknowledgement is mandatory and error is optional</li> <li>Incase if failure scenario,error is mandatory and acknowledgment is optional</li> <li>response is mandatory object in both the cases</li> </ol> </ol>
     
       security:
         - bearerAuth: []
@@ -1119,7 +1119,7 @@ paths:
                         abhaAddress:
                           type: string
                           nullable: false
-                          example: abc@abdm
+                          example: <ABHA_ADDRESS>
                           description: >-
                             The abha address of the patient. Should start with Alphanumeric . and  _  in the middle and must be ending with @abdm or @sbx and Allows alpha numeric character and special characters like ^[a-zA-Z0-9][a-zA-Z0-9_.\-!]+[a-zA-Z0-9]@(abdm|sbx)$
                         profile:
@@ -1325,7 +1325,7 @@ paths:
       operationId: profile-share 3
       summary: This API will be invoked to get the historical token numbers of the patient
       description: >-
-        This is a API will be invoked get the historical token numbers of the patient. <ol type='1'> <li> <b>Header</b>  <ol type='a'> <br/> <li>AUTHORIZATION will be provided by the gateway session API after the successful verification of client ID and Secret [ Example: eyJhbGciOiJSUzUxMiJ9.eyJzdWIiOiJ2YXNhbnRoYWt1bWFyLmtlc2F2 ]</li> <li>REQUEST-ID unique UUID[ Example: 18235d89-cb13-479d-ad71-7a57d5f669a8 ]</li> <li>TIMESTAMP  actual time of the requested was initiated[ Example: 2022-10-06T10:10:00.587Z ]</li> </ol> </li> <br/> </ol>
+        This is a API will be invoked get the historical token numbers of the patient. <ol type='1'> <li> <b>Header</b>  <ol type='a'> <br/> <li>AUTHORIZATION will be provided by the gateway session API after the successful verification of client ID and Secret [ Example: <TOKEN> ]</li> <li>REQUEST-ID unique UUID[ Example: 18235d89-cb13-479d-ad71-7a57d5f669a8 ]</li> <li>TIMESTAMP  actual time of the requested was initiated[ Example: 2022-10-06T10:10:00.587Z ]</li> </ol> </li> <br/> </ol>
       
       security:
         - bearerAuth: []
@@ -1364,7 +1364,7 @@ paths:
             format: bearer
             minimum: 1
             maximum: 100
-            example: Bearer eyJhbGciOiJSUzUxMiJ9.eyJzdWIiOiJ2YXNhbnRoYWt1bWFyLmtlc2F2
+            example: Bearer <TOKEN>
         - name: limit
           in: query
           required: true
@@ -1391,7 +1391,7 @@ paths:
                           type: string
                           nullable: false
                           format: email
-                          example: abdulkalam@abdm
+                          example: <ABHA_ADDRESS>
                         tokenNumber:
                           type: string
                           description: >-
