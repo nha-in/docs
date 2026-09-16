@@ -92,7 +92,7 @@ This repository's specification (`catalogue/openapi/hiecm/v3/hiecm-gateway.yaml`
 successful call as answering `200`, with a session created and a bearer token issued. The
 specification carries no captured response body from NHA, only the field list: `accessToken`,
 `expiresIn`, `refreshExpiresIn`, `refreshToken` and `tokenType`. See
-[the endpoint page](hiecm.endpoint.gateway-sessions) for what each field means.
+[the endpoint page](/docs/hiecm/v3/api/gateway/endpoints/gateway-abdm-sessions/01-gateway-post-gateway-v3-sessions) for what each field means.
 Nothing here invents a body NHA never sent.
 
 ### Your own first call
@@ -154,7 +154,7 @@ with no word, raise it on
 report format.
 
 If your first real call fails with a 401, that is a different problem from registration: see
-[Everything returns 401](hiecm.troubleshooting.everything-returns-401).
+[Everything returns 401](/docs/hiecm/v3/troubleshooting/everything-returns-401).
 
 While NHA reviews your registration, use the wait. See
 [registration and credentials](registration-and-credentials.md) for what to read next: picking

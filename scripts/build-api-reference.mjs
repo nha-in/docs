@@ -608,8 +608,11 @@ for (const {platform, version, files} of tree) {
       const id = op.operationId ?? slug(`${entry.method}-${entry.path}`);
       const name = slug(id);
       // The reader picks a journey. Everything the journeys do not name falls
-      // into one group at the end rather than into tags of its own.
-      const tag = 'Other operations';
+      // into one group at the end rather than into tags of its own; an
+      // operation a journey names is read through that journey, so it carries
+      // no tag and gets no page outside the journey.
+      const unnamed = !named.has(id);
+      const tag = unnamed ? 'Other operations' : undefined;
 
       const operation = {
         id,
@@ -660,6 +663,10 @@ for (const {platform, version, files} of tree) {
         `${JSON.stringify(operation, null, 2)}\n`,
       );
 
+      // The JSON is written for every operation, because the journey step
+      // pages read it. The page beside it is written only when no journey
+      // names the operation, so nothing is published twice.
+      if (unnamed) {
       const endpointsDir = join(docsDir, module.dir, 'endpoints');
       mkdirSync(endpointsDir, {recursive: true});
       const frontMatter = [
@@ -691,7 +698,6 @@ for (const {platform, version, files} of tree) {
       ].join('\n');
       writeFileSync(join(endpointsDir, `${name}.mdx`), frontMatter);
 
-      if (!named.has(id)) {
         if (!byTag.has(tag)) byTag.set(tag, []);
         byTag.get(tag).push({
           type: 'doc',

@@ -104,5 +104,5 @@ counts as a valid supporting document, go to
 named in NHA's FAQ. See [Support](/docs/support) for the report format.
 
 If a call that worked in the sandbox fails in production, check the base URL and the `X-CM-ID`
-header first: see [Everything returns 401](hiecm.troubleshooting.everything-returns-401),
+header first: see [Everything returns 401](/docs/hiecm/v3/troubleshooting/everything-returns-401),
 which covers this exact class of failure.

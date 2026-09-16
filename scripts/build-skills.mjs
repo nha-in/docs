@@ -53,7 +53,7 @@ const UNVERIFIED =
  * Name what was observed and leave the rest unconfirmed.
  */
 const PARTLY_VERIFIED = {
-  m1: 'Most of this has not been run against the ABDM sandbox. What has: the gateway session call, both public certificates and the algorithm they publish, the encryption round trip, and the error shapes recorded below. Treat everything else as unconfirmed and read a response before relying on its shape.',
+  m1: 'Three of the rules below were recorded against the ABDM sandbox on 2 September 2026: which paddings the encryption refuses, the sizes of the two published certificates, and how the transfer token behaves. The responses those three were read from are in this repository\'s git history, before commit 64eb95b50. Nothing else in this skill has been run. Treat the rest as unconfirmed and read a response before relying on its shape.',
 };
 
 // Practices, as distinct from rules. A rule is a fact about one module. A
@@ -220,7 +220,10 @@ const MODULES = [
 
 const operations = readdirSync(dataDir)
   .filter((file) => file.endsWith('.json'))
-  .map((file) => JSON.parse(readFileSync(join(dataDir, file), 'utf8')));
+  .map((file) => JSON.parse(readFileSync(join(dataDir, file), 'utf8')))
+  // An operation a journey names carries no tag, because it is read through
+  // the journey. The skill still lists every operation, so group those here.
+  .map((op) => ({...op, tag: op.tag ?? 'Other operations'}));
 
 function truncate(text, limit) {
   const flat = (text ?? '').replace(/\s+/g, ' ').trim();

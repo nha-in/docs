@@ -9,7 +9,7 @@ The calls themselves: where they live, what they need in their headers, and one 
 - `https://apis.abdm.gov.in` ABDM gateway, production
 ## Endpoints
 
-160 operations, grouped by the journey they belong to.
+161 operations, grouped by the journey they belong to.
 
 ### Other operations
 
@@ -34,6 +34,7 @@ The calls themselves: where they live, what they need in their headers, and one 
 | `POST` | `/abha/api/v3/enrollment/enrol/byAadhaar` | UseCase : Create ABHA number Via Aadhaar by verifying Aadhaar OTP, using Biomet… |
 | `POST` | `/abha/api/v3/enrollment/enrol/byAadhaar` | UseCase : Create ABHA number Via Aadhaar by verifying Aadhaar OTP, using Biomet… |
 | `POST` | `/abha/api/v3/enrollment/enrol/byAadhaar` | UseCase : Create ABHA number Via Aadhaar by verifying Aadhaar OTP, using Biomet… |
+| `POST` | `/abha/api/v3/enrollment/enrol/capturePID` | UseCase : This API is used to check the status of the transaction ID. |
 | `POST` | `/abha/api/v3/enrollment/enrol/capturePID` | UseCase : This API is used to check the status of the transaction ID. |
 | `POST` | `/abha/api/v3/enrollment/enrol/capturePID` | UseCase : This API is used to check the status of the transaction ID. |
 | `GET` | `/abha/api/v3/enrollment/enrol/suggestion` | UseCase: ABHA address suggestion |

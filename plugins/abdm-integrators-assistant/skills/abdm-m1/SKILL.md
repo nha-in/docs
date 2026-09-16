@@ -5,7 +5,7 @@ description: Use when building, debugging or testing ABDM Milestone 1: creating 
 
 # ABDM M1, ABHA identity
 
-Generated from the ABDM Developer Portal on 2026-09-16, catalogue version 2026.08.24. Every fact below comes from a page in that portal, which is the place to look when this file does not carry enough.
+Generated from the ABDM Developer Portal on 2026-09-16, catalogue version 2026.09.16. Every fact below comes from a page in that portal, which is the place to look when this file does not carry enough.
 
 This file is a snapshot. Re-download it from the portal's /skills/abdm-m1/SKILL.md path when it is older than the work you are doing.
 If the abdm-docs MCP server is connected, trust its answers over this file: it serves the current catalogue and stamps every response with its catalogue_version, which you can compare against the version above.
@@ -24,14 +24,14 @@ What it cannot do yet matters as much. Read **Before anything else** below befor
 ## What is in this folder
 
 - **Scaffold.** Build it flow by flow against the sandbox, as a loop that ends on an observed result rather than on a call returning 200. [references/scaffold.md](references/scaffold.md)
-- **Integrate.** 160 operations, with their hosts and headers. [references/integrate.md](references/integrate.md)
+- **Integrate.** 161 operations, with their hosts and headers. [references/integrate.md](references/integrate.md)
 - **Debug.** The loop from a failed call to a named fix, and 14 recorded error codes. [references/debug.md](references/debug.md)
 
 This file is the map. Each line above is a file beside it, opened one at a time rather than read through.
 
 ## Before anything else
 
-- Most of this has not been run against the ABDM sandbox. What has: the gateway session call, both public certificates and the algorithm they publish, the encryption round trip, and the error shapes recorded below. Treat everything else as unconfirmed and read a response before relying on its shape.
+- Three of the rules below were recorded against the ABDM sandbox on 2 September 2026: which paddings the encryption refuses, the sizes of the two published certificates, and how the transfer token behaves. The responses those three were read from are in this repository's git history, before commit 64eb95b50. Nothing else in this skill has been run. Treat the rest as unconfirmed and read a response before relying on its shape.
 - Get an access token first, from the gateway session endpoint. Every other call needs it in `Authorization: Bearer <token>`.
 - Two tokens exist and they are not interchangeable. The gateway access token goes in `Authorization`. The user token from an enrolment or a login goes in `X-token`. Profile endpoints need both.
 - Sensitive fields travel encrypted. Aadhaar numbers, mobile numbers, email addresses, OTP values and passwords are encrypted before they go in the body, then base64 encoded.

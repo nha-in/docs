@@ -11,7 +11,7 @@ Every ABDM journey opens with a call carrying an encrypted value, so a wrong pad
 
 **M1.** `POST /v3/profile/login/request/otp` on `https://abhasbx.abdm.gov.in/abha/api/v3`, with `loginHint: "mobile"` and `scope: ["abha-login", "mobile-verify"]`, carrying a mobile number you control encrypted under the certificate from `/v3/profile/public/certificate`.
 
-Load the `abdm-m1` skill for the headers and the full body. The atom behind this check is `hiecm.test.m1-encryption-padding`.
+Load the `abdm-m1` skill for the headers and the full body. The skill carries the padding rule this check proves.
 
 **M4.** The NHPR certificate at `/v4/int/api/v1/auth/cert` and `RSA/ECB/PKCS1Padding`. Load the `abdm-m4` skill. This padding is the NHPR's and is not M1's, so prove each separately and never reuse one path for the other.
 

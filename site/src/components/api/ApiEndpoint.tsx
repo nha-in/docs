@@ -57,7 +57,7 @@ export type Operation = {
   curl: string;
   /** The same request in each language the page offers. */
   samples?: {id: string; label: string; language: string; code: string}[];
-  tag: string;
+  tag?: string;
   tagDescription?: string;
 };
 
@@ -222,7 +222,9 @@ export default function ApiEndpoint({operation}: {operation: Operation}) {
   return (
     <div className="api-page">
       <div className="api-page__main">
-        <p className="api-page__eyebrow">{operation.tag.replace(/-/g, ' ')}</p>
+        {operation.tag ? (
+          <p className="api-page__eyebrow">{operation.tag.replace(/-/g, ' ')}</p>
+        ) : null}
         <Heading as="h1" className="api-page__title">
           {operation.summary}
         </Heading>

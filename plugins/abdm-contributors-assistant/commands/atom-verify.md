@@ -11,7 +11,7 @@ Prove an atom by running it. The only path to `verified.status: verified`.
 
 ```
 /atom-verify <atom-id>
-/atom-verify hiecm.endpoint.links-link-add-contexts
+/atom-verify shared.sandbox.first-fifteen-minutes
 /atom-verify --milestone M1          # every unverified atom in M1
 /atom-verify --stale                 # every atom marked stale by hand; no watcher marks any
 ```
