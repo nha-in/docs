@@ -1,1 +1,0 @@
-"use strict";(self.webpackChunk_abdm_docs_site=self.webpackChunk_abdm_docs_site||[]).push([["24210"],{42166(e,d,t){t.r(d),t.d(d,{__iconNode:()=>s,default:()=>i});var c=t(34438);let s=[["rect",{width:"20",height:"14",x:"2",y:"5",rx:"2",key:"ynyp8z"}],["line",{x1:"2",x2:"22",y1:"10",y2:"10",key:"1b3vmo"}]],i=(0,c.A)("credit-card",s)}}]);
