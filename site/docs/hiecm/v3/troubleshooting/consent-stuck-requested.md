@@ -62,10 +62,10 @@ If the patient's app shows the request, it has not expired, and the
 address is correct, and the state is still Requested after a reasonable
 wait, this is expected: Requested means the patient has not decided yet,
 and there is no call that makes them decide faster. If you believe the
-patient acted and the state did not change, escalate on the
-[NHA dev forum](https://devforum.abdm.gov.in). Report the consent
+patient acted and the state did not change, raise a request on the
+[support ticketing platform](https://sandboxsupport.abdm.gov.in/). Report the consent
 request id, the `REQUEST-ID` from the init call, the `TIMESTAMP`, and
-the status response. See [Support](/docs/support) for the full report
+the status response. See [what to put in a support request](/docs/hiecm/v3/troubleshooting#what-to-put-in-a-support-request) for the full report
 format.
 
 This symptom can surface as an invalid or non-existent ABHA address on
