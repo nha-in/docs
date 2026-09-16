@@ -57,55 +57,9 @@ export type Operation = {
   curl: string;
   /** The same request in each language the page offers. */
   samples?: {id: string; label: string; language: string; code: string}[];
-  /** The certification marking on this call, where a certification case names
-      it. Absent on every call no case names, which is not the same as
-      optional. Set by the reference generator from `x-abdm-requirement`. */
-  requirement?: {
-    level: string;
-    cases: string[];
-    conditions: string[];
-    /** The module's testing page, where the cases below are written out. */
-    href?: string;
-  };
   tag: string;
-  tagDescription: string;
+  tagDescription?: string;
 };
-
-/* The level alone tells a reader almost nothing: "Conditional" without the
-   condition is a badge they cannot act on, and a level without its cases is a
-   claim they cannot check. Both travel with it. */
-function Requirement({
-  requirement,
-}: {
-  requirement: NonNullable<Operation['requirement']>;
-}) {
-  const {level, cases, conditions, href} = requirement;
-  const label = `Certification ${cases.length === 1 ? 'case' : 'cases'}`;
-  return (
-    <div className="api-requirement">
-      <div className="api-requirement__head">
-        <span
-          className={`api-requirement__level api-requirement__level--${level}`}>
-          {level.replace(/^./, (c) => c.toUpperCase())}
-        </span>
-        {conditions.length ? (
-          <span className="api-requirement__note">{conditions.join('. ')}</span>
-        ) : null}
-      </div>
-      {cases.length ? (
-        <p className="api-requirement__cases">
-          {href ? <a href={href}>{label}</a> : label}{' '}
-          {cases.map((id, index) => (
-            <React.Fragment key={id}>
-              {index > 0 ? ', ' : null}
-              <code>{id}</code>
-            </React.Fragment>
-          ))}
-        </p>
-      ) : null}
-    </div>
-  );
-}
 
 function FieldRow({field}: {field: Field}) {
   return (
@@ -273,10 +227,6 @@ export default function ApiEndpoint({operation}: {operation: Operation}) {
           {operation.summary}
         </Heading>
         {lede ? <Markdown text={lede} className="api-page__lede" /> : null}
-
-        {operation.requirement ? (
-          <Requirement requirement={operation.requirement} />
-        ) : null}
 
         <div className="api-bar">
           <span
