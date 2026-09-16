@@ -18,16 +18,7 @@ sources:
 verified:
   status: unverified
 related:
-  concepts: [hiecm.concept.roles]
-  glossary:
-    [
-      shared.glossary.hip,
-      shared.glossary.hiu,
-      shared.glossary.hie-cm,
-      shared.glossary.phr,
-      shared.glossary.m2,
-      shared.glossary.m3,
-    ]
+  glossary: [shared.glossary.m2, shared.glossary.m3]
 ---
 
 # EMR, the clinical system a provider runs, also written EHR

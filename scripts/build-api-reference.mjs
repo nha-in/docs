@@ -92,7 +92,7 @@ function deref(spec, node, depth = 0) {
 // encrypted against NHA's public key before it is sent, so the try-it console
 // takes the raw value and encrypts it in the browser. This list scopes that
 // treatment; `fields()` only ever walks request bodies, so a `loginId` in a
-// response is never in this set. See catalogue/hiecm/concepts/input-encryption.
+// response is never in this set.
 const ENCRYPTED_FIELDS = new Set(['loginId', 'aadhaar', 'otpValue', 'password']);
 
 /** Flatten a JSON schema into rows a table can render, two levels deep. */

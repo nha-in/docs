@@ -17,14 +17,7 @@ sources:
 verified:
   status: unverified
 related:
-  concepts: [hiecm.concept.roles]
-  glossary:
-    [
-      shared.glossary.hmis,
-      shared.glossary.emr,
-      shared.glossary.lims,
-      shared.glossary.pms,
-    ]
+  glossary: [shared.glossary.hmis, shared.glossary.emr, shared.glossary.lims, shared.glossary.pms]
 ---
 
 # IMS, information management system
@@ -42,8 +35,8 @@ other being a [PHR](phr.md) application, and it is fixed for the life of
 the product: `ims` for software that acts for a facility, `phr` for
 software that acts for a citizen. The vendor who writes any of those
 systems has the same integration in front of them: the facility is the
-[HIP](hip.md) when it publishes a record and the [HIU](hiu.md) when it
-fetches one, so the code is M2 and M3 either way. See [roles](../../hiecm/concepts/roles.md).
+health information provider when it publishes a record and the health
+information user when it fetches one, so the code is M2 and M3 either way.
 
 ## Before you start
 

@@ -24,8 +24,6 @@ sources:
 verified:
   status: unverified
 related:
-  concepts: [hiecm.concept.encrypted-identifiers, hiecm.concept.gateway-session, hiecm.concept.m1-journey-design, hiecm.concept.error-codes]
-  errors: [hiecm.error.abdm-1107, hiecm.error.abdm-1094]
 ---
 
 # How to work on an ABDM integration

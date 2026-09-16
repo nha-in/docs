@@ -25,7 +25,7 @@ verified:
   status: unverified
   against: docs-only
 related:
-  glossary: [shared.glossary.abha, shared.glossary.abdm]
+  glossary: [shared.glossary.abha]
 ---
 
 # Ayushman card, and why it is not an ABHA

@@ -23,9 +23,7 @@ sources:
 verified:
   status: unverified
   against: docs-only
-related:
-  glossary: [shared.glossary.consent-artefact, shared.glossary.hip, shared.glossary.hiu]
-  concepts: [hiecm.concept.consent-artefact]
+related: {}
 ---
 
 # Key material, who generates it and who keeps it

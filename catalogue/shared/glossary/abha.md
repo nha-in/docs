@@ -16,8 +16,8 @@ verified:
   status: unverified
   against: docs-only
 related:
-  concepts: [hiecm.concept.care-context]
-  glossary: [shared.glossary.ayushman-card, shared.glossary.abha-address]
+  
+  glossary: [shared.glossary.ayushman-card]
 ---
 
 ## In plain words

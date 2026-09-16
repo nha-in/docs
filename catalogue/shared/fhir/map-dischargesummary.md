@@ -20,7 +20,6 @@ verified:
   status: draft
 related:
   fhir: [shared.fhir.document-bundles]
-  glossary: [shared.glossary.nrces, shared.glossary.abdm]
 ---
 
 # DischargeSummary, the discharge summary record

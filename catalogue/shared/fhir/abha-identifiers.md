@@ -26,14 +26,7 @@ verified:
   against: docs-only
 related:
   fhir: [shared.fhir.document-bundle, shared.fhir.hl7-validator-recipe]
-  glossary:
-    [
-      shared.glossary.abha,
-      shared.glossary.abha-number,
-      shared.glossary.abha-address,
-      shared.glossary.fhir,
-      shared.glossary.nrces,
-    ]
+  glossary: [shared.glossary.abha]
 ---
 
 # Carrying an ABHA number and an ABHA address on a FHIR Patient

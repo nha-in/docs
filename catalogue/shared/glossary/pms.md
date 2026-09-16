@@ -18,13 +18,7 @@ sources:
 verified:
   status: unverified
 related:
-  concepts: [hiecm.concept.roles]
-  glossary:
-    [
-      shared.glossary.hip,
-      shared.glossary.hiu,
-      shared.glossary.ims,
-    ]
+  glossary: [shared.glossary.ims]
 ---
 
 # PMS, pharmacy management system

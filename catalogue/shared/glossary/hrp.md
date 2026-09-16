@@ -24,8 +24,7 @@ verified:
   status: unverified
   against: docs-only
 related:
-  concepts: [hiecm.concept.roles]
-  glossary: [shared.glossary.hip, shared.glossary.hiu, shared.glossary.dsc]
+  glossary: [shared.glossary.dsc]
   decisions: [shared.decision.role-model-two-axes]
 ---
 
@@ -66,8 +65,7 @@ four were one set of roles to choose from. They are not comparable:
 One integration is usually several of these at once. A hospital system
 acts for a facility by position, that facility is the HIP or the HIU
 depending on the call, the facility is the HRP because it holds the
-records, and the software is sold by a DSC. See
-[roles](../../hiecm/concepts/roles.md).
+records, and the software is sold by a DSC.
 
 In practice the term shows up when software is registered: the bridge you
 register with the gateway is how custody is declared, and it is where you

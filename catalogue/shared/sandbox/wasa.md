@@ -23,8 +23,7 @@ sources:
 verified:
   status: unverified
   against: docs-only
-related:
-  sandbox: [shared.sandbox.registration-and-credentials]
+related: {}
 ---
 
 # WASA and the Safe to Host certificate

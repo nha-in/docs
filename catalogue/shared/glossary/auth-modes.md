@@ -17,9 +17,7 @@ sources:
 verified:
   status: unverified
   against: docs-only
-related:
-  glossary: [shared.glossary.abha-address, shared.glossary.hip]
-  concepts: [hiecm.concept.input-encryption]
+related: {}
 ---
 
 # Auth modes, the four ways a patient proves who they are

@@ -24,8 +24,7 @@ verified:
   status: unverified
   against: docs-only
 related:
-  concepts: [hiecm.concept.gateway-session, hiecm.concept.asynchronous-callbacks]
-  glossary: [shared.glossary.hie-cm, shared.glossary.bridge]
+  glossary: [shared.glossary.bridge]
 ---
 
 # Gateway, the routing layer between participants

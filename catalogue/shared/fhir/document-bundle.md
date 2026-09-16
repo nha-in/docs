@@ -24,7 +24,7 @@ verified:
   status: unverified
   against: docs-only
 related:
-  glossary: [shared.glossary.fhir, shared.glossary.hi-type, shared.glossary.nrces]
+  glossary: [shared.glossary.hi-type]
 ---
 
 # DocumentBundle, the envelope every health record travels in

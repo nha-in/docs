@@ -24,15 +24,7 @@ verified:
   status: unverified
   against: docs-only
 related:
-  concepts: [hiecm.concept.roles]
-  glossary:
-    [
-      shared.glossary.hip,
-      shared.glossary.hiu,
-      shared.glossary.phr,
-      shared.glossary.abha,
-      shared.glossary.hfr,
-    ]
+  glossary: [shared.glossary.abha]
 ---
 
 # Roles belong to the entity, and split into two axes, position and direction
@@ -46,9 +38,8 @@ kinds of thing, and the list invites a further mistake: reading the role
 onto the software instead of onto whoever is using it.
 
 Two entities hold identity on this network. The citizen holds an
-[ABHA](../glossary/abha.md) address. The facility holds a facility ID
-issued by the [HFR](../glossary/hfr.md). Those two are the participants.
-[HIP](../glossary/hip.md) and [HIU](../glossary/hiu.md) are roles an
+[ABHA](../glossary/abha.md) address. The facility holds a facility ID.
+Health information provider and health information user are roles an
 entity takes, and the software is how it takes them.
 
 This catalogue splits roles into two axes on the entity, and one

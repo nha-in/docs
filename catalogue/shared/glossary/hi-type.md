@@ -28,9 +28,7 @@ verified:
   status: unverified
   against: docs-only
 related:
-  concepts: []
-  glossary: [shared.glossary.fhir, shared.glossary.snomed-ct,
-             shared.glossary.consent-artefact]
+  glossary: [shared.glossary.snomed-ct]
 ---
 
 # HI type, the kind of health information

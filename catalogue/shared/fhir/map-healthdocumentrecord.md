@@ -21,7 +21,6 @@ verified:
   status: draft
 related:
   fhir: [shared.fhir.document-bundles]
-  glossary: [shared.glossary.nrces]
 ---
 
 # HealthDocumentRecord, the unstructured health document record

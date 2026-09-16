@@ -25,11 +25,7 @@ sources:
       a maximum of 5 working days.
 verified:
   status: unverified
-related:
-  endpoints: [hiecm.endpoint.gateway-sessions]
-  concepts: [hiecm.concept.gateway-session]
-  sandbox: [shared.sandbox.registration-and-credentials]
-  troubleshooting: [hiecm.troubleshooting.everything-returns-401]
+related: {}
 ---
 
 # Your first fifteen minutes with ABDM

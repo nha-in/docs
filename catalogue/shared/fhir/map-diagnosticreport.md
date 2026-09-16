@@ -28,7 +28,6 @@ verified:
   status: unverified
 related:
   fhir: [shared.fhir.document-bundles, shared.fhir.hl7-validator-recipe]
-  glossary: [shared.glossary.nrces]
 ---
 
 # Mapping DiagnosticReport, the lab and radiology report record

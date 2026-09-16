@@ -25,7 +25,7 @@ verified:
   against: docs-only
 related:
   decisions: [shared.decision.role-model-two-axes]
-  glossary: [shared.glossary.abha, shared.glossary.abha-address]
+  glossary: [shared.glossary.abha]
 ---
 
 # Aliases live in one vocabulary file, not in every atom

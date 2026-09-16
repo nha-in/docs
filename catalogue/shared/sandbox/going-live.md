@@ -29,11 +29,8 @@ verified:
   status: unverified
   against: docs-only
 related:
-  sandbox: [shared.sandbox.registration-and-credentials, shared.sandbox.wasa]
-  glossary: [shared.glossary.abdm, shared.glossary.nha, shared.glossary.hip,
-             shared.glossary.hiu, shared.glossary.phr, shared.glossary.abha]
-  concepts: [hiecm.concept.roles]
-  troubleshooting: [hiecm.troubleshooting.everything-returns-401]
+  sandbox: [shared.sandbox.wasa]
+  glossary: [shared.glossary.nha, shared.glossary.abha]
 ---
 
 # Going live, the sandbox exit process

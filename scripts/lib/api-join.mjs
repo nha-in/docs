@@ -12,11 +12,6 @@
 // and what is left matches. The host is kept beside the key rather than inside
 // it, because two specifications can publish the same path on different hosts
 // and only the host tells them apart.
-//
-// Two scripts read this and they have to agree: build-requirements.mjs, which
-// writes the certification level onto an operation, and build-api-reference
-// .mjs, which writes the lookup the test matrix joins against. A key built
-// two ways is a join that silently misses.
 
 /** Segments that route rather than identify. */
 const NOISE = new Set([

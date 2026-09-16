@@ -18,15 +18,7 @@ sources:
 verified:
   status: unverified
 related:
-  concepts: [hiecm.concept.roles]
-  glossary:
-    [
-      shared.glossary.hip,
-      shared.glossary.hiu,
-      shared.glossary.hi-type,
-      shared.glossary.ims,
-      shared.glossary.m4,
-    ]
+  glossary: [shared.glossary.hi-type, shared.glossary.ims, shared.glossary.m4]
 ---
 
 # HMIS, HIS or HIMS, the software a hospital runs
@@ -41,8 +33,7 @@ integration.
 
 A facility uses it to publish records as the [HIP](hip.md) and to fetch
 them as the [HIU](hiu.md), so the ABDM work is M2 and M3 rather than one
-or the other. It must implement every [HI type](hi-type.md). See
-[roles](../../hiecm/concepts/roles.md).
+or the other. It must implement every [HI type](hi-type.md).
 
 `HIS-` is also the prefix on every error code the [HPR](hpr.md) and the
 [HFR](hfr.md) return. Those are [M4](m4.md) registry errors and have

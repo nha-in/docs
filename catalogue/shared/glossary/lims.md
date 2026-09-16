@@ -17,8 +17,7 @@ sources:
 verified:
   status: unverified
 related:
-  concepts: [hiecm.concept.roles]
-  glossary: [shared.glossary.hip, shared.glossary.hiu, shared.glossary.m2]
+  glossary: [shared.glossary.m2]
 ---
 
 # LIMS, laboratory information management system, also written LMIS

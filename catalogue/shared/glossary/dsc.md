@@ -20,7 +20,7 @@ verified:
   status: unverified
   against: docs-only
 related:
-  glossary: [shared.glossary.hrp, shared.glossary.hip, shared.glossary.hiu]
+  glossary: [shared.glossary.hrp]
   decisions: [shared.decision.role-model-two-axes]
 ---
 
