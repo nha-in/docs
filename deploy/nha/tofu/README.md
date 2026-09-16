@@ -11,6 +11,7 @@ and `backend_alb.tf`. They add to the existing state; nothing already there chan
 | `abdm_docs_mcp_ecs_task.tf` | the docs-mcp Fargate service on `module.ecs_cluster`, 2 tasks, rollback on failure, Bedrock IAM |
 | `abdm_docs_bedrock_endpoint.tf` | `bedrock-runtime` VPC endpoint, open only to the docs-mcp tasks |
 | `abdm_docs_site.tf` | `docs.<zone>`: private bucket, CloudFront, certificate, DNS |
+| `deploy.sh` | publishes the site and docs-mcp into the above; not a Tofu file, stays in this repository |
 
 What they rely on from the root: `module.vpc`, `module.ecs_cluster`, `module.kms_key`,
 `aws_security_group.nlb_sg`, `data.aws_route53_zone.external`, the `aws.us-east-1` provider
@@ -30,44 +31,32 @@ plan must show additions only, every one named `abdm_docs_*` or `module.abdm_doc
 `tofu apply`. The ECR repository starts empty, so docs-mcp tasks fail to pull until step 2; that
 is expected and stops on its own.
 
-**2. docs-mcp image.** From this repository at a commit that includes the stateless MCP server
-(`mcp/internal/server/http.go` passing `Stateless: true`); older builds break with two tasks.
+**2. Publish.** From a checkout of this repository, at a commit that includes the stateless
+MCP server (`mcp/internal/server/http.go` passing `Stateless: true`; older builds break with
+two tasks), with credentials for NHA's account:
 
 ```sh
-cd mcp
-EMBED_PROVIDER=bedrock AWS_REGION=ap-south-1 go run ./cmd/indexer -catalogue ../catalogue -out catalogue.db
-docker build -t <ecr repository url>:latest .
-docker push <ecr repository url>:latest
-aws ecs update-service --cluster ohn-prod --service ohn-prod-abdm-docs-mcp --force-new-deployment
+deploy/nha/tofu/deploy.sh
 ```
 
-The repository URL is the `abdm_docs_mcp_ecr_repository_url` output. A plain `docker build`
-produces an amd64 image, which matches the `X86_64` default; build with
-`--platform linux/arm64` only if `abdm_docs_mcp_cpu_architecture` is changed. To pin releases
-instead of `latest`, push a tagged image and set `abdm_docs_mcp_image_tag` before applying.
+`deploy.sh` carries NHA's names (account, region, cluster, service, repository, bucket,
+hostname) and looks the rest up. It builds the site with the right URLs and syncs it to the
+bucket in two passes (assets first, then pages), invalidates CloudFront, builds the search index
+against Bedrock, builds and pushes the amd64 docs-mcp image, rolls the ECS service and waits for
+it to be stable. `deploy.sh site` or `deploy.sh mcp` does one half. Set `IMAGE_TAG` to push a
+release tag instead of `latest`, and set `abdm_docs_mcp_image_tag` to match before applying.
 
-**3. Docs site.**
-
-```sh
-DOCUSAURUS_URL=https://docs.<zone> DOCUSAURUS_BASE_URL=/ MCP_URL=<abdm_docs_mcp_url output> npm run build
-aws s3 sync site/build "s3://<abdm_docs_site_bucket output>" --delete \
-  --exclude "*.html" --exclude "*.xml" --exclude "*.yaml" --exclude "*.json" --exclude "*.txt" --exclude "*.md" \
-  --cache-control "public,max-age=31536000,immutable"
-aws s3 sync site/build "s3://<abdm_docs_site_bucket output>" --delete \
-  --exclude "*" --include "*.html" --include "*.xml" --include "*.yaml" --include "*.json" --include "*.txt" --include "*.md" \
-  --cache-control "public,max-age=0,must-revalidate"
-aws cloudfront create-invalidation --distribution-id <abdm_docs_site_distribution_id output> --paths "/*"
-```
-
-Two passes so every asset a page references is in the bucket before the page is.
+Needs Node for the site, Go and Docker for docs-mcp, and the deploying identity needs
+`bedrock:InvokeModel` on Titan Text Embeddings for the index build.
 
 ## Check
 
-From inside the VPC or across the transit gateway (the NLB is internal):
+From inside the VPC or across the transit gateway (the NLB is internal). `deploy.sh` prints the
+two URLs when it finishes.
 
 ```sh
-curl http://<abdm_docs_nlb_dns_name output>/healthz
-curl 'http://<abdm_docs_nlb_dns_name output>/api/search?q=abha'
+curl http://<nlb dns name>/healthz
+curl 'http://<nlb dns name>/api/search?q=abha'
 aws logs tail ohn/prod/abdm-docs-mcp --since 15m
 ```
 
