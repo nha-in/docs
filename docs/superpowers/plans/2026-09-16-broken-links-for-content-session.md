@@ -47,9 +47,15 @@ Exhaustive list of all broken links found:
    -> linking to /reference/hiecm-phr-services
 ```
 
-## Pages that import data the reset deleted
+## The four testing pages were deleted on this branch
 
-These four pages import `@site/src/data/test-matrix/<module>.json`. The generator that wrote that folder, `scripts/build-test-matrix.py`, was deleted with the retired sources, so the folder no longer exists and the client bundle cannot compile while these pages are present. They were moved aside only to produce the broken-link list above, and are back on the branch untouched. Until they are rewritten or removed, the site build fails before it reaches the broken-link check.
+`site/docs/hiecm/v3/resources/testing/m{1,2,3,4}.mdx` imported
+`@site/src/data/test-matrix/<module>.json`. The generator that wrote that
+folder, `scripts/build-test-matrix.py`, went with the retired sources, so the
+data no longer exists and the client bundle could not compile while the four
+pages were present. That is not a broken link, and no `onBrokenLinks` setting
+gets past it: the site build failed outright. By the coordinator's ruling on
+this unit the four pages come down here rather than being carried broken.
 
 ```
 site/docs/hiecm/v3/resources/testing/m1.mdx
@@ -58,6 +64,11 @@ site/docs/hiecm/v3/resources/testing/m3.mdx
 site/docs/hiecm/v3/resources/testing/m4.mdx
 ```
 
+`resources/testing/index.mdx` and its `_category_.json` are untouched, so the
+section survives with nothing under it. The content session recreates these
+pages from NHA's test cases when those arrive. Until then the links into them,
+listed above, stay broken.
+
 ## Retired sources still cited by hand-written pages
 
 Hits from the residue grep, restricted to `site/docs`. Each names a document, an extension or a generator that the final-set reset retired.
@@ -65,10 +76,6 @@ Hits from the residue grep, restricted to `site/docs`. Each names a document, an
 ```
 site/docs/hiecm/v3/api/README.md:8:`x-abdm-requirement`, which `scripts/build-requirements.mjs` joins from the
 site/docs/hiecm/v3/milestones/m1.mdx:190:This table is NHA's, from the proposed simplified M1 flow they supplied with
-site/docs/hiecm/v3/resources/testing/m1.mdx:13:import matrix from '@site/src/data/test-matrix/m1.json';
-site/docs/hiecm/v3/resources/testing/m2.mdx:13:import matrix from '@site/src/data/test-matrix/m2.json';
-site/docs/hiecm/v3/resources/testing/m3.mdx:13:import matrix from '@site/src/data/test-matrix/m3.json';
-site/docs/hiecm/v3/resources/testing/m4.mdx:13:import matrix from '@site/src/data/test-matrix/m4.json';
 site/docs/whats-new/2026-08-25.mdx:17:Aarogya Setu is the reference PHR, and it is now ingested and
 site/docs/whats-new/2026-08-25.mdx:28:Aarogya Setu. No OpenAPI file is published for this role yet, so these are
 ```
