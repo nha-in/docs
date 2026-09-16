@@ -38,15 +38,14 @@ MCP server (`mcp/internal/server/http.go` passing `Stateless: true`; older build
 two tasks), with credentials for NHA's account:
 
 ```sh
-deploy/nha/tofu/deploy.sh
+deploy/nha/tofu/deploy.sh v1.0.0
 ```
 
+The argument is the version being released: the git tag on the commit you are deploying from.
 `deploy.sh` carries NHA's names (account, region, cluster, service, repository, bucket,
-distribution) and looks up the two addresses `tofu apply` assigned: the site's `cloudfront.net`
-name and the NLB's name. `deploy.sh site` or `deploy.sh mcp` does one half.
-
-Every run is a version, named after the git tag on the checked-out commit (or `git-<sha>`;
-override with `VERSION=...`). There is no `latest` anywhere.
+distribution), looks up the two addresses `tofu apply` assigned (the site's `cloudfront.net`
+name and the NLB's name), and always publishes both the site and docs-mcp. There is no
+`latest` anywhere.
 
 - **Site:** built with the right URLs, synced to `main/` in the bucket in two passes (assets
   first, then pages), CloudFront invalidated. `main/` is the distribution's origin path and the
