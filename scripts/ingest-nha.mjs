@@ -15,6 +15,7 @@ const RAW = join(root, 'catalogue', 'openapi', '.raw', 'nha-2026-09-16');
 const OUT = join(root, 'catalogue', 'openapi', 'hiecm', 'v3');
 const LOG = join(root, 'catalogue', 'openapi', 'corrections', '2026-09-16-final-set.md');
 const check = process.argv.includes('--check');
+const journeysMode = process.argv.includes('--journeys');
 const METHODS = ['get', 'post', 'put', 'patch', 'delete'];
 
 const MODULES = {
@@ -101,6 +102,9 @@ const specs = Object.fromEntries(Object.entries(MODULES).map(([id, m]) => [id, {
 
 const seenPath = new Map();   // "METHOD path" -> module that first declared it
 const ids = new Set();
+// module -> [{tag, op}] in the exact order operations were encountered in NHA's
+// files, paths and webhooks interleaved. --journeys scaffolding reads this.
+const order = Object.fromEntries(Object.keys(MODULES).map((id) => [id, []]));
 const normHeader = (name) => M1_HEADERS[name.toLowerCase()] ?? name;
 
 for (const {file, place} of FILES) {
@@ -173,6 +177,7 @@ for (const {file, place} of FILES) {
       } else {
         (spec.paths[path] ??= {})[method] = copy;
       }
+      order[module].push({tag, op: copy});
     }
   }
   // M4 components: merge, refuse silent conflicts.
@@ -199,6 +204,31 @@ for (const [id, m] of Object.entries(MODULES)) {
   const count = Object.values(specs[id].paths).reduce((n, i) => n + METHODS.filter((x) => i[x]).length, 0) + Object.values(specs[id].webhooks).reduce((n, i) => n + METHODS.filter((x) => i[x]).length, 0);
   if (count !== m.expected) throw new Error(`${id}: ${count} operations, expected ${m.expected}`);
   if (!Object.keys(specs[id].webhooks).length) delete specs[id].webhooks;
+}
+
+if (journeysMode) {
+  const JOURNEYS = join(root, 'catalogue', 'openapi', 'hiecm', 'v3', 'journeys');
+  const journeySlug = (s) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+  let written = 0;
+  for (const module of Object.keys(MODULES)) {
+    if (module === 'm1') continue;
+    const path = join(JOURNEYS, `${module}.yaml`);
+    if (existsSync(path)) continue;
+    const byTag = new Map(); // tag -> steps, in first-seen order
+    for (const {tag, op} of order[module]) {
+      if (!byTag.has(tag)) byTag.set(tag, []);
+      byTag.get(tag).push({op: op.operationId});
+    }
+    const journeys = [...byTag.entries()].map(([tag, steps]) => ({
+      id: `${module}-${journeySlug(tag)}`,
+      title: tag.replace(/^abdm-/, '').replace(/-(hip|hiu|phr)$/, '').replace(/^./, (c) => c.toUpperCase()),
+      steps,
+    }));
+    writeFileSync(path, stringify(journeys, {lineWidth: 0}));
+    written++;
+  }
+  console.log(`wrote ${written} journey scaffold(s)`);
+  process.exit(0);
 }
 
 const outputs = Object.entries(specs).map(([id, spec]) => [join(OUT, `hiecm-${id}.yaml`), stringify(spec, {lineWidth: 0})]);

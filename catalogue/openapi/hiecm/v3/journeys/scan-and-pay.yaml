@@ -1,0 +1,16 @@
+- id: scan-and-pay-abdm-scan-pay-hip
+  title: Scan-pay
+  steps:
+    - op: scan-and-pay_post_v3_patient_share_open_order
+    - op: scan-and-pay_post_scan_gateway_v3_patient_on_share_open_order
+    - op: scan-and-pay_post_v3_patient_selection
+    - op: scan-and-pay_post_scan_gateway_v3_patient_on_selection
+    - op: scan-and-pay_post_scan_gateway_v3_patient_scan_pay_notify
+    - op: scan-and-pay_post_v3_patient_scan_pay_on_notify
+    - op: scan-and-pay_post_v3_patient_scan_pay_order_status
+    - op: scan-and-pay_post_scan_gateway_v3_patient_scan_pay_on_order_status
+- id: scan-and-pay-utility
+  title: Utility
+  steps:
+    - op: scan-and-pay_get_scan_gateway_v3_patient_scan_pay_details
+    - op: scan-and-pay_patch_gateway_v3_scanpay_updateversion

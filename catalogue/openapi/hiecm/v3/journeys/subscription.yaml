@@ -1,0 +1,13 @@
+- id: subscription-subscription-hiu
+  title: Subscription
+  steps:
+    - op: subscription_post_subscription_requests_v3_init
+    - op: subscription_post_v3_hiu_hiecm_subscription_requests_on_init
+    - op: subscription_post_v3_hiu_subscription_requests_hiu_notify
+    - op: subscription_post_subscription_requests_v3_hiu_on_notify
+    - op: subscription_post_v3_hiu_subscription_notify
+    - op: subscription_post_subscription_requests_v3_hiu_care_context_on_notify
+- id: subscription-health-locker
+  title: Health-locker
+  steps:
+    - op: subscription_post_subscription_requests_v3_setup_locker
