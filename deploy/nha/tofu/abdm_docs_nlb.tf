@@ -23,6 +23,10 @@ module "abdm_docs_nlb" {
       target_type      = "ip"
       # Time for an in-flight /api/chat stream to finish when a task is replaced.
       deregistration_delay = 60
+      # Off by default for IP targets, in which case tasks see the NLB's own addresses and the
+      # chat rate limiter, which is per client IP, would throttle everyone together. The tasks'
+      # security group admits the NLB's security group, which holds regardless of this setting.
+      preserve_client_ip = true
       health_check = {
         enabled             = true
         interval            = 15

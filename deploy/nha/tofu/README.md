@@ -5,17 +5,17 @@ and `backend_alb.tf`. They add to the existing state; nothing already there chan
 
 | File | Creates |
 | --- | --- |
-| `abdm_docs_variables.tf` | every setting, all with defaults |
+| `abdm_docs_variables.tf` | every setting; all defaulted except `abdm_docs_mcp_image_tag`, the image version to run |
 | `abdm_docs_ecr.tf` | `ohn-<env>-abdm-docs-mcp`, KMS-encrypted, keeps 20 tagged images |
 | `abdm_docs_nlb.tf` | internal NLB, TCP 80 → 8080, `/healthz` checks; reuses `backend_alb`'s security group |
 | `abdm_docs_mcp_ecs_task.tf` | the docs-mcp Fargate service on `module.ecs_cluster`, 2 tasks, rollback on failure, Bedrock IAM |
 | `abdm_docs_bedrock_endpoint.tf` | `bedrock-runtime` VPC endpoint, open only to the docs-mcp tasks |
-| `abdm_docs_site.tf` | `docs.<zone>`: private bucket, CloudFront, certificate, DNS |
+| `abdm_docs_site.tf` | the docs site: private bucket, CloudFront on its own `cloudfront.net` name (no custom hostname, no certificate) |
 | `deploy.sh` | publishes the site and docs-mcp into the above; not a Tofu file, stays in this repository |
 
 What they rely on from the root: `module.vpc`, `module.ecs_cluster`, `module.kms_key`,
-`aws_security_group.nlb_sg`, `data.aws_route53_zone.external`, the `aws.us-east-1` provider
-alias, `local.tags`, and the variables `environment`, `aws_region`, `aws_account_id`, `zone_name`.
+`aws_security_group.nlb_sg`, `local.tags`, and the variables `environment`, `aws_region`,
+`aws_account_id`.
 
 ## Deploy
 
@@ -26,10 +26,12 @@ tofu init -upgrade -backend-config=backend/nha-ap-south-1.tfbackend
 tofu plan -var-file=environments/nha-ap-south-1.tfvars
 ```
 
-`-upgrade` once: the committed lock file allows aws `>= 6.28`, the modules need `>= 6.41`. The
-plan must show additions only, every one named `abdm_docs_*` or `module.abdm_docs_*`. Then
-`tofu apply`. The ECR repository starts empty, so docs-mcp tasks fail to pull until step 2; that
-is expected and stops on its own.
+`-upgrade` once: the committed lock file allows aws `>= 6.28`, the modules need `>= 6.41`.
+`abdm_docs_mcp_image_tag` has no default: put the version you are about to publish in the
+tfvars (`abdm_docs_mcp_image_tag = "v1.0.0"`). The plan must show additions only, every one
+named `abdm_docs_*` or `module.abdm_docs_*`. Then `tofu apply`. The ECR repository starts
+empty, so docs-mcp tasks fail to pull until step 2 pushes that version; ECS keeps retrying and
+they start on their own once it is there.
 
 **2. Publish.** From a checkout of this repository, at a commit that includes the stateless
 MCP server (`mcp/internal/server/http.go` passing `Stateless: true`; older builds break with
@@ -40,11 +42,30 @@ deploy/nha/tofu/deploy.sh
 ```
 
 `deploy.sh` carries NHA's names (account, region, cluster, service, repository, bucket,
-hostname) and looks the rest up. It builds the site with the right URLs and syncs it to the
-bucket in two passes (assets first, then pages), invalidates CloudFront, builds the search index
-against Bedrock, builds and pushes the amd64 docs-mcp image, rolls the ECS service and waits for
-it to be stable. `deploy.sh site` or `deploy.sh mcp` does one half. Set `IMAGE_TAG` to push a
-release tag instead of `latest`, and set `abdm_docs_mcp_image_tag` to match before applying.
+distribution) and looks up the two addresses `tofu apply` assigned: the site's `cloudfront.net`
+name and the NLB's name. `deploy.sh site` or `deploy.sh mcp` does one half.
+
+Every run is a version, named after the git tag on the checked-out commit (or `git-<sha>`;
+override with `VERSION=...`). There is no `latest` anywhere.
+
+- **Site:** built with the right URLs, synced to `main/` in the bucket in two passes (assets
+  first, then pages), CloudFront invalidated. `main/` is the distribution's origin path and the
+  only prefix it serves. A copy is kept under `<version>/`, which later deploys never delete.
+- **docs-mcp:** the search index is built against Bedrock, the amd64 image is built and pushed
+  as `<version>`, and the script prints what to do next. Nothing rolls out until Tofu says so:
+
+  ```sh
+  # sandbox-tofu, environments/nha-ap-south-1.tfvars
+  abdm_docs_mcp_image_tag = "v1.1.0"
+  ```
+
+  then `tofu apply`. That is a new task-definition revision naming that version; ECS rolls the
+  two tasks one at a time, and if the new version never gets healthy the circuit breaker puts the
+  previous revision, and so the previous version, back.
+
+**Reverting.** docs-mcp: set the earlier version in the tfvars and `tofu apply`. Site:
+`aws s3 sync s3://ohn-prod-abdm-docs/<version>/ s3://ohn-prod-abdm-docs/main/ --delete` and an
+invalidation of `/*`.
 
 Needs Node for the site, Go and Docker for docs-mcp, and the deploying identity needs
 `bedrock:InvokeModel` on Titan Text Embeddings for the index build.

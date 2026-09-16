@@ -9,7 +9,8 @@ resource "aws_cloudwatch_log_group" "abdm_docs_mcp_logs" {
 locals {
   abdm_docs_mcp_container_name = "ohn-${var.environment}-abdm-docs-mcp"
 
-  # The NLB works at layer 4 and adds no X-Forwarded-For, so TRUST_PROXY stays unset.
+  # The NLB works at layer 4 and adds no X-Forwarded-For, so TRUST_PROXY stays unset; the target
+  # group preserves the client IP instead, so the chat rate limiter sees real clients.
   #
   # ALLOW_ORIGIN lets the documentation site's browser code call /api/search; MCP_URL is the
   # address docs-mcp names to coding agents, and without it the server falls back to a built-in
@@ -18,7 +19,7 @@ locals {
   abdm_docs_mcp_environment_variables = [
     for name, value in merge({
       AWS_REGION   = var.aws_region
-      ALLOW_ORIGIN = "https://${local.abdm_docs_site_domain_name}"
+      ALLOW_ORIGIN = "https://${aws_cloudfront_distribution.abdm_docs_site.domain_name}"
       MCP_URL      = "http://${module.abdm_docs_nlb.lb_dns_name}/mcp"
       }, var.abdm_docs_mcp_environment) : {
       name  = name

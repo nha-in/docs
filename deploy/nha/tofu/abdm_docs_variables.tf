@@ -1,7 +1,6 @@
 variable "abdm_docs_mcp_image_tag" {
-  description = "Tag of the docs-mcp image in the abdm-docs ECR repository"
+  description = "Version of the docs-mcp image to run, as pushed by deploy/nha/tofu/deploy.sh in abdm-docs (the git tag, e.g. v1.0.0). No default on purpose: every task definition names one version, so a rollout that fails rolls back to the previous version, and reverting is setting the earlier one here"
   type        = string
-  default     = "latest"
 }
 
 variable "abdm_docs_mcp_cpu_architecture" {
@@ -40,15 +39,6 @@ variable "abdm_docs_mcp_environment" {
   }
 }
 
-variable "abdm_docs_site_domain_name" {
-  description = "Hostname for the documentation site. Empty takes docs.<zone_name>"
-  type        = string
-  default     = ""
-}
-
-locals {
-  abdm_docs_site_domain_name = var.abdm_docs_site_domain_name != "" ? var.abdm_docs_site_domain_name : "docs.${var.zone_name}"
-}
 
 variable "abdm_docs_mcp_log_retention_days" {
   description = "Retention for docs-mcp logs. CERT-In expects 180 days"

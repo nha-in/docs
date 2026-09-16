@@ -1,6 +1,5 @@
 # The documentation site: static Docusaurus output in a private bucket, read only by CloudFront.
-# Same shape as the nhcx distribution in this account: OAC, a viewer-request function, and the
-# certificate issued in us-east-1.
+# Same shape as the nhcx distribution in this account: OAC and a viewer-request function.
 resource "aws_s3_bucket" "abdm_docs_site" {
   bucket = "ohn-${var.environment}-abdm-docs"
   tags   = local.tags
@@ -65,49 +64,20 @@ data "aws_cloudfront_cache_policy" "abdm_docs_caching_optimized" {
   name = "Managed-CachingOptimized"
 }
 
-resource "aws_acm_certificate" "abdm_docs_site" {
-  provider          = aws.us-east-1
-  domain_name       = local.abdm_docs_site_domain_name
-  validation_method = "DNS"
-  tags              = local.tags
-
-  lifecycle {
-    create_before_destroy = true
-  }
-}
-
-resource "aws_route53_record" "abdm_docs_site_certificate_validation" {
-  for_each = {
-    for option in aws_acm_certificate.abdm_docs_site.domain_validation_options :
-    option.domain_name => option
-  }
-
-  zone_id         = data.aws_route53_zone.external.zone_id
-  name            = each.value.resource_record_name
-  type            = each.value.resource_record_type
-  records         = [each.value.resource_record_value]
-  ttl             = 60
-  allow_overwrite = true
-}
-
-resource "aws_acm_certificate_validation" "abdm_docs_site" {
-  provider                = aws.us-east-1
-  certificate_arn         = aws_acm_certificate.abdm_docs_site.arn
-  validation_record_fqdns = [for record in aws_route53_record.abdm_docs_site_certificate_validation : record.fqdn]
-}
-
 resource "aws_cloudfront_distribution" "abdm_docs_site" {
   enabled             = true
   is_ipv6_enabled     = true
-  comment             = local.abdm_docs_site_domain_name
-  aliases             = [local.abdm_docs_site_domain_name]
+  comment             = "ohn-${var.environment}-abdm-docs"
   default_root_object = "index.html"
   price_class         = "PriceClass_All"
   tags                = local.tags
 
+  # The live site lives under main/ in the bucket; each deploy also keeps a copy under
+  # <version>/, which CloudFront never serves. Rolling back is a sync from <version>/ to main/.
   origin {
     origin_id                = "s3"
     domain_name              = aws_s3_bucket.abdm_docs_site.bucket_regional_domain_name
+    origin_path              = "/main"
     origin_access_control_id = aws_cloudfront_origin_access_control.abdm_docs_site.id
   }
 
@@ -140,10 +110,10 @@ resource "aws_cloudfront_distribution" "abdm_docs_site" {
     }
   }
 
+  # Served on the distribution's own cloudfront.net name with CloudFront's certificate. A custom
+  # hostname needs a certificate in us-east-1 and an alias here; none is managed by these files.
   viewer_certificate {
-    acm_certificate_arn      = aws_acm_certificate_validation.abdm_docs_site.certificate_arn
-    ssl_support_method       = "sni-only"
-    minimum_protocol_version = "TLSv1.2_2021"
+    cloudfront_default_certificate = true
   }
 }
 
@@ -172,23 +142,9 @@ resource "aws_s3_bucket_policy" "abdm_docs_site" {
   depends_on = [aws_s3_bucket_public_access_block.abdm_docs_site]
 }
 
-resource "aws_route53_record" "abdm_docs_site" {
-  for_each = toset(["A", "AAAA"])
-
-  zone_id = data.aws_route53_zone.external.zone_id
-  name    = local.abdm_docs_site_domain_name
-  type    = each.key
-
-  alias {
-    name                   = aws_cloudfront_distribution.abdm_docs_site.domain_name
-    zone_id                = aws_cloudfront_distribution.abdm_docs_site.hosted_zone_id
-    evaluate_target_health = false
-  }
-}
-
 output "abdm_docs_site_url" {
   description = "Public documentation site"
-  value       = "https://${local.abdm_docs_site_domain_name}"
+  value       = "https://${aws_cloudfront_distribution.abdm_docs_site.domain_name}"
 }
 
 output "abdm_docs_site_bucket" {
