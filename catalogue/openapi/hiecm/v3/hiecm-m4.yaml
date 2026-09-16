@@ -23,15 +23,15 @@ x-abdm-sources:
   - file: catalogue/openapi/.raw/nha-2026-09-16/M4/M4-HFR.json
     role: upstream
     hash: sha256:26948ced727b5d372b3809ab8a41c562870bcda12bd0fa956e5d46b24ef77b11
-    fetched: 2026-09-16
+    fetched: "2026-09-16"
   - file: catalogue/openapi/.raw/nha-2026-09-16/M4/M4-HPID.json
     role: upstream
     hash: sha256:6608da5913b7b0327dd04bc3e9ae05c4fcd59508e697f30060bc9a862af9d4bc
-    fetched: 2026-09-16
+    fetched: "2026-09-16"
   - file: catalogue/openapi/.raw/nha-2026-09-16/M4/M4-HPR.json
     role: upstream
     hash: sha256:f91492230d57ac9c50d538e9127f505ab3b04dc845c95055f45a590660a4fed9
-    fetched: 2026-09-16
+    fetched: "2026-09-16"
 servers:
   - url: https://apihspsbx.abdm.gov.in/v4/int
     description: NHPR, sandbox
@@ -160,7 +160,7 @@ paths:
                 name: Ayushman Bharat Mission
                 email: null
                 pincode: "201005"
-                birthdate: 01-11-1990
+                birthdate: "01-11-1990"
                 careOf: RAJPAL SHARMA
                 house: PLOT NO 84 B,D-201,EURO APARTMENT
                 street: SECTOR 5 RAJENDER NAGAR
@@ -424,7 +424,7 @@ paths:
                   facility_central: ""
                   fac_contact_per_desg: null
                   e_hospital_id: null
-                  lst_upd_dt: 2024-04-09T08:08:53.224Z
+                  lst_upd_dt: "2024-04-09T08:08:53.224Z"
                   fac_alt_contact_per_name: null
                   hrp_source: null
                   emr_software: ""
@@ -434,7 +434,7 @@ paths:
                   power_backup_it: null
                   abdm_software: null
                   facility_operational_status: F
-                  crt_dt: 2024-04-03T10:35:29.942Z
+                  crt_dt: "2024-04-03T10:35:29.942Z"
                   cea_id: null
                   hospital_speciality_type: null
                   hospital_link_to_colg: null
@@ -603,7 +603,7 @@ paths:
                   progress_value: null
                   it_available: null
                   alternate_id: IN2810001372
-                  app_submitted_date: 2024-04-03T10:35:29.942Z
+                  app_submitted_date: "2024-04-03T10:35:29.942Z"
                   std_code: null
                   status: Draft
                   cghs_id: null
@@ -2717,7 +2717,7 @@ paths:
                   motherName: ""
                   spouseName: ""
                   gender: M
-                  dateOfBirth: 1991-24-04
+                  dateOfBirth: "1991-24-04"
                   placeOfBirthState: "68"
                   district: ""
                   subDistrict: ""
@@ -2748,7 +2748,7 @@ paths:
                   registrationData:
                     - registeredWithCouncil: "47"
                       registrationNumber: REG12032
-                      registrationDate: 2024-12-01
+                      registrationDate: "2024-12-01"
                       registrationCertificate:
                         fileType: pdf
                         data: <BASE64 ENCODED STRING>
@@ -2885,7 +2885,7 @@ paths:
                   registrationData:
                     - registeredWithCouncil: "47"
                       registrationNumber: REG12032
-                      registrationDate: 2024-12-01
+                      registrationDate: "2024-12-01"
                       registrationCertificate:
                         fileType: pdf
                         data: <BASE64 ENCODED STRING>
@@ -3104,7 +3104,7 @@ paths:
                           councilName: Karnataka State Dental Council
                           registeredAt: null
                           registrationNumber: REG12032
-                          registrationDate: 2024-12-01
+                          registrationDate: "2024-12-01"
                       qualifications:
                         - identifier: 12835
                           courseName: Bds - Bachelor Of Dental Surgery
@@ -3286,7 +3286,7 @@ paths:
                   name: Dayanand Medical College And Hospital
                   status: true
                   visibleStatus: true
-                  createdAt: 2023-08-17T16:58:31.000Z
+                  createdAt: "2023-08-17T16:58:31.000Z"
                   systemOfMedicineId: 1
                   stateId: 27
                   courseId: null
@@ -3297,7 +3297,7 @@ paths:
                   name: Gian Sagar Medical College And Hospital
                   status: true
                   visibleStatus: true
-                  createdAt: 2023-08-17T16:58:31.000Z
+                  createdAt: "2023-08-17T16:58:31.000Z"
                   systemOfMedicineId: 1
                   stateId: 27
                   courseId: null
@@ -3308,7 +3308,7 @@ paths:
                   name: Government Medical College (gmc), Amritsar
                   status: true
                   visibleStatus: true
-                  createdAt: 2023-08-17T16:58:31.000Z
+                  createdAt: "2023-08-17T16:58:31.000Z"
                   systemOfMedicineId: 1
                   stateId: 27
                   courseId: null

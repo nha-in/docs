@@ -11,7 +11,7 @@ summary: >
 sources:
   - file: catalogue/openapi/.raw/nha-2026-09-16/abha/M1 ABHA Swagger 1.yaml
     fetched: 2026-09-16
-    hash: sha256:08791b99abd3eee70f787d83b830d7569c621c56ab37d43f10d7d79129913ce9
+    hash: sha256:867de34795761ba4d6bc29ad5ee2cd089200786daa3d089afc94968a0bd01308
 verified:
   status: unverified
 related: {}

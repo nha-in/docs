@@ -23,12 +23,12 @@ info:
 x-abdm-sources:
   - file: catalogue/openapi/.raw/nha-2026-09-16/abha/M1 ABHA Swagger 1.yaml
     role: upstream
-    hash: sha256:08791b99abd3eee70f787d83b830d7569c621c56ab37d43f10d7d79129913ce9
-    fetched: 2026-09-16
+    hash: sha256:867de34795761ba4d6bc29ad5ee2cd089200786daa3d089afc94968a0bd01308
+    fetched: "2026-09-16"
   - file: catalogue/openapi/.raw/nha-2026-09-16/abha/M1 ABHA Collection.json
     role: upstream
-    hash: sha256:2dfc7a3a638d3f8ff51aabe6a4a71e436dafae9bd1c4857f77535c486497eb24
-    fetched: 2026-09-15
+    hash: sha256:8dc7ddcba6db4718dc4fcc2a1ddb9d55dedf0e5e2000caf038cc22510b955031
+    fetched: "2026-09-15"
     note: Used for the order of M1 calls only. See journeys/m1.yaml.
 servers:
   - url: https://abhasbx.abdm.gov.in
@@ -153,7 +153,7 @@ paths:
           schema:
             type: string
             format: date-time
-          example: 2022-10-06T15:10:00.587Z
+          example: "2022-10-06T15:10:00.587Z"
       responses:
         "200":
           description: |-
@@ -204,7 +204,7 @@ paths:
                       timestamp:
                         type: string
                         format: date-time
-                        example: 2024-05-10T11:13:04.000Z
+                        example: "2024-05-10T11:13:04.000Z"
                   - type: object
                     properties:
                       loginId:
@@ -213,7 +213,7 @@ paths:
                       timestamp:
                         type: string
                         format: date-time
-                        example: 2024-05-10T11:15:14.000Z
+                        example: "2024-05-10T11:15:14.000Z"
                   - type: object
                     properties:
                       loginHint:
@@ -222,52 +222,52 @@ paths:
                       timestamp:
                         type: string
                         format: date-time
-                        example: 2024-05-10T11:16:16.000Z
+                        example: "2024-05-10T11:16:16.000Z"
               examples:
                 ABHA enrolment via Aadhaar-Invalid scope:
                   value:
                     scope: Invalid Scope
-                    timestamp: 2024-05-10T11:13:04.000Z
+                    timestamp: "2024-05-10T11:13:04.000Z"
                 ABHA enrolment via Aadhaar-Invalid LoginId:
                   value:
                     loginId: Invalid LoginId
-                    timestamp: 2024-05-10T11:15:14.000Z
+                    timestamp: "2024-05-10T11:15:14.000Z"
                 ABHA enrolment via Aadhaar-Invalid Login Hint:
                   value:
                     loginHint: Invalid Login Hint
-                    timestamp: 2024-05-10T11:16:16.000Z
+                    timestamp: "2024-05-10T11:16:16.000Z"
                 Mobile Update - Send OTP-Invalid Scope:
                   value:
                     scope: Invalid Scope
-                    timestamp: 2024-05-10T11:13:04.000Z
+                    timestamp: "2024-05-10T11:13:04.000Z"
                 Mobile Update - Send OTP-Invalid LoginId:
                   value:
                     loginId: Invalid LoginId
-                    timestamp: 2024-05-10T11:15:14.000Z
+                    timestamp: "2024-05-10T11:15:14.000Z"
                 Mobile Update - Send OTP-Invalid Login Hint:
                   value:
                     loginHint: Invalid Login Hint
-                    timestamp: 2024-05-10T11:16:16.000Z
+                    timestamp: "2024-05-10T11:16:16.000Z"
                 ABHA Creation via Aadhaar OTP-Invalid scope:
                   value:
                     scope: Invalid Scope
-                    timestamp: 2024-05-10T11:13:04.000Z
+                    timestamp: "2024-05-10T11:13:04.000Z"
                 ABHA Creation via Aadhaar OTP-Invalid Login Hint:
                   value:
                     loginHint: Invalid Login Hint
-                    timestamp: 2024-05-10T11:16:16.000Z
+                    timestamp: "2024-05-10T11:16:16.000Z"
                 ABHA Verify via Email-Invalid Login Hint:
                   value:
                     loginHint: Invalid Login Hint
-                    timestamp: 2024-05-10T11:16:16.000Z
+                    timestamp: "2024-05-10T11:16:16.000Z"
                 ABHA Verify via Email-Invalid scope:
                   value:
                     scope: Invalid Scope
-                    timestamp: 2024-05-10T11:13:04.000Z
+                    timestamp: "2024-05-10T11:13:04.000Z"
                 ABHA Verify via Email-Invalid LoginId:
                   value:
                     loginId: Invalid LoginId
-                    timestamp: 2024-05-10T11:15:14.000Z
+                    timestamp: "2024-05-10T11:15:14.000Z"
         "401":
           description: 'The 401 response code indicates an unauthorized request. In this context, it refers to the lack of proper authentication during the operation of the Invalid Credentials <br><br> <strong>Types of OTP Response Errors:</strong> <ol> <li><strong>ABHA Enrolment via Aadhaar - Invalid Access Token</strong>: This error occurs when the access token provided for authorization is invalid. The access token is essential for authenticating the request, and an invalid token means the server cannot verify the user’s identity.</li> </ol> <ol start="2"> <li><strong>Mobile Update - Send OTP - Invalid Access Token</strong>: This error occurs when the access token provided for authorization is invalid. The access token is essential for authenticating the request, and an invalid token means the server cannot verify the user’s identity.</li> </ol> <ol start="3"> <li><strong>ABHA Creation via Aadhaar OTP - Invalid Access Token</strong>:  This error occurs when the access token provided for authorization is invalid. The access token is essential for authenticating the request, and an invalid token means the server cannot verify the user’s identity.</li> </ol> <ol start="4"> <li><strong>EMail verification via  OTP - Invalid Access Token</strong>:  This error occurs when the access token provided for authorization is invalid. The access token is essential for authenticating the request, and an invalid token means the server cannot verify the user’s identity.</li> </ol> '
           content:
@@ -369,7 +369,7 @@ paths:
           schema:
             type: string
             format: date-time
-          example: 2022-10-06T15:10:00.587Z
+          example: "2022-10-06T15:10:00.587Z"
       responses:
         "200":
           description: The 200 response code indicates a successful request. In this context, it refers to the successful generation of Transaction Id.
@@ -403,7 +403,7 @@ paths:
                       timestamp:
                         type: string
                         format: date-time
-                        example: 2024-05-10T11:41:47.000Z
+                        example: "2024-05-10T11:41:47.000Z"
         "401":
           description: The 401 response code indicates an unauthorized request. In this context, it refers to the lack of proper authentication during the operation of the Invalid Credentials
           content:
@@ -478,7 +478,7 @@ paths:
           schema:
             type: string
             format: date-time
-          example: 2022-10-06T15:10:00.587Z
+          example: "2022-10-06T15:10:00.587Z"
       responses:
         "200":
           description: The 200 response code indicates a successful request. The reponse of the API will return status of that transactionId. It can be either <strong>PENDING,VERIFIED,FAILED,COMPLETE. </strong>
@@ -859,7 +859,7 @@ paths:
           schema:
             type: string
             format: date-time
-          example: 2022-10-06T15:10:00.587Z
+          example: "2022-10-06T15:10:00.587Z"
         - name: REQUEST-ID
           in: header
           required: true
@@ -918,7 +918,7 @@ paths:
                             example: Mohite
                           dob:
                             type: string
-                            example: 21-2-2020
+                            example: "21-2-2020"
                           gender:
                             type: string
                             example: F
@@ -1040,9 +1040,9 @@ paths:
                       firstName: Username
                       middleName: Kailas
                       lastName: Shelke
-                      dob: 26-06-1999
+                      dob: "26-06-1999"
                       gender: M
-                      photo: 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
+                      photo: <BASE64_PHOTO> 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
                       mobile: "******0903"
                       phrAddress:
                         - <ABHA_ADDRESS>
@@ -1068,7 +1068,7 @@ paths:
                       firstName: Username
                       middleName: ""
                       lastName: Mohite
-                      dob: 21-2-2020
+                      dob: "21-2-2020"
                       gender: F
                       photo: ""
                       mobile: "******0903"
@@ -1093,7 +1093,7 @@ paths:
                       firstName: Username
                       middleName: ""
                       lastName: Mohite
-                      dob: 21-2-2020
+                      dob: "21-2-2020"
                       gender: F
                       photo: ""
                       mobile: "******0903"
@@ -1120,7 +1120,7 @@ paths:
                       firstName: Username
                       middleName: ""
                       lastName: Mohite
-                      dob: 21-2-2020
+                      dob: "21-2-2020"
                       gender: F
                       mobile: "******0903"
                       phrAddress:
@@ -1201,7 +1201,7 @@ paths:
                       timestamp:
                         type: string
                         format: date-time
-                        example: 2024-05-10T11:41:47.000Z
+                        example: "2024-05-10T11:41:47.000Z"
                   - type: object
                     properties:
                       authMethods:
@@ -1210,7 +1210,7 @@ paths:
                       timestamp:
                         type: string
                         format: date-time
-                        example: 2024-05-10T11:40:16.000Z
+                        example: "2024-05-10T11:40:16.000Z"
                   - type: object
                     properties:
                       mobile:
@@ -1219,7 +1219,7 @@ paths:
                       timestamp:
                         type: string
                         format: date-time
-                        example: 2024-05-10T11:44:46.000Z
+                        example: "2024-05-10T11:44:46.000Z"
                   - type: object
                     properties:
                       districtCode:
@@ -1228,24 +1228,24 @@ paths:
                       timestamp:
                         type: string
                         format: date-time
-                        example: 2024-05-10T14:37:47.000Z
+                        example: "2024-05-10T14:37:47.000Z"
               examples:
                 Create ABHA by verifying OTP-Invalid Transaction Id:
                   value:
                     txnId: Invalid Transaction Id
-                    timestamp: 2024-05-10T11:41:47.000Z
+                    timestamp: "2024-05-10T11:41:47.000Z"
                 Create ABHA by verifying OTP-Invalid authMethod:
                   value:
                     authMethods: Invalid Auth Method
-                    timestamp: 2024-05-10T11:40:16.000Z
+                    timestamp: "2024-05-10T11:40:16.000Z"
                 Create ABHA by verifying OTP-Invalid Mobile Number:
                   value:
                     mobile: Invalid Mobile Number
-                    timestamp: 2024-05-10T11:44:46.000Z
+                    timestamp: "2024-05-10T11:44:46.000Z"
                 DemoAuth API-State District not matching:
                   value:
                     districtCode: Invalid state and district code
-                    timestamp: 2024-05-10T14:37:47.000Z
+                    timestamp: "2024-05-10T14:37:47.000Z"
         "401":
           description: 'The 401 response code indicates an unauthorized request. In this context, it refers to the lack of proper authentication during the operation of the Invalid Credentials.<br><br> <strong>Types of OTP Response Errors:</strong> <ol> <li><strong>Aadhaar Bio - Invalid Benefit Name</strong>: This error occurs when the access token provided for authorization is invalid. The access token is essential for authenticating the request, and an invalid token means the server cannot verify the user’s identity.</li> </ol> <ol start="2"> <li><strong>DemoAuth API - Invalid Benefit Name</strong>: This error occurs when the access token provided for authorization is invalid. The access token is essential for authenticating the request, and an invalid token means the server cannot verify the user’s identity..</li> </ol> <ol start="3"> <li><strong>CHILD ABHA - Invalid Benefit Name</strong>: This error occurs when the access token provided for authorization is invalid. The access token is essential for authenticating the request, and an invalid token means the server cannot verify the user’s identity.</li> </ol> <ol start="4"> <li><strong> CHILD ABHA - Access Issue</strong>: This error occurs when the access token provided for authorization is invalid. The access token is essential for authenticating the request, and an invalid token means the server cannot verify the user’s identity.</li> </ol> <ol start="5"> <li><strong>CHILD ABHA - X-token Expired</strong>: This error occurs when the X-token provided for authorization has expired. The X-token is essential for authenticating the request, and an expired token means the server cannot verify the user’s identity.</li> </ol> '
           content:
@@ -1260,7 +1260,7 @@ paths:
                       timestamp:
                         type: string
                         format: date-time
-                        example: 2024-05-10T18:52:59.000Z
+                        example: "2024-05-10T18:52:59.000Z"
                   - type: object
                     properties:
                       error:
@@ -1276,15 +1276,15 @@ paths:
                 Aadhaar Bio-Invalid Benefit Name:
                   value:
                     message: Invalid Benefit Name
-                    timestamp: 2024-05-10T14:39:48.000Z
+                    timestamp: "2024-05-10T14:39:48.000Z"
                 DemoAuth API-Invalid Benefit Name:
                   value:
                     message: Invalid Benefit Name
-                    timestamp: 2024-05-10T14:25:56.000Z
+                    timestamp: "2024-05-10T14:25:56.000Z"
                 CHILD ABHA-Invalid Benefit Name:
                   value:
                     message: Invalid Benefit Name
-                    timestamp: 2024-05-10T18:52:59.000Z
+                    timestamp: "2024-05-10T18:52:59.000Z"
                 CHILD ABHA-Access Issue:
                   value:
                     error:
@@ -1294,7 +1294,7 @@ paths:
                   value:
                     code: ABDM-1094
                     message: X-token expired
-                    timestamp: 2024-05-10T18:55:03.000Z
+                    timestamp: "2024-05-10T18:55:03.000Z"
         "422":
           description: 'The 422 response code Indicates an unprocessable entity due to errors such as invalid OTP value.<br><br> <strong>Types of OTP Response Errors:</strong> <ol> <li><strong>Create ABHA by Verifying OTP - Invalid OTP Value</strong>: This API endpoint is used to create an ABHA (Ayushman Bharat Health Account) number by verifying an OTP sent to the user’s registered mobile number. The ABHA number uniquely identifies individuals and helps in authenticating them and linking their health records across multiple systems ,This error occurs when the OTP value provided in the request is invalid. The OTP must be correctly formatted and match the one sent to the user’s registered mobile number.</li> </ol> <ol start="2"> <li><strong>Aadhaar Bio - Invalid Certificate</strong>: This error occurs when the certificate provided for Aadhaar biometric authentication is invalid.</li> </ol> <ol start="3"> <li><strong>DemoAuth API - 6 ABHA Linked to Mobile</strong>: This error occurs when the mobile number provided is already linked to 6 ABHA numbers. The mobile number must be unique or linked to fewer than 6 ABHA numbers.</li> </ol> <ol start="4"> <li><strong>  DemoAuth API - Details Not Matches Against Aadhaar</strong>: This error occurs when the information provided does not match the details on record with Aadhaar. The demographic details must be accurate and match the Aadhaar records.</li> </ol> <ol start="5"> <li><strong>CHILD ABHA - CHILD LIMIT</strong>: This error occurs when the limit for creating or updating CHILD ABHA profiles has been exceeded. The request cannot be processed as the limit has been reached.</li> </ol> '
           content:
@@ -1416,7 +1416,7 @@ paths:
           schema:
             type: string
             format: date-time
-          example: 2022-10-06T15:10:00.587Z
+          example: "2022-10-06T15:10:00.587Z"
       responses:
         "200":
           description: "The 200 response code indicates a successful request. In this context, it refers to the successful generation and delivery of an OTP (One-Time Password) for various services.<br><br> <strong>Types of OTP Responses:</strong> <ol> <li><strong> Mobile Update-Verify OTP-Positive flow:</strong> Indicates a successful request. The response includes a message indicating that the OTP has been verified successfully.</li> </ol>
@@ -1529,7 +1529,7 @@ paths:
                       timestamp:
                         type: string
                         format: date-time
-                        example: 2024-05-10T11:41:47.000Z
+                        example: "2024-05-10T11:41:47.000Z"
                   - type: object
                     properties:
                       authMethods:
@@ -1538,7 +1538,7 @@ paths:
                       timestamp:
                         type: string
                         format: date-time
-                        example: 2024-05-10T11:40:16.000Z
+                        example: "2024-05-10T11:40:16.000Z"
                   - type: object
                     properties:
                       txnId:
@@ -1555,7 +1555,7 @@ paths:
                       timestamp:
                         type: string
                         format: date-time
-                        example: 2024-05-10T14:37:47.000Z
+                        example: "2024-05-10T14:37:47.000Z"
               examples:
                 Mobile Update - Verify OTP:
                   summary: Invalid OTP Value
@@ -1566,17 +1566,17 @@ paths:
                   summary: Invalid Transaction Id
                   value:
                     txnId: Invalid Transaction Id
-                    timestamp: 2024-05-10T11:41:47.000Z
+                    timestamp: "2024-05-10T11:41:47.000Z"
                 Invalid Scope:
                   summary: Invalid scope
                   value:
                     scope: Invalid Scope
-                    timestamp: 2024-05-10T11:41:47.000Z
+                    timestamp: "2024-05-10T11:41:47.000Z"
                 Invalid AuthMethod:
                   summary: Invalid authMethod
                   value:
                     authMethods: Invalid Auth Method
-                    timestamp: 2024-05-10T11:21:54.000Z
+                    timestamp: "2024-05-10T11:21:54.000Z"
         "401":
           description: The 401 response code indicates an unauthorized request. In this context, it refers to the lack of proper authentication during the operation of the Invalid Credentials
           content:
@@ -1653,7 +1653,7 @@ paths:
           schema:
             type: string
             format: date-time
-          example: 2022-10-06T15:10:00.587Z
+          example: "2022-10-06T15:10:00.587Z"
       responses:
         "200":
           description: The 200 response code indicates a successful request. In this context, it refers to the successful operation of the Suggestion API, suggestions for ABHA addresses based on the user’s personal information.
@@ -1721,16 +1721,16 @@ paths:
                   timestamp:
                     type: string
                     format: date-time
-                    example: 2024-05-10T12:01:22.000Z
+                    example: "2024-05-10T12:01:22.000Z"
               examples:
                 Abha Address-Invalid Transaction Id:
                   value:
                     txnId: Invalid Transaction Id
-                    timestamp: 2024-05-10T12:01:22.000Z
+                    timestamp: "2024-05-10T12:01:22.000Z"
                 Abha Address-Invalid Preferred Flag:
                   value:
                     preferred: Invalid Preferred Flag
-                    timestamp: 2024-05-10T12:00:14.000Z
+                    timestamp: "2024-05-10T12:00:14.000Z"
         "401":
           description: The 401 response code indicates an unauthorized request. In this context, This error occurs when the transaction ID provided in the request is invalid. The transaction ID is essential for tracking the request and ensuring that the correct information is processed. An invalid transaction ID means the server cannot verify the request, leading to a failure in generating ABHA address suggestions.
           content:
@@ -1803,7 +1803,7 @@ paths:
           schema:
             type: string
             format: date-time
-          example: 2022-10-06T15:10:00.587Z
+          example: "2022-10-06T15:10:00.587Z"
       responses:
         "200":
           description: The 200 response code indicates a successful request. In this context, it refers to the successful operation of the Enroll ABHA Address API.
@@ -1840,18 +1840,18 @@ paths:
                   timestamp:
                     type: string
                     format: date-time
-                    example: 2024-05-10T12:00:14.000Z
+                    example: "2024-05-10T12:00:14.000Z"
               examples:
                 ABHA Address-Invalid Preferred Flag:
                   summary: Invalid Preferred Flag
                   value:
                     preferred: Invalid Preferred Flag
-                    timestamp: 2024-05-10T12:00:14.000Z
+                    timestamp: "2024-05-10T12:00:14.000Z"
                 ABHA Address-Invalid Transaction Id:
                   summary: Invalid Transaction Id
                   value:
                     txnId: Invalid Transaction Id
-                    timestamp: 2024-05-10T12:01:22.000Z
+                    timestamp: "2024-05-10T12:01:22.000Z"
         "401":
           description: The 401 response code indicates an unauthorized request. In this context, it refers to the lack of proper authentication during the operation of the Invalid Credentials.
           content:
@@ -1891,7 +1891,7 @@ paths:
           schema:
             type: string
             format: date-time
-          example: 2022-10-06T15:10:00.587Z
+          example: "2022-10-06T15:10:00.587Z"
         - name: REQUEST-ID
           in: header
           required: true
@@ -1941,7 +1941,7 @@ paths:
                       properties:
                         dateOfBirth:
                           type: string
-                          example: 21-2-2020
+                          example: "21-2-2020"
                         name:
                           type: string
                           example: Mohit
@@ -1961,12 +1961,12 @@ paths:
                     mobileNumber: "******0903"
                     childrenCount: 2
                     children:
-                      - dateOfBirth: 21-2-2020
+                      - dateOfBirth: "21-2-2020"
                         name: Mohit
                         gender: M
                         phrAddress: <ABHA_ADDRESS>
                         ABHANumber: 91-3786-8001-XXXX
-                      - dateOfBirth: 20-12-2022
+                      - dateOfBirth: "20-12-2022"
                         name: Mohite
                         gender: F
                         phrAddress: <ABHA_ADDRESS>
@@ -2021,7 +2021,7 @@ paths:
           schema:
             type: string
             format: date-time
-          example: 2022-10-06T15:10:00.587Z
+          example: "2022-10-06T15:10:00.587Z"
       requestBody:
         required: true
         content:
@@ -2096,7 +2096,7 @@ paths:
                   timestamp:
                     type: string
                     format: date-time
-                    example: 2024-12-26T10:41:04.000Z
+                    example: "2024-12-26T10:41:04.000Z"
         "401":
           description: Missing Credentials.
           content:
@@ -2154,7 +2154,7 @@ paths:
           schema:
             type: string
             format: date-time
-          example: 2022-10-06T15:10:00.587Z
+          example: "2022-10-06T15:10:00.587Z"
       requestBody:
         required: true
         content:
@@ -2227,7 +2227,7 @@ paths:
                   timestamp:
                     type: string
                     format: date-time
-                    example: 2024-12-26T10:41:04.000Z
+                    example: "2024-12-26T10:41:04.000Z"
         "401":
           description: Missing Credentials.
           content:
@@ -2285,7 +2285,7 @@ paths:
           schema:
             type: string
             format: date-time
-          example: 2022-10-06T15:10:00.587Z
+          example: "2022-10-06T15:10:00.587Z"
       requestBody:
         description: "<b>Below is the Request Body description:</b><br><br>\r
 
@@ -2535,10 +2535,10 @@ paths:
                       timestamp:
                         type: string
                         format: date-time
-                        example: 2024-05-10T14:33:06.000Z
+                        example: "2024-05-10T14:33:06.000Z"
                     example:
                       txnId: Invalid Transaction Id
-                      timestamp: 2024-05-10T14:33:06.000Z
+                      timestamp: "2024-05-10T14:33:06.000Z"
                   - type: object
                     properties:
                       password:
@@ -2547,10 +2547,10 @@ paths:
                       timestamp:
                         type: string
                         format: date-time
-                        example: 2024-05-10T14:33:06.000Z
+                        example: "2024-05-10T14:33:06.000Z"
                     example:
                       password: Invalid Password
-                      timestamp: 2024-05-10T14:33:06.000Z
+                      timestamp: "2024-05-10T14:33:06.000Z"
                   - type: object
                     properties:
                       otpValue:
@@ -2559,10 +2559,10 @@ paths:
                       timestamp:
                         type: string
                         format: date-time
-                        example: 2024-05-10T14:33:06.000Z
+                        example: "2024-05-10T14:33:06.000Z"
                     example:
                       otpValue: Invalid OTP Value
-                      timestamp: 2024-05-10T14:33:06.000Z
+                      timestamp: "2024-05-10T14:33:06.000Z"
                   - type: object
                     properties:
                       authMethods:
@@ -2571,10 +2571,10 @@ paths:
                       timestamp:
                         type: string
                         format: date-time
-                        example: 2024-05-10T14:33:06.000Z
+                        example: "2024-05-10T14:33:06.000Z"
                     example:
                       authMethods: Invalid Auth Method
-                      timestamp: 2024-05-10T14:33:06.000Z
+                      timestamp: "2024-05-10T14:33:06.000Z"
                   - type: object
                     properties:
                       loginHint:
@@ -2583,10 +2583,10 @@ paths:
                       timestamp:
                         type: string
                         format: date-time
-                        example: 2024-05-10T14:33:06.000Z
+                        example: "2024-05-10T14:33:06.000Z"
                     example:
                       loginHint: Invalid Login Hint
-                      timestamp: 2024-05-10T14:33:06.000Z
+                      timestamp: "2024-05-10T14:33:06.000Z"
                   - type: object
                     properties:
                       loginId:
@@ -2595,10 +2595,10 @@ paths:
                       timestamp:
                         type: string
                         format: date-time
-                        example: 2024-05-10T14:33:06.000Z
+                        example: "2024-05-10T14:33:06.000Z"
                     example:
                       loginId: Invalid LoginId
-                      timestamp: 2024-05-10T14:33:06.000Z
+                      timestamp: "2024-05-10T14:33:06.000Z"
                   - type: object
                     properties:
                       scope:
@@ -2607,55 +2607,55 @@ paths:
                       timestamp:
                         type: string
                         format: date-time
-                        example: 2024-05-10T14:33:06.000Z
+                        example: "2024-05-10T14:33:06.000Z"
                     example:
                       scope: Invalid Scope
-                      timestamp: 2024-05-10T14:33:06.000Z
+                      timestamp: "2024-05-10T14:33:06.000Z"
               examples:
                 Login Via ABHA Number - Using Aadhaar OTP - Invalid Login Hint:
                   value:
                     loginHint: Invalid Login Hint
-                    timestamp: 2024-05-10T11:16:16.000Z
+                    timestamp: "2024-05-10T11:16:16.000Z"
                 Login Via ABHA Number - Using ABHA OTP - Invalid Login Hint:
                   value:
                     loginHint: Invalid Login Hint
-                    timestamp: 2024-05-10T11:16:16.000Z
+                    timestamp: "2024-05-10T11:16:16.000Z"
                 Login Via Mobile Number - Invalid LoginHint:
                   value:
                     loginHint: Invalid Login Hint
-                    timestamp: 2024-05-10T11:16:16.000Z
+                    timestamp: "2024-05-10T11:16:16.000Z"
                 Login via Aadhaar - Invalid Login Hint:
                   value:
                     loginHint: Invalid Login Hint
-                    timestamp: 2024-05-10T11:16:16.000Z
+                    timestamp: "2024-05-10T11:16:16.000Z"
                 Login via Aadhaar OTP - Invalid Scope:
                   value:
                     scope: Invalid Scope
-                    timestamp: 2024-05-10T11:13:04.000Z
+                    timestamp: "2024-05-10T11:13:04.000Z"
                 Login via Aadhaar OTP - Invalid LoginId:
                   value:
                     loginId: Invalid LoginId
-                    timestamp: 2024-05-10T11:15:14.000Z
+                    timestamp: "2024-05-10T11:15:14.000Z"
                 Forgot ABHA via Mobile OTP-Invalid LoginId:
                   value:
                     loginId: Invalid LoginId
-                    timestamp: 2024-05-10T11:15:14.000Z
+                    timestamp: "2024-05-10T11:15:14.000Z"
                 Forgot ABHA via Mobile OTP-Invalid LoginHint:
                   value:
                     loginHint: Invalid Login Hint
-                    timestamp: 2024-05-10T11:16:16.000Z
+                    timestamp: "2024-05-10T11:16:16.000Z"
                 Forgot ABHA via Aadhaar OTP- Invalid LoginHint:
                   value:
                     loginHint: Invalid Login Hint
-                    timestamp: 2024-05-10T11:16:16.000Z
+                    timestamp: "2024-05-10T11:16:16.000Z"
                 Forgot ABHA via Aadhaar OTP-Invalid scope:
                   value:
                     scope: Invalid Scope
-                    timestamp: 2024-05-10T11:13:04.000Z
+                    timestamp: "2024-05-10T11:13:04.000Z"
                 Search ABHA Via Mobile Number - Invalid LoginId:
                   value:
                     loginId: Invalid LoginId
-                    timestamp: 2024-05-10T11:15:14.000Z
+                    timestamp: "2024-05-10T11:15:14.000Z"
         "401":
           description: 'The 401 response code indicates an unauthorized request. In this context, it refers to the lack of proper authentication during the operation of the Invalid Credentials.<br><br> <strong>Types of OTP Response Errors:</strong> <ol> <li><strong>Login Via Mobile Number - Invalid Access Token</strong>: This action attempts to log in to ABHA (Ayushman Bharat Health Account) using a mobile number, but fails due to an invalid access token. The access token provided for authorization is invalid, meaning the server cannot verify the user’s identity.</li> </ol> <ol start="2"> <li><strong>Login via Aadhaar - Invalid Access Token</strong>:  This action attempts to log in to ABHA using an Aadhaar number, but fails due to an invalid access token. The access token provided for authorization is invalid, meaning the server cannot verify the user’s identity.</li> </ol> </ol> <ol start="3"> <li><strong>Login Via ABHA Number - Using ABHA OTP - Invalid Access Token</strong>:This action attempts to log in to ABHA using an ABHA number and ABHA OTP, but fails due to an invalid access token. The access token provided for authorization is invalid, meaning the server cannot verify the user’s identity.</li> </ol> <ol start="4"> <li><strong>Login Via ABHA Number - Using Aadhaar OTP - Invalid Access Token</strong>: This action attempts to log in to ABHA using an ABHA number and Aadhaar OTP, but fails due to an invalid access token. The access token provided for authorization is invalid, meaning the server cannot verify the user’s identity..</li> </ol>'
           content:
@@ -2708,7 +2708,7 @@ paths:
                   timestamp:
                     type: string
                     format: date-time
-                    example: 2024-12-23T04:43:28.319Z
+                    example: "2024-12-23T04:43:28.319Z"
                   path:
                     type: string
                     example: /api/v3/profile/login/request/ot
@@ -2724,7 +2724,7 @@ paths:
               examples:
                 Login ABHA API's:
                   value:
-                    timestamp: 2024-12-23T04:43:28.319Z
+                    timestamp: "2024-12-23T04:43:28.319Z"
                     path: /api/v3/profile/login/request/ot
                     status: 404
                     error: Not Found
@@ -2895,7 +2895,7 @@ paths:
           schema:
             type: string
             format: date-time
-          example: 2022-10-06T15:10:00.587Z
+          example: "2022-10-06T15:10:00.587Z"
       responses:
         "200":
           description: "The 200 response code indicates a successful request. In this context, it refers to the successful generation and delivery of an OTP (One-Time Password) for various services.<br><br> <strong>Types of OTP Responses:</strong> <ol> <li><strong>Login via ABHA Number - Using Aadhaar OTP (Positive Flow) :</strong> This endpoint handles the login process via ABHA number using an Aadhaar OTP. If the OTP entered by the user matches the OTP sent by Aadhaar, the system will authenticate the user and display the user's profile along with a JWT token and profile details.</li>
@@ -2957,7 +2957,7 @@ paths:
                           example: ACTIVE
                         profilePhoto:
                           type: string
-                          example: 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
+                          example: <BASE64_PHOTO>
               examples:
                 Verify Login Via ABHA Number - Verify Password:
                   value:
@@ -2980,7 +2980,7 @@ paths:
                         preferredAbhaAddress: <ABHA_ADDRESS>
                         name: Ashwani Kumar Singh
                         gender: M
-                        dob: 06-03-1994
+                        dob: "06-03-1994"
                         verifiedStatus: VERIFIED
                         verificationType: AADHAAR
                         status: ACTIVE
@@ -2989,7 +2989,7 @@ paths:
                         preferredAbhaAddress: <ABHA_ADDRESS>
                         name: Ashwani Kumar Singh
                         gender: M
-                        dob: 06-03-1994
+                        dob: "06-03-1994"
                         verifiedStatus: VERIFIED
                         verificationType: AADHAAR
                         status: ACTIVE
@@ -2998,16 +2998,16 @@ paths:
                         preferredAbhaAddress: <ABHA_ADDRESS>
                         name: Fanny Fanny Littel
                         gender: M
-                        dob: 1994-03-06
+                        dob: "1994-03-06"
                         verifiedStatus: VERIFIED
                         verificationType: AADHAAR
                         status: ACTIVE
                         profilePhoto: <BASE64_PHOTO>
-                      - ABHANumber: 32-1251-3121-0731
+                      - ABHANumber: <ABHA_NUMBER>
                         preferredAbhaAddress: <ABHA_ADDRESS>
                         name: Ashwani Kumar Singh
                         gender: M
-                        dob: 06-03-1994
+                        dob: "06-03-1994"
                         verifiedStatus: VERIFIED
                         verificationType: AADHAAR
                         status: ACTIVE
@@ -3083,7 +3083,7 @@ paths:
                         preferredAbhaAddress: <ABHA_ADDRESS>
                         name: Username Kailas Shelke
                         gender: M
-                        dob: 26-06-1999
+                        dob: "26-06-1999"
                         verifiedStatus: VERIFIED
                         verificationType: AADHAAR
                         status: ACTIVE
@@ -3093,7 +3093,7 @@ paths:
                         preferredAbhaAddress: <ABHA_ADDRESS>
                         name: Username Mishra
                         gender: M
-                        dob: 28-02-2022
+                        dob: "28-02-2022"
                         verifiedStatus: VERIFIED
                         verificationType: CHILD_ABHA
                         status: ACTIVE
@@ -3170,10 +3170,10 @@ paths:
                       timestamp:
                         type: string
                         format: date-time
-                        example: 2024-05-10T14:33:06.000Z
+                        example: "2024-05-10T14:33:06.000Z"
                     example:
                       txnId: Invalid Transaction Id
-                      timestamp: 2024-05-10T14:33:06.000Z
+                      timestamp: "2024-05-10T14:33:06.000Z"
                   - type: object
                     properties:
                       password:
@@ -3182,10 +3182,10 @@ paths:
                       timestamp:
                         type: string
                         format: date-time
-                        example: 2024-05-10T14:33:06.000Z
+                        example: "2024-05-10T14:33:06.000Z"
                     example:
                       password: Invalid Password
-                      timestamp: 2024-05-10T14:33:06.000Z
+                      timestamp: "2024-05-10T14:33:06.000Z"
                   - type: object
                     properties:
                       otpValue:
@@ -3194,10 +3194,10 @@ paths:
                       timestamp:
                         type: string
                         format: date-time
-                        example: 2024-05-10T14:33:06.000Z
+                        example: "2024-05-10T14:33:06.000Z"
                     example:
                       otpValue: Invalid OTP Value
-                      timestamp: 2024-05-10T14:33:06.000Z
+                      timestamp: "2024-05-10T14:33:06.000Z"
                   - type: object
                     properties:
                       PID:
@@ -3206,10 +3206,10 @@ paths:
                       timestamp:
                         type: string
                         format: date-time
-                        example: 2024-05-10T14:33:06.000Z
+                        example: "2024-05-10T14:33:06.000Z"
                     example:
                       PID: Invalid Face Auth PID
-                      timestamp: 2024-05-10T14:33:06.000Z
+                      timestamp: "2024-05-10T14:33:06.000Z"
                   - type: object
                     properties:
                       PID:
@@ -3218,10 +3218,10 @@ paths:
                       timestamp:
                         type: string
                         format: date-time
-                        example: 2024-05-10T14:33:06.000Z
+                        example: "2024-05-10T14:33:06.000Z"
                     example:
                       PID: Invalid Fingerprint Auth PID
-                      timestamp: 2024-05-10T14:33:06.000Z
+                      timestamp: "2024-05-10T14:33:06.000Z"
                   - type: object
                     properties:
                       authMethods:
@@ -3230,10 +3230,10 @@ paths:
                       timestamp:
                         type: string
                         format: date-time
-                        example: 2024-05-10T14:33:06.000Z
+                        example: "2024-05-10T14:33:06.000Z"
                     example:
                       authMethods: Invalid Auth Method
-                      timestamp: 2024-05-10T14:33:06.000Z
+                      timestamp: "2024-05-10T14:33:06.000Z"
                   - type: object
                     properties:
                       scope:
@@ -3242,55 +3242,55 @@ paths:
                       timestamp:
                         type: string
                         format: date-time
-                        example: 2024-05-10T14:33:06.000Z
+                        example: "2024-05-10T14:33:06.000Z"
                     example:
                       scope: Invalid Scope
-                      timestamp: 2024-05-10T14:33:06.000Z
+                      timestamp: "2024-05-10T14:33:06.000Z"
               examples:
                 Verify Login via ABHA Number using Password - Invalid Password:
                   value:
                     password: Invalid Password
-                    timestamp: 2024-05-10T14:33:06.000Z
+                    timestamp: "2024-05-10T14:33:06.000Z"
                 Verify Login via ABHA Number using Aadhaar OTP - Invalid OTP Value:
                   value:
                     otpValue: Invalid OTP Value
-                    timestamp: 2024-05-10T12:51:40.000Z
+                    timestamp: "2024-05-10T12:51:40.000Z"
                 Verify Login via ABHA Number using ABHA OTP - Invalid OTP Value:
                   value:
                     otpValue: Invalid OTP Value
-                    timestamp: 2024-05-10T12:51:40.000Z
+                    timestamp: "2024-05-10T12:51:40.000Z"
                 Verify Login via Biometric (Face) - Invalid Pid:
                   value:
                     PID: Invalid Face Auth PID
-                    timestamp: 2024-10-03T17:28:42.000Z
+                    timestamp: "2024-10-03T17:28:42.000Z"
                 Verify Login via Biometric (FingerPrint) - Invalid Pid:
                   value:
                     PID: Invalid Fingerprint Auth PID
-                    timestamp: 2024-10-04T15:40:46.000Z
+                    timestamp: "2024-10-04T15:40:46.000Z"
                 Forgot ABHA via Mobile OTP-Invalid OTP Value:
                   value:
                     otpValue: Invalid OTP Value
-                    timestamp: 2024-05-10T11:20:28.000Z
+                    timestamp: "2024-05-10T11:20:28.000Z"
                 Forgot ABHA via Mobile OTP-Invalid Transaction Id:
                   value:
                     txnId: Invalid Transaction Id
-                    timestamp: 2024-05-10T11:21:54.000Z
+                    timestamp: "2024-05-10T11:21:54.000Z"
                 Forgot ABHA via Mobile OTP-Invalid scope:
                   value:
                     scope: Invalid Scope
-                    timestamp: 2024-05-10T11:22:57.000Z
+                    timestamp: "2024-05-10T11:22:57.000Z"
                 Forgot ABHA via Mobile OTP-Invalid authMethod:
                   value:
                     authMethods: Invalid Auth Method
-                    timestamp: 2024-05-10T11:23:53.000Z
+                    timestamp: "2024-05-10T11:23:53.000Z"
                 Forgot ABHA via Aadhaar OTP-Invalid OTP:
                   value:
                     otpValue: Invalid OTP Value
-                    timestamp: 2024-05-10T20:04:27.000Z
+                    timestamp: "2024-05-10T20:04:27.000Z"
                 Find ABHA  - Invalid Transaction Id:
                   value:
                     txnId: Invalid Transaction Id
-                    timestamp: 2024-12-27T16:14:46.000Z
+                    timestamp: "2024-12-27T16:14:46.000Z"
         "401":
           description: Unauthorized Access.
           content:
@@ -3400,7 +3400,7 @@ paths:
           schema:
             type: string
             format: date-time
-          example: 2022-10-06T15:10:00.587Z
+          example: "2022-10-06T15:10:00.587Z"
       responses:
         "200":
           description: "The 200 response code indicates a successful request.<br><br> <p><strong> "
@@ -3442,7 +3442,7 @@ paths:
                       timestamp:
                         type: string
                         format: date-time
-                        example: 2024-05-10T12:59:05.000Z
+                        example: "2024-05-10T12:59:05.000Z"
                   - properties:
                       ABHANumber:
                         type: string
@@ -3450,18 +3450,18 @@ paths:
                       timestamp:
                         type: string
                         format: date-time
-                        example: 2024-05-10T13:12:08.000Z
+                        example: "2024-05-10T13:12:08.000Z"
               examples:
                 Invalid T-Token:
                   summary: Invalid T-Token
                   value:
                     message: Invalid T-token
-                    timestamp: 2024-05-10T12:59:05.000Z
+                    timestamp: "2024-05-10T12:59:05.000Z"
                 Invalid ABHA Number:
                   summary: Invalid ABHA Number
                   value:
                     ABHANumber: Invalid ABHA Number
-                    timestamp: 2024-05-10T13:12:08.000Z
+                    timestamp: "2024-05-10T13:12:08.000Z"
         "401":
           description: " <strong>Unauthorized:</strong><br> Indicates that the request requires user authentication. The server returns a 401 status code when the client has not provided valid authentication credentials."
           content:
@@ -3517,7 +3517,7 @@ paths:
           schema:
             type: string
             format: date-time
-          example: 2022-10-06T15:10:00.587Z
+          example: "2022-10-06T15:10:00.587Z"
       requestBody:
         content:
           application/json:
@@ -3654,10 +3654,10 @@ paths:
                       timestamp:
                         type: string
                         format: date-time
-                        example: 2024-05-10T14:33:06.000Z
+                        example: "2024-05-10T14:33:06.000Z"
                     example:
                       Invalid Scope: Invalid Scope
-                      timestamp: 2024-05-10T14:33:06.000Z
+                      timestamp: "2024-05-10T14:33:06.000Z"
                   - type: object
                     properties:
                       Invalid LoginId:
@@ -3666,10 +3666,10 @@ paths:
                       timestamp:
                         type: string
                         format: date-time
-                        example: 2024-05-10T14:33:06.000Z
+                        example: "2024-05-10T14:33:06.000Z"
                     example:
                       Invalid LoginId: Invalid LoginId
-                      timestamp: 2024-05-10T14:33:06.000Z
+                      timestamp: "2024-05-10T14:33:06.000Z"
                   - type: object
                     properties:
                       Invalid Login Hint:
@@ -3678,10 +3678,10 @@ paths:
                       timestamp:
                         type: string
                         format: date-time
-                        example: 2024-05-10T14:33:06.000Z
+                        example: "2024-05-10T14:33:06.000Z"
                     example:
                       Invalid Login Hint: Invalid Login Hint
-                      timestamp: 2024-05-10T14:33:06.000Z
+                      timestamp: "2024-05-10T14:33:06.000Z"
                   - type: object
                     properties:
                       Invalid X-token:
@@ -3690,7 +3690,7 @@ paths:
                       timestamp:
                         type: string
                         format: date-time
-                        example: 2024-05-10T14:33:06.000Z
+                        example: "2024-05-10T14:33:06.000Z"
                     example:
                       Invalid X-token: Invalid X-token
                   - type: object
@@ -3701,83 +3701,83 @@ paths:
                       timestamp:
                         type: string
                         format: date-time
-                        example: 2024-05-10T14:33:06.000Z
+                        example: "2024-05-10T14:33:06.000Z"
                     example:
                       Invalid X-token: Invalid X-token
-                      timestamp: 2024-05-10T14:33:06.000Z
+                      timestamp: "2024-05-10T14:33:06.000Z"
               examples:
                 Update Email- Invalid Scope:
                   value:
                     scope: Invalid Scope
-                    timestamp: 2024-05-10T11:13:04.000Z
+                    timestamp: "2024-05-10T11:13:04.000Z"
                 Update Email- Invalid LoginId:
                   value:
                     loginId: Invalid LoginId
-                    timestamp: 2024-05-10T11:15:14.000Z
+                    timestamp: "2024-05-10T11:15:14.000Z"
                 Update Email- Invalid Login Hint:
                   value:
                     loginHint: Invalid Login Hint
-                    timestamp: 2024-05-10T11:16:16.000Z
+                    timestamp: "2024-05-10T11:16:16.000Z"
                 Update Email- Invalid X-token:
                   value:
                     message: Invalid X-token
-                    timestamp: 2024-05-10T15:43:47.000Z
+                    timestamp: "2024-05-10T15:43:47.000Z"
                 Update Mobile- Invalid LoginId:
                   value:
                     loginId: Invalid LoginId
-                    timestamp: 2024-05-10T15:44:28.000Z
+                    timestamp: "2024-05-10T15:44:28.000Z"
                 Update Mobile- Invalid Login Hint:
                   value:
                     loginHint: Invalid Login Hint
-                    timestamp: 2024-05-10T15:45:28.000Z
+                    timestamp: "2024-05-10T15:45:28.000Z"
                 Update Mobile-Already verified mobile number:
                   value:
                     message: This mobile number is already verified. Please enter a different mobile number.
-                    timestamp: 2024-05-10T15:45:57.000Z
+                    timestamp: "2024-05-10T15:45:57.000Z"
                 Update Mobile- Invalid Scope:
                   value:
                     scope: Invalid Scope
-                    timestamp: 2024-05-10T15:46:48.000Z
+                    timestamp: "2024-05-10T15:46:48.000Z"
                 Re-KYC- Invalid Scope:
                   value:
                     scope: Invalid Scope
-                    timestamp: 2024-05-10T11:13:04.000Z
+                    timestamp: "2024-05-10T11:13:04.000Z"
                 Re-KYC- Invalid X-token:
                   value:
                     message: Invalid X-token
-                    timestamp: 2024-05-10T14:53:18.000Z
+                    timestamp: "2024-05-10T14:53:18.000Z"
                 Re-KYC- Invalid LoginId:
                   value:
                     loginId: Invalid LoginId
-                    timestamp: 2024-05-10T11:15:14.000Z
+                    timestamp: "2024-05-10T11:15:14.000Z"
                 Re-KYC- Invalid Login Hint:
                   value:
                     loginHint: Invalid Login Hint
-                    timestamp: 2024-05-10T11:16:16.000Z
+                    timestamp: "2024-05-10T11:16:16.000Z"
                 PASSWORD_UPDATE_REQUEST_OTP - AADHAAR-Invalid Scope:
                   value:
                     scope: Invalid Scope
-                    timestamp: 2024-05-10T11:13:04.000Z
+                    timestamp: "2024-05-10T11:13:04.000Z"
                 PASSWORD_UPDATE_REQUEST_OTP - AADHAAR-Invalid LoginId:
                   value:
                     loginId: Invalid LoginId
-                    timestamp: 2024-05-10T11:15:14.000Z
+                    timestamp: "2024-05-10T11:15:14.000Z"
                 PASSWORD_UPDATE_REQUEST_OTP - AADHAAR-Invalid Login Hint:
                   value:
                     loginHint: Invalid Login Hint
-                    timestamp: 2024-05-10T11:16:16.000Z
+                    timestamp: "2024-05-10T11:16:16.000Z"
                 PASSWORD_REQUEST_OTP_ABDM- Invalid Scope:
                   value:
                     scope: Invalid Scope
-                    timestamp: 2024-05-10T11:13:04.000Z
+                    timestamp: "2024-05-10T11:13:04.000Z"
                 PASSWORD_REQUEST_OTP_ABDM- Invalid LoginId:
                   value:
                     loginId: Invalid LoginId
-                    timestamp: 2024-05-10T11:15:14.000Z
+                    timestamp: "2024-05-10T11:15:14.000Z"
                 PASSWORD_REQUEST_OTP_ABDM- Invalid Login Hint:
                   value:
                     loginHint: Invalid Login Hint
-                    timestamp: 2024-05-10T11:16:16.000Z
+                    timestamp: "2024-05-10T11:16:16.000Z"
         "401":
           description: The request was unauthorized. This can occur due to invalid credentials or token.
           content:
@@ -3962,7 +3962,7 @@ paths:
           schema:
             type: string
             format: date-time
-          example: 2022-10-06T15:10:00.587Z
+          example: "2022-10-06T15:10:00.587Z"
       responses:
         "200":
           description: "The 200 response code indicates a successful request. In this context, it refers to the successful verification of an OTP (One-Time Password) for various services.<br><br>
@@ -4093,10 +4093,10 @@ paths:
                       timestamp:
                         type: string
                         format: date-time
-                        example: 2024-05-10T14:33:06.000Z
+                        example: "2024-05-10T14:33:06.000Z"
                     example:
                       Invalid Scope: Invalid Scope
-                      timestamp: 2024-05-10T14:33:06.000Z
+                      timestamp: "2024-05-10T14:33:06.000Z"
                   - type: object
                     properties:
                       Invalid LoginId:
@@ -4105,10 +4105,10 @@ paths:
                       timestamp:
                         type: string
                         format: date-time
-                        example: 2024-05-10T14:33:06.000Z
+                        example: "2024-05-10T14:33:06.000Z"
                     example:
                       Invalid LoginId: Invalid LoginId
-                      timestamp: 2024-05-10T14:33:06.000Z
+                      timestamp: "2024-05-10T14:33:06.000Z"
                   - type: object
                     properties:
                       Invalid Login Hint:
@@ -4117,10 +4117,10 @@ paths:
                       timestamp:
                         type: string
                         format: date-time
-                        example: 2024-05-10T14:33:06.000Z
+                        example: "2024-05-10T14:33:06.000Z"
                     example:
                       Invalid Login Hint: Invalid Login Hint
-                      timestamp: 2024-05-10T14:33:06.000Z
+                      timestamp: "2024-05-10T14:33:06.000Z"
                   - type: object
                     properties:
                       Invalid X-token:
@@ -4129,7 +4129,7 @@ paths:
                       timestamp:
                         type: string
                         format: date-time
-                        example: 2024-05-10T14:33:06.000Z
+                        example: "2024-05-10T14:33:06.000Z"
                     example:
                       Invalid X-token: Invalid X-token
                   - type: object
@@ -4140,10 +4140,10 @@ paths:
                       timestamp:
                         type: string
                         format: date-time
-                        example: 2024-05-10T14:33:06.000Z
+                        example: "2024-05-10T14:33:06.000Z"
                     example:
                       Invalid X-token: Invalid X-token
-                      timestamp: 2024-05-10T14:33:06.000Z
+                      timestamp: "2024-05-10T14:33:06.000Z"
                   - type: object
                     properties:
                       txnId:
@@ -4152,10 +4152,10 @@ paths:
                       timestamp:
                         type: string
                         format: date-time
-                        example: 2024-05-10T14:33:06.000Z
+                        example: "2024-05-10T14:33:06.000Z"
                     example:
                       txnId: Invalid Transaction Id
-                      timestamp: 2024-05-10T14:33:06.000Z
+                      timestamp: "2024-05-10T14:33:06.000Z"
                   - type: object
                     properties:
                       authMethods:
@@ -4164,10 +4164,10 @@ paths:
                       timestamp:
                         type: string
                         format: date-time
-                        example: 2024-05-10T14:33:06.000Z
+                        example: "2024-05-10T14:33:06.000Z"
                     example:
                       authMethods: Invalid Auth Methods
-                      timestamp: 2024-05-10T14:33:06.000Z
+                      timestamp: "2024-05-10T14:33:06.000Z"
                   - type: object
                     properties:
                       otpValue:
@@ -4176,10 +4176,10 @@ paths:
                       timestamp:
                         type: string
                         format: date-time
-                        example: 2024-05-10T14:33:06.000Z
+                        example: "2024-05-10T14:33:06.000Z"
                     example:
                       otpValue: Invalid OTP Value
-                      timestamp: 2024-05-10T14:33:06.000Z
+                      timestamp: "2024-05-10T14:33:06.000Z"
                   - type: object
                     properties:
                       password:
@@ -4188,10 +4188,10 @@ paths:
                       timestamp:
                         type: string
                         format: date-time
-                        example: 2024-05-10T14:33:06.000Z
+                        example: "2024-05-10T14:33:06.000Z"
                     example:
                       password: New & Confirm Password is not same
-                      timestamp: 2024-05-10T14:33:06.000Z
+                      timestamp: "2024-05-10T14:33:06.000Z"
                   - type: object
                     properties:
                       New Password:
@@ -4200,10 +4200,10 @@ paths:
                       timestamp:
                         type: string
                         format: date-time
-                        example: 2024-05-10T14:33:06.000Z
+                        example: "2024-05-10T14:33:06.000Z"
                     example:
                       New Password: Invalid New Password
-                      timestamp: 2024-05-10T14:33:06.000Z
+                      timestamp: "2024-05-10T14:33:06.000Z"
                   - type: object
                     properties:
                       password:
@@ -4212,123 +4212,123 @@ paths:
                       timestamp:
                         type: string
                         format: date-time
-                        example: 2024-05-10T14:33:06.000Z
+                        example: "2024-05-10T14:33:06.000Z"
                     example:
                       password: Invalid Password
-                      timestamp: 2024-05-10T14:33:06.000Z
+                      timestamp: "2024-05-10T14:33:06.000Z"
               examples:
                 Update Email- Invalid Transaction Id:
                   value:
                     txnId: Invalid Transaction Id
-                    timestamp: 2024-05-10T12:45:25.000Z
+                    timestamp: "2024-05-10T12:45:25.000Z"
                 Update Email- Invalid Scope:
                   value:
                     scope: Invalid Scope
-                    timestamp: 2024-05-10T11:13:04.000Z
+                    timestamp: "2024-05-10T11:13:04.000Z"
                 Update Email- Invalid Auth Methods:
                   value:
                     authMethods: Invalid Auth Methods
-                    timestamp: 2024-05-10T11:40:16.000Z
+                    timestamp: "2024-05-10T11:40:16.000Z"
                 Update Email- Invalid X-token:
                   value:
                     message: Invalid X-token
-                    timestamp: 2024-05-10T14:53:18.000Z
+                    timestamp: "2024-05-10T14:53:18.000Z"
                 Update Email- Invalid OTP Value:
                   value:
                     otpValue: Invalid OTP Value
-                    timestamp: 2024-05-10T15:35:20.000Z
+                    timestamp: "2024-05-10T15:35:20.000Z"
                 Update Mobile- Invalid Transaction Id:
                   value:
                     txnId: Invalid Transaction Id
-                    timestamp: 2024-05-10T12:45:25.000Z
+                    timestamp: "2024-05-10T12:45:25.000Z"
                 Update Mobile- Invalid Scope:
                   value:
                     scope: Invalid Scope
-                    timestamp: 2024-05-10T11:13:04.000Z
+                    timestamp: "2024-05-10T11:13:04.000Z"
                 Update Mobile- Invalid Auth Methods:
                   value:
                     authMethods: Invalid Auth Methods
-                    timestamp: 2024-05-10T11:40:16.000Z
+                    timestamp: "2024-05-10T11:40:16.000Z"
                 Update Mobile- Invalid X-token:
                   value:
                     message: Invalid X-token
-                    timestamp: 2024-05-10T14:53:18.000Z
+                    timestamp: "2024-05-10T14:53:18.000Z"
                 Update Mobile- Invalid OTP Value:
                   value:
                     otpValue: Invalid OTP Value
-                    timestamp: 2024-05-10T15:35:20.000Z
+                    timestamp: "2024-05-10T15:35:20.000Z"
                 Re-KYC- Invalid Transaction Id:
                   value:
                     txnId: Invalid Transaction Id
-                    timestamp: 2024-05-10T12:45:25.000Z
+                    timestamp: "2024-05-10T12:45:25.000Z"
                 Re-KYC- Invalid Scope:
                   value:
                     scope: Invalid Scope
-                    timestamp: 2024-05-10T11:13:04.000Z
+                    timestamp: "2024-05-10T11:13:04.000Z"
                 ReKyc- Invalid Auth Method:
                   value:
                     authMethods: Invalid Auth Methods
-                    timestamp: 2024-05-10T11:40:16.000Z
+                    timestamp: "2024-05-10T11:40:16.000Z"
                 Re-KYC- Invalid X-token:
                   value:
                     message: Invalid X-token
-                    timestamp: 2024-05-10T14:53:18.000Z
+                    timestamp: "2024-05-10T14:53:18.000Z"
                 Re-Kyc- Invalid OTP Value:
                   value:
                     otpValue: Invalid OTP Value
-                    timestamp: 2024-05-10T15:35:20.000Z
+                    timestamp: "2024-05-10T15:35:20.000Z"
                 Password_Set-NEW & CONFIRM - NOT SAME:
                   value:
                     password: New & Confirm Password is not same
-                    timestamp: 2023-01-11T02:37:38.000Z
+                    timestamp: "2023-01-11T02:37:38.000Z"
                 Password-Set- Invalid Scope:
                   value:
                     scope: Invalid Scope
-                    timestamp: 2024-05-10T11:13:04.000Z
+                    timestamp: "2024-05-10T11:13:04.000Z"
                 Password Set- Invalid Auth Methods:
                   value:
                     authMethods: Invalid Auth Methods
-                    timestamp: 2024-05-10T11:40:16.000Z
+                    timestamp: "2024-05-10T11:40:16.000Z"
                 Password_Set- Invalid X-token:
                   value:
                     message: Invalid X-token
-                    timestamp: 2024-05-10T14:53:18.000Z
+                    timestamp: "2024-05-10T14:53:18.000Z"
                 PASSWORD_UPDATE-OLD PASSWORD-NEW & CONFIRM - NOT SAME:
                   value:
                     password: New & Confirm Password is not same
-                    timestamp: 2023-01-11T02:35:47.000Z
+                    timestamp: "2023-01-11T02:35:47.000Z"
                 PASSWORD_UPDATE-OLD PASSWORD- Invalid Scope:
                   value:
                     scope: Invalid Scope
-                    timestamp: 2024-05-10T11:13:04.000Z
+                    timestamp: "2024-05-10T11:13:04.000Z"
                 PASSWORD_UPDATE-OLD PASSWORD- Invalid Auth Method:
                   value:
                     authMethods: Invalid Auth Methods
-                    timestamp: 2024-05-10T11:40:16.000Z
+                    timestamp: "2024-05-10T11:40:16.000Z"
                 PASSWORD_UPDATE-OLD PASSWORD- Invalid X-token:
                   value:
                     message: Invalid X-token
-                    timestamp: 2024-05-10T14:53:18.000Z
+                    timestamp: "2024-05-10T14:53:18.000Z"
                 PASSWORD_UPDATE-OLD PASSWORD- Invalid New Password:
                   value:
                     newPassword: Invalid New Password
-                    timestamp: 2024-05-10T18:13:16.000Z
+                    timestamp: "2024-05-10T18:13:16.000Z"
                 PASSWORD_VERIFY_OTP- Invalid Transaction Id:
                   value:
                     txnId: Invalid Transaction Id
-                    timestamp: 2024-05-10T12:45:25.000Z
+                    timestamp: "2024-05-10T12:45:25.000Z"
                 PASSWORD_VERIFY_OTP- Invalid OTP Value:
                   value:
                     otpValue: Invalid OTP Value
-                    timestamp: 2024-05-10T12:51:40.000Z
+                    timestamp: "2024-05-10T12:51:40.000Z"
                 PASSWORD_VERIFY_OTP- Invalid Scope:
                   value:
                     scope: Invalid Scope
-                    timestamp: 2024-05-10T11:13:04.000Z
+                    timestamp: "2024-05-10T11:13:04.000Z"
                 PASSWORD_VERIFY_OTP- Invalid Auth Method:
                   value:
                     authMethods: Invalid Auth Method
-                    timestamp: 2024-05-10T11:40:16.000Z
+                    timestamp: "2024-05-10T11:40:16.000Z"
         "401":
           description: 'The 401 response code indicates an unauthorized request. In this context, it refers to the lack of proper authentication during the operation of the Invalid Credentials.<br><br> <strong>Types of OTP Response Errors:</strong> <ol> <li><strong>Update Email-X-token expired</strong>: The X-token provided for updating the email address has expired.</li> </ol> <ol start="2"> <li><strong>Update Mobile-Invalid access token</strong>: The access token provided for updating the mobile number is invalid.</li> </ol> <ol start="3"> <li><strong>Update Mobile-X-token expired</strong>: The X-token provided for updating the mobile number has expired.</li> </ol> <ol start="4"> <li><strong>Re-KYC - Invalid access token:</strong>: The access token provided for Re-KYC is invalid.</li> </ol> <ol start="5"> <li><strong>Re-KYC-X-token expired</strong>: The X-token provided for Re-KYC has expired..</li> </ol> <ol start="6"> <li><strong>Password_Set-Invalid access token</strong>:  The access token provided for setting the password is invalid.</li> </ol> <ol start="7"> <li><strong>Password_Set-X-token expired</strong>: The ABHA number provided for ABHA OTP is invalid.</li> </ol> <ol start="8"> <li><strong>PASSWORD_UPDATE-OLD PASSWORD-Invalid access token</strong>: The access token provided for updating the password using the old password is invalid.</li> </ol> <ol start="9"> <li><strong>PASSWORD_UPDATE-OLD PASSWORD-X-token expired</strong>: The X-token provided for updating the password using the old password has expired.</li> </ol>   '
           content:
@@ -4354,7 +4354,7 @@ paths:
                       timestamp:
                         type: string
                         format: date-time
-                        example: 2023-01-18T18:01:36.000Z
+                        example: "2023-01-18T18:01:36.000Z"
               examples:
                 Update Email- Invalid access token:
                   value:
@@ -4364,7 +4364,7 @@ paths:
                 Update Email- X-token expired:
                   value:
                     message: X-token expired
-                    timestamp: 2023-01-18T18:01:36.000Z
+                    timestamp: "2023-01-18T18:01:36.000Z"
                 Update Mobile- Invalid access token:
                   value:
                     code: "900901"
@@ -4373,7 +4373,7 @@ paths:
                 Update Mobile- X-token expired:
                   value:
                     message: X-token expired
-                    timestamp: 2024-05-10T14:51:16.000Z
+                    timestamp: "2024-05-10T14:51:16.000Z"
                 ReKyc- Invalid access token:
                   value:
                     code: "900901"
@@ -4382,7 +4382,7 @@ paths:
                 ReKYC- X-token expired:
                   value:
                     message: X-token expired
-                    timestamp: 2024-05-10T14:51:16.000Z
+                    timestamp: "2024-05-10T14:51:16.000Z"
                 Password_Set- Invalid access token:
                   value:
                     code: "900901"
@@ -4391,7 +4391,7 @@ paths:
                 Password_Set- X-token expired:
                   value:
                     message: X-token expired
-                    timestamp: 2024-05-10T14:51:16.000Z
+                    timestamp: "2024-05-10T14:51:16.000Z"
                 PASSWORD_UPDATE-OLD PASSWORD- Invalid access token:
                   value:
                     code: "900901"
@@ -4400,7 +4400,7 @@ paths:
                 PASSWORD_UPDATE-OLD PASSWORD- X-token expired:
                   value:
                     message: X-token expired
-                    timestamp: 2024-05-10T14:51:16.000Z
+                    timestamp: "2024-05-10T14:51:16.000Z"
         "422":
           description: 'The 422 Unprocessable Entity response for this endpoint indicates that the server understands the content type of the request entity, and the syntax of the request entity is correct, but it was unable to process the contained instructions.<br><br> <strong>Types of OTP Response Errors:</strong> <ol> <li><strong>Re-KYC-Invalid OTP</strong>: The OTP provided for Re-KYC is invalid.</li> </ol> <ol start="2"> <li><strong>PASSWORD VERIFY OTP-Invalid OTP-AADHAAR</strong>: The OTP provided for Aadhaar verification during password verification is invalid.</li> </ol>'
           content:
@@ -4414,16 +4414,16 @@ paths:
                   timestamp:
                     type: string
                     format: date-time
-                    example: 2023-01-11T00:14:02.000Z
+                    example: "2023-01-11T00:14:02.000Z"
               examples:
                 Re-KYC-INVALID OTP:
                   value:
                     message: "UIDAI Error code : 400 : Invalid Aadhaar OTP value."
-                    timestamp: 2023-01-11T00:14:02.000Z
+                    timestamp: "2023-01-11T00:14:02.000Z"
                 PASSWORD_VERIFY_OTP-INVALID OTP - AADHAAR:
                   value:
                     message: "UIDAI Error code : 400 : Invalid Aadhaar OTP value."
-                    timestamp: 2023-01-11T00:44:29.000Z
+                    timestamp: "2023-01-11T00:44:29.000Z"
         "500":
           description: Internal Server Error
       x-stoplight:
@@ -4457,7 +4457,7 @@ paths:
           schema:
             type: string
             format: date-time
-          example: 2022-10-06T15:10:00.587Z
+          example: "2022-10-06T15:10:00.587Z"
       responses:
         "200":
           description: The account information was successfully retrieved or updated.
@@ -4501,7 +4501,7 @@ paths:
                     example: M
                   profilePhoto:
                     type: string
-                    example: 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
+                    example: <BASE64_PHOTO>
                   status:
                     type: string
                     example: ACTIVE
@@ -4519,7 +4519,7 @@ paths:
                     example: LOHARA, AT POST LOHARA TQ PACHORA DIST JALGAON, Lohara, Pachora, Jalgaon, Maharashtra
                   kycPhoto:
                     type: string
-                    example: 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
+                    example: <BASE64_PHOTO>
                   stateName:
                     type: string
                     example: MAHARASHTRA
@@ -4595,7 +4595,7 @@ paths:
                             example: मोबाईल
                   createdDate:
                     type: string
-                    example: 07-05-2024
+                    example: "07-05-2024"
               examples:
                 Profile Management-Positive flow:
                   value:
@@ -4616,7 +4616,7 @@ paths:
                     districtCode: "478"
                     pincode: "424201"
                     address: LOHARA, AT POST LOHARA TQ PACHORA DIST JALGAON, Lohara, Pachora, Jalgaon, Maharashtra
-                    kycPhoto: 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
+                    kycPhoto: <BASE64_PHOTO>
                     stateName: MAHARASHTRA
                     districtName: JALGAON
                     subdistrictName: JALGAON
@@ -4644,7 +4644,7 @@ paths:
                         gender: लिंग
                         dob: जन्मतारीख
                         mobile: मोबाईल
-                    createdDate: 07-05-2024
+                    createdDate: "07-05-2024"
         "400":
           description: Indicates various errors encountered during the account management process, such as invalid identifiers or missing parameters.
           content:
@@ -4658,12 +4658,12 @@ paths:
                   timestamp:
                     type: string
                     format: date-time
-                    example: 2024-05-10T14:53:18.000Z
+                    example: "2024-05-10T14:53:18.000Z"
               examples:
                 Profile Management-Invalid X-token:
                   value:
                     message: Invalid X-token
-                    timestamp: 2024-05-10T14:53:18.000Z
+                    timestamp: "2024-05-10T14:53:18.000Z"
         "401":
           description: The request was unauthorized. This can occur due to invalid credentials or token.
           content:
@@ -4690,7 +4690,7 @@ paths:
                 Profile Management-X-token expired:
                   value:
                     message: X-token expired
-                    timestamp: 2024-05-10T14:51:16.000Z
+                    timestamp: "2024-05-10T14:51:16.000Z"
         "404":
           description: Not Found
           content:
@@ -4741,7 +4741,7 @@ paths:
                   example: 91-5553-4126-XXXX
                 dob:
                   type: string
-                  example: 21-2-2021
+                  example: "21-2-2021"
                 name:
                   type: string
                   example: Mohite
@@ -4760,7 +4760,7 @@ paths:
               Update CHILD ABHA Profile:
                 value:
                   abhaNumber: 91-5553-4126-XXXX
-                  dob: 21-2-2021
+                  dob: "21-2-2021"
                   name: Mohite
                   gender: F
         description: |-
@@ -4785,7 +4785,7 @@ paths:
           schema:
             type: string
             format: date-time
-          example: 2022-10-06T15:10:00.587Z
+          example: "2022-10-06T15:10:00.587Z"
         - name: REQUEST-ID
           in: header
           required: true
@@ -4876,7 +4876,7 @@ paths:
                     example: CHILD_ABHA
                   createdDate:
                     type: string
-                    example: 10-05-2024
+                    example: "10-05-2024"
               examples:
                 CHILD ABHA-Child Details:
                   value:
@@ -4902,7 +4902,7 @@ paths:
                     kycVerified: false
                     verificationStatus: VERIFIED
                     verificationType: CHILD_ABHA
-                    createdDate: 10-05-2024
+                    createdDate: "10-05-2024"
         "400":
           description: This error indicates that the request contains a field that is not valid for updating. In the context of updating a resource, certain fields may be restricted or immutable
           content:
@@ -4919,13 +4919,13 @@ paths:
                       timestamp:
                         type: string
                         format: date-time
-                        example: 2023-01-11T00:14:02.000Z
+                        example: "2023-01-11T00:14:02.000Z"
               examples:
                 CHILD ABHA-Access Issue:
                   value:
                     error:
                       message: Please provide a valid field to update
-                      timestamp: 2023-01-11T00:14:02.000Z
+                      timestamp: "2023-01-11T00:14:02.000Z"
         "401":
           description: Indicates an unauthorized request due to invalid credentials
           content:
@@ -5025,7 +5025,7 @@ paths:
           schema:
             type: string
             format: date-time
-          example: 2022-10-06T15:10:00.587Z
+          example: "2022-10-06T15:10:00.587Z"
       responses:
         "200":
           description: Receives a QR code as a response which can be used to quickly access and share the user’s ABHA profile information.
@@ -5047,12 +5047,12 @@ paths:
                   timestamp:
                     type: string
                     format: date-time
-                    example: 2024-05-10T14:53:18.000Z
+                    example: "2024-05-10T14:53:18.000Z"
               examples:
                 Invalid X-token:
                   value:
                     message: Invalid X-token
-                    timestamp: 2024-05-10T14:53:18.000Z
+                    timestamp: "2024-05-10T14:53:18.000Z"
         "401":
           description: Unauthorized
           content:
@@ -5078,7 +5078,7 @@ paths:
                 X-token Expired:
                   value:
                     message: Invalid X-token
-                    timestamp: 2024-05-10T14:53:18.000Z
+                    timestamp: "2024-05-10T14:53:18.000Z"
         "500":
           description: Internal Server Error
       x-stoplight:
@@ -5113,7 +5113,7 @@ paths:
           schema:
             type: string
             format: date-time
-          example: 2022-10-06T15:10:00.587Z
+          example: "2022-10-06T15:10:00.587Z"
       responses:
         "200":
           description: Successfully retrieved ABHA card image.
@@ -5136,7 +5136,7 @@ paths:
                   timestamp:
                     type: string
                     format: date-time
-                    example: 2024-05-10T14:53:18.000Z
+                    example: "2024-05-10T14:53:18.000Z"
         "401":
           description: Unauthorized.
           content:
@@ -5218,7 +5218,7 @@ paths:
           schema:
             type: string
             format: date-time
-          example: 2022-10-06T15:10:00.587Z
+          example: "2022-10-06T15:10:00.587Z"
         - name: BENEFIT_NAME
           in: header
           required: true
@@ -5384,7 +5384,7 @@ paths:
           schema:
             type: string
             format: date-time
-          example: 2022-10-06T15:10:00.587Z
+          example: "2022-10-06T15:10:00.587Z"
         - name: BENEFIT_NAME
           in: header
           required: true
@@ -5435,7 +5435,7 @@ paths:
                       timestamp:
                         type: string
                         format: date-time
-                        example: 2025-01-03T00:15:58.000Z
+                        example: "2025-01-03T00:15:58.000Z"
                   - type: object
                     properties:
                       scope:
@@ -5444,7 +5444,7 @@ paths:
                       timestamp:
                         type: string
                         format: date-time
-                        example: 2025-01-03T00:10:54.000Z
+                        example: "2025-01-03T00:10:54.000Z"
                   - type: object
                     properties:
                       loginId:
@@ -5453,7 +5453,7 @@ paths:
                       timestamp:
                         type: string
                         format: date-time
-                        example: 2025-01-03T00:15:58.000Z
+                        example: "2025-01-03T00:15:58.000Z"
                   - type: object
                     properties:
                       message:
@@ -5462,24 +5462,24 @@ paths:
                       timestamp:
                         type: string
                         format: date-time
-                        example: 2025-01-03T00:15:58.000Z
+                        example: "2025-01-03T00:15:58.000Z"
               examples:
                 Invalid Scope:
                   value:
                     scope: Invalid Scope
-                    timestamp: 2025-01-03T00:10:54.000Z
+                    timestamp: "2025-01-03T00:10:54.000Z"
                 Invalid Login Hint:
                   value:
                     loginHint: Invalid Login Hint
-                    timestamp: 2025-01-03T00:14:46.000Z
+                    timestamp: "2025-01-03T00:14:46.000Z"
                 Invalid LoginId:
                   value:
                     loginId: Invalid LoginId
-                    timestamp: 2025-01-03T00:15:58.000Z
+                    timestamp: "2025-01-03T00:15:58.000Z"
                 Invalid Benefit Name:
                   value:
                     message: Invalid Benefit Name
-                    timestamp: 2025-01-03T00:25:29.000Z
+                    timestamp: "2025-01-03T00:25:29.000Z"
         "401":
           description: <strong>Unauthorized</strong><br>Indicates that the request requires user authentication. The server returns a 401 status code when the client has not provided valid authentication credentials.
           content:
@@ -5566,7 +5566,7 @@ paths:
           schema:
             type: string
             format: date-time
-          example: 2022-10-06T15:10:00.587Z
+          example: "2022-10-06T15:10:00.587Z"
       responses:
         "200":
           description: "The 200 response code indicates a successful request. In this context, it refers to the successful retrieve of user details based on the ABHA address<br>  "
@@ -5777,7 +5777,7 @@ paths:
           schema:
             type: string
             format: date-time
-          example: 2022-10-06T15:10:00.587Z
+          example: "2022-10-06T15:10:00.587Z"
       responses:
         "200":
           description: The 200 response code indicates that the OTP has been successfully sent to the  mobile number. This response confirms that the authentication process has been initiated, ensuring that only authorized users can access their accounts. The OTP must be entered correctly to proceed with the authentication.
@@ -6027,7 +6027,7 @@ paths:
           schema:
             type: string
             format: date-time
-          example: 2022-10-06T15:10:00.587Z
+          example: "2022-10-06T15:10:00.587Z"
       responses:
         "200":
           description: The 200 response code indicates a successful request. In this context, the entered OTP was verified, confirming the user’s identity and  the account was  accessed by verified user.<br><br> <li><strong>ABHA Address Verification via Mobile OTP:</strong> This action allows users to verify their ABHA address using an OTP sent to the mobile number registered with their Abha address. This ensures that the user’s ABHA address is securely verified.</li><br><li><strong>ABHA Address Verification via Aadhaar OTP:</strong> This action allows users to verify their ABHA address using an OTP sent to the mobile number registered with their Aadhaar. This ensures that the user’s ABHA address is securely verified.</li><br><li><strong>ABHA Address Verification via Biometric :</strong> This action allows users to verify their ABHA address using Biometric Authentication modes(Fingerprint, Face, Iris) . This ensures that the user’s ABHA address is securely verified.</li>
@@ -6055,7 +6055,7 @@ paths:
                           example: Deepak Kumar Singh
                         profilePhoto:
                           type: string
-                          example: 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
+                          example: <BASE64_PHOTO>
                         abhaNumber:
                           type: string
                           example: 91-6167-8028-XXXX
@@ -6271,7 +6271,7 @@ paths:
           schema:
             type: string
             format: date-time
-          example: 2022-10-06T15:10:00.587Z
+          example: "2022-10-06T15:10:00.587Z"
       responses:
         "200":
           description: The 200 response code indicates a successful request. In this context, it signifies that the user was successfully verified with the OTP in the previous API call. A valid JWT token was provided, which authenticated the user and allowed access to their profile. As a result, the user profile was successfully retrieved, including all ABHA profile details.
@@ -6288,7 +6288,7 @@ paths:
                     example: Hemant Prakash Bodhai
                   profilePhoto:
                     type: string
-                    example: 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
+                    example: <BASE64_PHOTO>
                   firstName:
                     type: string
                     example: Hemant
@@ -6309,7 +6309,7 @@ paths:
                     example: "1995"
                   dateOfBirth:
                     type: string
-                    example: 14-11-1995
+                    example: "14-11-1995"
                   gender:
                     type: string
                     example: M
@@ -6375,7 +6375,7 @@ paths:
                     dayOfBirth: "14"
                     monthOfBirth: "11"
                     yearOfBirth: "1995"
-                    dateOfBirth: 14-11-1995
+                    dateOfBirth: "14-11-1995"
                     gender: M
                     email: <EMAIL>
                     mobile: <MOBILE_NUMBER>
@@ -6469,7 +6469,7 @@ paths:
           schema:
             type: string
             format: date-time
-          example: 2022-10-06T15:10:00.587Z
+          example: "2022-10-06T15:10:00.587Z"
       responses:
         "202":
           description: Indicates a successful generation of PHR card
@@ -6555,7 +6555,7 @@ paths:
           schema:
             type: string
             format: date-time
-          example: 2022-10-06T15:10:00.587Z
+          example: "2022-10-06T15:10:00.587Z"
       responses:
         "200":
           description: Receives a QR code as a response which can be used to quickly access and share the user’s ABHA profile information.
@@ -6577,12 +6577,12 @@ paths:
                   timestamp:
                     type: string
                     format: date-time
-                    example: 2024-05-10T14:53:18.000Z
+                    example: "2024-05-10T14:53:18.000Z"
               examples:
                 Invalid X-token:
                   value:
                     message: Invalid X-token
-                    timestamp: 2024-05-10T14:53:18.000Z
+                    timestamp: "2024-05-10T14:53:18.000Z"
         "401":
           description: Unauthorized
           content:
@@ -6608,7 +6608,7 @@ paths:
                 X-token Expired:
                   value:
                     message: Invalid X-token
-                    timestamp: 2024-05-10T14:53:18.000Z
+                    timestamp: "2024-05-10T14:53:18.000Z"
         "500":
           description: Internal Server Error
       x-stoplight:
@@ -6642,7 +6642,7 @@ paths:
         - schema:
             type: string
             format: date-time
-          example: 2022-10-06T15:10:00.587Z
+          example: "2022-10-06T15:10:00.587Z"
           name: TIMESTAMP
           in: header
           required: true
@@ -6755,7 +6755,7 @@ paths:
           schema:
             type: string
             format: date-time
-          example: 2022-10-06T15:10:00.587Z
+          example: "2022-10-06T15:10:00.587Z"
         - name: REQUEST-ID
           in: header
           required: true
@@ -6803,12 +6803,12 @@ paths:
                   timestamp:
                     type: string
                     format: date-time
-                    example: 2025-01-08T15:44:30.000Z
+                    example: "2025-01-08T15:44:30.000Z"
               examples:
                 Invalid Scope:
                   value:
                     message: Invalid R-token
-                    timestamp: 2025-01-08T15:44:30.000Z
+                    timestamp: "2025-01-08T15:44:30.000Z"
         "401":
           description: "The 401 response code indicates an unauthorized request. In this context, it refers to the lack of proper authentication during the operation of the Invalid Credentials <br><br>  "
           content:
@@ -6881,7 +6881,7 @@ paths:
           schema:
             type: string
             format: date-time
-          example: 2022-10-06T15:10:00.587Z
+          example: "2022-10-06T15:10:00.587Z"
         - name: REQUEST-ID
           in: header
           required: true

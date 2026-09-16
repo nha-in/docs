@@ -24,7 +24,7 @@ x-abdm-sources:
   - file: catalogue/openapi/.raw/nha-2026-09-16/hiecm/gateway.yaml
     role: upstream
     hash: sha256:e7ca9d3e54d6e6c864f3f1ef7b2422a322c38f6ef0bf64e421c57960b8851dc7
-    fetched: 2026-09-16
+    fetched: "2026-09-16"
 servers:
   - url: https://dev.abdm.gov.in
     description: ABDM gateway, sandbox
@@ -59,7 +59,7 @@ paths:
           required: true
           schema:
             type: string
-          example: 2022-10-06T15:10:00.587Z
+          example: "2022-10-06T15:10:00.587Z"
           description: Actual time of the request was initiated, ISO 8601 represents date and time by starting with the year, followed by the month, the day, the hour, the minutes, seconds and milliseconds
         - name: X-CM-ID
           in: header
@@ -325,7 +325,7 @@ paths:
           required: true
           schema:
             type: string
-          example: 2022-10-06T15:10:00.587Z
+          example: "2022-10-06T15:10:00.587Z"
           description: Actual time of the request was initiated, ISO 8601 represents date and time by starting with the year, followed by the month, the day, the hour, the minutes, seconds and milliseconds
         - name: X-CM-ID
           in: header
@@ -388,17 +388,17 @@ paths:
                     type: string
                     format: date time
                     nullable: true
-                    example: 2022-10-06T10:10:00.587Z
+                    example: "2022-10-06T10:10:00.587Z"
                   dateCreated:
                     type: string
                     format: date time
                     nullable: true
-                    example: 2022-10-06T10:10:00.587Z
+                    example: "2022-10-06T10:10:00.587Z"
                   dateModified:
                     type: string
                     format: date time
                     nullable: true
-                    example: 2022-10-06T10:10:00.587Z
+                    example: "2022-10-06T10:10:00.587Z"
         "204":
           description: No Content
           content:
@@ -548,7 +548,7 @@ paths:
           required: true
           schema:
             type: string
-          example: 2022-10-06T15:10:00.587Z
+          example: "2022-10-06T15:10:00.587Z"
           description: Actual time of the request was initiated, ISO 8601 represents date and time by starting with the year, followed by the month, the day, the hour, the minutes, seconds and milliseconds
         - name: X-CM-ID
           in: header
@@ -694,7 +694,7 @@ paths:
           required: true
           schema:
             type: string
-          example: 2022-10-06T15:10:00.587Z
+          example: "2022-10-06T15:10:00.587Z"
           description: Actual time of the request was initiated, ISO 8601 represents date and time by starting with the year, followed by the month, the day, the hour, the minutes, seconds and milliseconds
         - name: X-CM-ID
           in: header
@@ -924,7 +924,7 @@ paths:
           required: true
           schema:
             type: string
-          example: 2022-10-06T15:10:00.587Z
+          example: "2022-10-06T15:10:00.587Z"
           description: Actual time of the request was initiated, ISO 8601 represents date and time by starting with the year, followed by the month, the day, the hour, the minutes, seconds and milliseconds
         - name: X-CM-ID
           in: header
@@ -1110,7 +1110,7 @@ paths:
           required: true
           schema:
             type: string
-          example: 2022-10-06T15:10:00.587Z
+          example: "2022-10-06T15:10:00.587Z"
           description: Actual time of the request was initiated, ISO 8601 represents date and time by starting with the year, followed by the month, the day, the hour, the minutes, seconds and milliseconds
         - name: X-CM-ID
           in: header
@@ -1292,7 +1292,7 @@ paths:
           required: true
           schema:
             type: string
-          example: 2022-10-06T15:10:00.587Z
+          example: "2022-10-06T15:10:00.587Z"
           description: Actual time of the request was initiated, ISO 8601 represents date and time by starting with the year, followed by the month, the day, the hour, the minutes, seconds and milliseconds
         - name: X-CM-ID
           in: header
@@ -1508,7 +1508,7 @@ paths:
           required: true
           schema:
             type: string
-          example: 2022-10-06T15:10:00.587Z
+          example: "2022-10-06T15:10:00.587Z"
           description: Actual time of the request was initiated, ISO 8601 represents date and time by starting with the year, followed by the month, the day, the hour, the minutes, seconds and milliseconds
         - name: X-CM-ID
           in: header
@@ -1707,7 +1707,7 @@ paths:
           required: true
           schema:
             type: string
-          example: 2022-10-06T15:10:00.587Z
+          example: "2022-10-06T15:10:00.587Z"
           description: Actual time of the request was initiated, ISO 8601 represents date and time by starting with the year, followed by the month, the day, the hour, the minutes, seconds and milliseconds
         - name: X-CM-ID
           in: header
@@ -1867,7 +1867,7 @@ paths:
           required: true
           schema:
             type: string
-          example: 2022-10-06T15:10:00.587Z
+          example: "2022-10-06T15:10:00.587Z"
           description: Actual time of the request was initiated, ISO 8601 represents date and time by starting with the year, followed by the month, the day, the hour, the minutes, seconds and milliseconds
         - name: X-CM-ID
           in: header

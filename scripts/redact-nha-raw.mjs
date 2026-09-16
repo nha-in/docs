@@ -11,19 +11,22 @@ import {createHash} from 'node:crypto';
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const RAW = join(root, 'catalogue', 'openapi', '.raw', 'nha-2026-09-16');
 const MANIFEST = join(RAW, 'MANIFEST.md');
-const REDACT = ['abha/M1 ABHA Swagger 1.yaml', 'phr/PHR and locker.postman_collection.json'];
+const REDACT = ['abha/M1 ABHA Swagger 1.yaml', 'abha/M1 ABHA Collection.json', 'phr/PHR and locker.postman_collection.json'];
 
 // Order matters: tokens before anything that could match inside a token,
 // addresses before emails.
 const RULES = [
   ['photo', /(profilePhoto["']?\s*:\s*["']?)[A-Za-z0-9+/=]{100,}/g, '$1<BASE64_PHOTO>'],
+  ['photo', /(?:\/9j\/|\biVBORw0)[A-Za-z0-9+/=]{100,}/g, '<BASE64_PHOTO>'],
+  ['pid-block', /(fingerPrintAuthPid|faceAuthPid|irisAuthPid|"?Pid"?|pid)(\\?["']?\s*:\s*\\?["']?)[A-Za-z0-9+/=]{200,}/g, '$1$2<PID_BLOCK>'],
   ['token', /\{\{(?:bearer_token|json_web_token)_[a-z0-9]+\}\}[A-Za-z0-9_.-]*/g, '<TOKEN>'],
   ['token', /\beyJ[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]{10,}(?:\.[A-Za-z0-9_-]+)?/g, '<TOKEN>'],
   ['token', /\b[A-Za-z0-9+/_=-]*eyJ[A-Za-z0-9+/_=-]{200,}/g, '<TOKEN>'],
   ['abha-address', /\b[a-z0-9][a-z0-9._-]{2,}@(?:sbx|abdm)\b/gi, '<ABHA_ADDRESS>'],
-  ['email', /\b[\w.+-]+@[\w-]+\.[\w.-]+\b/g, '<EMAIL>'],
+  ['email', /\b[\w.+*-]+@[\w-]+\.[\w.-]+\b/g, '<EMAIL>'],
   ['abha-number', /\b91-\d{4}-\d{4}-\d{4}\b/g, '<ABHA_NUMBER>'],
   ['abha-number', /\b91\d{12}\b/g, '<ABHA_NUMBER>'],
+  ['abha-number', /\b\d{2}-\d{4}-\d{4}-\d{4}\b/g, '<ABHA_NUMBER>'],
   ['mobile', /\b[6-9]\d{9}\b/g, '<MOBILE_NUMBER>'],
   ['internal-host', /https?:\/\/[a-z0-9.-]+\.abdm\.gov\.internal(?::\d+)?/g, 'https://abhasbx.abdm.gov.in'],
   ['third-party-url', /https?:\/\/webhook\.site\/[A-Za-z0-9-]+/g, '<YOUR_CALLBACK_URL>'],
@@ -56,10 +59,13 @@ for (const file of walk(RAW).sort()) {
   const rel = relative(RAW, file);
   const before = readFileSync(file);
   let text = before.toString('utf8');
+  // A rerun sees already redacted text, so the counts a previous run recorded
+  // are carried forward and the new rules add to them.
   const counts = {};
+  for (const m of (recorded.get(rel) ?? '').matchAll(/([a-z-]+) (\d+)/g)) counts[m[1]] = Number(m[2]);
   if (REDACT.includes(rel)) {
     for (const [name, re, to] of RULES) {
-      text = text.replace(re, (whole, group) => { counts[name] = (counts[name] ?? 0) + 1; return to.replace('$1', group ?? ''); });
+      text = text.replace(re, (whole, g1, g2) => { counts[name] = (counts[name] ?? 0) + 1; return to.replace('$1', g1 ?? '').replace('$2', g2 ?? ''); });
     }
     if (text !== before.toString('utf8')) writeFileSync(file, text);
   }

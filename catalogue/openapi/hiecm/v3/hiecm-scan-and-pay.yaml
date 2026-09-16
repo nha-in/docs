@@ -23,7 +23,7 @@ x-abdm-sources:
   - file: catalogue/openapi/.raw/nha-2026-09-16/hiecm/scan-and-pay.yaml
     role: upstream
     hash: sha256:3943b3b43b4f6e2e2730f5aa57aeaf2c06a8cf87172af00e8bc041b0e02a1d5e
-    fetched: 2026-09-16
+    fetched: "2026-09-16"
 servers:
   - url: https://dev.abdm.gov.in
     description: ABDM gateway, sandbox
@@ -81,7 +81,7 @@ paths:
           required: true
           schema:
             type: string
-          example: 2022-10-06T15:10:00.587Z
+          example: "2022-10-06T15:10:00.587Z"
           description: Actual time of the request was initiated, ISO 8601 represents date and time by starting with the year, followed by the month, the day, the hour, the minutes, seconds and milliseconds.
         - name: X-CM-ID
           in: header
@@ -360,7 +360,7 @@ paths:
           required: true
           schema:
             type: string
-          example: 2022-10-06T15:10:00.587Z
+          example: "2022-10-06T15:10:00.587Z"
           description: Actual time of the request was initiated, ISO 8601 represents date and time by starting with the year, followed by the month, the day, the hour, the minutes, seconds and milliseconds.
         - name: X-CM-ID
           in: header
@@ -675,7 +675,7 @@ paths:
           required: true
           schema:
             type: string
-          example: 2022-10-06T15:10:00.587Z
+          example: "2022-10-06T15:10:00.587Z"
           description: Actual time of the request was initiated, ISO 8601 represents date and time by starting with the year, followed by the month, the day, the hour, the minutes, seconds and milliseconds.
         - name: X-CM-ID
           in: header
@@ -746,7 +746,7 @@ paths:
                     paymentDate:
                       type: string
                       nullable: false
-                      example: 2025-01-20T07:47:49.102Z
+                      example: "2025-01-20T07:47:49.102Z"
                       description: ISO Timestamp.
                     paymentRecipetLink:
                       type: string
@@ -893,7 +893,7 @@ paths:
           required: true
           schema:
             type: string
-          example: 2022-10-06T15:10:00.587Z
+          example: "2022-10-06T15:10:00.587Z"
           description: Actual time of the request was initiated, ISO 8601 represents date and time by starting with the year, followed by the month, the day, the hour, the minutes, seconds and milliseconds.
         - name: X-CM-ID
           in: header
@@ -1154,7 +1154,7 @@ paths:
           required: true
           schema:
             type: string
-          example: 2022-10-06T15:10:00.587Z
+          example: "2022-10-06T15:10:00.587Z"
           description: Actual time of the request was initiated, ISO 8601 represents date and time by starting with the year, followed by the month, the day, the hour, the minutes, seconds and milliseconds.
         - name: X-CM-ID
           in: header
@@ -1196,14 +1196,14 @@ paths:
           description: start date of the records.
           schema:
             type: string
-            example: 2024-07-13T07:30:10.186Z
+            example: "2024-07-13T07:30:10.186Z"
         - name: endDate
           in: query
           required: true
           description: start date of the records.
           schema:
             type: string
-            example: 2025-02-18T08:30:50.189Z
+            example: "2025-02-18T08:30:50.189Z"
         - name: offset
           in: query
           required: true
@@ -1283,11 +1283,11 @@ paths:
                         dateCreated:
                           type: string
                           format: date-time
-                          example: 2024-12-27T11:01:44.133Z
+                          example: "2024-12-27T11:01:44.133Z"
                         dateModified:
                           type: string
                           format: date-time
-                          example: 2024-12-27T11:26:20.144Z
+                          example: "2024-12-27T11:26:20.144Z"
                         orderDesc:
                           type: object
                           properties:
@@ -1466,7 +1466,7 @@ paths:
           required: true
           schema:
             type: string
-          example: 2022-10-06T15:10:00.587Z
+          example: "2022-10-06T15:10:00.587Z"
           description: Actual time of the request was initiated, ISO 8601 represents date and time by starting with the year, followed by the month, the day, the hour, the minutes, seconds and milliseconds.
         - name: X-CM-ID
           in: header
@@ -1635,7 +1635,7 @@ webhooks:
           required: true
           schema:
             type: string
-          example: 2022-10-06T15:10:00.587Z
+          example: "2022-10-06T15:10:00.587Z"
           description: Actual time of the request was initiated, ISO 8601 represents date and time by starting with the year, followed by the month, the day, the hour, the minutes, seconds and milliseconds.
         - name: X-HIP-ID
           in: header
@@ -1893,7 +1893,7 @@ webhooks:
           required: true
           schema:
             type: string
-          example: 2022-10-06T15:10:00.587Z
+          example: "2022-10-06T15:10:00.587Z"
           description: Actual time of the request was initiated, ISO 8601 represents date and time by starting with the year, followed by the month, the day, the hour, the minutes, seconds and milliseconds.
         - name: X-HIP-ID
           in: header
@@ -2108,7 +2108,7 @@ webhooks:
           required: true
           schema:
             type: string
-          example: 2022-10-06T15:10:00.587Z
+          example: "2022-10-06T15:10:00.587Z"
           description: Actual time of the request was initiated, ISO 8601 represents date and time by starting with the year, followed by the month, the day, the hour, the minutes, seconds and milliseconds.
         - name: X-HIP-ID
           in: header
@@ -2171,7 +2171,7 @@ webhooks:
                         paymentDate:
                           type: string
                           nullable: false
-                          example: 2025-01-20T07:47:49.102Z
+                          example: "2025-01-20T07:47:49.102Z"
                           description: ISO Timestamp.
                         paymentRecipetLink:
                           type: string
@@ -2309,7 +2309,7 @@ webhooks:
           required: true
           schema:
             type: string
-          example: 2022-10-06T15:10:00.587Z
+          example: "2022-10-06T15:10:00.587Z"
           description: Actual time of the request was initiated, ISO 8601 represents date and time by starting with the year, followed by the month, the day, the hour, the minutes, seconds and milliseconds.
         - name: X-HIP-ID
           in: header

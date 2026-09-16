@@ -23,7 +23,7 @@ x-abdm-sources:
   - file: catalogue/openapi/.raw/nha-2026-09-16/hiecm/subscription.yaml
     role: upstream
     hash: sha256:7697e2f1445968038f56a8795f73fd49e73cba74ce2bc30920572c602010f7bf
-    fetched: 2026-09-16
+    fetched: "2026-09-16"
 servers:
   - url: https://dev.abdm.gov.in
     description: ABDM gateway, sandbox
@@ -59,7 +59,7 @@ paths:
           required: true
           schema:
             type: string
-          example: 2022-10-06T15:10:00.587Z
+          example: "2022-10-06T15:10:00.587Z"
           description: Actual time of the request was initiated, ISO 8601 represents date and time by starting with the year, followed by the month, the day, the hour, the minutes, seconds and milliseconds
         - name: X-CM-ID
           in: header
@@ -198,13 +198,13 @@ paths:
                           type: string
                           format: date-time
                           nullable: false
-                          example: 2024-05-09T10:34:00.389Z
+                          example: "2024-05-09T10:34:00.389Z"
                           description: UTC date time in ISO format. Allows alpha numeric character and special characters like "\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}.\\d{3}Z$"
                         to:
                           type: string
                           format: date-time
                           nullable: false
-                          example: 2024-05-09T10:34:00.389Z
+                          example: "2024-05-09T10:34:00.389Z"
                           description: UTC date time in ISO format.Allows alpha numeric character and special characters like "\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}.\\d{3}Z$"
       responses:
         "202":
@@ -330,7 +330,7 @@ paths:
           required: true
           schema:
             type: string
-          example: 2022-10-06T15:10:00.587Z
+          example: "2022-10-06T15:10:00.587Z"
           description: Actual time of the request was initiated, ISO 8601 represents date and time by starting with the year, followed by the month, the day, the hour, the minutes, seconds and milliseconds
         - name: X-CM-ID
           in: header
@@ -520,7 +520,7 @@ paths:
           required: true
           schema:
             type: string
-          example: 2022-10-06T15:10:00.587Z
+          example: "2022-10-06T15:10:00.587Z"
           description: Actual time of the request was initiated, ISO 8601 represents date and time by starting with the year, followed by the month, the day, the hour, the minutes, seconds and milliseconds
         - name: X-CM-ID
           in: header
@@ -712,7 +712,7 @@ paths:
           required: true
           schema:
             type: string
-          example: 2022-10-06T15:10:00.587Z
+          example: "2022-10-06T15:10:00.587Z"
           description: Actual time of the request was initiated, ISO 8601 represents date and time by starting with the year, followed by the month, the day, the hour, the minutes, seconds, and milliseconds
         - name: X-CM-ID
           in: header
@@ -873,7 +873,7 @@ webhooks:
           required: true
           schema:
             type: string
-          example: 2022-10-06T15:10:00.587Z
+          example: "2022-10-06T15:10:00.587Z"
           description: Actual time of the request was initiated, ISO 8601 represents date and time by starting with the year, followed by the month, the day, the hour, the minutes, seconds and milliseconds
         - name: X-HIU-ID
           in: header
@@ -1058,7 +1058,7 @@ webhooks:
           required: true
           schema:
             type: string
-          example: 2022-10-06T15:10:00.587Z
+          example: "2022-10-06T15:10:00.587Z"
           description: Actual time of the request was initiated, ISO 8601 represents date and time by starting with the year, followed by the month, the day, the hour, the minutes, seconds and milliseconds
         - name: X-HIU-ID
           in: header
@@ -1254,13 +1254,13 @@ webhooks:
                                     type: string
                                     format: date-time
                                     nullable: false
-                                    example: 2024-05-09T10:34:00.389Z
+                                    example: "2024-05-09T10:34:00.389Z"
                                     description: UTC date time in ISO format. Allows alpha numeric character and special characters like \\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}.\\d{3}Z$
                                   to:
                                     type: string
                                     format: date-time
                                     nullable: false
-                                    example: 2024-05-09T10:34:00.389Z
+                                    example: "2024-05-09T10:34:00.389Z"
                                     description: UTC date time in ISO format.Allows alpha numeric character and special characters like \\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}.\\d{3}Z$
                               status:
                                 type: string
@@ -1393,7 +1393,7 @@ webhooks:
           required: true
           schema:
             type: string
-          example: 2022-10-06T15:10:00.587Z
+          example: "2022-10-06T15:10:00.587Z"
           description: Actual time of the request was initiated, ISO 8601 represents date and time by starting with the year, followed by the month, the day, the hour, the minutes, seconds and milliseconds
         - name: X-HIU-ID
           in: header
@@ -1431,7 +1431,7 @@ webhooks:
                       type: string
                       format: date-time
                       nullable: false
-                      example: 2024-09-10T04:27:47.696Z
+                      example: "2024-09-10T04:27:47.696Z"
                       description: UTC. Allows alpha numeric character and special characters like \\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}.\\d{3}Z$
                     category:
                       type: string

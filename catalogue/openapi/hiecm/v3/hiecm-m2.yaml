@@ -23,23 +23,23 @@ x-abdm-sources:
   - file: catalogue/openapi/.raw/nha-2026-09-16/hiecm/hip-initiated-linking.yaml
     role: upstream
     hash: sha256:d1224af3e12ede109747d595721cb0f39b90dfe6b1319bf8742c4d6f4d046d16
-    fetched: 2026-09-16
+    fetched: "2026-09-16"
   - file: catalogue/openapi/.raw/nha-2026-09-16/hiecm/user-initiated-linking.yaml
     role: upstream
     hash: sha256:8d500934ddd3e9c843446bd78a386473e5858167114c33987b355dead880ccea
-    fetched: 2026-09-16
+    fetched: "2026-09-16"
   - file: catalogue/openapi/.raw/nha-2026-09-16/hiecm/link-token.yaml
     role: upstream
     hash: sha256:0deb32fd67f3489d1ecc86c622ef066eaa6b545f81c62948669fc5235cbc37c8
-    fetched: 2026-09-16
+    fetched: "2026-09-16"
   - file: catalogue/openapi/.raw/nha-2026-09-16/hiecm/patient-share.yaml
     role: upstream
     hash: sha256:001806e1f180c8e738b82e598dc575cc53598f3c1efd10b7acc5096b83e00e37
-    fetched: 2026-09-16
+    fetched: "2026-09-16"
   - file: catalogue/openapi/.raw/nha-2026-09-16/hiecm/consent-management-data-flow.yaml
     role: upstream
     hash: sha256:78f8bc3102976944a630081e63cf34e046ee6cd337065c815473cf77b31bdbf2
-    fetched: 2026-09-16
+    fetched: "2026-09-16"
 servers:
   - url: https://dev.abdm.gov.in
     description: ABDM gateway, sandbox
@@ -81,7 +81,7 @@ paths:
           required: true
           schema:
             type: string
-          example: 2022-10-06T15:10:00.587Z
+          example: "2022-10-06T15:10:00.587Z"
           description: Actual time of the request was initiated, ISO 8601 represents date and time by starting with the year, followed by the month, the day, the hour, the minutes, seconds and milliseconds
         - name: X-CM-ID
           in: header
@@ -295,7 +295,7 @@ paths:
           required: true
           schema:
             type: string
-          example: 2022-10-06T15:10:00.587Z
+          example: "2022-10-06T15:10:00.587Z"
           description: Actual time of the request was initiated, ISO 8601 represents date and time by starting with the year, followed by the month, the day, the hour, the minutes, seconds and milliseconds
         - name: X-CM-ID
           in: header
@@ -376,7 +376,7 @@ paths:
                       type: string
                       format: date-time
                       nullable: false
-                      example: 2024-05-09T10:34:00.387Z
+                      example: "2024-05-09T10:34:00.387Z"
                       description: This should be a UTC Date & Time in ISO format
                     hip:
                       type: object
@@ -501,7 +501,7 @@ paths:
           required: true
           schema:
             type: string
-          example: 2022-10-06T15:10:00.587Z
+          example: "2022-10-06T15:10:00.587Z"
           description: Actual time of the request was initiated, ISO 8601 represents date and time by starting with the year, followed by the month, the day, the hour, the minutes, seconds and milliseconds
         - name: X-CM-ID
           in: header
@@ -657,7 +657,7 @@ paths:
           required: true
           schema:
             type: string
-          example: 2022-10-06T15:10:00.587Z
+          example: "2022-10-06T15:10:00.587Z"
           description: Actual time of the request was initiated, ISO 8601 represents date and time by starting with the year, followed by the month, the day, the hour, the minutes, seconds and milliseconds
         - name: X-CM-ID
           in: header
@@ -894,7 +894,7 @@ paths:
           required: true
           schema:
             type: string
-          example: 2022-10-06T15:10:00.587Z
+          example: "2022-10-06T15:10:00.587Z"
           description: Actual time of the request was initiated, ISO 8601 represents date and time by starting with the year, followed by the month, the day, the hour, the minutes, seconds and milliseconds
         - name: X-CM-ID
           in: header
@@ -968,7 +968,7 @@ paths:
                           type: string
                           format: date-time
                           nullable: false
-                          example: 2024-05-01T05:22:34.123Z
+                          example: "2024-05-01T05:22:34.123Z"
                           description: The communication expiry date. Should be UTC date in ISO format. Allows alpha numeric characters and special characters like "^[a-zA-Z0-9_\\-@,. \"':|()/]{0,255}$"
                 error:
                   type: object
@@ -1113,7 +1113,7 @@ paths:
           required: true
           schema:
             type: string
-          example: 2022-10-06T15:10:00.587Z
+          example: "2022-10-06T15:10:00.587Z"
           description: Actual time of the request was initiated, ISO 8601 represents date and time by starting with the year, followed by the month, the day, the hour, the minutes, seconds and milliseconds
         - name: X-CM-ID
           in: header
@@ -1332,7 +1332,7 @@ paths:
           required: true
           schema:
             type: string
-          example: 2022-10-06T15:10:00.587Z
+          example: "2022-10-06T15:10:00.587Z"
           description: Actual time of the request was initiated, ISO 8601 represents date and time by starting with the year, followed by the month, the day, the hour, the minutes, seconds and milliseconds
         - name: X-CM-ID
           in: header
@@ -1499,7 +1499,7 @@ paths:
           required: true
           schema:
             type: string
-          example: 2022-10-06T15:10:00.587Z
+          example: "2022-10-06T15:10:00.587Z"
           description: Actual time of the request was initiated, ISO 8601 represents date and time by starting with the year, followed by the month, the day, the hour, the minutes, seconds and milliseconds
         - name: X-CM-ID
           in: header
@@ -1771,7 +1771,7 @@ paths:
           required: true
           schema:
             type: string
-          example: 2022-10-06T15:10:00.587Z
+          example: "2022-10-06T15:10:00.587Z"
           description: Actual time of the request was initiated, ISO 8601 represents date and time by starting with the year, followed by the month, the day, the hour, the minutes, seconds and milliseconds
         - name: X-HIP-ID
           in: header
@@ -1845,7 +1845,7 @@ paths:
                           type: string
                           format: date-time
                           nullable: false
-                          example: 2024-05-01T05:10:20.123Z
+                          example: "2024-05-01T05:10:20.123Z"
                           description: Allows alpha numeric character and special characters like "\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}.\\d{3}Z$"
                         patient:
                           type: object
@@ -2045,19 +2045,19 @@ paths:
                                   type: string
                                   format: date-time
                                   nullable: false
-                                  example: 2021-09-28T12:30:08.573Z
+                                  example: "2021-09-28T12:30:08.573Z"
                                   description: Should be UTC date time in ISO format. Allows alpha numeric character and special characters like "\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}.\\d{3}Z$"
                                 to:
                                   type: string
                                   format: date-time
                                   nullable: false
-                                  example: 2021-09-28T12:30:08.573Z
+                                  example: "2021-09-28T12:30:08.573Z"
                                   description: Should be UTC date time in ISO format.Allows alpha numeric character and special characters like "\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}.\\d{3}Z$"
                             dataEraseAt:
                               type: string
                               format: date-time
                               nullable: false
-                              example: 2021-09-28T12:30:08.573Z
+                              example: "2021-09-28T12:30:08.573Z"
                               description: |-
                                 The date at which the consent expire. Should be UTC date time in ISO format.Allows alpha numeric character and special
                                                 characters like "\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}.\\d{3}Z$"
@@ -2233,7 +2233,7 @@ paths:
           required: true
           schema:
             type: string
-          example: 2022-10-06T15:10:00.587Z
+          example: "2022-10-06T15:10:00.587Z"
           description: Actual time of the request was initiated, ISO 8601 represents date and time by starting with the year, followed by the month, the day, the hour, the minutes, seconds and milliseconds
         - name: X-CM-ID
           in: header
@@ -2446,7 +2446,7 @@ paths:
           required: true
           schema:
             type: string
-          example: 2022-10-06T15:10:00.587Z
+          example: "2022-10-06T15:10:00.587Z"
           description: Actual time of the request was initiated, ISO 8601 represents date and time by starting with the year, followed by the month, the day, the hour, the minutes, seconds and milliseconds
         - name: X-CM-ID
           in: header
@@ -2670,7 +2670,7 @@ webhooks:
           required: true
           schema:
             type: string
-          example: 2022-10-06T15:10:00.587Z
+          example: "2022-10-06T15:10:00.587Z"
           description: Actual time of the request was initiated, ISO 8601 represents date and time by starting with the year, followed by the month, the day, the hour, the minutes, seconds and milliseconds
         - name: X-HIP-ID
           in: header
@@ -2932,7 +2932,7 @@ webhooks:
           required: true
           schema:
             type: string
-          example: 2022-10-06T15:10:00.587Z
+          example: "2022-10-06T15:10:00.587Z"
           description: Actual time of the request was initiated, ISO 8601 represents date and time by starting with the year, followed by the month, the day, the hour, the minutes, seconds and milliseconds
         - name: X-HIP-ID
           in: header
@@ -3106,7 +3106,7 @@ webhooks:
           required: true
           schema:
             type: string
-          example: 2022-10-06T15:10:00.587Z
+          example: "2022-10-06T15:10:00.587Z"
           description: Actual time of the request was initiated, ISO 8601 represents date and time by starting with the year, followed by the month, the day, the hour, the minutes, seconds and milliseconds
         - name: X-HIP-ID
           in: header
@@ -3280,7 +3280,7 @@ webhooks:
           required: true
           schema:
             type: string
-          example: 2022-10-06T15:10:00.587Z
+          example: "2022-10-06T15:10:00.587Z"
           description: Actual time of the request was initiated, ISO 8601 represents date and time by starting with the year, followed by the month, the day, the hour, the minutes, seconds and milliseconds.
         - name: X-HIP-ID
           in: header
@@ -3490,7 +3490,7 @@ webhooks:
           required: true
           schema:
             type: string
-          example: 2022-10-06T15:10:00.587Z
+          example: "2022-10-06T15:10:00.587Z"
           description: Actual time of the request was initiated, ISO 8601 represents date and time by starting with the year, followed by the month, the day, the hour, the minutes, seconds and milliseconds
         - name: X-HIP-ID
           in: header
@@ -3766,7 +3766,7 @@ webhooks:
           required: true
           schema:
             type: string
-          example: 2022-10-06T15:10:00.587Z
+          example: "2022-10-06T15:10:00.587Z"
           description: Actual time of the request was initiated, ISO 8601 represents date and time by starting with the year, followed by the month, the day, the hour, the minutes, seconds and milliseconds
         - name: X-HIP-ID
           in: header
@@ -3906,7 +3906,7 @@ webhooks:
           required: true
           schema:
             type: string
-          example: 2022-10-06T15:10:00.587Z
+          example: "2022-10-06T15:10:00.587Z"
           description: Actual time of the request was initiated, ISO 8601 represents date and time by starting with the year, followed by the month, the day, the hour, the minutes, seconds and milliseconds
         - name: X-HIP-ID
           in: header
@@ -4130,7 +4130,7 @@ webhooks:
           required: true
           schema:
             type: string
-          example: 2022-10-06T15:10:00.587Z
+          example: "2022-10-06T15:10:00.587Z"
           description: "Actual time of the request was initiated, ISO 8601 represents date and time by starting with the year, followed by the month, the day, the hour, the minutes, seconds and milliseconds    "
         - name: X-HIP-ID
           in: header
@@ -4427,7 +4427,7 @@ webhooks:
           required: true
           schema:
             type: string
-          example: 2022-10-06T15:10:00.587Z
+          example: "2022-10-06T15:10:00.587Z"
           description: Actual time of the request was initiated, ISO 8601 represents date and time by starting with the year, followed by the month, the day, the hour, the minutes, seconds and milliseconds
         - name: X-HIP-ID
           in: header
@@ -4483,13 +4483,13 @@ webhooks:
                           type: string
                           format: date-time
                           nullable: false
-                          example: 2022-10-06T15:10:00.587Z
+                          example: "2022-10-06T15:10:00.587Z"
                           description: Should be a UTC date time in ISO Format. Allows alpha numeric character and special characters like \\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}.\\d{3}Z$
                         to:
                           type: string
                           format: date-time
                           nullable: false
-                          example: 2022-11-06T15:10:00.587Z
+                          example: "2022-11-06T15:10:00.587Z"
                           description: Should be a UTC date time in ISO Format.Allows alpha numeric character and special characters like \\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}.\\d{3}Z$
                     dataPushUrl:
                       type: string
@@ -4525,7 +4525,7 @@ webhooks:
                             expiry:
                               type: string
                               nullable: false
-                              example: 2022-12-28T13:18:20.742Z
+                              example: "2022-12-28T13:18:20.742Z"
                               description: UTC.Allows alpha numeric character and special characters like "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
                             parameters:
                               type: string

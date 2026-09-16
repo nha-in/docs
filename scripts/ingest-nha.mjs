@@ -8,7 +8,7 @@ import {readFileSync, writeFileSync, existsSync} from 'node:fs';
 import {join, dirname} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {createHash} from 'node:crypto';
-import {parse, stringify} from 'yaml';
+import {parse, stringify, Document, visit} from 'yaml';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const RAW = join(root, 'catalogue', 'openapi', '.raw', 'nha-2026-09-16');
@@ -235,7 +235,16 @@ if (journeysMode) {
   process.exit(0);
 }
 
-const outputs = Object.entries(specs).map(([id, spec]) => [join(OUT, `hiecm-${id}.yaml`), stringify(spec, {lineWidth: 0})]);
+// YAML 1.1 readers resolve an unquoted 2026-09-16 or 1991-24-04 as a timestamp,
+// which loses the string NHA wrote and, on an impossible month, fails the load.
+const DATEISH = /^\d{4}-\d{1,2}-\d{1,2}([Tt ].*)?$|^\d{1,2}-\d{1,2}-\d{4}$/;
+const emit = (spec) => {
+  const doc = new Document(spec);
+  visit(doc, {Scalar(_, node) { if (typeof node.value === 'string' && DATEISH.test(node.value)) node.type = 'QUOTE_DOUBLE'; }});
+  return doc.toString({lineWidth: 0});
+};
+note('all', 'dates', 'date and timestamp strings are quoted so a YAML 1.1 reader keeps them as strings');
+const outputs = Object.entries(specs).map(([id, spec]) => [join(OUT, `hiecm-${id}.yaml`), emit(spec)]);
 outputs.push([LOG, ['# 2026-09-16: the final set, ingested', '', 'Written by `scripts/ingest-nha.mjs`. Every line is one edit the script made to NHA\'s files so they render; nothing else was changed. Rerun the script to regenerate the specs and this log.', '', '| Module | Operation | Edit |', '| --- | --- | --- |', ...log, ''].join('\n')]);
 let drift = 0;
 for (const [path, text] of outputs) {

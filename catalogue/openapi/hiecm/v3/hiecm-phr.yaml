@@ -23,31 +23,31 @@ x-abdm-sources:
   - file: catalogue/openapi/.raw/nha-2026-09-16/hiecm/hip-initiated-linking.yaml
     role: upstream
     hash: sha256:d1224af3e12ede109747d595721cb0f39b90dfe6b1319bf8742c4d6f4d046d16
-    fetched: 2026-09-16
+    fetched: "2026-09-16"
   - file: catalogue/openapi/.raw/nha-2026-09-16/hiecm/user-initiated-linking.yaml
     role: upstream
     hash: sha256:8d500934ddd3e9c843446bd78a386473e5858167114c33987b355dead880ccea
-    fetched: 2026-09-16
+    fetched: "2026-09-16"
   - file: catalogue/openapi/.raw/nha-2026-09-16/hiecm/patient-share.yaml
     role: upstream
     hash: sha256:001806e1f180c8e738b82e598dc575cc53598f3c1efd10b7acc5096b83e00e37
-    fetched: 2026-09-16
+    fetched: "2026-09-16"
   - file: catalogue/openapi/.raw/nha-2026-09-16/hiecm/consent-management-data-flow.yaml
     role: upstream
     hash: sha256:78f8bc3102976944a630081e63cf34e046ee6cd337065c815473cf77b31bdbf2
-    fetched: 2026-09-16
+    fetched: "2026-09-16"
   - file: catalogue/openapi/.raw/nha-2026-09-16/hiecm/subscription.yaml
     role: upstream
     hash: sha256:7697e2f1445968038f56a8795f73fd49e73cba74ce2bc30920572c602010f7bf
-    fetched: 2026-09-16
+    fetched: "2026-09-16"
   - file: catalogue/openapi/.raw/nha-2026-09-16/hiecm/scan-and-pay.yaml
     role: upstream
     hash: sha256:3943b3b43b4f6e2e2730f5aa57aeaf2c06a8cf87172af00e8bc041b0e02a1d5e
-    fetched: 2026-09-16
+    fetched: "2026-09-16"
   - file: catalogue/openapi/.raw/nha-2026-09-16/phr/PHR and Locker Swagger.yaml
     role: upstream
     hash: sha256:678b9045b11d924983314c7b154ebe54a766a79701063e1f546cc03a44e7de33
-    fetched: 2026-09-16
+    fetched: "2026-09-16"
 servers:
   - url: https://abhasbx.abdm.gov.in
     description: ABHA service, sandbox
@@ -109,7 +109,7 @@ paths:
           required: true
           schema:
             type: string
-          example: 2022-10-06T15:10:00.587Z
+          example: "2022-10-06T15:10:00.587Z"
           description: Actual time of the request was initiated, ISO 8601 represents date and time by starting with the year, followed by the month, the day, the hour, the minutes, seconds and milliseconds
         - name: X-CM-ID
           in: header
@@ -207,7 +207,7 @@ paths:
                             dateCreated:
                               type: string
                               format: date-time
-                              example: 2024-05-09T10:34:00.387Z
+                              example: "2024-05-09T10:34:00.387Z"
         "400":
           description: Bad Request
           content:
@@ -315,7 +315,7 @@ paths:
           required: true
           schema:
             type: string
-          example: 2022-10-06T15:10:00.587Z
+          example: "2022-10-06T15:10:00.587Z"
           description: Actual time of the request was initiated, ISO 8601 represents date and time by starting with the year, followed by the month, the day, the hour, the minutes, seconds and milliseconds
         - name: X-CM-ID
           in: header
@@ -489,7 +489,7 @@ paths:
           required: true
           schema:
             type: string
-          example: 2022-10-06T15:10:00.587Z
+          example: "2022-10-06T15:10:00.587Z"
           description: Actual time of the request was initiated, ISO 8601 represents date and time by starting with the year, followed by the month, the day, the hour, the minutes, seconds and milliseconds
         - name: X-CM-ID
           in: header
@@ -693,7 +693,7 @@ paths:
           required: true
           schema:
             type: string
-          example: 2022-10-06T15:10:00.587Z
+          example: "2022-10-06T15:10:00.587Z"
           description: Actual time of the request was initiated, ISO 8601 represents date and time by starting with the year, followed by the month, the day, the hour, the minutes, seconds and milliseconds
         - name: X-CM-ID
           in: header
@@ -843,7 +843,7 @@ paths:
           required: true
           schema:
             type: string
-          example: 2022-10-06T15:10:00.587Z
+          example: "2022-10-06T15:10:00.587Z"
           description: Actual time of the request was initiated, ISO 8601 represents date and time by starting with the year, followed by the month, the day, the hour, the minutes, seconds and milliseconds
         - name: X-CM-ID
           in: header
@@ -1196,7 +1196,7 @@ paths:
           required: true
           schema:
             type: string
-          example: 2022-10-06T15:10:00.587Z
+          example: "2022-10-06T15:10:00.587Z"
           description: Actual time of the request was initiated, ISO 8601 represents date and time by starting with the year, followed by the month, the day, the hour, the minutes, seconds and milliseconds
         - name: X-CM-ID
           in: header
@@ -1272,7 +1272,7 @@ paths:
                           type: string
                           format: date-time
                           nullable: false
-                          example: 2024-09-11T07:31:02.357Z
+                          example: "2024-09-11T07:31:02.357Z"
                         counterCode:
                           type: string
                           nullable: false
@@ -1451,7 +1451,7 @@ paths:
           required: true
           schema:
             type: string
-          example: 2022-10-06T15:10:00.587Z
+          example: "2022-10-06T15:10:00.587Z"
           description: Actual time of the request was initiated, ISO 8601 represents date and time by starting with the year, followed by the month, the day, the hour, the minutes, seconds and milliseconds
         - name: X-CM-ID
           in: header
@@ -1576,13 +1576,13 @@ paths:
                                 type: string
                                 format: date-time
                                 nullable: false
-                                example: 2021-09-28T12:30:08.573Z
+                                example: "2021-09-28T12:30:08.573Z"
                                 description: Should be UTC date time in ISO format. Allows alpha numeric character and special characters like "\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}.\\d{3}Z$"
                               to:
                                 type: string
                                 format: date-time
                                 nullable: false
-                                example: 2021-09-28T12:30:08.573Z
+                                example: "2021-09-28T12:30:08.573Z"
                                 description: Should be UTC date time in ISO format. Allows alpha numeric character and special characters like "\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}.\\d{3}Z$"
                           frequency:
                             type: object
@@ -1626,7 +1626,7 @@ paths:
                             type: string
                             format: date-time
                             nullable: false
-                            example: 2021-09-28T12:30:08.573Z
+                            example: "2021-09-28T12:30:08.573Z"
                             description: The date at which the consent expire. Should be UTC date time in ISO format. Allows alpha numeric character and special characters like "\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}.\\d{3}Z$"
       responses:
         "202":
@@ -1793,7 +1793,7 @@ paths:
           required: true
           schema:
             type: string
-          example: 2022-10-06T15:10:00.587Z
+          example: "2022-10-06T15:10:00.587Z"
           description: Actual time of the request was initiated, ISO 8601 represents date and time by starting with the year, followed by the month, the day, the hour, the minutes, seconds and milliseconds
         - name: X-CM-ID
           in: header
@@ -1965,7 +1965,7 @@ paths:
           required: true
           schema:
             type: string
-          example: 2022-10-06T15:10:00.587Z
+          example: "2022-10-06T15:10:00.587Z"
           description: Actual time of the request was initiated, ISO 8601 represents date and time by starting with the year, followed by the month, the day, the hour, the minutes, seconds and milliseconds
         - name: X-CM-ID
           in: header
@@ -2141,7 +2141,7 @@ paths:
           required: true
           schema:
             type: string
-          example: 2022-10-06T15:10:00.587Z
+          example: "2022-10-06T15:10:00.587Z"
           description: Actual time of the request was initiated, ISO 8601 represents date and time by starting with the year, followed by the month, the day, the hour, the minutes, seconds and milliseconds
         - name: X-CM-ID
           in: header
@@ -2336,12 +2336,12 @@ paths:
                     type: string
                     format: date-time
                     nullable: false
-                    example: 2021-09-28T12:30:08.573Z
+                    example: "2021-09-28T12:30:08.573Z"
                   lastUpdated:
                     type: string
                     format: date-time
                     nullable: false
-                    example: 2021-09-28T12:30:08.573Z
+                    example: "2021-09-28T12:30:08.573Z"
                   hiType:
                     type: array
                     items:
@@ -2386,19 +2386,19 @@ paths:
                             type: string
                             format: date-time
                             nullable: false
-                            example: 2021-09-28T12:30:08.573Z
+                            example: "2021-09-28T12:30:08.573Z"
                             description: Should be UTC date time in ISO format
                           to:
                             type: string
                             format: date-time
                             nullable: false
-                            example: 2021-09-28T12:30:08.573Z
+                            example: "2021-09-28T12:30:08.573Z"
                             description: Should be UTC date time in ISO format
                       dataEraseAt:
                         type: string
                         format: date-time
                         nullable: false
-                        example: 2021-09-28T12:30:08.573Z
+                        example: "2021-09-28T12:30:08.573Z"
                         description: The date at which the consent expire. Should be UTC date time in ISO format
                       frequency:
                         type: object
@@ -2559,7 +2559,7 @@ paths:
           required: true
           schema:
             type: string
-          example: 2022-10-06T15:10:00.587Z
+          example: "2022-10-06T15:10:00.587Z"
           description: Actual time of the request was initiated, ISO 8601 represents date and time by starting with the year, followed by the month, the day, the hour, the minutes, seconds and milliseconds
         - name: X-CM-ID
           in: header
@@ -2791,12 +2791,12 @@ paths:
                           type: string
                           format: date-time
                           nullable: false
-                          example: 2021-09-28T12:30:08.573Z
+                          example: "2021-09-28T12:30:08.573Z"
                         lastUpdated:
                           type: string
                           format: date-time
                           nullable: false
-                          example: 2021-09-28T12:30:08.573Z
+                          example: "2021-09-28T12:30:08.573Z"
                         hiType:
                           type: array
                           items:
@@ -2841,19 +2841,19 @@ paths:
                                   type: string
                                   format: date-time
                                   nullable: false
-                                  example: 2021-09-28T12:30:08.573Z
+                                  example: "2021-09-28T12:30:08.573Z"
                                   description: Should be UTC date time in ISO format
                                 to:
                                   type: string
                                   format: date-time
                                   nullable: false
-                                  example: 2021-09-28T12:30:08.573Z
+                                  example: "2021-09-28T12:30:08.573Z"
                                   description: Should be UTC date time in ISO format
                             dataEraseAt:
                               type: string
                               format: date-time
                               nullable: false
-                              example: 2021-09-28T12:30:08.573Z
+                              example: "2021-09-28T12:30:08.573Z"
                               description: The date at which the consent expire. Should be UTC date time in ISO format
                             frequency:
                               type: object
@@ -3015,7 +3015,7 @@ paths:
           required: true
           schema:
             type: string
-          example: 2022-10-06T15:10:00.587Z
+          example: "2022-10-06T15:10:00.587Z"
           description: Actual time of the request was initiated, ISO 8601 represents date and time by starting with the year, followed by the month, the day, the hour, the minutes, seconds and milliseconds
         - name: X-CM-ID
           in: header
@@ -3228,12 +3228,12 @@ paths:
                           type: string
                           format: date-time
                           nullable: false
-                          example: 2021-09-28T12:30:08.573Z
+                          example: "2021-09-28T12:30:08.573Z"
                         lastUpdated:
                           type: string
                           format: date-time
                           nullable: false
-                          example: 2021-09-28T12:30:08.573Z
+                          example: "2021-09-28T12:30:08.573Z"
                         schemaVersion:
                           type: string
                           nullable: false
@@ -3291,19 +3291,19 @@ paths:
                                   type: string
                                   format: date-time
                                   nullable: false
-                                  example: 2021-09-28T12:30:08.573Z
+                                  example: "2021-09-28T12:30:08.573Z"
                                   description: Should be UTC date time in ISO format
                                 to:
                                   type: string
                                   format: date-time
                                   nullable: false
-                                  example: 2021-09-28T12:30:08.573Z
+                                  example: "2021-09-28T12:30:08.573Z"
                                   description: Should be UTC date time in ISO format
                             dataEraseAt:
                               type: string
                               format: date-time
                               nullable: false
-                              example: 2021-09-28T12:30:08.573Z
+                              example: "2021-09-28T12:30:08.573Z"
                               description: The date at which the consent expire. Should be UTC date time in ISO format
                             frequency:
                               type: object
@@ -3469,7 +3469,7 @@ paths:
           required: true
           schema:
             type: string
-          example: 2022-10-06T15:10:00.587Z
+          example: "2022-10-06T15:10:00.587Z"
           description: Actual time of the request was initiated, ISO 8601 represents date and time by starting with the year, followed by the month, the day, the hour, the minutes, seconds and milliseconds
         - name: X-CM-ID
           in: header
@@ -3679,12 +3679,12 @@ paths:
                         type: string
                         format: date-time
                         nullable: false
-                        example: 2021-09-28T12:30:08.573Z
+                        example: "2021-09-28T12:30:08.573Z"
                       lastUpdated:
                         type: string
                         format: date-time
                         nullable: false
-                        example: 2021-09-28T12:30:08.573Z
+                        example: "2021-09-28T12:30:08.573Z"
                       schemaVersion:
                         type: string
                         nullable: false
@@ -3742,19 +3742,19 @@ paths:
                                 type: string
                                 format: date-time
                                 nullable: false
-                                example: 2021-09-28T12:30:08.573Z
+                                example: "2021-09-28T12:30:08.573Z"
                                 description: Should be UTC date time in ISO format
                               to:
                                 type: string
                                 format: date-time
                                 nullable: false
-                                example: 2021-09-28T12:30:08.573Z
+                                example: "2021-09-28T12:30:08.573Z"
                                 description: Should be UTC date time in ISO format
                           dataEraseAt:
                             type: string
                             format: date-time
                             nullable: false
-                            example: 2021-09-28T12:30:08.573Z
+                            example: "2021-09-28T12:30:08.573Z"
                             description: The date at which the consent expire. Should be UTC date time in ISO format
                           frequency:
                             type: object
@@ -3919,7 +3919,7 @@ paths:
           required: true
           schema:
             type: string
-          example: 2022-10-06T15:10:00.587Z
+          example: "2022-10-06T15:10:00.587Z"
           description: Actual time of the request was initiated, ISO 8601 represents date and time by starting with the year, followed by the month, the day, the hour, the minutes, seconds, and milliseconds
         - name: X-CM-ID
           in: header
@@ -4161,12 +4161,12 @@ paths:
                               type: string
                               format: date-time
                               nullable: false
-                              example: 2021-09-28T12:30:08.573Z
+                              example: "2021-09-28T12:30:08.573Z"
                             lastUpdated:
                               type: string
                               format: date-time
                               nullable: false
-                              example: 2021-09-28T12:30:08.573Z
+                              example: "2021-09-28T12:30:08.573Z"
                             schemaVersion:
                               type: string
                               nullable: false
@@ -4224,19 +4224,19 @@ paths:
                                       type: string
                                       format: date-time
                                       nullable: false
-                                      example: 2021-09-28T12:30:08.573Z
+                                      example: "2021-09-28T12:30:08.573Z"
                                       description: Should be UTC date time in ISO format
                                     to:
                                       type: string
                                       format: date-time
                                       nullable: false
-                                      example: 2021-09-28T12:30:08.573Z
+                                      example: "2021-09-28T12:30:08.573Z"
                                       description: Should be UTC date time in ISO format
                                 dataEraseAt:
                                   type: string
                                   format: date-time
                                   nullable: false
-                                  example: 2021-09-28T12:30:08.573Z
+                                  example: "2021-09-28T12:30:08.573Z"
                                   description: The date at which the consent expire. Should be UTC date time in ISO format
                                 frequency:
                                   type: object
@@ -4403,7 +4403,7 @@ paths:
           required: true
           schema:
             type: string
-          example: 2022-10-06T15:10:00.587Z
+          example: "2022-10-06T15:10:00.587Z"
           description: Actual time of the request was initiated, ISO 8601 represents date and time by starting with the year, followed by the month, the day, the hour, the minutes, seconds and milliseconds
         - name: X-CM-ID
           in: header
@@ -4558,13 +4558,13 @@ paths:
                             type: string
                             format: date-time
                             nullable: false
-                            example: 2021-09-28T12:30:08.573Z
+                            example: "2021-09-28T12:30:08.573Z"
                             description: Should be UTC date time in ISO format.Allows alpha numeric and special characters like "\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}.\\d{3}Z$"
                           to:
                             type: string
                             format: date-time
                             nullable: false
-                            example: 2021-09-28T12:30:08.573Z
+                            example: "2021-09-28T12:30:08.573Z"
                             description: Should be UTC date time in ISO format.Allows alpha numeric and special characters like "\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}.\\d{3}Z$"
                 excludedSources:
                   type: array
@@ -4662,13 +4662,13 @@ paths:
                             type: string
                             format: date-time
                             nullable: false
-                            example: 2021-09-28T12:30:08.573Z
+                            example: "2021-09-28T12:30:08.573Z"
                             description: Should be UTC date time in ISO format.Allows alpha numeric and special characters like "\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}.\\d{3}Z$"
                           to:
                             type: string
                             format: date-time
                             nullable: false
-                            example: 2021-09-28T12:30:08.573Z
+                            example: "2021-09-28T12:30:08.573Z"
                             description: Should be UTC date time in ISO format. Allows alpha numeric and special characters like "\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}.\\d{3}Z$"
       responses:
         "202":
@@ -4816,7 +4816,7 @@ paths:
           required: true
           schema:
             type: string
-          example: 2022-10-06T15:10:00.587Z
+          example: "2022-10-06T15:10:00.587Z"
           description: Actual time of the request was initiated, ISO 8601 represents date and time by starting with the year, followed by the month, the day, the hour, the minutes, seconds and milliseconds
         - name: X-CM-ID
           in: header
@@ -5002,7 +5002,7 @@ paths:
           required: true
           schema:
             type: string
-          example: 2022-10-06T15:10:00.587Z
+          example: "2022-10-06T15:10:00.587Z"
           description: Actual time of the request was initiated, ISO 8601 represents date and time by starting with the year, followed by the month, the day, the hour, the minutes, seconds and milliseconds
         - name: X-CM-ID
           in: header
@@ -5188,7 +5188,7 @@ paths:
           required: true
           schema:
             type: string
-          example: 2022-10-06T15:10:00.587Z
+          example: "2022-10-06T15:10:00.587Z"
           description: Actual time of the request was initiated, ISO 8601 represents date and time by starting with the year, followed by the month, the day, the hour, the minutes, seconds and milliseconds
         - name: X-CM-ID
           in: header
@@ -5295,12 +5295,12 @@ paths:
                           type: string
                           format: date time
                           nullable: false
-                          example: 2024-05-09T10:34:00.389Z
+                          example: "2024-05-09T10:34:00.389Z"
                         lastUpdated:
                           type: string
                           format: date time
                           nullable: false
-                          example: 2024-05-09T10:34:00.389Z
+                          example: "2024-05-09T10:34:00.389Z"
                         purpose:
                           type: object
                           nullable: false
@@ -5411,13 +5411,13 @@ paths:
                               type: string
                               format: date-time
                               nullable: false
-                              example: 2024-05-09T10:34:00.389Z
+                              example: "2024-05-09T10:34:00.389Z"
                               description: UTC date time in ISO format.Allows alpha numeric character and special characters like  "\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}.\\d{3}Z$"
                             to:
                               type: string
                               format: date-time
                               nullable: false
-                              example: 2024-05-09T10:34:00.389Z
+                              example: "2024-05-09T10:34:00.389Z"
                               description: UTC date time in ISO format.Allows alpha numeric character and special characters like  "\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}.\\d{3}Z$"
                         status:
                           type: string
@@ -5558,7 +5558,7 @@ paths:
           required: true
           schema:
             type: string
-          example: 2022-10-06T15:10:00.587Z
+          example: "2022-10-06T15:10:00.587Z"
           description: Actual time of the request was initiated, ISO 8601 represents date and time by starting with the year, followed by the month, the day, the hour, the minutes, seconds and milliseconds
         - name: X-CM-ID
           in: header
@@ -5708,13 +5708,13 @@ paths:
                             type: string
                             format: date-time
                             nullable: false
-                            example: 2024-05-09T10:34:00.389Z
+                            example: "2024-05-09T10:34:00.389Z"
                             description: UTC date time in ISO format. Allows alpha numeric character and special characters like  "\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}.\\d{3}Z$"
                           to:
                             type: string
                             format: date-time
                             nullable: false
-                            example: 2024-05-09T10:34:00.389Z
+                            example: "2024-05-09T10:34:00.389Z"
                             description: UTC date time in ISO format.Allows alpha numeric character and special characters like  "\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}.\\d{3}Z$"
                 excludedSources:
                   type: array
@@ -5825,13 +5825,13 @@ paths:
                             type: string
                             format: date-time
                             nullable: false
-                            example: 2024-05-09T10:34:00.389Z
+                            example: "2024-05-09T10:34:00.389Z"
                             description: UTC date time in ISO format.Allows alpha numeric character and special characters like  "\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}.\\d{3}Z$"
                           to:
                             type: string
                             format: date-time
                             nullable: false
-                            example: 2024-05-09T10:34:00.389Z
+                            example: "2024-05-09T10:34:00.389Z"
                             description: UTC date time in ISO format.Allows alpha numeric character and special characters like  "\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}.\\d{3}Z$"
       responses:
         "202":
@@ -5970,7 +5970,7 @@ paths:
           required: true
           schema:
             type: string
-          example: 2022-10-06T15:10:00.587Z
+          example: "2022-10-06T15:10:00.587Z"
           description: Actual time of the request was initiated, ISO 8601 represents date and time by starting with the year, followed by the month, the day, the hour, the minutes, seconds and milliseconds
         - name: X-CM-ID
           in: header
@@ -6142,7 +6142,7 @@ paths:
           required: true
           schema:
             type: string
-          example: 2022-10-06T15:10:00.587Z
+          example: "2022-10-06T15:10:00.587Z"
           description: Actual time of the request was initiated, ISO 8601 represents date and time by starting with the year, followed by the month, the day, the hour, the minutes, seconds and milliseconds
         - name: X-CM-ID
           in: header
@@ -6305,13 +6305,13 @@ paths:
                                 type: string
                                 format: date-time
                                 nullable: false
-                                example: 2024-05-09T10:34:00.389Z
+                                example: "2024-05-09T10:34:00.389Z"
                                 description: UTC date time in ISO format. Allows alpha numeric character and special characters like "\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}.\\d{3}Z$"
                               to:
                                 type: string
                                 format: date-time
                                 nullable: false
-                                example: 2024-05-09T10:34:00.389Z
+                                example: "2024-05-09T10:34:00.389Z"
                                 description: UTC date time in ISO format. Allows alpha numeric character and special characters like "\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}.\\d{3}Z$"
                           status:
                             type: string
@@ -6428,13 +6428,13 @@ paths:
                                 type: string
                                 format: date-time
                                 nullable: false
-                                example: 2024-05-09T10:34:00.389Z
+                                example: "2024-05-09T10:34:00.389Z"
                                 description: UTC date time in ISO format.Allows alpha numeric character and special characters like "\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}.\\d{3}Z$"
                               to:
                                 type: string
                                 format: date-time
                                 nullable: false
-                                example: 2024-05-09T10:34:00.389Z
+                                example: "2024-05-09T10:34:00.389Z"
                                 description: UTC date time in ISO format.Allows alpha numeric character and special characters like "\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}.\\d{3}Z$"
                           status:
                             type: string
@@ -6578,7 +6578,7 @@ paths:
           required: true
           schema:
             type: string
-          example: 2022-10-06T15:10:00.587Z
+          example: "2022-10-06T15:10:00.587Z"
           description: Actual time of the request was initiated, ISO 8601 represents date and time by starting with the year, followed by the month, the day, the hour, the minutes, seconds and milliseconds
         - name: X-CM-ID
           in: header
@@ -6736,7 +6736,7 @@ paths:
           required: true
           schema:
             type: string
-          example: 2022-10-06T15:10:00.587Z
+          example: "2022-10-06T15:10:00.587Z"
           description: Actual time of the request was initiated, ISO 8601 represents date and time by starting with the year, followed by the month, the day, the hour, the minutes, seconds and milliseconds
         - name: X-CM-ID
           in: header
@@ -6894,7 +6894,7 @@ paths:
           required: true
           schema:
             type: string
-          example: 2022-10-06T15:10:00.587Z
+          example: "2022-10-06T15:10:00.587Z"
           description: Actual time of the request was initiated, ISO 8601 represents date and time by starting with the year, followed by the month, the day, the hour, the minutes, seconds and milliseconds
         - name: X-CM-ID
           in: header
@@ -6983,7 +6983,7 @@ paths:
                     type: string
                     format: date-time
                     nullable: false
-                    example: 2021-09-28T12:30:08.573Z
+                    example: "2021-09-28T12:30:08.573Z"
                   status:
                     type: string
                     enum:
@@ -6998,7 +6998,7 @@ paths:
                     type: string
                     format: date-time
                     nullable: false
-                    example: 2021-09-28T12:30:08.573Z
+                    example: "2021-09-28T12:30:08.573Z"
                   patient:
                     type: object
                     nullable: false
@@ -7103,13 +7103,13 @@ paths:
                               type: string
                               format: date-time
                               nullable: false
-                              example: 2024-05-09T10:34:00.389Z
+                              example: "2024-05-09T10:34:00.389Z"
                               description: UTC date time in ISO format
                             to:
                               type: string
                               format: date-time
                               nullable: false
-                              example: 2024-05-09T10:34:00.389Z
+                              example: "2024-05-09T10:34:00.389Z"
                               description: UTC date time in ISO format
                         status:
                           type: string
@@ -7237,7 +7237,7 @@ paths:
           required: true
           schema:
             type: string
-          example: 2022-10-06T15:10:00.587Z
+          example: "2022-10-06T15:10:00.587Z"
           description: Actual time of the request was initiated, ISO 8601 represents date and time by starting with the year, followed by the month, the day, the hour, the minutes, seconds and milliseconds
         - name: X-CM-ID
           in: header
@@ -7441,25 +7441,25 @@ paths:
                             type: string
                             format: date-time
                             nullable: false
-                            example: 2024-05-09T10:34:00.389Z
+                            example: "2024-05-09T10:34:00.389Z"
                             description: UTC date time in ISO format. Allows alpha numeric character and special characters like \\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}.\\d{3}Z$
                           to:
                             type: string
                             format: date-time
                             nullable: false
-                            example: 2024-05-09T10:34:00.389Z
+                            example: "2024-05-09T10:34:00.389Z"
                             description: UTC date time in ISO format.Allows alpha numeric character and special characters like \\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}.\\d{3}Z$
                   dateCreated:
                     type: string
                     format: date-time
                     nullable: false
-                    example: 2022-10-06T10:10:00.587Z
+                    example: "2022-10-06T10:10:00.587Z"
                     description: created date. Allows alpha numeric character and special characters like \\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}.\\d{3}Z$
                   dateModified:
                     type: string
                     format: date-time
                     nullable: false
-                    example: 2022-10-06T10:10:00.587Z
+                    example: "2022-10-06T10:10:00.587Z"
                     description: modified date.Allows alpha numeric character and special characters like \\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}.\\d{3}Z$
                   healthIdNumber:
                     type: string
@@ -7587,7 +7587,7 @@ paths:
           required: true
           schema:
             type: string
-          example: 2022-10-06T15:10:00.587Z
+          example: "2022-10-06T15:10:00.587Z"
           description: Actual time of the request was initiated, ISO 8601 represents date and time by starting with the year, followed by the month, the day, the hour, the minutes, seconds, and milliseconds
         - name: X-CM-ID
           in: header
@@ -7686,12 +7686,12 @@ paths:
                               type: string
                               format: date-time
                               nullable: false
-                              example: 2021-09-28T12:30:08.573Z
+                              example: "2021-09-28T12:30:08.573Z"
                             lastUpdated:
                               type: string
                               format: date-time
                               nullable: false
-                              example: 2021-09-28T12:30:08.573Z
+                              example: "2021-09-28T12:30:08.573Z"
                             status:
                               type: string
                               nullable: false
@@ -7891,19 +7891,19 @@ paths:
                                       type: string
                                       format: date-time
                                       nullable: false
-                                      example: 2021-09-28T12:30:08.573Z
+                                      example: "2021-09-28T12:30:08.573Z"
                                       description: Should be UTC date time in ISO format
                                     to:
                                       type: string
                                       format: date-time
                                       nullable: false
-                                      example: 2021-09-28T12:30:08.573Z
+                                      example: "2021-09-28T12:30:08.573Z"
                                       description: Should be UTC date time in ISO format
                                 dataEraseAt:
                                   type: string
                                   format: date-time
                                   nullable: false
-                                  example: 2021-09-28T12:30:08.573Z
+                                  example: "2021-09-28T12:30:08.573Z"
                                   description: The date at which the consent expire. Should be UTC date time in ISO format
                                 frequency:
                                   type: object
@@ -8093,24 +8093,24 @@ paths:
                                   type: string
                                   format: date-time
                                   nullable: false
-                                  example: 2024-05-09T10:34:00.389Z
+                                  example: "2024-05-09T10:34:00.389Z"
                                   description: UTC date time in ISO format
                                 to:
                                   type: string
                                   format: date-time
                                   nullable: false
-                                  example: 2024-05-09T10:34:00.389Z
+                                  example: "2024-05-09T10:34:00.389Z"
                                   description: UTC date time in ISO format
                             createdAt:
                               type: string
                               format: date time
                               nullable: false
-                              example: 2024-05-09T10:34:00.389Z
+                              example: "2024-05-09T10:34:00.389Z"
                             lastUpdated:
                               type: string
                               format: date time
                               nullable: false
-                              example: 2024-05-09T10:34:00.389Z
+                              example: "2024-05-09T10:34:00.389Z"
                             status:
                               type: string
                               enum:
@@ -8250,7 +8250,7 @@ paths:
           required: true
           schema:
             type: string
-          example: 2022-10-06T15:10:00.587Z
+          example: "2022-10-06T15:10:00.587Z"
           description: Actual time of the request was initiated, ISO 8601 represents date and time by starting with the year, followed by the month, the day, the hour, the minutes, seconds, and milliseconds
         - name: X-CM-ID
           in: header
@@ -8299,7 +8299,7 @@ paths:
                     type: string
                     format: date-time
                     nullable: false
-                    example: 2021-09-28T12:30:08.573Z
+                    example: "2021-09-28T12:30:08.573Z"
                   subscriptions:
                     type: array
                     items:
@@ -8371,12 +8371,12 @@ paths:
                           type: string
                           format: date-time
                           nullable: false
-                          example: 2021-09-28T12:30:08.573Z
+                          example: "2021-09-28T12:30:08.573Z"
                         dateGranted:
                           type: string
                           format: date-time
                           nullable: false
-                          example: 2021-09-28T12:30:08.573Z
+                          example: "2021-09-28T12:30:08.573Z"
                         patient:
                           type: object
                           nullable: false
@@ -8517,13 +8517,13 @@ paths:
                                     type: string
                                     format: date-time
                                     nullable: false
-                                    example: 2024-05-09T10:34:00.389Z
+                                    example: "2024-05-09T10:34:00.389Z"
                                     description: UTC date time in ISO format
                                   to:
                                     type: string
                                     format: date-time
                                     nullable: false
-                                    example: 2024-05-09T10:34:00.389Z
+                                    example: "2024-05-09T10:34:00.389Z"
                                     description: UTC date time in ISO format
                               status:
                                 type: string
@@ -8561,12 +8561,12 @@ paths:
                           type: string
                           format: date-time
                           nullable: false
-                          example: 2021-09-28T12:30:08.573Z
+                          example: "2021-09-28T12:30:08.573Z"
                         dateModified:
                           type: string
                           format: date-time
                           nullable: false
-                          example: 2021-09-28T12:30:08.573Z
+                          example: "2021-09-28T12:30:08.573Z"
                         policy:
                           type: object
                           required:
@@ -8708,13 +8708,13 @@ paths:
                                         type: string
                                         format: date-time
                                         nullable: false
-                                        example: 2024-05-09T10:34:00.389Z
+                                        example: "2024-05-09T10:34:00.389Z"
                                         description: UTC date time in ISO format
                                       to:
                                         type: string
                                         format: date-time
                                         nullable: false
-                                        example: 2024-05-09T10:34:00.389Z
+                                        example: "2024-05-09T10:34:00.389Z"
                                         description: UTC date time in ISO format
                                   status:
                                     type: string
@@ -8830,13 +8830,13 @@ paths:
                                         type: string
                                         format: date-time
                                         nullable: false
-                                        example: 2024-05-09T10:34:00.389Z
+                                        example: "2024-05-09T10:34:00.389Z"
                                         description: UTC date time in ISO format
                                       to:
                                         type: string
                                         format: date-time
                                         nullable: false
-                                        example: 2024-05-09T10:34:00.389Z
+                                        example: "2024-05-09T10:34:00.389Z"
                                         description: UTC date time in ISO format
                                   status:
                                     type: string
@@ -8964,7 +8964,7 @@ paths:
           required: true
           schema:
             type: string
-          example: 2022-10-06T15:10:00.587Z
+          example: "2022-10-06T15:10:00.587Z"
           description: Actual time of the request was initiated, ISO 8601 represents date and time by starting with the year, followed by the month, the day, the hour, the minutes, seconds, and milliseconds
         - name: X-CM-ID
           in: header
@@ -9020,7 +9020,7 @@ paths:
                     dateCreated:
                       type: string
                       nullable: false
-                      example: 2024-03-15T01:49:16.316Z
+                      example: "2024-03-15T01:49:16.316Z"
                       description: Should be UTC date time in ISO format. Allows alpha numeric character and special characters like "\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}.\\d{3}Z$"
                     dateModified:
                       type: string
@@ -9104,7 +9104,7 @@ paths:
           required: true
           schema:
             type: string
-          example: 2022-10-06T15:10:00.587Z
+          example: "2022-10-06T15:10:00.587Z"
           description: Actual time of the request was initiated, ISO 8601 represents date and time by starting with the year, followed by the month, the day, the hour, the minutes, seconds and milliseconds.
         - name: X-CM-ID
           in: header
@@ -9402,7 +9402,7 @@ paths:
           required: true
           schema:
             type: string
-          example: 2022-10-06T15:10:00.587Z
+          example: "2022-10-06T15:10:00.587Z"
           description: Actual time of the request was initiated, ISO 8601 represents date and time by starting with the year, followed by the month, the day, the hour, the minutes, seconds and milliseconds.
         - name: X-CM-ID
           in: header
@@ -9657,7 +9657,7 @@ paths:
           required: true
           schema:
             type: string
-          example: 2022-10-06T15:10:00.587Z
+          example: "2022-10-06T15:10:00.587Z"
           description: Actual time of the request was initiated, ISO 8601 represents date and time by starting with the year, followed by the month, the day, the hour, the minutes, seconds and milliseconds.
         - name: X-CM-ID
           in: header
@@ -9721,7 +9721,7 @@ paths:
                         paymentDate:
                           type: string
                           nullable: false
-                          example: 2025-01-20T07:47:49.102Z
+                          example: "2025-01-20T07:47:49.102Z"
                           description: ISO Timestamp.
                         paymentRecipetLink:
                           type: string
@@ -9902,7 +9902,7 @@ paths:
           required: true
           schema:
             type: string
-          example: 2022-10-06T15:10:00.587Z
+          example: "2022-10-06T15:10:00.587Z"
           description: Actual time of the request was initiated, ISO 8601 represents date and time by starting with the year, followed by the month, the day, the hour, the minutes, seconds and milliseconds.
         - name: X-CM-ID
           in: header
@@ -10113,7 +10113,7 @@ paths:
           schema:
             type: string
             format: date-time
-          example: 2022-10-06T15:10:00.587Z
+          example: "2022-10-06T15:10:00.587Z"
       requestBody:
         required: true
         content:
@@ -10307,7 +10307,7 @@ paths:
                       dayOfBirth: "14"
                       monthOfBirth: "11"
                       yearOfBirth: "1998"
-                      dateOfBirth: 14-11-1978
+                      dateOfBirth: "14-11-1978"
                       gender: M
                       email: joh**********@example.com
                       mobile: "******1234"
@@ -10338,7 +10338,7 @@ paths:
                       dayOfBirth: "14"
                       monthOfBirth: "11"
                       yearOfBirth: "1976"
-                      dateOfBirth: 14-11-1976
+                      dateOfBirth: "14-11-1976"
                       gender: M
                       email: johndoe@example.com
                       mobile: "******0903"
@@ -10369,7 +10369,7 @@ paths:
                       dayOfBirth: "14"
                       monthOfBirth: "11"
                       yearOfBirth: "1976"
-                      dateOfBirth: 14-11-1976
+                      dateOfBirth: "14-11-1976"
                       gender: M
                       email: johndoe@example.com
                       mobile: "******0903"
@@ -10499,7 +10499,7 @@ paths:
           schema:
             type: string
             format: date-time
-          example: 2022-10-06T15:10:00.587Z
+          example: "2022-10-06T15:10:00.587Z"
       responses:
         "200":
           description: OK
@@ -10599,7 +10599,7 @@ paths:
           schema:
             type: string
             format: date-time
-          example: 2022-10-06T15:10:00.587Z
+          example: "2022-10-06T15:10:00.587Z"
       requestBody:
         required: true
         content:
@@ -10761,7 +10761,7 @@ paths:
           schema:
             type: string
             format: date-time
-          example: 2022-10-06T15:10:00.587Z
+          example: "2022-10-06T15:10:00.587Z"
       requestBody:
         required: true
         content:
@@ -10960,7 +10960,7 @@ paths:
           schema:
             type: string
             format: date-time
-          example: 2022-10-06T15:10:00.587Z
+          example: "2022-10-06T15:10:00.587Z"
       requestBody:
         required: true
         content:
@@ -11377,7 +11377,7 @@ paths:
           schema:
             type: string
             format: date-time
-          example: 2022-10-06T15:10:00.587Z
+          example: "2022-10-06T15:10:00.587Z"
       responses:
         "200":
           description: OK
@@ -11449,7 +11449,7 @@ paths:
                     dayOfBirth: "14"
                     monthOfBirth: "11"
                     yearOfBirth: "1995"
-                    dateOfBirth: 14-11-1995
+                    dateOfBirth: "14-11-1995"
                     gender: M
                     email: johndoe@example.com
                     mobile: "******0903"
@@ -11530,7 +11530,7 @@ paths:
           schema:
             type: string
             format: date-time
-          example: 2022-10-06T15:10:00.587Z
+          example: "2022-10-06T15:10:00.587Z"
       requestBody:
         required: true
         content:
@@ -11657,7 +11657,7 @@ paths:
           schema:
             type: string
             format: date-time
-          example: 2022-10-06T15:10:00.587Z
+          example: "2022-10-06T15:10:00.587Z"
       responses:
         "202":
           description: Accepted
@@ -11718,7 +11718,7 @@ paths:
           schema:
             type: string
             format: date-time
-          example: 2022-10-06T15:10:00.587Z
+          example: "2022-10-06T15:10:00.587Z"
       responses:
         "202":
           description: Accepted
@@ -11779,7 +11779,7 @@ paths:
           schema:
             type: string
             format: date-time
-          example: 2022-10-06T15:10:00.587Z
+          example: "2022-10-06T15:10:00.587Z"
       responses:
         "200":
           description: OK
@@ -11797,7 +11797,7 @@ paths:
                 Logout:
                   value:
                     message: You have been logged out
-                    timestamp: 2023-07-27T13:36:28.000Z
+                    timestamp: "2023-07-27T13:36:28.000Z"
         "401":
           description: Unauthorized
           content:
@@ -11861,7 +11861,7 @@ paths:
           schema:
             type: string
             format: date-time
-          example: 2022-10-06T15:10:00.587Z
+          example: "2022-10-06T15:10:00.587Z"
       requestBody:
         required: true
         content:
@@ -12083,7 +12083,7 @@ paths:
           schema:
             type: string
             format: date-time
-          example: 2022-10-06T15:10:00.587Z
+          example: "2022-10-06T15:10:00.587Z"
       responses:
         "200":
           description: OK
@@ -12168,7 +12168,7 @@ paths:
           schema:
             type: string
             format: date-time
-          example: 2022-10-06T15:10:00.587Z
+          example: "2022-10-06T15:10:00.587Z"
       responses:
         "200":
           description: OK
@@ -12263,7 +12263,7 @@ paths:
           schema:
             type: string
             format: date-time
-          example: 2022-10-06T15:10:00.587Z
+          example: "2022-10-06T15:10:00.587Z"
       requestBody:
         required: true
         content:
@@ -12394,7 +12394,7 @@ paths:
                     dayOfBirth: "14"
                     monthOfBirth: "11"
                     yearOfBirth: "1995"
-                    dateOfBirth: 14-11-1995
+                    dateOfBirth: "14-11-1995"
                     gender: M
                     email: ""
                     mobile: "******0903"
@@ -12511,7 +12511,7 @@ paths:
           schema:
             type: string
             format: date-time
-          example: 2022-10-06T15:10:00.587Z
+          example: "2022-10-06T15:10:00.587Z"
       requestBody:
         required: true
         content:
@@ -13041,7 +13041,7 @@ paths:
           schema:
             type: string
             format: date-time
-          example: 2022-10-06T15:10:00.587Z
+          example: "2022-10-06T15:10:00.587Z"
       requestBody:
         required: true
         content:
@@ -13143,7 +13143,7 @@ paths:
           schema:
             type: string
             format: date-time
-          example: 2022-10-06T15:10:00.587Z
+          example: "2022-10-06T15:10:00.587Z"
       responses:
         default:
           description: No response was saved in the Postman collection and no documented definition exists.
@@ -13182,7 +13182,7 @@ paths:
           schema:
             type: string
             format: date-time
-          example: 2022-10-06T15:10:00.587Z
+          example: "2022-10-06T15:10:00.587Z"
       requestBody:
         required: true
         content:
@@ -13476,7 +13476,7 @@ paths:
           schema:
             type: string
             format: date-time
-          example: 2022-10-06T15:10:00.587Z
+          example: "2022-10-06T15:10:00.587Z"
       requestBody:
         required: true
         content:
@@ -13628,7 +13628,7 @@ paths:
           schema:
             type: string
             format: date-time
-          example: 2022-10-06T15:10:00.587Z
+          example: "2022-10-06T15:10:00.587Z"
       requestBody:
         required: true
         content:
@@ -14343,7 +14343,7 @@ paths:
           schema:
             type: string
             format: date-time
-          example: 2022-10-06T15:10:00.587Z
+          example: "2022-10-06T15:10:00.587Z"
       requestBody:
         required: true
         content:
@@ -14534,7 +14534,7 @@ paths:
           schema:
             type: string
             format: date-time
-          example: 2022-10-06T15:10:00.587Z
+          example: "2022-10-06T15:10:00.587Z"
         - name: X-token
           in: header
           required: true
@@ -14596,7 +14596,7 @@ paths:
           schema:
             type: string
             format: date-time
-          example: 2022-10-06T15:10:00.587Z
+          example: "2022-10-06T15:10:00.587Z"
         - name: X-CM-ID
           in: header
           required: true
@@ -14675,7 +14675,7 @@ webhooks:
           required: true
           schema:
             type: string
-          example: 2022-10-06T15:10:00.587Z
+          example: "2022-10-06T15:10:00.587Z"
           description: Actual time of the request was initiated, ISO 8601 represents date and time by starting with the year, followed by the month, the day, the hour, the minutes, seconds and milliseconds
         - name: X-HIU-ID
           in: header
@@ -14765,7 +14765,7 @@ webhooks:
                   type: string
                   format: date-time
                   nullable: false
-                  example: 2024-12-31T05:45:35.429Z
+                  example: "2024-12-31T05:45:35.429Z"
                 error:
                   type: object
                   description: The error code and message, if any occurred.
@@ -14856,7 +14856,7 @@ webhooks:
                   createdAt:
                     type: string
                     format: date-time
-                    example: 2023-06-13T08:05:43.030Z
+                    example: "2023-06-13T08:05:43.030Z"
                   response:
                     type: object
                     properties:
@@ -14875,7 +14875,7 @@ webhooks:
                             display: 123-display
                         hiType: Prescription
                         count: 1
-                    createdAt: 2023-06-13T08:05:43.030Z
+                    createdAt: "2023-06-13T08:05:43.030Z"
                     response:
                       requestId: d89525a2-3a3f-4d39-98b5-477afb1865f6
                 Invalid Gender:
@@ -14987,7 +14987,7 @@ webhooks:
           required: true
           schema:
             type: string
-          example: 2022-10-06T15:10:00.587Z
+          example: "2022-10-06T15:10:00.587Z"
           description: Actual time of the request was initiated, ISO 8601 represents date and time by starting with the year, followed by the month, the day, the hour, the minutes, seconds and milliseconds
         - name: X-HIU-ID
           in: header
@@ -15061,7 +15061,7 @@ webhooks:
                           type: string
                           format: date-time
                           nullable: false
-                          example: 2024-05-01T05:22:34.123Z
+                          example: "2024-05-01T05:22:34.123Z"
                           description: The communication expiry date. Should be UTC date in ISO format.Allows alpha numeric characters and special characters like "^[a-zA-Z0-9_\\-@,. \"':|()/]{0,255}$
                 error:
                   type: object
@@ -15202,7 +15202,7 @@ webhooks:
           required: true
           schema:
             type: string
-          example: 2022-10-06T15:10:00.587Z
+          example: "2022-10-06T15:10:00.587Z"
           description: Actual time of the request was initiated, ISO 8601 represents date and time by starting with the year, followed by the month, the day, the hour, the minutes, seconds and milliseconds
         - name: X-HIU-ID
           in: header
@@ -15419,7 +15419,7 @@ webhooks:
           required: true
           schema:
             type: string
-          example: 2022-10-06T15:10:00.587Z
+          example: "2022-10-06T15:10:00.587Z"
           description: Actual time of the request was initiated, ISO 8601 represents date and time by starting with the year, followed by the month, the day, the hour, the minutes, seconds and milliseconds
         - name: X-HIU-ID
           in: header
@@ -15651,7 +15651,7 @@ webhooks:
           required: true
           schema:
             type: string
-          example: 2022-10-06T15:10:00.587Z
+          example: "2022-10-06T15:10:00.587Z"
           description: Actual time of the request was initiated, ISO 8601 represents date and time by starting with the year, followed by the month, the day, the hour, the minutes, seconds and milliseconds.
         - name: X-HIU-ID
           in: header
@@ -15883,7 +15883,7 @@ webhooks:
           required: true
           schema:
             type: string
-          example: 2022-10-06T15:10:00.587Z
+          example: "2022-10-06T15:10:00.587Z"
           description: Actual time of the request was initiated, ISO 8601 represents date and time by starting with the year, followed by the month, the day, the hour, the minutes, seconds and milliseconds.
         - name: X-HIU-ID
           in: header
@@ -16154,7 +16154,7 @@ webhooks:
           required: true
           schema:
             type: string
-          example: 2022-10-06T15:10:00.587Z
+          example: "2022-10-06T15:10:00.587Z"
           description: Actual time of the request was initiated, ISO 8601 represents date and time by starting with the year, followed by the month, the day, the hour, the minutes, seconds and milliseconds.
         - name: X-HIU-ID
           in: header
@@ -16216,7 +16216,7 @@ webhooks:
                     paymentDate:
                       type: string
                       nullable: false
-                      example: 2025-01-20T07:47:49.102Z
+                      example: "2025-01-20T07:47:49.102Z"
                       description: ISO Timestamp.
                     paymentRecipetLink:
                       type: string
@@ -16345,7 +16345,7 @@ webhooks:
           required: true
           schema:
             type: string
-          example: 2022-10-06T15:10:00.587Z
+          example: "2022-10-06T15:10:00.587Z"
           description: Actual time of the request was initiated, ISO 8601 represents date and time by starting with the year, followed by the month, the day, the hour, the minutes, seconds and milliseconds.
         - name: X-HIU-ID
           in: header

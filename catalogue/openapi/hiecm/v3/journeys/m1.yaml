@@ -1,4 +1,5 @@
 # catalogue/openapi/hiecm/v3/journeys/m1.yaml
+# Identifiers are encrypted locally under the public certificate before the search call; the helper endpoint in the collection is not part of the final set.
 # Order of calls from the M1 collection of 15 September. Content from the
 # M1 swagger of 16 September. Each ABHA creation method is its own journey
 # so the shared calls appear under every method with that method's example.
@@ -186,6 +187,7 @@
   steps:
     - {op: m1_post_v3_profile_account_abha_search}
     - {op: m1_post_v3_profile_login_request_otp, example: Find ABHA Via Biometric (Face) - Send Face Authentication Request}
+    - {op: m1_post_v3_enrollment_enrol_capturepid, example: Capture PID}
     - {op: m1_post_v3_profile_login_verify, example: Verify Login via Biometric - Face}
 
 - id: m1-find-iris
