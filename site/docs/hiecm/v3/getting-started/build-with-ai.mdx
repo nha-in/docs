@@ -4,7 +4,7 @@ sidebar_label: Build with AI
 sidebar_position: 4
 description: Set a coding agent up to build your ABDM integration, from a one-file skill to live retrieval over MCP.
 verification: unverified
-source: scripts/build-skills.mjs, plugins/abdm-integrators-assistant/skills
+source: NHA content review of 15 September 2026 (landing page, Build with AI), scripts/build-skills.mjs, plugins/abdm-integrators-assistant/skills
 sidebar_class_name: sidebar-icon sidebar-icon--bot
 ---
 
@@ -18,17 +18,25 @@ import {FileText, Sparkles} from 'lucide-react';
 
 # Build with AI
 
+Use ABDM documentation with AI-assisted development tools. Developers may use
+supported AI-assisted tools to search ABDM integration guides, API references
+and milestone-specific documentation while building their solution.
+
+:::note
+Review all AI-generated code against the official ABDM documentation and test it in the Sandbox.
+:::
+
 Every fact on this site is a public URL. There are three ways to put it in front of your agent, and they combine: the plugin is the one command that sets up the other two.
 
 <CardGroup cols={3}>
-  <Card title="Docs MCP server" tag="Recommended" icon="server" href="#connect-the-docs-mcp-server">
-    This documentation live, queried a paragraph at a time as your agent works. It cannot go stale, because it is this site answering.
+  <Card title="Search the documentation (MCP server)" tag="Recommended" icon="server" href="#connect-the-docs-mcp-server">
+    Use the documentation service while developing to find API endpoints, review request formats and understand error codes.
   </Card>
-  <Card title="AI plugin" icon="puzzle" href="#install-the-plugin">
-    One command that sets your agent up with both of the others: the skills as files, the server as a connection.
+  <Card title="Set up your coding assistant" icon="puzzle" href="#install-the-plugin">
+    Follow the setup guide to connect a supported coding assistant with the ABDM documentation and begin using it for integration support.
   </Card>
-  <Card title="Agent skills" icon="file-text" href="#install-a-skill">
-    One file per job, carrying a whole milestone: every endpoint, header, error code and test. Works offline, and ages until you update it.
+  <Card title="Use milestone-specific guidance" icon="file-text" href="#install-a-skill">
+    Provide the coding assistant with the relevant references for ABHA, record linking, consent, registries or FHIR bundles.
   </Card>
 </CardGroup>
 
