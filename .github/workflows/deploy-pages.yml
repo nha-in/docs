@@ -1,9 +1,15 @@
 name: deploy-pages
 
-# Publishes main to the root of gh-pages, so the site is readable at
-# https://nha-in.github.io/docs/ while hosting on NHA's own domain is set up
-# (deploy/nha/site-hosting.md). PR previews keep living under pr-<number>/
-# on the same branch; see pr-preview.yml.
+# Publishes main to main/ on gh-pages, so the site is readable at
+# https://nha-in.github.io/docs/main/ while hosting on NHA's own domain is set up
+# (deploy/nha/site-hosting.md). PR previews live beside it under pr-<number>/;
+# see pr-preview.yml.
+#
+# Not the branch root: the repository is named docs, so a root deploy has the
+# base /docs/, and Docusaurus leaves any link already starting with the base
+# unprefixed. Every /docs/... link then resolves outside the site and the
+# build fails on broken links. A subfolder base, as the previews use, does not
+# collide.
 #
 # One-time setting: Settings -> Pages -> Deploy from a branch ->
 # gh-pages, / (root).
@@ -36,20 +42,16 @@ jobs:
 
       - run: npm ci
 
-      - name: Build the site for the Pages path
+      - name: Build the site for the main/ path
         env:
           DOCUSAURUS_URL: https://${{ github.repository_owner }}.github.io
-          DOCUSAURUS_BASE_URL: /${{ github.event.repository.name }}/
+          DOCUSAURUS_BASE_URL: /${{ github.event.repository.name }}/main/
         run: npm run build
 
-      - name: Publish to the root of gh-pages
+      - name: Publish to gh-pages under main/
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: site/build
-          # ponytail: keep_files leaves pr-<number>/ previews in place, but also
-          # leaves files a later build no longer produces. Harmless for review;
-          # switch to a clean publish with the previews re-pushed if stale
-          # pages ever matter.
-          keep_files: true
+          destination_dir: main
           commit_message: "deploy: main ${{ github.sha }}"
