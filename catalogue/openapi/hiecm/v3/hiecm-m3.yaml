@@ -2432,6 +2432,4 @@ x-abdm-errors:
       Self Requested
     action: Fix request
     name: UNKNOWN_EXCEPTION
-  source: Code, message and error name are as published. The action column
-    reads the message text by a documented rule, and says Unclassified where
-    the rule could not classify one.
+  source: Code, message and error name are as published. The heading each code sits under reads the message text by a documented rule, and says Unclassified where the rule could not classify one.
