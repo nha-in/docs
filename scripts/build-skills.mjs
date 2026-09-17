@@ -31,14 +31,20 @@ const outDir = join(root, 'site', 'static', 'skills');
 // copy is stale and heal it. The version is the same catalogue/VERSION the
 // MCP indexer stamps into its snapshot, so the two surfaces are comparable.
 const catalogueVersion = readFileSync(join(root, 'catalogue', 'VERSION'), 'utf8').trim();
-const buildDate = new Date().toISOString().slice(0, 10);
-// The site build exports DOCUSAURUS_URL; without it (a local dev run) the
-// header falls back to naming the path, which is still enough to act on.
+// No clock: a date read from the system would make plugins/abdm-integrators-
+// assistant/skills/** (committed) change on every build, in every
+// environment, forever. catalogue/VERSION ("2026.09.16") is the date the
+// catalogue itself was cut, so it is stable input, not a clock, and it
+// doubles as the date site/static/skills/** (gitignored) prints too.
+const buildDate = catalogueVersion.replace(/\./g, '-');
+// The site build exports DOCUSAURUS_URL; without it (a local dev run, or the
+// frozen render below) the header falls back to naming the path, which is
+// still enough to act on.
 const siteUrl = process.env.DOCUSAURUS_URL
   ? `${process.env.DOCUSAURUS_URL}${process.env.DOCUSAURUS_BASE_URL ?? '/'}`.replace(/\/+$/, '')
   : null;
-const skillUrl = (slug) =>
-  siteUrl ? `${siteUrl}/skills/${slug}/SKILL.md` : `the portal's /skills/${slug}/SKILL.md path`;
+const skillUrl = (slug, url) =>
+  url ? `${url}/skills/${slug}/SKILL.md` : `the portal's /skills/${slug}/SKILL.md path`;
 
 // Every rule below is lifted from that module's own pages. A rule that is true
 // of M1 and not of M2 belongs to M1 only: an agent told the wrong rule is
@@ -254,9 +260,20 @@ const MODULES = [
   },
 ];
 
-const operations = readdirSync(dataDir)
-  .filter((file) => file.endsWith('.json'))
-  .map((file) => JSON.parse(readFileSync(join(dataDir, file), 'utf8')))
+// build-api-reference.mjs writes one JSON file per operation and then one
+// more per journey step that names it (same operationId, a `journey` field
+// added). Reading the directory raw counts an operation once per journey
+// that walks it, so a gateway call used by four journeys counted four times
+// over. Dedupe by operationId first, keeping the base file (no `journey`
+// field) when one exists, so every operation appears here exactly once.
+const byOperationId = new Map();
+for (const file of readdirSync(dataDir)) {
+  if (!file.endsWith('.json')) continue;
+  const op = JSON.parse(readFileSync(join(dataDir, file), 'utf8'));
+  const existing = byOperationId.get(op.id);
+  if (!existing || (existing.journey && !op.journey)) byOperationId.set(op.id, op);
+}
+const operations = [...byOperationId.values()]
   // An operation a journey names carries no tag, because it is read through
   // the journey. The skill still lists every operation, so group those here.
   .map((op) => ({...op, tag: op.tag ?? 'Other operations'}));
@@ -274,7 +291,7 @@ function moduleCodes(module) {
   return existsSync(path) ? errorsFromSpec(parse(readFileSync(path, 'utf8'))) : [];
 }
 
-function build(module) {
+function build(module, url) {
   const mine = operations
     .filter((op) => op.moduleId === module.id || op.moduleId === 'gateway')
     .sort((a, b) => a.tag.localeCompare(b.tag) || a.path.localeCompare(b.path));
@@ -301,7 +318,7 @@ function build(module) {
   );
   lines.push('');
   lines.push(
-    `This file is a snapshot. Re-download it from ${skillUrl(module.slug)} when it is older than the work you are doing.`,
+    `This file is a snapshot. Re-download it from ${skillUrl(module.slug, url)} when it is older than the work you are doing.`,
   );
   lines.push(
     'If the abdm-docs MCP server is connected, trust its answers over this file: it serves the current catalogue and stamps every response with its catalogue_version, which you can compare against the version above.',
@@ -527,6 +544,10 @@ const FOLD = Object.fromEntries(
   ]),
 );
 
+// Wiping the whole directory before writing only the modules MODULES still
+// names is the pruning: a module dropped from the list above leaves no
+// abdm-<slug> folder behind in either place that ships skills, because
+// nothing gets a chance to survive the rmSync.
 rmSync(outDir, {recursive: true, force: true});
 mkdirSync(outDir, {recursive: true});
 
@@ -537,15 +558,23 @@ const pluginDir = join(root, 'plugins', 'abdm-integrators-assistant', 'skills');
 rmSync(pluginDir, {recursive: true, force: true});
 mkdirSync(pluginDir, {recursive: true});
 
-/** Writes one skill folder to both places that ship it. */
-function emit(name, files) {
-  for (const base of [outDir, pluginDir]) {
+/**
+ * Writes one skill folder to both places that ship it. `files` goes to
+ * site/static/skills (gitignored, free to carry the environment's
+ * DOCUSAURUS_URL); `pluginFiles` goes to the committed plugin copy, which
+ * must render the same regardless of who runs the build, so it defaults to
+ * `files` but a caller with URL-bearing content passes the frozen version.
+ */
+function emit(name, files, pluginFiles = files) {
+  const write = (base, entries) => {
     const folder = join(base, name);
     mkdirSync(join(folder, 'references'), {recursive: true});
-    for (const [path, body] of Object.entries(files)) {
+    for (const [path, body] of Object.entries(entries)) {
       writeFileSync(join(folder, path), body.endsWith('\n') ? body : `${body}\n`);
     }
-  }
+  };
+  write(outDir, files);
+  write(pluginDir, pluginFiles);
 }
 
 // What each skill actually turned out to carry. The page renders its capability
@@ -554,7 +583,11 @@ function emit(name, files) {
 const manifest = {};
 
 for (const module of MODULES) {
-  const whole = build(module);
+  const whole = build(module, siteUrl);
+  // Same content, but the one line naming a canonical URL falls back to
+  // naming the path instead: this is what the committed plugin copy renders,
+  // so it reads the same whether DOCUSAURUS_URL was set at build time or not.
+  const wholeFrozen = build(module, null);
   const parts = sections(whole);
   const fold = FOLD[module.slug] ?? {};
 
@@ -619,32 +652,36 @@ for (const module of MODULES) {
     );
   }
 
-  files['SKILL.md'] = [
-    head(whole),
-    '',
-    `## What you can do with ${module.title.split(',')[0]}`,
-    '',
-    ...capabilities(module),
-    '',
-    '## What is in this folder',
-    '',
-    // Five files and no clue which to open. Say what each one answers.
-    ...covers,
-    '',
-    'This file is the map. Each line above is a file beside it, opened one at a time rather than read through.',
-    '',
-    parts.get('Before anything else'),
-    '',
-    '## Practices that hold across every call',
-    '',
-    ...PRACTICES.map((practice) => `- ${practice}`),
-    '',
-    parts.get('Where the detail is'),
-  ]
-    .filter((part) => part !== undefined)
-    .join('\n');
+  const skillMd = (headText) =>
+    [
+      headText,
+      '',
+      `## What you can do with ${module.title.split(',')[0]}`,
+      '',
+      ...capabilities(module),
+      '',
+      '## What is in this folder',
+      '',
+      // Five files and no clue which to open. Say what each one answers.
+      ...covers,
+      '',
+      'This file is the map. Each line above is a file beside it, opened one at a time rather than read through.',
+      '',
+      parts.get('Before anything else'),
+      '',
+      '## Practices that hold across every call',
+      '',
+      ...PRACTICES.map((practice) => `- ${practice}`),
+      '',
+      parts.get('Where the detail is'),
+    ]
+      .filter((part) => part !== undefined)
+      .join('\n');
 
-  emit(module.slug, files);
+  files['SKILL.md'] = skillMd(head(whole));
+  const pluginFiles = {...files, 'SKILL.md': skillMd(head(wholeFrozen))};
+
+  emit(module.slug, files, pluginFiles);
 
   manifest[module.slug] = {
     module: module.title.split(',')[0],
@@ -684,34 +721,37 @@ for (const [section, source, what] of FHIR_REFS) {
     `- **${section[0].toUpperCase()}${section.slice(1)}.** ${what} [references/${section}.md](references/${section}.md)`,
   );
 }
-fhirFiles['SKILL.md'] = [
-  '---',
-  'name: abdm-fhir',
-  'description: Use when producing or checking FHIR for ABDM: building NRCES compliant document bundle generation into a codebase, or auditing the bundles an existing FHIR store already emits. Covers the resource profiles ABDM requires, the Composition rules, and the validator to check against.',
-  '---',
-  '',
-  '# ABDM FHIR',
-  '',
-  `Generated from the ABDM Developer Portal on ${buildDate}, catalogue version ${catalogueVersion}.`,
-  '',
-  `This file is a snapshot. Re-download it from ${skillUrl('abdm-fhir')} when it is older than the work you are doing.`,
-  '',
-  '## What this skill covers',
-  '',
-  ...fhirCovers,
-  '',
-  'Open one when the work calls for it. This file is the map, not the material.',
-  '',
-  '## Before anything else',
-  '',
-  `- ${UNVERIFIED}`,
-  '- A bundle that validates is not a bundle ABDM accepts. The NRCES profiles are the floor, and the milestone the bundle travels under adds its own rules.',
-  '',
-  '## Practices that hold across every call',
-  '',
-  ...PRACTICES.map((practice) => `- ${practice}`),
-].join('\n');
-emit('abdm-fhir', fhirFiles);
+const fhirSkillMd = (url) =>
+  [
+    '---',
+    'name: abdm-fhir',
+    'description: Use when producing or checking FHIR for ABDM: building NRCES compliant document bundle generation into a codebase, or auditing the bundles an existing FHIR store already emits. Covers the resource profiles ABDM requires, the Composition rules, and the validator to check against.',
+    '---',
+    '',
+    '# ABDM FHIR',
+    '',
+    `Generated from the ABDM Developer Portal on ${buildDate}, catalogue version ${catalogueVersion}.`,
+    '',
+    `This file is a snapshot. Re-download it from ${skillUrl('abdm-fhir', url)} when it is older than the work you are doing.`,
+    '',
+    '## What this skill covers',
+    '',
+    ...fhirCovers,
+    '',
+    'Open one when the work calls for it. This file is the map, not the material.',
+    '',
+    '## Before anything else',
+    '',
+    `- ${UNVERIFIED}`,
+    '- A bundle that validates is not a bundle ABDM accepts. The NRCES profiles are the floor, and the milestone the bundle travels under adds its own rules.',
+    '',
+    '## Practices that hold across every call',
+    '',
+    ...PRACTICES.map((practice) => `- ${practice}`),
+  ].join('\n');
+fhirFiles['SKILL.md'] = fhirSkillMd(siteUrl);
+const fhirPluginFiles = {...fhirFiles, 'SKILL.md': fhirSkillMd(null)};
+emit('abdm-fhir', fhirFiles, fhirPluginFiles);
 manifest['abdm-fhir'] = {
   module: 'FHIR',
   title: 'FHIR, generating and auditing bundles',

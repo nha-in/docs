@@ -1,7 +1,7 @@
 // Compiles the guided loops under skills-src/<name>/ from the journeys and
 // the specifications. build-skills.mjs folds each into its module's skill.
 //   node scripts/compile-skills.mjs
-import {mkdirSync, writeFileSync, readFileSync, existsSync} from 'node:fs';
+import {mkdirSync, writeFileSync, readFileSync, existsSync, readdirSync, rmSync, statSync} from 'node:fs';
 import {join} from 'node:path';
 import {parse} from 'yaml';
 import {root} from './lib/atoms.mjs';
@@ -70,6 +70,19 @@ function debugSkill(module, codes) {
     ...codes.map((e) => `### ${e.code}\n\n**Observed as** HTTP ${e.http}, \`${e.message}\`, on \`${e.operationId}\`.\n\n**Exit condition: the original call now succeeds.**\n`),
     '## Where the detail is', '', `- The operation that returns each code: /docs/hiecm/v3/api/${module}`, '',
   ].join('\n');
+}
+
+// A module retired from MODULES above used to leave its hiecm-<id>-build
+// and hiecm-<id>-debug folders sitting here forever, since this script only
+// ever wrote, never removed. Prune any such folder for a module that is no
+// longer current before writing fresh ones. fhir-audit, fhir-generate and
+// README.md are hand-authored, never module-named, and untouched.
+for (const entry of readdirSync(outDir)) {
+  const match = entry.match(/^hiecm-(.+)-(build|debug)$/);
+  if (match && !(match[1] in MODULES) && statSync(join(outDir, entry)).isDirectory()) {
+    rmSync(join(outDir, entry), {recursive: true, force: true});
+    console.log(`Removed stale skills-src/${entry} (module "${match[1]}" no longer exists).`);
+  }
 }
 
 for (const module of Object.keys(MODULES)) {

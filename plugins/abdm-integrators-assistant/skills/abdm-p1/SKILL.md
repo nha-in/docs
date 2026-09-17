@@ -5,7 +5,7 @@ description: Use when building, debugging or testing ABDM P1 in a PHR app: creat
 
 # ABDM P1, PHR registration and login
 
-Generated from the ABDM Developer Portal on 2026-09-17, catalogue version 2026.09.16. Every fact below comes from a page in that portal, which is the place to look when this file does not carry enough.
+Generated from the ABDM Developer Portal on 2026-09-16, catalogue version 2026.09.16. Every fact below comes from a page in that portal, which is the place to look when this file does not carry enough.
 
 This file is a snapshot. Re-download it from the portal's /skills/abdm-p1/SKILL.md path when it is older than the work you are doing.
 If the abdm-docs MCP server is connected, trust its answers over this file: it serves the current catalogue and stamps every response with its catalogue_version, which you can compare against the version above.
@@ -16,7 +16,7 @@ If the abdm-docs MCP server is connected, trust its answers over this file: it s
 ## What is in this folder
 
 - **Scaffold.** Build it flow by flow against the sandbox, as a loop that ends on an observed result rather than on a call returning 200. [references/scaffold.md](references/scaffold.md)
-- **Integrate.** 50 operations, with their hosts and headers. [references/integrate.md](references/integrate.md)
+- **Integrate.** 22 operations, with their hosts and headers. [references/integrate.md](references/integrate.md)
 - **Debug.** The loop from a failed call to a named fix, and 4 recorded error codes. [references/debug.md](references/debug.md)
 
 This file is the map. Each line above is a file beside it, opened one at a time rather than read through.

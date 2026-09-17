@@ -8,55 +8,30 @@ The calls themselves: where they live, what they need in their headers, and one 
 - `https://apis.abdm.gov.in` ABDM gateway, production
 ## Endpoints
 
-44 operations, grouped by the journey they belong to.
+19 operations, grouped by the journey they belong to.
 
 ### Other operations
 
 | Method | Path | What it does |
 | --- | --- | --- |
 | `GET` | `/api/hiecm/gateway/v3/.well-known/openid-configuration` | This API is invoked to get the open id configuration. |
-| `GET` | `/api/hiecm/gateway/v3/.well-known/openid-configuration` | This API is invoked to get the open id configuration. |
-| `PUT` | `/api/hiecm/gateway/v3/bridge-service` | v3/gateway/bridge-service |
 | `PUT` | `/api/hiecm/gateway/v3/bridge-service` | v3/gateway/bridge-service |
 | `GET` | `/api/hiecm/gateway/v3/bridge-service/serviceId/{service-id}` | This API is invoked to fetch the details of a service id. |
-| `GET` | `/api/hiecm/gateway/v3/bridge-service/serviceId/{service-id}` | This API is invoked to fetch the details of a service id. |
-| `GET` | `/api/hiecm/gateway/v3/bridge-services` | This API will fetch the service ids registered against a bridge. |
 | `GET` | `/api/hiecm/gateway/v3/bridge-services` | This API will fetch the service ids registered against a bridge. |
 | `PATCH` | `/api/hiecm/gateway/v3/bridge/url` | This API is invoked to update the bridge URL. |
-| `PATCH` | `/api/hiecm/gateway/v3/bridge/url` | This API is invoked to update the bridge URL. |
-| `GET` | `/api/hiecm/gateway/v3/certs` | This API is invoked to get the certificate information. |
 | `GET` | `/api/hiecm/gateway/v3/certs` | This API is invoked to get the certificate information. |
 | `GET` | `/api/hiecm/gateway/v3/govt-programs` | This API is invoked to fetch the list of govt programs. |
-| `GET` | `/api/hiecm/gateway/v3/govt-programs` | This API is invoked to fetch the list of govt programs. |
-| `GET` | `/api/hiecm/gateway/v3/health-lockers` | This API is invoked to fetch the record with health locker enabled provider det… |
 | `GET` | `/api/hiecm/gateway/v3/health-lockers` | This API is invoked to fetch the record with health locker enabled provider det… |
 | `GET` | `/api/hiecm/gateway/v3/providers` | This API is invoked to fetch the list of providers filtered by name. |
-| `GET` | `/api/hiecm/gateway/v3/providers` | This API is invoked to fetch the list of providers filtered by name. |
-| `GET` | `/api/hiecm/gateway/v3/providers/{provider-id}` | This API is invoked to fetch the record for provider details for requested prov… |
 | `GET` | `/api/hiecm/gateway/v3/providers/{provider-id}` | This API is invoked to fetch the record for provider details for requested prov… |
 | `POST` | `/api/hiecm/gateway/v3/sessions` | This API is invoked to generate keycloak token/access token. |
-| `POST` | `/api/hiecm/gateway/v3/sessions` | This API is invoked to generate keycloak token/access token. |
-| `POST` | `/api/hiecm/gateway/v3/sessions` | This API is invoked to generate keycloak token/access token. |
-| `POST` | `/api/hiecm/gateway/v3/sessions` | This API is invoked to generate keycloak token/access token. |
-| `POST` | `/api/hiecm/gateway/v3/sessions` | This API is invoked to generate keycloak token/access token. |
-| `POST` | `/api/hiecm/gateway/v3/sessions` | This API is invoked to generate keycloak token/access token. |
-| `POST` | `/api/hiecm/gateway/v3/sessions` | This API is invoked to generate keycloak token/access token. |
-| `POST` | `/api/hiecm/gateway/v3/sessions` | This API is invoked to generate keycloak token/access token. |
-| `POST` | `/api/hiecm/subscription-requests/v3/{request-id}/approve` | This API will be invoked by the patient/user from PHR application to approve su… |
 | `POST` | `/api/hiecm/subscription-requests/v3/{request-id}/approve` | This API will be invoked by the patient/user from PHR application to approve su… |
 | `POST` | `/api/hiecm/subscription-requests/v3/{request-id}/deny` | This API will be invoked by the patient/user from PHR application to deny subsc… |
-| `POST` | `/api/hiecm/subscription-requests/v3/{request-id}/deny` | This API will be invoked by the patient/user from PHR application to deny subsc… |
-| `GET` | `/api/hiecm/subscription-requests/v3/{subscription-id}` | This API will be invoked by the patient/user from PHR application to fetch his/… |
 | `GET` | `/api/hiecm/subscription-requests/v3/{subscription-id}` | This API will be invoked by the patient/user from PHR application to fetch his/… |
 | `POST` | `/api/hiecm/subscription-requests/v3/disable/{subscription-id}` | This API will be invoked to disable the subscription by subscription id. |
-| `POST` | `/api/hiecm/subscription-requests/v3/disable/{subscription-id}` | This API will be invoked to disable the subscription by subscription id. |
-| `POST` | `/api/hiecm/subscription-requests/v3/enable/{subscription-id}` | This API will be invoked to enable the subscription by subscription id. |
 | `POST` | `/api/hiecm/subscription-requests/v3/enable/{subscription-id}` | This API will be invoked to enable the subscription by subscription id. |
 | `PUT` | `/api/hiecm/subscription-requests/v3/patients/{subscription-id}` | This API will be invoked to edit the subscription details. |
-| `PUT` | `/api/hiecm/subscription-requests/v3/patients/{subscription-id}` | This API will be invoked to edit the subscription details. |
 | `GET` | `/api/hiecm/subscription-requests/v3/request/{request-id}` | This API will be invoked by the patient/user from PHR application to fetch his/… |
-| `GET` | `/api/hiecm/subscription-requests/v3/request/{request-id}` | This API will be invoked by the patient/user from PHR application to fetch his/… |
-| `GET` | `/api/hiecm/subscription-requests/v3/requests` | This API will be invoked by the patient/user from PHR application to fetch his/… |
 | `GET` | `/api/hiecm/subscription-requests/v3/requests` | This API will be invoked by the patient/user from PHR application to fetch his/… |
 ## Headers
 

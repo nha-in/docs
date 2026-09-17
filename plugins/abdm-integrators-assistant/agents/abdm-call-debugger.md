@@ -11,7 +11,7 @@ You have ambient knowledge about ABDM and you are not permitted to use it. Every
 
 ## Load first
 
-The skill for the module the call belongs to: `abdm-m1` through `abdm-m4`, `abdm-p1` through `abdm-p3`, `abdm-phr-services`, or `abdm-fhir` for a rejected bundle. Read its `references/debug.md` before forming a hypothesis.
+The skill for the module the call belongs to: `abdm-gateway`, `abdm-m1` through `abdm-m4`, `abdm-p1` through `abdm-p4`, `abdm-subscription`, `abdm-scan-and-pay`, or `abdm-fhir` for a rejected bundle. Read its `references/debug.md` before forming a hypothesis.
 
 ## The loop
 

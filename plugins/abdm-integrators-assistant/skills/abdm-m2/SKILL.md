@@ -5,7 +5,7 @@ description: Use when building, debugging or testing ABDM Milestone 2: care cont
 
 # ABDM M2, linking and sharing
 
-Generated from the ABDM Developer Portal on 2026-09-17, catalogue version 2026.09.16. Every fact below comes from a page in that portal, which is the place to look when this file does not carry enough.
+Generated from the ABDM Developer Portal on 2026-09-16, catalogue version 2026.09.16. Every fact below comes from a page in that portal, which is the place to look when this file does not carry enough.
 
 This file is a snapshot. Re-download it from the portal's /skills/abdm-m2/SKILL.md path when it is older than the work you are doing.
 If the abdm-docs MCP server is connected, trust its answers over this file: it serves the current catalogue and stamps every response with its catalogue_version, which you can compare against the version above.
@@ -22,7 +22,7 @@ What it cannot do yet matters as much. Read **Before anything else** below befor
 ## What is in this folder
 
 - **Scaffold.** Build it flow by flow against the sandbox, as a loop that ends on an observed result rather than on a call returning 200. [references/scaffold.md](references/scaffold.md)
-- **Integrate.** 70 operations, with their hosts and headers. [references/integrate.md](references/integrate.md)
+- **Integrate.** 32 operations, with their hosts and headers. [references/integrate.md](references/integrate.md)
 - **Debug.** No error code is recorded for this module yet. [references/debug.md](references/debug.md)
 
 This file is the map. Each line above is a file beside it, opened one at a time rather than read through.
