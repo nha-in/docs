@@ -45,7 +45,7 @@ The gateway holds no health record. It routes the permission and the metadata.
 
 ## The session endpoint
 
-One endpoint issues the token every other call carries. It is the call [M1](/docs/hiecm/v3/getting-started/glossary#m1) uses. [M4](/docs/hiecm/v3/getting-started/glossary#m4) takes its token from `POST /getManagementToken` instead.
+One endpoint issues the token every other call carries. It is the call [M1](/docs/hiecm/v3/getting-started/glossary#m1) uses. [M4](/docs/hiecm/v3/getting-started/glossary#m4) declares bearer authentication, and its HPID calls publish `POST /getManagementToken`.
 
 **POST** `/api/hiecm/gateway/v3/sessions`
 
@@ -90,12 +90,11 @@ Send the token back as `Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>`
 
 ## Which host
 
-Three hosts serve gateway paths.
+Two hosts serve gateway paths.
 
 | Host | Environment |
 |---|---|
 | `https://dev.abdm.gov.in` | Sandbox |
-| `https://apissbx.abdm.gov.in` | Sandbox, on the sessions call |
 | `https://apis.abdm.gov.in` | Production |
 
 Keep the host in configuration, not in code.

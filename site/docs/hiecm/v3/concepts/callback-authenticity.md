@@ -1,7 +1,7 @@
 ---
 title: Proving a callback came from ABDM
 sidebar_label: Callback authenticity
-description: Your callback URL is a public address, so anything can post to it. How ABDM signs what it sends, and how to check that before your handler acts.
+description: Your callback URL is a public address, so anything can post to it. How ABDM authenticates what it sends, and how to check that before your handler acts.
 verification: unverified
 source: catalogue/openapi/hiecm/v3/hiecm-gateway.yaml
 sidebar_position: 10
@@ -15,7 +15,7 @@ sidebar_class_name: sidebar-icon sidebar-icon--signature
 
 - Your callback URL is a public address. Anything on the internet can post to
   it, and a POST arriving there tells you nothing about who sent it.
-- ABDM signs its callbacks. The gateway publishes the public keys at
+- ABDM callbacks declare bearer authentication. The gateway publishes the public keys at
   `/api/hiecm/gateway/v3/certs`, as a JSON Web Key Set, and that endpoint
   needs an access token.
 - Verify every callback before your handler does any work. Pin the algorithm
@@ -34,8 +34,8 @@ artefact](./consent) saying somebody agreed, an instruction to transfer
 records to a given address. A system that acts on whatever arrives will act on
 whatever an attacker sends.
 
-ABDM signs the callbacks it sends, and publishes the public keys that verify
-those signatures. You fetch the keys once, cache them, and check the signature
+ABDM callbacks declare bearer authentication, and the gateway publishes the
+public keys that verify the token. You fetch the keys once, cache them, and check the signature
 on every callback before your handler does anything.
 
 :::note[Two different signatures]

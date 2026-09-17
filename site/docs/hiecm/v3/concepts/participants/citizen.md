@@ -25,7 +25,7 @@ Ayushman Bharat Health Account. It has two parts.
 | What it does | Anchors one person to one number | Routes records and consent requests to you |
 
 You can hold an address without a number, created from a mobile number, name,
-age and gender. That profile is self declared and carries no KYC.
+year of birth and gender. That profile is self declared and carries no KYC.
 
 A [PHR](/docs/hiecm/v3/getting-started/glossary#phr) app holds your account and
 acts for you. Hospitals, laboratories and pharmacies address records to your

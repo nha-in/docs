@@ -25,8 +25,8 @@ names the person a patient is booking: the doctor in a consultation.
 ## Two forms of the same identifier
 
 The practitioner appears two ways in the same sample.
-`agent.id` carries the readable address, `priyamehra@hpr.ndhm`. The tag block beside it carries
-the numeric ID, `@abdm/gov.in/hpr_id`, as `73-5232-1888-8686`.
+`agent.id` carries the readable address, `<HPR_ADDRESS>`. The tag block beside it carries
+the numeric ID, `@abdm/gov.in/hpr_id`, as `<HPR_ID>`.
 
 Send the address in `agent.id`. The tag is optional, and it sits with the other practitioner tags
 The same block also carries: `@abdm/gov.in/experience`, `/languages`, `/education`, `/hpr_id`,

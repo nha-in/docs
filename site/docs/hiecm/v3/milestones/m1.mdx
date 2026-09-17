@@ -221,7 +221,7 @@ Email verification sits between the mobile step and the address step. It is opti
 
 <LegacyAnchor id="journey-2-abha-creation-by-face-authentication" />
 
-Some people cannot use the OTP route, usually because the mobile registered against their Aadhaar is no longer theirs. Face authentication is the optional alternative. The person authenticates their face through the Aadhaar registered device (RD) service on their own phone, which is how the transaction moves from your screen to theirs.
+Some people cannot use the OTP route, usually because the mobile registered against their Aadhaar is no longer theirs. Face authentication is the optional alternative. The person authenticates their face in the ABHA app on their own phone, which is how the transaction moves from your screen to theirs.
 
 Face, fingerprint and iris each have their own request body on the enrolment call,
 `POST /v3/enrollment/enrol/byAadhaar`. The reference has one sequence per method:
@@ -234,7 +234,7 @@ sequenceDiagram
     autonumber
     actor P as Person with the ABHA app
     participant S as Your system
-    participant R as Aadhaar RD service
+    participant R as ABHA app face capture
     participant A as ABHA service
     S->>A: Start enrolment authentication
     A-->>S: Transaction id
@@ -289,8 +289,7 @@ routes and optional on this one. The default address is the fourteen digit
 number followed by `@sbx` or `@abdm`, which nobody can remember, so offer the
 person a readable address anyway.
 
-The specification calls the programmes that use this route integrated
-programmes. What a demographic mismatch returns, field by field, is not
+What a demographic mismatch returns, field by field, is not
 published.
 
 ### Create a child ABHA
@@ -440,9 +439,7 @@ reference](/reference/hiecm-p1), written up as [creating an ABHA
 address](/docs/hiecm/v3/milestones/p1#creating-an-abha-address).
 
 The person verifies the mobile number by OTP, then types the demographics the
-ABHA service would otherwise have taken from Aadhaar. First name, year of birth,
-gender, address, state, district and pin code are mandatory; middle name, last
-name and the day and month of birth are not. Before creating anything, list the
+ABHA service would otherwise have taken from Aadhaar. Before creating anything, list the
 addresses already linked to that mobile number and let the person pick one: a
 second address for somebody who already has one is the most common thing that
 goes wrong here.

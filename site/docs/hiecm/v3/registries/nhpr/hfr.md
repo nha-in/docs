@@ -24,7 +24,7 @@ Three layers, one call each.
 
 | Layer | What goes in it |
 | --- | --- |
-| Basic information | Name, ownership and its subtypes, system of medicine, facility type and subtype, speciality type, operational status, type of service, the full address as codes, latitude and longitude, contact details, opening days and hours, and two mandatory photographs of the board and the building |
+| Basic information | Name, ownership and its subtypes, system of medicine, facility type and subtype, speciality type, operational status, type of service, the full address as codes, latitude and longitude, contact details, opening days and hours, and two photographs of the board and the building |
 | Additional information | Yes or no flags for a dialysis centre, pharmacy, blood bank, cath lab, diagnostic lab and imaging centre, plus scheme identifiers the facility already holds: NHRR, NIN, AB-PMJAY, Rohini, ECHS, CGHS, CEA registration and a state insurance scheme ID |
 | Detailed information | Specialities per system of medicine, and the sections that apply to this facility type: medical infrastructure and bed counts, pharmacy details, blood bank details, diagnostic services, imaging services |
 
@@ -52,9 +52,9 @@ To update a facility later, send the same calls with the facility ID or tracking
 
 ## The link to the HPR token
 
-Your client credentials are not enough. Basic facility information takes an **HPR token in the `x-hprid-auth` header**, generated from an HPR ID and password. Submit facility takes **`x-hprid-auth` and `x-hprid-auth-verifier` headers**. Obtain both from the HPR token flow, and set each header by the name the call asks for.
+Your client credentials are not enough. Basic facility information takes an **HPR token in the `x-hprid-auth` header**, generated from an HPR ID and password. Submit facility takes **`x-hprid-auth` and `x-hprid-auth-verifier` headers**. Obtain them from the HPR token flow, and set each header by the name the call asks for.
 
-Both come from a person, not from your application. That is why [HPR](/docs/hiecm/v3/registries/nhpr/hpr) comes first in a rollout, and why somebody in your organisation needs an [HPID](/docs/hiecm/v3/getting-started/glossary#hpid) with facility manager rights, role 2 or role 3, before you write a line of HFR code.
+They come from a person, not from your application. That is why [HPR](/docs/hiecm/v3/registries/nhpr/hpr) comes first in a rollout, and why somebody in your organisation needs an [HPID](/docs/hiecm/v3/getting-started/glossary#hpid) with facility manager rights, role 2 or role 3, before you write a line of HFR code.
 
 ## The facility ID
 
@@ -79,7 +79,7 @@ The HIP name is the one field a patient sees. It is the name shown in the [ABHA]
 | --- | --- |
 | Deduplicate search | Name, district and sub district, before creating a record |
 | Search facility | By facility ID, or by ownership code, state LGD code and facility name. Fuzzy on the name, exact on everything else, paginated |
-| Nearby search | Latitude, longitude and a radius in kilometres, with optional filters for ownership, speciality and ABDM enabled. Results are ordered nearest first |
+| Nearby search | Latitude, longitude and a radius in kilometres, with optional filters for ownership, speciality and `abdmSoftware`. Results are ordered nearest first |
 | Send and validate OTP to contact | Sends an [OTP](/docs/hiecm/v3/getting-started/glossary#otp) to the mobile number registered against a facility, then validates it. This proves control of a facility record you did not create |
 
 Base URLs for every call on this page are on [NHPR](/docs/hiecm/v3/registries/nhpr).

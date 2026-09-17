@@ -52,7 +52,7 @@ raised anywhere on the network arrives in your app, and the decision is made
 there.
 
 The [HIE-CM](/docs/hiecm/v3/getting-started/glossary#hie-cm) tells you when a
-care context is created or updated for a subscribed address, so records reach
+care context is linked or updated for a subscribed address, so records reach
 your user without them chasing a facility. You then store those records for the
 long term, which no other participant does on the citizen's behalf.
 

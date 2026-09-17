@@ -45,9 +45,8 @@ holds.
   mandatory.
 - Get a fresh HPR token later, by password, by mobile
   [OTP](/docs/hiecm/v3/getting-started/glossary#otp) or by Aadhaar OTP.
-- With role 2 or role 3, register your facility on the HFR. The create call
-  takes an HPR token in the header, and the submit call takes an `x-hprid-auth`
-  token.
+- With role 2 or role 3, register your facility on the HFR. Both calls take
+  `x-hprid-auth`, and submit also takes `x-hprid-auth-verifier`.
 
 Records themselves carry a `Practitioner` resource inside the
 [FHIR](/docs/hiecm/v3/getting-started/glossary#fhir) bundle, so the professional

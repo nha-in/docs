@@ -119,7 +119,7 @@ POST https://uhigatewaysandbox.abdm.gov.in/api/v1/uhi/search
 | --- | --- | --- | --- |
 | `fulfillment.type` | string | Yes | `Physical`. Case sensitive |
 | `fulfillment.agent.name` | string | No | Doctor name, for a name search |
-| `fulfillment.agent.id` | string | No | Doctor [HPR](/docs/uhi/v1/getting-started/glossary#hpr) address, for example `drmehra@hpr.ndhm` |
+| `fulfillment.agent.id` | string | No | Doctor [HPR](/docs/uhi/v1/getting-started/glossary#hpr) address, for example `<HPR_ADDRESS>` |
 | `fulfillment.start.time.timestamp` | datetime | Yes | Start of the search window |
 | `fulfillment.end.time.timestamp` | datetime | Yes | End of the search window |
 | `item.descriptor.code` | string | Yes | `Consultation` |
@@ -239,7 +239,7 @@ Trimmed to one provider:
                   "@abdm/gov.in/experience": "8.0",
                   "@abdm/gov.in/languages": "Hindi, English",
                   "@abdm/gov.in/education": "MBBS, MD Cardiology",
-                  "@abdm/gov.in/hpr_id": "73-5232-1888-8686"
+                  "@abdm/gov.in/hpr_id": "<HPR_ID>"
                 }
               },
               "start": { "time": { "timestamp": "2026-04-16T10:00:00" } },

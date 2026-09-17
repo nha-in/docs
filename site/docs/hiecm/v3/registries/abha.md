@@ -35,7 +35,7 @@ Verification runs against Aadhaar through the ABHA service, so your system never
 | Route | How the person proves identity | Private integrators | Government integrators |
 | --- | --- | --- | --- |
 | Aadhaar [OTP](/docs/hiecm/v3/getting-started/glossary#otp) | A code sent to the Aadhaar linked mobile number | Mandatory | Mandatory |
-| Face authentication | A QR code scanned in the ABHA app, then face capture through the Aadhaar RD service | Optional | Optional |
+| Face authentication | A QR code scanned in the ABHA app, then face capture in the ABHA app | Optional | Optional |
 | Biometrics | Fingerprint or IRIS on a registered device, which returns a signed PID block | Optional | Optional |
 | Demographic authentication | Name, date of birth and gender matched against Aadhaar | Not required | Mandatory |
 
@@ -59,7 +59,6 @@ These rules apply:
 
 - Letters, numbers, one optional dot and one optional underscore are allowed.
 - It cannot begin or end with a dot.
-- An all numeric address is allowed only in the `14digit@abdm` default form.
 - A 10 digit mobile number as an address is restricted and not created.
 - It is 8 to 18 characters long.
 
@@ -70,8 +69,6 @@ produces a failure the person cannot act on. Letters, digits, a single dot and a
 single underscore are allowed, and beyond that:
 
 - It cannot begin or end with a dot.
-- An all digit address is allowed for an ABHA number and nothing else, which
-  is what makes the default `14digit@abdm` legal.
 
 Three shapes read as though they should work and do not. A ten digit mobile
 number as an address is restricted. An ABHA number as an address you create is
@@ -81,7 +78,7 @@ refused at creation rather than at submission.
 
 A password is created alongside the address: at least 8 characters, at least
 one uppercase letter, one digit and one special character from
-`!@#$%^&*-`, no spaces, and no more than two consecutive characters or keyboard keys. NHA
+`!@#$^*_-`, no spaces, and no more than two consecutive characters or keyboard keys. NHA
 describes enforcing it as optional for the application, not the password
 itself as optional.
 

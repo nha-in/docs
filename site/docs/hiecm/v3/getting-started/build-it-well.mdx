@@ -125,9 +125,9 @@ for each whether your form shows it, locks it or lets a receptionist correct it.
 | Profile field | Goes to | Editable in your form |
 | --- | --- | --- |
 | `ABHANumber`, `preferredAbhaAddress` | The patient's ABDM identity, and the key you match on later | Never |
-| `name`, `firstName`, `middleName`, `lastName` | Patient name. Keep the parts, not only the joined string | Only on a Self-Declared profile |
-| `dayOfBirth`, `monthOfBirth`, `yearOfBirth` | Date of birth, assembled by you | Only on a Self-Declared profile |
-| `gender` | Gender, for example `M` or `F` | Only on a Self-Declared profile |
+| `name`, `firstName`, `middleName`, `lastName` | Patient name. Keep the parts, not only the joined string | Only when `kycVerified` is false |
+| `dayOfBirth`, `monthOfBirth`, `yearOfBirth` | Date of birth, assembled by you | Only when `kycVerified` is false |
+| `gender` | Gender, for example `M` or `F` | Only when `kycVerified` is false |
 | `mobile` | Contact number | Yes, it is the communication number and people change it |
 | `address`, `pincode`, `stateName`, `districtName`, `subdistrictName` | Address. The `*Code` twins are the machine values, keep both | Yes |
 | `stateCode`, `districtCode` | Your own reporting, which should key on codes rather than names | Never |
@@ -138,12 +138,11 @@ for each whether your form shows it, locks it or lets a receptionist correct it.
 | `localizedDetails` | The same details in the person's own language, where NHA holds them | Never |
 
 `kycVerified` is the field the form design hangs off. A
-[KYC verified profile](/docs/hiecm/v3/milestones/m1#abha-with-aadhaar) was proved
+[profile with `kycVerified` true](/docs/hiecm/v3/milestones/m1#abha-with-aadhaar) was proved
 against Aadhaar, so its demographics are better evidence than anything typed at a
 desk and your form should lock them. A
-[Self-Declared profile](/docs/hiecm/v3/milestones/m1#abha-address-with-a-mobile-number)
-is what the person typed themselves, so it is correctable, and it becomes KYC
-verified in place if they link an ABHA number later.
+[profile with `kycVerified` false](/docs/hiecm/v3/milestones/m1#abha-address-with-a-mobile-number)
+was not proved against Aadhaar, so it is correctable.
 
 Two traps. Several of these fields can come back null, so a form that renders a blank labelled row for
 each is worse than one that hides them. And the profile comes back in more than

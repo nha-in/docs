@@ -67,9 +67,6 @@ request id, the `REQUEST-ID` from the init call, the `TIMESTAMP`, and
 the status response. See [what to put in a support request](/docs/hiecm/v3/troubleshooting#what-to-put-in-a-support-request) for the full report
 format.
 
-This symptom can surface as an invalid or non-existent ABHA address on
-the [error codes reference](/docs/hiecm/v3/reference/error-codes).
-
 <a class="next-step" href="/docs/hiecm/v3/concepts/consent">
 <span class="next-step__eyebrow">Next</span>
 <span class="next-step__label">Still stuck? Read Consent end to end</span>

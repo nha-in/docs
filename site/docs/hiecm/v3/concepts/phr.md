@@ -28,7 +28,7 @@ record sharing hang off it. There are six jobs:
 | Job | What the user sees |
 | --- | --- |
 | Create or link an ABHA address | Register with a mobile number, or with an existing 14 digit ABHA number |
-| Log in | Mobile number, ABHA address, default `14digit@abdm` address, or ABHA number |
+| Log in | Mobile number, ABHA address, or ABHA number |
 | Manage a profile | Demographics, photo, password, QR code, downloadable ABHA card |
 | Share a profile at a facility | Scan the facility QR code, consent, receive a queue token |
 | Find and link past records | Search a facility, discover [care contexts](/docs/hiecm/v3/getting-started/glossary#care-context), verify by [OTP](/docs/hiecm/v3/getting-started/glossary#otp), link |
@@ -58,10 +58,6 @@ Build both paths.
 | Mobile number | Mobile OTP | The user types them | **Self-Declared**, no [KYC](/docs/hiecm/v3/getting-started/glossary#kyc) |
 | 14 digit ABHA number | Aadhaar OTP or ABHA OTP | Returned by the ABHA system | **KYC Verified** |
 
-On the mobile number path, first name, year of birth, gender, address, state,
-district and pin code are mandatory; middle name, last name, day and month of
-birth are optional.
-
 After validation on either path, show the ABHA addresses already linked to that
 mobile number or ABHA number, so the user picks one instead of creating a
 duplicate. ABDM wants one address per person.
@@ -70,14 +66,13 @@ Address rules:
 
 - Letters, numbers, one optional dot and one optional underscore.
 - Starts and ends with a letter or number, 8 to 18 characters long.
-- All numeric is allowed only for the `14digit@abdm` form.
 - Creating a `10digitmobile@abdm` address is currently blocked.
 - Creating a `14digit@abdm` address is not allowed, but a user can log in with
   one. Every 14 digit ABHA number is issued a default address of this shape,
   written as `14digit@sbx` or `14digit@abdm`. Which environment uses which
   suffix is not documented yet.
 - Password, where you collect one: 8 characters or longer, one A to Z, one digit,
-  one special character from `!@#$%^&*-`, no spaces, no more than 2 consecutive characters or
+  one special character from `!@#$^*_-`, no spaces, no more than 2 consecutive characters or
   keyboard keys. Password validation is now optional.
 
 ### Linking an ABHA number to an ABHA address
@@ -91,14 +86,13 @@ ABHA number, the number becomes visible, and the status changes to KYC Verified.
 
 ### Login
 
-All four routes are mandatory.
+All these routes are mandatory.
 
 | Route | Validated by |
 | --- | --- |
 | Mobile number | Mobile OTP, then the user picks which linked ABHA address to sign in as |
-| An easy to remember address such as `name@abdm` | Password, mobile OTP or Aadhaar OTP, by auth mode |
-| The default `14digit@abdm` address | Mobile OTP or Aadhaar OTP |
-| The 14 digit ABHA number | Mobile OTP or Aadhaar OTP |
+| An easy to remember address such as `name@abdm` | Password, mobile OTP or email OTP, by the auth methods the address supports |
+| The 14 digit ABHA number | ABHA OTP or Aadhaar OTP |
 
 Resend OTP unlocks after 60 seconds in every flow. You also need a reset password
 screen behind login with a confirmation message, secure storage of the refresh
@@ -148,11 +142,11 @@ A subscription is how your app hears about changes to a user's ABHA address. Set
 one up when you create an ABHA address, and when a user logs in with an address
 your install has not seen. Ask the user for consent first.
 
-An approved subscription notifies your app of a new care context, a modified care
-context, a new consent request and a new subscription request. Surface these as
+An approved subscription notifies your app when a care context is linked or
+updated. Surface these as
 device notifications, for example through Firebase on Android. You need screens to
 list subscriptions, approve, deny and edit them, where editing covers health
-information types, types of visit and the time period.
+information types, purpose, categories and the time period.
 
 ### Auto approval
 
@@ -207,8 +201,8 @@ NHA expects a PHR app to set one up at two moments, when it creates an address
 and when a person signs in with an address it has not seen before. The person
 must be asked to consent to it; signing in does not imply it.
 
-Once approved, four events arrive: a new care context, a modified care
-context, a new consent request, and a new subscription request. Showing them
+Once approved, a notification arrives when a care context is linked or
+updated. Showing it
 on the device is your job.
 
 A request sits in exactly one state, and the same five carry consent requests,
@@ -249,8 +243,7 @@ registered mobile number, and on successful verification the care contexts link 
 the ABHA address.
 
 The same flow works for government health programmes such as CoWIN, AB-PMJAY,
-e-Sanjeevani OPD, e-Sanjeevani HWC and RCH, with a programme specific optional
-field such as the PMJAY ID or the CoWIN registered mobile number.
+e-Sanjeevani OPD, e-Sanjeevani HWC and RCH.
 
 Three failures have specified copy:
 

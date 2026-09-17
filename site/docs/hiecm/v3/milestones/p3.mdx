@@ -37,8 +37,7 @@ that side.
 ## Subscriptions and notifications
 
 Ask the user for consent before you create a subscription. An approved
-subscription notifies your app of a new care context, a modified care context,
-a new consent request and a new subscription request. Surface these as device
+subscription notifies your app when a care context is linked or updated. Surface these as device
 notifications.
 
 You need screens to list subscriptions, approve them, deny them and edit them.
@@ -52,7 +51,6 @@ Editing covers health information types, purpose, categories and the time period
    automatically.
 2. Set up an auto approval policy with the
    [HIE-CM](/docs/hiecm/v3/getting-started/glossary#hie-cm).
-3. Save the auto approval ID the HIE-CM returns.
 
 While the policy is active, the consent request you raise on a new or updated
 care context notification is granted immediately, and you fetch and store the

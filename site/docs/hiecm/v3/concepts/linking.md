@@ -53,28 +53,25 @@ An unlinked record is not private. It is absent.
 
 Link as soon as the health record is ready to be shared, not when the visit opens and not at the end of the month.
 
-Whenever a care context is linked, or an existing one gains new records, the HIE-CM notifies every PHR application subscribed to that ABHA address. You do not send those notifications. You trigger them by linking.
+Whenever a care context is linked, or an existing one gains new records, the HIE-CM notifies each HIU subscribed to that patient. You do not send those notifications. You trigger them by linking.
 
-## Three routes onto the map
+## Two routes onto the map
 
 Which route applies depends on what the patient gave you at registration.
 
 | Route | When it applies | Who starts it |
 | --- | --- | --- |
 | [HIP](/docs/hiecm/v3/getting-started/glossary#hip) initiated linking | The patient shared their ABHA address with you | You |
-| Notification to mobile | You hold a mobile number, name, age and gender, but no ABHA address | You, and then the patient |
 | [Discovery](/docs/hiecm/v3/getting-started/glossary#discovery) and link | The patient goes looking for old records from their PHR app | The patient |
 
 **HIP initiated linking.** You know who the patient is, so you assign each new record to a care context and link it against their ABHA address.
-
-**Notification to mobile.** With no ABHA address to link to, you tell ABDM a record is ready. ABDM sends the patient an SMS with a secure deep link, which opens their PHR app or sends them to install one, where they can create an ABHA address, discover the record and link it. This route converts into the third one.
 
 **Discovery and link.** The request comes to you. The patient picks the facility they visited in their PHR app, and the HIE-CM forwards a discovery request to the [HRP](/docs/hiecm/v3/getting-started/glossary#hrp) or HIP behind it. You match against your own patients and reply with care contexts, and the patient picks which to link. Implementing discovery is mandatory for every HIP, even if every patient gives you an ABHA address at the counter, because a patient who visited two years ago did not.
 
 What you are handed splits in two, alongside the patient's name, gender and year of birth:
 
 - **Verified identifiers**, which you weight higher, each typed as `MR`, `MOBILE`, `ABHA_NUMBER`, `ABHA_ADDRESS` or `EMAIL`.
-- **Unverified, patient declared information**, typically a facility issued identifier such as a patient ID or a medical registration number.
+- **Unverified identifiers**, patient declared, typed from the same set.
 
 Use the unverified value to sharpen a match, not to make one. The response carries care context metadata and nothing else: no diagnosis, no test result, no report content. Somebody who has not yet proved they are the patient reads it.
 
@@ -87,13 +84,13 @@ Linking is authorised by a [link token](/docs/hiecm/v3/getting-started/glossary#
 | When you get it | Generated and stored at the time the patient registers with you |
 | Validity | Six months |
 | Before use | Validate it, for example with a tool like JWT.io. Which check to run is not documented yet. |
-| If you do not have a valid one | Regenerate it through demographic authentication |
+| If you do not have a valid one | Regenerate it with the generate link token call, which takes `abhaAddress`, `name`, `gender` and `yearOfBirth` |
 
 Store it against the patient record, not the visit: you need it for every link you make for that patient over six months. Check it before you link, not after the gateway rejects you.
 
 ## What links look like when they go wrong
 
-From the M2 error table. Read the code with the message the gateway returns, because the table reuses some codes against more than one message.
+From the M2 error table. Read the code with the message the gateway returns, because the specification returns `ABDM-9999` against more than one message.
 
 | Code | Message |
 | --- | --- |
@@ -105,7 +102,7 @@ The full list is on [M2 errors](/docs/hiecm/v3/api/m2/errors).
 ## Where this is implemented
 
 - [Hospital, lab and pharmacy systems](/docs/hiecm/v3/concepts/hip-hiu), what a facility builds to do the linking.
-- [M2 Attach, Health Information Provider Services](/docs/hiecm/v3/api/m2), the call order for all three routes.
+- [M2 Attach, Health Information Provider Services](/docs/hiecm/v3/api/m2), the call order for both routes.
 - [Consent](/docs/hiecm/v3/concepts/consent), what happens once somebody asks for a linked care context.
 - [How a record travels](/docs/hiecm/v3/concepts/data-flow), what you do when that request arrives.
 - [PHR applications](/docs/hiecm/v3/concepts/phr), the patient side of discovery and linking.

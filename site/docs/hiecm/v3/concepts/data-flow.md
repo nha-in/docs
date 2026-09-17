@@ -105,7 +105,7 @@ A new key pair per exchange is what buys forward secrecy.
 
 Six steps, once consent has validated.
 
-1. Generate a key pair, DHSK(P) and DHPK(P), in the group the HIU specified.
+1. Generate a key pair, DHSK(P) and DHPK(P), on the `curve` the HIU specified in `keyMaterial`.
 2. Generate a 32 byte random value, RAND(P).
 3. Compute the shared key DHK(U,P) from the HIU's public key DHPK(U) and the HIP's own private key DHSK(P).
 4. Derive the salt and IV by XOR of RAND(P) and RAND(U). The first 20 bytes are the salt for HKDF, the last 12 bytes the IV.

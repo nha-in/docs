@@ -59,8 +59,8 @@ not yet a step by step guide to building it.
 - **Facilities going live.** Without a facility in the HFR and a bridge linked
   to it, you cannot share as a HIP or fetch as an HIU. If you have built [M2
   Attach](./m2) or [M3 Retrieve](./m3), M4 is the step in front of production.
-- **Professionals registering.** An HPID is a verified identity in ABDM. Three
-  categories are open today: doctor, nurse and pharmacist. Others come later.
+- **Professionals registering.** An HPID is a verified identity in ABDM. The
+  `hprType` categories include doctor, nurse, pharmacist and facility manager.
 - **Software acting for others.** An
   [HMIS](/docs/hiecm/v3/getting-started/glossary#hmis) or practice management
   product can drive these calls for its own customers.
@@ -123,7 +123,7 @@ sequenceDiagram
         H-->>S: true or false, as a bare boolean
     end
     S->>H: Verify OTP and fetch user details with txnId
-    H-->>S: Demographic and address details, mobile number masked
+    H-->>S: Demographic and address details, with the mobile number
     S->>H: Check whether an HPID already exists for this Aadhaar
     H-->>S: The existing HPID, or none
 ```
@@ -203,7 +203,7 @@ sequenceDiagram
     S->>H: Additional information, with trackingId
     S->>H: Detailed information, with trackingId
     S->>H: Submit facility, with trackingId
-    H-->>S: Facility submitted for verification
+    H-->>S: Submit result
 ```
 
 ### What each write call carries

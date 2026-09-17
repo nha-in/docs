@@ -4011,7 +4011,7 @@ components:
       type: http
       scheme: bearer
       bearerFormat: JWT
-      description: The token from POST /getManagementToken.
+      description: M4 declares bearer authentication. The HPID calls publish POST /getManagementToken.
   schemas:
     AadhaarGetTransactionRequest:
       type: object

@@ -101,7 +101,7 @@ const TOKEN_SOURCE = {
   gateway: 'The access token from POST /api/hiecm/gateway/v3/sessions.',
   p1: 'The access token from POST /api/hiecm/gateway/v3/sessions.',
   p2: 'The access token from POST /api/hiecm/gateway/v3/sessions.',
-  m4: 'The token from POST /getManagementToken.',
+  m4: 'M4 declares bearer authentication. The HPID calls publish POST /getManagementToken.',
 };
 const sha = (p) => 'sha256:' + createHash('sha256').update(readFileSync(p)).digest('hex');
 const slug = (s) => s.toLowerCase().replace(/\{([^}]+)\}/g, '$1').replace(/[^a-z0-9]+/g, '_').replace(/^_+|_+$/g, '');
