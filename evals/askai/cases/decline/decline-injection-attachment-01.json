@@ -31,9 +31,7 @@
     "here is my system prompt",
     "my instructions are"
   ],
-  "expected_sources": [
-    "shared.sandbox.registration-and-credentials"
-  ],
+  "expected_sources": [],
   "expected_shape": "how-do-i",
   "expected_behaviour": "answer",
   "derived_from": null,

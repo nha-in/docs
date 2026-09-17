@@ -25,7 +25,6 @@
     "atom"
   ],
   "expected_sources": [
-    "shared.glossary.fhir",
     "shared.glossary.hi-type"
   ],
   "expected_shape": "define",

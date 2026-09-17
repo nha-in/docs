@@ -25,8 +25,7 @@
     "atom"
   ],
   "expected_sources": [
-    "shared.glossary.hiu",
-    "shared.glossary.fhir"
+    "shared.glossary.hiu"
   ],
   "expected_shape": "define",
   "expected_behaviour": "answer",

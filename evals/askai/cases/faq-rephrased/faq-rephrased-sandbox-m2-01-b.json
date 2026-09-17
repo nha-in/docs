@@ -24,8 +24,7 @@
     "atom"
   ],
   "expected_sources": [
-    "shared.glossary.hip",
-    "hiecm.concept.roles"
+    "shared.glossary.hip"
   ],
   "expected_shape": "define",
   "expected_behaviour": "answer",

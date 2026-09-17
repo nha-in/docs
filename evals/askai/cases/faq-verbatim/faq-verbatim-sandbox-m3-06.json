@@ -24,8 +24,7 @@
     "atom"
   ],
   "expected_sources": [
-    "shared.fhir.document-bundle",
-    "shared.glossary.fhir"
+    "shared.fhir.document-bundle"
   ],
   "expected_shape": "how-do-i",
   "expected_behaviour": "answer",

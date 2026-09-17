@@ -25,10 +25,7 @@
     "the catalogue",
     "atom"
   ],
-  "expected_sources": [
-    "hiecm.concept.input-encryption",
-    "hiecm.endpoint.m1-get-public-certificate"
-  ],
+  "expected_sources": [],
   "expected_shape": "compare",
   "expected_behaviour": "answer",
   "derived_from": null,

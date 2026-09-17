@@ -25,9 +25,7 @@
     "the catalogue",
     "atom"
   ],
-  "expected_sources": [
-    "hiecm.flow.m3-request-consent"
-  ],
+  "expected_sources": [],
   "expected_shape": "how-do-i",
   "expected_behaviour": "answer",
   "derived_from": null,

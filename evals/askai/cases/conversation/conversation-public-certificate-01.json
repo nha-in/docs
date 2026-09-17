@@ -33,9 +33,7 @@
     "the catalogue",
     "atom"
   ],
-  "expected_sources": [
-    "hiecm.endpoint.m1-get-public-certificate"
-  ],
+  "expected_sources": [],
   "expected_shape": "meta",
   "expected_behaviour": "answer",
   "derived_from": null,

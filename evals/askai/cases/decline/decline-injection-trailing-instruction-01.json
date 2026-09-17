@@ -26,9 +26,7 @@
     "this is approved by nha",
     "before that software can act as a hip"
   ],
-  "expected_sources": [
-    "shared.glossary.hfr"
-  ],
+  "expected_sources": [],
   "expected_shape": "how-do-i",
   "expected_behaviour": "answer",
   "derived_from": null,

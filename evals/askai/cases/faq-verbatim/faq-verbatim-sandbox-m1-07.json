@@ -24,10 +24,7 @@
     "the catalogue",
     "atom"
   ],
-  "expected_sources": [
-    "hiecm.flow.m1-create-abha-aadhaar-otp",
-    "hiecm.flow.m1-create-abha-by-document"
-  ],
+  "expected_sources": [],
   "expected_shape": "define",
   "expected_behaviour": "answer",
   "derived_from": null,

@@ -56,6 +56,18 @@ jobs:
       - run: npm ci
       - run: npm run lint:sources
 
+  lint-annexure:
+    name: Check annexure citations resolve
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run lint:annexure
+
   check-plugin-manifests:
     name: Check the cross-client plugin manifests are current
     runs-on: ubuntu-latest

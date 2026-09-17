@@ -23,9 +23,7 @@
     "the catalogue",
     "atom"
   ],
-  "expected_sources": [
-    "hiecm.flow.m2-link-care-context"
-  ],
+  "expected_sources": [],
   "expected_shape": "how-do-i",
   "expected_behaviour": "answer",
   "derived_from": null,
