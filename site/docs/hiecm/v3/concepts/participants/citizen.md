@@ -21,11 +21,11 @@ Ayushman Bharat Health Account. It has two parts.
 | | ABHA number | ABHA address |
 | --- | --- | --- |
 | What it is | 14 digits, such as `91-XXXX-XXXX-XXXX` | A readable name, such as `name@abdm` |
-| How you get it | After an Aadhaar based [KYC](/docs/hiecm/v3/getting-started/glossary#kyc) check passes | You choose it, or you are issued a default |
+| How you get it | After an Aadhaar based [KYC](/docs/hiecm/v3/getting-started/glossary#kyc) check passes | You choose it |
 | What it does | Anchors one person to one number | Routes records and consent requests to you |
 
 You can hold an address without a number, created from a mobile number, name,
-age and gender. That profile is self declared and carries no KYC.
+date of birth and gender.
 
 A [PHR](/docs/hiecm/v3/getting-started/glossary#phr) app holds your account and
 acts for you. Hospitals, laboratories and pharmacies address records to your
@@ -43,8 +43,7 @@ ABHA address.
   dates, and how long the access lasts.
 - Narrow it before you approve. You can change the access duration, the record
   date range, the data categories and the validity period.
-- Grant, deny, or revoke later. Revoking stops sharing under that consent
-  immediately.
+- Grant, deny, or revoke later. Revoking stops sharing under that consent.
 
 ## Why it is worth it
 

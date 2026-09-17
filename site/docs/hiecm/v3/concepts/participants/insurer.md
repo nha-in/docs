@@ -29,11 +29,10 @@ production.
 ## Confirm at onboarding
 
 - **Which registry entry your organisation holds on the HIE-CM.** The
-  [HFR](/docs/hiecm/v3/getting-started/glossary#hfr) lists hospitals, clinics,
-  laboratories, imaging centres, pharmacies and blood banks, and does not list
-  insurers. Do not scope your build around a facility ID.
-  [M4](/docs/hiecm/v3/api/m4) is required for an HIU, so ask which entry you
-  register against before you plan that work. Build M1 and M3 meanwhile.
+  [HFR](/docs/hiecm/v3/getting-started/glossary#hfr) lists facility types such
+  as hospitals, imaging centres and blood banks, and does not list insurers. Do not scope your build around a facility ID.
+  Ask which entry you register against before you plan
+  [M4](/docs/hiecm/v3/api/m4) work. Build M1 and M3 meanwhile.
 
 ## What you can do
 
