@@ -1,11 +1,17 @@
+# catalogue/openapi/hiecm/v3/journeys/p3.yaml
+# Order of calls from the P3-Subscription folder of the PHR and locker
+# collection of 16 September. Content from the PHR and Locker swagger of the
+# same set. The folder's init, on-notify and care context on-notify calls are
+# Subscription module operations, published after P3, so the Subscription
+# journeys walk them and this journey leaves them out.
 - id: p3-subscription-phr
   title: Subscription
   steps:
-    - op: p3_get_subscription_requests_v3_requests
-    - op: p3_post_subscription_requests_v3_request_id_approve
-    - op: p3_post_subscription_requests_v3_request_id_deny
-    - op: p3_put_subscription_requests_v3_patients_subscription_id
-    - op: p3_post_subscription_requests_v3_enable_subscription_id
-    - op: p3_post_subscription_requests_v3_disable_subscription_id
-    - op: p3_get_subscription_requests_v3_subscription_id
-    - op: p3_get_subscription_requests_v3_request_request_id
+    - {op: p3_post_subscription_requests_v3_request_id_approve}
+    - {op: p3_post_subscription_requests_v3_request_id_deny}
+    - {op: p3_get_subscription_requests_v3_requests}
+    - {op: p3_put_subscription_requests_v3_patients_subscription_id}
+    - {op: p3_post_subscription_requests_v3_disable_subscription_id}
+    - {op: p3_post_subscription_requests_v3_enable_subscription_id}
+    - {op: p3_get_subscription_requests_v3_request_request_id}
+    - {op: p3_get_subscription_requests_v3_subscription_id}

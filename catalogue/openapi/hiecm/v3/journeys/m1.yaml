@@ -3,6 +3,8 @@
 # Order of calls from the M1 collection of 15 September. Content from the
 # M1 swagger of 16 September. Each ABHA creation method is its own journey
 # so the shared calls appear under every method with that method's example.
+# Biometric login follows the swagger examples; the collection's v3.1 and
+# Face Auth QR calls are not in the final set.
 - id: m1-session
   title: Session, tokens and certificate
   steps:
@@ -63,7 +65,6 @@
     - {op: gateway_post_gateway_v3_sessions}
     - {op: m1_get_v3_profile_public_certificate}
     - {op: m1_post_v3_enrollment_enrol_byaadhaar, example: DemoAuth API}
-    - {op: m1_get_v3_profile_account}
 
 - id: m1-create-child
   title: ABHA creation, child ABHA
@@ -200,28 +201,25 @@
 - id: m1-profile-and-card
   title: Profile management, profile and ABHA card
   steps:
-    - {op: m1_get_v3_profile_account}
     - {op: m1_get_v3_profile_account_qrcode}
     - {op: m1_get_v3_profile_account_abha_card}
-    - {op: m1_patch_v3_profile_account, example: Update User Profile Photo}
+    - {op: m1_get_v3_profile_account}
 
 - id: m1-update-mobile
   title: Profile management, mobile number update
   steps:
     - {op: m1_post_v3_profile_account_request_otp, example: Update Mobile-Send OTP}
     - {op: m1_post_v3_profile_account_verify, example: Update Mobile- Verify OTP}
-    - {op: m1_get_v3_profile_account}
 
 - id: m1-re-kyc
   title: Profile management, re-KYC
   steps:
     - {op: m1_post_v3_profile_account_request_otp, example: ReKyc-Send OTP}
     - {op: m1_post_v3_profile_account_verify, example: Re-KYC - Verify OTP}
-    - {op: m1_get_v3_profile_account}
 
 - id: m1-benefit
   title: Benefit programmes
   steps:
     - {op: m1_post_v3_profile_benefit_search, example: Benefit Search via ABHA}
-    - {op: m1_post_v3_profile_benefit_linkanddelink, example: LINK or DELINK via ABHA number}
     - {op: m1_get_v3_profile_benefit_abha_abhanumber}
+    - {op: m1_post_v3_profile_benefit_linkanddelink, example: LINK or DELINK via ABHA number}

@@ -14,19 +14,7 @@ Loop limit: 8 passes per step. Hitting the limit is an escalation: state what wa
 
 **Act: the calls in this journey, in order**
 
-#### 1. This API will be invoked by the patient/user from PHR application to fetch his/her subscription requests details. (`p3_get_subscription_requests_v3_requests`)
-
-```bash
-curl --request GET \
-  --url https://dev.abdm.gov.in/api/hiecm/subscription-requests/v3/requests \
-  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
-  --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
-  --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
-  --header 'X-CM-ID: sbx' \
-  --header 'X-AUTH-TOKEN: <TOKEN>'
-```
-
-#### 2. This API will be invoked by the patient/user from PHR application to approve subscription request. (`p3_post_subscription_requests_v3_request_id_approve`)
+#### 1. This API will be invoked by the patient/user from PHR application to approve subscription request. (`p3_post_subscription_requests_v3_request_id_approve`)
 
 ```bash
 curl --request POST \
@@ -90,7 +78,7 @@ curl --request POST \
 }'
 ```
 
-#### 3. This API will be invoked by the patient/user from PHR application to deny subscription request. (`p3_post_subscription_requests_v3_request_id_deny`)
+#### 2. This API will be invoked by the patient/user from PHR application to deny subscription request. (`p3_post_subscription_requests_v3_request_id_deny`)
 
 ```bash
 curl --request POST \
@@ -104,6 +92,18 @@ curl --request POST \
   --data '{
   "reason": "Subscription denied."
 }'
+```
+
+#### 3. This API will be invoked by the patient/user from PHR application to fetch his/her subscription requests details. (`p3_get_subscription_requests_v3_requests`)
+
+```bash
+curl --request GET \
+  --url https://dev.abdm.gov.in/api/hiecm/subscription-requests/v3/requests \
+  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
+  --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
+  --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
+  --header 'X-CM-ID: sbx' \
+  --header 'X-AUTH-TOKEN: <TOKEN>'
 ```
 
 #### 4. This API will be invoked to edit the subscription details. (`p3_put_subscription_requests_v3_patients_subscription_id`)
@@ -175,19 +175,7 @@ curl --request PUT \
 }'
 ```
 
-#### 5. This API will be invoked to enable the subscription by subscription id. (`p3_post_subscription_requests_v3_enable_subscription_id`)
-
-```bash
-curl --request POST \
-  --url https://dev.abdm.gov.in/api/hiecm/subscription-requests/v3/enable/{subscription-id} \
-  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
-  --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
-  --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
-  --header 'X-CM-ID: sbx' \
-  --header 'X-AUTH-TOKEN: <TOKEN>'
-```
-
-#### 6. This API will be invoked to disable the subscription by subscription id. (`p3_post_subscription_requests_v3_disable_subscription_id`)
+#### 5. This API will be invoked to disable the subscription by subscription id. (`p3_post_subscription_requests_v3_disable_subscription_id`)
 
 ```bash
 curl --request POST \
@@ -199,11 +187,11 @@ curl --request POST \
   --header 'X-AUTH-TOKEN: <TOKEN>'
 ```
 
-#### 7. This API will be invoked by the patient/user from PHR application to fetch his/her subscription details by subscription id. (`p3_get_subscription_requests_v3_subscription_id`)
+#### 6. This API will be invoked to enable the subscription by subscription id. (`p3_post_subscription_requests_v3_enable_subscription_id`)
 
 ```bash
-curl --request GET \
-  --url https://dev.abdm.gov.in/api/hiecm/subscription-requests/v3/{subscription-id} \
+curl --request POST \
+  --url https://dev.abdm.gov.in/api/hiecm/subscription-requests/v3/enable/{subscription-id} \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
@@ -211,11 +199,23 @@ curl --request GET \
   --header 'X-AUTH-TOKEN: <TOKEN>'
 ```
 
-#### 8. This API will be invoked by the patient/user from PHR application to fetch his/her subscription details by subscription request id. (`p3_get_subscription_requests_v3_request_request_id`)
+#### 7. This API will be invoked by the patient/user from PHR application to fetch his/her subscription details by subscription request id. (`p3_get_subscription_requests_v3_request_request_id`)
 
 ```bash
 curl --request GET \
   --url https://dev.abdm.gov.in/api/hiecm/subscription-requests/v3/request/{request-id} \
+  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
+  --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
+  --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
+  --header 'X-CM-ID: sbx' \
+  --header 'X-AUTH-TOKEN: <TOKEN>'
+```
+
+#### 8. This API will be invoked by the patient/user from PHR application to fetch his/her subscription details by subscription id. (`p3_get_subscription_requests_v3_subscription_id`)
+
+```bash
+curl --request GET \
+  --url https://dev.abdm.gov.in/api/hiecm/subscription-requests/v3/{subscription-id} \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
@@ -229,45 +229,43 @@ A 200 whose body matches:
 
 ```json
 {
-  "id": 1234,
-  "requestId": "ab1f0e59-8388-4698-9fe6-05db67aeac46",
-  "subscriptionId": "c12f0e59-8388-4698-9fe6-05db67aea3c4",
-  "patientId": "<ABHA_ADDRESS>",
-  "requesterType": "phr",
+  "subscriptionId": "f29f0e59-8388-4698-9fe6-05db67aeac46",
+  "purpose": {
+    "text": "Care Management",
+    "code": "CAREMGT",
+    "refUri": "https://abc.def.in"
+  },
+  "dateCreated": "2021-09-28T12:30:08.573Z",
   "status": "GRANTED",
-  "details": {
-    "subscriptionRequestId": "38d8dbfc-9ea6-4f9f-b807-b00d2b885a54",
-    "purpose": {
-      "text": "Care Management",
-      "code": "CAREMGT",
-      "refUri": "https://abc.def.in"
-    },
-    "patient": {
-      "id": "<ABHA_ADDRESS>"
-    },
-    "hiu": {
-      "id": "INDIA_HIU",
-      "name": "INDIA HIU",
-      "type": "HIU"
-    },
-    "hips": [
-      {
+  "dateGranted": "2021-09-28T12:30:08.573Z",
+  "patient": {
+    "id": "<ABHA_ADDRESS>"
+  },
+  "requester": {
+    "id": "<ABHA_ADDRESS>",
+    "name": "ABDM_HIU",
+    "type": "HIU"
+  },
+  "includedSources": [
+    {
+      "hip": {
         "id": "INDIA_HIP",
         "name": "INDIA HIP",
         "type": "HIP"
-      }
-    ],
-    "categories": [
-      "LINK"
-    ],
-    "period": {
-      "from": "2024-05-09T10:34:00.389Z",
-      "to": "2024-05-09T10:34:00.389Z"
+      },
+      "categories": [
+        "LINK"
+      ],
+      "hiTypes": [
+        "Prescription"
+      ],
+      "period": {
+        "from": "2024-05-09T10:34:00.389Z",
+        "to": "2024-05-09T10:34:00.389Z"
+      },
+      "status": "GRANTED"
     }
-  },
-  "dateCreated": "2022-10-06T10:10:00.587Z",
-  "dateModified": "2022-10-06T10:10:00.587Z",
-  "healthIdNumber": "<ABHA_NUMBER>"
+  ]
 }
 ```
 

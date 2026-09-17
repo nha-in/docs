@@ -262,7 +262,7 @@
     "method": "GET",
     "path": "/abha/api/v3/profile/account",
     "summary": "Use Case: Get User Profile Details",
-    "route": "/docs/hiecm/v3/api/m1/endpoints/m1-create-demographic/04-m1-get-v3-profile-account",
+    "route": "/docs/hiecm/v3/api/m1/endpoints/m1-profile-and-card/03-m1-get-v3-profile-account",
     "callbacks": []
   },
   {
@@ -277,7 +277,7 @@
     "method": "GET",
     "path": "/abha/api/v3/profile/account/abha-card",
     "summary": "Use Case: Retrieve ABHA Card image",
-    "route": "/docs/hiecm/v3/api/m1/endpoints/m1-profile-and-card/03-m1-get-v3-profile-account-abha-card",
+    "route": "/docs/hiecm/v3/api/m1/endpoints/m1-profile-and-card/02-m1-get-v3-profile-account-abha-card",
     "callbacks": []
   },
   {
@@ -292,7 +292,7 @@
     "method": "GET",
     "path": "/abha/api/v3/profile/account/qrCode",
     "summary": "Use Case: Generate QR Code for an ABHA Profile",
-    "route": "/docs/hiecm/v3/api/m1/endpoints/m1-profile-and-card/02-m1-get-v3-profile-account-qrcode",
+    "route": "/docs/hiecm/v3/api/m1/endpoints/m1-profile-and-card/01-m1-get-v3-profile-account-qrcode",
     "callbacks": []
   },
   {
@@ -322,7 +322,7 @@
     "method": "GET",
     "path": "/abha/api/v3/profile/benefit/abha/{abhanumber}",
     "summary": "Use Case: Retrieve the benefit details associated with a specific ABHA number",
-    "route": "/docs/hiecm/v3/api/m1/endpoints/m1-benefit/03-m1-get-v3-profile-benefit-abha-abhanumber",
+    "route": "/docs/hiecm/v3/api/m1/endpoints/m1-benefit/02-m1-get-v3-profile-benefit-abha-abhanumber",
     "callbacks": []
   },
   {
@@ -547,7 +547,7 @@
     "method": "POST",
     "path": "/abha/api/v3/profile/benefit/linkAndDelink",
     "summary": "Usecase : Benefit LINK or DELINK",
-    "route": "/docs/hiecm/v3/api/m1/endpoints/m1-benefit/02-m1-post-v3-profile-benefit-linkanddelink",
+    "route": "/docs/hiecm/v3/api/m1/endpoints/m1-benefit/03-m1-post-v3-profile-benefit-linkanddelink",
     "callbacks": []
   },
   {
@@ -2665,7 +2665,7 @@
     "method": "GET",
     "path": "/abha/api/v3/phr/app/enrollment/isExists",
     "summary": "3 flows: isExists API, isExists API Copy",
-    "route": "/docs/hiecm/v3/api/p1/endpoints/p1-p1-create-abha-address-flow/02-p1-get-v3-phr-app-enrollment-isexists",
+    "route": "/docs/hiecm/v3/api/p1/endpoints/p1-create-abha-address-mobile/04-p1-get-v3-phr-app-enrollment-isexists",
     "callbacks": []
   },
   {
@@ -2680,7 +2680,7 @@
     "method": "GET",
     "path": "/abha/api/v3/phr/app/login/public/certificate",
     "summary": "PHR Certificate",
-    "route": "/docs/hiecm/v3/api/p1/endpoints/p1-p1-registration-login/01-p1-get-v3-phr-app-login-public-certificate",
+    "route": "/docs/hiecm/v3/api/p1/endpoints/p1-certificate-and-session/01-p1-get-v3-phr-app-login-public-certificate",
     "callbacks": []
   },
   {
@@ -2695,7 +2695,7 @@
     "method": "POST",
     "path": "/abha/api/v3/phr/app/enrollment/enrol",
     "summary": "3 flows: Enroll ABHA Address",
-    "route": "/docs/hiecm/v3/api/p1/endpoints/p1-p1-create-abha-address-flow/01-p1-post-v3-phr-app-enrollment-enrol",
+    "route": "/docs/hiecm/v3/api/p1/endpoints/p1-create-abha-address-mobile/05-p1-post-v3-phr-app-enrollment-enrol",
     "callbacks": []
   },
   {
@@ -2710,7 +2710,7 @@
     "method": "POST",
     "path": "/abha/api/v3/phr/app/enrollment/request/otp",
     "summary": "3 flows: OTP Request - Mobile, OTP Request - ABHA OTP, OTP Request - AADHAR OTP",
-    "route": "/docs/hiecm/v3/api/p1/endpoints/p1-p1-create-abha-address-flow/03-p1-post-v3-phr-app-enrollment-request-otp",
+    "route": "/docs/hiecm/v3/api/p1/endpoints/p1-create-abha-address-mobile/01-p1-post-v3-phr-app-enrollment-request-otp",
     "callbacks": []
   },
   {
@@ -2725,7 +2725,7 @@
     "method": "POST",
     "path": "/abha/api/v3/phr/app/enrollment/suggestion",
     "summary": "3 flows: Suggestion API",
-    "route": "/docs/hiecm/v3/api/p1/endpoints/p1-p1-create-abha-address-flow/04-p1-post-v3-phr-app-enrollment-suggestion",
+    "route": "/docs/hiecm/v3/api/p1/endpoints/p1-create-abha-address-mobile/03-p1-post-v3-phr-app-enrollment-suggestion",
     "callbacks": []
   },
   {
@@ -2740,7 +2740,7 @@
     "method": "POST",
     "path": "/abha/api/v3/phr/app/enrollment/verify",
     "summary": "3 flows: OTP Verify - Mobile, OTP Verify - ABHA OTP, OTP Verify - AADHAR OTP",
-    "route": "/docs/hiecm/v3/api/p1/endpoints/p1-p1-create-abha-address-flow/05-p1-post-v3-phr-app-enrollment-verify",
+    "route": "/docs/hiecm/v3/api/p1/endpoints/p1-create-abha-address-mobile/02-p1-post-v3-phr-app-enrollment-verify",
     "callbacks": []
   },
   {
@@ -2755,7 +2755,7 @@
     "method": "POST",
     "path": "/abha/api/v3/phr/app/login/request/otp",
     "summary": "7 flows: OTP Request - Mobile, OTP Request - Email, OTP Request -  ABHAADDRES Mobile, OTP Request - AADHAR OTP, OTP Request - ABHA OTP, OTP Request -  ABHAADDRES Email, new OTP Request- AADHAAR",
-    "route": "/docs/hiecm/v3/api/p1/endpoints/p1-p1-phr-login/01-p1-post-v3-phr-app-login-request-otp",
+    "route": "/docs/hiecm/v3/api/p1/endpoints/p1-login-mobile/01-p1-post-v3-phr-app-login-request-otp",
     "callbacks": []
   },
   {
@@ -2770,7 +2770,7 @@
     "method": "POST",
     "path": "/abha/api/v3/phr/app/login/search",
     "summary": "Search Auth Methods - ABHAAddress",
-    "route": "/docs/hiecm/v3/api/p1/endpoints/p1-p1-login-via-abha-address-password/01-p1-post-v3-phr-app-login-search",
+    "route": "/docs/hiecm/v3/api/p1/endpoints/p1-login-abha-address-password/01-p1-post-v3-phr-app-login-search",
     "callbacks": []
   },
   {
@@ -2785,7 +2785,7 @@
     "method": "POST",
     "path": "/abha/api/v3/phr/app/login/verify",
     "summary": "8 flows: Login OTP Verify - Mobile, Login OTP Verify - Email, Login OTP Verify - ABHAADDRES Mobile, Login OTP Verify - AADHAR, Login OTP Verify - ABHA, Login Verify - Password, Login OTP Verify - ABHAADDRESS Email, new OTP verify- AADHAAR",
-    "route": "/docs/hiecm/v3/api/p1/endpoints/p1-p1-phr-login/02-p1-post-v3-phr-app-login-verify",
+    "route": "/docs/hiecm/v3/api/p1/endpoints/p1-login-mobile/02-p1-post-v3-phr-app-login-verify",
     "callbacks": []
   },
   {
@@ -2800,7 +2800,7 @@
     "method": "POST",
     "path": "/abha/api/v3/phr/app/login/verify/user",
     "summary": "6 flows: Verify User, Verify - User",
-    "route": "/docs/hiecm/v3/api/p1/endpoints/p1-p1-registration-login/02-p1-post-v3-phr-app-login-verify-user",
+    "route": "/docs/hiecm/v3/api/p1/endpoints/p1-create-abha-address-abha-number-abha-otp/03-p1-post-v3-phr-app-login-verify-user",
     "callbacks": []
   },
   {
@@ -2815,7 +2815,7 @@
     "method": "POST",
     "path": "/abha/api/v3/profile/account/request/emailVerificationLink",
     "summary": "Email Verification Link",
-    "route": "/docs/hiecm/v3/api/p1/endpoints/p1-abha-enrolment-via-aadhaar/01-p1-post-v3-profile-account-request-emailverificationlink",
+    "route": "/docs/hiecm/v3/api/p1/endpoints/p1-create-abha-number-aadhaar-otp/05-p1-post-v3-profile-account-request-emailverificationlink",
     "callbacks": []
   },
   {
@@ -2831,7 +2831,7 @@
     "method": "GET",
     "path": "/api/hiecm/consent/v3/artefact",
     "summary": "This is ABDM HIE-CM API called to fetch all the consent artefact details of a patient.",
-    "route": "/docs/hiecm/v3/api/p2/endpoints/p2-consent-management-data-flow-phr/08-p2-get-consent-v3-artefact",
+    "route": "/docs/hiecm/v3/api/p2/endpoints/p2-consent-management-data-flow-phr/11-p2-get-consent-v3-artefact",
     "callbacks": []
   },
   {
@@ -2847,7 +2847,7 @@
     "method": "GET",
     "path": "/api/hiecm/consent/v3/artefact/{artefact-id}",
     "summary": "This is ABDM HIE-CM API called to fetch the consent artefact details associated with the artefact-id.",
-    "route": "/docs/hiecm/v3/api/p2/endpoints/p2-consent-management-data-flow-phr/07-p2-get-consent-v3-artefact-artefact-id",
+    "route": "/docs/hiecm/v3/api/p2/endpoints/p2-consent-management-data-flow-phr/10-p2-get-consent-v3-artefact-artefact-id",
     "callbacks": []
   },
   {
@@ -2863,7 +2863,7 @@
     "method": "GET",
     "path": "/api/hiecm/consent/v3/artefact/request/{request-id}",
     "summary": "This is ABDM HIE-CM API called to fetch all the consent artefact details associated with a consent request request-id.",
-    "route": "/docs/hiecm/v3/api/p2/endpoints/p2-consent-management-data-flow-phr/06-p2-get-consent-v3-artefact-request-request-id",
+    "route": "/docs/hiecm/v3/api/p2/endpoints/p2-consent-management-data-flow-phr/09-p2-get-consent-v3-artefact-request-request-id",
     "callbacks": []
   },
   {
@@ -2879,7 +2879,7 @@
     "method": "GET",
     "path": "/api/hiecm/consent/v3/request",
     "summary": "This is ABDM HIE-CM API called to fetch all the consent request details of a patient.",
-    "route": "/docs/hiecm/v3/api/p2/endpoints/p2-consent-management-data-flow-phr/05-p2-get-consent-v3-request",
+    "route": "/docs/hiecm/v3/api/p2/endpoints/p2-consent-management-data-flow-phr/04-p2-get-consent-v3-request",
     "callbacks": []
   },
   {
@@ -2895,7 +2895,7 @@
     "method": "GET",
     "path": "/api/hiecm/consent/v3/request/{request-id}",
     "summary": "This is ABDM HIE-CM API called to get the consent request details by request id.",
-    "route": "/docs/hiecm/v3/api/p2/endpoints/p2-consent-management-data-flow-phr/04-p2-get-consent-v3-request-request-id",
+    "route": "/docs/hiecm/v3/api/p2/endpoints/p2-consent-management-data-flow-phr/05-p2-get-consent-v3-request-request-id",
     "callbacks": []
   },
   {
@@ -2911,7 +2911,7 @@
     "method": "GET",
     "path": "/api/hiecm/hip/v3/link/patient/links",
     "summary": "This is the PHR  APP API, this api will used to fetch all link care-context for a patient.",
-    "route": "/docs/hiecm/v3/api/p2/endpoints/p2-abdm-hip-initiated-linking-phr/01-p2-get-hip-v3-link-patient-links",
+    "route": "/docs/hiecm/v3/api/p2/endpoints/p2-consent-manager-hiu-hip/01-p2-get-hip-v3-link-patient-links",
     "callbacks": []
   },
   {
@@ -2943,7 +2943,7 @@
     "method": "GET",
     "path": "/abha/api/v3/phr/app/login/profile",
     "summary": "Get Profile",
-    "route": "/docs/hiecm/v3/api/p2/endpoints/p2-p2-phr-profile/01-p2-get-v3-phr-app-login-profile",
+    "route": "/docs/hiecm/v3/api/p2/endpoints/p2-profile/01-p2-get-v3-phr-app-login-profile",
     "callbacks": []
   },
   {
@@ -2959,7 +2959,7 @@
     "method": "GET",
     "path": "/abha/api/v3/phr/app/login/profile/phrCard",
     "summary": "Get PHR Card",
-    "route": "/docs/hiecm/v3/api/p2/endpoints/p2-p2-phr-profile/02-p2-get-v3-phr-app-login-profile-phrcard",
+    "route": "/docs/hiecm/v3/api/p2/endpoints/p2-profile/03-p2-get-v3-phr-app-login-profile-phrcard",
     "callbacks": []
   },
   {
@@ -2975,7 +2975,7 @@
     "method": "GET",
     "path": "/abha/api/v3/phr/app/login/profile/qrCode",
     "summary": "Get QR Code",
-    "route": "/docs/hiecm/v3/api/p2/endpoints/p2-p2-phr-profile/03-p2-get-v3-phr-app-login-profile-qrcode",
+    "route": "/docs/hiecm/v3/api/p2/endpoints/p2-profile/02-p2-get-v3-phr-app-login-profile-qrcode",
     "callbacks": []
   },
   {
@@ -2991,7 +2991,7 @@
     "method": "GET",
     "path": "/abha/api/v3/phr/app/login/profile/request/logout",
     "summary": "Logout",
-    "route": "/docs/hiecm/v3/api/p2/endpoints/p2-p2-phr-profile/04-p2-get-v3-phr-app-login-profile-request-logout",
+    "route": "/docs/hiecm/v3/api/p2/endpoints/p2-profile/06-p2-get-v3-phr-app-login-profile-request-logout",
     "callbacks": []
   },
   {
@@ -3007,7 +3007,7 @@
     "method": "GET",
     "path": "/abha/api/v3/phr/app/login/profile/request/token",
     "summary": "Refresh Token",
-    "route": "/docs/hiecm/v3/api/p2/endpoints/p2-p2-phr-profile/06-p2-get-v3-phr-app-login-profile-request-token",
+    "route": "/docs/hiecm/v3/api/p2/endpoints/p2-profile/05-p2-get-v3-phr-app-login-profile-request-token",
     "callbacks": []
   },
   {
@@ -3039,7 +3039,7 @@
     "method": "POST",
     "path": "/api/hiecm/consent/v3/auto/approve",
     "summary": "This is ABDM HIE-CM API called to setup an auto-approval policy for given HIU.",
-    "route": "/docs/hiecm/v3/api/p2/endpoints/p2-consent-management-data-flow-phr/09-p2-post-consent-v3-auto-approve",
+    "route": "/docs/hiecm/v3/api/p2/endpoints/p2-consent-management-data-flow-phr/01-p2-post-consent-v3-auto-approve",
     "callbacks": []
   },
   {
@@ -3055,7 +3055,7 @@
     "method": "POST",
     "path": "/api/hiecm/consent/v3/auto/approve/{auto-approval-id}/disable",
     "summary": "This is ABDM HIE-CM API called to disable the auto-approval policy.",
-    "route": "/docs/hiecm/v3/api/p2/endpoints/p2-consent-management-data-flow-phr/10-p2-post-consent-v3-auto-approve-auto-approval-id-disable",
+    "route": "/docs/hiecm/v3/api/p2/endpoints/p2-consent-management-data-flow-phr/02-p2-post-consent-v3-auto-approve-auto-approval-id-disable",
     "callbacks": []
   },
   {
@@ -3071,7 +3071,7 @@
     "method": "POST",
     "path": "/api/hiecm/consent/v3/auto/approve/{auto-approval-id}/enable",
     "summary": "This is ABDM HIE-CM API called to enable the auto-approval policy.",
-    "route": "/docs/hiecm/v3/api/p2/endpoints/p2-consent-management-data-flow-phr/11-p2-post-consent-v3-auto-approve-auto-approval-id-enable",
+    "route": "/docs/hiecm/v3/api/p2/endpoints/p2-consent-management-data-flow-phr/03-p2-post-consent-v3-auto-approve-auto-approval-id-enable",
     "callbacks": []
   },
   {
@@ -3087,7 +3087,7 @@
     "method": "POST",
     "path": "/api/hiecm/consent/v3/request/{request-id}/approve",
     "summary": "This is ABDM HIE-CM API called by patients to approve the consent request raised by HIU from PHR/mobile application.",
-    "route": "/docs/hiecm/v3/api/p2/endpoints/p2-consent-management-data-flow-phr/01-p2-post-consent-v3-request-request-id-approve",
+    "route": "/docs/hiecm/v3/api/p2/endpoints/p2-consent-management-data-flow-phr/06-p2-post-consent-v3-request-request-id-approve",
     "callbacks": []
   },
   {
@@ -3103,7 +3103,7 @@
     "method": "POST",
     "path": "/api/hiecm/consent/v3/request/{request-id}/deny",
     "summary": "This is ABDM HIE-CM API called by patients to deny the consent request raised by HIU from PHR/mobile application.",
-    "route": "/docs/hiecm/v3/api/p2/endpoints/p2-consent-management-data-flow-phr/02-p2-post-consent-v3-request-request-id-deny",
+    "route": "/docs/hiecm/v3/api/p2/endpoints/p2-consent-management-data-flow-phr/07-p2-post-consent-v3-request-request-id-deny",
     "callbacks": []
   },
   {
@@ -3119,7 +3119,7 @@
     "method": "POST",
     "path": "/api/hiecm/consent/v3/revoke",
     "summary": "This is ABDM HIE-CM API called by patients to revoke the granted consent from PHR/mobile application.",
-    "route": "/docs/hiecm/v3/api/p2/endpoints/p2-consent-management-data-flow-phr/03-p2-post-consent-v3-revoke",
+    "route": "/docs/hiecm/v3/api/p2/endpoints/p2-consent-management-data-flow-phr/08-p2-post-consent-v3-revoke",
     "callbacks": []
   },
   {
@@ -3151,7 +3151,7 @@
     "method": "POST",
     "path": "/api/hiecm/user-initiated-linking/v3/link/care-context/confirm",
     "summary": "This API will be invoked by the patient/user to confirm his/her health records.",
-    "route": "/docs/hiecm/v3/api/p2/endpoints/p2-abdm-user-initiated-linking-phr/05-p2-post-user-initiated-linking-v3-link-care-context-confirm",
+    "route": "/docs/hiecm/v3/api/p2/endpoints/p2-abdm-user-initiated-linking-phr/07-p2-post-user-initiated-linking-v3-link-care-context-confirm",
     "callbacks": []
   },
   {
@@ -3167,7 +3167,7 @@
     "method": "POST",
     "path": "/api/hiecm/user-initiated-linking/v3/link/care-context/init",
     "summary": "This API will be invoked by the patient/user to link his/her health records.",
-    "route": "/docs/hiecm/v3/api/p2/endpoints/p2-abdm-user-initiated-linking-phr/03-p2-post-user-initiated-linking-v3-link-care-context-init",
+    "route": "/docs/hiecm/v3/api/p2/endpoints/p2-abdm-user-initiated-linking-phr/05-p2-post-user-initiated-linking-v3-link-care-context-init",
     "callbacks": []
   },
   {
@@ -3183,7 +3183,7 @@
     "method": "POST",
     "path": "/api/hiecm/user-initiated-linking/v3/patient/care-context/discover",
     "summary": "This API will be invoked by the patient/user from PHR application to discover his/her health records.",
-    "route": "/docs/hiecm/v3/api/p2/endpoints/p2-abdm-user-initiated-linking-phr/01-p2-post-user-initiated-linking-v3-patient-care-context-discover",
+    "route": "/docs/hiecm/v3/api/p2/endpoints/p2-abdm-user-initiated-linking-phr/03-p2-post-user-initiated-linking-v3-patient-care-context-discover",
     "callbacks": []
   },
   {
@@ -3199,7 +3199,7 @@
     "method": "POST",
     "path": "/api/v3/hiu/patient/care-context/on-confirm",
     "summary": "This API endpoint is used by healthcare information users (HIUs) to receive confirmation of the linked care contexts for a patient. It provides detailed information about the patient’s care contexts, including any errors encountered during the confirmation process.",
-    "route": "/docs/hiecm/v3/api/p2/endpoints/p2-abdm-user-initiated-linking-phr/06-p2-post-v3-hiu-patient-care-context-on-confirm",
+    "route": "/docs/hiecm/v3/api/p2/endpoints/p2-abdm-user-initiated-linking-phr/08-p2-post-v3-hiu-patient-care-context-on-confirm",
     "callbacks": []
   },
   {
@@ -3215,7 +3215,7 @@
     "method": "POST",
     "path": "/api/v3/hiu/patient/care-context/on-discover",
     "summary": "This API endpoint is used by healthcare information users (HIUs) to receive the discovered care contexts of a patient. It provides detailed information about the patient’s care contexts, including any errors encountered during the discovery process.",
-    "route": "/docs/hiecm/v3/api/p2/endpoints/p2-abdm-user-initiated-linking-phr/02-p2-post-v3-hiu-patient-care-context-on-discover",
+    "route": "/docs/hiecm/v3/api/p2/endpoints/p2-abdm-user-initiated-linking-phr/04-p2-post-v3-hiu-patient-care-context-on-discover",
     "callbacks": []
   },
   {
@@ -3231,7 +3231,7 @@
     "method": "POST",
     "path": "/api/v3/hiu/patient/care-context/on-init",
     "summary": "This API endpoint is used by healthcare information users (HIUs) to receive the initial linking of care contexts for a patient. It provides detailed information about the linking process, including authentication details and any errors encountered.",
-    "route": "/docs/hiecm/v3/api/p2/endpoints/p2-abdm-user-initiated-linking-phr/04-p2-post-v3-hiu-patient-care-context-on-init",
+    "route": "/docs/hiecm/v3/api/p2/endpoints/p2-abdm-user-initiated-linking-phr/06-p2-post-v3-hiu-patient-care-context-on-init",
     "callbacks": []
   },
   {
@@ -3263,7 +3263,7 @@
     "method": "POST",
     "path": "/abha/api/v3/phr/app/login/profile/link",
     "summary": "2 flows: Link Request",
-    "route": "/docs/hiecm/v3/api/p2/endpoints/p2-p2-link-abha-number/01-p2-post-v3-phr-app-login-profile-link",
+    "route": "/docs/hiecm/v3/api/p2/endpoints/p2-link-abha-number-abha-otp/03-p2-post-v3-phr-app-login-profile-link",
     "callbacks": []
   },
   {
@@ -3279,7 +3279,7 @@
     "method": "POST",
     "path": "/abha/api/v3/phr/app/login/profile/request/otp",
     "summary": "4 flows: Send Otp - Update Email, Send Otp - Update Mobile, Send ABHA Otp - Link-DeLink, Send AADHAAR Otp - Link-DeLink",
-    "route": "/docs/hiecm/v3/api/p2/endpoints/p2-p2-phr-profile/05-p2-post-v3-phr-app-login-profile-request-otp",
+    "route": "/docs/hiecm/v3/api/p2/endpoints/p2-update-email/01-p2-post-v3-phr-app-login-profile-request-otp",
     "callbacks": []
   },
   {
@@ -3295,7 +3295,7 @@
     "method": "POST",
     "path": "/abha/api/v3/phr/app/login/profile/updateProfile",
     "summary": "Update Profile",
-    "route": "/docs/hiecm/v3/api/p2/endpoints/p2-p2-phr-profile/07-p2-post-v3-phr-app-login-profile-updateprofile",
+    "route": "/docs/hiecm/v3/api/p2/endpoints/p2-profile/04-p2-post-v3-phr-app-login-profile-updateprofile",
     "callbacks": []
   },
   {
@@ -3311,7 +3311,7 @@
     "method": "POST",
     "path": "/abha/api/v3/phr/app/login/profile/verify",
     "summary": "5 flows: Verify Otp - Update Email, Verify Otp - Update Mobile, Verify Password - Update Password, Verify ABHA Otp - Link-DeLink, Verify AADHAAR Otp - Link-DeLink",
-    "route": "/docs/hiecm/v3/api/p2/endpoints/p2-p2-phr-profile/08-p2-post-v3-phr-app-login-profile-verify",
+    "route": "/docs/hiecm/v3/api/p2/endpoints/p2-update-email/02-p2-post-v3-phr-app-login-profile-verify",
     "callbacks": []
   },
   {
@@ -3342,7 +3342,7 @@
     "method": "GET",
     "path": "/api/hiecm/subscription-requests/v3/request/{request-id}",
     "summary": "This API will be invoked by the patient/user from PHR application to fetch his/her subscription details by subscription request id.",
-    "route": "/docs/hiecm/v3/api/p3/endpoints/p3-subscription-phr/08-p3-get-subscription-requests-v3-request-request-id",
+    "route": "/docs/hiecm/v3/api/p3/endpoints/p3-subscription-phr/07-p3-get-subscription-requests-v3-request-request-id",
     "callbacks": []
   },
   {
@@ -3357,7 +3357,7 @@
     "method": "GET",
     "path": "/api/hiecm/subscription-requests/v3/requests",
     "summary": "This API will be invoked by the patient/user from PHR application to fetch his/her subscription requests details.",
-    "route": "/docs/hiecm/v3/api/p3/endpoints/p3-subscription-phr/01-p3-get-subscription-requests-v3-requests",
+    "route": "/docs/hiecm/v3/api/p3/endpoints/p3-subscription-phr/03-p3-get-subscription-requests-v3-requests",
     "callbacks": []
   },
   {
@@ -3372,7 +3372,7 @@
     "method": "GET",
     "path": "/api/hiecm/subscription-requests/v3/{subscription-id}",
     "summary": "This API will be invoked by the patient/user from PHR application to fetch his/her subscription details by subscription id.",
-    "route": "/docs/hiecm/v3/api/p3/endpoints/p3-subscription-phr/07-p3-get-subscription-requests-v3-subscription-id",
+    "route": "/docs/hiecm/v3/api/p3/endpoints/p3-subscription-phr/08-p3-get-subscription-requests-v3-subscription-id",
     "callbacks": []
   },
   {
@@ -3387,7 +3387,7 @@
     "method": "POST",
     "path": "/api/hiecm/subscription-requests/v3/disable/{subscription-id}",
     "summary": "This API will be invoked to disable the subscription by subscription id.",
-    "route": "/docs/hiecm/v3/api/p3/endpoints/p3-subscription-phr/06-p3-post-subscription-requests-v3-disable-subscription-id",
+    "route": "/docs/hiecm/v3/api/p3/endpoints/p3-subscription-phr/05-p3-post-subscription-requests-v3-disable-subscription-id",
     "callbacks": []
   },
   {
@@ -3402,7 +3402,7 @@
     "method": "POST",
     "path": "/api/hiecm/subscription-requests/v3/enable/{subscription-id}",
     "summary": "This API will be invoked to enable the subscription by subscription id.",
-    "route": "/docs/hiecm/v3/api/p3/endpoints/p3-subscription-phr/05-p3-post-subscription-requests-v3-enable-subscription-id",
+    "route": "/docs/hiecm/v3/api/p3/endpoints/p3-subscription-phr/06-p3-post-subscription-requests-v3-enable-subscription-id",
     "callbacks": []
   },
   {
@@ -3417,7 +3417,7 @@
     "method": "POST",
     "path": "/api/hiecm/subscription-requests/v3/{request-id}/approve",
     "summary": "This API will be invoked by the patient/user from PHR application to approve subscription request.",
-    "route": "/docs/hiecm/v3/api/p3/endpoints/p3-subscription-phr/02-p3-post-subscription-requests-v3-request-id-approve",
+    "route": "/docs/hiecm/v3/api/p3/endpoints/p3-subscription-phr/01-p3-post-subscription-requests-v3-request-id-approve",
     "callbacks": []
   },
   {
@@ -3432,7 +3432,7 @@
     "method": "POST",
     "path": "/api/hiecm/subscription-requests/v3/{request-id}/deny",
     "summary": "This API will be invoked by the patient/user from PHR application to deny subscription request.",
-    "route": "/docs/hiecm/v3/api/p3/endpoints/p3-subscription-phr/03-p3-post-subscription-requests-v3-request-id-deny",
+    "route": "/docs/hiecm/v3/api/p3/endpoints/p3-subscription-phr/02-p3-post-subscription-requests-v3-request-id-deny",
     "callbacks": []
   },
   {
@@ -3462,7 +3462,7 @@
     "method": "GET",
     "path": "/api/hiecm/subscription-requests/v3/patients/lockers",
     "summary": "The API provides the list of health locker that the ABHA address is subscribed to.",
-    "route": "/docs/hiecm/v3/api/p4/endpoints/p4-subscription-phr/03-p4-get-subscription-requests-v3-patients-lockers",
+    "route": "/docs/hiecm/v3/api/p4/endpoints/p4-locker/02-p4-get-subscription-requests-v3-patients-lockers",
     "callbacks": []
   },
   {
@@ -3477,7 +3477,7 @@
     "method": "GET",
     "path": "/api/hiecm/subscription-requests/v3/patients/lockers/{lockerId}",
     "summary": "This API will be invoked to get health locker settings of a patient by locker id.",
-    "route": "/docs/hiecm/v3/api/p4/endpoints/p4-subscription-phr/02-p4-get-subscription-requests-v3-patients-lockers-lockerid",
+    "route": "/docs/hiecm/v3/api/p4/endpoints/p4-locker/03-p4-get-subscription-requests-v3-patients-lockers-lockerid",
     "callbacks": []
   },
   {
@@ -3492,7 +3492,7 @@
     "method": "GET",
     "path": "/api/hiecm/subscription-requests/v3/patients/requests",
     "summary": "This API will be invoked to get all the consent and subscription requests with given filters.",
-    "route": "/docs/hiecm/v3/api/p4/endpoints/p4-subscription-phr/01-p4-get-subscription-requests-v3-patients-requests",
+    "route": "/docs/hiecm/v3/api/p4/endpoints/p4-locker/04-p4-get-subscription-requests-v3-patients-requests",
     "callbacks": []
   },
   {
@@ -3507,7 +3507,7 @@
     "method": "POST",
     "path": "/api/hiecm/subscription-requests/v3/setup-locker",
     "summary": "This API will be invoked to setup health locker for a patient.",
-    "route": "/docs/hiecm/v3/api/p4/endpoints/p4-health-locker/01-p4-post-subscription-requests-v3-setup-locker",
+    "route": "/docs/hiecm/v3/api/p4/endpoints/p4-locker/01-p4-post-subscription-requests-v3-setup-locker",
     "callbacks": []
   },
   {

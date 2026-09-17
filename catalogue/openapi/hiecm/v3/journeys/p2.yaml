@@ -1,53 +1,101 @@
-- id: p2-abdm-hip-initiated-linking-phr
-  title: Hip-initiated-linking
+# catalogue/openapi/hiecm/v3/journeys/p2.yaml
+# Order of calls from the P2-Management folder of the PHR and locker
+# collection of 16 September. Content from the PHR and Locker swagger of the
+# same set. Each collection subfolder is its own journey, in collection order.
+# A step may name a gateway, M2 or M3 operation where the folder calls one.
+# Differences from the collection:
+# - Patient share and user initiated linking walk the on-share, on-discover,
+#   on-init and on-confirm replies as the callbacks the PHR receives, where
+#   the collection posts them to the gateway in the HIP's place.
+# - The Initiated Linking and Data Flow folders call only M2 and M3
+#   operations and have no journey here; the M2 and M3 journeys walk them.
+- id: p2-update-email
+  title: PHR profile, update email
   steps:
-    - op: p2_get_hip_v3_link_patient_links
-- id: p2-abdm-user-initiated-linking-phr
-  title: User-initiated-linking
+    - {op: p2_post_v3_phr_app_login_profile_request_otp, example: Send Otp - Update Email}
+    - {op: p2_post_v3_phr_app_login_profile_verify, example: Verify Otp - Update Email}
+
+- id: p2-update-mobile
+  title: PHR profile, update mobile
   steps:
-    - op: p2_post_user_initiated_linking_v3_patient_care_context_discover
-    - op: p2_post_v3_hiu_patient_care_context_on_discover
-    - op: p2_post_user_initiated_linking_v3_link_care_context_init
-    - op: p2_post_v3_hiu_patient_care_context_on_init
-    - op: p2_post_user_initiated_linking_v3_link_care_context_confirm
-    - op: p2_post_v3_hiu_patient_care_context_on_confirm
-- id: p2-abdm-hiecm-patient-share-phr
-  title: Hiecm-patient-share
+    - {op: p2_post_v3_phr_app_login_profile_request_otp, example: Send Otp - Update Mobile}
+    - {op: p2_post_v3_phr_app_login_profile_verify, example: Verify Otp - Update Mobile}
+
+- id: p2-update-password
+  title: PHR profile, update password
   steps:
-    - op: p2_post_patient_share_v3_share
-    - op: p2_post_v3_hiu_patient_on_share
-    - op: p2_get_patient_share_v3_profile_gettokendetails
-- id: p2-consent-management-data-flow-phr
-  title: Consent-management-data-flow
+    - {op: p2_post_v3_phr_app_login_profile_verify, example: Verify Password - Update Password}
+
+- id: p2-link-abha-number-abha-otp
+  title: Link ABHA number, ABHA OTP
   steps:
-    - op: p2_post_consent_v3_request_request_id_approve
-    - op: p2_post_consent_v3_request_request_id_deny
-    - op: p2_post_consent_v3_revoke
-    - op: p2_get_consent_v3_request_request_id
-    - op: p2_get_consent_v3_request
-    - op: p2_get_consent_v3_artefact_request_request_id
-    - op: p2_get_consent_v3_artefact_artefact_id
-    - op: p2_get_consent_v3_artefact
-    - op: p2_post_consent_v3_auto_approve
-    - op: p2_post_consent_v3_auto_approve_auto_approval_id_disable
-    - op: p2_post_consent_v3_auto_approve_auto_approval_id_enable
-- id: p2-p2-phr-profile
-  title: P2 -PHR Profile
+    - {op: p2_post_v3_phr_app_login_profile_request_otp, example: Send ABHA Otp - Link-DeLink}
+    - {op: p2_post_v3_phr_app_login_profile_verify, example: Verify ABHA Otp - Link-DeLink}
+    - {op: p2_post_v3_phr_app_login_profile_link, example: Link Request}
+
+- id: p2-link-abha-number-aadhaar-otp
+  title: Link ABHA number, Aadhaar OTP
   steps:
-    - op: p2_get_v3_phr_app_login_profile
-    - op: p2_get_v3_phr_app_login_profile_phrcard
-    - op: p2_get_v3_phr_app_login_profile_qrcode
-    - op: p2_get_v3_phr_app_login_profile_request_logout
-    - op: p2_post_v3_phr_app_login_profile_request_otp
-    - op: p2_get_v3_phr_app_login_profile_request_token
-    - op: p2_post_v3_phr_app_login_profile_updateprofile
-    - op: p2_post_v3_phr_app_login_profile_verify
-- id: p2-p2-link-abha-number
-  title: P2 - Link ABHA Number
-  steps:
-    - op: p2_post_v3_phr_app_login_profile_link
+    - {op: p2_post_v3_phr_app_login_profile_request_otp, example: Send AADHAAR Otp - Link-DeLink}
+    - {op: p2_post_v3_phr_app_login_profile_verify, example: Verify AADHAAR Otp - Link-DeLink}
+    - {op: p2_post_v3_phr_app_login_profile_link, example: Link Request (2)}
+
 - id: p2-p2-switch-profile
-  title: P2 - Switch Profile
+  title: Switch profile
   steps:
-    - op: p2_get_v3_phr_app_login_profile_switch_profile
-    - op: p2_post_v3_phr_app_login_profile_verify_switch_profile_user
+    - {op: p2_get_v3_phr_app_login_profile_switch_profile}
+    - {op: p2_post_v3_phr_app_login_profile_verify_switch_profile_user, example: Verify User Switch Profile}
+
+- id: p2-profile
+  title: PHR profile, profile, card and session
+  steps:
+    - {op: p2_get_v3_phr_app_login_profile}
+    - {op: p2_get_v3_phr_app_login_profile_qrcode}
+    - {op: p2_get_v3_phr_app_login_profile_phrcard}
+    - {op: p2_post_v3_phr_app_login_profile_updateprofile, example: Update Profile}
+    - {op: p2_get_v3_phr_app_login_profile_request_token}
+    - {op: p2_get_v3_phr_app_login_profile_request_logout}
+
+- id: p2-abdm-hiecm-patient-share-phr
+  title: Patient share
+  steps:
+    - {op: p2_post_patient_share_v3_share}
+    - {op: p2_post_v3_hiu_patient_on_share}
+    - {op: p2_get_patient_share_v3_profile_gettokendetails}
+
+- id: p2-abdm-user-initiated-linking-phr
+  title: User initiated linking
+  steps:
+    - {op: gateway_get_gateway_v3_providers}
+    - {op: gateway_get_gateway_v3_providers_provider_id}
+    - {op: p2_post_user_initiated_linking_v3_patient_care_context_discover}
+    - {op: p2_post_v3_hiu_patient_care_context_on_discover}
+    - {op: p2_post_user_initiated_linking_v3_link_care_context_init}
+    - {op: p2_post_v3_hiu_patient_care_context_on_init}
+    - {op: p2_post_user_initiated_linking_v3_link_care_context_confirm}
+    - {op: p2_post_v3_hiu_patient_care_context_on_confirm}
+
+- id: p2-consent-manager-hiu-hip
+  title: Consent manager, HIU and HIP
+  steps:
+    - {op: p2_get_hip_v3_link_patient_links}
+    - {op: m3_post_consent_v3_request_init}
+    - {op: m3_post_consent_v3_request_status}
+    - {op: m2_post_consent_v3_request_hip_on_notify}
+    - {op: m3_post_consent_v3_request_hiu_on_notify}
+    - {op: m3_post_consent_v3_fetch}
+
+- id: p2-consent-management-data-flow-phr
+  title: Consent manager, fetch and manage consent requests
+  steps:
+    - {op: p2_post_consent_v3_auto_approve}
+    - {op: p2_post_consent_v3_auto_approve_auto_approval_id_disable}
+    - {op: p2_post_consent_v3_auto_approve_auto_approval_id_enable}
+    - {op: p2_get_consent_v3_request}
+    - {op: p2_get_consent_v3_request_request_id}
+    - {op: p2_post_consent_v3_request_request_id_approve}
+    - {op: p2_post_consent_v3_request_request_id_deny}
+    - {op: p2_post_consent_v3_revoke}
+    - {op: p2_get_consent_v3_artefact_request_request_id}
+    - {op: p2_get_consent_v3_artefact_artefact_id}
+    - {op: p2_get_consent_v3_artefact}

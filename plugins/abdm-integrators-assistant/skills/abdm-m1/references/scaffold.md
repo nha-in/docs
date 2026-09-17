@@ -765,72 +765,42 @@ curl --request POST \
 }'
 ```
 
-#### 4. Use Case: Get User Profile Details (`m1_get_v3_profile_account`)
-
-```bash
-curl --request GET \
-  --url https://abhasbx.abdm.gov.in/abha/api/v3/profile/account \
-  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
-  --header 'X-token: Bearer {{X-token}}' \
-  --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
-  --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z'
-```
-
 **Exit condition (Observe until this is true)**
 
 A 200 whose body matches:
 
 ```json
 {
-  "ABHANumber": "<ABHA_NUMBER>",
-  "preferredAbhaAddress": "<ABHA_ADDRESS>",
-  "mobile": "******0903",
-  "firstName": "Username",
-  "middleName": "<NAME>",
-  "lastName": "<NAME>",
-  "name": "<NAME>",
-  "yearOfBirth": "<DOB>",
-  "dayOfBirth": "<DOB>",
-  "monthOfBirth": "<DOB>",
-  "gender": "M",
-  "profilePhoto": "<BASE64_PHOTO>",
-  "status": "ACTIVE",
-  "stateCode": "27",
-  "districtCode": "478",
-  "pincode": "<PINCODE>",
-  "address": "<ADDRESS>",
-  "kycPhoto": "<BASE64_PHOTO>",
-  "stateName": "MAHARASHTRA",
-  "districtName": "<ADDRESS>",
-  "subdistrictName": "<ADDRESS>",
-  "authMethods": [
-    "MOBILE_OTP",
-    "AADHAAR_BIO",
-    "AADHAAR_OTP",
-    "DEMOGRAPHICS",
-    "PASSWORD"
-  ],
-  "tags": {},
-  "kycVerified": true,
-  "verificationStatus": "VERIFIED",
-  "verificationType": "AADHAAR",
-  "localizedDetails": {
-    "name": "<NAME>",
-    "stateName": "महाराष्ट्र",
-    "districtName": "<ADDRESS>",
-    "villageName": "<ADDRESS>",
-    "townName": "<ADDRESS>",
-    "gender": "पुरुष",
-    "localizedLabels": {
-      "name": "नाव",
-      "abhaNumber": "आभा क्रमांक",
-      "abhaAddress": "आभा पत्ता",
-      "gender": "लिंग",
-      "dob": "जन्मतारीख",
-      "mobile": "मोबाईल"
-    }
+  "message": "This account already exist",
+  "txnId": "b89ec10d-71fa-4280-83b3-1fedad66b5f5",
+  "tokens": {
+    "token": "<TOKEN>",
+    "expiresIn": 1800,
+    "refreshToken": "<TOKEN>",
+    "refreshExpiresIn": 1296000
   },
-  "createdDate": "07-05-2024"
+  "ABHAProfile": {
+    "firstName": "Username",
+    "middleName": "<NAME>",
+    "lastName": "<NAME>",
+    "dob": "<DOB>",
+    "gender": "M",
+    "photo": "<BASE64_PHOTO>",
+    "mobile": "******0903",
+    "phrAddress": [
+      "<ABHA_ADDRESS>"
+    ],
+    "address": "<ADDRESS>",
+    "districtCode": "478",
+    "stateCode": "27",
+    "pinCode": "<PINCODE>",
+    "abhaType": "STANDARD",
+    "stateName": "MAHARASHTRA",
+    "districtName": "<ADDRESS>",
+    "ABHANumber": "<ABHA_NUMBER>",
+    "abhaStatus": "ACTIVE"
+  },
+  "isNew": false
 }
 ```
 
@@ -2427,18 +2397,7 @@ A 200 whose body matches:
 
 **Act: the calls in this journey, in order**
 
-#### 1. Use Case: Get User Profile Details (`m1_get_v3_profile_account`)
-
-```bash
-curl --request GET \
-  --url https://abhasbx.abdm.gov.in/abha/api/v3/profile/account \
-  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
-  --header 'X-token: Bearer {{X-token}}' \
-  --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
-  --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z'
-```
-
-#### 2. Use Case: Generate QR Code for an ABHA Profile (`m1_get_v3_profile_account_qrcode`)
+#### 1. Use Case: Generate QR Code for an ABHA Profile (`m1_get_v3_profile_account_qrcode`)
 
 ```bash
 curl --request GET \
@@ -2449,7 +2408,7 @@ curl --request GET \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z'
 ```
 
-#### 3. Use Case: Retrieve ABHA Card image (`m1_get_v3_profile_account_abha_card`)
+#### 2. Use Case: Retrieve ABHA Card image (`m1_get_v3_profile_account_abha_card`)
 
 ```bash
 curl --request GET \
@@ -2460,20 +2419,15 @@ curl --request GET \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z'
 ```
 
-#### 4. Use Case: Update the user ABHA Profile Photo , Update the Child ABHA Profile (`m1_patch_v3_profile_account`)
+#### 3. Use Case: Get User Profile Details (`m1_get_v3_profile_account`)
 
 ```bash
-curl --request PATCH \
+curl --request GET \
   --url https://abhasbx.abdm.gov.in/abha/api/v3/profile/account \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
-  --header 'X-token: <X_TOKEN>' \
-  --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
+  --header 'X-token: Bearer {{X-token}}' \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
-  --header 'BENEFIT_NAME: {{Benefit Name}}' \
-  --header 'Content-Type: application/json' \
-  --data '{
-  "profilePhoto": "{{profile photo string}}"
-}'
+  --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z'
 ```
 
 **Exit condition (Observe until this is true)**
@@ -2485,27 +2439,52 @@ A 200 whose body matches:
   "ABHANumber": "<ABHA_NUMBER>",
   "preferredAbhaAddress": "<ABHA_ADDRESS>",
   "mobile": "******0903",
-  "firstName": "<NAME>",
+  "firstName": "Username",
   "middleName": "<NAME>",
   "lastName": "<NAME>",
+  "name": "<NAME>",
   "yearOfBirth": "<DOB>",
-  "monthOfBirth": "<DOB>",
   "dayOfBirth": "<DOB>",
-  "gender": "F",
+  "monthOfBirth": "<DOB>",
+  "gender": "M",
+  "profilePhoto": "<BASE64_PHOTO>",
   "status": "ACTIVE",
-  "stateCode": 27,
-  "districtCode": 290,
-  "stateName": "Maharashtra",
+  "stateCode": "27",
+  "districtCode": "478",
+  "pincode": "<PINCODE>",
+  "address": "<ADDRESS>",
+  "kycPhoto": "<BASE64_PHOTO>",
+  "stateName": "MAHARASHTRA",
   "districtName": "<ADDRESS>",
   "subdistrictName": "<ADDRESS>",
   "authMethods": [
-    "MOBILE_OTP"
+    "MOBILE_OTP",
+    "AADHAAR_BIO",
+    "AADHAAR_OTP",
+    "DEMOGRAPHICS",
+    "PASSWORD"
   ],
   "tags": {},
-  "kycVerified": false,
+  "kycVerified": true,
   "verificationStatus": "VERIFIED",
-  "verificationType": "CHILD_ABHA",
-  "createdDate": "10-05-2024"
+  "verificationType": "AADHAAR",
+  "localizedDetails": {
+    "name": "<NAME>",
+    "stateName": "महाराष्ट्र",
+    "districtName": "<ADDRESS>",
+    "villageName": "<ADDRESS>",
+    "townName": "<ADDRESS>",
+    "gender": "पुरुष",
+    "localizedLabels": {
+      "name": "नाव",
+      "abhaNumber": "आभा क्रमांक",
+      "abhaAddress": "आभा पत्ता",
+      "gender": "लिंग",
+      "dob": "जन्मतारीख",
+      "mobile": "मोबाईल"
+    }
+  },
+  "createdDate": "07-05-2024"
 }
 ```
 
@@ -2561,72 +2540,20 @@ curl --request POST \
 }'
 ```
 
-#### 3. Use Case: Get User Profile Details (`m1_get_v3_profile_account`)
-
-```bash
-curl --request GET \
-  --url https://abhasbx.abdm.gov.in/abha/api/v3/profile/account \
-  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
-  --header 'X-token: Bearer {{X-token}}' \
-  --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
-  --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z'
-```
-
 **Exit condition (Observe until this is true)**
 
 A 200 whose body matches:
 
 ```json
 {
-  "ABHANumber": "<ABHA_NUMBER>",
-  "preferredAbhaAddress": "<ABHA_ADDRESS>",
-  "mobile": "******0903",
-  "firstName": "Username",
-  "middleName": "<NAME>",
-  "lastName": "<NAME>",
-  "name": "<NAME>",
-  "yearOfBirth": "<DOB>",
-  "dayOfBirth": "<DOB>",
-  "monthOfBirth": "<DOB>",
-  "gender": "M",
-  "profilePhoto": "<BASE64_PHOTO>",
-  "status": "ACTIVE",
-  "stateCode": "27",
-  "districtCode": "478",
-  "pincode": "<PINCODE>",
-  "address": "<ADDRESS>",
-  "kycPhoto": "<BASE64_PHOTO>",
-  "stateName": "MAHARASHTRA",
-  "districtName": "<ADDRESS>",
-  "subdistrictName": "<ADDRESS>",
-  "authMethods": [
-    "MOBILE_OTP",
-    "AADHAAR_BIO",
-    "AADHAAR_OTP",
-    "DEMOGRAPHICS",
-    "PASSWORD"
-  ],
-  "tags": {},
-  "kycVerified": true,
-  "verificationStatus": "VERIFIED",
-  "verificationType": "AADHAAR",
-  "localizedDetails": {
-    "name": "<NAME>",
-    "stateName": "महाराष्ट्र",
-    "districtName": "<ADDRESS>",
-    "villageName": "<ADDRESS>",
-    "townName": "<ADDRESS>",
-    "gender": "पुरुष",
-    "localizedLabels": {
-      "name": "नाव",
-      "abhaNumber": "आभा क्रमांक",
-      "abhaAddress": "आभा पत्ता",
-      "gender": "लिंग",
-      "dob": "जन्मतारीख",
-      "mobile": "मोबाईल"
+  "txnId": "6e3c1761-8e4c-44a3-929e-32b2c16083d5",
+  "authResult": "success",
+  "message": "Password updated successfully",
+  "accounts": [
+    {
+      "ABHANumber": "<ABHA_NUMBER>"
     }
-  },
-  "createdDate": "07-05-2024"
+  ]
 }
 ```
 
@@ -2682,72 +2609,20 @@ curl --request POST \
 }'
 ```
 
-#### 3. Use Case: Get User Profile Details (`m1_get_v3_profile_account`)
-
-```bash
-curl --request GET \
-  --url https://abhasbx.abdm.gov.in/abha/api/v3/profile/account \
-  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
-  --header 'X-token: Bearer {{X-token}}' \
-  --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
-  --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z'
-```
-
 **Exit condition (Observe until this is true)**
 
 A 200 whose body matches:
 
 ```json
 {
-  "ABHANumber": "<ABHA_NUMBER>",
-  "preferredAbhaAddress": "<ABHA_ADDRESS>",
-  "mobile": "******0903",
-  "firstName": "Username",
-  "middleName": "<NAME>",
-  "lastName": "<NAME>",
-  "name": "<NAME>",
-  "yearOfBirth": "<DOB>",
-  "dayOfBirth": "<DOB>",
-  "monthOfBirth": "<DOB>",
-  "gender": "M",
-  "profilePhoto": "<BASE64_PHOTO>",
-  "status": "ACTIVE",
-  "stateCode": "27",
-  "districtCode": "478",
-  "pincode": "<PINCODE>",
-  "address": "<ADDRESS>",
-  "kycPhoto": "<BASE64_PHOTO>",
-  "stateName": "MAHARASHTRA",
-  "districtName": "<ADDRESS>",
-  "subdistrictName": "<ADDRESS>",
-  "authMethods": [
-    "MOBILE_OTP",
-    "AADHAAR_BIO",
-    "AADHAAR_OTP",
-    "DEMOGRAPHICS",
-    "PASSWORD"
-  ],
-  "tags": {},
-  "kycVerified": true,
-  "verificationStatus": "VERIFIED",
-  "verificationType": "AADHAAR",
-  "localizedDetails": {
-    "name": "<NAME>",
-    "stateName": "महाराष्ट्र",
-    "districtName": "<ADDRESS>",
-    "villageName": "<ADDRESS>",
-    "townName": "<ADDRESS>",
-    "gender": "पुरुष",
-    "localizedLabels": {
-      "name": "नाव",
-      "abhaNumber": "आभा क्रमांक",
-      "abhaAddress": "आभा पत्ता",
-      "gender": "लिंग",
-      "dob": "जन्मतारीख",
-      "mobile": "मोबाईल"
+  "txnId": "6e3c1761-8e4c-44a3-929e-32b2c16083d5",
+  "authResult": "success",
+  "message": "Password updated successfully",
+  "accounts": [
+    {
+      "ABHANumber": "<ABHA_NUMBER>"
     }
-  },
-  "createdDate": "07-05-2024"
+  ]
 }
 ```
 
@@ -2774,7 +2649,18 @@ curl --request POST \
 }'
 ```
 
-#### 2. Usecase : Benefit LINK or DELINK (`m1_post_v3_profile_benefit_linkanddelink`)
+#### 2. Use Case: Retrieve the benefit details associated with a specific ABHA number (`m1_get_v3_profile_benefit_abha_abhanumber`)
+
+```bash
+curl --request GET \
+  --url https://abhasbx.abdm.gov.in/abha/api/v3/profile/benefit/abha/{abhanumber} \
+  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
+  --header 'BENEFIT_NAME: {{Benefit Name}}' \
+  --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
+  --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z'
+```
+
+#### 3. Usecase : Benefit LINK or DELINK (`m1_post_v3_profile_benefit_linkanddelink`)
 
 ```bash
 curl --request POST \
@@ -2793,35 +2679,15 @@ curl --request POST \
 }'
 ```
 
-#### 3. Use Case: Retrieve the benefit details associated with a specific ABHA number (`m1_get_v3_profile_benefit_abha_abhanumber`)
-
-```bash
-curl --request GET \
-  --url https://abhasbx.abdm.gov.in/abha/api/v3/profile/benefit/abha/{abhanumber} \
-  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
-  --header 'BENEFIT_NAME: {{Benefit Name}}' \
-  --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
-  --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z'
-```
-
 **Exit condition (Observe until this is true)**
 
 A 200 whose body matches:
 
 ```json
 {
-  "abhaNumber": "<ABHA_NUMBER>",
-  "programme": [
-    {
-      "benefitName": "Poshan Abhiyaan"
-    },
-    {
-      "benefitName": "Test Benefit Program"
-    },
-    {
-      "benefitName": "Pradhan Mantri National Dialysis Programme"
-    }
-  ]
+  "benefitName": "Benefit Name",
+  "healthId": "<ABHA_NUMBER>",
+  "status": "Benefit record has been linked successfully"
 }
 ```
 

@@ -1,10 +1,10 @@
-- id: p4-subscription-phr
-  title: Subscription
+# catalogue/openapi/hiecm/v3/journeys/p4.yaml
+# Order of calls from the P4-Locker folder of the PHR and locker collection of
+# 16 September. Content from the PHR and Locker swagger of the same set.
+- id: p4-locker
+  title: Locker
   steps:
-    - op: p4_get_subscription_requests_v3_patients_requests
-    - op: p4_get_subscription_requests_v3_patients_lockers_lockerid
-    - op: p4_get_subscription_requests_v3_patients_lockers
-- id: p4-health-locker
-  title: Health-locker
-  steps:
-    - op: p4_post_subscription_requests_v3_setup_locker
+    - {op: p4_post_subscription_requests_v3_setup_locker}
+    - {op: p4_get_subscription_requests_v3_patients_lockers}
+    - {op: p4_get_subscription_requests_v3_patients_lockers_lockerid}
+    - {op: p4_get_subscription_requests_v3_patients_requests}
