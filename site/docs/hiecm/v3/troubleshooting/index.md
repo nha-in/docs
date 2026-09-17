@@ -2,7 +2,6 @@
 title: When something breaks
 sidebar_label: Troubleshooting
 description: Find the symptom you are seeing, not the error code, and work through the checks in order.
-verification: unverified
 source: catalogue/hiecm/troubleshooting
 sidebar_position: 0
 ---

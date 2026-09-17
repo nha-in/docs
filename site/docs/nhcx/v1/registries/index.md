@@ -2,7 +2,6 @@
 title: Registries
 sidebar_label: Participants and identifiers
 description: The participant registry NHCX runs, and how ABDM's three identifiers appear on this gateway.
-verification: unverified
 source: NHCX__NHCX-Website_DocumentDetails.md
 sidebar_position: 3
 ---

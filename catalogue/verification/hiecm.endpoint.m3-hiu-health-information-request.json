@@ -1,0 +1,8 @@
+{
+  "atom": "hiecm.endpoint.m3-hiu-health-information-request",
+  "on": "2026-09-17",
+  "against": "https://dev.abdm.gov.in",
+  "request": "curl -X POST 'https://dev.abdm.gov.in/api/hiecm/data-flow/v3/health-information/request' \\\n  -H 'Authorization: Bearer <scrubbed>' \\\n  -H 'REQUEST-ID: d22c5653-e224-415b-8a9f-b3c02dc1ac9c' \\\n  -H 'TIMESTAMP: 2026-09-17T11:23:02.013Z' \\\n  -H 'X-CM-ID: sbx' \\\n  -H 'Content-Type: application/json' \\\n  -d '{\n  \"hiRequest\": {\n    \"consent\": {\n      \"id\": \"consent-art-uuid-001\"\n    },\n    \"dateRange\": {\n      \"from\": \"2023-01-01T00:00:00.000Z\",\n      \"to\": \"2024-01-01T00:00:00.000Z\"\n    },\n    \"dataPushUrl\": \"https://your-hiu-server.com/abdm/data/push\",\n    \"keyMaterial\": {\n      \"cryptoAlg\": \"ECDH\",\n      \"curve\": \"Curve25519\",\n      \"dhPublicKey\": {\n        \"expiry\": \"2024-12-31T00:00:00.000Z\",\n        \"parameters\": \"Curve25519/32byte\",\n        \"keyValue\": \"base64-encoded-hiu-ecdh-public-key\"\n      },\n      \"nonce\": \"base64-encoded-random-nonce-32bytes\"\n    }\n  }\n}'\n",
+  "status": 401,
+  "body": ""
+}

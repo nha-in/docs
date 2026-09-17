@@ -2,7 +2,6 @@
 title: How the pieces fit
 sidebar_label: How the pieces fit
 description: The registries, the HIE-CM gateway, the two roles a record moves between, and where a health record actually lives.
-verification: unverified
 source: ABDM__Proposed_Simplified_Milestone_1.md, ABDM__Proposed_Simplified_Milestone_2.md, ABDM__Proposed_Simplified_Milestone_3.md, ABDM__Proposed_Simplified_Milestone_4_(NHPR).md
 sidebar_position: 1
 sidebar_class_name: sidebar-icon sidebar-icon--puzzle

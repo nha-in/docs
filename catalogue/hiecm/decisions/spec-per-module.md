@@ -13,8 +13,6 @@ sources:
   - file: catalogue/openapi/CONVENTIONS.md
     status: not-yet-hashed
     note: This repository's own specification conventions.
-verified:
-  status: unverified
 related:
   decisions: [hiecm.decision.callbacks-as-webhooks]
 ---

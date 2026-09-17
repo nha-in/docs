@@ -14,8 +14,6 @@ sources:
     note: >
       NHA's own M1 collection, the same source
       m1-create-abha-aadhaar-otp.md draws on.
-verified:
-  status: unverified
 related:
   flows: [hiecm.flow.m1-create-abha-aadhaar-otp]
   endpoints: [hiecm.endpoint.m1-enrolment-request-otp]

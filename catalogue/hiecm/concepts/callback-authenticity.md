@@ -17,8 +17,11 @@ sources:
       Declares GET /api/hiecm/gateway/v3/certs as the JSON Web Key Set used
       to verify JWT signatures in gateway callbacks, and the OIDC discovery
       document that names the jwks_uri.
-verified:
-  status: unverified
+  - file: catalogue/annexure/integration-learnings-2026-09-16.md
+    fetched: 2026-09-16
+    hash: sha256:d1415609d3d71178563367bcdcc48fa7a01fe9ebd247b4c019686304868368ce
+    note: >
+      The 401 without a session token, and the Authorization Bearer JWT with kid on every callback verifying RS256 against the v3 set. Observed by an integrator on 2026-09-16; the authenticated 200 is in catalogue/verification/hiecm.endpoint.gateway-get-gateway-certs.json, run 2026-09-17.
 related:
   concepts:
     - hiecm.concept.asynchronous-callbacks
@@ -69,9 +72,9 @@ Verifying one does not verify the other.
 - An understanding of why a 200 is not an answer, on
   [asynchronous calls and callbacks](hiecm.concept.asynchronous-callbacks).
 
-You do not need an access token for this one. The certificates endpoint
-declares no security in the specification, which is what you would expect of
-an endpoint whose whole job is publishing public keys.
+You need a gateway access token for this one. The v3 certificates endpoint
+answers 401 without it, so fetch the key set through the same authenticated
+client you use for every other gateway call.
 
 ## What happens
 
@@ -81,12 +84,15 @@ JWT library in your language can consume it directly.
 ```bash
 curl --request GET \
   --url https://dev.abdm.gov.in/api/hiecm/gateway/v3/certs \
+  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'REQUEST-ID: <REQUEST_ID>' \
-  --header 'TIMESTAMP: <TIMESTAMP>'
+  --header 'TIMESTAMP: <TIMESTAMP>' \
+  --header 'X-CM-ID: sbx'
 ```
 
 Each key in the set carries a `kid` that identifies it, `kty: RSA`, `use:
-sig`, and an `alg` the specification gives as `RS256`. The `n` and `e`
+sig`, and an `alg`. The sandbox set holds one `RS256` key and one `RS512`
+key. The `n` and `e`
 fields are the RSA modulus and exponent, Base64URL encoded. Some keys also
 carry `x5c`, a certificate chain.
 
@@ -113,20 +119,13 @@ match:
 timeout_seconds: 30
 ```
 
-### What this catalogue cannot yet tell you
+### The header on the callback
 
-The gateway specification says the key set exists and says what it is for.
-It does not say which header carries the signed token on an inbound
-callback, and none of the webhook definitions in the M2 or M3 specifications
-declare a header or a security scheme at all. So the transport is documented
-and the field that carries it is not.
+Every callback carries `Authorization: Bearer <jwt>`. The JWT is signed
+RS256 and its header names the `kid` to look up in the key set. Verify it
+before your handler reads the body.
 
-Two things follow. Confirm the header name against the sandbox before you
-write the lookup, by logging the full header set of the first real callback
-you receive. And treat this page as unverified until somebody has done that,
-which is what its status says.
-
-Pin the algorithm to `RS256` when you verify, and reject `none`. A verifier
+Pin the algorithm to the one the key's `alg` names, and reject `none`. A verifier
 that accepts whatever algorithm the token names accepts a token an attacker
 signed, and that is a defect in the verifier rather than in ABDM.
 
@@ -152,10 +151,9 @@ The `kid` is not in your cache. That is key rotation. Refetch the key set
 once, then reject if it is still absent, rather than refetching on every
 callback and handing an attacker a way to make you call the gateway.
 
-You cannot find a token on the request. The header is not declared in any
-specification here, so log every header of a real callback and read what
-actually arrives. Do not fall back to processing unverified requests while
-you work it out.
+The key set fetch answers 401. Send the session token and the standard
+headers; the v3 key set is not public. The older `/gateway/v0.5/certs` is
+public, and it is not the set that signs v3 callbacks.
 
 Verification is skipped under load. A handler that verifies inside a
 try block and continues on failure is worse than one that never verified,

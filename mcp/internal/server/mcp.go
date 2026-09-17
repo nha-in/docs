@@ -20,11 +20,6 @@ import (
 
 const serverVersion = "0.1.0"
 
-// unverifiedCaution is attached to any full atom whose verification status
-// is not "verified", so recorded claims are never mistaken for observed
-// sandbox behaviour.
-const unverifiedCaution = "unverified: formats, URLs and enums in this atom are recorded claims, not observed behaviour; prefer any atom marked verified, and treat exact values as needing a sandbox check"
-
 // atomTypeValues are the catalogue atom types, used to enumerate the type
 // filters of search_docs and list_atoms.
 var atomTypeValues = []any{
@@ -261,7 +256,7 @@ func searchHitsJSON(hits []index.SearchHit) []map[string]any {
 		out = append(out, map[string]any{
 			"id": h.ID, "type": h.Type, "milestone": h.Milestone,
 			"title": h.Title, "summary": h.Summary,
-			"verification_status": h.VerificationStatus, "snippet": h.Snippet,
+			"snippet": h.Snippet,
 			"doc_url": index.DocLink(h.DocURL, h.DocAnchor),
 		})
 	}
@@ -273,7 +268,7 @@ func atomRefsJSON(refs []index.AtomRef) []map[string]any {
 	for _, a := range refs {
 		out = append(out, map[string]any{
 			"id": a.ID, "type": a.Type, "milestone": a.Milestone,
-			"title": a.Title, "verification_status": a.VerificationStatus,
+			"title":   a.Title,
 			"doc_url": index.DocLink(a.DocURL, a.DocAnchor),
 		})
 	}

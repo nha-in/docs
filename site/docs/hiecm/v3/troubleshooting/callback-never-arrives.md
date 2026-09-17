@@ -2,7 +2,6 @@
 title: The callback never arrives
 sidebar_label: Callback never arrives
 description: A call returned 202, and nothing followed on your registered callback URL. The checks in order.
-verification: unverified
 source: ABDM__Proposed_Simplified_Milestone_2.md, ABDM__Proposed_Simplified_Milestone_1.md
 sidebar_position: 1
 covers: [hiecm.troubleshooting.callback-never-arrives]

@@ -12,8 +12,6 @@ sources:
   - file: ABDM Sandbox/ABDM/M1 ABHA Collection.postman_collection.json
     status: not-yet-hashed
     note: NHA's own M1 Postman collection, 123 requests.
-verified:
-  status: unverified
 related:
   errors: [hiecm.error.abdm-2404]
 ---

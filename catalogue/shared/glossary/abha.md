@@ -12,9 +12,6 @@ sources:
   - file: site/docs/overview/glossary.md
     fetched: 2026-08-24
     hash: sha256:b78c776025d0fb07e54d0b4c7d6e0266aba75872c382760ee0e177c6a3b2381e
-verified:
-  status: unverified
-  against: docs-only
 related:
   concepts: [hiecm.concept.care-context]
   glossary: [shared.glossary.ayushman-card, shared.glossary.abha-address]

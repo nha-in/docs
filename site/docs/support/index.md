@@ -3,7 +3,6 @@ title: Support
 sidebar_label: Support
 sidebar_position: 0
 description: Where to ask about the sandbox, and what to put in a report.
-verification: unverified
 source: repository README.md and catalogue/openapi/hiecm-gateway.yaml
 ---
 
