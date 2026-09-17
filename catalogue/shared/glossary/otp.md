@@ -9,8 +9,8 @@ summary: >
   A short code sent to a mobile number or an email, used once to
   prove the person is present.
 sources:
-  - file: site/docs/_glossary/_shared.mdx
-    status: not-yet-hashed
+  - url: https://github.com/eka-care/abdm-docs/blob/main/site/docs/_glossary/_shared.mdx
+    status: reference
     note: >
       This portal's own published glossary, where the definition was
       written first. Moved here so it can be retrieved, not rewritten.

@@ -9,8 +9,8 @@ summary: >
   The umbrella term for the software a health facility runs, whichever
   of HMIS, EMR, LIMS or PMS it happens to be.
 sources:
-  - file: site/src/config/roles.ts
-    status: not-yet-hashed
+  - url: https://github.com/eka-care/abdm-docs/blob/main/site/src/config/roles.ts
+    status: reference
     note: >
       The portal's own role selector calls one of its four readers an
       IMS vendor. Written here so that role has a definition behind it.

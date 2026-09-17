@@ -88,7 +88,7 @@ an internal note that escaped into production.
 
 | Instead of | Write |
 |---|---|
-| "NHA has published no OpenAPI file for the PHR role. These operations are derived from NHA's Aarogya Setu collection rather than from a specification." | Nothing. Document the operations. |
+| "NHA has published no OpenAPI file for the PHR role. These operations are derived from NHA's Postman collection rather than from a specification." | Nothing. Document the operations. |
 | "NHA's document carries about 95 screenshots, each a request or response sample. In most cases the screenshot is the only place the method and path appear, so both are missing here." | "Method and path are not yet published for the calls below." |
 | "## What did not survive the conversion" | Delete the section. What is documented is documented; what is not does not need a memorial. |
 | "The prose is derived from the collection, not written from a specification." | Nothing. |
