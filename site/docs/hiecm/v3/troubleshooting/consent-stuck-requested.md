@@ -51,10 +51,9 @@ status call.
 
 ## How you know it worked
 
-The consent request status reports Granted or Denied rather than
-Requested. A Granted result also carries the id of at least one consent
-artefact, and a granted request can produce more than
-one.
+The consent request notification reports GRANTED or DENIED rather than
+REQUESTED. A GRANTED notification carries `consentArtefacts`, an array
+of the generated consent artefact ids.
 
 ## When it goes wrong
 

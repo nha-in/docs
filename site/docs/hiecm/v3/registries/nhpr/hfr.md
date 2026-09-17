@@ -52,7 +52,7 @@ To update a facility later, send the same calls with the facility ID or tracking
 
 ## The link to the HPR token
 
-Your client credentials are not enough. Basic facility information takes an **HPR token in the header**, generated from an HPR ID and password. Submit facility takes an **`x-hpird-auth` token in the header**. Obtain both from the HPR token flow, and set each header by the name the call asks for.
+Your client credentials are not enough. Basic facility information takes an **HPR token in the `x-hprid-auth` header**, generated from an HPR ID and password. Submit facility takes **`x-hprid-auth` and `x-hprid-auth-verifier` headers**. Obtain both from the HPR token flow, and set each header by the name the call asks for.
 
 Both come from a person, not from your application. That is why [HPR](/docs/hiecm/v3/registries/nhpr/hpr) comes first in a rollout, and why somebody in your organisation needs an [HPID](/docs/hiecm/v3/getting-started/glossary#hpid) with facility manager rights, role 2 or role 3, before you write a line of HFR code.
 
@@ -62,7 +62,7 @@ A submitted and verified facility carries a facility ID, and that ID identifies 
 
 | Where | Format |
 | --- | --- |
-| Bridge linkage, facility search, nearby search, send OTP to contact | Starts with `IN` and is 12 characters in total |
+| Bridge linkage, facility search, send OTP to contact | Starts with `IN` and is 12 characters in total |
 | Deduplicate search | A 6 digit numeric value, labelled there as the facility unique ID |
 
 One parameter name carries two different formats. Take the format from the reference page for the call you are making.
@@ -94,7 +94,7 @@ Two paths are fixed here:
 
 | Call | Path |
 | --- | --- |
-| Fetch facility type | `v1.5/facility/fetchfacilitytype` |
+| Fetch facility type | `/v1.5/facility/fetch-facility-type` |
 | Get specialities | `/v1.5/facility/get-specialities` |
 
 ## Next

@@ -25,11 +25,10 @@ It never holds a patient's health record, only identifiers, metadata about where
 
 ## Nothing goes participant to participant
 
-Every request is addressed to the gateway, which forwards it. Three things follow.
+Every request is addressed to the gateway, which forwards it. Two things follow.
 
-- **You get an acknowledgement, not an answer.** In the [M3](/docs/hiecm/v3/getting-started/glossary#m3) consent flow the [HIU](/docs/hiecm/v3/getting-started/glossary#hiu) asks, the HIE-CM acknowledges with a consent request id, and the patient's decision comes back later. Each call's page in the [API reference](/docs/hiecm/v3/api) names the callback it produces.
-- **You have to be reachable.** Half of [M2](/docs/hiecm/v3/getting-started/glossary#m2) is endpoints the gateway calls on your system. A [HIP](/docs/hiecm/v3/getting-started/glossary#hip) it cannot reach fails on someone else's logs, as `ABDM-1028 HIP is unavailable`.
-- **Order is enforced.** The M2 error list carries `ABDM-2406 Invalid API sequence flow, please follow logical flow`.
+- **You get an acknowledgement, not an answer.** In the [M3](/docs/hiecm/v3/getting-started/glossary#m3) consent flow the [HIU](/docs/hiecm/v3/getting-started/glossary#hiu) asks, the HIE-CM returns the consent request id on a callback, and the patient's decision comes back later. Each call's page in the [API reference](/docs/hiecm/v3/api) names the callback it produces.
+- **You have to be reachable.** Half of [M2](/docs/hiecm/v3/getting-started/glossary#m2) is endpoints the gateway calls on your system.
 
 One exception. In the health information flow the HIU supplies a data push URL, and the HIP encrypts the records and pushes them there. That URL may differ from the HIU's registered gateway URL, to improve privacy. The permission came through the gateway. The bytes do not.
 
@@ -40,13 +39,13 @@ One exception. In the health information flow the HIU supplies a data push URL, 
 | [M1](/docs/hiecm/v3/api/m1) | Session tokens, and the calls that create and authenticate an ABHA identity | [M1 API reference](/reference/hiecm-m1) |
 | [M2](/docs/hiecm/v3/api/m2) | [Discovery](/docs/hiecm/v3/getting-started/glossary#discovery), care context linking, health information requests to a HIP | [M2 API reference](/reference/hiecm-m2) |
 | [M3](/docs/hiecm/v3/api/m3) | Consent requests, consent notifications, artefact fetches, data flow requests | [M3 API reference](/reference/hiecm-m3) |
-| [M4](/docs/hiecm/v3/api/m4) | Session tokens for the [HPR](/docs/hiecm/v3/getting-started/glossary#hpr) and [HFR](/docs/hiecm/v3/getting-started/glossary#hfr) registry calls | [M4 API reference](/reference/hiecm-m4) |
+| [M4](/docs/hiecm/v3/api/m4) | The [HPR](/docs/hiecm/v3/getting-started/glossary#hpr) and [HFR](/docs/hiecm/v3/getting-started/glossary#hfr) registry calls, which carry their own token from `POST /getManagementToken` | [M4 API reference](/reference/hiecm-m4) |
 
 The gateway holds no health record. It routes the permission and the metadata.
 
 ## The session endpoint
 
-One endpoint issues the token every other call carries. It is the same call in [M1](/docs/hiecm/v3/getting-started/glossary#m1) and [M4](/docs/hiecm/v3/getting-started/glossary#m4).
+One endpoint issues the token every other call carries. It is the call [M1](/docs/hiecm/v3/getting-started/glossary#m1) uses. [M4](/docs/hiecm/v3/getting-started/glossary#m4) takes its token from `POST /getManagementToken` instead.
 
 **POST** `/api/hiecm/gateway/v3/sessions`
 
@@ -56,7 +55,7 @@ Headers:
 |---|---|---|
 | `REQUEST-ID` | `18235d89-cb13-479d-ad71-7a57d5f669a8` | A fresh UUID for this call |
 | `TIMESTAMP` | `2022-10-06T15:10:00.587Z` | The time you made the call, ISO 8601 |
-| `X-CM-ID` | `sbx` | The consent manager. Use `sbx` for sandbox and `abdm` for production |
+| `X-CM-ID` | `sbx` | The consent manager. Use `sbx` for sandbox |
 | `Content-Type` | `application/json` | |
 
 No `Authorization` header on this call. It is the one call with no token yet.
@@ -91,13 +90,12 @@ Send the token back as `Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>`
 
 ## Which host
 
-Four hosts serve gateway paths.
+Three hosts serve gateway paths.
 
 | Host | Environment |
 |---|---|
 | `https://dev.abdm.gov.in` | Sandbox |
 | `https://apissbx.abdm.gov.in` | Sandbox, on the sessions call |
-| `https://live.abdm.gov.in` | Production, alongside `apis` for the same call |
 | `https://apis.abdm.gov.in` | Production |
 
 Keep the host in configuration, not in code.

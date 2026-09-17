@@ -23,7 +23,7 @@ pharmacies. A verified facility is issued a facility ID, and linking a
 resolvable as that facility.
 
 Two things in the facility record are yours. The additional information layer
-carries yes or no flags for a diagnostic lab and an imaging centre. The detailed
+carries flags for a diagnostic lab and an imaging centre. The detailed
 information layer asks for diagnostic and imaging services, and an imaging
 centre or diagnostic laboratory does not have to submit medical infrastructure
 or bed counts at all.

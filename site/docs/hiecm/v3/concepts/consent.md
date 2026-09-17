@@ -90,7 +90,7 @@ Why you want the records. See [purpose of use](/docs/hiecm/v3/getting-started/gl
 | `PUBHLTH` | Public Health |
 | `HPAYMT` | Healthcare Payment |
 | `DSRCH` | Disease Specific Healthcare Research |
-| `PATRQT` | Self-Requested |
+| `PATRQT` | Self Requested |
 
 The source table prints the header row and the `CAREMGT` row twice. There are six codes. The patient reads this code.
 
@@ -107,18 +107,17 @@ What kind of record you are asking for. See [HI type](/docs/hiecm/v3/getting-sta
 | `ImmunizationRecord` | Immunization Record |
 | `HealthDocumentRecord` | Record artifact |
 | `WellnessRecord` | Wellness Record |
+| `Invoice` | Invoice |
 
-The M2 error message for an invalid HI type lists these seven and adds `Invoice`. The two disagree by one value, so check the swagger before you send `Invoice`. What each type carries as a [FHIR](/docs/hiecm/v3/getting-started/glossary#fhir) bundle is on [FHIR and health record formats](/docs/hiecm/v3/concepts/fhir).
+What each type carries as a [FHIR](/docs/hiecm/v3/getting-started/glossary#fhir) bundle is on [FHIR and health record formats](/docs/hiecm/v3/concepts/fhir).
 
 ## Expiry and revocation
 
-**Expiry is predictable.** The artefact carries an end, so you can fetch before it arrives. Past it, the record holder rejects the request: `ABDM-1061` for an expired consent artefact, `ABDM-1112` for an artefact id that is invalid or already expired.
+**Expiry is predictable.** The artefact carries an end, so you can fetch before it arrives.
 
 **Revocation is not.** The patient can withdraw at any time, including after you have read the data, and future data sharing under that consent must stop immediately.
 
-So treat every fetch as a fresh permission check, and handle a mid flow revocation. A consent that was live when you sent the health information request can be dead when the record holder validates it. That returns `ABDM-1062`, consent not granted. Decide your retention policy for data you already hold. Sharing stops. What to do with what you already received is not documented yet.
-
-Read every code with the message the gateway returns. The error table lists `ABDM-1061` and `ABDM-1062` against two different messages each, so the code alone does not identify the failure.
+So treat every fetch as a fresh permission check, and handle a mid flow revocation. A consent that was live when you sent the health information request can be dead when the record holder validates it. Decide your retention policy for data you already hold. Sharing stops. What to do with what you already received is not documented yet.
 
 ## Consent without a person tapping approve
 

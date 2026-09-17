@@ -57,8 +57,7 @@ again. Report the API you called, the `REQUEST-ID`, the `TIMESTAMP`, and
 the full response body including the `txnId`. See
 [what to put in a support request](/docs/hiecm/v3/troubleshooting#what-to-put-in-a-support-request) for the full report format.
 
-This symptom can surface as a rate limit code or the catch-all
-failure code, both on the
+This symptom can surface as the catch-all failure code on the
 [error codes reference](/docs/hiecm/v3/reference/error-codes).
 
 <a class="next-step" href="/docs/hiecm/v3/milestones/m1">

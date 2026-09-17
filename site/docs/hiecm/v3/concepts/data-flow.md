@@ -67,8 +67,6 @@ Before the HIP retrieves anything it runs three checks.
 
 Only then does it package the records as [FHIR](/docs/hiecm/v3/getting-started/glossary#fhir) bundles, encrypt, sign with its long term private key, and send with the transaction id to the data push URL.
 
-Two failures land here: `ABDM-1062`, consent not granted, and `ABDM-1063`, date range given is invalid. Both codes also appear against a linking message, so read the code with the message.
-
 ## Stage 3: the notifications that close it
 
 Both sides call `health-information/notify`: the HIP to say the data was transmitted, the HIU to report success or failure on its side. Neither carries the record. They carry the fact that a transfer happened, which is what makes the exchange auditable for the patient.

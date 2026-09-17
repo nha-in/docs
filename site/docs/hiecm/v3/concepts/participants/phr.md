@@ -38,7 +38,7 @@ application name, your Play Store URL and your App Store URL.
 
 | Build | What it gives the user |
 | --- | --- |
-| [P1](/docs/hiecm/v3/milestones/p1) | Create or link an ABHA address, four login routes, profile, card and QR code |
+| [P1](/docs/hiecm/v3/milestones/p1) | Create or link an ABHA address, eight login routes, profile, card and QR code |
 | [P2](/docs/hiecm/v3/milestones/p2) | Scan and share at a facility, discover old records, link [care contexts](/docs/hiecm/v3/getting-started/glossary#care-context) |
 | [P3](/docs/hiecm/v3/milestones/p3) | Subscriptions, notifications, consent decisions, auto approval, fetching and storing records |
 

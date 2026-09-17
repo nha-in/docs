@@ -48,8 +48,9 @@ where each call names the callback it produces.
 
 ## How you know it worked
 
-Your handler receives a POST at your registered URL, carrying the exact
-`REQUEST-ID` you generated for the original call. Until you have
+Your handler receives a POST at your registered URL, carrying in
+`response.requestId` the `REQUEST-ID` you generated for the original
+call. Until you have
 observed that once, the callback path is unproven, even if the
 registration call itself succeeded.
 

@@ -41,7 +41,7 @@ the care provider's: one for the professional, one for the place.
 
 ## The gateway sits in the middle
 
-Your system never calls another participant directly. You call the gateway, it forwards the
+Apart from the transfer of the record itself, your system never calls another participant directly. You call the gateway, it forwards the
 request, and the answer arrives at your callback URL as a separate inbound call. That is why
 every flow here is drawn as a sequence.
 
@@ -91,11 +91,11 @@ a facility is configured in your integration's own credentials.
 | Client id and client secret | Your integration, one of each | [Sandbox registration](/docs/hiecm/v3/getting-started/sandbox) |
 | Bridge callback URL | Your integration, one | [Sandbox registration](/docs/hiecm/v3/getting-started/sandbox#3-register-your-callback-url) |
 | Facility ID | Each facility | [HFR onboarding](/docs/hiecm/v3/milestones/m4#journey-3-a-facility-onboards-to-the-hfr) |
-| `hipId`, `hipName`, `hipType` | Each facility, once per bridge it links to | [The bridge linkage call](/docs/hiecm/v3/milestones/m4#journey-4-linking-bridges-to-a-facility) |
+| `bridgeId`, `hipName`, `type` | Each facility, once per bridge it links to | [The bridge linkage call](/docs/hiecm/v3/milestones/m4#journey-4-linking-bridges-to-a-facility) |
 
 Every callback for every facility arrives at the one bridge URL. The header says
 which facility it belongs to: `X-HIP-ID` in [M2](/docs/hiecm/v3/api/m2), and
-`X-HIU-ID` in M2 and [M3](/docs/hiecm/v3/api/m3). That header is what your
+`X-HIU-ID` in [M3](/docs/hiecm/v3/api/m3). That header is what your
 handler routes a callback on, and the facility ID is what your records key to.
 
 A callback URL kept in a facility's settings is a design error, and so is a

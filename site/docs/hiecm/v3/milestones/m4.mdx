@@ -67,8 +67,8 @@ not yet a step by step guide to building it.
 
 ## How the two halves connect
 
-The HPR comes first, twice over. Creating an HPID returns an `hprToken`, which
-the register professional call carries in its payload. Onboarding a facility
+The HPR comes first, twice over. Creating an HPID returns a `token`, and the
+register professional call carries an `hprToken` in its payload. Onboarding a facility
 needs an HPR token in the header of the create calls, generated from an HPR ID
 and password. So facility onboarding usually starts with a person getting an
 HPID.
@@ -77,7 +77,7 @@ HPID.
 
 Hand M4 to the agent you already use, as one file it loads once. Install it, or open it there in one click.
 
-<SkillInstall slug="abdm-m4" note="Every M4 call in one file: 111 operations." />
+<SkillInstall slug="abdm-m4" note="Every M4 call in one file: 100 operations." />
 
 ## Certification
 
@@ -112,11 +112,8 @@ sequenceDiagram
     autonumber
     actor P as Professional
     participant S as Your system
-    participant G as HIE-CM gateway
     participant H as HPR service
 
-    S->>G: POST /gateway/v3/sessions with clientId and clientSecret
-    G-->>S: accessToken
     S->>H: Generate Aadhaar link
     H-->>S: txnId and a temporary URL, valid 5 minutes
     S->>P: Redirect to the URL
@@ -133,7 +130,7 @@ sequenceDiagram
 
 ### Then the mobile number
 
-Step 13 decides what happens next. An existing HPID means the professional is already registered: log them in and skip the rest of this journey. A returning professional can also skip Aadhaar entirely and log in by mobile OTP or by password. Both routes are in [the M4 authentication calls](/docs/hiecm/v3/api/m4/endpoints/m4-authentication/01-m4-post-v1-auth-authpassword).
+Step 10 decides what happens next. An existing HPID means the professional is already registered: log them in and skip the rest of this journey. A returning professional can also skip Aadhaar entirely and log in by mobile OTP or by password. Both routes are in [the M4 authentication calls](/docs/hiecm/v3/api/m4/endpoints/m4-authentication/01-m4-post-v1-auth-authpassword).
 
 No HPID means you confirm the mobile number before creating one, by a fast path or a slow one. Send it encrypted: fetch the public certificate from `/v4/int/api/v1/auth/cert`, encrypt with `RSA/ECB/PKCS1Padding`, send the encrypted value.
 
@@ -151,13 +148,13 @@ flowchart TD
     F --> G["Create HPID"]
 ```
 
-Create HPID returns an `hprToken`. Keep it: the register professional call needs it.
+Create HPID returns a `token`. The register professional call carries an `hprToken` in its payload.
 
 <LegacyAnchor id="then-the-profile" />
 
 ## Journey 2: register the professional on the HPR
 
-The HPID is an identity, not a profile. Registering the professional adds qualifications, council registration and current work. It needs the `hprToken` journey 1 returned.
+The HPID is an identity, not a profile. Registering the professional adds qualifications, council registration and current work. It carries an `hprToken` in its payload.
 
 ```mermaid
 sequenceDiagram
@@ -165,14 +162,14 @@ sequenceDiagram
     participant S as Your system
     participant H as HPR service
 
-    Note over S: Holds accessToken and hprToken
+    Note over S: Holds hprToken
     S->>H: Fetch master data: councils, courses, colleges, universities, languages
     H-->>S: Code lists
     S->>H: Register professional, with hprToken in the payload
     H-->>S: Registration result
     S->>H: Retrieve professional document list
     H-->>S: Document IDs to upload against
-    S->>H: Upload documents, one call per document
+    S->>H: Upload documents, as a list in one call
     H-->>S: Upload result
 ```
 

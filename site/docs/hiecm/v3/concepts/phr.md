@@ -46,8 +46,7 @@ ship the client secret inside the app.
 
 ## What you build in M1
 
-ABHA base URLs are `https://abhasbx.abdm.gov.in/abha/api/v3/` for sandbox and
-`https://abha.abdm.gov.in/api/abha/v3/` for production. PHR enrolment uses
+The ABHA sandbox base URL is `https://abhasbx.abdm.gov.in/abha/api/v3/`. PHR enrolment uses
 `https://abhasbx.abdm.gov.in/abha/api/v3/phr/app/enrollment/request/otp`.
 
 ### Creating an ABHA address
@@ -57,7 +56,7 @@ Build both paths.
 | Path | Validated by | Profile details | Result |
 | --- | --- | --- | --- |
 | Mobile number | Mobile OTP | The user types them | **Self-Declared**, no [KYC](/docs/hiecm/v3/getting-started/glossary#kyc) |
-| 14 digit ABHA number | Aadhaar OTP or mobile OTP | Returned by the ABHA system | **KYC Verified** |
+| 14 digit ABHA number | Aadhaar OTP or ABHA OTP | Returned by the ABHA system | **KYC Verified** |
 
 On the mobile number path, first name, year of birth, gender, address, state,
 district and pin code are mandatory; middle name, last name, day and month of
@@ -69,16 +68,16 @@ duplicate. ABDM wants one address per person.
 
 Address rules:
 
-- Letters, numbers and a dot only.
-- Cannot begin with a number, and cannot begin or end with a dot.
+- Letters, numbers, one optional dot and one optional underscore.
+- Starts and ends with a letter or number, 8 to 18 characters long.
 - All numeric is allowed only for the `14digit@abdm` form.
 - Creating a `10digitmobile@abdm` address is currently blocked.
 - Creating a `14digit@abdm` address is not allowed, but a user can log in with
   one. Every 14 digit ABHA number is issued a default address of this shape,
   written as `14digit@sbx` or `14digit@abdm`. Which environment uses which
   suffix is not documented yet.
-- Password, where you collect one: 8 characters or longer, one A to Z, one a to z,
-  one digit, one symbol, no spaces, no more than 2 consecutive characters or
+- Password, where you collect one: 8 characters or longer, one A to Z, one digit,
+  one special character from `!@#$%^&*-`, no spaces, no more than 2 consecutive characters or
   keyboard keys. Password validation is now optional.
 
 ### Linking an ABHA number to an ABHA address
@@ -87,7 +86,7 @@ The ABHA number is the KYC verified identity; the ABHA address is what shares
 records. A user can hold several ABHA addresses but only one ABHA number.
 
 A Self-Declared profile needs a "Link ABHA number" action: enter the 14 digit
-number, validate by Aadhaar OTP or mobile OTP. Profile details then follow the
+number, validate by Aadhaar OTP or ABHA OTP. Profile details then follow the
 ABHA number, the number becomes visible, and the status changes to KYC Verified.
 
 ### Login
@@ -130,8 +129,8 @@ counter code. Your app scans it, then:
 4. Waits for the facility, currently expected to respond within 30 seconds.
 5. Displays the token number if the facility returned one.
 
-Counter names arrive in the QR code: up to 20 alphanumeric characters, no special
-characters, examples OPD, OPD1, OPD cardio, IPD1, Pharmacy. A counter name cannot
+Counter names arrive in the QR code: 1 to 250 characters, letters, digits and
+spaces, with `.`, `-` or `_` allowed inside the name, examples OPD, OPD1, OPD cardio, IPD1, Pharmacy. A counter name cannot
 be the [HFR](/docs/hiecm/v3/getting-started/glossary#hfr) facility ID, the
 [HPID](/docs/hiecm/v3/getting-started/glossary#hpid), the HIP ID or the HIP name.
 
@@ -236,8 +235,9 @@ records.
 The user searches for the facility by name. Only facilities participating in ABDM
 appear, and the facility must be a HIP linked to an
 [HRP](/docs/hiecm/v3/getting-started/glossary#hrp). Your app sends a discovery request to the
-HIE-CM carrying name, year or date of birth, gender, verified mobile number, ABHA
-address, and optionally a patient registration number issued by that provider. The
+HIE-CM carrying name, year of birth, gender, verified identifiers such as mobile
+number or ABHA address, and optionally unverified identifiers such as a medical
+record number issued by that provider. The
 HIP is expected to respond within 10 seconds.
 
 Care contexts already linked must not be shown again. When everything is linked,

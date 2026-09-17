@@ -40,7 +40,7 @@ code that names the real reason.
    behind. See [authentication](/docs/hiecm/v3/reference/authentication).
 4. **Is `X-CM-ID` missing or wrong for this environment?** Look at the
    literal value you sent, not the value you meant to send: `sbx` on
-   the sandbox, `abdm` in production. This header names the consent
+   the sandbox. This header names the consent
    manager you are pointed at, and the wrong value fails every call the
    same way a missing session token does.
 
@@ -62,7 +62,7 @@ See [what to put in a support request](/docs/hiecm/v3/troubleshooting#what-to-pu
 
 The codes this symptom can surface are on the
 [error codes reference](/docs/hiecm/v3/reference/error-codes): an
-invalid timestamp, the wrong consent manager id, a missing session
+invalid timestamp, a missing session
 token, or a required header that is absent or malformed.
 
 <a class="next-step" href="/docs/hiecm/v3/reference/authentication">

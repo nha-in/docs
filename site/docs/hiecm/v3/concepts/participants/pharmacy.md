@@ -23,8 +23,8 @@ issued a facility ID, and linking a
 [bridge](/docs/hiecm/v3/getting-started/glossary#bridge) makes your software
 resolvable as that facility.
 
-Pharmacy appears twice in a facility record: as a facility type, and as a yes or
-no flag in the additional information layer for a facility that runs a pharmacy
+Pharmacy appears twice in a facility record: as a facility type, and as a
+flag in the additional information layer for a facility that runs a pharmacy
 inside it. A pharmacy does not have to submit medical infrastructure or bed
 counts.
 
@@ -42,12 +42,6 @@ the consent, then encrypt and push.
 Two of the eight record types are the ones closest to your work. The
 Prescription Record holds medication advice and follows Pharmacy Council of
 India guidelines. The Invoice Record holds pharmacy invoices and other billing.
-
-:::warning[Check the swagger before you send `Invoice`]
-`Invoice` appears in the [M2](/docs/hiecm/v3/api/m2) error message for an
-invalid health information type, and is missing from the
-[M3](/docs/hiecm/v3/api/m3) list of supported types. The two sources disagree.
-:::
 
 Whether dispensing has a record type of its own is not documented here. Ordering
 and fulfilment are not on this gateway: they run on

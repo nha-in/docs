@@ -51,27 +51,24 @@ The shape is `name@abdm`.
 
 - **Every number gets a default address**, the number with a suffix: `14digit@sbx` in [sandbox](/docs/hiecm/v3/getting-started/glossary#sandbox), `14digit@abdm` in production. The `preferredAbhaAddress` field holds the 14 digits with the suffix and no hyphens, for example `91**********27@sbx` in sandbox.
 - **A person can then create a memorable one.** A suggestion call offers addresses, and a custom address is accepted, linked to the number.
-- **An address can exist without a number.** One can be created on the [HIE-CM](/docs/hiecm/v3/getting-started/glossary#hie-cm) from mobile number, name, age and gender, self declared and with no KYC. Expect accounts with no number behind them.
+- **An address can exist without a number.** One can be created from mobile number, name, year of birth and gender, self declared and with no KYC. Expect accounts with no number behind them.
 
 ### Address policy
 
 These rules apply:
 
-- Letters, numbers and a dot are allowed.
-- It cannot begin with a number.
+- Letters, numbers, one optional dot and one optional underscore are allowed.
 - It cannot begin or end with a dot.
 - An all numeric address is allowed only in the `14digit@abdm` default form.
 - A 10 digit mobile number as an address is restricted and not created.
-
-Minimum length differs by flow. Validate against the error the endpoint returns rather than assuming one rule across all of them.
+- It is 8 to 18 characters long.
 
 ## What an address is allowed to be
 
 NHA validates the address on creation, so a form that accepts what NHA refuses
-produces a failure the person cannot act on. Letters, digits and a single dot
-are allowed, and beyond that:
+produces a failure the person cannot act on. Letters, digits, a single dot and a
+single underscore are allowed, and beyond that:
 
-- It cannot begin with a digit.
 - It cannot begin or end with a dot.
 - An all digit address is allowed for an ABHA number and nothing else, which
   is what makes the default `14digit@abdm` legal.
@@ -83,8 +80,8 @@ with it works on both web and mobile. And anything failing the rules above is
 refused at creation rather than at submission.
 
 A password is created alongside the address: at least 8 characters, at least
-one uppercase letter, one lowercase letter, one digit and one symbol, no
-spaces, and no more than two consecutive characters or keyboard keys. NHA
+one uppercase letter, one digit and one special character from
+`!@#$%^&*-`, no spaces, and no more than two consecutive characters or keyboard keys. NHA
 describes enforcing it as optional for the application, not the password
 itself as optional.
 
@@ -113,7 +110,6 @@ The communication mobile number need not be the Aadhaar linked one. It is verifi
 
 ```text
 Sandbox     https://abhasbx.abdm.gov.in/abha/api/v3/
-Production  https://abha.abdm.gov.in/api/abha/v3/
 ```
 
 Login by fingerprint or iris uses the same base URL, through `/v3/profile/login/verify` with a `bio` or `iris` block.

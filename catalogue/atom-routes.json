@@ -485,10 +485,10 @@
     {
       "atom": "shared.glossary.x-cm-id",
       "type": "glossary",
-      "route": "/docs/hiecm/v3/getting-started/going-live",
-      "anchor": "stage-6-go-live",
-      "link": "/docs/hiecm/v3/getting-started/going-live#stage-6-go-live",
-      "rule": "term defined on going-live",
+      "route": "/docs/hiecm/v3/getting-started/first-fifteen-minutes",
+      "anchor": "if-a-call-fails",
+      "link": "/docs/hiecm/v3/getting-started/first-fifteen-minutes#if-a-call-fails",
+      "rule": "term defined on first-fifteen-minutes",
       "confidence": "derived"
     },
     {

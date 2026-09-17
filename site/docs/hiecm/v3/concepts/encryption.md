@@ -11,7 +11,7 @@ sidebar_class_name: sidebar-icon sidebar-icon--lock
 
 # Encryption
 
-Several fields in [M1](/docs/hiecm/v3/api/m1) do not carry the value you started with. They carry that value encrypted against the ABDM public key. When an API page shows a placeholder such as `<RSA_ENCRYPTED_AADHAAR_NUMBER>`, the field name tells you what the value is and the placeholder tells you it must already be encrypted.
+Several fields in [M1](/docs/hiecm/v3/api/m1) do not carry the value you started with. They carry that value encrypted against the ABDM public key. When an API page shows a placeholder such as `{{encrypted aadhaar number}}`, the field name tells you what the value is and the placeholder tells you it must already be encrypted.
 
 ## What must be encrypted
 
@@ -37,8 +37,8 @@ encrypt matters and a wrong shape is rejected as though the value were wrong.
 | --- | --- | --- |
 | ABHA number | 14 digits with dashes, `NN-NNNN-NNNN-NNNN` | `91-1234-5678-9015` |
 | Aadhaar number | 12 digits, no spaces | `999999990019` |
-| Mobile number | 10 digits, no country code and no `+` | `9876543210` |
-| OTP value | The digits as sent, nothing else | `123456` |
+| Mobile number | 10 digits, first digit 1 to 9, optionally prefixed with `+91` or `0` | `9876543210` |
+| OTP value | Exactly 6 digits | `123456` |
 
 The ABHA number is the one that catches people, because the number is printed
 and stored both ways. Encrypting the 14 bare digits is rejected: a login OTP
@@ -65,19 +65,13 @@ There is nothing ABDM specific in the mechanics. Your platform's standard RSA li
 
 ## Where to do it
 
-**Encrypt inside your own system, against the published ABDM public key.** This is the production path, and it is the only one that keeps the guarantee the encryption exists to provide.
-
-A hosted helper that encrypts a value for you also exists, along with two third party encryption websites. Those exist so someone can try a flow by hand. They are not a production path.
-
-The reason is worth stating plainly. To use the helper you send the raw Aadhaar or mobile number to a remote endpoint. That hands the value to a party which has no reason to hold it, which is the thing the encryption exists to prevent. With the third party websites it is worse: a patient identifier leaves ABDM entirely.
-
-The [encrypt value endpoint](/docs/hiecm/v3/api/m1) documents the helper for completeness. Do not build against it.
+**Encrypt inside your own system, against the published ABDM public key.** This is the production path.
 
 ## Fetching the public key
 
-M1 has a `public/certificate` API for fetching the public key, listed again under developer utilities. Its URL, headers and response shape are on [the certificate call](/docs/hiecm/v3/api/m1/endpoints/m1-session/02-m1-get-v3-profile-public-certificate).
+M1 has a `public/certificate` API for fetching the public key, listed again under developer utilities. Its URL, headers and response shape are on [the certificate call](/docs/hiecm/v3/api/m1/endpoints/m1-session/03-m1-get-v3-profile-public-certificate).
 
 ## Where to go next
 
-- [Gateway](/docs/hiecm/v3/concepts/gateway) for the session token every call needs, including the key and helper endpoints.
+- [Gateway](/docs/hiecm/v3/concepts/gateway) for the session token every call needs.
 - [M1 user journeys](/docs/hiecm/v3/milestones/m1), where the encrypted identifier appears in the search and login steps.

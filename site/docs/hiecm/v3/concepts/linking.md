@@ -71,9 +71,9 @@ Which route applies depends on what the patient gave you at registration.
 
 **Discovery and link.** The request comes to you. The patient picks the facility they visited in their PHR app, and the HIE-CM forwards a discovery request to the [HRP](/docs/hiecm/v3/getting-started/glossary#hrp) or HIP behind it. You match against your own patients and reply with care contexts, and the patient picks which to link. Implementing discovery is mandatory for every HIP, even if every patient gives you an ABHA address at the counter, because a patient who visited two years ago did not.
 
-What you are handed splits in two:
+What you are handed splits in two, alongside the patient's name, gender and year of birth:
 
-- **Verified identifiers**, which you weight higher: ABHA address, mobile number, name, gender and year of birth.
+- **Verified identifiers**, which you weight higher, each typed as `MR`, `MOBILE`, `ABHA_NUMBER`, `ABHA_ADDRESS` or `EMAIL`.
 - **Unverified, patient declared information**, typically a facility issued identifier such as a patient ID or a medical registration number.
 
 Use the unverified value to sharpen a match, not to make one. The response carries care context metadata and nothing else: no diagnosis, no test result, no report content. Somebody who has not yet proved they are the patient reads it.
@@ -97,12 +97,8 @@ From the M2 error table. Read the code with the message the gateway returns, bec
 
 | Code | Message |
 | --- | --- |
-| `ABDM-1026` | Invalid Link Token |
 | `ABDM-1038` | ABHA address and Link token mismatch |
-| `ABDM-1056` | This care contexts has been already linked |
-| `ABDM-1057` | Invalid Care Contexts |
-| `ABDM-1060` | Invalid Patient Reference Number |
-| `ABDM-1090` | Duplicate HIP link request |
+| `ABDM-1056` | This care context has already been linked |
 
 The full list is on [M2 errors](/docs/hiecm/v3/api/m2/errors).
 
