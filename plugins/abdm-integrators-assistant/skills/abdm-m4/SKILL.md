@@ -51,7 +51,7 @@ This file is the map. Each line above is a file beside it, opened one at a time 
 - Read a plural response as plural. A verification returns an accounts array and a consent request can produce more than one artefact. Store the collection and decide from its length.
 - A documented callback path is not a documented callback payload. Log the whole body on arrival before you parse it, so a handler written against an assumed shape fails where you can see it.
 - Decode a token before you use it. A call that hands you a token has not necessarily handed you the token the next call wants, and the claims are base64 that need no library to read.
-- When a journey carries the same parameter through two calls, check whether it is the same value in both. An array like `scope` is a combination the operation validates as a whole, and the combination can change between opening a transaction and confirming it.
+- When a journey carries the same parameter through two calls, check what each call's specification asks for rather than carrying the first value forward.
 - Do not infer which path an identifier belongs to from where that identifier is most discussed. Send every identifier to the lookup first and let the answer pick the path, so nobody who already holds an account is sent to create a second.
 - Do not match an error code with string equality. A code may come back bare, as `ABDM-1001`, or with a trailing `: ` separator, as `ABDM-1001: `. Match on the code itself and tolerate the separator.
 - Handle a failure that carries no body. Check for an empty body before you parse, or your client throws on the simplest failure there is.
