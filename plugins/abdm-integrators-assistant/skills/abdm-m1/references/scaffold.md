@@ -14,7 +14,18 @@ Loop limit: 8 passes per step. Hitting the limit is an escalation: state what wa
 
 **Act: the calls in this journey, in order**
 
-#### 1. This API is invoked to generate keycloak token/access token. (`gateway_post_gateway_v3_sessions`)
+#### 1. Use Case: Request a token for accessing a user’s ABHA (`m1_get_v3_profile_account_request_token`)
+
+```bash
+curl --request GET \
+  --url https://abhasbx.abdm.gov.in/abha/api/v3/profile/account/request/token \
+  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
+  --header 'R-token: Bearer {{R-jwtToken}}' \
+  --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
+  --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8'
+```
+
+#### 2. This API is invoked to generate keycloak token/access token. (`gateway_post_gateway_v3_sessions`)
 
 ```bash
 curl --request POST \
@@ -30,23 +41,12 @@ curl --request POST \
 }'
 ```
 
-#### 2. Use Case: Used to Fetch Public Key (`m1_get_v3_profile_public_certificate`)
+#### 3. Use Case: Used to Fetch Public Key (`m1_get_v3_profile_public_certificate`)
 
 ```bash
 curl --request GET \
   --url https://abhasbx.abdm.gov.in/abha/api/v3/profile/public/certificate \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
-  --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
-  --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8'
-```
-
-#### 3. Use Case: Request a token for accessing a user’s ABHA (`m1_get_v3_profile_account_request_token`)
-
-```bash
-curl --request GET \
-  --url https://abhasbx.abdm.gov.in/abha/api/v3/profile/account/request/token \
-  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
-  --header 'R-token: Bearer {{R-jwtToken}}' \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8'
 ```
@@ -57,10 +57,8 @@ A 200 whose body matches:
 
 ```json
 {
-  "token": "<TOKEN>",
-  "expiresIn": 1800,
-  "refreshToken": "<TOKEN>",
-  "refreshExpiresIn": 1296000
+  "publicKey": "MIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEAstWB95C5pHLXiYW59qyO4Xb+59KYVm9Hywbo77qETZVAyc6VIsxU+UWhd/k/YtjZibCznB+HaXWX9TVTFs9Nwgv7LRGq5uLczpZQDrU7dnGkl/urRA8p0Jv/f8T0MZdFWQgks91uFffeBmJOb58u68ZRxSYGMPe4hb9XXKDVsgoSJaRNYviH7RgAI2QhTCwLEiMqIaUX3p1SAc178ZlN8qHXSSGXvhDR1GKM+y2DIyJqlzfik7lD14mDY/I4lcbftib8cv7llkybtjX1AayfZp4XpmIXKWv8nRM488/jOAF81Bi13paKgpjQUUuwq9tb5Qd/DChytYgBTBTJFe7irDFCmTIcqPr8+IMB7tXA3YXPp3z605Z6cGoYxezUm2Nz2o6oUmarDUntDhq/PnkNergmSeSvS8gD9DHBuJkJWZweG3xOPXiKQAUBr92mdFhJGm6fitO5jsBxgpmulxpG0oKDy9lAOLWSqK92JMcbMNHn4wRikdI9HSiXrrI7fLhJYTbyU3I4v5ESdEsayHXuiwO/1C8y56egzKSw44GAtEpbAkTNEEfK5H5R0QnVBIXOvfeF4tzGvmkfOO6nNXU3o/WAdOyV3xSQ9dqLY5MEL4sJCGY1iJBIAQ452s8v0ynJG5Yq+8hNhsCVnklCzAlsIzQpnSVDUVEzv17grVAw078CAwEAAQ==",
+  "encryptionAlgorithm": "RSA/ECB/OAEPWithSHA-1AndMGF1Padding"
 }
 ```
 
@@ -1499,20 +1497,9 @@ curl --request GET \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z'
 ```
 
-#### 6. Use Case: Generate QR Code By Passing X-token to share user ABHA address Profile Information. (`m1_get_v3_phr_web_login_profile_abha_qr_code`)
-
-```bash
-curl --request GET \
-  --url https://abhasbx.abdm.gov.in/abha/api/v3/phr/web/login/profile/abha/qr-code \
-  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
-  --header 'X-token: Bearer {{X-token}}' \
-  --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
-  --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z'
-```
-
 **Exit condition (Observe until this is true)**
 
-A 200 response. The specification gives no body for it, so read what comes back.
+A 202 response. The specification gives no body for it, so read what comes back.
 
 ### ABHA login, ABHA address with Aadhaar OTP (`m1-login-abha-address-aadhaar-otp`)
 
@@ -1599,39 +1586,15 @@ curl --request GET \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z'
 ```
 
-#### 6. Use Case: Generate QR Code By Passing X-token to share user ABHA address Profile Information. (`m1_get_v3_phr_web_login_profile_abha_qr_code`)
-
-```bash
-curl --request GET \
-  --url https://abhasbx.abdm.gov.in/abha/api/v3/phr/web/login/profile/abha/qr-code \
-  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
-  --header 'X-token: Bearer {{X-token}}' \
-  --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
-  --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z'
-```
-
 **Exit condition (Observe until this is true)**
 
-A 200 response. The specification gives no body for it, so read what comes back.
+A 202 response. The specification gives no body for it, so read what comes back.
 
 ### ABHA login, ABHA address with fingerprint (`m1-login-abha-address-fingerprint`)
 
 **Act: the calls in this journey, in order**
 
-#### 1. Use Case: Search ABHA Profile using ABHA address (`m1_post_v3_phr_web_login_abha_search`)
-
-```bash
-curl --request POST \
-  --url https://abhasbx.abdm.gov.in/abha/api/v3/phr/web/login/abha/search \
-  --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
-  --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
-  --header 'Content-Type: application/json' \
-  --data '{
-  "abhaAddress": "<ABHA_ADDRESS>"
-}'
-```
-
-#### 2. Use Case: Sends an OTP to the Mobile Number, Aadhaar Number, Request Biometric Authentication (`m1_post_v3_phr_web_login_abha_request_otp`)
+#### 1. Use Case: Sends an OTP to the Mobile Number, Aadhaar Number, Request Biometric Authentication (`m1_post_v3_phr_web_login_abha_request_otp`)
 
 ```bash
 curl --request POST \
@@ -1651,7 +1614,7 @@ curl --request POST \
 }'
 ```
 
-#### 3. Use Case: Verify OTP - Aadhaar Number, Mobile Number, Verify via Biometric (`m1_post_v3_phr_web_login_abha_verify`)
+#### 2. Use Case: Verify OTP - Aadhaar Number, Mobile Number, Verify via Biometric (`m1_post_v3_phr_web_login_abha_verify`)
 
 ```bash
 curl --request POST \
@@ -1677,7 +1640,7 @@ curl --request POST \
 }'
 ```
 
-#### 4. Use Case: Retrieves the user’s ABHA Profile (`m1_get_v3_phr_web_login_profile_abha_profile`)
+#### 3. Use Case: Retrieves the user’s ABHA Profile (`m1_get_v3_phr_web_login_profile_abha_profile`)
 
 ```bash
 curl --request GET \
@@ -1688,62 +1651,37 @@ curl --request GET \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z'
 ```
 
+#### 4. Use Case: Generate a PHR Card Profile (`m1_get_v3_phr_web_login_profile_abha_phr_card`)
+
+```bash
+curl --request GET \
+  --url https://abhasbx.abdm.gov.in/abha/api/v3/phr/web/login/profile/abha/phr-card \
+  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
+  --header 'X-token: Bearer {{jwtToken}}' \
+  --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
+  --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z'
+```
+
+#### 5. Use Case: Generate QR Code By Passing X-token to share user ABHA address Profile Information. (`m1_get_v3_phr_web_login_profile_abha_qr_code`)
+
+```bash
+curl --request GET \
+  --url https://abhasbx.abdm.gov.in/abha/api/v3/phr/web/login/profile/abha/qr-code \
+  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
+  --header 'X-token: Bearer {{X-token}}' \
+  --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
+  --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z'
+```
+
 **Exit condition (Observe until this is true)**
 
-A 200 whose body matches:
-
-```json
-{
-  "abhaAddress": "<ABHA_ADDRESS>",
-  "fullName": "<NAME>",
-  "profilePhoto": "<BASE64_PHOTO>",
-  "firstName": "<NAME>",
-  "middleName": "<NAME>",
-  "lastName": "<NAME>",
-  "dayOfBirth": "<DOB>",
-  "monthOfBirth": "<DOB>",
-  "yearOfBirth": "<DOB>",
-  "dateOfBirth": "<DOB>",
-  "gender": "M",
-  "email": "<EMAIL>",
-  "mobile": "<MOBILE_NUMBER>",
-  "abhaNumber": "<ABHA_NUMBER>",
-  "address": "<ADDRESS>",
-  "stateName": "MAHARASHTRA",
-  "pinCode": "<PINCODE>",
-  "stateCode": "27",
-  "districtCode": "487",
-  "authMethods": [
-    "AADHAAR_OTP",
-    "MOBILE_OTP"
-  ],
-  "status": "ACTIVE",
-  "subDistrictCode": "",
-  "subDistrictName": "",
-  "emailVerified": "false",
-  "mobileVerified": "true",
-  "kycStatus": "VERIFIED"
-}
-```
+A 200 response. The specification gives no body for it, so read what comes back.
 
 ### ABHA login, ABHA address with face authentication (`m1-login-abha-address-face`)
 
 **Act: the calls in this journey, in order**
 
-#### 1. Use Case: Search ABHA Profile using ABHA address (`m1_post_v3_phr_web_login_abha_search`)
-
-```bash
-curl --request POST \
-  --url https://abhasbx.abdm.gov.in/abha/api/v3/phr/web/login/abha/search \
-  --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
-  --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
-  --header 'Content-Type: application/json' \
-  --data '{
-  "abhaAddress": "<ABHA_ADDRESS>"
-}'
-```
-
-#### 2. Use Case: Sends an OTP to the Mobile Number, Aadhaar Number, Request Biometric Authentication (`m1_post_v3_phr_web_login_abha_request_otp`)
+#### 1. Use Case: Sends an OTP to the Mobile Number, Aadhaar Number, Request Biometric Authentication (`m1_post_v3_phr_web_login_abha_request_otp`)
 
 ```bash
 curl --request POST \
@@ -1763,7 +1701,7 @@ curl --request POST \
 }'
 ```
 
-#### 3. Use Case: Verify OTP - Aadhaar Number, Mobile Number, Verify via Biometric (`m1_post_v3_phr_web_login_abha_verify`)
+#### 2. Use Case: Verify OTP - Aadhaar Number, Mobile Number, Verify via Biometric (`m1_post_v3_phr_web_login_abha_verify`)
 
 ```bash
 curl --request POST \
@@ -1789,7 +1727,7 @@ curl --request POST \
 }'
 ```
 
-#### 4. Use Case: Retrieves the user’s ABHA Profile (`m1_get_v3_phr_web_login_profile_abha_profile`)
+#### 3. Use Case: Retrieves the user’s ABHA Profile (`m1_get_v3_phr_web_login_profile_abha_profile`)
 
 ```bash
 curl --request GET \
@@ -1800,62 +1738,37 @@ curl --request GET \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z'
 ```
 
+#### 4. Use Case: Generate a PHR Card Profile (`m1_get_v3_phr_web_login_profile_abha_phr_card`)
+
+```bash
+curl --request GET \
+  --url https://abhasbx.abdm.gov.in/abha/api/v3/phr/web/login/profile/abha/phr-card \
+  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
+  --header 'X-token: Bearer {{jwtToken}}' \
+  --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
+  --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z'
+```
+
+#### 5. Use Case: Generate QR Code By Passing X-token to share user ABHA address Profile Information. (`m1_get_v3_phr_web_login_profile_abha_qr_code`)
+
+```bash
+curl --request GET \
+  --url https://abhasbx.abdm.gov.in/abha/api/v3/phr/web/login/profile/abha/qr-code \
+  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
+  --header 'X-token: Bearer {{X-token}}' \
+  --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
+  --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z'
+```
+
 **Exit condition (Observe until this is true)**
 
-A 200 whose body matches:
-
-```json
-{
-  "abhaAddress": "<ABHA_ADDRESS>",
-  "fullName": "<NAME>",
-  "profilePhoto": "<BASE64_PHOTO>",
-  "firstName": "<NAME>",
-  "middleName": "<NAME>",
-  "lastName": "<NAME>",
-  "dayOfBirth": "<DOB>",
-  "monthOfBirth": "<DOB>",
-  "yearOfBirth": "<DOB>",
-  "dateOfBirth": "<DOB>",
-  "gender": "M",
-  "email": "<EMAIL>",
-  "mobile": "<MOBILE_NUMBER>",
-  "abhaNumber": "<ABHA_NUMBER>",
-  "address": "<ADDRESS>",
-  "stateName": "MAHARASHTRA",
-  "pinCode": "<PINCODE>",
-  "stateCode": "27",
-  "districtCode": "487",
-  "authMethods": [
-    "AADHAAR_OTP",
-    "MOBILE_OTP"
-  ],
-  "status": "ACTIVE",
-  "subDistrictCode": "",
-  "subDistrictName": "",
-  "emailVerified": "false",
-  "mobileVerified": "true",
-  "kycStatus": "VERIFIED"
-}
-```
+A 200 response. The specification gives no body for it, so read what comes back.
 
 ### ABHA login, ABHA address with iris (`m1-login-abha-address-iris`)
 
 **Act: the calls in this journey, in order**
 
-#### 1. Use Case: Search ABHA Profile using ABHA address (`m1_post_v3_phr_web_login_abha_search`)
-
-```bash
-curl --request POST \
-  --url https://abhasbx.abdm.gov.in/abha/api/v3/phr/web/login/abha/search \
-  --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
-  --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
-  --header 'Content-Type: application/json' \
-  --data '{
-  "abhaAddress": "<ABHA_ADDRESS>"
-}'
-```
-
-#### 2. Use Case: Sends an OTP to the Mobile Number, Aadhaar Number, Request Biometric Authentication (`m1_post_v3_phr_web_login_abha_request_otp`)
+#### 1. Use Case: Sends an OTP to the Mobile Number, Aadhaar Number, Request Biometric Authentication (`m1_post_v3_phr_web_login_abha_request_otp`)
 
 ```bash
 curl --request POST \
@@ -1875,7 +1788,7 @@ curl --request POST \
 }'
 ```
 
-#### 3. Use Case: Verify OTP - Aadhaar Number, Mobile Number, Verify via Biometric (`m1_post_v3_phr_web_login_abha_verify`)
+#### 2. Use Case: Verify OTP - Aadhaar Number, Mobile Number, Verify via Biometric (`m1_post_v3_phr_web_login_abha_verify`)
 
 ```bash
 curl --request POST \
@@ -1901,7 +1814,7 @@ curl --request POST \
 }'
 ```
 
-#### 4. Use Case: Retrieves the user’s ABHA Profile (`m1_get_v3_phr_web_login_profile_abha_profile`)
+#### 3. Use Case: Retrieves the user’s ABHA Profile (`m1_get_v3_phr_web_login_profile_abha_profile`)
 
 ```bash
 curl --request GET \
@@ -1912,43 +1825,31 @@ curl --request GET \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z'
 ```
 
+#### 4. Use Case: Generate a PHR Card Profile (`m1_get_v3_phr_web_login_profile_abha_phr_card`)
+
+```bash
+curl --request GET \
+  --url https://abhasbx.abdm.gov.in/abha/api/v3/phr/web/login/profile/abha/phr-card \
+  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
+  --header 'X-token: Bearer {{jwtToken}}' \
+  --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
+  --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z'
+```
+
+#### 5. Use Case: Generate QR Code By Passing X-token to share user ABHA address Profile Information. (`m1_get_v3_phr_web_login_profile_abha_qr_code`)
+
+```bash
+curl --request GET \
+  --url https://abhasbx.abdm.gov.in/abha/api/v3/phr/web/login/profile/abha/qr-code \
+  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
+  --header 'X-token: Bearer {{X-token}}' \
+  --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
+  --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z'
+```
+
 **Exit condition (Observe until this is true)**
 
-A 200 whose body matches:
-
-```json
-{
-  "abhaAddress": "<ABHA_ADDRESS>",
-  "fullName": "<NAME>",
-  "profilePhoto": "<BASE64_PHOTO>",
-  "firstName": "<NAME>",
-  "middleName": "<NAME>",
-  "lastName": "<NAME>",
-  "dayOfBirth": "<DOB>",
-  "monthOfBirth": "<DOB>",
-  "yearOfBirth": "<DOB>",
-  "dateOfBirth": "<DOB>",
-  "gender": "M",
-  "email": "<EMAIL>",
-  "mobile": "<MOBILE_NUMBER>",
-  "abhaNumber": "<ABHA_NUMBER>",
-  "address": "<ADDRESS>",
-  "stateName": "MAHARASHTRA",
-  "pinCode": "<PINCODE>",
-  "stateCode": "27",
-  "districtCode": "487",
-  "authMethods": [
-    "AADHAAR_OTP",
-    "MOBILE_OTP"
-  ],
-  "status": "ACTIVE",
-  "subDistrictCode": "",
-  "subDistrictName": "",
-  "emailVerified": "false",
-  "mobileVerified": "true",
-  "kycStatus": "VERIFIED"
-}
-```
+A 200 response. The specification gives no body for it, so read what comes back.
 
 ### Find ABHA, mobile OTP (`m1-find-mobile-otp`)
 

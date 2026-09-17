@@ -8,9 +8,9 @@
 - id: m1-session
   title: Session, tokens and certificate
   steps:
+    - {op: m1_get_v3_profile_account_request_token}
     - {op: gateway_post_gateway_v3_sessions}
     - {op: m1_get_v3_profile_public_certificate}
-    - {op: m1_get_v3_profile_account_request_token}
 
 - id: m1-create-aadhaar-otp
   title: ABHA creation, Aadhaar OTP
@@ -126,7 +126,6 @@
     - {op: m1_post_v3_phr_web_login_abha_verify, example: Verify OTP -Mobile Number}
     - {op: m1_get_v3_phr_web_login_profile_abha_profile}
     - {op: m1_get_v3_phr_web_login_profile_abha_phr_card}
-    - {op: m1_get_v3_phr_web_login_profile_abha_qr_code}
 
 - id: m1-login-abha-address-aadhaar-otp
   title: ABHA login, ABHA address with Aadhaar OTP
@@ -136,31 +135,33 @@
     - {op: m1_post_v3_phr_web_login_abha_verify, example: Verify OTP -Aadhaar Number}
     - {op: m1_get_v3_phr_web_login_profile_abha_profile}
     - {op: m1_get_v3_phr_web_login_profile_abha_phr_card}
-    - {op: m1_get_v3_phr_web_login_profile_abha_qr_code}
 
 - id: m1-login-abha-address-fingerprint
   title: ABHA login, ABHA address with fingerprint
   steps:
-    - {op: m1_post_v3_phr_web_login_abha_search, example: ABHA Address}
     - {op: m1_post_v3_phr_web_login_abha_request_otp, example: ABHA Address Verification via Biometric - (FingerPrint)}
     - {op: m1_post_v3_phr_web_login_abha_verify, example: Verify via Biometric - (Fingerprint Authentication)}
     - {op: m1_get_v3_phr_web_login_profile_abha_profile}
+    - {op: m1_get_v3_phr_web_login_profile_abha_phr_card}
+    - {op: m1_get_v3_phr_web_login_profile_abha_qr_code}
 
 - id: m1-login-abha-address-face
   title: ABHA login, ABHA address with face authentication
   steps:
-    - {op: m1_post_v3_phr_web_login_abha_search, example: ABHA Address}
     - {op: m1_post_v3_phr_web_login_abha_request_otp, example: ABHA Address Verification via Biometric - (Face)}
     - {op: m1_post_v3_phr_web_login_abha_verify, example: Verify via Biometric - (Face Authentication)}
     - {op: m1_get_v3_phr_web_login_profile_abha_profile}
+    - {op: m1_get_v3_phr_web_login_profile_abha_phr_card}
+    - {op: m1_get_v3_phr_web_login_profile_abha_qr_code}
 
 - id: m1-login-abha-address-iris
   title: ABHA login, ABHA address with iris
   steps:
-    - {op: m1_post_v3_phr_web_login_abha_search, example: ABHA Address}
     - {op: m1_post_v3_phr_web_login_abha_request_otp, example: ABHA Address Verification via Biometric - (IRIS)}
     - {op: m1_post_v3_phr_web_login_abha_verify, example: Verify via Biometric - (Iris Authentication)}
     - {op: m1_get_v3_phr_web_login_profile_abha_profile}
+    - {op: m1_get_v3_phr_web_login_profile_abha_phr_card}
+    - {op: m1_get_v3_phr_web_login_profile_abha_qr_code}
 
 - id: m1-find-mobile-otp
   title: Find ABHA, mobile OTP
