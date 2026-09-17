@@ -229,8 +229,8 @@ Availability is not a field on the item. Each provider declares a small set of `
             "district": { "name": "Pune", "code": "521" }
           },
           "contact": {
-            "phone": "8987628900",
-            "email": "contact@jansevabc.org"
+            "phone": "<MOBILE_NUMBER>",
+            "email": "contact@example.org"
           }
         }
       ]

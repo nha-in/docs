@@ -262,8 +262,8 @@ PMBI sends this to your `consumer_uri` through the Gateway. Each entry in `catal
             "radius": { "type": "CONSTANT", "value": "1.19", "unit": "km" }
           },
           "contact": {
-            "phone": "9309534959",
-            "email": "janaushadhikem@gmail.com"
+            "phone": "<MOBILE_NUMBER>",
+            "email": "contact@example.org"
           }
         }
       ]

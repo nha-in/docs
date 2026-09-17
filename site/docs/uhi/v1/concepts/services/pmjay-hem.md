@@ -287,9 +287,9 @@ message:
           state.code: 28
           country.name: INDIA
         contact:
-          phone: 9966753790
-          email: test@gmail.com
-          tags.nodalOfficerNumber: 9966753790
+          phone: <MOBILE_NUMBER>
+          email: contact@example.org
+          tags.nodalOfficerNumber: <MOBILE_NUMBER>
 ```
 
 ## Field reference

@@ -232,7 +232,7 @@ Trimmed to one provider:
               "id": "slot-uuid-a1b2c3d4-abcd-1234-efgh-567890abcdef",
               "type": "Physical",
               "agent": {
-                "id": "priyamehra@hpr.ndhm",
+                "id": "<HPR_ADDRESS>",
                 "name": "Dr. Priya Mehra",
                 "gender": "F",
                 "tags": {
@@ -332,7 +332,7 @@ Direct to the HSPA. You send the patient's details and the chosen slot. The HSPA
       "fulfillment": {
         "id": "slot-uuid-a1b2c3d4-abcd-1234-efgh-567890abcdef",
         "type": "Physical",
-        "agent": { "id": "priyamehra@hpr.ndhm", "name": "Dr. Priya Mehra" },
+        "agent": { "id": "<HPR_ADDRESS>", "name": "Dr. Priya Mehra" },
         "start": { "time": { "timestamp": "2026-04-16T10:00:00" } },
         "end": { "time": { "timestamp": "2026-04-16T10:20:00" } }
       },
@@ -347,8 +347,8 @@ Direct to the HSPA. You send the patient's details and the chosen slot. The HSPA
           "country": "INDIA",
           "area_code": "110085"
         },
-        "phone": "9876543210",
-        "email": "rahul.sharma@email.com"
+        "phone": "<MOBILE_NUMBER>",
+        "email": "patient@example.org"
       },
       "customer": {
         "id": "rahul.k001@sbx",
