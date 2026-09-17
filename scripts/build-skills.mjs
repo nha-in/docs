@@ -47,9 +47,6 @@ const skillUrl = (slug) =>
 // Every rule below is lifted from that module's own pages. A rule that is true
 // of M1 and not of M2 belongs to M1 only: an agent told the wrong rule is
 // worse off than an agent told nothing.
-const UNVERIFIED =
-  'Nothing here has been run against the ABDM sandbox. Treat request and response shapes as unconfirmed, and check a response before you rely on its shape.';
-
 /**
  * Where part of a module HAS been run, the blanket sentence above is worse than
  * nothing: it sits directly above rules quoting observed responses, and a
@@ -127,7 +124,6 @@ const MODULES = [
     description:
       'Use when building, debugging or testing ABDM Milestone 2: care contexts, HIP initiated linking, discovery, and pushing encrypted health records to a requester. Carries the endpoints, the prerequisites, every recorded error code and the M2 test matrix. Also carries the scaffolding loop that builds it flow by flow and the loop from a failed call to a named fix, in references/.',
     rules: [
-      UNVERIFIED,
       'You act as the HIP. NHA requires a valid Facility ID and registration in the HIP role before you can create health records and share them.',
       'M2 is keyed to an ABHA address, so a working M1 integration comes first.',
       'Hold a link token per patient, stored at registration. NHA gives its validity as six months and says to validate it before use. If you hold no valid one, regenerate it using demographic authentication.',
@@ -147,7 +143,6 @@ const MODULES = [
     description:
       'Use when building, debugging or testing ABDM Milestone 3: raising a consent request, tracking its status, reading consent artefacts, and fetching encrypted health records as an HIU. Carries the endpoints, the consent rules, every recorded error code and the M3 test matrix. Also carries the scaffolding loop that builds it flow by flow and the loop from a failed call to a named fix, in references/.',
     rules: [
-      UNVERIFIED,
       'You act as the HIU. The HIE-CM holds the consent and asks the patient on your behalf. No artefact, no records.',
       'The patient must be known to you by ABHA address before you can raise a request.',
       'One consent request can produce more than one artefact. Store the request id and every artefact id.',
@@ -166,7 +161,6 @@ const MODULES = [
     description:
       'Use when building, debugging or testing ABDM Milestone 4, the NHPR: creating an HPID, registering a healthcare professional on the HPR, onboarding a facility to the HFR, and linking that facility to its HIP or HIU bridges. Carries the operations NHA has published, the registration order, every recorded error code and the identifier formats.',
     rules: [
-      UNVERIFIED,
       'Neither registry moves a health record. M4 establishes who the professional is and what the facility is, so every record flow has a verified provider behind it.',
       'M2 and M3 need a facility in the HFR and a bridge linked to it before records flow in production. M4 is the API route to that. Registering the facility by hand on the NHPR portal is the other route, and a product that takes it never builds M4.',
       'The HPR comes first. Onboarding a facility needs an HPR token, which needs a person who already holds an HPID.',
@@ -189,7 +183,6 @@ const MODULES = [
     description:
       "Use when building, debugging or testing ABDM P1, the patient side of Milestone 1: registration in a PHR application, the four login routes, profile management, the ABHA card, and the family members a user manages. Carries the endpoints, the required headers, every recorded error code and the account rules.",
     rules: [
-      UNVERIFIED,
       'P1 is the patient side of M1. M1 is how a hospital system creates an ABHA; P1 is how the person\'s own application does it and maintains the account afterwards.',
       'Every user needs an ABHA address, `username@abdm`. Consent, notifications and record sharing all hang off it.',
       'Build both creation paths: by mobile number, and by an existing 14 digit ABHA number.',
@@ -207,7 +200,6 @@ const MODULES = [
     description:
       'Use when building, debugging or testing ABDM P2, the patient side of Milestone 2: discovering records held elsewhere, linking care contexts to an ABHA address, and pulling those records into a PHR application. Carries the endpoints, the timing rules the network enforces, every recorded error code and the discovery rules.',
     rules: [
-      UNVERIFIED,
       'P2 is the mirror of M2. M2 is a provider publishing a record; P2 is the patient discovering it and linking it to their own ABHA address.',
       'Discovery is for facilities the user visited without giving an ABHA address, and for older records.',
       'A HIP is expected to answer a discovery request within 10 seconds.',
@@ -225,7 +217,6 @@ const MODULES = [
     description:
       "Use when building, debugging or testing ABDM P3, the patient side of Milestone 3: subscriptions, auto approval policies, granting and revoking consent, and fetching the records a grant covers. Carries the endpoints, the notification rules, every recorded error code and the consent rules.",
     rules: [
-      UNVERIFIED,
       'P3 is the other side of M3. M3 is a requester asking for records; P3 is the patient deciding, and being told each time.',
       'A PHR application implements the HIU role as well, because fetching a user\'s own records is an HIU flow.',
       'Build for revocation from the start. A consent that worked yesterday can be withdrawn today, and that is the system working correctly.',
@@ -244,7 +235,6 @@ const MODULES = [
     description:
       'Use when building services a PHR application offers on top of ABDM: teleconsultation, nearby facility search, ambulance booking, blood bank search, scan and pay, PMJAY facility discovery and NHCX coverage lookups. None of it is required to certify as a PHR application.',
     rules: [
-      UNVERIFIED,
       'None of this is a certification milestone. Nothing here is required to certify as a PHR application, and building none of it is a valid choice.',
       'These operations sit apart from P1 to P3 so that nothing here implies a PHR application must build them.',
     ],
@@ -793,7 +783,6 @@ fhirFiles['SKILL.md'] = [
   '',
   '## Before anything else',
   '',
-  `- ${UNVERIFIED}`,
   '- A bundle that validates is not a bundle ABDM accepts. The NRCES profiles are the floor, and the milestone the bundle travels under adds its own rules.',
   '',
   '## Practices that hold across every call',
@@ -984,7 +973,6 @@ const promptLines = [
   '',
   'Tell the user what you installed and where you suggest starting. Two cautions to keep for the whole engagement:',
   '',
-  '- Nothing in these skills has been run against the ABDM sandbox. Verify response shapes against real calls before relying on them.',
   `- The skills are snapshots. The current documentation lives at ${promptRef('/')}; prefer it, and the MCP server when connected, over any downloaded copy that has aged.`,
   '',
 ];
