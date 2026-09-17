@@ -19,19 +19,19 @@ Generated from the specifications. Every scheme and header below is declared in 
 
 ## M1 ABHA identity
 
-**bearerAuth**, `http` `bearer`. The access token from POST /api/hiecm/gateway/v3/sessions.
+**bearerAuth**, `http` `bearer`.
 
 ## M2 Linking and sharing
 
-**bearerAuth**, `http` `bearer`. The access token from POST /api/hiecm/gateway/v3/sessions.
+**bearerAuth**, `http` `bearer`.
 
 ## M3 Consent and fetching
 
-**bearerAuth**, `http` `bearer`. The access token from POST /api/hiecm/gateway/v3/sessions.
+**bearerAuth**, `http` `bearer`.
 
 ## M4 HPR and HFR
 
-**bearerAuth**, `http` `bearer`. The access token from POST /api/hiecm/gateway/v3/sessions.
+**bearerAuth**, `http` `bearer`. The token from POST /getManagementToken.
 
 ## P1 Registration and login
 
@@ -43,17 +43,17 @@ Generated from the specifications. Every scheme and header below is declared in 
 
 ## P3 Subscription
 
-**bearerAuth**, `http` `bearer`. The access token from POST /api/hiecm/gateway/v3/sessions.
+**bearerAuth**, `http` `bearer`.
 
 ## P4 Locker
 
-**bearerAuth**, `http` `bearer`. The access token from POST /api/hiecm/gateway/v3/sessions.
+**bearerAuth**, `http` `bearer`.
 
 ## Subscriptions
 
-**bearerAuth**, `http` `bearer`. The access token from POST /api/hiecm/gateway/v3/sessions.
+**bearerAuth**, `http` `bearer`.
 
 ## Scan and Pay
 
-**bearerAuth**, `http` `bearer`. The access token from POST /api/hiecm/gateway/v3/sessions.
+**bearerAuth**, `http` `bearer`.
 
