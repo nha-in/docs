@@ -16,7 +16,7 @@
 /** Segments that route rather than identify. */
 const NOISE = new Set([
   '', 'api', 'apis', 'abha', 'gateway', 'hiecm',
-  'v1', 'v1.5', 'v2', 'v3', 'v3.1', 'v0.5',
+  'v1', 'v1.5', 'v2', 'v3', 'v0.5',
 ]);
 
 // One typo in NHA's own sheet, corrected here rather than worked around
