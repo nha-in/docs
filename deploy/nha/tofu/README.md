@@ -10,7 +10,7 @@ and `backend_alb.tf`. They add to the existing state; nothing already there chan
 | `abdm_docs_nlb.tf` | internal NLB, TCP 80 → 8080, `/healthz` checks; reuses `backend_alb`'s security group |
 | `abdm_docs_mcp_ecs_task.tf` | the docs-mcp Fargate service on `module.ecs_cluster`, 2 tasks, rollback on failure, Bedrock IAM |
 | `abdm_docs_bedrock_endpoint.tf` | `bedrock-runtime` VPC endpoint, open only to the docs-mcp tasks |
-| `abdm_docs_site.tf` | the docs site: private bucket, CloudFront on its own `cloudfront.net` name (no custom hostname, no certificate) |
+| `abdm_docs_site.tf` | the docs site bucket, readable by the CloudFront distribution in NHA's CDN account that serves `docs.abdm.gov.in` |
 | `deploy.sh` | publishes the site and docs-mcp into the above; not a Tofu file, stays in this repository |
 
 What they rely on from the root: `module.vpc`, `module.ecs_cluster`, `module.kms_key`,
@@ -43,14 +43,15 @@ deploy/nha/tofu/deploy.sh v1.0.0
 ```
 
 The argument is the version being released: the git tag on the commit you are deploying from.
-`deploy.sh` carries NHA's names (account, region, cluster, service, repository, bucket,
-distribution), looks up the two addresses `tofu apply` assigned (the site's `cloudfront.net`
-name and the NLB's name), and always publishes both the site and docs-mcp. There is no
-`latest` anywhere.
+`deploy.sh` carries NHA's names (account, region, cluster, service, repository, bucket) and the
+public origin `https://docs.abdm.gov.in`, and always publishes both the site and docs-mcp. There
+is no `latest` anywhere.
 
-- **Site:** built with the right URLs, synced to `main/` in the bucket in two passes (assets
-  first, then pages), CloudFront invalidated. `main/` is the distribution's origin path and the
-  only prefix it serves. A copy is kept under `<version>/`, which later deploys never delete.
+- **Site:** built against `https://docs.abdm.gov.in`, synced to `main/` in the bucket in two
+  passes (assets first, then pages). `main/` is the CDN's origin path and the only prefix it
+  serves. Pages are uploaded with `must-revalidate` and assets are fingerprinted, so no
+  invalidation is needed; the distribution lives in NHA's CDN account (449563540430) and is not
+  managed here. A copy is kept under `<version>/`, which later deploys never delete.
 - **docs-mcp:** the search index is built against Bedrock, the amd64 image is built and pushed
   as `<version>`, and the script prints what to do next. Nothing rolls out until Tofu says so:
 
@@ -64,30 +65,31 @@ name and the NLB's name), and always publishes both the site and docs-mcp. There
   previous revision, and so the previous version, back.
 
 **Reverting.** docs-mcp: set the earlier version in the tfvars and `tofu apply`. Site:
-`aws s3 sync s3://ohn-prod-abdm-docs/<version>/ s3://ohn-prod-abdm-docs/main/ --delete` and an
-invalidation of `/*`.
+`aws s3 sync s3://ohn-prod-abdm-docs/<version>/ s3://ohn-prod-abdm-docs/main/ --delete`.
 
 Needs Node for the site, Go and Docker for docs-mcp, and the deploying identity needs
 `bedrock:InvokeModel` on Titan Text Embeddings for the index build.
 
 ## Check
 
-From inside the VPC or across the transit gateway (the NLB is internal). `deploy.sh` prints the
-two URLs when it finishes.
+Through the CDN, from anywhere:
 
 ```sh
-curl http://<nlb dns name>/healthz
-curl 'http://<nlb dns name>/api/search?q=abha'
+curl https://docs.abdm.gov.in/healthz
+curl 'https://docs.abdm.gov.in/api/search?q=abha'
 aws logs tail ohn/prod/abdm-docs-mcp --since 15m
 ```
+
+The NLB itself is internal; the CDN reaches it through an external ALB NHA runs. Whatever
+targets the docs-mcp tasks must carry `aws_security_group.nlb_sg`, the only group they admit
+on 8080.
 
 A healthy start logs `docs-mcp starting … embeddings=true`.
 
 ## Known limits
 
-- docs-mcp is internal and plain HTTP. Coding agents inside NHA's network reach it; the public
-  site's search box does not, because a browser will not call `http://` from an `https://` page.
-  Put TLS in front of the NLB, or a CloudFront behaviour, when that matters.
+- The CDN's `/mcp/*`, `/api/*` and `/healthz` behaviours must forward every method, header and
+  query string uncached: MCP is `POST` with `Accept: text/event-stream`, chat streams.
 - `private_dns_enabled` on the Bedrock endpoint applies to the whole VPC: everything in it that
   calls Bedrock goes through the endpoint from then on.
 - Chat is off (`CHAT_MODEL` unset). Add it to `abdm_docs_mcp_environment` to turn it on.
