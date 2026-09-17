@@ -29,20 +29,16 @@ code that names the real reason.
    a duration, and re-run it for a fresh token instead of retrying the
    failing call with the old one. See
    [authentication](/docs/hiecm/v3/reference/authentication).
-2. **Are you calling the wrong environment's base URL?** A sandbox token
-   is not valid against a production base URL, or the reverse. Look at
+2. **Are you calling the wrong environment's base URL?** Look at
    the host in the failing request and the host you requested the
    session token from, side by side. If they differ, point every call
    at the same host you authenticated against.
 3. **Is your clock wrong?** The `TIMESTAMP` header has to be close to
-   the gateway's own clock, in ISO 8601 UTC. A container host that was
-   suspended and resumed is the usual cause, because its clock resumes
-   behind. See [authentication](/docs/hiecm/v3/reference/authentication).
+   the gateway's own clock, in ISO 8601 UTC. See [authentication](/docs/hiecm/v3/reference/authentication).
 4. **Is `X-CM-ID` missing or wrong for this environment?** Look at the
    literal value you sent, not the value you meant to send: `sbx` on
-   the sandbox, `abdm` in production. This header names the consent
-   manager you are pointed at, and the wrong value fails every call the
-   same way a missing session token does.
+   the sandbox. This header names the consent manager you are pointed
+   at.
 
 ## How you know it worked
 
@@ -62,8 +58,7 @@ See [what to put in a support request](/docs/hiecm/v3/troubleshooting#what-to-pu
 
 The codes this symptom can surface are on the
 [error codes reference](/docs/hiecm/v3/reference/error-codes): an
-invalid timestamp, the wrong consent manager id, a missing session
-token, or a required header that is absent or malformed.
+invalid timestamp, a missing session token, or a required header that is absent or malformed.
 
 <a class="next-step" href="/docs/hiecm/v3/reference/authentication">
 <span class="next-step__eyebrow">Next</span>

@@ -24,73 +24,47 @@ sidebar_class_name: sidebar-icon sidebar-icon--id-card
 
 Store both. You match a patient record against the number, and you send the address when you link a [care context](/docs/hiecm/v3/getting-started/glossary#care-context) or ask for consent. The number is issued only after a strong KYC process completes.
 
-## The check digit
-
-Two validation utilities exist: ABHA number validation by the Luhn algorithm, and Aadhaar number validation by the Verhoeff algorithm. Luhn derives the last digit from the ones before it, so you catch a mistyped number locally before spending a call.
-
 ## How identity is verified
 
 Verification runs against Aadhaar through the ABHA service, so your system never calls Aadhaar directly. There are four routes:
 
-| Route | How the person proves identity | Private integrators | Government integrators |
-| --- | --- | --- | --- |
-| Aadhaar [OTP](/docs/hiecm/v3/getting-started/glossary#otp) | A code sent to the Aadhaar linked mobile number | Mandatory | Mandatory |
-| Face authentication | A QR code scanned in the ABHA app, then face capture through the Aadhaar RD service | Optional | Optional |
-| Biometrics | Fingerprint or IRIS on a registered device, which returns a signed PID block | Optional | Optional |
-| Demographic authentication | Name, date of birth and gender matched against Aadhaar | Not required | Mandatory |
-
-Build Aadhaar OTP first. It is mandatory for everyone and needs no hardware.
+| Route | How the person proves identity |
+| --- | --- |
+| Aadhaar [OTP](/docs/hiecm/v3/getting-started/glossary#otp) | A code sent to the Aadhaar linked mobile number |
+| Face authentication | A QR code scanned in the ABHA app, then face capture |
+| Biometrics | Fingerprint or IRIS on a registered device, which returns a signed PID block |
+| Demographic authentication | Name, date of birth and gender matched against Aadhaar |
 
 ### Child ABHA
 
-A child under six has no Aadhaar number. Child ABHA is a 14 digit identifier created with a parent or legal guardian's consent, so a health record exists from birth. It is restricted to specific government integrators approved by NHA leadership, through programmes including UWIN, RCH and POSHAN. Private integrators cannot use it.
+Child ABHA is created with a parent's consent. Its APIs are intended for use only by specific government integrators approved by NHA.
 
 ## The ABHA address
 
 The shape is `name@abdm`.
 
-- **Every number gets a default address**, the number with a suffix: `14digit@sbx` in [sandbox](/docs/hiecm/v3/getting-started/glossary#sandbox), `14digit@abdm` in production. The `preferredAbhaAddress` field holds the 14 digits with the suffix and no hyphens, for example `91**********27@sbx` in sandbox.
+- **Every number gets a default address**, the number with an `@sbx` or `@abdm` suffix. The `preferredAbhaAddress` field holds it.
 - **A person can then create a memorable one.** A suggestion call offers addresses, and a custom address is accepted, linked to the number.
-- **An address can exist without a number.** One can be created on the [HIE-CM](/docs/hiecm/v3/getting-started/glossary#hie-cm) from mobile number, name, age and gender, self declared and with no KYC. Expect accounts with no number behind them.
+- **An address can exist without a number.** One can be created from a mobile number, name, year of birth and gender, with no KYC. Expect accounts with no number behind them.
 
 ### Address policy
 
 These rules apply:
 
-- Letters, numbers and a dot are allowed.
-- It cannot begin with a number.
-- It cannot begin or end with a dot.
-- An all numeric address is allowed only in the `14digit@abdm` default form.
-- A 10 digit mobile number as an address is restricted and not created.
-
-Minimum length differs by flow. Validate against the error the endpoint returns rather than assuming one rule across all of them.
+- Letters, numbers, one optional dot and one optional underscore are allowed.
+- It starts and ends with a letter or number.
+- It is 8 to 18 characters long.
 
 ## What an address is allowed to be
 
-NHA validates the address on creation, so a form that accepts what NHA refuses
-produces a failure the person cannot act on. Letters, digits and a single dot
-are allowed, and beyond that:
-
-- It cannot begin with a digit.
-- It cannot begin or end with a dot.
-- An all digit address is allowed for an ABHA number and nothing else, which
-  is what makes the default `14digit@abdm` legal.
-
-Three shapes read as though they should work and do not. A ten digit mobile
-number as an address is restricted. An ABHA number as an address you create is
-not allowed, although the default one is issued automatically and signing in
-with it works on both web and mobile. And anything failing the rules above is
-refused at creation rather than at submission.
+The address is validated on creation, so a form that accepts what the rules
+above refuse produces a failure the person cannot act on.
 
 A password is created alongside the address: at least 8 characters, at least
-one uppercase letter, one lowercase letter, one digit and one symbol, no
-spaces, and no more than two consecutive characters or keyboard keys. NHA
-describes enforcing it as optional for the application, not the password
-itself as optional.
+one uppercase letter, one digit and one special character from `!@#$%^&*-`.
 
 Offer suggestions rather than an empty box and a policy. Two calls exist for
-it, address suggestions and address exists, and NHA asks that suggestions be
-built from the person's name and the username part of their email.
+it, address suggestions and address exists.
 
 ## What an ABHA record holds
 
@@ -113,14 +87,13 @@ The communication mobile number need not be the Aadhaar linked one. It is verifi
 
 ```text
 Sandbox     https://abhasbx.abdm.gov.in/abha/api/v3/
-Production  https://abha.abdm.gov.in/api/abha/v3/
 ```
 
 Login by fingerprint or iris uses the same base URL, through `/v3/profile/login/verify` with a `bio` or `iris` block.
 
 ## What M1 does with it
 
-[M1](/docs/hiecm/v3/api/m1) is the only milestone that writes to this registry. It covers creation, login, profile management and sessions. Login by mobile number, Aadhaar number, ABHA number and ABHA address are all four mandatory for both private and government integrators.
+[M1](/docs/hiecm/v3/api/m1) is the only milestone that writes to this registry. It covers creation, login, profile management and sessions.
 
 ## What every other milestone assumes
 

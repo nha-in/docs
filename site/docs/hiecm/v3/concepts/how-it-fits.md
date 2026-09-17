@@ -30,7 +30,7 @@ Creating those entries comes before anything else.
 | Identity | Registry | Who it identifies | Identifier | Written by |
 | --- | --- | --- | --- | --- |
 | Care seeker | [ABHA](/docs/hiecm/v3/registries/abha) | A patient | 14 digit ABHA number, plus an ABHA address | [M1](/docs/hiecm/v3/api/m1) |
-| Care provider | [HPR](/docs/hiecm/v3/registries/nhpr/hpr) | A doctor, nurse, pharmacist or facility manager | HPR ID | [M4](/docs/hiecm/v3/api/m4) |
+| Care provider | [HPR](/docs/hiecm/v3/registries/nhpr/hpr) | A doctor, nurse or pharmacist | HPR ID | [M4](/docs/hiecm/v3/api/m4) |
 | Care provider | [HFR](/docs/hiecm/v3/registries/nhpr/hfr) | A hospital, clinic, lab or pharmacy | Facility ID | [M4](/docs/hiecm/v3/api/m4) |
 
 [ABHA](/docs/hiecm/v3/getting-started/glossary#abha) is the care seeker's.
@@ -41,7 +41,7 @@ the care provider's: one for the professional, one for the place.
 
 ## The gateway sits in the middle
 
-Your system never calls another participant directly. You call the gateway, it forwards the
+Apart from the transfer of the record itself, your system never calls another participant directly. You call the gateway, it forwards the
 request, and the answer arrives at your callback URL as a separate inbound call. That is why
 every flow here is drawn as a sequence.
 
@@ -58,7 +58,7 @@ whole life. What decides it is which entity your software acts for.
 
 | Role | It acts for | What you build |
 | --- | --- | --- |
-| [IMS](/docs/hiecm/v3/getting-started/glossary#ims) | A care provider. An HMIS in a hospital, an EMR in a clinic, a LIMS in a laboratory, a PMS in a pharmacy | [M1](/docs/hiecm/v3/milestones/m1) to [M4](/docs/hiecm/v3/milestones/m4) |
+| [IMS](/docs/hiecm/v3/getting-started/glossary#ims) | A care provider. An HMIS in a hospital, a LIMS in a laboratory | [M1](/docs/hiecm/v3/milestones/m1) to [M4](/docs/hiecm/v3/milestones/m4) |
 | [PHR](/docs/hiecm/v3/getting-started/glossary#phr) | A care seeker, who holds their own records and gives consent | [P1](/docs/hiecm/v3/milestones/p1) to [P3](/docs/hiecm/v3/milestones/p3) |
 
 [HIP](/docs/hiecm/v3/getting-started/glossary#hip) and
@@ -91,11 +91,11 @@ a facility is configured in your integration's own credentials.
 | Client id and client secret | Your integration, one of each | [Sandbox registration](/docs/hiecm/v3/getting-started/sandbox) |
 | Bridge callback URL | Your integration, one | [Sandbox registration](/docs/hiecm/v3/getting-started/sandbox#3-register-your-callback-url) |
 | Facility ID | Each facility | [HFR onboarding](/docs/hiecm/v3/milestones/m4#journey-3-a-facility-onboards-to-the-hfr) |
-| `hipId`, `hipName`, `hipType` | Each facility, once per bridge it links to | [The bridge linkage call](/docs/hiecm/v3/milestones/m4#journey-4-linking-bridges-to-a-facility) |
+| `bridgeId`, `hipName`, `type` | Each facility, once per bridge it links to | [The bridge linkage call](/docs/hiecm/v3/milestones/m4#journey-4-linking-bridges-to-a-facility) |
 
 Every callback for every facility arrives at the one bridge URL. The header says
 which facility it belongs to: `X-HIP-ID` in [M2](/docs/hiecm/v3/api/m2), and
-`X-HIU-ID` in M2 and [M3](/docs/hiecm/v3/api/m3). That header is what your
+`X-HIU-ID` in [M3](/docs/hiecm/v3/api/m3). That header is what your
 handler routes a callback on, and the facility ID is what your records key to.
 
 A callback URL kept in a facility's settings is a design error, and so is a
@@ -107,8 +107,7 @@ call.
 
 ABDM has no central store. A record stays in the system that created it. What moves is smaller:
 
-- A **care context** is a pointer, not content: a reference number and a display name. Putting a
-  diagnosis or a result in that name is not allowed. See
+- A **care context** is a pointer, not content: a reference number and a display name. See
   [linking](/docs/hiecm/v3/concepts/linking).
 - A **consent artefact** is the patient's permission, scoped by purpose, record type and date
   range. See [consent](/docs/hiecm/v3/concepts/consent).

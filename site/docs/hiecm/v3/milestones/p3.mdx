@@ -18,9 +18,9 @@ P3 is the other side of [M3 Retrieve](./m3). M3 is a requester asking for
 records. P3 is the patient deciding, and being told each time.
 
 A citizen fetching records is the
-[HIU](/docs/hiecm/v3/getting-started/glossary#hiu), so every
-[PHR](/docs/hiecm/v3/getting-started/glossary#phr) application must implement
-that side.
+[HIU](/docs/hiecm/v3/getting-started/glossary#hiu), and the
+[PHR](/docs/hiecm/v3/getting-started/glossary#phr) application implements that
+side.
 
 <ApiLinks module="p3" />
 
@@ -29,34 +29,26 @@ that side.
 - Build for revocation from the start. A consent that worked yesterday can be
   withdrawn today, and that is the system working correctly.
 - A subscription is how your app hears about changes to a user's ABHA address.
-  Set one up at address creation and at first login on a new install.
 - An auto approval policy stops the user approving a request every time a
   hospital adds a record.
-- The user must be able to disable a policy at any time.
+- A policy can be disabled and enabled again.
 
 ## Subscriptions and notifications
 
-Ask the user for consent before you create a subscription. An approved
-subscription notifies your app of a new care context, a modified care context,
-a new consent request and a new subscription request. Surface these as device
-notifications.
+An approved subscription notifies your app by category, `LINK` or `DATA`.
 
 You need screens to list subscriptions, approve them, deny them and edit them.
-Editing covers health information types, types of visit and the time period.
+Editing covers health information types, purpose, categories and the time period.
 
 <LegacyAnchor id="auto-approval" />
 
 ## Auto approval: subscribe once, approve every time
 
-1. Ask the user to confirm your app may retrieve new linked records
-   automatically.
-2. Set up an auto approval policy with the
+1. Set up an auto approval policy for an HIU with the
    [HIE-CM](/docs/hiecm/v3/getting-started/glossary#hie-cm).
-3. Save the auto approval ID the HIE-CM returns.
 
-While the policy is active, the consent request you raise on a new or updated
-care context notification is granted immediately, and you fetch and store the
-record. Disable the policy and a request arrives for each record instead.
+While the policy is active, consent requests from that HIU are approved
+automatically. Disable the policy and each request waits for the user instead.
 
 ## Consent management
 
@@ -66,11 +58,7 @@ record. Disable the policy and a request arrives for each record instead.
 | Modify a request | Access duration, record date range, data categories, validity period |
 | Grant or deny | The decision goes back to the HIE-CM |
 | View active consents | Who currently has access, and to what |
-| Revoke | Withdraw at any time. Sharing under that consent stops immediately |
-
-The Consents tab and the Subscriptions tab group state the same way: a Requests
-section holding Requested, Denied and Expired, and an Approved section holding
-Granted and Revoked.
+| Revoke | Withdraw a granted consent, ending the access it gave |
 
 ## Fetching and displaying records
 
@@ -84,8 +72,7 @@ Once a care context is linked to the user's ABHA address:
    artefact](/docs/hiecm/v3/getting-started/glossary#consent-artefact).
 5. The [HIP](/docs/hiecm/v3/getting-started/glossary#hip) sends the records
    across the network.
-6. Your app stores them for long term access and displays them, preferably in
-   chronological order.
+6. Your app stores and displays them.
 
 ## Next
 

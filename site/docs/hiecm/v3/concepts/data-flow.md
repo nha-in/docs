@@ -17,7 +17,7 @@ In [ABDM](/docs/hiecm/v3/getting-started/glossary#abdm) the request goes through
 | Role | Who takes it | What it does here | Milestone |
 | --- | --- | --- | --- |
 | [HIU](/docs/hiecm/v3/getting-started/glossary#hiu) | The organisation or citizen asking | Holds a granted [consent artefact](/docs/hiecm/v3/getting-started/glossary#consent-artefact), asks for the records it covers, receives them and decrypts them | [M3](/docs/hiecm/v3/api/m3) |
-| [HIP](/docs/hiecm/v3/getting-started/glossary#hip) | The citizen or facility holding the record | Holds the records, validates the consent, packages, encrypts, signs and pushes | [M2](/docs/hiecm/v3/api/m2) |
+| [HIP](/docs/hiecm/v3/getting-started/glossary#hip) | The citizen or facility holding the record | Holds the records, packages, encrypts and pushes | [M2](/docs/hiecm/v3/api/m2) |
 
 The HIE-CM sits between them for the request and the notifications, and never sees a record.
 
@@ -29,20 +29,19 @@ sequenceDiagram
     participant U as HIU
     participant CM as HIE-CM gateway
     participant P as HIP
-    Note over U: Generate a short term key pair and a 32 byte nonce
+    Note over U: Generate a key pair and a nonce
     U->>CM: Health information request
     Note over U,CM: Consent artefact id, date range, data push URL, HIU public key, HIU nonce
     CM->>CM: Generate a transaction id
     CM-->>U: Transaction id
     CM->>P: Forward the request with the transaction id
-    P->>P: Validate consent status, date range, encryption parameters
     P->>P: Assemble the FHIR bundles
-    Note over P: Generate a key pair and nonce, derive the session key
-    P->>P: Encrypt, then sign with its long term private key
+    Note over P: Generate a key pair and nonce
+    P->>P: Encrypt
     P->>U: Push the encrypted data to the data push URL
     Note over P,U: Transaction id, HIP public key, HIP nonce, encrypted bundles
     P->>CM: health-information/notify, transfer complete
-    U->>U: Derive the same session key, decrypt
+    U->>U: Decrypt
     U->>CM: health-information/notify, success or failure
 ```
 
@@ -51,7 +50,7 @@ sequenceDiagram
 The HIU sends a health information request through the gateway, quoting a consent artefact the patient granted. It carries four things.
 
 - **The consent id**, the artefact that authorises the request.
-- **The data push URL**, where the HIP sends the records. It may differ from the HIU's registered gateway URL, which improves privacy and anonymity.
+- **The data push URL**, where the HIP sends the records.
 - **The date and time range** of records wanted.
 - **The encryption parameters**: the HIU's public key and its nonce.
 
@@ -59,15 +58,9 @@ The HIE-CM generates a transaction id and gives it to both sides, which is how y
 
 ## Stage 2: validation, then transfer
 
-Before the HIP retrieves anything it runs three checks.
+The HIE-CM validates the request against the consent id before it forwards the request to the HIP.
 
-1. **The consent id is valid and active.** Not expired, not paused, not revoked.
-2. **The requested date and time range falls inside the range the consent artefact permits.** A wider window is refused, not trimmed.
-3. **The encryption parameters are correct and compatible.**
-
-Only then does it package the records as [FHIR](/docs/hiecm/v3/getting-started/glossary#fhir) bundles, encrypt, sign with its long term private key, and send with the transaction id to the data push URL.
-
-Two failures land here: `ABDM-1062`, consent not granted, and `ABDM-1063`, date range given is invalid. Both codes also appear against a linking message, so read the code with the message.
+The HIP then packages the records as [FHIR](/docs/hiecm/v3/getting-started/glossary#fhir) bundles, encrypts them, and sends them with the transaction id to the data push URL.
 
 ## Stage 3: the notifications that close it
 
@@ -77,15 +70,13 @@ Both sides call `health-information/notify`: the HIP to say the data was transmi
 
 | Constraint | Rule |
 | --- | --- |
-| Timeout | 20 minutes from the start of the request |
-| Large datasets | Split into multiple parts, for example CT or MRI images running to hundreds of megabytes |
-| Very large files | Stream rather than sending one payload |
+| Large datasets | Split across pages, numbered with `pageNumber` out of `pageCount` |
 
 Treat retrieval and encryption as a background job, not work inside a web request.
 
 ## The encryption
 
-The scheme is [Elliptic Curve Diffie-Hellman](/docs/hiecm/v3/getting-started/glossary#ecdh) key exchange on Curve25519, with AES-GCM for the payload and HKDF to derive the session key. Only the HIU holding valid consent can read the data, and the design gives perfect forward secrecy: key material compromised later does not expose data exchanged earlier.
+The scheme is [Elliptic Curve Diffie-Hellman](/docs/hiecm/v3/getting-started/glossary#ecdh) key exchange on Curve25519. Only the HIU holding valid consent can read the data.
 
 ### Who holds which key
 
@@ -93,34 +84,24 @@ The scheme is [Elliptic Curve Diffie-Hellman](/docs/hiecm/v3/getting-started/glo
 | --- | --- | --- |
 | Short term private key, DHSK(U) | HIU | Never leaves the HIU |
 | Short term public key, DHPK(U) | HIU | Sent with the request |
-| Nonce, RAND(U), 32 bytes | HIU | Sent with the request |
+| Nonce, RAND(U) | HIU | Sent with the request |
 | Short term private key, DHSK(P) | HIP | Never leaves the HIP |
 | Short term public key, DHPK(P) | HIP | Sent with the encrypted data |
-| Nonce, RAND(P), 32 bytes | HIP | Sent with the encrypted data |
+| Nonce, RAND(P) | HIP | Sent with the encrypted data |
 | Shared key, DHK(U,P) | Computed independently by both | Never transmitted |
-| Session key, SK(U,P), 256 bit AES-GCM | Derived independently by both | Never transmitted |
-| Long term private key | HIP | Never leaves the HIP. Signs the encrypted payload. |
-
-A new key pair per exchange is what buys forward secrecy.
 
 ### What the HIP does, step by step
 
-Six steps, once consent has validated.
+Four steps, once consent has validated.
 
-1. Generate a key pair, DHSK(P) and DHPK(P), in the group the HIU specified.
-2. Generate a 32 byte random value, RAND(P).
+1. Generate a key pair, DHSK(P) and DHPK(P), on the curve the HIU specified.
+2. Generate a nonce, RAND(P).
 3. Compute the shared key DHK(U,P) from the HIU's public key DHPK(U) and the HIP's own private key DHSK(P).
-4. Derive the salt and IV by XOR of RAND(P) and RAND(U). The first 20 bytes are the salt for HKDF, the last 12 bytes the IV.
-5. Compute a 256 bit AES-GCM session key SK(U,P) with HKDF, from the shared key and that salt.
-6. Encrypt the data with that key and that IV.
+4. Encrypt the data.
 
-The HIP then sends DHPK(P), RAND(P) and the encrypted data. The HIU derives the same session key from its own private key DHSK(U) and the HIP's public key DHPK(P), with salt and IV from the same XOR.
+The HIP then sends DHPK(P), RAND(P) and the encrypted data. The HIU derives the same shared key from its own private key DHSK(U) and the HIP's public key DHPK(P).
 
 Build the shared key from the HIU's public key and the HIP's private key. That is the pairing that makes the Diffie-Hellman exchange work.
-
-### Do not write this yourself
-
-Two reference implementations exist. Fidelius, at [github.com/sukreet/fidelius](https://github.com/sukreet/fidelius), and the Fidelius CLI, which is Java, with worked examples for Node.js, Python, Ruby and PHP at [github.com/mgrmtech/fidelius-cli](https://github.com/mgrmtech/fidelius-cli/tree/main/examples) that run the binary as a subprocess. A webinar covers the CLI from both sides, at [youtu.be/rSir2gbkEmk](https://youtu.be/rSir2gbkEmk?t=9232) from 2:33:52.
 
 ## Where this is implemented
 
