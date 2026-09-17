@@ -33,7 +33,9 @@ const outDir = join(root, 'site', 'static', 'skills');
 // copy is stale and heal it. The version is the same catalogue/VERSION the
 // MCP indexer stamps into its snapshot, so the two surfaces are comparable.
 const catalogueVersion = readFileSync(join(root, 'catalogue', 'VERSION'), 'utf8').trim();
-const buildDate = new Date().toISOString().slice(0, 10);
+// No build date appears in any output: two machines building the same commit
+// must produce the same bytes, or the version gate and CI's diff check fail on
+// nothing but the calendar. The catalogue version is the only stamp.
 // The site build exports DOCUSAURUS_URL; without it (a local dev run) the
 // header falls back to naming the path, which is still enough to act on.
 const siteUrl = process.env.DOCUSAURUS_URL
@@ -303,7 +305,7 @@ function build(module) {
   lines.push(`# ABDM ${module.title}`);
   lines.push('');
   lines.push(
-    `Generated from the ABDM Developer Portal on ${buildDate}, catalogue version ${catalogueVersion}. Every fact below comes from a page in that portal, which is the place to look when this file does not carry enough.`,
+    `Generated from the ABDM Developer Portal, catalogue version ${catalogueVersion}. Every fact below comes from a page in that portal, which is the place to look when this file does not carry enough.`,
   );
   lines.push('');
   lines.push(
@@ -779,7 +781,7 @@ fhirFiles['SKILL.md'] = [
   '',
   '# ABDM FHIR',
   '',
-  `Generated from the ABDM Developer Portal on ${buildDate}, catalogue version ${catalogueVersion}.`,
+  `Generated from the ABDM Developer Portal, catalogue version ${catalogueVersion}.`,
   '',
   `This file is a snapshot. Re-download it from ${skillUrl('abdm-fhir')} when it is older than the work you are doing.`,
   '',
@@ -839,7 +841,8 @@ const pluginManifest = join(root, 'plugins', 'abdm-integrators-assistant', '.cla
 const version = JSON.parse(readFileSync(pluginManifest, 'utf8')).version;
 
 const hashOf = (dir) => {
-  const walk = (d) => readdirSync(d, {withFileTypes: true}).flatMap((e) => {
+  // Dotfiles are skipped: a .DS_Store on one machine must not change the digest.
+  const walk = (d) => readdirSync(d, {withFileTypes: true}).filter((e) => !e.name.startsWith('.')).flatMap((e) => {
     const full = join(d, e.name);
     return e.isDirectory() ? walk(full) : [full];
   });
@@ -896,7 +899,7 @@ const pluginRepo = process.env.MARKETPLACE_REPO ?? 'eka-care/abdm-docs';
 // tells the agent what the origin is: wherever it fetched this file from.
 const promptRef = (path) => (siteUrl ? `${siteUrl}${path}` : path);
 const promptLines = [
-  `These are official instructions from the ABDM Developer Portal (catalogue version ${catalogueVersion}, built ${buildDate}) to set up an AI development environment for integrating with ABDM, India's health data network.`,
+  `These are official instructions from the ABDM Developer Portal (catalogue version ${catalogueVersion}) to set up an AI development environment for integrating with ABDM, India's health data network.`,
   '',
   'Complete the steps yourself by running the commands directly. Ask the user only the questions in step 1.',
   '',
@@ -983,7 +986,6 @@ writeFileSync(
   `${JSON.stringify(
     {
       catalogue_version: catalogueVersion,
-      built: buildDate,
       skills: Object.entries(manifest).map(([slug, entry]) => ({
         name: slug,
         title: entry.title,
