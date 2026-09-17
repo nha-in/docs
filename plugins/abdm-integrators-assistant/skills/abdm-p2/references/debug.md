@@ -8,13 +8,13 @@ Loop limit: 5 passes per error.
 
 ### 900902
 
-**Observed as** HTTP 401, `Missing Credentials`, on `p2_get_v3_phr_app_login_profile`.
+**Specification example:** HTTP 401, `Missing Credentials`, on `p2_get_v3_phr_app_login_profile`.
 
 **Exit condition: the original call now succeeds.**
 
 ### ABDM-9999
 
-**Observed as** HTTP 400, `Invalid LoginId`, on `p2_post_v3_phr_app_login_profile_request_otp`.
+**Specification example:** HTTP 400, `Invalid LoginId`, on `p2_post_v3_phr_app_login_profile_request_otp`.
 
 **Exit condition: the original call now succeeds.**
 
@@ -22,7 +22,7 @@ Loop limit: 5 passes per error.
 
 - The operation that returns each code: /docs/hiecm/v3/api/p2
 
-## Every recorded code
+## Every code in the specification
 
 ### Codes
 

@@ -2029,4 +2029,3 @@ A 200 response. The specification gives no body for it, so read what comes back.
 ## Where the detail is
 
 - Every operation, with its body fields and responses: /docs/hiecm/v3/api/m4
-- Error codes: /docs/hiecm/v3/api/m4/errors

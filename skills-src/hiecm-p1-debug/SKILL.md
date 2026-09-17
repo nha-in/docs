@@ -12,25 +12,25 @@ Loop limit: 5 passes per error.
 
 ### 900902
 
-**Observed as** HTTP 401, `Missing Credentials`, on `p1_get_v3_phr_app_enrollment_isexists`.
+**Specification example:** HTTP 401, `Missing Credentials`, on `p1_get_v3_phr_app_enrollment_isexists`.
 
 **Exit condition: the original call now succeeds.**
 
 ### ABDM-1107
 
-**Observed as** HTTP 400, `Invalid combinations of scopes`, on `p1_post_v3_phr_app_login_verify`.
+**Specification example:** HTTP 400, `Invalid combinations of scopes`, on `p1_post_v3_phr_app_login_verify`.
 
 **Exit condition: the original call now succeeds.**
 
 ### ABDM-1211
 
-**Observed as** HTTP 400, `User not found.`, on `p1_post_v3_phr_app_login_search`.
+**Specification example:** HTTP 400, `User not found.`, on `p1_post_v3_phr_app_login_search`.
 
 **Exit condition: the original call now succeeds.**
 
 ### ABDM-9999
 
-**Observed as** HTTP 400, `Invalid LoginId`, on `p1_post_v3_phr_app_enrollment_request_otp`.
+**Specification example:** HTTP 400, `Invalid LoginId`, on `p1_post_v3_phr_app_enrollment_request_otp`.
 
 **Exit condition: the original call now succeeds.**
 

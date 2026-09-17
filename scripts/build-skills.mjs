@@ -19,6 +19,7 @@ import {join, dirname} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {parse} from 'yaml';
 import {errorsFromSpec} from './lib/spec-errors.mjs';
+import {loadJourneys} from './lib/journeys.mjs';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const dataDir = join(root, 'site', 'src', 'data', 'api');
@@ -51,16 +52,6 @@ const skillUrl = (slug, url) =>
 // worse off than an agent told nothing.
 const UNVERIFIED =
   'Nothing here has been run against the ABDM sandbox. Treat request and response shapes as unconfirmed, and check a response before you rely on its shape.';
-
-/**
- * Where part of a module HAS been run, the blanket sentence above is worse than
- * nothing: it sits directly above rules quoting observed responses, and a
- * reader who notices the contradiction has no way to tell which half to trust.
- * Name what was observed and leave the rest unconfirmed.
- */
-const PARTLY_VERIFIED = {
-  m1: 'Three of the rules below were recorded against the ABDM sandbox on 2 September 2026: which paddings the encryption refuses, the sizes of the two published certificates, and how the transfer token behaves. The responses those three were read from are in this repository\'s git history, before commit 64eb95b50. Nothing else in this skill has been run. Treat the rest as unconfirmed and read a response before relying on its shape.',
-};
 
 // Practices, as distinct from rules. A rule is a fact about one module. A
 // practice is how to work so a wrong assumption surfaces in a minute rather
@@ -101,33 +92,27 @@ const MODULES = [
     spec: 'hiecm-m1.yaml',
     example: 'Add ABHA creation by Aadhaar OTP to this codebase',
     description:
-      'Use when building, debugging or testing ABDM Milestone 1: creating an ABHA number or address, ABHA login, profile management, or the gateway session token. Carries the endpoints, the required headers, the two token rule, the encryption rule and every recorded error code. Also carries the scaffolding loop that builds it flow by flow and the loop from a failed call to a named fix, in references/.',
+      'Use when building, debugging or testing ABDM Milestone 1: creating an ABHA number or address, ABHA login, profile management, or the gateway session token. Carries the endpoints, the required headers, the two token rule, the encryption rule and the error codes its specification\'s examples return. Also carries the scaffolding loop that builds it flow by flow and the loop from a failed call to a named fix, in references/.',
     rules: [
-      PARTLY_VERIFIED.m1,
+      UNVERIFIED,
       'Get an access token first, from the gateway session endpoint. Every other call needs it in `Authorization: Bearer <token>`.',
       'Two tokens exist and they are not interchangeable. The gateway access token goes in `Authorization`. The user token from an enrolment or a login goes in `X-token`. Profile endpoints need both.',
       "Sensitive fields travel encrypted. Aadhaar numbers, mobile numbers, email addresses, OTP values and passwords are encrypted before they go in the body, then base64 encoded.",
-'The certificate response tells you the padding. `GET /v3/profile/public/certificate` returns `{"publicKey", "encryptionAlgorithm"}`, and `encryptionAlgorithm` is currently `RSA/ECB/OAEPWithSHA-1AndMGF1Padding`. Read that field and translate it for your language. Do not hard code a padding: a constant is right until it is not, and the failure then looks like a bad value rather than a stale constant.',
-      'PKCS#1 v1.5 is refused, and so is OAEP with SHA-256. Neither refusal names encryption, so a wrong padding reads back as a wrong value.',
-      'More than one certificate is published and they are not interchangeable. `/v3/profile/public/certificate` is 4096-bit and `/v3/phr/app/login/public/certificate` is 2048-bit, both naming the same algorithm. Ciphertext length tells them apart: 512 bytes against 256. The helper at `/v3/phr/app/enrollment/encrypt` uses the 2048 bit key.',
-      'Every certificate arrives as bare base64 DER with no PEM armour, whatever the field name suggests. Add the armour, wrapping at 64 characters per line, before your library will load it.',
-      'Prove the padding before building a flow, with a mobile that is registered against an ABHA account. `POST /v3/profile/login/request/otp` with `loginHint: "mobile"` returns 200 and a `txnId` when the padding is right, and `Invalid Mobile Number` when it is wrong. The number has to be a real one: an unregistered number returns that same refusal whatever the padding, so it proves nothing. `/v3/enrollment/request/otp` refuses every input identically and cannot tell you either way.',
+'The certificate response tells you the padding. `GET /v3/profile/public/certificate` returns `{"publicKey", "encryptionAlgorithm"}`. Read that field and translate it for your language. Do not hard code a padding: a constant is right until it is not, and the failure then looks like a bad value rather than a stale constant.',
       'One path serves several jobs. The `scope` array in the body picks which one, so read it before assuming an endpoint does one thing.',
       'Holds regardless of the design: the reason a front desk adopts ABHA is that the receptionist stops typing. `GET /v3/profile/account` returns the whole registration form: names, day, month and year of birth, gender, mobile, email, the full address with LGD codes and a photograph. So the ABHA step comes BEFORE the registration form and fills it. A journey that registers the patient first and offers ABHA afterwards has already spent the keystrokes it existed to save.',
       'Two ways the profile reaches the desk. The patient scans a QR carrying your facility id and a counter id, consents in their own app, and ABDM posts the profile to your callback, so nobody at the desk types or asks anything. Or the desk runs the identifier journey, which ends in a token that reads the profile. Build whichever the deployment can reach, but the form is the destination either way.',
-      'Present the filled form for confirmation rather than saving it unseen. The profile is what ABDM holds, not what the clinician sees: names get transliterated, addresses age, and a shared mobile may belong to a relative.',
+      'Present the filled form for confirmation rather than saving it unseen. The profile is what ABDM holds, not what the clinician sees: names may be transliterated, addresses age, and a shared mobile may belong to a relative.',
       'ABDM publishes operations, not a user experience. The journey is the integrator\'s to design, and a product that knows its own counter will often beat any default. Offer the suggested shape below, say it is a suggestion, and build what the user asks for instead when they have a view.',
       'Suggested shape: one entry rather than a menu. Take one identifier, send one OTP, and branch on what comes back, because asking a person at a desk whether they want to log in or register puts a question to them they often cannot answer. A chooser is better where the desk genuinely knows, such as a counter that only registers new patients.',
-      'Holds regardless of the design: the token a login verification returns is a TRANSFER token, not the session token. Its JWT carries `"typ": "Transfer"` and five minutes of life, and a profile call refuses it as ABDM-1094 "X-token expired" with a Bearer prefix or "Invalid X-token" without one, on a token one second old. Exchange it at `/v3/profile/login/verify/user` whatever the length of the accounts array, one included.',
-      'Holds regardless of the design: send every identifier to the login path first, Aadhaar included. Wiring Aadhaar to enrolment because that is where Aadhaar is most discussed sends everyone who already holds an ABHA to create a second. The scope pairs differ between the paths, so the mistake surfaces as ABDM-1107, invalid combinations of scopes, and never mentions duplicates.',
-      'Scope is an array and the operations care about the combination. A login keeps one pair across both calls: abha-login plus mobile-verify, aadhaar-verify or password-verify. An enrolment changes pair between them: the OTP request carries abha-enrol alone and the verification carries abha-enrol plus what is being verified. Carrying the request scope forward is ABDM-1107.',
-      'The accounts array on a login verification already carries ABHANumber, preferredAbhaAddress, name, gender, dob, profilePhoto and kycVerified, so a registration form can fill the moment the OTP verifies and before any profile call. Note dob is one DD-MM-YYYY string there and three integer fields on the profile endpoint.',
+      'Holds regardless of the design: send every identifier to the login path first, Aadhaar included. Wiring Aadhaar to enrolment because that is where Aadhaar is most discussed sends everyone who already holds an ABHA to create a second. The scope pairs differ between the paths.',
+      'Scope is an array and the operations care about the combination. A login keeps one pair across both calls: abha-login plus mobile-verify, aadhaar-verify or password-verify. An enrolment changes pair between them: the OTP request carries abha-enrol alone and the verification carries abha-enrol plus what is being verified.',
+      'The accounts array on a login verification already carries ABHANumber, preferredAbhaAddress, name, gender, dob, profilePhoto and kycVerified, so a registration form can fill the moment the OTP verifies and before any profile call.',
       'Holds regardless of the design: read the accounts on the verification response before creating. Creating when an account already exists leaves the patient holding two ABHA numbers and no M1 operation merges them. This is the one failure worth designing around first.',
-      'Holds regardless of the design: an ABHA is optional to the patient record, which is keyed by the hospital\'s own number. ABDM does not require a person to hold one to be treated, so a journey that cannot complete without one blocks care. Make that a deliberate decision rather than an omission.',
-      'An identifier and an auth method are two different questions, and listing them together is what makes M1 look like five choices. ABDM accepts four identifiers: Aadhaar, mobile, ABHA number, ABHA address. Aadhaar is the one to recommend because it is the only route ending in a KYC verified ABHA number.',
+      'Holds regardless of the design: decide deliberately whether a journey can complete without an ABHA. A patient record keyed by the hospital\'s own number does not need one, and a journey that cannot complete without one blocks care for anyone who has none.',
+      'An identifier and an auth method are two different questions, and listing them together is what makes M1 look like five choices. ABDM accepts four identifiers: Aadhaar, mobile, ABHA number, ABHA address.',
       'How the person proves the identifier is theirs is `authMethods`, whose values are otp, bio, face, iris, child and demo_auth. Aadhaar accepts the range; a mobile accepts the OTP sent to it and nothing else. So offer auth methods underneath the identifier, and only where there is more than one. Most integrations ship OTP on both and add the rest when a desk asks.',
       'The surface is more than a registration form. Finding a forgotten ABHA, upgrading a mobile-made address to KYC, showing the card and QR, sharing a profile by QR at a counter, and updating a mobile number are each placements the operations support. List them for the integrator so their own design can account for them rather than meeting them later.',
-      'Holds regardless of the design: OTP attempts are counted against the transaction, not the person. Repeated sends lock that transaction and the error names the attempt count rather than the wait. A fresh transaction is the recovery. The code is never persisted and never logged.',
     ],
   },
   {
@@ -138,13 +123,12 @@ const MODULES = [
     spec: 'hiecm-m2.yaml',
     example: 'Link a care context for this patient',
     description:
-      'Use when building, debugging or testing ABDM Milestone 2: care contexts, HIP initiated linking, discovery, and pushing encrypted health records to a requester. Carries the endpoints, the prerequisites and every recorded error code. Also carries the scaffolding loop that builds it flow by flow and the loop from a failed call to a named fix, in references/.',
+      'Use when building, debugging or testing ABDM Milestone 2: care contexts, HIP initiated linking, discovery, and pushing encrypted health records to a requester. Carries the endpoints and the encryption parameters. Also carries the scaffolding loop that builds it flow by flow and the loop from a failed call to a named fix, in references/.',
     rules: [
       UNVERIFIED,
-      'You act as the HIP. NHA requires a valid Facility ID and registration in the HIP role before you can create health records and share them.',
+      'You act as the HIP.',
       'M2 is keyed to an ABHA address, so a working M1 integration comes first.',
-      'Records go out as FHIR R4 conforming to the ABDM profiles at https://nrces.in/ndhm/fhir/r4/index.html.',
-      'You are the side that encrypts, and the parameters arrive from the requester rather than from you. The health information request carries `keyMaterial` with `cryptoAlg: ECDH`, `curve: Curve25519`, the requester\'s `dhPublicKey` and a 32 byte `nonce`. Generate your own Curve25519 pair and your own 32 byte nonce, and send your public key and nonce back with the data so the requester can derive the same secret.',
+      'You are the side that encrypts, and the parameters arrive from the requester rather than from you. The health information request carries `keyMaterial` with `cryptoAlg`, `curve: Curve25519`, the requester\'s `dhPublicKey` and a `nonce`. Generate your own Curve25519 pair and your own nonce, and send your public key and nonce back with the data so the requester can derive the same secret.',
       'The key derivation and the symmetric cipher applied over that shared secret are not yet published. Confirm both at onboarding before you ship, rather than inferring them from a sample.',
     ],
   },
@@ -156,13 +140,13 @@ const MODULES = [
     spec: 'hiecm-m3.yaml',
     example: 'Raise a consent request and fetch the records it covers',
     description:
-      'Use when building, debugging or testing ABDM Milestone 3: raising a consent request, tracking its status, reading consent artefacts, and fetching encrypted health records as an HIU. Carries the endpoints, the consent rules and every recorded error code. Also carries the scaffolding loop that builds it flow by flow and the loop from a failed call to a named fix, in references/.',
+      'Use when building, debugging or testing ABDM Milestone 3: raising a consent request, tracking its status, reading consent artefacts, and fetching encrypted health records as an HIU. Carries the endpoints and the consent rules. Also carries the scaffolding loop that builds it flow by flow and the loop from a failed call to a named fix, in references/.',
     rules: [
       UNVERIFIED,
       'You act as the HIU. The HIE-CM holds the consent and asks the patient on your behalf. No artefact, no records.',
       'The patient must be known to you by ABHA address before you can raise a request.',
       'One consent request can produce more than one artefact. Store the request id and every artefact id.',
-      'Records arrive encrypted on your callback URL. Decrypt them, then acknowledge receipt to the gateway.',
+      'Records arrive encrypted at the `dataPushUrl` the health information request names. Decrypt them with the key material that request carries.',
     ],
   },
   {
@@ -173,17 +157,14 @@ const MODULES = [
     spec: 'hiecm-m4.yaml',
     example: 'Onboard this facility to the HFR and link its HIP bridge',
     description:
-      'Use when building, debugging or testing ABDM Milestone 4, the NHPR: creating an HPID, registering a healthcare professional on the HPR, onboarding a facility to the HFR, and linking that facility to its HIP or HIU bridges. Carries the operations NHA has published, the registration order, every recorded error code and the identifier formats.',
+      'Use when building, debugging or testing ABDM Milestone 4, the NHPR: creating an HPID, registering a healthcare professional on the HPR, onboarding a facility to the HFR, and linking that facility to a bridge. Carries the operations, their hosts and headers.',
     rules: [
       UNVERIFIED,
       'Neither registry moves a health record. M4 establishes who the professional is and what the facility is, so every record flow has a verified provider behind it.',
-      'M2 and M3 need a facility in the HFR and a bridge linked to it before records flow in production. M4 is the API route to that. Registering the facility by hand on the NHPR portal is the other route, and a product that takes it never builds M4.',
-      'The HPR comes first. Onboarding a facility needs an HPR token, which needs a person who already holds an HPID.',
-      'Creating an HPID returns an `hprToken`. Keep it: the register professional call carries it in its payload.',
-      'A facility ID is `IN` followed by 10 characters. An HPID is 14 digits.',
-      'Facility onboarding is one search, three writes and a submit, all keyed to the `trackingId` the first write returns. Stop before submit and the facility stays in draft, invisible to ABDM.',
+      'The register professional call carries an `hprToken` in its payload, beside the practitioner.',
+      'The facility calls are keyed to a `trackingId`, and the facility status values in the examples include `Draft` and `Submitted`. Read the status rather than assuming a facility is complete.',
       'Register professional takes codes, not names. Fetch council, course, college, university, state, district and language from the master data APIs first.',
-      'A facility ID alone does not make records flow. Link the facility to a bridge and mark each link HIP or HIU. The HIP name is what a patient sees in their PHR app: 15 characters or fewer, no special characters, and unique for every bridge on that facility.',
+      '`POST /v1/bridges/MutipleHRPAddUpdateServices` links a facility to a bridge. Each entry names a `bridgeId`, a `hipName`, a `type` such as `HIP`, and whether it is `active`.',
     ],
   },
   {
@@ -330,8 +311,8 @@ function build(module, url) {
   lines.push(`- **Integrate.** ${mine.length} operations, with their hosts and headers.`);
   lines.push(
     codeCount
-      ? `- **Debug.** ${codeCount} recorded error codes, with the message and what to do.`
-      : '- **Debug.** No error code is recorded for this module yet.',
+      ? `- **Debug.** ${codeCount} error codes from the specification's examples, with the message and the operation that returns each.`
+      : '- **Debug.** The specification\'s examples return no error code for this module.',
   );
 
   lines.push('## Before anything else');
@@ -394,7 +375,7 @@ function build(module, url) {
   lines.push('');
   if (codeCount === 0) {
     lines.push(
-      `The ${module.title} specification records no error code yet. That is a gap in the specification, not a promise that this module cannot fail.`,
+      `The ${module.title} specification's examples return no error code yet. That is a gap in the specification, not a promise that this module cannot fail.`,
     );
     lines.push('');
   }
@@ -484,33 +465,36 @@ const CAPABILITIES = {
     'Create an ABHA for somebody who has none: by Aadhaar, by mobile, by an identity document, by face or fingerprint, or under a parent for a child.',
     'Log in somebody who already has one, by Aadhaar, mobile, ABHA number or ABHA address.',
     'Read their profile, which carries the whole registration form: names, date of birth, gender, mobile, address with its codes, and a photograph.',
-    'Find an ABHA somebody has forgotten, and tell two accounts on one mobile apart.',
+    'Find an ABHA somebody has forgotten, and pick the right account when one mobile holds several.',
     'Show the ABHA card and QR code, and take a profile a patient shares by QR at your counter.',
     'Update a profile, change a mobile, and upgrade a mobile made address to KYC verified.',
   ],
   m2: [
     'Tell ABDM a patient had a visit with you, so their records can be found later.',
     'Answer a discovery request when somebody looks for that patient.',
-    'Send records out encrypted when a consent says you must, and tell the gateway you have finished.',
-    'Hold and refresh the per patient link token the linking calls need.',
+    'Send records out encrypted when a consent says you must.',
+    'Get the link token the linking calls need.',
   ],
   m3: [
     'Ask a patient, through their consent manager, for records another provider holds.',
     'Track that request through a grant, a denial, a revocation and an expiry.',
-    'Receive the encrypted records on your callback, decrypt them, and acknowledge receipt.',
-    'Handle one request that produces several consent artefacts, which is the normal case.',
+    'Receive the encrypted records at your data push URL and decrypt them.',
+    'Handle one request that produces several consent artefacts.',
   ],
   m4: [
     'Create an HPID for a professional and register them in the HPR.',
-    'Register a facility in the HFR and carry it through to submission, without which it stays a draft nobody can see.',
-    'Link a facility to a bridge and mark each link HIP or HIU, which is what makes records flow.',
+    'Register a facility in the HFR and carry it through to submission.',
+    'Link a facility to a bridge and set the type of each link.',
     'Fetch the council, course, college, university and geography codes these calls take instead of names.',
   ],
 };
 
+const JOURNEYS = loadJourneys();
+
 function capabilities(module) {
-  const items = CAPABILITIES[module.id];
-  if (!items) return [];
+  // A module with no hand-written lines lists its journeys, so the heading is never empty.
+  const items = CAPABILITIES[module.id] ?? [...new Set((JOURNEYS.get(module.id) ?? []).map((j) => j.title))];
+  if (!items.length) return [];
   return [...items.map((c) => `- ${c}`), '',
     'What it cannot do yet matters as much. Read **Before anything else** below before assuming a capability is one endpoint away.'];
 }
@@ -604,7 +588,7 @@ for (const module of MODULES) {
   if (scaffold) {
     files['references/scaffold.md'] = scaffold;
     covers.push(
-      `- **Scaffold.** Build it flow by flow against the sandbox, as a loop that ends on an observed result rather than on a call returning 200. [references/scaffold.md](references/scaffold.md)`,
+      `- **Scaffold.** Build it flow by flow against the sandbox, as a loop that ends when the step's exit condition holds rather than on a call returning 200. [references/scaffold.md](references/scaffold.md)`,
     );
   }
 
@@ -629,7 +613,7 @@ for (const module of MODULES) {
   if (debugLoop) debugParts.push(debugLoop);
   const errors = parts.get('Errors');
   if (errors) {
-    debugParts.push(debugLoop ? `## Every recorded code\n\n${errors.replace(/^## Errors\n+/, '')}` : errors);
+    debugParts.push(debugLoop ? `## Every code in the specification\n\n${errors.replace(/^## Errors\n+/, '')}` : errors);
   }
   if (debugParts.length) {
     files['references/debug.md'] = debugLoop
@@ -645,10 +629,10 @@ for (const module of MODULES) {
       codeCount
         ? `- **Debug.** ${
             debugLoop ? 'The loop from a failed call to a named fix, and ' : ''
-          }${codeCount} recorded error codes. [references/debug.md](references/debug.md)`
+          }${codeCount} error codes from the specification's examples. [references/debug.md](references/debug.md)`
         : `- **Debug.** ${
             debugLoop ? 'The loop from a failed call to a named fix. ' : ''
-          }No error code is recorded for this module yet. [references/debug.md](references/debug.md)`,
+          }The specification's examples return no error code for this module. [references/debug.md](references/debug.md)`,
     );
   }
 
@@ -656,10 +640,9 @@ for (const module of MODULES) {
     [
       headText,
       '',
-      `## What you can do with ${module.title.split(',')[0]}`,
-      '',
-      ...capabilities(module),
-      '',
+      ...(capabilities(module).length
+        ? [`## What you can do with ${module.title.split(',')[0]}`, '', ...capabilities(module), '']
+        : []),
       '## What is in this folder',
       '',
       // Five files and no clue which to open. Say what each one answers.

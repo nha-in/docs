@@ -38,7 +38,7 @@ const exit = (data) => {
   return ok?.example ? `A ${ok.status} whose body matches:\n\n\`\`\`json\n${JSON.stringify(ok.example, null, 2)}\n\`\`\`` : `A ${ok?.status ?? '2xx'} response. The specification gives no body for it, so read what comes back.`;
 };
 
-function buildSkill(module) {
+function buildSkill(module, hasErrorsPage) {
   const list = journeys.get(module) ?? [];
   const sections = list.map((j) => [
     `### ${j.title} (\`${j.id}\`)`, '',
@@ -57,7 +57,7 @@ function buildSkill(module) {
     'Every journey below is an OODA loop, not a recipe: observe the actual state (last response, last error), orient against the step matched below, decide the cheapest next action, act, and return to observe. A step is done only when its exit condition is observed against the sandbox, never because it "should have worked."', '',
     'Loop limit: 8 passes per step. Hitting the limit is an escalation: state what was observed, what was tried, and which operation page to read, then ask one question.', '',
     '## Journeys', '', sections.join('\n\n'), '',
-    '## Where the detail is', '', `- Every operation, with its body fields and responses: /docs/hiecm/v3/api/${module}`, `- Error codes: /docs/hiecm/v3/api/${module}/errors`, '',
+    '## Where the detail is', '', `- Every operation, with its body fields and responses: /docs/hiecm/v3/api/${module}`, ...(hasErrorsPage ? [`- Error codes: /docs/hiecm/v3/api/${module}/errors`] : []), '',
   ].join('\n');
 }
 
@@ -67,7 +67,7 @@ function debugSkill(module, codes) {
     'Every error below is an OODA loop: observe the error code and last request id, orient against the matched code, decide the fix, act, and observe whether the original step now succeeds. Applying a fix is not the exit condition; the original step succeeding is.', '',
     'Loop limit: 5 passes per error.', '',
     '## Errors', '',
-    ...codes.map((e) => `### ${e.code}\n\n**Observed as** HTTP ${e.http}, \`${e.message}\`, on \`${e.operationId}\`.\n\n**Exit condition: the original call now succeeds.**\n`),
+    ...codes.map((e) => `### ${e.code}\n\n**Specification example:** HTTP ${e.http}, \`${e.message}\`, on \`${e.operationId}\`.\n\n**Exit condition: the original call now succeeds.**\n`),
     '## Where the detail is', '', `- The operation that returns each code: /docs/hiecm/v3/api/${module}`, '',
   ].join('\n');
 }
@@ -89,6 +89,8 @@ for (const module of Object.keys(MODULES)) {
   const spec = parse(readFileSync(join(specDir, `hiecm-${module}.yaml`), 'utf8'));
   const codes = errorsFromSpec(spec);
   const write = (name, body) => { mkdirSync(join(outDir, name), {recursive: true}); writeFileSync(join(outDir, name, 'SKILL.md'), body); console.log(`wrote skills-src/${name}/SKILL.md`); };
-  if ((journeys.get(module) ?? []).length) write(`hiecm-${module}-build`, buildSkill(module));
+  // Same rule build-api-reference.mjs uses to decide whether an errors page exists.
+  const hasErrorsPage = codes.length > 0 || Object.keys(spec.webhooks ?? {}).length > 0;
+  if ((journeys.get(module) ?? []).length) write(`hiecm-${module}-build`, buildSkill(module, hasErrorsPage));
   if (codes.length) write(`hiecm-${module}-debug`, debugSkill(module, codes));
 }

@@ -183,4 +183,3 @@ A 200 whose body matches:
 ## Where the detail is
 
 - Every operation, with its body fields and responses: /docs/hiecm/v3/api/p4
-- Error codes: /docs/hiecm/v3/api/p4/errors
