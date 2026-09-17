@@ -31,7 +31,7 @@ Generated from the specifications. Every scheme and header below is declared in 
 
 ## M4 HPR and HFR
 
-**bearerAuth**, `http` `bearer`. The token from POST /getManagementToken.
+**bearerAuth**, `http` `bearer`. M4 declares bearer authentication. The HPID calls publish POST /getManagementToken.
 
 ## P1 Registration and login
 
