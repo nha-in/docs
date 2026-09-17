@@ -44,9 +44,24 @@ export function validateJourneys(journeys = loadJourneys(), index = operationInd
   const problems = [];
   const ids = new Set();
   for (const [module, list] of journeys) {
+    // Titles sharing text before ", " fold into one sidebar family (see
+    // build-api-reference.mjs); two journeys with the exact same title, or
+    // one whose whole title equals another's family part, would fold into a
+    // member with an empty variant label.
+    const titles = [];
     for (const j of list) {
       if (!j.id || !j.title || !Array.isArray(j.steps) || !j.steps.length) { problems.push(`${module}: journey without id, title or steps`); continue; }
       if (ids.has(j.id)) problems.push(`${module}: duplicate journey id ${j.id}`); ids.add(j.id);
+      const hasComma = j.title.includes(', ');
+      const family = hasComma ? j.title.slice(0, j.title.indexOf(', ')) : j.title;
+      for (const other of titles) {
+        const clash =
+          other.title === j.title ||
+          (!hasComma && j.title === other.family) ||
+          (!other.hasComma && other.title === family);
+        if (clash) problems.push(`${module}: journeys ${other.id} and ${j.id} share the title "${j.title}"`);
+      }
+      titles.push({id: j.id, title: j.title, family, hasComma});
       j.steps.forEach((s, i) => {
         const entry = index.get(s.op);
         if (!entry) { problems.push(`${module}/${j.id} step ${i + 1}: unknown operation ${s.op}`); return; }

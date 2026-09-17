@@ -51,7 +51,31 @@ curl --request PATCH \
 }'
 ```
 
-#### 4. This API is invoked to fetch the list of providers filtered by name. (`gateway_get_gateway_v3_providers`)
+#### 4. v3/gateway/bridge-service (`gateway_put_gateway_v3_bridge_service`)
+
+```bash
+curl --request PUT \
+  --url https://dev.abdm.gov.in/api/hiecm/gateway/v3/bridge-service \
+  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
+  --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
+  --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
+  --header 'X-CM-ID: sbx' \
+  --header 'Content-Type: application/json' \
+  --data '{
+  "bridgeId": "{{bridgeId}}",
+  "serviceId": "{{serviceId}}",
+  "name": "TEST Gateway",
+  "isHip": true,
+  "isHiu": true,
+  "isHealthLocker": null,
+  "isPhr": false,
+  "endpoints": {},
+  "attributes": null,
+  "active": true
+}'
+```
+
+#### 5. This API is invoked to fetch the list of providers filtered by name. (`gateway_get_gateway_v3_providers`)
 
 ```bash
 curl --request GET \
@@ -62,7 +86,7 @@ curl --request GET \
   --header 'X-CM-ID: sbx'
 ```
 
-#### 5. This API is invoked to fetch the record for provider details for requested provider id. (`gateway_get_gateway_v3_providers_provider_id`)
+#### 6. This API is invoked to fetch the record for provider details for requested provider id. (`gateway_get_gateway_v3_providers_provider_id`)
 
 ```bash
 curl --request GET \
@@ -73,7 +97,7 @@ curl --request GET \
   --header 'X-CM-ID: sbx'
 ```
 
-#### 6. This API is invoked to fetch the list of govt programs. (`gateway_get_gateway_v3_govt_programs`)
+#### 7. This API is invoked to fetch the list of govt programs. (`gateway_get_gateway_v3_govt_programs`)
 
 ```bash
 curl --request GET \
@@ -84,7 +108,7 @@ curl --request GET \
   --header 'X-CM-ID: sbx'
 ```
 
-#### 7. This API is invoked to fetch the record with health locker enabled provider details. (`gateway_get_gateway_v3_health_lockers`)
+#### 8. This API is invoked to fetch the record with health locker enabled provider details. (`gateway_get_gateway_v3_health_lockers`)
 
 ```bash
 curl --request GET \
@@ -188,38 +212,6 @@ A 200 whose body matches:
   ]
 }
 ```
-
-### Gateway (`gateway-gateway`)
-
-**Act: the calls in this journey, in order**
-
-#### 1. v3/gateway/bridge-service (`gateway_put_gateway_v3_bridge_service`)
-
-```bash
-curl --request PUT \
-  --url https://dev.abdm.gov.in/api/hiecm/gateway/v3/bridge-service \
-  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
-  --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
-  --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
-  --header 'X-CM-ID: sbx' \
-  --header 'Content-Type: application/json' \
-  --data '{
-  "bridgeId": "{{bridgeId}}",
-  "serviceId": "{{serviceId}}",
-  "name": "TEST Gateway",
-  "isHip": true,
-  "isHiu": true,
-  "isHealthLocker": null,
-  "isPhr": false,
-  "endpoints": {},
-  "attributes": null,
-  "active": true
-}'
-```
-
-**Exit condition (Observe until this is true)**
-
-A 2xx response. The specification gives no body for it, so read what comes back.
 
 ## Where the detail is
 

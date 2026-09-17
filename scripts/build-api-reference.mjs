@@ -823,7 +823,7 @@ for (const {platform, version, files} of tree) {
         : {
             label: family,
             children: members.map((member) => {
-              const variant = member.label.slice(family.length + 2);
+              const variant = member.label.slice(family.length + 2) || member.label;
               return {
                 label: variant.replace(/^./, (c) => c.toUpperCase()),
                 items: member.items,
