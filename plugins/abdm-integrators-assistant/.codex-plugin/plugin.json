@@ -1,6 +1,6 @@
 {
   "name": "abdm-integrators-assistant",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "description": "Agent skills for ABDM integration from the ABDM Developer Portal, compiled from the Catalogue. One skill per module: abdm-m1 to abdm-m4 on the provider side, abdm-p1 to abdm-p3 inside a PHR application, abdm-phr-services for what a PHR app may offer on top, and abdm-fhir for NRCES compliant bundles. Each carries its work as sections that load on demand: scaffold builds the module flow by flow against the sandbox, integrate holds the calls and headers, debug walks a failed call to a named fix and lists every recorded code, test carries the matrix. Every step cites the atom it came from, and nothing has been run against the sandbox. Three commands open the work from the terminal: /abdm-preflight checks what must be true before any call, /abdm-prove-encryption settles the RSA padding before a flow is built on it, and /abdm-decode-error turns a response into the named fix. The abdm-call-debugger agent takes one failing call to a fix and verifies it by the original call succeeding.",
   "author": {
     "name": "ABDM Developer Portal",
