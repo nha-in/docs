@@ -1,0 +1,8 @@
+{
+  "atom": "hiecm.endpoint.p1-update-email-verify-otp",
+  "on": "2026-09-17",
+  "against": "https://abhasbx.abdm.gov.in",
+  "request": "curl -X POST 'https://abhasbx.abdm.gov.in/abha/api/v3/phr/app/login/profile/verify' \\\n  -H 'Authorization: Bearer <scrubbed>' \\\n  -H 'REQUEST-ID: 95b1d63b-2cdf-49bf-804c-ecf8258a842a' \\\n  -H 'TIMESTAMP: 2026-09-17T11:23:12.384Z' \\\n  -H 'Content-Type: application/json' \\\n  -d '{ \"scope\": [ \"abha-address-profile\", \"email-verify\" ], \"authData\": { \"authMethods\": [ \"otp\" ], \"otp\": { \"txnId\": \"*{{ transactionId}}*\", \"otpValue\":\"*{{encrypted OTP}}*\" } } }'\n",
+  "status": 401,
+  "body": ""
+}

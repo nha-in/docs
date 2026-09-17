@@ -1,0 +1,8 @@
+{
+  "atom": "hiecm.endpoint.p3-subscription-init",
+  "on": "2026-09-17",
+  "against": "https://dev.abdm.gov.in",
+  "request": "curl -X POST 'https://dev.abdm.gov.in/api/hiecm/subscription-requests/v3/init' \\\n  -H 'Authorization: Bearer <scrubbed>' \\\n  -H 'REQUEST-ID: c3981976-a584-42ff-9127-cae56eb36415' \\\n  -H 'TIMESTAMP: 2026-09-17T11:23:21.821Z' \\\n  -H 'Content-Type: application/json' \\\n  -d '{\n  \"subscription\": {\n    \"purpose\": {\n      \"text\": \"Care Management\",\n      \"code\": \"CAREMGT\",\n      \"refUri\": \"www.abdm.gov.in\"\n    },\n    \"patient\": {\n      \"id\": \"xxxxx@sbx\"\n    },\n    \"hiu\": {\n      \"id\": \"{ Health locker/PHR ID}\"\n    },\n    \"hips\": [\n      {\n        \"id\": \"HIP_ID\",\n        \"name\": \"HIP_NAME\",\n        \"type\": \"HIP\"\n      }\n    ],\n    \"categories\": [\n      \"LINK\",\n      \"DATA\"\n    ],\n    \"period\": {\n      \"from\": \"2024-06-01T09:00:00.000Z\",\n      \"to\": \"2124-12-31T09:00:00.000Z\"\n    }\n  }\n}'\n",
+  "status": 401,
+  "body": ""
+}

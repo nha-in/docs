@@ -3,7 +3,6 @@ title: M2 Linking and sharing errors
 sidebar_label: Errors
 sidebar_position: 98
 description: What M2 Linking and sharing returns when a call fails, and what to do about it.
-verification: unverified
 source: hiecm-m2.yaml
 generated: true
 ---

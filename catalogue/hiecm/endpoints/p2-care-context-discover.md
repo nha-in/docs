@@ -14,9 +14,6 @@ sources:
     note: >
       NHA's PHR V3 document, section 10.3.1. The path, the method, the
       request body and the error scenarios below are transcribed from it.
-verified:
-  status: unverified
-  against: docs-only
 related:
   flows: [hiecm.flow.p2-discover-and-link]
   concepts: [hiecm.concept.gateway-session]

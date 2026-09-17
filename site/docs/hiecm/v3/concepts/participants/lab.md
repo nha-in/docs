@@ -3,7 +3,6 @@ title: Diagnostics
 sidebar_label: Diagnostics
 sidebar_position: 4
 description: A laboratory or imaging centre takes the same roles as a hospital, with a narrower record surface. What differs and what does not.
-verification: unverified
 source: site/docs/hiecm/v3/registries/nhpr/hfr.md, site/docs/hiecm/v3/concepts/hip-hiu.md, site/docs/hiecm/v3/concepts/fhir.md, site/docs/hiecm/v3/concepts/linking.md
 sidebar_class_name: sidebar-icon sidebar-icon--flask-conical
 ---

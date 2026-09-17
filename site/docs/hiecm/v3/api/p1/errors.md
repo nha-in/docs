@@ -3,7 +3,6 @@ title: P1 PHR identity and profile errors
 sidebar_label: Errors
 sidebar_position: 98
 description: What P1 PHR identity and profile returns when a call fails, and what to do about it.
-verification: unverified
 source: hiecm-p1.yaml
 generated: true
 ---

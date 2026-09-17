@@ -12,7 +12,7 @@ An atom is one markdown file. The frontmatter is the machine half. The body is t
 Answer these four. If you cannot, you are not ready to write the atom.
 
 1. **What type is it?** One of: concept, flow, endpoint, callback, error, test, decision, glossary, fhir, sandbox. If it feels like two types, it is two atoms.
-2. **What is the source?** A URL and a hash. Never write an atom without a source. If the only source is a person's memory, mark it `docs-only` and `unverified`.
+2. **What is the source?** A URL and a hash. Never write an atom without a source. If the only source is a person's memory, mark it `docs-only`.
 3. **What does the reader already have?** That becomes "Before you start" and it must link to the atoms that get them there.
 4. **How will the reader know it worked?** If you cannot state an observable outcome, the atom is not finished and probably should not be merged.
 
@@ -34,11 +34,6 @@ sources:
   - url: https://sandbox.abdm.gov.in/swagger/ndhm-hip.yaml
     fetched: 2026-08-24
     hash: sha256:...
-verified:
-  status: verified
-  against: sandbox
-  on: 2026-08-25
-  by: shyamjith
 related:
   endpoints: [hiecm.endpoint.links-link-add-contexts]
   callbacks: [hiecm.callback.on-add-contexts]
@@ -56,7 +51,7 @@ Field rules that catch people out:
 - `gateway` is one of `hiecm`, `uhi`, `nhcx`, `shared`. Shared atoms have no milestone; use `n/a`. All four lint clean. `uhi` and `nhcx` carry no atoms yet because Phase 1's time went to HIE-CM M1 to M3, not because anything rejects them. Write one when you have the time to prove it.
 - `version` is the NHA spec version this is true for, not the Catalogue version. The Catalogue version is stamped by the build.
 - `summary` is one sentence a new developer understands with no acronyms. It is what the index and the search result show. Write it last, after the body, when you know what the atom actually says.
-- `verified.status` is `unverified`, `verified` or `stale`, plus a fourth value, `draft`, that lint accepts but the catalogue has never used and no compiler or selector script treats specially. Leave new atoms `unverified` until proven. Only `atom-verifier` or a human who ran it may set `verified`. Writing `verified` without a recorded response is the single worst thing you can do in this repo.
+- There is no `verified` field. Lint fails an atom that carries one. The Catalogue is published as ABDM's statement of how ABDM works; sandbox checks are internal, run by `npm run verify:atoms`, and their evidence lives under `catalogue/verification/`, never in the atom.
 - `related` ids must all resolve. Lint fails on a dangling id.
 - `skills` declares which compiled skills consume this atom. The compiler reads it. An atom with no `skills` entry renders in the docs but never reaches an agent, which is sometimes correct (glossary, decision) and sometimes a mistake.
 
@@ -108,7 +103,7 @@ Read the file for the type you are writing: `references/atom-types.md`.
 | Two flows in one atom | The graph cannot link to half a file | Split, link with `related` |
 | Section 4 says "you get a 200" | 200 means the request was accepted, not that the work happened | Name the callback and its payload |
 | Curl with `-H "Authorization: Bearer TOKEN"` | The reader does not know where TOKEN came from | `<ACCESS_TOKEN_FROM_SESSIONS_CALL>` and link the atom |
-| `verified: true` because it looked right | Fabricated verification is worse than none | `unverified`, and say so in the prose |
+| `verified:` in the frontmatter | The field no longer exists and lint fails on it | Drop it. Evidence lives in `catalogue/verification/` |
 | Fix described inline in section 5 | Skills compile error atoms separately | Create the error atom, link it |
 | Em dash anywhere | CI blocks U+2014 | Full stop, comma or colon |
 

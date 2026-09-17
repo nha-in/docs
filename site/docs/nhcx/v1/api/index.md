@@ -2,7 +2,6 @@
 title: NHCX API reference
 sidebar_label: API reference
 description: What is published for the NHCX gateway today.
-verification: unverified
 source: NHCX__NHCX-Website_DocumentDetails.md
 ---
 

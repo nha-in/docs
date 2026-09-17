@@ -1,0 +1,8 @@
+{
+  "atom": "hiecm.endpoint.m2-sms-deep-link-notify",
+  "on": "2026-09-17",
+  "against": "https://dev.abdm.gov.in",
+  "request": "curl -X POST 'https://dev.abdm.gov.in/api/hiecm/hip/v3/link/patient/links/sms/notify2' \\\n  -H 'Authorization: Bearer <scrubbed>' \\\n  -H 'REQUEST-ID: 9a2acd0d-e98e-490f-be61-e8f4278a4c9f' \\\n  -H 'TIMESTAMP: 2026-09-17T11:22:57.865Z' \\\n  -H 'X-CM-ID: sbx' \\\n  -H 'Content-Type: application/json' \\\n  -d '{\n  \"requestId\": \"f47ac10b-58cc-4372-a567-0e02b2c3d479\",\n  \"timestamp\": \"2024-01-10T12:00:00.000Z\",\n  \"notification\": {\n    \"phoneNo\": \"917812345678\",\n    \"hip\": {\n      \"name\": \"S Y Hospital\",\n      \"id\": \"HIP_SERVICE_ID\"\n    }\n  }\n}'\n",
+  "status": 400,
+  "body": "{\"error\":{\"code\":\"ABDM-9999: \",\"message\":\"Dependent service unavailable\"}}"
+}

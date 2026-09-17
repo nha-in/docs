@@ -3,7 +3,6 @@ title: Gateway session errors
 sidebar_label: Errors
 sidebar_position: 98
 description: What Gateway session returns when a call fails, and what to do about it.
-verification: unverified
 source: hiecm-gateway.yaml
 generated: true
 ---

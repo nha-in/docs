@@ -15,8 +15,6 @@ sources:
     note: >
       NHA milestone pack for M2, which carries the care context model and
       the error code table.
-verified:
-  status: unverified
 related:
   concepts: [hiecm.concept.roles]
   glossary: [shared.glossary.gateway, shared.glossary.abha-address]

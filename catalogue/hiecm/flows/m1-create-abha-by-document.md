@@ -22,8 +22,6 @@ sources:
       NHA's proposed simplified M1 flow, recorded as annexure#m1-simplified-flow.
       This route is not in it. NHA's review of 2026-09-11 says it is not
       recommended for integrators.
-verified:
-  status: unverified
 related:
   endpoints: [hiecm.endpoint.m1-enrolment-request-otp, hiecm.endpoint.m1-enrolment-verify-abdm-otp, hiecm.endpoint.m1-enrolment-by-document, hiecm.endpoint.m1-profile-get-account, hiecm.endpoint.m1-profile-get-qr-code]
 skills:

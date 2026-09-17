@@ -1,0 +1,8 @@
+{
+  "atom": "hiecm.endpoint.p3-approve-subscription-request",
+  "on": "2026-09-17",
+  "against": "https://dev.abdm.gov.in",
+  "request": "curl -X POST 'https://dev.abdm.gov.in/api/hiecm/subscription-' \\\n  -H 'Authorization: Bearer <scrubbed>' \\\n  -H 'REQUEST-ID: fcb7df87-79f2-4875-a7d7-c3048d1ada59' \\\n  -H 'TIMESTAMP: 2026-09-17T11:23:17.582Z' \\\n  -H 'Content-Type: application/json' \\\n  -d '{ \"isApplicableForAllHIPs\": **false**, \"includedSources\": [ { \"hiTypes\": [ \"Prescription\", \"DiagnosticReport\", \"OPConsultation\", \"DischargeSummary\", \"ImmunizationRecord\", \"HealthDocumentRecord\", \"WellnessRecord\" , \"Invoice\" ], \"purpose\": { \"text\": \"Care Management\", \"code\": \"CAREMGT\", \"refUri\": \"www.abc.com7\" }, \"hip\": { \"id\": \"HIP\\_ID\", \"name\": \"HIP\\_NAME \" }, \"categories\": [ \"DATA\", \"LINK\" ], \"period\": { \"from\": \"2023-04-27T04:03:40.079Z\", \"to\": \"2023-04-27T04:03:40.079Z\" } } ] } \"LINK\", \"DATA\" ], \"period\": { \"from\": \"2023-04-04T09:52:39.235Z\", \"to\": \"2023-04-20T09:52:39.235Z\" } } ], \"excludedSources\": [ { \"hiTypes\": [ \"PRESCRIPTION\" ], \"purpose\": { \"text\": \"Self Requested\", \"code\": \"PATRQT\", \"refUri\": \"www.test.com\" },'\n",
+  "status": 500,
+  "body": "{\"code\":\"601000\",\"type\":\"Status report\",\"message\":\"Runtime Error\",\"description\":\"Existing json payload is malformed. MessageID : urn:uuid:7b7e4c3a-d451-4c6c-9a19-ada40ca51921\"}"
+}

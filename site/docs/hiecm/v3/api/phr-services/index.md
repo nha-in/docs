@@ -3,7 +3,6 @@ title: PHR application services
 sidebar_label: Overview
 sidebar_position: 0
 description: Services a PHR application can offer on top of ABDM. Not a certification milestone.
-verification: unverified
 source: catalogue/openapi/hiecm/v3/hiecm-phr-services.yaml
 ---
 

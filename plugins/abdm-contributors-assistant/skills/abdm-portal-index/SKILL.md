@@ -1,9 +1,9 @@
 ---
 name: abdm-portal-index
 description: Router for all ABDM Developer Portal build work. Use this FIRST whenever anyone asks about building, planning, writing, reviewing, compiling, publishing or testing the ABDM Catalogue, the self-hosted docs site, the agent skills, the Docs MCP server, the update pipeline, or the portal's schedule and scope. Triggers include "write an atom", "review this page", "the catalogue", "lint failed", "compile the skills", "which milestone am I on", "what ships Friday", "is this DPG compliant", "ingest NHA swagger", "the support agent", and any mention of HIE-CM or ABDM documentation work. Route from here rather than guessing which skill applies.
-plan_version: 2026.09.09
+plan_version: 2026.09.17
 plan_source: abdm-v1-phase1-architecture-and-plan.md
-plan_hash: sha256:4ed2a64425a34e2613dec935deeb950b56de34305c7c5f7388d39afbce12d1d9
+plan_hash: sha256:515b1ece894d997588763c142d06c28c15214f500aa9e4b245c9766a2f0b6cd1
 compiled_from_plan: true
 ---
 
@@ -36,7 +36,7 @@ The only skill an agent needs loaded to know what else exists. Read the decision
    - Reviewing someone else's atom before merge: `atom-review`
    - A CI failure on the Catalogue: `catalogue-linting`
    - Pulling in NHA swagger, GitHub specs or callback definitions: `openapi-ingest`
-   - Marking an atom verified after running it: `/atom-verify`
+   - Running the sandbox check over endpoint atoms: `/atom-verify`
 
 3. **Rendering it for humans**
    - Docusaurus site, self-hosted Scalar references, local search, footer version stamp: `scalar-docs`
@@ -55,16 +55,16 @@ The only skill an agent needs loaded to know what else exists. Read the decision
 
 ## Which gateway, which phase
 
-Scope is phased, and phase is not the same as existence. Before promising anything, say two separate things: whether it exists in the repository, and whether it is verified. Across the whole Catalogue 319 atoms are indexed, 311 `unverified`, 4 `draft` and 4 `verified`. The rows below account for all 319. Note the shape of it: authoring has reached every HIE-CM module, verification has reached four atoms.
+Scope is phased, and phase is not the same as existence. Before promising anything, say whether it exists in the repository. Atoms carry no verification status: the Catalogue is published as ABDM's statement of how ABDM works, and sandbox checks are internal, with evidence under `catalogue/verification/`. Across the whole Catalogue 319 atoms are indexed. The rows below account for all 319.
 
 | Gateway and module | Atoms | What exists in the repository | What an agent may claim |
 |---|---|---|---|
-| HIE-CM M1, M2, M3 | 139, of which 3 verified | `hiecm-m1.yaml`, `hiecm-m2.yaml`, `hiecm-m3.yaml`, 44, 10 and 7 operations | Only what the atom records. 3 M1 atoms are verified against sandbox: `m1-encrypt-value` and `m1-get-public-certificate`, whose curls ran as written, and `hiecm.error.abdm-1016`, an error atom that carries no curl and was verified by observing the code. The other 136 are unverified: say so before quoting one. |
-| HIE-CM M4 | 20, none verified | `hiecm-m4.yaml`, 2 operations, 6 generated pages, and `abdm-m4` compiles | What the atoms record, and always that no M4 call has been run against sandbox. The atoms carry the registration order, the identifier formats and NHA's test cases, so quote them rather than improvising from the specification. |
-| HIE-CM P1, P2, P3 | 90, none verified | `hiecm-p1.yaml`, `hiecm-p2.yaml`, `hiecm-p3.yaml`, 63, 49 and 35 operations, 156 generated pages, and `abdm-p1`, `abdm-p2`, `abdm-p3` compile | As for M4. The atoms carry the patient-side flows and the AS error codes. No operation in them has been run. |
-| HIE-CM PHR application services | zero | `hiecm-phr-services.yaml`, 61 operations, 64 generated pages. `abdm-phr-services` compiles from the specification, not from atoms | Point at the generated pages and say they are unverified. Do not improvise a flow, an error table or a curl from the specification. Atoms are Phase 2. |
-| UHI | zero | 16 site pages. `catalogue/openapi/uhi/v1/` holds a conventions README and no specification file | Orientation only, and say it is unverified. Atoms and skills are Phase 2. |
-| Shared, plus the 2 HIE-CM decision atoms | 70, of which 1 verified and 4 draft | Glossary, FHIR and sandbox atoms that belong to no single milestone, all carrying `milestone: n/a` | Cite them freely for any gateway. 1 is verified, 4 are draft and the rest are unverified. These 70 plus the 249 above are the whole 319. |
+| HIE-CM M1, M2, M3 | 139 | `hiecm-m1.yaml`, `hiecm-m2.yaml`, `hiecm-m3.yaml`, 44, 10 and 7 operations | Only what the atom records. |
+| HIE-CM M4 | 20 | `hiecm-m4.yaml`, 2 operations, 6 generated pages, and `abdm-m4` compiles | What the atoms record. The atoms carry the registration order, the identifier formats and NHA's test cases, so quote them rather than improvising from the specification. |
+| HIE-CM P1, P2, P3 | 90 | `hiecm-p1.yaml`, `hiecm-p2.yaml`, `hiecm-p3.yaml`, 63, 49 and 35 operations, 156 generated pages, and `abdm-p1`, `abdm-p2`, `abdm-p3` compile | As for M4. The atoms carry the patient-side flows and the AS error codes. |
+| HIE-CM PHR application services | zero | `hiecm-phr-services.yaml`, 61 operations, 64 generated pages. `abdm-phr-services` compiles from the specification, not from atoms | Point at the generated pages. Do not improvise a flow, an error table or a curl from the specification. Atoms are Phase 2. |
+| UHI | zero | 16 site pages. `catalogue/openapi/uhi/v1/` holds a conventions README and no specification file | Orientation only. Atoms and skills are Phase 2. |
+| Shared, plus the 2 HIE-CM decision atoms | 70 | Glossary, FHIR and sandbox atoms that belong to no single milestone, all carrying `milestone: n/a` | Cite them freely for any gateway. These 70 plus the 249 above are the whole 319. |
 | NHCX | zero | 5 site pages. `catalogue/nhcx/` is folder structure holding no atom, and `catalogue/openapi/nhcx/v1/` holds a conventions README and no specification file | Say both halves. NHCX pages exist, so send readers to them rather than claiming NHCX is absent. NHCX atoms do not exist yet, and nothing rejects one: `scripts/lint-atoms.mjs` accepts `gateway: nhcx` alongside `hiecm`, `uhi` and `shared`. Atoms and skills are Phase 2, the same as UHI. |
 
 ## Skills
@@ -99,7 +99,7 @@ Dispatch these for work that is long, repetitive, or better done with a fresh co
 | Agent | Dispatch when |
 |---|---|
 | `atom-author` | A batch of atoms of the same type needs drafting from a source |
-| `atom-verifier` | Endpoint curls need running against sandbox and responses recording |
+| `atom-verifier` | Endpoint curls need running against sandbox with `npm run verify:atoms`, and each mismatch needs an issue or a correction |
 | `skill-compiler-agent` | A compile plus validate cycle, including the constrained prose pass |
 | `source-watcher` | A manual run of the recorded source hash check. No sweep and no schedule exist |
 | `support-responder` | An integrator question needs answering strictly from the Catalogue |
@@ -110,9 +110,9 @@ Dispatch these for work that is long, repetitive, or better done with a fresh co
 | Command | Does |
 |---|---|
 | `/atom-new` | Scaffolds an atom with valid frontmatter and the five section headings |
-| `/atom-verify` | Runs an endpoint atom's curl against sandbox and records the response |
+| `/atom-verify` | Runs `npm run verify:atoms` and reports the evidence written to `catalogue/verification/`. Flips nothing |
 | `/catalogue-lint` | Runs every lint rule and explains each failure |
-| `/catalogue-status` | Coverage and verification state by gateway and milestone |
+| `/catalogue-status` | Coverage and graph health by gateway and milestone |
 | `/skills-compile` | Compiles, validates and reports which atoms fed which skill |
 | `/docs-publish` | Generates navigation, previews, and publishes the Scalar site |
 | `/source-check` | Checks the recorded source hashes for drift and reports it. Nothing opens a pull request today |
@@ -132,5 +132,5 @@ The repository's actual scripts are under `scripts/` and reachable as npm target
 
 1. The Catalogue is the source. Never hand-edit a compiled skill, a navigation file, or llms.txt. Fix the atom and recompile. `portal-architecture`, `portal-planning`, `dpg-governance` and this index are compiled from the plan; edit the plan, not them.
 2. Never write an em dash. Not in atoms, not in skills, not in commit messages.
-3. Never claim verification you did not observe. `unverified` is an honest word and it is in the schema for a reason.
+3. Never present a response you did not observe as observed. Atoms carry no verification status; evidence lives in `catalogue/verification/` and a wrong atom is fixed through an issue against its id.
 4. If an atom does not exist for what you are being asked, say so and offer to create it. Do not improvise the answer.

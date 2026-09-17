@@ -14,8 +14,6 @@ sources:
   - file: ABDM Sandbox/ABDM/Proposed Simplified Milestone 1.docx
     status: not-yet-hashed
     note: NHA milestone pack for M1.
-verified:
-  status: unverified
 related:
   concepts: [hiecm.concept.asynchronous-callbacks]
   glossary: [shared.glossary.request-id]

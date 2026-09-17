@@ -1,0 +1,8 @@
+{
+  "atom": "hiecm.endpoint.p3-consent-fetch",
+  "on": "2026-09-17",
+  "against": "https://dev.abdm.gov.in",
+  "request": "curl -X POST 'https://dev.abdm.gov.in/api/hiecm/consent/v3/fetch' \\\n  -H 'Authorization: Bearer <scrubbed>' \\\n  -H 'REQUEST-ID: f784ad29-6c0d-4487-b842-f8a57f96c32f' \\\n  -H 'TIMESTAMP: 2026-09-17T11:23:18.863Z' \\\n  -H 'Content-Type: application/json' \\\n  -d '{ \"consentId\": \"d6a83f24-6c96-421e-b8b8-844e5344ef69\" }'\n",
+  "status": 401,
+  "body": ""
+}

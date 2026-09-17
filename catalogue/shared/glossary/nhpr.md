@@ -18,9 +18,6 @@ sources:
   - file: ABDM Sandbox/ABDM/Proposed Simplified Milestone 4 (NHPR).docx
     status: not-yet-hashed
     note: NHA milestone pack for M4.
-verified:
-  status: unverified
-  against: docs-only
 related:
   glossary: [shared.glossary.hpr, shared.glossary.hfr]
 ---

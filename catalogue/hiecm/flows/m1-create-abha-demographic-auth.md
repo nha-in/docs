@@ -24,9 +24,6 @@ sources:
       The M1 specification as curated here. The demo_auth authentication
       method, its four required fields, the top level token and the default
       ABHA address all come from it.
-verified:
-  status: unverified
-  against: docs-only
 related:
   endpoints:
     - hiecm.endpoint.m1-enrolment-by-aadhaar

@@ -14,8 +14,6 @@ sources:
     note: >
       NHA milestone pack for M4, which carries the session request and
       response.
-verified:
-  status: unverified
 related:
   endpoints: [hiecm.endpoint.gateway-sessions]
   errors: [hiecm.error.abdm-2500]

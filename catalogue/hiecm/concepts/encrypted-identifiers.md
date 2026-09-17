@@ -13,8 +13,6 @@ sources:
   - file: ABDM Sandbox/ABDM/M1 ABHA Collection.postman_collection.json
     status: not-yet-hashed
     note: NHA's own M1 Postman collection.
-verified:
-  status: unverified
 related:
   decisions: [hiecm.decision.encrypt-locally]
 ---

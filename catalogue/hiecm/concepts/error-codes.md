@@ -13,8 +13,6 @@ sources:
   - file: ABDM Sandbox/ABDM/Proposed Simplified Milestone 2.docx
     status: not-yet-hashed
     note: NHA milestone pack for M2.
-verified:
-  status: unverified
 related:
   concepts: []
 ---

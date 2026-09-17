@@ -14,8 +14,6 @@ sources:
     note: >
       NHA's own M1 collection. The step order in this flow is the order of
       the requests in NHA's folder for it.
-verified:
-  status: unverified
 related:
   endpoints: [hiecm.endpoint.m1-login-request-otp, hiecm.endpoint.m1-login-verify, hiecm.endpoint.m1-login-select-account]
   errors: [hiecm.error.abdm-2401, hiecm.error.900900]

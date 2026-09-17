@@ -1,0 +1,8 @@
+{
+  "atom": "hiecm.endpoint.p1-process-link-request-via-abha-number",
+  "on": "2026-09-17",
+  "against": "https://abhasbx.abdm.gov.in",
+  "request": "curl -X POST 'https://abhasbx.abdm.gov.in/abha/api/v3/phr/app/login/profile/link' \\\n  -H 'Authorization: Bearer <scrubbed>' \\\n  -H 'REQUEST-ID: e377a322-5a9d-4569-aa1f-8aaf09df704e' \\\n  -H 'TIMESTAMP: 2026-09-17T11:23:11.107Z' \\\n  -H 'Content-Type: application/json' \\\n  -d '{ \"action\": \"LINK\", \"transactionId\":\"*{{ transactionId}}*\" }'\n",
+  "status": 401,
+  "body": ""
+}

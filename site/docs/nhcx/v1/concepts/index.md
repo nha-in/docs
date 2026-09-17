@@ -2,7 +2,6 @@
 title: Core concepts
 sidebar_label: What a claim is made of
 description: What a claim is made of on NHCX, at the level the documentation set records.
-verification: unverified
 source: NHCX__NHCX-Website_DocumentDetails.md
 sidebar_position: 4
 ---

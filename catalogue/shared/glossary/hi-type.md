@@ -24,9 +24,6 @@ sources:
   - url: https://nrces.in/ndhm/fhir/r4/index.html
     status: docs-only
     note: The NRCeS guide, which defines one composition profile per type.
-verified:
-  status: unverified
-  against: docs-only
 related:
   concepts: []
   glossary: [shared.glossary.fhir, shared.glossary.snomed-ct,
