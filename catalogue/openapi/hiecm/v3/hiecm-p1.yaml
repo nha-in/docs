@@ -5195,8 +5195,7 @@ components:
       bearerFormat: JWT
       description: The access token from `POST /api/hiecm/gateway/v3/sessions`.
 x-abdm-errors:
-  source: Code and message are as published. The action column reads the message
-    text by a documented rule. These codes are the PHR facing wording of the core
+  source: Code and message are as published. The heading each code sits under reads the message text by a documented rule. These codes are the PHR facing wording of the core
     ABDM codes, row for row.
   codes:
   - code: AS-1001

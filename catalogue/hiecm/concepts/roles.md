@@ -19,9 +19,6 @@ sources:
   - file: ABDM Sandbox/ABDM/Proposed Simplified Milestone 2.docx
     status: not-yet-hashed
     note: NHA milestone pack for M2.
-verified:
-  status: unverified
-  against: docs-only
 related:
   glossary: [shared.glossary.hip, shared.glossary.hiu, shared.glossary.phr,
              shared.glossary.hrp, shared.glossary.dsc, shared.glossary.hfr,

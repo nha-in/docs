@@ -14,11 +14,14 @@ sources:
   - file: ABDM Sandbox/ABDM/M1 ABHA Collection.postman_collection.json
     status: not-yet-hashed
     note: NHA's own M1 Postman collection.
-verified:
-  status: unverified
+  - file: catalogue/annexure/integration-learnings-2026-09-16.md
+    fetched: 2026-09-16
+    hash: sha256:d1415609d3d71178563367bcdcc48fa7a01fe9ebd247b4c019686304868368ce
+    note: >
+      The two keys chosen by path prefix. Observed by an integrator on 2026-09-16, not yet run from this repository.
 related:
   decisions: [hiecm.decision.encrypt-locally]
-  concepts: [hiecm.concept.input-encryption]
+  concepts: [hiecm.concept.input-encryption, hiecm.concept.two-public-keys]
   endpoints: [hiecm.endpoint.m1-login-request-otp, hiecm.endpoint.m1-get-public-certificate]
   tests: [hiecm.test.m1-encryption-padding]
 skills:
@@ -59,6 +62,7 @@ certificate at
 2048-bit. Both name the same algorithm. Encrypting under the wrong one
 is refused by the field validator, which names the business field and
 never mentions the key.
+The key by path, and the symptom of the wrong one: [the two public keys](hiecm.concept.two-public-keys).
 
 ## What happens
 

@@ -119,7 +119,7 @@ components:
         The `accessToken` from `POST /api/hiecm/gateway/v3/sessions`. Send it as `Authorization: Bearer <ACCESS_TOKEN>`.
 x-abdm-errors:
   source: |-
-    The ranges below, with examples. The full list is in the sandbox documentation for the healthcare professional registry. Code, message and error name are as published. The action column reads the message text by a documented rule, and says Unclassified where the rule could not classify one.
+    The ranges below, with examples. The full list is in the sandbox documentation for the healthcare professional registry. Code, message and error name are as published. The heading each code sits under reads the message text by a documented rule, and says Unclassified where the rule could not classify one.
   ranges:
   - range: HIS-400 to HIS-504
     covers: The HTTP level failures

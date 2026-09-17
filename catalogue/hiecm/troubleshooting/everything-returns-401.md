@@ -13,8 +13,6 @@ sources:
   - file: ABDM Sandbox/ABDM/Proposed Simplified Milestone 2.docx
     status: not-yet-hashed
     note: NHA's error code table, the same source ABDM-2402 and ABDM-2403 draw on.
-verified:
-  status: unverified
 related:
   endpoints: [hiecm.endpoint.gateway-sessions]
   concepts: [hiecm.concept.gateway-session]

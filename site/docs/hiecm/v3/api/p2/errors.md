@@ -3,7 +3,6 @@ title: P2 PHR linking and records errors
 sidebar_label: Errors
 sidebar_position: 98
 description: What P2 PHR linking and records returns when a call fails, and what to do about it.
-verification: unverified
 source: hiecm-p2.yaml
 generated: true
 ---

@@ -2,7 +2,6 @@
 title: Registries
 sidebar_label: Registries
 description: The registry UHI runs itself, the three ABDM identifiers that ride inside UHI messages, and which of them onboarding actually asks for.
-verification: unverified
 source: UHI__UHI_Physical_Consultation_v2.0_-_Onboarding_Document.md, UHI__UHI_AmbulanceBooking_Onboarding_v1.1-July2026.md, UHI__UHI_AMRIT_Pharmacy_OnboardingDoc_v1.0.md
 ---
 

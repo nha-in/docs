@@ -2,7 +2,6 @@
 title: UHI API reference
 sidebar_label: API reference
 description: What is published for the UHI gateway today, and where the message shapes come from.
-verification: unverified
 source: UHI onboarding documents
 ---
 

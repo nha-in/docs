@@ -8,7 +8,6 @@ import { loadAtoms, root } from "./lib/atoms.mjs";
 const TYPES = ["concept", "flow", "endpoint", "callback", "error", "test",
                "decision", "glossary", "fhir", "sandbox", "troubleshooting"];
 const GATEWAYS = ["hiecm", "uhi", "nhcx", "shared"];
-const STATUSES = ["draft", "unverified", "verified", "stale"];
 const SECTIONS = ["In plain words", "Before you start", "What happens",
                   "How you know it worked", "When it goes wrong"];
 // Folder name per type, so an atom cannot claim a type it is not filed under.
@@ -31,7 +30,7 @@ for (const p of parseProblems) fail(p.file, p.msg);
 for (const [id, atom] of atoms) {
   const { file, fm, body, raw } = atom;
 
-  for (const field of ["id", "type", "gateway", "milestone", "version", "title", "summary", "sources", "verified", "related"]) {
+  for (const field of ["id", "type", "gateway", "milestone", "version", "title", "summary", "sources", "related"]) {
     if (fm[field] === undefined) fail(file, `missing mandatory field: ${field}`);
   }
   if (!id) continue;
@@ -58,13 +57,9 @@ for (const [id, atom] of atoms) {
     if (!s?.status && !s?.hash) fail(file, `sources[${i}] needs a status or a hash`);
   });
 
-  const v = fm.verified ?? {};
-  if (!STATUSES.includes(v.status)) fail(file, `verified.status must be one of ${STATUSES.join(", ")}`);
-  if (v.status === "verified") {
-    for (const f of ["against", "on", "by"]) {
-      if (!v[f]) fail(file, `verified.status is verified, so verified.${f} is required. Never claim verification you did not observe.`);
-    }
-  }
+  // No verification field: the Catalogue is published as ABDM's statement of how ABDM works.
+  // Sandbox evidence lives in catalogue/verification/, internal to contributors.
+  if (fm.verified !== undefined) fail(file, "verified is no longer a field; drop it. Sandbox evidence lives in catalogue/verification/");
 
   // The five sections, present and in order.
   const headings = [...body.matchAll(/^##\s+(.+?)\s*$/gm)].map((h) => h[1]);
@@ -102,12 +97,9 @@ for (const [id, atom] of atoms) {
 
 const byType = {};
 for (const a of atoms.values()) byType[a.fm?.type] = (byType[a.fm?.type] ?? 0) + 1;
-const byStatus = {};
-for (const a of atoms.values()) byStatus[a.fm?.verified?.status] = (byStatus[a.fm?.verified?.status] ?? 0) + 1;
 
 console.log(`${atoms.size} atoms`);
 console.log("  by type:  " + Object.entries(byType).map(([k, v]) => `${k} ${v}`).join(", "));
-console.log("  by status: " + Object.entries(byStatus).map(([k, v]) => `${k} ${v}`).join(", "));
 
 if (problems.length) {
   console.error(`\n${problems.length} problem(s):`);

@@ -13,11 +13,15 @@ sources:
     fetched: 2026-08-25
     note: >
       NHA's M2 OpenAPI file.
-verified:
-  status: unverified
+  - file: catalogue/annexure/integration-learnings-2026-09-16.md
+    fetched: 2026-09-16
+    hash: sha256:d1415609d3d71178563367bcdcc48fa7a01fe9ebd247b4c019686304868368ce
+    note: >
+      The /api/v3 path, the empty requestId and timestamp in the body, and the arrival within seconds of a link. Observed by an integrator on 2026-09-16, not yet run from this repository.
 related:
   errors: [hiecm.error.abdm-9999]
-  concepts: [hiecm.concept.asynchronous-callbacks]
+  concepts: [hiecm.concept.asynchronous-callbacks, hiecm.concept.linking-triggers-self-fetch]
+  endpoints: [hiecm.endpoint.m2-hip-health-information-on-request]
 skills:
   - hiecm-m2-build
 ---
@@ -27,8 +31,6 @@ skills:
 ## In plain words
 
 Inbound to the HIP, carrying the consent id, the date range, the data push URL and the encryption parameters. NHA states 20 minutes from this request to the data push.
-
-Transcribed from NHA's milestone document. Not run against the ABDM sandbox, so the payload is unconfirmed.
 
 This is something ABDM sends to you. It arrives at the URL you registered, not at a URL you choose per request.
 
@@ -40,11 +42,11 @@ This is something ABDM sends to you. It arrives at the URL you registered, not a
 
 ## What happens
 
-ABDM posts to `/v0.5/health-information/hip/request` on your registered base URL.
+ABDM posts to `/api/v3/hip/health-information/request` on your registered base URL.
 
-**The payload is not yet published.** The path is declared so the exchange is visible.
+The body carries `transactionId` and `hiRequest` with `consent`, `dateRange`, `dataPushUrl` and `keyMaterial`. The body's own `requestId` and `timestamp` arrive as empty strings, so read both from the `REQUEST-ID` and `TIMESTAMP` headers.
 
-Acknowledge with a 202 quickly. Do the work afterwards.
+Acknowledge with a 202 quickly, then call [the acknowledgement endpoint](hiecm.endpoint.m2-hip-health-information-on-request) and push the records. After a fresh link this request can arrive within about ten seconds, because the patient's PHR app fetches newly linked records on its own. See [linking triggers a self requested fetch](hiecm.concept.linking-triggers-self-fetch).
 
 ## How you know it worked
 

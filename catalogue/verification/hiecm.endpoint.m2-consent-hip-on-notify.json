@@ -1,0 +1,8 @@
+{
+  "atom": "hiecm.endpoint.m2-consent-hip-on-notify",
+  "on": "2026-09-17",
+  "against": "https://dev.abdm.gov.in",
+  "request": "curl -X POST 'https://dev.abdm.gov.in/api/hiecm/consent/v3/request/hip/on-notify' \\\n  -H 'Authorization: Bearer <scrubbed>' \\\n  -H 'REQUEST-ID: 65257b45-220b-469f-a620-0c0c0cd6c060' \\\n  -H 'TIMESTAMP: 2026-09-17T11:22:53.984Z' \\\n  -H 'X-CM-ID: sbx' \\\n  -H 'Content-Type: application/json' \\\n  -d '{ \"acknowledgement\": [ { \"status\": \"OK\", \"consentId\": \"e3c74829-3f82-4f94-959e-e10f57bcd57b\" } ], \"error\": { \"code\": \"ABDM-1001\", \"message\": \"unable to connect database\" }, \"response\": { \"requestId\": \"6f0b4665-a915-4c92-aa36-65afb4a2cd71\" } }'\n",
+  "status": 400,
+  "body": "{\"error\":{\"code\":\"ABDM-1006: \",\"message\":\"Bad Request, invalid request Body\"}}"
+}

@@ -14,8 +14,6 @@ sources:
     note: >
       NHA's own M1 collection, which supplies the call order for this
       flow.
-verified:
-  status: unverified
 related:
   concepts: [hiecm.concept.encrypted-identifiers]
   endpoints: [hiecm.endpoint.m1-encrypt-value]

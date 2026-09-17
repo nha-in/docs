@@ -16,9 +16,6 @@ sources:
       NHA's own test case sheet, which names the sandbox host and path for
       this call. It gives no request or response schema, so the body below
       is not transcribed from one.
-verified:
-  status: unverified
-  against: docs-only
 related:
   flows: [hiecm.flow.m4-onboard-facility]
   concepts: [hiecm.concept.gateway-session]
