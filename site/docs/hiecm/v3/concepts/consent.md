@@ -3,7 +3,7 @@ title: Consent
 sidebar_label: Consent
 description: What a consent request is, what a consent artefact is, who holds it, and the states it moves through.
 verification: unverified
-source: ABDM__Proposed_Simplified_Milestone_3.md, ABDM__NewDocumant_PHR_app.md, ABDM__Proposed_Simplified_Milestone_2.md
+source: catalogue/openapi/hiecm/v3/hiecm-m3.yaml, catalogue/openapi/hiecm/v3/hiecm-p2.yaml, catalogue/openapi/hiecm/v3/hiecm-m2.yaml
 sidebar_position: 4
 covers: [hiecm.concept.consent-artefact, hiecm.concept.consent-in-a-phr-app]
 sidebar_class_name: sidebar-icon sidebar-icon--shield-check

@@ -4,7 +4,7 @@ sidebar_label: Information Management Systems
 sidebar_position: 2
 description: What a facility does as a health information provider in ABDM, and how care context linking fits into a clinical workflow.
 verification: unverified
-source: ABDM__Proposed_Simplified_Milestone_2.md, ABDM__Proposed_Simplified_Milestone_1.md
+source: catalogue/openapi/hiecm/v3/hiecm-m2.yaml, catalogue/openapi/hiecm/v3/hiecm-m1.yaml
 sidebar_class_name: sidebar-icon sidebar-icon--server
 ---
 

@@ -3,7 +3,7 @@ title: The ABDM gateway
 sidebar_label: Gateway
 description: The routing layer every ABDM call goes through, and the session endpoint that issues your token.
 verification: unverified
-source: ABDM__M1_ABHA_Collection.postman_collection.md, ABDM__Proposed_Simplified_Milestone_2.md, ABDM__Proposed_Simplified_Milestone_3.md, ABDM__Proposed_Simplified_Milestone_4_(NHPR).md
+source: catalogue/openapi/hiecm/v3/hiecm-m1.yaml, catalogue/openapi/hiecm/v3/hiecm-m2.yaml, catalogue/openapi/hiecm/v3/hiecm-m3.yaml, catalogue/openapi/hiecm/v3/hiecm-m4.yaml
 sidebar_position: 7
 covers: [hiecm.concept.gateway-session]
 sidebar_class_name: sidebar-icon sidebar-icon--route
@@ -100,7 +100,7 @@ Four hosts serve gateway paths.
 | `https://live.abdm.gov.in` | Production, alongside `apis` for the same call |
 | `https://apis.abdm.gov.in` | Production |
 
-Take the host from the sandbox documentation issued at onboarding, and keep it in configuration, not in code.
+Keep the host in configuration, not in code.
 
 ## Limits to code against
 

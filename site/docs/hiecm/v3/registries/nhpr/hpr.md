@@ -3,7 +3,7 @@ title: HPR, the professional registry
 sidebar_label: HPR
 description: The Healthcare Professionals Registry, the HPID, what identifies a doctor, and the registration journey.
 verification: unverified
-source: ABDM__Proposed_Simplified_Milestone_4_(NHPR).md
+source: catalogue/openapi/hiecm/v3/hiecm-m4.yaml
 sidebar_position: 1
 sidebar_class_name: sidebar-icon sidebar-icon--stethoscope
 ---
@@ -47,7 +47,7 @@ An HPID on its own is an authenticated person; the profile behind it makes them 
 | Qualification | Degree or diploma obtained, college, university, year of award, and the degree certificate |
 | Current work | Whether they are working, the purpose of that work, whether it is private, government or both, and the facility they work at |
 
-Three codes decide what the professional may be. **Category** says doctor, nurse or pharmacist. **Subcategory** fixes the system of medicine. The **degree code** must agree with both. The tables for all three are on [the HPR and HFR call list](/docs/hiecm/v3/api/m4).
+Three codes decide what the professional may be. **Category** says doctor, nurse or pharmacist. **Subcategory** fixes the system of medicine. The **degree code** must agree with both. The operations that take them, and their fields, are in [the M4 API reference](/docs/hiecm/v3/api/m4).
 
 :::warning[The subcategory codes differ between two calls]
 Subcategory codes differ between the create HPID and register professional tables. Fetch the codes from the HPRID subcategories master call rather than hard coding either table.
@@ -81,7 +81,7 @@ Three things to know first:
 - `degreeCertificate` and `registrationCertificate` are mandatory uploads, and `proofOfWorkCertificate` is mandatory when the professional is government or both.
 - Call `demographicAuthViaMobile` first, and generate the mobile OTP only when it returns false.
 
-Call by call, with the parameters, is on [M4 user journey](/docs/hiecm/v3/milestones/m4) and [the HPR and HFR call list](/docs/hiecm/v3/api/m4).
+Call by call, with the parameters, is on [M4 user journey](/docs/hiecm/v3/milestones/m4) and [the M4 API reference](/docs/hiecm/v3/api/m4).
 
 ## Getting an HPR token later
 
@@ -114,12 +114,12 @@ Upload limits: 1 MB for a profile photo, 5 MB for anything else, png, jpeg, jpg 
 ## Request and response formats
 
 This page gives the behaviour, the call order, the parameter tables and the
-code lists. Take the request and response shapes from the healthcare
-professional registry sandbox documentation alongside it.
+code lists. Take the request and response shapes from [the M4 API
+reference](/docs/hiecm/v3/api/m4) alongside it.
 
 ## Next
 
 - [HFR](/docs/hiecm/v3/registries/nhpr/hfr), the facility half, which needs a token from this registry.
 - [NHPR](/docs/hiecm/v3/registries/nhpr), the parent page.
 - [M4 user journey](/docs/hiecm/v3/milestones/m4), the same order as diagrams.
-- [the HPR and HFR call list](/docs/hiecm/v3/api/m4), the parameter tables and the error codes.
+- [the M4 API reference](/docs/hiecm/v3/api/m4), its operations and their fields.

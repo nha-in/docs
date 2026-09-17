@@ -3,7 +3,7 @@ title: NHPR, the provider registries
 sidebar_label: NHPR
 description: The National Health Professional Registry, why professionals and facilities are registered separately, and which one you need first.
 verification: unverified
-source: ABDM__Proposed_Simplified_Milestone_4_(NHPR).md
+source: catalogue/openapi/hiecm/v3/hiecm-m4.yaml
 ---
 
 # NHPR, the provider registries
@@ -29,7 +29,7 @@ Sandbox     https://apihspsbx.abdm.gov.in/v4/int/
 Production  https://apinhpr.abdm.gov.in/v4/int/
 ```
 
-The session token that authorises them comes from the HIE-CM gateway, not from NHPR. [M4](/docs/hiecm/v3/api/m4) is the only milestone in [ABDM](/docs/hiecm/v3/getting-started/glossary#abdm) that writes to NHPR, and its endpoints, parameter tables and error codes are on [the M4 API reference](/docs/hiecm/v3/api/m4).
+The session token that authorises them comes from the HIE-CM gateway, not from NHPR. [M4](/docs/hiecm/v3/api/m4) is the only milestone in [ABDM](/docs/hiecm/v3/getting-started/glossary#abdm) that writes to NHPR, and its operations and their fields are in [the M4 API reference](/docs/hiecm/v3/api/m4).
 
 ## Next
 

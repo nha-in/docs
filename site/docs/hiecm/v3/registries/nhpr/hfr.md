@@ -3,7 +3,7 @@ title: HFR, the facility registry
 sidebar_label: HFR
 description: The Health Facility Registry, what a facility record holds, the five call onboarding sequence, and how a bridge is linked to it.
 verification: unverified
-source: ABDM__Proposed_Simplified_Milestone_4_(NHPR).md, ABDM__Proposed_Simplified_Milestone_2.md
+source: catalogue/openapi/hiecm/v3/hiecm-m4.yaml, catalogue/openapi/hiecm/v3/hiecm-m2.yaml
 sidebar_position: 2
 sidebar_class_name: sidebar-icon sidebar-icon--building
 ---
@@ -28,7 +28,7 @@ Three layers, one call each.
 | Additional information | Yes or no flags for a dialysis centre, pharmacy, blood bank, cath lab, diagnostic lab and imaging centre, plus scheme identifiers the facility already holds: NHRR, NIN, AB-PMJAY, Rohini, ECHS, CGHS, CEA registration and a state insurance scheme ID |
 | Detailed information | Specialities per system of medicine, and the sections that apply to this facility type: medical infrastructure and bed counts, pharmacy details, blood bank details, diagnostic services, imaging services |
 
-Which parts of the detailed layer are mandatory depends on the facility type, the type of service and the system of medicine, and the rules are on [the HPR and HFR call list](/docs/hiecm/v3/api/m4). Two of them shape your form. An inpatient or day care facility must submit at least one bed count greater than zero. An imaging centre, diagnostic laboratory, blood bank or pharmacy need not submit medical infrastructure at all.
+Which parts of the detailed layer are mandatory depends on the facility type, the type of service and the system of medicine. Two of those rules shape your form. An inpatient or day care facility must submit at least one bed count greater than zero. An imaging centre, diagnostic laboratory, blood bank or pharmacy need not submit medical infrastructure at all.
 
 ### Codes, not names
 
@@ -101,5 +101,5 @@ Two paths are fixed here:
 
 - [HPR](/docs/hiecm/v3/registries/nhpr/hpr), which issues the token these calls need.
 - [NHPR](/docs/hiecm/v3/registries/nhpr), the parent page.
-- [the HPR and HFR call list](/docs/hiecm/v3/api/m4), parameter tables and `HIS-` error codes.
+- [the M4 API reference](/docs/hiecm/v3/api/m4), its operations and their fields.
 - [M2 Attach, Health Information Provider Services](/docs/hiecm/v3/api/m2), which needs this facility ID.

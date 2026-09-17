@@ -3,7 +3,7 @@ title: FHIR and health record formats
 sidebar_label: FHIR
 description: The R4 profiles ABDM uses, the document bundle every record travels in, and how to validate one before you ship it.
 verification: unverified
-source: ABDM__Proposed_Simplified_Milestone_2.md, ABDM__Proposed_Simplified_Milestone_3.md
+source: catalogue/openapi/hiecm/v3/hiecm-m2.yaml, catalogue/openapi/hiecm/v3/hiecm-m3.yaml
 sidebar_position: 6
 sidebar_class_name: sidebar-icon sidebar-icon--file-heart
 ---

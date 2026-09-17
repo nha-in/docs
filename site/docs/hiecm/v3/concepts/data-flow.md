@@ -3,7 +3,7 @@ title: How a record travels
 sidebar_label: Data flow
 description: The path a health record takes from the system that asks for it to the system that holds it, and the encryption in between.
 verification: unverified
-source: ABDM__Proposed_Simplified_Milestone_2.md, ABDM__Proposed_Simplified_Milestone_3.md
+source: catalogue/openapi/hiecm/v3/hiecm-m2.yaml, catalogue/openapi/hiecm/v3/hiecm-m3.yaml
 sidebar_position: 5
 sidebar_class_name: sidebar-icon sidebar-icon--arrow-right-left
 ---

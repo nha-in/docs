@@ -3,7 +3,7 @@ title: Care contexts and linking
 sidebar_label: Linking
 description: What a care context is, why a record has to be linked before anyone can find it, and how the link token works.
 verification: unverified
-source: ABDM__Proposed_Simplified_Milestone_2.md, ABDM__NewDocumant_PHR_app.md
+source: catalogue/openapi/hiecm/v3/hiecm-m2.yaml, catalogue/openapi/hiecm/v3/hiecm-p2.yaml
 sidebar_position: 3
 covers: [hiecm.concept.care-context]
 sidebar_class_name: sidebar-icon sidebar-icon--link

@@ -7,7 +7,7 @@ sidebar_custom_props:
 description: What a personal health record app does in ABDM, the screens it needs, and the modules you have to build.
 covers: [hiecm.concept.phr-subscriptions]
 verification: unverified
-source: ABDM__NewDocumant_PHR_app.md, ABDM__Proposed_Simplified_Milestone_1.md
+source: catalogue/openapi/hiecm/v3/hiecm-p1.yaml, catalogue/openapi/hiecm/v3/hiecm-p2.yaml, catalogue/openapi/hiecm/v3/hiecm-p3.yaml, catalogue/openapi/hiecm/v3/hiecm-p4.yaml, catalogue/openapi/hiecm/v3/hiecm-m1.yaml
 sidebar_class_name: sidebar-icon sidebar-icon--app-window
 ---
 
@@ -77,9 +77,6 @@ Address rules:
   one. Every 14 digit ABHA number is issued a default address of this shape,
   written as `14digit@sbx` or `14digit@abdm`. Which environment uses which
   suffix is not documented yet.
-- Minimum length is stated twice and the statements disagree: 4 characters in the
-  prose and the ABHA number test cases, 8 in the mobile number test case table.
-  Unresolved against the sandbox, so validate against the API response.
 - Password, where you collect one: 8 characters or longer, one A to Z, one a to z,
   one digit, one symbol, no spaces, no more than 2 consecutive characters or
   keyboard keys. Password validation is now optional.
@@ -132,10 +129,6 @@ counter code. Your app scans it, then:
 3. Calls the [HIE-CM](/docs/hiecm/v3/getting-started/glossary#hie-cm) API to share the details.
 4. Waits for the facility, currently expected to respond within 30 seconds.
 5. Displays the token number if the facility returned one.
-
-Two time limits are in the source and we have tested neither: the functionality
-overview blocks a second token for 60 minutes, the test cases show the token as
-valid for the next 30 minutes and configurable.
 
 Counter names arrive in the QR code: up to 20 alphanumeric characters, no special
 characters, examples OPD, OPD1, OPD cardio, IPD1, Pharmacy. A counter name cannot
@@ -203,10 +196,6 @@ Once a care context is linked to the user's ABHA address:
 5. The HIP sends the records across the network.
 6. Your app stores them for long term access and displays them, preferably in
    chronological order.
-
-The test cases cover fetching each health information type structured and
-unstructured: diagnostic report, prescription, discharge summary, consultation
-note, immunisation record, wellness record and health document record.
 
 ## Subscriptions, and why you need one
 

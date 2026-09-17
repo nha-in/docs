@@ -3,7 +3,7 @@ title: The OTP never arrives
 sidebar_label: OTP never arrives
 description: You requested an OTP and nothing reached the phone. The checks in order.
 verification: unverified
-source: M1 ABHA Collection.postman_collection.json
+source: catalogue/openapi/hiecm/v3/hiecm-m1.yaml
 sidebar_position: 3
 covers: [hiecm.troubleshooting.otp-never-arrives]
 sidebar_class_name: sidebar-icon sidebar-icon--message-square-warning

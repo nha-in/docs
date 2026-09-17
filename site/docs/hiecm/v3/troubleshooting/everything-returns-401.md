@@ -3,7 +3,7 @@ title: Everything returns 401
 sidebar_label: Everything returns 401
 description: Every call fails the same way, not just one endpoint. The checks in order, before you assume the gateway is down.
 verification: unverified
-source: ABDM__Proposed_Simplified_Milestone_2.md
+source: catalogue/openapi/hiecm/v3/hiecm-m2.yaml
 sidebar_position: 2
 covers: [hiecm.troubleshooting.everything-returns-401]
 sidebar_class_name: sidebar-icon sidebar-icon--shield-x

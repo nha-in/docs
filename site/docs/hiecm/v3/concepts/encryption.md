@@ -3,7 +3,7 @@ title: Encryption
 sidebar_label: Encryption
 description: Which values must be encrypted before they go in a request body, why it is required, and why you encrypt inside your own system rather than through a helper.
 verification: unverified
-source: ABDM__Proposed_Simplified_Milestone_1.md, the M1 Postman collection
+source: catalogue/openapi/hiecm/v3/hiecm-m1.yaml
 sidebar_position: 9
 covers: [hiecm.concept.encrypted-identifiers, hiecm.concept.input-encryption, hiecm.decision.encrypt-locally]
 sidebar_class_name: sidebar-icon sidebar-icon--lock
@@ -75,7 +75,7 @@ The [encrypt value endpoint](/docs/hiecm/v3/api/m1) documents the helper for com
 
 ## Fetching the public key
 
-M1 has a `public/certificate` API for fetching the public key, listed again under developer utilities. Its URL, headers and response shape are not yet published. Take them from the sandbox documentation.
+M1 has a `public/certificate` API for fetching the public key, listed again under developer utilities. Its URL, headers and response shape are on [the certificate call](/docs/hiecm/v3/api/m1/endpoints/m1-session/02-m1-get-v3-profile-public-certificate).
 
 ## Where to go next
 

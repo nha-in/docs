@@ -3,7 +3,7 @@ title: ABHA, the patient registry
 sidebar_label: ABHA
 description: The registry that identifies patients, the 14 digit ABHA number, the ABHA address, and what every milestone assumes about both.
 verification: unverified
-source: ABDM__Proposed_Simplified_Milestone_1.md, ABDM__NewDocumant_PHR_app.md, ABDM__M1_ABHA_Collection.postman_collection.md
+source: catalogue/openapi/hiecm/v3/hiecm-m1.yaml, catalogue/openapi/hiecm/v3/hiecm-p1.yaml
 sidebar_position: 1
 covers: [hiecm.concept.abha-number-and-address, hiecm.concept.abha-address-policy]
 sidebar_class_name: sidebar-icon sidebar-icon--id-card
@@ -81,12 +81,6 @@ number as an address is restricted. An ABHA number as an address you create is
 not allowed, although the default one is issued automatically and signing in
 with it works on both web and mobile. And anything failing the rules above is
 refused at creation rather than at submission.
-
-:::caution[The minimum length is stated twice, differently]
-NHA's PHR document gives the minimum as 4 characters in its narrative and as 8
-in the test case for creating an address by mobile number. Neither has been
-run against the sandbox from here. Build to 8, which is the stricter reading.
-:::
 
 A password is created alongside the address: at least 8 characters, at least
 one uppercase letter, one lowercase letter, one digit and one symbol, no

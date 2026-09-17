@@ -381,7 +381,11 @@ for (const {platform, version, files} of tree) {
     if (status === '202') {
       return {label: 'The callback never arrives', href: troubleshooting('callback-never-arrives')};
     }
-    if (/^[45]/.test(status)) {
+    // Only a module that gets an errors page (see the error pages below) is
+    // linked to one.
+    const owner = modules.find((m) => m.dir === moduleDir);
+    const hasErrorsPage = owner && (errorsFromSpec(owner.spec).length || Object.keys(owner.spec.webhooks ?? {}).length);
+    if (/^[45]/.test(status) && hasErrorsPage) {
       return {
         label: 'Error codes for this module',
         href: `/docs/${platform}/${version}/api/${moduleDir}/errors`,
@@ -426,7 +430,10 @@ for (const {platform, version, files} of tree) {
         const answeredBy = hook['x-abdm-answered-by'];
         const target = triggeredBy ?? answeredBy;
         if (!target || !operations.has(target)) {
-          unpairedCallbacks.push(entry);
+          // A journey that walks a call before this callback places it after
+          // its trigger, which is documentation enough to leave it off the list.
+          const placed = [...journeys.values()].flat().some((journey) => journey.steps.findIndex((step) => step.op === id) > 0);
+          if (!(isHiecmV3 && placed)) unpairedCallbacks.push(entry);
           continue;
         }
         entry.relation = triggeredBy ? 'triggered-by' : 'answered-by';
@@ -1069,7 +1076,13 @@ for (const {platform, version, files} of tree) {
     // gateway session) gets no errors page; a module in the async flows keeps
     // one even before any code is recorded, so the gap is stated rather than
     // hidden.
-    if (!codes.length && !Object.keys(spec.webhooks ?? {}).length) continue;
+    if (!codes.length && !Object.keys(spec.webhooks ?? {}).length) {
+      // An errors page an earlier specification produced would otherwise
+      // outlive it and keep publishing codes this one does not return.
+      const stale = join(docsDir, module.dir, 'errors.md');
+      if (existsSync(stale) && /^generated: true$/m.test(readFileSync(stale, 'utf8'))) rmSync(stale);
+      continue;
+    }
 
     const lines = [
       '---',
