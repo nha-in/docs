@@ -174,7 +174,7 @@ func TestSpecErrorCodesLookup(t *testing.T) {
 		t.Fatal(err)
 	}
 	if len(rows) != 1 || rows[0].Message != "Dependent service unavailable" ||
-		rows[0].Action != "Retry with backoff" || rows[0].Module != "m1" {
+		rows[0].HTTP != "503" || rows[0].OperationID != "linkAddContexts" || rows[0].Module != "m1" {
 		t.Errorf("rows = %+v", rows)
 	}
 	// Raw response code fields arrive with trailing colon and space.

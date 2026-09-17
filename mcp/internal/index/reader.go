@@ -308,7 +308,7 @@ func (r *Reader) ListOperations(tag, module, q string) ([]OperationSummary, erro
 // "ABDM-1016: " still match.
 func (r *Reader) SpecErrorCodes(code string) ([]catalogue.SpecErrorCode, error) {
 	rows, err := r.db.Query(`
-        SELECT code, message, action, module FROM spec_error_codes
+        SELECT code, message, http, operation_id, module FROM spec_error_codes
         WHERE code = ? ORDER BY module, message`,
 		catalogue.NormalizeErrorCode(code))
 	if err != nil {
@@ -318,7 +318,7 @@ func (r *Reader) SpecErrorCodes(code string) ([]catalogue.SpecErrorCode, error) 
 	out := []catalogue.SpecErrorCode{}
 	for rows.Next() {
 		var e catalogue.SpecErrorCode
-		if err := rows.Scan(&e.Code, &e.Message, &e.Action, &e.Module); err != nil {
+		if err := rows.Scan(&e.Code, &e.Message, &e.HTTP, &e.OperationID, &e.Module); err != nil {
 			return nil, err
 		}
 		out = append(out, e)

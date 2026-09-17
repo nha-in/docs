@@ -58,12 +58,11 @@ func fixtureOps() []catalogue.Operation {
 func fixtureSpecErrors() []catalogue.SpecErrorCode {
 	return []catalogue.SpecErrorCode{
 		{Code: "ABDM-1016", Message: "Dependent service unavailable",
-			Action: "Retry with backoff", Module: "m1"},
+			HTTP: "503", OperationID: "linkAddContexts", Module: "m1"},
 		{Code: "ABDM-1035", Message: "Facility is not registered with the bridge",
-			Action: "Fix onboarding", Module: "m2"},
+			HTTP: "409", OperationID: "linkAddContexts", Module: "m2"},
 	}
 }
-
 
 // fixtureOpt customizes buildFixtureDB beyond the withVectors switch, for
 // tests that also need FHIR digests and examples in the snapshot.
@@ -188,7 +187,7 @@ func TestBuildNormalizesSpecErrorCodes(t *testing.T) {
 	// colon and space; the stored code must be the clean upper-case form.
 	dbPath := filepath.Join(t.TempDir(), "catalogue.db")
 	specErrs := []catalogue.SpecErrorCode{
-		{Code: "abdm-1016: ", Message: "m", Action: "a", Module: "m1"},
+		{Code: "abdm-1016: ", Message: "m", HTTP: "500", OperationID: "op1", Module: "m1"},
 	}
 	meta := Meta{CatalogueVersion: "v", BuiltAt: "t"}
 	if err := Build(dbPath, nil, nil, nil, specErrs, nil, nil, nil, meta); err != nil {

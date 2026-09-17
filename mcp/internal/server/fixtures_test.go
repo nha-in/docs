@@ -60,9 +60,9 @@ func fixtureOps() []catalogue.Operation {
 func fixtureSpecErrors() []catalogue.SpecErrorCode {
 	return []catalogue.SpecErrorCode{
 		{Code: "ABDM-1016", Message: "Dependent service unavailable",
-			Action: "Retry with backoff", Module: "m1"},
+			HTTP: "503", OperationID: "linkAddContexts", Module: "m1"},
 		{Code: "ABDM-1035", Message: "Facility is not registered with the bridge",
-			Action: "Fix onboarding", Module: "m2"},
+			HTTP: "409", OperationID: "linkAddContexts", Module: "m2"},
 	}
 }
 

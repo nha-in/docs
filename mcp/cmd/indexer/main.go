@@ -60,6 +60,28 @@ func main() {
 	}
 }
 
+// isSpecPath reports whether rel (a path relative to the catalogue root) is
+// an OpenAPI spec to parse: exactly openapi/<platform>/<version>/<name>.yaml,
+// four path segments, none starting with ".". This is what excludes
+// journeys/ (five segments, step lists read through lib/journeys.mjs, not
+// OpenAPI), corrections/ and asyncapi files (both live outside that shape
+// today), and catalogue/openapi/.raw (an untouched-download folder, and a
+// dot segment either way). Mirrors scripts/specs.mjs's listSpecTree, which
+// also only treats a three-segment-under-openapi file as spec-tree
+// structure.
+func isSpecPath(rel string) bool {
+	segs := strings.Split(filepath.ToSlash(rel), "/")
+	if len(segs) != 4 || segs[0] != "openapi" {
+		return false
+	}
+	for _, s := range segs {
+		if strings.HasPrefix(s, ".") {
+			return false
+		}
+	}
+	return true
+}
+
 func run(catDir, outPath, nrcesPath string, emb embed.Embedder) error {
 	var ops []catalogue.Operation
 	var specErrors []catalogue.SpecErrorCode
@@ -90,24 +112,21 @@ func run(catDir, outPath, nrcesPath string, emb embed.Embedder) error {
 		if !strings.HasSuffix(path, ".yaml") {
 			return nil
 		}
+		if !isSpecPath(rel) {
+			return nil
+		}
 		content, err := os.ReadFile(path)
 		if err != nil {
 			return err
 		}
-		switch {
-		case strings.HasPrefix(rel, "openapi"+string(os.PathSeparator)) &&
-			strings.HasSuffix(path, ".yaml") &&
-			!strings.Contains(rel, "corrections") &&
-			!strings.Contains(path, "asyncapi"):
-			parsed, err := catalogue.ParseSpec(path)
-			if err != nil {
-				return err
-			}
-			ops = append(ops, parsed.Operations...)
-			specErrors = append(specErrors, parsed.ErrorCodes...)
-			sum := sha256.Sum256(content)
-			hashes[filepath.ToSlash(rel)] = hex.EncodeToString(sum[:])
+		parsed, err := catalogue.ParseSpec(path)
+		if err != nil {
+			return err
 		}
+		ops = append(ops, parsed.Operations...)
+		specErrors = append(specErrors, parsed.ErrorCodes...)
+		sum := sha256.Sum256(content)
+		hashes[filepath.ToSlash(rel)] = hex.EncodeToString(sum[:])
 		return nil
 	})
 	if err != nil {

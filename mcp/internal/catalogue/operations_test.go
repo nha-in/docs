@@ -9,7 +9,7 @@ import (
 )
 
 func TestParseOperations(t *testing.T) {
-	ops, err := ParseOperations(filepath.Join("testdata", "catalogue", "openapi", "hiecm-v3.yaml"))
+	ops, err := ParseOperations(filepath.Join("testdata", "catalogue", "openapi", "hiecm", "v3", "hiecm-v3.yaml"))
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -49,8 +49,8 @@ func TestParseOperations(t *testing.T) {
 	}
 }
 
-func TestParseSpecReadsModuleAndErrorTable(t *testing.T) {
-	data, err := ParseSpec(filepath.Join("testdata", "catalogue", "openapi", "hiecm-v3.yaml"))
+func TestParseSpecReadsModuleAndErrorCodes(t *testing.T) {
+	data, err := ParseSpec(filepath.Join("testdata", "catalogue", "openapi", "hiecm", "v3", "hiecm-v3.yaml"))
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -62,6 +62,9 @@ func TestParseSpecReadsModuleAndErrorTable(t *testing.T) {
 			t.Errorf("operation %s Module = %q, want m2", op.OperationID, op.Module)
 		}
 	}
+	// The fixture's /health 200 example also carries a code/message pair;
+	// only the 400 and 409 examples are error responses, so only their
+	// codes are extracted.
 	if len(data.ErrorCodes) != 2 {
 		t.Fatalf("ErrorCodes = %+v, want 2", data.ErrorCodes)
 	}
@@ -69,15 +72,17 @@ func TestParseSpecReadsModuleAndErrorTable(t *testing.T) {
 	for _, e := range data.ErrorCodes {
 		byCode[e.Code] = e
 	}
-	e1016, ok := byCode["ABDM-1016"]
-	if !ok || e1016.Message != "Dependent service unavailable" ||
-		e1016.Action != "Retry with backoff" || e1016.Module != "m2" {
-		t.Errorf("ABDM-1016 = %+v", e1016)
+	if _, ok := byCode["ABDM-9999"]; ok {
+		t.Errorf("2xx example's code must not be extracted: %+v", data.ErrorCodes)
 	}
-	// The fixture records "ABDM-1035: " with trailing colon and space,
-	// as observed in real tables; ingestion must normalize it.
-	if _, ok := byCode["ABDM-1035"]; !ok {
-		t.Errorf("trailing-colon code not normalized: %+v", data.ErrorCodes)
+	e1013, ok := byCode["ABDM-1013"]
+	if !ok || e1013.Message != "Invalid ABHA Number" || e1013.HTTP != "400" ||
+		e1013.OperationID != "healthCheck" || e1013.Module != "m2" {
+		t.Errorf("ABDM-1013 = %+v", e1013)
+	}
+	e1035, ok := byCode["ABDM-1035"]
+	if !ok || e1035.Message != "Facility is not registered with the bridge" || e1035.HTTP != "409" {
+		t.Errorf("ABDM-1035 = %+v", e1035)
 	}
 }
 
@@ -95,7 +100,7 @@ func TestParseSpecModuleFallsBackToFilenameStem(t *testing.T) {
 		t.Errorf("Module = %q, want filename stem hiecm-m9", data.Module)
 	}
 	if len(data.ErrorCodes) != 0 {
-		t.Errorf("want no error codes without x-abdm-errors, got %+v", data.ErrorCodes)
+		t.Errorf("want no error codes when no response example carries one, got %+v", data.ErrorCodes)
 	}
 }
 

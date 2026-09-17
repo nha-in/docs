@@ -32,7 +32,8 @@ CREATE TABLE operations (
 CREATE TABLE spec_error_codes (
     code TEXT NOT NULL,
     message TEXT NOT NULL,
-    action TEXT NOT NULL,
+    http TEXT NOT NULL,
+    operation_id TEXT NOT NULL,
     module TEXT NOT NULL
 );
 CREATE TABLE related (

@@ -3,11 +3,14 @@ package catalogue
 import (
 	"encoding/json"
 	"fmt"
+	"os"
 	"path/filepath"
+	"regexp"
 	"sort"
 	"strings"
 
 	"github.com/getkin/kin-openapi/openapi3"
+	"gopkg.in/yaml.v3"
 )
 
 type Operation struct {
@@ -22,14 +25,16 @@ type Operation struct {
 	RequiredParams    []string
 }
 
-// SpecErrorCode is one row of a specification's top-level x-abdm-errors
-// table: the code as the gateway returns it, the recorded message and the
-// recommended action, attributed to the module whose spec carries it.
+// SpecErrorCode is one error code found in a specification's 4xx/5xx
+// response examples: the code as the gateway returns it, the recorded
+// message, the HTTP status and the operationId that returned it, and the
+// module whose spec carries it.
 type SpecErrorCode struct {
-	Code    string `json:"code"`
-	Message string `json:"message"`
-	Action  string `json:"action"`
-	Module  string `json:"module"`
+	Code        string `json:"code"`
+	Message     string `json:"message"`
+	HTTP        string `json:"http"`
+	OperationID string `json:"operation_id"`
+	Module      string `json:"module"`
 }
 
 // SpecData is everything the indexer ingests from one OpenAPI file.
@@ -64,36 +69,106 @@ func specModule(specPath string, doc *openapi3.T) string {
 	return strings.TrimSuffix(base, filepath.Ext(base))
 }
 
-// specErrorCodes reads the top-level x-abdm-errors table. A missing or
-// empty table is not an error; some specs record their codes elsewhere.
-func specErrorCodes(specPath, module string, doc *openapi3.T) ([]SpecErrorCode, error) {
-	raw, ok := doc.Extensions["x-abdm-errors"]
-	if !ok {
-		return nil, nil
-	}
-	b, err := json.Marshal(raw)
-	if err != nil {
-		return nil, fmt.Errorf("%s: x-abdm-errors: %w", specPath, err)
-	}
-	var table struct {
-		Codes []struct {
-			Code    string `json:"code"`
-			Message string `json:"message"`
-			Action  string `json:"action"`
-		} `json:"codes"`
-	}
-	if err := json.Unmarshal(b, &table); err != nil {
-		return nil, fmt.Errorf("%s: x-abdm-errors: %w", specPath, err)
-	}
+// errorCodeRe matches a code as ABDM returns it, either "ABDM-1234" style
+// or a bare numeric HTTP-adjacent code. Mirrors scripts/lib/spec-errors.mjs.
+var errorCodeRe = regexp.MustCompile(`^[A-Z]{2,5}-\d{3,5}$|^\d{3,6}$`)
+
+// errMethods is every HTTP method an operation can be keyed under, in the
+// order scripts/lib/spec-errors.mjs checks them.
+var errMethods = []string{"get", "post", "put", "patch", "delete"}
+
+// codesIn recursively yields every {code, message} pair value holds, the
+// same walk scripts/lib/spec-errors.mjs's codesIn performs: an object
+// matching the shape is yielded, and every value (including that object's
+// own) is still walked, because a real example nests the pair inside a
+// wrapper such as {"error": {...}}.
+func codesIn(value any) []SpecErrorCode {
 	var out []SpecErrorCode
-	for _, c := range table.Codes {
-		code := NormalizeErrorCode(c.Code)
-		if code == "" {
-			continue
+	switch v := value.(type) {
+	case []any:
+		for _, e := range v {
+			out = append(out, codesIn(e)...)
 		}
-		out = append(out, SpecErrorCode{
-			Code: code, Message: c.Message, Action: c.Action, Module: module,
-		})
+	case map[string]any:
+		if code, ok := v["code"].(string); ok && errorCodeRe.MatchString(code) {
+			if msg, ok := v["message"].(string); ok {
+				out = append(out, SpecErrorCode{Code: code, Message: msg})
+			}
+		}
+		for _, key := range sortedKeys(v) {
+			out = append(out, codesIn(v[key])...)
+		}
+	}
+	return out
+}
+
+func sortedKeys(m map[string]any) []string {
+	keys := make([]string, 0, len(m))
+	for k := range m {
+		keys = append(keys, k)
+	}
+	sort.Strings(keys)
+	return keys
+}
+
+var errStatusRe = regexp.MustCompile(`^[45]`)
+
+// specErrorCodes walks every paths and webhooks operation's 4xx/5xx
+// responses and yields the error codes their JSON examples carry. No code
+// is invented: it is here only because an example returns it. The first
+// occurrence of a code wins, matching scripts/lib/spec-errors.mjs, which
+// this must produce identical results to. Read straight from the parsed
+// YAML rather than the openapi3.T doc, because kin-openapi does not expose
+// webhooks.
+func specErrorCodes(specPath, module string, raw []byte) ([]SpecErrorCode, error) {
+	var doc map[string]any
+	if err := yaml.Unmarshal(raw, &doc); err != nil {
+		return nil, fmt.Errorf("%s: %w", specPath, err)
+	}
+	seen := map[string]bool{}
+	var out []SpecErrorCode
+	for _, blockKey := range []string{"paths", "webhooks"} {
+		block, _ := doc[blockKey].(map[string]any)
+		for _, pathKey := range sortedKeys(block) {
+			item, _ := block[pathKey].(map[string]any)
+			for _, method := range errMethods {
+				op, ok := item[method].(map[string]any)
+				if !ok {
+					continue
+				}
+				operationID, _ := op["operationId"].(string)
+				responses, _ := op["responses"].(map[string]any)
+				for _, status := range sortedKeys(responses) {
+					if !errStatusRe.MatchString(status) {
+						continue
+					}
+					response, _ := responses[status].(map[string]any)
+					content, _ := response["content"].(map[string]any)
+					media, _ := content["application/json"].(map[string]any)
+					var samples []any
+					if example, ok := media["example"]; ok {
+						samples = append(samples, example)
+					}
+					examples, _ := media["examples"].(map[string]any)
+					for _, exKey := range sortedKeys(examples) {
+						entry, _ := examples[exKey].(map[string]any)
+						samples = append(samples, entry["value"])
+					}
+					for _, sample := range samples {
+						for _, found := range codesIn(sample) {
+							if seen[found.Code] {
+								continue
+							}
+							seen[found.Code] = true
+							out = append(out, SpecErrorCode{
+								Code: found.Code, Message: found.Message,
+								HTTP: status, OperationID: operationID, Module: module,
+							})
+						}
+					}
+				}
+			}
+		}
 	}
 	return out, nil
 }
@@ -216,7 +291,11 @@ func ParseSpec(specPath string) (SpecData, error) {
 		return SpecData{}, fmt.Errorf("%s: %w", specPath, err)
 	}
 	module := specModule(specPath, doc)
-	errCodes, err := specErrorCodes(specPath, module, doc)
+	raw, err := os.ReadFile(specPath)
+	if err != nil {
+		return SpecData{}, err
+	}
+	errCodes, err := specErrorCodes(specPath, module, raw)
 	if err != nil {
 		return SpecData{}, err
 	}

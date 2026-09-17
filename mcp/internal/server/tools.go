@@ -33,7 +33,7 @@ const (
 	relatedAtomsDescription = "Walk the catalogue graph from one atom, both directions. " +
 		"Related atoms come back grouped by their own type (concept, flow, endpoint, callback, error, test, ...), each atom once. " +
 		"Use this to move from one exact atom to its neighbours; use search_docs when you do not have a starting atom."
-	decodeErrorDescription = "Extract ABDM error codes from a code or raw response body and return, per code, the matching narrative error atoms with their fixes plus the specification error table rows (code, message, action, module). " +
+	decodeErrorDescription = "Extract ABDM error codes from a code or raw response body and return, per code, the matching narrative error atoms with their fixes plus the specification rows (code, message, http status, returning operation_id, module). " +
 		"Use this first for any error response from the gateway, before reaching for search_docs."
 	catalogueInfoDescription = "Catalogue version, build time, embeddings status and coverage counts by gateway, milestone, type and verification status. " +
 		"Use this to check which snapshot you are talking to and how complete it is."

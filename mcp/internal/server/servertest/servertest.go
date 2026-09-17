@@ -41,7 +41,7 @@ func Reader(t *testing.T) *index.Reader {
 	}}
 	specErrors := []catalogue.SpecErrorCode{
 		{Code: "ABDM-1035", Message: "Facility is not registered with the bridge",
-			Action: "Fix onboarding", Module: "m2"},
+			HTTP: "409", OperationID: "linkAddContexts", Module: "m2"},
 	}
 	dbPath := filepath.Join(t.TempDir(), "catalogue.db")
 	meta := index.Meta{CatalogueVersion: "2026.08.24", BuiltAt: "2026-08-24T00:00:00Z"}

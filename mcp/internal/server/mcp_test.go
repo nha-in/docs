@@ -194,7 +194,7 @@ func TestDecodeErrorSpecTableFallback(t *testing.T) {
 	}
 	for _, want := range []string{
 		`"specification"`, "ABDM-1016", "Dependent service unavailable",
-		"Retry with backoff", `"module": "m1"`, "specification error table",
+		`"http": "503"`, `"module": "m1"`, "specification error table",
 		"no narrative error atom",
 	} {
 		if !strings.Contains(out, want) {

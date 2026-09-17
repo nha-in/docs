@@ -91,8 +91,8 @@ func Build(dbPath string, atoms []catalogue.Atom, questions map[string]catalogue
 		}
 	}
 	for _, e := range specErrors {
-		if _, err := tx.Exec(`INSERT INTO spec_error_codes VALUES (?,?,?,?)`,
-			catalogue.NormalizeErrorCode(e.Code), e.Message, e.Action, e.Module); err != nil {
+		if _, err := tx.Exec(`INSERT INTO spec_error_codes VALUES (?,?,?,?,?)`,
+			catalogue.NormalizeErrorCode(e.Code), e.Message, e.HTTP, e.OperationID, e.Module); err != nil {
 			return fmt.Errorf("spec error code %s: %w", e.Code, err)
 		}
 	}
