@@ -1,5 +1,5 @@
 - id: scan-and-pay-abdm-scan-pay-hip
-  title: Scan-pay
+  title: Scan and pay, HIP side
   steps:
     - op: scan-and-pay_post_v3_patient_share_open_order
     - op: scan-and-pay_post_scan_gateway_v3_patient_on_share_open_order
@@ -10,7 +10,7 @@
     - op: scan-and-pay_post_v3_patient_scan_pay_order_status
     - op: scan-and-pay_post_scan_gateway_v3_patient_scan_pay_on_ord_21f376
 - id: scan-and-pay-abdm-hiecm-scan-pay-phr
-  title: Hiecm-scan-pay
+  title: Scan and pay, PHR side
   steps:
     - op: scan-and-pay_post_scan_gateway_v3_patient_share_open_order
     - op: scan-and-pay_post_v3_patient_on_share_open_order
@@ -21,7 +21,7 @@
     - op: scan-and-pay_post_scan_gateway_v3_patient_scan_pay_order_status
     - op: scan-and-pay_post_v3_patient_scan_pay_on_order_status
 - id: scan-and-pay-utility
-  title: Utility
+  title: Scan and pay details and version update
   steps:
     - op: scan-and-pay_get_scan_gateway_v3_patient_scan_pay_details
     - op: scan-and-pay_patch_gateway_v3_scanpay_updateversion

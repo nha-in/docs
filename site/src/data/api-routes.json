@@ -3023,7 +3023,7 @@
     "method": "GET",
     "path": "/abha/api/v3/phr/app/login/profile/switch-profile",
     "summary": "Switch Profile",
-    "route": "/docs/hiecm/v3/api/p2/endpoints/p2-p2-switch-profile/01-p2-get-v3-phr-app-login-profile-switch-profile",
+    "route": "/docs/hiecm/v3/api/p2/endpoints/p2-switch-profile/01-p2-get-v3-phr-app-login-profile-switch-profile",
     "callbacks": []
   },
   {
@@ -3327,7 +3327,7 @@
     "method": "POST",
     "path": "/abha/api/v3/phr/app/login/profile/verify/switch-profile/user",
     "summary": "Verify User Switch Profile",
-    "route": "/docs/hiecm/v3/api/p2/endpoints/p2-p2-switch-profile/02-p2-post-v3-phr-app-login-profile-verify-switch-profile-user",
+    "route": "/docs/hiecm/v3/api/p2/endpoints/p2-switch-profile/02-p2-post-v3-phr-app-login-profile-verify-switch-profile-user",
     "callbacks": []
   },
   {

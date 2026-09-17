@@ -40,14 +40,14 @@
     - {op: p2_post_v3_phr_app_login_profile_verify, example: Verify AADHAAR Otp - Link-DeLink}
     - {op: p2_post_v3_phr_app_login_profile_link, example: Link Request (2)}
 
-- id: p2-p2-switch-profile
-  title: Switch profile
+- id: p2-switch-profile
+  title: PHR profile, switch profile
   steps:
     - {op: p2_get_v3_phr_app_login_profile_switch_profile}
     - {op: p2_post_v3_phr_app_login_profile_verify_switch_profile_user, example: Verify User Switch Profile}
 
 - id: p2-profile
-  title: PHR profile, profile, card and session
+  title: PHR profile, card, QR code and session
   steps:
     - {op: p2_get_v3_phr_app_login_profile}
     - {op: p2_get_v3_phr_app_login_profile_qrcode}

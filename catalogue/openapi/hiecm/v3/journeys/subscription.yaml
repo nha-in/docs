@@ -1,5 +1,5 @@
 - id: subscription-subscription-hiu
-  title: Subscription
+  title: Subscription request and notifications, HIU side
   steps:
     - op: subscription_post_subscription_requests_v3_init
     - op: subscription_post_v3_hiu_hiecm_subscription_requests_on_init

@@ -331,7 +331,7 @@ A 200 whose body matches:
 }
 ```
 
-### Switch profile (`p2-p2-switch-profile`)
+### PHR profile, switch profile (`p2-switch-profile`)
 
 **Act: the calls in this journey, in order**
 
@@ -373,7 +373,7 @@ A 200 whose body matches:
 }
 ```
 
-### PHR profile, profile, card and session (`p2-profile`)
+### PHR profile, card, QR code and session (`p2-profile`)
 
 **Act: the calls in this journey, in order**
 

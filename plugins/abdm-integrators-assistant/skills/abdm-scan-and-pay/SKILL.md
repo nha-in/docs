@@ -12,9 +12,9 @@ If the abdm-docs MCP server is connected, trust its answers over this file: it s
 
 ## What you can do with Scan and pay
 
-- Scan-pay
-- Hiecm-scan-pay
-- Utility
+- Scan and pay, HIP side
+- Scan and pay, PHR side
+- Scan and pay details and version update
 
 What it cannot do yet matters as much. Read **Before anything else** below before assuming a capability is one endpoint away.
 

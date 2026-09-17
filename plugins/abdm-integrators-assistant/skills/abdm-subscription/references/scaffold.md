@@ -10,7 +10,7 @@ Loop limit: 8 passes per step. Hitting the limit is an escalation: state what wa
 
 ## Journeys
 
-### Subscription (`subscription-subscription-hiu`)
+### Subscription request and notifications, HIU side (`subscription-subscription-hiu`)
 
 **Act: the calls in this journey, in order**
 

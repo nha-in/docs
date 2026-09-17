@@ -12,7 +12,7 @@ If the abdm-docs MCP server is connected, trust its answers over this file: it s
 
 ## What you can do with P3
 
-- Subscription
+- Subscription approval and management, PHR side
 
 What it cannot do yet matters as much. Read **Before anything else** below before assuming a capability is one endpoint away.
 

@@ -5,7 +5,7 @@
 # Subscription module operations, published after P3, so the Subscription
 # journeys walk them and this journey leaves them out.
 - id: p3-subscription-phr
-  title: Subscription
+  title: Subscription approval and management, PHR side
   steps:
     - {op: p3_post_subscription_requests_v3_request_id_approve}
     - {op: p3_post_subscription_requests_v3_request_id_deny}

@@ -14,7 +14,7 @@ Loop limit: 8 passes per step. Hitting the limit is an escalation: state what wa
 
 ## Journeys
 
-### Scan-pay (`scan-and-pay-abdm-scan-pay-hip`)
+### Scan and pay, HIP side (`scan-and-pay-abdm-scan-pay-hip`)
 
 **Act: the calls in this journey, in order**
 
@@ -101,7 +101,7 @@ curl --request POST \
 
 A 202 response. The specification gives no body for it, so read what comes back.
 
-### Hiecm-scan-pay (`scan-and-pay-abdm-hiecm-scan-pay-phr`)
+### Scan and pay, PHR side (`scan-and-pay-abdm-hiecm-scan-pay-phr`)
 
 **Act: the calls in this journey, in order**
 
@@ -213,7 +213,7 @@ Inbound to your bridge at `/v3/patient/scan-pay/on-order-status`. Acknowledge it
 
 A 200 response. The specification gives no body for it, so read what comes back.
 
-### Utility (`scan-and-pay-utility`)
+### Scan and pay details and version update (`scan-and-pay-utility`)
 
 **Act: the calls in this journey, in order**
 
