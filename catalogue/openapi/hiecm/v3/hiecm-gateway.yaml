@@ -1058,6 +1058,4 @@ x-abdm-errors:
   - code: ABDM-9008
     message: No CR Mapped with Abha Address
     action: Unclassified
-  source: Code, message and error name are as published. The action column
-    reads the message text by a documented rule, and says Unclassified where
-    the rule could not classify one.
+  source: Code, message and error name are as published. The heading each code sits under reads the message text by a documented rule, and says Unclassified where the rule could not classify one.

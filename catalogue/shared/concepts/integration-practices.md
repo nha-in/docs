@@ -21,8 +21,6 @@ sources:
     note: >
       Most of these were paid for: each names a mistake somebody made against
       the sandbox and the shape of the refusal that followed.
-verified:
-  status: unverified
 related:
   concepts: [hiecm.concept.encrypted-identifiers, hiecm.concept.gateway-session, hiecm.concept.m1-journey-design, hiecm.concept.error-codes]
   errors: [hiecm.error.abdm-1107, hiecm.error.abdm-1094]

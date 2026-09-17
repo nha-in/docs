@@ -14,8 +14,11 @@ sources:
     note: >
       NHA milestone pack for M4, which carries the session request and
       response.
-verified:
-  status: unverified
+  - file: catalogue/annexure/integration-learnings-2026-09-16.md
+    fetched: 2026-09-16
+    hash: sha256:d1415609d3d71178563367bcdcc48fa7a01fe9ebd247b4c019686304868368ce
+    note: >
+      Bearer on X-token. Observed by an integrator on 2026-09-16, not yet run from this repository.
 related:
   endpoints: [hiecm.endpoint.gateway-sessions]
   errors: [hiecm.error.abdm-2500]
@@ -55,7 +58,8 @@ sequenceDiagram
 
 Two tokens exist in M1 and they are not interchangeable. The session
 token says which application is calling. The `X-token` returned by login
-says which person the call is about. Profile calls need both.
+says which person the call is about. Profile calls need both, and both
+carry the `Bearer` prefix: `X-token: Bearer <token>`.
 
 ## How you know it worked
 

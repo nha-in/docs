@@ -1,0 +1,8 @@
+{
+  "atom": "hiecm.endpoint.gateway-sessions",
+  "on": "2026-09-17",
+  "against": "https://dev.abdm.gov.in",
+  "request": "curl -X POST 'https://dev.abdm.gov.in/api/hiecm/gateway/v3/sessions' \\\n  -H 'Authorization: Bearer <scrubbed>' \\\n  -H 'REQUEST-ID: e10fe90f-113a-41d5-bc80-30c3b4e552c3' \\\n  -H 'TIMESTAMP: 2026-09-17T11:22:43.540Z' \\\n  -H 'X-CM-ID: sbx'\n",
+  "status": 400,
+  "body": "{\"error\":{\"code\":\"ABDM-9999: \",\"message\":\"415 UNSUPPORTED_MEDIA_TYPE \\\"Content type 'application/octet-stream' not supported for bodyType=in.gov.abdm.hiecm.gateway.domain.session.SessionRequest\\\"\"}}"
+}

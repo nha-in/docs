@@ -1,0 +1,8 @@
+{
+  "atom": "hiecm.endpoint.p2-profile-on-share",
+  "on": "2026-09-17",
+  "against": "https://dev.abdm.gov.in",
+  "request": "curl -X POST 'https://dev.abdm.gov.in/api/hiecm/patient-share/v3/on-share' \\\n  -H 'Authorization: Bearer <scrubbed>' \\\n  -H 'REQUEST-ID: b0e77711-d2c5-4531-888d-ef7357d1c9ee' \\\n  -H 'TIMESTAMP: 2026-09-17T11:23:16.971Z' \\\n  -H 'Content-Type: application/json' \\\n  -d '{\n  \"acknowledgement\": {\n    \"abhaAddress\": \"abc@abdm\",\n    \"status\": \"success\",\n    \"profile\": {\n      \"context\": \"43\",\n      \"tokenNumber\": \"3\",\n      \"expiry\": \"180\"\n    }\n  },\n  \"response\": {\n    \"requestId\": \"f29f0e59-8388-4698-9fe6-05db67aeac46\"\n  }\n}'\n",
+  "status": 401,
+  "body": ""
+}

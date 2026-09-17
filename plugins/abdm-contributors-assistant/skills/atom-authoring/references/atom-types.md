@@ -25,7 +25,7 @@ An end-to-end journey with more than one call. Creating an ABHA by Aadhaar, link
 One OpenAPI operation. Usually generated as a stub by ingestion, then given prose by hand.
 
 - Section 3 carries the working curl with every header shown, including `REQUEST-ID`, `TIMESTAMP` and `X-CM-ID` where the gateway needs them.
-- Record the actual sandbox response in a fenced `response` block once verified.
+- Record the sandbox response in a fenced `response` block. `npm run verify:atoms` writes the observed one to `catalogue/verification/<atom id>.json`; correct the atom when they differ.
 - Note idempotency: whether retrying with the same identifier is safe. This is asked constantly and documented rarely.
 - Link the callback atom if the operation is asynchronous. A 202 with no callback link is an incomplete atom.
 

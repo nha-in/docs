@@ -15,8 +15,6 @@ sources:
     note: >
       The portal's own role selector names this acronym. Written here so
       a pharmacy vendor searching for it finds the ABDM position.
-verified:
-  status: unverified
 related:
   concepts: [hiecm.concept.roles]
   glossary:

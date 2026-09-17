@@ -14,8 +14,6 @@ sources:
     note: >
       Derived from the operation in catalogue/openapi/hiecm/v3/hiecm-m1.yaml, which
       comes from this source.
-verified:
-  status: unverified
 related:
   errors: [hiecm.error.abdm-2402, hiecm.error.abdm-2404, hiecm.error.abdm-2500, hiecm.error.abdm-9999]
   flows: [hiecm.flow.m1-create-abha-aadhaar-otp, hiecm.flow.m1-create-abha-face-auth]

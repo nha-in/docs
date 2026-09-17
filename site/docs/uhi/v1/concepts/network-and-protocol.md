@@ -3,7 +3,6 @@ title: UHI gateway
 sidebar_label: UHI gateway
 sidebar_position: 1
 description: The open network for discovering and booking health services, its two roles, and its signing scheme.
-verification: unverified
 source: UHI__UHI_Physical_Consultation_v2.0_-_Onboarding_Document.md
 sidebar_class_name: sidebar-icon sidebar-icon--route
 ---

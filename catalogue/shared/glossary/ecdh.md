@@ -14,10 +14,13 @@ sources:
     note: >
       This portal's own published glossary, where the definition was
       written first. Moved here so it can be retrieved, not rewritten.
-verified:
-  status: unverified
+  - file: catalogue/annexure/integration-learnings-2026-09-16.md
+    fetched: 2026-09-16
+    hash: sha256:d1415609d3d71178563367bcdcc48fa7a01fe9ebd247b4c019686304868368ce
+    note: >
+      The curve encoding and derivation used in practice. Observed by an integrator on 2026-09-16, not yet run from this repository.
 related:
-  concepts: []
+  concepts: [shared.concept.fidelius-ecdh-interop]
 ---
 
 # ECDH, the key exchange that protects records in transit

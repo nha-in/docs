@@ -17,7 +17,7 @@ Publish the ABDM docs site. Load the `scalar-docs` skill and follow the procedur
 ## Sequence
 
 1. Generate navigation with `scripts/build-nav.mjs`, which walks the folder tree under `site/docs` and the `_platform.json` beside each platform's version folders. It does not read atom frontmatter, so nothing here groups by gateway, milestone or type
-2. Check the rendered page carries its own phase and verification wording. Depth labels in the sidebar and verification banners for `unverified` and `stale` atoms were both designed and neither is built. Nothing under `site/src` renders one, so a page that needs the warning has to say it in its own body
+2. Check the rendered page carries its own phase wording. Depth labels in the sidebar were designed and not built, and atoms carry no verification status to render. A page that needs a phase note has to say it in its own body
 3. Build, then preview or publish. `site/docusaurus.config.ts` reads `catalogue/VERSION` and stamps it into the footer copyright as part of the build
 
 Steps 1 and 3 run for you: `site`'s `prebuild` and `prestart` call `sync-specs.mjs`, `build-api-reference.mjs`, `build-nav.mjs` and `build-skills.mjs` in that order. Step 2 is review, not a script.
@@ -28,7 +28,7 @@ Publishing to live requires: lint passing, skills compiling and validating, and 
 
 ## Reviewing a preview
 
-Read the rendered page, not the diff. Dummy-proofness is a property of rendered output: whether the page says what is unverified in words a skimming reader will see, whether a diagram makes the sequence obvious. No banner or depth label appears for you, so this is the only place either gets caught.
+Read the rendered page, not the diff. Dummy-proofness is a property of rendered output: whether a diagram makes the sequence obvious. No depth label appears for you, so this is the only place either gets caught.
 
 ## Never hand-edit navigation
 

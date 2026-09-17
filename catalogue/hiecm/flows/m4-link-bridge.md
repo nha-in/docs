@@ -29,9 +29,6 @@ sources:
       NHA's HFR test case sheet, 123 cases across search, registration,
       update and bridge linkage. It names the sandbox host and the
       operation ids behind the onboarding calls.
-verified:
-  status: unverified
-  against: docs-only
 related:
   flows:
     - hiecm.flow.m4-onboard-facility

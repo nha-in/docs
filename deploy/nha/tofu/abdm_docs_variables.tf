@@ -45,3 +45,15 @@ variable "abdm_docs_mcp_log_retention_days" {
   type        = number
   default     = 180
 }
+
+variable "abdm_docs_site_url" {
+  description = "Public origin of the documentation site. docs-mcp announces itself under it (MCP_URL) and admits browser calls from it (ALLOW_ORIGIN); the site is built against it"
+  type        = string
+  default     = "https://docs.abdm.gov.in"
+}
+
+variable "abdm_docs_site_distribution_arn" {
+  description = "CloudFront distribution in NHA's CDN account that serves the site bucket"
+  type        = string
+  default     = "arn:aws:cloudfront::449563540430:distribution/E2ER503YJXRSWI"
+}

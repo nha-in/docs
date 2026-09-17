@@ -1,0 +1,8 @@
+{
+  "atom": "hiecm.endpoint.p3-consent-auto-approve",
+  "on": "2026-09-17",
+  "against": "https://dev.abdm.gov.in",
+  "request": "curl -X POST 'https://dev.abdm.gov.in/api/hiecm/consent/v3/auto/approve' \\\n  -H 'Authorization: Bearer <scrubbed>' \\\n  -H 'REQUEST-ID: a47c8a61-1212-4662-9805-ccee71c17bc8' \\\n  -H 'TIMESTAMP: 2026-09-17T11:23:18.244Z' \\\n  -H 'Content-Type: application/json' \\\n  -d '{ \"isApplicableForAllHIPs\": **true**, \"hiu\": { \"id\": \"*{{hiu-id}}*\" }, \"includedSources\": [ { \"hiTypes\": [ \"Prescription\", \"DiagnosticReport\", \"OPConsultation\", \"DischargeSummary\", \"ImmunizationRecord\", \"HealthDocumentRecord\", \"WellnessRecord\", \"Invoice\" ], \"purpose\": { \"text\": \"Care Management\", \"code\": \"CAREMGT\", \"refUri\": \"www.abdm.gov.in\" }, \"period\": { \"from\": \"2024-11-27T16:21:00.000Z\", \"to\": \"2024-12-30T00:00:00.000Z\" } } ], \"excludedSources\": [] }'\n",
+  "status": 401,
+  "body": ""
+}

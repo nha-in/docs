@@ -352,7 +352,7 @@ The same request, unchanged, succeeds later. That is the test: if changing nothi
 
 ### Codes
 
-Code, message and error name are as published. The action column reads the message text by a documented rule, and says Unclassified rather than guessing.
+Code, message and error name are as published. The heading each code sits under reads the message text by a documented rule, and says Unclassified rather than guessing.
 
 | Code | Message | What to do |
 | --- | --- | --- |

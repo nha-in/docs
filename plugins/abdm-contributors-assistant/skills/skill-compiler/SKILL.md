@@ -46,7 +46,6 @@ Rules:
 - An atom with no `skills` entry never reaches an agent. That is correct for glossary and decision atoms and a mistake for flows. The selector warns on flows with no skill target.
 - Error atoms feed the milestone debug skill and the cross-gateway `abdm-errors` skill.
 - Test atoms feed test skills only.
-- An atom marked `stale` still compiles, but the compiler injects a warning line into the skill: this step may have changed, check the docs.
 
 ## Templates
 
@@ -124,7 +123,6 @@ This constrains the templates: no skill may depend on another skill being loaded
 | Identifier diff fails on something real | The fact is in prose but not in a structured block, so extraction missed it |
 | Exit condition missing | Atom's section 4 is not observable. Fix the atom, not the template. |
 | Index missing a skill | Build ordering: the skill was produced after the index walk |
-| Gateway coverage failure | A gateway has zero verified atoms. P1 refuses to build. |
 
 ## Related
 

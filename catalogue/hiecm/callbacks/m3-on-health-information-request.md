@@ -13,11 +13,16 @@ sources:
     fetched: 2026-08-25
     note: >
       NHA's M3 OpenAPI file.
-verified:
-  status: unverified
+  - file: catalogue/annexure/integration-learnings-2026-09-16.md
+    fetched: 2026-09-16
+    hash: sha256:d1415609d3d71178563367bcdcc48fa7a01fe9ebd247b4c019686304868368ce
+    note: >
+      The REQUESTED status and the push racing this callback. Observed by an integrator on 2026-09-16, not yet run from this repository.
 related:
   errors: [hiecm.error.abdm-9999]
-  concepts: [hiecm.concept.asynchronous-callbacks]
+  concepts: [hiecm.concept.asynchronous-callbacks, hiecm.concept.artefact-date-range]
+  endpoints: [hiecm.endpoint.m3-hiu-health-information-request]
+  flows: [hiecm.flow.m3-fetch-records]
 skills:
   - hiecm-m3-build
 ---
@@ -27,8 +32,6 @@ skills:
 ## In plain words
 
 Carries the transaction id, the request id and the current status. This is an acknowledgement, not the records. The records arrive at the data push URL you supplied.
-
-Transcribed from NHA's milestone document. Not run against the ABDM sandbox, so the payload is unconfirmed.
 
 This is something ABDM sends to you. It arrives at the URL you registered, not at a URL you choose per request.
 
@@ -42,15 +45,27 @@ This is something ABDM sends to you. It arrives at the URL you registered, not a
 
 ABDM posts to `/api/v3/hiu/health-information/on-request` on your registered base URL.
 
-The payload shape and an example are in the `webhooks` section of the M3 specification, published at /specs/hiecm-m3.yaml, transcribed from NHA's collection with values scrubbed.
+The body carries `hiRequest.transactionId` and `hiRequest.sessionStatus`, and `sessionStatus` arrives as `REQUESTED`, not `ACKNOWLEDGED`:
+
+```json
+{
+  "hiRequest": {
+    "transactionId": "<TRANSACTION_ID>",
+    "sessionStatus": "REQUESTED"
+  },
+  "response": {
+    "requestId": "<THE_REQUEST_ID_YOU_SENT>"
+  }
+}
+```
+
+Store the `transactionId` against the consent id. The push to your `dataPushUrl` can land in the same second as this callback, so key the push route on the consent id you put in the URL rather than on a transaction id you may not have stored yet.
 
 Acknowledge with a 202 quickly. Do the work afterwards.
 
 ## How you know it worked
 
-Your handler receives a POST carrying the same `REQUEST-ID` you sent on the call this answers, and you return 202 within the timeout.
-
-Not yet observed from this repository. Record the first real delivery here.
+Your handler receives a POST whose `response.requestId` equals the `REQUEST-ID` you sent on the health information request, with `hiRequest.sessionStatus` of `REQUESTED`, and you return 202.
 
 ## When it goes wrong
 

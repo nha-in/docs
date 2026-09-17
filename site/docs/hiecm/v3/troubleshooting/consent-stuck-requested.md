@@ -2,7 +2,6 @@
 title: Consent stuck in Requested
 sidebar_label: Consent stuck in Requested
 description: A consent request was created and never moved to Granted or Denied. The checks in order.
-verification: unverified
 source: ABDM__Proposed_Simplified_Milestone_3.md, ABDM__NewDocumant_PHR_app.md
 sidebar_position: 5
 covers: [hiecm.troubleshooting.consent-stuck-requested]

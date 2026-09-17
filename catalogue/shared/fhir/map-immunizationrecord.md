@@ -17,8 +17,6 @@ sources:
       The pinned NRCES/NDHM package. digests.json's ImmunizationRecord
       digest carries an empty Sections list; stated here as-is, not
       invented.
-verified:
-  status: draft
 related:
   fhir: [shared.fhir.document-bundles]
   glossary: [shared.glossary.nrces]
