@@ -4357,4 +4357,3 @@ components:
       type: http
       scheme: bearer
       bearerFormat: JWT
-      description: The access token from POST /api/hiecm/gateway/v3/sessions.

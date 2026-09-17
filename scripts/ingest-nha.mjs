@@ -93,6 +93,16 @@ function dedupeM4Components(doc, file) {
   }
 }
 
+// Where the bearer token comes from, only where a raw file says so. The PHR
+// swagger names the gateway session for its operations (gateway, p1, p2), and
+// the M4 files carry their own token call. The other raw files name no source,
+// so their modules get no description rather than a guessed one.
+const TOKEN_SOURCE = {
+  gateway: 'The access token from POST /api/hiecm/gateway/v3/sessions.',
+  p1: 'The access token from POST /api/hiecm/gateway/v3/sessions.',
+  p2: 'The access token from POST /api/hiecm/gateway/v3/sessions.',
+  m4: 'The token from POST /getManagementToken.',
+};
 const sha = (p) => 'sha256:' + createHash('sha256').update(readFileSync(p)).digest('hex');
 const slug = (s) => s.toLowerCase().replace(/\{([^}]+)\}/g, '$1').replace(/[^a-z0-9]+/g, '_').replace(/^_+|_+$/g, '');
 const log = [];
@@ -111,7 +121,7 @@ const specs = Object.fromEntries(Object.entries(MODULES).map(([id, m]) => [id, {
   servers: m.servers,
   security: id === 'gateway' ? [] : [{bearerAuth: []}],
   tags: [], paths: {}, webhooks: {},
-  components: {securitySchemes: {bearerAuth: {type: 'http', scheme: 'bearer', bearerFormat: 'JWT', description: 'The access token from POST /api/hiecm/gateway/v3/sessions.'}}},
+  components: {securitySchemes: {bearerAuth: {type: 'http', scheme: 'bearer', bearerFormat: 'JWT', ...(TOKEN_SOURCE[id] ? {description: TOKEN_SOURCE[id]} : {})}}},
 }]));
 
 const seenPath = new Map();   // "METHOD path" -> module that first declared it

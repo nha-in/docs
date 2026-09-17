@@ -1007,7 +1007,7 @@ for (const {platform, version, files} of tree) {
             scheme.description ?? ''
           )
             .replace(/\s+/g, ' ')
-            .trim()}`,
+            .trim()}`.trimEnd(),
         );
         lines.push('');
       }
