@@ -132,10 +132,9 @@ for (const {file, place} of FILES) {
       if (!op) continue;
       const tag = (op.tags ?? ['untagged'])[0];
       const module = place(tag, path);
-      if (!module) { note('gateway', `${method.toUpperCase()} ${path}`, `dropped from ${file}: the gateway module already carries it`); continue; }
       const key = `${method.toUpperCase()} ${path.replace(/^\/(abha\/api|api\/hiecm)/, '').replace(/\{[^}]+\}/g, '{}')}`;
-      if (seenPath.has(key)) { const first = seenPath.get(key); note(module ?? first.module, key, `dropped from ${file}: already declared by ${first.file}`); continue; }
-      if (!MODULES[module]) throw new Error(`${file}: ${method.toUpperCase()} ${path} has tag "${tag}", which no module takes`);
+      if (seenPath.has(key)) { const first = seenPath.get(key); note(first.module, key, `dropped from ${file}: already declared by ${first.file} in the ${first.module} module`); continue; }
+      if (!module || !MODULES[module]) throw new Error(`${file}: ${method.toUpperCase()} ${path} has tag "${tag}", which no module takes`);
       seenPath.set(key, {file, module});
       touched.add(module);
       const spec = specs[module];
@@ -215,7 +214,7 @@ for (const {file, place} of FILES) {
 }
 
 // 8. The M1 info.description is not published (wrong cipher, wrong certificate path, third-party tool).
-specs.m1.info.description = 'Encrypt Aadhaar numbers, mobile numbers, OTP values and passwords under the certificate from GET /abha/api/v3/profile/public/certificate. See /docs/hiecm/v3/getting-started/encryption for the padding the sandbox accepts.';
+specs.m1.info.description = 'Encrypt Aadhaar numbers, mobile numbers, OTP values and passwords under the certificate from GET /abha/api/v3/profile/public/certificate. See /docs/hiecm/v3/concepts/encryption.';
 note('m1', 'info', 'description replaced: NHA\'s text names RSA/ECB/PKCS1Padding, /v3/auth/cert and a third-party encryption site; the original is in the raw file');
 specs.m1['x-abdm-sources'].push({file: 'catalogue/openapi/.raw/nha-2026-09-16/abha/M1 ABHA Collection.json', role: 'upstream', hash: sha(join(RAW, 'abha/M1 ABHA Collection.json')), fetched: '2026-09-15', note: 'Used for the order of M1 calls only. See journeys/m1.yaml.'});
 

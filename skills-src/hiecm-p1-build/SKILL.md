@@ -33,18 +33,18 @@ curl --request POST \
     "firstName": "John",
     "middleName": "",
     "lastName": "Doe",
-    "yearOfBirth": "1997",
+    "yearOfBirth": "<DOB>",
     "dayOfBirth": "",
-    "monthOfBirth": "01",
+    "monthOfBirth": "<DOB>",
     "gender": "M",
     "email": "",
     "profilePhoto": "",
-    "address": "pune Maharashtra",
+    "address": "<ADDRESS>",
     "stateName": "Maharashtra",
     "stateCode": "27",
-    "districtName": "Nashik",
+    "districtName": "<ADDRESS>",
     "districtCode": "123",
-    "pinCode": "422003",
+    "pinCode": "<PINCODE>",
     "abhaAddress": "<ABHA_ADDRESS>",
     "password": "<BASE64_PHOTO>"
   }
@@ -91,9 +91,9 @@ curl --request POST \
   "txnId": "ee10d1c7-e25f-40e0-a3a1-df4c1dda02211",
   "firstName": "John",
   "lastName": "Doe",
-  "dayOfBirth": "01",
-  "monthOfBirth": "01",
-  "yearOfBirth": "1990",
+  "dayOfBirth": "<DOB>",
+  "monthOfBirth": "<DOB>",
+  "yearOfBirth": "<DOB>",
   "email": ""
 }'
 ```
@@ -255,14 +255,14 @@ A 200 whose body matches:
     {
       "abhaAddress": "<ABHA_ADDRESS>",
       "fullName": "John Doe",
-      "abhaNumber": "91-5326-6278-XXXX",
+      "abhaNumber": "<ABHA_NUMBER>",
       "status": "ACTIVE",
       "kycStatus": "VERIFIED"
     },
     {
       "abhaAddress": "<ABHA_ADDRESS>",
       "fullName": "John Doe",
-      "abhaNumber": "91-5326-6278-XXXX",
+      "abhaNumber": "<ABHA_NUMBER>",
       "status": "ACTIVE",
       "kycStatus": "PENDING"
     },
@@ -305,7 +305,7 @@ A 200 whose body matches:
 
 ```json
 {
-  "healthIdNumber": "91-5326-6278-XXXX",
+  "healthIdNumber": "<ABHA_NUMBER>",
   "abhaAddress": "<ABHA_ADDRESS>",
   "authMethods": [
     "MOBILE_OTP",

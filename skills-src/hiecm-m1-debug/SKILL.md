@@ -66,7 +66,7 @@ Loop limit: 5 passes per error.
 
 ### ABDM-1157
 
-**Observed as** HTTP 422, `Child ABHA’s account limit has been exceeded for the requested Abha ID number ‘91-5553-4126-XXXX`, on `m1_post_v3_enrollment_enrol_byaadhaar`.
+**Observed as** HTTP 422, `Child ABHA’s account limit has been exceeded for the requested Abha ID number ‘<ABHA_NUMBER>`, on `m1_post_v3_enrollment_enrol_byaadhaar`.
 
 **Exit condition: the original call now succeeds.**
 

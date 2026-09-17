@@ -19,15 +19,15 @@ info:
   x-abdm-phase: 1
   x-abdm-roles:
     - his
-  description: Encrypt Aadhaar numbers, mobile numbers, OTP values and passwords under the certificate from GET /abha/api/v3/profile/public/certificate. See /docs/hiecm/v3/getting-started/encryption for the padding the sandbox accepts.
+  description: Encrypt Aadhaar numbers, mobile numbers, OTP values and passwords under the certificate from GET /abha/api/v3/profile/public/certificate. See /docs/hiecm/v3/concepts/encryption.
 x-abdm-sources:
   - file: catalogue/openapi/.raw/nha-2026-09-16/abha/M1 ABHA Swagger 1.yaml
     role: upstream
-    hash: sha256:867de34795761ba4d6bc29ad5ee2cd089200786daa3d089afc94968a0bd01308
+    hash: sha256:6ab5cfe77c29032fac5fbf25c8e28529f22951e459374fa618f570f15e25551b
     fetched: "2026-09-16"
   - file: catalogue/openapi/.raw/nha-2026-09-16/abha/M1 ABHA Collection.json
     role: upstream
-    hash: sha256:8dc7ddcba6db4718dc4fcc2a1ddb9d55dedf0e5e2000caf038cc22510b955031
+    hash: sha256:ea48dc0600f8322c766bf59b17714ed80b94c01e4df02373a4cc248ac0118f5c
     fetched: "2026-09-15"
     note: Used for the order of M1 calls only. See journeys/m1.yaml.
 servers:
@@ -791,8 +791,8 @@ paths:
                       name: "{{Full name}}"
                       mobile: "{{Mobile number}}"
                       profilePhoto: "{{Base64 plain String}}"
-                      pinCode: "110092"
-                      address: House No.1234 Anand Vihar, Delhi
+                      pinCode: <PINCODE>
+                      address: <ADDRESS>
                   consent:
                     code: abha-enrollment
                     version: "1.4"
@@ -849,7 +849,7 @@ paths:
                   consent:
                     code: abha-enrollment
                     version: "1.4"
-        description: <b>Below is the Request Body description:</b><br><br>  <ol> <li> <p><strong>CHILD ABHA - Create CHILD ABHA</strong></p> <ul> <li><strong>Description:</strong> This API endpoint is used to create a CHILD ABHA number for a minor using their demographic details. The CHILD ABHA number helps in uniquely identifying minors and linking their health records across multiple systems:</li> <li><strong>dayOfBirth:</strong> The day of the user’s birth. <ul> <li><strong>Type:</strong> String</li> <li><strong>Example:</strong> <code>14</code></li> </ul> </li> <li><strong>monthOfBirth:</strong> The month of the user’s birth. <ul> <li><strong>Type:</strong> String</li> <li><strong>Example:</strong> <code>1</code></li> </ul> </li> <li><strong>yearOfBirth:</strong> The year of the user’s birth. <ul> <li><strong>Type:</strong> String</li> <li><strong>Example:</strong> <code>2000</code></li> </ul> </li> <li><strong>name:</strong> The user’s name. <ul> <li><strong>Type:</strong> String</li> <li><strong>Example:</strong> <code>John</code></li> </ul> </li> <li><strong>gender:</strong> The user’s gender. <ul> <li><strong>Type:</strong> String</li> <li><strong>Example:</strong> <code>M</code></li> </ul> </li> <li><strong>name:</strong> The user’s last name. <ul><li><strong>Type:</strong> String</li> <li><strong>Example:</strong> <code>Doe John</code></li> </ul> </li>  <li><strong>stateCode:</strong> The code of the user’s state. <ul> <li><strong>Type:</strong> String</li> <li><strong>Example:</strong> <code>27</code></li> </ul> </li> <li><strong>parentConsent:</strong> Consent of the parent should be true <ul> <li><strong>Type:</strong> String</li> <li><strong>Example:</strong> <code>true</code></li> </ul> </li> </ul> </li> </ul> </li> </ul> </li> <li> <p><strong>Demo Auth API</strong></p> <ul> <li><strong>Description:</strong> This API endpoint is used for the demo authentication of an individual using their Aadhaar number. It verifies the demographic details against the Aadhaar database and generates an ABHA number if the details match.</li> <li><strong>dateOfBirth:</strong> The day of the user’s birth. <ul> <li><strong>Type:</strong> String</li> <li><strong>Example:</strong> <code>18-06-1995</code></li> </ul> </li> <li><strong>districtCode:</strong> The code of the user’s district. <ul> <li><strong>Type:</strong> String</li> <li><strong>Example:</strong> <code>486</code></li> </ul> </li> <li><strong>stateCode:</strong> The code of the user’s state. <ul> <li><strong>Type:</strong> String</li> <li><strong>Example:</strong> <code>1</code></li> </ul> </li> <li><strong>name:</strong> The user’s name. <ul> <li><strong>Type:</strong> String</li> <li><strong>Example:</strong> <code>John Doe</code></li> </ul> </li> <li><strong>gender:</strong> The user’s gender. <ul> <li><strong>Type:</strong> String</li> <li><strong>Example:</strong> <code>M</code></li> </ul> </li> <li><strong>mobile:</strong> The user’s mobile number. <ul> <li><strong>Type:</strong> String</li> <li><strong>Example:</strong> <code>******1234</code></li> </ul> </li> </ul> </li> <li> <p><strong>Create ABHA by Verifying OTP</strong></p> <ul> <li><strong>Description:</strong> This API endpoint is used to create an ABHA (Ayushman Bharat Health Account) number by verifying an OTP sent to the user’s registered mobile number.</li> </ul> </li> <li> <p><strong>Create ABHA Via Biometrics</strong></p> <ul> <li><strong>Description:</strong> This API endpoint is used to create an ABHA (Ayushman Bharat Health Account) number by using users biometrics. In this flow user will be using Aadhaar authentication and biometrics verification(FingerPrint, Face and Iris). </li> </ul> </li> </ol>
+        description: <b>Below is the Request Body description:</b><br><br>  <ol> <li> <p><strong>CHILD ABHA - Create CHILD ABHA</strong></p> <ul> <li><strong>Description:</strong> This API endpoint is used to create a CHILD ABHA number for a minor using their demographic details. The CHILD ABHA number helps in uniquely identifying minors and linking their health records across multiple systems:</li> <li><strong>dayOfBirth:</strong> The day of the user’s birth. <ul> <li><strong>Type:</strong> String</li> <li><strong>Example:</strong> <code>&lt;DOB&gt;</code></li> </ul> </li> <li><strong>monthOfBirth:</strong> The month of the user’s birth. <ul> <li><strong>Type:</strong> String</li> <li><strong>Example:</strong> <code>&lt;DOB&gt;</code></li> </ul> </li> <li><strong>yearOfBirth:</strong> The year of the user’s birth. <ul> <li><strong>Type:</strong> String</li> <li><strong>Example:</strong> <code>&lt;DOB&gt;</code></li> </ul> </li> <li><strong>name:</strong> The user’s name. <ul> <li><strong>Type:</strong> String</li> <li><strong>Example:</strong> <code>John</code></li> </ul> </li> <li><strong>gender:</strong> The user’s gender. <ul> <li><strong>Type:</strong> String</li> <li><strong>Example:</strong> <code>M</code></li> </ul> </li> <li><strong>name:</strong> The user’s last name. <ul><li><strong>Type:</strong> String</li> <li><strong>Example:</strong> <code>Doe John</code></li> </ul> </li>  <li><strong>stateCode:</strong> The code of the user’s state. <ul> <li><strong>Type:</strong> String</li> <li><strong>Example:</strong> <code>27</code></li> </ul> </li> <li><strong>parentConsent:</strong> Consent of the parent should be true <ul> <li><strong>Type:</strong> String</li> <li><strong>Example:</strong> <code>true</code></li> </ul> </li> </ul> </li> </ul> </li> </ul> </li> <li> <p><strong>Demo Auth API</strong></p> <ul> <li><strong>Description:</strong> This API endpoint is used for the demo authentication of an individual using their Aadhaar number. It verifies the demographic details against the Aadhaar database and generates an ABHA number if the details match.</li> <li><strong>dateOfBirth:</strong> The day of the user’s birth. <ul> <li><strong>Type:</strong> String</li> <li><strong>Example:</strong> <code>&lt;DOB&gt;</code></li> </ul> </li> <li><strong>districtCode:</strong> The code of the user’s district. <ul> <li><strong>Type:</strong> String</li> <li><strong>Example:</strong> <code>486</code></li> </ul> </li> <li><strong>stateCode:</strong> The code of the user’s state. <ul> <li><strong>Type:</strong> String</li> <li><strong>Example:</strong> <code>1</code></li> </ul> </li> <li><strong>name:</strong> The user’s name. <ul> <li><strong>Type:</strong> String</li> <li><strong>Example:</strong> <code>John Doe</code></li> </ul> </li> <li><strong>gender:</strong> The user’s gender. <ul> <li><strong>Type:</strong> String</li> <li><strong>Example:</strong> <code>M</code></li> </ul> </li> <li><strong>mobile:</strong> The user’s mobile number. <ul> <li><strong>Type:</strong> String</li> <li><strong>Example:</strong> <code>******1234</code></li> </ul> </li> </ul> </li> <li> <p><strong>Create ABHA by Verifying OTP</strong></p> <ul> <li><strong>Description:</strong> This API endpoint is used to create an ABHA (Ayushman Bharat Health Account) number by verifying an OTP sent to the user’s registered mobile number.</li> </ul> </li> <li> <p><strong>Create ABHA Via Biometrics</strong></p> <ul> <li><strong>Description:</strong> This API endpoint is used to create an ABHA (Ayushman Bharat Health Account) number by using users biometrics. In this flow user will be using Aadhaar authentication and biometrics verification(FingerPrint, Face and Iris). </li> </ul> </li> </ol>
       security:
         - bearerAuth: []
       parameters:
@@ -915,10 +915,10 @@ paths:
                             example: ""
                           lastName:
                             type: string
-                            example: Mohite
+                            example: <NAME>
                           dob:
                             type: string
-                            example: "21-2-2020"
+                            example: <DOB>
                           gender:
                             type: string
                             example: F
@@ -945,10 +945,10 @@ paths:
                             example: Maharashtra
                           districtName:
                             type: string
-                            example: PUNE
+                            example: <ADDRESS>
                           ABHANumber:
                             type: string
-                            example: 91-3786-8352-XXXX
+                            example: <ABHA_NUMBER>
                           abhaStatus:
                             type: string
                             example: ACTIVE
@@ -959,7 +959,7 @@ paths:
                     properties:
                       healthIdNumber:
                         type: string
-                        example: 91-5054-5533-XXXX
+                        example: <ABHA_NUMBER>
                       healthId:
                         type: string
                         example: <ABHA_ADDRESS>
@@ -971,22 +971,22 @@ paths:
                         example: Username
                       middleName:
                         type: string
-                        example: Sudhir
+                        example: <NAME>
                       lastName:
                         type: string
-                        example: Varude
+                        example: <NAME>
                       name:
                         type: string
-                        example: Username Sudhir Varude
+                        example: <NAME>
                       yearOfBirth:
                         type: string
-                        example: "1959"
+                        example: <DOB>
                       dayOfBirth:
                         type: string
-                        example: "26"
+                        example: <DOB>
                       monthOfBirth:
                         type: string
-                        example: "11"
+                        example: <DOB>
                       gender:
                         type: string
                         example: F
@@ -1001,7 +1001,7 @@ paths:
                         example: MAHARASHTRA
                       districtName:
                         type: string
-                        example: PUNE
+                        example: <ADDRESS>
                       kycVerified:
                         type: boolean
                         example: true
@@ -1038,22 +1038,22 @@ paths:
                       refreshExpiresIn: 1296000
                     ABHAProfile:
                       firstName: Username
-                      middleName: Kailas
-                      lastName: Shelke
-                      dob: "26-06-1999"
+                      middleName: <NAME>
+                      lastName: <NAME>
+                      dob: <DOB>
                       gender: M
-                      photo: <BASE64_PHOTO> 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
+                      photo: <BASE64_PHOTO>
                       mobile: "******0903"
                       phrAddress:
                         - <ABHA_ADDRESS>
-                      address: LOHARA, AT POST LOHARA TQ PACHORA DIST JALGAON, Lohara, Pachora, Jalgaon, Maharashtra
+                      address: <ADDRESS>
                       districtCode: "478"
                       stateCode: "27"
-                      pinCode: "424201"
+                      pinCode: <PINCODE>
                       abhaType: STANDARD
                       stateName: MAHARASHTRA
-                      districtName: JALGAON
-                      ABHANumber: 91-7561-4088-XXXX
+                      districtName: <ADDRESS>
+                      ABHANumber: <ABHA_NUMBER>
                       abhaStatus: ACTIVE
                     isNew: false
                 Create CHILD ABHA - Positive Flow:
@@ -1067,8 +1067,8 @@ paths:
                     ABHAProfile:
                       firstName: Username
                       middleName: ""
-                      lastName: Mohite
-                      dob: "21-2-2020"
+                      lastName: <NAME>
+                      dob: <DOB>
                       gender: F
                       photo: ""
                       mobile: "******0903"
@@ -1076,8 +1076,8 @@ paths:
                       stateCode: "27"
                       abhaType: CHILD
                       stateName: Maharashtra
-                      districtName: PUNE
-                      ABHANumber: 91-3786-8352-XXXX
+                      districtName: <ADDRESS>
+                      ABHANumber: <ABHA_NUMBER>
                       abhaStatus: ACTIVE
                     isNew: true
                 Create ABHA via Biometric (Fingerprint, Face, IRIS) - Positive Flow:
@@ -1092,8 +1092,8 @@ paths:
                     ABHAProfile:
                       firstName: Username
                       middleName: ""
-                      lastName: Mohite
-                      dob: "21-2-2020"
+                      lastName: <NAME>
+                      dob: <DOB>
                       gender: F
                       photo: ""
                       mobile: "******0903"
@@ -1104,8 +1104,8 @@ paths:
                       stateCode: "27"
                       abhaType: CHILD
                       stateName: Maharashtra
-                      districtName: PUNE
-                      ABHANumber: 91-3786-8352-XXXX
+                      districtName: <ADDRESS>
+                      ABHANumber: <ABHA_NUMBER>
                       abhaStatus: ACTIVE
                     isNew: true
                 CHILD ABHA - Account Already Exist:
@@ -1119,8 +1119,8 @@ paths:
                     ABHAProfile:
                       firstName: Username
                       middleName: ""
-                      lastName: Mohite
-                      dob: "21-2-2020"
+                      lastName: <NAME>
+                      dob: <DOB>
                       gender: F
                       mobile: "******0903"
                       phrAddress:
@@ -1129,29 +1129,29 @@ paths:
                       stateCode: "27"
                       abhaType: CHILD
                       stateName: Maharashtra
-                      districtName: PUNE
-                      ABHANumber: 91-3786-8352-XXXX
+                      districtName: <ADDRESS>
+                      ABHANumber: <ABHA_NUMBER>
                       abhaStatus: ACTIVE
                     isNew: false
                 DemoAuth API - In case of Existing ABHA Number:
                   value:
-                    healthIdNumber: 91-5006-4247-XXXX
+                    healthIdNumber: <ABHA_NUMBER>
                     healthId: <ABHA_ADDRESS>
                     mobile: "******0903"
                     firstName: Username
-                    middleName: Sudhir
-                    lastName: Varude
-                    name: Username Sudhir Varude
-                    yearOfBirth: "1959"
-                    dayOfBirth: "26"
-                    monthOfBirth: "11"
+                    middleName: <NAME>
+                    lastName: <NAME>
+                    name: <NAME>
+                    yearOfBirth: <DOB>
+                    dayOfBirth: <DOB>
+                    monthOfBirth: <DOB>
                     gender: F
                     stateCode: "27"
                     districtCode: "494"
-                    pincode: "415001"
-                    address: 165/2 Plot no-25 Mangalai Colony Shahunagar, Godoli, Satara, Maharashtra
+                    pincode: <PINCODE>
+                    address: <ADDRESS>
                     stateName: MAHARASHTRA
-                    districtName: SATARA
+                    districtName: <ADDRESS>
                     kycVerified: true
                     token: <TOKEN>
                     jwtResponse:
@@ -1163,21 +1163,21 @@ paths:
                     new: false
                 DemoAuth API - New ABHA creation:
                   value:
-                    healthIdNumber: 91-5054-5533-XXXX
+                    healthIdNumber: <ABHA_NUMBER>
                     healthId: <ABHA_ADDRESS>
                     mobile: "******0903"
                     firstName: Username
-                    middleName: Sudhir
-                    lastName: Varude
-                    name: Username Sudhir Varude
-                    yearOfBirth: "1959"
-                    dayOfBirth: "26"
-                    monthOfBirth: "11"
+                    middleName: <NAME>
+                    lastName: <NAME>
+                    name: <NAME>
+                    yearOfBirth: <DOB>
+                    dayOfBirth: <DOB>
+                    monthOfBirth: <DOB>
                     gender: F
                     stateCode: "27"
                     districtCode: "490"
                     stateName: MAHARASHTRA
-                    districtName: PUNE
+                    districtName: <ADDRESS>
                     kycVerified: true
                     token: <TOKEN>
                     jwtResponse:
@@ -1310,7 +1310,7 @@ paths:
                         example: ABDM-1157
                       message:
                         type: string
-                        example: "Child ABHA’s account limit has been exceeded for the requested Abha ID number ‘91-5553-4126-XXXX, UIDAI Error code : 400 : Invalid Aadhaar OTP value. , UIDAI Error code : 501 : Invalid certificate identifier in ci attribute of Skey,  The information you provided does not match the details on record with Aadhaar. Please verify and provide accurate information., The mobile number provided by you is already linked to 6 ABHA Numbers. Please provide a different Mobile Number"
+                        example: "Child ABHA’s account limit has been exceeded for the requested Abha ID number ‘<ABHA_NUMBER>, UIDAI Error code : 400 : Invalid Aadhaar OTP value. , UIDAI Error code : 501 : Invalid certificate identifier in ci attribute of Skey,  The information you provided does not match the details on record with Aadhaar. Please verify and provide accurate information., The mobile number provided by you is already linked to 6 ABHA Numbers. Please provide a different Mobile Number"
               examples:
                 Create ABHA by verifying OTP- Invalid OTP value:
                   value:
@@ -1336,7 +1336,7 @@ paths:
                   value:
                     error:
                       code: ABDM-1157
-                      message: Child ABHA’s account limit has been exceeded for the requested Abha ID number ‘91-5553-4126-XXXX
+                      message: Child ABHA’s account limit has been exceeded for the requested Abha ID number ‘<ABHA_NUMBER>
         "500":
           description: Internal Server Error
       description: "This API endpoint is used to create an ABHA (Ayushman Bharat Health Account) number for an individual using their Aadhaar number. The ABHA number is a unique identifier that helps in authenticating individuals and linking their health records across multiple systems and stakeholders, ensuring that medical records are issued to the correct individual and accessed by authorized Health Information Users with appropriate consent. "
@@ -1445,7 +1445,7 @@ paths:
                     items:
                       type: object
                     example:
-                      - ABHANumber: 91-7561-4088-XXXX
+                      - ABHANumber: <ABHA_NUMBER>
               examples:
                 Mobile Update - Verify OTP-positive flow:
                   value:
@@ -1453,7 +1453,7 @@ paths:
                     authResult: success
                     message: Mobile number is now successfully linked to your Account
                     accounts:
-                      - ABHANumber: 91-7561-4088-XXXX
+                      - ABHANumber: <ABHA_NUMBER>
                 Mobile Update - Verify OTP-OTP EXPIRED:
                   value:
                     txnId: 9c5d453e-756f-45e1-9766-43b9cc1190de
@@ -1466,7 +1466,7 @@ paths:
                     authResult: success
                     message: Email address is now successfully linked to your Account
                     accounts:
-                      - ABHANumber: 91-7561-4088-XXXX
+                      - ABHANumber: <ABHA_NUMBER>
                 Email Update - Verify OTP-OTP EXPIRED:
                   value:
                     txnId: 9c5d453e-756f-45e1-9766-43b9cc1190de
@@ -1670,37 +1670,37 @@ paths:
                     items:
                       type: string
                     example:
-                      - Username.2661997
-                      - Usernamebarve_1997
-                      - Username_1997
-                      - Username266
-                      - Username_26
-                      - Username.1997
+                      - <ABHA_ADDRESS>
+                      - <ABHA_ADDRESS>
+                      - <ABHA_ADDRESS>
+                      - <ABHA_ADDRESS>
+                      - <ABHA_ADDRESS>
+                      - <ABHA_ADDRESS>
                       - Username
-                      - 26_Username.barve
-                      - Usernamel1997
-                      - Usernamebarve1997
-                      - Username_barve
-                      - Username2661997
-                      - Username.266
+                      - <ABHA_ADDRESS>
+                      - <ABHA_ADDRESS>
+                      - <ABHA_ADDRESS>
+                      - <ABHA_ADDRESS>
+                      - <ABHA_ADDRESS>
+                      - <ABHA_ADDRESS>
               examples:
                 ABHA Address Suggestion API-Positive flow:
                   value:
                     txnId: 23acf181-339d-4771-b532-5c5df4a28d19
                     abhaAddressList:
-                      - Username.2661997
-                      - Usernamebarve_1997
-                      - Username_1997
-                      - Username266
-                      - Username_26
-                      - Username.1997
+                      - <ABHA_ADDRESS>
+                      - <ABHA_ADDRESS>
+                      - <ABHA_ADDRESS>
+                      - <ABHA_ADDRESS>
+                      - <ABHA_ADDRESS>
+                      - <ABHA_ADDRESS>
                       - Username
-                      - 26_Username.barve
-                      - Usernamel1997
-                      - Usernamebarve1997
-                      - Username_barve
-                      - Username2661997
-                      - Username.266
+                      - <ABHA_ADDRESS>
+                      - <ABHA_ADDRESS>
+                      - <ABHA_ADDRESS>
+                      - <ABHA_ADDRESS>
+                      - <ABHA_ADDRESS>
+                      - <ABHA_ADDRESS>
         "400":
           description: |-
             The 400 response code indicates a bad request. In this context, it refers to various errors encountered during the operation of the Suggestion API.<br><br> <p><strong>Types of Suggestion API Errors:</strong></p>
@@ -1825,7 +1825,7 @@ paths:
                 ABHA Address-Positive flow:
                   value:
                     txnId: 23acf181-339d-4771-b532-5c5df4a28d19
-                    healthIdNumber: 91-7561-4088-XXXX
+                    healthIdNumber: <ABHA_NUMBER>
                     preferredAbhaAddress: <ABHA_ADDRESS>
         "400":
           description: The 400 response code indicates a bad request. In this context, it refers to various errors encountered during the operation of the Suggestion API.<br><br> <p><strong>Types of Suggestion API Errors:</strong></p> <ol> <li><strong>Invalid Preferred Flag:</strong> This error occurs when the transaction ID provided in the request is invalid. The transaction ID is essential for tracking the request and ensuring that the correct information is processed. An invalid transaction ID means the server cannot verify the request, leading to a failure in enrolling the ABHA address. .</li> </ol> <ol start="2"> <li><strong>Invalid Transaction Id:</strong>This error occurs when the preferred flag provided in the request is invalid. The preferred flag indicates the user’s preference for the suggested ABHA address. An invalid preferred flag means the server cannot process the user’s preference correctly, leading to a failure in enrolling the ABHA address.</li> </ol>
@@ -1927,7 +1927,7 @@ paths:
                 properties:
                   parentAbhaNumber:
                     type: string
-                    example: 91-5553-4126-XXXX
+                    example: <ABHA_NUMBER>
                   mobileNumber:
                     type: string
                     example: "******0903"
@@ -1941,10 +1941,10 @@ paths:
                       properties:
                         dateOfBirth:
                           type: string
-                          example: "21-2-2020"
+                          example: <DOB>
                         name:
                           type: string
-                          example: Mohit
+                          example: <NAME>
                         gender:
                           type: string
                           example: M
@@ -1953,24 +1953,24 @@ paths:
                           example: <ABHA_ADDRESS>
                         ABHANumber:
                           type: string
-                          example: 91-3786-8001-XXXX
+                          example: <ABHA_NUMBER>
               examples:
                 CHILD ABHA-Child Details:
                   value:
-                    parentAbhaNumber: 91-5553-4126-XXXX
+                    parentAbhaNumber: <ABHA_NUMBER>
                     mobileNumber: "******0903"
                     childrenCount: 2
                     children:
-                      - dateOfBirth: "21-2-2020"
-                        name: Mohit
+                      - dateOfBirth: <DOB>
+                        name: <NAME>
                         gender: M
                         phrAddress: <ABHA_ADDRESS>
-                        ABHANumber: 91-3786-8001-XXXX
-                      - dateOfBirth: "20-12-2022"
-                        name: Mohite
+                        ABHANumber: <ABHA_NUMBER>
+                      - dateOfBirth: <DOB>
+                        name: <NAME>
                         gender: F
                         phrAddress: <ABHA_ADDRESS>
-                        ABHANumber: 91-4083-6083-XXXX
+                        ABHANumber: <ABHA_NUMBER>
         "401":
           description: Indicates an unauthorized request due to invalid credentials
           content:
@@ -2067,7 +2067,7 @@ paths:
                             example: xx-xxxx-xxxx-XX31
                           name:
                             type: string
-                            example: Username Sudhakarrao Pinge
+                            example: <NAME>
                           gender:
                             type: string
                             example: F
@@ -2182,7 +2182,7 @@ paths:
                       example: <ABHA_ADDRESS>
                     ABHANumber:
                       type: string
-                      example: 91-1760-5301-XXXX
+                      example: <ABHA_NUMBER>
                     authMethods:
                       type: array
                       items:
@@ -2951,7 +2951,7 @@ paths:
                           example: <ABHA_ADDRESS>
                         name:
                           type: string
-                          example: Username Kailas Shelke
+                          example: <NAME>
                         status:
                           type: string
                           example: ACTIVE
@@ -2978,36 +2978,36 @@ paths:
                     accounts:
                       - ABHANumber: <ABHA_NUMBER>
                         preferredAbhaAddress: <ABHA_ADDRESS>
-                        name: Ashwani Kumar Singh
+                        name: <NAME>
                         gender: M
-                        dob: "06-03-1994"
+                        dob: <DOB>
                         verifiedStatus: VERIFIED
                         verificationType: AADHAAR
                         status: ACTIVE
                         profilePhoto: <BASE64_PHOTO>
                       - ABHANumber: <ABHA_NUMBER>
                         preferredAbhaAddress: <ABHA_ADDRESS>
-                        name: Ashwani Kumar Singh
+                        name: <NAME>
                         gender: M
-                        dob: "06-03-1994"
+                        dob: <DOB>
                         verifiedStatus: VERIFIED
                         verificationType: AADHAAR
                         status: ACTIVE
                         profilePhoto: <BASE64_PHOTO>
                       - ABHANumber: <ABHA_NUMBER>
                         preferredAbhaAddress: <ABHA_ADDRESS>
-                        name: Fanny Fanny Littel
+                        name: <NAME>
                         gender: M
-                        dob: "1994-03-06"
+                        dob: <DOB>
                         verifiedStatus: VERIFIED
                         verificationType: AADHAAR
                         status: ACTIVE
                         profilePhoto: <BASE64_PHOTO>
                       - ABHANumber: <ABHA_NUMBER>
                         preferredAbhaAddress: <ABHA_ADDRESS>
-                        name: Ashwani Kumar Singh
+                        name: <NAME>
                         gender: M
-                        dob: "06-03-1994"
+                        dob: <DOB>
                         verifiedStatus: VERIFIED
                         verificationType: AADHAAR
                         status: ACTIVE
@@ -3023,8 +3023,8 @@ paths:
                     refreshExpiresIn: 1296000
                     accounts:
                       - ABHANumber: 91-****-****-5727
-                        preferredAbhaAddress: 91**********27@sbx
-                        name: username Sudhir Varude
+                        preferredAbhaAddress: <ABHA_ADDRESS>
+                        name: <NAME>
                         status: ACTIVE
                 Find ABHA - Verify Mobile OTP:
                   value:
@@ -3036,9 +3036,9 @@ paths:
                     refreshToken: <TOKEN>
                     refreshExpiresIn: 1296000
                     accounts:
-                      - ABHANumber: 91-7561-4088-XXXX
+                      - ABHANumber: <ABHA_NUMBER>
                         preferredAbhaAddress: <ABHA_ADDRESS>
-                        name: Username Kailas Shelke
+                        name: <NAME>
                         status: ACTIVE
                         profilePhoto: <BASE64_PHOTO>
                 Verify Login Via ABHA Number - Using Aadhaar OTP:
@@ -3051,9 +3051,9 @@ paths:
                     refreshToken: <TOKEN>
                     refreshExpiresIn: 1296000
                     accounts:
-                      - ABHANumber: 91-7561-4088-XXXX
+                      - ABHANumber: <ABHA_NUMBER>
                         preferredAbhaAddress: <ABHA_ADDRESS>
-                        name: Username Kailas Shelke
+                        name: <NAME>
                         status: ACTIVE
                         profilePhoto: <BASE64_PHOTO>
                 Verify Login Via ABHA Number - Using ABHA OTP:
@@ -3066,9 +3066,9 @@ paths:
                     refreshToken: <TOKEN>
                     refreshExpiresIn: 1296000
                     accounts:
-                      - ABHANumber: 91-7561-4088-XXXX
+                      - ABHANumber: <ABHA_NUMBER>
                         preferredAbhaAddress: <ABHA_ADDRESS>
-                        name: Username Kailas Shelke
+                        name: <NAME>
                         status: ACTIVE
                         profilePhoto: <BASE64_PHOTO>
                 Verify Login Via Mobile Number:
@@ -3079,21 +3079,21 @@ paths:
                     token: <TOKEN>
                     expiresIn: 300
                     accounts:
-                      - ABHANumber: 91-7561-4088-XXXX
+                      - ABHANumber: <ABHA_NUMBER>
                         preferredAbhaAddress: <ABHA_ADDRESS>
-                        name: Username Kailas Shelke
+                        name: <NAME>
                         gender: M
-                        dob: "26-06-1999"
+                        dob: <DOB>
                         verifiedStatus: VERIFIED
                         verificationType: AADHAAR
                         status: ACTIVE
                         profilePhoto: <BASE64_PHOTO>
                         kycVerified: true
-                      - ABHANumber: 91-3202-1536-XXXX
+                      - ABHANumber: <ABHA_NUMBER>
                         preferredAbhaAddress: <ABHA_ADDRESS>
-                        name: Username Mishra
+                        name: <NAME>
                         gender: M
-                        dob: "28-02-2022"
+                        dob: <DOB>
                         verifiedStatus: VERIFIED
                         verificationType: CHILD_ABHA
                         status: ACTIVE
@@ -3108,9 +3108,9 @@ paths:
                     refreshToken: <TOKEN>
                     refreshExpiresIn: 1296000
                     accounts:
-                      - ABHANumber: 91-1886-0070-XXXX
+                      - ABHANumber: <ABHA_NUMBER>
                         preferredAbhaAddress: <ABHA_ADDRESS>
-                        name: Pragati Sudhakarrao Pinge
+                        name: <NAME>
                         status: ACTIVE
                         profilePhoto: <BASE64_PHOTO>
                 Verify Login Via Biometric - FingerPrint:
@@ -3123,9 +3123,9 @@ paths:
                     refreshToken: <TOKEN>
                     refreshExpiresIn: 1296000
                     accounts:
-                      - ABHANumber: 91-1500-2053-XXXX
+                      - ABHANumber: <ABHA_NUMBER>
                         preferredAbhaAddress: <ABHA_ADDRESS>
-                        name: Suyog Sunil Suryawanshi
+                        name: <NAME>
                         status: ACTIVE
                         profilePhoto: <BASE64_PHOTO>
                 Verify Login Via Biometric - IRIS:
@@ -3138,9 +3138,9 @@ paths:
                     refreshToken: <TOKEN>
                     refreshExpiresIn: 1296000
                     accounts:
-                      - ABHANumber: 91-1886-1230-XXXX
+                      - ABHANumber: <ABHA_NUMBER>
                         preferredAbhaAddress: <ABHA_ADDRESS>
-                        name: Pragati Sudhakarrao Pinge
+                        name: <NAME>
                         status: ACTIVE
                         profilePhoto: <BASE64_PHOTO>
         "400":
@@ -4029,7 +4029,7 @@ paths:
                       properties:
                         ABHANumber:
                           type: string
-                          example: 91-4173-3253-XXXX
+                          example: <ABHA_NUMBER>
               examples:
                 PASSWORD_VERIFY_OTP:
                   value:
@@ -4037,34 +4037,34 @@ paths:
                     authResult: success
                     message: Password updated successfully
                     accounts:
-                      - ABHANumber: 91-4173-3253-XXXX
+                      - ABHANumber: <ABHA_NUMBER>
                 PASSWORD_SET-Positive flow:
                   value:
                     authResult: success
                     message: Password updated successfully
                     accounts:
-                      - ABHANumber: 91-7561-4088-XXXX
+                      - ABHANumber: <ABHA_NUMBER>
                 Re-KYC- Positive Flow:
                   value:
                     txnId: bb548986-e96d-4b48-be1b-1e36741e867d
                     authResult: success
                     message: Re-kyc done successfully
                     accounts:
-                      - ABHANumber: 91-4173-3253-XXXX
+                      - ABHANumber: <ABHA_NUMBER>
                 Update Mobile- Positive Flow:
                   value:
                     txnId: 01bb3a4c-4588-4734-aff4-23d3978e50be
                     authResult: success
                     message: Mobile Number linked successfully
                     accounts:
-                      - ABHANumber: 91-4173-3253-XXXX
+                      - ABHANumber: <ABHA_NUMBER>
                 CHILD ABHA KYC- Positive Flow:
                   value:
                     txnId: bb548986-e96d-4b48-be1b-1e36741e867d
                     authResult: success
                     message: KYC verification has been done
                     accounts:
-                      - ABHANumber: 91-4173-3253-XXXX
+                      - ABHANumber: <ABHA_NUMBER>
                       - mobileVerified: "true"
                 Update Email- Positive Flow:
                   value:
@@ -4072,13 +4072,13 @@ paths:
                     authResult: success
                     message: Email linked successfully
                     accounts:
-                      - ABHANumber: 91-4173-3253-XXXX
+                      - ABHANumber: <ABHA_NUMBER>
                 PASSWORD_UPDATE-OLD PASSWORD- Positive Flow:
                   value:
                     authResult: success
                     message: Password updated successfully
                     accounts:
-                      - ABHANumber: 91-4173-3253-XXXX
+                      - ABHANumber: <ABHA_NUMBER>
         "400":
           description: 'The 400 response code indicates a bad request. In this context, it refers to various errors encountered during the OTP (One-Time Password) generation or validation process.<br><br> <strong>Types of OTP Response Errors:</strong> <ol> <li><strong>Update Email - Invalid Scope</strong>: The scope of the OTP response is invalid.</li> </ol> <ol start="2"> <li><strong>Update Email- Invalid Auth Methods</strong>: The authentication method provided is invalid.</li> </ol> <ol start="3"> <li><strong>Update Email -Invalid X-token</strong>: The X-token provided is invalid or expired.</li> </ol> <ol start="4"> <li><strong>Update Email -Invalid OTP Value</strong>: The OTP value provided is invalid.</li> </ol> <ol start="5"> <li><strong>Update Mobile -Invalid Transaction Id</strong>: The transaction ID provided is invalid.</li> </ol> <ol start="6"> <li><strong>Update Mobile - Invalid Scope</strong>: The scope of the OTP response is invalid.</li> </ol> <ol start="7"> <li><strong>Update Mobile - Invalid Auth Methods:</strong>: The authentication method provided is invalid..</li> </ol> <ol start="8"> <li><strong>Update Mobile -  Invalid X-token:</strong>: The X-token provided is invalid or expired.</li> </ol> <ol start="9"> <li><strong>Update Mobile-Invalid OTP Value</strong>: The OTP value provided is invalid.</li> </ol> <ol start="10"> <li><strong>Re-KYC- Invalid Transaction Id</strong>: The transaction ID provided is invalid.</li> </ol> <ol start="11"> <li><strong>Re-KYC  - Invalid Transaction Id</strong>: The transaction ID provided is invalid.</li> </ol>  <ol start="12"> <li><strong>Re-KYC- Invalid Auth Method</strong>:  The authentication method provided is invalid..</li> </ol> <ol start="13"> <li><strong>Re-KYC - Invalid X-token</strong>: The X-token provided is invalid or expired.</li> </ol> '
           content:
@@ -4468,7 +4468,7 @@ paths:
                 properties:
                   ABHANumber:
                     type: string
-                    example: 91-7561-4088-XXXX
+                    example: <ABHA_NUMBER>
                   preferredAbhaAddress:
                     type: string
                     example: <ABHA_ADDRESS>
@@ -4480,22 +4480,22 @@ paths:
                     example: Username
                   middleName:
                     type: string
-                    example: Kailas
+                    example: <NAME>
                   lastName:
                     type: string
-                    example: Shelke
+                    example: <NAME>
                   name:
                     type: string
-                    example: Username Kailas Shelke
+                    example: <NAME>
                   yearOfBirth:
                     type: string
-                    example: "1999"
+                    example: <DOB>
                   dayOfBirth:
                     type: string
-                    example: "26"
+                    example: <DOB>
                   monthOfBirth:
                     type: string
-                    example: "06"
+                    example: <DOB>
                   gender:
                     type: string
                     example: M
@@ -4513,10 +4513,10 @@ paths:
                     example: "478"
                   pincode:
                     type: string
-                    example: "424201"
+                    example: <PINCODE>
                   address:
                     type: string
-                    example: LOHARA, AT POST LOHARA TQ PACHORA DIST JALGAON, Lohara, Pachora, Jalgaon, Maharashtra
+                    example: <ADDRESS>
                   kycPhoto:
                     type: string
                     example: <BASE64_PHOTO>
@@ -4525,10 +4525,10 @@ paths:
                     example: MAHARASHTRA
                   districtName:
                     type: string
-                    example: JALGAON
+                    example: <ADDRESS>
                   subdistrictName:
                     type: string
-                    example: JALGAON
+                    example: <ADDRESS>
                   authMethods:
                     type: array
                     items:
@@ -4556,19 +4556,19 @@ paths:
                     properties:
                       name:
                         type: string
-                        example: कैलास कैलास शेळके
+                        example: <NAME>
                       stateName:
                         type: string
                         example: महाराष्ट्र
                       districtName:
                         type: string
-                        example: जळगाव
+                        example: <ADDRESS>
                       villageName:
                         type: string
-                        example: लोहारा
+                        example: <ADDRESS>
                       townName:
                         type: string
-                        example: मु पोस्ट लोहारा ता पाचोरा जि. जळगाव
+                        example: <ADDRESS>
                       gender:
                         type: string
                         example: पुरुष
@@ -4599,27 +4599,27 @@ paths:
               examples:
                 Profile Management-Positive flow:
                   value:
-                    ABHANumber: 91-7561-4088-XXXX
+                    ABHANumber: <ABHA_NUMBER>
                     preferredAbhaAddress: <ABHA_ADDRESS>
                     mobile: "******0903"
                     firstName: Username
-                    middleName: Kailas
-                    lastName: Shelke
-                    name: Username Kailas Shelke
-                    yearOfBirth: "1999"
-                    dayOfBirth: "26"
-                    monthOfBirth: "06"
+                    middleName: <NAME>
+                    lastName: <NAME>
+                    name: <NAME>
+                    yearOfBirth: <DOB>
+                    dayOfBirth: <DOB>
+                    monthOfBirth: <DOB>
                     gender: M
                     profilePhoto: <BASE64_PHOTO>
                     status: ACTIVE
                     stateCode: "27"
                     districtCode: "478"
-                    pincode: "424201"
-                    address: LOHARA, AT POST LOHARA TQ PACHORA DIST JALGAON, Lohara, Pachora, Jalgaon, Maharashtra
+                    pincode: <PINCODE>
+                    address: <ADDRESS>
                     kycPhoto: <BASE64_PHOTO>
                     stateName: MAHARASHTRA
-                    districtName: JALGAON
-                    subdistrictName: JALGAON
+                    districtName: <ADDRESS>
+                    subdistrictName: <ADDRESS>
                     authMethods:
                       - MOBILE_OTP
                       - AADHAAR_BIO
@@ -4631,11 +4631,11 @@ paths:
                     verificationStatus: VERIFIED
                     verificationType: AADHAAR
                     localizedDetails:
-                      name: कैलास कैलास शेळके
+                      name: <NAME>
                       stateName: महाराष्ट्र
-                      districtName: जळगाव
-                      villageName: लोहारा
-                      townName: मु पोस्ट लोहारा ता पाचोरा जि. जळगाव
+                      districtName: <ADDRESS>
+                      villageName: <ADDRESS>
+                      townName: <ADDRESS>
                       gender: पुरुष
                       localizedLabels:
                         name: नाव
@@ -4738,13 +4738,13 @@ paths:
               properties:
                 abhaNumber:
                   type: string
-                  example: 91-5553-4126-XXXX
+                  example: <ABHA_NUMBER>
                 dob:
                   type: string
-                  example: "21-2-2021"
+                  example: <DOB>
                 name:
                   type: string
-                  example: Mohite
+                  example: <NAME>
                 gender:
                   type: string
                   example: F
@@ -4759,16 +4759,16 @@ paths:
                   profilePhoto: "{{profile photo string}}"
               Update CHILD ABHA Profile:
                 value:
-                  abhaNumber: 91-5553-4126-XXXX
-                  dob: "21-2-2021"
-                  name: Mohite
+                  abhaNumber: <ABHA_NUMBER>
+                  dob: <DOB>
+                  name: <NAME>
                   gender: F
         description: |-
           <b>Below is the Request Body description:</b><br><div> <table> 
           <ol> <li> <p><strong>Update ABHA</strong> (required):</p> <ul> <li><strong>Description:</strong>  This API endpoint is used to update a ABHA number using their demographic details and linking their health records across multiple systems:</strong> <ul>
           <br><strong>Note:</strong>  Child ABHA can also be updated using this API 
           <br><br>
-          </li> <li><strong>abhaNumber:</strong>   The ABHA number of the child<ul> <li><strong>Type:</strong> String</li> <li><strong>Example:</strong> <code>91-5553-4126-XXXX</code></li> </ul> </li> <li><strong>dateOfBirth:(required)</strong> The month of the user’s birth. <ul> <li><strong>Type:</strong> String</li> <li><strong>Example:</strong> <code>21-2-2020</code></li> </ul> </li> <li><strong>Name:(required)</strong> The user’s  name. <ul> <li><strong>Type:</strong> String</li> <li><strong>Example:</strong> <code>Mohite</code></li> </ul> </li> <li><strong>gender:(required)</strong> The user’s gender. <ul> <li><strong>Type:</strong> String</li> <li><strong>Example:</strong> <code>M</code></li> </ul> </li> 
+          </li> <li><strong>abhaNumber:</strong>   The ABHA number of the child<ul> <li><strong>Type:</strong> String</li> <li><strong>Example:</strong> <code><ABHA_NUMBER></code></li> </ul> </li> <li><strong>dateOfBirth:(required)</strong> The month of the user’s birth. <ul> <li><strong>Type:</strong> String</li> <li><strong>Example:</strong> <code>&lt;DOB&gt;</code></li> </ul> </li> <li><strong>Name:(required)</strong> The user’s  name. <ul> <li><strong>Type:</strong> String</li> <li><strong>Example:</strong> <code>&lt;NAME&gt;</code></li> </ul> </li> <li><strong>gender:(required)</strong> The user’s gender. <ul> <li><strong>Type:</strong> String</li> <li><strong>Example:</strong> <code>M</code></li> </ul> </li> 
           </li> </ol>
       security:
         - bearerAuth: []
@@ -4809,7 +4809,7 @@ paths:
                 properties:
                   ABHANumber:
                     type: string
-                    example: 91-5553-4126-XXXX
+                    example: <ABHA_NUMBER>
                   preferredAbhaAddress:
                     type: string
                     example: <ABHA_ADDRESS>
@@ -4818,22 +4818,22 @@ paths:
                     example: "******0903"
                   firstName:
                     type: string
-                    example: Mohite
+                    example: <NAME>
                   middleName:
                     type: string
-                    example: m
+                    example: <NAME>
                   lastName:
                     type: string
-                    example: kale
+                    example: <NAME>
                   yearOfBirth:
                     type: integer
-                    example: 2021
+                    example: <DOB>
                   monthOfBirth:
                     type: integer
-                    example: 2
+                    example: <DOB>
                   dayOfBirth:
                     type: integer
-                    example: 26
+                    example: <DOB>
                   gender:
                     type: string
                     example: F
@@ -4851,10 +4851,10 @@ paths:
                     example: Maharashtra
                   districtName:
                     type: string
-                    example: PUNE
+                    example: <ADDRESS>
                   subdistrictName:
                     type: string
-                    example: PUNE
+                    example: <ADDRESS>
                   authMethods:
                     type: array
                     items:
@@ -4880,22 +4880,22 @@ paths:
               examples:
                 CHILD ABHA-Child Details:
                   value:
-                    ABHANumber: 91-5553-4126-XXXX
+                    ABHANumber: <ABHA_NUMBER>
                     preferredAbhaAddress: <ABHA_ADDRESS>
                     mobile: "******0903"
-                    firstName: Mohite
-                    middleName: m
-                    lastName: kale
-                    yearOfBirth: 2021
-                    monthOfBirth: 2
-                    dayOfBirth: 26
+                    firstName: <NAME>
+                    middleName: <NAME>
+                    lastName: <NAME>
+                    yearOfBirth: <DOB>
+                    monthOfBirth: <DOB>
+                    dayOfBirth: <DOB>
                     gender: F
                     status: ACTIVE
                     stateCode: 27
                     districtCode: 290
                     stateName: Maharashtra
-                    districtName: PUNE
-                    subdistrictName: PUNE
+                    districtName: <ADDRESS>
+                    subdistrictName: <ADDRESS>
                     authMethods:
                       - MOBILE_OTP
                     tags: {}
@@ -5238,7 +5238,7 @@ paths:
                     example: COVIN
                   healthId:
                     type: string
-                    example: 91-5150-4867-XXXX
+                    example: <ABHA_NUMBER>
                   status:
                     type: string
                     example: Benefit record has been linked successfully
@@ -5246,32 +5246,32 @@ paths:
                 LINK or DELINK via ABHA number-with x-token:
                   value:
                     benefitName: Benefit Name
-                    healthId: 91-5713-4487-XXXX
+                    healthId: <ABHA_NUMBER>
                     status: Benefit record has been linked successfully
                 LINK or DELINK via ABHA number-with abha-number:
                   value:
                     benefitName: COVIN
-                    healthId: 91-5150-4867-XXXX
+                    healthId: <ABHA_NUMBER>
                     status: Benefit record has been linked successfully
                 LINK or DELINK via xmluid-with x-token:
                   value:
                     benefitName: COVIN
-                    healthId: 91-5713-4487-XXXX
+                    healthId: <ABHA_NUMBER>
                     status: Benefit record has been linked successfully
                 LINK or DELINK via xmluid-with abha-number:
                   value:
                     benefitName: COVIN
-                    healthId: 91-5150-4867-XXXX
+                    healthId: <ABHA_NUMBER>
                     status: Benefit record has been linked successfully
                 LINK or DELINK via X-token-with x-token:
                   value:
                     benefitName: COVIN
-                    healthId: 91-5713-4487-XXXX
+                    healthId: <ABHA_NUMBER>
                     status: Benefit record has been linked successfully
                 LINK or DELINK via X-token-with abha-number:
                   value:
                     benefitName: COVIN
-                    healthId: 91-5150-4867-XXXX
+                    healthId: <ABHA_NUMBER>
                     status: Benefit record has been linked successfully
         "400":
           description: <strong>Bad Request</strong><br> Indicates that the server cannot process the request due to a client error. The server returns a 400 status code when the request is malformed, such as missing required parameters or having invalid syntax
@@ -5577,7 +5577,7 @@ paths:
                 properties:
                   healthIdNumber:
                     type: string
-                    example: 91-6167-8028-XXXX
+                    example: <ABHA_NUMBER>
                   abhaAddress:
                     type: string
                     example: <ABHA_ADDRESS>
@@ -5602,14 +5602,14 @@ paths:
                     example: null
                   fullName:
                     type: string
-                    example: Priya
+                    example: <NAME>
                   mobile:
                     type: string
                     example: 9340******
               examples:
                 ABHA search:
                   value:
-                    healthIdNumber: 91-6167-8028-XXXX
+                    healthIdNumber: <ABHA_NUMBER>
                     abhaAddress: <ABHA_ADDRESS>
                     authMethods:
                       - MOBILE_OTP
@@ -5617,7 +5617,7 @@ paths:
                     blockedAuthMethods: []
                     status: ACTIVE
                     message: null
-                    fullName: Priya
+                    fullName: <NAME>
                     mobile: 9340******
         "400":
           description: The 400 response code signifies a bad request. In this context, it means that no user was found for the provided ABHA address.
@@ -6052,13 +6052,13 @@ paths:
                           example: <ABHA_ADDRESS>
                         fullName:
                           type: string
-                          example: Deepak Kumar Singh
+                          example: <NAME>
                         profilePhoto:
                           type: string
                           example: <BASE64_PHOTO>
                         abhaNumber:
                           type: string
-                          example: 91-6167-8028-XXXX
+                          example: <ABHA_NUMBER>
                         status:
                           type: string
                           example: ACTIVE
@@ -6087,9 +6087,9 @@ paths:
                     authResult: success
                     users:
                       - abhaAddress: <ABHA_ADDRESS>
-                        fullName: Deepak Kumar Singh
+                        fullName: <NAME>
                         profilePhoto: <BASE64_PHOTO>
-                        abhaNumber: 91-6167-8028-XXXX
+                        abhaNumber: <ABHA_NUMBER>
                         status: ACTIVE
                         kycStatus: VERIFIED
                     tokens:
@@ -6103,9 +6103,9 @@ paths:
                     authResult: success
                     users:
                       - abhaAddress: <ABHA_ADDRESS>
-                        fullName: Deepak Kumar Singh
+                        fullName: <NAME>
                         profilePhoto: <BASE64_PHOTO>
-                        abhaNumber: 91-6167-8028-XXXX
+                        abhaNumber: <ABHA_NUMBER>
                         status: ACTIVE
                         kycStatus: VERIFIED
                     tokens:
@@ -6127,9 +6127,9 @@ paths:
                     authResult: success
                     users:
                       - abhaAddress: <ABHA_ADDRESS>
-                        fullName: Deepak Kumar Singh
+                        fullName: <NAME>
                         profilePhoto: <BASE64_PHOTO>
-                        abhaNumber: 91-6167-8028-XXXX
+                        abhaNumber: <ABHA_NUMBER>
                         status: ACTIVE
                         kycStatus: VERIFIED
                     tokens:
@@ -6145,9 +6145,9 @@ paths:
                     authResult: success
                     users:
                       - abhaAddress: <ABHA_ADDRESS>
-                        fullName: Deepak Kumar Singh
+                        fullName: <NAME>
                         profilePhoto: <BASE64_PHOTO>
-                        abhaNumber: 91-6167-8028-XXXX
+                        abhaNumber: <ABHA_NUMBER>
                         status: ACTIVE
                         kycStatus: VERIFIED
                     tokens:
@@ -6163,9 +6163,9 @@ paths:
                     authResult: success
                     users:
                       - abhaAddress: <ABHA_ADDRESS>
-                        fullName: Deepak Kumar Singh
+                        fullName: <NAME>
                         profilePhoto: <BASE64_PHOTO>
-                        abhaNumber: 91-6167-8028-XXXX
+                        abhaNumber: <ABHA_NUMBER>
                         status: ACTIVE
                         kycStatus: VERIFIED
                     tokens:
@@ -6285,31 +6285,31 @@ paths:
                     example: <ABHA_ADDRESS>
                   fullName:
                     type: string
-                    example: Hemant Prakash Bodhai
+                    example: <NAME>
                   profilePhoto:
                     type: string
                     example: <BASE64_PHOTO>
                   firstName:
                     type: string
-                    example: Hemant
+                    example: <NAME>
                   middleName:
                     type: string
-                    example: Prakash
+                    example: <NAME>
                   lastName:
                     type: string
-                    example: Bodhai
+                    example: <NAME>
                   dayOfBirth:
                     type: string
-                    example: "14"
+                    example: <DOB>
                   monthOfBirth:
                     type: string
-                    example: "11"
+                    example: <DOB>
                   yearOfBirth:
                     type: string
-                    example: "1995"
+                    example: <DOB>
                   dateOfBirth:
                     type: string
-                    example: "14-11-1995"
+                    example: <DOB>
                   gender:
                     type: string
                     example: M
@@ -6321,10 +6321,10 @@ paths:
                     example: 89995*****
                   abhaNumber:
                     type: string
-                    example: 91-3837-7464-XXXX
+                    example: <ABHA_NUMBER>
                   address:
                     type: string
-                    example: house no-XXXX, main road, Nashik, Nashik, Maharashtra
+                    example: <ADDRESS>
                   stateName:
                     type: string
                     example: MAHARASHTRA
@@ -6367,22 +6367,22 @@ paths:
                   summary: Get Profile
                   value:
                     abhaAddress: <ABHA_ADDRESS>
-                    fullName: Hemant Prakash Bodhai
+                    fullName: <NAME>
                     profilePhoto: <BASE64_PHOTO>
-                    firstName: Hemant
-                    middleName: Prakash
-                    lastName: Bodhai
-                    dayOfBirth: "14"
-                    monthOfBirth: "11"
-                    yearOfBirth: "1995"
-                    dateOfBirth: "14-11-1995"
+                    firstName: <NAME>
+                    middleName: <NAME>
+                    lastName: <NAME>
+                    dayOfBirth: <DOB>
+                    monthOfBirth: <DOB>
+                    yearOfBirth: <DOB>
+                    dateOfBirth: <DOB>
                     gender: M
                     email: <EMAIL>
                     mobile: <MOBILE_NUMBER>
                     abhaNumber: <ABHA_NUMBER>
-                    address: house no-620, main road, Nashik, Nashik, Maharashtra
+                    address: <ADDRESS>
                     stateName: MAHARASHTRA
-                    pinCode: "422003"
+                    pinCode: <PINCODE>
                     stateCode: "27"
                     districtCode: "487"
                     authMethods:
@@ -6658,7 +6658,7 @@ paths:
                 properties:
                   abhaNumber:
                     type: string
-                    example: 91-7722-7553-XXXX
+                    example: <ABHA_NUMBER>
                   programme:
                     type: array
                     items:
@@ -6670,7 +6670,7 @@ paths:
               examples:
                 ABHA linked to Benefit Programs:
                   value:
-                    abhaNumber: 91-7722-7553-XXXX
+                    abhaNumber: <ABHA_NUMBER>
                     programme:
                       - benefitName: Poshan Abhiyaan
                       - benefitName: Test Benefit Program

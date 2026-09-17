@@ -22,15 +22,15 @@ info:
 x-abdm-sources:
   - file: catalogue/openapi/.raw/nha-2026-09-16/M4/M4-HFR.json
     role: upstream
-    hash: sha256:69729e97853c7ec991903f80807079305c978e24892e31f1fdaa76c759a5a075
+    hash: sha256:25291734dd3782857bc3e012c7fa1881a069b49fdb3701e1657c514f43b590f5
     fetched: "2026-09-16"
   - file: catalogue/openapi/.raw/nha-2026-09-16/M4/M4-HPID.json
     role: upstream
-    hash: sha256:a439c18663297b665f636ed8ddae63dbf9cd3b67152c4e542522c26acb23574d
+    hash: sha256:7e2eb837caa110f883dd56fb25ed606c942ac32324b9666d9a728b9a22582263
     fetched: "2026-09-16"
   - file: catalogue/openapi/.raw/nha-2026-09-16/M4/M4-HPR.json
     role: upstream
-    hash: sha256:e4cf07d50cf6798dd7cf948e92d73b1ebda9eb08e4ef50de142dc932ee39eb01
+    hash: sha256:fe3e5b211cf9f1c0cf3af9830de9f3c28c6fbc52294bdc3bf24b76cfacf92cd0
     fetched: "2026-09-16"
 servers:
   - url: https://apihspsbx.abdm.gov.in/v4/int
@@ -159,13 +159,13 @@ paths:
                 gender: M
                 name: Ayushman Bharat Mission
                 email: null
-                pincode: "201005"
-                birthdate: "01-11-1990"
-                careOf: RAJPAL SHARMA
-                house: PLOT NO 84 B,D-201,EURO APARTMENT
-                street: SECTOR 5 RAJENDER NAGAR
+                pincode: <PINCODE>
+                birthdate: <DOB>
+                careOf: <NAME>
+                house: <ADDRESS>
+                street: <ADDRESS>
                 landmark: null
-                locality: NEAR AGRASEN BHAWAN
+                locality: <ADDRESS>
                 villageTownCity: Sahibabad
                 subDist: null
                 district: Ghaziabad
@@ -244,18 +244,18 @@ paths:
                 txnId: 79dbf65d-affa-4249-8935-3d01676d8b82
                 name: Ayushman Bharat Mission
                 gender: M
-                yearOfBirth: "1990"
-                monthOfBirth: "11"
-                dayOfBirth: "1"
+                yearOfBirth: <DOB>
+                monthOfBirth: <DOB>
+                dayOfBirth: <DOB>
                 firstName: Ayushman
                 middleName: ""
                 lastName: Mission
                 stateCode: "9"
                 districtCode: "145"
                 stateName: Uttar Pradesh
-                districtName: Ghaziabad
+                districtName: <ADDRESS>
                 address: 9th Floor, Tower-l, Jeevan Bharati Building, Connaught Place, New Delhi - 110001
-                pincode: "201005"
+                pincode: <PINCODE>
                 profilePhoto: <BASE64 ENCODED STRING>
                 mobile: null
                 hprId: <EMAIL>
@@ -404,7 +404,7 @@ paths:
               $ref: "#/components/schemas/AddressFilterRequest"
             example:
               name: Jethana
-              address: amt
+              address: <ADDRESS>
               district: "511"
               subDistrict: "5271"
               village: ""
@@ -438,7 +438,7 @@ paths:
                   cea_id: null
                   hospital_speciality_type: null
                   hospital_link_to_colg: null
-                  pincode: "518301"
+                  pincode: <PINCODE>
                   type_of_service_other: null
                   fac_alt_contact_per_landline_no: null
                   facility_type: "2"
@@ -649,7 +649,7 @@ paths:
                   villageCityTownLGDCode: ""
                   addressLine1: townhall, Pune
                   addressLine2: Pune
-                  pincode: "382350"
+                  pincode: <PINCODE>
                   latitude: "23.068570"
                   longitude: "23.068570"
                 facilityContactInformation:
@@ -1017,14 +1017,14 @@ paths:
                     facilityType: Hospital
                     stateName: Bihar
                     stateLGDCode: "10"
-                    districtName: Patna
+                    districtName: <ADDRESS>
                     districtLGDCode: "212"
-                    subDistrictName: Patna Rural
+                    subDistrictName: <ADDRESS>
                     subDistrictLGDCode: "1400"
                     villageCityTownName: null
                     villageCityTownLGDCode: null
-                    address: "Behind P ans M Mall Patliputra Industrial Area, "
-                    pincode: "800010"
+                    address: <ADDRESS>
+                    pincode: <PINCODE>
                     latitude: "25.635802000000098"
                     longitude: "85.10391099999993"
                     facilityId: ""
@@ -1323,7 +1323,7 @@ paths:
                   name: Andhra Pradesh
                   districts:
                     - code: "745"
-                      name: Alluri Sitharama Raju
+                      name: <NAME>
                     - code: "744"
                       name: Anakapalli
                     - code: "502"
@@ -1466,7 +1466,7 @@ paths:
             example:
               idType: ""
               domainName: ""
-              hprId: 71-3002-1245-XXXX
+              hprId: <HPR_ID>
               password: XXXX@992
         required: true
       responses:
@@ -1561,7 +1561,7 @@ paths:
               idType: ""
               domainName: ""
               authMethod: AADHAAR_OTP
-              hprId: 71-2665-5777-XXXX
+              hprId: <HPR_ID>
         required: true
       responses:
         "200":
@@ -1761,7 +1761,7 @@ paths:
               $ref: "#/components/schemas/EmailOTPVerificationRequestDTO"
             example:
               hpr_token: <JWT TOKEN>
-              hpr_id: 71-2665-5777-XXXX
+              hpr_id: <HPR_ID>
               officialEmail: <ABHA_ADDRESS>.com
               emailOtp: 515999
         required: true
@@ -2272,9 +2272,9 @@ paths:
                 middleName: Bharat
                 lastName: Mission
                 name: Ayushman Bharat Mission
-                yearOfBirth: "1989"
-                dayOfBirth: "14"
-                monthOfBirth: "5"
+                yearOfBirth: <DOB>
+                dayOfBirth: <DOB>
+                monthOfBirth: <DOB>
                 gender: M
                 email: <ABHA_ADDRESS>.com
                 profilePhoto: <BASE64 ENCODED STRING>
@@ -2284,14 +2284,14 @@ paths:
                 villageCode: null
                 townCode: null
                 wardCode: null
-                pincode: "411036"
+                pincode: <PINCODE>
                 address: 9th Floor, Tower-l, Jeevan Bharati Building, Connaught Place, New Delhi - 110001
                 kycPhoto: <BASE64 ENCODED STRING>
                 stateName: MAHARASHTRA
-                districtName: PUNE
+                districtName: <ADDRESS>
                 subdistrictName: null
                 villageName: null
-                townName: Pune City
+                townName: <ADDRESS>
                 wardName: null
                 authMethods:
                   - MOBILE_OTP
@@ -2717,7 +2717,7 @@ paths:
                   motherName: ""
                   spouseName: ""
                   gender: M
-                  dateOfBirth: "1991-24-04"
+                  dateOfBirth: <DOB>
                   placeOfBirthState: "68"
                   district: ""
                   subDistrict: ""
@@ -2854,7 +2854,7 @@ paths:
                   motherName: ""
                   spouseName: ""
                   gender: M
-                  dateOfBirth: 19XX-24-04
+                  dateOfBirth: <DOB>
                   placeOfBirthState: "68"
                   district: ""
                   subDistrict: ""
@@ -2970,7 +2970,7 @@ paths:
             schema:
               $ref: "#/components/schemas/FetchRequestDTO"
             example:
-              hprid: 71-7061-5874-XXXX
+              hprid: <HPR_ID>
         required: true
       responses:
         "200":
@@ -3072,7 +3072,7 @@ paths:
               $ref: "#/components/schemas/FetchPracticionerRequestDTO"
             example:
               practitioner:
-                id: 71-5223-5385-XXXX
+                id: <HPR_ID>
                 name: ""
                 contactNumber: 976243XXXX
                 state: UTTAR PRADESH

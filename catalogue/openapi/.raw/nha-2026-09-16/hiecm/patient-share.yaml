@@ -148,7 +148,7 @@ paths:
                         name:
                           type: string
                           nullable: false
-                          example: Abdul Kalam
+                          example: <NAME>
                           description: >-
                             The name of the patient. Allows alpha numeric character and special characters like ^[a-zA-Z0-9.-_,]+(([',. -][a-zA-Z0-9. ])?[a-zA-Z0-9. ]*)*$
                         gender:
@@ -167,14 +167,14 @@ paths:
                           type: string
                           format: number
                           nullable: true
-                          example: '1'
+                          example: '<DOB>'
                           description: >-
                             The day of birth of the patient. Only allows numeric values between 1 abd 31 and ^(?!\\s*$)(0?[1-9]|[12][0-9]|3[01])$
                         monthOfBirth:
                           type: string
                           format: number
                           nullable: true
-                          example: '8'
+                          example: '<DOB>'
                           description: >-
                             The month of birth of the patient. Only allows numeric values between 1 abd 12 and ^(?!\\s*$)(0?[1-9]|[1][0-2])$
                         yearOfBirth:
@@ -208,7 +208,7 @@ paths:
                             pincode:
                               type: string
                               nullable: false
-                              example: '641050'
+                              example: '<PINCODE>'
                               description: Should be 5 digits and only contain numbers
                         phoneNumber:
                           type: string
@@ -804,7 +804,7 @@ paths:
                         name:
                           type: string
                           nullable: false
-                          example: Abdul Kalam
+                          example: <NAME>
                           description: >-
                             The name of the patient. Allows alpha numeric character and special characters like ^[a-zA-Z0-9.-_,]+(([',. -][a-zA-Z0-9. ])?[a-zA-Z0-9. ]*)*$
                         gender:
@@ -823,14 +823,14 @@ paths:
                           type: string
                           format: number
                           nullable: true
-                          example: '1'
+                          example: '<DOB>'
                           description: >-
                             The day of birth of the patient. Only allows numeric values between 1 abd 31 and ^(?!\\s*$)(0?[1-9]|[12][0-9]|3[01])$
                         monthOfBirth:
                           type: string
                           format: number
                           nullable: true
-                          example: '8'
+                          example: '<DOB>'
                           description: >-
                             The month of birth of the patient. Only allows numeric values between 1 abd 12 and ^(?!\\s*$)(0?[1-9]|[1][0-2])$
                         yearOfBirth:
@@ -864,7 +864,7 @@ paths:
                             pincode:
                               type: string
                               nullable: false
-                              example: '641050'
+                              example: '<PINCODE>'
                               description: Should be 5 digits and only contain numbers
                         phoneNumber:
                           type: string

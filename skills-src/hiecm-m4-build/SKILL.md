@@ -166,7 +166,7 @@ curl --request POST \
   --header 'Content-Type: application/json' \
   --data '{
   "name": "Jethana",
-  "address": "amt",
+  "address": "<ADDRESS>",
   "district": "511",
   "subDistrict": "5271",
   "village": "",
@@ -196,7 +196,7 @@ curl --request POST \
       "villageCityTownLGDCode": "",
       "addressLine1": "townhall, Pune",
       "addressLine2": "Pune",
-      "pincode": "382350",
+      "pincode": "<PINCODE>",
       "latitude": "23.068570",
       "longitude": "23.068570"
     },
@@ -622,14 +622,14 @@ A 200 whose body matches:
       "facilityType": "Hospital",
       "stateName": "Bihar",
       "stateLGDCode": "10",
-      "districtName": "Patna",
+      "districtName": "<ADDRESS>",
       "districtLGDCode": "212",
-      "subDistrictName": "Patna Rural",
+      "subDistrictName": "<ADDRESS>",
       "subDistrictLGDCode": "1400",
       "villageCityTownName": null,
       "villageCityTownLGDCode": null,
-      "address": "Behind P ans M Mall Patliputra Industrial Area, ",
-      "pincode": "800010",
+      "address": "<ADDRESS>",
+      "pincode": "<PINCODE>",
       "latitude": "25.635802000000098",
       "longitude": "85.10391099999993",
       "facilityId": "",
@@ -704,7 +704,7 @@ curl --request POST \
   --data '{
   "idType": "",
   "domainName": "",
-  "hprId": "71-3002-1245-XXXX",
+  "hprId": "<HPR_ID>",
   "password": "XXXX@992"
 }'
 ```
@@ -741,7 +741,7 @@ curl --request POST \
   "idType": "",
   "domainName": "",
   "authMethod": "AADHAAR_OTP",
-  "hprId": "71-2665-5777-XXXX"
+  "hprId": "<HPR_ID>"
 }'
 ```
 
@@ -834,7 +834,7 @@ curl --request POST \
   --header 'Content-Type: application/json' \
   --data '{
   "hpr_token": "<JWT TOKEN>",
-  "hpr_id": "71-2665-5777-XXXX",
+  "hpr_id": "<HPR_ID>",
   "officialEmail": "<ABHA_ADDRESS>.com",
   "emailOtp": 515999
 }'
@@ -1332,7 +1332,7 @@ curl --request POST \
       "motherName": "",
       "spouseName": "",
       "gender": "M",
-      "dateOfBirth": "1991-24-04",
+      "dateOfBirth": "<DOB>",
       "placeOfBirthState": "68",
       "district": "",
       "subDistrict": "",
@@ -1466,7 +1466,7 @@ curl --request POST \
       "motherName": "",
       "spouseName": "",
       "gender": "M",
-      "dateOfBirth": "19XX-24-04",
+      "dateOfBirth": "<DOB>",
       "placeOfBirthState": "68",
       "district": "",
       "subDistrict": "",
@@ -1579,7 +1579,7 @@ curl --request POST \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'Content-Type: application/json' \
   --data '{
-  "hprid": "71-7061-5874-XXXX"
+  "hprid": "<HPR_ID>"
 }'
 ```
 
@@ -1612,7 +1612,7 @@ curl --request POST \
   --header 'Content-Type: application/json' \
   --data '{
   "practitioner": {
-    "id": "71-5223-5385-XXXX",
+    "id": "<HPR_ID>",
     "name": "",
     "contactNumber": "976243XXXX",
     "state": "UTTAR PRADESH",

@@ -228,7 +228,7 @@ A 200 whose body matches:
 ```json
 {
   "txnId": "23acf181-339d-4771-b532-5c5df4a28d19",
-  "healthIdNumber": "91-7561-4088-XXXX",
+  "healthIdNumber": "<ABHA_NUMBER>",
   "preferredAbhaAddress": "<ABHA_ADDRESS>"
 }
 ```
@@ -408,7 +408,7 @@ A 200 whose body matches:
 ```json
 {
   "txnId": "23acf181-339d-4771-b532-5c5df4a28d19",
-  "healthIdNumber": "91-7561-4088-XXXX",
+  "healthIdNumber": "<ABHA_NUMBER>",
   "preferredAbhaAddress": "<ABHA_ADDRESS>"
 }
 ```
@@ -553,7 +553,7 @@ A 200 whose body matches:
 ```json
 {
   "txnId": "23acf181-339d-4771-b532-5c5df4a28d19",
-  "healthIdNumber": "91-7561-4088-XXXX",
+  "healthIdNumber": "<ABHA_NUMBER>",
   "preferredAbhaAddress": "<ABHA_ADDRESS>"
 }
 ```
@@ -698,7 +698,7 @@ A 200 whose body matches:
 ```json
 {
   "txnId": "23acf181-339d-4771-b532-5c5df4a28d19",
-  "healthIdNumber": "91-7561-4088-XXXX",
+  "healthIdNumber": "<ABHA_NUMBER>",
   "preferredAbhaAddress": "<ABHA_ADDRESS>"
 }
 ```
@@ -758,8 +758,8 @@ curl --request POST \
       "name": "{{Full name}}",
       "mobile": "{{Mobile number}}",
       "profilePhoto": "{{Base64 plain String}}",
-      "pinCode": "110092",
-      "address": "House No.1234 Anand Vihar, Delhi"
+      "pinCode": "<PINCODE>",
+      "address": "<ADDRESS>"
     }
   },
   "consent": {
@@ -786,27 +786,27 @@ A 200 whose body matches:
 
 ```json
 {
-  "ABHANumber": "91-7561-4088-XXXX",
+  "ABHANumber": "<ABHA_NUMBER>",
   "preferredAbhaAddress": "<ABHA_ADDRESS>",
   "mobile": "******0903",
   "firstName": "Username",
-  "middleName": "Kailas",
-  "lastName": "Shelke",
-  "name": "Username Kailas Shelke",
-  "yearOfBirth": "1999",
-  "dayOfBirth": "26",
-  "monthOfBirth": "06",
+  "middleName": "<NAME>",
+  "lastName": "<NAME>",
+  "name": "<NAME>",
+  "yearOfBirth": "<DOB>",
+  "dayOfBirth": "<DOB>",
+  "monthOfBirth": "<DOB>",
   "gender": "M",
   "profilePhoto": "<BASE64_PHOTO>",
   "status": "ACTIVE",
   "stateCode": "27",
   "districtCode": "478",
-  "pincode": "424201",
-  "address": "LOHARA, AT POST LOHARA TQ PACHORA DIST JALGAON, Lohara, Pachora, Jalgaon, Maharashtra",
+  "pincode": "<PINCODE>",
+  "address": "<ADDRESS>",
   "kycPhoto": "<BASE64_PHOTO>",
   "stateName": "MAHARASHTRA",
-  "districtName": "JALGAON",
-  "subdistrictName": "JALGAON",
+  "districtName": "<ADDRESS>",
+  "subdistrictName": "<ADDRESS>",
   "authMethods": [
     "MOBILE_OTP",
     "AADHAAR_BIO",
@@ -819,11 +819,11 @@ A 200 whose body matches:
   "verificationStatus": "VERIFIED",
   "verificationType": "AADHAAR",
   "localizedDetails": {
-    "name": "कैलास कैलास शेळके",
+    "name": "<NAME>",
     "stateName": "महाराष्ट्र",
-    "districtName": "जळगाव",
-    "villageName": "लोहारा",
-    "townName": "मु पोस्ट लोहारा ता पाचोरा जि. जळगाव",
+    "districtName": "<ADDRESS>",
+    "villageName": "<ADDRESS>",
+    "townName": "<ADDRESS>",
     "gender": "पुरुष",
     "localizedLabels": {
       "name": "नाव",
@@ -901,9 +901,9 @@ curl --request PATCH \
   --header 'BENEFIT_NAME: {{Benefit Name}}' \
   --header 'Content-Type: application/json' \
   --data '{
-  "abhaNumber": "91-5553-4126-XXXX",
-  "dob": "21-2-2021",
-  "name": "Mohite",
+  "abhaNumber": "<ABHA_NUMBER>",
+  "dob": "<DOB>",
+  "name": "<NAME>",
   "gender": "F"
 }'
 ```
@@ -967,7 +967,7 @@ A 200 whose body matches:
   "message": "Password updated successfully",
   "accounts": [
     {
-      "ABHANumber": "91-4173-3253-XXXX"
+      "ABHANumber": "<ABHA_NUMBER>"
     }
   ]
 }
@@ -1729,22 +1729,22 @@ A 200 whose body matches:
 ```json
 {
   "abhaAddress": "<ABHA_ADDRESS>",
-  "fullName": "Hemant Prakash Bodhai",
+  "fullName": "<NAME>",
   "profilePhoto": "<BASE64_PHOTO>",
-  "firstName": "Hemant",
-  "middleName": "Prakash",
-  "lastName": "Bodhai",
-  "dayOfBirth": "14",
-  "monthOfBirth": "11",
-  "yearOfBirth": "1995",
-  "dateOfBirth": "14-11-1995",
+  "firstName": "<NAME>",
+  "middleName": "<NAME>",
+  "lastName": "<NAME>",
+  "dayOfBirth": "<DOB>",
+  "monthOfBirth": "<DOB>",
+  "yearOfBirth": "<DOB>",
+  "dateOfBirth": "<DOB>",
   "gender": "M",
   "email": "<EMAIL>",
   "mobile": "<MOBILE_NUMBER>",
   "abhaNumber": "<ABHA_NUMBER>",
-  "address": "house no-620, main road, Nashik, Nashik, Maharashtra",
+  "address": "<ADDRESS>",
   "stateName": "MAHARASHTRA",
-  "pinCode": "422003",
+  "pinCode": "<PINCODE>",
   "stateCode": "27",
   "districtCode": "487",
   "authMethods": [
@@ -1841,22 +1841,22 @@ A 200 whose body matches:
 ```json
 {
   "abhaAddress": "<ABHA_ADDRESS>",
-  "fullName": "Hemant Prakash Bodhai",
+  "fullName": "<NAME>",
   "profilePhoto": "<BASE64_PHOTO>",
-  "firstName": "Hemant",
-  "middleName": "Prakash",
-  "lastName": "Bodhai",
-  "dayOfBirth": "14",
-  "monthOfBirth": "11",
-  "yearOfBirth": "1995",
-  "dateOfBirth": "14-11-1995",
+  "firstName": "<NAME>",
+  "middleName": "<NAME>",
+  "lastName": "<NAME>",
+  "dayOfBirth": "<DOB>",
+  "monthOfBirth": "<DOB>",
+  "yearOfBirth": "<DOB>",
+  "dateOfBirth": "<DOB>",
   "gender": "M",
   "email": "<EMAIL>",
   "mobile": "<MOBILE_NUMBER>",
   "abhaNumber": "<ABHA_NUMBER>",
-  "address": "house no-620, main road, Nashik, Nashik, Maharashtra",
+  "address": "<ADDRESS>",
   "stateName": "MAHARASHTRA",
-  "pinCode": "422003",
+  "pinCode": "<PINCODE>",
   "stateCode": "27",
   "districtCode": "487",
   "authMethods": [
@@ -1953,22 +1953,22 @@ A 200 whose body matches:
 ```json
 {
   "abhaAddress": "<ABHA_ADDRESS>",
-  "fullName": "Hemant Prakash Bodhai",
+  "fullName": "<NAME>",
   "profilePhoto": "<BASE64_PHOTO>",
-  "firstName": "Hemant",
-  "middleName": "Prakash",
-  "lastName": "Bodhai",
-  "dayOfBirth": "14",
-  "monthOfBirth": "11",
-  "yearOfBirth": "1995",
-  "dateOfBirth": "14-11-1995",
+  "firstName": "<NAME>",
+  "middleName": "<NAME>",
+  "lastName": "<NAME>",
+  "dayOfBirth": "<DOB>",
+  "monthOfBirth": "<DOB>",
+  "yearOfBirth": "<DOB>",
+  "dateOfBirth": "<DOB>",
   "gender": "M",
   "email": "<EMAIL>",
   "mobile": "<MOBILE_NUMBER>",
   "abhaNumber": "<ABHA_NUMBER>",
-  "address": "house no-620, main road, Nashik, Nashik, Maharashtra",
+  "address": "<ADDRESS>",
   "stateName": "MAHARASHTRA",
-  "pinCode": "422003",
+  "pinCode": "<PINCODE>",
   "stateCode": "27",
   "districtCode": "487",
   "authMethods": [
@@ -2486,22 +2486,22 @@ A 200 whose body matches:
 
 ```json
 {
-  "ABHANumber": "91-5553-4126-XXXX",
+  "ABHANumber": "<ABHA_NUMBER>",
   "preferredAbhaAddress": "<ABHA_ADDRESS>",
   "mobile": "******0903",
-  "firstName": "Mohite",
-  "middleName": "m",
-  "lastName": "kale",
-  "yearOfBirth": 2021,
-  "monthOfBirth": 2,
-  "dayOfBirth": 26,
+  "firstName": "<NAME>",
+  "middleName": "<NAME>",
+  "lastName": "<NAME>",
+  "yearOfBirth": "<DOB>",
+  "monthOfBirth": "<DOB>",
+  "dayOfBirth": "<DOB>",
   "gender": "F",
   "status": "ACTIVE",
   "stateCode": 27,
   "districtCode": 290,
   "stateName": "Maharashtra",
-  "districtName": "PUNE",
-  "subdistrictName": "PUNE",
+  "districtName": "<ADDRESS>",
+  "subdistrictName": "<ADDRESS>",
   "authMethods": [
     "MOBILE_OTP"
   ],
@@ -2582,27 +2582,27 @@ A 200 whose body matches:
 
 ```json
 {
-  "ABHANumber": "91-7561-4088-XXXX",
+  "ABHANumber": "<ABHA_NUMBER>",
   "preferredAbhaAddress": "<ABHA_ADDRESS>",
   "mobile": "******0903",
   "firstName": "Username",
-  "middleName": "Kailas",
-  "lastName": "Shelke",
-  "name": "Username Kailas Shelke",
-  "yearOfBirth": "1999",
-  "dayOfBirth": "26",
-  "monthOfBirth": "06",
+  "middleName": "<NAME>",
+  "lastName": "<NAME>",
+  "name": "<NAME>",
+  "yearOfBirth": "<DOB>",
+  "dayOfBirth": "<DOB>",
+  "monthOfBirth": "<DOB>",
   "gender": "M",
   "profilePhoto": "<BASE64_PHOTO>",
   "status": "ACTIVE",
   "stateCode": "27",
   "districtCode": "478",
-  "pincode": "424201",
-  "address": "LOHARA, AT POST LOHARA TQ PACHORA DIST JALGAON, Lohara, Pachora, Jalgaon, Maharashtra",
+  "pincode": "<PINCODE>",
+  "address": "<ADDRESS>",
   "kycPhoto": "<BASE64_PHOTO>",
   "stateName": "MAHARASHTRA",
-  "districtName": "JALGAON",
-  "subdistrictName": "JALGAON",
+  "districtName": "<ADDRESS>",
+  "subdistrictName": "<ADDRESS>",
   "authMethods": [
     "MOBILE_OTP",
     "AADHAAR_BIO",
@@ -2615,11 +2615,11 @@ A 200 whose body matches:
   "verificationStatus": "VERIFIED",
   "verificationType": "AADHAAR",
   "localizedDetails": {
-    "name": "कैलास कैलास शेळके",
+    "name": "<NAME>",
     "stateName": "महाराष्ट्र",
-    "districtName": "जळगाव",
-    "villageName": "लोहारा",
-    "townName": "मु पोस्ट लोहारा ता पाचोरा जि. जळगाव",
+    "districtName": "<ADDRESS>",
+    "villageName": "<ADDRESS>",
+    "townName": "<ADDRESS>",
     "gender": "पुरुष",
     "localizedLabels": {
       "name": "नाव",
@@ -2703,27 +2703,27 @@ A 200 whose body matches:
 
 ```json
 {
-  "ABHANumber": "91-7561-4088-XXXX",
+  "ABHANumber": "<ABHA_NUMBER>",
   "preferredAbhaAddress": "<ABHA_ADDRESS>",
   "mobile": "******0903",
   "firstName": "Username",
-  "middleName": "Kailas",
-  "lastName": "Shelke",
-  "name": "Username Kailas Shelke",
-  "yearOfBirth": "1999",
-  "dayOfBirth": "26",
-  "monthOfBirth": "06",
+  "middleName": "<NAME>",
+  "lastName": "<NAME>",
+  "name": "<NAME>",
+  "yearOfBirth": "<DOB>",
+  "dayOfBirth": "<DOB>",
+  "monthOfBirth": "<DOB>",
   "gender": "M",
   "profilePhoto": "<BASE64_PHOTO>",
   "status": "ACTIVE",
   "stateCode": "27",
   "districtCode": "478",
-  "pincode": "424201",
-  "address": "LOHARA, AT POST LOHARA TQ PACHORA DIST JALGAON, Lohara, Pachora, Jalgaon, Maharashtra",
+  "pincode": "<PINCODE>",
+  "address": "<ADDRESS>",
   "kycPhoto": "<BASE64_PHOTO>",
   "stateName": "MAHARASHTRA",
-  "districtName": "JALGAON",
-  "subdistrictName": "JALGAON",
+  "districtName": "<ADDRESS>",
+  "subdistrictName": "<ADDRESS>",
   "authMethods": [
     "MOBILE_OTP",
     "AADHAAR_BIO",
@@ -2736,11 +2736,11 @@ A 200 whose body matches:
   "verificationStatus": "VERIFIED",
   "verificationType": "AADHAAR",
   "localizedDetails": {
-    "name": "कैलास कैलास शेळके",
+    "name": "<NAME>",
     "stateName": "महाराष्ट्र",
-    "districtName": "जळगाव",
-    "villageName": "लोहारा",
-    "townName": "मु पोस्ट लोहारा ता पाचोरा जि. जळगाव",
+    "districtName": "<ADDRESS>",
+    "villageName": "<ADDRESS>",
+    "townName": "<ADDRESS>",
     "gender": "पुरुष",
     "localizedLabels": {
       "name": "नाव",
@@ -2814,7 +2814,7 @@ A 200 whose body matches:
 
 ```json
 {
-  "abhaNumber": "91-7722-7553-XXXX",
+  "abhaNumber": "<ABHA_NUMBER>",
   "programme": [
     {
       "benefitName": "Poshan Abhiyaan"

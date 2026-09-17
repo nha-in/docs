@@ -22,7 +22,7 @@ info:
 x-abdm-sources:
   - file: catalogue/openapi/.raw/nha-2026-09-16/phr/PHR and Locker Swagger.yaml
     role: upstream
-    hash: sha256:f958b8d065943503db85da430fe2a9df91dbf7edf30022ba7e36cbef45247d7e
+    hash: sha256:a7e1b7e0b56b75297623057678cf307f21ecdbfbc9ebdb022dc67df78540f6d5
     fetched: "2026-09-16"
 servers:
   - url: https://abhasbx.abdm.gov.in
@@ -129,18 +129,18 @@ paths:
                     firstName: John
                     middleName: ""
                     lastName: Doe
-                    yearOfBirth: "1997"
+                    yearOfBirth: <DOB>
                     dayOfBirth: ""
-                    monthOfBirth: "01"
+                    monthOfBirth: <DOB>
                     gender: M
                     email: ""
                     profilePhoto: ""
-                    address: pune Maharashtra
+                    address: <ADDRESS>
                     stateName: Maharashtra
                     stateCode: "27"
-                    districtName: Nashik
+                    districtName: <ADDRESS>
                     districtCode: "123"
-                    pinCode: "422003"
+                    pinCode: <PINCODE>
                     abhaAddress: <ABHA_ADDRESS>
                     password: <BASE64_PHOTO>
               Enroll ABHA Address (2):
@@ -151,18 +151,18 @@ paths:
                     firstName: John
                     middleName: ""
                     lastName: Doe
-                    dayOfBirth: "01"
-                    monthOfBirth: "01"
-                    yearOfBirth: "2000"
+                    dayOfBirth: <DOB>
+                    monthOfBirth: <DOB>
+                    yearOfBirth: <DOB>
                     gender: M
                     email: ""
                     mobile: <BASE64_PHOTO>
-                    address: Shivaji Nagar
+                    address: <ADDRESS>
                     stateName: Maharashtra
                     stateCode: "27"
-                    districtName: Nashik
+                    districtName: <ADDRESS>
                     districtCode: "123"
-                    pinCode: "422003"
+                    pinCode: <PINCODE>
                     abhaAddress: <ABHA_ADDRESS>
                     password: <BASE64_PHOTO>
               Enroll ABHA Address (3):
@@ -173,18 +173,18 @@ paths:
                     firstName: John
                     middleName: ""
                     lastName: Doe
-                    dayOfBirth: "12"
-                    monthOfBirth: "12"
-                    yearOfBirth: "1992"
+                    dayOfBirth: <DOB>
+                    monthOfBirth: <DOB>
+                    yearOfBirth: <DOB>
                     gender: M
                     email: ""
                     mobile: <BASE64_PHOTO>
-                    address: House No 620, Main road Adgaon Nashik Mah
+                    address: <ADDRESS>
                     stateName: Maharashtra
                     stateCode: "27"
-                    districtName: Nashik
+                    districtName: <ADDRESS>
                     districtCode: "123"
-                    pinCode: "422003"
+                    pinCode: <PINCODE>
                     abhaAddress: <ABHA_ADDRESS>
                     password: <BASE64_PHOTO>
       responses:
@@ -261,17 +261,17 @@ paths:
                       middleName: ""
                       lastName: Doe
                       fullName: John Doe
-                      dayOfBirth: "14"
-                      monthOfBirth: "11"
-                      yearOfBirth: "1998"
-                      dateOfBirth: "14-11-1978"
+                      dayOfBirth: <DOB>
+                      monthOfBirth: <DOB>
+                      yearOfBirth: <DOB>
+                      dateOfBirth: <DOB>
                       gender: M
                       email: <EMAIL>
                       mobile: "******1234"
-                      address: street number 4, sector 12
+                      address: <ADDRESS>
                       stateName: Maharashtra
-                      districtName: Nashik
-                      pinCode: "123456"
+                      districtName: <ADDRESS>
+                      pinCode: <PINCODE>
                       abhaAddress:
                         - <ABHA_ADDRESS>
                         - <ABHA_ADDRESS>
@@ -292,17 +292,17 @@ paths:
                       middleName: ""
                       lastName: Doe
                       fullName: John Doe
-                      dayOfBirth: "14"
-                      monthOfBirth: "11"
-                      yearOfBirth: "1976"
-                      dateOfBirth: "14-11-1976"
+                      dayOfBirth: <DOB>
+                      monthOfBirth: <DOB>
+                      yearOfBirth: <DOB>
+                      dateOfBirth: <DOB>
                       gender: M
                       email: <EMAIL>
                       mobile: "******0903"
-                      address: House No 620, Main road Adgaon Nashik Mah
+                      address: <ADDRESS>
                       stateName: Maharashtra
-                      districtName: Nashik
-                      pinCode: "422003"
+                      districtName: <ADDRESS>
+                      pinCode: <PINCODE>
                       abhaAddress:
                         - <ABHA_ADDRESS>
                         - <ABHA_ADDRESS>
@@ -323,17 +323,17 @@ paths:
                       middleName: ""
                       lastName: Doe
                       fullName: John Doe
-                      dayOfBirth: "14"
-                      monthOfBirth: "11"
-                      yearOfBirth: "1976"
-                      dateOfBirth: "14-11-1976"
+                      dayOfBirth: <DOB>
+                      monthOfBirth: <DOB>
+                      yearOfBirth: <DOB>
+                      dateOfBirth: <DOB>
                       gender: M
                       email: <EMAIL>
                       mobile: "******0903"
-                      address: House No 620, Main road Adgaon Nashik Mah
+                      address: <ADDRESS>
                       stateName: Maharashtra
-                      districtName: Nashik
-                      pinCode: "422003"
+                      districtName: <ADDRESS>
+                      pinCode: <PINCODE>
                       abhaAddress:
                         - <ABHA_ADDRESS>
                         - <ABHA_ADDRESS>
@@ -440,7 +440,7 @@ paths:
           required: false
           schema:
             type: string
-          example: rakeshkumar199001
+          example: <ABHA_ADDRESS>
         - name: REQUEST-ID
           in: header
           required: true
@@ -747,9 +747,9 @@ paths:
                   txnId: ee10d1c7-e25f-40e0-a3a1-df4c1dda02211
                   firstName: John
                   lastName: Doe
-                  dayOfBirth: "01"
-                  monthOfBirth: "01"
-                  yearOfBirth: "1990"
+                  dayOfBirth: <DOB>
+                  monthOfBirth: <DOB>
+                  yearOfBirth: <DOB>
                   email: ""
               Suggestion API (2):
                 summary: Enrolment via ABHA Number-ABHA OTP › Suggestion API
@@ -757,9 +757,9 @@ paths:
                   txnId: 37d8d312-35a0-41e7-a6e4-1074eb18a5fa
                   firstName: John
                   lastName: Doe
-                  dayOfBirth: "01"
-                  monthOfBirth: "11"
-                  yearOfBirth: "2000"
+                  dayOfBirth: <DOB>
+                  monthOfBirth: <DOB>
+                  yearOfBirth: <DOB>
                   email: ""
               Suggestion API (3):
                 summary: Enrolment via ABHA Number-Aadhaar OTP › Suggestion API
@@ -767,9 +767,9 @@ paths:
                   txnId: 7f45052a-ac63-48de-92db-c5d8d3d0c92a
                   firstName: John
                   lastName: Doe
-                  dayOfBirth: "13"
-                  monthOfBirth: "10"
-                  yearOfBirth: "1992"
+                  dayOfBirth: <DOB>
+                  monthOfBirth: <DOB>
+                  yearOfBirth: <DOB>
                   email: ""
       responses:
         "200":
@@ -790,23 +790,23 @@ paths:
                   value:
                     txnId: 4765527e-898b-4a62-91ec-be041fbf60f8
                     abhaAddressList:
-                      - doe.1411
-                      - johndoe
-                      - john_doe
+                      - <ABHA_ADDRESS>
+                      - <ABHA_ADDRESS>
+                      - <ABHA_ADDRESS>
                 Suggestion API (2):
                   value:
                     txnId: 4795527e-848b-4a62-91ec-be041fbf60f7
                     abhaAddressList:
-                      - bodhai.1411
-                      - hemantbodhai
-                      - hemant_bodhai
+                      - <ABHA_ADDRESS>
+                      - <ABHA_ADDRESS>
+                      - <ABHA_ADDRESS>
                 Suggestion API (3):
                   value:
                     txnId: 4795527e-848b-4a62-91ec-be041fbf60f7
                     abhaAddressList:
-                      - bodhai.1411
-                      - hemantbodhai
-                      - hemant_bodhai
+                      - <ABHA_ADDRESS>
+                      - <ABHA_ADDRESS>
+                      - <ABHA_ADDRESS>
         "400":
           description: Bad Request
           content:
@@ -1123,12 +1123,12 @@ paths:
                     users:
                       - abhaAddress: <ABHA_ADDRESS>
                         fullName: John Doe
-                        abhaNumber: 91-5326-6278-XXXX
+                        abhaNumber: <ABHA_NUMBER>
                         status: ACTIVE
                         kycStatus: VERIFIED
                       - abhaAddress: <ABHA_ADDRESS>
                         fullName: John Doe
-                        abhaNumber: 91-5326-6278-XXXX
+                        abhaNumber: <ABHA_NUMBER>
                         status: ACTIVE
                         kycStatus: PENDING
                     accounts:
@@ -1137,9 +1137,9 @@ paths:
                         middleName: ""
                         lastName: Doe
                         name: John Doe
-                        yearOfBirth: "1997"
-                        dayOfBirth: "11"
-                        monthOfBirth: "11"
+                        yearOfBirth: <DOB>
+                        dayOfBirth: <DOB>
+                        monthOfBirth: <DOB>
                         gender: M
                         email: null
                         profilePhoto: <BASE64_PHOTO>
@@ -1150,14 +1150,14 @@ paths:
                         villageCode: null
                         townCode: null
                         wardCode: null
-                        pincode: "422003"
-                        address: house no-620, main road, Pune, Maharashtra
+                        pincode: <PINCODE>
+                        address: <ADDRESS>
                         kycPhoto: <BASE64_PHOTO>
                         stateName: MAHARASHTRA
-                        districtName: PUNE
-                        subdistrictName: PUNE
+                        districtName: <ADDRESS>
+                        subdistrictName: <ADDRESS>
                         villageName: null
-                        townName: Pune
+                        townName: <ADDRESS>
                         wardName: null
                         authMethods:
                           - DEMOGRAPHICS
@@ -1168,7 +1168,7 @@ paths:
                         verificationStatus: VERIFIED
                         verificationType: AADHAAR
                         emailVerified: null
-                        ABHANumber: 91-5326-6278-XXXX
+                        ABHANumber: <ABHA_NUMBER>
                         preferredAbhaAddress: <ABHA_ADDRESS>
                     tokens:
                       token: <JWT TOKEN>
@@ -1183,12 +1183,12 @@ paths:
                     users:
                       - abhaAddress: <ABHA_ADDRESS>
                         fullName: John Doe
-                        abhaNumber: 91-5326-6278-XXXX
+                        abhaNumber: <ABHA_NUMBER>
                         status: ACTIVE
                         kycStatus: VERIFIED
                       - abhaAddress: <ABHA_ADDRESS>
                         fullName: John Doe
-                        abhaNumber: 91-5326-6278-XXXX
+                        abhaNumber: <ABHA_NUMBER>
                         status: ACTIVE
                         kycStatus: PENDING
                     accounts:
@@ -1197,9 +1197,9 @@ paths:
                         middleName: ""
                         lastName: Doe
                         name: John Doe
-                        yearOfBirth: "1997"
-                        dayOfBirth: "11"
-                        monthOfBirth: "11"
+                        yearOfBirth: <DOB>
+                        dayOfBirth: <DOB>
+                        monthOfBirth: <DOB>
                         gender: M
                         email: null
                         profilePhoto: <BASE64_PHOTO>
@@ -1210,14 +1210,14 @@ paths:
                         villageCode: null
                         townCode: null
                         wardCode: null
-                        pincode: "422003"
-                        address: house no-620, main road, Pune, Maharashtra
+                        pincode: <PINCODE>
+                        address: <ADDRESS>
                         kycPhoto: <BASE64_PHOTO>
                         stateName: MAHARASHTRA
-                        districtName: PUNE
-                        subdistrictName: PUNE
+                        districtName: <ADDRESS>
+                        subdistrictName: <ADDRESS>
                         villageName: null
-                        townName: Pune
+                        townName: <ADDRESS>
                         wardName: null
                         authMethods:
                           - DEMOGRAPHICS
@@ -1228,7 +1228,7 @@ paths:
                         verificationStatus: VERIFIED
                         verificationType: AADHAAR
                         emailVerified: null
-                        ABHANumber: 91-5326-6278-XXXX
+                        ABHANumber: <ABHA_NUMBER>
                         preferredAbhaAddress: <ABHA_ADDRESS>
                     tokens:
                       token: <JWT TOKEN>
@@ -1707,7 +1707,7 @@ paths:
               examples:
                 Search Auth Methods - ABHAAddress:
                   value:
-                    healthIdNumber: 91-5326-6278-XXXX
+                    healthIdNumber: <ABHA_NUMBER>
                     abhaAddress: <ABHA_ADDRESS>
                     authMethods:
                       - MOBILE_OTP
@@ -2077,12 +2077,12 @@ paths:
                     users:
                       - abhaAddress: <ABHA_ADDRESS>
                         fullName: John Doe
-                        abhaNumber: 91-5326-6278-XXXX
+                        abhaNumber: <ABHA_NUMBER>
                         status: ACTIVE
                         kycStatus: VERIFIED
                       - abhaAddress: <ABHA_ADDRESS>
                         fullName: John Doe
-                        abhaNumber: 91-5326-6278-XXXX
+                        abhaNumber: <ABHA_NUMBER>
                         status: ACTIVE
                         kycStatus: PENDING
                       - abhaAddress: <ABHA_ADDRESS>
@@ -2108,7 +2108,7 @@ paths:
                     users:
                       - abhaAddress: <ABHA_ADDRESS>
                         fullName: John Doe
-                        abhaNumber: 91-5326-6278-XXXX
+                        abhaNumber: <ABHA_NUMBER>
                         status: ACTIVE
                         kycStatus: VERIFIED
                     tokens:
@@ -2136,12 +2136,12 @@ paths:
                     users:
                       - abhaAddress: <ABHA_ADDRESS>
                         fullName: John Doe
-                        abhaNumber: 91-5326-6278-XXXX
+                        abhaNumber: <ABHA_NUMBER>
                         status: ACTIVE
                         kycStatus: VERIFIED
                       - abhaAddress: <ABHA_ADDRESS>
                         fullName: John Doe
-                        abhaNumber: 91-5326-6278-XXXX
+                        abhaNumber: <ABHA_NUMBER>
                         status: ACTIVE
                         kycStatus: PENDING
                       - abhaAddress: <ABHA_ADDRESS>
@@ -2161,12 +2161,12 @@ paths:
                     users:
                       - abhaAddress: <ABHA_ADDRESS>
                         fullName: John Doe
-                        abhaNumber: 91-5326-6278-XXXX
+                        abhaNumber: <ABHA_NUMBER>
                         status: ACTIVE
                         kycStatus: VERIFIED
                       - abhaAddress: <ABHA_ADDRESS>
                         fullName: John Doe
-                        abhaNumber: 91-5326-6278-XXXX
+                        abhaNumber: <ABHA_NUMBER>
                         status: ACTIVE
                         kycStatus: PENDING
                     accounts:
@@ -2175,9 +2175,9 @@ paths:
                         middleName: ""
                         lastName: Doe
                         name: John Doe
-                        yearOfBirth: "1995"
-                        dayOfBirth: "14"
-                        monthOfBirth: "11"
+                        yearOfBirth: <DOB>
+                        dayOfBirth: <DOB>
+                        monthOfBirth: <DOB>
                         gender: M
                         email: null
                         profilePhoto: <BASE64_PHOTO>
@@ -2188,14 +2188,14 @@ paths:
                         villageCode: null
                         townCode: null
                         wardCode: null
-                        pincode: "422003"
-                        address: house no-620, main road, Nashik, Nashik, Maharashtra
+                        pincode: <PINCODE>
+                        address: <ADDRESS>
                         kycPhoto: <BASE64_PHOTO>
                         stateName: MAHARASHTRA
-                        districtName: NASHIK
-                        subdistrictName: NASHIK
+                        districtName: <ADDRESS>
+                        subdistrictName: <ADDRESS>
                         villageName: null
-                        townName: Nashik
+                        townName: <ADDRESS>
                         wardName: null
                         authMethods:
                           - DEMOGRAPHICS
@@ -2206,7 +2206,7 @@ paths:
                         verificationStatus: VERIFIED
                         verificationType: AADHAAR
                         emailVerified: null
-                        ABHANumber: 91-5326-6278-XXXX
+                        ABHANumber: <ABHA_NUMBER>
                         preferredAbhaAddress: <ABHA_ADDRESS>
                     tokens:
                       token: <JWT TOKEN>
@@ -2227,12 +2227,12 @@ paths:
                     users:
                       - abhaAddress: <ABHA_ADDRESS>
                         fullName: John Doe
-                        abhaNumber: 91-5326-6278-XXXX
+                        abhaNumber: <ABHA_NUMBER>
                         status: ACTIVE
                         kycStatus: VERIFIED
                       - abhaAddress: <ABHA_ADDRESS>
                         fullName: John Doe
-                        abhaNumber: 91-5326-6278-XXXX
+                        abhaNumber: <ABHA_NUMBER>
                         status: ACTIVE
                         kycStatus: PENDING
                     accounts:
@@ -2241,9 +2241,9 @@ paths:
                         middleName: ""
                         lastName: Doe
                         name: John Doe
-                        yearOfBirth: "1995"
-                        dayOfBirth: "14"
-                        monthOfBirth: "11"
+                        yearOfBirth: <DOB>
+                        dayOfBirth: <DOB>
+                        monthOfBirth: <DOB>
                         gender: M
                         email: null
                         profilePhoto: <BASE64_PHOTO>
@@ -2254,14 +2254,14 @@ paths:
                         villageCode: null
                         townCode: null
                         wardCode: null
-                        pincode: "422003"
-                        address: house no-620, main road, Nashik, Nashik, Maharashtra
+                        pincode: <PINCODE>
+                        address: <ADDRESS>
                         kycPhoto: <BASE64_PHOTO>
                         stateName: MAHARASHTRA
-                        districtName: NASHIK
-                        subdistrictName: NASHIK
+                        districtName: <ADDRESS>
+                        subdistrictName: <ADDRESS>
                         villageName: null
-                        townName: Nashik
+                        townName: <ADDRESS>
                         wardName: null
                         authMethods:
                           - DEMOGRAPHICS
@@ -2272,7 +2272,7 @@ paths:
                         verificationStatus: VERIFIED
                         verificationType: AADHAAR
                         emailVerified: null
-                        ABHANumber: 91-5326-6278-XXXX
+                        ABHANumber: <ABHA_NUMBER>
                         preferredAbhaAddress: <ABHA_ADDRESS>
                     tokens:
                       token: <JWT TOKEN>
@@ -2286,7 +2286,7 @@ paths:
                     users:
                       - abhaAddress: <ABHA_ADDRESS>
                         fullName: John Doe
-                        abhaNumber: 91-5326-6278-XXXX
+                        abhaNumber: <ABHA_NUMBER>
                         status: ACTIVE
                         kycStatus: VERIFIED
                     tokens:
@@ -2307,7 +2307,7 @@ paths:
                     users:
                       - abhaAddress: <ABHA_ADDRESS>
                         fullName: John Doe
-                        abhaNumber: 91-5326-6278-XXXX
+                        abhaNumber: <ABHA_NUMBER>
                         status: ACTIVE
                         kycStatus: VERIFIED
                     tokens:
@@ -2329,12 +2329,12 @@ paths:
                     users:
                       - abhaAddress: <ABHA_ADDRESS>
                         fullName: John Doe
-                        abhaNumber: 91-7760-2330-XXXX
+                        abhaNumber: <ABHA_NUMBER>
                         status: ACTIVE
                         kycStatus: VERIFIED
                       - abhaAddress: <ABHA_ADDRESS>
                         fullName: John Doe
-                        abhaNumber: 91-7760-2330-XXXX
+                        abhaNumber: <ABHA_NUMBER>
                         status: ACTIVE
                         kycStatus: VERIFIED
                     preferredAbhaAddress: <ABHA_ADDRESS>

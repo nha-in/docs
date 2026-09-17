@@ -180,16 +180,16 @@ curl --request POST \
     "patient": {
       "abhaNumber": "<ABHA_NUMBER>",
       "abhaAddress": "<ABHA_ADDRESS>",
-      "name": "Abdul Kalam",
+      "name": "<NAME>",
       "gender": "M",
-      "dayOfBirth": "1",
-      "monthOfBirth": "8",
+      "dayOfBirth": "<DOB>",
+      "monthOfBirth": "<DOB>",
       "yearOfBirth": "9999",
       "address": {
         "line": "Address line 1",
         "district": "Coimbatore",
         "state": "Tamil Nadu",
-        "pincode": "641050"
+        "pincode": "<PINCODE>"
       },
       "phoneNumber": "<MOBILE_NUMBER>"
     }
@@ -554,16 +554,16 @@ curl --request POST \
   "firstName": "John",
   "middleName": "",
   "lastName": "Doe",
-  "dayOfBirth": "11",
-  "monthOfBirth": "05",
-  "yearOfBirth": "1997",
+  "dayOfBirth": "<DOB>",
+  "monthOfBirth": "<DOB>",
+  "yearOfBirth": "<DOB>",
   "gender": "M",
   "email": "<EMAIL>",
   "mobile": "******0903",
-  "address": "Patoda, Yeola, Nashik, Maharashtra1",
+  "address": "<ADDRESS>",
   "stateName": "Maharashtra",
-  "districtName": "Nashik",
-  "pinCode": "423401",
+  "districtName": "<ADDRESS>",
+  "pinCode": "<PINCODE>",
   "stateCode": "27",
   "districtCode": "12"
 }'

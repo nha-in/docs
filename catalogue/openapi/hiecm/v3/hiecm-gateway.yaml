@@ -27,7 +27,7 @@ x-abdm-sources:
     fetched: "2026-09-16"
   - file: catalogue/openapi/.raw/nha-2026-09-16/phr/PHR and Locker Swagger.yaml
     role: upstream
-    hash: sha256:f958b8d065943503db85da430fe2a9df91dbf7edf30022ba7e36cbef45247d7e
+    hash: sha256:a7e1b7e0b56b75297623057678cf307f21ecdbfbc9ebdb022dc67df78540f6d5
     fetched: "2026-09-16"
 servers:
   - url: https://dev.abdm.gov.in
