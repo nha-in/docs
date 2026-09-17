@@ -2,6 +2,7 @@ package server
 
 import (
 	"context"
+	"encoding/base64"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -47,7 +48,8 @@ const (
 	getFhirExampleDescription = "A known-good document bundle for one ABDM record type, taken from the NRCES implementation guide's own examples. " +
 		"Use it as the reference shape when scaffolding generation code."
 	validateRequestDescription = "Validate a candidate request body against an operation's schema, locally, before calling the sandbox. " +
-		"Also reminds you of required headers and parameters, which body validation cannot see. " +
+		"Also reminds you of required headers and parameters, which body validation cannot see, " +
+		"and returns sandbox_notes for shapes the schema accepts but the sandbox rejects. " +
 		"Use this before writing request code for any operation."
 )
 
@@ -356,7 +358,60 @@ func (t *Tools) ValidateRequest(ctx context.Context, in validateIn) (map[string]
 		errs = []string{}
 	}
 	base["errors"] = errs
+	if notes := sandboxNotes(in.OperationID, payload); len(notes) > 0 {
+		base["sandbox_notes"] = notes
+	}
 	return t.versioned(base), nil
+}
+
+// sandboxNotes carries what the sandbox rejects even when the schema
+// accepts it, observed on 2026-09-16 and recorded in the catalogue's
+// integration learnings annexure. They are notes, not errors, because the
+// specification and the sandbox disagree and the specification is what the
+// schema check enforces.
+func sandboxNotes(opID string, payload any) []string {
+	body, _ := payload.(map[string]any)
+	if body == nil {
+		return nil
+	}
+	var notes []string
+	switch {
+	case opID == "m2_hip_link_care_context":
+		if n, _ := body["abhaNumber"].(string); strings.Contains(n, "-") {
+			notes = append(notes, "abhaNumber: the sandbox returns 400 with an empty body for the dashed form; send the 14 digits only")
+		}
+		for _, p := range asList(body["patient"]) {
+			for _, cc := range asList(p["careContexts"]) {
+				if _, isList := cc["hiType"].([]any); isList {
+					notes = append(notes, "careContexts[].hiType: the sandbox returns 400 for an array; send one hiType as a string")
+				}
+			}
+		}
+		if _, isList := body["hiType"].([]any); isList {
+			notes = append(notes, "hiType: the sandbox returns 400 for an array; send one hiType as a string")
+		}
+	case strings.HasPrefix(opID, "m1_phr_") || strings.HasPrefix(opID, "p1_"):
+		if h, _ := body["loginHint"].(string); h == "mobile" {
+			notes = append(notes, "loginHint: /v3/phr/* returns ABDM-9999 Invalid Login Hint for \"mobile\"; send \"mobile-number\"")
+		}
+		if id, _ := body["loginId"].(string); id != "" {
+			if raw, err := base64.StdEncoding.DecodeString(id); err == nil && len(raw) == 512 {
+				notes = append(notes, "loginId: 512 bytes of ciphertext means the 4096-bit profile key; /v3/phr/* needs the 2048-bit key from /v3/phr/app/login/public/certificate, or the sandbox answers ABDM-1006 Invalid mobile number")
+			}
+		}
+	}
+	return notes
+}
+
+func asList(v any) []map[string]any {
+	items, _ := v.([]any)
+	var out []map[string]any
+	for _, it := range items {
+		if m, ok := it.(map[string]any); ok {
+			out = append(out, m)
+		}
+	}
+	return out
 }
 
 func (t *Tools) ListOperations(ctx context.Context, in listOpsIn) (map[string]any, error) {

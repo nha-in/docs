@@ -13,8 +13,14 @@ sources:
   - file: ABDM Sandbox/ABDM/M1 ABHA Collection.postman_collection.json
     status: not-yet-hashed
     note: NHA's own M1 Postman collection.
+  - file: catalogue/annexure/integration-learnings-2026-09-16.md
+    fetched: 2026-09-16
+    hash: sha256:d1415609d3d71178563367bcdcc48fa7a01fe9ebd247b4c019686304868368ce
+    note: >
+      The two keys chosen by path prefix. Observed by an integrator on 2026-09-16, not yet run from this repository.
 related:
   decisions: [hiecm.decision.encrypt-locally]
+  concepts: [hiecm.concept.two-public-keys]
 ---
 
 # Why identifiers are encrypted, and where to do it
@@ -38,8 +44,9 @@ dashes passed validation and went on to look the account up.
 
 ## Before you start
 
-You need NHA's public key, which is fetched from the certificate
-endpoint. Read [the gateway session](gateway-session.md) first, since
+You need the public key for the path you are calling: the profile key
+for `/v3/profile/*` and `/v3/enrollment/*`, the PHR key for `/v3/phr/*`.
+See [the two public keys](hiecm.concept.two-public-keys). Read [the gateway session](gateway-session.md) first, since
 that call needs a token like any other.
 
 ## What happens

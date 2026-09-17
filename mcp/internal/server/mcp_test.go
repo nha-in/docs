@@ -2,6 +2,7 @@ package server
 
 import (
 	"context"
+	"encoding/base64"
 	"encoding/json"
 	"fmt"
 	"path/filepath"
@@ -295,6 +296,26 @@ func TestCatalogueInfo(t *testing.T) {
 	out := callText(t, sess, "catalogue_info", map[string]any{})
 	if !strings.Contains(out, "2026.08.24") || !strings.Contains(out, "\"embeddings\": false") {
 		t.Errorf("info payload: %s", out)
+	}
+}
+
+func TestSandboxNotes(t *testing.T) {
+	var body any
+	if err := json.Unmarshal([]byte(`{"abhaNumber":"91-1234-5678-9012","patient":[{"careContexts":[{"hiType":["Prescription"]}]}]}`), &body); err != nil {
+		t.Fatal(err)
+	}
+	notes := sandboxNotes("m2_hip_link_care_context", body)
+	if len(notes) != 2 {
+		t.Fatalf("want dashed abhaNumber and array hiType notes, got %v", notes)
+	}
+	if err := json.Unmarshal([]byte(`{"loginHint":"mobile","loginId":"`+base64.StdEncoding.EncodeToString(make([]byte, 512))+`"}`), &body); err != nil {
+		t.Fatal(err)
+	}
+	if notes = sandboxNotes("m1_phr_request_otp", body); len(notes) != 2 {
+		t.Fatalf("want loginHint and wrong-key notes, got %v", notes)
+	}
+	if notes = sandboxNotes("m2_hip_link_care_context", map[string]any{"abhaNumber": "91123456789012"}); len(notes) != 0 {
+		t.Fatalf("clean body must carry no notes, got %v", notes)
 	}
 }
 

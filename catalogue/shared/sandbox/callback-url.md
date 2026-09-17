@@ -14,8 +14,13 @@ sources:
   - file: ABDM Sandbox/ABDM/Proposed Simplified Milestone 1.docx
     status: not-yet-hashed
     note: NHA milestone pack for M1.
+  - file: catalogue/annexure/integration-learnings-2026-09-16.md
+    fetched: 2026-09-16
+    hash: sha256:d1415609d3d71178563367bcdcc48fa7a01fe9ebd247b4c019686304868368ce
+    note: >
+      Last writer wins on the bridge URL. Observed by an integrator on 2026-09-16, not yet run from this repository.
 related:
-  concepts: [hiecm.concept.asynchronous-callbacks]
+  concepts: [hiecm.concept.asynchronous-callbacks, hiecm.concept.bridge-url-ownership]
   glossary: [shared.glossary.request-id]
 ---
 
@@ -69,5 +74,11 @@ that appends on every POST will duplicate data. Key on the
 `REQUEST-ID`.
 
 You are behind a tunnel that changed address. Development tunnels
-reissue URLs, and the registered value goes stale silently.
+reissue URLs, and the registered value goes stale silently. After every
+change, re-register and prove delivery with one round trip. See
+[who owns the bridge URL](hiecm.concept.bridge-url-ownership).
+
+Another system registered the same client id after you did. The gateway
+holds one URL per client id and the last write wins, so every callback
+goes to them and nothing tells you.
 

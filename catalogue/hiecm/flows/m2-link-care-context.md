@@ -23,6 +23,13 @@ sources:
       makes and the three callbacks it waits on come from here, which is
       what replaced the note that said the endpoint atoms were still to
       come.
+  - file: catalogue/annexure/integration-learnings-2026-09-16.md
+    fetched: 2026-09-16
+    hash: sha256:d1415609d3d71178563367bcdcc48fa7a01fe9ebd247b4c019686304868368ce
+    note: >
+      The prose success status, the notify race, and the self requested
+      fetch after linking. Observed by an integrator on 2026-09-16, not
+      yet run from this repository.
 related:
   endpoints:
     - hiecm.endpoint.m2-generate-link-token
@@ -35,6 +42,9 @@ related:
   concepts:
     - hiecm.concept.care-context
     - hiecm.concept.asynchronous-callbacks
+    - hiecm.concept.context-notify-timing
+    - hiecm.concept.linking-triggers-self-fetch
+    - hiecm.concept.bridge-url-ownership
   glossary:
     - shared.glossary.m2
     - shared.glossary.hip
@@ -43,6 +53,7 @@ related:
     - shared.glossary.phr
     - shared.glossary.abha-address
   errors:
+    - hiecm.error.abdm-1006
     - hiecm.error.abdm-1056
     - hiecm.error.abdm-1062
     - hiecm.error.abdm-1063
@@ -101,22 +112,35 @@ sequenceDiagram
 2. **Link the care context.** Call
    [Link care contexts to an ABHA address](hiecm.endpoint.m2-hip-link-care-context),
    which posts to `/hiecm/hip/v3/link/carecontext` and carries the link
-   token. The response is an acknowledgement that the request was
-   accepted, and nothing more.
+   token. Send `abhaNumber` as digits only and `hiType` as a string.
+   The response is an acknowledgement that the request was accepted,
+   and nothing more.
 3. **Wait for the outcome on your bridge.** It arrives at
    [the link callback](hiecm.callback.m2-on-carecontext-result), with
-   `response.requestId` matching the `REQUEST-ID` you sent.
-4. **Notify ABDM when a linked care context changes.** Call
+   `response.requestId` matching the `REQUEST-ID` you sent. Success is
+   the absence of an `error` object; the `status` reads
+   `Successfully Linked care context`.
+4. **Notify ABDM that the care context is linked.** Wait at least five
+   seconds, then call
    [Link Care Context Notify](hiecm.endpoint.m2-link-care-context-notify),
    which posts to `/hiecm/hip/v3/link/context/notify`, and read the
    outcome on
    [the notify callback](hiecm.callback.m2-on-context-notify-result).
+   An `ERRORED` acknowledgement with
+   [ABDM-1006](hiecm.error.abdm-1006) "No care context linked" means the
+   link is not yet visible: retry at 5, 15 and 60 seconds. See
+   [context notify timing](hiecm.concept.context-notify-timing).
+5. **Be ready to serve the record at once.** Within about ten seconds of
+   a successful notify the patient's PHR app requests the data itself,
+   and a consent notification followed by a health information request
+   arrive on your bridge. See
+   [linking triggers a self requested fetch](hiecm.concept.linking-triggers-self-fetch).
 
 ## How you know it worked
 
-Your bridge receives a POST at `/v3/link/on_carecontext` whose
+Your bridge receives a POST at `/api/v3/link/on_carecontext` whose
 `response.requestId` matches the `REQUEST-ID` you sent on the link call,
-carrying a success `status` rather than an `error`. The care context then
+carrying `status: Successfully Linked care context` and no `error`. The care context then
 appears when the patient's PHR app runs discovery against your facility.
 
 Do not treat the synchronous acknowledgement on the link call as success.
@@ -124,14 +148,15 @@ It says the request was accepted, not that anything was linked.
 
 ```observation schema=exit-condition
 channel: callback
-path: <YOUR_BRIDGE_URL>/v3/link/on_carecontext
+path: <YOUR_BRIDGE_URL>/api/v3/link/on_carecontext
 match:
   response.requestId: <THE_REQUEST_ID_YOU_SENT>
-  status: SUCCESS
-timeout_seconds: unknown
+  error: absent
+timeout_seconds: 60
 note: >
-  The timeout is not published. Wait on the callback rather than on a
-  deadline of your own.
+  The success status is the sentence "Successfully Linked care context",
+  so test for the absence of error rather than comparing status against
+  SUCCESS. Delivery is usually within one second.
 ```
 
 ## When it goes wrong
@@ -139,6 +164,10 @@ note: >
 The frequent failures, in rough order of frequency, each with its fix in
 the linked error atom:
 
+- A 400 with an empty body on the link call, when `abhaNumber` carries
+  dashes or `hiType` is an array.
+- hiecm.error.abdm-1006 on the notify acknowledgement when the notify
+  was sent before the link became visible. Retry with backoff.
 - hiecm.error.abdm-1056 when the care context is already linked or the
   link reference number is invalid.
 - hiecm.error.abdm-1062 when the ABHA number does not match the link

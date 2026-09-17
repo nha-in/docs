@@ -14,6 +14,11 @@ sources:
     note: >
       Derived from the operation in catalogue/openapi/hiecm/v3/hiecm-gateway.yaml,
       which comes from this source.
+  - file: catalogue/annexure/integration-learnings-2026-09-16.md
+    fetched: 2026-09-16
+    hash: sha256:d1415609d3d71178563367bcdcc48fa7a01fe9ebd247b4c019686304868368ce
+    note: >
+      Standard headers, the session body and the 30 second refresh margin. The 415 without Content-Type is in catalogue/verification/hiecm.endpoint.gateway-sessions.json, run 2026-09-17.
 related:
   errors: [hiecm.error.abdm-2402, hiecm.error.abdm-2403, hiecm.error.abdm-2404, hiecm.error.abdm-2500, hiecm.error.abdm-9999]
   concepts: [hiecm.concept.gateway-session]
@@ -38,17 +43,29 @@ waiting for a 401.
 
 ## Before you start
 
-- A gateway access token. See [the gateway session](hiecm.concept.gateway-session).
+- A client id and client secret from your sandbox registration. See
+  [the gateway session](hiecm.concept.gateway-session).
 
 ## What happens
 
 ```bash
 curl -X POST 'https://dev.abdm.gov.in/api/hiecm/gateway/v3/sessions' \
-  -H 'Authorization: Bearer <ACCESS_TOKEN>' \
   -H 'REQUEST-ID: <FRESH_UUID>' \
   -H 'TIMESTAMP: <ISO_8601_TIMESTAMP>' \
-  -H 'X-CM-ID: sbx'
+  -H 'X-CM-ID: sbx' \
+  -H 'Content-Type: application/json' \
+  -d '{
+  "clientId": "<YOUR_CLIENT_ID>",
+  "clientSecret": "<YOUR_CLIENT_SECRET>",
+  "grantType": "client_credentials"
+}'
 ```
+
+`Content-Type: application/json` is required. Without it the gateway
+answers 400 with `ABDM-9999` and a message beginning
+`415 UNSUPPORTED_MEDIA_TYPE`, because the body is read as
+`application/octet-stream`. No `Authorization` header goes on this call:
+it is the call that issues the token.
 
 Every placeholder in angle brackets is something you supply. `REQUEST-ID` is a UUID you generate for this call and log before sending.
 
@@ -60,7 +77,7 @@ NHA's own collection records responses for this operation at status 200, and tho
 
 Read the body rather than only the status. Several of NHA's saved failures return a body that names the problem while the status alone does not.
 
-This has not been run against the sandbox from this repository. When you run it, record the response here and set `verified.status` accordingly.
+The response carries `accessToken`, `expiresIn` and `refreshToken`. Refresh about 30 seconds before `expiresIn` runs out, and drop the cached token on any 401.
 
 ## When it goes wrong
 

@@ -54,7 +54,7 @@ curl -X POST 'https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/enrol/byAadhaar
   -H 'REQUEST-ID: <FRESH_UUID>' \
   -H 'TIMESTAMP: <ISO_8601_TIMESTAMP>' \
   -H 'BENEFIT_NAME: <BENEFIT_SCHEME_NAME>' \
-  -H 'X-token: <X_TOKEN_FROM_LOGIN_VERIFY>' \
+  -H 'X-token: Bearer <X_TOKEN_FROM_LOGIN_VERIFY>' \
   -H 'Content-Type: application/json' \
   -d '{
   "authData": {
@@ -242,7 +242,7 @@ curl -X GET 'https://abhasbx.abdm.gov.in/abha/api/v3/profile/account' \
   -H 'Authorization: Bearer <ACCESS_TOKEN>' \
   -H 'REQUEST-ID: <FRESH_UUID>' \
   -H 'TIMESTAMP: <ISO_8601_TIMESTAMP>' \
-  -H 'X-token: <X_TOKEN_FROM_LOGIN_VERIFY>'
+  -H 'X-token: Bearer <X_TOKEN_FROM_LOGIN_VERIFY>'
 ```
 
 #### Get the ABHA QR code (`hiecm.endpoint.m1-profile-get-qr-code`)
@@ -252,7 +252,7 @@ curl -X GET 'https://abhasbx.abdm.gov.in/abha/api/v3/profile/account/qrCode' \
   -H 'Authorization: Bearer <ACCESS_TOKEN>' \
   -H 'REQUEST-ID: <FRESH_UUID>' \
   -H 'TIMESTAMP: <ISO_8601_TIMESTAMP>' \
-  -H 'X-token: <X_TOKEN_FROM_LOGIN_VERIFY>'
+  -H 'X-token: Bearer <X_TOKEN_FROM_LOGIN_VERIFY>'
 ```
 
 **Exit condition (Observe until this is true)**
@@ -295,7 +295,7 @@ curl -X POST 'https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/enrol/byAadhaar
   -H 'REQUEST-ID: <FRESH_UUID>' \
   -H 'TIMESTAMP: <ISO_8601_TIMESTAMP>' \
   -H 'BENEFIT_NAME: <BENEFIT_SCHEME_NAME>' \
-  -H 'X-token: <X_TOKEN_FROM_LOGIN_VERIFY>' \
+  -H 'X-token: Bearer <X_TOKEN_FROM_LOGIN_VERIFY>' \
   -H 'Content-Type: application/json' \
   -d '{
   "authData": {
@@ -345,7 +345,7 @@ curl -X GET 'https://abhasbx.abdm.gov.in/abha/api/v3/profile/account' \
   -H 'Authorization: Bearer <ACCESS_TOKEN>' \
   -H 'REQUEST-ID: <FRESH_UUID>' \
   -H 'TIMESTAMP: <ISO_8601_TIMESTAMP>' \
-  -H 'X-token: <X_TOKEN_FROM_LOGIN_VERIFY>'
+  -H 'X-token: Bearer <X_TOKEN_FROM_LOGIN_VERIFY>'
 ```
 
 **Exit condition (Observe until this is true)**
@@ -418,7 +418,7 @@ curl -X POST 'https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/enrol/byAadhaar
   -H 'REQUEST-ID: <FRESH_UUID>' \
   -H 'TIMESTAMP: <ISO_8601_TIMESTAMP>' \
   -H 'BENEFIT_NAME: <BENEFIT_SCHEME_NAME>' \
-  -H 'X-token: <X_TOKEN_FROM_LOGIN_VERIFY>' \
+  -H 'X-token: Bearer <X_TOKEN_FROM_LOGIN_VERIFY>' \
   -H 'Content-Type: application/json' \
   -d '{
   "authData": {
@@ -509,7 +509,7 @@ curl -X POST 'https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/enrol/byAadhaar
   -H 'REQUEST-ID: <FRESH_UUID>' \
   -H 'TIMESTAMP: <ISO_8601_TIMESTAMP>' \
   -H 'BENEFIT_NAME: <BENEFIT_SCHEME_NAME>' \
-  -H 'X-token: <X_TOKEN_FROM_LOGIN_VERIFY>' \
+  -H 'X-token: Bearer <X_TOKEN_FROM_LOGIN_VERIFY>' \
   -H 'Content-Type: application/json' \
   -d '{
   "authData": {
@@ -536,7 +536,7 @@ curl -X GET 'https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/profile/children
   -H 'Authorization: Bearer <ACCESS_TOKEN>' \
   -H 'REQUEST-ID: <FRESH_UUID>' \
   -H 'TIMESTAMP: <ISO_8601_TIMESTAMP>' \
-  -H 'X-token: <X_TOKEN_FROM_LOGIN_VERIFY>'
+  -H 'X-token: Bearer <X_TOKEN_FROM_LOGIN_VERIFY>'
 ```
 
 #### Update fields on an ABHA profile (`hiecm.endpoint.m1-profile-update-account`)
@@ -547,7 +547,7 @@ curl -X PATCH 'https://abhasbx.abdm.gov.in/abha/api/v3/profile/account' \
   -H 'REQUEST-ID: <FRESH_UUID>' \
   -H 'TIMESTAMP: <ISO_8601_TIMESTAMP>' \
   -H 'BENEFIT_NAME: <BENEFIT_SCHEME_NAME>' \
-  -H 'X-token: <X_TOKEN_FROM_LOGIN_VERIFY>' \
+  -H 'X-token: Bearer <X_TOKEN_FROM_LOGIN_VERIFY>' \
   -H 'Content-Type: application/json' \
   -d '{
   "abhaNumber": "<ABHA_NUMBER>",
@@ -646,9 +646,6 @@ curl -X POST 'https://abhasbx.abdm.gov.in/abha/api/v3/profile/login/verify' \
   -H 'Authorization: Bearer <ACCESS_TOKEN>' \
   -H 'REQUEST-ID: <FRESH_UUID>' \
   -H 'TIMESTAMP: <ISO_8601_TIMESTAMP>' \
-  -H 'BENEFIT_NAME: <BENEFIT_SCHEME_NAME>' \
-  -H 'T-token: <T_TOKEN_FROM_LOGIN_VERIFY>' \
-  -H 'X-token: <X_TOKEN_FROM_LOGIN_VERIFY>' \
   -H 'Content-Type: application/json' \
   -d '{
   "scope": [
@@ -696,6 +693,9 @@ lookup of somebody else's identity.
 - The person's mobile number, encrypted. See
   why identifiers are encrypted (hiecm.concept.encrypted-identifiers).
 - The person present to read an OTP.
+- Send the user token as `X-token: Bearer <token>`, because a bare token is refused with `400 Invalid X-token`.
+- If the verify response carries `refreshToken` it is the final token; exchanging it answers `400 Invalid T-token`. See `hiecm.endpoint.m1-login-verify`.
+- Encrypt with the PHR key from `/v3/phr/app/login/public/certificate` for any `/v3/phr/*` path and the profile key elsewhere, because the wrong key is refused as `ABDM-1006 Invalid mobile number`. See `hiecm.concept.two-public-keys`.
 
 **Act: the calls in this flow, in order**
 
@@ -726,9 +726,6 @@ curl -X POST 'https://abhasbx.abdm.gov.in/abha/api/v3/profile/login/verify' \
   -H 'Authorization: Bearer <ACCESS_TOKEN>' \
   -H 'REQUEST-ID: <FRESH_UUID>' \
   -H 'TIMESTAMP: <ISO_8601_TIMESTAMP>' \
-  -H 'BENEFIT_NAME: <BENEFIT_SCHEME_NAME>' \
-  -H 'T-token: <T_TOKEN_FROM_LOGIN_VERIFY>' \
-  -H 'X-token: <X_TOKEN_FROM_LOGIN_VERIFY>' \
   -H 'Content-Type: application/json' \
   -d '{
   "scope": [
@@ -754,7 +751,7 @@ curl -X POST 'https://abhasbx.abdm.gov.in/abha/api/v3/profile/login/verify/user'
   -H 'Authorization: Bearer <ACCESS_TOKEN>' \
   -H 'REQUEST-ID: <FRESH_UUID>' \
   -H 'TIMESTAMP: <ISO_8601_TIMESTAMP>' \
-  -H 'T-token: <T_TOKEN_FROM_LOGIN_VERIFY>' \
+  -H 'T-token: Bearer <TRANSFER_TOKEN_FROM_LOGIN_VERIFY>' \
   -H 'Content-Type: application/json' \
   -d '{
   "ABHANumber": "<ABHA_NUMBER>",
@@ -764,8 +761,8 @@ curl -X POST 'https://abhasbx.abdm.gov.in/abha/api/v3/profile/login/verify/user'
 
 **Exit condition (Observe until this is true)**
 
-You hold an `X-token`, and a profile read with it returns the account the
-person expected.
+You hold a token with `expiresIn: 1800`, and a profile read with
+`X-token: Bearer <token>` returns the account the person expected.
 
 The token read back is the check, not the presence of a token. A token
 for the wrong account in a multi account household is the failure this
@@ -773,8 +770,8 @@ flow exists to prevent.
 
 **If it goes wrong**
 
-The verify call returns a list rather than a token. That is the multi
-account branch, not an error.
+The verify call returns a 300 second token and a list rather than a
+final token. That is the mobile OTP branch, not an error. Exchange it.
 
 The token is rejected on the next call. See
 ABDM-2401 (hiecm.error.abdm-2401), and check you are not sending the
@@ -801,7 +798,7 @@ curl -X POST 'https://abhasbx.abdm.gov.in/abha/api/v3/profile/account/request/ot
   -H 'Authorization: Bearer <ACCESS_TOKEN>' \
   -H 'REQUEST-ID: <FRESH_UUID>' \
   -H 'TIMESTAMP: <ISO_8601_TIMESTAMP>' \
-  -H 'X-token: <X_TOKEN_FROM_LOGIN_VERIFY>' \
+  -H 'X-token: Bearer <X_TOKEN_FROM_LOGIN_VERIFY>' \
   -H 'Content-Type: application/json' \
   -d '{
   "scope": [
@@ -821,7 +818,7 @@ curl -X POST 'https://abhasbx.abdm.gov.in/abha/api/v3/profile/account/verify' \
   -H 'Authorization: Bearer <ACCESS_TOKEN>' \
   -H 'REQUEST-ID: <FRESH_UUID>' \
   -H 'TIMESTAMP: <ISO_8601_TIMESTAMP>' \
-  -H 'X-token: <X_TOKEN_FROM_LOGIN_VERIFY>' \
+  -H 'X-token: Bearer <X_TOKEN_FROM_LOGIN_VERIFY>' \
   -H 'Content-Type: application/json' \
   -d '{
   "scope": [
@@ -847,7 +844,7 @@ curl -X GET 'https://abhasbx.abdm.gov.in/abha/api/v3/profile/account' \
   -H 'Authorization: Bearer <ACCESS_TOKEN>' \
   -H 'REQUEST-ID: <FRESH_UUID>' \
   -H 'TIMESTAMP: <ISO_8601_TIMESTAMP>' \
-  -H 'X-token: <X_TOKEN_FROM_LOGIN_VERIFY>'
+  -H 'X-token: Bearer <X_TOKEN_FROM_LOGIN_VERIFY>'
 ```
 
 **Exit condition (Observe until this is true)**

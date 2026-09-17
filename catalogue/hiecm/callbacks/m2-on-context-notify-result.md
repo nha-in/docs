@@ -16,11 +16,16 @@ sources:
       NHA's M2 file as ingested on this branch. The path, the headers and
       the payload shape below are the ones it declares for this result
       leg. Nothing here has been observed arriving from the sandbox.
+  - file: catalogue/annexure/integration-learnings-2026-09-16.md
+    fetched: 2026-09-16
+    hash: sha256:d1415609d3d71178563367bcdcc48fa7a01fe9ebd247b4c019686304868368ce
+    note: >
+      The ERRORED acknowledgement with ABDM-1006 when the notify races the link. Observed by an integrator on 2026-09-16, not yet run from this repository.
 related:
   endpoints: [hiecm.endpoint.m2-link-care-context-notify]
   flows: [hiecm.flow.m2-link-care-context]
-  concepts: [hiecm.concept.asynchronous-callbacks]
-  errors: [hiecm.error.abdm-9999]
+  concepts: [hiecm.concept.asynchronous-callbacks, hiecm.concept.context-notify-timing]
+  errors: [hiecm.error.abdm-1006, hiecm.error.abdm-9999]
 skills:
   - hiecm-m2-build
 ---
@@ -44,7 +49,7 @@ back on the call itself.
 
 ## What happens
 
-ABDM posts to `/v3/links/context/on-notify` on the base URL you registered for
+ABDM posts to `/api/v3/links/context/on-notify` on the base URL you registered for
 your bridge. The path is relative to that URL, not to an ABDM host.
 
 Headers: `REQUEST-ID`, `TIMESTAMP` and `X-HIP-ID`.
@@ -66,7 +71,11 @@ Headers: `REQUEST-ID`, `TIMESTAMP` and `X-HIP-ID`.
 
 `response.requestId` echoes the `REQUEST-ID` you sent on the call this
 answers. Match on it. A body carrying `acknowledgement.status` of `SUCCESS` is the success
-case.
+case. `ERRORED` with `error.code` of `ABDM-1006: ` and message
+`No care context linked with given reference number` means the notify ran
+ahead of the link. Note the trailing colon and space on the code. Retry
+the notify at 5, 15 and 60 seconds. See
+[context notify timing](hiecm.concept.context-notify-timing).
 
 ## How you know it worked
 
@@ -74,10 +83,7 @@ Your handler receives a POST carrying a `response.requestId` equal to the
 `REQUEST-ID` you sent, and you return 200.
 
 The gateway validates the body you send back, so a 200 carrying the wrong
-body is still a failure. 
-
-Not yet observed from this repository. Record the first real delivery
-here.
+body is still a failure.
 
 ## When it goes wrong
 
