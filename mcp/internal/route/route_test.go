@@ -37,3 +37,16 @@ func TestRoute(t *testing.T) {
 		}
 	}
 }
+
+func TestIsGreeting(t *testing.T) {
+	for _, q := range []string{"hi", "Hi!", "hello there", "thanks", "ok"} {
+		if !IsGreeting(q) {
+			t.Errorf("%q should be a greeting", q)
+		}
+	}
+	for _, q := range []string{"hip", "HIU", "hi, what is an ABHA", "ok so how do I link"} {
+		if IsGreeting(q) {
+			t.Errorf("%q should not be a greeting", q)
+		}
+	}
+}

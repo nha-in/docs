@@ -62,7 +62,7 @@ func TestNoPageLeavesThePromptAndTheLoopAlone(t *testing.T) {
 		svc := &Service{Model: fm, MaxTokens: 100}
 		emit, _ := collectEvents()
 		if err := svc.Respond(context.Background(),
-			[]Turn{{Role: "user", Text: "hi"}}, page, emit); err != nil {
+			[]Turn{{Role: "user", Text: "what is an ABHA"}}, page, emit); err != nil {
 			t.Fatalf("%s: %v", name, err)
 		}
 		if fm.gotSystem[0] != SystemPrompt("") {
@@ -90,7 +90,7 @@ func TestValidatePageCapsTheMarkdown(t *testing.T) {
 	svc.Model = &fakeModel{replies: []Reply{{StopReason: "end_turn"}}}
 	emit, _ := collectEvents()
 	if err := svc.Respond(context.Background(),
-		[]Turn{{Role: "user", Text: "hi"}}, over, emit); err == nil {
+		[]Turn{{Role: "user", Text: "what is an ABHA"}}, over, emit); err == nil {
 		t.Error("Respond accepted an oversized page, want error")
 	}
 }
