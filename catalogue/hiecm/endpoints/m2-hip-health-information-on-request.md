@@ -7,8 +7,7 @@ version: abdm-v3
 title: Acknowledge a health information data request
 summary: >
   **Async Callback:** After ABDM Gateway sends a health information
-  request to the HIP bridge URL (`{bridgeUrl}/v0.5/health-
-  information/hip/request`), the HIP calls this Gateway endpoint to
+  request to the HIP bridge URL (`{bridgeUrl}/api/v3/hip/health-information/request`), the HIP calls this Gateway endpoint to
   acknowledge receipt and indicate it will begin processing
   (ACKNOWLEDGED).  After this, the HIP prepares and encrypts FHIR
   records, then pushes them to the HIU's `dataPushUrl`..
@@ -18,8 +17,14 @@ sources:
     fetched: 2026-08-25
     note: >
       NHA's M2 OpenAPI file.
+  - file: catalogue/annexure/integration-learnings-2026-09-16.md
+    fetched: 2026-09-16
+    hash: sha256:d1415609d3d71178563367bcdcc48fa7a01fe9ebd247b4c019686304868368ce
+    note: >
+      The 200 on this call was observed by an integrator on 2026-09-16, not yet run to success from this repository. The ABDM-1113 on a repeated transaction id is in catalogue/verification/hiecm.endpoint.m2-hip-health-information-on-request.json, run 2026-09-17.
 related:
-  errors: [hiecm.error.abdm-2402, hiecm.error.abdm-2404, hiecm.error.abdm-2500, hiecm.error.abdm-9999]
+  errors: [hiecm.error.abdm-1113, hiecm.error.abdm-2402, hiecm.error.abdm-2404, hiecm.error.abdm-2500, hiecm.error.abdm-9999]
+  callbacks: [hiecm.callback.m2-on-health-information-request]
   concepts: [hiecm.concept.gateway-session]
 skills:
   - hiecm-m2-build
@@ -30,7 +35,7 @@ skills:
 ## In plain words
 
 **Async Callback:** After ABDM Gateway sends a health information request to the HIP bridge URL
-(`{bridgeUrl}/v0.5/health-information/hip/request`), the HIP calls this Gateway endpoint to
+(`{bridgeUrl}/api/v3/hip/health-information/request`), the HIP calls this Gateway endpoint to
 acknowledge receipt and indicate it will begin processing (ACKNOWLEDGED).
 
 After this, the HIP prepares and encrypts FHIR records, then pushes them to the HIU's `dataPushUrl`.
@@ -68,12 +73,15 @@ NHA calls this operation `hipHealthInformationOnRequest`.
 
 ## How you know it worked
 
-Not yet observed, and NHA's file documents no response body for this operation. Run it against the sandbox and record what comes back before relying on it.
+The gateway answers **200**, not 202, on this call. Treat 200 as the acknowledgement being accepted and move on to encrypting and pushing the records to the `dataPushUrl`.
+
+Idempotency: a second acknowledgement for the same `transactionId` is refused with [ABDM-1113](hiecm.error.abdm-1113), and the sandbox remembers a transaction id across runs. Send it once.
 
 ## When it goes wrong
 
 - The clock is wrong and every call fails. See [ABDM-2402](hiecm.error.abdm-2402).
 - The `REQUEST-ID` is missing, malformed or reused. See [ABDM-2404](hiecm.error.abdm-2404).
 - No session token was sent. See [ABDM-2500](hiecm.error.abdm-2500).
+- The same transaction id was already acknowledged. See [ABDM-1113](hiecm.error.abdm-1113).
 - ABDM fails and does not say why. See [ABDM-9999](hiecm.error.abdm-9999).
 

@@ -20,8 +20,14 @@ sources:
     fetched: 2026-08-25
     note: >
       NHA's M3 OpenAPI file.
+  - file: catalogue/annexure/integration-learnings-2026-09-16.md
+    fetched: 2026-09-16
+    hash: sha256:d1415609d3d71178563367bcdcc48fa7a01fe9ebd247b4c019686304868368ce
+    note: >
+      The 202 with TRANSFERRED and notifier.type HIU was observed by an integrator on 2026-09-16, not yet run to success from this repository. The ABDM-1101 on a repeated transaction id is in catalogue/verification/hiecm.endpoint.m3-hiu-data-flow-notify.json, run 2026-09-17.
 related:
-  errors: [hiecm.error.abdm-2402, hiecm.error.abdm-2404, hiecm.error.abdm-2500, hiecm.error.abdm-9999]
+  errors: [hiecm.error.abdm-1101, hiecm.error.abdm-2402, hiecm.error.abdm-2404, hiecm.error.abdm-2500, hiecm.error.abdm-9999]
+  flows: [hiecm.flow.m3-fetch-records]
   concepts: [hiecm.concept.gateway-session]
 skills:
   - hiecm-m3-build
@@ -67,7 +73,7 @@ curl -X POST 'https://dev.abdm.gov.in/api/hiecm/data-flow/v3/health-information/
       "id": "HIU_SERVICE_ID"
     },
     "statusNotification": {
-      "sessionStatus": "RECEIVED",
+      "sessionStatus": "TRANSFERRED",
       "hipId": "HIP_SERVICE_ID",
       "statusResponses": [
         {
@@ -92,12 +98,15 @@ NHA calls this operation `hiuDataFlowNotify`.
 
 ## How you know it worked
 
-Not yet observed, and NHA's file documents no response body for this operation. Run it against the sandbox and record what comes back before relying on it.
+The gateway answers 202 with the body `{"status":"Notification is Accepted"}`. Send `sessionStatus: TRANSFERRED` with `notifier.type: HIU` once every entry has decrypted; the enum in the specification lists `RECEIVED`, and `TRANSFERRED` is the value the gateway accepts.
+
+Idempotency: a second notify for the same `transactionId` is refused with [ABDM-1101](hiecm.error.abdm-1101), and the sandbox remembers a transaction id across runs. Send it once.
 
 ## When it goes wrong
 
 - The clock is wrong and every call fails. See [ABDM-2402](hiecm.error.abdm-2402).
 - The `REQUEST-ID` is missing, malformed or reused. See [ABDM-2404](hiecm.error.abdm-2404).
 - No session token was sent. See [ABDM-2500](hiecm.error.abdm-2500).
+- The same transaction id was already notified. See [ABDM-1101](hiecm.error.abdm-1101).
 - ABDM fails and does not say why. See [ABDM-9999](hiecm.error.abdm-9999).
 

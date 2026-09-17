@@ -4,74 +4,92 @@ type: endpoint
 gateway: hiecm
 milestone: M1
 version: abdm-v3
-title: Send Share Acknowledgement (HIP → Gateway)
+title: Acknowledge a shared profile with a token number
 summary: >
-  HIP sends an acknowledgement back to the ABDM Gateway after
-  receiving and processing the patient's shared profile. Typically
-  includes a token/queue number assigned to the patient. **Server:**
-  `https://dev.abdm.gov.in/api/hiecm`.
+  After a patient scans your counter code and their profile arrives on
+  your bridge, you answer the gateway with a token number for the
+  patient to use at the counter.
 sources:
   - file: catalogue/openapi/.raw/ABDM_M1_API_Swagger.yaml
     hash: sha256:14bbfcbe0fc38e13a485d2a8fcfd6dc6d84e89d4f2e6b743cb85a238a3c18873
     fetched: 2026-08-25
     note: >
-      NHA's M1 OpenAPI file.
+      NHA's M1 OpenAPI file, for the field names.
+  - file: catalogue/annexure/integration-learnings-2026-09-16.md
+    fetched: 2026-09-16
+    hash: sha256:d1415609d3d71178563367bcdcc48fa7a01fe9ebd247b4c019686304868368ce
+    note: >
+      The working gateway URL, the reply body and the 202. Observed by an
+      integrator on 2026-09-16, not yet run to success from this
+      repository. The 404 on the previous ABHA host URL is in
+      catalogue/verification/hiecm.endpoint.m1-on-share-acknowledgement.json,
+      run 2026-09-17.
 related:
+  endpoints: [hiecm.endpoint.m1-receive-patient-share]
+  concepts: [hiecm.concept.gateway-session, hiecm.concept.scan-and-share]
   errors: [hiecm.error.abdm-2402, hiecm.error.abdm-2404, hiecm.error.abdm-2500, hiecm.error.abdm-9999]
-  concepts: [hiecm.concept.gateway-session]
 skills:
   - hiecm-m1-build
 ---
 
-# Send Share Acknowledgement (HIP → Gateway)
+# Acknowledge a shared profile with a token number
 
 ## In plain words
 
-HIP sends an acknowledgement back to the ABDM Gateway after receiving
-and processing the patient's shared profile.
-Typically includes a token/queue number assigned to the patient.
-**Server:** `https://dev.abdm.gov.in/api/hiecm`
-
-This wording is NHA's own, from the file this operation was ingested from.
+Your reply to [a shared profile](hiecm.endpoint.m1-receive-patient-share).
+It tells the gateway you registered the patient and gives the token
+number they show at the counter. The patient's PHR app displays what you
+send here. See [scan and share](hiecm.concept.scan-and-share) for the
+counter code and the token rules.
 
 ## Before you start
 
 - A gateway access token. See [the gateway session](hiecm.concept.gateway-session).
-- The right `X-CM-ID` for the environment you are calling.
+- The `REQUEST-ID` header of the inbound share, because it goes back in `response.requestId`.
 
 ## What happens
 
+This call goes to the gateway host, `dev.abdm.gov.in`, not to the ABHA
+host.
+
 ```bash
-curl -X POST 'https://abhasbx.abdm.gov.in/abha/api/v3/patient-share/v3/on-share' \
+curl -X POST 'https://dev.abdm.gov.in/api/hiecm/patient-share/v3/on-share' \
   -H 'Authorization: Bearer <ACCESS_TOKEN>' \
   -H 'REQUEST-ID: <FRESH_UUID>' \
   -H 'TIMESTAMP: <ISO_8601_TIMESTAMP>' \
   -H 'X-CM-ID: sbx' \
+  -H 'X-HIP-ID: <YOUR_HIP_ID>' \
   -H 'Content-Type: application/json' \
   -d '{
   "acknowledgement": {
+    "abhaAddress": "<ABHA_ADDRESS_FROM_THE_SHARE>",
     "status": "SUCCESS",
-    "abhaAddress": "johnkumar@sbx",
     "profile": {
-      "context": "123",
-      "tokenNumber": "TKN-0042"
+      "context": "<COUNTER_ID_FROM_THE_SHARE>",
+      "tokenNumber": "<TOKEN_NUMBER_YOU_ISSUED>",
+      "expiry": "<TOKEN_VALIDITY>"
     }
+  },
+  "response": {
+    "requestId": "<REQUEST_ID_HEADER_OF_THE_INBOUND_SHARE>"
   }
 }'
 ```
 
-The request and response schemas for this operation are in the M1 specification, published at /specs/hiecm-m1.yaml and rendered field by field at /docs/hiecm/v3/api/m1. It is NHA's file as ingested.
+The unit of `expiry` is not published. Send seconds, and confirm at
+onboarding how the PHR app renders it.
 
-NHA calls this operation `onShareAcknowledgement`.
+Idempotency: a repeat scan inside the token's validity returns the same token number, so answering the same share twice with the same body is safe.
 
 ## How you know it worked
 
-Not yet observed, and NHA's file documents no response body for this operation. Run it against the sandbox and record what comes back before relying on it.
+The gateway answers 202, within the same second as the inbound share in
+the sandbox. The patient's PHR app then shows the token number.
 
 ## When it goes wrong
 
+- 404 with `No matching resource found for given API Request`. The call went to the ABHA host. Use `https://dev.abdm.gov.in/api/hiecm/patient-share/v3/on-share`.
 - The clock is wrong and every call fails. See [ABDM-2402](hiecm.error.abdm-2402).
 - The `REQUEST-ID` is missing, malformed or reused. See [ABDM-2404](hiecm.error.abdm-2404).
 - No session token was sent. See [ABDM-2500](hiecm.error.abdm-2500).
 - ABDM fails and does not say why. See [ABDM-9999](hiecm.error.abdm-9999).
-

@@ -13,8 +13,13 @@ sources:
   - file: ABDM Sandbox/ABDM/Proposed Simplified Milestone 2.docx
     status: not-yet-hashed
     note: NHA milestone pack for M2.
+  - file: catalogue/annexure/integration-learnings-2026-09-16.md
+    fetched: 2026-09-16
+    hash: sha256:d1415609d3d71178563367bcdcc48fa7a01fe9ebd247b4c019686304868368ce
+    note: >
+      The body shapes the codes arrive in. Observed by an integrator on 2026-09-16, not yet run from this repository.
 related:
-  concepts: []
+  concepts: [hiecm.concept.error-body-shapes]
 ---
 
 # The ABDM error code table
@@ -30,7 +35,7 @@ went wrong and how to fix it, which the one line meaning does not.
 
 ## Before you start
 
-Nothing. Look a code up here the moment you see one.
+Nothing. Look a code up here the moment you see one. To find the code in a response, read [error body shapes](hiecm.concept.error-body-shapes) first: the body is not always an `error` object.
 
 ## What happens
 

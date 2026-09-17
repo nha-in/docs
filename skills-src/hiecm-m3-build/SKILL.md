@@ -51,6 +51,12 @@ curl -X POST 'https://dev.abdm.gov.in/api/hiecm/consent/v3/fetch' \
 
 #### Request a patient's health information (`hiecm.endpoint.m3-hiu-health-information-request`)
 
+Copy `dateRange` from the fetched artefact's `permission.dateRange`, never from your init request, because the patient can narrow the range when they approve and a wider request is refused with `ABDM-1063`. See `hiecm.concept.artefact-date-range`.
+
+Put the consent id in the `dataPushUrl` path, because the push can arrive in the same second as the on-request callback, before a lookup by transaction id has anything to find.
+
+Keep the private key stored against the consent id until the push has decrypted, because a restart between request and push otherwise loses the records.
+
 ```bash
 curl -X POST 'https://dev.abdm.gov.in/api/hiecm/data-flow/v3/health-information/request' \
   -H 'Authorization: Bearer <ACCESS_TOKEN>' \
@@ -101,7 +107,7 @@ curl -X POST 'https://dev.abdm.gov.in/api/hiecm/data-flow/v3/health-information/
       "id": "HIU_SERVICE_ID"
     },
     "statusNotification": {
-      "sessionStatus": "RECEIVED",
+      "sessionStatus": "TRANSFERRED",
       "hipId": "HIP_SERVICE_ID",
       "statusResponses": [
         {

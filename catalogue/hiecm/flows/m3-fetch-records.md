@@ -23,6 +23,11 @@ sources:
     note: >
       How a record travels: the ECDH key exchange, who generates what,
       and the notify calls that close the transfer.
+  - file: catalogue/annexure/integration-learnings-2026-09-16.md
+    fetched: 2026-09-16
+    hash: sha256:d1415609d3d71178563367bcdcc48fa7a01fe9ebd247b4c019686304868368ce
+    note: >
+      The artefact's date range, the consent id in the push URL, the REQUESTED status and TRANSFERRED on notify. Observed by an integrator on 2026-09-16, not yet run from this repository.
 related:
   endpoints:
     - hiecm.endpoint.m3-consent-fetch
@@ -34,11 +39,15 @@ related:
   concepts:
     - hiecm.concept.consent-artefact
     - hiecm.concept.gateway-session
+    - hiecm.concept.artefact-date-range
+    - shared.concept.fidelius-ecdh-interop
   troubleshooting:
     - hiecm.troubleshooting.accepted-then-nothing
     - hiecm.troubleshooting.callback-never-arrives
   errors:
     - hiecm.error.abdm-1062
+    - hiecm.error.abdm-1063
+    - hiecm.error.abdm-1101
     - hiecm.error.abdm-1112
     - hiecm.error.abdm-2402
     - hiecm.error.abdm-2404
@@ -118,13 +127,20 @@ sequenceDiagram
 3. **Ask for the data.** Call
    [HIU Health Information Request](hiecm.endpoint.m3-hiu-health-information-request),
    which posts to `/hiecm/data-flow/v3/health-information/request` with
-   the consent id, the date range you want inside what the artefact
-   permits, your `dataPushUrl`, and your public key in
-   `keyMaterial.dhPublicKey`. The acknowledgement arrives on
+   the consent id, the artefact's own `permission.dateRange` from the
+   on-fetch callback, your `dataPushUrl` with the consent id in its
+   path, and your public key in `keyMaterial.dhPublicKey`. The patient
+   can narrow the range you asked for when they approve, so a request
+   built from your init call can fall outside the grant. See
+   [the artefact's date range](hiecm.concept.artefact-date-range).
+   Keep the private key until the push arrives, stored against the
+   consent id, so a restart between request and push can still
+   decrypt. The acknowledgement arrives on
    [acknowledgement of a health information request](hiecm.callback.m3-on-health-information-request)
    at `/api/v3/hiu/health-information/on-request`, carrying a
-   transaction id and a status. This is an acknowledgement, not the
-   records.
+   transaction id and `sessionStatus: REQUESTED`. This is an
+   acknowledgement, not the records. The push can arrive in the same
+   second, which is why the consent id belongs in the `dataPushUrl`.
 4. **Receive the push.** The HIP encrypts the FHIR bundles with the
    shared secret it derives from your public key and its own, and posts
    them to the `dataPushUrl` you supplied. This is not a call to an
@@ -132,7 +148,9 @@ sequenceDiagram
 5. **Decrypt.** Derive the same session key from your private key and
    the HIP's public key, carried in the push payload's `keyMaterial`, and
    decrypt. The cipher is specified on the HIP side, and the data flow
-   concept page above reproduces it.
+   concept page above reproduces it. For the curve encoding and the key
+   derivation, see
+   [Fidelius ECDH interop](shared.concept.fidelius-ecdh-interop).
 6. **Acknowledge the transfer.** Call
    [HIU Data Flow Notification](hiecm.endpoint.m3-hiu-data-flow-notify),
    which posts to `/hiecm/data-flow/v3/health-information/notify` with
@@ -166,8 +184,12 @@ note: >
   cause, and a mid flow revocation is one way it happens. See
   [ABDM-1062](hiecm.error.abdm-1062). Treat every fetch as a fresh
   permission check, not a cached yes.
+- The date range you asked for falls outside what the patient granted.
+  See [ABDM-1063](hiecm.error.abdm-1063).
 - The artefact id is unknown, expired or already used past its window.
   See [ABDM-1112](hiecm.error.abdm-1112).
+- The final notify is refused as a duplicate. See
+  [ABDM-1101](hiecm.error.abdm-1101).
 - The push never arrives at your `dataPushUrl`. See
   [the callback never arrives](hiecm.troubleshooting.callback-never-arrives).
   Check the `dataPushUrl` you sent on the health information request,
