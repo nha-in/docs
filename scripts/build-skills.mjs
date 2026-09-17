@@ -850,12 +850,20 @@ const hashOf = (dir) => {
   return h.digest('hex').slice(0, 16);
 };
 
+// The compiled skills carry the site URL when DOCUSAURUS_URL is set, so a
+// deployment build (staging, NHA) never hashes to the committed digest, which
+// is taken from the URL-less build that CI's check:skills-version runs. Those
+// builds publish, they do not commit, so the gate and the stamp are skipped
+// for them; the check build is where a missing bump has to fail.
+const deployBuild = Boolean(process.env.DOCUSAURUS_URL);
 const digest = hashOf(pluginDir);
 const previous = existsSync(stamp)
   ? JSON.parse(readFileSync(stamp, 'utf8'))
   : {version: null, digest: null};
 
-if (previous.digest && previous.digest !== digest && previous.version === version) {
+if (deployBuild) {
+  console.log(`Skills built for ${siteUrl}; version gate skipped (deployment build, nothing is committed).`);
+} else if (previous.digest && previous.digest !== digest && previous.version === version) {
   const [maj, min] = version.split('.');
   console.error([
     '',
@@ -873,9 +881,11 @@ if (previous.digest && previous.digest !== digest && previous.version === versio
   process.exit(1);
 }
 
-writeFileSync(stamp, `${JSON.stringify({version, digest}, null, 2)}\n`);
-if (previous.version !== version) {
-  console.log(`Skills stamped at version ${version}, content ${digest}.`);
+if (!deployBuild) {
+  writeFileSync(stamp, `${JSON.stringify({version, digest}, null, 2)}\n`);
+  if (previous.version !== version) {
+    console.log(`Skills stamped at version ${version}, content ${digest}.`);
+  }
 }
 
 // ---------------------------------------------------------------------------
