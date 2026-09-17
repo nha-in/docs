@@ -89,6 +89,17 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run validate:skills
+      # Rebuilding here does two jobs. It fails when the compiled skills changed
+      # without a version bump, which otherwise ships silently and leaves every
+      # existing install on the old skills. And it fails when the committed
+      # skills do not match what the catalogue compiles to, which means somebody
+      # hand edited a build output.
+      # site/src/data/api is a build output and is gitignored, so it does not
+      # exist in a fresh checkout and build-skills reads it.
+      - run: node scripts/build-api-reference.mjs
+      - run: npm run check:skills-version
+      - name: Compiled skills match the catalogue
+        run: git diff --exit-code -- plugins/abdm-integrators-assistant/skills site/static/skills
 
   lint-agent-readiness:
     name: Check specs are agent readable
