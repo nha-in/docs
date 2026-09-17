@@ -20,9 +20,6 @@ sources:
     note: >
       NHA's sandbox FAQ, which points integrators at NRCeS for formats
       and samples rather than publishing its own.
-verified:
-  status: unverified
-  against: docs-only
 related:
   glossary: [shared.glossary.fhir, shared.glossary.hi-type, shared.glossary.nrces]
 ---

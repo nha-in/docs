@@ -18,8 +18,6 @@ sources:
   - file: ABDM Sandbox/ABDM/Proposed Simplified Milestone 2.docx
     status: not-yet-hashed
     note: NHA milestone pack for M2, the same source asynchronous-callbacks.md draws on.
-verified:
-  status: unverified
 related:
   concepts: [hiecm.concept.asynchronous-callbacks]
   flows: [hiecm.flow.m2-link-care-context]

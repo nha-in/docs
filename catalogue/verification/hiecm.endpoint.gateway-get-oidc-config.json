@@ -1,0 +1,8 @@
+{
+  "atom": "hiecm.endpoint.gateway-get-oidc-config",
+  "on": "2026-09-17",
+  "against": "https://dev.abdm.gov.in",
+  "request": "curl -X GET 'https://dev.abdm.gov.in/api/hiecm/gateway/v3/.well-known/openid-configuration' \\\n  -H 'Authorization: Bearer <scrubbed>' \\\n  -H 'REQUEST-ID: 7a74b126-97e6-4e4b-8445-97159479e2f1' \\\n  -H 'TIMESTAMP: 2026-09-17T11:22:42.246Z' \\\n  -H 'X-CM-ID: sbx'\n",
+  "status": 200,
+  "body": "{\"jwks_uri\":\"https://dev.abdm.gov.in/api/hiecm/gateway/v3/certs\"}"
+}

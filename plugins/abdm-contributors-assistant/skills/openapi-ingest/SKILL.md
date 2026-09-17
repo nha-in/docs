@@ -75,8 +75,8 @@ sources:
 Rules for corrections:
 
 - A correction may add what is missing and fix what is malformed. It may never change a schema to what we think it should be.
-- If the correct behaviour is unknown, do not guess. Generate the stub, mark the atom `unverified`, and let sandbox verification settle it.
-- Every corrected operation produces an atom that stays `unverified` until someone runs it.
+- If the correct behaviour is unknown, do not guess. Generate the stub and let `npm run verify:atoms` settle it.
+- Every corrected operation produces an atom that needs a sandbox run before release.
 
 ## Known conditions to expect
 
@@ -95,7 +95,6 @@ One endpoint atom per operation. The generator fills:
 - `type: endpoint`, `gateway`, `version`
 - `title` from summary, rewritten later by a human because generated titles read like machine output
 - `sources` with the hash
-- `verified.status: unverified` always. Generation is not verification.
 - `related.callbacks` where the operation is asynchronous and a callback is identifiable
 
 The generator leaves all five sections empty with headings present. It never writes prose. A stub with generated prose is worse than an empty one, because a reviewer might believe it.

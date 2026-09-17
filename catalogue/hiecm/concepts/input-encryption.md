@@ -42,13 +42,15 @@ sources:
       against ABDM. Source of the OAEP with SHA-1 finding for V3 and of
       the one-key-per-family split. Not a public URL, so a sandbox run
       is what will make this atom verifiable by a reader.
-verified:
-  status: unverified
-  against: docs-only
+  - file: catalogue/annexure/integration-learnings-2026-09-16.md
+    fetched: 2026-09-16
+    hash: sha256:d1415609d3d71178563367bcdcc48fa7a01fe9ebd247b4c019686304868368ce
+    note: >
+      The two keys chosen by path prefix. Observed by an integrator on 2026-09-16, not yet run from this repository.
 related:
   endpoints: [hiecm.endpoint.m1-encrypt-value]
   flows: [hiecm.flow.m1-create-abha-aadhaar-otp]
-  concepts: [hiecm.concept.gateway-session]
+  concepts: [hiecm.concept.gateway-session, hiecm.concept.two-public-keys]
 skills:
   - hiecm-m1-build
 ---
@@ -107,7 +109,8 @@ often needs both:
 
 | Calling | Padding | Key |
 |---|---|---|
-| V3 ABHA and PHR registration and login, the flows this catalogue documents | RSA OAEP with SHA-1 | the certificate from `/v3/profile/public/certificate`, 4096 bit |
+| V3 ABHA enrolment and profile, `/v3/enrollment/*` and `/v3/profile/*` | RSA OAEP with SHA-1 | the profile public key from `/v3/profile/public/certificate`, 4096 bit |
+| V3 PHR, `/v3/phr/*` | RSA OAEP with SHA-1 | the PHR public key from `/v3/phr/app/login/public/certificate`, 2048 bit |
 | Older healthid API family, V1 and V2 | RSA PKCS1 v1.5 | a separate healthid public key, 4096 bit |
 | NHPR, the M4 professional registry | RSA PKCS1 v1.5 | a separate NHPR public key, 2048 bit |
 

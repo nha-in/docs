@@ -1,0 +1,53 @@
+{
+  "footer": "Report at the very end in one fenced block tagged eval-result containing JSON with keys: result (PASS, FAIL or NEEDS_HUMAN), attempts (number of loops), atoms_cited (array of atom ids you actually read), evidence (the verbatim tool or sandbox output that shows the exit condition, or empty), blockers (array of strings). A PASS with empty evidence is scored as FAIL. Use only the abdm-integrators-assistant plugin skills and the mcp__abdm-docs__* tools; do not use your own memory of ABDM where the Catalogue speaks.",
+  "tasks": [
+    {
+      "id": 1,
+      "title": "Scaffold an ABHA verification flow from an empty repo",
+      "skill": "abdm-m1",
+      "needs": ["ABDM_CLIENT_ID", "ABDM_CLIENT_SECRET"],
+      "exit": "The sandbox returns a verified ABHA profile: a 200 from the profile call whose body carries an ABHANumber.",
+      "prompt": "Starting from the empty directory you are in, scaffold an ABHA verification flow against the ABDM sandbox using the abdm-m1 skill. Credentials are in ABDM_CLIENT_ID and ABDM_CLIENT_SECRET. Run it. The task is done only when the sandbox returns a verified ABHA profile. Stop at any OTP step that needs a human and report NEEDS_HUMAN with the atom that marks it."
+    },
+    {
+      "id": 2,
+      "title": "Build and validate an OPConsultation bundle",
+      "skill": "abdm-fhir",
+      "needs": [],
+      "exit": "mcp__abdm-docs__validate_fhir returns findings: null for the bundle, with record_type OPConsultation.",
+      "prompt": "Build an NRCeS compliant OPConsultation FHIR document bundle using the abdm-fhir skill and save it as opconsult-bundle.json in the current directory. Validate it with the validate_fhir MCP tool with record_type OPConsultation. Maximum 8 validate attempts. The task is done only when the validator returns no findings."
+    },
+    {
+      "id": 3,
+      "title": "Link a care context and push encrypted data",
+      "skill": "abdm-m2",
+      "needs": ["ABDM_CLIENT_ID", "ABDM_CLIENT_SECRET", "ABDM_HIP_ID", "ABDM_CALLBACK_URL"],
+      "exit": "A link callback at /api/v3/link/on_carecontext is received at ABDM_CALLBACK_URL carrying no error object and a response.requestId matching the link request, then the data push returns 200 or 202.",
+      "prompt": "Using the abdm-m2 skill, link one care context for the sandbox test patient as HIP ABDM_HIP_ID and push one encrypted health record to the requester. Callbacks arrive at ABDM_CALLBACK_URL. The task is done only when the on_carecontext callback arrives with no error object and the data push is acknowledged with 200 or 202."
+    },
+    {
+      "id": 4,
+      "title": "Raise an HIU consent request and fetch records",
+      "skill": "abdm-m3",
+      "needs": ["ABDM_CLIENT_ID", "ABDM_CLIENT_SECRET", "ABDM_HIU_ID", "ABDM_CALLBACK_URL"],
+      "exit": "A consent artefact is received, and the fetched bundle decrypts and passes validate_fhir.",
+      "prompt": "Using the abdm-m3 skill, raise a consent request as HIU ABDM_HIU_ID for the sandbox test patient, wait for the artefact, and fetch the records. Callbacks arrive at ABDM_CALLBACK_URL. Consent approval in the patient app is a human step: report NEEDS_HUMAN at that point with the atom that marks it. The task is done only when a bundle is decrypted and validate_fhir returns no findings."
+    },
+    {
+      "id": 5,
+      "title": "Diagnose a failing HIP data push from its error",
+      "skill": "abdm-m2",
+      "needs": ["ABDM_CLIENT_ID", "ABDM_CLIENT_SECRET", "ABDM_HIP_ID", "ABDM_CALLBACK_URL"],
+      "exit": "The correct error atom is cited, the fix is applied, and the original push then succeeds.",
+      "prompt": "A HIP data push against the sandbox is failing. Reproduce it with the abdm-m2 skill using a REQUEST-ID that was already used once, diagnose the error with the debug reference, cite the error atom, apply the fix, and rerun the original push. The task is done only when the original push succeeds. Applying the fix is not the exit condition."
+    },
+    {
+      "id": 6,
+      "title": "Walk the M1 to M3 test cases to completion",
+      "skill": "abdm-m1, abdm-m2, abdm-m3",
+      "needs": ["ABDM_CLIENT_ID", "ABDM_CLIENT_SECRET", "ABDM_HIP_ID", "ABDM_HIU_ID", "ABDM_CALLBACK_URL"],
+      "exit": "Every test case in the M1, M2 and M3 test references is recorded as passed or as NEEDS_HUMAN with the reason.",
+      "prompt": "Walk every test case in the test references of the abdm-m1, abdm-m2 and abdm-m3 skills against the sandbox. Record each as passed, failed or NEEDS_HUMAN with the reason. Never mark a human step as passed or failed. The task is done only when every case has a recorded outcome."
+    }
+  ]
+}

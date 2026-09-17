@@ -18,8 +18,6 @@ sources:
       narrative and again in the test cases, and the two do not agree on the
       minimum length. Both readings are recorded below rather than one being
       chosen.
-verified:
-  status: unverified
 related:
   concepts:
     - hiecm.concept.abha-number-and-address

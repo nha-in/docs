@@ -3,7 +3,6 @@ title: P3 PHR consent and notifications
 sidebar_label: Overview
 sidebar_position: 0
 description: How a patient grants, reviews and revokes consent, and how they are told any of it happened.
-verification: unverified
 source: catalogue/openapi/hiecm/v3/hiecm-p3.yaml
 ---
 

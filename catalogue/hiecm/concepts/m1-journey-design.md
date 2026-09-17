@@ -23,8 +23,6 @@ sources:
       entry point, a skip affordance, and branding carried as configuration.
       Recorded as design corroboration only. Every rule below is grounded in
       an ABDM operation rather than in any one product.
-verified:
-  status: unverified
 related:
   concepts: [hiecm.concept.abha-number-and-address, hiecm.concept.abha-address-policy, hiecm.concept.encrypted-identifiers]
   flows: [hiecm.flow.m1-create-abha-aadhaar-otp, hiecm.flow.m1-create-abha-by-document, hiecm.flow.m1-create-abha-face-auth, hiecm.flow.m1-create-child-abha, hiecm.flow.m1-login-by-mobile, hiecm.flow.m1-find-abha]

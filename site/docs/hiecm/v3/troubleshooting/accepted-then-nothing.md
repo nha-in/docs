@@ -2,7 +2,6 @@
 title: Accepted, then nothing
 sidebar_label: Accepted, then nothing
 description: Discovery or care context linking started, the first call was accepted, and the flow stalled somewhere in the middle.
-verification: unverified
 source: site/docs/api/hie-cm/index.md, ABDM__Proposed_Simplified_Milestone_2.md
 sidebar_position: 4
 covers: [hiecm.troubleshooting.accepted-then-nothing]

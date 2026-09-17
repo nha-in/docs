@@ -21,8 +21,6 @@ sources:
       The padding matrix behind the pass and fail bodies below, run by an
       integrator against a provisioned sandbox client and reported to this
       portal.
-verified:
-  status: unverified
 related:
   concepts: [hiecm.concept.encrypted-identifiers, hiecm.concept.input-encryption]
   endpoints: [hiecm.endpoint.m1-login-request-otp, hiecm.endpoint.m1-get-public-certificate]

@@ -18,8 +18,6 @@ sources:
       NHA's PHR application document. Gives the four events a subscription
       delivers, the two moments an application must create one, and the five
       states a request moves through in the interface.
-verified:
-  status: unverified
 related:
   concepts:
     - hiecm.concept.care-context

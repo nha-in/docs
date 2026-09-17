@@ -2,7 +2,6 @@
 title: HFR on UHI
 sidebar_label: HFR
 description: The one UHI service that carries an HFR ID, the tag it travels in, and what is issued at onboarding.
-verification: unverified
 source: UHI__UHI_AMRIT_Pharmacy_OnboardingDoc_v1.0.md, UHI__UHI_Physical_Consultation_v2.0_-_Onboarding_Document.md
 sidebar_position: 3
 sidebar_class_name: sidebar-icon sidebar-icon--building
