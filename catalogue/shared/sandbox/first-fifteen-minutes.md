@@ -23,8 +23,6 @@ sources:
       Sandbox category, "How to integrate digital health solutions in
       the sandbox?": application takes around 10 minutes, processed in
       a maximum of 5 working days.
-verified:
-  status: unverified
 related:
   endpoints: [hiecm.endpoint.gateway-sessions]
   concepts: [hiecm.concept.gateway-session]

@@ -12,8 +12,6 @@ sources:
   - file: ABDM Sandbox/ABDM/Proposed Simplified Milestone 3.docx
     status: not-yet-hashed
     note: NHA milestone pack for M3.
-verified:
-  status: unverified
 related:
   glossary: [shared.glossary.consent-artefact, shared.glossary.hiu]
   concepts: [hiecm.concept.roles]

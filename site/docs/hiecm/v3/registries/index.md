@@ -2,7 +2,6 @@
 title: Registries
 sidebar_label: Registries
 description: What an ABDM registry is, why there are two, and where ABHA, HPR and HFR sit.
-verification: unverified
 source: ABDM__Proposed_Simplified_Milestone_1.md, ABDM__Proposed_Simplified_Milestone_4_(NHPR).md
 ---
 

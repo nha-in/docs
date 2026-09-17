@@ -1,0 +1,8 @@
+{
+  "atom": "hiecm.endpoint.m1-enrolment-request-otp",
+  "on": "2026-09-17",
+  "against": "https://abhasbx.abdm.gov.in",
+  "request": "curl -X POST 'https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/request/otp' \\\n  -H 'Authorization: Bearer <scrubbed>' \\\n  -H 'REQUEST-ID: 4e87d52a-ff4f-45db-97a5-9216b9ae3c89' \\\n  -H 'TIMESTAMP: 2026-09-17T11:22:48.201Z' \\\n  -H 'Content-Type: application/json' \\\n  -d '{\n  \"scope\": [\n    \"abha-enrol\"\n  ],\n  \"loginHint\": \"aadhaar\",\n  \"loginId\": \"_encrypted_12_digit_aadhaar_no_\",\n  \"otpSystem\": \"aadhaar\"\n}'\n",
+  "status": 400,
+  "body": "{\"loginId\":\"Invalid LoginId\",\"timestamp\":\"2026-09-17 16:52:48\"}"
+}

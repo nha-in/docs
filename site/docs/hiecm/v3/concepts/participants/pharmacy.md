@@ -3,7 +3,6 @@ title: Pharmacy
 sidebar_label: Pharmacy
 sidebar_position: 5
 description: A pharmacy takes the same roles as a hospital, with a narrower record surface. What differs, and what runs on another gateway.
-verification: unverified
 source: site/docs/hiecm/v3/registries/nhpr/hfr.md, site/docs/hiecm/v3/concepts/hip-hiu.md, site/docs/hiecm/v3/concepts/fhir.md, site/docs/hiecm/v3/registries/nhpr/hpr.md
 sidebar_class_name: sidebar-icon sidebar-icon--pill
 ---

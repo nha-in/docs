@@ -16,8 +16,6 @@ sources:
   - file: ABDM Sandbox/ABDM/NewDocumant PHR app.docx
     status: not-yet-hashed
     note: NHA's PHR app document, for what a patient sees and the subscription model.
-verified:
-  status: unverified
 related:
   concepts: [hiecm.concept.consent-artefact]
   endpoints: [hiecm.endpoint.m3-consent-request-init, hiecm.endpoint.m3-consent-request-status]

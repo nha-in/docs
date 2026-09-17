@@ -25,9 +25,6 @@ sources:
       The Sandbox category, the question "What to do when my
       integration is completed? What are the next steps?", and the
       related questions on functional testing and security assessment.
-verified:
-  status: unverified
-  against: docs-only
 related:
   sandbox: [shared.sandbox.registration-and-credentials, shared.sandbox.wasa]
   glossary: [shared.glossary.abdm, shared.glossary.nha, shared.glossary.hip,

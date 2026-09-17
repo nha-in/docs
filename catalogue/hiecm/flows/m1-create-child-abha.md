@@ -25,9 +25,6 @@ sources:
       The M1 specification as curated here. The child authentication method
       and its fields, the update payload, the listing call and the two
       refusals come from it.
-verified:
-  status: unverified
-  against: docs-only
 related:
   endpoints:
     - hiecm.endpoint.m1-enrolment-by-aadhaar

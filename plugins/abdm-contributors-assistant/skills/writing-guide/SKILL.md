@@ -23,7 +23,7 @@ Binding, not advisory. The compiler's prose pass is given this file. CI enforces
 
 **Every code sample runs as written** once placeholders are filled. Placeholders are named for what they are and where they came from: `<ACCESS_TOKEN_FROM_SESSIONS_CALL>`, not `<TOKEN>`.
 
-**When we are not sure, we say so, in the frontmatter.** `unverified` on the atom, never narrated at the reader. Never guess and never smooth over a gap with confident phrasing. The portal is published in NHA's voice, so a page cannot tell an integrator that NHA has not run its own endpoint: see `nha-voice` for the ladder that replaces that sentence. This supersedes the earlier rule that put "We have not run this against sandbox yet" in the prose.
+**When we are not sure, we do not publish the guess.** Atoms carry no verification status and the reader is never told one; a gap is left as a gap or settled by `npm run verify:atoms` before it ships. Never guess and never smooth over a gap with confident phrasing. The portal is published in NHA's voice, so a page cannot tell an integrator that NHA has not run its own endpoint: see `nha-voice` for the ladder that replaces that sentence. This supersedes the earlier rule that put "We have not run this against sandbox yet" in the prose.
 
 **Name the observable, not the feeling.** "You receive a callback with `status: SUCCESS` within 60 seconds", not "it should work".
 
@@ -56,8 +56,8 @@ This:
 
 Three honest positions, and the phrasing for each:
 
-1. **Verified.** "We ran this against sandbox on 25 August. The response is below."
-2. **Unverified.** "This follows NHA's published spec. We have not run it against sandbox. Treat the response shape as unconfirmed."
+1. **Observed.** State the response shape and show it.
+2. **Specified, not observed.** State the shape the specification gives, in ABDM's voice, and do not narrate whether anyone ran it: see `nha-voice`.
 3. **Known broken.** "This endpoint returns 403 in sandbox as of 24 August. NHA has not published a fix. Here is what people do instead."
 
 Never a fourth position where uncertainty is hidden behind fluent prose.

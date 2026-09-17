@@ -3,7 +3,6 @@ title: M1 ABHA identity errors
 sidebar_label: Errors
 sidebar_position: 98
 description: What M1 ABHA identity returns when a call fails, and what to do about it.
-verification: unverified
 source: hiecm-m1.yaml
 generated: true
 ---

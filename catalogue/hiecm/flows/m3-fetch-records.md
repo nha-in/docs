@@ -23,9 +23,6 @@ sources:
     note: >
       How a record travels: the ECDH key exchange, who generates what,
       and the notify calls that close the transfer.
-verified:
-  status: unverified
-  against: docs-only
 related:
   endpoints:
     - hiecm.endpoint.m3-consent-fetch

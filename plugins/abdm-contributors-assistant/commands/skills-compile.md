@@ -26,7 +26,7 @@ Select, assemble, prose pass, validate, index, bundle. The index is always gener
 - Skills compiled, with the atom count feeding each
 - The traceability map from `--trace`
 - Validation failures with the atom or template at fault
-- Warnings: flows with no skill target, stale atoms compiled with a warning line, orphan atoms
+- Warnings: flows with no skill target, orphan atoms
 - The new `catalogue_version`
 
 ## On failure
@@ -38,7 +38,7 @@ The build stops. Nothing publishes. Common causes and where to look:
 | Identifier diff | The prose pass invented a token. Regenerate. Do not add it to the Catalogue. |
 | Missing exit condition | The atom's section 4 is not observable. Fix the atom. |
 | Missing loop limit | Template bug. See `ooda-skill-authoring`. |
-| Gateway coverage zero | Nothing raises this. No script checks verified coverage per gateway and none refuses to build on it. That gate is wanted and not implemented, so P1's phasing is held by review, not by CI. Do not cite it as a gate. |
+| Gateway coverage zero | Nothing raises this. Atoms carry no status to count and no script refuses to build on coverage. P1's phasing is held by review, not by CI. Do not cite it as a gate. |
 
 ## Never
 

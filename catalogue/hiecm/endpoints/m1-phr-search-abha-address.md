@@ -14,8 +14,6 @@ sources:
     fetched: 2026-08-25
     note: >
       NHA's M1 OpenAPI file.
-verified:
-  status: unverified
 related:
   errors: [hiecm.error.abdm-2402, hiecm.error.abdm-2404, hiecm.error.abdm-2500, hiecm.error.abdm-9999]
   concepts: [hiecm.concept.gateway-session]

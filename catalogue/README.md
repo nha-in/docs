@@ -78,9 +78,10 @@ not yet indexed (only `paths` operations appear in list_operations), and
 
 Frontmatter carries the machine half: `id` (stable, never reused),
 `type`, `gateway`, `milestone`, `title`, `summary`, `sources` with fetch
-status, `verified.status` (draft, unverified, verified, stale), and the
-`related` map that builds the graph. The body carries five sections: In
-plain words, Before you start, What happens, How you know it worked,
-When it goes wrong. No em dash anywhere. Never claim verification that
-was not observed. The abdm-portal plugin's atom-authoring skill carries
-the full rules.
+status, and the `related` map that builds the graph. The body carries five
+sections: In plain words, Before you start, What happens, How you know it
+worked, When it goes wrong. No em dash anywhere. Atoms carry no
+verification status: the Catalogue states how ABDM works, and sandbox
+evidence is kept for contributors under `catalogue/verification/` by
+`npm run verify:atoms`. The abdm-portal plugin's atom-authoring skill
+carries the full rules.

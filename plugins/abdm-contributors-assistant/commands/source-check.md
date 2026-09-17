@@ -18,7 +18,7 @@ The same command runs in CI as the `lint-sources` job.
 ## What this command does not do
 
 - It does not fetch anything from NHA. It compares recorded hashes against files already in the repository, so it detects a raw file changing under the Catalogue, not NHA changing a page.
-- It does not flip any atom to `stale`. Nothing does; no atom is stale today.
+- It does not edit any atom. Atoms carry no status to flip.
 - It does not open a pull request. There is no bot. If the check reports a `MISMATCH`, a person reads the diff and edits the affected atoms by hand.
 - It is not scheduled. Nothing sweeps sources on a timer.
 

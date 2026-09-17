@@ -17,8 +17,6 @@ sources:
       Declares GET /api/hiecm/gateway/v3/certs as the JSON Web Key Set used
       to verify JWT signatures in gateway callbacks, and the OIDC discovery
       document that names the jwks_uri.
-verified:
-  status: unverified
 related:
   concepts:
     - hiecm.concept.asynchronous-callbacks

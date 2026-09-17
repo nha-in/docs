@@ -7,10 +7,6 @@
       "M1": 1,
       "M2": 2
     },
-    "by_status": {
-      "unverified": 2,
-      "verified": 1
-    },
     "by_type": {
       "endpoint": 1,
       "error": 1,

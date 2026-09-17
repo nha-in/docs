@@ -14,8 +14,6 @@ sources:
     note: >
       Derived from the operation in catalogue/openapi/hiecm/v3/hiecm-gateway.yaml,
       which comes from this source.
-verified:
-  status: unverified
 related:
   errors: [hiecm.error.abdm-2402, hiecm.error.abdm-2403, hiecm.error.abdm-2404, hiecm.error.abdm-2500, hiecm.error.abdm-9999]
   concepts: [hiecm.concept.gateway-session]

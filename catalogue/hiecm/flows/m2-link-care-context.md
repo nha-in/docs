@@ -23,9 +23,6 @@ sources:
       makes and the three callbacks it waits on come from here, which is
       what replaced the note that said the endpoint atoms were still to
       come.
-verified:
-  status: unverified
-  against: docs-only
 related:
   endpoints:
     - hiecm.endpoint.m2-generate-link-token

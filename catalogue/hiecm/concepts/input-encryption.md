@@ -42,9 +42,6 @@ sources:
       against ABDM. Source of the OAEP with SHA-1 finding for V3 and of
       the one-key-per-family split. Not a public URL, so a sandbox run
       is what will make this atom verifiable by a reader.
-verified:
-  status: unverified
-  against: docs-only
 related:
   endpoints: [hiecm.endpoint.m1-encrypt-value]
   flows: [hiecm.flow.m1-create-abha-aadhaar-otp]

@@ -14,8 +14,6 @@ sources:
   - file: catalogue/openapi/CONVENTIONS.md
     status: not-yet-hashed
     note: This repository's own specification conventions.
-verified:
-  status: unverified
 related:
   concepts: [hiecm.concept.asynchronous-callbacks]
 ---
