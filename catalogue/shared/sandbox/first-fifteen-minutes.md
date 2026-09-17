@@ -70,7 +70,7 @@ Method and path: `POST /api/hiecm/gateway/v3/sessions`, sandbox host
 | --- | --- |
 | `REQUEST-ID` | `5f7a4a1e-59ba-4c0c-9e0c-8e6b3b6e2f11` |
 | `TIMESTAMP` | `2026-08-25T15:51:15.339Z` |
-| `X-CM-ID` | `sbx` on the sandbox, `abdm` in production |
+| `X-CM-ID` | `sbx` |
 | `Content-Type` | `application/json` |
 
 ```bash

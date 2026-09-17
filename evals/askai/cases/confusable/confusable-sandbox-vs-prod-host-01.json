@@ -15,5 +15,5 @@
   "derived_from": null,
   "source_row": "annexure#sandbox-faq-general",
   "catalogue_version": "2026.08.24",
-  "notes": "Source line: catalogue/shared/sandbox/going-live.md:92-93, 'For the gateway session call, sandbox is https://dev.abdm.gov.in with X-CM-ID: sbx, and production is https://apis.abdm.gov.in with X-CM-ID: abdm.' Dropped criterion: the brief's second fact ('several published samples show the production host while describing sandbox behaviour') has no source in the catalogue after searching gateway-session.md, going-live.md and the endpoint files; no atom documents this as a known error, so it was not written."
+  "notes": "Source line: catalogue/shared/sandbox/going-live.md:91-92, 'For the gateway session call, sandbox is https://dev.abdm.gov.in with X-CM-ID: sbx, and production is https://apis.abdm.gov.in.' Dropped criterion: the brief's second fact ('several published samples show the production host while describing sandbox behaviour') has no source in the catalogue after searching gateway-session.md, going-live.md and the endpoint files; no atom documents this as a known error, so it was not written."
 }

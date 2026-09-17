@@ -27,8 +27,8 @@ related:
 NHA's test environment, and where every integration starts: you register
 on the sandbox portal, declare your role and the milestones you plan to
 complete, and receive a client id and client secret. Sandbox hosts
-differ from production, so ABHA calls go to `abhasbx.abdm.gov.in` in
-sandbox and `abha.abdm.gov.in` in production. Everything in sandbox is
+differ from production, and ABHA calls go to `abhasbx.abdm.gov.in` in
+sandbox. Everything in sandbox is
 test data; see [Get started](/docs/hiecm/v3/getting-started/sandbox).
 
 ## Before you start

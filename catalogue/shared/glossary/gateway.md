@@ -35,8 +35,8 @@ NHA's routing layer: you do not call another participant directly, you
 call the gateway, it forwards your request, and the reply arrives at
 your [bridge](bridge.md) as a separate inbound call. You get a session
 token first, by posting your client id and client secret to
-`/api/hiecm/gateway/v3/sessions`. Two sandbox hosts serve that path,
-`https://apissbx.abdm.gov.in` and `https://dev.abdm.gov.in`. Take the
+`/api/hiecm/gateway/v3/sessions`. The sandbox host for that path is
+`https://dev.abdm.gov.in`. Take the
 host from your onboarding documentation and keep it in configuration.
 
 NHA's own description is the hub that mediates and connects consent
