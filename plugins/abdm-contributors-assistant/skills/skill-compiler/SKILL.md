@@ -7,9 +7,19 @@ description: How ABDM Catalogue atoms are compiled into agent skills, the plugin
 
 Skills are build outputs. Nobody writes a SKILL.md for ABDM by hand. If a compiled skill is wrong, the atom is wrong, or the template is wrong. Editing the output fixes nothing and gets overwritten on the next build.
 
+## What runs today
+
+The HIE-CM module skills do not compile from atoms. No HIE-CM atom exists since the 16 September 2026 reset. Three scripts build them from the specifications and the journey files:
+
+1. `node scripts/build-api-reference.mjs` writes one data file per operation and per journey step from `catalogue/openapi/hiecm/v3/*.yaml` and `journeys/*.yaml`.
+2. `node scripts/compile-skills.mjs` writes the guided loops under `skills-src/`: `hiecm-<module>-build` for a module with journeys, and `hiecm-<module>-debug` for a module whose specification's response examples return error codes.
+3. `node scripts/build-skills.mjs` writes one folder per module, `abdm-gateway`, `abdm-m1` to `abdm-m4`, `abdm-p1` to `abdm-p4`, `abdm-subscription` and `abdm-scan-and-pay`, plus `abdm-fhir`, to `site/static/skills/` and to the integrators plugin. It folds the loops in as `references/scaffold.md` and `references/debug.md`, adds the module rules held in the script, and injects the practices from `shared.concept.integration-practices`.
+
+`npm run validate:skills` checks the output. The selector, templates, prose pass and identifier diff described below are the design for atom-fed skills, and none of them runs today.
+
 ## Two inputs, one pipeline
 
-The compiler has two sources. Atoms produce the gateway skills. The architecture and execution plan produces four skills about the portal itself: `portal-architecture`, `portal-planning`, `dpg-governance` and `abdm-portal-index`. Same templates, same prose constraints, same validator, and the same rule that the output is never hand-edited.
+The compiler has two sources. Atoms were designed to produce the gateway skills. The architecture and execution plan produces four skills about the portal itself: `portal-architecture`, `portal-planning`, `dpg-governance` and `abdm-portal-index`. Same templates, same prose constraints, same validator, and the same rule that the output is never hand-edited.
 
 The plan's authoritative list of its own outputs is `compiled_skills` in `plan/manifest.json`. Read it from there rather than hardcoding four names, so adding a fifth plan-derived skill does not need a compiler change.
 
@@ -44,7 +54,7 @@ Reads `skills:` in each atom's frontmatter. An atom can feed several skills; the
 Rules:
 
 - An atom with no `skills` entry never reaches an agent. That is correct for glossary and decision atoms and a mistake for flows. The selector warns on flows with no skill target.
-- Error atoms feed the milestone debug skill and the cross-gateway `abdm-errors` skill.
+- Error codes reach the module debug loop from the specification's response examples, not from error atoms. No cross-gateway errors skill exists.
 - Test atoms feed test skills only.
 - An atom marked `stale` still compiles, but the compiler injects a warning line into the skill: this step may have changed, check the docs.
 

@@ -1,9 +1,9 @@
 ---
 name: abdm-portal-index
 description: Router for all ABDM Developer Portal build work. Use this FIRST whenever anyone asks about building, planning, writing, reviewing, compiling, publishing or testing the ABDM Catalogue, the self-hosted docs site, the agent skills, the Docs MCP server, the update pipeline, or the portal's schedule and scope. Triggers include "write an atom", "review this page", "the catalogue", "lint failed", "compile the skills", "which milestone am I on", "what ships Friday", "is this DPG compliant", "ingest NHA swagger", "the support agent", and any mention of HIE-CM or ABDM documentation work. Route from here rather than guessing which skill applies.
-plan_version: 2026.09.17
+plan_version: 2026.09.17-2
 plan_source: abdm-v1-phase1-architecture-and-plan.md
-plan_hash: sha256:688c6cd2bfac19ab6aa9c0cebb108ec2f2fb58e9fdb9d275c963eef967d4f901
+plan_hash: sha256:f82e22ccc0cc67666b57c6907c200544f5e9a66f434a58990ae26deafa2eebaa
 compiled_from_plan: true
 ---
 
@@ -61,8 +61,8 @@ Scope is phased, and phase is not the same as existence. Before promising anythi
 |---|---|---|---|
 | HIE-CM gateway, M1, M2, M3 | zero | `hiecm-gateway.yaml`, `hiecm-m1.yaml`, `hiecm-m2.yaml`, `hiecm-m3.yaml`, 11, 30, 21 and 12 operations, 15 of the M2 and M3 ones webhooks. `abdm-gateway` and `abdm-m1` to `abdm-m3` compile | Point at the generated pages and the compiled skills and say they are unverified. No call in them has a recorded sandbox response. |
 | HIE-CM M4 | zero | `hiecm-m4.yaml`, 100 operations, 100 generated pages, and `abdm-m4` compiles | As for M1 to M3, and always that no M4 call has been run against sandbox. |
-| HIE-CM P1, P2, P3, P4 | zero | `hiecm-p1.yaml` to `hiecm-p4.yaml`, 11, 32, 8 and 4 operations, 57 generated pages, and `abdm-p1` to `abdm-p4` compile | As for M4. No operation in them has been run. |
-| HIE-CM subscriptions, Scan and Pay | zero | `hiecm-subscription.yaml` and `hiecm-scan-and-pay.yaml`, 6 and 18 operations, 11 of them webhooks, 26 generated pages, and `abdm-subscription` and `abdm-scan-and-pay` compile | As for M4. Do not improvise a flow, an error table or a curl beyond what the specification and the journey file carry. |
+| HIE-CM P1, P2, P3, P4 | zero | `hiecm-p1.yaml` to `hiecm-p4.yaml`, 11, 32, 8 and 4 operations, 57 generated endpoint and errors pages, and `abdm-p1` to `abdm-p4` compile | As for M4. No operation in them has been run. |
+| HIE-CM subscriptions, Scan and Pay | zero | `hiecm-subscription.yaml` and `hiecm-scan-and-pay.yaml`, 6 and 18 operations, 11 of them webhooks, 26 generated endpoint and errors pages, and `abdm-subscription` and `abdm-scan-and-pay` compile | As for M4. Do not improvise a flow, an error table or a curl beyond what the specification and the journey file carry. |
 | UHI | zero | 16 site pages. `catalogue/openapi/uhi/v1/` holds a conventions README and no specification file | Orientation only, and say it is unverified. Atoms and skills are Phase 2. |
 | Shared | 57, of which 4 draft and none verified | Glossary, FHIR, sandbox, concept and decision atoms that belong to no single milestone, all carrying `milestone: n/a` | Cite them freely for any gateway, and say they are unverified. These 57 are the whole Catalogue. |
 | NHCX | zero | 5 site pages. `catalogue/nhcx/` is folder structure holding no atom, and `catalogue/openapi/nhcx/v1/` holds a conventions README and no specification file | Say both halves. NHCX pages exist, so send readers to them rather than claiming NHCX is absent. NHCX atoms do not exist yet, and nothing rejects one: `scripts/lint-atoms.mjs` accepts `gateway: nhcx` alongside `hiecm`, `uhi` and `shared`. Atoms and skills are Phase 2, the same as UHI. |

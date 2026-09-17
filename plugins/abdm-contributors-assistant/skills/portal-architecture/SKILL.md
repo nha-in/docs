@@ -1,9 +1,9 @@
 ---
 name: portal-architecture
 description: 'The architecture of the ABDM Developer Portal: the four building blocks, how the Catalogue compiles into docs, skills and MCP surfaces, the seven binding principles, the atom model, and what is deliberately excluded from V1. Use whenever someone asks how the portal fits together, why a design decision was made, whether something belongs in V1, where a new capability should live, or proposes a change to the structure. Also use before designing any new component so it lands in the right layer instead of beside it.'
-plan_version: 2026.09.17
+plan_version: 2026.09.17-2
 plan_source: abdm-v1-phase1-architecture-and-plan.md
-plan_hash: sha256:688c6cd2bfac19ab6aa9c0cebb108ec2f2fb58e9fdb9d275c963eef967d4f901
+plan_hash: sha256:f82e22ccc0cc67666b57c6907c200544f5e9a66f434a58990ae26deafa2eebaa
 compiled_from_plan: true
 ---
 
