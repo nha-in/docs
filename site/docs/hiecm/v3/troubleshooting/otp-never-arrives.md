@@ -30,7 +30,13 @@ or the code the response names on the
    [M1 user journey](/docs/hiecm/v3/milestones/m1) for the full
    enrolment sequence, and confirm which number Aadhaar has on file
    before assuming delivery failed.
-2. **Has the transaction expired before you tried to verify it?** How
+2. **Have you requested an OTP for this transaction more than a few
+   times in a short window?** You may have been rate limited. A retry
+   loop that fires the request call again on every failure can trigger
+   this without the failure showing clearly in your own logs, because a
+   rate limit response can read like a plain timeout depending on how
+   your client surfaces it.
+3. **Has the transaction expired before you tried to verify it?** How
    long a `txnId` stays valid is not documented yet.
    A failed enrolment call should not be retried blindly: start a fresh
    OTP request rather than reuse an old `txnId` if enough time has
@@ -38,19 +44,21 @@ or the code the response names on the
 
 ## How you know it worked
 
-The phone registered against the identifier you sent receives an OTP, and verifying it with that `txnId` succeeds. Receiving
+The phone registered against the identifier you sent receives an SMS
+carrying an OTP, and verifying it with that `txnId` succeeds. Receiving
 a `txnId` from the request call alone does not confirm the SMS was sent.
 
 ## When it goes wrong
 
-If you have confirmed the receiving number and
+If you have confirmed the receiving number, are not rate limited, and
 the transaction is fresh, and the OTP still has not arrived, raise a request on the
 [support ticketing platform](https://sandboxsupport.abdm.gov.in/) rather than requesting
 again. Report the API you called, the `REQUEST-ID`, the `TIMESTAMP`, and
 the full response body including the `txnId`. See
 [what to put in a support request](/docs/hiecm/v3/troubleshooting#what-to-put-in-a-support-request) for the full report format.
 
-This symptom can surface as the catch-all failure code on the
+This symptom can surface as a rate limit code or the catch-all
+failure code, both on the
 [error codes reference](/docs/hiecm/v3/reference/error-codes).
 
 <a class="next-step" href="/docs/hiecm/v3/milestones/m1">

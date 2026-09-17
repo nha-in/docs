@@ -16,19 +16,20 @@ They are separate because a doctor holds one identity for a career across many f
 
 | You need | When |
 | --- | --- |
-| An [HPID](/docs/hiecm/v3/getting-started/glossary#hpid) on the HPR | Before anything else in NHPR. The HFR basic information call carries an `x-hprid-auth` token in the header |
+| An [HPID](/docs/hiecm/v3/getting-started/glossary#hpid) on the HPR | Before anything else in NHPR. The HFR create call carries an HPR token in the header, generated from an HPR ID and password |
 | A facility ID on the HFR | Before the facility goes live as a [HIP](/docs/hiecm/v3/getting-started/glossary#hip) or an [HIU](/docs/hiecm/v3/getting-started/glossary#hiu). A valid facility ID is a prerequisite for sharing records at all |
 | A bridge linked to the facility | Last. It is what makes your software resolvable as that facility on the network |
 
 ## Base URLs
 
-Both registries share one sandbox base URL:
+Both registries share one set:
 
 ```text
 Sandbox     https://apihspsbx.abdm.gov.in/v4/int/
+Production  https://apinhpr.abdm.gov.in/v4/int/
 ```
 
-The calls take a bearer token in the `Authorization` header. NHPR issues a token through its own `POST /getManagementToken` call. [M4](/docs/hiecm/v3/api/m4) is the only milestone in [ABDM](/docs/hiecm/v3/getting-started/glossary#abdm) that writes to NHPR, and its operations and their fields are in [the M4 API reference](/docs/hiecm/v3/api/m4).
+The session token that authorises them comes from the HIE-CM gateway, not from NHPR. [M4](/docs/hiecm/v3/api/m4) is the only milestone in [ABDM](/docs/hiecm/v3/getting-started/glossary#abdm) that writes to NHPR, and its operations and their fields are in [the M4 API reference](/docs/hiecm/v3/api/m4).
 
 ## Next
 

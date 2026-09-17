@@ -31,7 +31,7 @@ One request can produce more than one artefact. A granted request returns the id
 
 ## The states a consent moves through
 
-There are five states: Requested, Granted, Denied, Expired and Revoked.
+There are five states, in the two sections a PHR app shows: Requests holds Requested, Denied and Expired; Approved holds Granted and Revoked.
 
 ```mermaid
 stateDiagram-v2
@@ -48,20 +48,20 @@ stateDiagram-v2
 | Requested | The patient has not acted yet. | Wait. Poll the request status if you need to show progress. |
 | Granted | The patient approved, and set how long the access lasts. | Fetch the artefact ids, then request the data. |
 | Denied | The patient refused. | Stop. There is no partial result and no retry that changes the answer. |
-| Expired | The request expired before the patient acted. | Raise a new request if the clinical need is still there. |
+| Expired | The patient did not act inside the window the HIU set on the request. | Raise a new request if the clinical need is still there. |
 | Revoked | The patient withdrew a consent they had already granted. | Stop fetching under that artefact from that moment. |
 
-The **consent validity period** is how long access lasts once granted, carried as the date and time at which the consent expires. It is not the **date range**, which says which records are in scope by when the care happened: a consent granted today can cover records from 2019.
+Two clocks run here. The **request window** is how long the patient has to answer, set by the HIU, and running out produces Expired. The **consent validity period** is how long access lasts once granted, set by the patient as they grant, with a defined expiry date and time. Neither is the **date range**, which says which records are in scope by when the care happened: a consent granted today can cover records from 2019.
 
 ## What the patient sees, and can change
 
-A consent request carries the requesting HIU, the purpose of data access, the data types requested, the date range, the consent validity period and the request status. The patient approves with their preferred data access parameters, so they may modify four of those before approving: access duration, record date range, data categories and validity period. The consent you get back can be narrower than the one you asked for, so read the artefact.
+A consent request must display the requesting HIU, the purpose of data access, the data types requested, the date range, the consent validity period and the request status. Where permitted, the patient may modify four of those before approving: access duration, record date range, data categories and validity period. The consent you get back can be narrower than the one you asked for, so read the artefact.
 
 ## The five things a PHR app must let a person do
 
-Consent is granted by a person, and the PHR app is where they do it. The
-consent APIs give it five capabilities, and an app missing one leaves a person
-able to give access they cannot inspect, change or withdraw.
+Consent is granted by a person, and the PHR app is where they do it. NHA sets
+a floor of five capabilities, and an app missing one leaves a person able to
+give access they cannot inspect, change or withdraw.
 
 1. **See the request**, with the HIU asking, the purpose, the record types,
    the date range of records, how long the consent would last, and its status.
@@ -70,17 +70,18 @@ able to give access they cannot inspect, change or withdraw.
    period. This is the one most often left out, and the one that turns a
    consent screen into a negotiation rather than a demand.
 3. **Allow or refuse it.** A request has three outcomes, not two:
-   grant, deny, or let it expire. The interface has to show the expired
-   state.
+   approve, reject and ignore. An ignored request expires on the requester's
+   window, and the interface has to show that state.
 4. **See what is already allowed**, so the person can tell which
    organisations hold access right now. A list of past decisions is not the
    same thing.
-5. **Take it back** at any time, which revokes a previously approved
-   consent.
+5. **Take it back** at any time. Two things follow: the status updates at the
+   consent manager, and sharing under that consent stops immediately, not at
+   the end of the period.
 
 ## Purpose of use codes
 
-Why you want the records. See [purpose of use](/docs/hiecm/v3/getting-started/glossary#purpose-of-use).
+Why you want the records. See [purpose of use](/docs/hiecm/v3/getting-started/glossary#purpose-of-use). These codes are a subset of the HL7 v3 PurposeOfUse value set at [terminology.hl7.org](http://terminology.hl7.org/ValueSet/v3-PurposeOfUse).
 
 | Code | Display |
 | --- | --- |
@@ -89,34 +90,35 @@ Why you want the records. See [purpose of use](/docs/hiecm/v3/getting-started/gl
 | `PUBHLTH` | Public Health |
 | `HPAYMT` | Healthcare Payment |
 | `DSRCH` | Disease Specific Healthcare Research |
-| `PATRQT` | Self Requested |
+| `PATRQT` | Self-Requested |
 
-There are six codes.
+The source table prints the header row and the `CAREMGT` row twice. There are six codes. The patient reads this code.
 
 ## Health information types
 
-What kind of record you are asking for. See [HI type](/docs/hiecm/v3/getting-started/glossary#hi-type). M3 accepts these types:
+What kind of record you are asking for. See [HI type](/docs/hiecm/v3/getting-started/glossary#hi-type). M3 supports these types as of writing:
 
-| Code |
-| --- |
-| `Prescription` |
-| `DiagnosticReport` |
-| `OPConsultation` |
-| `DischargeSummary` |
-| `ImmunizationRecord` |
-| `HealthDocumentRecord` |
-| `WellnessRecord` |
-| `Invoice` |
+| Code | Display |
+| --- | --- |
+| `Prescription` | Prescription |
+| `DiagnosticReport` | Diagnostic Report |
+| `OPConsultation` | OP Consultation |
+| `DischargeSummary` | Discharge Summary |
+| `ImmunizationRecord` | Immunization Record |
+| `HealthDocumentRecord` | Record artifact |
+| `WellnessRecord` | Wellness Record |
 
-What each type carries as a [FHIR](/docs/hiecm/v3/getting-started/glossary#fhir) bundle is on [FHIR and health record formats](/docs/hiecm/v3/concepts/fhir).
+The M2 error message for an invalid HI type lists these seven and adds `Invoice`. The two disagree by one value, so check the swagger before you send `Invoice`. What each type carries as a [FHIR](/docs/hiecm/v3/getting-started/glossary#fhir) bundle is on [FHIR and health record formats](/docs/hiecm/v3/concepts/fhir).
 
 ## Expiry and revocation
 
-**Expiry is predictable.** The artefact carries an end, so you can fetch before it arrives.
+**Expiry is predictable.** The artefact carries an end, so you can fetch before it arrives. Past it, the record holder rejects the request: `ABDM-1061` for an expired consent artefact, `ABDM-1112` for an artefact id that is invalid or already expired.
 
-**Revocation is not.** The patient can withdraw at any time, including after you have read the data.
+**Revocation is not.** The patient can withdraw at any time, including after you have read the data, and future data sharing under that consent must stop immediately.
 
-So treat every fetch as a fresh permission check, and handle a mid flow revocation. A consent that was live when you sent the health information request can be dead when the record holder validates it. Decide your retention policy for data you already hold.
+So treat every fetch as a fresh permission check, and handle a mid flow revocation. A consent that was live when you sent the health information request can be dead when the record holder validates it. That returns `ABDM-1062`, consent not granted. Decide your retention policy for data you already hold. Sharing stops. What to do with what you already received is not documented yet.
+
+Read every code with the message the gateway returns. The error table lists `ABDM-1061` and `ABDM-1062` against two different messages each, so the code alone does not identify the failure.
 
 ## Consent without a person tapping approve
 

@@ -20,7 +20,7 @@ You do not link a record. You link a [care context](/docs/hiecm/v3/getting-start
 | Field | What it is | Rule |
 | --- | --- | --- |
 | Reference number | Your own internal identifier for that group of records | It has to resolve inside your system, because you will be handed it back later and asked for the records |
-| Display name | A description the patient reads before they decide anything | Up to 255 characters |
+| Display name | A description the patient reads before they decide anything | No clinical detail. No results, no diagnoses. |
 
 ```json
 {
@@ -37,6 +37,8 @@ You do not link a record. You link a [care context](/docs/hiecm/v3/getting-start
 }
 ```
 
+A good display name is "OPD records (X-Ray, Prescription) from 3rd March 2023": what kind of visit and when, not what was found. Use one care context per outpatient visit and one per inpatient admission.
+
 ## Why the record has to be linked first
 
 The HIE-CM is data blind. It holds a map: which [ABHA address](/docs/hiecm/v3/getting-started/glossary#abha-address) has care contexts at which facilities. Linking puts an entry on that map, and everything downstream reads it.
@@ -47,29 +49,34 @@ The HIE-CM is data blind. It holds a map: which [ABHA address](/docs/hiecm/v3/ge
 
 An unlinked record is not private. It is absent.
 
-## Linking notifies subscribers
+## Link when the record is ready to share
 
-Whenever a care context is linked or updated, the HIE-CM notifies every HIU subscribed to that patient. You do not send those notifications. You trigger them by linking.
+Link as soon as the health record is ready to be shared, not when the visit opens and not at the end of the month.
 
-## Two routes onto the map
+Whenever a care context is linked, or an existing one gains new records, the HIE-CM notifies every PHR application subscribed to that ABHA address. You do not send those notifications. You trigger them by linking.
+
+## Three routes onto the map
 
 Which route applies depends on what the patient gave you at registration.
 
 | Route | When it applies | Who starts it |
 | --- | --- | --- |
 | [HIP](/docs/hiecm/v3/getting-started/glossary#hip) initiated linking | The patient shared their ABHA address with you | You |
+| Notification to mobile | You hold a mobile number, name, age and gender, but no ABHA address | You, and then the patient |
 | [Discovery](/docs/hiecm/v3/getting-started/glossary#discovery) and link | The patient goes looking for old records from their PHR app | The patient |
 
 **HIP initiated linking.** You know who the patient is, so you assign each new record to a care context and link it against their ABHA address.
 
-**Discovery and link.** The request comes to you. The patient picks the facility they visited in their PHR app, and the HIE-CM forwards a discovery request to the [HRP](/docs/hiecm/v3/getting-started/glossary#hrp) or HIP behind it. You match against your own patients and reply with care contexts, and the patient picks which to link.
+**Notification to mobile.** With no ABHA address to link to, you tell ABDM a record is ready. ABDM sends the patient an SMS with a secure deep link, which opens their PHR app or sends them to install one, where they can create an ABHA address, discover the record and link it. This route converts into the third one.
 
-What you are handed splits in two, alongside the patient's name, gender and year of birth:
+**Discovery and link.** The request comes to you. The patient picks the facility they visited in their PHR app, and the HIE-CM forwards a discovery request to the [HRP](/docs/hiecm/v3/getting-started/glossary#hrp) or HIP behind it. You match against your own patients and reply with care contexts, and the patient picks which to link. Implementing discovery is mandatory for every HIP, even if every patient gives you an ABHA address at the counter, because a patient who visited two years ago did not.
 
-- **Verified identifiers**, each typed as `MR`, `MOBILE`, `ABHA_NUMBER`, `ABHA_ADDRESS` or `EMAIL`.
-- **Unverified identifiers**, of the same types, with which you search for the patient in your own records.
+What you are handed splits in two:
 
-The response carries care context metadata, not the health data itself.
+- **Verified identifiers**, which you weight higher: ABHA address, mobile number, name, gender and year of birth.
+- **Unverified, patient declared information**, typically a facility issued identifier such as a patient ID or a medical registration number.
+
+Use the unverified value to sharpen a match, not to make one. The response carries care context metadata and nothing else: no diagnosis, no test result, no report content. Somebody who has not yet proved they are the patient reads it.
 
 ## The link token
 
@@ -77,26 +84,32 @@ Linking is authorised by a [link token](/docs/hiecm/v3/getting-started/glossary#
 
 | Property | Rule |
 | --- | --- |
+| When you get it | Generated and stored at the time the patient registers with you |
 | Validity | Six months |
-| If you do not have a valid one | Generate one with the patient's ABHA address, name, gender and year of birth |
+| Before use | Validate it, for example with a tool like JWT.io. Which check to run is not documented yet. |
+| If you do not have a valid one | Regenerate it through demographic authentication |
 
-Store it against the patient record, not the visit: you need it for every link you make for that patient over six months.
+Store it against the patient record, not the visit: you need it for every link you make for that patient over six months. Check it before you link, not after the gateway rejects you.
 
 ## What links look like when they go wrong
 
-From the M2 error table. Read the code with the message the gateway returns.
+From the M2 error table. Read the code with the message the gateway returns, because the table reuses some codes against more than one message.
 
 | Code | Message |
 | --- | --- |
+| `ABDM-1026` | Invalid Link Token |
 | `ABDM-1038` | ABHA address and Link token mismatch |
-| `ABDM-1056` | This care context has already been linked |
+| `ABDM-1056` | This care contexts has been already linked |
+| `ABDM-1057` | Invalid Care Contexts |
+| `ABDM-1060` | Invalid Patient Reference Number |
+| `ABDM-1090` | Duplicate HIP link request |
 
 The full list is on [M2 errors](/docs/hiecm/v3/api/m2/errors).
 
 ## Where this is implemented
 
 - [Hospital, lab and pharmacy systems](/docs/hiecm/v3/concepts/hip-hiu), what a facility builds to do the linking.
-- [M2 Attach, Health Information Provider Services](/docs/hiecm/v3/api/m2), the call order for both routes.
+- [M2 Attach, Health Information Provider Services](/docs/hiecm/v3/api/m2), the call order for all three routes.
 - [Consent](/docs/hiecm/v3/concepts/consent), what happens once somebody asks for a linked care context.
 - [How a record travels](/docs/hiecm/v3/concepts/data-flow), what you do when that request arrives.
 - [PHR applications](/docs/hiecm/v3/concepts/phr), the patient side of discovery and linking.
