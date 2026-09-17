@@ -54,10 +54,18 @@ type frontmatter struct {
 // found" for 572 codes the catalogue holds.
 var errCodeRe = regexp.MustCompile(`\b(?:ABDM|GATEWAY|MIS|EKA|HIS|AS)-\d{3,5}\b`)
 
+// gatewayCodeRe matches the gateway's numeric authentication codes (900900,
+// 900901, 900902) only as a JSON "code" value, so a bare six-digit number
+// elsewhere in the input (an OTP, a timestamp) is not read as a code.
+var gatewayCodeRe = regexp.MustCompile(`"code"\s*:\s*"?(9\d{5})\b`)
+
 func ExtractErrorCodes(s string) []string {
 	set := map[string]bool{}
 	for _, c := range errCodeRe.FindAllString(s, -1) {
 		set[strings.ToUpper(c)] = true
+	}
+	for _, m := range gatewayCodeRe.FindAllStringSubmatch(s, -1) {
+		set[m[1]] = true
 	}
 	var out []string
 	for c := range set {

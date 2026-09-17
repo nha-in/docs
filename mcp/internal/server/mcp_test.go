@@ -194,11 +194,19 @@ func TestDecodeErrorSpecTableFallback(t *testing.T) {
 	}
 	for _, want := range []string{
 		`"specification"`, "ABDM-1016", "Dependent service unavailable",
-		`"http": "503"`, `"module": "m1"`, "specification error table",
+		`"http": "503"`, `"module": "m1"`, "specification response example",
+		"the specification's response examples above are the only source for this code",
 		"no narrative error atom",
 	} {
 		if !strings.Contains(out, want) {
 			t.Errorf("fallback output missing %q: %s", want, out)
+		}
+	}
+	// The gateway's numeric codes arrive as a JSON "code" value.
+	out = callText(t, sess, "decode_error", map[string]any{"input": `{"code":"900901","message":"Invalid Credentials"}`})
+	for _, want := range []string{`"900901"`, `"http": "401"`, "m1_post_v3_enrollment_request_otp"} {
+		if !strings.Contains(out, want) {
+			t.Errorf("numeric gateway code output missing %q: %s", want, out)
 		}
 	}
 	// A code in neither source still gets the honest empty answer.

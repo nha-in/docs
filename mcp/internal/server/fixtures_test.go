@@ -61,6 +61,8 @@ func fixtureSpecErrors() []catalogue.SpecErrorCode {
 	return []catalogue.SpecErrorCode{
 		{Code: "ABDM-1016", Message: "Dependent service unavailable",
 			HTTP: "503", OperationID: "linkAddContexts", Module: "m1"},
+		{Code: "900901", Message: "Invalid Credentials",
+			HTTP: "401", OperationID: "m1_post_v3_enrollment_request_otp", Module: "m1"},
 		{Code: "ABDM-1035", Message: "Facility is not registered with the bridge",
 			HTTP: "409", OperationID: "linkAddContexts", Module: "m2"},
 	}

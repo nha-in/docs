@@ -77,7 +77,7 @@ type emptyIn struct{}
 
 type listOpsIn struct {
 	Tag    string `json:"tag,omitempty" jsonschema:"optional exact tag filter"`
-	Module string `json:"module,omitempty" jsonschema:"optional exact module filter, for example gateway, m1, m2, m3, m4, p1, phr-services"`
+	Module string `json:"module,omitempty" jsonschema:"optional exact module filter, one of gateway, m1, m2, m3, m4, p1, p2, p3, p4, subscription, scan-and-pay"`
 	Q      string `json:"q,omitempty" jsonschema:"optional case-insensitive substring filter over operation_id, summary and path"`
 }
 
@@ -308,11 +308,11 @@ func (t *Tools) DecodeError(ctx context.Context, in decodeIn) (map[string]any, e
 		}
 		if len(specRows) > 0 {
 			match["specification"] = specRows
-			match["source"] = "specification error table"
+			match["source"] = "specification response example"
 		}
 		if full == nil {
 			if len(specRows) > 0 {
-				match["note"] = "no narrative error atom exists for this code yet; the specification rows above are the recorded truth, and search_docs with the message text may find related guidance"
+				match["note"] = "no narrative error atom exists for this code yet; the specification's response examples above are the only source for this code, and search_docs with the message text may find related guidance"
 			} else {
 				match["message"] = "no error atom for this code yet; try search_docs"
 			}

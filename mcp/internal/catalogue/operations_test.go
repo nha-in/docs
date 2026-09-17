@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"os"
+	"os/exec"
 	"path/filepath"
 	"testing"
 )
@@ -340,3 +341,83 @@ components:
 		}
 	}
 }
+
+// The real M1 spec's first-occurrence rows must be the ones the generated
+// errors page (site/docs/hiecm/v3/api/m1/errors.md) shows. A sorted walk
+// named different operations for these three codes.
+func TestSpecErrorCodesFollowDocumentOrder(t *testing.T) {
+	data, err := ParseSpec(filepath.Join(repoRoot, "catalogue", "openapi", "hiecm", "v3", "hiecm-m1.yaml"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	got := map[string]SpecErrorCode{}
+	for _, c := range data.ErrorCodes {
+		got[c.Code] = c
+	}
+	for _, want := range []SpecErrorCode{
+		{Code: "900901", HTTP: "401", Message: "Invalid Credentials", OperationID: "m1_post_v3_enrollment_request_otp", Module: "m1"},
+		{Code: "900902", HTTP: "401", Message: "Missing Credentials", OperationID: "m1_post_v3_profile_benefit_search", Module: "m1"},
+		{Code: "ABDM-1211", HTTP: "400", Message: "User not found.", OperationID: "m1_post_v3_phr_web_login_abha_search", Module: "m1"},
+	} {
+		if got[want.Code] != want {
+			t.Errorf("%s: got %+v, want %+v", want.Code, got[want.Code], want)
+		}
+	}
+}
+
+// Every module's rows must equal what scripts/lib/spec-errors.mjs produces,
+// since the errors pages and the debug skills are built from that. Skipped
+// when node or the repo's node_modules are not present.
+func TestSpecErrorCodesMatchNode(t *testing.T) {
+	if _, err := exec.LookPath("node"); err != nil {
+		t.Skip("node not on PATH")
+	}
+	if _, err := os.Stat(filepath.Join(repoRoot, "node_modules", "yaml")); err != nil {
+		t.Skip("node_modules/yaml not installed")
+	}
+	root, _ := filepath.Abs(repoRoot)
+	specs, _ := filepath.Glob(filepath.Join(root, "catalogue", "openapi", "hiecm", "v3", "hiecm-*.yaml"))
+	if len(specs) == 0 {
+		t.Fatal("no specs found")
+	}
+	script := `import {parse} from 'yaml'; import {readFileSync} from 'node:fs';
+import {errorsFromSpec} from './scripts/lib/spec-errors.mjs';
+const out = {};
+for (const f of process.argv.slice(1)) out[f] = errorsFromSpec(parse(readFileSync(f, 'utf8')));
+console.log(JSON.stringify(out));`
+	cmd := exec.Command("node", append([]string{"--input-type=module", "-e", script}, specs...)...)
+	cmd.Dir = repoRoot
+	cmd.Stderr = os.Stderr
+	raw, err := cmd.Output()
+	if err != nil {
+		t.Fatalf("node: %v", err)
+	}
+	var node map[string][]struct{ Code, HTTP, Message, OperationID string }
+	if err := json.Unmarshal(raw, &node); err != nil {
+		t.Fatal(err)
+	}
+	for _, spec := range specs {
+		data, err := ParseSpec(spec)
+		if err != nil {
+			t.Fatal(err)
+		}
+		want := map[string]string{}
+		for _, r := range node[spec] {
+			want[r.Code] = r.HTTP + "|" + r.Message + "|" + r.OperationID
+		}
+		got := map[string]string{}
+		for _, r := range data.ErrorCodes {
+			got[r.Code] = r.HTTP + "|" + r.Message + "|" + r.OperationID
+		}
+		if len(got) != len(want) {
+			t.Errorf("%s: %d codes, node has %d", filepath.Base(spec), len(got), len(want))
+		}
+		for code, w := range want {
+			if got[code] != w {
+				t.Errorf("%s %s: go %q, node %q", filepath.Base(spec), code, got[code], w)
+			}
+		}
+	}
+}
+
+var repoRoot = filepath.Join("..", "..", "..")

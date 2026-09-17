@@ -7,6 +7,7 @@ import (
 	"path/filepath"
 	"regexp"
 	"sort"
+	"strconv"
 	"strings"
 
 	"github.com/getkin/kin-openapi/openapi3"
@@ -77,38 +78,99 @@ var errorCodeRe = regexp.MustCompile(`^[A-Z]{2,5}-\d{3,5}$|^\d{3,6}$`)
 // order scripts/lib/spec-errors.mjs checks them.
 var errMethods = []string{"get", "post", "put", "patch", "delete"}
 
-// codesIn recursively yields every {code, message} pair value holds, the
-// same walk scripts/lib/spec-errors.mjs's codesIn performs: an object
+// codesIn recursively yields every {code, message} pair a YAML node holds,
+// the same walk scripts/lib/spec-errors.mjs's codesIn performs: an object
 // matching the shape is yielded, and every value (including that object's
 // own) is still walked, because a real example nests the pair inside a
-// wrapper such as {"error": {...}}.
-func codesIn(value any) []SpecErrorCode {
+// wrapper such as {"error": {...}}. Only string scalars count, as the Node
+// side checks typeof === 'string'.
+func codesIn(n *yaml.Node) []SpecErrorCode {
+	n = deref(n)
+	if n == nil {
+		return nil
+	}
 	var out []SpecErrorCode
-	switch v := value.(type) {
-	case []any:
-		for _, e := range v {
+	switch n.Kind {
+	case yaml.SequenceNode:
+		for _, e := range n.Content {
 			out = append(out, codesIn(e)...)
 		}
-	case map[string]any:
-		if code, ok := v["code"].(string); ok && errorCodeRe.MatchString(code) {
-			if msg, ok := v["message"].(string); ok {
-				out = append(out, SpecErrorCode{Code: code, Message: msg})
-			}
+	case yaml.MappingNode:
+		code, msg := stringScalar(mapGet(n, "code")), stringScalar(mapGet(n, "message"))
+		if code != nil && errorCodeRe.MatchString(code.Value) && msg != nil {
+			out = append(out, SpecErrorCode{Code: code.Value, Message: msg.Value})
 		}
-		for _, key := range sortedKeys(v) {
-			out = append(out, codesIn(v[key])...)
+		for _, kv := range jsEntries(n) {
+			out = append(out, codesIn(kv[1])...)
 		}
 	}
 	return out
 }
 
-func sortedKeys(m map[string]any) []string {
-	keys := make([]string, 0, len(m))
-	for k := range m {
-		keys = append(keys, k)
+// deref follows aliases and unwraps the document node, as a YAML parse into
+// plain JS values does.
+func deref(n *yaml.Node) *yaml.Node {
+	for n != nil && (n.Kind == yaml.AliasNode || n.Kind == yaml.DocumentNode) {
+		if n.Kind == yaml.AliasNode {
+			n = n.Alias
+		} else if len(n.Content) > 0 {
+			n = n.Content[0]
+		} else {
+			return nil
+		}
 	}
-	sort.Strings(keys)
-	return keys
+	return n
+}
+
+func stringScalar(n *yaml.Node) *yaml.Node {
+	if n = deref(n); n != nil && n.Kind == yaml.ScalarNode && n.ShortTag() == "!!str" {
+		return n
+	}
+	return nil
+}
+
+// mapGet returns the value under key in a mapping node, or nil. The last
+// duplicate wins, as it does in a JS object.
+func mapGet(n *yaml.Node, key string) *yaml.Node {
+	if n = deref(n); n == nil || n.Kind != yaml.MappingNode {
+		return nil
+	}
+	var v *yaml.Node
+	for i := 0; i+1 < len(n.Content); i += 2 {
+		if n.Content[i].Value == key {
+			v = n.Content[i+1]
+		}
+	}
+	return v
+}
+
+// jsIndexKeyRe matches the keys a JS object enumerates before all others:
+// canonical non-negative integers ("0", "400"), in ascending numeric order.
+var jsIndexKeyRe = regexp.MustCompile(`^(?:0|[1-9]\d{0,8})$`)
+
+// jsEntries lists a mapping's key/value pairs in the order Object.entries
+// yields them for the parsed object: integer-like keys ascending, then every
+// other key in document order. This is why response statuses walk 400, 401,
+// 500 whatever order the file writes them in.
+func jsEntries(n *yaml.Node) [][2]*yaml.Node {
+	if n = deref(n); n == nil || n.Kind != yaml.MappingNode {
+		return nil
+	}
+	var ints, rest [][2]*yaml.Node
+	for i := 0; i+1 < len(n.Content); i += 2 {
+		kv := [2]*yaml.Node{n.Content[i], n.Content[i+1]}
+		if jsIndexKeyRe.MatchString(kv[0].Value) {
+			ints = append(ints, kv)
+		} else {
+			rest = append(rest, kv)
+		}
+	}
+	sort.SliceStable(ints, func(a, b int) bool {
+		x, _ := strconv.Atoi(ints[a][0].Value)
+		y, _ := strconv.Atoi(ints[b][0].Value)
+		return x < y
+	})
+	return append(ints, rest...)
 }
 
 var errStatusRe = regexp.MustCompile(`^[45]`)
@@ -117,42 +179,37 @@ var errStatusRe = regexp.MustCompile(`^[45]`)
 // responses and yields the error codes their JSON examples carry. No code
 // is invented: it is here only because an example returns it. The first
 // occurrence of a code wins, matching scripts/lib/spec-errors.mjs, which
-// this must produce identical results to. Read straight from the parsed
-// YAML rather than the openapi3.T doc, because kin-openapi does not expose
-// webhooks.
+// this must produce identical results to, so the walk follows the key order
+// that JS sees rather than a sorted one. Read straight from the YAML node
+// tree rather than the openapi3.T doc, because kin-openapi does not expose
+// webhooks and Go maps lose document order.
 func specErrorCodes(specPath, module string, raw []byte) ([]SpecErrorCode, error) {
-	var doc map[string]any
+	var doc yaml.Node
 	if err := yaml.Unmarshal(raw, &doc); err != nil {
 		return nil, fmt.Errorf("%s: %w", specPath, err)
 	}
 	seen := map[string]bool{}
 	var out []SpecErrorCode
 	for _, blockKey := range []string{"paths", "webhooks"} {
-		block, _ := doc[blockKey].(map[string]any)
-		for _, pathKey := range sortedKeys(block) {
-			item, _ := block[pathKey].(map[string]any)
+		for _, pathKV := range jsEntries(mapGet(&doc, blockKey)) {
 			for _, method := range errMethods {
-				op, ok := item[method].(map[string]any)
-				if !ok {
+				op := mapGet(pathKV[1], method)
+				if deref(op) == nil {
 					continue
 				}
-				operationID, _ := op["operationId"].(string)
-				responses, _ := op["responses"].(map[string]any)
-				for _, status := range sortedKeys(responses) {
+				operationID := ""
+				if id := stringScalar(mapGet(op, "operationId")); id != nil {
+					operationID = id.Value
+				}
+				for _, statusKV := range jsEntries(mapGet(op, "responses")) {
+					status := statusKV[0].Value
 					if !errStatusRe.MatchString(status) {
 						continue
 					}
-					response, _ := responses[status].(map[string]any)
-					content, _ := response["content"].(map[string]any)
-					media, _ := content["application/json"].(map[string]any)
-					var samples []any
-					if example, ok := media["example"]; ok {
-						samples = append(samples, example)
-					}
-					examples, _ := media["examples"].(map[string]any)
-					for _, exKey := range sortedKeys(examples) {
-						entry, _ := examples[exKey].(map[string]any)
-						samples = append(samples, entry["value"])
+					media := mapGet(mapGet(statusKV[1], "content"), "application/json")
+					samples := []*yaml.Node{mapGet(media, "example")}
+					for _, exKV := range jsEntries(mapGet(media, "examples")) {
+						samples = append(samples, mapGet(exKV[1], "value"))
 					}
 					for _, sample := range samples {
 						for _, found := range codesIn(sample) {
@@ -161,7 +218,7 @@ func specErrorCodes(specPath, module string, raw []byte) ([]SpecErrorCode, error
 							}
 							seen[found.Code] = true
 							out = append(out, SpecErrorCode{
-								Code: found.Code, Message: found.Message,
+								Code: found.Code, Message: strings.TrimSpace(found.Message),
 								HTTP: status, OperationID: operationID, Module: module,
 							})
 						}

@@ -303,7 +303,7 @@ func (r *Reader) ListOperations(tag, module, q string) ([]OperationSummary, erro
 	return out, rows.Err()
 }
 
-// SpecErrorCodes returns the specification error table rows for one code.
+// SpecErrorCodes returns the specification response example rows for one code.
 // The code is normalized first, so raw response values such as
 // "ABDM-1016: " still match.
 func (r *Reader) SpecErrorCodes(code string) ([]catalogue.SpecErrorCode, error) {
