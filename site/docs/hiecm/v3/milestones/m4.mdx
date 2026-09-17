@@ -77,15 +77,14 @@ HPID.
 
 Hand M4 to the agent you already use, as one file it loads once. Install it, or open it there in one click.
 
-<SkillInstall slug="abdm-m4" note="Every M4 call, its error codes and its certification cases in one file: 13 operations, 150 codes, 183 cases." />
+<SkillInstall slug="abdm-m4" note="Every M4 call and its error codes in one file: 13 operations, 150 codes." />
 
 ## Certification
 
 M4 has no certification step of its own. One exit process covers the whole
 integration, run once, after every milestone your role needs works end to end.
 See [Going live](/docs/hiecm/v3/getting-started/going-live) for the four steps
-and what each one asks of you. The cases you are certified against are in [M4
-testing use cases](/docs/hiecm/v3/resources/testing/m4).
+and what each one asks of you.
 
 ## The journey, one diagram per flow
 
@@ -96,7 +95,7 @@ Milestone 4 of [ABDM](/docs/hiecm/v3/getting-started/glossary#abdm) has four jou
 - A facility manager onboards a facility to the [HFR](/docs/hiecm/v3/getting-started/glossary#hfr).
 - A facility links its bridges, so it can publish records as the [HIP](/docs/hiecm/v3/getting-started/glossary#hip) and fetch them as the [HIU](/docs/hiecm/v3/getting-started/glossary#hiu) through its software.
 
-This page shows the order of calls in each. Field lists are on the [operations and fields](/docs/hiecm/v3/api/m4/undocumented) page.
+This page shows the order of calls in each. Field lists are in the [M4 API reference](/docs/hiecm/v3/api/m4).
 
 :::caution[A map, not a runbook]
 These diagrams follow the published order of steps.
@@ -134,7 +133,7 @@ sequenceDiagram
 
 ### Then the mobile number
 
-Step 13 decides what happens next. An existing HPID means the professional is already registered: log them in and skip the rest of this journey. A returning professional can also skip Aadhaar entirely and log in by mobile OTP or by password. Both routes are in [M4 operations and fields](/docs/hiecm/v3/api/m4/undocumented#login-by-mobile-otp).
+Step 13 decides what happens next. An existing HPID means the professional is already registered: log them in and skip the rest of this journey. A returning professional can also skip Aadhaar entirely and log in by mobile OTP or by password. Both routes are in [the M4 authentication calls](/docs/hiecm/v3/api/m4/endpoints/m4-authentication/01-m4-post-v1-auth-authpassword).
 
 No HPID means you confirm the mobile number before creating one, by a fast path or a slow one. Send it encrypted: fetch the public certificate from `/v4/int/api/v1/auth/cert`, encrypt with `RSA/ECB/PKCS1Padding`, send the encrypted value.
 
@@ -256,14 +255,12 @@ The HIP name is what a patient sees in their [ABHA](/docs/hiecm/v3/getting-start
 
 A facility with a facility ID and a linked HIP bridge can do the [M2](/docs/hiecm/v3/api/m2) work, linking care contexts and sharing records. With a linked HIU bridge it can do the [M3](/docs/hiecm/v3/api/m3) work, requesting consent and fetching records. M4 is the registration step in front of either flow outside sandbox.
 
-Next: [M4 operations and fields](/docs/hiecm/v3/api/m4/undocumented).
+Next: [M4 API reference](/docs/hiecm/v3/api/m4).
 
 ## Next
 
 - The registration journeys as diagrams: [the journey below](#the-journey-one-diagram-per-flow).
 - The base URLs and the operation list: [M4 API
   reference](/docs/hiecm/v3/api/m4).
-- Every call with its parameters and codes: [M4 operations and
-  fields](/docs/hiecm/v3/api/m4/undocumented).
 - The patient side of all four: [P1 Identity and profile](./p1).
 - Take your integration to production: [Go live](/docs/hiecm/v3/getting-started/going-live).

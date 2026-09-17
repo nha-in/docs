@@ -47,7 +47,7 @@ An HPID on its own is an authenticated person; the profile behind it makes them 
 | Qualification | Degree or diploma obtained, college, university, year of award, and the degree certificate |
 | Current work | Whether they are working, the purpose of that work, whether it is private, government or both, and the facility they work at |
 
-Three codes decide what the professional may be. **Category** says doctor, nurse or pharmacist. **Subcategory** fixes the system of medicine. The **degree code** must agree with both. The tables for all three are on [the HPR and HFR call list](/docs/hiecm/v3/api/m4/undocumented).
+Three codes decide what the professional may be. **Category** says doctor, nurse or pharmacist. **Subcategory** fixes the system of medicine. The **degree code** must agree with both. The tables for all three are on [the HPR and HFR call list](/docs/hiecm/v3/api/m4).
 
 :::warning[The subcategory codes differ between two calls]
 Subcategory codes differ between the create HPID and register professional tables. Fetch the codes from the HPRID subcategories master call rather than hard coding either table.
@@ -81,7 +81,7 @@ Three things to know first:
 - `degreeCertificate` and `registrationCertificate` are mandatory uploads, and `proofOfWorkCertificate` is mandatory when the professional is government or both.
 - Call `demographicAuthViaMobile` first, and generate the mobile OTP only when it returns false.
 
-Call by call, with the parameters, is on [M4 user journey](/docs/hiecm/v3/milestones/m4) and [the HPR and HFR call list](/docs/hiecm/v3/api/m4/undocumented).
+Call by call, with the parameters, is on [M4 user journey](/docs/hiecm/v3/milestones/m4) and [the HPR and HFR call list](/docs/hiecm/v3/api/m4).
 
 ## Getting an HPR token later
 
@@ -95,7 +95,7 @@ The `hprToken` from creation does not last. Three ways to get a fresh one, all s
 | By Aadhaar OTP, send | `/v4/int/api/v1/auth/init` |
 | By Aadhaar OTP, verify | `/v4/int/api/v1/auth/confirmWithAadhaarOtp` |
 
-The bodies are on [M4 operations and fields](/docs/hiecm/v3/api/m4/undocumented). The mobile verify path is not yet published.
+The bodies are on [the M4 API reference](/docs/hiecm/v3/api/m4).
 
 ## What your system has to hold
 
@@ -117,12 +117,9 @@ This page gives the behaviour, the call order, the parameter tables and the
 code lists. Take the request and response shapes from the healthcare
 professional registry sandbox documentation alongside it.
 
-Seven of the 17 master data calls have their path published here: see
-[the HPR and HFR call list](/docs/hiecm/v3/api/m4/undocumented).
-
 ## Next
 
 - [HFR](/docs/hiecm/v3/registries/nhpr/hfr), the facility half, which needs a token from this registry.
 - [NHPR](/docs/hiecm/v3/registries/nhpr), the parent page.
 - [M4 user journey](/docs/hiecm/v3/milestones/m4), the same order as diagrams.
-- [the HPR and HFR call list](/docs/hiecm/v3/api/m4/undocumented), the parameter tables and the error codes.
+- [the HPR and HFR call list](/docs/hiecm/v3/api/m4), the parameter tables and the error codes.

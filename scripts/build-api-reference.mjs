@@ -356,8 +356,16 @@ for (const {platform, version, files} of tree) {
   // A webhook carrying neither key has no stated pairing. It is never guessed
   // at: its own page says the specification does not name a call, and the API
   // index lists it under the module that declares it.
-  const operationPage = (moduleDir, id) =>
-    `/docs/${platform}/${version}/api/${moduleDir}/endpoints/${slug(id)}`;
+  // An operation a journey names has no page outside it, so its route is the
+  // first step that names it, in the order the journey files list them.
+  const operationPage = (moduleDir, id) => {
+    const base = `/docs/${platform}/${version}/api/${moduleDir}/endpoints`;
+    for (const journey of isHiecmV3 ? journeys.get(moduleDir) ?? [] : []) {
+      const i = journey.steps.findIndex((step) => step.op === id);
+      if (i >= 0) return `${base}/${journey.id}/${String(i + 1).padStart(2, '0')}-${slug(id)}`;
+    }
+    return `${base}/${slug(id)}`;
+  };
 
   // A status code on a reference page was a dead end. The troubleshooting
   // section already knows what a blanket 401 means and what a 202 followed by

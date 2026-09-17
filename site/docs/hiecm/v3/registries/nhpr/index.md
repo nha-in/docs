@@ -29,7 +29,7 @@ Sandbox     https://apihspsbx.abdm.gov.in/v4/int/
 Production  https://apinhpr.abdm.gov.in/v4/int/
 ```
 
-The session token that authorises them comes from the HIE-CM gateway, not from NHPR. [M4](/docs/hiecm/v3/api/m4) is the only milestone in [ABDM](/docs/hiecm/v3/getting-started/glossary#abdm) that writes to NHPR, and its endpoints, parameter tables and error codes are on [M4 operations and fields](/docs/hiecm/v3/api/m4/undocumented).
+The session token that authorises them comes from the HIE-CM gateway, not from NHPR. [M4](/docs/hiecm/v3/api/m4) is the only milestone in [ABDM](/docs/hiecm/v3/getting-started/glossary#abdm) that writes to NHPR, and its endpoints, parameter tables and error codes are on [the M4 API reference](/docs/hiecm/v3/api/m4).
 
 ## Next
 

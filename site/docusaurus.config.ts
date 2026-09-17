@@ -321,7 +321,7 @@ const config: Config = {
   url: process.env.DOCUSAURUS_URL ?? 'https://abdm-docs.example.com',
   baseUrl: process.env.DOCUSAURUS_BASE_URL ?? '/',
 
-  onBrokenLinks: process.env.DOCUSAURUS_ON_BROKEN_LINKS ?? 'throw',
+  onBrokenLinks: 'throw',
 
   customFields: {
     // The Docs MCP server's public address. Null until it has one: the install
