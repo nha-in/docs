@@ -1,0 +1,14 @@
+{
+  "date": "2026-09-16",
+  "catalogue_version": "2026.08.24",
+  "model": "haiku",
+  "note": "Run by hand from a Claude Code session before scripts/eval-agent.mjs existed. Task 2 was re-validated independently by the parent session with validate_fhir.",
+  "rows": [
+    { "id": 1, "title": "Scaffold an ABHA verification flow from an empty repo", "result": "BLOCKED", "blockers": ["unset: ABDM_CLIENT_ID, ABDM_CLIENT_SECRET"] },
+    { "id": 2, "title": "Build and validate an OPConsultation bundle", "result": "PASS", "attempts": 3, "atoms_cited": ["shared.fhir.document-bundles", "shared.fhir.map-opconsultation"], "evidence": "{\"catalogue_version\":\"2026.08.24\",\"findings\":null}", "blockers": ["a helper subagent reported the 447KB NRCES example as structurally sound without running the validator; the parent shrank the bundle and validated properly"] },
+    { "id": 3, "title": "Link a care context and push encrypted data", "result": "BLOCKED", "blockers": ["unset: ABDM_CLIENT_ID, ABDM_CLIENT_SECRET, ABDM_HIP_ID, ABDM_CALLBACK_URL"] },
+    { "id": 4, "title": "Raise an HIU consent request and fetch records", "result": "BLOCKED", "blockers": ["unset: ABDM_CLIENT_ID, ABDM_CLIENT_SECRET, ABDM_HIU_ID, ABDM_CALLBACK_URL"] },
+    { "id": 5, "title": "Diagnose a failing HIP data push from its error", "result": "BLOCKED", "blockers": ["unset: ABDM_CLIENT_ID, ABDM_CLIENT_SECRET, ABDM_HIP_ID, ABDM_CALLBACK_URL"] },
+    { "id": 6, "title": "Walk the M1 to M3 test cases to completion", "result": "BLOCKED", "blockers": ["unset: ABDM_CLIENT_ID, ABDM_CLIENT_SECRET, ABDM_HIP_ID, ABDM_HIU_ID, ABDM_CALLBACK_URL"] }
+  ]
+}

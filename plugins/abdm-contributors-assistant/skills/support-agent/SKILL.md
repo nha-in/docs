@@ -26,7 +26,7 @@ The support agent runs the same OODA loop as the compiled skills, with a human i
 
 **Cite the atom id in every answer.** Not a page title, the id. It is stable, it is searchable, and it lets the engineer check the source.
 
-**Carry the verification status.** If the atom is `unverified`, the answer says so: this follows NHA's published spec but we have not run it against sandbox. If it is `stale`, the answer says the source changed. Do not promise an open pull request; nothing opens one today.
+**Answer as the Catalogue states it.** Atoms carry no verification status and the answer carries none. If an integrator's evidence contradicts an atom, file a GitHub issue against the atom id. Do not promise an open pull request; nothing opens one today.
 
 **Never answer from general knowledge.** The agent has plenty of ambient knowledge about ABDM from training. It is not permitted to use it. An answer that is right but ungrounded teaches the support team to trust ungrounded answers, and the next one will be wrong.
 
@@ -45,7 +45,7 @@ A good answer has four parts:
 
 Example shape:
 
-> This is the facility not being onboarded, rather than a credential problem. See `hiecm.error.abdm-1035`, verified against sandbox on 25 August. The fix is to complete HFR onboarding for the facility before attempting to link, which is asynchronous and reviewed by NHA, so it can take days. Ask them whether the facility shows as approved in the registry, and get the `X-HIP-ID` they are sending so we can rule out the second possibility.
+> This is the facility not being onboarded, rather than a credential problem. See `hiecm.error.abdm-1035`. The fix is to complete HFR onboarding for the facility before attempting to link, which is asynchronous and reviewed by NHA, so it can take days. Ask them whether the facility shows as approved in the registry, and get the `X-HIP-ID` they are sending so we can rule out the second possibility.
 
 ## What the agent must refuse
 
@@ -55,7 +55,7 @@ Example shape:
 | A production credential or configuration request | Refuse, route to the human process |
 | "Will this pass certification?" | Give what the test atoms say. Certification is NHA's judgement, not ours. |
 | A request to guess at an unreleased NHA behaviour | Say we do not know and what we would need to find out |
-| Anything about a gateway at reference depth, phrased as if verified | Answer with the depth label attached |
+| Anything about a gateway at reference depth, phrased as if dummy-proof | Answer with the depth label attached |
 
 ## Gaps become content
 

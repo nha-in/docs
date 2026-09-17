@@ -13,8 +13,11 @@ sources:
     note: >
       Derived from the operation in catalogue/openapi/hiecm/v3/hiecm-m1.yaml, which
       comes from this source.
-verified:
-  status: unverified
+  - file: catalogue/annexure/integration-learnings-2026-09-16.md
+    fetched: 2026-09-16
+    hash: sha256:d1415609d3d71178563367bcdcc48fa7a01fe9ebd247b4c019686304868368ce
+    note: >
+      X-token is sent as Bearer plus the token. Observed by an integrator on 2026-09-16, not yet run from this repository.
 related:
   errors: [hiecm.error.900900, hiecm.error.abdm-2401, hiecm.error.abdm-2402, hiecm.error.abdm-2404, hiecm.error.abdm-2500, hiecm.error.abdm-9999]
   flows: [hiecm.flow.m1-update-mobile]
@@ -42,7 +45,7 @@ curl -X POST 'https://abhasbx.abdm.gov.in/abha/api/v3/profile/account/verify' \
   -H 'Authorization: Bearer <ACCESS_TOKEN>' \
   -H 'REQUEST-ID: <FRESH_UUID>' \
   -H 'TIMESTAMP: <ISO_8601_TIMESTAMP>' \
-  -H 'X-token: <X_TOKEN_FROM_LOGIN_VERIFY>' \
+  -H 'X-token: Bearer <X_TOKEN_FROM_LOGIN_VERIFY>' \
   -H 'Content-Type: application/json' \
   -d '{
   "scope": [

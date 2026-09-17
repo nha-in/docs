@@ -14,8 +14,6 @@ sources:
     note: >
       The portal's own role selector calls one of its four readers an
       IMS vendor. Written here so that role has a definition behind it.
-verified:
-  status: unverified
 related:
   concepts: [hiecm.concept.roles]
   glossary:

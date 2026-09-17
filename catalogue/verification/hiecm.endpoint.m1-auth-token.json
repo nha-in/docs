@@ -1,0 +1,8 @@
+{
+  "atom": "hiecm.endpoint.m1-auth-token",
+  "on": "2026-09-17",
+  "against": "https://dev.abdm.gov.inapi",
+  "request": "curl -X POST 'https://dev.abdm.gov.inapi/hiecm/gateway/v3/session' \\\n  -H 'Authorization: Bearer <scrubbed>' \\\n  -H 'REQUEST-ID: a283733a-1a46-4b28-9dcf-3c687cf41174' \\\n  -H 'TIMESTAMP: 2026-09-17T11:22:44.222Z' \\\n  -H 'Content-Type: application/json' \\\n  -d '{ \"clientId\": \"SBX\\_XXXXX\", \"clientSecret\": \"XXXX-XXX-XXXX-XXXX-XXXXXXX\", \"grantType\": \"client\\_credentials\" }'\n",
+  "status": 0,
+  "body": "000"
+}

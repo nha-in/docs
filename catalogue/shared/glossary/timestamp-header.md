@@ -23,11 +23,6 @@ sources:
     note: >
       Sandbox behaviour observed during a real integration session on
       25 August 2026. The evidence is quoted in the body.
-verified:
-  status: verified
-  against: https://abhasbx.abdm.gov.in (ABHA sandbox)
-  on: "2026-08-25"
-  by: recorded integration session against the ABHA sandbox, request and response pairs observed
 related:
   errors: [hiecm.error.abdm-2402, hiecm.error.abdm-1016]
 ---

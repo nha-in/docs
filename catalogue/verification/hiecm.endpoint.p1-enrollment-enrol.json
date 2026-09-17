@@ -1,0 +1,8 @@
+{
+  "atom": "hiecm.endpoint.p1-enrollment-enrol",
+  "on": "2026-09-17",
+  "against": "https://abhasbx.abdm.gov.in",
+  "request": "curl -X POST 'https://abhasbx.abdm.gov.in/abha/api/v3/phr/app/enrollment/enrol' \\\n  -H 'Authorization: Bearer <scrubbed>' \\\n  -H 'REQUEST-ID: f39281f9-aac3-4939-8472-2f055ca8367f' \\\n  -H 'TIMESTAMP: 2026-09-17T11:23:03.321Z' \\\n  -H 'Content-Type: application/json' \\\n  -d '{ \"txnId\": \"22387064-45ea-42d4-b6c5-8b86dbec6fe5\", \"phrDetails\": { \"mobile\": \" *{{encrypted mobile-number }}*\", \"firstName\": \"John\", \"middleName\": \"\", \"lastName\": \"Doe\", \"yearOfBirth\": \"1998\", \"dayOfBirth\": \"14\", \"monthOfBirth\": \"11\", \"gender\": \"M\", \"email\": \"\", \"profilePhoto\": \"{{base-64-encoded-profile-photo}}\", \"stateCode\": \"9\", \"districtCode\": \"135\", \"pinCode\": 232101, \"address\": \"Street number 4, sector 12\", \"stateName\": \"Maharashtra\", \"districtName\": \"Nashik\", \"ABHANumber\": \"XX-XXXX-XXXX-1234\", \"abhaAddress\": \"johndoe@sbx\", \"password\": \"*{{encrypted password}}*\" } }'\n",
+  "status": 400,
+  "body": "[{\"code\":\"ABDM-9999: \",\"message\":\"Invalid ABHA Address\"}]"
+}

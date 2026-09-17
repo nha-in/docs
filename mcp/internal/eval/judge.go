@@ -69,7 +69,7 @@ func conversation(c Case) string {
 func (j Judge) prompt(c Case, t Transcript) string {
 	var sources []string
 	for _, s := range t.Sources {
-		sources = append(sources, s.ID+": "+s.Title+" ("+s.Status+")")
+		sources = append(sources, s.ID+": "+s.Title)
 	}
 	if len(sources) == 0 {
 		sources = []string{"(no source was cited)"}

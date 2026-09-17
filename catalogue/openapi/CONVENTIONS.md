@@ -109,10 +109,9 @@ operation. Per-operation chunks lose document context, so the indexer copies
 `info.x-abdm-*` into each chunk at index time. Repeating them by hand in the
 file would be boilerplate that goes stale.
 
-Verification status is deliberately absent here. The atom owns it, through
-its `verified` block. The operation carries `x-abdm-atom` and the indexer
-reads status from the atom, so there is one place to change when a
-verification lands.
+No verification status appears here or in the atom. The operation carries
+`x-abdm-atom` so the indexer can join the two, and sandbox evidence for an
+operation lives under `catalogue/verification/`, keyed by the atom id.
 
 ## Sources
 

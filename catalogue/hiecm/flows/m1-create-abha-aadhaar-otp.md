@@ -22,8 +22,6 @@ sources:
     note: >
       NHA's own M1 collection. The step order in this flow is the order of
       the requests in NHA's folder for it.
-verified:
-  status: unverified
 related:
   endpoints: [hiecm.endpoint.m1-enrolment-request-otp, hiecm.endpoint.m1-enrolment-by-aadhaar, hiecm.endpoint.m1-enrolment-verify-abdm-otp, hiecm.endpoint.m1-enrolment-address-suggestions, hiecm.endpoint.m1-enrolment-claim-abha-address]
   concepts: [hiecm.concept.abha-number-and-address, hiecm.concept.encrypted-identifiers]

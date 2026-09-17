@@ -1,0 +1,8 @@
+{
+  "atom": "hiecm.endpoint.m1-phr-request-otp",
+  "on": "2026-09-17",
+  "against": "https://abhasbx.abdm.gov.in",
+  "request": "curl -X POST 'https://abhasbx.abdm.gov.in/abha/api/v3/phr/web/login/abha/request/otp' \\\n  -H 'Authorization: Bearer <scrubbed>' \\\n  -H 'REQUEST-ID: f2aab93f-af57-45c4-b177-c35cc89ad278' \\\n  -H 'TIMESTAMP: 2026-09-17T11:22:50.705Z' \\\n  -H 'X-CM-ID: sbx' \\\n  -H 'Content-Type: application/json' \\\n  -d '{\n  \"scope\": [\n    \"abha-address-login\",\n    \"mobile-verify\"\n  ],\n  \"loginHint\": \"abha-address\",\n  \"loginId\": \"{{RSA_encrypted_abha_address}}\",\n  \"otpSystem\": \"abdm, aadhaar\"\n}'\n",
+  "status": 400,
+  "body": "[{\"code\":\"ABDM-9999: \",\"message\":\"Invalid Otp System\"}]"
+}

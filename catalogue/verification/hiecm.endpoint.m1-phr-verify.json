@@ -1,0 +1,8 @@
+{
+  "atom": "hiecm.endpoint.m1-phr-verify",
+  "on": "2026-09-17",
+  "against": "https://abhasbx.abdm.gov.in",
+  "request": "curl -X POST 'https://abhasbx.abdm.gov.in/abha/api/v3/phr/web/login/abha/verify' \\\n  -H 'Authorization: Bearer <scrubbed>' \\\n  -H 'REQUEST-ID: ebb73691-6b6c-43ed-9749-a9b1c3b978e0' \\\n  -H 'TIMESTAMP: 2026-09-17T11:22:51.378Z' \\\n  -H 'X-CM-ID: sbx' \\\n  -H 'Content-Type: application/json' \\\n  -d '{\n  \"scope\": [\n    \"abha-address-login\",\n    \"mobile-verify\"\n  ],\n  \"authData\": {\n    \"authMethods\": [\n      \"otp\"\n    ],\n    \"otp\": {\n      \"txnId\": \"3fa85f64-5717-4562-b3fc-2c963f66afa6\",\n      \"otpValue\": \"{{RSA_encrypted_otp}}\"\n    }\n  }\n}'\n",
+  "status": 400,
+  "body": "{\"code\":\"ABDM-9999: \",\"message\":\"Illegal base64 character 7b\"}"
+}

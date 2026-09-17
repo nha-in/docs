@@ -15,7 +15,7 @@ Run by an agent using only the plugin and the MCP. Scored pass or fail against t
 |---|---|---|
 | 1 | Scaffold an ABHA verification flow from an empty repo | Sandbox returns a verified ABHA profile |
 | 2 | Build and validate an OPConsultation bundle | The NRCeS validator passes |
-| 3 | Link a care context and push encrypted data | `on-add-contexts` callback with SUCCESS, then a data push acknowledged |
+| 3 | Link a care context and push encrypted data | `on_carecontext` callback with no `error` object and a matching `response.requestId`, then a data push acknowledged |
 | 4 | Raise an HIU consent request and fetch records | Consent artefact received, bundle decrypted and valid |
 | 5 | Diagnose a failing HIP data push from its error | Correct error atom cited, fix applied, and the original push then succeeds |
 | 6 | Walk the M1 to M3 test cases to completion | Every test atom passed or marked needs-human with a reason |
@@ -74,7 +74,8 @@ Notice how many of those are atom bugs, not site bugs. That is the point of the 
 
 ## Re-running
 
-- The eval set is not wired into CI. `.github/workflows/ci.yml` runs `lint-specs`, `lint-atoms`, `lint-sources`, `validate-skills`, `lint-agent-readiness`, `lint-content`, `lint-tables`, `build-site`, `mcp` and `plan-stamp`, none of them the eval set. Run it by hand with `/eval-run` after a Catalogue change, until someone adds the CI job.
+- The eval set is not wired into CI. `.github/workflows/ci.yml` runs `lint-specs`, `lint-atoms`, `lint-sources`, `validate-skills`, `lint-agent-readiness`, `lint-content`, `lint-tables`, `build-site`, `mcp` and `plan-stamp`, none of them the eval set. Run it with `npm run eval:agent` after a Catalogue change, until someone adds the CI job. The harness is `scripts/eval-agent.mjs`, the tasks and their exit conditions are `evals/agent/tasks.json`, and runs land in `evals/agent/runs/`.
+- Score on Haiku first. It is the floor model: a skill that only passes on Opus is a skill for people who can afford Opus. The 2026-09-16 run on Haiku passed task 2 and was blocked on credentials for the rest, and it caught a helper agent claiming a bundle was valid without running the validator. That is why the harness scores a pass with no evidence as a fail.
 - The first-day test runs before ship, and again whenever the M1 path changes materially. It needs a fresh developer each time, which is the constraint on how often it can run.
 
 ## What proof does not mean

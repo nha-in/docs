@@ -1,0 +1,8 @@
+{
+  "atom": "hiecm.endpoint.p2-patient-share",
+  "on": "2026-09-17",
+  "against": "https://dev.abdm.gov.in",
+  "request": "curl -X POST 'https://dev.abdm.gov.in/api/hiecm/patient-share/v3/share' \\\n  -H 'Authorization: Bearer <scrubbed>' \\\n  -H 'REQUEST-ID: 69c3ec95-b7ba-4e01-9350-02af17d52d5e' \\\n  -H 'TIMESTAMP: 2026-09-17T11:23:16.286Z' \\\n  -H 'Content-Type: application/json' \\\n  -d '{\n  \"intent\": \"PROFILE_SHARE\",\n  \"metaData\": {\n    \"hipId\": \"MAYUR_HIP\",\n    \"context\": \"ABC123\",\n    \"hprId\": \"abdulkalam@abdm\",\n    \"latitude\": \"-38.679\",\n    \"longitude\": \"58.498\"\n  },\n  \"profile\": {\n    \"patient\": {\n      \"abhaNumber\": 91178386101251,\n      \"abhaAddress\": \"9117838@sbx\",\n      \"name\": \"User 1\",\n      \"gender\": \"M\",\n      \"dayOfBirth\": \"10\",\n      \"monthOfBirth\": \"10\",\n      \"yearOfBirth\": \"1994\",\n      \"address\": {\n        \"line\": \"C/O Sandipan Kshirsagar Ambejogai Road Renuka Nagar\",\n        \"district\": null,\n        \"state\": null,\n        \"pincode\": null\n      },\n      \"phoneNumber\": \"9876543210\"\n    }\n  }\n}'\n",
+  "status": 401,
+  "body": ""
+}

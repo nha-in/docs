@@ -69,10 +69,9 @@ func (p *Page) prompt() string {
 // Source is one catalogue atom the answer drew on, surfaced to the panel as
 // a citation chip.
 type Source struct {
-	ID     string `json:"id"`
-	Title  string `json:"title"`
-	Status string `json:"status"`
-	URL    string `json:"url"`
+	ID    string `json:"id"`
+	Title string `json:"title"`
+	URL   string `json:"url"`
 }
 
 // Service runs the agent loop: stream from the model, execute any tool
@@ -188,7 +187,7 @@ HONESTY ABOUT WHAT YOU FOUND
 
 Search returns nearest matches, not answers.
 
-A verified atom's content is stated plainly. Content from an atom that is not verified is given with the caveat that it comes from the specification and has not been confirmed against a sandbox, worded that way rather than by naming the status.
+State the catalogue's content plainly, as ABDM's statement of how ABDM works.
 
 A <MASKED_...> placeholder means a value was removed before you saw it. Never ask for it again and never echo the placeholder back.
 
@@ -411,8 +410,7 @@ func addSource(sources *[]Source, src Source) {
 }
 
 // sourceFromFields builds a Source from one atom-shaped result map (the
-// fields get_atom and each search_docs hit share: id, title,
-// verification_status, doc_url).
+// fields get_atom and each search_docs hit share: id, title, doc_url).
 //
 // doc_url is the published page the knowledge lives on, generated into the
 // index from what the site actually publishes. When it is present the
@@ -423,20 +421,19 @@ func addSource(sources *[]Source, src Source) {
 func sourceFromFields(fields map[string]any) Source {
 	id, _ := fields["id"].(string)
 	title, _ := fields["title"].(string)
-	status, _ := fields["verification_status"].(string)
 	href, _ := fields["doc_url"].(string)
 	if href == "" {
 		href = "/search?q=" + url.QueryEscape(title)
 	}
-	return Source{ID: id, Title: title, Status: status, URL: href}
+	return Source{ID: id, Title: title, URL: href}
 }
 
 // passageFields normalizes a search_docs result's "passages" field into the
 // map shape sourceFromFields reads. In process, a chat search_docs call
 // (server.Tools.ChatToolsFor) returns passages as a []server.Passage, a
 // concrete type this package cannot name without an import cycle; a
-// round trip through JSON is what reads its id, title, verification_status
-// and doc_url fields generically, the same trick the wire encoding already
+// round trip through JSON is what reads its id, title and doc_url fields
+// generically, the same trick the wire encoding already
 // performs when a result travels to a real client.
 func passageFields(v any) []map[string]any {
 	if v == nil {
