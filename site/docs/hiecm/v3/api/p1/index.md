@@ -3,7 +3,6 @@ title: P1 PHR identity and profile
 sidebar_label: Overview
 sidebar_position: 0
 description: "How a patient gets into their own PHR: registration, login, the profile they see, the family members they manage."
-verification: unverified
 source: catalogue/openapi/hiecm/v3/hiecm-p1.yaml
 ---
 

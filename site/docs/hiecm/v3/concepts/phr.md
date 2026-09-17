@@ -6,7 +6,6 @@ sidebar_custom_props:
   roles: [phr]
 description: What a personal health record app does in ABDM, the screens it needs, and the modules you have to build.
 covers: [hiecm.concept.phr-subscriptions]
-verification: unverified
 source: ABDM__NewDocumant_PHR_app.md, ABDM__Proposed_Simplified_Milestone_1.md
 sidebar_class_name: sidebar-icon sidebar-icon--app-window
 ---

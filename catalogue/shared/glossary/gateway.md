@@ -20,9 +20,6 @@ sources:
     note: >
       NHA's PHR Framework page, which calls the gateway the hub that
       mediates and connects HIE-CMs, health repositories and HIUs.
-verified:
-  status: unverified
-  against: docs-only
 related:
   concepts: [hiecm.concept.gateway-session, hiecm.concept.asynchronous-callbacks]
   glossary: [shared.glossary.hie-cm, shared.glossary.bridge]

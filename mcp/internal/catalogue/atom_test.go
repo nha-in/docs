@@ -25,9 +25,6 @@ func TestParseAtomError(t *testing.T) {
 	if a.ID != "hiecm.error.abdm-1035" || a.Type != "error" || a.Milestone != "M2" {
 		t.Errorf("frontmatter mismatch: %+v", a)
 	}
-	if a.VerificationStatus != "verified" {
-		t.Errorf("status = %q, want verified", a.VerificationStatus)
-	}
 	if want := []string{"ABDM-1035"}; !reflect.DeepEqual(a.ErrorCodes, want) {
 		t.Errorf("ErrorCodes = %v, want %v", a.ErrorCodes, want)
 	}

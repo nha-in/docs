@@ -1,0 +1,8 @@
+{
+  "atom": "hiecm.endpoint.p2-link-care-context-confirm",
+  "on": "2026-09-17",
+  "against": "https://dev.abdm.gov.in",
+  "request": "curl -X POST 'https://dev.abdm.gov.in/api/hiecm/user-initiated-linking/v3/link/care-context/confirm' \\\n  -H 'Authorization: Bearer <scrubbed>' \\\n  -H 'REQUEST-ID: e76b3dd2-993c-42bb-a7bb-bec39f3c0f0e' \\\n  -H 'TIMESTAMP: 2026-09-17T11:23:14.994Z' \\\n  -H 'Content-Type: application/json' \\\n  -d '{\n  \"token\": 123456,\n  \"linkRefNumber\": \"4336268d-89a3-4c84-8674-aef42092d9fc\"\n}'\n",
+  "status": 401,
+  "body": ""
+}

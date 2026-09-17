@@ -124,7 +124,7 @@ asking for.
 
 ### Codes
 
-Code and message are as published. The action column reads the message text by a documented rule. These codes are the PHR facing wording of the core ABDM codes, row for row.
+Code and message are as published. The heading each code sits under reads the message text by a documented rule. These codes are the PHR facing wording of the core ABDM codes, row for row.
 
 | Code | Message | What to do |
 | --- | --- | --- |

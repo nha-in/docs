@@ -1,0 +1,8 @@
+{
+  "atom": "hiecm.endpoint.m3-hiu-data-flow-notify",
+  "on": "2026-09-17",
+  "against": "https://dev.abdm.gov.in",
+  "request": "curl -X POST 'https://dev.abdm.gov.in/api/hiecm/data-flow/v3/health-information/notify' \\\n  -H 'Authorization: Bearer <scrubbed>' \\\n  -H 'REQUEST-ID: e97acdf5-4419-4f29-b047-89b37704d76b' \\\n  -H 'TIMESTAMP: 2026-09-17T11:23:01.384Z' \\\n  -H 'X-CM-ID: sbx' \\\n  -H 'Content-Type: application/json' \\\n  -d '{\n  \"notification\": {\n    \"consentId\": \"consent-art-uuid-001\",\n    \"transactionId\": \"txn-uuid-data-001\",\n    \"doneAt\": \"2024-01-15T10:30:00.000Z\",\n    \"notifier\": {\n      \"type\": \"HIU\",\n      \"id\": \"HIU_SERVICE_ID\"\n    },\n    \"statusNotification\": {\n      \"sessionStatus\": \"RECEIVED\",\n      \"hipId\": \"HIP_SERVICE_ID\",\n      \"statusResponses\": [\n        {\n          \"careContextReference\": \"VISIT-2024-001\",\n          \"hiStatus\": \"OK\",\n          \"description\": \"Data received and decrypted successfully\"\n        },\n        {\n          \"careContextReference\": \"LAB-2024-001\",\n          \"hiStatus\": \"OK\",\n          \"description\": \"Data received and decrypted successfully\"\n        }\n      ]\n    }\n  }\n}'\n",
+  "status": 400,
+  "body": "{\"error\":{\"code\":\"ABDM-1101\",\"message\":\"Duplicate Health Information request\"}}"
+}

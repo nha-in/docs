@@ -17,10 +17,13 @@ sources:
   - file: ABDM Sandbox/ABDM/Proposed Simplified Milestone 1.docx
     status: not-yet-hashed
     note: NHA milestone pack for M1, the same source callback-url.md draws on.
-verified:
-  status: unverified
+  - file: catalogue/annexure/integration-learnings-2026-09-16.md
+    fetched: 2026-09-16
+    hash: sha256:d1415609d3d71178563367bcdcc48fa7a01fe9ebd247b4c019686304868368ce
+    note: >
+      Last writer wins on the bridge URL, and that the registered URL cannot be read back. Observed by an integrator on 2026-09-16, not yet run from this repository.
 related:
-  concepts: [hiecm.concept.asynchronous-callbacks]
+  concepts: [hiecm.concept.asynchronous-callbacks, hiecm.concept.bridge-url-ownership]
   sandbox: [shared.sandbox.callback-url]
   endpoints: [hiecm.endpoint.gateway-update-bridge-url]
   errors: [hiecm.error.abdm-9999]

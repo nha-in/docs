@@ -21,13 +21,13 @@ Create a new atom, correctly shaped, ready to write.
 1. Loads `atom-authoring` and the type-specific rules from `references/atom-types.md`
 2. Asks the four questions that must be answered before writing: type, source, what the reader already has, how they will know it worked
 3. Writes the file to the correct path from gateway and type
-4. Fills frontmatter: `id`, `type`, `gateway`, `version`, `verified.status: unverified`
+4. Fills frontmatter: `id`, `type`, `gateway`, `version`
 5. Emits the five section headings in order, with type-specific scaffolding inside them
 6. Leaves `title`, `summary`, `milestone`, `sources` and `related` for the author
 
 ## What it will not do
 
-- Set `verified` to anything but `unverified`
+- Write a `verified` block. The field no longer exists and lint fails on it
 - Write prose into the sections
 - Invent a source
 - Create an atom whose id already exists

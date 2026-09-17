@@ -148,7 +148,7 @@ func TestValidateTurnsCapsAssistantLen(t *testing.T) {
 func TestRespondRejectsInvalidTurns(t *testing.T) {
 	svc := &Service{Model: &fakeModel{}}
 	emit, _ := collectEvents()
-	err := svc.Respond(context.Background(), []Turn{{Role: "assistant", Text: "hi"}}, nil, emit)
+	err := svc.Respond(context.Background(), []Turn{{Role: "assistant", Text: "what is an ABHA"}}, nil, emit)
 	if err == nil {
 		t.Fatal("want validation error, got nil")
 	}
@@ -200,7 +200,7 @@ func TestRespondStopsOnFirstEmitTextError(t *testing.T) {
 		}
 		return nil
 	}
-	err := svc.Respond(context.Background(), []Turn{{Role: "user", Text: "hi"}}, nil, emit)
+	err := svc.Respond(context.Background(), []Turn{{Role: "user", Text: "what is an ABHA"}}, nil, emit)
 	if !errors.Is(err, wantErr) {
 		t.Fatalf("err = %v, want %v", err, wantErr)
 	}
@@ -223,7 +223,7 @@ func TestLoopUnknownToolRoutesAround(t *testing.T) {
 	}
 	svc := &Service{Model: fm, Tools: nil, MaxTokens: 100}
 	emit, _ := collectEvents()
-	if err := svc.Respond(context.Background(), []Turn{{Role: "user", Text: "hi"}}, nil, emit); err != nil {
+	if err := svc.Respond(context.Background(), []Turn{{Role: "user", Text: "what is an ABHA"}}, nil, emit); err != nil {
 		t.Fatal(err)
 	}
 	last := fm.gotMsgs[1]
@@ -249,7 +249,7 @@ func TestLoopPreservesTextAlongsideToolCalls(t *testing.T) {
 	}
 	svc := &Service{Model: fm, Tools: nil, MaxTokens: 100}
 	emit, _ := collectEvents()
-	if err := svc.Respond(context.Background(), []Turn{{Role: "user", Text: "hi"}}, nil, emit); err != nil {
+	if err := svc.Respond(context.Background(), []Turn{{Role: "user", Text: "what is an ABHA"}}, nil, emit); err != nil {
 		t.Fatal(err)
 	}
 	if fm.calls != 2 {
@@ -607,7 +607,7 @@ func TestRespondDoesNotRetryAPlainAnswer(t *testing.T) {
 	svc := &Service{Model: fm, MaxTokens: 100}
 	emit, _ := collectEvents()
 	if err := svc.Respond(context.Background(),
-		[]Turn{{Role: "user", Text: "hi"}}, nil, emit); err != nil {
+		[]Turn{{Role: "user", Text: "what is an ABHA"}}, nil, emit); err != nil {
 		t.Fatal(err)
 	}
 	if fm.calls != 1 {

@@ -25,8 +25,6 @@ sources:
     note: >
       NHA's PHR V3 document, section 6.9, which publishes the request
       body this atom had as a placeholder.
-verified:
-  status: unverified
 related:
   errors: [hiecm.error.abdm-2402, hiecm.error.abdm-2404, hiecm.error.abdm-2500, hiecm.error.abdm-9999]
   concepts: [hiecm.concept.gateway-session]
