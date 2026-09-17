@@ -130,9 +130,11 @@ Node    crypto.publicEncrypt({key, padding: RSA_PKCS1_OAEP_PADDING,
             oaepHash: "sha1"}, buf)
 ```
 
-Each key is an RSA public key in X.509 SubjectPublicKeyInfo form, the
-`-----BEGIN PUBLIC KEY-----` PEM. Working integrations pin the key
-rather than fetching it per request, and refresh it when NHA rotates.
+Each key is an RSA public key in X.509 SubjectPublicKeyInfo form. The
+V3 certificate endpoint returns it as bare base64 DER, with no
+`-----BEGIN PUBLIC KEY-----` armour, so add the armour before your
+library will load it. Working integrations pin the key rather than
+fetching it per request, and refresh it on rotation.
 
 The evidence: a production V3 integration running against ABDM uses
 OAEP with SHA-1 for the V3 registration and login flows, and PKCS1 v1.5
@@ -144,23 +146,22 @@ is PKCS1 v1.5. No NHA published source in reach states the V3 OAEP
 parameters, which is exactly why integrators reading only the documents
 get this wrong.
 
-What is still not settled, and is not guessed here: the public
-certificate endpoint's full URL, headers and response shape, since
-NHA's document carries them only as screenshots and the Postman
-collection does not include the call, and the rotation policy for each
-key. Nothing on this page has been run against the sandbox from this
-repository, so the atom stays unverified until the verification below
-is done.
+The V3 certificate call is settled:
+`GET /v3/profile/public/certificate` returns
+`{"publicKey": "<base64 DER>"}`, documented in
+[get RSA public certificate](../endpoints/m1-get-public-certificate.md).
+The rotation policy for each key is not published. Cache the
+certificate with a validity window rather than forever.
 
 ```observation schema=precondition
 requires: the public key for the API family you are calling
 settled:
   - v3 padding: RSA OAEP, SHA-1 for both digest and MGF1
   - healthid and nhpr padding: RSA PKCS1 v1.5
-  - key format: X.509 SubjectPublicKeyInfo PEM, one key per API family
+  - key format: X.509 SubjectPublicKeyInfo, one key per API family. The
+    V3 endpoint returns it as base64 DER with no PEM armour
   - ciphertext encoding: standard base64
 unknowns:
-  - certificate endpoint full URL, headers and response shape
   - rotation policy per key
 closed_by: sandbox verification run, recorded in this atom
 ```

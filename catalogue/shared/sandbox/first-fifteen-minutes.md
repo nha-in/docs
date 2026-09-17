@@ -57,10 +57,9 @@ Apply first, then spend fifteen minutes of your own on the two steps below.
    NHA's review clock, so do it before anything else. See
    [registration and credentials](registration-and-credentials.md).
 2. **Read one transcribed exchange, about 5 minutes.** Below is the gateway session call, the
-   one every other ABDM call depends on, transcribed from this repository's specification. It
-   is **not run live**: nobody has executed this call from this repository, and the header and
-   body values shown are generated example values from the specification, not values NHA has
-   returned.
+   one every other ABDM call depends on. The header and body values shown are example values
+   from the specification rather than a recorded response, so read the shape and expect your
+   own values to differ.
 3. **Assemble your own first call, about 10 minutes.** A filled in curl with placeholders named
    for where each value comes from, so the moment your credentials arrive, pasting them in is
    the only step left.
@@ -119,6 +118,26 @@ curl --request POST \
 
 Save it. When NHA emails your client id and client secret, this is the one paste away from
 your first real call.
+
+### What you test M1 with
+
+Everything in the sandbox is test data, and no test identities are published
+with it. There is no fixture Aadhaar number and no fixed OTP: an OTP goes to
+whichever handset the identifier is registered against, and a real one
+receives it.
+
+So plan for this before you reach your first OTP call:
+
+- **A mobile you can read an SMS on.** This unlocks the whole login journey,
+  and it is the cheapest thing to arrange. Your own is fine.
+- **An Aadhaar whose linked mobile you hold**, if you intend to build ABHA
+  creation or anything that ends in a KYC verified ABHA number. Without one
+  you can build and read the creation calls but never complete them.
+
+Two consequences worth designing around. Never point an OTP call at a number
+nobody on your team answers, because a real person receives that message. And
+attempts are counted against the transaction rather than against you, so a
+retry loop against one number spends the transaction rather than trying again.
 
 ## How you know it worked
 

@@ -47,6 +47,34 @@ const skillUrl = (slug) =>
 const UNVERIFIED =
   'Nothing here has been run against the ABDM sandbox. Treat request and response shapes as unconfirmed, and check a response before you rely on its shape.';
 
+/**
+ * Where part of a module HAS been run, the blanket sentence above is worse than
+ * nothing: it sits directly above rules quoting observed responses, and a
+ * reader who notices the contradiction has no way to tell which half to trust.
+ * Name what was observed and leave the rest unconfirmed.
+ */
+const PARTLY_VERIFIED = {
+  m1: 'Most of this has not been run against the ABDM sandbox. What has: the gateway session call, both public certificates and the algorithm they publish, the encryption round trip, and the error shapes recorded below. Treat everything else as unconfirmed and read a response before relying on its shape.',
+};
+
+// Practices, as distinct from rules. A rule is a fact about one module. A
+// practice is how to work so a wrong assumption surfaces in a minute rather
+// than after a day, and it holds across every module.
+//
+// They live in the Catalogue like everything else, at
+// shared.concept.integration-practices, so they are linted, rendered on the
+// site, and citable by id. An earlier version held the text in this file,
+// which made the most cross-cutting content in the repository the only content
+// no lint could see and no reader of the docs site ever met.
+const practicesAtom = join(root, 'catalogue', 'shared', 'concepts', 'integration-practices.md');
+const PRACTICES = (() => {
+  const body = readFileSync(practicesAtom, 'utf8');
+  const what = body.split('\n## What happens\n')[1]?.split('\n## ')[0] ?? '';
+  const items = [...what.matchAll(/^- (.+)$/gm)].map((m) => m[1].trim());
+  if (!items.length) throw new Error(`No practices found in ${practicesAtom}`);
+  return items;
+})();
+
 const MODULES = [
   {
     id: 'm1',
@@ -59,11 +87,31 @@ const MODULES = [
     description:
       'Use when building, debugging or testing ABDM Milestone 1: creating an ABHA number or address, ABHA login, profile management, or the gateway session token. Carries the endpoints, the required headers, the two token rule, the encryption rule, every recorded error code and the M1 test matrix. Also carries the scaffolding loop that builds it flow by flow and the loop from a failed call to a named fix, in references/.',
     rules: [
-      UNVERIFIED,
+      PARTLY_VERIFIED.m1,
       'Get an access token first, from the gateway session endpoint. Every other call needs it in `Authorization: Bearer <token>`.',
       'Two tokens exist and they are not interchangeable. The gateway access token goes in `Authorization`. The user token from an enrolment or a login goes in `X-token`. Profile endpoints need both.',
-      "Sensitive fields travel encrypted. Aadhaar numbers, mobile numbers, email addresses, OTP values and passwords are RSA encrypted with NHA's public certificate before they go in the body.",
+      "Sensitive fields travel encrypted. Aadhaar numbers, mobile numbers, email addresses, OTP values and passwords are encrypted before they go in the body, then base64 encoded.",
+'The certificate response tells you the padding. `GET /v3/profile/public/certificate` returns `{"publicKey", "encryptionAlgorithm"}`, and `encryptionAlgorithm` is currently `RSA/ECB/OAEPWithSHA-1AndMGF1Padding`. Read that field and translate it for your language. Do not hard code a padding: a constant is right until it is not, and the failure then looks like a bad value rather than a stale constant.',
+      'PKCS#1 v1.5 is refused, and so is OAEP with SHA-256. Neither refusal names encryption, so a wrong padding reads back as a wrong value.',
+      'More than one certificate is published and they are not interchangeable. `/v3/profile/public/certificate` is 4096-bit and `/v3/phr/app/login/public/certificate` is 2048-bit, both naming the same algorithm. Ciphertext length tells them apart: 512 bytes against 256. The helper at `/v3/phr/app/enrollment/encrypt` uses the 2048 bit key.',
+      'Every certificate arrives as bare base64 DER with no PEM armour, whatever the field name suggests. Add the armour, wrapping at 64 characters per line, before your library will load it.',
+      'Prove the padding before building a flow, with a mobile that is registered against an ABHA account. `POST /v3/profile/login/request/otp` with `loginHint: "mobile"` returns 200 and a `txnId` when the padding is right, and `Invalid Mobile Number` when it is wrong. The number has to be a real one: an unregistered number returns that same refusal whatever the padding, so it proves nothing. `/v3/enrollment/request/otp` refuses every input identically and cannot tell you either way.',
       'One path serves several jobs. The `scope` array in the body picks which one, so read it before assuming an endpoint does one thing.',
+      'Holds regardless of the design: the reason a front desk adopts ABHA is that the receptionist stops typing. `GET /v3/profile/account` returns the whole registration form: names, day, month and year of birth, gender, mobile, email, the full address with LGD codes and a photograph. So the ABHA step comes BEFORE the registration form and fills it. A journey that registers the patient first and offers ABHA afterwards has already spent the keystrokes it existed to save.',
+      'Two ways the profile reaches the desk. The patient scans a QR carrying your facility id and a counter id, consents in their own app, and ABDM posts the profile to your callback, so nobody at the desk types or asks anything. Or the desk runs the identifier journey, which ends in a token that reads the profile. Build whichever the deployment can reach, but the form is the destination either way.',
+      'Present the filled form for confirmation rather than saving it unseen. The profile is what ABDM holds, not what the clinician sees: names get transliterated, addresses age, and a shared mobile may belong to a relative.',
+      'ABDM publishes operations, not a user experience. The journey is the integrator\'s to design, and a product that knows its own counter will often beat any default. Offer the suggested shape below, say it is a suggestion, and build what the user asks for instead when they have a view.',
+      'Suggested shape: one entry rather than a menu. Take one identifier, send one OTP, and branch on what comes back, because asking a person at a desk whether they want to log in or register puts a question to them they often cannot answer. A chooser is better where the desk genuinely knows, such as a counter that only registers new patients.',
+      'Holds regardless of the design: the token a login verification returns is a TRANSFER token, not the session token. Its JWT carries `"typ": "Transfer"` and five minutes of life, and a profile call refuses it as ABDM-1094 "X-token expired" with a Bearer prefix or "Invalid X-token" without one, on a token one second old. Exchange it at `/v3/profile/login/verify/user` whatever the length of the accounts array, one included.',
+      'Holds regardless of the design: send every identifier to the login path first, Aadhaar included. Wiring Aadhaar to enrolment because that is where Aadhaar is most discussed sends everyone who already holds an ABHA to create a second. The scope pairs differ between the paths, so the mistake surfaces as ABDM-1107, invalid combinations of scopes, and never mentions duplicates.',
+      'Scope is an array and the operations care about the combination. A login keeps one pair across both calls: abha-login plus mobile-verify, aadhaar-verify or password-verify. An enrolment changes pair between them: the OTP request carries abha-enrol alone and the verification carries abha-enrol plus what is being verified. Carrying the request scope forward is ABDM-1107.',
+      'The accounts array on a login verification already carries ABHANumber, preferredAbhaAddress, name, gender, dob, profilePhoto and kycVerified, so a registration form can fill the moment the OTP verifies and before any profile call. Note dob is one DD-MM-YYYY string there and three integer fields on the profile endpoint.',
+      'Holds regardless of the design: read the accounts on the verification response before creating. Creating when an account already exists leaves the patient holding two ABHA numbers and no M1 operation merges them. This is the one failure worth designing around first.',
+      'Holds regardless of the design: an ABHA is optional to the patient record, which is keyed by the hospital\'s own number. ABDM does not require a person to hold one to be treated, so a journey that cannot complete without one blocks care. Make that a deliberate decision rather than an omission.',
+      'An identifier and an auth method are two different questions, and listing them together is what makes M1 look like five choices. ABDM accepts four identifiers: Aadhaar, mobile, ABHA number, ABHA address. Aadhaar is the one to recommend because it is the only route ending in a KYC verified ABHA number.',
+      'How the person proves the identifier is theirs is `authMethods`, whose values are otp, bio, face, iris, child and demo_auth. Aadhaar accepts the range; a mobile accepts the OTP sent to it and nothing else. So offer auth methods underneath the identifier, and only where there is more than one. Most integrations ship OTP on both and add the rest when a desk asks.',
+      'The surface is more than a registration form. Finding a forgotten ABHA, upgrading a mobile-made address to KYC, showing the card and QR, sharing a profile by QR at a counter, and updating a mobile number are each placements the operations support. List them for the integrator so their own design can account for them rather than meeting them later.',
+      'Holds regardless of the design: OTP attempts are counted against the transaction, not the person. Repeated sends lock that transaction and the error names the attempt count rather than the wait. A fresh transaction is the recovery. The code is never persisted and never logged.',
     ],
   },
   {
@@ -81,6 +129,8 @@ const MODULES = [
       'M2 is keyed to an ABHA address, so a working M1 integration comes first.',
       'Hold a link token per patient, stored at registration. NHA gives its validity as six months and says to validate it before use. If you hold no valid one, regenerate it using demographic authentication.',
       'Records go out as FHIR R4 conforming to the ABDM profiles at https://nrces.in/ndhm/fhir/r4/index.html.',
+      'You are the side that encrypts, and the parameters arrive from the requester rather than from you. The health information request carries `keyMaterial` with `cryptoAlg: ECDH`, `curve: Curve25519`, the requester\'s `dhPublicKey` and a 32 byte `nonce`. Generate your own Curve25519 pair and your own 32 byte nonce, and send your public key and nonce back with the data so the requester can derive the same secret.',
+      'The key derivation and the symmetric cipher applied over that shared secret are not yet published. Confirm both at onboarding before you ship, rather than inferring them from a sample.',
       'Four callbacks name a path and carry no payload in either of NHA sources: discovery, link init, link confirm and consent notify. Do not assume a body for those.',
     ],
   },
@@ -122,7 +172,7 @@ const MODULES = [
       'Facility onboarding is one search, three writes and a submit, all keyed to the `trackingId` the first write returns. Stop before submit and the facility stays in draft, invisible to ABDM.',
       'Register professional takes codes, not names. Fetch council, course, college, university, state, district and language from the master data APIs first.',
       'A facility ID alone does not make records flow. Link the facility to a bridge and mark each link HIP or HIU. The HIP name is what a patient sees in their PHR app: 15 characters or fewer, no special characters, and unique for every bridge on that facility.',
-      'Send the mobile number encrypted. Fetch the public certificate from `/v4/int/api/v1/auth/cert` and encrypt with `RSA/ECB/PKCS1Padding`.',
+      'Send the mobile number encrypted. Fetch the public certificate from `/v4/int/api/v1/auth/cert` and encrypt with `RSA/ECB/PKCS1Padding`. That padding and that certificate belong to the NHPR registry alone. M1 uses RSA-OAEP with SHA-1 under a different certificate, so do not carry either across.',
       'Several published M4 samples show the production host while describing sandbox behaviour. Check the host before you copy a sample.',
     ],
   },
@@ -457,6 +507,50 @@ function sections(markdown) {
 }
 
 /** Everything above the first `## `: frontmatter, title, provenance. */
+/**
+ * What the module actually lets you build, in a reader's terms rather than in
+ * operation names. People who download a skill are deciding whether it covers
+ * their case, and a list of 55 paths does not answer that.
+ */
+const CAPABILITIES = {
+  m1: [
+    'Create an ABHA for somebody who has none: by Aadhaar, by mobile, by an identity document, by face or fingerprint, or under a parent for a child.',
+    'Log in somebody who already has one, by Aadhaar, mobile, ABHA number or ABHA address.',
+    'Read their profile, which carries the whole registration form: names, date of birth, gender, mobile, address with its codes, and a photograph.',
+    'Find an ABHA somebody has forgotten, and tell two accounts on one mobile apart.',
+    'Show the ABHA card and QR code, and take a profile a patient shares by QR at your counter.',
+    'Update a profile, change a mobile, and upgrade a mobile made address to KYC verified.',
+  ],
+  m2: [
+    'Tell ABDM a patient had a visit with you, so their records can be found later.',
+    'Answer a discovery request when somebody looks for that patient.',
+    'Send records out encrypted when a consent says you must, and tell the gateway you have finished.',
+    'Hold and refresh the per patient link token the linking calls need.',
+  ],
+  m3: [
+    'Ask a patient, through their consent manager, for records another provider holds.',
+    'Track that request through a grant, a denial, a revocation and an expiry.',
+    'Receive the encrypted records on your callback, decrypt them, and acknowledge receipt.',
+    'Handle one request that produces several consent artefacts, which is the normal case.',
+  ],
+  m4: [
+    'Create an HPID for a professional and register them in the HPR.',
+    'Register a facility in the HFR and carry it through to submission, without which it stays a draft nobody can see.',
+    'Link a facility to a bridge and mark each link HIP or HIU, which is what makes records flow.',
+    'Fetch the council, course, college, university and geography codes these calls take instead of names.',
+  ],
+  p1: ['Everything M1 covers, from inside a patient facing PHR application rather than a provider system.'],
+  p2: ['Share a patient profile from their own application, including the counter QR flow.'],
+  p3: ['Manage consents from inside a PHR application, including auto approval policies.'],
+};
+
+function capabilities(module) {
+  const items = CAPABILITIES[module.id];
+  if (!items) return [];
+  return [...items.map((c) => `- ${c}`), '',
+    'What it cannot do yet matters as much. Read **Before anything else** below before assuming a capability is one endpoint away.'];
+}
+
 function head(markdown) {
   return markdown.split(/\n(?=## )/)[0].trim();
 }
@@ -612,13 +706,22 @@ for (const module of MODULES) {
   files['SKILL.md'] = [
     head(whole),
     '',
-    '## What this skill covers',
+    `## What you can do with ${module.title.split(',')[0]}`,
     '',
+    ...capabilities(module),
+    '',
+    '## What is in this folder',
+    '',
+    // Five files and no clue which to open. Say what each one answers.
     ...covers,
     '',
-    'Open one when the work calls for it. This file is the map, not the material.',
+    'This file is the map. Each line above is a file beside it, opened one at a time rather than read through.',
     '',
     parts.get('Before anything else'),
+    '',
+    '## Practices that hold across every call',
+    '',
+    ...PRACTICES.map((practice) => `- ${practice}`),
     '',
     parts.get('Where the detail is'),
   ]
@@ -689,6 +792,10 @@ fhirFiles['SKILL.md'] = [
   '',
   `- ${UNVERIFIED}`,
   '- A bundle that validates is not a bundle ABDM accepts. The NRCES profiles are the floor, and the milestone the bundle travels under adds its own rules.',
+  '',
+  '## Practices that hold across every call',
+  '',
+  ...PRACTICES.map((practice) => `- ${practice}`),
 ].join('\n');
 emit('abdm-fhir', fhirFiles);
 manifest['abdm-fhir'] = {

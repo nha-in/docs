@@ -40,6 +40,19 @@ acknowledge receipt and indicate it will begin processing (ACKNOWLEDGED).
 
 After this, the HIP prepares and encrypts FHIR records, then pushes them to the HIU's `dataPushUrl`.
 
+The encryption parameters come from the requester, in the `keyMaterial`
+of the health information request: `cryptoAlg: ECDH`, `curve:
+Curve25519`, the requester's `dhPublicKey`, and a 32 byte `nonce`.
+Generate your own Curve25519 pair and your own 32 byte nonce, and send
+your public key and nonce back with the data so the requester can
+derive the same secret. The same block is documented from the
+requesting side in
+[request health information](m3-hiu-health-information-request.md).
+
+The key derivation and the symmetric cipher applied over that shared
+secret are not yet published. Confirm both at onboarding before you
+ship.
+
 This wording is NHA's own, from the file this operation was ingested from.
 
 ## Before you start

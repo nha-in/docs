@@ -13,6 +13,7 @@
           "functionality": "Creation of Health Records",
           "expected": "ABDM mandates only the sharing of digital health record in FHIR format. Expected result is generation of digital health record.",
           "apis": [],
+          "apisNote": "No APIs",
           "api": null,
           "webhook": null,
           "detail": "Test: The system should have a provision to create digital health records Steps: 1. Check if digital Health Records are being created in HIP systems (valid for HI types as applicable to the integrating entity)."
@@ -30,6 +31,7 @@
           "functionality": "Link record via mobile OTP",
           "expected": "The user/ patient should receive an OTP on the mobile number registered with ABHA address.",
           "apis": [],
+          "apisNote": "No APIs",
           "api": null,
           "webhook": null,
           "detail": "Test: The system should have provision to link patient's Health record with ABHA address Steps: 1. Enter patient's ABHA address on the System. 2. OTP receive by the patient."
@@ -41,6 +43,7 @@
           "functionality": "Receive OTP",
           "expected": "OTP should be received on the registered mobile number",
           "apis": [],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Test: The user receives OTP Steps: 1.User receives OTP on the registered mobile number"
@@ -52,6 +55,7 @@
           "functionality": "OTP validation",
           "expected": "In case of correct OTP, the ABHA address of patient is validated. In case of incorrect OTP, the system throws an error. Linking token generated on successful authentication will be used for linking of health records for the given ABHA address.",
           "apis": [],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Test: The user shares the OTP with the HIP for validation Steps: 1. Share Mobile OTP with HIP System 2. Validate the OTP. 3. Upon successful validation of OTP, linking token is generated."
@@ -63,6 +67,7 @@
           "functionality": "Creation of new Token",
           "expected": "New Linking token should be created",
           "apis": [],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Test: On succesful authentication, the HIP will receive a new linking token Steps: 1. Receive the Linking token"
@@ -74,6 +79,7 @@
           "functionality": "Linking of Health Records",
           "expected": "Health record linking can now be initiated using the generated linking token. User can now pull the linked health records on their PHR app",
           "apis": [],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Test: HIP system links the ABHA Address with the patient records using existing generated token Steps: 1. Link Health Records using existing generated token 2. Through PHR app, check if the linked records can be pulled"
@@ -85,6 +91,7 @@
           "functionality": "Pull Records",
           "expected": "Health record linking can now be initiated using the generated linking token. User can now pull the linked health records on their PHR app using the \" Pull Records\" button. Kindly Note: it's also Important to verify all associated details for care context including HI types, Visit Date and Time, Demographic details, ABHA Number, ABHA Address, Patient details and relevant HI types information for the both the format (Structure and Unstructure).",
           "apis": [],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Test: In PHR app user will able to pull the records. Steps: Through PHR app, check if the linked records can be pulled"
@@ -102,6 +109,7 @@
           "functionality": "Link record via aadhaar linked mobile OTP",
           "expected": "The user/ patient should receive an OTP on the aadhaar linked mobile number registered with ABHA address.",
           "apis": [],
+          "apisNote": "No APIs",
           "api": null,
           "webhook": null,
           "detail": "Test: The system should have provision to link patient's Health record with ABHA address Steps: 1. Enter patient's ABHA address on the System. 2. OTP receive by the patient."
@@ -113,6 +121,7 @@
           "functionality": "Receive OTP",
           "expected": "OTP should be received on the registered Aadhaar linked mobile number",
           "apis": [],
+          "apisNote": "No APIs",
           "api": null,
           "webhook": null,
           "detail": "Test: User receives OTP on Aadhaar linked mobile number Steps: 1. OTP should be received on the registered Aadhaar linked mobile number"
@@ -124,6 +133,7 @@
           "functionality": "OTP validation",
           "expected": "In case of correct OTP, the user is validated. In case of incorrect OTP, the System throws an error. The linking token generated on successful authentication will be used for linking of health records for the given ABHA address.",
           "apis": [],
+          "apisNote": "No APIs",
           "api": null,
           "webhook": null,
           "detail": "Test: The user shares the OTP with the HIP for validation Steps: 1. Share Mobile OTP with HIP System 2. Validate the OTP. 3. Upon successful validation of OTP, linking token is generated."
@@ -135,6 +145,7 @@
           "functionality": "Creation of new Token",
           "expected": "New Linking token should be created",
           "apis": [],
+          "apisNote": "No APIs",
           "api": null,
           "webhook": null,
           "detail": "Test: On succesful authentication, the HIP will receive a new linking token Steps: 1. Receive the Linking token"
@@ -146,6 +157,7 @@
           "functionality": "Linking of Health Records",
           "expected": "Health record linking can now be initiated using the generated linking token. User can now pull the linked health records on their PHR app",
           "apis": [],
+          "apisNote": "No APIs",
           "api": null,
           "webhook": null,
           "detail": "Test: HIP system links the ABHA Address with the patient records using existing generated token Steps: 1. Link Health Records using existing generated token 2. Through PHR app, check if the linked records can be pulled"
@@ -157,6 +169,7 @@
           "functionality": "Pull Records",
           "expected": "Health record linking can now be initiated using the generated linking token. User can now pull the linked health records on their PHR app using the \" Pull Records\" button. Kindly Note: it's also Important to verify all associated details for care context including HI types, Visit Date and Time, Demographic details, ABHA Number, ABHA Address, Patient details and relevant HI types information for the both the format (Structure and Unstructure).",
           "apis": [],
+          "apisNote": "No APIs",
           "api": null,
           "webhook": null,
           "detail": "Test: In PHR app user will able to pull the records. Steps: Through PHR app, check if the linked records can be pulled"
@@ -174,6 +187,7 @@
           "functionality": "Direct Auth mode for Linking of Health Records",
           "expected": "The request for linking of Health record should be initiated using Direct auth mode. Health record will be linked with their ABHA Address.",
           "apis": [],
+          "apisNote": "No APIs",
           "api": null,
           "webhook": null,
           "detail": "Test: The system should have provision to link patient's Health record with ABHA address Steps: 1. Enter patient's ABHA address on the System 2. The user logs into their PHR app, receives the request for approval and approves it. 3. Search the request in the Notification tab 4. Approve the request.(User may approve or reject the request. if the request is rejected process ends there) 5. Upon successful validation of OTP, linking token is generated."
@@ -185,6 +199,7 @@
           "functionality": "Notification on PHR App",
           "expected": "User should get a notification on their PHR app for approval of request sent by HIP.",
           "apis": [],
+          "apisNote": "No APIs",
           "api": null,
           "webhook": null,
           "detail": "Test: The user logs into their PHR app, receives the request for approval and approves it Steps: 1. Login in the PHR app. 2. Search the request in the Notification tab 3. Approve the request. 4.3. Upon successful validation of OTP, linking token is generated."
@@ -196,6 +211,7 @@
           "functionality": "Creation of Linking Token",
           "expected": "New Linking token should be created",
           "apis": [],
+          "apisNote": "No APIs",
           "api": null,
           "webhook": null,
           "detail": "Test: On sucessfull authentication, the HIP will receive a new linking token Steps: 1. Receive the Linking token"
@@ -207,6 +223,7 @@
           "functionality": "Linking of Health Records",
           "expected": "Health record linking can now be initiated using the generated linking token. User can now pull the linked health records on their PHR app",
           "apis": [],
+          "apisNote": "No APIs",
           "api": null,
           "webhook": null,
           "detail": "Test: HIP system links the ABHA Address with the patient records using existing generated token Steps: 1. Link Health Records using existing generated token 2. Through PHR app, check if the linked records can be pulled"
@@ -218,6 +235,7 @@
           "functionality": "Pull Records",
           "expected": "Health record linking can now be initiated using the generated linking token. User can now pull the linked health records on their PHR app using the \" Pull Records\" button. Kindly Note: it's also Important to verify all associated details for care context including HI types, Visit Date and Time, Demographic details, ABHA Number, ABHA Address, Patient details and relevant HI types information for the both the format (Structure and Unstructure).",
           "apis": [],
+          "apisNote": "No APIs",
           "api": null,
           "webhook": null,
           "detail": "Test: In PHR app user will able to pull the records. Steps: Through PHR app, check if the linked records can be pulled"
@@ -235,6 +253,7 @@
           "functionality": "HIP must save consent (s)granted for a ABHA address in their system",
           "expected": "Consent request seen in HMIS",
           "apis": [],
+          "apisNote": "No APIs",
           "api": null,
           "webhook": null,
           "detail": "Steps: 1. Initiate a new consent request for HIP on HIU web interface on sandbox. 2. Grant the request for this consent on PHR app 3. HIP will be notified of granted consent request. 4.Verify the HIP has saved the granted consent request as part of EMR/HMIS system"
@@ -252,6 +271,7 @@
           "functionality": "HIP must delete consents for a ABHA address in their system when it is revoked",
           "expected": "Consent revoked seen in HMIS",
           "apis": [],
+          "apisNote": "No APIs",
           "api": null,
           "webhook": null,
           "detail": "Steps: 1. Select a granted consent request for this HIP in the PHR app 2. Revoke consent on PHR app 3. HIP will be notified of revoked consent . 4. Verify the HIP has deleted the consent as part of EMR/HMIS system upon revoke by patient"
@@ -269,6 +289,7 @@
           "functionality": "HIP must delete consents for a ABHA address in their system when it is expired",
           "expected": "Consent expired seen in HMIS",
           "apis": [],
+          "apisNote": "No APIs",
           "api": null,
           "webhook": null,
           "detail": "Steps: 1. Initiate a new consent request for HIP on HIU web interface on sandbox. 2. Grant the consent on PHR app; Set the expiry to a short expiry time 3. HIP will be notified of granted consent request 4. HIP will be notified of the expired consent post expiry time. 5.Verify the HIP has deleted the expired request as part of EMR/HMIS system"
@@ -291,6 +312,7 @@
             "https://dev.abdm.gov.in/api/hiecm/hip/v3/link/context/notify",
             "https://dev.abdm.gov.in/api/hiecm/hip/v3/link/patient/links/sms/notify2"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Test: The system should have provision to link patient's Health record with ABHA address. Steps: 1. for the verified ABHA Address of the patient in the HIP System. 2.The user provides their demographic details (name, gender, DOB, mobile number, Aadhaar Number , State , District, Address."
@@ -307,6 +329,7 @@
             "https://dev.abdm.gov.in/api/hiecm/hip/v3/link/context/notify",
             "https://dev.abdm.gov.in/api/hiecm/hip/v3/link/patient/links/sms/notify2"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Test: The user provides their demographic details (name, gender, DOB, mobile number, Aadhaar Number , State , District, Address. Steps: 1. Enter user/patient's demographic details in the HIP System"
@@ -323,6 +346,7 @@
             "https://dev.abdm.gov.in/api/hiecm/hip/v3/link/context/notify",
             "https://dev.abdm.gov.in/api/hiecm/hip/v3/link/patient/links/sms/notify2"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Test: The HIP validates demographic details of patient Steps: 1. Validate Demographic Details based on the data verified by Aadhaar database( Provided by the user and fetch by the ABHA address) 2. based on succesfull verification linking token is generated."
@@ -339,6 +363,7 @@
             "https://dev.abdm.gov.in/api/hiecm/hip/v3/link/context/notify",
             "https://dev.abdm.gov.in/api/hiecm/hip/v3/link/patient/links/sms/notify2"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Test: On sucessfull authentication, the HIP will receive a new linking token Steps: 1. Receive the Linking token"
@@ -355,6 +380,7 @@
             "https://dev.abdm.gov.in/api/hiecm/hip/v3/link/context/notify",
             "https://dev.abdm.gov.in/api/hiecm/hip/v3/link/patient/links/sms/notify2"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Test: HIP system links the ABHA Address with the patient records using existing generated token Steps: 1. Link Health Records using existing generated token. 2.The request for linking should be pushed from the backend using the batch process with any UI click. 2. Through PHR app, check if the linked records can be pulled. Note: The Process would be same either its new record or legacy reocrd."
@@ -371,6 +397,7 @@
             "https://dev.abdm.gov.in/api/hiecm/hip/v3/link/context/notify",
             "https://dev.abdm.gov.in/api/hiecm/hip/v3/link/patient/links/sms/notify2"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Test: In PHR app user will able to pull the records. Steps: Through PHR app, check if the linked records can be pulled"
@@ -392,6 +419,7 @@
             "https://dev.abdm.gov.in/api/hiecm/user-initiated-linking/v3/link/care-context/on-init",
             "https://dev.abdm.gov.in/api/hiecm/user-initiated-linking/v3/link/care-context/on-confirm"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Test: System should allow the user to login. Steps: 1. Log into the abdm sandbox PHR App"
@@ -407,6 +435,7 @@
             "https://dev.abdm.gov.in/api/hiecm/user-initiated-linking/v3/link/care-context/on-init",
             "https://dev.abdm.gov.in/api/hiecm/user-initiated-linking/v3/link/care-context/on-confirm"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Test: 1. Patient logs in PHR app. 2. PHR app must provide an option to search health providers (provider can be hospitals, labs, clinics, nursing home, doctor, govt Health program, telemedicine provider) Steps: 1. Search for required HIP 2. Select that HIP"
@@ -422,6 +451,7 @@
             "https://dev.abdm.gov.in/api/hiecm/user-initiated-linking/v3/link/care-context/on-init",
             "https://dev.abdm.gov.in/api/hiecm/user-initiated-linking/v3/link/care-context/on-confirm"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Test: PHR app must share user's profile details (Mobile no., ABHA Number, ABHA Address, Name, Gender, Year of Birth and Patient ID (optional) with the Facility/HIP. Steps: 1. Profile Details will be shared."
@@ -437,6 +467,7 @@
             "https://dev.abdm.gov.in/api/hiecm/user-initiated-linking/v3/link/care-context/on-init",
             "https://dev.abdm.gov.in/api/hiecm/user-initiated-linking/v3/link/care-context/on-confirm"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Test: PHR app must fetch/ receive Health Records available with the selected HIP/ Facility for the shared profile details. Steps: 1. Receive list of Health Records that are available with the Facility/ HIP"
@@ -452,6 +483,7 @@
             "https://dev.abdm.gov.in/api/hiecm/user-initiated-linking/v3/link/care-context/on-init",
             "https://dev.abdm.gov.in/api/hiecm/user-initiated-linking/v3/link/care-context/on-confirm"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Test: PHR app will prompt to enter an OTP received on the user's mobile number. Steps: 1. Select \"Link Health Records\" on PHR app. 2. Receive OTP on mobile number 3. Enter OTP and provide consent for health record linking"
@@ -467,6 +499,7 @@
             "https://dev.abdm.gov.in/api/hiecm/user-initiated-linking/v3/link/care-context/on-init",
             "https://dev.abdm.gov.in/api/hiecm/user-initiated-linking/v3/link/care-context/on-confirm"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Test: The CM send the request to the HIP to identify the patient in th HIP System. Steps: 1. CM Validates the demo details entered by patient for HIP"
@@ -482,6 +515,7 @@
             "https://dev.abdm.gov.in/api/hiecm/user-initiated-linking/v3/link/care-context/on-init",
             "https://dev.abdm.gov.in/api/hiecm/user-initiated-linking/v3/link/care-context/on-confirm"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Test: In PHR app user will able to pull the records. Steps: Through PHR app, check if the linked records can be pulled"
@@ -501,6 +535,7 @@
           "apis": [
             "https://dev.abdm.gov.in/api/hiecm/hip/v3/link/patient/links/sms/notify2"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Test: HIP should notify HIE-CM when a new health record is generated & ABHA address is not available. This test case is applicable when patient has shared mobile number and has NOT shared ABHA address with HIP during patient registration. Steps: 1. New health record like Diagnostic report, Prescription, etc is created on EMR/HMIS system for a patient 2. Mobile number of patient is available in EMR/HMIS system and ABHA address of the patient is NOT available in EMR/HMIS system 3. EMR/HMIS system will call the SMS/notify2 API on the gateway to inform of available of new health record (only the mobile number and the HIP ID is to be shared) 4. ABDM should be sending notification to the patient on their mobile with deep link 5. Patient should be able to download/launch PHR app of their choice 6. PHR app will make a discovery request to the HIP 7. Care context for New patient record must be correctly discoverable in the PHR app."
@@ -522,6 +557,7 @@
             "https://dev.abdm.gov.in/api/hiecm/data-flow/v3/health-information/hip/on-request",
             "https://dev.abdm.gov.in/api/hiecm/data-flow/v3/health-information/notify"
           ],
+          "apisNote": "",
           "api": null,
           "webhook": null,
           "detail": "Steps: 1. Initiate a \"Get data\" for a linked care context in the PHR app 2. HIP will receive a request to share information along with the consent id & end-point URL where the data must be pushed 3. HIP must verify that there is a valid consent for sharing this data with the specific HIU making the request 4. Health records must be shared only for allowed HIP types withing the date ranges granted in the consent 5. HIP should encrypt the health records to be shared with the HIU public key. 6. HIP should push the encrypted data to the end-point URL. 7. On successful transfer, HIP must notify HIE-CM of successful transfer by calling health information notify API. 8. Transfer must be completed within 2 hours of receiving the request."
@@ -534,51 +570,73 @@
       "rows": [
         {
           "condition": "",
-          "apis": [],
+          "apis": [
+            "https://dev.abdm.gov.in/api/hiecm/hip/v3/link/carecontext"
+          ],
           "id": "LNK_01",
           "type": "Portal check",
           "functionality": "Group every new record into a care context",
           "expected": "Two visits for one patient show as two entries in a PHR app, each named so the patient knows which visit it was.",
           "api": null,
           "webhook": null,
-          "detail": "Not an NHA test case. It sat under 'HIP initiated linking'. Assign every record to a care context at the moment you create it. NHA recommends one care context per outpatient visit and one per inpatient admission. A care context carries two fields: a reference number that is unique and resolves to the records behind it, and a display name a patient recognises. NHA's example of an acceptable display name is \"OPD records (X-Ray, Prescription) from 3rd March 2023\". The test fails if a display name carries a diagnosis, a test result or a report."
+          "detail": "Not an NHA test case. It sat under 'HIP initiated linking'. Assign every record to a care context at the moment you create it. NHA recommends one care context per outpatient visit and one per inpatient admission. A care context carries two fields: a reference number that is unique and resolves to the records behind it, and a display name a patient recognises. NHA's example of an acceptable display name is \"OPD records (X-Ray, Prescription) from 3rd March 2023\". The test fails if a display name carries a diagnosis, a test result or a report.",
+          "atoms": [
+            "hiecm.endpoint.m2-hip-link-care-context"
+          ]
         },
         {
           "condition": "",
-          "apis": [],
+          "apis": [
+            "https://dev.abdm.gov.in/api/hiecm/v3/token/generate-token"
+          ],
           "id": "LNK_02",
           "type": "Portal check",
           "functionality": "Store the link token at registration and validate it before every use",
           "expected": "Linking works while the token is valid. An expired or missing token triggers regeneration, not a link attempt.",
           "api": null,
           "webhook": null,
-          "detail": "Not an NHA test case. It sat under 'HIP initiated linking'. The link token is generated and stored when the patient registers with you, and it is the authorisation for linking. NHA currently sets validity at six months. Check expiry before every link attempt. Confirm the failure path by decoding a stored token with jwt.io and comparing it against what your code decided. With no valid token, regenerate through demographic authentication rather than attempting the link."
+          "detail": "Not an NHA test case. It sat under 'HIP initiated linking'. The link token is generated and stored when the patient registers with you, and it is the authorisation for linking. NHA currently sets validity at six months. Check expiry before every link attempt. Confirm the failure path by decoding a stored token with jwt.io and comparing it against what your code decided. With no valid token, regenerate through demographic authentication rather than attempting the link.",
+          "atoms": [
+            "hiecm.endpoint.m2-generate-link-token"
+          ]
         },
         {
           "condition": "",
-          "apis": [],
+          "apis": [
+            "https://dev.abdm.gov.in/api/hiecm/hip/v3/link/carecontext"
+          ],
           "id": "LNK_03",
           "type": "Portal check",
           "functionality": "Link a care context for a patient who gave you their ABHA address",
           "expected": "The link is acknowledged and the record appears in the patient's PHR app with no action from the patient.",
           "api": null,
           "webhook": null,
-          "detail": "Not an NHA test case. It sat under 'HIP initiated linking'. Send the patient reference and the care context, authorised by the link token. NHA then notifies every PHR application subscribed to that ABHA address. You do not send that notification. Run the test twice: linking a new care context, and adding a record to an existing one. NHA says the notification fires in both cases. On failure watch for ABDM-1038, ABDM-1062 and ABDM-1063. All three mean the link token does not match the patient or facility you sent. NHA's M2 document publishes the request and response tables as screenshots, so no endpoint path and no field list converted for this step."
+          "detail": "Not an NHA test case. It sat under 'HIP initiated linking'. Send the patient reference and the care context, authorised by the link token. NHA then notifies every PHR application subscribed to that ABHA address. You do not send that notification. Run the test twice: linking a new care context, and adding a record to an existing one. NHA says the notification fires in both cases. On failure watch for ABDM-1038, ABDM-1062 and ABDM-1063. All three mean the link token does not match the patient or facility you sent. NHA's M2 document publishes the request and response tables as screenshots, so no endpoint path and no field list converted for this step.",
+          "atoms": [
+            "hiecm.endpoint.m2-hip-link-care-context"
+          ]
         },
         {
           "condition": "",
-          "apis": [],
+          "apis": [
+            "https://dev.abdm.gov.in/api/hiecm/hip/v3/link/patient/links/sms/notify2"
+          ],
           "id": "NTF_01",
           "type": "Portal check",
           "functionality": "Tell NHA a record is ready for a patient who has no ABHA address",
           "expected": "The patient receives an SMS with a link that opens a PHR app, or offers to install one.",
           "api": null,
           "webhook": null,
-          "detail": "Not an NHA test case. It sat under 'Notification to mobile'. Use this route when you hold a mobile number, a name, an age and a gender, and no ABHA address. There is nothing to link to, so you tell NHA the record exists once it is ready to share. NHA sends the SMS with a secure deep link. The rest is between the patient and NHA: they open the app, create an ABHA address if they need one, then link the record through discovery against your system. If no SMS arrives, check for ABDM-1004 and ABDM-1008, NHA's SMS gateway unavailable or disabled."
+          "detail": "Not an NHA test case. It sat under 'Notification to mobile'. Use this route when you hold a mobile number, a name, an age and a gender, and no ABHA address. There is nothing to link to, so you tell NHA the record exists once it is ready to share. NHA sends the SMS with a secure deep link. The rest is between the patient and NHA: they open the app, create an ABHA address if they need one, then link the record through discovery against your system. If no SMS arrives, check for ABDM-1004 and ABDM-1008, NHA's SMS gateway unavailable or disabled.",
+          "atoms": [
+            "hiecm.endpoint.m2-sms-deep-link-notify"
+          ]
         },
         {
           "condition": "",
-          "apis": [],
+          "apis": [
+            "https://dev.abdm.gov.in/api/hiecm/user-initiated-linking/v3/patient/care-context/on-discover"
+          ],
           "id": "DSC_01",
           "type": "Portal check",
           "functionality": "Match an inbound discovery request and return the patient's care contexts",
@@ -588,7 +646,10 @@
             "method": "POST",
             "path": null
           },
-          "detail": "Not an NHA test case. It sat under 'Discovery and user initiated linking'. Discovery starts in the patient's PHR app and reaches you as inbound traffic. Implementing it correctly is mandatory for every HIP. You are given verified identifiers, which are ABHA address, mobile number, name, gender and year of birth, plus unverified facility issued identifiers such as a patient ID. Weight the verified ones higher and treat the user declared ones as supporting evidence. Answer on a separate callback, not in the body of the inbound request. Two later steps also arrive inbound: link init, whose answer NHA names on-init, and link confirm, whose answer NHA names on-confirm. Two failures to force on purpose. A patient whose name and gender match but whose year of birth does not returns nothing, because a wrong match hands one patient another patient's records. And the response body carries no diagnosis, no test result and no report content in any field, including the display name. NHA's error list validates the linking flow against the care context count, the patient reference number, the patient display value and the link reference number, with a distinct code for each, and does not say which step raises which. No endpoint path converted from NHA's M2 document."
+          "detail": "Not an NHA test case. It sat under 'Discovery and user initiated linking'. Discovery starts in the patient's PHR app and reaches you as inbound traffic. Implementing it correctly is mandatory for every HIP. You are given verified identifiers, which are ABHA address, mobile number, name, gender and year of birth, plus unverified facility issued identifiers such as a patient ID. Weight the verified ones higher and treat the user declared ones as supporting evidence. Answer on a separate callback, not in the body of the inbound request. Two later steps also arrive inbound: link init, whose answer NHA names on-init, and link confirm, whose answer NHA names on-confirm. Two failures to force on purpose. A patient whose name and gender match but whose year of birth does not returns nothing, because a wrong match hands one patient another patient's records. And the response body carries no diagnosis, no test result and no report content in any field, including the display name. NHA's error list validates the linking flow against the care context count, the patient reference number, the patient display value and the link reference number, with a distinct code for each, and does not say which step raises which. No endpoint path converted from NHA's M2 document.",
+          "atoms": [
+            "hiecm.endpoint.m2-on-discover-care-contexts"
+          ]
         },
         {
           "condition": "",
@@ -599,11 +660,14 @@
           "expected": "The validator reports no structural or profile error, for one bundle per HI type you support.",
           "api": null,
           "webhook": null,
-          "detail": "Not an NHA test case. It sat under 'Data request and transfer'. NHA's own procedure. Needs a Java Development Kit, version 8 or higher, and the FHIR validator command line tool version 6.2.1. Run `java -jar validator_cli.jar <YOUR_EXPORTED_BUNDLE>.json -ig https://nrces.in/ndhm/fhir/r4`. It checks structural correctness, compliance with the NRCeS FHIR profiles, and required fields and constraints. NHA marks implementing all HI types as mandatory for an HMIS, so run one bundle per type. Two things the validator does not catch, so check them yourself: every reference resolves inside the bundle and no reference is an absolute URL, and `Composition.attester.party` points at an Organization in the same bundle whose identifier is registered in the sandbox facility registry."
+          "detail": "Not an NHA test case. It sat under 'Data request and transfer'. NHA's own procedure. Needs a Java Development Kit, version 8 or higher, and the FHIR validator command line tool version 6.2.1. Run `java -jar validator_cli.jar <YOUR_EXPORTED_BUNDLE>.json -ig https://nrces.in/ndhm/fhir/r4`. It checks structural correctness, compliance with the NRCeS FHIR profiles, and required fields and constraints. NHA marks implementing all HI types as mandatory for an HMIS, so run one bundle per type. Two things the validator does not catch, so check them yourself: every reference resolves inside the bundle and no reference is an absolute URL, and `Composition.attester.party` points at an Organization in the same bundle whose identifier is registered in the sandbox facility registry.",
+          "apisNote": "No single call: this check validates a FHIR bundle against the NRCeS guide, which is a validator run rather than an ABDM call."
         },
         {
           "condition": "",
-          "apis": [],
+          "apis": [
+            "https://dev.abdm.gov.in/api/hiecm/data-flow/v3/health-information/hip/on-request"
+          ],
           "id": "DAT_02",
           "type": "Portal check",
           "functionality": "Refuse a health information request that falls outside the consent",
@@ -613,7 +677,10 @@
             "method": "POST",
             "path": null
           },
-          "detail": "Not an NHA test case. It sat under 'Data request and transfer'. The request arrives from the gateway carrying the consent ID, the data push URL, the date and time range, the HIU's ECDH public key and nonce, and the HIE-CM's transaction ID. Before you touch a record, run three checks. Consent status: expired, paused or revoked fails with ABDM-1061 or ABDM-1062. Date range: outside what the consent artefact permits fails with ABDM-1063. Encryption parameters: incorrect or incompatible. Force each failure with its own request. NHA carries no code for bad encryption parameters, so record what your system does."
+          "detail": "Not an NHA test case. It sat under 'Data request and transfer'. The request arrives from the gateway carrying the consent ID, the data push URL, the date and time range, the HIU's ECDH public key and nonce, and the HIE-CM's transaction ID. Before you touch a record, run three checks. Consent status: expired, paused or revoked fails with ABDM-1061 or ABDM-1062. Date range: outside what the consent artefact permits fails with ABDM-1063. Encryption parameters: incorrect or incompatible. Force each failure with its own request. NHA carries no code for bad encryption parameters, so record what your system does.",
+          "atoms": [
+            "hiecm.endpoint.m2-hip-health-information-on-request"
+          ]
         },
         {
           "condition": "",
@@ -624,22 +691,30 @@
           "expected": "Decrypting your output with the matching private key returns the original bundle byte for byte.",
           "api": null,
           "webhook": null,
-          "detail": "Not an NHA test case. It sat under 'Data request and transfer'. Take a request's public key and nonce, run your encryption path, then decrypt the output with the matching private key. ABDM uses ECDH on the Curve25519 elliptic curve with AES-GCM. On your side: generate a new ECDH key pair in the group the HIU specified, generate a 32 byte nonce, compute the shared key from the HIU's public key and your private key, XOR the two nonces and take the first 20 bytes as the HKDF salt and the last 12 as the initialisation vector, derive a 256 bit AES-GCM session key with HKDF, then encrypt. Check your implementation against Fidelius, the reference implementation. Confirm the payload is signed with your long term private key, not the session key."
+          "detail": "Not an NHA test case. It sat under 'Data request and transfer'. Take a request's public key and nonce, run your encryption path, then decrypt the output with the matching private key. ABDM uses ECDH on the Curve25519 elliptic curve with AES-GCM. On your side: generate a new ECDH key pair in the group the HIU specified, generate a 32 byte nonce, compute the shared key from the HIU's public key and your private key, XOR the two nonces and take the first 20 bytes as the HKDF salt and the last 12 as the initialisation vector, derive a 256 bit AES-GCM session key with HKDF, then encrypt. Check your implementation against Fidelius, the reference implementation. Confirm the payload is signed with your long term private key, not the session key.",
+          "apisNote": "No single call: this check encrypts a bundle, which is checked by decrypting it rather than by a response."
         },
         {
           "condition": "",
-          "apis": [],
+          "apis": [
+            "https://dev.abdm.gov.in/api/hiecm/data-flow/v3/health-information/hip/on-request"
+          ],
           "id": "DAT_04",
           "type": "Portal check",
           "functionality": "Deliver a record you created to the ABHA PHR app end to end",
           "expected": "The record displays, readable, in the ABHA PHR app, without you touching the app in between.",
           "api": null,
           "webhook": null,
-          "detail": "Not an NHA test case. It sat under 'Data request and transfer'. NHA's own verification script, in NHA's order. Log in to the PHR app with a sandbox ABHA address. Register a patient in your HIP system with that same ABHA address. Create a new health record for that patient. Link a care context for the record using HIP initiated linking. The PHR app then requests the record with the appropriate consents, which you do not trigger. Your system prepares the record, encrypts it and transfers it to the data push URL the PHR app supplied. The record displays. When the last step fails the fault is usually the push: NHA allows the data push URL to differ from the HIU's registered gateway URL, so use the one in the request rather than one you looked up."
+          "detail": "Not an NHA test case. It sat under 'Data request and transfer'. NHA's own verification script, in NHA's order. Log in to the PHR app with a sandbox ABHA address. Register a patient in your HIP system with that same ABHA address. Create a new health record for that patient. Link a care context for the record using HIP initiated linking. The PHR app then requests the record with the appropriate consents, which you do not trigger. Your system prepares the record, encrypts it and transfers it to the data push URL the PHR app supplied. The record displays. When the last step fails the fault is usually the push: NHA allows the data push URL to differ from the HIU's registered gateway URL, so use the one in the request rather than one you looked up.",
+          "atoms": [
+            "hiecm.endpoint.m2-hip-health-information-on-request"
+          ]
         },
         {
           "condition": "",
-          "apis": [],
+          "apis": [
+            "https://dev.abdm.gov.in/api/hiecm/data-flow/v3/health-information/notify"
+          ],
           "id": "DAT_05",
           "type": "Portal check",
           "functionality": "Close the transfer with a completion notification, inside the timeout",
@@ -650,7 +725,10 @@
             "to": null
           },
           "webhook": null,
-          "detail": "Not an NHA test case. It sat under 'Data request and transfer'. After a successful push, call `health-information/notify` to tell the HIE-CM the transfer is complete. Measure the time from the request arriving to the push finishing. NHA's current timeout is 20 minutes. Test with a large record, such as an imaging study, and confirm your split or streaming path stays inside it. Split large datasets such as CT or MRI images across multiple parts, and stream very large files rather than sending one large payload. This is the only endpoint NHA's M2 document names in prose, and it states no HTTP method for it."
+          "detail": "Not an NHA test case. It sat under 'Data request and transfer'. After a successful push, call `health-information/notify` to tell the HIE-CM the transfer is complete. Measure the time from the request arriving to the push finishing. NHA's current timeout is 20 minutes. Test with a large record, such as an imaging study, and confirm your split or streaming path stays inside it. Split large datasets such as CT or MRI images across multiple parts, and stream very large files rather than sending one large payload. This is the only endpoint NHA's M2 document names in prose, and it states no HTTP method for it.",
+          "atoms": [
+            "hiecm.endpoint.m2-hip-data-flow-notify"
+          ]
         }
       ]
     }
