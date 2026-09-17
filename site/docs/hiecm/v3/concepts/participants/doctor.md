@@ -24,11 +24,12 @@ Aadhaar authenticated identifier, written as both HPID and HPR ID.
 
 | Form | Sample | Sent as |
 | --- | --- | --- |
-| The number | `71-1********-0212` | `hpid` or `hprIdNumber` |
+| The number | `71-2665-5777-XXXX` | `hpId` or `hprIdNumber` |
 | The address | `name@hpr.abdm` | `hprId`, with a `domainName` of `@hpr.abdm` |
 
 Three categories can enrol today: doctor, nurse and pharmacist. You also declare
-a system of medicine.
+a system of medicine. A role code says what you are on the registry: 1 for a
+healthcare professional, 2 for a facility manager, 3 for both.
 
 Your HPR ID identifies you as a professional. It does not put your software on
 the network, and it is not the
@@ -40,11 +41,13 @@ holds.
 - Create your HPID through Aadhaar authentication, then register the full
   profile: personal details, communication address, council registration,
   qualification and current work.
-- Upload your degree certificate and registration certificate.
+- Upload your degree certificate and registration certificate. Both are
+  mandatory.
 - Get a fresh HPR token later, by password, by mobile
   [OTP](/docs/hiecm/v3/getting-started/glossary#otp) or by Aadhaar OTP.
-- Register your facility on the HFR. The create call and the submit call both
-  take an `x-hprid-auth` header.
+- With role 2 or role 3, register your facility on the HFR. The create call
+  takes an HPR token in the header, and the submit call takes an `x-hpird-auth`
+  token.
 
 Records themselves carry a `Practitioner` resource inside the
 [FHIR](/docs/hiecm/v3/getting-started/glossary#fhir) bundle, so the professional
@@ -57,7 +60,7 @@ carrying your council registration and qualifications.
 
 It is also the thing that unblocks your organisation. Nobody can register a
 facility, and therefore nobody can share or fetch records, until a person with
-an HPR ID exists. That person is you or a colleague.
+facility manager rights exists. That person is you or a colleague.
 
 No fee, payment or incentive for registering is documented here.
 

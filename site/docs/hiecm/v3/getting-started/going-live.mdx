@@ -22,7 +22,7 @@ sit between the two, and you run them once, at the end.
 - There is no per milestone submission. Stages 4 to 6 cover your whole integration, once.
 - The [security audit](/docs/hiecm/v3/getting-started/security-audit) is separate from functional testing.
 - The Health Tech Committee demonstration obtains approval for production access.
-- Production credentials are issued at the end.
+- Production credentials are issued at the end. They are not your sandbox values.
 
 ## Prerequisites
 
@@ -67,7 +67,9 @@ assemble them.
 
 Present the integrated solution to the
 [Health Tech Committee](/docs/hiecm/v3/getting-started/glossary#health-tech-committee)
-and obtain approval for production access.
+and obtain approval for production access. The committee records its decision in four
+review stages, each carrying its own reviewer and date, so the outcome arrives as a
+sequence rather than a single answer.
 
 ## Stage 6: Go live
 
@@ -77,6 +79,8 @@ Production credentials are issued once the committee approves.
 | What you call | Sandbox | Production |
 | --- | --- | --- |
 | The gateway | `https://dev.abdm.gov.in`, `X-CM-ID: sbx` | `https://apis.abdm.gov.in` |
+
+A production client id against a sandbox host, or the reverse, fails.
 
 ## What you see when it works
 

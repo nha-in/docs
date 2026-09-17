@@ -31,10 +31,10 @@ calls, and holds the permission that lets a record move.
 | --- | --- |
 | [ABHA](/docs/hiecm/v3/registries/abha) | A patient's 14 digit ABHA number and their ABHA address |
 | [HPR](/docs/hiecm/v3/registries/nhpr/hpr) | An [HPID](/docs/hiecm/v3/getting-started/glossary#hpid) for a doctor, nurse, pharmacist or facility manager |
-| [HFR](/docs/hiecm/v3/registries/nhpr/hfr) | A facility ID for a hospital, imaging centre, blood bank or other facility |
+| [HFR](/docs/hiecm/v3/registries/nhpr/hfr) | A facility ID for a hospital, clinic, laboratory, imaging centre or pharmacy |
 | [The gateway](/docs/hiecm/v3/concepts/gateway) | Your session token, header validation, and routing to every other participant |
 | [HIE-CM](/docs/hiecm/v3/getting-started/glossary#hie-cm) | Care context links, consent requests and consent artefacts |
-| The sandbox | Client credentials |
+| The sandbox | Client credentials, test identities, and the milestone certification you submit |
 
 One limit is deliberate. The HIE-CM is data blind. It holds identifiers,
 metadata about where records live, and consent artefacts. It never holds the
@@ -50,7 +50,8 @@ appointments, and [NHCX](/docs/nhcx/v1) carries insurance claims.
 
 Because one authority runs the middle, you do not have to negotiate with every
 other participant. One identity works at every facility in the country. One
-consent model governs every transfer, so you implement it once.
+consent model governs every transfer, so you implement it once. One
+certification path covers going live.
 
 And because the HIE-CM is data blind, joining the network does not mean handing
 your patients' records to NHA. They stay where they were created, in your
