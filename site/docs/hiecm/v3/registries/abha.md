@@ -49,7 +49,7 @@ A child under six has no Aadhaar number. Child ABHA is a 14 digit identifier cre
 
 The shape is `name@abdm`.
 
-- **Every number gets a default address**, the number with a suffix: `14digit@sbx` in [sandbox](/docs/hiecm/v3/getting-started/glossary#sandbox), `14digit@abdm` in production. The M1 Postman collection shows a `preferredAbhaAddress` field holding the 14 digits with the `@abdm` suffix and no hyphens.
+- **Every number gets a default address**, the number with a suffix: `14digit@sbx` in [sandbox](/docs/hiecm/v3/getting-started/glossary#sandbox), `14digit@abdm` in production. The `preferredAbhaAddress` field holds the 14 digits with the suffix and no hyphens, for example `91**********27@sbx` in sandbox.
 - **A person can then create a memorable one.** A suggestion call offers addresses, and a custom address is accepted, linked to the number.
 - **An address can exist without a number.** One can be created on the [HIE-CM](/docs/hiecm/v3/getting-started/glossary#hie-cm) from mobile number, name, age and gender, self declared and with no KYC. Expect accounts with no number behind them.
 

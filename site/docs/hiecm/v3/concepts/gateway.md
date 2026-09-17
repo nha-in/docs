@@ -52,28 +52,28 @@ One endpoint issues the token every other call carries. It is the same call in [
 
 Headers:
 
-| Header | Value in the collection | What it is |
+| Header | Example value | What it is |
 |---|---|---|
-| `REQUEST-ID` | `{{$randomUUID}}` | A fresh UUID for this call |
-| `TIMESTAMP` | `{{$isoTimestamp}}` | The time you made the call, ISO 8601 |
+| `REQUEST-ID` | `18235d89-cb13-479d-ad71-7a57d5f669a8` | A fresh UUID for this call |
+| `TIMESTAMP` | `2022-10-06T15:10:00.587Z` | The time you made the call, ISO 8601 |
 | `X-CM-ID` | `sbx` | The consent manager. Use `sbx` for sandbox and `abdm` for production |
 | `Content-Type` | `application/json` | |
 
-No `Authorization` header on this call. It is the one call with no token yet, and the collection marks it `noauth`.
+No `Authorization` header on this call. It is the one call with no token yet.
 
-Body, transcribed from the collection:
+Body:
 
 ```json
 {
-  "clientId": "healthid-api",
+  "clientId": "<CLIENT_ID_FROM_SANDBOX_SIGNUP>",
   "clientSecret": "<CLIENT_SECRET_FROM_SANDBOX_SIGNUP>",
   "grantType": "client_credentials"
 }
 ```
 
-The collection sends the literal `healthid-api` as the client id. The M4 document shows a per integrator value in the same field. Send whatever you were issued.
+Send the client id you were issued.
 
-Response shape, from the M4 document, which prints it as text:
+Response shape:
 
 ```json
 {

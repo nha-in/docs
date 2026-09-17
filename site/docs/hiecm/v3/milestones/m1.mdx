@@ -231,8 +231,8 @@ Some people cannot use the OTP route, usually because the mobile registered agai
 
 NHA files both calls in this route under the use case "ABHA creation,
 Aadhaar biometric", and their summaries read "face or biometric". Fingerprint
-and iris are a real route: NHA's simplified flow names them as a creation
-route of their own, optional for every integrator, and the enrolment call
+and iris are a real route: the creation table above lists them as optional
+for every integrator, and the enrolment call
 takes `bio` and `iris` in `authMethods` beside `face`. What nothing here
 records is a request that uses them. The only request recorded against either
 call sends the scope `face-auth`, and nothing has been run against the sandbox
@@ -322,9 +322,8 @@ specification this portal holds:
   date of birth and gender.
 - **List.** `GET /v3/enrollment/profile/children`, which returns the children
   under the account and their count.
-- **KYC of a child ABHA** is named in NHA's simplified flow and has no operation
-  in the specification this portal holds. Ask NHA for it rather than designing
-  around a guess.
+- **KYC of a child ABHA** uses the profile OTP calls,
+  `POST /v3/profile/account/request/otp` and `POST /v3/profile/account/verify`.
 
 Two refusals are worth handling by name before you meet them: a parent under 18,
 and an account that has already enrolled as many children as it may.
@@ -337,14 +336,12 @@ and an account that has already enrolled as many children as it may.
 
 <LegacyAnchor id="create-an-abha-from-an-identity-document-not-in-the-recommended-flow" />
 
-NHA reviewed this page in September 2026 and asked for this route to come out of
-the recommended flow. It is not in the simplified M1 flow they supplied, and
-their words are that it is not recommended for integrators. It is kept here,
+This route is not recommended for integrators. It is kept here,
 below the recommended routes rather than among them, because the call is in the
 specification and people find it there.
 
 When neither an Aadhaar OTP nor a face capture is possible, the person can be
-enrolled from an identity document. NHA's own collection uses a driving licence.
+enrolled from an identity document.
 
 ```mermaid
 sequenceDiagram
