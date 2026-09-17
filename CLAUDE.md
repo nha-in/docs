@@ -28,7 +28,7 @@ Two things the index will not route for you, because they are repo-wide:
 - Skills ship as one folder per module: a `SKILL.md` that routes, and the
   scaffold, integrate, debug and test sections under `references/`. The guided
   loops are authored in `skills-src/` and folded in by
-  `scripts/build-skills.mjs`, which writes the same nine folders to
+  `scripts/build-skills.mjs`, which writes the same twelve folders to
   `site/static/skills/` and to the plugin. Edit `skills-src/`, never either
   output.
 - The plugin's other manifests are generated too. `.claude-plugin/plugin.json`
