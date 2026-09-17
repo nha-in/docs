@@ -5,7 +5,7 @@ Date: 2026-09-17. Branch: `feat/final-nha-swagger`.
 The reset session fixes only what the specifications decide: hosts, paths, headers, fields, enums, error codes, token sources and links into the generated reference. Static content on the hand-written pages belongs to the content session. This file lists what an audit of those pages found against NHA's final set (`catalogue/openapi/.raw/nha-2026-09-16/` and `catalogue/openapi/hiecm/v3/`), in two parts per page group:
 
 - **Applied:** API-dependent corrections already committed. These lines moved.
-- **Handoff:** claims with no source in the final set, or not contradicted by it but flagged, left for the content session to keep, re-source against the 15 September review, or delete. Line numbers are from the audit run and may be off by a few lines.
+- **Handoff:** claims with no source in the final set, or not contradicted by it but flagged, left for the content session to keep, re-source against the 15 September review, or delete. Line numbers are from the audit run; rows added on 17 September give line numbers at that commit. Each action carries its reason in brackets, and a QUESTION row asks the content session to decide.
 
 Items the content session owns outright: `getting-started/security-audit.mdx`, the certification block in `getting-started/going-live.mdx`, `reference/data-dictionary.md`, timers and screen rules from the older PHR document, the private and government integrator tables, KYC label wording, and sandbox anecdotes.
 
@@ -39,89 +39,89 @@ Pages: site/docs/hiecm/v3/ concepts/data-flow.md, concepts/fhir.md, concepts/how
 | troubleshooting/everything-returns-401.md:42-43 | `sbx` on the sandbox, `abdm` in production. | `sbx` on the sandbox. | X-CM-ID "abdm": 0 (only consentManager.id example at hiecm-m3.yaml:2633, hiecm-m2.yaml:1968, not the header) |
 | troubleshooting/everything-returns-401.md:64-65 | invalid timestamp, the wrong consent manager id, a missing session token, or | invalid timestamp, a missing session token, or | "consent manager id" error: 0 |
 | troubleshooting/otp-never-arrives.md:60 | a rate limit code or the catch-all failure code, both on the | the catch-all failure code on the | hiecm-m1.yaml "429" / "too many": 0 |
+| concepts/data-flow.md:108 | in the group the HIU specified | on the `curve` the HIU specified in `keyMaterial` | hiecm-m3.yaml:1096-1107 keyMaterial required `curve`, example curve25519 |
+| concepts/linking.md:56 | notifies every PHR application subscribed to that ABHA address | notifies each HIU subscribed to that patient | hiecm-subscription.yaml:1217 notify summary "the subscribed HIU when a care context is linked or updated" |
+| concepts/linking.md:58-66, 104 | "Three routes", Notification to mobile row and paragraph, "all three routes" | "Two routes", row and paragraph removed, "both routes" | hiecm-m2.yaml:482 sms/notify2 notifies that a care context is linked, body `phoneNo` and `hip` only (same correction as hip-hiu.md:77) |
+| concepts/linking.md:73 | Unverified: patient ID or medical registration number | Unverified identifiers, patient declared, typed from the same set | hiecm-m2.yaml:3346-3362 unverifiedIdentifiers type enum MR, MOBILE, ABHA_NUMBER, ABHA_ADDRESS, EMAIL |
+| concepts/linking.md:86 | Regenerate it through demographic authentication | Regenerate it with the generate link token call, which takes `abhaAddress`, `name`, `gender` and `yearOfBirth` | hiecm-m2.yaml:1313, 1358-1362 required fields |
+| concepts/linking.md:92 | the table reuses some codes against more than one message | the specification returns `ABDM-9999` against more than one message | hiecm-m2.yaml:2334-2340 ABDM-9999 with three messages; ABDM-1038 and ABDM-1056 carry one message each |
+| registries/index.md:28 | takes a professional token in its header | takes the HPR token in the `x-hprid-auth` header (password clause kept, controller ruling b) | hiecm-m4.yaml:629, 861 |
+| troubleshooting/callback-never-arrives.md:29 | Confirm it with the update bridge callback URL call | Set it with the update bridge callback URL call | hiecm-gateway.yaml PATCH /gateway/v3/bridge/url sets the URL |
+| troubleshooting/consent-stuck-requested.md:n/a (was 70-71) | This symptom can surface as an invalid or non-existent ABHA address on the error codes reference | (sentence deleted) | no ABHA address error code in hiecm-m3.yaml; ABDM-1051 is in hiecm-m2.yaml:4001 only |
 
 ### Handoff
 | File:line (after) | Claim | raw hits | spec hits | Audit's suggested action |
 |---|---|---|---|---|
-| concepts/data-flow.md:20 | HIP validates the consent and signs | 73 (CM signature only) / 0 | - | CORRECT (who-validates flow prose and signing crypto) |
-| concepts/data-flow.md:32 | HIU generates a 32 byte nonce | 0 | 0 | CORRECT (32 byte nonce, crypto) |
+| concepts/data-flow.md:20 | HIP validates the consent and signs | 73 (CM signature only) / 0 | - | QUESTION for the content session: keep, reword or delete? (who-validates flow prose and signing crypto) |
+| concepts/data-flow.md:32 | HIU generates a 32 byte nonce | 0 | 0 | QUESTION for the content session: keep, reword or delete? (32 byte nonce, crypto) |
 | concepts/data-flow.md:38 | HIP validates consent status, date range, encryption params | 0 | 0 | DELETE (who-validates flow prose) |
-| concepts/data-flow.md:40 | HIP derives the session key | 0 | 0 | CORRECT (crypto) |
-| concepts/data-flow.md:41 | Encrypt then sign with long term private key | 0 | 0 | CORRECT (crypto) |
-| concepts/data-flow.md:45 | HIU derives the same session key | 0 | 0 | CORRECT (crypto) |
+| concepts/data-flow.md:40 | HIP derives the session key | 0 | 0 | QUESTION for the content session: keep, reword or delete? (crypto) |
+| concepts/data-flow.md:41 | Encrypt then sign with long term private key | 0 | 0 | QUESTION for the content session: keep, reword or delete? (crypto) |
+| concepts/data-flow.md:45 | HIU derives the same session key | 0 | 0 | QUESTION for the content session: keep, reword or delete? (crypto) |
 | concepts/data-flow.md:54 | Push URL may differ, improves privacy and anonymity | 0 | 0 | DELETE (not API) |
-| concepts/data-flow.md:62-66 | HIP runs three checks | 0 | 0 | CORRECT (who-validates flow prose) |
-| concepts/data-flow.md:68 | Sign with long term private key | 0 | 0 | CORRECT (crypto) |
+| concepts/data-flow.md:62-66 | HIP runs three checks | 0 | 0 | QUESTION for the content session: keep, reword or delete? (who-validates flow prose) |
+| concepts/data-flow.md:68 | Sign with long term private key | 0 | 0 | QUESTION for the content session: keep, reword or delete? (crypto) |
 | concepts/data-flow.md:78 | Timeout 20 minutes | 0 | 0 | DELETE (timer) |
-| concepts/data-flow.md:79 | Split large datasets, hundreds of MB | 0 / 2 (pageCount) | 0 / 2 | CORRECT to pageNumber/pageCount (borderline API: page claim is not contradicted by the spec) |
+| concepts/data-flow.md:79 | Split large datasets, hundreds of MB | 0 / 2 (pageCount) | 0 / 2 | CORRECT to "Split large datasets across pages with `pageNumber` and `pageCount`." (static: the size guidance is content; the paging fields exist) |
 | concepts/data-flow.md:80 | Stream very large files | 0 relevant | 0 | DELETE (not API) |
 | concepts/data-flow.md:86 | AES-GCM, HKDF, perfect forward secrecy | 0 | 0 | DELETE (crypto) |
-| concepts/data-flow.md:94,97 | Nonce is 32 bytes | 0 | 0 | CORRECT (crypto) |
+| concepts/data-flow.md:94,97 | Nonce is 32 bytes | 0 | 0 | QUESTION for the content session: keep, reword or delete? (crypto) |
 | concepts/data-flow.md:99 | Session key 256 bit AES-GCM | 0 | 0 | DELETE (crypto) |
 | concepts/data-flow.md:100 | Long term private key signs payload | 0 | 0 | DELETE (crypto) |
 | concepts/data-flow.md:102 | New key pair buys forward secrecy | 0 | 0 | DELETE (crypto) |
 | concepts/data-flow.md:106 | Six steps | - | - | CORRECT to Four (depends on crypto deletions) |
-| concepts/data-flow.md:108 | Key pair in the group the HIU specified | 20 (curve) | 11 | CORRECT group to curve (borderline API: keyMaterial.curve, but crypto derivation prose) |
-| concepts/data-flow.md:109 | 32 byte random value RAND(P) | 0 | 0 | CORRECT (crypto) |
+| concepts/data-flow.md:109 | 32 byte random value RAND(P) | 0 | 0 | QUESTION for the content session: keep, reword or delete? (crypto) |
 | concepts/data-flow.md:111 | XOR of nonces, 20 byte salt, 12 byte IV | 0 | 0 | DELETE (crypto) |
 | concepts/data-flow.md:112 | 256 bit AES-GCM key via HKDF | 0 | 0 | DELETE (crypto) |
-| concepts/data-flow.md:113 | Encrypt with that key and IV | - | - | CORRECT (crypto) |
-| concepts/data-flow.md:115 | HIU derives session key with XOR salt/IV | yes / 0 | yes / 0 | CORRECT (crypto) |
+| concepts/data-flow.md:113 | Encrypt with that key and IV | - | - | QUESTION for the content session: keep, reword or delete? (crypto) |
+| concepts/data-flow.md:115 | HIU derives session key with XOR salt/IV | yes / 0 | yes / 0 | QUESTION for the content session: keep, reword or delete? (crypto) |
 | concepts/data-flow.md:119-121 | Fidelius repos, CLI examples, webinar | 0 | 0 | DELETE with heading (crypto references) |
 | concepts/fhir.md:30 | Implementing all eight is mandatory for an HMIS | 1 (unrelated) | 1 | DELETE (business guidance) |
 | concepts/fhir.md:107 | Identifier system hosts /nhpr/v4/home (Concern 3) | 0 / 3 | 0 / 1 | out of scope, flagged (FHIR content) |
 | concepts/fhir.md:109 | section.code system affinitydomain in "the same sample" (Concern 3); now points at a sample the page no longer links | 0 | 0 | out of scope, flagged (FHIR content; note the sample link was removed by an applied edit) |
 | concepts/how-it-fits.md:20,56-62 | Two integrator roles, IMS or PHR | 0 | 0 | KEEP, flagged (portal taxonomy) |
-| concepts/how-it-fits.md:33 | HPR includes facility manager | 0 | 0 | CORRECT (role guidance) |
-| concepts/how-it-fits.md:61 | EMR and PMS examples | 0, 0 | - | CORRECT (not API) |
-| concepts/how-it-fits.md:110-111 | Diagnosis or result in display name not allowed | 0 relevant | - | CORRECT, remove prohibition (content rule) |
-| concepts/linking.md:23 | Display name: no clinical detail, no results, no diagnoses | 0 relevant | 0 | CORRECT to "Up to 255 characters" (content rule; spec regex {0,255} could be added, borderline API) |
-| concepts/linking.md:25-38 | Illustrative JSON values (Concern 3) | 7; 0; 0 | 3; 0; 0 | KEEP, flagged |
+| concepts/how-it-fits.md:33 | HPR includes facility manager | 0 | 0 | QUESTION for the content session: keep, reword or delete? (role guidance) |
+| concepts/how-it-fits.md:61 | EMR and PMS examples | 0, 0 | - | QUESTION for the content session: keep, reword or delete? (not API) |
+| concepts/how-it-fits.md:110-111 | Diagnosis or result in display name not allowed | 0 relevant | - | QUESTION for the content session: keep, reword or delete? (content rule) |
+| concepts/linking.md:23 | Display name: no clinical detail, no results, no diagnoses | 0 relevant | 0 | CORRECT to "Up to 255 characters" (static: the no clinical detail rule is content; the length is the spec regex {0,255}) |
+| concepts/linking.md:25-38 | Illustrative JSON values (Concern 3) | 7; 0; 0 | 3; 0; 0 | KEEP, flagged (illustrative values, not fields the spec decides; Concern 3) |
 | concepts/linking.md:40 | Good display name example; one care context per OPD visit / IPD admission | 0 | 0 | DELETE (example and business guidance) |
 | concepts/linking.md:54 | Link as soon as ready to share | 0 | 0 | DELETE, rename heading (process) |
-| concepts/linking.md:56 | HIE-CM notifies every PHR app subscribed to that ABHA address | yes | yes | CORRECT to subscribed HIU (borderline API: hiecm-subscription.yaml:1217) |
-| concepts/linking.md:58-70 | Three routes incl. Notification to mobile SMS deep link route | 0 (deep link); 5 (sms/notify2) | 0; 3 | DELETE route, "Two routes" (borderline API: sms/notify2 exists with different meaning; heading change) |
 | concepts/linking.md:72 | Discovery mandatory for every HIP | 0 | 0 | DELETE (mandatory for every HIP) |
-| concepts/linking.md:77 | Unverified: patient declared, patient ID or medical registration number | 0; 8 | 0; 4 | CORRECT to same type enum (borderline API: not directly contradicted) |
 | concepts/linking.md:79 | Use unverified to sharpen not make a match; no diagnosis/result/report; somebody unproven reads it | 0 | 0 | DELETE / CORRECT (not API) |
 | concepts/linking.md:87 | Link token generated and stored at registration | 0 | 0 | DELETE (process) |
 | concepts/linking.md:89 | Validate with JWT.io | 0 | 0 | DELETE (not API) |
-| concepts/linking.md:90 | Regenerate through demographic authentication | yes | yes | CORRECT to generate-token fields (borderline API: not contradicted) |
-| concepts/linking.md:92 | Check it before you link | - | - | CORRECT, remove (not API) |
-| concepts/linking.md:96 | Table reuses codes against more than one message | 0 | 0 | CORRECT, remove clause (borderline API: generated M2 errors page lists no codes, could not confirm either way) |
+| concepts/linking.md:92 | Check it before you link | - | - | QUESTION for the content session: keep, reword or delete? (not API) |
 | concepts/linking.md:108 | Call order for all three routes | - | - | CORRECT to "both routes" (tied to route deletion) |
-| registries/index.md:23 | HPR includes facility manager | 0 | 0 | CORRECT (role guidance) |
-| registries/index.md:28-29 | HFR token in header, generated from HPR ID and password | 3; no login endpoint | 3; - | CORRECT to `x-hprid-auth`, drop password. Controller ruling (b): keep the password sentence as is, since POST /api/v1/auth/authPassword exists (hiecm-m4.yaml:1456). Header-name correction to `x-hprid-auth` (hiecm-m4.yaml:861) not applied, still open |
-| registries/index.md:29-30 | HPR ID with facility manager rights | 0 | 0 | CORRECT (role guidance) |
+| registries/index.md:23 | HPR includes facility manager | 0 | 0 | QUESTION for the content session: keep, reword or delete? (role guidance) |
+| registries/index.md:29-30 | HPR ID with facility manager rights | 0 | 0 | QUESTION for the content session: keep, reword or delete? (role guidance) |
 | troubleshooting/accepted-then-nothing.md:21-26 | Discovery is PHR app, another facility, insurer, referral service | 0/0 | 0/0 | CORRECT to patient via PHR app (flow/role prose) |
 | troubleshooting/accepted-then-nothing.md:44-45 | Care context visible in PHR app only after confirm | 0 | 0 | DELETE (unsourced behaviour) |
 | troubleshooting/accepted-then-nothing.md:53-55 | Callback URL problem more common than gateway failing | 0 | 0 | DELETE (frequency) |
-| troubleshooting/accepted-then-nothing.md:68 | Support platform sandboxsupport.abdm.gov.in (Concern 2) | 0 | 11 | KEEP, flagged |
+| troubleshooting/accepted-then-nothing.md:68 | Support platform sandboxsupport.abdm.gov.in (Concern 2) | 0 | 11 | KEEP, flagged (support channel, only in the injected info.contact; contact details are content; Concern 2) |
 | troubleshooting/callback-never-arrives.md:14-16 | Common report in HIE-CM integration | 0 | 0 | DELETE (frequency) |
-| troubleshooting/callback-never-arrives.md:29-31 | Confirm URL with update bridge URL call | 3 | 1 | CORRECT Confirm to Set (borderline API: PATCH /bridge/url sets; GET /bridge-services at hiecm-gateway.yaml:46 exists) |
 | troubleshooting/callback-never-arrives.md:31-32 | Setting a URL in a console is not confirming | 0 | 0 | DELETE (no console, not API) |
-| troubleshooting/callback-never-arrives.md:33 | Reachable over HTTPS | 0 | 0 | CORRECT, drop HTTPS (not contradicted, url is format: uri) |
+| troubleshooting/callback-never-arrives.md:33 | Reachable over HTTPS | 0 | 0 | QUESTION for the content session: keep, reword or delete? (not contradicted, url is format: uri) |
 | troubleshooting/callback-never-arrives.md:43-45 | Deliveries can repeat, treat as retry | only token retry | - | DELETE (not API) |
-| troubleshooting/callback-never-arrives.md:59 | Support platform (Concern 2) | 0 | 11 | KEEP, flagged |
+| troubleshooting/callback-never-arrives.md:59 | Support platform (Concern 2) | 0 | 11 | KEEP, flagged (support channel, as accepted-then-nothing.md:68; Concern 2) |
 | troubleshooting/consent-stuck-requested.md:30-32 | Gateway notifies patient through ABHA App | 6 | 6 | DELETE (process/UI) |
-| troubleshooting/consent-stuck-requested.md:32-35 | Third party PHR app needs approved subscription | - | - | DELETE (borderline API: subscription categories LINK/DATA) |
+| troubleshooting/consent-stuck-requested.md:32-35 | Third party PHR app needs approved subscription | - | - | DELETE (static: process note about third party PHR apps; subscription categories do not decide it) |
 | troubleshooting/consent-stuck-requested.md:35-37 | ABHA App setup not confirmed | - | - | DELETE (process note) |
-| troubleshooting/consent-stuck-requested.md:38-40 | Request carries a response window the requester sets | 0 | 0 | DELETE (borderline API: no request expiry field in spec, only dataEraseAt; also a timer) |
+| troubleshooting/consent-stuck-requested.md:38-40 | Request carries a response window the requester sets | 0 | 0 | DELETE (static: a timer; the spec has no request expiry field, only dataEraseAt) |
 | troubleshooting/consent-stuck-requested.md:40-42 | Link to two clocks | - | - | DELETE (depends on above) |
-| troubleshooting/consent-stuck-requested.md:42-44 | Expiry of request window moves state to Expired | yes | yes | CORRECT, reword without window |
-| troubleshooting/consent-stuck-requested.md:45-47 | Malformed/non-existent address produces error | 1 | 1 (m2) | DELETE (borderline API: no M3 code, but no code named) |
+| troubleshooting/consent-stuck-requested.md:42-44 | Expiry of request window moves state to Expired | yes | yes | CORRECT to "A request nobody answers moves to `EXPIRED`." (the request window is a timer) |
+| troubleshooting/consent-stuck-requested.md:45-47 | Malformed/non-existent address produces error | 1 | 1 (m2) | DELETE (static: no code is named, so no spec value decides it) |
 | troubleshooting/consent-stuck-requested.md:47-50 | Valid address of other patient delivered to wrong person | 0 | 0 | DELETE (unsourced) |
-| troubleshooting/consent-stuck-requested.md:64-66 | Support platform (Concern 2) | 0 | 11 | KEEP, flagged |
-| troubleshooting/consent-stuck-requested.md:70-71 | Invalid or non-existent ABHA address on error codes reference | - | - | DELETE (borderline API: aggregated reference may carry ABDM-1051 from M2) |
+| troubleshooting/consent-stuck-requested.md:64-66 | Support platform (Concern 2) | 0 | 11 | KEEP, flagged (support channel; Concern 2) |
 | troubleshooting/everything-returns-401.md:32-33 | Sandbox token invalid against production | 0 | 0 | DELETE (environment behaviour, not an artefact) |
-| troubleshooting/everything-returns-401.md:37-38 | TIMESTAMP tolerance not stated (Concern) | 100 | 99 | KEEP, flagged |
+| troubleshooting/everything-returns-401.md:37-38 | TIMESTAMP tolerance not stated (Concern) | 100 | 99 | KEEP, flagged (the specs state no TIMESTAMP tolerance, so how to word the unknown is content) |
 | troubleshooting/everything-returns-401.md:38-40 | Suspended container host usual cause | 0 | 0 | DELETE (not API) |
-| troubleshooting/everything-returns-401.md:44-45 | Wrong X-CM-ID fails every call like missing token | 0 | 0 | DELETE (borderline API: error behaviour, no code named) |
-| troubleshooting/everything-returns-401.md:58 | Support platform (Concern 2) | 0 | 11 | KEEP, flagged |
+| troubleshooting/everything-returns-401.md:44-45 | Wrong X-CM-ID fails every call like missing token | 0 | 0 | DELETE (static: error behaviour with no code named) |
+| troubleshooting/everything-returns-401.md:58 | Support platform (Concern 2) | 0 | 11 | KEEP, flagged (support channel; Concern 2) |
 | troubleshooting/otp-never-arrives.md:33-38 | Rate limited after repeated OTP requests | 0 | 0 | DELETE (rate-limit prose) |
-| troubleshooting/otp-never-arrives.md:47-49 | Phone receives an SMS carrying the OTP | 0 | 0 | CORRECT, drop SMS (not API) |
+| troubleshooting/otp-never-arrives.md:47-49 | Phone receives an SMS carrying the OTP | 0 | 0 | QUESTION for the content session: keep, reword or delete? (not API) |
 | troubleshooting/otp-never-arrives.md:53 | "are not rate limited" | - | - | DELETE (rate-limit residue) |
-| troubleshooting/otp-never-arrives.md:55 | Support platform (Concern 2) | 0 | 11 | KEEP, flagged |
+| troubleshooting/otp-never-arrives.md:55 | Support platform (Concern 2) | 0 | 11 | KEEP, flagged (support channel; Concern 2) |
 
 ## Page group 2
 
@@ -162,88 +162,91 @@ All paths under site/docs/hiecm/v3/. Specs are catalogue/openapi/hiecm/v3/. Raw 
 | milestones/p2.mdx:63-65 | discovery request carrying name, year or date of birth, gender, verified mobile, ABHA address; registration number optional | carrying the HIP ID and unverified identifiers of type `MR`, `MOBILE`, `ABHA_NUMBER` or `ABHA_ADDRESS` | hiecm-p2.yaml:272 discover; body required `hip`, `unverifiedIdentifiers`, type enum MR/MOBILE/ABHA_NUMBER/ABHA_ADDRESS; no name, gender or birth fields |
 | milestones/p2.mdx:91-92 | link token from the M1 APIs | from the generate link token call | `/api/hiecm/v3/token/generate-token` at hiecm-m2.yaml:1313; generate-token 0 in hiecm-m1.yaml |
 | milestones/p3.mdx:45 | Editing covers health information types, types of visit and the time period | health information types, purpose, categories and the time period | hiecm-p3.yaml approve body (406): includedSources 469, hiTypes 481, purpose 497, categories 556, period 566; "visit" 0 in hiecm-p3.yaml |
+| concepts/encryption.md:72 | listed again under developer utilities | (clause deleted) | no utilities section in the generated api/m1 tree |
+| concepts/hip-hiu.md:81 | regenerated by demographic authentication | regenerated with the generate link token call | hiecm-m2.yaml:1313, 1358-1362 |
+| concepts/hip-hiu.md:n/a (was 120-122) | The same code can arrive with more than one message | (sentence deleted) | ABDM-1038 (hiecm-m2.yaml:2734) and ABDM-1056 (:3666) carry one message each |
+| concepts/gateway.md:48 | M4 takes its token from `POST /getManagementToken` instead | M4 declares bearer authentication, and its HPID calls publish `POST /getManagementToken` | raw M4/M4-HPID.json is the only raw file with getManagementToken; M4-HPR.json:5530 and M4-HFR.json:4809 declare BearerAuth with no source |
+| concepts/gateway.md:93, n/a (was 98) | Three hosts; row `https://apissbx.abdm.gov.in` Sandbox, on the sessions call | Two hosts; row deleted | apissbx: specs 0 (servers are dev, apis, abhasbx, apihspsbx); raw only in M1 ABHA Collection.json |
+| milestones/m4.mdx:62-63 | Three categories are open today: doctor, nurse and pharmacist. Others come later. | The `hprType` categories include doctor, nurse, pharmacist and facility manager. | hiecm-m4.yaml:6417-6426 hprType enum |
+| milestones/m4.mdx:126 | mobile number masked | with the mobile number | verifyOTP examples show both `******1234` and null, no masking rule |
+| milestones/m4.mdx:206 | Facility submitted for verification | Submit result | submit-facility has no response example |
+| milestones/p1.mdx:36-37 | family members they manage on one account, and DigiLocker documents they pull in | (clauses deleted) | family and DigiLocker: 0 in hiecm-p1.yaml |
+| milestones/p1.mdx:31 | All four login routes are mandatory | All eight login routes are mandatory (mandate left in handoff) | hiecm-p1.yaml:1785 "8 flows" |
+| milestones/p1.mdx:51, 58, 76 | Aadhaar OTP or mobile OTP | Aadhaar OTP or ABHA OTP | hiecm-p1.yaml:534, 895 flows ABHA OTP and AADHAR OTP |
+| milestones/p1.mdx:n/a (was 62-64) | mobile path mandatory and optional fields | (paragraph deleted) | hiecm-p1.yaml phrDetails declares no required list |
+| milestones/p1.mdx:77, n/a (was 84), 84 | "any of four routes"; default `14digit@abdm` row; ABHA number "Mobile OTP or Aadhaar OTP" | "any of these routes"; row deleted; "ABHA OTP or Aadhaar OTP" | hiecm-p1.yaml:1785-1795 eight flows, none for a default address, ABHA number by ABHA OTP or Aadhaar OTP |
+| milestones/p3.mdx:40-41 | new care context, modified care context, new consent request, new subscription request | when a care context is linked or updated | hiecm-subscription.yaml:1217 |
+| milestones/p3.mdx:n/a (was 55) | 3. Save the auto approval ID the HIE-CM returns. | (step deleted) | auto approval returns 202 with no body |
 
 ### Handoff
 
 | File:line (after) | Claim | raw hits | spec hits | Audit's suggested action |
 |---|---|---|---|---|
 | concepts/encryption.md:39 | Aadhaar 12 digits no spaces | 0 | 0 | DELETE (row) |
-| concepts/encryption.md:43-47 | sandbox run 11 Sept, `LoginId is invalid` | 0 | 0 | DELETE |
-| concepts/encryption.md:50-51 | shapes "as NHA's validation patterns describe" and "not failed deliberately from here" | 0 | 0 | DELETE |
-| concepts/encryption.md:72 | "listed again under developer utilities" (spec tag is UTILITIES, no utilities section in the generated api tree). Borderline API | 0 | 0 | DELETE (consolidation) |
-| concepts/gateway.md:33 | push URL may differ from registered gateway URL "to improve privacy" | 0 | 0 | DELETE |
-| concepts/gateway.md:105 | callback retries, idempotent, assume a repeat | 0 relevant | 0 | DELETE |
-| concepts/gateway.md:108 | gateway request not signed; signing applies to health records. Borderline API | 0 / CM signature only | 0 | DELETE |
-| concepts/hip-hiu.md:37-54 | private vs government mandatory/optional capability table and lead-in | 0/2/0/0 | 0 | DELETE |
-| concepts/hip-hiu.md:56 | "and the Aadhaar RD service" | 0 | 0 | CORRECT (remove) |
-| concepts/hip-hiu.md:57-59 | registered device needed, UIDAI device list URL | 0 | 0 | DELETE |
-| concepts/hip-hiu.md:61-62 | Luhn for ABHA, Verhoeff for Aadhaar | 0 | 0 | DELETE |
-| concepts/hip-hiu.md:75-76 | one care context per outpatient visit, one per inpatient admission | scan-and-pay / HPR only | - | DELETE |
-| concepts/hip-hiu.md:80-81 | link token stored at registration, regenerated by demographic authentication (generate-token takes abhaAddress, name, gender, yearOfBirth, so not clearly contradicted). Borderline API | 0 | 0 | DELETE |
-| concepts/hip-hiu.md:83 | discovery mandatory for every HIP | 0 | 0 | DELETE |
-| concepts/hip-hiu.md:83-84 | match verified identifiers, weight above declared ones (request carries verifiedIdentifiers and unverifiedIdentifiers, hiecm-m2.yaml:3313,3346; weighting is guidance). Borderline API | yes/0 | yes/0 | CORRECT |
-| concepts/hip-hiu.md:87-88 | sign with long term private key | 0 | 0 | DELETE |
-| concepts/hip-hiu.md:88-90 | 20 minute timeout, split CT/MRI, streaming | 0/0/unrelated | 0 | DELETE |
-| concepts/hip-hiu.md:99 | one care context per OPD visit / IPD admission | unrelated | - | CORRECT |
-| concepts/hip-hiu.md:103 | inside 20 minutes | 0 | 0 | DELETE |
-| concepts/hip-hiu.md:110-118 | single end to end sandbox check, 7 steps | 0 | 0 | DELETE |
-| concepts/hip-hiu.md:121-122 | same code arrives with more than one message | 0 | 0 | DELETE |
-| milestones/m4.mdx:33-35 | M2/M3 need facility ID in production; NHPR portal alternative | 0 | 0 | DELETE |
-| milestones/m4.mdx:39-40 | samples show production host for sandbox (no production host in M4 spec). Borderline API | 0 | 0 | DELETE |
-| milestones/m4.mdx:53 | facility types incl. clinic, lab, pharmacy | 0 | 0 | CORRECT |
-| milestones/m4.mdx:59-61 | without HFR and bridge cannot share/fetch | 0 | 0 | DELETE |
-| milestones/m4.mdx:62-63 | three categories open today, others later (hprType enum at hiecm-m4.yaml:6417 lists more). Borderline API | example only | | DELETE |
-| milestones/m4.mdx:108 | hosted page URL valid five minutes, regenerate after | url yes; 0 | 0 | CORRECT (validity deleted) |
-| milestones/m4.mdx:118 | txnId and temporary URL valid 5 minutes | as 108 | | CORRECT |
-| milestones/m4.mdx:126 | verifyOTP returns demographics, mobile number masked (examples show both `******1234` and null). Borderline API | mobileNumber null | | CORRECT (masked dropped) |
-| milestones/m4.mdx:135 | encrypt with `RSA/ECB/PKCS1Padding` | 1 (ABHA only) | 0 | DELETE |
-| milestones/m4.mdx:176 | degree and registration certificates mandatory; proof of work for government | 0 | 0 | DELETE |
+| concepts/encryption.md:43-47 | sandbox run 11 Sept, `LoginId is invalid` | 0 | 0 | DELETE (sandbox anecdote; no run is recorded in the set) |
+| concepts/encryption.md:50-51 | shapes "as NHA's validation patterns describe" and "not failed deliberately from here" | 0 | 0 | DELETE (describes the documentation rather than ABDM, voice) |
+| concepts/gateway.md:33 | push URL may differ from registered gateway URL "to improve privacy" | 0 | 0 | DELETE (privacy rationale, not in the set) |
+| concepts/gateway.md:105 | callback retries, idempotent, assume a repeat | 0 relevant | 0 | DELETE (retry behaviour, not in the set) |
+| concepts/gateway.md:108 | gateway request not signed; signing applies to health records. Borderline API | 0 / CM signature only | 0 | DELETE (static: the specs declare bearer authentication and say nothing about signing gateway requests, so no field or header decides it) |
+| concepts/hip-hiu.md:37-54 | private vs government mandatory/optional capability table and lead-in | 0/2/0/0 | 0 | DELETE (private and government integrator table, owned by the content session) |
+| concepts/hip-hiu.md:56 | "and the Aadhaar RD service" | 0 | 0 | QUESTION for the content session: keep, reword or delete? (remove) |
+| concepts/hip-hiu.md:57-59 | registered device needed, UIDAI device list URL | 0 | 0 | DELETE (device certification, outside the set) |
+| concepts/hip-hiu.md:61-62 | Luhn for ABHA, Verhoeff for Aadhaar | 0 | 0 | DELETE (checksum algorithms, not in the set) |
+| concepts/hip-hiu.md:75-76 | one care context per outpatient visit, one per inpatient admission | scan-and-pay / HPR only | - | DELETE (care context granularity is business guidance) |
+| concepts/hip-hiu.md:80-81 | link token "stored at registration" (the regeneration call is applied) | 0 | 0 | DELETE "stored at registration" (process, not in the set) |
+| concepts/hip-hiu.md:83 | discovery mandatory for every HIP | 0 | 0 | DELETE (mandate, a certification rule) |
+| concepts/hip-hiu.md:83-84 | match verified identifiers, weight above declared ones (request carries verifiedIdentifiers and unverifiedIdentifiers, hiecm-m2.yaml:3313,3346; weighting is guidance). Borderline API | yes/0 | yes/0 | QUESTION for the content session: keep "weight verified identifiers above unverified ones" as guidance? (static: both identifier lists exist, hiecm-m2.yaml:3313, 3346; the weighting is guidance, not a field) |
+| concepts/hip-hiu.md:87-88 | sign with long term private key | 0 | 0 | DELETE (signing prose, not in the set) |
+| concepts/hip-hiu.md:88-90 | 20 minute timeout, split CT/MRI, streaming | 0/0/unrelated | 0 | DELETE (timer and payload size guidance) |
+| concepts/hip-hiu.md:99 | one care context per OPD visit / IPD admission | unrelated | - | QUESTION for the content session: keep one care context per visit and per admission as guidance, or delete? (business guidance) |
+| concepts/hip-hiu.md:103 | inside 20 minutes | 0 | 0 | DELETE (timer) |
+| concepts/hip-hiu.md:110-118 | single end to end sandbox check, 7 steps | 0 | 0 | DELETE (sandbox check procedure, not in the set) |
+| milestones/m4.mdx:33-35 | M2/M3 need facility ID in production; NHPR portal alternative | 0 | 0 | DELETE (production onboarding rule, process) |
+| milestones/m4.mdx:39-40 | samples show production host for sandbox (no production host in M4 spec). Borderline API | 0 | 0 | DELETE (static: a sandbox anecdote about samples; the M4 spec carries no production host to compare) |
+| milestones/m4.mdx:53 | facility types incl. clinic, lab, pharmacy | 0 | 0 | CORRECT to "facility types such as hospital, imaging centre and blood bank" (the facility type examples in hiecm-m4.yaml name these three) |
+| milestones/m4.mdx:59-61 | without HFR and bridge cannot share/fetch | 0 | 0 | DELETE (consequence prose, process) |
+| milestones/m4.mdx:108 | hosted page URL valid five minutes, regenerate after | url yes; 0 | 0 | QUESTION for the content session: keep, reword or delete? (validity deleted) |
+| milestones/m4.mdx:118 | txnId and temporary URL valid 5 minutes | as 108 | CORRECT to "The response carries a `txnId` and a URL." (the validity is a timer) |
+| milestones/m4.mdx:135 | encrypt with `RSA/ECB/PKCS1Padding` | 1 (ABHA only) | 0 | DELETE (cipher name has 0 hits in hiecm-m4.yaml; crypto prose) |
+| milestones/m4.mdx:176 | degree and registration certificates mandatory; proof of work for government | 0 | 0 | DELETE (document mandate, certification) |
 | milestones/m4.mdx:184 | draft until submit, "invisible to ABDM" | yes / 0 | | CORRECT (invisible dropped) |
-| milestones/m4.mdx:206 | "Facility submitted for verification" (no response example). Borderline API | no example | | CORRECT ("Submit result") |
 | milestones/m4.mdx:215 | detailed info sections "that apply to this facility type" | yes | | CORRECT (qualifier dropped) |
-| milestones/m4.mdx:218 | mandatory fields depend on type; labs etc send no infrastructure counts | 0 | 0 | DELETE |
+| milestones/m4.mdx:218 | mandatory fields depend on type; labs etc send no infrastructure counts | 0 | 0 | DELETE (per-type mandatory rules, not in the set) |
 | milestones/m4.mdx:222 | OTP path serves government programmes | example AB-PMJAY only | | CORRECT (purpose dropped) |
-| milestones/m4.mdx:240 | facility ID alone does not make records flow | 0 | 0 | CORRECT |
-| milestones/m4.mdx:246 | HIP name 15 characters or fewer (diagram label) | 0 | 0 | CORRECT (label only) |
-| milestones/m4.mdx:251 | HIP name shown to patients; 15 chars, no special, unique; worked example | 0 | 0 | DELETE |
-| milestones/m4.mdx:253 | linked HIP/HIU bridge enables M2/M3; step before production | 0 | 0 | DELETE |
+| milestones/m4.mdx:240 | facility ID alone does not make records flow | 0 | 0 | QUESTION for the content session: keep "a facility ID alone does not make records flow", or delete? (process consequence) |
+| milestones/m4.mdx:246 | HIP name 15 characters or fewer (diagram label) | 0 | 0 | QUESTION for the content session: keep, reword or delete? (label only) |
+| milestones/m4.mdx:251 | HIP name shown to patients; 15 chars, no special, unique; worked example | 0 | 0 | DELETE (HIP name rules, not in the M4 schema) |
+| milestones/m4.mdx:253 | linked HIP/HIU bridge enables M2/M3; step before production | 0 | 0 | DELETE (production step, process) |
 | milestones/p1.mdx:29-30 | build both creation paths | yes | yes | CORRECT ("build" mandate removed) |
-| milestones/p1.mdx:31 | all four login routes mandatory | 0 relevant | | DELETE |
-| milestones/p1.mdx:32 | several addresses, only one ABHA number | examples | | CORRECT |
-| milestones/p1.mdx:36-37 | family members; DigiLocker (0 in hiecm-p1.yaml). Borderline API | 0 | 0 | CORRECT (clauses removed) |
+| milestones/p1.mdx:31 | all four login routes mandatory | 0 relevant | DELETE "mandatory" (mandate, a certification rule; the count is now eight, applied) |
+| milestones/p1.mdx:32 | several addresses, only one ABHA number | examples | CORRECT to "A user can hold several ABHA addresses." (the one-number rule has no source) |
 | milestones/p1.mdx:43-46,50 | Self-Declared, no KYC | 0 | 0 | CORRECT ("no ABHA number linked") |
-| milestones/p1.mdx:51,58,76 | ABHA number path by Aadhaar OTP or mobile OTP (spec flows name "ABHA OTP" with otpSystem abdm, which is an OTP to the ABHA mobile, so not clearly contradicted). Borderline API | yes | yes | CORRECT (ABHA OTP or Aadhaar OTP) |
 | milestones/p1.mdx:51 | KYC Verified result | yes | yes | CORRECT (`kycStatus` `VERIFIED`) |
-| milestones/p1.mdx:67-69 | mandatory/optional enrol fields | none | | DELETE |
-| milestones/p1.mdx:75-77 | Link ABHA number; status becomes KYC Verified | yes | yes | CORRECT (status change deleted) |
-| milestones/p1.mdx:81-82 | four routes all mandatory | 0 | | CORRECT |
-| milestones/p1.mdx:88 | default `14digit@abdm` login route. Borderline API | 0 | 0 | DELETE |
-| milestones/p1.mdx:89 | ABHA number login: mobile OTP or Aadhaar OTP (same ABHA OTP naming question). Borderline API | ABHA OTP/Aadhaar OTP | | CORRECT |
-| milestones/p1.mdx:91-93 | resend 60 s; reset screen, refresh storage, multi profile | 0 | 0 | DELETE |
-| milestones/p1.mdx:99-103 | profile/card/QR table per KYC state, card fields | endpoints only | | CORRECT |
-| milestones/p2.mdx:27-28 | HIP answers discovery in 10 s | 1 (ABHA face auth) | | DELETE |
-| milestones/p2.mdx:29-31 | never show already linked care context | UX rule 0 | | DELETE |
-| milestones/p2.mdx:32-33 | data transfer within 5 minutes of Pull Records | 0 | 0 | DELETE |
-| milestones/p2.mdx:42-43 | QR code URL with HIP ID and context (share body has hip id and context; QR not in spec). Borderline API | yes / 0 | | CORRECT (QR removed) |
-| milestones/p2.mdx:45-48 | show what is shared; specified consent wording | 0 | 0 | DELETE |
-| milestones/p2.mdx:51 | facility responds within 30 s | 0 | 0 | CORRECT (timing dropped) |
-| milestones/p2.mdx:55-57 | counter cannot be facility ID, HPID, HIP ID or HIP name | yes | yes | CORRECT (exclusions deleted) |
-| milestones/p2.mdx:61-63 | search by name; only participating; HIP linked to HRP | 0 | | CORRECT |
-| milestones/p2.mdx:72-74 | government programmes CoWIN, e-Sanjeevani... with programme field | 0 | 0 | DELETE |
-| milestones/p2.mdx:76-82 | error copy table | 0 | 0 | DELETE |
-| milestones/p2.mdx:84 | records within 2 hours | 0 | 0 | DELETE |
-| milestones/p2.mdx:95-96 | HealthDocumentRecord fallback rule | enum only | | DELETE |
+| milestones/p1.mdx:75-77 | Link ABHA number; status becomes KYC Verified | yes | yes | QUESTION for the content session: keep, reword or delete? (status change deleted) |
+| milestones/p1.mdx:81-82 | four routes all mandatory | 0 | DELETE "all of them mandatory" (mandate; the count was dropped with the default address row, applied) |
+| milestones/p1.mdx:91-93 | resend 60 s; reset screen, refresh storage, multi profile | 0 | 0 | DELETE (timer and screen rules) |
+| milestones/p1.mdx:99-103 | profile/card/QR table per KYC state, card fields | endpoints only | QUESTION for the content session: which rows of the per-KYC profile, card and QR table stay? (screen guidance; the calls exist in hiecm-p2.yaml) |
+| milestones/p2.mdx:27-28 | HIP answers discovery in 10 s | 1 (ABHA face auth) | DELETE (timer) |
+| milestones/p2.mdx:29-31 | never show already linked care context | UX rule 0 | DELETE (screen rule) |
+| milestones/p2.mdx:32-33 | data transfer within 5 minutes of Pull Records | 0 | 0 | DELETE (timer) |
+| milestones/p2.mdx:42-43 | QR code URL with HIP ID and context (share body has hip id and context; QR not in spec). Borderline API | yes / 0 | CORRECT, remove the QR code clause (static: the QR code is a facility artefact; the share body fields are already right) |
+| milestones/p2.mdx:45-48 | show what is shared; specified consent wording | 0 | 0 | DELETE (screen copy) |
+| milestones/p2.mdx:51 | facility responds within 30 s | 0 | 0 | QUESTION for the content session: keep, reword or delete? (timing dropped) |
+| milestones/p2.mdx:55-57 | counter cannot be facility ID, HPID, HIP ID or HIP name | yes | yes | QUESTION for the content session: keep, reword or delete? (exclusions deleted) |
+| milestones/p2.mdx:61-63 | search by name; only participating; HIP linked to HRP | 0 | CORRECT to "Search facilities by name." (participation and HRP rules have no source) |
+| milestones/p2.mdx:72-74 | government programmes CoWIN, e-Sanjeevani... with programme field | 0 | 0 | DELETE (programme list is content; the programme field is absent from the P2 discover body) |
+| milestones/p2.mdx:76-82 | error copy table | 0 | 0 | DELETE (screen copy) |
+| milestones/p2.mdx:84 | records within 2 hours | 0 | 0 | DELETE (timer) |
+| milestones/p2.mdx:95-96 | HealthDocumentRecord fallback rule | enum only | DELETE (FHIR fallback guidance; the spec carries the enum only) |
 | milestones/p3.mdx:20-23 | every PHR must implement HIU | yes (term) | | CORRECT ("must" removed) |
-| milestones/p3.mdx:32 | set up subscription at creation and first login | 0 | | DELETE |
-| milestones/p3.mdx:35 | user must be able to disable any time | yes | yes | CORRECT |
-| milestones/p3.mdx:39 | ask consent before subscription | 0 | | DELETE |
-| milestones/p3.mdx:40-42 | notify new/modified care context, consent, subscription requests; device notifications (spec `categories` LINK/DATA is a subscription filter, not the event list). Borderline API | yes | yes | CORRECT |
-| milestones/p3.mdx:51-52 | ask user to confirm auto retrieval | 0 | | DELETE |
-| milestones/p3.mdx:55 | save auto approval ID the HIE-CM returns (hiecm-p2.yaml auto/approve returns 202 with no body, yet disable/enable take `{auto-approval-id}`; source of the id undocumented). Borderline API | response 202 no body | | DELETE |
-| milestones/p3.mdx:57-59 | granted immediately; request per record after disable | partial | | CORRECT |
-| milestones/p3.mdx:69 | revoke any time, stops immediately | yes | | CORRECT |
-| milestones/p3.mdx:71-73 | tabs grouping of statuses | 0 | | DELETE |
-| milestones/p3.mdx:87-88 | store long term, chronological | 0 | 0 | CORRECT |
+| milestones/p3.mdx:32 | set up subscription at creation and first login | 0 | DELETE (when to set up a subscription, process) |
+| milestones/p3.mdx:35 | user must be able to disable any time | yes | yes | CORRECT to "The user can disable a subscription." (the disable call exists; "any time" and "must" are rules) |
+| milestones/p3.mdx:39 | ask consent before subscription | 0 | DELETE (consent screen rule) |
+| milestones/p3.mdx:51-52 | ask user to confirm auto retrieval | 0 | DELETE (screen rule) |
+| milestones/p3.mdx:57-59 | granted immediately; request per record after disable | partial | QUESTION for the content session: keep "granted immediately" and "a request per record after disable"? (behaviour not in the P3 spec) |
+| milestones/p3.mdx:69 | revoke any time, stops immediately | yes | CORRECT to "The user can revoke a consent." (immediacy has no source) |
+| milestones/p3.mdx:71-73 | tabs grouping of statuses | 0 | DELETE (screen grouping) |
+| milestones/p3.mdx:87-88 | store long term, chronological | 0 | 0 | QUESTION for the content session: keep long term chronological storage as guidance? (storage guidance) |
 
 ## Page group 3
 
@@ -269,12 +272,12 @@ Pages: site/docs/hiecm/v3/ milestones/m1.mdx, registries/abha.md, concepts/phr.m
 | abha.md:60 | "- Letters, numbers and a dot are allowed." / "- It cannot begin with a number." | "- Letters, numbers, one optional dot and one optional underscore are allowed." (begin-with-number bullet deleted) | raw M1 ABHA Swagger 1.yaml:5 Abha Address Validation regex `(^[a-zA-Z0-9]+[.]?[a-zA-Z0-9]*[_]?[a-zA-Z0-9]+$)\|...`, starts alphanumeric |
 | abha.md:64 | "Minimum length differs by flow. Validate against the error the endpoint returns rather than assuming one rule across all of them." | "- It is 8 to 18 characters long." | raw M1 ABHA Swagger 1.yaml:5 "between 8 to 18 characters long" |
 | abha.md:69-70 | "Letters, digits and a single dot are allowed, and beyond that: - It cannot begin with a digit." | "Letters, digits, a single dot and a single underscore are allowed, and beyond that:" (bullet deleted) | Same regex |
-| abha.md:82-84 | password "one uppercase letter, one lowercase letter, one digit and one symbol, no spaces," | "one uppercase letter, one digit and one special character from `!@#$%^&*-`, no spaces," | raw M1 ABHA Swagger 1.yaml:5 Password Validation `^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*-])[A-Za-z\d!@#$%^&*-]{8,}$` |
+| abha.md:82-84 | password "one uppercase letter, one lowercase letter, one digit and one symbol, no spaces," | "one uppercase letter, one digit and one special character from `!@#$^*_-`, no spaces," | raw M1 ABHA Swagger 1.yaml:5 Password Validation `^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$^*_-])[A-Za-z\d!@#$%^&*_-]{8,}$` |
 | abha.md:112 | `Production  https://abha.abdm.gov.in/api/abha/v3/` | Deleted | abha.abdm.gov.in raw 0, specs 0 |
 | phr.md:49 | "ABHA base URLs are `...abhasbx...` for sandbox and `https://abha.abdm.gov.in/api/abha/v3/` for production." | "The ABHA sandbox base URL is `https://abhasbx.abdm.gov.in/abha/api/v3/`." | abha.abdm.gov.in raw 0, specs 0 |
 | phr.md:59 | ABHA number path "Aadhaar OTP or mobile OTP" | "Aadhaar OTP or ABHA OTP" | hiecm-p1.yaml:534,895 flows "OTP Request - ABHA OTP, OTP Request - AADHAR OTP"; tags "via ABHA Number-ABHA OTP" / "via ABHA Number-Aadhaar OTP" |
 | phr.md:71-72 | "- Letters, numbers and a dot only." / "- Cannot begin with a number, and cannot begin or end with a dot." | "- Letters, numbers, one optional dot and one optional underscore." / "- Starts and ends with a letter or number, 8 to 18 characters long." | raw M1 ABHA Swagger 1.yaml:5 Abha Address Validation |
-| phr.md:79-80 | password "one A to Z, one a to z, one digit, one symbol, no spaces" | "one A to Z, one digit, one special character from `!@#$%^&*-`, no spaces" | raw M1 ABHA Swagger 1.yaml:5 Password Validation |
+| phr.md:79-80 | password "one A to Z, one a to z, one digit, one symbol, no spaces" | "one A to Z, one digit, one special character from `!@#$^*_-`, no spaces" | raw M1 ABHA Swagger 1.yaml:5 Password Validation |
 | phr.md:89 | Link ABHA number "validate by Aadhaar OTP or mobile OTP" | "validate by Aadhaar OTP or ABHA OTP" | hiecm-p2.yaml tags "Link ABHA Number / P2 - via ABHA OTP" and "P2 - via Aadhaar OTP" (the audit's "ABHA OTP" alone would drop the Aadhaar route, which the set has) |
 | phr.md:132-133 | counter names "up to 20 alphanumeric characters, no special characters" | "1 to 250 characters, letters, digits and spaces, with `.`, `-` or `_` allowed inside the name" | hiecm-m2.yaml:1554, hiecm-p2.yaml:887 `^(?:[a-zA-Z0-9 ]\|[a-zA-Z0-9 ][a-zA-Z0-9.\\-_ ]*[a-zA-Z0-9 ]){1,250}$` |
 | phr.md:238-240 | discovery "name, year or date of birth, gender, verified mobile number, ABHA address, and optionally a patient registration number" | "name, year of birth, gender, verified identifiers such as mobile number or ABHA address, and optionally unverified identifiers such as a medical record number" | hiecm-m2.yaml:3259-3383 discover patient: verifiedIdentifiers, unverifiedIdentifiers (MR, MOBILE, ABHA_NUMBER, ABHA_ADDRESS, EMAIL), name, gender, yearOfBirth; no dateOfBirth |
@@ -298,124 +301,131 @@ Pages: site/docs/hiecm/v3/ milestones/m1.mdx, registries/abha.md, concepts/phr.m
 | nhpr/hfr.md:55 | "Basic facility information takes an **HPR token in the header** ... Submit facility takes an **`x-hpird-auth` token in the header**." | "...an **HPR token in the `x-hprid-auth` header** ... Submit facility takes **`x-hprid-auth` and `x-hprid-auth-verifier` headers**." | hiecm-m4.yaml:629, 861, 866; x-hpird-auth 0 |
 | nhpr/hfr.md:65 | "Bridge linkage, facility search, nearby search, send OTP to contact" | "Bridge linkage, facility search, send OTP to contact" | hiecm-m4.yaml:958 bygeoLocation: HFRSearchWithinRadiusRequest and response carry no facilityId (fac_unique_id only) |
 | nhpr/hfr.md:97 | `v1.5/facility/fetchfacilitytype` | `/v1.5/facility/fetch-facility-type` | hiecm-m4.yaml:1084; fetchfacilitytype 0 |
+| m1.mdx:224, 237 | through the Aadhaar registered device (RD) service; participant Aadhaar RD service | in the ABHA app; participant ABHA app face capture | hiecm-m1.yaml:431 auth/init: face capture happens in the ABHA app |
+| m1.mdx:n/a (was 291-292) | The specification calls the programmes that use this route integrated programmes. | (sentence deleted) | specs 0; raw hits are the integrated_program gateway role |
+| m1.mdx:440 | mobile address path mandatory and optional demographics | (sentence deleted) | P1 phrDetails declares no required list |
+| abha.md:38 | face capture through the Aadhaar RD service | face capture in the ABHA app | hiecm-m1.yaml:431 |
+| abha.md:n/a (was 62, 73-74) | all numeric address bullets | (bullets deleted) | raw M1 ABHA Swagger 1.yaml:5 address regex does not forbid all digits |
+| abha.md:83 | one special character from `!@#$%^&*-` | one special character from `!@#$^*_-` | raw M1 ABHA Swagger 1.yaml:5 lookahead `(?=.*[!@#$^*_-])` |
+| phr.md:78 | one special character from `!@#$%^&*-` | one special character from `!@#$^*_-` | same |
+| phr.md:n/a (was 61-63), n/a (was 69) | mobile path mandatory fields; "All numeric is allowed only for the `14digit@abdm` form" | (deleted) | no required list; address regex |
+| phr.md:31, 89, n/a (was 95), 95 | default `14digit@abdm` login; "All four routes"; default address row; ABHA number "Mobile OTP or Aadhaar OTP" | removed; "All these routes"; row deleted; "ABHA OTP or Aadhaar OTP" | hiecm-p1.yaml:1785-1795 |
+| phr.md:93 | name@abdm: Password, mobile OTP or Aadhaar OTP, by auth mode | Password, mobile OTP or email OTP, by the auth methods the address supports | hiecm-p1.yaml:1713-1715 (as p1.mdx:87) |
+| phr.md:147-148, 204-205 | four notification events | a care context is linked or updated | hiecm-subscription.yaml:1217 |
+| phr.md:150 | types of visit | purpose, categories | hiecm-p3.yaml approve body purpose 497, categories 556; visit 0 |
+| phr.md:247-248 | with a programme specific optional field such as the PMJAY ID or the CoWIN registered mobile number | (clause deleted; programme list left in handoff) | P2 discover body carries `hip` and `unverifiedIdentifiers` only |
+| consent.md:72-73 | approve, reject and ignore. An ignored request | grant, deny, or let it expire (`GRANTED`, `DENIED`, `EXPIRED`). An unanswered request | hiecm-m3.yaml:2095-2104 |
+| nhpr/index.md:31 | NHPR issues a token through its own `POST /getManagementToken` call. | M4 declares bearer authentication. The HPID calls publish `POST /getManagementToken`. | raw M4-HPID.json only; scripts/ingest-nha.mjs TOKEN_SOURCE.m4 reworded to match |
+| nhpr/hfr.md:27 | two mandatory photographs | two photographs | no required list on the photograph fields |
+| nhpr/hfr.md:55, 57 | Obtain both; Both come from a person | Obtain them; They come from a person | three headers named on the page (hiecm-m4.yaml:629, 861, 866) |
+| nhpr/hfr.md:82 | ABDM enabled | `abdmSoftware` (ordering left in handoff) | hiecm-m4.yaml bygeoLocation request filter `abdmSoftware` |
 
 ### Handoff
 
 | File:line (after) | Claim | raw hits | spec hits | Audit's suggested action |
 | --- | --- | --- | --- | --- |
-| m1.mdx:84-91 | "Mandatory" per build step; demo auth mandatory for government | 0 | 0 | CORRECT (annotations removed) |
-| m1.mdx:93-95 | Everything else optional for both; split on API reference | 0 | 0 | DELETE |
-| m1.mdx:105-108 | No M1 certification; one exit process, four steps | 0 | 0 | DELETE |
+| m1.mdx:84-91 | "Mandatory" per build step; demo auth mandatory for government | 0 | 0 | QUESTION for the content session: keep, reword or delete? (annotations removed) |
+| m1.mdx:93-95 | Everything else optional for both; split on API reference | 0 | 0 | DELETE (mandate table residue, certification) |
+| m1.mdx:105-108 | No M1 certification; one exit process, four steps | 0 | 0 | DELETE (certification process) |
 | m1.mdx:126,134,428,486,488 | Self-Declared / KYC Verified labels, heading "What Self-Declared costs" | 0; 0 (kycStatus 145/43) | 0; 0 | KEEP (concern); consolidation rewrote to "KYC on the profile: Verified / None" |
-| m1.mdx:129 | Link `#which-creation-route-you-must-build` | - | - | CORRECT (retarget); not needed, the heading stays |
-| m1.mdx:151 | Flowchart "government integrators only" for demo auth | 0 | 0 | CORRECT (label trimmed) |
-| m1.mdx:179-187 | Private/government route table and heading | 0 | 0 | DELETE |
-| m1.mdx:224, 237 | Face through the Aadhaar RD service; diagram participant "Aadhaar RD service" (borderline API: hiecm-m1.yaml:431 says the transaction goes to the ABHA app) | 0 | 0 | CORRECT to "ABHA app" / "ABHA app face capture" |
-| m1.mdx:255 | PID block encrypted by the device and expires | 0 | 0 | DELETE |
-| m1.mdx:261 | Government integrators build demo auth, private do not | 0 | 0 | DELETE |
-| m1.mdx:281 | "full name as per Aadhaar" | - | - | CORRECT to "full name" |
-| m1.mdx:287-288 | Claiming an address mandatory on other routes, optional here | 0 | 0 | DELETE |
-| m1.mdx:288-290 | Default address is 14 digits @sbx/@abdm | 0 | 0 | DELETE |
-| m1.mdx:292-293 | Specification calls these programmes integrated programmes (borderline API: raw hits are the integrated_program gateway role) | 2 | 0 | DELETE |
-| m1.mdx:300-302 | Child ABHA on NHA leadership approval | 0; "approved by NHA" 6 | 0; 6 | CORRECT (tag wording) |
-| m1.mdx:308-309 | Parent must be 18 or older | 0 | 0 | CORRECT (18+ deleted) |
-| m1.mdx:316-317 | Refusal: parent under 18 | 0 | 0 | DELETE |
-| m1.mdx:367 | API reference lists which routes are mandatory | 0 | 0 | DELETE |
-| m1.mdx:394 | Do not send to a remote encryption helper or third party site (borderline API: advice, not an endpoint claim) | 0 in final set | 0 | DELETE |
-| m1.mdx:444-445 | Mobile address path mandatory/optional demographics (borderline API: required-ness; P1 phrDetails has no required list) | 0 | 0 | DELETE |
-| m1.mdx:447 | Second address is the most common failure | 0 | 0 | DELETE |
-| m1.mdx:505 | QR URL with two parameters, `OPD1` | 0 | 0 | DELETE |
-| m1.mdx:526 | App holds screen 30 seconds | 0 | 0 | DELETE |
-| m1.mdx:528 | Context never the facility id, HIP id or HIP name | 0 | 0 | DELETE |
-| m1.mdx (Concerns 6) | Journey-step links into the generated api tree may break on the next reorder | - | - | Concern only |
-| abha.md:29 | Luhn check digit, Verhoeff for Aadhaar (section) | 0 | 0 | DELETE |
+| m1.mdx:129 | Link `#which-creation-route-you-must-build` | - | - | QUESTION for the content session: keep, reword or delete? (retarget) |
+| m1.mdx:151 | Flowchart "government integrators only" for demo auth | 0 | 0 | QUESTION for the content session: keep, reword or delete? (label trimmed) |
+| m1.mdx:179-187 | Private/government route table and heading | 0 | 0 | DELETE (private and government integrator table) |
+| m1.mdx:255 | PID block encrypted by the device and expires | 0 | 0 | DELETE (device behaviour, not in the set) |
+| m1.mdx:261 | Government integrators build demo auth, private do not | 0 | 0 | DELETE (integrator category rule) |
+| m1.mdx:281 | "full name as per Aadhaar" | - | - | CORRECT to "full name" (the as-per-Aadhaar qualifier has no source) |
+| m1.mdx:287-288 | Claiming an address mandatory on other routes, optional here | 0 | 0 | DELETE (mandate) |
+| m1.mdx:288-290 | Default address is 14 digits @sbx/@abdm | 0 | 0 | DELETE (default address rule, not in the spec) |
+| m1.mdx:300-302 | Child ABHA on NHA leadership approval | 0; "approved by NHA" 6 | 0; 6 | QUESTION for the content session: keep, reword or delete? (tag wording) |
+| m1.mdx:308-309 | Parent must be 18 or older | 0 | 0 | QUESTION for the content session: keep, reword or delete? (18+ deleted) |
+| m1.mdx:316-317 | Refusal: parent under 18 | 0 | 0 | DELETE (refusal behaviour, not in the spec) |
+| m1.mdx:367 | API reference lists which routes are mandatory | 0 | 0 | DELETE (the API reference lists no mandatory routes) |
+| m1.mdx:394 | Do not send to a remote encryption helper or third party site (borderline API: advice, not an endpoint claim) | 0 in final set | 0 | DELETE (static: advice about where to encrypt; it names no endpoint or field) |
+| m1.mdx:447 | Second address is the most common failure | 0 | 0 | DELETE (frequency claim) |
+| m1.mdx:505 | QR URL with two parameters, `OPD1` | 0 | 0 | DELETE (QR URL shape, not in the set) |
+| m1.mdx:526 | App holds screen 30 seconds | 0 | 0 | DELETE (timer) |
+| m1.mdx:528 | Context never the facility id, HIP id or HIP name | 0 | 0 | DELETE (counter naming rule; the context pattern is applied) |
+| m1.mdx (Concerns 6) | Journey-step links into the generated api tree may break on the next reorder | - | - | Concern only (route stability; no page change asked) |
+| abha.md:29 | Luhn check digit, Verhoeff for Aadhaar (section) | 0 | 0 | DELETE (checksum algorithms, not in the set) |
 | abha.md:35-40 | Private/government Mandatory/Optional columns | 0 | 0 | DELETE (columns) |
-| abha.md:38 | Face capture through the Aadhaar RD service (borderline API) | 0 | 0 | DELETE |
-| abha.md:42 | Aadhaar OTP mandatory for everyone | 0 | 0 | DELETE |
-| abha.md:46 | Under six, legal guardian, from birth | 0 | 0 | DELETE |
+| abha.md:42 | Aadhaar OTP mandatory for everyone | 0 | 0 | DELETE (mandate) |
+| abha.md:46 | Under six, legal guardian, from birth | 0 | 0 | DELETE (child ABHA policy, not in the spec) |
 | abha.md:46 | Govt integrators approved by NHA leadership | 6 / 0 | 6 / 0 | CORRECT ("leadership" dropped) |
-| abha.md:46 | UWIN, RCH, POSHAN | 0/0/2 | - | DELETE |
-| abha.md:46 | Private integrators cannot use it | 0 | 0 | DELETE |
-| abha.md:52 | `@sbx` sandbox / `@abdm` production mapping | 42/30 | - | CORRECT (env mapping) |
-| abha.md:52 | Example `91**********27@sbx` | 0 | 0 | DELETE |
+| abha.md:46 | UWIN, RCH, POSHAN | 0/0/2 | - | DELETE (programme names, not in the set) |
+| abha.md:46 | Private integrators cannot use it | 0 | 0 | DELETE (integrator category rule) |
+| abha.md:52 | `@sbx` sandbox / `@abdm` production mapping | 42/30 | - | QUESTION for the content session: keep, reword or delete? (env mapping) |
+| abha.md:52 | Example `91**********27@sbx` | 0 | 0 | DELETE (example value with no source) |
 | abha.md:54 | "self declared" label | 0 | 0 | consolidation (labels) |
-| abha.md:62, 73-74 | All numeric only in default `14digit@abdm` form (borderline API: the address regex does not forbid all digits) | 0 | - | CORRECT/DELETE |
-| abha.md:63, 76-80 | 10 digit mobile restricted; three shapes that do not work | 0 | 0 | DELETE |
+| abha.md:63, 76-80 | 10 digit mobile restricted; three shapes that do not work | 0 | 0 | DELETE (address policy beyond the regex) |
 | abha.md:68 | "NHA validates the address on creation" (voice) | 0 | 0 | DELETE ("NHA validates" reworded) |
 | abha.md:84-86 | Password: no more than two consecutive characters or keyboard keys; enforcement optional | 0 | 0 | CORRECT (rule to Swagger set) |
-| abha.md:89 | NHA asks suggestions from name and email | 0 | 0 | DELETE |
-| abha.md:118 | All four login methods mandatory | 0 | 0 | DELETE |
-| phr.md:31 | Log in with default `14digit@abdm` | 0 | 0 | CORRECT (row trimmed) |
+| abha.md:89 | NHA asks suggestions from name and email | 0 | 0 | DELETE (voice, and the suggestion inputs have no source) |
+| abha.md:118 | All four login methods mandatory | 0 | 0 | DELETE (mandate) |
+| phr.md:31 | Log in with default `14digit@abdm` | 0 | 0 | QUESTION for the content session: keep, reword or delete? (row trimmed) |
 | phr.md:58-59, 88-90, 112-116 | Self-Declared / KYC Verified labels | 0 | 0 | CORRECT ("No KYC" / "KYC verified") |
-| phr.md:61-63 | Mobile path mandatory/optional fields (borderline API: required-ness) | 0 | - | DELETE |
-| phr.md:67 | ABDM wants one address per person | 0 | 0 | DELETE |
-| phr.md:73-78 | 14digit all numeric, 10digitmobile blocked, 14digit login, env suffix undocumented | 0 | - | CORRECT (replace with regex and @abdm/@sbx ending) |
-| phr.md:80-81 | Password: no more than 2 consecutive, validation now optional | 0 | 0 | CORRECT (M1 regex) |
-| phr.md:94 | All four login routes mandatory | 0 | 0 | DELETE |
-| phr.md:100 | Default `14digit@abdm` login row | 0 | 0 | DELETE |
-| phr.md:103 | Resend OTP after 60 seconds | 0 | 0 | DELETE |
-| phr.md:103-104 | Reset password screen, confirmation message | 0 | 0/2 | DELETE |
+| phr.md:67 | ABDM wants one address per person | 0 | 0 | DELETE (policy, not in the set) |
+| phr.md:73-78 | 14digit all numeric, 10digitmobile blocked, 14digit login, env suffix undocumented | 0 | - | CORRECT to "Starts and ends with a letter or number, 8 to 18 characters long, and ends in `@abdm` or `@sbx`." for the remaining `10digitmobile` and `14digit` bullets (policy beyond the regex; the all numeric bullet is applied) |
+| phr.md:80-81 | Password: no more than 2 consecutive, validation now optional | 0 | 0 | QUESTION for the content session: keep, reword or delete? (M1 regex) |
+| phr.md:94 | All four login routes mandatory | 0 | 0 | DELETE "mandatory" (mandate; the count is applied) |
+| phr.md:103 | Resend OTP after 60 seconds | 0 | 0 | DELETE (timer) |
+| phr.md:103-104 | Reset password screen, confirmation message | 0 | 0/2 | DELETE (screen rule) |
 | phr.md:110-116 | Green tick, exclamation, card PDF contents, sample `91-0098-2416-3421`, editable fields by status | 0 | 0 | CORRECT (table cut to profile, PHR card call, QR code call) |
-| phr.md:125-127 | ABDM specified consent wording | 0 | 0 | CORRECT |
+| phr.md:125-127 | ABDM specified consent wording | 0 | 0 | QUESTION for the content session: what consent wording, if any, stays? (screen copy, not in the set) |
 | phr.md:129 | Facility responds within 30 seconds | 0 | 0 | CORRECT ("Waits for the facility's response") |
-| phr.md:133-135 | Counter name examples and exclusions (HFR ID, HPID, HIP ID, HIP name) | 0 | 0 | DELETE |
-| phr.md:137-138 | Third party scanner behaviour | 0 | 0 | DELETE |
-| phr.md:147-149 | Set up subscription at creation / new login, ask consent | 0 | 0 | DELETE |
-| phr.md:151-152, 210-212 | Four notification events (borderline API: subscription categories are LINK or DATA, hiecm-subscription.yaml:183-186; consent and subscription request events are not in the subscription notify) | 0 | 0/4 (operationIds only) | CORRECT ("care context is linked or updated") |
-| phr.md:153 | Firebase | 0 | 0 | DELETE |
-| phr.md:154-155 | Edit covers HI types, visit types, period (edit call exists: hiecm-p3.yaml:990 PUT) | 0 | - | CORRECT (approve, deny, enable, disable) |
-| phr.md:179 | Sharing stops immediately | 0 | 0 | CORRECT (revoke description) |
-| phr.md:181-183 | Consents/Subscriptions tab grouping | 0 | 0 | CORRECT (five states plainly) |
-| phr.md:197-198 | Chronological order | 0 | 0 | DELETE |
-| phr.md:206-208 | NHA expects subscription at two moments | 0 | 0 | DELETE |
-| phr.md:214-222 | Same five states for health locker requests; Group column (lockers exist in hiecm-p4.yaml, so not contradicted) | yes | yes | CORRECT (locker dropped, Group column dropped) |
-| phr.md:222 | Expired inside requester's window | 0 | 0 | CORRECT |
-| phr.md:241 | HIP responds within 10 seconds | 1 | - | DELETE |
-| phr.md:243-245 | Hide linked contexts, message copy | 0 | 0 | DELETE |
-| phr.md:251-253 | CoWIN, AB-PMJAY, e-Sanjeevani, RCH, programme fields (borderline API: programme specific fields) | 0 / yes | - | CORRECT (AB-PMJAY via government programmes call) |
-| phr.md:255-261 | Failure copy table | 0 | 0 | DELETE |
-| phr.md:263-264 | 5 minutes, 2 hours | 0 | 0 | DELETE |
-| phr.md:266-278 | Deep links section, hipcode, random order, store URLs (borderline API: deep link URL shape) | 0 | 0 | DELETE (section and heading) |
-| phr.md:283-288 | Device types, HealthDocumentRecord fallback | 0 | 0 | CORRECT |
-| consent.md:34 | States in two PHR sections | yes | m3:2157-2161 | CORRECT (sections unsourced) |
-| consent.md:51 | Expired inside window the HIU set | 0 | 0 | CORRECT |
-| consent.md:54 | Request window clock set by HIU | 0 | 0 | CORRECT |
+| phr.md:133-135 | Counter name examples and exclusions (HFR ID, HPID, HIP ID, HIP name) | 0 | 0 | DELETE (counter naming rule) |
+| phr.md:137-138 | Third party scanner behaviour | 0 | 0 | DELETE (third party scanner behaviour, not in the set) |
+| phr.md:147-149 | Set up subscription at creation / new login, ask consent | 0 | 0 | DELETE (process) |
+| phr.md:153 | Firebase | 0 | 0 | DELETE (vendor example) |
+| phr.md:179 | Sharing stops immediately | 0 | 0 | QUESTION for the content session: keep, reword or delete? (revoke description) |
+| phr.md:181-183 | Consents/Subscriptions tab grouping | 0 | 0 | QUESTION for the content session: keep, reword or delete? (five states plainly) |
+| phr.md:197-198 | Chronological order | 0 | 0 | DELETE (storage guidance) |
+| phr.md:206-208 | NHA expects subscription at two moments | 0 | 0 | DELETE (voice and process) |
+| phr.md:214-222 | Same five states for health locker requests; Group column (lockers exist in hiecm-p4.yaml, so not contradicted) | yes | yes | QUESTION for the content session: keep, reword or delete? (locker dropped, Group column dropped) |
+| phr.md:222 | Expired inside requester's window | 0 | 0 | CORRECT to "`EXPIRED` when nobody answers" (the window is a timer) |
+| phr.md:241 | HIP responds within 10 seconds | 1 | - | DELETE (timer) |
+| phr.md:243-245 | Hide linked contexts, message copy | 0 | 0 | DELETE (screen rule) |
+| phr.md:251-253 | CoWIN, AB-PMJAY, e-Sanjeevani, RCH, programme fields (borderline API: programme specific fields) | 0 / yes | - | QUESTION for the content session: keep the programme list (CoWIN, AB-PMJAY, e-Sanjeevani, RCH)? (programme names are content; the programme field clause is applied) |
+| phr.md:255-261 | Failure copy table | 0 | 0 | DELETE (screen copy) |
+| phr.md:263-264 | 5 minutes, 2 hours | 0 | 0 | DELETE (timers) |
+| phr.md:266-278 | Deep links section, hipcode, random order, store URLs (borderline API: deep link URL shape) | 0 | 0 | DELETE (static: deep link sections describe app store listing and URL handling, which no spec carries) |
+| phr.md:283-288 | Device types, HealthDocumentRecord fallback | 0 | 0 | QUESTION for the content session: keep device types and the `HealthDocumentRecord` fallback? (FHIR guidance; the spec carries the enum only) |
+| consent.md:34 | States in two PHR sections | yes | m3:2157-2161 | QUESTION for the content session: keep, reword or delete? (sections unsourced) |
+| consent.md:51 | Expired inside window the HIU set | 0 | 0 | CORRECT to "`EXPIRED` when nobody answers" (timer) |
+| consent.md:54 | Request window clock set by HIU | 0 | 0 | QUESTION for the content session: does the request window stay? (timer; the M3 request carries no request expiry field) |
 | consent.md:58 | Request "must display" fields | 0 | - | CORRECT ("carries") |
-| consent.md:62-64 | NHA sets a floor of five capabilities | 0 | - | CORRECT (voice) |
-| consent.md:72-74 | Approve, reject and ignore (W6) | yes | yes | CORRECT ("grant, deny, or let it expire") |
-| consent.md:78-80 | Sharing stops immediately | 0 | 0 | CORRECT (revoke description) |
-| consent.md:84 | Subset of HL7 PurposeOfUse, terminology.hl7.org | 0 | 0 | DELETE |
-| consent.md:95 | Source table prints rows twice; patient reads code | 0 | - | DELETE |
-| consent.md:101-110 | HI type display column (incl. "Record artifact") | 0 | 0 | CORRECT (display column removed) |
-| consent.md:118 | Future sharing must stop immediately | 0 | 0 | DELETE |
-| consent.md:120 | Retention undocumented; "Sharing stops." | 0 | 0 | DELETE |
-| nhpr/index.md:19 | HPR token "generated from an HPR ID and password" | - | - | (audit corrected header only; wording kept) |
+| consent.md:62-64 | NHA sets a floor of five capabilities | 0 | - | QUESTION for the content session: keep, reword or delete? (voice) |
+| consent.md:78-80 | Sharing stops immediately | 0 | 0 | QUESTION for the content session: keep, reword or delete? (revoke description) |
+| consent.md:84 | Subset of HL7 PurposeOfUse, terminology.hl7.org | 0 | 0 | DELETE (terminology source, not in the set) |
+| consent.md:95 | Source table prints rows twice; patient reads code | 0 | - | DELETE (describes the source document, voice) |
+| consent.md:101-110 | HI type display column (incl. "Record artifact") | 0 | 0 | QUESTION for the content session: keep, reword or delete? (display column removed) |
+| consent.md:118 | Future sharing must stop immediately | 0 | 0 | DELETE (behaviour, not in the set) |
+| consent.md:120 | Retention undocumented; "Sharing stops." | 0 | 0 | DELETE (retention, not in the set) |
+| nhpr/index.md:19 | HPR token "generated from an HPR ID and password" | - | - | KEEP (the header is corrected to `x-hprid-auth`; the password clause stands under controller ruling (b), POST /api/v1/auth/authPassword at hiecm-m4.yaml:1456) |
 | nhpr/hpr.md:17 | Three categories, more later | yes | yes | CORRECT ("Categories include") |
-| nhpr/hpr.md:17 | Systems incl. Ayurveda, Homoeopathy, Sowa-Rigpa | 0 | 0 | CORRECT |
-| nhpr/hpr.md:17-23 | Role codes 1/2/3 table | 0 | 0 | CORRECT (table deleted; facility_manager in hprType) |
-| nhpr/hpr.md:25 | No role 2/3 means no facility | 0 | 0 | DELETE |
-| nhpr/hpr.md:29 | 14 digit | 0 | - | CORRECT (digit count dropped) |
+| nhpr/hpr.md:17 | Systems incl. Ayurveda, Homoeopathy, Sowa-Rigpa | 0 | 0 | QUESTION for the content session: which systems of medicine to name? (master data values, not in the M4 spec) |
+| nhpr/hpr.md:17-23 | Role codes 1/2/3 table | 0 | 0 | QUESTION for the content session: keep, reword or delete? (table deleted; facility_manager in hprType) |
+| nhpr/hpr.md:25 | No role 2/3 means no facility | 0 | 0 | DELETE (role code rule) |
+| nhpr/hpr.md:29 | 14 digit | 0 | - | QUESTION for the content session: keep, reword or delete? (digit count dropped) |
 | nhpr/hpr.md:33 | Sample `71-2665-5777-XXXX` | 0 | 2 | CORRECT (raw example `71-1********-0212`) |
-| nhpr/hpr.md:50 | Degree code must agree with both | 0 | 0 | DELETE |
-| nhpr/hpr.md:52-54 | Subcategory codes differ between tables | 0 | 0 | DELETE |
-| nhpr/hpr.md:56 | SMD null for nurses | 0 | 1 | DELETE |
-| nhpr/hpr.md:78-82 | Aadhaar link valid 5 minutes; certificates mandatory; demographicAuthViaMobile first; "Three things to know first" | 0 | 0 | DELETE |
-| nhpr/hpr.md:106 | Registry rejects display values | 0 | 0 | DELETE |
-| nhpr/hpr.md:109 | Three fields encrypted, RSA/ECB/PKCS1Padding for NHPR, M1 uses OAEP | 1 | 0 | DELETE |
-| nhpr/hpr.md:111 | 1 MB / 5 MB, png jpeg jpg PDF | 0 | 0 | DELETE |
-| nhpr/hfr.md:19 | Licence renewals, empanelment benefits | 0 | 0 | DELETE |
-| nhpr/hfr.md:27 | Two mandatory photographs (borderline API: no required list on the fields) | yes | - | CORRECT ("mandatory" dropped) |
-| nhpr/hfr.md:31 | Mandatory by type, bed count > 0, exemptions | field names only | - | DELETE |
-| nhpr/hfr.md:35 | Only codes accepted, else validation fails | 0 | - | DELETE |
-| nhpr/hfr.md:42 | Unique identification number until submit | 0 | - | DELETE |
-| nhpr/hfr.md:47-49 | Not submitted stays draft, goes nowhere | 1 | 1 | CORRECT (kept Draft status) |
-| nhpr/hfr.md:51 | Update by resending with ID | 0 | - | DELETE |
-| nhpr/hfr.md:57 | Facility manager rights, role 2 or role 3 (consolidation: "with facility manager rights" goes) | 0 | 0 | CORRECT (removed role codes) |
-| nhpr/hfr.md:66 | Dedup 6 digit, labelled facility unique ID (Concerns 4: `69765` example) | yes | yes | CORRECT (numeric, example) |
-| nhpr/hfr.md:74 | HIP name 15 chars, no specials, unique, XYZ BRIDGE | 0 | 0 | DELETE |
-| nhpr/hfr.md:81 | Fuzzy name, exact others | 0 | - | CORRECT |
-| nhpr/hfr.md:82 | Nearby filter "ABDM enabled" vs `abdmSoftware` (borderline API), nearest first | yes | yes | CORRECT ("ABDM software", ordering dropped) |
-| nhpr/hfr.md:83 | OTP proves control of a facility record | yes | yes | CORRECT (purpose dropped) |
+| nhpr/hpr.md:50 | Degree code must agree with both | 0 | 0 | DELETE (master data rule, not in the spec) |
+| nhpr/hpr.md:52-54 | Subcategory codes differ between tables | 0 | 0 | DELETE (master data rule, not in the spec) |
+| nhpr/hpr.md:56 | SMD null for nurses | 0 | 1 | DELETE (master data rule, not in the spec) |
+| nhpr/hpr.md:78-82 | Aadhaar link valid 5 minutes; certificates mandatory; demographicAuthViaMobile first; "Three things to know first" | 0 | 0 | DELETE (timer, document mandate, call order rule) |
+| nhpr/hpr.md:106 | Registry rejects display values | 0 | 0 | DELETE (validation behaviour, not in the spec) |
+| nhpr/hpr.md:109 | Three fields encrypted, RSA/ECB/PKCS1Padding for NHPR, M1 uses OAEP | 1 | 0 | DELETE (cipher has 0 hits in hiecm-m4.yaml; crypto prose) |
+| nhpr/hpr.md:111 | 1 MB / 5 MB, png jpeg jpg PDF | 0 | 0 | DELETE (file limits, not in the spec) |
+| nhpr/hfr.md:19 | Licence renewals, empanelment benefits | 0 | 0 | DELETE (benefits prose) |
+| nhpr/hfr.md:31 | Mandatory by type, bed count > 0, exemptions | field names only | - | DELETE (per-type rules) |
+| nhpr/hfr.md:35 | Only codes accepted, else validation fails | 0 | - | DELETE (validation behaviour) |
+| nhpr/hfr.md:42 | Unique identification number until submit | 0 | - | DELETE (identifier lifecycle, not in the spec) |
+| nhpr/hfr.md:47-49 | Not submitted stays draft, goes nowhere | 1 | 1 | QUESTION for the content session: keep, reword or delete? (kept Draft status) |
+| nhpr/hfr.md:51 | Update by resending with ID | 0 | - | DELETE (update process, not in the spec) |
+| nhpr/hfr.md:57 | Facility manager rights, role 2 or role 3 (consolidation: "with facility manager rights" goes) | 0 | 0 | QUESTION for the content session: keep, reword or delete? (removed role codes) |
+| nhpr/hfr.md:66 | Dedup 6 digit, labelled facility unique ID (Concerns 4: `69765` example) | yes | yes | QUESTION for the content session: keep, reword or delete? (numeric, example) |
+| nhpr/hfr.md:74 | HIP name 15 chars, no specials, unique, XYZ BRIDGE | 0 | 0 | DELETE (HIP name rules, not in the schema) |
+| nhpr/hfr.md:81 | Fuzzy name, exact others | 0 | - | CORRECT to "Search by name and the other filters." (match behaviour, not in the spec) |
+| nhpr/hfr.md:82 | Nearby filter "ABDM enabled" vs `abdmSoftware` (borderline API), nearest first | yes | yes | DELETE "Results are ordered nearest first" (ordering behaviour, not in the spec; the `abdmSoftware` filter is applied) |
+| nhpr/hfr.md:83 | OTP proves control of a facility record | yes | yes | QUESTION for the content session: keep, reword or delete? (purpose dropped) |
 
 ## Page group 4
 
@@ -455,6 +465,18 @@ Paths below are relative to site/docs/. Specs are catalogue/openapi/hiecm/v3/. L
 | hiecm/v3/getting-started/going-live.mdx:81 | production cell `https://apis.abdm.gov.in`, `X-CM-ID: abdm` | `https://apis.abdm.gov.in` | X-CM-ID examples in hiecm-gateway.yaml all `sbx` (10); "abdm" as header value 0/0 |
 | hiecm/v3/getting-started/going-live.mdx:82 | ABHA service row, production cell `https://abha.abdm.gov.in/api/abha/v3/` | row kept with sandbox `https://abhasbx.abdm.gov.in/abha/api/v3/`; production cell "Not in the specification" (controller ruling a) | abha.abdm.gov.in raw 0, specs 0; abhasbx.abdm.gov.in in hiecm-m1.yaml servers (1) |
 | hiecm/v3/milestones/index.mdx:124 | "logs in four different ways" | "logs in eight different ways" | hiecm-p1.yaml:1785 "8 flows" |
+| hiecm/v3/concepts/callback-authenticity.md:4, 18, 37-38 | ABDM signs what it sends / signs its callbacks | ABDM authenticates what it sends / callbacks declare bearer authentication | hiecm-m2.yaml:4788-4792 bearerAuth http bearer JWT |
+| hiecm/v3/concepts/participants/citizen.md:27-28 | age | year of birth | hiecm-p1.yaml:92 phrDetails.yearOfBirth |
+| hiecm/v3/concepts/participants/doctor.md:48-49 | create call takes an HPR token in the header, submit takes `x-hprid-auth` | Both calls take `x-hprid-auth`, and submit also takes `x-hprid-auth-verifier` | hiecm-m4.yaml:629, 861, 866 |
+| hiecm/v3/concepts/participants/phr.md:55 | created or updated | linked or updated | hiecm-subscription.yaml:1217 |
+| hiecm/v3/getting-started/build-it-well.mdx:128-130, 138-143 | Only on a Self-Declared profile; KYC verified profile; Self-Declared profile ... becomes KYC verified in place | Only when `kycVerified` is false; profile with `kycVerified` true; profile with `kycVerified` false was not proved against Aadhaar, so it is correctable | hiecm-m1.yaml profile/account 200 `kycVerified` |
+| hiecm/v3/getting-started/build-with-ai.mdx:57 | Those exist for M1 to M3, the milestones the catalogue has flows and errors for. | Every module skill carries both, under its `references/`. | plugins/abdm-integrators-assistant/skills/abdm-*/references/scaffold.md and debug.md in all 11 module skills |
+| hiecm/v3/getting-started/first-fifteen-minutes.mdx:52 | usually means the credentials or the `X-CM-ID` header | means the request was not authorised | hiecm-gateway.yaml:245 401 Unauthorized; X-CM-ID as a cause 0 |
+| hiecm/v3/getting-started/going-live.mdx:82 | production cell "Not in the specification" | cell left empty, as hip-hiu.md:32 | table convention for an absent value |
+| hiecm/v3/milestones/index.mdx:124 | and her family members | (clause deleted) | family: 0 in every spec |
+| whats-new/2026-09-16.mdx:23 | every way to log in has its own sequence | every way to log in that the specification carries has its own sequence | hiecm-m1.yaml has no password login; journeys/m1.yaml walks every creation and login flow it carries |
+| whats-new/2026-09-16.mdx:29 | Each module's errors page lists the codes | Seven modules have an errors page, and each lists the codes | scripts/build-api-reference.mjs:387 errors page only when the spec has error examples or webhooks: m1, m2, m3, p1, p2, scan-and-pay, subscription |
+| catalogue/shared (atoms) sandbox/first-fifteen-minutes.md:73, sandbox/going-live.md:91-93, glossary/sandbox.md:30-31, glossary/gateway.md:38-39 | `abdm` X-CM-ID, abha.abdm.gov.in, apissbx.abdm.gov.in | removed; dev.abdm.gov.in only | same evidence as gateway.md:58 and going-live.mdx:81-82 |
 
 ### Handoff
 
@@ -462,81 +484,72 @@ Paths below are relative to site/docs/. Specs are catalogue/openapi/hiecm/v3/. L
 | --- | --- | --- | --- | --- |
 | _glossary/_hiecm.mdx:90 | Purpose codes are a subset of HL7 v3 PurposeOfUse | 0 | 0 | CORRECT to "The codes are ..." (unsourced, not contradicted) |
 | _glossary/_shared.mdx:18 | ABHA address is "self-declared" | 0 | 0 | CORRECT, remove "self-declared" (KYC label wording) |
-| _glossary/_shared.mdx:34 | HTC reviews integrations for production onboarding | 0 (13 base64 noise) | 2 (noise) | KEEP flagged, onboarding process |
+| _glossary/_shared.mdx:34 | HTC reviews integrations for production onboarding | 0 (13 base64 noise) | 2 (noise) | KEEP flagged (onboarding process, not in the final set) |
 | _glossary/_shared.mdx:54 | Demographic authentication "for government entities only" | 18 (none relevant) | 16 | DELETE clause (business guidance) |
 | _glossary/_shared.mdx:66 | ABHA OTP valid for 10 minutes, stated generally | 1 | 6 | KEEP flagged (Concern 9: sourced only for Find ABHA; timer) |
-| _glossary/_shared.mdx:72-74, 88-90 | Safe to Host, WASA, CERT-In auditor | 0/0/0 | 0/0/0 | KEEP flagged, onboarding process |
+| _glossary/_shared.mdx:72-74, 88-90 | Safe to Host, WASA, CERT-In auditor | 0/0/0 | 0/0/0 | KEEP flagged (onboarding process, not in the final set) |
 | _glossary/_shared.mdx:82 | txnId "short lived and single purpose", "stops working once the flow finishes or expires" | 0 | 0 | DELETE both clauses (timer, unsourced) |
-| hiecm/v3/concepts/callback-authenticity.md:4, 18, 38-40 | "ABDM signs its callbacks" / "How ABDM signs what it sends" / keys "verify those signatures" | 0 relevant | 0 | CORRECT to "declare bearer authentication" / "authenticates". Borderline API: specs declare bearerAuth (a JWT), not contradicted; that certs keys sign the JWT is inference (Concern 1) |
-| hiecm/v3/concepts/participants/citizen.md:24 | Address: "or you are issued a default" | 0 relevant | suggestion API only | CORRECT to "You choose it" |
-| hiecm/v3/concepts/participants/citizen.md:27-28 | Address from mobile, name, "age" and gender | yes | yes (day/month/yearOfBirth) | CORRECT "age" to "date of birth". Borderline API (prose, not a field name) |
+| hiecm/v3/concepts/participants/citizen.md:24 | Address: "or you are issued a default" | 0 relevant | suggestion API only | CORRECT to "You choose it" (a default address is not in the spec) |
 | hiecm/v3/concepts/participants/citizen.md:28 | Profile "self declared and carries no KYC" | 0 | 0 | DELETE (KYC label) |
-| hiecm/v3/concepts/participants/citizen.md:46-47 | Revoking stops sharing "immediately" | 0 | 0 | CORRECT, remove "immediately" |
+| hiecm/v3/concepts/participants/citizen.md:46-47 | Revoking stops sharing "immediately" | 0 | 0 | CORRECT, remove "immediately" (timing has no source) |
 | hiecm/v3/concepts/participants/doctor.md:27 | HPID sample `71-2665-5777-XXXX` | 0 | 0 | CORRECT to `71-1********-0212` (example value) |
 | hiecm/v3/concepts/participants/doctor.md:30-32 | Role code 1/2/3 meanings | 0 | 0 | DELETE (role codes) |
-| hiecm/v3/concepts/participants/doctor.md:44-45 | Degree and registration certificate "Both are mandatory" | 0 | 0 | CORRECT, remove "Both are mandatory" |
-| hiecm/v3/concepts/participants/doctor.md:48-50 | "With role 2 or role 3"; "create call takes an HPR token in the header" | 0 | 0 | CORRECT to "create call and submit call both take an `x-hprid-auth` header" (header name applied; role wording left) |
-| hiecm/v3/concepts/participants/doctor.md:62-63 | Blocked until someone with "facility manager rights" exists | 0 | 0 | CORRECT to "a person with an HPR ID" |
+| hiecm/v3/concepts/participants/doctor.md:44-45 | Degree and registration certificate "Both are mandatory" | 0 | 0 | CORRECT, remove "Both are mandatory" (document mandate) |
+| hiecm/v3/concepts/participants/doctor.md:48-50 | "With role 2 or role 3"; "create call takes an HPR token in the header" | 0 | 0 | CORRECT, remove "With role 2 or role 3" (role guidance; the header wording is applied) |
+| hiecm/v3/concepts/participants/doctor.md:62-63 | Blocked until someone with "facility manager rights" exists | 0 | 0 | CORRECT to "a person with an HPR ID" (role guidance) |
 | hiecm/v3/concepts/participants/hospital.md:22 | "a 6 digit value on deduplicate search" | 3 | 4 | CORRECT to "a numeric value such as `69765`" (example value) |
-| hiecm/v3/concepts/participants/hospital.md:35-37 | A clinician needs facility manager rights before registering | 0 | 0 | CORRECT to "registering the facility needs one of them" |
-| hiecm/v3/concepts/participants/hospital.md:48 | "This is mandatory for every HIP" | 0 | 0 | DELETE |
+| hiecm/v3/concepts/participants/hospital.md:35-37 | A clinician needs facility manager rights before registering | 0 | 0 | CORRECT to "registering the facility needs one of them" (role guidance) |
+| hiecm/v3/concepts/participants/hospital.md:48 | "This is mandatory for every HIP" | 0 | 0 | DELETE (mandate) |
 | hiecm/v3/concepts/participants/hospital.md:49-50 | "Validate the consent, then encrypt, sign and push ... inside the 20 minute window" | 0 | 0 | CORRECT to "Encrypt and push the records." (timer, who validates consent) |
 | hiecm/v3/concepts/participants/hospital.md:55-57 | HFR benefits: trusted identity, search listing, licence, empanelment | 0 | 0 | DELETE (and drop "On the exchange itself,") |
 | hiecm/v3/concepts/participants/insurer.md:31-34 | HFR lists hospitals, clinics, labs, imaging, pharmacies, blood banks | Hospital, Blood Bank, Imaging Center only | same | CORRECT to "facility types such as hospitals, imaging centres and blood banks" (facility type list) |
-| hiecm/v3/concepts/participants/insurer.md:35-36 | M4 is required for an HIU | 0 | 0 | CORRECT to "Ask which entry you register against before you plan M4 work." |
+| hiecm/v3/concepts/participants/insurer.md:35-36 | M4 is required for an HIU | 0 | 0 | CORRECT to "Ask which entry you register against before you plan M4 work." (role guidance) |
 | hiecm/v3/concepts/participants/lab.md:19-21 | HFR lists diagnostic labs and imaging alongside hospitals, clinics, pharmacies | Imaging Center, Hospital only | same | DELETE clause (facility type list) |
-| hiecm/v3/concepts/participants/lab.md:27-29 | Imaging or diagnostic centre need not submit infrastructure or bed counts | 0 | 0 | DELETE |
-| hiecm/v3/concepts/participants/lab.md:42-44 | All eight record types mandatory for an HMIS | 0 | 0 | DELETE |
+| hiecm/v3/concepts/participants/lab.md:27-29 | Imaging or diagnostic centre need not submit infrastructure or bed counts | 0 | 0 | DELETE (per-type rules, not in the M4 schema) |
+| hiecm/v3/concepts/participants/lab.md:42-44 | All eight record types mandatory for an HMIS | 0 | 0 | DELETE (mandate) |
 | hiecm/v3/concepts/participants/lab.md:46-47 | Split CT/MRI and stream inside the 20 minute window | 0 | 0 | DELETE paragraph (timer) |
-| hiecm/v3/concepts/participants/lab.md:55-57 | Registry benefits list | 0 | 0 | DELETE |
+| hiecm/v3/concepts/participants/lab.md:55-57 | Registry benefits list | 0 | 0 | DELETE (benefits prose) |
 | hiecm/v3/concepts/participants/nha.md:34 | Facility ID for hospital, clinic, laboratory, imaging centre or pharmacy | Hospital, Imaging Center, Blood Bank | same | CORRECT to "hospital, imaging centre, blood bank or other facility" (facility type list) |
 | hiecm/v3/concepts/participants/nha.md:37 | Sandbox gives test identities and milestone certification | 14/0 | 3/0 | CORRECT to "Client credentials" (process) |
 | hiecm/v3/concepts/participants/nha.md:53-54 | "One certification path covers going live" | 0 | 0 | DELETE (certification) |
 | hiecm/v3/concepts/participants/pharmacy.md:20-21 | HFR lists pharmacies alongside hospitals, clinics, labs | no Pharmacy type | no | DELETE clause (facility type list) |
 | hiecm/v3/concepts/participants/pharmacy.md:26 | Pharmacy appears "as a facility type" | no Pharmacy type | no | CORRECT to "as pharmacy details in the detailed information layer" (facility type list; flag half applied) |
-| hiecm/v3/concepts/participants/pharmacy.md:28-29 | Pharmacy need not submit infrastructure or bed counts | 0 | 0 | DELETE |
+| hiecm/v3/concepts/participants/pharmacy.md:28-29 | Pharmacy need not submit infrastructure or bed counts | 0 | 0 | DELETE (per-type rules, not in the M4 schema) |
 | hiecm/v3/concepts/participants/pharmacy.md:43-44 | Prescription Record follows Pharmacy Council of India guidelines | 0 | 0 | KEEP flagged (FHIR profile scope) |
-| hiecm/v3/concepts/participants/pharmacy.md:53-56 | Registry benefits list | 0 | 0 | DELETE |
+| hiecm/v3/concepts/participants/pharmacy.md:53-56 | Registry benefits list | 0 | 0 | DELETE (benefits prose) |
 | hiecm/v3/concepts/participants/phr.md:34-35 | Deep link listing: app name, Play Store URL, App Store URL at sandbox exit | 0 | 0 | DELETE paragraph (process) |
 | hiecm/v3/concepts/participants/phr.md:45-46 | Accepting uploads makes you a health locker, needs M2 | 0 | 0 | DELETE (role guidance) |
-| hiecm/v3/concepts/participants/phr.md:55 | HIE-CM notifies when a care context is "created" or updated | yes | yes (hiecm-subscription.yaml:1217 "linked or updated") | CORRECT "created" to "linked". Borderline API (description prose, not an enum) |
 | hiecm/v3/getting-started/build-it-well.mdx:33 | Cost of skipping ABHA format `400 {"loginId": "LoginId is invalid"}` | 0 | 0 | DELETE, now "A failed call" (fix-E direct; sandbox-run anecdote) |
-| hiecm/v3/getting-started/build-it-well.mdx:36 | Aadhaar number 12 digits, no spaces | 0 | 0 | DELETE row |
+| hiecm/v3/getting-started/build-it-well.mdx:36 | Aadhaar number 12 digits, no spaces | 0 | 0 | DELETE row (Aadhaar number format, not in the set) |
 | hiecm/v3/getting-started/build-it-well.mdx:78 | Request an OTP: rate limited, retry loop causes lockout | 42/0 | 33/0 | CORRECT to "Each request sends the person a new OTP" (rate-limit prose) |
-| hiecm/v3/getting-started/build-it-well.mdx:79 | Verify an OTP: OTP and txnId both single use | 0 | 0 | DELETE row |
-| hiecm/v3/getting-started/build-it-well.mdx:81 | "ABDM repeats callbacks" | 0 | 0 | CORRECT to "Deduplicate on the id the callback carries before you apply any effect" |
-| hiecm/v3/getting-started/build-it-well.mdx:95 | Wait example "thirty minutes" | 0 | 0 | CORRECT, remove example (timer, screen copy) |
+| hiecm/v3/getting-started/build-it-well.mdx:79 | Verify an OTP: OTP and txnId both single use | 0 | 0 | DELETE row (single use rule, not in the set) |
+| hiecm/v3/getting-started/build-it-well.mdx:81 | "ABDM repeats callbacks" | 0 | 0 | CORRECT to "Deduplicate on the id the callback carries before you apply any effect" (retry behaviour, not in the set) |
+| hiecm/v3/getting-started/build-it-well.mdx:95 | Wait example "thirty minutes" | 0 | 0 | QUESTION for the content session: keep, reword or delete? (timer, screen copy) |
 | hiecm/v3/getting-started/build-it-well.mdx:107 | Say upfront when the account will be restricted | 0 relevant | 0 | DELETE row (screen rule) |
 | hiecm/v3/getting-started/build-it-well.mdx:108 | Answer scan and share inside thirty seconds | 0 | 0 | DELETE row (timer) |
-| hiecm/v3/getting-started/build-it-well.mdx:113 | "The first four are journey specific" | - | - | CORRECT to "first two" once rows 107-108 go |
-| hiecm/v3/getting-started/build-it-well.mdx:128-130 | Editable "Only on a Self-Declared profile" | 0 / kycVerified 38 | 0 / 22 | CORRECT to "Only when `kycVerified` is false" (KYC label) |
+| hiecm/v3/getting-started/build-it-well.mdx:113 | "The first four are journey specific" | - | - | CORRECT to "first two" once rows 107-108 go (the count follows those deletions) |
 | hiecm/v3/getting-started/build-it-well.mdx:138 | "where NHA holds them" | - | - | Voice defect (Concern 8) |
-| hiecm/v3/getting-started/build-it-well.mdx:140-143 | "KYC verified profile" link text | 0 / 14 | 0 / 12 | CORRECT to "profile with `kycVerified` true" |
-| hiecm/v3/getting-started/build-it-well.mdx:143-146 | Self-Declared profile typed by the person, becomes KYC verified in place on linking an ABHA number | 0 | 0 | CORRECT to "profile with `kycVerified` false was not proved against Aadhaar, so it is correctable"; delete in-place upgrade clause |
-| hiecm/v3/getting-started/build-with-ai.mdx:57 | Scaffold and debug skills "exist for M1 to M3" | - | - | CORRECT to "every HIE-CM module" (fix-E direct). Site fact about skills, not API |
 | hiecm/v3/getting-started/build-with-ai.mdx:69 | "NHA's v3" | - | - | Voice defect (Concern 8) |
-| hiecm/v3/getting-started/build-with-ai.mdx:70 | "the bare digits are refused" | present (dash format) | refusal 0 | CORRECT, remove clause (unsourced refusal) |
-| hiecm/v3/getting-started/first-fifteen-minutes.mdx:52-53 | 401 on session call "usually means the credentials or the `X-CM-ID` header" | 279 | 401 description: no valid credentials or expired token | CORRECT to "means the request carried no valid credentials". Borderline API (X-CM-ID as a cause is unsourced, not contradicted) |
+| hiecm/v3/getting-started/build-with-ai.mdx:70 | "the bare digits are refused" | present (dash format) | refusal 0 | QUESTION for the content session: keep, reword or delete? (unsourced refusal) |
 | hiecm/v3/getting-started/first-fifteen-minutes.mdx:56-58 | Runner uses RSA-OAEP, the only RSA a browser offers, digest a control | 5/6 | 2/2 | CORRECT to "encrypts it with RSA under the public certificate" (crypto padding) |
-| hiecm/v3/getting-started/going-live.mdx:25 | "They are not your sandbox values" | 0 | 0 | CORRECT, delete sentence |
+| hiecm/v3/getting-started/going-live.mdx:25 | "They are not your sandbox values" | 0 | 0 | CORRECT, delete sentence (credential shape, not in the set) |
 | hiecm/v3/getting-started/going-live.mdx:42-47 | Empanelled agencies run functional testing and security audit; functional report and certificate; security audit produces Safe to Host certificate | 0 | 0 | KEEP flagged (certification, abdm.gov.in/FAQ and sandbox docs, not the final set) |
 | hiecm/v3/getting-started/going-live.mdx:49-50 | Demonstrate built functionality to the integration team before testing | 0 | 0 | KEEP flagged (certification) |
 | hiecm/v3/getting-started/going-live.mdx:52-61 | Exit form with four uploads: functional report and certificate (empanelled agency), security audit report (CERT-In empanelled auditor), signed undertaking, other documents | 0 | 0 | KEEP flagged (certification) |
 | hiecm/v3/getting-started/going-live.mdx:63-64 | Confirm report and undertaking format with the integration team | 0 | 0 | KEEP flagged (certification) |
 | hiecm/v3/getting-started/going-live.mdx:70-72 | Committee records its decision in four review stages, each with reviewer and date | 0 | 0 | DELETE (unrecorded sandbox observation) |
-| hiecm/v3/getting-started/going-live.mdx:83 | Production client id against a sandbox host, or the reverse, fails | 0 | 0 | DELETE |
+| hiecm/v3/getting-started/going-live.mdx:83 | Production client id against a sandbox host, or the reverse, fails | 0 | 0 | DELETE (environment behaviour, not in the set) |
 | hiecm/v3/getting-started/sandbox.mdx:21-33 | Six stages, Health Tech Committee approval, stage 2 ordering | 0 | 0 | KEEP flagged (process, Concern 2) |
 | hiecm/v3/getting-started/security-audit.mdx:4, 14-17 | Every app passes a WASA audit, producing a Safe to Host certificate uploaded with the exit form | 0 | 0 | KEEP flagged (whole page is certification, outside the final set) |
-| hiecm/v3/getting-started/security-audit.mdx:21-25 | In short: separate from functional, CERT-In auditor, staging URL, one audit per platform, in-date certificate covers a new module | 0 | 0 | KEEP flagged |
+| hiecm/v3/getting-started/security-audit.mdx:21-25 | In short: separate from functional, CERT-In auditor, staging URL, one audit per platform, in-date certificate covers a new module | 0 | 0 | KEEP flagged (certification, outside the final set) |
 | hiecm/v3/getting-started/security-audit.mdx:29-30 | Build modules before applying | - | - | KEEP (generic) |
-| hiecm/v3/getting-started/security-audit.mdx:34-35 | CERT-In empanelled list link | 0 | 0 | KEEP flagged |
-| hiecm/v3/getting-started/security-audit.mdx:39-47 | Audit on staging carries into production; one audit per platform; shared ABHA base URL audit does not cover mobile apps | 0 / 10 unrelated | 0 / 7 unrelated | KEEP flagged |
-| hiecm/v3/getting-started/security-audit.mdx:51-58 | Scope table by situation | 0 | 0 | KEEP flagged |
-| hiecm/v3/getting-started/security-audit.mdx:62-64 | Re-audit on major or backend change; certificate expiry | 0 | 0 | KEEP flagged |
-| hiecm/v3/getting-started/security-audit.mdx:68-77 | How you know it worked; three failure modes | 0 | 0 | KEEP flagged |
-| hiecm/v3/milestones/index.mdx:57 | "many products do exactly that and never build M4" | 0 | 0 | DELETE clause |
+| hiecm/v3/getting-started/security-audit.mdx:34-35 | CERT-In empanelled list link | 0 | 0 | KEEP flagged (certification, outside the final set) |
+| hiecm/v3/getting-started/security-audit.mdx:39-47 | Audit on staging carries into production; one audit per platform; shared ABHA base URL audit does not cover mobile apps | 0 / 10 unrelated | 0 / 7 unrelated | KEEP flagged (certification, outside the final set) |
+| hiecm/v3/getting-started/security-audit.mdx:51-58 | Scope table by situation | 0 | 0 | KEEP flagged (certification, outside the final set) |
+| hiecm/v3/getting-started/security-audit.mdx:62-64 | Re-audit on major or backend change; certificate expiry | 0 | 0 | KEEP flagged (certification, outside the final set) |
+| hiecm/v3/getting-started/security-audit.mdx:68-77 | How you know it worked; three failure modes | 0 | 0 | KEEP flagged (certification, outside the final set) |
+| hiecm/v3/milestones/index.mdx:57 | "many products do exactly that and never build M4" | 0 | 0 | DELETE clause (market claim) |
 | hiecm/v3/milestones/index.mdx:101 | "None of the above leaves sandbox until the clinic is a registered facility and its doctors hold professional IDs" | 0 | 0 | CORRECT to "Enrol the clinic as a facility and its doctors as professionals, then link your software to the facility." (process) |
-| hiecm/v3/milestones/index.mdx:124 | P1 "manages ... her family members" | 1 (unrelated) | 1 | DELETE. Borderline API (capability absent from every spec) |
 | hiecm/v3/milestones/index.mdx:124 | Card and QR code kept under P1 though `phrCard`/`qrCode` sit in the P2 spec | 10/17 | 3/5 | KEEP flagged (Concern 7) |
 | hiecm/v3/milestones/index.mdx:172 | M2 needed by "a citizen pushing their own" | 0 | 0 | DELETE clause (role guidance) |
 | hiecm/v3/milestones/index.mdx:173 | M3 needed by "every PHR app" | 0 | 0 | DELETE clause (role guidance) |
@@ -546,7 +559,5 @@ Paths below are relative to site/docs/. Specs are catalogue/openapi/hiecm/v3/. L
 | hiecm/v3/reference/data-dictionary.md:47-61 | Abbreviations: HTC reviews integration at the end of exit; WASA produces Safe to Host certificate | 0 | 0 | KEEP flagged (certification) |
 | hiecm/v3/reference/data-dictionary.md:96-648 | Per-table column transcriptions (sd_login to awsdms_apply_exceptions, incl. sd_exit 279, wasa_dhis_initiation_details 376) | 0 | 0 | KEEP flagged (Concern 3) |
 | hiecm/v3/reference/data-dictionary.md:649-743 | Backup copies, indexes, what is not transcribed, what the page does not tell you | 0 | 0 | KEEP flagged (Concern 3) |
-| whats-new/2026-09-16.mdx:23 | Every way to create an ABHA and every way to log in has its own sequence | 1 | 1 | CORRECT (password login excepted) (fix-E direct). Site fact about reference pages, not API |
-| whats-new/2026-09-16.mdx:29 | Each module's errors page lists the codes | - | 7 of 11 modules have errors.md | CORRECT to "Modules whose specifications return error examples have an errors page" (fix-E direct). Site fact, not API |
 | support/index.md:20 (not an assigned page) | sandboxsupport.abdm.gov.in | 0 | 11 (only in injected info.contact) | KEEP flagged (fix-E Concern 2: same shape as the M4 gateway-token line, may need that ruling) |
 | support/index.md:25 (not an assigned page) | integration.support@nha.gov.in | 0 | 0 | KEEP flagged (contact channel) |
