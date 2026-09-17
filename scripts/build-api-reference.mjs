@@ -64,6 +64,36 @@ const label = (text) =>
     .join(' ');
 
 
+// The `action` a recorded code carries is the thing a reader holding that code
+// came for, so it groups the table instead of repeating down a column of its
+// own. No code in any specification records which endpoint returns it, so the
+// action is the only axis there is to group on.
+const UNCLASSIFIED = 'Unclassified';
+
+// Markdown links in the value flatten to their text, which merges the
+// `Chase the [HIP](...)` that M2 writes for one code with the plain
+// `Chase the HIP` it writes for four others.
+const actionOf = (row) =>
+  String(row.action ?? '')
+    .replace(/\[([^\]]+)\]\([^)]*\)/g, '$1')
+    .replace(/\s+/g, ' ')
+    .trim() || UNCLASSIFIED;
+
+/** Groups by action, biggest first, with Unclassified always last. */
+function groupByAction(rows) {
+  const groups = new Map();
+  for (const row of rows) {
+    const action = actionOf(row);
+    if (!groups.has(action)) groups.set(action, []);
+    groups.get(action).push(row);
+  }
+  return [...groups].sort((a, b) => {
+    if (a[0] === UNCLASSIFIED) return 1;
+    if (b[0] === UNCLASSIFIED) return -1;
+    return b[1].length - a[1].length;
+  });
+}
+
 const slug = (s) =>
   s
     .replace(/[^a-zA-Z0-9]+/g, '-')
@@ -716,7 +746,7 @@ for (const {platform, version, files} of tree) {
         'hide_table_of_contents: true',
         'hide_title: true',
         'wrapperClassName: api-doc',
-        `source: ${module.file}`,
+          `source: ${module.file}`,
         'generated: true',
         '---',
         '',
@@ -1061,19 +1091,20 @@ for (const {platform, version, files} of tree) {
           lines.push(block.source);
           lines.push('');
         }
-        const withHttp = codes.some((c) => c.http !== undefined);
-        lines.push(
-          withHttp ? '| Code | HTTP | Message | What to do |' : '| Code | Message | What to do |',
-        );
-        lines.push(withHttp ? '| --- | --- | --- | --- |' : '| --- | --- | --- |');
-        for (const entry of codes) {
-          const cells = [`\`${entry.code}\``];
-          if (withHttp) cells.push(entry.http ?? '');
-          cells.push((entry.message ?? '').replace(/\|/g, '\\|'));
-          cells.push(entry.action ?? '');
-          lines.push(`| ${cells.join(' | ')} |`);
+        for (const [action, group] of groupByAction(codes)) {
+          lines.push(`### ${action}`);
+          lines.push('');
+          const withHttp = group.some((c) => c.http !== undefined);
+          lines.push(withHttp ? '| Code | HTTP | Message |' : '| Code | Message |');
+          lines.push(withHttp ? '| --- | --- | --- |' : '| --- | --- |');
+          for (const entry of group) {
+            const cells = [`\`${entry.code}\``];
+            if (withHttp) cells.push(entry.http ?? '');
+            cells.push((entry.message ?? '').replace(/\|/g, '\\|'));
+            lines.push(`| ${cells.join(' | ')} |`);
+          }
+          lines.push('');
         }
-        lines.push('');
       }
     }
     lines.push(
@@ -1131,17 +1162,26 @@ for (const {platform, version, files} of tree) {
           lines.push(String(block.source).replace(/\s+/g, ' ').trim());
           lines.push('');
         }
-        const withHttp = rows.some((row) => row.http !== undefined);
-        lines.push(withHttp ? '| Code | HTTP | Message | What to do |' : '| Code | Message | What to do |');
-        lines.push(withHttp ? '| --- | --- | --- | --- |' : '| --- | --- | --- |');
-        for (const row of rows) {
-          const cells = [`\`${row.code}\``];
-          if (withHttp) cells.push(row.http ?? '');
-          cells.push((row.message ?? '').replace(/\|/g, '\\|'));
-          cells.push(row.action ?? '');
-          lines.push(`| ${cells.join(' | ')} |`);
+        for (const [action, group] of groupByAction(rows)) {
+          lines.push(`### ${action}`);
+          lines.push('');
+          if (action === UNCLASSIFIED) {
+            lines.push(
+              'The rule that reads the message could not classify these. Read the message and decide.',
+            );
+            lines.push('');
+          }
+          const withHttp = group.some((row) => row.http !== undefined);
+          lines.push(withHttp ? '| Code | HTTP | Message |' : '| Code | Message |');
+          lines.push(withHttp ? '| --- | --- | --- |' : '| --- | --- |');
+          for (const row of group) {
+            const cells = [`\`${row.code}\``];
+            if (withHttp) cells.push(row.http ?? '');
+            cells.push((row.message ?? '').replace(/\|/g, '\\|'));
+            lines.push(`| ${cells.join(' | ')} |`);
+          }
+          lines.push('');
         }
-        lines.push('');
       }
     }
 

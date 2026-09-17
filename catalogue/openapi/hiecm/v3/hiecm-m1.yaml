@@ -5726,9 +5726,7 @@ x-abdm-errors:
     ```
 
     A numeric code, not an `ABDM-` code, plus a `description` field the other shapes lack. This comes from the API gateway in front of the ABHA service, before your request reaches the business logic. It almost always means the `Authorization` header is wrong or expired.
-  source: Code, message and error name are as published. The action column reads
-    the message text by a documented rule, and says Unclassified where the rule
-    could not classify one.
+  source: Code, message and error name are as published. The heading each code sits under reads the message text by a documented rule, and says Unclassified where the rule could not classify one.
   codes:
   - code: ABDM-1001
     message: Subscription source update returned empty

@@ -167,7 +167,7 @@ succeeds unchanged.
 
 ### Codes
 
-The ranges below, with examples. The full list is in the sandbox documentation for the healthcare professional registry. Code, message and error name are as published. The action column reads the message text by a documented rule, and says Unclassified where the rule could not classify one.
+The ranges below, with examples. The full list is in the sandbox documentation for the healthcare professional registry. Code, message and error name are as published. The heading each code sits under reads the message text by a documented rule, and says Unclassified where the rule could not classify one.
 
 | Code | Message | What to do |
 | --- | --- | --- |

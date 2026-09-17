@@ -22,6 +22,7 @@ Three things must already be true, each checkable:
 - You hold a gateway session token from the sessions endpoint
   (gateway_sessions_create in the gateway reference).
 - The patient has an ABHA address, which is the M1 module's job.
+- After any change to your bridge URL, prove delivery with one round trip before anything else, because the gateway keeps one URL per client id, the last write wins, and nothing reads it back. See `hiecm.concept.bridge-url-ownership`.
 
 **Act: the calls in this flow, in order**
 
@@ -51,9 +52,11 @@ curl -X POST 'https://dev.abdm.gov.in/api/hiecm/hip/v3/link/carecontext' \
   -H 'REQUEST-ID: <FRESH_UUID>' \
   -H 'TIMESTAMP: <ISO_8601_TIMESTAMP>' \
   -H 'X-CM-ID: sbx' \
+  -H 'X-HIP-ID: <YOUR_HIP_ID>' \
+  -H 'X-Link-Token: <LINK_TOKEN_FROM_ON_GENERATE_TOKEN>' \
   -H 'Content-Type: application/json' \
   -d '{
-    "abhaNumber": "<PATIENT_ABHA_NUMBER_14_DIGITS>",
+    "abhaNumber": "<PATIENT_ABHA_NUMBER_14_DIGITS_NO_DASHES>",
     "abhaAddress": "<PATIENT_ABHA_ADDRESS>",
     "patient": [
       {
@@ -65,7 +68,7 @@ curl -X POST 'https://dev.abdm.gov.in/api/hiecm/hip/v3/link/carecontext' \
             "display": "<WHAT_THE_PATIENT_WILL_SEE>"
           }
         ],
-        "hiType": ["<HI_TYPE>"],
+        "hiType": "<HI_TYPE>",
         "count": 1
       }
     ]
@@ -73,6 +76,10 @@ curl -X POST 'https://dev.abdm.gov.in/api/hiecm/hip/v3/link/carecontext' \
 ```
 
 #### Link Care Context Notify (`hiecm.endpoint.m2-link-care-context-notify`)
+
+Send this at least five seconds after the link callback, and on an `ERRORED` acknowledgement carrying `ABDM-1006` retry at 5, 15 and 60 seconds, because the link takes a few seconds to become visible to the notify path. See `hiecm.concept.context-notify-timing`.
+
+Have the record ready to serve before you link it, because within about ten seconds of a successful notify the patient's PHR app requests it itself. See `hiecm.concept.linking-triggers-self-fetch`.
 
 ```bash
 curl -X POST 'https://dev.abdm.gov.in/api/hiecm/hip/v3/link/context/notify' \

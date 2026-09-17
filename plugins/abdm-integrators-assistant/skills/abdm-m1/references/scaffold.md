@@ -8,6 +8,58 @@ Every flow below is an OODA loop, not a recipe: observe the actual state (last r
 
 Loop limit: 8 passes per flow step. Hitting the limit is an escalation: state what was observed, what was tried, and which atom to read, then ask one question.
 
+## Before the flows: five questions about the deployment
+
+M1 carries around forty operations, and no deployment needs all of them. The
+routes do not change per integrator. The context does. So open by asking these
+five questions, and build only the routes the answers light up.
+
+Ask all five before writing any code. Each answer is a yes or a no, and each
+yes adds a route rather than replacing one.
+
+| Ask | A yes adds |
+|---|---|
+| 1. Is this a government integrator? | The demographic route: one call, no OTP. It is mandatory for a government integrator, and a private integrator is not asked for it. See `hiecm.flow.m1-create-abha-demographic-auth` |
+| 2. Does your record already hold the patient's mobile at check-in? | No route, and it takes a screen away. The identifier screen disappears and the lookup is submitted from the number you already hold. See `hiecm.flow.m1-login-by-mobile` |
+| 3. Is the facility registered, with a callback ABDM can reach? | Scan and Share, which then becomes the default desk experience: zero OTPs and zero questions at the counter. See `hiecm.endpoint.m1-receive-patient-share` |
+| 4. Is a fingerprint or iris reader at the desk? | The `bio` authentication method. See `hiecm.endpoint.m1-enrolment-capture-pid` |
+| 5. Do patients arrive with the ABHA app on their phone? | The face route, worth offering as a second method rather than a first. See `hiecm.flow.m1-create-abha-face-auth` |
+
+**The same answers give you the screen set.**
+
+| Screen | Build it when |
+|---|---|
+| Identifier entry | Question 2 is no. A yes removes this screen |
+| Auth method chooser | Two or more of questions 1, 4 and 5 are yes. A single method needs no chooser |
+| OTP entry | Any surviving route sends an OTP. Scan and Share on its own does not |
+| Account chooser | Always. One mobile carries several ABHA accounts, and a shared handset is ordinary rather than an edge case |
+| Filled registration form | Always. It is the destination of every route, and the reason the others exist |
+
+**Four things hold under every combination of answers.**
+
+- Every identifier starts on the login path, Aadhaar included. Reading "no account on this number" as "this person has no ABHA" is what leaves somebody holding two ABHA numbers, and no M1 operation merges them afterwards.
+- A login verification that returns `refreshToken` has returned the final user token: use it directly. One without `refreshToken` is a 300 second transfer token: exchange it at the account selection call, whatever the length of the accounts array. See `hiecm.endpoint.m1-login-verify`.
+- The profile is the point. Fetch it before the receptionist types, so the registration form opens filled and is read back rather than entered.
+- An ABHA is optional to your record. A person may decline, and registration completes without one.
+
+Read `hiecm.concept.m1-journey-design` for a worked default journey and the
+rest of what holds regardless.
+
+**One lookup costs nothing and is worth running first.** Searching for an ABHA
+number answers whether an account exists in one call, with no OTP sent. See
+`hiecm.endpoint.m1-login-search`. It reaches accounts that are KYC verified and
+hold an ABHA number, so a miss narrows the question rather than settling it.
+
+Loop limit: 1 pass per question. An unanswered question is an escalation: ask
+the integrator rather than assuming a no, because a wrong assumption here is a
+route built or a route missing for the life of the integration.
+
+**Exit condition (Observe until this is true)**
+
+You hold a yes or a no for all five questions, and you have named the routes
+and screens the answers selected. Restate that list to the integrator before
+the first call, because it is the scope of everything below.
+
 ## Flows
 
 ### Create an ABHA using an Aadhaar OTP (`hiecm.flow.m1-create-abha-aadhaar-otp`)
@@ -50,7 +102,7 @@ curl -X POST 'https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/enrol/byAadhaar
   -H 'REQUEST-ID: <FRESH_UUID>' \
   -H 'TIMESTAMP: <ISO_8601_TIMESTAMP>' \
   -H 'BENEFIT_NAME: <BENEFIT_SCHEME_NAME>' \
-  -H 'X-token: <X_TOKEN_FROM_LOGIN_VERIFY>' \
+  -H 'X-token: Bearer <X_TOKEN_FROM_LOGIN_VERIFY>' \
   -H 'Content-Type: application/json' \
   -d '{
   "authData": {
@@ -238,7 +290,7 @@ curl -X GET 'https://abhasbx.abdm.gov.in/abha/api/v3/profile/account' \
   -H 'Authorization: Bearer <ACCESS_TOKEN>' \
   -H 'REQUEST-ID: <FRESH_UUID>' \
   -H 'TIMESTAMP: <ISO_8601_TIMESTAMP>' \
-  -H 'X-token: <X_TOKEN_FROM_LOGIN_VERIFY>'
+  -H 'X-token: Bearer <X_TOKEN_FROM_LOGIN_VERIFY>'
 ```
 
 #### Get the ABHA QR code (`hiecm.endpoint.m1-profile-get-qr-code`)
@@ -248,7 +300,7 @@ curl -X GET 'https://abhasbx.abdm.gov.in/abha/api/v3/profile/account/qrCode' \
   -H 'Authorization: Bearer <ACCESS_TOKEN>' \
   -H 'REQUEST-ID: <FRESH_UUID>' \
   -H 'TIMESTAMP: <ISO_8601_TIMESTAMP>' \
-  -H 'X-token: <X_TOKEN_FROM_LOGIN_VERIFY>'
+  -H 'X-token: Bearer <X_TOKEN_FROM_LOGIN_VERIFY>'
 ```
 
 **Exit condition (Observe until this is true)**
@@ -291,7 +343,7 @@ curl -X POST 'https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/enrol/byAadhaar
   -H 'REQUEST-ID: <FRESH_UUID>' \
   -H 'TIMESTAMP: <ISO_8601_TIMESTAMP>' \
   -H 'BENEFIT_NAME: <BENEFIT_SCHEME_NAME>' \
-  -H 'X-token: <X_TOKEN_FROM_LOGIN_VERIFY>' \
+  -H 'X-token: Bearer <X_TOKEN_FROM_LOGIN_VERIFY>' \
   -H 'Content-Type: application/json' \
   -d '{
   "authData": {
@@ -341,7 +393,7 @@ curl -X GET 'https://abhasbx.abdm.gov.in/abha/api/v3/profile/account' \
   -H 'Authorization: Bearer <ACCESS_TOKEN>' \
   -H 'REQUEST-ID: <FRESH_UUID>' \
   -H 'TIMESTAMP: <ISO_8601_TIMESTAMP>' \
-  -H 'X-token: <X_TOKEN_FROM_LOGIN_VERIFY>'
+  -H 'X-token: Bearer <X_TOKEN_FROM_LOGIN_VERIFY>'
 ```
 
 **Exit condition (Observe until this is true)**
@@ -414,7 +466,7 @@ curl -X POST 'https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/enrol/byAadhaar
   -H 'REQUEST-ID: <FRESH_UUID>' \
   -H 'TIMESTAMP: <ISO_8601_TIMESTAMP>' \
   -H 'BENEFIT_NAME: <BENEFIT_SCHEME_NAME>' \
-  -H 'X-token: <X_TOKEN_FROM_LOGIN_VERIFY>' \
+  -H 'X-token: Bearer <X_TOKEN_FROM_LOGIN_VERIFY>' \
   -H 'Content-Type: application/json' \
   -d '{
   "authData": {
@@ -505,7 +557,7 @@ curl -X POST 'https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/enrol/byAadhaar
   -H 'REQUEST-ID: <FRESH_UUID>' \
   -H 'TIMESTAMP: <ISO_8601_TIMESTAMP>' \
   -H 'BENEFIT_NAME: <BENEFIT_SCHEME_NAME>' \
-  -H 'X-token: <X_TOKEN_FROM_LOGIN_VERIFY>' \
+  -H 'X-token: Bearer <X_TOKEN_FROM_LOGIN_VERIFY>' \
   -H 'Content-Type: application/json' \
   -d '{
   "authData": {
@@ -532,7 +584,7 @@ curl -X GET 'https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/profile/children
   -H 'Authorization: Bearer <ACCESS_TOKEN>' \
   -H 'REQUEST-ID: <FRESH_UUID>' \
   -H 'TIMESTAMP: <ISO_8601_TIMESTAMP>' \
-  -H 'X-token: <X_TOKEN_FROM_LOGIN_VERIFY>'
+  -H 'X-token: Bearer <X_TOKEN_FROM_LOGIN_VERIFY>'
 ```
 
 #### Update fields on an ABHA profile (`hiecm.endpoint.m1-profile-update-account`)
@@ -543,7 +595,7 @@ curl -X PATCH 'https://abhasbx.abdm.gov.in/abha/api/v3/profile/account' \
   -H 'REQUEST-ID: <FRESH_UUID>' \
   -H 'TIMESTAMP: <ISO_8601_TIMESTAMP>' \
   -H 'BENEFIT_NAME: <BENEFIT_SCHEME_NAME>' \
-  -H 'X-token: <X_TOKEN_FROM_LOGIN_VERIFY>' \
+  -H 'X-token: Bearer <X_TOKEN_FROM_LOGIN_VERIFY>' \
   -H 'Content-Type: application/json' \
   -d '{
   "abhaNumber": "<ABHA_NUMBER>",
@@ -642,9 +694,6 @@ curl -X POST 'https://abhasbx.abdm.gov.in/abha/api/v3/profile/login/verify' \
   -H 'Authorization: Bearer <ACCESS_TOKEN>' \
   -H 'REQUEST-ID: <FRESH_UUID>' \
   -H 'TIMESTAMP: <ISO_8601_TIMESTAMP>' \
-  -H 'BENEFIT_NAME: <BENEFIT_SCHEME_NAME>' \
-  -H 'T-token: <T_TOKEN_FROM_LOGIN_VERIFY>' \
-  -H 'X-token: <X_TOKEN_FROM_LOGIN_VERIFY>' \
   -H 'Content-Type: application/json' \
   -d '{
   "scope": [
@@ -692,6 +741,9 @@ lookup of somebody else's identity.
 - The person's mobile number, encrypted. See
   why identifiers are encrypted (hiecm.concept.encrypted-identifiers).
 - The person present to read an OTP.
+- Send the user token as `X-token: Bearer <token>`, because a bare token is refused with `400 Invalid X-token`.
+- If the verify response carries `refreshToken` it is the final token; exchanging it answers `400 Invalid T-token`. See `hiecm.endpoint.m1-login-verify`.
+- Encrypt with the PHR key from `/v3/phr/app/login/public/certificate` for any `/v3/phr/*` path and the profile key elsewhere, because the wrong key is refused as `ABDM-1006 Invalid mobile number`. See `hiecm.concept.two-public-keys`.
 
 **Act: the calls in this flow, in order**
 
@@ -722,9 +774,6 @@ curl -X POST 'https://abhasbx.abdm.gov.in/abha/api/v3/profile/login/verify' \
   -H 'Authorization: Bearer <ACCESS_TOKEN>' \
   -H 'REQUEST-ID: <FRESH_UUID>' \
   -H 'TIMESTAMP: <ISO_8601_TIMESTAMP>' \
-  -H 'BENEFIT_NAME: <BENEFIT_SCHEME_NAME>' \
-  -H 'T-token: <T_TOKEN_FROM_LOGIN_VERIFY>' \
-  -H 'X-token: <X_TOKEN_FROM_LOGIN_VERIFY>' \
   -H 'Content-Type: application/json' \
   -d '{
   "scope": [
@@ -750,7 +799,7 @@ curl -X POST 'https://abhasbx.abdm.gov.in/abha/api/v3/profile/login/verify/user'
   -H 'Authorization: Bearer <ACCESS_TOKEN>' \
   -H 'REQUEST-ID: <FRESH_UUID>' \
   -H 'TIMESTAMP: <ISO_8601_TIMESTAMP>' \
-  -H 'T-token: <T_TOKEN_FROM_LOGIN_VERIFY>' \
+  -H 'T-token: Bearer <TRANSFER_TOKEN_FROM_LOGIN_VERIFY>' \
   -H 'Content-Type: application/json' \
   -d '{
   "ABHANumber": "<ABHA_NUMBER>",
@@ -760,8 +809,8 @@ curl -X POST 'https://abhasbx.abdm.gov.in/abha/api/v3/profile/login/verify/user'
 
 **Exit condition (Observe until this is true)**
 
-You hold an `X-token`, and a profile read with it returns the account the
-person expected.
+You hold a token with `expiresIn: 1800`, and a profile read with
+`X-token: Bearer <token>` returns the account the person expected.
 
 The token read back is the check, not the presence of a token. A token
 for the wrong account in a multi account household is the failure this
@@ -769,8 +818,8 @@ flow exists to prevent.
 
 **If it goes wrong**
 
-The verify call returns a list rather than a token. That is the multi
-account branch, not an error.
+The verify call returns a 300 second token and a list rather than a
+final token. That is the mobile OTP branch, not an error. Exchange it.
 
 The token is rejected on the next call. See
 ABDM-2401 (hiecm.error.abdm-2401), and check you are not sending the
@@ -797,7 +846,7 @@ curl -X POST 'https://abhasbx.abdm.gov.in/abha/api/v3/profile/account/request/ot
   -H 'Authorization: Bearer <ACCESS_TOKEN>' \
   -H 'REQUEST-ID: <FRESH_UUID>' \
   -H 'TIMESTAMP: <ISO_8601_TIMESTAMP>' \
-  -H 'X-token: <X_TOKEN_FROM_LOGIN_VERIFY>' \
+  -H 'X-token: Bearer <X_TOKEN_FROM_LOGIN_VERIFY>' \
   -H 'Content-Type: application/json' \
   -d '{
   "scope": [
@@ -817,7 +866,7 @@ curl -X POST 'https://abhasbx.abdm.gov.in/abha/api/v3/profile/account/verify' \
   -H 'Authorization: Bearer <ACCESS_TOKEN>' \
   -H 'REQUEST-ID: <FRESH_UUID>' \
   -H 'TIMESTAMP: <ISO_8601_TIMESTAMP>' \
-  -H 'X-token: <X_TOKEN_FROM_LOGIN_VERIFY>' \
+  -H 'X-token: Bearer <X_TOKEN_FROM_LOGIN_VERIFY>' \
   -H 'Content-Type: application/json' \
   -d '{
   "scope": [
@@ -843,7 +892,7 @@ curl -X GET 'https://abhasbx.abdm.gov.in/abha/api/v3/profile/account' \
   -H 'Authorization: Bearer <ACCESS_TOKEN>' \
   -H 'REQUEST-ID: <FRESH_UUID>' \
   -H 'TIMESTAMP: <ISO_8601_TIMESTAMP>' \
-  -H 'X-token: <X_TOKEN_FROM_LOGIN_VERIFY>'
+  -H 'X-token: Bearer <X_TOKEN_FROM_LOGIN_VERIFY>'
 ```
 
 **Exit condition (Observe until this is true)**
