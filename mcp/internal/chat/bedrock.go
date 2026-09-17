@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"strings"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	awsconfig "github.com/aws/aws-sdk-go-v2/config"
@@ -149,16 +150,29 @@ func toBedrockTools(defs []ToolDef) (*types.ToolConfiguration, error) {
 // system blocks, the question and the retrieved documentation, differs per
 // request and is not cacheable. An empty prompt gets no blocks at all: a lone
 // cache point is a request Bedrock rejects.
-func systemBlocksFor(system string) []types.SystemContentBlock {
+func systemBlocksFor(system string, cacheable bool) []types.SystemContentBlock {
 	if system == "" {
 		return nil
 	}
-	return []types.SystemContentBlock{
+	blocks := []types.SystemContentBlock{
 		&types.SystemContentBlockMemberText{Value: system},
-		&types.SystemContentBlockMemberCachePoint{
-			Value: types.CachePointBlock{Type: types.CachePointTypeDefault},
-		},
 	}
+	if cacheable {
+		blocks = append(blocks, &types.SystemContentBlockMemberCachePoint{
+			Value: types.CachePointBlock{Type: types.CachePointTypeDefault},
+		})
+	}
+	return blocks
+}
+
+// promptCacheable reports whether Bedrock accepts a cache point for the
+// model. Only Anthropic and Amazon Nova models do; every other model rejects
+// the whole request with AccessDeniedException "your request did not allow
+// prompt caching", so for those the system prompt goes without one and is
+// simply charged at the full input rate. The id may carry a cross-region
+// prefix (apac., global., us.), hence Contains rather than HasPrefix.
+func promptCacheable(modelID string) bool {
+	return strings.Contains(modelID, "anthropic.") || strings.Contains(modelID, "amazon.nova")
 }
 
 // Stream calls Bedrock's ConverseStream and drains the event stream into one
@@ -171,7 +185,7 @@ func (b *bedrockModel) Stream(ctx context.Context, system string, tools []ToolDe
 		return Reply{}, err
 	}
 
-	systemBlocks := systemBlocksFor(system)
+	systemBlocks := systemBlocksFor(system, promptCacheable(b.modelID))
 
 	out, err := b.client.ConverseStream(ctx, &bedrockruntime.ConverseStreamInput{
 		ModelId:    aws.String(b.modelID),
