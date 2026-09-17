@@ -31,13 +31,15 @@ openapi/
     hiecm-m2.yaml                live inside the module file that owns them, as
     hiecm-m3.yaml                OpenAPI 3.1 webhooks, so one file is the whole
     hiecm-m4.yaml                 contract for that module
-    hiecm-p1.yaml, -p2.yaml,      three more HIE-CM modules, plus PHR services
-      -p3.yaml, -phr-services.yaml
+    hiecm-p1.yaml to -p4.yaml,    six more HIE-CM modules
+      -subscription.yaml,
+      -scan-and-pay.yaml
+    journeys/<module>.yaml     the call order the reference and skills follow
   .raw/                       upstream NHA files, stored untouched
   corrections/                recorded patches, never silent fixes
 ```
 
-Nine module spec files exist under `hiecm/v3/` today; this skill's own
+Eleven module spec files exist under `hiecm/v3/` today; this skill's own
 scope is HIE-CM M1 to M3, and the rest are named here only so the path
 structure is not mistaken for something flatter than it is.
 

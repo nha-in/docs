@@ -53,7 +53,7 @@ One Scalar reference per OpenAPI spec file, matching the module-per-file layout 
 | `/reference/hiecm-m3` | `hiecm-m3.yaml` |
 | `/reference/hiecm-m4` | `hiecm-m4.yaml`, Phase 2, exists in the layout but says so |
 
-This skill's scope is HIE-CM M1 to M3. Three more modules and PHR services (`hiecm-p1.yaml` through `-p3.yaml`, `hiecm-phr-services.yaml`) render the same way and are out of scope here, not out of existence.
+This skill's scope is HIE-CM M1 to M3. Six more modules (`hiecm-p1.yaml` through `-p4.yaml`, `hiecm-subscription.yaml`, `hiecm-scan-and-pay.yaml`) render the same way and are out of scope here, not out of existence.
 
 Each spec file is the whole contract for its module, callbacks included as `webhooks` entries. There is no AsyncAPI file anywhere in this stack; see `openapi-ingest` for the layout and `CONVENTIONS.md`.
 
