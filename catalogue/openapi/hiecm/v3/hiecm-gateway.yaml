@@ -25,6 +25,10 @@ x-abdm-sources:
     role: upstream
     hash: sha256:d3bc599054c2570a50818ca54906c44cf652ad6f813473e8ac243667da4e9300
     fetched: "2026-09-16"
+  - file: catalogue/openapi/.raw/nha-2026-09-16/phr/PHR and Locker Swagger.yaml
+    role: upstream
+    hash: sha256:f958b8d065943503db85da430fe2a9df91dbf7edf30022ba7e36cbef45247d7e
+    fetched: "2026-09-16"
 servers:
   - url: https://dev.abdm.gov.in
     description: ABDM gateway, sandbox
@@ -36,6 +40,8 @@ tags:
     description: ""
   - name: abdm-sessions
     description: ""
+  - name: Gateway
+    description: Gateway
 paths:
   /api/hiecm/gateway/v3/bridge-services:
     get:
@@ -2043,6 +2049,84 @@ paths:
                     nullable: false
                     example: Dependent service unavailable
       x-abdm-nha-operation-id: abdm-sessions 3
+  /api/hiecm/gateway/v3/bridge-service:
+    put:
+      tags:
+        - Gateway
+      summary: v3/gateway/bridge-service
+      operationId: gateway_put_gateway_v3_bridge_service
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: REQUEST-ID
+          in: header
+          required: true
+          description: Unique UUID for each request.
+          schema:
+            type: string
+            format: uuid
+          example: 18235d89-cb13-479d-ad71-7a57d5f669a8
+        - name: TIMESTAMP
+          in: header
+          required: true
+          description: Request timestamp in UTC, ISO-8601 with Z.
+          schema:
+            type: string
+            format: date-time
+          example: "2022-10-06T15:10:00.587Z"
+        - name: X-CM-ID
+          in: header
+          required: true
+          description: Suffix of the consent manager to which the request was intended
+          schema:
+            type: string
+          example: sbx
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                bridgeId:
+                  type: string
+                serviceId:
+                  type: string
+                name:
+                  type: string
+                isHip:
+                  type: boolean
+                isHiu:
+                  type: boolean
+                isHealthLocker:
+                  nullable: true
+                isPhr:
+                  type: boolean
+                endpoints:
+                  type: object
+                  properties: {}
+                attributes:
+                  nullable: true
+                active:
+                  type: boolean
+            examples:
+              v3/gateway/bridge-service:
+                summary: Gateway › v3/gateway/bridge-service
+                value:
+                  bridgeId: "{{bridgeId}}"
+                  serviceId: "{{serviceId}}"
+                  name: TEST Gateway
+                  isHip: true
+                  isHiu: true
+                  isHealthLocker: null
+                  isPhr: false
+                  endpoints: {}
+                  attributes: null
+                  active: true
+      responses:
+        default:
+          description: No response was saved in the Postman collection and no documented definition exists.
+      x-abdm-nha-operation-id: putGatewayV3BridgeService
 components:
   securitySchemes:
     bearerAuth:

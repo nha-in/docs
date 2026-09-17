@@ -33,7 +33,19 @@ Generated from the specifications. Every scheme and header below is declared in 
 
 **bearerAuth**, `http` `bearer`. The access token from POST /api/hiecm/gateway/v3/sessions.
 
-## PHR application
+## P1 Registration and login
+
+**bearerAuth**, `http` `bearer`. The access token from POST /api/hiecm/gateway/v3/sessions.
+
+## P2 Management
+
+**bearerAuth**, `http` `bearer`. The access token from POST /api/hiecm/gateway/v3/sessions.
+
+## P3 Subscription
+
+**bearerAuth**, `http` `bearer`. The access token from POST /api/hiecm/gateway/v3/sessions.
+
+## P4 Locker
 
 **bearerAuth**, `http` `bearer`. The access token from POST /api/hiecm/gateway/v3/sessions.
 

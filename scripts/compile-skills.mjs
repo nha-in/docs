@@ -19,8 +19,11 @@ const MODULES = {
   m2: 'care contexts, HIP initiated linking, discovery, and pushing encrypted records to a requester',
   m3: 'raising a consent request, tracking it, and fetching the records it covers as an HIU',
   m4: 'creating an HPID, registering a professional on the HPR, and onboarding a facility to the HFR',
-  phr: 'the patient side: ABHA address, login, discovery, linking, consent and lockers',
-  subscription: 'subscribing an HIU to changes on an ABHA address, and health lockers',
+  p1: 'creating an ABHA address in a PHR app and logging in to it',
+  p2: 'the PHR profile, linking an ABHA number, switching profiles, and linking, sharing and consent for the patient',
+  p3: 'reading, approving, denying, enabling, disabling and updating the patient\'s subscriptions and subscription requests',
+  p4: 'setting up a health locker and listing the lockers and requests on an ABHA address',
+  subscription: 'subscribing an HIU to changes on an ABHA address',
   'scan-and-pay': 'open orders, patient selection and payment status between a facility and a PHR app',
 };
 

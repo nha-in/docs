@@ -1,5 +1,5 @@
 // scripts/ingest-nha.mjs
-// NHA's final set (catalogue/openapi/.raw/nha-2026-09-16) to the eight module
+// NHA's final set (catalogue/openapi/.raw/nha-2026-09-16) to the eleven module
 // specs. Deterministic. Only the edits listed in the design spec, each one
 // appended to the correction log this script writes.
 //   node scripts/ingest-nha.mjs          write the specs and the log
@@ -19,15 +19,29 @@ const journeysMode = process.argv.includes('--journeys');
 const METHODS = ['get', 'post', 'put', 'patch', 'delete'];
 
 const MODULES = {
-  gateway: {label: 'Gateway session', position: 1, icon: 'key-round', roles: ['his', 'phr'], title: 'ABDM gateway, sessions and bridges', summary: 'The access token every call carries, and the bridge registry.', servers: [{url: 'https://dev.abdm.gov.in', description: 'ABDM gateway, sandbox'}, {url: 'https://apis.abdm.gov.in', description: 'ABDM gateway, production'}], expected: 10},
+  gateway: {label: 'Gateway session', position: 1, icon: 'key-round', roles: ['his', 'phr'], title: 'ABDM gateway, sessions and bridges', summary: 'The access token every call carries, and the bridge registry.', servers: [{url: 'https://dev.abdm.gov.in', description: 'ABDM gateway, sandbox'}, {url: 'https://apis.abdm.gov.in', description: 'ABDM gateway, production'}], expected: 11},
   m1: {label: 'M1 ABHA identity', position: 2, icon: 'id-card', roles: ['his'], title: 'ABDM M1, ABHA identity', summary: 'Create, find, log into and manage an ABHA.', servers: [{url: 'https://abhasbx.abdm.gov.in', description: 'ABHA service, sandbox'}], expected: 30},
   m2: {label: 'M2 Linking and sharing', position: 3, icon: 'link', roles: ['his'], title: 'ABDM M2, linking and sharing as a HIP', summary: 'Link care contexts to an ABHA address and share records when consent arrives.', servers: [{url: 'https://dev.abdm.gov.in', description: 'ABDM gateway, sandbox'}, {url: 'https://apis.abdm.gov.in', description: 'ABDM gateway, production'}], expected: 21},
   m3: {label: 'M3 Consent and fetching', position: 4, icon: 'file-check', roles: ['his'], title: 'ABDM M3, consent and fetching as an HIU', summary: 'Raise a consent request, fetch its artefacts, and receive records.', servers: [{url: 'https://dev.abdm.gov.in', description: 'ABDM gateway, sandbox'}, {url: 'https://apis.abdm.gov.in', description: 'ABDM gateway, production'}], expected: 12},
   m4: {label: 'M4 HPR and HFR', position: 5, icon: 'building-2', roles: ['his'], title: 'ABDM M4, professional and facility registries', summary: 'Register healthcare professionals and facilities on the NHPR.', servers: [{url: 'https://apihspsbx.abdm.gov.in/v4/int', description: 'NHPR, sandbox'}], expected: 100},
-  phr: {label: 'PHR application', position: 6, icon: 'smartphone', roles: ['phr'], title: 'ABDM PHR application', summary: 'The patient side: ABHA address, login, discovery, linking, consent and lockers.', servers: [{url: 'https://abhasbx.abdm.gov.in', description: 'ABHA service, sandbox'}, {url: 'https://dev.abdm.gov.in', description: 'ABDM gateway, sandbox'}], expected: 63},
-  subscription: {label: 'Subscriptions', position: 7, icon: 'bell', roles: ['his'], title: 'ABDM subscriptions and health lockers', summary: 'Subscribe an HIU to changes on an ABHA address.', servers: [{url: 'https://dev.abdm.gov.in', description: 'ABDM gateway, sandbox'}, {url: 'https://apis.abdm.gov.in', description: 'ABDM gateway, production'}], expected: 7},
-  'scan-and-pay': {label: 'Scan and Pay', position: 8, icon: 'qr-code', roles: ['his'], title: 'ABDM Scan and Pay', summary: 'Open orders, patient selection and payment status between a facility and a PHR app.', servers: [{url: 'https://dev.abdm.gov.in', description: 'ABDM gateway, sandbox'}, {url: 'https://apis.abdm.gov.in', description: 'ABDM gateway, production'}], expected: 10},
+  p1: {label: 'P1 Registration and login', position: 6, icon: 'user-round', roles: ['phr'], title: 'ABDM P1, PHR registration and login', summary: 'Create an ABHA address in a PHR app and log in to it.', servers: [{url: 'https://abhasbx.abdm.gov.in', description: 'ABHA service, sandbox'}], expected: 11},
+  p2: {label: 'P2 Management', position: 7, icon: 'files', roles: ['phr'], title: 'ABDM P2, PHR management', summary: 'Manage the PHR profile, link an ABHA number, switch profiles, and handle linking, sharing and consent for the patient.', servers: [{url: 'https://abhasbx.abdm.gov.in', description: 'ABHA service, sandbox'}, {url: 'https://dev.abdm.gov.in', description: 'ABDM gateway, sandbox'}], expected: 32},
+  p3: {label: 'P3 Subscription', position: 8, icon: 'bell', roles: ['phr'], title: 'ABDM P3, PHR subscriptions', summary: 'Read, approve, deny, enable, disable and update the patient\'s subscriptions and subscription requests.', servers: [{url: 'https://dev.abdm.gov.in', description: 'ABDM gateway, sandbox'}], expected: 8},
+  p4: {label: 'P4 Locker', position: 9, icon: 'lock', roles: ['phr'], title: 'ABDM P4, health lockers', summary: 'Set up a health locker and list the lockers and requests on an ABHA address.', servers: [{url: 'https://dev.abdm.gov.in', description: 'ABDM gateway, sandbox'}], expected: 4},
+  subscription: {label: 'Subscriptions', position: 10, icon: 'bell', roles: ['his'], title: 'ABDM subscriptions', summary: 'Subscribe an HIU to changes on an ABHA address.', servers: [{url: 'https://dev.abdm.gov.in', description: 'ABDM gateway, sandbox'}, {url: 'https://apis.abdm.gov.in', description: 'ABDM gateway, production'}], expected: 6},
+  'scan-and-pay': {label: 'Scan and Pay', position: 11, icon: 'qr-code', roles: ['his'], title: 'ABDM Scan and Pay', summary: 'Open orders, patient selection and payment status between a facility and a PHR app.', servers: [{url: 'https://dev.abdm.gov.in', description: 'ABDM gateway, sandbox'}, {url: 'https://apis.abdm.gov.in', description: 'ABDM gateway, production'}], expected: 18},
 };
+
+// The patient side follows NHA's PHR collection folders, P1 to P4, by tag.
+// The locker calls carry subscription tags, so they are placed by path.
+const PHR_TAGS = {
+  'ABHA enrolment via Aadhaar': 'p1', 'P1 - Create ABHA Address Flow': 'p1', 'P1 - Login via ABHA Address - Password': 'p1', 'P1 - PHR Login': 'p1', 'P1-Registration-login': 'p1',
+  'P2 - Link ABHA Number': 'p2', 'P2 - Switch Profile': 'p2', 'P2 -PHR Profile': 'p2', 'abdm-hiecm-patient-share-phr': 'p2', 'abdm-hip-initiated-linking-phr': 'p2', 'abdm-user-initiated-linking-phr': 'p2', 'consent-management-data-flow-phr': 'p2',
+  'subscription-phr': 'p3', 'abdm-hiecm-scan-pay-phr': 'scan-and-pay', Gateway: 'gateway',
+};
+const LOCKER = /\/subscription-requests\/v3\/(patients\/lockers(\/\{[^}]+\})?|patients\/requests|setup-locker)$/;
+// undefined: no mapping; only allowed for a call an earlier file already declared.
+const phrPlace = (tag, path) => (LOCKER.test(path) ? 'p4' : PHR_TAGS[tag]);
 
 // Which module an operation lands in. Returns null to drop it.
 const FILES = [
@@ -37,15 +51,15 @@ const FILES = [
   {file: 'hiecm/user-initiated-linking.yaml', place: byRole('m2')},
   {file: 'hiecm/link-token.yaml', place: byRole('m2')},
   {file: 'hiecm/patient-share.yaml', place: byRole('m2')},
-  {file: 'hiecm/consent-management-data-flow.yaml', place: (tag) => (tag.endsWith('-phr') ? 'phr' : tag.endsWith('-hiu') ? 'm3' : 'm2')},
-  {file: 'hiecm/subscription.yaml', place: (tag) => (tag === 'subscription-phr' ? 'phr' : 'subscription')},
-  {file: 'hiecm/scan-and-pay.yaml', place: (tag) => (tag.endsWith('-phr') ? 'phr' : 'scan-and-pay')},
+  {file: 'hiecm/consent-management-data-flow.yaml', place: (tag, path) => (tag.endsWith('-phr') ? phrPlace(tag, path) : tag.endsWith('-hiu') ? 'm3' : 'm2')},
+  {file: 'hiecm/subscription.yaml', place: (tag, path) => (tag === 'subscription-phr' || LOCKER.test(path) ? phrPlace(tag, path) : 'subscription')},
+  {file: 'hiecm/scan-and-pay.yaml', place: (tag, path) => (tag.endsWith('-phr') ? phrPlace(tag, path) : 'scan-and-pay')},
   {file: 'M4/M4-HFR.json', place: () => 'm4'},
   {file: 'M4/M4-HPID.json', place: () => 'm4'},
   {file: 'M4/M4-HPR.json', place: () => 'm4'},
-  {file: 'phr/PHR and Locker Swagger.yaml', place: () => 'phr'},
+  {file: 'phr/PHR and Locker Swagger.yaml', place: phrPlace},
 ];
-function byRole(hipModule) { return (tag) => (tag.endsWith('-phr') ? 'phr' : hipModule); }
+function byRole(hipModule) { return (tag, path) => (tag.endsWith('-phr') ? phrPlace(tag, path) : hipModule); }
 
 const CALLBACK = /^\/api\/v3\/(hip|hiu|link|links|patients)\/|^\/v3\/patient\/|^\/health-information\/transfer$/;
 const M1_HEADERS = {'x-token': 'X-token', 'benefit-name': 'BENEFIT_NAME', 'benefit_name': 'BENEFIT_NAME', 'benefit name': 'BENEFIT_NAME', 'transaction_id': 'TRANSACTION_ID'};
@@ -120,8 +134,9 @@ for (const {file, place} of FILES) {
       const module = place(tag, path);
       if (!module) { note('gateway', `${method.toUpperCase()} ${path}`, `dropped from ${file}: the gateway module already carries it`); continue; }
       const key = `${method.toUpperCase()} ${path.replace(/^\/(abha\/api|api\/hiecm)/, '').replace(/\{[^}]+\}/g, '{}')}`;
-      if (seenPath.has(key)) { note(module, key, `dropped from ${file}: already declared by ${seenPath.get(key)}`); continue; }
-      seenPath.set(key, file);
+      if (seenPath.has(key)) { const first = seenPath.get(key); note(module ?? first.module, key, `dropped from ${file}: already declared by ${first.file}`); continue; }
+      if (!MODULES[module]) throw new Error(`${file}: ${method.toUpperCase()} ${path} has tag "${tag}", which no module takes`);
+      seenPath.set(key, {file, module});
       touched.add(module);
       const spec = specs[module];
       const copy = structuredClone(op);

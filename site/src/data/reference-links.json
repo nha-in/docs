@@ -20,8 +20,20 @@
     "to": "/reference/hiecm-m4"
   },
   {
-    "label": "PHR application",
-    "to": "/reference/hiecm-phr"
+    "label": "P1 Registration and login",
+    "to": "/reference/hiecm-p1"
+  },
+  {
+    "label": "P2 Management",
+    "to": "/reference/hiecm-p2"
+  },
+  {
+    "label": "P3 Subscription",
+    "to": "/reference/hiecm-p3"
+  },
+  {
+    "label": "P4 Locker",
+    "to": "/reference/hiecm-p4"
   },
   {
     "label": "Subscriptions",

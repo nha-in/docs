@@ -1,4 +1,4 @@
-# Integrate Subscriptions and health lockers
+# Integrate Subscriptions
 
 The calls themselves: where they live, what they need in their headers, and one request written out in full.
 
@@ -16,6 +16,8 @@ The calls themselves: where they live, what they need in their headers, and one 
 | --- | --- | --- |
 | `GET` | `/api/hiecm/gateway/v3/.well-known/openid-configuration` | This API is invoked to get the open id configuration. |
 | `GET` | `/api/hiecm/gateway/v3/.well-known/openid-configuration` | This API is invoked to get the open id configuration. |
+| `PUT` | `/api/hiecm/gateway/v3/bridge-service` | v3/gateway/bridge-service |
+| `PUT` | `/api/hiecm/gateway/v3/bridge-service` | v3/gateway/bridge-service |
 | `GET` | `/api/hiecm/gateway/v3/bridge-service/serviceId/{service-id}` | This API is invoked to fetch the details of a service id. |
 | `GET` | `/api/hiecm/gateway/v3/bridge-service/serviceId/{service-id}` | This API is invoked to fetch the details of a service id. |
 | `GET` | `/api/hiecm/gateway/v3/bridge-services` | This API will fetch the service ids registered against a bridge. |
@@ -46,8 +48,6 @@ The calls themselves: where they live, what they need in their headers, and one 
 | `POST` | `/api/hiecm/subscription-requests/v3/hiu/on-notify` | This API will be invoked by the HIU to respond to /subscription-requests/hiu/no… |
 | `POST` | `/api/hiecm/subscription-requests/v3/init` | This API will be invoked by the HIU/patient/user to initiate subscription reque… |
 | `POST` | `/api/hiecm/subscription-requests/v3/init` | This API will be invoked by the HIU/patient/user to initiate subscription reque… |
-| `POST` | `/api/hiecm/subscription-requests/v3/setup-locker` | This API will be invoked to setup health locker for a patient. |
-| `POST` | `/api/hiecm/subscription-requests/v3/setup-locker` | This API will be invoked to setup health locker for a patient. |
 | `POST` | `/api/v3/hiu/hiecm/subscription-requests/on-init` | This is a callback api for /api/hiecm/subscription-requests/v3/init. |
 | `POST` | `/api/v3/hiu/hiecm/subscription-requests/on-init` | This is a callback api for /api/hiecm/subscription-requests/v3/init. |
 | `POST` | `/api/v3/hiu/subscription-requests/hiu/notify` | This is a callback api when a subscription request is approved or denied. |
@@ -61,8 +61,6 @@ The calls themselves: where they live, what they need in their headers, and one 
 | `REQUEST-ID` | Unique UUID for track the end to end request transaction |
 | `TIMESTAMP` | Actual time of the request was initiated, ISO 8601 represents date and time by starting with the year, follow… |
 | `X-CM-ID` | Suffix of the consent manager to which the request was intended |
-| `X-AUTH-TOKEN` | JWT Authentication token issued by ABDM after successful validation of username and password |
-| `X-LOCKER-ID` | The locker id |
 | `X-HIU-ID` | Identifier of the health information user to which the request was intended |
 ## A request, in full
 

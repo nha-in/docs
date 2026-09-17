@@ -1,0 +1,26 @@
+- id: p1-p1-create-abha-address-flow
+  title: P1 - Create ABHA Address Flow
+  steps:
+    - op: p1_post_v3_phr_app_enrollment_enrol
+    - op: p1_get_v3_phr_app_enrollment_isexists
+    - op: p1_post_v3_phr_app_enrollment_request_otp
+    - op: p1_post_v3_phr_app_enrollment_suggestion
+    - op: p1_post_v3_phr_app_enrollment_verify
+- id: p1-p1-registration-login
+  title: P1-Registration-login
+  steps:
+    - op: p1_get_v3_phr_app_login_public_certificate
+    - op: p1_post_v3_phr_app_login_verify_user
+- id: p1-p1-phr-login
+  title: P1 - PHR Login
+  steps:
+    - op: p1_post_v3_phr_app_login_request_otp
+    - op: p1_post_v3_phr_app_login_verify
+- id: p1-p1-login-via-abha-address-password
+  title: P1 - Login via ABHA Address - Password
+  steps:
+    - op: p1_post_v3_phr_app_login_search
+- id: p1-abha-enrolment-via-aadhaar
+  title: ABHA enrolment via Aadhaar
+  steps:
+    - op: p1_post_v3_profile_account_request_emailverificationlink

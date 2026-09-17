@@ -8,7 +8,7 @@ The calls themselves: where they live, what they need in their headers, and one 
 - `https://apis.abdm.gov.in` ABDM gateway, production
 ## Endpoints
 
-46 operations, grouped by the journey they belong to.
+64 operations, grouped by the journey they belong to.
 
 ### Other operations
 
@@ -16,6 +16,8 @@ The calls themselves: where they live, what they need in their headers, and one 
 | --- | --- | --- |
 | `GET` | `/api/hiecm/gateway/v3/.well-known/openid-configuration` | This API is invoked to get the open id configuration. |
 | `GET` | `/api/hiecm/gateway/v3/.well-known/openid-configuration` | This API is invoked to get the open id configuration. |
+| `PUT` | `/api/hiecm/gateway/v3/bridge-service` | v3/gateway/bridge-service |
+| `PUT` | `/api/hiecm/gateway/v3/bridge-service` | v3/gateway/bridge-service |
 | `GET` | `/api/hiecm/gateway/v3/bridge-service/serviceId/{service-id}` | This API is invoked to fetch the details of a service id. |
 | `GET` | `/api/hiecm/gateway/v3/bridge-service/serviceId/{service-id}` | This API is invoked to fetch the details of a service id. |
 | `GET` | `/api/hiecm/gateway/v3/bridge-services` | This API will fetch the service ids registered against a bridge. |
@@ -50,10 +52,26 @@ The calls themselves: where they live, what they need in their headers, and one 
 | `GET` | `/api/hiecm/scan-gateway/v3/patient/scan-pay/details` | This is retrieve the all the details of the user. |
 | `POST` | `/api/hiecm/scan-gateway/v3/patient/scan-pay/notify` | This is an API called by HIP to send the payment status to HIU. |
 | `POST` | `/api/hiecm/scan-gateway/v3/patient/scan-pay/notify` | This is an API called by HIP to send the payment status to HIU. |
+| `POST` | `/api/hiecm/scan-gateway/v3/patient/scan-pay/on-notify` | This is an API is called by HIU to notify to HIP so that confirm that the HIU r… |
+| `POST` | `/api/hiecm/scan-gateway/v3/patient/scan-pay/on-notify` | This is an API is called by HIU to notify to HIP so that confirm that the HIU r… |
 | `POST` | `/api/hiecm/scan-gateway/v3/patient/scan-pay/on-order-status` | This is an API is called by HIP to check the status of reports. |
 | `POST` | `/api/hiecm/scan-gateway/v3/patient/scan-pay/on-order-status` | This is an API is called by HIP to check the status of reports. |
+| `POST` | `/api/hiecm/scan-gateway/v3/patient/scan-pay/order-status` | This is an API is called by HIU to check the status of reports. |
+| `POST` | `/api/hiecm/scan-gateway/v3/patient/scan-pay/order-status` | This is an API is called by HIU to check the status of reports. |
+| `POST` | `/api/hiecm/scan-gateway/v3/patient/selection` | This is an API called by HIU to select the all open-order and send to HIP for a… |
+| `POST` | `/api/hiecm/scan-gateway/v3/patient/selection` | This is an API called by HIU to select the all open-order and send to HIP for a… |
+| `POST` | `/api/hiecm/scan-gateway/v3/patient/share/open-order` | This API will be invoked from the integrator application (any PHR application, … |
+| `POST` | `/api/hiecm/scan-gateway/v3/patient/share/open-order` | This API will be invoked from the integrator application (any PHR application, … |
+| `POST` | `/v3/patient/on-selection` | This is callback api for the API. This Api needs to implement by HIU to receive… |
+| `POST` | `/v3/patient/on-selection` | This is callback api for the API. This Api needs to implement by HIU to receive… |
+| `POST` | `/v3/patient/on-share/open-order` | This is a callback API for patient on-share. This Api needs to implement by HIU… |
+| `POST` | `/v3/patient/on-share/open-order` | This is a callback API for patient on-share. This Api needs to implement by HIU… |
+| `POST` | `/v3/patient/scan-pay/notify` | This is callback API for the notify API. This API needs to implement by HIU to … |
+| `POST` | `/v3/patient/scan-pay/notify` | This is callback API for the notify API. This API needs to implement by HIU to … |
 | `POST` | `/v3/patient/scan-pay/on-notify` | This is an callback API for on-notify API need to implement by HIP to received … |
 | `POST` | `/v3/patient/scan-pay/on-notify` | This is an callback API for on-notify API need to implement by HIP to received … |
+| `POST` | `/v3/patient/scan-pay/on-order-status` | This is callback for the on-order-status API. This API needs to implement by HI… |
+| `POST` | `/v3/patient/scan-pay/on-order-status` | This is callback for the on-order-status API. This API needs to implement by HI… |
 | `POST` | `/v3/patient/scan-pay/order-status` | This is callback API for the order_status API. This Api needs to implement by H… |
 | `POST` | `/v3/patient/scan-pay/order-status` | This is callback API for the order_status API. This Api needs to implement by H… |
 | `POST` | `/v3/patient/selection` | This is the call back api for the selection API. This API needs to implement by… |
@@ -69,6 +87,7 @@ The calls themselves: where they live, what they need in their headers, and one 
 | `X-CM-ID` | Suffix of the consent manager to which the request was intended |
 | `X-AUTH-TOKEN` | JWT Authentication token which was issued by ABDM after successful validation of username and password |
 | `X-HIP-ID` | Identifier of the health information provider to which the request was intended |
+| `X-HIU-ID` | Identifier of the health information user to which the request was intended |
 ## A request, in full
 
 ```bash

@@ -1,4 +1,4 @@
-# Integrate PHR, the patient side
+# Integrate P2, PHR management
 
 The calls themselves: where they live, what they need in their headers, and one request written out in full.
 
@@ -9,22 +9,12 @@ The calls themselves: where they live, what they need in their headers, and one 
 - `https://apis.abdm.gov.in` ABDM gateway, production
 ## Endpoints
 
-152 operations, grouped by the journey they belong to.
+92 operations, grouped by the journey they belong to.
 
 ### Other operations
 
 | Method | Path | What it does |
 | --- | --- | --- |
-| `POST` | `/abha/api/v3/phr/app/enrollment/enrol` | 3 flows: Enroll ABHA Address |
-| `POST` | `/abha/api/v3/phr/app/enrollment/enrol` | 3 flows: Enroll ABHA Address |
-| `GET` | `/abha/api/v3/phr/app/enrollment/isExists` | 3 flows: isExists API, isExists API Copy |
-| `GET` | `/abha/api/v3/phr/app/enrollment/isExists` | 3 flows: isExists API, isExists API Copy |
-| `POST` | `/abha/api/v3/phr/app/enrollment/request/otp` | 3 flows: OTP Request - Mobile, OTP Request - ABHA OTP, OTP Request - AADHAR OTP |
-| `POST` | `/abha/api/v3/phr/app/enrollment/request/otp` | 3 flows: OTP Request - Mobile, OTP Request - ABHA OTP, OTP Request - AADHAR OTP |
-| `POST` | `/abha/api/v3/phr/app/enrollment/suggestion` | 3 flows: Suggestion API |
-| `POST` | `/abha/api/v3/phr/app/enrollment/suggestion` | 3 flows: Suggestion API |
-| `POST` | `/abha/api/v3/phr/app/enrollment/verify` | 3 flows: OTP Verify - Mobile, OTP Verify - ABHA OTP, OTP Verify - AADHAR OTP |
-| `POST` | `/abha/api/v3/phr/app/enrollment/verify` | 3 flows: OTP Verify - Mobile, OTP Verify - ABHA OTP, OTP Verify - AADHAR OTP |
 | `GET` | `/abha/api/v3/phr/app/login/profile` | Get Profile |
 | `GET` | `/abha/api/v3/phr/app/login/profile` | Get Profile |
 | `POST` | `/abha/api/v3/phr/app/login/profile/link` | 2 flows: Link Request |
@@ -47,18 +37,6 @@ The calls themselves: where they live, what they need in their headers, and one 
 | `POST` | `/abha/api/v3/phr/app/login/profile/verify` | 5 flows: Verify Otp - Update Email, Verify Otp - Update Mobile, Verify Password… |
 | `POST` | `/abha/api/v3/phr/app/login/profile/verify/switch-profile/user` | Verify User Switch Profile |
 | `POST` | `/abha/api/v3/phr/app/login/profile/verify/switch-profile/user` | Verify User Switch Profile |
-| `GET` | `/abha/api/v3/phr/app/login/public/certificate` | PHR Certificate |
-| `GET` | `/abha/api/v3/phr/app/login/public/certificate` | PHR Certificate |
-| `POST` | `/abha/api/v3/phr/app/login/request/otp` | 7 flows: OTP Request - Mobile, OTP Request - Email, OTP Request - ABHAADDRES Mo… |
-| `POST` | `/abha/api/v3/phr/app/login/request/otp` | 7 flows: OTP Request - Mobile, OTP Request - Email, OTP Request - ABHAADDRES Mo… |
-| `POST` | `/abha/api/v3/phr/app/login/search` | Search Auth Methods - ABHAAddress |
-| `POST` | `/abha/api/v3/phr/app/login/search` | Search Auth Methods - ABHAAddress |
-| `POST` | `/abha/api/v3/phr/app/login/verify` | 8 flows: Login OTP Verify - Mobile, Login OTP Verify - Email, Login OTP Verify … |
-| `POST` | `/abha/api/v3/phr/app/login/verify` | 8 flows: Login OTP Verify - Mobile, Login OTP Verify - Email, Login OTP Verify … |
-| `POST` | `/abha/api/v3/phr/app/login/verify/user` | 6 flows: Verify User, Verify - User |
-| `POST` | `/abha/api/v3/phr/app/login/verify/user` | 6 flows: Verify User, Verify - User |
-| `POST` | `/abha/api/v3/profile/account/request/emailVerificationLink` | Email Verification Link |
-| `POST` | `/abha/api/v3/profile/account/request/emailVerificationLink` | Email Verification Link |
 | `GET` | `/api/hiecm/consent/v3/artefact` | This is ABDM HIE-CM API called to fetch all the consent artefact details of a p… |
 | `GET` | `/api/hiecm/consent/v3/artefact` | This is ABDM HIE-CM API called to fetch all the consent artefact details of a p… |
 | `GET` | `/api/hiecm/consent/v3/artefact/{artefact-id}` | This is ABDM HIE-CM API called to fetch the consent artefact details associated… |
@@ -115,36 +93,6 @@ The calls themselves: where they live, what they need in their headers, and one 
 | `GET` | `/api/hiecm/patient-share/v3/profile/getTokenDetails` | This API will be invoked to get the historical token numbers of the patient |
 | `POST` | `/api/hiecm/patient-share/v3/share` | This API will be invoked from the PHR-HIU application for sharing the patient/u… |
 | `POST` | `/api/hiecm/patient-share/v3/share` | This API will be invoked from the PHR-HIU application for sharing the patient/u… |
-| `POST` | `/api/hiecm/scan-gateway/v3/patient/scan-pay/on-notify` | This is an API is called by HIU to notify to HIP so that confirm that the HIU r… |
-| `POST` | `/api/hiecm/scan-gateway/v3/patient/scan-pay/on-notify` | This is an API is called by HIU to notify to HIP so that confirm that the HIU r… |
-| `POST` | `/api/hiecm/scan-gateway/v3/patient/scan-pay/order-status` | This is an API is called by HIU to check the status of reports. |
-| `POST` | `/api/hiecm/scan-gateway/v3/patient/scan-pay/order-status` | This is an API is called by HIU to check the status of reports. |
-| `POST` | `/api/hiecm/scan-gateway/v3/patient/selection` | This is an API called by HIU to select the all open-order and send to HIP for a… |
-| `POST` | `/api/hiecm/scan-gateway/v3/patient/selection` | This is an API called by HIU to select the all open-order and send to HIP for a… |
-| `POST` | `/api/hiecm/scan-gateway/v3/patient/share/open-order` | This API will be invoked from the integrator application (any PHR application, … |
-| `POST` | `/api/hiecm/scan-gateway/v3/patient/share/open-order` | This API will be invoked from the integrator application (any PHR application, … |
-| `POST` | `/api/hiecm/subscription-requests/v3/{request-id}/approve` | This API will be invoked by the patient/user from PHR application to approve su… |
-| `POST` | `/api/hiecm/subscription-requests/v3/{request-id}/approve` | This API will be invoked by the patient/user from PHR application to approve su… |
-| `POST` | `/api/hiecm/subscription-requests/v3/{request-id}/deny` | This API will be invoked by the patient/user from PHR application to deny subsc… |
-| `POST` | `/api/hiecm/subscription-requests/v3/{request-id}/deny` | This API will be invoked by the patient/user from PHR application to deny subsc… |
-| `GET` | `/api/hiecm/subscription-requests/v3/{subscription-id}` | This API will be invoked by the patient/user from PHR application to fetch his/… |
-| `GET` | `/api/hiecm/subscription-requests/v3/{subscription-id}` | This API will be invoked by the patient/user from PHR application to fetch his/… |
-| `POST` | `/api/hiecm/subscription-requests/v3/disable/{subscription-id}` | This API will be invoked to disable the subscription by subscription id. |
-| `POST` | `/api/hiecm/subscription-requests/v3/disable/{subscription-id}` | This API will be invoked to disable the subscription by subscription id. |
-| `POST` | `/api/hiecm/subscription-requests/v3/enable/{subscription-id}` | This API will be invoked to enable the subscription by subscription id. |
-| `POST` | `/api/hiecm/subscription-requests/v3/enable/{subscription-id}` | This API will be invoked to enable the subscription by subscription id. |
-| `PUT` | `/api/hiecm/subscription-requests/v3/patients/{subscription-id}` | This API will be invoked to edit the subscription details. |
-| `PUT` | `/api/hiecm/subscription-requests/v3/patients/{subscription-id}` | This API will be invoked to edit the subscription details. |
-| `GET` | `/api/hiecm/subscription-requests/v3/patients/lockers` | The API provides the list of health locker that the ABHA address is subscribed … |
-| `GET` | `/api/hiecm/subscription-requests/v3/patients/lockers` | The API provides the list of health locker that the ABHA address is subscribed … |
-| `GET` | `/api/hiecm/subscription-requests/v3/patients/lockers/{lockerId}` | This API will be invoked to get health locker settings of a patient by locker i… |
-| `GET` | `/api/hiecm/subscription-requests/v3/patients/lockers/{lockerId}` | This API will be invoked to get health locker settings of a patient by locker i… |
-| `GET` | `/api/hiecm/subscription-requests/v3/patients/requests` | This API will be invoked to get all the consent and subscription requests with … |
-| `GET` | `/api/hiecm/subscription-requests/v3/patients/requests` | This API will be invoked to get all the consent and subscription requests with … |
-| `GET` | `/api/hiecm/subscription-requests/v3/request/{request-id}` | This API will be invoked by the patient/user from PHR application to fetch his/… |
-| `GET` | `/api/hiecm/subscription-requests/v3/request/{request-id}` | This API will be invoked by the patient/user from PHR application to fetch his/… |
-| `GET` | `/api/hiecm/subscription-requests/v3/requests` | This API will be invoked by the patient/user from PHR application to fetch his/… |
-| `GET` | `/api/hiecm/subscription-requests/v3/requests` | This API will be invoked by the patient/user from PHR application to fetch his/… |
 | `POST` | `/api/hiecm/user-initiated-linking/v3/link/care-context/confirm` | This API will be invoked by the patient/user to confirm his/her health records. |
 | `POST` | `/api/hiecm/user-initiated-linking/v3/link/care-context/confirm` | This API will be invoked by the patient/user to confirm his/her health records. |
 | `POST` | `/api/hiecm/user-initiated-linking/v3/link/care-context/init` | This API will be invoked by the patient/user to link his/her health records. |
@@ -159,21 +107,13 @@ The calls themselves: where they live, what they need in their headers, and one 
 | `POST` | `/api/v3/hiu/patient/care-context/on-init` | This API endpoint is used by healthcare information users (HIUs) to receive the… |
 | `POST` | `/api/v3/hiu/patient/on-share` | This API will be invoked to the HIU for sharing the response of HIECM's /api/hi… |
 | `POST` | `/api/v3/hiu/patient/on-share` | This API will be invoked to the HIU for sharing the response of HIECM's /api/hi… |
-| `POST` | `/v3/patient/on-selection` | This is callback api for the API. This Api needs to implement by HIU to receive… |
-| `POST` | `/v3/patient/on-selection` | This is callback api for the API. This Api needs to implement by HIU to receive… |
-| `POST` | `/v3/patient/on-share/open-order` | This is a callback API for patient on-share. This Api needs to implement by HIU… |
-| `POST` | `/v3/patient/on-share/open-order` | This is a callback API for patient on-share. This Api needs to implement by HIU… |
-| `POST` | `/v3/patient/scan-pay/notify` | This is callback API for the notify API. This API needs to implement by HIU to … |
-| `POST` | `/v3/patient/scan-pay/notify` | This is callback API for the notify API. This API needs to implement by HIU to … |
-| `POST` | `/v3/patient/scan-pay/on-order-status` | This is callback for the on-order-status API. This API needs to implement by HI… |
-| `POST` | `/v3/patient/scan-pay/on-order-status` | This is callback for the on-order-status API. This API needs to implement by HI… |
 ## Headers
 
 | Header | What it is |
 | --- | --- |
+| `X-token` |  |
 | `REQUEST-ID` | Unique UUID for each request. |
 | `TIMESTAMP` | Request timestamp in UTC, ISO-8601 with Z. |
-| `X-token` |  |
 | `R-token` |  |
 | `T-token` |  |
 | `X-CM-ID` | Suffix of the consent manager to which the request was intended |
@@ -182,32 +122,9 @@ The calls themselves: where they live, what they need in their headers, and one 
 ## A request, in full
 
 ```bash
-curl --request POST \
-  --url https://abhasbx.abdm.gov.in/abha/api/v3/phr/app/enrollment/enrol \
+curl --request GET \
+  --url https://abhasbx.abdm.gov.in/abha/api/v3/phr/app/login/profile \
+  --header 'X-token: Bearer <JWT TOKEN>' \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
-  --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
-  --header 'Content-Type: application/json' \
-  --data '{
-  "txnId": "27d444b7-2a3d-46d8-bf67-e5590b6c46b6",
-  "phrDetails": {
-    "mobile": "<BASE64_PHOTO>",
-    "firstName": "John",
-    "middleName": "",
-    "lastName": "Doe",
-    "yearOfBirth": "1997",
-    "dayOfBirth": "",
-    "monthOfBirth": "01",
-    "gender": "M",
-    "email": "",
-    "profilePhoto": "",
-    "address": "pune Maharashtra",
-    "stateName": "Maharashtra",
-    "stateCode": "27",
-    "districtName": "Nashik",
-    "districtCode": "123",
-    "pinCode": "422003",
-    "abhaAddress": "<ABHA_ADDRESS>",
-    "password": "<BASE64_PHOTO>"
-  }
-}'
+  --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z'
 ```

@@ -1,0 +1,11 @@
+- id: p3-subscription-phr
+  title: Subscription
+  steps:
+    - op: p3_get_subscription_requests_v3_requests
+    - op: p3_post_subscription_requests_v3_request_id_approve
+    - op: p3_post_subscription_requests_v3_request_id_deny
+    - op: p3_put_subscription_requests_v3_patients_subscription_id
+    - op: p3_post_subscription_requests_v3_enable_subscription_id
+    - op: p3_post_subscription_requests_v3_disable_subscription_id
+    - op: p3_get_subscription_requests_v3_subscription_id
+    - op: p3_get_subscription_requests_v3_request_request_id

@@ -1,6 +1,6 @@
 # HIE-CM subscription build
 
-Scaffolds an ABDM subscription integration one journey at a time. It covers subscribing an HIU to changes on an ABHA address, and health lockers.
+Scaffolds an ABDM subscription integration one journey at a time. It covers subscribing an HIU to changes on an ABHA address.
 
 ## How this skill runs
 
@@ -122,33 +122,6 @@ curl --request POST \
 **Exit condition (Observe until this is true)**
 
 A 202 response. The specification gives no body for it, so read what comes back.
-
-### Health-locker (`subscription-health-locker`)
-
-**Act: the calls in this journey, in order**
-
-#### 1. This API will be invoked to setup health locker for a patient. (`subscription_post_subscription_requests_v3_setup_locker`)
-
-```bash
-curl --request POST \
-  --url https://dev.abdm.gov.in/api/hiecm/subscription-requests/v3/setup-locker \
-  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
-  --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
-  --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
-  --header 'X-CM-ID: sbx' \
-  --header 'X-AUTH-TOKEN: <TOKEN>' \
-  --header 'X-LOCKER-ID: <X_LOCKER_ID>'
-```
-
-**Exit condition (Observe until this is true)**
-
-A 200 whose body matches:
-
-```json
-{
-  "consentAutoApprovalId": "e5ec415f-c098-40f6-a0db-faa162fc5295"
-}
-```
 
 ## Where the detail is
 

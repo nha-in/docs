@@ -9,7 +9,7 @@ The calls themselves: where they live, what they need in their headers, and one 
 - `https://apis.abdm.gov.in` ABDM gateway, production
 ## Endpoints
 
-161 operations, grouped by the journey they belong to.
+163 operations, grouped by the journey they belong to.
 
 ### Other operations
 
@@ -152,6 +152,8 @@ The calls themselves: where they live, what they need in their headers, and one 
 | `GET` | `/abha/api/v3/profile/public/certificate` | Use Case: Used to Fetch Public Key |
 | `GET` | `/api/hiecm/gateway/v3/.well-known/openid-configuration` | This API is invoked to get the open id configuration. |
 | `GET` | `/api/hiecm/gateway/v3/.well-known/openid-configuration` | This API is invoked to get the open id configuration. |
+| `PUT` | `/api/hiecm/gateway/v3/bridge-service` | v3/gateway/bridge-service |
+| `PUT` | `/api/hiecm/gateway/v3/bridge-service` | v3/gateway/bridge-service |
 | `GET` | `/api/hiecm/gateway/v3/bridge-service/serviceId/{service-id}` | This API is invoked to fetch the details of a service id. |
 | `GET` | `/api/hiecm/gateway/v3/bridge-service/serviceId/{service-id}` | This API is invoked to fetch the details of a service id. |
 | `GET` | `/api/hiecm/gateway/v3/bridge-services` | This API will fetch the service ids registered against a bridge. |

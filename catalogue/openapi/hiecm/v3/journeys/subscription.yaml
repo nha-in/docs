@@ -7,7 +7,3 @@
     - op: subscription_post_subscription_requests_v3_hiu_on_notify
     - op: subscription_post_v3_hiu_subscription_notify
     - op: subscription_post_subscription_requests_v3_hiu_care_conte_96bc45
-- id: subscription-health-locker
-  title: Health-locker
-  steps:
-    - op: subscription_post_subscription_requests_v3_setup_locker

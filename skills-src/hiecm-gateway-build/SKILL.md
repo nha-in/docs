@@ -193,6 +193,38 @@ A 200 whose body matches:
 }
 ```
 
+### Gateway (`gateway-gateway`)
+
+**Act: the calls in this journey, in order**
+
+#### 1. v3/gateway/bridge-service (`gateway_put_gateway_v3_bridge_service`)
+
+```bash
+curl --request PUT \
+  --url https://dev.abdm.gov.in/api/hiecm/gateway/v3/bridge-service \
+  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
+  --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
+  --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
+  --header 'X-CM-ID: sbx' \
+  --header 'Content-Type: application/json' \
+  --data '{
+  "bridgeId": "{{bridgeId}}",
+  "serviceId": "{{serviceId}}",
+  "name": "TEST Gateway",
+  "isHip": true,
+  "isHiu": true,
+  "isHealthLocker": null,
+  "isPhr": false,
+  "endpoints": {},
+  "attributes": null,
+  "active": true
+}'
+```
+
+**Exit condition (Observe until this is true)**
+
+A 2xx response. The specification gives no body for it, so read what comes back.
+
 ## Where the detail is
 
 - Every operation, with its body fields and responses: /docs/hiecm/v3/api/gateway

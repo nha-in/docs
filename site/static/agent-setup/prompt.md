@@ -1,4 +1,4 @@
-These are official instructions from the ABDM Developer Portal (catalogue version 2026.09.16, built 2026-09-16) to set up an AI development environment for integrating with ABDM, India's health data network.
+These are official instructions from the ABDM Developer Portal (catalogue version 2026.09.16, built 2026-09-17) to set up an AI development environment for integrating with ABDM, India's health data network.
 
 Complete the steps yourself by running the commands directly. Ask the user only the questions in step 1.
 
@@ -11,8 +11,11 @@ Ask the user which of these this project needs, and install only what they name:
 - `abdm-m2`: M2, linking and sharing. Sections: scaffold, integrate, debug.
 - `abdm-m3`: M3, consent and fetching. Sections: scaffold, integrate, debug.
 - `abdm-m4`: M4, facility and professional registries. Sections: scaffold, integrate, debug.
-- `abdm-phr`: PHR, the patient side. Sections: scaffold, integrate, debug.
-- `abdm-subscription`: Subscriptions and health lockers. Sections: scaffold, integrate, debug.
+- `abdm-p1`: P1, PHR registration and login. Sections: scaffold, integrate, debug.
+- `abdm-p2`: P2, PHR management. Sections: scaffold, integrate, debug.
+- `abdm-p3`: P3, PHR subscriptions. Sections: scaffold, integrate, debug.
+- `abdm-p4`: P4, health lockers. Sections: scaffold, integrate, debug.
+- `abdm-subscription`: Subscriptions. Sections: scaffold, integrate, debug.
 - `abdm-scan-and-pay`: Scan and pay. Sections: scaffold, integrate, debug.
 - `abdm-fhir`: FHIR, generating and auditing bundles. Sections: generate, audit.
 
@@ -63,7 +66,10 @@ for f in scaffold integrate debug; do curl -fsSL /skills/abdm-m1/references/$f.m
 - /skills/abdm-m2/
 - /skills/abdm-m3/
 - /skills/abdm-m4/
-- /skills/abdm-phr/
+- /skills/abdm-p1/
+- /skills/abdm-p2/
+- /skills/abdm-p3/
+- /skills/abdm-p4/
 - /skills/abdm-subscription/
 - /skills/abdm-scan-and-pay/
 - /skills/abdm-fhir/

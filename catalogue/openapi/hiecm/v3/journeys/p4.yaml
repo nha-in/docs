@@ -1,0 +1,10 @@
+- id: p4-subscription-phr
+  title: Subscription
+  steps:
+    - op: p4_get_subscription_requests_v3_patients_requests
+    - op: p4_get_subscription_requests_v3_patients_lockers_lockerid
+    - op: p4_get_subscription_requests_v3_patients_lockers
+- id: p4-health-locker
+  title: Health-locker
+  steps:
+    - op: p4_post_subscription_requests_v3_setup_locker

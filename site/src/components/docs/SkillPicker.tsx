@@ -43,23 +43,23 @@ const CHOICES: Choice[] = [
   },
   {
     slug: 'abdm-p1',
-    label: 'PHR identity (P1)',
-    note: 'The patient side of M1: registration in a PHR app, the four login routes, and the profile the user holds.',
+    label: 'PHR registration and login (P1)',
+    note: 'Creating an ABHA address in a PHR app and logging in to it.',
   },
   {
     slug: 'abdm-p2',
-    label: 'PHR linking (P2)',
-    note: 'The patient side of M2: discovering records held elsewhere and linking them to an ABHA address.',
+    label: 'PHR management (P2)',
+    note: 'The PHR profile, linking an ABHA number, switching profiles, and linking, sharing and consent for the patient.',
   },
   {
     slug: 'abdm-p3',
-    label: 'PHR consent (P3)',
-    note: 'The patient side of M3: subscriptions, auto approval, granting and revoking, and fetching a grant.',
+    label: 'PHR subscriptions (P3)',
+    note: 'Reading, approving, denying, enabling, disabling and updating the patient\'s subscriptions and subscription requests.',
   },
   {
-    slug: 'abdm-phr-services',
-    label: 'PHR extras',
-    note: 'Services a PHR app may offer on top of ABDM. None of them is required to certify.',
+    slug: 'abdm-p4',
+    label: 'Health lockers (P4)',
+    note: 'Setting up a health locker and listing the lockers and requests on an ABHA address.',
   },
   {
     slug: 'abdm-fhir',
