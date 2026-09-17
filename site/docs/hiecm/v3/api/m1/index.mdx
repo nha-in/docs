@@ -19,7 +19,7 @@ Create an ABHA, authenticate a holder, and read or update the profile, QR code a
 | Sandbox | `https://abhasbx.abdm.gov.in/abha/api/v3/` |
 | Production | `https://abha.abdm.gov.in/api/abha/v3/` |
 
-Login by Aadhaar number using fingerprint or IRIS uses v3.1 instead: `https://abhasbx.abdm.gov.in/abha/api/v3.1/` in sandbox. No production v3.1 URL is published.
+Login by fingerprint or iris uses the same base URL, through `/v3/profile/login/verify` with a `bio` or `iris` block.
 
 <PathChoices
   paths={[

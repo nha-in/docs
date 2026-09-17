@@ -116,7 +116,7 @@ Sandbox     https://abhasbx.abdm.gov.in/abha/api/v3/
 Production  https://abha.abdm.gov.in/api/abha/v3/
 ```
 
-One exception: login by Aadhaar number using fingerprint or IRIS uses the v3.1 base URL, `https://abhasbx.abdm.gov.in/abha/api/v3.1/`. No production v3.1 URL is given.
+Login by fingerprint or iris uses the same base URL, through `/v3/profile/login/verify` with a `bio` or `iris` block.
 
 ## What M1 does with it
 

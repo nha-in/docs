@@ -210,8 +210,7 @@ must be asked to consent to it; signing in does not imply it.
 
 Once approved, four events arrive: a new care context, a modified care
 context, a new consent request, and a new subscription request. Showing them
-on the device is your job, and NHA names a push service as the example rather
-than a requirement.
+on the device is your job.
 
 A request sits in exactly one state, and the same five carry consent requests,
 subscription requests and health locker requests, so one screen serves all

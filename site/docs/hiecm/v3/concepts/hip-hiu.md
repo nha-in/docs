@@ -30,7 +30,6 @@ Make the records the facility creates discoverable and shareable, which is [M2](
 | Purpose | Sandbox | Production |
 | --- | --- | --- |
 | ABHA identity APIs (M1) | `https://abhasbx.abdm.gov.in/abha/api/v3/` | `https://abha.abdm.gov.in/api/abha/v3/` |
-| Fingerprint and IRIS login via Aadhaar number | `https://abhasbx.abdm.gov.in/abha/api/v3.1/` | Not yet published |
 | Gateway and record exchange (M2) | `https://dev.abdm.gov.in` | `https://apis.abdm.gov.in` |
 
 ## What you build in M1

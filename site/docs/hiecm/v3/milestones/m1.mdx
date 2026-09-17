@@ -33,7 +33,7 @@ skips M1.
   records.
 - Nothing runs until the gateway session call returns an access token.
 - Two tokens exist and are not interchangeable: the gateway token in
-  `Authorization`, the user token in `X-token`. NHA's recorded login
+  `Authorization`, the user token in `X-token`. The login
   response gives the user token thirty minutes (`expiresIn: 1800`) and its
   refresh token fifteen days (`refreshExpiresIn: 1296000`). Read both back
   from the response rather than assuming them, and plan a refresh before
@@ -229,16 +229,11 @@ Email verification sits between the mobile step and the address step. It is opti
 
 Some people cannot use the OTP route, usually because the mobile registered against their Aadhaar is no longer theirs. Face authentication is the optional alternative. The person authenticates their face through the Aadhaar registered device (RD) service on their own phone, which is how the transaction moves from your screen to theirs.
 
-NHA files both calls in this route under the use case "ABHA creation,
-Aadhaar biometric", and their summaries read "face or biometric". Fingerprint
-and iris are a real route: the creation table above lists them as optional
-for every integrator, and the enrolment call
-takes `bio` and `iris` in `authMethods` beside `face`. What nothing here
-records is a request that uses them. The only request recorded against either
-call sends the scope `face-auth`, and nothing has been run against the sandbox
-either way. Build the face route from the diagram above, treat fingerprint and iris
-as named by NHA and unproven here, and confirm the capture step with NHA
-before you design around it.
+Face, fingerprint and iris each have their own request body on the enrolment call,
+`POST /v3/enrollment/enrol/byAadhaar`. The reference has one sequence per method:
+[face](/docs/hiecm/v3/api/m1/endpoints/m1-create-face/01-gateway-post-gateway-v3-sessions),
+[fingerprint](/docs/hiecm/v3/api/m1/endpoints/m1-create-fingerprint/01-gateway-post-gateway-v3-sessions)
+and [iris](/docs/hiecm/v3/api/m1/endpoints/m1-create-iris/01-gateway-post-gateway-v3-sessions).
 
 ```mermaid
 sequenceDiagram
@@ -459,7 +454,7 @@ sequenceDiagram
     A-->>S: QR code
 ```
 
-The card is returned in the response rather than fetched from a separate link. The content type and encoding of the card and QR code responses are not yet published. See the [M1 API reference](/docs/hiecm/v3/api/m1) for the fields that are.
+The card is returned in the response rather than fetched from a separate link. Both the card and the QR code return a PNG image. See the [M1 API reference](/docs/hiecm/v3/api/m1) for the fields.
 
 ## ABHA address with a mobile number
 
