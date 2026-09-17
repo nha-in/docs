@@ -24,6 +24,15 @@ export type MatrixRow = {
   api?: {method?: string | null; path: string; to?: string | null} | null;
   /** The calls NHA's sheet names for this case, as absolute URLs. */
   apis?: string[];
+  /**
+   * What stands where the calls would go, when it is not a URL. NHA writes
+   * "No API" for a case with no V3 call, and points at the master data sheet
+   * where the values come from a spreadsheet. Rendering a dash for all three
+   * made a deliberate statement look like a gap in this portal.
+   */
+  apisNote?: string;
+  /** For a check this portal wrote, the endpoint atoms its calls came from. */
+  atoms?: string[];
   webhook?: {method?: string | null; path: string} | null;
   detail?: string;
 };
@@ -278,12 +287,16 @@ function MethodChip({method}: {method?: string | null}) {
  * with nothing saying which was the calls you make and which the callbacks you
  * receive. It is hidden again wherever the header row is doing that job.
  */
-function CallList({calls, label}: {calls: Call[]; label: string}) {
+function CallList({calls, label, note}: {calls: Call[]; label: string; note?: string}) {
   if (calls.length === 0) {
     return (
       <span className="matrix__calls">
         <span className="matrix__calls-label">{label}</span>
-        <span className="matrix__empty">&mdash;</span>
+        {note ? (
+          <span className="matrix__note">{note}</span>
+        ) : (
+          <span className="matrix__empty">&mdash;</span>
+        )}
       </span>
     );
   }
@@ -484,7 +497,7 @@ export default function TestMatrix({matrix}: {matrix: Matrix}) {
                           <span className="matrix__condition">{row.condition}</span>
                         ) : null}
                       </span>
-                      <CallList calls={endpoints} label="Endpoints" />
+                      <CallList calls={endpoints} label="Endpoints" note={row.apisNote} />
                       {hasCallbacks ? (
                         <CallList calls={callbacks} label="Callbacks" />
                       ) : null}

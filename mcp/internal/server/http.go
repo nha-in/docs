@@ -41,8 +41,15 @@ func Handler(r *index.Reader, emb embed.Embedder, allowOrigin string, chatSvc *c
 		return nil, fmt.Errorf("server: chatSvc is set but limiter is nil")
 	}
 	mcpServer := NewMCPServer(r, emb)
+	// Stateless: no session is kept between requests, so any replica can answer
+	// any request. With sessions, a client whose next request a load balancer
+	// sends to a different replica gets "session not found"; two ECS tasks or
+	// two pods behind one address hit this on the first call. The cost is that
+	// the server cannot send requests to the client, which this server never
+	// does: it only answers tool calls.
 	streamable := mcp.NewStreamableHTTPHandler(
-		func(*http.Request) *mcp.Server { return mcpServer }, nil)
+		func(*http.Request) *mcp.Server { return mcpServer },
+		&mcp.StreamableHTTPOptions{Stateless: true})
 
 	mux := http.NewServeMux()
 	mux.Handle("/mcp", streamable)

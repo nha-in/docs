@@ -56,6 +56,10 @@ integration, read the Aadhaar OTP route instead.
   [the gateway session](hiecm.concept.gateway-session).
 - The public certificate, because the Aadhaar number is encrypted before
   it is sent. See [fetch the public certificate](hiecm.endpoint.m1-get-public-certificate).
+  It arrives as base64 DER and needs PEM armour before your library will
+  load it.
+- The padding, which is RSA-OAEP with SHA-1, base64 encoded, under the 4096-bit certificate from `/v3/profile/public/certificate`. PKCS#1 v1.5 and OAEP with SHA-256 are both refused, and neither refusal names encryption. See
+  [why identifiers are encrypted](hiecm.concept.encrypted-identifiers).
 - The person's name exactly as Aadhaar holds it, their date of birth and
   their gender. A near miss on any of them is a refusal, not a warning.
 - Their consent, recorded the same way the other enrolment routes record it.

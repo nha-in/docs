@@ -50,7 +50,7 @@ integrators and is not asked of private ones. See
 
 - A client id and secret, and a working session token. See
   [registration and credentials](shared.sandbox.registration-and-credentials).
-- The person's Aadhaar number, encrypted against NHA's public key. See
+- The person's Aadhaar number, encrypted with RSA-OAEP with SHA-1, base64 encoded, under the 4096-bit certificate from `/v3/profile/public/certificate`. PKCS#1 v1.5 and OAEP with SHA-256 are both refused, and neither refusal names encryption. See
   [why identifiers are encrypted](hiecm.concept.encrypted-identifiers).
 - The person present, because they must read an OTP from their phone.
 - Their explicit consent to create an ABHA, which you send in the

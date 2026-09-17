@@ -1503,6 +1503,15 @@ label.api-console__ident {
   color: var(--text-faint);
 }
 
+/* What NHA wrote where the calls would go, when it was a sentence rather than
+   a URL. Distinct from the dash, which means the cell was blank. */
+.matrix__note {
+  color: var(--text-muted);
+  font-size: 0.8125rem;
+  font-style: italic;
+  line-height: 1.4;
+}
+
 .matrix__none {
   margin: 0;
   padding: 1.5rem 1.25rem;

@@ -12,7 +12,9 @@ import yaml
 REQUIRED = {"name", "description"}
 
 failures = []
-files = sorted(glob.glob("plugins/abdm-contributors-assistant/agents/*.md"))
+# Both plugins ship agents now, and an agent the checker does not see is an
+# agent that installs broken.
+files = sorted(glob.glob("plugins/*/agents/*.md"))
 if not files:
     failures.append("plugins/abdm-contributors-assistant/agents: no agent files found")
 
