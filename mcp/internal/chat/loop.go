@@ -482,6 +482,8 @@ func collectSources(sources *[]Source, name string, result map[string]any) {
 // call starts, "text" for each streamed text delta, "sources" once with the
 // citations gathered along the way (only if any were gathered), then
 // "done". The "error" event is the HTTP layer's job, not this loop's.
+const greetingReply = "Hi. What are you building? Ask about creating an ABHA, linking records, consent, or an error code you are seeing."
+
 func (s *Service) Respond(ctx context.Context, turns []Turn, page *Page, emit func(event string, data any) error) error {
 	if err := s.ValidateTurns(turns); err != nil {
 		return err
@@ -515,6 +517,12 @@ func (s *Service) Respond(ctx context.Context, turns []Turn, page *Page, emit fu
 		}
 	}
 	question := lastUserText(turns)
+	if route.IsGreeting(question) && lastUserAttachment(turns) == nil {
+		if err := emit("text", map[string]string{"delta": greetingReply}); err != nil {
+			return err
+		}
+		return s.finish(nil, emit)
+	}
 	// An attached page is a source the answer legitimately draws on, and the
 	// reader can see it named in the panel, so it counts towards the
 	// grounding check the same way a retrieved atom does. Without this, an
