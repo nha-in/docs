@@ -77,9 +77,23 @@ func main() {
 	chatPerDay := flag.Int("chat-rate-per-day", envIntOr("CHAT_RATE_PER_DAY", 100), "chat requests per ip per day")
 	mcpURL := flag.String("mcp-url", envOr("MCP_URL", ""), "public MCP endpoint the chat assistant names; empty keeps the built-in default")
 	trustProxy := flag.Bool("trust-proxy", envBoolOr("TRUST_PROXY", false),
-		"trust the last X-Forwarded-For entry for the chat rate limiter's client IP; "+
+		"trust X-Forwarded-For for the chat rate limiter's client IP; "+
 			"enable only when a trusted reverse proxy sits in front and appends its own entry")
+	trustProxyHops := flag.Int("trust-proxy-hops", envIntOr("TRUST_PROXY_HOPS", 1),
+		"with -trust-proxy, how many trusted proxies each append an X-Forwarded-For entry; "+
+			"1 for a load balancer alone, 2 for a CDN in front of a load balancer")
 	flag.Parse()
+
+	// The rate limiter keys on the client address; trustedHops is how far back
+	// in X-Forwarded-For that address sits. Zero means the header is untrusted.
+	trustedHops := 0
+	if *trustProxy {
+		trustedHops = *trustProxyHops
+		if trustedHops < 1 {
+			slog.Error("TRUST_PROXY_HOPS must be at least 1 when TRUST_PROXY is set", "hops", trustedHops)
+			os.Exit(1)
+		}
+	}
 
 	r, err := index.Open(*db)
 	if err != nil {
@@ -181,7 +195,7 @@ func main() {
 		slog.Info("chat enabled", "model", *chatModel)
 	}
 
-	h, err := server.Handler(r, emb, *allowOrigin, chatSvc, limiter, *trustProxy)
+	h, err := server.Handler(r, emb, *allowOrigin, chatSvc, limiter, trustedHops)
 	if err != nil {
 		slog.Error("configure server", "err", err)
 		os.Exit(1)

@@ -92,7 +92,10 @@ A healthy start logs `docs-mcp starting … embeddings=true`.
   query string uncached: MCP is `POST` with `Accept: text/event-stream`, chat streams.
 - `private_dns_enabled` on the Bedrock endpoint applies to the whole VPC: everything in it that
   calls Bedrock goes through the endpoint from then on.
-- Chat is off (`CHAT_MODEL` unset). Add it to `abdm_docs_mcp_environment` to turn it on.
+- Chat needs `CHAT_MODEL` in `abdm_docs_mcp_environment`, plus `TRUST_PROXY = "true"` and
+  `TRUST_PROXY_HOPS = "2"` so the per-IP rate limit keys on the reader rather than on the ALB
+  or the CDN edge. Unset `CHAT_MODEL` turns chat off and the Ask AI panel becomes a labelled
+  mock on the next site build.
 - Destroying: empty the ECR repository and the versioned site bucket first, or `tofu destroy`
   stops on them.
 

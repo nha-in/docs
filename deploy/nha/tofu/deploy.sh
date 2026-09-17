@@ -41,7 +41,9 @@ site_url="$SITE_URL"
 mcp_url="$SITE_URL/mcp"
 
 echo "==> site: building for $site_url"
-(cd "$repo" && npm ci && DOCUSAURUS_URL="$site_url" DOCUSAURUS_BASE_URL=/ MCP_URL="$mcp_url" npm run build)
+# CHAT_URL is the origin the Ask AI panel posts /api/chat to; the CDN forwards /api/* to
+# docs-mcp on the site's own hostname. Without it the panel ships as a labelled mock.
+(cd "$repo" && npm ci && DOCUSAURUS_URL="$site_url" DOCUSAURUS_BASE_URL=/ MCP_URL="$mcp_url" CHAT_URL="$site_url" npm run build)
 
 # The CDN serves main/ (its origin path). Fingerprinted assets go first, cached for a year,
 # so every file a page references is in the bucket before the page is; pages and the spec
