@@ -48,6 +48,31 @@ jobs:
           DOCUSAURUS_BASE_URL: /${{ github.event.repository.name }}/main/
         run: npm run build
 
+      # GitHub's Deployments panel always links the site root, and the site
+      # itself lives under main/, so the link it hands you 404s and reads as a
+      # failed deploy. This sends the root at main/ instead.
+      - name: Build the root redirect
+        run: |
+          mkdir -p root
+          cat > root/index.html <<'HTML'
+          <!doctype html>
+          <meta charset="utf-8">
+          <title>ABDM Developer Portal</title>
+          <meta http-equiv="refresh" content="0; url=./main/">
+          <link rel="canonical" href="./main/">
+          <p>The portal is at <a href="./main/">./main/</a>.</p>
+          HTML
+
+      - name: Publish the root redirect
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: root
+          # Root publish, so keep everything already there: main/ and the
+          # pr-<number>/ previews.
+          keep_files: true
+          commit_message: "deploy: root redirect to main/"
+
       - name: Publish to gh-pages under main/
         uses: peaceiris/actions-gh-pages@v4
         with:
