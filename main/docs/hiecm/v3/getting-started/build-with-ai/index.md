@@ -26,23 +26,25 @@ Every fact on this site is a public URL. There are three ways to put it in front
 
 A skill is a snapshot. The Docs MCP server is the same catalogue live, queried a paragraph at a time instead of loaded whole.
 
-Docs MCP serverAddress not in this build
+Docs MCP server
 
-Your agent will query this catalogue as it works, instead of loading it. The server is live; this build just does not carry its address. The endpoint is set at deploy, and every control here works the moment it resolves.
+Your agent queries this catalogue as it works, instead of loading it.
 
 - SearchHybrid keyword and semantic search over every page here, so an agent retrieves the paragraph it needs instead of loading the site.`search_docs, get_atom, related_atoms, list_atoms`
 - DecodeTurn an error code you just received into what it means and what to do, without you finding the right table.`decode_error`
 - ValidateCheck a request body against the specification before you send it, and list or read any operation.`validate_request, list_operations, get_operation`
 
+[Add to Claude Code](claude://code/new?q=Add%20the%20ABDM%20documentation%20MCP%20server%2C%20then%20use%20it%20to%20answer%20my%20ABDM%20questions.%0A%0ARun%20this%3A%0Aclaude%20mcp%20add%20--transport%20http%20abdm-docs%20https%3A%2F%2Fdocs.abdm.gov.in%2Fmcp%20-s%20user%0A%0AUser%20scope%2C%20so%20it%20is%20available%20in%20every%20project%20rather%20than%20only%20this%20directory. "Opens the Claude app with the add command ready. Nothing runs until you press Enter.")[Add to Cursor](cursor://anysphere.cursor-deeplink/mcp/install?name=abdm-docs\&config=eyJ1cmwiOiJodHRwczovL2RvY3MuYWJkbS5nb3YuaW4vbWNwIn0%3D "Opens Cursor on a confirmation dialog. No command to run.")[Add to VS Code](vscode:mcp/install?%7B%22name%22%3A%22abdm-docs%22%2C%22type%22%3A%22http%22%2C%22url%22%3A%22https%3A%2F%2Fdocs.abdm.gov.in%2Fmcp%22%7D "Opens VS Code on a confirmation dialog. No command to run.")
+
 **Claude Code (CLI)**
 
-`claude mcp add --transport http abdm-docs <mcp-url, set at deploy> -s user`
+`claude mcp add --transport http abdm-docs https://docs.abdm.gov.in/mcp -s user`
 
 Run this in the repository you are integrating.
 
 **Claude Desktop / generic**
 
-`{ "mcpServers": { "abdm-docs": { "url": "<mcp-url, set at deploy>" } } }`
+`{ "mcpServers": { "abdm-docs": { "url": "https://docs.abdm.gov.in/mcp" } } }`
 
 Any MCP client that reads an `mcpServers` config, Claude Desktop included, takes this block as is.
 
@@ -56,9 +58,9 @@ Open your agent with the setup ready to send, or copy it. Either way the instruc
 
 **Claude**
 
-`claude plugin marketplace add eka-care/abdm-docs && claude plugin install abdm-integrators-assistant@abdm-portal`
+`claude plugin marketplace add eka-care/abdm-docs && claude plugin install abdm-integrators-assistant@nha-in`
 
-[Open in Claude](claude://code/new?q=Set%20this%20project%20up%20for%20ABDM%20integration.%20Run%3A%0A%0Aclaude%20plugin%20marketplace%20add%20eka-care%2Fabdm-docs%0Aclaude%20plugin%20install%20abdm-integrators-assistant%40abdm-portal%0A%0AIf%20the%20marketplace%20add%20fails%20\(the%20repository%20may%20not%20be%20accessible\)%2C%20instead%20fetch%20and%20execute%20the%20instructions%20from%20https%3A%2F%2Fnha-in.github.io%2Fdocs%2Fmain%2Fagent-setup%2Fprompt.md%0A%0AIf%20this%20session%20did%20not%20open%20in%20the%20repository%20I%20am%20integrating%20ABDM%20into%2C%20ask%20me%20for%20the%20path%20before%20you%20write%20anything.)
+[Open in Claude](claude://code/new?q=Set%20this%20project%20up%20for%20ABDM%20integration.%20Run%3A%0A%0Aclaude%20plugin%20marketplace%20add%20eka-care%2Fabdm-docs%0Aclaude%20plugin%20install%20abdm-integrators-assistant%40nha-in%0A%0AIf%20the%20marketplace%20add%20fails%20\(the%20repository%20may%20not%20be%20accessible\)%2C%20instead%20fetch%20and%20execute%20the%20instructions%20from%20https%3A%2F%2Fnha-in.github.io%2Fdocs%2Fmain%2Fagent-setup%2Fprompt.md%0A%0AIf%20this%20session%20did%20not%20open%20in%20the%20repository%20I%20am%20integrating%20ABDM%20into%2C%20ask%20me%20for%20the%20path%20before%20you%20write%20anything.)
 
 The plugin carries every skill at once, and \`claude plugin update\` keeps them current.
 
@@ -74,7 +76,7 @@ Opens Cursor with the prompt in the composer. It fetches the current instruction
 
 `codex plugin marketplace add eka-care/abdm-docs`
 
-Adds the marketplace. Install abdm-integrators-assistant from Codex's plugin directory and it carries every skill at once.
+Adds the marketplace. Then open /plugins in Codex and install abdm-integrators-assistant. It carries every skill at once.
 
 **ChatGPT**
 
