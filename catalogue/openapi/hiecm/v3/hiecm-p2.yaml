@@ -37,7 +37,7 @@ info:
 x-abdm-sources:
 - file: catalogue/openapi/.raw/aarogya-setu.postman_collection.json
   role: upstream
-  hash: sha256:84afbc33fc248dd13f63e12adcd8958c9be30e3877184555f5e5a0a50d5ec92c
+  hash: sha256:0264f83b5b6c4635c6e63ac5529ddc72d3fa28b3d578375ca91b13171a7f30c6
   fetched: '2026-08-25'
   note: NHA's Aarogya Setu collection, 248 requests. Aarogya Setu is NHA's own
     PHR, so it stands in for any PHR implementation.
