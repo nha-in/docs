@@ -1,0 +1,9 @@
+{
+  "label": "Building a provider",
+  "position": 1,
+  "customProps": {
+    "roles": [
+      "provider"
+    ]
+  }
+}
