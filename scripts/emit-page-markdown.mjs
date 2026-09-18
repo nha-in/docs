@@ -298,6 +298,22 @@ function* walk(dir) {
 }
 
 /**
+ * How a module is named in prose and in the llms.txt index.
+ *
+ * HIE-CM module ids are already the name a reader knows (M1, P2, GATEWAY), so
+ * they upper-case straight through. Another gateway's ids are not, so the
+ * label comes from the API sidebar and is prefixed with the gateway, which is
+ * what distinguishes an NHCX module from an HIE-CM one in a flat list.
+ */
+export function moduleLabel({platform, version, moduleId}, sidebar = []) {
+  if (platform === 'hiecm') return moduleId.toUpperCase();
+  const entry = sidebar.find(
+    (s) => s.platform === platform && s.version === version && s.moduleId === moduleId,
+  );
+  return `${platform.toUpperCase()} ${entry?.label ?? moduleId}`;
+}
+
+/**
  * Where a page is actually published.
  *
  * Usually that follows the file's own path, but front matter can override it

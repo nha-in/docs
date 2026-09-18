@@ -1,0 +1,292 @@
+{
+  "rules": [
+    "No screen shows a decision the exchange has not sent.",
+    "Nothing the exchange already knows is typed."
+  ],
+  "state_address": "",
+  "screens": [
+    {
+      "id": "cases",
+      "route": "",
+      "who": "billing clerk",
+      "values": [
+        {
+          "name": "stage",
+          "source": "claim.stage (case_stage)",
+          "empty": "draft"
+        },
+        {
+          "name": "waiting_for",
+          "source": "next_actions[0]",
+          "empty": "nothing"
+        }
+      ],
+      "actions": []
+    },
+    {
+      "id": "case",
+      "route": "",
+      "who": "everyone",
+      "values": [
+        {
+          "name": "preauth_decision",
+          "source": "ClaimResponse.outcome + adjudication[status] via verdict_status",
+          "empty": "waiting"
+        },
+        {
+          "name": "preauth_ref",
+          "source": "ClaimResponse.preAuthRef",
+          "empty": ""
+        },
+        {
+          "name": "approved_amount",
+          "source": "ClaimResponse.total[benefit]",
+          "empty": ""
+        },
+        {
+          "name": "payer_words",
+          "source": "ClaimResponse.item[].adjudication[reason], processNote[].text, x-hcx-error_details",
+          "empty": ""
+        },
+        {
+          "name": "discharge_mode",
+          "source": "typed",
+          "typed_reason": "the exchange cannot know it"
+        }
+      ],
+      "actions": [
+        {
+          "name": "check_the_cover",
+          "step": "F3",
+          "label": "Check the cover",
+          "tab": "eligibility",
+          "leg": "v1/coverageeligibility/check <claim number>",
+          "offered_when": "member id; policy code for validation and benefits",
+          "moves_to": "{\"stage\": \"eligibility\", \"sub_stage\": \"eligible|not-eligible|error\"}"
+        },
+        {
+          "name": "fetch_the_package_master",
+          "step": "F4",
+          "label": "Fetch the package master",
+          "tab": "plan",
+          "leg": "v1/insuranceplan/request <claim number>",
+          "offered_when": "eligible",
+          "moves_to": "{\"plan\": \"ready|empty|error\"}"
+        },
+        {
+          "name": "link_or_capture_the_admission",
+          "step": "F5",
+          "label": "Link the admission",
+          "tab": "preauth",
+          "leg": "none",
+          "offered_when": "eligible",
+          "moves_to": ""
+        },
+        {
+          "name": "the_dossier",
+          "step": "F6",
+          "label": "Save the dossier",
+          "tab": "preauth",
+          "leg": "none",
+          "offered_when": "linked",
+          "moves_to": ""
+        },
+        {
+          "name": "quote_the_treatment",
+          "step": "F7",
+          "label": "Quote the treatment",
+          "tab": "lines",
+          "leg": "none",
+          "offered_when": "plan ready",
+          "moves_to": ""
+        },
+        {
+          "name": "validate_the_set",
+          "step": "F8",
+          "label": "Ask the payer (validate)",
+          "tab": "validate",
+          "leg": "v1/coverageeligibility/check <claim number>",
+          "offered_when": "at least one line",
+          "moves_to": "{\"auth\": \"checking|ready\"}"
+        },
+        {
+          "name": "send_the_pre-authorisation",
+          "step": "F9",
+          "label": "Send the pre-authorisation",
+          "tab": "preauth",
+          "leg": "v1/preauth/submit 12",
+          "offered_when": "eligible; linked; admission date; diagnosis; care team with HPIN; a line; required forms answered; required documents attached",
+          "moves_to": "{\"stage\": \"preauth\", \"sub_stage\": \"requested\"}"
+        },
+        {
+          "name": "answer_a_query",
+          "step": "F9b",
+          "label": "Answer the query",
+          "tab": "preauth or communication",
+          "leg": "none",
+          "offered_when": "queried",
+          "moves_to": "{\"stage\": \"preauth\", \"sub_stage\": \"answered (resubmit) or queried until the decision (communication)\"}"
+        },
+        {
+          "name": "enhancement",
+          "step": "F9c",
+          "label": "Send the enhancement (n added)",
+          "tab": "preauth",
+          "leg": "v1/preauth/submit 13 or 131",
+          "offered_when": "approved or partial; lines added; no request in flight",
+          "moves_to": "{\"stage\": \"enhancement\", \"sub_stage\": \"requested\"}"
+        },
+        {
+          "name": "cancel",
+          "step": "F9d",
+          "label": "Withdraw the pre-authorisation",
+          "tab": "preauth",
+          "leg": "v1/task/submit PC01",
+          "offered_when": "not rejected; not cancelled; no claim raised",
+          "moves_to": "{\"stage\": \"preauth\", \"sub_stage\": \"cancelling then cancelled; fresh claim number\"}"
+        },
+        {
+          "name": "predetermination",
+          "step": "F9e",
+          "label": "Ask for a quote",
+          "tab": "preauth",
+          "leg": "v1/preauth/submit 12",
+          "offered_when": "as F9",
+          "moves_to": "{\"predetermination\": \"asking then answered; the pre-auth unchanged\"}"
+        },
+        {
+          "name": "record_the_discharge",
+          "step": "F10",
+          "label": "Record the discharge",
+          "tab": "claim",
+          "leg": "none",
+          "offered_when": "approved or partial",
+          "moves_to": ""
+        },
+        {
+          "name": "file_the_claim",
+          "step": "F11",
+          "label": "File the claim",
+          "tab": "claim",
+          "leg": "v1/claim/submit 15 (161 or 151 query answer; 16 generic resubmit)",
+          "offered_when": "discharge recorded; discharge summary attached; claim-stage forms answered; amount not above approved",
+          "moves_to": "{\"stage\": \"claim\", \"sub_stage\": \"requested then approved|queried|rejected|partial\"}"
+        },
+        {
+          "name": "status,_reprocess,_release",
+          "step": "F13",
+          "label": "Ask for a reprocess",
+          "tab": "preauth or claim",
+          "leg": "v1/task/submit leg correlation id (status) or 36",
+          "offered_when": "status: payer allows it; reprocess: claim decided and not paid in full; release: part paid",
+          "moves_to": "{\"enquiry\": \"asking then answered|error; a reprocess reopens the claim to requested\"}"
+        }
+      ]
+    },
+    {
+      "id": "inbox",
+      "route": "",
+      "who": "desk",
+      "values": [
+        {
+          "name": "question_text",
+          "source": "CommunicationRequest.payload[].contentString",
+          "empty": ""
+        }
+      ],
+      "actions": []
+    },
+    {
+      "id": "payments",
+      "route": "",
+      "who": "accounts",
+      "values": [
+        {
+          "name": "utr",
+          "source": "PaymentNotice.payment identifier",
+          "empty": ""
+        }
+      ],
+      "actions": []
+    },
+    {
+      "id": "find",
+      "route": "",
+      "who": "registration clerk",
+      "values": [
+        {
+          "name": "disposition",
+          "source": "CoverageEligibilityResponse.disposition",
+          "empty": "not checked"
+        }
+      ],
+      "actions": [
+        {
+          "name": "policy_search",
+          "step": "F1",
+          "label": "Search policies",
+          "tab": "new",
+          "leg": "participant/get/policies",
+          "offered_when": "always",
+          "moves_to": ""
+        },
+        {
+          "name": "open_the_case",
+          "step": "F2",
+          "label": "Select",
+          "tab": "new",
+          "leg": "none",
+          "offered_when": "always",
+          "moves_to": "{\"stage\": \"eligibility\", \"sub_stage\": \"draft\"}"
+        }
+      ]
+    },
+    {
+      "id": "plan",
+      "route": "",
+      "who": "doctor",
+      "values": [
+        {
+          "name": "package_rate",
+          "source": "InsurancePlan cost[Procedure] via claim_plan_benefit.rate",
+          "empty": ""
+        }
+      ],
+      "actions": []
+    }
+  ],
+  "tabs": [
+    {
+      "key": "eligibility",
+      "label": "Eligibility"
+    },
+    {
+      "key": "plan",
+      "label": "Insurance plan"
+    },
+    {
+      "key": "lines",
+      "label": "Line items"
+    },
+    {
+      "key": "validate",
+      "label": "Validate"
+    },
+    {
+      "key": "preauth",
+      "label": "Pre-authorisation"
+    },
+    {
+      "key": "communication",
+      "label": "Communication"
+    },
+    {
+      "key": "claim",
+      "label": "Claim"
+    },
+    {
+      "key": "payments",
+      "label": "Payments"
+    }
+  ]
+}
