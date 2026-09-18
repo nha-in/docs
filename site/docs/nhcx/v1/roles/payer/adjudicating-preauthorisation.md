@@ -3,6 +3,8 @@ title: Adjudicating preauthorisation
 sidebar_label: Adjudicating preauthorisation
 sidebar_position: 4
 description: Evaluating medical necessity, raising queries, approval, and rejection
+sidebar_class_name: sidebar-icon sidebar-icon--file-check
+verification: unverified
 source: nhcx-package/docs/04-Building a Payer/04-Adjudicating Preauthorisation.md
 generated: true
 sidebar_custom_props:

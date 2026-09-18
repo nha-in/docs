@@ -3,8 +3,13 @@ title: Your certificate
 sidebar_label: Your certificate
 sidebar_position: 4
 description: RSA-2048 key pair generation and self-signed certificate assembly
+sidebar_class_name: sidebar-icon sidebar-icon--file-badge
+verification: unverified
 source: nhcx-package/docs/02-Getting Started/04-Your Certificate.md
 generated: true
+covers:
+  - nhcx.flow.generate-and-register-certificate
+  - nhcx.flow.rotate-certificate
 ---
 
 # Your certificate

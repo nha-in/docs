@@ -39,7 +39,7 @@ Changed sections since installed version:
   plan#p8-schedule        checkpoint 4 moved
   plan#p9-done            one criterion added
 
-Run: /plugin update abdm-portal
+Run: /plugin update nha-in
 ```
 
 ## Behaviour on drift

@@ -1,0 +1,39 @@
+{
+  "name": "nhcx",
+  "version": "0.1.0",
+  "description": "Agent skills for building on the National Health Claims Exchange (NHCX), one per use case in episode order: nhcx-coverage, nhcx-insurance, nhcx-preauth, nhcx-claim, nhcx-payment, nhcx-communication and nhcx-reprocess. Each builds its use case into a hospital information system or a claims desk, held to the NHCX package's pinned FHIR bundles, and installs and runs alone.",
+  "author": {
+    "name": "ABDM Developer Portal",
+    "url": "https://github.com/eka-care/abdm-docs"
+  },
+  "homepage": "https://github.com/eka-care/abdm-docs",
+  "repository": "https://github.com/eka-care/abdm-docs",
+  "license": "MIT",
+  "keywords": [
+    "nhcx",
+    "claims",
+    "insurance",
+    "pmjay",
+    "fhir",
+    "healthcare",
+    "india-health"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "NHCX",
+    "shortDescription": "Build an NHCX claims integration, one use case at a time.",
+    "longDescription": "The National Health Claims Exchange, written as one skill per use case in episode order: coverage, insurance plan, pre-authorisation, claim, payment, communication and reprocess. Each checks what the system already has, builds only what is missing, and holds its bundles to the NHCX package's pinned samples.",
+    "defaultPrompt": [
+      "Add NHCX coverage eligibility to this hospital system.",
+      "File the NHCX claim at discharge from this system.",
+      "Handle the payer's NHCX communication requests."
+    ],
+    "developerName": "ABDM Developer Portal working group",
+    "category": "Documentation",
+    "capabilities": [
+      "Read",
+      "Write"
+    ],
+    "websiteURL": "https://github.com/eka-care/abdm-docs"
+  }
+}

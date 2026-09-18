@@ -125,7 +125,106 @@ function CopyLine({value, block}: {value: string; block?: boolean}) {
   );
 }
 
-export default function McpInstall(): React.ReactNode {
+/**
+ * NHCX's server entry: the name the NHCX landing page publishes it under, the
+ * published portal's own MCP address, and a copyable line for each agent that
+ * page names. `{name}` and `{url}` are filled in below.
+ *
+ * The address is the live one, docs.abdm.gov.in/mcp, not the docs-mcp host the
+ * landing page's content file carries: that hostname does not resolve.
+ */
+const NHCX_SERVER = {name: 'nhcx-docs', url: 'https://docs.abdm.gov.in/mcp'};
+
+const NHCX_AGENTS: {id: string; label: string; command: string; file?: string}[] = [
+  {id: 'claude', label: 'Claude Code', command: 'claude mcp add --transport http {name} {url} -s user'},
+  {id: 'codex', label: 'Codex', command: 'codex mcp add {name} --url {url}'},
+  {
+    id: 'cursor',
+    label: 'Cursor',
+    file: '.cursor/mcp.json',
+    command: '{ "mcpServers": { "{name}": { "url": "{url}" } } }',
+  },
+  {
+    id: 'vscode',
+    label: 'VS Code',
+    command: `code --add-mcp '{"name":"{name}","type":"http","url":"{url}"}'`,
+  },
+  {id: 'gemini', label: 'Gemini CLI', command: 'gemini mcp add --transport http {name} {url}'},
+];
+
+const fill = (template: string) =>
+  template.replaceAll('{name}', NHCX_SERVER.name).replaceAll('{url}', NHCX_SERVER.url);
+
+function NhcxMcpInstall(): React.ReactNode {
+  const [agent, setAgent] = useState(NHCX_AGENTS[0]);
+  return (
+    <aside className="skill-install">
+      <div className="skill-install__head">
+        <span className="skill-install__icon" aria-hidden="true">
+          <Plug className="size-4" />
+        </span>
+        <div className="skill-install__body">
+          <p className="skill-install__title">Docs MCP server</p>
+          <p className="skill-install__note">
+            A live MCP server over the documentation. The agent searches it, decodes
+            error codes and checks request bodies as it works, alongside a skill or on
+            its own.
+          </p>
+        </div>
+      </div>
+
+      <ul className="skill-caps">
+        {CAPABILITIES.map((capability) => (
+          <li key={capability.label} className="skill-caps__item">
+            <span className="skill-caps__label">{capability.label}</span>
+            <span className="skill-caps__detail">{capability.detail}</span>
+            <code className="skill-caps__tools">{capability.tools}</code>
+          </li>
+        ))}
+      </ul>
+
+      <div className="skill-install__targets" role="tablist" aria-label="Coding agent">
+        {NHCX_AGENTS.map((option) => (
+          <button
+            key={option.id}
+            type="button"
+            role="tab"
+            aria-selected={option.id === agent.id}
+            className={cn(
+              'skill-install__target',
+              option.id === agent.id && 'skill-install__target--active',
+            )}
+            onClick={() => setAgent(option)}>
+            {option.label}
+          </button>
+        ))}
+      </div>
+
+      <CopyLine value={fill(agent.command)} />
+      <p className="skill-install__hint">
+        {agent.file ? (
+          <>
+            Add this to <code>{agent.file}</code>.
+          </>
+        ) : (
+          'Run this in the repository you are integrating.'
+        )}
+      </p>
+    </aside>
+  );
+}
+
+type McpInstallProps = {
+  /** Which gateway's server entry to show: ABDM's by default, or NHCX's. */
+  set?: 'abdm' | 'nhcx';
+};
+
+export default function McpInstall({set = 'abdm'}: McpInstallProps): React.ReactNode {
+  if (set === 'nhcx') return <NhcxMcpInstall />;
+  return <AbdmMcpInstall />;
+}
+
+function AbdmMcpInstall(): React.ReactNode {
   const {siteConfig} = useDocusaurusContext();
   const url = (siteConfig.customFields?.mcpUrl as string | null) ?? null;
 

@@ -3,6 +3,8 @@ title: Glossary
 sidebar_label: Glossary
 sidebar_position: 90
 description: Definitive glossary of protocol, healthcare, and scheme terms
+sidebar_class_name: sidebar-icon sidebar-icon--book-a
+verification: unverified
 source: nhcx-package/docs/01-Overview/11-Glossary.md
 generated: true
 ---

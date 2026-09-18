@@ -3,6 +3,8 @@ title: Payer flexibility
 sidebar_label: Payer flexibility
 sidebar_position: 7
 description: How each payer configures queries, answers and case numbers
+sidebar_class_name: sidebar-icon sidebar-icon--sliders-horizontal
+verification: unverified
 source: nhcx-package/docs/01-Overview/07-Payer Flexibility.md
 generated: true
 ---

@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import {cn} from '@site/src/lib/utils';
-import SkillInstall from './SkillInstall';
+import SkillInstall, {NHCX_SKILLS_URL} from './SkillInstall';
 import manifest from '@site/src/data/skills.json';
 
 /**
@@ -153,24 +153,33 @@ export default function SkillPicker({set = 'abdm'}: SkillPickerProps): React.Rea
           slug, plus an archive for a skill of more than one file, and no
           index), so this lists each skill rather than claiming a "download
           all" archive. */}
-      <details className="skill-how skill-picker__all">
-        <summary className="skill-how__summary">Download all skills</summary>
-        <ul className="skill-picker__all-list">
-          {choices.map((option) => (
-            <li key={option.slug}>
-              <a
-                href={
-                  isFolder(option.slug)
-                    ? `${base}/skills/${option.slug}.tar.gz`
-                    : `${base}/skills/${option.slug}/SKILL.md`
-                }
-                download>
-                {option.label}
-              </a>
-            </li>
-          ))}
-        </ul>
-      </details>
+      {/* NHCX's skills are read and downloaded from the repository, as the
+          NHCX landing page points readers to them. */}
+      {set === 'nhcx' ? (
+        <p className="skill-install__hint">
+          Read the skills first, or download a folder by hand:{' '}
+          <a href={NHCX_SKILLS_URL}>the skills on GitHub</a>.
+        </p>
+      ) : (
+        <details className="skill-how skill-picker__all">
+          <summary className="skill-how__summary">Download all skills</summary>
+          <ul className="skill-picker__all-list">
+            {choices.map((option) => (
+              <li key={option.slug}>
+                <a
+                  href={
+                    isFolder(option.slug)
+                      ? `${base}/skills/${option.slug}.tar.gz`
+                      : `${base}/skills/${option.slug}/SKILL.md`
+                  }
+                  download>
+                  {option.label}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </details>
+      )}
     </div>
   );
 }

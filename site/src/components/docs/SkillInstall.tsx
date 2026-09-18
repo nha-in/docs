@@ -25,6 +25,10 @@ type Entry = {
   tests?: number;
   /** The reference files this skill is made of, from the generator. */
   sections: string[];
+  /** Set on NHCX's skills; absent means ABDM. */
+  gateway?: 'nhcx';
+  /** A committed folder skill, also served as /skills/<slug>.tar.gz. */
+  folder?: boolean;
 };
 
 type Target = {
@@ -35,7 +39,7 @@ type Target = {
   /** Built from the published URL, so the command works where the site is. */
   command: (url: string, slug: string, sections: string[]) => string;
   /** One click into the agent, or null where the agent has no scheme for it. */
-  link: ((command: string, module: string) => string) | null;
+  link: ((command: string, skill: string, gateway: string) => string) | null;
   note: string;
 };
 
@@ -48,14 +52,14 @@ type Target = {
  * keeps the project they are integrating, so the last line tells the agent to
  * ask before it writes anything.
  */
-function promptFor(command: string, module: string) {
+function promptFor(command: string, skill: string, gateway: string) {
   return [
-    `Install the ABDM ${module} agent skill into this project, then help me use it.`,
+    `Install the ${skill} agent skill into this project, then help me use it.`,
     '',
     'Run this:',
     command,
     '',
-    'If this session did not open in the repository I am integrating ABDM into, ask me for the path before you write anything.',
+    `If this session did not open in the repository I am integrating ${gateway} into, ask me for the path before you write anything.`,
   ].join('\n');
 }
 
@@ -74,6 +78,26 @@ function fetchFolder(url: string, slug: string, dir: string, sections: string[])
   ].join(' && ');
 }
 
+/**
+ * NHCX's skills install from the repository, the way the NHCX landing page
+ * publishes them: `npx skills`, which sets a skill up for every agent it finds,
+ * or git alone, which fetches the one folder into the agent's skills directory.
+ */
+const NHCX_SKILLS_PATH = 'nha-in/docs/plugins/nhcx/skills';
+export const NHCX_SKILLS_URL = 'https://github.com/nha-in/docs/tree/docs/nhcx-base/plugins/nhcx/skills';
+
+const gitFetch = (slug: string, dir: string) =>
+  `git clone --depth 1 --filter=blob:none --sparse https://github.com/nha-in/docs .nhcx && git -C .nhcx sparse-checkout set plugins/nhcx/skills/${slug} && mkdir -p ${dir} && cp -R .nhcx/plugins/nhcx/skills/${slug} ${dir}/ && rm -rf .nhcx`;
+
+const gitTarget = (id: string, label: string, dir: string, link: Target['link'] = null): Target => ({
+  id,
+  label,
+  dir,
+  command: (_url, slug) => gitFetch(slug, dir),
+  link,
+  note: `No installer, only git. It fetches just the skill's folder and copies it to ${dir}.`,
+});
+
 const TARGETS: Target[] = [
   {
     id: 'claude-code',
@@ -81,8 +105,8 @@ const TARGETS: Target[] = [
     dir: '.claude/skills',
     command: (url, slug, sections) => fetchFolder(url, slug, '.claude/skills', sections),
     // https://support.claude.com/en/articles/14729294-open-claude-desktop-with-a-link
-    link: (command, module) =>
-      `claude://code/new?q=${encodeURIComponent(promptFor(command, module))}`,
+    link: (command, skill, gateway) =>
+      `claude://code/new?q=${encodeURIComponent(promptFor(command, skill, gateway))}`,
     note: 'Drops the skill into this project. Claude loads it when a task matches.',
   },
   {
@@ -97,9 +121,9 @@ const TARGETS: Target[] = [
     // https://cursor.com/docs/integrations/deeplinks. Cursor has no skill
     // install deeplink, but it has a prompt one, so this lands the same way the
     // Claude link does: the command in the composer, waiting to be sent.
-    link: (command, module) =>
+    link: (command, skill, gateway) =>
       `cursor://anysphere.cursor-deeplink/prompt?text=${encodeURIComponent(
-        promptFor(command, module),
+        promptFor(command, skill, gateway),
       )}`,
     note: 'Cursor reads this folder as a skill and matches it by its description when a task calls for it.',
   },
@@ -121,6 +145,22 @@ const TARGETS: Target[] = [
     link: null,
     note: 'One folder. Put it wherever your agent reads skills from.',
   },
+];
+
+const NHCX_TARGETS: Target[] = [
+  {
+    id: 'npx',
+    label: 'npx skills',
+    dir: null,
+    command: (_url, slug) => `npx skills add ${NHCX_SKILLS_PATH}/${slug}`,
+    link: null,
+    note: 'The skills installer finds every coding agent in the project and sets the skill up for each.',
+  },
+  gitTarget('claude-code', 'Claude Code', '.claude/skills', TARGETS[0].link),
+  gitTarget('codex', 'Codex', '.agents/skills'),
+  gitTarget('cursor', 'Cursor', '.cursor/skills', TARGETS[1].link),
+  gitTarget('copilot', 'GitHub Copilot', '.github/skills'),
+  gitTarget('gemini', 'Gemini CLI', '.gemini/skills'),
 ];
 
 /**
@@ -235,7 +275,9 @@ function CopyLine({value}: {value: string}) {
  */
 export default function SkillInstall({slug, note}: SkillInstallProps): React.ReactNode {
   const {siteConfig} = useDocusaurusContext();
-  const [target, setTarget] = useState(TARGETS[0]);
+  const nhcx = (manifest as Record<string, Entry>)[slug]?.gateway === 'nhcx';
+  const targets = nhcx ? NHCX_TARGETS : TARGETS;
+  const [target, setTarget] = useState(targets[0]);
   const base = `${siteConfig.url}${siteConfig.baseUrl}`.replace(/\/+$/, '');
   // The router, for the copy button. The install commands take the whole
   // folder, because the router alone has links to files that are not there.
@@ -244,6 +286,13 @@ export default function SkillInstall({slug, note}: SkillInstallProps): React.Rea
 
   if (!entry) return null;
 
+  const gateway = nhcx ? 'NHCX' : 'ABDM';
+  // The panel's heading, and the skill named in a launch prompt. Every NHCX
+  // skill shares one module, so it is named by its own title instead.
+  const heading = nhcx ? entry.title : `${entry.module} agent skill`;
+  const skillName = nhcx ? entry.title : `${gateway} ${entry.module}`;
+  const command = target.command(base, slug, entry.sections);
+
   return (
     <aside className="skill-install">
       <div className="skill-install__head">
@@ -251,23 +300,30 @@ export default function SkillInstall({slug, note}: SkillInstallProps): React.Rea
           <Sparkles className="size-4" />
         </span>
         <div className="skill-install__body">
-          <p className="skill-install__title">
-            {entry.module} agent skill
-          </p>
+          <p className="skill-install__title">{heading}</p>
           <p className="skill-install__note">{note}</p>
         </div>
         <div className="skill-install__actions">
-          <CopySkillButton url={download} />
-          {/* The router only. Named for what it is, because the folder is
-              what installs and the command above is what fetches it. */}
-          <a
-            className="skill-install__download"
-            href={download}
-            download
-            title="The router. Use the command below to take the references with it.">
-            <Download className="size-4" aria-hidden="true" />
-            SKILL.md
-          </a>
+          {nhcx ? (
+            <a className="skill-install__download" href={`${NHCX_SKILLS_URL}/${slug}`}>
+              <SquareArrowOutUpRight className="size-4" aria-hidden="true" />
+              On GitHub
+            </a>
+          ) : (
+            <>
+              <CopySkillButton url={download} />
+              {/* The router only. Named for what it is, because the folder is
+                  what installs and the command above is what fetches it. */}
+              <a
+                className="skill-install__download"
+                href={download}
+                download
+                title="The router. Use the command below to take the references with it.">
+                <Download className="size-4" aria-hidden="true" />
+                SKILL.md
+              </a>
+            </>
+          )}
         </div>
       </div>
 
@@ -281,7 +337,7 @@ export default function SkillInstall({slug, note}: SkillInstallProps): React.Rea
       </ul>
 
       <div className="skill-install__targets" role="tablist" aria-label="Install for">
-        {TARGETS.map((option) => (
+        {targets.map((option) => (
           <button
             key={option.id}
             type="button"
@@ -297,12 +353,12 @@ export default function SkillInstall({slug, note}: SkillInstallProps): React.Rea
         ))}
       </div>
 
-      <CopyLine value={target.command(base, slug, entry.sections)} />
+      <CopyLine value={command} />
 
       {target.link && (
         <a
           className="skill-launch"
-          href={target.link(target.command(base, slug, entry.sections), entry.module)}>
+          href={target.link(command, skillName, gateway)}>
           <SquareArrowOutUpRight className="size-3.5" aria-hidden="true" />
           Open in {target.label}
         </a>
@@ -322,8 +378,9 @@ export default function SkillInstall({slug, note}: SkillInstallProps): React.Rea
               : '. The skill loads when the task matches it.'}
           </li>
           <li>
-            Check what it writes against these pages. The skill carries the facts,
-            not the sandbox: nothing in it has been run against ABDM.
+            {nhcx
+              ? 'Check what it writes against these pages. The skill holds its bundles to the pinned samples in the NHCX package; check response shapes against the sandbox.'
+              : 'Check what it writes against these pages. The skill carries the facts, not the sandbox: nothing in it has been run against ABDM.'}
           </li>
           {target.link && (
             <li>

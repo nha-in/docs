@@ -26,7 +26,7 @@ The plugin carries every skill at once and updates in place, so prefer it wherev
 
 ```
 claude plugin marketplace add eka-care/abdm-docs
-claude plugin install abdm-integrators-assistant@abdm-portal
+claude plugin install abdm-integrators-assistant@nha-in
 ```
 
 ### Codex
