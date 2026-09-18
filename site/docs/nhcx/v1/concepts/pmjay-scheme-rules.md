@@ -7,6 +7,8 @@ sidebar_class_name: sidebar-icon sidebar-icon--scale
 verification: unverified
 source: nhcx-package/docs/01-Overview/10-PMJAY Scheme Rules.md
 generated: true
+covers:
+  - nhcx.flow.pmjay-hospital-migration
 ---
 
 # PMJAY Scheme Rules and HMIS Integration

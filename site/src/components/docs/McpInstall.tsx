@@ -133,7 +133,7 @@ function CopyLine({value, block}: {value: string; block?: boolean}) {
  * The address is the live one, docs.abdm.gov.in/mcp, not the docs-mcp host the
  * landing page's content file carries: that hostname does not resolve.
  */
-const NHCX_SERVER = {name: 'nhcx-v1', url: 'https://docs.abdm.gov.in/mcp'};
+const NHCX_SERVER = {name: 'nhcx-docs', url: 'https://docs.abdm.gov.in/mcp'};
 
 const NHCX_AGENTS: {id: string; label: string; command: string; file?: string}[] = [
   {id: 'claude', label: 'Claude Code', command: 'claude mcp add --transport http {name} {url} -s user'},

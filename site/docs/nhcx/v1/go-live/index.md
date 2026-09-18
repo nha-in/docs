@@ -10,6 +10,7 @@ generated: true
 covers:
   - nhcx.sandbox.going-live
   - nhcx.sandbox.sandbox-exit
+  - nhcx.flow.production-onboarding
 ---
 
 # Going live

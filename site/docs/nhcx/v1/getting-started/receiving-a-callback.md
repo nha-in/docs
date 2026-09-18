@@ -9,6 +9,8 @@ source: nhcx-package/docs/02-Getting Started/09-Receiving a Callback.md
 generated: true
 covers:
   - nhcx.sandbox.callback-url-requirements
+  - nhcx.flow.receive-a-sealed-callback
+  - nhcx.flow.report-a-processing-error
 ---
 
 # Receiving a callback

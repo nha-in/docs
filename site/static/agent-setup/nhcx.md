@@ -61,12 +61,12 @@ git clone --depth 1 --filter=blob:none --sparse https://github.com/nha-in/docs .
 A live MCP server over the documentation. Register it with your agent:
 
 ```
-claude mcp add --transport http nhcx-v1 https://docs.abdm.gov.in/mcp -s user
-codex mcp add nhcx-v1 --url https://docs.abdm.gov.in/mcp
-gemini mcp add --transport http nhcx-v1 https://docs.abdm.gov.in/mcp
+claude mcp add --transport http nhcx-docs https://docs.abdm.gov.in/mcp -s user
+codex mcp add nhcx-docs --url https://docs.abdm.gov.in/mcp
+gemini mcp add --transport http nhcx-docs https://docs.abdm.gov.in/mcp
 ```
 
-For Cursor, add `{ "mcpServers": { "nhcx-v1": { "url": "https://docs.abdm.gov.in/mcp" } } }` to `.cursor/mcp.json`. For other agents, add an HTTP MCP server named `nhcx-v1` at `https://docs.abdm.gov.in/mcp` using their config format.
+For Cursor, add `{ "mcpServers": { "nhcx-docs": { "url": "https://docs.abdm.gov.in/mcp" } } }` to `.cursor/mcp.json`. For other agents, add an HTTP MCP server named `nhcx-docs` at `https://docs.abdm.gov.in/mcp` using their config format.
 
 ## 4. Report back
 

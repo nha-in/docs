@@ -10,6 +10,8 @@ generated: true
 sidebar_custom_props:
   roles:
     - payer
+covers:
+  - nhcx.flow.payer-process-a-request
 ---
 
 # Payer overview
