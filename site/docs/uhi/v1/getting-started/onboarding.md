@@ -2,7 +2,6 @@
 title: Onboarding to UHI
 sidebar_label: Onboarding
 description: How an application joins the UHI network, from the M2 gate to sandbox sign-off and production go-live.
-verification: unverified
 source: UHI__UHI_Physical_Consultation_v2.0_-_Onboarding_Document.md, UHI__UHI_AmbulanceBooking_Onboarding_v1.1-July2026.md, UHI__UHI_BloodBank_Onboarding_v1.0.md, UHI__UHI_PMJAY_HEM_Onboarding_v1.4.md, UHI__UHI_JanAushadhiKendra_OnboardingDoc_v1.0.md, UHI__UHI_AMRIT_Pharmacy_OnboardingDoc_v1.0.md
 sidebar_position: 1
 sidebar_class_name: sidebar-icon sidebar-icon--door-open
@@ -42,7 +41,7 @@ Two bars on the HSPA role. For blood bank, your inventory data has to be maintai
 
 Your application must have completed ABDM M2 with [HIE-CM](/docs/uhi/v1/getting-started/glossary#hie-cm). An application that has not completed M2 cannot be onboarded onto UHI services. The gate applies to every service on the network.
 
-If M2 is not done, start at [M2 linking and sharing](/docs/hiecm/v3/api/m2).
+If M2 is not done, start at [M2 Attach, Health Information Provider Services](/docs/hiecm/v3/api/m2).
 
 ## The steps
 
@@ -136,4 +135,4 @@ For anything about these pages rather than about UHI itself, see [support](/docs
 - [UHI gateway](/docs/uhi/v1/concepts/network-and-protocol), for the message pattern, the context block and signing
 - [Introduction](/docs/uhi/v1), for the two roles and how far each service goes
 - [Physical consultation](/docs/uhi/v1/concepts/services/physical-consultation), the service with the full booking lifecycle
-- [M2 linking and sharing](/docs/hiecm/v3/api/m2), the prerequisite
+- [M2 Attach, Health Information Provider Services](/docs/hiecm/v3/api/m2), the prerequisite

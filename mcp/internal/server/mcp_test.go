@@ -2,6 +2,7 @@ package server
 
 import (
 	"context"
+	"encoding/base64"
 	"encoding/json"
 	"fmt"
 	"path/filepath"
@@ -65,8 +66,7 @@ func TestSearchDocsCarriesVersionAndStatus(t *testing.T) {
 	var payload struct {
 		CatalogueVersion string `json:"catalogue_version"`
 		Hits             []struct {
-			ID                 string `json:"id"`
-			VerificationStatus string `json:"verification_status"`
+			ID string `json:"id"`
 		} `json:"hits"`
 	}
 	if err := json.Unmarshal([]byte(out), &payload); err != nil {
@@ -77,9 +77,6 @@ func TestSearchDocsCarriesVersionAndStatus(t *testing.T) {
 	}
 	if len(payload.Hits) == 0 || payload.Hits[0].ID != "hiecm.error.abdm-1035" {
 		t.Errorf("hits = %+v", payload.Hits)
-	}
-	if payload.Hits[0].VerificationStatus != "verified" {
-		t.Errorf("status not carried")
 	}
 }
 
@@ -152,8 +149,8 @@ func TestRelatedAtomsReverseEdgeNotMislabeled(t *testing.T) {
 func TestGetAtomCautionOnUnverifiedOnly(t *testing.T) {
 	sess := connect(t, false, nil)
 	out := callText(t, sess, "get_atom", map[string]any{"id": "hiecm.flow.m2-link-care-context"})
-	if !strings.Contains(out, `"caution"`) || !strings.Contains(out, "recorded claims, not observed behaviour") {
-		t.Errorf("unverified atom missing caution: %s", out)
+	if strings.Contains(out, `"caution"`) || strings.Contains(out, "verification_status") {
+		t.Errorf("atom must carry no verification field or caution: %s", out)
 	}
 	out = callText(t, sess, "get_atom", map[string]any{"id": "hiecm.error.abdm-1035"})
 	if strings.Contains(out, `"caution"`) {
@@ -299,6 +296,26 @@ func TestCatalogueInfo(t *testing.T) {
 	out := callText(t, sess, "catalogue_info", map[string]any{})
 	if !strings.Contains(out, "2026.08.24") || !strings.Contains(out, "\"embeddings\": false") {
 		t.Errorf("info payload: %s", out)
+	}
+}
+
+func TestSandboxNotes(t *testing.T) {
+	var body any
+	if err := json.Unmarshal([]byte(`{"abhaNumber":"91-1234-5678-9012","patient":[{"careContexts":[{"hiType":["Prescription"]}]}]}`), &body); err != nil {
+		t.Fatal(err)
+	}
+	notes := sandboxNotes("m2_hip_link_care_context", body)
+	if len(notes) != 2 {
+		t.Fatalf("want dashed abhaNumber and array hiType notes, got %v", notes)
+	}
+	if err := json.Unmarshal([]byte(`{"loginHint":"mobile","loginId":"`+base64.StdEncoding.EncodeToString(make([]byte, 512))+`"}`), &body); err != nil {
+		t.Fatal(err)
+	}
+	if notes = sandboxNotes("m1_phr_request_otp", body); len(notes) != 2 {
+		t.Fatalf("want loginHint and wrong-key notes, got %v", notes)
+	}
+	if notes = sandboxNotes("m2_hip_link_care_context", map[string]any{"abhaNumber": "91123456789012"}); len(notes) != 0 {
+		t.Fatalf("clean body must carry no notes, got %v", notes)
 	}
 }
 

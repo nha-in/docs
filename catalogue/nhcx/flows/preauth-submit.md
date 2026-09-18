@@ -39,8 +39,6 @@ sources:
   hash: sha256:2e8c594c51d9640ae4a576be34a5d190614918d1e7697d6718bc91c31fa66948
   fetched: '2026-09-14'
   note: 'API specification: preauthhcxservice, row 23 of the NHCX document sheet, listed on https://hcxsbx.abdm.gov.in/#/technical-specifications/api-specifications. paths /v1/preauth/submit and /v1/preauth/on_submit.'
-verified:
-  status: unverified
 related:
   endpoints:
   - nhcx.endpoint.preauth-submit

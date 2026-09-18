@@ -1,6 +1,6 @@
 ---
-description: Coverage and verification state of the ABDM Catalogue by gateway, milestone and atom type.
-argument-hint: '[--gateway <g>|--milestone <M>|--stale|--gaps]'
+description: Coverage and graph health of the ABDM Catalogue by gateway, milestone and atom type.
+argument-hint: '[--gateway <g>|--milestone <M>|--gaps]'
 ---
 
 Report where the ABDM Catalogue actually is. Filters: `$ARGUMENTS`. With no arguments, report everything.
@@ -13,7 +13,6 @@ Where the Catalogue actually is, as opposed to where it feels like it is.
 /catalogue-status
 /catalogue-status --gateway hiecm
 /catalogue-status --milestone M2
-/catalogue-status --stale            # everything needing attention
 /catalogue-status --gaps             # what is missing rather than what exists
 ```
 
@@ -21,7 +20,7 @@ Where the Catalogue actually is, as opposed to where it feels like it is.
 
 **Coverage** per gateway and milestone: atoms by type, against the expected set derived from the ingested OpenAPI operations. An endpoint in the spec with no atom is a gap.
 
-**Verification** counts: verified, unverified, stale, and the age of the oldest verification.
+**Sandbox evidence**: which endpoint atoms have a file under `catalogue/verification/`, and how old the newest run is. Atoms carry no status; this is the only record.
 
 **Scope** reporting: which gateways and milestones carry atoms, and which carry none yet. Report the counts rather than judging them, because no gateway is barred. Flag anything in M1 to M3 claiming dummy-proof depth without all five sections.
 
@@ -31,6 +30,6 @@ Where the Catalogue actually is, as opposed to where it feels like it is.
 
 ## Reading it
 
-The number that matters is not atoms written. It is endpoint atoms verified against sandbox on the dummy-proof paths, because that is what the definition of done requires and what the first-day developer test exercises.
+The number that matters is not atoms written. It is endpoint atoms on the dummy-proof paths with matching sandbox evidence, because that is what the definition of done requires and what the first-day developer test exercises.
 
-A high atom count with low verification is the failure mode this command exists to make visible.
+A high atom count with little evidence is the failure mode this command exists to make visible.

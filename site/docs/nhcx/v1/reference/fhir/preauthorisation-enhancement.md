@@ -3,7 +3,6 @@ title: Preauthorisation enhancement
 sidebar_label: Preauthorisation enhancement
 sidebar_position: 10
 description: "Enhancement payload, header `x-hcx-use_case: Enhancement`, and increment totals"
-verification: unverified
 source: nhcx-package/docs/05-FHIR Reference/10-Preauthorisation Enhancement.md
 generated: true
 ---

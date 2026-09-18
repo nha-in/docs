@@ -1820,9 +1820,7 @@ components:
           schema:
             $ref: '#/components/schemas/ErrorResponse'
 x-abdm-errors:
-  source: Code, message and error name are as published. The action column reads
-    the message text by a documented rule, and says Unclassified rather
-    than guessing.
+  source: Code, message and error name are as published. The heading each code sits under reads the message text by a documented rule, and says Unclassified rather than guessing.
   codes:
   - code: ABDM-1000
     message: Unable to connect the database

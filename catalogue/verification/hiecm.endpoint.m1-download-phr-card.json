@@ -1,0 +1,8 @@
+{
+  "atom": "hiecm.endpoint.m1-download-phr-card",
+  "on": "2026-09-17",
+  "against": "https://abhasbx.abdm.gov.in",
+  "request": "curl -X GET 'https://abhasbx.abdm.gov.in/abha/api/v3/phr/web/login/profile/abha/phr-card' \\\n  -H 'Authorization: Bearer <scrubbed>' \\\n  -H 'REQUEST-ID: 4bfa5af2-a26d-4645-9dab-df147e991646' \\\n  -H 'TIMESTAMP: 2026-09-17T11:22:46.102Z' \\\n  -H 'X-CM-ID: sbx'\n",
+  "status": 401,
+  "body": ""
+}

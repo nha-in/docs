@@ -3,7 +3,6 @@ title: Claim request
 sidebar_label: Claim request
 sidebar_position: 12
 description: Final claim bundle, `billablePeriod`, discharge evidence, and invoice attachments
-verification: unverified
 source: nhcx-package/docs/05-FHIR Reference/12-Claim Request.md
 generated: true
 ---

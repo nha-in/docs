@@ -14,9 +14,6 @@ sources:
     note: >
       NHA's PHR V3 document, section 10.3.14. The path, the method
       and the error scenarios below are transcribed from it.
-verified:
-  status: unverified
-  against: docs-only
 related:
   concepts: [hiecm.concept.gateway-session]
 skills:

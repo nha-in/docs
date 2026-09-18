@@ -2,7 +2,6 @@
 title: Everything returns 401
 sidebar_label: Everything returns 401
 description: Every call fails the same way, not just one endpoint. The checks in order, before you assume the gateway is down.
-verification: unverified
 source: ABDM__Proposed_Simplified_Milestone_2.md
 sidebar_position: 2
 covers: [hiecm.troubleshooting.everything-returns-401]
@@ -55,10 +54,10 @@ confirm with a second call a minute or more later.
 
 If you have re-run the session call, confirmed the environment, fixed
 the clock, and confirmed `X-CM-ID`, and calls still return 401 with no
-matching code, escalate on the
-[NHA dev forum](https://devforum.abdm.gov.in). Report the API you
+matching code, raise a request on the
+[support ticketing platform](https://sandboxsupport.abdm.gov.in/). Report the API you
 called, the `REQUEST-ID`, the `TIMESTAMP`, and the full response body.
-See [Support](/docs/support) for the full report format.
+See [what to put in a support request](/docs/hiecm/v3/troubleshooting#what-to-put-in-a-support-request) for the full report format.
 
 The codes this symptom can surface are on the
 [error codes reference](/docs/hiecm/v3/reference/error-codes): an

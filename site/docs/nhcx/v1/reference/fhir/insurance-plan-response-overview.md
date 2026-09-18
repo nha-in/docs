@@ -3,7 +3,6 @@ title: Insurance plan response
 sidebar_label: Insurance plan response
 sidebar_position: 5
 description: Collection bundle overview and questionnaires
-verification: unverified
 source: nhcx-package/docs/05-FHIR Reference/05-Insurance Plan Response Overview.md
 generated: true
 ---

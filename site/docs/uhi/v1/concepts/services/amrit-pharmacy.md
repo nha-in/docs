@@ -3,7 +3,6 @@ title: AMRIT Pharmacy discovery
 sidebar_label: AMRIT Pharmacy
 sidebar_position: 7
 description: Find AMRIT Pharmacy stores over UHI by store code, state and district, pincode or GPS radius.
-verification: unverified
 source: UHI__UHI_AMRIT_Pharmacy_OnboardingDoc_v1.0.md
 sidebar_class_name: sidebar-icon sidebar-icon--pill
 ---

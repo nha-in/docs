@@ -52,7 +52,7 @@ The identifier diff failing means the system caught something. Treat it as a suc
 - Skills compiled, with the atom count feeding each
 - The traceability map: which atoms produced which skill sections
 - Validation failures, each with the atom or template at fault
-- Warnings: flows with no skill target, orphan atoms, stale atoms that compiled with warnings
+- Warnings: flows with no skill target, orphan atoms
 - The new `catalogue_version`
 
 Never report a build as successful when validation failed. Never report skills as installable without having checked that each installs alone.

@@ -398,7 +398,7 @@ paths:
               address: "123 Main Street, Andheri"
               districtCode: "501"
               stateCode: "27"
-              pinCode: "400053"
+              pinCode: "999999"
       responses:
         '201':
           description: Enrolment number created
@@ -1680,7 +1680,7 @@ paths:
                     line: "123 Main Street"
                     district: "Mumbai"
                     state: "Maharashtra"
-                    pinCode: "400001"
+                    pinCode: "999999"
       responses:
         '200':
           description: Profile received by HIP
@@ -2214,7 +2214,7 @@ components:
         pinCode:
           type: string
           description: 6-digit PIN code
-          example: "400053"
+          example: "999999"
 
     DLEnrolmentResponse:
       type: object
@@ -2538,7 +2538,7 @@ components:
               example: "Maharashtra"
             pinCode:
               type: string
-              example: "400001"
+              example: "999999"
         districtName:
           type: string
           example: "Mumbai Suburban"
@@ -2547,7 +2547,7 @@ components:
           example: "Maharashtra"
         pinCode:
           type: string
-          example: "400001"
+          example: "999999"
 
     UpdateProfileRequest:
       type: object
@@ -3016,7 +3016,7 @@ components:
               example: "Maharashtra"
             pinCode:
               type: string
-              example: "400001"
+              example: "999999"
 
     OnShareRequest:
       type: object

@@ -29,9 +29,6 @@ sources:
       NHA's HPR test case sheet, 60 cases from HPR-002 to HPR-080. It
       names the sandbox paths several of these calls use, which no
       specification in the catalogue had.
-verified:
-  status: unverified
-  against: docs-only
 related:
   endpoints:
     - hiecm.endpoint.m4-hpr-register-professional

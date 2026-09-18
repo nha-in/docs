@@ -61,7 +61,7 @@ func (f *scriptedModel) Stream(ctx context.Context, system string, tools []chat.
 // origin, so each chat test only has to supply the pieces it cares about.
 func testHandler(t *testing.T, svc *chat.Service, limiter *chat.Limiter) http.Handler {
 	t.Helper()
-	h, err := server.Handler(servertest.Reader(t), nil, "https://docs.example.com", svc, limiter, false)
+	h, err := server.Handler(servertest.Reader(t), nil, "https://docs.example.com", svc, limiter, 0)
 	if err != nil {
 		t.Fatal(err)
 	}

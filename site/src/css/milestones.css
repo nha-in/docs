@@ -150,13 +150,20 @@
   display: flex;
   flex-direction: column;
   gap: 0.35rem;
-  padding: 1.25rem 1.25rem 1.35rem;
+  padding: 1rem 1.125rem;
   border: 1px solid var(--border);
   border-radius: var(--radius-panel, 12px);
   background: var(--surface);
   color: inherit;
   text-decoration: none;
   transition: border-color 120ms ease, transform 120ms ease;
+}
+
+/* The whole card is the link, so the page's inline-link underline stays off
+   every word inside it. */
+.acronym-card,
+.acronym-card * {
+  text-decoration: none !important;
 }
 
 .acronym-card:hover {
@@ -173,34 +180,33 @@
 
 .acronym-card__word {
   font-family: var(--ifm-heading-font-family);
-  font-size: 1.35rem;
+  font-size: 1.125rem;
   font-weight: 600;
-  line-height: 1.1;
+  line-height: 1.2;
   letter-spacing: -0.01em;
+  color: var(--text-heading);
 }
 
 .acronym-card__letter {
-  font-size: 2.6rem;
-  line-height: 0.9;
   color: var(--accent);
-  margin-right: 0.05em;
 }
 
 .acronym-card__label {
+  font-family: var(--ifm-font-family-base);
   font-size: 0.72rem;
   font-weight: 700;
   letter-spacing: 0.1em;
-  text-transform: uppercase;
   color: var(--text-muted);
+  vertical-align: 0.15em;
 }
 
 .acronym-card__text {
-  font-size: 0.9375rem;
-  line-height: 1.5;
+  font-size: 0.8125rem;
+  line-height: 1.4;
   color: var(--text-muted);
 }
 
-@media (max-width: 900px) {
+@media (max-width: 600px) {
   .acronym-cards {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }

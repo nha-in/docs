@@ -39,8 +39,6 @@ sources:
   hash: sha256:d5c8e55232cc854aa273e0bf4813db17999d7cd5f212eb84d92544b6b9f97e2b
   fetched: '2026-09-14'
   note: Guide For Providers, listed on https://hcxsbx.abdm.gov.in/#/media-center, not named in the NHCX document sheet. Page 9 Integrator Journey.
-verified:
-  status: unverified
 related:
   concepts:
   - nhcx.concept.participant-registry

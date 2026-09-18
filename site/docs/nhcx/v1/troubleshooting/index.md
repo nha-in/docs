@@ -3,7 +3,6 @@ title: When something breaks
 sidebar_label: When something breaks
 sidebar_position: 1
 description: Find the symptom you see, not the error code, and open the chapter that walks its checks
-verification: unverified
 source: nhcx-package/docs/08-Troubleshooting/01-When Something Breaks.md
 generated: true
 ---

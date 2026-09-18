@@ -3,7 +3,6 @@ title: Coverage eligibility request
 sidebar_label: Coverage eligibility request
 sidebar_position: 2
 description: Resource breakdown and fields
-verification: unverified
 source: nhcx-package/docs/05-FHIR Reference/02-Coverage Eligibility Request.md
 generated: true
 ---

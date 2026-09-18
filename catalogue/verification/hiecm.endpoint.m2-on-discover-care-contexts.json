@@ -1,0 +1,8 @@
+{
+  "atom": "hiecm.endpoint.m2-on-discover-care-contexts",
+  "on": "2026-09-17",
+  "against": "https://dev.abdm.gov.in",
+  "request": "curl -X POST 'https://dev.abdm.gov.in/api/hiecm/user-initiated-linking/v3/patient/care-context/on-discover' \\\n  -H 'Authorization: Bearer <scrubbed>' \\\n  -H 'REQUEST-ID: 5f9855ab-02da-4ddf-8c4a-accdec586b9e' \\\n  -H 'TIMESTAMP: 2026-09-17T11:22:55.951Z' \\\n  -H 'X-CM-ID: sbx' \\\n  -H 'Content-Type: application/json' \\\n  -d '{\n  \"transactionId\": \"txn-uuid-001\",\n  \"patient\": [\n    {\n      \"referenceNumber\": \"PAT-REF-001\",\n      \"display\": \"Ramesh Kumar\",\n      \"careContexts\": [\n        {\n          \"referenceNumber\": \"VISIT-2024-001\",\n          \"display\": \"OPD Visit 10-Jan-2024\"\n        },\n        {\n          \"referenceNumber\": \"LAB-2024-001\",\n          \"display\": \"Lab Report 10-Jan-2024\"\n        }\n      ],\n      \"hiType\": [\n        \"DiagnosticReport\"\n      ],\n      \"count\": 2\n    }\n  ],\n  \"response\": {\n    \"requestId\": \"req-uuid-from-discover\"\n  }\n}'\n",
+  "status": 400,
+  "body": ""
+}

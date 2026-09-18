@@ -34,8 +34,6 @@ sources:
   hash: sha256:f56dd156c232192296082f23b1561d0ff11fd40992e6675de41c5c991d579e6d
   fetched: '2026-09-14'
   note: Workflow Status Sheets(with Codes), row 12 of the NHCX document sheet, listed on https://hcxsbx.abdm.gov.in/#/documents. Sheet1.
-verified:
-  status: unverified
 related:
   endpoints:
   - nhcx.endpoint.get-session

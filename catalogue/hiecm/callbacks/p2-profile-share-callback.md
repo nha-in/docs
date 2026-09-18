@@ -14,9 +14,6 @@ sources:
     note: >
       NHA's PHR V3 document, section 5.3.2. The path, the method, the request body
       and the error scenarios below are transcribed from it.
-verified:
-  status: unverified
-  against: docs-only
 related:
   concepts: [hiecm.concept.gateway-session, hiecm.concept.asynchronous-callbacks]
 skills:

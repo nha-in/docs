@@ -3,7 +3,6 @@ title: Predetermination, status and search
 sidebar_label: Predetermination, status and search
 sidebar_position: 18
 description: Specification and schemas for predetermination, status, and search
-verification: unverified
 source: nhcx-package/docs/05-FHIR Reference/18-Predetermination, Status and Search.md
 generated: true
 ---

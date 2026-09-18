@@ -20,8 +20,6 @@ sources:
   hash: sha256:c95469758a25cb8aca8c47757d8b18b4dedb8b4d42669663cff7343205f77fda
   fetched: '2026-09-14'
   note: NHCX-PMJAY-HMIS Integration Overview, row 27 of the NHCX document sheet, listed on https://hcxsbx.abdm.gov.in/#/hmisdocuments. Pages 2-8.
-verified:
-  status: unverified
 related:
   flows:
   - nhcx.flow.pmjay-hospital-migration

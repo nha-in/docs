@@ -13,8 +13,6 @@ sources:
     fetched: 2026-08-25
     note: >
       NHA's M3 OpenAPI file.
-verified:
-  status: unverified
 related:
   errors: [hiecm.error.abdm-9999]
   concepts: [hiecm.concept.asynchronous-callbacks]

@@ -2,7 +2,6 @@
 title: HFR, the facility registry
 sidebar_label: HFR
 description: The Health Facility Registry, what a facility record holds, the five call onboarding sequence, and how a bridge is linked to it.
-verification: unverified
 source: ABDM__Proposed_Simplified_Milestone_4_(NHPR).md, ABDM__Proposed_Simplified_Milestone_2.md
 sidebar_position: 2
 sidebar_class_name: sidebar-icon sidebar-icon--building
@@ -102,4 +101,4 @@ Two paths are fixed here:
 - [HPR](/docs/hiecm/v3/registries/nhpr/hpr), which issues the token these calls need.
 - [NHPR](/docs/hiecm/v3/registries/nhpr), the parent page.
 - [the HPR and HFR call list](/docs/hiecm/v3/api/m4/undocumented), parameter tables and `HIS-` error codes.
-- [M2, linking and sharing](/docs/hiecm/v3/api/m2), which needs this facility ID.
+- [M2 Attach, Health Information Provider Services](/docs/hiecm/v3/api/m2), which needs this facility ID.

@@ -21,9 +21,6 @@ sources:
     note: >
       NHA's ABDM material, which states that the Ayushman card, earlier
       known as the golden card, should not be confused with ABHA.
-verified:
-  status: unverified
-  against: docs-only
 related:
   glossary: [shared.glossary.abha, shared.glossary.abdm]
 ---

@@ -3,7 +3,6 @@ title: Cancel, reprocess and shortfall
 sidebar_label: Cancel, reprocess and shortfall
 sidebar_position: 15
 description: Task-based cancel (`cancel`), reprocess (`reprocess`), balance release (`release`) and `nullify`
-verification: unverified
 source: nhcx-package/docs/05-FHIR Reference/15-Cancel, Reprocess and Shortfall.md
 generated: true
 ---

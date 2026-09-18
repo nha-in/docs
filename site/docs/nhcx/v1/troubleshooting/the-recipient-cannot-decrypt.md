@@ -3,7 +3,6 @@ title: The recipient cannot decrypt your message
 sidebar_label: The recipient cannot decrypt your message
 sidebar_position: 5
 description: "A `PAYR-1001` protocol response: the certificate, its cache, the algorithms and the compact form"
-verification: unverified
 source: nhcx-package/docs/08-Troubleshooting/05-The Recipient Cannot Decrypt.md
 generated: true
 covers:

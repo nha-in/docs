@@ -1,6 +1,6 @@
 ---
 name: atom-review
-description: How to review an ABDM Catalogue atom before merge, including the dummy-proofness test, verification honesty checks, graph integrity, and the specific failure modes reviewers miss. Use whenever reviewing a pull request against the Catalogue, checking someone else's atom, approving a draft, or deciding whether an atom is ready to be marked verified. Also use when an atom passed lint but still feels wrong, because lint checks structure and this skill checks truth.
+description: How to review an ABDM Catalogue atom before merge, including the dummy-proofness test, verification honesty checks, graph integrity, and the specific failure modes reviewers miss. Use whenever reviewing a pull request against the Catalogue, checking someone else's atom, approving a draft, or deciding whether an atom is ready to merge. Also use when an atom passed lint but still feels wrong, because lint checks structure and this skill checks truth.
 ---
 
 # Atom Review
@@ -19,12 +19,11 @@ Work in this order. Stop and request changes as soon as you hit a blocker; do no
 
 The highest-severity failure in this repo.
 
-- Does `verified.status` match reality? If it says `verified`, is there a recorded response in the body from an actual run?
-- Does `verified.on` correspond to a real date and `verified.by` to a real person?
-- If the atom was generated or drafted by an agent and never run, it must say `unverified`.
-- If the source hash has changed since verification, status should be `stale`, not `verified`.
+- Atoms carry no `verified` field and lint fails one that does. The check is on the body: does the recorded response come from an actual run, or from the spec?
+- If `catalogue/verification/<atom id>.json` exists, does the atom's section 4 agree with it?
+- If the source hash has changed since the atom was written, has the atom been re-read against the new source?
 
-Fabricated verification fails review immediately, regardless of how good the rest is.
+A response body presented as observed when it was never observed fails review immediately, regardless of how good the rest is.
 
 ### 2. The first-day developer test (blocker)
 
@@ -75,7 +74,7 @@ Run the `writing-guide` checklist. Most commonly caught: banned words, unnamed p
 
 | Miss | How to catch it |
 |---|---|
-| Plausible-sounding response body that was never observed | Ask where the response came from. If the answer is "the spec", it is unverified. |
+| Plausible-sounding response body that was never observed | Ask where the response came from. If the answer is "the spec", the atom must present it as the spec's shape, not an observed one. |
 | Section 2 that lists what the author had, not what is required | Ask what happens if each item is absent. |
 | A curl that works only because of shell state | Read it as a fresh terminal. |
 | Error atom linked but describing a different condition | Open the error atom. Do not trust the id. |
@@ -88,7 +87,7 @@ Run the `writing-guide` checklist. Most commonly caught: banned words, unnamed p
 - **Approve.** Everything above passes. Say what you checked, so the author knows the review was real.
 - **Approve with follow-up issue.** The atom is correct and useful but incomplete in a way that does not mislead. File the issue and link it in the atom.
 - **Request changes.** Any blocker. Name the section and the specific sentence. "Section 4 is not observable: what exactly arrives, and within how long?"
-- **Request verification.** The content looks right but was never run. Dispatch `atom-verifier` or ask the author to run it, and hold approval.
+- **Request a sandbox run.** The content looks right but was never run. Dispatch `atom-verifier` or ask the author to run `npm run verify:atoms`, and hold approval.
 
 ## What a good review comment looks like
 
@@ -101,4 +100,4 @@ This: "Section 4 says the call returns 200. For this endpoint 200 means the gate
 - What the atom should contain: `atom-authoring`
 - Prose rules: `writing-guide`
 - Mechanised checks that run before you review: `catalogue-linting`
-- Verifying against sandbox: `/atom-verify`
+- Running the sandbox check: `/atom-verify`

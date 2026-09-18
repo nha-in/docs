@@ -24,9 +24,6 @@ sources:
       The consent concept page: two objects, the request and the
       artefact, and the two clocks, the request window and the
       validity period.
-verified:
-  status: unverified
-  against: docs-only
 related:
   endpoints:
     - hiecm.endpoint.m3-consent-request-init

@@ -34,8 +34,6 @@ sources:
   hash: sha256:cea0cfbf5897e9642eaf9a515a941b0a1de39474ea39444c9e05abe21cd9ec73
   fetched: '2026-09-14'
   note: NHCX Code Snippets references for payload preparation, row 13 of the NHCX document sheet, listed on https://hcxsbx.abdm.gov.in/#/documents. Sections 3 and 4.
-verified:
-  status: unverified
 related:
   concepts:
   - nhcx.concept.jwe-envelope

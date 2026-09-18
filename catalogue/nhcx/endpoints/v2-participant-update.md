@@ -34,8 +34,6 @@ sources:
   hash: sha256:94605e935f05ebb49e24dee50787cb4f3f1c401983a9616a5aaabdbc302f664b
   fetched: '2026-09-14'
   note: Steps to generate encryption Certificate, row 20 of the NHCX document sheet, listed on https://hcxsbx.abdm.gov.in/#/documents. Page 3, Step 4 Base64 Encoding.
-verified:
-  status: unverified
 related:
   concepts:
   - nhcx.concept.encryption-certificate

@@ -3,7 +3,6 @@ title: Bundles and conventions
 sidebar_label: Bundles and conventions
 sidebar_position: 1
 description: Universal bundle rules, profiles, IDs, base64 encoding, and size limits
-verification: unverified
 source: nhcx-package/docs/05-FHIR Reference/01-Bundles and Conventions.md
 generated: true
 ---

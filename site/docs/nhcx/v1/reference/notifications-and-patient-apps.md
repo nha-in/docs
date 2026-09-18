@@ -3,7 +3,6 @@ title: Notifications and patient apps
 sidebar_label: Notifications and patient apps
 sidebar_position: 17
 description: Beneficiary service provider integration, subscription model, and push events
-verification: unverified
 source: nhcx-package/docs/06-Reference/07-Notifications and Patient Apps.md
 generated: true
 covers:

@@ -746,7 +746,7 @@ paths:
                           example: 91-5326-6278-1550
                         address:
                           type: string
-                          example: house no-620, main road, Pune, Maharashtra
+                          example: Flat 12, Sample Street
                         authMethods:
                           type: array
                           items:
@@ -802,7 +802,7 @@ paths:
                           example: John Doe
                         pincode:
                           type: string
-                          example: '422003'
+                          example: '999999'
                         preferredAbhaAddress:
                           type: string
                           example: 15_hemant.bodhai@sbx
@@ -857,7 +857,7 @@ paths:
                           example: '1998'
                     example:
                       - ABHANumber: 91-5326-6278-1550
-                        address: house no-620, main road, Pune, Maharashtra
+                        address: Flat 12, Sample Street
                         authMethods:
                           - DEMOGRAPHICS
                           - MOBILE_OTP
@@ -878,7 +878,7 @@ paths:
                         mobile: '******2425'
                         monthOfBirth: '11'
                         name: John Doe
-                        pincode: '422003'
+                        pincode: '999999'
                         preferredAbhaAddress: 15_hemant.bodhai@sbx
                         profilePhoto: >-
                           {{profile-photo}}
@@ -959,7 +959,7 @@ paths:
                   value:
                     accounts:
                       - ABHANumber: 91-5326-6278-1550
-                        address: house no-620, main road, Pune, Maharashtra
+                        address: Flat 12, Sample Street
                         authMethods:
                           - DEMOGRAPHICS
                           - MOBILE_OTP
@@ -980,7 +980,7 @@ paths:
                         mobile: '******2425'
                         monthOfBirth: '11'
                         name: John Doe
-                        pincode: '422003'
+                        pincode: '999999'
                         preferredAbhaAddress: 15_hemant.bodhai@sbx
                         profilePhoto: >-
                           {{profile-photo}}
@@ -1019,7 +1019,7 @@ paths:
                   value:
                     accounts:
                       - ABHANumber: 91-5326-6278-1550
-                        address: house no-620, main road, Pune, Maharashtra
+                        address: Flat 12, Sample Street
                         authMethods:
                           - DEMOGRAPHICS
                           - MOBILE_OTP
@@ -1040,7 +1040,7 @@ paths:
                         mobile: '9922332425'
                         monthOfBirth: '11'
                         name: Hemant P Bodhai
-                        pincode: '422003'
+                        pincode: '999999'
                         preferredAbhaAddress: 15_hemant.bodhai@sbx
                         profilePhoto: >-
                           {{profile-photo}}
@@ -2339,7 +2339,7 @@ paths:
                       example: '{{Encrypted Password}}'
                     pinCode:
                       type: string
-                      example: '421003'
+                      example: '999999'
                     stateCode:
                       type: string
                       example: '27'
@@ -2389,7 +2389,7 @@ paths:
                     mobile: '{{Encrypted mobile}}'
                     monthOfBirth: '11'
                     password: '{{Encrypted Password}}'
-                    pinCode: '421003'
+                    pinCode: '999999'
                     stateCode: '27'
                     stateName: Maharashtra
                     yearOfBirth: '1998'
@@ -2568,7 +2568,7 @@ paths:
               <li><strong>pinCode:(required)</strong> The user’s postal code.
               <ul>
               <li><strong>Type:</strong> String</li>
-              <li><strong>Example:</strong> <code>421003</code></li>
+              <li><strong>Example:</strong> <code>999999</code></li>
               </ul>
               </li>
               <li><strong>stateCode:(required)</strong> The code of the user’s state.
@@ -5092,7 +5092,7 @@ paths:
                           example: John Doe
                         pincode:
                           type: string
-                          example: '422003'
+                          example: '999999'
                         preferredAbhaAddress:
                           type: string
                           example: johndoe@abdm
@@ -5168,7 +5168,7 @@ paths:
                         mobile: XXXXXX1234
                         monthOfBirth: '11'
                         name: John Doe
-                        pincode: '422003'
+                        pincode: '999999'
                         preferredAbhaAddress: johndoe@abdm
                         profilePhoto: >-
                           {{profile-photo}}
@@ -5286,7 +5286,7 @@ paths:
                         mobile: XXXXXX1234
                         monthOfBirth: '11'
                         name: John Doe
-                        pincode: '422003'
+                        pincode: '999999'
                         preferredAbhaAddress: johndoe@abdm
                         profilePhoto: >-
                           {{profile-photo}}
@@ -5351,7 +5351,7 @@ paths:
                         mobile: XXXXXX1234
                         monthOfBirth: '11'
                         name: John Doe
-                        pincode: '422003'
+                        pincode: '999999'
                         preferredAbhaAddress: john.doe@sbx
                         profilePhoto: >-
                           {{profile-photo}}
@@ -8312,7 +8312,7 @@ paths:
                           example: John Doe
                         pincode:
                           type: string
-                          example: '422003'
+                          example: '999999'
                         preferredAbhaAddress:
                           type: string
                           example: john.doe@abdm
@@ -8388,7 +8388,7 @@ paths:
                         mobile: XXXXXX1234
                         monthOfBirth: '11'
                         name: John Doe
-                        pincode: '422003'
+                        pincode: '999999'
                         preferredAbhaAddress: john.doe@abdm
                         profilePhoto: >-
                           {{profile-photo}}
@@ -8466,7 +8466,7 @@ paths:
                         mobile: XXXXXX1234
                         monthOfBirth: '11'
                         name: John Doe
-                        pincode: '422003'
+                        pincode: '999999'
                         preferredAbhaAddress: john.doe@sbx
                         profilePhoto: >-
                           {{profile-photo}}
@@ -8531,7 +8531,7 @@ paths:
                         mobile: XXXXXX1234
                         monthOfBirth: '11'
                         name: John Doe
-                        pincode: '422003'
+                        pincode: '999999'
                         preferredAbhaAddress: john.doe@sbx
                         profilePhoto: >-
                           {{profile-photo}}
@@ -11297,7 +11297,7 @@ paths:
                     example: '11'
                   pinCode:
                     type: string
-                    example: '422003'
+                    example: '999999'
                   stateCode:
                     type: string
                     example: '27'
@@ -11337,7 +11337,7 @@ paths:
                     mobile: XXXXXX1234
                     mobileVerified: 'true'
                     monthOfBirth: '11'
-                    pinCode: '422003'
+                    pinCode: '999999'
                     stateCode: '27'
                     stateName: Maharashtra
                     status: ACTIVE
@@ -12378,7 +12378,7 @@ paths:
                   example: '11'
                 pinCode:
                   type: string
-                  example: '422003'
+                  example: '999999'
                 profilePhoto:
                   type: string
                   example: '{{profile-photo}}'
@@ -12406,7 +12406,7 @@ paths:
                   middleName: ''
                   mobile: XXXXXX1234
                   monthOfBirth: '11'
-                  pinCode: '422003'
+                  pinCode: '999999'
                   profilePhoto: '{{profile-photo}}'
                   stateCode: '27'
                   stateName: Maharashtra
@@ -12497,7 +12497,7 @@ paths:
             <p><strong>pinCode (required):</strong></p>
             <ul>
             <li><strong>Description:</strong> The postal code of the user’s address.</li>
-            <li><strong>Example :</strong> <code>422003</code></li>
+            <li><strong>Example :</strong> <code>999999</code></li>
             </ul>
             </li>
             <li>
@@ -12609,7 +12609,7 @@ paths:
                     example: '11'
                   pinCode:
                     type: string
-                    example: '422003'
+                    example: '999999'
                   stateCode:
                     type: string
                     example: '27'
@@ -12649,7 +12649,7 @@ paths:
                     mobile: XXXXXX1234
                     mobileVerified: 'true'
                     monthOfBirth: '11'
-                    pinCode: '422003'
+                    pinCode: '999999'
                     stateCode: '27'
                     stateName: Maharashtra
                     status: ACTIVE

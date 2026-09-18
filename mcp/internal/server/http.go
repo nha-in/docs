@@ -28,7 +28,7 @@ import (
 // only stops a body too large to be any of that from being buffered at all.
 const chatBodyLimit = 512 * 1024 // 512 KiB
 
-func Handler(r *index.Reader, emb embed.Embedder, allowOrigin string, chatSvc *chat.Service, limiter *chat.Limiter, trustProxy bool) (http.Handler, error) {
+func Handler(r *index.Reader, emb embed.Embedder, allowOrigin string, chatSvc *chat.Service, limiter *chat.Limiter, trustedHops int) (http.Handler, error) {
 	if emb != nil && r.EmbeddingsEnabled() && emb.Model() != r.EmbeddingModel() {
 		return nil, fmt.Errorf("embedding model mismatch: index built with %q, server configured with %q",
 			r.EmbeddingModel(), emb.Model())
@@ -41,8 +41,15 @@ func Handler(r *index.Reader, emb embed.Embedder, allowOrigin string, chatSvc *c
 		return nil, fmt.Errorf("server: chatSvc is set but limiter is nil")
 	}
 	mcpServer := NewMCPServer(r, emb)
+	// Stateless: no session is kept between requests, so any replica can answer
+	// any request. With sessions, a client whose next request a load balancer
+	// sends to a different replica gets "session not found"; two ECS tasks or
+	// two pods behind one address hit this on the first call. The cost is that
+	// the server cannot send requests to the client, which this server never
+	// does: it only answers tool calls.
 	streamable := mcp.NewStreamableHTTPHandler(
-		func(*http.Request) *mcp.Server { return mcpServer }, nil)
+		func(*http.Request) *mcp.Server { return mcpServer },
+		&mcp.StreamableHTTPOptions{Stateless: true})
 
 	mux := http.NewServeMux()
 	mux.Handle("/mcp", streamable)
@@ -94,7 +101,7 @@ func Handler(r *index.Reader, emb embed.Embedder, allowOrigin string, chatSvc *c
 			writeJSON(w, 405, map[string]string{"error": "POST only"})
 			return
 		}
-		if !limiter.Allow(clientIP(req, trustProxy), time.Now()) {
+		if !limiter.Allow(clientIP(req, trustedHops), time.Now()) {
 			writeJSON(w, 429, map[string]string{"error": "rate limit reached, try again in a minute"})
 			return
 		}
@@ -145,20 +152,30 @@ func Handler(r *index.Reader, emb embed.Embedder, allowOrigin string, chatSvc *c
 	return mux, nil
 }
 
-// clientIP identifies the caller for rate limiting. When trustProxy is true,
-// the last entry of X-Forwarded-For is used when present (the entry nearest
-// to us, appended by our own reverse proxy, is the only one we can trust);
-// otherwise -- and this is the default -- X-Forwarded-For is ignored
+// clientIP identifies the caller for rate limiting. trustedHops is the
+// number of reverse proxies in front of us that each append one entry to
+// X-Forwarded-For; the client is the entry that many from the end. One hop
+// is a single proxy, which appends the client's own address. Two hops is a
+// CDN in front of a load balancer: the CDN records the client, the load
+// balancer appends the CDN's edge address, and taking the last entry would
+// group every reader behind that edge into one bucket. Entries before the
+// trusted ones were supplied by the client and are never used; if the
+// header is shorter than the hop count, the first entry is the best there
+// is. With trustedHops zero -- the default -- X-Forwarded-For is ignored
 // entirely and RemoteAddr's host is used, since a direct caller with no
 // proxy in front can set that header to whatever it likes and forge a fresh
 // identity on every request to dodge the rate limit. If RemoteAddr does not
 // parse as host:port, it is returned verbatim rather than discarded, since
 // some identifier beats none for rate limiting purposes.
-func clientIP(req *http.Request, trustProxy bool) string {
-	if trustProxy {
+func clientIP(req *http.Request, trustedHops int) string {
+	if trustedHops > 0 {
 		if fwd := req.Header.Get("X-Forwarded-For"); fwd != "" {
 			parts := strings.Split(fwd, ",")
-			return strings.TrimSpace(parts[len(parts)-1])
+			i := len(parts) - trustedHops
+			if i < 0 {
+				i = 0
+			}
+			return strings.TrimSpace(parts[i])
 		}
 	}
 	host, _, err := net.SplitHostPort(req.RemoteAddr)

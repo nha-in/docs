@@ -3,7 +3,6 @@ title: Communication
 sidebar_label: Communication
 sidebar_position: 17
 description: Out-of-band communication payloads and reason codes
-verification: unverified
 source: nhcx-package/docs/05-FHIR Reference/17-Communication.md
 generated: true
 ---

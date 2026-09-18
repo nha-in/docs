@@ -3,7 +3,6 @@ title: Preauthorisation response
 sidebar_label: Preauthorisation response
 sidebar_position: 9
 description: ClaimResponse, approvals, queries, and verified rejection bundles (wf 23)
-verification: unverified
 source: nhcx-package/docs/05-FHIR Reference/09-Preauthorisation Response.md
 generated: true
 ---

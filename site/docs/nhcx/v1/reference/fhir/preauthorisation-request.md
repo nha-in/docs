@@ -3,7 +3,6 @@ title: Preauthorisation request
 sidebar_label: Preauthorisation request
 sidebar_position: 8
 description: Preauth Claim bundle, items, and ABDM clinical attachments
-verification: unverified
 source: nhcx-package/docs/05-FHIR Reference/08-Preauthorisation Request.md
 generated: true
 ---

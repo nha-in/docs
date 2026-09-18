@@ -3,7 +3,6 @@ title: The payer rejects your FHIR bundle
 sidebar_label: The payer rejects your FHIR bundle
 sidebar_position: 6
 description: "`PAYR-1004`, `PAYR-1008` and the missing identifier codes: validate, then check shape, identifiers and attachments"
-verification: unverified
 source: nhcx-package/docs/08-Troubleshooting/06-The Payer Rejects Your Bundle.md
 generated: true
 covers:

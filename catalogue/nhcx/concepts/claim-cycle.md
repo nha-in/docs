@@ -40,8 +40,6 @@ sources:
   hash: sha256:549377c9c26b1bd23decac3a1b9e5ebedfdc8e0fe99e53ef733859b188f51366
   fetched: '2026-09-14'
   note: Implementation Guide for Adoption of FHIR in ABDM and NHCX, row 14 of the NHCX document sheet, listed on https://hcxsbx.abdm.gov.in/#/documents. API table rows 5-6.
-verified:
-  status: unverified
 related:
   concepts:
   - nhcx.concept.coverage-eligibility-purposes

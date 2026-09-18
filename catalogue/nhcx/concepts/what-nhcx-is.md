@@ -44,8 +44,6 @@ sources:
   hash: sha256:56234dd8a55fe4eb9dd852779b22b522b04760c9bec5c263d5e9bc3ac2c6f167
   fetched: '2026-09-14'
   note: Site page /domain-specifications, text as shown on the site. ABDM sandbox onboarding section.
-verified:
-  status: unverified
 related:
   concepts:
   - nhcx.concept.participant-roles

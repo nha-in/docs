@@ -3,7 +3,6 @@ title: Error codes
 sidebar_label: Reading error codes
 sidebar_position: 11
 description: Directory of 309 error codes, the three code spaces, and collisions
-verification: unverified
 source: nhcx-package/docs/06-Reference/01-Error Codes.md
 generated: true
 ---

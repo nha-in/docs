@@ -14,8 +14,6 @@ sources:
   hash: sha256:fac8b14bfe8d518c0e651740537b9441c501d3cf2ab0f0482a07ab9f417e43a9
   fetched: '2026-09-14'
   note: Biometric Authentication Implementation Steps, listed on https://hcxsbx.abdm.gov.in/#/hmisdocuments, not named in the NHCX document sheet. NHCX Face-Auth API Curl, FACE AUTH Capture PID.
-verified:
-  status: unverified
 related:
   endpoints:
   - nhcx.endpoint.abha-biometric-faceauth-init

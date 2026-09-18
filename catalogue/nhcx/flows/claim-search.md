@@ -24,8 +24,6 @@ sources:
   hash: sha256:21749dd2ba84a19c5523772da359d76293493d44b48651f1af2e6042d78fa296
   fetched: '2026-09-14'
   note: 'API specification: searchhcxservice, row 23 of the NHCX document sheet, listed on https://hcxsbx.abdm.gov.in/#/technical-specifications/api-specifications. paths /v1/search/submit and /v1/search/on_submit.'
-verified:
-  status: unverified
 related:
   endpoints:
   - nhcx.endpoint.search-submit

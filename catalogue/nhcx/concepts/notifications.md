@@ -15,8 +15,6 @@ sources:
   hash: sha256:05908862c103522fac0dbb482f8eb6a0f8536fc12b1ae3bdb0e98615f30812aa
   fetched: '2026-09-14'
   note: NHCX Notification Integration, listed on https://hcxsbx.abdm.gov.in/#/documents, not named in the NHCX document sheet. Whole document, sections 1 to 7.
-verified:
-  status: unverified
 related:
   flows:
   - nhcx.flow.notification-subscribe

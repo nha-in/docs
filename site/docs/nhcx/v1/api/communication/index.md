@@ -3,7 +3,6 @@ title: Communication
 sidebar_label: Overview
 sidebar_position: 0
 description: "The Communication calls on NHCX: what each one does, the hosts they go to, and the guides that use them."
-verification: unverified
 source: nhcx-package/apis/07-communication
 generated: true
 ---

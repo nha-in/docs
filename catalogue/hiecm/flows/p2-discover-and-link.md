@@ -30,9 +30,6 @@ sources:
       NHA's PHR V3 document: 120 operations with their paths, request
       bodies and error scenarios. It is where the endpoint atoms this
       flow cites come from.
-verified:
-  status: unverified
-  against: docs-only
 related:
   endpoints:
     - hiecm.endpoint.p2-care-context-discover

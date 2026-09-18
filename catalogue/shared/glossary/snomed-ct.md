@@ -18,9 +18,6 @@ sources:
   - url: https://www.nrces.in/standards/snomed-ct
     status: docs-only
     note: NRCeS's SNOMED CT resource page, which NHA points integrators at.
-verified:
-  status: unverified
-  against: docs-only
 related:
   glossary: [shared.glossary.fhir, shared.glossary.hi-type, shared.glossary.nrces]
 ---

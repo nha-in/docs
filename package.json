@@ -20,6 +20,7 @@
     "build:plugins": "node scripts/build-plugin-manifests.mjs",
     "check:plugins": "node scripts/build-plugin-manifests.mjs --check",
     "validate:skills": "node scripts/validate-skills.mjs",
+    "check:skills-version": "node scripts/build-api-reference.mjs && node scripts/build-skills.mjs",
     "lint:agent": "node scripts/lint-agent-readiness.mjs",
     "lint:tables": "node scripts/lint-tables.mjs",
     "lint:content": "node scripts/lint-content.mjs",
@@ -39,7 +40,9 @@
     "eval:askai:check": "cd mcp && go run ./cmd/askai-eval check -cases ../evals/askai/cases",
     "eval:askai:judge": "cd mcp && go run ./cmd/askai-eval judge -cases ../evals/askai/cases",
     "eval:askai:report": "cd mcp && go run ./cmd/askai-eval report -cases ../evals/askai/cases",
-    "eval:askai:calibrate": "cd mcp && go run ./cmd/askai-eval calibrate"
+    "eval:askai:calibrate": "cd mcp && go run ./cmd/askai-eval calibrate",
+    "eval:agent": "node scripts/eval-agent.mjs",
+    "verify:atoms": "node scripts/verify-atoms.mjs"
   },
   "devDependencies": {
     "@docusaurus/faster": "^3.10.2",

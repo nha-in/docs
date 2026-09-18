@@ -2,7 +2,6 @@
 title: ABHA, the patient registry
 sidebar_label: ABHA
 description: The registry that identifies patients, the 14 digit ABHA number, the ABHA address, and what every milestone assumes about both.
-verification: unverified
 source: ABDM__Proposed_Simplified_Milestone_1.md, ABDM__NewDocumant_PHR_app.md, ABDM__M1_ABHA_Collection.postman_collection.md
 sidebar_position: 1
 covers: [hiecm.concept.abha-number-and-address, hiecm.concept.abha-address-policy]
@@ -139,6 +138,6 @@ No flow starts without an ABHA, so M1 comes first even when your real goal is M2
 ## Next
 
 - [NHPR](/docs/hiecm/v3/registries/nhpr), the professional and facility registries.
-- [M1, ABHA identity](/docs/hiecm/v3/api/m1), the guide.
+- [M1 Create, ABHA Creation and Verification](/docs/hiecm/v3/api/m1), the guide.
 - [M1 API reference](/reference/hiecm-m1).
 - [Sandbox data dictionary](/docs/hiecm/v3/reference/data-dictionary), test identities.

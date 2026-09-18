@@ -6,17 +6,23 @@ milestone: M1
 version: abdm-v3
 title: Verify a login OTP and get a user token
 summary: >
-  Returns the user scoped token that profile calls need, sent
-  afterwards as the `X-token` header.
+  Returns the token that profile calls need in the `X-token` header.
+  After an Aadhaar OTP it is the final token; after a mobile OTP it is a
+  short lived transfer token to exchange for one.
 sources:
   - file: ABDM Sandbox/ABDM/M1 ABHA Collection.postman_collection.json
     status: not-yet-hashed
     note: >
       Derived from the operation in catalogue/openapi/hiecm/v3/hiecm-m1.yaml, which
       comes from this source.
-verified:
-  status: unverified
+  - file: catalogue/annexure/integration-learnings-2026-09-16.md
+    fetched: 2026-09-16
+    hash: sha256:d1415609d3d71178563367bcdcc48fa7a01fe9ebd247b4c019686304868368ce
+    note: >
+      The two token outcomes by OTP system and the refreshToken rule.
+      Observed by an integrator on 2026-09-16, not yet run from this repository.
 related:
+  endpoints: [hiecm.endpoint.m1-login-select-account]
   errors: [hiecm.error.900900, hiecm.error.abdm-2401, hiecm.error.abdm-2402, hiecm.error.abdm-2404, hiecm.error.abdm-2500, hiecm.error.abdm-9999]
   flows: [hiecm.flow.m1-login-by-mobile, hiecm.flow.m1-find-abha]
   concepts: [hiecm.concept.gateway-session]
@@ -28,22 +34,24 @@ skills:
 
 ## In plain words
 
-Returns the user scoped token that profile calls need, sent afterwards as
-the `X-token` header. That token identifies one person, so it is not
-interchangeable with the gateway session token, which identifies your
-application.
+Verifies the OTP sent by the login request and returns a token. Which
+token depends on which system sent the OTP:
 
-If the identifier the person used maps to more than one ABHA, this
-responds with the list instead of a token, and you continue with the
-user selection call.
+| OTP system (`scope`) | `verify` returns | What you do next |
+|---|---|---|
+| Mobile OTP (`abha-login`, `mobile-verify`) | `token` with `expiresIn: 300` and `accounts[]` | Exchange it at [choose which ABHA to sign in to](hiecm.endpoint.m1-login-select-account). It is a transfer token, not a user token. |
+| Aadhaar OTP (`abha-login`, `aadhaar-verify`) | `token` with `expiresIn: 1800`, `refreshToken` and `accounts[]` | Use it directly as `X-token: Bearer <token>`. Exchanging it returns `400 Invalid T-token`. |
 
-The saved responses in NHA's collection cover 400, 401, 404 and 422 as
-well as 200, so read the body rather than only the status.
+The rule to code: **if the verify response carries `refreshToken`, the
+token is final. If it does not, exchange it.**
+
+Either token identifies one person, so it is not interchangeable with
+the gateway session token, which identifies your application.
 
 ## Before you start
 
 - A gateway access token. See [the gateway session](hiecm.concept.gateway-session).
-- The person logged in, so you hold their `X-token`. See [log somebody in](hiecm.flow.m1-login-by-mobile).
+- A `txnId` from [send a login OTP](hiecm.endpoint.m1-login-request-otp) and the OTP the person read out, encrypted.
 
 ## What happens
 
@@ -52,9 +60,6 @@ curl -X POST 'https://abhasbx.abdm.gov.in/abha/api/v3/profile/login/verify' \
   -H 'Authorization: Bearer <ACCESS_TOKEN>' \
   -H 'REQUEST-ID: <FRESH_UUID>' \
   -H 'TIMESTAMP: <ISO_8601_TIMESTAMP>' \
-  -H 'BENEFIT_NAME: <BENEFIT_SCHEME_NAME>' \
-  -H 'T-token: <T_TOKEN_FROM_LOGIN_VERIFY>' \
-  -H 'X-token: <X_TOKEN_FROM_LOGIN_VERIFY>' \
   -H 'Content-Type: application/json' \
   -d '{
   "scope": [
@@ -67,21 +72,22 @@ curl -X POST 'https://abhasbx.abdm.gov.in/abha/api/v3/profile/login/verify' \
     ],
     "otp": {
       "txnId": "<TXN_ID>",
-      "otpValue": "<OTPVALUE>"
+      "otpValue": "<ENCRYPTED_OTP>"
     }
   }
 }'
 ```
 
-Every placeholder in angle brackets is something you supply. `REQUEST-ID` is a UUID you generate for this call and log before sending.
+Every placeholder in angle brackets is something you supply. `REQUEST-ID` is a UUID you generate for this call and log before sending. For an Aadhaar OTP send `"aadhaar-verify"` in place of `"mobile-verify"`.
 
-Idempotency: not established. NHA does not document whether repeating this call with the same body is safe, and it has not been tested here. Treat a retry after a timeout as potentially creating a second effect until that is proven.
+Idempotency: an OTP verifies once. A second verify with the same `txnId` is refused.
 
 ## How you know it worked
 
-NHA's own collection records responses for this operation at status 200, 400, 401, 404, 422, and those bodies are in the specification as examples with the personal data scrubbed.
+The response is 200 with a `token`, an `expiresIn` and an `accounts` array.
 
-Read the body rather than only the status. Several of NHA's saved failures return a body that names the problem while the status alone does not.
+- `refreshToken` present and `expiresIn: 1800`: you hold the user token. A profile read with `X-token: Bearer <token>` returns the account.
+- No `refreshToken` and `expiresIn: 300`: you hold a transfer token. The exchange call returns the user token with `expiresIn: 1800`.
 
 ### The token this returns is not the X-token
 
@@ -132,12 +138,17 @@ Note the shape difference, because it catches people moving between the two:
 `dob` is one `DD-MM-YYYY` string here, and three integer fields
 (`dayOfBirth`, `monthOfBirth`, `yearOfBirth`) on the profile endpoint.
 
+Read the lifetimes from the response rather than assuming them. The user token lasts thirty minutes and the refresh token fifteen days (`refreshExpiresIn: 1296000`). This is a different clock from the gateway session token in `Authorization`.
+
+The bodies for 400, 401, 404 and 422 name the problem, so read the body rather than only the status.
+
 ## When it goes wrong
 
+- A profile call answers `400 {"message":"Invalid X-token"}`. The token was sent bare. Send `X-token: Bearer <token>`.
+- The exchange call answers `400 Invalid T-token`. You exchanged a final token. Use it as `X-token` directly.
 - The clock is wrong and every call fails. See [ABDM-2402](hiecm.error.abdm-2402).
 - The `REQUEST-ID` is missing, malformed or reused. See [ABDM-2404](hiecm.error.abdm-2404).
 - No session token was sent. See [ABDM-2500](hiecm.error.abdm-2500).
 - The person scoped token is wrong or expired. See [ABDM-2401](hiecm.error.abdm-2401).
 - Authentication fails without saying why. See [900900](hiecm.error.900900).
 - ABDM fails and does not say why. See [ABDM-9999](hiecm.error.abdm-9999).
-

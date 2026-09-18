@@ -1,0 +1,8 @@
+{
+  "atom": "hiecm.endpoint.m1-get-phr-profile",
+  "on": "2026-09-17",
+  "against": "https://abhasbx.abdm.gov.in",
+  "request": "curl -X GET 'https://abhasbx.abdm.gov.in/abha/api/v3/phr/web/login/profile/abha-profile' \\\n  -H 'Authorization: Bearer <scrubbed>' \\\n  -H 'REQUEST-ID: 76ffc63f-a511-4490-9aed-6768f87ebd0c' \\\n  -H 'TIMESTAMP: 2026-09-17T11:22:48.846Z' \\\n  -H 'X-CM-ID: sbx'\n",
+  "status": 401,
+  "body": ""
+}

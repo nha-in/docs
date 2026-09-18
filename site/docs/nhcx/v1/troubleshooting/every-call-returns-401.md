@@ -3,7 +3,6 @@ title: Every NHCX call returns 401
 sidebar_label: Every NHCX call returns 401
 sidebar_position: 2
 description: "Every endpoint fails the same way: the token, its prefix, its header or its environment"
-verification: unverified
 source: nhcx-package/docs/08-Troubleshooting/02-Every Call Returns 401.md
 generated: true
 covers:

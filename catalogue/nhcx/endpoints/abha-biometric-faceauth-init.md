@@ -19,8 +19,6 @@ sources:
   hash: sha256:f2db63f7fe272178ee57acfcfd32dbc40680d69527dc35c6724f0da2a32fcaab
   fetched: '2026-09-14'
   note: FaceAuth Postman Collection, listed on https://hcxsbx.abdm.gov.in/#/hmisdocuments, not named in the NHCX document sheet. item FaceAuth init.
-verified:
-  status: unverified
 related:
   endpoints:
   - nhcx.endpoint.abha-biometric-faceauth-init

@@ -39,8 +39,6 @@ sources:
   hash: sha256:03665c6e6a5c8d86e3d621ab577dd683cf13c155d5b9529f5be6ca70fef13dee
   fetched: '2026-09-14'
   note: 'API specification: insuranceplanhcxservice, row 23 of the NHCX document sheet, listed on https://hcxsbx.abdm.gov.in/#/technical-specifications/api-specifications. paths /v1/insuranceplan/request and /on_request.'
-verified:
-  status: unverified
 related:
   endpoints:
   - nhcx.endpoint.insuranceplan-request

@@ -3,7 +3,6 @@ title: Insurance plan response, coverage-based
 sidebar_label: Insurance plan response, coverage-based
 sidebar_position: 7
 description: Commercial insurance plan layout
-verification: unverified
 source: nhcx-package/docs/05-FHIR Reference/07-Insurance Plan Response, Coverage-Based.md
 generated: true
 ---

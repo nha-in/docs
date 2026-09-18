@@ -30,8 +30,6 @@ sources:
   hash: sha256:beef72eb0c33bf23952d9260c30bfe6cc28796c731f5fbd2c4168e336f2859c1
   fetched: '2026-09-14'
   note: NHCX PMJAY Integration Handbook, row 24 of the NHCX document sheet, listed on https://hcxsbx.abdm.gov.in/#/hmisdocuments. Section 7.4 Usage Guidelines, Discovery.
-verified:
-  status: unverified
 related:
   flows:
   - nhcx.flow.policy-link-and-delink

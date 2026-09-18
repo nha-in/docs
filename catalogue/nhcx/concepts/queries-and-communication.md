@@ -34,8 +34,6 @@ sources:
   hash: sha256:25d9426cab5661180103996888855e3cef20b701862d6800ec7659855303a913
   fetched: '2026-09-14'
   note: NHCX Requests and Responses for UseCases, row 11 of the NHCX document sheet, listed on https://hcxsbx.abdm.gov.in/#/documents. Sheet Communication.
-verified:
-  status: unverified
 related:
   flows:
   - nhcx.flow.preauth-query-response

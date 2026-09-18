@@ -3,7 +3,6 @@ title: Claim response
 sidebar_label: Claim response
 sidebar_position: 13
 description: Claim decisions, item adjudications, and verified rejection bundles (wf 291)
-verification: unverified
 source: nhcx-package/docs/05-FHIR Reference/13-Claim Response.md
 generated: true
 ---

@@ -29,8 +29,6 @@ sources:
   hash: sha256:2d082f244ee41d137a62af82380dcd2d5db9ebbab66824fd54a23c506d4d9a7f
   fetched: '2026-09-14'
   note: AWS(Sandbox)-PARTICIPANT SERVICE_APIs Postman Collection, row 16 of the NHCX document sheet, listed on https://hcxsbx.abdm.gov.in/#/documents. Postman SANDBOX-Participant_APIs item Delink Abha.
-verified:
-  status: unverified
 related:
   concepts:
   - nhcx.concept.policy-linking

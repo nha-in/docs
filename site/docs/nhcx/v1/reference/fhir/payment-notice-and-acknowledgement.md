@@ -3,7 +3,6 @@ title: Payment notice and acknowledgement
 sidebar_label: Payment notice and acknowledgement
 sidebar_position: 16
 description: Payment notices, reconciliations, and payment receipts
-verification: unverified
 source: nhcx-package/docs/05-FHIR Reference/16-Payment Notice and Acknowledgement.md
 generated: true
 ---
