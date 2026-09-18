@@ -802,10 +802,10 @@ paths:
         description: |
           The user scoped token returned when a person logs in or verifies an
           OTP. Required on this operation. See the shared `XToken` parameter,
-          and note that this header takes the bare token with no prefix.
+          and note that this header takes `Bearer` followed by the token, the same shape as `Authorization`.
         schema:
           type: string
-        example: <X_TOKEN_FROM_LOGIN_VERIFY>
+        example: Bearer <X_TOKEN_FROM_LOGIN_VERIFY>
       responses:
         '200':
           description: The children linked to the parent ABHA, with their count.
@@ -2021,10 +2021,10 @@ paths:
         description: |
           The user scoped token returned when a person logs in or verifies an
           OTP. Required on this operation. See the shared `XToken` parameter,
-          and note that this header takes the bare token with no prefix.
+          and note that this header takes `Bearer` followed by the token, the same shape as `Authorization`.
         schema:
           type: string
-        example: <X_TOKEN_FROM_LOGIN_VERIFY>
+        example: Bearer <X_TOKEN_FROM_LOGIN_VERIFY>
       responses:
         '200':
           description: The response.
@@ -2068,10 +2068,10 @@ paths:
         description: |
           The user scoped token returned when a person logs in or verifies an
           OTP. Required on this operation. See the shared `XToken` parameter,
-          and note that this header takes the bare token with no prefix.
+          and note that this header takes `Bearer` followed by the token, the same shape as `Authorization`.
         schema:
           type: string
-        example: <X_TOKEN_FROM_LOGIN_VERIFY>
+        example: Bearer <X_TOKEN_FROM_LOGIN_VERIFY>
       responses:
         '200':
           description: "Response body: not documented."
@@ -2121,10 +2121,10 @@ paths:
         description: |
           The user scoped token returned when a person logs in or verifies an
           OTP. Required on this operation. See the shared `XToken` parameter,
-          and note that this header takes the bare token with no prefix.
+          and note that this header takes `Bearer` followed by the token, the same shape as `Authorization`.
         schema:
           type: string
-        example: <X_TOKEN_FROM_LOGIN_VERIFY>
+        example: Bearer <X_TOKEN_FROM_LOGIN_VERIFY>
       responses:
         '200':
           description: "Response body: not documented."
@@ -2157,10 +2157,10 @@ paths:
         description: |
           The user scoped token returned when a person logs in or verifies an
           OTP. Required on this operation. See the shared `XToken` parameter,
-          and note that this header takes the bare token with no prefix.
+          and note that this header takes `Bearer` followed by the token, the same shape as `Authorization`.
         schema:
           type: string
-        example: <X_TOKEN_FROM_LOGIN_VERIFY>
+        example: Bearer <X_TOKEN_FROM_LOGIN_VERIFY>
       responses:
         '200':
           description: Confirmation that the session ended.
@@ -2219,10 +2219,10 @@ paths:
         description: |
           The user scoped token returned when a person logs in or verifies an
           OTP. Required on this operation. See the shared `XToken` parameter,
-          and note that this header takes the bare token with no prefix.
+          and note that this header takes `Bearer` followed by the token, the same shape as `Authorization`.
         schema:
           type: string
-        example: <X_TOKEN_FROM_LOGIN_VERIFY>
+        example: Bearer <X_TOKEN_FROM_LOGIN_VERIFY>
       requestBody:
         required: true
         content:
@@ -2311,10 +2311,10 @@ paths:
         description: |
           The user scoped token returned when a person logs in or verifies an
           OTP. Required on this operation. See the shared `XToken` parameter,
-          and note that this header takes the bare token with no prefix.
+          and note that this header takes `Bearer` followed by the token, the same shape as `Authorization`.
         schema:
           type: string
-        example: <X_TOKEN_FROM_LOGIN_VERIFY>
+        example: Bearer <X_TOKEN_FROM_LOGIN_VERIFY>
       requestBody:
         required: true
         content:
@@ -3691,10 +3691,10 @@ components:
       description: |
         The user scoped token returned when a person logs in or verifies an OTP. Profile calls act on one account, so they need this in addition to the gateway token. Required on the calls that read or change a specific person's account.
 
-        Send the bare token. Unlike the Authorization header this one carries no `Bearer ` prefix, and adding one is refused as `ABDM-1094` with the message `X-token expired`. That message names the wrong thing: a token rejected one second after it was issued has not expired, it was malformed. Check the prefix before the lifetime.
+        Send it as `Bearer` followed by the token, the same shape as the Authorization header. The bare form is refused as HTTP 400 `Invalid X-token`. A transfer token, the one a mobile OTP login returns without `refreshToken`, is refused on profile calls in either form; exchange it at the account selection call first. `ABDM-1094` on a profile or benefit call is an entitlement refusal for the client, not a token format error.
       schema:
         type: string
-      example: <X_TOKEN_FROM_LOGIN_VERIFY>
+      example: Bearer <X_TOKEN_FROM_LOGIN_VERIFY>
     BenefitName:
       name: BENEFIT_NAME
       in: header
