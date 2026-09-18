@@ -96,8 +96,15 @@ jobs:
       # hand edited a build output.
       # site/src/data/api is a build output and is gitignored, so it does not
       # exist in a fresh checkout and build-skills reads it.
+      # The workflow-wide DOCUSAURUS_URL turns this into a deployment build,
+      # which embeds the site URL, skips the gate, and can never match the
+      # committed URL-less skills. Blank it so this is the check build.
       - run: node scripts/build-api-reference.mjs
+        env:
+          DOCUSAURUS_URL: ''
       - run: npm run check:skills-version
+        env:
+          DOCUSAURUS_URL: ''
       - name: Compiled skills match the catalogue
         run: git diff --exit-code -- plugins/abdm-integrators-assistant/skills site/static/skills
 

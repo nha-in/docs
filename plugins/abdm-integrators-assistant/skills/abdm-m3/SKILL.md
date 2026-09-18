@@ -5,7 +5,7 @@ description: Use when building, debugging or testing ABDM Milestone 3: raising a
 
 # ABDM M3, consent and fetching
 
-Generated from the ABDM Developer Portal on 2026-09-17, catalogue version 2026.08.24. Every fact below comes from a page in that portal, which is the place to look when this file does not carry enough.
+Generated from the ABDM Developer Portal, catalogue version 2026.08.24. Every fact below comes from a page in that portal, which is the place to look when this file does not carry enough.
 
 This file is a snapshot. Re-download it from the portal's /skills/abdm-m3/SKILL.md path when it is older than the work you are doing.
 If the abdm-docs MCP server is connected, trust its answers over this file: it serves the current catalogue and stamps every response with its catalogue_version, which you can compare against the version above.
@@ -30,7 +30,6 @@ This file is the map. Each line above is a file beside it, opened one at a time 
 
 ## Before anything else
 
-- Nothing here has been run against the ABDM sandbox. Treat request and response shapes as unconfirmed, and check a response before you rely on its shape.
 - You act as the HIU. The HIE-CM holds the consent and asks the patient on your behalf. No artefact, no records.
 - The patient must be known to you by ABHA address before you can raise a request.
 - One consent request can produce more than one artefact. Store the request id and every artefact id.
