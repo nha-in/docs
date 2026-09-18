@@ -10,6 +10,9 @@ generated: true
 sidebar_custom_props:
   roles:
     - provider
+covers:
+  - nhcx.flow.biometric-face
+  - nhcx.flow.biometric-fingerprint-iris
 ---
 
 # Biometric authentication

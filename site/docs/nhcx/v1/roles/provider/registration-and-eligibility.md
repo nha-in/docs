@@ -10,6 +10,8 @@ generated: true
 sidebar_custom_props:
   roles:
     - provider
+covers:
+  - nhcx.flow.coverage-eligibility-check
 ---
 
 # Registration and eligibility

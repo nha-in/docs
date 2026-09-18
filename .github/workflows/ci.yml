@@ -215,7 +215,7 @@ jobs:
       - run: ./scripts/plan-check.sh
 
   plugin-validate:
-    name: Validate both plugins
+    name: Validate the plugins
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -231,6 +231,8 @@ jobs:
           # broken manifest or a malformed skill would have reached them
           # rather than this job.
           claude plugin validate ./plugins/abdm-integrators-assistant --strict
+          # The NHCX plugin ships the same way, so it is held to the same bar.
+          claude plugin validate ./plugins/nhcx --strict
       - name: agent frontmatter parses
         run: python3 scripts/check-agent-frontmatter.py
       - name: no skill shares a name with a command

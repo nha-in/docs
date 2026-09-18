@@ -1080,7 +1080,7 @@ writeFileSync(join(promptDir, 'prompt.md'), `${promptLines.join('\n')}\n`);
 // lines and MCP server are the ones the NHCX landing page publishes, which is
 // why they are spelled out here rather than taken from pluginRepo and MCP_URL.
 const nhcxRepo = 'nha-in/docs';
-const nhcxMcp = {name: 'nhcx-v1', url: mcpUrl ?? 'https://docs.abdm.gov.in/mcp'};
+const nhcxMcp = {name: 'nhcx-docs', url: mcpUrl ?? 'https://docs.abdm.gov.in/mcp'};
 const nhcxPromptLines = [
   `These are official instructions from the ABDM Developer Portal (built ${buildDate}) to set up an AI development environment for integrating with NHCX, the National Health Claims Exchange.`,
   '',

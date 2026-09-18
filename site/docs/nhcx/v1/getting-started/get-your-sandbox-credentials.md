@@ -12,6 +12,7 @@ covers:
   - nhcx.sandbox.test-participants
   - nhcx.sandbox.dummy-payer
   - nhcx.sandbox.support-contacts
+  - nhcx.flow.sandbox-onboarding
 ---
 
 # Get your sandbox credentials

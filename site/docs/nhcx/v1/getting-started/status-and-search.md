@@ -7,6 +7,9 @@ sidebar_class_name: sidebar-icon sidebar-icon--activity
 verification: unverified
 source: nhcx-package/docs/02-Getting Started/11-Status and Search.md
 generated: true
+covers:
+  - nhcx.flow.status-check
+  - nhcx.flow.claim-search
 ---
 
 # Status and search

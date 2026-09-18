@@ -7,6 +7,8 @@ sidebar_class_name: sidebar-icon sidebar-icon--database
 verification: unverified
 source: nhcx-package/docs/01-Overview/03-Participants and Policies.md
 generated: true
+covers:
+  - nhcx.flow.policy-link-and-delink
 ---
 
 # Participants and policies
