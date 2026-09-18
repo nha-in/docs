@@ -28,20 +28,20 @@ const CHOICES: Choice[] = [
   {
     id: 'facility',
     role: 'ims',
-    label: 'Health facility',
-    what: 'A hospital, clinic, lab or pharmacy. You hold records and share them: a HIP, and often an HIU too.',
+    label: 'Healthcare Facility',
+    what: 'Healthcare providers and facilities (hospital, clinic, lab or pharmacy) that create, maintain and exchange digital health records.',
   },
   {
     id: 'vendor',
     role: 'ims',
-    label: 'IMS vendor',
-    what: 'You build the EMR, HIMS, LIMS or PMS a facility runs, so you write its HIP and HIU code.',
+    label: 'Health Software Provider',
+    what: 'Technology providers (EMR, HMIS, LMIS or PMS) developing ABDM-enabled healthcare information systems and digital health applications.',
   },
   {
     id: 'phr',
     role: 'phr',
-    label: 'PHR app',
-    what: 'You build the app a patient uses to hold their own records and give consent.',
+    label: 'Personal Health Record (PHR) Application',
+    what: 'Applications that enable individuals to access, manage and share their health records and provide consent for health information exchange.',
   },
   {
     id: 'unsure',

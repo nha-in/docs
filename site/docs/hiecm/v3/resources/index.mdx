@@ -2,27 +2,44 @@
 title: Developer resources
 sidebar_label: Overview
 sidebar_position: 1
-description: What sits beside the API reference for HIE-CM. Today that is the testing use cases, one page per module.
+description: Test scenarios for ABDM integration and certification, and the documentation, AI-assisted tools and reference projects that support it.
+source: NHA content review of 15 September 2026 (resources page and landing page, ABDM Integration Resources)
 sidebar_class_name: sidebar-icon sidebar-icon--library
 ---
 
 # Developer resources
 
-What helps you build against
-[HIE-CM](/docs/hiecm/v3/getting-started/glossary#hie-cm), beside the contract
-itself. The contract is in [API references](/docs/hiecm/v3/api): the calls, the
-fields, the errors.
+This section contains the test scenarios applicable for ABDM integration and
+certification. Test cases are organized module-wise and include the
+corresponding test case identifiers used during the certification process.
+Additional developer resources and implementation guidance may be added to this
+section as they become available.
 
 ## Testing use cases
 
-[Testing use cases](./testing/) are what this tab holds today. They are the
-cases an integration is tested against, one page per module, each keeping the
-id it carries at certification.
+[Testing use cases](./testing/), one page per module, starting with
+[M1](./testing/m1).
 
-More resources land here as they are written.
+## ABDM integration resources
+
+Access the documentation, AI-assisted tools and reference projects required to
+support your ABDM integration.
+
+<CardGroup cols={2}>
+  <Card title="ABDM Documentation" icon="book-open" href="/docs/hiecm/v3">
+    Access versioned guides, API references, milestone details, error information and change logs for HIE-CM, UHI and NHCX.
+  </Card>
+  <Card title="AI-assisted Integration Tools" icon="sparkles" href="/docs/hiecm/v3/getting-started/build-with-ai">
+    Use milestone guidance, FHIR references and the documentation MCP server to provide the coding assistant with relevant ABDM integration information.
+  </Card>
+  <Card title="National Health Claims Exchange" icon="receipt" href="/docs/nhcx/v1">
+    Understand how payers, third-party administrators and healthcare providers exchange health insurance claims through NHCX.
+  </Card>
+  <Card title="CARE Reference Environment" icon="flask-conical">
+    Explore planned reference workflows for ABDM integration and follow the progress of the open-source project.
+  </Card>
+</CardGroup>
 
 ## Next
 
-- [Testing use cases](./testing/), starting with
-  [M1](./testing/m1).
 - The calls each case exercises: [API references](/docs/hiecm/v3/api).
