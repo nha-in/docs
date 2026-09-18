@@ -12,7 +12,7 @@ from the repo root, then restart Claude Code:
 
 ```sh
 claude plugin marketplace add ./
-claude plugin install abdm-contributors-assistant@abdm-portal
+claude plugin install abdm-contributors-assistant@nha-in
 ```
 
 `./` installs from this checkout, so the branch you are on is the version you

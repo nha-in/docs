@@ -10,12 +10,12 @@ This repo is itself a marketplace, so this is two commands:
 
 ```sh
 claude plugin marketplace add eka-care/abdm-docs
-claude plugin install abdm-contributors-assistant@abdm-portal
+claude plugin install abdm-contributors-assistant@nha-in
 ```
 
 Restart Claude Code afterwards. `claude plugin details abdm-contributors-assistant` lists every component and its token cost.
 
-Working on the plugin itself: add your checkout as the marketplace instead, and re-run `claude plugin marketplace update abdm-portal` after each change.
+Working on the plugin itself: add your checkout as the marketplace instead, and re-run `claude plugin marketplace update nha-in` after each change.
 
 ## Two rules the manifest will not forgive
 

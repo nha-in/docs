@@ -3,6 +3,7 @@ title: Payer overview
 sidebar_label: Payer overview
 sidebar_position: 1
 description: Insurer and TPA ingestion architecture
+sidebar_class_name: sidebar-icon sidebar-icon--compass
 verification: unverified
 source: nhcx-package/docs/04-Building a Payer/01-Payer Overview.md
 generated: true

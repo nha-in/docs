@@ -1,4 +1,4 @@
-These are official instructions from the ABDM Developer Portal (catalogue version 2026.08.24, built 2026-09-15) to set up an AI development environment for integrating with ABDM, India's health data network.
+These are official instructions from the ABDM Developer Portal (catalogue version 2026.08.24, built 2026-09-18) to set up an AI development environment for integrating with ABDM, India's health data network.
 
 Complete the steps yourself by running the commands directly. Ask the user only the questions in step 1.
 
@@ -26,7 +26,7 @@ The plugin carries every skill at once and updates in place, so prefer it wherev
 
 ```
 claude plugin marketplace add eka-care/abdm-docs
-claude plugin install abdm-integrators-assistant@abdm-portal
+claude plugin install abdm-integrators-assistant@nha-in
 ```
 
 ### Codex

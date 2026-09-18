@@ -15,7 +15,8 @@
 //
 // Output under site/static/skills is a build output. Edit the specs, the test
 // matrix and the pages, not the skill.
-import {readFileSync, writeFileSync, mkdirSync, rmSync, readdirSync, existsSync} from 'node:fs';
+import {readFileSync, writeFileSync, mkdirSync, rmSync, readdirSync, existsSync, cpSync} from 'node:fs';
+import {execFileSync} from 'node:child_process';
 import {join, dirname} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {parse} from 'yaml';
@@ -812,6 +813,140 @@ manifest['abdm-fhir'] = {
 count += 1;
 console.log('Built abdm-fhir: 2 reference(s) from the hand written procedures.');
 
+// Everything above is ABDM's, and the hosted ABDM prompt and index.json list
+// only these. The NHCX skills below are served beside them but set up through
+// their own prompt, so an ABDM integrator is never offered claims skills.
+const abdmSlugs = Object.keys(manifest);
+
+// The NHCX skills are committed folders under plugins/nhcx/skills, copied from
+// github.com/nha-in/nhcx-skills rather than compiled here. They ship at the
+// same /skills/<name>/ URLs, and each also ships as /skills/<name>.tar.gz,
+// because its SKILL.md points into stages, templates and scripts beside it and
+// a SKILL.md served alone would send an agent to files it cannot reach.
+const NHCX = {
+  'nhcx-coverage': {
+    title: 'NHCX coverage',
+    example: 'Add NHCX policy search and coverage eligibility to this hospital system',
+  },
+  'nhcx-insurance': {
+    title: 'NHCX insurance plan',
+    example: "Fetch the payer's NHCX package master and quote treatment lines from it",
+  },
+  'nhcx-preauth': {
+    title: 'NHCX pre-authorisation',
+    example: 'Add NHCX pre-authorisation to this claims desk',
+  },
+  'nhcx-claim': {
+    title: 'NHCX claim',
+    example: 'File the NHCX claim at discharge from this system',
+  },
+  'nhcx-payment': {
+    title: 'NHCX payment',
+    example: 'Record and acknowledge NHCX payment notices',
+  },
+  'nhcx-communication': {
+    title: 'NHCX communication',
+    example: "Handle the payer's NHCX communication requests in this system",
+  },
+  'nhcx-reprocess': {
+    title: 'NHCX reprocess',
+    example: 'Ask the payer to reprocess a rejected NHCX claim',
+  },
+};
+
+const countFiles = (dir) =>
+  readdirSync(dir, {withFileTypes: true}).reduce(
+    (n, entry) => n + (entry.isDirectory() ? countFiles(join(dir, entry.name)) : 1),
+    0,
+  );
+
+// An NHCX skill is counted from its own files, so its install panel shows what
+// it holds the way a module skill's does:
+//   Integrate  the calls its Wire row names, each with its reverse leg when a
+//              published specification carries one
+//   Test       its test-case matrix rows for the use cases it names, leaving out
+//              rows that make no call
+//   Debug      the distinct error codes its errors reference carries
+const specPaths = readdirSync(dataDir)
+  .filter((file) => file.endsWith('.json'))
+  .map((file) => String(JSON.parse(readFileSync(join(dataDir, file), 'utf8')).path ?? ''));
+const published = (path) => specPaths.some((p) => p.endsWith(`/${path}`));
+const cellOf = (text, label) => new RegExp(`^\\| ${label} \\| (.+) \\|$`, 'm').exec(text)?.[1] ?? '';
+function useCaseCounts(dir) {
+  const testingFile = join(dir, 'references', 'testing-knowledge.md');
+  const errorsFile = join(dir, 'references', 'errors-and-debugging.md');
+  const skill = readFileSync(join(dir, 'SKILL.md'), 'utf8');
+  const wire = cellOf(skill, 'Wire');
+  const uses = cellOf(skill, 'Use cases');
+  if (!wire || !uses || !existsSync(testingFile) || !existsSync(errorsFile)) {
+    return {operations: 0, codes: 0, tests: 0};
+  }
+
+  const calls = new Set();
+  let resource = '';
+  for (const [, token] of wire.matchAll(/`((?:v1\/)?[a-z]+(?:\/[a-z_]+)+|on_[a-z_]+)`/g)) {
+    // A bare `on_check` belongs to the resource named just before it.
+    const path = token.startsWith('on_') && resource ? `${resource}/${token}` : token;
+    if (path.startsWith('v1/')) resource = path.split('/').slice(0, 2).join('/');
+    calls.add(path);
+    if (!path.startsWith('v1/')) continue;
+    const last = path.split('/').pop();
+    const reverse = path.replace(/[^/]+$/, last.startsWith('on_') ? last.slice(3) : `on_${last}`);
+    if (published(reverse)) calls.add(reverse);
+  }
+
+  const wanted = [];
+  for (const part of uses.replace(/\(.*?\)/g, '').split(/[;,]| and /)) {
+    const range = /\b([A-E])(\d+) to \1?(\d+)\b/.exec(part);
+    if (range) {
+      for (let i = Number(range[2]); i <= Number(range[3]); i += 1) wanted.push({code: `${range[1]}${i}`});
+      continue;
+    }
+    const one = /\b([A-E]\d+)\b(?:\s+(cancel|reprocess))?/i.exec(part);
+    if (one) wanted.push({code: one[1], qualifier: one[2]?.toLowerCase()});
+  }
+  const matrix = (readFileSync(testingFile, 'utf8').split('## 3. The test-case matrix')[1] ?? '').split('Cross-cutting rows')[0];
+  const tests = [...matrix.matchAll(/^\| ([A-E]\d+)([^|]*) \|[^|]*\|[^|]*\| ([^|]*) \|/gm)].filter(
+    ([, code, rest, callCell]) =>
+      callCell.trim() !== 'none' &&
+      wanted.some((w) => w.code === code && (!w.qualifier || rest.toLowerCase().includes(w.qualifier))),
+  ).length;
+
+  const codes = new Set(
+    readFileSync(errorsFile, 'utf8').match(/\b(?:NHCX-\d{3,4}|PAYR-\d{4}|ERR-[A-Z]+-[A-Z]+-\d+)\b/g) ?? [],
+  ).size;
+  return {operations: calls.size, codes, tests};
+}
+
+const nhcxDir = join(root, 'plugins', 'nhcx', 'skills');
+const nhcxSlugs = [];
+for (const name of Object.keys(NHCX)) {
+  const src = join(nhcxDir, name);
+  if (!existsSync(join(src, 'SKILL.md'))) {
+    throw new Error(`plugins/nhcx/skills/${name}/SKILL.md is missing`);
+  }
+  cpSync(src, join(outDir, name), {recursive: true});
+  // COPYFILE_DISABLE keeps macOS tar from adding its ._ metadata files.
+  execFileSync('tar', ['-czf', join(outDir, `${name}.tar.gz`), '-C', nhcxDir, name], {
+    env: {...process.env, COPYFILE_DISABLE: '1'},
+  });
+  manifest[name] = {
+    gateway: 'nhcx',
+    module: 'NHCX',
+    title: NHCX[name].title,
+    docs: '/docs/nhcx/v1/getting-started/build-with-ai',
+    example: NHCX[name].example,
+    errorExample: null,
+    ...useCaseCounts(src),
+    sections: ['integrate', 'debug', 'test'],
+    folder: true,
+    files: countFiles(src),
+  };
+  nhcxSlugs.push(name);
+  count += 1;
+  console.log(`Copied ${name} from plugins/nhcx/skills.`);
+}
+
 writeFileSync(
   join(root, 'site', 'src', 'data', 'skills.json'),
   `${JSON.stringify(manifest, null, 2)}\n`,
@@ -825,9 +960,9 @@ console.log(`Compiled ${count} skill(s) into site/static/skills and the plugin.`
 // this URL, regenerated every build. The pasted prompt therefore cannot go
 // stale, which no inline prompt can promise. AgentSetup.tsx copies the one
 // line; this file is what the agent fetches.
-const promptSkills = Object.entries(manifest).map(([slug, entry]) => [
+const promptSkills = abdmSlugs.map((slug) => [
   slug,
-  `${entry.title}. Sections: ${entry.sections.join(', ')}.`,
+  `${manifest[slug].title}. Sections: ${manifest[slug].sections.join(', ')}.`,
 ]);
 const mcpUrl = process.env.MCP_URL ?? null;
 // The Claude Code plugin marketplace: this repository itself. Update at
@@ -857,7 +992,7 @@ const promptLines = [
   '',
   '```',
   `claude plugin marketplace add ${pluginRepo}`,
-  'claude plugin install abdm-integrators-assistant@abdm-portal',
+  'claude plugin install abdm-integrators-assistant@nha-in',
   '```',
   '',
   '### Codex',
@@ -925,10 +1060,10 @@ writeFileSync(
     {
       catalogue_version: catalogueVersion,
       built: buildDate,
-      skills: Object.entries(manifest).map(([slug, entry]) => ({
+      skills: abdmSlugs.map((slug) => ({
         name: slug,
-        title: entry.title,
-        files: ['SKILL.md', ...entry.sections.map((s) => `references/${s}.md`)],
+        title: manifest[slug].title,
+        files: ['SKILL.md', ...manifest[slug].sections.map((s) => `references/${s}.md`)],
       })),
     },
     null,
@@ -939,4 +1074,80 @@ writeFileSync(
 const promptDir = join(root, 'site', 'static', 'agent-setup');
 mkdirSync(promptDir, {recursive: true});
 writeFileSync(join(promptDir, 'prompt.md'), `${promptLines.join('\n')}\n`);
+
+// The NHCX setup prompt, fetched by the NHCX Build with AI page's one line
+// setup the same way prompt.md is fetched by HIE-CM's. Its repository, install
+// lines and MCP server are the ones the NHCX landing page publishes, which is
+// why they are spelled out here rather than taken from pluginRepo and MCP_URL.
+const nhcxRepo = 'nha-in/docs';
+const nhcxMcp = {name: 'nhcx-v1', url: mcpUrl ?? 'https://docs.abdm.gov.in/mcp'};
+const nhcxPromptLines = [
+  `These are official instructions from the ABDM Developer Portal (built ${buildDate}) to set up an AI development environment for integrating with NHCX, the National Health Claims Exchange.`,
+  '',
+  'Complete the steps yourself by running the commands directly. Ask the user only the questions in step 1.',
+  '',
+  '## 1. Establish scope',
+  '',
+  'There is one skill per NHCX use case, in episode order. Ask the user which use cases this project builds, and install only those:',
+  '',
+  ...nhcxSlugs.map((slug) => `- \`${slug}\`: ${manifest[slug].title}. ${manifest[slug].example}.`),
+  '',
+  'Each skill checks what the project already has and builds only what is missing, and each installs and runs alone. A claims integration usually starts with `nhcx-coverage`.',
+  '',
+  '## 2. Install the skills',
+  '',
+  'The plugin carries all seven and updates in place, so prefer it wherever it installs.',
+  '',
+  '### Claude Code',
+  '',
+  '```',
+  `claude plugin marketplace add ${nhcxRepo} && claude plugin install nhcx@nha-in`,
+  '```',
+  '',
+  '### Codex',
+  '',
+  '```',
+  `codex plugin marketplace add ${nhcxRepo}`,
+  '```',
+  '',
+  'Then open /plugins in Codex and install `nhcx`.',
+  '',
+  '### Every other agent',
+  '',
+  'Cursor, GitHub Copilot and the others install plugins only from their own marketplaces, where NHCX is not listed yet. Install the skills one at a time instead, which is also the fallback anywhere the marketplace add above fails. The skills installer finds every coding agent in the project and sets the skill up for each:',
+  '',
+  '```',
+  `npx skills add ${nhcxRepo}/plugins/nhcx/skills/nhcx-coverage`,
+  '```',
+  '',
+  'With git alone, fetch just the skill\'s folder and copy it to where the agent reads skills from: `.claude/skills` for Claude Code, `.agents/skills` for Codex, `.cursor/skills` for Cursor, `.github/skills` for GitHub Copilot, `.gemini/skills` for Gemini CLI. For example:',
+  '',
+  '```',
+  `git clone --depth 1 --filter=blob:none --sparse https://github.com/${nhcxRepo} .nhcx && git -C .nhcx sparse-checkout set plugins/nhcx/skills/nhcx-coverage && mkdir -p .claude/skills && cp -R .nhcx/plugins/nhcx/skills/nhcx-coverage .claude/skills/ && rm -rf .nhcx`,
+  '```',
+  '',
+  ...nhcxSlugs.map((slug) => `- \`${nhcxRepo}/plugins/nhcx/skills/${slug}\``),
+  '',
+  '## 3. Connect the Docs MCP server',
+  '',
+  'A live MCP server over the documentation. Register it with your agent:',
+  '',
+  '```',
+  `claude mcp add --transport http ${nhcxMcp.name} ${nhcxMcp.url} -s user`,
+  `codex mcp add ${nhcxMcp.name} --url ${nhcxMcp.url}`,
+  `gemini mcp add --transport http ${nhcxMcp.name} ${nhcxMcp.url}`,
+  '```',
+  '',
+  `For Cursor, add \`{ "mcpServers": { "${nhcxMcp.name}": { "url": "${nhcxMcp.url}" } } }\` to \`.cursor/mcp.json\`. For other agents, add an HTTP MCP server named \`${nhcxMcp.name}\` at \`${nhcxMcp.url}\` using their config format.`,
+  '',
+  '## 4. Report back',
+  '',
+  'Tell the user what you installed and where you suggest starting. Two cautions to keep for the whole engagement:',
+  '',
+  '- The skills hold the bundles they send to the pinned samples in the NHCX package. Check response shapes against real sandbox calls before relying on them.',
+  `- The skills are snapshots. The current documentation lives at ${promptRef('/docs/nhcx/v1')}; prefer it, and the MCP server when connected, over any downloaded copy that has aged.`,
+  '',
+];
+writeFileSync(join(promptDir, 'nhcx.md'), `${nhcxPromptLines.join('\n')}\n`);
+console.log('Wrote agent-setup/nhcx.md.');
 console.log('Wrote agent-setup/prompt.md.');

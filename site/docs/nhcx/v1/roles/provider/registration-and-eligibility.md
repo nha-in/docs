@@ -3,6 +3,7 @@ title: Registration and eligibility
 sidebar_label: Registration and eligibility
 sidebar_position: 2
 description: Patient intake, Aadhaar eKYC and biometrics, and the coverage check
+sidebar_class_name: sidebar-icon sidebar-icon--user-check
 verification: unverified
 source: nhcx-package/docs/03-Building a Provider/02-Registration and Eligibility.md
 generated: true

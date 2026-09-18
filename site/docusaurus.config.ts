@@ -316,18 +316,20 @@ const config: Config = {
     v4: true,
   },
 
-  // The Pages workflow overrides these for the github.io deployment; a
-  // custom domain later sets DOCUSAURUS_URL and drops the base path.
-  url: process.env.DOCUSAURUS_URL ?? 'https://abdm-docs.example.com',
+  // The published portal, which is where a reader who copies a command from
+  // this build will expect it to point. The Pages workflow and the dev deploy
+  // override it for their own origins.
+  url: process.env.DOCUSAURUS_URL ?? 'https://docs.abdm.gov.in',
   baseUrl: process.env.DOCUSAURUS_BASE_URL ?? '/',
 
   onBrokenLinks: 'throw',
 
   customFields: {
-    // The Docs MCP server's public address. Null until it has one: the install
-    // panel on the MCP page renders locked, and every button on it goes live
-    // the moment this resolves. Nothing else has to change.
-    mcpUrl: process.env.MCP_URL ?? null,
+    // The Docs MCP server's public address, defaulting to the published
+    // portal's own. A deploy with a server of its own sets MCP_URL; set it to
+    // an empty value and the install panel renders locked, which is what a
+    // build with no reachable server should show.
+    mcpUrl: process.env.MCP_URL ?? 'https://docs.abdm.gov.in/mcp',
     // The chat backend's origin. Null keeps the Ask AI panel a labeled mock,
     // so Pages and preview builds never ship a dead composer.
     chatUrl: process.env.CHAT_URL ?? null,

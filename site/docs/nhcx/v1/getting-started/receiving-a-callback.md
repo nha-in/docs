@@ -3,6 +3,7 @@ title: Receiving a callback
 sidebar_label: Receiving a callback
 sidebar_position: 9
 description: Asynchronous callback listener and 202 receipt handling
+sidebar_class_name: sidebar-icon sidebar-icon--webhook
 verification: unverified
 source: nhcx-package/docs/02-Getting Started/09-Receiving a Callback.md
 generated: true

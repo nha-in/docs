@@ -1,4 +1,6 @@
 {
   "label": "Core concepts",
-  "position": 5
+  "position": 2,
+  "collapsed": false,
+  "className": "sidebar-icon sidebar-icon--shapes"
 }

@@ -3,6 +3,7 @@ title: Policies and plans
 sidebar_label: Policies and plans
 sidebar_position: 2
 description: Publishing policy master and 21 MB plan bundles
+sidebar_class_name: sidebar-icon sidebar-icon--package
 verification: unverified
 source: nhcx-package/docs/04-Building a Payer/02-Policies and Plans.md
 generated: true

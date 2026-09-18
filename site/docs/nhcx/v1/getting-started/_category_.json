@@ -1,5 +1,6 @@
 {
   "label": "Getting started",
-  "position": 2,
+  "position": 3,
+  "collapsed": false,
   "className": "sidebar-icon sidebar-icon--rocket"
 }

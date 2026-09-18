@@ -1,5 +1,5 @@
 {
-  "name": "abdm-portal",
+  "name": "nha-in",
   "interface": {
     "displayName": "ABDM Developer Portal"
   },
@@ -9,6 +9,17 @@
       "source": {
         "source": "local",
         "path": "./plugins/abdm-integrators-assistant"
+      },
+      "policy": {
+        "installation": "AVAILABLE"
+      },
+      "category": "Documentation"
+    },
+    {
+      "name": "nhcx",
+      "source": {
+        "source": "local",
+        "path": "./plugins/nhcx"
       },
       "policy": {
         "installation": "AVAILABLE"
