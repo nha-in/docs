@@ -2286,9 +2286,9 @@
       "atom": "hiecm.flow.m4-create-hpid",
       "type": "flow",
       "route": "/docs/hiecm/v3/milestones/m4",
-      "anchor": "journey-1-create-an-hpid-for-a-professional",
-      "link": "/docs/hiecm/v3/milestones/m4#journey-1-create-an-hpid-for-a-professional",
-      "rule": "journey on the M4 user journey page",
+      "anchor": null,
+      "link": "/docs/hiecm/v3/milestones/m4",
+      "rule": "claimed by m4",
       "confidence": "derived"
     },
     {
@@ -2304,8 +2304,8 @@
       "atom": "hiecm.flow.m4-onboard-facility",
       "type": "flow",
       "route": "/docs/hiecm/v3/milestones/m4",
-      "anchor": "journey-3-a-facility-onboards-to-the-hfr",
-      "link": "/docs/hiecm/v3/milestones/m4#journey-3-a-facility-onboards-to-the-hfr",
+      "anchor": "journey-3-onboarding-a-facility-to-the-hfr",
+      "link": "/docs/hiecm/v3/milestones/m4#journey-3-onboarding-a-facility-to-the-hfr",
       "rule": "journey on the M4 user journey page",
       "confidence": "derived"
     },
@@ -2313,8 +2313,8 @@
       "atom": "hiecm.flow.m4-register-professional",
       "type": "flow",
       "route": "/docs/hiecm/v3/milestones/m4",
-      "anchor": "journey-2-register-the-professional-on-the-hpr",
-      "link": "/docs/hiecm/v3/milestones/m4#journey-2-register-the-professional-on-the-hpr",
+      "anchor": "journey-2-registering-a-professional-on-the-hpr",
+      "link": "/docs/hiecm/v3/milestones/m4#journey-2-registering-a-professional-on-the-hpr",
       "rule": "journey on the M4 user journey page",
       "confidence": "derived"
     },
