@@ -20,8 +20,6 @@ sources:
   hash: sha256:c38476fb90101f13fdfea447861292718d561e1dc088ae20950b193606500d2e
   fetched: '2026-09-14'
   note: Onboarding providers and payers in Production, row 5 of the NHCX document sheet, listed on https://hcxsbx.abdm.gov.in/#/documents. Steps 1 to 4.
-verified:
-  status: unverified
 related:
   endpoints:
   - nhcx.endpoint.session-token

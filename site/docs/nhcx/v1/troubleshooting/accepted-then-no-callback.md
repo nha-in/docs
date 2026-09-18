@@ -3,7 +3,6 @@ title: Accepted with 202, and no callback arrives
 sidebar_label: Accepted with 202, and no callback arrives
 sidebar_position: 4
 description: "The exchange answered 202 and no callback followed: the six checks in order"
-verification: unverified
 source: nhcx-package/docs/08-Troubleshooting/04-Accepted Then No Callback.md
 generated: true
 covers:

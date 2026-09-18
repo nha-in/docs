@@ -32,7 +32,7 @@ Grouped by rule, with the file, line and the specific fix. Failures first, warni
 
 Two failures deserve special attention when you see them:
 
-- `schema.verified-evidence` means an atom claims verification with no recorded response. Treat as a blocker regardless of what else is red.
+- `verified is no longer a field; drop it` means an atom carries a `verified` block. Delete it; sandbox evidence lives in `catalogue/verification/`.
 - `compile.identifier-diff` means the prose pass invented something. Regenerate. Do not add the token to the Catalogue to clear the build.
 
 Full rule reference and fixes: `catalogue-linting` skill.

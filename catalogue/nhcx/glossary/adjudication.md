@@ -23,8 +23,6 @@ sources:
   hash: sha256:b65cf1ec6dc1e33c7a9e77106ff7f1892e66d943598b64809f3a677752f6efbe
   fetched: '2026-09-14'
   note: API Response Handling to avoid Failures, row 15 of the NHCX document sheet, listed on https://hcxsbx.abdm.gov.in/#/documents. page 1, Acceptance scenario.
-verified:
-  status: unverified
 related:
   glossary:
   - nhcx.glossary.payer

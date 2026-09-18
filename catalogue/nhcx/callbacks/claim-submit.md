@@ -54,8 +54,6 @@ sources:
   hash: sha256:66290de20d57d69e681946a0101518092ca43b3775bb38997c43beb17fb38076
   fetched: '2026-09-14'
   note: Claim, listed on https://hcxsbx.abdm.gov.in/#/documents, not named in the NHCX document sheet. page 2, items 4-6.
-verified:
-  status: unverified
 related:
   endpoints:
   - nhcx.endpoint.claim-submit

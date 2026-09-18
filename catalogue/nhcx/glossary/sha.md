@@ -17,8 +17,6 @@ sources:
   hash: sha256:1028d480d2fabe3204301f1c1b192a0077ddfa64f7f9084b01f73e004253fdd7
   fetched: '2026-09-05'
   note: NHCX Payer Service API Workflow Guide for External Integrators, not listed on hcxsbx.abdm.gov.in and not named in the NHCX document sheet, received separately. CLAIM Step 5 and role table; get/user-role.
-verified:
-  status: unverified
 related:
   glossary:
   - nhcx.glossary.pmjay

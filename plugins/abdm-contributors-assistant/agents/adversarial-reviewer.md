@@ -17,7 +17,7 @@ Run all seven. Report findings even when they are uncomfortable.
 
 ### 1. Fabricated verification
 
-Sample atoms marked `verified`. For each, find the recorded response. No response means the status is a lie. Check `verified.on` against when credentials actually existed. An atom verified before credentials arrived is fabricated.
+Atoms carry no `verified` field. Sample endpoint atoms whose section 4 shows a response body. For each, find `catalogue/verification/<atom id>.json`. No evidence file means the body came from the spec and must not be presented as observed. Check the evidence date against when credentials actually existed.
 
 ### 2. Unobservable exit conditions
 

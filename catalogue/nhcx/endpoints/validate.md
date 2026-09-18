@@ -34,8 +34,6 @@ sources:
   hash: sha256:cbd03baf428655f0305e2f60ca331f8b76700496b070c522cafcc95001710b3a
   fetched: '2026-09-14'
   note: Onboarding providers and payers in Sandbox, row 4 of the NHCX document sheet, listed on https://hcxsbx.abdm.gov.in/#/documents. Page 1, API Definition - Create Participant.
-verified:
-  status: unverified
 related:
   flows:
   - nhcx.flow.production-onboarding

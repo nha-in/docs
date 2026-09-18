@@ -3,7 +3,6 @@ title: Governance and audit
 sidebar_label: Governance and audit
 sidebar_position: 15
 description: Security layers, dual JWTs, log retention, grievance redressal, and onboarding checklist
-verification: unverified
 source: nhcx-package/docs/06-Reference/05-Governance and Audit.md
 generated: true
 ---

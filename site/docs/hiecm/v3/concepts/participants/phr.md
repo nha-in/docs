@@ -3,7 +3,6 @@ title: PHR app
 sidebar_label: PHR app
 sidebar_position: 7
 description: 'The citizen facing app: what identifies it, the three milestones it builds, and why it is where consent happens.'
-verification: unverified
 source: site/docs/hiecm/v3/concepts/phr.md, site/docs/hiecm/v3/milestones/p1.mdx, site/docs/hiecm/v3/milestones/p3.mdx, catalogue/hiecm/concepts/roles.md, site/docs/hiecm/v3/concepts/gateway.md
 sidebar_class_name: sidebar-icon sidebar-icon--smartphone
 ---

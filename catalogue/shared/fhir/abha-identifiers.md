@@ -21,9 +21,6 @@ sources:
     note: >
       The Identifier Type value set, which carries the HIN and ABHA
       codes and the wording of their definitions.
-verified:
-  status: unverified
-  against: docs-only
 related:
   fhir: [shared.fhir.document-bundle, shared.fhir.hl7-validator-recipe]
   glossary:

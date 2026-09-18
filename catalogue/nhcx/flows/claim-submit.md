@@ -39,8 +39,6 @@ sources:
   hash: sha256:488eea449c6ee45dc324f4f7c095a862c7d50d0e238075846122b51b2bab4878
   fetched: '2026-09-14'
   note: 'API specification: claimhcxservice, row 23 of the NHCX document sheet, listed on https://hcxsbx.abdm.gov.in/#/technical-specifications/api-specifications. paths /v1/claim/submit and /v1/claim/on_submit.'
-verified:
-  status: unverified
 related:
   endpoints:
   - nhcx.endpoint.claim-submit

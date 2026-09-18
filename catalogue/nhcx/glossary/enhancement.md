@@ -23,8 +23,6 @@ sources:
   hash: sha256:f92a30673d65dd2cc3cf09e2087c624f23f781dc4ca6b5cd8ec1825e224ac108
   fetched: '2026-09-14'
   note: NHCX_APIs to be called based on scenario, row 26 of the NHCX document sheet, listed on https://hcxsbx.abdm.gov.in/#/hmisdocuments. Sheet Scenarios, row 7.
-verified:
-  status: unverified
 related:
   flows:
   - nhcx.flow.preauth-enhancement

@@ -34,8 +34,6 @@ sources:
   hash: sha256:58aaa762f2a04565e2060658b0eda95e3cac4cbb0819b6d865f04cf53066680d
   fetched: '2026-09-14'
   note: Site page /introduction-NHCX/guidlines-for-participant-onboarding, text as shown on the site. Step 3 Sandbox certification.
-verified:
-  status: unverified
 related:
   sandbox:
   - nhcx.sandbox.going-live

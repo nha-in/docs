@@ -24,8 +24,6 @@ sources:
   hash: sha256:5275f391537c7a97c0d11321951eb0420bd97ed42d1b3bce241c013c4b677dd8
   fetched: '2026-09-14'
   note: FAQs, row 21 of the NHCX document sheet, listed on https://hcxsbx.abdm.gov.in/#/documents. Page 4, Q12.
-verified:
-  status: unverified
 related:
   concepts:
   - nhcx.concept.four-message-legs

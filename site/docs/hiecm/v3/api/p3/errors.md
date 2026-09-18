@@ -3,7 +3,6 @@ title: P3 PHR consent and notifications errors
 sidebar_label: Errors
 sidebar_position: 98
 description: What P3 PHR consent and notifications returns when a call fails, and what to do about it.
-verification: unverified
 source: hiecm-p3.yaml
 generated: true
 ---

@@ -20,9 +20,6 @@ sources:
     note: >
       An atom whose subject has three common names in the wild, none of
       which the reader's query is guaranteed to use.
-verified:
-  status: unverified
-  against: docs-only
 related:
   decisions: [shared.decision.role-model-two-axes]
   glossary: [shared.glossary.abha, shared.glossary.abha-address]

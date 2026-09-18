@@ -3,7 +3,6 @@ title: PHR application services errors
 sidebar_label: Errors
 sidebar_position: 98
 description: What PHR application services returns when a call fails, and what to do about it.
-verification: unverified
 source: hiecm-phr-services.yaml
 generated: true
 ---

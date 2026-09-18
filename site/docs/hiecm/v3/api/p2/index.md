@@ -3,7 +3,6 @@ title: P2 PHR linking and records
 sidebar_label: Overview
 sidebar_position: 0
 description: How a patient finds records held elsewhere and attaches them to their ABHA address.
-verification: unverified
 source: catalogue/openapi/hiecm/v3/hiecm-p2.yaml
 ---
 

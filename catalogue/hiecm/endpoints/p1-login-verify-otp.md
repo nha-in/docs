@@ -14,12 +14,16 @@ sources:
     note: >
       NHA's PHR V3 document, section 3.12. The path, the method, the
       request body and the error scenarios below are transcribed from it.
-verified:
-  status: unverified
-  against: docs-only
+  - file: catalogue/annexure/integration-learnings-2026-09-16.md
+    fetched: 2026-09-16
+    hash: sha256:d1415609d3d71178563367bcdcc48fa7a01fe9ebd247b4c019686304868368ce
+    note: >
+      The users array with PENDING entries and null abhaNumber, and the 300 second transfer token. Observed by an integrator on 2026-09-16; the Invalid Transaction Id body is in catalogue/verification/hiecm.endpoint.p1-login-verify-otp.json, run 2026-09-17.
 related:
-  flows: [hiecm.flow.p1-login]
+  flows: [hiecm.flow.p1-login, hiecm.flow.m1-login-phr-by-mobile]
+  endpoints: [hiecm.endpoint.p1-login-verify-user]
   concepts: [hiecm.concept.gateway-session]
+  errors: [hiecm.error.abdm-1006, hiecm.error.abdm-9999]
 skills:
   - hiecm-p1-build
 ---
@@ -46,19 +50,35 @@ curl -X POST 'https://abhasbx.abdm.gov.in/abha/api/v3/phr/app/login/verify' \
   -d '{ "scope": [ "abha-address-login", "mobile-verify" ], "authData": { "authMethods": [ "otp" ], "otp": { "txnId": "*{{ transactionId}}*", "otpValue": "*{{encrypted OTP}}*" } } }'
 ```
 
-The path, the method and the body come from NHA's PHR V3 document,
-section 3.12. The sandbox host for the PHR calls is
-`https://abhasbx.abdm.gov.in`; production is
-`https://apis.abdm.gov.in/phr/api/phr/app/v3`. Nothing here has been
-called from this repository.
+The sandbox host for the PHR calls is `https://abhasbx.abdm.gov.in`;
+production is `https://apis.abdm.gov.in/phr/api/phr/app/v3`.
 
 ## How you know it worked
 
-The response carries the tokens for the session. Store the refresh token securely, because that is what survives the application restarting.
+The response carries a `users` array and a `tokens` object:
+
+```json
+{
+  "users": [
+    {
+      "abhaAddress": "<ABHA_ADDRESS>",
+      "abhaNumber": null,
+      "fullName": "<NAME>",
+      "kycStatus": "PENDING",
+      "status": "<STATUS>"
+    }
+  ],
+  "tokens": {
+    "token": "<TRANSFER_TOKEN_300_SECONDS>"
+  }
+}
+```
+
+Every address on the mobile is listed, including `PENDING` ones with no ABHA number. `tokens.token` is a 300 second transfer token: exchange it at [say which address is signing in](hiecm.endpoint.p1-login-verify-user) for the address the person picks.
 
 ## When it goes wrong
 
-The error scenarios NHA records against this call: ABDM-1006, ABDM-9999. The PHR codes
+The error scenarios recorded against this call: [ABDM-1006](hiecm.error.abdm-1006), [ABDM-9999](hiecm.error.abdm-9999). `ABDM-9999 Invalid Transaction Id` means the `txnId` is not from a live login request. The PHR codes
 are the AS series, recorded once against P1 for the whole patient side and
 listed in full in the P1 reference. A code that is not in that list is one
 this document names and the specification does not.

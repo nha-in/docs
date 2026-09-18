@@ -22,8 +22,6 @@ sources:
     status: reference
     note: >
       NRCeS's own download for the package above.
-verified:
-  status: unverified
 related:
   fhir: [shared.fhir.document-bundles, shared.fhir.map-opconsultation, shared.fhir.map-prescription, shared.fhir.map-diagnosticreport]
   glossary: [shared.glossary.nrces]

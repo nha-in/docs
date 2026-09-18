@@ -3,7 +3,6 @@ title: Environments and addresses
 sidebar_label: Environments and addresses
 sidebar_position: 16
 description: Sandbox/production URLs, firewall IPs, token headers, and 12 live Swagger specifications
-verification: unverified
 source: nhcx-package/docs/06-Reference/06-Environments and Addresses.md
 generated: true
 ---

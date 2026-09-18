@@ -20,9 +20,6 @@ sources:
     note: >
       NHA's PHR V3 document, section 3.33, which publishes the request
       body this atom had as a placeholder.
-verified:
-  status: unverified
-  against: docs-only
 related:
   concepts: [hiecm.concept.gateway-session]
 skills:

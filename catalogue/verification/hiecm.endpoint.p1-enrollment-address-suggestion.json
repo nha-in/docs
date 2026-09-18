@@ -1,0 +1,8 @@
+{
+  "atom": "hiecm.endpoint.p1-enrollment-address-suggestion",
+  "on": "2026-09-17",
+  "against": "https://abhasbx.abdm.gov.in",
+  "request": "curl -X POST 'https://abhasbx.abdm.gov.in/abha/api/v3/phr/app/enrollment/suggestion' \\\n  -H 'Authorization: Bearer <scrubbed>' \\\n  -H 'REQUEST-ID: d8cbd1e8-340e-4cd3-ad9e-32606eba6994' \\\n  -H 'TIMESTAMP: 2026-09-17T11:23:02.634Z' \\\n  -H 'Content-Type: application/json' \\\n  -d '{ \"txnId\": \"*{{transactionId}}*\", \"firstName\": \"John\", \"lastName\": \"Doe\", \"dayOfBirth\": \"14\", \"monthOfBirth\": \"11\", \"yearOfBirth\": \"1998\" }'\n",
+  "status": 400,
+  "body": "[{\"code\":\"ABDM-9999: \",\"message\":\"Invalid Transaction Id\"}]"
+}

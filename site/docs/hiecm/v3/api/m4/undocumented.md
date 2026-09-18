@@ -4,7 +4,6 @@ sidebar_label: Operations and fields
 sidebar_position: 90
 page_type: reference
 description: Every M4 call for the HPR and the HFR, with its parameters, codes and rules, including the calls whose path is not yet published.
-verification: unverified
 source: ABDM__Proposed_Simplified_Milestone_4_(NHPR).md
 ---
 

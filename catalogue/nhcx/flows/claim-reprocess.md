@@ -24,8 +24,6 @@ sources:
   hash: sha256:0418eca6478dece4d72c5a49a6547d50772511f7ffaf32f901f245591ba84656
   fetched: '2026-09-14'
   note: 'API specification: taskhcxservice, row 23 of the NHCX document sheet, listed on https://hcxsbx.abdm.gov.in/#/technical-specifications/api-specifications. paths /v1/task/submit and /v1/task/on_submit.'
-verified:
-  status: unverified
 related:
   endpoints:
   - nhcx.endpoint.task-submit

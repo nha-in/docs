@@ -3,7 +3,6 @@ title: Insurance plan response, package-based
 sidebar_label: Insurance plan response, package-based
 sidebar_position: 6
 description: PMJAY package structure and claim condition extensions
-verification: unverified
 source: nhcx-package/docs/05-FHIR Reference/06-Insurance Plan Response, Package-Based.md
 generated: true
 ---

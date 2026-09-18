@@ -3,7 +3,6 @@ title: Envelope fields
 sidebar_label: Envelope fields
 sidebar_position: 13
 description: Full JWE header table, obligations, and correlation rules
-verification: unverified
 source: nhcx-package/docs/06-Reference/03-Envelope Fields.md
 generated: true
 ---

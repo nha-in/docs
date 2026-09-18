@@ -33,12 +33,13 @@ type Result struct {
 }
 
 var (
-	pathRe = regexp.MustCompile(`(?i)\b(?:GET|POST|PUT|PATCH|DELETE)?\s*(/(?:api|v3|v3\.1|hiecm|abha|phr)[A-Za-z0-9/_{}.\-]*)`)
-	opIDRe = regexp.MustCompile(`\b([a-z][a-z0-9]*(?:_[a-z0-9]+){2,})\b`)
-	failRe = regexp.MustCompile(`(?i)\b(fail|failing|error|returns? \d{3}|got \d{3}|\b4\d\d\b|\b5\d\d\b|not working|stuck|rejected|invalid)\b`)
-	compRe = regexp.MustCompile(`(?i)\b(difference|differ|vs\.?|versus|same as|the same as|compare|which one)\b`)
-	metaRe = regexp.MustCompile(`(?i)\b(catalogue version|which version|how (?:old|current)|last updated|built)\b`)
-	whRe   = regexp.MustCompile(`(?i)^(what is|what's|whats|what are|what makes|define|meaning of|explain)\b`)
+	pathRe  = regexp.MustCompile(`(?i)\b(?:GET|POST|PUT|PATCH|DELETE)?\s*(/(?:api|v3|v3\.1|hiecm|abha|phr)[A-Za-z0-9/_{}.\-]*)`)
+	opIDRe  = regexp.MustCompile(`\b([a-z][a-z0-9]*(?:_[a-z0-9]+){2,})\b`)
+	failRe  = regexp.MustCompile(`(?i)\b(fail|failing|error|returns? \d{3}|got \d{3}|\b4\d\d\b|\b5\d\d\b|not working|stuck|rejected|invalid)\b`)
+	compRe  = regexp.MustCompile(`(?i)\b(difference|differ|vs\.?|versus|same as|the same as|compare|which one)\b`)
+	metaRe  = regexp.MustCompile(`(?i)\b(catalogue version|which version|how (?:old|current)|last updated|built)\b`)
+	greetRe = regexp.MustCompile(`(?i)^(hi+|hello|hey|hiya|yo|namaste|good (?:morning|afternoon|evening)|thanks?|thank you|ty|ok(?:ay)?|cool|great)(?: there| all| team)?[\s.!?]*$`)
+	whRe    = regexp.MustCompile(`(?i)^(what is|what's|whats|what are|what makes|define|meaning of|explain)\b`)
 )
 
 // imperativeVerbs are bare how-to imperatives ("link record", "reset
@@ -98,3 +99,7 @@ func Route(in Input) Result {
 	}
 	return r
 }
+
+// IsGreeting reports whether a message is only a greeting or thanks. Those
+// carry nothing to retrieve on, and "hi" retrieves HI type, HIU and HIP.
+func IsGreeting(q string) bool { return greetRe.MatchString(strings.TrimSpace(q)) }

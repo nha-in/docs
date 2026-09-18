@@ -2,7 +2,6 @@
 title: Care contexts and linking
 sidebar_label: Linking
 description: What a care context is, why a record has to be linked before anyone can find it, and how the link token works.
-verification: unverified
 source: ABDM__Proposed_Simplified_Milestone_2.md, ABDM__NewDocumant_PHR_app.md
 sidebar_position: 3
 covers: [hiecm.concept.care-context]
@@ -109,7 +108,7 @@ The full list is on [M2 errors](/docs/hiecm/v3/api/m2/errors).
 ## Where this is implemented
 
 - [Hospital, lab and pharmacy systems](/docs/hiecm/v3/concepts/hip-hiu), what a facility builds to do the linking.
-- [M2, linking and sharing](/docs/hiecm/v3/api/m2), the call order for all three routes.
+- [M2 Attach, Health Information Provider Services](/docs/hiecm/v3/api/m2), the call order for all three routes.
 - [Consent](/docs/hiecm/v3/concepts/consent), what happens once somebody asks for a linked care context.
 - [How a record travels](/docs/hiecm/v3/concepts/data-flow), what you do when that request arrives.
 - [PHR applications](/docs/hiecm/v3/concepts/phr), the patient side of discovery and linking.

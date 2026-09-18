@@ -38,8 +38,6 @@ sources:
   hash: sha256:b2d4834fa71f26721319a8222ad44feb35467592d62a00e6c3127ac3636e96cc
   fetched: '2026-09-14'
   note: Site page /technical-specifications, text as shown on the site. Status Description.
-verified:
-  status: unverified
 related:
   endpoints:
   - nhcx.endpoint.coverageeligibility-on-check

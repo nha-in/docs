@@ -3,7 +3,6 @@ title: Preauthorisation query and answer
 sidebar_label: Preauthorisation query and answer
 sidebar_position: 11
 description: Query resolution on preauth thread (wf 24 / 19)
-verification: unverified
 source: nhcx-package/docs/05-FHIR Reference/11-Preauthorisation Query and Answer.md
 generated: true
 ---

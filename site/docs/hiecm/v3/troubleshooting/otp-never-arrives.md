@@ -2,7 +2,6 @@
 title: The OTP never arrives
 sidebar_label: OTP never arrives
 description: You requested an OTP and nothing reached the phone. The checks in order.
-verification: unverified
 source: M1 ABHA Collection.postman_collection.json
 sidebar_position: 3
 covers: [hiecm.troubleshooting.otp-never-arrives]
@@ -51,11 +50,11 @@ a `txnId` from the request call alone does not confirm the SMS was sent.
 ## When it goes wrong
 
 If you have confirmed the receiving number, are not rate limited, and
-the transaction is fresh, and the OTP still has not arrived, escalate on
-the [developer forum](https://devforum.abdm.gov.in) rather than requesting
+the transaction is fresh, and the OTP still has not arrived, raise a request on the
+[support ticketing platform](https://sandboxsupport.abdm.gov.in/) rather than requesting
 again. Report the API you called, the `REQUEST-ID`, the `TIMESTAMP`, and
 the full response body including the `txnId`. See
-[Support](/docs/support) for the full report format.
+[what to put in a support request](/docs/hiecm/v3/troubleshooting#what-to-put-in-a-support-request) for the full report format.
 
 This symptom can surface as a rate limit code or the catch-all
 failure code, both on the

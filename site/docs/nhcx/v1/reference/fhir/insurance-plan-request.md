@@ -3,7 +3,6 @@ title: Insurance plan request
 sidebar_label: Insurance plan request
 sidebar_position: 4
 description: Task-based plan polling request
-verification: unverified
 source: nhcx-package/docs/05-FHIR Reference/04-Insurance Plan Request.md
 generated: true
 ---

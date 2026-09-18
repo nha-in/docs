@@ -3,7 +3,6 @@ title: Payment notice
 sidebar_label: Overview
 sidebar_position: 0
 description: "The Payment notice calls on NHCX: what each one does, the hosts they go to, and the guides that use them."
-verification: unverified
 source: nhcx-package/apis/06-payment-notice
 generated: true
 ---

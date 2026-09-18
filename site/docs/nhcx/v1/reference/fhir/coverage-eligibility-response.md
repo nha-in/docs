@@ -3,7 +3,6 @@ title: Coverage eligibility response
 sidebar_label: Coverage eligibility response
 sidebar_position: 3
 description: Response bundle, wallet breakdown, and inforce flags
-verification: unverified
 source: nhcx-package/docs/05-FHIR Reference/03-Coverage Eligibility Response.md
 generated: true
 ---

@@ -3,7 +3,6 @@ title: Status and search
 sidebar_label: Overview
 sidebar_position: 0
 description: "The Status and search calls on NHCX: what each one does, the hosts they go to, and the guides that use them."
-verification: unverified
 source: nhcx-package/apis/08-status
 generated: true
 ---

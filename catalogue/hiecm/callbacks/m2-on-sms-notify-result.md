@@ -16,9 +16,6 @@ sources:
       NHA's M2 file as ingested on this branch. The path, the headers and
       the payload shape below are the ones it declares for this result
       leg. Nothing here has been observed arriving from the sandbox.
-verified:
-  status: unverified
-  against: docs-only
 related:
   endpoints: [hiecm.endpoint.m2-sms-deep-link-notify]
   flows: [hiecm.flow.m2-link-care-context]

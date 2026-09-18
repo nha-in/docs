@@ -3,7 +3,6 @@ title: Your callback URL is rejected or never called
 sidebar_label: Your callback URL is rejected or never called
 sidebar_position: 3
 description: The endpoint update is refused, or nothing ever reaches your server
-verification: unverified
 source: nhcx-package/docs/08-Troubleshooting/03-Your Callback URL Is Rejected.md
 generated: true
 covers:

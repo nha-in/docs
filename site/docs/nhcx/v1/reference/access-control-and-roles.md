@@ -3,7 +3,6 @@ title: Access control and roles
 sidebar_label: Access control and roles
 sidebar_position: 14
 description: Role permissions, search rights, consent headers, and registry attributes (`payment_details`)
-verification: unverified
 source: nhcx-package/docs/06-Reference/04-Access Control and Roles.md
 generated: true
 ---

@@ -3,7 +3,6 @@ title: Claim query and answer
 sidebar_label: Claim query and answer
 sidebar_position: 14
 description: Claim query updates (wf 27 / 151)
-verification: unverified
 source: nhcx-package/docs/05-FHIR Reference/14-Claim Query and Answer.md
 generated: true
 ---

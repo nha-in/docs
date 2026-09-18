@@ -19,8 +19,6 @@ sources:
   hash: sha256:0d95021974cfe81ab2e3bf66f983228a70b8fed8d7d251eb6d7eeab7354ecad2
   fetched: '2026-09-14'
   note: NHCX-PMJAY-HMIS Test Cases, row 31 of the NHCX document sheet, listed on https://hcxsbx.abdm.gov.in/#/hmisdocuments. Test case TC-HBP-01.
-verified:
-  status: unverified
 related:
   glossary:
   - nhcx.glossary.pmjay

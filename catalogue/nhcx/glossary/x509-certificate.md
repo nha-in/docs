@@ -18,8 +18,6 @@ sources:
   hash: sha256:1098cd595c986dca11bd09f2baad78f32b85ed68cec83524b5ec189643bade6a
   fetched: '2026-09-14'
   note: NHCX Provider Side Use Cases- Sandbox Exit Process, row 9 of the NHCX document sheet, listed on https://hcxsbx.abdm.gov.in/#/documents. Use case 3, Get public Key.
-verified:
-  status: unverified
 related:
   concepts:
   - nhcx.concept.encryption-certificate

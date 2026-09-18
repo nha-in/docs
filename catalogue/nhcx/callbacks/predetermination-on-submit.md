@@ -39,8 +39,6 @@ sources:
   hash: sha256:b4af12a432a29886e1ae4956340ff07782bba7df792380de3a408f4e5a55673f
   fetched: '2026-09-14'
   note: Common Mistakes while implementing through NHCX, row 22 of the NHCX document sheet, listed on https://hcxsbx.abdm.gov.in/#/documents. item 8.
-verified:
-  status: unverified
 related:
   endpoints:
   - nhcx.endpoint.predetermination-on-submit

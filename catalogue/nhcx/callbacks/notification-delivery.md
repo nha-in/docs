@@ -19,8 +19,6 @@ sources:
   hash: sha256:0d0d4781aa96017c06c8c2533e63dd1a6b36bb2342ebb51aeefca3349d892029
   fetched: '2026-09-14'
   note: 'API specification: subscriptionhcxservice, row 23 of the NHCX document sheet, listed on https://hcxsbx.abdm.gov.in/#/technical-specifications/api-specifications. paths./v1/notification/on_subscribe and /v1/notification/subscribe.'
-verified:
-  status: unverified
 related:
   endpoints:
   - nhcx.endpoint.notification-subscribe

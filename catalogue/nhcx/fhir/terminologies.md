@@ -31,8 +31,6 @@ sources:
   hash: sha256:8c7b24e3022733aaf7e8f517e12c11c0e8eddd6293844a2c4f3e9700fb720dca
   fetched: '2026-09-14'
   note: Sample FHIR bundles, row 29 of the NHCX document sheet, listed on https://hcxsbx.abdm.gov.in/#/hmisdocuments. meta.tag, Coverage.class.
-verified:
-  status: unverified
 related:
   fhir:
   - nhcx.fhir.collection-bundle

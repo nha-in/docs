@@ -49,8 +49,6 @@ sources:
   hash: sha256:d9cdc0997294a788f33d2e00638c787dd790ebd2a2e52be97ad024d864c2b164
   fetched: '2026-09-14'
   note: NHCX-PMJAY-HMIS Integration Guide, row 28 of the NHCX document sheet, listed on https://hcxsbx.abdm.gov.in/#/hmisdocuments. page 5 table 5.1; page 6 API Flows.
-verified:
-  status: unverified
 related:
   endpoints:
   - nhcx.endpoint.preauth-on-submit

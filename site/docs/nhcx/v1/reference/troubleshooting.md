@@ -3,7 +3,6 @@ title: Troubleshooting
 sidebar_label: Troubleshooting
 sidebar_position: 12
 description: Five-layer fault isolation model and symptom-first diagnostic playbook
-verification: unverified
 source: nhcx-package/docs/06-Reference/02-Troubleshooting.md
 generated: true
 ---

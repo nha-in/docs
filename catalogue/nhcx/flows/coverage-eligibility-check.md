@@ -34,8 +34,6 @@ sources:
   hash: sha256:1723a4020b1b33d0bc1d7175609f0d05e6a6a78e8b4c52041222396639ceb52c
   fetched: '2026-09-14'
   note: 'API specification: coverageeligibilityhcxservice, row 23 of the NHCX document sheet, listed on https://hcxsbx.abdm.gov.in/#/technical-specifications/api-specifications. paths /v1/coverageeligibility/check and /on_check.'
-verified:
-  status: unverified
 related:
   endpoints:
   - nhcx.endpoint.coverageeligibility-check

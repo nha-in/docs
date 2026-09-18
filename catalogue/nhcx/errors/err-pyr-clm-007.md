@@ -14,8 +14,6 @@ sources:
 - file: catalogue/openapi/.raw/nhcx-package-2026-09-15/nhcx-error.yaml
   hash: sha256:d24ac927ed4dd722e60d7bd1d6fed15de370cc29f750d68999ee56fac93c941b
   note: Recorded from a sandbox run. On none of the NHA error sheets.
-verified:
-  status: unverified
 related:
   concepts:
   - nhcx.concept.error-code-spaces

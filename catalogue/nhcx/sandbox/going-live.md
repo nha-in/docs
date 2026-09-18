@@ -35,8 +35,6 @@ sources:
   hash: sha256:6d0a2192da8160fe4b292bbdd81e937ba254bf6d27915d23907e70b82faebf63
   fetched: '2026-09-14'
   note: 'API specification: participanthcxservice, row 23 of the NHCX document sheet, listed on https://hcxsbx.abdm.gov.in/#/technical-specifications/api-specifications. paths /v2/participant/create, /validate, /v2/participant/update, /update/validate, /v2/update/cert.'
-verified:
-  status: unverified
 related:
   flows:
   - nhcx.flow.production-onboarding

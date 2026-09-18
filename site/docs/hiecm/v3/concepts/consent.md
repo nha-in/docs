@@ -2,7 +2,6 @@
 title: Consent
 sidebar_label: Consent
 description: What a consent request is, what a consent artefact is, who holds it, and the states it moves through.
-verification: unverified
 source: ABDM__Proposed_Simplified_Milestone_3.md, ABDM__NewDocumant_PHR_app.md, ABDM__Proposed_Simplified_Milestone_2.md
 sidebar_position: 4
 covers: [hiecm.concept.consent-artefact, hiecm.concept.consent-in-a-phr-app]
@@ -128,6 +127,6 @@ An auto approval policy works like this: the patient authorises the app once, th
 
 - [Hospital, lab and pharmacy systems](/docs/hiecm/v3/concepts/hip-hiu), the facility taking each role.
 - [The ABDM gateway](/docs/hiecm/v3/concepts/gateway), which holds every artefact here.
-- [M3, consent and fetching](/docs/hiecm/v3/api/m3), the requesting side.
-- [M2, linking and sharing](/docs/hiecm/v3/api/m2), what a record holder validates.
+- [M3 Retrieve, Health Information User Services](/docs/hiecm/v3/api/m3), the requesting side.
+- [M2 Attach, Health Information Provider Services](/docs/hiecm/v3/api/m2), what a record holder validates.
 - [How a record travels](/docs/hiecm/v3/concepts/data-flow), what happens next.

@@ -24,9 +24,9 @@ Watched sources (daily)
         |
    Watcher: fetch, hash, diff against stored hash
         |
-   Pull request: changed source + affected atom ids + atoms flipped to stale
+   Pull request: changed source + affected atom ids
         |
-   Human review: accept, edit, or mark unverified
+   Human review: accept, edit, or mark unaffected
         |
    Merge to main
         |
@@ -47,21 +47,11 @@ Runs daily as a scheduled job. For each source: fetch, hash, compare to the stor
 On a change, it does three things and no more:
 
 1. Identifies every atom whose `sources` include the changed file
-2. Flips those atoms from `verified` to `stale`
-3. Opens a pull request containing the source diff, the affected atom ids, and draft edits where the change is mechanical
+2. Opens a pull request containing the source diff, the affected atom ids, and draft edits where the change is mechanical
 
-**The watcher cannot merge.** A person does. This is not bureaucracy; a spec change that silently rewrote a verified atom would destroy the meaning of the word verified.
+Atoms carry no status to flip. The affected list in the pull request is the record of what needs re-reading.
 
-## Staleness is visible everywhere
-
-A stale atom:
-
-- Renders a banner on the site
-- Causes the compiled skill to warn the agent that this step may have changed
-- Appears in `/catalogue-status` as needing attention
-- Is cited by the support agent with its status attached
-
-An integrator should never be able to read a stale page without knowing it is stale, in any surface.
+**The watcher cannot merge.** A person does. This is not bureaucracy; a spec change that silently rewrote an atom would publish something ABDM never said.
 
 ## Review of a watcher pull request
 
@@ -69,9 +59,9 @@ Three possible outcomes per affected atom:
 
 | Outcome | When | Action |
 |---|---|---|
-| Accept the draft edit | The change is mechanical, for example a description reword upstream | Merge, atom returns to `unverified` unless re-run |
-| Edit then accept | The change is real and needs prose work | Rewrite the affected sections, set `unverified`, queue verification |
-| Mark unaffected | The changed part of the source does not touch this atom | Set back to `verified` with a note recording the review |
+| Accept the draft edit | The change is mechanical, for example a description reword upstream | Merge |
+| Edit then accept | The change is real and needs prose work | Rewrite the affected sections, queue a run of `npm run verify:atoms` |
+| Mark unaffected | The changed part of the source does not touch this atom | Note the review in the pull request |
 
 The third outcome is common and legitimate. A single-character change to one operation should not invalidate forty atoms.
 
@@ -106,7 +96,7 @@ This is the least automated part of the pipeline and the one most likely to rot.
 
 ## The plan is a source too
 
-The architecture and execution plan is watched on the same schedule and by the same mechanism as anything NHA publishes. It is hashed, diffed, and a change to it opens a pull request like any other source change. The difference is what a change affects: an NHA change flips atoms to stale, a plan change forces a rebuild of the four skills compiled from it.
+The architecture and execution plan is watched on the same schedule and by the same mechanism as anything NHA publishes. It is hashed, diffed, and a change to it opens a pull request like any other source change. The difference is what a change affects: an NHA change lists the affected atoms, a plan change forces a rebuild of the four skills compiled from it.
 
 | | NHA source changes | Plan changes |
 |---|---|---|

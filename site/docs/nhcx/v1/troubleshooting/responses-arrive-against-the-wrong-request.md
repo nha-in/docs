@@ -3,7 +3,6 @@ title: Responses arrive against the wrong request
 sidebar_label: Responses arrive against the wrong request
 sidebar_position: 7
 description: "Answers on the wrong case, duplicates refused, callbacks unmatched: correlation and API call IDs"
-verification: unverified
 source: nhcx-package/docs/08-Troubleshooting/07-Responses Arrive Against the Wrong Request.md
 generated: true
 covers:

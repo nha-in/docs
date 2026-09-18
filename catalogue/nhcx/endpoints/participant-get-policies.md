@@ -44,8 +44,6 @@ sources:
   hash: sha256:420115b9a54e15fa625312a56362164d92d23dd0d6ebf9195135bb00055d1911
   fetched: '2026-09-14'
   note: Policy Linking and De-Linking Process, row 8 of the NHCX document sheet, listed on https://hcxsbx.abdm.gov.in/#/documents. Page 1, For Sandbox / For Production envBaseUrl.
-verified:
-  status: unverified
 related:
   concepts:
   - nhcx.concept.policy-linking

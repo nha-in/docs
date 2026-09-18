@@ -5,7 +5,7 @@ description: Use when building, debugging or testing ABDM Milestone 2: care cont
 
 # ABDM M2, linking and sharing
 
-Generated from the ABDM Developer Portal on 2026-09-18, catalogue version 2026.08.24. Every fact below comes from a page in that portal, which is the place to look when this file does not carry enough.
+Generated from the ABDM Developer Portal, catalogue version 2026.08.24. Every fact below comes from a page in that portal, which is the place to look when this file does not carry enough.
 
 This file is a snapshot. Re-download it from the portal's /skills/abdm-m2/SKILL.md path when it is older than the work you are doing.
 If the abdm-docs MCP server is connected, trust its answers over this file: it serves the current catalogue and stamps every response with its catalogue_version, which you can compare against the version above.
@@ -30,7 +30,6 @@ This file is the map. Each line above is a file beside it, opened one at a time 
 
 ## Before anything else
 
-- Nothing here has been run against the ABDM sandbox. Treat request and response shapes as unconfirmed, and check a response before you rely on its shape.
 - You act as the HIP. NHA requires a valid Facility ID and registration in the HIP role before you can create health records and share them.
 - M2 is keyed to an ABHA address, so a working M1 integration comes first.
 - Hold a link token per patient, stored at registration. NHA gives its validity as six months and says to validate it before use. If you hold no valid one, regenerate it using demographic authentication.

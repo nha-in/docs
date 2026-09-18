@@ -1,0 +1,8 @@
+{
+  "atom": "hiecm.endpoint.m1-receive-patient-share",
+  "on": "2026-09-17",
+  "against": "https://abhasbx.abdm.gov.in",
+  "request": "curl -X POST 'https://abhasbx.abdm.gov.in/abha/api/v3/patient-share/v3/share' \\\n  -H 'Authorization: Bearer <scrubbed>' \\\n  -H 'REQUEST-ID: b9958c13-49f9-4b22-beae-af62aba9130f' \\\n  -H 'TIMESTAMP: 2026-09-17T11:22:52.680Z' \\\n  -H 'X-CM-ID: sbx' \\\n  -H 'Content-Type: application/json' \\\n  -d '{\n  \"intent\": \"PROFILE_SHARE\",\n  \"metaData\": {\n    \"hipId\": \"CityGeneralHospital_HIP\",\n    \"context\": \"123\",\n    \"hprId\": \"testhpr@hpr.abdm\"\n  },\n  \"profile\": {\n    \"patient\": {\n      \"abhaNumber\": \"91-1234-5678-9012\",\n      \"abhaAddress\": \"johnkumar@sbx\",\n      \"name\": \"John Kumar\",\n      \"gender\": \"M\",\n      \"dob\": \"1990-01-15\",\n      \"mobile\": \"9876543210\",\n      \"kycPhoto\": \"{{base64_photo}}\",\n      \"address\": {\n        \"line\": \"123 Main Street\",\n        \"district\": \"Mumbai\",\n        \"state\": \"Maharashtra\",\n        \"pinCode\": \"999999\"\n      }\n    }\n  }\n}'\n",
+  "status": 404,
+  "body": "{\"code\":\"404\",\"type\":\"Status report\",\"message\":\"Runtime Error\",\"description\":\"No matching resource found for given API Request\"}"
+}

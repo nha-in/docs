@@ -29,8 +29,6 @@ sources:
   hash: sha256:97335ebc4cd32c86e0c34328b2f4c526420b32a7a009208364043d6334e9e757
   fetched: '2026-09-14'
   note: NHCX Dummy Payer Implementation, row 19 of the NHCX document sheet, listed on https://hcxsbx.abdm.gov.in/#/documents. page 1, dummy payer use case list.
-verified:
-  status: unverified
 related:
   endpoints:
   - nhcx.endpoint.predetermination-submit

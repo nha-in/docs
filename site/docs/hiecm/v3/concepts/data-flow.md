@@ -2,7 +2,6 @@
 title: How a record travels
 sidebar_label: Data flow
 description: The path a health record takes from the system that asks for it to the system that holds it, and the encryption in between.
-verification: unverified
 source: ABDM__Proposed_Simplified_Milestone_2.md, ABDM__Proposed_Simplified_Milestone_3.md
 sidebar_position: 5
 sidebar_class_name: sidebar-icon sidebar-icon--arrow-right-left
@@ -125,7 +124,7 @@ Two reference implementations exist. Fidelius, at [github.com/sukreet/fidelius](
 ## Where this is implemented
 
 - [Hospital, lab and pharmacy systems](/docs/hiecm/v3/concepts/hip-hiu), which side the facility you act for is on.
-- [M2, linking and sharing](/docs/hiecm/v3/api/m2), the sending side.
-- [M3, consent and fetching](/docs/hiecm/v3/api/m3), the receiving side.
+- [M2 Attach, Health Information Provider Services](/docs/hiecm/v3/api/m2), the sending side.
+- [M3 Retrieve, Health Information User Services](/docs/hiecm/v3/api/m3), the receiving side.
 - [Consent](/docs/hiecm/v3/concepts/consent), the artefact this flow depends on.
 - [FHIR and health record formats](/docs/hiecm/v3/concepts/fhir), what is inside the payload.

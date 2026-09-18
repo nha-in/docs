@@ -34,8 +34,6 @@ sources:
   hash: sha256:50be7b035a2bed658b7cbbe2e8b02444aea2cda3e3af5ed04832565c825a603d
   fetched: '2026-09-14'
   note: NHCX Payer Side Use Cases- Sandbox Exit Process, row 10 of the NHCX document sheet, listed on https://hcxsbx.abdm.gov.in/#/documents. Page 1, Use case 1 Link ABHA with Policy.
-verified:
-  status: unverified
 related:
   concepts:
   - nhcx.concept.policy-linking

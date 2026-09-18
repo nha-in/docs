@@ -25,8 +25,6 @@ sources:
   hash: sha256:e9c6c82b6d67fd8476d6d19a5961419beb04e3c0613533453ed1e16e2a569cc1
   fetched: '2026-09-14'
   note: Insurance Plan IG, row 25 of the NHCX document sheet, listed on https://hcxsbx.abdm.gov.in/#/hmisdocuments. CoverageEligibility request and response tables.
-verified:
-  status: unverified
 related:
   flows:
   - nhcx.flow.coverage-eligibility-check

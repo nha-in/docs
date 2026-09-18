@@ -34,8 +34,6 @@ sources:
   hash: sha256:c95469758a25cb8aca8c47757d8b18b4dedb8b4d42669663cff7343205f77fda
   fetched: '2026-09-14'
   note: NHCX-PMJAY-HMIS Integration Overview, row 27 of the NHCX document sheet, listed on https://hcxsbx.abdm.gov.in/#/hmisdocuments. Page 8 flow table.
-verified:
-  status: unverified
 related:
   concepts:
   - nhcx.concept.claim-cycle

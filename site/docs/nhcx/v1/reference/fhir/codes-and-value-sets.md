@@ -3,7 +3,6 @@ title: Codes and value sets
 sidebar_label: Codes and value sets
 sidebar_position: 19
 description: All code systems, bindings, and known NHA discrepancies
-verification: unverified
 source: nhcx-package/docs/05-FHIR Reference/19-Codes and Value Sets.md
 generated: true
 ---

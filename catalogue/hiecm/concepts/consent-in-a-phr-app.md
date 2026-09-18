@@ -17,8 +17,6 @@ sources:
       NHA's PHR application document. Names five capabilities the application
       must provide, the fields each screen must show, and the three outcomes
       of a request including ignoring it.
-verified:
-  status: unverified
 related:
   concepts:
     - hiecm.concept.consent-artefact

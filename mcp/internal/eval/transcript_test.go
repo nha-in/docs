@@ -36,7 +36,7 @@ func TestTranscriptRoundTrips(t *testing.T) {
 	dir := t.TempDir()
 	in := Transcript{CaseID: "define-hmis-01", CatalogueVersion: "2026.08.24", ModelID: "m",
 		Temperature: 0.1, Answer: "HMIS is hospital software.", Corpus: "HMIS hospital",
-		Sources: []chat.Source{{ID: "shared.glossary.hmis", Title: "HMIS", Status: "unverified", URL: "/docs/x"}}}
+		Sources: []chat.Source{{ID: "shared.glossary.hmis", Title: "HMIS", URL: "/docs/x"}}}
 	if err := WriteTranscript(dir, in); err != nil {
 		t.Fatal(err)
 	}
