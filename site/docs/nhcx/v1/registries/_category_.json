@@ -1,4 +1,6 @@
 {
   "label": "Registries",
-  "position": 4
+  "position": 6,
+  "collapsed": false,
+  "className": "sidebar-icon sidebar-icon--database"
 }

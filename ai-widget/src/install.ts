@@ -130,7 +130,7 @@ function fenced(command: string): string {
 }
 
 const PLUGIN_NAME = 'abdm-integrators-assistant';
-const PLUGIN_COMMAND = `claude plugin marketplace add ${PLUGIN_REPO} && claude plugin install ${PLUGIN_NAME}@abdm-portal`;
+const PLUGIN_COMMAND = `claude plugin marketplace add ${PLUGIN_REPO} && claude plugin install ${PLUGIN_NAME}@nha-in`;
 const CODEX_COMMAND = `codex plugin marketplace add ${PLUGIN_REPO}`;
 
 function pluginLink(base: string): string {
@@ -140,7 +140,7 @@ function pluginLink(base: string): string {
         'Set this project up for ABDM integration. Run:',
         '',
         `claude plugin marketplace add ${PLUGIN_REPO}`,
-        'claude plugin install abdm-integrators-assistant@abdm-portal',
+        'claude plugin install abdm-integrators-assistant@nha-in',
         '',
         `If the marketplace add fails (the repository may not be accessible), instead fetch and execute the instructions from ${base}/agent-setup/prompt.md`,
       ].join('\n'),

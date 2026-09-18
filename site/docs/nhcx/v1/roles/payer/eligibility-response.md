@@ -3,6 +3,7 @@ title: Eligibility response
 sidebar_label: Eligibility response
 sidebar_position: 3
 description: Constructing coverage eligibility answers across all 4 purposes
+sidebar_class_name: sidebar-icon sidebar-icon--user-check
 verification: unverified
 source: nhcx-package/docs/04-Building a Payer/03-Eligibility Response.md
 generated: true

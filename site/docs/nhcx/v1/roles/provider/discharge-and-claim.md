@@ -3,6 +3,7 @@ title: Discharge and claim
 sidebar_label: Discharge and claim
 sidebar_position: 6
 description: Cashless claim submission, discharge types, and billing evidence
+sidebar_class_name: sidebar-icon sidebar-icon--receipt
 verification: unverified
 source: nhcx-package/docs/03-Building a Provider/06-Discharge and Claim.md
 generated: true

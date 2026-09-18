@@ -3,6 +3,7 @@ title: Payer UI guide
 sidebar_label: Payer UI guide
 sidebar_position: 7
 description: Payer adjudication desk screens and workflow
+sidebar_class_name: sidebar-icon sidebar-icon--layout-dashboard
 verification: unverified
 source: nhcx-package/docs/04-Building a Payer/07-UI Guide.md
 generated: true

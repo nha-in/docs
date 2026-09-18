@@ -3,6 +3,7 @@ title: Participants and policies
 sidebar_label: Participants and policies
 sidebar_position: 3
 description: Registry records, identifiers, policy lookups
+sidebar_class_name: sidebar-icon sidebar-icon--database
 verification: unverified
 source: nhcx-package/docs/01-Overview/03-Participants and Policies.md
 generated: true

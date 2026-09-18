@@ -3,6 +3,7 @@ title: Building and sending a JWE
 sidebar_label: Building and sending a JWE
 sidebar_position: 8
 description: RSA-OAEP-256 + A256GCM compact serialisation
+sidebar_class_name: sidebar-icon sidebar-icon--send
 verification: unverified
 source: nhcx-package/docs/02-Getting Started/08-Building and Sending a JWE.md
 generated: true

@@ -3,6 +3,7 @@ title: JWE, status and errors
 sidebar_label: JWE, status and errors
 sidebar_position: 4
 description: Envelope/letter model, cross-gateway relay, unified correlation ID, status lifecycle (`request.stopped`)
+sidebar_class_name: sidebar-icon sidebar-icon--lock-keyhole
 verification: unverified
 source: nhcx-package/docs/01-Overview/04-JWE, Status and Errors.md
 generated: true

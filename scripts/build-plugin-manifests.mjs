@@ -58,6 +58,17 @@ const STOREFRONT = {
     ],
     capabilities: ['Read', 'Write'],
   },
+  nhcx: {
+    shortDescription: 'Build an NHCX claims integration, one use case at a time.',
+    longDescription:
+      "The National Health Claims Exchange, written as one skill per use case in episode order: coverage, insurance plan, pre-authorisation, claim, payment, communication and reprocess. Each checks what the system already has, builds only what is missing, and holds its bundles to the NHCX package's pinned samples.",
+    defaultPrompt: [
+      'Add NHCX coverage eligibility to this hospital system.',
+      'File the NHCX claim at discharge from this system.',
+      "Handle the payer's NHCX communication requests.",
+    ],
+    capabilities: ['Read', 'Write'],
+  },
 };
 
 const files = [];

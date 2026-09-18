@@ -3,6 +3,7 @@ title: Get your sandbox credentials
 sidebar_label: Get your sandbox credentials
 sidebar_position: 1.1
 description: Register the organisation, get an ABDM client ID and secret, take NHCX sandbox roles, and meet the dummy payer
+sidebar_class_name: sidebar-icon sidebar-icon--key-round
 verification: unverified
 source: nhcx-package/docs/02-Getting Started/12-Get Your Sandbox Credentials.md
 generated: true

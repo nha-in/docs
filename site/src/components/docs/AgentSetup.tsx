@@ -24,17 +24,51 @@ import {cn} from '@site/src/lib/utils';
     handover, together with the same constant in scripts/build-skills.mjs. */
 const PLUGIN_REPO = 'eka-care/abdm-docs';
 
-function fetchPrompt(base: string) {
-  return `Fetch and execute the instructions to set me up for ABDM integration from ${base}/agent-setup/prompt.md`;
+/**
+ * What differs between gateways: the plugin that carries their skills and the
+ * hosted prompt that sets an agent up without it. Everything else is shared.
+ */
+type Gateway = {
+  /** The name a reader and the prompt call it by. */
+  name: string;
+  plugin: string;
+  /** The repository whose marketplace carries the plugin. */
+  repo: string;
+  /** Under /agent-setup/, written by scripts/build-skills.mjs. */
+  prompt: string;
+  /** The gateway's Build with AI page, where the MCP server is connected. */
+  page: string;
+};
+
+const GATEWAYS: Record<'abdm' | 'nhcx', Gateway> = {
+  abdm: {
+    name: 'ABDM',
+    plugin: 'abdm-integrators-assistant',
+    repo: PLUGIN_REPO,
+    prompt: 'prompt.md',
+    page: '/docs/hiecm/v3/getting-started/build-with-ai',
+  },
+  nhcx: {
+    name: 'NHCX',
+    plugin: 'nhcx',
+    // As the NHCX landing page publishes it.
+    repo: 'nha-in/docs',
+    prompt: 'nhcx.md',
+    page: '/docs/nhcx/v1/getting-started/build-with-ai',
+  },
+};
+
+function fetchPrompt(g: Gateway, base: string) {
+  return `Fetch and execute the instructions to set me up for ${g.name} integration from ${base}/agent-setup/${g.prompt}`;
 }
 
 /** What a deeplink lands in the agent's composer. Nothing runs until the
     reader presses Enter, which is why install commands can sit in it. */
-function guarded(body: string) {
+function guarded(g: Gateway, body: string) {
   return [
     body,
     '',
-    'If this session did not open in the repository I am integrating ABDM into, ask me for the path before you write anything.',
+    `If this session did not open in the repository I am integrating ${g.name} into, ask me for the path before you write anything.`,
   ].join('\n');
 }
 
@@ -60,23 +94,24 @@ function surfacesOf(target: Target): Surface[] {
   return 'variants' in target ? target.variants : [target];
 }
 
-const TARGETS: Target[] = [
+const targetsFor = (g: Gateway): Target[] => [
   {
     id: 'claude-code',
     label: 'Claude',
     command: () =>
-      `claude plugin marketplace add ${PLUGIN_REPO} && claude plugin install abdm-integrators-assistant@abdm-portal`,
+      `claude plugin marketplace add ${g.repo} && claude plugin install ${g.plugin}@nha-in`,
     // https://support.claude.com/en/articles/14729294-open-claude-desktop-with-a-link
     link: (base) =>
       `claude://code/new?q=${encodeURIComponent(
         guarded(
+          g,
           [
-            'Set this project up for ABDM integration. Run:',
+            `Set this project up for ${g.name} integration. Run:`,
             '',
-            `claude plugin marketplace add ${PLUGIN_REPO}`,
-            'claude plugin install abdm-integrators-assistant@abdm-portal',
+            `claude plugin marketplace add ${g.repo}`,
+            `claude plugin install ${g.plugin}@nha-in`,
             '',
-            `If the marketplace add fails (the repository may not be accessible), instead fetch and execute the instructions from ${base}/agent-setup/prompt.md`,
+            `If the marketplace add fails (the repository may not be accessible), instead fetch and execute the instructions from ${base}/agent-setup/${g.prompt}`,
           ].join('\n'),
         ),
       )}`,
@@ -85,11 +120,11 @@ const TARGETS: Target[] = [
   {
     id: 'cursor',
     label: 'Cursor',
-    command: fetchPrompt,
+    command: (base) => fetchPrompt(g, base),
     // https://cursor.com/docs/integrations/deeplinks
     link: (base) =>
       `cursor://anysphere.cursor-deeplink/prompt?text=${encodeURIComponent(
-        guarded(fetchPrompt(base)),
+        guarded(g, fetchPrompt(g, base)),
       )}`,
     note: 'Opens Cursor with the prompt in the composer. It fetches the current instructions from this site.',
   },
@@ -107,19 +142,19 @@ const TARGETS: Target[] = [
         // Codex reads Agent Plugins 1.0, and this repository publishes a
         // marketplace it can add directly. Codex is a CLI with no URL scheme,
         // so there is no deeplink. Do not invent one.
-        command: () => `codex plugin marketplace add ${PLUGIN_REPO}`,
+        command: () => `codex plugin marketplace add ${g.repo}`,
         link: null,
-        note: 'Adds the marketplace. Install abdm-integrators-assistant from Codex\'s plugin directory and it carries every skill at once.',
+        note: `Adds the marketplace. Then open /plugins in Codex and install ${g.plugin}. It carries every skill at once.`,
       },
       {
         id: 'chatgpt',
         label: 'ChatGPT',
-        command: fetchPrompt,
+        command: (base) => fetchPrompt(g, base),
         // https://help.openai.com/en/articles/9955102 - chatgpt.com/?q=<text>
         // opens a new chat with the text preloaded. Nothing sends until
         // Enter, the same as the other deeplinks here.
         link: (base: string) =>
-          `https://chatgpt.com/?q=${encodeURIComponent(guarded(fetchPrompt(base)))}`,
+          `https://chatgpt.com/?q=${encodeURIComponent(guarded(g, fetchPrompt(g, base)))}`,
         note: 'Opens ChatGPT with the setup preloaded. It answers from this site, and writes nothing into your project.',
       },
     ],
@@ -127,14 +162,21 @@ const TARGETS: Target[] = [
   {
     id: 'any',
     label: 'Any agent',
-    command: fetchPrompt,
+    command: (base) => fetchPrompt(g, base),
     link: null,
     note: 'One line, any agent that can fetch a URL. The instructions live on this site and are rebuilt with it.',
   },
 ];
 
-export default function AgentSetup(): React.ReactNode {
+type AgentSetupProps = {
+  /** Which gateway to set the agent up for: ABDM by default, or NHCX. */
+  set?: 'abdm' | 'nhcx';
+};
+
+export default function AgentSetup({set = 'abdm'}: AgentSetupProps): React.ReactNode {
   const {siteConfig} = useDocusaurusContext();
+  const g = GATEWAYS[set] ?? GATEWAYS.abdm;
+  const TARGETS = targetsFor(g);
   const [target, setTarget] = useState<Target>(TARGETS[0]);
   const [surface, setSurface] = useState<Surface>(surfacesOf(TARGETS[0])[0]);
   const [copied, setCopied] = useState(false);
@@ -257,10 +299,14 @@ export default function AgentSetup(): React.ReactNode {
 
       <p className="agent-setup__mcp">
         <Database className="size-3.5" aria-hidden="true" />
+        {/* The nhcx plugin carries skills only, so only the pasted setup
+            connects the server; the plugin lines leave it to the reader. */}
         <span>
-          The setup also connects the{' '}
-          <Link to="/docs/hiecm/v3/getting-started/build-with-ai#connect-the-docs-mcp-server">Docs MCP server</Link>: the live
-          version of these docs, queried by your agent as it works.
+          {set === 'nhcx' ? 'Connect the ' : 'The setup also connects the '}
+          <Link to={`${g.page}#connect-the-docs-mcp-server`}>Docs MCP server</Link>
+          {set === 'nhcx'
+            ? ' alongside the plugin: the live version of these docs, queried by your agent as it works.'
+            : ': the live version of these docs, queried by your agent as it works.'}
         </span>
       </p>
     </aside>

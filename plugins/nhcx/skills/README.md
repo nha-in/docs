@@ -12,7 +12,7 @@ and `scripts/`, and the shared files are repeated in every folder so any one
 installs alone. `scripts/fetch-package.sh` fetches the NHCX package from
 github.com/nha-in/nhcx-package into the project being built.
 
-Install all seven with `claude plugin install nhcx@abdm-portal`, after
+Install all seven with `claude plugin install nhcx@nha-in`, after
 `claude plugin marketplace add` for this repository, or one at a time with
 `scripts/install-skill.sh <name> <target>`. The site build copies each folder
 to `/skills/<name>/` and packs it as `/skills/<name>.tar.gz`, which the site's
