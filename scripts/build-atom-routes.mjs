@@ -320,8 +320,18 @@ for (const [id, atom] of atoms) {
 // set as a type reaches zero, never before.
 const GATED_TYPES = new Set(["flow"]);
 
+// NHCX pages are not written here. The NHCX package generates them from its
+// own sources (see catalogue/openapi/CONVENTIONS.md), so `covers:` added to
+// one of them is lost on the package's next run, and the gate cannot be
+// satisfied from this repository. Exempt until the package emits `covers:`
+// itself, then delete this set rather than adding another gateway to it.
+const GATE_EXEMPT_GATEWAYS = new Set(["nhcx"]);
+const gatewayOf = (atomId) => atomId.split(".")[0];
+
 function reportCoverage(rows) {
-  const missing = rows.filter((r) => !r.route && GATED_TYPES.has(r.type));
+  const missing = rows.filter(
+    (r) => !r.route && GATED_TYPES.has(r.type) && !GATE_EXEMPT_GATEWAYS.has(gatewayOf(r.atom)),
+  );
   if (!missing.length) return true;
   console.error(
     `\n${missing.length} ${[...GATED_TYPES].join("/")} atom(s) have no page, which this gate does not allow:`,
