@@ -135,7 +135,7 @@ curl --request POST \
           "city": "Pune",
           "state": "Maharashtra",
           "country": "INDIA",
-          "area_code": "412115"
+          "area_code": "999999"
         },
         "email": "<EMAIL>",
         "phone": "<MOBILE>"

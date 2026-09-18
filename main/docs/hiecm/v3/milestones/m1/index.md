@@ -1,4 +1,4 @@
-# M1 Create: ABHA identity
+# M1 Create: ABHA Creation and Verification
 
 Milestone 1 is the identity milestone of [ABDM](/docs/main/docs/hiecm/v3/getting-started/glossary#abdm). You create an [ABHA](/docs/main/docs/hiecm/v3/getting-started/glossary#abha) for a person, log that person in, and read or update their profile. An ABHA number is a 14 digit identifier issued after a [KYC](/docs/main/docs/hiecm/v3/getting-started/glossary#kyc) check. Every other ABDM flow assumes the person already has one, so nobody skips M1.
 

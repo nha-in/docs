@@ -44,7 +44,7 @@ x-abdm-sources:
   note: NHA's M3 OpenAPI, supplied 2026-08-25. 13 operations. Carries no callbacks.
 - file: catalogue/openapi/.raw/M3_postman_collection.json
   role: upstream
-  hash: sha256:bc3df44584f306c7ab81f923dcd5fc6bc113c3786f83c4e7e6161a5683f79bf8
+  hash: sha256:b374e09cd61716a029cc34df2020605892ba0a9c53bcf5e743e96e170db2c0e8
   fetched: '2026-08-25'
   note: NHA's M3 collection, 18 requests. Source of every callback payload in
     this file.
@@ -2432,6 +2432,4 @@ x-abdm-errors:
       Self Requested
     action: Fix request
     name: UNKNOWN_EXCEPTION
-  source: Code, message and error name are as published. The action column
-    reads the message text by a documented rule, and says Unclassified where
-    the rule could not classify one.
+  source: Code, message and error name are as published. The heading each code sits under reads the message text by a documented rule, and says Unclassified where the rule could not classify one.

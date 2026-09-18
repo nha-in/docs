@@ -2,19 +2,32 @@
 
 Every [ABDM](/docs/main/docs/hiecm/v3/getting-started/glossary#abdm) call carries a token, and every token starts with a client id and a client secret. Here is how you get them.
 
+## How sandbox integration works
+
+Complete the integration process in 6 stages. Use a single workspace to manage the integration from account creation to production review. The integrating entity and the National Health Authority review team can access the relevant submissions, supporting evidence, queries and decisions.
+
+| Stage                                                | What happens                                                                                                                                   | Where                                                          |
+| ---------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------- |
+| 01. Send Request                                     | Submit a request to access the ABDM Sandbox APIs.                                                                                              | [Step 1](#1-send-a-request-for-sandbox-access)                 |
+| 02. Get Access                                       | Receive Sandbox access after approval by the [Health Tech Committee](/docs/main/docs/hiecm/v3/getting-started/glossary#health-tech-committee). | [Step 2](#2-get-access-your-client-id-and-client-secret)       |
+| 03. Integrate APIs                                   | Integrate the applicable ABDM APIs with your software solution.                                                                                | [Milestones](/docs/main/docs/hiecm/v3/milestones)              |
+| 04. Complete Functional Testing and Security Audit   | Test the integrated solution and complete the required security audit.                                                                         | [Go live](/docs/main/docs/hiecm/v3/getting-started/going-live) |
+| 05. Complete the Health Tech Committee Demonstration | Present the integrated solution to the Health Tech Committee and obtain approval for production access.                                        | [Go live](/docs/main/docs/hiecm/v3/getting-started/going-live) |
+| 06. Go Live                                          | Move the approved integration to the production environment and begin using ABDM services.                                                     | [Go live](/docs/main/docs/hiecm/v3/getting-started/going-live) |
+
 ## Before you start
 
 You need an organisation to register, and a URL we can post callbacks to. Step 3 says what that URL has to do.
 
-## 1. Register on the sandbox
+## 1. Send a request for sandbox access
 
-Create an account on the sandbox application and register your organisation.
+Submit a request to access the ABDM Sandbox APIs. Eligible entities may apply for access to the ABDM Sandbox to integrate and test their software with ABDM APIs. Provide the required organisation, product and contact details and select the applicable integration category while submitting the request.
 
-[Register on the sandbox](https://sandbox.abdm.gov.in/sandbox/v3/sandbox-registration)
+[Apply for Sandbox Integration](https://sandbox.abdm.gov.in/sandbox/v3/sandbox-registration)
 
-## 2. Get your client id and client secret
+## 2. Get access: your client id and client secret
 
-Sign in to the sandbox application. Your `clientId` and `clientSecret` are issued there.
+Sandbox access is granted after approval by the [Health Tech Committee](/docs/main/docs/hiecm/v3/getting-started/glossary#health-tech-committee). Once approved, sign in to the sandbox application. Your `clientId` and `clientSecret` are issued there.
 
 Store the secret the way you store any other production credential. Never commit it, and never send it to a browser.
 

@@ -112,6 +112,6 @@ No flow starts without an ABHA, so M1 comes first even when your real goal is M2
 ## Next
 
 - [NHPR](/docs/main/docs/hiecm/v3/registries/nhpr), the professional and facility registries.
-- [M1, ABHA identity](/docs/main/docs/hiecm/v3/api/m1), the guide.
+- [M1 Create, ABHA Creation and Verification](/docs/main/docs/hiecm/v3/api/m1), the guide.
 - [M1 API reference](/docs/main/reference/hiecm-m1).
 - [Sandbox data dictionary](/docs/main/docs/hiecm/v3/reference/data-dictionary), test identities.

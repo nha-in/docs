@@ -5,7 +5,7 @@ description: Use when building, debugging or testing ABDM Milestone 4, the NHPR:
 
 # ABDM M4, facility and professional registries
 
-Generated from the ABDM Developer Portal on 2026-09-16, catalogue version 2026.08.24. Every fact below comes from a page in that portal, which is the place to look when this file does not carry enough.
+Generated from the ABDM Developer Portal, catalogue version 2026.08.24. Every fact below comes from a page in that portal, which is the place to look when this file does not carry enough.
 
 This file is a snapshot. Re-download it from https://nha-in.github.io/docs/main/skills/abdm-m4/SKILL.md when it is older than the work you are doing.
 If the abdm-docs MCP server is connected, trust its answers over this file: it serves the current catalogue and stamps every response with its catalogue_version, which you can compare against the version above.
@@ -30,7 +30,6 @@ This file is the map. Each line above is a file beside it, opened one at a time 
 
 ## Before anything else
 
-- Nothing here has been run against the ABDM sandbox. Treat request and response shapes as unconfirmed, and check a response before you rely on its shape.
 - Neither registry moves a health record. M4 establishes who the professional is and what the facility is, so every record flow has a verified provider behind it.
 - M2 and M3 need a facility in the HFR and a bridge linked to it before records flow in production. M4 is the API route to that. Registering the facility by hand on the NHPR portal is the other route, and a product that takes it never builds M4.
 - The HPR comes first. Onboarding a facility needs an HPR token, which needs a person who already holds an HPID.

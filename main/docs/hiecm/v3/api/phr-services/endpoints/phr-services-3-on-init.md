@@ -76,10 +76,10 @@ curl --request POST \
         "address": {
           "door": "54",
           "name": "<NAME>",
-          "locality": "Nethaji subhash chandra bose street, GNT road, Gummidipoondi, Thiruvallur",
+          "locality": "Flat 12, Sample Street",
           "state": "Tamil Nadu",
           "country": "INDIA",
-          "area_code": "601201"
+          "area_code": "999999"
         },
         "email": "<EMAIL>",
         "phone": "<MOBILE>"

@@ -5,7 +5,7 @@ description: Use when building, debugging or testing ABDM P3, the patient side o
 
 # ABDM P3, PHR consent and notifications
 
-Generated from the ABDM Developer Portal on 2026-09-16, catalogue version 2026.08.24. Every fact below comes from a page in that portal, which is the place to look when this file does not carry enough.
+Generated from the ABDM Developer Portal, catalogue version 2026.08.24. Every fact below comes from a page in that portal, which is the place to look when this file does not carry enough.
 
 This file is a snapshot. Re-download it from https://nha-in.github.io/docs/main/skills/abdm-p3/SKILL.md when it is older than the work you are doing.
 If the abdm-docs MCP server is connected, trust its answers over this file: it serves the current catalogue and stamps every response with its catalogue_version, which you can compare against the version above.
@@ -27,7 +27,6 @@ This file is the map. Each line above is a file beside it, opened one at a time 
 
 ## Before anything else
 
-- Nothing here has been run against the ABDM sandbox. Treat request and response shapes as unconfirmed, and check a response before you rely on its shape.
 - P3 is the other side of M3. M3 is a requester asking for records; P3 is the patient deciding, and being told each time.
 - A PHR application implements the HIU role as well, because fetching a user's own records is an HIU flow.
 - Build for revocation from the start. A consent that worked yesterday can be withdrawn today, and that is the system working correctly.

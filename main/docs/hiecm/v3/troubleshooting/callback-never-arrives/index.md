@@ -17,7 +17,7 @@ Your handler receives a POST at your registered URL, carrying the exact `REQUEST
 
 ## When it goes wrong
 
-If all four checks pass and the callback still has not arrived, escalate on the [developer forum](https://devforum.abdm.gov.in). Report the API you called, the `REQUEST-ID`, the `TIMESTAMP`, and the response you got. See [Support](/docs/main/docs/support) for the full report format.
+If all four checks pass and the callback still has not arrived, raise a request on the [support ticketing platform](https://sandboxsupport.abdm.gov.in/). Report the API you called, the `REQUEST-ID`, the `TIMESTAMP`, and the response you got. See [what to put in a support request](/docs/main/docs/hiecm/v3/troubleshooting#what-to-put-in-a-support-request) for the full report format.
 
 This symptom can surface as [ABDM-9999](/docs/main/docs/hiecm/v3/reference/error-codes), the catch-all for a failure the gateway does not explain further.
 

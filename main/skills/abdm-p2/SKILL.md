@@ -5,7 +5,7 @@ description: Use when building, debugging or testing ABDM P2, the patient side o
 
 # ABDM P2, PHR linking and records
 
-Generated from the ABDM Developer Portal on 2026-09-16, catalogue version 2026.08.24. Every fact below comes from a page in that portal, which is the place to look when this file does not carry enough.
+Generated from the ABDM Developer Portal, catalogue version 2026.08.24. Every fact below comes from a page in that portal, which is the place to look when this file does not carry enough.
 
 This file is a snapshot. Re-download it from https://nha-in.github.io/docs/main/skills/abdm-p2/SKILL.md when it is older than the work you are doing.
 If the abdm-docs MCP server is connected, trust its answers over this file: it serves the current catalogue and stamps every response with its catalogue_version, which you can compare against the version above.
@@ -27,7 +27,6 @@ This file is the map. Each line above is a file beside it, opened one at a time 
 
 ## Before anything else
 
-- Nothing here has been run against the ABDM sandbox. Treat request and response shapes as unconfirmed, and check a response before you rely on its shape.
 - P2 is the mirror of M2. M2 is a provider publishing a record; P2 is the patient discovering it and linking it to their own ABHA address.
 - Discovery is for facilities the user visited without giving an ABHA address, and for older records.
 - A HIP is expected to answer a discovery request within 10 seconds.

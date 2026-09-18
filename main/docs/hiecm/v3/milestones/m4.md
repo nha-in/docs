@@ -1,8 +1,8 @@
-# M4 Enrol: facilities and professionals
+# M4 Enrol: Register Healthcare Professionals and Facilities
 
-Milestone 4 is the registries milestone, also called the NHPR. A healthcare professional registers on the [HPR](/docs/main/docs/hiecm/v3/getting-started/glossary#hpr) and is issued an [HPID](/docs/main/docs/hiecm/v3/getting-started/glossary#hpid). A health facility onboards to the [HFR](/docs/main/docs/hiecm/v3/getting-started/glossary#hfr) and is issued a facility ID.
+Milestone 4 is the Registries milestone, commonly referred to as NHPR, the National Healthcare Professionals and Facilities Registry. It establishes the identity of healthcare professionals and the details of healthcare facilities within the ABDM ecosystem.
 
-Neither registry moves a health record. They establish who the professional is and what the facility is, so every record flow has a verified provider behind it.
+Neither the [HPR](/docs/main/docs/hiecm/v3/getting-started/glossary#hpr) nor the [HFR](/docs/main/docs/hiecm/v3/getting-started/glossary#hfr) is responsible for moving health records. These registries establish who the healthcare professional is and what the healthcare facility is, providing a verified identity and facility layer for subsequent ABDM transactions.
 
 [Try the M4 APIs](/docs/main/docs/hiecm/v3/api/m4)
 
@@ -14,34 +14,35 @@ Neither registry moves a health record. They establish who the professional is a
 
 ## In short
 
-- M2 and M3 need a facility ID in production. M4 is the API route to one. The NHPR portal is the other, and a product that registers its facilities there by hand never builds M4.
-- The HPR comes first. Facility onboarding needs an HPR token, which needs a person with an HPID.
-- A facility ID has the form `IN` plus 10 characters. An HPID is 14 digits.
-- Expect to correct a host or two. Several published samples show the production host while describing sandbox behaviour.
+- The Healthcare Professionals Registry (HPR) is a comprehensive repository of registered and verified healthcare professionals. It includes doctors from Modern Medicine, Dentistry, Ayurveda, Unani, Siddha, Sowa-Rigpa and Homeopathy, as well as nurses and pharmacists delivering healthcare services across India. A healthcare professional registers on the HPR and is issued a unique [HPID](/docs/main/docs/hiecm/v3/getting-started/glossary#hpid), which is 14 digits.
+- The Health Facility Registry (HFR) is a comprehensive repository of health facilities across the country, covering both modern and traditional systems of medicine. It includes public and private facilities such as hospitals, clinics, diagnostic laboratories, imaging centres and pharmacies. A facility is onboarded to the HFR and is issued a unique Facility ID, 12 characters in the form `IN` plus 10 characters.
+- M2 and M3 need a Facility ID in production. M4 is the API route to one. The NHPR portal is the other, and a product that registers its facilities there by hand never builds M4.
 
 Not a step by step guide
 
 These pages cover the shape of M4 and the endpoints that are named. They are not yet a step by step guide to building it.
 
-## What M4 covers
+## M4 scope and capabilities
 
-| Area                   | What it produces                                                                                                                                                                               | Who it is for                                                   |
-| ---------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------- |
-| HPID creation          | A 14 digit HPID, issued after Aadhaar authentication                                                                                                                                           | A doctor, nurse, pharmacist or facility manager                 |
-| Register professional  | A full HPR profile: qualifications, council registration, current work                                                                                                                         | The same professional, after the HPID exists                    |
-| Facility onboarding    | A facility ID on the HFR, in the form `IN` plus 10 characters                                                                                                                                  | A hospital, clinic, lab, imaging centre, pharmacy or blood bank |
-| Bridge linkage         | A link between a facility ID and one or more bridges, each marked [HIP](/docs/main/docs/hiecm/v3/getting-started/glossary#hip) or [HIU](/docs/main/docs/hiecm/v3/getting-started/glossary#hiu) | A facility whose software is going live                         |
-| Search and master data | Facility search, nearby search, and the code lists every other call needs                                                                                                                      | Anyone building either of the above                             |
+| Capability             | Key output                                                                                                                                                                                              | Target user                                                                                             |
+| ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------- |
+| HPID creation          | A 14 digit HPID, issued after Aadhaar authentication                                                                                                                                                    | Doctors, nurses, pharmacists, and facility managers                                                     |
+| Register professional  | A complete HPR profile, including qualifications, council registration, and current work details                                                                                                        | Healthcare professionals after HPID creation                                                            |
+| Facility onboarding    | A 12 character unique Facility ID for registration in the HFR                                                                                                                                           | Hospitals, clinics, laboratories, imaging centres, pharmacies, blood banks, and other health facilities |
+| Bridge linkage         | A link between a Facility ID and one or more bridges, each identified as a [HIP](/docs/main/docs/hiecm/v3/getting-started/glossary#hip) or [HIU](/docs/main/docs/hiecm/v3/getting-started/glossary#hiu) | A facility whose software is going live                                                                 |
+| Search and master data | Facility search and nearby search                                                                                                                                                                       | Anyone building either of the above                                                                     |
 
-## Who needs it
+## Intended users
 
-- **Facilities going live.** Without a facility in the HFR and a bridge linked to it, you cannot share as a HIP or fetch as an HIU. If you have built [M2 Attach](/docs/main/docs/hiecm/v3/milestones/m2) or [M3 Retrieve](/docs/main/docs/hiecm/v3/milestones/m3), M4 is the step in front of production.
-- **Professionals registering.** An HPID is a verified identity in ABDM. Three categories are open today: doctor, nurse and pharmacist. Others come later.
+- **Facilities going live.** A facility must be registered in the HFR and have a bridge linked to it to share health information as a HIP or retrieve it as an HIU. For facilities that have implemented [M2 Attach](/docs/main/docs/hiecm/v3/milestones/m2) or [M3 Retrieve](/docs/main/docs/hiecm/v3/milestones/m3), M4 is the next step towards production readiness.
+- **Professionals registering.** An HPR ID provides a verified professional identity within ABDM. Currently, registration is available for three categories: doctors, nurses and pharmacists.
 - **Software acting for others.** An [HMIS](/docs/main/docs/hiecm/v3/getting-started/glossary#hmis) or practice management product can drive these calls for its own customers.
 
-## How the two halves connect
+## How HPR and HFR work together
 
-The HPR comes first, twice over. Creating an HPID returns an `hprToken`, which the register professional call carries in its payload. Onboarding a facility needs an HPR token in the header of the create calls, generated from an HPR ID and password. So facility onboarding usually starts with a person getting an HPID.
+HPR and HFR represent two connected parts of the healthcare ecosystem. HPR enables healthcare professionals to register and maintain their professional identity and profile, while HFR enables hospitals, clinics, laboratories, pharmacies, and other healthcare facilities to register and maintain their facility information.
+
+Once a facility is registered in the HFR, healthcare professionals can link their professional profile to that facility as their place of work. Similarly, an HPR-registered professional can declare the HFR facility where they currently work. This creates a connection between who provides healthcare and where healthcare is provided, allowing professionals and facilities to be linked within the ABDM ecosystem.
 
 ## Build it with an agent
 
@@ -73,16 +74,24 @@ How to use it
 
 ## Certification
 
-M4 has no certification step of its own. One exit process covers the whole integration, run once, after every milestone your role needs works end to end. See [Going live](/docs/main/docs/hiecm/v3/getting-started/going-live) for the four steps and what each one asks of you. The cases you are certified against are in [M4 testing use cases](/docs/main/docs/hiecm/v3/resources/testing/m4).
+M4 does not have a separate certification process. A single exit process covers the complete integration and is conducted once all the required milestones for your role are working end to end.
 
-## The journey, one diagram per flow
+[Going live](/docs/main/docs/hiecm/v3/getting-started/going-live) outlines the four steps involved and the requirements for each step. The cases used for certification are covered under the [M4 testing use cases](/docs/main/docs/hiecm/v3/resources/testing/m4).
 
-Milestone 4 of [ABDM](/docs/main/docs/hiecm/v3/getting-started/glossary#abdm) has four journeys:
+## The journey, step by step
 
-- A professional gets an [HPID](/docs/main/docs/hiecm/v3/getting-started/glossary#hpid).
-- That professional's [HPR](/docs/main/docs/hiecm/v3/getting-started/glossary#hpr) profile is registered against the HPID. The identity and the profile are two jobs, not one.
-- A facility manager onboards a facility to the [HFR](/docs/main/docs/hiecm/v3/getting-started/glossary#hfr).
-- A facility links its bridges, so it can publish records as the [HIP](/docs/main/docs/hiecm/v3/getting-started/glossary#hip) and fetch them as the [HIU](/docs/main/docs/hiecm/v3/getting-started/glossary#hiu) through its software.
+Milestone 4 of [ABDM](/docs/main/docs/hiecm/v3/getting-started/glossary#abdm) covers the following key journeys.
+
+- **HPID creation and role selection.** A healthcare professional completes Aadhaar authentication and creates an [HPID](/docs/main/docs/hiecm/v3/getting-started/glossary#hpid). The professional then selects the required role: [HPR](/docs/main/docs/hiecm/v3/getting-started/glossary#hpr), [HFR](/docs/main/docs/hiecm/v3/getting-started/glossary#hfr), or both.
+- **HPR registration.** If HPR is selected, the professional completes the required personal, qualification, registration and work details.
+- **HFR registration.** If HFR is selected, the professional completes the Health Facility Registry registration form with the required facility details.
+- **Facility software integration.** A registered facility can link its bridge to the Facility ID, enabling it to publish health records as the [HIP](/docs/main/docs/hiecm/v3/getting-started/glossary#hip) and retrieve records as the [HIU](/docs/main/docs/hiecm/v3/getting-started/glossary#hiu) through its software.
+
+| Role selected | The sequence                                                                                                                                                 |
+| ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| HPR           | Aadhaar authentication, role selection, HPID creation, HPR registration                                                                                      |
+| HFR           | Aadhaar authentication, role selection, HPID creation, HFR registration, then facility software integration as HIP or HIU where applicable                   |
+| Both          | Aadhaar authentication, role selection, HPID creation, HFR registration, HPR registration, then facility software integration as HIP or HIU where applicable |
 
 This page shows the order of calls in each. Field lists are on the [operations and fields](/docs/main/docs/hiecm/v3/api/m4/undocumented) page.
 
@@ -90,7 +99,9 @@ A map, not a runbook
 
 These diagrams follow the published order of steps.
 
-## Journey 1: create an HPID for a professional
+## Journey 1: creating an HPID for a professional
+
+### Aadhaar authentication
 
 ```mermaid
 sequenceDiagram
@@ -116,9 +127,11 @@ sequenceDiagram
     H-->>S: The existing HPID, or none
 ```
 
-The professional authenticates against Aadhaar on a hosted page. Your system never handles the Aadhaar number or [OTP](/docs/main/docs/hiecm/v3/getting-started/glossary#otp): it handles the transaction ID and redirects to a URL the HPR service returns, valid for five minutes. After that, call generate Aadhaar link again.
+The professional authenticates using Aadhaar. The integrating system does not handle the Aadhaar number or [OTP](/docs/main/docs/hiecm/v3/getting-started/glossary#otp). Instead, it handles the transaction ID and redirects the user to the URL returned by the HPR service.
 
-### Then the mobile number
+The URL is valid for five minutes. If it expires before authentication is completed, call Generate Aadhaar Link again to obtain a new authentication URL. After authentication the professional selects the role to register for: HPR, HFR, or both.
+
+### Login using a mobile number and OTP, or credentials
 
 ```mermaid
 flowchart TD
@@ -134,13 +147,19 @@ flowchart TD
     F --> G["Create HPID"]
 ```
 
-Step 13 decides what happens next. An existing HPID means the professional is already registered: log them in and skip the rest of this journey. A returning professional can also skip Aadhaar entirely and log in by mobile OTP or by password. Both routes are in [M4 operations and fields](/docs/main/docs/hiecm/v3/api/m4/undocumented#login-by-mobile-otp).
+If an HPID already exists, the professional is already registered. Authenticate the professional and proceed directly to login, skipping the HPID creation journey.
 
-No HPID means you confirm the mobile number before creating one, by a fast path or a slow one. Send it encrypted: fetch the public certificate from `/v4/int/api/v1/auth/cert`, encrypt with `RSA/ECB/PKCS1Padding`, send the encrypted value.
+A returning professional can also log in without Aadhaar authentication, using either a mobile OTP or a password. Both login mechanisms are covered under [M4 operations and fields](/docs/main/docs/hiecm/v3/api/m4/undocumented#login-by-mobile-otp).
+
+If no HPID exists, the mobile number must be verified before creating the HPID:
+
+1. Fetch the public certificate from `/v4/int/api/v1/auth/cert`.
+2. Encrypt the mobile number using `RSA/ECB/PKCS1Padding`.
+3. Send the encrypted value in the API request.
 
 Create HPID returns an `hprToken`. Keep it: the register professional call needs it.
 
-## Journey 2: register the professional on the HPR
+## Journey 2: registering a professional on the HPR
 
 ```mermaid
 sequenceDiagram
@@ -159,13 +178,13 @@ sequenceDiagram
     H-->>S: Upload result
 ```
 
-The HPID is an identity, not a profile. Registering the professional adds qualifications, council registration and current work. It needs the `hprToken` journey 1 returned.
+The HPID is an identity, not a professional profile. The professional profile is created through the registration process, which captures details such as qualifications, council registration, and current work information. Professional registration requires the HPR token returned from journey 1.
 
-Two documents are mandatory, the degree certificate and the registration certificate. A proof of work certificate is mandatory too when the professional works for government, or for both government and private.
+The following documents are mandatory for upload: the qualification degree certificate, and the registration certificate. A proof of work certificate is mandatory for professionals working in government, or in both government and private settings.
 
-Register professional takes codes, not names. Fetch council, course, college, university, state, district and language from the master APIs first.
+The registration API requires codes rather than names, so fetch the relevant master data through the master APIs first and use those codes during registration. Master data includes council, course, college, university, state, district and language.
 
-## Journey 3: a facility onboards to the HFR
+## Journey 3: onboarding a facility to the HFR
 
 ```mermaid
 sequenceDiagram
@@ -188,22 +207,22 @@ sequenceDiagram
     H-->>S: Facility submitted for verification
 ```
 
-Onboarding is one search, three writes and a submit, each write adding a layer of detail. Stop before submit and the facility stays in draft, invisible to ABDM.
+Onboarding consists of one search, three updates, and a final submission, with each update adding another layer of facility details. If you stop before submission, the facility remains in Draft status and is not visible on ABDM.
 
-The first write, basic facility information, returns a tracking ID. That is the facility's identity for the rest of the sequence, and what you pass as the facility ID on every later update.
+The first update captures the basic facility information and creates the Facility ID. The Facility ID is retained throughout the onboarding flow, but remains masked until the facility is fully submitted. Once submission is complete, the Facility ID becomes visible. The API returns it as `trackingId`, and that is the value every later update carries.
 
-### What each write call carries
+### What each update carries
 
-| Call                       | What it captures                                                                                                                                                   |
-| -------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Basic facility information | Name, ownership, system of medicine, facility type and subtype, address with LGD codes, contact details, board and building photographs, opening hours             |
-| Additional information     | Whether it has a pharmacy, blood bank, dialysis centre, cath lab, diagnostic lab or imaging centre, plus scheme identifiers such as ABPMJAY, Rohini, ECHS and CGHS |
-| Detailed information       | Specialities per system of medicine, bed and ventilator counts, and the pharmacy, blood bank, diagnostic and imaging sections that apply to this facility type     |
-| Submit facility            | The tracking ID and an optional source of information. Moves the facility out of draft                                                                             |
+| Call                       | Information captured                                                                                                                                                                                   |
+| -------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Basic facility information | Facility name, ownership, system of medicine, facility type and subtype, address with LGD codes, contact details, board and building photographs, and opening hours                                    |
+| Additional information     | Availability of services and units such as a pharmacy, blood bank, dialysis centre, cath lab, diagnostic laboratory, or imaging centre, plus scheme identifiers such as ABPMJAY, Rohini, ECHS and CGHS |
+| Detailed information       | Specialities by system of medicine, bed and ventilator counts, and applicable sections for pharmacy, blood bank, diagnostic laboratory and imaging                                                     |
+| Submit facility            | The tracking ID and an optional source of information. Moves the facility application out of Draft status                                                                                              |
 
-Which fields are mandatory in detailed information depends on the facility type, the type of service and the system of medicine. A diagnostic laboratory, imaging centre, blood bank or pharmacy sends no medical infrastructure counts at all.
+The mandatory fields under detailed information vary based on the facility type, service type, and system of medicine selected during registration. Diagnostic laboratories, imaging centres, blood banks and pharmacies do not require medical infrastructure counts, such as bed or ventilator counts.
 
-### A facility can also verify by OTP
+### OTP based facility verification
 
 ```mermaid
 sequenceDiagram
@@ -217,7 +236,7 @@ sequenceDiagram
     H-->>S: Validation result
 ```
 
-A second, shorter path serves government programmes: send an OTP to the contact number registered against a facility ID, then validate it.
+A shorter verification flow is available for government programmes. An OTP is sent to the contact number registered against the Facility ID, which is then validated to complete verification.
 
 ## Journey 4: linking bridges to a facility
 
@@ -230,17 +249,21 @@ flowchart LR
     B --> F["Active: true or false"]
 ```
 
-A facility ID alone does not make records flow. The facility has to be linked to a bridge, each link marked HIP or HIU. One facility can have several, and one bridge serves as many facilities as you link to it. What is set once for your integration and what is set per facility is in [one bridge, many facilities](/docs/main/docs/hiecm/v3/concepts/how-it-fits#one-bridge-many-facilities).
+A Facility ID alone does not enable health record exchange. The facility must be linked to a bridge, with each linkage designated as either a HIP or an HIU.
 
-The HIP name is what a patient sees in their [ABHA](/docs/main/docs/hiecm/v3/getting-started/glossary#abha) or [PHR](/docs/main/docs/hiecm/v3/getting-started/glossary#phr) app when they search for this hospital. Three rules apply: 15 characters or fewer, no special characters, and unique for every bridge on a facility. The worked example builds the name from the hospital name plus the bridge name.
+- A single facility can be linked to multiple bridges.
+- A single bridge can be linked to multiple facilities. See [one bridge, many facilities](/docs/main/docs/hiecm/v3/concepts/how-it-fits#one-bridge-many-facilities).
+- The HIP or HIU role is defined for each facility and bridge linkage.
+- Integration-level configurations are set once, while facility-specific configurations are maintained separately for each linked facility.
 
-A facility with a facility ID and a linked HIP bridge can do the [M2](/docs/main/docs/hiecm/v3/api/m2) work, linking care contexts and sharing records. With a linked HIU bridge it can do the [M3](/docs/main/docs/hiecm/v3/api/m3) work, requesting consent and fetching records. M4 is the registration step in front of either flow outside sandbox.
+The HIP name is the name displayed to patients in their [ABHA](/docs/main/docs/hiecm/v3/getting-started/glossary#abha) or [PHR](/docs/main/docs/hiecm/v3/getting-started/glossary#phr) app when they search for a hospital. Three rules apply: a maximum of 15 characters, no special characters, and it must be unique for every bridge linked to the same facility. For example, the HIP name can be derived by combining the hospital name and the bridge name, while keeping to those rules.
+
+A facility with a Facility ID and a linked HIP bridge can perform [M2](/docs/main/docs/hiecm/v3/api/m2) activities, including linking care contexts and sharing health records. A facility with a linked HIU bridge can perform [M3](/docs/main/docs/hiecm/v3/api/m3) activities, including requesting patient consent and fetching health records. M4 covers the registration of the facility and the healthcare professionals working at the facility.
 
 Next: [M4 operations and fields](/docs/main/docs/hiecm/v3/api/m4/undocumented).
 
 ## Next
 
-- The registration journeys as diagrams: [the journey below](#the-journey-one-diagram-per-flow).
 - The base URLs and the operation list: [M4 API reference](/docs/main/docs/hiecm/v3/api/m4).
 - Every call with its parameters and codes: [M4 operations and fields](/docs/main/docs/hiecm/v3/api/m4/undocumented).
 - The patient side of all four: [P1 Identity and profile](/docs/main/docs/hiecm/v3/milestones/p1).
