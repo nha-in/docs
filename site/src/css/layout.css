@@ -173,11 +173,14 @@
 /* Every level steps right of its parent, so the depth of a page is visible in
    the rail rather than only in the breadcrumb. The step is applied to the
    nested list, so it compounds: gateway, module, section, use case, endpoint.
-   No left rule: the indent alone carries the structure. */
+   A 1px thread runs down the left of every nested list, the way Reddit draws
+   a comment thread, so a child is visibly tied to its parent. */
 .menu__list .menu__list {
-  padding-left: 0.75rem;
-  margin-left: 0;
-  border-left: 0;
+  /* The parent's icon is 16px wide after 16px of padding, so its centre sits
+     24px in. The thread runs through that centre. */
+  margin-left: calc(1.5rem - 0.5px);
+  padding-left: calc(0.75rem + 0.5px);
+  border-left: 1px solid var(--border);
 }
 
 .menu__list-item:not(:first-child) {
