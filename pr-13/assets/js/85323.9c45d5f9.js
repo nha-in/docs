@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunk_abdm_docs_site=self.webpackChunk_abdm_docs_site||[]).push([["85323"],{45158(e,s,a){a.r(s),a.d(s,{__iconNode:()=>t,default:()=>_});var o=a(34438);let t=[["polygon",{points:"12 2 19 21 12 17 5 21 12 2",key:"x8c0qg"}]],_=(0,o.A)("navigation-2",t)}}]);
