@@ -12,7 +12,7 @@ summary: >
   is 4096-bit.
 sources:
   - file: catalogue/openapi/.raw/ABDM_M1_API_Swagger.yaml
-    hash: sha256:14bbfcbe0fc38e13a485d2a8fcfd6dc6d84e89d4f2e6b743cb85a238a3c18873
+    hash: sha256:6e2f0691a60ef948cae58f69df4e1730742c38f47f10da7b8c63596288120e4c
     fetched: 2026-08-25
     note: >
       NHA's M1 OpenAPI file.
