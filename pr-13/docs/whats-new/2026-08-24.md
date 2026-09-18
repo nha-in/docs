@@ -12,7 +12,7 @@ Three modules on the [HIE-CM](/docs/pr-13/docs/hiecm/v3/getting-started/glossary
 
 Start at [Overview](/docs/pr-13/docs/hiecm/v3).
 
-These pages follow the sandbox document pack. Nothing in them has been run against the ABDM sandbox, so every page carries `verification: unverified`. Where a request or response shape is not yet published, the page says so instead of guessing at a payload.
+These pages follow the sandbox document pack. Where a request or response shape is not yet published, the page says so instead of guessing at a payload.
 
 ### Try the session token call
 

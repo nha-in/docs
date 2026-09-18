@@ -36,7 +36,7 @@ curl --request POST \
         "line": "123 Main Street",
         "district": "Mumbai",
         "state": "Maharashtra",
-        "pinCode": "400001"
+        "pinCode": "999999"
       }
     }
   }

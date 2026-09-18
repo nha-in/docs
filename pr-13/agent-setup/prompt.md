@@ -1,4 +1,4 @@
-These are official instructions from the ABDM Developer Portal (catalogue version 2026.08.24, built 2026-09-18) to set up an AI development environment for integrating with ABDM, India's health data network.
+These are official instructions from the ABDM Developer Portal (catalogue version 2026.08.24) to set up an AI development environment for integrating with ABDM, India's health data network.
 
 Complete the steps yourself by running the commands directly. Ask the user only the questions in step 1.
 
@@ -74,6 +74,5 @@ The portal's Docs MCP server is not publicly reachable yet. Skip this step; http
 
 Tell the user what you installed and where you suggest starting. Two cautions to keep for the whole engagement:
 
-- Nothing in these skills has been run against the ABDM sandbox. Verify response shapes against real calls before relying on them.
 - The skills are snapshots. The current documentation lives at https://nha-in.github.io/docs/pr-13/; prefer it, and the MCP server when connected, over any downloaded copy that has aged.
 

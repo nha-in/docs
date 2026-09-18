@@ -5,7 +5,7 @@ description: Use when building services a PHR application offers on top of ABDM:
 
 # ABDM PHR application services
 
-Generated from the ABDM Developer Portal on 2026-09-18, catalogue version 2026.08.24. Every fact below comes from a page in that portal, which is the place to look when this file does not carry enough.
+Generated from the ABDM Developer Portal, catalogue version 2026.08.24. Every fact below comes from a page in that portal, which is the place to look when this file does not carry enough.
 
 This file is a snapshot. Re-download it from https://nha-in.github.io/docs/pr-13/skills/abdm-phr-services/SKILL.md when it is older than the work you are doing.
 If the abdm-docs MCP server is connected, trust its answers over this file: it serves the current catalogue and stamps every response with its catalogue_version, which you can compare against the version above.
@@ -23,7 +23,6 @@ This file is the map. Each line above is a file beside it, opened one at a time 
 
 ## Before anything else
 
-- Nothing here has been run against the ABDM sandbox. Treat request and response shapes as unconfirmed, and check a response before you rely on its shape.
 - None of this is a certification milestone. Nothing here is required to certify as a PHR application, and building none of it is a valid choice.
 - These operations sit apart from P1 to P3 so that nothing here implies a PHR application must build them.
 

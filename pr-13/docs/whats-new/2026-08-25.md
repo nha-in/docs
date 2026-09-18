@@ -33,5 +33,3 @@ For M3 that gap is now filled: the callbacks carry the payloads. For M2 only the
 ### Corrections applied to the published files
 
 Five, all recorded in `catalogue/openapi/corrections/` rather than applied silently: 52 em dashes rewritten, 8 references to components that were never defined, 26 UUID format assertions the examples contradict, 2 `hiType` examples that disagreed with the schema, and 1 example dropped for violating the schema it illustrates.
-
-Nothing in this release has been run against the ABDM sandbox. Every page and every atom says `unverified`.

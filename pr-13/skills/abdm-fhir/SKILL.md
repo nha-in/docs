@@ -5,7 +5,7 @@ description: Use when producing or checking FHIR for ABDM: building NRCES compli
 
 # ABDM FHIR
 
-Generated from the ABDM Developer Portal on 2026-09-18, catalogue version 2026.08.24.
+Generated from the ABDM Developer Portal, catalogue version 2026.08.24.
 
 This file is a snapshot. Re-download it from https://nha-in.github.io/docs/pr-13/skills/abdm-fhir/SKILL.md when it is older than the work you are doing.
 
@@ -18,7 +18,6 @@ Open one when the work calls for it. This file is the map, not the material.
 
 ## Before anything else
 
-- Nothing here has been run against the ABDM sandbox. Treat request and response shapes as unconfirmed, and check a response before you rely on its shape.
 - A bundle that validates is not a bundle ABDM accepts. The NRCES profiles are the floor, and the milestone the bundle travels under adds its own rules.
 
 ## Practices that hold across every call

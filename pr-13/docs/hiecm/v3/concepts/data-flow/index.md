@@ -115,7 +115,7 @@ Two reference implementations exist. Fidelius, at [github.com/sukreet/fidelius](
 ## Where this is implemented
 
 - [Hospital, lab and pharmacy systems](/docs/pr-13/docs/hiecm/v3/concepts/hip-hiu), which side the facility you act for is on.
-- [M2, linking and sharing](/docs/pr-13/docs/hiecm/v3/api/m2), the sending side.
-- [M3, consent and fetching](/docs/pr-13/docs/hiecm/v3/api/m3), the receiving side.
+- [M2 Attach, Health Information Provider Services](/docs/pr-13/docs/hiecm/v3/api/m2), the sending side.
+- [M3 Retrieve, Health Information User Services](/docs/pr-13/docs/hiecm/v3/api/m3), the receiving side.
 - [Consent](/docs/pr-13/docs/hiecm/v3/concepts/consent), the artefact this flow depends on.
 - [FHIR and health record formats](/docs/pr-13/docs/hiecm/v3/concepts/fhir), what is inside the payload.

@@ -81,7 +81,7 @@ curl -X POST 'https://abhasbx.abdm.gov.in/abha/api/v3/phr/app/enrollment/enrol' 
   -H 'REQUEST-ID: <FRESH_UUID>' \
   -H 'TIMESTAMP: <ISO_8601_TIMESTAMP>' \
   -H 'Content-Type: application/json' \
-  -d '{ "txnId": "22387064-45ea-42d4-b6c5-8b86dbec6fe5", "phrDetails": { "mobile": " *{{encrypted mobile-number }}*", "firstName": "John", "middleName": "", "lastName": "Doe", "yearOfBirth": "1998", "dayOfBirth": "14", "monthOfBirth": "11", "gender": "M", "email": "", "profilePhoto": "{{base-64-encoded-profile-photo}}", "stateCode": "9", "districtCode": "135", "pinCode": 232101, "address": "Street number 4, sector 12", "stateName": "Maharashtra", "districtName": "Nashik", "ABHANumber": "XX-XXXX-XXXX-1234", "abhaAddress": "johndoe@sbx", "password": "*{{encrypted password}}*" } }'
+  -d '{ "txnId": "22387064-45ea-42d4-b6c5-8b86dbec6fe5", "phrDetails": { "mobile": " *{{encrypted mobile-number }}*", "firstName": "John", "middleName": "", "lastName": "Doe", "yearOfBirth": "1998", "dayOfBirth": "14", "monthOfBirth": "11", "gender": "M", "email": "", "profilePhoto": "{{base-64-encoded-profile-photo}}", "stateCode": "9", "districtCode": "135", "pinCode": 999999, "address": "Street number 4, sector 12", "stateName": "Maharashtra", "districtName": "Nashik", "ABHANumber": "XX-XXXX-XXXX-1234", "abhaAddress": "johndoe@sbx", "password": "*{{encrypted password}}*" } }'
 ```
 
 #### Encrypt data (Aadhaar/Mobile/OTP/Password) (`hiecm.endpoint.p1-encrypt-data-aadhaar-mobile-otp-password`)

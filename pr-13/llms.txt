@@ -51,14 +51,14 @@ Add `.md` to any link below to get that page as markdown. Individual API operati
 - [Build with AI](https://nha-in.github.io/docs/pr-13/docs/hiecm/v3/getting-started/build-with-ai): Set a coding agent up to build your ABDM integration, from a one-file skill to live retrieval over MCP.
 - [Quickstart](https://nha-in.github.io/docs/pr-13/docs/hiecm/v3/getting-started/first-fifteen-minutes): Create a gateway session and then create your first ABHA, live from this page, with your own sandbox credentials.
 - [Glossary](https://nha-in.github.io/docs/pr-13/docs/hiecm/v3/getting-started/glossary): The ABDM terms used across this documentation, and the HIE-CM ones, defined once.
-- [Go live](https://nha-in.github.io/docs/pr-13/docs/hiecm/v3/getting-started/going-live): Complete the sandbox exit process, two demonstrations, functional testing, the security audit and the exit form, then switch to production.
-- [Get your sandbox credentials](https://nha-in.github.io/docs/pr-13/docs/hiecm/v3/getting-started/sandbox): Register on the sandbox, collect your client id and secret, register a callback URL, and note the base URLs.
+- [Go live](https://nha-in.github.io/docs/pr-13/docs/hiecm/v3/getting-started/going-live): Stages 4 to 6 of sandbox integration. Functional testing and the security audit, the Health Tech Committee demonstration, then go live.
+- [Get your sandbox credentials](https://nha-in.github.io/docs/pr-13/docs/hiecm/v3/getting-started/sandbox): The six stages of sandbox integration, then how to request sandbox access, receive credentials, register a callback URL and note the base URLs.
 - [Security audit](https://nha-in.github.io/docs/pr-13/docs/hiecm/v3/getting-started/security-audit): Pass the WASA security audit and hold a Safe to Host certificate, which every application needs before it runs in production.
 - [Milestones](https://nha-in.github.io/docs/pr-13/docs/hiecm/v3/milestones): The four milestones spell CARE. Create, Attach, Retrieve, Enrol, in build order, plus the three PHR milestones and which ones you need.
-- [M1 Create: ABHA identity](https://nha-in.github.io/docs/pr-13/docs/hiecm/v3/milestones/m1): What Milestone 1 gives you, what you need before your first call, and the order to build it in.
-- [M2 Attach: linking and sharing](https://nha-in.github.io/docs/pr-13/docs/hiecm/v3/milestones/m2): What Milestone 2 gives you, the prerequisites that block it, the record types you can link, and the order to build it in.
-- [M3 Retrieve: consent and fetching](https://nha-in.github.io/docs/pr-13/docs/hiecm/v3/milestones/m3): What Milestone 3 gives you, who asks the patient for consent, what you store, and the order to build it in.
-- [M4 Enrol: facilities and professionals](https://nha-in.github.io/docs/pr-13/docs/hiecm/v3/milestones/m4): What Milestone 4 covers, who needs it, how the two registries connect, and when to build it rather than use the NHPR portal.
+- [M1 Create: ABHA Creation and Verification](https://nha-in.github.io/docs/pr-13/docs/hiecm/v3/milestones/m1): What Milestone 1 gives you, what you need before your first call, and the order to build it in.
+- [M2 Attach: Health Information Provider Services](https://nha-in.github.io/docs/pr-13/docs/hiecm/v3/milestones/m2): Milestone 2 enables a HIP to create digital health records, link care contexts with an ABHA Address, support discovery and share encrypted records.
+- [M3 Retrieve: Health Information User Services](https://nha-in.github.io/docs/pr-13/docs/hiecm/v3/milestones/m3): Milestone 3 enables an HIU to request and retrieve a patient's health information through the ABDM consent-management framework.
+- [M4 Enrol: Register Healthcare Professionals and Facilities](https://nha-in.github.io/docs/pr-13/docs/hiecm/v3/milestones/m4): Milestone 4 establishes the identity of healthcare professionals on the HPR and the details of healthcare facilities on the HFR.
 - [P1 Identity and profile](https://nha-in.github.io/docs/pr-13/docs/hiecm/v3/milestones/p1): The patient side of M1: how a person registers in your PHR app, logs in four ways, and holds their own profile and ABHA card.
 - [P2 Linking and records](https://nha-in.github.io/docs/pr-13/docs/hiecm/v3/milestones/p2): The patient side of M2: how a PHR app finds records held elsewhere, links them to an ABHA address, and shares a profile at a facility.
 - [P3 Consent and notifications](https://nha-in.github.io/docs/pr-13/docs/hiecm/v3/milestones/p3): The patient side of M3: subscriptions, auto approval, granting and revoking consent, and fetching the records a grant covers.
@@ -70,7 +70,7 @@ Add `.md` to any link below to get that page as markdown. Individual API operati
 - [NHPR, the provider registries](https://nha-in.github.io/docs/pr-13/docs/hiecm/v3/registries/nhpr): The National Health Professional Registry, why professionals and facilities are registered separately, and which one you need first.
 - [HFR, the facility registry](https://nha-in.github.io/docs/pr-13/docs/hiecm/v3/registries/nhpr/hfr): The Health Facility Registry, what a facility record holds, the five call onboarding sequence, and how a bridge is linked to it.
 - [HPR, the professional registry](https://nha-in.github.io/docs/pr-13/docs/hiecm/v3/registries/nhpr/hpr): The Healthcare Professionals Registry, the HPID, what identifies a doctor, and the registration journey.
-- [Developer resources](https://nha-in.github.io/docs/pr-13/docs/hiecm/v3/resources): What sits beside the API reference for HIE-CM. Today that is the testing use cases, one page per module.
+- [Developer resources](https://nha-in.github.io/docs/pr-13/docs/hiecm/v3/resources): Test scenarios for ABDM integration and certification, and the documentation, AI-assisted tools and reference projects that support it.
 - [Testing use cases](https://nha-in.github.io/docs/pr-13/docs/hiecm/v3/resources/testing): The cases every HIE-CM module is tested against, where you run them, and how to read a case id and its marking.
 - [M1 testing use cases](https://nha-in.github.io/docs/pr-13/docs/hiecm/v3/resources/testing/m1): The cases M1 is tested against. ABHA creation on four routes, verification, profile read and update, and profile sharing.
 - [M2 testing use cases](https://nha-in.github.io/docs/pr-13/docs/hiecm/v3/resources/testing/m2): The cases M2 is tested against. Care context linking on five authentication routes, user initiated linking, and the data transfer.
@@ -195,7 +195,7 @@ Add `.md` to any link below to get that page as markdown. Individual API operati
 
 ## docs/support
 
-- [Support](https://nha-in.github.io/docs/pr-13/docs/support): Where to ask about the sandbox, and what to put in a report.
+- [Support](https://nha-in.github.io/docs/pr-13/docs/support): Where to raise integration queries, API errors, onboarding and certification questions for the ABDM sandbox.
 
 ## docs/uhi
 

@@ -13,7 +13,7 @@ curl --request PATCH \
   --header 'REQUEST-ID: <REQUEST_ID>' \
   --header 'TIMESTAMP: <TIMESTAMP>' \
   --header 'BENEFIT_NAME: healthid api' \
-  --header 'X-token: <X_TOKEN_FROM_LOGIN_VERIFY>' \
+  --header 'X-token: Bearer <X_TOKEN_FROM_LOGIN_VERIFY>' \
   --header 'Content-Type: application/json' \
   --data '{
   "abhaNumber": "<ABHA_NUMBER>",
@@ -32,7 +32,7 @@ curl --request PATCH \
 - `REQUEST-ID` (string, required): Unique UUID v4 per request. Used for idempotency and distributed tracing. Generate a fresh UUID for every call.
 - `TIMESTAMP` (string, required): ISO 8601 UTC timestamp of the request.
 - `BENEFIT_NAME` (string): The benefit scheme an enrolment belongs to. Send `healthid api` on the enrol and search calls, and `healthid` on the login OTP and verify calls under Find ABHA. On the enrolment OTP request the header is present but explicitly disabled, so it is not sent there. A login OTP request sent with `healthid api` rather than `healthid` was accepted on the sandbox on 2026-09-11, so the login calls may take either. NHA's files spell this header four different ways and use scheme values beyond healthid. Which spelling each endpoint accepts is not confirmed against the sandbox. The Conventions page for this module lists all four.
-- `X-token` (string): The user scoped token returned when a person logs in or verifies an OTP. Profile calls act on one account, so they need this in addition to the gateway token. Required on the calls that read or change a specific person's account. Send the bare token. Unlike the Authorization header this one carries no `Bearer ` prefix, and adding one is refused as `ABDM-1094` with the message `X-token expired`. That message names the wrong thing: a token rejected one second after it was issued has not expired, it was malformed. Check the prefix before the lifetime.
+- `X-token` (string): The user scoped token returned when a person logs in or verifies an OTP. Profile calls act on one account, so they need this in addition to the gateway token. Required on the calls that read or change a specific person's account. Send it as `Bearer` followed by the token, the same shape as the Authorization header. The bare form is refused as HTTP 400 `Invalid X-token`. A transfer token, the one a mobile OTP login returns without `refreshToken`, is refused on profile calls in either form; exchange it at the account selection call first. `ABDM-1094` on a profile or benefit call is an entitlement refusal for the client, not a token format error.
 
 ## Body
 

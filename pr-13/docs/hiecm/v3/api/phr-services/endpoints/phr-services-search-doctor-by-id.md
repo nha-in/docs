@@ -48,7 +48,7 @@ Shape of the 200 response, generated from the schema. The values are placeholder
     {
       "facilityId": "IN2710004268",
       "facilityName": "Manish Test 21 Aug",
-      "facilityAddress": "Test 123456  Pune Maharashtra 412115",
+      "facilityAddress": "Test 123456  Pune Maharashtra 999999",
       "facilityContact": "<MOBILE>",
       "designationWithFacility": "Sr. Doctor",
       "distanceInKm": "12.18"

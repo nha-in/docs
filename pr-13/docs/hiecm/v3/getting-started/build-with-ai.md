@@ -1,20 +1,26 @@
 # Build with AI
 
+Use ABDM documentation with AI-assisted development tools. Developers may use supported AI-assisted tools to search ABDM integration guides, API references and milestone-specific documentation while building their solution.
+
+note
+
+Review all AI-generated code against the official ABDM documentation and test it in the Sandbox.
+
 Every fact on this site is a public URL. There are three ways to put it in front of your agent, and they combine: the plugin is the one command that sets up the other two.
 
 [Recommended](#connect-the-docs-mcp-server)
 
-[Docs MCP server](#connect-the-docs-mcp-server)
+[Search the documentation (MCP server)](#connect-the-docs-mcp-server)
 
-[This documentation live, queried a paragraph at a time as your agent works. It cannot go stale, because it is this site answering.](#connect-the-docs-mcp-server)
+[Use the documentation service while developing to find API endpoints, review request formats and understand error codes.](#connect-the-docs-mcp-server)
 
-[AI plugin](#install-the-plugin)
+[Set up your coding assistant](#install-the-plugin)
 
-[One command that sets your agent up with both of the others: the skills as files, the server as a connection.](#install-the-plugin)
+[Follow the setup guide to connect a supported coding assistant with the ABDM documentation and begin using it for integration support.](#install-the-plugin)
 
-[Agent skills](#install-a-skill)
+[Use milestone-specific guidance](#install-a-skill)
 
-[One file per job, carrying a whole milestone: every endpoint, header, error code and test. Works offline, and ages until you update it.](#install-a-skill)
+[Provide the coding assistant with the relevant references for ABHA, record linking, consent, registries or FHIR bundles.](#install-a-skill)
 
 ## Connect the Docs MCP server
 
@@ -118,10 +124,10 @@ How to use it
 
 Download all skills
 
-- [ABHA identity (M1)](https://nha-in.github.io/docs/pr-13/skills/abdm-m1/SKILL.md)
-- [Link and share records (M2)](https://nha-in.github.io/docs/pr-13/skills/abdm-m2/SKILL.md)
-- [Consent and fetching (M3)](https://nha-in.github.io/docs/pr-13/skills/abdm-m3/SKILL.md)
-- [Registries (M4)](https://nha-in.github.io/docs/pr-13/skills/abdm-m4/SKILL.md)
+- [ABHA Creation and Verification (M1)](https://nha-in.github.io/docs/pr-13/skills/abdm-m1/SKILL.md)
+- [Health Information Provider Services (M2)](https://nha-in.github.io/docs/pr-13/skills/abdm-m2/SKILL.md)
+- [Health Information User Services (M3)](https://nha-in.github.io/docs/pr-13/skills/abdm-m3/SKILL.md)
+- [National Healthcare Providers Registry (M4)](https://nha-in.github.io/docs/pr-13/skills/abdm-m4/SKILL.md)
 - [PHR identity (P1)](https://nha-in.github.io/docs/pr-13/skills/abdm-p1/SKILL.md)
 - [PHR linking (P2)](https://nha-in.github.io/docs/pr-13/skills/abdm-p2/SKILL.md)
 - [PHR consent (P3)](https://nha-in.github.io/docs/pr-13/skills/abdm-p3/SKILL.md)
@@ -154,3 +160,17 @@ Point it at [Build it well](/docs/pr-13/docs/hiecm/v3/getting-started/build-it-w
 Ask this catalogue a question directly, without setting anything up.
 
 The same assistant sits in the search box at the top of every page, labelled "Search or ask AI".
+
+### Attaching a file
+
+Ask AI takes a file with your question: a failing request body, a FHIR bundle, a log, a CSV, a PDF, or a screenshot. The paperclip is on the left of the box. At most 20,000 characters of text, 256KB for a text file and 8MB for a PDF or an image.
+
+What happens to it is worth knowing before you attach one.
+
+- The file is read in your own browser and only the text it gives up travels with your question. A PDF gives up the text it already carries. A screenshot is read by a text recognition engine your browser downloads once, from this site, and runs on your own machine. The picture itself is never sent, so nothing is uploaded and nothing is stored: the conversation lives in the panel and is gone when you close it.
+- A PDF that is only pictures of text, a scan, gives up nothing. Screenshot the part you mean instead and that will be read.
+- Text read from a picture carries reading mistakes. The assistant is told where the text came from, so it can say when an answer turns on a character it cannot trust.
+- Personal data is removed before the file reaches the model. A file that parses as JSON is masked by its field names, so `name`, `telecom`, `address`, `birthDate` and identifier values in a FHIR bundle are replaced with placeholders such as `<MASKED_NAME>`. Aadhaar, ABHA, PAN, passport, voter, mobile, email and bearer tokens are matched by pattern anywhere in the file, JSON or not.
+- A file with no field names, a log or the text read from a screenshot, gets the same pattern masking, and a name on a labelled line goes too: `patient: Rakesh Sharma` leaves as `patient: <MASKED_NAME>`.
+- What none of that catches is a name written in running prose, with nothing marking it as a name. Redact those yourself, the same way you would in a support request. The panel says so next to any file it read for you.
+- Your question is logged, masked, to improve the answers. The file is not logged.
