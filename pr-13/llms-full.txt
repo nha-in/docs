@@ -40872,7 +40872,7 @@ Every fact on this site is a public URL. There are three ways to put it in front
 
 ## Connect the Docs MCP server
 
-A skill is a snapshot. The Docs MCP server is the same documentation live, queried a paragraph at a time instead of loaded whole. The agent searches it, decodes error codes and checks request bodies as it works, alongside a skill or on its own. Add it as `nhcx-v1` at `https://docs.abdm.gov.in/mcp`.
+A skill is a snapshot. The Docs MCP server is the same documentation live, queried a paragraph at a time instead of loaded whole. The agent searches it, decodes error codes and checks request bodies as it works, alongside a skill or on its own. Add it as `nhcx-docs` at `https://docs.abdm.gov.in/mcp`.
 
 Docs MCP server
 
@@ -40882,7 +40882,7 @@ A live MCP server over the documentation. The agent searches it, decodes error c
 - DecodeTurn an error code you just received into what it means and what to do, without you finding the right table.`decode_error`
 - ValidateCheck a request body against the specification before you send it, and list or read any operation.`validate_request, list_operations, get_operation`
 
-`claude mcp add --transport http nhcx-v1 https://docs.abdm.gov.in/mcp -s user`
+`claude mcp add --transport http nhcx-docs https://docs.abdm.gov.in/mcp -s user`
 
 Run this in the repository you are integrating.
 
