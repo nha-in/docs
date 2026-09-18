@@ -79,6 +79,30 @@ RANK_CASES = [
      {"hiecm.endpoint.m1-encrypt-value"}),
     ("my request got a 404 but the body has an ABDM error code",
      {"hiecm.concept.error-codes", "hiecm.error.abdm-1016"}),
+    # -- NHCX, the claims exchange: a hospital or insurer developer's words ----
+    ("every call to the claims exchange comes back 401 even right after I get a token",
+     {"nhcx.troubleshooting.everything-returns-401", "nhcx.error.nhcx-401",
+      "nhcx.concept.session-token"}),
+    ("the insurer says it could not decrypt the claim message our hospital system sent",
+     {"nhcx.error.payr-1001", "nhcx.troubleshooting.recipient-cannot-decrypt",
+      "nhcx.concept.encryption-certificate", "nhcx.concept.jwe-envelope"}),
+    ("the exchange accepted my request with a 202 but the insurer's answer never reaches our server",
+     {"nhcx.troubleshooting.accepted-then-no-callback",
+      "nhcx.troubleshooting.callback-url-rejected",
+      "nhcx.sandbox.callback-url-requirements"}),
+    ("the patient has been discharged, send the final bill to the insurer",
+     {"nhcx.flow.claim-submit", "nhcx.endpoint.claim-submit"}),
+    ("should we get the insurer's approval before surgery or only ask for an estimate of what they would pay",
+     {"nhcx.decision.preauth-or-predetermination", "nhcx.flow.predetermination",
+      "nhcx.flow.preauth-submit"}),
+    ("our approval request has gone quiet, how do I find out whether the insurer received it",
+     {"nhcx.flow.status-check", "nhcx.endpoint.status",
+      "nhcx.decision.status-poll-or-wait"}),
+    ("find which insurer covers this patient from their health account number before sending anything",
+     {"nhcx.endpoint.participant-get-policies", "nhcx.endpoint.v2-participant-get-policies",
+      "nhcx.concept.policy-linking"}),
+    ("the exchange rejected my retry saying the correlation id was already used",
+     {"nhcx.error.nhcx-1006", "nhcx.concept.message-identifiers"}),
 ]
 
 # ---------------------------------------------------------------------------
@@ -91,6 +115,10 @@ CONTENT_CASES = [
      ["+05:30 offset, for example"]),  # the refuted claim's phrasing
     ("the api rejected my call saying invalid timestamp",
      ["utc"],
+     []),
+    # From the summary of nhcx.error.nhcx-1006: a retry needs a new id.
+    ("the exchange rejected my retry saying the correlation id was already used",
+     ["new correlation id"],
      []),
 ]
 
@@ -145,17 +173,29 @@ def main() -> None:
             print(f"           {'; '.join(reason)}")
 
     # -- summary --
-    n = len(rows)
-    ranks = [r["rank"] for r in rows]
+    def scores(subset: list) -> dict:
+        ranks = [r["rank"] for r in subset]
+        n = len(ranks)
+        return {
+            "hit_at_1": sum(1 for r in ranks if r == 1),
+            "hit_at_3": sum(1 for r in ranks if r is not None and r <= 3),
+            "hit_at_10": sum(1 for r in ranks if r is not None and r <= 10),
+            "mrr": round(sum(1 / r for r in ranks if r is not None) / n, 3) if n else 0,
+            "n": n,
+        }
+
+    # A case belongs to the gateway its expected atoms carry; shared atoms
+    # count with HIE-CM, whose cases they answer.
+    def gateway(row: dict) -> str:
+        return "nhcx" if all(e.startswith("nhcx.") for e in row["expect"]) else "hiecm+shared"
+
     summary = {
         "name": name,
-        "hit_at_1": sum(1 for r in ranks if r == 1),
-        "hit_at_3": sum(1 for r in ranks if r is not None and r <= 3),
-        "hit_at_10": sum(1 for r in ranks if r is not None and r <= 10),
-        "mrr": round(sum(1 / r for r in ranks if r is not None) / n, 3),
+        **scores(rows),
         "content_pass": sum(1 for p in probes if p["passed"]),
         "content_total": len(probes),
-        "n": n,
+        "by_gateway": {g: scores([r for r in rows if gateway(r) == g])
+                       for g in ("hiecm+shared", "nhcx")},
     }
     out_dir = Path(__file__).parent / "results"
     out_dir.mkdir(exist_ok=True)

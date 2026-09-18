@@ -1,5 +1,491 @@
 [
   {
+    "key": "pmjay/hcx/nhcxpayerservice/wrapper/process/case",
+    "hosts": [
+      "apisbx.abdm.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "adjudicator_adjudicator_process",
+    "module": "PMJAY adjudicator",
+    "moduleDir": "adjudicator",
+    "method": "POST",
+    "path": "/pmjay/hcx/nhcxpayerservice/wrapper/process/case",
+    "summary": "Adjudicator: act on a case",
+    "route": "/docs/nhcx/v1/api/adjudicator/endpoints/adjudicator-adjudicator-process",
+    "callbacks": []
+  },
+  {
+    "key": "pmjay/sbxhcx/nhcxpayerservice/get/user-role",
+    "hosts": [
+      "apisbx.abdm.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "adjudicator_adjudicator_role",
+    "module": "PMJAY adjudicator",
+    "moduleDir": "adjudicator",
+    "method": "POST",
+    "path": "/pmjay/sbxhcx/nhcxpayerservice/v1/get/user-role",
+    "summary": "Adjudicator: role for a case",
+    "route": "/docs/nhcx/v1/api/adjudicator/endpoints/adjudicator-adjudicator-role",
+    "callbacks": []
+  },
+  {
+    "key": "paymentnotice/init",
+    "hosts": [
+      "apisbx.abdm.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "adjudicator_dummy_payer_paymentnotice_init",
+    "module": "PMJAY adjudicator",
+    "moduleDir": "adjudicator",
+    "method": "POST",
+    "path": "/paymentNotice/init",
+    "summary": "Dummy payer, send a payment notice",
+    "route": "/docs/nhcx/v1/api/adjudicator/endpoints/adjudicator-dummy-payer-paymentnotice-init",
+    "callbacks": []
+  },
+  {
+    "key": "process/request",
+    "hosts": [
+      "apisbx.abdm.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "adjudicator_dummy_payer_process_request",
+    "module": "PMJAY adjudicator",
+    "moduleDir": "adjudicator",
+    "method": "POST",
+    "path": "/process/request",
+    "summary": "Dummy payer, act on a request",
+    "route": "/docs/nhcx/v1/api/adjudicator/endpoints/adjudicator-dummy-payer-process-request",
+    "callbacks": []
+  },
+  {
+    "key": "hcx/biometric/auth/init",
+    "hosts": [
+      "apisbx.abdm.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "biometric_auth_init",
+    "module": "ABHA biometric authentication",
+    "moduleDir": "biometric",
+    "method": "POST",
+    "path": "/hcx/abha/biometric/auth/init",
+    "summary": "Biometric auth init",
+    "route": "/docs/nhcx/v1/api/biometric/endpoints/biometric-auth-init",
+    "callbacks": []
+  },
+  {
+    "key": "hcx/biometric/auth/refresh/token",
+    "hosts": [
+      "apisbx.abdm.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "biometric_auth_refresh_token",
+    "module": "ABHA biometric authentication",
+    "moduleDir": "biometric",
+    "method": "GET",
+    "path": "/hcx/abha/biometric/auth/refresh/token",
+    "summary": "Biometric auth refresh token",
+    "route": "/docs/nhcx/v1/api/biometric/endpoints/biometric-auth-refresh-token",
+    "callbacks": []
+  },
+  {
+    "key": "hcx/biometric/auth/verify",
+    "hosts": [
+      "apisbx.abdm.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "biometric_auth_verify",
+    "module": "ABHA biometric authentication",
+    "moduleDir": "biometric",
+    "method": "POST",
+    "path": "/hcx/abha/biometric/auth/verify",
+    "summary": "Biometric auth verify",
+    "route": "/docs/nhcx/v1/api/biometric/endpoints/biometric-auth-verify",
+    "callbacks": []
+  },
+  {
+    "key": "pmjay/sbxhcx/abdmproxy/biometric/capture/pid",
+    "hosts": [
+      "apisbx.abdm.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "biometric_faceauth_capture_pid",
+    "module": "ABHA biometric authentication",
+    "moduleDir": "biometric",
+    "method": "POST",
+    "path": "/pmjay/sbxhcx/abdmproxy/abha/biometric/capture/pid",
+    "summary": "Face auth capture PID",
+    "route": "/docs/nhcx/v1/api/biometric/endpoints/biometric-faceauth-capture-pid",
+    "callbacks": []
+  },
+  {
+    "key": "pmjay/sbxhcx/abdmproxy/biometric/faceauth/init",
+    "hosts": [
+      "apisbx.abdm.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "biometric_faceauth_init",
+    "module": "ABHA biometric authentication",
+    "moduleDir": "biometric",
+    "method": "POST",
+    "path": "/pmjay/sbxhcx/abdmproxy/abha/biometric/faceauth/init",
+    "summary": "Face auth init",
+    "route": "/docs/nhcx/v1/api/biometric/endpoints/biometric-faceauth-init",
+    "callbacks": []
+  },
+  {
+    "key": "pmjay/sbxhcx/abdmproxy/biometric/auth/verify",
+    "hosts": [
+      "apisbx.abdm.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "biometric_faceauth_v2_auth_verify",
+    "module": "ABHA biometric authentication",
+    "moduleDir": "biometric",
+    "method": "POST",
+    "path": "/pmjay/sbxhcx/abdmproxy/abha/biometric/v2/auth/verify",
+    "summary": "Face auth verify",
+    "route": "/docs/nhcx/v1/api/biometric/endpoints/biometric-faceauth-v2-auth-verify",
+    "callbacks": []
+  },
+  {
+    "key": "internal/claim/on_submit",
+    "hosts": [
+      "apisbx.abdm.gov.in",
+      "apisprod.nha.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "claim_internal_v1_claim_on_submit",
+    "module": "Claim",
+    "moduleDir": "claim",
+    "method": "POST",
+    "path": "/internal/v1/claim/on_submit",
+    "summary": "Claim callback (internal) (adapter)",
+    "route": "/docs/nhcx/v1/api/claim/endpoints/claim-internal-v1-claim-on-submit",
+    "callbacks": []
+  },
+  {
+    "key": "internal/claim/submit",
+    "hosts": [
+      "apisbx.abdm.gov.in",
+      "apisprod.nha.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "claim_internal_v1_claim_submit",
+    "module": "Claim",
+    "moduleDir": "claim",
+    "method": "POST",
+    "path": "/internal/v1/claim/submit",
+    "summary": "Claim submit (internal) (adapter)",
+    "route": "/docs/nhcx/v1/api/claim/endpoints/claim-internal-v1-claim-submit",
+    "callbacks": []
+  },
+  {
+    "key": "claim/on_submit",
+    "hosts": [
+      "apisbx.abdm.gov.in",
+      "apisprod.nha.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "claim_v1_claim_on_submit",
+    "module": "Claim",
+    "moduleDir": "claim",
+    "method": "POST",
+    "path": "/v1/claim/on_submit",
+    "summary": "Claim callback",
+    "route": "/docs/nhcx/v1/api/claim/endpoints/claim-v1-claim-on-submit",
+    "callbacks": [
+      {
+        "method": "POST",
+        "path": "v1_claim_on_submit",
+        "summary": "Receive claim callback",
+        "route": "/docs/nhcx/v1/api/claim/endpoints/claim-webhook-v1-claim-on-submit",
+        "relation": "triggered-by"
+      }
+    ]
+  },
+  {
+    "key": "claim/submit",
+    "hosts": [
+      "apisbx.abdm.gov.in",
+      "apisprod.nha.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "claim_v1_claim_submit",
+    "module": "Claim",
+    "moduleDir": "claim",
+    "method": "POST",
+    "path": "/v1/claim/submit",
+    "summary": "Claim submit",
+    "route": "/docs/nhcx/v1/api/claim/endpoints/claim-v1-claim-submit",
+    "callbacks": [
+      {
+        "method": "POST",
+        "path": "v1_claim_submit",
+        "summary": "Receive claim submit",
+        "route": "/docs/nhcx/v1/api/claim/endpoints/claim-webhook-v1-claim-submit",
+        "relation": "triggered-by"
+      }
+    ]
+  },
+  {
+    "key": "v1_claim_on_submit",
+    "hosts": [
+      "apisbx.abdm.gov.in",
+      "apisprod.nha.gov.in"
+    ],
+    "kind": "callback",
+    "operationId": "claim_webhook_v1_claim_on_submit",
+    "module": "Claim",
+    "moduleDir": "claim",
+    "method": "POST",
+    "path": "v1_claim_on_submit",
+    "summary": "Receive claim callback",
+    "route": "/docs/nhcx/v1/api/claim/endpoints/claim-webhook-v1-claim-on-submit",
+    "callbacks": []
+  },
+  {
+    "key": "v1_claim_submit",
+    "hosts": [
+      "apisbx.abdm.gov.in",
+      "apisprod.nha.gov.in"
+    ],
+    "kind": "callback",
+    "operationId": "claim_webhook_v1_claim_submit",
+    "module": "Claim",
+    "moduleDir": "claim",
+    "method": "POST",
+    "path": "v1_claim_submit",
+    "summary": "Receive claim submit",
+    "route": "/docs/nhcx/v1/api/claim/endpoints/claim-webhook-v1-claim-submit",
+    "callbacks": []
+  },
+  {
+    "key": "internal/communication/on_request",
+    "hosts": [
+      "apisbx.abdm.gov.in",
+      "apisprod.nha.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "communication_internal_v1_communication_on_request",
+    "module": "Communication",
+    "moduleDir": "communication",
+    "method": "POST",
+    "path": "/internal/v1/communication/on_request",
+    "summary": "Communication acknowledgement callback (internal variant) (adapter)",
+    "route": "/docs/nhcx/v1/api/communication/endpoints/communication-internal-v1-communication-on-request",
+    "callbacks": []
+  },
+  {
+    "key": "internal/communication/request",
+    "hosts": [
+      "apisbx.abdm.gov.in",
+      "apisprod.nha.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "communication_internal_v1_communication_request",
+    "module": "Communication",
+    "moduleDir": "communication",
+    "method": "POST",
+    "path": "/internal/v1/communication/request",
+    "summary": "Communication request (internal variant) (adapter)",
+    "route": "/docs/nhcx/v1/api/communication/endpoints/communication-internal-v1-communication-request",
+    "callbacks": []
+  },
+  {
+    "key": "communication/on_request",
+    "hosts": [
+      "apisbx.abdm.gov.in",
+      "apisprod.nha.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "communication_v1_communication_on_request",
+    "module": "Communication",
+    "moduleDir": "communication",
+    "method": "POST",
+    "path": "/v1/communication/on_request",
+    "summary": "Communication acknowledgement callback",
+    "route": "/docs/nhcx/v1/api/communication/endpoints/communication-v1-communication-on-request",
+    "callbacks": [
+      {
+        "method": "POST",
+        "path": "v1_communication_on_request",
+        "summary": "Receive communication acknowledgement callback",
+        "route": "/docs/nhcx/v1/api/communication/endpoints/communication-webhook-v1-communication-on-request",
+        "relation": "triggered-by"
+      }
+    ]
+  },
+  {
+    "key": "communication/request",
+    "hosts": [
+      "apisbx.abdm.gov.in",
+      "apisprod.nha.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "communication_v1_communication_request",
+    "module": "Communication",
+    "moduleDir": "communication",
+    "method": "POST",
+    "path": "/v1/communication/request",
+    "summary": "Communication request",
+    "route": "/docs/nhcx/v1/api/communication/endpoints/communication-v1-communication-request",
+    "callbacks": [
+      {
+        "method": "POST",
+        "path": "v1_communication_request",
+        "summary": "Receive communication request",
+        "route": "/docs/nhcx/v1/api/communication/endpoints/communication-webhook-v1-communication-request",
+        "relation": "triggered-by"
+      }
+    ]
+  },
+  {
+    "key": "v1_communication_on_request",
+    "hosts": [
+      "apisbx.abdm.gov.in",
+      "apisprod.nha.gov.in"
+    ],
+    "kind": "callback",
+    "operationId": "communication_webhook_v1_communication_on_request",
+    "module": "Communication",
+    "moduleDir": "communication",
+    "method": "POST",
+    "path": "v1_communication_on_request",
+    "summary": "Receive communication acknowledgement callback",
+    "route": "/docs/nhcx/v1/api/communication/endpoints/communication-webhook-v1-communication-on-request",
+    "callbacks": []
+  },
+  {
+    "key": "v1_communication_request",
+    "hosts": [
+      "apisbx.abdm.gov.in",
+      "apisprod.nha.gov.in"
+    ],
+    "kind": "callback",
+    "operationId": "communication_webhook_v1_communication_request",
+    "module": "Communication",
+    "moduleDir": "communication",
+    "method": "POST",
+    "path": "v1_communication_request",
+    "summary": "Receive communication request",
+    "route": "/docs/nhcx/v1/api/communication/endpoints/communication-webhook-v1-communication-request",
+    "callbacks": []
+  },
+  {
+    "key": "internal/coverageeligibility/check",
+    "hosts": [
+      "apisbx.abdm.gov.in",
+      "apisprod.nha.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "eligibility_internal_v1_coverageeligibility_check",
+    "module": "Coverage eligibility",
+    "moduleDir": "eligibility",
+    "method": "POST",
+    "path": "/internal/v1/coverageeligibility/check",
+    "summary": "Coverage eligibility check (internal) (adapter)",
+    "route": "/docs/nhcx/v1/api/eligibility/endpoints/eligibility-internal-v1-coverageeligibility-check",
+    "callbacks": []
+  },
+  {
+    "key": "internal/coverageeligibility/on_check",
+    "hosts": [
+      "apisbx.abdm.gov.in",
+      "apisprod.nha.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "eligibility_internal_v1_coverageeligibility_on_check",
+    "module": "Coverage eligibility",
+    "moduleDir": "eligibility",
+    "method": "POST",
+    "path": "/internal/v1/coverageeligibility/on_check",
+    "summary": "Coverage eligibility callback (internal) (adapter)",
+    "route": "/docs/nhcx/v1/api/eligibility/endpoints/eligibility-internal-v1-coverageeligibility-on-check",
+    "callbacks": []
+  },
+  {
+    "key": "coverageeligibility/check",
+    "hosts": [
+      "apisbx.abdm.gov.in",
+      "apisprod.nha.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "eligibility_v1_coverageeligibility_check",
+    "module": "Coverage eligibility",
+    "moduleDir": "eligibility",
+    "method": "POST",
+    "path": "/v1/coverageeligibility/check",
+    "summary": "Coverage eligibility check",
+    "route": "/docs/nhcx/v1/api/eligibility/endpoints/eligibility-v1-coverageeligibility-check",
+    "callbacks": [
+      {
+        "method": "POST",
+        "path": "v1_coverageeligibility_check",
+        "summary": "Receive coverage eligibility check",
+        "route": "/docs/nhcx/v1/api/eligibility/endpoints/eligibility-webhook-v1-coverageeligibility-check",
+        "relation": "triggered-by"
+      }
+    ]
+  },
+  {
+    "key": "coverageeligibility/on_check",
+    "hosts": [
+      "apisbx.abdm.gov.in",
+      "apisprod.nha.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "eligibility_v1_coverageeligibility_on_check",
+    "module": "Coverage eligibility",
+    "moduleDir": "eligibility",
+    "method": "POST",
+    "path": "/v1/coverageeligibility/on_check",
+    "summary": "Coverage eligibility callback",
+    "route": "/docs/nhcx/v1/api/eligibility/endpoints/eligibility-v1-coverageeligibility-on-check",
+    "callbacks": [
+      {
+        "method": "POST",
+        "path": "v1_coverageeligibility_on_check",
+        "summary": "Receive coverage eligibility callback",
+        "route": "/docs/nhcx/v1/api/eligibility/endpoints/eligibility-webhook-v1-coverageeligibility-on-check",
+        "relation": "triggered-by"
+      }
+    ]
+  },
+  {
+    "key": "v1_coverageeligibility_check",
+    "hosts": [
+      "apisbx.abdm.gov.in",
+      "apisprod.nha.gov.in"
+    ],
+    "kind": "callback",
+    "operationId": "eligibility_webhook_v1_coverageeligibility_check",
+    "module": "Coverage eligibility",
+    "moduleDir": "eligibility",
+    "method": "POST",
+    "path": "v1_coverageeligibility_check",
+    "summary": "Receive coverage eligibility check",
+    "route": "/docs/nhcx/v1/api/eligibility/endpoints/eligibility-webhook-v1-coverageeligibility-check",
+    "callbacks": []
+  },
+  {
+    "key": "v1_coverageeligibility_on_check",
+    "hosts": [
+      "apisbx.abdm.gov.in",
+      "apisprod.nha.gov.in"
+    ],
+    "kind": "callback",
+    "operationId": "eligibility_webhook_v1_coverageeligibility_on_check",
+    "module": "Coverage eligibility",
+    "moduleDir": "eligibility",
+    "method": "POST",
+    "path": "v1_coverageeligibility_on_check",
+    "summary": "Receive coverage eligibility callback",
+    "route": "/docs/nhcx/v1/api/eligibility/endpoints/eligibility-webhook-v1-coverageeligibility-on-check",
+    "callbacks": []
+  },
+  {
     "key": "bridge-service/serviceid/{serviceid}",
     "hosts": [
       "dev.abdm.gov.in",
@@ -173,6 +659,118 @@
     "path": "/api/hiecm/gateway/v3/bridge/url",
     "summary": "Update HIP/HIU Bridge Callback URL",
     "route": "/docs/hiecm/v3/api/gateway/endpoints/gateway-update-bridge-url",
+    "callbacks": []
+  },
+  {
+    "key": "internal/insuranceplan/on_request",
+    "hosts": [
+      "apisbx.abdm.gov.in",
+      "apisprod.nha.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "insurance_plan_internal_v1_insuranceplan_on_request",
+    "module": "Insurance plan",
+    "moduleDir": "insurance-plan",
+    "method": "POST",
+    "path": "/internal/v1/insuranceplan/on_request",
+    "summary": "Insurance plan callback (internal variant) (adapter)",
+    "route": "/docs/nhcx/v1/api/insurance-plan/endpoints/insurance-plan-internal-v1-insuranceplan-on-request",
+    "callbacks": []
+  },
+  {
+    "key": "internal/insuranceplan/request",
+    "hosts": [
+      "apisbx.abdm.gov.in",
+      "apisprod.nha.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "insurance_plan_internal_v1_insuranceplan_request",
+    "module": "Insurance plan",
+    "moduleDir": "insurance-plan",
+    "method": "POST",
+    "path": "/internal/v1/insuranceplan/request",
+    "summary": "Insurance plan request (internal variant) (adapter)",
+    "route": "/docs/nhcx/v1/api/insurance-plan/endpoints/insurance-plan-internal-v1-insuranceplan-request",
+    "callbacks": []
+  },
+  {
+    "key": "insuranceplan/on_request",
+    "hosts": [
+      "apisbx.abdm.gov.in",
+      "apisprod.nha.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "insurance_plan_v1_insuranceplan_on_request",
+    "module": "Insurance plan",
+    "moduleDir": "insurance-plan",
+    "method": "POST",
+    "path": "/v1/insuranceplan/on_request",
+    "summary": "Insurance plan callback",
+    "route": "/docs/nhcx/v1/api/insurance-plan/endpoints/insurance-plan-v1-insuranceplan-on-request",
+    "callbacks": [
+      {
+        "method": "POST",
+        "path": "v1_insuranceplan_on_request",
+        "summary": "Receive insurance plan callback",
+        "route": "/docs/nhcx/v1/api/insurance-plan/endpoints/insurance-plan-webhook-v1-insuranceplan-on-request",
+        "relation": "triggered-by"
+      }
+    ]
+  },
+  {
+    "key": "insuranceplan/request",
+    "hosts": [
+      "apisbx.abdm.gov.in",
+      "apisprod.nha.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "insurance_plan_v1_insuranceplan_request",
+    "module": "Insurance plan",
+    "moduleDir": "insurance-plan",
+    "method": "POST",
+    "path": "/v1/insuranceplan/request",
+    "summary": "Insurance plan request",
+    "route": "/docs/nhcx/v1/api/insurance-plan/endpoints/insurance-plan-v1-insuranceplan-request",
+    "callbacks": [
+      {
+        "method": "POST",
+        "path": "v1_insuranceplan_request",
+        "summary": "Receive insurance plan request",
+        "route": "/docs/nhcx/v1/api/insurance-plan/endpoints/insurance-plan-webhook-v1-insuranceplan-request",
+        "relation": "triggered-by"
+      }
+    ]
+  },
+  {
+    "key": "v1_insuranceplan_on_request",
+    "hosts": [
+      "apisbx.abdm.gov.in",
+      "apisprod.nha.gov.in"
+    ],
+    "kind": "callback",
+    "operationId": "insurance_plan_webhook_v1_insuranceplan_on_request",
+    "module": "Insurance plan",
+    "moduleDir": "insurance-plan",
+    "method": "POST",
+    "path": "v1_insuranceplan_on_request",
+    "summary": "Receive insurance plan callback",
+    "route": "/docs/nhcx/v1/api/insurance-plan/endpoints/insurance-plan-webhook-v1-insuranceplan-on-request",
+    "callbacks": []
+  },
+  {
+    "key": "v1_insuranceplan_request",
+    "hosts": [
+      "apisbx.abdm.gov.in",
+      "apisprod.nha.gov.in"
+    ],
+    "kind": "callback",
+    "operationId": "insurance_plan_webhook_v1_insuranceplan_request",
+    "module": "Insurance plan",
+    "moduleDir": "insurance-plan",
+    "method": "POST",
+    "path": "v1_insuranceplan_request",
+    "summary": "Receive insurance plan request",
+    "route": "/docs/nhcx/v1/api/insurance-plan/endpoints/insurance-plan-webhook-v1-insuranceplan-request",
     "callbacks": []
   },
   {
@@ -1578,6 +2176,406 @@
     "path": "/v4/int/api/v1/auth/authPassword",
     "summary": "Log in to the HPR with a username and password",
     "route": "/docs/hiecm/v3/api/m4/endpoints/m4-hpr-login-password",
+    "callbacks": []
+  },
+  {
+    "key": "participant/create",
+    "hosts": [
+      "apisbx.abdm.gov.in",
+      "apisprod.nha.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "onboarding_participant_create",
+    "module": "Onboarding",
+    "moduleDir": "onboarding",
+    "method": "POST",
+    "path": "/participant/create",
+    "summary": "Participant create (v1)",
+    "route": "/docs/nhcx/v1/api/onboarding/endpoints/onboarding-participant-create",
+    "callbacks": []
+  },
+  {
+    "key": "update/validate",
+    "hosts": [
+      "apisbx.abdm.gov.in",
+      "apisprod.nha.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "onboarding_update_validate",
+    "module": "Onboarding",
+    "moduleDir": "onboarding",
+    "method": "GET",
+    "path": "/update/validate",
+    "summary": "Validate participant update",
+    "route": "/docs/nhcx/v1/api/onboarding/endpoints/onboarding-update-validate",
+    "callbacks": []
+  },
+  {
+    "key": "participant/create",
+    "hosts": [
+      "apisbx.abdm.gov.in",
+      "apisprod.nha.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "onboarding_v2_participant_create",
+    "module": "Onboarding",
+    "moduleDir": "onboarding",
+    "method": "POST",
+    "path": "/v2/participant/create",
+    "summary": "Participant create (v2)",
+    "route": "/docs/nhcx/v1/api/onboarding/endpoints/onboarding-v2-participant-create",
+    "callbacks": []
+  },
+  {
+    "key": "participant/hementity/create",
+    "hosts": [
+      "apisbx.abdm.gov.in",
+      "apisprod.nha.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "onboarding_v2_participant_hementity_create",
+    "module": "Onboarding",
+    "moduleDir": "onboarding",
+    "method": "POST",
+    "path": "/v2/participant/hementity/create",
+    "summary": "HEM-entity participant create",
+    "route": "/docs/nhcx/v1/api/onboarding/endpoints/onboarding-v2-participant-hementity-create",
+    "callbacks": []
+  },
+  {
+    "key": "validate",
+    "hosts": [
+      "apisbx.abdm.gov.in",
+      "apisprod.nha.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "onboarding_validate",
+    "module": "Onboarding",
+    "moduleDir": "onboarding",
+    "method": "GET",
+    "path": "/validate",
+    "summary": "Validate participant creation",
+    "route": "/docs/nhcx/v1/api/onboarding/endpoints/onboarding-validate",
+    "callbacks": []
+  },
+  {
+    "key": "internal/task/on_submit",
+    "hosts": [
+      "apisbx.abdm.gov.in",
+      "apisprod.nha.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "other_internal_v1_task_on_submit",
+    "module": "Other",
+    "moduleDir": "other",
+    "method": "POST",
+    "path": "/internal/v1/task/on_submit",
+    "summary": "Task callback (internal variant) (adapter)",
+    "route": "/docs/nhcx/v1/api/other/endpoints/other-internal-v1-task-on-submit",
+    "callbacks": []
+  },
+  {
+    "key": "internal/task/submit",
+    "hosts": [
+      "apisbx.abdm.gov.in",
+      "apisprod.nha.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "other_internal_v1_task_submit",
+    "module": "Other",
+    "moduleDir": "other",
+    "method": "POST",
+    "path": "/internal/v1/task/submit",
+    "summary": "Task submit (internal variant) (adapter)",
+    "route": "/docs/nhcx/v1/api/other/endpoints/other-internal-v1-task-submit",
+    "callbacks": []
+  },
+  {
+    "key": "swagger-resources",
+    "hosts": [
+      "apisbx.abdm.gov.in",
+      "apisprod.nha.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "other_swagger_resources",
+    "module": "Other",
+    "moduleDir": "other",
+    "method": "GET",
+    "path": "/swagger-resources",
+    "summary": "Swagger resources list",
+    "route": "/docs/nhcx/v1/api/other/endpoints/other-swagger-resources",
+    "callbacks": []
+  },
+  {
+    "key": "swagger-resources/configuration/security",
+    "hosts": [
+      "apisbx.abdm.gov.in",
+      "apisprod.nha.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "other_swagger_resources_configuration_security",
+    "module": "Other",
+    "moduleDir": "other",
+    "method": "GET",
+    "path": "/swagger-resources/configuration/security",
+    "summary": "Swagger security configuration",
+    "route": "/docs/nhcx/v1/api/other/endpoints/other-swagger-resources-configuration-security",
+    "callbacks": []
+  },
+  {
+    "key": "swagger-resources/configuration/ui",
+    "hosts": [
+      "apisbx.abdm.gov.in",
+      "apisprod.nha.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "other_swagger_resources_configuration_ui",
+    "module": "Other",
+    "moduleDir": "other",
+    "method": "GET",
+    "path": "/swagger-resources/configuration/ui",
+    "summary": "Swagger UI configuration",
+    "route": "/docs/nhcx/v1/api/other/endpoints/other-swagger-resources-configuration-ui",
+    "callbacks": []
+  },
+  {
+    "key": "delete",
+    "hosts": [
+      "apisbx.abdm.gov.in",
+      "apisprod.nha.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "other_v1_delete",
+    "module": "Other",
+    "moduleDir": "other",
+    "method": "POST",
+    "path": "/v1/delete",
+    "summary": "Delete records (troubleshooting)",
+    "route": "/docs/nhcx/v1/api/other/endpoints/other-v1-delete",
+    "callbacks": []
+  },
+  {
+    "key": "error",
+    "hosts": [
+      "apisbx.abdm.gov.in",
+      "apisprod.nha.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "other_v1_error",
+    "module": "Other",
+    "moduleDir": "other",
+    "method": "POST",
+    "path": "/v1/error",
+    "summary": "Error report (callback)",
+    "route": "/docs/nhcx/v1/api/other/endpoints/other-v1-error",
+    "callbacks": [
+      {
+        "method": "POST",
+        "path": "v1_error",
+        "summary": "Receive error report (callback)",
+        "route": "/docs/nhcx/v1/api/other/endpoints/other-webhook-v1-error",
+        "relation": "triggered-by"
+      }
+    ]
+  },
+  {
+    "key": "notification/on_subscribe",
+    "hosts": [
+      "apisbx.abdm.gov.in",
+      "apisprod.nha.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "other_v1_notification_on_subscribe",
+    "module": "Other",
+    "moduleDir": "other",
+    "method": "POST",
+    "path": "/v1/notification/on_subscribe",
+    "summary": "Notification on_subscribe",
+    "route": "/docs/nhcx/v1/api/other/endpoints/other-v1-notification-on-subscribe",
+    "callbacks": []
+  },
+  {
+    "key": "notification/subscribe",
+    "hosts": [
+      "apisbx.abdm.gov.in",
+      "apisprod.nha.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "other_v1_notification_subscribe",
+    "module": "Other",
+    "moduleDir": "other",
+    "method": "POST",
+    "path": "/v1/notification/subscribe",
+    "summary": "Notification subscribe",
+    "route": "/docs/nhcx/v1/api/other/endpoints/other-v1-notification-subscribe",
+    "callbacks": []
+  },
+  {
+    "key": "on_status",
+    "hosts": [
+      "apisbx.abdm.gov.in",
+      "apisprod.nha.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "other_v1_on_status",
+    "module": "Other",
+    "moduleDir": "other",
+    "method": "POST",
+    "path": "/v1/on_status",
+    "summary": "Status callback",
+    "route": "/docs/nhcx/v1/api/other/endpoints/other-v1-on-status",
+    "callbacks": [
+      {
+        "method": "POST",
+        "path": "v1_on_status",
+        "summary": "Receive status callback",
+        "route": "/docs/nhcx/v1/api/other/endpoints/other-webhook-v1-on-status",
+        "relation": "triggered-by"
+      }
+    ]
+  },
+  {
+    "key": "task/on_submit",
+    "hosts": [
+      "apisbx.abdm.gov.in",
+      "apisprod.nha.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "other_v1_task_on_submit",
+    "module": "Other",
+    "moduleDir": "other",
+    "method": "POST",
+    "path": "/v1/task/on_submit",
+    "summary": "Task callback (reprocess or cancel outcome)",
+    "route": "/docs/nhcx/v1/api/other/endpoints/other-v1-task-on-submit",
+    "callbacks": [
+      {
+        "method": "POST",
+        "path": "v1_task_on_submit",
+        "summary": "Receive task callback (reprocess or cancel outcome)",
+        "route": "/docs/nhcx/v1/api/other/endpoints/other-webhook-v1-task-on-submit",
+        "relation": "triggered-by"
+      }
+    ]
+  },
+  {
+    "key": "task/submit",
+    "hosts": [
+      "apisbx.abdm.gov.in",
+      "apisprod.nha.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "other_v1_task_submit",
+    "module": "Other",
+    "moduleDir": "other",
+    "method": "POST",
+    "path": "/v1/task/submit",
+    "summary": "Task submit (reprocess or cancel)",
+    "route": "/docs/nhcx/v1/api/other/endpoints/other-v1-task-submit",
+    "callbacks": [
+      {
+        "method": "POST",
+        "path": "v1_task_submit",
+        "summary": "Receive task submit (reprocess or cancel)",
+        "route": "/docs/nhcx/v1/api/other/endpoints/other-webhook-v1-task-submit",
+        "relation": "triggered-by"
+      }
+    ]
+  },
+  {
+    "key": "api-docs",
+    "hosts": [
+      "apisbx.abdm.gov.in",
+      "apisprod.nha.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "other_v2_api_docs",
+    "module": "Other",
+    "moduleDir": "other",
+    "method": "GET",
+    "path": "/v2/api-docs",
+    "summary": "Swagger 2 document (status service)",
+    "route": "/docs/nhcx/v1/api/other/endpoints/other-v2-api-docs",
+    "callbacks": []
+  },
+  {
+    "key": "api-docs",
+    "hosts": [
+      "apisbx.abdm.gov.in",
+      "apisprod.nha.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "other_v3_api_docs",
+    "module": "Other",
+    "moduleDir": "other",
+    "method": "GET",
+    "path": "/v3/api-docs",
+    "summary": "OpenAPI 3 document (status service)",
+    "route": "/docs/nhcx/v1/api/other/endpoints/other-v3-api-docs",
+    "callbacks": []
+  },
+  {
+    "key": "v1_error",
+    "hosts": [
+      "apisbx.abdm.gov.in",
+      "apisprod.nha.gov.in"
+    ],
+    "kind": "callback",
+    "operationId": "other_webhook_v1_error",
+    "module": "Other",
+    "moduleDir": "other",
+    "method": "POST",
+    "path": "v1_error",
+    "summary": "Receive error report (callback)",
+    "route": "/docs/nhcx/v1/api/other/endpoints/other-webhook-v1-error",
+    "callbacks": []
+  },
+  {
+    "key": "v1_on_status",
+    "hosts": [
+      "apisbx.abdm.gov.in",
+      "apisprod.nha.gov.in"
+    ],
+    "kind": "callback",
+    "operationId": "other_webhook_v1_on_status",
+    "module": "Other",
+    "moduleDir": "other",
+    "method": "POST",
+    "path": "v1_on_status",
+    "summary": "Receive status callback",
+    "route": "/docs/nhcx/v1/api/other/endpoints/other-webhook-v1-on-status",
+    "callbacks": []
+  },
+  {
+    "key": "v1_task_on_submit",
+    "hosts": [
+      "apisbx.abdm.gov.in",
+      "apisprod.nha.gov.in"
+    ],
+    "kind": "callback",
+    "operationId": "other_webhook_v1_task_on_submit",
+    "module": "Other",
+    "moduleDir": "other",
+    "method": "POST",
+    "path": "v1_task_on_submit",
+    "summary": "Receive task callback (reprocess or cancel outcome)",
+    "route": "/docs/nhcx/v1/api/other/endpoints/other-webhook-v1-task-on-submit",
+    "callbacks": []
+  },
+  {
+    "key": "v1_task_submit",
+    "hosts": [
+      "apisbx.abdm.gov.in",
+      "apisprod.nha.gov.in"
+    ],
+    "kind": "callback",
+    "operationId": "other_webhook_v1_task_submit",
+    "module": "Other",
+    "moduleDir": "other",
+    "method": "POST",
+    "path": "v1_task_submit",
+    "summary": "Receive task submit (reprocess or cancel)",
+    "route": "/docs/nhcx/v1/api/other/endpoints/other-webhook-v1-task-submit",
     "callbacks": []
   },
   {
@@ -3933,6 +4931,118 @@
     "callbacks": []
   },
   {
+    "key": "internal/paymentnotice/on_request",
+    "hosts": [
+      "apisbx.abdm.gov.in",
+      "apisprod.nha.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "payment_notice_internal_v1_paymentnotice_on_request",
+    "module": "Payment notice",
+    "moduleDir": "payment-notice",
+    "method": "POST",
+    "path": "/internal/v1/paymentnotice/on_request",
+    "summary": "Payment notice acknowledgement (internal) (adapter)",
+    "route": "/docs/nhcx/v1/api/payment-notice/endpoints/payment-notice-internal-v1-paymentnotice-on-request",
+    "callbacks": []
+  },
+  {
+    "key": "internal/paymentnotice/request",
+    "hosts": [
+      "apisbx.abdm.gov.in",
+      "apisprod.nha.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "payment_notice_internal_v1_paymentnotice_request",
+    "module": "Payment notice",
+    "moduleDir": "payment-notice",
+    "method": "POST",
+    "path": "/internal/v1/paymentnotice/request",
+    "summary": "Payment notice request (internal) (adapter)",
+    "route": "/docs/nhcx/v1/api/payment-notice/endpoints/payment-notice-internal-v1-paymentnotice-request",
+    "callbacks": []
+  },
+  {
+    "key": "paymentnotice/on_request",
+    "hosts": [
+      "apisbx.abdm.gov.in",
+      "apisprod.nha.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "payment_notice_v1_paymentnotice_on_request",
+    "module": "Payment notice",
+    "moduleDir": "payment-notice",
+    "method": "POST",
+    "path": "/v1/paymentnotice/on_request",
+    "summary": "Payment notice acknowledgement",
+    "route": "/docs/nhcx/v1/api/payment-notice/endpoints/payment-notice-v1-paymentnotice-on-request",
+    "callbacks": [
+      {
+        "method": "POST",
+        "path": "v1_paymentnotice_on_request",
+        "summary": "Receive payment notice acknowledgement",
+        "route": "/docs/nhcx/v1/api/payment-notice/endpoints/payment-notice-webhook-v1-paymentnotice-on-request",
+        "relation": "triggered-by"
+      }
+    ]
+  },
+  {
+    "key": "paymentnotice/request",
+    "hosts": [
+      "apisbx.abdm.gov.in",
+      "apisprod.nha.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "payment_notice_v1_paymentnotice_request",
+    "module": "Payment notice",
+    "moduleDir": "payment-notice",
+    "method": "POST",
+    "path": "/v1/paymentnotice/request",
+    "summary": "Payment notice request",
+    "route": "/docs/nhcx/v1/api/payment-notice/endpoints/payment-notice-v1-paymentnotice-request",
+    "callbacks": [
+      {
+        "method": "POST",
+        "path": "v1_paymentnotice_request",
+        "summary": "Receive payment notice request",
+        "route": "/docs/nhcx/v1/api/payment-notice/endpoints/payment-notice-webhook-v1-paymentnotice-request",
+        "relation": "triggered-by"
+      }
+    ]
+  },
+  {
+    "key": "v1_paymentnotice_on_request",
+    "hosts": [
+      "apisbx.abdm.gov.in",
+      "apisprod.nha.gov.in"
+    ],
+    "kind": "callback",
+    "operationId": "payment_notice_webhook_v1_paymentnotice_on_request",
+    "module": "Payment notice",
+    "moduleDir": "payment-notice",
+    "method": "POST",
+    "path": "v1_paymentnotice_on_request",
+    "summary": "Receive payment notice acknowledgement",
+    "route": "/docs/nhcx/v1/api/payment-notice/endpoints/payment-notice-webhook-v1-paymentnotice-on-request",
+    "callbacks": []
+  },
+  {
+    "key": "v1_paymentnotice_request",
+    "hosts": [
+      "apisbx.abdm.gov.in",
+      "apisprod.nha.gov.in"
+    ],
+    "kind": "callback",
+    "operationId": "payment_notice_webhook_v1_paymentnotice_request",
+    "module": "Payment notice",
+    "moduleDir": "payment-notice",
+    "method": "POST",
+    "path": "v1_paymentnotice_request",
+    "summary": "Receive payment notice request",
+    "route": "/docs/nhcx/v1/api/payment-notice/endpoints/payment-notice-webhook-v1-paymentnotice-request",
+    "callbacks": []
+  },
+  {
     "key": "teleconsulting/search",
     "hosts": [
       "phrsbx.abdm.gov.in",
@@ -4906,6 +6016,702 @@
     "path": "/scan-pay/update/payment/{id}",
     "summary": "update payment",
     "route": "/docs/hiecm/v3/api/phr-services/endpoints/phr-services-update-payment",
+    "callbacks": []
+  },
+  {
+    "key": "internal/preauth/on_submit",
+    "hosts": [
+      "apisbx.abdm.gov.in",
+      "apisprod.nha.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "preauth_internal_v1_preauth_on_submit",
+    "module": "Pre-authorisation",
+    "moduleDir": "preauth",
+    "method": "POST",
+    "path": "/internal/v1/preauth/on_submit",
+    "summary": "Pre-authorisation callback (internal) (adapter)",
+    "route": "/docs/nhcx/v1/api/preauth/endpoints/preauth-internal-v1-preauth-on-submit",
+    "callbacks": []
+  },
+  {
+    "key": "internal/preauth/submit",
+    "hosts": [
+      "apisbx.abdm.gov.in",
+      "apisprod.nha.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "preauth_internal_v1_preauth_submit",
+    "module": "Pre-authorisation",
+    "moduleDir": "preauth",
+    "method": "POST",
+    "path": "/internal/v1/preauth/submit",
+    "summary": "Pre-authorisation submit (internal) (adapter)",
+    "route": "/docs/nhcx/v1/api/preauth/endpoints/preauth-internal-v1-preauth-submit",
+    "callbacks": []
+  },
+  {
+    "key": "preauth/on_submit",
+    "hosts": [
+      "apisbx.abdm.gov.in",
+      "apisprod.nha.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "preauth_v1_preauth_on_submit",
+    "module": "Pre-authorisation",
+    "moduleDir": "preauth",
+    "method": "POST",
+    "path": "/v1/preauth/on_submit",
+    "summary": "Pre-authorisation callback",
+    "route": "/docs/nhcx/v1/api/preauth/endpoints/preauth-v1-preauth-on-submit",
+    "callbacks": [
+      {
+        "method": "POST",
+        "path": "v1_preauth_on_submit",
+        "summary": "Receive pre-authorisation callback",
+        "route": "/docs/nhcx/v1/api/preauth/endpoints/preauth-webhook-v1-preauth-on-submit",
+        "relation": "triggered-by"
+      }
+    ]
+  },
+  {
+    "key": "preauth/submit",
+    "hosts": [
+      "apisbx.abdm.gov.in",
+      "apisprod.nha.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "preauth_v1_preauth_submit",
+    "module": "Pre-authorisation",
+    "moduleDir": "preauth",
+    "method": "POST",
+    "path": "/v1/preauth/submit",
+    "summary": "Pre-authorisation submit",
+    "route": "/docs/nhcx/v1/api/preauth/endpoints/preauth-v1-preauth-submit",
+    "callbacks": [
+      {
+        "method": "POST",
+        "path": "v1_preauth_submit",
+        "summary": "Receive pre-authorisation submit",
+        "route": "/docs/nhcx/v1/api/preauth/endpoints/preauth-webhook-v1-preauth-submit",
+        "relation": "triggered-by"
+      }
+    ]
+  },
+  {
+    "key": "v1_preauth_on_submit",
+    "hosts": [
+      "apisbx.abdm.gov.in",
+      "apisprod.nha.gov.in"
+    ],
+    "kind": "callback",
+    "operationId": "preauth_webhook_v1_preauth_on_submit",
+    "module": "Pre-authorisation",
+    "moduleDir": "preauth",
+    "method": "POST",
+    "path": "v1_preauth_on_submit",
+    "summary": "Receive pre-authorisation callback",
+    "route": "/docs/nhcx/v1/api/preauth/endpoints/preauth-webhook-v1-preauth-on-submit",
+    "callbacks": []
+  },
+  {
+    "key": "v1_preauth_submit",
+    "hosts": [
+      "apisbx.abdm.gov.in",
+      "apisprod.nha.gov.in"
+    ],
+    "kind": "callback",
+    "operationId": "preauth_webhook_v1_preauth_submit",
+    "module": "Pre-authorisation",
+    "moduleDir": "preauth",
+    "method": "POST",
+    "path": "v1_preauth_submit",
+    "summary": "Receive pre-authorisation submit",
+    "route": "/docs/nhcx/v1/api/preauth/endpoints/preauth-webhook-v1-preauth-submit",
+    "callbacks": []
+  },
+  {
+    "key": "predetermination/on_submit",
+    "hosts": [
+      "apisbx.abdm.gov.in",
+      "apisprod.nha.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "predetermination_v1_predetermination_on_submit",
+    "module": "Predetermination",
+    "moduleDir": "predetermination",
+    "method": "POST",
+    "path": "/v1/predetermination/on_submit",
+    "summary": "Predetermination callback",
+    "route": "/docs/nhcx/v1/api/predetermination/endpoints/predetermination-v1-predetermination-on-submit",
+    "callbacks": [
+      {
+        "method": "POST",
+        "path": "v1_predetermination_on_submit",
+        "summary": "Receive predetermination callback",
+        "route": "/docs/nhcx/v1/api/predetermination/endpoints/predetermination-webhook-v1-predetermination-on-submit",
+        "relation": "triggered-by"
+      }
+    ]
+  },
+  {
+    "key": "predetermination/submit",
+    "hosts": [
+      "apisbx.abdm.gov.in",
+      "apisprod.nha.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "predetermination_v1_predetermination_submit",
+    "module": "Predetermination",
+    "moduleDir": "predetermination",
+    "method": "POST",
+    "path": "/v1/predetermination/submit",
+    "summary": "Predetermination request",
+    "route": "/docs/nhcx/v1/api/predetermination/endpoints/predetermination-v1-predetermination-submit",
+    "callbacks": [
+      {
+        "method": "POST",
+        "path": "v1_predetermination_submit",
+        "summary": "Receive predetermination request",
+        "route": "/docs/nhcx/v1/api/predetermination/endpoints/predetermination-webhook-v1-predetermination-submit",
+        "relation": "triggered-by"
+      }
+    ]
+  },
+  {
+    "key": "v1_predetermination_on_submit",
+    "hosts": [
+      "apisbx.abdm.gov.in",
+      "apisprod.nha.gov.in"
+    ],
+    "kind": "callback",
+    "operationId": "predetermination_webhook_v1_predetermination_on_submit",
+    "module": "Predetermination",
+    "moduleDir": "predetermination",
+    "method": "POST",
+    "path": "v1_predetermination_on_submit",
+    "summary": "Receive predetermination callback",
+    "route": "/docs/nhcx/v1/api/predetermination/endpoints/predetermination-webhook-v1-predetermination-on-submit",
+    "callbacks": []
+  },
+  {
+    "key": "v1_predetermination_submit",
+    "hosts": [
+      "apisbx.abdm.gov.in",
+      "apisprod.nha.gov.in"
+    ],
+    "kind": "callback",
+    "operationId": "predetermination_webhook_v1_predetermination_submit",
+    "module": "Predetermination",
+    "moduleDir": "predetermination",
+    "method": "POST",
+    "path": "v1_predetermination_submit",
+    "summary": "Receive predetermination request",
+    "route": "/docs/nhcx/v1/api/predetermination/endpoints/predetermination-webhook-v1-predetermination-submit",
+    "callbacks": []
+  },
+  {
+    "key": "fetch/certs",
+    "hosts": [
+      "apisbx.abdm.gov.in",
+      "apisprod.nha.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "registry_fetch_certs",
+    "module": "Participant registry",
+    "moduleDir": "registry",
+    "method": "POST",
+    "path": "/fetch/certs",
+    "summary": "Fetch certificate",
+    "route": "/docs/nhcx/v1/api/registry/endpoints/registry-fetch-certs",
+    "callbacks": []
+  },
+  {
+    "key": "fetch/certs/path",
+    "hosts": [
+      "apisbx.abdm.gov.in",
+      "apisprod.nha.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "registry_fetch_certs_path",
+    "module": "Participant registry",
+    "moduleDir": "registry",
+    "method": "POST",
+    "path": "/fetch/certs/path",
+    "summary": "Fetch certificate path",
+    "route": "/docs/nhcx/v1/api/registry/endpoints/registry-fetch-certs-path",
+    "callbacks": []
+  },
+  {
+    "key": "fetch/participants/list",
+    "hosts": [
+      "apisbx.abdm.gov.in",
+      "apisprod.nha.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "registry_fetch_participants_list",
+    "module": "Participant registry",
+    "moduleDir": "registry",
+    "method": "POST",
+    "path": "/fetch/participants/list",
+    "summary": "Fetch participants list",
+    "route": "/docs/nhcx/v1/api/registry/endpoints/registry-fetch-participants-list",
+    "callbacks": []
+  },
+  {
+    "key": "get/linked/registry/mst",
+    "hosts": [
+      "apisbx.abdm.gov.in",
+      "apisprod.nha.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "registry_get_linked_registry_mst",
+    "module": "Participant registry",
+    "moduleDir": "registry",
+    "method": "POST",
+    "path": "/get/linked/registry/mst",
+    "summary": "Get linked registry master (internal)",
+    "route": "/docs/nhcx/v1/api/registry/endpoints/registry-get-linked-registry-mst",
+    "callbacks": []
+  },
+  {
+    "key": "get/session",
+    "hosts": [
+      "apisbx.abdm.gov.in",
+      "apisprod.nha.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "registry_get_session",
+    "module": "Participant registry",
+    "moduleDir": "registry",
+    "method": "POST",
+    "path": "/get/session",
+    "summary": "Get session token",
+    "route": "/docs/nhcx/v1/api/registry/endpoints/registry-get-session",
+    "callbacks": []
+  },
+  {
+    "key": "participant/delink/policy",
+    "hosts": [
+      "apisbx.abdm.gov.in",
+      "apisprod.nha.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "registry_participant_delink_abha_policy",
+    "module": "Participant registry",
+    "moduleDir": "registry",
+    "method": "POST",
+    "path": "/participant/delink/abha/policy",
+    "summary": "De-link ABHA policies",
+    "route": "/docs/nhcx/v1/api/registry/endpoints/registry-participant-delink-abha-policy",
+    "callbacks": []
+  },
+  {
+    "key": "participant/details",
+    "hosts": [
+      "apisbx.abdm.gov.in",
+      "apisprod.nha.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "registry_participant_details",
+    "module": "Participant registry",
+    "moduleDir": "registry",
+    "method": "POST",
+    "path": "/participant/details",
+    "summary": "Participant details (v2 search)",
+    "route": "/docs/nhcx/v1/api/registry/endpoints/registry-participant-details",
+    "callbacks": []
+  },
+  {
+    "key": "participant/get/policies",
+    "hosts": [
+      "apisbx.abdm.gov.in",
+      "apisprod.nha.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "registry_participant_get_policies",
+    "module": "Participant registry",
+    "moduleDir": "registry",
+    "method": "POST",
+    "path": "/participant/get/policies",
+    "summary": "Get beneficiary policies",
+    "route": "/docs/nhcx/v1/api/registry/endpoints/registry-participant-get-policies",
+    "callbacks": []
+  },
+  {
+    "key": "participant/getproductidname",
+    "hosts": [
+      "apisbx.abdm.gov.in",
+      "apisprod.nha.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "registry_participant_getproductidname",
+    "module": "Participant registry",
+    "moduleDir": "registry",
+    "method": "POST",
+    "path": "/participant/getProductIdName",
+    "summary": "Get product id and name",
+    "route": "/docs/nhcx/v1/api/registry/endpoints/registry-participant-getproductidname",
+    "callbacks": []
+  },
+  {
+    "key": "participant/link/policy",
+    "hosts": [
+      "apisbx.abdm.gov.in",
+      "apisprod.nha.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "registry_participant_link_abha_policy",
+    "module": "Participant registry",
+    "moduleDir": "registry",
+    "method": "POST",
+    "path": "/participant/link/abha/policy",
+    "summary": "Link ABHA number to policies",
+    "route": "/docs/nhcx/v1/api/registry/endpoints/registry-participant-link-abha-policy",
+    "callbacks": []
+  },
+  {
+    "key": "participant/search",
+    "hosts": [
+      "apisbx.abdm.gov.in",
+      "apisprod.nha.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "registry_participant_search",
+    "module": "Participant registry",
+    "moduleDir": "registry",
+    "method": "POST",
+    "path": "/participant/search",
+    "summary": "Participant search",
+    "route": "/docs/nhcx/v1/api/registry/endpoints/registry-participant-search",
+    "callbacks": []
+  },
+  {
+    "key": "participant/update",
+    "hosts": [
+      "apisbx.abdm.gov.in",
+      "apisprod.nha.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "registry_participant_update",
+    "module": "Participant registry",
+    "moduleDir": "registry",
+    "method": "POST",
+    "path": "/participant/update",
+    "summary": "Participant update (v1)",
+    "route": "/docs/nhcx/v1/api/registry/endpoints/registry-participant-update",
+    "callbacks": []
+  },
+  {
+    "key": "product/delink",
+    "hosts": [
+      "apisbx.abdm.gov.in",
+      "apisprod.nha.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "registry_product_delink",
+    "module": "Participant registry",
+    "moduleDir": "registry",
+    "method": "POST",
+    "path": "/product/delink",
+    "summary": "De-link payer product",
+    "route": "/docs/nhcx/v1/api/registry/endpoints/registry-product-delink",
+    "callbacks": []
+  },
+  {
+    "key": "product/getowner",
+    "hosts": [
+      "apisbx.abdm.gov.in",
+      "apisprod.nha.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "registry_product_getowner",
+    "module": "Participant registry",
+    "moduleDir": "registry",
+    "method": "POST",
+    "path": "/product/getowner",
+    "summary": "Get product owner",
+    "route": "/docs/nhcx/v1/api/registry/endpoints/registry-product-getowner",
+    "callbacks": []
+  },
+  {
+    "key": "product/link",
+    "hosts": [
+      "apisbx.abdm.gov.in",
+      "apisprod.nha.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "registry_product_link",
+    "module": "Participant registry",
+    "moduleDir": "registry",
+    "method": "POST",
+    "path": "/product/link",
+    "summary": "Link payer product",
+    "route": "/docs/nhcx/v1/api/registry/endpoints/registry-product-link",
+    "callbacks": []
+  },
+  {
+    "key": "update/abhanumber",
+    "hosts": [
+      "apisbx.abdm.gov.in",
+      "apisprod.nha.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "registry_update_abhanumber",
+    "module": "Participant registry",
+    "moduleDir": "registry",
+    "method": "POST",
+    "path": "/update/abhanumber",
+    "summary": "Update ABHA number",
+    "route": "/docs/nhcx/v1/api/registry/endpoints/registry-update-abhanumber",
+    "callbacks": []
+  },
+  {
+    "key": "participant/delink/policy",
+    "hosts": [
+      "apisbx.abdm.gov.in",
+      "apisprod.nha.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "registry_v2_participant_delink_abha_policy",
+    "module": "Participant registry",
+    "moduleDir": "registry",
+    "method": "POST",
+    "path": "/V2/participant/delink/abha/policy",
+    "summary": "De-link ABHA policies (V2)",
+    "route": "/docs/nhcx/v1/api/registry/endpoints/registry-v2-participant-delink-abha-policy",
+    "callbacks": []
+  },
+  {
+    "key": "participant/get/policies",
+    "hosts": [
+      "apisbx.abdm.gov.in",
+      "apisprod.nha.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "registry_v2_participant_get_policies",
+    "module": "Participant registry",
+    "moduleDir": "registry",
+    "method": "POST",
+    "path": "/V2/participant/get/policies",
+    "summary": "Get beneficiary policies (V2)",
+    "route": "/docs/nhcx/v1/api/registry/endpoints/registry-v2-participant-get-policies",
+    "callbacks": []
+  },
+  {
+    "key": "participant/link/policy",
+    "hosts": [
+      "apisbx.abdm.gov.in",
+      "apisprod.nha.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "registry_v2_participant_link_abha_policy",
+    "module": "Participant registry",
+    "moduleDir": "registry",
+    "method": "POST",
+    "path": "/V2/participant/link/abha/policy",
+    "summary": "Link ABHA number to policies (V2)",
+    "route": "/docs/nhcx/v1/api/registry/endpoints/registry-v2-participant-link-abha-policy",
+    "callbacks": []
+  },
+  {
+    "key": "participant/link/policy/init",
+    "hosts": [
+      "apisbx.abdm.gov.in",
+      "apisprod.nha.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "registry_v2_participant_link_abha_policy_init",
+    "module": "Participant registry",
+    "moduleDir": "registry",
+    "method": "POST",
+    "path": "/v2/participant/link/abha/policy/init",
+    "summary": "Initiate ABHA policy link (v2)",
+    "route": "/docs/nhcx/v1/api/registry/endpoints/registry-v2-participant-link-abha-policy-init",
+    "callbacks": []
+  },
+  {
+    "key": "participant/link/policy/validate",
+    "hosts": [
+      "apisbx.abdm.gov.in",
+      "apisprod.nha.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "registry_v2_participant_link_abha_policy_validate",
+    "module": "Participant registry",
+    "moduleDir": "registry",
+    "method": "GET",
+    "path": "/v2/participant/link/abha/policy/validate",
+    "summary": "Validate ABHA policy link (v2)",
+    "route": "/docs/nhcx/v1/api/registry/endpoints/registry-v2-participant-link-abha-policy-validate",
+    "callbacks": []
+  },
+  {
+    "key": "participant/update",
+    "hosts": [
+      "apisbx.abdm.gov.in",
+      "apisprod.nha.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "registry_v2_participant_update",
+    "module": "Participant registry",
+    "moduleDir": "registry",
+    "method": "POST",
+    "path": "/v2/participant/update",
+    "summary": "Participant certificate and bridge update (v2)",
+    "route": "/docs/nhcx/v1/api/registry/endpoints/registry-v2-participant-update",
+    "callbacks": []
+  },
+  {
+    "key": "update/cert",
+    "hosts": [
+      "apisbx.abdm.gov.in",
+      "apisprod.nha.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "registry_v2_update_cert",
+    "module": "Participant registry",
+    "moduleDir": "registry",
+    "method": "POST",
+    "path": "/v2/update/cert",
+    "summary": "Update certificate (v2, no passcode)",
+    "route": "/docs/nhcx/v1/api/registry/endpoints/registry-v2-update-cert",
+    "callbacks": []
+  },
+  {
+    "key": "sessions",
+    "hosts": [
+      "dev.abdm.gov.in",
+      "apis.abdm.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "session_session_token",
+    "module": "Session",
+    "moduleDir": "session",
+    "method": "POST",
+    "path": "/api/hiecm/gateway/v3/sessions",
+    "summary": "Session token",
+    "route": "/docs/nhcx/v1/api/session/endpoints/session-session-token",
+    "callbacks": []
+  },
+  {
+    "key": "search/on_submit",
+    "hosts": [
+      "apisbx.abdm.gov.in",
+      "apisprod.nha.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "status_v1_search_on_submit",
+    "module": "Status and search",
+    "moduleDir": "status",
+    "method": "POST",
+    "path": "/v1/search/on_submit",
+    "summary": "Search result callback",
+    "route": "/docs/nhcx/v1/api/status/endpoints/status-v1-search-on-submit",
+    "callbacks": [
+      {
+        "method": "POST",
+        "path": "v1_search_on_submit",
+        "summary": "Receive search result callback",
+        "route": "/docs/nhcx/v1/api/status/endpoints/status-webhook-v1-search-on-submit",
+        "relation": "triggered-by"
+      }
+    ]
+  },
+  {
+    "key": "search/submit",
+    "hosts": [
+      "apisbx.abdm.gov.in",
+      "apisprod.nha.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "status_v1_search_submit",
+    "module": "Status and search",
+    "moduleDir": "status",
+    "method": "POST",
+    "path": "/v1/search/submit",
+    "summary": "Search submit",
+    "route": "/docs/nhcx/v1/api/status/endpoints/status-v1-search-submit",
+    "callbacks": [
+      {
+        "method": "POST",
+        "path": "v1_search_submit",
+        "summary": "Receive search submit",
+        "route": "/docs/nhcx/v1/api/status/endpoints/status-webhook-v1-search-submit",
+        "relation": "triggered-by"
+      }
+    ]
+  },
+  {
+    "key": "status",
+    "hosts": [
+      "apisbx.abdm.gov.in",
+      "apisprod.nha.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "status_v1_status",
+    "module": "Status and search",
+    "moduleDir": "status",
+    "method": "POST",
+    "path": "/v1/status",
+    "summary": "Status check",
+    "route": "/docs/nhcx/v1/api/status/endpoints/status-v1-status",
+    "callbacks": [
+      {
+        "method": "POST",
+        "path": "v1_status",
+        "summary": "Receive status check",
+        "route": "/docs/nhcx/v1/api/status/endpoints/status-webhook-v1-status",
+        "relation": "triggered-by"
+      }
+    ]
+  },
+  {
+    "key": "v1_search_on_submit",
+    "hosts": [
+      "apisbx.abdm.gov.in",
+      "apisprod.nha.gov.in"
+    ],
+    "kind": "callback",
+    "operationId": "status_webhook_v1_search_on_submit",
+    "module": "Status and search",
+    "moduleDir": "status",
+    "method": "POST",
+    "path": "v1_search_on_submit",
+    "summary": "Receive search result callback",
+    "route": "/docs/nhcx/v1/api/status/endpoints/status-webhook-v1-search-on-submit",
+    "callbacks": []
+  },
+  {
+    "key": "v1_search_submit",
+    "hosts": [
+      "apisbx.abdm.gov.in",
+      "apisprod.nha.gov.in"
+    ],
+    "kind": "callback",
+    "operationId": "status_webhook_v1_search_submit",
+    "module": "Status and search",
+    "moduleDir": "status",
+    "method": "POST",
+    "path": "v1_search_submit",
+    "summary": "Receive search submit",
+    "route": "/docs/nhcx/v1/api/status/endpoints/status-webhook-v1-search-submit",
+    "callbacks": []
+  },
+  {
+    "key": "v1_status",
+    "hosts": [
+      "apisbx.abdm.gov.in",
+      "apisprod.nha.gov.in"
+    ],
+    "kind": "callback",
+    "operationId": "status_webhook_v1_status",
+    "module": "Status and search",
+    "moduleDir": "status",
+    "method": "POST",
+    "path": "v1_status",
+    "summary": "Receive status check",
+    "route": "/docs/nhcx/v1/api/status/endpoints/status-webhook-v1-status",
     "callbacks": []
   }
 ]
