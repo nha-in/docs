@@ -56,3 +56,6 @@ site/src/data/api-sidebar.json
 site/src/data/skills.json
 site/static/llms.txt
 site/static/robots.txt
+
+# NHA infrastructure lives in nha-in/sandbox-tofu, not here.
+deploy/nha/tofu/
