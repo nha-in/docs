@@ -1,4 +1,4 @@
-# Biometric auth refresh token
+# Get the biometric auth refresh token
 
 `GET /hcx/abha/biometric/auth/refresh/token`
 

@@ -1,4 +1,4 @@
-# Face auth verify
+# Submit the face auth verify
 
 `POST /pmjay/sbxhcx/abdmproxy/abha/biometric/v2/auth/verify`
 
@@ -15,7 +15,7 @@ After `Face auth capture PID` answers `COMPLETE`.
 ### Preconditions
 
 - The `txnId` from `Face auth init`, with the capture reported `COMPLETE`.
-- `aadhaar` is the Aadhaar number encrypted with the X.509 public key the portal publishes, using the transformation `RSA/ECB/OAEPWithSHA-1AndMGF1Padding`. The ciphertext is roughly 680 base64 characters for a 4096-bit key.
+- `Aadhaar` is the Aadhaar number encrypted with the X.509 public key the portal publishes, using the transformation `RSA/ECB/OAEPWithSHA-1AndMGF1Padding`. The ciphertext is roughly 680 base64 characters for a 4096-bit key.
 - `mobile` is the Aadhaar-linked mobile number.
 - `authMethods` is `["face_auth"]` and `authMode` is `FACE_AUTH`.
 - The ABDM session token on `Authorization`, with a fresh `REQUEST-ID`, the current `TIMESTAMP`, `payerid` and `process`, sent to the ABDM proxy host.

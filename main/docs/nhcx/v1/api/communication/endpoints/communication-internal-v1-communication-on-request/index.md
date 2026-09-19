@@ -1,4 +1,4 @@
-# Communication acknowledgement callback (internal variant) (adapter)
+# Submit the communication acknowledgement callback (internal variant) (adapter)
 
 `POST /internal/v1/communication/on_request`
 
@@ -10,24 +10,24 @@ This is the internal-path form of the provider acknowledgement that closes a pay
 
 ### When to use
 
-Use it in the same circumstances as the public on_request callback: after receiving, acknowledging with a synchronous 202, and persisting a communication request, the provider posts a mirror-image Task bundle with the same reasonCode, Task.code poll, Task.intent proposal, Task.status completed and the same x-hcx-correlation_id. The responder status is response.complete, response.partial or response.error. The specs do not say when the internal path is used instead of the public one; follow your onboarding instructions.
+Use it in the same circumstances as the public on_request callback: after receiving, acknowledging with a synchronous 202, and persisting a communication request, the provider posts a mirror-image Task bundle with the same reasonCode, Task.code poll, Task.intent proposal, Task.status completed and the same x-hcx-correlation_ID. The responder status is response.complete, response.partial or response.error. The specs do not say when the internal path is used instead of the public one; follow your onboarding instructions.
 
 ### Preconditions
 
-- The inbound communication was decrypted and its correlation id, status and workflow id captured.
+- The inbound communication was decrypted and its correlation ID, status and workflow ID captured.
 - A valid Bearer token and the payer's certificate for encrypting the acknowledgement.
-- The acknowledgement bundle mirrors the request, provider Organization first, timestamps updated.
-- Protected header echoes the request's x-hcx-correlation_id, carries a fresh x-hcx-api_call_id, an IST timestamp and a responder status; x-hcx-workflow_id is validated at the gateway.
+- The acknowledgement bundle mirrors the request, provider Organisation first, timestamps updated.
+- Protected header echoes the request's x-hcx-correlation_ID, carries a fresh x-hcx-API_call_ID, an IST TIMESTAMP and a responder status; x-hcx-workflow_ID is validated at the gateway.
 - Confirm the internal prefix is the route you were onboarded to before using it.
 
 ### Postconditions
 
-Same as the public callback: HTTP 202 with the StatusSuccessResponse envelope, or 400, 404 or 500 in the same shape; the bundle is forwarded to the payer, who links it to the original notification by correlation id and by the shared claim or preauth reference. The underlying issue remains open until resolved through the preauth or claim path. No additional behaviour is documented for the internal variant.
+Same as the public callback: HTTP 202 with the StatusSuccessResponse envelope, or 400, 404 or 500 in the same shape; the bundle is forwarded to the payer, who links it to the original notification by correlation ID and by the shared claim or preauth reference. The underlying issue remains open until resolved through the preauth or claim path. No additional behaviour is documented for the internal variant.
 
 ### Common mistakes
 
-- Expecting the internal path to relax any rule; it carries the same validation and the same errors (NHCX-1010 for an unknown correlation id, NHCX-1011 for a bad status value).
-- Minting a new correlation id on the acknowledgement.
+- Expecting the internal path to relax any rule; it carries the same validation and the same errors (NHCX-1010 for an unknown correlation ID, NHCX-1011 for a bad status value).
+- Minting a new correlation ID on the acknowledgement.
 - Sending this call in place of the synchronous 202, which triggers the five-attempt retry loop and deletion of the request.
 - Closing the case because Communication.status is completed.
 - Using an unconfigurable path prefix that cannot switch between public and internal forms.
@@ -36,9 +36,9 @@ Same as the public callback: HTTP 202 with the StatusSuccessResponse envelope, o
 
 - Share one acknowledgement builder with the public callback; only the path differs.
 - Return 202 within 30 seconds first, then post the acknowledgement asynchronously.
-- Be idempotent on correlation id; expect redeliveries.
-- Route on Task.reasonCode and log reason, category, priority and correlation id.
-- Keep IST timestamps and a fresh api_call_id on every call.
+- Be idempotent on correlation ID; expect redeliveries.
+- Route on Task.reasonCode and log reason, category, priority and correlation ID.
+- Keep IST timestamps and a fresh API_call_ID on every call.
 
 ### Related scenario
 

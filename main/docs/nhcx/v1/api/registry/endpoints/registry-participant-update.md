@@ -1,4 +1,4 @@
-# Participant update (v1)
+# Submit the participant update (v1)
 
 `POST /participant/update`
 
@@ -10,25 +10,25 @@ Participant details change over the life of an integration: callback endpoints m
 
 ### When to use
 
-Use it after registration whenever a registry attribute must change. The FAQ lists the sandbox Update Participant URL as https://apisbx.abdm.gov.in/pmjay/sbxhcx/participanthcxservice/participant/update, while production onboarding documents the narrower /v2/participant/update plus /update/validate for certificate and bridge changes. It is a plain JSON registry call outside the JWE protocol, with no workflow or x-hcx-status codes. For a certificate-only change without passcode validation, /v2/update/cert is the documented shortcut.
+Use it after registration whenever a registry attribute must change. The FAQ lists the sandbox Update Participant URL as https://apisbx.ABDM.gov.in/pmjay/sbxhcx/participanthcxservice/participant/update, while production onboarding documents the narrower /v2/participant/update plus /update/validate for certificate and bridge changes. It is a plain JSON registry call outside the JWE protocol, with no workflow or x-hcx-status codes. For a certificate-only change without passcode validation, /v2/update/cert is the documented shortcut.
 
 ### Preconditions
 
 - The participant already exists and you hold its participant_code.
 - Bearer token with the Bearer prefix in bearer_auth, plus Accept and Content-Type: application/json.
-- Body per ParticipantUpdateBody: participant_code and roles are the only required fields; participant_name, scheme_code, linked_registry_codes, address, contact fields, status, signing_cert_path, encryption_cert, endpoint_url and payment_details are optional.
+- Body per ParticipantUpdateBody: participant_code and roles are the only required fields; participant_name, scheme_code, linked_registry_codes, address, contact fields, status, signing_cert_path, encryption_cert, endpoint_URL and payment_details are optional.
 - If updating encryption_cert, the new certificate is Base64-encoded and its private key is already deployed on the callback host.
 - Linked registry codes must validate.
 
 ### Postconditions
 
-HTTP 200 with a string body (the OpenAPI declares string; the sandbox onboarding document shows the participant code echoed back, for example 100001@sbx). The registry record now carries the amended values, and because the gateway reads endpoint_url and encryption_cert from the registry on every leg, callback routing and counterparties' certificate fetches reflect the change from the next call onwards, subject to their 24-hour certificate cache. No asynchronous callback follows. Failures use the 400/404/500 ErrorResponse envelope.
+HTTP 200 with a string body (the OpenAPI declares string; the sandbox onboarding document shows the participant code echoed back, for example 100001@sbx). The registry record now carries the amended values, and because the gateway reads endpoint_URL and encryption_cert from the registry on every leg, callback routing and counterparties' certificate fetches reflect the change from the next call onwards, subject to their 24-hour certificate cache. No asynchronous callback follows. Failures use the 400/404/500 ErrorResponse envelope.
 
 ### Common mistakes
 
 - Omitting roles on a partial update; it is required even when the change has nothing to do with roles, and its absence yields a 400.
 - Copying v2 field names (participantcode, encryptioncert, endpointurl) into this snake_case body.
-- Setting an endpoint_url that uses an IP address or port, or a server outside India, which breaks callback delivery at go-live.
+- Setting an endpoint_URL that uses an IP address or port, or a server outside India, which breaks callback delivery at go-live.
 - Rotating the certificate in the registry before the new private key is live on the callback host, so inbound callbacks can no longer be decrypted.
 - Missing the Accept header or the Bearer prefix.
 
@@ -36,12 +36,12 @@ HTTP 200 with a string body (the OpenAPI declares string; the sandbox onboarding
 
 - Read the current record with /participant/search first and send the full intended state, so a partial body does not unintentionally blank optional fields.
 - Rotate certificates in two phases and keep the old private key for at least 24 hours, the documented certificate cache TTL.
-- Confirm callback reachability (domain name, India-based host, NAT IPs 3.109.99.210, 13.126.152.0 and 13.200.129.223 whitelisted) before pointing endpoint_url at a new host.
+- Confirm callback reachability (domain name, India-based host, NAT IPs 3.109.99.210, 13.126.152.0 and 13.200.129.223 whitelisted) before pointing endpoint_URL at a new host.
 - Log the change with who requested it; registry changes affect where encrypted health data is delivered.
 
 ### Related scenario
 
-A hospital migrates its claims callback service to a new domain. Before touching the registry the team deploys the service, verifies the NHCX NAT IPs are whitelisted and copies the existing PKCS8 private key across. They fetch a Bearer token via /get/session, read the current record with /participant/search, and call /participant/update with participant_code, roles and the new endpoint_url. The registry returns 200. The next /v1/preauth/on_submit callback from the payer arrives at the new domain and is acknowledged with 202 within 30 seconds.
+A hospital migrates its claims callback service to a new domain. Before touching the registry the team deploys the service, verifies the NHCX NAT IPs are whitelisted and copies the existing PKCS8 private key across. They fetch a Bearer token via /get/session, read the current record with /participant/search, and call /participant/update with participant_code, roles and the new endpoint_URL. The registry returns 200. The next /v1/preauth/on_submit callback from the payer arrives at the new domain and is acknowledged with 202 within 30 seconds.
 
 ### Specification
 

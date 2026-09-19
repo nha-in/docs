@@ -45,10 +45,10 @@ Present the integrated solution to the [Health Tech Committee](/docs/main/docs/h
 
 Move the approved integration to the production environment and begin using ABDM services. Production credentials are issued once the committee approves.
 
-| What you call                                                              | Sandbox                                    | Production                                  |
-| -------------------------------------------------------------------------- | ------------------------------------------ | ------------------------------------------- |
-| The gateway                                                                | `https://dev.abdm.gov.in`, `X-CM-ID: sbx`  | `https://apis.abdm.gov.in`, `X-CM-ID: abdm` |
-| The [ABHA](/docs/main/docs/hiecm/v3/getting-started/glossary#abha) service | `https://abhasbx.abdm.gov.in/abha/api/v3/` | `https://abha.abdm.gov.in/api/abha/v3/`     |
+| What you call                                                              | Sandbox                                    | Production                 |
+| -------------------------------------------------------------------------- | ------------------------------------------ | -------------------------- |
+| The gateway                                                                | `https://dev.abdm.gov.in`, `X-CM-ID: sbx`  | `https://apis.abdm.gov.in` |
+| The [ABHA](/docs/main/docs/hiecm/v3/getting-started/glossary#abha) service | `https://abhasbx.abdm.gov.in/abha/api/v3/` |                            |
 
 A production client id against a sandbox host, or the reverse, fails.
 

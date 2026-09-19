@@ -2,14 +2,6 @@
 
 Milestone 2 enables a [Health Information Provider](/docs/main/docs/hiecm/v3/getting-started/glossary#hip) (HIP) to create digital health records and to generate and link [care contexts](/docs/main/docs/hiecm/v3/getting-started/glossary#care-context) with a patient's [ABHA Address](/docs/main/docs/hiecm/v3/getting-started/glossary#abha-address). It also enables the HIP to facilitate record [discovery](/docs/main/docs/hiecm/v3/getting-started/glossary#discovery) through a Personal Health Record ([PHR](/docs/main/docs/hiecm/v3/getting-started/glossary#phr)) application, and to securely share encrypted health information across the ABDM ecosystem.
 
-[Try the M2 APIs](/docs/main/docs/hiecm/v3/api/m2)
-
-[Every call in M2, one page each: the headers it needs, the payload it takes, the callback it triggers, and a request builder you can fire at the sandbox.](/docs/main/docs/hiecm/v3/api/m2)
-
-[Error codes](/docs/main/docs/hiecm/v3/api/m2/errors)
-
-[What each code M2 returns actually means, and the first thing to check when you see one.](/docs/main/docs/hiecm/v3/api/m2/errors)
-
 ## In short
 
 Milestone 2 enables a Healthcare Facility, acting as a Health Information Provider (HIP), to link a patient's health records with the patient's ABHA Address and make such records available within the ABDM ecosystem. The linkage of records may be carried out through either HIP-Initiated Linking or User-Initiated Linking.
@@ -69,20 +61,19 @@ Every M2 call and callback, its error codes and its certification cases in one f
 [SKILL.md](/docs/main/skills/abdm-m2/SKILL.md "The router. Use the command below to take the references with it.")
 
 - ScaffoldThe loop that builds the module flow by flow against the sandbox, ending on an observed result rather than on a call returning 200.
-- Integrate31 operations, with their hosts, headers and the rules that hold across them.
-- Debug120 recorded error codes, each with its message and what to do about it.
-- Test46 test cases, each with the call it makes and what to see when it passes.
+- Integrate32 operations, with their hosts, headers and the rules that hold across them.
+- DebugNo error code is recorded for this module yet.
 
-`mkdir -p .claude/skills/abdm-m2/references && curl -fsSL https://nha-in.github.io/docs/main/skills/abdm-m2/SKILL.md -o .claude/skills/abdm-m2/SKILL.md && for f in scaffold integrate debug test; do curl -fsSL https://nha-in.github.io/docs/main/skills/abdm-m2/references/$f.md -o .claude/skills/abdm-m2/references/$f.md; done`
+`mkdir -p .claude/skills/abdm-m2/references && curl -fsSL https://nha-in.github.io/docs/main/skills/abdm-m2/SKILL.md -o .claude/skills/abdm-m2/SKILL.md && for f in scaffold integrate debug; do curl -fsSL https://nha-in.github.io/docs/main/skills/abdm-m2/references/$f.md -o .claude/skills/abdm-m2/references/$f.md; done`
 
-[Open in Claude](claude://code/new?q=Install%20the%20ABDM%20M2%20agent%20skill%20into%20this%20project%2C%20then%20help%20me%20use%20it.%0A%0ARun%20this%3A%0Amkdir%20-p%20.claude%2Fskills%2Fabdm-m2%2Freferences%20%26%26%20curl%20-fsSL%20https%3A%2F%2Fnha-in.github.io%2Fdocs%2Fmain%2Fskills%2Fabdm-m2%2FSKILL.md%20-o%20.claude%2Fskills%2Fabdm-m2%2FSKILL.md%20%26%26%20for%20f%20in%20scaffold%20integrate%20debug%20test%3B%20do%20curl%20-fsSL%20https%3A%2F%2Fnha-in.github.io%2Fdocs%2Fmain%2Fskills%2Fabdm-m2%2Freferences%2F%24f.md%20-o%20.claude%2Fskills%2Fabdm-m2%2Freferences%2F%24f.md%3B%20done%0A%0AIf%20this%20session%20did%20not%20open%20in%20the%20repository%20I%20am%20integrating%20ABDM%20into%2C%20ask%20me%20for%20the%20path%20before%20you%20write%20anything.)
+[Open in Claude](claude://code/new?q=Install%20the%20ABDM%20M2%20agent%20skill%20into%20this%20project%2C%20then%20help%20me%20use%20it.%0A%0ARun%20this%3A%0Amkdir%20-p%20.claude%2Fskills%2Fabdm-m2%2Freferences%20%26%26%20curl%20-fsSL%20https%3A%2F%2Fnha-in.github.io%2Fdocs%2Fmain%2Fskills%2Fabdm-m2%2FSKILL.md%20-o%20.claude%2Fskills%2Fabdm-m2%2FSKILL.md%20%26%26%20for%20f%20in%20scaffold%20integrate%20debug%3B%20do%20curl%20-fsSL%20https%3A%2F%2Fnha-in.github.io%2Fdocs%2Fmain%2Fskills%2Fabdm-m2%2Freferences%2F%24f.md%20-o%20.claude%2Fskills%2Fabdm-m2%2Freferences%2F%24f.md%3B%20done%0A%0AIf%20this%20session%20did%20not%20open%20in%20the%20repository%20I%20am%20integrating%20ABDM%20into%2C%20ask%20me%20for%20the%20path%20before%20you%20write%20anything.)
 
 Drops the skill into this project. Claude loads it when a task matches.
 
 How to use it
 
 1. Run the command above in the repository you are integrating.
-2. Ask your agent for the job in your own words. "Link a care context for this patient", "why am I getting ABDM-1000", or "write the M2 tests for this". The skill loads when the task matches it.
+2. Ask your agent for the job in your own words. "Link a care context for this patient". The skill loads when the task matches it.
 3. Check what it writes against these pages. The skill carries the facts, not the sandbox: nothing in it has been run against ABDM.
 4. Open in Claude needs that app installed. It fills the composer and waits: nothing runs until you read it and press Enter.
 
@@ -116,7 +107,7 @@ sequenceDiagram
 
 The HIP generates a [link token](/docs/main/docs/hiecm/v3/getting-started/glossary#link-token) using the patient's ABHA address and demographic details, which is then shared with the patient for authentication. Upon successful verification, a linking token valid for 6 months is created, and the patient's care context is linked to the corresponding ABHA address.
 
-Step 8 is the acknowledgement. Step 9 is the answer. The link is confirmed only when the callback arrives at `/api/v3/link/on_carecontext` on your bridge, so do not mark a record as linked on the strength of the 202. See [the outcome of a care context linking call](/docs/main/docs/hiecm/v3/api/m2/endpoints/m2-on-carecontext-result).
+Step 8 is the acknowledgement. Step 9 is the answer. The link is confirmed only when the callback arrives at `/api/v3/link/on_carecontext` on your bridge, so do not mark a record as linked on the strength of the 202. See [the outcome of a care context linking call](/docs/main/docs/hiecm/v3/api/m2/endpoints/m2-abdm-hip-initiated-linking-hip/02-m2-post-v3-link-on-carecontext).
 
 Which steps are callbacks?
 
@@ -182,4 +173,4 @@ The HIU supplies the data push URL and its key material in the request. Encrypti
 
 - Requesting records from other facilities is [M3 Retrieve](/docs/main/docs/hiecm/v3/milestones/m3).
 - The calls, callbacks and error codes: [M2 API reference](/docs/main/docs/hiecm/v3/api/m2).
-- The cases M2 is tested against: [M2 testing use cases](/docs/main/docs/hiecm/v3/resources/testing/m2). Certification runs once, for the whole integration: [Go live](/docs/main/docs/hiecm/v3/getting-started/going-live).
+- The cases M2 is tested against: the certification pack NHA issues. Certification runs once, for the whole integration: [Go live](/docs/main/docs/hiecm/v3/getting-started/going-live).

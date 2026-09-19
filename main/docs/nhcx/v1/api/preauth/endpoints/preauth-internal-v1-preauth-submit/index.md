@@ -1,4 +1,4 @@
-# Pre-authorisation submit (internal) (adapter)
+# Submit the pre-authorisation submit (internal) (adapter)
 
 `POST /internal/v1/preauth/submit`
 

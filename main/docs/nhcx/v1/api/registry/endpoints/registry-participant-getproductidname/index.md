@@ -1,12 +1,12 @@
-# Get product id and name
+# Get product ID and name
 
 `POST /participant/getProductIdName`
 
-Retrieving API described as generating the product id and product name; declared with a bare string request body and a participant-code response.
+Retrieving API described as generating the product ID and product name; declared with a bare string request body and a participant-code response.
 
 ### Business purpose
 
-The OpenAPI document describes this endpoint with the same sentence as /product/getowner, "This API is to generate the product Id and product Name", and it belongs to the payer product lifecycle alongside /product/link, /product/delink and /product/getowner. Its documented purpose is to resolve product identity information within the participant service. The specification is thin: the request body is declared as a bare string, the response is ParticipantCreateResponse (participant_code only), and the operationId participantCreatePost is reused from the participant-creation endpoints, so treat the operationId as non-unique.
+The OpenAPI document describes this endpoint with the same sentence as /product/getowner, "This API is to generate the product ID and product Name", and it belongs to the payer product lifecycle alongside /product/link, /product/delink and /product/getowner. Its documented purpose is to resolve product identity information within the participant service. The specification is thin: the request body is declared as a bare string, the response is ParticipantCreateResponse (participant_code only), and the operationId participantCreatePost is reused from the participant-creation endpoints, so treat the operationId as non-unique.
 
 ### When to use
 
@@ -14,16 +14,16 @@ Use it only where your NHCX instance documents a concrete contract for it, typic
 
 ### Preconditions
 
-- A valid Bearer token from the client-credentials call (POST /get/session, form-urlencoded client_id, client_secret, grant_type=client_credentials); tokens last 1200 seconds, so refresh before expiry.
-- HTTP headers Accept: application/json, Content-Type: application/json and bearer_auth: Bearer <token> (the participant service uses bearer_auth, not Authorization).
-- Base path for the participant service: https://apisbx.abdm.gov.in/pmjay/sbxhcx/participanthcxservice (sandbox) or https://apisprod.nha.gov.in/pmjay/hcx/participanthcxservice (production).
-- This is a synchronous plain-JSON registry call: no JWE envelope, no x-hcx-* protocol headers and no correlation id are involved.
+- A valid Bearer token from the client-credentials call (POST /get/session, form-urlencoded client_ID, client_secret, grant_type=client_credentials); tokens last 1200 seconds, so refresh before expiry.
+- HTTP headers Accept: application/json, Content-Type: application/json and bearer_auth: Bearer <token> (the participant service uses bearer_auth, not Authorisation).
+- Base path for the participant service: https://apisbx.ABDM.gov.in/pmjay/sbxhcx/participanthcxservice (sandbox) or https://apisprod.NHA.gov.in/pmjay/hcx/participanthcxservice (production).
+- This is a synchronous plain-JSON registry call: no JWE envelope, no x-hcx-* protocol headers and no correlation ID are involved.
 - The request body is declared in the OpenAPI document as a bare JSON string rather than an object; the docs do not say what the string should contain.
 - The product concerned should have been registered by its payer through /product/link.
 
 ### Postconditions
 
-Returns HTTP 200 with ParticipantCreateResponse, whose only field, participant_code, is optional. No callback follows and no state change is documented. Failures return 400, 404 or 500 with the ErrorResponse envelope. Because the description promises a product id and name while the schema returns a participant code, verify the actual body returned by your instance before depending on either interpretation.
+Returns HTTP 200 with ParticipantCreateResponse, whose only field, participant_code, is optional. No callback follows and no state change is documented. Failures return 400, 404 or 500 with the ErrorResponse envelope. Because the description promises a product ID and name while the schema returns a participant code, verify the actual body returned by your instance before depending on either interpretation.
 
 ### Common mistakes
 

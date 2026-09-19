@@ -1,4 +1,4 @@
-# HEM-entity participant create
+# Submit the HEM-entity participant create
 
 `POST /v2/participant/hementity/create`
 
@@ -15,14 +15,14 @@ Use during scheme-specific hospital onboarding when the operator directs you to 
 ### Preconditions
 
 - Bearer token with the Bearer prefix in bearer_auth, plus Accept and Content-Type: application/json.
-- Required ParticipantCreateBodyV2 fields: participant_name, scheme_code, state, district, entityid, bankdetails, participantcode, hospitaltype, incentiveCode, hospitalbedstrength, lab_yn, roles, specialityList, primaryEmail, primaryMobile, encryption_cert, endpoint_url.
+- Required ParticipantCreateBodyV2 fields: participant_name, scheme_code, state, district, entityid, bankdetails, participantcode, hospitaltype, incentiveCode, hospitalbedstrength, lab_yn, roles, specialityList, primaryEmail, primaryMobile, encryption_cert, endpoint_URL.
 - BankDetails requires facilitybankaccountname, authorizedsignatoryname, bankaccountnumber, ifsccode, bankname, bankbranchname, bankaddress, micrcode and accounttype; upiid, paymenttype and mailid are optional.
 - If taxdetails is supplied, pannumber, tannumber and gstnumber are all required within it.
 - A Base64-encoded self-signed X.509 encryption certificate and a domain-name callback URL.
 
 ### Postconditions
 
-HTTP 200 with ParticipantCreateResponseV2 containing status and hospitalid. Unlike the other two create calls, the response does not return a participant code, despite the shared description; the participantcode you supplied in the body is the identifier the record is keyed on. There is no asynchronous callback. Errors follow the registry envelope of 400 Client Error, 404 Resource not found and 500 Downstream systems down, each with ErrorResponse (timestamp, error code, message, trace).
+HTTP 200 with ParticipantCreateResponseV2 containing status and hospitalid. Unlike the other two create calls, the response does not return a participant code, despite the shared description; the participantcode you supplied in the body is the identifier the record is keyed on. There is no asynchronous callback. Errors follow the registry envelope of 400 Client Error, 404 Resource not found and 500 Downstream systems down, each with ErrorResponse (TIMESTAMP, error code, message, trace).
 
 ### Common mistakes
 
@@ -30,7 +30,7 @@ HTTP 200 with ParticipantCreateResponseV2 containing status and hospitalid. Unli
 - Leaving out nested required fields, especially inside bankdetails, or supplying taxdetails with only some of pannumber, tannumber and gstnumber.
 - Mixing field naming: this schema uses snake_case for participant_name, scheme_code and encryption_cert but flattened lowercase for participantcode and hospitalbedstrength; copy names exactly from the schema.
 - Sending the PEM certificate without Base64 encoding.
-- Registering an endpoint_url with an IP address or port, which fails the go-live reachability checks.
+- Registering an endpoint_URL with an IP address or port, which fails the go-live reachability checks.
 
 ### Best practices
 

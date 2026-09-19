@@ -1,4 +1,4 @@
-# Biometric auth verify
+# Submit the biometric auth verify
 
 `POST /hcx/abha/biometric/auth/verify`
 

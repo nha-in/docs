@@ -2,7 +2,7 @@
 
 `POST v1_claim_submit`
 
-Hosted by the payer. The exchange posts this message to the `endpoint_url` you registered, at `/v1/claim/submit`, with the headers and the sealed payload the sender posted. Answer HTTP 202 with the receipt first and process afterwards; [Receiving a callback](/docs/nhcx/v1/getting-started/receiving-a-callback) has the rules.
+Hosted by the payer. The exchange posts this message to the `endpoint_URL` you registered, at `/v1/claim/submit`, with the headers and the sealed payload the sender posted. Answer HTTP 202 with the receipt first and process afterwards; [Receiving a callback](/docs/nhcx/v1/getting-started/receiving-a-callback) has the rules.
 
 Provider submits the final itemised Claim bundle (Claim.use claim), or a claim query response or resubmission; NHCX routes it to the payer.
 

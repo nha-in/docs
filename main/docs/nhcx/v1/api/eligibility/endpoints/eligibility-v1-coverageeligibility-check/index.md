@@ -1,4 +1,4 @@
-# Coverage eligibility check
+# Submit the coverage eligibility check
 
 `POST /v1/coverageeligibility/check`
 
@@ -10,20 +10,20 @@ Coverage eligibility is the pre-check a hospital desk runs before committing a p
 
 ### When to use
 
-Call it at registration or admission, before /v1/preauth/submit. The CoverageEligibilityRequest.purpose field (1..*) decides what the payer computes: discovery is the fallback when /participant/get/policies does not yield a policy code; validation retrieves used amount, available balance and wallet liability; auth-requirements checks whether a chosen procedure is covered at this hospital and returns the STG questionnaires and MAND document codes the preauth must carry; benefits is also listed. Send x-hcx-status request.initiated. No eligibility-specific workflow code is published in the workflow tables; the workbook sample shows x-hcx-workflow_id 11 (PATIENT_ADMITTED). For PMJAY an unspecified procedure still requires an auth-requirements check.
+Call it at registration or admission, before /v1/preauth/submit. The CoverageEligibilityRequest.purpose field (1..*) decides what the payer computes: discovery is the fallback when /participant/get/policies does not yield a policy code; validation retrieves used amount, available balance and wallet liability; auth-requirements checks whether a chosen procedure is covered at this hospital and returns the STG questionnaires and MAND document codes the preauth must carry; benefits is also listed. Send x-hcx-status request.initiated. No eligibility-specific workflow code is published in the workflow tables; the workbook sample shows x-hcx-workflow_ID 11 (PATIENT_ADMITTED). For PMJAY an unspecified procedure still requires an auth-requirements check.
 
 ### Preconditions
 
 - The provider is an onboarded NHCX participant (otherwise NHCX-1002) holding a valid Bearer token from the client-credentials session call; tokens expire after 1200 seconds.
 - The payer's public certificate has been fetched via /fetch/certs (cache 24 hours) and the bundle is JWE-encrypted with RSA-OAEP-256 and A256GCM.
 - x-hcx-recipient_code is the processingID from the get/policies response, not the PayerID.
-- x-hcx-correlation_id is a fresh UUID for this request cycle; x-hcx-api_call_id is unique per call.
+- x-hcx-correlation_ID is a fresh UUID for this request cycle; x-hcx-API_call_ID is unique per call.
 - The bundle contains the Patient (PMJAY Member ID and/or ABHA number), the Coverage record, both Organisations (provider and insurer) and a PractitionerRole for the enterer; items are included when purpose is auth-requirements.
 - HTTP headers Accept: application/json, Content-Type: application/json and bearer_auth are all present.
 
 ### Postconditions
 
-NHCX replies synchronously with HTTP 202 Accepted and a StatusSuccessResponse acknowledgement (timestamp, api_call_id, correlation_id, result with sender_code, recipient_code, entity_type coverageeligibility and protocol_status such as request.queued or request.dispatched, plus an empty error object). The 202 means only that the JWE structure and open protocol headers validated; the gateway then forwards the request to the payer asynchronously. The eligibility answer arrives later on the provider's /v1/coverageeligibility/on_check endpoint as a CoverageEligibilityResponseBundle, or as a ProtocolResponse carrying x-hcx-error_details, or as a redirect or forward instruction to try another payer. Other documented statuses are 400 request validation failed, 404 resource not found and 500 downstream systems down.
+NHCX replies synchronously with HTTP 202 Accepted and a StatusSuccessResponse acknowledgement (TIMESTAMP, API_call_ID, correlation_ID, result with sender_code, recipient_code, entity_type coverageeligibility and protocol_status such as request.queued or request.dispatched, plus an empty error object). The 202 means only that the JWE structure and open protocol headers validated; the gateway then forwards the request to the payer asynchronously. The eligibility answer arrives later on the provider's /v1/coverageeligibility/on_check endpoint as a CoverageEligibilityResponseBundle, or as a ProtocolResponse carrying x-hcx-error_details, or as a redirect or forward instruction to try another payer. Other documented statuses are 400 request validation failed, 404 resource not found and 500 downstream systems down.
 
 ### Common mistakes
 
@@ -41,7 +41,7 @@ NHCX replies synchronously with HTTP 202 Accepted and a StatusSuccessResponse ac
 - Run discovery first only when get/policies gives no policy code, then validation, then auth-requirements for the chosen package; store the returned MAND codes and STG questionnaire references and attach them to the preauth.
 - Do not assume the response echoes your request codes: items come back in the payer's numeric master codes (for example 100478 against your MG003B).
 - Use IST timestamps with the +05:30 offset in the protected header.
-- Log the 202 body (protocol_status, api_call_id) so a missing callback can be traced with /v1/status.
+- Log the 202 body (protocol_status, API_call_ID) so a missing callback can be traced with /v1/status.
 
 ### Related scenario
 

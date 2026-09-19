@@ -14,10 +14,10 @@ Use it at the same point in the journey as the v1 lookup: after registration, be
 
 ### Preconditions
 
-- A valid Bearer token from the client-credentials call (POST /get/session, form-urlencoded client_id, client_secret, grant_type=client_credentials); tokens last 1200 seconds, so refresh before expiry.
-- HTTP headers Accept: application/json, Content-Type: application/json and bearer_auth: Bearer <token> (the participant service uses bearer_auth, not Authorization).
-- Base path for the participant service: https://apisbx.abdm.gov.in/pmjay/sbxhcx/participanthcxservice (sandbox) or https://apisprod.nha.gov.in/pmjay/hcx/participanthcxservice (production).
-- This is a synchronous plain-JSON registry call: no JWE envelope, no x-hcx-* protocol headers and no correlation id are involved.
+- A valid Bearer token from the client-credentials call (POST /get/session, form-urlencoded client_ID, client_secret, grant_type=client_credentials); tokens last 1200 seconds, so refresh before expiry.
+- HTTP headers Accept: application/json, Content-Type: application/json and bearer_auth: Bearer <token> (the participant service uses bearer_auth, not Authorisation).
+- Base path for the participant service: https://apisbx.ABDM.gov.in/pmjay/sbxhcx/participanthcxservice (sandbox) or https://apisprod.NHA.gov.in/pmjay/hcx/participanthcxservice (production).
+- This is a synchronous plain-JSON registry call: no JWE envelope, no x-hcx-* protocol headers and no correlation ID are involved.
 - A payer or TPA must already have linked the beneficiary.
 - Body: identifiertype (AbhaNumber, MemberId or MobileNo) and identifiervalue, both required; ABHA without hyphens.
 - Note the capital V in /V2/.
@@ -45,7 +45,7 @@ Returns HTTP 200 with ParticipantListResponse (optional participantdetails array
 
 ### Related scenario
 
-A TPA has just linked a new member through /V2/participant/link/abha/policy and wants to verify the write before closing the ticket. It calls /V2/participant/get/policies with identifiertype AbhaNumber and the member's hyphen-free ABHA number and sees the product returned. Months later the same member is admitted; the hospital's HMIS runs the identifier cascade (ABHA, then member id, then mobile) against this endpoint, caches the result, and proceeds to /v1/insuranceplan/request and /v1/preauth/submit addressed to the TPA's participant code taken from processingID.
+A TPA has just linked a new member through /V2/participant/link/abha/policy and wants to verify the write before closing the ticket. It calls /V2/participant/get/policies with identifiertype AbhaNumber and the member's hyphen-free ABHA number and sees the product returned. Months later the same member is admitted; the hospital's HMIS runs the identifier cascade (ABHA, then member ID, then mobile) against this endpoint, caches the result, and proceeds to /v1/insuranceplan/request and /v1/preauth/submit addressed to the TPA's participant code taken from processingID.
 
 ### Specification
 

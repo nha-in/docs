@@ -2,7 +2,7 @@
 
 `POST v1_status`
 
-Hosted by the payer. The exchange posts this message to the `endpoint_url` you registered, at `/v1/status`, with the headers and the sealed payload the sender posted. Answer HTTP 202 with the receipt first and process afterwards; [Receiving a callback](/docs/nhcx/v1/getting-started/receiving-a-callback) has the rules.
+Hosted by the payer. The exchange posts this message to the `endpoint_URL` you registered, at `/v1/status`, with the headers and the sealed payload the sender posted. Answer HTTP 202 with the receipt first and process afterwards; [Receiving a callback](/docs/nhcx/v1/getting-started/receiving-a-callback) has the rules.
 
 Sender asks NHCX where its own in-flight request stands; the gateway answers request.queued or request.dispatched, and only dispatched yields a callback.
 

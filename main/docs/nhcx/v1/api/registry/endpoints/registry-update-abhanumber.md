@@ -14,10 +14,10 @@ Use it once the beneficiary's genuine ABHA number becomes available after an onb
 
 ### Preconditions
 
-- A valid Bearer token from the client-credentials call (POST /get/session, form-urlencoded client_id, client_secret, grant_type=client_credentials); tokens last 1200 seconds, so refresh before expiry.
-- HTTP headers Accept: application/json, Content-Type: application/json and bearer_auth: Bearer <token> (the participant service uses bearer_auth, not Authorization).
-- Base path for the participant service: https://apisbx.abdm.gov.in/pmjay/sbxhcx/participanthcxservice (sandbox) or https://apisprod.nha.gov.in/pmjay/hcx/participanthcxservice (production).
-- This is a synchronous plain-JSON registry call: no JWE envelope, no x-hcx-* protocol headers and no correlation id are involved.
+- A valid Bearer token from the client-credentials call (POST /get/session, form-urlencoded client_ID, client_secret, grant_type=client_credentials); tokens last 1200 seconds, so refresh before expiry.
+- HTTP headers Accept: application/json, Content-Type: application/json and bearer_auth: Bearer <token> (the participant service uses bearer_auth, not Authorisation).
+- Base path for the participant service: https://apisbx.ABDM.gov.in/pmjay/sbxhcx/participanthcxservice (sandbox) or https://apisprod.NHA.gov.in/pmjay/hcx/participanthcxservice (production).
+- This is a synchronous plain-JSON registry call: no JWE envelope, no x-hcx-* protocol headers and no correlation ID are involved.
 - Both the placeholder and the real ABHA must be known; the body is UpdateAbhaRequest with two optional strings, dummyAbha and realAbha.
 - The gateway's error catalogue expects ABHA numbers in XX-XXXX-XXXX-XXXX form (NHCX-1018), while the member layer stores them without hyphens; the docs do not state which form this endpoint expects, so follow your instance's guidance.
 
@@ -29,21 +29,21 @@ A successful call returns HTTP 200 with UpdateAbhaResponse, which carries option
 
 - Parsing failures as ErrorResponse; this endpoint returns UpdateAbhaResponse for 400, 404 and 500 as well as for success.
 - Sending an empty body; both fields are optional in the schema, but the operation is meaningless without dummyAbha and realAbha.
-- Inconsistent ABHA formatting between systems: NHCX-1018 requires XX-XXXX-XXXX-XXXX at the gateway, while x-hcx-ben-abha-id and the member-layer lookups take the number without hyphens.
+- Inconsistent ABHA formatting between systems: NHCX-1018 requires XX-XXXX-XXXX-XXXX at the gateway, while x-hcx-ben-ABHA-ID and the member-layer lookups take the number without hyphens.
 - Forgetting to refresh cached policies and stored Patient identifiers that still carry the placeholder.
 - Omitting the Accept header or the Bearer prefix on bearer_auth.
 
 ### Best practices
 
-- Record both the placeholder and the real ABHA with the timestamp of the change for audit purposes.
+- Record both the placeholder and the real ABHA with the TIMESTAMP of the change for audit purposes.
 - Read successMessage and errorMessage on every response and treat a non-200 status as failure even if the body parses.
 - Immediately re-run /participant/get/policies with forceRefresh: true for the affected beneficiary.
-- Keep the ABHA formatting rule per field: hyphen-free for member lookups and x-hcx-ben-abha-id, XX-XXXX-XXXX-XXXX where NHCX-1018 applies.
+- Keep the ABHA formatting rule per field: hyphen-free for member lookups and x-hcx-ben-ABHA-ID, XX-XXXX-XXXX-XXXX where NHCX-1018 applies.
 - Never log the token; log the ABHA change with the request identifier only.
 
 ### Related scenario
 
-A state scheme enrols a beneficiary in a hurry with a dummy ABHA so that a policy can be linked and an emergency admission can proceed. After discharge the beneficiary completes ABHA creation and the real number is captured. The payer's system calls /update/abhanumber with dummyAbha and realAbha, receives a successMessage, and then calls /participant/get/policies with forceRefresh to make sure the real ABHA resolves the linked product. The hospital's billing team, preparing the final claim, refreshes its own policy cache so that the Claim bundle's Patient identifiers carry the PMJAY member id and the real hyphen-free ABHA.
+A state scheme enrols a beneficiary in a hurry with a dummy ABHA so that a policy can be linked and an emergency admission can proceed. After discharge the beneficiary completes ABHA creation and the real number is captured. The payer's system calls /update/abhanumber with dummyAbha and realAbha, receives a successMessage, and then calls /participant/get/policies with forceRefresh to make sure the real ABHA resolves the linked product. The hospital's billing team, preparing the final claim, refreshes its own policy cache so that the Claim bundle's Patient identifiers carry the PMJAY member ID and the real hyphen-free ABHA.
 
 ### Specification
 

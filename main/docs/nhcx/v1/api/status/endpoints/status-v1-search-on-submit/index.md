@@ -10,39 +10,39 @@ This is how a payer answers an authorised entity's search. It completes the over
 
 ### When to use
 
-The payer calls it after receiving a /v1/search/submit Task, acknowledging it with 202 within 30 seconds and locating the requested documents. The task type code=poll is the discriminator that tells the recipient this is a search poll and not another Task-driven flow. For a claim document the domain payload is the ClaimResponse for the reference number, with basedOn holding the sender's reference id and about holding the recipient's reference id and the current status. Carry the same x-hcx-correlation_id as the search and a responder status such as response.complete.
+The payer calls it after receiving a /v1/search/submit Task, acknowledging it with 202 within 30 seconds and locating the requested documents. The task type code=poll is the discriminator that tells the recipient this is a search poll and not another Task-driven flow. For a claim document the domain payload is the ClaimResponse for the reference number, with basedOn holding the sender's reference ID and about holding the recipient's reference ID and the current status. Carry the same x-hcx-correlation_ID as the search and a responder status such as response.complete.
 
 ### Preconditions
 
-- The inbound search Task was decrypted and its correlation id, status and workflow id captured; the 202 acceptance body was already returned.
+- The inbound search Task was decrypted and its correlation ID, status and workflow ID captured; the 202 acceptance body was already returned.
 - The payer is a registered participant with a valid Bearer token and the requester's certificate for encryption.
 - The response is a JWE whose plaintext carries the ClaimResponse (for claim-document searches) with basedOn and about populated as documented; the loosely typed HcxOnSearchBody requires only a type property.
-- Protected header echoes the search's x-hcx-correlation_id, carries a fresh api_call_id, an IST timestamp and a responder status.
+- Protected header echoes the search's x-hcx-correlation_ID, carries a fresh API_call_ID, an IST TIMESTAMP and a responder status.
 
 ### Postconditions
 
-The gateway returns HTTP 202 with the StatusSuccessResponse envelope (or 400, 404, 500 in the same shape) and delivers the result to the requester's registered endpoint, which must acknowledge with 202 within 30 seconds. The requester reads the recipient's reference id and the current status of the response entity from the about element. Nothing about the underlying claim changes; the search is read-only. The endpoint is tagged V1.0 APIs-Provider side because the callback is delivered to the provider side of the exchange, with operationId hcxOnSearchPost.
+The gateway returns HTTP 202 with the StatusSuccessResponse envelope (or 400, 404, 500 in the same shape) and delivers the result to the requester's registered endpoint, which must acknowledge with 202 within 30 seconds. The requester reads the recipient's reference ID and the current status of the response entity from the about element. Nothing about the underlying claim changes; the search is read-only. The endpoint is tagged V1.0 APIs-Provider side because the callback is delivered to the provider side of the exchange, with operationId hcxOnSearchPost.
 
 ### Common mistakes
 
 - Returning the search result in the synchronous 202 instead of on this callback.
-- Minting a new correlation id on the response so the requester cannot match it (NHCX-1010).
-- Omitting basedOn or about, or swapping them: basedOn carries the sender's id, about the recipient's id and current status.
+- Minting a new correlation ID on the response so the requester cannot match it (NHCX-1010).
+- Omitting basedOn or about, or swapping them: basedOn carries the sender's ID, about the recipient's ID and current status.
 - Sending a Task or bare Bundle where the claim-document search expects the ClaimResponse resource.
 - Reading the ClaimResponse outcome as approval without checking adjudication; a rejected claim still carries outcome complete.
 - Missing the 30-second window on the inbound search, which causes redeliveries.
 
 ### Best practices
 
-- Key the search on the sender's reference id from Task.about and echo it in basedOn.
-- Populate about with your own reference id and the current status so the requester needs no further call.
+- Key the search on the sender's reference ID from Task.about and echo it in basedOn.
+- Populate about with your own reference ID and the current status so the requester needs no further call.
 - Return 202 to the inbound search first, resolve documents asynchronously, then post this callback.
-- Be idempotent on correlation id; the same search may be redelivered up to five times.
-- Use a fresh api_call_id, IST timestamp and a responder status from response.complete, response.partial or response.error.
+- Be idempotent on correlation ID; the same search may be redelivered up to five times.
+- Use a fresh API_call_ID, IST TIMESTAMP and a responder status from response.complete, response.partial or response.error.
 
 ### Related scenario
 
-An insurer receives a search Task from the scheme authority for a claim its TPA rejected last quarter. The gateway-facing endpoint acknowledges with 202, and a worker retrieves the stored ClaimResponse for the reference number. The TPA posts /v1/search/on_submit with the ClaimResponse, basedOn set to the authority's reference id and about set to the insurer's claim id and current status, under the same correlation id as the search. The authority's system acknowledges within 30 seconds and the reviewer compares the adjudication against the provider's original claim and any reprocess Task submitted on /v1/task/submit.
+An insurer receives a search Task from the scheme authority for a claim its TPA rejected last quarter. The gateway-facing endpoint acknowledges with 202, and a worker retrieves the stored ClaimResponse for the reference number. The TPA posts /v1/search/on_submit with the ClaimResponse, basedOn set to the authority's reference ID and about set to the insurer's claim ID and current status, under the same correlation ID as the search. The authority's system acknowledges within 30 seconds and the reviewer compares the adjudication against the provider's original claim and any reprocess Task submitted on /v1/task/submit.
 
 ### Specification
 

@@ -1,4 +1,4 @@
-# Face auth capture PID
+# Submit the face auth capture PID
 
 `POST /pmjay/sbxhcx/abdmproxy/abha/biometric/capture/pid`
 

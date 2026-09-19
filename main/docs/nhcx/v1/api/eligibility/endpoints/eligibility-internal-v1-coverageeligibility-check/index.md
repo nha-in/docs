@@ -1,4 +1,4 @@
-# Coverage eligibility check (internal) (adapter)
+# Submit the coverage eligibility check (internal) (adapter)
 
 `POST /internal/v1/coverageeligibility/check`
 

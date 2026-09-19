@@ -6,7 +6,7 @@ V2 variant of the ABHA policy link; same ParticipantLinkAbhaRequest body and Par
 
 ### Business purpose
 
-This endpoint serves the same business need as /participant/link/abha/policy: it lets a payer (or the TPA processing on its behalf) record which products a beneficiary holds, keyed by ABHA number and member id, so that providers can discover the policy and route claims correctly. The OpenAPI document exposes it as operation participantLinkAbhaPolicyV2 with an identical request and response schema to the v1 path; the documentation does not describe any behavioural difference beyond the path and operationId.
+This endpoint serves the same business need as /participant/link/abha/policy: it lets a payer (or the TPA processing on its behalf) record which products a beneficiary holds, keyed by ABHA number and member ID, so that providers can discover the policy and route claims correctly. The OpenAPI document exposes it as operation participantLinkAbhaPolicyV2 with an identical request and response schema to the v1 path; the documentation does not describe any behavioural difference beyond the path and operationId.
 
 ### When to use
 
@@ -14,11 +14,11 @@ Use it in exactly the situations where the v1 link call applies: policy issue, r
 
 ### Preconditions
 
-- A valid Bearer token from the client-credentials call (POST /get/session, form-urlencoded client_id, client_secret, grant_type=client_credentials); tokens last 1200 seconds, so refresh before expiry.
-- HTTP headers Accept: application/json, Content-Type: application/json and bearer_auth: Bearer <token> (the participant service uses bearer_auth, not Authorization).
-- Base path for the participant service: https://apisbx.abdm.gov.in/pmjay/sbxhcx/participanthcxservice (sandbox) or https://apisprod.nha.gov.in/pmjay/hcx/participanthcxservice (production).
-- This is a synchronous plain-JSON registry call: no JWE envelope, no x-hcx-* protocol headers and no correlation id are involved.
-- The token must belong to the participant named as payerid or processingid, generated with the client_id used at participant creation.
+- A valid Bearer token from the client-credentials call (POST /get/session, form-urlencoded client_ID, client_secret, grant_type=client_credentials); tokens last 1200 seconds, so refresh before expiry.
+- HTTP headers Accept: application/json, Content-Type: application/json and bearer_auth: Bearer <token> (the participant service uses bearer_auth, not Authorisation).
+- Base path for the participant service: https://apisbx.ABDM.gov.in/pmjay/sbxhcx/participanthcxservice (sandbox) or https://apisprod.NHA.gov.in/pmjay/hcx/participanthcxservice (production).
+- This is a synchronous plain-JSON registry call: no JWE envelope, no x-hcx-* protocol headers and no correlation ID are involved.
+- The token must belong to the participant named as payerid or processingid, generated with the client_ID used at participant creation.
 - Note the capital V in the path (/V2/participant/...), which differs from the lower-case /v2/ used by the init and validate variants.
 
 ### Postconditions
@@ -27,7 +27,7 @@ A successful call returns HTTP 200 with ParticipantLinkAbhaResponse (optional re
 
 ### Common mistakes
 
-- Calling with a token minted from a client_id other than the one used at participant creation for the payer or TPA; NHA lists this as common mistake 10 and the call is refused even though the token itself is valid.
+- Calling with a token minted from a client_ID other than the one used at participant creation for the payer or TPA; NHA lists this as common mistake 10 and the call is refused even though the token itself is valid.
 - Confusing payerid and processingid: payerid is always the insurance company's own participant code; processingid is only the TPA code when the payer is mapped under a TPA.
 - Trying to move a payer to a new TPA by re-linking in place; the documented path is de-link, then link again with the new TPA's code as processingid.
 - Omitting one of the required fields (requestid, abhanumber, memberid, payerid, policies with productid and productname) or reusing a non-UUID requestid, which returns 400 with the ErrorResponse envelope.

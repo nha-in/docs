@@ -14,7 +14,7 @@ Documented as the internal variant of the claim callback, consumed by payers. Ca
 
 ### Preconditions
 
-Identical to the public callback: an in-flight claim request with this correlation ID that has not been closed by a response.complete, the provider's certificate for encryption, a new api_call_id, swapped sender and recipient codes, a valid responder status, and business errors inside the encrypted ClaimResponse rather than the header.
+Identical to the public callback: an in-flight claim request with this correlation ID that has not been closed by a response.complete, the provider's certificate for encryption, a new API_call_ID, swapped sender and recipient codes, a valid responder status, and business errors inside the encrypted ClaimResponse rather than the header.
 
 ### Postconditions
 
@@ -27,7 +27,7 @@ Same as /v1/claim/on_submit: HTTP 202 Accepted with the StatusSuccessResponse ac
 
 ### Best practices
 
-- Route both callback variants into one handler keyed on x-hcx-correlation_id.
+- Route both callback variants into one handler keyed on x-hcx-correlation_ID.
 - Acknowledge with 202 inside 30 seconds and process asynchronously; be idempotent under redelivery.
 - Use the public /v1 path unless NHCX onboarding specifies the internal one.
 

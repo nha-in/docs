@@ -1,4 +1,4 @@
-# Payment notice acknowledgement (internal) (adapter)
+# Submit the payment notice acknowledgement (internal) (adapter)
 
 `POST /internal/v1/paymentnotice/on_request`
 

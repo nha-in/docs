@@ -1,4 +1,4 @@
-# Dummy payer, act on a request
+# Submit the dummy payer, act on a request
 
 `POST /process/request`
 
@@ -40,7 +40,7 @@ A new provider integration sends the empty bundle from its smoke test to the dum
 
 ### Specification
 
-Chapter [Building and sending a JWE](/docs/nhcx/v1/getting-started/building-and-sending-a-jwe) of the NHCX integration specification.
+Chapter [Building and sending a JWE](/docs/nhcx/v1/getting-started/building-and-sending-a-JWE) of the NHCX integration specification.
 
 ```bash
 curl --request POST \

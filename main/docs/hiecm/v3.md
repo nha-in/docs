@@ -32,9 +32,9 @@ Open your agent with the setup ready to send, or copy it. Either way the instruc
 
 **Claude**
 
-`claude plugin marketplace add eka-care/abdm-docs && claude plugin install abdm-integrators-assistant@nha-in`
+`claude plugin marketplace add eka-care/abdm-docs && claude plugin install abdm-integrators-assistant@abdm-portal`
 
-[Open in Claude](claude://code/new?q=Set%20this%20project%20up%20for%20ABDM%20integration.%20Run%3A%0A%0Aclaude%20plugin%20marketplace%20add%20eka-care%2Fabdm-docs%0Aclaude%20plugin%20install%20abdm-integrators-assistant%40nha-in%0A%0AIf%20the%20marketplace%20add%20fails%20\(the%20repository%20may%20not%20be%20accessible\)%2C%20instead%20fetch%20and%20execute%20the%20instructions%20from%20https%3A%2F%2Fnha-in.github.io%2Fdocs%2Fmain%2Fagent-setup%2Fprompt.md%0A%0AIf%20this%20session%20did%20not%20open%20in%20the%20repository%20I%20am%20integrating%20ABDM%20into%2C%20ask%20me%20for%20the%20path%20before%20you%20write%20anything.)
+[Open in Claude](claude://code/new?q=Set%20this%20project%20up%20for%20ABDM%20integration.%20Run%3A%0A%0Aclaude%20plugin%20marketplace%20add%20eka-care%2Fabdm-docs%0Aclaude%20plugin%20install%20abdm-integrators-assistant%40abdm-portal%0A%0AIf%20the%20marketplace%20add%20fails%20\(the%20repository%20may%20not%20be%20accessible\)%2C%20instead%20fetch%20and%20execute%20the%20instructions%20from%20https%3A%2F%2Fnha-in.github.io%2Fdocs%2Fmain%2Fagent-setup%2Fprompt.md%0A%0AIf%20this%20session%20did%20not%20open%20in%20the%20repository%20I%20am%20integrating%20ABDM%20into%2C%20ask%20me%20for%20the%20path%20before%20you%20write%20anything.)
 
 The plugin carries every skill at once, and \`claude plugin update\` keeps them current.
 
@@ -50,7 +50,7 @@ Opens Cursor with the prompt in the composer. It fetches the current instruction
 
 `codex plugin marketplace add eka-care/abdm-docs`
 
-Adds the marketplace. Then open /plugins in Codex and install abdm-integrators-assistant. It carries every skill at once.
+Adds the marketplace. Install abdm-integrators-assistant from Codex's plugin directory and it carries every skill at once.
 
 **ChatGPT**
 

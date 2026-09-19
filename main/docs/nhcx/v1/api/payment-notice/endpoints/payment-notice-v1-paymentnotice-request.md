@@ -1,4 +1,4 @@
-# Payment notice request
+# Submit the payment notice request
 
 `POST /v1/paymentnotice/request`
 
@@ -10,13 +10,13 @@ Every other flow exchanges decisions; the payment notice is the only one that te
 
 ### When to use
 
-Payer-initiated, after the final claim is approved (workflow 26). The same bundle shape is sent up to three times as the money progresses: 30 PAYMENT_INITIATED, 31 PAYMENT_PROCESSED and 33 PAYMENT_SETTLED, when the UTR becomes available in PaymentReconciliation.paymentIdentifier.value. The NHA status sheet frames these as x-hcx-status request.initiated because the payer is authoring a new request to the provider; the workbook sample shows x-hcx-workflow_id 11 as a placeholder. The bundle is a Task with code deliver and status requested, plus PaymentNotice (paymentStatus paid), PaymentReconciliation and both Organisations.
+Payer-initiated, after the final claim is approved (workflow 26). The same bundle shape is sent up to three times as the money progresses: 30 PAYMENT_INITIATED, 31 PAYMENT_PROCESSED and 33 PAYMENT_SETTLED, when the UTR becomes available in PaymentReconciliation.paymentIdentifier.value. The NHA status sheet frames these as x-hcx-status request.initiated because the payer is authoring a new request to the provider; the workbook sample shows x-hcx-workflow_ID 11 as a placeholder. The bundle is a Task with code deliver and status requested, plus PaymentNotice (paymentStatus paid), PaymentReconciliation and both Organisations.
 
 ### Preconditions
 
 - The claim has received a response.complete approval and a payment has been initiated in the payer's banking system.
 - The payer holds a valid Bearer token and has fetched the provider's certificate; the bundle is JWE-encrypted for the provider.
-- Protected header carries request.initiated, a fresh correlation UUID for this notice cycle (the workbook says same as the API caller ID), the payer as sender and the provider as recipient, and an IST timestamp.
+- Protected header carries request.initiated, a fresh correlation UUID for this notice cycle (the workbook says same as the API caller ID), the payer as sender and the provider as recipient, and an IST TIMESTAMP.
 - PaymentNotice.amount and PaymentReconciliation.paymentAmount carry the net amount; detail lines itemise TDS and Payment; the claim number is carried as identifier type CLN.
 - Valid provider bank details exist on the payer side (PAYR-1020 otherwise).
 

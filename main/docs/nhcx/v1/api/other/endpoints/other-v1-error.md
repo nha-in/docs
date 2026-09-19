@@ -1,4 +1,4 @@
-# Error report (callback)
+# Submit the error report (callback)
 
 `POST /v1/error`
 
@@ -39,7 +39,7 @@ A hospital posts a pre-authorisation and gets its receipt, but the payer's endpo
 
 ### Specification
 
-Chapter [Building and sending a JWE](/docs/nhcx/v1/getting-started/building-and-sending-a-jwe) of the NHCX integration specification.
+Chapter [Building and sending a JWE](/docs/nhcx/v1/getting-started/building-and-sending-a-JWE) of the NHCX integration specification.
 
 ```bash
 curl --request POST \

@@ -1,4 +1,4 @@
-# Participant create (v1)
+# Submit the participant create (v1)
 
 `POST /participant/create`
 
@@ -10,25 +10,25 @@ Nothing moves through NHCX until both the sender and the recipient exist in the 
 
 ### When to use
 
-Call it once, at onboarding time, before any transaction API is attempted. The FAQ base-URL table lists this path (not the v2 form) as the sandbox Create Participant API at https://apisbx.abdm.gov.in/pmjay/sbxhcx/participanthcxservice/participant/create, whereas production onboarding is documented against /v2/participant/create followed by GET /validate. It is a plain synchronous registry call; no NHCX workflow or x-hcx-status codes are involved. If the organisation later rotates its certificate or moves its callback URL, use /participant/update or /v2/update/cert rather than creating again.
+Call it once, at onboarding time, before any transaction API is attempted. The FAQ base-URL table lists this path (not the v2 form) as the sandbox Create Participant API at https://apisbx.ABDM.gov.in/pmjay/sbxhcx/participanthcxservice/participant/create, whereas production onboarding is documented against /v2/participant/create followed by GET /validate. It is a plain synchronous registry call; no NHCX workflow or x-hcx-status codes are involved. If the organisation later rotates its certificate or moves its callback URL, use /participant/update or /v2/update/cert rather than creating again.
 
 ### Preconditions
 
-- Sandbox or production access has been granted through the semi-manual registration review, so you hold a client_id and client_secret.
-- A valid Bearer token from POST /get/session, sent with the Bearer prefix in the bearer_auth (Authorization) header, plus Accept: application/json and Content-Type: application/json.
-- Required body fields of ParticipantCreateBody: linked_registry_codes, participant_name, registryid, roles, primaryEmail, primaryMobile, encryption_cert and endpoint_url. The certificate is mandatory at creation, so generate the 2048-bit RSA key pair and self-signed X.509 certificate first and Base64-encode it.
+- Sandbox or production access has been granted through the semi-manual registration review, so you hold a client_ID and client_secret.
+- A valid Bearer token from POST /get/session, sent with the Bearer prefix in the bearer_auth (Authorisation) header, plus Accept: application/json and Content-Type: application/json.
+- Required body fields of ParticipantCreateBody: linked_registry_codes, participant_name, registryid, roles, primaryEmail, primaryMobile, encryption_cert and endpoint_URL. The certificate is mandatory at creation, so generate the 2048-bit RSA key pair and self-signed X.509 certificate first and Base64-encode it.
 - Correct registry ID for your type: HFR ID for providers, IRDAI-issued ID for payers and TPAs.
 
 ### Postconditions
 
-On success the registry returns HTTP 200 with ParticipantCreateResponse containing only participant_code, described as the machine-generated unique identifier of the participant on the HCX instance; sandbox codes look like 100001@sbx and production codes like XXXXX7583@hcx. There is no asynchronous callback. The new record carries a status (Created, Active, Inactive or Blocked in the architecture description) that the gateway checks on every routing leg, so the code is not usable for transactions until the instance activates it. Failures return 400 Client Error, 404 Resource not found or 500 with the ErrorResponse envelope (timestamp plus error code, message and trace).
+On success the registry returns HTTP 200 with ParticipantCreateResponse containing only participant_code, described as the machine-generated unique identifier of the participant on the HCX instance; sandbox codes look like 100001@sbx and production codes like XXXXX7583@hcx. There is no asynchronous callback. The new record carries a status (Created, Active, Inactive or Blocked in the architecture description) that the gateway checks on every routing leg, so the code is not usable for transactions until the instance activates it. Failures return 400 Client Error, 404 Resource not found or 500 with the ErrorResponse envelope (TIMESTAMP plus error code, message and trace).
 
 ### Common mistakes
 
 - Passing the wrong registry ID: providers must send the HFR ID, payers the IRDAI ID with leading zeros stripped (0123 becomes 123).
-- Mixing field casing across generations: this v1 body is snake_case (participant_code, encryption_cert, endpoint_url); copying v2 names such as endpointurl yields a 400.
+- Mixing field casing across generations: this v1 body is snake_case (participant_code, encryption_cert, endpoint_URL); copying v2 names such as endpointurl yields a 400.
 - Omitting the Accept header or the Bearer prefix on the token, which surfaces as a rejection before business logic or a flat 401.
-- Registering an endpoint_url that is an IP address or carries a port; the callback URL must be a domain name on an India-based server with the NHCX NAT IPs whitelisted.
+- Registering an endpoint_URL that is an IP address or carries a port; the callback URL must be a domain name on an India-based server with the NHCX NAT IPs whitelisted.
 - Submitting the raw PEM instead of the Base64-encoded certificate.
 
 ### Best practices

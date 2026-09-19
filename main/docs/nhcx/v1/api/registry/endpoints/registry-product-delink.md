@@ -1,8 +1,8 @@
-# De-link payer product
+# Submit the de-link payer product
 
 `POST /product/delink`
 
-Removes a product (product id and name) from a payer's participant code in the registry.
+Removes a product (product ID and name) from a payer's participant code in the registry.
 
 ### Business purpose
 
@@ -14,10 +14,10 @@ Use it when a product is discontinued or renamed (the docs give no rename operat
 
 ### Preconditions
 
-- A valid Bearer token from the client-credentials call (POST /get/session, form-urlencoded client_id, client_secret, grant_type=client_credentials); tokens last 1200 seconds, so refresh before expiry.
-- HTTP headers Accept: application/json, Content-Type: application/json and bearer_auth: Bearer <token> (the participant service uses bearer_auth, not Authorization).
-- Base path for the participant service: https://apisbx.abdm.gov.in/pmjay/sbxhcx/participanthcxservice (sandbox) or https://apisprod.nha.gov.in/pmjay/hcx/participanthcxservice (production).
-- This is a synchronous plain-JSON registry call: no JWE envelope, no x-hcx-* protocol headers and no correlation id are involved.
+- A valid Bearer token from the client-credentials call (POST /get/session, form-urlencoded client_ID, client_secret, grant_type=client_credentials); tokens last 1200 seconds, so refresh before expiry.
+- HTTP headers Accept: application/json, Content-Type: application/json and bearer_auth: Bearer <token> (the participant service uses bearer_auth, not Authorisation).
+- Base path for the participant service: https://apisbx.ABDM.gov.in/pmjay/sbxhcx/participanthcxservice (sandbox) or https://apisprod.NHA.gov.in/pmjay/hcx/participanthcxservice (production).
+- This is a synchronous plain-JSON registry call: no JWE envelope, no x-hcx-* protocol headers and no correlation ID are involved.
 - The payer or insurance company must already be a registered participant with its own participant code.
 - Body is ProductLinkRequest with all three fields required: productid, productname and participantcode.
 
@@ -43,7 +43,7 @@ On success the endpoint returns HTTP 200 with ParticipantCreateResponse containi
 
 ### Related scenario
 
-An insurer retires its old Individual Health Silver product at the end of a policy year, having migrated every member to a successor product. Its system first runs /participant/delink/abha/policy for each member still linked to the old product, then calls /product/delink with the product id, product name and the insurer's participant code. A confirmation call to /product/getowner shows the product no longer resolves. The insurer notifies its network hospitals, whose desks force a refresh of cached policies so that the next coverage-eligibility check and preauthorisation reference the successor product.
+An insurer retires its old Individual Health Silver product at the end of a policy year, having migrated every member to a successor product. Its system first runs /participant/delink/abha/policy for each member still linked to the old product, then calls /product/delink with the product ID, product name and the insurer's participant code. A confirmation call to /product/getowner shows the product no longer resolves. The insurer notifies its network hospitals, whose desks force a refresh of cached policies so that the next coverage-eligibility check and preauthorisation reference the successor product.
 
 ### Specification
 

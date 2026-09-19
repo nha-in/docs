@@ -1,4 +1,4 @@
-# Participant create (v2)
+# Submit the participant create (v2)
 
 `POST /v2/participant/create`
 
@@ -10,7 +10,7 @@ Production onboarding needs to prove that the organisation registering on NHCX i
 
 ### When to use
 
-Use at production onboarding after sandbox certification has been reviewed and credentials issued; the documented URL is https://apisprod.nha.gov.in/pmjay/hcx/participanthcxservice/v2/participant/create. It is always followed by GET /validate with the returned transactionid and the SMS passcode, which must happen within 24 hours. In the sandbox the FAQ lists the unversioned /participant/create instead. No NHCX workflow codes or x-hcx-status values apply; this is a synchronous JSON call outside the JWE protocol.
+Use at production onboarding after sandbox certification has been reviewed and credentials issued; the documented URL is https://apisprod.NHA.gov.in/pmjay/hcx/participanthcxservice/v2/participant/create. It is always followed by GET /validate with the returned transactionid and the SMS passcode, which must happen within 24 hours. In the sandbox the FAQ lists the unversioned /participant/create instead. No NHCX workflow codes or x-hcx-status values apply; this is a synchronous JSON call outside the JWE protocol.
 
 ### Preconditions
 
@@ -23,7 +23,7 @@ Use at production onboarding after sandbox certification has been reviewed and c
 
 ### Postconditions
 
-HTTP 200 with ParticipantCreateV2Resp: participantid, facilityname, facilitycontact and facilityemail echoed from the linked registry, a transactionid such as 1vouv8tlz2tnl-1fpspjhwj07c6, and an error object (code, message, trace). A passcode is sent by SMS to the registered mobile number. The participant is not confirmed until GET /validate?transactionId=&passcode= succeeds; the transaction id and passcode are valid for 24 hours and each re-trigger generates a new pair. Only after creation confirmation can /v2/participant/update be used to upload the certificate and endpoint. Failures use the standard 400/404/500 ErrorResponse envelope.
+HTTP 200 with ParticipantCreateV2Resp: participantid, facilityname, facilitycontact and facilityemail echoed from the linked registry, a transactionid such as 1vouv8tlz2tnl-1fpspjhwj07c6, and an error object (code, message, trace). A passcode is sent by SMS to the registered mobile number. The participant is not confirmed until GET /validate?transactionId=&passcode= succeeds; the transaction ID and passcode are valid for 24 hours and each re-trigger generates a new pair. Only after creation confirmation can /v2/participant/update be used to upload the certificate and endpoint. Failures use the standard 400/404/500 ErrorResponse envelope.
 
 ### Common mistakes
 
@@ -36,10 +36,10 @@ HTTP 200 with ParticipantCreateV2Resp: participantid, facilityname, facilitycont
 
 ### Best practices
 
-- Persist transactionid immediately, together with the timestamp, so the /validate step can be completed by whoever holds the registered phone.
+- Persist transactionid immediately, together with the TIMESTAMP, so the /validate step can be completed by whoever holds the registered phone.
 - Verify the mobile number and registry ID against HFR or IRDAI records before calling; the check is strict and every failed attempt is a manual round trip.
 - Treat the error object in a 200 response as meaningful and surface it to the operator rather than assuming success from the HTTP status alone.
-- Do not retry blindly: each call generates a new transaction id and passcode and invalidates the plan to confirm the previous one.
+- Do not retry blindly: each call generates a new transaction ID and passcode and invalidates the plan to confirm the previous one.
 - Keep sandbox and production credentials, hosts and participant codes strictly separate.
 
 ### Related scenario

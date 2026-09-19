@@ -2,9 +2,9 @@
 
 `POST v1_communication_on_request`
 
-Hosted by the payer. The exchange posts this message to the `endpoint_url` you registered, at `/v1/communication/on_request`, with the headers and the sealed payload the sender posted. Answer HTTP 202 with the receipt first and process afterwards; [Receiving a callback](/docs/nhcx/v1/getting-started/receiving-a-callback) has the rules.
+Hosted by the payer. The exchange posts this message to the `endpoint_URL` you registered, at `/v1/communication/on_request`, with the headers and the sealed payload the sender posted. Answer HTTP 202 with the receipt first and process afterwards; [Receiving a callback](/docs/nhcx/v1/getting-started/receiving-a-callback) has the rules.
 
-Provider returns the acknowledgement Task bundle for a payer communication, echoing the reason code and correlation id so the payer can close the loop.
+Provider returns the acknowledgement Task bundle for a payer communication, echoing the reason code and correlation ID so the payer can close the loop.
 
 ```bash
 curl --request POST \

@@ -1,4 +1,4 @@
-# Adjudicator: act on a case
+# Submit the adjudicator: act on a case
 
 `POST /pmjay/hcx/nhcxpayerservice/wrapper/process/case`
 

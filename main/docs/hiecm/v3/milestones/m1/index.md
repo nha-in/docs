@@ -2,14 +2,6 @@
 
 Milestone 1 is the identity milestone of [ABDM](/docs/main/docs/hiecm/v3/getting-started/glossary#abdm). You create an [ABHA](/docs/main/docs/hiecm/v3/getting-started/glossary#abha) for a person, log that person in, and read or update their profile. An ABHA number is a 14 digit identifier issued after a [KYC](/docs/main/docs/hiecm/v3/getting-started/glossary#kyc) check. Every other ABDM flow assumes the person already has one, so nobody skips M1.
 
-[Try the M1 APIs](/docs/main/docs/hiecm/v3/api/m1)
-
-[Every call in M1, one page each: the headers it needs, the payload it takes, the callback it triggers, and a request builder you can fire at the sandbox.](/docs/main/docs/hiecm/v3/api/m1)
-
-[Error codes](/docs/main/docs/hiecm/v3/api/m1/errors)
-
-[What each code M1 returns actually means, and the first thing to check when you see one.](/docs/main/docs/hiecm/v3/api/m1/errors)
-
 ## In short
 
 - M1 is identity only. It creates and authenticates an ABHA. It moves no health records.
@@ -67,20 +59,19 @@ Every M1 call, its error codes and its certification cases in one file: 55 opera
 [SKILL.md](/docs/main/skills/abdm-m1/SKILL.md "The router. Use the command below to take the references with it.")
 
 - ScaffoldThe loop that builds the module flow by flow against the sandbox, ending on an observed result rather than on a call returning 200.
-- Integrate55 operations, with their hosts, headers and the rules that hold across them.
-- Debug89 recorded error codes, each with its message and what to do about it.
-- Test122 test cases, each with the call it makes and what to see when it passes.
+- Integrate41 operations, with their hosts, headers and the rules that hold across them.
+- Debug14 recorded error codes, each with its message and what to do about it.
 
-`mkdir -p .claude/skills/abdm-m1/references && curl -fsSL https://nha-in.github.io/docs/main/skills/abdm-m1/SKILL.md -o .claude/skills/abdm-m1/SKILL.md && for f in scaffold integrate debug test; do curl -fsSL https://nha-in.github.io/docs/main/skills/abdm-m1/references/$f.md -o .claude/skills/abdm-m1/references/$f.md; done`
+`mkdir -p .claude/skills/abdm-m1/references && curl -fsSL https://nha-in.github.io/docs/main/skills/abdm-m1/SKILL.md -o .claude/skills/abdm-m1/SKILL.md && for f in scaffold integrate debug; do curl -fsSL https://nha-in.github.io/docs/main/skills/abdm-m1/references/$f.md -o .claude/skills/abdm-m1/references/$f.md; done`
 
-[Open in Claude](claude://code/new?q=Install%20the%20ABDM%20M1%20agent%20skill%20into%20this%20project%2C%20then%20help%20me%20use%20it.%0A%0ARun%20this%3A%0Amkdir%20-p%20.claude%2Fskills%2Fabdm-m1%2Freferences%20%26%26%20curl%20-fsSL%20https%3A%2F%2Fnha-in.github.io%2Fdocs%2Fmain%2Fskills%2Fabdm-m1%2FSKILL.md%20-o%20.claude%2Fskills%2Fabdm-m1%2FSKILL.md%20%26%26%20for%20f%20in%20scaffold%20integrate%20debug%20test%3B%20do%20curl%20-fsSL%20https%3A%2F%2Fnha-in.github.io%2Fdocs%2Fmain%2Fskills%2Fabdm-m1%2Freferences%2F%24f.md%20-o%20.claude%2Fskills%2Fabdm-m1%2Freferences%2F%24f.md%3B%20done%0A%0AIf%20this%20session%20did%20not%20open%20in%20the%20repository%20I%20am%20integrating%20ABDM%20into%2C%20ask%20me%20for%20the%20path%20before%20you%20write%20anything.)
+[Open in Claude](claude://code/new?q=Install%20the%20ABDM%20M1%20agent%20skill%20into%20this%20project%2C%20then%20help%20me%20use%20it.%0A%0ARun%20this%3A%0Amkdir%20-p%20.claude%2Fskills%2Fabdm-m1%2Freferences%20%26%26%20curl%20-fsSL%20https%3A%2F%2Fnha-in.github.io%2Fdocs%2Fmain%2Fskills%2Fabdm-m1%2FSKILL.md%20-o%20.claude%2Fskills%2Fabdm-m1%2FSKILL.md%20%26%26%20for%20f%20in%20scaffold%20integrate%20debug%3B%20do%20curl%20-fsSL%20https%3A%2F%2Fnha-in.github.io%2Fdocs%2Fmain%2Fskills%2Fabdm-m1%2Freferences%2F%24f.md%20-o%20.claude%2Fskills%2Fabdm-m1%2Freferences%2F%24f.md%3B%20done%0A%0AIf%20this%20session%20did%20not%20open%20in%20the%20repository%20I%20am%20integrating%20ABDM%20into%2C%20ask%20me%20for%20the%20path%20before%20you%20write%20anything.)
 
 Drops the skill into this project. Claude loads it when a task matches.
 
 How to use it
 
 1. Run the command above in the repository you are integrating.
-2. Ask your agent for the job in your own words. "Add ABHA creation by Aadhaar OTP to this codebase", "why am I getting ABDM-1001", or "write the M1 tests for this". The skill loads when the task matches it.
+2. Ask your agent for the job in your own words. "Add ABHA creation by Aadhaar OTP to this codebase", "why am I getting 900900". The skill loads when the task matches it.
 3. Check what it writes against these pages. The skill carries the facts, not the sandbox: nothing in it has been run against ABDM.
 4. Open in Claude needs that app installed. It fills the composer and waits: nothing runs until you read it and press Enter.
 
@@ -88,7 +79,7 @@ How to use it
 
 M1 has no certification step of its own. One exit process covers the whole integration, run once, after every milestone your role needs works end to end. See [Going live](/docs/main/docs/hiecm/v3/getting-started/going-live) for the four steps and what each one asks of you.
 
-Sandbox test data is in the [data dictionary](/docs/main/docs/hiecm/v3/reference/data-dictionary). [Support](/docs/main/docs/support) lists the channels. The cases you are certified against are in [M1 testing use cases](/docs/main/docs/hiecm/v3/resources/testing/m1).
+Sandbox test data is in the [data dictionary](/docs/main/docs/hiecm/v3/reference/data-dictionary). [Support](/docs/main/docs/support) lists the channels. The cases you are certified against are in the certification pack NHA issues.
 
 ## The page map
 
@@ -361,7 +352,7 @@ sequenceDiagram
 
 Once you hold a token for a person, the profile reads are plain calls. Get profile, QR code and card download form one set.
 
-The card is returned in the response rather than fetched from a separate link. The content type and encoding of the card and QR code responses are not yet published. See the [APIs](/docs/main/docs/hiecm/v3/api/m1/apis) page for the fields that are.
+The card is returned in the response rather than fetched from a separate link. The content type and encoding of the card and QR code responses are not yet published. See the [APIs](/docs/main/docs/hiecm/v3/api/m1) page for the fields that are.
 
 ## ABHA address with a mobile number
 
@@ -373,7 +364,7 @@ Nothing in this track is reserved for one kind of integrator. It takes the same 
 
 ### Create the address
 
-The calls are the enrolment set in [the P1 reference](/docs/main/docs/hiecm/v3/api/p1), written up as [creating an ABHA address](/docs/main/docs/hiecm/v3/milestones/p1#creating-an-abha-address).
+The calls are the enrolment set in [the P1 reference](/docs/main/docs/hiecm/v3/milestones/p1), written up as [creating an ABHA address](/docs/main/docs/hiecm/v3/milestones/p1#creating-an-abha-address).
 
 The person verifies the mobile number by OTP, then types the demographics the ABHA service would otherwise have taken from Aadhaar. First name, year of birth, gender, address, state, district and pin code are mandatory; middle name, last name and the day and month of birth are not. Before creating anything, list the addresses already linked to that mobile number and let the person pick one: a second address for somebody who already has one is the most common thing that goes wrong here.
 
@@ -396,11 +387,11 @@ sequenceDiagram
     S->>A: Fetch the PHR profile
 ```
 
-Logging in by ABHA address is its own set of calls, under `/v3/phr/web/login/abha`, and it is the way into a profile that has no ABHA number behind it. Ask first and authenticate second: [search the ABHA address](/docs/main/docs/hiecm/v3/api/m1/endpoints/m1-phr-search-abha-address) returns the authentication methods that address supports, which is what stops you offering an Aadhaar OTP to a profile with no Aadhaar behind it.
+Logging in by ABHA address is its own set of calls, under `/v3/phr/web/login/abha`, and it is the way into a profile that has no ABHA number behind it. Ask first and authenticate second: [search the ABHA address](/docs/main/docs/hiecm/v3/api/m1/endpoints/m1-login-abha-address-mobile-otp/01-m1-post-v3-phr-web-login-abha-search) returns the authentication methods that address supports, which is what stops you offering an Aadhaar OTP to a profile with no Aadhaar behind it.
 
-The [OTP request](/docs/main/docs/hiecm/v3/api/m1/endpoints/m1-phr-request-otp) carries a `scope` pair naming the method: `abha-address-login` with `mobile-verify` for a mobile OTP, `abha-address-login` with `aadhaar-verify` for an Aadhaar OTP, and `abha-login` with `aadhaar-bio-verify`, `aadhaar-face-verify` or `aadhaar-iris-verify` for the three biometric methods. The ABHA address travels encrypted, the same way every other identifier does.
+The [OTP request](/docs/main/docs/hiecm/v3/api/m1/endpoints/m1-login-abha-address-mobile-otp/02-m1-post-v3-phr-web-login-abha-request-otp) carries a `scope` pair naming the method: `abha-address-login` with `mobile-verify` for a mobile OTP, `abha-address-login` with `aadhaar-verify` for an Aadhaar OTP, and `abha-login` with `aadhaar-bio-verify`, `aadhaar-face-verify` or `aadhaar-iris-verify` for the three biometric methods. The ABHA address travels encrypted, the same way every other identifier does.
 
-Once it verifies, the [PHR profile](/docs/main/docs/hiecm/v3/api/m1/endpoints/m1-get-phr-profile) and the PHR card and QR code read against the token it returns.
+Once it verifies, the [PHR profile](/docs/main/docs/hiecm/v3/api/m1/endpoints/m1-login-abha-address-mobile-otp/04-m1-get-v3-phr-web-login-profile-abha-profile) and the PHR card and QR code read against the token it returns.
 
 ### What Self-Declared costs, and what ends it
 
@@ -435,7 +426,7 @@ The patient's app holds its screen open for 30 seconds. Send the acknowledgement
 
 `profile.patient` carries the ABHA number, the ABHA address, name, gender, date of birth, mobile number, address and a KYC photo. Match on the ABHA address. The counter context is yours to define: up to 20 alphanumeric characters, and never the facility id, the HIP id or the HIP name.
 
-The two calls: [receive a patient's shared profile](/docs/main/docs/hiecm/v3/api/m1/endpoints/m1-receive-patient-share) and [send the share acknowledgement](/docs/main/docs/hiecm/v3/api/m1/endpoints/m1-on-share-acknowledgement). The patient's side is [P2 Linking and records](/docs/main/docs/hiecm/v3/milestones/p2#scan-and-share-at-a-facility).
+The two calls: [receive a patient's shared profile](/docs/main/docs/hiecm/v3/api/m2/endpoints/m2-abdm-patient-share-hip/01-m2-post-v3-hip-patient-share) and [send the share acknowledgement](/docs/main/docs/hiecm/v3/api/m2/endpoints/m2-abdm-patient-share-hip/02-m2-post-patient-share-v3-on-share). The patient's side is [P2 Linking and records](/docs/main/docs/hiecm/v3/milestones/p2#scan-and-share-at-a-facility).
 
 ## Next
 

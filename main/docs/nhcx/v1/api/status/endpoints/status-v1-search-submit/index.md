@@ -10,40 +10,40 @@ Regulators and scheme authorities need to see what was actually claimed and deci
 
 ### When to use
 
-Use it when an authorised entity needs the claim documents for a known case number, for example during a regulatory audit or a dispute. It is a pull, not a lifecycle step, and sits outside the workflow-code sequence. The protected header's x-hcx-correlation_id carries the correlation id of the request being queried, and x-hcx-status is request.initiated. The result arrives asynchronously on /v1/search/on_submit with task type code=poll; if the search is for a claim document, the callback payload is the ClaimResponse for the reference number.
+Use it when an authorised entity needs the claim documents for a known case number, for example during a regulatory audit or a dispute. It is a pull, not a lifecycle step, and sits outside the workflow-code sequence. The protected header's x-hcx-correlation_ID carries the correlation ID of the request being queried, and x-hcx-status is request.initiated. The result arrives asynchronously on /v1/search/on_submit with task type code=poll; if the search is for a claim document, the callback payload is the ClaimResponse for the reference number.
 
 ### Preconditions
 
 - The caller is an entity authorised to search claim information (the source names NHA and IRDAI) and is registered on NHCX with a valid Bearer token.
 - Request body is a JWE per RFC-7516 with protocol headers per the ProtocolHeader schema.
-- Domain payload is an encrypted Task built per the TaskBundle, with the entity being queried referenced in the about element using the sender's reference id.
-- Protected header carries sender_code, recipient_code, a fresh api_call_id, the correlation id of the request being queried, an IST timestamp and status request.initiated.
+- Domain payload is an encrypted Task built per the TaskBundle, with the entity being queried referenced in the about element using the sender's reference ID.
+- Protected header carries sender_code, recipient_code, a fresh API_call_ID, the correlation ID of the request being queried, an IST TIMESTAMP and status request.initiated.
 - HTTP headers Accept, Content-Type and bearer_auth.
 
 ### Postconditions
 
-The gateway returns HTTP 202 with a StatusSuccessResponse (timestamp, api_call_id, correlation_id, result with sender_code, recipient_code, entity_type and protocol_status, and error), or 400, 404 or 500 in the same envelope. It forwards the Task to the payer, who responds later on /v1/search/on_submit with the claim document: a ClaimResponse whose basedOn carries the sender's reference id and whose about carries the recipient's reference id and the current status of the response entity. No case state changes; Search only reads.
+The gateway returns HTTP 202 with a StatusSuccessResponse (TIMESTAMP, API_call_ID, correlation_ID, result with sender_code, recipient_code, entity_type and protocol_status, and error), or 400, 404 or 500 in the same envelope. It forwards the Task to the payer, who responds later on /v1/search/on_submit with the claim document: a ClaimResponse whose basedOn carries the sender's reference ID and whose about carries the recipient's reference ID and the current status of the response entity. No case state changes; Search only reads.
 
 ### Common mistakes
 
 - Using Search as a general status lookup; Status answers where a request is, Search returns documents.
 - Sending a CommunicationRequest as the domain payload; Search uses a Task (Status is the one that uses CommunicationRequest).
-- Forgetting the about reference with the sender's reference id, leaving the payer with nothing to search for (PAYR-1102 Invalid search parameter requested).
-- Minting a new correlation id rather than carrying the one for the request being queried.
+- Forgetting the about reference with the sender's reference ID, leaving the payer with nothing to search for (PAYR-1102 Invalid search parameter requested).
+- Minting a new correlation ID rather than carrying the one for the request being queried.
 - Calling it from a participant that is not an authorised entity; the description scopes it explicitly.
 - Expecting the documents in the synchronous 202.
 
 ### Best practices
 
-- Reference the case in Task.about using the sender's own reference id and keep it consistent with the correlation id you carry.
-- Persist the correlation id so the on_submit result can be matched.
-- Use fresh api_call_id values, IST timestamps and request.initiated on the outbound header.
-- Handle 404 as a signal that the correlation id is unknown to the gateway, not as a retry trigger.
+- Reference the case in Task.about using the sender's own reference ID and keep it consistent with the correlation ID you carry.
+- Persist the correlation ID so the on_submit result can be matched.
+- Use fresh API_call_ID values, IST timestamps and request.initiated on the outbound header.
+- Handle 404 as a signal that the correlation ID is unknown to the gateway, not as a retry trigger.
 - Implement v1/error and the on_submit receiver before submitting searches.
 
 ### Related scenario
 
-A scheme authority reviewing a grievance about a rejected claim needs the payer's adjudication record. Its integration posts /v1/search/submit with a Task whose about element names the case and whose header carries the claim's correlation id. The gateway acknowledges with 202 and forwards the Task to the payer. The payer's system locates the ClaimResponse for the reference number and returns it on /v1/search/on_submit with basedOn holding the authority's reference and about holding the payer's reference and current status. The authority then compares it with the provider's original /v1/claim/submit bundle.
+A scheme authority reviewing a grievance about a rejected claim needs the payer's adjudication record. Its integration posts /v1/search/submit with a Task whose about element names the case and whose header carries the claim's correlation ID. The gateway acknowledges with 202 and forwards the Task to the payer. The payer's system locates the ClaimResponse for the reference number and returns it on /v1/search/on_submit with basedOn holding the authority's reference and about holding the payer's reference and current status. The authority then compares it with the provider's original /v1/claim/submit bundle.
 
 ### Specification
 

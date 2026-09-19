@@ -1,4 +1,4 @@
-# Task callback (reprocess or cancel outcome)
+# Submit the task callback (reprocess or cancel outcome)
 
 `POST /v1/task/on_submit`
 
@@ -10,14 +10,14 @@ This callback closes the appeal or cancellation the provider opened on /v1/task/
 
 ### When to use
 
-The payer calls it after acknowledging a Task (workflow 251 REPROCESS_REQUEST_RECEIVED), validating it and re-adjudicating. The outer wrapper is a collection Bundle with a Task whose status is completed and whose Task.output.type references a ClaimResponse for the entity the sender named; workflow 252 approved (outcome complete), 253 rejected (outcome complete with adjudication reason cancelled, display Rejected), 254 queried (outcome partial, often zero totals; provider answers with workflow 19). Cancellation accomplished is PC02. Carry the same x-hcx-correlation_id and a responder status (response.complete, or request.initiated for a query per the workflow sheet).
+The payer calls it after acknowledging a Task (workflow 251 REPROCESS_REQUEST_RECEIVED), validating it and re-adjudicating. The outer wrapper is a collection Bundle with a Task whose status is completed and whose Task.output.type references a ClaimResponse for the entity the sender named; workflow 252 approved (outcome complete), 253 rejected (outcome complete with adjudication reason cancelled, display Rejected), 254 queried (outcome partial, often zero totals; provider answers with workflow 19). Cancellation accomplished is PC02. Carry the same x-hcx-correlation_ID and a responder status (response.complete, or request.initiated for a query per the workflow sheet).
 
 ### Preconditions
 
-- The inbound Task was decrypted, its correlation id and workflow captured, and the 202 acceptance body returned within 30 seconds.
+- The inbound Task was decrypted, its correlation ID and workflow captured, and the 202 acceptance body returned within 30 seconds.
 - Payer registered with a valid Bearer token and the provider's certificate for encryption.
 - A Task bundle: Task.status completed, Task.output[0].valueReference pointing to a ClaimResponse entry that is structurally identical to a normal adjudication response (total, item adjudication, processNote, adjudication reason).
-- Protected header echoing the request's correlation id with a fresh api_call_id, IST timestamp, the outcome workflow id and a responder status.
+- Protected header echoing the request's correlation ID with a fresh API_call_ID, IST TIMESTAMP, the outcome workflow ID and a responder status.
 
 ### Postconditions
 
@@ -28,22 +28,22 @@ The gateway returns HTTP 202 with the StatusSuccessResponse envelope (400, 404, 
 - Provider side: looking for the ClaimResponse as a direct Bundle.entry instead of following Task.output[].valueReference.
 - Reading outcome complete as approval; a rejected reprocess is outcome complete with adjudication reason cancelled.
 - Treating a queried response with outcome partial and zero totals as a zero-value approval.
-- Payer side: minting a new correlation id on the callback (NHCX-1010) or sending a standalone ClaimResponse bundle instead of a Task wrapper.
+- Payer side: minting a new correlation ID on the callback (NHCX-1010) or sending a standalone ClaimResponse bundle instead of a Task wrapper.
 - Missing the 30-second 202 on the inbound Task, triggering five redeliveries and deletion of the request.
 - Splitting the PMJAY pipe-delimited adjudication reason (USER~datetime~type~comment~trust) as if it were structured.
 
 ### Best practices
 
-- Payer: acknowledge first, re-adjudicate asynchronously, then post the Task bundle with the outcome workflow id and ClaimResponse nested in Task.output.
+- Payer: acknowledge first, re-adjudicate asynchronously, then post the Task bundle with the outcome workflow ID and ClaimResponse nested in Task.output.
 - Provider: share the ClaimResponse parser between /v1/claim/on_submit and this callback; only the extraction path differs.
 - Branch on adjudication reason as well as outcome; check processNote for reductions or query text.
 - Terminate the appeal branch of the case state machine on 252 or 253; on 254 respond with workflow 19.
-- Be idempotent on correlation id; expect redeliveries.
-- Fresh api_call_id, IST timestamp, responder status on the callback header.
+- Be idempotent on correlation ID; expect redeliveries.
+- Fresh API_call_ID, IST TIMESTAMP, responder status on the callback header.
 
 ### Related scenario
 
-A scheme payer's TPA receives a reprocess Task on a rejected claim with the missing implant invoice attached. Its endpoint returns 202 and the case reopens for re-adjudication with the original claim, the new document and the justification. The reviewer approves at the package rate, and the TPA posts /v1/task/on_submit: a Task bundle, status completed, Task.output referencing a ClaimResponse with outcome complete, workflow 252, under the claim's correlation id. The hospital acknowledges within 30 seconds, extracts the ClaimResponse from Task.output, marks the appeal closed and awaits the payment notice on /v1/paymentnotice/request.
+A scheme payer's TPA receives a reprocess Task on a rejected claim with the missing implant invoice attached. Its endpoint returns 202 and the case reopens for re-adjudication with the original claim, the new document and the justification. The reviewer approves at the package rate, and the TPA posts /v1/task/on_submit: a Task bundle, status completed, Task.output referencing a ClaimResponse with outcome complete, workflow 252, under the claim's correlation ID. The hospital acknowledges within 30 seconds, extracts the ClaimResponse from Task.output, marks the appeal closed and awaits the payment notice on /v1/paymentnotice/request.
 
 ### Specification
 

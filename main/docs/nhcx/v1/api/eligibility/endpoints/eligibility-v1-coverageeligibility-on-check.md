@@ -1,4 +1,4 @@
-# Coverage eligibility callback
+# Submit the coverage eligibility callback
 
 `POST /v1/coverageeligibility/on_check`
 
@@ -10,24 +10,24 @@ This is the answer leg of the eligibility check. The payer (or a TPA acting for 
 
 ### When to use
 
-The payer calls it after it has processed a /v1/coverageeligibility/check request, using the same x-hcx-correlation_id. The protected header carries x-hcx-status response.complete for a final answer (the coverage-eligibility workbook sheets spell this response.completed; the preauth and claim sheets use response.complete), response.partial for a partial answer, or response.error for a protocol-level rejection with x-hcx-error_details populated. The plaintext is a CoverageEligibilityResponseBundle with outcome complete, insurance[*].inforce, item[*].excluded, item[*].authorizationRequired and item[*].authorizationSupporting. A redirect or forward instruction to another payer is an alternate documented outcome.
+The payer calls it after it has processed a /v1/coverageeligibility/check request, using the same x-hcx-correlation_ID. The protected header carries x-hcx-status response.complete for a final answer (the coverage-eligibility workbook sheets spell this response.completed; the preauth and claim sheets use response.complete), response.partial for a partial answer, or response.error for a protocol-level rejection with x-hcx-error_details populated. The plaintext is a CoverageEligibilityResponseBundle with outcome complete, insurance[*].inforce, item[*].excluded, item[*].authorizationRequired and item[*].authorizationSupporting. A redirect or forward instruction to another payer is an alternate documented outcome.
 
 ### Preconditions
 
 - A /v1/coverageeligibility/check request with this correlation ID must exist in NHCX; a callback against an unknown or already deleted correlation ID fails with NHCX-1010.
 - The payer has a valid Bearer token and has fetched the provider's certificate to encrypt the response bundle for the provider's private key.
-- x-hcx-correlation_id echoes the request's value; x-hcx-api_call_id is a new UUID; sender and recipient codes are swapped relative to the request.
+- x-hcx-correlation_ID echoes the request's value; x-hcx-API_call_ID is a new UUID; sender and recipient codes are swapped relative to the request.
 - x-hcx-status is one of response.complete, response.partial or response.error (NHCX-1011 otherwise).
 - Business or clinical errors are embedded inside the encrypted CoverageEligibilityResponse, never in the clear header; only protocol errors go in x-hcx-error_details.
 
 ### Postconditions
 
-The gateway (and, when the callback reaches it, the provider system) returns HTTP 202 Accepted with the StatusSuccessResponse acknowledgement echoing correlation_id and api_call_id, entity_type coverageeligibility and a protocol_status. NHCX forwards the encrypted response to the provider's registered callback URL; the provider must acknowledge with 202 within 30 seconds or NHCX retries, and after five failed attempts the request under that correlation ID is deleted and the sender is notified via v1/error. On success the eligibility conversation is closed and the provider can decide whether to proceed to preauth.
+The gateway (and, when the callback reaches it, the provider system) returns HTTP 202 Accepted with the StatusSuccessResponse acknowledgement echoing correlation_ID and API_call_ID, entity_type coverageeligibility and a protocol_status. NHCX forwards the encrypted response to the provider's registered callback URL; the provider must acknowledge with 202 within 30 seconds or NHCX retries, and after five failed attempts the request under that correlation ID is deleted and the sender is notified via v1/error. On success the eligibility conversation is closed and the provider can decide whether to proceed to preauth.
 
 ### Common mistakes
 
 - Returning HTTP 200 or an ad-hoc body instead of the 202 acceptance shape on the receiving side, which NHCX treats as an error and retries up to five times.
-- Minting a new correlation ID on the callback instead of echoing the request's (NHCX-1010 no data with given correlation id).
+- Minting a new correlation ID on the callback instead of echoing the request's (NHCX-1010 no data with given correlation ID).
 - Sending a JWEPayloadResponse where a ProtocolResponse is expected on error (PAYR-1517), or using the superseded status spelling response.fail versus response.error; the sources disagree, so check which your gateway build accepts.
 - Placing patient or clinical error detail in x-hcx-error_details, which the gateway stores for audit.
 - Provider side: expecting the response codes to match the request codes verbatim; the payer answers in its own master codes.
@@ -35,7 +35,7 @@ The gateway (and, when the callback reaches it, the provider system) returns HTT
 ### Best practices
 
 - Acknowledge first, process later: return 202 within 30 seconds and queue decryption and business handling.
-- Be idempotent on x-hcx-correlation_id; the same callback may be redelivered up to five times.
+- Be idempotent on x-hcx-correlation_ID; the same callback may be redelivered up to five times.
 - Set inforce, disposition, excluded, authorizationRequired and authorizationSupporting explicitly so the desk can act without free-text interpretation.
 - Use ProtocolResponse with x-hcx-status response.error and a catalogued error code for protocol rejections; put business errors inside the encrypted resource.
 - Providers: whitelist the NHCX NAT IPs, expose the callback on a domain name (not IP or port) on an India-based server, and implement v1/error alongside on_check.

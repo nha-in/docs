@@ -1,4 +1,4 @@
-# Status check
+# Submit the status check
 
 `POST /v1/status`
 
@@ -10,41 +10,41 @@ Asynchronous exchanges lose messages, stall in queues and outlive the shift of t
 
 ### When to use
 
-Call it after a submission whose callback has not arrived within your operational tolerance, for example a preauth (workflow 12) or claim (workflow 15) still awaiting its on_submit. It is only for requests you originated; x-hcx-correlation_id carries the x-hcx-api_call_id of the request being checked (the Status sheet: "same as API caller ID of the request that requires a status check"). Send x-hcx-status request.initiated. x-hcx-workflow_id and x-hcx-use_case (New, Enhancement or Resubmit) are optional on this call; x-hcx-ben-abha-id is mandatory. If the reply is request.queued, the payer has never seen the request and no callback will come; if request.dispatched, the payer holds it and will answer on the status callback.
+Call it after a submission whose callback has not arrived within your operational tolerance, for example a preauth (workflow 12) or claim (workflow 15) still awaiting its on_submit. It is only for requests you originated; x-hcx-correlation_ID carries the x-hcx-API_call_ID of the request being checked (the Status sheet: "same as API caller ID of the request that requires a status check"). Send x-hcx-status request.initiated. x-hcx-workflow_ID and x-hcx-use_case (New, Enhancement or Resubmit) are optional on this call; x-hcx-ben-ABHA-ID is mandatory. If the reply is request.queued, the payer has never seen the request and no callback will come; if request.dispatched, the payer holds it and will answer on the status callback.
 
 ### Preconditions
 
-- You are the original sender of the request being queried and have its api_call_id persisted.
+- You are the original sender of the request being queried and have its API_call_ID persisted.
 - Valid Bearer token; the request body is a JWE per RFC-7516 like every protocol API.
 - The payload inside the JWE is an empty string: no bundle, no Task, no resource. The Status sheet of the requests-and-responses workbook says "Payload should be empty string". The sandbox exit checklists word it as the "encrypted payload of request for which the status is seeking for" and describe no bundle for it.
-- Protected header with sender_code, recipient_code, a fresh api_call_id, the original request's api_call_id as correlation_id, an IST timestamp and status request.initiated.
+- Protected header with sender_code, recipient_code, a fresh API_call_ID, the original request's API_call_ID as correlation_ID, an IST TIMESTAMP and status request.initiated.
 - HTTP headers Accept, Content-Type and bearer_auth.
 
 ### Postconditions
 
-The gateway validates the request and returns the protocol status synchronously in the HTTP response: HTTP 202 with a StatusSuccessResponse whose result carries sender_code, recipient_code, entity_type and protocol_status of request.queued or request.dispatched. On request.queued nothing further happens; the original request is still inside NHCX. On request.dispatched the gateway forwards the status request to the recipient, who responds asynchronously on the status callback (named /v1/on_status and /hcx/on_status in different sentences of the source). A 404 against a correlation id you believe you sent strongly suggests the original submission never landed; NHCX-1012 reports no records for the api caller id.
+The gateway validates the request and returns the protocol status synchronously in the HTTP response: HTTP 202 with a StatusSuccessResponse whose result carries sender_code, recipient_code, entity_type and protocol_status of request.queued or request.dispatched. On request.queued nothing further happens; the original request is still inside NHCX. On request.dispatched the gateway forwards the status request to the recipient, who responds asynchronously on the status callback (named /v1/on_status and /hcx/on_status in different sentences of the source). A 404 against a correlation ID you believe you sent strongly suggests the original submission never landed; NHCX-1012 reports no records for the API caller ID.
 
 ### Common mistakes
 
-- Minting a fresh correlation id for the status call itself instead of setting it to the original request's api_call_id; this is the single most common status-integration error and yields NHCX-1012 or 404.
+- Minting a fresh correlation ID for the status call itself instead of setting it to the original request's API_call_ID; this is the single most common status-integration error and yields NHCX-1012 or 404.
 - Polling in a tight loop; a request.queued answer means the gateway is still working and there is no callback for that branch.
 - Resubmitting the original request after a request.queued response, which duplicates it (NHCX-1006).
 - Reading the Appendix C lifecycle statuses (request.acknowledged, request.queried, request.complete) as Status API outcomes; the API returns only the two gateway values.
-- Querying a correlation id after NHCX deleted it following five failed deliveries; it is gone.
+- Querying a correlation ID after NHCX deleted it following five failed deliveries; it is gone.
 - Querying a request another participant originated; senders may only query their own.
 
 ### Best practices
 
-- Persist the correlation id against the case record before every submission so a status check is always possible.
-- Use a bounded, spaced schedule tied to the correlation id, then escalate; do not poll aggressively.
+- Persist the correlation ID against the case record before every submission so a status check is always possible.
+- Use a bounded, spaced schedule tied to the correlation ID, then escalate; do not poll aggressively.
 - Branch on protocol_status: wait on request.queued, expect the status callback on request.dispatched.
-- Use a fresh x-hcx-api_call_id per status call and IST timestamps.
+- Use a fresh x-hcx-API_call_ID per status call and IST timestamps.
 - Treat Status as transport position only; the decision lives in the original on_ callback or a Search for the claim document.
 - Implement the status callback and v1/error so both branches of the answer have somewhere to land.
 
 ### Related scenario
 
-A hospital's TPA desk submitted a preauth on /v1/preauth/submit at 09:00 and by 13:00 nothing has arrived on /v1/preauth/on_submit. Rather than resubmit, the integration posts /v1/status with the preauth's correlation id. The synchronous reply shows protocol_status request.dispatched, so the request is with the payer, not stuck at the gateway; the desk stops worrying about a lost message and waits for the status callback and the eventual preauth decision. Had the reply been request.queued, the desk would have waited on the gateway and, if the delay persisted, escalated to NHCX support with the correlation id.
+A hospital's TPA desk submitted a preauth on /v1/preauth/submit at 09:00 and by 13:00 nothing has arrived on /v1/preauth/on_submit. Rather than resubmit, the integration posts /v1/status with the preauth's correlation ID. The synchronous reply shows protocol_status request.dispatched, so the request is with the payer, not stuck at the gateway; the desk stops worrying about a lost message and waits for the status callback and the eventual preauth decision. Had the reply been request.queued, the desk would have waited on the gateway and, if the delay persisted, escalated to NHCX support with the correlation ID.
 
 ### Specification
 

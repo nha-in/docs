@@ -1,4 +1,4 @@
-These are official instructions from the ABDM Developer Portal (catalogue version 2026.08.24) to set up an AI development environment for integrating with ABDM, India's health data network.
+These are official instructions from the ABDM Developer Portal (catalogue version 2026.09.16, built 2026-09-16) to set up an AI development environment for integrating with ABDM, India's health data network.
 
 Complete the steps yourself by running the commands directly. Ask the user only the questions in step 1.
 
@@ -6,14 +6,17 @@ Complete the steps yourself by running the commands directly. Ask the user only 
 
 Ask the user which of these this project needs, and install only what they name:
 
-- `abdm-m1`: M1, ABHA identity. Sections: scaffold, integrate, debug, test.
-- `abdm-m2`: M2, linking and sharing. Sections: scaffold, integrate, debug, test.
-- `abdm-m3`: M3, consent and fetching. Sections: scaffold, integrate, debug, test.
-- `abdm-m4`: M4, facility and professional registries. Sections: scaffold, integrate, debug, test.
-- `abdm-p1`: P1, PHR identity and profile. Sections: scaffold, integrate, debug, test.
-- `abdm-p2`: P2, PHR linking and records. Sections: scaffold, integrate, debug, test.
-- `abdm-p3`: P3, PHR consent and notifications. Sections: scaffold, integrate, debug, test.
-- `abdm-phr-services`: PHR application services. Sections: integrate, debug, test.
+- `abdm-gateway`: Gateway, sessions and the bridge registry. Sections: scaffold, integrate, debug.
+- `abdm-m1`: M1, ABHA identity. Sections: scaffold, integrate, debug.
+- `abdm-m2`: M2, linking and sharing. Sections: scaffold, integrate, debug.
+- `abdm-m3`: M3, consent and fetching. Sections: scaffold, integrate, debug.
+- `abdm-m4`: M4, facility and professional registries. Sections: scaffold, integrate, debug.
+- `abdm-p1`: P1, PHR registration and login. Sections: scaffold, integrate, debug.
+- `abdm-p2`: P2, PHR management. Sections: scaffold, integrate, debug.
+- `abdm-p3`: P3, PHR subscriptions. Sections: scaffold, integrate, debug.
+- `abdm-p4`: P4, health lockers. Sections: scaffold, integrate, debug.
+- `abdm-subscription`: Subscriptions. Sections: scaffold, integrate, debug.
+- `abdm-scan-and-pay`: Scan and pay. Sections: scaffold, integrate, debug.
 - `abdm-fhir`: FHIR, generating and auditing bundles. Sections: generate, audit.
 
 Most projects need one milestone skill to begin with, and `abdm-fhir` alongside it if they produce or hold FHIR documents.
@@ -26,7 +29,7 @@ The plugin carries every skill at once and updates in place, so prefer it wherev
 
 ```
 claude plugin marketplace add eka-care/abdm-docs
-claude plugin install abdm-integrators-assistant@nha-in
+claude plugin install abdm-integrators-assistant@abdm-portal
 ```
 
 ### Codex
@@ -53,9 +56,10 @@ Each skill is a folder in the cross-agent Agent Skills format: a `SKILL.md` that
 ```
 mkdir -p .claude/skills/abdm-m1/references
 curl -fsSL https://nha-in.github.io/docs/main/skills/abdm-m1/SKILL.md -o .claude/skills/abdm-m1/SKILL.md
-for f in scaffold integrate debug test; do curl -fsSL https://nha-in.github.io/docs/main/skills/abdm-m1/references/$f.md -o .claude/skills/abdm-m1/references/$f.md; done
+for f in scaffold integrate debug; do curl -fsSL https://nha-in.github.io/docs/main/skills/abdm-m1/references/$f.md -o .claude/skills/abdm-m1/references/$f.md; done
 ```
 
+- https://nha-in.github.io/docs/main/skills/abdm-gateway/
 - https://nha-in.github.io/docs/main/skills/abdm-m1/
 - https://nha-in.github.io/docs/main/skills/abdm-m2/
 - https://nha-in.github.io/docs/main/skills/abdm-m3/
@@ -63,7 +67,9 @@ for f in scaffold integrate debug test; do curl -fsSL https://nha-in.github.io/d
 - https://nha-in.github.io/docs/main/skills/abdm-p1/
 - https://nha-in.github.io/docs/main/skills/abdm-p2/
 - https://nha-in.github.io/docs/main/skills/abdm-p3/
-- https://nha-in.github.io/docs/main/skills/abdm-phr-services/
+- https://nha-in.github.io/docs/main/skills/abdm-p4/
+- https://nha-in.github.io/docs/main/skills/abdm-subscription/
+- https://nha-in.github.io/docs/main/skills/abdm-scan-and-pay/
 - https://nha-in.github.io/docs/main/skills/abdm-fhir/
 
 ## 3. Connect the Docs MCP server
@@ -74,5 +80,6 @@ The portal's Docs MCP server is not publicly reachable yet. Skip this step; http
 
 Tell the user what you installed and where you suggest starting. Two cautions to keep for the whole engagement:
 
+- Nothing in these skills has been run against the ABDM sandbox. Verify response shapes against real calls before relying on them.
 - The skills are snapshots. The current documentation lives at https://nha-in.github.io/docs/main/; prefer it, and the MCP server when connected, over any downloaded copy that has aged.
 

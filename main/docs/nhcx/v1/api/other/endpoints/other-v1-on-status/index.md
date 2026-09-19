@@ -1,4 +1,4 @@
-# Status callback
+# Submit the status callback
 
 `POST /v1/on_status`
 
@@ -14,7 +14,7 @@ Hosted by every participant that sends `/v1/status`. It arrives in answer to a s
 
 ### Preconditions
 
-- You sent `/v1/status` with `x-hcx-correlation_id` set to the `api_call_id` of the message you were asking about, and you kept that mapping.
+- You sent `/v1/status` with `x-hcx-correlation_ID` set to the `API_call_ID` of the message you were asking about, and you kept that mapping.
 - Your callback address is registered and answers 202 within 30 seconds.
 
 ### Postconditions
@@ -30,13 +30,13 @@ Read `x-hcx-status` from the protected header. `request.dispatched` means the me
 
 ### Best practices
 
-- Keep every `api_call_id` you send. Without it you cannot ask the question at all.
+- Keep every `API_call_ID` you send. Without it you cannot ask the question at all.
 - Act on `request.stopped` at once, and treat `request.dispatched` as a reason to wait for the payer.
 - Ask from a support screen when a case has gone quiet for longer than the payer's expected turnaround, not on a timer.
 
 ### Related scenario
 
-A pre-authorisation has had no answer for longer than the payer's usual turnaround. The support screen sends `/v1/status` with that request's `api_call_id` as the correlation ID. The answer arrives here with an empty payload and `x-hcx-status` `request.stopped`, so the desk knows the request is dead rather than slow, and resubmits it with a fresh correlation ID.
+A pre-authorisation has had no answer for longer than the payer's usual turnaround. The support screen sends `/v1/status` with that request's `API_call_ID` as the correlation ID. The answer arrives here with an empty payload and `x-hcx-status` `request.stopped`, so the desk knows the request is dead rather than slow, and resubmits it with a fresh correlation ID.
 
 ### Specification
 

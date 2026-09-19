@@ -1,4 +1,4 @@
-# Coverage eligibility callback (internal) (adapter)
+# Submit the coverage eligibility callback (internal) (adapter)
 
 `POST /internal/v1/coverageeligibility/on_check`
 
@@ -14,7 +14,7 @@ Documented as the internal variant of the eligibility callback (operationId cove
 
 ### Preconditions
 
-Identical to the public callback: an in-flight check request with this correlation ID, the provider's certificate for encryption, a new api_call_id, swapped sender and recipient codes, a valid responder status, and business errors embedded inside the encrypted resource rather than the header.
+Identical to the public callback: an in-flight check request with this correlation ID, the provider's certificate for encryption, a new API_call_ID, swapped sender and recipient codes, a valid responder status, and business errors embedded inside the encrypted resource rather than the header.
 
 ### Postconditions
 
@@ -27,7 +27,7 @@ Same as /v1/coverageeligibility/on_check: HTTP 202 Accepted with the StatusSucce
 
 ### Best practices
 
-- Route both callback variants to the same handler keyed on x-hcx-correlation_id so behaviour cannot diverge.
+- Route both callback variants to the same handler keyed on x-hcx-correlation_ID so behaviour cannot diverge.
 - Acknowledge with 202 inside 30 seconds and process asynchronously; be idempotent under redelivery.
 - Use the public /v1 path unless NHCX onboarding specifies the internal one.
 

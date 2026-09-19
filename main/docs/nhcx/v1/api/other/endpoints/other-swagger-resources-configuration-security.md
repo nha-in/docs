@@ -1,4 +1,4 @@
-# Swagger security configuration
+# Get the swagger security configuration
 
 `GET /swagger-resources/configuration/security`
 
@@ -14,8 +14,8 @@ Use it only in a Swagger UI session against the status service; integrations nev
 
 ### Preconditions
 
-- A GET request to the status service host; the OpenAPI documents in this corpus were captured from https://hcxsbx.abdm.gov.in/<service>/api-docs, and the status service declares the server prefix /statushcxservice.
-- No JWE envelope, no x-hcx-* protocol headers and no correlation id; the docs do not state that a Bearer token is required for these discovery endpoints.
+- A GET request to the status service host; the OpenAPI documents in this corpus were captured from https://hcxsbx.ABDM.gov.in/<service>/api-docs, and the status service declares the server prefix /statushcxservice.
+- No JWE envelope, no x-hcx-* protocol headers and no correlation ID; the docs do not state that a Bearer token is required for these discovery endpoints.
 - No request body.
 
 ### Postconditions
@@ -24,7 +24,7 @@ The service returns HTTP 200 with a small JSON object describing how Swagger UI 
 
 ### Common mistakes
 
-- Pointing at the gateway base https://apisbx.abdm.gov.in/pmjay/sbxhcx and expecting the per-service spec host; the docs advise swapping between the two URL shapes when a path 404s.
+- Pointing at the gateway base https://apisbx.ABDM.gov.in/pmjay/sbxhcx and expecting the per-service spec host; the docs advise swapping between the two URL shapes when a path 404s.
 - Treating the served document as the integration contract for gateway traffic; the handbook's gateway base and header conventions take precedence where the two disagree.
 - Sending a POST or a JSON body to a GET discovery endpoint.
 - Wrapping the call in JWE or adding x-hcx-* headers, which only apply to protocol APIs such as /v1/status.
@@ -35,11 +35,11 @@ The service returns HTTP 200 with a small JSON object describing how Swagger UI 
 - Use these endpoints for exploration and client generation in the sandbox, and cache the document rather than fetching it on every run.
 - Diff the served document against the corpus (Status service: OpenAPI 3.0.1, version 1.0.0) when behaviour changes unexpectedly.
 - Never let production traffic depend on the availability of the documentation endpoints.
-- Keep the /v1/status protocol rules in mind when reading the spec: x-hcx-correlation_id must carry the original request's correlation id.
+- Keep the /v1/status protocol rules in mind when reading the spec: x-hcx-correlation_ID must carry the original request's correlation ID.
 
 ### Related scenario
 
-A provider's engineer wants to try /v1/status from Swagger UI in the sandbox. The UI fetches /swagger-resources/configuration/security to decide how to show the authorisation dialog, and the engineer pastes a Bearer token obtained separately from the client-credentials call. Because the status request body must be a JWE built with the payer's certificate, the engineer ultimately uses the UI only to confirm the schema and runs the real status request from the integration code, which reuses the original preauth correlation id.
+A provider's engineer wants to try /v1/status from Swagger UI in the sandbox. The UI fetches /swagger-resources/configuration/security to decide how to show the authorisation dialog, and the engineer pastes a Bearer token obtained separately from the client-credentials call. Because the status request body must be a JWE built with the payer's certificate, the engineer ultimately uses the UI only to confirm the schema and runs the real status request from the integration code, which reuses the original preauth correlation ID.
 
 ### Specification
 

@@ -4,14 +4,6 @@ P3 is the other side of [M3 Retrieve](/docs/main/docs/hiecm/v3/milestones/m3). M
 
 A citizen fetching records is the [HIU](/docs/main/docs/hiecm/v3/getting-started/glossary#hiu), so every [PHR](/docs/main/docs/hiecm/v3/getting-started/glossary#phr) application must implement that side.
 
-[Try the P3 APIs](/docs/main/docs/hiecm/v3/api/p3)
-
-[Every call in P3, one page each: the headers it needs, the payload it takes, the callback it triggers, and a request builder you can fire at the sandbox.](/docs/main/docs/hiecm/v3/api/p3)
-
-[Error codes](/docs/main/docs/hiecm/v3/api/p3/errors)
-
-[What each code P3 returns actually means, and the first thing to check when you see one.](/docs/main/docs/hiecm/v3/api/p3/errors)
-
 ## In short
 
 - Build for revocation from the start. A consent that worked yesterday can be withdrawn today, and that is the system working correctly.
@@ -21,15 +13,14 @@ A citizen fetching records is the [HIU](/docs/main/docs/hiecm/v3/getting-started
 
 ## Subscriptions and notifications
 
-Ask the user for consent before you create a subscription. An approved subscription notifies your app of a new care context, a modified care context, a new consent request and a new subscription request. Surface these as device notifications.
+Ask the user for consent before you create a subscription. An approved subscription notifies your app when a care context is linked or updated. Surface these as device notifications.
 
-You need screens to list subscriptions, approve them, deny them and edit them. Editing covers health information types, types of visit and the time period.
+You need screens to list subscriptions, approve them, deny them and edit them. Editing covers health information types, purpose, categories and the time period.
 
 ## Auto approval: subscribe once, approve every time
 
 1. Ask the user to confirm your app may retrieve new linked records automatically.
 2. Set up an auto approval policy with the [HIE-CM](/docs/main/docs/hiecm/v3/getting-started/glossary#hie-cm).
-3. Save the auto approval ID the HIE-CM returns.
 
 While the policy is active, the consent request you raise on a new or updated care context notification is granted immediately, and you fetch and store the record. Disable the policy and a request arrives for each record instead.
 
@@ -56,10 +47,8 @@ Once a care context is linked to the user's ABHA address:
 5. The [HIP](/docs/main/docs/hiecm/v3/getting-started/glossary#hip) sends the records across the network.
 6. Your app stores them for long term access and displays them, preferably in chronological order.
 
-The test cases cover every health information type, structured and unstructured: diagnostic report, prescription, discharge summary, consultation note, immunisation record, wellness record and health document record.
-
 ## Next
 
-- The calls and base URLs: [P3 API reference](/docs/main/docs/hiecm/v3/api/p3).
+- The calls and base URLs: [P3 API reference](/docs/main/reference/hiecm-p3).
 - Back to the four provider milestones: [Milestones](/docs/main/docs/hiecm/v3/milestones).
 - Take your integration to production: [Go live](/docs/main/docs/hiecm/v3/getting-started/going-live).

@@ -1,4 +1,4 @@
-# Face auth init
+# Submit the face auth init
 
 `POST /pmjay/sbxhcx/abdmproxy/abha/biometric/faceauth/init`
 
@@ -16,12 +16,12 @@ When fingerprint and iris are not possible for the patient. Face authentication 
 
 - The ABDM session token on `Authorization`, with a fresh `REQUEST-ID` and the current `TIMESTAMP`.
 - The request sent to the ABDM proxy host, under `/pmjay/sbxhcx/abdmproxy/abha/biometric/`.
-- `scope` is `["abha-enrol", "face-auth"]`.
+- `scope` is `["ABHA-enrol", "face-auth"]`.
 - The patient has the ABHA app on a phone.
 
 ### Postconditions
 
-Returns a `txnId`. Render `https://phrsbx.abdm.gov.in/face-auth?txnId=<txnId>` as a QR code. The patient scans it with the ABHA app and completes the face scan there.
+Returns a `txnId`. Render `https://phrsbx.ABDM.gov.in/face-auth?txnId=<txnId>` as a QR code. The patient scans it with the ABHA app and completes the face scan there.
 
 ### Common mistakes
 

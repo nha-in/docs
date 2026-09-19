@@ -10,7 +10,7 @@ The claim is where money actually moves. After treatment the provider assembles 
 
 ### When to use
 
-Called after discharge, once an approved preauth exists (PAYR-1302 otherwise). x-hcx-workflow_id distinguishes the step: 15 CLAIM_REQUEST_INITIATED for the final claim (in PMJAY the discharge and claim steps are merged into this one submission); 151 CLAIM_QUERY_RESPONSE_SUBMITTED to answer a payer query received under 27; the optional x-hcx-use_case header takes New or Resubmit. The NHA sheet also lists R15 and R151 for the reimbursement mirror and 36 CLAIM_ARBITRATION_REQUEST_SUBMITTED for reprocess or erroneous-claim requests, which the FAQ routes through /v1/task/submit rather than this endpoint. Send x-hcx-status request.initiated. PMJAY LAMA or DAMA discharges before or during surgery must carry only procedure LM100 (PAYR-1362).
+Called after discharge, once an approved preauth exists (PAYR-1302 otherwise). x-hcx-workflow_ID distinguishes the step: 15 CLAIM_REQUEST_INITIATED for the final claim (in PMJAY the discharge and claim steps are merged into this one submission); 151 CLAIM_QUERY_RESPONSE_SUBMITTED to answer a payer query received under 27; the optional x-hcx-use_case header takes New or Resubmit. The NHA sheet also lists R15 and R151 for the reimbursement mirror and 36 CLAIM_ARBITRATION_REQUEST_SUBMITTED for reprocess or erroneous-claim requests, which the FAQ routes through /v1/task/submit rather than this endpoint. Send x-hcx-status request.initiated. PMJAY LAMA or DAMA discharges before or during surgery must carry only procedure LM100 (PAYR-1362).
 
 ### Preconditions
 

@@ -1,4 +1,4 @@
-# Predetermination callback
+# Submit the predetermination callback
 
 `POST /v1/predetermination/on_submit`
 
@@ -18,7 +18,7 @@ Called by the payer after it has assessed a request received on `/v1/predetermin
 - The bundle carries `ClaimResponse`, `Patient`, the payer and provider `Organization` and `Coverage`.
 - `ClaimResponse.use` is `predetermination`, and the estimated approved benefit is in `ClaimResponse.total` under category `benefit`.
 - The payer holds a valid session token and the provider's certificate, and seals the bundle for the provider.
-- `x-hcx-correlation_id` echoes the request, `x-hcx-api_call_id` is new, and the sender and recipient codes are swapped.
+- `x-hcx-correlation_ID` echoes the request, `x-hcx-API_call_ID` is new, and the sender and recipient codes are swapped.
 
 ### Postconditions
 
@@ -33,7 +33,7 @@ NHCX returns HTTP 202 with the acknowledgement and delivers the callback to the 
 ### Best practices
 
 - Provider: acknowledge first, then decrypt, then store the estimate against the planned case.
-- Provider: make the handler idempotent, since a missed receipt means the same message arrives again with the same `x-hcx-api_call_id`.
+- Provider: make the handler idempotent, since a missed receipt means the same message arrives again with the same `x-hcx-API_call_ID`.
 - Payer: explain the estimate in `ClaimResponse.disposition`, as the reference sample does.
 
 ### Related scenario

@@ -1,4 +1,4 @@
-# Communication request (internal variant) (adapter)
+# Submit the communication request (internal variant) (adapter)
 
 `POST /internal/v1/communication/request`
 
@@ -10,31 +10,31 @@ Six NHCX services expose each operation twice, once at /v1/... and once at /inte
 
 ### When to use
 
-The published OpenAPI documents give this path the same semantics as /v1/communication/request: a payer submits a Task plus Communication bundle for a provider during the claim lifecycle, identified by Task.reasonCode (tatquery, grievance, walletupdate, policychange, additionalinfo, claim arbitration). The specs do not state when an integrator should prefer the internal path over the public one, so integrators should code against /v1/communication/request unless onboarding instructions direct otherwise. Header rules are unchanged: request.initiated status and a workflow id validated against the associated case.
+The published OpenAPI documents give this path the same semantics as /v1/communication/request: a payer submits a Task plus Communication bundle for a provider during the claim lifecycle, identified by Task.reasonCode (tatquery, grievance, walletupdate, policychange, additionalinfo, claim arbitration). The specs do not state when an integrator should prefer the internal path over the public one, so integrators should code against /v1/communication/request unless onboarding instructions direct otherwise. Header rules are unchanged: request.initiated status and a workflow ID validated against the associated case.
 
 ### Preconditions
 
 - Identical to the public endpoint: registered sender and recipient, valid Bearer token, recipient certificate for JWE encryption (RSA-OAEP-256, A256GCM).
 - Request body is a JWEPayload, { "payload": "<compact JWE>" }, whose plaintext is the Task plus Communication collection Bundle.
-- Protected header carries sender_code, recipient_code, api_call_id, correlation_id, workflow_id, timestamp in IST and status request.initiated.
+- Protected header carries sender_code, recipient_code, API_call_ID, correlation_ID, workflow_ID, TIMESTAMP in IST and status request.initiated.
 - Whether the internal prefix is reachable from a participant's network is not documented; confirm with the environment index and your onboarding contact.
 
 ### Postconditions
 
-Returns the same response set as the public endpoint: 202 Accepted with a StatusSuccessResponse (timestamp, api_call_id, correlation_id, result, error), or 400 Request Validation failed, 404 Requested resource was not found and 500 Downstream systems down/unhandled exceptions in the same envelope. The bundle is forwarded to the provider's registered callback, which must acknowledge with 202 within 30 seconds and then answer on the communication on_request path under the same correlation id. No additional state change is documented for the internal variant.
+Returns the same response set as the public endpoint: 202 Accepted with a StatusSuccessResponse (TIMESTAMP, API_call_ID, correlation_ID, result, error), or 400 Request Validation failed, 404 Requested resource was not found and 500 Downstream systems down/unhandled exceptions in the same envelope. The bundle is forwarded to the provider's registered callback, which must acknowledge with 202 within 30 seconds and then answer on the communication on_request path under the same correlation ID. No additional state change is documented for the internal variant.
 
 ### Common mistakes
 
 - Assuming the internal path behaves differently or bypasses header validation; the specs describe it as identical apart from the operationId.
 - Hard-coding the internal prefix in a participant integration without confirmation that it is the route you were onboarded to.
-- The same envelope errors as the public path: wrong status spelling (NHCX-1011), invalid header (NHCX-1005), duplicate correlation id (NHCX-1006), invalid workflow (PAYR-1003).
-- Mixing the hcxsbx.abdm.gov.in/<service> spec host and the apisbx.abdm.gov.in/pmjay/sbxhcx gateway base; a 404 is the first sign.
+- The same envelope errors as the public path: wrong status spelling (NHCX-1011), invalid header (NHCX-1005), duplicate correlation ID (NHCX-1006), invalid workflow (PAYR-1003).
+- Mixing the hcxsbx.ABDM.gov.in/<service> spec host and the apisbx.ABDM.gov.in/pmjay/sbxhcx gateway base; a 404 is the first sign.
 
 ### Best practices
 
-- Treat this path exactly as /v1/communication/request in your client: same bundle builder, same header hygiene, same correlation-id persistence.
+- Treat this path exactly as /v1/communication/request in your client: same bundle builder, same header hygiene, same correlation-ID persistence.
 - Keep the path prefix configurable so you can switch between public and internal forms without a code change.
-- Use fresh UUIDs for api_call_id per call and correlation_id per cycle; use IST timestamps.
+- Use fresh UUIDs for API_call_ID per call and correlation_ID per cycle; use IST timestamps.
 - Implement v1/error and idempotent callback handling regardless of which path you post to.
 
 ### Related scenario
