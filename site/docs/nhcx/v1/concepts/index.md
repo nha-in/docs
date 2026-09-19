@@ -5,7 +5,6 @@ slug: /nhcx/v1
 sidebar_position: 0
 description: What NHCX is, objectives, participants, machine-readable specifications
 sidebar_class_name: sidebar-icon sidebar-icon--info
-verification: unverified
 source: nhcx-package/docs/01-Overview/01-Introduction.md
 generated: true
 ---

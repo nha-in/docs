@@ -4,7 +4,6 @@ sidebar_label: Creating and updating a participant
 sidebar_position: 5
 description: Registry onboarding and participant updates
 sidebar_class_name: sidebar-icon sidebar-icon--user-round-plus
-verification: unverified
 source: nhcx-package/docs/02-Getting Started/05-Creating and Updating a Participant.md
 generated: true
 ---

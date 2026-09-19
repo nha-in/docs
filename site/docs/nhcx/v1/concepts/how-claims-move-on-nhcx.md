@@ -4,7 +4,6 @@ sidebar_label: How claims move on NHCX
 sidebar_position: 2
 description: End-to-end claim journey in plain language
 sidebar_class_name: sidebar-icon sidebar-icon--route
-verification: unverified
 source: nhcx-package/docs/01-Overview/02-How Claims Move on NHCX.md
 generated: true
 ---

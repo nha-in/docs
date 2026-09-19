@@ -4,7 +4,6 @@ sidebar_label: Security audit
 sidebar_position: 2
 description: The security tests for your role, the WASA audit, STQC or CERT-In review, and the certificates production asks for
 sidebar_class_name: sidebar-icon sidebar-icon--badge-check
-verification: unverified
 source: nhcx-package/docs/07-Go Live/02-Security Audit.md
 generated: true
 ---

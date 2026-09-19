@@ -4,7 +4,6 @@ sidebar_label: Preauthorisation
 sidebar_position: 5
 description: Preauth request submission, clinical attachments, and query handling
 sidebar_class_name: sidebar-icon sidebar-icon--file-check
-verification: unverified
 source: nhcx-package/docs/03-Building a Provider/05-Preauthorisation.md
 generated: true
 sidebar_custom_props:

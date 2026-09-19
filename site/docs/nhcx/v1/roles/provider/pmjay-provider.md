@@ -4,7 +4,6 @@ sidebar_label: PMJAY provider
 sidebar_position: 8
 description: PMJAY-specific HMIS rules, STG questionnaires, GST, incentives, and size limits
 sidebar_class_name: sidebar-icon sidebar-icon--shield-plus
-verification: unverified
 source: nhcx-package/docs/03-Building a Provider/08-PMJAY Provider.md
 generated: true
 sidebar_custom_props:

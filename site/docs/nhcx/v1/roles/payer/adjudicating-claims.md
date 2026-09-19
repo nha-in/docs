@@ -4,7 +4,6 @@ sidebar_label: Adjudicating claims
 sidebar_position: 5
 description: Adjudicating claims, deductions, dispute handling, and rejection bundles
 sidebar_class_name: sidebar-icon sidebar-icon--gavel
-verification: unverified
 source: nhcx-package/docs/04-Building a Payer/05-Adjudicating Claims.md
 generated: true
 sidebar_custom_props:

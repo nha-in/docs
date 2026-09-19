@@ -4,7 +4,6 @@ sidebar_label: PMJAY on NHCX
 sidebar_position: 8
 description: What the Ayushman Bharat scheme changes on the network
 sidebar_class_name: sidebar-icon sidebar-icon--shield-plus
-verification: unverified
 source: nhcx-package/docs/01-Overview/08-PMJAY on NHCX.md
 generated: true
 ---

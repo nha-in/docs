@@ -43,7 +43,6 @@ related:
   - nhcx.sandbox.environments-and-base-urls
   - nhcx.sandbox.callback-url-requirements
   - nhcx.sandbox.support-contacts
-  - shared.sandbox.registration-and-credentials
   concepts:
   - nhcx.concept.participant-roles
   - nhcx.concept.participant-registry

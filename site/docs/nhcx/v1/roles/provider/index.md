@@ -4,7 +4,6 @@ sidebar_label: Provider overview
 sidebar_position: 1
 description: Hospital integration architecture and queue flow
 sidebar_class_name: sidebar-icon sidebar-icon--compass
-verification: unverified
 source: nhcx-package/docs/03-Building a Provider/01-Provider Overview.md
 generated: true
 sidebar_custom_props:

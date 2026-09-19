@@ -4,7 +4,6 @@ sidebar_label: Status and search
 sidebar_position: 11
 description: Status checking (`/v1/status`) and search queries (`/v1/search/submit`)
 sidebar_class_name: sidebar-icon sidebar-icon--activity
-verification: unverified
 source: nhcx-package/docs/02-Getting Started/11-Status and Search.md
 generated: true
 covers:

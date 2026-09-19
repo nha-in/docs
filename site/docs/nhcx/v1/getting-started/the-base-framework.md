@@ -4,7 +4,6 @@ sidebar_label: The base framework
 sidebar_position: 1
 description: Six-step base client architecture
 sidebar_class_name: sidebar-icon sidebar-icon--layers
-verification: unverified
 source: nhcx-package/docs/02-Getting Started/01-The Base Framework.md
 generated: true
 ---

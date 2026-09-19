@@ -4,7 +4,6 @@ sidebar_label: Payer checklist
 sidebar_position: 8
 description: Payer sandbox exit list, the four validations, 26 test cases by family (T-ELG, T-PLN, T-PRE, T-CLM, T-TSK, T-PAY, T-COM, T-ENV)
 sidebar_class_name: sidebar-icon sidebar-icon--list-checks
-verification: unverified
 source: nhcx-package/docs/04-Building a Payer/08-Payer Checklist.md
 generated: true
 sidebar_custom_props:

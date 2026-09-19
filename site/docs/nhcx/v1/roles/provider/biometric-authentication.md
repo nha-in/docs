@@ -4,7 +4,6 @@ sidebar_label: Biometric authentication
 sidebar_position: 3
 description: "ABDM biometric pipeline: Fingerprint, Iris, FaceAuth, and exemption consent"
 sidebar_class_name: sidebar-icon sidebar-icon--fingerprint-pattern
-verification: unverified
 source: nhcx-package/docs/03-Building a Provider/03-Biometric Authentication.md
 generated: true
 sidebar_custom_props:
