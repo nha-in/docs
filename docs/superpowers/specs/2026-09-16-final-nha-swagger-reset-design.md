@@ -214,6 +214,41 @@ build is rerun once that session lands.
    `ErrorCode-Message`, `Building-HI`, or `ABHA-Creation-and-Verification`.
 6. `adversarial-reviewer` dispatched on the branch before the PR.
 
+## The set is final
+
+Decided 19 September 2026, after an operation by operation comparison against
+`main`. The 16 September drop is the whole of what the portal publishes. Where
+the set carries no source for something `main` published, the portal stops
+publishing it, and that is the intended outcome rather than a gap to fill.
+
+The comparison found 212 operations on `main` with no source in the set and 179
+in the set that `main` never carried. The net is 299 operations down to 253.
+Milestone by milestone, counting operations and callbacks together:
+
+| Module | main | this branch |
+| --- | --- | --- |
+| Gateway | 11 | 11 |
+| M1 | 44 | 30 |
+| M2 | 20 | 21 |
+| M3 | 14 | 12 |
+| M4 | 2 | 100 |
+| P1, P2, P3 | 147 | 51 |
+| P4, Scan and Pay, Subscriptions | 0 | 28 |
+| `phr-services` | 61 | module deleted |
+
+The PHR side carries the reduction: 208 operations down to 79. These areas are
+no longer published, because no file in the set mentions them. Teleconsulting,
+ambulance booking, blood bank, NHCX, DigiLocker records, family management,
+notifications, care context linking on the PHR side, and PHR side consent
+management.
+
+Two consequences follow from the same rule and are accepted with it. The
+Catalogue holds 60 atoms where `main` held 365, all of `catalogue/hiecm/`
+having been deleted. The generated error reference carries 20 codes where
+`main` carried 922, because error pages now render from specification examples
+rather than from the 49 error atoms. Both come back when NHA supplies flow and
+error documents.
+
 ## Out of scope
 
 - Hand-written site pages (other session).
