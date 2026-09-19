@@ -7,7 +7,7 @@ description: Use when producing or checking FHIR for ABDM: building NRCES compli
 
 Generated from the ABDM Developer Portal on 2026-09-16, catalogue version 2026.09.16.
 
-This file is a snapshot. Re-download it from the portal's /skills/abdm-fhir/SKILL.md path when it is older than the work you are doing.
+This file is a snapshot. Re-download the whole folder from the portal's /skills/abdm-fhir/ path when it is older than the work you are doing: this router and every file under references/ that it links to. Fetching this file alone leaves those links pointing at files you do not have.
 
 ## What this skill covers
 

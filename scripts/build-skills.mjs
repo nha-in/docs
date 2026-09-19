@@ -45,8 +45,12 @@ const buildDate = catalogueVersion.replace(/\./g, '-');
 const siteUrl = process.env.DOCUSAURUS_URL
   ? `${process.env.DOCUSAURUS_URL}${process.env.DOCUSAURUS_BASE_URL ?? '/'}`.replace(/\/+$/, '')
   : null;
+// A skill is a folder: this router plus the sections under references/ that it
+// links to. Naming the router's own URL here invited a reader to re-fetch one
+// file and leave every link in it pointing at a file they no longer have, so
+// the refresh names the folder and the section list names what is in it.
 const skillUrl = (slug, url) =>
-  url ? `${url}/skills/${slug}/SKILL.md` : `the portal's /skills/${slug}/SKILL.md path`;
+  url ? `${url}/skills/${slug}/` : `the portal's /skills/${slug}/ path`;
 
 // Every rule below is lifted from that module's own pages. A rule that is true
 // of M1 and not of M2 belongs to M1 only: an agent told the wrong rule is
@@ -299,7 +303,7 @@ function build(module, url) {
   );
   lines.push('');
   lines.push(
-    `This file is a snapshot. Re-download it from ${skillUrl(module.slug, url)} when it is older than the work you are doing.`,
+    `This file is a snapshot. Re-download the whole folder from ${skillUrl(module.slug, url)} when it is older than the work you are doing: this router and every file under references/ that it links to. Fetching this file alone leaves those links pointing at files you do not have.`,
   );
   lines.push(
     'If the abdm-docs MCP server is connected, trust its answers over this file: it serves the current catalogue and stamps every response with its catalogue_version, which you can compare against the version above.',
@@ -721,7 +725,7 @@ const fhirSkillMd = (url) =>
     '',
     `Generated from the ABDM Developer Portal on ${buildDate}, catalogue version ${catalogueVersion}.`,
     '',
-    `This file is a snapshot. Re-download it from ${skillUrl('abdm-fhir', url)} when it is older than the work you are doing.`,
+    `This file is a snapshot. Re-download the whole folder from ${skillUrl('abdm-fhir', url)} when it is older than the work you are doing: this router and every file under references/ that it links to. Fetching this file alone leaves those links pointing at files you do not have.`,
     '',
     '## What this skill covers',
     '',

@@ -7,7 +7,7 @@ description: Use when building, debugging or testing ABDM subscriptions: subscri
 
 Generated from the ABDM Developer Portal on 2026-09-16, catalogue version 2026.09.16. Every fact below comes from a page in that portal, which is the place to look when this file does not carry enough.
 
-This file is a snapshot. Re-download it from the portal's /skills/abdm-subscription/SKILL.md path when it is older than the work you are doing.
+This file is a snapshot. Re-download the whole folder from the portal's /skills/abdm-subscription/ path when it is older than the work you are doing: this router and every file under references/ that it links to. Fetching this file alone leaves those links pointing at files you do not have.
 If the abdm-docs MCP server is connected, trust its answers over this file: it serves the current catalogue and stamps every response with its catalogue_version, which you can compare against the version above.
 
 ## What you can do with Subscriptions
