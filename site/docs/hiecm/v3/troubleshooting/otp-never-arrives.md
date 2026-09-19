@@ -2,7 +2,7 @@
 title: The OTP never arrives
 sidebar_label: OTP never arrives
 description: You requested an OTP and nothing reached the phone. The checks in order.
-source: catalogue/openapi/hiecm/v3/hiecm-m1.yaml
+source: M1 ABHA Collection.postman_collection.json
 sidebar_position: 3
 covers: [hiecm.troubleshooting.otp-never-arrives]
 sidebar_class_name: sidebar-icon sidebar-icon--message-square-warning
@@ -56,7 +56,8 @@ again. Report the API you called, the `REQUEST-ID`, the `TIMESTAMP`, and
 the full response body including the `txnId`. See
 [what to put in a support request](/docs/hiecm/v3/troubleshooting#what-to-put-in-a-support-request) for the full report format.
 
-This symptom can surface as the catch-all failure code on the
+This symptom can surface as a rate limit code or the catch-all
+failure code, both on the
 [error codes reference](/docs/hiecm/v3/reference/error-codes).
 
 <a class="next-step" href="/docs/hiecm/v3/milestones/m1">

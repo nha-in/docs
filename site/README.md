@@ -5,7 +5,8 @@ API references, generated from [`../catalogue`](../catalogue). Nothing
 under `docs/`, `static/specs/` or `static/skills/` is hand-edited — all
 three are overwritten by the build: pages from the catalogue's atoms,
 specs from its OpenAPI files, and skills by `scripts/build-skills.mjs`
-(which also copies in the committed skills from `plugins/abdm/skills/`).
+(which also copies in the committed skills from
+`plugins/abdm-integrators-assistant/skills/` and `plugins/nhcx/skills/`).
 
 ```bash
 npm install

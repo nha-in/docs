@@ -2,7 +2,7 @@
 title: Consent stuck in Requested
 sidebar_label: Consent stuck in Requested
 description: A consent request was created and never moved to Granted or Denied. The checks in order.
-source: catalogue/openapi/hiecm/v3/hiecm-m3.yaml, catalogue/openapi/hiecm/v3/hiecm-p2.yaml
+source: ABDM__Proposed_Simplified_Milestone_3.md, ABDM__NewDocumant_PHR_app.md
 sidebar_position: 5
 covers: [hiecm.troubleshooting.consent-stuck-requested]
 sidebar_class_name: sidebar-icon sidebar-icon--circle-pause
@@ -50,9 +50,10 @@ status call.
 
 ## How you know it worked
 
-The consent request notification reports GRANTED or DENIED rather than
-REQUESTED. A GRANTED notification carries `consentArtefacts`, an array
-of the generated consent artefact ids.
+The consent request status reports Granted or Denied rather than
+Requested. A Granted result also carries the id of at least one consent
+artefact, and a granted request can produce more than
+one.
 
 ## When it goes wrong
 
@@ -65,6 +66,9 @@ patient acted and the state did not change, raise a request on the
 request id, the `REQUEST-ID` from the init call, the `TIMESTAMP`, and
 the status response. See [what to put in a support request](/docs/hiecm/v3/troubleshooting#what-to-put-in-a-support-request) for the full report
 format.
+
+This symptom can surface as an invalid or non-existent ABHA address on
+the [error codes reference](/docs/hiecm/v3/reference/error-codes).
 
 <a class="next-step" href="/docs/hiecm/v3/concepts/consent">
 <span class="next-step__eyebrow">Next</span>

@@ -2,7 +2,7 @@
 title: Consent
 sidebar_label: Consent
 description: What a consent request is, what a consent artefact is, who holds it, and the states it moves through.
-source: catalogue/openapi/hiecm/v3/hiecm-m3.yaml, catalogue/openapi/hiecm/v3/hiecm-p2.yaml, catalogue/openapi/hiecm/v3/hiecm-m2.yaml
+source: ABDM__Proposed_Simplified_Milestone_3.md, ABDM__NewDocumant_PHR_app.md, ABDM__Proposed_Simplified_Milestone_2.md
 sidebar_position: 4
 covers: [hiecm.concept.consent-artefact, hiecm.concept.consent-in-a-phr-app]
 sidebar_class_name: sidebar-icon sidebar-icon--shield-check
@@ -68,8 +68,8 @@ give access they cannot inspect, change or withdraw.
    duration, the record date range, the categories shared, and the validity
    period. This is the one most often left out, and the one that turns a
    consent screen into a negotiation rather than a demand.
-3. **Allow or refuse it.** A request has three outcomes, not two:
-   grant, deny, or let it expire (`GRANTED`, `DENIED`, `EXPIRED`). An unanswered request expires on the requester's
+3. **Allow or refuse it.** NHA's own flow names three outcomes, not two:
+   approve, reject and ignore. An ignored request expires on the requester's
    window, and the interface has to show that state.
 4. **See what is already allowed**, so the person can tell which
    organisations hold access right now. A list of past decisions is not the
@@ -89,7 +89,7 @@ Why you want the records. See [purpose of use](/docs/hiecm/v3/getting-started/gl
 | `PUBHLTH` | Public Health |
 | `HPAYMT` | Healthcare Payment |
 | `DSRCH` | Disease Specific Healthcare Research |
-| `PATRQT` | Self Requested |
+| `PATRQT` | Self-Requested |
 
 The source table prints the header row and the `CAREMGT` row twice. There are six codes. The patient reads this code.
 
@@ -106,17 +106,18 @@ What kind of record you are asking for. See [HI type](/docs/hiecm/v3/getting-sta
 | `ImmunizationRecord` | Immunization Record |
 | `HealthDocumentRecord` | Record artifact |
 | `WellnessRecord` | Wellness Record |
-| `Invoice` | Invoice |
 
-What each type carries as a [FHIR](/docs/hiecm/v3/getting-started/glossary#fhir) bundle is on [FHIR and health record formats](/docs/hiecm/v3/concepts/fhir).
+The M2 error message for an invalid HI type lists these seven and adds `Invoice`. The two disagree by one value, so check the swagger before you send `Invoice`. What each type carries as a [FHIR](/docs/hiecm/v3/getting-started/glossary#fhir) bundle is on [FHIR and health record formats](/docs/hiecm/v3/concepts/fhir).
 
 ## Expiry and revocation
 
-**Expiry is predictable.** The artefact carries an end, so you can fetch before it arrives.
+**Expiry is predictable.** The artefact carries an end, so you can fetch before it arrives. Past it, the record holder rejects the request: `ABDM-1061` for an expired consent artefact, `ABDM-1112` for an artefact id that is invalid or already expired.
 
 **Revocation is not.** The patient can withdraw at any time, including after you have read the data, and future data sharing under that consent must stop immediately.
 
-So treat every fetch as a fresh permission check, and handle a mid flow revocation. A consent that was live when you sent the health information request can be dead when the record holder validates it. Decide your retention policy for data you already hold. Sharing stops. What to do with what you already received is not documented yet.
+So treat every fetch as a fresh permission check, and handle a mid flow revocation. A consent that was live when you sent the health information request can be dead when the record holder validates it. That returns `ABDM-1062`, consent not granted. Decide your retention policy for data you already hold. Sharing stops. What to do with what you already received is not documented yet.
+
+Read every code with the message the gateway returns. The error table lists `ABDM-1061` and `ABDM-1062` against two different messages each, so the code alone does not identify the failure.
 
 ## Consent without a person tapping approve
 

@@ -2,7 +2,7 @@
 title: Everything returns 401
 sidebar_label: Everything returns 401
 description: Every call fails the same way, not just one endpoint. The checks in order, before you assume the gateway is down.
-source: catalogue/openapi/hiecm/v3/hiecm-m2.yaml
+source: ABDM__Proposed_Simplified_Milestone_2.md
 sidebar_position: 2
 covers: [hiecm.troubleshooting.everything-returns-401]
 sidebar_class_name: sidebar-icon sidebar-icon--shield-x
@@ -39,7 +39,7 @@ code that names the real reason.
    behind. See [authentication](/docs/hiecm/v3/reference/authentication).
 4. **Is `X-CM-ID` missing or wrong for this environment?** Look at the
    literal value you sent, not the value you meant to send: `sbx` on
-   the sandbox. This header names the consent
+   the sandbox, `abdm` in production. This header names the consent
    manager you are pointed at, and the wrong value fails every call the
    same way a missing session token does.
 
@@ -61,7 +61,7 @@ See [what to put in a support request](/docs/hiecm/v3/troubleshooting#what-to-pu
 
 The codes this symptom can surface are on the
 [error codes reference](/docs/hiecm/v3/reference/error-codes): an
-invalid timestamp, a missing session
+invalid timestamp, the wrong consent manager id, a missing session
 token, or a required header that is absent or malformed.
 
 <a class="next-step" href="/docs/hiecm/v3/reference/authentication">

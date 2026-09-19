@@ -38,7 +38,7 @@ func (a *alternating) RoundTrip(req *http.Request) (*http.Response, error) {
 func TestMCPSessionSurvivesReplicaChange(t *testing.T) {
 	var servers []*httptest.Server
 	for i := 0; i < 2; i++ {
-		h, err := Handler(fixtureReader(t, false), nil, "*", nil, nil, false)
+		h, err := Handler(fixtureReader(t, false), nil, "*", nil, nil, 0)
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -80,7 +80,7 @@ func TestMCPSessionSurvivesReplicaChange(t *testing.T) {
 // The embeddings path takes the same handler, so a stateless server must not
 // change what /healthz reports.
 func TestStatelessHandlerKeepsHealthz(t *testing.T) {
-	h, err := Handler(fixtureReader(t, true), embed.NewFake(64), "*", nil, nil, false)
+	h, err := Handler(fixtureReader(t, true), embed.NewFake(64), "*", nil, nil, 0)
 	if err != nil {
 		t.Fatal(err)
 	}

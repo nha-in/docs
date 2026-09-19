@@ -98,25 +98,17 @@ A Patient carrying both:
   "identifier": [
     {
       "type": {
-        "coding": [
-          {
-            "system": "https://nrces.in/ndhm/fhir/r4/CodeSystem/ndhm-identifier-type-code",
-            "code": "HIN",
-            "display": "Health ID issued by NDHM"
-          }
-        ]
+        "coding": [{
+            "system": "https://nrces.in/ndhm/fhir/r4/CodeSystem/ndhm-identifier-type-code", "code": "HIN", "display": "Health ID issued by NDHM"
+          }]
       },
       "value": "<ABHA_NUMBER_14_DIGITS>"
     },
     {
       "type": {
-        "coding": [
-          {
-            "system": "https://nrces.in/ndhm/fhir/r4/CodeSystem/ndhm-identifier-type-code",
-            "code": "ABHA",
-            "display": "Ayushman Bharat Health Account (ABHA) ID"
-          }
-        ]
+        "coding": [{
+            "system": "https://nrces.in/ndhm/fhir/r4/CodeSystem/ndhm-identifier-type-code", "code": "ABHA", "display": "Ayushman Bharat Health Account (ABHA) ID"
+          }]
       },
       "value": "<ABHA_ADDRESS>"
     }

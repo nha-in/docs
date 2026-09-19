@@ -2,7 +2,7 @@
 title: Accepted, then nothing
 sidebar_label: Accepted, then nothing
 description: Discovery or care context linking started, the first call was accepted, and the flow stalled somewhere in the middle.
-source: catalogue/openapi/hiecm/v3/hiecm-m2.yaml
+source: site/docs/api/hie-cm/index.md, ABDM__Proposed_Simplified_Milestone_2.md
 sidebar_position: 4
 covers: [hiecm.troubleshooting.accepted-then-nothing]
 sidebar_class_name: sidebar-icon sidebar-icon--hourglass
@@ -31,12 +31,12 @@ where the chain broke.
 
 ## Work through these in order
 
-1. **Discovery request.** The patient's discovery should reach your
-   bridge as an inbound `discover` request. If this never arrives, the
+1. **Discovery request.** Your discovery call should produce an inbound
+   discovery request callback to your bridge. If this never arrives, the
    problem sits upstream of your system entirely; escalate rather than
    continuing down this list.
-2. **Link initiation.** The patient's link request should reach your
-   bridge as an inbound link `init` request. If discovery completed but this never arrives, the
+2. **Link initiation.** Starting a link should produce an inbound link
+   init callback. If discovery completed but this never arrives, the
    stall is at the handoff into linking.
 3. **Link confirmation.** Do not treat the synchronous acknowledgement
    to your link request as success. The confirmation arrives as a
@@ -55,9 +55,10 @@ gateway itself failing to send.
 
 ## How you know it worked
 
-For linking, the callback to your link request reports success. For
-discovery, your system answers the inbound discovery request with the
-unlinked care contexts you hold for that patient.
+For linking, the care context appears when the patient's PHR app runs
+discovery against your facility, after the link confirm callback reports
+success. For discovery, your system answers the inbound discovery
+callback with the care contexts you hold for that patient.
 
 ## When it goes wrong
 
@@ -69,8 +70,9 @@ chain stopped, the `REQUEST-ID` from the call that started it, the
 the point it stalled. See [what to put in a support request](/docs/hiecm/v3/troubleshooting#what-to-put-in-a-support-request) for the full report
 format.
 
-This symptom can surface as a duplicate discovery, init or confirm
-request, on the [M2 errors reference](/docs/hiecm/v3/api/m2/errors).
+This symptom can surface as a duplicate or invalid link reference, or a
+call made out of the logical sequence, both on the
+[M2 errors reference](/docs/hiecm/v3/api/m2/errors).
 
 <a class="next-step" href="/docs/hiecm/v3/milestones/m2">
 <span class="next-step__eyebrow">Next</span>

@@ -2,7 +2,7 @@
 title: The callback never arrives
 sidebar_label: Callback never arrives
 description: A call returned 202, and nothing followed on your registered callback URL. The checks in order.
-source: catalogue/openapi/hiecm/v3/hiecm-m2.yaml, catalogue/openapi/hiecm/v3/hiecm-m1.yaml
+source: ABDM__Proposed_Simplified_Milestone_2.md, ABDM__Proposed_Simplified_Milestone_1.md
 sidebar_position: 1
 covers: [hiecm.troubleshooting.callback-never-arrives]
 sidebar_class_name: sidebar-icon sidebar-icon--satellite-dish
@@ -25,8 +25,8 @@ where each call names the callback it produces.
 
 ## Work through these in order
 
-1. **Is the callback URL registered with the gateway?** Set it with
-   the [update bridge callback URL](/docs/hiecm/v3/api/gateway/endpoints/gateway-abdm-gateway/03-gateway-patch-gateway-v3-bridge-url)
+1. **Is the callback URL registered with the gateway?** Confirm it with
+   the [update bridge callback URL](/docs/hiecm/v3/api/gateway/endpoints/gateway-update-bridge-url)
    call. Setting a URL in a console once is not the same as confirming
    the gateway has it.
 2. **Is that URL reachable from the public internet over HTTPS?** ABDM
@@ -47,9 +47,8 @@ where each call names the callback it produces.
 
 ## How you know it worked
 
-Your handler receives a POST at your registered URL, carrying in
-`response.requestId` the `REQUEST-ID` you generated for the original
-call. Until you have
+Your handler receives a POST at your registered URL, carrying the exact
+`REQUEST-ID` you generated for the original call. Until you have
 observed that once, the callback path is unproven, even if the
 registration call itself succeeded.
 

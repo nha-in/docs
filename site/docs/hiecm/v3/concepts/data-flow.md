@@ -2,7 +2,7 @@
 title: How a record travels
 sidebar_label: Data flow
 description: The path a health record takes from the system that asks for it to the system that holds it, and the encryption in between.
-source: catalogue/openapi/hiecm/v3/hiecm-m2.yaml, catalogue/openapi/hiecm/v3/hiecm-m3.yaml
+source: ABDM__Proposed_Simplified_Milestone_2.md, ABDM__Proposed_Simplified_Milestone_3.md
 sidebar_position: 5
 sidebar_class_name: sidebar-icon sidebar-icon--arrow-right-left
 ---
@@ -66,6 +66,8 @@ Before the HIP retrieves anything it runs three checks.
 
 Only then does it package the records as [FHIR](/docs/hiecm/v3/getting-started/glossary#fhir) bundles, encrypt, sign with its long term private key, and send with the transaction id to the data push URL.
 
+Two failures land here: `ABDM-1062`, consent not granted, and `ABDM-1063`, date range given is invalid. Both codes also appear against a linking message, so read the code with the message.
+
 ## Stage 3: the notifications that close it
 
 Both sides call `health-information/notify`: the HIP to say the data was transmitted, the HIU to report success or failure on its side. Neither carries the record. They carry the fact that a transfer happened, which is what makes the exchange auditable for the patient.
@@ -104,7 +106,7 @@ A new key pair per exchange is what buys forward secrecy.
 
 Six steps, once consent has validated.
 
-1. Generate a key pair, DHSK(P) and DHPK(P), on the `curve` the HIU specified in `keyMaterial`.
+1. Generate a key pair, DHSK(P) and DHPK(P), in the group the HIU specified.
 2. Generate a 32 byte random value, RAND(P).
 3. Compute the shared key DHK(U,P) from the HIU's public key DHPK(U) and the HIP's own private key DHSK(P).
 4. Derive the salt and IV by XOR of RAND(P) and RAND(U). The first 20 bytes are the salt for HKDF, the last 12 bytes the IV.

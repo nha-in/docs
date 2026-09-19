@@ -13,6 +13,10 @@ MCP index and compile into agent skills; they are not site pages.
 | `flows/` | One atom per end-to-end journey, stitching endpoints and callbacks in call order. |
 | `decisions/` | One atom per integration decision: the options, the trade-off, the recommendation. |
 | `tests/` | One atom per test case: what it proves functionally, and its exact pass and fail conditions. |
+| `troubleshooting/` | One atom per symptom a developer reports, not per error code: the checks that rule out the common causes, in order. |
+| `fhir/` | One atom per FHIR bundle an exchange carries: its resources, profiles and the fields a payer reads. |
+| `glossary/` | One atom per NHCX term, where the term is the exchange's own rather than shared across gateways. Shared terms live in `catalogue/shared/glossary/`. |
+| `sandbox/` | One atom per fact about the NHCX sandbox: hosts, test participants, the dummy payer, callback rules, exit and going live. |
 
 Scaffold a new atom with the `atom-new` skill so the frontmatter and the five
 mandatory sections come out right. READMEs like this one are contributor

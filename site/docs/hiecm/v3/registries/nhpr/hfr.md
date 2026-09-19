@@ -2,7 +2,7 @@
 title: HFR, the facility registry
 sidebar_label: HFR
 description: The Health Facility Registry, what a facility record holds, the five call onboarding sequence, and how a bridge is linked to it.
-source: catalogue/openapi/hiecm/v3/hiecm-m4.yaml, catalogue/openapi/hiecm/v3/hiecm-m2.yaml
+source: ABDM__Proposed_Simplified_Milestone_4_(NHPR).md, ABDM__Proposed_Simplified_Milestone_2.md
 sidebar_position: 2
 sidebar_class_name: sidebar-icon sidebar-icon--building
 ---
@@ -23,11 +23,11 @@ Three layers, one call each.
 
 | Layer | What goes in it |
 | --- | --- |
-| Basic information | Name, ownership and its subtypes, system of medicine, facility type and subtype, speciality type, operational status, type of service, the full address as codes, latitude and longitude, contact details, opening days and hours, and two photographs of the board and the building |
+| Basic information | Name, ownership and its subtypes, system of medicine, facility type and subtype, speciality type, operational status, type of service, the full address as codes, latitude and longitude, contact details, opening days and hours, and two mandatory photographs of the board and the building |
 | Additional information | Yes or no flags for a dialysis centre, pharmacy, blood bank, cath lab, diagnostic lab and imaging centre, plus scheme identifiers the facility already holds: NHRR, NIN, AB-PMJAY, Rohini, ECHS, CGHS, CEA registration and a state insurance scheme ID |
 | Detailed information | Specialities per system of medicine, and the sections that apply to this facility type: medical infrastructure and bed counts, pharmacy details, blood bank details, diagnostic services, imaging services |
 
-Which parts of the detailed layer are mandatory depends on the facility type, the type of service and the system of medicine. Two of those rules shape your form. An inpatient or day care facility must submit at least one bed count greater than zero. An imaging centre, diagnostic laboratory, blood bank or pharmacy need not submit medical infrastructure at all.
+Which parts of the detailed layer are mandatory depends on the facility type, the type of service and the system of medicine, and the rules are on [the HPR and HFR call list](/docs/hiecm/v3/api/m4/undocumented). Two of them shape your form. An inpatient or day care facility must submit at least one bed count greater than zero. An imaging centre, diagnostic laboratory, blood bank or pharmacy need not submit medical infrastructure at all.
 
 ### Codes, not names
 
@@ -51,9 +51,9 @@ To update a facility later, send the same calls with the facility ID or tracking
 
 ## The link to the HPR token
 
-Your client credentials are not enough. Basic facility information takes an **HPR token in the `x-hprid-auth` header**, generated from an HPR ID and password. Submit facility takes **`x-hprid-auth` and `x-hprid-auth-verifier` headers**. Obtain them from the HPR token flow, and set each header by the name the call asks for.
+Your client credentials are not enough. Basic facility information takes an **HPR token in the header**, generated from an HPR ID and password. Submit facility takes an **`x-hpird-auth` token in the header**. Obtain both from the HPR token flow, and set each header by the name the call asks for.
 
-They come from a person, not from your application. That is why [HPR](/docs/hiecm/v3/registries/nhpr/hpr) comes first in a rollout, and why somebody in your organisation needs an [HPID](/docs/hiecm/v3/getting-started/glossary#hpid) with facility manager rights, role 2 or role 3, before you write a line of HFR code.
+Both come from a person, not from your application. That is why [HPR](/docs/hiecm/v3/registries/nhpr/hpr) comes first in a rollout, and why somebody in your organisation needs an [HPID](/docs/hiecm/v3/getting-started/glossary#hpid) with facility manager rights, role 2 or role 3, before you write a line of HFR code.
 
 ## The facility ID
 
@@ -61,7 +61,7 @@ A submitted and verified facility carries a facility ID, and that ID identifies 
 
 | Where | Format |
 | --- | --- |
-| Bridge linkage, facility search, send OTP to contact | Starts with `IN` and is 12 characters in total |
+| Bridge linkage, facility search, nearby search, send OTP to contact | Starts with `IN` and is 12 characters in total |
 | Deduplicate search | A 6 digit numeric value, labelled there as the facility unique ID |
 
 One parameter name carries two different formats. Take the format from the reference page for the call you are making.
@@ -78,7 +78,7 @@ The HIP name is the one field a patient sees. It is the name shown in the [ABHA]
 | --- | --- |
 | Deduplicate search | Name, district and sub district, before creating a record |
 | Search facility | By facility ID, or by ownership code, state LGD code and facility name. Fuzzy on the name, exact on everything else, paginated |
-| Nearby search | Latitude, longitude and a radius in kilometres, with optional filters for ownership, speciality and `abdmSoftware`. Results are ordered nearest first |
+| Nearby search | Latitude, longitude and a radius in kilometres, with optional filters for ownership, speciality and ABDM enabled. Results are ordered nearest first |
 | Send and validate OTP to contact | Sends an [OTP](/docs/hiecm/v3/getting-started/glossary#otp) to the mobile number registered against a facility, then validates it. This proves control of a facility record you did not create |
 
 Base URLs for every call on this page are on [NHPR](/docs/hiecm/v3/registries/nhpr).
@@ -93,12 +93,12 @@ Two paths are fixed here:
 
 | Call | Path |
 | --- | --- |
-| Fetch facility type | `/v1.5/facility/fetch-facility-type` |
+| Fetch facility type | `v1.5/facility/fetchfacilitytype` |
 | Get specialities | `/v1.5/facility/get-specialities` |
 
 ## Next
 
 - [HPR](/docs/hiecm/v3/registries/nhpr/hpr), which issues the token these calls need.
 - [NHPR](/docs/hiecm/v3/registries/nhpr), the parent page.
-- [the M4 API reference](/docs/hiecm/v3/api/m4), its operations and their fields.
+- [the HPR and HFR call list](/docs/hiecm/v3/api/m4/undocumented), parameter tables and `HIS-` error codes.
 - [M2 Attach, Health Information Provider Services](/docs/hiecm/v3/api/m2), which needs this facility ID.

@@ -51,9 +51,10 @@ const METHODS = ['get', 'put', 'post', 'delete', 'patch', 'options', 'head'];
 // names nothing a rule can rescue. Kept outside the specifications because
 // ingest-nha.mjs rewrites those on every NHA drop. See the file's own header.
 const titleOverrides = (() => {
-  // At the openapi root, beside corrections/: listSpecTree only treats a YAML
-  // inside <platform>/<version> as a module, so a title list must not sit there.
-  const file = join(root, 'catalogue', 'openapi', 'titles.yaml');
+  // At the catalogue root, outside catalogue/openapi entirely: listSpecTree
+  // treats a YAML under <platform>/<version> as a module, and lint:agent reads
+  // every YAML anywhere under openapi/ as a specification. This is neither.
+  const file = join(root, 'catalogue', 'titles.yaml');
   if (!existsSync(file)) return {};
   return parse(readFileSync(file, 'utf8')) ?? {};
 })();

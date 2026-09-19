@@ -5,7 +5,7 @@ sidebar_position: 1
 sidebar_custom_props:
   roles: [his, hip, hiu]
 description: What Milestone 1 gives you, what you need before your first call, and the order to build it in.
-source: catalogue/openapi/hiecm/v3/hiecm-m1.yaml
+source: ABDM__Proposed_Simplified_Milestone_1.md
 covers: [hiecm.flow.m1-update-mobile]
 sidebar_class_name: sidebar-icon sidebar-icon--user-round-plus
 ---
@@ -32,7 +32,7 @@ skips M1.
   records.
 - Nothing runs until the gateway session call returns an access token.
 - Two tokens exist and are not interchangeable: the gateway token in
-  `Authorization`, the user token in `X-token`. The login
+  `Authorization`, the user token in `X-token`. NHA's recorded login
   response gives the user token thirty minutes (`expiresIn: 1800`) and its
   refresh token fifteen days (`refreshExpiresIn: 1296000`). Read both back
   from the response rather than assuming them, and plan a refresh before
@@ -97,7 +97,7 @@ capability, is on the [M1 API reference](/reference/hiecm-m1).
 
 Hand M1 to the agent you already use, as one file it loads once. Install it, or open it there in one click.
 
-<SkillInstall slug="abdm-m1" note="Every M1 call and its error codes in one file: 41 operations, 14 codes." />
+<SkillInstall slug="abdm-m1" note="Every M1 call, its error codes and its certification cases in one file: 55 operations, 89 codes, 122 cases." />
 
 ## Certification
 
@@ -108,7 +108,8 @@ and what each one asks of you.
 
 Sandbox test data is in the [data
 dictionary](/docs/hiecm/v3/reference/data-dictionary). [Support](/docs/support)
-lists the channels.
+lists the channels. The cases you are certified against are in [M1 testing use
+cases](/docs/hiecm/v3/resources/testing/m1).
 
 ## The page map
 
@@ -185,6 +186,13 @@ satisfied.
 | Aadhaar demographic authentication | Not required | Mandatory |
 | Child ABHA | Not available | Only on NHA leadership approval |
 
+This table is NHA's, from the proposed simplified M1 flow they supplied with
+their review of this page on 11 September 2026. Enrolment from an identity
+document is not in it: NHA does not recommend that route to integrators, and it
+is described [further down](#create-an-abha-from-a-document-not-recommended)
+rather than among the routes above, because the call is in the specification and people
+find it there.
+
 ### ABHA creation by an Aadhaar OTP
 
 <LegacyAnchor id="journey-1-abha-creation-by-aadhaar-otp" />
@@ -220,20 +228,25 @@ Email verification sits between the mobile step and the address step. It is opti
 
 <LegacyAnchor id="journey-2-abha-creation-by-face-authentication" />
 
-Some people cannot use the OTP route, usually because the mobile registered against their Aadhaar is no longer theirs. Face authentication is the optional alternative. The person authenticates their face in the ABHA app on their own phone, which is how the transaction moves from your screen to theirs.
+Some people cannot use the OTP route, usually because the mobile registered against their Aadhaar is no longer theirs. Face authentication is the optional alternative. The person authenticates their face through the Aadhaar registered device (RD) service on their own phone, which is how the transaction moves from your screen to theirs.
 
-Face, fingerprint and iris each have their own request body on the enrolment call,
-`POST /v3/enrollment/enrol/byAadhaar`. The reference has one sequence per method:
-[face](/docs/hiecm/v3/api/m1/endpoints/m1-create-face/01-gateway-post-gateway-v3-sessions),
-[fingerprint](/docs/hiecm/v3/api/m1/endpoints/m1-create-fingerprint/01-gateway-post-gateway-v3-sessions)
-and [iris](/docs/hiecm/v3/api/m1/endpoints/m1-create-iris/01-gateway-post-gateway-v3-sessions).
+NHA files both calls in this route under the use case "ABHA creation,
+Aadhaar biometric", and their summaries read "face or biometric". Fingerprint
+and iris are a real route: NHA's simplified flow names them as a creation
+route of their own, optional for every integrator, and the enrolment call
+takes `bio` and `iris` in `authMethods` beside `face`. What nothing here
+records is a request that uses them. The only request recorded against either
+call sends the scope `face-auth`, and nothing has been run against the sandbox
+either way. Build the face route from the diagram above, treat fingerprint and iris
+as named by NHA and unproven here, and confirm the capture step with NHA
+before you design around it.
 
 ```mermaid
 sequenceDiagram
     autonumber
     actor P as Person with the ABHA app
     participant S as Your system
-    participant R as ABHA app face capture
+    participant R as Aadhaar RD service
     participant A as ABHA service
     S->>A: Start enrolment authentication
     A-->>S: Transaction id
@@ -277,8 +290,7 @@ sequenceDiagram
 
 The call is the same `enrol/byAadhaar` the OTP route ends on, with `authMethods`
 set to `demo_auth` and a `demo_auth` block carrying the encrypted Aadhaar number,
-the full name as per Aadhaar, the date of birth, the gender, `stateCode` and
-`districtCode`.
+the full name as per Aadhaar, the date of birth and the gender.
 
 Two things differ from the OTP route and both bite. The user token comes back as
 `token` at the top level rather than under `tokens`, so a client that reuses its
@@ -288,8 +300,9 @@ routes and optional on this one. The default address is the fourteen digit
 number followed by `@sbx` or `@abdm`, which nobody can remember, so offer the
 person a readable address anyway.
 
-What a demographic mismatch returns, field by field, is not
-published.
+The specification calls the programmes that use this route integrated
+programmes. What a demographic mismatch returns, field by field, is not
+published; `INVALID_DEMOGRAPHIC_DETAILS` is the error the specification names.
 
 ### Create a child ABHA
 
@@ -299,21 +312,61 @@ A parent or guardian can hold ABHA accounts for their children under their own
 account. NHA releases this route to specific government integrators on its
 leadership's approval, so a private integration does not get it.
 
-Four calls carry it:
+Three calls carry it, and a fourth is named by NHA and is not in the
+specification this portal holds:
 
 - **Create.** The same `enrol/byAadhaar` call, with `authMethods` set to `child`
-  and a `child` block carrying the child's `name`, day, month and year of birth,
-  gender and `parentConsent`. The parent is authenticated first, and must be 18
-  or older. The parent's user token goes in the `X-token` header.
+  and a `child` block carrying the child's first and last name, day, month and
+  year of birth and gender, and the parent's ABHA number or ABHA address. The
+  parent is authenticated first, and must be 18 or older.
 - **Update.** `PATCH /v3/profile/account` with the child's ABHA number, name,
   date of birth and gender.
 - **List.** `GET /v3/enrollment/profile/children`, which returns the children
   under the account and their count.
-- **KYC of a child ABHA** uses the profile OTP calls,
-  `POST /v3/profile/account/request/otp` and `POST /v3/profile/account/verify`.
+- **KYC of a child ABHA** is named in NHA's simplified flow and has no operation
+  in the specification this portal holds. Ask NHA for it rather than designing
+  around a guess.
 
 Two refusals are worth handling by name before you meet them: a parent under 18,
 and an account that has already enrolled as many children as it may.
+
+### Create an ABHA from a document, not recommended
+
+<LegacyAnchor id="journey-3-abha-creation-from-an-identity-document" />
+
+<LegacyAnchor id="abha-creation-from-an-identity-document-not-in-the-recommended-flow" />
+
+<LegacyAnchor id="create-an-abha-from-an-identity-document-not-in-the-recommended-flow" />
+
+NHA reviewed this page in September 2026 and asked for this route to come out of
+the recommended flow. It is not in the simplified M1 flow they supplied, and
+their words are that it is not recommended for integrators. It is kept here,
+below the recommended routes rather than among them, because the call is in the
+specification and people find it there.
+
+When neither an Aadhaar OTP nor a face capture is possible, the person can be
+enrolled from an identity document. NHA's own collection uses a driving licence.
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor P as Person
+    participant S as Your system
+    participant A as ABHA service
+    S->>A: Request enrolment OTP
+    A->>P: OTP by SMS
+    P->>S: Enters OTP
+    S->>A: Verify the OTP
+    S->>A: Enrol by document
+    A-->>S: ABHA number, restricted
+    S->>A: Fetch user profile
+    S->>A: Fetch ABHA QR code
+```
+
+The account this produces is restricted until it is upgraded through Aadhaar know
+your customer (KYC) verification. If you build the route anyway, tell the person
+that when the account is created, rather than letting them find out when
+something later fails.
 
 ### Attach a communication mobile number
 
@@ -387,7 +440,7 @@ sequenceDiagram
     A-->>S: Account and access token
 ```
 
-The login OTP response names the masked mobile the OTP was sent to, for example one ending `0161`. Show that to the person so they can confirm the number is theirs before they sit waiting for a message that will not arrive.
+The search response names the masked mobile the OTP was sent to, for example one ending `0161`. Show that to the person so they can confirm the number is theirs before they sit waiting for a message that will not arrive.
 
 Encrypt the identifier inside your own system. Do not send the identifier to a remote encryption helper or a third party site; that hands a patient identifier to a party that has no reason to hold it. See [encryption](/docs/hiecm/v3/concepts/encryption) for how to do it locally.
 
@@ -410,14 +463,15 @@ sequenceDiagram
     A-->>S: QR code
 ```
 
-The card is returned in the response rather than fetched from a separate link. Both the card and the QR code return a PNG image. See the [M1 API reference](/docs/hiecm/v3/api/m1) for the fields.
+The card is returned in the response rather than fetched from a separate link. The content type and encoding of the card and QR code responses are not yet published. See the [APIs](/docs/hiecm/v3/api/m1/apis) page for the fields that are.
 
 ## ABHA address with a mobile number
 
 <LegacyAnchor id="creating-an-abha-address-without-an-abha-number" />
 
 A mobile number on its own does not reach an ABHA number. Every creation route
-above proves the person against Aadhaar, and the number is issued off the back of that.
+above proves the person against Aadhaar, or against an identity document on the
+route NHA no longer recommends, and the number is issued off the back of that.
 
 It does reach an
 [ABHA address](/docs/hiecm/v3/getting-started/glossary#abha-address). The person
@@ -434,11 +488,13 @@ building, not what you are registered as.
 ### Create the address
 
 The calls are the enrolment set in [the P1
-reference](/reference/hiecm-p1), written up as [creating an ABHA
+reference](/docs/hiecm/v3/api/p1), written up as [creating an ABHA
 address](/docs/hiecm/v3/milestones/p1#creating-an-abha-address).
 
 The person verifies the mobile number by OTP, then types the demographics the
-ABHA service would otherwise have taken from Aadhaar. Before creating anything, list the
+ABHA service would otherwise have taken from Aadhaar. First name, year of birth,
+gender, address, state, district and pin code are mandatory; middle name, last
+name and the day and month of birth are not. Before creating anything, list the
 addresses already linked to that mobile number and let the person pick one: a
 second address for somebody who already has one is the most common thing that
 goes wrong here.
@@ -448,7 +504,7 @@ goes wrong here.
 Logging in by ABHA address is its own set of calls, under
 `/v3/phr/web/login/abha`, and it is the way into a profile that has no ABHA
 number behind it. Ask first and authenticate second: [search the ABHA
-address](/docs/hiecm/v3/api/m1/endpoints/m1-login-abha-address-mobile-otp/01-m1-post-v3-phr-web-login-abha-search) returns the
+address](/docs/hiecm/v3/api/m1/endpoints/m1-phr-search-abha-address) returns the
 authentication methods that address supports, which is what stops you offering
 an Aadhaar OTP to a profile with no Aadhaar behind it.
 
@@ -469,14 +525,14 @@ sequenceDiagram
     S->>A: Fetch the PHR profile
 ```
 
-The [OTP request](/docs/hiecm/v3/api/m1/endpoints/m1-login-abha-address-mobile-otp/02-m1-post-v3-phr-web-login-abha-request-otp) carries a
+The [OTP request](/docs/hiecm/v3/api/m1/endpoints/m1-phr-request-otp) carries a
 `scope` pair naming the method: `abha-address-login` with `mobile-verify` for a
 mobile OTP, `abha-address-login` with `aadhaar-verify` for an Aadhaar OTP, and
 `abha-login` with `aadhaar-bio-verify`, `aadhaar-face-verify` or
 `aadhaar-iris-verify` for the three biometric methods. The ABHA address travels
 encrypted, the same way every other identifier does.
 
-Once it verifies, the [PHR profile](/docs/hiecm/v3/api/m1/endpoints/m1-login-abha-address-mobile-otp/04-m1-get-v3-phr-web-login-profile-abha-profile)
+Once it verifies, the [PHR profile](/docs/hiecm/v3/api/m1/endpoints/m1-get-phr-profile)
 and the PHR card and QR code read against the token it returns.
 
 ### What Self-Declared costs, and what ends it
@@ -509,7 +565,7 @@ sequenceDiagram
     participant S as Your system
     P->>A: Scans the counter QR code, agrees to share
     A->>CM: Share the profile with this HIP and counter
-    CM->>S: POST /api/v3/hip/patient/share on your bridge
+    CM->>S: POST /patient-share/v3/share on your bridge
     Note over CM,S: intent PROFILE_SHARE, metaData.hipId, metaData.context, profile.patient
     S-->>CM: 200, profile received
     S->>S: Register the patient, assign a queue token
@@ -517,13 +573,13 @@ sequenceDiagram
     CM-->>A: Token number to show the patient
 ```
 
-Step 3 is a callback on the URL registered for your bridge, not a call you make. Answer it with a 200 at once and do the registration afterwards. Step 7 is your reply: `acknowledgement.status` is `SUCCESS` with `profile.tokenNumber` and the same `context`, or `FAILED` with an `error` code and message.
+Step 3 is a callback on the URL registered for your bridge, not a call you make. Answer it with a 200 at once and do the registration afterwards. Step 7 is your reply: `acknowledgement.status` is `SUCCESS` with `profile.tokenNumber` and the same `context`, or `FAILURE` with an `error` code and message.
 
 The patient's app holds its screen open for 30 seconds. Send the acknowledgement inside that window or the patient sees no token.
 
-`profile.patient` carries the ABHA number, the ABHA address, name, gender, date of birth, mobile number and address. Match on the ABHA address. The counter context is yours to define: 1 to 250 characters, and never the facility id, the HIP id or the HIP name.
+`profile.patient` carries the ABHA number, the ABHA address, name, gender, date of birth, mobile number, address and a KYC photo. Match on the ABHA address. The counter context is yours to define: up to 20 alphanumeric characters, and never the facility id, the HIP id or the HIP name.
 
-The two calls: [receive a patient's shared profile](/docs/hiecm/v3/api/m2/endpoints/m2-abdm-patient-share-hip/01-m2-post-v3-hip-patient-share) and [send the share acknowledgement](/docs/hiecm/v3/api/m2/endpoints/m2-abdm-patient-share-hip/02-m2-post-patient-share-v3-on-share). The patient's side is [P2 Linking and records](./p2#scan-and-share-at-a-facility).
+The two calls: [receive a patient's shared profile](/docs/hiecm/v3/api/m1/endpoints/m1-receive-patient-share) and [send the share acknowledgement](/docs/hiecm/v3/api/m1/endpoints/m1-on-share-acknowledgement). The patient's side is [P2 Linking and records](./p2#scan-and-share-at-a-facility).
 
 ## Next
 

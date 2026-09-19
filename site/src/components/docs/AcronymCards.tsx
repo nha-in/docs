@@ -6,15 +6,15 @@ export type AcronymCard = {
   word: string;
   /** The milestone label, for example "M1". */
   label: string;
-  /** One line of what the milestone gives you. */
+  /** The milestone's title, a few words. */
   text: string;
   to: string;
 };
 
 /**
- * A horizontal row of cards, one per milestone, with the first letter of
- * each word set large and in the accent colour so the acronym reads across
- * the row. Wraps to two columns on narrow screens.
+ * One row of cards, one per milestone: the milestone label and word on one
+ * line, with the word's first letter in the accent colour so the acronym
+ * reads across the row, and the milestone's title under it.
  */
 export default function AcronymCards({
   cards,
@@ -27,13 +27,11 @@ export default function AcronymCards({
     <div className="acronym-cards" role="list" aria-label={label}>
       {cards.map(({word, label: ms, text, to}) => (
         <Link key={to} to={to} className="acronym-card" role="listitem">
-          <span className="acronym-card__word" aria-label={word}>
-            <span className="acronym-card__letter" aria-hidden="true">
-              {word.charAt(0)}
-            </span>
-            <span aria-hidden="true">{word.slice(1)}</span>
+          <span className="acronym-card__word">
+            <span className="acronym-card__label">{ms}</span>{' '}
+            <span className="acronym-card__letter">{word.charAt(0)}</span>
+            {word.slice(1)}
           </span>
-          <span className="acronym-card__label">{ms}</span>
           <span className="acronym-card__text">{text}</span>
         </Link>
       ))}

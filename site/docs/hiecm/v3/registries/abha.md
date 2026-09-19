@@ -2,7 +2,7 @@
 title: ABHA, the patient registry
 sidebar_label: ABHA
 description: The registry that identifies patients, the 14 digit ABHA number, the ABHA address, and what every milestone assumes about both.
-source: catalogue/openapi/hiecm/v3/hiecm-m1.yaml, catalogue/openapi/hiecm/v3/hiecm-p1.yaml
+source: ABDM__Proposed_Simplified_Milestone_1.md, ABDM__NewDocumant_PHR_app.md, ABDM__M1_ABHA_Collection.postman_collection.md
 sidebar_position: 1
 covers: [hiecm.concept.abha-number-and-address, hiecm.concept.abha-address-policy]
 sidebar_class_name: sidebar-icon sidebar-icon--id-card
@@ -34,7 +34,7 @@ Verification runs against Aadhaar through the ABHA service, so your system never
 | Route | How the person proves identity | Private integrators | Government integrators |
 | --- | --- | --- | --- |
 | Aadhaar [OTP](/docs/hiecm/v3/getting-started/glossary#otp) | A code sent to the Aadhaar linked mobile number | Mandatory | Mandatory |
-| Face authentication | A QR code scanned in the ABHA app, then face capture in the ABHA app | Optional | Optional |
+| Face authentication | A QR code scanned in the ABHA app, then face capture through the Aadhaar RD service | Optional | Optional |
 | Biometrics | Fingerprint or IRIS on a registered device, which returns a signed PID block | Optional | Optional |
 | Demographic authentication | Name, date of birth and gender matched against Aadhaar | Not required | Mandatory |
 
@@ -48,26 +48,32 @@ A child under six has no Aadhaar number. Child ABHA is a 14 digit identifier cre
 
 The shape is `name@abdm`.
 
-- **Every number gets a default address**, the number with a suffix: `14digit@sbx` in [sandbox](/docs/hiecm/v3/getting-started/glossary#sandbox), `14digit@abdm` in production. The `preferredAbhaAddress` field holds the 14 digits with the suffix and no hyphens, for example `91**********27@sbx` in sandbox.
+- **Every number gets a default address**, the number with a suffix: `14digit@sbx` in [sandbox](/docs/hiecm/v3/getting-started/glossary#sandbox), `14digit@abdm` in production. The M1 Postman collection shows a `preferredAbhaAddress` field holding the 14 digits with the `@abdm` suffix and no hyphens.
 - **A person can then create a memorable one.** A suggestion call offers addresses, and a custom address is accepted, linked to the number.
-- **An address can exist without a number.** One can be created from mobile number, name, year of birth and gender, self declared and with no KYC. Expect accounts with no number behind them.
+- **An address can exist without a number.** One can be created on the [HIE-CM](/docs/hiecm/v3/getting-started/glossary#hie-cm) from mobile number, name, age and gender, self declared and with no KYC. Expect accounts with no number behind them.
 
 ### Address policy
 
 These rules apply:
 
-- Letters, numbers, one optional dot and one optional underscore are allowed.
+- Letters, numbers and a dot are allowed.
+- It cannot begin with a number.
 - It cannot begin or end with a dot.
+- An all numeric address is allowed only in the `14digit@abdm` default form.
 - A 10 digit mobile number as an address is restricted and not created.
-- It is 8 to 18 characters long.
+
+Minimum length differs by flow. Validate against the error the endpoint returns rather than assuming one rule across all of them.
 
 ## What an address is allowed to be
 
 NHA validates the address on creation, so a form that accepts what NHA refuses
-produces a failure the person cannot act on. Letters, digits, a single dot and a
-single underscore are allowed, and beyond that:
+produces a failure the person cannot act on. Letters, digits and a single dot
+are allowed, and beyond that:
 
+- It cannot begin with a digit.
 - It cannot begin or end with a dot.
+- An all digit address is allowed for an ABHA number and nothing else, which
+  is what makes the default `14digit@abdm` legal.
 
 Three shapes read as though they should work and do not. A ten digit mobile
 number as an address is restricted. An ABHA number as an address you create is
@@ -75,9 +81,15 @@ not allowed, although the default one is issued automatically and signing in
 with it works on both web and mobile. And anything failing the rules above is
 refused at creation rather than at submission.
 
+:::caution[The minimum length is stated twice, differently]
+NHA's PHR document gives the minimum as 4 characters in its narrative and as 8
+in the test case for creating an address by mobile number. Neither has been
+run against the sandbox from here. Build to 8, which is the stricter reading.
+:::
+
 A password is created alongside the address: at least 8 characters, at least
-one uppercase letter, one digit and one special character from
-`!@#$^*_-`, no spaces, and no more than two consecutive characters or keyboard keys. NHA
+one uppercase letter, one lowercase letter, one digit and one symbol, no
+spaces, and no more than two consecutive characters or keyboard keys. NHA
 describes enforcing it as optional for the application, not the password
 itself as optional.
 
@@ -100,15 +112,16 @@ The profile response carries:
 | `email` | Present once an email is verified, otherwise `null` |
 | `profilePhoto` | Base64 image data with no data URI prefix |
 
-The communication mobile number need not be the Aadhaar linked one. It is verified separately, by its own OTP, after enrolment. Email is optional throughout. An ABHA also carries a card, downloadable as an image, and a QR code, both M1 calls. Field level detail is on [the M1 API reference](/docs/hiecm/v3/api/m1).
+The communication mobile number need not be the Aadhaar linked one. It is verified separately, by its own OTP, after enrolment. Email is optional throughout. An ABHA also carries a card, downloadable as an image, and a QR code, both M1 calls. Field level detail is on [M1 APIs](/docs/hiecm/v3/api/m1/apis).
 
 ## Where the calls go
 
 ```text
 Sandbox     https://abhasbx.abdm.gov.in/abha/api/v3/
+Production  https://abha.abdm.gov.in/api/abha/v3/
 ```
 
-Login by fingerprint or iris uses the same base URL, through `/v3/profile/login/verify` with a `bio` or `iris` block.
+One exception: login by Aadhaar number using fingerprint or IRIS uses the v3.1 base URL, `https://abhasbx.abdm.gov.in/abha/api/v3.1/`. No production v3.1 URL is given.
 
 ## What M1 does with it
 
