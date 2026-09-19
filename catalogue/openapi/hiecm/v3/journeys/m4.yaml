@@ -1,5 +1,5 @@
 - id: m4-registration-api-s-collection-via-aadhaar
-  title: Registration API's Collection Via Aadhaar
+  title: HPID, registration via Aadhaar
   steps:
     - op: m4_post_aadhaar_generatelink
     - op: m4_post_aadhaar_isauthenticated
@@ -11,7 +11,7 @@
     - op: m4_post_v1_registration_aadhaar_verifymobileotp
     - op: m4_post_v2_registration_aadhaar_createhpridwithpreverified
 - id: m4-onboarding-apis
-  title: Onboarding APIs
+  title: HFR, facility onboarding
   steps:
     - op: m4_post_search_address_filter_deduplicate
     - op: m4_post_v1_5_facility_basic_information
@@ -19,11 +19,11 @@
     - op: m4_post_v1_5_facility_detailed_information
     - op: m4_post_v1_5_facility_submit_facility
 - id: m4-multiple-hrp-api
-  title: Multiple HRP API
+  title: HRP bridge services
   steps:
     - op: m4_post_v1_bridges_mutiplehrpaddupdateservices
 - id: m4-utilities
-  title: Utilities
+  title: HFR, master data
   steps:
     - op: m4_get_getpsudetailsbyministry
     - op: m4_post_v1_5_facility_fetch_facility_sub_type
@@ -36,17 +36,17 @@
     - op: m4_get_v1_5_facility_lgd_states
     - op: m4_get_v1_5_facility_lgd_subdistricts
 - id: m4-search
-  title: Search
+  title: HFR, facility search
   steps:
     - op: m4_post_facilitymanagement_v1_5_facility_bygeolocation_se_907b10
     - op: m4_post_facilitymanagement_v1_5_facility_search
 - id: m4-hfr-hrp-linkage-apis
-  title: HFR-HRP Linkage APIs
+  title: HFR, linkage to the HPR
   steps:
     - op: m4_post_v1_5_facility_sendotptocontact
     - op: m4_post_v1_5_facility_validateotp
 - id: m4-authentication
-  title: Authentication
+  title: HPR, authentication
   steps:
     - op: m4_post_v1_auth_authpassword
     - op: m4_get_v1_auth_cert
@@ -54,7 +54,7 @@
     - op: m4_post_v1_auth_init
     - op: m4_post_v2_auth_loginviamobilesendotp
 - id: m4-verification
-  title: Verification
+  title: HPR, contact verification
   steps:
     - op: m4_post_v1_doctors_generate_mobile_otp
     - op: m4_post_v1_doctors_generate_verification_email
@@ -65,18 +65,18 @@
     - op: m4_post_v1_sendotpifdoctorverified
     - op: m4_post_v1_verifydoctorverificationotp
 - id: m4-hpid
-  title: Hpid
+  title: HPID, session and role
   steps:
     - op: m4_post_getmanagementtoken
     - op: m4_post_healdthloginwithmobile
     - op: m4_post_profile_updaterole
 - id: m4-util
-  title: Util
+  title: HPID, categories
   steps:
     - op: m4_get_hpid_get_categories
     - op: m4_get_hpid_get_subcategories
 - id: m4-profile
-  title: Profile
+  title: HPR, profile and password
   steps:
     - op: m4_post_password_change_bypassword
     - op: m4_post_password_recover_byaadhaar
@@ -93,19 +93,19 @@
     - op: m4_get_v1_account_user_details_hprid
     - op: m4_get_v4_auth_logout
 - id: m4-forgot-healthcare-professional-id-number
-  title: Forgot Healthcare Professional ID/number
+  title: HPR, recover the HPR ID
   steps:
     - op: m4_post_v1_forgot_hprid_aadhaar
     - op: m4_post_v1_forgot_hprid_mobile
     - op: m4_post_v1_forgot_hprid_mobile_generateotp
 - id: m4-searched
-  title: Searched
+  title: HPR, search
   steps:
     - op: m4_get_v1_search_existsbyhprid_hprid
     - op: m4_get_v1_search_searchbyhprid_hprid
     - op: m4_get_v1_search_searchbymobile_mobile
 - id: m4-enrollment
-  title: Enrollment
+  title: HPR, professional registration
   steps:
     - op: m4_post_v1_doctors_register_professional_new
     - op: m4_post_v1_doctors_update_professional_new
@@ -113,7 +113,7 @@
     - op: m4_post_v1_uploads_upload_document
     - op: m4_post_v1_doctors_fetch_professional_info
 - id: m4-utility
-  title: Utility
+  title: HPR, master data
   steps:
     - op: m4_get_v1_masters_affiliated_board
     - op: m4_get_v1_masters_affiliated_board_states_id
@@ -142,7 +142,7 @@
     - op: m4_put_hprworkdetails_status
     - op: m4_post_relinkordelinkprofessionalfromfacility
 - id: m4-hpr
-  title: Hpr
+  title: HPR, facility linkage
   steps:
     - op: m4_post_fetchprofessionalfacility
     - op: m4_post_hprfacilitysuggestions

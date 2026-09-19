@@ -1,5 +1,5 @@
 - id: m3-consent-management-data-flow-hiu
-  title: Consent-management-data-flow
+  title: Consent and data flow
   steps:
     - op: m3_post_consent_v3_request_init
     - op: m3_post_v3_hiu_consent_request_on_init
