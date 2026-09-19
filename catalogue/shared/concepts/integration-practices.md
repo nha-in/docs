@@ -20,8 +20,6 @@ sources:
     note: >
       Error codes that may be returned bare or with a trailing ": "
       separator.
-verified:
-  status: unverified
 related:
 ---
 

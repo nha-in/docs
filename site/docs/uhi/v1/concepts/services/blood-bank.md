@@ -3,7 +3,6 @@ title: Blood bank discovery
 sidebar_label: Blood bank
 sidebar_position: 3
 description: Search live blood stock by group and component across registered blood banks, using one call pair.
-verification: unverified
 source: UHI__UHI_BloodBank_Onboarding_v1.0.md
 sidebar_class_name: sidebar-icon sidebar-icon--droplet
 ---

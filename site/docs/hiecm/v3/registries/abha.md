@@ -2,7 +2,6 @@
 title: ABHA, the patient registry
 sidebar_label: ABHA
 description: The registry that identifies patients, the 14 digit ABHA number, the ABHA address, and what every milestone assumes about both.
-verification: unverified
 source: catalogue/openapi/hiecm/v3/hiecm-m1.yaml, catalogue/openapi/hiecm/v3/hiecm-p1.yaml
 sidebar_position: 1
 covers: [hiecm.concept.abha-number-and-address, hiecm.concept.abha-address-policy]

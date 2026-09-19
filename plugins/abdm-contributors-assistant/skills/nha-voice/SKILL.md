@@ -183,11 +183,11 @@ When the disagreement is about a code or an enum, the instruction is almost
 always the same: fetch it from the master data call rather than hard coding
 either table.
 
-**Frontmatter is unchanged.** `verification: unverified` stays on the page and
-keeps meaning exactly what it meant. It is metadata: it drives the compiler,
-tells maintainers what to prove next, and travels with the atom. The reader
-does not need it narrated at them, and the presence of honest metadata is what
-makes an authoritative sentence safe to write.
+**The atom carries no verification status.** The field was removed from the
+schema. Sandbox checks run internally through `npm run verify:atoms` and their
+evidence lives under `catalogue/verification/`, outside the atom, which is what
+makes an authoritative sentence safe to write: the check exists, the reader is
+not told about it.
 
 ## What does not change
 
@@ -241,8 +241,7 @@ pages:
 
 > Not yet observed. NHA's collection saves no response body for this operation,
 > so this catalogue does not state a shape. When you run this against the
-> sandbox, record the exact response here and set `verified.status` to verified
-> with the date and who ran it.
+> sandbox, record the exact response here with the date and who ran it.
 
 The second sentence instructs a maintainer, in a page an integrator is reading.
 Both sentences collapse to one platform fact: the response body for this

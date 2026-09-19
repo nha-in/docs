@@ -14,9 +14,6 @@ sources:
     note: >
       NHA's sandbox FAQ, question on the different fetch modes available,
       which enumerates all four and describes each.
-verified:
-  status: unverified
-  against: docs-only
 related: {}
 ---
 

@@ -2,7 +2,6 @@
 title: Encryption
 sidebar_label: Encryption
 description: Which values must be encrypted before they go in a request body, why it is required, and why you encrypt inside your own system rather than through a helper.
-verification: unverified
 source: catalogue/openapi/hiecm/v3/hiecm-m1.yaml
 sidebar_position: 9
 covers: [hiecm.concept.encrypted-identifiers, hiecm.concept.input-encryption, hiecm.decision.encrypt-locally]

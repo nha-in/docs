@@ -15,8 +15,6 @@ sources:
     note: >
       This portal's own published glossary, where the definition was
       written first. Moved here so it can be retrieved, not rewritten.
-verified:
-  status: unverified
 related:
   glossary: [shared.glossary.hi-type, shared.glossary.ims, shared.glossary.m4]
 ---

@@ -20,9 +20,6 @@ sources:
     note: >
       The list of empanelled auditors NHA points integrators at when they
       ask where to get WASA done.
-verified:
-  status: unverified
-  against: docs-only
 related: {}
 ---
 

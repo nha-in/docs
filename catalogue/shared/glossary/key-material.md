@@ -20,9 +20,6 @@ sources:
     note: >
       NHA's M2 encryption and decryption pages, which name ECDH and
       recommend the Fidelius CLI.
-verified:
-  status: unverified
-  against: docs-only
 related: {}
 ---
 

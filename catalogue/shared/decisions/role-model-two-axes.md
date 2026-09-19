@@ -20,9 +20,6 @@ sources:
     note: >
       This repository's own role switcher, which already separates the
       axes by declaring that the IMS choice covers hip and hiu.
-verified:
-  status: unverified
-  against: docs-only
 related:
   glossary: [shared.glossary.abha]
 ---

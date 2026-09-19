@@ -15,7 +15,7 @@ Checks every atom's frontmatter and body: mandatory fields, id format, gateway a
 
 | Fails on | Message (verbatim, `<...>` is a template slot) | Fix |
 |---|---|---|
-| A mandatory field is missing | `missing mandatory field: <field>`. Fields checked: `id`, `type`, `gateway`, `milestone`, `version`, `title`, `summary`, `sources`, `verified`, `related`. | Add the field. See `atom-authoring` for the full schema. |
+| A mandatory field is missing | `missing mandatory field: <field>`. Fields checked: `id`, `type`, `gateway`, `milestone`, `version`, `title`, `summary`, `sources`, `related`. | Add the field. See `atom-authoring` for the full schema. |
 | Frontmatter block cannot be found or parsed | `no frontmatter block`, or `frontmatter is not valid YAML: <error>` (from the shared loader, `scripts/lib/atoms.mjs`) | Fix the YAML. |
 | `type` is not one of the ten | `type must be one of concept, flow, endpoint, callback, error, test, decision, glossary, fhir, sandbox` | Pick one. If it fits none, it is probably two atoms. |
 | `gateway` is not one of the four | `gateway must be one of hiecm, uhi, nhcx, shared` | Fix the value. All four gateways are accepted. Shared atoms use `milestone: n/a`. |
@@ -27,8 +27,7 @@ Checks every atom's frontmatter and body: mandatory fields, id format, gateway a
 | `sources` is missing or empty | `sources must list at least one entry` | Add at least one source. If it is our own analysis, say so and mark `docs-only`. |
 | A `sources` entry has neither `url` nor `file` | `sources[<i>] needs a url or a file` | Add one. |
 | A `sources` entry has neither `status` nor `hash` | `sources[<i>] needs a status or a hash` | Add one. Ingestion records a hash; if hand-added, run `/source-check`. |
-| `verified.status` is not one of the four | `verified.status must be one of draft, unverified, verified, stale` | Fix. If unsure, `unverified` is always safe. |
-| `verified.status` is `verified` but `against`, `on`, or `by` is missing | `verified.status is verified, so verified.<field> is required. Never claim verification you did not observe.` | Either record the observed response or set `unverified`. |
+| A `verified` block is present | `verified is no longer a field; drop it. Sandbox evidence lives in catalogue/verification/` | Delete the block. Atoms carry no verification status; `npm run verify:atoms` writes evidence outside the atom. |
 | One of the five mandatory sections is missing | `missing mandatory section: ## <heading>`. Headings, in order: `In plain words`, `Before you start`, `What happens`, `How you know it worked`, `When it goes wrong`. | Add it. Glossary atoms may write "Nothing" under a heading, but the heading stays. |
 | The five sections are present but out of order | `sections are out of order at "## <heading>"` | Reorder. |
 | An em dash (U+2014) appears anywhere in the file | `em dash found. Use a full stop, a comma or a colon.` | Replace it. No exceptions, including code comments and commit messages. |
@@ -112,7 +111,7 @@ Runs after `compile:skills` and validates the compiled output in `plugins/abdm-i
 | No loop states a limit (`Loop limit: N passes per ...`) | `<skill>: no loop limit stated` | Add one so an agent following it can terminate. |
 | A `### ` block has no matching `Exit condition` | `<skill>: <N> loop(s) but only <M> exit condition(s)` | Name what arrives and within how long. |
 
-There is no separate check that a gateway has some minimum count of verified atoms. Nothing in this repository emits such a message and nothing refuses to build on verified coverage. That gate is wanted and not implemented, so P1's phasing is held by review today, not by CI. Do not cite it as a build gate.
+There is no check that a gateway has some minimum count of sandbox-checked atoms. Atoms carry no status to count, and nothing refuses to build on coverage. P1's phasing is held by review, not by CI. Do not cite it as a build gate.
 
 ## `./scripts/plan-check.sh`
 

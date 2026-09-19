@@ -14,8 +14,6 @@ sources:
     note: >
       The portal's own role selector calls one of its four readers an
       IMS vendor. Written here so that role has a definition behind it.
-verified:
-  status: unverified
 related:
   glossary: [shared.glossary.hmis, shared.glossary.emr, shared.glossary.lims, shared.glossary.pms]
 ---

@@ -2,7 +2,6 @@
 title: Consent stuck in Requested
 sidebar_label: Consent stuck in Requested
 description: A consent request was created and never moved to Granted or Denied. The checks in order.
-verification: unverified
 source: catalogue/openapi/hiecm/v3/hiecm-m3.yaml, catalogue/openapi/hiecm/v3/hiecm-p2.yaml
 sidebar_position: 5
 covers: [hiecm.troubleshooting.consent-stuck-requested]

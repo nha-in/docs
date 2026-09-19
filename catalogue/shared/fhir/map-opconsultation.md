@@ -21,8 +21,6 @@ sources:
       `Composition.section:<Slice>.entry`'s `targetProfile`); the
       example section-to-resource mapping comes from the IG's own
       Bundle-OPConsultNote-example-05.json.
-verified:
-  status: unverified
 related:
   fhir: [shared.fhir.document-bundles, shared.fhir.hl7-validator-recipe]
 ---

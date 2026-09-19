@@ -2,7 +2,6 @@
 title: HPR, the professional registry
 sidebar_label: HPR
 description: The Healthcare Professionals Registry, the HPID, what identifies a doctor, and the registration journey.
-verification: unverified
 source: catalogue/openapi/hiecm/v3/hiecm-m4.yaml
 sidebar_position: 1
 sidebar_class_name: sidebar-icon sidebar-icon--stethoscope

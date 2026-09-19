@@ -17,9 +17,6 @@ sources:
     hash: sha256:a7e1b7e0b56b75297623057678cf307f21ecdbfbc9ebdb022dc67df78540f6d5
     note: >
       The ABHA number described as 14 digits.
-verified:
-  status: unverified
-  against: docs-only
 related:
   
   glossary: [shared.glossary.ayushman-card]

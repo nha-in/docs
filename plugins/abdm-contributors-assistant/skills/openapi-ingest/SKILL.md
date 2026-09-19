@@ -82,7 +82,7 @@ If NHA's own documentation does not state the retry behaviour, mark it unknown r
 
 ## After ingestion
 
-Ingestion produces specifications, journeys and a correction log. No atom is generated from them, and nothing in them is verified. Report the operation count per module, the corrections made, and what still fails lint.
+Ingestion produces specifications, journeys and a correction log. No atom is generated from them, and no call in them has a recorded sandbox response. Report the operation count per module, the corrections made, and what still fails lint.
 
 ## How the indexer reads your spec
 

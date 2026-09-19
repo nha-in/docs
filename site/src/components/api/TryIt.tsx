@@ -380,7 +380,7 @@ export default function TryIt({operation}: {operation: Operation}) {
   // fake up, just an empty box.
   const bodyUnknown = hasBody && !canUseFields && operation.requestExample === undefined;
   const bodyHint =
-    "NHA's collection records no body shape for this operation. Paste a body if you have one, and treat the result as unverified.";
+    "NHA's collection records no body shape for this operation. Paste a body if you have one, and check the response against the specification.";
   const rawErrorId = `try-${operation.id}-body-error`;
   const bodyHintId = `try-${operation.id}-body-hint`;
 

@@ -16,9 +16,6 @@ sources:
       NHA's Getting Started page, which defines DSCs as organizations
       that provide software to patients or health facilities and names
       them the primary users of the sandbox.
-verified:
-  status: unverified
-  against: docs-only
 related:
   glossary: [shared.glossary.hrp]
   decisions: [shared.decision.role-model-two-axes]

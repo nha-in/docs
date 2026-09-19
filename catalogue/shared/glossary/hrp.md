@@ -20,9 +20,6 @@ sources:
       NHA's PHR Framework page, which describes HRPs as digital solution
       companies offering ABDM compliant software, and an instance of
       certified software as an HRP.
-verified:
-  status: unverified
-  against: docs-only
 related:
   glossary: [shared.glossary.dsc]
   decisions: [shared.decision.role-model-two-axes]

@@ -16,8 +16,6 @@ sources:
     note: >
       The pinned NRCES/NDHM package. The section list below is
       digests.json's DischargeSummaryRecord digest, verbatim.
-verified:
-  status: draft
 related:
   fhir: [shared.fhir.document-bundles]
 ---

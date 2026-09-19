@@ -3,7 +3,6 @@ title: Jan Aushadhi Kendra discovery
 sidebar_label: Jan Aushadhi Kendra
 sidebar_position: 5
 description: Find Jan Aushadhi Kendras over UHI by Kendra code, state and district, pincode or GPS radius.
-verification: unverified
 source: UHI__UHI_JanAushadhiKendra_OnboardingDoc_v1.0.md
 sidebar_class_name: sidebar-icon sidebar-icon--store
 ---

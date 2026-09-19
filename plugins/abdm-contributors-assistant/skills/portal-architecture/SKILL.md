@@ -1,9 +1,9 @@
 ---
 name: portal-architecture
 description: 'The architecture of the ABDM Developer Portal: the four building blocks, how the Catalogue compiles into docs, skills and MCP surfaces, the seven binding principles, the atom model, and what is deliberately excluded from V1. Use whenever someone asks how the portal fits together, why a design decision was made, whether something belongs in V1, where a new capability should live, or proposes a change to the structure. Also use before designing any new component so it lands in the right layer instead of beside it.'
-plan_version: 2026.09.17-2
+plan_version: 2026.09.19
 plan_source: abdm-v1-phase1-architecture-and-plan.md
-plan_hash: sha256:f82e22ccc0cc67666b57c6907c200544f5e9a66f434a58990ae26deafa2eebaa
+plan_hash: sha256:88997a44ec35f90875d7752fd86735a34ea5ac2b82e7eb2dd64aecff25578a3c
 compiled_from_plan: true
 ---
 
@@ -33,9 +33,9 @@ The design is that NHA sources are watched daily and feed the Catalogue through 
 | Block | What it is in V1 | The rule that keeps it honest |
 |---|---|---|
 | 01 Catalogue | NHA's HIE-CM M1 to M3 endpoints as atoms | Nothing downstream is hand-maintained. `scripts/validate-skills.mjs` fails CI on a cited atom id the Catalogue does not define, or a curl target recorded on no atom. Error codes are not checked. |
-| 02 MCP | Our own Go Docs MCP server: nine read tools over one indexed snapshot of the Catalogue, hybrid keyword plus semantic retrieval | Retrieval only. Nothing executes against NHA. Every response carries catalogue version and verification status. |
+| 02 MCP | Our own Go Docs MCP server: nine read tools over one indexed snapshot of the Catalogue, hybrid keyword plus semantic retrieval | Retrieval only. Nothing executes against NHA. Every response carries the catalogue version. |
 | 03 Skills | Compiled, never written. Index, per-milestone build, test and debug skills, one bundle | The compiler may reword. It may not add facts. |
-| 04 Docs | Docusaurus site with self-hosted Scalar API references, structured after developer.eka.care flow pages | No verification banner exists. Nothing under `site/src` renders one for a `stale` or an `unverified` atom, and no atom is stale today because nothing sets that status. A page that needs the warning says it in its own prose, which is held by review. Do not tell anyone the site will flag an unverified page for them. |
+| 04 Docs | Docusaurus site with self-hosted Scalar API references, structured after developer.eka.care flow pages | No status banner exists, and no atom carries a status to render. A page that needs the warning says it in its own prose, which is held by review. Do not tell anyone the site will flag a page for them. |
 
 ## The seven principles and their enforcement
 
@@ -43,7 +43,7 @@ A principle without an enforcement mechanism is a wish. Each of these has one.
 
 | # | Principle | Enforced by |
 |---|---|---|
-| P1 | Scope is phased and declared, never implied, and what exists is declared separately from what is verified: HIE-CM M1 to M4 and P1 to P3 carry atoms now, and PHR application services, UHI and NHCX carry specifications or pages without atoms | Mandatory `gateway` field, and that is all of it. No gateway is refused by lint. A coverage gate refusing to build on zero verified atoms is wanted and not implemented, so the phasing half of P1 is held by review, not by CI. Do not cite it as a gate. |
+| P1 | Scope is phased and declared, never implied, and what exists is declared separately from what is merely specified: HIE-CM M1 to M4 and P1 to P3 carry atoms now, and PHR application services, UHI and NHCX carry specifications or pages without atoms | Mandatory `gateway` field, and that is all of it. No gateway is refused by lint. A coverage gate refusing to build on zero atoms is wanted and not implemented, so the phasing half of P1 is held by review, not by CI. Do not cite it as a gate. |
 | P2 | Documentation is the knowledge base that powers everything | Skills, llms.txt, MCP resources and the support agent are build outputs. `scripts/validate-skills.mjs` fails CI on a cited atom id or curl target the Catalogue does not define. It does not check every identifier. |
 | P3 | No em dashes, write like a person | A CI rule blocks U+2014. The writing guide is in the repo and in the compiler prompt. |
 | P4 | Human and machine readable from one source | Typed atoms: frontmatter is the machine half, body is the human half, structured blocks are fenced with a declared schema. |
@@ -64,15 +64,15 @@ Full schema and section rules: `atom-authoring`.
 ## Atom lifecycle
 
 ```
-draft -> unverified -> verified -> stale -> unverified or back to verified
+draft -> published -> checked, and from either back through an issue
 ```
 
 - `draft` a stub, generated from OpenAPI or hand-created
-- `unverified` five sections written, lint passes, not yet run against anything
-- `verified` run against sandbox, response recorded in the atom, a reviewer stamped it
-- `stale` the watcher saw the source hash change
+- `published` five sections written, lint passes, merged. This is what every reader sees, stated as ABDM's own account, with no status label anywhere
+- `checked` `npm run verify:atoms` ran the atom's curl and the scrubbed request and response sit in `catalogue/verification/`. Contributors only
+- `issue` the sandbox disagreed, found by the script or by an integrator. A GitHub issue keyed by the atom id, then the atom is corrected citing it and the skills recompile
 
-Stale is designed to render a banner on the site and make the compiled skill warn the agent. Neither is built, and nor is the watcher that would set `stale` in the first place, so no atom is stale today. Unverified renders no label either: no component under `site/src` reads the status, so the pages that say `unverified` say it in hand-written prose. The support agent does carry the status when citing, because the MCP tools return it. A source change never silently edits a verified atom.
+Atoms carry no verification field. Lint fails one that does. The MCP returns no status and the support agent cites atom ids only. A source change never silently edits an atom: it opens a PR naming the affected ids.
 
 ## Where new things go
 
@@ -94,13 +94,13 @@ Scope is phased, and phase is not the only axis. Keep two claims apart at all ti
 
 What exists: `catalogue/openapi/hiecm/v3/` holds eleven specifications carrying 253 operations, 30 of them webhooks: the gateway plus M1, M2, M3, M4, P1, P2, P3, P4, subscriptions and Scan and Pay. The reference is ordered by the journey files under `catalogue/openapi/hiecm/v3/journeys/`, and each module's error page lists the codes its specification's response examples return. The site renders 398 HIE-CM pages, 345 of them generated, alongside 16 UHI pages and 5 NHCX pages.
 
-What is verified: 57 atoms are indexed, 53 `unverified`, 4 `draft` and none `verified`. Every atom is shared and carries `milestone: n/a`: 40 glossary, 11 FHIR, 3 sandbox, 2 decision and 1 concept. The HIE-CM atoms, and with them the three verified M1 atoms, came down in the 16 September 2026 reset, and the shared `timestamp-header` returned to `unverified`. There are no HIE-CM atoms, no UHI atoms and no NHCX atoms.
+What the Catalogue holds: 57 atoms are indexed, and none carries a status. Every atom is shared and carries `milestone: n/a`: 40 glossary, 11 FHIR, 3 sandbox, 2 decision and 1 concept. The HIE-CM atoms came down in the 16 September 2026 reset. There are no HIE-CM atoms, no UHI atoms and no NHCX atoms.
 
 **NHCX, pages today and atoms open.** NHCX has site pages and no atoms, and the gap is a schedule rather than a rule. Atoms: there are none, because the time went to HIE-CM. `scripts/lint-atoms.mjs` accepts `gateway: nhcx` alongside `hiecm`, `uhi` and `shared`, so an NHCX atom lints clean the day somebody writes one. Pages: `site/docs/nhcx/` renders 5 pages covering what NHCX is, who is on it, its registries and its glossary, `catalogue/nhcx/` and `catalogue/openapi/nhcx/v1/` exist as folder structure holding no atom and no specification, and `CONTRIBUTING.md` documents the NHCX provider and payer roles. Nothing enforces that second half, because those are ordinary hand-written site pages. So, in both directions: do not tell anyone NHCX is absent from the repository, because its pages ship, and do not tell anyone NHCX atoms are forbidden, because they are merely unwritten.
 
 Out of Phase 1 is not an empty page. UHI and NHCX have orientation pages built from NHA's own documents: what it is, whether the reader needs it, where NHA documents it. Every HIE-CM module goes further, because it has a specification file, so its reference pages are generated and every operation appears. What none of them has is an atom, which is where the plain words, the worked example and the recorded sandbox response live. The landing page, the index skill and the frontmatter all carry the phase.
 
-One gateway written out beats three gateways half-written. Generated reference pages are cheap, because they fall out of a specification file, which is why every HIE-CM module renders. Atoms are expensive, because each one is written and then proven, and the HIE-CM writing came down with the reset while the proving never moved past M1: none of the 57 atoms carries a recorded sandbox response. A confident wrong page is harmful; a generated page that says it is unverified is honest. What is never acceptable is something shaped like a proven reference that has not been run. Repeat that whenever someone suggests slipping UHI into Phase 1 "since the pages already render".
+One gateway written out beats three gateways half-written. Generated reference pages are cheap, because they fall out of a specification file, which is why every HIE-CM module renders. Atoms are expensive, because each one is written and then proven, and the HIE-CM writing came down with the reset while the proving never moved past M1: none of the 57 atoms carries a recorded sandbox response. A confident wrong page is harmful; a generated page that states only what the specification carries is honest. What is never acceptable is something shaped like a proven reference that has not been run. Repeat that whenever someone suggests slipping UHI into Phase 1 "since the pages already render".
 
 ## Explicitly not in V1
 

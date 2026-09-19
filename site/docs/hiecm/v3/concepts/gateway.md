@@ -2,7 +2,6 @@
 title: The ABDM gateway
 sidebar_label: Gateway
 description: The routing layer every ABDM call goes through, and the session endpoint that issues your token.
-verification: unverified
 source: catalogue/openapi/hiecm/v3/hiecm-m1.yaml, catalogue/openapi/hiecm/v3/hiecm-m2.yaml, catalogue/openapi/hiecm/v3/hiecm-m3.yaml, catalogue/openapi/hiecm/v3/hiecm-m4.yaml
 sidebar_position: 7
 covers: [hiecm.concept.gateway-session]

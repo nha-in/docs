@@ -2,7 +2,6 @@
 title: HFR, the facility registry
 sidebar_label: HFR
 description: The Health Facility Registry, what a facility record holds, the five call onboarding sequence, and how a bridge is linked to it.
-verification: unverified
 source: catalogue/openapi/hiecm/v3/hiecm-m4.yaml, catalogue/openapi/hiecm/v3/hiecm-m2.yaml
 sidebar_position: 2
 sidebar_class_name: sidebar-icon sidebar-icon--building

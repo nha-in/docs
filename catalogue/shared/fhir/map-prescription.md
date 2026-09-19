@@ -22,8 +22,6 @@ sources:
       `Composition.section.entry:MedicationRequest` and
       `Composition.section.entry:Binary` slices; the example resource
       mix comes from the IG's own Bundle-Prescription-example-06.json.
-verified:
-  status: unverified
 related:
   fhir: [shared.fhir.document-bundles, shared.fhir.hl7-validator-recipe]
 ---

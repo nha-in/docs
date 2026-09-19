@@ -14,8 +14,6 @@ sources:
     note: >
       This portal's own published glossary, where the definition was
       written first. Moved here so it can be retrieved, not rewritten.
-verified:
-  status: unverified
 related:
   concepts: []
 ---

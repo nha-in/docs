@@ -39,7 +39,7 @@ The generator writes exactly three things:
 - `site/src/data/reference-links.json`, from the `api-sidebar.json` that `build-api-reference.mjs` wrote just before it
 - `site/static/llms.txt`, an index of every page under `site/docs`
 
-It emits no phase scope into the sidebar and no verification banner. Nothing under `site/src` renders a banner for an `unverified` or a `stale` atom: that was designed and is not built, so an honest phase and verification note has to be written into the page itself. The `catalogue_version` in the footer is real but is not this script's doing: `site/docusaurus.config.ts` reads `catalogue/VERSION` and puts it in the copyright line.
+It emits no phase scope into the sidebar. Atoms carry no verification status and no page renders one, so a phase note has to be written into the page itself. The `catalogue_version` in the footer is real but is not this script's doing: `site/docusaurus.config.ts` reads `catalogue/VERSION` and puts it in the copyright line.
 
 ## Per-module reference routes
 

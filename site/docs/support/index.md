@@ -3,7 +3,6 @@ title: Support
 sidebar_label: Support
 sidebar_position: 0
 description: Where to raise integration queries, API errors, onboarding and certification questions for the ABDM sandbox.
-verification: unverified
 source: NHA content review of 15 September 2026 (Sandbox2.0 M1, getting started and glossary, support page)
 ---
 

@@ -24,8 +24,6 @@ sources:
       `Composition.section.entry:DocumentReference` slices; the example
       resource mix comes from the IG's own
       Bundle-DiagnosticReport-Imaging-DCM-example-01.json.
-verified:
-  status: unverified
 related:
   fhir: [shared.fhir.document-bundles, shared.fhir.hl7-validator-recipe]
 ---

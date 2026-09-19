@@ -1,9 +1,9 @@
 ---
 name: portal-planning
 description: The ABDM Developer Portal schedule, workstreams, ownership split, two-day shipping increments, definition of done, and risk register. Use whenever someone asks what ships when, what is blocked, who owns a piece of work, whether V1 is on track, what counts as finished, how to sequence a task, or wants a standup, a status update, or a re-plan. Also use when scope is being added or cut so the trade is made against the schedule rather than in the abstract.
-plan_version: 2026.09.17-2
+plan_version: 2026.09.19
 plan_source: abdm-v1-phase1-architecture-and-plan.md
-plan_hash: sha256:f82e22ccc0cc67666b57c6907c200544f5e9a66f434a58990ae26deafa2eebaa
+plan_hash: sha256:88997a44ec35f90875d7752fd86735a34ea5ac2b82e7eb2dd64aecff25578a3c
 compiled_from_plan: true
 ---
 
@@ -27,7 +27,7 @@ The split is by kind of judgement, not by convenience.
 
 | Stream | Functional and strategic owner | Technical owner |
 |---|---|---|
-| Catalogue | Atom schema decisions, writing guide, every body's five sections, dummy-proofness review, glossary | OpenAPI ingestion and cleanup, callbacks as webhooks per module file, endpoint stubs, sandbox verification runs, verified stamps |
+| Catalogue | Atom schema decisions, writing guide, every body's five sections, dummy-proofness review, glossary | OpenAPI ingestion and cleanup, callbacks as webhooks per module file, endpoint stubs, sandbox runs, evidence under `catalogue/verification/` |
 | Site and MCP | Information architecture mirroring developer.eka.care flows, theme, landing copy, depth labels | Docusaurus and Scalar setup, spec conventions, the docs-mcp server and indexer, domains, deploys |
 | Skills | Template prose, index decision tree, trigger descriptions, what each skill must refuse to guess | Compiler, validator, plugin manifest, per-agent adapters |
 | Pipeline | Source inventory, review rota | Watcher, PR bot, CI, publishers |
@@ -62,7 +62,7 @@ Every item is checkable. None is a judgement call. This is the list to run befor
 7. The watcher has opened at least one real pull request from a real source change
 8. The support agent answered the six eval tasks from the Catalogue, citing atom ids, with the score recorded
 9. The first-day developer test passes: no ABDM exposure, docs URL and sandbox credentials only, successful M1 ABHA verification call in under two hours with no human asked
-10. The landing page, index entries and skill descriptions state the phase scope as the plan's §7 states it, keeping what exists separate from what is verified, and naming NHCX as present in site pages and carrying no atoms yet, and every unverified atom renders the banner
+10. The landing page, index entries and skill descriptions state the phase scope as the plan's §7 states it, keeping what exists separate from what is merely specified, and naming NHCX as present in site pages and carrying no atoms yet
 11. Public repo, neutral licence, contributing, security and governance files present, no `eka.care` reference in the core Catalogue
 
 ## Risk register
@@ -71,8 +71,8 @@ Each risk carries the decision it needs, because an unowned risk is just anxiety
 
 | Risk | Mitigation | Decision needed |
 |---|---|---|
-| Verification lags authoring badly, and the gap has widened. 57 atoms are written, 53 of them say `unverified` and none is verified against sandbox, while the plan promises dummy proof and recorded responses | Credentials, then a verification sweep across M1 to M3 before ship. No `verified` stamp without a recorded response, and `lint-atoms.mjs` fails the build on one | The long pole, and authoring has moved three times since it was written. If credentials slip, ship honest `unverified` labels rather than a fabricated stamp |
-| NHA swagger is inconsistent or incomplete, with known 403s on some V3 sandbox endpoints | Ingest, hand-correct, record both the NHA file and the correction in `sources`, mark unverified until sandbox confirms | Accept that some endpoints ship unverified |
+| Verification lags authoring badly, and the gap has widened. 57 atoms are written and none has been run against sandbox, while the plan promises dummy proof and recorded responses | Credentials, then a verification sweep across M1 to M3 before ship. Evidence lands in `catalogue/verification/`, and a wrong atom is corrected through an issue keyed by its id | The long pole, and authoring has moved three times since it was written. If credentials slip, ship atoms that state what the specification says and nothing more |
+| NHA swagger is inconsistent or incomplete, with known 403s on some V3 sandbox endpoints | Ingest, hand-correct, record both the NHA file and the correction in `sources`, record the correction and leave the atom stating what the specification carries | Accept that some endpoints ship without a recorded sandbox response |
 | Docusaurus guides and Scalar references are two rendering systems on one site | Keep prose in plain markdown, avoid MDX beyond callouts and steps, so it ports anywhere; specs stay the single source under `catalogue/openapi/` | Decided: fully self-hosted from day one, no hosted-Scalar phase |
 | An existing community docs site overlaps heavily | Reach out early, propose the Catalogue as shared upstream | Product makes the call and the call |
 | The time available is not enough for three gateways at full depth | Atom depth is HIE-CM only, and since the 16 September 2026 reset no HIE-CM module carries atoms. Every HIE-CM module, UHI and NHCX stay at specification or site page depth, with no atoms written against them yet | Needs sign-off, already decided in the plan |

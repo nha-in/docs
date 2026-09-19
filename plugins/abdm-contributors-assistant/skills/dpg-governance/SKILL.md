@@ -1,9 +1,9 @@
 ---
 name: dpg-governance
 description: 'The digital public good constraint on the ABDM Developer Portal: FOSS licensing, no dependency on Eka infrastructure or APIs, the overlay repo boundary for vendor-specific content, governance files, and the acceptance test that proves decoupling. Use whenever anything touches licensing, vendor-specific content, hosting dependencies, contribution process, or when someone proposes adding an Eka endpoint, credential format or URL to the core Catalogue. Also use before any public release.'
-plan_version: 2026.09.17-2
+plan_version: 2026.09.19
 plan_source: abdm-v1-phase1-architecture-and-plan.md
-plan_hash: sha256:f82e22ccc0cc67666b57c6907c200544f5e9a66f434a58990ae26deafa2eebaa
+plan_hash: sha256:88997a44ec35f90875d7752fd86735a34ea5ac2b82e7eb2dd64aecff25578a3c
 compiled_from_plan: true
 ---
 
@@ -59,7 +59,7 @@ There is no lint rule for this yet. `prose.no-vendor-url` is the intended rule, 
 The framework is credible only if someone else can contribute meaningfully. In practice:
 
 - Anyone can open a pull request with an atom
-- The verification requirement applies equally: their claim of `verified` needs a recorded response like anyone else's
+- The evidence requirement applies equally: a claim that a call was checked needs its scrubbed response under `catalogue/verification/` like anyone else's
 - Another organisation can add its own overlay without asking permission
 - Nobody needs Eka's infrastructure to test their contribution
 

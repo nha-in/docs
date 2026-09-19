@@ -6,7 +6,6 @@ sidebar_custom_props:
   roles: [phr]
 description: What a personal health record app does in ABDM, the screens it needs, and the modules you have to build.
 covers: [hiecm.concept.phr-subscriptions]
-verification: unverified
 source: catalogue/openapi/hiecm/v3/hiecm-p1.yaml, catalogue/openapi/hiecm/v3/hiecm-p2.yaml, catalogue/openapi/hiecm/v3/hiecm-p3.yaml, catalogue/openapi/hiecm/v3/hiecm-p4.yaml, catalogue/openapi/hiecm/v3/hiecm-m1.yaml
 sidebar_class_name: sidebar-icon sidebar-icon--app-window
 ---

@@ -26,8 +26,6 @@ sources:
       NRCeS's own download for the package above. The pinned tgz under
       .raw/ is what the catalogue and the validator actually read; this
       URL is recorded so the pin can be renewed deliberately.
-verified:
-  status: unverified
 related:
   fhir: [shared.fhir.hl7-validator-recipe, shared.fhir.map-opconsultation, shared.fhir.map-prescription, shared.fhir.map-diagnosticreport]
 ---
