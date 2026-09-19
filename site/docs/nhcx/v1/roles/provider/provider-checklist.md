@@ -3,6 +3,8 @@ title: Provider checklist
 sidebar_label: Provider checklist
 sidebar_position: 10
 description: Sandbox exit list, 29 test cases by family (T-ML1, T-PLN, T-ELG, T-PRE, T-CLM, T-PAY, T-COM, T-CBK, T-SES), first-week failures
+sidebar_class_name: sidebar-icon sidebar-icon--list-checks
+verification: unverified
 source: nhcx-package/docs/03-Building a Provider/10-Provider Checklist.md
 generated: true
 sidebar_custom_props:

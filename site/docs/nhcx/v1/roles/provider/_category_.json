@@ -1,9 +1,11 @@
 {
   "label": "Building a provider",
   "position": 1,
+  "collapsed": false,
   "customProps": {
     "roles": [
       "provider"
     ]
-  }
+  },
+  "className": "sidebar-icon sidebar-icon--hospital"
 }

@@ -3,11 +3,15 @@ title: Payment and communication
 sidebar_label: Payment and communication
 sidebar_position: 7
 description: Payment reconciliations (wf 30, 31, 33) and out-of-band communication
+sidebar_class_name: sidebar-icon sidebar-icon--message-square
+verification: unverified
 source: nhcx-package/docs/03-Building a Provider/07-Payment and Communication.md
 generated: true
 sidebar_custom_props:
   roles:
     - provider
+covers:
+  - nhcx.flow.payment-notice
 ---
 
 # Payment and communication

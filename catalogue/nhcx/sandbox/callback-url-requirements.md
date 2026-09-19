@@ -35,6 +35,7 @@ related:
   sandbox:
   - nhcx.sandbox.prerequisites
   - nhcx.sandbox.environments-and-base-urls
+  - shared.sandbox.callback-url
   concepts:
   - nhcx.concept.synchronous-acknowledgement
   - nhcx.concept.retries-and-expiry

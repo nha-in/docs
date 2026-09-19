@@ -3,11 +3,15 @@ title: Insurance plan
 sidebar_label: Insurance plan
 sidebar_position: 4
 description: Dynamic package master retrieval and caching
+sidebar_class_name: sidebar-icon sidebar-icon--package
+verification: unverified
 source: nhcx-package/docs/03-Building a Provider/04-Insurance Plan.md
 generated: true
 sidebar_custom_props:
   roles:
     - provider
+covers:
+  - nhcx.flow.insurance-plan-request
 ---
 
 # Insurance plan

@@ -3,6 +3,8 @@ title: Session token
 sidebar_label: Session token
 sidebar_position: 3
 description: Minting and refreshing ABDM gateway session JWTs
+sidebar_class_name: sidebar-icon sidebar-icon--ticket
+verification: unverified
 source: nhcx-package/docs/02-Getting Started/03-Session Token.md
 generated: true
 ---

@@ -99,9 +99,12 @@ Every call answers in its own response. Nothing arrives later.
   "memberid": "<MEMBER_ID>",
   "payerid": "<INSURER_PARTICIPANT_CODE>",
   "processingid": "<TPA_PARTICIPANT_CODE>",
-  "policies": [{
-      "productid": "<PRODUCT_ID>", "productname": "<PRODUCT_NAME>"
-    }]
+  "policies": [
+    {
+      "productid": "<PRODUCT_ID>",
+      "productname": "<PRODUCT_NAME>"
+    }
+  ]
 }
 ```
 
@@ -134,9 +137,12 @@ Put `/participant/link/abha/policy` directly after the base address. The base al
   "payerid": "<INSURER_PARTICIPANT_CODE>",
   "memberid": "<MEMBER_ID>",
   "processingid": "<TPA_PARTICIPANT_CODE>",
-  "policies": [{
-      "productid": "<PRODUCT_ID>", "productname": "<PRODUCT_NAME>"
-    }]
+  "policies": [
+    {
+      "productid": "<PRODUCT_ID>",
+      "productname": "<PRODUCT_NAME>"
+    }
+  ]
 }
 ```
 

@@ -3,6 +3,8 @@ title: Fetching a recipient certificate
 sidebar_label: Fetching a recipient certificate
 sidebar_position: 7
 description: Certificate discovery and caching discipline
+sidebar_class_name: sidebar-icon sidebar-icon--file-key
+verification: unverified
 source: nhcx-package/docs/02-Getting Started/07-Fetching a Recipient Certificate.md
 generated: true
 ---

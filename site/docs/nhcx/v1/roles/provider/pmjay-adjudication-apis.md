@@ -3,6 +3,8 @@ title: PMJAY adjudication APIs
 sidebar_label: PMJAY adjudication APIs
 sidebar_position: 12
 description: The two payer service calls that read and drive a PMJAY case, the role walk, and what the desk refuses
+sidebar_class_name: sidebar-icon sidebar-icon--gavel
+verification: unverified
 source: nhcx-package/docs/03-Building a Provider/12-PMJAY Adjudication APIs.md
 generated: true
 sidebar_custom_props:

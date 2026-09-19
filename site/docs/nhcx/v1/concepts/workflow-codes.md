@@ -3,6 +3,8 @@ title: Workflow Codes
 sidebar_label: Workflow Codes
 sidebar_position: 6
 description: The 74 workflow IDs and their message directions
+sidebar_class_name: sidebar-icon sidebar-icon--workflow
+verification: unverified
 source: nhcx-package/docs/01-Overview/06-Workflow Codes.md
 generated: true
 ---

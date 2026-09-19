@@ -1,4 +1,6 @@
 {
   "label": "Choose your path",
-  "position": 3
+  "position": 4,
+  "collapsed": false,
+  "className": "sidebar-icon sidebar-icon--signpost"
 }

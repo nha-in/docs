@@ -5,6 +5,8 @@ sidebar_position: 17
 description: Beneficiary service provider integration, subscription model, and push events
 source: nhcx-package/docs/06-Reference/07-Notifications and Patient Apps.md
 generated: true
+covers:
+  - nhcx.flow.notification-subscribe
 ---
 
 # Notifications and patient apps

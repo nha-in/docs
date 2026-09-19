@@ -3,11 +3,14 @@ title: Going live
 sidebar_label: Going live
 sidebar_position: 1
 description: Sandbox exit, production credentials, registering in production, switching addresses, the network path, the PMJAY cutover and the pilot
+sidebar_class_name: sidebar-icon sidebar-icon--plane-takeoff
+verification: unverified
 source: nhcx-package/docs/07-Go Live/01-Going Live.md
 generated: true
 covers:
   - nhcx.sandbox.going-live
   - nhcx.sandbox.sandbox-exit
+  - nhcx.flow.production-onboarding
 ---
 
 # Going live

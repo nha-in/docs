@@ -85,9 +85,12 @@ curl -X POST 'https://apisbx.abdm.gov.in/pmjay/sbxhcx/participanthcxservice/part
     "memberid": "<POLICY_HOLDER_MEMBER_ID>",
     "payerid": "<INSURANCE_COMPANY_PARTICIPANT_CODE>",
     "processingid": "<TPA_PARTICIPANT_CODE>",
-    "policies": [{
-        "productid": "<PRODUCT_ID>", "productname": "<PRODUCT_NAME>"
-      }]
+    "policies": [
+      {
+        "productid": "<PRODUCT_ID>",
+        "productname": "<PRODUCT_NAME>"
+      }
+    ]
   }'
 ```
 

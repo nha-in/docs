@@ -137,18 +137,29 @@ Every resource declares `https://nrces.in/ndhm/fhir/r4/StructureDefinition/<Reso
         "resourceType": "CoverageEligibilityRequest",
         "id": "<CER_UUID>",
         "meta": {
-          "profile": ["https://nrces.in/ndhm/fhir/r4/StructureDefinition/CoverageEligibilityRequest"]
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/CoverageEligibilityRequest"
+          ]
         },
-        "identifier": [{
-            "system": "<YOUR_IDENTIFIER_SYSTEM_URL>", "value": "<YOUR_REQUEST_NUMBER>"
-          }],
+        "identifier": [
+          {
+            "system": "<YOUR_IDENTIFIER_SYSTEM_URL>",
+            "value": "<YOUR_REQUEST_NUMBER>"
+          }
+        ],
         "status": "active",
         "priority": {
-          "coding": [{
-              "system": "http://terminology.hl7.org/CodeSystem/processpriority", "code": "normal", "display": "Normal"
-            }]
+          "coding": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/processpriority",
+              "code": "normal",
+              "display": "Normal"
+            }
+          ]
         },
-        "purpose": ["validation"],
+        "purpose": [
+          "validation"
+        ],
         "patient": {
           "reference": "urn:uuid:<PATIENT_UUID>"
         },
@@ -169,17 +180,24 @@ Every resource declares `https://nrces.in/ndhm/fhir/r4/StructureDefinition/<Reso
             "value": "<YOUR_HFR_ID>"
           }
         },
-        "insurance": [{
-            "focal": true, "coverage": {
+        "insurance": [
+          {
+            "focal": true,
+            "coverage": {
               "reference": "urn:uuid:<COVERAGE_UUID>"
             }
-          }],
+          }
+        ],
         "item": [
           {
             "productOrService": {
-              "coding": [{
-                  "system": "<PACKAGE_SYSTEM_FROM_INSURANCE_PLAN>", "code": "<PACKAGE_CODE_FROM_INSURANCE_PLAN>", "display": "<PACKAGE_NAME>"
-                }]
+              "coding": [
+                {
+                  "system": "<PACKAGE_SYSTEM_FROM_INSURANCE_PLAN>",
+                  "code": "<PACKAGE_CODE_FROM_INSURANCE_PLAN>",
+                  "display": "<PACKAGE_NAME>"
+                }
+              ]
             }
           }
         ]
@@ -191,31 +209,41 @@ Every resource declares `https://nrces.in/ndhm/fhir/r4/StructureDefinition/<Reso
         "resourceType": "Patient",
         "id": "<PATIENT_UUID>",
         "meta": {
-          "profile": ["https://nrces.in/ndhm/fhir/r4/StructureDefinition/Patient"]
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Patient"
+          ]
         },
         "identifier": [
           {
             "type": {
-              "coding": [{
-                  "system": "https://nrces.in/ndhm/fhir/r4/CodeSystem/ndhm-identifier-type-code", "code": "PMJAY"
-                }]
+              "coding": [
+                {
+                  "system": "https://nrces.in/ndhm/fhir/r4/CodeSystem/ndhm-identifier-type-code",
+                  "code": "PMJAY"
+                }
+              ]
             },
             "system": "https://bis.pmjay.gov.in",
             "value": "<PMJAY_BENEFICIARY_ID>"
           },
           {
             "type": {
-              "coding": [{
-                  "system": "https://nrces.in/ndhm/fhir/r4/CodeSystem/ndhm-identifier-type-code", "code": "ABHA"
-                }]
+              "coding": [
+                {
+                  "system": "https://nrces.in/ndhm/fhir/r4/CodeSystem/ndhm-identifier-type-code",
+                  "code": "ABHA"
+                }
+              ]
             },
             "system": "https://bis.pmjay.gov.in",
             "value": "<ABHA_NUMBER_AS_XX-XXXX-XXXX-XXXX>"
           }
         ],
-        "name": [{
+        "name": [
+          {
             "text": "<PATIENT_NAME>"
-          }],
+          }
+        ],
         "gender": "<male|female|other|unknown>",
         "birthDate": "<YYYY-MM-DD>"
       }
@@ -226,14 +254,20 @@ Every resource declares `https://nrces.in/ndhm/fhir/r4/StructureDefinition/<Reso
         "resourceType": "Organization",
         "id": "<PROVIDER_ORG_UUID>",
         "meta": {
-          "profile": ["https://nrces.in/ndhm/fhir/r4/StructureDefinition/Organization"]
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Organization"
+          ]
         },
         "identifier": [
           {
             "type": {
-              "coding": [{
-                  "system": "http://terminology.hl7.org/CodeSystem/v2-0203", "code": "NPI", "display": "National provider identifier"
-                }]
+              "coding": [
+                {
+                  "system": "http://terminology.hl7.org/CodeSystem/v2-0203",
+                  "code": "NPI",
+                  "display": "National provider identifier"
+                }
+              ]
             },
             "system": "https://facility.abdm.gov.in",
             "value": "<YOUR_HFR_ID>"
@@ -241,9 +275,13 @@ Every resource declares `https://nrces.in/ndhm/fhir/r4/StructureDefinition/<Reso
         ],
         "type": [
           {
-            "coding": [{
-                "system": "http://terminology.hl7.org/CodeSystem/organization-type", "code": "prov", "display": "Healthcare Provider"
-              }]
+            "coding": [
+              {
+                "system": "http://terminology.hl7.org/CodeSystem/organization-type",
+                "code": "prov",
+                "display": "Healthcare Provider"
+              }
+            ]
           }
         ],
         "name": "<YOUR_FACILITY_NAME>"
@@ -255,14 +293,20 @@ Every resource declares `https://nrces.in/ndhm/fhir/r4/StructureDefinition/<Reso
         "resourceType": "Organization",
         "id": "<PAYER_ORG_UUID>",
         "meta": {
-          "profile": ["https://nrces.in/ndhm/fhir/r4/StructureDefinition/Organization"]
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Organization"
+          ]
         },
         "identifier": [
           {
             "type": {
-              "coding": [{
-                  "system": "http://terminology.hl7.org/CodeSystem/v2-0203", "code": "NIIP", "display": "National Insurance Payor Identifier (Payor)"
-                }]
+              "coding": [
+                {
+                  "system": "http://terminology.hl7.org/CodeSystem/v2-0203",
+                  "code": "NIIP",
+                  "display": "National Insurance Payor Identifier (Payor)"
+                }
+              ]
             },
             "system": "https://facility.abdm.gov.in",
             "value": "<PAYER_ID>"
@@ -270,9 +314,13 @@ Every resource declares `https://nrces.in/ndhm/fhir/r4/StructureDefinition/<Reso
         ],
         "type": [
           {
-            "coding": [{
-                "system": "http://terminology.hl7.org/CodeSystem/organization-type", "code": "pay", "display": "Payer"
-              }]
+            "coding": [
+              {
+                "system": "http://terminology.hl7.org/CodeSystem/organization-type",
+                "code": "pay",
+                "display": "Payer"
+              }
+            ]
           }
         ],
         "name": "<PAYER_NAME>"
@@ -284,14 +332,20 @@ Every resource declares `https://nrces.in/ndhm/fhir/r4/StructureDefinition/<Reso
         "resourceType": "Coverage",
         "id": "<COVERAGE_UUID>",
         "meta": {
-          "profile": ["https://nrces.in/ndhm/fhir/r4/StructureDefinition/Coverage"]
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Coverage"
+          ]
         },
         "identifier": [
           {
             "type": {
-              "coding": [{
-                  "system": "http://terminology.hl7.org/CodeSystem/v2-0203", "code": "NH", "display": "National Health Plan Identifier"
-                }]
+              "coding": [
+                {
+                  "system": "http://terminology.hl7.org/CodeSystem/v2-0203",
+                  "code": "NH",
+                  "display": "National Health Plan Identifier"
+                }
+              ]
             },
             "system": "<PAYER_POLICY_SYSTEM_URL>",
             "value": "<POLICY_NUMBER>"
@@ -301,9 +355,11 @@ Every resource declares `https://nrces.in/ndhm/fhir/r4/StructureDefinition/<Reso
         "beneficiary": {
           "reference": "urn:uuid:<PATIENT_UUID>"
         },
-        "payor": [{
+        "payor": [
+          {
             "reference": "urn:uuid:<PAYER_ORG_UUID>"
-          }]
+          }
+        ]
       }
     },
     {
@@ -312,22 +368,29 @@ Every resource declares `https://nrces.in/ndhm/fhir/r4/StructureDefinition/<Reso
         "resourceType": "Practitioner",
         "id": "<PRACTITIONER_UUID>",
         "meta": {
-          "profile": ["https://nrces.in/ndhm/fhir/r4/StructureDefinition/Practitioner"]
+          "profile": [
+            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Practitioner"
+          ]
         },
         "identifier": [
           {
             "type": {
-              "coding": [{
-                  "system": "https://nrces.in/ndhm/fhir/r4/CodeSystem/ndhm-identifier-type-code", "code": "HPIN"
-                }]
+              "coding": [
+                {
+                  "system": "https://nrces.in/ndhm/fhir/r4/CodeSystem/ndhm-identifier-type-code",
+                  "code": "HPIN"
+                }
+              ]
             },
             "system": "https://hpr.abdm.gov.in",
             "value": "<TREATING_DOCTOR_HPR_ID>"
           }
         ],
-        "name": [{
+        "name": [
+          {
             "text": "<TREATING_DOCTOR_NAME>"
-          }]
+          }
+        ]
       }
     }
   ]
