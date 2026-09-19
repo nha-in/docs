@@ -14,7 +14,7 @@ Loop limit: 8 passes per step. Hitting the limit is an escalation: state what wa
 
 **Act: the calls in this journey, in order**
 
-#### 1. This API will be used to perform HIP initiated linking. (`m2_post_hip_v3_link_carecontext`)
+#### 1. Perform HIP initiated linking (`m2_post_hip_v3_link_carecontext`)
 
 ```bash
 curl --request POST \
@@ -46,11 +46,11 @@ curl --request POST \
 }'
 ```
 
-#### 2. This API endpoint is a callback API that will be called by HIE-CM. The response will be received after it is triggered on the HIP side at /api/hiecm/hip/v3/link/carecontext. (`m2_post_v3_link_on_carecontext`)
+#### 2. Link on carecontext (`m2_post_v3_link_on_carecontext`)
 
 Inbound to your bridge at `/api/v3/link/on_carecontext`. Acknowledge it and continue.
 
-#### 3. This API will be used to notify CM about any update on the already linked care context for a patient. (`m2_post_hip_v3_link_context_notify`)
+#### 3. Notify a change to a linked care context (`m2_post_hip_v3_link_context_notify`)
 
 ```bash
 curl --request POST \
@@ -81,11 +81,11 @@ curl --request POST \
 }'
 ```
 
-#### 4. This API endpoint is a call back API for /api/hiecm/hip/v3/link/context/notify used to notify the HIP. (`m2_post_v3_links_context_on_notify`)
+#### 4. Receive the links context on notify (`m2_post_v3_links_context_on_notify`)
 
 Inbound to your bridge at `/api/v3/links/context/on-notify`. Acknowledge it and continue.
 
-#### 5. This API will be used by HIP to send SMS notification to patient that a care context is linked. (`m2_post_hip_v3_link_patient_links_sms_notify2`)
+#### 5. Send SMS notification to patient that a care context is linked (`m2_post_hip_v3_link_patient_links_sms_notify2`)
 
 ```bash
 curl --request POST \
@@ -106,7 +106,7 @@ curl --request POST \
 }'
 ```
 
-#### 6. This API endpoint is a call back API for /api/hiecm/hip/v3/link/patient/links/sms/notify2 (`m2_post_v3_patients_sms_on_notify`)
+#### 6. Receive the patients SMS on notify (`m2_post_v3_patients_sms_on_notify`)
 
 Inbound to your bridge at `/api/v3/patients/sms/on-notify`. Acknowledge it and continue.
 
@@ -118,11 +118,11 @@ A 200 response. The specification gives no body for it, so read what comes back.
 
 **Act: the calls in this journey, in order**
 
-#### 1. This API endpoint is used to discover care contexts associated with a patient. It allows healthcare information providers (HIPs) to retrieve and manage patient care context information. (`m2_post_v3_hip_patient_care_context_discover`)
+#### 1. Discover care contexts associated with a patient (`m2_post_v3_hip_patient_care_context_discover`)
 
 Inbound to your bridge at `/api/v3/hip/patient/care-context/discover`. Acknowledge it and continue.
 
-#### 2. HMIS/LIMS/HIP has to ensure that only unlinked records of the patient has to be shared through this API. (`m2_post_user_initiated_linking_v3_patient_care_context_on_8c9340`)
+#### 2. Answer the care context discovery (`m2_post_user_initiated_linking_v3_patient_care_context_on_8c9340`)
 
 ```bash
 curl --request POST \
@@ -161,11 +161,11 @@ curl --request POST \
 }'
 ```
 
-#### 3. This API endpoint is used to initiate the linking of care contexts for a patient. It allows healthcare information providers (HIPs) to link patient care contexts with their ABHA (Ayushman Bharat Health Account) address. (`m2_post_v3_hip_link_care_context_init`)
+#### 3. Initiate the linking of care contexts for a patient (`m2_post_v3_hip_link_care_context_init`)
 
 Inbound to your bridge at `/api/v3/hip/link/care-context/init`. Acknowledge it and continue.
 
-#### 4. As a result of the initialization, HIP has to generate a unique reference-number in the link object which is called as link-reference-number and it has to trigger a OTP (token) to the patient's mobile number that is present with the HIP/HMIS/LIMS which will be provided back to HIP for validation during confirm request flow. (`m2_post_user_initiated_linking_v3_link_care_context_on_init`)
+#### 4. Link care context on init (`m2_post_user_initiated_linking_v3_link_care_context_on_init`)
 
 ```bash
 curl --request POST \
@@ -196,11 +196,11 @@ curl --request POST \
 }'
 ```
 
-#### 5. This API endpoint is used to confirm the linking of care contexts for a patient. It allows healthcare information providers (HIPs) to verify the linking process using a confirmation token. (`m2_post_v3_hip_link_care_context_confirm`)
+#### 5. Confirm the linking of care contexts for a patient (`m2_post_v3_hip_link_care_context_confirm`)
 
 Inbound to your bridge at `/api/v3/hip/link/care-context/confirm`. Acknowledge it and continue.
 
-#### 6. This API will be invoked by the HIP for sharing the response of /api/hiecm/user-initiated-linking/v3/link/care-context/on-confirm API (`m2_post_user_initiated_linking_v3_link_care_context_on_confirm`)
+#### 6. Link care context on confirm (`m2_post_user_initiated_linking_v3_link_care_context_on_confirm`)
 
 ```bash
 curl --request POST \
@@ -243,7 +243,7 @@ A 202 response. The specification gives no body for it, so read what comes back.
 
 **Act: the calls in this journey, in order**
 
-#### 1. API used to generate link token to link the health records (`m2_post_v3_token_generate_token`)
+#### 1. Generate link token to link the health records (`m2_post_v3_token_generate_token`)
 
 ```bash
 curl --request POST \
@@ -263,7 +263,7 @@ curl --request POST \
 }'
 ```
 
-#### 2. This is a call back API of [/api/hiecm/v3/token/generate-token]. (`m2_post_v3_hip_token_on_generate_token`)
+#### 2. Receive the HIP token on generate token (`m2_post_v3_hip_token_on_generate_token`)
 
 Inbound to your bridge at `/api/v3/hip/token/on-generate-token`. Acknowledge it and continue.
 
@@ -275,11 +275,11 @@ A 200 response. The specification gives no body for it, so read what comes back.
 
 **Act: the calls in this journey, in order**
 
-#### 1. This API will be invoked to the HIP for sharing the response of HIECM's /api/hiecm/patient-share/v3/share API (`m2_post_v3_hip_patient_share`)
+#### 1. Share HIP patient (`m2_post_v3_hip_patient_share`)
 
 Inbound to your bridge at `/api/v3/hip/patient/share`. Acknowledge it and continue.
 
-#### 2. This API will be invoked by the HIP for sharing the response of HIECM's /api/hiecm/patient-share/v3/on-share API (`m2_post_patient_share_v3_on_share`)
+#### 2. Answer the patient share request (`m2_post_patient_share_v3_on_share`)
 
 ```bash
 curl --request POST \
@@ -300,7 +300,7 @@ A 202 response. The specification gives no body for it, so read what comes back.
 
 **Act: the calls in this journey, in order**
 
-#### 1. This is a callback api to notify hip when consent is APPROVED or REVOKED. (`m2_post_v3_consent_request_hip_notify`)
+#### 1. Receive the consent decision (`m2_post_v3_consent_request_hip_notify`)
 
 ```bash
 curl --request POST \
@@ -376,7 +376,7 @@ curl --request POST \
 }'
 ```
 
-#### 2. This is ABDM HIE-CM API called by HIP to acknowledge the notification sent when a consent request is approved/revoked/expired by the patient. (`m2_post_consent_v3_request_hip_on_notify`)
+#### 2. Acknowledge the consent notification (`m2_post_consent_v3_request_hip_on_notify`)
 
 ```bash
 curl --request POST \
@@ -401,11 +401,11 @@ curl --request POST \
 }'
 ```
 
-#### 3. Health information data request to HIP. (`m2_post_v3_hip_health_information_request`)
+#### 3. Receive the health information data request to HIP (`m2_post_v3_hip_health_information_request`)
 
 Inbound to your bridge at `/api/v3/hip/health-information/request`. Acknowledge it and continue.
 
-#### 4. Health information data request acknowledgement from HIP. (`m2_post_data_flow_v3_health_information_hip_on_request`)
+#### 4. Submit the health information data request acknowledgement from HIP (`m2_post_data_flow_v3_health_information_hip_on_request`)
 
 ```bash
 curl --request POST \
@@ -418,7 +418,7 @@ curl --request POST \
   --data '"<VALUE>"'
 ```
 
-#### 5. health information transfer API (`m2_post_health_information_transfer`)
+#### 5. Receive the transferred health information (`m2_post_health_information_transfer`)
 
 Inbound to your bridge at `/health-information/transfer`. Acknowledge it and continue.
 

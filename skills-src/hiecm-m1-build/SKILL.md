@@ -18,7 +18,7 @@ Loop limit: 8 passes per step. Hitting the limit is an escalation: state what wa
 
 **Act: the calls in this journey, in order**
 
-#### 1. Use Case: Request a token for accessing a user’s ABHA (`m1_get_v3_profile_account_request_token`)
+#### 1. Request a token for accessing a user’s ABHA (`m1_get_v3_profile_account_request_token`)
 
 ```bash
 curl --request GET \
@@ -29,7 +29,7 @@ curl --request GET \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8'
 ```
 
-#### 2. This API is invoked to generate keycloak token/access token. (`gateway_post_gateway_v3_sessions`)
+#### 2. Generate Keycloak token/access token (`gateway_post_gateway_v3_sessions`)
 
 ```bash
 curl --request POST \
@@ -45,7 +45,7 @@ curl --request POST \
 }'
 ```
 
-#### 3. Use Case: Used to Fetch Public Key (`m1_get_v3_profile_public_certificate`)
+#### 3. Fetch public key (`m1_get_v3_profile_public_certificate`)
 
 ```bash
 curl --request GET \
@@ -70,7 +70,7 @@ A 200 whose body matches:
 
 **Act: the calls in this journey, in order**
 
-#### 1. This API is invoked to generate keycloak token/access token. (`gateway_post_gateway_v3_sessions`)
+#### 1. Generate Keycloak token/access token (`gateway_post_gateway_v3_sessions`)
 
 ```bash
 curl --request POST \
@@ -86,7 +86,7 @@ curl --request POST \
 }'
 ```
 
-#### 2. Use Case: Used to Fetch Public Key (`m1_get_v3_profile_public_certificate`)
+#### 2. Fetch public key (`m1_get_v3_profile_public_certificate`)
 
 ```bash
 curl --request GET \
@@ -96,7 +96,7 @@ curl --request GET \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8'
 ```
 
-#### 3. Use Case: ABHA enrollment - Send OTP using Aadhaar number Mobile number, ABHA number and Email address (`m1_post_v3_enrollment_request_otp`)
+#### 3. Request enrolment OTP (`m1_post_v3_enrollment_request_otp`)
 
 ```bash
 curl --request POST \
@@ -116,7 +116,7 @@ curl --request POST \
 }'
 ```
 
-#### 4. UseCase : Create ABHA number Via Aadhaar by verifying Aadhaar OTP, using Biometrics, using demoAuth and Child ABHA Creation. (`m1_post_v3_enrollment_enrol_byaadhaar`)
+#### 4. Enrol by Aadhaar (`m1_post_v3_enrollment_enrol_byaadhaar`)
 
 ```bash
 curl --request POST \
@@ -145,7 +145,7 @@ curl --request POST \
 }'
 ```
 
-#### 5. Use Case: ABHA enrollment - Send OTP using Aadhaar number Mobile number, ABHA number and Email address (optional) (`m1_post_v3_enrollment_request_otp`)
+#### 5. Request enrolment OTP (`m1_post_v3_enrollment_request_otp`)
 
 ```bash
 curl --request POST \
@@ -166,7 +166,7 @@ curl --request POST \
 }'
 ```
 
-#### 6. UseCase : Verify- Mobile OTP (optional) (`m1_post_v3_enrollment_auth_byabdm`)
+#### 6. Verify- mobile OTP (`m1_post_v3_enrollment_auth_byabdm`)
 
 ```bash
 curl --request POST \
@@ -192,7 +192,7 @@ curl --request POST \
 }'
 ```
 
-#### 7. UseCase: ABHA address suggestion (`m1_get_v3_enrollment_enrol_suggestion`)
+#### 7. Get the ABHA address suggestion (`m1_get_v3_enrollment_enrol_suggestion`)
 
 ```bash
 curl --request GET \
@@ -203,7 +203,7 @@ curl --request GET \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z'
 ```
 
-#### 8. UseCase: Create ABHA address (`m1_post_v3_enrollment_enrol_abha_address`)
+#### 8. Create ABHA address (`m1_post_v3_enrollment_enrol_abha_address`)
 
 ```bash
 curl --request POST \
@@ -235,7 +235,7 @@ A 200 whose body matches:
 
 **Act: the calls in this journey, in order**
 
-#### 1. This API is invoked to generate keycloak token/access token. (`gateway_post_gateway_v3_sessions`)
+#### 1. Generate Keycloak token/access token (`gateway_post_gateway_v3_sessions`)
 
 ```bash
 curl --request POST \
@@ -251,7 +251,7 @@ curl --request POST \
 }'
 ```
 
-#### 2. Use Case: Used to Fetch Public Key (`m1_get_v3_profile_public_certificate`)
+#### 2. Fetch public key (`m1_get_v3_profile_public_certificate`)
 
 ```bash
 curl --request GET \
@@ -261,7 +261,7 @@ curl --request GET \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8'
 ```
 
-#### 3. UseCase : It will generate the Transaction ID. This Transaction ID will be used for whole face authentication process. (`m1_post_v3_enrollment_enrol_auth_init`)
+#### 3. Enrol auth init (`m1_post_v3_enrollment_enrol_auth_init`)
 
 ```bash
 curl --request POST \
@@ -278,7 +278,7 @@ curl --request POST \
 }'
 ```
 
-#### 4. UseCase : This API is used to check the status of the transaction ID. (`m1_post_v3_enrollment_enrol_capturepid`)
+#### 4. Check the status of the transaction ID (`m1_post_v3_enrollment_enrol_capturepid`)
 
 ```bash
 curl --request POST \
@@ -296,7 +296,7 @@ curl --request POST \
 }'
 ```
 
-#### 5. UseCase : Create ABHA number Via Aadhaar by verifying Aadhaar OTP, using Biometrics, using demoAuth and Child ABHA Creation. (`m1_post_v3_enrollment_enrol_byaadhaar`)
+#### 5. Enrol by Aadhaar (`m1_post_v3_enrollment_enrol_byaadhaar`)
 
 ```bash
 curl --request POST \
@@ -325,7 +325,7 @@ curl --request POST \
 }'
 ```
 
-#### 6. Use Case: ABHA enrollment - Send OTP using Aadhaar number Mobile number, ABHA number and Email address (optional) (`m1_post_v3_enrollment_request_otp`)
+#### 6. Request enrolment OTP (`m1_post_v3_enrollment_request_otp`)
 
 ```bash
 curl --request POST \
@@ -346,7 +346,7 @@ curl --request POST \
 }'
 ```
 
-#### 7. UseCase : Verify- Mobile OTP (optional) (`m1_post_v3_enrollment_auth_byabdm`)
+#### 7. Verify- mobile OTP (`m1_post_v3_enrollment_auth_byabdm`)
 
 ```bash
 curl --request POST \
@@ -372,7 +372,7 @@ curl --request POST \
 }'
 ```
 
-#### 8. UseCase: ABHA address suggestion (`m1_get_v3_enrollment_enrol_suggestion`)
+#### 8. Get the ABHA address suggestion (`m1_get_v3_enrollment_enrol_suggestion`)
 
 ```bash
 curl --request GET \
@@ -383,7 +383,7 @@ curl --request GET \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z'
 ```
 
-#### 9. UseCase: Create ABHA address (`m1_post_v3_enrollment_enrol_abha_address`)
+#### 9. Create ABHA address (`m1_post_v3_enrollment_enrol_abha_address`)
 
 ```bash
 curl --request POST \
@@ -415,7 +415,7 @@ A 200 whose body matches:
 
 **Act: the calls in this journey, in order**
 
-#### 1. This API is invoked to generate keycloak token/access token. (`gateway_post_gateway_v3_sessions`)
+#### 1. Generate Keycloak token/access token (`gateway_post_gateway_v3_sessions`)
 
 ```bash
 curl --request POST \
@@ -431,7 +431,7 @@ curl --request POST \
 }'
 ```
 
-#### 2. Use Case: Used to Fetch Public Key (`m1_get_v3_profile_public_certificate`)
+#### 2. Fetch public key (`m1_get_v3_profile_public_certificate`)
 
 ```bash
 curl --request GET \
@@ -441,7 +441,7 @@ curl --request GET \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8'
 ```
 
-#### 3. UseCase : Create ABHA number Via Aadhaar by verifying Aadhaar OTP, using Biometrics, using demoAuth and Child ABHA Creation. (`m1_post_v3_enrollment_enrol_byaadhaar`)
+#### 3. Enrol by Aadhaar (`m1_post_v3_enrollment_enrol_byaadhaar`)
 
 ```bash
 curl --request POST \
@@ -470,7 +470,7 @@ curl --request POST \
 }'
 ```
 
-#### 4. Use Case: ABHA enrollment - Send OTP using Aadhaar number Mobile number, ABHA number and Email address (optional) (`m1_post_v3_enrollment_request_otp`)
+#### 4. Request enrolment OTP (`m1_post_v3_enrollment_request_otp`)
 
 ```bash
 curl --request POST \
@@ -491,7 +491,7 @@ curl --request POST \
 }'
 ```
 
-#### 5. UseCase : Verify- Mobile OTP (optional) (`m1_post_v3_enrollment_auth_byabdm`)
+#### 5. Verify- mobile OTP (`m1_post_v3_enrollment_auth_byabdm`)
 
 ```bash
 curl --request POST \
@@ -517,7 +517,7 @@ curl --request POST \
 }'
 ```
 
-#### 6. UseCase: ABHA address suggestion (`m1_get_v3_enrollment_enrol_suggestion`)
+#### 6. Get the ABHA address suggestion (`m1_get_v3_enrollment_enrol_suggestion`)
 
 ```bash
 curl --request GET \
@@ -528,7 +528,7 @@ curl --request GET \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z'
 ```
 
-#### 7. UseCase: Create ABHA address (`m1_post_v3_enrollment_enrol_abha_address`)
+#### 7. Create ABHA address (`m1_post_v3_enrollment_enrol_abha_address`)
 
 ```bash
 curl --request POST \
@@ -560,7 +560,7 @@ A 200 whose body matches:
 
 **Act: the calls in this journey, in order**
 
-#### 1. This API is invoked to generate keycloak token/access token. (`gateway_post_gateway_v3_sessions`)
+#### 1. Generate Keycloak token/access token (`gateway_post_gateway_v3_sessions`)
 
 ```bash
 curl --request POST \
@@ -576,7 +576,7 @@ curl --request POST \
 }'
 ```
 
-#### 2. Use Case: Used to Fetch Public Key (`m1_get_v3_profile_public_certificate`)
+#### 2. Fetch public key (`m1_get_v3_profile_public_certificate`)
 
 ```bash
 curl --request GET \
@@ -586,7 +586,7 @@ curl --request GET \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8'
 ```
 
-#### 3. UseCase : Create ABHA number Via Aadhaar by verifying Aadhaar OTP, using Biometrics, using demoAuth and Child ABHA Creation. (`m1_post_v3_enrollment_enrol_byaadhaar`)
+#### 3. Enrol by Aadhaar (`m1_post_v3_enrollment_enrol_byaadhaar`)
 
 ```bash
 curl --request POST \
@@ -615,7 +615,7 @@ curl --request POST \
 }'
 ```
 
-#### 4. Use Case: ABHA enrollment - Send OTP using Aadhaar number Mobile number, ABHA number and Email address (optional) (`m1_post_v3_enrollment_request_otp`)
+#### 4. Request enrolment OTP (`m1_post_v3_enrollment_request_otp`)
 
 ```bash
 curl --request POST \
@@ -636,7 +636,7 @@ curl --request POST \
 }'
 ```
 
-#### 5. UseCase : Verify- Mobile OTP (optional) (`m1_post_v3_enrollment_auth_byabdm`)
+#### 5. Verify- mobile OTP (`m1_post_v3_enrollment_auth_byabdm`)
 
 ```bash
 curl --request POST \
@@ -662,7 +662,7 @@ curl --request POST \
 }'
 ```
 
-#### 6. UseCase: ABHA address suggestion (`m1_get_v3_enrollment_enrol_suggestion`)
+#### 6. Get the ABHA address suggestion (`m1_get_v3_enrollment_enrol_suggestion`)
 
 ```bash
 curl --request GET \
@@ -673,7 +673,7 @@ curl --request GET \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z'
 ```
 
-#### 7. UseCase: Create ABHA address (`m1_post_v3_enrollment_enrol_abha_address`)
+#### 7. Create ABHA address (`m1_post_v3_enrollment_enrol_abha_address`)
 
 ```bash
 curl --request POST \
@@ -705,7 +705,7 @@ A 200 whose body matches:
 
 **Act: the calls in this journey, in order**
 
-#### 1. This API is invoked to generate keycloak token/access token. (`gateway_post_gateway_v3_sessions`)
+#### 1. Generate Keycloak token/access token (`gateway_post_gateway_v3_sessions`)
 
 ```bash
 curl --request POST \
@@ -721,7 +721,7 @@ curl --request POST \
 }'
 ```
 
-#### 2. Use Case: Used to Fetch Public Key (`m1_get_v3_profile_public_certificate`)
+#### 2. Fetch public key (`m1_get_v3_profile_public_certificate`)
 
 ```bash
 curl --request GET \
@@ -731,7 +731,7 @@ curl --request GET \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8'
 ```
 
-#### 3. UseCase : Create ABHA number Via Aadhaar by verifying Aadhaar OTP, using Biometrics, using demoAuth and Child ABHA Creation. (`m1_post_v3_enrollment_enrol_byaadhaar`)
+#### 3. Enrol by Aadhaar (`m1_post_v3_enrollment_enrol_byaadhaar`)
 
 ```bash
 curl --request POST \
@@ -810,7 +810,7 @@ A 200 whose body matches:
 
 **Act: the calls in this journey, in order**
 
-#### 1. UseCase : Create ABHA number Via Aadhaar by verifying Aadhaar OTP, using Biometrics, using demoAuth and Child ABHA Creation. (`m1_post_v3_enrollment_enrol_byaadhaar`)
+#### 1. Enrol by Aadhaar (`m1_post_v3_enrollment_enrol_byaadhaar`)
 
 ```bash
 curl --request POST \
@@ -844,7 +844,7 @@ curl --request POST \
 }'
 ```
 
-#### 2. UseCase: Get Child ABHA address (`m1_get_v3_enrollment_profile_children`)
+#### 2. Get child ABHA address (`m1_get_v3_enrollment_profile_children`)
 
 ```bash
 curl --request GET \
@@ -857,7 +857,7 @@ curl --request GET \
   --header 'X-token: Bearer {{X-token}}'
 ```
 
-#### 3. Use Case: Update the user ABHA Profile Photo , Update the Child ABHA Profile (`m1_patch_v3_profile_account`)
+#### 3. Update the user ABHA profile Photo, update the child ABHA profile (`m1_patch_v3_profile_account`)
 
 ```bash
 curl --request PATCH \
@@ -876,7 +876,7 @@ curl --request PATCH \
 }'
 ```
 
-#### 4. Use Case: Send OTP - ReKyc, Update Mobile, Child ABHA KYC Request OTP (`m1_post_v3_profile_account_request_otp`)
+#### 4. Send OTP ReKyc, update Mobile, child ABHA KYC request OTP (`m1_post_v3_profile_account_request_otp`)
 
 ```bash
 curl --request POST \
@@ -897,7 +897,7 @@ curl --request POST \
 }'
 ```
 
-#### 5. Use Case: Verify OTP - ReKyc, Update Mobile, CHILD ABHA KYC (`m1_post_v3_profile_account_verify`)
+#### 5. Verify OTP ReKyc, update Mobile, CHILD ABHA KYC (`m1_post_v3_profile_account_verify`)
 
 ```bash
 curl --request POST \
@@ -945,7 +945,7 @@ A 200 whose body matches:
 
 **Act: the calls in this journey, in order**
 
-#### 1. Use Case: ABHA Login - Send OTP using Aadhaar number, ABHA number, Mobile number, Biometric Login, Search ABHA, Find ABHA via Biometrics (`m1_post_v3_profile_login_request_otp`)
+#### 1. Login request OTP (`m1_post_v3_profile_login_request_otp`)
 
 ```bash
 curl --request POST \
@@ -965,7 +965,7 @@ curl --request POST \
 }'
 ```
 
-#### 2. Use Case: ABHA Login - Verify OTP using Aadhaar number, ABHA number, Mobile number, Biometric Verify Login, Find ABHA via Aadhaar, Mobile, Biometrics (`m1_post_v3_profile_login_verify`)
+#### 2. Login profile verify (`m1_post_v3_profile_login_verify`)
 
 ```bash
 curl --request POST \
@@ -991,7 +991,7 @@ curl --request POST \
 }'
 ```
 
-#### 3. Use Case: This API is used to verify and confirm the selected ABHA user during login, so the correct account is authenticated and access is granted securely. (`m1_post_v3_profile_login_verify_user`)
+#### 3. Login verify user (`m1_post_v3_profile_login_verify_user`)
 
 ```bash
 curl --request POST \
@@ -1024,7 +1024,7 @@ A 200 whose body matches:
 
 **Act: the calls in this journey, in order**
 
-#### 1. Use Case: ABHA Login - Send OTP using Aadhaar number, ABHA number, Mobile number, Biometric Login, Search ABHA, Find ABHA via Biometrics (`m1_post_v3_profile_login_request_otp`)
+#### 1. Login request OTP (`m1_post_v3_profile_login_request_otp`)
 
 ```bash
 curl --request POST \
@@ -1044,7 +1044,7 @@ curl --request POST \
 }'
 ```
 
-#### 2. Use Case: ABHA Login - Verify OTP using Aadhaar number, ABHA number, Mobile number, Biometric Verify Login, Find ABHA via Aadhaar, Mobile, Biometrics (`m1_post_v3_profile_login_verify`)
+#### 2. Login profile verify (`m1_post_v3_profile_login_verify`)
 
 ```bash
 curl --request POST \
@@ -1090,7 +1090,7 @@ A 200 whose body matches:
 
 **Act: the calls in this journey, in order**
 
-#### 1. Use Case: ABHA Login - Send OTP using Aadhaar number, ABHA number, Mobile number, Biometric Login, Search ABHA, Find ABHA via Biometrics (`m1_post_v3_profile_login_request_otp`)
+#### 1. Login request OTP (`m1_post_v3_profile_login_request_otp`)
 
 ```bash
 curl --request POST \
@@ -1110,7 +1110,7 @@ curl --request POST \
 }'
 ```
 
-#### 2. Use Case: ABHA Login - Verify OTP using Aadhaar number, ABHA number, Mobile number, Biometric Verify Login, Find ABHA via Aadhaar, Mobile, Biometrics (`m1_post_v3_profile_login_verify`)
+#### 2. Login profile verify (`m1_post_v3_profile_login_verify`)
 
 ```bash
 curl --request POST \
@@ -1156,7 +1156,7 @@ A 200 whose body matches:
 
 **Act: the calls in this journey, in order**
 
-#### 1. Use Case: ABHA Login - Send OTP using Aadhaar number, ABHA number, Mobile number, Biometric Login, Search ABHA, Find ABHA via Biometrics (`m1_post_v3_profile_login_request_otp`)
+#### 1. Login request OTP (`m1_post_v3_profile_login_request_otp`)
 
 ```bash
 curl --request POST \
@@ -1176,7 +1176,7 @@ curl --request POST \
 }'
 ```
 
-#### 2. Use Case: ABHA Login - Verify OTP using Aadhaar number, ABHA number, Mobile number, Biometric Verify Login, Find ABHA via Aadhaar, Mobile, Biometrics (`m1_post_v3_profile_login_verify`)
+#### 2. Login profile verify (`m1_post_v3_profile_login_verify`)
 
 ```bash
 curl --request POST \
@@ -1222,7 +1222,7 @@ A 200 whose body matches:
 
 **Act: the calls in this journey, in order**
 
-#### 1. Use Case: ABHA Login - Send OTP using Aadhaar number, ABHA number, Mobile number, Biometric Login, Search ABHA, Find ABHA via Biometrics (`m1_post_v3_profile_login_request_otp`)
+#### 1. Login request OTP (`m1_post_v3_profile_login_request_otp`)
 
 ```bash
 curl --request POST \
@@ -1242,7 +1242,7 @@ curl --request POST \
 }'
 ```
 
-#### 2. Use Case: ABHA Login - Verify OTP using Aadhaar number, ABHA number, Mobile number, Biometric Verify Login, Find ABHA via Aadhaar, Mobile, Biometrics (`m1_post_v3_profile_login_verify`)
+#### 2. Login profile verify (`m1_post_v3_profile_login_verify`)
 
 ```bash
 curl --request POST \
@@ -1288,7 +1288,7 @@ A 200 whose body matches:
 
 **Act: the calls in this journey, in order**
 
-#### 1. Use Case: ABHA Login - Send OTP using Aadhaar number, ABHA number, Mobile number, Biometric Login, Search ABHA, Find ABHA via Biometrics (`m1_post_v3_profile_login_request_otp`)
+#### 1. Login request OTP (`m1_post_v3_profile_login_request_otp`)
 
 ```bash
 curl --request POST \
@@ -1308,7 +1308,7 @@ curl --request POST \
 }'
 ```
 
-#### 2. Use Case: ABHA Login - Verify OTP using Aadhaar number, ABHA number, Mobile number, Biometric Verify Login, Find ABHA via Aadhaar, Mobile, Biometrics (`m1_post_v3_profile_login_verify`)
+#### 2. Login profile verify (`m1_post_v3_profile_login_verify`)
 
 ```bash
 curl --request POST \
@@ -1354,7 +1354,7 @@ A 200 whose body matches:
 
 **Act: the calls in this journey, in order**
 
-#### 1. Use Case: ABHA Login - Send OTP using Aadhaar number, ABHA number, Mobile number, Biometric Login, Search ABHA, Find ABHA via Biometrics (`m1_post_v3_profile_login_request_otp`)
+#### 1. Login request OTP (`m1_post_v3_profile_login_request_otp`)
 
 ```bash
 curl --request POST \
@@ -1374,7 +1374,7 @@ curl --request POST \
 }'
 ```
 
-#### 2. Use Case: ABHA Login - Verify OTP using Aadhaar number, ABHA number, Mobile number, Biometric Verify Login, Find ABHA via Aadhaar, Mobile, Biometrics (`m1_post_v3_profile_login_verify`)
+#### 2. Login profile verify (`m1_post_v3_profile_login_verify`)
 
 ```bash
 curl --request POST \
@@ -1420,7 +1420,7 @@ A 200 whose body matches:
 
 **Act: the calls in this journey, in order**
 
-#### 1. Use Case: Search ABHA Profile using ABHA address (`m1_post_v3_phr_web_login_abha_search`)
+#### 1. Search ABHA profile using ABHA address (`m1_post_v3_phr_web_login_abha_search`)
 
 ```bash
 curl --request POST \
@@ -1433,7 +1433,7 @@ curl --request POST \
 }'
 ```
 
-#### 2. Use Case: Sends an OTP to the Mobile Number, Aadhaar Number, Request Biometric Authentication (`m1_post_v3_phr_web_login_abha_request_otp`)
+#### 2. Login request OTP (`m1_post_v3_phr_web_login_abha_request_otp`)
 
 ```bash
 curl --request POST \
@@ -1453,7 +1453,7 @@ curl --request POST \
 }'
 ```
 
-#### 3. Use Case: Verify OTP - Aadhaar Number, Mobile Number, Verify via Biometric (`m1_post_v3_phr_web_login_abha_verify`)
+#### 3. Verify OTP Aadhaar Number, mobile Number, verify via biometric (`m1_post_v3_phr_web_login_abha_verify`)
 
 ```bash
 curl --request POST \
@@ -1479,7 +1479,7 @@ curl --request POST \
 }'
 ```
 
-#### 4. Use Case: Retrieves the user’s ABHA Profile (`m1_get_v3_phr_web_login_profile_abha_profile`)
+#### 4. Retrieve the user’s ABHA profile (`m1_get_v3_phr_web_login_profile_abha_profile`)
 
 ```bash
 curl --request GET \
@@ -1490,7 +1490,7 @@ curl --request GET \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z'
 ```
 
-#### 5. Use Case: Generate a PHR Card Profile (`m1_get_v3_phr_web_login_profile_abha_phr_card`)
+#### 5. Generate a PHR card profile (`m1_get_v3_phr_web_login_profile_abha_phr_card`)
 
 ```bash
 curl --request GET \
@@ -1509,7 +1509,7 @@ A 202 response. The specification gives no body for it, so read what comes back.
 
 **Act: the calls in this journey, in order**
 
-#### 1. Use Case: Search ABHA Profile using ABHA address (`m1_post_v3_phr_web_login_abha_search`)
+#### 1. Search ABHA profile using ABHA address (`m1_post_v3_phr_web_login_abha_search`)
 
 ```bash
 curl --request POST \
@@ -1522,7 +1522,7 @@ curl --request POST \
 }'
 ```
 
-#### 2. Use Case: Sends an OTP to the Mobile Number, Aadhaar Number, Request Biometric Authentication (`m1_post_v3_phr_web_login_abha_request_otp`)
+#### 2. Login request OTP (`m1_post_v3_phr_web_login_abha_request_otp`)
 
 ```bash
 curl --request POST \
@@ -1542,7 +1542,7 @@ curl --request POST \
 }'
 ```
 
-#### 3. Use Case: Verify OTP - Aadhaar Number, Mobile Number, Verify via Biometric (`m1_post_v3_phr_web_login_abha_verify`)
+#### 3. Verify OTP Aadhaar Number, mobile Number, verify via biometric (`m1_post_v3_phr_web_login_abha_verify`)
 
 ```bash
 curl --request POST \
@@ -1568,7 +1568,7 @@ curl --request POST \
 }'
 ```
 
-#### 4. Use Case: Retrieves the user’s ABHA Profile (`m1_get_v3_phr_web_login_profile_abha_profile`)
+#### 4. Retrieve the user’s ABHA profile (`m1_get_v3_phr_web_login_profile_abha_profile`)
 
 ```bash
 curl --request GET \
@@ -1579,7 +1579,7 @@ curl --request GET \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z'
 ```
 
-#### 5. Use Case: Generate a PHR Card Profile (`m1_get_v3_phr_web_login_profile_abha_phr_card`)
+#### 5. Generate a PHR card profile (`m1_get_v3_phr_web_login_profile_abha_phr_card`)
 
 ```bash
 curl --request GET \
@@ -1598,7 +1598,7 @@ A 202 response. The specification gives no body for it, so read what comes back.
 
 **Act: the calls in this journey, in order**
 
-#### 1. Use Case: Sends an OTP to the Mobile Number, Aadhaar Number, Request Biometric Authentication (`m1_post_v3_phr_web_login_abha_request_otp`)
+#### 1. Login request OTP (`m1_post_v3_phr_web_login_abha_request_otp`)
 
 ```bash
 curl --request POST \
@@ -1618,7 +1618,7 @@ curl --request POST \
 }'
 ```
 
-#### 2. Use Case: Verify OTP - Aadhaar Number, Mobile Number, Verify via Biometric (`m1_post_v3_phr_web_login_abha_verify`)
+#### 2. Verify OTP Aadhaar Number, mobile Number, verify via biometric (`m1_post_v3_phr_web_login_abha_verify`)
 
 ```bash
 curl --request POST \
@@ -1644,7 +1644,7 @@ curl --request POST \
 }'
 ```
 
-#### 3. Use Case: Retrieves the user’s ABHA Profile (`m1_get_v3_phr_web_login_profile_abha_profile`)
+#### 3. Retrieve the user’s ABHA profile (`m1_get_v3_phr_web_login_profile_abha_profile`)
 
 ```bash
 curl --request GET \
@@ -1655,7 +1655,7 @@ curl --request GET \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z'
 ```
 
-#### 4. Use Case: Generate a PHR Card Profile (`m1_get_v3_phr_web_login_profile_abha_phr_card`)
+#### 4. Generate a PHR card profile (`m1_get_v3_phr_web_login_profile_abha_phr_card`)
 
 ```bash
 curl --request GET \
@@ -1666,7 +1666,7 @@ curl --request GET \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z'
 ```
 
-#### 5. Use Case: Generate QR Code By Passing X-token to share user ABHA address Profile Information. (`m1_get_v3_phr_web_login_profile_abha_qr_code`)
+#### 5. Login profile QR code (`m1_get_v3_phr_web_login_profile_abha_qr_code`)
 
 ```bash
 curl --request GET \
@@ -1685,7 +1685,7 @@ A 200 response. The specification gives no body for it, so read what comes back.
 
 **Act: the calls in this journey, in order**
 
-#### 1. Use Case: Sends an OTP to the Mobile Number, Aadhaar Number, Request Biometric Authentication (`m1_post_v3_phr_web_login_abha_request_otp`)
+#### 1. Login request OTP (`m1_post_v3_phr_web_login_abha_request_otp`)
 
 ```bash
 curl --request POST \
@@ -1705,7 +1705,7 @@ curl --request POST \
 }'
 ```
 
-#### 2. Use Case: Verify OTP - Aadhaar Number, Mobile Number, Verify via Biometric (`m1_post_v3_phr_web_login_abha_verify`)
+#### 2. Verify OTP Aadhaar Number, mobile Number, verify via biometric (`m1_post_v3_phr_web_login_abha_verify`)
 
 ```bash
 curl --request POST \
@@ -1731,7 +1731,7 @@ curl --request POST \
 }'
 ```
 
-#### 3. Use Case: Retrieves the user’s ABHA Profile (`m1_get_v3_phr_web_login_profile_abha_profile`)
+#### 3. Retrieve the user’s ABHA profile (`m1_get_v3_phr_web_login_profile_abha_profile`)
 
 ```bash
 curl --request GET \
@@ -1742,7 +1742,7 @@ curl --request GET \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z'
 ```
 
-#### 4. Use Case: Generate a PHR Card Profile (`m1_get_v3_phr_web_login_profile_abha_phr_card`)
+#### 4. Generate a PHR card profile (`m1_get_v3_phr_web_login_profile_abha_phr_card`)
 
 ```bash
 curl --request GET \
@@ -1753,7 +1753,7 @@ curl --request GET \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z'
 ```
 
-#### 5. Use Case: Generate QR Code By Passing X-token to share user ABHA address Profile Information. (`m1_get_v3_phr_web_login_profile_abha_qr_code`)
+#### 5. Login profile QR code (`m1_get_v3_phr_web_login_profile_abha_qr_code`)
 
 ```bash
 curl --request GET \
@@ -1772,7 +1772,7 @@ A 200 response. The specification gives no body for it, so read what comes back.
 
 **Act: the calls in this journey, in order**
 
-#### 1. Use Case: Sends an OTP to the Mobile Number, Aadhaar Number, Request Biometric Authentication (`m1_post_v3_phr_web_login_abha_request_otp`)
+#### 1. Login request OTP (`m1_post_v3_phr_web_login_abha_request_otp`)
 
 ```bash
 curl --request POST \
@@ -1792,7 +1792,7 @@ curl --request POST \
 }'
 ```
 
-#### 2. Use Case: Verify OTP - Aadhaar Number, Mobile Number, Verify via Biometric (`m1_post_v3_phr_web_login_abha_verify`)
+#### 2. Verify OTP Aadhaar Number, mobile Number, verify via biometric (`m1_post_v3_phr_web_login_abha_verify`)
 
 ```bash
 curl --request POST \
@@ -1818,7 +1818,7 @@ curl --request POST \
 }'
 ```
 
-#### 3. Use Case: Retrieves the user’s ABHA Profile (`m1_get_v3_phr_web_login_profile_abha_profile`)
+#### 3. Retrieve the user’s ABHA profile (`m1_get_v3_phr_web_login_profile_abha_profile`)
 
 ```bash
 curl --request GET \
@@ -1829,7 +1829,7 @@ curl --request GET \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z'
 ```
 
-#### 4. Use Case: Generate a PHR Card Profile (`m1_get_v3_phr_web_login_profile_abha_phr_card`)
+#### 4. Generate a PHR card profile (`m1_get_v3_phr_web_login_profile_abha_phr_card`)
 
 ```bash
 curl --request GET \
@@ -1840,7 +1840,7 @@ curl --request GET \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z'
 ```
 
-#### 5. Use Case: Generate QR Code By Passing X-token to share user ABHA address Profile Information. (`m1_get_v3_phr_web_login_profile_abha_qr_code`)
+#### 5. Login profile QR code (`m1_get_v3_phr_web_login_profile_abha_qr_code`)
 
 ```bash
 curl --request GET \
@@ -1859,7 +1859,7 @@ A 200 response. The specification gives no body for it, so read what comes back.
 
 **Act: the calls in this journey, in order**
 
-#### 1. Use Case: Search ABHA Profile (`m1_post_v3_profile_account_abha_search`)
+#### 1. Search ABHA profile (`m1_post_v3_profile_account_abha_search`)
 
 ```bash
 curl --request POST \
@@ -1876,7 +1876,7 @@ curl --request POST \
 }'
 ```
 
-#### 2. Use Case: ABHA Login - Send OTP using Aadhaar number, ABHA number, Mobile number, Biometric Login, Search ABHA, Find ABHA via Biometrics (`m1_post_v3_profile_login_request_otp`)
+#### 2. Login request OTP (`m1_post_v3_profile_login_request_otp`)
 
 ```bash
 curl --request POST \
@@ -1898,7 +1898,7 @@ curl --request POST \
 }'
 ```
 
-#### 3. Use Case: ABHA Login - Verify OTP using Aadhaar number, ABHA number, Mobile number, Biometric Verify Login, Find ABHA via Aadhaar, Mobile, Biometrics (`m1_post_v3_profile_login_verify`)
+#### 3. Login profile verify (`m1_post_v3_profile_login_verify`)
 
 ```bash
 curl --request POST \
@@ -1944,7 +1944,7 @@ A 200 whose body matches:
 
 **Act: the calls in this journey, in order**
 
-#### 1. Use Case: Search ABHA Profile (`m1_post_v3_profile_account_abha_search`)
+#### 1. Search ABHA profile (`m1_post_v3_profile_account_abha_search`)
 
 ```bash
 curl --request POST \
@@ -1961,7 +1961,7 @@ curl --request POST \
 }'
 ```
 
-#### 2. Use Case: ABHA Login - Send OTP using Aadhaar number, ABHA number, Mobile number, Biometric Login, Search ABHA, Find ABHA via Biometrics (`m1_post_v3_profile_login_request_otp`)
+#### 2. Login request OTP (`m1_post_v3_profile_login_request_otp`)
 
 ```bash
 curl --request POST \
@@ -1983,7 +1983,7 @@ curl --request POST \
 }'
 ```
 
-#### 3. Use Case: ABHA Login - Verify OTP using Aadhaar number, ABHA number, Mobile number, Biometric Verify Login, Find ABHA via Aadhaar, Mobile, Biometrics (`m1_post_v3_profile_login_verify`)
+#### 3. Login profile verify (`m1_post_v3_profile_login_verify`)
 
 ```bash
 curl --request POST \
@@ -2029,7 +2029,7 @@ A 200 whose body matches:
 
 **Act: the calls in this journey, in order**
 
-#### 1. Use Case: Search ABHA Profile (`m1_post_v3_profile_account_abha_search`)
+#### 1. Search ABHA profile (`m1_post_v3_profile_account_abha_search`)
 
 ```bash
 curl --request POST \
@@ -2046,7 +2046,7 @@ curl --request POST \
 }'
 ```
 
-#### 2. Use Case: ABHA Login - Send OTP using Aadhaar number, ABHA number, Mobile number, Biometric Login, Search ABHA, Find ABHA via Biometrics (`m1_post_v3_profile_login_request_otp`)
+#### 2. Login request OTP (`m1_post_v3_profile_login_request_otp`)
 
 ```bash
 curl --request POST \
@@ -2068,7 +2068,7 @@ curl --request POST \
 }'
 ```
 
-#### 3. Use Case: ABHA Login - Verify OTP using Aadhaar number, ABHA number, Mobile number, Biometric Verify Login, Find ABHA via Aadhaar, Mobile, Biometrics (`m1_post_v3_profile_login_verify`)
+#### 3. Login profile verify (`m1_post_v3_profile_login_verify`)
 
 ```bash
 curl --request POST \
@@ -2114,7 +2114,7 @@ A 200 whose body matches:
 
 **Act: the calls in this journey, in order**
 
-#### 1. Use Case: Search ABHA Profile (`m1_post_v3_profile_account_abha_search`)
+#### 1. Search ABHA profile (`m1_post_v3_profile_account_abha_search`)
 
 ```bash
 curl --request POST \
@@ -2131,7 +2131,7 @@ curl --request POST \
 }'
 ```
 
-#### 2. Use Case: ABHA Login - Send OTP using Aadhaar number, ABHA number, Mobile number, Biometric Login, Search ABHA, Find ABHA via Biometrics (`m1_post_v3_profile_login_request_otp`)
+#### 2. Login request OTP (`m1_post_v3_profile_login_request_otp`)
 
 ```bash
 curl --request POST \
@@ -2153,7 +2153,7 @@ curl --request POST \
 }'
 ```
 
-#### 3. UseCase : This API is used to check the status of the transaction ID. (`m1_post_v3_enrollment_enrol_capturepid`)
+#### 3. Check the status of the transaction ID (`m1_post_v3_enrollment_enrol_capturepid`)
 
 ```bash
 curl --request POST \
@@ -2171,7 +2171,7 @@ curl --request POST \
 }'
 ```
 
-#### 4. Use Case: ABHA Login - Verify OTP using Aadhaar number, ABHA number, Mobile number, Biometric Verify Login, Find ABHA via Aadhaar, Mobile, Biometrics (`m1_post_v3_profile_login_verify`)
+#### 4. Login profile verify (`m1_post_v3_profile_login_verify`)
 
 ```bash
 curl --request POST \
@@ -2217,7 +2217,7 @@ A 200 whose body matches:
 
 **Act: the calls in this journey, in order**
 
-#### 1. Use Case: Search ABHA Profile (`m1_post_v3_profile_account_abha_search`)
+#### 1. Search ABHA profile (`m1_post_v3_profile_account_abha_search`)
 
 ```bash
 curl --request POST \
@@ -2234,7 +2234,7 @@ curl --request POST \
 }'
 ```
 
-#### 2. Use Case: ABHA Login - Send OTP using Aadhaar number, ABHA number, Mobile number, Biometric Login, Search ABHA, Find ABHA via Biometrics (`m1_post_v3_profile_login_request_otp`)
+#### 2. Login request OTP (`m1_post_v3_profile_login_request_otp`)
 
 ```bash
 curl --request POST \
@@ -2256,7 +2256,7 @@ curl --request POST \
 }'
 ```
 
-#### 3. Use Case: ABHA Login - Verify OTP using Aadhaar number, ABHA number, Mobile number, Biometric Verify Login, Find ABHA via Aadhaar, Mobile, Biometrics (`m1_post_v3_profile_login_verify`)
+#### 3. Login profile verify (`m1_post_v3_profile_login_verify`)
 
 ```bash
 curl --request POST \
@@ -2302,7 +2302,7 @@ A 200 whose body matches:
 
 **Act: the calls in this journey, in order**
 
-#### 1. Use Case: Generate QR Code for an ABHA Profile (`m1_get_v3_profile_account_qrcode`)
+#### 1. Generate QR code for an ABHA profile (`m1_get_v3_profile_account_qrcode`)
 
 ```bash
 curl --request GET \
@@ -2313,7 +2313,7 @@ curl --request GET \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z'
 ```
 
-#### 2. Use Case: Retrieve ABHA Card image (`m1_get_v3_profile_account_abha_card`)
+#### 2. Retrieve ABHA card image (`m1_get_v3_profile_account_abha_card`)
 
 ```bash
 curl --request GET \
@@ -2324,7 +2324,7 @@ curl --request GET \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z'
 ```
 
-#### 3. Use Case: Get User Profile Details (`m1_get_v3_profile_account`)
+#### 3. Get user profile details (`m1_get_v3_profile_account`)
 
 ```bash
 curl --request GET \
@@ -2397,7 +2397,7 @@ A 200 whose body matches:
 
 **Act: the calls in this journey, in order**
 
-#### 1. Use Case: Send OTP - ReKyc, Update Mobile, Child ABHA KYC Request OTP (`m1_post_v3_profile_account_request_otp`)
+#### 1. Send OTP ReKyc, update Mobile, child ABHA KYC request OTP (`m1_post_v3_profile_account_request_otp`)
 
 ```bash
 curl --request POST \
@@ -2418,7 +2418,7 @@ curl --request POST \
 }'
 ```
 
-#### 2. Use Case: Verify OTP - ReKyc, Update Mobile, CHILD ABHA KYC (`m1_post_v3_profile_account_verify`)
+#### 2. Verify OTP ReKyc, update Mobile, CHILD ABHA KYC (`m1_post_v3_profile_account_verify`)
 
 ```bash
 curl --request POST \
@@ -2466,7 +2466,7 @@ A 200 whose body matches:
 
 **Act: the calls in this journey, in order**
 
-#### 1. Use Case: Send OTP - ReKyc, Update Mobile, Child ABHA KYC Request OTP (`m1_post_v3_profile_account_request_otp`)
+#### 1. Send OTP ReKyc, update Mobile, child ABHA KYC request OTP (`m1_post_v3_profile_account_request_otp`)
 
 ```bash
 curl --request POST \
@@ -2487,7 +2487,7 @@ curl --request POST \
 }'
 ```
 
-#### 2. Use Case: Verify OTP - ReKyc, Update Mobile, CHILD ABHA KYC (`m1_post_v3_profile_account_verify`)
+#### 2. Verify OTP ReKyc, update Mobile, CHILD ABHA KYC (`m1_post_v3_profile_account_verify`)
 
 ```bash
 curl --request POST \
@@ -2535,7 +2535,7 @@ A 200 whose body matches:
 
 **Act: the calls in this journey, in order**
 
-#### 1. Use Case: Search for benefits associated with a user’s profile (`m1_post_v3_profile_benefit_search`)
+#### 1. Search for benefits associated with a user’s profile (`m1_post_v3_profile_benefit_search`)
 
 ```bash
 curl --request POST \
@@ -2554,7 +2554,7 @@ curl --request POST \
 }'
 ```
 
-#### 2. Use Case: Retrieve the benefit details associated with a specific ABHA number (`m1_get_v3_profile_benefit_abha_abhanumber`)
+#### 2. Retrieve the benefit details associated with a specific ABHA number (`m1_get_v3_profile_benefit_abha_abhanumber`)
 
 ```bash
 curl --request GET \
@@ -2565,7 +2565,7 @@ curl --request GET \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z'
 ```
 
-#### 3. Usecase : Benefit LINK or DELINK (`m1_post_v3_profile_benefit_linkanddelink`)
+#### 3. Submit the benefit LINK or DELINK (`m1_post_v3_profile_benefit_linkanddelink`)
 
 ```bash
 curl --request POST \

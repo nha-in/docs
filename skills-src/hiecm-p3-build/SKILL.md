@@ -18,7 +18,7 @@ Loop limit: 8 passes per step. Hitting the limit is an escalation: state what wa
 
 **Act: the calls in this journey, in order**
 
-#### 1. This API will be invoked by the patient/user from PHR application to approve subscription request. (`p3_post_subscription_requests_v3_request_id_approve`)
+#### 1. Approve subscription request (`p3_post_subscription_requests_v3_request_id_approve`)
 
 ```bash
 curl --request POST \
@@ -82,7 +82,7 @@ curl --request POST \
 }'
 ```
 
-#### 2. This API will be invoked by the patient/user from PHR application to deny subscription request. (`p3_post_subscription_requests_v3_request_id_deny`)
+#### 2. Deny subscription request (`p3_post_subscription_requests_v3_request_id_deny`)
 
 ```bash
 curl --request POST \
@@ -98,7 +98,7 @@ curl --request POST \
 }'
 ```
 
-#### 3. This API will be invoked by the patient/user from PHR application to fetch his/her subscription requests details. (`p3_get_subscription_requests_v3_requests`)
+#### 3. Fetch his/her subscription requests details (`p3_get_subscription_requests_v3_requests`)
 
 ```bash
 curl --request GET \
@@ -110,7 +110,7 @@ curl --request GET \
   --header 'X-AUTH-TOKEN: <TOKEN>'
 ```
 
-#### 4. This API will be invoked to edit the subscription details. (`p3_put_subscription_requests_v3_patients_subscription_id`)
+#### 4. Edit the subscription details (`p3_put_subscription_requests_v3_patients_subscription_id`)
 
 ```bash
 curl --request PUT \
@@ -179,7 +179,7 @@ curl --request PUT \
 }'
 ```
 
-#### 5. This API will be invoked to disable the subscription by subscription id. (`p3_post_subscription_requests_v3_disable_subscription_id`)
+#### 5. Disable the subscription by subscription ID (`p3_post_subscription_requests_v3_disable_subscription_id`)
 
 ```bash
 curl --request POST \
@@ -191,7 +191,7 @@ curl --request POST \
   --header 'X-AUTH-TOKEN: <TOKEN>'
 ```
 
-#### 6. This API will be invoked to enable the subscription by subscription id. (`p3_post_subscription_requests_v3_enable_subscription_id`)
+#### 6. Enable the subscription by subscription ID (`p3_post_subscription_requests_v3_enable_subscription_id`)
 
 ```bash
 curl --request POST \
@@ -203,7 +203,7 @@ curl --request POST \
   --header 'X-AUTH-TOKEN: <TOKEN>'
 ```
 
-#### 7. This API will be invoked by the patient/user from PHR application to fetch his/her subscription details by subscription request id. (`p3_get_subscription_requests_v3_request_request_id`)
+#### 7. Fetch his/her subscription details by subscription REQUEST-ID (`p3_get_subscription_requests_v3_request_request_id`)
 
 ```bash
 curl --request GET \
@@ -215,7 +215,7 @@ curl --request GET \
   --header 'X-AUTH-TOKEN: <TOKEN>'
 ```
 
-#### 8. This API will be invoked by the patient/user from PHR application to fetch his/her subscription details by subscription id. (`p3_get_subscription_requests_v3_subscription_id`)
+#### 8. Fetch his/her subscription details by subscription ID (`p3_get_subscription_requests_v3_subscription_id`)
 
 ```bash
 curl --request GET \

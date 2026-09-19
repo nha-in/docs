@@ -18,11 +18,11 @@ Loop limit: 8 passes per step. Hitting the limit is an escalation: state what wa
 
 **Act: the calls in this journey, in order**
 
-#### 1. This is an API is called by HIU to check the status of reports. (`scan-and-pay_post_v3_patient_share_open_order`)
+#### 1. Check the status of reports (`scan-and-pay_post_v3_patient_share_open_order`)
 
 Inbound to your bridge at `/v3/patient/share/open-order`. Acknowledge it and continue.
 
-#### 2. This is an API called by HIP to HIE-CM to send all the open order for patient. (`scan-and-pay_post_scan_gateway_v3_patient_on_share_open_order`)
+#### 2. Submit the HIE-CM to send all the open order for patient (`scan-and-pay_post_scan_gateway_v3_patient_on_share_open_order`)
 
 ```bash
 curl --request POST \
@@ -35,11 +35,11 @@ curl --request POST \
   --data '"<VALUE>"'
 ```
 
-#### 3. This is the call back api for the selection API. This API needs to implement by HIP to receive all selected open order . (`scan-and-pay_post_v3_patient_selection`)
+#### 3. Receive the patient selection (`scan-and-pay_post_v3_patient_selection`)
 
 Inbound to your bridge at `/v3/patient/selection`. Acknowledge it and continue.
 
-#### 4. This is an API is called by HIP to share payment bundle alone with procedures of the patient. (`scan-and-pay_post_scan_gateway_v3_patient_on_selection`)
+#### 4. Share payment bundle alone with procedures of the patient (`scan-and-pay_post_scan_gateway_v3_patient_on_selection`)
 
 ```bash
 curl --request POST \
@@ -52,7 +52,7 @@ curl --request POST \
   --data '"<VALUE>"'
 ```
 
-#### 5. This is an API called by HIP to send the payment status to HIU. (`scan-and-pay_post_scan_gateway_v3_patient_scan_pay_notify`)
+#### 5. Send the payment status to HIU (`scan-and-pay_post_scan_gateway_v3_patient_scan_pay_notify`)
 
 ```bash
 curl --request POST \
@@ -76,15 +76,15 @@ curl --request POST \
 }'
 ```
 
-#### 6. This is an callback API for on-notify API need to implement by HIP to received the confirmation of notification. (`scan-and-pay_post_v3_patient_scan_pay_on_notify`)
+#### 6. Receive the patient scan pay on notify (`scan-and-pay_post_v3_patient_scan_pay_on_notify`)
 
 Inbound to your bridge at `/v3/patient/scan-pay/on-notify`. Acknowledge it and continue.
 
-#### 7. This is callback API for the order_status API. This Api needs to implement by HIP to receive the request for payment status. (`scan-and-pay_post_v3_patient_scan_pay_order_status`)
+#### 7. Receive the patient scan pay order status (`scan-and-pay_post_v3_patient_scan_pay_order_status`)
 
 Inbound to your bridge at `/v3/patient/scan-pay/order-status`. Acknowledge it and continue.
 
-#### 8. This is an API is called by HIP to check the status of reports. (`scan-and-pay_post_scan_gateway_v3_patient_scan_pay_on_ord_21f376`)
+#### 8. Check the status of reports (`scan-and-pay_post_scan_gateway_v3_patient_scan_pay_on_ord_21f376`)
 
 ```bash
 curl --request POST \
@@ -105,7 +105,7 @@ A 202 response. The specification gives no body for it, so read what comes back.
 
 **Act: the calls in this journey, in order**
 
-#### 1. This API will be invoked from the integrator application (any PHR application, just like ABHA) to share the user/patient payment details with HMIS/LIMS. (`scan-and-pay_post_scan_gateway_v3_patient_share_open_order`)
+#### 1. Share patient open order (`scan-and-pay_post_scan_gateway_v3_patient_share_open_order`)
 
 ```bash
 curl --request POST \
@@ -144,11 +144,11 @@ curl --request POST \
 }'
 ```
 
-#### 2. This is a callback API for patient on-share. This Api needs to implement by HIU for receive all the open order. (`scan-and-pay_post_v3_patient_on_share_open_order`)
+#### 2. Receive the patient on-share (`scan-and-pay_post_v3_patient_on_share_open_order`)
 
 Inbound to your bridge at `/v3/patient/on-share/open-order`. Acknowledge it and continue.
 
-#### 3. This is an API called by HIU to select the all open-order and send to HIP for a payment request detail. (`scan-and-pay_post_scan_gateway_v3_patient_selection`)
+#### 3. Select the all open-order and send to HIP for a payment request detail (`scan-and-pay_post_scan_gateway_v3_patient_selection`)
 
 ```bash
 curl --request POST \
@@ -163,15 +163,15 @@ curl --request POST \
   --data '"<VALUE>"'
 ```
 
-#### 4. This is callback api for the  API. This Api needs to implement by HIU to received all the select open order payment requests. (`scan-and-pay_post_v3_patient_on_selection`)
+#### 4. Receive the patient on selection (`scan-and-pay_post_v3_patient_on_selection`)
 
 Inbound to your bridge at `/v3/patient/on-selection`. Acknowledge it and continue.
 
-#### 5. This is callback API for the notify API. This API needs to implement by HIU to received the payment status. (`scan-and-pay_post_v3_patient_scan_pay_notify`)
+#### 5. Notify patient scan pay (`scan-and-pay_post_v3_patient_scan_pay_notify`)
 
 Inbound to your bridge at `/v3/patient/scan-pay/notify`. Acknowledge it and continue.
 
-#### 6. This is an API is called by HIU to notify to HIP so that confirm that the HIU received the payment status. (`scan-and-pay_post_scan_gateway_v3_patient_scan_pay_on_notify`)
+#### 6. Notify to HIP so that confirm that the HIU received the payment status (`scan-and-pay_post_scan_gateway_v3_patient_scan_pay_on_notify`)
 
 ```bash
 curl --request POST \
@@ -184,7 +184,7 @@ curl --request POST \
   --data '"<VALUE>"'
 ```
 
-#### 7. This is an API is called by HIU to check the status of reports. (`scan-and-pay_post_scan_gateway_v3_patient_scan_pay_order_status`)
+#### 7. Check the status of reports (`scan-and-pay_post_scan_gateway_v3_patient_scan_pay_order_status`)
 
 ```bash
 curl --request POST \
@@ -205,7 +205,7 @@ curl --request POST \
 }'
 ```
 
-#### 8. This is callback for the on-order-status API. This API needs to implement by HIU for receive the payment status. (`scan-and-pay_post_v3_patient_scan_pay_on_order_status`)
+#### 8. Receive the patient scan pay on order status (`scan-and-pay_post_v3_patient_scan_pay_on_order_status`)
 
 Inbound to your bridge at `/v3/patient/scan-pay/on-order-status`. Acknowledge it and continue.
 
@@ -217,7 +217,7 @@ A 200 response. The specification gives no body for it, so read what comes back.
 
 **Act: the calls in this journey, in order**
 
-#### 1. This is retrieve the all the details of the user. (`scan-and-pay_get_scan_gateway_v3_patient_scan_pay_details`)
+#### 1. Get the patient scan pay details (`scan-and-pay_get_scan_gateway_v3_patient_scan_pay_details`)
 
 ```bash
 curl --request GET \
@@ -229,7 +229,7 @@ curl --request GET \
   --header 'X-AUTH-TOKEN: <TOKEN>'
 ```
 
-#### 2. This API is used to update version to the serviceId. (`scan-and-pay_patch_gateway_v3_scanpay_updateversion`)
+#### 2. Update version to the serviceId (`scan-and-pay_patch_gateway_v3_scanpay_updateversion`)
 
 ```bash
 curl --request PATCH \

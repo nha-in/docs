@@ -18,7 +18,7 @@ Loop limit: 8 passes per step. Hitting the limit is an escalation: state what wa
 
 **Act: the calls in this journey, in order**
 
-#### 1. This API will be invoked by the HIU/patient/user to initiate subscription request. (`subscription_post_subscription_requests_v3_init`)
+#### 1. Initiate subscription request (`subscription_post_subscription_requests_v3_init`)
 
 ```bash
 curl --request POST \
@@ -61,15 +61,15 @@ curl --request POST \
 }'
 ```
 
-#### 2. This is a callback api for /api/hiecm/subscription-requests/v3/init. (`subscription_post_v3_hiu_hiecm_subscription_requests_on_init`)
+#### 2. Receive the HIU subscription requests on init (`subscription_post_v3_hiu_hiecm_subscription_requests_on_init`)
 
 Inbound to your bridge at `/api/v3/hiu/hiecm/subscription-requests/on-init`. Acknowledge it and continue.
 
-#### 3. This is a callback api when a subscription request is approved or denied. (`subscription_post_v3_hiu_subscription_requests_hiu_notify`)
+#### 3. Notify subscription requests HIU (`subscription_post_v3_hiu_subscription_requests_hiu_notify`)
 
 Inbound to your bridge at `/api/v3/hiu/subscription-requests/hiu/notify`. Acknowledge it and continue.
 
-#### 4. This API will be invoked by the HIU to respond to /subscription-requests/hiu/notify. (`subscription_post_subscription_requests_v3_hiu_on_notify`)
+#### 4. Answer the subscription request notification (`subscription_post_subscription_requests_v3_hiu_on_notify`)
 
 ```bash
 curl --request POST \
@@ -94,11 +94,11 @@ curl --request POST \
 }'
 ```
 
-#### 5. This is a callback api to notify the subscribed HIU when a care context is linked or updated for a patient. (`subscription_post_v3_hiu_subscription_notify`)
+#### 5. Notify HIU subscription (`subscription_post_v3_hiu_subscription_notify`)
 
 Inbound to your bridge at `/api/v3/hiu/subscription/notify`. Acknowledge it and continue.
 
-#### 6. This API will be invoked by the HIU to respond to /api/v3/hiu/subscription/notify. (`subscription_post_subscription_requests_v3_hiu_care_conte_96bc45`)
+#### 6. Answer the care context subscription notification (`subscription_post_subscription_requests_v3_hiu_care_conte_96bc45`)
 
 ```bash
 curl --request POST \

@@ -14,7 +14,7 @@ Loop limit: 8 passes per step. Hitting the limit is an escalation: state what wa
 
 **Act: the calls in this journey, in order**
 
-#### 1. Use Case: ABHA enrollment - Send OTP using Aadhaar number Mobile number, ABHA number and Email address (`m1_post_v3_enrollment_request_otp`)
+#### 1. Request enrolment OTP (`m1_post_v3_enrollment_request_otp`)
 
 ```bash
 curl --request POST \
@@ -34,7 +34,7 @@ curl --request POST \
 }'
 ```
 
-#### 2. UseCase : Create ABHA number Via Aadhaar by verifying Aadhaar OTP, using Biometrics, using demoAuth and Child ABHA Creation. (`m1_post_v3_enrollment_enrol_byaadhaar`)
+#### 2. Enrol by Aadhaar (`m1_post_v3_enrollment_enrol_byaadhaar`)
 
 ```bash
 curl --request POST \
@@ -63,7 +63,7 @@ curl --request POST \
 }'
 ```
 
-#### 3. Use Case: ABHA enrollment - Send OTP using Aadhaar number Mobile number, ABHA number and Email address (optional) (`m1_post_v3_enrollment_request_otp`)
+#### 3. Request enrolment OTP (`m1_post_v3_enrollment_request_otp`)
 
 ```bash
 curl --request POST \
@@ -84,7 +84,7 @@ curl --request POST \
 }'
 ```
 
-#### 4. UseCase : Verify- Mobile OTP (optional) (`m1_post_v3_enrollment_auth_byabdm`)
+#### 4. Verify- mobile OTP (`m1_post_v3_enrollment_auth_byabdm`)
 
 ```bash
 curl --request POST \
@@ -110,7 +110,7 @@ curl --request POST \
 }'
 ```
 
-#### 5. Email Verification Link (`p1_post_v3_profile_account_request_emailverificationlink`)
+#### 5. Submit the email verification link (`p1_post_v3_profile_account_request_emailverificationlink`)
 
 ```bash
 curl --request POST \
@@ -131,7 +131,7 @@ curl --request POST \
 }'
 ```
 
-#### 6. UseCase: ABHA address suggestion (`m1_get_v3_enrollment_enrol_suggestion`)
+#### 6. Get the ABHA address suggestion (`m1_get_v3_enrollment_enrol_suggestion`)
 
 ```bash
 curl --request GET \
@@ -142,7 +142,7 @@ curl --request GET \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z'
 ```
 
-#### 7. UseCase: Create ABHA address (`m1_post_v3_enrollment_enrol_abha_address`)
+#### 7. Create ABHA address (`m1_post_v3_enrollment_enrol_abha_address`)
 
 ```bash
 curl --request POST \
@@ -158,7 +158,7 @@ curl --request POST \
 }'
 ```
 
-#### 8. Use Case: Get User Profile Details (`m1_get_v3_profile_account`)
+#### 8. Get user profile details (`m1_get_v3_profile_account`)
 
 ```bash
 curl --request GET \
@@ -169,7 +169,7 @@ curl --request GET \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z'
 ```
 
-#### 9. Use Case: Retrieve ABHA Card image (`m1_get_v3_profile_account_abha_card`)
+#### 9. Retrieve ABHA card image (`m1_get_v3_profile_account_abha_card`)
 
 ```bash
 curl --request GET \
@@ -188,7 +188,7 @@ A 200 response. The specification gives no body for it, so read what comes back.
 
 **Act: the calls in this journey, in order**
 
-#### 1. 3 flows: OTP Request - Mobile, OTP Request - ABHA OTP, OTP Request - AADHAR OTP (`p1_post_v3_phr_app_enrollment_request_otp`)
+#### 1. Request enrolment OTP (`p1_post_v3_phr_app_enrollment_request_otp`)
 
 ```bash
 curl --request POST \
@@ -207,7 +207,7 @@ curl --request POST \
 }'
 ```
 
-#### 2. 3 flows: OTP Verify - Mobile, OTP Verify - ABHA OTP, OTP Verify - AADHAR OTP (`p1_post_v3_phr_app_enrollment_verify`)
+#### 2. Verify the enrolment OTP (`p1_post_v3_phr_app_enrollment_verify`)
 
 ```bash
 curl --request POST \
@@ -232,7 +232,7 @@ curl --request POST \
 }'
 ```
 
-#### 3. 3 flows: Suggestion API (`p1_post_v3_phr_app_enrollment_suggestion`)
+#### 3. Suggest an ABHA address (`p1_post_v3_phr_app_enrollment_suggestion`)
 
 ```bash
 curl --request POST \
@@ -251,7 +251,7 @@ curl --request POST \
 }'
 ```
 
-#### 4. 3 flows: isExists API, isExists API Copy (`p1_get_v3_phr_app_enrollment_isexists`)
+#### 4. Check whether the ABHA address exists (`p1_get_v3_phr_app_enrollment_isexists`)
 
 ```bash
 curl --request GET \
@@ -260,7 +260,7 @@ curl --request GET \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z'
 ```
 
-#### 5. 3 flows: Enroll ABHA Address (`p1_post_v3_phr_app_enrollment_enrol`)
+#### 5. Enrol ABHA address (`p1_post_v3_phr_app_enrollment_enrol`)
 
 ```bash
 curl --request POST \
@@ -338,7 +338,7 @@ A 200 whose body matches:
 
 **Act: the calls in this journey, in order**
 
-#### 1. 3 flows: OTP Request - Mobile, OTP Request - ABHA OTP, OTP Request - AADHAR OTP (`p1_post_v3_phr_app_enrollment_request_otp`)
+#### 1. Request enrolment OTP (`p1_post_v3_phr_app_enrollment_request_otp`)
 
 ```bash
 curl --request POST \
@@ -357,7 +357,7 @@ curl --request POST \
 }'
 ```
 
-#### 2. 3 flows: OTP Verify - Mobile, OTP Verify - ABHA OTP, OTP Verify - AADHAR OTP (`p1_post_v3_phr_app_enrollment_verify`)
+#### 2. Verify the enrolment OTP (`p1_post_v3_phr_app_enrollment_verify`)
 
 ```bash
 curl --request POST \
@@ -382,7 +382,7 @@ curl --request POST \
 }'
 ```
 
-#### 3. 6 flows: Verify User, Verify - User (`p1_post_v3_phr_app_login_verify_user`)
+#### 3. Verify User, verify user (`p1_post_v3_phr_app_login_verify_user`)
 
 ```bash
 curl --request POST \
@@ -398,7 +398,7 @@ curl --request POST \
 }'
 ```
 
-#### 4. 3 flows: Suggestion API (`p1_post_v3_phr_app_enrollment_suggestion`)
+#### 4. Suggest an ABHA address (`p1_post_v3_phr_app_enrollment_suggestion`)
 
 ```bash
 curl --request POST \
@@ -417,7 +417,7 @@ curl --request POST \
 }'
 ```
 
-#### 5. 3 flows: isExists API, isExists API Copy (`p1_get_v3_phr_app_enrollment_isexists`)
+#### 5. Check whether the ABHA address exists (`p1_get_v3_phr_app_enrollment_isexists`)
 
 ```bash
 curl --request GET \
@@ -426,7 +426,7 @@ curl --request GET \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z'
 ```
 
-#### 6. 3 flows: Enroll ABHA Address (`p1_post_v3_phr_app_enrollment_enrol`)
+#### 6. Enrol ABHA address (`p1_post_v3_phr_app_enrollment_enrol`)
 
 ```bash
 curl --request POST \
@@ -503,7 +503,7 @@ A 200 whose body matches:
 
 **Act: the calls in this journey, in order**
 
-#### 1. 3 flows: OTP Request - Mobile, OTP Request - ABHA OTP, OTP Request - AADHAR OTP (`p1_post_v3_phr_app_enrollment_request_otp`)
+#### 1. Request enrolment OTP (`p1_post_v3_phr_app_enrollment_request_otp`)
 
 ```bash
 curl --request POST \
@@ -522,7 +522,7 @@ curl --request POST \
 }'
 ```
 
-#### 2. 3 flows: OTP Verify - Mobile, OTP Verify - ABHA OTP, OTP Verify - AADHAR OTP (`p1_post_v3_phr_app_enrollment_verify`)
+#### 2. Verify the enrolment OTP (`p1_post_v3_phr_app_enrollment_verify`)
 
 ```bash
 curl --request POST \
@@ -547,7 +547,7 @@ curl --request POST \
 }'
 ```
 
-#### 3. 3 flows: Suggestion API (`p1_post_v3_phr_app_enrollment_suggestion`)
+#### 3. Suggest an ABHA address (`p1_post_v3_phr_app_enrollment_suggestion`)
 
 ```bash
 curl --request POST \
@@ -566,7 +566,7 @@ curl --request POST \
 }'
 ```
 
-#### 4. 3 flows: isExists API, isExists API Copy (`p1_get_v3_phr_app_enrollment_isexists`)
+#### 4. Check whether the ABHA address exists (`p1_get_v3_phr_app_enrollment_isexists`)
 
 ```bash
 curl --request GET \
@@ -575,7 +575,7 @@ curl --request GET \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z'
 ```
 
-#### 5. 3 flows: Enroll ABHA Address (`p1_post_v3_phr_app_enrollment_enrol`)
+#### 5. Enrol ABHA address (`p1_post_v3_phr_app_enrollment_enrol`)
 
 ```bash
 curl --request POST \
@@ -652,7 +652,7 @@ A 200 whose body matches:
 
 **Act: the calls in this journey, in order**
 
-#### 1. 7 flows: OTP Request - Mobile, OTP Request - Email, OTP Request -  ABHAADDRES Mobile, OTP Request - AADHAR OTP, OTP Request - ABHA OTP, OTP Request -  ABHAADDRES Email, new OTP Request- AADHAAR (`p1_post_v3_phr_app_login_request_otp`)
+#### 1. Login request OTP (`p1_post_v3_phr_app_login_request_otp`)
 
 ```bash
 curl --request POST \
@@ -672,7 +672,7 @@ curl --request POST \
 }'
 ```
 
-#### 2. 8 flows: Login OTP Verify - Mobile, Login OTP Verify - Email, Login OTP Verify - ABHAADDRES Mobile, Login OTP Verify - AADHAR, Login OTP Verify - ABHA, Login Verify - Password, Login OTP Verify - ABHAADDRESS Email, new OTP verify- AADHAAR (`p1_post_v3_phr_app_login_verify`)
+#### 2. Login PHR verify (`p1_post_v3_phr_app_login_verify`)
 
 ```bash
 curl --request POST \
@@ -698,7 +698,7 @@ curl --request POST \
 }'
 ```
 
-#### 3. 6 flows: Verify User, Verify - User (`p1_post_v3_phr_app_login_verify_user`)
+#### 3. Verify User, verify user (`p1_post_v3_phr_app_login_verify_user`)
 
 ```bash
 curl --request POST \
@@ -731,7 +731,7 @@ A 200 whose body matches:
 
 **Act: the calls in this journey, in order**
 
-#### 1. 7 flows: OTP Request - Mobile, OTP Request - Email, OTP Request -  ABHAADDRES Mobile, OTP Request - AADHAR OTP, OTP Request - ABHA OTP, OTP Request -  ABHAADDRES Email, new OTP Request- AADHAAR (`p1_post_v3_phr_app_login_request_otp`)
+#### 1. Login request OTP (`p1_post_v3_phr_app_login_request_otp`)
 
 ```bash
 curl --request POST \
@@ -751,7 +751,7 @@ curl --request POST \
 }'
 ```
 
-#### 2. 8 flows: Login OTP Verify - Mobile, Login OTP Verify - Email, Login OTP Verify - ABHAADDRES Mobile, Login OTP Verify - AADHAR, Login OTP Verify - ABHA, Login Verify - Password, Login OTP Verify - ABHAADDRESS Email, new OTP verify- AADHAAR (`p1_post_v3_phr_app_login_verify`)
+#### 2. Login PHR verify (`p1_post_v3_phr_app_login_verify`)
 
 ```bash
 curl --request POST \
@@ -777,7 +777,7 @@ curl --request POST \
 }'
 ```
 
-#### 3. 6 flows: Verify User, Verify - User (`p1_post_v3_phr_app_login_verify_user`)
+#### 3. Verify User, verify user (`p1_post_v3_phr_app_login_verify_user`)
 
 ```bash
 curl --request POST \
@@ -810,7 +810,7 @@ A 200 whose body matches:
 
 **Act: the calls in this journey, in order**
 
-#### 1. 7 flows: OTP Request - Mobile, OTP Request - Email, OTP Request -  ABHAADDRES Mobile, OTP Request - AADHAR OTP, OTP Request - ABHA OTP, OTP Request -  ABHAADDRES Email, new OTP Request- AADHAAR (`p1_post_v3_phr_app_login_request_otp`)
+#### 1. Login request OTP (`p1_post_v3_phr_app_login_request_otp`)
 
 ```bash
 curl --request POST \
@@ -830,7 +830,7 @@ curl --request POST \
 }'
 ```
 
-#### 2. 8 flows: Login OTP Verify - Mobile, Login OTP Verify - Email, Login OTP Verify - ABHAADDRES Mobile, Login OTP Verify - AADHAR, Login OTP Verify - ABHA, Login Verify - Password, Login OTP Verify - ABHAADDRESS Email, new OTP verify- AADHAAR (`p1_post_v3_phr_app_login_verify`)
+#### 2. Login PHR verify (`p1_post_v3_phr_app_login_verify`)
 
 ```bash
 curl --request POST \
@@ -900,7 +900,7 @@ A 200 whose body matches:
 
 **Act: the calls in this journey, in order**
 
-#### 1. 7 flows: OTP Request - Mobile, OTP Request - Email, OTP Request -  ABHAADDRES Mobile, OTP Request - AADHAR OTP, OTP Request - ABHA OTP, OTP Request -  ABHAADDRES Email, new OTP Request- AADHAAR (`p1_post_v3_phr_app_login_request_otp`)
+#### 1. Login request OTP (`p1_post_v3_phr_app_login_request_otp`)
 
 ```bash
 curl --request POST \
@@ -920,7 +920,7 @@ curl --request POST \
 }'
 ```
 
-#### 2. 8 flows: Login OTP Verify - Mobile, Login OTP Verify - Email, Login OTP Verify - ABHAADDRES Mobile, Login OTP Verify - AADHAR, Login OTP Verify - ABHA, Login Verify - Password, Login OTP Verify - ABHAADDRESS Email, new OTP verify- AADHAAR (`p1_post_v3_phr_app_login_verify`)
+#### 2. Login PHR verify (`p1_post_v3_phr_app_login_verify`)
 
 ```bash
 curl --request POST \
@@ -946,7 +946,7 @@ curl --request POST \
 }'
 ```
 
-#### 3. 6 flows: Verify User, Verify - User (`p1_post_v3_phr_app_login_verify_user`)
+#### 3. Verify User, verify user (`p1_post_v3_phr_app_login_verify_user`)
 
 ```bash
 curl --request POST \
@@ -979,7 +979,7 @@ A 200 whose body matches:
 
 **Act: the calls in this journey, in order**
 
-#### 1. 7 flows: OTP Request - Mobile, OTP Request - Email, OTP Request -  ABHAADDRES Mobile, OTP Request - AADHAR OTP, OTP Request - ABHA OTP, OTP Request -  ABHAADDRES Email, new OTP Request- AADHAAR (`p1_post_v3_phr_app_login_request_otp`)
+#### 1. Login request OTP (`p1_post_v3_phr_app_login_request_otp`)
 
 ```bash
 curl --request POST \
@@ -999,7 +999,7 @@ curl --request POST \
 }'
 ```
 
-#### 2. 8 flows: Login OTP Verify - Mobile, Login OTP Verify - Email, Login OTP Verify - ABHAADDRES Mobile, Login OTP Verify - AADHAR, Login OTP Verify - ABHA, Login Verify - Password, Login OTP Verify - ABHAADDRESS Email, new OTP verify- AADHAAR (`p1_post_v3_phr_app_login_verify`)
+#### 2. Login PHR verify (`p1_post_v3_phr_app_login_verify`)
 
 ```bash
 curl --request POST \
@@ -1025,7 +1025,7 @@ curl --request POST \
 }'
 ```
 
-#### 3. 6 flows: Verify User, Verify - User (`p1_post_v3_phr_app_login_verify_user`)
+#### 3. Verify User, verify user (`p1_post_v3_phr_app_login_verify_user`)
 
 ```bash
 curl --request POST \
@@ -1058,7 +1058,7 @@ A 200 whose body matches:
 
 **Act: the calls in this journey, in order**
 
-#### 1. Search Auth Methods - ABHAAddress (`p1_post_v3_phr_app_login_search`)
+#### 1. Search auth methods ABHAAddress (`p1_post_v3_phr_app_login_search`)
 
 ```bash
 curl --request POST \
@@ -1071,7 +1071,7 @@ curl --request POST \
 }'
 ```
 
-#### 2. 8 flows: Login OTP Verify - Mobile, Login OTP Verify - Email, Login OTP Verify - ABHAADDRES Mobile, Login OTP Verify - AADHAR, Login OTP Verify - ABHA, Login Verify - Password, Login OTP Verify - ABHAADDRESS Email, new OTP verify- AADHAAR (`p1_post_v3_phr_app_login_verify`)
+#### 2. Login PHR verify (`p1_post_v3_phr_app_login_verify`)
 
 ```bash
 curl --request POST \
@@ -1141,7 +1141,7 @@ A 200 whose body matches:
 
 **Act: the calls in this journey, in order**
 
-#### 1. 7 flows: OTP Request - Mobile, OTP Request - Email, OTP Request -  ABHAADDRES Mobile, OTP Request - AADHAR OTP, OTP Request - ABHA OTP, OTP Request -  ABHAADDRES Email, new OTP Request- AADHAAR (`p1_post_v3_phr_app_login_request_otp`)
+#### 1. Login request OTP (`p1_post_v3_phr_app_login_request_otp`)
 
 ```bash
 curl --request POST \
@@ -1161,7 +1161,7 @@ curl --request POST \
 }'
 ```
 
-#### 2. 8 flows: Login OTP Verify - Mobile, Login OTP Verify - Email, Login OTP Verify - ABHAADDRES Mobile, Login OTP Verify - AADHAR, Login OTP Verify - ABHA, Login Verify - Password, Login OTP Verify - ABHAADDRESS Email, new OTP verify- AADHAAR (`p1_post_v3_phr_app_login_verify`)
+#### 2. Login PHR verify (`p1_post_v3_phr_app_login_verify`)
 
 ```bash
 curl --request POST \
@@ -1231,7 +1231,7 @@ A 200 whose body matches:
 
 **Act: the calls in this journey, in order**
 
-#### 1. 7 flows: OTP Request - Mobile, OTP Request - Email, OTP Request -  ABHAADDRES Mobile, OTP Request - AADHAR OTP, OTP Request - ABHA OTP, OTP Request -  ABHAADDRES Email, new OTP Request- AADHAAR (`p1_post_v3_phr_app_login_request_otp`)
+#### 1. Login request OTP (`p1_post_v3_phr_app_login_request_otp`)
 
 ```bash
 curl --request POST \
@@ -1252,7 +1252,7 @@ curl --request POST \
 }'
 ```
 
-#### 2. 8 flows: Login OTP Verify - Mobile, Login OTP Verify - Email, Login OTP Verify - ABHAADDRES Mobile, Login OTP Verify - AADHAR, Login OTP Verify - ABHA, Login Verify - Password, Login OTP Verify - ABHAADDRESS Email, new OTP verify- AADHAAR (`p1_post_v3_phr_app_login_verify`)
+#### 2. Login PHR verify (`p1_post_v3_phr_app_login_verify`)
 
 ```bash
 curl --request POST \
@@ -1279,7 +1279,7 @@ curl --request POST \
 }'
 ```
 
-#### 3. 6 flows: Verify User, Verify - User (`p1_post_v3_phr_app_login_verify_user`)
+#### 3. Verify User, verify user (`p1_post_v3_phr_app_login_verify_user`)
 
 ```bash
 curl --request POST \
@@ -1312,7 +1312,7 @@ A 200 whose body matches:
 
 **Act: the calls in this journey, in order**
 
-#### 1. PHR Certificate (`p1_get_v3_phr_app_login_public_certificate`)
+#### 1. Get the PHR certificate (`p1_get_v3_phr_app_login_public_certificate`)
 
 ```bash
 curl --request GET \
@@ -1321,7 +1321,7 @@ curl --request GET \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z'
 ```
 
-#### 2. This API is invoked to generate keycloak token/access token. (`gateway_post_gateway_v3_sessions`)
+#### 2. Generate Keycloak token/access token (`gateway_post_gateway_v3_sessions`)
 
 ```bash
 curl --request POST \

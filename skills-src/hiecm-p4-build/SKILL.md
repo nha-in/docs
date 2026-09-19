@@ -18,7 +18,7 @@ Loop limit: 8 passes per step. Hitting the limit is an escalation: state what wa
 
 **Act: the calls in this journey, in order**
 
-#### 1. This API will be invoked to setup health locker for a patient. (`p4_post_subscription_requests_v3_setup_locker`)
+#### 1. Setup health locker for a patient (`p4_post_subscription_requests_v3_setup_locker`)
 
 ```bash
 curl --request POST \
@@ -31,7 +31,7 @@ curl --request POST \
   --header 'X-LOCKER-ID: <X_LOCKER_ID>'
 ```
 
-#### 2. The API provides the list of health locker that the ABHA address is subscribed to. (`p4_get_subscription_requests_v3_patients_lockers`)
+#### 2. Get the subscription requests patients lockers (`p4_get_subscription_requests_v3_patients_lockers`)
 
 ```bash
 curl --request GET \
@@ -43,7 +43,7 @@ curl --request GET \
   --header 'X-AUTH-TOKEN: <TOKEN>'
 ```
 
-#### 3. This API will be invoked to get health locker settings of a patient by locker id. (`p4_get_subscription_requests_v3_patients_lockers_lockerid`)
+#### 3. Get health locker settings of a patient by locker ID (`p4_get_subscription_requests_v3_patients_lockers_lockerid`)
 
 ```bash
 curl --request GET \
@@ -55,7 +55,7 @@ curl --request GET \
   --header 'X-AUTH-TOKEN: <TOKEN>'
 ```
 
-#### 4. This API will be invoked to get all the consent and subscription requests with given filters. (`p4_get_subscription_requests_v3_patients_requests`)
+#### 4. Get all the consent and subscription requests with given filters (`p4_get_subscription_requests_v3_patients_requests`)
 
 ```bash
 curl --request GET \

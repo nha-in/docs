@@ -18,7 +18,7 @@ Loop limit: 8 passes per step. Hitting the limit is an escalation: state what wa
 
 **Act: the calls in this journey, in order**
 
-#### 1. Generate Aadhaar Link (`m4_post_aadhaar_generatelink`)
+#### 1. Generate Aadhaar link (`m4_post_aadhaar_generatelink`)
 
 ```bash
 curl --request POST \
@@ -33,7 +33,7 @@ curl --request POST \
 }'
 ```
 
-#### 2. Is Aadhaar Authenticated (`m4_post_aadhaar_isauthenticated`)
+#### 2. Submit the is Aadhaar authenticated (`m4_post_aadhaar_isauthenticated`)
 
 ```bash
 curl --request POST \
@@ -45,7 +45,7 @@ curl --request POST \
 }'
 ```
 
-#### 3. Verify Otp (`m4_post_v2_registration_aadhaar_verifyotp`)
+#### 3. Verify OTP (`m4_post_v2_registration_aadhaar_verifyotp`)
 
 ```bash
 curl --request POST \
@@ -57,7 +57,7 @@ curl --request POST \
 }'
 ```
 
-#### 4. Demographic Auth Via Mobile (`m4_post_v2_registration_aadhaar_demographicauthviamobile`)
+#### 4. Submit the demographic auth via mobile (`m4_post_v2_registration_aadhaar_demographicauthviamobile`)
 
 ```bash
 curl --request POST \
@@ -70,7 +70,7 @@ curl --request POST \
 }'
 ```
 
-#### 5. Account Exist (`m4_post_v1_registration_aadhaar_checkhpidaccountexist`)
+#### 5. Submit the account exist (`m4_post_v1_registration_aadhaar_checkhpidaccountexist`)
 
 ```bash
 curl --request POST \
@@ -82,7 +82,7 @@ curl --request POST \
 }'
 ```
 
-#### 6. Get Suggesstion (`m4_post_v1_registration_aadhaar_hpid_suggestion`)
+#### 6. Get suggesstion (`m4_post_v1_registration_aadhaar_hpid_suggestion`)
 
 ```bash
 curl --request POST \
@@ -94,7 +94,7 @@ curl --request POST \
 }'
 ```
 
-#### 7. Generate Mobile Otp (`m4_post_v1_registration_aadhaar_generatemobileotp`)
+#### 7. Generate mobile OTP (`m4_post_v1_registration_aadhaar_generatemobileotp`)
 
 ```bash
 curl --request POST \
@@ -107,7 +107,7 @@ curl --request POST \
 }'
 ```
 
-#### 8. Verify Mobile OTP (`m4_post_v1_registration_aadhaar_verifymobileotp`)
+#### 8. Verify mobile OTP (`m4_post_v1_registration_aadhaar_verifymobileotp`)
 
 ```bash
 curl --request POST \
@@ -120,7 +120,7 @@ curl --request POST \
 }'
 ```
 
-#### 9. Create Hpr Id V2 (`m4_post_v2_registration_aadhaar_createhpridwithpreverified`)
+#### 9. Create HPR ID V2 (`m4_post_v2_registration_aadhaar_createhpridwithpreverified`)
 
 ```bash
 curl --request POST \
@@ -157,7 +157,7 @@ A 200 response. The specification gives no body for it, so read what comes back.
 
 **Act: the calls in this journey, in order**
 
-#### 1. Get Filtered Address Post (`m4_post_search_address_filter_deduplicate`)
+#### 1. Get filtered address post (`m4_post_search_address_filter_deduplicate`)
 
 ```bash
 curl --request POST \
@@ -175,7 +175,7 @@ curl --request POST \
 }'
 ```
 
-#### 2. V15Basic Facility Information (`m4_post_v1_5_facility_basic_information`)
+#### 2. Submit the v15Basic facility information (`m4_post_v1_5_facility_basic_information`)
 
 ```bash
 curl --request POST \
@@ -252,7 +252,7 @@ curl --request POST \
 }'
 ```
 
-#### 3. V15Facility Additional Information (`m4_post_v1_5_facility_additional_information`)
+#### 3. Submit the v15Facility additional information (`m4_post_v1_5_facility_additional_information`)
 
 ```bash
 curl --request POST \
@@ -296,7 +296,7 @@ curl --request POST \
 }'
 ```
 
-#### 4. V15Facility Detailed Information (`m4_post_v1_5_facility_detailed_information`)
+#### 4. Submit the v15Facility detailed information (`m4_post_v1_5_facility_detailed_information`)
 
 ```bash
 curl --request POST \
@@ -383,7 +383,7 @@ curl --request POST \
 }'
 ```
 
-#### 5. V15Submit Facility Details (`m4_post_v1_5_facility_submit_facility`)
+#### 5. Submit the v15Submit facility details (`m4_post_v1_5_facility_submit_facility`)
 
 ```bash
 curl --request POST \
@@ -408,7 +408,7 @@ A 200 response. The specification gives no body for it, so read what comes back.
 
 **Act: the calls in this journey, in order**
 
-#### 1. Facility Add And Update (`m4_post_v1_bridges_mutiplehrpaddupdateservices`)
+#### 1. Submit the facility add and update (`m4_post_v1_bridges_mutiplehrpaddupdateservices`)
 
 ```bash
 curl --request POST \
@@ -437,7 +437,7 @@ A 200 response. The specification gives no body for it, so read what comes back.
 
 **Act: the calls in this journey, in order**
 
-#### 1. Get Psu Data (`m4_get_getpsudetailsbyministry`)
+#### 1. Get PSU details by ministry (`m4_get_getpsudetailsbyministry`)
 
 ```bash
 curl --request GET \
@@ -445,7 +445,7 @@ curl --request GET \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>'
 ```
 
-#### 2. Get All Facility Sub Type By Facility Type (`m4_post_v1_5_facility_fetch_facility_sub_type`)
+#### 2. Get all facility sub type by facility type (`m4_post_v1_5_facility_fetch_facility_sub_type`)
 
 ```bash
 curl --request POST \
@@ -457,7 +457,7 @@ curl --request POST \
 }'
 ```
 
-#### 3. Get All Facility Type By Ownership And Sys Of Med (`m4_post_v1_5_facility_fetch_facility_type`)
+#### 3. Get all facility type by ownership and sys of med (`m4_post_v1_5_facility_fetch_facility_type`)
 
 ```bash
 curl --request POST \
@@ -470,7 +470,7 @@ curl --request POST \
 }'
 ```
 
-#### 4. Get Master Data (`m4_get_v1_5_facility_get_master_data`)
+#### 4. Get master data (`m4_get_v1_5_facility_get_master_data`)
 
 ```bash
 curl --request GET \
@@ -478,7 +478,7 @@ curl --request GET \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>'
 ```
 
-#### 5. Get All Master Type (`m4_get_v1_5_facility_get_master_types`)
+#### 5. Get all master types (`m4_get_v1_5_facility_get_master_types`)
 
 ```bash
 curl --request GET \
@@ -486,7 +486,7 @@ curl --request GET \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>'
 ```
 
-#### 6. Get All Sub Types By Owner Ship Type And Sub Type (`m4_post_v1_5_facility_get_owner_subtype`)
+#### 6. Get all sub types by owner ship type and sub type (`m4_post_v1_5_facility_get_owner_subtype`)
 
 ```bash
 curl --request POST \
@@ -499,7 +499,7 @@ curl --request POST \
 }'
 ```
 
-#### 7. Get All Specialities By System Of Medicine Code (`m4_post_v1_5_facility_get_specialities`)
+#### 7. Get all specialities by system of medicine code (`m4_post_v1_5_facility_get_specialities`)
 
 ```bash
 curl --request POST \
@@ -511,7 +511,7 @@ curl --request POST \
 }'
 ```
 
-#### 8. Get All District By State Id (`m4_get_v1_5_facility_lgd_districts`)
+#### 8. Get all district by state ID (`m4_get_v1_5_facility_lgd_districts`)
 
 ```bash
 curl --request GET \
@@ -519,7 +519,7 @@ curl --request GET \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>'
 ```
 
-#### 9. Get All States By LGD (`m4_get_v1_5_facility_lgd_states`)
+#### 9. Get all states by LGD (`m4_get_v1_5_facility_lgd_states`)
 
 ```bash
 curl --request GET \
@@ -527,7 +527,7 @@ curl --request GET \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>'
 ```
 
-#### 10. Get All Sub District By District Code (`m4_get_v1_5_facility_lgd_subdistricts`)
+#### 10. Get all sub district by district code (`m4_get_v1_5_facility_lgd_subdistricts`)
 
 ```bash
 curl --request GET \
@@ -560,7 +560,7 @@ A 200 whose body matches:
 
 **Act: the calls in this journey, in order**
 
-#### 1. Get Facility And Infrastructure Within Radius With Filter (`m4_post_facilitymanagement_v1_5_facility_bygeolocation_se_907b10`)
+#### 1. Get facility and infrastructure within radius with filter (`m4_post_facilitymanagement_v1_5_facility_bygeolocation_se_907b10`)
 
 ```bash
 curl --request POST \
@@ -588,7 +588,7 @@ curl --request POST \
 }'
 ```
 
-#### 2. Search Facility (`m4_post_facilitymanagement_v1_5_facility_search`)
+#### 2. Search facility (`m4_post_facilitymanagement_v1_5_facility_search`)
 
 ```bash
 curl --request POST \
@@ -649,7 +649,7 @@ A 200 whose body matches:
 
 **Act: the calls in this journey, in order**
 
-#### 1. Send Otp To Contact (`m4_post_v1_5_facility_sendotptocontact`)
+#### 1. Send OTP to contact (`m4_post_v1_5_facility_sendotptocontact`)
 
 ```bash
 curl --request POST \
@@ -661,7 +661,7 @@ curl --request POST \
 }'
 ```
 
-#### 2. Validate Otp (`m4_post_v1_5_facility_validateotp`)
+#### 2. Validate OTP (`m4_post_v1_5_facility_validateotp`)
 
 ```bash
 curl --request POST \
@@ -694,7 +694,7 @@ A 200 whose body matches:
 
 **Act: the calls in this journey, in order**
 
-#### 1. Login Via Password (`m4_post_v1_auth_authpassword`)
+#### 1. Login via password (`m4_post_v1_auth_authpassword`)
 
 ```bash
 curl --request POST \
@@ -709,7 +709,7 @@ curl --request POST \
 }'
 ```
 
-#### 2. Get Public Certificate (`m4_get_v1_auth_cert`)
+#### 2. Get public certificate (`m4_get_v1_auth_cert`)
 
 ```bash
 curl --request GET \
@@ -730,7 +730,7 @@ curl --request POST \
 }'
 ```
 
-#### 4. Send Via Aadhaar OTP (`m4_post_v1_auth_init`)
+#### 4. Send via Aadhaar OTP (`m4_post_v1_auth_init`)
 
 ```bash
 curl --request POST \
@@ -745,7 +745,7 @@ curl --request POST \
 }'
 ```
 
-#### 5. Send Verify OTP (`m4_post_v2_auth_loginviamobilesendotp`)
+#### 5. Send verify OTP (`m4_post_v2_auth_loginviamobilesendotp`)
 
 ```bash
 curl --request POST \
@@ -773,7 +773,7 @@ A 200 whose body matches:
 
 **Act: the calls in this journey, in order**
 
-#### 1. Generate Mobile OTP 2 (`m4_post_v1_doctors_generate_mobile_otp`)
+#### 1. Generate mobile OTP 2 (`m4_post_v1_doctors_generate_mobile_otp`)
 
 ```bash
 curl --request POST \
@@ -786,7 +786,7 @@ curl --request POST \
 }'
 ```
 
-#### 2. Send Verification Email (`m4_post_v1_doctors_generate_verification_email`)
+#### 2. Send verification email (`m4_post_v1_doctors_generate_verification_email`)
 
 ```bash
 curl --request POST \
@@ -799,7 +799,7 @@ curl --request POST \
 }'
 ```
 
-#### 3. Regenerate Mobile OTP (`m4_post_v1_doctors_regenerate_mobile_otp`)
+#### 3. Submit the regenerate mobile OTP (`m4_post_v1_doctors_regenerate_mobile_otp`)
 
 ```bash
 curl --request POST \
@@ -812,7 +812,7 @@ curl --request POST \
 }'
 ```
 
-#### 4. Resent Verification Email (`m4_post_v1_doctors_resent_verify_email`)
+#### 4. Resend verification email (`m4_post_v1_doctors_resent_verify_email`)
 
 ```bash
 curl --request POST \
@@ -825,7 +825,7 @@ curl --request POST \
 }'
 ```
 
-#### 5. Verify Email OTP (`m4_post_v1_doctors_verify_email_otp`)
+#### 5. Verify email OTP (`m4_post_v1_doctors_verify_email_otp`)
 
 ```bash
 curl --request POST \
@@ -840,7 +840,7 @@ curl --request POST \
 }'
 ```
 
-#### 6. Verify Mobile Otp (`m4_post_v1_doctors_verify_mobile_otp`)
+#### 6. Verify mobile OTP (`m4_post_v1_doctors_verify_mobile_otp`)
 
 ```bash
 curl --request POST \
@@ -854,7 +854,7 @@ curl --request POST \
 }'
 ```
 
-#### 7. Send Otp If Doctor Verified (`m4_post_v1_sendotpifdoctorverified`)
+#### 7. Send OTP if doctor verified (`m4_post_v1_sendotpifdoctorverified`)
 
 ```bash
 curl --request POST \
@@ -867,7 +867,7 @@ curl --request POST \
 }'
 ```
 
-#### 8. Verify Doctor Verification Otp (`m4_post_v1_verifydoctorverificationotp`)
+#### 8. Verify doctor verification OTP (`m4_post_v1_verifydoctorverificationotp`)
 
 ```bash
 curl --request POST \
@@ -888,7 +888,7 @@ A 200 response. The specification gives no body for it, so read what comes back.
 
 **Act: the calls in this journey, in order**
 
-#### 1. Get Admin Token (`m4_post_getmanagementtoken`)
+#### 1. Get admin token (`m4_post_getmanagementtoken`)
 
 ```bash
 curl --request POST \
@@ -902,7 +902,7 @@ curl --request POST \
 }'
 ```
 
-#### 2. Healdthloginwithmobile (`m4_post_healdthloginwithmobile`)
+#### 2. Submit the healdthloginwithmobile (`m4_post_healdthloginwithmobile`)
 
 ```bash
 curl --request POST \
@@ -916,7 +916,7 @@ curl --request POST \
 }'
 ```
 
-#### 3. Update Role And Category (`m4_post_profile_updaterole`)
+#### 3. Update role and category (`m4_post_profile_updaterole`)
 
 ```bash
 curl --request POST \
@@ -958,7 +958,7 @@ A 200 response. The specification gives no body for it, so read what comes back.
 
 **Act: the calls in this journey, in order**
 
-#### 1. Fetch Hp Id Categories (`m4_get_hpid_get_categories`)
+#### 1. Fetch HPID categories (`m4_get_hpid_get_categories`)
 
 ```bash
 curl --request GET \
@@ -966,7 +966,7 @@ curl --request GET \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>'
 ```
 
-#### 2. Fetch Hp Id Sub Categories From Category (`m4_get_hpid_get_subcategories`)
+#### 2. Fetch HPID sub categories from category (`m4_get_hpid_get_subcategories`)
 
 ```bash
 curl --request GET \
@@ -999,7 +999,7 @@ A 200 whose body matches:
 
 **Act: the calls in this journey, in order**
 
-#### 1. Change Password (`m4_post_password_change_bypassword`)
+#### 1. Change password (`m4_post_password_change_bypassword`)
 
 ```bash
 curl --request POST \
@@ -1012,7 +1012,7 @@ curl --request POST \
 }'
 ```
 
-#### 2. Recover Password Via Aadhaar (`m4_post_password_recover_byaadhaar`)
+#### 2. Recover password via Aadhaar (`m4_post_password_recover_byaadhaar`)
 
 ```bash
 curl --request POST \
@@ -1024,7 +1024,7 @@ curl --request POST \
 }'
 ```
 
-#### 3. Generate Mobile OTP 1 (`m4_post_password_recover_bymobile_sendmobileotp`)
+#### 3. Generate mobile OTP 1 (`m4_post_password_recover_bymobile_sendmobileotp`)
 
 ```bash
 curl --request POST \
@@ -1036,7 +1036,7 @@ curl --request POST \
 }'
 ```
 
-#### 4. Verify Mobile OTP 1 (`m4_post_password_recover_bymobile_verifymobileotp`)
+#### 4. Verify mobile OTP 1 (`m4_post_password_recover_bymobile_verifymobileotp`)
 
 ```bash
 curl --request POST \
@@ -1049,7 +1049,7 @@ curl --request POST \
 }'
 ```
 
-#### 5. Recover Password Confirm By Aadhaar (`m4_post_password_recover_confirmbyaadhaar`)
+#### 5. Recover password confirm by Aadhaar (`m4_post_password_recover_confirmbyaadhaar`)
 
 ```bash
 curl --request POST \
@@ -1062,7 +1062,7 @@ curl --request POST \
 }'
 ```
 
-#### 6. Reset Password And Session (`m4_post_password_reset_password`)
+#### 6. Reset password and session (`m4_post_password_reset_password`)
 
 ```bash
 curl --request POST \
@@ -1076,7 +1076,7 @@ curl --request POST \
 }'
 ```
 
-#### 7. Reset Password (`m4_post_password_resetpassword`)
+#### 7. Reset password (`m4_post_password_resetpassword`)
 
 ```bash
 curl --request POST \
@@ -1089,7 +1089,7 @@ curl --request POST \
 }'
 ```
 
-#### 8. Get Account Png Card (`m4_get_v1_account_getidcard`)
+#### 8. Get account png card (`m4_get_v1_account_getidcard`)
 
 ```bash
 curl --request GET \
@@ -1098,7 +1098,7 @@ curl --request GET \
   --header 'X-Token: <X_TOKEN>'
 ```
 
-#### 9. Get User Profile By Jwt (`m4_get_v1_account_information`)
+#### 9. Get user profile by JWT (`m4_get_v1_account_information`)
 
 ```bash
 curl --request GET \
@@ -1106,7 +1106,7 @@ curl --request GET \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>'
 ```
 
-#### 10. Generate Aadhaar OTPFor Re KYC (`m4_post_v1_account_rekyc_generateaadhaarotp`)
+#### 10. Generate Aadhaar OTPFor re KYC (`m4_post_v1_account_rekyc_generateaadhaarotp`)
 
 ```bash
 curl --request POST \
@@ -1141,7 +1141,7 @@ curl --request POST \
 }'
 ```
 
-#### 12. Verify Aadhaar OTPGet Details (`m4_post_v1_account_rekyc_verifyaadhaarotpgetdetails`)
+#### 12. Verify Aadhaar OTPGet details (`m4_post_v1_account_rekyc_verifyaadhaarotpgetdetails`)
 
 ```bash
 curl --request POST \
@@ -1168,7 +1168,7 @@ curl --request POST \
 }'
 ```
 
-#### 13. Get User Details (`m4_get_v1_account_user_details_hprid`)
+#### 13. Get user details (`m4_get_v1_account_user_details_hprid`)
 
 ```bash
 curl --request GET \
@@ -1192,7 +1192,7 @@ A 200 response. The specification gives no body for it, so read what comes back.
 
 **Act: the calls in this journey, in order**
 
-#### 1. Retrieval Health Id By Aadhaar (`m4_post_v1_forgot_hprid_aadhaar`)
+#### 1. Submit the retrieval health ID by Aadhaar (`m4_post_v1_forgot_hprid_aadhaar`)
 
 ```bash
 curl --request POST \
@@ -1205,7 +1205,7 @@ curl --request POST \
 }'
 ```
 
-#### 2. Retrieval Health Id By Mobile (`m4_post_v1_forgot_hprid_mobile`)
+#### 2. Submit the retrieval health ID by mobile (`m4_post_v1_forgot_hprid_mobile`)
 
 ```bash
 curl --request POST \
@@ -1226,7 +1226,7 @@ curl --request POST \
 }'
 ```
 
-#### 3. Generate Mobile OTP (`m4_post_v1_forgot_hprid_mobile_generateotp`)
+#### 3. Generate mobile OTP (`m4_post_v1_forgot_hprid_mobile_generateotp`)
 
 ```bash
 curl --request POST \
@@ -1254,7 +1254,7 @@ A 200 whose body matches:
 
 **Act: the calls in this journey, in order**
 
-#### 1. Exists By Hpr Id (`m4_get_v1_search_existsbyhprid_hprid`)
+#### 1. Get the exists by HPR ID (`m4_get_v1_search_existsbyhprid_hprid`)
 
 ```bash
 curl --request GET \
@@ -1262,7 +1262,7 @@ curl --request GET \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>'
 ```
 
-#### 2. Search User By Hpr Id (`m4_get_v1_search_searchbyhprid_hprid`)
+#### 2. Search user by HPR ID (`m4_get_v1_search_searchbyhprid_hprid`)
 
 ```bash
 curl --request GET \
@@ -1270,7 +1270,7 @@ curl --request GET \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>'
 ```
 
-#### 3. Search User By Mobile No (`m4_get_v1_search_searchbymobile_mobile`)
+#### 3. Search user by mobile no (`m4_get_v1_search_searchbymobile_mobile`)
 
 ```bash
 curl --request GET \
@@ -1303,7 +1303,7 @@ A 200 whose body matches:
 
 **Act: the calls in this journey, in order**
 
-#### 1. Register Professtional (`m4_post_v1_doctors_register_professional_new`)
+#### 1. Register professional (`m4_post_v1_doctors_register_professional_new`)
 
 ```bash
 curl --request POST \
@@ -1437,7 +1437,7 @@ curl --request POST \
 }'
 ```
 
-#### 2. Update Professtional (`m4_post_v1_doctors_update_professional_new`)
+#### 2. Update professional (`m4_post_v1_doctors_update_professional_new`)
 
 ```bash
 curl --request POST \
@@ -1571,7 +1571,7 @@ curl --request POST \
 }'
 ```
 
-#### 3. Fetch Documents (`m4_post_v1_doctors_fetch_documents_list`)
+#### 3. Fetch documents (`m4_post_v1_doctors_fetch_documents_list`)
 
 ```bash
 curl --request POST \
@@ -1583,7 +1583,7 @@ curl --request POST \
 }'
 ```
 
-#### 4. Upload Documents (`m4_post_v1_uploads_upload_document`)
+#### 4. Upload documents (`m4_post_v1_uploads_upload_document`)
 
 ```bash
 curl --request POST \
@@ -1603,7 +1603,7 @@ curl --request POST \
 }'
 ```
 
-#### 5. Get Professional Info (`m4_post_v1_doctors_fetch_professional_info`)
+#### 5. Get professional info (`m4_post_v1_doctors_fetch_professional_info`)
 
 ```bash
 curl --request POST \
@@ -1679,7 +1679,7 @@ A 200 whose body matches:
 
 **Act: the calls in this journey, in order**
 
-#### 1. Get All Affiliated Board (`m4_get_v1_masters_affiliated_board`)
+#### 1. Get all affiliated board (`m4_get_v1_masters_affiliated_board`)
 
 ```bash
 curl --request GET \
@@ -1687,7 +1687,7 @@ curl --request GET \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>'
 ```
 
-#### 2. Get Affiliated Board By State Id (`m4_get_v1_masters_affiliated_board_states_id`)
+#### 2. Get affiliated board by state ID (`m4_get_v1_masters_affiliated_board_states_id`)
 
 ```bash
 curl --request GET \
@@ -1695,7 +1695,7 @@ curl --request GET \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>'
 ```
 
-#### 3. Get Affiliated Board By Id (`m4_get_v1_masters_affiliated_board_id`)
+#### 3. Get affiliated board by ID (`m4_get_v1_masters_affiliated_board_id`)
 
 ```bash
 curl --request GET \
@@ -1703,7 +1703,7 @@ curl --request GET \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>'
 ```
 
-#### 4. Get College By State (`m4_get_v1_masters_colleges_id`)
+#### 4. Get college by state (`m4_get_v1_masters_colleges_id`)
 
 ```bash
 curl --request GET \
@@ -1711,7 +1711,7 @@ curl --request GET \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>'
 ```
 
-#### 5. Get College By State And Medicine Id (`m4_get_v1_masters_colleges_stateid_medicineid`)
+#### 5. Get college by state and medicine ID (`m4_get_v1_masters_colleges_stateid_medicineid`)
 
 ```bash
 curl --request GET \
@@ -1719,7 +1719,7 @@ curl --request GET \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>'
 ```
 
-#### 6. Get All Countries (`m4_get_v1_masters_countries`)
+#### 6. Get all countries (`m4_get_v1_masters_countries`)
 
 ```bash
 curl --request GET \
@@ -1727,7 +1727,7 @@ curl --request GET \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>'
 ```
 
-#### 7. Get Countries By Id (`m4_get_v1_masters_countries_id`)
+#### 7. Get countries by ID (`m4_get_v1_masters_countries_id`)
 
 ```bash
 curl --request GET \
@@ -1735,7 +1735,7 @@ curl --request GET \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>'
 ```
 
-#### 8. List Courses (`m4_post_v1_masters_courses`)
+#### 8. List courses (`m4_post_v1_masters_courses`)
 
 ```bash
 curl --request POST \
@@ -1749,7 +1749,7 @@ curl --request POST \
 }'
 ```
 
-#### 9. Get All Districts (`m4_get_v1_masters_district`)
+#### 9. Get all districts (`m4_get_v1_masters_district`)
 
 ```bash
 curl --request GET \
@@ -1757,7 +1757,7 @@ curl --request GET \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>'
 ```
 
-#### 10. Get Districts By State (`m4_get_v1_masters_district_id`)
+#### 10. Get districts by state (`m4_get_v1_masters_district_id`)
 
 ```bash
 curl --request GET \
@@ -1765,7 +1765,7 @@ curl --request GET \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>'
 ```
 
-#### 11. List Government Health Programmes (`m4_get_v1_masters_languages`)
+#### 11. List government health programmes (`m4_get_v1_masters_languages`)
 
 ```bash
 curl --request GET \
@@ -1773,7 +1773,7 @@ curl --request GET \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>'
 ```
 
-#### 12. Get Pi Languages By Id (`m4_get_v1_masters_languages_id`)
+#### 12. Get pi languages by ID (`m4_get_v1_masters_languages_id`)
 
 ```bash
 curl --request GET \
@@ -1781,7 +1781,7 @@ curl --request GET \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>'
 ```
 
-#### 13. Get All Medical Council (`m4_get_v1_masters_medical_councils`)
+#### 13. Get all medical council (`m4_get_v1_masters_medical_councils`)
 
 ```bash
 curl --request GET \
@@ -1789,7 +1789,7 @@ curl --request GET \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>'
 ```
 
-#### 14. Get Medical Council By System Of Medicine Name (`m4_get_v1_masters_medical_councils_name`)
+#### 14. Get medical council by system of medicine name (`m4_get_v1_masters_medical_councils_name`)
 
 ```bash
 curl --request GET \
@@ -1797,7 +1797,7 @@ curl --request GET \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>'
 ```
 
-#### 15. Get All Nurse Councils (`m4_get_v1_masters_nurse_councils`)
+#### 15. Get all nurse councils (`m4_get_v1_masters_nurse_councils`)
 
 ```bash
 curl --request GET \
@@ -1805,7 +1805,7 @@ curl --request GET \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>'
 ```
 
-#### 16. Get All States (`m4_get_v1_masters_states`)
+#### 16. Get all states (`m4_get_v1_masters_states`)
 
 ```bash
 curl --request GET \
@@ -1813,7 +1813,7 @@ curl --request GET \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>'
 ```
 
-#### 17. Get Status (`m4_get_v1_masters_states_id`)
+#### 17. Get status (`m4_get_v1_masters_states_id`)
 
 ```bash
 curl --request GET \
@@ -1821,7 +1821,7 @@ curl --request GET \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>'
 ```
 
-#### 18. Get All Sub Districts (`m4_get_v1_masters_sub_districts`)
+#### 18. Get all sub districts (`m4_get_v1_masters_sub_districts`)
 
 ```bash
 curl --request GET \
@@ -1829,7 +1829,7 @@ curl --request GET \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>'
 ```
 
-#### 19. Get All Sub Districts 1 (`m4_get_v1_masters_sub_districts_id`)
+#### 19. Get all sub districts 1 (`m4_get_v1_masters_sub_districts_id`)
 
 ```bash
 curl --request GET \
@@ -1837,7 +1837,7 @@ curl --request GET \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>'
 ```
 
-#### 20. Get All Medical System (`m4_get_v1_masters_system_of_medicines`)
+#### 20. Get all medical system (`m4_get_v1_masters_system_of_medicines`)
 
 ```bash
 curl --request GET \
@@ -1845,7 +1845,7 @@ curl --request GET \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>'
 ```
 
-#### 21. List All University (`m4_get_v1_masters_universites`)
+#### 21. List all university (`m4_get_v1_masters_universites`)
 
 ```bash
 curl --request GET \
@@ -1853,7 +1853,7 @@ curl --request GET \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>'
 ```
 
-#### 22. Get University By College (`m4_get_v1_masters_universites_id`)
+#### 22. Get university by college (`m4_get_v1_masters_universites_id`)
 
 ```bash
 curl --request GET \
@@ -1861,7 +1861,7 @@ curl --request GET \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>'
 ```
 
-#### 23. Get Facilities Created By Hpr Id (`m4_post_getfacilitycreatedbyhprid`)
+#### 23. Get facilities created by HPR ID (`m4_post_getfacilitycreatedbyhprid`)
 
 ```bash
 curl --request POST \
@@ -1874,7 +1874,7 @@ curl --request POST \
 }'
 ```
 
-#### 24. Get Facilities Declared By Hpr Id (`m4_post_getfacilitydeclaredbyhprid`)
+#### 24. Get facilities declared by HPR ID (`m4_post_getfacilitydeclaredbyhprid`)
 
 ```bash
 curl --request POST \
@@ -1887,7 +1887,7 @@ curl --request POST \
 }'
 ```
 
-#### 25. Update Status (`m4_put_hprworkdetails_status`)
+#### 25. Update status (`m4_put_hprworkdetails_status`)
 
 ```bash
 curl --request PUT \
@@ -1903,7 +1903,7 @@ curl --request PUT \
 }'
 ```
 
-#### 26. Link Delink Existing Facility (`m4_post_relinkordelinkprofessionalfromfacility`)
+#### 26. Link delink existing facility (`m4_post_relinkordelinkprofessionalfromfacility`)
 
 ```bash
 curl --request POST \
@@ -1925,7 +1925,7 @@ A 200 response. The specification gives no body for it, so read what comes back.
 
 **Act: the calls in this journey, in order**
 
-#### 1. Fetch Professional Facility (`m4_post_fetchprofessionalfacility`)
+#### 1. Fetch professional facility (`m4_post_fetchprofessionalfacility`)
 
 ```bash
 curl --request POST \
@@ -1939,7 +1939,7 @@ curl --request POST \
 }'
 ```
 
-#### 2. Create Facility Suggestion (`m4_post_hprfacilitysuggestions`)
+#### 2. Create facility suggestion (`m4_post_hprfacilitysuggestions`)
 
 ```bash
 curl --request POST \

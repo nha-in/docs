@@ -14,7 +14,7 @@ Loop limit: 8 passes per step. Hitting the limit is an escalation: state what wa
 
 **Act: the calls in this journey, in order**
 
-#### 1. This API will fetch the service ids registered against a bridge. (`gateway_get_gateway_v3_bridge_services`)
+#### 1. Fetch the service ids registered against a bridge (`gateway_get_gateway_v3_bridge_services`)
 
 ```bash
 curl --request GET \
@@ -25,7 +25,7 @@ curl --request GET \
   --header 'X-CM-ID: sbx'
 ```
 
-#### 2. This API is invoked to fetch the details of a service id. (`gateway_get_gateway_v3_bridge_service_serviceid_service_id`)
+#### 2. Fetch the details of a service ID (`gateway_get_gateway_v3_bridge_service_serviceid_service_id`)
 
 ```bash
 curl --request GET \
@@ -36,7 +36,7 @@ curl --request GET \
   --header 'X-CM-ID: sbx'
 ```
 
-#### 3. This API is invoked to update the bridge URL. (`gateway_patch_gateway_v3_bridge_url`)
+#### 3. Update the bridge URL (`gateway_patch_gateway_v3_bridge_url`)
 
 ```bash
 curl --request PATCH \
@@ -51,7 +51,7 @@ curl --request PATCH \
 }'
 ```
 
-#### 4. v3/gateway/bridge-service (`gateway_put_gateway_v3_bridge_service`)
+#### 4. Update the bridge service (`gateway_put_gateway_v3_bridge_service`)
 
 ```bash
 curl --request PUT \
@@ -75,7 +75,7 @@ curl --request PUT \
 }'
 ```
 
-#### 5. This API is invoked to fetch the list of providers filtered by name. (`gateway_get_gateway_v3_providers`)
+#### 5. Fetch the list of providers filtered by name (`gateway_get_gateway_v3_providers`)
 
 ```bash
 curl --request GET \
@@ -86,7 +86,7 @@ curl --request GET \
   --header 'X-CM-ID: sbx'
 ```
 
-#### 6. This API is invoked to fetch the record for provider details for requested provider id. (`gateway_get_gateway_v3_providers_provider_id`)
+#### 6. Fetch the record for provider details for requested provider ID (`gateway_get_gateway_v3_providers_provider_id`)
 
 ```bash
 curl --request GET \
@@ -97,7 +97,7 @@ curl --request GET \
   --header 'X-CM-ID: sbx'
 ```
 
-#### 7. This API is invoked to fetch the list of govt programs. (`gateway_get_gateway_v3_govt_programs`)
+#### 7. Fetch the list of govt programmes (`gateway_get_gateway_v3_govt_programs`)
 
 ```bash
 curl --request GET \
@@ -108,7 +108,7 @@ curl --request GET \
   --header 'X-CM-ID: sbx'
 ```
 
-#### 8. This API is invoked to fetch the record with health locker enabled provider details. (`gateway_get_gateway_v3_health_lockers`)
+#### 8. Fetch the record with health locker enabled provider details (`gateway_get_gateway_v3_health_lockers`)
 
 ```bash
 curl --request GET \
@@ -152,7 +152,7 @@ A 200 whose body matches:
 
 **Act: the calls in this journey, in order**
 
-#### 1. This API is invoked to generate keycloak token/access token. (`gateway_post_gateway_v3_sessions`)
+#### 1. Generate Keycloak token/access token (`gateway_post_gateway_v3_sessions`)
 
 ```bash
 curl --request POST \
@@ -168,7 +168,7 @@ curl --request POST \
 }'
 ```
 
-#### 2. This API is invoked to get the open id configuration. (`gateway_get_gateway_v3_well_known_openid_configuration`)
+#### 2. Get the open ID configuration (`gateway_get_gateway_v3_well_known_openid_configuration`)
 
 ```bash
 curl --request GET \
@@ -178,7 +178,7 @@ curl --request GET \
   --header 'X-CM-ID: sbx'
 ```
 
-#### 3. This API is invoked to get the certificate information. (`gateway_get_gateway_v3_certs`)
+#### 3. Get the certificate information (`gateway_get_gateway_v3_certs`)
 
 ```bash
 curl --request GET \

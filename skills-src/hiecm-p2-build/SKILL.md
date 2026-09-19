@@ -18,7 +18,7 @@ Loop limit: 8 passes per step. Hitting the limit is an escalation: state what wa
 
 **Act: the calls in this journey, in order**
 
-#### 1. 4 flows: Send Otp - Update Email, Send Otp - Update Mobile, Send ABHA Otp - Link-DeLink, Send AADHAAR Otp - Link-DeLink (`p2_post_v3_phr_app_login_profile_request_otp`)
+#### 1. Request profile OTP (`p2_post_v3_phr_app_login_profile_request_otp`)
 
 ```bash
 curl --request POST \
@@ -38,7 +38,7 @@ curl --request POST \
 }'
 ```
 
-#### 2. 5 flows: Verify Otp - Update Email, Verify Otp - Update Mobile, Verify Password - Update Password, Verify ABHA Otp - Link-DeLink, Verify AADHAAR Otp - Link-DeLink (`p2_post_v3_phr_app_login_profile_verify`)
+#### 2. Login profile verify (`p2_post_v3_phr_app_login_profile_verify`)
 
 ```bash
 curl --request POST \
@@ -81,7 +81,7 @@ A 200 whose body matches:
 
 **Act: the calls in this journey, in order**
 
-#### 1. 4 flows: Send Otp - Update Email, Send Otp - Update Mobile, Send ABHA Otp - Link-DeLink, Send AADHAAR Otp - Link-DeLink (`p2_post_v3_phr_app_login_profile_request_otp`)
+#### 1. Request profile OTP (`p2_post_v3_phr_app_login_profile_request_otp`)
 
 ```bash
 curl --request POST \
@@ -101,7 +101,7 @@ curl --request POST \
 }'
 ```
 
-#### 2. 5 flows: Verify Otp - Update Email, Verify Otp - Update Mobile, Verify Password - Update Password, Verify ABHA Otp - Link-DeLink, Verify AADHAAR Otp - Link-DeLink (`p2_post_v3_phr_app_login_profile_verify`)
+#### 2. Login profile verify (`p2_post_v3_phr_app_login_profile_verify`)
 
 ```bash
 curl --request POST \
@@ -144,7 +144,7 @@ A 200 whose body matches:
 
 **Act: the calls in this journey, in order**
 
-#### 1. 5 flows: Verify Otp - Update Email, Verify Otp - Update Mobile, Verify Password - Update Password, Verify ABHA Otp - Link-DeLink, Verify AADHAAR Otp - Link-DeLink (`p2_post_v3_phr_app_login_profile_verify`)
+#### 1. Login profile verify (`p2_post_v3_phr_app_login_profile_verify`)
 
 ```bash
 curl --request POST \
@@ -187,7 +187,7 @@ A 200 whose body matches:
 
 **Act: the calls in this journey, in order**
 
-#### 1. 4 flows: Send Otp - Update Email, Send Otp - Update Mobile, Send ABHA Otp - Link-DeLink, Send AADHAAR Otp - Link-DeLink (`p2_post_v3_phr_app_login_profile_request_otp`)
+#### 1. Request profile OTP (`p2_post_v3_phr_app_login_profile_request_otp`)
 
 ```bash
 curl --request POST \
@@ -207,7 +207,7 @@ curl --request POST \
 }'
 ```
 
-#### 2. 5 flows: Verify Otp - Update Email, Verify Otp - Update Mobile, Verify Password - Update Password, Verify ABHA Otp - Link-DeLink, Verify AADHAAR Otp - Link-DeLink (`p2_post_v3_phr_app_login_profile_verify`)
+#### 2. Login profile verify (`p2_post_v3_phr_app_login_profile_verify`)
 
 ```bash
 curl --request POST \
@@ -233,7 +233,7 @@ curl --request POST \
 }'
 ```
 
-#### 3. 2 flows: Link Request (`p2_post_v3_phr_app_login_profile_link`)
+#### 3. Link request (`p2_post_v3_phr_app_login_profile_link`)
 
 ```bash
 curl --request POST \
@@ -263,7 +263,7 @@ A 200 whose body matches:
 
 **Act: the calls in this journey, in order**
 
-#### 1. 4 flows: Send Otp - Update Email, Send Otp - Update Mobile, Send ABHA Otp - Link-DeLink, Send AADHAAR Otp - Link-DeLink (`p2_post_v3_phr_app_login_profile_request_otp`)
+#### 1. Request profile OTP (`p2_post_v3_phr_app_login_profile_request_otp`)
 
 ```bash
 curl --request POST \
@@ -283,7 +283,7 @@ curl --request POST \
 }'
 ```
 
-#### 2. 5 flows: Verify Otp - Update Email, Verify Otp - Update Mobile, Verify Password - Update Password, Verify ABHA Otp - Link-DeLink, Verify AADHAAR Otp - Link-DeLink (`p2_post_v3_phr_app_login_profile_verify`)
+#### 2. Login profile verify (`p2_post_v3_phr_app_login_profile_verify`)
 
 ```bash
 curl --request POST \
@@ -309,7 +309,7 @@ curl --request POST \
 }'
 ```
 
-#### 3. 2 flows: Link Request (`p2_post_v3_phr_app_login_profile_link`)
+#### 3. Link request (`p2_post_v3_phr_app_login_profile_link`)
 
 ```bash
 curl --request POST \
@@ -339,7 +339,7 @@ A 200 whose body matches:
 
 **Act: the calls in this journey, in order**
 
-#### 1. Switch Profile (`p2_get_v3_phr_app_login_profile_switch_profile`)
+#### 1. Switch profile (`p2_get_v3_phr_app_login_profile_switch_profile`)
 
 ```bash
 curl --request GET \
@@ -349,7 +349,7 @@ curl --request GET \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z'
 ```
 
-#### 2. Verify User Switch Profile (`p2_post_v3_phr_app_login_profile_verify_switch_profile_user`)
+#### 2. Verify user switch profile (`p2_post_v3_phr_app_login_profile_verify_switch_profile_user`)
 
 ```bash
 curl --request POST \
@@ -381,7 +381,7 @@ A 200 whose body matches:
 
 **Act: the calls in this journey, in order**
 
-#### 1. Get Profile (`p2_get_v3_phr_app_login_profile`)
+#### 1. Get profile (`p2_get_v3_phr_app_login_profile`)
 
 ```bash
 curl --request GET \
@@ -391,7 +391,7 @@ curl --request GET \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z'
 ```
 
-#### 2. Get QR Code (`p2_get_v3_phr_app_login_profile_qrcode`)
+#### 2. Get QR code (`p2_get_v3_phr_app_login_profile_qrcode`)
 
 ```bash
 curl --request GET \
@@ -401,7 +401,7 @@ curl --request GET \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z'
 ```
 
-#### 3. Get PHR Card (`p2_get_v3_phr_app_login_profile_phrcard`)
+#### 3. Get PHR card (`p2_get_v3_phr_app_login_profile_phrcard`)
 
 ```bash
 curl --request GET \
@@ -411,7 +411,7 @@ curl --request GET \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z'
 ```
 
-#### 4. Update Profile (`p2_post_v3_phr_app_login_profile_updateprofile`)
+#### 4. Update profile (`p2_post_v3_phr_app_login_profile_updateprofile`)
 
 ```bash
 curl --request POST \
@@ -440,7 +440,7 @@ curl --request POST \
 }'
 ```
 
-#### 5. Refresh Token (`p2_get_v3_phr_app_login_profile_request_token`)
+#### 5. Refresh token (`p2_get_v3_phr_app_login_profile_request_token`)
 
 ```bash
 curl --request GET \
@@ -475,7 +475,7 @@ A 200 whose body matches:
 
 **Act: the calls in this journey, in order**
 
-#### 1. This API will be invoked from the PHR-HIU application for sharing the patient/user profile with the HMIS/LIMS. (`p2_post_patient_share_v3_share`)
+#### 1. Share patient share (`p2_post_patient_share_v3_share`)
 
 ```bash
 curl --request POST \
@@ -517,11 +517,11 @@ curl --request POST \
 }'
 ```
 
-#### 2. This API will be invoked to the HIU for sharing the response of HIECM's /api/hiecm/patient-share/v3/on-share API (`p2_post_v3_hiu_patient_on_share`)
+#### 2. Receive the HIU patient on share (`p2_post_v3_hiu_patient_on_share`)
 
 Inbound to your bridge at `/api/v3/hiu/patient/on-share`. Acknowledge it and continue.
 
-#### 3. This API will be invoked to get the historical token numbers of the patient (`p2_get_patient_share_v3_profile_gettokendetails`)
+#### 3. Get the historical token numbers of the patient (`p2_get_patient_share_v3_profile_gettokendetails`)
 
 ```bash
 curl --request GET \
@@ -545,7 +545,7 @@ A 200 whose body matches:
 
 **Act: the calls in this journey, in order**
 
-#### 1. This API is invoked to fetch the list of providers filtered by name. (`gateway_get_gateway_v3_providers`)
+#### 1. Fetch the list of providers filtered by name (`gateway_get_gateway_v3_providers`)
 
 ```bash
 curl --request GET \
@@ -556,7 +556,7 @@ curl --request GET \
   --header 'X-CM-ID: sbx'
 ```
 
-#### 2. This API is invoked to fetch the record for provider details for requested provider id. (`gateway_get_gateway_v3_providers_provider_id`)
+#### 2. Fetch the record for provider details for requested provider ID (`gateway_get_gateway_v3_providers_provider_id`)
 
 ```bash
 curl --request GET \
@@ -567,7 +567,7 @@ curl --request GET \
   --header 'X-CM-ID: sbx'
 ```
 
-#### 3. This API will be invoked by the patient/user from PHR application to discover his/her health records. (`p2_post_user_initiated_linking_v3_patient_care_context_discover`)
+#### 3. Discover his/her health records (`p2_post_user_initiated_linking_v3_patient_care_context_discover`)
 
 ```bash
 curl --request POST \
@@ -592,11 +592,11 @@ curl --request POST \
 }'
 ```
 
-#### 4. This API endpoint is used by healthcare information users (HIUs) to receive the discovered care contexts of a patient. It provides detailed information about the patient’s care contexts, including any errors encountered during the discovery process. (`p2_post_v3_hiu_patient_care_context_on_discover`)
+#### 4. Receive the discovered care contexts of a patient (`p2_post_v3_hiu_patient_care_context_on_discover`)
 
 Inbound to your bridge at `/api/v3/hiu/patient/care-context/on-discover`. Acknowledge it and continue.
 
-#### 5. This API will be invoked by the patient/user to link his/her health records. (`p2_post_user_initiated_linking_v3_link_care_context_init`)
+#### 5. Link his/her health records (`p2_post_user_initiated_linking_v3_link_care_context_init`)
 
 ```bash
 curl --request POST \
@@ -627,11 +627,11 @@ curl --request POST \
 }'
 ```
 
-#### 6. This API endpoint is used by healthcare information users (HIUs) to receive the initial linking of care contexts for a patient. It provides detailed information about the linking process, including authentication details and any errors encountered. (`p2_post_v3_hiu_patient_care_context_on_init`)
+#### 6. Receive the initial linking of care contexts for a patient (`p2_post_v3_hiu_patient_care_context_on_init`)
 
 Inbound to your bridge at `/api/v3/hiu/patient/care-context/on-init`. Acknowledge it and continue.
 
-#### 7. This API will be invoked by the patient/user to confirm his/her health records. (`p2_post_user_initiated_linking_v3_link_care_context_confirm`)
+#### 7. Confirm his/her health records (`p2_post_user_initiated_linking_v3_link_care_context_confirm`)
 
 ```bash
 curl --request POST \
@@ -649,7 +649,7 @@ curl --request POST \
 }'
 ```
 
-#### 8. This API endpoint is used by healthcare information users (HIUs) to receive confirmation of the linked care contexts for a patient. It provides detailed information about the patient’s care contexts, including any errors encountered during the confirmation process. (`p2_post_v3_hiu_patient_care_context_on_confirm`)
+#### 8. Receive confirmation of the linked care contexts for a patient (`p2_post_v3_hiu_patient_care_context_on_confirm`)
 
 Inbound to your bridge at `/api/v3/hiu/patient/care-context/on-confirm`. Acknowledge it and continue.
 
@@ -661,7 +661,7 @@ A 200 response. The specification gives no body for it, so read what comes back.
 
 **Act: the calls in this journey, in order**
 
-#### 1. This is the PHR  APP API, this api will used to fetch all link care-context for a patient.  (`p2_get_hip_v3_link_patient_links`)
+#### 1. Link patient links  (`p2_get_hip_v3_link_patient_links`)
 
 ```bash
 curl --request GET \
@@ -673,7 +673,7 @@ curl --request GET \
   --header 'X-AUTH-TOKEN: <X_AUTH_TOKEN>'
 ```
 
-#### 2. This is ABDM HIE-CM API called by HIU to initiate the consent request (`m3_post_consent_v3_request_init`)
+#### 2. Initiate the consent request (`m3_post_consent_v3_request_init`)
 
 ```bash
 curl --request POST \
@@ -737,7 +737,7 @@ curl --request POST \
 }'
 ```
 
-#### 3. This is ABDM HIE-CM API used by HIU to get consent request status (`m3_post_consent_v3_request_status`)
+#### 3. Get consent request status (`m3_post_consent_v3_request_status`)
 
 ```bash
 curl --request POST \
@@ -753,7 +753,7 @@ curl --request POST \
 }'
 ```
 
-#### 4. This is ABDM HIE-CM API called by HIP to acknowledge the notification sent when a consent request is approved/revoked/expired by the patient. (`m2_post_consent_v3_request_hip_on_notify`)
+#### 4. Acknowledge the consent notification (`m2_post_consent_v3_request_hip_on_notify`)
 
 ```bash
 curl --request POST \
@@ -778,7 +778,7 @@ curl --request POST \
 }'
 ```
 
-#### 5. This is ABDM HIE-CM API called by HIU to acknowledge the notification sent when a consent request is approved/denied/revoked/expired by the patient. (`m3_post_consent_v3_request_hiu_on_notify`)
+#### 5. Acknowledge the consent notification (`m3_post_consent_v3_request_hiu_on_notify`)
 
 ```bash
 curl --request POST \
@@ -805,7 +805,7 @@ curl --request POST \
 }'
 ```
 
-#### 6. This is ABDM HIE-CM API called by HIU to fetch the consent details (`m3_post_consent_v3_fetch`)
+#### 6. Fetch the consent details (`m3_post_consent_v3_fetch`)
 
 ```bash
 curl --request POST \
@@ -829,7 +829,7 @@ A 202 response. The specification gives no body for it, so read what comes back.
 
 **Act: the calls in this journey, in order**
 
-#### 1. This is ABDM HIE-CM API called to setup an auto-approval policy for given HIU. (`p2_post_consent_v3_auto_approve`)
+#### 1. Setup an auto-approval policy for given HIU (`p2_post_consent_v3_auto_approve`)
 
 ```bash
 curl --request POST \
@@ -892,7 +892,7 @@ curl --request POST \
 }'
 ```
 
-#### 2. This is ABDM HIE-CM API called to disable the auto-approval policy. (`p2_post_consent_v3_auto_approve_auto_approval_id_disable`)
+#### 2. Disable the auto-approval policy (`p2_post_consent_v3_auto_approve_auto_approval_id_disable`)
 
 ```bash
 curl --request POST \
@@ -904,7 +904,7 @@ curl --request POST \
   --header 'X-AUTH-TOKEN: <TOKEN>'
 ```
 
-#### 3. This is ABDM HIE-CM API called to enable the auto-approval policy. (`p2_post_consent_v3_auto_approve_auto_approval_id_enable`)
+#### 3. Enable the auto-approval policy (`p2_post_consent_v3_auto_approve_auto_approval_id_enable`)
 
 ```bash
 curl --request POST \
@@ -916,7 +916,7 @@ curl --request POST \
   --header 'X-AUTH-TOKEN: <TOKEN>'
 ```
 
-#### 4. This is ABDM HIE-CM API called to fetch all the consent request details of a patient. (`p2_get_consent_v3_request`)
+#### 4. Fetch all the consent request details of a patient (`p2_get_consent_v3_request`)
 
 ```bash
 curl --request GET \
@@ -928,7 +928,7 @@ curl --request GET \
   --header 'X-AUTH-TOKEN: <TOKEN>'
 ```
 
-#### 5. This is ABDM HIE-CM API called to get the consent request details by request id. (`p2_get_consent_v3_request_request_id`)
+#### 5. Get the consent request details by REQUEST-ID (`p2_get_consent_v3_request_request_id`)
 
 ```bash
 curl --request GET \
@@ -940,7 +940,7 @@ curl --request GET \
   --header 'X-AUTH-TOKEN: <TOKEN>'
 ```
 
-#### 6. This is ABDM HIE-CM API called by patients to approve the consent request raised by HIU from PHR/mobile application. (`p2_post_consent_v3_request_request_id_approve`)
+#### 6. Approve the consent request raised by HIU from PHR/mobile application (`p2_post_consent_v3_request_request_id_approve`)
 
 ```bash
 curl --request POST \
@@ -986,7 +986,7 @@ curl --request POST \
 }'
 ```
 
-#### 7. This is ABDM HIE-CM API called by patients to deny the consent request raised by HIU from PHR/mobile application. (`p2_post_consent_v3_request_request_id_deny`)
+#### 7. Deny the consent request raised by HIU from PHR/mobile application (`p2_post_consent_v3_request_request_id_deny`)
 
 ```bash
 curl --request POST \
@@ -1002,7 +1002,7 @@ curl --request POST \
 }'
 ```
 
-#### 8. This is ABDM HIE-CM API called by patients to revoke the granted consent from PHR/mobile application. (`p2_post_consent_v3_revoke`)
+#### 8. Revoke the granted consent from PHR/mobile application (`p2_post_consent_v3_revoke`)
 
 ```bash
 curl --request POST \
@@ -1020,7 +1020,7 @@ curl --request POST \
 }'
 ```
 
-#### 9. This is ABDM HIE-CM API called to fetch all the consent artefact details associated with a consent request request-id. (`p2_get_consent_v3_artefact_request_request_id`)
+#### 9. Request artefact by REQUEST-ID (`p2_get_consent_v3_artefact_request_request_id`)
 
 ```bash
 curl --request GET \
@@ -1032,7 +1032,7 @@ curl --request GET \
   --header 'X-AUTH-TOKEN: <TOKEN>'
 ```
 
-#### 10. This is ABDM HIE-CM API called to fetch the consent artefact details associated with the artefact-id. (`p2_get_consent_v3_artefact_artefact_id`)
+#### 10. Fetch the consent artefact details associated with the artefact-ID (`p2_get_consent_v3_artefact_artefact_id`)
 
 ```bash
 curl --request GET \
@@ -1044,7 +1044,7 @@ curl --request GET \
   --header 'X-AUTH-TOKEN: <TOKEN>'
 ```
 
-#### 11. This is ABDM HIE-CM API called to fetch all the consent artefact details of a patient. (`p2_get_consent_v3_artefact`)
+#### 11. Fetch all the consent artefact details of a patient (`p2_get_consent_v3_artefact`)
 
 ```bash
 curl --request GET \
