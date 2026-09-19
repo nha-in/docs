@@ -13,13 +13,16 @@
  * ciphertext goes on the wire, which is the whole point of encrypting it.
  */
 
-export type Padding = 'oaep-sha1' | 'pkcs1v15';
+export type Padding = 'oaep-sha1' | 'oaep-sha256' | 'pkcs1v15';
 
 /** Map NHA's `encryptionAlgorithm` string to the padding this module speaks. */
 export function paddingFromAlgorithm(algorithm: string | undefined): Padding {
   if (!algorithm) return 'oaep-sha1';
   const a = algorithm.toUpperCase();
-  if (a.includes('OAEP')) return 'oaep-sha1';
+  // An OAEP transformation names its digest, so the digest is read before the
+  // generic OAEP case can claim it. Reading OAEP alone silently turns a
+  // SHA-256 certificate into SHA-1 ciphertext that the server then refuses.
+  if (a.includes('OAEP')) return /SHA-?256/.test(a) ? 'oaep-sha256' : 'oaep-sha1';
   if (a.includes('PKCS1')) return 'pkcs1v15';
   return 'oaep-sha1';
 }
@@ -80,12 +83,16 @@ function modPow(base: bigint, exp: bigint, mod: bigint): bigint {
   return result;
 }
 
-/** OAEP with SHA-1 via WebCrypto, which the browser implements natively. */
-async function encryptOaepSha1(der: Uint8Array, plaintext: string): Promise<string> {
+/** OAEP via WebCrypto, which the browser implements natively for both digests. */
+async function encryptOaep(
+  der: Uint8Array,
+  plaintext: string,
+  hash: 'SHA-1' | 'SHA-256',
+): Promise<string> {
   const key = await crypto.subtle.importKey(
     'spki',
     buf(der),
-    {name: 'RSA-OAEP', hash: 'SHA-1'},
+    {name: 'RSA-OAEP', hash},
     false,
     ['encrypt'],
   );
@@ -150,7 +157,6 @@ export async function encryptValue(
   plaintext: string,
 ): Promise<string> {
   const der = derFromKey(key);
-  return padding === 'pkcs1v15'
-    ? encryptPkcs1v15(der, plaintext)
-    : encryptOaepSha1(der, plaintext);
+  if (padding === 'pkcs1v15') return encryptPkcs1v15(der, plaintext);
+  return encryptOaep(der, plaintext, padding === 'oaep-sha256' ? 'SHA-256' : 'SHA-1');
 }
