@@ -2,24 +2,16 @@
 
 P1 is the patient side of [M1 Create](/docs/pr-14/docs/hiecm/v3/milestones/m1). M1 is how a hospital system creates an [ABHA](/docs/pr-14/docs/hiecm/v3/getting-started/glossary#abha). P1 is how the patient's own [PHR](/docs/pr-14/docs/hiecm/v3/getting-started/glossary#phr) app does it, and how it maintains the account afterwards.
 
-[Try the P1 APIs](/docs/pr-14/docs/hiecm/v3/api/p1)
-
-[Every call in P1, one page each: the headers it needs, the payload it takes, the callback it triggers, and a request builder you can fire at the sandbox.](/docs/pr-14/docs/hiecm/v3/api/p1)
-
-[Error codes](/docs/pr-14/docs/hiecm/v3/api/p1/errors)
-
-[What each code P1 returns actually means, and the first thing to check when you see one.](/docs/pr-14/docs/hiecm/v3/api/p1/errors)
-
 ## In short
 
 - Every user needs an ABHA address, `username@abdm`. Consent, notifications and record sharing all hang off it.
 - Build both creation paths: by mobile number, and by an existing 14 digit ABHA number.
-- All four login routes are mandatory.
+- All eight login routes are mandatory.
 - A user can hold several ABHA addresses but only one ABHA number.
 
 ## What you build
 
-Registration and login, the profile the patient reads and edits, family members they manage on one account, and DigiLocker documents they pull in.
+Registration and login, and the profile the patient reads and edits.
 
 ## Creating an ABHA address
 
@@ -28,7 +20,7 @@ flowchart TD
     A["User picks a path"] --> B{"Mobile number, or 14 digit ABHA number?"}
     B -- "Mobile number" --> C["Verify by mobile OTP"]
     C --> D["User types first name, year of birth, gender, address, state, district, pin code"]
-    B -- "ABHA number" --> E["Verify by Aadhaar OTP or mobile OTP"]
+    B -- "ABHA number" --> E["Verify by Aadhaar OTP or ABHA OTP"]
     E --> F["Profile details come back from the ABHA system"]
     D --> G["Show the ABHA addresses already linked to this mobile or number"]
     F --> G
@@ -42,24 +34,21 @@ A person does not need an [ABHA number](/docs/pr-14/docs/hiecm/v3/getting-starte
 | Path                 | Validated by                                                         | Profile details             | Result                                                                          |
 | -------------------- | -------------------------------------------------------------------- | --------------------------- | ------------------------------------------------------------------------------- |
 | Mobile number        | Mobile [OTP](/docs/pr-14/docs/hiecm/v3/getting-started/glossary#otp) | The user types them         | Self-Declared, no [KYC](/docs/pr-14/docs/hiecm/v3/getting-started/glossary#kyc) |
-| 14 digit ABHA number | Aadhaar OTP or mobile OTP                                            | Returned by the ABHA system | KYC Verified                                                                    |
-
-On the mobile number path, first name, year of birth, gender, address, state, district and pin code are mandatory. Middle name, last name, day and month of birth are optional.
+| 14 digit ABHA number | Aadhaar OTP or ABHA OTP                                              | Returned by the ABHA system | KYC Verified                                                                    |
 
 After validation on either path, show the ABHA addresses already linked to that mobile number or ABHA number. The user then picks one instead of creating a duplicate.
 
-A Self-Declared profile needs a "Link ABHA number" action. The user enters the 14 digit number and validates by Aadhaar OTP or mobile OTP. Profile details then follow the ABHA number, and the status changes to KYC Verified.
+A Self-Declared profile needs a "Link ABHA number" action. The user enters the 14 digit number and validates by Aadhaar OTP or ABHA OTP. Profile details then follow the ABHA number, and the status changes to KYC Verified.
 
 ## Login
 
-Sign a user in to a PHR application by any of four routes, all of them mandatory.
+Sign a user in to a PHR application by any of these routes, all of them mandatory.
 
-| Route                              | Validated by                                                            |
-| ---------------------------------- | ----------------------------------------------------------------------- |
-| Mobile number                      | Mobile OTP, then the user picks which linked ABHA address to sign in as |
-| An address such as `name@abdm`     | Password, mobile OTP or Aadhaar OTP, by auth mode                       |
-| The default `14digit@abdm` address | Mobile OTP or Aadhaar OTP                                               |
-| The 14 digit ABHA number           | Mobile OTP or Aadhaar OTP                                               |
+| Route                          | Validated by                                                                |
+| ------------------------------ | --------------------------------------------------------------------------- |
+| Mobile number                  | Mobile OTP, then the user picks which linked ABHA address to sign in as     |
+| An address such as `name@abdm` | Password, mobile OTP or email OTP, by the auth methods the address supports |
+| The 14 digit ABHA number       | ABHA OTP or Aadhaar OTP                                                     |
 
 Resend OTP unlocks after 60 seconds in every flow. You also need a reset password screen behind login, secure storage of the refresh token, and more than one user profile per install with sign in and sign out.
 
@@ -75,5 +64,5 @@ Resend OTP unlocks after 60 seconds in every flow. You also need a reset passwor
 
 ## Next
 
-- The calls and base URLs: [P1 API reference](/docs/pr-14/docs/hiecm/v3/api/p1).
+- The calls and base URLs: [P1 API reference](/docs/pr-14/reference/hiecm-p1).
 - The next milestone: [P2 Linking and records](/docs/pr-14/docs/hiecm/v3/milestones/p2).

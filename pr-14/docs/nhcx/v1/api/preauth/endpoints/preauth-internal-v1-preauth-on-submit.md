@@ -1,4 +1,4 @@
-# Pre-authorisation callback (internal) (adapter)
+# Submit the pre-authorisation callback (internal) (adapter)
 
 `POST /internal/v1/preauth/on_submit`
 

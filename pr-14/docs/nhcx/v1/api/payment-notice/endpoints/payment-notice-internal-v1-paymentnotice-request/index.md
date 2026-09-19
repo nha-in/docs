@@ -1,4 +1,4 @@
-# Payment notice request (internal) (adapter)
+# Submit the payment notice request (internal) (adapter)
 
 `POST /internal/v1/paymentnotice/request`
 

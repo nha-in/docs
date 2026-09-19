@@ -1,4 +1,4 @@
-# Participant certificate and bridge update (v2)
+# Submit the participant certificate and bridge update (v2)
 
 `POST /v2/participant/update`
 
@@ -10,7 +10,7 @@ Exactly two operational values rotate over a participant's life: the public encr
 
 ### When to use
 
-Use it immediately after creation confirmation (/validate) to upload encryptioncert and endpointurl, and again whenever either value changes; always follow with GET /update/validate within 24 hours. The production URL is https://apisprod.nha.gov.in/pmjay/hcx/participanthcxservice/v2/participant/update. If only the certificate changes and passcode validation is not wanted, /v2/update/cert is the documented alternative. This is a synchronous JSON registry call with no workflow or x-hcx-status codes.
+Use it immediately after creation confirmation (/validate) to upload encryptioncert and endpointurl, and again whenever either value changes; always follow with GET /update/validate within 24 hours. The production URL is https://apisprod.NHA.gov.in/pmjay/hcx/participanthcxservice/v2/participant/update. If only the certificate changes and passcode validation is not wanted, /v2/update/cert is the documented alternative. This is a synchronous JSON registry call with no workflow or x-hcx-status codes.
 
 ### Preconditions
 
@@ -28,10 +28,10 @@ HTTP 200 with ParticipantCertUpdateResp: participant_code, status and transactio
 
 - Calling it before creation has been confirmed with /validate; the validations require a confirmed participant code.
 - Sending the raw PEM instead of the Base64-encoded certificate.
-- Using v1 field names (participant_code, encryption_cert, endpoint_url) in this flattened lowercase body.
+- Using v1 field names (participant_code, encryption_cert, endpoint_URL) in this flattened lowercase body.
 - Treating the 200 as completion and skipping /update/validate, so the old certificate stays live.
-- Re-triggering the update while a passcode is pending, invalidating the earlier transaction id.
-- Losing the transaction id, which forces the update to be issued again.
+- Re-triggering the update while a passcode is pending, invalidating the earlier transaction ID.
+- Losing the transaction ID, which forces the update to be issued again.
 
 ### Best practices
 

@@ -1,4 +1,4 @@
-# Pre-authorisation callback
+# Submit the pre-authorisation callback
 
 `POST /v1/preauth/on_submit`
 
@@ -10,13 +10,13 @@ This callback carries the payer's decision on a preauth. For the hospital it is 
 
 ### When to use
 
-Called by the payer or its TPA after adjudicating a /v1/preauth/submit message, using the same correlation ID. The x-hcx-workflow_id identifies the outcome: 20 received, 21 approved, 23 rejected, 24 queried, 22 enhancement approved, 241 enhancement queried, 231 enhancement denied, 261, 262 and 263 for discharge. The NHA status sheet frames approvals and rejections as response.complete and queries (24, 241) as request.initiated because the payer is authoring a new request to the provider. ClaimResponse.outcome is complete for approved and rejected, partial for partially approved and queried; adjudication[0].reason.coding.code (approved, queried, cancelled) is the real discriminator.
+Called by the payer or its TPA after adjudicating a /v1/preauth/submit message, using the same correlation ID. The x-hcx-workflow_ID identifies the outcome: 20 received, 21 approved, 23 rejected, 24 queried, 22 enhancement approved, 241 enhancement queried, 231 enhancement denied, 261, 262 and 263 for discharge. The NHA status sheet frames approvals and rejections as response.complete and queries (24, 241) as request.initiated because the payer is authoring a new request to the provider. ClaimResponse.outcome is complete for approved and rejected, partial for partially approved and queried; adjudication[0].reason.coding.code (approved, queried, cancelled) is the real discriminator.
 
 ### Preconditions
 
 - A preauth request with this correlation ID exists in NHCX and has not been deleted after failed deliveries (NHCX-1010 otherwise).
 - The payer holds a valid Bearer token and the provider's certificate, and encrypts the ClaimResponseBundle for the provider.
-- x-hcx-correlation_id is echoed from the request; x-hcx-api_call_id is new; sender and recipient codes are swapped.
+- x-hcx-correlation_ID is echoed from the request; x-hcx-API_call_ID is new; sender and recipient codes are swapped.
 - x-hcx-status is response.complete, response.partial or response.error; on error the body is a ProtocolResponse with x-hcx-error_details mandatory.
 - preAuthRef is populated on approval and partial approval; processNote explains any reduction; clinical or business error detail stays inside the encrypted resource.
 
@@ -27,7 +27,7 @@ HTTP 202 Accepted with the StatusSuccessResponse acknowledgement (entity_type pr
 ### Common mistakes
 
 - Provider side: branching on outcome alone; complete plus reason cancelled is a rejection, complete plus approved is an approval.
-- Provider side: treating the pipe-delimited query audit trail (USER~datetime~type~comment~trust) as a FHIR coding and failing to parse it.
+- Provider side: treating the pipe-delimited query audit trail (USER~datetime~type~comment~trust) as an FHIR coding and failing to parse it.
 - Provider side: returning 200 or a bare body instead of the 202 acceptance shape, which triggers retries and eventual deletion.
 - Payer side: minting a new correlation ID, or sending a JWEPayloadResponse where a ProtocolResponse is expected (PAYR-1517).
 - Payer side: using the superseded status spelling; the sources show both response.fail and response.error for failures, and the technical specification vocabulary is response.error.
@@ -36,7 +36,7 @@ HTTP 202 Accepted with the StatusSuccessResponse acknowledgement (entity_type pr
 ### Best practices
 
 - Provider: acknowledge first, adjudicate later; queue the decrypt and state change and be idempotent on correlation ID.
-- Provider: branch on x-hcx-workflow_id, ClaimResponse.outcome and adjudication[0].reason.coding.code together, and surface processNote text to the desk.
+- Provider: branch on x-hcx-workflow_ID, ClaimResponse.outcome and adjudication[0].reason.coding.code together, and surface processNote text to the desk.
 - Provider: persist preAuthRef and the payer identifier (identifier[0].value) against the case for the claim stage.
 - Payer: fill disposition, adjudication categories (submitted, eligible, copay, benefit) and processNote so a partial approval is explainable.
 - Payer: put protocol errors in x-hcx-error_details with catalogued codes and business errors inside the encrypted ClaimResponse.
@@ -44,7 +44,7 @@ HTTP 202 Accepted with the StatusSuccessResponse acknowledgement (entity_type pr
 
 ### Related scenario
 
-The insurer's adjudication engine reviews a corneal grafting preauth submitted for 25000 INR and caps it at the package rate of 13700 INR. Its bridge builds a ClaimResponseBundle with outcome partial, preAuthRef PREAUTH-HP-2026-78902 and a processNote explaining the cap, sets x-hcx-workflow_id 21 and x-hcx-status response.complete with the request's correlation ID, encrypts it for the hospital and posts to /v1/preauth/on_submit. NHCX acknowledges with 202 and delivers it to the hospital, whose callback acknowledges inside 30 seconds and shows the desk the reduced amount and reason. Treatment proceeds, and after discharge the hospital submits the final claim on /v1/claim/submit referencing that preAuthRef.
+The insurer's adjudication engine reviews a corneal grafting preauth submitted for 25000 INR and caps it at the package rate of 13700 INR. Its bridge builds a ClaimResponseBundle with outcome partial, preAuthRef PREAUTH-HP-2026-78902 and a processNote explaining the cap, sets x-hcx-workflow_ID 21 and x-hcx-status response.complete with the request's correlation ID, encrypts it for the hospital and posts to /v1/preauth/on_submit. NHCX acknowledges with 202 and delivers it to the hospital, whose callback acknowledges inside 30 seconds and shows the desk the reduced amount and reason. Treatment proceeds, and after discharge the hospital submits the final claim on /v1/claim/submit referencing that preAuthRef.
 
 ### Specification
 

@@ -1,4 +1,4 @@
-# Insurance plan callback (internal variant) (adapter)
+# Submit the insurance plan callback (internal variant) (adapter)
 
 `POST /internal/v1/insuranceplan/on_request`
 
@@ -10,14 +10,14 @@ This is the internal-path form of the callback through which a payer delivers th
 
 ### When to use
 
-Same as the public callback: after receiving and acknowledging an insurance plan request Task, the payer posts the plan bundle under the request's correlation id with a responder status (response.complete, or response.error with x-hcx-error_details). The bundle may follow either documented structure and may be empty when no coverage matches. The specifications do not indicate when the internal path is used in preference to the public one.
+Same as the public callback: after receiving and acknowledging an insurance plan request Task, the payer posts the plan bundle under the request's correlation ID with a responder status (response.complete, or response.error with x-hcx-error_details). The bundle may follow either documented structure and may be empty when no coverage matches. The specifications do not indicate when the internal path is used in preference to the public one.
 
 ### Preconditions
 
-- Inbound request decrypted, correlation id captured, 202 acceptance already returned.
+- Inbound request decrypted, correlation ID captured, 202 acceptance already returned.
 - Registered payer with a valid Bearer token and the provider's certificate for encryption.
-- Collection Bundle containing InsurancePlan, Organization and any Questionnaire resources, filtered to the requesting provider per the MoU.
-- Protected header echoing the request's correlation id with a fresh api_call_id, IST timestamp and responder status.
+- Collection Bundle containing InsurancePlan, Organisation and any Questionnaire resources, filtered to the requesting provider per the MoU.
+- Protected header echoing the request's correlation ID with a fresh API_call_ID, IST TIMESTAMP and responder status.
 - Confirmation that the internal route is the one intended for your gateway integration.
 
 ### Postconditions
@@ -27,7 +27,7 @@ Returns 202 Accepted with the StatusSuccessResponse envelope, or 400, 404 or 500
 ### Common mistakes
 
 - Expecting different validation or routing from the public callback; none is documented.
-- Minting a new correlation id instead of echoing the request's (NHCX-1010).
+- Minting a new correlation ID instead of echoing the request's (NHCX-1010).
 - Populating cost.value with the package rate rather than the extra amount over the procedure cost.
 - Returning an unfiltered package master rather than the provider-specific view.
 - Provider side: failing to handle both structuring approaches or treating an empty plan as a fault.
@@ -37,12 +37,12 @@ Returns 202 Accepted with the StatusSuccessResponse envelope, or 400, 404 or 500
 - Share one bundle builder with the public callback; only the path differs.
 - Acknowledge the inbound Task first, assemble the plan asynchronously, then post.
 - Use the documented claim-condition codes and include Questionnaire resources for mandatory documents.
-- Fresh api_call_id, IST timestamp, response.complete or response.error with error details.
+- Fresh API_call_ID, IST TIMESTAMP, response.complete or response.error with error details.
 - Provider side: cache, refresh periodically or on treatment change, validate preauth items against the plan.
 
 ### Related scenario
 
-A payer platform team reviewing the insuranceplanhcxservice specification notices the callback appears twice, publicly and under /internal/v1. They implement a single plan-publication service that emits the InsurancePlan bundle under the request's correlation id, configured to the public /v1/insuranceplan/on_request path unless NHCX onboarding specifies the internal one. When a hospital's discovery Task arrives, the service returns 202, builds the filtered package master and posts it; the hospital acknowledges within 30 seconds and proceeds to eligibility and preauth.
+A payer platform team reviewing the insuranceplanhcxservice specification notices the callback appears twice, publicly and under /internal/v1. They implement a single plan-publication service that emits the InsurancePlan bundle under the request's correlation ID, configured to the public /v1/insuranceplan/on_request path unless NHCX onboarding specifies the internal one. When a hospital's discovery Task arrives, the service returns 202, builds the filtered package master and posts it; the hospital acknowledges within 30 seconds and proceeds to eligibility and preauth.
 
 ### Specification
 

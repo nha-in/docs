@@ -2,22 +2,22 @@
 
 `POST /participant/get/policies`
 
-Looks up the policies linked to a beneficiary by ABHA number, member id or mobile number, returning the payer and product details needed for claims.
+Looks up the policies linked to a beneficiary by ABHA number, member ID or mobile number, returning the payer and product details needed for claims.
 
 ### Business purpose
 
-This is the provider's window into the member layer that payers populate through the link API. A hospital cannot submit a coverage-eligibility check, preauthorisation or claim until it knows the payer participant code, member id and product for the patient, and this call is where those values come from. The handbook lists policy discovery as step three of the fixed cashless sequence (payer search, payer selection, policy discovery, cache normalisation, effective payer resolution, InsurancePlan retrieval, optional eligibility, preauth). Payers and TPAs also use it to verify that their links were recorded.
+This is the provider's window into the member layer that payers populate through the link API. A hospital cannot submit a coverage-eligibility check, preauthorisation or claim until it knows the payer participant code, member ID and product for the patient, and this call is where those values come from. The handbook lists policy discovery as step three of the fixed cashless sequence (payer search, payer selection, policy discovery, cache normalisation, effective payer resolution, InsurancePlan retrieval, optional eligibility, preauth). Payers and TPAs also use it to verify that their links were recorded.
 
 ### When to use
 
-Call it after patient registration or admission, when the desk needs to confirm that the patient is linked to a scheme or policy, and again (with a forced refresh) whenever a payer-side change is suspected. It precedes /v1/insuranceplan/request, /v1/coverageeligibility/check and /v1/preauth/submit (workflow code 12). If no payer id can be derived from the result, the backend must refuse preauth with "Unable to resolve payerId from policy bundle. Please fetch eligibility/policies before pre-auth submission." It is use case 2 in both the provider and payer sandbox exit checklists.
+Call it after patient registration or admission, when the desk needs to confirm that the patient is linked to a scheme or policy, and again (with a forced refresh) whenever a payer-side change is suspected. It precedes /v1/insuranceplan/request, /v1/coverageeligibility/check and /v1/preauth/submit (workflow code 12). If no payer ID can be derived from the result, the backend must refuse preauth with "Unable to resolve payerId from policy bundle. Please fetch eligibility/policies before pre-auth submission." It is use case 2 in both the provider and payer sandbox exit checklists.
 
 ### Preconditions
 
-- A valid Bearer token from the client-credentials call (POST /get/session, form-urlencoded client_id, client_secret, grant_type=client_credentials); tokens last 1200 seconds, so refresh before expiry.
-- HTTP headers Accept: application/json, Content-Type: application/json and bearer_auth: Bearer <token> (the participant service uses bearer_auth, not Authorization).
-- Base path for the participant service: https://apisbx.abdm.gov.in/pmjay/sbxhcx/participanthcxservice (sandbox) or https://apisprod.nha.gov.in/pmjay/hcx/participanthcxservice (production).
-- This is a synchronous plain-JSON registry call: no JWE envelope, no x-hcx-* protocol headers and no correlation id are involved.
+- A valid Bearer token from the client-credentials call (POST /get/session, form-urlencoded client_ID, client_secret, grant_type=client_credentials); tokens last 1200 seconds, so refresh before expiry.
+- HTTP headers Accept: application/json, Content-Type: application/json and bearer_auth: Bearer <token> (the participant service uses bearer_auth, not Authorisation).
+- Base path for the participant service: https://apisbx.ABDM.gov.in/pmjay/sbxhcx/participanthcxservice (sandbox) or https://apisprod.NHA.gov.in/pmjay/hcx/participanthcxservice (production).
+- This is a synchronous plain-JSON registry call: no JWE envelope, no x-hcx-* protocol headers and no correlation ID are involved.
 - The beneficiary must already have been linked by the payer or TPA; if no link exists the lookup returns nothing regardless of the hospital's own records.
 - Body is FetchParticipantPoliciesRequest with two required strings: identifiertype (AbhaNumber, MemberId or MobileNo) and identifiervalue; ABHA must be supplied without hyphens.
 
@@ -43,7 +43,7 @@ The service answers synchronously with HTTP 200 and ParticipantListResponse: an 
 
 ### Related scenario
 
-A patient is admitted to a network hospital and the registration desk captures an ABHA number and a member id. The HMIS has already called /fetch/participants/list to discover payers, and now calls /participant/get/policies with identifiertype AbhaNumber and the hyphen-free ABHA value. The response is normalised and cached against the patient, and the processingID becomes the receiver code. The desk then requests the plan through /v1/insuranceplan/request, optionally runs /v1/coverageeligibility/check, and submits the preauthorisation with /v1/preauth/submit; when the payer later queries a coverage detail, the desk forces a refresh of this lookup before responding.
+A patient is admitted to a network hospital and the registration desk captures an ABHA number and a member ID. The HMIS has already called /fetch/participants/list to discover payers, and now calls /participant/get/policies with identifiertype AbhaNumber and the hyphen-free ABHA value. The response is normalised and cached against the patient, and the processingID becomes the receiver code. The desk then requests the plan through /v1/insuranceplan/request, optionally runs /v1/coverageeligibility/check, and submits the preauthorisation with /v1/preauth/submit; when the payer later queries a coverage detail, the desk forces a refresh of this lookup before responding.
 
 ### Specification
 

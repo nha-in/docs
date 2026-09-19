@@ -2,7 +2,7 @@
 
 `POST /product/link`
 
-Registers a product (product id and name) against a payer's participant code, so that it can be referenced in ABHA policy links.
+Registers a product (product ID and name) against a payer's participant code, so that it can be referenced in ABHA policy links.
 
 ### Business purpose
 
@@ -14,16 +14,16 @@ Use it when a payer introduces a new product, and before any /participant/link/a
 
 ### Preconditions
 
-- A valid Bearer token from the client-credentials call (POST /get/session, form-urlencoded client_id, client_secret, grant_type=client_credentials); tokens last 1200 seconds, so refresh before expiry.
-- HTTP headers Accept: application/json, Content-Type: application/json and bearer_auth: Bearer <token> (the participant service uses bearer_auth, not Authorization).
-- Base path for the participant service: https://apisbx.abdm.gov.in/pmjay/sbxhcx/participanthcxservice (sandbox) or https://apisprod.nha.gov.in/pmjay/hcx/participanthcxservice (production).
-- This is a synchronous plain-JSON registry call: no JWE envelope, no x-hcx-* protocol headers and no correlation id are involved.
+- A valid Bearer token from the client-credentials call (POST /get/session, form-urlencoded client_ID, client_secret, grant_type=client_credentials); tokens last 1200 seconds, so refresh before expiry.
+- HTTP headers Accept: application/json, Content-Type: application/json and bearer_auth: Bearer <token> (the participant service uses bearer_auth, not Authorisation).
+- Base path for the participant service: https://apisbx.ABDM.gov.in/pmjay/sbxhcx/participanthcxservice (sandbox) or https://apisprod.NHA.gov.in/pmjay/hcx/participanthcxservice (production).
+- This is a synchronous plain-JSON registry call: no JWE envelope, no x-hcx-* protocol headers and no correlation ID are involved.
 - The payer or insurance company must already be a registered participant with its own participant code.
 - Body is ProductLinkRequest with all three fields required: productid, productname and participantcode.
 
 ### Postconditions
 
-On success the endpoint returns HTTP 200 with ParticipantCreateResponse, whose single optional field participant_code is the machine-generated participant identifier on the HCX instance. No callback follows. The product becomes the value that /product/getowner resolves back to the owning participant and that policy links refer to. Failures return 400, 404 or 500 with the ErrorResponse envelope (timestamp plus Error with code, message and trace).
+On success the endpoint returns HTTP 200 with ParticipantCreateResponse, whose single optional field participant_code is the machine-generated participant identifier on the HCX instance. No callback follows. The product becomes the value that /product/getowner resolves back to the owning participant and that policy links refer to. Failures return 400, 404 or 500 with the ErrorResponse envelope (TIMESTAMP plus Error with code, message and trace).
 
 ### Common mistakes
 
@@ -42,7 +42,7 @@ On success the endpoint returns HTTP 200 with ParticipantCreateResponse, whose s
 
 ### Related scenario
 
-An insurer launches a new family floater plan. Before its policy administration system can link any member, it calls /product/link with the product id, the product name that hospitals will see, and the insurer's participant code, receiving its participant_code back in the response. It then checks /product/getowner with the product id to confirm ownership, and begins linking members with /participant/link/abha/policy. Hospitals that later call /participant/get/policies will see the product id and name, use productName for the InsurancePlan lookup and productId for coverage matching in the preauth.
+An insurer launches a new family floater plan. Before its policy administration system can link any member, it calls /product/link with the product ID, the product name that hospitals will see, and the insurer's participant code, receiving its participant_code back in the response. It then checks /product/getowner with the product ID to confirm ownership, and begins linking members with /participant/link/abha/policy. Hospitals that later call /participant/get/policies will see the product ID and name, use productName for the InsurancePlan lookup and productId for coverage matching in the preauth.
 
 ### Specification
 

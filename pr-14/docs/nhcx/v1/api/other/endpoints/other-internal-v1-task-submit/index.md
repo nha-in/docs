@@ -1,4 +1,4 @@
-# Task submit (internal variant) (adapter)
+# Submit the task submit (internal variant) (adapter)
 
 `POST /internal/v1/task/submit`
 
@@ -10,13 +10,13 @@ The taskhcxservice is one of six NHCX services that publish each operation at bo
 
 ### When to use
 
-Same circumstances as /v1/task/submit: a reprocess (Task.code reprocess, reasonCode claimrejected or partialpayment, workflow 18) after an adverse adjudication with new evidence, or a preauth cancellation (Task.code cancel with a cancellation reasonCode, workflow 122 or PC01). x-hcx-correlation_id carries the original claim or preauth correlation id. The specs do not say when the internal path applies; default to the public path unless onboarding guidance names this one.
+Same circumstances as /v1/task/submit: a reprocess (Task.code reprocess, reasonCode claimrejected or partialpayment, workflow 18) after an adverse adjudication with new evidence, or a preauth cancellation (Task.code cancel with a cancellation reasonCode, workflow 122 or PC01). x-hcx-correlation_ID carries the original claim or preauth correlation ID. The specs do not say when the internal path applies; default to the public path unless onboarding guidance names this one.
 
 ### Preconditions
 
 - As for the public endpoint: active provider with NPI facility code, Bearer token, payer certificate for JWE encryption.
-- Body is a JWEPayload whose plaintext is the Task resource with basedOn referencing the original entity by the sender's reference id, Task.input with claimNumber and intimation number, and supporting evidence.
-- Protected header with the original correlation id, fresh api_call_id, IST timestamp, workflow id and status request.initiated.
+- Body is a JWEPayload whose plaintext is the Task resource with basedOn referencing the original entity by the sender's reference ID, Task.input with claimNumber and intimation number, and supporting evidence.
+- Protected header with the original correlation ID, fresh API_call_ID, IST TIMESTAMP, workflow ID and status request.initiated.
 - Confirmation that the internal route is intended for your integration.
 
 ### Postconditions
@@ -25,8 +25,8 @@ Returns 202 Accepted with StatusSuccessResponse (entity_type task), or 400, 404 
 
 ### Common mistakes
 
-- Expecting the internal path to skip validation of basedOn, correlation id or status; it is documented as identical.
-- Omitting Task.basedOn or minting a fresh correlation id.
+- Expecting the internal path to skip validation of basedOn, correlation ID or status; it is documented as identical.
+- Omitting Task.basedOn or minting a fresh correlation ID.
 - Cancelling a preauth not in submitted or approved state (PAYR-1252, PAYR-1253, PAYR-1257, PAYR-1258).
 - Hard-coding the internal prefix without confirming the route; a 404 may be a host or prefix mismatch.
 
@@ -34,12 +34,12 @@ Returns 202 Accepted with StatusSuccessResponse (entity_type task), or 400, 404 
 
 - Reuse the public endpoint's Task builder; make only the path prefix configurable.
 - Link to the original entity in both basedOn and Task.input; use Task.description with reasonCode other.
-- Fresh api_call_id per call, IST timestamps, request.initiated on the outbound header.
-- Persist correlation id and workflow id for matching the callback; implement v1/error.
+- Fresh API_call_ID per call, IST timestamps, request.initiated on the outbound header.
+- Persist correlation ID and workflow ID for matching the callback; implement v1/error.
 
 ### Related scenario
 
-A hospital integrator generating a client from the taskhcxservice Swagger sees hcxTaskPost and hcxTaskPostInternal with the same description. The team builds one reprocess-and-cancel module that posts to /v1/task/submit by default and can be switched to the internal path if NHCX onboarding requires it. When a surgeon changes the treatment plan after a preauth was approved, the module sends Task.code cancel with reasonCode treatmentplanchanged under the preauth's correlation id, receives 202, and later gets the cancellation confirmation on the task on_submit callback before a new preauth is raised.
+A hospital integrator generating a client from the taskhcxservice Swagger sees hcxTaskPost and hcxTaskPostInternal with the same description. The team builds one reprocess-and-cancel module that posts to /v1/task/submit by default and can be switched to the internal path if NHCX onboarding requires it. When a surgeon changes the treatment plan after a preauth was approved, the module sends Task.code cancel with reasonCode treatmentplanchanged under the preauth's correlation ID, receives 202, and later gets the cancellation confirmation on the task on_submit callback before a new preauth is raised.
 
 ### Specification
 

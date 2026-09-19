@@ -10,7 +10,7 @@ A patient is not cashless merely by having insurance. The hospital must first di
 
 ### When to use
 
-Call it at the very start of the handbook's fixed operational order: payer search, payer selection, policy discovery, policy cache normalisation, effective payer resolution, InsurancePlan and benefit retrieval, optional eligibility verification, then preauth submission. Refresh the list periodically rather than per patient. Sandbox URL https://apisbx.abdm.gov.in/pmjay/sbxhcx/participanthcxservice/fetch/participants/list. Synchronous JSON; no workflow or x-hcx-status codes.
+Call it at the very start of the handbook's fixed operational order: payer search, payer selection, policy discovery, policy cache normalisation, effective payer resolution, InsurancePlan and benefit retrieval, optional eligibility verification, then preauth submission. Refresh the list periodically rather than per patient. Sandbox URL https://apisbx.ABDM.gov.in/pmjay/sbxhcx/participanthcxservice/fetch/participants/list. Synchronous JSON; no workflow or x-hcx-status codes.
 
 ### Preconditions
 

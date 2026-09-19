@@ -16,7 +16,7 @@ Called by the payer or TPA after each adjudication step on a /v1/claim/submit me
 
 - A claim request with this correlation ID exists in NHCX (NHCX-1010 otherwise) and has not been closed by an earlier response.complete.
 - The payer has a valid Bearer token and the provider's certificate, and encrypts the ClaimResponseBundle for the provider.
-- x-hcx-correlation_id echoes the request; x-hcx-api_call_id is new; sender and recipient codes are swapped; x-hcx-status is response.partial, response.complete or response.error.
+- x-hcx-correlation_ID echoes the request; x-hcx-API_call_ID is new; sender and recipient codes are swapped; x-hcx-status is response.partial, response.complete or response.error.
 - Adjudication categories (submitted, eligible, copay, benefit) and total[].category codes are populated; processNote explains reductions; query text is carried in the adjudication reason display.
 - Protocol errors are a ProtocolResponse with x-hcx-error_details; business errors are inside the encrypted resource.
 
@@ -35,11 +35,11 @@ HTTP 202 Accepted with the StatusSuccessResponse acknowledgement (entity_type cl
 
 ### Best practices
 
-- Provider: acknowledge first, then decrypt, then update case state; be idempotent on correlation ID and api_call_id.
+- Provider: acknowledge first, then decrypt, then update case state; be idempotent on correlation ID and API_call_ID.
 - Provider: parse the PMJAY query audit trail (USER~datetime~type~comment~trust, entries separated by |) as a plain string.
 - Provider: on complete plus approved, trigger settlement tracking and await 30, 31 and 33; the claim is only closed when 33 arrives and the UTR is persisted.
 - Payer: emit 25 on receipt and 28 during processing so the desk sees progress, and put reduction reasons in processNote linked by noteNumber.
-- Both: keep x-hcx-status and x-hcx-workflow_id consistent with the NHA status sheet, since the pair identifies the message.
+- Both: keep x-hcx-status and x-hcx-workflow_ID consistent with the NHA status sheet, since the pair identifies the message.
 
 ### Related scenario
 

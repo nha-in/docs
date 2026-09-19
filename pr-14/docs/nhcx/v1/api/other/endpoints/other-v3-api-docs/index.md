@@ -1,4 +1,4 @@
-# OpenAPI 3 document (status service)
+# Get the openAPI 3 document (status service)
 
 `GET /v3/api-docs`
 
@@ -14,8 +14,8 @@ Use it during integration setup, when generating or refreshing an API client, an
 
 ### Preconditions
 
-- A GET request to the status service host; the OpenAPI documents in this corpus were captured from https://hcxsbx.abdm.gov.in/<service>/api-docs, and the status service declares the server prefix /statushcxservice.
-- No JWE envelope, no x-hcx-* protocol headers and no correlation id; the docs do not state that a Bearer token is required for these discovery endpoints.
+- A GET request to the status service host; the OpenAPI documents in this corpus were captured from https://hcxsbx.ABDM.gov.in/<service>/api-docs, and the status service declares the server prefix /statushcxservice.
+- No JWE envelope, no x-hcx-* protocol headers and no correlation ID; the docs do not state that a Bearer token is required for these discovery endpoints.
 - No request body.
 
 ### Postconditions
@@ -24,7 +24,7 @@ The service returns HTTP 200 with a JSON OpenAPI 3 document describing the statu
 
 ### Common mistakes
 
-- Pointing at the gateway base https://apisbx.abdm.gov.in/pmjay/sbxhcx and expecting the per-service spec host; the docs advise swapping between the two URL shapes when a path 404s.
+- Pointing at the gateway base https://apisbx.ABDM.gov.in/pmjay/sbxhcx and expecting the per-service spec host; the docs advise swapping between the two URL shapes when a path 404s.
 - Treating the served document as the integration contract for gateway traffic; the handbook's gateway base and header conventions take precedence where the two disagree.
 - Sending a POST or a JSON body to a GET discovery endpoint.
 - Wrapping the call in JWE or adding x-hcx-* headers, which only apply to protocol APIs such as /v1/status.
@@ -34,11 +34,11 @@ The service returns HTTP 200 with a JSON OpenAPI 3 document describing the statu
 - Use these endpoints for exploration and client generation in the sandbox, and cache the document rather than fetching it on every run.
 - Diff the served document against the corpus (Status service: OpenAPI 3.0.1, version 1.0.0) when behaviour changes unexpectedly.
 - Never let production traffic depend on the availability of the documentation endpoints.
-- Keep the /v1/status protocol rules in mind when reading the spec: x-hcx-correlation_id must carry the original request's correlation id.
+- Keep the /v1/status protocol rules in mind when reading the spec: x-hcx-correlation_ID must carry the original request's correlation ID.
 
 ### Related scenario
 
-A hospital's integration team is building status polling for stalled preauthorisations. Before wiring /v1/status, an engineer fetches /v3/api-docs from the status service host, confirms the server prefix and the response schema, and generates a typed client. The team then implements the status request with the original correlation id in x-hcx-correlation_id, handles the synchronous request.queued and request.dispatched outcomes, and receives the payer's answer on the status callback.
+A hospital's integration team is building status polling for stalled preauthorisations. Before wiring /v1/status, an engineer fetches /v3/api-docs from the status service host, confirms the server prefix and the response schema, and generates a typed client. The team then implements the status request with the original correlation ID in x-hcx-correlation_ID, handles the synchronous request.queued and request.dispatched outcomes, and receives the payer's answer on the status callback.
 
 ### Specification
 

@@ -4,14 +4,6 @@ Milestone 4 is the Registries milestone, commonly referred to as NHPR, the Natio
 
 Neither the [HPR](/docs/pr-14/docs/hiecm/v3/getting-started/glossary#hpr) nor the [HFR](/docs/pr-14/docs/hiecm/v3/getting-started/glossary#hfr) is responsible for moving health records. These registries establish who the healthcare professional is and what the healthcare facility is, providing a verified identity and facility layer for subsequent ABDM transactions.
 
-[Try the M4 APIs](/docs/pr-14/docs/hiecm/v3/api/m4)
-
-[Every call in M4, one page each: the headers it needs, the payload it takes, the callback it triggers, and a request builder you can fire at the sandbox.](/docs/pr-14/docs/hiecm/v3/api/m4)
-
-[Error codes](/docs/pr-14/docs/hiecm/v3/api/m4/errors)
-
-[What each code M4 returns actually means, and the first thing to check when you see one.](/docs/pr-14/docs/hiecm/v3/api/m4/errors)
-
 ## In short
 
 - The Healthcare Professionals Registry (HPR) is a comprehensive repository of registered and verified healthcare professionals. It includes doctors from Modern Medicine, Dentistry, Ayurveda, Unani, Siddha, Sowa-Rigpa and Homeopathy, as well as nurses and pharmacists delivering healthcare services across India. A healthcare professional registers on the HPR and is issued a unique [HPID](/docs/pr-14/docs/hiecm/v3/getting-started/glossary#hpid), which is 14 digits.
@@ -50,25 +42,24 @@ Hand M4 to the agent you already use, as one file it loads once. Install it, or 
 
 M4 agent skill
 
-Every M4 call, its error codes and its certification cases in one file: 13 operations, 150 codes, 183 cases.
+Every M4 call in one file: 100 operations.
 
 [SKILL.md](/docs/pr-14/skills/abdm-m4/SKILL.md "The router. Use the command below to take the references with it.")
 
 - ScaffoldThe loop that builds the module flow by flow against the sandbox, ending on an observed result rather than on a call returning 200.
-- Integrate13 operations, with their hosts, headers and the rules that hold across them.
-- Debug150 recorded error codes, each with its message and what to do about it.
-- Test184 test cases, each with the call it makes and what to see when it passes.
+- Integrate111 operations, with their hosts, headers and the rules that hold across them.
+- DebugNo error code is recorded for this module yet.
 
-`mkdir -p .claude/skills/abdm-m4/references && curl -fsSL https://nha-in.github.io/docs/pr-14/skills/abdm-m4/SKILL.md -o .claude/skills/abdm-m4/SKILL.md && for f in scaffold integrate debug test; do curl -fsSL https://nha-in.github.io/docs/pr-14/skills/abdm-m4/references/$f.md -o .claude/skills/abdm-m4/references/$f.md; done`
+`mkdir -p .claude/skills/abdm-m4/references && curl -fsSL https://nha-in.github.io/docs/pr-14/skills/abdm-m4/SKILL.md -o .claude/skills/abdm-m4/SKILL.md && for f in scaffold integrate debug; do curl -fsSL https://nha-in.github.io/docs/pr-14/skills/abdm-m4/references/$f.md -o .claude/skills/abdm-m4/references/$f.md; done`
 
-[Open in Claude](claude://code/new?q=Install%20the%20ABDM%20M4%20agent%20skill%20into%20this%20project%2C%20then%20help%20me%20use%20it.%0A%0ARun%20this%3A%0Amkdir%20-p%20.claude%2Fskills%2Fabdm-m4%2Freferences%20%26%26%20curl%20-fsSL%20https%3A%2F%2Fnha-in.github.io%2Fdocs%2Fpr-14%2Fskills%2Fabdm-m4%2FSKILL.md%20-o%20.claude%2Fskills%2Fabdm-m4%2FSKILL.md%20%26%26%20for%20f%20in%20scaffold%20integrate%20debug%20test%3B%20do%20curl%20-fsSL%20https%3A%2F%2Fnha-in.github.io%2Fdocs%2Fpr-14%2Fskills%2Fabdm-m4%2Freferences%2F%24f.md%20-o%20.claude%2Fskills%2Fabdm-m4%2Freferences%2F%24f.md%3B%20done%0A%0AIf%20this%20session%20did%20not%20open%20in%20the%20repository%20I%20am%20integrating%20ABDM%20into%2C%20ask%20me%20for%20the%20path%20before%20you%20write%20anything.)
+[Open in Claude](claude://code/new?q=Install%20the%20ABDM%20M4%20agent%20skill%20into%20this%20project%2C%20then%20help%20me%20use%20it.%0A%0ARun%20this%3A%0Amkdir%20-p%20.claude%2Fskills%2Fabdm-m4%2Freferences%20%26%26%20curl%20-fsSL%20https%3A%2F%2Fnha-in.github.io%2Fdocs%2Fpr-14%2Fskills%2Fabdm-m4%2FSKILL.md%20-o%20.claude%2Fskills%2Fabdm-m4%2FSKILL.md%20%26%26%20for%20f%20in%20scaffold%20integrate%20debug%3B%20do%20curl%20-fsSL%20https%3A%2F%2Fnha-in.github.io%2Fdocs%2Fpr-14%2Fskills%2Fabdm-m4%2Freferences%2F%24f.md%20-o%20.claude%2Fskills%2Fabdm-m4%2Freferences%2F%24f.md%3B%20done%0A%0AIf%20this%20session%20did%20not%20open%20in%20the%20repository%20I%20am%20integrating%20ABDM%20into%2C%20ask%20me%20for%20the%20path%20before%20you%20write%20anything.)
 
 Drops the skill into this project. Claude loads it when a task matches.
 
 How to use it
 
 1. Run the command above in the repository you are integrating.
-2. Ask your agent for the job in your own words. "Onboard this facility to the HFR and link its HIP bridge", "why am I getting HIS-400", or "write the M4 tests for this". The skill loads when the task matches it.
+2. Ask your agent for the job in your own words. "Onboard this facility to the HFR and link its HIP bridge". The skill loads when the task matches it.
 3. Check what it writes against these pages. The skill carries the facts, not the sandbox: nothing in it has been run against ABDM.
 4. Open in Claude needs that app installed. It fills the composer and waits: nothing runs until you read it and press Enter.
 
@@ -76,7 +67,7 @@ How to use it
 
 M4 does not have a separate certification process. A single exit process covers the complete integration and is conducted once all the required milestones for your role are working end to end.
 
-[Going live](/docs/pr-14/docs/hiecm/v3/getting-started/going-live) outlines the four steps involved and the requirements for each step. The cases used for certification are covered under the [M4 testing use cases](/docs/pr-14/docs/hiecm/v3/resources/testing/m4).
+[Going live](/docs/pr-14/docs/hiecm/v3/getting-started/going-live) outlines the four steps involved and the requirements for each step.
 
 ## The journey, step by step
 
@@ -93,7 +84,7 @@ Milestone 4 of [ABDM](/docs/pr-14/docs/hiecm/v3/getting-started/glossary#abdm) c
 | HFR           | Aadhaar authentication, role selection, HPID creation, HFR registration, then facility software integration as HIP or HIU where applicable                   |
 | Both          | Aadhaar authentication, role selection, HPID creation, HFR registration, HPR registration, then facility software integration as HIP or HIU where applicable |
 
-This page shows the order of calls in each. Field lists are on the [operations and fields](/docs/pr-14/docs/hiecm/v3/api/m4/undocumented) page.
+This page shows the order of calls in each. Field lists are in the [M4 API reference](/docs/pr-14/docs/hiecm/v3/api/m4).
 
 A map, not a runbook
 
@@ -149,7 +140,7 @@ flowchart TD
 
 If an HPID already exists, the professional is already registered. Authenticate the professional and proceed directly to login, skipping the HPID creation journey.
 
-A returning professional can also log in without Aadhaar authentication, using either a mobile OTP or a password. Both login mechanisms are covered under [M4 operations and fields](/docs/pr-14/docs/hiecm/v3/api/m4/undocumented#login-by-mobile-otp).
+A returning professional can also log in without Aadhaar authentication, using either a mobile OTP or a password. Both are under [HPR authentication](/docs/pr-14/docs/hiecm/v3/api/m4/endpoints/m4-authentication/01-m4-post-v1-auth-authpassword) in the M4 API reference.
 
 If no HPID exists, the mobile number must be verified before creating the HPID:
 
@@ -157,7 +148,7 @@ If no HPID exists, the mobile number must be verified before creating the HPID:
 2. Encrypt the mobile number using `RSA/ECB/PKCS1Padding`.
 3. Send the encrypted value in the API request.
 
-Create HPID returns an `hprToken`. Keep it: the register professional call needs it.
+Create HPID returns a `token`. The register professional call carries an `hprToken` in its payload.
 
 ## Journey 2: registering a professional on the HPR
 
@@ -260,11 +251,10 @@ The HIP name is the name displayed to patients in their [ABHA](/docs/pr-14/docs/
 
 A facility with a Facility ID and a linked HIP bridge can perform [M2](/docs/pr-14/docs/hiecm/v3/api/m2) activities, including linking care contexts and sharing health records. A facility with a linked HIU bridge can perform [M3](/docs/pr-14/docs/hiecm/v3/api/m3) activities, including requesting patient consent and fetching health records. M4 covers the registration of the facility and the healthcare professionals working at the facility.
 
-Next: [M4 operations and fields](/docs/pr-14/docs/hiecm/v3/api/m4/undocumented).
+Next: [M4 API reference](/docs/pr-14/docs/hiecm/v3/api/m4).
 
 ## Next
 
 - The base URLs and the operation list: [M4 API reference](/docs/pr-14/docs/hiecm/v3/api/m4).
-- Every call with its parameters and codes: [M4 operations and fields](/docs/pr-14/docs/hiecm/v3/api/m4/undocumented).
 - The patient side of all four: [P1 Identity and profile](/docs/pr-14/docs/hiecm/v3/milestones/p1).
 - Take your integration to production: [Go live](/docs/pr-14/docs/hiecm/v3/getting-started/going-live).

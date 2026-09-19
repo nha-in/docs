@@ -1,4 +1,4 @@
-# Communication request
+# Submit the communication request
 
 `POST /v1/communication/request`
 
@@ -10,41 +10,41 @@ Every other NHCX exchange is provider-initiated and expects a matching response.
 
 ### When to use
 
-Call it whenever the payer needs to communicate outside the direct request-response lifecycle of a preauth or claim. It does not replace the in-band query path (ClaimResponse outcome=partial with a DOC_MISSING processNote); both can be in flight for the same case. The scenario is identified by Task.reasonCode: tatquery, grievance, walletupdate, policychange, additionalinfo and the arbitration code (spelt claimArbitration in one handbook table and claimArbitartion in another). Send x-hcx-status request.initiated; the x-hcx-workflow_id must be the workflow of the associated claim or preauth and is validated at the gateway.
+Call it whenever the payer needs to communicate outside the direct request-response lifecycle of a preauth or claim. It does not replace the in-band query path (ClaimResponse outcome=partial with a DOC_MISSING processNote); both can be in flight for the same case. The scenario is identified by Task.reasonCode: tatquery, grievance, walletupdate, policychange, additionalinfo and the arbitration code (spelt claimArbitration in one handbook table and claimArbitartion in another). Send x-hcx-status request.initiated; the x-hcx-workflow_ID must be the workflow of the associated claim or preauth and is validated at the gateway.
 
 ### Preconditions
 
 - Payer and provider both registered on NHCX; a valid Bearer token from the client-credentials session call (1200 s expiry).
 - The provider's public certificate fetched via /fetch/certs (cache up to 24 h) and used to JWE-encrypt with RSA-OAEP-256 and A256GCM.
 - A collection Bundle containing a Task (status completed, intent proposal, code poll, input type include) that references a Communication or CommunicationRequest carrying category, priority and topic; the identifiers key off the claim or preauth reference.
-- Protected header with x-hcx-sender_code, x-hcx-recipient_code, x-hcx-api_call_id, x-hcx-correlation_id, x-hcx-workflow_id, x-hcx-timestamp (IST +05:30) and x-hcx-status request.initiated. A fresh UUID correlation id opens the conversation.
+- Protected header with x-hcx-sender_code, x-hcx-recipient_code, x-hcx-API_call_ID, x-hcx-correlation_ID, x-hcx-workflow_ID, x-hcx-TIMESTAMP (IST +05:30) and x-hcx-status request.initiated. A fresh UUID correlation ID opens the conversation.
 - HTTP headers Accept, Content-Type and bearer_auth.
 
 ### Postconditions
 
-The gateway validates the JWE headers, workflow id and NIIP and returns HTTP 202 with a StatusSuccessResponse (timestamp, api_call_id, correlation_id, result with sender_code, recipient_code, entity_type and protocol_status, and an error object). Nothing is decided synchronously; the gateway forwards the bundle to the provider's registered callback. The provider must acknowledge with 202 within 30 seconds, then close the loop by posting an acknowledgement Task bundle to /v1/communication/on_request under the same x-hcx-correlation_id. Errors are 400 (validation failed), 404 and 500, all in the same envelope. Communication.status completed describes the event, not the resolution of the underlying issue.
+The gateway validates the JWE headers, workflow ID and NIIP and returns HTTP 202 with a StatusSuccessResponse (TIMESTAMP, API_call_ID, correlation_ID, result with sender_code, recipient_code, entity_type and protocol_status, and an error object). Nothing is decided synchronously; the gateway forwards the bundle to the provider's registered callback. The provider must acknowledge with 202 within 30 seconds, then close the loop by posting an acknowledgement Task bundle to /v1/communication/on_request under the same x-hcx-correlation_ID. Errors are 400 (validation failed), 404 and 500, all in the same envelope. Communication.status completed describes the event, not the resolution of the underlying issue.
 
 ### Common mistakes
 
 - Treating the 202 as delivery or as the provider's answer; the acknowledgement comes later on on_request.
-- Sending a workflow id that does not match the associated claim or preauth, which fails gateway validation (PAYR-1003 Invalid workflow requested).
+- Sending a workflow ID that does not match the associated claim or preauth, which fails gateway validation (PAYR-1003 Invalid workflow requested).
 - Wrong x-hcx-status spelling (request.initiate instead of request.initiated) producing NHCX-1011.
-- Reusing a correlation id from an earlier cycle (NHCX-1006 Duplicate request) or from a failed cycle, which NHCX has made inactive.
-- Copying the sandbox sample's swapped Organization identifier types (NIIP versus NPI), a known data-quality defect.
+- Reusing a correlation ID from an earlier cycle (NHCX-1006 Duplicate request) or from a failed cycle, which NHCX has made inactive.
+- Copying the sandbox sample's swapped Organisation identifier types (NIIP versus NPI), a known data-quality defect.
 - Using Communication as a substitute for the in-band ClaimResponse query mechanism.
 
 ### Best practices
 
-- Mint a new UUID for x-hcx-api_call_id on every call and for x-hcx-correlation_id on every new communication cycle, including retries after failure.
+- Mint a new UUID for x-hcx-API_call_ID on every call and for x-hcx-correlation_ID on every new communication cycle, including retries after failure.
 - Put the routing intent in Task.reasonCode and the message classification in Communication.category, topic and priority; pair additionalinfo with category instruction or questionnaire.
 - Use IST timestamps; UTC causes validation failures.
-- Persist the correlation id before posting so the on_request acknowledgement can be matched.
+- Persist the correlation ID before posting so the on_request acknowledgement can be matched.
 - Expect up to five redeliveries if the provider mis-acknowledges; keep your own handling idempotent.
 - Implement v1/error so a message that never reaches the provider is reported back to you.
 
 ### Related scenario
 
-A state health agency's TPA notices that a cashless claim from a district hospital has sat in adjudication past the scheme's turnaround threshold. It builds a Task bundle with reasonCode tatquery, category reminder, topic progress-update and priority asap, encrypts it for the hospital and posts /v1/communication/request with the workflow id of the claim submitted earlier on /v1/claim/submit. The gateway returns 202 and forwards the bundle. The hospital's claims desk is alerted, and its system posts the acknowledgement Task on /v1/communication/on_request with the same correlation id. Adjudication then continues and the outcome arrives on /v1/claim/on_submit as usual.
+A state health agency's TPA notices that a cashless claim from a district hospital has sat in adjudication past the scheme's turnaround threshold. It builds a Task bundle with reasonCode tatquery, category reminder, topic progress-update and priority asap, encrypts it for the hospital and posts /v1/communication/request with the workflow ID of the claim submitted earlier on /v1/claim/submit. The gateway returns 202 and forwards the bundle. The hospital's claims desk is alerted, and its system posts the acknowledgement Task on /v1/communication/on_request with the same correlation ID. Adjudication then continues and the outcome arrives on /v1/claim/on_submit as usual.
 
 ### Specification
 

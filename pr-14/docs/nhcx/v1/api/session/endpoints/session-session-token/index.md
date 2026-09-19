@@ -1,4 +1,4 @@
-# Session token
+# Submit the session token
 
 `POST /api/hiecm/gateway/v3/sessions`
 
@@ -38,7 +38,7 @@ The gateway returns `accessToken`, `expiresIn`, `refreshToken` and `tokenType` `
 - Keep the token together with the time you got it, and fetch a new one before a call if it is more than a few minutes old.
 - On any `401`, get a new token and retry that call once.
 - Send the token on both `bearer_auth` and `Authorization`.
-- Keep the clock synchronised with NTP and let a date library format the timestamp.
+- Keep the clock synchronised with NTP and let a date library format the TIMESTAMP.
 
 ### Related scenario
 

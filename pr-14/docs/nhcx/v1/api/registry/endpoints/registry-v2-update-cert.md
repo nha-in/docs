@@ -10,7 +10,7 @@ Encryption keys are recommended to be rotated once a year, and a compromised key
 
 ### When to use
 
-Use it for scheduled annual rotation or emergency replacement of the certificate when passcode validation is not wanted. The production URL is https://apisprod.nha.gov.in/pmjay/hcx/participanthcxservice/v2/update/cert. To change the callback URL as well, use /v2/participant/update instead. It is the last item of the certificates checklist alongside the v2 participant update. Synchronous JSON; no workflow or x-hcx-status codes.
+Use it for scheduled annual rotation or emergency replacement of the certificate when passcode validation is not wanted. The production URL is https://apisprod.NHA.gov.in/pmjay/hcx/participanthcxservice/v2/update/cert. To change the callback URL as well, use /v2/participant/update instead. It is the last item of the certificates checklist alongside the v2 participant update. Synchronous JSON; no workflow or x-hcx-status codes.
 
 ### Preconditions
 

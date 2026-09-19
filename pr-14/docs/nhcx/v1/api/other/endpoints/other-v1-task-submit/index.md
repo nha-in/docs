@@ -1,8 +1,8 @@
-# Task submit (reprocess or cancel)
+# Submit the task submit (reprocess or cancel)
 
 `POST /v1/task/submit`
 
-Provider sends a FHIR Task asking the payer to reprocess a rejected or short-paid claim or to cancel a preauth; Task.code and reasonCode set the intent.
+Provider sends an FHIR Task asking the payer to reprocess a rejected or short-paid claim or to cancel a preauth; Task.code and reasonCode set the intent.
 
 ### Business purpose
 
@@ -10,15 +10,15 @@ Claims are often not fully approved first time, for mundane reasons: missing doc
 
 ### When to use
 
-After adjudication, when a claim was rejected or partially paid and you have valid justification and additional evidence: Task.code reprocess with reasonCode claimrejected (or partialpayment for a short payment; the handbook sample uses rejectiondisputed), workflow 18 REPROCESS_REQUEST_SUBMITTED, with 36 listed for the arbitration or erroneous case. For cancelling a submitted or approved preauth: Task.code cancel with a cancellation reasonCode (treatmentplanchanged, patientrequest, financialconstraints, alternativetreatment, duplicateclaim, administrativeerror, other), workflow 122 PREAUTH_CANCEL_INITIATED (PC01 in the scenario sheet). x-hcx-correlation_id carries the correlation id of the original claim or preauth. Reprocess outcomes are final within the workflow.
+After adjudication, when a claim was rejected or partially paid and you have valid justification and additional evidence: Task.code reprocess with reasonCode claimrejected (or partialpayment for a short payment; the handbook sample uses rejectiondisputed), workflow 18 REPROCESS_REQUEST_SUBMITTED, with 36 listed for the arbitration or erroneous case. For cancelling a submitted or approved preauth: Task.code cancel with a cancellation reasonCode (treatmentplanchanged, patientrequest, financialconstraints, alternativetreatment, duplicateclaim, administrativeerror, other), workflow 122 PREAUTH_CANCEL_INITIATED (PC01 in the scenario sheet). x-hcx-correlation_ID carries the correlation ID of the original claim or preauth. Reprocess outcomes are final within the workflow.
 
 ### Preconditions
 
 - Provider is an active NHCX participant with a valid NPI facility code and Bearer token; payer certificate available for JWE encryption.
-- The original claim or preauth exists; Task.basedOn references it with the sender's reference id, and Task.input carries claimNumber and the intimation number.
+- The original claim or preauth exists; Task.basedOn references it with the sender's reference ID, and Task.input carries claimNumber and the intimation number.
 - Patient resource carries PMJAY Member ID and ABHA number; supporting evidence attached (the FAQ says a document as valueAttachment is mandatory for reprocess).
 - Task.status requested, Task.intent order, Task.code from http://terminology.hl7.org/CodeSystem/financialtaskcode, reasonCode from ndhm-reason-code; Task.description explains when reasonCode is other.
-- Protected header with the original correlation id, fresh api_call_id, IST timestamp, workflow id and status request.initiated.
+- Protected header with the original correlation ID, fresh API_call_ID, IST TIMESTAMP, workflow ID and status request.initiated.
 
 ### Postconditions
 
@@ -27,7 +27,7 @@ The gateway returns HTTP 202 with a StatusSuccessResponse whose result carries e
 ### Common mistakes
 
 - Omitting Task.basedOn, so the payer has nothing to act on; or sending the sender's reference only in input and not in basedOn.
-- Minting a fresh correlation id instead of carrying the original claim or preauth's.
+- Minting a fresh correlation ID instead of carrying the original claim or preauth's.
 - Submitting a reprocess without new evidence; the handbook restricts appeals to cases with valid justification and supporting documents.
 - Cancelling a preauth that is already cancelled, paid or not in an active state (PAYR-1252, PAYR-1253, PAYR-1257, PAYR-1258).
 - Spelling the intimation input anything other than intimationNumber; a reprocess under another spelling is refused with PAYR-1008.
@@ -36,16 +36,16 @@ The gateway returns HTTP 202 with a StatusSuccessResponse whose result carries e
 
 ### Best practices
 
-- Link the Task to the original entity twice: basedOn with the sender's reference id and Task.input with claimNumber and intimation number.
+- Link the Task to the original entity twice: basedOn with the sender's reference ID and Task.input with claimNumber and intimation number.
 - Use reasonCode other only with a clear Task.description.
-- Persist the correlation id and workflow id so the on_submit Task bundle can be matched and the ClaimResponse extracted from Task.output.
+- Persist the correlation ID and workflow ID so the on_submit Task bundle can be matched and the ClaimResponse extracted from Task.output.
 - Design the case state machine so 252 or 253 terminates the appeal branch.
-- Fresh api_call_id per call, IST timestamps, request.initiated on the outbound header.
+- Fresh API_call_ID per call, IST timestamps, request.initiated on the outbound header.
 - Implement v1/error; a Task that never reaches the payer is otherwise silent.
 
 ### Related scenario
 
-A hospital's claim for a cardiac package, submitted on /v1/claim/submit, comes back on /v1/claim/on_submit rejected for a missing implant invoice. The billing team obtains the invoice and the integration builds a Task: code reprocess, reasonCode claimrejected, basedOn the original claim, input claimNumber and intimation number, the invoice attached, workflow 18, and the claim's correlation id. It posts /v1/task/submit and receives 202. The payer acknowledges (251), re-adjudicates and returns a Task bundle on /v1/task/on_submit whose Task.output wraps a ClaimResponse with outcome complete and workflow 252; a payment notice follows on /v1/paymentnotice/request.
+A hospital's claim for a cardiac package, submitted on /v1/claim/submit, comes back on /v1/claim/on_submit rejected for a missing implant invoice. The billing team obtains the invoice and the integration builds a Task: code reprocess, reasonCode claimrejected, basedOn the original claim, input claimNumber and intimation number, the invoice attached, workflow 18, and the claim's correlation ID. It posts /v1/task/submit and receives 202. The payer acknowledges (251), re-adjudicates and returns a Task bundle on /v1/task/on_submit whose Task.output wraps a ClaimResponse with outcome complete and workflow 252; a payment notice follows on /v1/paymentnotice/request.
 
 ### Specification
 

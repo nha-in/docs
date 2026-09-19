@@ -1,4 +1,4 @@
-# De-link ABHA policies (V2)
+# Submit the de-link ABHA policies (V2)
 
 `POST /V2/participant/delink/abha/policy`
 
@@ -14,11 +14,11 @@ Use it in the same situations as the v1 de-link: policy termination, member remo
 
 ### Preconditions
 
-- A valid Bearer token from the client-credentials call (POST /get/session, form-urlencoded client_id, client_secret, grant_type=client_credentials); tokens last 1200 seconds, so refresh before expiry.
-- HTTP headers Accept: application/json, Content-Type: application/json and bearer_auth: Bearer <token> (the participant service uses bearer_auth, not Authorization).
-- Base path for the participant service: https://apisbx.abdm.gov.in/pmjay/sbxhcx/participanthcxservice (sandbox) or https://apisprod.nha.gov.in/pmjay/hcx/participanthcxservice (production).
-- This is a synchronous plain-JSON registry call: no JWE envelope, no x-hcx-* protocol headers and no correlation id are involved.
-- The caller must be the payerid or processingid participant from the original link, using a token minted with the client_id used at participant creation.
+- A valid Bearer token from the client-credentials call (POST /get/session, form-urlencoded client_ID, client_secret, grant_type=client_credentials); tokens last 1200 seconds, so refresh before expiry.
+- HTTP headers Accept: application/json, Content-Type: application/json and bearer_auth: Bearer <token> (the participant service uses bearer_auth, not Authorisation).
+- Base path for the participant service: https://apisbx.ABDM.gov.in/pmjay/sbxhcx/participanthcxservice (sandbox) or https://apisprod.NHA.gov.in/pmjay/hcx/participanthcxservice (production).
+- This is a synchronous plain-JSON registry call: no JWE envelope, no x-hcx-* protocol headers and no correlation ID are involved.
+- The caller must be the payerid or processingid participant from the original link, using a token minted with the client_ID used at participant creation.
 - Body: requestid (UUID), payerid, memberid and policies are required; processingid is optional; there is no abhanumber field.
 - Note the capital V in /V2/.
 
@@ -28,11 +28,11 @@ On success the service returns HTTP 200 with ParticipantDeLinkAbhaResponse and t
 
 ### Common mistakes
 
-- Calling from a participant that is neither the payerid nor the processingid used at link time; NHCX checks the client id in the token, not the body, and refuses the call (common mistake 10).
+- Calling from a participant that is neither the payerid nor the processingid used at link time; NHCX checks the client ID in the token, not the body, and refuses the call (common mistake 10).
 - Listing a product that is not actually linked for that payerid and memberid, which returns the error message "There is no policies with requested details".
 - Including abhanumber or mobilenumber in the body; the de-link request is keyed on payerid, memberid and the products listed, and has no ABHA field.
 - Expecting provider-side caches to update: the handbook documents the policy cache as permanent with no TTL, so a de-linked policy keeps appearing until the provider passes forceRefresh: true.
-- Using a token generated with a different client_id from the one used when the payer or TPA participant was created.
+- Using a token generated with a different client_ID from the one used when the payer or TPA participant was created.
 - Lower-casing the path; /v2/participant/delink/abha/policy is not a documented route.
 
 ### Best practices

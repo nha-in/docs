@@ -1,8 +1,8 @@
-# Participant search
+# Submit the participant search
 
 `POST /participant/search`
 
-Reads a participant's full registry record by participant_code, including roles, status, encryption_cert and endpoint_url.
+Reads a participant's full registry record by participant_code, including roles, status, encryption_cert and endpoint_URL.
 
 ### Business purpose
 
@@ -16,11 +16,11 @@ Call it once a participant_code is known, typically after /fetch/participants/li
 
 - A Bearer token from /get/session in bearer_auth with the Bearer prefix; Accept and Content-Type: application/json.
 - The target's participant_code in xxxxx@hcx (or @sbx) form, exactly the value later placed in x-hcx-recipient_code.
-- Sandbox base https://apisbx.abdm.gov.in/pmjay/sbxhcx/participanthcxservice/participant/search; production under https://apis.abdm.gov.in/pmjay/hcx.
+- Sandbox base https://apisbx.ABDM.gov.in/pmjay/sbxhcx/participanthcxservice/participant/search; production under https://apis.ABDM.gov.in/pmjay/hcx.
 
 ### Postconditions
 
-HTTP 200 with ParticipantSearchResponse: timestamp (Unix timestamp when the request is sent) and participants, an array of full participant records with participant_code, linked_registry_codes, participant_name, scheme_code, roles, address, primaryEmail, additionalEmail, phone, primaryMobile, additionalMobile, status, signing_cert_path, encryption_cert, endpoint_url and payment_details. No state changes and no callback. An unknown code returns 404 with the ErrorResponse envelope; 400 and 500 are the other documented outcomes.
+HTTP 200 with ParticipantSearchResponse: TIMESTAMP (Unix TIMESTAMP when the request is sent) and participants, an array of full participant records with participant_code, linked_registry_codes, participant_name, scheme_code, roles, address, primaryEmail, additionalEmail, phone, primaryMobile, additionalMobile, status, signing_cert_path, encryption_cert, endpoint_URL and payment_details. No state changes and no callback. An unknown code returns 404 with the ErrorResponse envelope; 400 and 500 are the other documented outcomes.
 
 ### Common mistakes
 
@@ -40,7 +40,7 @@ HTTP 200 with ParticipantSearchResponse: timestamp (Unix timestamp when the requ
 
 ### Related scenario
 
-A hospital's TPA desk has selected a payer code from /fetch/participants/list for a PMJAY patient. Before submitting anything the integration calls /participant/search with that participant_code and receives the payer's record: roles include payer, status is Active, scheme_code matches, and endpoint_url and encryption_cert are populated. The engine stores the code as the payerId that will become x-hcx-recipient_code, calls /fetch/certs to obtain the actual certificate, and then encrypts and sends /v1/coverageeligibility/check.
+A hospital's TPA desk has selected a payer code from /fetch/participants/list for a PMJAY patient. Before submitting anything the integration calls /participant/search with that participant_code and receives the payer's record: roles include payer, status is Active, scheme_code matches, and endpoint_URL and encryption_cert are populated. The engine stores the code as the payerId that will become x-hcx-recipient_code, calls /fetch/certs to obtain the actual certificate, and then encrypts and sends /v1/coverageeligibility/check.
 
 ### Specification
 

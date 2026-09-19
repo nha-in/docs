@@ -2,14 +2,6 @@
 
 Milestone 3 enables a participating entity, acting as a [Health Information User](/docs/pr-14/docs/hiecm/v3/getting-started/glossary#hiu) (HIU), to request and retrieve a patient's health information through the ABDM consent-management framework. The HIU initiates a consent request with the prescribed parameters. Upon the patient's approval, the [HIE-CM](/docs/pr-14/docs/hiecm/v3/getting-started/glossary#hie-cm) provides the applicable [consent artefact](/docs/pr-14/docs/hiecm/v3/getting-started/glossary#consent-artefact) details. These enable the HIU to request and retrieve authorised health information from the concerned Health Information Provider(s).
 
-[Try the M3 APIs](/docs/pr-14/docs/hiecm/v3/api/m3)
-
-[Every call in M3, one page each: the headers it needs, the payload it takes, the callback it triggers, and a request builder you can fire at the sandbox.](/docs/pr-14/docs/hiecm/v3/api/m3)
-
-[Error codes](/docs/pr-14/docs/hiecm/v3/api/m3/errors)
-
-[What each code M3 returns actually means, and the first thing to check when you see one.](/docs/pr-14/docs/hiecm/v3/api/m3/errors)
-
 ## In short
 
 The HIU initiates a consent request using the patient's [ABHA Address](/docs/pr-14/docs/hiecm/v3/getting-started/glossary#abha-address). The HIE-CM notifies the patient and communicates the consent status through the ABDM Gateway. Upon approval, the HIU fetches the generated consent artefact(s) and requests the authorised health information. The concerned [HIP](/docs/pr-14/docs/hiecm/v3/getting-started/glossary#hip) encrypts and transfers the information to the HIU's specified data-push URL, following which the HIU submits the prescribed receipt-status notification.
@@ -54,20 +46,19 @@ Every M3 call and callback with its error codes in one file: 25 operations, 95 c
 [SKILL.md](/docs/pr-14/skills/abdm-m3/SKILL.md "The router. Use the command below to take the references with it.")
 
 - ScaffoldThe loop that builds the module flow by flow against the sandbox, ending on an observed result rather than on a call returning 200.
-- Integrate25 operations, with their hosts, headers and the rules that hold across them.
-- Debug95 recorded error codes, each with its message and what to do about it.
-- Test32 test cases, each with the call it makes and what to see when it passes.
+- Integrate23 operations, with their hosts, headers and the rules that hold across them.
+- DebugNo error code is recorded for this module yet.
 
-`mkdir -p .claude/skills/abdm-m3/references && curl -fsSL https://nha-in.github.io/docs/pr-14/skills/abdm-m3/SKILL.md -o .claude/skills/abdm-m3/SKILL.md && for f in scaffold integrate debug test; do curl -fsSL https://nha-in.github.io/docs/pr-14/skills/abdm-m3/references/$f.md -o .claude/skills/abdm-m3/references/$f.md; done`
+`mkdir -p .claude/skills/abdm-m3/references && curl -fsSL https://nha-in.github.io/docs/pr-14/skills/abdm-m3/SKILL.md -o .claude/skills/abdm-m3/SKILL.md && for f in scaffold integrate debug; do curl -fsSL https://nha-in.github.io/docs/pr-14/skills/abdm-m3/references/$f.md -o .claude/skills/abdm-m3/references/$f.md; done`
 
-[Open in Claude](claude://code/new?q=Install%20the%20ABDM%20M3%20agent%20skill%20into%20this%20project%2C%20then%20help%20me%20use%20it.%0A%0ARun%20this%3A%0Amkdir%20-p%20.claude%2Fskills%2Fabdm-m3%2Freferences%20%26%26%20curl%20-fsSL%20https%3A%2F%2Fnha-in.github.io%2Fdocs%2Fpr-14%2Fskills%2Fabdm-m3%2FSKILL.md%20-o%20.claude%2Fskills%2Fabdm-m3%2FSKILL.md%20%26%26%20for%20f%20in%20scaffold%20integrate%20debug%20test%3B%20do%20curl%20-fsSL%20https%3A%2F%2Fnha-in.github.io%2Fdocs%2Fpr-14%2Fskills%2Fabdm-m3%2Freferences%2F%24f.md%20-o%20.claude%2Fskills%2Fabdm-m3%2Freferences%2F%24f.md%3B%20done%0A%0AIf%20this%20session%20did%20not%20open%20in%20the%20repository%20I%20am%20integrating%20ABDM%20into%2C%20ask%20me%20for%20the%20path%20before%20you%20write%20anything.)
+[Open in Claude](claude://code/new?q=Install%20the%20ABDM%20M3%20agent%20skill%20into%20this%20project%2C%20then%20help%20me%20use%20it.%0A%0ARun%20this%3A%0Amkdir%20-p%20.claude%2Fskills%2Fabdm-m3%2Freferences%20%26%26%20curl%20-fsSL%20https%3A%2F%2Fnha-in.github.io%2Fdocs%2Fpr-14%2Fskills%2Fabdm-m3%2FSKILL.md%20-o%20.claude%2Fskills%2Fabdm-m3%2FSKILL.md%20%26%26%20for%20f%20in%20scaffold%20integrate%20debug%3B%20do%20curl%20-fsSL%20https%3A%2F%2Fnha-in.github.io%2Fdocs%2Fpr-14%2Fskills%2Fabdm-m3%2Freferences%2F%24f.md%20-o%20.claude%2Fskills%2Fabdm-m3%2Freferences%2F%24f.md%3B%20done%0A%0AIf%20this%20session%20did%20not%20open%20in%20the%20repository%20I%20am%20integrating%20ABDM%20into%2C%20ask%20me%20for%20the%20path%20before%20you%20write%20anything.)
 
 Drops the skill into this project. Claude loads it when a task matches.
 
 How to use it
 
 1. Run the command above in the repository you are integrating.
-2. Ask your agent for the job in your own words. "Raise a consent request and fetch the records it covers", "why am I getting ABDM-1000", or "write the M3 tests for this". The skill loads when the task matches it.
+2. Ask your agent for the job in your own words. "Raise a consent request and fetch the records it covers". The skill loads when the task matches it.
 3. Check what it writes against these pages. The skill carries the facts, not the sandbox: nothing in it has been run against ABDM.
 4. Open in Claude needs that app installed. It fills the composer and waits: nothing runs until you read it and press Enter.
 
@@ -171,5 +162,5 @@ Decrypt the data, then present it in a readable format. The key exchange is [ECD
 ## Next
 
 - The calls, callbacks and error codes: [M3 API reference](/docs/pr-14/docs/hiecm/v3/api/m3).
-- The cases M3 is tested against: [M3 testing use cases](/docs/pr-14/docs/hiecm/v3/resources/testing/m3). Certification runs once, for the whole integration: [Go live](/docs/pr-14/docs/hiecm/v3/getting-started/going-live).
+- The cases M3 is tested against: the certification pack NHA issues. Certification runs once, for the whole integration: [Go live](/docs/pr-14/docs/hiecm/v3/getting-started/going-live).
 - The next milestone: [M4 Enrol](/docs/pr-14/docs/hiecm/v3/milestones/m4).

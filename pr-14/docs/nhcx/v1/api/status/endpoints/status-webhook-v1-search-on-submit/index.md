@@ -2,7 +2,7 @@
 
 `POST v1_search_on_submit`
 
-Hosted by the provider. The exchange posts this message to the `endpoint_url` you registered, at `/v1/search/on_submit`, with the headers and the sealed payload the sender posted. Answer HTTP 202 with the receipt first and process afterwards; [Receiving a callback](/docs/nhcx/v1/getting-started/receiving-a-callback) has the rules.
+Hosted by the provider. The exchange posts this message to the `endpoint_URL` you registered, at `/v1/search/on_submit`, with the headers and the sealed payload the sender posted. Answer HTTP 202 with the receipt first and process afterwards; [Receiving a callback](/docs/nhcx/v1/getting-started/receiving-a-callback) has the rules.
 
 Callback returning a search result for task type code=poll; for a claim-document search the payload is the ClaimResponse for the reference number.
 

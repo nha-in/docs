@@ -1,4 +1,4 @@
-# Predetermination request
+# Submit the predetermination request
 
 `POST /v1/predetermination/submit`
 
@@ -18,7 +18,7 @@ Before a planned admission, with a payer that has confirmed it supports predeter
 - The bundle carries `Claim`, `Patient`, the provider and payer `Organization`, `Coverage`, `Practitioner` and `Procedure`, shaped as in the pre-authorisation chapters.
 - `Claim.use` is `predetermination`, and `Claim.identifier[0].value` carries your predetermination reference.
 - A valid session token, the recipient's certificate, and the bundle sealed as a JWE in `payload`, with the protected headers mirrored onto the wire.
-- A fresh `x-hcx-api_call_id` and a new `x-hcx-correlation_id` for the cycle.
+- A fresh `x-hcx-API_call_ID` and a new `x-hcx-correlation_ID` for the cycle.
 
 ### Postconditions
 

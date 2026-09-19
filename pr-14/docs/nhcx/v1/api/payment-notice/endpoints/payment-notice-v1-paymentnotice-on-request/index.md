@@ -1,4 +1,4 @@
-# Payment notice acknowledgement
+# Submit the payment notice acknowledgement
 
 `POST /v1/paymentnotice/on_request`
 
@@ -10,13 +10,13 @@ The acknowledgement confirms to the payer that the provider has received and rec
 
 ### When to use
 
-Called by the provider after processing a /v1/paymentnotice/request message, using the same correlation ID, with x-hcx-workflow_id 17 PAYMENT_RECEIVED and x-hcx-status response.complete (the NHA sheet lists 17 Payment Notice Received as response.complete). The plaintext is a Task with status completed, intent order, code status from the HL7 financialtaskcode system, output[0] paymentack (Payment is acknowledged) and output[1] claimNumber carrying the acknowledged claim number; Task.requester is the provider and Task.owner the payer, the reverse of the notice. The handbook narrative alternatively places this acknowledgement on /v1/task/submit; the OpenAPI contract and the Payment use-case document support this endpoint.
+Called by the provider after processing a /v1/paymentnotice/request message, using the same correlation ID, with x-hcx-workflow_ID 17 PAYMENT_RECEIVED and x-hcx-status response.complete (the NHA sheet lists 17 Payment Notice Received as response.complete). The plaintext is a Task with status completed, intent order, code status from the HL7 financialtaskcode system, output[0] paymentack (Payment is acknowledged) and output[1] claimNumber carrying the acknowledged claim number; Task.requester is the provider and Task.owner the payer, the reverse of the notice. The handbook narrative alternatively places this acknowledgement on /v1/task/submit; the OpenAPI contract and the Payment use-case document support this endpoint.
 
 ### Preconditions
 
 - A payment notice with this correlation ID has been received and acknowledged with 202 (NHCX-1010 if NHCX has no record of it).
 - The provider holds a valid Bearer token and the payer's certificate, and encrypts the acknowledgement Task for the payer.
-- x-hcx-correlation_id echoes the notice; x-hcx-api_call_id is new; the provider is sender and the payer is recipient.
+- x-hcx-correlation_ID echoes the notice; x-hcx-API_call_ID is new; the provider is sender and the payer is recipient.
 - Task.output[0].valueCodeableConcept.coding.code is paymentack and Task.output[1].valueString is the claim number from the notice; Task.status is completed.
 - x-hcx-status is response.complete, or response.error with x-hcx-error_details for a protocol-level problem.
 
@@ -39,7 +39,7 @@ NHCX returns HTTP 202 Accepted with a StatusSuccessResponse acknowledgement (ent
 - Echo the claim number from PaymentNotice.identifier (type CLN) into Task.output[1].valueString so the payer can match it without decrypting the original.
 - Confirm with the payer during onboarding whether it expects the acknowledgement here or on /v1/task/submit, given the documented source conflict.
 - Be idempotent: if the same notice is redelivered, acknowledge again with the same content rather than creating a second ledger entry.
-- Log api_call_id and correlation ID for the acknowledgement so the closed lifecycle can be evidenced.
+- Log API_call_ID and correlation ID for the acknowledgement so the closed lifecycle can be evidenced.
 
 ### Related scenario
 

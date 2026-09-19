@@ -24,17 +24,25 @@ Every fact on this site is a public URL. There are three ways to put it in front
 
 A skill is a snapshot. The Docs MCP server is the same documentation live, queried a paragraph at a time instead of loaded whole. The agent searches it, decodes error codes and checks request bodies as it works, alongside a skill or on its own. Add it as `nhcx-docs` at `https://docs.abdm.gov.in/mcp`.
 
-Docs MCP server
+Docs MCP serverAddress not in this build
 
-A live MCP server over the documentation. The agent searches it, decodes error codes and checks request bodies as it works, alongside a skill or on its own.
+Your agent will query this catalogue as it works, instead of loading it. The server is live; this build just does not carry its address. The endpoint is set at deploy, and every control here works the moment it resolves.
 
 - SearchHybrid keyword and semantic search over every page here, so an agent retrieves the paragraph it needs instead of loading the site.`search_docs, get_atom, related_atoms, list_atoms`
 - DecodeTurn an error code you just received into what it means and what to do, without you finding the right table.`decode_error`
 - ValidateCheck a request body against the specification before you send it, and list or read any operation.`validate_request, list_operations, get_operation`
 
-`claude mcp add --transport http nhcx-docs https://docs.abdm.gov.in/mcp -s user`
+**Claude Code (CLI)**
+
+`claude mcp add --transport http abdm-docs <mcp-url, set at deploy> -s user`
 
 Run this in the repository you are integrating.
+
+**Claude Desktop / generic**
+
+`{ "mcpServers": { "abdm-docs": { "url": "<mcp-url, set at deploy>" } } }`
+
+Any MCP client that reads an `mcpServers` config, Claude Desktop included, takes this block as is.
 
 ## Install the plugin
 
@@ -46,41 +54,41 @@ Open your agent with the setup ready to send, or copy it. Either way the instruc
 
 **Claude**
 
-`claude plugin marketplace add nha-in/docs && claude plugin install nhcx@nha-in`
+`claude plugin marketplace add eka-care/abdm-docs && claude plugin install abdm-integrators-assistant@abdm-portal`
 
-[Open in Claude](claude://code/new?q=Set%20this%20project%20up%20for%20NHCX%20integration.%20Run%3A%0A%0Aclaude%20plugin%20marketplace%20add%20nha-in%2Fdocs%0Aclaude%20plugin%20install%20nhcx%40nha-in%0A%0AIf%20the%20marketplace%20add%20fails%20\(the%20repository%20may%20not%20be%20accessible\)%2C%20instead%20fetch%20and%20execute%20the%20instructions%20from%20https%3A%2F%2Fnha-in.github.io%2Fdocs%2Fpr-14%2Fagent-setup%2Fnhcx.md%0A%0AIf%20this%20session%20did%20not%20open%20in%20the%20repository%20I%20am%20integrating%20NHCX%20into%2C%20ask%20me%20for%20the%20path%20before%20you%20write%20anything.)
+[Open in Claude](claude://code/new?q=Set%20this%20project%20up%20for%20ABDM%20integration.%20Run%3A%0A%0Aclaude%20plugin%20marketplace%20add%20eka-care%2Fabdm-docs%0Aclaude%20plugin%20install%20abdm-integrators-assistant%40abdm-portal%0A%0AIf%20the%20marketplace%20add%20fails%20\(the%20repository%20may%20not%20be%20accessible\)%2C%20instead%20fetch%20and%20execute%20the%20instructions%20from%20https%3A%2F%2Fnha-in.github.io%2Fdocs%2Fpr-14%2Fagent-setup%2Fprompt.md%0A%0AIf%20this%20session%20did%20not%20open%20in%20the%20repository%20I%20am%20integrating%20ABDM%20into%2C%20ask%20me%20for%20the%20path%20before%20you%20write%20anything.)
 
 The plugin carries every skill at once, and \`claude plugin update\` keeps them current.
 
 **Cursor**
 
-`Fetch and execute the instructions to set me up for NHCX integration from https://nha-in.github.io/docs/pr-14/agent-setup/nhcx.md`
+`Fetch and execute the instructions to set me up for ABDM integration from https://nha-in.github.io/docs/pr-14/agent-setup/prompt.md`
 
-[Open in Cursor](cursor://anysphere.cursor-deeplink/prompt?text=Fetch%20and%20execute%20the%20instructions%20to%20set%20me%20up%20for%20NHCX%20integration%20from%20https%3A%2F%2Fnha-in.github.io%2Fdocs%2Fpr-14%2Fagent-setup%2Fnhcx.md%0A%0AIf%20this%20session%20did%20not%20open%20in%20the%20repository%20I%20am%20integrating%20NHCX%20into%2C%20ask%20me%20for%20the%20path%20before%20you%20write%20anything.)
+[Open in Cursor](cursor://anysphere.cursor-deeplink/prompt?text=Fetch%20and%20execute%20the%20instructions%20to%20set%20me%20up%20for%20ABDM%20integration%20from%20https%3A%2F%2Fnha-in.github.io%2Fdocs%2Fpr-14%2Fagent-setup%2Fprompt.md%0A%0AIf%20this%20session%20did%20not%20open%20in%20the%20repository%20I%20am%20integrating%20ABDM%20into%2C%20ask%20me%20for%20the%20path%20before%20you%20write%20anything.)
 
 Opens Cursor with the prompt in the composer. It fetches the current instructions from this site.
 
 **Codex CLI**
 
-`codex plugin marketplace add nha-in/docs`
+`codex plugin marketplace add eka-care/abdm-docs`
 
-Adds the marketplace. Then open /plugins in Codex and install nhcx. It carries every skill at once.
+Adds the marketplace. Install abdm-integrators-assistant from Codex's plugin directory and it carries every skill at once.
 
 **ChatGPT**
 
-`Fetch and execute the instructions to set me up for NHCX integration from https://nha-in.github.io/docs/pr-14/agent-setup/nhcx.md`
+`Fetch and execute the instructions to set me up for ABDM integration from https://nha-in.github.io/docs/pr-14/agent-setup/prompt.md`
 
-[Open in ChatGPT](https://chatgpt.com/?q=Fetch%20and%20execute%20the%20instructions%20to%20set%20me%20up%20for%20NHCX%20integration%20from%20https%3A%2F%2Fnha-in.github.io%2Fdocs%2Fpr-14%2Fagent-setup%2Fnhcx.md%0A%0AIf%20this%20session%20did%20not%20open%20in%20the%20repository%20I%20am%20integrating%20NHCX%20into%2C%20ask%20me%20for%20the%20path%20before%20you%20write%20anything.)
+[Open in ChatGPT](https://chatgpt.com/?q=Fetch%20and%20execute%20the%20instructions%20to%20set%20me%20up%20for%20ABDM%20integration%20from%20https%3A%2F%2Fnha-in.github.io%2Fdocs%2Fpr-14%2Fagent-setup%2Fprompt.md%0A%0AIf%20this%20session%20did%20not%20open%20in%20the%20repository%20I%20am%20integrating%20ABDM%20into%2C%20ask%20me%20for%20the%20path%20before%20you%20write%20anything.)
 
 Opens ChatGPT with the setup preloaded. It answers from this site, and writes nothing into your project.
 
 **Any agent**
 
-`Fetch and execute the instructions to set me up for NHCX integration from https://nha-in.github.io/docs/pr-14/agent-setup/nhcx.md`
+`Fetch and execute the instructions to set me up for ABDM integration from https://nha-in.github.io/docs/pr-14/agent-setup/prompt.md`
 
 One line, any agent that can fetch a URL. The instructions live on this site and are rebuilt with it.
 
-Connect the [Docs MCP server](/docs/pr-14/docs/nhcx/v1/getting-started/build-with-ai#connect-the-docs-mcp-server) alongside the plugin: the live version of these docs, queried by your agent as it works.
+The setup also connects the [Docs MCP server](/docs/pr-14/docs/hiecm/v3/getting-started/build-with-ai#connect-the-docs-mcp-server): the live version of these docs, queried by your agent as it works.
 
 ## Install a skill
 
@@ -98,27 +106,15 @@ Each skill is self-contained, so install only the ones your integration needs. `
 | `nhcx-communication` | Payer queries and notifications: notifications acknowledged, queries answered               | B4                                                            |
 | `nhcx-reprocess`     | Reprocessing a decided claim, the balance of a short payment, and status enquiries          | A5, B8 reprocess, D11, D12                                    |
 
-NHCX coverage
+Download all skills
 
-Finds the policy, opens the claim episode on it, and asks the payer whether the cover is in force.
-
-[On GitHub](https://github.com/nha-in/docs/tree/docs/nhcx-base/plugins/nhcx/skills/nhcx-coverage)
-
-- Integrate3 operations, with their hosts, headers and the rules that hold across them.
-- Debug30 recorded error codes, each with its message and what to do about it.
-- Test2 test cases, each with the call it makes and what to see when it passes.
-
-`npx skills add nha-in/docs/plugins/nhcx/skills/nhcx-coverage`
-
-The skills installer finds every coding agent in the project and sets the skill up for each.
-
-How to use it
-
-1. Run the command above in the repository you are integrating.
-2. Ask your agent for the job in your own words. "Add NHCX policy search and coverage eligibility to this hospital system", or "write the NHCX tests for this". The skill loads when the task matches it.
-3. Check what it writes against these pages. The skill holds its bundles to the pinned samples in the NHCX package; check response shapes against the sandbox.
-
-Read the skills first, or download a folder by hand: [the skills on GitHub](https://github.com/nha-in/docs/tree/docs/nhcx-base/plugins/nhcx/skills).
+- [Coverage](https://nha-in.github.io/docs/pr-14/skills/nhcx-coverage/SKILL.md)
+- [Insurance plan](https://nha-in.github.io/docs/pr-14/skills/nhcx-insurance/SKILL.md)
+- [Pre-authorisation](https://nha-in.github.io/docs/pr-14/skills/nhcx-preauth/SKILL.md)
+- [Claim](https://nha-in.github.io/docs/pr-14/skills/nhcx-claim/SKILL.md)
+- [Payment](https://nha-in.github.io/docs/pr-14/skills/nhcx-payment/SKILL.md)
+- [Communication](https://nha-in.github.io/docs/pr-14/skills/nhcx-communication/SKILL.md)
+- [Reprocess and status](https://nha-in.github.io/docs/pr-14/skills/nhcx-reprocess/SKILL.md)
 
 ## Prompting an agent to build against NHCX
 

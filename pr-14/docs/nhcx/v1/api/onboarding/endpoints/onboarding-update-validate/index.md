@@ -10,13 +10,13 @@ Changing a participant's encryption certificate or callback endpoint changes whe
 
 ### When to use
 
-Call it after /v2/participant/update returns a transactionid and the passcode arrives by SMS, within the 24-hour validity window. The production URL is https://apisprod.nha.gov.in/pmjay/hcx/participanthcxservice/update/validate?transactionId=""&passcode="". It is also the closing step of the annual key-rotation checklist when rotation is done via /v2/participant/update. The passcode-free alternative for certificate-only changes is /v2/update/cert. No workflow or x-hcx-status codes apply.
+Call it after /v2/participant/update returns a transactionid and the passcode arrives by SMS, within the 24-hour validity window. The production URL is https://apisprod.NHA.gov.in/pmjay/hcx/participanthcxservice/update/validate?transactionId=""&passcode="". It is also the closing step of the annual key-rotation checklist when rotation is done via /v2/participant/update. The passcode-free alternative for certificate-only changes is /v2/update/cert. No workflow or x-hcx-status codes apply.
 
 ### Preconditions
 
 - The participant is already registered and its creation was confirmed via /validate.
 - A completed /v2/participant/update that returned a transactionid, with the matching passcode received on the registered mobile number.
-- The call is made within 24 hours; each new update trigger generates a new transaction id and passcode.
+- The call is made within 24 hours; each new update trigger generates a new transaction ID and passcode.
 - Bearer token with the Bearer prefix in bearer_auth and Accept: application/json; parameters go in the query string.
 
 ### Postconditions
@@ -29,14 +29,14 @@ HTTP 200 with a bare string body (operation particiapntUpdateValidate, response 
 - Presenting a passcode from a previous update attempt after a new one was triggered.
 - Letting the 24-hour window lapse and then retrying validation instead of re-issuing the update.
 - Calling /validate (creation) instead of /update/validate.
-- Losing the transaction id, which requires repeating the update request.
+- Losing the transaction ID, which requires repeating the update request.
 
 ### Best practices
 
 - Rotate keys in two phases: keep the old private key available for decrypting inbound callbacks until the update is validated and cached certificates (24-hour TTL on the payer side) have refreshed.
 - Persist transactionid with its 24-hour expiry and record who completed validation, for audit.
 - Never log the passcode; treat it as a one-time credential.
-- After success, call /participant/search on your own code to confirm encryption_cert and endpoint_url reflect the change.
+- After success, call /participant/search on your own code to confirm encryption_cert and endpoint_URL reflect the change.
 
 ### Related scenario
 

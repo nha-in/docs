@@ -10,7 +10,7 @@ The claim service OpenAPI lists /v1/delete as an internal troubleshooting operat
 
 ### When to use
 
-Only in troubleshooting, and only as directed by NHCX support. The endpoint index describes it as internal troubleshooting, deleting records by correlationid plus action. It does not appear in any transaction flow, sample bundle or workflow-code table, and it carries no x-hcx-workflow_id semantics. It is unrelated to the platform behaviour in which NHCX itself deletes a request after five failed delivery attempts; that deletion is automatic and needs no call.
+Only in troubleshooting, and only as directed by NHCX support. The endpoint index describes it as internal troubleshooting, deleting records by correlationid plus action. It does not appear in any transaction flow, sample bundle or workflow-code table, and it carries no x-hcx-workflow_ID semantics. It is unrelated to the platform behaviour in which NHCX itself deletes a request after five failed delivery attempts; that deletion is automatic and needs no call.
 
 ### Preconditions
 

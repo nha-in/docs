@@ -1,4 +1,4 @@
-# Dummy payer, send a payment notice
+# Submit the dummy payer, send a payment notice
 
 `POST /paymentNotice/init`
 

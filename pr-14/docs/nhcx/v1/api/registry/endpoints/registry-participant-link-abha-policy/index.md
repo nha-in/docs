@@ -2,7 +2,7 @@
 
 `POST /participant/link/abha/policy`
 
-Payer-side write that links a beneficiary's ABHA number and member id to one or more products, so provider policy lookups can find them.
+Payer-side write that links a beneficiary's ABHA number and member ID to one or more products, so provider policy lookups can find them.
 
 ### Business purpose
 
@@ -14,20 +14,20 @@ Use it when a policy is issued or renewed, when a member is added to a product, 
 
 ### Preconditions
 
-- A valid Bearer token from the client-credentials call (POST /get/session, form-urlencoded client_id, client_secret, grant_type=client_credentials); tokens last 1200 seconds, so refresh before expiry.
-- HTTP headers Accept: application/json, Content-Type: application/json and bearer_auth: Bearer <token> (the participant service uses bearer_auth, not Authorization).
-- Base path for the participant service: https://apisbx.abdm.gov.in/pmjay/sbxhcx/participanthcxservice (sandbox) or https://apisprod.nha.gov.in/pmjay/hcx/participanthcxservice (production).
-- This is a synchronous plain-JSON registry call: no JWE envelope, no x-hcx-* protocol headers and no correlation id are involved.
-- The caller must be the participant named as payerid (the insurance company) or as processingid (its TPA), and the token must be minted with the client_id used when that participant was created.
+- A valid Bearer token from the client-credentials call (POST /get/session, form-urlencoded client_ID, client_secret, grant_type=client_credentials); tokens last 1200 seconds, so refresh before expiry.
+- HTTP headers Accept: application/json, Content-Type: application/json and bearer_auth: Bearer <token> (the participant service uses bearer_auth, not Authorisation).
+- Base path for the participant service: https://apisbx.ABDM.gov.in/pmjay/sbxhcx/participanthcxservice (sandbox) or https://apisprod.NHA.gov.in/pmjay/hcx/participanthcxservice (production).
+- This is a synchronous plain-JSON registry call: no JWE envelope, no x-hcx-* protocol headers and no correlation ID are involved.
+- The caller must be the participant named as payerid (the insurance company) or as processingid (its TPA), and the token must be minted with the client_ID used when that participant was created.
 - Both the payer and, where applicable, the TPA must already exist in the registry with their own participant codes; every payer has an individual participant code even when it sits under a TPA.
 
 ### Postconditions
 
-On success the service returns HTTP 200 with ParticipantLinkAbhaResponse, whose two optional fields are result (a string) and errormessage (errorcode and errordescription). There is no asynchronous callback; the write is immediately visible to /participant/get/policies and /V2/participant/get/policies keyed by ABHA number, member id or mobile number. The linked payerid and processingid become the values that providers later resolve as the payer and the receiver code for NHCX routing. Failures return 400, 404 or 500 with the ErrorResponse envelope (timestamp plus Error with code, message and trace).
+On success the service returns HTTP 200 with ParticipantLinkAbhaResponse, whose two optional fields are result (a string) and errormessage (errorcode and errordescription). There is no asynchronous callback; the write is immediately visible to /participant/get/policies and /V2/participant/get/policies keyed by ABHA number, member ID or mobile number. The linked payerid and processingid become the values that providers later resolve as the payer and the receiver code for NHCX routing. Failures return 400, 404 or 500 with the ErrorResponse envelope (TIMESTAMP plus Error with code, message and trace).
 
 ### Common mistakes
 
-- Calling with a token minted from a client_id other than the one used at participant creation for the payer or TPA; NHA lists this as common mistake 10 and the call is refused even though the token itself is valid.
+- Calling with a token minted from a client_ID other than the one used at participant creation for the payer or TPA; NHA lists this as common mistake 10 and the call is refused even though the token itself is valid.
 - Confusing payerid and processingid: payerid is always the insurance company's own participant code; processingid is only the TPA code when the payer is mapped under a TPA.
 - Trying to move a payer to a new TPA by re-linking in place; the documented path is de-link, then link again with the new TPA's code as processingid.
 - Omitting one of the required fields (requestid, abhanumber, memberid, payerid, policies with productid and productname) or reusing a non-UUID requestid, which returns 400 with the ErrorResponse envelope.
@@ -43,7 +43,7 @@ On success the service returns HTTP 200 with ParticipantLinkAbhaResponse, whose 
 
 ### Related scenario
 
-A private insurer onboards a new group policy for a corporate client and issues a family floater to a beneficiary who already holds an ABHA. Its policy administration system has previously registered the product through /product/link and now calls /participant/link/abha/policy with the beneficiary's ABHA number, member id, the insurer's own participant code as payerid and the TPA's code as processingid. A week later the beneficiary is admitted to a network hospital; the hospital's desk calls /participant/get/policies with the ABHA number, receives the linked details and uses the processingid as x-hcx-recipient_code for the coverage-eligibility check and the preauthorisation that follow.
+A private insurer onboards a new group policy for a corporate client and issues a family floater to a beneficiary who already holds an ABHA. Its policy administration system has previously registered the product through /product/link and now calls /participant/link/abha/policy with the beneficiary's ABHA number, member ID, the insurer's own participant code as payerid and the TPA's code as processingid. A week later the beneficiary is admitted to a network hospital; the hospital's desk calls /participant/get/policies with the ABHA number, receives the linked details and uses the processingid as x-hcx-recipient_code for the coverage-eligibility check and the preauthorisation that follow.
 
 ### Specification
 

@@ -4,7 +4,7 @@ This section contains the test scenarios applicable for ABDM integration and cer
 
 ## Testing use cases
 
-[Testing use cases](/docs/pr-14/docs/hiecm/v3/resources/testing/), one page per module, starting with [M1](/docs/pr-14/docs/hiecm/v3/resources/testing/m1).
+The certification pack NHA issues names the cases each milestone is tested against.
 
 ## ABDM integration resources
 

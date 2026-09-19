@@ -10,7 +10,7 @@ Every NHCX payload is encrypted end-to-end for exactly one recipient so that eve
 
 ### When to use
 
-Call it before encrypting the first message to a recipient and whenever the 24-hour cache entry for that participantid expires or is evicted after a decrypt or encrypt failure. Providers fetch the payer's certificate before /v1/coverageeligibility/check, /v1/preauth/submit and /v1/claim/submit; payers fetch the provider's certificate before encrypting on_* callbacks. Handbook call: POST /fetch/certs on host apisbx.abdm.gov.in/pmjay/sbxhcx with bearer_auth Bearer <token>. Synchronous; no workflow or x-hcx-status codes.
+Call it before encrypting the first message to a recipient and whenever the 24-hour cache entry for that participantid expires or is evicted after a decrypt or encrypt failure. Providers fetch the payer's certificate before /v1/coverageeligibility/check, /v1/preauth/submit and /v1/claim/submit; payers fetch the provider's certificate before encrypting on_* callbacks. Handbook call: POST /fetch/certs on host apisbx.ABDM.gov.in/pmjay/sbxhcx with bearer_auth Bearer <token>. Synchronous; no workflow or x-hcx-status codes.
 
 ### Preconditions
 

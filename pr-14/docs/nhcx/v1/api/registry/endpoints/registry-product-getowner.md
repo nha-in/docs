@@ -2,22 +2,22 @@
 
 `POST /product/getowner`
 
-Resolves a product id to the participant code of the payer that owns it.
+Resolves a product ID to the participant code of the payer that owns it.
 
 ### Business purpose
 
-Given only a product identifier, an integrator often needs to know which payer stands behind it. This Retrieving API call takes a ProductOwnerRequest with productid and returns ParticipantCreateResponse, whose participant_code is the owning participant's identifier on the HCX instance. That makes it a useful bridge between a product seen on a policy document or in a policy lookup and the participant code that must go into routing. Note that the OpenAPI description reads "This API is to generate the product Id and product Name", which does not match the response schema; the source does not resolve this conflict.
+Given only a product identifier, an integrator often needs to know which payer stands behind it. This Retrieving API call takes a ProductOwnerRequest with productid and returns ParticipantCreateResponse, whose participant_code is the owning participant's identifier on the HCX instance. That makes it a useful bridge between a product seen on a policy document or in a policy lookup and the participant code that must go into routing. Note that the OpenAPI description reads "This API is to generate the product ID and product Name", which does not match the response schema; the source does not resolve this conflict.
 
 ### When to use
 
-Use it when you hold a product id but not the payer participant code, for example while normalising a policy lookup or verifying a newly linked product. It is a synchronous helper in the member layer, used before InsurancePlan retrieval, coverage eligibility or preauthorisation rather than during them. Payers use it after /product/link or /product/delink to confirm the registry state.
+Use it when you hold a product ID but not the payer participant code, for example while normalising a policy lookup or verifying a newly linked product. It is a synchronous helper in the member layer, used before InsurancePlan retrieval, coverage eligibility or preauthorisation rather than during them. Payers use it after /product/link or /product/delink to confirm the registry state.
 
 ### Preconditions
 
-- A valid Bearer token from the client-credentials call (POST /get/session, form-urlencoded client_id, client_secret, grant_type=client_credentials); tokens last 1200 seconds, so refresh before expiry.
-- HTTP headers Accept: application/json, Content-Type: application/json and bearer_auth: Bearer <token> (the participant service uses bearer_auth, not Authorization).
-- Base path for the participant service: https://apisbx.abdm.gov.in/pmjay/sbxhcx/participanthcxservice (sandbox) or https://apisprod.nha.gov.in/pmjay/hcx/participanthcxservice (production).
-- This is a synchronous plain-JSON registry call: no JWE envelope, no x-hcx-* protocol headers and no correlation id are involved.
+- A valid Bearer token from the client-credentials call (POST /get/session, form-urlencoded client_ID, client_secret, grant_type=client_credentials); tokens last 1200 seconds, so refresh before expiry.
+- HTTP headers Accept: application/json, Content-Type: application/json and bearer_auth: Bearer <token> (the participant service uses bearer_auth, not Authorisation).
+- Base path for the participant service: https://apisbx.ABDM.gov.in/pmjay/sbxhcx/participanthcxservice (sandbox) or https://apisprod.NHA.gov.in/pmjay/hcx/participanthcxservice (production).
+- This is a synchronous plain-JSON registry call: no JWE envelope, no x-hcx-* protocol headers and no correlation ID are involved.
 - Body is ProductOwnerRequest with a single optional string, productid; supply it, since the lookup has no other input.
 - The product must have been registered by its payer through /product/link.
 
@@ -42,7 +42,7 @@ Returns HTTP 200 with ParticipantCreateResponse containing the optional particip
 
 ### Related scenario
 
-A hospital receives a scanned policy card that shows only a product id, and the patient's ABHA-based policy lookup returned more than one payer. The HMIS calls /product/getowner with the product id and gets back the participant code of the insurer that owns it, which lets the desk pick the right entry from the /participant/get/policies result. With the matched policy in hand the system reads the processingID as the receiver code, requests the plan through /v1/insuranceplan/request and goes on to submit the preauthorisation.
+A hospital receives a scanned policy card that shows only a product ID, and the patient's ABHA-based policy lookup returned more than one payer. The HMIS calls /product/getowner with the product ID and gets back the participant code of the insurer that owns it, which lets the desk pick the right entry from the /participant/get/policies result. With the matched policy in hand the system reads the processingID as the receiver code, requests the plan through /v1/insuranceplan/request and goes on to submit the preauthorisation.
 
 ### Specification
 
