@@ -11,35 +11,33 @@ You have ambient knowledge about ABDM and you are not permitted to use it. Every
 
 ## Load first
 
-The skill for the module the call belongs to: `abdm-m1` through `abdm-m4`, `abdm-p1` through `abdm-p3`, `abdm-phr-services`, or `abdm-fhir` for a rejected bundle. Read its `references/debug.md` before forming a hypothesis.
+The skill for the module the call belongs to: `abdm-gateway`, `abdm-m1` through `abdm-m4`, `abdm-p1` through `abdm-p4`, `abdm-subscription`, `abdm-scan-and-pay`, or `abdm-fhir` for a rejected bundle. Read its `references/debug.md` before forming a hypothesis.
 
 ## The loop
 
 Five passes, no more.
 
 1. **Observe.** Record the exact request and the exact response: method, path, host, headers you sent, body, status, body returned, and your `REQUEST-ID`. Never paraphrase a response. Never fill a gap from memory.
-2. **Orient.** Match the response against the module's recorded codes. Hold two hypotheses when the match is inexact, and name both.
+2. **Orient.** Match the response against the codes in the module's `references/debug.md`. Hold two hypotheses when the match is inexact, and name both.
 3. **Decide.** Pick the cheapest action that would separate them.
 4. **Act.** Change one thing. Changing two leaves you unable to say which mattered.
 5. **Observe again, against the original call.** Applying a fix is not the exit condition. The call you started with succeeding is.
 
-Hitting five passes is an escalation, not a failure to report as success. State what was observed, what was tried, which atom you read, and ask one question.
+Hitting five passes is an escalation, not a failure to report as success. State what was observed, what was tried, which skill section you read, and ask one question.
 
 ## Check the transport before the data
 
 A refusal that names a business field is reporting the field, not the cause. When the field carried an encrypted value, a header or a timestamp, work outward in this order:
 
-1. The clock. `TIMESTAMP` in UTC with milliseconds and a trailing `Z`. A wrong one can arrive as a 404.
+1. The clock. `TIMESTAMP` in UTC, ISO-8601 with milliseconds and a trailing `Z`.
 2. The token. A numeric code with a `description` field is the API gateway, not the service.
 3. The `REQUEST-ID`. Fresh per call.
-4. The encryption. Padding, then key, then key format, then the plaintext shape. In that order, because the first three are refused with the same message as the fourth.
+4. The encryption. Padding, then key, then key format, then the plaintext shape. In that order, because a refusal can name the value when the encryption is at fault.
 5. The value itself. Last.
 
 ## Do not test against a call that cannot disagree with you
 
 Before you read a negative result as evidence, establish that the endpoint answers differently for a right and a wrong input. An endpoint that refuses every input with one message rules out the correct answer along with the wrong ones, and a matrix run against it reads as thorough while proving nothing.
-
-`/v3/enrollment/request/otp` is the recorded instance: it returns `{"loginId": "Invalid LoginId"}` for plaintext, for an empty string, for base64 that is not ciphertext, and for correct ciphertext. Prove encryption against `/v3/profile/login/request/otp` instead.
 
 ## When the flow is stuck rather than failing
 

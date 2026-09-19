@@ -1,0 +1,9 @@
+- id: subscription-subscription-hiu
+  title: Subscription request and notifications, HIU side
+  steps:
+    - op: subscription_post_subscription_requests_v3_init
+    - op: subscription_post_v3_hiu_hiecm_subscription_requests_on_init
+    - op: subscription_post_v3_hiu_subscription_requests_hiu_notify
+    - op: subscription_post_subscription_requests_v3_hiu_on_notify
+    - op: subscription_post_v3_hiu_subscription_notify
+    - op: subscription_post_subscription_requests_v3_hiu_care_conte_96bc45

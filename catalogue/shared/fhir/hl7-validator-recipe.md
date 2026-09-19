@@ -24,7 +24,6 @@ sources:
       NRCeS's own download for the package above.
 related:
   fhir: [shared.fhir.document-bundles, shared.fhir.map-opconsultation, shared.fhir.map-prescription, shared.fhir.map-diagnosticreport]
-  glossary: [shared.glossary.nrces]
 ---
 
 # Running the official HL7 validator, the tier 2 full conformance check

@@ -9,9 +9,9 @@ summary: >
   India's national programme for connecting health records, identities
   and facilities across providers.
 sources:
-  - file: ABDM Sandbox/ABDM/Proposed Simplified Milestone 1.docx
-    status: not-yet-hashed
-    note: NHA milestone pack for M1.
+  - file: catalogue/openapi/.raw/nha-2026-09-16/abha/M1 ABHA Swagger 1.yaml
+    fetched: 2026-09-16
+    hash: sha256:6ab5cfe77c29032fac5fbf25c8e28529f22951e459374fa618f570f15e25551b
 related:
   concepts: []
 ---

@@ -8,8 +8,8 @@ title: NHCX, the National Health Claims Exchange
 summary: >
   The gateway for insurance claims, separate from HIE-CM and UHI.
 sources:
-  - file: site/docs/_glossary/_shared.mdx
-    status: not-yet-hashed
+  - url: https://github.com/eka-care/abdm-docs/blob/main/site/docs/_glossary/_shared.mdx
+    status: reference
     note: >
       This portal's own published glossary, where the definition was
       written first. Moved here so it can be retrieved, not rewritten.

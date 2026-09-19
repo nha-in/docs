@@ -117,43 +117,29 @@ Send at least one input.
         "resourceType": "Task",
         "id": "<TASK_UUID>",
         "meta": {
-          "profile": [
-            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Task"
-          ]
+          "profile": ["https://nrces.in/ndhm/fhir/r4/StructureDefinition/Task"]
         },
         "status": "requested",
         "intent": "order",
         "code": {
-          "coding": [
-            {
-              "system": "http://terminology.hl7.org/CodeSystem/financialtaskcode",
-              "code": "poll",
-              "display": "Poll"
-            }
-          ]
+          "coding": [{
+              "system": "http://terminology.hl7.org/CodeSystem/financialtaskcode", "code": "poll", "display": "Poll"
+            }]
         },
         "input": [
           {
             "type": {
-              "coding": [
-                {
-                  "system": "https://nrces.in/ndhm/fhir/r4/CodeSystem/ndhm-task-input-type-code",
-                  "code": "policyNumber",
-                  "display": "PolicyNumber"
-                }
-              ]
+              "coding": [{
+                  "system": "https://nrces.in/ndhm/fhir/r4/CodeSystem/ndhm-task-input-type-code", "code": "policyNumber", "display": "PolicyNumber"
+                }]
             },
             "valueString": "<POLICY_NUMBER>"
           },
           {
             "type": {
-              "coding": [
-                {
-                  "system": "https://nrces.in/ndhm/fhir/r4/CodeSystem/ndhm-task-input-type-code",
-                  "code": "providerId",
-                  "display": "Provider ID"
-                }
-              ]
+              "coding": [{
+                  "system": "https://nrces.in/ndhm/fhir/r4/CodeSystem/ndhm-task-input-type-code", "code": "providerId", "display": "Provider ID"
+                }]
             },
             "valueString": "<PROVIDER_ID_KNOWN_TO_THE_PAYER>"
           }

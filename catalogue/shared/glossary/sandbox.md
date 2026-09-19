@@ -9,8 +9,8 @@ summary: >
   NHA's test environment, with its own base URLs and credentials,
   separate from production.
 sources:
-  - file: site/docs/_glossary/_shared.mdx
-    status: not-yet-hashed
+  - url: https://github.com/eka-care/abdm-docs/blob/main/site/docs/_glossary/_shared.mdx
+    status: reference
     note: >
       This portal's own published glossary, where the definition was
       written first. Moved here so it can be retrieved, not rewritten.
@@ -25,8 +25,8 @@ related:
 NHA's test environment, and where every integration starts: you register
 on the sandbox portal, declare your role and the milestones you plan to
 complete, and receive a client id and client secret. Sandbox hosts
-differ from production, so ABHA calls go to `abhasbx.abdm.gov.in` in
-sandbox and `abha.abdm.gov.in` in production. Everything in sandbox is
+differ from production, and ABHA calls go to `abhasbx.abdm.gov.in` in
+sandbox. Everything in sandbox is
 test data; see [Get started](/docs/hiecm/v3/getting-started/sandbox).
 
 ## Before you start

@@ -196,8 +196,7 @@ The model emits JSON and code renders it. This split is what keeps internal voca
   "citations": [
     {
       "atom_id": "hiecm.error.abdm-1035",
-      "section_heading": "When it goes wrong",
-      "verification_status": "verified"
+      "section_heading": "When it goes wrong"
     }
   ],
   "curl": "a single cURL command, or null",
@@ -209,7 +208,7 @@ The model emits JSON and code renders it. This split is what keeps internal voca
 }
 ```
 
-`atom_id`, `section_heading` and `verification_status` are inputs to the renderer, never output text. `section_heading` must be a heading that exists in that source. When `grounded` is false every other content field must be null, and the renderer produces the gap message.
+`atom_id` and `section_heading` are inputs to the renderer, never output text. `section_heading` must be a heading that exists in that source. When `grounded` is false every other content field must be null, and the renderer produces the gap message.
 
 ## 8. Guardrails
 

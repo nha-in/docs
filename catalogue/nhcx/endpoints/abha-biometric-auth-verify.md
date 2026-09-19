@@ -102,14 +102,9 @@ You receive a JSON body with `authResult` `success`:
   "refreshToken": "<REFRESH_TOKEN>",
   "expiresIn": 1800,
   "refreshExpiresIn": 1296000,
-  "accounts": [
-    {
-      "ABHANumber": "<ABHA_NUMBER>",
-      "preferredAbhaAddress": "<ABHA_ADDRESS>",
-      "name": "<NAME>",
-      "status": "ACTIVE"
-    }
-  ]
+  "accounts": [{
+      "ABHANumber": "<ABHA_NUMBER>", "preferredAbhaAddress": "<ABHA_ADDRESS>", "name": "<NAME>", "status": "ACTIVE"
+    }]
 }
 ```
 

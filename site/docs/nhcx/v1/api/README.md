@@ -1,5 +1,9 @@
 # API references
 
-One module per folder of the package's Bruno collection. `index.md` in each module is the
-overview the port writes. `endpoints/`, `errors.md` and `_category_.json` are generated
-from `catalogue/openapi/nhcx/v1/` by the site's build, as for every gateway.
+Module guide pages live here, one folder per module. The endpoint pages, each
+module's `_category_.json` and everything under `endpoints/` are generated
+from `catalogue/openapi/nhcx/v1/` on every build; never edit them by hand.
+
+A module's hand-written overview page sits in its folder next to the generated
+content.
+

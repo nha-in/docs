@@ -24,7 +24,6 @@ sources:
       mix comes from the IG's own Bundle-Prescription-example-06.json.
 related:
   fhir: [shared.fhir.document-bundles, shared.fhir.hl7-validator-recipe]
-  glossary: [shared.glossary.nrces]
 ---
 
 # Mapping Prescription, the medication advice record

@@ -24,9 +24,7 @@
     "the catalogue",
     "atom"
   ],
-  "expected_sources": [
-    "shared.sandbox.registration-and-credentials"
-  ],
+  "expected_sources": [],
   "expected_shape": "how-do-i",
   "expected_behaviour": "answer",
   "derived_from": "faq-verbatim-abdm-sandbox-06",

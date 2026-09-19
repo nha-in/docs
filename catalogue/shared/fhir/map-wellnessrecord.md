@@ -18,7 +18,6 @@ sources:
       digests.json's WellnessRecord digest, verbatim.
 related:
   fhir: [shared.fhir.document-bundles]
-  glossary: [shared.glossary.nrces]
 ---
 
 # WellnessRecord, the PHR wellness record

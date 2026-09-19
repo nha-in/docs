@@ -21,7 +21,7 @@ sources:
       NHA's sandbox FAQ, which points integrators at NRCeS for formats
       and samples rather than publishing its own.
 related:
-  glossary: [shared.glossary.fhir, shared.glossary.hi-type, shared.glossary.nrces]
+  glossary: [shared.glossary.hi-type]
 ---
 
 # DocumentBundle, the envelope every health record travels in

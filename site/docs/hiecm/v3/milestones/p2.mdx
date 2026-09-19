@@ -5,7 +5,7 @@ sidebar_position: 10
 sidebar_custom_props:
   roles: [phr]
 description: 'The patient side of M2: how a PHR app finds records held elsewhere, links them to an ABHA address, and shares a profile at a facility.'
-source: ABDM__NewDocumant_PHR_app.md, catalogue/openapi/hiecm/v3/hiecm-p2.yaml
+source: catalogue/openapi/hiecm/v3/hiecm-p2.yaml
 sidebar_class_name: sidebar-icon sidebar-icon--link-2
 ---
 
@@ -50,8 +50,8 @@ and a facility defined context such as a counter code. Your app scans it, then:
 4. Waits for the facility, currently expected to respond within 30 seconds.
 5. Displays the token number if the facility returned one.
 
-Counter names arrive in the QR code: up to 20 alphanumeric characters, no
-special characters. A counter name cannot be the facility ID, the
+Counter names arrive in the QR code: 1 to 250 characters, letters, digits and
+spaces, with `.`, `-` and `_` allowed between them. A counter name cannot be the facility ID, the
 [HPID](/docs/hiecm/v3/getting-started/glossary#hpid), the HIP ID or the HIP
 name.
 
@@ -60,8 +60,8 @@ name.
 The user searches for the facility by name. Only participating facilities
 appear, and the facility must be a HIP linked to an
 [HRP](/docs/hiecm/v3/getting-started/glossary#hrp). Your app sends a discovery
-request carrying name, year or date of birth, gender, verified mobile number
-and ABHA address. A provider issued registration number is optional.
+request carrying the HIP ID and unverified identifiers of type `MR`, `MOBILE`,
+`ABHA_NUMBER` or `ABHA_ADDRESS`.
 
 The user selects care contexts and confirms. The HIP sends an
 [OTP](/docs/hiecm/v3/getting-started/glossary#otp) to the registered mobile
@@ -88,7 +88,7 @@ A citizen pushing a record into your app is the HIP. A health locker, where
 users upload their own records, puts you on that publishing side.
 
 An uploaded record is shareable once you hold three things: a link token from
-the M1 APIs, a care context added by HIP initiated linking from [M2
+the generate link token call, a care context added by HIP initiated linking from [M2
 Attach](./m2), and the M2 health information transfer APIs.
 
 Set the health information type from the contents or from user input. Use
@@ -96,5 +96,5 @@ Set the health information type from the contents or from user input. Use
 
 ## Next
 
-- The calls and base URLs: [P2 API reference](/docs/hiecm/v3/api/p2).
+- The calls and base URLs: [P2 API reference](/reference/hiecm-p2).
 - The next milestone: [P3 Consent and notifications](./p3).

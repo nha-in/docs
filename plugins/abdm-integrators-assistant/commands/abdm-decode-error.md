@@ -20,17 +20,17 @@ Read `error.code` first and fall back to a top level `code`. A numeric code with
 
 ## Then match it
 
-Load the module's skill and read `references/debug.md`, which carries every recorded code for that module with its message and action. `abdm-m1` through `abdm-m4` on the provider side, `abdm-p1` for the patient side, where the PHR codes are recorded once for P1, P2 and P3 together.
+Load the module's skill. Each module skill's `references/debug.md` lists the codes its specification's examples return, with message, status and operation. The module skills are `abdm-gateway`, `abdm-m1` through `abdm-m4`, `abdm-p1` through `abdm-p4`, `abdm-subscription` and `abdm-scan-and-pay`.
 
 ## What a field validation body does not tell you
 
-A body naming a field is reporting the field, not the cause. When the field carried an encrypted value, the encryption is the first thing to check and the value is the last. `{"loginId": "Invalid LoginId"}` on `/v3/enrollment/request/otp` is returned for every input, correct ciphertext included, so read no cause into it there.
+A body naming a field is reporting the field, not the cause. When the field carried an encrypted value, the encryption is the first thing to check and the value is the last. A call that returns the same body for every input tells you nothing about which input was right.
 
 ## Output
 
 1. The shape, and where the code was found
-2. The code, its recorded message, and the atom id behind it
+2. The code, its message, and the operation that returns it
 3. The named fix
 4. The exit condition: the original call succeeding, not the fix being applied
 
-Where no recorded code matches, say so and name the two most likely causes rather than picking one. Do not invent a code.
+Where no listed code matches, say so and name the two most likely causes rather than picking one. Do not invent a code.

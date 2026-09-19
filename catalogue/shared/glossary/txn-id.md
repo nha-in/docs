@@ -4,42 +4,44 @@ type: glossary
 gateway: shared
 milestone: n/a
 version: abdm-v3
-title: txnId, transaction id
+title: txnId, the transaction id
 summary: >
-  The identifier that ties the steps of one multi-step flow together,
-  such as an OTP request and its verification.
+  The identifier ABDM returns when a multi step exchange begins, sent
+  back on every later call in that exchange.
 sources:
-  - file: ABDM Sandbox/ABDM/M1 ABHA Collection.postman_collection.json
-    status: not-yet-hashed
-    note: NHA's own M1 Postman collection, 123 requests.
-related:
-  concepts: []
+  - file: catalogue/openapi/.raw/nha-2026-09-16/abha/M1 ABHA Swagger 1.yaml
+    fetched: 2026-09-16
+    hash: sha256:6ab5cfe77c29032fac5fbf25c8e28529f22951e459374fa618f570f15e25551b
+related: {}
 ---
 
-# txnId, transaction id
+# txnId, the transaction id
 
 ## In plain words
 
-Most M1 flows are two or three calls. The first call returns a `txnId`,
-and the following calls send it back so ABDM knows which attempt they
-belong to.
+`txnId` is a body field, not a header. The specification describes it as:
 
-It is short lived and single purpose. It is not a session and not a
-token.
+> The transaction ID associated with the OTP request.
+
+An OTP on its own proves nothing, so the transaction id is what says which
+request the code answers.
 
 ## Before you start
 
-Nothing. A glossary entry assumes no prior reading.
+You need the response of the call that opened the exchange, because the
+transaction id comes back from ABDM rather than being chosen by you.
 
 ## What happens
 
-Nothing happens here. This entry defines a term, it does not describe a call.
+`m1_post_v3_enrollment_request_otp` returns a transaction id, and the verify
+call that follows sends the same value back alongside the encrypted OTP.
 
 ## How you know it worked
 
-You have understood this when you can say what txnId is without using the acronym itself.
+You have understood this when you can say which call issues a transaction id
+and which calls must echo it.
 
 ## When it goes wrong
 
-Reusing a txnId after the flow completed, or across flows. Start a fresh one per attempt.
-
+Starting a second exchange and sending the older transaction id, which pairs
+a code with a request it does not belong to.

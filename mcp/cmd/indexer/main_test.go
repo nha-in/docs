@@ -36,7 +36,7 @@ func TestRunKeywordOnly(t *testing.T) {
 		t.Errorf("counts = %v", counts)
 	}
 	if counts["spec_error_codes"] != 2 {
-		t.Errorf("spec_error_codes = %d, want 2 from the fixture x-abdm-errors table", counts["spec_error_codes"])
+		t.Errorf("spec_error_codes = %d, want 2 from the fixture's 4xx response examples", counts["spec_error_codes"])
 	}
 	var module string
 	if err := db.QueryRow("SELECT module FROM operations WHERE operation_id='linkAddContexts'").Scan(&module); err != nil {
@@ -100,8 +100,6 @@ milestone: M2
 title: Sample concept
 summary: >
   A sample concept used for testing.
-verified:
-  status: verified
 ---
 
 ## In plain words
@@ -159,8 +157,6 @@ milestone: M2
 title: Sample concept
 summary: >
   A sample concept used for testing.
-verified:
-  status: verified
 ---
 
 ## In plain words
@@ -218,6 +214,20 @@ func TestRunSkipsNestedReadme(t *testing.T) {
 
 	if err := run(dir, filepath.Join(dir, "out.db"), "", nil); err != nil {
 		t.Fatalf("nested README.md should be skipped, got: %v", err)
+	}
+}
+
+func TestIsSpecPath(t *testing.T) {
+	for path, want := range map[string]bool{
+		"openapi/hiecm/v3/hiecm-m1.yaml":    true,
+		"openapi/hiecm/v3/journeys/m1.yaml": false,
+		"openapi/.raw/x/y.yaml":             false,
+		"openapi/corrections/hiecm-m1.yaml": false,
+		"openapi/hiecm-v3.yaml":             false,
+	} {
+		if got := isSpecPath(filepath.FromSlash(path)); got != want {
+			t.Errorf("isSpecPath(%q) = %v, want %v", path, got, want)
+		}
 	}
 }
 

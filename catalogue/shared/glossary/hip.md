@@ -4,55 +4,48 @@ type: glossary
 gateway: shared
 milestone: n/a
 version: abdm-v3
-title: HIP, Health Information Provider
+title: HIP, health information provider
 summary: >
-  The role an entity takes when it publishes a record and hands it over
-  when a consented request arrives.
+  The role held by a system that holds a patient's records and shares
+  them when a consent allows it.
 sources:
-  - file: ABDM Sandbox/ABDM/Proposed Simplified Milestone 2.docx
-    status: not-yet-hashed
-    note: >
-      NHA milestone pack for M2, which carries the care context model and
-      the error code table.
-related:
-  concepts: [hiecm.concept.roles]
-  glossary: [shared.glossary.hiu, shared.glossary.hrp, shared.glossary.dsc]
-  decisions: [shared.decision.role-model-two-axes]
+  - file: catalogue/openapi/.raw/nha-2026-09-16/hiecm/consent-management-data-flow.yaml
+    fetched: 2026-09-16
+    hash: sha256:4b0af51af2e2b5bfbf08f5e8745a940f59c550f8a1e4600c970c526f27bc8718
+related: {}
 ---
 
-# HIP, Health Information Provider
+# HIP, health information provider
 
 ## In plain words
 
-Whoever holds a record and publishes it is the HIP. That is a facility
-publishing through its [HMIS](hmis.md), or a citizen pushing a record
-from their [PHR](phr.md) app. The HIP links care contexts to a patient's
-[ABHA](abha.md) address, answers discovery requests, and hands over
-encrypted FHIR bundles when a request backed by consent arrives.
+A health information provider is the side of an exchange that holds health
+records and hands them over. It is identified by a service id, carried in the
+`X-HIP-ID` header, which the specification describes as:
 
-A facility publishes through whatever software it runs, whether that is
-called an HMIS, an HIMS, an HMS, an [EMR](emr.md) or an EHR, a
-[LIMS](lims.md) in a laboratory or a [PMS](pms.md) in a pharmacy. The
-role is per interaction, and the same entity is the [HIU](hiu.md) when
-it fetches instead.
+> Identifier of the health information provider to which the request was
+> intended
 
-Publishing is M2 work.
+A hospital, a lab or a clinic system acts in this role when it shares what it
+recorded.
 
 ## Before you start
 
-Nothing. A glossary entry assumes no prior reading.
+You need your bridge registered and its service id in hand, because the
+header value is that id rather than a name.
 
 ## What happens
 
-Nothing happens here. This entry defines a term, it does not describe a call.
+ABDM calls `m2_post_consent_v3_request_hip_on_notify` at your callback URL to
+tell you a consent covering your records was granted, revoked or expired.
 
 ## How you know it worked
 
-You have understood this when you can say what HIP is without using the acronym itself.
+You have understood this when you can say which side of a data exchange holds
+the records and which side asks for them.
 
 ## When it goes wrong
 
-Reading the role onto the product. One entity takes both roles through
-the same software, so the roles are per interaction, not per product and
-not per company.
-
+Building only the request side and leaving the callback endpoints unbuilt,
+which leaves ABDM with nowhere to deliver the notifications this role
+receives.

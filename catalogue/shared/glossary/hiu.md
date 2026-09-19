@@ -4,52 +4,46 @@ type: glossary
 gateway: shared
 milestone: n/a
 version: abdm-v3
-title: HIU, Health Information User
+title: HIU, health information user
 summary: >
-  The role taken by whoever asks to read health records they did not
-  create.
+  The role held by a system that asks a patient for consent and then
+  fetches records held elsewhere.
 sources:
-  - file: ABDM Sandbox/ABDM/Proposed Simplified Milestone 3.docx
-    status: not-yet-hashed
-    note: NHA milestone pack for M3.
-related:
-  concepts: [hiecm.concept.roles, hiecm.concept.consent-artefact]
-  glossary: [shared.glossary.hip, shared.glossary.hrp, shared.glossary.dsc]
-  decisions: [shared.decision.role-model-two-axes]
+  - file: catalogue/openapi/.raw/nha-2026-09-16/hiecm/consent-management-data-flow.yaml
+    fetched: 2026-09-16
+    hash: sha256:4b0af51af2e2b5bfbf08f5e8745a940f59c550f8a1e4600c970c526f27bc8718
+related: {}
 ---
 
-# HIU, Health Information User
+# HIU, health information user
 
 ## In plain words
 
-Whoever asks to read records they did not create is the HIU. Asking means
-requesting consent, waiting for the patient to grant it, then fetching
-against the artefact. There is no data without one, and the patient can
-revoke at any time.
+A health information user is the side of an exchange that wants records it
+does not hold. It is identified by a service id, carried in the `X-HIU-ID`
+header, which the specification describes as:
 
-A facility asks through a doctor's console, an [HMIS](hmis.md) or an
-[EMR](emr.md), whenever it pulls a patient's history from elsewhere
-rather than serving its own records. A citizen asks when their
-[PHR](phr.md) app or health locker fetches records on their behalf. An
-insurer, a referral service or an analytics service asks while holding
-neither an [ABHA](abha.md) address nor a facility ID. An entity
-publishing a record is the [HIP](hip.md) in that moment instead.
+> Identifier of the health information user to which the request was intended
 
-Reading is M3 work.
+The same organisation often holds both roles, one for the records it keeps
+and one for the records it wants to read.
 
 ## Before you start
 
-Nothing. A glossary entry assumes no prior reading.
+You need a consent request the patient has approved, because this role reads
+nothing without one.
 
 ## What happens
 
-Nothing happens here. This entry defines a term, it does not describe a call.
+`m3_post_consent_v3_request_init` raises the consent request that this role
+begins every exchange with.
 
 ## How you know it worked
 
-You have understood this when you can say what HIU is without using the acronym itself.
+You have understood this when you can say which role a consent request is
+raised by and which role it is served against.
 
 ## When it goes wrong
 
-Building as though consent were permanent. A consent that worked yesterday can be revoked today, so handle the revoked state from the start.
-
+Requesting health information on a consent artefact that has expired or been
+revoked, which the specification states must not be done.

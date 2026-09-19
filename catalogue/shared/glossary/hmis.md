@@ -10,21 +10,13 @@ summary: >
   hospital uses it both to publish its own records and to fetch a
   patient's history from elsewhere.
 sources:
-  - file: site/docs/_glossary/_hiecm.mdx
-    status: not-yet-hashed
+  - url: https://github.com/eka-care/abdm-docs/blob/main/site/docs/_glossary/_hiecm.mdx
+    status: reference
     note: >
       This portal's own published glossary, where the definition was
       written first. Moved here so it can be retrieved, not rewritten.
 related:
-  concepts: [hiecm.concept.roles]
-  glossary:
-    [
-      shared.glossary.hip,
-      shared.glossary.hiu,
-      shared.glossary.hi-type,
-      shared.glossary.ims,
-      shared.glossary.m4,
-    ]
+  glossary: [shared.glossary.hi-type, shared.glossary.ims, shared.glossary.m4]
 ---
 
 # HMIS, HIS or HIMS, the software a hospital runs
@@ -39,8 +31,7 @@ integration.
 
 A facility uses it to publish records as the [HIP](hip.md) and to fetch
 them as the [HIU](hiu.md), so the ABDM work is M2 and M3 rather than one
-or the other. It must implement every [HI type](hi-type.md). See
-[roles](../../hiecm/concepts/roles.md).
+or the other. It must implement every [HI type](hi-type.md).
 
 `HIS-` is also the prefix on every error code the [HPR](hpr.md) and the
 [HFR](hfr.md) return. Those are [M4](m4.md) registry errors and have

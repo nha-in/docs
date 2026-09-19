@@ -2,7 +2,7 @@
 title: Registries
 sidebar_label: Registries
 description: What an ABDM registry is, why there are two, and where ABHA, HPR and HFR sit.
-source: ABDM__Proposed_Simplified_Milestone_1.md, ABDM__Proposed_Simplified_Milestone_4_(NHPR).md
+source: catalogue/openapi/hiecm/v3/hiecm-m1.yaml, catalogue/openapi/hiecm/v3/hiecm-m4.yaml
 ---
 
 # Registries
@@ -24,7 +24,7 @@ its own: the [HPR](/docs/hiecm/v3/getting-started/glossary#hpr) for professional
 
 ## The order they arrive in
 
-The HFR create call takes a professional token in its header, generated
+The HFR create call takes the HPR token in the `x-hprid-auth` header, generated
 from an HPR ID and password. Someone in your organisation needs an HPR ID with facility manager
 rights before you can register a facility, and a facility has to be in the HFR before it can
 act as a [HIP](/docs/hiecm/v3/getting-started/glossary#hip) or [HIU](/docs/hiecm/v3/getting-started/glossary#hiu) on

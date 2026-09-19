@@ -5,7 +5,7 @@ sidebar_position: 7
 sidebar_custom_props:
   roles: [his, hip]
 description: Milestone 4 establishes the identity of healthcare professionals on the HPR and the details of healthcare facilities on the HFR.
-source: NHA content review of 18 September 2026 (Milestone 4 Document NHA Reviewed); NHA content review of 15 September 2026 for the milestone naming
+source: NHA content review of 18 September 2026 (Milestone 4 Document NHA Reviewed); NHA content review of 15 September 2026 for the milestone naming; catalogue/openapi/hiecm/v3/hiecm-m4.yaml for the calls and fields
 covers: [hiecm.flow.m4-create-hpid]
 sidebar_class_name: sidebar-icon sidebar-icon--clipboard-pen
 ---
@@ -97,7 +97,7 @@ linked within the ABDM ecosystem.
 
 Hand M4 to the agent you already use, as one file it loads once. Install it, or open it there in one click.
 
-<SkillInstall slug="abdm-m4" note="Every M4 call, its error codes and its certification cases in one file: 13 operations, 150 codes, 183 cases." />
+<SkillInstall slug="abdm-m4" note="Every M4 call in one file: 100 operations." />
 
 ## Certification
 
@@ -106,9 +106,7 @@ the complete integration and is conducted once all the required milestones for
 your role are working end to end.
 
 [Going live](/docs/hiecm/v3/getting-started/going-live) outlines the four steps
-involved and the requirements for each step. The cases used for certification
-are covered under the [M4 testing use
-cases](/docs/hiecm/v3/resources/testing/m4).
+involved and the requirements for each step.
 
 ## The journey, step by step
 
@@ -135,7 +133,7 @@ Milestone 4 of [ABDM](/docs/hiecm/v3/getting-started/glossary#abdm) covers the f
 | HFR | Aadhaar authentication, role selection, HPID creation, HFR registration, then facility software integration as HIP or HIU where applicable |
 | Both | Aadhaar authentication, role selection, HPID creation, HFR registration, HPR registration, then facility software integration as HIP or HIU where applicable |
 
-This page shows the order of calls in each. Field lists are on the [operations and fields](/docs/hiecm/v3/api/m4/undocumented) page.
+This page shows the order of calls in each. Field lists are in the [M4 API reference](/docs/hiecm/v3/api/m4).
 
 :::caution[A map, not a runbook]
 These diagrams follow the published order of steps.
@@ -181,7 +179,7 @@ sequenceDiagram
 
 If an HPID already exists, the professional is already registered. Authenticate the professional and proceed directly to login, skipping the HPID creation journey.
 
-A returning professional can also log in without Aadhaar authentication, using either a mobile OTP or a password. Both login mechanisms are covered under [M4 operations and fields](/docs/hiecm/v3/api/m4/undocumented#login-by-mobile-otp).
+A returning professional can also log in without Aadhaar authentication, using either a mobile OTP or a password. Both are under [HPR authentication](/docs/hiecm/v3/api/m4/endpoints/m4-authentication/01-m4-post-v1-auth-authpassword) in the M4 API reference.
 
 If no HPID exists, the mobile number must be verified before creating the HPID:
 
@@ -203,7 +201,7 @@ flowchart TD
     F --> G["Create HPID"]
 ```
 
-Create HPID returns an `hprToken`. Keep it: the register professional call needs it.
+Create HPID returns a `token`. The register professional call carries an `hprToken` in its payload.
 
 <LegacyAnchor id="then-the-profile" />
 
@@ -316,13 +314,11 @@ The HIP name is the name displayed to patients in their [ABHA](/docs/hiecm/v3/ge
 
 A facility with a Facility ID and a linked HIP bridge can perform [M2](/docs/hiecm/v3/api/m2) activities, including linking care contexts and sharing health records. A facility with a linked HIU bridge can perform [M3](/docs/hiecm/v3/api/m3) activities, including requesting patient consent and fetching health records. M4 covers the registration of the facility and the healthcare professionals working at the facility.
 
-Next: [M4 operations and fields](/docs/hiecm/v3/api/m4/undocumented).
+Next: [M4 API reference](/docs/hiecm/v3/api/m4).
 
 ## Next
 
 - The base URLs and the operation list: [M4 API
   reference](/docs/hiecm/v3/api/m4).
-- Every call with its parameters and codes: [M4 operations and
-  fields](/docs/hiecm/v3/api/m4/undocumented).
 - The patient side of all four: [P1 Identity and profile](./p1).
 - Take your integration to production: [Go live](/docs/hiecm/v3/getting-started/going-live).

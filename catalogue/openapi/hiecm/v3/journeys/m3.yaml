@@ -1,0 +1,15 @@
+- id: m3-consent-management-data-flow-hiu
+  title: Consent and data flow
+  steps:
+    - op: m3_post_consent_v3_request_init
+    - op: m3_post_v3_hiu_consent_request_on_init
+    - op: m3_post_consent_v3_request_status
+    - op: m3_post_v3_hiu_consent_request_on_status
+    - op: m3_post_v3_hiu_consent_request_notify
+    - op: m3_post_consent_v3_request_hiu_on_notify
+    - op: m3_post_consent_v3_fetch
+    - op: m3_post_v3_hiu_consent_on_fetch
+    - op: m3_post_data_flow_v3_health_information_request
+    - op: m3_post_v3_hiu_health_information_on_request
+    - op: m3_post_data_flow_v3_health_information_notify
+    - op: m3_get_data_flow_v3_health_information_request_status_tra_550104

@@ -10,20 +10,20 @@
 // three jobs are sections instead:
 //
 //   Integrate  the endpoints, hosts and headers, from the specifications
-//   Debug      every recorded error code, from the specs' x-abdm-errors blocks
-//   Test       the test matrix, from site/src/data/test-matrix
+//   Debug      every error code the specification's examples return
 //
-// Output under site/static/skills is a build output. Edit the specs, the test
-// matrix and the pages, not the skill.
+// Output under site/static/skills is a build output. Edit the specs and the
+// pages, not the skill.
 import {readFileSync, writeFileSync, mkdirSync, rmSync, readdirSync, existsSync} from 'node:fs';
-import {createHash} from 'node:crypto';
 import {join, dirname} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {parse} from 'yaml';
+import {cleanDescription} from './lib/titles.mjs';
+import {errorsFromSpec} from './lib/spec-errors.mjs';
+import {loadJourneys} from './lib/journeys.mjs';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const dataDir = join(root, 'site', 'src', 'data', 'api');
-const testDir = join(root, 'site', 'src', 'data', 'test-matrix');
 const specDir = join(root, 'catalogue', 'openapi', 'hiecm', 'v3');
 const outDir = join(root, 'site', 'static', 'skills');
 
@@ -33,29 +33,30 @@ const outDir = join(root, 'site', 'static', 'skills');
 // copy is stale and heal it. The version is the same catalogue/VERSION the
 // MCP indexer stamps into its snapshot, so the two surfaces are comparable.
 const catalogueVersion = readFileSync(join(root, 'catalogue', 'VERSION'), 'utf8').trim();
-// No build date appears in any output: two machines building the same commit
-// must produce the same bytes, or the version gate and CI's diff check fail on
-// nothing but the calendar. The catalogue version is the only stamp.
-// The site build exports DOCUSAURUS_URL; without it (a local dev run) the
-// header falls back to naming the path, which is still enough to act on.
+// No clock: a date read from the system would make plugins/abdm-integrators-
+// assistant/skills/** (committed) change on every build, in every
+// environment, forever. catalogue/VERSION ("2026.09.16") is the date the
+// catalogue itself was cut, so it is stable input, not a clock, and it
+// doubles as the date site/static/skills/** (gitignored) prints too.
+const buildDate = catalogueVersion.replace(/\./g, '-');
+// The site build exports DOCUSAURUS_URL; without it (a local dev run, or the
+// frozen render below) the header falls back to naming the path, which is
+// still enough to act on.
 const siteUrl = process.env.DOCUSAURUS_URL
   ? `${process.env.DOCUSAURUS_URL}${process.env.DOCUSAURUS_BASE_URL ?? '/'}`.replace(/\/+$/, '')
   : null;
-const skillUrl = (slug) =>
-  siteUrl ? `${siteUrl}/skills/${slug}/SKILL.md` : `the portal's /skills/${slug}/SKILL.md path`;
+// A skill is a folder: this router plus the sections under references/ that it
+// links to. Naming the router's own URL here invited a reader to re-fetch one
+// file and leave every link in it pointing at a file they no longer have, so
+// the refresh names the folder and the section list names what is in it.
+const skillUrl = (slug, url) =>
+  url ? `${url}/skills/${slug}/` : `the portal's /skills/${slug}/ path`;
 
 // Every rule below is lifted from that module's own pages. A rule that is true
 // of M1 and not of M2 belongs to M1 only: an agent told the wrong rule is
 // worse off than an agent told nothing.
-/**
- * Where part of a module HAS been run, the blanket sentence above is worse than
- * nothing: it sits directly above rules quoting observed responses, and a
- * reader who notices the contradiction has no way to tell which half to trust.
- * Name what was observed and leave the rest unconfirmed.
- */
-const PARTLY_VERIFIED = {
-  m1: 'Most of this has not been run against the ABDM sandbox. What has: the gateway session call, both public certificates and the algorithm they publish, the encryption round trip, and the error shapes recorded below. Treat everything else as unconfirmed and read a response before relying on its shape.',
-};
+const UNVERIFIED =
+  'Nothing here has been run against the ABDM sandbox. Treat request and response shapes as unconfirmed, and check a response before you rely on its shape.';
 
 // Practices, as distinct from rules. A rule is a fact about one module. A
 // practice is how to work so a wrong assumption surfaces in a minute rather
@@ -77,41 +78,45 @@ const PRACTICES = (() => {
 
 const MODULES = [
   {
+    id: 'gateway',
+    slug: 'abdm-gateway',
+    title: 'Gateway, sessions and the bridge registry',
+    docs: '/docs/hiecm/v3/api/gateway',
+    spec: 'hiecm-gateway.yaml',
+    journey: null,
+    example: 'Get a gateway access token and register this bridge',
+    description:
+      'Use when building, debugging or testing the ABDM gateway: the gateway session and bridge registry.',
+    rules: [UNVERIFIED],
+  },
+  {
     id: 'm1',
     slug: 'abdm-m1',
     title: 'M1, ABHA identity',
     docs: '/docs/hiecm/v3/api/m1',
     spec: 'hiecm-m1.yaml',
-    sample: 'm1_enrolment_by_aadhaar',
     example: 'Add ABHA creation by Aadhaar OTP to this codebase',
     description:
-      'Use when building, debugging or testing ABDM Milestone 1: creating an ABHA number or address, ABHA login, profile management, or the gateway session token. Carries the endpoints, the required headers, the two token rule, the encryption rule, every recorded error code and the M1 test matrix. Also carries the scaffolding loop that builds it flow by flow and the loop from a failed call to a named fix, in references/.',
+      'Use when building, debugging or testing ABDM Milestone 1: creating an ABHA number or address, ABHA login, profile management, or the gateway session token. Carries the endpoints, the required headers, the two token rule, the encryption rule and the error codes its specification\'s examples return. Also carries the scaffolding loop that builds it flow by flow and the loop from a failed call to a named fix, in references/.',
     rules: [
-      PARTLY_VERIFIED.m1,
+      UNVERIFIED,
       'Get an access token first, from the gateway session endpoint. Every other call needs it in `Authorization: Bearer <token>`.',
       'Two tokens exist and they are not interchangeable. The gateway access token goes in `Authorization`. The user token from an enrolment or a login goes in `X-token`. Profile endpoints need both.',
       "Sensitive fields travel encrypted. Aadhaar numbers, mobile numbers, email addresses, OTP values and passwords are encrypted before they go in the body, then base64 encoded.",
-'The certificate response tells you the padding. `GET /v3/profile/public/certificate` returns `{"publicKey", "encryptionAlgorithm"}`, and `encryptionAlgorithm` is currently `RSA/ECB/OAEPWithSHA-1AndMGF1Padding`. Read that field and translate it for your language. Do not hard code a padding: a constant is right until it is not, and the failure then looks like a bad value rather than a stale constant.',
-      'PKCS#1 v1.5 is refused, and so is OAEP with SHA-256. Neither refusal names encryption, so a wrong padding reads back as a wrong value.',
-      'More than one certificate is published and they are not interchangeable. `/v3/profile/public/certificate` is 4096-bit and `/v3/phr/app/login/public/certificate` is 2048-bit, both naming the same algorithm. Ciphertext length tells them apart: 512 bytes against 256. The helper at `/v3/phr/app/enrollment/encrypt` uses the 2048 bit key.',
-      'Every certificate arrives as bare base64 DER with no PEM armour, whatever the field name suggests. Add the armour, wrapping at 64 characters per line, before your library will load it.',
-      'Prove the padding before building a flow, with a mobile that is registered against an ABHA account. `POST /v3/profile/login/request/otp` with `loginHint: "mobile"` returns 200 and a `txnId` when the padding is right, and `Invalid Mobile Number` when it is wrong. The number has to be a real one: an unregistered number returns that same refusal whatever the padding, so it proves nothing. `/v3/enrollment/request/otp` refuses every input identically and cannot tell you either way.',
+'The certificate response tells you the padding. `GET /v3/profile/public/certificate` returns `{"publicKey", "encryptionAlgorithm"}`. Read that field and translate it for your language. Do not hard code a padding: a constant is right until it is not, and the failure then looks like a bad value rather than a stale constant.',
       'One path serves several jobs. The `scope` array in the body picks which one, so read it before assuming an endpoint does one thing.',
       'Holds regardless of the design: the reason a front desk adopts ABHA is that the receptionist stops typing. `GET /v3/profile/account` returns the whole registration form: names, day, month and year of birth, gender, mobile, email, the full address with LGD codes and a photograph. So the ABHA step comes BEFORE the registration form and fills it. A journey that registers the patient first and offers ABHA afterwards has already spent the keystrokes it existed to save.',
       'Two ways the profile reaches the desk. The patient scans a QR carrying your facility id and a counter id, consents in their own app, and ABDM posts the profile to your callback, so nobody at the desk types or asks anything. Or the desk runs the identifier journey, which ends in a token that reads the profile. Build whichever the deployment can reach, but the form is the destination either way.',
-      'Present the filled form for confirmation rather than saving it unseen. The profile is what ABDM holds, not what the clinician sees: names get transliterated, addresses age, and a shared mobile may belong to a relative.',
+      'Present the filled form for confirmation rather than saving it unseen. The profile is what ABDM holds, not what the clinician sees: names may be transliterated, addresses age, and a shared mobile may belong to a relative.',
       'ABDM publishes operations, not a user experience. The journey is the integrator\'s to design, and a product that knows its own counter will often beat any default. Offer the suggested shape below, say it is a suggestion, and build what the user asks for instead when they have a view.',
       'Suggested shape: one entry rather than a menu. Take one identifier, send one OTP, and branch on what comes back, because asking a person at a desk whether they want to log in or register puts a question to them they often cannot answer. A chooser is better where the desk genuinely knows, such as a counter that only registers new patients.',
-      'Holds regardless of the design: read the login verification response before using its token. A response that carries `refreshToken` has returned the final user token, which a mobile OTP never does and an Aadhaar OTP does. One without `refreshToken` is a transfer token, its JWT carrying `"typ": "Transfer"` and five minutes of life, and it is exchanged at `/v3/profile/login/verify/user` whatever the length of the accounts array, one included. Either token goes in `X-token` as `Bearer` followed by the token; the bare form is refused as "Invalid X-token".',
-      'Holds regardless of the design: send every identifier to the login path first, Aadhaar included. Wiring Aadhaar to enrolment because that is where Aadhaar is most discussed sends everyone who already holds an ABHA to create a second. The scope pairs differ between the paths, so the mistake surfaces as ABDM-1107, invalid combinations of scopes, and never mentions duplicates.',
-      'Scope is an array and the operations care about the combination. A login keeps one pair across both calls: abha-login plus mobile-verify, aadhaar-verify or password-verify. An enrolment changes pair between them: the OTP request carries abha-enrol alone and the verification carries abha-enrol plus what is being verified. Carrying the request scope forward is ABDM-1107.',
-      'The accounts array on a login verification already carries ABHANumber, preferredAbhaAddress, name, gender, dob, profilePhoto and kycVerified, so a registration form can fill the moment the OTP verifies and before any profile call. Note dob is one DD-MM-YYYY string there and three integer fields on the profile endpoint.',
+      'Holds regardless of the design: send every identifier to the login path first, Aadhaar included. Wiring Aadhaar to enrolment because that is where Aadhaar is most discussed sends everyone who already holds an ABHA to create a second.',
+      'The accounts array on a login verification already carries ABHANumber, preferredAbhaAddress, name, gender, dob, profilePhoto and kycVerified, so a registration form can fill the moment the OTP verifies and before any profile call.',
       'Holds regardless of the design: read the accounts on the verification response before creating. Creating when an account already exists leaves the patient holding two ABHA numbers and no M1 operation merges them. This is the one failure worth designing around first.',
-      'Holds regardless of the design: an ABHA is optional to the patient record, which is keyed by the hospital\'s own number. ABDM does not require a person to hold one to be treated, so a journey that cannot complete without one blocks care. Make that a deliberate decision rather than an omission.',
-      'An identifier and an auth method are two different questions, and listing them together is what makes M1 look like five choices. ABDM accepts four identifiers: Aadhaar, mobile, ABHA number, ABHA address. Aadhaar is the one to recommend because it is the only route ending in a KYC verified ABHA number.',
-      'How the person proves the identifier is theirs is `authMethods`, whose values are otp, bio, face, iris, child and demo_auth. Aadhaar accepts the range; a mobile accepts the OTP sent to it and nothing else. So offer auth methods underneath the identifier, and only where there is more than one. Most integrations ship OTP on both and add the rest when a desk asks.',
+      'Holds regardless of the design: decide deliberately whether a journey can complete without an ABHA. A patient record keyed by the hospital\'s own number does not need one, and a journey that cannot complete without one blocks care for anyone who has none.',
+      'An identifier and an auth method are two different questions, and listing them together is what makes M1 look like five choices. ABDM accepts four identifiers: Aadhaar, mobile, ABHA number, ABHA address.',
+      'How the person proves the identifier is theirs is `authMethods`, whose values include otp, bio, face, iris, child and demo_auth. Offer auth methods underneath the identifier, and only where there is more than one.',
       'The surface is more than a registration form. Finding a forgotten ABHA, upgrading a mobile-made address to KYC, showing the card and QR, sharing a profile by QR at a counter, and updating a mobile number are each placements the operations support. List them for the integrator so their own design can account for them rather than meeting them later.',
-      'Holds regardless of the design: OTP attempts are counted against the transaction, not the person. Repeated sends lock that transaction and the error names the attempt count rather than the wait. A fresh transaction is the recovery. The code is never persisted and never logged.',
     ],
   },
   {
@@ -122,15 +127,13 @@ const MODULES = [
     spec: 'hiecm-m2.yaml',
     example: 'Link a care context for this patient',
     description:
-      'Use when building, debugging or testing ABDM Milestone 2: care contexts, HIP initiated linking, discovery, and pushing encrypted health records to a requester. Carries the endpoints, the prerequisites, every recorded error code and the M2 test matrix. Also carries the scaffolding loop that builds it flow by flow and the loop from a failed call to a named fix, in references/.',
+      'Use when building, debugging or testing ABDM Milestone 2: care contexts, HIP initiated linking, discovery, and pushing encrypted health records to a requester. Carries the endpoints and the encryption parameters. Also carries the scaffolding loop that builds it flow by flow and the loop from a failed call to a named fix, in references/.',
     rules: [
-      'You act as the HIP. NHA requires a valid Facility ID and registration in the HIP role before you can create health records and share them.',
+      UNVERIFIED,
+      'You act as the HIP.',
       'M2 is keyed to an ABHA address, so a working M1 integration comes first.',
-      'Hold a link token per patient, stored at registration. NHA gives its validity as six months and says to validate it before use. If you hold no valid one, regenerate it using demographic authentication.',
-      'Records go out as FHIR R4 conforming to the ABDM profiles at https://nrces.in/ndhm/fhir/r4/index.html.',
-      'You are the side that encrypts, and the parameters arrive from the requester rather than from you. The health information request carries `keyMaterial` with `cryptoAlg: ECDH`, `curve: Curve25519`, the requester\'s `dhPublicKey` and a 32 byte `nonce`. Generate your own Curve25519 pair and your own 32 byte nonce, and send your public key and nonce back with the data so the requester can derive the same secret.',
+      'You are the side that encrypts, and the parameters arrive from the requester rather than from you. The health information request carries `keyMaterial` with `cryptoAlg`, `curve: Curve25519`, the requester\'s `dhPublicKey` and a `nonce`. Generate your own Curve25519 pair and your own nonce, and send your public key and nonce back with the data so the requester can derive the same secret.',
       'The key derivation and the symmetric cipher applied over that shared secret are not yet published. Confirm both at onboarding before you ship, rather than inferring them from a sample.',
-      'Four callbacks name a path and carry no payload in either of NHA sources: discovery, link init, link confirm and consent notify. Do not assume a body for those.',
     ],
   },
   {
@@ -141,16 +144,15 @@ const MODULES = [
     spec: 'hiecm-m3.yaml',
     example: 'Raise a consent request and fetch the records it covers',
     description:
-      'Use when building, debugging or testing ABDM Milestone 3: raising a consent request, tracking its status, reading consent artefacts, and fetching encrypted health records as an HIU. Carries the endpoints, the consent rules, every recorded error code and the M3 test matrix. Also carries the scaffolding loop that builds it flow by flow and the loop from a failed call to a named fix, in references/.',
+      'Use when building, debugging or testing ABDM Milestone 3: raising a consent request, tracking its status, reading consent artefacts, and fetching encrypted health records as an HIU. Carries the endpoints and the consent rules. Also carries the scaffolding loop that builds it flow by flow and the loop from a failed call to a named fix, in references/.',
     rules: [
+      UNVERIFIED,
       'You act as the HIU. The HIE-CM holds the consent and asks the patient on your behalf. No artefact, no records.',
       'The patient must be known to you by ABHA address before you can raise a request.',
       'One consent request can produce more than one artefact. Store the request id and every artefact id.',
-      'Records arrive encrypted on your callback URL. Decrypt them, then acknowledge receipt to the gateway.',
-      "NHA's schema declares `consentId` and `consentRequestId` as UUIDs while NHA's own examples give values that are not. Do not validate them as UUIDs. Recorded as correction C3 in catalogue/openapi/corrections.",
+      'Records arrive encrypted at the `dataPushUrl` the health information request names. Decrypt them with the key material that request carries.',
     ],
   },
-
   {
     id: 'm4',
     slug: 'abdm-m4',
@@ -159,91 +161,107 @@ const MODULES = [
     spec: 'hiecm-m4.yaml',
     example: 'Onboard this facility to the HFR and link its HIP bridge',
     description:
-      'Use when building, debugging or testing ABDM Milestone 4, the NHPR: creating an HPID, registering a healthcare professional on the HPR, onboarding a facility to the HFR, and linking that facility to its HIP or HIU bridges. Carries the operations NHA has published, the registration order, every recorded error code and the identifier formats.',
+      'Use when building, debugging or testing ABDM Milestone 4, the NHPR: creating an HPID, registering a healthcare professional on the HPR, onboarding a facility to the HFR, and linking that facility to a bridge. Carries the operations, their hosts and headers.',
     rules: [
+      UNVERIFIED,
       'Neither registry moves a health record. M4 establishes who the professional is and what the facility is, so every record flow has a verified provider behind it.',
-      'M2 and M3 need a facility in the HFR and a bridge linked to it before records flow in production. M4 is the API route to that. Registering the facility by hand on the NHPR portal is the other route, and a product that takes it never builds M4.',
-      'The HPR comes first. Onboarding a facility needs an HPR token, which needs a person who already holds an HPID.',
-      'Creating an HPID returns an `hprToken`. Keep it: the register professional call carries it in its payload.',
-      'A facility ID is `IN` followed by 10 characters. An HPID is 14 digits.',
-      'Facility onboarding is one search, three writes and a submit, all keyed to the `trackingId` the first write returns. Stop before submit and the facility stays in draft, invisible to ABDM.',
+      'The register professional call carries an `hprToken` in its payload, beside the practitioner.',
+      'The facility calls are keyed to a `trackingId`, and the facility status values in the examples include `Draft` and `Submitted`. Read the status rather than assuming a facility is complete.',
       'Register professional takes codes, not names. Fetch council, course, college, university, state, district and language from the master data APIs first.',
-      'A facility ID alone does not make records flow. Link the facility to a bridge and mark each link HIP or HIU. The HIP name is what a patient sees in their PHR app: 15 characters or fewer, no special characters, and unique for every bridge on that facility.',
-      'Send the mobile number encrypted. Fetch the public certificate from `/v4/int/api/v1/auth/cert` and encrypt with `RSA/ECB/PKCS1Padding`. That padding and that certificate belong to the NHPR registry alone. M1 uses RSA-OAEP with SHA-1 under a different certificate, so do not carry either across.',
-      'Several published M4 samples show the production host while describing sandbox behaviour. Check the host before you copy a sample.',
+      '`POST /v1/bridges/MutipleHRPAddUpdateServices` links a facility to a bridge. Each entry names a `bridgeId`, a `hipName`, a `type` such as `HIP`, and whether it is `active`.',
     ],
   },
   {
     id: 'p1',
     slug: 'abdm-p1',
-    title: 'P1, PHR identity and profile',
+    title: 'P1, PHR registration and login',
     docs: '/docs/hiecm/v3/api/p1',
-    example: 'Register a new user in this PHR app and log them in',
     spec: 'hiecm-p1.yaml',
+    journey: null,
+    example: 'Register a new user in this PHR app and log them in',
     description:
-      "Use when building, debugging or testing ABDM P1, the patient side of Milestone 1: registration in a PHR application, the four login routes, profile management, the ABHA card, and the family members a user manages. Carries the endpoints, the required headers, every recorded error code and the account rules.",
-    rules: [
-      'P1 is the patient side of M1. M1 is how a hospital system creates an ABHA; P1 is how the person\'s own application does it and maintains the account afterwards.',
-      'Every user needs an ABHA address, `username@abdm`. Consent, notifications and record sharing all hang off it.',
-      'Build both creation paths: by mobile number, and by an existing 14 digit ABHA number.',
-      'All four login routes are mandatory.',
-      'A user can hold several ABHA addresses but only one ABHA number.',
-    ],
+      'Use when building, debugging or testing ABDM P1 in a PHR app: creating an ABHA address and logging in to it.',
+    rules: [UNVERIFIED],
   },
   {
     id: 'p2',
     slug: 'abdm-p2',
-    title: 'P2, PHR linking and records',
+    title: 'P2, PHR management',
     docs: '/docs/hiecm/v3/api/p2',
-    example: 'Discover records held elsewhere and link them to this ABHA address',
     spec: 'hiecm-p2.yaml',
+    journey: null,
+    example: 'Link this user\'s records to their ABHA address from the PHR app',
     description:
-      'Use when building, debugging or testing ABDM P2, the patient side of Milestone 2: discovering records held elsewhere, linking care contexts to an ABHA address, and pulling those records into a PHR application. Carries the endpoints, the timing rules the network enforces, every recorded error code and the discovery rules.',
-    rules: [
-      'P2 is the mirror of M2. M2 is a provider publishing a record; P2 is the patient discovering it and linking it to their own ABHA address.',
-      'Discovery is for facilities the user visited without giving an ABHA address, and for older records.',
-      'A HIP is expected to answer a discovery request within 10 seconds.',
-      'Never show a care context that is already linked.',
-      'Send the data transfer request within 5 minutes of the user asking for their records.',
-    ],
+      'Use when building, debugging or testing ABDM P2 in a PHR app: the PHR profile, linking an ABHA number, switching profiles, and linking, sharing and consent for the patient.',
+    rules: [UNVERIFIED],
   },
   {
     id: 'p3',
     slug: 'abdm-p3',
-    title: 'P3, PHR consent and notifications',
+    title: 'P3, PHR subscriptions',
     docs: '/docs/hiecm/v3/api/p3',
-    example: 'Grant a consent request in this PHR app and fetch what it covers',
     spec: 'hiecm-p3.yaml',
+    journey: null,
+    example: 'Let this user approve or deny a subscription request',
     description:
-      "Use when building, debugging or testing ABDM P3, the patient side of Milestone 3: subscriptions, auto approval policies, granting and revoking consent, and fetching the records a grant covers. Carries the endpoints, the notification rules, every recorded error code and the consent rules.",
-    rules: [
-      'P3 is the other side of M3. M3 is a requester asking for records; P3 is the patient deciding, and being told each time.',
-      'A PHR application implements the HIU role as well, because fetching a user\'s own records is an HIU flow.',
-      'Build for revocation from the start. A consent that worked yesterday can be withdrawn today, and that is the system working correctly.',
-      "A subscription is how the application hears about changes to a user's ABHA address. Set one up at address creation and at first login on a new install.",
-      'An auto approval policy stops the user approving a request every time a hospital adds a record, and the user must be able to disable a policy at any time.',
-    ],
+      'Use when building, debugging or testing ABDM P3 in a PHR app: reading, approving, denying, enabling, disabling and updating the patient\'s subscriptions and subscription requests.',
+    rules: [UNVERIFIED],
   },
   {
-    id: 'phr-services',
-    slug: 'abdm-phr-services',
-    title: 'PHR application services',
-    docs: '/docs/hiecm/v3/api/phr-services',
+    id: 'p4',
+    slug: 'abdm-p4',
+    title: 'P4, health lockers',
+    docs: '/docs/hiecm/v3/api/p4',
+    spec: 'hiecm-p4.yaml',
     journey: null,
-    example: 'Add nearby facility search to this PHR app',
-    spec: 'hiecm-phr-services.yaml',
+    example: 'Set up a health locker for this user',
     description:
-      'Use when building services a PHR application offers on top of ABDM: teleconsultation, nearby facility search, ambulance booking, blood bank search, scan and pay, PMJAY facility discovery and NHCX coverage lookups. None of it is required to certify as a PHR application.',
-    rules: [
-      'None of this is a certification milestone. Nothing here is required to certify as a PHR application, and building none of it is a valid choice.',
-      'These operations sit apart from P1 to P3 so that nothing here implies a PHR application must build them.',
-    ],
+      'Use when building, debugging or testing ABDM P4, health lockers: setting up a locker and listing the lockers and requests on an ABHA address.',
+    rules: [UNVERIFIED],
+  },
+  {
+    id: 'subscription',
+    slug: 'abdm-subscription',
+    title: 'Subscriptions',
+    docs: '/docs/hiecm/v3/api/subscription',
+    spec: 'hiecm-subscription.yaml',
+    journey: null,
+    example: 'Subscribe this HIU to changes on an ABHA address',
+    description:
+      'Use when building, debugging or testing ABDM subscriptions: subscribing an HIU to changes on an ABHA address.',
+    rules: [UNVERIFIED],
+  },
+  {
+    id: 'scan-and-pay',
+    slug: 'abdm-scan-and-pay',
+    title: 'Scan and pay',
+    docs: '/docs/hiecm/v3/api/scan-and-pay',
+    spec: 'hiecm-scan-and-pay.yaml',
+    journey: null,
+    example: 'Open an order at this counter and take payment from a PHR app',
+    description:
+      'Use when building, debugging or testing ABDM scan and pay: open orders, patient selection and payment status between a facility and a PHR app.',
+    rules: [UNVERIFIED],
   },
 ];
 
-const operations = readdirSync(dataDir)
-  .filter((file) => file.endsWith('.json'))
-  .map((file) => JSON.parse(readFileSync(join(dataDir, file), 'utf8')));
+// build-api-reference.mjs writes one JSON file per operation and then one
+// more per journey step that names it (same operationId, a `journey` field
+// added). Reading the directory raw counts an operation once per journey
+// that walks it, so a gateway call used by four journeys counted four times
+// over. Dedupe by operationId first, keeping the base file (no `journey`
+// field) when one exists, so every operation appears here exactly once.
+const byOperationId = new Map();
+for (const file of readdirSync(dataDir)) {
+  if (!file.endsWith('.json')) continue;
+  const op = JSON.parse(readFileSync(join(dataDir, file), 'utf8'));
+  const existing = byOperationId.get(op.id);
+  if (!existing || (existing.journey && !op.journey)) byOperationId.set(op.id, op);
+}
+const operations = [...byOperationId.values()]
+  // An operation a journey names carries no tag, because it is read through
+  // the journey. The skill still lists every operation, so group those here.
+  .map((op) => ({...op, tag: op.tag ?? 'Other operations'}));
 
 function truncate(text, limit) {
   const flat = (text ?? '').replace(/\s+/g, ' ').trim();
@@ -252,25 +270,13 @@ function truncate(text, limit) {
 
 const cell = (text) => truncate(text, 110).replace(/\|/g, '\\|');
 
-/** Every x-abdm-errors block the module's specification carries. */
-function errorBlocks(module) {
+/** Every error code the module's specification examples return. */
+function moduleCodes(module) {
   const path = join(specDir, module.spec);
-  if (!existsSync(path)) return [];
-  const spec = parse(readFileSync(path, 'utf8'));
-  return Object.keys(spec)
-    .filter((key) => key.startsWith('x-abdm-errors'))
-    .map((key) => ({
-      suffix: key.replace('x-abdm-errors', '').replace(/^-/, ''),
-      block: spec[key] ?? {},
-    }));
+  return existsSync(path) ? errorsFromSpec(parse(readFileSync(path, 'utf8'))) : [];
 }
 
-function testMatrix(module) {
-  const path = join(testDir, `${module.id}.json`);
-  return existsSync(path) ? JSON.parse(readFileSync(path, 'utf8')) : null;
-}
-
-function build(module) {
+function build(module, url) {
   const mine = operations
     .filter((op) => op.moduleId === module.id || op.moduleId === 'gateway')
     .sort((a, b) => a.tag.localeCompare(b.tag) || a.path.localeCompare(b.path));
@@ -281,10 +287,8 @@ function build(module) {
     ).entries(),
   ];
 
-  const blocks = errorBlocks(module);
-  const matrix = testMatrix(module);
-  const codeCount = blocks.reduce((total, {block}) => total + (block.codes?.length ?? 0), 0);
-  const testCount = matrix?.groups.reduce((total, group) => total + group.rows.length, 0) ?? 0;
+  const codes = moduleCodes(module);
+  const codeCount = codes.length;
 
   const lines = [];
   lines.push('---');
@@ -295,11 +299,11 @@ function build(module) {
   lines.push(`# ABDM ${module.title}`);
   lines.push('');
   lines.push(
-    `Generated from the ABDM Developer Portal, catalogue version ${catalogueVersion}. Every fact below comes from a page in that portal, which is the place to look when this file does not carry enough.`,
+    `Generated from the ABDM Developer Portal on ${buildDate}, catalogue version ${catalogueVersion}. Every fact below comes from a page in that portal, which is the place to look when this file does not carry enough.`,
   );
   lines.push('');
   lines.push(
-    `This file is a snapshot. Re-download it from ${skillUrl(module.slug)} when it is older than the work you are doing.`,
+    `This file is a snapshot. Re-download the whole folder from ${skillUrl(module.slug, url)} when it is older than the work you are doing: this router and every file under references/ that it links to. Fetching this file alone leaves those links pointing at files you do not have.`,
   );
   lines.push(
     'If the abdm-docs MCP server is connected, trust its answers over this file: it serves the current catalogue and stamps every response with its catalogue_version, which you can compare against the version above.',
@@ -311,15 +315,9 @@ function build(module) {
   lines.push(`- **Integrate.** ${mine.length} operations, with their hosts and headers.`);
   lines.push(
     codeCount
-      ? `- **Debug.** ${codeCount} recorded error codes, with the message and what to do.`
-      : '- **Debug.** No error code is recorded for this module yet.',
+      ? `- **Debug.** ${codeCount} error codes from the specification's examples, with the message and the operation that returns each.`
+      : '- **Debug.** The specification\'s examples return no error code for this module.',
   );
-  lines.push(
-    testCount
-      ? `- **Test.** ${testCount} test cases, each with the call it makes and what to see when it passes.`
-      : '- **Test.** No test matrix exists for this module yet.',
-  );
-  lines.push('');
 
   lines.push('## Before anything else');
   lines.push('');
@@ -349,7 +347,13 @@ function build(module) {
     lines.push('| Method | Path | What it does |');
     lines.push('| --- | --- | --- |');
     for (const op of ops) {
-      lines.push(`| \`${op.method}\` | \`${op.path}\` | ${truncate(op.summary, 80)} |`);
+      // NHA's summary opens with "This API is invoked to", which spends 22 of
+      // the 80 characters before it says anything and pushes the rest past the
+      // cut. The opener is stripped, not the meaning. The summary itself stays
+      // in this column rather than the derived title: the title is a short name
+      // for a sidebar, is not unique across operations, and for a route-derived
+      // one would only repeat the path column beside it.
+      lines.push(`| \`${op.method}\` | \`${op.path}\` | ${truncate(cleanDescription(op.summary), 80)} |`);
     }
     lines.push('');
   }
@@ -381,32 +385,19 @@ function build(module) {
   lines.push('');
   if (codeCount === 0) {
     lines.push(
-      `The ${module.title} specification records no error code yet. That is a gap in the specification, not a promise that this module cannot fail.`,
+      `The ${module.title} specification's examples return no error code yet. That is a gap in the specification, not a promise that this module cannot fail.`,
     );
     lines.push('');
   }
-  for (const {suffix, block} of blocks) {
-    const codes = block.codes ?? [];
-    if (block.notes) {
-      lines.push(block.notes.trim().replace(/^#+ /gm, '### '));
-      lines.push('');
-    }
-    if (codes.length === 0) continue;
-    lines.push(`### Codes${suffix ? `, ${suffix}` : ''}`);
+  if (codeCount) {
+    lines.push('### Codes');
     lines.push('');
-    if (block.source) {
-      lines.push(String(block.source).replace(/\s+/g, ' ').trim());
-      lines.push('');
-    }
-    const withHttp = codes.some((entry) => entry.http !== undefined);
-    lines.push(withHttp ? '| Code | HTTP | Message | What to do |' : '| Code | Message | What to do |');
-    lines.push(withHttp ? '| --- | --- | --- | --- |' : '| --- | --- | --- |');
+    lines.push('| Code | HTTP | Message | Returned by |');
+    lines.push('| --- | --- | --- | --- |');
     for (const entry of codes) {
-      const cells = [`\`${entry.code}\``];
-      if (withHttp) cells.push(entry.http ?? '');
-      cells.push(cell(entry.message));
-      cells.push(cell(entry.action));
-      lines.push(`| ${cells.join(' | ')} |`);
+      lines.push(
+        `| \`${entry.code}\` | ${entry.http} | ${cell(entry.message)} | \`${entry.operationId}\` |`,
+      );
     }
     lines.push('');
   }
@@ -414,31 +405,6 @@ function build(module) {
     'A code you meet that is not above is one the specifications do not carry yet. Read the code together with the message: a code can appear twice with different meanings.',
   );
   lines.push('');
-
-  lines.push('## Test cases');
-  lines.push('');
-  if (!matrix) {
-    lines.push('No test matrix exists for this module yet.');
-    lines.push('');
-  } else {
-    lines.push(
-      `${testCount} cases, from NHA's ${matrix.module} matrix for ${matrix.title}. "Mandatory" is NHA's own marking.`,
-    );
-    lines.push('');
-    for (const group of matrix.groups) {
-      lines.push(`### ${group.label}`);
-      lines.push('');
-      lines.push('| Case | Type | What it proves | Call | Passes when |');
-      lines.push('| --- | --- | --- | --- | --- |');
-      for (const row of group.rows) {
-        const call = row.api ? `\`${row.api.method} ${row.api.path}\`` : row.webhook ? `webhook \`${row.webhook.path ?? row.webhook}\`` : '';
-        lines.push(
-          `| \`${row.id}\` | ${row.type} | ${cell(row.functionality)} | ${call} | ${cell(row.expected)} |`,
-        );
-      }
-      lines.push('');
-    }
-  }
 
   lines.push('## Where the detail is');
   lines.push('');
@@ -449,7 +415,6 @@ function build(module) {
     );
   }
   lines.push(`- Every error code across modules: /docs/hiecm/v3/reference/error-codes`);
-  lines.push(`- Sandbox test data: /docs/hiecm/v3/reference/data-dictionary`);
   lines.push(`- Terms: /docs/hiecm/v3/getting-started/glossary`);
   lines.push('');
 
@@ -510,36 +475,36 @@ const CAPABILITIES = {
     'Create an ABHA for somebody who has none: by Aadhaar, by mobile, by an identity document, by face or fingerprint, or under a parent for a child.',
     'Log in somebody who already has one, by Aadhaar, mobile, ABHA number or ABHA address.',
     'Read their profile, which carries the whole registration form: names, date of birth, gender, mobile, address with its codes, and a photograph.',
-    'Find an ABHA somebody has forgotten, and tell two accounts on one mobile apart.',
+    'Find an ABHA somebody has forgotten, and pick the right account when one mobile holds several.',
     'Show the ABHA card and QR code, and take a profile a patient shares by QR at your counter.',
     'Update a profile, change a mobile, and upgrade a mobile made address to KYC verified.',
   ],
   m2: [
     'Tell ABDM a patient had a visit with you, so their records can be found later.',
     'Answer a discovery request when somebody looks for that patient.',
-    'Send records out encrypted when a consent says you must, and tell the gateway you have finished.',
-    'Hold and refresh the per patient link token the linking calls need.',
+    'Send records out encrypted when a consent says you must.',
+    'Get the link token the linking calls need.',
   ],
   m3: [
     'Ask a patient, through their consent manager, for records another provider holds.',
     'Track that request through a grant, a denial, a revocation and an expiry.',
-    'Receive the encrypted records on your callback, decrypt them, and acknowledge receipt.',
-    'Handle one request that produces several consent artefacts, which is the normal case.',
+    'Receive the encrypted records at your data push URL and decrypt them.',
+    'Handle one request that produces several consent artefacts.',
   ],
   m4: [
     'Create an HPID for a professional and register them in the HPR.',
-    'Register a facility in the HFR and carry it through to submission, without which it stays a draft nobody can see.',
-    'Link a facility to a bridge and mark each link HIP or HIU, which is what makes records flow.',
+    'Register a facility in the HFR and carry it through to submission.',
+    'Link a facility to a bridge and set the type of each link.',
     'Fetch the council, course, college, university and geography codes these calls take instead of names.',
   ],
-  p1: ['Everything M1 covers, from inside a patient facing PHR application rather than a provider system.'],
-  p2: ['Share a patient profile from their own application, including the counter QR flow.'],
-  p3: ['Manage consents from inside a PHR application, including auto approval policies.'],
 };
 
+const JOURNEYS = loadJourneys();
+
 function capabilities(module) {
-  const items = CAPABILITIES[module.id];
-  if (!items) return [];
+  // A module with no hand-written lines lists its journeys, so the heading is never empty.
+  const items = CAPABILITIES[module.id] ?? [...new Set((JOURNEYS.get(module.id) ?? []).map((j) => j.title))];
+  if (!items.length) return [];
   return [...items.map((c) => `- ${c}`), '',
     'What it cannot do yet matters as much. Read **Before anything else** below before assuming a capability is one endpoint away.'];
 }
@@ -555,8 +520,9 @@ function head(markdown) {
  * the same folder is a second skill to any client that goes looking.
  */
 function guided(name) {
-  const raw = readFileSync(join(guidedDir, name, 'SKILL.md'), 'utf8');
-  return raw.replace(/^---\n[\s\S]*?\n---\n/, '').trim();
+  const file = join(guidedDir, name, 'SKILL.md');
+  if (!existsSync(file)) return '';
+  return readFileSync(file, 'utf8').replace(/^---\n[\s\S]*?\n---\n/, '').trim();
 }
 
 function guidedTitle(name) {
@@ -564,48 +530,45 @@ function guidedTitle(name) {
   return parse(raw.match(/^---\n([\s\S]*?)\n---/)?.[1] ?? '')?.description ?? '';
 }
 
-/**
- * Which guided loop is which section of which skill.
- *
- * P2 and P3 have no debugging loop of their own because NHA records the PHR
- * error codes once. One loop covers P1 to P3 and it sits with P1, which is
- * what the two of them point at rather than repeating it.
- */
-const FOLD = {
-  'abdm-m1': {scaffold: 'hiecm-m1-build', debug: 'hiecm-m1-debug'},
-  'abdm-m2': {scaffold: 'hiecm-m2-build', debug: 'hiecm-m2-debug'},
-  'abdm-m3': {scaffold: 'hiecm-m3-build', debug: 'hiecm-m3-debug'},
-  'abdm-m4': {scaffold: 'hiecm-m4-build', debug: 'hiecm-m4-debug'},
-  'abdm-p1': {scaffold: 'hiecm-p1-build', debug: 'hiecm-p1-debug'},
-  'abdm-p2': {scaffold: 'hiecm-p2-build'},
-  'abdm-p3': {scaffold: 'hiecm-p3-build'},
-};
+/** Which guided loop is which section of which skill. */
+const FOLD = Object.fromEntries(
+  MODULES.map((module) => [
+    module.slug,
+    {scaffold: `hiecm-${module.id}-build`, debug: `hiecm-${module.id}-debug`},
+  ]),
+);
 
-/** Where a module with no debugging loop of its own sends a reader. */
-const DEBUG_ELSEWHERE = {
-  'abdm-p2': 'abdm-p1',
-  'abdm-p3': 'abdm-p1',
-};
-
+// Wiping the whole directory before writing only the modules MODULES still
+// names is the pruning: a module dropped from the list above leaves no
+// abdm-<slug> folder behind in either place that ships skills, because
+// nothing gets a chance to survive the rmSync.
 rmSync(outDir, {recursive: true, force: true});
 mkdirSync(outDir, {recursive: true});
 
-// The plugin ships the same nine folders the site serves. It used to ship the
-// fourteen guided loops and nothing else, so the plugin and the site offered
-// different sets under the same names.
+// The plugin ships the same folders the site serves: one per module, plus
+// abdm-fhir. It used to ship the guided loops and nothing else, so the plugin
+// and the site offered different sets under the same names.
 const pluginDir = join(root, 'plugins', 'abdm-integrators-assistant', 'skills');
 rmSync(pluginDir, {recursive: true, force: true});
 mkdirSync(pluginDir, {recursive: true});
 
-/** Writes one skill folder to both places that ship it. */
-function emit(name, files) {
-  for (const base of [outDir, pluginDir]) {
+/**
+ * Writes one skill folder to both places that ship it. `files` goes to
+ * site/static/skills (gitignored, free to carry the environment's
+ * DOCUSAURUS_URL); `pluginFiles` goes to the committed plugin copy, which
+ * must render the same regardless of who runs the build, so it defaults to
+ * `files` but a caller with URL-bearing content passes the frozen version.
+ */
+function emit(name, files, pluginFiles = files) {
+  const write = (base, entries) => {
     const folder = join(base, name);
     mkdirSync(join(folder, 'references'), {recursive: true});
-    for (const [path, body] of Object.entries(files)) {
+    for (const [path, body] of Object.entries(entries)) {
       writeFileSync(join(folder, path), body.endsWith('\n') ? body : `${body}\n`);
     }
-  }
+  };
+  write(outDir, files);
+  write(pluginDir, pluginFiles);
 }
 
 // What each skill actually turned out to carry. The page renders its capability
@@ -613,29 +576,29 @@ function emit(name, files) {
 // generator did not put in it.
 const manifest = {};
 
-let count = 0;
 for (const module of MODULES) {
-  const whole = build(module);
+  const whole = build(module, siteUrl);
+  // Same content, but the one line naming a canonical URL falls back to
+  // naming the path instead: this is what the committed plugin copy renders,
+  // so it reads the same whether DOCUSAURUS_URL was set at build time or not.
+  const wholeFrozen = build(module, null);
   const parts = sections(whole);
   const fold = FOLD[module.slug] ?? {};
 
   const operationCount = operations.filter(
     (op) => op.moduleId === module.id || op.moduleId === 'gateway',
   ).length;
-  const codeCount = errorBlocks(module).reduce(
-    (total, {block}) => total + (block.codes?.length ?? 0),
-    0,
-  );
-  const testCount =
-    testMatrix(module)?.groups.reduce((total, group) => total + group.rows.length, 0) ?? 0;
+  const codes = moduleCodes(module);
+  const codeCount = codes.length;
 
   const files = {};
   const covers = [];
 
-  if (fold.scaffold) {
-    files['references/scaffold.md'] = guided(fold.scaffold);
+  const scaffold = fold.scaffold ? guided(fold.scaffold) : '';
+  if (scaffold) {
+    files['references/scaffold.md'] = scaffold;
     covers.push(
-      `- **Scaffold.** Build it flow by flow against the sandbox, as a loop that ends on an observed result rather than on a call returning 200. [references/scaffold.md](references/scaffold.md)`,
+      `- **Scaffold.** Build it flow by flow against the sandbox, as a loop that ends when the step's exit condition holds rather than on a call returning 200. [references/scaffold.md](references/scaffold.md)`,
     );
   }
 
@@ -656,72 +619,62 @@ for (const module of MODULES) {
   // The loop first, then the codes. A reader who arrives with a failing call
   // wants the procedure; the table is what the procedure sends them to.
   const debugParts = [];
-  if (fold.debug) debugParts.push(guided(fold.debug));
+  const debugLoop = fold.debug ? guided(fold.debug) : '';
+  if (debugLoop) debugParts.push(debugLoop);
   const errors = parts.get('Errors');
   if (errors) {
-    debugParts.push(fold.debug ? `## Every recorded code\n\n${errors.replace(/^## Errors\n+/, '')}` : errors);
+    debugParts.push(debugLoop ? `## Every code in the specification\n\n${errors.replace(/^## Errors\n+/, '')}` : errors);
   }
   if (debugParts.length) {
-    files['references/debug.md'] = fold.debug
+    files['references/debug.md'] = debugLoop
       ? debugParts.join('\n\n')
       : [
           `# Debug ${module.title}`,
           '',
-          DEBUG_ELSEWHERE[module.slug]
-            ? `The loop from a failed call to a named fix is recorded once for the whole patient side, in the ${DEBUG_ELSEWHERE[module.slug]} skill. The codes this module can return are below.`
-            : 'The codes this module can return, with the message and what to do about each.',
+          'The codes this module can return, with the message and the operation that returns each.',
           '',
           ...debugParts,
         ].join('\n');
     covers.push(
       codeCount
         ? `- **Debug.** ${
-            fold.debug ? 'The loop from a failed call to a named fix, and ' : ''
-          }${codeCount} recorded error codes. [references/debug.md](references/debug.md)`
-        : `- **Debug.** The loop from a failed call to a named fix. No error code is recorded for this module yet. [references/debug.md](references/debug.md)`,
+            debugLoop ? 'The loop from a failed call to a named fix, and ' : ''
+          }${codeCount} error codes from the specification's examples. [references/debug.md](references/debug.md)`
+        : `- **Debug.** ${
+            debugLoop ? 'The loop from a failed call to a named fix. ' : ''
+          }The specification's examples return no error code for this module. [references/debug.md](references/debug.md)`,
     );
   }
 
-  const tests = parts.get('Test cases');
-  if (tests) {
-    files['references/test.md'] = [
-      `# Test ${module.title}`,
+  const skillMd = (headText) =>
+    [
+      headText,
       '',
-      'Each case names the call it makes and what to see when it passes.',
+      ...(capabilities(module).length
+        ? [`## What you can do with ${module.title.split(',')[0]}`, '', ...capabilities(module), '']
+        : []),
+      '## What is in this folder',
       '',
-      tests,
-    ].join('\n');
-    covers.push(
-      `- **Test.** ${testCount} test cases, each with the call it makes and what to see when it passes. [references/test.md](references/test.md)`,
-    );
-  }
+      // Five files and no clue which to open. Say what each one answers.
+      ...covers,
+      '',
+      'This file is the map. Each line above is a file beside it, opened one at a time rather than read through.',
+      '',
+      parts.get('Before anything else'),
+      '',
+      '## Practices that hold across every call',
+      '',
+      ...PRACTICES.map((practice) => `- ${practice}`),
+      '',
+      parts.get('Where the detail is'),
+    ]
+      .filter((part) => part !== undefined)
+      .join('\n');
 
-  files['SKILL.md'] = [
-    head(whole),
-    '',
-    `## What you can do with ${module.title.split(',')[0]}`,
-    '',
-    ...capabilities(module),
-    '',
-    '## What is in this folder',
-    '',
-    // Five files and no clue which to open. Say what each one answers.
-    ...covers,
-    '',
-    'This file is the map. Each line above is a file beside it, opened one at a time rather than read through.',
-    '',
-    parts.get('Before anything else'),
-    '',
-    '## Practices that hold across every call',
-    '',
-    ...PRACTICES.map((practice) => `- ${practice}`),
-    '',
-    parts.get('Where the detail is'),
-  ]
-    .filter((part) => part !== undefined)
-    .join('\n');
+  files['SKILL.md'] = skillMd(head(whole));
+  const pluginFiles = {...files, 'SKILL.md': skillMd(head(wholeFrozen))};
 
-  emit(module.slug, files);
+  emit(module.slug, files, pluginFiles);
 
   manifest[module.slug] = {
     module: module.title.split(',')[0],
@@ -730,16 +683,14 @@ for (const module of MODULES) {
     example: module.example,
     // A real code from this module, so the page's example question is one the
     // skill can actually answer.
-    errorExample: errorBlocks(module).flatMap(({block}) => block.codes ?? [])[0]?.code ?? null,
+    errorExample: codes[0]?.code ?? null,
     operations: operationCount,
     codes: codeCount,
-    tests: testCount,
     sections: Object.keys(files)
       .filter((path) => path.startsWith('references/'))
       .map((path) => path.replace(/^references\/|\.md$/g, '')),
   };
 
-  count += 1;
   const size = Object.values(files).reduce((total, body) => total + body.length, 0);
   console.log(
     `Built ${module.slug}: ${files['SKILL.md'].split('\n').length} line router, ${
@@ -763,33 +714,37 @@ for (const [section, source, what] of FHIR_REFS) {
     `- **${section[0].toUpperCase()}${section.slice(1)}.** ${what} [references/${section}.md](references/${section}.md)`,
   );
 }
-fhirFiles['SKILL.md'] = [
-  '---',
-  'name: abdm-fhir',
-  'description: Use when producing or checking FHIR for ABDM: building NRCES compliant document bundle generation into a codebase, or auditing the bundles an existing FHIR store already emits. Covers the resource profiles ABDM requires, the Composition rules, and the validator to check against.',
-  '---',
-  '',
-  '# ABDM FHIR',
-  '',
-  `Generated from the ABDM Developer Portal, catalogue version ${catalogueVersion}.`,
-  '',
-  `This file is a snapshot. Re-download it from ${skillUrl('abdm-fhir')} when it is older than the work you are doing.`,
-  '',
-  '## What this skill covers',
-  '',
-  ...fhirCovers,
-  '',
-  'Open one when the work calls for it. This file is the map, not the material.',
-  '',
-  '## Before anything else',
-  '',
-  '- A bundle that validates is not a bundle ABDM accepts. The NRCES profiles are the floor, and the milestone the bundle travels under adds its own rules.',
-  '',
-  '## Practices that hold across every call',
-  '',
-  ...PRACTICES.map((practice) => `- ${practice}`),
-].join('\n');
-emit('abdm-fhir', fhirFiles);
+const fhirSkillMd = (url) =>
+  [
+    '---',
+    'name: abdm-fhir',
+    'description: Use when producing or checking FHIR for ABDM: building NRCES compliant document bundle generation into a codebase, or auditing the bundles an existing FHIR store already emits. Covers the resource profiles ABDM requires, the Composition rules, and the validator to check against.',
+    '---',
+    '',
+    '# ABDM FHIR',
+    '',
+    `Generated from the ABDM Developer Portal on ${buildDate}, catalogue version ${catalogueVersion}.`,
+    '',
+    `This file is a snapshot. Re-download the whole folder from ${skillUrl('abdm-fhir', url)} when it is older than the work you are doing: this router and every file under references/ that it links to. Fetching this file alone leaves those links pointing at files you do not have.`,
+    '',
+    '## What this skill covers',
+    '',
+    ...fhirCovers,
+    '',
+    'Open one when the work calls for it. This file is the map, not the material.',
+    '',
+    '## Before anything else',
+    '',
+    `- ${UNVERIFIED}`,
+    '- A bundle that validates is not a bundle ABDM accepts. The NRCES profiles are the floor, and the milestone the bundle travels under adds its own rules.',
+    '',
+    '## Practices that hold across every call',
+    '',
+    ...PRACTICES.map((practice) => `- ${practice}`),
+  ].join('\n');
+fhirFiles['SKILL.md'] = fhirSkillMd(siteUrl);
+const fhirPluginFiles = {...fhirFiles, 'SKILL.md': fhirSkillMd(null)};
+emit('abdm-fhir', fhirFiles, fhirPluginFiles);
 manifest['abdm-fhir'] = {
   module: 'FHIR',
   title: 'FHIR, generating and auditing bundles',
@@ -798,10 +753,8 @@ manifest['abdm-fhir'] = {
   errorExample: null,
   operations: 0,
   codes: 0,
-  tests: 0,
   sections: FHIR_REFS.map(([section]) => section),
 };
-count += 1;
 console.log('Built abdm-fhir: 2 reference(s) from the hand written procedures.');
 
 writeFileSync(
@@ -809,76 +762,7 @@ writeFileSync(
   `${JSON.stringify(manifest, null, 2)}\n`,
 );
 
-console.log(`Compiled ${count} skill(s) into site/static/skills and the plugin.`);
-
-// ---------------------------------------------------------------------------
-// The version gate.
-//
-// A plugin is cached by name and version. Change what a skill says without
-// changing the version and `claude plugin install` reports "already installed"
-// and leaves yesterday's copy in place: no error, no warning, and the reader
-// never learns that the thing they are following is stale. That happened here
-// on 15 September 2026, when two merged pull requests of skill changes reached
-// nobody who already had the plugin.
-//
-// So the content is hashed and the hash is committed next to the version. When
-// the content moves and the version has not, this refuses to finish and names
-// the version to set. It fails at the moment the mistake is made rather than
-// leaving it to be discovered by somebody reading the wrong instructions.
-const stamp = join(root, 'plugins', 'abdm-integrators-assistant', '.skills-version');
-const pluginManifest = join(root, 'plugins', 'abdm-integrators-assistant', '.claude-plugin', 'plugin.json');
-const version = JSON.parse(readFileSync(pluginManifest, 'utf8')).version;
-
-const hashOf = (dir) => {
-  // Dotfiles are skipped: a .DS_Store on one machine must not change the digest.
-  const walk = (d) => readdirSync(d, {withFileTypes: true}).filter((e) => !e.name.startsWith('.')).flatMap((e) => {
-    const full = join(d, e.name);
-    return e.isDirectory() ? walk(full) : [full];
-  });
-  // Sorted, so the digest depends on content and not on directory order.
-  const files = walk(dir).sort();
-  const h = createHash('sha256');
-  for (const f of files) { h.update(f.slice(dir.length)); h.update(readFileSync(f)); }
-  return h.digest('hex').slice(0, 16);
-};
-
-// The compiled skills carry the site URL when DOCUSAURUS_URL is set, so a
-// deployment build (staging, NHA) never hashes to the committed digest, which
-// is taken from the URL-less build that CI's check:skills-version runs. Those
-// builds publish, they do not commit, so the gate and the stamp are skipped
-// for them; the check build is where a missing bump has to fail.
-const deployBuild = Boolean(process.env.DOCUSAURUS_URL);
-const digest = hashOf(pluginDir);
-const previous = existsSync(stamp)
-  ? JSON.parse(readFileSync(stamp, 'utf8'))
-  : {version: null, digest: null};
-
-if (deployBuild) {
-  console.log(`Skills built for ${siteUrl}; version gate skipped (deployment build, nothing is committed).`);
-} else if (previous.digest && previous.digest !== digest && previous.version === version) {
-  const [maj, min] = version.split('.');
-  console.error([
-    '',
-    `The compiled skills changed but the plugin version is still ${version}.`,
-    '',
-    'Anyone who already installed this plugin will keep the old skills: the',
-    'installer reports "already installed" and refreshes nothing, because the',
-    'cache is keyed by version.',
-    '',
-    `Set "version" to ${maj}.${Number(min) + 1}.0 in`,
-    '  plugins/abdm-integrators-assistant/.claude-plugin/plugin.json',
-    'then run: npm run build:plugins && node scripts/build-skills.mjs',
-    '',
-  ].join('\n'));
-  process.exit(1);
-}
-
-if (!deployBuild) {
-  writeFileSync(stamp, `${JSON.stringify({version, digest}, null, 2)}\n`);
-  if (previous.version !== version) {
-    console.log(`Skills stamped at version ${version}, content ${digest}.`);
-  }
-}
+console.log(`Compiled ${MODULES.length + 1} skill(s) into site/static/skills and the plugin.`);
 
 // ---------------------------------------------------------------------------
 // The hosted setup prompt, the pattern Cloudflare's docs use: what a reader
@@ -898,7 +782,7 @@ const pluginRepo = process.env.MARKETPLACE_REPO ?? 'eka-care/abdm-docs';
 // tells the agent what the origin is: wherever it fetched this file from.
 const promptRef = (path) => (siteUrl ? `${siteUrl}${path}` : path);
 const promptLines = [
-  `These are official instructions from the ABDM Developer Portal (catalogue version ${catalogueVersion}) to set up an AI development environment for integrating with ABDM, India's health data network.`,
+  `These are official instructions from the ABDM Developer Portal (catalogue version ${catalogueVersion}, built ${buildDate}) to set up an AI development environment for integrating with ABDM, India's health data network.`,
   '',
   'Complete the steps yourself by running the commands directly. Ask the user only the questions in step 1.',
   '',
@@ -948,7 +832,7 @@ const promptLines = [
   '```',
   `mkdir -p .claude/skills/abdm-m1/references`,
   `curl -fsSL ${promptRef('/skills/abdm-m1/SKILL.md')} -o .claude/skills/abdm-m1/SKILL.md`,
-  `for f in scaffold integrate debug test; do curl -fsSL ${promptRef('/skills/abdm-m1/references')}/$f.md -o .claude/skills/abdm-m1/references/$f.md; done`,
+  `for f in scaffold integrate debug; do curl -fsSL ${promptRef('/skills/abdm-m1/references')}/$f.md -o .claude/skills/abdm-m1/references/$f.md; done`,
   '```',
   '',
   ...promptSkills.map(([slug]) => `- ${promptRef(`/skills/${slug}/`)}`),
@@ -973,6 +857,7 @@ const promptLines = [
   '',
   'Tell the user what you installed and where you suggest starting. Two cautions to keep for the whole engagement:',
   '',
+  '- Nothing in these skills has been run against the ABDM sandbox. Verify response shapes against real calls before relying on them.',
   `- The skills are snapshots. The current documentation lives at ${promptRef('/')}; prefer it, and the MCP server when connected, over any downloaded copy that has aged.`,
   '',
 ];
@@ -984,6 +869,7 @@ writeFileSync(
   `${JSON.stringify(
     {
       catalogue_version: catalogueVersion,
+      built: buildDate,
       skills: Object.entries(manifest).map(([slug, entry]) => ({
         name: slug,
         title: entry.title,

@@ -9,12 +9,12 @@ summary: >
   The registry of individual healthcare professionals across every
   system of medicine, which issues a Healthcare Professional ID.
 sources:
-  - file: ABDM Sandbox/ABDM/Proposed Simplified Milestone 4 (NHPR).docx
-    status: not-yet-hashed
-    note: NHA milestone pack for M4.
+  - file: catalogue/openapi/.raw/nha-2026-09-16/M4/M4-HPR.json
+    fetched: 2026-09-16
+    hash: sha256:fe3e5b211cf9f1c0cf3af9830de9f3c28c6fbc52294bdc3bf24b76cfacf92cd0
 related:
   concepts: []
-  glossary: [shared.glossary.nhpr, shared.glossary.hfr]
+  glossary: [shared.glossary.hfr]
 ---
 
 # HPR, Healthcare Professionals Registry

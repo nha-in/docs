@@ -1,4 +1,5 @@
 import React, {type ReactNode} from 'react';
+import {useAllDocsData} from '@docusaurus/plugin-content-docs/client';
 import Card from '@site/src/components/mdx/Card';
 import CardGroup from '@site/src/components/mdx/CardGroup';
 
@@ -20,9 +21,10 @@ import CardGroup from '@site/src/components/mdx/CardGroup';
  * same material by two routes, one of which dropped the reader out of the
  * site. The reference is the route that keeps them in it.
  */
-type Module = 'm1' | 'm2' | 'm3' | 'm4' | 'p1' | 'p2' | 'p3';
+type Module = 'gateway' | 'm1' | 'm2' | 'm3' | 'm4' | 'p1' | 'p2' | 'p3' | 'p4' | 'subscription' | 'scan-and-pay';
 
 const NAMES: Record<Module, string> = {
+  gateway: 'Gateway',
   m1: 'M1',
   m2: 'M2',
   m3: 'M3',
@@ -30,22 +32,37 @@ const NAMES: Record<Module, string> = {
   p1: 'P1',
   p2: 'P2',
   p3: 'P3',
+  p4: 'P4',
+  subscription: 'Subscription',
+  'scan-and-pay': 'Scan and Pay',
 };
 
 export default function ApiLinks({module}: {module: Module}): ReactNode {
   const name = NAMES[module];
   const docs = `/docs/hiecm/v3/api/${module}`;
+  // Not every module has an overview or an errors page: a module with no
+  // overview opens on its first endpoint page, and one with no recorded codes
+  // shows no errors card, so neither card links to a page that does not exist.
+  const paths = Object.values(useAllDocsData())
+    .flatMap((plugin) => plugin.versions.flatMap((version) => version.docs.map((doc) => doc.path.replace(/\/$/, ''))))
+    .sort();
+  const entry = paths.includes(docs) ? docs : paths.find((path) => path.startsWith(`${docs}/endpoints/`));
+  const errors = paths.includes(`${docs}/errors`) ? `${docs}/errors` : undefined;
   return (
     <CardGroup cols={2}>
-      <Card title={`Try the ${name} APIs`} icon="book-open" href={docs}>
-        Every call in {name}, one page each: the headers it needs, the payload
-        it takes, the callback it triggers, and a request builder you can fire
-        at the sandbox.
-      </Card>
-      <Card title="Error codes" icon="triangle-alert" href={`${docs}/errors`}>
-        What each code {name} returns actually means, and the first thing to
-        check when you see one.
-      </Card>
+      {entry && (
+        <Card title={`Try the ${name} APIs`} icon="book-open" href={entry}>
+          Every call in {name}, one page each: the headers it needs, the payload
+          it takes, the callback it triggers, and a request builder you can fire
+          at the sandbox.
+        </Card>
+      )}
+      {errors && (
+        <Card title="Error codes" icon="triangle-alert" href={errors}>
+          What each code {name} returns actually means, and the first thing to
+          check when you see one.
+        </Card>
+      )}
     </CardGroup>
   );
 }

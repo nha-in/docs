@@ -25,7 +25,6 @@
   ],
   "expected_sources": [
     "shared.glossary.hmis",
-    "shared.glossary.lmis",
     "shared.glossary.phr"
   ],
   "expected_shape": "define",

@@ -109,7 +109,7 @@ func TestRelatedAtomsBothDirections(t *testing.T) {
 	for _, g := range groups {
 		if g.Type == "error" {
 			for _, a := range g.Atoms {
-				if a.ID == "hiecm.error.abdm-1035" && a.VerificationStatus == "verified" {
+				if a.ID == "hiecm.error.abdm-1035" {
 					found = true
 				}
 			}
@@ -174,7 +174,7 @@ func TestSpecErrorCodesLookup(t *testing.T) {
 		t.Fatal(err)
 	}
 	if len(rows) != 1 || rows[0].Message != "Dependent service unavailable" ||
-		rows[0].Action != "Retry with backoff" || rows[0].Module != "m1" {
+		rows[0].HTTP != "503" || rows[0].OperationID != "linkAddContexts" || rows[0].Module != "m1" {
 		t.Errorf("rows = %+v", rows)
 	}
 	// Raw response code fields arrive with trailing colon and space.
@@ -291,7 +291,7 @@ func TestGetOperationAndStats(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if s.ByStatus["verified"] != 1 || s.ByStatus["unverified"] != 2 || s.Operations != 1 {
+	if s.Operations != 1 {
 		t.Errorf("stats = %+v", s)
 	}
 }

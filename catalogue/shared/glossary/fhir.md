@@ -9,11 +9,11 @@ summary: >
   The standard ABDM uses for the health records themselves, in the R4
   version with India specific profiles.
 sources:
-  - file: ABDM Sandbox/ABDM/Proposed Simplified Milestone 2.docx
-    status: not-yet-hashed
+  - url: https://nrces.in/ndhm/fhir/r4/
+    status: docs-only
     note: >
-      NHA milestone pack for M2, which carries the care context model and
-      the error code table.
+      The NRCeS ABDM Implementation Guide 6.5.0, pinned in the repository at
+      catalogue/openapi/.raw/nrces-ndhm.in-6.5.0.tgz.
 related:
   concepts: []
   glossary: [shared.glossary.hi-type, shared.glossary.nrces]

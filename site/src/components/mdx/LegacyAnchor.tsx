@@ -1,4 +1,5 @@
 import React from 'react';
+import useBrokenLinks from '@docusaurus/useBrokenLinks';
 
 export type LegacyAnchorProps = {
   /** The heading id this section used to have. */
@@ -20,5 +21,8 @@ export type LegacyAnchorProps = {
  * as this, the HTML carries the anchor and the markdown carries nothing.
  */
 export default function LegacyAnchor({id}: LegacyAnchorProps): React.ReactNode {
+  // Registered so the build's anchor check knows the fragment exists: an id
+  // written as raw HTML in MDX is rendered but never collected.
+  useBrokenLinks().collectAnchor(id);
   return <a id={id} aria-hidden="true" />;
 }

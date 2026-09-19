@@ -108,20 +108,13 @@ A payer's bundle carries this entry plus the echoed request entries and the `Pat
     "resourceType": "CoverageEligibilityResponse",
     "id": "<CERESP_UUID>",
     "meta": {
-      "profile": [
-        "http://hl7.org/fhir/StructureDefinition/CoverageEligibilityResponse"
-      ]
+      "profile": ["http://hl7.org/fhir/StructureDefinition/CoverageEligibilityResponse"]
     },
-    "identifier": [
-      {
-        "system": "<PAYER_IDENTIFIER_SYSTEM_URL>",
-        "value": "<RESPONSE_NUMBER>"
-      }
-    ],
+    "identifier": [{
+        "system": "<PAYER_IDENTIFIER_SYSTEM_URL>", "value": "<RESPONSE_NUMBER>"
+      }],
     "status": "active",
-    "purpose": [
-      "validation"
-    ],
+    "purpose": ["validation"],
     "patient": {
       "reference": "<PATIENT_ENTRY_FULLURL>"
     },
@@ -146,25 +139,17 @@ A payer's bundle carries this entry plus the echoed request entries and the `Pat
         "item": [
           {
             "productOrService": {
-              "coding": [
-                {
-                  "system": "<PACKAGE_SYSTEM>",
-                  "code": "<PACKAGE_CODE>",
-                  "display": "<PACKAGE_NAME>"
-                }
-              ]
+              "coding": [{
+                  "system": "<PACKAGE_SYSTEM>", "code": "<PACKAGE_CODE>", "display": "<PACKAGE_NAME>"
+                }]
             },
             "excluded": false,
             "benefit": [
               {
                 "type": {
-                  "coding": [
-                    {
-                      "system": "http://terminology.hl7.org/CodeSystem/ex-benefitcategory",
-                      "code": "30",
-                      "display": "Health Benefit Plan Coverage"
-                    }
-                  ]
+                  "coding": [{
+                      "system": "http://terminology.hl7.org/CodeSystem/ex-benefitcategory", "code": "30", "display": "Health Benefit Plan Coverage"
+                    }]
                 },
                 "allowedMoney": {
                   "value": "<REMAINING_SUM_INSURED_AS_A_NUMBER>",

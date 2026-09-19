@@ -12,7 +12,7 @@ for and who reads it.
 
 ## Document level
 
-These sit in `info`, except `x-abdm-sources` and `x-abdm-errors`, which sit at
+These sit in `info`, except `x-abdm-sources`, which sits at
 the root of the document. A retrieval index chunks per operation and loses the
 document around it, which is the reason these facets are declared once per
 document rather than repeated on every operation.
@@ -56,15 +56,6 @@ half of the honesty rule: an answer can say which NHA artefact it rests on, and
 `scripts/check-source-freshness.mjs` fails CI when a recorded hash no longer
 matches the file under `catalogue/openapi/.raw/`.
 
-### `x-abdm-errors`
-
-The module's error documentation, as prose notes plus tables. Read by
-`scripts/build-skills.mjs` to build a skill's Debug section, by
-`scripts/build-api-reference.mjs` to generate the error pages, and by the Go MCP
-server, which parses the table to answer error lookups. Two variants
-appear once each where a module's errors do not fall into one table:
-`x-abdm-errors-untagged` and `x-abdm-errors-uidai`.
-
 ## Operation level
 
 ### `x-abdm-atom`
@@ -83,43 +74,6 @@ cheaper to fix now than 289 operations are to backfill.
 ```yaml
       operationId: p1_encryption_copy
       x-abdm-atom: hiecm.endpoint.p1-encryption-copy
-```
-
-### `x-abdm-requirement`
-
-Whether a call has to be implemented to certify, joined from the certification
-sheets by `scripts/build-requirements.mjs` and never written by hand. `level` is
-`mandatory`, `conditional` or `optional`; `cases` names every certification case
-that exercises the call, which is the evidence for the level; `conditions`
-carries the sheet's own wording where the marking is conditional, verbatim.
-
-```yaml
-      operationId: m2_sms_deep_link_notify
-      x-abdm-requirement:
-        level: mandatory
-        cases: [HIP_INIT_NOTIFY_HIECM, HIP_INTI_LINK_501]
-        conditions:
-          - "Mandatory for the Government Integartors / Private Integrators"
-```
-
-Written by `scripts/build-requirements.mjs`, which also checks the specs are up
-to date with `--check`. Read by `scripts/build-api-reference.mjs`, which carries
-it into the per-operation JSON so the endpoint page can badge the call.
-
-It is on 35 of 299 operations, and the absence is load bearing: sheets exist for
-M1, M2, M3 and M4 only, and the M4 sheets name calls on the HPR and HFR hosts
-that have no specification here. An operation with no key is one no case names.
-That is not the same as optional, and nothing may render it as optional.
-
-### `x-abdm-use-case`
-
-Groups generated endpoint pages into a sidebar section. Operations sharing a
-value are rendered together under it. Where it is absent the build falls back to
-the operation's `tags`.
-
-```yaml
-      operationId: m1_enrolment_verify_abdm_otp
-      x-abdm-use-case: ABHA creation, Aadhaar OTP
 ```
 
 ### `x-abdm-nha-operation-id`

@@ -87,11 +87,16 @@ func TestExtractErrorCodesCoversRegistryAndPHRSeries(t *testing.T) {
 		{`{"code":"HIS-1132","message":"duplicate facility detected"}`, "HIS-1132"},
 		{"AS-1038 the entered OTP is incorrect", "AS-1038"},
 		{"ABDM-1035", "ABDM-1035"},
+		{`{"code":"900901","message":"Invalid Credentials"}`, "900901"},
+		{`{"error":{"code": 900902}}`, "900902"},
 	} {
 		got := ExtractErrorCodes(tc.in)
 		if len(got) != 1 || got[0] != tc.want {
 			t.Errorf("ExtractErrorCodes(%q) = %v, want [%s]", tc.in, got, tc.want)
 		}
+	}
+	if got := ExtractErrorCodes("OTP 900901 sent at 1726560000"); len(got) != 0 {
+		t.Errorf("a bare number outside a code field is not a code, got %v", got)
 	}
 	if got := ExtractErrorCodes("no codes here"); len(got) != 0 {
 		t.Errorf("expected no codes, got %v", got)

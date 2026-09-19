@@ -4,52 +4,45 @@ type: glossary
 gateway: shared
 milestone: n/a
 version: abdm-v3
-title: X-CM-ID
+title: X-CM-ID, the consent manager header
 summary: >
-  The header naming which consent manager you are talking to, sbx on
-  the sandbox and abdm in production.
+  The header naming which consent manager a request is meant for,
+  carrying that consent manager's suffix.
 sources:
-  - file: ABDM Sandbox/ABDM/Proposed Simplified Milestone 2.docx
-    status: not-yet-hashed
-    note: >
-      NHA milestone pack for M2, which carries the care context model and
-      the error code table.
-related:
-  errors: [hiecm.error.abdm-2403]
+  - file: catalogue/openapi/.raw/nha-2026-09-16/hiecm/gateway.yaml
+    fetched: 2026-09-16
+    hash: sha256:d3bc599054c2570a50818ca54906c44cf652ad6f813473e8ac243667da4e9300
+related: {}
 ---
 
-# X-CM-ID
+# X-CM-ID, the consent manager header
 
 ## In plain words
 
-`X-CM-ID` names which consent manager a call is addressed to. On the
-sandbox it is `sbx`. In production it is `abdm`.
+`X-CM-ID` is a required header on the session call. The specification
+describes it as:
 
-The value is not an environment name that happens to look like a suffix.
-It is the suffix. Take an ABHA address, drop everything up to and
-including the `@`, and what remains is the value of this header. NHA
-says exactly that: get it from the HIE-CM domain name after the `@` in
-the address. The architecture allows for several consent managers, each
-with its own domain, and this header is how a call reaches the right one.
-Today NHA runs one, which is why the header looks like an environment
-switch.
+> Suffix of the consent manager to which the request was intended
 
-It is a header, not part of the URL, so it is easy to leave pointing at
-the wrong consent manager while the host is right.
+The example value given is `sbx`, the suffix that also ends an ABHA address
+on that consent manager.
 
 ## Before you start
 
-Nothing. A glossary entry assumes no prior reading.
+You need to know which environment you are calling, because the suffix is
+what distinguishes one consent manager from another.
 
 ## What happens
 
-Nothing happens here. This entry defines a term, it does not describe a call.
+`gateway_post_gateway_v3_sessions` requires this header, so the value is
+settled before you hold an access token.
 
 ## How you know it worked
 
-You have understood this when you can say what X-CM-ID is without using the acronym itself.
+You have understood this when you can say where the suffix in an ABHA address
+and the value of this header come from.
 
 ## When it goes wrong
 
-Sending the sandbox value against the production host, or the reverse. NHA has a dedicated error code for an invalid value here, which tells you how often it happens.
-
+Sending the suffix of one consent manager to the host of another, which makes
+a routing mistake surface as an authorisation failure.

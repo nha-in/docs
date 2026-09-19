@@ -9,14 +9,13 @@ summary: >
   The system a diagnostic laboratory uses to manage samples, tests
   and results.
 sources:
-  - file: site/docs/_glossary/_hiecm.mdx
-    status: not-yet-hashed
+  - url: https://github.com/eka-care/abdm-docs/blob/main/site/docs/_glossary/_hiecm.mdx
+    status: reference
     note: >
       This portal's own published glossary, where the definition was
       written first. Moved here so it can be retrieved, not rewritten.
 related:
-  concepts: [hiecm.concept.roles]
-  glossary: [shared.glossary.hip, shared.glossary.hiu, shared.glossary.m2]
+  glossary: [shared.glossary.m2]
 ---
 
 # LIMS, laboratory information management system, also written LMIS

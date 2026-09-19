@@ -20,8 +20,7 @@ sources:
     note: >
       The list of empanelled auditors NHA points integrators at when they
       ask where to get WASA done.
-related:
-  sandbox: [shared.sandbox.registration-and-credentials]
+related: {}
 ---
 
 # WASA and the Safe to Host certificate

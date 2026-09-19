@@ -4,70 +4,48 @@ type: glossary
 gateway: shared
 milestone: n/a
 version: abdm-v3
-title: TIMESTAMP
+title: TIMESTAMP, the request time header
 summary: >
-  The header carrying the current time in ISO 8601 UTC, which the gateway
-  rejects if the format is wrong or your clock has drifted.
+  The moment you sent the request, written as an ISO 8601 date and time
+  and carried in the TIMESTAMP header.
 sources:
-  - file: ABDM Sandbox/ABDM/M1 ABHA Collection.postman_collection.json
-    status: not-yet-hashed
-    note: NHA's own M1 Postman collection, 123 requests.
-  - file: catalogue/openapi/hiecm/v3/hiecm-m1.yaml
-    status: ingested
-    note: >
-      NHA's ingested M1 spec. Its Timestamp component says "ISO 8601 UTC
-      timestamp of the request."
-  - url: https://abhasbx.abdm.gov.in
-    fetched: 2026-08-25
-    status: observed
-    note: >
-      Sandbox behaviour observed during a real integration session on
-      25 August 2026. The evidence is quoted in the body.
-related:
-  errors: [hiecm.error.abdm-2402, hiecm.error.abdm-1016]
+  - file: catalogue/openapi/.raw/nha-2026-09-16/hiecm/gateway.yaml
+    fetched: 2026-09-16
+    hash: sha256:d3bc599054c2570a50818ca54906c44cf652ad6f813473e8ac243667da4e9300
+related: {}
 ---
 
-# TIMESTAMP
+# TIMESTAMP, the request time header
 
 ## In plain words
 
-Every ABDM call carries a `TIMESTAMP` header in ISO 8601 UTC, with
-milliseconds and the `Z` suffix, for example `2026-08-25T15:51:15.339Z`.
-The gateway rejects other formats, and it rejects a well formed value if
-your clock has drifted too far from its own.
+`TIMESTAMP` is a required header on ABDM HIE-CM calls. The specification
+describes it as:
 
-It is present on 121 of the 123 requests in NHA's own M1 collection, so
-treat it as required everywhere.
+> Actual time of the request was initiated, ISO 8601 represents date and
+> time by starting with the year, followed by the month, the day, the hour,
+> the minutes, seconds and milliseconds
 
-The value is UTC with the `Z` suffix, not IST: an IST offset reads as
-clock drift and is rejected. Observed on 25 August 2026, against
-`https://abhasbx.abdm.gov.in`:
-
-- `2026-08-25T21:12:40.588+05:30`, IST offset with milliseconds, was
-  rejected: HTTP 404 with body
-  `{"error":{"code":"ABDM-1016: ","message":"Invalid Timestamp"}}`.
-- `2026-08-25T15:51:15.339Z`, UTC with milliseconds and `Z`, was
-  accepted on `POST /v3/phr/app/enrollment/encrypt` with a valid bearer
-  token.
-
-The M1 specification gives the same shape: an ISO 8601 UTC timestamp of
-the request.
+The example given is `2022-10-06T15:10:00.587Z`, so milliseconds and the
+trailing `Z` for UTC are part of the shape you send.
 
 ## Before you start
 
-Nothing. A glossary entry assumes no prior reading.
+You need a clock you trust, because the value states when you initiated the
+request rather than when anything was received.
 
 ## What happens
 
-Nothing happens here. This entry defines a term, it does not describe a call.
+Every HIE-CM operation takes this header, including
+`gateway_post_gateway_v3_sessions`, so the first call you ever make carries
+it.
 
 ## How you know it worked
 
-You have understood this when you can say what TIMESTAMP is without using the acronym itself.
+You have understood this when you can write the header value for the current
+moment without looking up the format.
 
 ## When it goes wrong
 
-A wrong format, including a non-UTC offset, is rejected with ABDM-1016,
-"Invalid Timestamp": see hiecm.error.abdm-1016. A drifted clock fails
-every call in the module, and the error does not mention the clock. Take
-the value from a synchronised source and format it in UTC.
+Sending a local time without the UTC marker, or dropping the milliseconds,
+either of which leaves the value outside the format the specification states.

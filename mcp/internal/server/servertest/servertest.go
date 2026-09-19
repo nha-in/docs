@@ -25,12 +25,11 @@ func Reader(t *testing.T) *index.Reader {
 		{
 			ID: "hiecm.error.abdm-1035", Type: "error", Gateway: "hiecm",
 			Milestone: "M2", Title: "ABDM-1035 facility not onboarded",
-			Summary:            "The gateway rejected the call.",
-			VerificationStatus: "verified",
-			Body:               "## In plain words\n\nThe gateway does not recognise your facility. ABDM-1035 means the X-HIP-ID header is not registered. Every timestamp in the response is ISO 8601 UTC.",
-			SourcePath:         "hiecm/errors/abdm-1035.md",
-			ErrorCodes:         []string{"ABDM-1035"},
-			Related:            map[string][]string{},
+			Summary:    "The gateway rejected the call.",
+			Body:       "## In plain words\n\nThe gateway does not recognise your facility. ABDM-1035 means the X-HIP-ID header is not registered. Every timestamp in the response is ISO 8601 UTC.",
+			SourcePath: "hiecm/errors/abdm-1035.md",
+			ErrorCodes: []string{"ABDM-1035"},
+			Related:    map[string][]string{},
 		},
 	}
 	ops := []catalogue.Operation{{
@@ -41,7 +40,7 @@ func Reader(t *testing.T) *index.Reader {
 	}}
 	specErrors := []catalogue.SpecErrorCode{
 		{Code: "ABDM-1035", Message: "Facility is not registered with the bridge",
-			Action: "Fix onboarding", Module: "m2"},
+			HTTP: "409", OperationID: "linkAddContexts", Module: "m2"},
 	}
 	dbPath := filepath.Join(t.TempDir(), "catalogue.db")
 	meta := index.Meta{CatalogueVersion: "2026.08.24", BuiltAt: "2026-08-24T00:00:00Z"}

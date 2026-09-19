@@ -1,0 +1,3853 @@
+{
+    "openapi": "3.0.1",
+    "info": {
+        "title": "Health Professional Identification APIs",
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "https://apihspsbx.abdm.gov.in/v4/int"
+        }
+    ],
+    "security": [
+        {
+            "BearerAuth": []
+        }
+    ],
+    "paths": {
+        "/aadhaar/generateLink": {
+            "post": {
+                "tags": [
+                    "Registration API's Collection Via Aadhaar"
+                ],
+                "operationId": "generateAadhaarLink",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/AadharGenerateLinkRequest"
+                            },
+                            "example": {
+                                "scopes": [
+                                    "nhpr-register"
+                                ],
+                                "source": "NHPR"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AadharGenerateLinkResponse"
+                                },
+                                "example": {
+                                    "txnId": "de4ff682-fcc6-4bcf-a978-0dbb19a288b4",
+                                    "mobileNumber": "******1234"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/aadhaar/isAuthenticated": {
+            "post": {
+                "tags": [
+                    "Registration API's Collection Via Aadhaar"
+                ],
+                "operationId": "isAadhaarAuthenticated",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/AadhaarGetTransactionRequest"
+                            },
+                            "example": {
+                                "txnId": "259813b1-a339-4482-8df5-16ee45b8dcf2"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "boolean"
+                                },
+                                "example": true
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/v2/registration/aadhaar/verifyOTP": {
+            "post": {
+                "tags": [
+                    "Registration API's Collection Via Aadhaar"
+                ],
+                "operationId": "verifyOtp",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/AadhaarGetTransactionRequest"
+                            },
+                            "example": {
+                                "txnId": "de4ff682-fcc6-4bcf-a978-0dbb19a288b4"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AadharVerifyResponsePayload"
+                                },
+                                "example": {
+                                    "txnId": "951b4258-2ac7-432c-8dbf-6ed990757b88",
+                                    "mobileNumber": null,
+                                    "photo": "<BASE64 ENCODED STRING>",
+                                    "gender": "M",
+                                    "name": "Ayushman Bharat Mission",
+                                    "email": null,
+                                    "pincode": "<PINCODE>",
+                                    "birthdate": "<DOB>",
+                                    "careOf": "<NAME>",
+                                    "house": "<ADDRESS>",
+                                    "street": "<ADDRESS>",
+                                    "landmark": null,
+                                    "locality": "<ADDRESS>",
+                                    "villageTownCity": "Sahibabad",
+                                    "subDist": null,
+                                    "district": "Ghaziabad",
+                                    "state": "Uttar Pradesh",
+                                    "postOffice": "Sahibabad",
+                                    "address": "9th Floor, Tower-l, Jeevan Bharati Building, Connaught Place, New Delhi - 110001"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/v2/registration/aadhaar/demographicAuthViaMobile": {
+            "post": {
+                "tags": [
+                    "Registration API's Collection Via Aadhaar"
+                ],
+                "operationId": "demographicAuthViaMobile",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/HPRIDGenerateMobileOTPResponseDTO"
+                            },
+                            "example": {
+                                "txnId": "de4ff682-fcc6-4bcf-a978-0dbb19a288b4",
+                                "mobileNumber": "JrHfDROoEcsYJ41g2wdkicsI7mT1ATCP347iqwBhWbfaEIgZ03/WHAYvDHRG2WXl4HBNuP2orD+3O75pN0xFhOz4oLXrePAxKTLK8uG5jdeAiGE2lKwOrShq9/gg+BckrQcDYjpMUePRuDau4mqLHa8FdSCQ8npGPY9KCpD2hZkscWNqZR68gRo/EwpY4u32kDzv5i1K/s+A7FNVwXqZS5AK2BadEhG5drSRk7P83eFxJZUlwtsvDK6iipOsM4VtMXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/MobileDemographicAuthResponseModel"
+                                },
+                                "example": {
+                                    "verified": true,
+                                    "errorCode": null,
+                                    "reason": null,
+                                    "uidaiToken": null
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/registration/aadhaar/checkHpIdAccountExist": {
+            "post": {
+                "tags": [
+                    "Registration API's Collection Via Aadhaar"
+                ],
+                "operationId": "accountExist",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/AccountExistPayload"
+                            },
+                            "example": {
+                                "txnId": "de4ff682-fcc6-4bcf-a978-0dbb19a288b4"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AccountExistResponsePayload"
+                                },
+                                "example": {
+                                    "token": "<JWT TOKEN>",
+                                    "hprIdNumber": "<HPR_ID>",
+                                    "categoryId": 100,
+                                    "subCategoryId": 85,
+                                    "txnId": "79dbf65d-affa-4249-8935-3d01676d8b82",
+                                    "name": "Ayushman Bharat Mission",
+                                    "gender": "M",
+                                    "yearOfBirth": "<DOB>",
+                                    "monthOfBirth": "<DOB>",
+                                    "dayOfBirth": "<DOB>",
+                                    "firstName": "Ayushman",
+                                    "middleName": "",
+                                    "lastName": "Mission",
+                                    "stateCode": "9",
+                                    "districtCode": "145",
+                                    "stateName": "Uttar Pradesh",
+                                    "districtName": "<ADDRESS>",
+                                    "address": "9th Floor, Tower-l, Jeevan Bharati Building, Connaught Place, New Delhi - 110001",
+                                    "pincode": "<PINCODE>",
+                                    "profilePhoto": "<BASE64 ENCODED STRING>",
+                                    "mobile": null,
+                                    "hprId": "<EMAIL>",
+                                    "new": false
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/registration/aadhaar/hpid/suggestion": {
+            "post": {
+                "tags": [
+                    "Registration API's Collection Via Aadhaar"
+                ],
+                "operationId": "getSuggesstion",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/HpIdSuggestionRequst"
+                            },
+                            "example": {
+                                "txnId": "a825f76b-0696-40f3-864c-5a3a5b389a83"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "string"
+                                    }
+                                },
+                                "example": [
+                                    "anujsharma"
+                                ]
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/registration/aadhaar/generateMobileOTP": {
+            "post": {
+                "tags": [
+                    "Registration API's Collection Via Aadhaar"
+                ],
+                "operationId": "generateMobileOtp",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/HPRIDGenerateMobileOTPRequestDTO"
+                            },
+                            "example": {
+                                "mobile": "981065XXXX",
+                                "txnId": "de4ff682-fcc6-4bcf-a978-0dbb19a288b4"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HPRIDGenerateMobileOTPResponseDTO"
+                                },
+                                "example": {
+                                    "txnId": "951b4258-2ac7-432c-8dbf-6ed990757b88",
+                                    "mobileNumber": null
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/registration/aadhaar/verifyMobileOTP": {
+            "post": {
+                "tags": [
+                    "Registration API's Collection Via Aadhaar"
+                ],
+                "operationId": "verifyMobileOTP",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/HPRIDVerifyMobileOTPRequestDTO"
+                            },
+                            "example": {
+                                "otp": "<BASE64 ENCODED STRING>",
+                                "txnId": "de4ff682-fcc6-4bcf-a978-0dbb19a288b4"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HPRIDVerifyMobileOTPResponseDTO"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/v2/registration/aadhaar/createHprIdWithPreVerified": {
+            "post": {
+                "tags": [
+                    "Registration API's Collection Via Aadhaar"
+                ],
+                "operationId": "createHprIdV2",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CreateAccountWithPreVerifiedAadhaar"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CreateAccountJwtResponse"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/auth/authPassword": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "operationId": "loginViaPassword",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/LoginViaPasswordRequestDto"
+                            },
+                            "example": {
+                                "idType": "",
+                                "domainName": "",
+                                "hprId": "<HPR_ID>",
+                                "password": "XXXX@992"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/LoginViaPasswordResponseDto"
+                                },
+                                "example": {
+                                    "token": "<JWT TOKEN>",
+                                    "expiresIn": 1733639805,
+                                    "refreshToken": null,
+                                    "refreshExpiresIn": 0
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/auth/cert": {
+            "get": {
+                "tags": [
+                    "Authentication"
+                ],
+                "operationId": "getPublicCertificate",
+                "parameters": [
+                    {
+                        "name": "publicCertificateRequestDto",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/components/schemas/PublicCertificateRequestDto"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/auth/confirmWithAadhaarOtp": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "operationId": "verifyAadhaarOTP_1",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/AadhaarAuthVerifyRequestDTO"
+                            },
+                            "example": {
+                                "otp": "308709",
+                                "txnId": "de4ff682-fcc6-4bcf-a978-0dbb19a288b4"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AadhaarAuthVerifyResponseDTO"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/auth/init": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "operationId": "sendViaAadhaarOTP",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/AadhaarAuthRequestDTO"
+                            },
+                            "example": {
+                                "idType": "",
+                                "domainName": "",
+                                "authMethod": "AADHAAR_OTP",
+                                "hprId": "<HPR_ID>"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AadhaarAuthResponseDTO"
+                                },
+                                "example": {
+                                    "transactionId": "227654a1-a627-48e3-a617-f6fa7595a512",
+                                    "mobileNumber": "******1234"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v2/auth/loginViaMobileSendOTP": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "operationId": "sendVerifyOTP",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/SendVerifyOtpRequestDto"
+                            },
+                            "example": {
+                                "txnId": "4c8c4b29-6d7e-4446-8f73-4574d6d14f09",
+                                "mobile": "97624XXXXX"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SendVerifyOtpResponseDto"
+                                },
+                                "example": {
+                                    "txnId": "28b4ce41-71df-48af-8b6c-13c30402816c",
+                                    "mobileNumber": "******1234"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/apis/v1/doctors/generate-mobile-otp": {
+            "post": {
+                "tags": [
+                    "Verification"
+                ],
+                "operationId": "generateMobileOTP_2",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/AadhaarGenerateOTPRequestDTO"
+                            },
+                            "example": {
+                                "hpr_token": "<JWT TOKEN>",
+                                "officialMobile": "<BASE64 ENCODED STRING>"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AadhaarGenerateOTPResponseDTO"
+                                },
+                                "example": {
+                                    "status": "success",
+                                    "txnId": "3a9e7f08-39ea-42fc-b3bc-b81a3cc68ab5"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/apis/v1/doctors/generate-verification-email": {
+            "post": {
+                "tags": [
+                    "Verification"
+                ],
+                "operationId": "sendVerificationEmail",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/EmailAuthRequestDto"
+                            },
+                            "example": {
+                                "emailAddress": "<ABHA_ADDRESS>.com",
+                                "otp_type": ""
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/EmailAuthResponseDto"
+                                },
+                                "example": {
+                                    "msg": "Mail sent successfully",
+                                    "status": "success",
+                                    "otpLimitExp": null,
+                                    "expTime": null
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/apis/v1/doctors/regenerate-mobile-otp": {
+            "post": {
+                "tags": [
+                    "Verification"
+                ],
+                "operationId": "regenerateMobileOTP",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/AadhaarGenerateOTPRequestDTO"
+                            },
+                            "example": {
+                                "hpr_token": "<JWT TOKEN>",
+                                "officialMobile": "PFiI0AQJkAKIdLL6ytdJLKFObqXab9rwTvOEPHflksQBkMzIIb8HMDYUzZfN3AUdefedSbb+B4sPwi72lsaaNRkpXygWRF0GWntEwD/WL80JbXaW9DJkwPpDEzQpMYKKT17iCTp7pQer8337NZofO1D1aYiDfEnA9E1HMTyPCGFjvmbcL32hNqGsgpHKYNh4rHXCo4RwP5UQKWDYI1jLZqbWLp0a9GQu9nC1hyP5IR5LRCASzvhiRfrRk+Y660xuDSCvOKb+uUPcN3ZFA==xxxxxxxx"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AadhaarGenerateOTPResponseDTO"
+                                },
+                                "example": {
+                                    "status": "<string>",
+                                    "txnId": "<string>"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/apis/v1/doctors/resent-verify-email": {
+            "post": {
+                "tags": [
+                    "Verification"
+                ],
+                "operationId": "resentVerificationEmail",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/EmailAuthRequestDto"
+                            },
+                            "example": {
+                                "emailAddress": "<ABHA_ADDRESS>.com",
+                                "otp_type": ""
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/EmailAuthResponseDto"
+                                },
+                                "example": {
+                                    "emailAddress": "<ABHA_ADDRESS>.com",
+                                    "otp_type": ""
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/apis/v1/doctors/verify-email-otp": {
+            "post": {
+                "tags": [
+                    "Verification"
+                ],
+                "operationId": "verifyEmailOTP",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/EmailOTPVerificationRequestDTO"
+                            },
+                            "example": {
+                                "hpr_token": "<JWT TOKEN>",
+                                "hpr_id": "<HPR_ID>",
+                                "officialEmail": "<ABHA_ADDRESS>.com",
+                                "emailOtp": 515999
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/EmailOTPVerificationResponseDTO"
+                                },
+                                "example": {
+                                    "status": "fail",
+                                    "msg": "Email Verification Failed"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/apis/v1/doctors/verify-mobile-otp": {
+            "post": {
+                "tags": [
+                    "Verification"
+                ],
+                "operationId": "verifyMobileOtp",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/VerifyOtpRequest"
+                            },
+                            "example": {
+                                "hpr_token": "<JWT TOKEN>",
+                                "txnId": "dd392164-0f4a-4894-8d64-1fce027ee033",
+                                "otp": "<BASE64 ENCODED STRING>"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AadhaarGenerateOTPResponseDTO"
+                                },
+                                "example": {
+                                    "status": "<string>",
+                                    "txnId": "<string>"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/getManagementToken": {
+            "post": {
+                "tags": [
+                    "hpid"
+                ],
+                "operationId": "getAdminToken",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/LoginDTO"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/LoginResponseDTO"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/healdthloginwithmobile": {
+            "post": {
+                "tags": [
+                    "hpid"
+                ],
+                "operationId": "healdthloginwithmobile",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/TokenRequestDTO"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/TokenResponseDTO"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/hpid/get/categories": {
+            "get": {
+                "tags": [
+                    "Util"
+                ],
+                "operationId": "fetchHpIdCategories",
+                "parameters": [
+                    {
+                        "name": "role",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int32"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/HpCategoriesDTO"
+                                    }
+                                },
+                                "example": [
+                                    {
+                                        "code": 1,
+                                        "name": "Doctor",
+                                        "subCategories": [
+                                            {
+                                                "code": "220",
+                                                "name": "Yoga and Naturopathy"
+                                            },
+                                            {
+                                                "code": "1",
+                                                "name": "Modern Medicine"
+                                            },
+                                            {
+                                                "code": "2",
+                                                "name": "Dentist"
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "code": 2,
+                                        "name": "Nurse",
+                                        "subCategories": [
+                                            {
+                                                "code": "9",
+                                                "name": "Registered Nurse and Registered Midwife (RN & RM)"
+                                            },
+                                            {
+                                                "code": "10",
+                                                "name": "Registered Lady Health Visitor (RLHV)"
+                                            },
+                                            {
+                                                "code": "7",
+                                                "name": "Registered Auxiliary Nurse Midwife(RANM)"
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "code": 6,
+                                        "name": "Pharmacist",
+                                        "subCategories": [
+                                            {
+                                                "code": "33",
+                                                "name": "Pharmacy"
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/hpid/get/subCategories": {
+            "get": {
+                "tags": [
+                    "Util"
+                ],
+                "operationId": "fetchHpIdSubCategoriesFromCategory",
+                "parameters": [
+                    {
+                        "name": "categoryCode",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "role",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int32"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/HpSubCategoriesDTO"
+                                    }
+                                },
+                                "example": [
+                                    {
+                                        "code": "220",
+                                        "name": "Yoga and Naturopathy"
+                                    },
+                                    {
+                                        "code": "1",
+                                        "name": "Modern Medicine"
+                                    },
+                                    {
+                                        "code": "2",
+                                        "name": "Dentist"
+                                    }
+                                ]
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/password/change/byPassword": {
+            "post": {
+                "tags": [
+                    "Profile"
+                ],
+                "operationId": "changePassword",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/HidChangePasswordRequestPayload"
+                            },
+                            "example": {
+                                "newPassword": "<BASE64 ENCODED STRING>",
+                                "oldPassword": "<BASE64 ENCODED STRING>"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/PasswordChangeDTO"
+                                },
+                                "example": {
+                                    "message": "Password has been changed successfully!"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/password/recover/byAadhaar": {
+            "post": {
+                "tags": [
+                    "Profile"
+                ],
+                "operationId": "recoverPasswordViaAadhaar",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CategoryRequest"
+                            },
+                            "example": {
+                                "hprId": "<HPR_ID>"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/TxnResponse"
+                                },
+                                "example": {
+                                    "txnId": "9b78fdfb-3ba4-4707-8913-63c7c5e3a743",
+                                    "mobileNumber": "******8063",
+                                    "msg": "",
+                                    "verified": false
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/password/recover/byMobile/sendMobileOTP": {
+            "post": {
+                "tags": [
+                    "Profile"
+                ],
+                "operationId": "generateMobileOTP_1",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CategoryRequest"
+                            },
+                            "example": {
+                                "hprId": "amol.xxxxxx"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SendOtpResponse"
+                                },
+                                "example": {
+                                    "txnId": "7ebad8aa-127b-492f-bd0e-56da716bd39e",
+                                    "msg": "Please enter OTP sent on your mobile number ******2021",
+                                    "otp": 0,
+                                    "mobileNumber": "******2021"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/password/recover/byMobile/verifyMobileOTP": {
+            "post": {
+                "tags": [
+                    "Profile"
+                ],
+                "operationId": "verifyMobileOTP_1",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/HidChangePasswordRequestPayload"
+                            },
+                            "example": {
+                                "txnId": "7ebad8aa-127b-492f-bd0e-56da716bd39e",
+                                "otp": "<BASE64 ENCODED STRING>"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SendOtpResponse"
+                                },
+                                "example": {
+                                    "verified": true,
+                                    "txnId": "7ebad8aa-127b-492f-bd0e-56da716bd39e"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/password/recover/confirmByAadhaar": {
+            "post": {
+                "tags": [
+                    "Profile"
+                ],
+                "operationId": "recoverPasswordConfirmByAadhaar",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/HidOtpWebRequestPaylaod"
+                            },
+                            "example": {
+                                "otp": "<BASE64 ENCODED STRING>",
+                                "txnId": "9b78fdfb-3ba4-4707-8913-63c7c5e3a743"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ValidateAaddhaarDemographicMobileResponseDTO"
+                                },
+                                "example": {
+                                    "verified": true,
+                                    "txnId": "9b78fdfb-3ba4-4707-8913-63c7c5e3a743"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/password/reset/password": {
+            "post": {
+                "tags": [
+                    "Profile"
+                ],
+                "operationId": "resetPasswordAndSession",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/HidOtpWebRequestPaylaod"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/PasswordChangeDTO"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/password/resetPassword": {
+            "post": {
+                "tags": [
+                    "Profile"
+                ],
+                "operationId": "resetPassword",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/HidOtpWebRequestPaylaod"
+                            },
+                            "example": {
+                                "txnId": "9b78fdfb-3ba4-4707-8913-63c7c5e3a743",
+                                "newPassword": "<BASE64 ENCODED STRING>"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/PasswordChangeDTO"
+                                },
+                                "example": {
+                                    "message": "Password has been changed successfully!"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/profile/updateRole": {
+            "post": {
+                "tags": [
+                    "hpid"
+                ],
+                "operationId": "updateRoleAndCategory",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UpdateAccountWebRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UserDTO"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/account/getIdCard": {
+            "get": {
+                "tags": [
+                    "Profile"
+                ],
+                "operationId": "getAccountPngCard",
+                "parameters": [
+                    {
+                        "name": "X-Token",
+                        "in": "header",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ProfileResponseDTO"
+                                },
+                                "example": {
+                                    "pdf": "JVBERi0xLjMK"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/account/information": {
+            "get": {
+                "tags": [
+                    "Profile"
+                ],
+                "operationId": "getUserProfileByJwt",
+                "parameters": [
+                    {
+                        "name": "masked",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "boolean",
+                            "default": true
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UserProfileResponseDto"
+                                },
+                                "example": {
+                                    "hprIdNumber": "<HPR_ID>",
+                                    "hprId": "<EMAIL>",
+                                    "mobile": "******2125",
+                                    "firstName": "Ayushman",
+                                    "middleName": "Bharat",
+                                    "lastName": "Mission",
+                                    "name": "Ayushman Bharat Mission",
+                                    "yearOfBirth": "<DOB>",
+                                    "dayOfBirth": "<DOB>",
+                                    "monthOfBirth": "<DOB>",
+                                    "gender": "M",
+                                    "email": "<ABHA_ADDRESS>.com",
+                                    "profilePhoto": "<BASE64 ENCODED STRING>",
+                                    "stateCode": "27",
+                                    "districtCode": "490",
+                                    "subDistrictCode": null,
+                                    "villageCode": null,
+                                    "townCode": null,
+                                    "wardCode": null,
+                                    "pincode": "<PINCODE>",
+                                    "address": "9th Floor, Tower-l, Jeevan Bharati Building, Connaught Place, New Delhi - 110001",
+                                    "kycPhoto": "<BASE64 ENCODED STRING>",
+                                    "stateName": "MAHARASHTRA",
+                                    "districtName": "<ADDRESS>",
+                                    "subdistrictName": null,
+                                    "villageName": null,
+                                    "townName": "<ADDRESS>",
+                                    "wardName": null,
+                                    "authMethods": [
+                                        "MOBILE_OTP",
+                                        "DEMOGRAPHICS",
+                                        "AADHAAR_BIO"
+                                    ],
+                                    "kycVerified": true,
+                                    "verificationStatus": "true",
+                                    "categoryId": 1,
+                                    "categoryName": "DOCTOR",
+                                    "categorySubId": 3,
+                                    "categorySubName": "AYURVEDA",
+                                    "emailVerified": false,
+                                    "new": false
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/account/reKYC/generateAadhaarOTP": {
+            "post": {
+                "tags": [
+                    "Profile"
+                ],
+                "operationId": "generateAadhaarOTPForReKYC",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/TxnResponse"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/account/reKYC/verifyAadhaarOTP": {
+            "post": {
+                "tags": [
+                    "Profile"
+                ],
+                "operationId": "verifyAadhaarOTP",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/AuthRequestDto"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/account/reKYC/verifyAadhaarOTPGetDetails": {
+            "post": {
+                "tags": [
+                    "Profile"
+                ],
+                "operationId": "verifyAadhaarOTPGetDetails",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/AuthRequestDto"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UserDTO"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/account/user-details/{hprId}": {
+            "get": {
+                "tags": [
+                    "Profile"
+                ],
+                "operationId": "getUserDetails",
+                "parameters": [
+                    {
+                        "name": "hprId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UserEntityResponseDTO"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/forgot/hprId/aadhaar": {
+            "post": {
+                "tags": [
+                    "Forgot Healthcare Professional ID/number"
+                ],
+                "operationId": "retrievalHealthIdByAadhaar",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/AadhaarGetTransactionRequest"
+                            },
+                            "example": {
+                                "otp": "<BASE64 ENCODED STRING>",
+                                "txnId": "4c115e27-a602-4320-b4cd-ee658539e2f0"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/RetrieveHprIdPayloadResponse"
+                                },
+                                "example": {
+                                    "hprId": "<EMAIL>",
+                                    "hprIdNumber": "71-1********-0212",
+                                    "token": "<JWT TOKEN>"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/forgot/hprId/mobile": {
+            "post": {
+                "tags": [
+                    "Forgot Healthcare Professional ID/number"
+                ],
+                "operationId": "retrievalHealthIdByMobile",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/RetriveHprIdMobilePayLoad"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/RetrieveHprIdPayloadResponse"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/forgot/hprId/mobile/generateOtp": {
+            "post": {
+                "tags": [
+                    "Forgot Healthcare Professional ID/number"
+                ],
+                "operationId": "generateMobileOTP",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/SendOtpRequest"
+                            },
+                            "example": {
+                                "mobileNumber": "VPoaDCJBNyGhJiX+sAh9yRq1WXAfRXkgcE31/0U2DMkH/+nvpspAA4GEmkbideZhKsSLYnFA1lHPkBH7PS6Bg4jz0aSdDAoovnYgVftJ/suP4mzhhg1Hrf7zQFPriHiraNlsIzsDeLl3ckGejNiCmXhfhBBw==xxxxxxxxxxxxx"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SendOtpResponse"
+                                },
+                                "example": {
+                                    "txnId": "132dd7dd-ca5a-4ec1-a36c-093c007bf794",
+                                    "msg": "Please enter OTP sent on your mobile number ******2021",
+                                    "mobileNumber": "******2021"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/search/existsByHprId/{hprId}": {
+            "get": {
+                "tags": [
+                    "Searched"
+                ],
+                "operationId": "existsByHprId",
+                "parameters": [
+                    {
+                        "name": "hprId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "boolean"
+                                },
+                                "example": true
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/search/searchByHprId/{hprId}": {
+            "get": {
+                "tags": [
+                    "Searched"
+                ],
+                "operationId": "searchUserByHprId",
+                "parameters": [
+                    {
+                        "name": "hprId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ForgetUserEntityResponseDTO"
+                                },
+                                "example": {
+                                    "hprIdNumber": "<HPR_ID>",
+                                    "name": "Ayushman Bharat Mission",
+                                    "authMethods": [
+                                        "PASSWORD",
+                                        "MOBILE_OTP",
+                                        "AADHAAR_OTP"
+                                    ],
+                                    "hprId": "<EMAIL>",
+                                    "categoryId": "1",
+                                    "subCategoryId": "1"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/search/searchByMobile/{mobile}": {
+            "get": {
+                "tags": [
+                    "Searched"
+                ],
+                "operationId": "searchUserByMobileNo",
+                "parameters": [
+                    {
+                        "name": "mobile",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/ForgetUserEntityResponseDTO"
+                                    }
+                                },
+                                "example": [
+                                    {
+                                        "hprIdNumber": "<HPR_ID>",
+                                        "name": "Ayushman Bharat Mission",
+                                        "authMethods": [
+                                            "PASSWORD",
+                                            "MOBILE_OTP",
+                                            "AADHAAR_OTP"
+                                        ],
+                                        "hprId": "<EMAIL>",
+                                        "categoryId": "1",
+                                        "subCategoryId": "1"
+                                    }
+                                ]
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/sendOtpIfDoctorVerified": {
+            "post": {
+                "tags": [
+                    "Verification"
+                ],
+                "operationId": "sendOtpIfDoctorVerified",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/SendOtpIfDoctorVerifiedRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SendOtpIfDoctorVerifiedResponse"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/verifyDoctorVerificationOtp": {
+            "post": {
+                "tags": [
+                    "Verification"
+                ],
+                "operationId": "verifyDoctorVerificationOtp",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/VerifyOtpRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/VerifyDoctorOtpResponse"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/v4/auth/logout": {
+            "get": {
+                "tags": [
+                    "Profile"
+                ],
+                "operationId": "logout",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "example": "User Profile LoggedOut Successfully!!"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "AadhaarGetTransactionRequest": {
+                "type": "object",
+                "properties": {
+                    "txnId": {
+                        "type": "string"
+                    }
+                }
+            },
+            "AadharVerifyResponsePayload": {
+                "type": "object",
+                "properties": {
+                    "txnId": {
+                        "type": "string"
+                    },
+                    "mobileNumber": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "photo": {
+                        "type": "string"
+                    },
+                    "gender": {
+                        "type": "string"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "email": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "pincode": {
+                        "type": "string"
+                    },
+                    "birthdate": {
+                        "type": "string"
+                    },
+                    "careOf": {
+                        "type": "string"
+                    },
+                    "house": {
+                        "type": "string"
+                    },
+                    "street": {
+                        "type": "string"
+                    },
+                    "landmark": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "locality": {
+                        "type": "string"
+                    },
+                    "villageTownCity": {
+                        "type": "string"
+                    },
+                    "subDist": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "district": {
+                        "type": "string"
+                    },
+                    "state": {
+                        "type": "string"
+                    },
+                    "postOffice": {
+                        "type": "string"
+                    },
+                    "address": {
+                        "type": "string"
+                    }
+                }
+            },
+            "HPRIDGenerateMobileOTPResponseDTO": {
+                "type": "object",
+                "properties": {
+                    "txnId": {
+                        "type": "string"
+                    },
+                    "mobileNumber": {
+                        "type": "string",
+                        "nullable": true
+                    }
+                }
+            },
+            "MobileDemographicAuthResponseModel": {
+                "type": "object",
+                "properties": {
+                    "verified": {
+                        "type": "boolean"
+                    }
+                }
+            },
+            "CreateAccountWithPreVerifiedAadhaar": {
+                "required": [
+                    "email",
+                    "txnId"
+                ],
+                "type": "object",
+                "properties": {
+                    "idType": {
+                        "type": "string",
+                        "example": "hpr_id"
+                    },
+                    "domainName": {
+                        "type": "string",
+                        "example": "@hpr.abdm"
+                    },
+                    "email": {
+                        "type": "string",
+                        "description": "Email Address of the user.",
+                        "example": "<ABHA_ADDRESS>.com"
+                    },
+                    "firstName": {
+                        "type": "string",
+                        "description": "First Name of the user).",
+                        "example": "Ayushman"
+                    },
+                    "middleName": {
+                        "type": "string",
+                        "description": "Middle name of the user ",
+                        "example": "Bharat"
+                    },
+                    "lastName": {
+                        "type": "string",
+                        "description": "Last name of the user ",
+                        "example": "Mission"
+                    },
+                    "password": {
+                        "type": "string",
+                        "description": "Passwords for authentication",
+                        "example": "Ayushman@143"
+                    },
+                    "profilePhoto": {
+                        "type": "string",
+                        "description": "Profile photo of the user (Uploaded by the user).",
+                        "example": "<BASE64 ENCODED STRING>"
+                    },
+                    "txnId": {
+                        "type": "string",
+                        "description": "Transaction ID",
+                        "format": "uuid",
+                        "example": "c3b0c27d-e19d-4244-b8bb-3fa19285054a"
+                    },
+                    "hprId": {
+                        "type": "string",
+                        "description": "Healthcare Professional ID Alias.",
+                        "example": "<EMAIL>"
+                    },
+                    "sourceType": {
+                        "type": "string",
+                        "enum": [
+                            "DRIVING_LICENSE",
+                            "AADHAAR"
+                        ]
+                    },
+                    "hpCategoryCode": {
+                        "type": "integer",
+                        "format": "int32",
+                        "example": 1
+                    },
+                    "hpSubCategoryCode": {
+                        "type": "integer",
+                        "format": "int32",
+                        "example": 1
+                    },
+                    "clientId": {
+                        "type": "string",
+                        "example": "V4"
+                    },
+                    "stateCode": {
+                        "type": "string"
+                    },
+                    "districtCode": {
+                        "type": "string"
+                    },
+                    "council": {
+                        "type": "boolean"
+                    },
+                    "role": {
+                        "type": "integer",
+                        "format": "int32"
+                    }
+                }
+            },
+            "CreateAccountJwtResponse": {
+                "type": "object",
+                "properties": {
+                    "token": {
+                        "type": "string"
+                    },
+                    "hprIdNumber": {
+                        "type": "string"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "gender": {
+                        "type": "string"
+                    },
+                    "yearOfBirth": {
+                        "type": "string"
+                    },
+                    "monthOfBirth": {
+                        "type": "string"
+                    },
+                    "dayOfBirth": {
+                        "type": "string"
+                    },
+                    "firstName": {
+                        "type": "string"
+                    },
+                    "hprId": {
+                        "type": "string"
+                    },
+                    "lastName": {
+                        "type": "string"
+                    },
+                    "middleName": {
+                        "type": "string"
+                    },
+                    "stateCode": {
+                        "type": "string"
+                    },
+                    "districtCode": {
+                        "type": "string"
+                    },
+                    "subDistrictCode": {
+                        "type": "string"
+                    },
+                    "subDistrictName": {
+                        "type": "string"
+                    },
+                    "stateName": {
+                        "type": "string"
+                    },
+                    "districtName": {
+                        "type": "string"
+                    },
+                    "email": {
+                        "type": "string"
+                    },
+                    "kycPhoto": {
+                        "type": "string"
+                    },
+                    "mobile": {
+                        "type": "string"
+                    },
+                    "categoryId": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "subCategoryId": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "role": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "authMethods": {
+                        "uniqueItems": true,
+                        "type": "array",
+                        "items": {
+                            "type": "string",
+                            "enum": [
+                                "AADHAAR_OTP",
+                                "MOBILE_OTP",
+                                "PASSWORD",
+                                "DEMOGRAPHICS",
+                                "AADHAAR_BIO",
+                                "EMAIL_OTP",
+                                "MOBILE_OTP_RESET_PASSWROD",
+                                "FACE_AUTH"
+                            ]
+                        }
+                    },
+                    "new": {
+                        "type": "boolean"
+                    }
+                }
+            },
+            "VerifyOtpRequest": {
+                "type": "object",
+                "properties": {
+                    "txnId": {
+                        "type": "string"
+                    },
+                    "otp": {
+                        "type": "string"
+                    }
+                }
+            },
+            "VerifyDoctorOtpResponse": {
+                "type": "object",
+                "properties": {
+                    "message": {
+                        "type": "string"
+                    },
+                    "verified": {
+                        "type": "boolean"
+                    }
+                }
+            },
+            "SendOtpIfDoctorVerifiedRequest": {
+                "type": "object",
+                "properties": {
+                    "hprId": {
+                        "type": "string"
+                    },
+                    "mobileNumber": {
+                        "type": "string"
+                    }
+                }
+            },
+            "SendOtpIfDoctorVerifiedResponse": {
+                "type": "object",
+                "properties": {
+                    "txnId": {
+                        "type": "string"
+                    },
+                    "message": {
+                        "type": "string"
+                    },
+                    "mobileNumber": {
+                        "type": "string"
+                    }
+                }
+            },
+            "HPRIDVerifyMobileOTPRequestDTO": {
+                "type": "object",
+                "properties": {
+                    "otp": {
+                        "type": "string"
+                    },
+                    "txnId": {
+                        "type": "string"
+                    }
+                }
+            },
+            "HPRIDVerifyMobileOTPResponseDTO": {
+                "type": "object",
+                "properties": {
+                    "txnId": {
+                        "type": "string"
+                    },
+                    "mobileNumber": {
+                        "type": "string"
+                    }
+                }
+            },
+            "HpIdSuggestionRequst": {
+                "required": [
+                    "txnId"
+                ],
+                "type": "object",
+                "properties": {
+                    "txnId": {
+                        "type": "string",
+                        "description": "Based on UUID",
+                        "example": "a825f76b-0696-40f3-864c-5a3a5b389a83"
+                    }
+                }
+            },
+            "HPRIDGenerateMobileOTPRequestDTO": {
+                "type": "object",
+                "properties": {
+                    "mobile": {
+                        "type": "string"
+                    },
+                    "txnId": {
+                        "type": "string"
+                    }
+                }
+            },
+            "AccountExistPayload": {
+                "type": "object",
+                "properties": {
+                    "txnId": {
+                        "type": "string"
+                    },
+                    "preverifiedCheck": {
+                        "type": "boolean"
+                    }
+                }
+            },
+            "AccountExistResponsePayload": {
+                "type": "object",
+                "properties": {
+                    "token": {
+                        "type": "string"
+                    },
+                    "hprIdNumber": {
+                        "type": "string"
+                    },
+                    "categoryId": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "categoryName": {
+                        "type": "string"
+                    },
+                    "subCategoryId": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "categorySubName": {
+                        "type": "string"
+                    },
+                    "txnId": {
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "gender": {
+                        "type": "string"
+                    },
+                    "yearOfBirth": {
+                        "type": "string"
+                    },
+                    "monthOfBirth": {
+                        "type": "string"
+                    },
+                    "dayOfBirth": {
+                        "type": "string"
+                    },
+                    "firstName": {
+                        "type": "string"
+                    },
+                    "middleName": {
+                        "type": "string"
+                    },
+                    "lastName": {
+                        "type": "string"
+                    },
+                    "stateCode": {
+                        "type": "string"
+                    },
+                    "districtCode": {
+                        "type": "string"
+                    },
+                    "stateName": {
+                        "type": "string"
+                    },
+                    "districtName": {
+                        "type": "string"
+                    },
+                    "address": {
+                        "type": "string"
+                    },
+                    "pincode": {
+                        "type": "string"
+                    },
+                    "profilePhoto": {
+                        "type": "string"
+                    },
+                    "mobile": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "hprId": {
+                        "type": "string"
+                    },
+                    "new": {
+                        "type": "boolean"
+                    }
+                }
+            },
+            "RetriveHprIdMobilePayLoad": {
+                "required": [
+                    "firstName",
+                    "gender",
+                    "name",
+                    "otp",
+                    "txnId",
+                    "yearOfBirth"
+                ],
+                "type": "object",
+                "properties": {
+                    "txnId": {
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "gender": {
+                        "pattern": "^(M|F|O|U)$",
+                        "type": "string"
+                    },
+                    "yearOfBirth": {
+                        "pattern": "^(\\d{4})$",
+                        "type": "string"
+                    },
+                    "monthOfBirth": {
+                        "pattern": "^(0?[1-9]|1[012])$",
+                        "type": "string"
+                    },
+                    "dayOfBirth": {
+                        "pattern": "^(0?[1-9]|[12][0-9]|3[01])$",
+                        "type": "string"
+                    },
+                    "firstName": {
+                        "type": "string"
+                    },
+                    "lastName": {
+                        "type": "string"
+                    },
+                    "middleName": {
+                        "type": "string"
+                    },
+                    "otp": {
+                        "type": "string"
+                    }
+                }
+            },
+            "RetrieveHprIdPayloadResponse": {
+                "type": "object",
+                "properties": {
+                    "hprId": {
+                        "type": "string"
+                    },
+                    "hprIdNumber": {
+                        "type": "string"
+                    },
+                    "token": {
+                        "type": "string"
+                    }
+                }
+            },
+            "SendOtpRequest": {
+                "type": "object",
+                "properties": {
+                    "mobileNumber": {
+                        "type": "string"
+                    },
+                    "email": {
+                        "type": "string"
+                    },
+                    "type": {
+                        "type": "string"
+                    },
+                    "hpid": {
+                        "type": "string"
+                    }
+                }
+            },
+            "SendOtpResponse": {
+                "type": "object",
+                "properties": {
+                    "txnId": {
+                        "type": "string"
+                    },
+                    "msg": {
+                        "type": "string"
+                    },
+                    "mobileNumber": {
+                        "type": "string"
+                    }
+                }
+            },
+            "AadhaarVerifyOtpRequestDto": {
+                "type": "object",
+                "properties": {
+                    "aadhaarNumber": {
+                        "type": "string"
+                    },
+                    "otp": {
+                        "type": "string"
+                    },
+                    "faceAuthPid": {
+                        "type": "string"
+                    },
+                    "aadhaarLogType": {
+                        "type": "string"
+                    },
+                    "transactionId": {
+                        "type": "string"
+                    },
+                    "txnId": {
+                        "type": "string"
+                    }
+                }
+            },
+            "AuthRequestDto": {
+                "type": "object",
+                "properties": {
+                    "authType": {
+                        "type": "string",
+                        "enum": [
+                            "AADHAAR_OTP",
+                            "USERNAME_PASSWORD",
+                            "MOBILE_OTP"
+                        ]
+                    },
+                    "hprId": {
+                        "type": "string"
+                    },
+                    "password": {
+                        "type": "string"
+                    },
+                    "aadhaar": {
+                        "type": "string"
+                    },
+                    "mobileNumber": {
+                        "type": "string"
+                    },
+                    "txnId": {
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "otp": {
+                        "type": "string"
+                    },
+                    "resend": {
+                        "type": "boolean"
+                    },
+                    "aadhaarVerifyOtpRequestDto": {
+                        "$ref": "#/components/schemas/AadhaarVerifyOtpRequestDto"
+                    }
+                }
+            },
+            "UserDTO": {
+                "type": "object",
+                "properties": {
+                    "hprIdNumber": {
+                        "type": "string"
+                    },
+                    "hprId": {
+                        "type": "string"
+                    },
+                    "mobile": {
+                        "type": "string"
+                    },
+                    "firstName": {
+                        "type": "string"
+                    },
+                    "middleName": {
+                        "type": "string"
+                    },
+                    "lastName": {
+                        "type": "string"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "yearOfBirth": {
+                        "type": "string"
+                    },
+                    "dayOfBirth": {
+                        "type": "string"
+                    },
+                    "monthOfBirth": {
+                        "type": "string"
+                    },
+                    "gender": {
+                        "type": "string"
+                    },
+                    "email": {
+                        "type": "string"
+                    },
+                    "profilePhoto": {
+                        "type": "string"
+                    },
+                    "stateCode": {
+                        "type": "string"
+                    },
+                    "districtCode": {
+                        "type": "string"
+                    },
+                    "subDistrictCode": {
+                        "type": "string"
+                    },
+                    "villageCode": {
+                        "type": "string"
+                    },
+                    "townCode": {
+                        "type": "string"
+                    },
+                    "wardCode": {
+                        "type": "string"
+                    },
+                    "pinCode": {
+                        "type": "string"
+                    },
+                    "address": {
+                        "type": "string"
+                    },
+                    "kycPhoto": {
+                        "type": "string"
+                    },
+                    "stateName": {
+                        "type": "string"
+                    },
+                    "districtName": {
+                        "type": "string"
+                    },
+                    "subdistrictName": {
+                        "type": "string"
+                    },
+                    "villageName": {
+                        "type": "string"
+                    },
+                    "townName": {
+                        "type": "string"
+                    },
+                    "wardName": {
+                        "type": "string"
+                    },
+                    "authMethods": {
+                        "uniqueItems": true,
+                        "type": "array",
+                        "items": {
+                            "type": "string",
+                            "enum": [
+                                "AADHAAR_OTP",
+                                "MOBILE_OTP",
+                                "PASSWORD",
+                                "DEMOGRAPHICS",
+                                "AADHAAR_BIO",
+                                "EMAIL_OTP",
+                                "MOBILE_OTP_RESET_PASSWROD",
+                                "FACE_AUTH"
+                            ]
+                        }
+                    },
+                    "kycVerified": {
+                        "type": "boolean"
+                    },
+                    "verificationType": {
+                        "type": "string"
+                    },
+                    "verificationStatus": {
+                        "type": "string"
+                    },
+                    "categoryId": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "categoryName": {
+                        "type": "string"
+                    },
+                    "categorySubId": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "categorySubName": {
+                        "type": "string"
+                    },
+                    "token": {
+                        "type": "string"
+                    },
+                    "hprIdCategories": {
+                        "type": "array",
+                        "items": {
+                            "type": "integer",
+                            "format": "int32"
+                        }
+                    },
+                    "fileEntityProfileId": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "fileEntityKycId": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "role": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "hprProfileId": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "new": {
+                        "type": "boolean"
+                    },
+                    "emailVerified": {
+                        "type": "boolean"
+                    },
+                    "xmluidexist": {
+                        "type": "boolean"
+                    }
+                }
+            },
+            "TxnResponse": {
+                "type": "object",
+                "properties": {
+                    "txnId": {
+                        "type": "string",
+                        "description": "Based on UUID",
+                        "format": "uuid",
+                        "example": "a825f76b-0696-40f3-864c-5a3a5b389a83"
+                    },
+                    "mobileNumber": {
+                        "type": "string",
+                        "example": "******2125"
+                    },
+                    "msg": {
+                        "type": "string"
+                    },
+                    "verified": {
+                        "type": "boolean"
+                    }
+                }
+            },
+            "UpdateAccountWebRequest": {
+                "type": "object",
+                "properties": {
+                    "firstName": {
+                        "type": "string",
+                        "description": "First Name of the user).",
+                        "example": "Ayushman"
+                    },
+                    "lastName": {
+                        "type": "string",
+                        "description": "Last name of the user ",
+                        "example": "Mission"
+                    },
+                    "middleName": {
+                        "type": "string",
+                        "description": "Middle name of the user ",
+                        "example": "Bharat"
+                    },
+                    "hprId": {
+                        "type": "string",
+                        "description": "Healthcare Professional ID Alias.",
+                        "example": "<EMAIL>"
+                    },
+                    "password": {
+                        "type": "string",
+                        "description": "User Authentication password.",
+                        "example": "Abdm@143"
+                    },
+                    "email": {
+                        "type": "string",
+                        "description": "Email Address of the user.",
+                        "example": "<ABHA_ADDRESS>.com"
+                    },
+                    "profilePhoto": {
+                        "type": "string",
+                        "description": "Profile photo of the user (Uploaded by the user).",
+                        "example": "<BASE64 ENCODED STRING>"
+                    },
+                    "stateCode": {
+                        "type": "string",
+                        "description": "State Code of the user (LGD).",
+                        "example": "7"
+                    },
+                    "districtCode": {
+                        "type": "string",
+                        "description": "District Code of the user (LGD).",
+                        "example": "71"
+                    },
+                    "subdistrictCode": {
+                        "type": "string",
+                        "description": "Sub District Code of the user (LGD).",
+                        "example": "1"
+                    },
+                    "villageCode": {
+                        "type": "string",
+                        "description": "Village Code of the user (LGD)."
+                    },
+                    "townCode": {
+                        "type": "string",
+                        "description": "Town Code of the user (LGD)."
+                    },
+                    "wardCode": {
+                        "type": "string",
+                        "description": "Ward Code of the user (LGD)."
+                    },
+                    "pincode": {
+                        "type": "integer",
+                        "description": "Pincode of the user.",
+                        "format": "int32",
+                        "example": 110001
+                    },
+                    "address": {
+                        "type": "string",
+                        "description": "Address of the user.",
+                        "example": "9th Floor, Tower-l, Jeevan Bharati Building, Connaught Place, New Delhi - 110001"
+                    },
+                    "yearOfBirth": {
+                        "type": "string",
+                        "description": "Year of birth of the user.",
+                        "example": "2021"
+                    },
+                    "monthOfBirth": {
+                        "type": "string",
+                        "description": "Month of birth of the user.",
+                        "example": "8"
+                    },
+                    "dayOfBirth": {
+                        "type": "string",
+                        "description": "Day of birth of the user.",
+                        "example": "15"
+                    },
+                    "hpCategoryCode": {
+                        "type": "string",
+                        "example": "1"
+                    },
+                    "hpSubCategoryCode": {
+                        "type": "string",
+                        "example": "1"
+                    },
+                    "txnId": {
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "role": {
+                        "type": "string"
+                    },
+                    "consentToDelete": {
+                        "type": "boolean"
+                    }
+                }
+            },
+            "HidOtpWebRequestPaylaod": {
+                "required": [
+                    "txnId"
+                ],
+                "type": "object",
+                "properties": {
+                    "newPassword": {
+                        "type": "string",
+                        "description": "Encrypted new Password."
+                    },
+                    "otp": {
+                        "type": "string",
+                        "description": "Encrypted OTP."
+                    },
+                    "txnId": {
+                        "type": "string",
+                        "format": "uuid"
+                    }
+                }
+            },
+            "PasswordChangeDTO": {
+                "type": "object",
+                "properties": {
+                    "message": {
+                        "type": "string"
+                    }
+                }
+            },
+            "ValidateAaddhaarDemographicMobileResponseDTO": {
+                "type": "object",
+                "properties": {
+                    "verified": {
+                        "type": "boolean"
+                    },
+                    "txnId": {
+                        "type": "string"
+                    }
+                }
+            },
+            "HidChangePasswordRequestPayload": {
+                "type": "object",
+                "properties": {
+                    "oldPassword": {
+                        "type": "string"
+                    },
+                    "newPassword": {
+                        "type": "string"
+                    },
+                    "txnId": {
+                        "type": "string"
+                    },
+                    "hprID": {
+                        "type": "string"
+                    },
+                    "otp": {
+                        "type": "string"
+                    }
+                },
+                "description": "Shared by /password/recover/byMobile/verifyMobileOTP (txnId, otp) and /password/change/byPassword (oldPassword, newPassword), per the official HPID \"Change password\" document."
+            },
+            "CategoryRequest": {
+                "required": [
+                    "hprId"
+                ],
+                "type": "object",
+                "properties": {
+                    "hprId": {
+                        "type": "string"
+                    },
+                    "categories": {
+                        "type": "object",
+                        "additionalProperties": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "TokenRequestDTO": {
+                "type": "object",
+                "properties": {
+                    "txnId": {
+                        "type": "string"
+                    },
+                    "issueToken": {
+                        "type": "string"
+                    },
+                    "token": {
+                        "type": "string"
+                    }
+                }
+            },
+            "TokenResponseDTO": {
+                "type": "object",
+                "properties": {
+                    "hbi": {
+                        "type": "boolean"
+                    },
+                    "docid": {
+                        "type": "string"
+                    },
+                    "status": {
+                        "type": "string"
+                    },
+                    "siteUrl": {
+                        "type": "string"
+                    },
+                    "token": {
+                        "type": "string"
+                    }
+                }
+            },
+            "LoginDTO": {
+                "type": "object",
+                "properties": {
+                    "username": {
+                        "type": "string"
+                    },
+                    "password": {
+                        "type": "string"
+                    },
+                    "resend": {
+                        "type": "boolean"
+                    }
+                }
+            },
+            "LoginResponseDTO": {
+                "type": "object",
+                "properties": {
+                    "token": {
+                        "type": "string"
+                    },
+                    "ncToken": {
+                        "type": "string"
+                    }
+                }
+            },
+            "AadhaarGenerateOTPResponseDTO": {
+                "type": "object",
+                "properties": {
+                    "status": {
+                        "type": "string"
+                    },
+                    "txnId": {
+                        "type": "string"
+                    }
+                }
+            },
+            "EmailOTPVerificationRequestDTO": {
+                "type": "object",
+                "properties": {
+                    "hpr_token": {
+                        "type": "string"
+                    },
+                    "hpr_id": {
+                        "type": "string"
+                    },
+                    "officialEmail": {
+                        "type": "string"
+                    },
+                    "emailOtp": {
+                        "type": "integer",
+                        "format": "int32"
+                    }
+                }
+            },
+            "EmailOTPVerificationResponseDTO": {
+                "type": "object",
+                "properties": {
+                    "status": {
+                        "type": "string"
+                    },
+                    "msg": {
+                        "type": "string"
+                    }
+                }
+            },
+            "EmailAuthRequestDto": {
+                "type": "object",
+                "properties": {
+                    "emailAddress": {
+                        "type": "string"
+                    },
+                    "otp_type": {
+                        "type": "string"
+                    }
+                }
+            },
+            "EmailAuthResponseDto": {
+                "type": "object",
+                "properties": {
+                    "msg": {
+                        "type": "string"
+                    },
+                    "status": {
+                        "type": "string"
+                    }
+                }
+            },
+            "AadhaarGenerateOTPRequestDTO": {
+                "required": [
+                    "hpr_token",
+                    "officialMobile"
+                ],
+                "type": "object",
+                "properties": {
+                    "hpr_token": {
+                        "type": "string"
+                    },
+                    "officialMobile": {
+                        "type": "string"
+                    }
+                }
+            },
+            "SendVerifyOtpRequestDto": {
+                "type": "object",
+                "properties": {
+                    "mobile": {
+                        "type": "string"
+                    },
+                    "txnId": {
+                        "type": "string"
+                    },
+                    "otp": {
+                        "type": "string"
+                    },
+                    "hpid": {
+                        "type": "string"
+                    }
+                }
+            },
+            "MobileLinkedHpIdDto": {
+                "type": "object",
+                "properties": {
+                    "hprIdNumber": {
+                        "type": "string"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "hprId": {
+                        "type": "string"
+                    },
+                    "categoryId": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "subCategoryId": {
+                        "type": "integer",
+                        "format": "int32"
+                    }
+                }
+            },
+            "SendVerifyOtpResponseDto": {
+                "type": "object",
+                "properties": {
+                    "txnId": {
+                        "type": "string"
+                    },
+                    "mobileLinkedHpIdDTO": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/MobileLinkedHpIdDto"
+                        }
+                    },
+                    "mobileNumber": {
+                        "type": "string"
+                    }
+                }
+            },
+            "AadhaarAuthRequestDTO": {
+                "type": "object",
+                "properties": {
+                    "idType": {
+                        "type": "string"
+                    },
+                    "domainName": {
+                        "type": "string"
+                    },
+                    "authMethod": {
+                        "type": "string"
+                    },
+                    "hprId": {
+                        "type": "string"
+                    }
+                }
+            },
+            "AadhaarAuthResponseDTO": {
+                "type": "object",
+                "properties": {
+                    "transactionId": {
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "mobileNumber": {
+                        "type": "string"
+                    }
+                }
+            },
+            "AadhaarAuthVerifyRequestDTO": {
+                "type": "object",
+                "properties": {
+                    "otp": {
+                        "type": "string"
+                    },
+                    "txnId": {
+                        "type": "string",
+                        "format": "uuid"
+                    }
+                }
+            },
+            "AadhaarAuthVerifyResponseDTO": {
+                "type": "object",
+                "properties": {
+                    "token": {
+                        "type": "string"
+                    },
+                    "expiresIn": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "refreshToken": {
+                        "type": "string"
+                    },
+                    "refreshExpiresIn": {
+                        "type": "integer",
+                        "format": "int32"
+                    }
+                }
+            },
+            "LoginViaPasswordRequestDto": {
+                "type": "object",
+                "properties": {
+                    "idType": {
+                        "type": "string"
+                    },
+                    "domainName": {
+                        "type": "string"
+                    },
+                    "hprId": {
+                        "type": "string"
+                    },
+                    "password": {
+                        "type": "string"
+                    }
+                }
+            },
+            "LoginViaPasswordResponseDto": {
+                "type": "object",
+                "properties": {
+                    "token": {
+                        "type": "string"
+                    },
+                    "expiresIn": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "refreshToken": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "refreshExpiresIn": {
+                        "type": "integer",
+                        "format": "int64"
+                    }
+                }
+            },
+            "AadharGenerateLinkRequest": {
+                "type": "object",
+                "properties": {
+                    "scopes": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "source": {
+                        "type": "string"
+                    }
+                }
+            },
+            "AadharGenerateLinkResponse": {
+                "type": "object",
+                "properties": {
+                    "status": {
+                        "type": "string"
+                    },
+                    "txnId": {
+                        "type": "string"
+                    },
+                    "url": {
+                        "type": "string"
+                    }
+                }
+            },
+            "ForgetUserEntityResponseDTO": {
+                "type": "object",
+                "properties": {
+                    "hprIdNumber": {
+                        "type": "string"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "authMethods": {
+                        "type": "array",
+                        "items": {
+                            "type": "string",
+                            "enum": [
+                                "AADHAAR_OTP",
+                                "MOBILE_OTP",
+                                "PASSWORD",
+                                "DEMOGRAPHICS",
+                                "AADHAAR_BIO",
+                                "EMAIL_OTP",
+                                "MOBILE_OTP_RESET_PASSWROD",
+                                "FACE_AUTH"
+                            ]
+                        }
+                    },
+                    "hprId": {
+                        "type": "string"
+                    },
+                    "categoryId": {
+                        "type": "string"
+                    },
+                    "subCategoryId": {
+                        "type": "string"
+                    }
+                }
+            },
+            "UserEntityResponseDTO": {
+                "type": "object",
+                "properties": {
+                    "hprIdNumber": {
+                        "type": "string"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "hprId": {
+                        "type": "string"
+                    },
+                    "categoryName": {
+                        "type": "string"
+                    },
+                    "categorySubName": {
+                        "type": "string"
+                    }
+                }
+            },
+            "UserProfileResponseDto": {
+                "type": "object",
+                "properties": {
+                    "hprIdNumber": {
+                        "type": "string"
+                    },
+                    "hprId": {
+                        "type": "string"
+                    },
+                    "mobile": {
+                        "type": "string"
+                    },
+                    "firstName": {
+                        "type": "string"
+                    },
+                    "middleName": {
+                        "type": "string"
+                    },
+                    "lastName": {
+                        "type": "string"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "yearOfBirth": {
+                        "type": "string"
+                    },
+                    "dayOfBirth": {
+                        "type": "string"
+                    },
+                    "monthOfBirth": {
+                        "type": "string"
+                    },
+                    "gender": {
+                        "type": "string"
+                    },
+                    "email": {
+                        "type": "string"
+                    },
+                    "profilePhoto": {
+                        "type": "string"
+                    },
+                    "stateCode": {
+                        "type": "string"
+                    },
+                    "districtCode": {
+                        "type": "string"
+                    },
+                    "subDistrictCode": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "villageCode": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "townCode": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "wardCode": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "pincode": {
+                        "type": "string"
+                    },
+                    "address": {
+                        "type": "string"
+                    },
+                    "kycPhoto": {
+                        "type": "string"
+                    },
+                    "stateName": {
+                        "type": "string"
+                    },
+                    "districtName": {
+                        "type": "string"
+                    },
+                    "subdistrictName": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "villageName": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "townName": {
+                        "type": "string"
+                    },
+                    "wardName": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "authMethods": {
+                        "type": "array",
+                        "items": {
+                            "type": "string",
+                            "enum": [
+                                "AADHAAR_OTP",
+                                "MOBILE_OTP",
+                                "PASSWORD",
+                                "DEMOGRAPHICS",
+                                "AADHAAR_BIO",
+                                "EMAIL_OTP",
+                                "MOBILE_OTP_RESET_PASSWROD",
+                                "FACE_AUTH"
+                            ]
+                        }
+                    },
+                    "kycVerified": {
+                        "type": "boolean"
+                    },
+                    "verificationStatus": {
+                        "type": "string"
+                    },
+                    "categoryId": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "categoryName": {
+                        "type": "string"
+                    },
+                    "categorySubId": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "categorySubName": {
+                        "type": "string"
+                    },
+                    "emailVerified": {
+                        "type": "boolean"
+                    },
+                    "role": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "new": {
+                        "type": "boolean"
+                    }
+                }
+            },
+            "ProfileResponseDTO": {
+                "type": "object",
+                "properties": {
+                    "pdf": {
+                        "type": "string",
+                        "format": "byte"
+                    }
+                }
+            },
+            "HpSubCategoriesDTO": {
+                "type": "object",
+                "properties": {
+                    "code": {
+                        "type": "string",
+                        "example": "1"
+                    },
+                    "Modern Medicine": {
+                        "type": "string",
+                        "example": "1"
+                    }
+                }
+            },
+            "HpCategoriesDTO": {
+                "type": "object",
+                "properties": {
+                    "code": {
+                        "type": "integer",
+                        "format": "int32",
+                        "example": 1
+                    },
+                    "name": {
+                        "type": "string",
+                        "example": "Doctor"
+                    },
+                    "subCategories": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/HpSubCategoriesDTO"
+                        }
+                    },
+                    "districts": {
+                        "type": "array",
+                        "writeOnly": true,
+                        "items": {
+                            "$ref": "#/components/schemas/HpSubCategoriesDTO"
+                        }
+                    }
+                }
+            },
+            "PublicCertificateRequestDto": {
+                "type": "object",
+                "properties": {
+                    "mobile": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "securitySchemes": {
+            "BearerAuth": {
+                "type": "http",
+                "scheme": "bearer",
+                "bearerFormat": "JWT"
+            }
+        }
+    }
+}

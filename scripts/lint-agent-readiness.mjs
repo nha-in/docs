@@ -21,6 +21,9 @@ const warnings = [];
 const seenIds = new Map();
 let ops = 0;
 let specs = 0;
+// Operations whose source document gave no description. Counted on its own
+// line so the number is visible without being a failure.
+let sourceless = 0;
 
 for (const entry of listSpecs()) {
   const spec = parse(readFileSync(entry.path, 'utf8'));
@@ -53,9 +56,16 @@ for (const entry of listSpecs()) {
         }
 
         if (!op.summary) problems.push(`${at}: no summary, which is what a tool generator shows the model`);
-        if (!op.description) problems.push(`${at}: no description, so this chunk retrieves against its path alone`);
-        else if (op.description.trim().length < 40) {
-          warnings.push(`${at}: description is under 40 characters`);
+        // An operation whose source document carries no description at all is
+        // reported, never failed: the only ways to clear it are to write the
+        // prose ourselves, which the voice rules forbid, or to drop the
+        // operation. A description that exists but says almost nothing is a
+        // different thing, and it is ours to fix.
+        if (!op.description) {
+          sourceless += 1;
+          warnings.push(`${at}: no description in the source, so this chunk retrieves against its path alone`);
+        } else if (op.description.trim().length < 40) {
+          problems.push(`${at}: description is under 40 characters`);
         }
         if (!op.tags?.length) warnings.push(`${at}: no tag, so it has no within-module facet`);
         if (kind === 'path' && !op['x-abdm-atom']) {
@@ -72,6 +82,7 @@ for (const entry of listSpecs()) {
 }
 
 console.log(`${ops} operations across ${specs} specification(s)`);
+if (sourceless) console.log(`${sourceless} operation(s) carry no description from their source`);
 if (warnings.length) {
   console.log(`\n${warnings.length} warning(s):`);
   for (const w of warnings.slice(0, 15)) console.log('  ' + w);

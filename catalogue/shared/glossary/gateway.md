@@ -10,8 +10,8 @@ summary: >
   call each other directly. It is not the consent manager, and no
   health record passes through it.
 sources:
-  - file: site/docs/_glossary/_shared.mdx
-    status: not-yet-hashed
+  - url: https://github.com/eka-care/abdm-docs/blob/main/site/docs/_glossary/_shared.mdx
+    status: reference
     note: >
       This portal's own published glossary, where the definition was
       written first. Moved here so it can be retrieved, not rewritten.
@@ -21,8 +21,7 @@ sources:
       NHA's PHR Framework page, which calls the gateway the hub that
       mediates and connects HIE-CMs, health repositories and HIUs.
 related:
-  concepts: [hiecm.concept.gateway-session, hiecm.concept.asynchronous-callbacks]
-  glossary: [shared.glossary.hie-cm, shared.glossary.bridge]
+  glossary: [shared.glossary.bridge]
 ---
 
 # Gateway, the routing layer between participants
@@ -33,8 +32,8 @@ NHA's routing layer: you do not call another participant directly, you
 call the gateway, it forwards your request, and the reply arrives at
 your [bridge](bridge.md) as a separate inbound call. You get a session
 token first, by posting your client id and client secret to
-`/api/hiecm/gateway/v3/sessions`. Two sandbox hosts serve that path,
-`https://apissbx.abdm.gov.in` and `https://dev.abdm.gov.in`. Take the
+`/api/hiecm/gateway/v3/sessions`. The sandbox host for that path is
+`https://dev.abdm.gov.in`. Take the
 host from your onboarding documentation and keep it in configuration.
 
 NHA's own description is the hub that mediates and connects consent

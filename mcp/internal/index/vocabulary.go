@@ -102,8 +102,8 @@ func (v *Vocabulary) Expand(query string) []string {
 		return nil
 	}
 
-	present := map[string]bool{}  // terms the query already carries
-	hitSets := map[int]bool{}     // sets the query touched
+	present := map[string]bool{} // terms the query already carries
+	hitSets := map[int]bool{}    // sets the query touched
 	for i := range words {
 		// Longest phrase first, so "hospital information system" wins
 		// over a bare "system" that happens to sit in another set.

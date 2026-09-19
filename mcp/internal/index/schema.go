@@ -9,7 +9,6 @@ CREATE TABLE atoms (
     milestone TEXT NOT NULL,
     title TEXT NOT NULL,
     summary TEXT NOT NULL,
-    verification_status TEXT NOT NULL,
     body TEXT NOT NULL,
     source_path TEXT NOT NULL,
     doc_url TEXT NOT NULL,
@@ -32,7 +31,8 @@ CREATE TABLE operations (
 CREATE TABLE spec_error_codes (
     code TEXT NOT NULL,
     message TEXT NOT NULL,
-    action TEXT NOT NULL,
+    http TEXT NOT NULL,
+    operation_id TEXT NOT NULL,
     module TEXT NOT NULL
 );
 CREATE TABLE related (

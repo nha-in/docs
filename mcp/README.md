@@ -61,8 +61,7 @@ answer contract, is specified in support-agent-playbook.md.
 search_docs, get_atom, related_atoms, decode_error, list_atoms,
 catalogue_info, list_operations, get_operation, validate_request,
 list_fhir_profiles, get_fhir_profile, get_fhir_example, validate_fhir.
-Every response carries catalogue_version; every atom result carries
-verification_status. validate_fhir never logs bundle contents — the
+Every response carries catalogue_version. validate_fhir never logs bundle contents — the
 tool-call logging middleware records only the tool name, duration and
 whether it errored — and, like validate_request, is not part of the
 chat tool set. A bundle over the 2 MiB input cap gets a different

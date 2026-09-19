@@ -28,7 +28,6 @@ sources:
       URL is recorded so the pin can be renewed deliberately.
 related:
   fhir: [shared.fhir.hl7-validator-recipe, shared.fhir.map-opconsultation, shared.fhir.map-prescription, shared.fhir.map-diagnosticreport]
-  glossary: [shared.glossary.fhir, shared.glossary.nrces, shared.glossary.abdm, shared.glossary.hiu, shared.glossary.hip]
 ---
 
 # FHIR document bundles, the seven ABDM record types

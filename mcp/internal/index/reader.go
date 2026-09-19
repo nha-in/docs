@@ -144,10 +144,10 @@ func (r *Reader) GetAtom(id string) (catalogue.Atom, error) {
 	var a catalogue.Atom
 	err := r.db.QueryRow(`
         SELECT id, type, gateway, milestone, title, summary,
-               verification_status, body, source_path, doc_url, doc_anchor
+               body, source_path, doc_url, doc_anchor
         FROM atoms WHERE id = ?`, id).Scan(
 		&a.ID, &a.Type, &a.Gateway, &a.Milestone, &a.Title, &a.Summary,
-		&a.VerificationStatus, &a.Body, &a.SourcePath, &a.DocURL, &a.DocAnchor)
+		&a.Body, &a.SourcePath, &a.DocURL, &a.DocAnchor)
 	if err == sql.ErrNoRows {
 		return catalogue.Atom{}, &NotFoundError{ID: id, Closest: r.closest("atoms", "id", id)}
 	}
@@ -158,8 +158,8 @@ func (r *Reader) GetAtom(id string) (catalogue.Atom, error) {
 }
 
 type AtomRef struct {
-	ID, Type, Milestone, Title, VerificationStatus string
-	DocURL, DocAnchor                              string
+	ID, Type, Milestone, Title string
+	DocURL, DocAnchor          string
 }
 
 func (r *Reader) atomRefs(query string, args ...any) ([]AtomRef, error) {
@@ -172,7 +172,7 @@ func (r *Reader) atomRefs(query string, args ...any) ([]AtomRef, error) {
 	for rows.Next() {
 		var a AtomRef
 		if err := rows.Scan(&a.ID, &a.Type, &a.Milestone, &a.Title,
-			&a.VerificationStatus, &a.DocURL, &a.DocAnchor); err != nil {
+			&a.DocURL, &a.DocAnchor); err != nil {
 			return nil, err
 		}
 		refs = append(refs, a)
@@ -180,7 +180,7 @@ func (r *Reader) atomRefs(query string, args ...any) ([]AtomRef, error) {
 	return refs, rows.Err()
 }
 
-const refCols = `id, type, milestone, title, verification_status, doc_url, doc_anchor`
+const refCols = `id, type, milestone, title, doc_url, doc_anchor`
 
 // DocLink joins a page route and a section anchor into the link a reader
 // follows. It returns "" when the atom has no published page, which the
@@ -249,11 +249,11 @@ func (r *Reader) RelatedAtoms(id string) ([]RelatedGroup, error) {
 		// represent it honestly rather than dropping it.
 		a, err := r.GetAtom(other)
 		if err != nil {
-			byType["missing"] = append(byType["missing"], AtomRef{ID: other, VerificationStatus: "missing"})
+			byType["missing"] = append(byType["missing"], AtomRef{ID: other})
 			continue
 		}
 		byType[a.Type] = append(byType[a.Type],
-			AtomRef{a.ID, a.Type, a.Milestone, a.Title, a.VerificationStatus, a.DocURL, a.DocAnchor})
+			AtomRef{a.ID, a.Type, a.Milestone, a.Title, a.DocURL, a.DocAnchor})
 	}
 	var types []string
 	for t := range byType {
@@ -303,12 +303,12 @@ func (r *Reader) ListOperations(tag, module, q string) ([]OperationSummary, erro
 	return out, rows.Err()
 }
 
-// SpecErrorCodes returns the specification error table rows for one code.
+// SpecErrorCodes returns the specification response example rows for one code.
 // The code is normalized first, so raw response values such as
 // "ABDM-1016: " still match.
 func (r *Reader) SpecErrorCodes(code string) ([]catalogue.SpecErrorCode, error) {
 	rows, err := r.db.Query(`
-        SELECT code, message, action, module FROM spec_error_codes
+        SELECT code, message, http, operation_id, module FROM spec_error_codes
         WHERE code = ? ORDER BY module, message`,
 		catalogue.NormalizeErrorCode(code))
 	if err != nil {
@@ -318,7 +318,7 @@ func (r *Reader) SpecErrorCodes(code string) ([]catalogue.SpecErrorCode, error) 
 	out := []catalogue.SpecErrorCode{}
 	for rows.Next() {
 		var e catalogue.SpecErrorCode
-		if err := rows.Scan(&e.Code, &e.Message, &e.Action, &e.Module); err != nil {
+		if err := rows.Scan(&e.Code, &e.Message, &e.HTTP, &e.OperationID, &e.Module); err != nil {
 			return nil, err
 		}
 		out = append(out, e)
@@ -373,27 +373,25 @@ type Stats struct {
 	ByGateway   map[string]int
 	ByMilestone map[string]int
 	ByType      map[string]int
-	ByStatus    map[string]int
 	Operations  int
 }
 
 func (r *Reader) Stats() (Stats, error) {
 	s := Stats{ByGateway: map[string]int{}, ByMilestone: map[string]int{},
-		ByType: map[string]int{}, ByStatus: map[string]int{}}
-	rows, err := r.db.Query(`SELECT gateway, milestone, type, verification_status FROM atoms`)
+		ByType: map[string]int{}}
+	rows, err := r.db.Query(`SELECT gateway, milestone, type FROM atoms`)
 	if err != nil {
 		return s, err
 	}
 	defer rows.Close()
 	for rows.Next() {
-		var g, m, ty, st string
-		if err := rows.Scan(&g, &m, &ty, &st); err != nil {
+		var g, m, ty string
+		if err := rows.Scan(&g, &m, &ty); err != nil {
 			return s, err
 		}
 		s.ByGateway[g]++
 		s.ByMilestone[m]++
 		s.ByType[ty]++
-		s.ByStatus[st]++
 	}
 	if err := rows.Err(); err != nil {
 		return s, err

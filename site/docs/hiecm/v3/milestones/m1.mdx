@@ -108,8 +108,7 @@ and what each one asks of you.
 
 Sandbox test data is in the [data
 dictionary](/docs/hiecm/v3/reference/data-dictionary). [Support](/docs/support)
-lists the channels. The cases you are certified against are in [M1 testing use
-cases](/docs/hiecm/v3/resources/testing/m1).
+lists the channels. The cases you are certified against are in the certification pack NHA issues.
 
 ## The page map
 
@@ -463,7 +462,7 @@ sequenceDiagram
     A-->>S: QR code
 ```
 
-The card is returned in the response rather than fetched from a separate link. The content type and encoding of the card and QR code responses are not yet published. See the [APIs](/docs/hiecm/v3/api/m1/apis) page for the fields that are.
+The card is returned in the response rather than fetched from a separate link. The content type and encoding of the card and QR code responses are not yet published. See the [APIs](/docs/hiecm/v3/api/m1) page for the fields that are.
 
 ## ABHA address with a mobile number
 
@@ -488,7 +487,7 @@ building, not what you are registered as.
 ### Create the address
 
 The calls are the enrolment set in [the P1
-reference](/docs/hiecm/v3/api/p1), written up as [creating an ABHA
+reference](/docs/hiecm/v3/milestones/p1), written up as [creating an ABHA
 address](/docs/hiecm/v3/milestones/p1#creating-an-abha-address).
 
 The person verifies the mobile number by OTP, then types the demographics the
@@ -504,7 +503,7 @@ goes wrong here.
 Logging in by ABHA address is its own set of calls, under
 `/v3/phr/web/login/abha`, and it is the way into a profile that has no ABHA
 number behind it. Ask first and authenticate second: [search the ABHA
-address](/docs/hiecm/v3/api/m1/endpoints/m1-phr-search-abha-address) returns the
+address](/docs/hiecm/v3/api/m1/endpoints/m1-login-abha-address-mobile-otp/01-m1-post-v3-phr-web-login-abha-search) returns the
 authentication methods that address supports, which is what stops you offering
 an Aadhaar OTP to a profile with no Aadhaar behind it.
 
@@ -525,14 +524,14 @@ sequenceDiagram
     S->>A: Fetch the PHR profile
 ```
 
-The [OTP request](/docs/hiecm/v3/api/m1/endpoints/m1-phr-request-otp) carries a
+The [OTP request](/docs/hiecm/v3/api/m1/endpoints/m1-login-abha-address-mobile-otp/02-m1-post-v3-phr-web-login-abha-request-otp) carries a
 `scope` pair naming the method: `abha-address-login` with `mobile-verify` for a
 mobile OTP, `abha-address-login` with `aadhaar-verify` for an Aadhaar OTP, and
 `abha-login` with `aadhaar-bio-verify`, `aadhaar-face-verify` or
 `aadhaar-iris-verify` for the three biometric methods. The ABHA address travels
 encrypted, the same way every other identifier does.
 
-Once it verifies, the [PHR profile](/docs/hiecm/v3/api/m1/endpoints/m1-get-phr-profile)
+Once it verifies, the [PHR profile](/docs/hiecm/v3/api/m1/endpoints/m1-login-abha-address-mobile-otp/04-m1-get-v3-phr-web-login-profile-abha-profile)
 and the PHR card and QR code read against the token it returns.
 
 ### What Self-Declared costs, and what ends it
@@ -579,7 +578,7 @@ The patient's app holds its screen open for 30 seconds. Send the acknowledgement
 
 `profile.patient` carries the ABHA number, the ABHA address, name, gender, date of birth, mobile number, address and a KYC photo. Match on the ABHA address. The counter context is yours to define: up to 20 alphanumeric characters, and never the facility id, the HIP id or the HIP name.
 
-The two calls: [receive a patient's shared profile](/docs/hiecm/v3/api/m1/endpoints/m1-receive-patient-share) and [send the share acknowledgement](/docs/hiecm/v3/api/m1/endpoints/m1-on-share-acknowledgement). The patient's side is [P2 Linking and records](./p2#scan-and-share-at-a-facility).
+The two calls: [receive a patient's shared profile](/docs/hiecm/v3/api/m2/endpoints/m2-abdm-patient-share-hip/01-m2-post-v3-hip-patient-share) and [send the share acknowledgement](/docs/hiecm/v3/api/m2/endpoints/m2-abdm-patient-share-hip/02-m2-post-patient-share-v3-on-share). The patient's side is [P2 Linking and records](./p2#scan-and-share-at-a-facility).
 
 ## Next
 

@@ -94,20 +94,13 @@ One package benefit, cut to three rules and one document:
   "extension": [
     {
       "url": "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Claim-Condition",
-      "extension": [
-        {
-          "url": "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Claim-Condition/ProcedureType",
-          "valueString": "Surgical"
-        },
-        {
-          "url": "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Claim-Condition/ApprovalNotRequired",
-          "valueString": "N"
-        },
-        {
-          "url": "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Claim-Condition/EnhancementAllowed",
-          "valueString": "N"
-        }
-      ]
+      "extension": [{
+          "url": "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Claim-Condition/ProcedureType", "valueString": "Surgical"
+        }, {
+          "url": "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Claim-Condition/ApprovalNotRequired", "valueString": "N"
+        }, {
+          "url": "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Claim-Condition/EnhancementAllowed", "valueString": "N"
+        }]
     },
     {
       "url": "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Claim-SupportingInfoRequirement",
@@ -118,25 +111,17 @@ One package benefit, cut to three rules and one document:
             {
               "url": "category",
               "valueCodeableConcept": {
-                "coding": [
-                  {
-                    "system": "https://nrces.in/ndhm/fhir/r4/CodeSystem/ndhm-supportinginfo-category",
-                    "code": "DIA",
-                    "display": "Diagnostic report"
-                  }
-                ]
+                "coding": [{
+                    "system": "https://nrces.in/ndhm/fhir/r4/CodeSystem/ndhm-supportinginfo-category", "code": "DIA", "display": "Diagnostic report"
+                  }]
               }
             },
             {
               "url": "code",
               "valueCodeableConcept": {
-                "coding": [
-                  {
-                    "system": "https://nrces.in/ndhm/fhir/r4/ValueSet/ndhm-supportinginfo-code",
-                    "code": "<MAND_CODE>",
-                    "display": "<DOCUMENT_NAME>"
-                  }
-                ]
+                "coding": [{
+                    "system": "https://nrces.in/ndhm/fhir/r4/ValueSet/ndhm-supportinginfo-code", "code": "<MAND_CODE>", "display": "<DOCUMENT_NAME>"
+                  }]
               }
             }
           ]
@@ -145,13 +130,9 @@ One package benefit, cut to three rules and one document:
     }
   ],
   "type": {
-    "coding": [
-      {
-        "system": "https://nrces.in/ndhm/fhir/r4/ValueSet/ndhm-productorservice",
-        "code": "<PACKAGE_CODE>",
-        "display": "<PACKAGE_NAME>"
-      }
-    ]
+    "coding": [{
+        "system": "https://nrces.in/ndhm/fhir/r4/ValueSet/ndhm-productorservice", "code": "<PACKAGE_CODE>", "display": "<PACKAGE_NAME>"
+      }]
   },
   "limit": [
     {
@@ -160,11 +141,9 @@ One package benefit, cut to three rules and one document:
         "unit": "INR"
       },
       "code": {
-        "coding": [
-          {
+        "coding": [{
             "code": "<PACKAGE_CODE>"
-          }
-        ]
+          }]
       }
     }
   ]

@@ -9,8 +9,8 @@ summary: >
   Whoever holds the records. It describes custody, which is why it is
   neither a position nor a direction.
 sources:
-  - file: site/docs/_glossary/_hiecm.mdx
-    status: not-yet-hashed
+  - url: https://github.com/eka-care/abdm-docs/blob/main/site/docs/_glossary/_hiecm.mdx
+    status: reference
     note: >
       This portal's own published glossary, where the definition was
       written first. Moved here so it can be retrieved, not rewritten.
@@ -21,8 +21,7 @@ sources:
       companies offering ABDM compliant software, and an instance of
       certified software as an HRP.
 related:
-  concepts: [hiecm.concept.roles]
-  glossary: [shared.glossary.hip, shared.glossary.hiu, shared.glossary.dsc]
+  glossary: [shared.glossary.dsc]
   decisions: [shared.decision.role-model-two-axes]
 ---
 
@@ -63,8 +62,7 @@ four were one set of roles to choose from. They are not comparable:
 One integration is usually several of these at once. A hospital system
 acts for a facility by position, that facility is the HIP or the HIU
 depending on the call, the facility is the HRP because it holds the
-records, and the software is sold by a DSC. See
-[roles](../../hiecm/concepts/roles.md).
+records, and the software is sold by a DSC.
 
 In practice the term shows up when software is registered: the bridge you
 register with the gateway is how custody is declared, and it is where you

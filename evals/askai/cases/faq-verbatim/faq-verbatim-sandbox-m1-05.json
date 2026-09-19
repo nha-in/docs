@@ -24,9 +24,7 @@
     "the catalogue",
     "atom"
   ],
-  "expected_sources": [
-    "hiecm.concept.gateway-session"
-  ],
+  "expected_sources": [],
   "expected_shape": "define",
   "expected_behaviour": "answer",
   "derived_from": null,

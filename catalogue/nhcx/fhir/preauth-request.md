@@ -142,20 +142,14 @@ A document goes in `supportingInfo` in one of two ways. Send a `valueAttachment`
         "resourceType": "Claim",
         "id": "<CLAIM_UUID>",
         "meta": {
-          "profile": [
-            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Claim"
-          ]
+          "profile": ["https://nrces.in/ndhm/fhir/r4/StructureDefinition/Claim"]
         },
         "identifier": [
           {
             "type": {
-              "coding": [
-                {
-                  "system": "https://nrces.in/ndhm/fhir/r4/CodeSystem/ndhm-identifier-type-code",
-                  "code": "CLN",
-                  "display": "Claim number"
-                }
-              ]
+              "coding": [{
+                  "system": "https://nrces.in/ndhm/fhir/r4/CodeSystem/ndhm-identifier-type-code", "code": "CLN", "display": "Claim number"
+                }]
             },
             "system": "<YOUR_CLAIM_NUMBER_SYSTEM_URL>",
             "value": "<YOUR_CLAIM_NUMBER>"
@@ -163,13 +157,9 @@ A document goes in `supportingInfo` in one of two ways. Send a `valueAttachment`
         ],
         "status": "active",
         "type": {
-          "coding": [
-            {
-              "system": "http://snomed.info/sct",
-              "code": "737481003",
-              "display": "Inpatient care management (procedure)"
-            }
-          ]
+          "coding": [{
+              "system": "http://snomed.info/sct", "code": "737481003", "display": "Inpatient care management (procedure)"
+            }]
         },
         "use": "preauthorization",
         "patient": {
@@ -183,39 +173,27 @@ A document goes in `supportingInfo` in one of two ways. Send a `valueAttachment`
           "reference": "urn:uuid:<PROVIDER_ORG_UUID>"
         },
         "priority": {
-          "coding": [
-            {
-              "system": "http://terminology.hl7.org/CodeSystem/processpriority",
-              "code": "normal"
-            }
-          ]
+          "coding": [{
+              "system": "http://terminology.hl7.org/CodeSystem/processpriority", "code": "normal"
+            }]
         },
-        "careTeam": [
-          {
-            "sequence": 1,
-            "provider": {
+        "careTeam": [{
+            "sequence": 1, "provider": {
               "reference": "urn:uuid:<PRACTITIONER_UUID>"
             }
-          }
-        ],
+          }],
         "supportingInfo": [
           {
             "sequence": 1,
             "category": {
-              "coding": [
-                {
-                  "system": "https://nrces.in/ndhm/fhir/r4/CodeSystem/ndhm-supportinginfo-category",
-                  "code": "<CATEGORY_FROM_INSURANCE_PLAN_REQUIREMENT>"
-                }
-              ]
+              "coding": [{
+                  "system": "https://nrces.in/ndhm/fhir/r4/CodeSystem/ndhm-supportinginfo-category", "code": "<CATEGORY_FROM_INSURANCE_PLAN_REQUIREMENT>"
+                }]
             },
             "code": {
-              "coding": [
-                {
-                  "system": "<DOCUMENT_CODE_SYSTEM_FROM_INSURANCE_PLAN>",
-                  "code": "<MAND_CODE_FROM_INSURANCE_PLAN>"
-                }
-              ]
+              "coding": [{
+                  "system": "<DOCUMENT_CODE_SYSTEM_FROM_INSURANCE_PLAN>", "code": "<MAND_CODE_FROM_INSURANCE_PLAN>"
+                }]
             },
             "valueAttachment": {
               "contentType": "application/pdf",
@@ -228,64 +206,38 @@ A document goes in `supportingInfo` in one of two ways. Send a `valueAttachment`
           {
             "sequence": 1,
             "diagnosisCodeableConcept": {
-              "coding": [
-                {
-                  "system": "http://hl7.org/fhir/sid/icd-10",
-                  "code": "<ICD10_CODE>",
-                  "display": "<DIAGNOSIS_NAME>"
-                }
-              ]
+              "coding": [{
+                  "system": "http://hl7.org/fhir/sid/icd-10", "code": "<ICD10_CODE>", "display": "<DIAGNOSIS_NAME>"
+                }]
             }
           }
         ],
-        "procedure": [
-          {
-            "sequence": 1,
-            "procedureReference": {
+        "procedure": [{
+            "sequence": 1, "procedureReference": {
               "reference": "urn:uuid:<PROCEDURE_1_UUID>"
             }
-          }
-        ],
-        "insurance": [
-          {
-            "sequence": 1,
-            "focal": true,
-            "coverage": {
+          }],
+        "insurance": [{
+            "sequence": 1, "focal": true, "coverage": {
               "reference": "urn:uuid:<COVERAGE_UUID>"
             }
-          }
-        ],
+          }],
         "item": [
           {
             "sequence": 1,
-            "careTeamSequence": [
-              1
-            ],
-            "diagnosisSequence": [
-              1
-            ],
-            "procedureSequence": [
-              1
-            ],
-            "informationSequence": [
-              1
-            ],
+            "careTeamSequence": [1],
+            "diagnosisSequence": [1],
+            "procedureSequence": [1],
+            "informationSequence": [1],
             "category": {
-              "coding": [
-                {
-                  "system": "<SPECIALTY_SYSTEM_FROM_INSURANCE_PLAN>",
-                  "code": "<SPECIALTY_CODE_FROM_INSURANCE_PLAN>"
-                }
-              ]
+              "coding": [{
+                  "system": "<SPECIALTY_SYSTEM_FROM_INSURANCE_PLAN>", "code": "<SPECIALTY_CODE_FROM_INSURANCE_PLAN>"
+                }]
             },
             "productOrService": {
-              "coding": [
-                {
-                  "system": "<PACKAGE_SYSTEM_FROM_INSURANCE_PLAN>",
-                  "code": "<PACKAGE_CODE_FROM_INSURANCE_PLAN>",
-                  "display": "<PACKAGE_NAME>"
-                }
-              ]
+              "coding": [{
+                  "system": "<PACKAGE_SYSTEM_FROM_INSURANCE_PLAN>", "code": "<PACKAGE_CODE_FROM_INSURANCE_PLAN>", "display": "<PACKAGE_NAME>"
+                }]
             },
             "servicedPeriod": {
               "start": "<ADMISSION_DATE>",
@@ -313,41 +265,31 @@ A document goes in `supportingInfo` in one of two ways. Send a `valueAttachment`
         "resourceType": "Patient",
         "id": "<PATIENT_UUID>",
         "meta": {
-          "profile": [
-            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Patient"
-          ]
+          "profile": ["https://nrces.in/ndhm/fhir/r4/StructureDefinition/Patient"]
         },
         "identifier": [
           {
             "type": {
-              "coding": [
-                {
-                  "system": "https://nrces.in/ndhm/fhir/r4/CodeSystem/ndhm-identifier-type-code",
-                  "code": "PMJAY"
-                }
-              ]
+              "coding": [{
+                  "system": "https://nrces.in/ndhm/fhir/r4/CodeSystem/ndhm-identifier-type-code", "code": "PMJAY"
+                }]
             },
             "system": "https://bis.pmjay.gov.in",
             "value": "<PMJAY_BENEFICIARY_ID>"
           },
           {
             "type": {
-              "coding": [
-                {
-                  "system": "https://nrces.in/ndhm/fhir/r4/CodeSystem/ndhm-identifier-type-code",
-                  "code": "ABHA"
-                }
-              ]
+              "coding": [{
+                  "system": "https://nrces.in/ndhm/fhir/r4/CodeSystem/ndhm-identifier-type-code", "code": "ABHA"
+                }]
             },
             "system": "https://bis.pmjay.gov.in",
             "value": "<ABHA_NUMBER_AS_XX-XXXX-XXXX-XXXX>"
           }
         ],
-        "name": [
-          {
+        "name": [{
             "text": "<PATIENT_NAME>"
-          }
-        ],
+          }],
         "gender": "<male|female|other|unknown>",
         "birthDate": "<YYYY-MM-DD>"
       }
@@ -358,20 +300,14 @@ A document goes in `supportingInfo` in one of two ways. Send a `valueAttachment`
         "resourceType": "Organization",
         "id": "<PROVIDER_ORG_UUID>",
         "meta": {
-          "profile": [
-            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Organization"
-          ]
+          "profile": ["https://nrces.in/ndhm/fhir/r4/StructureDefinition/Organization"]
         },
         "identifier": [
           {
             "type": {
-              "coding": [
-                {
-                  "system": "http://terminology.hl7.org/CodeSystem/v2-0203",
-                  "code": "NPI",
-                  "display": "National provider identifier"
-                }
-              ]
+              "coding": [{
+                  "system": "http://terminology.hl7.org/CodeSystem/v2-0203", "code": "NPI", "display": "National provider identifier"
+                }]
             },
             "system": "https://facility.abdm.gov.in",
             "value": "<YOUR_HFR_ID>"
@@ -379,13 +315,9 @@ A document goes in `supportingInfo` in one of two ways. Send a `valueAttachment`
         ],
         "type": [
           {
-            "coding": [
-              {
-                "system": "http://terminology.hl7.org/CodeSystem/organization-type",
-                "code": "prov",
-                "display": "Healthcare Provider"
-              }
-            ]
+            "coding": [{
+                "system": "http://terminology.hl7.org/CodeSystem/organization-type", "code": "prov", "display": "Healthcare Provider"
+              }]
           }
         ],
         "name": "<YOUR_FACILITY_NAME>"
@@ -397,20 +329,14 @@ A document goes in `supportingInfo` in one of two ways. Send a `valueAttachment`
         "resourceType": "Organization",
         "id": "<PAYER_ORG_UUID>",
         "meta": {
-          "profile": [
-            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Organization"
-          ]
+          "profile": ["https://nrces.in/ndhm/fhir/r4/StructureDefinition/Organization"]
         },
         "identifier": [
           {
             "type": {
-              "coding": [
-                {
-                  "system": "http://terminology.hl7.org/CodeSystem/v2-0203",
-                  "code": "NIIP",
-                  "display": "National Insurance Payor Identifier (Payor)"
-                }
-              ]
+              "coding": [{
+                  "system": "http://terminology.hl7.org/CodeSystem/v2-0203", "code": "NIIP", "display": "National Insurance Payor Identifier (Payor)"
+                }]
             },
             "system": "https://facility.abdm.gov.in",
             "value": "<PAYER_ID>"
@@ -418,13 +344,9 @@ A document goes in `supportingInfo` in one of two ways. Send a `valueAttachment`
         ],
         "type": [
           {
-            "coding": [
-              {
-                "system": "http://terminology.hl7.org/CodeSystem/organization-type",
-                "code": "pay",
-                "display": "Payer"
-              }
-            ]
+            "coding": [{
+                "system": "http://terminology.hl7.org/CodeSystem/organization-type", "code": "pay", "display": "Payer"
+              }]
           }
         ],
         "name": "<PAYER_NAME>"
@@ -436,20 +358,14 @@ A document goes in `supportingInfo` in one of two ways. Send a `valueAttachment`
         "resourceType": "Coverage",
         "id": "<COVERAGE_UUID>",
         "meta": {
-          "profile": [
-            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Coverage"
-          ]
+          "profile": ["https://nrces.in/ndhm/fhir/r4/StructureDefinition/Coverage"]
         },
         "identifier": [
           {
             "type": {
-              "coding": [
-                {
-                  "system": "http://terminology.hl7.org/CodeSystem/v2-0203",
-                  "code": "NH",
-                  "display": "National Health Plan Identifier"
-                }
-              ]
+              "coding": [{
+                  "system": "http://terminology.hl7.org/CodeSystem/v2-0203", "code": "NH", "display": "National Health Plan Identifier"
+                }]
             },
             "system": "<PAYER_POLICY_SYSTEM_URL>",
             "value": "<POLICY_NUMBER>"
@@ -459,11 +375,9 @@ A document goes in `supportingInfo` in one of two ways. Send a `valueAttachment`
         "beneficiary": {
           "reference": "urn:uuid:<PATIENT_UUID>"
         },
-        "payor": [
-          {
+        "payor": [{
             "reference": "urn:uuid:<PAYER_ORG_UUID>"
-          }
-        ]
+          }]
       }
     },
     {
@@ -472,29 +386,22 @@ A document goes in `supportingInfo` in one of two ways. Send a `valueAttachment`
         "resourceType": "Practitioner",
         "id": "<PRACTITIONER_UUID>",
         "meta": {
-          "profile": [
-            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Practitioner"
-          ]
+          "profile": ["https://nrces.in/ndhm/fhir/r4/StructureDefinition/Practitioner"]
         },
         "identifier": [
           {
             "type": {
-              "coding": [
-                {
-                  "system": "https://nrces.in/ndhm/fhir/r4/CodeSystem/ndhm-identifier-type-code",
-                  "code": "HPIN"
-                }
-              ]
+              "coding": [{
+                  "system": "https://nrces.in/ndhm/fhir/r4/CodeSystem/ndhm-identifier-type-code", "code": "HPIN"
+                }]
             },
             "system": "https://hpr.abdm.gov.in",
             "value": "<TREATING_DOCTOR_HPR_ID>"
           }
         ],
-        "name": [
-          {
+        "name": [{
             "text": "<TREATING_DOCTOR_NAME>"
-          }
-        ]
+          }]
       }
     },
     {
@@ -503,20 +410,14 @@ A document goes in `supportingInfo` in one of two ways. Send a `valueAttachment`
         "resourceType": "Procedure",
         "id": "<PROCEDURE_1_UUID>",
         "meta": {
-          "profile": [
-            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Procedure"
-          ]
+          "profile": ["https://nrces.in/ndhm/fhir/r4/StructureDefinition/Procedure"]
         },
         "identifier": [
           {
             "type": {
-              "coding": [
-                {
-                  "system": "http://terminology.hl7.org/CodeSystem/v2-0203",
-                  "code": "SNO",
-                  "display": "Serial Number"
-                }
-              ]
+              "coding": [{
+                  "system": "http://terminology.hl7.org/CodeSystem/v2-0203", "code": "SNO", "display": "Serial Number"
+                }]
             },
             "system": "<YOUR_IDENTIFIER_SYSTEM_URL>",
             "value": "1"
@@ -524,13 +425,9 @@ A document goes in `supportingInfo` in one of two ways. Send a `valueAttachment`
         ],
         "status": "preparation",
         "code": {
-          "coding": [
-            {
-              "system": "<PACKAGE_SYSTEM_FROM_INSURANCE_PLAN>",
-              "code": "<PACKAGE_CODE_FROM_INSURANCE_PLAN>",
-              "display": "<PACKAGE_NAME>"
-            }
-          ]
+          "coding": [{
+              "system": "<PACKAGE_SYSTEM_FROM_INSURANCE_PLAN>", "code": "<PACKAGE_CODE_FROM_INSURANCE_PLAN>", "display": "<PACKAGE_NAME>"
+            }]
         },
         "subject": {
           "reference": "urn:uuid:<PATIENT_UUID>"

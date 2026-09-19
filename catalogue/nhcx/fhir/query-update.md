@@ -109,20 +109,14 @@ The added `supportingInfo` entries:
     {
       "sequence": 1,
       "category": {
-        "coding": [
-          {
-            "system": "https://nrces.in/ndhm/fhir/r4/CodeSystem/ndhm-supportinginfo-category",
-            "code": "<CATEGORY_FROM_INSURANCE_PLAN_REQUIREMENT>"
-          }
-        ]
+        "coding": [{
+            "system": "https://nrces.in/ndhm/fhir/r4/CodeSystem/ndhm-supportinginfo-category", "code": "<CATEGORY_FROM_INSURANCE_PLAN_REQUIREMENT>"
+          }]
       },
       "code": {
-        "coding": [
-          {
-            "system": "<DOCUMENT_CODE_SYSTEM_FROM_INSURANCE_PLAN>",
-            "code": "<MAND_CODE_THE_QUERY_ASKS_FOR>"
-          }
-        ]
+        "coding": [{
+            "system": "<DOCUMENT_CODE_SYSTEM_FROM_INSURANCE_PLAN>", "code": "<MAND_CODE_THE_QUERY_ASKS_FOR>"
+          }]
       },
       "valueAttachment": {
         "contentType": "application/pdf",
@@ -133,41 +127,28 @@ The added `supportingInfo` entries:
     {
       "sequence": 2,
       "category": {
-        "coding": [
-          {
-            "system": "https://nrces.in/ndhm/fhir/r4/CodeSystem/ndhm-supportinginfo-category",
-            "code": "NMI"
-          }
-        ]
+        "coding": [{
+            "system": "https://nrces.in/ndhm/fhir/r4/CodeSystem/ndhm-supportinginfo-category", "code": "NMI"
+          }]
       },
       "code": {
-        "coding": [
-          {
-            "system": "https://nrces.in/ndhm/fhir/r4/CodeSystem/ndhm-supportinginfo-code",
-            "code": "CQD"
-          }
-        ]
+        "coding": [{
+            "system": "https://nrces.in/ndhm/fhir/r4/CodeSystem/ndhm-supportinginfo-code", "code": "CQD"
+          }]
       },
       "valueString": "<YOUR_REMARKS_ANSWERING_THE_QUERY>"
     },
     {
       "sequence": 3,
       "category": {
-        "coding": [
-          {
-            "system": "https://nrces.in/ndhm/fhir/r4/CodeSystem/ndhm-supportinginfo-category",
-            "code": "INF"
-          }
-        ]
+        "coding": [{
+            "system": "https://nrces.in/ndhm/fhir/r4/CodeSystem/ndhm-supportinginfo-category", "code": "INF"
+          }]
       },
       "code": {
-        "coding": [
-          {
-            "system": "https://nrces.in/ndhm/fhir/r4/ValueSet/ndhm-supportinginfo-code",
-            "code": "ODN",
-            "display": "Other document"
-          }
-        ]
+        "coding": [{
+            "system": "https://nrces.in/ndhm/fhir/r4/ValueSet/ndhm-supportinginfo-code", "code": "ODN", "display": "Other document"
+          }]
       },
       "valueReference": {
         "reference": "urn:uuid:<QUESTIONNAIRE_RESPONSE_UUID>"
@@ -186,20 +167,16 @@ The `QuestionnaireResponse` entry they reference:
     "resourceType": "QuestionnaireResponse",
     "id": "<QUESTIONNAIRE_RESPONSE_UUID>",
     "meta": {
-      "profile": [
-        "https://nrces.in/ndhm/fhir/r4/StructureDefinition/QuestionnaireResponse"
-      ]
+      "profile": ["https://nrces.in/ndhm/fhir/r4/StructureDefinition/QuestionnaireResponse"]
     },
     "questionnaire": "<QUESTIONNAIRE_URL_FROM_INSURANCE_PLAN>",
     "status": "completed",
     "item": [
       {
         "linkId": "<LINK_ID_FROM_THE_QUESTIONNAIRE>",
-        "answer": [
-          {
+        "answer": [{
             "valueString": "<YOUR_ANSWER>"
-          }
-        ]
+          }]
       }
     ]
   }

@@ -22,7 +22,6 @@ type Entry = {
   errorExample?: string | null;
   operations?: number;
   codes?: number;
-  tests?: number;
   /** The reference files this skill is made of, from the generator. */
   sections: string[];
 };
@@ -151,13 +150,6 @@ function capabilities(entry: Entry) {
         (entry.codes ?? 0) > 0
           ? `${entry.codes} recorded error codes, each with its message and what to do about it.`
           : 'No error code is recorded for this module yet.',
-    },
-    {
-      label: 'Test',
-      detail:
-        (entry.tests ?? 0) > 0
-          ? `${entry.tests} test cases, each with the call it makes and what to see when it passes.`
-          : 'No test matrix exists for this module yet.',
     },
   ];
   const named = new Map(counted.map((row) => [row.label.toLowerCase(), row]));
@@ -317,9 +309,7 @@ export default function SkillInstall({slug, note}: SkillInstallProps): React.Rea
           <li>
             Ask your agent for the job in your own words. "{entry.example}"
             {entry.errorExample ? `, "why am I getting ${entry.errorExample}"` : ''}
-            {entry.sections.includes('test')
-              ? `, or "write the ${entry.module} tests for this". The skill loads when the task matches it.`
-              : '. The skill loads when the task matches it.'}
+            {'. The skill loads when the task matches it.'}
           </li>
           <li>
             Check what it writes against these pages. The skill carries the facts,

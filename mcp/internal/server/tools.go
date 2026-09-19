@@ -2,7 +2,6 @@ package server
 
 import (
 	"context"
-	"encoding/base64"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -32,7 +31,7 @@ const (
 	relatedAtomsDescription = "Walk the catalogue graph from one atom, both directions. " +
 		"Related atoms come back grouped by their own type (concept, flow, endpoint, callback, error, test, ...), each atom once. " +
 		"Use this to move from one exact atom to its neighbours; use search_docs when you do not have a starting atom."
-	decodeErrorDescription = "Extract ABDM error codes from a code or raw response body and return, per code, the matching narrative error atoms with their fixes plus the specification error table rows (code, message, action, module). " +
+	decodeErrorDescription = "Extract ABDM error codes from a code or raw response body and return, per code, the matching narrative error atoms with their fixes plus the specification rows (code, message, http status, returning operation_id, module). " +
 		"Use this first for any error response from the gateway, before reaching for search_docs."
 	catalogueInfoDescription = "Catalogue version, build time, embeddings status and coverage counts by gateway, milestone and type. " +
 		"Use this to check which snapshot you are talking to and how complete it is."
@@ -48,8 +47,7 @@ const (
 	getFhirExampleDescription = "A known-good document bundle for one ABDM record type, taken from the NRCES implementation guide's own examples. " +
 		"Use it as the reference shape when scaffolding generation code."
 	validateRequestDescription = "Validate a candidate request body against an operation's schema, locally, before calling the sandbox. " +
-		"Also reminds you of required headers and parameters, which body validation cannot see, " +
-		"and returns sandbox_notes for shapes the schema accepts but the sandbox rejects. " +
+		"Also reminds you of required headers and parameters, which body validation cannot see. " +
 		"Use this before writing request code for any operation."
 )
 
@@ -77,7 +75,7 @@ type emptyIn struct{}
 
 type listOpsIn struct {
 	Tag    string `json:"tag,omitempty" jsonschema:"optional exact tag filter"`
-	Module string `json:"module,omitempty" jsonschema:"optional exact module filter, for example gateway, m1, m2, m3, m4, p1, phr-services"`
+	Module string `json:"module,omitempty" jsonschema:"optional exact module filter, one of gateway, m1, m2, m3, m4, p1, p2, p3, p4, subscription, scan-and-pay"`
 	Q      string `json:"q,omitempty" jsonschema:"optional case-insensitive substring filter over operation_id, summary and path"`
 }
 
@@ -198,7 +196,8 @@ type atomOpener interface {
 // becomes visible instead of silently returning a snippet.
 func openPassage(r atomOpener, h index.SearchHit) (Passage, []map[string]string) {
 	p := Passage{ID: h.ID, Type: h.Type, Milestone: h.Milestone, Title: h.Title,
-		DocURL: index.DocLink(h.DocURL, h.DocAnchor), Body: h.Summary}
+		DocURL: index.DocLink(h.DocURL, h.DocAnchor),
+		Body:   h.Summary}
 	a, err := r.GetAtom(h.ID)
 	if err != nil {
 		slog.Warn("lookup: could not open atom, returning its summary", "id", h.ID, "error", err)
@@ -231,7 +230,8 @@ func (t *Tools) Lookup(ctx context.Context, in lookupIn) (PassagePack, error) {
 	seenRelated := map[string]bool{}
 	for i, h := range hits {
 		p := Passage{ID: h.ID, Type: h.Type, Milestone: h.Milestone, Title: h.Title,
-			DocURL: index.DocLink(h.DocURL, h.DocAnchor), Body: h.Summary}
+			DocURL: index.DocLink(h.DocURL, h.DocAnchor),
+			Body:   h.Summary}
 		if i < lookupOpened {
 			var related []map[string]string
 			p, related = openPassage(t.r, h)
@@ -299,11 +299,11 @@ func (t *Tools) DecodeError(ctx context.Context, in decodeIn) (map[string]any, e
 		}
 		if len(specRows) > 0 {
 			match["specification"] = specRows
-			match["source"] = "specification error table"
+			match["source"] = "specification response example"
 		}
 		if full == nil {
 			if len(specRows) > 0 {
-				match["note"] = "no narrative error atom exists for this code yet; the specification rows above are the recorded truth, and search_docs with the message text may find related guidance"
+				match["note"] = "no narrative error atom exists for this code yet; the specification's response examples above are the only source for this code, and search_docs with the message text may find related guidance"
 			} else {
 				match["message"] = "no error atom for this code yet; try search_docs"
 			}
@@ -358,60 +358,7 @@ func (t *Tools) ValidateRequest(ctx context.Context, in validateIn) (map[string]
 		errs = []string{}
 	}
 	base["errors"] = errs
-	if notes := sandboxNotes(in.OperationID, payload); len(notes) > 0 {
-		base["sandbox_notes"] = notes
-	}
 	return t.versioned(base), nil
-}
-
-// sandboxNotes carries what the sandbox rejects even when the schema
-// accepts it, observed on 2026-09-16 and recorded in the catalogue's
-// integration learnings annexure. They are notes, not errors, because the
-// specification and the sandbox disagree and the specification is what the
-// schema check enforces.
-func sandboxNotes(opID string, payload any) []string {
-	body, _ := payload.(map[string]any)
-	if body == nil {
-		return nil
-	}
-	var notes []string
-	switch {
-	case opID == "m2_hip_link_care_context":
-		if n, _ := body["abhaNumber"].(string); strings.Contains(n, "-") {
-			notes = append(notes, "abhaNumber: the sandbox returns 400 with an empty body for the dashed form; send the 14 digits only")
-		}
-		for _, p := range asList(body["patient"]) {
-			for _, cc := range asList(p["careContexts"]) {
-				if _, isList := cc["hiType"].([]any); isList {
-					notes = append(notes, "careContexts[].hiType: the sandbox returns 400 for an array; send one hiType as a string")
-				}
-			}
-		}
-		if _, isList := body["hiType"].([]any); isList {
-			notes = append(notes, "hiType: the sandbox returns 400 for an array; send one hiType as a string")
-		}
-	case strings.HasPrefix(opID, "m1_phr_") || strings.HasPrefix(opID, "p1_"):
-		if h, _ := body["loginHint"].(string); h == "mobile" {
-			notes = append(notes, "loginHint: /v3/phr/* returns ABDM-9999 Invalid Login Hint for \"mobile\"; send \"mobile-number\"")
-		}
-		if id, _ := body["loginId"].(string); id != "" {
-			if raw, err := base64.StdEncoding.DecodeString(id); err == nil && len(raw) == 512 {
-				notes = append(notes, "loginId: 512 bytes of ciphertext means the 4096-bit profile key; /v3/phr/* needs the 2048-bit key from /v3/phr/app/login/public/certificate, or the sandbox answers ABDM-1006 Invalid mobile number")
-			}
-		}
-	}
-	return notes
-}
-
-func asList(v any) []map[string]any {
-	items, _ := v.([]any)
-	var out []map[string]any
-	for _, it := range items {
-		if m, ok := it.(map[string]any); ok {
-			out = append(out, m)
-		}
-	}
-	return out
 }
 
 func (t *Tools) ListOperations(ctx context.Context, in listOpsIn) (map[string]any, error) {

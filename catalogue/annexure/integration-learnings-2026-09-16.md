@@ -61,14 +61,14 @@ X-HIU-ID: <HIP_ID>                       # on consent init/fetch/on-notify, HI r
 
 - **Response format:** `{"publicKey":"<base64 DER, no PEM armour>","encryptionAlgorithm":"RSA/ECB/OAEPWithSHA-1AndMGF1Padding"}`. Wrap it in PEM yourself at 64 characters per line.
 - **Padding:** OAEP with SHA-1 for both digest and MGF1 (`crypto.publicEncrypt({padding: RSA_PKCS1_OAEP_PADDING, oaepHash:"sha1"})` in Node).
-- **Wrong key symptom:** `[{"code":"ABDM-1006: ","message":"Invalid mobile number"}]`. It looks like bad input, not bad crypto.
+- **Wrong key symptom:** `[{"code":"ABDM-1006: ", "message":"Invalid mobile number"}]`. It looks like bad input, not bad crypto.
 - **Encrypt helper:** `/v3/phr/app/enrollment/encrypt` takes `{"data":"..."}`. `{"value":"..."}` gives `ABDM-9999 Invalid Data`.
 - **Fix shipped:** the client picks the certificate from the path prefix, and caches both.
 
 ### 1.4 Error body shapes seen (parse all of them)
 ```jsonc
 {"error":{"code":"ABDM-1006","message":"..."}}            // documented
-[{"code":"ABDM-9999: ","message":"Invalid Login Hint"}]  // top-level ARRAY, code has trailing ": "
+[{"code":"ABDM-9999: ", "message":"Invalid Login Hint"}]  // top-level ARRAY, code has trailing ": "
 {"code":"ABDM-9999","message":"User not found"}         // flat
 {"message":"Invalid X-token","timestamp":"2026-09-16 14:34:55"}
 {"loginId":"Invalid LoginId","timestamp":"..."}         // field-keyed
@@ -137,7 +137,7 @@ X-HIU-ID: <HIP_ID>                       # on consent init/fetch/on-notify, HI r
 - **Fix:** add a PHR login that lists every address on the mobile.
   ```
   POST /v3/phr/app/login/request/otp   (2048-bit PHR key)
-    {"scope":["abha-address-login","mobile-verify"],"loginHint":"mobile-number","loginId":"<enc>","otpSystem":"abdm"}
+    {"scope":["abha-address-login", "mobile-verify"],"loginHint":"mobile-number","loginId":"<enc>","otpSystem":"abdm"}
   POST /v3/phr/app/login/verify
     -> {"users":[{abhaAddress, abhaNumber|null, fullName, kycStatus:"VERIFIED"|"PENDING", status}], "tokens":{"token":<300s transfer>}}
   POST /v3/phr/app/login/verify/user   T-token: Bearer <tokens.token>
@@ -205,7 +205,7 @@ Every one uses the `/api/v3/...` prefix; the catalogue's v0.5 paths never fired.
 | `POST /data-flow/v3/health-information/notify` (HIP, `TRANSFERRED`, `hiStatus:"OK"`) | 202 `{"status":"Notification is Accepted"}` |
 | FHIR `HealthDocumentRecord` bundle | passed `validate_fhir` after adding `Bundle.meta.versionId` |
 
-- Push body: `{pageNumber,pageCount,transactionId,entries:[{content,media:"application/fhir+json",checksum(md5 hex),careContextReference}],keyMaterial:{cryptoAlg:"ECDH",curve:"Curve25519",nonce,dhPublicKey:{expiry,parameters:"Curve25519/32byte random key",keyValue:<X.509>}}}`.
+- Push body: `{pageNumber,pageCount,transactionId,entries:[{content, media:"application/fhir+json", checksum(md5 hex), careContextReference}],keyMaterial:{cryptoAlg:"ECDH",curve:"Curve25519",nonce,dhPublicKey:{expiry,parameters:"Curve25519/32byte random key",keyValue:<X.509>}}}`.
 
 ### 3.7 Untested M2 paths
 - User-initiated discovery `/api/v3/hip/patient/care-context/discover`, link init/confirm, and the on-discover/on-init/on-confirm bodies are implemented, but no PHR-initiated discovery has been exercised yet.
@@ -220,7 +220,7 @@ Every one uses the `/api/v3/...` prefix; the catalogue's v0.5 paths never fired.
 | 1 | `POST /consent/v3/request/init` (plus `X-HIU-ID`) | 202 |
 | 2 | `/api/v3/hiu/consent/request/on-init` | `{"consentRequest":{"id"},"error":null,"response":{"requestId"}}`. Body shape was **not in docs**; now confirmed |
 | 3 | Patient approves in PHR app, then `/api/v3/hiu/consent/request/notify` | `{"notification":{"consentRequestId","status":"GRANTED","consentArtefacts":[{"id"}]}}`. `requestId` only in header |
-| 4 | `POST /consent/v3/request/hiu/on-notify` `{"acknowledgement":[{consentId,status:"OK"}],"response":{requestId}}` | 202 |
+| 4 | `POST /consent/v3/request/hiu/on-notify` `{"acknowledgement":[{consentId, status:"OK"}],"response":{requestId}}` | 202 |
 | 5 | `POST /consent/v3/fetch` `{consentId}` | 202, then `/api/v3/hiu/consent/on-fetch` `{"consent":{"status":"GRANTED","consentDetail":{...,"permission":{dateRange...}}}}` (no `careContexts` issue seen) |
 | 6 | `POST /data-flow/v3/health-information/request` with HIU key material, `dataPushUrl` = `<bridge>/api/v3/hiu/data/push/<consentId>` | 202, then `/api/v3/hiu/health-information/on-request` `{"hiRequest":{"transactionId","sessionStatus":"REQUESTED"}}` |
 | 7 | Data push arrives (620 KB, 4 entries including a PDF) | Decrypted **8/8 records, 0 errors** across 2 consents |

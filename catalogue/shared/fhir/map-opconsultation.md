@@ -23,7 +23,6 @@ sources:
       Bundle-OPConsultNote-example-05.json.
 related:
   fhir: [shared.fhir.document-bundles, shared.fhir.hl7-validator-recipe]
-  glossary: [shared.glossary.nrces]
 ---
 
 # Mapping OPConsultation, the outpatient consultation note

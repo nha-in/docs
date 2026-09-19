@@ -48,8 +48,7 @@ what order.
 ## If a call fails
 
 Under the four steps you get the request each call sent and the response it got back,
-including the error body. A 401 on the session call usually means the credentials or the
-`X-CM-ID` header, so see
+including the error body. A 401 on the session call means the request was not authorised, so see
 [Everything returns 401](/docs/hiecm/v3/troubleshooting/everything-returns-401).
 
 A rejected `loginId` may be the encryption rather than the number. The runner uses RSA-OAEP,

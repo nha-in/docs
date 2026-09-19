@@ -4,54 +4,49 @@ type: glossary
 gateway: shared
 milestone: n/a
 version: abdm-v3
-title: PHR, Personal Health Record application
+title: PHR, personal health record application
 summary: >
-  An application a patient uses to see their own records, link them
-  and act on consent requests.
+  The application a patient uses to see consent requests and to approve,
+  deny or revoke them.
 sources:
-  - file: ABDM Sandbox/ABDM/Proposed Simplified Milestone 1.docx
-    status: not-yet-hashed
-    note: NHA milestone pack for M1.
-related:
-  concepts: [hiecm.concept.roles]
-  glossary: [shared.glossary.hip, shared.glossary.hiu]
-  decisions: [shared.decision.role-model-two-axes]
+  - file: catalogue/openapi/.raw/nha-2026-09-16/hiecm/consent-management-data-flow.yaml
+    fetched: 2026-09-16
+    hash: sha256:4b0af51af2e2b5bfbf08f5e8745a940f59c550f8a1e4600c970c526f27bc8718
+related: {}
 ---
 
-# PHR, Personal Health Record application
+# PHR, personal health record application
 
 ## In plain words
 
-A PHR app is the patient's side of ABDM. It is where somebody creates an
-ABHA, discovers records held at facilities they visited, links them, and
-approves or denies consent requests from providers.
+A personal health record application is the patient's own side of ABDM. The
+specification describes what a patient does from it:
 
-PHR is a position, meaning which of the two entities your software acts
-for. A PHR app acts for the citizen, and a hospital or laboratory system
-acts for the facility on the other side of the [HIE-CM](hie-cm.md).
-Position is fixed for the life of an application, unlike HIP and HIU,
-which describe single interactions and which the citizen takes through
-the app.
+> This API endpoint is used to deny a consent request from the Personal
+> Health Record (PHR) or mobile application. By invoking this API, users can
+> reject a consent request, preventing the Health Information User (HIU) from
+> accessing their health data.
 
-If you are building for the patient rather than for a facility, you are
-building a PHR app, and M1 is where you start. It is not where you stop.
-A citizen who uploads a record into your PHR app is publishing, which is
-HIP behaviour and M2 work. Starting at M1 and stopping there is the
-common mistake.
+Approval, denial and revocation all reach ABDM from this application, so it
+is where a patient's control over their records is exercised.
 
 ## Before you start
 
-Nothing. A glossary entry assumes no prior reading.
+You need a signed in patient, because every call in this role acts on the
+account of the person holding the application.
 
 ## What happens
 
-Nothing happens here. This entry defines a term, it does not describe a call.
+`phr_post_consent_v3_request_request_id_approve` is the call this application
+makes when the patient agrees to a request, and the deny and revoke calls sit
+beside it.
 
 ## How you know it worked
 
-You have understood this when you can say what PHR is without using the acronym itself.
+You have understood this when you can say who approves a consent request and
+from which application.
 
 ## When it goes wrong
 
-A PHR app still needs its own registration and credentials. It is not a client of somebody else's integration.
-
+Building a consent flow that never surfaces the request to the patient, which
+leaves a request that no one can act on.

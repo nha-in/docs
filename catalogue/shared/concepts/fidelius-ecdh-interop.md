@@ -27,12 +27,8 @@ related:
     - shared.glossary.ecdh
     - shared.glossary.key-material
   endpoints:
-    - hiecm.endpoint.m3-hiu-health-information-request
-    - hiecm.endpoint.m2-hip-data-flow-notify
   flows:
-    - hiecm.flow.m3-fetch-records
   concepts:
-    - hiecm.concept.artefact-date-range
 skills:
   - hiecm-m2-build
   - hiecm-m3-build

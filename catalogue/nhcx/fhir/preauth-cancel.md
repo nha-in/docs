@@ -107,19 +107,14 @@ The input code is spelled `initimationNumber`. Send it with that spelling.
         "resourceType": "Task",
         "id": "<TASK_UUID>",
         "meta": {
-          "profile": [
-            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Task"
-          ]
+          "profile": ["https://nrces.in/ndhm/fhir/r4/StructureDefinition/Task"]
         },
         "status": "requested",
         "intent": "order",
         "code": {
-          "coding": [
-            {
-              "system": "http://terminology.hl7.org/CodeSystem/financialtaskcode",
-              "code": "cancel"
-            }
-          ]
+          "coding": [{
+              "system": "http://terminology.hl7.org/CodeSystem/financialtaskcode", "code": "cancel"
+            }]
         },
         "description": "<WHY_YOU_ARE_CANCELLING>",
         "authoredOn": "<ISO_8601_TIMESTAMP_WITH_OFFSET>",
@@ -130,34 +125,24 @@ The input code is spelled `initimationNumber`. Send it with that spelling.
           "reference": "urn:uuid:<PAYER_ORG_UUID>"
         },
         "reasonCode": {
-          "coding": [
-            {
-              "system": "https://nrces.in/ndhm/fhir/r4/CodeSystem/ndhm-reason-code",
-              "code": "treatmentplanchanged",
-              "display": "Treatment plan changed during hospitalization."
-            }
-          ]
+          "coding": [{
+              "system": "https://nrces.in/ndhm/fhir/r4/CodeSystem/ndhm-reason-code", "code": "treatmentplanchanged", "display": "Treatment plan changed during hospitalization."
+            }]
         },
         "input": [
           {
             "type": {
-              "coding": [
-                {
-                  "system": "https://nrces.in/ndhm/fhir/r4/CodeSystem/ndhm-task-input-type-code",
-                  "code": "claimNumber"
-                }
-              ]
+              "coding": [{
+                  "system": "https://nrces.in/ndhm/fhir/r4/CodeSystem/ndhm-task-input-type-code", "code": "claimNumber"
+                }]
             },
             "valueString": "<PREAUTH_CLAIM_NUMBER>"
           },
           {
             "type": {
-              "coding": [
-                {
-                  "system": "https://nrces.in/ndhm/fhir/r4/CodeSystem/ndhm-task-input-type-code",
-                  "code": "initimationNumber"
-                }
-              ]
+              "coding": [{
+                  "system": "https://nrces.in/ndhm/fhir/r4/CodeSystem/ndhm-task-input-type-code", "code": "initimationNumber"
+                }]
             },
             "valueString": "<PREAUTH_CLAIM_NUMBER>"
           }
@@ -170,20 +155,14 @@ The input code is spelled `initimationNumber`. Send it with that spelling.
         "resourceType": "Organization",
         "id": "<PROVIDER_ORG_UUID>",
         "meta": {
-          "profile": [
-            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Organization"
-          ]
+          "profile": ["https://nrces.in/ndhm/fhir/r4/StructureDefinition/Organization"]
         },
         "identifier": [
           {
             "type": {
-              "coding": [
-                {
-                  "system": "http://terminology.hl7.org/CodeSystem/v2-0203",
-                  "code": "NPI",
-                  "display": "National provider identifier"
-                }
-              ]
+              "coding": [{
+                  "system": "http://terminology.hl7.org/CodeSystem/v2-0203", "code": "NPI", "display": "National provider identifier"
+                }]
             },
             "system": "https://facility.abdm.gov.in",
             "value": "<YOUR_HFR_ID>"
@@ -191,13 +170,9 @@ The input code is spelled `initimationNumber`. Send it with that spelling.
         ],
         "type": [
           {
-            "coding": [
-              {
-                "system": "http://terminology.hl7.org/CodeSystem/organization-type",
-                "code": "prov",
-                "display": "Healthcare Provider"
-              }
-            ]
+            "coding": [{
+                "system": "http://terminology.hl7.org/CodeSystem/organization-type", "code": "prov", "display": "Healthcare Provider"
+              }]
           }
         ],
         "name": "<YOUR_FACILITY_NAME>"
@@ -209,20 +184,14 @@ The input code is spelled `initimationNumber`. Send it with that spelling.
         "resourceType": "Organization",
         "id": "<PAYER_ORG_UUID>",
         "meta": {
-          "profile": [
-            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Organization"
-          ]
+          "profile": ["https://nrces.in/ndhm/fhir/r4/StructureDefinition/Organization"]
         },
         "identifier": [
           {
             "type": {
-              "coding": [
-                {
-                  "system": "http://terminology.hl7.org/CodeSystem/v2-0203",
-                  "code": "NIIP",
-                  "display": "National Insurance Payor Identifier (Payor)"
-                }
-              ]
+              "coding": [{
+                  "system": "http://terminology.hl7.org/CodeSystem/v2-0203", "code": "NIIP", "display": "National Insurance Payor Identifier (Payor)"
+                }]
             },
             "system": "https://facility.abdm.gov.in",
             "value": "<PAYER_ID>"
@@ -230,13 +199,9 @@ The input code is spelled `initimationNumber`. Send it with that spelling.
         ],
         "type": [
           {
-            "coding": [
-              {
-                "system": "http://terminology.hl7.org/CodeSystem/organization-type",
-                "code": "pay",
-                "display": "Payer"
-              }
-            ]
+            "coding": [{
+                "system": "http://terminology.hl7.org/CodeSystem/organization-type", "code": "pay", "display": "Payer"
+              }]
           }
         ],
         "name": "<PAYER_NAME>"

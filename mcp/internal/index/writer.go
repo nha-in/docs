@@ -49,9 +49,9 @@ func Build(dbPath string, atoms []catalogue.Atom, questions map[string]catalogue
 	}
 	defer tx.Rollback()
 	for _, a := range atoms {
-		if _, err := tx.Exec(`INSERT INTO atoms VALUES (?,?,?,?,?,?,?,?,?,?,?)`,
+		if _, err := tx.Exec(`INSERT INTO atoms VALUES (?,?,?,?,?,?,?,?,?,?)`,
 			a.ID, a.Type, a.Gateway, a.Milestone, a.Title, a.Summary,
-			a.VerificationStatus, a.Body, a.SourcePath, a.DocURL, a.DocAnchor); err != nil {
+			a.Body, a.SourcePath, a.DocURL, a.DocAnchor); err != nil {
 			return fmt.Errorf("atom %s: %w", a.ID, err)
 		}
 		qs := strings.Join(questions[a.ID].Questions, "\n")
@@ -91,8 +91,8 @@ func Build(dbPath string, atoms []catalogue.Atom, questions map[string]catalogue
 		}
 	}
 	for _, e := range specErrors {
-		if _, err := tx.Exec(`INSERT INTO spec_error_codes VALUES (?,?,?,?)`,
-			catalogue.NormalizeErrorCode(e.Code), e.Message, e.Action, e.Module); err != nil {
+		if _, err := tx.Exec(`INSERT INTO spec_error_codes VALUES (?,?,?,?,?)`,
+			catalogue.NormalizeErrorCode(e.Code), e.Message, e.HTTP, e.OperationID, e.Module); err != nil {
 			return fmt.Errorf("spec error code %s: %w", e.Code, err)
 		}
 	}

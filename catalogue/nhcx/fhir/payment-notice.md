@@ -108,19 +108,14 @@ The net payment plus the `TDS` line equals the approved claim amount. Store the 
         "resourceType": "Task",
         "id": "<TASK_UUID>",
         "meta": {
-          "profile": [
-            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Task"
-          ]
+          "profile": ["https://nrces.in/ndhm/fhir/r4/StructureDefinition/Task"]
         },
         "status": "completed",
         "intent": "order",
         "code": {
-          "coding": [
-            {
-              "system": "http://terminology.hl7.org/CodeSystem/financialtaskcode",
-              "code": "status"
-            }
-          ]
+          "coding": [{
+              "system": "http://terminology.hl7.org/CodeSystem/financialtaskcode", "code": "status"
+            }]
         },
         "description": "<FREE_TEXT_CONFIRMATION>",
         "authoredOn": "<ISO_8601_TIMESTAMP_WITH_OFFSET>",
@@ -133,31 +128,21 @@ The net payment plus the `TDS` line equals the approved claim amount. Store the 
         "output": [
           {
             "type": {
-              "coding": [
-                {
-                  "system": "https://nrces.in/ndhm/fhir/r4/CodeSystem/ndhm-task-output-type",
-                  "code": "status"
-                }
-              ]
+              "coding": [{
+                  "system": "https://nrces.in/ndhm/fhir/r4/CodeSystem/ndhm-task-output-type", "code": "status"
+                }]
             },
             "valueCodeableConcept": {
-              "coding": [
-                {
-                  "system": "https://nrces.in/ndhm/fhir/r4/CodeSystem/ndhm-task-output-value",
-                  "code": "paymentack",
-                  "display": "Payment is acknowledged"
-                }
-              ]
+              "coding": [{
+                  "system": "https://nrces.in/ndhm/fhir/r4/CodeSystem/ndhm-task-output-value", "code": "paymentack", "display": "Payment is acknowledged"
+                }]
             }
           },
           {
             "type": {
-              "coding": [
-                {
-                  "system": "https://nrces.in/ndhm/fhir/r4/CodeSystem/ndhm-task-input-type-code",
-                  "code": "claimNumber"
-                }
-              ]
+              "coding": [{
+                  "system": "https://nrces.in/ndhm/fhir/r4/CodeSystem/ndhm-task-input-type-code", "code": "claimNumber"
+                }]
             },
             "valueString": "<CLAIM_NUMBER>"
           }
@@ -170,20 +155,14 @@ The net payment plus the `TDS` line equals the approved claim amount. Store the 
         "resourceType": "Organization",
         "id": "<PROVIDER_ORG_UUID>",
         "meta": {
-          "profile": [
-            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Organization"
-          ]
+          "profile": ["https://nrces.in/ndhm/fhir/r4/StructureDefinition/Organization"]
         },
         "identifier": [
           {
             "type": {
-              "coding": [
-                {
-                  "system": "http://terminology.hl7.org/CodeSystem/v2-0203",
-                  "code": "NPI",
-                  "display": "National provider identifier"
-                }
-              ]
+              "coding": [{
+                  "system": "http://terminology.hl7.org/CodeSystem/v2-0203", "code": "NPI", "display": "National provider identifier"
+                }]
             },
             "system": "https://facility.abdm.gov.in",
             "value": "<YOUR_HFR_ID>"
@@ -191,13 +170,9 @@ The net payment plus the `TDS` line equals the approved claim amount. Store the 
         ],
         "type": [
           {
-            "coding": [
-              {
-                "system": "http://terminology.hl7.org/CodeSystem/organization-type",
-                "code": "prov",
-                "display": "Healthcare Provider"
-              }
-            ]
+            "coding": [{
+                "system": "http://terminology.hl7.org/CodeSystem/organization-type", "code": "prov", "display": "Healthcare Provider"
+              }]
           }
         ],
         "name": "<YOUR_FACILITY_NAME>"
@@ -209,20 +184,14 @@ The net payment plus the `TDS` line equals the approved claim amount. Store the 
         "resourceType": "Organization",
         "id": "<PAYER_ORG_UUID>",
         "meta": {
-          "profile": [
-            "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Organization"
-          ]
+          "profile": ["https://nrces.in/ndhm/fhir/r4/StructureDefinition/Organization"]
         },
         "identifier": [
           {
             "type": {
-              "coding": [
-                {
-                  "system": "http://terminology.hl7.org/CodeSystem/v2-0203",
-                  "code": "NIIP",
-                  "display": "National Insurance Payor Identifier (Payor)"
-                }
-              ]
+              "coding": [{
+                  "system": "http://terminology.hl7.org/CodeSystem/v2-0203", "code": "NIIP", "display": "National Insurance Payor Identifier (Payor)"
+                }]
             },
             "system": "https://facility.abdm.gov.in",
             "value": "<PAYER_ID>"
@@ -230,13 +199,9 @@ The net payment plus the `TDS` line equals the approved claim amount. Store the 
         ],
         "type": [
           {
-            "coding": [
-              {
-                "system": "http://terminology.hl7.org/CodeSystem/organization-type",
-                "code": "pay",
-                "display": "Payer"
-              }
-            ]
+            "coding": [{
+                "system": "http://terminology.hl7.org/CodeSystem/organization-type", "code": "pay", "display": "Payer"
+              }]
           }
         ],
         "name": "<PAYER_NAME>"

@@ -17,13 +17,13 @@ import (
 
 // RecordTypes maps the ABDM hiType wire name to the NRCES profile name.
 var RecordTypes = map[string]string{
-	"OPConsultation":      "OPConsultRecord",
-	"Prescription":        "PrescriptionRecord",
-	"DiagnosticReport":    "DiagnosticReportRecord",
-	"DischargeSummary":    "DischargeSummaryRecord",
-	"ImmunizationRecord":  "ImmunizationRecord",
+	"OPConsultation":       "OPConsultRecord",
+	"Prescription":         "PrescriptionRecord",
+	"DiagnosticReport":     "DiagnosticReportRecord",
+	"DischargeSummary":     "DischargeSummaryRecord",
+	"ImmunizationRecord":   "ImmunizationRecord",
 	"HealthDocumentRecord": "HealthDocumentRecord",
-	"WellnessRecord":      "WellnessRecord",
+	"WellnessRecord":       "WellnessRecord",
 }
 
 // IG is the loaded implementation guide package.

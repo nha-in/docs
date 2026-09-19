@@ -2,7 +2,6 @@ package server
 
 import (
 	"context"
-	"encoding/base64"
 	"encoding/json"
 	"fmt"
 	"path/filepath"
@@ -146,15 +145,18 @@ func TestRelatedAtomsReverseEdgeNotMislabeled(t *testing.T) {
 	}
 }
 
-func TestGetAtomCautionOnUnverifiedOnly(t *testing.T) {
+// The Catalogue is published as ABDM's statement of how ABDM works, so no
+// atom carries a status and no answer carries a caution derived from one.
+func TestGetAtomCarriesNoStatusOrCaution(t *testing.T) {
 	sess := connect(t, false, nil)
-	out := callText(t, sess, "get_atom", map[string]any{"id": "hiecm.flow.m2-link-care-context"})
-	if strings.Contains(out, `"caution"`) || strings.Contains(out, "verification_status") {
-		t.Errorf("atom must carry no verification field or caution: %s", out)
-	}
-	out = callText(t, sess, "get_atom", map[string]any{"id": "hiecm.error.abdm-1035"})
-	if strings.Contains(out, `"caution"`) {
-		t.Errorf("verified atom must carry no caution: %s", out)
+	for _, id := range []string{"hiecm.flow.m2-link-care-context", "hiecm.error.abdm-1035"} {
+		out := callText(t, sess, "get_atom", map[string]any{"id": id})
+		if strings.Contains(out, `"caution"`) {
+			t.Errorf("%s carries a caution: %s", id, out)
+		}
+		if strings.Contains(out, "verification_status") {
+			t.Errorf("%s carries a verification status: %s", id, out)
+		}
 	}
 }
 
@@ -191,11 +193,19 @@ func TestDecodeErrorSpecTableFallback(t *testing.T) {
 	}
 	for _, want := range []string{
 		`"specification"`, "ABDM-1016", "Dependent service unavailable",
-		"Retry with backoff", `"module": "m1"`, "specification error table",
+		`"http": "503"`, `"module": "m1"`, "specification response example",
+		"the specification's response examples above are the only source for this code",
 		"no narrative error atom",
 	} {
 		if !strings.Contains(out, want) {
 			t.Errorf("fallback output missing %q: %s", want, out)
+		}
+	}
+	// The gateway's numeric codes arrive as a JSON "code" value.
+	out = callText(t, sess, "decode_error", map[string]any{"input": `{"code":"900901","message":"Invalid Credentials"}`})
+	for _, want := range []string{`"900901"`, `"http": "401"`, "m1_post_v3_enrollment_request_otp"} {
+		if !strings.Contains(out, want) {
+			t.Errorf("numeric gateway code output missing %q: %s", want, out)
 		}
 	}
 	// A code in neither source still gets the honest empty answer.
@@ -296,26 +306,6 @@ func TestCatalogueInfo(t *testing.T) {
 	out := callText(t, sess, "catalogue_info", map[string]any{})
 	if !strings.Contains(out, "2026.08.24") || !strings.Contains(out, "\"embeddings\": false") {
 		t.Errorf("info payload: %s", out)
-	}
-}
-
-func TestSandboxNotes(t *testing.T) {
-	var body any
-	if err := json.Unmarshal([]byte(`{"abhaNumber":"91-1234-5678-9012","patient":[{"careContexts":[{"hiType":["Prescription"]}]}]}`), &body); err != nil {
-		t.Fatal(err)
-	}
-	notes := sandboxNotes("m2_hip_link_care_context", body)
-	if len(notes) != 2 {
-		t.Fatalf("want dashed abhaNumber and array hiType notes, got %v", notes)
-	}
-	if err := json.Unmarshal([]byte(`{"loginHint":"mobile","loginId":"`+base64.StdEncoding.EncodeToString(make([]byte, 512))+`"}`), &body); err != nil {
-		t.Fatal(err)
-	}
-	if notes = sandboxNotes("m1_phr_request_otp", body); len(notes) != 2 {
-		t.Fatalf("want loginHint and wrong-key notes, got %v", notes)
-	}
-	if notes = sandboxNotes("m2_hip_link_care_context", map[string]any{"abhaNumber": "91123456789012"}); len(notes) != 0 {
-		t.Fatalf("clean body must carry no notes, got %v", notes)
 	}
 }
 

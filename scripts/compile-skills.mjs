@@ -1,356 +1,96 @@
-// Selector + deterministic assembler. Reads M1 Catalogue atoms and writes a
-// draft SKILL.md per guided loop under skills-src/<name>/. build-skills.mjs folds
-// each of those into its module's skill as a references/ section.
-//
-// This is stage one of the pipeline in `skill-compiler`: select, assemble.
-// The output is deliberately stilted -- a human (or the agent running the
-// compile) does the constrained prose pass by hand afterwards, then
-// `validate-skills.mjs` checks the result traces back to real atoms.
-//
-// Usage: node scripts/compile-skills.mjs [skill-name ...]
-//        node scripts/compile-skills.mjs            compiles every milestone
-import { mkdirSync, writeFileSync } from "node:fs";
-import { join } from "node:path";
-import { loadAtoms, root, section } from "./lib/atoms.mjs";
+// Compiles the guided loops under skills-src/<name>/ from the journeys and
+// the specifications. build-skills.mjs folds each into its module's skill.
+//   node scripts/compile-skills.mjs
+import {mkdirSync, writeFileSync, readFileSync, existsSync, readdirSync, rmSync, statSync} from 'node:fs';
+import {join} from 'node:path';
+import {parse} from 'yaml';
+import {root} from './lib/atoms.mjs';
+import {loadJourneys, stepDataName} from './lib/journeys.mjs';
+import {errorsFromSpec} from './lib/spec-errors.mjs';
 
-const outDir = join(root, "skills-src");
-const { atoms, problems } = loadAtoms();
-if (problems.length) {
-  console.warn("Some Catalogue files did not parse as atoms (ignored here):");
-  for (const p of problems) console.warn(`  ${p.file}: ${p.msg}`);
+const outDir = join(root, 'skills-src');
+const dataDir = join(root, 'site', 'src', 'data', 'api');
+const specDir = join(root, 'catalogue', 'openapi', 'hiecm', 'v3');
+const journeys = loadJourneys();
+
+const MODULES = {
+  gateway: 'the gateway session and bridge registry',
+  m1: 'ABHA creation, login and profile management',
+  m2: 'care contexts, HIP initiated linking, discovery, and pushing encrypted records to a requester',
+  m3: 'raising a consent request, tracking it, and fetching the records it covers as an HIU',
+  m4: 'creating an HPID, registering a professional on the HPR, and onboarding a facility to the HFR',
+  p1: 'creating an ABHA address in a PHR app and logging in to it',
+  p2: 'the PHR profile, linking an ABHA number, switching profiles, and linking, sharing and consent for the patient',
+  p3: 'reading, approving, denying, enabling, disabling and updating the patient\'s subscriptions and subscription requests',
+  p4: 'setting up a health locker and listing the lockers and requests on an ABHA address',
+  subscription: 'subscribing an HIU to changes on an ABHA address',
+  'scan-and-pay': 'open orders, patient selection and payment status between a facility and a PHR app',
+};
+
+function stepData(step, journeyId, i) {
+  const file = join(dataDir, `${stepDataName(step.op, journeyId, i)}.json`);
+  if (!existsSync(file)) throw new Error(`run build-api-reference first: ${file} missing`);
+  return JSON.parse(readFileSync(file, 'utf8'));
 }
 
-const all = [...atoms.values()];
+const exit = (data) => {
+  const ok = data.responses.find((r) => /^2/.test(r.status));
+  return ok?.example ? `A ${ok.status} whose body matches:\n\n\`\`\`json\n${JSON.stringify(ok.example, null, 2)}\n\`\`\`` : `A ${ok?.status ?? '2xx'} response. The specification gives no body for it, so read what comes back.`;
+};
 
-// One entry per milestone that has atoms to compile from. A milestone with no
-// flow atoms gets no build skill and a milestone with no error atoms gets no
-// debug skill: an empty OODA loop is worse than none, because an agent reads
-// the heading as a promise that the loop is there.
-//
-// The scope line is what the skill says it covers. It is lifted from that
-// milestone's own pages, so a milestone cannot inherit another's claims.
-const MILESTONES = [
-  {
-    id: "M1",
-    slug: "m1",
-    scope: "ABHA creation, login and profile management",
-    buildDescription:
-      "Use when scaffolding an integration against ABDM Milestone 1 (ABHA creation, login, profile): builds each M1 flow as an observe-orient-decide-act loop against the sandbox, citing the Catalogue atom behind every call.",
-    debugDescription:
-      "Use when an ABDM Milestone 1 call fails or a login/enrolment flow is stuck: matches the error against the Catalogue's M1 error atoms and walks to a named fix, verified by the original step succeeding.",
-  },
-  {
-    id: "M2",
-    slug: "m2",
-    scope: "care contexts, HIP initiated linking, discovery, and pushing encrypted records to a requester",
-    buildDescription:
-      "Use when scaffolding an integration against ABDM Milestone 2 (care contexts, linking, discovery, sharing records as a HIP): builds each M2 flow as an observe-orient-decide-act loop against the sandbox, citing the Catalogue atom behind every call.",
-    debugDescription:
-      "Use when an ABDM Milestone 2 call fails or a linking or data transfer flow is stuck: matches the error against the Catalogue's M2 error atoms and walks to a named fix, verified by the original step succeeding.",
-  },
-  {
-    id: "M4",
-    slug: "m4",
-    scope:
-      "creating an HPID, registering a professional on the HPR, onboarding a facility to the HFR, and linking that facility to its bridges",
-    buildDescription:
-      "Use when scaffolding an integration against ABDM Milestone 4, the NHPR (HPID creation, professional registration, facility onboarding, bridge linkage): builds each M4 journey as an observe-orient-decide-act loop, citing the Catalogue atom behind every step.",
-    debugDescription:
-      "Use when an ABDM Milestone 4 call fails or an HPR or HFR registration is stuck: matches the HIS error against the Catalogue's M4 error atoms and walks to a named fix, verified by the original step succeeding.",
-  },
-  {
-    id: "P1",
-    slug: "p1",
-    scope:
-      "registration in a PHR application, the four login routes, and the profile the person holds",
-    buildDescription:
-      "Use when scaffolding the patient side of ABDM Milestone 1 in a PHR application (creating an ABHA address, the four login routes, the profile): builds each P1 flow as an observe-orient-decide-act loop, citing the Catalogue atom behind every step.",
-    // NHA records the PHR error codes once against P1 and they apply across
-    // P1 to P3, so this is the debug skill for the whole patient side.
-    debugDescription:
-      "Use when a call from a PHR application fails anywhere in P1, P2 or P3: matches the AS error against the Catalogue's PHR error atoms, which NHA records once for the whole patient side, and walks to a named fix verified by the original step succeeding.",
-    // The AS codes are the whole patient side, so this skill says so rather
-    // than reading as P1 only and being passed over on a P3 failure.
-    debugCovers: "PHR application call, anywhere in P1, P2 or P3",
-  },
-  {
-    id: "P2",
-    slug: "p2",
-    scope:
-      "discovering records held elsewhere, linking care contexts to a health address, and sharing a profile at a facility",
-    buildDescription:
-      "Use when scaffolding the patient side of ABDM Milestone 2 in a PHR application (discovery, user initiated linking, scan and share at a facility): builds each P2 flow as an observe-orient-decide-act loop, citing the Catalogue atom behind every step.",
-    debugDescription: null,
-  },
-  {
-    id: "P3",
-    slug: "p3",
-    scope:
-      "subscriptions, auto approval policies, and fetching the records a granted consent covers",
-    buildDescription:
-      "Use when scaffolding the patient side of ABDM Milestone 3 in a PHR application (subscriptions, auto approval, granting and revoking consent, fetching records): builds each P3 flow as an observe-orient-decide-act loop, citing the Catalogue atom behind every step.",
-    debugDescription: null,
-  },
-  {
-    id: "M3",
-    slug: "m3",
-    scope: "raising a consent request, tracking it, and fetching the records it covers as an HIU",
-    buildDescription:
-      "Use when scaffolding an integration against ABDM Milestone 3 (consent requests, artefacts, fetching records as an HIU): builds each M3 flow as an observe-orient-decide-act loop against the sandbox, citing the Catalogue atom behind every call.",
-    debugDescription:
-      "Use when an ABDM Milestone 3 call fails or a consent or fetch flow is stuck: matches the error against the Catalogue's M3 error atoms and walks to a named fix, verified by the original step succeeding.",
-  },
-];
-
-const mine = (milestone, type) =>
-  all.filter((a) => a.fm.type === type && a.fm.gateway === "hiecm" && a.fm.milestone === milestone.id);
-
-/**
- * The flows a build skill carries. A flow opts in by naming the skill in its
- * `skills` list, which is how the Catalogue says which loop a flow belongs in.
- */
-const flowsFor = (milestone) =>
-  mine(milestone, "flow").filter((a) =>
-    (a.fm.skills ?? []).includes(`hiecm-${milestone.slug}-build`),
-  );
-
-/**
- * The concepts and tests a build skill carries. Both opt in the way a flow
- * does, by naming the skill in `skills`.
- *
- * Until this existed a build skill compiled from flows alone, so a rule
- * written in a concept atom reached the docs site and never reached an agent.
- * That is how the M1 encryption padding sat correct in
- * hiecm.concept.input-encryption while the only padding on the agent surface
- * was the NHPR's PKCS1, and an integrator lost a day to it.
- */
-const optedIn = (milestone, type) =>
-  mine(milestone, type).filter((a) =>
-    (a.fm.skills ?? []).includes(`hiecm-${milestone.slug}-build`),
-  );
-
-/**
- * The errors a debug skill carries: every error atom recorded against the
- * milestone, not only those that name the skill. An error an agent can hit is
- * an error the debug skill should recognise.
- */
-const errorsFor = (milestone) => mine(milestone, "error");
-
-/**
- * Catalogue prose links to other atoms by atom id.
- *
- * Stripping those to the bare label, which is what this did while the links
- * were relative file paths, produced "See registration and credentials.": a
- * reader told to look at something and given no way to reach it. The id is
- * kept instead, because the agent reading a compiled skill is exactly the
- * reader that can call get_atom with it.
- *
- * A relative path is still reduced to its label, since that is the dead end
- * the id replaced. Ordinary links, to a docs route or an external page, are
- * left as links: those resolve for anybody.
- */
-const ATOM_ID = /^[a-z][a-z0-9-]*\.[a-z][a-z0-9-]*\.[a-z0-9.-]+$/;
-const deref = (text) =>
-  text.replace(/\[([^\]]+)\]\(([^)]+)\)/g, (whole, label, href) => {
-    if (ATOM_ID.test(href)) return `${label} (${href})`;
-    if (/\.md(#[^)]*)?$/.test(href)) return label;
-    return whole;
-  });
-
-/** The one place a compiled skill sends a reader who needs more than it carries. */
-const footer = (milestone) => [
-  ``,
-  `## Where the detail is`,
-  ``,
-  `- Every operation in this milestone, with its body fields and responses: /docs/hiecm/v3/api/${milestone.slug}`,
-  `- The flows as diagrams: /docs/hiecm/v3/milestones/${milestone.slug}`,
-  `- Every error code across milestones: /docs/hiecm/v3/reference/error-codes`,
-  `- Terms: /docs/hiecm/v3/getting-started/glossary`,
-  ``,
-].join("\n");
-
-function endpointsFor(flow) {
-  return (flow.fm.related?.endpoints ?? []).map((id) => atoms.get(id)).filter(Boolean);
+function buildSkill(module, hasErrorsPage) {
+  const list = journeys.get(module) ?? [];
+  const sections = list.map((j) => [
+    `### ${j.title} (\`${j.id}\`)`, '',
+    '**Act: the calls in this journey, in order**', '',
+    ...j.steps.map((s, i) => {
+      const d = stepData(s, j.id, i);
+      return `#### ${i + 1}. ${d.summary}${s.optional ? ' (optional)' : ''} (\`${s.op}\`)\n\n${d.kind === 'callback' ? `Inbound to your bridge at \`${d.path}\`. Acknowledge it and continue.` : `\`\`\`bash\n${d.curl}\n\`\`\``}\n`;
+    }),
+    '**Exit condition (Observe until this is true)**', '',
+    exit(stepData(j.steps[j.steps.length - 1], j.id, j.steps.length - 1)),
+  ].join('\n'));
+  return `---\nname: hiecm-${module}-build\ndescription: "Use when scaffolding an integration against ABDM ${module.toUpperCase()} (${MODULES[module]}): builds each journey as an observe-orient-decide-act loop against the sandbox."\n---\n` + [
+    `# HIE-CM ${module} build`, '',
+    `Scaffolds an ABDM ${module} integration one journey at a time. It covers ${MODULES[module]}.`, '',
+    '## How this skill runs', '',
+    'Every journey below is an OODA loop, not a recipe: observe the actual state (last response, last error), orient against the step matched below, decide the cheapest next action, act, and return to observe. A step is done only when its exit condition is observed against the sandbox, never because it "should have worked."', '',
+    'Loop limit: 8 passes per step. Hitting the limit is an escalation: state what was observed, what was tried, and which operation page to read, then ask one question.', '',
+    '## Journeys', '', sections.join('\n\n'), '',
+    '## Where the detail is', '', `- Every operation, with its body fields and responses: /docs/hiecm/v3/api/${module}`, ...(hasErrorsPage ? [`- Error codes: /docs/hiecm/v3/api/${module}/errors`] : []), '',
+  ].join('\n');
 }
 
-function curl(endpoint) {
-  const m = section(endpoint.body, "What happens").match(/```bash\n([\s\S]*?)```/);
-  return m ? m[1].trim() : "(no curl recorded on this endpoint atom)";
+function debugSkill(module, codes) {
+  return `---\nname: hiecm-${module}-debug\ndescription: "Use when an ABDM ${module.toUpperCase()} call fails: matches the error code against the codes the specification's examples return and walks to the operation that returns it, verified by the original step succeeding."\n---\n` + [
+    `# HIE-CM ${module} debug`, '',
+    'Every error below is an OODA loop: observe the error code and last request id, orient against the matched code, decide the fix, act, and observe whether the original step now succeeds. Applying a fix is not the exit condition; the original step succeeding is.', '',
+    'Loop limit: 5 passes per error.', '',
+    '## Errors', '',
+    ...codes.map((e) => `### ${e.code}\n\n**Specification example:** HTTP ${e.http}, \`${e.message}\`, on \`${e.operationId}\`.\n\n**Exit condition: the original call now succeeds.**\n`),
+    '## Where the detail is', '', `- The operation that returns each code: /docs/hiecm/v3/api/${module}`, '',
+  ].join('\n');
 }
 
-function frontmatter(name, description) {
-  const escaped = description.replace(/"/g, '\\"');
-  return `---\nname: ${name}\ndescription: "${escaped}"\n---\n`;
-}
-
-/**
- * A concept's own subheadings are spliced in under a `####` block here, so
- * they have to sink with it. Left at `###` they outrank the block holding
- * them, and the skill validator counts each one as an OODA loop owing an exit
- * condition it will never have.
- */
-const demote = (text) => text.replace(/^(#{3,})(?= )/gm, "#$1");
-
-/**
- * A concept an agent must hold before it writes a call. Its mechanics live in
- * "What happens", which is where a padding, a token rule or a key format is
- * actually written down.
- */
-function conceptSections(milestone) {
-  const concepts = optedIn(milestone, "concept");
-  if (!concepts.length) return [];
-  return [
-    `## Rules to hold before you call anything`,
-    ``,
-    concepts.map((c) => [
-      `#### ${c.fm.title} (\`${c.fm.id}\`)`,
-      ``,
-      demote(deref(section(c.body, "In plain words"))),
-      ``,
-      demote(deref(section(c.body, "What happens"))),
-    ].join("\n")).join("\n\n"),
-    ``,
-  ];
-}
-
-/**
- * A check that settles a precondition in one call, so a wrong assumption is
- * caught before it is built on rather than after.
- */
-function testSections(milestone) {
-  const tests = optedIn(milestone, "test");
-  if (!tests.length) return [];
-  return [
-    `## Prove these before you build a flow`,
-    ``,
-    tests.map((t) => [
-      `### ${t.fm.title} (\`${t.fm.id}\`)`,
-      ``,
-      demote(deref(section(t.body, "What happens"))),
-      ``,
-      `**Exit condition (Observe until this is true)**`,
-      ``,
-      deref(section(t.body, "How you know it worked")),
-    ].join("\n")).join("\n\n"),
-    ``,
-  ];
-}
-
-function buildSkill(milestone) {
-  const flows = flowsFor(milestone);
-  const flowSections = flows.map((flow) => {
-    const eps = endpointsFor(flow);
-    // A flow whose calls are not yet recorded as endpoint atoms says so. The
-    // alternative is an empty "the calls in this flow" heading, which reads
-    // as "this flow makes no calls".
-    const epList = eps.length
-      ? eps.map((e) =>
-          `#### ${e.fm.title} (\`${e.fm.id}\`)\n\n\`\`\`bash\n${curl(e)}\n\`\`\`\n`
-        ).join("\n")
-      : `The Catalogue does not yet record this flow's calls as endpoint atoms, so this skill cannot give you the exact requests. Read the operations under /docs/hiecm/v3/api/${milestone.slug} before acting, and treat the exit condition below as the thing to observe.\n`;
-    return [
-      `### ${flow.fm.title} (\`${flow.fm.id}\`)`,
-      ``,
-      `**Before you start**`,
-      ``,
-      deref(section(flow.body, "Before you start")),
-      ``,
-      `**Act: the calls in this flow, in order**`,
-      ``,
-      epList,
-      `**Exit condition (Observe until this is true)**`,
-      ``,
-      deref(section(flow.body, "How you know it worked")),
-      ``,
-      `**If it goes wrong**`,
-      ``,
-      deref(section(flow.body, "When it goes wrong")),
-    ].join("\n");
-  });
-
-  return frontmatter(`hiecm-${milestone.slug}-build`, milestone.buildDescription) + [
-    `# HIE-CM ${milestone.id} build`,
-    ``,
-    `Scaffolds an ABDM ${milestone.id} integration one flow at a time. ${milestone.id} covers ${milestone.scope}.`,
-    ``,
-    `## How this skill runs`,
-    ``,
-    `Every flow below is an OODA loop, not a recipe: observe the actual state (last response, last error), orient against the flow step matched below, decide the cheapest next action, act, and return to observe. A flow step is done only when its exit condition is observed against the sandbox, never because it "should have worked."`,
-    ``,
-    `Loop limit: 8 passes per flow step. Hitting the limit is an escalation: state what was observed, what was tried, and which atom to read, then ask one question.`,
-    ``,
-    ...conceptSections(milestone),
-    ...testSections(milestone),
-    `## Flows`,
-    ``,
-    flowSections.join("\n\n"),
-    footer(milestone),
-  ].join("\n") + "\n";
-}
-
-function debugSkill(milestone) {
-  const errors = errorsFor(milestone);
-  const errorSections = errors.map((err) => [
-    `### ${err.fm.title} (\`${err.fm.id}\`)`,
-    ``,
-    `**Observed as**`,
-    ``,
-    deref(section(err.body, "In plain words")),
-    ``,
-    `**Fix**`,
-    ``,
-    deref(section(err.body, "When it goes wrong")),
-    ``,
-    `**Exit condition: the original call now succeeds**`,
-    ``,
-    deref(section(err.body, "How you know it worked")),
-  ].join("\n"));
-
-  return frontmatter(`hiecm-${milestone.slug}-debug`, milestone.debugDescription) + [
-    `# HIE-CM ${milestone.id} debug`,
-    ``,
-    `Diagnoses a failed ${milestone.debugCovers ?? `${milestone.id} call`}. Every error below is an OODA loop: observe the error code and last request id, orient against the matched error atom below (list a second hypothesis if the match is not exact), decide the fix, act, and observe whether the *original* step now succeeds. Applying a fix is not the exit condition; the original step succeeding is.`,
-    ``,
-    `Loop limit: 5 passes per error. Hitting the limit is an escalation: state what was observed, what was tried, and which atom to read, then ask one question.`,
-    ``,
-    `## Errors`,
-    ``,
-    errorSections.join("\n\n"),
-    footer(milestone),
-  ].join("\n") + "\n";
-}
-
-// A milestone contributes only the skills its atoms can fill.
-const SKILLS = {};
-for (const milestone of MILESTONES) {
-  if (flowsFor(milestone).length) {
-    SKILLS[`hiecm-${milestone.slug}-build`] = () => buildSkill(milestone);
-  }
-  // P2 and P3 get no debug skill of their own: NHA records the PHR error
-  // codes once against P1, so a second and third copy of the same errors
-  // would be three skills competing to answer one question.
-  if (errorsFor(milestone).length && milestone.debugDescription) {
-    SKILLS[`hiecm-${milestone.slug}-debug`] = () => debugSkill(milestone);
+// A module retired from MODULES above used to leave its hiecm-<id>-build
+// and hiecm-<id>-debug folders sitting here forever, since this script only
+// ever wrote, never removed. Prune any such folder for a module that is no
+// longer current before writing fresh ones. fhir-audit, fhir-generate and
+// README.md are hand-authored, never module-named, and untouched.
+for (const entry of readdirSync(outDir)) {
+  const match = entry.match(/^hiecm-(.+)-(build|debug)$/);
+  if (match && !(match[1] in MODULES) && statSync(join(outDir, entry)).isDirectory()) {
+    rmSync(join(outDir, entry), {recursive: true, force: true});
+    console.log(`Removed stale skills-src/${entry} (module "${match[1]}" no longer exists).`);
   }
 }
 
-const targets = process.argv.slice(2).length ? process.argv.slice(2) : Object.keys(SKILLS);
-
-for (const name of targets) {
-  if (!SKILLS[name]) { console.error(`Unknown skill: ${name}`); process.exit(1); }
-  const dir = join(outDir, name);
-  mkdirSync(dir, { recursive: true });
-  const file = join(dir, "SKILL.md");
-  writeFileSync(file, SKILLS[name]());
-  console.log(`wrote ${file.replace(root + "/", "")}`);
+for (const module of Object.keys(MODULES)) {
+  const spec = parse(readFileSync(join(specDir, `hiecm-${module}.yaml`), 'utf8'));
+  const codes = errorsFromSpec(spec);
+  const write = (name, body) => { mkdirSync(join(outDir, name), {recursive: true}); writeFileSync(join(outDir, name, 'SKILL.md'), body); console.log(`wrote skills-src/${name}/SKILL.md`); };
+  // Same rule build-api-reference.mjs uses to decide whether an errors page exists.
+  const hasErrorsPage = codes.length > 0 || Object.keys(spec.webhooks ?? {}).length > 0;
+  if ((journeys.get(module) ?? []).length) write(`hiecm-${module}-build`, buildSkill(module, hasErrorsPage));
+  if (codes.length) write(`hiecm-${module}-debug`, debugSkill(module, codes));
 }
-
-console.log("");
-for (const milestone of MILESTONES) {
-  const f = flowsFor(milestone).length;
-  const e = errorsFor(milestone).length;
-  const c = optedIn(milestone, "concept").length;
-  const t = optedIn(milestone, "test").length;
-  console.log(`${milestone.id}: ${f} flow(s), ${c} concept(s), ${t} test(s), ${e} error(s) fed this compile.`);
-}
-console.log(`This is a draft. Run the constrained prose pass, then node scripts/validate-skills.mjs.`);

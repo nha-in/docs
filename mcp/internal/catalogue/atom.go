@@ -13,15 +13,14 @@ import (
 )
 
 type Atom struct {
-	ID                 string
-	Type               string
-	Gateway            string
-	Milestone          string
-	Title              string
-	Summary            string
-	VerificationStatus string
-	Body               string
-	SourcePath         string
+	ID         string
+	Type       string
+	Gateway    string
+	Milestone  string
+	Title      string
+	Summary    string
+	Body       string
+	SourcePath string
 	// DocURL and DocAnchor are the published page a support answer links
 	// to instead of showing a reader an atom id, and the section within
 	// it. They are NOT parsed from the atom: an atom is authored before
@@ -51,10 +50,18 @@ type frontmatter struct {
 // found" for 572 codes the catalogue holds.
 var errCodeRe = regexp.MustCompile(`\b(?:ABDM|GATEWAY|MIS|EKA|HIS|AS)-\d{3,5}\b`)
 
+// gatewayCodeRe matches the gateway's numeric authentication codes (900900,
+// 900901, 900902) only as a JSON "code" value, so a bare six-digit number
+// elsewhere in the input (an OTP, a timestamp) is not read as a code.
+var gatewayCodeRe = regexp.MustCompile(`"code"\s*:\s*"?(9\d{5})\b`)
+
 func ExtractErrorCodes(s string) []string {
 	set := map[string]bool{}
 	for _, c := range errCodeRe.FindAllString(s, -1) {
 		set[strings.ToUpper(c)] = true
+	}
+	for _, m := range gatewayCodeRe.FindAllStringSubmatch(s, -1) {
+		set[m[1]] = true
 	}
 	var out []string
 	for c := range set {
@@ -85,18 +92,15 @@ func ParseAtom(sourcePath string, content []byte) (Atom, error) {
 		related = map[string][]string{}
 	}
 	return Atom{
-		ID:        fm.ID,
-		Type:      fm.Type,
-		Gateway:   fm.Gateway,
-		Milestone: fm.Milestone,
-		Title:     fm.Title,
-		Summary:   strings.TrimSpace(fm.Summary),
-		// Atoms carry no verification field: the Catalogue is published as ABDM's
-		// statement of how ABDM works. Sandbox evidence is internal to contributors.
-		VerificationStatus: "",
-		Body:               strings.TrimSpace(string(body)),
-		SourcePath:         sourcePath,
-		ErrorCodes:         ExtractErrorCodes(string(content)),
-		Related:            related,
+		ID:         fm.ID,
+		Type:       fm.Type,
+		Gateway:    fm.Gateway,
+		Milestone:  fm.Milestone,
+		Title:      fm.Title,
+		Summary:    strings.TrimSpace(fm.Summary),
+		Body:       strings.TrimSpace(string(body)),
+		SourcePath: sourcePath,
+		ErrorCodes: ExtractErrorCodes(string(content)),
+		Related:    related,
 	}, nil
 }

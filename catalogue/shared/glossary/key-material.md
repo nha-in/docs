@@ -20,14 +20,7 @@ sources:
     note: >
       NHA's M2 encryption and decryption pages, which name ECDH and
       recommend the Fidelius CLI.
-  - file: catalogue/annexure/integration-learnings-2026-09-16.md
-    fetched: 2026-09-16
-    hash: sha256:d1415609d3d71178563367bcdcc48fa7a01fe9ebd247b4c019686304868368ce
-    note: >
-      The curve encoding and derivation used in practice. Observed by an integrator on 2026-09-16, not yet run from this repository.
-related:
-  glossary: [shared.glossary.consent-artefact, shared.glossary.hip, shared.glossary.hiu]
-  concepts: [hiecm.concept.consent-artefact, shared.concept.fidelius-ecdh-interop]
+related: {}
 ---
 
 # Key material, who generates it and who keeps it

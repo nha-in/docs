@@ -24,8 +24,8 @@ for (const a of atoms.values()) {
 // rule is stated once and applies to every milestone the compiler emits.
 // Naming them one by one is how a new milestone ships unchecked.
 function requiredSections(name) {
-  if (/^hiecm-[a-z0-9]+-build$/.test(name)) return ["## Flows"];
-  if (/^hiecm-[a-z0-9]+-debug$/.test(name)) return ["## Errors"];
+  if (/^hiecm-[a-z0-9-]+-build$/.test(name)) return ["## Journeys"];
+  if (/^hiecm-[a-z0-9-]+-debug$/.test(name)) return ["## Errors"];
   return null;
 }
 

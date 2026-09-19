@@ -249,7 +249,7 @@ Kendra records, the same shape as Kendra discovery, with one addition: each Kend
             "address": "Shop no.1 basement, Radha Krishna complex, behind Harsh sankul, opp. S.A.college",
             "radius": { "type": "CONSTANT", "value": "0.4", "unit": "km" }
           },
-          "contact": { "phone": "9881461949", "email": "" }
+          "contact": { "phone": "<MOBILE_NUMBER>", "email": "" }
         }
       ]
     }

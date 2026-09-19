@@ -9,6 +9,7 @@ import {
 } from '@site/src/components/ui/dialog';
 import TryIt from './TryIt';
 import Markdown from './Markdown';
+import {splitLede, isRestatement} from './lede';
 
 export type Field = {
   name: string;
@@ -33,6 +34,9 @@ export type Operation = {
   server: string;
   servers: {url: string; description: string}[];
   summary: string;
+  // The short name build-api-reference.mjs derives from the summary or the
+  // path. `summary` stays NHA's sentence, which is documentation, not a name.
+  title: string;
   description: string;
   security: {
     name: string;
@@ -57,55 +61,9 @@ export type Operation = {
   curl: string;
   /** The same request in each language the page offers. */
   samples?: {id: string; label: string; language: string; code: string}[];
-  /** The certification marking on this call, where a certification case names
-      it. Absent on every call no case names, which is not the same as
-      optional. Set by the reference generator from `x-abdm-requirement`. */
-  requirement?: {
-    level: string;
-    cases: string[];
-    conditions: string[];
-    /** The module's testing page, where the cases below are written out. */
-    href?: string;
-  };
-  tag: string;
-  tagDescription: string;
+  tag?: string;
+  tagDescription?: string;
 };
-
-/* The level alone tells a reader almost nothing: "Conditional" without the
-   condition is a badge they cannot act on, and a level without its cases is a
-   claim they cannot check. Both travel with it. */
-function Requirement({
-  requirement,
-}: {
-  requirement: NonNullable<Operation['requirement']>;
-}) {
-  const {level, cases, conditions, href} = requirement;
-  const label = `Certification ${cases.length === 1 ? 'case' : 'cases'}`;
-  return (
-    <div className="api-requirement">
-      <div className="api-requirement__head">
-        <span
-          className={`api-requirement__level api-requirement__level--${level}`}>
-          {level.replace(/^./, (c) => c.toUpperCase())}
-        </span>
-        {conditions.length ? (
-          <span className="api-requirement__note">{conditions.join('. ')}</span>
-        ) : null}
-      </div>
-      {cases.length ? (
-        <p className="api-requirement__cases">
-          {href ? <a href={href}>{label}</a> : label}{' '}
-          {cases.map((id, index) => (
-            <React.Fragment key={id}>
-              {index > 0 ? ', ' : null}
-              <code>{id}</code>
-            </React.Fragment>
-          ))}
-        </p>
-      ) : null}
-    </div>
-  );
-}
 
 function FieldRow({field}: {field: Field}) {
   return (
@@ -186,7 +144,7 @@ function RequestPanel({operation}: {operation: Operation}) {
   return (
     <div className="api-panel">
       <div className="api-panel__head">
-        <span className="api-panel__label">{operation.summary}</span>
+        <span className="api-panel__label">{operation.title || operation.summary}</span>
         <div className="api-panel__tabs" role="tablist" aria-label="Request">
           {samples.map((sample) => (
             <button
@@ -262,21 +220,21 @@ function ResponsePanel({responses}: {responses: Operation['responses']}) {
 }
 
 export default function ApiEndpoint({operation}: {operation: Operation}) {
-  const lede = operation.description.split('\n\n')[0];
-  const rest = operation.description.split('\n\n').slice(1).join('\n\n');
+  const heading = operation.title || operation.summary;
+  const [opening, rest] = splitLede(operation.description);
+  // A lede that only repeats the heading is noise between the title and the call.
+  const lede = isRestatement(opening, heading) ? '' : opening;
 
   return (
     <div className="api-page">
       <div className="api-page__main">
-        <p className="api-page__eyebrow">{operation.tag.replace(/-/g, ' ')}</p>
+        {operation.tag ? (
+          <p className="api-page__eyebrow">{operation.tag.replace(/-/g, ' ')}</p>
+        ) : null}
         <Heading as="h1" className="api-page__title">
-          {operation.summary}
+          {heading}
         </Heading>
         {lede ? <Markdown text={lede} className="api-page__lede" /> : null}
-
-        {operation.requirement ? (
-          <Requirement requirement={operation.requirement} />
-        ) : null}
 
         <div className="api-bar">
           <span

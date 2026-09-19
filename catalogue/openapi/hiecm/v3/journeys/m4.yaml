@@ -1,0 +1,148 @@
+- id: m4-registration-api-s-collection-via-aadhaar
+  title: HPID, registration via Aadhaar
+  steps:
+    - op: m4_post_aadhaar_generatelink
+    - op: m4_post_aadhaar_isauthenticated
+    - op: m4_post_v2_registration_aadhaar_verifyotp
+    - op: m4_post_v2_registration_aadhaar_demographicauthviamobile
+    - op: m4_post_v1_registration_aadhaar_checkhpidaccountexist
+    - op: m4_post_v1_registration_aadhaar_hpid_suggestion
+    - op: m4_post_v1_registration_aadhaar_generatemobileotp
+    - op: m4_post_v1_registration_aadhaar_verifymobileotp
+    - op: m4_post_v2_registration_aadhaar_createhpridwithpreverified
+- id: m4-onboarding-apis
+  title: HFR, facility onboarding
+  steps:
+    - op: m4_post_search_address_filter_deduplicate
+    - op: m4_post_v1_5_facility_basic_information
+    - op: m4_post_v1_5_facility_additional_information
+    - op: m4_post_v1_5_facility_detailed_information
+    - op: m4_post_v1_5_facility_submit_facility
+- id: m4-multiple-hrp-api
+  title: HRP bridge services
+  steps:
+    - op: m4_post_v1_bridges_mutiplehrpaddupdateservices
+- id: m4-utilities
+  title: HFR, master data
+  steps:
+    - op: m4_get_getpsudetailsbyministry
+    - op: m4_post_v1_5_facility_fetch_facility_sub_type
+    - op: m4_post_v1_5_facility_fetch_facility_type
+    - op: m4_get_v1_5_facility_get_master_data
+    - op: m4_get_v1_5_facility_get_master_types
+    - op: m4_post_v1_5_facility_get_owner_subtype
+    - op: m4_post_v1_5_facility_get_specialities
+    - op: m4_get_v1_5_facility_lgd_districts
+    - op: m4_get_v1_5_facility_lgd_states
+    - op: m4_get_v1_5_facility_lgd_subdistricts
+- id: m4-search
+  title: HFR, facility search
+  steps:
+    - op: m4_post_facilitymanagement_v1_5_facility_bygeolocation_se_907b10
+    - op: m4_post_facilitymanagement_v1_5_facility_search
+- id: m4-hfr-hrp-linkage-apis
+  title: HFR, linkage to the HPR
+  steps:
+    - op: m4_post_v1_5_facility_sendotptocontact
+    - op: m4_post_v1_5_facility_validateotp
+- id: m4-authentication
+  title: HPR, authentication
+  steps:
+    - op: m4_post_v1_auth_authpassword
+    - op: m4_get_v1_auth_cert
+    - op: m4_post_v1_auth_confirmwithaadhaarotp
+    - op: m4_post_v1_auth_init
+    - op: m4_post_v2_auth_loginviamobilesendotp
+- id: m4-verification
+  title: HPR, contact verification
+  steps:
+    - op: m4_post_v1_doctors_generate_mobile_otp
+    - op: m4_post_v1_doctors_generate_verification_email
+    - op: m4_post_v1_doctors_regenerate_mobile_otp
+    - op: m4_post_v1_doctors_resent_verify_email
+    - op: m4_post_v1_doctors_verify_email_otp
+    - op: m4_post_v1_doctors_verify_mobile_otp
+    - op: m4_post_v1_sendotpifdoctorverified
+    - op: m4_post_v1_verifydoctorverificationotp
+- id: m4-hpid
+  title: HPID, session and role
+  steps:
+    - op: m4_post_getmanagementtoken
+    - op: m4_post_healdthloginwithmobile
+    - op: m4_post_profile_updaterole
+- id: m4-util
+  title: HPID, categories
+  steps:
+    - op: m4_get_hpid_get_categories
+    - op: m4_get_hpid_get_subcategories
+- id: m4-profile
+  title: HPR, profile and password
+  steps:
+    - op: m4_post_password_change_bypassword
+    - op: m4_post_password_recover_byaadhaar
+    - op: m4_post_password_recover_bymobile_sendmobileotp
+    - op: m4_post_password_recover_bymobile_verifymobileotp
+    - op: m4_post_password_recover_confirmbyaadhaar
+    - op: m4_post_password_reset_password
+    - op: m4_post_password_resetpassword
+    - op: m4_get_v1_account_getidcard
+    - op: m4_get_v1_account_information
+    - op: m4_post_v1_account_rekyc_generateaadhaarotp
+    - op: m4_post_v1_account_rekyc_verifyaadhaarotp
+    - op: m4_post_v1_account_rekyc_verifyaadhaarotpgetdetails
+    - op: m4_get_v1_account_user_details_hprid
+    - op: m4_get_v4_auth_logout
+- id: m4-forgot-healthcare-professional-id-number
+  title: HPR, recover the HPR ID
+  steps:
+    - op: m4_post_v1_forgot_hprid_aadhaar
+    - op: m4_post_v1_forgot_hprid_mobile
+    - op: m4_post_v1_forgot_hprid_mobile_generateotp
+- id: m4-searched
+  title: HPR, search
+  steps:
+    - op: m4_get_v1_search_existsbyhprid_hprid
+    - op: m4_get_v1_search_searchbyhprid_hprid
+    - op: m4_get_v1_search_searchbymobile_mobile
+- id: m4-enrollment
+  title: HPR, professional registration
+  steps:
+    - op: m4_post_v1_doctors_register_professional_new
+    - op: m4_post_v1_doctors_update_professional_new
+    - op: m4_post_v1_doctors_fetch_documents_list
+    - op: m4_post_v1_uploads_upload_document
+    - op: m4_post_v1_doctors_fetch_professional_info
+- id: m4-utility
+  title: HPR, master data
+  steps:
+    - op: m4_get_v1_masters_affiliated_board
+    - op: m4_get_v1_masters_affiliated_board_states_id
+    - op: m4_get_v1_masters_affiliated_board_id
+    - op: m4_get_v1_masters_colleges_id
+    - op: m4_get_v1_masters_colleges_stateid_medicineid
+    - op: m4_get_v1_masters_countries
+    - op: m4_get_v1_masters_countries_id
+    - op: m4_post_v1_masters_courses
+    - op: m4_get_v1_masters_district
+    - op: m4_get_v1_masters_district_id
+    - op: m4_get_v1_masters_languages
+    - op: m4_get_v1_masters_languages_id
+    - op: m4_get_v1_masters_medical_councils
+    - op: m4_get_v1_masters_medical_councils_name
+    - op: m4_get_v1_masters_nurse_councils
+    - op: m4_get_v1_masters_states
+    - op: m4_get_v1_masters_states_id
+    - op: m4_get_v1_masters_sub_districts
+    - op: m4_get_v1_masters_sub_districts_id
+    - op: m4_get_v1_masters_system_of_medicines
+    - op: m4_get_v1_masters_universites
+    - op: m4_get_v1_masters_universites_id
+    - op: m4_post_getfacilitycreatedbyhprid
+    - op: m4_post_getfacilitydeclaredbyhprid
+    - op: m4_put_hprworkdetails_status
+    - op: m4_post_relinkordelinkprofessionalfromfacility
+- id: m4-hpr
+  title: HPR, facility linkage
+  steps:
+    - op: m4_post_fetchprofessionalfacility
+    - op: m4_post_hprfacilitysuggestions

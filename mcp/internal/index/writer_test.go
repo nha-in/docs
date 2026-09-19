@@ -17,7 +17,7 @@ func fixtureAtoms() []catalogue.Atom {
 		{
 			ID: "hiecm.error.abdm-1035", Type: "error", Gateway: "hiecm",
 			Milestone: "M2", Title: "ABDM-1035 facility not onboarded",
-			Summary: "The gateway rejected the call.", VerificationStatus: "verified",
+			Summary:    "The gateway rejected the call.",
 			Body:       "## In plain words\n\nThe gateway does not recognise your facility. ABDM-1035 means the X-HIP-ID is not registered.",
 			SourcePath: "hiecm/errors/abdm-1035.md",
 			ErrorCodes: []string{"ABDM-1035"}, Related: map[string][]string{},
@@ -25,7 +25,7 @@ func fixtureAtoms() []catalogue.Atom {
 		{
 			ID: "hiecm.flow.m2-link-care-context", Type: "flow", Gateway: "hiecm",
 			Milestone: "M2", Title: "Link a care context",
-			Summary: "Tell ABDM about a visit.", VerificationStatus: "unverified",
+			Summary:    "Tell ABDM about a visit.",
 			Body:       "## In plain words\n\nLinking makes a visit discoverable.",
 			SourcePath: "hiecm/flows/m2-link-care-context.md",
 			ErrorCodes: []string{"ABDM-1035"},
@@ -37,7 +37,7 @@ func fixtureAtoms() []catalogue.Atom {
 		{
 			ID: "hiecm.endpoint.m1-enrolment-by-aadhaar", Type: "endpoint", Gateway: "hiecm",
 			Milestone: "M1", Title: "Enrol an ABHA by Aadhaar",
-			Summary: "POST enrol/byAadhaar creates an ABHA from an Aadhaar OTP.", VerificationStatus: "unverified",
+			Summary:    "POST enrol/byAadhaar creates an ABHA from an Aadhaar OTP.",
 			Body:       "## In plain words\n\nSend the encrypted Aadhaar OTP to enrol.",
 			SourcePath: "hiecm/endpoints/m1-enrolment-by-aadhaar.md",
 			Related:    map[string][]string{},
@@ -58,12 +58,11 @@ func fixtureOps() []catalogue.Operation {
 func fixtureSpecErrors() []catalogue.SpecErrorCode {
 	return []catalogue.SpecErrorCode{
 		{Code: "ABDM-1016", Message: "Dependent service unavailable",
-			Action: "Retry with backoff", Module: "m1"},
+			HTTP: "503", OperationID: "linkAddContexts", Module: "m1"},
 		{Code: "ABDM-1035", Message: "Facility is not registered with the bridge",
-			Action: "Fix onboarding", Module: "m2"},
+			HTTP: "409", OperationID: "linkAddContexts", Module: "m2"},
 	}
 }
-
 
 // fixtureOpt customizes buildFixtureDB beyond the withVectors switch, for
 // tests that also need FHIR digests and examples in the snapshot.
@@ -188,7 +187,7 @@ func TestBuildNormalizesSpecErrorCodes(t *testing.T) {
 	// colon and space; the stored code must be the clean upper-case form.
 	dbPath := filepath.Join(t.TempDir(), "catalogue.db")
 	specErrs := []catalogue.SpecErrorCode{
-		{Code: "abdm-1016: ", Message: "m", Action: "a", Module: "m1"},
+		{Code: "abdm-1016: ", Message: "m", HTTP: "500", OperationID: "op1", Module: "m1"},
 	}
 	meta := Meta{CatalogueVersion: "v", BuiltAt: "t"}
 	if err := Build(dbPath, nil, nil, nil, specErrs, nil, nil, nil, meta); err != nil {
@@ -225,7 +224,7 @@ func TestBuildRoundTripsDocLinkColumns(t *testing.T) {
 	dbPath := filepath.Join(t.TempDir(), "c.db")
 	atom := catalogue.Atom{
 		ID: "hiecm.error.abdm-1035", Type: "error", Gateway: "hiecm",
-		Milestone: "M2", Title: "T", Summary: "s", VerificationStatus: "verified",
+		Milestone: "M2", Title: "T", Summary: "s",
 		Body: "b", SourcePath: "hiecm/errors/abdm-1035.md",
 		DocURL: "/docs/hiecm/v3/reference/error-codes", DocAnchor: "m2-linking-and-sharing",
 	}

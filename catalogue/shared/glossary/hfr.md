@@ -9,12 +9,12 @@ summary: >
   The registry of health facilities, which is where a facility is
   searched for, onboarded and linked to software.
 sources:
-  - file: ABDM Sandbox/ABDM/Proposed Simplified Milestone 4 (NHPR).docx
-    status: not-yet-hashed
-    note: NHA milestone pack for M4.
+  - file: catalogue/openapi/.raw/nha-2026-09-16/M4/M4-HFR.json
+    fetched: 2026-09-16
+    hash: sha256:25291734dd3782857bc3e012c7fa1881a069b49fdb3701e1657c514f43b590f5
 related:
   concepts: []
-  glossary: [shared.glossary.nhpr, shared.glossary.hpr, shared.glossary.hip]
+  glossary: [shared.glossary.hpr, shared.glossary.hip]
 ---
 
 # HFR, Health Facility Registry

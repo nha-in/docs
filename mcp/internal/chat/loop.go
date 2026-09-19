@@ -181,13 +181,13 @@ const systemPromptTemplate = `You are the Ask AI assistant on the ABDM Developer
 WHERE THINGS LIVE
 
 - Atoms are the written knowledge: concepts, flows, endpoint guides, callbacks, error explanations, tests, glossary entries, decisions, FHIR mappings, sandbox notes and troubleshooting guides. search_docs searches these, and only these.
-- Operations are the raw API surface parsed from NHA's specification files, across the modules gateway, m1, m2, m3, m4, p1, p2, p3 and phr-services. search_docs does not reach them. Use list_operations to filter by module, by tag, or by a substring of an operationId, summary or path, and get_operation to read one in full.
+- Operations are the raw API surface parsed from NHA's specification files, across the modules gateway, m1, m2, m3, m4, p1, p2, p3, p4, subscription and scan-and-pay. search_docs does not reach them. Use list_operations to filter by module, by tag, or by a substring of an operationId, summary or path, and get_operation to read one in full.
 
 HONESTY ABOUT WHAT YOU FOUND
 
 Search returns nearest matches, not answers.
 
-State the catalogue's content plainly, as ABDM's statement of how ABDM works.
+A verified atom's content is stated plainly. Content from an atom that is not verified is given with the caveat that it comes from the specification and has not been confirmed against a sandbox, worded that way rather than by naming the status.
 
 A <MASKED_...> placeholder means a value was removed before you saw it. Never ask for it again and never echo the placeholder back.
 
@@ -432,8 +432,8 @@ func sourceFromFields(fields map[string]any) Source {
 // map shape sourceFromFields reads. In process, a chat search_docs call
 // (server.Tools.ChatToolsFor) returns passages as a []server.Passage, a
 // concrete type this package cannot name without an import cycle; a
-// round trip through JSON is what reads its id, title and doc_url fields
-// generically, the same trick the wire encoding already
+// round trip through JSON is what reads its id, title and doc_url
+// fields generically, the same trick the wire encoding already
 // performs when a result travels to a real client.
 func passageFields(v any) []map[string]any {
 	if v == nil {
@@ -479,8 +479,6 @@ func collectSources(sources *[]Source, name string, result map[string]any) {
 // call starts, "text" for each streamed text delta, "sources" once with the
 // citations gathered along the way (only if any were gathered), then
 // "done". The "error" event is the HTTP layer's job, not this loop's.
-const greetingReply = "Hi. What are you building? Ask about creating an ABHA, linking records, consent, or an error code you are seeing."
-
 func (s *Service) Respond(ctx context.Context, turns []Turn, page *Page, emit func(event string, data any) error) error {
 	if err := s.ValidateTurns(turns); err != nil {
 		return err
@@ -514,12 +512,6 @@ func (s *Service) Respond(ctx context.Context, turns []Turn, page *Page, emit fu
 		}
 	}
 	question := lastUserText(turns)
-	if route.IsGreeting(question) && lastUserAttachment(turns) == nil {
-		if err := emit("text", map[string]string{"delta": greetingReply}); err != nil {
-			return err
-		}
-		return s.finish(nil, emit)
-	}
 	// An attached page is a source the answer legitimately draws on, and the
 	// reader can see it named in the panel, so it counts towards the
 	// grounding check the same way a retrieved atom does. Without this, an

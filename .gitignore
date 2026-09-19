@@ -13,6 +13,7 @@ site/static/vendor/
 
 # Generated: agent skills compiled from the pages by scripts/build-skills.mjs
 site/static/skills/
+site/static/agent-setup/prompt.md
 
 # Generated: the support agent widget, bundled from ai-widget/ on every build
 site/static/agent/

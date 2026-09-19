@@ -23,14 +23,7 @@ sources:
       codes and the wording of their definitions.
 related:
   fhir: [shared.fhir.document-bundle, shared.fhir.hl7-validator-recipe]
-  glossary:
-    [
-      shared.glossary.abha,
-      shared.glossary.abha-number,
-      shared.glossary.abha-address,
-      shared.glossary.fhir,
-      shared.glossary.nrces,
-    ]
+  glossary: [shared.glossary.abha]
 ---
 
 # Carrying an ABHA number and an ABHA address on a FHIR Patient
@@ -105,25 +98,17 @@ A Patient carrying both:
   "identifier": [
     {
       "type": {
-        "coding": [
-          {
-            "system": "https://nrces.in/ndhm/fhir/r4/CodeSystem/ndhm-identifier-type-code",
-            "code": "HIN",
-            "display": "Health ID issued by NDHM"
-          }
-        ]
+        "coding": [{
+            "system": "https://nrces.in/ndhm/fhir/r4/CodeSystem/ndhm-identifier-type-code", "code": "HIN", "display": "Health ID issued by NDHM"
+          }]
       },
       "value": "<ABHA_NUMBER_14_DIGITS>"
     },
     {
       "type": {
-        "coding": [
-          {
-            "system": "https://nrces.in/ndhm/fhir/r4/CodeSystem/ndhm-identifier-type-code",
-            "code": "ABHA",
-            "display": "Ayushman Bharat Health Account (ABHA) ID"
-          }
-        ]
+        "coding": [{
+            "system": "https://nrces.in/ndhm/fhir/r4/CodeSystem/ndhm-identifier-type-code", "code": "ABHA", "display": "Ayushman Bharat Health Account (ABHA) ID"
+          }]
       },
       "value": "<ABHA_ADDRESS>"
     }

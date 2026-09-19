@@ -118,7 +118,7 @@ POST https://uhigatewaysandbox.abdm.gov.in/api/v1/uhi/search
 | --- | --- | --- | --- |
 | `fulfillment.type` | string | Yes | `Physical`. Case sensitive |
 | `fulfillment.agent.name` | string | No | Doctor name, for a name search |
-| `fulfillment.agent.id` | string | No | Doctor [HPR](/docs/uhi/v1/getting-started/glossary#hpr) address, for example `drmehra@hpr.ndhm` |
+| `fulfillment.agent.id` | string | No | Doctor [HPR](/docs/uhi/v1/getting-started/glossary#hpr) address, for example `<HPR_ADDRESS>` |
 | `fulfillment.start.time.timestamp` | datetime | Yes | Start of the search window |
 | `fulfillment.end.time.timestamp` | datetime | Yes | End of the search window |
 | `item.descriptor.code` | string | Yes | `Consultation` |
@@ -231,14 +231,14 @@ Trimmed to one provider:
               "id": "slot-uuid-a1b2c3d4-abcd-1234-efgh-567890abcdef",
               "type": "Physical",
               "agent": {
-                "id": "priyamehra@hpr.ndhm",
+                "id": "<HPR_ADDRESS>",
                 "name": "Dr. Priya Mehra",
                 "gender": "F",
                 "tags": {
                   "@abdm/gov.in/experience": "8.0",
                   "@abdm/gov.in/languages": "Hindi, English",
                   "@abdm/gov.in/education": "MBBS, MD Cardiology",
-                  "@abdm/gov.in/hpr_id": "73-5232-1888-8686"
+                  "@abdm/gov.in/hpr_id": "<HPR_ID>"
                 }
               },
               "start": { "time": { "timestamp": "2026-04-16T10:00:00" } },
@@ -331,7 +331,7 @@ Direct to the HSPA. You send the patient's details and the chosen slot. The HSPA
       "fulfillment": {
         "id": "slot-uuid-a1b2c3d4-abcd-1234-efgh-567890abcdef",
         "type": "Physical",
-        "agent": { "id": "priyamehra@hpr.ndhm", "name": "Dr. Priya Mehra" },
+        "agent": { "id": "<HPR_ADDRESS>", "name": "Dr. Priya Mehra" },
         "start": { "time": { "timestamp": "2026-04-16T10:00:00" } },
         "end": { "time": { "timestamp": "2026-04-16T10:20:00" } }
       },
@@ -346,8 +346,8 @@ Direct to the HSPA. You send the patient's details and the chosen slot. The HSPA
           "country": "INDIA",
           "area_code": "110085"
         },
-        "phone": "9876543210",
-        "email": "rahul.sharma@email.com"
+        "phone": "<MOBILE_NUMBER>",
+        "email": "patient@example.org"
       },
       "customer": {
         "id": "rahul.k001@sbx",

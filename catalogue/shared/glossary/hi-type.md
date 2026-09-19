@@ -10,8 +10,8 @@ summary: >
   prescription or a diagnostic report. A SNOMED CT code decides which,
   and NHA requires all of them to be implemented.
 sources:
-  - file: site/docs/_glossary/_hiecm.mdx
-    status: not-yet-hashed
+  - url: https://github.com/eka-care/abdm-docs/blob/main/site/docs/_glossary/_hiecm.mdx
+    status: reference
     note: >
       This portal's own published glossary, where the definition was
       written first. Moved here so it can be retrieved, not rewritten.
@@ -25,9 +25,7 @@ sources:
     status: docs-only
     note: The NRCeS guide, which defines one composition profile per type.
 related:
-  concepts: []
-  glossary: [shared.glossary.fhir, shared.glossary.snomed-ct,
-             shared.glossary.consent-artefact]
+  glossary: [shared.glossary.snomed-ct]
 ---
 
 # HI type, the kind of health information

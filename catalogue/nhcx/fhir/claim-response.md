@@ -103,13 +103,9 @@ A payer's bundle carries this entry plus the `Patient`, `Coverage` and `Organiza
     "identifier": [
       {
         "type": {
-          "coding": [
-            {
-              "system": "https://nrces.in/ndhm/fhir/r4/CodeSystem/ndhm-identifier-type-code",
-              "code": "CLN",
-              "display": "Claim number"
-            }
-          ]
+          "coding": [{
+              "system": "https://nrces.in/ndhm/fhir/r4/CodeSystem/ndhm-identifier-type-code", "code": "CLN", "display": "Claim number"
+            }]
         },
         "system": "<CLAIM_NUMBER_SYSTEM_URL>",
         "value": "<CLAIM_NUMBER_FROM_THE_REQUEST>"
@@ -117,13 +113,9 @@ A payer's bundle carries this entry plus the `Patient`, `Coverage` and `Organiza
     ],
     "status": "active",
     "type": {
-      "coding": [
-        {
-          "system": "http://snomed.info/sct",
-          "code": "737481003",
-          "display": "Inpatient care management (procedure)"
-        }
-      ]
+      "coding": [{
+          "system": "http://snomed.info/sct", "code": "737481003", "display": "Inpatient care management (procedure)"
+        }]
     },
     "use": "claim",
     "patient": {
@@ -144,13 +136,9 @@ A payer's bundle carries this entry plus the `Patient`, `Coverage` and `Organiza
         "adjudication": [
           {
             "category": {
-              "coding": [
-                {
-                  "system": "https://hl7.org/fhir/R4/valueset-adjudication.html",
-                  "code": "eligible",
-                  "display": "Eligible Amount"
-                }
-              ]
+              "coding": [{
+                  "system": "https://hl7.org/fhir/R4/valueset-adjudication.html", "code": "eligible", "display": "Eligible Amount"
+                }]
             },
             "amount": {
               "value": "<ELIGIBLE_AMOUNT_AS_A_NUMBER>"
@@ -158,20 +146,14 @@ A payer's bundle carries this entry plus the `Patient`, `Coverage` and `Organiza
           },
           {
             "category": {
-              "coding": [
-                {
-                  "code": "deductible",
-                  "display": "Deductible"
-                }
-              ]
+              "coding": [{
+                  "code": "deductible", "display": "Deductible"
+                }]
             },
             "reason": {
-              "coding": [
-                {
-                  "code": "<DEDUCTION_REASON_CODE>",
-                  "display": "<DEDUCTION_REASON>"
-                }
-              ]
+              "coding": [{
+                  "code": "<DEDUCTION_REASON_CODE>", "display": "<DEDUCTION_REASON>"
+                }]
             },
             "amount": {
               "value": "<DEDUCTED_AMOUNT_AS_A_NUMBER>"
@@ -179,21 +161,14 @@ A payer's bundle carries this entry plus the `Patient`, `Coverage` and `Organiza
           },
           {
             "category": {
-              "coding": [
-                {
-                  "system": "https://hl7.org/fhir/R4/valueset-adjudication.html",
-                  "code": "status",
-                  "display": "Item adjudication status"
-                }
-              ]
+              "coding": [{
+                  "system": "https://hl7.org/fhir/R4/valueset-adjudication.html", "code": "status", "display": "Item adjudication status"
+                }]
             },
             "reason": {
-              "coding": [
-                {
-                  "code": "Approved",
-                  "display": "Approved"
-                }
-              ]
+              "coding": [{
+                  "code": "Approved", "display": "Approved"
+                }]
             }
           }
         ]
@@ -202,33 +177,23 @@ A payer's bundle carries this entry plus the `Patient`, `Coverage` and `Organiza
     "adjudication": [
       {
         "category": {
-          "coding": [
-            {
-              "code": "status",
-              "display": "Status"
-            }
-          ]
+          "coding": [{
+              "code": "status", "display": "Status"
+            }]
         },
         "reason": {
-          "coding": [
-            {
-              "code": "approved",
-              "display": "Approved"
-            }
-          ]
+          "coding": [{
+              "code": "approved", "display": "Approved"
+            }]
         }
       }
     ],
     "total": [
       {
         "category": {
-          "coding": [
-            {
-              "system": "https://hl7.org/fhir/R4/valueset-adjudication.html",
-              "code": "benefit",
-              "display": "Benefit Amount"
-            }
-          ]
+          "coding": [{
+              "system": "https://hl7.org/fhir/R4/valueset-adjudication.html", "code": "benefit", "display": "Benefit Amount"
+            }]
         },
         "amount": {
           "value": "<APPROVED_AMOUNT_AS_A_NUMBER>"
@@ -236,13 +201,9 @@ A payer's bundle carries this entry plus the `Patient`, `Coverage` and `Organiza
       },
       {
         "category": {
-          "coding": [
-            {
-              "system": "https://hl7.org/fhir/R4/valueset-adjudication.html",
-              "code": "submitted",
-              "display": "Submitted Amount"
-            }
-          ]
+          "coding": [{
+              "system": "https://hl7.org/fhir/R4/valueset-adjudication.html", "code": "submitted", "display": "Submitted Amount"
+            }]
         },
         "amount": {
           "value": "<CLAIMED_AMOUNT_AS_A_NUMBER>"

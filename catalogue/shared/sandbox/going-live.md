@@ -26,11 +26,8 @@ sources:
       integration is completed? What are the next steps?", and the
       related questions on functional testing and security assessment.
 related:
-  sandbox: [shared.sandbox.registration-and-credentials, shared.sandbox.wasa]
-  glossary: [shared.glossary.abdm, shared.glossary.nha, shared.glossary.hip,
-             shared.glossary.hiu, shared.glossary.phr, shared.glossary.abha]
-  concepts: [hiecm.concept.roles]
-  troubleshooting: [hiecm.troubleshooting.everything-returns-401]
+  sandbox: [shared.sandbox.wasa]
+  glossary: [shared.glossary.nha, shared.glossary.abha]
 ---
 
 # Going live, the sandbox exit process
@@ -87,10 +84,9 @@ exit process completes. They are not the same values as your sandbox credentials
 
 You also switch base URLs. The [gateway concept page](/docs/hiecm/v3/concepts/gateway) records
 the sandbox and production hosts side by side. For the gateway session call, sandbox is
-`https://dev.abdm.gov.in` with `X-CM-ID: sbx`, and production is `https://apis.abdm.gov.in`
-with `X-CM-ID: abdm`. For the [ABHA](shared.glossary.abha) service, sandbox is
-`https://abhasbx.abdm.gov.in/abha/api/v3/` and production is
-`https://abha.abdm.gov.in/api/abha/v3/`. A production client id against a sandbox host, or the
+`https://dev.abdm.gov.in` with `X-CM-ID: sbx`, and production is `https://apis.abdm.gov.in`.
+For the [ABHA](shared.glossary.abha) service, sandbox is
+`https://abhasbx.abdm.gov.in/abha/api/v3/`. A production client id against a sandbox host, or the
 reverse, fails.
 
 NHA's FAQ does not publish what a production client id or secret looks like, so this atom does
@@ -104,5 +100,5 @@ counts as a valid supporting document, go to
 named in NHA's FAQ. See [Support](/docs/support) for the report format.
 
 If a call that worked in the sandbox fails in production, check the base URL and the `X-CM-ID`
-header first: see [Everything returns 401](hiecm.troubleshooting.everything-returns-401),
+header first: see [Everything returns 401](/docs/hiecm/v3/troubleshooting/everything-returns-401),
 which covers this exact class of failure.

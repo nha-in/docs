@@ -28,6 +28,8 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run lint:specs
+      - run: npm run check:specs
+      - run: npm run lint:journeys
 
   lint-atoms:
     name: Lint catalogue atoms

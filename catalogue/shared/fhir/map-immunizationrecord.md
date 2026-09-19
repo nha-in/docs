@@ -19,7 +19,6 @@ sources:
       invented.
 related:
   fhir: [shared.fhir.document-bundles]
-  glossary: [shared.glossary.nrces]
 ---
 
 # ImmunizationRecord, the immunization record

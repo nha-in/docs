@@ -26,7 +26,7 @@ where each call names the callback it produces.
 ## Work through these in order
 
 1. **Is the callback URL registered with the gateway?** Confirm it with
-   the [update bridge callback URL](/docs/hiecm/v3/api/gateway/endpoints/gateway-update-bridge-url)
+   the [update bridge callback URL](/docs/hiecm/v3/api/gateway/endpoints/gateway-abdm-gateway/03-gateway-patch-gateway-v3-bridge-url)
    call. Setting a URL in a console once is not the same as confirming
    the gateway has it.
 2. **Is that URL reachable from the public internet over HTTPS?** ABDM

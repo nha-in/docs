@@ -142,10 +142,7 @@ You build the bundle, seal it inside the [JWE](../glossary/jwe.md) payload of th
   },
   "type": "collection",
   "timestamp": "<ISO_8601_TIMESTAMP_WITH_OFFSET>",
-  "entry": [
-    "<FOCAL_RESOURCE_ENTRY>",
-    "<ONE_ENTRY_PER_RESOURCE_IT_REFERENCES>"
-  ]
+  "entry": ["<FOCAL_RESOURCE_ENTRY>", "<ONE_ENTRY_PER_RESOURCE_IT_REFERENCES>"]
 }
 ```
 
@@ -158,41 +155,31 @@ One entry, showing the `fullUrl` and the profile declaration:
     "resourceType": "Patient",
     "id": "<PATIENT_UUID>",
     "meta": {
-      "profile": [
-        "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Patient"
-      ]
+      "profile": ["https://nrces.in/ndhm/fhir/r4/StructureDefinition/Patient"]
     },
     "identifier": [
       {
         "type": {
-          "coding": [
-            {
-              "system": "https://nrces.in/ndhm/fhir/r4/CodeSystem/ndhm-identifier-type-code",
-              "code": "PMJAY"
-            }
-          ]
+          "coding": [{
+              "system": "https://nrces.in/ndhm/fhir/r4/CodeSystem/ndhm-identifier-type-code", "code": "PMJAY"
+            }]
         },
         "system": "https://bis.pmjay.gov.in",
         "value": "<PMJAY_BENEFICIARY_ID>"
       },
       {
         "type": {
-          "coding": [
-            {
-              "system": "https://nrces.in/ndhm/fhir/r4/CodeSystem/ndhm-identifier-type-code",
-              "code": "ABHA"
-            }
-          ]
+          "coding": [{
+              "system": "https://nrces.in/ndhm/fhir/r4/CodeSystem/ndhm-identifier-type-code", "code": "ABHA"
+            }]
         },
         "system": "https://bis.pmjay.gov.in",
         "value": "<ABHA_NUMBER_AS_XX-XXXX-XXXX-XXXX>"
       }
     ],
-    "name": [
-      {
+    "name": [{
         "text": "<PATIENT_NAME>"
-      }
-    ],
+      }],
     "gender": "<male|female|other|unknown>",
     "birthDate": "<YYYY-MM-DD>"
   }

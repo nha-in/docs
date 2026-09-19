@@ -273,8 +273,7 @@ func TestLoopPreservesTextAlongsideToolCalls(t *testing.T) {
 func TestSourceFromFieldsPrefersThePublishedPage(t *testing.T) {
 	got := sourceFromFields(map[string]any{
 		"id": "hiecm.error.abdm-1035", "title": "ABDM-1035 facility not onboarded",
-		"verification_status": "verified",
-		"doc_url":             "/docs/hiecm/v3/reference/error-codes#m2-linking-and-sharing",
+		"doc_url": "/docs/hiecm/v3/reference/error-codes#m2-linking-and-sharing",
 	})
 	if want := "/docs/hiecm/v3/reference/error-codes#m2-linking-and-sharing"; got.URL != want {
 		t.Errorf("URL = %q, want the published page %q", got.URL, want)
@@ -286,7 +285,7 @@ func TestSourceFromFieldsPrefersThePublishedPage(t *testing.T) {
 func TestSourceFromFieldsFallsBackToSearchWithoutAPage(t *testing.T) {
 	got := sourceFromFields(map[string]any{
 		"id": "hiecm.decision.spec-per-module", "title": "One spec per module",
-		"verification_status": "unverified", "doc_url": "",
+		"doc_url": "",
 	})
 	if want := "/search?q=One+spec+per+module"; got.URL != want {
 		t.Errorf("URL = %q, want %q", got.URL, want)
@@ -407,7 +406,7 @@ func groundingRun(t *testing.T, answer string) string {
 	t.Helper()
 	result := map[string]any{"hits": []map[string]any{{
 		"id": "hiecm.error.abdm-1035", "title": "Facility not onboarded",
-		"verification_status": "verified", "doc_url": "/docs/hiecm/v3/reference/error-codes",
+		"doc_url": "/docs/hiecm/v3/reference/error-codes",
 		"snippet": "ABDM-1035 means the X-HIP-ID is not registered.",
 	}}}
 	svc := &Service{
@@ -703,9 +702,9 @@ func TestCollectSourcesFromPassages(t *testing.T) {
 	result := map[string]any{
 		"passages": []map[string]any{
 			{"id": "hiecm.glossary.abha-address", "title": "ABHA address",
-				"verification_status": "verified", "doc_url": "/docs/glossary/abha-address"},
+				"doc_url": "/docs/glossary/abha-address"},
 			{"id": "hiecm.glossary.abha-number", "title": "ABHA number",
-				"verification_status": "verified", "doc_url": "/docs/glossary/abha-number"},
+				"doc_url": "/docs/glossary/abha-number"},
 		},
 	}
 	collectSources(&sources, "search_docs", result)

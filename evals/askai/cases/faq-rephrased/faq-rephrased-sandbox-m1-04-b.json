@@ -24,11 +24,7 @@
     "the catalogue",
     "atom"
   ],
-  "expected_sources": [
-    "shared.sandbox.registration-and-credentials",
-    "hiecm.concept.gateway-session",
-    "hiecm.endpoint.gateway-register-bridge-services"
-  ],
+  "expected_sources": [],
   "expected_shape": "how-do-i",
   "expected_behaviour": "answer",
   "derived_from": "faq-verbatim-sandbox-m1-04",

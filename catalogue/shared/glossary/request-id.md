@@ -4,42 +4,46 @@ type: glossary
 gateway: shared
 milestone: n/a
 version: abdm-v3
-title: REQUEST-ID
+title: REQUEST-ID, the request correlation header
 summary: >
-  A fresh UUID you generate per request, which correlates a call with
-  its callback and with a support ticket.
+  A UUID you generate for one request, carried in the REQUEST-ID header
+  so the call and everything that follows from it can be traced.
 sources:
-  - file: ABDM Sandbox/ABDM/M1 ABHA Collection.postman_collection.json
-    status: not-yet-hashed
-    note: NHA's own M1 Postman collection, 123 requests.
-related:
-  errors: [hiecm.error.abdm-2404]
+  - file: catalogue/openapi/.raw/nha-2026-09-16/hiecm/gateway.yaml
+    fetched: 2026-09-16
+    hash: sha256:d3bc599054c2570a50818ca54906c44cf652ad6f813473e8ac243667da4e9300
+related: {}
 ---
 
-# REQUEST-ID
+# REQUEST-ID, the request correlation header
 
 ## In plain words
 
-Every ABDM call carries a `REQUEST-ID` header holding a UUID you
-generate. In the asynchronous parts of M2 and M3, the callback that
-answers your call carries the same value, so this is how you match a
-reply to the request that caused it.
+`REQUEST-ID` is a required header on ABDM HIE-CM calls. The specification
+describes it as:
 
-Store it before you send, not after.
+> Unique UUID for track the end to end request transaction
+
+So you generate a fresh UUID for each request, send it in this header, and
+keep it: it is the value that ties one call to the responses and callbacks
+that follow from it.
 
 ## Before you start
 
-Nothing. A glossary entry assumes no prior reading.
+You need nothing beyond a UUID generator, because the value is yours to
+create rather than one ABDM hands you.
 
 ## What happens
 
-Nothing happens here. This entry defines a term, it does not describe a call.
+Every HIE-CM operation takes this header, starting with
+`gateway_post_gateway_v3_sessions`, the call that issues your access token.
 
 ## How you know it worked
 
-You have understood this when you can say what REQUEST-ID is without using the acronym itself.
+You have understood this when you can say why a REQUEST-ID must be fresh on
+every call rather than reused across a flow.
 
 ## When it goes wrong
 
-Reusing one value across requests. That makes correlation impossible and makes a support ticket unanswerable.
-
+Reusing one UUID across several requests, which leaves you unable to tell
+which call a later response or callback belongs to.
