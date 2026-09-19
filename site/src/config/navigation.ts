@@ -7,6 +7,7 @@
  * moving through its guides.
  */
 
+import {Bot, type LucideIcon} from 'lucide-react';
 import {useLocation} from '@docusaurus/router';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import generatedPlatforms from '../data/platforms.json';
@@ -18,6 +19,12 @@ export type Tab = {
   to: string;
   /** Route prefix that marks this tab active. */
   match: string;
+  /**
+   * A mark rendered before the label. One tab has one, which is the point:
+   * the strip is otherwise six words in a row, and a single icon in it is
+   * read before any of them.
+   */
+  icon?: LucideIcon;
 };
 
 export type Version = {
@@ -104,6 +111,7 @@ export const tabs: Tab[] = [
   {
     id: 'build-with-ai',
     label: 'Build with AI',
+    icon: Bot,
     to: `${platforms[0].to}/${BUILD_WITH_AI_PATH}`,
     match: `/${BUILD_WITH_AI_PATH}`,
   },

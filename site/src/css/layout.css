@@ -137,6 +137,66 @@
   transform: scaleX(1);
 }
 
+/* The one tab that is a way in rather than a section: Build with AI carries a
+   mark and a chip, so it is found without reading the strip left to right.
+
+   The chip is a ::before rather than padding on the tab itself. The tabs
+   stretch to the strip's full height and the accent underline is positioned
+   against that height, so giving this one a shorter box of its own would lift
+   its underline off the strip's bottom border. An inset ::before draws a 28px
+   chip inside a 48px tab and leaves the underline where it was.
+
+   The gradient runs the accent down into its own light step, which on the
+   cream page reads as a faint sheen rather than as a second colour. Both stops
+   are low alpha: the label sits on top of it and keeps its contrast, which a
+   solid accent fill would have cost. */
+.docs-tab--feature::before {
+  content: '';
+  position: absolute;
+  inset-block: 0.625rem;
+  inset-inline: -0.625rem;
+  z-index: -1;
+  border-radius: var(--radius-chip);
+  background-image: linear-gradient(
+    105deg,
+    hsl(220 54% 36% / 0.16),
+    hsl(216 40% 72% / 0.1)
+  );
+  transition: background-image 150ms ease;
+}
+
+[data-theme='dark'] .docs-tab--feature::before {
+  background-image: linear-gradient(
+    105deg,
+    hsl(220 54% 36% / 0.55),
+    hsl(216 40% 72% / 0.16)
+  );
+}
+
+/* Resting, the label is the accent rather than the strip's faint grey: the
+   chip alone is not enough to separate it from a neighbour at a glance. */
+.docs-tab--feature {
+  color: var(--accent);
+}
+
+.docs-tab--feature:hover,
+.docs-tab--feature.docs-tab--active {
+  color: var(--accent-hover);
+}
+
+[data-theme='dark'] .docs-tab--feature,
+[data-theme='dark'] .docs-tab--feature:hover,
+[data-theme='dark'] .docs-tab--feature.docs-tab--active {
+  color: var(--accent);
+}
+
+.docs-tab__icon {
+  width: 0.875rem;
+  height: 0.875rem;
+  margin-inline-end: 0.375rem;
+  flex: none;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .docs-tab::after {
     transition: none;
