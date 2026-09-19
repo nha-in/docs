@@ -20,7 +20,7 @@ import {
  * the shape on screen is the argument the page is making rather than
  * decoration; and the reveal is a falloff rather than a hole, because the
  * visible circle edge is what reads as the flashlight trope. Light still
- * follows the pointer, in sage, the way beckn.io does it.
+ * follows the pointer, in the accent, the way beckn.io does it.
  *
  * The icons are DOM, the links and the courier are canvas. Canvas cannot draw
  * an icon without shipping its path data, and the DOM cannot draw 28 live
@@ -336,12 +336,12 @@ export default function NetworkWeb({
     };
 
     /**
-     * The same sage, at the chroma a pale page needs.
+     * The same accent, at the chroma a pale page needs.
      *
      * Dark mode has headroom: a low alpha wash over near black is read as
      * light, and that version stays as it is. Cream has none, so the identical
-     * wash is read as a film of grey green laid on the paper. A canvas
-     * composite does not rescue it either: over a near white ground multiply
+     * wash is read as a film of grey laid on the paper. A canvas composite
+     * does not rescue it either: over a near white ground multiply
      * and source-over resolve to the same pixels. What separates a lamp from a
      * stain here is colour, so the light torch keeps the accent's hue and
      * takes its saturation up, and gets its shape from a hot core below.

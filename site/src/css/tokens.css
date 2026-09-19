@@ -3,7 +3,7 @@
  *
  * The scale and the structure are taken from the Claude Code documentation
  * site (code.claude.com/docs). The one deliberate change is the
- * accent: sage green in place of the original terracotta, on the reference
+ * accent: the ABDM blue in place of the original terracotta, on the reference
  * site's cream page, in both light and dark mode.
  *
  * Everything here is a raw value. Nothing in this file references Infima or
@@ -28,18 +28,20 @@
   --ramp-900: #171717;
   --ramp-950: #0d0d0d;
 
-  /* Sage accent. Light mode uses 600, dark mode 300, so the accent keeps its
-     weight on either background. */
-  --brand-50: hsl(140 25% 96%);
-  --brand-100: hsl(140 22% 91%);
-  --brand-200: hsl(138 20% 82%);
-  --brand-300: hsl(134 20% 72%);
-  --brand-400: hsl(130 21% 62%);
-  --brand-500: hsl(130 24% 48%);
-  --brand-600: hsl(140 30% 34%);
-  --brand-700: hsl(142 32% 27%);
-  --brand-800: hsl(144 32% 21%);
-  --brand-900: hsl(146 30% 16%);
+  /* Blue accent, the ABDM blue. Light mode uses 600, dark mode 300, so the
+     accent keeps its weight on either background. 600 is the mark's own blue
+     (#2a4b8d) and measures 8.3:1 on the page; 300 measures 7.5:1 on #121212.
+     The sage this replaced survives as the POST colour below. */
+  --brand-50: hsl(220 45% 96%);
+  --brand-100: hsl(220 42% 91%);
+  --brand-200: hsl(218 40% 82%);
+  --brand-300: hsl(216 40% 72%);
+  --brand-400: hsl(218 42% 60%);
+  --brand-500: hsl(219 48% 48%);
+  --brand-600: hsl(220 54% 36%);
+  --brand-700: hsl(221 55% 29%);
+  --brand-800: hsl(222 54% 23%);
+  --brand-900: hsl(223 50% 17%);
 
   /* Semantic surfaces: the reference site's cream page, white panels on top */
   --page: #fdfdf7;
@@ -51,7 +53,7 @@
   --border-strong: rgb(0 0 0 / 0.16);
 
   /* Hover and resting fills, neutral. Every hover state in the shell used
-     --accent-soft, which over this page is a visible pale sage rectangle:
+     --accent-soft, which over this page is a visible pale blue rectangle:
      twenty rules all shouting the accent for the ordinary act of moving a
      pointer. The accent is now reserved for the two things that are actually
      about the accent, the current page and a link. */
@@ -82,12 +84,12 @@
   --accent: var(--brand-600);
   --accent-hover: var(--brand-700);
   --accent-contrast: #ffffff;
-  --accent-soft: hsl(140 30% 34% / 0.1);
-  --accent-line: hsl(140 30% 34% / 0.4);
+  --accent-soft: hsl(220 54% 36% / 0.1);
+  --accent-line: hsl(220 54% 36% / 0.4);
   /* The faintest step, for a field rather than a mark: the ground behind a
      current row, and the wash behind the landing statement. Soft enough that
      text on it keeps its own contrast. */
-  --accent-wash: hsl(140 30% 34% / 0.055);
+  --accent-wash: hsl(220 54% 36% / 0.055);
 
   /* HTTP method colours. GET and POST previously both fell through to the
      accent, so a read and a write looked identical in the sidebar and on the
@@ -95,7 +97,10 @@
      order developers already expect from API tooling. */
   --method-get: #1b6ac9;
   --method-get-soft: hsl(211 76% 45% / 0.12);
-  --method-post: var(--brand-600);
+  /* POST no longer follows the accent: a blue accent would have put it back
+     on top of GET, which is the collision this block exists to fix. It keeps
+     the sage the accent gave up. */
+  --method-post: hsl(140 30% 34%);
   --method-post-soft: hsl(140 30% 34% / 0.14);
   --method-put: #a45c00;
   --method-put-soft: hsl(34 100% 32% / 0.14);
@@ -148,7 +153,7 @@
 /**
  * shadcn/ui semantic names, mapped onto the tokens above so its components
  * inherit this palette instead of carrying a second one. The `accent` role in
- * shadcn means "hover surface", which here is the sage tint, not the sage.
+ * shadcn means "hover surface", which here is the accent tint, not the accent.
  */
 :root {
   --background: var(--page);
@@ -204,14 +209,14 @@
   --accent: var(--brand-300);
   --accent-hover: var(--brand-200);
   --accent-contrast: #0d0d0d;
-  --accent-soft: hsl(134 20% 72% / 0.12);
-  --accent-line: hsl(134 20% 72% / 0.4);
-  --accent-wash: hsl(134 20% 72% / 0.07);
+  --accent-soft: hsl(216 40% 72% / 0.12);
+  --accent-line: hsl(216 40% 72% / 0.4);
+  --accent-wash: hsl(216 40% 72% / 0.07);
 
   /* Method colours, lifted for dark ground. */
   --method-get: #7fb4f0;
   --method-get-soft: hsl(211 76% 72% / 0.16);
-  --method-post: var(--brand-300);
+  --method-post: hsl(134 20% 72%);
   --method-post-soft: hsl(134 20% 72% / 0.16);
   --method-put: #e0ac6a;
   --method-put-soft: hsl(34 66% 65% / 0.16);
