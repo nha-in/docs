@@ -210,7 +210,7 @@
   transition: opacity 200ms ease;
 }
 
-/* The sage light, behind the icon rather than on it, so the glow reads as
+/* The accent light, behind the icon rather than on it, so the glow reads as
    light falling on the participant and not as a coloured tile. */
 .network-node::before {
   content: '';
@@ -835,11 +835,12 @@
   overscroll-behavior: contain;
   /* The first screen is the one place the accent is allowed a whole field of
      its own: a wash off the top, fading into the page before the copy ends,
-     so the statement is read on sage rather than on cream. On the curtain and
-     not on the hero inside it, because a wash that begins at the hero's top
-     edge begins exactly where the bar ends, and that is a line across the
-     page: the bar reads as a band of cream over a green page rather than as
-     part of it. Here it runs the full height, the bar included. */
+     so the statement is read on the accent rather than on cream. On the
+     curtain and not on the hero inside it, because a wash that begins at the
+     hero's top edge begins exactly where the bar ends, and that is a line
+     across the page: the bar reads as a band of cream over a coloured page
+     rather than as part of it. Here it runs the full height, the bar
+     included. */
   background-color: var(--page);
   background-image: radial-gradient(
     150% 95% at 50% -15%,
