@@ -1,4 +1,6 @@
 {
   "label": "Go live",
-  "position": 6
+  "position": 5,
+  "collapsed": false,
+  "className": "sidebar-icon sidebar-icon--plane-takeoff"
 }

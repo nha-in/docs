@@ -3,6 +3,7 @@ title: Payment notice and communication
 sidebar_label: Payment notice and communication
 sidebar_position: 6
 description: Dispatching payment notices and operational intimations
+sidebar_class_name: sidebar-icon sidebar-icon--banknote
 source: nhcx-package/docs/04-Building a Payer/06-Payment Notice and Communication.md
 generated: true
 sidebar_custom_props:

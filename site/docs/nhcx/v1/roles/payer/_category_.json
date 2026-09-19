@@ -1,9 +1,11 @@
 {
   "label": "Building a payer",
   "position": 2,
+  "collapsed": false,
   "customProps": {
     "roles": [
       "payer"
     ]
-  }
+  },
+  "className": "sidebar-icon sidebar-icon--landmark"
 }

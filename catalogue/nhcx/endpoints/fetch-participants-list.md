@@ -106,9 +106,14 @@ The response body has this shape:
 
 ```json
 {
-  "participantdetails": [{
-      "participantcode": "<PARTICIPANT_CODE>", "participantname": "<PARTICIPANT_NAME>", "address": "<ADDRESS>", "state": "<STATE>"
-    }]
+  "participantdetails": [
+    {
+      "participantcode": "<PARTICIPANT_CODE>",
+      "participantname": "<PARTICIPANT_NAME>",
+      "address": "<ADDRESS>",
+      "state": "<STATE>"
+    }
+  ]
 }
 ```
 

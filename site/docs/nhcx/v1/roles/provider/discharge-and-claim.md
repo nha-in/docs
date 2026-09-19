@@ -3,11 +3,16 @@ title: Discharge and claim
 sidebar_label: Discharge and claim
 sidebar_position: 6
 description: Cashless claim submission, discharge types, and billing evidence
+sidebar_class_name: sidebar-icon sidebar-icon--receipt
 source: nhcx-package/docs/03-Building a Provider/06-Discharge and Claim.md
 generated: true
 sidebar_custom_props:
   roles:
     - provider
+covers:
+  - nhcx.flow.claim-submit
+  - nhcx.flow.claim-query-response
+  - nhcx.flow.claim-reprocess
 ---
 
 # Discharge and claim

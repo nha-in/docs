@@ -3,6 +3,7 @@ title: Provider UI guide
 sidebar_label: Provider UI guide
 sidebar_position: 9
 description: Provider desk wireframes and UX recommendations
+sidebar_class_name: sidebar-icon sidebar-icon--layout-dashboard
 source: nhcx-package/docs/03-Building a Provider/09-UI Guide.md
 generated: true
 sidebar_custom_props:

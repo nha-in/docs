@@ -3,8 +3,11 @@ title: PMJAY Scheme Rules and HMIS Integration
 sidebar_label: PMJAY Scheme Rules and HMIS Integration
 sidebar_position: 10
 description: Package-based tariffs, LM100 LAMA/DAMA arithmetic and `los` bounding
+sidebar_class_name: sidebar-icon sidebar-icon--scale
 source: nhcx-package/docs/01-Overview/10-PMJAY Scheme Rules.md
 generated: true
+covers:
+  - nhcx.flow.pmjay-hospital-migration
 ---
 
 # PMJAY Scheme Rules and HMIS Integration

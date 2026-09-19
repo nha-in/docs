@@ -3,6 +3,7 @@ title: PMJAY sandbox run
 sidebar_label: PMJAY sandbox run
 sidebar_position: 11
 description: A full PMJAY case on the sandbox in order, the refusals met and what each means, with placeholders for your own values
+sidebar_class_name: sidebar-icon sidebar-icon--flask-conical
 source: nhcx-package/docs/03-Building a Provider/11-PMJAY Sandbox Run.md
 generated: true
 sidebar_custom_props:

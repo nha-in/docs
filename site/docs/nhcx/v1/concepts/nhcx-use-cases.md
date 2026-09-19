@@ -3,6 +3,7 @@ title: NHCX Use Cases
 sidebar_label: NHCX Use Cases
 sidebar_position: 5
 description: Catalog of all 40 NHA use cases across A, B, C, D, E series
+sidebar_class_name: sidebar-icon sidebar-icon--list-checks
 source: nhcx-package/docs/01-Overview/05-NHCX Use Cases.md
 generated: true
 ---

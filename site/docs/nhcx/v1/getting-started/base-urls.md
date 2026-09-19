@@ -3,6 +3,7 @@ title: Base URLs
 sidebar_label: Base URLs
 sidebar_position: 2
 description: Every service's base in the sandbox and in production, from `baseurl.yaml`
+sidebar_class_name: sidebar-icon sidebar-icon--globe
 source: nhcx-package/docs/02-Getting Started/02-Base URLs.md
 generated: true
 covers:

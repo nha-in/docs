@@ -3,11 +3,18 @@ title: Preauthorisation
 sidebar_label: Preauthorisation
 sidebar_position: 5
 description: Preauth request submission, clinical attachments, and query handling
+sidebar_class_name: sidebar-icon sidebar-icon--file-check
 source: nhcx-package/docs/03-Building a Provider/05-Preauthorisation.md
 generated: true
 sidebar_custom_props:
   roles:
     - provider
+covers:
+  - nhcx.flow.preauth-submit
+  - nhcx.flow.preauth-enhancement
+  - nhcx.flow.preauth-cancel
+  - nhcx.flow.preauth-query-response
+  - nhcx.flow.predetermination
 ---
 
 # Preauthorisation

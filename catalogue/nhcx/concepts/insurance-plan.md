@@ -101,7 +101,7 @@ graph TD
   CAT --> BEN["benefit<br/>package, such as SE012A"]
   BEN --> COST["cost<br/>package rate"]
   COST --> QUAL["qualifiers<br/>implant, stratification"]
-  P --> EXT["extensions<br/>claim conditions, exclusions, <br/>required documents"]
+  P --> EXT["extensions<br/>claim conditions, exclusions,<br/>required documents"]
 ```
 
 - **Specialities and packages.** Only those your hospital is empanelled for. The plan is specific to the payer, the policy and your hospital.

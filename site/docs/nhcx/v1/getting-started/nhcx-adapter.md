@@ -3,6 +3,7 @@ title: NHCX adapter (Optional)
 sidebar_label: NHCX adapter (Optional)
 sidebar_position: 10
 description: Turnkey protocol adapter implementation, optional
+sidebar_class_name: sidebar-icon sidebar-icon--plug
 source: nhcx-package/docs/02-Getting Started/10-NHCX Adapter.md
 generated: true
 ---

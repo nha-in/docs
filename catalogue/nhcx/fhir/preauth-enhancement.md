@@ -85,31 +85,51 @@ The changed parts of the `Claim`:
 
 ```json
 {
-  "procedure": [{
-      "sequence": 1, "procedureReference": {
+  "procedure": [
+    {
+      "sequence": 1,
+      "procedureReference": {
         "reference": "urn:uuid:<PROCEDURE_1_UUID>"
       }
-    }, {
-      "sequence": 2, "procedureReference": {
+    },
+    {
+      "sequence": 2,
+      "procedureReference": {
         "reference": "urn:uuid:<PROCEDURE_2_UUID>"
       }
-    }],
+    }
+  ],
   "item": [
     {
       "sequence": 1,
-      "careTeamSequence": [1],
-      "diagnosisSequence": [1],
-      "procedureSequence": [1],
-      "informationSequence": [1],
+      "careTeamSequence": [
+        1
+      ],
+      "diagnosisSequence": [
+        1
+      ],
+      "procedureSequence": [
+        1
+      ],
+      "informationSequence": [
+        1
+      ],
       "category": {
-        "coding": [{
-            "system": "<SPECIALTY_SYSTEM_FROM_INSURANCE_PLAN>", "code": "<SPECIALTY_CODE_FROM_INSURANCE_PLAN>"
-          }]
+        "coding": [
+          {
+            "system": "<SPECIALTY_SYSTEM_FROM_INSURANCE_PLAN>",
+            "code": "<SPECIALTY_CODE_FROM_INSURANCE_PLAN>"
+          }
+        ]
       },
       "productOrService": {
-        "coding": [{
-            "system": "<PACKAGE_SYSTEM_FROM_INSURANCE_PLAN>", "code": "<APPROVED_PACKAGE_CODE>", "display": "<PACKAGE_NAME>"
-          }]
+        "coding": [
+          {
+            "system": "<PACKAGE_SYSTEM_FROM_INSURANCE_PLAN>",
+            "code": "<APPROVED_PACKAGE_CODE>",
+            "display": "<PACKAGE_NAME>"
+          }
+        ]
       },
       "servicedPeriod": {
         "start": "<ADMISSION_DATE>",
@@ -127,19 +147,34 @@ The changed parts of the `Claim`:
     },
     {
       "sequence": 2,
-      "careTeamSequence": [1],
-      "diagnosisSequence": [1],
-      "procedureSequence": [2],
-      "informationSequence": [1],
+      "careTeamSequence": [
+        1
+      ],
+      "diagnosisSequence": [
+        1
+      ],
+      "procedureSequence": [
+        2
+      ],
+      "informationSequence": [
+        1
+      ],
       "category": {
-        "coding": [{
-            "system": "<SPECIALTY_SYSTEM_FROM_INSURANCE_PLAN>", "code": "<SPECIALTY_CODE_FROM_INSURANCE_PLAN>"
-          }]
+        "coding": [
+          {
+            "system": "<SPECIALTY_SYSTEM_FROM_INSURANCE_PLAN>",
+            "code": "<SPECIALTY_CODE_FROM_INSURANCE_PLAN>"
+          }
+        ]
       },
       "productOrService": {
-        "coding": [{
-            "system": "<PACKAGE_SYSTEM_FROM_INSURANCE_PLAN>", "code": "<ADDITIONAL_PACKAGE_CODE>", "display": "<PACKAGE_NAME>"
-          }]
+        "coding": [
+          {
+            "system": "<PACKAGE_SYSTEM_FROM_INSURANCE_PLAN>",
+            "code": "<ADDITIONAL_PACKAGE_CODE>",
+            "display": "<PACKAGE_NAME>"
+          }
+        ]
       },
       "servicedPeriod": {
         "start": "<ADMISSION_DATE>",

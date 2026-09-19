@@ -3,6 +3,7 @@ title: PMJAY use cases
 sidebar_label: PMJAY use cases
 sidebar_position: 9
 description: PMJAY-specific use cases D1 to D13
+sidebar_class_name: sidebar-icon sidebar-icon--clipboard-list
 source: nhcx-package/docs/01-Overview/09-PMJAY Use Cases.md
 generated: true
 ---

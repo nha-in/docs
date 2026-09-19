@@ -3,6 +3,7 @@ title: Finding participants and policies
 sidebar_label: Finding participants and policies
 sidebar_position: 6
 description: Search endpoints and policy resolution
+sidebar_class_name: sidebar-icon sidebar-icon--search
 source: nhcx-package/docs/02-Getting Started/06-Finding Participants and Policies.md
 generated: true
 ---

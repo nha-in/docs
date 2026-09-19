@@ -3,11 +3,14 @@ title: Payer overview
 sidebar_label: Payer overview
 sidebar_position: 1
 description: Insurer and TPA ingestion architecture
+sidebar_class_name: sidebar-icon sidebar-icon--compass
 source: nhcx-package/docs/04-Building a Payer/01-Payer Overview.md
 generated: true
 sidebar_custom_props:
   roles:
     - payer
+covers:
+  - nhcx.flow.payer-process-a-request
 ---
 
 # Payer overview

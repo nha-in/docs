@@ -3,6 +3,7 @@ title: Quickstart
 sidebar_label: Quickstart
 sidebar_position: 1.2
 description: "Three calls with only your credentials: a session token, the dummy payer's registry record, and its certificate"
+sidebar_class_name: sidebar-icon sidebar-icon--zap
 source: nhcx-package/docs/02-Getting Started/13-Quickstart.md
 generated: true
 ---
