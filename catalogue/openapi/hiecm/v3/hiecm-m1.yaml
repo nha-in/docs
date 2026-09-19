@@ -27,7 +27,7 @@ x-abdm-sources:
     fetched: "2026-09-16"
   - file: catalogue/openapi/.raw/nha-2026-09-16/abha/M1 ABHA Collection.json
     role: upstream
-    hash: sha256:ea48dc0600f8322c766bf59b17714ed80b94c01e4df02373a4cc248ac0118f5c
+    hash: sha256:e121c850ed891b6d96c241be3616e15fddeb967a22f600cfc08561c99f81fc65
     fetched: "2026-09-15"
     note: Used for the order of M1 calls only. See journeys/m1.yaml.
 servers:

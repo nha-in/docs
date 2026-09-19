@@ -16,6 +16,33 @@ const MANIFEST = join(RAW, 'MANIFEST.md');
 // byte-exact, so every file the walker finds goes through the same rules.
 const redacted = () => true;
 
+
+// Aadhaar carries a Verhoeff check digit, which is what separates a real number
+// from a twelve digit placeholder. NHA's own +911234567890 and +919876543210,
+// and the classic 123456789012, all fail it. A first digit of 0 or 1 is never
+// issued.
+const VERHOEFF_D = [
+  [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], [1, 2, 3, 4, 0, 6, 7, 8, 9, 5],
+  [2, 3, 4, 0, 1, 7, 8, 9, 5, 6], [3, 4, 0, 1, 2, 8, 9, 5, 6, 7],
+  [4, 0, 1, 2, 3, 9, 5, 6, 7, 8], [5, 9, 8, 7, 6, 0, 4, 3, 2, 1],
+  [6, 5, 9, 8, 7, 1, 0, 4, 3, 2], [7, 6, 5, 9, 8, 2, 1, 0, 4, 3],
+  [8, 7, 6, 5, 9, 3, 2, 1, 0, 4], [9, 8, 7, 6, 5, 4, 3, 2, 1, 0],
+];
+const VERHOEFF_P = [
+  [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], [1, 5, 7, 6, 2, 8, 3, 0, 9, 4],
+  [5, 8, 0, 3, 7, 9, 6, 1, 4, 2], [8, 9, 1, 6, 0, 4, 3, 5, 2, 7],
+  [9, 4, 5, 3, 1, 2, 6, 8, 7, 0], [4, 2, 8, 6, 5, 7, 3, 9, 0, 1],
+  [2, 7, 9, 3, 8, 0, 6, 4, 1, 5], [7, 0, 4, 6, 9, 1, 3, 2, 5, 8],
+];
+
+/** Whether twelve digits are a structurally valid Aadhaar number. */
+export const isAadhaar = (digits) => {
+  if (!/^[2-9]\d{11}$/.test(digits)) return false;
+  let c = 0;
+  [...digits].reverse().forEach((ch, i) => { c = VERHOEFF_D[c][VERHOEFF_P[i % 8][Number(ch)]]; });
+  return c === 0;
+};
+
 // Order matters: tokens before anything that could match inside a token,
 // addresses before emails.
 const RULES = [
@@ -39,6 +66,11 @@ const RULES = [
   // Numbers masked only in the last group still carry twelve real digits.
   ['hpr-id', /\b7\d-\d{4}-\d{4}-XXXX\b/g, '<HPR_ID>'],
   ['abha-number', /\b\d{2}-\d{4}-\d{4}-XXXX\b/g, '<ABHA_NUMBER>'],
+  // After the ABHA rules, so a fourteen digit ABHA is matched there first. Not
+  // hyphen adjacent: a UUID's last group is twelve characters and can be all
+  // digits, and the tail of 123e4567-e89b-12d3-a456-426614174000, the example
+  // NHA documents REQUEST-ID with, passes the Verhoeff check.
+  ['aadhaar', /(?<![-\w])\d{12}(?![-\w])/g, (whole) => (isAadhaar(whole) ? '<AADHAAR_NUMBER>' : whole)],
   ['mobile', /\b[6-9]\d{9}\b/g, '<MOBILE_NUMBER>'],
   ['internal-host', /https?:\/\/[a-z0-9.-]+\.abdm\.gov\.internal(?::\d+)?/g, 'https://abhasbx.abdm.gov.in'],
   ['third-party-url', /https?:\/\/webhook\.site(?:\/[A-Za-z0-9-]*)?/g, '<YOUR_CALLBACK_URL>'],
@@ -175,7 +207,17 @@ for (const file of walk(RAW).sort()) {
   for (const m of (recorded.get(rel) ?? '').matchAll(/([a-z-]+) (\d+)/g)) counts[m[1]] = Number(m[2]);
   if (redacted(rel)) {
     for (const [name, re, to] of RULES) {
-      text = text.replace(re, (whole, g1, g2) => { counts[name] = (counts[name] ?? 0) + 1; return to.replace('$1', g1 ?? '').replace('$2', g2 ?? ''); });
+      // A rule may be a function so it can inspect a match and decline it.
+      // Returning the match unchanged counts as no redaction, which keeps the
+      // manifest's tally the number of values actually replaced.
+      text = text.replace(re, (whole, g1, g2) => {
+        const out = typeof to === 'function'
+          ? to(whole, g1, g2)
+          : to.replace('$1', g1 ?? '').replace('$2', g2 ?? '');
+        if (out === whole) return whole;
+        counts[name] = (counts[name] ?? 0) + 1;
+        return out;
+      });
     }
     text = redactIdentity(text, /\.ya?ml$/.test(file), counts);
     if (text !== before.toString('utf8')) writeFileSync(file, text);
