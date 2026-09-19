@@ -15,6 +15,8 @@ import {listSpecTree} from './specs.mjs';
 import {joinKey, hostOf} from './lib/api-join.mjs';
 import {loadJourneys, operationIndex, stepDataName} from './lib/journeys.mjs';
 import {errorsFromSpec} from './lib/spec-errors.mjs';
+import {cleanTitle, cleanGroupLabel, caseTerms, imperative, cleanDescription} from './lib/titles.mjs';
+import {fixProse} from './lib/prose.mjs';
 
 /**
  * Write a page this script owns, refusing to destroy one a person wrote.
@@ -44,6 +46,17 @@ const routesFile = join(root, 'site', 'src', 'data', 'api-routes.json');
 const apiRoutes = [];
 
 const METHODS = ['get', 'put', 'post', 'delete', 'patch', 'options', 'head'];
+
+// Hand written titles, keyed by operationId, for the operations whose summary
+// names nothing a rule can rescue. Kept outside the specifications because
+// ingest-nha.mjs rewrites those on every NHA drop. See the file's own header.
+const titleOverrides = (() => {
+  // At the openapi root, beside corrections/: listSpecTree only treats a YAML
+  // inside <platform>/<version> as a module, so a title list must not sit there.
+  const file = join(root, 'catalogue', 'openapi', 'titles.yaml');
+  if (!existsSync(file)) return {};
+  return parse(readFileSync(file, 'utf8')) ?? {};
+})();
 
 const slug = (s) =>
   s
@@ -638,8 +651,19 @@ for (const {platform, version, files} of tree) {
         path: entry.path,
         server: servers[0]?.url ?? '',
         servers,
-        summary: op.summary ?? id,
-        description: op.description ?? '',
+        summary: caseTerms(fixProse(op.summary ?? id)),
+        // What a heading, a sidebar row and a table cell show. NHA's summary
+        // is a sentence of documentation, so it stays as the description and
+        // this carries the name. Always an instruction starting with a verb.
+        // `x-abdm-title` overrides it where NHA's summary names nothing a rule
+        // can rescue. See scripts/lib/titles.mjs.
+        title: titleOverrides[id]
+          ? caseTerms(titleOverrides[id])
+          : imperative(cleanTitle(op.summary, {path: entry.path, method: entry.method}), {
+              method: entry.method,
+              kind: entry.kind,
+            }),
+        description: cleanDescription(op.description),
         security: securityFor(op),
         headers: parameters
           .filter((p) => p.in === 'header')
@@ -686,8 +710,8 @@ for (const {platform, version, files} of tree) {
       mkdirSync(endpointsDir, {recursive: true});
       const frontMatter = [
         '---',
-        `title: ${JSON.stringify(operation.summary)}`,
-        `sidebar_label: ${JSON.stringify(operation.summary)}`,
+        `title: ${JSON.stringify(operation.title)}`,
+        `sidebar_label: ${JSON.stringify(operation.title)}`,
         `sidebar_class_name: api-method api-method--${operation.method.toLowerCase()}`,
         `description: ${JSON.stringify(metaDescription(operation))}`,
         'hide_table_of_contents: true',
@@ -717,7 +741,7 @@ for (const {platform, version, files} of tree) {
         byTag.get(tag).push({
           type: 'doc',
           id: `${platform}/${version}/api/${module.dir}/endpoints/${name}`,
-          label: operation.summary,
+          label: operation.title,
           className: `api-method api-method--${operation.method.toLowerCase()}`,
         });
       }
@@ -761,7 +785,7 @@ for (const {platform, version, files} of tree) {
         writeFileSync(join(dataDir, `${dataName}.json`), `${JSON.stringify(stepped, null, 2)}\n`);
         const dir = join(docsDir, module.dir, 'endpoints', journey.id);
         mkdirSync(dir, {recursive: true});
-        const title = `${i + 1}. ${stepped.summary}${step.optional ? ' (optional)' : ''}`;
+        const title = `${i + 1}. ${stepped.title}${step.optional ? ' (optional)' : ''}`;
         writeFileSync(join(dir, `${nn}-${slug(step.op)}.mdx`), [
           '---',
           // The step number stays in the id. Docusaurus strips an "NN-" file
@@ -817,10 +841,7 @@ for (const {platform, version, files} of tree) {
     // into an "ABHA creation" section with the variants as children. The split
     // is presentation only; the title in the journey file stays the one name.
     // Journeys come first and the leftovers last.
-    const pretty = (tag) =>
-      /[A-Z]/.test(tag)
-        ? tag
-        : tag.replace(/-/g, ' ').replace(/^./, (c) => c.toUpperCase());
+    const pretty = (tag) => cleanGroupLabel(tag);
     const families = new Map();
     for (const {label: title, items} of [
       ...journeyGroups,
@@ -840,7 +861,7 @@ for (const {platform, version, files} of tree) {
             children: members.map((member) => {
               const variant = member.label.slice(family.length + 2) || member.label;
               return {
-                label: variant.replace(/^./, (c) => c.toUpperCase()),
+                label: caseTerms(variant.replace(/^./, (c) => c.toUpperCase())),
                 items: member.items,
               };
             }),

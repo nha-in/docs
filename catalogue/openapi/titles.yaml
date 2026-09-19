@@ -1,0 +1,41 @@
+# Hand written titles, keyed by operationId.
+#
+# scripts/build-api-reference.mjs derives every title from NHA's summary, and
+# falls back to the method and path when the summary names nothing. These are
+# the operations where neither works: NHA's summary is collection bookkeeping
+# ("3 flows: Suggestion API"), a bare route, or a sentence about who calls the
+# endpoint rather than what it does.
+#
+# This file sits outside the specifications on purpose, for two reasons.
+# scripts/ingest-nha.mjs rewrites the module YAMLs wholesale on every run, so a
+# title stored in one would not survive the next ingest of an NHA drop. And
+# listSpecTree treats every YAML under <platform>/<version> as a module, so a
+# file kept there would render as an empty thirteenth module in the sidebar.
+#
+# Add a row only when the generated title is wrong or unreadable. A title here
+# is a claim about what the operation does, so it is written from the
+# operation's own description, and it starts with a verb like every other title.
+
+# M2, linking and sharing
+m2_post_consent_v3_request_hip_on_notify: Acknowledge the consent notification
+m2_post_health_information_transfer: Receive the transferred health information
+m2_post_hip_v3_link_context_notify: Notify a change to a linked care context
+m2_post_patient_share_v3_on_share: Answer the patient share request
+m2_post_user_initiated_linking_v3_patient_care_context_on_8c9340: Answer the care context discovery
+m2_post_v3_consent_request_hip_notify: Receive the consent decision
+
+# M3, consent and fetching
+m3_post_consent_v3_request_hiu_on_notify: Acknowledge the consent notification
+
+# M4, HPR and HFR
+m4_get_getpsudetailsbyministry: Get PSU details by ministry
+m4_get_v1_5_facility_get_master_types: Get all master types
+
+# P1, registration and login
+p1_get_v3_phr_app_enrollment_isexists: Check whether the ABHA address exists
+p1_post_v3_phr_app_enrollment_suggestion: Suggest an ABHA address
+p1_post_v3_phr_app_enrollment_verify: Verify the enrolment OTP
+
+# Subscriptions
+subscription_post_subscription_requests_v3_hiu_care_conte_96bc45: Answer the care context subscription notification
+subscription_post_subscription_requests_v3_hiu_on_notify: Answer the subscription request notification
