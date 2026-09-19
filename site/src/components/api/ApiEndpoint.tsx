@@ -9,6 +9,7 @@ import {
 } from '@site/src/components/ui/dialog';
 import TryIt from './TryIt';
 import Markdown from './Markdown';
+import {splitLede, isRestatement} from './lede';
 
 export type Field = {
   name: string;
@@ -33,6 +34,9 @@ export type Operation = {
   server: string;
   servers: {url: string; description: string}[];
   summary: string;
+  // The short name build-api-reference.mjs derives from the summary or the
+  // path. `summary` stays NHA's sentence, which is documentation, not a name.
+  title: string;
   description: string;
   security: {
     name: string;
@@ -140,7 +144,7 @@ function RequestPanel({operation}: {operation: Operation}) {
   return (
     <div className="api-panel">
       <div className="api-panel__head">
-        <span className="api-panel__label">{operation.summary}</span>
+        <span className="api-panel__label">{operation.title || operation.summary}</span>
         <div className="api-panel__tabs" role="tablist" aria-label="Request">
           {samples.map((sample) => (
             <button
@@ -216,8 +220,10 @@ function ResponsePanel({responses}: {responses: Operation['responses']}) {
 }
 
 export default function ApiEndpoint({operation}: {operation: Operation}) {
-  const lede = operation.description.split('\n\n')[0];
-  const rest = operation.description.split('\n\n').slice(1).join('\n\n');
+  const heading = operation.title || operation.summary;
+  const [opening, rest] = splitLede(operation.description);
+  // A lede that only repeats the heading is noise between the title and the call.
+  const lede = isRestatement(opening, heading) ? '' : opening;
 
   return (
     <div className="api-page">
@@ -226,7 +232,7 @@ export default function ApiEndpoint({operation}: {operation: Operation}) {
           <p className="api-page__eyebrow">{operation.tag.replace(/-/g, ' ')}</p>
         ) : null}
         <Heading as="h1" className="api-page__title">
-          {operation.summary}
+          {heading}
         </Heading>
         {lede ? <Markdown text={lede} className="api-page__lede" /> : null}
 
