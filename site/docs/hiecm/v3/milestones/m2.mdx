@@ -155,7 +155,7 @@ sequenceDiagram
     CM->>A: Notify every PHR app subscribed to that ABHA address
 ```
 
-Step 8 is the acknowledgement. Step 9 is the answer. The link is confirmed only when the callback arrives at `/api/v3/link/on_carecontext` on your bridge, so do not mark a record as linked on the strength of the 202. See [the outcome of a care context linking call](/docs/hiecm/v3/api/m2/endpoints/m2-on-carecontext-result).
+Step 8 is the acknowledgement. Step 9 is the answer. The link is confirmed only when the callback arrives at `/api/v3/link/on_carecontext` on your bridge, so do not mark a record as linked on the strength of the 202. See [the outcome of a care context linking call](/docs/hiecm/v3/api/m2/endpoints/m2-abdm-hip-initiated-linking-hip/02-m2-post-v3-link-on-carecontext).
 
 :::note[Which steps are callbacks?]
 A step drawn from the HIE-CM to your system is a POST to the callback URL registered for your bridge. It arrives on its own. Do not poll for it.
@@ -232,6 +232,5 @@ The HIU supplies the data push URL and its key material in the request. Encrypti
 - Requesting records from other facilities is [M3 Retrieve](./m3).
 - The calls, callbacks and error codes: [M2 API
   reference](/docs/hiecm/v3/api/m2).
-- The cases M2 is tested against: [M2 testing use
-  cases](/docs/hiecm/v3/resources/testing/m2). Certification runs once, for
+- The cases M2 is tested against: the certification pack NHA issues. Certification runs once, for
   the whole integration: [Go live](/docs/hiecm/v3/getting-started/going-live).
