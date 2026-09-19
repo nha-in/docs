@@ -26,37 +26,37 @@ The calls themselves: where they live, what they need in their headers, and one 
 | `POST` | `/abha/api/v3/phr/app/login/profile/updateProfile` | Update Profile |
 | `POST` | `/abha/api/v3/phr/app/login/profile/verify` | 5 flows: Verify OTP - Update Email, Verify OTP - Update Mobile, Verify Password… |
 | `POST` | `/abha/api/v3/phr/app/login/profile/verify/switch-profile/user` | Verify User Switch Profile |
-| `GET` | `/api/hiecm/consent/v3/artefact` | This is ABDM HIE-CM API called to fetch all the consent artefact details of a p… |
-| `GET` | `/api/hiecm/consent/v3/artefact/{artefact-id}` | This is ABDM HIE-CM API called to fetch the consent artefact details associated… |
-| `GET` | `/api/hiecm/consent/v3/artefact/request/{request-id}` | This is ABDM HIE-CM API called to fetch all the consent artefact details associ… |
-| `POST` | `/api/hiecm/consent/v3/auto/approve` | This is ABDM HIE-CM API called to setup an auto-approval policy for given HIU. |
-| `POST` | `/api/hiecm/consent/v3/auto/approve/{auto-approval-id}/disable` | This is ABDM HIE-CM API called to disable the auto-approval policy. |
-| `POST` | `/api/hiecm/consent/v3/auto/approve/{auto-approval-id}/enable` | This is ABDM HIE-CM API called to enable the auto-approval policy. |
-| `GET` | `/api/hiecm/consent/v3/request` | This is ABDM HIE-CM API called to fetch all the consent request details of a pa… |
-| `GET` | `/api/hiecm/consent/v3/request/{request-id}` | This is ABDM HIE-CM API called to get the consent request details by REQUEST-ID. |
-| `POST` | `/api/hiecm/consent/v3/request/{request-id}/approve` | This is ABDM HIE-CM API called by patients to approve the consent request raise… |
-| `POST` | `/api/hiecm/consent/v3/request/{request-id}/deny` | This is ABDM HIE-CM API called by patients to deny the consent request raised b… |
-| `POST` | `/api/hiecm/consent/v3/revoke` | This is ABDM HIE-CM API called by patients to revoke the granted consent from P… |
-| `GET` | `/api/hiecm/gateway/v3/.well-known/openid-configuration` | This API is invoked to get the open ID configuration. |
+| `GET` | `/api/hiecm/consent/v3/artefact` | Fetch all the consent artefact details of a patient. |
+| `GET` | `/api/hiecm/consent/v3/artefact/{artefact-id}` | Fetch the consent artefact details associated with the artefact-ID. |
+| `GET` | `/api/hiecm/consent/v3/artefact/request/{request-id}` | Fetch all the consent artefact details associated with a consent request REQUES… |
+| `POST` | `/api/hiecm/consent/v3/auto/approve` | Setup an auto-approval policy for given HIU. |
+| `POST` | `/api/hiecm/consent/v3/auto/approve/{auto-approval-id}/disable` | Disable the auto-approval policy. |
+| `POST` | `/api/hiecm/consent/v3/auto/approve/{auto-approval-id}/enable` | Enable the auto-approval policy. |
+| `GET` | `/api/hiecm/consent/v3/request` | Fetch all the consent request details of a patient. |
+| `GET` | `/api/hiecm/consent/v3/request/{request-id}` | Get the consent request details by REQUEST-ID. |
+| `POST` | `/api/hiecm/consent/v3/request/{request-id}/approve` | Approve the consent request raised by HIU from PHR/mobile application. |
+| `POST` | `/api/hiecm/consent/v3/request/{request-id}/deny` | Deny the consent request raised by HIU from PHR/mobile application. |
+| `POST` | `/api/hiecm/consent/v3/revoke` | Revoke the granted consent from PHR/mobile application. |
+| `GET` | `/api/hiecm/gateway/v3/.well-known/openid-configuration` | Get the open ID configuration. |
 | `PUT` | `/api/hiecm/gateway/v3/bridge-service` | v3/gateway/bridge-service |
-| `GET` | `/api/hiecm/gateway/v3/bridge-service/serviceId/{service-id}` | This API is invoked to fetch the details of a service ID. |
-| `GET` | `/api/hiecm/gateway/v3/bridge-services` | This API will fetch the service ids registered against a bridge. |
-| `PATCH` | `/api/hiecm/gateway/v3/bridge/url` | This API is invoked to update the bridge URL. |
-| `GET` | `/api/hiecm/gateway/v3/certs` | This API is invoked to get the certificate information. |
-| `GET` | `/api/hiecm/gateway/v3/govt-programs` | This API is invoked to fetch the list of govt programmes. |
-| `GET` | `/api/hiecm/gateway/v3/health-lockers` | This API is invoked to fetch the record with health locker enabled provider det… |
-| `GET` | `/api/hiecm/gateway/v3/providers` | This API is invoked to fetch the list of providers filtered by name. |
-| `GET` | `/api/hiecm/gateway/v3/providers/{provider-id}` | This API is invoked to fetch the record for provider details for requested prov… |
-| `POST` | `/api/hiecm/gateway/v3/sessions` | This API is invoked to generate Keycloak token/access token. |
+| `GET` | `/api/hiecm/gateway/v3/bridge-service/serviceId/{service-id}` | Fetch the details of a service ID. |
+| `GET` | `/api/hiecm/gateway/v3/bridge-services` | Fetch the service ids registered against a bridge. |
+| `PATCH` | `/api/hiecm/gateway/v3/bridge/url` | Update the bridge URL. |
+| `GET` | `/api/hiecm/gateway/v3/certs` | Get the certificate information. |
+| `GET` | `/api/hiecm/gateway/v3/govt-programs` | Fetch the list of govt programmes. |
+| `GET` | `/api/hiecm/gateway/v3/health-lockers` | Fetch the record with health locker enabled provider details. |
+| `GET` | `/api/hiecm/gateway/v3/providers` | Fetch the list of providers filtered by name. |
+| `GET` | `/api/hiecm/gateway/v3/providers/{provider-id}` | Fetch the record for provider details for requested provider ID. |
+| `POST` | `/api/hiecm/gateway/v3/sessions` | Generate Keycloak token/access token. |
 | `GET` | `/api/hiecm/hip/v3/link/patient/links` | This is the PHR APP API, this API will used to fetch all link care-context for … |
-| `GET` | `/api/hiecm/patient-share/v3/profile/getTokenDetails` | This API will be invoked to get the historical token numbers of the patient |
-| `POST` | `/api/hiecm/patient-share/v3/share` | This API will be invoked from the PHR-HIU application for sharing the patient/u… |
-| `POST` | `/api/hiecm/user-initiated-linking/v3/link/care-context/confirm` | This API will be invoked by the patient/user to confirm his/her health records. |
-| `POST` | `/api/hiecm/user-initiated-linking/v3/link/care-context/init` | This API will be invoked by the patient/user to link his/her health records. |
-| `POST` | `/api/hiecm/user-initiated-linking/v3/patient/care-context/discover` | This API will be invoked by the patient/user from PHR application to discover h… |
-| `POST` | `/api/v3/hiu/patient/care-context/on-confirm` | This API endpoint is used by healthcare information users (HIUs) to receive con… |
-| `POST` | `/api/v3/hiu/patient/care-context/on-discover` | This API endpoint is used by healthcare information users (HIUs) to receive the… |
-| `POST` | `/api/v3/hiu/patient/care-context/on-init` | This API endpoint is used by healthcare information users (HIUs) to receive the… |
+| `GET` | `/api/hiecm/patient-share/v3/profile/getTokenDetails` | Get the historical token numbers of the patient |
+| `POST` | `/api/hiecm/patient-share/v3/share` | Be invoked from the PHR-HIU application for sharing the patient/user profile wi… |
+| `POST` | `/api/hiecm/user-initiated-linking/v3/link/care-context/confirm` | Confirm his/her health records. |
+| `POST` | `/api/hiecm/user-initiated-linking/v3/link/care-context/init` | Link his/her health records. |
+| `POST` | `/api/hiecm/user-initiated-linking/v3/patient/care-context/discover` | Discover his/her health records. |
+| `POST` | `/api/v3/hiu/patient/care-context/on-confirm` | Receive confirmation of the linked care contexts for a patient. It provides det… |
+| `POST` | `/api/v3/hiu/patient/care-context/on-discover` | Receive the discovered care contexts of a patient. It provides detailed informa… |
+| `POST` | `/api/v3/hiu/patient/care-context/on-init` | Receive the initial linking of care contexts for a patient. It provides detaile… |
 | `POST` | `/api/v3/hiu/patient/on-share` | This API will be invoked to the HIU for sharing the response of HIECM's /api/hi… |
 ## Headers
 

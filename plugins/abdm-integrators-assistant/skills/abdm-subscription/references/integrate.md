@@ -14,20 +14,20 @@ The calls themselves: where they live, what they need in their headers, and one 
 
 | Method | Path | What it does |
 | --- | --- | --- |
-| `GET` | `/api/hiecm/gateway/v3/.well-known/openid-configuration` | This API is invoked to get the open ID configuration. |
+| `GET` | `/api/hiecm/gateway/v3/.well-known/openid-configuration` | Get the open ID configuration. |
 | `PUT` | `/api/hiecm/gateway/v3/bridge-service` | v3/gateway/bridge-service |
-| `GET` | `/api/hiecm/gateway/v3/bridge-service/serviceId/{service-id}` | This API is invoked to fetch the details of a service ID. |
-| `GET` | `/api/hiecm/gateway/v3/bridge-services` | This API will fetch the service ids registered against a bridge. |
-| `PATCH` | `/api/hiecm/gateway/v3/bridge/url` | This API is invoked to update the bridge URL. |
-| `GET` | `/api/hiecm/gateway/v3/certs` | This API is invoked to get the certificate information. |
-| `GET` | `/api/hiecm/gateway/v3/govt-programs` | This API is invoked to fetch the list of govt programmes. |
-| `GET` | `/api/hiecm/gateway/v3/health-lockers` | This API is invoked to fetch the record with health locker enabled provider det… |
-| `GET` | `/api/hiecm/gateway/v3/providers` | This API is invoked to fetch the list of providers filtered by name. |
-| `GET` | `/api/hiecm/gateway/v3/providers/{provider-id}` | This API is invoked to fetch the record for provider details for requested prov… |
-| `POST` | `/api/hiecm/gateway/v3/sessions` | This API is invoked to generate Keycloak token/access token. |
-| `POST` | `/api/hiecm/subscription-requests/v3/hiu/care-context/on-notify` | This API will be invoked by the HIU to respond to /api/v3/hiu/subscription/noti… |
-| `POST` | `/api/hiecm/subscription-requests/v3/hiu/on-notify` | This API will be invoked by the HIU to respond to /subscription-requests/hiu/no… |
-| `POST` | `/api/hiecm/subscription-requests/v3/init` | This API will be invoked by the HIU/patient/user to initiate subscription reque… |
+| `GET` | `/api/hiecm/gateway/v3/bridge-service/serviceId/{service-id}` | Fetch the details of a service ID. |
+| `GET` | `/api/hiecm/gateway/v3/bridge-services` | Fetch the service ids registered against a bridge. |
+| `PATCH` | `/api/hiecm/gateway/v3/bridge/url` | Update the bridge URL. |
+| `GET` | `/api/hiecm/gateway/v3/certs` | Get the certificate information. |
+| `GET` | `/api/hiecm/gateway/v3/govt-programs` | Fetch the list of govt programmes. |
+| `GET` | `/api/hiecm/gateway/v3/health-lockers` | Fetch the record with health locker enabled provider details. |
+| `GET` | `/api/hiecm/gateway/v3/providers` | Fetch the list of providers filtered by name. |
+| `GET` | `/api/hiecm/gateway/v3/providers/{provider-id}` | Fetch the record for provider details for requested provider ID. |
+| `POST` | `/api/hiecm/gateway/v3/sessions` | Generate Keycloak token/access token. |
+| `POST` | `/api/hiecm/subscription-requests/v3/hiu/care-context/on-notify` | Respond to /api/v3/hiu/subscription/notify. |
+| `POST` | `/api/hiecm/subscription-requests/v3/hiu/on-notify` | Respond to /subscription-requests/hiu/notify. |
+| `POST` | `/api/hiecm/subscription-requests/v3/init` | Initiate subscription request. |
 | `POST` | `/api/v3/hiu/hiecm/subscription-requests/on-init` | This is a callback API for /api/hiecm/subscription-requests/v3/init. |
 | `POST` | `/api/v3/hiu/subscription-requests/hiu/notify` | This is a callback API when a subscription request is approved or denied. |
 | `POST` | `/api/v3/hiu/subscription/notify` | This is a callback API to notify the subscribed HIU when a care context is link… |

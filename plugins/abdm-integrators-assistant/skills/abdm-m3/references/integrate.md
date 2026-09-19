@@ -14,24 +14,24 @@ The calls themselves: where they live, what they need in their headers, and one 
 
 | Method | Path | What it does |
 | --- | --- | --- |
-| `POST` | `/api/hiecm/consent/v3/fetch` | This is ABDM HIE-CM API called by HIU to fetch the consent details |
-| `POST` | `/api/hiecm/consent/v3/request/hiu/on-notify` | This is ABDM HIE-CM API called by HIU to acknowledge the notification sent when… |
-| `POST` | `/api/hiecm/consent/v3/request/init` | This is ABDM HIE-CM API called by HIU to initiate the consent request |
-| `POST` | `/api/hiecm/consent/v3/request/status` | This is ABDM HIE-CM API used by HIU to get consent request status |
+| `POST` | `/api/hiecm/consent/v3/fetch` | Fetch the consent details |
+| `POST` | `/api/hiecm/consent/v3/request/hiu/on-notify` | Acknowledge the notification sent when a consent request is approved/denied/rev… |
+| `POST` | `/api/hiecm/consent/v3/request/init` | Initiate the consent request |
+| `POST` | `/api/hiecm/consent/v3/request/status` | Get consent request status |
 | `POST` | `/api/hiecm/data-flow/v3/health-information/notify` | Notifications corresponding to events during data flow |
 | `POST` | `/api/hiecm/data-flow/v3/health-information/request` | Health information data request from HIU. |
-| `GET` | `/api/hiecm/data-flow/v3/health-information/request/status/{transaction-id}` | API to get the current status of the Health Information Request. |
-| `GET` | `/api/hiecm/gateway/v3/.well-known/openid-configuration` | This API is invoked to get the open ID configuration. |
+| `GET` | `/api/hiecm/data-flow/v3/health-information/request/status/{transaction-id}` | Get the current status of the Health Information Request. |
+| `GET` | `/api/hiecm/gateway/v3/.well-known/openid-configuration` | Get the open ID configuration. |
 | `PUT` | `/api/hiecm/gateway/v3/bridge-service` | v3/gateway/bridge-service |
-| `GET` | `/api/hiecm/gateway/v3/bridge-service/serviceId/{service-id}` | This API is invoked to fetch the details of a service ID. |
-| `GET` | `/api/hiecm/gateway/v3/bridge-services` | This API will fetch the service ids registered against a bridge. |
-| `PATCH` | `/api/hiecm/gateway/v3/bridge/url` | This API is invoked to update the bridge URL. |
-| `GET` | `/api/hiecm/gateway/v3/certs` | This API is invoked to get the certificate information. |
-| `GET` | `/api/hiecm/gateway/v3/govt-programs` | This API is invoked to fetch the list of govt programmes. |
-| `GET` | `/api/hiecm/gateway/v3/health-lockers` | This API is invoked to fetch the record with health locker enabled provider det… |
-| `GET` | `/api/hiecm/gateway/v3/providers` | This API is invoked to fetch the list of providers filtered by name. |
-| `GET` | `/api/hiecm/gateway/v3/providers/{provider-id}` | This API is invoked to fetch the record for provider details for requested prov… |
-| `POST` | `/api/hiecm/gateway/v3/sessions` | This API is invoked to generate Keycloak token/access token. |
+| `GET` | `/api/hiecm/gateway/v3/bridge-service/serviceId/{service-id}` | Fetch the details of a service ID. |
+| `GET` | `/api/hiecm/gateway/v3/bridge-services` | Fetch the service ids registered against a bridge. |
+| `PATCH` | `/api/hiecm/gateway/v3/bridge/url` | Update the bridge URL. |
+| `GET` | `/api/hiecm/gateway/v3/certs` | Get the certificate information. |
+| `GET` | `/api/hiecm/gateway/v3/govt-programs` | Fetch the list of govt programmes. |
+| `GET` | `/api/hiecm/gateway/v3/health-lockers` | Fetch the record with health locker enabled provider details. |
+| `GET` | `/api/hiecm/gateway/v3/providers` | Fetch the list of providers filtered by name. |
+| `GET` | `/api/hiecm/gateway/v3/providers/{provider-id}` | Fetch the record for provider details for requested provider ID. |
+| `POST` | `/api/hiecm/gateway/v3/sessions` | Generate Keycloak token/access token. |
 | `POST` | `/api/v3/hiu/consent/on-fetch` | This is a callback API called by CM to provide fetched consent artefact details… |
 | `POST` | `/api/v3/hiu/consent/request/notify` | This is a callback API to notify HIU when consent is APPROVED, DENIED or REVOKE… |
 | `POST` | `/api/v3/hiu/consent/request/on-init` | Callback API of consent request for patient HIU. |

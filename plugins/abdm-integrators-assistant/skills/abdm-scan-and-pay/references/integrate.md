@@ -14,27 +14,27 @@ The calls themselves: where they live, what they need in their headers, and one 
 
 | Method | Path | What it does |
 | --- | --- | --- |
-| `GET` | `/api/hiecm/gateway/v3/.well-known/openid-configuration` | This API is invoked to get the open ID configuration. |
+| `GET` | `/api/hiecm/gateway/v3/.well-known/openid-configuration` | Get the open ID configuration. |
 | `PUT` | `/api/hiecm/gateway/v3/bridge-service` | v3/gateway/bridge-service |
-| `GET` | `/api/hiecm/gateway/v3/bridge-service/serviceId/{service-id}` | This API is invoked to fetch the details of a service ID. |
-| `GET` | `/api/hiecm/gateway/v3/bridge-services` | This API will fetch the service ids registered against a bridge. |
-| `PATCH` | `/api/hiecm/gateway/v3/bridge/url` | This API is invoked to update the bridge URL. |
-| `GET` | `/api/hiecm/gateway/v3/certs` | This API is invoked to get the certificate information. |
-| `GET` | `/api/hiecm/gateway/v3/govt-programs` | This API is invoked to fetch the list of govt programmes. |
-| `GET` | `/api/hiecm/gateway/v3/health-lockers` | This API is invoked to fetch the record with health locker enabled provider det… |
-| `GET` | `/api/hiecm/gateway/v3/providers` | This API is invoked to fetch the list of providers filtered by name. |
-| `GET` | `/api/hiecm/gateway/v3/providers/{provider-id}` | This API is invoked to fetch the record for provider details for requested prov… |
-| `PATCH` | `/api/hiecm/gateway/v3/scanPay/updateVersion` | This API is used to update version to the serviceId. |
-| `POST` | `/api/hiecm/gateway/v3/sessions` | This API is invoked to generate Keycloak token/access token. |
-| `POST` | `/api/hiecm/scan-gateway/v3/patient/on-selection` | This is an API is called by HIP to share payment bundle alone with procedures o… |
-| `POST` | `/api/hiecm/scan-gateway/v3/patient/on-share/open-order` | This is an API called by HIP to HIE-CM to send all the open order for patient. |
+| `GET` | `/api/hiecm/gateway/v3/bridge-service/serviceId/{service-id}` | Fetch the details of a service ID. |
+| `GET` | `/api/hiecm/gateway/v3/bridge-services` | Fetch the service ids registered against a bridge. |
+| `PATCH` | `/api/hiecm/gateway/v3/bridge/url` | Update the bridge URL. |
+| `GET` | `/api/hiecm/gateway/v3/certs` | Get the certificate information. |
+| `GET` | `/api/hiecm/gateway/v3/govt-programs` | Fetch the list of govt programmes. |
+| `GET` | `/api/hiecm/gateway/v3/health-lockers` | Fetch the record with health locker enabled provider details. |
+| `GET` | `/api/hiecm/gateway/v3/providers` | Fetch the list of providers filtered by name. |
+| `GET` | `/api/hiecm/gateway/v3/providers/{provider-id}` | Fetch the record for provider details for requested provider ID. |
+| `PATCH` | `/api/hiecm/gateway/v3/scanPay/updateVersion` | Update version to the serviceId. |
+| `POST` | `/api/hiecm/gateway/v3/sessions` | Generate Keycloak token/access token. |
+| `POST` | `/api/hiecm/scan-gateway/v3/patient/on-selection` | Share payment bundle alone with procedures of the patient. |
+| `POST` | `/api/hiecm/scan-gateway/v3/patient/on-share/open-order` | HIE-CM to send all the open order for patient. |
 | `GET` | `/api/hiecm/scan-gateway/v3/patient/scan-pay/details` | This is retrieve the all the details of the user. |
-| `POST` | `/api/hiecm/scan-gateway/v3/patient/scan-pay/notify` | This is an API called by HIP to send the payment status to HIU. |
-| `POST` | `/api/hiecm/scan-gateway/v3/patient/scan-pay/on-notify` | This is an API is called by HIU to notify to HIP so that confirm that the HIU r… |
-| `POST` | `/api/hiecm/scan-gateway/v3/patient/scan-pay/on-order-status` | This is an API is called by HIP to check the status of reports. |
-| `POST` | `/api/hiecm/scan-gateway/v3/patient/scan-pay/order-status` | This is an API is called by HIU to check the status of reports. |
-| `POST` | `/api/hiecm/scan-gateway/v3/patient/selection` | This is an API called by HIU to select the all open-order and send to HIP for a… |
-| `POST` | `/api/hiecm/scan-gateway/v3/patient/share/open-order` | This API will be invoked from the integrator application (any PHR application, … |
+| `POST` | `/api/hiecm/scan-gateway/v3/patient/scan-pay/notify` | Send the payment status to HIU. |
+| `POST` | `/api/hiecm/scan-gateway/v3/patient/scan-pay/on-notify` | Notify to HIP so that confirm that the HIU received the payment status. |
+| `POST` | `/api/hiecm/scan-gateway/v3/patient/scan-pay/on-order-status` | Check the status of reports. |
+| `POST` | `/api/hiecm/scan-gateway/v3/patient/scan-pay/order-status` | Check the status of reports. |
+| `POST` | `/api/hiecm/scan-gateway/v3/patient/selection` | Select the all open-order and send to HIP for a payment request detail. |
+| `POST` | `/api/hiecm/scan-gateway/v3/patient/share/open-order` | Be invoked from the integrator application (any PHR application, just like ABHA… |
 | `POST` | `/v3/patient/on-selection` | This is callback API for the API. This API needs to implement by HIU to receive… |
 | `POST` | `/v3/patient/on-share/open-order` | This is a callback API for patient on-share. This API needs to implement by HIU… |
 | `POST` | `/v3/patient/scan-pay/notify` | This is callback API for the notify API. This API needs to implement by HIU to … |
@@ -42,7 +42,7 @@ The calls themselves: where they live, what they need in their headers, and one 
 | `POST` | `/v3/patient/scan-pay/on-order-status` | This is callback for the on-order-status API. This API needs to implement by HI… |
 | `POST` | `/v3/patient/scan-pay/order-status` | This is callback API for the order_status API. This API needs to implement by H… |
 | `POST` | `/v3/patient/selection` | This is the call back API for the selection API. This API needs to implement by… |
-| `POST` | `/v3/patient/share/open-order` | This is an API is called by HIU to check the status of reports. |
+| `POST` | `/v3/patient/share/open-order` | Check the status of reports. |
 ## Headers
 
 | Header | What it is |

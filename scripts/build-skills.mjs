@@ -18,6 +18,7 @@ import {readFileSync, writeFileSync, mkdirSync, rmSync, readdirSync, existsSync}
 import {join, dirname} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {parse} from 'yaml';
+import {cleanDescription} from './lib/titles.mjs';
 import {errorsFromSpec} from './lib/spec-errors.mjs';
 import {loadJourneys} from './lib/journeys.mjs';
 
@@ -342,7 +343,13 @@ function build(module, url) {
     lines.push('| Method | Path | What it does |');
     lines.push('| --- | --- | --- |');
     for (const op of ops) {
-      lines.push(`| \`${op.method}\` | \`${op.path}\` | ${truncate(op.summary, 80)} |`);
+      // NHA's summary opens with "This API is invoked to", which spends 22 of
+      // the 80 characters before it says anything and pushes the rest past the
+      // cut. The opener is stripped, not the meaning. The summary itself stays
+      // in this column rather than the derived title: the title is a short name
+      // for a sidebar, is not unique across operations, and for a route-derived
+      // one would only repeat the path column beside it.
+      lines.push(`| \`${op.method}\` | \`${op.path}\` | ${truncate(cleanDescription(op.summary), 80)} |`);
     }
     lines.push('');
   }
