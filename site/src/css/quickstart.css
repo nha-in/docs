@@ -15,21 +15,132 @@
   font-size: 0.875rem;
 }
 
-.quickstart__step {
+.quickstart__card {
   padding: 1.5rem 1.5rem 1.75rem;
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--radius-panel, 0.5rem);
 }
 
-.quickstart__step--locked {
-  background: var(--surface-sunken);
+/* On a phone the card already fills the screen, so holding it at the tallest
+   step's height is a screenful of nothing on the short ones: the card came out
+   838px against an 812px viewport, 461px of it empty on the step that is one
+   button. Narrow, the card is sized by the step that is open. */
+.quickstart__pane--hidden {
+  display: none;
+}
+
+/* The four steps, always all four, at the top of the card. Showing them is the
+   page's claim that the whole use case is four calls, so they are readable
+   before the reader starts rather than a card at a time. */
+/* Two classes deep, and the list items named, because the theme's own list
+   rules outrank a single class: `ol` keeps a 20px padding-left and `li + li` a
+   6px margin-top. Left alone, the padding pushed the columns 20px right of the
+   track, whose percentages resolve against the padding box, and the margin sat
+   the second, third and fourth markers 6px below the first, so the line ran
+   through their numbers instead of between them. */
+.quickstart .quickstart__stepper {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin: 0 0 1.75rem;
+  padding: 0;
+  list-style: none;
+}
+
+.quickstart .quickstart__stepper > li {
+  margin: 0;
+  padding: 0;
+}
+
+/* The track, and how much of it has been covered. Both run from the centre of
+   the first marker to the centre of the last, which across four equal columns
+   is 12.5% to 87.5%. The fill is a plain multiple of that 75%, which is why
+   the progress custom property is a unitless fraction. */
+.quickstart__stepper::before,
+.quickstart__stepper::after {
+  position: absolute;
+  top: calc(0.875rem - 1px);
+  left: 12.5%;
+  height: 2px;
+  content: '';
+}
+
+.quickstart__stepper::before {
+  width: 75%;
+  background: var(--border);
+}
+
+.quickstart__stepper::after {
+  width: calc(75% * var(--quickstart-progress, 0));
+  background: var(--accent);
+  transition: width 240ms ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .quickstart__stepper::after {
+    transition: none;
+  }
+}
+
+.quickstart__stepper-step {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  align-items: center;
+  width: 100%;
+  padding: 0 0.25rem;
+  color: var(--text-muted);
+  font-size: 0.8125rem;
+  line-height: 1.3;
+  text-align: center;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+}
+
+/* The ring is the card's own background, so the track stops short of every
+   marker instead of running under it. */
+.quickstart__stepper .quickstart__marker {
+  background: var(--surface);
+  box-shadow: 0 0 0 4px var(--surface);
+}
+
+.quickstart__stepper-step:hover {
+  color: var(--text);
+}
+
+.quickstart__stepper-step:hover .quickstart__marker {
+  border-color: var(--accent);
+}
+
+.quickstart__stepper-step--done .quickstart__marker {
+  color: var(--surface);
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+.quickstart__stepper-step--active {
+  color: var(--text);
+  font-weight: 600;
+}
+
+/* Opaque on purpose. --accent-soft is a tenth-alpha tint, and the track runs
+   through the centre of every marker; painted on its own it let the line show
+   through the one marker that was open, which read as a strikethrough on the
+   number. The tint is composited over the surface instead, so the look is the
+   same and the line is hidden. A step that is both open and finished keeps
+   the finished look, otherwise the done rule's white tick lands on this tint
+   and disappears. */
+.quickstart__stepper-step--active:not(.quickstart__stepper-step--done) .quickstart__marker {
+  background: linear-gradient(var(--accent-soft), var(--accent-soft)), var(--surface);
+  border-color: var(--accent);
 }
 
 .quickstart__step-head {
-  display: flex;
-  gap: 0.875rem;
-  align-items: flex-start;
+  display: block;
 }
 
 .quickstart__marker {
@@ -47,25 +158,60 @@
   border-radius: 999px;
 }
 
-.quickstart__step-title {
+/* Two classes deep on purpose: the theme's own heading rule is `.markdown h3`
+   and outranks a single class. The marker circle used to stand in the space
+   the theme's margin left above the title, so removing the marker exposed it. */
+.quickstart .quickstart__step-title {
   margin: 0;
   font-size: 1.0625rem;
 }
 
-.quickstart__step-lede,
-.quickstart__locked-note {
+.quickstart__step-lede {
   margin: 0.25rem 0 0;
   color: var(--text-muted);
   font-size: 0.9375rem;
 }
 
-.quickstart__locked-note {
-  margin-top: 1rem;
-  padding-left: 2.625rem;
+/* A step can be attempted before the step it depends on, so the refusal has to
+   arrive where the reader is looking rather than at the top of the runner. */
+.quickstart__toast {
+  position: fixed;
+  bottom: 1.5rem;
+  left: 50%;
+  z-index: 300;
+  max-width: min(32rem, calc(100vw - 2rem));
+  margin: 0;
+  padding: 0.75rem 1rem;
+  color: var(--text);
+  font-size: 0.9375rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-panel, 0.5rem);
+  box-shadow: 0 8px 24px rgb(0 0 0 / 18%);
+  transform: translateX(-50%);
+  animation: quickstart-toast-in 160ms ease-out;
+}
+
+@keyframes quickstart-toast-in {
+  from {
+    opacity: 0;
+    transform: translate(-50%, 0.5rem);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .quickstart__toast {
+    animation: none;
+  }
 }
 
 .quickstart__step-body {
-  padding-left: 2.625rem;
+  padding-left: 0;
 }
 
 .quickstart__form {
@@ -158,20 +304,57 @@
   line-height: 1.5;
 }
 
+/* The disclaimer is one line on the card with the rest of it behind the mark.
+   Kept as a block it was the tallest thing in the runner, and it pushed the
+   card it sits in past the other three. The words are not lost: the tooltip
+   carries them for a pointer or a keyboard, and the hidden copy beside it is
+   what the Aadhaar input's aria-describedby points at. */
 .quickstart__warning {
   display: flex;
-  gap: 0.75rem;
+  gap: 0.5rem;
+  align-items: center;
+  width: 100%;
   margin-top: 1.25rem;
-  padding: 0.875rem 1rem;
-  font-size: 0.875rem;
-  line-height: 1.55;
+  padding: 0.625rem 0.75rem;
+  color: inherit;
+  font-size: 0.8125rem;
+  line-height: 1.45;
+  text-align: left;
   background: var(--accent-soft);
   border: 1px solid var(--accent-line);
   border-radius: 0.5rem;
+  cursor: help;
 }
 
-.quickstart__warning p {
-  margin: 0.25rem 0 0;
+.quickstart__warning-mark {
+  flex: none;
+  margin-left: auto;
+  color: var(--text-faint);
+}
+
+.quickstart__warning:hover .quickstart__warning-mark,
+.quickstart__warning:focus-visible .quickstart__warning-mark {
+  color: var(--accent);
+}
+
+/* Wider than the tooltip default, which sizes to its content and turns a
+   paragraph into a column. */
+.quickstart__tip {
+  max-width: 24rem;
+  line-height: 1.45;
+  text-align: left;
+}
+
+.quickstart__sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }
 
 .quickstart__held {
@@ -278,11 +461,6 @@
   .quickstart__panels {
     grid-template-columns: minmax(0, 1fr);
   }
-
-  .quickstart__step-body,
-  .quickstart__locked-note {
-    padding-left: 0;
-  }
 }
 
 /* ---------- the four steps, two by two ----------
@@ -291,38 +469,35 @@
    three of them to reach the one they are on. Two by two it is one screen: you
    see the whole shape of the thing you are about to do, which is the point of
    a quickstart. Four across was tried and dropped, because a quarter of the
-   column is narrower than the prose inside a card wants to be. */
-@media (min-width: 1024px) {
-  .quickstart__steps {
+   column is narrower than the prose inside a card wants to be.
+
+   Both were dropped in turn. Four cards side by side had to be one size to
+   read as one thing, and one size meant every card took the height of the one
+   with the most fields: 892px of a 1529px runner was empty, and the step that
+   is a single button was a button in a 754px box. The stepper says the same
+   thing the grid was trying to say, in the height of one row. */
+@media (min-width: 768px) {
+  .quickstart__stepper-step {
+    font-size: 0.875rem;
+  }
+
+  /* Wide enough for the card to be one element among others on the page, so
+     it holds one size: all four panes share a grid cell and the card takes the
+     height of the tallest at whatever width it is read at. Nothing below the
+     card moves when the reader changes step, and no height is hard coded.
+     `visibility` rather than `display`, because a hidden pane has to keep its
+     size, and either one takes it out of the tab order. */
+  .quickstart__panes {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 1.25rem;
-    /* One box for every card, down the rows as well as along them. 1fr on the
-       implicit rows makes each row as tall as the tallest card in the runner,
-       and the default stretch fills it. Sized to their own content the four
-       read as four different components rather than four steps of one. */
-    grid-auto-rows: 1fr;
   }
 
-  /* A card this narrow has no room for the marker's gutter, and its two field
-     columns want the whole card. */
-  .quickstart__step-body,
-  .quickstart__locked-note {
-    padding-left: 0;
+  .quickstart__pane {
+    grid-area: 1 / 1;
   }
 
-  .quickstart__fields,
-  .quickstart__result {
-    grid-template-columns: minmax(0, 1fr);
-  }
-
-  .quickstart__result {
-    display: grid;
-    gap: 0.75rem;
-  }
-
-  .quickstart__step {
-    padding: 1.25rem 1.25rem 1.5rem;
+  .quickstart__pane--hidden {
+    display: block;
+    visibility: hidden;
   }
 }
 

@@ -49,8 +49,35 @@ test('PEM armour is accepted as well as bare base64 DER', async () => {
   assert.equal(plain.toString(), 'abc');
 });
 
+test('OAEP SHA-256 round-trips through private decryption', async () => {
+  const enc = await mod.encryptValue(pubB64, 'oaep-sha256', '9876543210');
+  const plain = crypto.privateDecrypt(
+    {key: privateKey, padding: crypto.constants.RSA_PKCS1_OAEP_PADDING, oaepHash: 'sha256'},
+    Buffer.from(enc, 'base64'),
+  );
+  assert.equal(plain.toString(), '9876543210');
+});
+
 test('the algorithm string maps to the right padding', () => {
   assert.equal(mod.paddingFromAlgorithm('RSA/ECB/OAEPWithSHA-1AndMGF1Padding'), 'oaep-sha1');
   assert.equal(mod.paddingFromAlgorithm('RSA/ECB/PKCS1Padding'), 'pkcs1v15');
   assert.equal(mod.paddingFromAlgorithm(undefined), 'oaep-sha1');
+  // The digest has to be read, not assumed. A SHA-256 certificate answered as
+  // SHA-1 encrypts cleanly and is then refused by the server.
+  assert.equal(mod.paddingFromAlgorithm('RSA/ECB/OAEPWithSHA-256AndMGF1Padding'), 'oaep-sha256');
+  assert.equal(mod.paddingFromAlgorithm('rsa/ecb/oaepwithsha256andmgf1padding'), 'oaep-sha256');
+});
+
+test('SHA-1 and SHA-256 OAEP produce different ciphertext for the same value', async () => {
+  const one = await mod.encryptValue(pubB64, 'oaep-sha1', 'same-value');
+  const two = await mod.encryptValue(pubB64, 'oaep-sha256', 'same-value');
+  assert.notEqual(one, two);
+  // And the SHA-256 ciphertext must not decrypt as SHA-1, which is the failure
+  // the digest mix-up produced.
+  assert.throws(() =>
+    crypto.privateDecrypt(
+      {key: privateKey, padding: crypto.constants.RSA_PKCS1_OAEP_PADDING, oaepHash: 'sha1'},
+      Buffer.from(two, 'base64'),
+    ),
+  );
 });

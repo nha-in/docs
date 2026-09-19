@@ -1,7 +1,13 @@
 import React, {useEffect, useState} from 'react';
 import CodeBlock from '@theme/CodeBlock';
-import {Check, Loader2, Lock} from 'lucide-react';
+import {Check, Info, Loader2, Lock} from 'lucide-react';
 import {Button} from '@site/src/components/ui/button';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@site/src/components/ui/tooltip';
 import {
   consentManagerFor,
   perRequestHeaders,
@@ -9,6 +15,7 @@ import {
   subscribeToken,
   writeToken,
 } from '@site/src/components/api/session';
+import {encryptValue, paddingFromAlgorithm, type Padding} from '@site/src/components/api/rsa';
 
 /**
  * The four calls that create an ABHA, run live from the reader's browser.
@@ -42,6 +49,12 @@ type Exchange = {
 };
 
 const REDACTED = '********';
+
+const AADHAAR_NOTE =
+  "What you type is encrypted in this browser with NHA's public key and posted only " +
+  'to NHA\'s sandbox host. This site has no server of its own and stores nothing you ' +
+  'type. Use a sandbox test identity, not a real person\'s Aadhaar number. NHA does ' +
+  'not publish a test Aadhaar number, so bring one issued to you for sandbox use.';
 
 function pretty(text: string): string {
   try {
@@ -82,37 +95,6 @@ async function call(
     exchange.ms = Date.now() - started;
     return {exchange, json: null, text: ''};
   }
-}
-
-const toBytes = (base64: string) =>
-  Uint8Array.from(atob(base64), (character) => character.charCodeAt(0));
-
-const toBase64 = (buffer: ArrayBuffer) =>
-  btoa(String.fromCharCode(...new Uint8Array(buffer)));
-
-/**
- * RSA encrypt one value against NHA's published certificate, in this browser.
- *
- * The V3 ABHA service takes RSA-OAEP with SHA-1, and its certificate response
- * says so itself in `encryptionAlgorithm`. The digest defaults to SHA-1 and
- * follows what the certificate declares; the control stays on the page for the
- * older API families, which use a different padding.
- */
-async function encryptValue(pem: string, value: string, hash: string): Promise<string> {
-  const spki = pem.replace(/-----[^-]*-----/g, '').replace(/\s+/g, '');
-  const key = await crypto.subtle.importKey(
-    'spki',
-    toBytes(spki),
-    {name: 'RSA-OAEP', hash},
-    false,
-    ['encrypt'],
-  );
-  const cipher = await crypto.subtle.encrypt(
-    {name: 'RSA-OAEP'},
-    key,
-    new TextEncoder().encode(value),
-  );
-  return toBase64(cipher);
 }
 
 /**
@@ -182,13 +164,62 @@ function Panel({exchange}: {exchange: Exchange}) {
   );
 }
 
-/** The steps in the order they run, with the name each one carries below. */
-const STEPS: {key: Step; title: string}[] = [
-  {key: 'session', title: '1. Create a gateway session'},
-  {key: 'encrypt', title: '2. Encrypt the Aadhaar number'},
-  {key: 'otp', title: '3. Request the OTP'},
-  {key: 'enrol', title: '4. Create the ABHA'},
+/** The steps in the order they run. The stepper and the log both read this. */
+const STEPS: {key: Step; n: number; title: string}[] = [
+  {key: 'session', n: 1, title: 'Create a gateway session'},
+  {key: 'encrypt', n: 2, title: 'Encrypt the Aadhaar number'},
+  {key: 'otp', n: 3, title: 'Request the OTP'},
+  {key: 'enrol', n: 4, title: 'Create the ABHA'},
 ];
+
+/**
+ * All four steps, always, above the one card that is open.
+ *
+ * Showing them is not about progress. It is the claim the page is making: the
+ * whole use case is four calls, and a reader should be able to see that before
+ * they start rather than discover it a card at a time. Every step is reachable
+ * at any point, so the fields of a step you have not reached yet are still
+ * yours to read and fill. Running one out of order is what the toast refuses,
+ * not opening it.
+ */
+function Stepper({
+  active,
+  done,
+  onSelect,
+}: {
+  active: Step;
+  done: Record<Step, boolean>;
+  onSelect: (step: Step) => void;
+}) {
+  // The line runs between the first marker and the last, so it has three
+  // segments for four steps. Finishing a step fills the segment that leads to
+  // the next one, which is why a fourth finished step cannot add any more.
+  const finished = STEPS.filter(({key}) => done[key]).length;
+  const progress = Math.min(finished, STEPS.length - 1) / (STEPS.length - 1);
+  return (
+    <ol
+      className="quickstart__stepper"
+      aria-label="The four steps that create an ABHA"
+      style={{'--quickstart-progress': progress} as React.CSSProperties}>
+      {STEPS.map(({key, n, title}) => (
+        <li key={key}>
+          <button
+            type="button"
+            onClick={() => onSelect(key)}
+            aria-current={key === active ? 'step' : undefined}
+            className={`quickstart__stepper-step${
+              key === active ? ' quickstart__stepper-step--active' : ''
+            }${done[key] ? ' quickstart__stepper-step--done' : ''}`}>
+            <span className="quickstart__marker" aria-hidden="true">
+              {done[key] ? <Check className="size-4" /> : n}
+            </span>
+            <span className="quickstart__stepper-title">{title}</span>
+          </button>
+        </li>
+      ))}
+    </ol>
+  );
+}
 
 /**
  * Everything that was sent and everything that came back, under the row rather
@@ -211,9 +242,11 @@ function ExchangeLog({
   if (!ran.length) return null;
   return (
     <section className="quickstart__log" aria-label="What was sent and what came back">
-      {ran.map(({key, title}) => (
+      {ran.map(({key, n, title}) => (
         <div className="quickstart__log-entry" key={key}>
-          <h3 className="quickstart__log-title">{title}</h3>
+          <h3 className="quickstart__log-title">
+            {n}. {title}
+          </h3>
           <Panel exchange={log[key] as Exchange} />
           {key === 'encrypt' && loginId ? (
             <div className="quickstart__panel">
@@ -229,43 +262,44 @@ function ExchangeLog({
   );
 }
 
+/**
+ * One step's form, rendered only when it is the step the stepper has open.
+ *
+ * Returning null for the other three is what lets the card be the size of its
+ * own content. Sized as four cards in a grid they all took the height of
+ * whichever one had the most fields, which on the widest layout left 892px of
+ * the 1529px runner empty.
+ */
 function StepCard({
-  index,
+  step,
+  active,
   title,
   lede,
-  done,
-  locked,
-  lockedNote,
   children,
 }: {
-  index: number;
+  step: Step;
+  active: Step;
   title: string;
   lede: string;
-  done: boolean;
-  locked: boolean;
-  lockedNote: string;
   children: React.ReactNode;
 }) {
+  // Every pane renders, and the three that are not open are hidden rather than
+  // dropped. They all sit in one grid cell, so the card is the height of the
+  // tallest of them at whatever width it is being read at, and moving between
+  // steps does not resize the card or shift the page under it. `visibility`
+  // rather than `display`, because a hidden pane must keep its size, and it
+  // takes the pane out of the tab order and the accessibility tree either way.
   return (
     <section
-      className={`quickstart__step${locked ? ' quickstart__step--locked' : ''}`}
-      aria-labelledby={`quickstart-step-${index}`}>
+      className={`quickstart__pane${step === active ? '' : ' quickstart__pane--hidden'}`}
+      aria-labelledby={`quickstart-step-${step}`}>
       <div className="quickstart__step-head">
-        <span className="quickstart__marker" aria-hidden="true">
-          {done ? <Check className="size-4" /> : index}
-        </span>
-        <div>
-          <h3 className="quickstart__step-title" id={`quickstart-step-${index}`}>
-            {title}
-          </h3>
-          <p className="quickstart__step-lede">{lede}</p>
-        </div>
+        <h3 className="quickstart__step-title" id={`quickstart-step-${step}`}>
+          {title}
+        </h3>
+        <p className="quickstart__step-lede">{lede}</p>
       </div>
-      {locked ? (
-        <p className="quickstart__locked-note">{lockedNote}</p>
-      ) : (
-        <div className="quickstart__step-body">{children}</div>
-      )}
+      <div className="quickstart__step-body">{children}</div>
     </section>
   );
 }
@@ -275,7 +309,13 @@ export default function Quickstart() {
   const [clientSecret, setClientSecret] = useState('');
   const [token, setToken] = useState(readToken);
   const [aadhaar, setAadhaar] = useState('');
-  const [digest, setDigest] = useState('SHA-1');
+  // What the certificate declared, read from it rather than picked. It is not
+  // a control any more: the V3 certificate states
+  // RSA/ECB/OAEPWithSHA-1AndMGF1Padding, and the other two paddings this module
+  // can produce are both refused by the V3 sandbox, so the choice only ever let
+  // a reader break their own request. Held because runEnrol encrypts the OTP
+  // with whatever the certificate asked for.
+  const [padding, setPadding] = useState<Padding>('oaep-sha1');
   const [pem, setPem] = useState('');
   const [loginId, setLoginId] = useState('');
   const [txnId, setTxnId] = useState('');
@@ -284,10 +324,28 @@ export default function Quickstart() {
   const [busy, setBusy] = useState<Step | ''>('');
   const [status, setStatus] = useState('');
   const [log, setLog] = useState<Partial<Record<Step, Exchange>>>({});
+  const [toast, setToast] = useState<{text: string; at: number} | null>(null);
+  const [active, setActive] = useState<Step>('session');
   const [result, setResult] = useState<Record<string, unknown> | null>(null);
 
   // Another panel in this tab may mint or clear the token first.
   useEffect(() => subscribeToken(setToken), []);
+
+  useEffect(() => {
+    if (!toast) return;
+    const timer = setTimeout(() => setToast(null), 6000);
+    return () => clearTimeout(timer);
+  }, [toast]);
+
+  /**
+   * Every field stays usable, so a step can be attempted before the step it
+   * depends on has run. The prerequisite is still real, so the attempt is
+   * refused here and the reason is said out loud, rather than sending a call
+   * that cannot succeed and letting the reader read a server error for it.
+   */
+  function warn(text: string) {
+    setToast({text, at: Date.now()});
+  }
 
   const record = (step: Step, exchange: Exchange) =>
     setLog((current) => ({...current, [step]: exchange}));
@@ -310,26 +368,49 @@ export default function Quickstart() {
     };
   }
 
-  async function runSession(event: React.FormEvent) {
+  async function runSession(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setBusy('session');
     setStatus('Creating a gateway session.');
     const sent = headers('gateway');
+    // Read from the form, not from state. A password manager fills a field by
+    // setting its value directly, which never reaches React's onChange, so the
+    // state can still be empty while the input on screen looks filled. The
+    // request then goes out with an empty secret and comes back ABDM-9999,
+    // which reads as a wrong secret rather than a missing one.
+    //
+    // Trimmed because a pasted credential carries a trailing newline more often
+    // than not, and the gateway rejects that the same way it rejects a wrong
+    // one. Every other field on this page is trimmed.
+    const form = new FormData(event.currentTarget);
+    const id = String(form.get('clientId') ?? clientId).trim();
+    const secret = String(form.get('clientSecret') ?? clientSecret).trim();
+    if (!id || !secret) {
+      setBusy('');
+      return warn(
+        'The client id and secret both have to be filled in. If a password manager put one there, retype it: a value set that way does not always reach the page.',
+      );
+    }
     const {exchange, json} = await call(
       'POST',
       `${GATEWAY}/sessions`,
       sent,
-      {clientId, clientSecret, grantType: 'client_credentials'},
+      {clientId: id, clientSecret: secret, grantType: 'client_credentials'},
     );
     // The secret goes to NHA, not onto the screen.
     record('session', {
       ...exchange,
-      body: JSON.stringify({clientId, clientSecret: REDACTED, grantType: 'client_credentials'}),
+      body: JSON.stringify({
+        clientId: id,
+        clientSecret: `${REDACTED} (${secret.length} characters)`,
+        grantType: 'client_credentials',
+      }),
     });
     const minted = field(json, ['accessToken']);
     if (minted) {
       setToken(minted);
       writeToken(minted);
+      setActive('encrypt');
       setStatus('Step 1 succeeded. You have an access token.');
     } else {
       setStatus(originBlocked(exchange) ? ORIGIN_BLOCKED : 'Step 1 did not return an access token. The response is shown below.');
@@ -339,6 +420,8 @@ export default function Quickstart() {
 
   async function runEncrypt(event: React.FormEvent) {
     event.preventDefault();
+    if (!token)
+      return warn('Create a session first. Fetching the certificate needs the access token.');
     setBusy('encrypt');
     setLoginId('');
     setStatus('Fetching the public certificate.');
@@ -363,10 +446,17 @@ export default function Quickstart() {
       return;
     }
     // The certificate names its own algorithm. Follow it rather than guess.
+    // The choice is held in a local because setPadding does not change
+    // `padding` inside this call: encrypting with the state value would use the
+    // padding from before the certificate was read, and the OTP, which runEnrol
+    // encrypts with the state value later, would then use a different one.
+    // A certificate that declares nothing leaves the reader's choice alone.
     const declared = field(json, ['encryptionAlgorithm']);
-    if (declared) setDigest(/SHA-?256/i.test(declared) ? 'SHA-256' : 'SHA-1');
+    const effective = declared ? paddingFromAlgorithm(declared) : padding;
+    setPadding(effective);
     try {
-      setLoginId(await encryptValue(key, aadhaar.trim(), digest));
+      setLoginId(await encryptValue(key, effective, aadhaar.trim()));
+      setActive('otp');
       setStatus('Step 2 succeeded. The number was encrypted in this browser.');
     } catch (error) {
       setStatus(
@@ -380,6 +470,10 @@ export default function Quickstart() {
 
   async function runOtp(event: React.FormEvent) {
     event.preventDefault();
+    if (!loginId)
+      return warn(
+        'Encrypt the Aadhaar number first. This call takes the encrypted value, never the raw one.',
+      );
     setBusy('otp');
     setStatus('Requesting an OTP from Aadhaar.');
     const {exchange, json} = await call('POST', `${ABHA}/v3/enrollment/request/otp`, headers('abha'), {
@@ -392,6 +486,7 @@ export default function Quickstart() {
     const returned = field(json, ['txnId']);
     if (returned) {
       setTxnId(returned);
+      setActive('enrol');
       setStatus('Step 3 succeeded. An OTP was sent to the registered mobile.');
     } else {
       setStatus(originBlocked(exchange) ? ORIGIN_BLOCKED : 'Step 3 returned no transaction id. The response is shown below.');
@@ -401,13 +496,17 @@ export default function Quickstart() {
 
   async function runEnrol(event: React.FormEvent) {
     event.preventDefault();
+    if (!txnId)
+      return warn(
+        'Request an OTP first. This call needs the transaction id that came back with it.',
+      );
     setBusy('enrol');
     setStatus('Creating the ABHA.');
     let otpValue = '';
     try {
       // The OTP is encrypted against the same certificate, per the encryption
       // concept page's list of values that never travel raw.
-      otpValue = await encryptValue(pem, otp.trim(), digest);
+      otpValue = await encryptValue(pem, padding, otp.trim());
     } catch (error) {
       setStatus(
         `The OTP could not be encrypted: ${
@@ -447,224 +546,232 @@ export default function Quickstart() {
     'healthId',
   ]);
 
+  /** What the stepper shows a tick against: the step produced its value. */
+  const done: Record<Step, boolean> = {
+    session: Boolean(token),
+    encrypt: Boolean(loginId),
+    otp: Boolean(txnId),
+    enrol: Boolean(abhaNumber),
+  };
+
   return (
     <div className="quickstart">
       <p className="quickstart__status" role="status" aria-live="polite">
         {status}
       </p>
 
-      <div className="quickstart__steps">
-        <StepCard
-          index={1}
-          title="Create a gateway session"
-          lede="Exchange your sandbox client id and secret for the access token every later call carries."
-          done={Boolean(token)}
-          locked={false}
-          lockedNote="">
-          <form className="quickstart__form" onSubmit={runSession}>
-            <div className="quickstart__fields">
-              <label className="quickstart__field">
-                <span className="quickstart__label">clientId</span>
-                <input
-                  className="quickstart__input"
-                  type="text"
-                  autoComplete="off"
-                  spellCheck={false}
-                  value={clientId}
-                  onChange={(event) => setClientId(event.target.value)}
-                />
-              </label>
-              <label className="quickstart__field">
-                <span className="quickstart__label">
-                  clientSecret <span className="quickstart__sensitive">sensitive</span>
-                </span>
-                <input
-                  className="quickstart__input"
-                  type="password"
-                  autoComplete="off"
-                  spellCheck={false}
-                  value={clientSecret}
-                  onChange={(event) => setClientSecret(event.target.value)}
-                />
-                <span className="quickstart__hint">
-                  Held in this page only while the tab is open. It is never written to
-                  storage and never put in a URL.
-                </span>
-              </label>
-            </div>
-            <Button type="submit" disabled={busy !== '' || !clientId || !clientSecret}>
-              {busy === 'session' ? (
-                <Loader2 className="quickstart__spin size-4" aria-hidden="true" />
-              ) : null}
-              Create session
-            </Button>
-          </form>
-          {token ? (
-            <p className="quickstart__held">
-              An access token is held in <code>sessionStorage</code> for this tab, so
-              every Try It console on this site can use it without you pasting it again.
-              Closing the tab ends it.
-            </p>
-          ) : null}
-        </StepCard>
+      <div className="quickstart__card">
+        <Stepper active={active} done={done} onSelect={setActive} />
 
-        <StepCard
-          index={2}
-          title="Encrypt the Aadhaar number"
-          lede="Fetch NHA's public certificate, then encrypt the number here in your browser. NHA never accepts a raw Aadhaar number."
-          done={Boolean(loginId)}
-          locked={!token}
-          lockedNote="Create a session first. Fetching the certificate needs the access token.">
-          <div className="quickstart__warning">
-            <Lock className="size-4" aria-hidden="true" />
-            <div>
-              <strong>An Aadhaar number is a government identity number.</strong>
-              <p>
-                What you type is encrypted in this browser with NHA's public key and
-                posted only to NHA's sandbox host. This site has no server of its own and
-                stores nothing you type. Use a sandbox test identity, not a real person's
-                Aadhaar number. NHA does not publish a test Aadhaar number, so bring one
-                issued to you for sandbox use.
+        <div className="quickstart__panes">
+          <StepCard
+            step="session"
+            active={active}
+            title="Create a gateway session"
+            lede="Exchange your sandbox client id and secret for the access token every later call carries.">
+            <form className="quickstart__form" onSubmit={runSession}>
+              <div className="quickstart__fields">
+                <label className="quickstart__field">
+                  <span className="quickstart__label">Client ID</span>
+                  <input
+                    className="quickstart__input"
+                    type="text"
+                    name="clientId"
+                    autoComplete="off"
+                    spellCheck={false}
+                    value={clientId}
+                    onChange={(event) => setClientId(event.target.value)}
+                  />
+                </label>
+                <label className="quickstart__field">
+                  <span className="quickstart__label">
+                    Client secret <span className="quickstart__sensitive">sensitive</span>
+                  </span>
+                  <input
+                    className="quickstart__input"
+                    type="password"
+                    name="clientSecret"
+                    autoComplete="off"
+                    spellCheck={false}
+                    value={clientSecret}
+                    onChange={(event) => setClientSecret(event.target.value)}
+                  />
+                  <span className="quickstart__hint">
+                    Held in this page only while the tab is open. It is never written to
+                    storage and never put in a URL.
+                  </span>
+                </label>
+              </div>
+              <Button type="submit" disabled={busy !== '' || !clientId.trim() || !clientSecret.trim()}>
+                {busy === 'session' ? (
+                  <Loader2 className="quickstart__spin size-4" aria-hidden="true" />
+                ) : null}
+                Create session
+              </Button>
+            </form>
+            {token ? (
+              <p className="quickstart__held">
+                An access token is held in <code>sessionStorage</code> for this tab, so
+                every Try It console on this site can use it without you pasting it again.
+                Closing the tab ends it.
               </p>
-            </div>
-          </div>
-          <form className="quickstart__form" onSubmit={runEncrypt}>
-            <div className="quickstart__fields">
-              <label className="quickstart__field">
-                <span className="quickstart__label">
-                  Aadhaar number <span className="quickstart__sensitive">sensitive</span>
-                </span>
-                <input
-                  className="quickstart__input"
-                  type="password"
-                  inputMode="numeric"
-                  autoComplete="off"
-                  spellCheck={false}
-                  value={aadhaar}
-                  onChange={(event) => setAadhaar(event.target.value)}
-                />
-                <span className="quickstart__hint">
-                  Masked as you type, kept in this page's memory only, cleared when you
-                  close the tab.
-                </span>
-              </label>
-              <label className="quickstart__field">
-                <span className="quickstart__label">OAEP digest</span>
-                <select
-                  className="quickstart__input"
-                  value={digest}
-                  onChange={(event) => setDigest(event.target.value)}>
-                  <option value="SHA-1">SHA-1</option>
-                  <option value="SHA-256">SHA-256</option>
-                </select>
-                <span className="quickstart__hint">
-                  The V3 ABHA service takes RSA-OAEP with SHA-1, and the certificate it
-                  returns states the algorithm, so this follows the certificate. SHA-256 is
-                  here for hosts that declare it; the V3 sandbox rejects it.
-                </span>
-              </label>
-            </div>
-            <Button type="submit" disabled={busy !== '' || !aadhaar.trim()}>
-              {busy === 'encrypt' ? (
-                <Loader2 className="quickstart__spin size-4" aria-hidden="true" />
-              ) : null}
-              Fetch certificate and encrypt
-            </Button>
-          </form>
-        </StepCard>
+            ) : null}
+          </StepCard>
 
-        <StepCard
-          index={3}
-          title="Request the OTP"
-          lede="NHA sends a one time password to the mobile number registered against that Aadhaar, and hands you a transaction id."
-          done={Boolean(txnId)}
-          locked={!loginId}
-          lockedNote="Encrypt the Aadhaar number first. This call takes the encrypted value, never the raw one.">
-          <form className="quickstart__form" onSubmit={runOtp}>
-            <Button type="submit" disabled={busy !== ''}>
-              {busy === 'otp' ? (
-                <Loader2 className="quickstart__spin size-4" aria-hidden="true" />
-              ) : null}
-              Request OTP
-            </Button>
-          </form>
-          {txnId ? <p className="quickstart__held">Transaction id: {txnId}</p> : null}
-        </StepCard>
+          <StepCard
+            step="encrypt"
+            active={active}
+            title="Encrypt the Aadhaar number"
+            lede="Fetch NHA's public certificate, then encrypt the number here in your browser. NHA never accepts a raw Aadhaar number.">
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <button
+                    type="button"
+                    className="quickstart__warning"
+                    aria-label={`An Aadhaar number is a government identity number. ${AADHAAR_NOTE}`}>
+                    <Lock className="size-4" aria-hidden="true" />
+                    <span>
+                      An Aadhaar number is a government identity number. Use a sandbox test
+                      identity.
+                    </span>
+                    <Info className="quickstart__warning-mark size-3.5" aria-hidden="true" />
+                  </button>
+                </TooltipTrigger>
+                <TooltipContent className="quickstart__tip" side="top">
+                  {AADHAAR_NOTE}
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+            <span id="quickstart-aadhaar-note" className="quickstart__sr-only">
+              {AADHAAR_NOTE}
+            </span>
+            <form className="quickstart__form" onSubmit={runEncrypt}>
+              <div className="quickstart__fields">
+                <label className="quickstart__field">
+                  <span className="quickstart__label">
+                    Aadhaar number <span className="quickstart__sensitive">sensitive</span>
+                  </span>
+                  <input
+                    className="quickstart__input"
+                    type="password"
+                    inputMode="numeric"
+                    autoComplete="off"
+                    spellCheck={false}
+                    aria-describedby="quickstart-aadhaar-note"
+                    value={aadhaar}
+                    onChange={(event) => setAadhaar(event.target.value)}
+                  />
+                  <span className="quickstart__hint">
+                    Masked as you type, kept in this page's memory only, cleared when you
+                    close the tab.
+                  </span>
+                </label>
+              </div>
+              <Button type="submit" disabled={busy !== '' || !aadhaar.trim()}>
+                {busy === 'encrypt' ? (
+                  <Loader2 className="quickstart__spin size-4" aria-hidden="true" />
+                ) : null}
+                Fetch certificate and encrypt
+              </Button>
+            </form>
+          </StepCard>
 
-        <StepCard
-          index={4}
-          title="Create the ABHA"
-          lede="Send the OTP with the transaction id. This call creates a real account on the sandbox, so send it once."
-          done={Boolean(abhaNumber)}
-          locked={!txnId}
-          lockedNote="Request an OTP first. This call needs the transaction id that came back with it.">
-          <form className="quickstart__form" onSubmit={runEnrol}>
-            <div className="quickstart__fields">
-              <label className="quickstart__field">
-                <span className="quickstart__label">
-                  OTP <span className="quickstart__sensitive">sensitive</span>
-                </span>
-                <input
-                  className="quickstart__input"
-                  type="password"
-                  inputMode="numeric"
-                  autoComplete="one-time-code"
-                  value={otp}
-                  onChange={(event) => setOtp(event.target.value)}
-                />
-                <span className="quickstart__hint">
-                  Encrypted with the same certificate before it is sent.
-                </span>
-              </label>
-              <label className="quickstart__field">
-                <span className="quickstart__label">Mobile number</span>
-                <input
-                  className="quickstart__input"
-                  type="tel"
-                  inputMode="numeric"
-                  autoComplete="off"
-                  value={mobile}
-                  onChange={(event) => setMobile(event.target.value)}
-                />
-                <span className="quickstart__hint">
-                  The number to attach to the new account. The specification requires it on
-                  this call and its example shows it unencrypted.
-                </span>
-              </label>
-            </div>
-            <Button type="submit" disabled={busy !== '' || !otp.trim() || !mobile.trim()}>
-              {busy === 'enrol' ? (
-                <Loader2 className="quickstart__spin size-4" aria-hidden="true" />
-              ) : null}
-              Create ABHA
-            </Button>
-          </form>
-          {abhaNumber || abhaAddress ? (
-            <dl className="quickstart__result">
-              {abhaNumber ? (
-                <div>
-                  <dt>ABHA number</dt>
-                  <dd>{abhaNumber}</dd>
-                </div>
-              ) : null}
-              {abhaAddress ? (
-                <div>
-                  <dt>ABHA address</dt>
-                  <dd>{abhaAddress}</dd>
-                </div>
-              ) : null}
-            </dl>
-          ) : null}
-          {log.enrol && !abhaNumber && !abhaAddress && log.enrol.status === 200 ? (
-            <p className="quickstart__held">
-              The call succeeded. NHA's specification does not document the response body
-              for this operation, so read the fields you need from the response below.
-            </p>
-          ) : null}
-        </StepCard>
+          <StepCard
+            step="otp"
+            active={active}
+            title="Request the OTP"
+            lede="NHA sends a one time password to the mobile number registered against that Aadhaar, and hands you a transaction id.">
+            <form className="quickstart__form" onSubmit={runOtp}>
+              <Button type="submit" disabled={busy !== ''}>
+                {busy === 'otp' ? (
+                  <Loader2 className="quickstart__spin size-4" aria-hidden="true" />
+                ) : null}
+                Request OTP
+              </Button>
+            </form>
+            {txnId ? <p className="quickstart__held">Transaction id: {txnId}</p> : null}
+          </StepCard>
+
+          <StepCard
+            step="enrol"
+            active={active}
+            title="Create the ABHA"
+            lede="Send the OTP with the transaction id. This call creates a real account on the sandbox, so send it once.">
+            <form className="quickstart__form" onSubmit={runEnrol}>
+              <div className="quickstart__fields">
+                <label className="quickstart__field">
+                  <span className="quickstart__label">
+                    OTP <span className="quickstart__sensitive">sensitive</span>
+                  </span>
+                  <input
+                    className="quickstart__input"
+                    type="password"
+                    inputMode="numeric"
+                    autoComplete="one-time-code"
+                    value={otp}
+                    onChange={(event) => setOtp(event.target.value)}
+                  />
+                  <span className="quickstart__hint">
+                    Encrypted with the same certificate before it is sent.
+                  </span>
+                </label>
+                <label className="quickstart__field">
+                  <span className="quickstart__label">Mobile number</span>
+                  <input
+                    className="quickstart__input"
+                    type="tel"
+                    inputMode="numeric"
+                    autoComplete="off"
+                    value={mobile}
+                    onChange={(event) => setMobile(event.target.value)}
+                  />
+                  <span className="quickstart__hint">
+                    The number to attach to the new account. The specification requires it on
+                    this call and its example shows it unencrypted.
+                  </span>
+                </label>
+              </div>
+              <Button type="submit" disabled={busy !== '' || !otp.trim() || !mobile.trim()}>
+                {busy === 'enrol' ? (
+                  <Loader2 className="quickstart__spin size-4" aria-hidden="true" />
+                ) : null}
+                Create ABHA
+              </Button>
+            </form>
+            {abhaNumber || abhaAddress ? (
+              <dl className="quickstart__result">
+                {abhaNumber ? (
+                  <div>
+                    <dt>ABHA number</dt>
+                    <dd>{abhaNumber}</dd>
+                  </div>
+                ) : null}
+                {abhaAddress ? (
+                  <div>
+                    <dt>ABHA address</dt>
+                    <dd>{abhaAddress}</dd>
+                  </div>
+                ) : null}
+              </dl>
+            ) : null}
+            {log.enrol && !abhaNumber && !abhaAddress && log.enrol.status === 200 ? (
+              <p className="quickstart__held">
+                The call succeeded. NHA's specification does not document the response body
+                for this operation, so read the fields you need from the response below.
+              </p>
+            ) : null}
+          </StepCard>
+        </div>
       </div>
 
       <ExchangeLog log={log} loginId={loginId} />
+
+      {toast ? (
+        <p className="quickstart__toast" role="alert">
+          {toast.text}
+        </p>
+      ) : null}
     </div>
   );
 }
