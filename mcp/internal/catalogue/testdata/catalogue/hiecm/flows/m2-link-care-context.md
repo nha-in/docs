@@ -6,8 +6,6 @@ milestone: M2
 title: Link a care context
 summary: >
   Tell ABDM that this patient had a visit at your facility.
-verified:
-  status: unverified
 related:
   errors: [hiecm.error.abdm-1035]
   endpoints: [hiecm.endpoint.link-add-contexts]

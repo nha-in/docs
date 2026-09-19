@@ -441,7 +441,7 @@ Nine tools, each answering a different kind of question:
 
 Retrieval is hybrid: FTS5 keyword ranking (error codes weighted highest) fused with cosine similarity over per-section chunk embeddings from a self-hosted Ollama sidecar running `nomic-embed-text`. Reciprocal rank fusion merges the two. Degradation is a design rule: without Ollama the indexer builds keyword-only and the server answers from keyword search alone, reporting `embeddings: false` on `/healthz`. Search never hard-depends on the sidecar.
 
-Rules that keep it honest: every response carries `catalogue_version`; every atom result carries `verification_status`; an unknown id returns the closest valid ids, never a guess; `decode_error` with no matching atom says exactly that. Nothing executes against NHA: the earlier idea of a Scalar Installation MCP is superseded, its search-mode value covered by `get_operation` and `validate_request`, and execute mode remains a Phase 2 concern with its own safety design (per-caller credentials, never shared).
+Rules that keep it honest: every response carries `catalogue_version`; an atom result carries no status, because atoms have none; an unknown id returns the closest valid ids, never a guess; `decode_error` with no matching atom says exactly that. Nothing executes against NHA: the earlier idea of a Scalar Installation MCP is superseded, its search-mode value covered by `get_operation` and `validate_request`, and execute mode remains a Phase 2 concern with its own safety design (per-caller credentials, never shared).
 
 | MCP | Where it comes from | Use in V1 |
 |---|---|---|

@@ -11,7 +11,7 @@ Its value is not that it answers quickly. It is that it answers **only from the 
 
 ## Tools it calls
 
-All nine tools the Docs MCP serves are available to it: `search_docs`, `get_atom`, `related_atoms`, `decode_error`, `list_atoms`, `catalogue_info`, `list_operations`, `get_operation`, `validate_request`. Every response carries `catalogue_version`; every atom result carries `verification_status`; an unknown id returns the closest matches, never a guess; `decode_error` with no matching atom says so explicitly.
+All nine tools the Docs MCP serves are available to it: `search_docs`, `get_atom`, `related_atoms`, `decode_error`, `list_atoms`, `catalogue_info`, `list_operations`, `get_operation`, `validate_request`. Every response carries `catalogue_version`; an atom result carries no status, because atoms have none; an unknown id returns the closest matches, never a guess; `decode_error` with no matching atom says so explicitly.
 
 ## The loop
 

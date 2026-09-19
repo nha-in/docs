@@ -100,8 +100,6 @@ milestone: M2
 title: Sample concept
 summary: >
   A sample concept used for testing.
-verified:
-  status: verified
 ---
 
 ## In plain words
@@ -159,8 +157,6 @@ milestone: M2
 title: Sample concept
 summary: >
   A sample concept used for testing.
-verified:
-  status: verified
 ---
 
 ## In plain words
