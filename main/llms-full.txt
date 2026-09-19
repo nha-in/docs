@@ -27449,7 +27449,7 @@ Questions about the exit process itself, including where to submit the form or w
 
 # Get started
 
-Connect your application to India's health data network.
+Connect your application to India's Interoperable Digital Health Infrastructure.
 
 ## What ABDM is
 
