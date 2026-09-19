@@ -9,7 +9,6 @@ CREATE TABLE atoms (
     milestone TEXT NOT NULL,
     title TEXT NOT NULL,
     summary TEXT NOT NULL,
-    verification_status TEXT NOT NULL,
     body TEXT NOT NULL,
     source_path TEXT NOT NULL,
     doc_url TEXT NOT NULL,

@@ -65,8 +65,7 @@ func TestSearchDocsCarriesVersionAndStatus(t *testing.T) {
 	var payload struct {
 		CatalogueVersion string `json:"catalogue_version"`
 		Hits             []struct {
-			ID                 string `json:"id"`
-			VerificationStatus string `json:"verification_status"`
+			ID string `json:"id"`
 		} `json:"hits"`
 	}
 	if err := json.Unmarshal([]byte(out), &payload); err != nil {
@@ -77,9 +76,6 @@ func TestSearchDocsCarriesVersionAndStatus(t *testing.T) {
 	}
 	if len(payload.Hits) == 0 || payload.Hits[0].ID != "hiecm.error.abdm-1035" {
 		t.Errorf("hits = %+v", payload.Hits)
-	}
-	if payload.Hits[0].VerificationStatus != "verified" {
-		t.Errorf("status not carried")
 	}
 }
 
@@ -149,15 +145,18 @@ func TestRelatedAtomsReverseEdgeNotMislabeled(t *testing.T) {
 	}
 }
 
-func TestGetAtomCautionOnUnverifiedOnly(t *testing.T) {
+// The Catalogue is published as ABDM's statement of how ABDM works, so no
+// atom carries a status and no answer carries a caution derived from one.
+func TestGetAtomCarriesNoStatusOrCaution(t *testing.T) {
 	sess := connect(t, false, nil)
-	out := callText(t, sess, "get_atom", map[string]any{"id": "hiecm.flow.m2-link-care-context"})
-	if !strings.Contains(out, `"caution"`) || !strings.Contains(out, "recorded claims, not observed behaviour") {
-		t.Errorf("unverified atom missing caution: %s", out)
-	}
-	out = callText(t, sess, "get_atom", map[string]any{"id": "hiecm.error.abdm-1035"})
-	if strings.Contains(out, `"caution"`) {
-		t.Errorf("verified atom must carry no caution: %s", out)
+	for _, id := range []string{"hiecm.flow.m2-link-care-context", "hiecm.error.abdm-1035"} {
+		out := callText(t, sess, "get_atom", map[string]any{"id": id})
+		if strings.Contains(out, `"caution"`) {
+			t.Errorf("%s carries a caution: %s", id, out)
+		}
+		if strings.Contains(out, "verification_status") {
+			t.Errorf("%s carries a verification status: %s", id, out)
+		}
 	}
 }
 

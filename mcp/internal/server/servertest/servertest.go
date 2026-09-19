@@ -25,12 +25,11 @@ func Reader(t *testing.T) *index.Reader {
 		{
 			ID: "hiecm.error.abdm-1035", Type: "error", Gateway: "hiecm",
 			Milestone: "M2", Title: "ABDM-1035 facility not onboarded",
-			Summary:            "The gateway rejected the call.",
-			VerificationStatus: "verified",
-			Body:               "## In plain words\n\nThe gateway does not recognise your facility. ABDM-1035 means the X-HIP-ID header is not registered. Every timestamp in the response is ISO 8601 UTC.",
-			SourcePath:         "hiecm/errors/abdm-1035.md",
-			ErrorCodes:         []string{"ABDM-1035"},
-			Related:            map[string][]string{},
+			Summary:    "The gateway rejected the call.",
+			Body:       "## In plain words\n\nThe gateway does not recognise your facility. ABDM-1035 means the X-HIP-ID header is not registered. Every timestamp in the response is ISO 8601 UTC.",
+			SourcePath: "hiecm/errors/abdm-1035.md",
+			ErrorCodes: []string{"ABDM-1035"},
+			Related:    map[string][]string{},
 		},
 	}
 	ops := []catalogue.Operation{{

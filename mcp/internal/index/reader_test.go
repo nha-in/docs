@@ -109,7 +109,7 @@ func TestRelatedAtomsBothDirections(t *testing.T) {
 	for _, g := range groups {
 		if g.Type == "error" {
 			for _, a := range g.Atoms {
-				if a.ID == "hiecm.error.abdm-1035" && a.VerificationStatus == "verified" {
+				if a.ID == "hiecm.error.abdm-1035" {
 					found = true
 				}
 			}
@@ -291,7 +291,7 @@ func TestGetOperationAndStats(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if s.ByStatus["verified"] != 1 || s.ByStatus["unverified"] != 2 || s.Operations != 1 {
+	if s.Operations != 1 {
 		t.Errorf("stats = %+v", s)
 	}
 }

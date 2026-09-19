@@ -25,17 +25,15 @@ import (
 const (
 	searchDocsDescription = "Hybrid search over the ABDM catalogue atoms: concepts, flows, endpoints, callbacks, errors, tests, glossary entries, decisions, FHIR mappings, sandbox notes and troubleshooting guides. " +
 		"It does NOT search raw API operations; those are covered by list_operations and get_operation. " +
-		"Use this when you have an intent in your own words and want the catalogue's guidance. " +
-		"Results carry verification_status; treat unverified content as unverified."
+		"Use this when you have an intent in your own words and want the catalogue's guidance."
 	getAtomDescription = "Read one catalogue atom: full frontmatter fields and markdown body. " +
-		"Use this when you already know the exact atom id and want the one full atom; use search_docs when you only have an intent. " +
-		"Atoms not marked verified carry a caution field."
+		"Use this when you already know the exact atom id and want the one full atom; use search_docs when you only have an intent."
 	relatedAtomsDescription = "Walk the catalogue graph from one atom, both directions. " +
 		"Related atoms come back grouped by their own type (concept, flow, endpoint, callback, error, test, ...), each atom once. " +
 		"Use this to move from one exact atom to its neighbours; use search_docs when you do not have a starting atom."
 	decodeErrorDescription = "Extract ABDM error codes from a code or raw response body and return, per code, the matching narrative error atoms with their fixes plus the specification rows (code, message, http status, returning operation_id, module). " +
 		"Use this first for any error response from the gateway, before reaching for search_docs."
-	catalogueInfoDescription = "Catalogue version, build time, embeddings status and coverage counts by gateway, milestone, type and verification status. " +
+	catalogueInfoDescription = "Catalogue version, build time, embeddings status and coverage counts by gateway, milestone and type. " +
 		"Use this to check which snapshot you are talking to and how complete it is."
 	listOperationsDescription = "List API operations from the ingested OpenAPI specifications. " +
 		"The unfiltered listing is hundreds of operations and is truncated at 60 rows, so filter by tag, by module or by q, a substring over operation_id, summary and path. " +
@@ -148,13 +146,10 @@ func (t *Tools) GetAtom(ctx context.Context, in getAtomIn) (map[string]any, erro
 	fields := map[string]any{
 		"id": a.ID, "type": a.Type, "gateway": a.Gateway,
 		"milestone": a.Milestone, "title": a.Title, "summary": a.Summary,
-		"verification_status": a.VerificationStatus, "body": a.Body,
+		"body": a.Body,
 		// The page a reader is sent to. Empty when the atom has no
 		// published page, which callers must treat as not citable.
 		"doc_url": index.DocLink(a.DocURL, a.DocAnchor),
-	}
-	if a.VerificationStatus != "verified" {
-		fields["caution"] = unverifiedCaution
 	}
 	return t.versioned(fields), nil
 }
@@ -165,13 +160,12 @@ type lookupIn struct {
 }
 
 type Passage struct {
-	ID                 string `json:"id"`
-	Type               string `json:"type"`
-	Milestone          string `json:"milestone"`
-	Title              string `json:"title"`
-	VerificationStatus string `json:"verification_status"`
-	DocURL             string `json:"doc_url"`
-	Body               string `json:"body"` // full body for the top hits, summary for the rest
+	ID        string `json:"id"`
+	Type      string `json:"type"`
+	Milestone string `json:"milestone"`
+	Title     string `json:"title"`
+	DocURL    string `json:"doc_url"`
+	Body      string `json:"body"` // full body for the top hits, summary for the rest
 }
 
 type PassagePack struct {
@@ -202,8 +196,8 @@ type atomOpener interface {
 // becomes visible instead of silently returning a snippet.
 func openPassage(r atomOpener, h index.SearchHit) (Passage, []map[string]string) {
 	p := Passage{ID: h.ID, Type: h.Type, Milestone: h.Milestone, Title: h.Title,
-		VerificationStatus: h.VerificationStatus, DocURL: index.DocLink(h.DocURL, h.DocAnchor),
-		Body: h.Summary}
+		DocURL: index.DocLink(h.DocURL, h.DocAnchor),
+		Body:   h.Summary}
 	a, err := r.GetAtom(h.ID)
 	if err != nil {
 		slog.Warn("lookup: could not open atom, returning its summary", "id", h.ID, "error", err)
@@ -236,8 +230,8 @@ func (t *Tools) Lookup(ctx context.Context, in lookupIn) (PassagePack, error) {
 	seenRelated := map[string]bool{}
 	for i, h := range hits {
 		p := Passage{ID: h.ID, Type: h.Type, Milestone: h.Milestone, Title: h.Title,
-			VerificationStatus: h.VerificationStatus, DocURL: index.DocLink(h.DocURL, h.DocAnchor),
-			Body: h.Summary}
+			DocURL: index.DocLink(h.DocURL, h.DocAnchor),
+			Body:   h.Summary}
 		if i < lookupOpened {
 			var related []map[string]string
 			p, related = openPassage(t.r, h)
@@ -291,10 +285,7 @@ func (t *Tools) DecodeError(ctx context.Context, in decodeIn) (map[string]any, e
 			}
 			entry := map[string]any{
 				"id": a.ID, "title": a.Title, "summary": a.Summary,
-				"verification_status": a.VerificationStatus, "body": a.Body,
-			}
-			if a.VerificationStatus != "verified" {
-				entry["caution"] = unverifiedCaution
+				"body": a.Body,
 			}
 			full = append(full, entry)
 		}
@@ -433,7 +424,6 @@ func (t *Tools) CatalogueInfo(ctx context.Context, in emptyIn) (map[string]any, 
 			"by_gateway":   stats.ByGateway,
 			"by_milestone": stats.ByMilestone,
 			"by_type":      stats.ByType,
-			"by_status":    stats.ByStatus,
 		},
 		"operations": stats.Operations,
 	}), nil
@@ -715,7 +705,7 @@ func ChatHooks(tools *Tools) (
 		var srcs []chat.Source
 		var facts guard.PackFacts
 		for _, p := range pack.Passages {
-			srcs = append(srcs, chat.Source{ID: p.ID, Title: p.Title, URL: p.DocURL, Status: p.VerificationStatus})
+			srcs = append(srcs, chat.Source{ID: p.ID, Title: p.Title, URL: p.DocURL})
 			if p.Type == "flow" {
 				facts.FlowTitles = append(facts.FlowTitles, p.Title)
 			}

@@ -31,9 +31,6 @@ func TestSearchKeywordOnlySnapshot(t *testing.T) {
 	if len(hits) == 0 || hits[0].ID != "hiecm.error.abdm-1035" {
 		t.Fatalf("hits = %+v, want abdm-1035 first", hits)
 	}
-	if hits[0].VerificationStatus != "verified" {
-		t.Errorf("status missing from hit")
-	}
 }
 
 func TestSearchHybridFindsSemanticMatch(t *testing.T) {

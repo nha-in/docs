@@ -13,15 +13,14 @@ import (
 )
 
 type Atom struct {
-	ID                 string
-	Type               string
-	Gateway            string
-	Milestone          string
-	Title              string
-	Summary            string
-	VerificationStatus string
-	Body               string
-	SourcePath         string
+	ID         string
+	Type       string
+	Gateway    string
+	Milestone  string
+	Title      string
+	Summary    string
+	Body       string
+	SourcePath string
 	// DocURL and DocAnchor are the published page a support answer links
 	// to instead of showing a reader an atom id, and the section within
 	// it. They are NOT parsed from the atom: an atom is authored before
@@ -44,9 +43,6 @@ type frontmatter struct {
 	Title     string              `yaml:"title"`
 	Summary   string              `yaml:"summary"`
 	Related   map[string][]string `yaml:"related"`
-	Verified struct {
-		Status string `yaml:"status"`
-	} `yaml:"verified"`
 }
 
 // HIS is M4's registry series and AS is the PHR series NHA records once
@@ -91,25 +87,20 @@ func ParseAtom(sourcePath string, content []byte) (Atom, error) {
 	if fm.ID == "" {
 		return Atom{}, fmt.Errorf("%s: frontmatter missing id", sourcePath)
 	}
-	status := fm.Verified.Status
-	if status == "" {
-		status = "draft"
-	}
 	related := fm.Related
 	if related == nil {
 		related = map[string][]string{}
 	}
 	return Atom{
-		ID:                 fm.ID,
-		Type:               fm.Type,
-		Gateway:            fm.Gateway,
-		Milestone:          fm.Milestone,
-		Title:              fm.Title,
-		Summary:            strings.TrimSpace(fm.Summary),
-		VerificationStatus: status,
-		Body:               strings.TrimSpace(string(body)),
-		SourcePath:         sourcePath,
-		ErrorCodes:         ExtractErrorCodes(string(content)),
-		Related:            related,
+		ID:         fm.ID,
+		Type:       fm.Type,
+		Gateway:    fm.Gateway,
+		Milestone:  fm.Milestone,
+		Title:      fm.Title,
+		Summary:    strings.TrimSpace(fm.Summary),
+		Body:       strings.TrimSpace(string(body)),
+		SourcePath: sourcePath,
+		ErrorCodes: ExtractErrorCodes(string(content)),
+		Related:    related,
 	}, nil
 }
