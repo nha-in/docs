@@ -16,17 +16,17 @@ The calls themselves: where they live, what they need in their headers, and one 
 | --- | --- | --- |
 | `POST` | `/api/hiecm/consent/v3/request/hip/on-notify` | This is ABDM HIE-CM API called by HIP to acknowledge the notification sent when… |
 | `POST` | `/api/hiecm/data-flow/v3/health-information/hip/on-request` | Health information data request acknowledgement from HIP. |
-| `GET` | `/api/hiecm/gateway/v3/.well-known/openid-configuration` | This API is invoked to get the open id configuration. |
+| `GET` | `/api/hiecm/gateway/v3/.well-known/openid-configuration` | This API is invoked to get the open ID configuration. |
 | `PUT` | `/api/hiecm/gateway/v3/bridge-service` | v3/gateway/bridge-service |
-| `GET` | `/api/hiecm/gateway/v3/bridge-service/serviceId/{service-id}` | This API is invoked to fetch the details of a service id. |
+| `GET` | `/api/hiecm/gateway/v3/bridge-service/serviceId/{service-id}` | This API is invoked to fetch the details of a service ID. |
 | `GET` | `/api/hiecm/gateway/v3/bridge-services` | This API will fetch the service ids registered against a bridge. |
 | `PATCH` | `/api/hiecm/gateway/v3/bridge/url` | This API is invoked to update the bridge URL. |
 | `GET` | `/api/hiecm/gateway/v3/certs` | This API is invoked to get the certificate information. |
-| `GET` | `/api/hiecm/gateway/v3/govt-programs` | This API is invoked to fetch the list of govt programs. |
+| `GET` | `/api/hiecm/gateway/v3/govt-programs` | This API is invoked to fetch the list of govt programmes. |
 | `GET` | `/api/hiecm/gateway/v3/health-lockers` | This API is invoked to fetch the record with health locker enabled provider det… |
 | `GET` | `/api/hiecm/gateway/v3/providers` | This API is invoked to fetch the list of providers filtered by name. |
 | `GET` | `/api/hiecm/gateway/v3/providers/{provider-id}` | This API is invoked to fetch the record for provider details for requested prov… |
-| `POST` | `/api/hiecm/gateway/v3/sessions` | This API is invoked to generate keycloak token/access token. |
+| `POST` | `/api/hiecm/gateway/v3/sessions` | This API is invoked to generate Keycloak token/access token. |
 | `POST` | `/api/hiecm/hip/v3/link/carecontext` | This API will be used to perform HIP initiated linking. |
 | `POST` | `/api/hiecm/hip/v3/link/context/notify` | This API will be used to notify CM about any update on the already linked care … |
 | `POST` | `/api/hiecm/hip/v3/link/patient/links/sms/notify2` | This API will be used by HIP to send SMS notification to patient that a care co… |
@@ -35,7 +35,7 @@ The calls themselves: where they live, what they need in their headers, and one 
 | `POST` | `/api/hiecm/user-initiated-linking/v3/link/care-context/on-init` | As a result of the initialization, HIP has to generate a unique reference-numbe… |
 | `POST` | `/api/hiecm/user-initiated-linking/v3/patient/care-context/on-discover` | HMIS/LIMS/HIP has to ensure that only unlinked records of the patient has to be… |
 | `POST` | `/api/hiecm/v3/token/generate-token` | API used to generate link token to link the health records |
-| `POST` | `/api/v3/consent/request/hip/notify` | This is a callback api to notify hip when consent is APPROVED or REVOKED. |
+| `POST` | `/api/v3/consent/request/hip/notify` | This is a callback API to notify HIP when consent is APPROVED or REVOKED. |
 | `POST` | `/api/v3/hip/health-information/request` | Health information data request to HIP. |
 | `POST` | `/api/v3/hip/link/care-context/confirm` | This API endpoint is used to confirm the linking of care contexts for a patient… |
 | `POST` | `/api/v3/hip/link/care-context/init` | This API endpoint is used to initiate the linking of care contexts for a patien… |
