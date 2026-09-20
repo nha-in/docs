@@ -55,10 +55,23 @@ Field rules that catch people out:
 - `related` ids must all resolve. Lint fails on a dangling id.
 - `skills` declares which compiled skills consume this atom. The compiler reads it. An atom with no `skills` entry renders in the docs but never reaches an agent, which is sometimes correct (glossary, decision) and sometimes a mistake.
 
-No optional fields exist yet. `fix.deterministic` and `depth` are not read by
-`scripts/lint-atoms.mjs`, `scripts/compile-skills.mjs`, or any other script in
-this repository: writing them on an atom has no effect. Do not add them
-until a script actually reads them.
+Three optional fields exist, and each is read by a script. Lint checks their
+shape when present and never requires them.
+
+| Field | Shape | What reads it, and what it does |
+|---|---|---|
+| `audience` | `contributor` | `mcp/cmd/indexer` drops the atom before it writes the snapshot. For an atom about how this catalogue is built rather than how ABDM works, so it cannot be returned to an integrator asking about ABDM. Absent means integrator. |
+| `order` | whole number from 1 | `scripts/build-skills.mjs` places the atom within its compiled design section. Absent sorts after the ordered atoms, by id, so adding a rule appends rather than reshuffling. |
+| `router` | non-empty string | `scripts/build-skills.mjs` renders it as one line in the compiled skill's always-loaded router, where the design section is loaded on demand. For a rule a reader must meet before deciding whether to open that section. |
+
+Write `router` only where the rule changes what somebody does before reading
+further. The router is the part of a skill that is always in context, and
+every line added to it costs every reader.
+
+`fix.deterministic` and `depth` are not read by `scripts/lint-atoms.mjs`,
+`scripts/compile-skills.mjs`, or any other script in this repository: writing
+them on an atom has no effect. Do not add them until a script actually reads
+them.
 
 ## The five body sections
 
