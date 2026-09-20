@@ -618,6 +618,46 @@ function guidedTitle(name) {
   return parse(raw.match(/^---\n([\s\S]*?)\n---/)?.[1] ?? '')?.description ?? '';
 }
 
+
+// The survey that precedes the first journey when the target is a system that
+// already exists. It is the build loop's own first Observe phase, the repo as
+// it is, extended to a system with patients, records, an HTTP client and a
+// way of keeping secrets already in it, and it exits on a written plan rather
+// than on a call succeeding. It lives in the Catalogue as
+// shared.concept.survey-an-existing-codebase for the same reason the practices
+// and the design rules do, and folds into every scaffold that has journeys.
+const SURVEY_ATOM = 'shared.concept.survey-an-existing-codebase';
+
+function surveySection() {
+  const {atoms} = loadAtoms();
+  const entry = atoms.get(SURVEY_ATOM);
+  if (!entry) throw new Error(`${SURVEY_ATOM} is missing, and every scaffold folds it in`);
+  const withoutTitle = entry.body.replace(/^#\s+.+$/m, '').trim();
+  // Links point at catalogue files that are not beside a skill; the text
+  // they carry is still the right pointer.
+  const flattened = withoutTitle.replace(/\[([^\]]+)\]\([^)]*\.md\)/g, '$1');
+  return [
+    '## Before the first journey, when the codebase already exists',
+    '',
+    'Skip this section only for a system that does not exist yet. Otherwise it runs first, and its exit condition is a written plan, not a call.',
+    '',
+    flattened.replace(/^## /gm, '### ').trim(),
+    '',
+    `From \`${SURVEY_ATOM}\`.`,
+    '',
+  ].join('\n');
+}
+
+/** Inserts the survey ahead of the journeys, or at the end when there is no such heading. */
+function withSurvey(scaffold) {
+  if (!scaffold) return scaffold;
+  const marker = '\n## Journeys\n';
+  const at = scaffold.indexOf(marker);
+  const section = surveySection();
+  if (at === -1) return `${scaffold.trimEnd()}\n\n${section}`;
+  return `${scaffold.slice(0, at)}\n${section}${scaffold.slice(at)}`;
+}
+
 /** Which guided loop is which section of which skill. */
 const FOLD = Object.fromEntries(
   MODULES.map((module) => [
@@ -682,11 +722,11 @@ for (const module of MODULES) {
   const files = {};
   const covers = [];
 
-  const scaffold = fold.scaffold ? guided(fold.scaffold) : '';
+  const scaffold = fold.scaffold ? withSurvey(guided(fold.scaffold)) : '';
   if (scaffold) {
     files['references/scaffold.md'] = scaffold;
     covers.push(
-      `- **Scaffold.** Build it flow by flow against the sandbox, as a loop that ends when the step's exit condition holds rather than on a call returning 200. [references/scaffold.md](references/scaffold.md)`,
+      `- **Scaffold.** Survey the codebase first when one exists, then build it flow by flow against the sandbox, as a loop that ends when the step's exit condition holds rather than on a call returning 200. [references/scaffold.md](references/scaffold.md)`,
     );
   }
 

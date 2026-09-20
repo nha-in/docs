@@ -20,7 +20,7 @@ What it cannot do yet matters as much. Read **Before anything else** below befor
 
 ## What is in this folder
 
-- **Scaffold.** Build it flow by flow against the sandbox, as a loop that ends when the step's exit condition holds rather than on a call returning 200. [references/scaffold.md](references/scaffold.md)
+- **Scaffold.** Survey the codebase first when one exists, then build it flow by flow against the sandbox, as a loop that ends when the step's exit condition holds rather than on a call returning 200. [references/scaffold.md](references/scaffold.md)
 - **Integrate.** 29 operations, with their hosts and headers. [references/integrate.md](references/integrate.md)
 - **Debug.** The specification's examples return no error code for this module. [references/debug.md](references/debug.md)
 
