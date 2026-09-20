@@ -5,6 +5,11 @@ gateway: hiecm
 milestone: M1
 version: abdm-v3
 order: 1
+router: >
+  The ABHA step comes before the registration form and fills it. A verified
+  profile carries the whole form, so a journey that registers the patient
+  first and offers ABHA afterwards has already spent the keystrokes it
+  existed to save.
 title: The ABHA step comes before the registration form and fills it
 summary: >
   Ask for an ABHA before you ask a patient to register, because a verified

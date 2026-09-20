@@ -4,7 +4,12 @@ type: concept
 gateway: hiecm
 milestone: M1
 version: abdm-v3
-order: 5
+order: 6
+router: >
+  Every identifier starts on the login path, Aadhaar included. A verified
+  login already returns the accounts, and only ABDM-1114 on a refusal means
+  nobody holds one. Create on any other answer and the patient ends up with
+  two numbers, which nothing merges.
 title: The branch that creates a duplicate ABHA, and how to close it
 summary: >
   A second ABHA number for one person is the expensive failure in M1, nothing

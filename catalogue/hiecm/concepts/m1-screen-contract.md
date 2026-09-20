@@ -4,7 +4,7 @@ type: concept
 gateway: hiecm
 milestone: M1
 version: abdm-v3
-order: 4
+order: 5
 title: The six counter screens, and what each is forbidden to ask
 summary: >
   An ABHA journey at a desk needs six screens, and what each one must never ask

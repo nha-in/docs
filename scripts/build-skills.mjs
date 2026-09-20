@@ -113,6 +113,18 @@ function byReadingOrder(a, b) {
   return a.fm.id.localeCompare(b.fm.id);
 }
 
+// The one line per design atom that the router carries, in reading order.
+// The full rule is in the design section; this is what a reader meets before
+// deciding whether to open it. Only atoms that set `router` appear, so a
+// design rule stays out of the always-loaded part unless its atom says
+// otherwise. Four of these used to be strings in this file, which made them
+// the only design rules no lint could see and no atom could be cited for.
+function routerLines(entries) {
+  return entries
+    .filter((e) => typeof e.fm?.router === 'string' && e.fm.router.trim())
+    .map((e) => e.fm.router.trim().replace(/\s+/g, ' '));
+}
+
 const DESIGN_ATOMS = (() => {
   const {atoms, problems} = loadAtoms();
   if (problems.length) {
@@ -190,15 +202,11 @@ const MODULES = [
       "Sensitive fields travel encrypted. Aadhaar numbers, mobile numbers, email addresses, OTP values and passwords are encrypted before they go in the body, then base64 encoded.",
 'The certificate response tells you the padding. `GET /v3/profile/public/certificate` returns `{"publicKey", "encryptionAlgorithm"}`. Read that field and translate it for your language. Do not hard code a padding: a constant is right until it is not, and the failure then looks like a bad value rather than a stale constant.',
       'One path serves several jobs. The `scope` array in the body picks which one, so read it before assuming an endpoint does one thing.',
-      'Holds regardless of the design: the reason a front desk adopts ABHA is that the receptionist stops typing. `GET /v3/profile/account` returns the whole registration form: names, day, month and year of birth, gender, mobile, email, the full address with LGD codes and a photograph. So the ABHA step comes BEFORE the registration form and fills it. A journey that registers the patient first and offers ABHA afterwards has already spent the keystrokes it existed to save.',
       'Two ways the profile reaches the desk. The patient scans a QR carrying your facility id and a counter id, consents in their own app, and ABDM posts the profile to your callback, so nobody at the desk types or asks anything. Or the desk runs the identifier journey, which ends in a token that reads the profile. Build whichever the deployment can reach, but the form is the destination either way.',
       'Present the filled form for confirmation rather than saving it unseen. The profile is what ABDM holds, not what the clinician sees: names may be transliterated, addresses age, and a shared mobile may belong to a relative.',
       'ABDM publishes operations, not a user experience. The journey is the integrator\'s to design, and a product that knows its own counter will often beat any default. Offer the suggested shape below, say it is a suggestion, and build what the user asks for instead when they have a view.',
       'Suggested shape: one entry rather than a menu. Take one identifier, send one OTP, and branch on what comes back, because asking a person at a desk whether they want to log in or register puts a question to them they often cannot answer. A chooser is better where the desk genuinely knows, such as a counter that only registers new patients.',
-      'Holds regardless of the design: send every identifier to the login path first, Aadhaar included. Wiring Aadhaar to enrolment because that is where Aadhaar is most discussed sends everyone who already holds an ABHA to create a second.',
       'The accounts array on a login verification already carries ABHANumber, preferredAbhaAddress, name, gender, dob, profilePhoto and kycVerified, so a registration form can fill the moment the OTP verifies and before any profile call.',
-      'Holds regardless of the design: read the accounts on the verification response before creating. Creating when an account already exists leaves the patient holding two ABHA numbers and no M1 operation merges them. This is the one failure worth designing around first.',
-      'Holds regardless of the design: decide deliberately whether a journey can complete without an ABHA. A patient record keyed by the hospital\'s own number does not need one, and a journey that cannot complete without one blocks care for anyone who has none.',
       'An identifier and an auth method are two different questions, and listing them together is what makes M1 look like five choices. ABDM accepts four identifiers: Aadhaar, mobile, ABHA number, ABHA address.',
       'How the person proves the identifier is theirs is `authMethods`, whose values include otp, bio, face, iris, child and demo_auth. Offer auth methods underneath the identifier, and only where there is more than one.',
       'The surface is more than a registration form. Finding a forgotten ABHA, upgrading a mobile-made address to KYC, showing the card and QR, sharing a profile by QR at a counter, and updating a mobile number are each placements the operations support. List them for the integrator so their own design can account for them rather than meeting them later.',
@@ -408,7 +416,10 @@ function build(module, url) {
   lines.push('');
   for (const rule of module.rules) {
     lines.push(`- ${rule}`);
-    if (rule === UNVERIFIED && DESIGN_ATOMS.has(module.id)) lines.push(`- ${DESIGN_OBSERVED}`);
+    if (rule === UNVERIFIED && DESIGN_ATOMS.has(module.id)) {
+      lines.push(`- ${DESIGN_OBSERVED}`);
+      for (const line of routerLines(DESIGN_ATOMS.get(module.id))) lines.push(`- ${line}`);
+    }
   }
   lines.push('');
 
@@ -866,15 +877,20 @@ const FHIR_DESIGN_ATOMS = [
 ];
 
 /** The design section for abdm-fhir, assembled from the named atoms above. */
-function fhirDesignSection() {
+function fhirDesignEntries() {
   const {atoms} = loadAtoms();
-  const picked = FHIR_DESIGN_ATOMS.map((id) => {
+  return FHIR_DESIGN_ATOMS.map((id) => {
     const atom = atoms.get(id);
     // A renamed or deleted atom must fail the build rather than quietly
     // shrink the section.
     if (!atom) throw new Error(`FHIR_DESIGN_ATOMS names ${id}, which no atom defines`);
     return atom;
   }).sort(byReadingOrder);
+}
+
+/** The design section for abdm-fhir, assembled from the entries above. */
+function fhirDesignSection() {
+  const picked = fhirDesignEntries();
   const bodies = picked.map((entry) => {
     const withoutTitle = entry.body.replace(/^#\s+.+$/m, '').trim();
     const dropped = withoutTitle.replace(/^## Before you start\n[\s\S]*?(?=^## )/m, '');
@@ -917,6 +933,7 @@ const fhirSkillMd = (url) =>
     '',
     `- ${UNVERIFIED}`,
     `- ${DESIGN_OBSERVED}`,
+    ...routerLines(fhirDesignEntries()).map((line) => `- ${line}`),
     '- A bundle that validates is not a bundle ABDM accepts. The NRCES profiles are the floor, and the milestone the bundle travels under adds its own rules.',
     '',
     '## Practices that hold across every call',
