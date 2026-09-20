@@ -19,6 +19,16 @@ type ElementRule struct {
 	Path string `json:"path"` // e.g. "Composition.subject"
 	Min  int    `json:"min"`
 	Max  string `json:"max"`
+	// OptionalParent names the nearest ancestor whose own min is 0, when
+	// there is one. A min of 1 binds WITHIN its parent, so an element whose
+	// parent is optional is a conditional requirement and not something to
+	// emit unconditionally. NRCES's own example carries neither an attester
+	// nor a relatesTo, while Composition.attester.mode and
+	// Composition.relatesTo.code are both min 1 inside those optional
+	// parents. A generator that reads this list as "always emit" produces an
+	// attester with no party, which is worse than omitting it, because it is
+	// then structurally present and semantically empty.
+	OptionalParent string `json:"optional_parent,omitempty"`
 }
 
 // FixedRule records a fixedCode / fixedUri / patternCode constraint.
@@ -91,6 +101,16 @@ func Digest(ig *IG, profileName, recordType string) (*ProfileDigest, error) {
 		}
 	}
 
+	// Every element's own min, by id, so a required element can name the
+	// nearest ancestor that is itself optional. Built before the pass below
+	// because an ancestor can appear after its child in a differential.
+	minByID := make(map[string]int, len(elements))
+	for _, e := range elements {
+		if e.Min != nil {
+			minByID[e.ID] = *e.Min
+		}
+	}
+
 	digest := &ProfileDigest{
 		RecordType:  recordType,
 		ProfileName: profileName,
@@ -124,15 +144,22 @@ func Digest(ig *IG, profileName, recordType string) (*ProfileDigest, error) {
 
 		topTwoLevels := strings.Count(e.ID, ".") <= 2
 
-		if fixed, val := fixedValue(e); fixed && topTwoLevels {
+		// Fixed values are recorded at any depth. The two-level cut that
+		// applies to Required would drop every one that matters: NRCES
+		// fixes the SNOMED code typing a Composition at
+		// Composition.type.coding.code, three levels down, so digests
+		// reported no fixed values at all and validate_fhir could not
+		// check the one code every document Composition must carry.
+		if fixed, val := fixedValue(e); fixed {
 			digest.Fixed = append(digest.Fixed, FixedRule{Path: e.ID, Value: val})
 		}
 
 		if e.Min != nil && *e.Min >= 1 && topTwoLevels {
 			digest.Required = append(digest.Required, ElementRule{
-				Path: e.ID,
-				Min:  *e.Min,
-				Max:  e.Max,
+				Path:           e.ID,
+				Min:            *e.Min,
+				Max:            e.Max,
+				OptionalParent: optionalAncestor(e.ID, minByID),
 			})
 		}
 	}
@@ -151,6 +178,20 @@ func sectionSlice(id string) (string, bool) {
 		return "", false
 	}
 	return rest, true
+}
+
+// optionalAncestor returns the nearest ancestor of id whose min is 0, or ""
+// when every ancestor is itself required. It walks up one path segment at a
+// time, so Composition.attester.mode resolves through Composition.attester.
+func optionalAncestor(id string, minByID map[string]int) string {
+	parts := strings.Split(id, ".")
+	for i := len(parts) - 1; i > 1; i-- {
+		ancestor := strings.Join(parts[:i], ".")
+		if min, ok := minByID[ancestor]; ok && min == 0 {
+			return ancestor
+		}
+	}
+	return ""
 }
 
 // fixedValue reports whether e carries a fixedCode, fixedUri or
