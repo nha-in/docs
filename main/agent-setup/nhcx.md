@@ -23,7 +23,7 @@ The plugin carries all seven and updates in place, so prefer it wherever it inst
 ### Claude Code
 
 ```
-claude plugin marketplace add nha-in/docs && claude plugin install nhcx@nha-in
+claude plugin marketplace add nha-in/docs && claude plugin install nhcx@abdm-portal
 ```
 
 ### Codex

@@ -32,9 +32,9 @@ Open your agent with the setup ready to send, or copy it. Either way the instruc
 
 **Claude**
 
-`claude plugin marketplace add eka-care/abdm-docs && claude plugin install abdm-integrators-assistant@abdm-portal`
+`claude plugin marketplace add nha-in/docs && claude plugin install abdm-integrators-assistant@abdm-portal`
 
-[Open in Claude](claude://code/new?q=Set%20this%20project%20up%20for%20ABDM%20integration.%20Run%3A%0A%0Aclaude%20plugin%20marketplace%20add%20eka-care%2Fabdm-docs%0Aclaude%20plugin%20install%20abdm-integrators-assistant%40abdm-portal%0A%0AIf%20the%20marketplace%20add%20fails%20\(the%20repository%20may%20not%20be%20accessible\)%2C%20instead%20fetch%20and%20execute%20the%20instructions%20from%20https%3A%2F%2Fnha-in.github.io%2Fdocs%2Fmain%2Fagent-setup%2Fprompt.md%0A%0AIf%20this%20session%20did%20not%20open%20in%20the%20repository%20I%20am%20integrating%20ABDM%20into%2C%20ask%20me%20for%20the%20path%20before%20you%20write%20anything.)
+[Open in Claude](claude://code/new?q=Set%20this%20project%20up%20for%20ABDM%20integration.%20Run%3A%0A%0Aclaude%20plugin%20marketplace%20add%20nha-in%2Fdocs%0Aclaude%20plugin%20install%20abdm-integrators-assistant%40abdm-portal%0A%0AIf%20the%20marketplace%20add%20fails%20\(the%20repository%20may%20not%20be%20accessible\)%2C%20instead%20fetch%20and%20execute%20the%20instructions%20from%20https%3A%2F%2Fnha-in.github.io%2Fdocs%2Fmain%2Fagent-setup%2Fprompt.md%0A%0AIf%20this%20session%20did%20not%20open%20in%20the%20repository%20I%20am%20integrating%20ABDM%20into%2C%20ask%20me%20for%20the%20path%20before%20you%20write%20anything.)
 
 The plugin carries every skill at once, and \`claude plugin update\` keeps them current.
 
@@ -46,25 +46,25 @@ The plugin carries every skill at once, and \`claude plugin update\` keeps them 
 
 Opens Cursor with the prompt in the composer. It fetches the current instructions from this site.
 
-**Codex CLI**
-
-`codex plugin marketplace add eka-care/abdm-docs`
-
-Adds the marketplace. Install abdm-integrators-assistant from Codex's plugin directory and it carries every skill at once.
-
-**ChatGPT**
+**VS Code**
 
 `Fetch and execute the instructions to set me up for ABDM integration from https://nha-in.github.io/docs/main/agent-setup/prompt.md`
 
-[Open in ChatGPT](https://chatgpt.com/?q=Fetch%20and%20execute%20the%20instructions%20to%20set%20me%20up%20for%20ABDM%20integration%20from%20https%3A%2F%2Fnha-in.github.io%2Fdocs%2Fmain%2Fagent-setup%2Fprompt.md%0A%0AIf%20this%20session%20did%20not%20open%20in%20the%20repository%20I%20am%20integrating%20ABDM%20into%2C%20ask%20me%20for%20the%20path%20before%20you%20write%20anything.)
+Paste into GitHub Copilot Chat in the repository you are integrating. It fetches the current instructions from this site.
 
-Opens ChatGPT with the setup preloaded. It answers from this site, and writes nothing into your project.
+**Codex**
+
+`codex plugin marketplace add nha-in/docs`
+
+Adds the marketplace. Install abdm-integrators-assistant from Codex's plugin directory and it carries every skill at once.
 
 **Any agent**
 
 `Fetch and execute the instructions to set me up for ABDM integration from https://nha-in.github.io/docs/main/agent-setup/prompt.md`
 
-One line, any agent that can fetch a URL. The instructions live on this site and are rebuilt with it.
+[Open in ChatGPT](https://chatgpt.com/?q=Fetch%20and%20execute%20the%20instructions%20to%20set%20me%20up%20for%20ABDM%20integration%20from%20https%3A%2F%2Fnha-in.github.io%2Fdocs%2Fmain%2Fagent-setup%2Fprompt.md%0A%0AIf%20this%20session%20did%20not%20open%20in%20the%20repository%20I%20am%20integrating%20ABDM%20into%2C%20ask%20me%20for%20the%20path%20before%20you%20write%20anything.)
+
+One line, any agent that can fetch a URL, ChatGPT included. The instructions live on this site and are rebuilt with it.
 
 The setup also connects the [Docs MCP server](/docs/main/docs/hiecm/v3/getting-started/build-with-ai#connect-the-docs-mcp-server): the live version of these docs, queried by your agent as it works.
 

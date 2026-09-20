@@ -26,11 +26,11 @@ Every fact on this site is a public URL. There are three ways to put it in front
 
 Never built with a coding assistant before? Start here. Three things have to be in place before anything else on this page works.
 
-| What you need               | Why                                                                                                                 |
-| --------------------------- | ------------------------------------------------------------------------------------------------------------------- |
-| A coding assistant          | Claude, Cursor, Codex and ChatGPT are the ones set up below. Any of them is enough. Pick one and stay on it.        |
-| A paid plan on it           | Free tiers stop partway through a long task. The cheapest paid plan on any of these carries a milestone.            |
-| Your own project open in it | The assistant reads and writes the folder it is opened in. Open the repository you are integrating ABDM into first. |
+| What you need               | Why                                                                                                                                       |
+| --------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
+| A coding assistant          | Claude, Cursor, VS Code with GitHub Copilot, Codex and ChatGPT are the ones set up below. Any of them is enough. Pick one and stay on it. |
+| A paid plan on it           | Free tiers stop partway through a long task. The cheapest paid plan on any of these carries a milestone.                                  |
+| Your own project open in it | The assistant reads and writes the folder it is opened in. Open the repository you are integrating ABDM into first.                       |
 
 Then work down the page in order.
 
@@ -55,21 +55,39 @@ Your agent will query this catalogue as it works, instead of loading it. The ser
 - DecodeTurn an error code you just received into what it means and what to do, without you finding the right table.`decode_error`
 - ValidateCheck a request body against the specification before you send it, and list or read any operation.`validate_request, list_operations, get_operation`
 
-**Claude Code (CLI)**
+**Claude**
 
 `claude mcp add --transport http abdm-docs <mcp-url, set at deploy> -s user`
 
-Run this in the repository you are integrating.
+User scope, so it is there in every project rather than only this directory. Claude Desktop takes the generic block under "Any agent" instead.
 
-**Claude Desktop / generic**
+**Cursor**
 
 `{ "mcpServers": { "abdm-docs": { "url": "<mcp-url, set at deploy>" } } }`
 
-Any MCP client that reads an `mcpServers` config, Claude Desktop included, takes this block as is.
+The link opens Cursor on a confirmation dialog. The block goes in .cursor/mcp.json if you would rather add it by hand.
+
+**VS Code**
+
+`code --add-mcp '{"name":"abdm-docs","type":"http","url":"<mcp-url, set at deploy>"}'`
+
+The link opens VS Code on a confirmation dialog. The command does the same from a terminal.
+
+**Codex**
+
+`codex mcp add abdm-docs --url <mcp-url, set at deploy>`
+
+Writes it to \~/.codex/config.toml, which the Codex CLI, the IDE extension and the desktop app all read. Run /mcp in a session to confirm it connected.
+
+**Any agent**
+
+`{ "mcpServers": { "abdm-docs": { "url": "<mcp-url, set at deploy>" } } }`
+
+Any MCP client that reads an mcpServers config, Claude Desktop included, takes this block as is.
 
 ## Install the plugin
 
-One command for both halves: the skills as files and the server as a connection. Claude takes it as a plugin; Cursor, Codex, ChatGPT and anything else that can fetch a URL take the same setup as a line to paste.
+One command for both halves: the skills as files and the server as a connection. Claude and Codex take it as a plugin; Cursor, VS Code, ChatGPT and anything else that can fetch a URL take the same setup as a line to paste.
 
 Set your agent up in one step
 
@@ -77,9 +95,9 @@ Open your agent with the setup ready to send, or copy it. Either way the instruc
 
 **Claude**
 
-`claude plugin marketplace add eka-care/abdm-docs && claude plugin install abdm-integrators-assistant@abdm-portal`
+`claude plugin marketplace add nha-in/docs && claude plugin install abdm-integrators-assistant@abdm-portal`
 
-[Open in Claude](claude://code/new?q=Set%20this%20project%20up%20for%20ABDM%20integration.%20Run%3A%0A%0Aclaude%20plugin%20marketplace%20add%20eka-care%2Fabdm-docs%0Aclaude%20plugin%20install%20abdm-integrators-assistant%40abdm-portal%0A%0AIf%20the%20marketplace%20add%20fails%20\(the%20repository%20may%20not%20be%20accessible\)%2C%20instead%20fetch%20and%20execute%20the%20instructions%20from%20https%3A%2F%2Fnha-in.github.io%2Fdocs%2Fmain%2Fagent-setup%2Fprompt.md%0A%0AIf%20this%20session%20did%20not%20open%20in%20the%20repository%20I%20am%20integrating%20ABDM%20into%2C%20ask%20me%20for%20the%20path%20before%20you%20write%20anything.)
+[Open in Claude](claude://code/new?q=Set%20this%20project%20up%20for%20ABDM%20integration.%20Run%3A%0A%0Aclaude%20plugin%20marketplace%20add%20nha-in%2Fdocs%0Aclaude%20plugin%20install%20abdm-integrators-assistant%40abdm-portal%0A%0AIf%20the%20marketplace%20add%20fails%20\(the%20repository%20may%20not%20be%20accessible\)%2C%20instead%20fetch%20and%20execute%20the%20instructions%20from%20https%3A%2F%2Fnha-in.github.io%2Fdocs%2Fmain%2Fagent-setup%2Fprompt.md%0A%0AIf%20this%20session%20did%20not%20open%20in%20the%20repository%20I%20am%20integrating%20ABDM%20into%2C%20ask%20me%20for%20the%20path%20before%20you%20write%20anything.)
 
 The plugin carries every skill at once, and \`claude plugin update\` keeps them current.
 
@@ -91,25 +109,25 @@ The plugin carries every skill at once, and \`claude plugin update\` keeps them 
 
 Opens Cursor with the prompt in the composer. It fetches the current instructions from this site.
 
-**Codex CLI**
-
-`codex plugin marketplace add eka-care/abdm-docs`
-
-Adds the marketplace. Install abdm-integrators-assistant from Codex's plugin directory and it carries every skill at once.
-
-**ChatGPT**
+**VS Code**
 
 `Fetch and execute the instructions to set me up for ABDM integration from https://nha-in.github.io/docs/main/agent-setup/prompt.md`
 
-[Open in ChatGPT](https://chatgpt.com/?q=Fetch%20and%20execute%20the%20instructions%20to%20set%20me%20up%20for%20ABDM%20integration%20from%20https%3A%2F%2Fnha-in.github.io%2Fdocs%2Fmain%2Fagent-setup%2Fprompt.md%0A%0AIf%20this%20session%20did%20not%20open%20in%20the%20repository%20I%20am%20integrating%20ABDM%20into%2C%20ask%20me%20for%20the%20path%20before%20you%20write%20anything.)
+Paste into GitHub Copilot Chat in the repository you are integrating. It fetches the current instructions from this site.
 
-Opens ChatGPT with the setup preloaded. It answers from this site, and writes nothing into your project.
+**Codex**
+
+`codex plugin marketplace add nha-in/docs`
+
+Adds the marketplace. Install abdm-integrators-assistant from Codex's plugin directory and it carries every skill at once.
 
 **Any agent**
 
 `Fetch and execute the instructions to set me up for ABDM integration from https://nha-in.github.io/docs/main/agent-setup/prompt.md`
 
-One line, any agent that can fetch a URL. The instructions live on this site and are rebuilt with it.
+[Open in ChatGPT](https://chatgpt.com/?q=Fetch%20and%20execute%20the%20instructions%20to%20set%20me%20up%20for%20ABDM%20integration%20from%20https%3A%2F%2Fnha-in.github.io%2Fdocs%2Fmain%2Fagent-setup%2Fprompt.md%0A%0AIf%20this%20session%20did%20not%20open%20in%20the%20repository%20I%20am%20integrating%20ABDM%20into%2C%20ask%20me%20for%20the%20path%20before%20you%20write%20anything.)
+
+One line, any agent that can fetch a URL, ChatGPT included. The instructions live on this site and are rebuilt with it.
 
 The setup also connects the [Docs MCP server](/docs/main/docs/hiecm/v3/getting-started/build-with-ai#connect-the-docs-mcp-server): the live version of these docs, queried by your agent as it works.
 
@@ -124,12 +142,13 @@ The whole of M1: the calls, the loop that builds them, every error code and the 
 [SKILL.md](/docs/main/skills/abdm-m1/SKILL.md "The router. Use the command below to take the references with it.")
 
 - ScaffoldThe loop that builds the module flow by flow against the sandbox, ending on an observed result rather than on a call returning 200.
+- Design
 - Integrate41 operations, with their hosts, headers and the rules that hold across them.
 - Debug14 recorded error codes, each with its message and what to do about it.
 
-`mkdir -p .claude/skills/abdm-m1/references && curl -fsSL https://nha-in.github.io/docs/main/skills/abdm-m1/SKILL.md -o .claude/skills/abdm-m1/SKILL.md && for f in scaffold integrate debug; do curl -fsSL https://nha-in.github.io/docs/main/skills/abdm-m1/references/$f.md -o .claude/skills/abdm-m1/references/$f.md; done`
+`mkdir -p .claude/skills/abdm-m1/references && curl -fsSL https://nha-in.github.io/docs/main/skills/abdm-m1/SKILL.md -o .claude/skills/abdm-m1/SKILL.md && for f in scaffold design integrate debug; do curl -fsSL https://nha-in.github.io/docs/main/skills/abdm-m1/references/$f.md -o .claude/skills/abdm-m1/references/$f.md; done`
 
-[Open in Claude](claude://code/new?q=Install%20the%20ABDM%20M1%20agent%20skill%20into%20this%20project%2C%20then%20help%20me%20use%20it.%0A%0ARun%20this%3A%0Amkdir%20-p%20.claude%2Fskills%2Fabdm-m1%2Freferences%20%26%26%20curl%20-fsSL%20https%3A%2F%2Fnha-in.github.io%2Fdocs%2Fmain%2Fskills%2Fabdm-m1%2FSKILL.md%20-o%20.claude%2Fskills%2Fabdm-m1%2FSKILL.md%20%26%26%20for%20f%20in%20scaffold%20integrate%20debug%3B%20do%20curl%20-fsSL%20https%3A%2F%2Fnha-in.github.io%2Fdocs%2Fmain%2Fskills%2Fabdm-m1%2Freferences%2F%24f.md%20-o%20.claude%2Fskills%2Fabdm-m1%2Freferences%2F%24f.md%3B%20done%0A%0AIf%20this%20session%20did%20not%20open%20in%20the%20repository%20I%20am%20integrating%20ABDM%20into%2C%20ask%20me%20for%20the%20path%20before%20you%20write%20anything.)
+[Open in Claude](claude://code/new?q=Install%20the%20ABDM%20M1%20agent%20skill%20into%20this%20project%2C%20then%20help%20me%20use%20it.%0A%0ARun%20this%3A%0Amkdir%20-p%20.claude%2Fskills%2Fabdm-m1%2Freferences%20%26%26%20curl%20-fsSL%20https%3A%2F%2Fnha-in.github.io%2Fdocs%2Fmain%2Fskills%2Fabdm-m1%2FSKILL.md%20-o%20.claude%2Fskills%2Fabdm-m1%2FSKILL.md%20%26%26%20for%20f%20in%20scaffold%20design%20integrate%20debug%3B%20do%20curl%20-fsSL%20https%3A%2F%2Fnha-in.github.io%2Fdocs%2Fmain%2Fskills%2Fabdm-m1%2Freferences%2F%24f.md%20-o%20.claude%2Fskills%2Fabdm-m1%2Freferences%2F%24f.md%3B%20done%0A%0AIf%20this%20session%20did%20not%20open%20in%20the%20repository%20I%20am%20integrating%20ABDM%20into%2C%20ask%20me%20for%20the%20path%20before%20you%20write%20anything.)
 
 Drops the skill into this project. Claude loads it when a task matches.
 
