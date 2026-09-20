@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunk_abdm_docs_site=self.webpackChunk_abdm_docs_site||[]).push([["25820"],{19265(s){s.exports=JSON.parse('{"name":"@scalar/docusaurus","id":"scan-and-pay"}')}}]);
