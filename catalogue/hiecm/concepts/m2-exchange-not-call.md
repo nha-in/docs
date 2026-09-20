@@ -4,6 +4,7 @@ type: concept
 gateway: hiecm
 milestone: M2
 version: abdm-v3
+order: 1
 title: The unit of work is an exchange, not a call
 summary: >
   Every linking call answers twice, so group the outbound call, the wait and

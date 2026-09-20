@@ -4,6 +4,7 @@ type: concept
 gateway: hiecm
 milestone: M2
 version: abdm-v3
+order: 6
 title: A care context and its records are one thing
 summary: >
   A bundle with no care context cannot be sent, and a care context with nothing

@@ -4,6 +4,7 @@ type: concept
 gateway: hiecm
 milestone: M3
 version: abdm-v3
+order: 1
 title: Read plural as plural, and never translate a code into a meaning
 summary: >
   A consent request produces more than one artefact, and the same error code

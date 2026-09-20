@@ -4,6 +4,7 @@ type: concept
 gateway: hiecm
 milestone: M1
 version: abdm-v3
+order: 5
 title: The branch that creates a duplicate ABHA, and how to close it
 summary: >
   A second ABHA number for one person is the expensive failure in M1, nothing

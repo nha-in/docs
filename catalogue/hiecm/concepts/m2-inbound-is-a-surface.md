@@ -4,6 +4,7 @@ type: concept
 gateway: hiecm
 milestone: M2
 version: abdm-v3
+order: 5
 title: Inbound is a surface, and silence there is a failure state
 summary: >
   ABDM asks your bridge questions and waits, most of them carry no documented

@@ -4,6 +4,7 @@ type: concept
 gateway: hiecm
 milestone: M1
 version: abdm-v3
+order: 6
 title: Telling the truth on screen at the counter
 summary: >
   A screen must not say verified, linked or complete when it means accepted,

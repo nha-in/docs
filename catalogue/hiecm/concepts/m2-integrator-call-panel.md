@@ -4,6 +4,7 @@ type: concept
 gateway: hiecm
 milestone: M2
 version: abdm-v3
+order: 4
 title: What the integrator needs on screen, separately from the patient
 summary: >
   An asynchronous integration is undebuggable without a live view of calls and

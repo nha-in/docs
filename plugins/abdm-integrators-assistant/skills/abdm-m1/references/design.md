@@ -2,70 +2,6 @@
 
 What the integration has to do to the journey around the calls: how many questions a patient is asked, where a failure is shown, and what a screen is forbidden to claim. Every rule below comes from a Catalogue atom, cited at the end.
 
-## The branch that creates a duplicate ABHA, and how to close it
-
-### In plain words
-
-The expensive failure in M1 is a person ending up with two ABHA numbers. Nothing
-merges them, so the mistake is permanent and the patient carries it.
-
-It is caused by journey decisions rather than by any single call. Four of them
-matter.
-
-### What happens
-
-**Every identifier starts on the login path, Aadhaar included.** Wiring Aadhaar
-straight to enrolment, because enrolment is where Aadhaar is most discussed,
-sends everybody who already holds an ABHA to make a second one.
-
-**`ABDM-1114` is the only answer that means nobody holds an ABHA.** A refusal
-that names a field is not the same thing. A stale certificate reads back
-identically, and creating an account on that is how the duplicate happens.
-
-**Never ask the patient whether they want to log in or to create.** They often
-cannot answer. One screen, titled for both outcomes, takes an identifier and
-lets the response decide.
-
-**Read the token, not the account count.** A verification that returns a
-`refreshToken` has already returned the final user token, so use it. One without
-a `refreshToken` is a short lived transfer token and must be exchanged at the
-account selection call, whatever the length of the accounts array. Branching on
-`accounts.length` sends the Aadhaar path into an exchange it must not make, and
-the refusal then blames the token's shape rather than saying the call was
-unnecessary.
-
-Creation is from Aadhaar. ABDM publishes a mobile enrolment route, and an
-account created that way is address only and never verified against a
-government identity document. No later desk can look it up before spending a one
-time password, and the person carries the lesser account permanently. Write that
-rule into code as a guard that refuses an unknown method by name, because a rule
-the code merely happens to satisfy is one that regresses silently.
-
-When the desk already knows there is no ABHA, ask only for Aadhaar. Offering a
-mobile there offers a path that cannot finish. The lookup still runs first: a
-patient saying they have never had one is not evidence, and creating on somebody's
-word is how the second number appears.
-
-### How you know it worked
-
-Run a login for an identifier nobody holds. You receive `404` with `ABDM-1114`,
-no one time password is sent, and only then does the journey offer creation.
-
-Run the Aadhaar login path. The verify response carries a `refreshToken`, the
-journey uses it directly, and no exchange call is made. Run the mobile path and
-the exchange call is made, because no `refreshToken` came back.
-
-### When it goes wrong
-
-- A login is refused with a message naming a field, and the journey offers
-  creation anyway. Only `ABDM-1114` means nobody holds an account. Treat
-  anything else as a failure to answer the question.
-- The Aadhaar path is refused `Invalid T-token` at the account selection call.
-  The journey branched on the account count instead of on `refreshToken`, and
-  made a call it did not need to make.
-- Two patients a week arrive holding two numbers. Something in the journey is
-  creating before it has looked, and the lookup is the cheapest call available.
-
 ## The ABHA step comes before the registration form and fills it
 
 ### In plain words
@@ -141,6 +77,66 @@ route and on scan and share that count is zero.
   avoiding a duplicate ABHA explains what to
   do instead.
 
+## Never ask a patient the same thing twice, enforced by structure
+
+### In plain words
+
+A patient at a counter will be asked for an identifier, and then, two screens
+later, for something they already gave. Nobody notices in review, because each
+screen reads correctly on its own. It is only the journey that repeats itself.
+
+Discipline does not fix this, because the mistake is invisible at the point it
+is made. Structure does. Keep one store of what you know about the patient in
+front of you, and generate every question from what is missing in it. A request
+to collect a fact you already hold then cannot be constructed.
+
+### What happens
+
+Hold one store per patient, for the length of their visit:
+
+```
+facts:      { aadhaar, mobile, abhaNumber, name, dob, gender, ... }
+provenance: { mobile: 'from the appointment', name: 'from the ABHA profile' }
+tried:      [ { route, why it failed } ]
+```
+
+Three rules make it work.
+
+1. **Facts are write once.** Nothing overwrites a fact silently.
+2. **A failed route gives back everything it collected.** An Aadhaar typed for a
+   login that then failed is already in the store when creation begins.
+3. **Screens ask for one missing fact at a time**, and the question is generated
+   from the store rather than hard coded into the screen.
+
+Where this bites in practice: a patient identifies by mobile, turns out to have
+no ABHA, and creation begins. Creation needs a mobile to attach to the new
+account. An implementation that renders a fresh empty mobile field there has
+asked the same question twice.
+
+Show provenance. When a field is filled from something you already hold, say so
+beside it: taken from what they already gave you, change it only if the new ABHA
+should carry something different. A prefilled field with no explanation reads as
+a guess.
+
+### How you know it worked
+
+Walk a patient through a route that fails and then through a second route. The
+second route asks only for facts the first never collected, and the fields the
+first collected arrive filled, each showing where it came from.
+
+Search the interface for a question that is asked in two places. In a journey
+built this way there is no such question to find, because the screen cannot name
+a field, only request the next missing one.
+
+### When it goes wrong
+
+- A field arrives filled and wrong, and the desk cannot tell why. Provenance is
+  missing. Show where each value came from.
+- A fact changes under the desk between two screens. Something is overwriting
+  rather than writing once. The store should refuse the second write.
+- A route fails and the patient is asked everything again. The failed route
+  discarded what it collected instead of returning it.
+
 ## Ask the integrator about the deployment, not the patient about the journey
 
 ### In plain words
@@ -190,6 +186,119 @@ one answer switched on, and no screen exists for a route no answer reached.
   rather than from the answers.
 - Seven record generators exist and the system produces two. The sixth question
   was not asked.
+
+## The six counter screens, and what each is forbidden to ask
+
+### In plain words
+
+Six screens cover every ABHA route a desk offers. Each one declares three
+things: what it collects, what it is forbidden to ask, and when it does not
+appear at all.
+
+The forbidden column is the one usually missing, and it is the one that stops a
+journey asking the same question twice.
+
+### What happens
+
+| Screen | Collects | Must never ask | Skipped when |
+|---|---|---|---|
+| Identify | one identifier | anything already held | the desk holds a mobile or an ABHA number |
+| Confirm it is them | yes or no to a masked number | the number itself | no free lookup ran |
+| One time password | six digits | the identifier, again | the chosen route spends no one time password |
+| Choose an account | which of several | anything the accounts array already carries | there is one account or none |
+| Choose an address | pick or type | anything the profile carries | the route issues a default address |
+| Confirm the form | corrections only | anything the profile carries | never. It is the destination |
+
+The account chooser is not an edge case. One mobile carrying several ABHA
+accounts is an ordinary shared family handset. A journey written as a straight
+line from one time password to signed in has nowhere to put the second account,
+and finds this out in production.
+
+The last screen is the destination of the whole journey, which is why it is the
+only one never skipped. Everything before it exists to arrive there with the
+fields already filled.
+
+### How you know it worked
+
+Every screen in the build maps to a row above. For each one you can say what it
+refuses to ask, and that refusal is enforced by the fact store rather than by a
+comment.
+
+Run a patient whose mobile carries two ABHA accounts. The account chooser
+appears, offers both, and asks for nothing the accounts array already carries.
+
+### When it goes wrong
+
+- A second account signs the wrong person in, or the journey stalls. The account
+  chooser was not built. It is not optional.
+- A screen asks for the identifier again alongside the one time password. The
+  screen is naming its own fields instead of requesting the next missing fact.
+- The address screen appears on a route that issues a default address. The skip
+  condition is not being checked.
+
+## The branch that creates a duplicate ABHA, and how to close it
+
+### In plain words
+
+The expensive failure in M1 is a person ending up with two ABHA numbers. Nothing
+merges them, so the mistake is permanent and the patient carries it.
+
+It is caused by journey decisions rather than by any single call. Four of them
+matter.
+
+### What happens
+
+**Every identifier starts on the login path, Aadhaar included.** Wiring Aadhaar
+straight to enrolment, because enrolment is where Aadhaar is most discussed,
+sends everybody who already holds an ABHA to make a second one.
+
+**`ABDM-1114` is the only answer that means nobody holds an ABHA.** A refusal
+that names a field is not the same thing. A stale certificate reads back
+identically, and creating an account on that is how the duplicate happens.
+
+**Never ask the patient whether they want to log in or to create.** They often
+cannot answer. One screen, titled for both outcomes, takes an identifier and
+lets the response decide.
+
+**Read the token, not the account count.** A verification that returns a
+`refreshToken` has already returned the final user token, so use it. One without
+a `refreshToken` is a short lived transfer token and must be exchanged at the
+account selection call, whatever the length of the accounts array. Branching on
+`accounts.length` sends the Aadhaar path into an exchange it must not make, and
+the refusal then blames the token's shape rather than saying the call was
+unnecessary.
+
+Creation is from Aadhaar. ABDM publishes a mobile enrolment route, and an
+account created that way is address only and never verified against a
+government identity document. No later desk can look it up before spending a one
+time password, and the person carries the lesser account permanently. Write that
+rule into code as a guard that refuses an unknown method by name, because a rule
+the code merely happens to satisfy is one that regresses silently.
+
+When the desk already knows there is no ABHA, ask only for Aadhaar. Offering a
+mobile there offers a path that cannot finish. The lookup still runs first: a
+patient saying they have never had one is not evidence, and creating on somebody's
+word is how the second number appears.
+
+### How you know it worked
+
+Run a login for an identifier nobody holds. You receive `404` with `ABDM-1114`,
+no one time password is sent, and only then does the journey offer creation.
+
+Run the Aadhaar login path. The verify response carries a `refreshToken`, the
+journey uses it directly, and no exchange call is made. Run the mobile path and
+the exchange call is made, because no `refreshToken` came back.
+
+### When it goes wrong
+
+- A login is refused with a message naming a field, and the journey offers
+  creation anyway. Only `ABDM-1114` means nobody holds an account. Treat
+  anything else as a failure to answer the question.
+- The Aadhaar path is refused `Invalid T-token` at the account selection call.
+  The journey branched on the account count instead of on `refreshToken`, and
+  made a call it did not need to make.
+- Two patients a week arrive holding two numbers. Something in the journey is
+  creating before it has looked, and the lookup is the cheapest call available.
 
 ## Telling the truth on screen at the counter
 
@@ -259,120 +368,11 @@ from the first, including the fields the desk typed by hand.
   certificate is at fault. Name the field that was refused and say what else
   can cause it.
 
-## Never ask a patient the same thing twice, enforced by structure
-
-### In plain words
-
-A patient at a counter will be asked for an identifier, and then, two screens
-later, for something they already gave. Nobody notices in review, because each
-screen reads correctly on its own. It is only the journey that repeats itself.
-
-Discipline does not fix this, because the mistake is invisible at the point it
-is made. Structure does. Keep one store of what you know about the patient in
-front of you, and generate every question from what is missing in it. A request
-to collect a fact you already hold then cannot be constructed.
-
-### What happens
-
-Hold one store per patient, for the length of their visit:
-
-```
-facts:      { aadhaar, mobile, abhaNumber, name, dob, gender, ... }
-provenance: { mobile: 'from the appointment', name: 'from the ABHA profile' }
-tried:      [ { route, why it failed } ]
-```
-
-Three rules make it work.
-
-1. **Facts are write once.** Nothing overwrites a fact silently.
-2. **A failed route gives back everything it collected.** An Aadhaar typed for a
-   login that then failed is already in the store when creation begins.
-3. **Screens ask for one missing fact at a time**, and the question is generated
-   from the store rather than hard coded into the screen.
-
-Where this bites in practice: a patient identifies by mobile, turns out to have
-no ABHA, and creation begins. Creation needs a mobile to attach to the new
-account. An implementation that renders a fresh empty mobile field there has
-asked the same question twice.
-
-Show provenance. When a field is filled from something you already hold, say so
-beside it: taken from what they already gave you, change it only if the new ABHA
-should carry something different. A prefilled field with no explanation reads as
-a guess.
-
-### How you know it worked
-
-Walk a patient through a route that fails and then through a second route. The
-second route asks only for facts the first never collected, and the fields the
-first collected arrive filled, each showing where it came from.
-
-Search the interface for a question that is asked in two places. In a journey
-built this way there is no such question to find, because the screen cannot name
-a field, only request the next missing one.
-
-### When it goes wrong
-
-- A field arrives filled and wrong, and the desk cannot tell why. Provenance is
-  missing. Show where each value came from.
-- A fact changes under the desk between two screens. Something is overwriting
-  rather than writing once. The store should refuse the second write.
-- A route fails and the patient is asked everything again. The failed route
-  discarded what it collected instead of returning it.
-
-## The six counter screens, and what each is forbidden to ask
-
-### In plain words
-
-Six screens cover every ABHA route a desk offers. Each one declares three
-things: what it collects, what it is forbidden to ask, and when it does not
-appear at all.
-
-The forbidden column is the one usually missing, and it is the one that stops a
-journey asking the same question twice.
-
-### What happens
-
-| Screen | Collects | Must never ask | Skipped when |
-|---|---|---|---|
-| Identify | one identifier | anything already held | the desk holds a mobile or an ABHA number |
-| Confirm it is them | yes or no to a masked number | the number itself | no free lookup ran |
-| One time password | six digits | the identifier, again | the chosen route spends no one time password |
-| Choose an account | which of several | anything the accounts array already carries | there is one account or none |
-| Choose an address | pick or type | anything the profile carries | the route issues a default address |
-| Confirm the form | corrections only | anything the profile carries | never. It is the destination |
-
-The account chooser is not an edge case. One mobile carrying several ABHA
-accounts is an ordinary shared family handset. A journey written as a straight
-line from one time password to signed in has nowhere to put the second account,
-and finds this out in production.
-
-The last screen is the destination of the whole journey, which is why it is the
-only one never skipped. Everything before it exists to arrive there with the
-fields already filled.
-
-### How you know it worked
-
-Every screen in the build maps to a row above. For each one you can say what it
-refuses to ask, and that refusal is enforced by the fact store rather than by a
-comment.
-
-Run a patient whose mobile carries two ABHA accounts. The account chooser
-appears, offers both, and asks for nothing the accounts array already carries.
-
-### When it goes wrong
-
-- A second account signs the wrong person in, or the journey stalls. The account
-  chooser was not built. It is not optional.
-- A screen asks for the identifier again alongside the one time password. The
-  screen is naming its own fields instead of requesting the next missing fact.
-- The address screen appears on a route that issues a default address. The skip
-  condition is not being checked.
-
 ## Where these came from
 
-- `hiecm.concept.m1-avoiding-duplicate-abha`
 - `hiecm.concept.m1-counter-journey-order`
-- `hiecm.concept.m1-deployment-interview`
-- `hiecm.concept.m1-honest-screen-states`
 - `hiecm.concept.m1-never-ask-twice`
+- `hiecm.concept.m1-deployment-interview`
 - `hiecm.concept.m1-screen-contract`
+- `hiecm.concept.m1-avoiding-duplicate-abha`
+- `hiecm.concept.m1-honest-screen-states`

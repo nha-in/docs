@@ -4,6 +4,7 @@ type: concept
 gateway: hiecm
 milestone: M3
 version: abdm-v3
+order: 2
 title: Refuse to guess an undocumented step, and say so before the work starts
 summary: >
   Where a capability cannot work because ABDM has not published what it needs,

@@ -89,6 +89,19 @@ const PRACTICES = (() => {
 // hiecm concept atoms carrying the milestone they belong to, so they are
 // linted, citable by id, and reach the Docs MCP through the same snapshot as
 // everything else.
+// Reading order within a design section. An atom's `order` is the position it
+// should be read in, because the rules build on each other: M1's journey order
+// rule is what every other M1 rule serves, and sorting by id put it second
+// behind a slug beginning with "avoiding". An atom with no order sorts after
+// the ordered ones, by id, so adding a rule without deciding where it goes
+// appends rather than silently reshuffling the rest.
+function byReadingOrder(a, b) {
+  const ao = Number.isInteger(a.fm?.order) ? a.fm.order : Infinity;
+  const bo = Number.isInteger(b.fm?.order) ? b.fm.order : Infinity;
+  if (ao !== bo) return ao - bo;
+  return a.fm.id.localeCompare(b.fm.id);
+}
+
 const DESIGN_ATOMS = (() => {
   const {atoms, problems} = loadAtoms();
   if (problems.length) {
@@ -104,7 +117,7 @@ const DESIGN_ATOMS = (() => {
     if (!byMilestone.has(key)) byMilestone.set(key, []);
     byMilestone.get(key).push(entry);
   }
-  for (const list of byMilestone.values()) list.sort((a, b) => a.fm.id.localeCompare(b.fm.id));
+  for (const list of byMilestone.values()) list.sort(byReadingOrder);
   return byMilestone;
 })();
 
@@ -807,7 +820,7 @@ function fhirDesignSection() {
     // shrink the section.
     if (!atom) throw new Error(`FHIR_DESIGN_ATOMS names ${id}, which no atom defines`);
     return atom;
-  });
+  }).sort(byReadingOrder);
   const bodies = picked.map((entry) => {
     const withoutTitle = entry.body.replace(/^#\s+.+$/m, '').trim();
     const dropped = withoutTitle.replace(/^## Before you start\n[\s\S]*?(?=^## )/m, '');

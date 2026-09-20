@@ -4,6 +4,7 @@ type: concept
 gateway: hiecm
 milestone: M1
 version: abdm-v3
+order: 1
 title: The ABHA step comes before the registration form and fills it
 summary: >
   Ask for an ABHA before you ask a patient to register, because a verified

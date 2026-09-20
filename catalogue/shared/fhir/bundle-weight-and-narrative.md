@@ -4,6 +4,7 @@ type: fhir
 gateway: shared
 milestone: n/a
 version: abdm-v3
+order: 3
 title: Bundles are mostly somebody's health record, and they carry a narrative
 summary: >
   Almost every byte of a document bundle is the patient's attachment, which

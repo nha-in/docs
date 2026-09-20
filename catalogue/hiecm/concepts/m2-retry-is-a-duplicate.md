@@ -4,6 +4,7 @@ type: concept
 gateway: hiecm
 milestone: M2
 version: abdm-v3
+order: 3
 title: A refused request is still remembered, so a retry is a duplicate
 summary: >
   ABDM records a link token request even when it refuses it, so retrying inside

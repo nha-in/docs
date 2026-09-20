@@ -4,6 +4,7 @@ type: fhir
 gateway: shared
 milestone: n/a
 version: abdm-v3
+order: 1
 title: Read the profile and the example together, because each omits what the other carries
 summary: >
   A NRCeS profile gives the cardinalities and a NRCeS example gives the shape,
