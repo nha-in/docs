@@ -22,7 +22,7 @@ sources:
       The Identifier Type value set, which carries the HIN and ABHA
       codes and the wording of their definitions.
 related:
-  fhir: [shared.fhir.document-bundle, shared.fhir.hl7-validator-recipe]
+  fhir: [shared.fhir.document-bundle, shared.fhir.hl7-validator-recipe, shared.fhir.profile-and-example-together]
   glossary: [shared.glossary.abha]
 ---
 
@@ -120,7 +120,20 @@ A Patient carrying both:
 
 The only `system` in that block is the one naming the code system the
 type code comes from. Neither identifier carries a `system` of its own,
-because there is none to carry.
+because NRCeS prescribes none.
+
+NRCeS's own examples do something different, and you should know it
+before a receiver surprises you. Across all 144 examples in the pinned
+package, no Patient identifier uses `HIN` or `ABHA` at all. Twelve carry
+the ABHA number under HL7's generic `MR` code with
+`identifier.system` set to `https://healthid.ndhm.gov.in`, and twenty
+carry an Aadhaar under `ADN` with `https://uidai.gov.in/`. Both shapes
+satisfy the profile, because the binding is extensible and `system` is
+free, and neither has been confirmed against an ABDM receiver. Carry
+both codes rather than choosing, and expect a receiver to select on
+`type.coding.code`.
+[Reading the profile and the example together](profile-and-example-together.md)
+records the measurement.
 
 If your database schema needs a namespace URI, that is a local decision
 and it stays local. Record it as yours, keep the type code alongside it,

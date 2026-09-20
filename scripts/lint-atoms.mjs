@@ -79,6 +79,20 @@ for (const [id, atom] of atoms) {
     fail(file, "docs.url is not allowed on an atom. Page routes are generated into atom-routes.json, and a page may claim an atom with its own covers: key.");
   }
 
+  // order is optional, and it decides where an atom sits in a compiled design
+  // section. A string or a float silently sorts last instead of failing, so
+  // the typo would be invisible until somebody read the skill.
+  if (fm.order !== undefined && (!Number.isInteger(fm.order) || fm.order < 1)) {
+    fail(file, `order must be a whole number from 1 upwards, got ${JSON.stringify(fm.order)}`);
+  }
+
+  // router is optional: the one line a compiled skill's always-loaded router
+  // carries for this atom, where the design section is loaded on demand. An
+  // empty or non-string value would render as a blank bullet.
+  if (fm.router !== undefined && (typeof fm.router !== "string" || !fm.router.trim())) {
+    fail(file, "router must be a non-empty string when present");
+  }
+
   if (raw.includes("—")) fail(file, "em dash found. Use a full stop, a comma or a colon.");
 
   // Relative links in the body must point at a file that exists. A dead link

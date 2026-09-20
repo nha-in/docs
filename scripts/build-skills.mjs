@@ -22,6 +22,7 @@ import {parse} from 'yaml';
 import {cleanDescription} from './lib/titles.mjs';
 import {errorsFromSpec} from './lib/spec-errors.mjs';
 import {loadJourneys} from './lib/journeys.mjs';
+import {loadAtoms} from './lib/atoms.mjs';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const dataDir = join(root, 'site', 'src', 'data', 'api');
@@ -56,8 +57,19 @@ const skillUrl = (slug, url) =>
 // Every rule below is lifted from that module's own pages. A rule that is true
 // of M1 and not of M2 belongs to M1 only: an agent told the wrong rule is
 // worse off than an agent told nothing.
+// Said of the calls, and only of the calls. It used to say "nothing here",
+// which stopped being true once a skill carried a design section: those rules
+// were observed at a working front desk against the sandbox and each names the
+// date it was seen. Claiming they were unproven undersold the one part of the
+// skill that had been run, and a reader who discounts it loses the rules that
+// stop a journey asking twice.
 const UNVERIFIED =
-  'Nothing here has been run against the ABDM sandbox. Treat request and response shapes as unconfirmed, and check a response before you rely on its shape.';
+  'No call in this skill has been run against the ABDM sandbox. Treat request and response shapes as unconfirmed, and check a response before you rely on its shape.';
+
+// Added only where a design section exists, immediately after UNVERIFIED, so
+// the two claims are read together rather than a page apart.
+const DESIGN_OBSERVED =
+  'The design section is the exception. Its rules come from building a working front desk against the sandbox, and each atom it cites names what was observed and the date it was seen.';
 
 // Practices, as distinct from rules. A rule is a fact about one module. A
 // practice is how to work so a wrong assumption surfaces in a minute rather
@@ -76,6 +88,90 @@ const PRACTICES = (() => {
   if (!items.length) throw new Error(`No practices found in ${practicesAtom}`);
   return items;
 })();
+
+// Design rules, as distinct from both rules and practices. A rule is a fact
+// about one module's calls. A practice is how to work. A design rule is what
+// the integration has to do to the journey around those calls: how many
+// questions a patient is asked, where a failure is shown, and what a screen is
+// forbidden to claim. They decide whether an integration that passes every
+// call is one a receptionist can actually use.
+//
+// Like the practices, they live in the Catalogue rather than in this file, as
+// hiecm concept atoms carrying the milestone they belong to, so they are
+// linted, citable by id, and reach the Docs MCP through the same snapshot as
+// everything else.
+// Reading order within a design section. An atom's `order` is the position it
+// should be read in, because the rules build on each other: M1's journey order
+// rule is what every other M1 rule serves, and sorting by id put it second
+// behind a slug beginning with "avoiding". An atom with no order sorts after
+// the ordered ones, by id, so adding a rule without deciding where it goes
+// appends rather than silently reshuffling the rest.
+function byReadingOrder(a, b) {
+  const ao = Number.isInteger(a.fm?.order) ? a.fm.order : Infinity;
+  const bo = Number.isInteger(b.fm?.order) ? b.fm.order : Infinity;
+  if (ao !== bo) return ao - bo;
+  return a.fm.id.localeCompare(b.fm.id);
+}
+
+// The one line per design atom that the router carries, in reading order.
+// The full rule is in the design section; this is what a reader meets before
+// deciding whether to open it. Only atoms that set `router` appear, so a
+// design rule stays out of the always-loaded part unless its atom says
+// otherwise. Four of these used to be strings in this file, which made them
+// the only design rules no lint could see and no atom could be cited for.
+function routerLines(entries) {
+  return entries
+    .filter((e) => typeof e.fm?.router === 'string' && e.fm.router.trim())
+    .map((e) => e.fm.router.trim().replace(/\s+/g, ' '));
+}
+
+const DESIGN_ATOMS = (() => {
+  const {atoms, problems} = loadAtoms();
+  if (problems.length) {
+    // An atom that will not parse is a build failure here, not a warning: a
+    // design section would otherwise lose it silently.
+    throw new Error(`Catalogue atoms did not parse: ${problems.map((x) => `${x.file}: ${x.msg}`).join(', ')}`);
+  }
+  const byMilestone = new Map();
+  for (const entry of atoms.values()) {
+    const fm = entry.fm;
+    if (fm?.gateway !== 'hiecm' || fm?.type !== 'concept') continue;
+    const key = String(fm.milestone ?? '').toLowerCase();
+    if (!byMilestone.has(key)) byMilestone.set(key, []);
+    byMilestone.get(key).push(entry);
+  }
+  for (const list of byMilestone.values()) list.sort(byReadingOrder);
+  return byMilestone;
+})();
+
+/**
+ * The design section for one module, or '' when no atom claims its milestone.
+ * Each atom becomes one section, its own headings pushed down a level so the
+ * atom's title is what a reader scans. "Before you start" is dropped and the
+ * relative links are flattened, because both point at catalogue files that are
+ * not beside this one inside a skill folder.
+ */
+function designSection(module) {
+  const list = DESIGN_ATOMS.get(module.id) ?? [];
+  if (!list.length) return '';
+  const bodies = list.map((entry) => {
+    const withoutTitle = entry.body.replace(/^#\s+.+$/m, '').trim();
+    const dropped = withoutTitle.replace(/^## Before you start\n[\s\S]*?(?=^## )/m, '');
+    const flattened = dropped.replace(/\[([^\]]+)\]\([^)]*\.md\)/g, '$1');
+    return [`## ${entry.fm.title}`, '', flattened.replace(/^## /gm, '### ').trim(), ''].join('\n');
+  });
+  return [
+    `# Design ${module.title}`,
+    '',
+    'What the integration has to do to the journey around the calls: how many questions a patient is asked, where a failure is shown, and what a screen is forbidden to claim. Every rule below comes from a Catalogue atom, cited at the end.',
+    '',
+    ...bodies,
+    '## Where these came from',
+    '',
+    ...list.map((entry) => '- `' + entry.fm.id + '`'),
+    '',
+  ].join('\n');
+}
 
 const MODULES = [
   {
@@ -106,18 +202,7 @@ const MODULES = [
       "Sensitive fields travel encrypted. Aadhaar numbers, mobile numbers, email addresses, OTP values and passwords are encrypted before they go in the body, then base64 encoded.",
 'The certificate response tells you the padding. `GET /v3/profile/public/certificate` returns `{"publicKey", "encryptionAlgorithm"}`. Read that field and translate it for your language. Do not hard code a padding: a constant is right until it is not, and the failure then looks like a bad value rather than a stale constant.',
       'One path serves several jobs. The `scope` array in the body picks which one, so read it before assuming an endpoint does one thing.',
-      'Holds regardless of the design: the reason a front desk adopts ABHA is that the receptionist stops typing. `GET /v3/profile/account` returns the whole registration form: names, day, month and year of birth, gender, mobile, email, the full address with LGD codes and a photograph. So the ABHA step comes BEFORE the registration form and fills it. A journey that registers the patient first and offers ABHA afterwards has already spent the keystrokes it existed to save.',
-      'Two ways the profile reaches the desk. The patient scans a QR carrying your facility id and a counter id, consents in their own app, and ABDM posts the profile to your callback, so nobody at the desk types or asks anything. Or the desk runs the identifier journey, which ends in a token that reads the profile. Build whichever the deployment can reach, but the form is the destination either way.',
-      'Present the filled form for confirmation rather than saving it unseen. The profile is what ABDM holds, not what the clinician sees: names may be transliterated, addresses age, and a shared mobile may belong to a relative.',
-      'ABDM publishes operations, not a user experience. The journey is the integrator\'s to design, and a product that knows its own counter will often beat any default. Offer the suggested shape below, say it is a suggestion, and build what the user asks for instead when they have a view.',
-      'Suggested shape: one entry rather than a menu. Take one identifier, send one OTP, and branch on what comes back, because asking a person at a desk whether they want to log in or register puts a question to them they often cannot answer. A chooser is better where the desk genuinely knows, such as a counter that only registers new patients.',
-      'Holds regardless of the design: send every identifier to the login path first, Aadhaar included. Wiring Aadhaar to enrolment because that is where Aadhaar is most discussed sends everyone who already holds an ABHA to create a second.',
       'The accounts array on a login verification already carries ABHANumber, preferredAbhaAddress, name, gender, dob, profilePhoto and kycVerified, so a registration form can fill the moment the OTP verifies and before any profile call.',
-      'Holds regardless of the design: read the accounts on the verification response before creating. Creating when an account already exists leaves the patient holding two ABHA numbers and no M1 operation merges them. This is the one failure worth designing around first.',
-      'Holds regardless of the design: decide deliberately whether a journey can complete without an ABHA. A patient record keyed by the hospital\'s own number does not need one, and a journey that cannot complete without one blocks care for anyone who has none.',
-      'An identifier and an auth method are two different questions, and listing them together is what makes M1 look like five choices. ABDM accepts four identifiers: Aadhaar, mobile, ABHA number, ABHA address.',
-      'How the person proves the identifier is theirs is `authMethods`, whose values include otp, bio, face, iris, child and demo_auth. Offer auth methods underneath the identifier, and only where there is more than one.',
-      'The surface is more than a registration form. Finding a forgotten ABHA, upgrading a mobile-made address to KYC, showing the card and QR, sharing a profile by QR at a counter, and updating a mobile number are each placements the operations support. List them for the integrator so their own design can account for them rather than meeting them later.',
     ],
   },
   {
@@ -150,7 +235,6 @@ const MODULES = [
       UNVERIFIED,
       'You act as the HIU. The HIE-CM holds the consent and asks the patient on your behalf. No artefact, no records.',
       'The patient must be known to you by ABHA address before you can raise a request.',
-      'One consent request can produce more than one artefact. Store the request id and every artefact id.',
       'Records arrive encrypted at the `dataPushUrl` the health information request names. Decrypt them with the key material that request carries.',
     ],
   },
@@ -322,7 +406,13 @@ function build(module, url) {
 
   lines.push('## Before anything else');
   lines.push('');
-  for (const rule of module.rules) lines.push(`- ${rule}`);
+  for (const rule of module.rules) {
+    lines.push(`- ${rule}`);
+    if (rule === UNVERIFIED && DESIGN_ATOMS.has(module.id)) {
+      lines.push(`- ${DESIGN_OBSERVED}`);
+      for (const line of routerLines(DESIGN_ATOMS.get(module.id))) lines.push(`- ${line}`);
+    }
+  }
   lines.push('');
 
   lines.push('## Hosts');
@@ -531,6 +621,46 @@ function guidedTitle(name) {
   return parse(raw.match(/^---\n([\s\S]*?)\n---/)?.[1] ?? '')?.description ?? '';
 }
 
+
+// The survey that precedes the first journey when the target is a system that
+// already exists. It is the build loop's own first Observe phase, the repo as
+// it is, extended to a system with patients, records, an HTTP client and a
+// way of keeping secrets already in it, and it exits on a written plan rather
+// than on a call succeeding. It lives in the Catalogue as
+// shared.concept.survey-an-existing-codebase for the same reason the practices
+// and the design rules do, and folds into every scaffold that has journeys.
+const SURVEY_ATOM = 'shared.concept.survey-an-existing-codebase';
+
+function surveySection() {
+  const {atoms} = loadAtoms();
+  const entry = atoms.get(SURVEY_ATOM);
+  if (!entry) throw new Error(`${SURVEY_ATOM} is missing, and every scaffold folds it in`);
+  const withoutTitle = entry.body.replace(/^#\s+.+$/m, '').trim();
+  // Links point at catalogue files that are not beside a skill; the text
+  // they carry is still the right pointer.
+  const flattened = withoutTitle.replace(/\[([^\]]+)\]\([^)]*\.md\)/g, '$1');
+  return [
+    '## Before the first journey, when the codebase already exists',
+    '',
+    'Skip this section only for a system that does not exist yet. Otherwise it runs first, and its exit condition is a written plan, not a call.',
+    '',
+    flattened.replace(/^## /gm, '### ').trim(),
+    '',
+    `From \`${SURVEY_ATOM}\`.`,
+    '',
+  ].join('\n');
+}
+
+/** Inserts the survey ahead of the journeys, or at the end when there is no such heading. */
+function withSurvey(scaffold) {
+  if (!scaffold) return scaffold;
+  const marker = '\n## Journeys\n';
+  const at = scaffold.indexOf(marker);
+  const section = surveySection();
+  if (at === -1) return `${scaffold.trimEnd()}\n\n${section}`;
+  return `${scaffold.slice(0, at)}\n${section}${scaffold.slice(at)}`;
+}
+
 /** Which guided loop is which section of which skill. */
 const FOLD = Object.fromEntries(
   MODULES.map((module) => [
@@ -595,11 +725,22 @@ for (const module of MODULES) {
   const files = {};
   const covers = [];
 
-  const scaffold = fold.scaffold ? guided(fold.scaffold) : '';
+  const scaffold = fold.scaffold ? withSurvey(guided(fold.scaffold)) : '';
   if (scaffold) {
     files['references/scaffold.md'] = scaffold;
     covers.push(
-      `- **Scaffold.** Build it flow by flow against the sandbox, as a loop that ends when the step's exit condition holds rather than on a call returning 200. [references/scaffold.md](references/scaffold.md)`,
+      `- **Scaffold.** Survey the codebase first when one exists, then build it flow by flow against the sandbox, as a loop that ends when the step's exit condition holds rather than on a call returning 200. [references/scaffold.md](references/scaffold.md)`,
+    );
+  }
+
+  // Design before integrate: an integrator who reads the calls first builds
+  // the journey the specification implies, which is the one that asks a
+  // patient the same question twice.
+  const design = designSection(module);
+  if (design) {
+    files['references/design.md'] = design;
+    covers.push(
+      `- **Design.** What the journey around the calls has to do, and what a screen is forbidden to claim. [references/design.md](references/design.md)`,
     );
   }
 
@@ -715,6 +856,68 @@ for (const [section, source, what] of FHIR_REFS) {
     `- **${section[0].toUpperCase()}${section.slice(1)}.** ${what} [references/${section}.md](references/${section}.md)`,
   );
 }
+
+// The shared fhir atoms that are design rules rather than reference material.
+// Named explicitly because the rest of catalogue/shared/fhir is the seven
+// record type maps, the envelope and the validator recipe, which the
+// generate and audit procedures already send a reader to. These three are
+// what a generator gets wrong before it ever reaches a profile table.
+// The envelope atom is not a design atom: its body is reference material the
+// generate and audit procedures already reach. Its one rule belongs in the
+// always-loaded router, so the router reads it by id alongside the design
+// atoms rather than pulling its body into the design section.
+const FHIR_ROUTER_EXTRA = ['shared.fhir.document-bundles'];
+
+const FHIR_DESIGN_ATOMS = [
+  'shared.fhir.profile-and-example-together',
+  'shared.fhir.conditional-cardinality',
+  'shared.fhir.bundle-weight-and-narrative',
+];
+
+/** The design section for abdm-fhir, assembled from the named atoms above. */
+function fhirDesignEntries() {
+  const {atoms} = loadAtoms();
+  return FHIR_DESIGN_ATOMS.map((id) => {
+    const atom = atoms.get(id);
+    // A renamed or deleted atom must fail the build rather than quietly
+    // shrink the section.
+    if (!atom) throw new Error(`FHIR_DESIGN_ATOMS names ${id}, which no atom defines`);
+    return atom;
+  }).sort(byReadingOrder);
+}
+
+/** The extra atoms whose router line the FHIR skill carries. */
+function fhirRouterExtraEntries() {
+  const {atoms} = loadAtoms();
+  return FHIR_ROUTER_EXTRA.map((id) => {
+    const atom = atoms.get(id);
+    if (!atom) throw new Error(`FHIR_ROUTER_EXTRA names ${id}, which no atom defines`);
+    return atom;
+  });
+}
+
+/** The design section for abdm-fhir, assembled from the entries above. */
+function fhirDesignSection() {
+  const picked = fhirDesignEntries();
+  const bodies = picked.map((entry) => {
+    const withoutTitle = entry.body.replace(/^#\s+.+$/m, '').trim();
+    const dropped = withoutTitle.replace(/^## Before you start\n[\s\S]*?(?=^## )/m, '');
+    const flattened = dropped.replace(/\[([^\]]+)\]\([^)]*\.md\)/g, '$1');
+    return [`## ${entry.fm.title}`, '', flattened.replace(/^## /gm, '### ').trim(), ''].join('\n');
+  });
+  return [
+    '# Design an ABDM FHIR generator',
+    '',
+    'What a bundle generator gets wrong before it reaches a profile table: reading one NRCeS source without the other, emitting a required child of an optional parent, and treating a bundle as a small object with a file attached.',
+    '',
+    ...bodies,
+    '## Where these came from',
+    '',
+    ...picked.map((entry) => '- `' + entry.fm.id + '`'),
+    '',
+  ].join('\n');
+}
+
 const fhirSkillMd = (url) =>
   [
     '---',
@@ -737,12 +940,17 @@ const fhirSkillMd = (url) =>
     '## Before anything else',
     '',
     `- ${UNVERIFIED}`,
-    '- A bundle that validates is not a bundle ABDM accepts. The NRCES profiles are the floor, and the milestone the bundle travels under adds its own rules.',
+    `- ${DESIGN_OBSERVED}`,
+    ...routerLines([...fhirDesignEntries(), ...fhirRouterExtraEntries()]).map((line) => `- ${line}`),
     '',
     '## Practices that hold across every call',
     '',
     ...PRACTICES.map((practice) => `- ${practice}`),
   ].join('\n');
+fhirFiles['references/design.md'] = fhirDesignSection();
+fhirCovers.unshift(
+  '- **Design.** What a generator gets wrong before it reaches a profile table. [references/design.md](references/design.md)',
+);
 fhirFiles['SKILL.md'] = fhirSkillMd(siteUrl);
 const fhirPluginFiles = {...fhirFiles, 'SKILL.md': fhirSkillMd(null)};
 emit('abdm-fhir', fhirFiles, fhirPluginFiles);
@@ -756,7 +964,7 @@ manifest['abdm-fhir'] = {
   codes: 0,
   sections: FHIR_REFS.map(([section]) => section),
 };
-console.log('Built abdm-fhir: 2 reference(s) from the hand written procedures.');
+console.log(`Built abdm-fhir: ${Object.keys(fhirFiles).length - 1} reference(s), including the design rules.`);
 
 writeFileSync(
   join(root, 'site', 'src', 'data', 'skills.json'),

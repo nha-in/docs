@@ -68,6 +68,40 @@ chat tool set. A bundle over the 2 MiB input cap gets a different
 response shape: just `error` and `catalogue_version`, with no
 `findings` or `limits` field.
 
+An atom marked `audience: contributor` in its frontmatter never reaches the
+snapshot, so nothing that documents how this catalogue is built can be
+returned to somebody asking about ABDM. Absent means integrator, so an atom
+is integrator-facing unless it says otherwise.
+
+## Skills
+
+The tools answer a question an agent already knows how to ask. The compiled
+integrator skills answer the question before that: what the steps are, in
+what order, and how to tell when one worked. `cmd/indexer` reads them from
+`-skills` (default `../plugins/abdm-integrators-assistant/skills`, or
+`SKILLS_DIR`) into the snapshot, so the server still reads the database and
+nothing else, and the server offers them two ways:
+
+- **Resources**, one per section, at `skill://<skill>` for the router and
+  `skill://<skill>/<section>` for each file under `references/`.
+- **Prompts**, one per skill, taking an optional `section` argument. Omit it
+  for the router, which says which section to read. An unrecognised section
+  is refused with the list of the ones that exist.
+
+Both read the same rows, so a skill cannot say one thing on one surface and
+something else on the other, and both stamp `catalogue_version` onto the text
+the way every tool response carries it.
+
+Twelve skills and forty seven sections ship today. A snapshot built with
+`-skills ""`, or against a directory that is not there, carries no skills:
+the server then registers no prompts and no resources and serves its tools
+alone, which is what it did before skills were indexed.
+
+The compiled `SKILL.md` frontmatter is read line by line rather than as
+YAML, because it is not valid YAML: the compiler writes descriptions
+containing a colon and a space inside an unquoted scalar. Skill loaders read
+that file leniently and so does this one.
+
 ## Chat
 
 `POST /api/chat` is a server-sent-events endpoint behind the site's "Ask

@@ -4,6 +4,7 @@ type: decision
 gateway: shared
 milestone: n/a
 version: abdm-v3
+audience: contributor
 title: Aliases live in one vocabulary file, not in every atom
 summary: >
   The words readers bring are a property of the domain, not of any

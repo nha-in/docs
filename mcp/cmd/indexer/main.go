@@ -45,6 +45,8 @@ func main() {
 	region := flag.String("aws-region", envOr("AWS_REGION", ""), "AWS region, for -embed-provider bedrock")
 	nrces := flag.String("nrces", envOr("NRCES_PACKAGE", "../catalogue/openapi/.raw/nrces-ndhm.in-6.5.0.tgz"),
 		"path to the pinned NRCES IG package; empty skips FHIR indexing")
+	skills := flag.String("skills", envOr("SKILLS_DIR", "../plugins/abdm-integrators-assistant/skills"),
+		"path to the compiled integrator skills; empty skips skill indexing")
 	flag.Parse()
 	emb, err := embed.New(context.Background(), embed.Config{
 		Provider:  *provider,
@@ -55,7 +57,7 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	if err := run(*catDir, *out, *nrces, emb); err != nil {
+	if err := run(*catDir, *out, *nrces, *skills, emb); err != nil {
 		log.Fatal(err)
 	}
 }
@@ -82,7 +84,7 @@ func isSpecPath(rel string) bool {
 	return true
 }
 
-func run(catDir, outPath, nrcesPath string, emb embed.Embedder) error {
+func run(catDir, outPath, nrcesPath, skillsDir string, emb embed.Embedder) error {
 	var ops []catalogue.Operation
 	var specErrors []catalogue.SpecErrorCode
 	hashes := map[string]string{}
@@ -91,6 +93,11 @@ func run(catDir, outPath, nrcesPath string, emb embed.Embedder) error {
 	if err != nil {
 		return err
 	}
+	// The snapshot is the integrator's corpus. An atom marked
+	// audience: contributor documents how this catalogue is built, not how
+	// ABDM is integrated, so it never reaches the MCP server, the Ask AI
+	// panel or site search.
+	atoms = catalogue.IntegratorAtoms(atoms)
 
 	err = filepath.WalkDir(catDir, func(path string, d fs.DirEntry, err error) error {
 		if err != nil {
@@ -164,6 +171,22 @@ func run(catDir, outPath, nrcesPath string, emb embed.Embedder) error {
 		}
 		meta.Vocabulary = string(vocabBytes)
 	}
+
+	// The compiled skills travel inside the snapshot, so the server serves
+	// the loops from the database like everything else. An absent
+	// directory is not an error: the server then offers its tools and no
+	// prompts, which is what it did before skills were indexed.
+	if skillsDir != "" {
+		switch loaded, err := catalogue.LoadSkills(skillsDir); {
+		case errors.Is(err, fs.ErrNotExist):
+			fmt.Fprintf(os.Stderr, "no skills at %s, the server will offer no prompts\n", skillsDir)
+		case err != nil:
+			return fmt.Errorf("load skills: %w", err)
+		default:
+			meta.Skills = loaded
+		}
+	}
+
 	if emb != nil {
 		var all []catalogue.Chunk
 		for _, a := range atoms {

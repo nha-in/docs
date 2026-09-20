@@ -51,6 +51,16 @@ CREATE TABLE chunks (
     text TEXT NOT NULL,
     embedding BLOB
 );
+-- The compiled integrator skills, one row per section. The snapshot carries
+-- them so the server keeps its one rule: everything it serves comes from the
+-- database, never from a directory it reads at request time.
+CREATE TABLE skills (
+    name        TEXT NOT NULL,
+    section     TEXT NOT NULL,
+    description TEXT NOT NULL,
+    body        TEXT NOT NULL,
+    PRIMARY KEY (name, section)
+);
 CREATE TABLE meta (key TEXT PRIMARY KEY, value TEXT NOT NULL);
 CREATE TABLE sources (path TEXT PRIMARY KEY, sha256 TEXT NOT NULL);
 CREATE TABLE fhir_profiles (
