@@ -4,7 +4,7 @@ type: concept
 gateway: hiecm
 milestone: M1
 version: abdm-v3
-order: 2
+order: 5
 title: Never ask a patient the same thing twice, enforced by structure
 summary: >
   Hold every fact you learn about a patient in one place, so a screen asking

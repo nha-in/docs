@@ -1,18 +1,32 @@
-# HIE-CM p4 build
+---
+id: shared.concept.survey-an-existing-codebase
+type: concept
+gateway: shared
+milestone: n/a
+version: abdm-v3
+title: Survey the existing codebase before the first journey, and write the plan
+summary: >
+  Integrating ABDM into a system that already exists starts by reading that
+  system whole, and ends with a written plan that names the file every ABDM
+  touchpoint will live in.
+sources:
+  - url: https://sandbox.abdm.gov.in/
+    status: observed-2026-09-16
+    note: >
+      From building a working front desk and then integrating the same flows
+      into an existing system. Every question the plan answers was one that,
+      left unanswered, produced a journey built in the wrong place.
+related:
+  concepts:
+    - shared.concept.integration-practices
+    - hiecm.concept.m1-deployment-interview
+    - hiecm.concept.m1-counter-journey-order
+    - hiecm.concept.m2-inbound-is-a-surface
+---
 
-Scaffolds an ABDM p4 integration one journey at a time. It covers setting up a health locker and listing the lockers and requests on an ABHA address.
+# Survey the existing codebase before the first journey, and write the plan
 
-## How this skill runs
-
-Every journey below is an OODA loop, not a recipe: observe the actual state (last response, last error), orient against the step matched below, decide the cheapest next action, act, and return to observe. A step is done only when its exit condition is observed against the sandbox, never because it "should have worked."
-
-Loop limit: 8 passes per step. Hitting the limit is an escalation: state what was observed, what was tried, and which operation page to read, then ask one question.
-
-## Before the first journey, when the codebase already exists
-
-Skip this section only for a system that does not exist yet. Otherwise it runs first, and its exit condition is a written plan, not a call.
-
-### In plain words
+## In plain words
 
 Most ABDM integrations are not new systems. They are a hospital management
 system, a laboratory system or a clinic application that already has patients,
@@ -27,17 +41,17 @@ its exit condition is a written plan that names, for every ABDM touchpoint, the
 file it will live in. The journeys then build against that plan rather than
 against the specification's idea of a fresh codebase.
 
-### Before you start
+## Before you start
 
 - The repository, checked out, with permission to read all of it. A survey of
   half a codebase produces a plan for half a system.
-- The answers to the deployment interview. The
+- The answers to [the deployment interview](m1-deployment-interview.md). The
   code says what the system is. Only the integrator can say what the
   deployment is, and the two together decide which journeys are built at all.
-- The practices that hold across every call, which
+- [The practices that hold across every call](integration-practices.md), which
   the plan has to leave room for.
 
-### What happens
+## What happens
 
 This is one loop with a limit of eight passes over the codebase. Each pass
 reads live state only, which here means the files themselves, never a README's
@@ -87,7 +101,7 @@ If the limit is reached with questions still open, escalate: name what was
 found, name the two candidates that could not be separated, point at this
 atom, and ask one question.
 
-### How you know it worked
+## How you know it worked
 
 The plan exists and answers every row of the inventory table with a file path,
 or with the words none, add at, followed by a path. No row is blank and no row
@@ -101,7 +115,7 @@ Open the plan beside the tree. Every path it names resolves, or is marked as
 new. That is the observation that ends this loop, and the first journey does
 not start until it has been made.
 
-### When it goes wrong
+## When it goes wrong
 
 - **The plan puts the HTTP client in the frontend.** The survey found the
   frontend's API client and stopped. Every ABDM call carries a secret, so it
@@ -118,177 +132,3 @@ not start until it has been made.
 - **Eight passes and the plan is still incomplete.** Escalate with the rows
   that are answered, the rows that are not, this atom, and one question about
   the row that blocks the most journeys.
-
-From `shared.concept.survey-an-existing-codebase`.
-
-## Journeys
-
-### Locker (`p4-locker`)
-
-**Act: the calls in this journey, in order**
-
-#### 1. Setup health locker for a patient (`p4_post_subscription_requests_v3_setup_locker`)
-
-```bash
-curl --request POST \
-  --url https://dev.abdm.gov.in/api/hiecm/subscription-requests/v3/setup-locker \
-  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
-  --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
-  --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
-  --header 'X-CM-ID: sbx' \
-  --header 'X-AUTH-TOKEN: <TOKEN>' \
-  --header 'X-LOCKER-ID: <X_LOCKER_ID>'
-```
-
-#### 2. Get the subscription requests patients lockers (`p4_get_subscription_requests_v3_patients_lockers`)
-
-```bash
-curl --request GET \
-  --url https://dev.abdm.gov.in/api/hiecm/subscription-requests/v3/patients/lockers \
-  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
-  --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
-  --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
-  --header 'X-CM-ID: sbx' \
-  --header 'X-AUTH-TOKEN: <TOKEN>'
-```
-
-#### 3. Get health locker settings of a patient by locker ID (`p4_get_subscription_requests_v3_patients_lockers_lockerid`)
-
-```bash
-curl --request GET \
-  --url https://dev.abdm.gov.in/api/hiecm/subscription-requests/v3/patients/lockers/{lockerId} \
-  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
-  --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
-  --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
-  --header 'X-CM-ID: sbx' \
-  --header 'X-AUTH-TOKEN: <TOKEN>'
-```
-
-#### 4. Get all the consent and subscription requests with given filters (`p4_get_subscription_requests_v3_patients_requests`)
-
-```bash
-curl --request GET \
-  --url https://dev.abdm.gov.in/api/hiecm/subscription-requests/v3/patients/requests \
-  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
-  --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
-  --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
-  --header 'X-CM-ID: sbx' \
-  --header 'X-AUTH-TOKEN: <TOKEN>'
-```
-
-**Exit condition (Observe until this is true)**
-
-A 200 whose body matches:
-
-```json
-{
-  "consents": {
-    "size": 10,
-    "limit": 10,
-    "offset": 0,
-    "requests": [
-      {
-        "requestId": "e5ec415f-c098-40f6-a0db-faa162fc5295",
-        "createdAt": "2021-09-28T12:30:08.573Z",
-        "lastUpdated": "2021-09-28T12:30:08.573Z",
-        "status": "GRANTED",
-        "purpose": {
-          "text": "Care Management",
-          "code": "CAREMGT",
-          "refUri": "www.abc.com"
-        },
-        "patient": {
-          "id": "<ABHA_ADDRESS>"
-        },
-        "hip": {
-          "id": "cowin_hip_01",
-          "name": "Cowin",
-          "type": "HIP"
-        },
-        "hiu": {
-          "id": "cowin_hiu_01",
-          "name": "Cowin",
-          "type": "HIU"
-        },
-        "requester": {
-          "name": "<ABHA_ADDRESS>",
-          "identifier": {
-            "value": "REG1",
-            "type": "MH1001",
-            "system": "https://www.sample.com"
-          }
-        },
-        "hiTypes": [
-          "Prescription"
-        ],
-        "careContexts": [
-          {
-            "patientReference": "batman@tmh",
-            "careContextReference": "Episode1"
-          }
-        ],
-        "permission": {
-          "accessMode": "VIEW",
-          "dateRange": {
-            "from": "2021-09-28T12:30:08.573Z",
-            "to": "2021-09-28T12:30:08.573Z"
-          },
-          "dataEraseAt": "2021-09-28T12:30:08.573Z",
-          "frequency": {
-            "unit": "HOUR",
-            "value": 1,
-            "repeats": 0
-          }
-        }
-      }
-    ]
-  },
-  "subscriptions": {
-    "limit": 5,
-    "size": 0,
-    "offset": 5,
-    "requests": [
-      {
-        "id": "1234",
-        "requestId": "f29f0e59-8388-4698-9fe6-05db67aeac46",
-        "subscriptionId": "f29f0e59-8388-4698-9fe6-05db67aeac46",
-        "patient": {
-          "id": "<ABHA_ADDRESS>"
-        },
-        "purpose": {
-          "text": "Care Management",
-          "code": "CAREMGT",
-          "refUri": "https://abc.def.in"
-        },
-        "hiu": {
-          "id": "INDIA_HIU",
-          "name": "INDIA HIU",
-          "type": "HIU"
-        },
-        "hips": [
-          {
-            "id": "INDIA_HIP",
-            "name": "INDIA HIP",
-            "type": "HIP"
-          }
-        ],
-        "categories": [
-          "LINK"
-        ],
-        "period": {
-          "from": "2024-05-09T10:34:00.389Z",
-          "to": "2024-05-09T10:34:00.389Z"
-        },
-        "createdAt": "2024-05-09T10:34:00.389Z",
-        "lastUpdated": "2024-05-09T10:34:00.389Z",
-        "status": "GRANTED",
-        "requestType": "HEALTH_LOCKER"
-      }
-    ]
-  }
-}
-```
-
-## Where the detail is
-
-- Every operation, with its body fields and responses: /docs/hiecm/v3/api/p4

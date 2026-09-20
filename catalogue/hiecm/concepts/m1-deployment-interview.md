@@ -4,7 +4,7 @@ type: concept
 gateway: hiecm
 milestone: M1
 version: abdm-v3
-order: 3
+order: 6
 title: Ask the integrator about the deployment, not the patient about the journey
 summary: >
   Six questions about a deployment decide which ABHA routes it offers, and the

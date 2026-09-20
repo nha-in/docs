@@ -83,7 +83,10 @@ optional: `audience: contributor` keeps an atom out of the Docs MCP
 snapshot, for a note about how this catalogue is built rather than about
 how ABDM works, and `order` is a whole number placing the atom within a
 compiled design section, where the default is to sort by id and the rules
-usually build on each other instead. The body carries five
+usually build on each other instead. A third, `router`, is the one line the
+compiled skill's always-loaded router carries for a design atom, for a rule a
+reader must meet before deciding whether to open the design section. The
+body carries five
 sections: In plain words, Before you start, What happens, How you know it
 worked, When it goes wrong. No em dash anywhere. Atoms carry no
 verification status: the Catalogue states how ABDM works, and sandbox

@@ -26,6 +26,10 @@ sources:
       NRCeS's own download for the package above. The pinned tgz under
       .raw/ is what the catalogue and the validator actually read; this
       URL is recorded so the pin can be renewed deliberately.
+router: >
+  A bundle that validates is not a bundle ABDM accepts. The NRCES profiles
+  are the floor, and the milestone the bundle travels under adds its own
+  rules on top.
 related:
   fhir: [shared.fhir.hl7-validator-recipe, shared.fhir.map-opconsultation, shared.fhir.map-prescription, shared.fhir.map-diagnosticreport]
 ---
