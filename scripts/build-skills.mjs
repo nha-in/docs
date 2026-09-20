@@ -22,6 +22,7 @@ import {parse} from 'yaml';
 import {cleanDescription} from './lib/titles.mjs';
 import {errorsFromSpec} from './lib/spec-errors.mjs';
 import {loadJourneys} from './lib/journeys.mjs';
+import {loadAtoms} from './lib/atoms.mjs';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const dataDir = join(root, 'site', 'src', 'data', 'api');
@@ -76,6 +77,65 @@ const PRACTICES = (() => {
   if (!items.length) throw new Error(`No practices found in ${practicesAtom}`);
   return items;
 })();
+
+// Design rules, as distinct from both rules and practices. A rule is a fact
+// about one module's calls. A practice is how to work. A design rule is what
+// the integration has to do to the journey around those calls: how many
+// questions a patient is asked, where a failure is shown, and what a screen is
+// forbidden to claim. They decide whether an integration that passes every
+// call is one a receptionist can actually use.
+//
+// Like the practices, they live in the Catalogue rather than in this file, as
+// hiecm concept atoms carrying the milestone they belong to, so they are
+// linted, citable by id, and reach the Docs MCP through the same snapshot as
+// everything else.
+const DESIGN_ATOMS = (() => {
+  const {atoms, problems} = loadAtoms();
+  if (problems.length) {
+    // An atom that will not parse is a build failure here, not a warning: a
+    // design section would otherwise lose it silently.
+    throw new Error(`Catalogue atoms did not parse: ${problems.map((x) => `${x.file}: ${x.msg}`).join(', ')}`);
+  }
+  const byMilestone = new Map();
+  for (const entry of atoms.values()) {
+    const fm = entry.fm;
+    if (fm?.gateway !== 'hiecm' || fm?.type !== 'concept') continue;
+    const key = String(fm.milestone ?? '').toLowerCase();
+    if (!byMilestone.has(key)) byMilestone.set(key, []);
+    byMilestone.get(key).push(entry);
+  }
+  for (const list of byMilestone.values()) list.sort((a, b) => a.fm.id.localeCompare(b.fm.id));
+  return byMilestone;
+})();
+
+/**
+ * The design section for one module, or '' when no atom claims its milestone.
+ * Each atom becomes one section, its own headings pushed down a level so the
+ * atom's title is what a reader scans. "Before you start" is dropped and the
+ * relative links are flattened, because both point at catalogue files that are
+ * not beside this one inside a skill folder.
+ */
+function designSection(module) {
+  const list = DESIGN_ATOMS.get(module.id) ?? [];
+  if (!list.length) return '';
+  const bodies = list.map((entry) => {
+    const withoutTitle = entry.body.replace(/^#\s+.+$/m, '').trim();
+    const dropped = withoutTitle.replace(/^## Before you start\n[\s\S]*?(?=^## )/m, '');
+    const flattened = dropped.replace(/\[([^\]]+)\]\([^)]*\.md\)/g, '$1');
+    return [`## ${entry.fm.title}`, '', flattened.replace(/^## /gm, '### ').trim(), ''].join('\n');
+  });
+  return [
+    `# Design ${module.title}`,
+    '',
+    'What the integration has to do to the journey around the calls: how many questions a patient is asked, where a failure is shown, and what a screen is forbidden to claim. Every rule below comes from a Catalogue atom, cited at the end.',
+    '',
+    ...bodies,
+    '## Where these came from',
+    '',
+    ...list.map((entry) => '- `' + entry.fm.id + '`'),
+    '',
+  ].join('\n');
+}
 
 const MODULES = [
   {
@@ -600,6 +660,17 @@ for (const module of MODULES) {
     files['references/scaffold.md'] = scaffold;
     covers.push(
       `- **Scaffold.** Build it flow by flow against the sandbox, as a loop that ends when the step's exit condition holds rather than on a call returning 200. [references/scaffold.md](references/scaffold.md)`,
+    );
+  }
+
+  // Design before integrate: an integrator who reads the calls first builds
+  // the journey the specification implies, which is the one that asks a
+  // patient the same question twice.
+  const design = designSection(module);
+  if (design) {
+    files['references/design.md'] = design;
+    covers.push(
+      `- **Design.** What the journey around the calls has to do, and what a screen is forbidden to claim. [references/design.md](references/design.md)`,
     );
   }
 
