@@ -62,3 +62,20 @@ func LoadAtoms(catDir string) ([]Atom, error) {
 	}
 	return atoms, nil
 }
+
+// IntegratorAtoms drops the atoms written for contributors to this
+// catalogue rather than for integrators of ABDM. The distinction is not
+// cosmetic: everything the snapshot carries is reachable through the MCP
+// server's search_docs, list_atoms and get_atom, and through the site's
+// Ask AI panel, so a note about this repository's own retrieval design is
+// an answer an integrator can be given to a question about ABDM.
+func IntegratorAtoms(atoms []Atom) []Atom {
+	kept := atoms[:0:0]
+	for _, a := range atoms {
+		if a.Audience == "contributor" {
+			continue
+		}
+		kept = append(kept, a)
+	}
+	return kept
+}

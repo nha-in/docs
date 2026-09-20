@@ -91,6 +91,11 @@ func run(catDir, outPath, nrcesPath string, emb embed.Embedder) error {
 	if err != nil {
 		return err
 	}
+	// The snapshot is the integrator's corpus. An atom marked
+	// audience: contributor documents how this catalogue is built, not how
+	// ABDM is integrated, so it never reaches the MCP server, the Ask AI
+	// panel or site search.
+	atoms = catalogue.IntegratorAtoms(atoms)
 
 	err = filepath.WalkDir(catDir, func(path string, d fs.DirEntry, err error) error {
 		if err != nil {
