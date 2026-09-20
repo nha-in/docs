@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunk_abdm_docs_site=self.webpackChunk_abdm_docs_site||[]).push([["79537"],{99398(s){s.exports=JSON.parse('{"name":"@scalar/docusaurus","id":"m2"}')}}]);
