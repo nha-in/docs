@@ -44,6 +44,7 @@ export default function Omnibox() {
   // The panel hands this out in its install flow. Absent in a build with no
   // backend, and the flow says so rather than printing a placeholder command.
   const mcpUrl = siteConfig.customFields?.mcpUrl as string | null;
+  const pluginRepo = siteConfig.customFields?.pluginRepo as string;
   const support = useBaseUrl('/docs/support');
   const history = useHistory();
   const box = React.useRef<HTMLDivElement>(null);
@@ -295,6 +296,7 @@ export default function Omnibox() {
         {...(chatUrl ? {'api-base': chatUrl} : {})}
         docs-origin={siteConfig.url + siteConfig.baseUrl.replace(/\/$/, '')}
         {...(mcpUrl ? {'mcp-url': mcpUrl} : {})}
+        plugin-repo={pluginRepo}
         {...(starters ? {starters} : {})}
         {...(shortcut ? {shortcut} : {})}
         support-url={support}

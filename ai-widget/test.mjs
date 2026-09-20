@@ -120,7 +120,11 @@ for (const asked of [
 
 // The flow: three tools, four agents, and every tool asks which agent. The
 // plugin used to skip that question when it was Claude Code's alone.
-const ctx = {docsOrigin: 'https://d.example/', mcpUrl: 'https://mcp.example/x'};
+const ctx = {
+  docsOrigin: 'https://d.example/',
+  mcpUrl: 'https://mcp.example/x',
+  pluginRepo: 'example-org/example-docs',
+};
 assert.deepEqual(TOOLS.map((t) => t.id), ['skills', 'mcp', 'plugin']);
 assert.deepEqual(AGENTS.map((a) => a.id), ['claude', 'codex', 'cursor', 'other']);
 for (const tool of ['skills', 'mcp', 'plugin']) {
@@ -144,19 +148,19 @@ assert.match(answer({at: 'answer', tool: 'mcp', agent: 'claude'}, ctx).text,
 assert.match(answer({at: 'answer', tool: 'skills', agent: 'other', named: 'Zed'}, ctx).text,
   /Zed included/);
 assert.match(answer({at: 'answer', tool: 'plugin', agent: 'claude'}, ctx).text,
-  /claude plugin marketplace add eka-care\/abdm-docs/);
+  /claude plugin marketplace add example-org\/example-docs/);
 // Codex installs the same plugin from the same repository, since Agent
 // Plugins 1.0. Cursor reads the standard but installs from its own
 // marketplace, so it is told that rather than given a command that fails.
 assert.match(answer({at: 'answer', tool: 'plugin', agent: 'codex'}, ctx).text,
-  /codex plugin marketplace add eka-care\/abdm-docs/);
+  /codex plugin marketplace add example-org\/example-docs/);
 const cursorPlugin = answer({at: 'answer', tool: 'plugin', agent: 'cursor'}, ctx);
 assert.equal(cursorPlugin.text.includes('```'), false, 'no command Cursor cannot run');
 assert.match(cursorPlugin.text, /not listed in one yet/);
 
 // No MCP address in this build is a sentence, never a placeholder command.
 const locked = answer({at: 'answer', tool: 'mcp', agent: 'claude'},
-  {docsOrigin: 'https://d.example', mcpUrl: null});
+  {docsOrigin: 'https://d.example', mcpUrl: null, pluginRepo: 'example-org/example-docs'});
 assert.equal(locked.text.includes('```'), false, 'no command without an address');
 assert.match(locked.text, /does not carry its address/);
 

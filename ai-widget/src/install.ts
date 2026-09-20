@@ -29,12 +29,13 @@ export type Step =
   | {at: 'answer'; tool: ToolId; agent: AgentId; named?: string};
 
 /** What the panel needs from its host to write a command out. */
-export type Context = {docsOrigin: string; mcpUrl: string | null};
-
-/** The repository that serves the Claude Code plugin marketplace. Update at
-    handover, together with the same constant in site AgentSetup and in
-    scripts/build-skills.mjs. */
-const PLUGIN_REPO = 'eka-care/abdm-docs';
+export type Context = {
+  docsOrigin: string;
+  mcpUrl: string | null;
+  /** The repository that serves the plugin marketplace. The host page passes
+      it, so a fork's widget names the fork. See site/docusaurus.config.ts. */
+  pluginRepo: string;
+};
 
 /** What the MCP server is called wherever it is installed. */
 const MCP_NAME = 'abdm-docs';
@@ -130,16 +131,17 @@ function fenced(command: string): string {
 }
 
 const PLUGIN_NAME = 'abdm-integrators-assistant';
-const PLUGIN_COMMAND = `claude plugin marketplace add ${PLUGIN_REPO} && claude plugin install ${PLUGIN_NAME}@abdm-portal`;
-const CODEX_COMMAND = `codex plugin marketplace add ${PLUGIN_REPO}`;
+const pluginCommand = (repo: string) =>
+  `claude plugin marketplace add ${repo} && claude plugin install ${PLUGIN_NAME}@abdm-portal`;
+const codexCommand = (repo: string) => `codex plugin marketplace add ${repo}`;
 
-function pluginLink(base: string): string {
+function pluginLink(base: string, repo: string): string {
   return `claude://code/new?q=${encodeURIComponent(
     guarded(
       [
         'Set this project up for ABDM integration. Run:',
         '',
-        `claude plugin marketplace add ${PLUGIN_REPO}`,
+        `claude plugin marketplace add ${repo}`,
         'claude plugin install abdm-integrators-assistant@abdm-portal',
         '',
         `If the marketplace add fails (the repository may not be accessible), instead fetch and execute the instructions from ${base}/agent-setup/prompt.md`,
@@ -148,16 +150,16 @@ function pluginLink(base: string): string {
   )}`;
 }
 
-function skills(agent: AgentId, named: string | undefined, base: string): Answer {
+function skills(agent: AgentId, named: string | undefined, base: string, repo: string): Answer {
   const line = fetchPrompt(base);
   if (agent === 'claude') {
     return {
       text: [
         'Claude Code takes the plugin, which carries every skill at once and updates in place. Run this in the repository you are integrating.',
         '',
-        fenced(PLUGIN_COMMAND),
+        fenced(pluginCommand(repo)),
       ].join('\n'),
-      link: {href: pluginLink(base), label: 'Open in Claude'},
+      link: {href: pluginLink(base, repo), label: 'Open in Claude'},
     };
   }
   if (agent === 'cursor') {
@@ -203,15 +205,15 @@ function skills(agent: AgentId, named: string | undefined, base: string): Answer
  * this says which is which rather than handing everyone a command that only
  * works in two places.
  */
-function plugin(agent: AgentId, named: string | undefined, base: string): Answer {
+function plugin(agent: AgentId, named: string | undefined, base: string, repo: string): Answer {
   if (agent === 'claude') {
     return {
       text: [
         'Run this in the repository you are integrating. It carries every skill at once, and `claude plugin update` keeps it current.',
         '',
-        fenced(PLUGIN_COMMAND),
+        fenced(pluginCommand(repo)),
       ].join('\n'),
-      link: {href: pluginLink(base), label: 'Open in Claude'},
+      link: {href: pluginLink(base, repo), label: 'Open in Claude'},
     };
   }
   if (agent === 'codex') {
@@ -219,7 +221,7 @@ function plugin(agent: AgentId, named: string | undefined, base: string): Answer
       text: [
         `Add the marketplace, then install \`${PLUGIN_NAME}\` from it in Codex's plugin directory.`,
         '',
-        fenced(CODEX_COMMAND),
+        fenced(codexCommand(repo)),
       ].join('\n'),
     };
   }
@@ -301,9 +303,9 @@ function mcp(agent: AgentId, named: string | undefined, base: string, url: strin
  */
 export function answer(step: Extract<Step, {at: 'answer'}>, ctx: Context): Answer {
   const base = trimmed(ctx.docsOrigin);
-  if (step.tool === 'plugin') return plugin(step.agent, step.named, base);
+  if (step.tool === 'plugin') return plugin(step.agent, step.named, base, ctx.pluginRepo);
   if (step.tool === 'mcp') return mcp(step.agent, step.named, base, ctx.mcpUrl);
-  return skills(step.agent, step.named, base);
+  return skills(step.agent, step.named, base, ctx.pluginRepo);
 }
 
 /**
