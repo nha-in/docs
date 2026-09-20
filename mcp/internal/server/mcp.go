@@ -247,6 +247,13 @@ func NewMCPServer(r *index.Reader, emb embed.Embedder) *mcp.Server {
 		}))
 	})
 
+	// The compiled skills, as one resource per section and one prompt per
+	// skill. A snapshot built before skills were indexed has no rows and
+	// registers nothing, so an older database still serves.
+	if err := addSkills(s, r); err != nil {
+		slog.Warn("skills not registered", "err", err)
+	}
+
 	return s
 }
 

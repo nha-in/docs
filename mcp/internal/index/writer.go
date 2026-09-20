@@ -29,6 +29,12 @@ type Meta struct {
 	// the index so the server needs the database and nothing else. Empty
 	// when the file is absent, and search then behaves as it did before.
 	Vocabulary string
+	// Skills are the compiled integrator skills, carried for the same
+	// reason as Vocabulary: the server reads the database and nothing
+	// else. Empty when the skills directory is absent, and the server then
+	// offers no prompts and no resources, which is what it did before they
+	// were indexed.
+	Skills []catalogue.Skill
 }
 
 func Build(dbPath string, atoms []catalogue.Atom, questions map[string]catalogue.AtomQuestions,
@@ -122,6 +128,12 @@ func Build(dbPath string, atoms []catalogue.Atom, questions map[string]catalogue
 	for p, h := range meta.SourceHashes {
 		if _, err := tx.Exec(`INSERT INTO sources VALUES (?,?)`, p, h); err != nil {
 			return err
+		}
+	}
+	for _, sk := range meta.Skills {
+		if _, err := tx.Exec(`INSERT INTO skills VALUES (?,?,?,?)`,
+			sk.Name, sk.Section, sk.Description, sk.Body); err != nil {
+			return fmt.Errorf("skill %s/%s: %w", sk.Name, sk.Section, err)
 		}
 	}
 	for _, d := range fhirDigests {
