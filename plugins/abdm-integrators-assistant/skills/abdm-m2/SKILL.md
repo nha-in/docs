@@ -30,7 +30,8 @@ This file is the map. Each line above is a file beside it, opened one at a time 
 
 ## Before anything else
 
-- Nothing here has been run against the ABDM sandbox. Treat request and response shapes as unconfirmed, and check a response before you rely on its shape.
+- No call in this skill has been run against the ABDM sandbox. Treat request and response shapes as unconfirmed, and check a response before you rely on its shape.
+- The design section is the exception. Its rules come from building a working front desk against the sandbox, and each atom it cites names what was observed and the date it was seen.
 - You act as the HIP.
 - M2 is keyed to an ABHA address, so a working M1 integration comes first.
 - You are the side that encrypts, and the parameters arrive from the requester rather than from you. The health information request carries `keyMaterial` with `cryptoAlg`, `curve: Curve25519`, the requester's `dhPublicKey` and a `nonce`. Generate your own Curve25519 pair and your own nonce, and send your public key and nonce back with the data so the requester can derive the same secret.

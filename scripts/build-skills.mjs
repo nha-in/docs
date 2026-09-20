@@ -57,8 +57,19 @@ const skillUrl = (slug, url) =>
 // Every rule below is lifted from that module's own pages. A rule that is true
 // of M1 and not of M2 belongs to M1 only: an agent told the wrong rule is
 // worse off than an agent told nothing.
+// Said of the calls, and only of the calls. It used to say "nothing here",
+// which stopped being true once a skill carried a design section: those rules
+// were observed at a working front desk against the sandbox and each names the
+// date it was seen. Claiming they were unproven undersold the one part of the
+// skill that had been run, and a reader who discounts it loses the rules that
+// stop a journey asking twice.
 const UNVERIFIED =
-  'Nothing here has been run against the ABDM sandbox. Treat request and response shapes as unconfirmed, and check a response before you rely on its shape.';
+  'No call in this skill has been run against the ABDM sandbox. Treat request and response shapes as unconfirmed, and check a response before you rely on its shape.';
+
+// Added only where a design section exists, immediately after UNVERIFIED, so
+// the two claims are read together rather than a page apart.
+const DESIGN_OBSERVED =
+  'The design section is the exception. Its rules come from building a working front desk against the sandbox, and each atom it cites names what was observed and the date it was seen.';
 
 // Practices, as distinct from rules. A rule is a fact about one module. A
 // practice is how to work so a wrong assumption surfaces in a minute rather
@@ -395,7 +406,10 @@ function build(module, url) {
 
   lines.push('## Before anything else');
   lines.push('');
-  for (const rule of module.rules) lines.push(`- ${rule}`);
+  for (const rule of module.rules) {
+    lines.push(`- ${rule}`);
+    if (rule === UNVERIFIED && DESIGN_ATOMS.has(module.id)) lines.push(`- ${DESIGN_OBSERVED}`);
+  }
   lines.push('');
 
   lines.push('## Hosts');
@@ -862,6 +876,7 @@ const fhirSkillMd = (url) =>
     '## Before anything else',
     '',
     `- ${UNVERIFIED}`,
+    `- ${DESIGN_OBSERVED}`,
     '- A bundle that validates is not a bundle ABDM accepts. The NRCES profiles are the floor, and the milestone the bundle travels under adds its own rules.',
     '',
     '## Practices that hold across every call',

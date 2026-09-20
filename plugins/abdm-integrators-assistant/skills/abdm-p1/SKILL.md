@@ -38,7 +38,7 @@ This file is the map. Each line above is a file beside it, opened one at a time 
 
 ## Before anything else
 
-- Nothing here has been run against the ABDM sandbox. Treat request and response shapes as unconfirmed, and check a response before you rely on its shape.
+- No call in this skill has been run against the ABDM sandbox. Treat request and response shapes as unconfirmed, and check a response before you rely on its shape.
 
 ## Practices that hold across every call
 

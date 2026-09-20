@@ -30,7 +30,8 @@ This file is the map. Each line above is a file beside it, opened one at a time 
 
 ## Before anything else
 
-- Nothing here has been run against the ABDM sandbox. Treat request and response shapes as unconfirmed, and check a response before you rely on its shape.
+- No call in this skill has been run against the ABDM sandbox. Treat request and response shapes as unconfirmed, and check a response before you rely on its shape.
+- The design section is the exception. Its rules come from building a working front desk against the sandbox, and each atom it cites names what was observed and the date it was seen.
 - You act as the HIU. The HIE-CM holds the consent and asks the patient on your behalf. No artefact, no records.
 - The patient must be known to you by ABHA address before you can raise a request.
 - One consent request can produce more than one artefact. Store the request id and every artefact id.
