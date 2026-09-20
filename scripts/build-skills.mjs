@@ -786,6 +786,47 @@ for (const [section, source, what] of FHIR_REFS) {
     `- **${section[0].toUpperCase()}${section.slice(1)}.** ${what} [references/${section}.md](references/${section}.md)`,
   );
 }
+
+// The shared fhir atoms that are design rules rather than reference material.
+// Named explicitly because the rest of catalogue/shared/fhir is the seven
+// record type maps, the envelope and the validator recipe, which the
+// generate and audit procedures already send a reader to. These three are
+// what a generator gets wrong before it ever reaches a profile table.
+const FHIR_DESIGN_ATOMS = [
+  'shared.fhir.profile-and-example-together',
+  'shared.fhir.conditional-cardinality',
+  'shared.fhir.bundle-weight-and-narrative',
+];
+
+/** The design section for abdm-fhir, assembled from the named atoms above. */
+function fhirDesignSection() {
+  const {atoms} = loadAtoms();
+  const picked = FHIR_DESIGN_ATOMS.map((id) => {
+    const atom = atoms.get(id);
+    // A renamed or deleted atom must fail the build rather than quietly
+    // shrink the section.
+    if (!atom) throw new Error(`FHIR_DESIGN_ATOMS names ${id}, which no atom defines`);
+    return atom;
+  });
+  const bodies = picked.map((entry) => {
+    const withoutTitle = entry.body.replace(/^#\s+.+$/m, '').trim();
+    const dropped = withoutTitle.replace(/^## Before you start\n[\s\S]*?(?=^## )/m, '');
+    const flattened = dropped.replace(/\[([^\]]+)\]\([^)]*\.md\)/g, '$1');
+    return [`## ${entry.fm.title}`, '', flattened.replace(/^## /gm, '### ').trim(), ''].join('\n');
+  });
+  return [
+    '# Design an ABDM FHIR generator',
+    '',
+    'What a bundle generator gets wrong before it reaches a profile table: reading one NRCeS source without the other, emitting a required child of an optional parent, and treating a bundle as a small object with a file attached.',
+    '',
+    ...bodies,
+    '## Where these came from',
+    '',
+    ...picked.map((entry) => '- `' + entry.fm.id + '`'),
+    '',
+  ].join('\n');
+}
+
 const fhirSkillMd = (url) =>
   [
     '---',
@@ -814,6 +855,10 @@ const fhirSkillMd = (url) =>
     '',
     ...PRACTICES.map((practice) => `- ${practice}`),
   ].join('\n');
+fhirFiles['references/design.md'] = fhirDesignSection();
+fhirCovers.unshift(
+  '- **Design.** What a generator gets wrong before it reaches a profile table. [references/design.md](references/design.md)',
+);
 fhirFiles['SKILL.md'] = fhirSkillMd(siteUrl);
 const fhirPluginFiles = {...fhirFiles, 'SKILL.md': fhirSkillMd(null)};
 emit('abdm-fhir', fhirFiles, fhirPluginFiles);
@@ -827,7 +872,7 @@ manifest['abdm-fhir'] = {
   codes: 0,
   sections: FHIR_REFS.map(([section]) => section),
 };
-console.log('Built abdm-fhir: 2 reference(s) from the hand written procedures.');
+console.log(`Built abdm-fhir: ${Object.keys(fhirFiles).length - 1} reference(s), including the design rules.`);
 
 writeFileSync(
   join(root, 'site', 'src', 'data', 'skills.json'),

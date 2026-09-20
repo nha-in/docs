@@ -11,6 +11,7 @@ This file is a snapshot. Re-download the whole folder from the portal's /skills/
 
 ## What this skill covers
 
+- **Design.** What a generator gets wrong before it reaches a profile table. [references/design.md](references/design.md)
 - **Generate.** Build NRCES compliant bundle generation into a codebase. [references/generate.md](references/generate.md)
 - **Audit.** Check an existing FHIR store's output against the same profiles. [references/audit.md](references/audit.md)
 
