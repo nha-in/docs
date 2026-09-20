@@ -20,6 +20,19 @@ install commands unpack.
 
 They come from github.com/nha-in/nhcx-skills, taken from its working tree on
 15 September 2026, over commit 0e7545f. Update them there and copy them across
-again rather than editing them here. `npm run validate:skills` checks their
-frontmatter and em dashes; they cite no Catalogue atom, so its Catalogue
-checks do not reach them.
+again rather than editing them here.
+
+One block in each `SKILL.md` is the exception, and it is generated rather than
+hand written. `npm run stamp:nhcx` writes it: where the folder came from, that
+it is a snapshot and where to re-download it, that the nhcx-docs MCP server
+outranks it, and what its claims rest on. The counts in it are read from this
+repository, so the block goes stale when the Catalogue moves.
+`npm run check:nhcx-stamp` fails when it has, and CI runs it.
+
+`npm run validate:skills` now opens these folders. It checks each router's
+frontmatter, that the provenance block is present, and that no file carries an
+em dash. It also checks that the files every folder repeats are byte identical
+across all seven, which is the rule that matters here: 57 of each folder's 58
+files are copies, so a fix applied to one folder and not the rest would
+otherwise ship as six stale copies. They cite no Catalogue atom, so the
+Catalogue checks that the compiled ABDM skills get still do not reach them.

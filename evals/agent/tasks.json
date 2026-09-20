@@ -5,7 +5,10 @@
       "id": 1,
       "title": "Scaffold an ABHA verification flow from an empty repo",
       "skill": "abdm-m1",
-      "needs": ["ABDM_CLIENT_ID", "ABDM_CLIENT_SECRET"],
+      "needs": [
+        "ABDM_CLIENT_ID",
+        "ABDM_CLIENT_SECRET"
+      ],
       "exit": "The sandbox returns a verified ABHA profile: a 200 from the profile call whose body carries an ABHANumber.",
       "prompt": "Starting from the empty directory you are in, scaffold an ABHA verification flow against the ABDM sandbox using the abdm-m1 skill. Credentials are in ABDM_CLIENT_ID and ABDM_CLIENT_SECRET. Run it. The task is done only when the sandbox returns a verified ABHA profile. Stop at any OTP step that needs a human and report NEEDS_HUMAN with the atom that marks it."
     },
@@ -21,7 +24,12 @@
       "id": 3,
       "title": "Link a care context and push encrypted data",
       "skill": "abdm-m2",
-      "needs": ["ABDM_CLIENT_ID", "ABDM_CLIENT_SECRET", "ABDM_HIP_ID", "ABDM_CALLBACK_URL"],
+      "needs": [
+        "ABDM_CLIENT_ID",
+        "ABDM_CLIENT_SECRET",
+        "ABDM_HIP_ID",
+        "ABDM_CALLBACK_URL"
+      ],
       "exit": "A link callback at /api/v3/link/on_carecontext is received at ABDM_CALLBACK_URL carrying no error object and a response.requestId matching the link request, then the data push returns 200 or 202.",
       "prompt": "Using the abdm-m2 skill, link one care context for the sandbox test patient as HIP ABDM_HIP_ID and push one encrypted health record to the requester. Callbacks arrive at ABDM_CALLBACK_URL. The task is done only when the on_carecontext callback arrives with no error object and the data push is acknowledged with 200 or 202."
     },
@@ -29,7 +37,12 @@
       "id": 4,
       "title": "Raise an HIU consent request and fetch records",
       "skill": "abdm-m3",
-      "needs": ["ABDM_CLIENT_ID", "ABDM_CLIENT_SECRET", "ABDM_HIU_ID", "ABDM_CALLBACK_URL"],
+      "needs": [
+        "ABDM_CLIENT_ID",
+        "ABDM_CLIENT_SECRET",
+        "ABDM_HIU_ID",
+        "ABDM_CALLBACK_URL"
+      ],
       "exit": "A consent artefact is received, and the fetched bundle decrypts and passes validate_fhir.",
       "prompt": "Using the abdm-m3 skill, raise a consent request as HIU ABDM_HIU_ID for the sandbox test patient, wait for the artefact, and fetch the records. Callbacks arrive at ABDM_CALLBACK_URL. Consent approval in the patient app is a human step: report NEEDS_HUMAN at that point with the atom that marks it. The task is done only when a bundle is decrypted and validate_fhir returns no findings."
     },
@@ -37,7 +50,12 @@
       "id": 5,
       "title": "Diagnose a failing HIP data push from its error",
       "skill": "abdm-m2",
-      "needs": ["ABDM_CLIENT_ID", "ABDM_CLIENT_SECRET", "ABDM_HIP_ID", "ABDM_CALLBACK_URL"],
+      "needs": [
+        "ABDM_CLIENT_ID",
+        "ABDM_CLIENT_SECRET",
+        "ABDM_HIP_ID",
+        "ABDM_CALLBACK_URL"
+      ],
       "exit": "The correct error atom is cited, the fix is applied, and the original push then succeeds.",
       "prompt": "A HIP data push against the sandbox is failing. Reproduce it with the abdm-m2 skill using a REQUEST-ID that was already used once, diagnose the error with the debug reference, cite the error atom, apply the fix, and rerun the original push. The task is done only when the original push succeeds. Applying the fix is not the exit condition."
     },
@@ -45,9 +63,49 @@
       "id": 6,
       "title": "Walk the M1 to M3 test cases to completion",
       "skill": "abdm-m1, abdm-m2, abdm-m3",
-      "needs": ["ABDM_CLIENT_ID", "ABDM_CLIENT_SECRET", "ABDM_HIP_ID", "ABDM_HIU_ID", "ABDM_CALLBACK_URL"],
+      "needs": [
+        "ABDM_CLIENT_ID",
+        "ABDM_CLIENT_SECRET",
+        "ABDM_HIP_ID",
+        "ABDM_HIU_ID",
+        "ABDM_CALLBACK_URL"
+      ],
       "exit": "Every test case in the M1, M2 and M3 test references is recorded as passed or as NEEDS_HUMAN with the reason.",
       "prompt": "Walk every test case in the test references of the abdm-m1, abdm-m2 and abdm-m3 skills against the sandbox. Record each as passed, failed or NEEDS_HUMAN with the reason. Never mark a human step as passed or failed. The task is done only when every case has a recorded outcome."
+    },
+    {
+      "id": 7,
+      "title": "Decode a payer refusal without guessing",
+      "skill": "nhcx-claim",
+      "needs": [],
+      "footer": "Report at the very end in one fenced block tagged eval-result containing JSON with keys: result (PASS, FAIL or NEEDS_HUMAN), attempts (number of loops), atoms_cited (array of atom ids you actually read), evidence (the verbatim tool or sandbox output that shows the exit condition, or empty), blockers (array of strings). A PASS with empty evidence is scored as FAIL. Use only the nhcx plugin skills and the mcp__abdm-docs__* tools, which serve the NHCX atoms too; do not use your own memory of NHCX where the Catalogue or the skill speaks.",
+      "exit": "mcp__abdm-docs__decode_error, given the pasted ProtocolResponse, returns the atom nhcx.error.payr-1238, and the answer names who refused the message and states that the retry goes out on a fresh correlation id.",
+      "prompt": "A hospital system sent an NHCX pre-authorisation and this arrived on its callback: {\"type\":\"ProtocolResponse\",\"x-hcx-status\":\"response.error\",\"x-hcx-error_details\":{\"code\":\"PAYR-1238\",\"message\":\"An active preauthorisation exists\"}}. Using the nhcx-preauth skill and the decode_error MCP tool, say who refused the message, what the code means, and what the hospital does next. The task is done only when decode_error has returned the matching atom and you have cited it."
+    },
+    {
+      "id": 8,
+      "title": "Prove the JWE seal offline",
+      "skill": "nhcx-claim",
+      "needs": [],
+      "footer": "Report at the very end in one fenced block tagged eval-result containing JSON with keys: result (PASS, FAIL or NEEDS_HUMAN), attempts (number of loops), atoms_cited (array of atom ids you actually read), evidence (the verbatim tool or sandbox output that shows the exit condition, or empty), blockers (array of strings). A PASS with empty evidence is scored as FAIL. Use only the nhcx plugin skills and the mcp__abdm-docs__* tools, which serve the NHCX atoms too; do not use your own memory of NHCX where the Catalogue or the skill speaks.",
+      "exit": "A script in the current directory seals a JSON bundle as a compact JWE with RSA-OAEP-256 and A256GCM under a throwaway key, prints five dot separated parts, opens it with the matching private key to the identical JSON, and fails to open it with a second unrelated key.",
+      "prompt": "Using the nhcx-claim skill, write and run a script in the current directory that proves an NHCX seal offline. Generate a throwaway RSA key pair, seal a small JSON bundle as the skill's transport reference describes, and show the round trip. Send no network traffic. The task is done only when the matching key opens the JWE to the same JSON and an unrelated key is observed failing to open it."
+    },
+    {
+      "id": 9,
+      "title": "Check coverage eligibility on the sandbox",
+      "skill": "nhcx-coverage",
+      "needs": [
+        "NHCX_PARTICIPANT_CODE",
+        "NHCX_CLIENT_ID",
+        "NHCX_CLIENT_SECRET",
+        "NHCX_PRIVATE_KEY_PATH",
+        "NHCX_CALLBACK_URL",
+        "NHCX_TEST_ABHA"
+      ],
+      "footer": "Report at the very end in one fenced block tagged eval-result containing JSON with keys: result (PASS, FAIL or NEEDS_HUMAN), attempts (number of loops), atoms_cited (array of atom ids you actually read), evidence (the verbatim tool or sandbox output that shows the exit condition, or empty), blockers (array of strings). A PASS with empty evidence is scored as FAIL. Use only the nhcx plugin skills and the mcp__abdm-docs__* tools, which serve the NHCX atoms too; do not use your own memory of NHCX where the Catalogue or the skill speaks.",
+      "exit": "A delivery on /v1/coverageeligibility/on_check is received at NHCX_CALLBACK_URL on the correlation id the send returned, and it opens to a CoverageEligibilityResponse or to a ProtocolResponse whose code is decoded.",
+      "prompt": "Using the nhcx-coverage skill, find the policy for the beneficiary NHCX_TEST_ABHA and send one coverage eligibility check on the NHCX sandbox as participant NHCX_PARTICIPANT_CODE. Answers arrive at NHCX_CALLBACK_URL. Store txn_id, correlation_id and api_call_id before the POST. The task is done only when a delivery on the same correlation id has arrived and been opened."
     }
   ]
 }

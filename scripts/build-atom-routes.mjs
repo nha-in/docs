@@ -144,6 +144,35 @@ for (const [name, route] of apiPageByOperation) {
 }
 
 const pageAt = (re) => pages.find((p) => re.test(p.route));
+
+// ---------- NHCX: the same rules, scoped to its own pages ----------
+// Every lookup above finds the first page that matches, which is HIE-CM's,
+// so an NHCX atom was tested against ABDM's error page, ABDM's callbacks and
+// ABDM's API paths, matched none of them, and left the MCP answering every
+// NHCX search with an empty doc_url. An NHCX atom states its method and path
+// in its title, so it joins on those rather than on a cURL it may not carry.
+const nhcxPages = pages.filter((p) => p.route.startsWith("/docs/nhcx/"));
+const nhcxErrorsPage = nhcxPages.find((p) => /\/reference\/error-codes$/.test(p.route));
+const nhcxApiByMethodPath = new Map();
+for (const [name, route] of apiPageByOperation) {
+  if (!route.startsWith("/docs/nhcx/")) continue;
+  const jf = join(root, "site", "src", "data", "api", `${name}.json`);
+  if (!existsSync(jf)) continue;
+  try {
+    const op = JSON.parse(readFileSync(jf, "utf8"));
+    const key = `${String(op.method ?? "").toUpperCase()} ${normPath(op.path ?? "")}`;
+    // A path published twice, once on the exchange and once on a payer's
+    // internal service, belongs to the exchange page: that is the one an
+    // integrator calls.
+    if (!nhcxApiByMethodPath.has(key) || /-internal-/.test(nhcxApiByMethodPath.get(key))) {
+      nhcxApiByMethodPath.set(key, route);
+    }
+  } catch {}
+}
+function nhcxTitleKey(title) {
+  const m = title.match(/\b(GET|POST|PUT|PATCH|DELETE)\s+(\/\S+)/);
+  return m ? `${m[1]} ${normPath(m[2])}` : null;
+}
 const callbacksPage = pageAt(/\/reference\/callbacks$/);
 const errorsPage = pageAt(/\/reference\/error-codes$/);
 const glossaryPage = pageAt(/glossary$/);
@@ -191,6 +220,43 @@ for (const [id, atom] of atoms) {
            ?? headingFor(claim.body, id.split(".").pop().replace(/-/g, " "));
     route = claim.route; anchor = h ? slug(h) : null;
     rule = `claimed by ${basename(claim.route)}`; confidence = "derived";
+  }
+
+  const isNhcx = id.startsWith("nhcx.");
+
+  if (!route && isNhcx && (type === "endpoint" || type === "callback")) {
+    const key = nhcxTitleKey(title);
+    const hit = key ? nhcxApiByMethodPath.get(key) : null;
+    if (hit) {
+      route = hit; rule = "method and path in the atom title match the generated API page";
+      confidence = "derived";
+    }
+  }
+
+  if (!route && isNhcx && type === "error" && nhcxErrorsPage) {
+    const code = (title.match(/^([A-Z]+(?:-[A-Z]+)*-\d+)/) ?? [])[1];
+    if (code && nhcxErrorsPage.body.includes(`\`${code}\``)) {
+      // The page has one heading per code space, so that is the anchor.
+      route = nhcxErrorsPage.route; anchor = slug(code.replace(/-\d+$/, ""));
+      rule = "error code listed on the NHCX error codes page"; confidence = "derived";
+    }
+  }
+
+  if (!route && isNhcx && (type === "concept" || type === "fhir")) {
+    // Exact names only. The NHCX pages come from the NHCX package and cannot
+    // carry covers:, so the one join that is safe is an atom and a page named
+    // for the same thing. The package spells out what the Catalogue shortens.
+    const stem = basename(file).replace(/\.md$/, "");
+    const names = new Set([stem, stem.replace(/^preauth-/, "preauthorisation-")]);
+    // A bundle atom belongs on a bundle page, never on the API module that
+    // happens to share its name.
+    const pool = type === "fhir" ? nhcxPages.filter((pg) => pg.route.includes("/reference/fhir/")) : nhcxPages;
+    const hit = pool.find((pg) => names.has(basename(pg.route)))
+      ?? (type === "fhir" ? pool.find((pg) => [...names].some((n) => basename(pg.route).startsWith(`${n}-`))) : null);
+    if (hit) {
+      route = hit.route; rule = `page named for the same thing, ${basename(hit.route)}`;
+      confidence = "derived";
+    }
   }
 
   if (!route && (type === "endpoint" || type === "callback")) {

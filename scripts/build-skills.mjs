@@ -966,11 +966,6 @@ manifest['abdm-fhir'] = {
 };
 console.log(`Built abdm-fhir: ${Object.keys(fhirFiles).length - 1} reference(s), including the design rules.`);
 
-writeFileSync(
-  join(root, 'site', 'src', 'data', 'skills.json'),
-  `${JSON.stringify(manifest, null, 2)}\n`,
-);
-
 console.log(`Compiled ${MODULES.length + 1} skill(s) into site/static/skills and the plugin.`);
 
 // Everything above is ABDM's, and the hosted ABDM prompt and index.json list
@@ -1079,6 +1074,14 @@ function useCaseCounts(dir) {
   return {operations: calls.size, codes, tests};
 }
 
+/** The install panel's rows for an NHCX skill, and the file behind each. */
+const NHCX_SECTION_FILES = {
+  scaffold: 'references/scaffold.md',
+  integrate: 'references/api-knowledge.md',
+  debug: 'references/errors-and-debugging.md',
+  test: 'references/testing-knowledge.md',
+};
+
 const nhcxDir = join(root, 'plugins', 'nhcx', 'skills');
 const nhcxSlugs = [];
 for (const name of Object.keys(NHCX)) {
@@ -1099,13 +1102,57 @@ for (const name of Object.keys(NHCX)) {
     example: NHCX[name].example,
     errorExample: null,
     ...useCaseCounts(src),
-    sections: ['integrate', 'debug', 'test'],
+    // A row on the install panel, and the file in the folder that backs it.
+    // These used to be bare labels, which read as references/integrate.md and
+    // the like: names an ABDM skill has and an NHCX skill never did.
+    sections: Object.keys(NHCX_SECTION_FILES).filter((section) =>
+      existsSync(join(src, NHCX_SECTION_FILES[section])),
+    ),
+    sectionFiles: NHCX_SECTION_FILES,
     folder: true,
     files: countFiles(src),
   };
   nhcxSlugs.push(name);
   console.log(`Copied ${name} from plugins/nhcx/skills.`);
 }
+
+// The NHCX counterpart of index.json. ABDM's index leaves these out on purpose,
+// so an ABDM integrator is never offered claims skills, which left an agent
+// setting up NHCX with no list of what a skill is made of. Every file is read
+// from the folder rather than derived from section names.
+function filesUnder(dir, base = dir) {
+  return readdirSync(dir, {withFileTypes: true}).flatMap((entry) =>
+    entry.isDirectory()
+      ? filesUnder(join(dir, entry.name), base)
+      : [join(dir, entry.name).slice(base.length + 1)],
+  ).sort();
+}
+writeFileSync(
+  join(outDir, 'nhcx-index.json'),
+  `${JSON.stringify(
+    {
+      catalogue_version: catalogueVersion,
+      built: buildDate,
+      skills: nhcxSlugs.map((slug) => ({
+        name: slug,
+        title: manifest[slug].title,
+        archive: `${slug}.tar.gz`,
+        files: filesUnder(join(nhcxDir, slug)),
+      })),
+    },
+    null,
+    2,
+  )}\n`,
+);
+
+// Written here rather than after the ABDM skills, because the NHCX entries are
+// added above and the page reads one manifest for both gateways. Writing it
+// earlier shipped a skills.json with no NHCX slug in it, which made
+// SkillInstall render nothing at all on the NHCX page.
+writeFileSync(
+  join(root, 'site', 'src', 'data', 'skills.json'),
+  `${JSON.stringify(manifest, null, 2)}\n`,
+);
 
 
 // ---------------------------------------------------------------------------
@@ -1292,6 +1339,8 @@ const nhcxPromptLines = [
   '```',
   '',
   ...nhcxSlugs.map((slug) => `- \`${nhcxRepo}/plugins/nhcx/skills/${slug}\``),
+  '',
+  `\`${promptRef('/skills/nhcx-index.json')}\` lists every NHCX skill, its archive and the exact files it is made of. A skill is 59 files across eight directories, so take the archive rather than fetching files one at a time.`,
   '',
   '## 3. Connect the Docs MCP server',
   '',

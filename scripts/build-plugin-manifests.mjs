@@ -58,6 +58,17 @@ const STOREFRONT = {
     ],
     capabilities: ['Read', 'Write'],
   },
+  nhcx: {
+    shortDescription: 'Build an NHCX claims integration, one use case at a time.',
+    longDescription:
+      "India's health claims exchange, written as skills an agent reads before it writes code. One skill per use case, from coverage to reprocess. Each checks what the system already has, builds only what is missing, and holds every bundle to the NHCX package's pinned samples.",
+    defaultPrompt: [
+      'Add NHCX policy search and coverage eligibility to this hospital system.',
+      'File the NHCX claim at discharge from this system.',
+      'This NHCX call was refused. Find out why.',
+    ],
+    capabilities: ['Read', 'Write'],
+  },
 };
 
 const files = [];
@@ -131,6 +142,9 @@ const market = JSON.parse(
  */
 const CLAUDE_ONLY = {
   'abdm-integrators-assistant': ['commands', 'agents'],
+  // The same case as the integrators' assistant: NHCX is its seven skills, and
+  // the commands and the call debugger are entry points into them.
+  nhcx: ['commands', 'agents'],
 };
 
 const COMPONENTS = ['commands', 'agents', 'hooks'];

@@ -17,6 +17,14 @@ import {FileText, Sparkles} from 'lucide-react';
 
 # Build with AI
 
+Use NHCX documentation with AI-assisted development tools. Developers may use
+supported AI-assisted tools to search NHCX integration guides, API references
+and use case documentation while building their solution.
+
+:::note
+Review all AI-generated code against the official NHCX documentation and test it in the Sandbox.
+:::
+
 Every fact on this site is a public URL. There are three ways to put it in front of your agent, and they combine. From lightest to fullest:
 
 - Copy one skill into your project.
@@ -34,6 +42,31 @@ Every fact on this site is a public URL. There are three ways to put it in front
     One folder per NHCX use case, in episode order. Works offline, and ages until you update it.
   </Card>
 </CardGroup>
+
+## Learn how to use AI
+
+Never built with a coding assistant before? Start here. Three things have to be
+in place before anything else on this page works.
+
+| What you need | Why |
+| --- | --- |
+| A coding assistant | Claude, Cursor, VS Code with GitHub Copilot, Codex and ChatGPT are the ones set up below. Any of them is enough. Pick one and stay on it. |
+| A paid plan on it | Free tiers stop partway through a long task. The cheapest paid plan on any of these carries a use case. |
+| Your own project open in it | The assistant reads and writes the folder it is opened in. Open the repository you are integrating NHCX into first. |
+
+Then work down the page in order.
+
+1. Connect the Docs MCP server, so the assistant looks NHCX up here instead of recalling an older version of it.
+2. Install the plugin, which is one command or one pasted line.
+3. Install the skill for the use case you are on, `nhcx-coverage` first if you are starting.
+4. Ask for what you want in plain language, one use case at a time. "Add coverage eligibility to this project, using the nhcx-coverage skill" is a good first prompt.
+
+You do not need to know what MCP, a plugin or a skill is to use them. They are
+three ways of handing the same documentation to the assistant: live lookup,
+one install for everything, and one folder for one use case.
+
+Read what it writes before you run it. An assistant is fast and confident, and
+it is wrong in ways only the Sandbox will show you.
 
 ## Connect the Docs MCP server
 
@@ -82,7 +115,9 @@ cannot infer. Tell it these, and check its output against them.
 | Do not invent an error code or a workflow code | Both exist here in full. See [workflow codes](/docs/nhcx/v1/concepts/workflow-codes) and [error codes](/docs/nhcx/v1/reference/error-code-guide) |
 | Patient identifiers and bundle contents never reach a log, a fixture or a test | An agent writing test data will otherwise put a real looking beneficiary in your repository |
 
-Point it at the [provider checklist](/docs/nhcx/v1/roles/provider/provider-checklist)
+Point it at [Build it well](/docs/nhcx/v1/getting-started/build-it-well) for the
+handling rules themselves: who refused a message, what is safe to send again,
+and what to do when no answer comes. Then point it at the [provider checklist](/docs/nhcx/v1/roles/provider/provider-checklist)
 or the [payer checklist](/docs/nhcx/v1/roles/payer/payer-checklist) for what your
 side has to have in place before go live.
 
@@ -137,6 +172,41 @@ export const AskAiButton = () => (
 <AskAiButton />
 
 The same assistant sits in the search box at the top of every page, labelled "Search or ask AI".
+
+### Attaching a file
+
+Ask AI takes a file with your question: a failing request body, a FHIR bundle,
+a log, a CSV, a PDF, or a screenshot. The paperclip is on the left of the box.
+At most 20,000 characters of text, 256KB for a text file and 8MB for a PDF or
+an image.
+
+What happens to it is worth knowing before you attach one.
+
+- The file is read in your own browser and only the text it gives up travels
+  with your question. A PDF gives up the text it already carries. A screenshot
+  is read by a text recognition engine your browser downloads once, from this
+  site, and runs on your own machine. The picture itself is never sent, so
+  nothing is uploaded and nothing is stored: the conversation lives in the
+  panel and is gone when you close it.
+- A PDF that is only pictures of text, a scan, gives up nothing. Screenshot
+  the part you mean instead and that will be read.
+- Text read from a picture carries reading mistakes. The assistant is told
+  where the text came from, so it can say when an answer turns on a character
+  it cannot trust.
+- Personal data is removed before the file reaches the model. A file that
+  parses as JSON is masked by its field names, so `name`, `telecom`,
+  `address`, `birthDate` and identifier values in a FHIR bundle are replaced
+  with placeholders such as `<MASKED_NAME>`. Aadhaar, ABHA, PAN, passport,
+  voter, mobile, email and bearer tokens are matched by pattern anywhere in
+  the file, JSON or not.
+- A file with no field names, a log or the text read from a screenshot, gets
+  the same pattern masking, and a name on a labelled line goes too:
+  `patient: Rakesh Sharma` leaves as `patient: <MASKED_NAME>`.
+- What none of that catches is a name written in running prose, with nothing
+  marking it as a name. Redact those yourself, the same way you would in a
+  support request. The panel says so next to any file it read for you.
+- Your question is logged, masked, to improve the answers. The file is not
+  logged.
 
 ## Next steps
 

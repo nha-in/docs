@@ -1,13 +1,13 @@
 {
   "name": "nhcx",
-  "version": "0.1.0",
-  "description": "Agent skills for building on the National Health Claims Exchange (NHCX), one per use case in episode order: nhcx-coverage, nhcx-insurance, nhcx-preauth, nhcx-claim, nhcx-payment, nhcx-communication and nhcx-reprocess. Each builds its use case into a hospital information system or a claims desk, held to the NHCX package's pinned FHIR bundles, and installs and runs alone.",
+  "version": "0.2.0",
+  "description": "Agent skills for building on the National Health Claims Exchange (NHCX), one per use case in episode order: nhcx-coverage, nhcx-insurance, nhcx-preauth, nhcx-claim, nhcx-payment, nhcx-communication and nhcx-reprocess. Each builds its use case into a hospital information system or a claims desk, held to the NHCX package's pinned FHIR bundles, and installs and runs alone. Also carries /nhcx-decode-error, /nhcx-preflight and /nhcx-prove-seal, and the nhcx-call-debugger agent.",
   "author": {
     "name": "ABDM Developer Portal",
-    "url": "https://github.com/eka-care/abdm-docs"
+    "url": "https://github.com/nha-in/docs"
   },
-  "homepage": "https://github.com/eka-care/abdm-docs",
-  "repository": "https://github.com/eka-care/abdm-docs",
+  "homepage": "https://github.com/nha-in/docs",
+  "repository": "https://github.com/nha-in/docs",
   "license": "MIT",
   "keywords": [
     "nhcx",
@@ -22,11 +22,11 @@
   "interface": {
     "displayName": "NHCX",
     "shortDescription": "Build an NHCX claims integration, one use case at a time.",
-    "longDescription": "The National Health Claims Exchange, written as one skill per use case in episode order: coverage, insurance plan, pre-authorisation, claim, payment, communication and reprocess. Each checks what the system already has, builds only what is missing, and holds its bundles to the NHCX package's pinned samples.",
+    "longDescription": "India's health claims exchange, written as skills an agent reads before it writes code. One skill per use case, from coverage to reprocess. Each checks what the system already has, builds only what is missing, and holds every bundle to the NHCX package's pinned samples.",
     "defaultPrompt": [
-      "Add NHCX coverage eligibility to this hospital system.",
+      "Add NHCX policy search and coverage eligibility to this hospital system.",
       "File the NHCX claim at discharge from this system.",
-      "Handle the payer's NHCX communication requests."
+      "This NHCX call was refused. Find out why."
     ],
     "developerName": "ABDM Developer Portal working group",
     "category": "Documentation",
@@ -34,6 +34,6 @@
       "Read",
       "Write"
     ],
-    "websiteURL": "https://github.com/eka-care/abdm-docs"
+    "websiteURL": "https://github.com/nha-in/docs"
   }
 }

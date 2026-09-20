@@ -15,6 +15,7 @@ import {listSpecTree} from './specs.mjs';
 import {joinKey, hostOf} from './lib/api-join.mjs';
 import {loadJourneys, operationIndex, stepDataName} from './lib/journeys.mjs';
 import {errorsFromSpec} from './lib/spec-errors.mjs';
+import {loadAtoms} from './lib/atoms.mjs';
 import {cleanTitle, cleanGroupLabel, caseTerms, imperative, cleanDescription} from './lib/titles.mjs';
 import {fixProse} from './lib/prose.mjs';
 
@@ -1048,6 +1049,34 @@ for (const {platform, version, files} of tree) {
     writeGenerated(join(refDir, 'authentication.md'), `${lines.join('\n')}\n`);
   }
 
+  // ---- error codes the Catalogue records, for a gateway whose specs carry none ----
+  // A specification's response examples are where a code comes from when they
+  // have one. NHCX's do not: its codes reach an integrator sealed inside a
+  // callback, so no example returns one, and a page built from examples alone
+  // said "0 codes are recorded" beside a Catalogue holding 310 of them. Where
+  // the examples are silent, the gateway's own error atoms are the record.
+  const atomCodes = [];
+  {
+    const {atoms} = loadAtoms();
+    const pathOf = (id) => (String(atoms.get(id)?.fm.title ?? '').match(/(\/v\d[^\s]*)/) ?? [])[1];
+    for (const [, atom] of atoms) {
+      if (atom.fm.gateway !== platform || atom.fm.type !== 'error') continue;
+      const m = String(atom.fm.title).replace(/\s+/g, ' ').match(/^([A-Z]+(?:-[A-Z]+)*-\d+)[:,]\s+(.+)$/);
+      if (!m) continue;
+      const related = [...(atom.fm.related?.endpoints ?? []), ...(atom.fm.related?.callbacks ?? [])];
+      atomCodes.push({
+        code: m[1],
+        meaning: m[2].charAt(0).toUpperCase() + m[2].slice(1),
+        paths: [...new Set(related.map(pathOf).filter(Boolean))].sort(),
+      });
+    }
+    atomCodes.sort((a, b) => a.code.localeCompare(b.code, 'en', {numeric: true}));
+  }
+  const specCodeTotal = modules.reduce((n, module) => n + errorsFromSpec(module.spec).length, 0);
+  const fromAtoms = specCodeTotal === 0 && atomCodes.length > 0;
+  const codeRow = (e) =>
+    `| \`${e.code}\` | ${e.meaning.replace(/\|/g, '\\|')} | ${e.paths.map((x) => `\`${x}\``).join(', ')} |`;
+
   // ---- error codes: every code the response examples return ----
   {
     const lines = [
@@ -1056,7 +1085,7 @@ for (const {platform, version, files} of tree) {
         'Error codes',
         'Every error code the specifications carry, with its message and what to do.',
         3,
-        ['hiecm.concept.error-codes'],
+        [platform === 'nhcx' ? 'nhcx.concept.error-code-spaces' : 'hiecm.concept.error-codes'],
         'circle-alert',
       ),
       '# Error codes',
@@ -1067,10 +1096,28 @@ for (const {platform, version, files} of tree) {
       ...(isHiecmV3
         ? [`Seeing a symptom rather than a code? Start at [Troubleshooting](/docs/${platform}/${version}/troubleshooting/).`, '']
         : []),
-      'A code is on this page because a response example in a specification returns it.',
+      fromAtoms
+        ? 'A code is on this page because the Catalogue records it. The specifications carry no code in their response examples, because a code reaches you sealed inside a callback rather than in the response to your call.'
+        : 'A code is on this page because a response example in a specification returns it.',
       '',
     ];
     let total = 0;
+    if (fromAtoms) {
+      // One section per code space, because the prefix says who sent it: the
+      // exchange, or the payer behind it.
+      const spaces = new Map();
+      for (const e of atomCodes) {
+        const space = e.code.replace(/-\d+$/, '');
+        if (!spaces.has(space)) spaces.set(space, []);
+        spaces.get(space).push(e);
+      }
+      for (const [space, codes] of spaces) {
+        total += codes.length;
+        lines.push(`## ${space}`, '', '| Code | What it means | Arrives on |', '| --- | --- | --- |');
+        for (const e of codes) lines.push(codeRow(e));
+        lines.push('');
+      }
+    }
     for (const module of modules) {
       const codes = errorsFromSpec(module.spec);
       if (!codes.length) continue;
@@ -1080,7 +1127,9 @@ for (const {platform, version, files} of tree) {
       lines.push('');
     }
     lines.push(
-      `${total} code${total === 1 ? '' : 's'} are recorded. A code you meet that is not here is one the specifications do not carry yet.`,
+      fromAtoms
+        ? `${total} codes are recorded. The same code can mean two things from two payers, so read it with the message text beside it: [reading error codes](/docs/${platform}/${version}/reference/error-code-guide) has the collisions and what to do about each.`
+        : `${total} code${total === 1 ? '' : 's'} are recorded. A code you meet that is not here is one the specifications do not carry yet.`,
     );
     lines.push('');
     writeGenerated(join(refDir, 'error-codes.md'), `${lines.join('\n')}\n`);
@@ -1125,14 +1174,26 @@ for (const {platform, version, files} of tree) {
       for (const e of codes) lines.push(`| \`${e.code}\` | ${e.http} | ${e.message.replace(/\|/g, '\\|')} | \`${e.operationId}\` |`);
       lines.push('');
     } else {
-      lines.push(
-        `The ${module.label} specification records no error code yet. That is a gap in the specification, not a promise that this module cannot fail.`,
-      );
-      lines.push('');
+      const own = new Set(Object.keys(spec.paths ?? {}).concat(Object.keys(spec.webhooks ?? {})));
+      const here = atomCodes.filter((e) => e.paths.some((x) => own.has(x)));
+      if (here.length) {
+        lines.push(
+          `A ${module.label} code arrives sealed inside the callback, not in the response to your call. These are the codes the Catalogue records on this module's paths.`,
+          '',
+          '## Codes', '', '| Code | What it means | Arrives on |', '| --- | --- | --- |',
+        );
+        for (const e of here) lines.push(codeRow({...e, paths: e.paths.filter((x) => own.has(x))}));
+        lines.push('');
+      } else {
+        lines.push(
+          `The ${module.label} specification records no error code yet. That is a gap in the specification, not a promise that this module cannot fail.`,
+        );
+        lines.push('');
+      }
     }
 
     lines.push(
-      `Every code above is recorded in the specification that owns it. The aggregated list across modules is at [error codes](/docs/${platform}/${version}/reference/error-codes).`,
+      `${fromAtoms ? 'Every code above is recorded in the Catalogue.' : 'Every code above is recorded in the specification that owns it.'} The aggregated list across modules is at [error codes](/docs/${platform}/${version}/reference/error-codes).`,
     );
     lines.push('');
 

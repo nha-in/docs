@@ -1,0 +1,20 @@
+{
+  "id": "naive-nhcx-claim-endpoint-01",
+  "slice": "naive",
+  "class": "how-do-i",
+  "turns": [{"role": "user", "text": "what is the NHCX claim API endpoint"}],
+  "attachment": null,
+  "page": null,
+  "must_contain": [
+    "the claim is sent with POST to /v1/claim/submit",
+    "the response to the call is only a receipt, and the payer's decision arrives later on /v1/claim/on_submit"
+  ],
+  "must_not_contain": ["<MASKED", "i apologize", "i apologise", "let me ", "great question", "the catalogue", "atom", "/api/nhcx"],
+  "expected_sources": ["nhcx.endpoint.claim-submit"],
+  "expected_shape": "how-do-i",
+  "expected_behaviour": "answer",
+  "derived_from": null,
+  "source_row": "annexure#abdm-faq-general",
+  "catalogue_version": "2026.09.16",
+  "notes": "Was abstain-nhcx-endpoint-01, written at catalogue 2026.08.24 when no NHCX endpoint was documented, and it passed on a decline. The Catalogue now holds 50 NHCX endpoint atoms, so declining is the failure. Source lines: catalogue/nhcx/endpoints/claim-submit.md, title 'POST /v1/claim/submit'; 'NHCX gives you a receipt at once'; related callback nhcx.callback.claim-on-submit, 'Receiving POST /v1/claim/on_submit'. The invented path /api/nhcx stays banned."
+}

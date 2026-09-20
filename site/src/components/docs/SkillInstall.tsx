@@ -23,13 +23,18 @@ type Entry = {
   errorExample?: string | null;
   operations?: number;
   codes?: number;
+  /** Test matrix rows the skill carries. Only the NHCX skills count these. */
+  tests?: number;
   /** The reference files this skill is made of, from the generator. */
   sections: string[];
+  /** True when the skill is more than SKILL.md plus references/, so it ships
+      as an archive. The NHCX skills are 59 files across eight directories. */
+  folder?: boolean;
 };
 
 type Target = {
   /** Built from the published URL, so the command works where the site is. */
-  command: (url: string, slug: string, sections: string[]) => string;
+  command: (url: string, slug: string, entry: Entry) => string;
   /** One click into the agent, or null where the agent has no scheme for it. */
   link: ((command: string, module: string) => string) | null;
   note: string;
@@ -60,19 +65,31 @@ function promptFor(command: string, module: string) {
  * under references/, which an agent loads only when the work needs them.
  * Fetching the router alone leaves every link in it broken, so every command
  * here takes the whole folder.
+ *
+ * A skill marked `folder` is more than that shape. The NHCX skills carry
+ * core/, stages/, flow/, fhir/, ui/, templates/ and scripts/ as well, 59 files
+ * in all, so naming their sections in a curl loop would fetch three files that
+ * do not exist and leave every pointer in the router broken. Those take the
+ * archive the generator already writes beside them.
  */
-function fetchFolder(url: string, slug: string, dir: string, sections: string[]) {
+function fetchFolder(url: string, slug: string, dir: string, entry: Entry) {
+  if (entry.folder) {
+    return [
+      `mkdir -p ${dir}`,
+      `curl -fsSL ${url}/skills/${slug}.tar.gz | tar -xzf - -C ${dir}`,
+    ].join(' && ');
+  }
   const into = `${dir}/${slug}`;
   return [
     `mkdir -p ${into}/references`,
     `curl -fsSL ${url}/skills/${slug}/SKILL.md -o ${into}/SKILL.md`,
-    `for f in ${sections.join(' ')}; do curl -fsSL ${url}/skills/${slug}/references/$f.md -o ${into}/references/$f.md; done`,
+    `for f in ${entry.sections.join(' ')}; do curl -fsSL ${url}/skills/${slug}/references/$f.md -o ${into}/references/$f.md; done`,
   ].join(' && ');
 }
 
 const TARGETS: Record<AgentId, Target> = {
   claude: {
-    command: (url, slug, sections) => fetchFolder(url, slug, '.claude/skills', sections),
+    command: (url, slug, entry) => fetchFolder(url, slug, '.claude/skills', entry),
     // https://support.claude.com/en/articles/14729294-open-claude-desktop-with-a-link
     link: (command, module) =>
       `claude://code/new?q=${encodeURIComponent(promptFor(command, module))}`,
@@ -83,7 +100,7 @@ const TARGETS: Record<AgentId, Target> = {
     // so this is the same folder every other target takes. It used to be
     // converted into a .mdc project rule, which was the answer before the
     // format was a standard Cursor implemented.
-    command: (url, slug, sections) => fetchFolder(url, slug, '.cursor/skills', sections),
+    command: (url, slug, entry) => fetchFolder(url, slug, '.cursor/skills', entry),
     // https://cursor.com/docs/integrations/deeplinks. Cursor has no skill
     // install deeplink, but it has a prompt one, so this lands the same way the
     // Claude link does: the command in the composer, waiting to be sent.
@@ -94,20 +111,20 @@ const TARGETS: Record<AgentId, Target> = {
     note: 'Cursor reads this folder as a skill and matches it by its description when a task calls for it.',
   },
   vscode: {
-    command: (url, slug, sections) => fetchFolder(url, slug, '.github/skills', sections),
+    command: (url, slug, entry) => fetchFolder(url, slug, '.github/skills', entry),
     // VS Code has a deeplink for MCP servers but none for skills, so this
     // target is the command only. Do not invent one.
     link: null,
     note: 'GitHub Copilot reads this on every surface your team uses, not only your editor.',
   },
   codex: {
-    command: (url, slug, sections) => fetchFolder(url, slug, '.agents/skills', sections),
+    command: (url, slug, entry) => fetchFolder(url, slug, '.agents/skills', entry),
     // Codex is a CLI with no URL scheme. Do not invent one.
     link: null,
     note: 'Codex reads this folder as a skill and loads it when a task matches its description.',
   },
   any: {
-    command: (url, slug, sections) => fetchFolder(url, slug, 'skills', sections),
+    command: (url, slug, entry) => fetchFolder(url, slug, 'skills', entry),
     link: null,
     note: 'One folder. Put it wherever your agent reads skills from.',
   },
@@ -120,8 +137,14 @@ const TARGETS: Record<AgentId, Target> = {
  * scaffolding loop of its own does not get a row promising one.
  */
 const DETAIL: Record<string, (entry: Entry) => string> = {
-  scaffold: () =>
-    'The loop that builds the module flow by flow against the sandbox, ending on an observed result rather than on a call returning 200.',
+  scaffold: (entry) =>
+    entry.folder
+      ? 'The loop that builds the use case stage by stage, ending when a gate closes on evidence rather than on the work looking right.'
+      : 'The loop that builds the module flow by flow against the sandbox, ending on an observed result rather than on a call returning 200.',
+  test: (entry) =>
+    (entry.tests ?? 0) > 0
+      ? `${entry.tests} test matrix rows, from offline pins up to a live payer on the sandbox.`
+      : 'The test pyramid, from offline pins up to a live payer on the sandbox.',
   generate: () => 'Building NRCES compliant bundle generation into a codebase.',
   audit: () => "Checking an existing FHIR store's output against the same profiles.",
 };
@@ -281,12 +304,12 @@ export default function SkillInstall({slug, note}: SkillInstallProps): React.Rea
         ))}
       </div>
 
-      <CopyLine value={target.command(base, slug, entry.sections)} />
+      <CopyLine value={target.command(base, slug, entry)} />
 
       {target.link && (
         <a
           className="skill-launch"
-          href={target.link(target.command(base, slug, entry.sections), entry.module)}>
+          href={target.link(target.command(base, slug, entry), entry.module)}>
           <SquareArrowOutUpRight className="size-3.5" aria-hidden="true" />
           Open in {agent.label}
         </a>
@@ -304,8 +327,22 @@ export default function SkillInstall({slug, note}: SkillInstallProps): React.Rea
             {'. The skill loads when the task matches it.'}
           </li>
           <li>
-            Check what it writes against these pages. The skill carries the facts,
-            not the sandbox: nothing in it has been run against ABDM.
+            {/* The ABDM skills are compiled from the catalogue and no call in
+                them has been run. The NHCX skills were built against the NHCX
+                sandbox, and say so in their own routers, so claiming the
+                opposite here would be the page contradicting the skill. */}
+            {entry.folder ? (
+              <>
+                Check what it writes against these pages. The skill names the
+                cases it could not reach on the NHCX sandbox, and nothing in it
+                is re-verified here.
+              </>
+            ) : (
+              <>
+                Check what it writes against these pages. The skill carries the
+                facts, not the sandbox: nothing in it has been run against ABDM.
+              </>
+            )}
           </li>
           {target.link && (
             <li>
