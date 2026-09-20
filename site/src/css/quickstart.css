@@ -8,11 +8,70 @@
   margin: 2rem 0 2.5rem;
 }
 
+/* The runner's status, drawn as one.
+
+   It used to be a bare sentence in body text directly above the card, so
+   "Step 4 did not succeed" read as another line of the page's prose rather
+   than as the machine answering. It is a chip now, and it carries its outcome
+   in its colour as well as its words. The row keeps its height whether or not
+   there is anything to say, so the card below never jumps. */
+.quickstart__status-row {
+  display: flex;
+  min-height: 2rem;
+  align-items: center;
+  margin: 0 0 0.25rem;
+}
+
 .quickstart__status {
-  min-height: 1.25rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  max-width: 100%;
   margin: 0;
-  color: var(--text-muted);
+  padding: 0.375rem 0.75rem 0.375rem 0.625rem;
+  color: var(--text);
   font-size: 0.875rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+}
+
+.quickstart__status-dot {
+  flex: none;
+  width: 0.5rem;
+  height: 0.5rem;
+  background: currentcolor;
+  border-radius: 50%;
+}
+
+/* Scoped under the row, not by the state class alone.
+
+   The runner renders inside the doc article, where the theme colours
+   paragraphs with a selector carrying an element as well as a class. A single
+   state class loses to it, so the pill took the article's own #d4d4d4 and
+   every state looked identical. The extra class here outranks that.
+
+   Infima's token, not --danger: something in the dark theme defines --danger
+   as #d4d4d4 too, so `var(--danger, #b3261e)` never reached its fallback. */
+.quickstart__status-row .quickstart__status--idle,
+.quickstart__status-row .quickstart__status--busy {
+  color: var(--text-muted);
+}
+
+.quickstart__status-row .quickstart__status--ok {
+  color: var(--accent);
+  background: var(--accent-soft);
+  border-color: var(--accent-line);
+}
+
+.quickstart__status-row .quickstart__status--error {
+  color: var(--ifm-color-danger);
+  border-color: currentcolor;
+}
+
+/* A long explanation, the blocked origin one, is a paragraph not a pill. */
+.quickstart__status > span:last-child {
+  min-width: 0;
 }
 
 .quickstart__card {
@@ -298,10 +357,60 @@
   outline-offset: 1px;
 }
 
+/* A masked field and the button that unmasks it.
+
+   The button sits inside the field's box rather than beside it, so the row of
+   fields keeps one width whether or not a field is a secret, and the input
+   reserves room for it so a long value never runs underneath the eye. */
+.quickstart__secret {
+  position: relative;
+  display: block;
+}
+
+.quickstart__secret .quickstart__input {
+  padding-right: 2.5rem;
+}
+
+.quickstart__reveal {
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: flex;
+  width: 2.25rem;
+  height: 100%;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  color: var(--text-muted);
+  background: none;
+  border: 0;
+  border-radius: 0 var(--radius-control, 0.375rem) var(--radius-control, 0.375rem) 0;
+  cursor: pointer;
+}
+
+.quickstart__reveal:hover {
+  color: var(--text);
+}
+
+.quickstart__reveal:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
+}
+
 .quickstart__hint {
   color: var(--text-muted);
   font-size: 0.75rem;
   line-height: 1.5;
+}
+
+/* A button and the one line saying why it is not available yet. Beside it on a
+   wide card, under it once there is no room, and never so far from the button
+   that the two read as unrelated. */
+.quickstart__go {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
 }
 
 /* The disclaimer is one line on the card with the rest of it behind the mark.
@@ -405,7 +514,7 @@
 }
 
 .quickstart__code--bad {
-  color: var(--danger, #b3261e);
+  color: var(--ifm-color-danger);
 }
 
 .quickstart__ms {
@@ -445,6 +554,35 @@
   font-size: 1rem;
   font-weight: 600;
   font-family: var(--ifm-font-family-monospace);
+}
+
+/* The account itself, once it exists. The button that made it is gone by
+   then: there is nothing left to press twice, and a second press would only
+   spend a transaction that is already used. */
+.quickstart__created {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-top: 1.25rem;
+}
+
+.quickstart__created-head {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0;
+  color: var(--accent);
+  font-size: 0.9375rem;
+  font-weight: 600;
+}
+
+.quickstart__created .quickstart__result {
+  margin: 0;
+}
+
+.quickstart__created .quickstart__hint {
+  margin: -0.5rem 0 0;
 }
 
 .quickstart__spin {
