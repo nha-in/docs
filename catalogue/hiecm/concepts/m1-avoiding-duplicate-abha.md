@@ -4,7 +4,7 @@ type: concept
 gateway: hiecm
 milestone: M1
 version: abdm-v3
-order: 6
+order: 10
 router: >
   Every identifier starts on the login path, Aadhaar included. A verified
   login already returns the accounts, and only ABDM-1114 on a refusal means

@@ -4,7 +4,7 @@ type: concept
 gateway: hiecm
 milestone: M1
 version: abdm-v3
-order: 1
+order: 2
 router: >
   The ABHA step comes before the registration form and fills it. A verified
   profile carries the whole form, so a journey that registers the patient

@@ -202,14 +202,7 @@ const MODULES = [
       "Sensitive fields travel encrypted. Aadhaar numbers, mobile numbers, email addresses, OTP values and passwords are encrypted before they go in the body, then base64 encoded.",
 'The certificate response tells you the padding. `GET /v3/profile/public/certificate` returns `{"publicKey", "encryptionAlgorithm"}`. Read that field and translate it for your language. Do not hard code a padding: a constant is right until it is not, and the failure then looks like a bad value rather than a stale constant.',
       'One path serves several jobs. The `scope` array in the body picks which one, so read it before assuming an endpoint does one thing.',
-      'Two ways the profile reaches the desk. The patient scans a QR carrying your facility id and a counter id, consents in their own app, and ABDM posts the profile to your callback, so nobody at the desk types or asks anything. Or the desk runs the identifier journey, which ends in a token that reads the profile. Build whichever the deployment can reach, but the form is the destination either way.',
-      'Present the filled form for confirmation rather than saving it unseen. The profile is what ABDM holds, not what the clinician sees: names may be transliterated, addresses age, and a shared mobile may belong to a relative.',
-      'ABDM publishes operations, not a user experience. The journey is the integrator\'s to design, and a product that knows its own counter will often beat any default. Offer the suggested shape below, say it is a suggestion, and build what the user asks for instead when they have a view.',
-      'Suggested shape: one entry rather than a menu. Take one identifier, send one OTP, and branch on what comes back, because asking a person at a desk whether they want to log in or register puts a question to them they often cannot answer. A chooser is better where the desk genuinely knows, such as a counter that only registers new patients.',
       'The accounts array on a login verification already carries ABHANumber, preferredAbhaAddress, name, gender, dob, profilePhoto and kycVerified, so a registration form can fill the moment the OTP verifies and before any profile call.',
-      'An identifier and an auth method are two different questions, and listing them together is what makes M1 look like five choices. ABDM accepts four identifiers: Aadhaar, mobile, ABHA number, ABHA address.',
-      'How the person proves the identifier is theirs is `authMethods`, whose values include otp, bio, face, iris, child and demo_auth. Offer auth methods underneath the identifier, and only where there is more than one.',
-      'The surface is more than a registration form. Finding a forgotten ABHA, upgrading a mobile-made address to KYC, showing the card and QR, sharing a profile by QR at a counter, and updating a mobile number are each placements the operations support. List them for the integrator so their own design can account for them rather than meeting them later.',
     ],
   },
   {
@@ -242,7 +235,6 @@ const MODULES = [
       UNVERIFIED,
       'You act as the HIU. The HIE-CM holds the consent and asks the patient on your behalf. No artefact, no records.',
       'The patient must be known to you by ABHA address before you can raise a request.',
-      'One consent request can produce more than one artefact. Store the request id and every artefact id.',
       'Records arrive encrypted at the `dataPushUrl` the health information request names. Decrypt them with the key material that request carries.',
     ],
   },
@@ -870,6 +862,12 @@ for (const [section, source, what] of FHIR_REFS) {
 // record type maps, the envelope and the validator recipe, which the
 // generate and audit procedures already send a reader to. These three are
 // what a generator gets wrong before it ever reaches a profile table.
+// The envelope atom is not a design atom: its body is reference material the
+// generate and audit procedures already reach. Its one rule belongs in the
+// always-loaded router, so the router reads it by id alongside the design
+// atoms rather than pulling its body into the design section.
+const FHIR_ROUTER_EXTRA = ['shared.fhir.document-bundles'];
+
 const FHIR_DESIGN_ATOMS = [
   'shared.fhir.profile-and-example-together',
   'shared.fhir.conditional-cardinality',
@@ -886,6 +884,16 @@ function fhirDesignEntries() {
     if (!atom) throw new Error(`FHIR_DESIGN_ATOMS names ${id}, which no atom defines`);
     return atom;
   }).sort(byReadingOrder);
+}
+
+/** The extra atoms whose router line the FHIR skill carries. */
+function fhirRouterExtraEntries() {
+  const {atoms} = loadAtoms();
+  return FHIR_ROUTER_EXTRA.map((id) => {
+    const atom = atoms.get(id);
+    if (!atom) throw new Error(`FHIR_ROUTER_EXTRA names ${id}, which no atom defines`);
+    return atom;
+  });
 }
 
 /** The design section for abdm-fhir, assembled from the entries above. */
@@ -933,8 +941,7 @@ const fhirSkillMd = (url) =>
     '',
     `- ${UNVERIFIED}`,
     `- ${DESIGN_OBSERVED}`,
-    ...routerLines(fhirDesignEntries()).map((line) => `- ${line}`),
-    '- A bundle that validates is not a bundle ABDM accepts. The NRCES profiles are the floor, and the milestone the bundle travels under adds its own rules.',
+    ...routerLines([...fhirDesignEntries(), ...fhirRouterExtraEntries()]).map((line) => `- ${line}`),
     '',
     '## Practices that hold across every call',
     '',

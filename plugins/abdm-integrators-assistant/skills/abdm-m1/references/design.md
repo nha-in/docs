@@ -2,6 +2,62 @@
 
 What the integration has to do to the journey around the calls: how many questions a patient is asked, where a failure is shown, and what a screen is forbidden to claim. Every rule below comes from a Catalogue atom, cited at the end.
 
+## ABDM publishes operations, not a journey
+
+### In plain words
+
+The M1 specification defines around forty operations. It does not say which to
+call first, which to skip, or what a screen should ask. That is deliberate: the
+same operations serve a hospital front desk, a pharmacy counter, a laboratory
+and a patient's own application, and those are not the same journey.
+
+So the journey is the integrator's to design, and a product that knows its own
+counter will often beat any default. The rules in this section are the
+constraints a good design satisfies, not a design.
+
+That distinction matters when an agent is building. Offer the suggested shape,
+say that it is a suggestion, and build what the integrator asks for instead
+when they have a view.
+
+### What happens
+
+The suggested shape is one entry rather than a menu. Take one identifier, send
+one one time password, and branch on what comes back.
+
+The reason is the branch that creates a duplicate:
+asking a person at a desk whether they want to log in or to register puts a
+question to them they often cannot answer, and the response already contains the
+answer. One screen titled for both outcomes takes the identifier and lets ABDM
+decide which journey it was.
+
+A chooser is better where the desk genuinely knows. A counter that only
+registers new patients has already answered the question, and making it click
+through a combined screen is a step that serves nobody.
+
+Neither is a rule. The rules are the ones that follow in this section: do not
+ask twice, do not create before looking, complete without an ABHA, tell the
+truth on screen. A design that satisfies those and looks nothing like the shape
+above is a good design.
+
+### How you know it worked
+
+Ask the integrator what their counter does before proposing screens. If they
+have a view, the built journey matches their view and still satisfies every
+rule in this section.
+
+If they have no view, the built journey is the suggested shape, and it was
+offered as a suggestion rather than presented as what ABDM requires.
+
+### When it goes wrong
+
+- **The journey is the one the specification implies.** Reading the operations
+  in the order they are documented produces a journey nobody designed. The
+  order in the specification is an order of documentation.
+- **The integrator's own design was overridden by a default.** The default is a
+  suggestion. Their counter is the thing that exists.
+- **A rule was relaxed to fit the design.** The shape is negotiable. The rules
+  in this section are not, because each one was a defect before it was a rule.
+
 ## The ABHA step comes before the registration form and fills it
 
 ### In plain words
@@ -76,6 +132,66 @@ route and on scan and share that count is zero.
   cannot answer it, and
   avoiding a duplicate ABHA explains what to
   do instead.
+
+## Two routes to the profile, and the form is the destination of both
+
+### In plain words
+
+A registration form fills from an ABHA profile. There are two ways that profile
+reaches the desk, and they look nothing like each other.
+
+The patient scans a QR code at the counter carrying your facility id and a
+counter id, consents in their own application, and ABDM posts the profile to
+your callback. Nobody at the desk types anything or asks anything.
+
+Or the desk runs an identifier journey: take an identifier, verify it, and end
+holding a token that reads the profile.
+
+Build whichever the deployment can reach. The form is the destination either
+way, which is why both belong to the same design rather than being two
+features.
+
+### What happens
+
+The share route costs nothing at the counter: no question, no one time
+password, no outbound call. It is the cheapest journey in M1 and most
+integrations never build it, because it needs a public callback and the
+specification leads with the identifier route.
+
+The identifier route is the one to build when the deployment has no callback
+ABDM can reach, or when patients arrive without the application. It spends at
+least one question and usually one one time password, which is why
+the journey order ranks the routes.
+
+Both end in the same place. The form opens filled, the desk corrects rather
+than types, and every rule about the form applies whichever route filled it.
+A design that treats the share route as a separate feature with its own screens
+ends up with two registration paths that drift.
+
+Where both are available, the share route is the default and the identifier
+route is the fallback for a patient who cannot or will not scan.
+
+### How you know it worked
+
+Register a patient by each route and compare what the receptionist did. The
+share route required nothing beyond showing the code. The identifier route
+required one identifier and its verification. Both ended on the same form,
+filled from the same profile.
+
+Where the deployment has no callback, the share route is absent from the
+journey rather than present and silently failing.
+
+### When it goes wrong
+
+- **The share route is built and nothing ever arrives.** No callback URL is
+  registered against the facility, so ABDM has nowhere to post the profile.
+  That is a configuration cause for a runtime symptom, and the interface has to
+  say so.
+- **Two registration forms exist, one per route.** They will drift. The routes
+  differ in how the profile arrives, not in what happens after.
+- **The share route was skipped because the specification leads with the
+  other.** That is the most expensive omission in M1: it is the only journey
+  that asks the patient nothing.
 
 ## A journey has to complete without an ABHA
 
@@ -242,6 +358,66 @@ one answer switched on, and no screen exists for a route no answer reached.
 - Seven record generators exist and the system produces two. The sixth question
   was not asked.
 
+## An identifier and an auth method are two different questions
+
+### In plain words
+
+M1 looks like five unrelated choices when a screen lists Aadhaar one time
+password, mobile one time password, fingerprint, face and demographic
+authentication side by side. It is not five choices. It is two questions.
+
+Who is this person, which is an identifier. And how do they prove it is them,
+which is an auth method. Every combination the platform supports is one answer
+to each.
+
+Ask them in that order and the screen stops being a menu.
+
+### What happens
+
+ABDM works with four identifiers: an Aadhaar number, a mobile number, an ABHA
+number and an ABHA address. Not all four reach every path. The profile login
+path takes a mobile, an Aadhaar or an ABHA number, and refuses an ABHA address
+with `Invalid Login Hint`. An address signs in through the PHR login family
+instead, which is the patient's own application acting for them rather than a
+facility acting as a provider, so a facility takes such a patient through the
+share route.
+
+How the person proves the identifier is theirs travels separately, as
+`authMethods`. Its values include `otp`, `demo_auth`, `bio`, `face`, `iris` and
+`child`.
+
+So the screen asks for the identifier first. The auth methods go underneath it,
+and only where there is more than one, because offering a single method as a
+choice is a click that decides nothing. Which methods are available depends on
+the identifier and on the deployment: a demographic route is for a government
+integrator, a fingerprint route needs a reader on the desk.
+
+The account lookup returns the methods an account actually supports, so a desk
+can offer one that will work rather than one that will fail.
+
+### How you know it worked
+
+Count the options on the first screen. It offers identifiers, and the number of
+them is at most four and usually fewer, rather than a flat list of every
+identifier and method combination.
+
+Pick an identifier that supports one auth method. No method chooser appears.
+Pick one that supports several and the chooser appears underneath, listing only
+the ones this deployment can actually perform.
+
+### When it goes wrong
+
+- **The first screen lists five or more options.** The two axes were
+  collapsed. Split them.
+- **A method is offered that the desk cannot perform.** A fingerprint option on
+  a desk with no reader, or a demographic option for a private integrator. The
+  route set comes from
+  the deployment interview.
+- **An ABHA address is offered on the profile login path.** It is refused with
+  `Invalid Login Hint`. That identifier reaches a different family of calls.
+- **A chooser appears with one option in it.** Offer it only where there is
+  more than one.
+
 ## The six counter screens, and what each is forbidden to ask
 
 ### In plain words
@@ -290,6 +466,60 @@ appears, offers both, and asks for nothing the accounts array already carries.
   screen is naming its own fields instead of requesting the next missing fact.
 - The address screen appears on a route that issues a default address. The skip
   condition is not being checked.
+
+## Present the filled form for confirmation rather than saving it unseen
+
+### In plain words
+
+The point of reading an ABHA profile is that the receptionist stops typing. The
+temptation that follows is to stop showing the form at all: the data is
+authoritative, so save it and move on.
+
+Do not. The profile is what ABDM holds, which is not the same as what the
+clinician needs to see. Names may be transliterated into a script the desk does
+not use. An address may be years old. A mobile number on a shared handset may
+belong to a relative. None of that makes the profile wrong, and all of it
+matters at a counter.
+
+### What happens
+
+The confirmation screen collects corrections only. It asks for nothing the
+profile already carries, because everything it carries is already on the
+screen.
+
+It is the one screen never skipped. Every other screen in the journey exists to
+reach this one with more fields filled.
+
+Show which fields came from the profile, so a correction is a deliberate act
+rather than a guess. A receptionist who cannot tell a prefilled value from a
+typed one will either trust all of it or retype all of it, and both defeat the
+purpose.
+
+A correction changes the facility's record. It does not change what ABDM holds:
+the profile is the patient's, updated through their own application or through
+the profile update calls, not by a desk editing a form. If the desk's copy and
+ABDM's copy need to agree, that is a separate update call and a separate
+decision.
+
+### How you know it worked
+
+Register a patient whose profile carries a transliterated name. The
+confirmation screen shows the profile's value, the receptionist corrects it,
+and the facility record carries the correction.
+
+Read what ABDM holds for that patient afterwards. It is unchanged, because a
+correction to the form is not an update to the profile.
+
+### When it goes wrong
+
+- **The record is saved without anybody seeing it.** The form was skipped
+  because the data was authoritative. Authoritative is not the same as
+  appropriate for this counter.
+- **A correction silently changed the ABHA profile.** The form was wired to the
+  profile update call. Those are different decisions and usually different
+  permissions.
+- **The receptionist retypes every field.** Nothing distinguished a prefilled
+  value from an empty one, so none of them were trusted.
 
 ## The branch that creates a duplicate ABHA, and how to close it
 
@@ -423,12 +653,68 @@ from the first, including the fields the desk typed by hand.
   certificate is at fault. Name the field that was refused and say what else
   can cause it.
 
+## The surface is more than a registration form
+
+### In plain words
+
+Registering a patient is the journey every M1 integration builds first, and it
+is not the whole of what the operations support. Several other placements exist,
+each answering something a desk is actually asked for, and each arriving later
+as a change request when the design did not account for it.
+
+List them for the integrator early. They may choose to build none of them, and
+that is a decision rather than an omission.
+
+### What happens
+
+| Placement | What a desk is asked for |
+|---|---|
+| Find a forgotten ABHA | A patient knows they have one and cannot produce it |
+| Upgrade a mobile made address | An account that was never verified against an identity document, and cannot be looked up before an OTP is spent |
+| Show the card and the QR code | A patient wants their ABHA on screen or on paper |
+| Take a profile shared by QR at the counter | The share route, which is also the cheapest registration journey |
+| Update a mobile number | The number on the account is not the one the patient carries |
+
+Two of these are worth deciding early rather than late.
+
+The upgrade matters because a mobile made address is the lesser account, and a
+desk that can upgrade it in place is the only opportunity most patients will get.
+Creation is from Aadhaar exists so a desk does
+not create those accounts; the upgrade is what to do about the ones that exist.
+
+The card and QR are usually the first thing a patient asks for and the last
+thing an integration builds, because they are not part of registering anybody.
+
+### How you know it worked
+
+Show the integrator the table above before the first screen is designed. For
+each row they say build it, or not now, and not now is recorded.
+
+For each placement built, a patient can reach it from somewhere a receptionist
+would look, rather than from a screen that exists only in the registration
+journey.
+
+### When it goes wrong
+
+- **Every placement arrives as a change request.** The list was never shown, so
+  each one looks like new scope rather than a decision deferred.
+- **A patient cannot be shown their own card.** The operations support it and
+  the journey has nowhere to put it.
+- **Mobile made accounts accumulate with no upgrade path.** The desk stopped
+  creating them and never offered the upgrade to the people already holding
+  one.
+
 ## Where these came from
 
+- `hiecm.concept.m1-operations-not-a-journey`
 - `hiecm.concept.m1-counter-journey-order`
+- `hiecm.concept.m1-two-routes-to-the-profile`
 - `hiecm.concept.m1-journey-completes-without-abha`
 - `hiecm.concept.m1-never-ask-twice`
 - `hiecm.concept.m1-deployment-interview`
+- `hiecm.concept.m1-identifier-and-auth-method`
 - `hiecm.concept.m1-screen-contract`
+- `hiecm.concept.m1-confirm-the-filled-form`
 - `hiecm.concept.m1-avoiding-duplicate-abha`
 - `hiecm.concept.m1-honest-screen-states`
+- `hiecm.concept.m1-the-whole-surface`

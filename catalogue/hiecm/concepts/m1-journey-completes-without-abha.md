@@ -4,7 +4,7 @@ type: concept
 gateway: hiecm
 milestone: M1
 version: abdm-v3
-order: 2
+order: 4
 router: >
   Decide deliberately whether a journey can complete without an ABHA. A
   record keyed by the facility's own number does not need one, and a journey

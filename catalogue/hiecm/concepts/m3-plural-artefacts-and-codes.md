@@ -5,6 +5,10 @@ gateway: hiecm
 milestone: M3
 version: abdm-v3
 order: 1
+router: >
+  One consent request can produce more than one artefact, so store the
+  request id and every artefact id. Taking the first element is the bug
+  that silently drops half a fetch.
 title: Read plural as plural, and never translate a code into a meaning
 summary: >
   A consent request produces more than one artefact, and the same error code
