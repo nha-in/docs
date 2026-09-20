@@ -230,6 +230,7 @@ type PanelProps = {
   docsOrigin: string;
   /** The Docs MCP server's address, where this build carries one. */
   mcpUrl: string | null;
+  pluginRepo: string;
   open: boolean;
   onClose: () => void;
   question: string;
@@ -359,6 +360,7 @@ function Panel({
   apiBase,
   docsOrigin,
   mcpUrl,
+  pluginRepo,
   open,
   onClose,
   page,
@@ -682,7 +684,7 @@ function Panel({
       ...(chose ? [{from: 'you' as const, text: chose}] : []),
       {
         from: 'assistant' as const,
-        text: say(next, {docsOrigin, mcpUrl}),
+        text: say(next, {docsOrigin, mcpUrl, pluginRepo}),
         install: next,
       },
     ]);
@@ -999,7 +1001,7 @@ function Panel({
                 same fenced block every other answer here uses. */}
             {turn.install?.at === 'answer' &&
               (() => {
-                const {link} = scripted(turn.install, {docsOrigin, mcpUrl});
+                const {link} = scripted(turn.install, {docsOrigin, mcpUrl, pluginRepo});
                 return link ? (
                   <a
                     class="ask-ai__install-cta"
@@ -1192,6 +1194,7 @@ function Widget({
   apiBase,
   docsOrigin,
   mcpUrl,
+  pluginRepo,
   supportUrl,
   launcher,
   shortcut,
@@ -1206,6 +1209,7 @@ function Widget({
   apiBase: string;
   docsOrigin: string;
   mcpUrl: string | null;
+  pluginRepo: string;
   supportUrl: string;
   launcher: boolean;
   shortcut: string;
@@ -1248,6 +1252,7 @@ function Widget({
         apiBase={apiBase}
         docsOrigin={docsOrigin}
         mcpUrl={mcpUrl}
+        pluginRepo={pluginRepo}
         supportUrl={supportUrl}
         open={open}
         question={question}
@@ -1268,6 +1273,8 @@ function Widget({
  *   api-base     the chat server's origin; absent keeps the panel a mock
  *   docs-origin  where citations resolve, since "/docs/..." is wrong on
  *                every host except the docs site itself
+ *   plugin-repo  the repository serving the plugin marketplace, so the
+ *                install flow names the fork this site is published from
  *   mcp-url      the Docs MCP server's address, for the install flow to hand
  *                out; absent and the flow says so rather than inventing one
  *   launcher     "none" to supply your own trigger and drive `open`
@@ -1318,6 +1325,7 @@ class SupportAgentElement extends HTMLElement {
     'api-base',
     'docs-origin',
     'mcp-url',
+    'plugin-repo',
     'support-url',
     'launcher',
     'shortcut',
@@ -1380,6 +1388,7 @@ class SupportAgentElement extends HTMLElement {
         apiBase={this.getAttribute('api-base') ?? ''}
         docsOrigin={docsOrigin}
         mcpUrl={this.getAttribute('mcp-url')}
+        pluginRepo={this.getAttribute('plugin-repo') ?? 'nha-in/docs'}
         supportUrl={
           this.getAttribute('support-url') ??
           `${docsOrigin.replace(/\/$/, '')}/docs/support`

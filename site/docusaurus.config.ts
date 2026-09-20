@@ -250,6 +250,23 @@ const catalogueVersion = readFileSync(
   'utf8',
 ).trim();
 
+/**
+ * The repository this copy of the portal is published from. Actions sets
+ * GITHUB_REPOSITORY on whichever fork is building, so a fork's install
+ * commands and GitHub link name that fork without anyone editing a constant.
+ * MARKETPLACE_REPO overrides it where the plugin is served from elsewhere.
+ * Keep the same chain in scripts/build-skills.mjs.
+ */
+const pluginRepo =
+  process.env.MARKETPLACE_REPO ?? process.env.GITHUB_REPOSITORY ?? 'nha-in/docs';
+
+/** What `claude plugin install <plugin>@<marketplace>` has to name. Read from
+    the manifest rather than repeated, so renaming the shelf cannot leave a
+    published command pointing at one that does not exist. */
+const marketplaceName = JSON.parse(
+  readFileSync(join(__dirname, '..', '.claude-plugin', 'marketplace.json'), 'utf8'),
+).name as string;
+
 const config: Config = {
   title: 'ABDM Developer Portal',
   tagline: 'One catalogue of ABDM, readable by humans and machines',
@@ -324,6 +341,13 @@ const config: Config = {
   onBrokenLinks: 'throw',
 
   customFields: {
+    // The repository this copy of the portal is published from, which is the
+    // one its install commands and its GitHub link have to name. Derived, not
+    // written down: GITHUB_REPOSITORY is set by Actions on whichever fork is
+    // building, so a fork publishes its own commands without being edited.
+    // MARKETPLACE_REPO overrides it where the plugin is served from elsewhere.
+    pluginRepo,
+    marketplaceName,
     // The Docs MCP server's public address. Null until it has one: the install
     // panel on the MCP page renders locked, and every button on it goes live
     // the moment this resolves. Nothing else has to change.
@@ -526,7 +550,7 @@ const config: Config = {
           position: 'right',
         },
         {
-          href: 'https://github.com/eka-care/abdm-docs',
+          href: `https://github.com/${pluginRepo}`,
           label: 'GitHub',
           position: 'right',
         },

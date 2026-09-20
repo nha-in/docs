@@ -3,7 +3,7 @@ import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import {Check, Copy, Lock, Plug, SquareArrowOutUpRight} from 'lucide-react';
 import {cn} from '@site/src/lib/utils';
 import {Button} from '@site/src/components/ui/button';
-import {Tabs, TabsContent, TabsList, TabsTrigger} from '@site/src/components/ui/tabs';
+import {AGENTS, AgentId, MCP_NAME, guarded} from './agents';
 
 /**
  * The Docs MCP server, and the one click that installs it.
@@ -15,6 +15,11 @@ import {Tabs, TabsContent, TabsList, TabsTrigger} from '@site/src/components/ui/
  *
  * Locked is a deliberate state, not a broken one: a reader sees what the
  * server offers and where it would come from.
+ *
+ * One tab per agent in AGENTS, the same row the plugin and skill panels
+ * carry. It used to be three deeplink buttons over two Claude tabs, so a
+ * Cursor or Codex reader who wanted the command rather than the deeplink had
+ * a Claude one to translate, and Codex had nothing at all.
  */
 
 /** What the server carries, from mcp/README.md. */
@@ -39,67 +44,86 @@ const CAPABILITIES = [
   },
 ];
 
-type DeepLink = {
-  id: string;
-  label: string;
-  /** The one click install, once a public URL exists. */
-  link: (url: string) => string;
+/** The `mcpServers` block every client that reads one takes as is. */
+function mcpServersJson(url: string) {
+  return JSON.stringify({mcpServers: {[MCP_NAME]: {url}}}, null, 2);
+}
+
+type Surface = {
+  /** What the copy button yields for this agent. */
+  command: (url: string) => string;
+  /** True where the command is a config block rather than a line to run. */
+  block?: boolean;
+  /** One click into the agent, where the agent has a scheme for it. */
+  link: ((url: string) => string) | null;
   note: string;
 };
 
-const NAME = 'abdm-docs';
-
 /**
- * Platforms with an install deeplink. Each opens the target app directly,
- * rather than a copyable command, where the app has a scheme for it.
- *
- * Verified against official docs: neither could be confirmed. Cursor's own
- * deeplinks page (cursor.com/docs/integrations/deeplinks) documents the
+ * Deeplinks verified against official docs as far as they can be: Cursor's
+ * own deeplinks page (cursor.com/docs/integrations/deeplinks) documents the
  * `prompt`, `command` and `rule` schemes but not `mcp/install`; VS Code's MCP
  * docs (code.visualstudio.com/docs/copilot/chat/mcp-servers) document the
  * Extensions view, the Command Palette and `code --add-mcp`, not a
  * `vscode:mcp/install` URI. Both forms below match what Cursor's and VS
  * Code's own "Add to Cursor" / "Install in VS Code" marketplace badges emit,
  * so they are kept, but treat them as best effort rather than confirmed.
+ *
+ * The commands are confirmed. Codex takes `codex mcp add <name> --url <url>`
+ * for a streamable HTTP server and stores it under `[mcp_servers.<name>]` in
+ * ~/.codex/config.toml (learn.chatgpt.com/docs/extend/mcp).
  */
-const DEEPLINKS: DeepLink[] = [
-  {
-    id: 'claude-code',
-    label: 'Claude Code',
+const SURFACES: Record<AgentId, Surface> = {
+  claude: {
+    command: (url) => `claude mcp add --transport http ${MCP_NAME} ${url} -s user`,
     // Neither Claude scheme has an MCP install action, so this opens a Code
     // session in the desktop app with the add command in the composer.
     link: (url) =>
       `claude://code/new?q=${encodeURIComponent(
-        [
-          'Add the ABDM documentation MCP server, then use it to answer my ABDM questions.',
-          '',
-          'Run this:',
-          `claude mcp add --transport http ${NAME} ${url} -s user`,
-          '',
-          'User scope, so it is available in every project rather than only this directory.',
-        ].join('\n'),
+        guarded(
+          [
+            'Add the ABDM documentation MCP server, then use it to answer my ABDM questions.',
+            '',
+            'Run this:',
+            `claude mcp add --transport http ${MCP_NAME} ${url} -s user`,
+            '',
+            'User scope, so it is available in every project rather than only this directory.',
+          ].join('\n'),
+        ),
       )}`,
-    note: 'Opens the Claude app with the add command ready. Nothing runs until you press Enter.',
+    note: 'User scope, so it is there in every project rather than only this directory. Claude Desktop takes the generic block under "Any agent" instead.',
   },
-  {
-    id: 'cursor',
-    label: 'Cursor',
+  cursor: {
+    command: mcpServersJson,
+    block: true,
     link: (url) =>
-      `cursor://anysphere.cursor-deeplink/mcp/install?name=${NAME}&config=${encodeURIComponent(
+      `cursor://anysphere.cursor-deeplink/mcp/install?name=${MCP_NAME}&config=${encodeURIComponent(
         btoa(JSON.stringify({url})),
       )}`,
-    note: 'Opens Cursor on a confirmation dialog. No command to run.',
+    note: 'The link opens Cursor on a confirmation dialog. The block goes in .cursor/mcp.json if you would rather add it by hand.',
   },
-  {
-    id: 'vscode',
-    label: 'VS Code',
+  vscode: {
+    command: (url) =>
+      `code --add-mcp '${JSON.stringify({name: MCP_NAME, type: 'http', url})}'`,
     link: (url) =>
       `vscode:mcp/install?${encodeURIComponent(
-        JSON.stringify({name: NAME, type: 'http', url}),
+        JSON.stringify({name: MCP_NAME, type: 'http', url}),
       )}`,
-    note: 'Opens VS Code on a confirmation dialog. No command to run.',
+    note: 'The link opens VS Code on a confirmation dialog. The command does the same from a terminal.',
   },
-];
+  codex: {
+    command: (url) => `codex mcp add ${MCP_NAME} --url ${url}`,
+    // Codex is a CLI with no URL scheme. Do not invent one.
+    link: null,
+    note: 'Writes it to ~/.codex/config.toml, which the Codex CLI, the IDE extension and the desktop app all read. Run /mcp in a session to confirm it connected.',
+  },
+  any: {
+    command: mcpServersJson,
+    block: true,
+    link: null,
+    note: 'Any MCP client that reads an mcpServers config, Claude Desktop included, takes this block as is.',
+  },
+};
 
 function CopyLine({value, block}: {value: string; block?: boolean}) {
   const [copied, setCopied] = useState(false);
@@ -128,16 +152,11 @@ function CopyLine({value, block}: {value: string; block?: boolean}) {
 export default function McpInstall(): React.ReactNode {
   const {siteConfig} = useDocusaurusContext();
   const url = (siteConfig.customFields?.mcpUrl as string | null) ?? null;
+  const [active, setActive] = useState<AgentId>(AGENTS[0].id);
 
   // The endpoint at build time, or a placeholder the copyable forms show so
   // the panel still reads correctly before the deploy pipeline sets MCP_URL.
   const shown = url ?? '<mcp-url, set at deploy>';
-  const claudeCliCmd = `claude mcp add --transport http ${NAME} ${shown} -s user`;
-  const genericConfig = JSON.stringify(
-    {mcpServers: {[NAME]: {url: shown}}},
-    null,
-    2,
-  );
 
   return (
     <aside className={cn('skill-install', !url && 'skill-install--locked')}>
@@ -168,41 +187,58 @@ export default function McpInstall(): React.ReactNode {
         ))}
       </ul>
 
-      <div className="skill-install__actions skill-install__actions--wrap">
-        {DEEPLINKS.map((option) =>
-          url ? (
-            <Button key={option.id} asChild variant="outline" size="sm">
-              <a href={option.link(url)} title={option.note}>
-                <SquareArrowOutUpRight className="size-3.5" aria-hidden="true" />
-                Add to {option.label}
-              </a>
-            </Button>
-          ) : (
-            <Button key={option.id} variant="outline" size="sm" disabled title={option.note}>
-              <Lock className="size-3.5" aria-hidden="true" />
-              Add to {option.label}
-            </Button>
-          ),
-        )}
+      <div className="skill-install__targets" role="tablist" aria-label="Add to">
+        {AGENTS.map((agent) => (
+          <button
+            key={agent.id}
+            type="button"
+            role="tab"
+            id={`mcp-install-tab-${agent.id}`}
+            aria-selected={agent.id === active}
+            className={cn(
+              'skill-install__target',
+              agent.id === active && 'skill-install__target--active',
+            )}
+            onClick={() => setActive(agent.id)}>
+            {agent.label}
+          </button>
+        ))}
       </div>
 
-      <Tabs defaultValue="claude-cli" className="skill-install__mcp-tabs">
-        <TabsList>
-          <TabsTrigger value="claude-cli">Claude Code (CLI)</TabsTrigger>
-          <TabsTrigger value="generic">Claude Desktop / generic</TabsTrigger>
-        </TabsList>
-        <TabsContent value="claude-cli">
-          <CopyLine value={claudeCliCmd} />
-          <p className="skill-install__hint">Run this in the repository you are integrating.</p>
-        </TabsContent>
-        <TabsContent value="generic">
-          <CopyLine value={genericConfig} block />
-          <p className="skill-install__hint">
-            Any MCP client that reads an <code>mcpServers</code> config, Claude Desktop
-            included, takes this block as is.
-          </p>
-        </TabsContent>
-      </Tabs>
+      {/* Every target renders, unselected ones hidden, for the same reason
+          AgentSetup does it: the built HTML is what an agent reading this
+          page as markdown gets, and it should carry all five. */}
+      {AGENTS.map((agent) => {
+        const surface = SURFACES[agent.id];
+        return (
+          <div
+            key={agent.id}
+            role="tabpanel"
+            aria-labelledby={`mcp-install-tab-${agent.id}`}
+            hidden={agent.id !== active}>
+            <p className="sr-only"><strong>{agent.label}</strong></p>
+            {surface.link && (
+              <div className="skill-install__actions">
+                {url ? (
+                  <Button asChild variant="outline" size="sm">
+                    <a href={surface.link(url)}>
+                      <SquareArrowOutUpRight className="size-3.5" aria-hidden="true" />
+                      Add to {agent.label}
+                    </a>
+                  </Button>
+                ) : (
+                  <Button variant="outline" size="sm" disabled>
+                    <Lock className="size-3.5" aria-hidden="true" />
+                    Add to {agent.label}
+                  </Button>
+                )}
+              </div>
+            )}
+            <CopyLine value={surface.command(shown)} block={surface.block} />
+            <p className="skill-install__hint">{surface.note}</p>
+          </div>
+        );
+      })}
     </aside>
   );
 }

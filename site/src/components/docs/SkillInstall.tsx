@@ -4,6 +4,7 @@ import useBaseUrl from '@docusaurus/useBaseUrl';
 import {Check, Copy, Download, Sparkles, SquareArrowOutUpRight} from 'lucide-react';
 import {cn} from '@site/src/lib/utils';
 import manifest from '@site/src/data/skills.json';
+import {AGENTS, AgentId} from './agents';
 
 export type SkillInstallProps = {
   /** The skill's folder name, for example "abdm-m1". Keys into skills.json. */
@@ -27,10 +28,6 @@ type Entry = {
 };
 
 type Target = {
-  id: string;
-  label: string;
-  /** Where this agent reads skills from, for the panel's own copy. */
-  dir: string | null;
   /** Built from the published URL, so the command works where the site is. */
   command: (url: string, slug: string, sections: string[]) => string;
   /** One click into the agent, or null where the agent has no scheme for it. */
@@ -73,25 +70,19 @@ function fetchFolder(url: string, slug: string, dir: string, sections: string[])
   ].join(' && ');
 }
 
-const TARGETS: Target[] = [
-  {
-    id: 'claude-code',
-    label: 'Claude',
-    dir: '.claude/skills',
+const TARGETS: Record<AgentId, Target> = {
+  claude: {
     command: (url, slug, sections) => fetchFolder(url, slug, '.claude/skills', sections),
     // https://support.claude.com/en/articles/14729294-open-claude-desktop-with-a-link
     link: (command, module) =>
       `claude://code/new?q=${encodeURIComponent(promptFor(command, module))}`,
     note: 'Drops the skill into this project. Claude loads it when a task matches.',
   },
-  {
-    id: 'cursor',
-    label: 'Cursor',
+  cursor: {
     // Cursor reads Agent Skills natively now (cursor.com/docs/context/skills),
     // so this is the same folder every other target takes. It used to be
     // converted into a .mdc project rule, which was the answer before the
     // format was a standard Cursor implemented.
-    dir: '.cursor/skills',
     command: (url, slug, sections) => fetchFolder(url, slug, '.cursor/skills', sections),
     // https://cursor.com/docs/integrations/deeplinks. Cursor has no skill
     // install deeplink, but it has a prompt one, so this lands the same way the
@@ -102,25 +93,25 @@ const TARGETS: Target[] = [
       )}`,
     note: 'Cursor reads this folder as a skill and matches it by its description when a task calls for it.',
   },
-  {
-    id: 'vscode',
-    label: 'VS Code',
-    dir: '.github/skills',
+  vscode: {
     command: (url, slug, sections) => fetchFolder(url, slug, '.github/skills', sections),
     // VS Code has a deeplink for MCP servers but none for skills, so this
     // target is the command only. Do not invent one.
     link: null,
     note: 'GitHub Copilot reads this on every surface your team uses, not only your editor.',
   },
-  {
-    id: 'any',
-    label: 'Any agent',
-    dir: null,
+  codex: {
+    command: (url, slug, sections) => fetchFolder(url, slug, '.agents/skills', sections),
+    // Codex is a CLI with no URL scheme. Do not invent one.
+    link: null,
+    note: 'Codex reads this folder as a skill and loads it when a task matches its description.',
+  },
+  any: {
     command: (url, slug, sections) => fetchFolder(url, slug, 'skills', sections),
     link: null,
     note: 'One folder. Put it wherever your agent reads skills from.',
   },
-];
+};
 
 /**
  * What the skill carries, one row per section the generator actually wrote.
@@ -227,7 +218,8 @@ function CopyLine({value}: {value: string}) {
  */
 export default function SkillInstall({slug, note}: SkillInstallProps): React.ReactNode {
   const {siteConfig} = useDocusaurusContext();
-  const [target, setTarget] = useState(TARGETS[0]);
+  const [agent, setAgent] = useState(AGENTS[0]);
+  const target = TARGETS[agent.id];
   const base = `${siteConfig.url}${siteConfig.baseUrl}`.replace(/\/+$/, '');
   // The router, for the copy button. The install commands take the whole
   // folder, because the router alone has links to files that are not there.
@@ -273,17 +265,17 @@ export default function SkillInstall({slug, note}: SkillInstallProps): React.Rea
       </ul>
 
       <div className="skill-install__targets" role="tablist" aria-label="Install for">
-        {TARGETS.map((option) => (
+        {AGENTS.map((option) => (
           <button
             key={option.id}
             type="button"
             role="tab"
-            aria-selected={option.id === target.id}
+            aria-selected={option.id === agent.id}
             className={cn(
               'skill-install__target',
-              option.id === target.id && 'skill-install__target--active',
+              option.id === agent.id && 'skill-install__target--active',
             )}
-            onClick={() => setTarget(option)}>
+            onClick={() => setAgent(option)}>
             {option.label}
           </button>
         ))}
@@ -296,7 +288,7 @@ export default function SkillInstall({slug, note}: SkillInstallProps): React.Rea
           className="skill-launch"
           href={target.link(target.command(base, slug, entry.sections), entry.module)}>
           <SquareArrowOutUpRight className="size-3.5" aria-hidden="true" />
-          Open in {target.label}
+          Open in {agent.label}
         </a>
       )}
 
@@ -317,7 +309,7 @@ export default function SkillInstall({slug, note}: SkillInstallProps): React.Rea
           </li>
           {target.link && (
             <li>
-              Open in {target.label} needs that app installed. It fills the
+              Open in {agent.label} needs that app installed. It fills the
               composer and waits: nothing runs until you read it and press Enter.
             </li>
           )}

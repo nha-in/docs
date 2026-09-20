@@ -911,9 +911,19 @@ const promptSkills = abdmSlugs.map((slug) => [
   `${manifest[slug].title}. Sections: ${manifest[slug].sections.join(', ')}.`,
 ]);
 const mcpUrl = process.env.MCP_URL ?? null;
-// The Claude Code plugin marketplace: this repository itself. Update at
-// handover, together with PLUGIN_REPO in site/src/components/docs/AgentSetup.tsx.
-const pluginRepo = process.env.MARKETPLACE_REPO ?? 'eka-care/abdm-docs';
+// The Claude Code plugin marketplace: this repository itself, named by the
+// environment rather than written down here. Actions sets GITHUB_REPOSITORY on
+// whichever fork is building, so a fork's prompt carries its own install
+// commands. Keep the same chain in site/docusaurus.config.ts, which is where
+// the site's own components read it from.
+const pluginRepo =
+  process.env.MARKETPLACE_REPO ?? process.env.GITHUB_REPOSITORY ?? 'nha-in/docs';
+// What `claude plugin install <plugin>@<marketplace>` has to name, taken from
+// the marketplace manifest rather than repeated here, so renaming the shelf
+// cannot leave a published command pointing at one that does not exist.
+const marketplaceName = JSON.parse(
+  readFileSync(join(root, '.claude-plugin', 'marketplace.json'), 'utf8'),
+).name;
 // Without DOCUSAURUS_URL every reference is origin-relative, and one note
 // tells the agent what the origin is: wherever it fetched this file from.
 const promptRef = (path) => (siteUrl ? `${siteUrl}${path}` : path);
@@ -938,7 +948,7 @@ const promptLines = [
   '',
   '```',
   `claude plugin marketplace add ${pluginRepo}`,
-  'claude plugin install abdm-integrators-assistant@abdm-portal',
+  `claude plugin install abdm-integrators-assistant@${marketplaceName}`,
   '```',
   '',
   '### Codex',
@@ -1023,10 +1033,10 @@ writeFileSync(join(promptDir, 'prompt.md'), `${promptLines.join('\n')}\n`);
 console.log('Wrote agent-setup/prompt.md.');
 
 // The NHCX setup prompt, fetched by the NHCX Build with AI page's one line
-// setup the same way prompt.md is fetched by HIE-CM's. Its repository, install
-// lines and MCP server are the ones the NHCX landing page publishes, which is
-// why they are spelled out here rather than taken from pluginRepo and MCP_URL.
-const nhcxRepo = 'nha-in/docs';
+// setup the same way prompt.md is fetched by HIE-CM's. It ships from the same
+// repository and the same marketplace as the ABDM plugin, so it takes both
+// from the constants above rather than repeating them.
+const nhcxRepo = pluginRepo;
 const nhcxMcp = {name: 'nhcx-docs', url: mcpUrl ?? 'https://docs.abdm.gov.in/mcp'};
 const nhcxPromptLines = [
   `These are official instructions from the ABDM Developer Portal (catalogue version ${catalogueVersion}) to set up an AI development environment for integrating with NHCX, the National Health Claims Exchange.`,
@@ -1048,7 +1058,7 @@ const nhcxPromptLines = [
   '### Claude Code',
   '',
   '```',
-  `claude plugin marketplace add ${nhcxRepo} && claude plugin install nhcx@nha-in`,
+  `claude plugin marketplace add ${nhcxRepo} && claude plugin install nhcx@${marketplaceName}`,
   '```',
   '',
   '### Codex',

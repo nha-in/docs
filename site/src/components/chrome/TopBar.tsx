@@ -1,6 +1,7 @@
 import React from 'react';
 import Link from '@docusaurus/Link';
 import useBaseUrl from '@docusaurus/useBaseUrl';
+import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import ThemedImage from '@theme/ThemedImage';
 import NavbarColorModeToggle from '@theme/Navbar/ColorModeToggle';
 import {Check, ChevronDown, Languages, MoreHorizontal, Sparkles} from 'lucide-react';
@@ -31,8 +32,19 @@ import {
 import BrandMark from './BrandMark';
 import Omnibox from './Omnibox';
 
-/** External destinations shown in the bar. Not routes, so not in navigation.ts. */
-const GITHUB_URL = 'https://github.com/nha-in';
+/**
+ * The repository this copy of the portal is published from. External, so not
+ * a route and not in navigation.ts, and named by the build rather than
+ * written down here: Actions sets GITHUB_REPOSITORY on whichever fork builds,
+ * so the link goes to that fork's repository. See docusaurus.config.ts.
+ *
+ * It used to be a constant, and it pointed at the organisation rather than at
+ * the repository, so the bar's GitHub link landed on a list of repositories.
+ */
+function useGitHubUrl(): string {
+  const {siteConfig} = useDocusaurusContext();
+  return `https://github.com/${siteConfig.customFields?.pluginRepo as string}`;
+}
 
 /**
  * The sandbox: an open isometric tray with a code caret sitting in it, drawn
@@ -193,6 +205,7 @@ function LandingBar() {
  * or shrinking them under the size a thumb can hit.
  */
 function OverflowMenu() {
+  const githubUrl = useGitHubUrl();
   return (
     <DropdownMenu>
       <DropdownMenuTrigger
@@ -226,7 +239,7 @@ function OverflowMenu() {
           </a>
         </DropdownMenuItem>
         <DropdownMenuItem asChild>
-          <a href={GITHUB_URL} target="_blank" rel="noopener noreferrer">
+          <a href={githubUrl} target="_blank" rel="noopener noreferrer">
             <GitHubMark />
             GitHub
           </a>
@@ -249,6 +262,7 @@ function OverflowMenu() {
 
 export default function TopBar() {
   const pathname = useRoutePath();
+  const githubUrl = useGitHubUrl();
   if (isLanding(pathname)) {
     return <LandingBar />;
   }
@@ -302,7 +316,7 @@ export default function TopBar() {
         </TooltipProvider>
         <a
           className="topbar-action topbar-action--icon"
-          href={GITHUB_URL}
+          href={githubUrl}
           target="_blank"
           rel="noopener noreferrer"
           aria-label="GitHub repository">

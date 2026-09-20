@@ -787,14 +787,19 @@ body.is-resizing-sidebar {
   color: var(--text-body);
 }
 
+/* Five agents now, in three panels. A single unwrapped line fitted four on a
+   phone and clipped the fifth, so the row wraps, and a label stays whole
+   rather than breaking "VS Code" across two lines inside its chip. */
 .skill-install__targets {
   display: flex;
+  flex-wrap: wrap;
   gap: 0.375rem;
   margin: 1.25rem 0 0.625rem;
 }
 
 .skill-install__target {
   height: 1.875rem;
+  white-space: nowrap;
   padding: 0 0.75rem;
   border: 1px solid transparent;
   border-radius: var(--radius-chip);

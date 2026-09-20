@@ -11,10 +11,11 @@ on:
 # build-nav.mjs refuses to build under CI without this, so that llms.txt never
 # ships example.com placeholder URLs to an agent. Two jobs below run the build,
 # lint-tables and build-site, so it is set once here rather than on each of
-# them. The value is where dev-docs-cd.yml actually publishes, so the URLs in a
-# CI artifact are the URLs the pages really carry.
+# them. The value is the repository's own SITE_URL variable, so the URLs in a
+# CI artifact are the URLs that copy of the site really carries, and no fork
+# builds pages that name somebody else's host.
 env:
-  DOCUSAURUS_URL: https://abdm-docs.dev.eka.care
+  DOCUSAURUS_URL: ${{ vars.SITE_URL || 'https://docs.abdm.gov.in' }}
 
 jobs:
   lint-specs:
@@ -153,7 +154,7 @@ jobs:
         # real URL will do; it is the repository variable the deploy reads,
         # rather than a hostname written into a file both repositories share.
         env:
-          DOCUSAURUS_URL: ${{ vars.SITE_URL || 'https://abdm-docs.dev.eka.care' }}
+          DOCUSAURUS_URL: ${{ vars.SITE_URL || 'https://docs.abdm.gov.in' }}
       - run: npm run lint:tables
 
   widget:
@@ -184,7 +185,7 @@ jobs:
         # real URL will do; it is the repository variable the deploy reads,
         # rather than a hostname written into a file both repositories share.
         env:
-          DOCUSAURUS_URL: ${{ vars.SITE_URL || 'https://abdm-docs.dev.eka.care' }}
+          DOCUSAURUS_URL: ${{ vars.SITE_URL || 'https://docs.abdm.gov.in' }}
       # The committed atom to page map must still match what the site
       # publishes. A renamed or deleted page fails here, rather than becoming
       # a dead link in a support answer. Needs the build above for the
