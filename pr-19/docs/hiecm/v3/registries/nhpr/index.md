@@ -1,0 +1,30 @@
+# NHPR, the provider registries
+
+NHPR is the provider half of [Registries](/docs/pr-19/docs/hiecm/v3/registries), and the name covers the pair underneath it: the [HPR](/docs/pr-19/docs/hiecm/v3/getting-started/glossary#hpr) for people and the [HFR](/docs/pr-19/docs/hiecm/v3/getting-started/glossary#hfr) for places. This page carries what they share and forks to each.
+
+They are separate because a doctor holds one identity for a career across many facilities, while a facility sees many professionals pass through. Keeping them apart lets each change without rewriting the other, and lets [HIE-CM](/docs/pr-19/docs/hiecm/v3/getting-started/glossary#hie-cm) answer two questions: who wrote this, and where was it written.
+
+## Which one you need, and when
+
+| You need                                                                      | When                                                                                                                                                                                                                                   |
+| ----------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| An [HPID](/docs/pr-19/docs/hiecm/v3/getting-started/glossary#hpid) on the HPR | Before anything else in NHPR. The HFR create call carries an HPR token in the `x-hprid-auth` header, generated from an HPR ID and password                                                                                             |
+| A facility ID on the HFR                                                      | Before the facility goes live as a [HIP](/docs/pr-19/docs/hiecm/v3/getting-started/glossary#hip) or an [HIU](/docs/pr-19/docs/hiecm/v3/getting-started/glossary#hiu). A valid facility ID is a prerequisite for sharing records at all |
+| A bridge linked to the facility                                               | Last. It is what makes your software resolvable as that facility on the network                                                                                                                                                        |
+
+## Base URLs
+
+Both registries share one base URL:
+
+```text
+Sandbox     https://apihspsbx.abdm.gov.in/v4/int/
+```
+
+The calls take a bearer token in the `Authorization` header. M4 declares bearer authentication. The HPID calls publish `POST /getManagementToken`. [M4](/docs/pr-19/docs/hiecm/v3/api/m4) is the only milestone in [ABDM](/docs/pr-19/docs/hiecm/v3/getting-started/glossary#abdm) that writes to NHPR, and its operations and their fields are in [the M4 API reference](/docs/pr-19/docs/hiecm/v3/api/m4).
+
+## Next
+
+- [HPR](/docs/pr-19/docs/hiecm/v3/registries/nhpr/hpr): the HPID and the registration journey.
+- [HFR](/docs/pr-19/docs/hiecm/v3/registries/nhpr/hfr): the facility record, the five call onboarding sequence, bridge linkage.
+- [ABHA](/docs/pr-19/docs/hiecm/v3/registries/abha), the patient side.
+- [M4 API reference](/docs/pr-19/reference/hiecm-m4).

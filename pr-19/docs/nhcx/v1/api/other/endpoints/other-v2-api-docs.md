@@ -1,0 +1,89 @@
+# Get the swagger 2 document (status service)
+
+`GET /v2/api-docs`
+
+Serves the status service's Swagger 2 document, optionally filtered by a group query parameter; a discovery endpoint, not a protocol API.
+
+### Business purpose
+
+Some tooling still consumes Swagger 2 rather than OpenAPI 3. This endpoint serves the status service's contract in that older format so that such tools can generate clients and validate requests against /v1/status. It exists alongside /v3/api-docs and describes the same service; it carries no claim-settlement data and involves no business logic. Its value is limited to integration setup and troubleshooting.
+
+### When to use
+
+Use it when your client generator or API tooling requires Swagger 2 input, or when comparing the Swagger 2 and OpenAPI 3 renderings of the status service during a troubleshooting session. The endpoint index lists it as endpoint 20 with an optional group query parameter. It plays no part in any transaction workflow.
+
+### Preconditions
+
+- A GET request to the status service host; the OpenAPI documents in this corpus were captured from https://hcxsbx.ABDM.gov.in/<service>/api-docs, and the status service declares the server prefix /statushcxservice.
+- No JWE envelope, no x-hcx-* protocol headers and no correlation ID; the docs do not state that a Bearer token is required for these discovery endpoints.
+- No request body.
+
+### Postconditions
+
+The service returns HTTP 200 with a JSON Swagger 2 document (swagger: 2.0) describing the status service, its base path and the /v1/status operation. Nothing changes on NHCX and no callback follows. Where the served document and the handbook disagree on URL shape, the docs advise treating the per-service spec host as the exploration surface and the handbook's gateway base as the integration surface.
+
+### Common mistakes
+
+- Pointing at the gateway base https://apisbx.ABDM.gov.in/pmjay/sbxhcx and expecting the per-service spec host; the docs advise swapping between the two URL shapes when a path 404s.
+- Treating the served document as the integration contract for gateway traffic; the handbook's gateway base and header conventions take precedence where the two disagree.
+- Sending a POST or a JSON body to a GET discovery endpoint.
+- Wrapping the call in JWE or adding x-hcx-* headers, which only apply to protocol APIs such as /v1/status.
+
+### Best practices
+
+- Use these endpoints for exploration and client generation in the sandbox, and cache the document rather than fetching it on every run.
+- Diff the served document against the corpus (Status service: OpenAPI 3.0.1, version 1.0.0) when behaviour changes unexpectedly.
+- Never let production traffic depend on the availability of the documentation endpoints.
+- Keep the /v1/status protocol rules in mind when reading the spec: x-hcx-correlation_ID must carry the original request's correlation ID.
+
+### Related scenario
+
+A TPA's legacy integration platform only imports Swagger 2 definitions. During onboarding to the status flow the team fetches /v2/api-docs from the status service, imports it, and confirms that the /v1/status operation and its StatusSuccessResponse are represented. They then implement the JWE-wrapped status request for preauthorisations that have not received an on_submit callback, and respond to providers' status requests on the status callback.
+
+### Specification
+
+Chapter [Environments and addresses](/docs/nhcx/v1/reference/environments-and-addresses) of the NHCX integration specification.
+
+```bash
+curl --request GET \
+  --url https://apisbx.abdm.gov.in/hcx/v2/api-docs \
+  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
+  --header 'bearer_auth: Bearer <access token>'
+```
+
+## Authorization
+
+- `Authorization` (bearer token, required): On every NHCX call, the token goes in a header called `bearer_auth`, with the word `Bearer` and a space in front. The sources are not unanimous: the authentication page and the FAQ both write the example as `Authorization`, and the notification endpoint uses `Authorization`. The safe course, and what the adapter does, is to send both headers with the same value.
+
+## Headers
+
+- `bearer_auth` (string, required): It is `bearer_auth`, not `Authorization`, on NHCX's own endpoints.
+
+## Responses
+
+- `200`: The service returns HTTP 200 with a JSON Swagger 2 document (swagger: 2.0) describing the status service, its base path and the /v1/status operation.
+
+Shape of the 200 response, generated from the schema. The values are placeholders, not a captured response:
+
+```json
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "Status service",
+    "version": "1.0.0"
+  },
+  "basePath": "/statushcxservice",
+  "paths": {
+    "/v1/status": {
+      "post": {
+        "operationId": "status",
+        "responses": {
+          "202": {
+            "description": "Accepted"
+          }
+        }
+      }
+    }
+  }
+}
+```
