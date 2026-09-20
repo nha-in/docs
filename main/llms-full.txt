@@ -27177,15 +27177,19 @@ What you type is encrypted in this browser with NHA's public key and posted only
 
 Aadhaar number sensitiveMasked as you type, kept in this page's memory only, cleared when you close the tab.
 
-### Request the OTP
+### Request and enter the OTP
 
-NHA sends a one time password to the mobile number registered against that Aadhaar, and hands you a transaction id.
+NHA sends a one time password to the mobile number registered against that Aadhaar, and hands you a transaction id. Type the code back here, with the mobile number the new account should carry.
+
+OTP sensitiveSix digits. Encrypted with the same certificate before it is sent.Mobile numberTen digits, the first between 1 and 9. The number to attach to the new account. The specification requires it on the next call and its example shows it unencrypted.
+
+Request an OTP first.
 
 ### Create the ABHA
 
-Send the OTP with the transaction id. This call creates a real account on the sandbox, so send it once.
+Send the code from step 3 with its transaction id. This creates a real account on the sandbox, so send it once.
 
-OTP sensitiveEncrypted with the same certificate before it is sent.Mobile numberThe number to attach to the new account. The specification requires it on this call and its example shows it unencrypted.
+Request an OTP on step 3 first. This call needs the transaction id that comes back with it.
 
 ## How this fits your product
 
