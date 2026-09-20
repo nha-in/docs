@@ -13,12 +13,18 @@ import (
 )
 
 type Atom struct {
-	ID         string
-	Type       string
-	Gateway    string
-	Milestone  string
-	Title      string
-	Summary    string
+	ID        string
+	Type      string
+	Gateway   string
+	Milestone string
+	Title     string
+	Summary   string
+	// Audience is "contributor" on an atom that documents how this
+	// catalogue is built rather than how ABDM is integrated. Empty means
+	// integrator, so an atom is integrator-facing unless it says
+	// otherwise. The indexer drops contributor atoms, which is what keeps
+	// the MCP server, the Ask AI panel and site search to one audience.
+	Audience   string
 	Body       string
 	SourcePath string
 	// DocURL and DocAnchor are the published page a support answer links
@@ -42,6 +48,7 @@ type frontmatter struct {
 	Milestone string              `yaml:"milestone"`
 	Title     string              `yaml:"title"`
 	Summary   string              `yaml:"summary"`
+	Audience  string              `yaml:"audience"`
 	Related   map[string][]string `yaml:"related"`
 }
 
@@ -98,6 +105,7 @@ func ParseAtom(sourcePath string, content []byte) (Atom, error) {
 		Milestone:  fm.Milestone,
 		Title:      fm.Title,
 		Summary:    strings.TrimSpace(fm.Summary),
+		Audience:   fm.Audience,
 		Body:       strings.TrimSpace(string(body)),
 		SourcePath: sourcePath,
 		ErrorCodes: ExtractErrorCodes(string(content)),

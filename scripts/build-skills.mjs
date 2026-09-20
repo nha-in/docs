@@ -22,6 +22,7 @@ import {parse} from 'yaml';
 import {cleanDescription} from './lib/titles.mjs';
 import {errorsFromSpec} from './lib/spec-errors.mjs';
 import {loadJourneys} from './lib/journeys.mjs';
+import {loadAtoms} from './lib/atoms.mjs';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const dataDir = join(root, 'site', 'src', 'data', 'api');
@@ -76,6 +77,78 @@ const PRACTICES = (() => {
   if (!items.length) throw new Error(`No practices found in ${practicesAtom}`);
   return items;
 })();
+
+// Design rules, as distinct from both rules and practices. A rule is a fact
+// about one module's calls. A practice is how to work. A design rule is what
+// the integration has to do to the journey around those calls: how many
+// questions a patient is asked, where a failure is shown, and what a screen is
+// forbidden to claim. They decide whether an integration that passes every
+// call is one a receptionist can actually use.
+//
+// Like the practices, they live in the Catalogue rather than in this file, as
+// hiecm concept atoms carrying the milestone they belong to, so they are
+// linted, citable by id, and reach the Docs MCP through the same snapshot as
+// everything else.
+// Reading order within a design section. An atom's `order` is the position it
+// should be read in, because the rules build on each other: M1's journey order
+// rule is what every other M1 rule serves, and sorting by id put it second
+// behind a slug beginning with "avoiding". An atom with no order sorts after
+// the ordered ones, by id, so adding a rule without deciding where it goes
+// appends rather than silently reshuffling the rest.
+function byReadingOrder(a, b) {
+  const ao = Number.isInteger(a.fm?.order) ? a.fm.order : Infinity;
+  const bo = Number.isInteger(b.fm?.order) ? b.fm.order : Infinity;
+  if (ao !== bo) return ao - bo;
+  return a.fm.id.localeCompare(b.fm.id);
+}
+
+const DESIGN_ATOMS = (() => {
+  const {atoms, problems} = loadAtoms();
+  if (problems.length) {
+    // An atom that will not parse is a build failure here, not a warning: a
+    // design section would otherwise lose it silently.
+    throw new Error(`Catalogue atoms did not parse: ${problems.map((x) => `${x.file}: ${x.msg}`).join(', ')}`);
+  }
+  const byMilestone = new Map();
+  for (const entry of atoms.values()) {
+    const fm = entry.fm;
+    if (fm?.gateway !== 'hiecm' || fm?.type !== 'concept') continue;
+    const key = String(fm.milestone ?? '').toLowerCase();
+    if (!byMilestone.has(key)) byMilestone.set(key, []);
+    byMilestone.get(key).push(entry);
+  }
+  for (const list of byMilestone.values()) list.sort(byReadingOrder);
+  return byMilestone;
+})();
+
+/**
+ * The design section for one module, or '' when no atom claims its milestone.
+ * Each atom becomes one section, its own headings pushed down a level so the
+ * atom's title is what a reader scans. "Before you start" is dropped and the
+ * relative links are flattened, because both point at catalogue files that are
+ * not beside this one inside a skill folder.
+ */
+function designSection(module) {
+  const list = DESIGN_ATOMS.get(module.id) ?? [];
+  if (!list.length) return '';
+  const bodies = list.map((entry) => {
+    const withoutTitle = entry.body.replace(/^#\s+.+$/m, '').trim();
+    const dropped = withoutTitle.replace(/^## Before you start\n[\s\S]*?(?=^## )/m, '');
+    const flattened = dropped.replace(/\[([^\]]+)\]\([^)]*\.md\)/g, '$1');
+    return [`## ${entry.fm.title}`, '', flattened.replace(/^## /gm, '### ').trim(), ''].join('\n');
+  });
+  return [
+    `# Design ${module.title}`,
+    '',
+    'What the integration has to do to the journey around the calls: how many questions a patient is asked, where a failure is shown, and what a screen is forbidden to claim. Every rule below comes from a Catalogue atom, cited at the end.',
+    '',
+    ...bodies,
+    '## Where these came from',
+    '',
+    ...list.map((entry) => '- `' + entry.fm.id + '`'),
+    '',
+  ].join('\n');
+}
 
 const MODULES = [
   {
@@ -603,6 +676,17 @@ for (const module of MODULES) {
     );
   }
 
+  // Design before integrate: an integrator who reads the calls first builds
+  // the journey the specification implies, which is the one that asks a
+  // patient the same question twice.
+  const design = designSection(module);
+  if (design) {
+    files['references/design.md'] = design;
+    covers.push(
+      `- **Design.** What the journey around the calls has to do, and what a screen is forbidden to claim. [references/design.md](references/design.md)`,
+    );
+  }
+
   const integrate = INTEGRATE.map((heading) => parts.get(heading)).filter(Boolean);
   if (integrate.length) {
     files['references/integrate.md'] = [
@@ -715,6 +799,47 @@ for (const [section, source, what] of FHIR_REFS) {
     `- **${section[0].toUpperCase()}${section.slice(1)}.** ${what} [references/${section}.md](references/${section}.md)`,
   );
 }
+
+// The shared fhir atoms that are design rules rather than reference material.
+// Named explicitly because the rest of catalogue/shared/fhir is the seven
+// record type maps, the envelope and the validator recipe, which the
+// generate and audit procedures already send a reader to. These three are
+// what a generator gets wrong before it ever reaches a profile table.
+const FHIR_DESIGN_ATOMS = [
+  'shared.fhir.profile-and-example-together',
+  'shared.fhir.conditional-cardinality',
+  'shared.fhir.bundle-weight-and-narrative',
+];
+
+/** The design section for abdm-fhir, assembled from the named atoms above. */
+function fhirDesignSection() {
+  const {atoms} = loadAtoms();
+  const picked = FHIR_DESIGN_ATOMS.map((id) => {
+    const atom = atoms.get(id);
+    // A renamed or deleted atom must fail the build rather than quietly
+    // shrink the section.
+    if (!atom) throw new Error(`FHIR_DESIGN_ATOMS names ${id}, which no atom defines`);
+    return atom;
+  }).sort(byReadingOrder);
+  const bodies = picked.map((entry) => {
+    const withoutTitle = entry.body.replace(/^#\s+.+$/m, '').trim();
+    const dropped = withoutTitle.replace(/^## Before you start\n[\s\S]*?(?=^## )/m, '');
+    const flattened = dropped.replace(/\[([^\]]+)\]\([^)]*\.md\)/g, '$1');
+    return [`## ${entry.fm.title}`, '', flattened.replace(/^## /gm, '### ').trim(), ''].join('\n');
+  });
+  return [
+    '# Design an ABDM FHIR generator',
+    '',
+    'What a bundle generator gets wrong before it reaches a profile table: reading one NRCeS source without the other, emitting a required child of an optional parent, and treating a bundle as a small object with a file attached.',
+    '',
+    ...bodies,
+    '## Where these came from',
+    '',
+    ...picked.map((entry) => '- `' + entry.fm.id + '`'),
+    '',
+  ].join('\n');
+}
+
 const fhirSkillMd = (url) =>
   [
     '---',
@@ -743,6 +868,10 @@ const fhirSkillMd = (url) =>
     '',
     ...PRACTICES.map((practice) => `- ${practice}`),
   ].join('\n');
+fhirFiles['references/design.md'] = fhirDesignSection();
+fhirCovers.unshift(
+  '- **Design.** What a generator gets wrong before it reaches a profile table. [references/design.md](references/design.md)',
+);
 fhirFiles['SKILL.md'] = fhirSkillMd(siteUrl);
 const fhirPluginFiles = {...fhirFiles, 'SKILL.md': fhirSkillMd(null)};
 emit('abdm-fhir', fhirFiles, fhirPluginFiles);
@@ -756,7 +885,7 @@ manifest['abdm-fhir'] = {
   codes: 0,
   sections: FHIR_REFS.map(([section]) => section),
 };
-console.log('Built abdm-fhir: 2 reference(s) from the hand written procedures.');
+console.log(`Built abdm-fhir: ${Object.keys(fhirFiles).length - 1} reference(s), including the design rules.`);
 
 writeFileSync(
   join(root, 'site', 'src', 'data', 'skills.json'),

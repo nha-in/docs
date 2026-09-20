@@ -54,17 +54,20 @@
       {
         "path": "Composition.attester.mode",
         "min": 1,
-        "max": "1"
+        "max": "1",
+        "optional_parent": "Composition.attester"
       },
       {
         "path": "Composition.relatesTo.code",
         "min": 1,
-        "max": "1"
+        "max": "1",
+        "optional_parent": "Composition.relatesTo"
       },
       {
         "path": "Composition.relatesTo.target[x]",
         "min": 1,
-        "max": "1"
+        "max": "1",
+        "optional_parent": "Composition.relatesTo"
       },
       {
         "path": "Composition.section",
@@ -78,7 +81,16 @@
       }
     ],
     "sections": [],
-    "fixed": []
+    "fixed": [
+      {
+        "path": "Composition.type.coding.system",
+        "value": "http://snomed.info/sct"
+      },
+      {
+        "path": "Composition.section.code.coding.system",
+        "value": "http://snomed.info/sct"
+      }
+    ]
   },
   {
     "record_type": "DischargeSummary",
@@ -135,17 +147,20 @@
       {
         "path": "Composition.attester.mode",
         "min": 1,
-        "max": "1"
+        "max": "1",
+        "optional_parent": "Composition.attester"
       },
       {
         "path": "Composition.relatesTo.code",
         "min": 1,
-        "max": "1"
+        "max": "1",
+        "optional_parent": "Composition.relatesTo"
       },
       {
         "path": "Composition.relatesTo.target[x]",
         "min": 1,
-        "max": "1"
+        "max": "1",
+        "optional_parent": "Composition.relatesTo"
       },
       {
         "path": "Composition.section",
@@ -205,7 +220,16 @@
         "max": "1"
       }
     ],
-    "fixed": []
+    "fixed": [
+      {
+        "path": "Composition.type.coding.system",
+        "value": "http://snomed.info/sct"
+      },
+      {
+        "path": "Composition.type.coding.code",
+        "value": "373942005"
+      }
+    ]
   },
   {
     "record_type": "",
@@ -308,17 +332,20 @@
       {
         "path": "Composition.attester.mode",
         "min": 1,
-        "max": "1"
+        "max": "1",
+        "optional_parent": "Composition.attester"
       },
       {
         "path": "Composition.relatesTo.code",
         "min": 1,
-        "max": "1"
+        "max": "1",
+        "optional_parent": "Composition.relatesTo"
       },
       {
         "path": "Composition.relatesTo.target[x]",
         "min": 1,
-        "max": "1"
+        "max": "1",
+        "optional_parent": "Composition.relatesTo"
       },
       {
         "path": "Composition.section",
@@ -332,7 +359,24 @@
       }
     ],
     "sections": [],
-    "fixed": []
+    "fixed": [
+      {
+        "path": "Composition.type.coding.system",
+        "value": "http://snomed.info/sct"
+      },
+      {
+        "path": "Composition.type.coding.code",
+        "value": "419891008"
+      },
+      {
+        "path": "Composition.section.code.coding.system",
+        "value": "http://snomed.info/sct"
+      },
+      {
+        "path": "Composition.section.code.coding.code",
+        "value": "419891008"
+      }
+    ]
   },
   {
     "record_type": "ImmunizationRecord",
@@ -384,17 +428,20 @@
       {
         "path": "Composition.attester.mode",
         "min": 1,
-        "max": "1"
+        "max": "1",
+        "optional_parent": "Composition.attester"
       },
       {
         "path": "Composition.relatesTo.code",
         "min": 1,
-        "max": "1"
+        "max": "1",
+        "optional_parent": "Composition.relatesTo"
       },
       {
         "path": "Composition.relatesTo.target[x]",
         "min": 1,
-        "max": "1"
+        "max": "1",
+        "optional_parent": "Composition.relatesTo"
       },
       {
         "path": "Composition.section",
@@ -408,7 +455,24 @@
       }
     ],
     "sections": [],
-    "fixed": []
+    "fixed": [
+      {
+        "path": "Composition.type.coding.system",
+        "value": "http://snomed.info/sct"
+      },
+      {
+        "path": "Composition.type.coding.code",
+        "value": "41000179103"
+      },
+      {
+        "path": "Composition.section.code.coding.system",
+        "value": "http://snomed.info/sct"
+      },
+      {
+        "path": "Composition.section.code.coding.code",
+        "value": "41000179103"
+      }
+    ]
   },
   {
     "record_type": "OPConsultation",
@@ -470,17 +534,20 @@
       {
         "path": "Composition.attester.mode",
         "min": 1,
-        "max": "1"
+        "max": "1",
+        "optional_parent": "Composition.attester"
       },
       {
         "path": "Composition.relatesTo.code",
         "min": 1,
-        "max": "1"
+        "max": "1",
+        "optional_parent": "Composition.relatesTo"
       },
       {
         "path": "Composition.relatesTo.target[x]",
         "min": 1,
-        "max": "1"
+        "max": "1",
+        "optional_parent": "Composition.relatesTo"
       },
       {
         "path": "Composition.section",
@@ -550,7 +617,16 @@
         "max": "1"
       }
     ],
-    "fixed": []
+    "fixed": [
+      {
+        "path": "Composition.type.coding.system",
+        "value": "http://snomed.info/sct"
+      },
+      {
+        "path": "Composition.type.coding.code",
+        "value": "371530004"
+      }
+    ]
   },
   {
     "record_type": "Prescription",
@@ -607,17 +683,20 @@
       {
         "path": "Composition.attester.mode",
         "min": 1,
-        "max": "1"
+        "max": "1",
+        "optional_parent": "Composition.attester"
       },
       {
         "path": "Composition.relatesTo.code",
         "min": 1,
-        "max": "1"
+        "max": "1",
+        "optional_parent": "Composition.relatesTo"
       },
       {
         "path": "Composition.relatesTo.target[x]",
         "min": 1,
-        "max": "1"
+        "max": "1",
+        "optional_parent": "Composition.relatesTo"
       },
       {
         "path": "Composition.section",
@@ -631,7 +710,24 @@
       }
     ],
     "sections": [],
-    "fixed": []
+    "fixed": [
+      {
+        "path": "Composition.type.coding.system",
+        "value": "http://snomed.info/sct"
+      },
+      {
+        "path": "Composition.type.coding.code",
+        "value": "440545006"
+      },
+      {
+        "path": "Composition.section.code.coding.system",
+        "value": "http://snomed.info/sct"
+      },
+      {
+        "path": "Composition.section.code.coding.code",
+        "value": "440545006"
+      }
+    ]
   },
   {
     "record_type": "WellnessRecord",
@@ -678,17 +774,20 @@
       {
         "path": "Composition.attester.mode",
         "min": 1,
-        "max": "1"
+        "max": "1",
+        "optional_parent": "Composition.attester"
       },
       {
         "path": "Composition.relatesTo.code",
         "min": 1,
-        "max": "1"
+        "max": "1",
+        "optional_parent": "Composition.relatesTo"
       },
       {
         "path": "Composition.relatesTo.target[x]",
         "min": 1,
-        "max": "1"
+        "max": "1",
+        "optional_parent": "Composition.relatesTo"
       },
       {
         "path": "Composition.section",

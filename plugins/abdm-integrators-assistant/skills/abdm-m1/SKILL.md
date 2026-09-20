@@ -24,6 +24,7 @@ What it cannot do yet matters as much. Read **Before anything else** below befor
 ## What is in this folder
 
 - **Scaffold.** Build it flow by flow against the sandbox, as a loop that ends when the step's exit condition holds rather than on a call returning 200. [references/scaffold.md](references/scaffold.md)
+- **Design.** What the journey around the calls has to do, and what a screen is forbidden to claim. [references/design.md](references/design.md)
 - **Integrate.** 41 operations, with their hosts and headers. [references/integrate.md](references/integrate.md)
 - **Debug.** The loop from a failed call to a named fix, and 14 error codes from the specification's examples. [references/debug.md](references/debug.md)
 
