@@ -641,7 +641,7 @@
     "moduleDir": "gateway",
     "method": "POST",
     "path": "/api/hiecm/gateway/v3/sessions",
-    "summary": "This API is invoked to generate keycloak token/access token.",
+    "summary": "This API is invoked to generate access token.",
     "route": "/docs/hiecm/v3/api/gateway/endpoints/gateway-abdm-sessions/01-gateway-post-gateway-v3-sessions",
     "callbacks": []
   },
@@ -905,7 +905,7 @@
     "method": "GET",
     "path": "/abha/api/v3/profile/account/request/token",
     "summary": "Use Case: Request a token for accessing a user’s ABHA",
-    "route": "/docs/hiecm/v3/api/m1/endpoints/m1-session/01-m1-get-v3-profile-account-request-token",
+    "route": "/docs/hiecm/v3/api/m1/endpoints/m1-profile-and-card/04-m1-get-v3-profile-account-request-token",
     "callbacks": []
   },
   {
@@ -935,7 +935,7 @@
     "method": "GET",
     "path": "/abha/api/v3/profile/public/certificate",
     "summary": "Use Case: Used to Fetch Public Key",
-    "route": "/docs/hiecm/v3/api/m1/endpoints/m1-session/03-m1-get-v3-profile-public-certificate",
+    "route": "/docs/hiecm/v3/api/m1/endpoints/m1-session/02-m1-get-v3-profile-public-certificate",
     "callbacks": []
   },
   {

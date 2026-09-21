@@ -25,7 +25,7 @@ The calls themselves: where they live, what they need in their headers, and one 
 | `GET` | `/api/hiecm/gateway/v3/providers` | Fetch the list of providers filtered by name. |
 | `GET` | `/api/hiecm/gateway/v3/providers/{provider-id}` | Fetch the record for provider details for requested provider ID. |
 | `PATCH` | `/api/hiecm/gateway/v3/scanPay/updateVersion` | Update version to the serviceId. |
-| `POST` | `/api/hiecm/gateway/v3/sessions` | Generate Keycloak token/access token. |
+| `POST` | `/api/hiecm/gateway/v3/sessions` | Generate access token. |
 | `POST` | `/api/hiecm/scan-gateway/v3/patient/on-selection` | Share payment bundle alone with procedures of the patient. |
 | `POST` | `/api/hiecm/scan-gateway/v3/patient/on-share/open-order` | HIE-CM to send all the open order for patient. |
 | `GET` | `/api/hiecm/scan-gateway/v3/patient/scan-pay/details` | This is retrieve the all the details of the user. |

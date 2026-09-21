@@ -8,7 +8,6 @@
 - id: m1-session
   title: Session, tokens and certificate
   steps:
-    - {op: m1_get_v3_profile_account_request_token}
     - {op: gateway_post_gateway_v3_sessions}
     - {op: m1_get_v3_profile_public_certificate}
 
@@ -205,6 +204,7 @@
     - {op: m1_get_v3_profile_account_qrcode}
     - {op: m1_get_v3_profile_account_abha_card}
     - {op: m1_get_v3_profile_account}
+    - {op: m1_get_v3_profile_account_request_token}
 
 - id: m1-update-mobile
   title: Profile management, mobile number update

@@ -31,7 +31,7 @@ The calls themselves: where they live, what they need in their headers, and one 
 | `GET` | `/api/hiecm/gateway/v3/health-lockers` | Fetch the record with health locker enabled provider details. |
 | `GET` | `/api/hiecm/gateway/v3/providers` | Fetch the list of providers filtered by name. |
 | `GET` | `/api/hiecm/gateway/v3/providers/{provider-id}` | Fetch the record for provider details for requested provider ID. |
-| `POST` | `/api/hiecm/gateway/v3/sessions` | Generate Keycloak token/access token. |
+| `POST` | `/api/hiecm/gateway/v3/sessions` | Generate access token. |
 | `POST` | `/api/v3/hiu/consent/on-fetch` | This is a callback API called by CM to provide fetched consent artefact details… |
 | `POST` | `/api/v3/hiu/consent/request/notify` | This is a callback API to notify HIU when consent is APPROVED, DENIED or REVOKE… |
 | `POST` | `/api/v3/hiu/consent/request/on-init` | Callback API of consent request for patient HIU. |

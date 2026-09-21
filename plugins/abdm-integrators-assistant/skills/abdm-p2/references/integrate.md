@@ -47,7 +47,7 @@ The calls themselves: where they live, what they need in their headers, and one 
 | `GET` | `/api/hiecm/gateway/v3/health-lockers` | Fetch the record with health locker enabled provider details. |
 | `GET` | `/api/hiecm/gateway/v3/providers` | Fetch the list of providers filtered by name. |
 | `GET` | `/api/hiecm/gateway/v3/providers/{provider-id}` | Fetch the record for provider details for requested provider ID. |
-| `POST` | `/api/hiecm/gateway/v3/sessions` | Generate Keycloak token/access token. |
+| `POST` | `/api/hiecm/gateway/v3/sessions` | Generate access token. |
 | `GET` | `/api/hiecm/hip/v3/link/patient/links` | This is the PHR APP API, this API will used to fetch all link care-context for … |
 | `GET` | `/api/hiecm/patient-share/v3/profile/getTokenDetails` | Get the historical token numbers of the patient |
 | `POST` | `/api/hiecm/patient-share/v3/share` | Be invoked from the PHR-HIU application for sharing the patient/user profile wi… |

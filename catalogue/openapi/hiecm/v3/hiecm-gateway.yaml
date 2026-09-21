@@ -1499,7 +1499,7 @@ paths:
       tags:
         - abdm-sessions
       operationId: gateway_post_gateway_v3_sessions
-      summary: This API is invoked to generate keycloak token/access token.
+      summary: This API is invoked to generate access token.
       description: This API is used to generate a access token. When invoked, it facilitates the authentication process by providing a secure token that can be used to access various services and resources within the system. This functionality is essential for ensuring secure and authorized access, enabling users to interact with protected endpoints and perform operations that require authentication. By using this API, users can obtain the necessary tokens to maintain secure sessions and access the system’s features effectively.
       parameters:
         - name: REQUEST-ID
@@ -1537,12 +1537,12 @@ paths:
                 clientId:
                   type: string
                   nullable: false
-                  description: Mandatory when the clientId.
+                  description: The client ID issued to the integrator by ABDM at registration.
                   example: SBX_0000
                 clientSecret:
                   type: string
                   nullable: false
-                  description: Mandatory when the clientSecret.
+                  description: The client secret issued to the integrator by ABDM along with the client ID.
                   example: 0******-***-***-***-a****
                 grantType:
                   type: string

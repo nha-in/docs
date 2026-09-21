@@ -26,7 +26,7 @@ The calls themselves: where they live, what they need in their headers, and one 
 | `GET` | `/api/hiecm/gateway/v3/health-lockers` | Fetch the record with health locker enabled provider details. |
 | `GET` | `/api/hiecm/gateway/v3/providers` | Fetch the list of providers filtered by name. |
 | `GET` | `/api/hiecm/gateway/v3/providers/{provider-id}` | Fetch the record for provider details for requested provider ID. |
-| `POST` | `/api/hiecm/gateway/v3/sessions` | Generate Keycloak token/access token. |
+| `POST` | `/api/hiecm/gateway/v3/sessions` | Generate access token. |
 | `POST` | `/api/hiecm/hip/v3/link/carecontext` | Perform HIP initiated linking. |
 | `POST` | `/api/hiecm/hip/v3/link/context/notify` | Notify CM about any update on the already linked care context for a patient. |
 | `POST` | `/api/hiecm/hip/v3/link/patient/links/sms/notify2` | Send SMS notification to patient that a care context is linked. |

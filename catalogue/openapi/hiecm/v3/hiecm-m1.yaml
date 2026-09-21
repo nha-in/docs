@@ -2031,8 +2031,11 @@ paths:
               properties:
                 scope:
                   type: array
+                  description: The scope of the request. Use search-abha.
                   items:
                     type: string
+                    enum:
+                      - search-abha
                   example:
                     - search-abha
                 mobile:
@@ -6961,7 +6964,7 @@ paths:
           description: <b>Internal Server Error</b><br><br>  An Internal Server Error (500) indicates that the server encountered an unexpected condition that prevented it from fulfilling the request.
       x-stoplight:
         id: rzx3lv9ybtbv3
-      description: This API endpoint is used to fetch the public key and RSA encryptionAlgorithm supported by ABHA V3 system.
+      description: This API is used to fetch the public key used for encryption of Aadhaar, OTP, mobile and other fields which require encryption.
       operationId: m1_get_v3_profile_public_certificate
 components:
   securitySchemes:

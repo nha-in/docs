@@ -403,13 +403,16 @@ for (const {platform, version, files} of tree) {
   // silence means, and each module's errors page lists the codes it returns,
   // and none of it was linked from the place the reader meets the failure.
   // Only HIE-CM v3 has those pages, so only it gets the links.
-  const helpFor = (status, moduleDir) => {
+  const SYNCHRONOUS_202 = new Set(['gateway_post_gateway_v3_sessions']);
+  const helpFor = (status, moduleDir, operationId) => {
     if (!isHiecmV3) return undefined;
     const troubleshooting = (name) => `/docs/${platform}/${version}/troubleshooting/${name}`;
     if (status === '401') {
       return {label: 'Everything returns 401', href: troubleshooting('everything-returns-401')};
     }
-    if (status === '202') {
+    // The session API answers its 202 with the token in the body. No callback
+    // follows, so the callback page would mislead (NHA review, September 2026).
+    if (status === '202' && !SYNCHRONOUS_202.has(operationId)) {
       return {label: 'The callback never arrives', href: troubleshooting('callback-never-arrives')};
     }
     // Only a module that gets an errors page (see the error pages below) is
@@ -648,7 +651,7 @@ for (const {platform, version, files} of tree) {
         example:
           firstExample(response.content) ??
           sampleFromSchema(response.content?.['application/json']?.schema),
-        help: helpFor(status, module.dir),
+        help: helpFor(status, module.dir, op.operationId),
       }));
 
       const id = op.operationId ?? slug(`${entry.method}-${entry.path}`);
