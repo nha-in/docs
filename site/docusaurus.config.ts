@@ -464,6 +464,35 @@ const config: Config = {
   ],
 
   themeConfig: {
+    // Diagrams take the site's type and sizes here, and its colours from
+    // mdx.css, where the tokens already switch with the theme. Flowchart
+    // labels are SVG text rather than HTML, so the page's font size and line
+    // height cannot make a label outgrow the box Mermaid measured for it.
+    mermaid: {
+      theme: {light: 'base', dark: 'base'},
+      options: {
+        fontFamily: 'ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif',
+        fontSize: 14,
+        sequence: {
+          wrap: true,
+          wrapPadding: 10,
+          width: 250,
+          height: 44,
+          actorMargin: 36,
+          boxMargin: 12,
+          messageMargin: 36,
+          noteMargin: 12,
+          actorFontSize: 14,
+          actorFontWeight: 600,
+          messageFontSize: 13,
+          noteFontSize: 12,
+          mirrorActors: false,
+          useMaxWidth: true,
+        },
+        flowchart: {htmlLabels: false, curve: 'basis', padding: 16, nodeSpacing: 40, rankSpacing: 44, useMaxWidth: true},
+        themeVariables: {sequenceNumberColor: '#ffffff', fontSize: '14px'},
+      },
+    },
     image: 'img/social-card.jpg',
     /**
      * What a link to this site unfurls into, beyond the four tags Docusaurus
