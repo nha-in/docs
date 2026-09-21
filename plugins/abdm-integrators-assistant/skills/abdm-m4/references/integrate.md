@@ -27,7 +27,7 @@ The calls themselves: where they live, what they need in their headers, and one 
 | `GET` | `/api/hiecm/gateway/v3/health-lockers` | Fetch the record with health locker enabled provider details. |
 | `GET` | `/api/hiecm/gateway/v3/providers` | Fetch the list of providers filtered by name. |
 | `GET` | `/api/hiecm/gateway/v3/providers/{provider-id}` | Fetch the record for provider details for requested provider ID. |
-| `POST` | `/api/hiecm/gateway/v3/sessions` | Generate Keycloak token/access token. |
+| `POST` | `/api/hiecm/gateway/v3/sessions` | Generate access token. |
 | `POST` | `/api/v1/auth/authPassword` | Login Via Password |
 | `GET` | `/api/v1/auth/cert` | Get Public Certificate |
 | `POST` | `/api/v1/auth/confirmWithAadhaarOtp` | Verify Aadhaar OTP 1 |
@@ -133,9 +133,9 @@ The calls themselves: where they live, what they need in their headers, and one 
 | `REQUEST-ID` | Unique UUID for track the end to end request transaction |
 | `TIMESTAMP` | Actual time of the request was initiated, ISO 8601 represents date and time by starting with the year, follow… |
 | `X-CM-ID` | Suffix of the consent manager to which the request was intended |
-| `x-hprid-auth` |  |
-| `x-hprid-auth-verifier` |  |
-| `X-Token` |  |
+| `x-hprid-auth` | The HPR token of the signed-in professional, from the HPR login. |
+| `x-hprid-auth-verifier` | The HPR token of the professional verifying the facility submission. |
+| `X-Token` | The HPR token of the signed-in professional, from the HPR login. |
 ## A request, in full
 
 ```bash

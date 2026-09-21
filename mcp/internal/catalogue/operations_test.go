@@ -355,9 +355,9 @@ func TestSpecErrorCodesFollowDocumentOrder(t *testing.T) {
 		got[c.Code] = c
 	}
 	for _, want := range []SpecErrorCode{
-		{Code: "900901", HTTP: "401", Message: "Invalid Credentials", OperationID: "m1_post_v3_enrollment_request_otp", Module: "m1"},
-		{Code: "900902", HTTP: "401", Message: "Missing Credentials", OperationID: "m1_post_v3_profile_benefit_search", Module: "m1"},
-		{Code: "ABDM-1211", HTTP: "400", Message: "User not found.", OperationID: "m1_post_v3_phr_web_login_abha_search", Module: "m1"},
+		{Code: "900901", HTTP: "401", Message: "Invalid Credentials", OperationID: "m1_post_v3_enrollment_request_otp_aadhaar_otp", Module: "m1"},
+		{Code: "900902", HTTP: "401", Message: "Missing Credentials", OperationID: "m1_post_v3_profile_benefit_search_xmluid", Module: "m1"},
+		{Code: "ABDM-1211", HTTP: "400", Message: "User not found.", OperationID: "m1_post_v3_phr_web_login_abha_search_abha_address_login_m_27a20f", Module: "m1"},
 	} {
 		if got[want.Code] != want {
 			t.Errorf("%s: got %+v, want %+v", want.Code, got[want.Code], want)

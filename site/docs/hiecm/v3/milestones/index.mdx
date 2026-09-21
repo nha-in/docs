@@ -2,7 +2,7 @@
 title: Milestones
 slug: /hiecm/v3/milestones
 sidebar_label: Milestones
-description: The four milestones spell CARE. Create, Attach, Retrieve, Enrol, in build order, plus the three PHR milestones and which ones you need.
+description: The four milestones, Create, Attach, Retrieve and Enrol, in build order, plus the three PHR milestones and which ones you need.
 covers: [hiecm.concept.roles]
 source: NHA content review of 15 September 2026 (landing page, ABDM Integration Milestones and Select Milestones)
 ---
@@ -17,39 +17,45 @@ ABDM integration is divided into milestones. These cover creation and
 verification of ABHA, linking of health records with an ABHA Address,
 consent-based exchange of health records, and native registration through the
 National Healthcare Professionals Registry. Integrators should implement the
-milestones applicable to their software. The four milestones spell CARE.
+milestones applicable to their software.
 
 ## In short
 
 <AcronymCards
-  label="The four milestones, CARE"
+  label="The four milestones"
   cards={[
     {
-      word: 'Create',
+      word: 'Identity',
       label: 'M1',
-      text: 'ABHA Creation and Verification',
+      text: 'Create and verify ABHA',
       to: '/docs/hiecm/v3/milestones/m1',
     },
     {
-      word: 'Attach',
+      word: 'Health Information Provider',
       label: 'M2',
-      text: 'Health Information Provider Services',
+      text: 'Create and link records',
       to: '/docs/hiecm/v3/milestones/m2',
     },
     {
-      word: 'Retrieve',
+      word: 'Health Information User',
       label: 'M3',
-      text: 'Health Information User Services',
+      text: 'Fetch data with consent',
       to: '/docs/hiecm/v3/milestones/m3',
     },
     {
-      word: 'Enrol',
+      word: 'Registry Integration',
       label: 'M4',
-      text: 'National Healthcare Providers Registry',
+      text: 'Register facilities and professionals',
       to: '/docs/hiecm/v3/milestones/m4',
     },
   ]}
 />
+
+Three workflows sit on top of the milestones and start at your counter QR code.
+[Scan and Register](/docs/hiecm/v3/use-cases/scan-and-register) belongs to M1,
+[Patient record share](/docs/hiecm/v3/use-cases/patient-record-share) to M3 and
+[Scan and Pay](/docs/hiecm/v3/use-cases/scan-and-pay) to M2. All
+are under [Use cases](/docs/hiecm/v3/use-cases).
 
 M2 needs a facility ID and registration in the HIP role before it can share a
 record. That ID does not have to come from M4. A facility can be registered by
@@ -67,38 +73,38 @@ be able to do for her, and one milestone that gives you it.
   label="Meera's journey through the four milestones"
   steps={[
     {
-      eyebrow: 'Milestone 1 · Create',
+      eyebrow: 'Milestone 1 · Identity',
       title: "Register Meera's ABHA",
       story:
         'Meera walks in without a health ID. Create her ABHA so every record from today onwards links to one identity.',
-      cta: 'Build M1 Create',
+      cta: 'Build M1',
       to: '/docs/hiecm/v3/milestones/m1',
       icon: 'user-plus',
     },
     {
-      eyebrow: 'Milestone 2 · Attach',
+      eyebrow: 'Milestone 2 · Health Information Provider',
       title: "Attach today's visit to her ABHA",
       story:
         "Her consultation note and her blood test are yours to hold. Group them into care contexts, link them to her ABHA address, and answer when her app comes looking.",
-      cta: 'Build M2 Attach',
+      cta: 'Build M2',
       to: '/docs/hiecm/v3/milestones/m2',
       icon: 'link-2',
     },
     {
-      eyebrow: 'Milestone 3 · Retrieve',
+      eyebrow: 'Milestone 3 · Health Information User',
       title: 'Retrieve the scan from another hospital',
       story:
         'Meera mentions a scan done last year, somewhere else. Ask her for consent, wait for her answer, then fetch and decrypt what she granted.',
-      cta: 'Build M3 Retrieve',
+      cta: 'Build M3',
       to: '/docs/hiecm/v3/milestones/m3',
       icon: 'download',
     },
     {
-      eyebrow: 'Milestone 4 · Enrol',
+      eyebrow: 'Milestone 4 · Registry Integration',
       title: 'Enrol the clinic and its doctors',
       story:
         'None of the above leaves sandbox until the clinic is a registered facility and its doctors hold professional IDs. Enrol both, then link your software to the facility.',
-      cta: 'Build M4 Enrol',
+      cta: 'Build M4',
       to: '/docs/hiecm/v3/milestones/m4',
       icon: 'building-2',
     },
@@ -167,10 +173,10 @@ services offered.
 
 | Milestone | What you get | Who needs it |
 | --- | --- | --- |
-| [M1 Create: ABHA Creation and Verification](/docs/hiecm/v3/milestones/m1) | Identity and the session token | Everyone |
-| [M2 Attach: Health Information Provider Services](/docs/hiecm/v3/milestones/m2) | Linking and sharing records | A facility publishing records, and a citizen pushing their own |
-| [M3 Retrieve: Health Information User Services](/docs/hiecm/v3/milestones/m3) | Consent and record fetching | Anyone reading records they did not create, and every PHR app |
-| [M4 Enrol: National Healthcare Providers Registry](/docs/hiecm/v3/milestones/m4) | A facility ID and professional registration | Anyone going live as a facility |
+| [M1 Identity: ABHA Creation and Verification](/docs/hiecm/v3/milestones/m1) | Identity and the session token | Everyone |
+| [M2 Health Information Provider: Health Information Provider Services](/docs/hiecm/v3/milestones/m2) | Linking and sharing records | A facility publishing records, and a citizen pushing their own |
+| [M3 Health Information User: Health Information User Services](/docs/hiecm/v3/milestones/m3) | Consent and record fetching | Anyone reading records they did not create, and every PHR app |
+| [M4 Registry Integration: National Healthcare Providers Registry](/docs/hiecm/v3/milestones/m4) | A facility ID and professional registration | Anyone going live as a facility |
 
 These pages give the steps, the order to build them in and the failure modes.
 Every request URL, header and body sits on the [API
@@ -178,6 +184,6 @@ reference](/docs/hiecm/v3/api) pages, one page per call.
 
 ## Next
 
-Start with [M1 Create](/docs/hiecm/v3/milestones/m1), or read [Go
+Start with [M1 Identity](/docs/hiecm/v3/milestones/m1), or read [Go
 live](/docs/hiecm/v3/getting-started/going-live) for what happens after the
 fourth certificate.

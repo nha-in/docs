@@ -20,8 +20,8 @@ const METHODS = ['get', 'post', 'put', 'patch', 'delete'];
 
 const MODULES = {
   gateway: {label: 'Gateway session', position: 1, icon: 'key-round', roles: ['his', 'phr'], title: 'ABDM gateway, sessions and bridges', summary: 'The access token every call carries, and the bridge registry.', servers: [{url: 'https://dev.abdm.gov.in', description: 'ABDM gateway, sandbox'}, {url: 'https://apis.abdm.gov.in', description: 'ABDM gateway, production'}], expected: 11},
-  m1: {label: 'M1 ABHA creation and verification', position: 2, icon: 'id-card', roles: ['his'], title: 'ABDM M1, ABHA creation and verification', summary: 'Create, find, log into and manage an ABHA.', servers: [{url: 'https://abhasbx.abdm.gov.in', description: 'ABHA service, sandbox'}], expected: 30},
-  m2: {label: 'M2 Health information provider services', position: 3, icon: 'link', roles: ['his'], title: 'ABDM M2, health information provider services as a HIP', summary: 'Link care contexts to an ABHA address and share records when consent arrives.', servers: [{url: 'https://dev.abdm.gov.in', description: 'ABDM gateway, sandbox'}, {url: 'https://apis.abdm.gov.in', description: 'ABDM gateway, production'}], expected: 21},
+  m1: {label: 'M1 ABHA creation and verification', position: 2, icon: 'id-card', roles: ['his'], title: 'ABDM M1, ABHA creation and verification', summary: 'Create, find, log into and manage an ABHA.', servers: [{url: 'https://abhasbx.abdm.gov.in', description: 'ABHA service, sandbox'}], expected: 121},
+  m2: {label: 'M2 Health information provider services', position: 3, icon: 'link', roles: ['his'], title: 'ABDM M2, health information provider services as a HIP', summary: 'Link care contexts to an ABHA address and share records when consent arrives.', servers: [{url: 'https://dev.abdm.gov.in', description: 'ABDM gateway, sandbox'}, {url: 'https://apis.abdm.gov.in', description: 'ABDM gateway, production'}], expected: 20},
   m3: {label: 'M3 Health information user services', position: 4, icon: 'file-check', roles: ['his'], title: 'ABDM M3, health information user services as an HIU', summary: 'Raise a consent request, fetch its artefacts, and receive records.', servers: [{url: 'https://dev.abdm.gov.in', description: 'ABDM gateway, sandbox'}, {url: 'https://apis.abdm.gov.in', description: 'ABDM gateway, production'}], expected: 12},
   m4: {label: 'M4 HPR and HFR', position: 5, icon: 'building-2', roles: ['his'], title: 'ABDM M4, professional and facility registries', summary: 'Register healthcare professionals and facilities on the NHPR.', servers: [{url: 'https://apihspsbx.abdm.gov.in/v4/int', description: 'NHPR, sandbox'}], expected: 100},
   p1: {label: 'P1 Registration and login', position: 6, icon: 'user-round', roles: ['phr'], title: 'ABDM P1, PHR registration and login', summary: 'Create an ABHA address in a PHR app and log in to it.', servers: [{url: 'https://abhasbx.abdm.gov.in', description: 'ABHA service, sandbox'}], expected: 11},
@@ -29,7 +29,8 @@ const MODULES = {
   p3: {label: 'P3 Subscription', position: 8, icon: 'bell', roles: ['phr'], title: 'ABDM P3, PHR subscriptions', summary: 'Read, approve, deny, enable, disable and update the patient\'s subscriptions and subscription requests.', servers: [{url: 'https://dev.abdm.gov.in', description: 'ABDM gateway, sandbox'}], expected: 8},
   p4: {label: 'P4 Locker', position: 9, icon: 'lock', roles: ['phr'], title: 'ABDM P4, health lockers', summary: 'Set up a health locker and list the lockers and requests on an ABHA address.', servers: [{url: 'https://dev.abdm.gov.in', description: 'ABDM gateway, sandbox'}], expected: 4},
   subscription: {label: 'Subscriptions', position: 10, icon: 'bell', roles: ['his'], title: 'ABDM subscriptions', summary: 'Subscribe an HIU to changes on an ABHA address.', servers: [{url: 'https://dev.abdm.gov.in', description: 'ABDM gateway, sandbox'}, {url: 'https://apis.abdm.gov.in', description: 'ABDM gateway, production'}], expected: 6},
-  'scan-and-pay': {label: 'Scan and Pay', position: 11, icon: 'qr-code', roles: ['his'], title: 'ABDM Scan and Pay', summary: 'Open orders, patient selection and payment status between a facility and a PHR app.', servers: [{url: 'https://dev.abdm.gov.in', description: 'ABDM gateway, sandbox'}, {url: 'https://apis.abdm.gov.in', description: 'ABDM gateway, production'}], expected: 18},
+  'scan-and-register': {label: 'Scan and Register', position: 11, icon: 'contact-round', section: 'use-cases', roles: ['his'], title: 'ABDM Scan and Register', summary: 'Receive the profile a patient shares by scanning the counter QR code, and hand back a queue token.', servers: [{url: 'https://dev.abdm.gov.in', description: 'ABDM gateway, sandbox'}, {url: 'https://apis.abdm.gov.in', description: 'ABDM gateway, production'}], expected: 2},
+  'scan-and-pay': {label: 'Scan and Pay', position: 13, icon: 'qr-code', section: 'use-cases', roles: ['his'], title: 'ABDM Scan and Pay', summary: 'Open orders, patient selection and payment status between a facility and a PHR app.', servers: [{url: 'https://dev.abdm.gov.in', description: 'ABDM gateway, sandbox'}, {url: 'https://apis.abdm.gov.in', description: 'ABDM gateway, production'}], expected: 18},
 };
 
 // The patient side follows NHA's PHR collection folders, P1 to P4, by tag.
@@ -46,11 +47,14 @@ const phrPlace = (tag, path) => (LOCKER.test(path) ? 'p4' : PHR_TAGS[tag]);
 // Which module an operation lands in. Returns null to drop it.
 const FILES = [
   {file: 'hiecm/gateway.yaml', place: () => 'gateway'},
-  {file: 'abha/M1 ABHA Swagger 1.yaml', place: (tag, path) => (path.includes('/gateway/') ? null : 'm1')},
+  // NHA reissued the M1 swagger on 22 September 2026 with one operation per
+  // use case: the path key carries a #use-case suffix, the real URL sits in
+  // x-actual-path, and the tags follow the M1 Postman collection.
+  {file: 'abha/ABHA Swagger split.yaml', set: 'nha-2026-09-22', fetched: '2026-09-22', titlesFromSummary: true, place: (tag, path) => (path.includes('/gateway/') ? null : 'm1')},
   {file: 'hiecm/hip-initiated-linking.yaml', place: byRole('m2')},
   {file: 'hiecm/user-initiated-linking.yaml', place: byRole('m2')},
   {file: 'hiecm/link-token.yaml', place: byRole('m2')},
-  {file: 'hiecm/patient-share.yaml', place: byRole('m2')},
+  {file: 'hiecm/patient-share.yaml', place: byRole('scan-and-register')},
   {file: 'hiecm/consent-management-data-flow.yaml', place: (tag, path) => (tag.endsWith('-phr') ? phrPlace(tag, path) : tag.endsWith('-hiu') ? 'm3' : 'm2')},
   {file: 'hiecm/subscription.yaml', place: (tag, path) => (tag === 'subscription-phr' || LOCKER.test(path) ? phrPlace(tag, path) : 'subscription')},
   {file: 'hiecm/scan-and-pay.yaml', place: (tag, path) => (tag.endsWith('-phr') ? phrPlace(tag, path) : 'scan-and-pay')},
@@ -97,11 +101,27 @@ function dedupeM4Components(doc, file) {
 // swagger names the gateway session for its operations (gateway, p1, p2), and
 // the M4 files carry their own token call. The other raw files name no source,
 // so their modules get no description rather than a guessed one.
+const GATEWAY_TOKEN = 'The access token from POST /api/hiecm/gateway/v3/sessions, sent with a `Bearer ` prefix.';
 const TOKEN_SOURCE = {
-  gateway: 'The access token from POST /api/hiecm/gateway/v3/sessions.',
-  p1: 'The access token from POST /api/hiecm/gateway/v3/sessions.',
-  p2: 'The access token from POST /api/hiecm/gateway/v3/sessions.',
   m4: 'M4 declares bearer authentication. The HPID calls publish POST /getManagementToken.',
+};
+// 10. Header descriptions NHA's files leave blank. One meaning per header,
+// applied only where the file gave none, so NHA's own wording always wins.
+const HEADER_DESC = {
+  'REQUEST-ID': 'A fresh UUID v4 for this request. Callbacks echo it as `response.requestId`, which is how a reply is matched to the request it answers.',
+  'TIMESTAMP': 'When the request was sent, in ISO 8601 UTC, for example `2026-09-22T10:15:00.000Z`.',
+  'X-CM-ID': 'The consent manager suffix: `sbx` in sandbox, `abdm` in production.',
+  'X-token': 'The user token from a login or enrolment response, sent with a `Bearer ` prefix. It acts for that ABHA holder.',
+  'T-token': 'The transaction token from the preceding login step, sent with a `Bearer ` prefix. It is valid only for that login.',
+  'R-token': 'The refresh token from a login response, sent with a `Bearer ` prefix, exchanged for a new user token.',
+  'BENEFIT_NAME': 'The benefit programme the call is made under.',
+  'TRANSACTION_ID': 'The `txnId` from the preceding enrolment step.',
+  'Content-Type': '`application/json`.',
+  'X-HIP-ID': 'Identifier of the health information provider to which the request was intended.',
+  'X-HIU-ID': 'Identifier of the health information user to which the request was intended.',
+  'x-hprid-auth': 'The HPR token of the signed-in professional, from the HPR login.',
+  'x-hprid-auth-verifier': 'The HPR token of the professional verifying the facility submission.',
+  'X-Token': 'The HPR token of the signed-in professional, from the HPR login.',
 };
 const sha = (p) => 'sha256:' + createHash('sha256').update(readFileSync(p)).digest('hex');
 const slug = (s) => s.toLowerCase().replace(/\{([^}]+)\}/g, '$1').replace(/[^a-z0-9]+/g, '_').replace(/^_+|_+$/g, '');
@@ -111,7 +131,7 @@ const note = (module, op, what) => log.push(`| ${module} | \`${op}\` | ${what} |
 const specs = Object.fromEntries(Object.entries(MODULES).map(([id, m]) => [id, {
   openapi: '3.1.1',
   info: {
-    'x-portal': {module: id, label: m.label, position: m.position, icon: m.icon},
+    'x-portal': {module: id, label: m.label, position: m.position, icon: m.icon, ...(m.section ? {section: m.section} : {})},
     title: m.title, summary: m.summary, version: 'abdm-v3',
     license: {name: 'MIT', identifier: 'MIT'},
     contact: {name: 'ABDM sandbox support', url: 'https://sandboxsupport.abdm.gov.in/'},
@@ -121,7 +141,7 @@ const specs = Object.fromEntries(Object.entries(MODULES).map(([id, m]) => [id, {
   servers: m.servers,
   security: id === 'gateway' ? [] : [{bearerAuth: []}],
   tags: [], paths: {}, webhooks: {},
-  components: {securitySchemes: {bearerAuth: {type: 'http', scheme: 'bearer', bearerFormat: 'JWT', ...(TOKEN_SOURCE[id] ? {description: TOKEN_SOURCE[id]} : {})}}},
+  components: {securitySchemes: {bearerAuth: {type: 'http', scheme: 'bearer', bearerFormat: 'JWT', description: TOKEN_SOURCE[id] ?? GATEWAY_TOKEN}}},
 }]));
 
 const seenPath = new Map();   // "METHOD path" -> module that first declared it
@@ -131,8 +151,8 @@ const ids = new Set();
 const order = Object.fromEntries(Object.keys(MODULES).map((id) => [id, []]));
 const normHeader = (name) => M1_HEADERS[name.toLowerCase()] ?? name;
 
-for (const {file, place} of FILES) {
-  const full = join(RAW, file);
+for (const {file, place, set = 'nha-2026-09-16', fetched = '2026-09-16', titlesFromSummary = false} of FILES) {
+  const full = join(RAW, '..', set, file);
   const doc = file.endsWith('.json') ? JSON.parse(readFileSync(full, 'utf8')) : parse(readFileSync(full, 'utf8'));
   if (file.startsWith('M4/')) dedupeM4Components(doc, file);
   const touched = new Set();
@@ -142,10 +162,13 @@ for (const {file, place} of FILES) {
       if (!op) continue;
       const tag = (op.tags ?? ['untagged'])[0];
       const module = place(tag, path);
-      const key = `${method.toUpperCase()} ${path.replace(/^\/(abha\/api|api\/hiecm)/, '').replace(/\{[^}]+\}/g, '{}')}`;
-      if (seenPath.has(key)) { const first = seenPath.get(key); note(first.module, key, `dropped from ${file}: already declared by ${first.file} in the ${first.module} module`); continue; }
+      // The key ignores a #use-case suffix, so a later file's plain path is
+      // still dropped against the M1 swagger's split of the same path, while
+      // one file may declare several use cases of one path.
+      const key = `${method.toUpperCase()} ${path.replace(/#.*$/, '').replace(/^\/(abha\/api|api\/hiecm)/, '').replace(/\{[^}]+\}/g, '{}')}`;
+      if (seenPath.has(key) && seenPath.get(key).file !== file) { const first = seenPath.get(key); note(first.module, key, `dropped from ${file}: already declared by ${first.file} in the ${first.module} module`); continue; }
       if (!module || !MODULES[module]) throw new Error(`${file}: ${method.toUpperCase()} ${path} has tag "${tag}", which no module takes`);
-      seenPath.set(key, {file, module});
+      if (!seenPath.has(key)) seenPath.set(key, {file, module});
       touched.add(module);
       const spec = specs[module];
       const copy = structuredClone(op);
@@ -162,6 +185,10 @@ for (const {file, place} of FILES) {
       copy.operationId = id;
       if (nhaId) copy['x-abdm-nha-operation-id'] = nhaId;
       note(module, id, nhaId ? `operationId was \`${nhaId}\`` : 'operationId added, NHA had none');
+      // The reissued M1 swagger writes each summary as a name, not as a
+      // sentence of documentation, so it is the page title as written rather
+      // than run through the sentence-to-title rules.
+      if (titlesFromSummary && copy.summary && !copy['x-abdm-title']) copy['x-abdm-title'] = copy.summary;
       // 3. M4 summaries
       if (module === 'm4' && !copy.summary) {
         copy.summary = (nhaId ?? slug(path)).replace(/([a-z])([A-Z])/g, '$1 $2').replace(/_/g, ' ').replace(/^./, (c) => c.toUpperCase());
@@ -219,7 +246,7 @@ for (const {file, place} of FILES) {
         specs[module].components[kind][name] = def;
       }
     }
-    specs[module]['x-abdm-sources'].push({file: `catalogue/openapi/.raw/nha-2026-09-16/${file}`, role: 'upstream', hash: sha(full), fetched: '2026-09-16'});
+    specs[module]['x-abdm-sources'].push({file: `catalogue/openapi/.raw/${set}/${file}`, role: 'upstream', hash: sha(full), fetched});
   }
 }
 
@@ -264,6 +291,267 @@ specs.m1['x-abdm-sources'].push({file: 'catalogue/openapi/.raw/nha-2026-09-16/ab
   describeKeyMaterial(specs.m2.webhooks?.['/api/v3/hip/health-information/request']?.post?.requestBody?.content?.['application/json']?.schema, 'callback POST /api/v3/hip/health-information/request');
 }
 
+// 10. NHA's AI sandbox observations, 21 September 2026, on the M1 reference
+// pages: the session API named Keycloak and described its credentials with a
+// broken sentence, the public key call said what it returned rather than what
+// the key is for, and the search call's scope carried only an example.
+{
+  const sessions = specs.gateway.paths['/api/hiecm/gateway/v3/sessions']?.post;
+  if (sessions) {
+    sessions.summary = 'This API is invoked to generate access token.';
+    const props = sessions.requestBody?.content?.['application/json']?.schema?.properties ?? {};
+    if (props.clientId) props.clientId.description = 'The client ID issued to the integrator by ABDM at registration.';
+    if (props.clientSecret) props.clientSecret.description = 'The client secret issued to the integrator by ABDM along with the client ID.';
+    note('gateway', 'POST /api/hiecm/gateway/v3/sessions', 'summary no longer names Keycloak, and clientId and clientSecret are described as the credentials issued to the integrator; the raw file says "Mandatory when the clientId." for both. NHA review, 21 September 2026');
+  }
+  const certificate = specs.m1.paths['/abha/api/v3/profile/public/certificate']?.get;
+  if (certificate) {
+    certificate.description = 'This API is used to fetch the public key used for encryption of Aadhaar, OTP, mobile and other fields which require encryption.';
+    note('m1', 'GET /abha/api/v3/profile/public/certificate', 'description says what the key is for, encryption of Aadhaar, OTP, mobile and other fields; the raw file says it returns the key and algorithm. NHA review, 21 September 2026');
+  }
+  // The use-case split swagger of 22 September declares the search call once
+  // per Find ABHA route, each under the same path with a fragment, so every
+  // variant takes the edit.
+  for (const [path, item] of Object.entries(specs.m1.paths)) {
+    if (!path.startsWith('/abha/api/v3/profile/account/abha/search')) continue;
+    const scope = item.post?.requestBody?.content?.['application/json']?.schema?.properties?.scope;
+    if (!scope) continue;
+    scope.description = 'The scope of the request. Use search-abha.';
+    scope.items = {...(scope.items ?? {type: 'string'}), enum: ['search-abha']};
+    note('m1', `POST ${path}`, 'scope described and constrained to search-abha; the raw file carried only the example. NHA review, 21 September 2026');
+  }
+  // "Description of all body parameters should be there." Six field names in
+  // the reissued M1 swagger carry an example and no description. Each is
+  // described once here, in the words the flow gives it, and only where the
+  // raw file left it blank.
+  const M1_FIELDS = {
+    txnId: 'The transaction ID returned by the previous call in this flow.',
+    abhaAddress: 'The ABHA address chosen for the account, without the @ suffix.',
+    preferred: '1 to make this the preferred ABHA address of the account, 0 otherwise.',
+    scope: 'The scopes of the request, which name the flow this call belongs to.',
+    ABHANumber: 'The 14 digit ABHA number to sign in to, chosen from the accounts the previous call listed.',
+    mobile: 'The mobile number, encrypted with the public key from GET /abha/api/v3/profile/public/certificate.',
+  };
+  let described = 0;
+  const describe = (schema) => {
+    if (!schema || typeof schema !== 'object') return;
+    for (const [name, prop] of Object.entries(schema.properties ?? {})) {
+      if (!prop.description && M1_FIELDS[name]) {
+        prop.description = M1_FIELDS[name];
+        described++;
+      }
+      describe(prop);
+      describe(prop.items);
+    }
+  };
+  for (const item of Object.values(specs.m1.paths)) {
+    for (const method of METHODS) describe(item[method]?.requestBody?.content?.['application/json']?.schema);
+  }
+  if (described) note('m1', 'request bodies', `${described} body fields described (${Object.keys(M1_FIELDS).join(', ')}); the raw file carried only an example for each. NHA review, 21 September 2026`);
+}
+
+// 11. The HIP calls health-information/notify after pushing the data, so the
+// operation belongs on the M2 list as well as the M3 one. NHA declares it
+// once, under the HIU tag, so it is copied rather than moved (NHA's M2 API
+// review of 21 September 2026 lists it under M2 as "Not Found").
+{
+  const NOTIFY = '/api/hiecm/data-flow/v3/health-information/notify';
+  const notify = specs.m3.paths[NOTIFY]?.post;
+  if (notify) {
+    const copy = structuredClone(notify);
+    copy.operationId = 'm2_post_data_flow_v3_health_information_notify';
+    ids.add(copy.operationId);
+    specs.m2.paths[NOTIFY] = {post: copy};
+    for (const t of copy.tags ?? []) if (!specs.m2.tags.some((x) => x.name === t)) specs.m2.tags.push({name: t, description: ''});
+    note('m2', copy.operationId, 'copied from m3: the HIP sends this notification after the data push, and NHA\'s review of 21 September 2026 lists it under M2');
+  }
+}
+
+// 12. NHA's review of the M2 and M3 API pages, 15 and 21 September 2026.
+// On link/context/notify the HIP block marked id, name and type required and
+// NHA answered "only one is required, not all". The consent request init
+// example still sent the HIU name the schema no longer requires. The HIP's
+// on-request acknowledgement is an anyOf with no example, so its curl rendered
+// "<VALUE>". The success examples of the linking replies carried an error
+// object beside the success fields. And every M2 and M3 callback is declared
+// at module level without naming the call it belongs to.
+{
+  const body = (op) => op?.requestBody?.content?.['application/json'];
+  const hip = body(specs.m2.paths['/api/hiecm/hip/v3/link/context/notify']?.post)?.schema?.properties?.notification?.properties?.hip;
+  if (hip) {
+    hip.required = ['id'];
+    hip.description = 'The HIP that linked the care context. Only id is required.';
+    note('m2', 'POST /api/hiecm/hip/v3/link/context/notify', 'notification.hip requires id only; the raw file required id, name and type. NHA review, 15 September 2026');
+  }
+  const hiu = body(specs.m3.paths['/api/hiecm/consent/v3/request/init']?.post)?.schema?.properties?.consent?.properties?.hiu;
+  if (hiu?.properties?.id?.example !== undefined) {
+    hiu.example = {id: hiu.properties.id.example};
+    note('m3', 'POST /api/hiecm/consent/v3/request/init', 'the example sends hiu with id only, as the schema requires; the raw file also sent name and type. NHA review, 15 September 2026');
+  }
+  const onRequest = body(specs.m2.paths['/api/hiecm/data-flow/v3/health-information/hip/on-request']?.post);
+  const success = onRequest?.schema?.anyOf?.[0]?.properties;
+  if (onRequest && onRequest.example === undefined && success?.hiRequest && success?.response) {
+    onRequest.example = {
+      hiRequest: {transactionId: success.hiRequest.properties.transactionId.example, sessionStatus: success.hiRequest.properties.sessionStatus.example},
+      response: {requestId: success.response.properties.requestId.example},
+    };
+    note('m2', 'POST /api/hiecm/data-flow/v3/health-information/hip/on-request', 'request example taken from the success branch of the anyOf; the raw file carried none, so the curl rendered a placeholder. NHA review, 15 September 2026');
+  }
+  // A success example without the error object. The reference build samples
+  // a request from the schema's examples, and a string with no example
+  // becomes a named placeholder, so the error object appears in every curl
+  // unless the media type carries its own example.
+  const sample = (schema, name = '') => {
+    if (!schema) return undefined;
+    if (schema.example !== undefined) return schema.example;
+    if (Array.isArray(schema.enum) && schema.enum.length) return schema.enum[0];
+    const type = schema.type ?? (schema.properties ? 'object' : schema.items ? 'array' : 'string');
+    if (type === 'object') {
+      const out = {};
+      for (const [k, v] of Object.entries(schema.properties ?? {})) {
+        if (k === 'error') continue;
+        const val = sample(v, k);
+        if (val !== undefined) out[k] = val;
+      }
+      return Object.keys(out).length ? out : undefined;
+    }
+    if (type === 'array') { const item = sample(schema.items, name); return item === undefined ? [] : [item]; }
+    if (type === 'integer' || type === 'number') return 0;
+    if (type === 'boolean') return false;
+    return `<${(name || 'value').replace(/([a-z0-9])([A-Z])/g, '$1_$2').replace(/[^A-Za-z0-9]+/g, '_').toUpperCase()}>`;
+  };
+  const dropErrorExample = (module, path) => {
+    const media = body(specs[module].paths[path]?.post);
+    if (!media?.schema?.properties?.error || media.example !== undefined) return;
+    media.example = sample(media.schema);
+    note(module, `POST ${path}`, 'the request example carries the success fields only, as NHA\'s corrected curl does; the body table still lists error. NHA review, 15 September 2026');
+  };
+  for (const path of ['/api/hiecm/user-initiated-linking/v3/patient/care-context/on-discover', '/api/hiecm/user-initiated-linking/v3/link/care-context/on-init', '/api/hiecm/user-initiated-linking/v3/link/care-context/on-confirm', '/api/hiecm/consent/v3/request/hip/on-notify']) dropErrorExample('m2', path);
+  // Which call each callback belongs to. triggered-by: the integrator's call
+  // that produces it. answered-by: the integrator's call that replies to it.
+  const PAIRS = {
+    m2: {
+      '/api/v3/hip/token/on-generate-token': ['x-abdm-triggered-by', 'm2_post_v3_token_generate_token'],
+      '/api/v3/link/on_carecontext': ['x-abdm-triggered-by', 'm2_post_hip_v3_link_carecontext'],
+      '/api/v3/links/context/on-notify': ['x-abdm-triggered-by', 'm2_post_hip_v3_link_context_notify'],
+      '/api/v3/patients/sms/on-notify': ['x-abdm-triggered-by', 'm2_post_hip_v3_link_patient_links_sms_notify2'],
+      '/api/v3/hip/patient/care-context/discover': ['x-abdm-answered-by', 'm2_post_user_initiated_linking_v3_patient_care_context_on_8c9340'],
+      '/api/v3/hip/link/care-context/init': ['x-abdm-answered-by', 'm2_post_user_initiated_linking_v3_link_care_context_on_init'],
+      '/api/v3/hip/link/care-context/confirm': ['x-abdm-answered-by', 'm2_post_user_initiated_linking_v3_link_care_context_on_confirm'],
+      '/api/v3/hip/health-information/request': ['x-abdm-answered-by', 'm2_post_data_flow_v3_health_information_hip_on_request'],
+    },
+    p2: {
+      '/api/v3/hiu/patient/care-context/on-discover': ['x-abdm-triggered-by', 'p2_post_user_initiated_linking_v3_patient_care_context_discover'],
+      '/api/v3/hiu/patient/care-context/on-init': ['x-abdm-triggered-by', 'p2_post_user_initiated_linking_v3_link_care_context_init'],
+      '/api/v3/hiu/patient/care-context/on-confirm': ['x-abdm-triggered-by', 'p2_post_user_initiated_linking_v3_link_care_context_confirm'],
+      '/api/v3/hiu/patient/on-share': ['x-abdm-triggered-by', 'p2_post_patient_share_v3_share'],
+    },
+    'scan-and-register': {
+      '/api/v3/hip/patient/share': ['x-abdm-answered-by', 'scan-and-register_post_patient_share_v3_on_share'],
+    },
+    subscription: {
+      '/api/v3/hiu/hiecm/subscription-requests/on-init': ['x-abdm-triggered-by', 'subscription_post_subscription_requests_v3_init'],
+      '/api/v3/hiu/subscription-requests/hiu/notify': ['x-abdm-answered-by', 'subscription_post_subscription_requests_v3_hiu_on_notify'],
+      '/api/v3/hiu/subscription/notify': ['x-abdm-answered-by', 'subscription_post_subscription_requests_v3_hiu_care_conte_96bc45'],
+    },
+    'scan-and-pay': {
+      '/v3/patient/share/open-order': ['x-abdm-answered-by', 'scan-and-pay_post_scan_gateway_v3_patient_on_share_open_order'],
+      '/v3/patient/selection': ['x-abdm-answered-by', 'scan-and-pay_post_scan_gateway_v3_patient_on_selection'],
+      '/v3/patient/scan-pay/on-notify': ['x-abdm-triggered-by', 'scan-and-pay_post_scan_gateway_v3_patient_scan_pay_notify'],
+      '/v3/patient/scan-pay/order-status': ['x-abdm-answered-by', 'scan-and-pay_post_scan_gateway_v3_patient_scan_pay_on_ord_21f376'],
+      '/v3/patient/on-share/open-order': ['x-abdm-triggered-by', 'scan-and-pay_post_scan_gateway_v3_patient_share_open_order'],
+      '/v3/patient/on-selection': ['x-abdm-triggered-by', 'scan-and-pay_post_scan_gateway_v3_patient_selection'],
+      '/v3/patient/scan-pay/notify': ['x-abdm-answered-by', 'scan-and-pay_post_scan_gateway_v3_patient_scan_pay_on_notify'],
+      '/v3/patient/scan-pay/on-order-status': ['x-abdm-triggered-by', 'scan-and-pay_post_scan_gateway_v3_patient_scan_pay_order_status'],
+    },
+    m3: {
+      '/api/v3/hiu/consent/request/on-init': ['x-abdm-triggered-by', 'm3_post_consent_v3_request_init'],
+      '/api/v3/hiu/consent/request/on-status': ['x-abdm-triggered-by', 'm3_post_consent_v3_request_status'],
+      '/api/v3/hiu/consent/request/notify': ['x-abdm-answered-by', 'm3_post_consent_v3_request_hiu_on_notify'],
+      '/api/v3/hiu/consent/on-fetch': ['x-abdm-triggered-by', 'm3_post_consent_v3_fetch'],
+      '/api/v3/hiu/health-information/on-request': ['x-abdm-triggered-by', 'm3_post_data_flow_v3_health_information_request'],
+    },
+  };
+  for (const [module, pairs] of Object.entries(PAIRS)) {
+    for (const [path, [key, target]] of Object.entries(pairs)) {
+      const hook = specs[module].webhooks?.[path]?.post;
+      if (!hook) throw new Error(`${module}: webhook ${path} not found for pairing`);
+      if (!ids.has(target)) throw new Error(`${module}: ${target} not found for pairing ${path}`);
+      hook[key] = target;
+    }
+    note(module, 'webhooks', `every callback names the call it belongs to (x-abdm-triggered-by or x-abdm-answered-by); the raw file declares them at module level with no pairing. NHA review, 15 September 2026`);
+  }
+}
+
+// 13. NHA's PHR V3 document, the final source for the PHR application
+// services. The PHR swagger names a security scheme, apiKeyAuth, that it
+// never defines, so every PHR call it marks rendered with no Authorization
+// header; the document marks the gateway session token mandatory on each.
+// The document marks every body field of the /phr/app calls required, and
+// the swagger marks none. Three profile reads take X-AUTH-TOKEN beside
+// X-token. excludedSources on approving a subscription is optional. And the
+// redaction pass had turned encrypted mobile numbers, login ids, OTPs and
+// passwords into the photograph placeholder.
+{
+  const PHR = '/abha/api/v3/phr/app/';
+  for (const module of ['p1', 'p2']) {
+    let fixed = 0;
+    for (const [path, item] of Object.entries(specs[module].paths)) {
+      for (const method of METHODS) {
+        const op = item[method];
+        if (!op) continue;
+        if (Array.isArray(op.security) && op.security.some((s) => 'apiKeyAuth' in s)) {
+          op.security = op.security.map((s) => ('apiKeyAuth' in s ? {bearerAuth: []} : s));
+          fixed++;
+        }
+      }
+    }
+    if (fixed) note(module, 'security', `${fixed} operations named apiKeyAuth, a scheme the raw file never defines; they carry the gateway session token as bearerAuth, as the PHR V3 document marks Authorization mandatory on each`);
+    let required = 0;
+    for (const [path, item] of Object.entries(specs[module].paths)) {
+      if (!path.startsWith(PHR)) continue;
+      const schema = item.post?.requestBody?.content?.['application/json']?.schema;
+      if (!schema?.properties || schema.required) continue;
+      schema.required = Object.keys(schema.properties).filter((k) => !(path.endsWith('/enrollment/suggestion') && k === 'email'));
+      required++;
+    }
+    if (required) note(module, 'request bodies', `${required} /phr/app request bodies mark their fields required, as the PHR V3 document does; the raw file marked none. email on the address suggestion stays optional, since the document's own request omits it`);
+    let placeholders = 0;
+    const scrub = (node, key) => {
+      if (Array.isArray(node)) return node.forEach((n) => scrub(n, key));
+      if (!node || typeof node !== 'object') return;
+      for (const [k, v] of Object.entries(node)) {
+        if (v === '<BASE64_PHOTO>' && !/photo/i.test(k)) {
+          node[k] = `<ENCRYPTED_${k.replace(/([a-z0-9])([A-Z])/g, '$1_$2').toUpperCase()}>`;
+          placeholders++;
+        } else scrub(v, k);
+      }
+    };
+    scrub(specs[module].paths);
+    if (placeholders) note(module, 'examples', `${placeholders} encrypted values (mobile, loginId, otpValue, password) read <BASE64_PHOTO> after redaction and now read a placeholder named for the field`);
+  }
+  for (const path of ['/abha/api/v3/phr/app/login/profile', '/abha/api/v3/phr/app/login/profile/qrCode', '/abha/api/v3/phr/app/login/profile/phrCard']) {
+    const op = specs.p2.paths[path]?.get;
+    if (!op) continue;
+    op.parameters ??= [];
+    if (!op.parameters.some((x) => x.name === 'X-AUTH-TOKEN')) {
+      op.parameters.push({name: 'X-AUTH-TOKEN', in: 'header', required: true, schema: {type: 'string'}, description: 'The user token issued at login. Send it beside X-token.'});
+      note('p2', `GET ${path}`, 'X-AUTH-TOKEN header added; the PHR V3 document marks it mandatory beside X-token and the raw file declares X-token only');
+    }
+  }
+  const approve = specs.p3.paths['/api/hiecm/subscription-requests/v3/{request-id}/approve']?.post?.requestBody?.content?.['application/json']?.schema;
+  const walkRequired = (schema) => {
+    if (!schema || typeof schema !== 'object') return;
+    if (Array.isArray(schema.required) && schema.required.includes('excludedSources')) {
+      schema.required = schema.required.filter((k) => k !== 'excludedSources');
+      note('p3', 'POST /api/hiecm/subscription-requests/v3/{request-id}/approve', 'excludedSources is optional, as the PHR V3 document marks it; the raw file required it');
+    }
+    for (const v of Object.values(schema.properties ?? {})) walkRequired(v);
+    walkRequired(schema.items);
+  };
+  walkRequired(approve);
+}
+
 for (const [id, m] of Object.entries(MODULES)) {
   const count = Object.values(specs[id].paths).reduce((n, i) => n + METHODS.filter((x) => i[x]).length, 0) + Object.values(specs[id].webhooks).reduce((n, i) => n + METHODS.filter((x) => i[x]).length, 0);
   if (count !== m.expected) throw new Error(`${id}: ${count} operations, expected ${m.expected}`);
@@ -298,6 +586,24 @@ if (journeysMode) {
 // YAML 1.1 readers resolve an unquoted 2026-09-16 or 1991-24-04 as a timestamp,
 // which loses the string NHA wrote and, on an impossible month, fails the load.
 const DATEISH = /^\d{4}-\d{1,2}-\d{1,2}([Tt ].*)?$|^\d{1,2}-\d{1,2}-\d{4}$/;
+// 10. Fill the header descriptions NHA left blank, every module, paths and
+// webhooks alike. Logged per operation so the log shows what the file lacked.
+for (const [module, spec] of Object.entries(specs)) {
+  for (const group of [spec.paths, spec.webhooks]) {
+    for (const item of Object.values(group ?? {})) {
+      for (const method of METHODS) {
+        const op = item[method];
+        if (!op) continue;
+        const filled = [];
+        for (const p of op.parameters ?? []) {
+          if (p.in === 'header' && !p.description && HEADER_DESC[p.name]) { p.description = HEADER_DESC[p.name]; filled.push(`\`${p.name}\``); }
+        }
+        if (filled.length) note(module, op.operationId, `header description added for ${filled.join(', ')}; NHA gave none`);
+      }
+    }
+  }
+}
+
 const emit = (spec) => {
   const doc = new Document(spec);
   visit(doc, {Scalar(_, node) { if (typeof node.value === 'string' && DATEISH.test(node.value)) node.type = 'QUOTE_DOUBLE'; }});

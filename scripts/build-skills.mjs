@@ -317,6 +317,18 @@ const MODULES = [
     rules: [UNVERIFIED],
   },
   {
+    id: 'scan-and-register',
+    slug: 'abdm-scan-and-register',
+    title: 'Scan and register',
+    docs: '/docs/hiecm/v3/use-cases/scan-and-register',
+    spec: 'hiecm-scan-and-register.yaml',
+    journey: null,
+    example: 'Register the patient who just scanned the counter QR code and hand them a token',
+    description:
+      'Use when building, debugging or testing ABDM scan and register: receiving the profile a patient shares by QR code at a counter and answering with a queue token.',
+    rules: [UNVERIFIED],
+  },
+  {
     id: 'scan-and-pay',
     slug: 'abdm-scan-and-pay',
     title: 'Scan and pay',
@@ -326,6 +338,18 @@ const MODULES = [
     example: 'Open an order at this counter and take payment from a PHR app',
     description:
       'Use when building, debugging or testing ABDM scan and pay: open orders, patient selection and payment status between a facility and a PHR app.',
+    rules: [UNVERIFIED],
+  },
+  {
+    id: 'record-share',
+    slug: 'abdm-record-share',
+    title: 'Patient scan and record share',
+    docs: '/docs/hiecm/v3/api/record-share',
+    spec: 'hiecm-record-share.yaml',
+    journey: null,
+    example: 'Receive the records a patient shares from a PHR app after scanning our QR code',
+    description:
+      'Use when building, debugging or testing ABDM patient scan and record share: a PHR app shares chosen records with an HIU after scanning its QR code, on either side.',
     rules: [UNVERIFIED],
   },
 ];
@@ -487,7 +511,7 @@ function build(module, url) {
     lines.push('| --- | --- | --- | --- |');
     for (const entry of codes) {
       lines.push(
-        `| \`${entry.code}\` | ${entry.http} | ${cell(entry.message)} | \`${entry.operationId}\` |`,
+        `| \`${entry.code}\` | ${entry.http || ''} | ${cell(entry.message)} | ${entry.operationId ? `\`${entry.operationId}\`` : "NHA's list for the module"} |`,
       );
     }
     lines.push('');

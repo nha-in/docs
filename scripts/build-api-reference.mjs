@@ -348,6 +348,10 @@ for (const {platform, version, files} of tree) {
         // stylesheet gives every other group, so a new specification renders
         // correctly before anyone has picked its icon.
         icon: portal.icon,
+        // Optional. 'use-cases' moves the module under a Use cases group in
+        // the API sidebar (site/docusaurus.config.ts), beside the milestones
+        // rather than among them.
+        section: portal.section,
         dir: portal.module ?? stem,
         file: file.name,
         route: `/reference/${stem}`,
@@ -403,13 +407,16 @@ for (const {platform, version, files} of tree) {
   // silence means, and each module's errors page lists the codes it returns,
   // and none of it was linked from the place the reader meets the failure.
   // Only HIE-CM v3 has those pages, so only it gets the links.
-  const helpFor = (status, moduleDir) => {
+  const SYNCHRONOUS_202 = new Set(['gateway_post_gateway_v3_sessions']);
+  const helpFor = (status, moduleDir, operationId) => {
     if (!isHiecmV3) return undefined;
     const troubleshooting = (name) => `/docs/${platform}/${version}/troubleshooting/${name}`;
     if (status === '401') {
       return {label: 'Everything returns 401', href: troubleshooting('everything-returns-401')};
     }
-    if (status === '202') {
+    // The session API answers its 202 with the token in the body. No callback
+    // follows, so the callback page would mislead (NHA review, September 2026).
+    if (status === '202' && !SYNCHRONOUS_202.has(operationId)) {
       return {label: 'The callback never arrives', href: troubleshooting('callback-never-arrives')};
     }
     // Only a module that gets an errors page (see the error pages below) is
@@ -557,7 +564,7 @@ for (const {platform, version, files} of tree) {
       return [
         '## Where this fits',
         '',
-        `\`${moduleFile}\` declares this callback at module level and names no call against it. Which call produces it is not documented, so this page does not say.`,
+        'This callback arrives in the journey listed above. The call that produces it is not yet published; take the order from the journey.',
         '',
       ];
     }
@@ -648,7 +655,7 @@ for (const {platform, version, files} of tree) {
         example:
           firstExample(response.content) ??
           sampleFromSchema(response.content?.['application/json']?.schema),
-        help: helpFor(status, module.dir),
+        help: helpFor(status, module.dir, op.operationId),
       }));
 
       const id = op.operationId ?? slug(`${entry.method}-${entry.path}`);
@@ -666,7 +673,10 @@ for (const {platform, version, files} of tree) {
         moduleId: module.id,
         kind: entry.kind,
         method: entry.method.toUpperCase(),
-        path: entry.path,
+        // The M1 swagger keys one operation per use case as <path>#<use-case>.
+        // The suffix is never sent to the server; the real URL is in
+        // x-actual-path, and that is what the page, the curl and the samples show.
+        path: op['x-actual-path'] ?? entry.path.replace(/#.*$/, ''),
         // A callback is ABDM calling you. Its examples run against the URL
         // registered for your bridge, never against the gateway host, which
         // is what a curl against dev.abdm.gov.in wrongly suggested.
@@ -678,8 +688,8 @@ for (const {platform, version, files} of tree) {
         // this carries the name. Always an instruction starting with a verb.
         // `x-abdm-title` overrides it where NHA's summary names nothing a rule
         // can rescue. See scripts/lib/titles.mjs.
-        title: titleOverrides[id]
-          ? caseTerms(titleOverrides[id])
+        title: (titleOverrides[id] ?? op['x-abdm-title'])
+          ? caseTerms(titleOverrides[id] ?? op['x-abdm-title'])
           : imperative(cleanTitle(op.summary, {path: entry.path, method: entry.method}), {
               method: entry.method,
               kind: entry.kind,
@@ -805,7 +815,10 @@ for (const {platform, version, files} of tree) {
         writeFileSync(join(dataDir, `${dataName}.json`), `${JSON.stringify(stepped, null, 2)}\n`);
         const dir = join(docsDir, module.dir, 'endpoints', journey.id);
         mkdirSync(dir, {recursive: true});
-        const title = `${i + 1}. ${stepped.title}${step.optional ? ' (optional)' : ''}`;
+        // NHA's own titles already say "(optional)" where a step is; the
+        // journey flag adds it only where the title does not.
+        const optional = step.optional && !/\(optional\)\s*$/i.test(stepped.title) ? ' (optional)' : '';
+        const title = `${i + 1}. ${stepped.title}${optional}`;
         writeFileSync(join(dir, `${nn}-${slug(step.op)}.mdx`), [
           '---',
           // The step number stays in the id. Docusaurus strips an "NN-" file
@@ -844,6 +857,7 @@ for (const {platform, version, files} of tree) {
           ...(module.icon && {
             className: `sidebar-icon sidebar-icon--${module.icon}`,
           }),
+          ...(module.section && {customProps: {section: module.section}}),
         },
         null,
         2,

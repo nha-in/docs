@@ -9,7 +9,10 @@ import {fileURLToPath} from 'node:url';
 import {createHash} from 'node:crypto';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
-const RAW = join(root, 'catalogue', 'openapi', '.raw', 'nha-2026-09-16');
+// The raw set to redact. NHA's final set of 16 September is the default; a
+// later drop names its own dated folder: RAW_SET=nha-2026-09-22.
+const SET = process.env.RAW_SET ?? 'nha-2026-09-16';
+const RAW = join(root, 'catalogue', 'openapi', '.raw', SET);
 const MANIFEST = join(RAW, 'MANIFEST.md');
 // One policy for the whole raw set. The shapes that carried personal data in
 // the three files redacted first also sat in files the manifest had called
@@ -229,13 +232,17 @@ for (const file of walk(RAW).sort()) {
   rows.push({rel, committed: sha(after), original, redactions});
 }
 
+const TITLES = {
+  'nha-2026-09-16': ['# NHA final set, 16 September 2026', 'The M1 collection of 15 September sits beside the set because it supplies the order of M1 calls, and nothing else.'],
+  'nha-2026-09-22': ['# NHA M1 swagger, use-case split, 22 September 2026', 'One file: the M1 swagger NHA reissued with one operation per use case, tags following the M1 Postman collection, and the real URL of each operation in x-actual-path. It replaces abha/M1 ABHA Swagger 1.yaml of the 16 September set as the M1 source.'],
+};
+const [title, extra] = TITLES[SET] ?? [`# NHA raw set ${SET}`, ''];
 const lines = [
-  '# NHA final set, 16 September 2026',
+  title,
   '',
   'Every file NHA supplied, with the sha256 of the bytes committed here. Every one of them is redacted by the same rules, because sandbox tokens, mobile numbers, ABHA numbers and addresses, HPR identifiers, photographs and internal hostnames turned up across the set rather than in a few files. Each row records the sha256 of the original bytes so a reissued file can be matched, and the originals are held outside git.',
   '',
-  'The M1 collection of 15 September sits beside the set because it supplies the order of M1 calls, and nothing else.',
-  '',
+  ...(extra ? [extra, ''] : []),
   '| File | sha256 committed | sha256 original | Redactions |',
   '| --- | --- | --- | --- |',
   ...rows.map((r) => `| \`${r.rel}\` | \`${r.committed}\` | \`${r.original}\` | ${r.redactions} |`),

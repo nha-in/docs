@@ -1,6 +1,6 @@
 ---
-title: 'M1 Create: ABHA Creation and Verification'
-sidebar_label: M1 Create
+title: 'M1 Identity: Create and verify ABHA'
+sidebar_label: M1 Identity
 sidebar_position: 1
 sidebar_custom_props:
   roles: [ims, phr]
@@ -13,7 +13,7 @@ import ApiLinks from '@site/src/components/docs/ApiLinks';
 import SkillInstall from '@site/src/components/docs/SkillInstall';
 import LegacyAnchor from '@site/src/components/mdx/LegacyAnchor';
 
-# M1 Create: ABHA Creation and Verification
+# M1 Identity: Create and verify ABHA
 
 Milestone 1 focuses on the creation and management of
 [ABHA](/docs/hiecm/v3/getting-started/glossary#abha), the unique health identifier under
@@ -56,7 +56,15 @@ health record sharing is performed as part of this milestone.
 | ABHA creation | Support creation of ABHA and associated identifiers in accordance with ABDM onboarding and verification workflows. |
 | ABHA login | Authenticate an ABHA holder using approved identifiers and authentication mechanisms, including mobile number, ABHA number, or ABHA address, as applicable. |
 | Profile management | Retrieve and manage ABHA profile information, display ABHA credentials and QR codes, update eligible profile attributes, and support re-verification workflows where applicable. |
-| [Scan and Register](./scan-and-register) | Support patient registration through QR-based workflows and generate service or queue identifiers in accordance with organization-specific processes. |
+| [Scan and Register](/docs/hiecm/v3/use-cases/scan-and-register) | Support patient registration through QR-based workflows and generate service or queue identifiers in accordance with organization-specific processes. |
+
+## Use cases
+
+| Use case | What it does |
+|---|---|
+| [Scan and Register](/docs/hiecm/v3/use-cases/scan-and-register) | A patient scans the QR code at your counter and shares their ABHA profile. Registration needs no typing, every record from the visit links to the right ABHA address, and the patient gets a queue token. |
+
+All use cases, and the milestone each belongs to: [Use cases](/docs/hiecm/v3/use-cases).
 
 ## Building blocks you use
 
@@ -74,38 +82,12 @@ The M1 skill gives an AI coding assistant this milestone as one file: every M1
 call, its error codes and its test cases. Install it, or open it in your
 assistant in one click.
 
-<SkillInstall slug="abdm-m1" note="Every M1 call, its error codes and its certification cases in one file: 55 operations, 89 codes, 122 cases." />
+<SkillInstall slug="abdm-m1" note="Every M1 call, one per use case, with its error codes in one file: 132 operations, 17 codes." />
 
 ## ABHA creation
 
 <LegacyAnchor id="abha-with-aadhaar" />
 <LegacyAnchor id="the-page-map" />
-
-A Self-Declared profile may transition to a KYC-verified profile following
-successful linkage and verification of an ABHA number, in accordance with ABDM
-guidelines. Relevant profile information is retained and updated as part of the
-profile lifecycle management process. This section describes the supported
-onboarding pathways, including workflows for individuals who already possess an
-ABHA. Interactions involving identity verification are facilitated through
-ABDM-authorized services and prescribed integration workflows, while the
-diagrams illustrate the recommended sequence of steps for each implementation
-flow.
-
-The Aadhaar-based pathways produce the 14-digit
-[ABHA number](/docs/hiecm/v3/getting-started/glossary#abha-number). Aadhaar verifies the individual's identity, the
-ABHA service issues the number, and the individual selects an
-[ABHA address](/docs/hiecm/v3/getting-started/glossary#abha-address) linked to it. The pathways differ only in the
-Aadhaar authentication mechanism used.
-
-### Which creation route you must build
-
-| Creation route | Private integrator | Government integrator |
-|---|---|---|
-| Aadhaar OTP | Mandatory | Mandatory |
-| Aadhaar face authentication | Optional | Optional |
-| Aadhaar fingerprint or iris | Optional | Optional |
-| Aadhaar demographic authentication | Not required | Mandatory |
-| Child ABHA | Not available | Only on NHA leadership approval |
 
 ### ABHA creation by an Aadhaar OTP
 
@@ -157,8 +139,7 @@ workflows.
 ABDM documentation references biometric-based ABHA creation workflows,
 including face authentication and other supported biometric modalities where
 applicable. Organizations should implement authentication methods in accordance
-with the officially published specifications and validate any implementation
-assumptions through the appropriate NHA guidance and documentation before
+with the officially published specifications and follow them before
 proceeding with production deployment.
 
 ```mermaid
@@ -185,6 +166,24 @@ sequenceDiagram
     S->>A: POST /abha/api/v3/enrollment/enrol/abha-address<br/>txnId, abhaAddress, preferred 1
     A-->>S: healthIdNumber, preferredAbhaAddress
 ```
+
+### ABHA creation by fingerprint or iris
+
+Aadhaar Biometric-Based ABHA Creation enables users to create an Ayushman
+Bharat Health Account (ABHA) by securely verifying their identity using
+biometric authentication through an Aadhaar Registered Device (RD). The RD
+Service captures the user's biometric data and generates an encrypted,
+digitally signed PID block, which is submitted along with the Aadhaar details
+for verification. Upon successful authentication and user consent, the user's
+profile is validated and a unique ABHA number is generated, enabling secure
+onboarding into the ABDM digital health ecosystem.
+
+The Registered Device (RD) List and information can be found on the following
+link:
+[uidai.gov.in](https://uidai.gov.in/en/ecosystem/authentication-devices-documents/biometric-devices.html).
+
+The calls, in order, are on the [M1 API reference](/docs/hiecm/v3/api/m1)
+under ABHA creation, fingerprint and ABHA creation, iris.
 
 ### ABHA creation by demographic authentication
 
@@ -233,14 +232,6 @@ workflow includes creation of a child ABHA linked to a verified parent or
 guardian account, updating child profile information, and retrieval of child
 accounts associated with the parent or guardian.
 
-- **Create.** The same `enrol/byAadhaar` call, with `authMethods` set to `child`
-  and a `child` block carrying the child's name, date of birth and gender, and
-  the parent's ABHA number or ABHA address. The parent is authenticated first.
-- **Update.** `PATCH /v3/profile/account` with the child's ABHA number, name,
-  date of birth and gender.
-- **List.** `GET /v3/enrollment/profile/children`, which returns the children
-  under the account and their count.
-
 ## ABHA login via mobile number
 
 <LegacyAnchor id="abha-login-by-mobile-number" />
@@ -271,10 +262,6 @@ sequenceDiagram
     S->>A: POST /abha/api/v3/profile/login/verify/user<br/>header T-token, ABHANumber, txnId
     A-->>S: token (X-token), expiresIn, refreshToken,<br/>refreshExpiresIn
 ```
-
-Login by Aadhaar number, by ABHA number and by ABHA address follow the same two
-steps: request a challenge, then verify it. The [M1 API
-reference](/docs/hiecm/v3/api/m1) lists which routes are mandatory.
 
 ## Find ABHA from mobile number
 
@@ -346,9 +333,9 @@ requirements.
 ## Next
 
 - Register a patient who scanned your counter QR code: [Scan and
-  Register](./scan-and-register).
+  Register](/docs/hiecm/v3/use-cases/scan-and-register).
 - The calls, base URLs and error shapes: [M1 API
   reference](/docs/hiecm/v3/api/m1).
 - Certification runs once, for the whole integration: [Go
   live](/docs/hiecm/v3/getting-started/going-live).
-- The next milestone: [M2 Attach](./m2).
+- The next milestone: [M2 Health Information Provider](./m2).

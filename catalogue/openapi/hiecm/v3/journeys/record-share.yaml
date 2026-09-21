@@ -1,0 +1,20 @@
+# Patient scan and record share. Two sides, in the order NHA's Postman
+# collection of 19 March 2026 lists them: the PHR app that scans the QR code
+# and pushes the records, and the HIU that receives them.
+- id: record-share-phr
+  title: Record share, PHR app side
+  steps:
+    - op: record-share_post_patient_record_v3_share
+    - op: record-share_post_v3_patient_record_on_share
+    - op: record-share_post_health_information_transfer
+    - op: record-share_post_patient_record_v3_notify
+    - op: record-share_post_v3_patient_record_on_notify
+    - op: record-share_get_patient_record_v3_audit_history
+- id: record-share-hiu
+  title: Record share, HIU side
+  steps:
+    - op: record-share_post_v3_patient_record_share
+    - op: record-share_post_patient_record_v3_on_share
+    - op: record-share_post_health_information_transfer
+    - op: record-share_post_v3_patient_record_on_notify
+    - op: record-share_post_patient_record_v3_notify

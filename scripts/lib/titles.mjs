@@ -63,13 +63,29 @@ export function acronyms(dir = catalogueDir) {
 
 /** Cases every acronym and proper noun in `text`, whatever case it arrived in. */
 export function caseTerms(text, vocab = acronyms()) {
+  // A code span is a literal the reader sends: `abha-enrol` cased as
+  // `ABHA-enrol` is a different, wrong, value. Only the prose between
+  // spans is cased.
+  return String(text ?? '')
+    .split(/(`[^`\n]*`)/)
+    .map((part, i) => (i % 2 === 1 ? part : caseProse(part, vocab)))
+    .join('');
+}
+
+// Header names that are also ordinary words. Written in lowercase they are
+// the word ("the timestamp of the request"), not the header, and stay so.
+const PLAIN_WORDS = new Set(['TIMESTAMP']);
+
+function caseProse(text, vocab) {
   let out = text;
   for (const [pattern, joined] of SPLIT) out = out.replace(pattern, joined);
   for (const term of vocab) {
     // Hyphens and spaces inside a term match either. A term never matches
     // inside a longer word, so "idempotency" keeps its lowercase id.
     const pattern = term.replace(/[-\s]/g, '[-\\s]');
-    out = out.replace(new RegExp(`(?<![A-Za-z0-9/])${pattern}(?![A-Za-z0-9/])`, 'gi'), term);
+    out = out.replace(new RegExp(`(?<![A-Za-z0-9/])${pattern}(?![A-Za-z0-9/])`, 'gi'), (m) =>
+      PLAIN_WORDS.has(term) && m === m.toLowerCase() ? m : term,
+    );
   }
   for (const [lower, proper] of Object.entries(PROPER)) {
     out = out.replace(new RegExp(`(?<![A-Za-z0-9/])${lower}(?![A-Za-z0-9/])`, 'gi'), proper);

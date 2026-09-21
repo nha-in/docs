@@ -4400,10 +4400,10 @@
     {
       "atom": "nhcx.glossary.correlation-id",
       "type": "glossary",
-      "route": "/docs/hiecm/v3/reference/data-dictionary",
-      "anchor": "tables-at-a-glance",
-      "link": "/docs/hiecm/v3/reference/data-dictionary#tables-at-a-glance",
-      "rule": "term defined on data-dictionary",
+      "route": "/docs/nhcx/v1/getting-started/build-with-ai",
+      "anchor": "prompting-an-agent-to-build-against-nhcx",
+      "link": "/docs/nhcx/v1/getting-started/build-with-ai#prompting-an-agent-to-build-against-nhcx",
+      "rule": "term defined on build-with-ai",
       "confidence": "derived"
     },
     {

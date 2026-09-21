@@ -1,0 +1,24 @@
+---
+title: Use cases
+sidebar_label: Use cases
+sidebar_position: 0
+description: End-to-end workflows that sit on top of a milestone. Each one names the milestone it belongs to and the calls it uses.
+source: NHA content review of 15 September 2026 (Scan and Register separated from M1); NHA Patient Scan and Record Share API document of 21 September 2026
+sidebar_class_name: sidebar-icon sidebar-icon--briefcase
+---
+
+# Use cases
+
+A use case is one thing a patient does at your counter, and the calls your
+system makes to answer it. Each one belongs to a [milestone](/docs/hiecm/v3/milestones).
+Build that milestone first, then add the use case.
+
+| Use case | Milestone | What the patient does |
+|---|---|---|
+| [Scan and Register](./scan-and-register) | [M1 Identity](/docs/hiecm/v3/milestones/m1) | Scans your counter QR code and shares their ABHA profile, so registration needs no typing and they get a queue token. |
+| [Patient record share](./patient-record-share) | [M3 Health Information User](/docs/hiecm/v3/milestones/m3) | Scans your counter QR code and pushes records from their PHR app straight to your system, without a consent request from you. |
+| [Scan and Pay](./scan-and-pay) | [M2 Health Information Provider](/docs/hiecm/v3/milestones/m2) | Scans your counter QR code, sees their open orders in their PHR app, pays there, and your system learns the payment status. |
+
+All three start with the same QR code at the counter. What differs is what
+moves: Scan and Register sends the patient's profile to you, Patient record
+share sends their health records, and Scan and Pay sends their payment.

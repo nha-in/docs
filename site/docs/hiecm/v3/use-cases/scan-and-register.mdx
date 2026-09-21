@@ -1,11 +1,11 @@
 ---
 title: Scan and Register
 sidebar_label: Scan and Register
-sidebar_position: 2
+sidebar_position: 1
 sidebar_custom_props:
   roles: [ims, hip]
 description: A patient scans the QR code at your counter and shares their ABHA profile, so registration needs no typing and every record links to the right ABHA address.
-source: NHA content review of 15 September 2026 (Sandbox2.0 M1, Scan and Register separated from M1); catalogue/openapi/hiecm/v3/hiecm-m2.yaml for the patient share calls
+source: NHA content review of 15 September 2026 (Sandbox2.0 M1, Scan and Register separated from M1); catalogue/openapi/hiecm/v3/hiecm-scan-and-register.yaml for the patient share calls
 sidebar_class_name: sidebar-icon sidebar-icon--qr-code
 ---
 
@@ -13,7 +13,7 @@ sidebar_class_name: sidebar-icon sidebar-icon--qr-code
 
 Support patient registration through QR-based workflows and generate service or
 queue identifiers in accordance with organization-specific processes. This use
-case sits beside [M1 Create](./m1): it uses the ABHA the person already holds.
+case belongs to [M1 Identity](/docs/hiecm/v3/milestones/m1): it uses the ABHA the person already holds.
 
 Your facility prints a QR code at each counter. It holds a URL with two parameters: your HIP id and a counter context such as `OPD1`. The patient scans it in their [PHR](/docs/hiecm/v3/getting-started/glossary#phr) app, agrees to share, and their profile arrives on your bridge. Nobody types a name at the desk, and every record from that visit links to the right ABHA address from the start.
 
@@ -40,4 +40,4 @@ The patient's app holds its screen open for 30 seconds. Send the acknowledgement
 
 `profile.patient` carries the ABHA number, the ABHA address, name, gender, date of birth, mobile number, address and a KYC photo. Match on the ABHA address. The counter context is yours to define: up to 20 alphanumeric characters, and never the facility id, the HIP id or the HIP name.
 
-The two calls: [receive a patient's shared profile](/docs/hiecm/v3/api/m2/endpoints/m2-abdm-patient-share-hip/01-m2-post-v3-hip-patient-share) and [send the share acknowledgement](/docs/hiecm/v3/api/m2/endpoints/m2-abdm-patient-share-hip/02-m2-post-patient-share-v3-on-share). The patient's side is [P2 Linking and records](./p2#scan-and-share-at-a-facility).
+The two calls: [receive a patient's shared profile](/docs/hiecm/v3/api/scan-and-register/endpoints/scan-and-register-abdm-patient-share-hip/01-scan-and-register-post-v3-hip-patient-share) and [send the share acknowledgement](/docs/hiecm/v3/api/scan-and-register/endpoints/scan-and-register-abdm-patient-share-hip/02-scan-and-register-post-patient-share-v3-on-share). The patient's side is [P2 Linking and records](/docs/hiecm/v3/milestones/p2#scan-and-share-at-a-facility).

@@ -12,6 +12,12 @@ sidebar_class_name: sidebar-icon sidebar-icon--lock
 
 Several fields in [M1](/docs/hiecm/v3/api/m1) do not carry the value you started with. They carry that value encrypted against the ABDM public key. When an API page shows a placeholder such as `{{encrypted aadhaar number}}`, the field name tells you what the value is and the placeholder tells you it must already be encrypted.
 
+## In short
+
+- Encrypt the Aadhaar number, mobile number, OTP and password with RSA against the published public key, and send the base64 ciphertext.
+- M1 calls use the ABHA service's key. PHR calls use the PHR key, which is a different key at a different URL.
+- Your system never holds a secret for this: only the current public certificate.
+
 ## What must be encrypted
 
 Six kinds of value never travel raw in an M1 request body.
@@ -65,7 +71,7 @@ sequenceDiagram
     A->>A: Decrypts with its private key
 ```
 
-There is nothing ABDM specific in the mechanics. Your platform's standard RSA library does the work. The two things to confirm are which key you are using and which padding.
+There is nothing ABDM specific in the mechanics. Your platform's standard RSA library does the work. Both keys use `RSA/ECB/OAEPWithSHA-1AndMGF1Padding`. The one thing to confirm is which key you are using.
 
 ## Where to do it
 
@@ -73,7 +79,9 @@ There is nothing ABDM specific in the mechanics. Your platform's standard RSA li
 
 ## Fetching the public key
 
-M1 has a `public/certificate` API for fetching the public key. Its URL, headers and response shape are on [the certificate call](/docs/hiecm/v3/api/m1/endpoints/m1-session/03-m1-get-v3-profile-public-certificate).
+A [PHR](/docs/hiecm/v3/getting-started/glossary#phr) application fetches its own key from `GET /abha/api/v3/phr/app/login/public/certificate`, the first call in [P1](/docs/hiecm/v3/api/p1/endpoints/p1-certificate-and-session/01-p1-get-v3-phr-app-login-public-certificate). It is a different key from the ABHA service's, so never encrypt a PHR call with the M1 certificate.
+
+M1 has a `public/certificate` API for fetching the public key. Its URL, headers and response shape are on [the certificate call](/docs/hiecm/v3/api/m1/endpoints/m1-access-tokens-encryption/02-m1-get-v3-profile-public-certificate).
 
 ## Where to go next
 

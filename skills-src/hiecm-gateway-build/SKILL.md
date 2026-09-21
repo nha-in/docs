@@ -14,7 +14,7 @@ Loop limit: 8 passes per step. Hitting the limit is an escalation: state what wa
 
 ## Journeys
 
-### Gateway (`gateway-abdm-gateway`)
+### Bridge and providers (`gateway-abdm-gateway`)
 
 **Act: the calls in this journey, in order**
 
@@ -152,11 +152,11 @@ A 200 whose body matches:
 ]
 ```
 
-### Sessions (`gateway-abdm-sessions`)
+### Session and certificates (`gateway-abdm-sessions`)
 
 **Act: the calls in this journey, in order**
 
-#### 1. Generate Keycloak token/access token (`gateway_post_gateway_v3_sessions`)
+#### 1. Generate access token (`gateway_post_gateway_v3_sessions`)
 
 ```bash
 curl --request POST \
