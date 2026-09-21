@@ -1236,7 +1236,7 @@
     "method": "POST",
     "path": "/api/hiecm/consent/v3/request/hip/on-notify",
     "summary": "This is ABDM HIE-CM API called by HIP to acknowledge the notification sent when a consent request is approved/revoked/expired by the patient.",
-    "route": "/docs/hiecm/v3/api/m2/endpoints/m2-consent-management-data-flow-hip/02-m2-post-consent-v3-request-hip-on-notify",
+    "route": "/docs/hiecm/v3/api/m2/endpoints/m2-consent-management-data-flow-hip/01-m2-post-consent-v3-request-hip-on-notify",
     "callbacks": []
   },
   {
@@ -1252,7 +1252,23 @@
     "method": "POST",
     "path": "/api/hiecm/data-flow/v3/health-information/hip/on-request",
     "summary": "Health information data request acknowledgement from HIP.",
-    "route": "/docs/hiecm/v3/api/m2/endpoints/m2-consent-management-data-flow-hip/04-m2-post-data-flow-v3-health-information-hip-on-request",
+    "route": "/docs/hiecm/v3/api/m2/endpoints/m2-consent-management-data-flow-hip/02-m2-post-data-flow-v3-health-information-hip-on-request",
+    "callbacks": []
+  },
+  {
+    "key": "data-flow/health-information/notify",
+    "hosts": [
+      "dev.abdm.gov.in",
+      "apis.abdm.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "m2_post_data_flow_v3_health_information_notify",
+    "module": "M2 Health information provider services",
+    "moduleDir": "m2",
+    "method": "POST",
+    "path": "/api/hiecm/data-flow/v3/health-information/notify",
+    "summary": "Notifications corresponding to events during data flow",
+    "route": "/docs/hiecm/v3/api/m2/endpoints/m2-consent-management-data-flow-hip/03-m2-post-data-flow-v3-health-information-notify",
     "callbacks": []
   },
   {
@@ -1268,7 +1284,7 @@
     "method": "POST",
     "path": "/health-information/transfer",
     "summary": "health information transfer API",
-    "route": "/docs/hiecm/v3/api/m2/endpoints/m2-consent-management-data-flow-hip/05-m2-post-health-information-transfer",
+    "route": "/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/11-m2-post-health-information-transfer",
     "callbacks": []
   },
   {
@@ -1300,7 +1316,7 @@
     "method": "POST",
     "path": "/api/hiecm/hip/v3/link/context/notify",
     "summary": "This API will be used to notify CM about any update on the already linked care context for a patient.",
-    "route": "/docs/hiecm/v3/api/m2/endpoints/m2-abdm-hip-initiated-linking-hip/03-m2-post-hip-v3-link-context-notify",
+    "route": "/docs/hiecm/v3/api/m2/endpoints/m2-abdm-hip-initiated-linking-hip/02-m2-post-hip-v3-link-context-notify",
     "callbacks": []
   },
   {
@@ -1316,7 +1332,7 @@
     "method": "POST",
     "path": "/api/hiecm/hip/v3/link/patient/links/sms/notify2",
     "summary": "This API will be used by HIP to send SMS notification to patient that a care context is linked.",
-    "route": "/docs/hiecm/v3/api/m2/endpoints/m2-abdm-hip-initiated-linking-hip/05-m2-post-hip-v3-link-patient-links-sms-notify2",
+    "route": "/docs/hiecm/v3/api/m2/endpoints/m2-abdm-hip-initiated-linking-hip/03-m2-post-hip-v3-link-patient-links-sms-notify2",
     "callbacks": []
   },
   {
@@ -1332,7 +1348,7 @@
     "method": "POST",
     "path": "/api/hiecm/patient-share/v3/on-share",
     "summary": "This API will be invoked by the HIP for sharing the response of HIECM's /api/hiecm/patient-share/v3/on-share API",
-    "route": "/docs/hiecm/v3/api/m2/endpoints/m2-abdm-patient-share-hip/02-m2-post-patient-share-v3-on-share",
+    "route": "/docs/hiecm/v3/api/m2/endpoints/m2-abdm-patient-share-hip/01-m2-post-patient-share-v3-on-share",
     "callbacks": []
   },
   {
@@ -1348,7 +1364,7 @@
     "method": "POST",
     "path": "/api/hiecm/user-initiated-linking/v3/link/care-context/on-confirm",
     "summary": "This API will be invoked by the HIP for sharing the response of /api/hiecm/user-initiated-linking/v3/link/care-context/on-confirm API",
-    "route": "/docs/hiecm/v3/api/m2/endpoints/m2-abdm-user-initiated-linking-hip/06-m2-post-user-initiated-linking-v3-link-care-context-on-confirm",
+    "route": "/docs/hiecm/v3/api/m2/endpoints/m2-abdm-user-initiated-linking-hip/03-m2-post-user-initiated-linking-v3-link-care-context-on-confirm",
     "callbacks": []
   },
   {
@@ -1364,7 +1380,7 @@
     "method": "POST",
     "path": "/api/hiecm/user-initiated-linking/v3/link/care-context/on-init",
     "summary": "As a result of the initialization, HIP has to generate a unique reference-number in the link object which is called as link-reference-number and it has to trigger a OTP (token) to the patient's mobile number that is present with the HIP/HMIS/LIMS which will be provided back to HIP for validation during confirm request flow.",
-    "route": "/docs/hiecm/v3/api/m2/endpoints/m2-abdm-user-initiated-linking-hip/04-m2-post-user-initiated-linking-v3-link-care-context-on-init",
+    "route": "/docs/hiecm/v3/api/m2/endpoints/m2-abdm-user-initiated-linking-hip/02-m2-post-user-initiated-linking-v3-link-care-context-on-init",
     "callbacks": []
   },
   {
@@ -1380,7 +1396,7 @@
     "method": "POST",
     "path": "/api/hiecm/user-initiated-linking/v3/patient/care-context/on-discover",
     "summary": "HMIS/LIMS/HIP has to ensure that only unlinked records of the patient has to be shared through this API.",
-    "route": "/docs/hiecm/v3/api/m2/endpoints/m2-abdm-user-initiated-linking-hip/02-m2-post-user-initiated-linking-v3-patient-care-context-on-8c9340",
+    "route": "/docs/hiecm/v3/api/m2/endpoints/m2-abdm-user-initiated-linking-hip/01-m2-post-user-initiated-linking-v3-patient-care-context-on-8c9340",
     "callbacks": []
   },
   {
@@ -1396,7 +1412,7 @@
     "method": "POST",
     "path": "/api/v3/consent/request/hip/notify",
     "summary": "This is a callback api to notify hip when consent is APPROVED or REVOKED.",
-    "route": "/docs/hiecm/v3/api/m2/endpoints/m2-consent-management-data-flow-hip/01-m2-post-v3-consent-request-hip-notify",
+    "route": "/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/09-m2-post-v3-consent-request-hip-notify",
     "callbacks": []
   },
   {
@@ -1412,7 +1428,7 @@
     "method": "POST",
     "path": "/api/v3/hip/health-information/request",
     "summary": "Health information data request to HIP.",
-    "route": "/docs/hiecm/v3/api/m2/endpoints/m2-consent-management-data-flow-hip/03-m2-post-v3-hip-health-information-request",
+    "route": "/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/10-m2-post-v3-hip-health-information-request",
     "callbacks": []
   },
   {
@@ -1428,7 +1444,7 @@
     "method": "POST",
     "path": "/api/v3/hip/link/care-context/confirm",
     "summary": "This API endpoint is used to confirm the linking of care contexts for a patient. It allows healthcare information providers (HIPs) to verify the linking process using a confirmation token.",
-    "route": "/docs/hiecm/v3/api/m2/endpoints/m2-abdm-user-initiated-linking-hip/05-m2-post-v3-hip-link-care-context-confirm",
+    "route": "/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/07-m2-post-v3-hip-link-care-context-confirm",
     "callbacks": []
   },
   {
@@ -1444,7 +1460,7 @@
     "method": "POST",
     "path": "/api/v3/hip/link/care-context/init",
     "summary": "This API endpoint is used to initiate the linking of care contexts for a patient. It allows healthcare information providers (HIPs) to link patient care contexts with their ABHA (Ayushman Bharat Health Account) address.",
-    "route": "/docs/hiecm/v3/api/m2/endpoints/m2-abdm-user-initiated-linking-hip/03-m2-post-v3-hip-link-care-context-init",
+    "route": "/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/06-m2-post-v3-hip-link-care-context-init",
     "callbacks": []
   },
   {
@@ -1460,7 +1476,7 @@
     "method": "POST",
     "path": "/api/v3/hip/patient/care-context/discover",
     "summary": "This API endpoint is used to discover care contexts associated with a patient. It allows healthcare information providers (HIPs) to retrieve and manage patient care context information.",
-    "route": "/docs/hiecm/v3/api/m2/endpoints/m2-abdm-user-initiated-linking-hip/01-m2-post-v3-hip-patient-care-context-discover",
+    "route": "/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/05-m2-post-v3-hip-patient-care-context-discover",
     "callbacks": []
   },
   {
@@ -1476,7 +1492,7 @@
     "method": "POST",
     "path": "/api/v3/hip/patient/share",
     "summary": "This API will be invoked to the HIP for sharing the response of HIECM's /api/hiecm/patient-share/v3/share API",
-    "route": "/docs/hiecm/v3/api/m2/endpoints/m2-abdm-patient-share-hip/01-m2-post-v3-hip-patient-share",
+    "route": "/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/08-m2-post-v3-hip-patient-share",
     "callbacks": []
   },
   {
@@ -1492,7 +1508,7 @@
     "method": "POST",
     "path": "/api/v3/hip/token/on-generate-token",
     "summary": "This is a call back API of [/api/hiecm/v3/token/generate-token].",
-    "route": "/docs/hiecm/v3/api/m2/endpoints/m2-abdm-link-token-hip/02-m2-post-v3-hip-token-on-generate-token",
+    "route": "/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/01-m2-post-v3-hip-token-on-generate-token",
     "callbacks": []
   },
   {
@@ -1508,7 +1524,7 @@
     "method": "POST",
     "path": "/api/v3/link/on_carecontext",
     "summary": "This API endpoint is a callback API that will be called by HIE-CM. The response will be received after it is triggered on the HIP side at /api/hiecm/hip/v3/link/carecontext.",
-    "route": "/docs/hiecm/v3/api/m2/endpoints/m2-abdm-hip-initiated-linking-hip/02-m2-post-v3-link-on-carecontext",
+    "route": "/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/02-m2-post-v3-link-on-carecontext",
     "callbacks": []
   },
   {
@@ -1524,7 +1540,7 @@
     "method": "POST",
     "path": "/api/v3/links/context/on-notify",
     "summary": "This API endpoint is a call back API for /api/hiecm/hip/v3/link/context/notify used to notify the HIP.",
-    "route": "/docs/hiecm/v3/api/m2/endpoints/m2-abdm-hip-initiated-linking-hip/04-m2-post-v3-links-context-on-notify",
+    "route": "/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/03-m2-post-v3-links-context-on-notify",
     "callbacks": []
   },
   {
@@ -1540,7 +1556,7 @@
     "method": "POST",
     "path": "/api/v3/patients/sms/on-notify",
     "summary": "This API endpoint is a call back API for /api/hiecm/hip/v3/link/patient/links/sms/notify2",
-    "route": "/docs/hiecm/v3/api/m2/endpoints/m2-abdm-hip-initiated-linking-hip/06-m2-post-v3-patients-sms-on-notify",
+    "route": "/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/04-m2-post-v3-patients-sms-on-notify",
     "callbacks": []
   },
   {
@@ -1572,7 +1588,7 @@
     "method": "GET",
     "path": "/api/hiecm/data-flow/v3/health-information/request/status/{transaction-id}",
     "summary": "API to get the current status of the Health Information Request.",
-    "route": "/docs/hiecm/v3/api/m3/endpoints/m3-consent-management-data-flow-hiu/12-m3-get-data-flow-v3-health-information-request-status-tra-550104",
+    "route": "/docs/hiecm/v3/api/m3/endpoints/m3-consent-management-data-flow-hiu/07-m3-get-data-flow-v3-health-information-request-status-tra-550104",
     "callbacks": []
   },
   {
@@ -1588,7 +1604,7 @@
     "method": "POST",
     "path": "/api/hiecm/consent/v3/fetch",
     "summary": "This is ABDM HIE-CM API called by HIU to fetch the consent details",
-    "route": "/docs/hiecm/v3/api/m3/endpoints/m3-consent-management-data-flow-hiu/07-m3-post-consent-v3-fetch",
+    "route": "/docs/hiecm/v3/api/m3/endpoints/m3-consent-management-data-flow-hiu/04-m3-post-consent-v3-fetch",
     "callbacks": []
   },
   {
@@ -1604,7 +1620,7 @@
     "method": "POST",
     "path": "/api/hiecm/consent/v3/request/hiu/on-notify",
     "summary": "This is ABDM HIE-CM API called by HIU to acknowledge the notification sent when a consent request is approved/denied/revoked/expired by the patient.",
-    "route": "/docs/hiecm/v3/api/m3/endpoints/m3-consent-management-data-flow-hiu/06-m3-post-consent-v3-request-hiu-on-notify",
+    "route": "/docs/hiecm/v3/api/m3/endpoints/m3-consent-management-data-flow-hiu/03-m3-post-consent-v3-request-hiu-on-notify",
     "callbacks": []
   },
   {
@@ -1636,7 +1652,7 @@
     "method": "POST",
     "path": "/api/hiecm/consent/v3/request/status",
     "summary": "This is ABDM HIE-CM API used by HIU to get consent request status",
-    "route": "/docs/hiecm/v3/api/m3/endpoints/m3-consent-management-data-flow-hiu/03-m3-post-consent-v3-request-status",
+    "route": "/docs/hiecm/v3/api/m3/endpoints/m3-consent-management-data-flow-hiu/02-m3-post-consent-v3-request-status",
     "callbacks": []
   },
   {
@@ -1652,7 +1668,7 @@
     "method": "POST",
     "path": "/api/hiecm/data-flow/v3/health-information/notify",
     "summary": "Notifications corresponding to events during data flow",
-    "route": "/docs/hiecm/v3/api/m3/endpoints/m3-consent-management-data-flow-hiu/11-m3-post-data-flow-v3-health-information-notify",
+    "route": "/docs/hiecm/v3/api/m3/endpoints/m3-consent-management-data-flow-hiu/06-m3-post-data-flow-v3-health-information-notify",
     "callbacks": []
   },
   {
@@ -1668,7 +1684,7 @@
     "method": "POST",
     "path": "/api/hiecm/data-flow/v3/health-information/request",
     "summary": "Health information data request from HIU.",
-    "route": "/docs/hiecm/v3/api/m3/endpoints/m3-consent-management-data-flow-hiu/09-m3-post-data-flow-v3-health-information-request",
+    "route": "/docs/hiecm/v3/api/m3/endpoints/m3-consent-management-data-flow-hiu/05-m3-post-data-flow-v3-health-information-request",
     "callbacks": []
   },
   {
@@ -1684,7 +1700,7 @@
     "method": "POST",
     "path": "/api/v3/hiu/consent/on-fetch",
     "summary": "This is a callback API called by CM to provide fetched consent artefact details to HIU.",
-    "route": "/docs/hiecm/v3/api/m3/endpoints/m3-consent-management-data-flow-hiu/08-m3-post-v3-hiu-consent-on-fetch",
+    "route": "/docs/hiecm/v3/api/m3/endpoints/m3-callbacks/04-m3-post-v3-hiu-consent-on-fetch",
     "callbacks": []
   },
   {
@@ -1700,7 +1716,7 @@
     "method": "POST",
     "path": "/api/v3/hiu/consent/request/notify",
     "summary": "This is a callback api to notify hiu when consent is APPROVED, DENIED or REVOKED.",
-    "route": "/docs/hiecm/v3/api/m3/endpoints/m3-consent-management-data-flow-hiu/05-m3-post-v3-hiu-consent-request-notify",
+    "route": "/docs/hiecm/v3/api/m3/endpoints/m3-callbacks/03-m3-post-v3-hiu-consent-request-notify",
     "callbacks": []
   },
   {
@@ -1716,7 +1732,7 @@
     "method": "POST",
     "path": "/api/v3/hiu/consent/request/on-init",
     "summary": "Callback API of consent request for patient HIU.",
-    "route": "/docs/hiecm/v3/api/m3/endpoints/m3-consent-management-data-flow-hiu/02-m3-post-v3-hiu-consent-request-on-init",
+    "route": "/docs/hiecm/v3/api/m3/endpoints/m3-callbacks/01-m3-post-v3-hiu-consent-request-on-init",
     "callbacks": []
   },
   {
@@ -1732,7 +1748,7 @@
     "method": "POST",
     "path": "/api/v3/hiu/consent/request/on-status",
     "summary": "Callback API of consent status request.",
-    "route": "/docs/hiecm/v3/api/m3/endpoints/m3-consent-management-data-flow-hiu/04-m3-post-v3-hiu-consent-request-on-status",
+    "route": "/docs/hiecm/v3/api/m3/endpoints/m3-callbacks/02-m3-post-v3-hiu-consent-request-on-status",
     "callbacks": []
   },
   {
@@ -1748,7 +1764,7 @@
     "method": "POST",
     "path": "/api/v3/hiu/health-information/on-request",
     "summary": "Health information data request acknowledgement to HIU.",
-    "route": "/docs/hiecm/v3/api/m3/endpoints/m3-consent-management-data-flow-hiu/10-m3-post-v3-hiu-health-information-on-request",
+    "route": "/docs/hiecm/v3/api/m3/endpoints/m3-callbacks/05-m3-post-v3-hiu-health-information-on-request",
     "callbacks": []
   },
   {
