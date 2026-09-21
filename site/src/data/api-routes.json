@@ -4813,6 +4813,165 @@
     "callbacks": []
   },
   {
+    "key": "patient-record/audit-history",
+    "hosts": [
+      "dev.abdm.gov.in",
+      "apis.abdm.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "record-share_get_patient_record_v3_audit_history",
+    "module": "Patient scan and record share",
+    "moduleDir": "record-share",
+    "method": "GET",
+    "path": "/api/hiecm/patient-record/v3/audit-history",
+    "summary": "List the record sharing history of the signed in user.",
+    "route": "/docs/hiecm/v3/api/record-share/endpoints/record-share-phr/06-record-share-get-patient-record-v3-audit-history",
+    "callbacks": []
+  },
+  {
+    "key": "health-information/transfer",
+    "hosts": [
+      "dev.abdm.gov.in",
+      "apis.abdm.gov.in"
+    ],
+    "kind": "callback",
+    "operationId": "record-share_post_health_information_transfer",
+    "module": "Patient scan and record share",
+    "moduleDir": "record-share",
+    "method": "POST",
+    "path": "/health-information/transfer",
+    "summary": "Receive the encrypted records at the data push URL, as the HIU.",
+    "route": "/docs/hiecm/v3/api/record-share/endpoints/record-share-phr/03-record-share-post-health-information-transfer",
+    "callbacks": []
+  },
+  {
+    "key": "patient-record/notify",
+    "hosts": [
+      "dev.abdm.gov.in",
+      "apis.abdm.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "record-share_post_patient_record_v3_notify",
+    "module": "Patient scan and record share",
+    "moduleDir": "record-share",
+    "method": "POST",
+    "path": "/api/hiecm/patient-record/v3/notify",
+    "summary": "Notify the HIE-CM of the transfer status, once, after the data transfer completes.",
+    "route": "/docs/hiecm/v3/api/record-share/endpoints/record-share-phr/04-record-share-post-patient-record-v3-notify",
+    "callbacks": [
+      {
+        "method": "POST",
+        "path": "/api/v3/patient-record/on-notify",
+        "summary": "Receive the other side's transfer status.",
+        "route": "/docs/hiecm/v3/api/record-share/endpoints/record-share-phr/05-record-share-post-v3-patient-record-on-notify",
+        "relation": "triggered-by"
+      }
+    ]
+  },
+  {
+    "key": "patient-record/on-share",
+    "hosts": [
+      "dev.abdm.gov.in",
+      "apis.abdm.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "record-share_post_patient_record_v3_on_share",
+    "module": "Patient scan and record share",
+    "moduleDir": "record-share",
+    "method": "POST",
+    "path": "/api/hiecm/patient-record/v3/on-share",
+    "summary": "Reply to a share request with the data push URL and the encryption key.",
+    "route": "/docs/hiecm/v3/api/record-share/endpoints/record-share-hiu/02-record-share-post-patient-record-v3-on-share",
+    "callbacks": [
+      {
+        "method": "POST",
+        "path": "/api/v3/patient-record/on-share",
+        "summary": "Receive the HIU's data push URL and encryption key, as the PHR app.",
+        "route": "/docs/hiecm/v3/api/record-share/endpoints/record-share-phr/02-record-share-post-v3-patient-record-on-share",
+        "relation": "triggered-by"
+      },
+      {
+        "method": "POST",
+        "path": "/health-information/transfer",
+        "summary": "Receive the encrypted records at the data push URL, as the HIU.",
+        "route": "/docs/hiecm/v3/api/record-share/endpoints/record-share-phr/03-record-share-post-health-information-transfer",
+        "relation": "triggered-by"
+      }
+    ]
+  },
+  {
+    "key": "patient-record/share",
+    "hosts": [
+      "dev.abdm.gov.in",
+      "apis.abdm.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "record-share_post_patient_record_v3_share",
+    "module": "Patient scan and record share",
+    "moduleDir": "record-share",
+    "method": "POST",
+    "path": "/api/hiecm/patient-record/v3/share",
+    "summary": "Share a patient's records with the HIU whose QR code was scanned.",
+    "route": "/docs/hiecm/v3/api/record-share/endpoints/record-share-phr/01-record-share-post-patient-record-v3-share",
+    "callbacks": [
+      {
+        "method": "POST",
+        "path": "/api/v3/patient-record/share",
+        "summary": "Receive a patient's share request, as the HIU.",
+        "route": "/docs/hiecm/v3/api/record-share/endpoints/record-share-hiu/01-record-share-post-v3-patient-record-share",
+        "relation": "triggered-by"
+      }
+    ]
+  },
+  {
+    "key": "patient-record/on-notify",
+    "hosts": [
+      "dev.abdm.gov.in",
+      "apis.abdm.gov.in"
+    ],
+    "kind": "callback",
+    "operationId": "record-share_post_v3_patient_record_on_notify",
+    "module": "Patient scan and record share",
+    "moduleDir": "record-share",
+    "method": "POST",
+    "path": "/api/v3/patient-record/on-notify",
+    "summary": "Receive the other side's transfer status.",
+    "route": "/docs/hiecm/v3/api/record-share/endpoints/record-share-phr/05-record-share-post-v3-patient-record-on-notify",
+    "callbacks": []
+  },
+  {
+    "key": "patient-record/on-share",
+    "hosts": [
+      "dev.abdm.gov.in",
+      "apis.abdm.gov.in"
+    ],
+    "kind": "callback",
+    "operationId": "record-share_post_v3_patient_record_on_share",
+    "module": "Patient scan and record share",
+    "moduleDir": "record-share",
+    "method": "POST",
+    "path": "/api/v3/patient-record/on-share",
+    "summary": "Receive the HIU's data push URL and encryption key, as the PHR app.",
+    "route": "/docs/hiecm/v3/api/record-share/endpoints/record-share-phr/02-record-share-post-v3-patient-record-on-share",
+    "callbacks": []
+  },
+  {
+    "key": "patient-record/share",
+    "hosts": [
+      "dev.abdm.gov.in",
+      "apis.abdm.gov.in"
+    ],
+    "kind": "callback",
+    "operationId": "record-share_post_v3_patient_record_share",
+    "module": "Patient scan and record share",
+    "moduleDir": "record-share",
+    "method": "POST",
+    "path": "/api/v3/patient-record/share",
+    "summary": "Receive a patient's share request, as the HIU.",
+    "route": "/docs/hiecm/v3/api/record-share/endpoints/record-share-hiu/01-record-share-post-v3-patient-record-share",
+    "callbacks": []
+  },
+  {
     "key": "fetch/certs",
     "hosts": [
       "apisbx.abdm.gov.in",

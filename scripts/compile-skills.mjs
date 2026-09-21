@@ -25,6 +25,7 @@ const MODULES = {
   p4: 'setting up a health locker and listing the lockers and requests on an ABHA address',
   subscription: 'subscribing an HIU to changes on an ABHA address',
   'scan-and-pay': 'open orders, patient selection and payment status between a facility and a PHR app',
+  'record-share': 'a patient sharing chosen records with an HIU from a PHR app after scanning its QR code',
 };
 
 function stepData(step, journeyId, i) {
@@ -45,7 +46,7 @@ function buildSkill(module, hasErrorsPage) {
     '**Act: the calls in this journey, in order**', '',
     ...j.steps.map((s, i) => {
       const d = stepData(s, j.id, i);
-      return `#### ${i + 1}. ${d.summary}${s.optional ? ' (optional)' : ''} (\`${s.op}\`)\n\n${d.kind === 'callback' ? `Inbound to your bridge at \`${d.path}\`. Acknowledge it and continue.` : `\`\`\`bash\n${d.curl}\n\`\`\``}\n`;
+      return `#### ${i + 1}. ${d.title ?? d.summary}${s.optional ? ' (optional)' : ''} (\`${s.op}\`)\n\n${d.kind === 'callback' ? `Inbound to your bridge at \`${d.path}\`. Acknowledge it and continue.` : `\`\`\`bash\n${d.curl}\n\`\`\``}\n`;
     }),
     '**Exit condition (Observe until this is true)**', '',
     exit(stepData(j.steps[j.steps.length - 1], j.id, j.steps.length - 1)),
@@ -67,7 +68,7 @@ function debugSkill(module, codes) {
     'Every error below is an OODA loop: observe the error code and last request id, orient against the matched code, decide the fix, act, and observe whether the original step now succeeds. Applying a fix is not the exit condition; the original step succeeding is.', '',
     'Loop limit: 5 passes per error.', '',
     '## Errors', '',
-    ...codes.map((e) => `### ${e.code}\n\n**Specification example:** HTTP ${e.http}, \`${e.message}\`, on \`${e.operationId}\`.\n\n**Exit condition: the original call now succeeds.**\n`),
+    ...codes.map((e) => `### ${e.code}\n\n${e.listed ? `**NHA's list for the module:** \`${e.message}\`. NHA names no HTTP status and no call for it.` : `**Specification example:** HTTP ${e.http}, \`${e.message}\`, on \`${e.operationId}\`.`}\n\n**Exit condition: the original call now succeeds.**\n`),
     '## Where the detail is', '', `- The operation that returns each code: /docs/hiecm/v3/api/${module}`, '',
   ].join('\n');
 }

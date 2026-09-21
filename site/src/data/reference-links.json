@@ -44,6 +44,10 @@
     "to": "/reference/hiecm-scan-and-pay"
   },
   {
+    "label": "Patient scan and record share",
+    "to": "/reference/hiecm-record-share"
+  },
+  {
     "label": "Session",
     "to": "/reference/nhcx-session"
   },

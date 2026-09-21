@@ -328,6 +328,18 @@ const MODULES = [
       'Use when building, debugging or testing ABDM scan and pay: open orders, patient selection and payment status between a facility and a PHR app.',
     rules: [UNVERIFIED],
   },
+  {
+    id: 'record-share',
+    slug: 'abdm-record-share',
+    title: 'Patient scan and record share',
+    docs: '/docs/hiecm/v3/api/record-share',
+    spec: 'hiecm-record-share.yaml',
+    journey: null,
+    example: 'Receive the records a patient shares from a PHR app after scanning our QR code',
+    description:
+      'Use when building, debugging or testing ABDM patient scan and record share: a PHR app shares chosen records with an HIU after scanning its QR code, on either side.',
+    rules: [UNVERIFIED],
+  },
 ];
 
 // build-api-reference.mjs writes one JSON file per operation and then one
@@ -487,7 +499,7 @@ function build(module, url) {
     lines.push('| --- | --- | --- | --- |');
     for (const entry of codes) {
       lines.push(
-        `| \`${entry.code}\` | ${entry.http} | ${cell(entry.message)} | \`${entry.operationId}\` |`,
+        `| \`${entry.code}\` | ${entry.http || ''} | ${cell(entry.message)} | ${entry.operationId ? `\`${entry.operationId}\`` : "NHA's list for the module"} |`,
       );
     }
     lines.push('');
