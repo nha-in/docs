@@ -767,6 +767,12 @@ In M2 and M3 a call is acknowledged now and answered later. The answer arrives a
 
 [Read the whole specification](/docs/pr-20/reference/hiecm-scan-and-pay)
 
+## Patient scan and record share
+
+11 endpoints across 1 use case: Record share. Each endpoint has its own page in the sidebar.
+
+[Read the whole specification](/docs/pr-20/reference/hiecm-record-share)
+
 ## Callbacks with no documented trigger
 
 3 callbacks are declared at module level with no call named against them. Which call produces each one is not documented, so this page does not say.
@@ -9389,136 +9395,6 @@ Login by fingerprint or iris uses the same base URL, through `profile/login/veri
 [See the user journeyWhat the person experiences, screen by screen, before you write any code.](/docs/pr-20/docs/hiecm/v3/milestones/m1)[When it goes wrongThe recorded error shapes and codes, and what to do about each.](/docs/pr-20/docs/hiecm/v3/api/m1/errors)
 
 New to this? Start with [M1 Create](/docs/pr-20/docs/hiecm/v3/milestones/m1).
-
-
----
-
-# Custom error codes
-
-During ABDM integration, systems may encounter issues across discovery, linking, consent, encryption, and data exchange workflows. This section outlines common errors, their causes, and recommended resolutions to help ensure smooth implementation.
-
-| Code      | Error                                                                                                                                                      |
-| --------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| ABDM-1000 | Unable to connect the database                                                                                                                             |
-| ABDM-1001 | No data found                                                                                                                                              |
-| ABDM-1004 | SMS Gateway is unavailable                                                                                                                                 |
-| ABDM-1006 | Bad Request, invalid request Body                                                                                                                          |
-| ABDM-1007 | Connection failed due to timeout                                                                                                                           |
-| ABDM-1008 | SMS service currently disabled                                                                                                                             |
-| ABDM-1010 | Validation failed                                                                                                                                          |
-| ABDM-1011 | Gateway database unavailable                                                                                                                               |
-| ABDM-1012 | No records found against the ABHA Address                                                                                                                  |
-| ABDM-1013 | Invalid ABHA Number                                                                                                                                        |
-| ABDM-1015 | Invalid Response                                                                                                                                           |
-| ABDM-1016 | Invalid TimeStamp                                                                                                                                          |
-| ABDM-1017 | Invalid TransactionId                                                                                                                                      |
-| ABDM-1018 | Share Profile database unavailable                                                                                                                         |
-| ABDM-1019 | Dependent Service Unavailable                                                                                                                              |
-| ABDM-1020 | Unknown database                                                                                                                                           |
-| ABDM-1022 | Too many requests                                                                                                                                          |
-| ABDM-1023 | Invalid User                                                                                                                                               |
-| ABDM-1024 | Dependent service unavailable                                                                                                                              |
-| ABDM-1025 | Invalid ServiceId                                                                                                                                          |
-| ABDM-1026 | Invalid Link Token                                                                                                                                         |
-| ABDM-1027 | You are blocked. Please try again after 24 hours.                                                                                                          |
-| ABDM-1028 | HIP is unavailable                                                                                                                                         |
-| ABDM-1029 | Redis server is unavailable                                                                                                                                |
-| ABDM-1030 | Invalid request ID                                                                                                                                         |
-| ABDM-1031 | Invalid request                                                                                                                                            |
-| ABDM-1032 | Invalid header                                                                                                                                             |
-| ABDM-1033 | HIU is unavailable                                                                                                                                         |
-| ABDM-1034 | Notification service unavailable                                                                                                                           |
-| ABDM-1035 | Invalid HIP ID                                                                                                                                             |
-| ABDM-1036 | Data does not matched                                                                                                                                      |
-| ABDM-1037 | Counter and Care context count mismatch                                                                                                                    |
-| ABDM-1038 | ABHA address and Link token mismatch                                                                                                                       |
-| ABDM-1040 | Invalid HIU ID                                                                                                                                             |
-| ABDM-1041 | Invalid Acknowledgement                                                                                                                                    |
-| ABDM-1042 | Provider Mandatory                                                                                                                                         |
-| ABDM-1043 | ABHA Address does not match with KYC details.                                                                                                              |
-| ABDM-1044 | Broadcast Failed                                                                                                                                           |
-| ABDM-1045 | Database Access is restricted                                                                                                                              |
-| ABDM-1046 | Invalid Purpose                                                                                                                                            |
-| ABDM-1047 | Purpose does not exist                                                                                                                                     |
-| ABDM-1048 | Timeout                                                                                                                                                    |
-| ABDM-1049 | Invalid Profile Share Intent Keys                                                                                                                          |
-| ABDM-1050 | Invalid Profile Share Metadata Keys                                                                                                                        |
-| ABDM-1051 | Invalid ABHA Number or ABHA Address                                                                                                                        |
-| ABDM-1052 | Invalid TransactionId or response's requestId                                                                                                              |
-| ABDM-1401 | HIP is not available                                                                                                                                       |
-| ABDM-1061 | Consent artefact expired                                                                                                                                   |
-| ABDM-1062 | Consent Not granted                                                                                                                                        |
-| ABDM-1063 | Date Range given is invalid                                                                                                                                |
-| ABDM-1064 | request with this request id already exists                                                                                                                |
-| ABDM-1109 | ABHA DB service unavailable                                                                                                                                |
-| ABDM-1108 | Notification DB service unavailable                                                                                                                        |
-| ABDM-1201 | IDP Gateway is unavailable                                                                                                                                 |
-| ABDM-9999 | Unknown exception                                                                                                                                          |
-| ABDM-1006 | Invalid combinations of scopes                                                                                                                             |
-| ABDM-1056 | This care contexts has been already linked                                                                                                                 |
-| ABDM-1055 | Invalid HIP Id or PHR Id                                                                                                                                   |
-| ABDM-1056 | Invalid Link Reference Number                                                                                                                              |
-| ABDM-1057 | Invalid Care Contexts                                                                                                                                      |
-| ABDM-1059 | Invalid Care Contexts count                                                                                                                                |
-| ABDM-1060 | Invalid Patient Reference Number                                                                                                                           |
-| ABDM-1061 | Invalid Patient Display                                                                                                                                    |
-| ABDM-1062 | ABHA number mismatch with Link token                                                                                                                       |
-| ABDM-1063 | HIP Id mismatch with Link token                                                                                                                            |
-| ABDM-1064 | Request body was missing                                                                                                                                   |
-| ABDM-1065 | Invalid X Auth token                                                                                                                                       |
-| ABDM-1066 | Invalid JWT token                                                                                                                                          |
-| ABDM-1067 | Request body not required                                                                                                                                  |
-| ABDM-1170 | Invalid ABHA address                                                                                                                                       |
-| ABDM-1084 | ABHA address mismatch with X Auth token                                                                                                                    |
-| ABDM-1085 | ABHA number mismatch with X Auth token                                                                                                                     |
-| ABDM-1086 | Patient profile mismatch with X Auth token                                                                                                                 |
-| ABDM-1087 | Duplicate patient share request                                                                                                                            |
-| ABDM-1090 | Duplicate HIP link request                                                                                                                                 |
-| ABDM-1091 | Duplicate Get links request                                                                                                                                |
-| ABDM-1092 | Duplicate Link token request                                                                                                                               |
-| ABDM-1093 | Duplicate Bridge request                                                                                                                                   |
-| ABDM-1094 | Duplicate bridge patch request                                                                                                                             |
-| ABDM-1095 | Duplicate Bridge service request                                                                                                                           |
-| ABDM-1102 | Profile information cannot be null                                                                                                                         |
-| ABDM-1103 | Duplicate Discovery request                                                                                                                                |
-| ABDM-1104 | Duplicate Init request                                                                                                                                     |
-| ABDM-1105 | Duplicate Confirm request                                                                                                                                  |
-| ABDM-1106 | Duplicate On discovery request                                                                                                                             |
-| ABDM-1107 | Duplicate On init request                                                                                                                                  |
-| ABDM-1108 | Duplicate On confirm request                                                                                                                               |
-| ABDM-1109 | Invalid On discovery response                                                                                                                              |
-| ABDM-1110 | Invalid On init response                                                                                                                                   |
-| ABDM-1111 | Invalid On confirm response                                                                                                                                |
-| ABDM-1112 | Invalid or already expired consent artefact id                                                                                                             |
-| ABDM-1113 | Duplicate health information provider data flow response                                                                                                   |
-| ABDM-1149 | Intent type is not supported at HIP end                                                                                                                    |
-| ABDM-1150 | Bridge API version cannot be null                                                                                                                          |
-| ABDM-1402 | Acknowledgement is not received from HIP                                                                                                                   |
-| ABDM-9999 | HIP is unable to generate a token at this time. Please try again later.                                                                                    |
-| ABDM-9999 | HIP is unable to process at this time. Please try again later.                                                                                             |
-| ABDM-1030 | Request id not found                                                                                                                                       |
-| ABDM-2500 | No mapping found for                                                                                                                                       |
-| ABDM-2401 | The X Auth token is invalid.                                                                                                                               |
-| ABDM-2402 | Invalid Timestamp                                                                                                                                          |
-| ABDM-2404 | Invalid Request Id                                                                                                                                         |
-| ABDM-2429 | Too many requests found                                                                                                                                    |
-| ABDM-2501 | Payment status should be : SUCCESS,CANCELED,PENDING,FAIL,REFUND\_INITIATED,REFUND\_SUCCESS                                                                 |
-| ABDM-2500 | Authorization header is missing                                                                                                                            |
-| ABDM-2403 | Invalid X-CM-ID                                                                                                                                            |
-| ABDM-2406 | Invalid API sequence flow, please follow logical flow                                                                                                      |
-| ABDM-2406 | The status is invalid. Please follow the logical status flow or transition.                                                                                |
-| ABDM-9999 | User not found                                                                                                                                             |
-| ABDM-9999 | Cannot process the request at the moment, please try later.                                                                                                |
-| ABDM-9001 | No open order against ABHA. Please ensure a minimum of one open order                                                                                      |
-| ABDM-9002 | No registration found at <>. Contact counter support                                                                                                       |
-| ABDM-9003 | Hospital services temporarily unavailable. Please try again after some time.                                                                               |
-| ABDM-9004 | Services disrupted, please try again.                                                                                                                      |
-| ABDM-9005 | Bank server not responding. Please try again later                                                                                                         |
-| ABDM-9006 | Service details mismatch. Please ensure original service ID from HMIS                                                                                      |
-| ABDM-9007 | The Scan and Pay functionality is not enabled at this facility. Kindly contact the hospital administration.                                                |
-| ABDM-1006 | Invalid count, must be 2 digit and ranges between 1 to 20                                                                                                  |
-| ABDM-1407 | The ABHA Number associated with this ABHA Address is currently deactivated. Please reactivate it.                                                          |
-| ABDM-1006 | Invalid HIType, it must be in Prescription,DiagnosticReport,OPConsultation,DischargeSummary,ImmunizationRecord,HealthDocumentRecord,WellnessRecord,Invoice |
 
 
 ---
@@ -25252,6 +25128,921 @@ Shape of the 200 response, generated from the schema. The values are placeholder
 
 ---
 
+# Receive a patient's share request, as the HIU
+
+`POST /api/v3/patient-record/share`
+
+**Hosted by the HIU, not by ABDM.** The HIE-CM calls this endpoint at the callback URL registered for your bridge, so the path below is relative to that URL.
+
+This is a callback API for the HIU. The HIE-CM provides the record share request the PHR app raised: the patient's profile, the number of records and the care contexts to share, and a transactionId for the transfer. Reply by calling POST /api/hiecm/patient-record/v3/on-share with the data push URL and the encryption key, carrying this transactionId and this request's REQUEST-ID.
+
+```bash
+curl --request POST \
+  --url {bridgeUrl}/api/v3/patient-record/share \
+  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
+  --header 'request-id: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
+  --header 'timestamp: 2022-10-06T15:10:00.587Z' \
+  --header 'x-hiu-id: HIU_ID' \
+  --header 'Content-Type: application/json' \
+  --data '{
+  "metaData": {
+    "hiuId": "MANISH_HIU",
+    "counterId": "cf554160-1db7-453e-9d7a-3793ae2f50e0"
+  },
+  "transactionId": "56582bc6-5c17-4b32-9244-9b61d47a8059",
+  "profile": {
+    "patient": {
+      "abhaNumber": null,
+      "abhaAddress": "abhaAddress@sbx",
+      "name": "Nitesh",
+      "gender": "M",
+      "dayOfBirth": "18",
+      "monthOfBirth": "10",
+      "yearOfBirth": "1912",
+      "address": {
+        "line": "Rohini Delhi",
+        "district": "Delhi",
+        "state": "Delhi",
+        "pincode": "110042"
+      },
+      "phoneNumber": "989141XXXX"
+    }
+  },
+  "sharedRecordCount": 2,
+  "consent": {
+    "careContexts": [
+      {
+        "patientReference": "manikandanb87@sbx",
+        "careContextReference": "COC497647c1-0627-48fa-8131-0dddc1b3e0b4"
+      },
+      {
+        "patientReference": "manikandanb87@sbx",
+        "careContextReference": "COC497647c1-0627-48fa-8131-0dddc1b3e0b5"
+      }
+    ],
+    "permission": {
+      "accessMode": "VIEW"
+    },
+    "dataEraseAt": "2026-10-12T08:58:09.738Z"
+  }
+}'
+```
+
+## Authorization
+
+- `Authorization` (bearer token, required): JWT access token issued by the ABDM session API after successful validation of client id and secret.
+
+## Headers
+
+- `request-id` (string, required): Random UUID, a v4 style guid, unique per callback.
+- `timestamp` (string, required): ISO 8601 timestamp of when the callback was sent.
+- `x-hiu-id` (string, required): Identifier of the health information user to which the request was intended.
+
+## Body
+
+- `metaData` (object, required): The HIU and the counter the QR code named.
+- `metaData.hiuId` (string, required): The HIU's identifier, read from the QR code.
+- `metaData.counterId` (string, required): The counter at the HIU, read from the QR code.
+- `transactionId` (string, required): The transfer's identifier, assigned by the HIE-CM. Carry it in on-share and in notify.
+- `profile` (object, required): The essential patient details, including ABHA number, ABHA address and the patient's contact address, used for initiating the record share process.
+- `profile.patient` (object, required)
+- `profile.patient.abhaNumber` (string,null): The 14 digit ABHA number, or null when the patient has an address only.
+- `profile.patient.abhaAddress` (string, required): The patient's ABHA address.
+- `profile.patient.name` (string, required)
+- `profile.patient.gender` (string, required): M, F or O.
+- `profile.patient.dayOfBirth` (string)
+- `profile.patient.monthOfBirth` (string)
+- `profile.patient.yearOfBirth` (string, required)
+- `profile.patient.address` (object, required)
+- `profile.patient.address.line` (string)
+- `profile.patient.address.district` (string)
+- `profile.patient.address.state` (string)
+- `profile.patient.address.pincode` (string)
+- `profile.patient.phoneNumber` (string, required)
+- `sharedRecordCount` (integer, required): Number of records that are to be shared to the HIU.
+- `consent` (object, required): The care contexts to share, the permission specifying how the records can be accessed, and the dataEraseAt date until which the data remains accessible.
+- `consent.careContexts` (object[], required)
+- `consent.careContexts.patientReference` (string, required): The patient reference the care context was linked under.
+- `consent.careContexts.careContextReference` (string, required)
+- `consent.permission` (object, required)
+- `consent.permission.accessMode` (string, required): How the HIU may use the records. One of: VIEW.
+- `consent.dataEraseAt` (string, required): Until when the data remains accessible to the HIU.
+
+## Responses
+
+- `202`: Accepted. Answer with the on-share call.
+  See The callback never arrives: /docs/hiecm/v3/troubleshooting/callback-never-arrives
+
+
+---
+
+# Submit the reply to a share request with the data push URL and the encryption key
+
+`POST /api/hiecm/patient-record/v3/on-share`
+
+Acts as the callback endpoint for the PHR application. After the initial request, the HIU responds to this callback with the data push URL and the encryption key required for securely transferring the user's health records.
+
+The HIU makes this call after receiving the share request on its /api/v3/patient-record/share bridge endpoint. The transactionId is the one that request carried, and response.requestId is that request's REQUEST-ID. The HIE-CM forwards the body to the PHR app's /api/v3/patient-record/on-share callback.
+
+```bash
+curl --request POST \
+  --url https://dev.abdm.gov.in/api/hiecm/patient-record/v3/on-share \
+  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
+  --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
+  --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
+  --header 'X-HIU-ID: HIU_ID' \
+  --header 'X-CM-ID: sbx' \
+  --header 'Content-Type: application/json' \
+  --data '{
+  "hiRequest": {
+    "transactionId": "18235d89-cb13-479d-ad71-7a57d5f669a8",
+    "dataPushUrl": "https://webhook.site/a2477c41-2185-47eb-835a/health-information/transfer",
+    "keyMaterial": {
+      "cryptoAlg": "ECDH.",
+      "curve": "curve25519",
+      "dhPublicKey": {
+        "expiry": "2022-12-28T13:18:20.742Z",
+        "parameters": "Ephemeral public key.",
+        "keyValue": "BFN7KTdOT0jIAExG2A8Jg+01wMPWxptiGqwHRVvtiVEsUq2FR7P2UdqZxJyPJSeR6muai21iQhasNxnhh8I5M+g="
+      },
+      "nonce": "28236d89-cb13-479d-ad71-7a57d5f669a9"
+    }
+  },
+  "response": {
+    "requestId": "efd6964f-6893-4b66-9e4e-28afc164126b"
+  }
+}'
+```
+
+## Authorization
+
+- `Authorization` (bearer token, required): JWT access token issued by the ABDM session API after successful validation of client id and secret.
+
+## Headers
+
+- `REQUEST-ID` (string, required): Random UUID, a v4 style guid, unique per request.
+- `TIMESTAMP` (string, required): ISO 8601 timestamp of when the request was initiated.
+- `X-HIU-ID` (string, required): Identifier of the health information user to which the request was intended.
+- `X-CM-ID` (string, required): Suffix of the consent manager to which the request was intended. sbx in the sandbox, abdm in production.
+
+## Body
+
+- `hiRequest` (object, required): The data push URL and the encryption key.
+- `hiRequest.transactionId` (string, required): The transactionId the share request carried.
+- `hiRequest.dataPushUrl` (string, required): The HIU's URL the PHR app posts the encrypted records to.
+- `hiRequest.keyMaterial` (object, required)
+- `response` (object, required)
+- `response.requestId` (string, required): The REQUEST-ID of the share request this answers.
+
+## Responses
+
+- `202`: Accepted. The HIE-CM forwards the data push URL and key to the PHR app's on-share callback.
+  See The callback never arrives: /docs/hiecm/v3/troubleshooting/callback-never-arrives
+
+
+---
+
+# Receive the encrypted records at the data push URL, as the HIU
+
+`POST /health-information/transfer`
+
+**Hosted by the HIU at the dataPushUrl it supplied in on-share, not by ABDM.** The PHR application posts here directly; the path is whatever the data push URL names.
+
+The PHR app sends the records covered by the share, one entry per care context, each an encrypted FHIR bundle with its checksum, along with the PHR app's own ECDH key material so the HIU can derive the shared key and decrypt. The shape below is the placeholder body in NHA's Postman collection; it follows the M2 and M3 health information transfer.
+
+```bash
+curl --request POST \
+  --url {bridgeUrl}/health-information/transfer \
+  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
+  --header 'request-id: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
+  --header 'timestamp: 2022-10-06T15:10:00.587Z' \
+  --header 'Content-Type: application/json' \
+  --data '{
+  "pageNumber": 0,
+  "pageCount": 0,
+  "transactionId": "string",
+  "entries": [
+    {
+      "content": "Encrypted content of data packaged in FHIR bundle",
+      "media": "mimetype of the content.",
+      "checksum": "string",
+      "careContextReference": "10004-20200001768-1"
+    },
+    {
+      "content": "Encrypted content of data packaged in FHIR bundle",
+      "media": "mimetype of the content.",
+      "checksum": "string",
+      "careContextReference": "10004-20200001768-2"
+    }
+  ],
+  "keyMaterial": {
+    "cryptoAlg": "ECDH",
+    "curve": "Curve25519",
+    "dhPublicKey": {
+      "expiry": "2026-12-28T13:18:20.742Z",
+      "parameters": "Curve25519/32byte random key",
+      "keyValue": "string"
+    },
+    "nonce": "string"
+  }
+}'
+```
+
+## Authorization
+
+- `Authorization` (bearer token, required): JWT access token issued by the ABDM session API after successful validation of client id and secret.
+
+## Headers
+
+- `request-id` (string, required): Random UUID, a v4 style guid, unique per callback.
+- `timestamp` (string, required): ISO 8601 timestamp of when the callback was sent.
+
+## Body
+
+- `pageNumber` (integer, required): This page, counting from 0.
+- `pageCount` (integer, required): How many pages the transfer has.
+- `transactionId` (string, required): The transfer's identifier, from the share request.
+- `entries` (object[], required): One entry per care context shared.
+- `entries.content` (string): Encrypted content of data packaged in a FHIR bundle.
+- `entries.media` (string): MIME type of the content.
+- `entries.checksum` (string): Checksum of the content.
+- `entries.careContextReference` (string)
+- `keyMaterial` (object, required): ECDH key material for encrypting the records.
+- `keyMaterial.cryptoAlg` (string, required)
+- `keyMaterial.curve` (string, required)
+- `keyMaterial.dhPublicKey` (object, required)
+- `keyMaterial.dhPublicKey.expiry` (string, required)
+- `keyMaterial.dhPublicKey.parameters` (string, required)
+- `keyMaterial.dhPublicKey.keyValue` (string, required): The public key, base64.
+- `keyMaterial.nonce` (string, required): A 32 byte random nonce for this transfer.
+
+## Responses
+
+- `202`: Accepted. Decrypt, then call notify with RECEIVED, PARTIAL_RECEIVED or FAILED.
+  See The callback never arrives: /docs/hiecm/v3/troubleshooting/callback-never-arrives
+
+
+---
+
+# Receive the other side's transfer status
+
+`POST /api/v3/patient-record/on-notify`
+
+**Hosted by the PHR application and by the HIU, not by ABDM.** The HIE-CM calls this endpoint at the callback URL registered for your bridge, so the path below is relative to that URL.
+
+This is a callback API for the PHR application and the HIU. This API is used to receive the status of the health record transfer process: the HIU receives what the PHR app sent to notify, and the PHR app receives what the HIU sent.
+
+```bash
+curl --request POST \
+  --url {bridgeUrl}/api/v3/patient-record/on-notify \
+  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
+  --header 'request-id: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
+  --header 'timestamp: 2022-10-06T15:10:00.587Z' \
+  --header 'x-hiu-id: HIU_ID' \
+  --header 'Content-Type: application/json' \
+  --data '{
+  "notification": {
+    "transactionId": "103a6265-8d5d-411b-9a9d-b460b5f00e4e",
+    "doneAt": "2026-03-19T08:01:11.090Z",
+    "statusNotification": {
+      "sessionStatus": "TRANSFERRED",
+      "statusResponses": [
+        {
+          "careContextReference": "COC497647c1-0627-48fa-8131-0dddc1b3e0b4",
+          "hiStatus": "DELIVERED",
+          "description": "Data sent successfully"
+        }
+      ]
+    }
+  }
+}'
+```
+
+## Authorization
+
+- `Authorization` (bearer token, required): JWT access token issued by the ABDM session API after successful validation of client id and secret.
+
+## Headers
+
+- `request-id` (string, required): Random UUID, a v4 style guid, unique per callback.
+- `timestamp` (string, required): ISO 8601 timestamp of when the callback was sent.
+- `x-hiu-id` (string, required): Identifier of the health information user to which the request was intended.
+
+## Body
+
+- `notification` (object, required): The transaction id, the session status and each care context's transfer status.
+- `notification.transactionId` (string, required)
+- `notification.doneAt` (string, required): When the transfer completed.
+- `notification.statusNotification` (object, required)
+- `notification.statusNotification.sessionStatus` (string, required): TRANSFERRED, PARTIAL_TRANSFERRED or FAILED from the PHR app or health locker; RECEIVED, PARTIAL_RECEIVED or FAILED from the HIU. One of: TRANSFERRED, PARTIAL_TRANSFERRED, RECEIVED, PARTIAL_RECEIVED, FAILED.
+- `notification.statusNotification.statusResponses` (object[], required)
+- `notification.statusNotification.statusResponses.careContextReference` (string, required)
+- `notification.statusNotification.statusResponses.hiStatus` (string, required): DELIVERED or ERRORED from the PHR app or health locker; VALID, CORRUPTED, BLANK or ERRORED from the HIU. One of: DELIVERED, ERRORED, VALID, CORRUPTED, BLANK.
+- `notification.statusNotification.statusResponses.description` (string)
+
+## Responses
+
+- `202`: Accepted.
+  See The callback never arrives: /docs/hiecm/v3/troubleshooting/callback-never-arrives
+
+
+---
+
+# Notify patient record
+
+`POST /api/hiecm/patient-record/v3/notify`
+
+Update the status of the health record transfer process. It is invoked by the PHR application and HIU to notify the HIE-CM about the completion status of the transaction and the individual care-contexts. Each care-context's transfer status is included to provide a detailed update on which records were successfully shared and received.
+
+The PHR app or health locker, on the transfer of data, sends sessionStatus as one of TRANSFERRED, PARTIAL_TRANSFERRED or FAILED, and an hiStatus for each careContextReference as one of DELIVERED or ERRORED.
+
+The HIU, on receipt of data, sends sessionStatus as one of RECEIVED, PARTIAL_RECEIVED or FAILED, for example FAILED when data was not received or invalid data was received, and an hiStatus for each careContextReference as one of VALID, CORRUPTED, BLANK or ERRORED.
+
+Send the notification once, after the data transfer has completed. The HIE-CM forwards it to the other side's /api/v3/patient-record/on-notify callback.
+
+```bash
+curl --request POST \
+  --url https://dev.abdm.gov.in/api/hiecm/patient-record/v3/notify \
+  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
+  --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
+  --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
+  --header 'X-HIU-ID: HIU_ID' \
+  --header 'X-CM-ID: sbx' \
+  --header 'Content-Type: application/json' \
+  --data '{
+  "notification": {
+    "transactionId": "a0e7bed4-ef98-4ea8-9077-f4a6192bfe2b",
+    "doneAt": "2026-03-19T08:01:11.090Z",
+    "statusNotification": {
+      "sessionStatus": "TRANSFERRED",
+      "statusResponses": [
+        {
+          "careContextReference": "COC497647c1-0627-48fa-8131-0dddc1b3e0b4",
+          "hiStatus": "DELIVERED",
+          "description": "Data sent successfully"
+        },
+        {
+          "careContextReference": "COC497647c1-0627-48fa-8131-0dddc1b3e0b5",
+          "hiStatus": "DELIVERED",
+          "description": "Data sent successfully"
+        }
+      ]
+    }
+  }
+}'
+```
+
+## Authorization
+
+- `Authorization` (bearer token, required): JWT access token issued by the ABDM session API after successful validation of client id and secret.
+
+## Headers
+
+- `REQUEST-ID` (string, required): Random UUID, a v4 style guid, unique per request.
+- `TIMESTAMP` (string, required): ISO 8601 timestamp of when the request was initiated.
+- `X-HIU-ID` (string, required): Identifier of the health information user to which the request was intended.
+- `X-CM-ID` (string, required): Suffix of the consent manager to which the request was intended. sbx in the sandbox, abdm in production.
+
+## Body
+
+- `notification` (object, required): The transaction id, the session status and each care context's transfer status.
+- `notification.transactionId` (string, required)
+- `notification.doneAt` (string, required): When the transfer completed.
+- `notification.statusNotification` (object, required)
+- `notification.statusNotification.sessionStatus` (string, required): TRANSFERRED, PARTIAL_TRANSFERRED or FAILED from the PHR app or health locker; RECEIVED, PARTIAL_RECEIVED or FAILED from the HIU. One of: TRANSFERRED, PARTIAL_TRANSFERRED, RECEIVED, PARTIAL_RECEIVED, FAILED.
+- `notification.statusNotification.statusResponses` (object[], required)
+- `notification.statusNotification.statusResponses.careContextReference` (string, required)
+- `notification.statusNotification.statusResponses.hiStatus` (string, required): DELIVERED or ERRORED from the PHR app or health locker; VALID, CORRUPTED, BLANK or ERRORED from the HIU. One of: DELIVERED, ERRORED, VALID, CORRUPTED, BLANK.
+- `notification.statusNotification.statusResponses.description` (string)
+
+## Responses
+
+- `202`: Accepted. The HIE-CM forwards the status to the other side's on-notify callback.
+  See The callback never arrives: /docs/hiecm/v3/troubleshooting/callback-never-arrives
+
+
+---
+
+# Share a patient's records with the HIU whose QR code was scanned
+
+`POST /api/hiecm/patient-record/v3/share`
+
+Is the first step in initiating the health data sharing process. It is invoked by an integrator application (such as any PHR application like ABHA) after scanning the HIU's QR code. The QR code provides the Health Information User (HIU) identifier, which is then used to share the user's profile details and care-context information with the HIE-CM.
+
+The HIE-CM answers 202 Accepted and forwards the request to the HIU as a POST to /api/v3/patient-record/share on the HIU's bridge. The HIU's reply, with the data push URL and encryption key, arrives on the PHR app's /api/v3/patient-record/on-share callback.
+
+```bash
+curl --request POST \
+  --url https://dev.abdm.gov.in/api/hiecm/patient-record/v3/share \
+  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
+  --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
+  --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
+  --header 'X-HIU-ID: HIU_ID' \
+  --header 'X-CM-ID: sbx' \
+  --header 'X-AUTH-TOKEN: Bearer <USER_TOKEN>' \
+  --header 'Content-Type: application/json' \
+  --data '{
+  "metaData": {
+    "hiuId": "MANISH_HIU",
+    "counterId": "IN081010313"
+  },
+  "profile": {
+    "patient": {
+      "abhaNumber": null,
+      "abhaAddress": "abhaAddress@sbx",
+      "name": "String",
+      "gender": "M",
+      "dayOfBirth": "18",
+      "monthOfBirth": "10",
+      "yearOfBirth": "1991",
+      "address": {
+        "line": "String",
+        "district": "String",
+        "state": "String",
+        "pincode": "XXXXXX"
+      },
+      "phoneNumber": "989141XXXX"
+    }
+  },
+  "sharedRecordCount": 2,
+  "consent": {
+    "careContexts": [
+      {
+        "patientReference": "manishk1991@sbx",
+        "careContextReference": "10004-20200001768-1"
+      },
+      {
+        "patientReference": "manishk1991@sbx",
+        "careContextReference": "10004-20200001768-2"
+      }
+    ],
+    "permission": {
+      "accessMode": "VIEW"
+    },
+    "dataEraseAt": "2025-10-11T08:58:09.738Z"
+  }
+}'
+```
+
+## Authorization
+
+- `Authorization` (bearer token, required): JWT access token issued by the ABDM session API after successful validation of client id and secret.
+
+## Headers
+
+- `REQUEST-ID` (string, required): Random UUID, a v4 style guid, unique per request.
+- `TIMESTAMP` (string, required): ISO 8601 timestamp of when the request was initiated.
+- `X-HIU-ID` (string, required): Identifier of the health information user to which the request was intended.
+- `X-CM-ID` (string, required): Suffix of the consent manager to which the request was intended. sbx in the sandbox, abdm in production.
+- `X-AUTH-TOKEN` (string, required): JWT access token issued by the PHR service after successful user authentication. If the HIP does not have any role, then it is mandatory.
+
+## Body
+
+- `metaData` (object, required): The HIU and the counter the QR code named.
+- `metaData.hiuId` (string, required): The HIU's identifier, read from the QR code.
+- `metaData.counterId` (string, required): The counter at the HIU, read from the QR code.
+- `profile` (object, required): The essential patient details, including ABHA number, ABHA address and the patient's contact address, used for initiating the record share process.
+- `profile.patient` (object, required)
+- `profile.patient.abhaNumber` (string,null): The 14 digit ABHA number, or null when the patient has an address only.
+- `profile.patient.abhaAddress` (string, required): The patient's ABHA address.
+- `profile.patient.name` (string, required)
+- `profile.patient.gender` (string, required): M, F or O.
+- `profile.patient.dayOfBirth` (string)
+- `profile.patient.monthOfBirth` (string)
+- `profile.patient.yearOfBirth` (string, required)
+- `profile.patient.address` (object, required)
+- `profile.patient.address.line` (string)
+- `profile.patient.address.district` (string)
+- `profile.patient.address.state` (string)
+- `profile.patient.address.pincode` (string)
+- `profile.patient.phoneNumber` (string, required)
+- `sharedRecordCount` (integer, required): Number of records that are to be shared to the health information user (HIU).
+- `consent` (object, required): The care contexts to share, the permission specifying how the records can be accessed, and the dataEraseAt date until which the data remains accessible.
+- `consent.careContexts` (object[], required)
+- `consent.careContexts.patientReference` (string, required): The patient reference the care context was linked under.
+- `consent.careContexts.careContextReference` (string, required)
+- `consent.permission` (object, required)
+- `consent.permission.accessMode` (string, required): How the HIU may use the records. One of: VIEW.
+- `consent.dataEraseAt` (string, required): Until when the data remains accessible to the HIU.
+
+## Responses
+
+- `202`: Accepted. The HIE-CM forwards the request to the HIU; the HIU's data push URL and key arrive on the on-share callback.
+  See The callback never arrives: /docs/hiecm/v3/troubleshooting/callback-never-arrives
+
+
+---
+
+# Receive the HIU's data push URL and encryption key, as the PHR app
+
+`POST /api/v3/patient-record/on-share`
+
+**Hosted by the PHR application, not by ABDM.** The HIE-CM calls this endpoint at the callback URL registered for your bridge, so the path below is relative to that URL.
+
+This is a callback API for the PHR application. The HIE-CM provides the HIU's answer to the share request: the data push URL to post the records to, and the ECDH key material to encrypt them with. Generate your own key pair and nonce, encrypt each record, and POST them to the data push URL, then call POST /api/hiecm/patient-record/v3/notify with the transfer status.
+
+```bash
+curl --request POST \
+  --url {bridgeUrl}/api/v3/patient-record/on-share \
+  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
+  --header 'request-id: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
+  --header 'timestamp: 2022-10-06T15:10:00.587Z' \
+  --header 'x-hiu-id: HIU_ID' \
+  --header 'Content-Type: application/json' \
+  --data '{
+  "hiRequest": {
+    "transactionId": "56582bc6-5c17-4b32-9244-9b61d47a8059",
+    "dataPushUrl": "https://webhook.site/a2477c41-2185-47eb-835a/health-information/transfer",
+    "keyMaterial": {
+      "cryptoAlg": "ECDH.",
+      "curve": "curve25519",
+      "dhPublicKey": {
+        "expiry": "2026-12-28T13:18:20.742Z",
+        "parameters": "Ephemeral public key.",
+        "keyValue": "BFN7KTdOT0jIAExG2A8Jg+01wMPWxptiGqwHRVvtiVEsUq2FR7P2UdqZxJyPJSeR6muai21iQhasNxnhh8I5M+g="
+      },
+      "nonce": "e589643f-48a9-41ed-ab2b-479e709e8f80"
+    }
+  },
+  "response": {
+    "requestId": "180ce450-ce28-493f-ac43-9f5253fa1167"
+  }
+}'
+```
+
+## Authorization
+
+- `Authorization` (bearer token, required): JWT access token issued by the ABDM session API after successful validation of client id and secret.
+
+## Headers
+
+- `request-id` (string, required): Random UUID, a v4 style guid, unique per callback.
+- `timestamp` (string, required): ISO 8601 timestamp of when the callback was sent.
+- `x-hiu-id` (string, required): Identifier of the health information user to which the request was intended.
+
+## Body
+
+- `hiRequest` (object, required): The data push URL and the encryption key.
+- `hiRequest.transactionId` (string, required): The transactionId the share request carried.
+- `hiRequest.dataPushUrl` (string, required): The HIU's URL the PHR app posts the encrypted records to.
+- `hiRequest.keyMaterial` (object, required)
+- `response` (object, required)
+- `response.requestId` (string, required): The REQUEST-ID of the share request this answers.
+
+## Responses
+
+- `202`: Accepted. Post the encrypted records to the data push URL next.
+  See The callback never arrives: /docs/hiecm/v3/troubleshooting/callback-never-arrives
+
+
+---
+
+# Receive the encrypted records at the data push URL, as the HIU
+
+`POST /health-information/transfer`
+
+**Hosted by the HIU at the dataPushUrl it supplied in on-share, not by ABDM.** The PHR application posts here directly; the path is whatever the data push URL names.
+
+The PHR app sends the records covered by the share, one entry per care context, each an encrypted FHIR bundle with its checksum, along with the PHR app's own ECDH key material so the HIU can derive the shared key and decrypt. The shape below is the placeholder body in NHA's Postman collection; it follows the M2 and M3 health information transfer.
+
+```bash
+curl --request POST \
+  --url {bridgeUrl}/health-information/transfer \
+  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
+  --header 'request-id: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
+  --header 'timestamp: 2022-10-06T15:10:00.587Z' \
+  --header 'Content-Type: application/json' \
+  --data '{
+  "pageNumber": 0,
+  "pageCount": 0,
+  "transactionId": "string",
+  "entries": [
+    {
+      "content": "Encrypted content of data packaged in FHIR bundle",
+      "media": "mimetype of the content.",
+      "checksum": "string",
+      "careContextReference": "10004-20200001768-1"
+    },
+    {
+      "content": "Encrypted content of data packaged in FHIR bundle",
+      "media": "mimetype of the content.",
+      "checksum": "string",
+      "careContextReference": "10004-20200001768-2"
+    }
+  ],
+  "keyMaterial": {
+    "cryptoAlg": "ECDH",
+    "curve": "Curve25519",
+    "dhPublicKey": {
+      "expiry": "2026-12-28T13:18:20.742Z",
+      "parameters": "Curve25519/32byte random key",
+      "keyValue": "string"
+    },
+    "nonce": "string"
+  }
+}'
+```
+
+## Authorization
+
+- `Authorization` (bearer token, required): JWT access token issued by the ABDM session API after successful validation of client id and secret.
+
+## Headers
+
+- `request-id` (string, required): Random UUID, a v4 style guid, unique per callback.
+- `timestamp` (string, required): ISO 8601 timestamp of when the callback was sent.
+
+## Body
+
+- `pageNumber` (integer, required): This page, counting from 0.
+- `pageCount` (integer, required): How many pages the transfer has.
+- `transactionId` (string, required): The transfer's identifier, from the share request.
+- `entries` (object[], required): One entry per care context shared.
+- `entries.content` (string): Encrypted content of data packaged in a FHIR bundle.
+- `entries.media` (string): MIME type of the content.
+- `entries.checksum` (string): Checksum of the content.
+- `entries.careContextReference` (string)
+- `keyMaterial` (object, required): ECDH key material for encrypting the records.
+- `keyMaterial.cryptoAlg` (string, required)
+- `keyMaterial.curve` (string, required)
+- `keyMaterial.dhPublicKey` (object, required)
+- `keyMaterial.dhPublicKey.expiry` (string, required)
+- `keyMaterial.dhPublicKey.parameters` (string, required)
+- `keyMaterial.dhPublicKey.keyValue` (string, required): The public key, base64.
+- `keyMaterial.nonce` (string, required): A 32 byte random nonce for this transfer.
+
+## Responses
+
+- `202`: Accepted. Decrypt, then call notify with RECEIVED, PARTIAL_RECEIVED or FAILED.
+  See The callback never arrives: /docs/hiecm/v3/troubleshooting/callback-never-arrives
+
+
+---
+
+# Notify patient record
+
+`POST /api/hiecm/patient-record/v3/notify`
+
+Update the status of the health record transfer process. It is invoked by the PHR application and HIU to notify the HIE-CM about the completion status of the transaction and the individual care-contexts. Each care-context's transfer status is included to provide a detailed update on which records were successfully shared and received.
+
+The PHR app or health locker, on the transfer of data, sends sessionStatus as one of TRANSFERRED, PARTIAL_TRANSFERRED or FAILED, and an hiStatus for each careContextReference as one of DELIVERED or ERRORED.
+
+The HIU, on receipt of data, sends sessionStatus as one of RECEIVED, PARTIAL_RECEIVED or FAILED, for example FAILED when data was not received or invalid data was received, and an hiStatus for each careContextReference as one of VALID, CORRUPTED, BLANK or ERRORED.
+
+Send the notification once, after the data transfer has completed. The HIE-CM forwards it to the other side's /api/v3/patient-record/on-notify callback.
+
+```bash
+curl --request POST \
+  --url https://dev.abdm.gov.in/api/hiecm/patient-record/v3/notify \
+  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
+  --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
+  --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
+  --header 'X-HIU-ID: HIU_ID' \
+  --header 'X-CM-ID: sbx' \
+  --header 'Content-Type: application/json' \
+  --data '{
+  "notification": {
+    "transactionId": "a0e7bed4-ef98-4ea8-9077-f4a6192bfe2b",
+    "doneAt": "2026-03-19T08:01:11.090Z",
+    "statusNotification": {
+      "sessionStatus": "TRANSFERRED",
+      "statusResponses": [
+        {
+          "careContextReference": "COC497647c1-0627-48fa-8131-0dddc1b3e0b4",
+          "hiStatus": "DELIVERED",
+          "description": "Data sent successfully"
+        },
+        {
+          "careContextReference": "COC497647c1-0627-48fa-8131-0dddc1b3e0b5",
+          "hiStatus": "DELIVERED",
+          "description": "Data sent successfully"
+        }
+      ]
+    }
+  }
+}'
+```
+
+## Authorization
+
+- `Authorization` (bearer token, required): JWT access token issued by the ABDM session API after successful validation of client id and secret.
+
+## Headers
+
+- `REQUEST-ID` (string, required): Random UUID, a v4 style guid, unique per request.
+- `TIMESTAMP` (string, required): ISO 8601 timestamp of when the request was initiated.
+- `X-HIU-ID` (string, required): Identifier of the health information user to which the request was intended.
+- `X-CM-ID` (string, required): Suffix of the consent manager to which the request was intended. sbx in the sandbox, abdm in production.
+
+## Body
+
+- `notification` (object, required): The transaction id, the session status and each care context's transfer status.
+- `notification.transactionId` (string, required)
+- `notification.doneAt` (string, required): When the transfer completed.
+- `notification.statusNotification` (object, required)
+- `notification.statusNotification.sessionStatus` (string, required): TRANSFERRED, PARTIAL_TRANSFERRED or FAILED from the PHR app or health locker; RECEIVED, PARTIAL_RECEIVED or FAILED from the HIU. One of: TRANSFERRED, PARTIAL_TRANSFERRED, RECEIVED, PARTIAL_RECEIVED, FAILED.
+- `notification.statusNotification.statusResponses` (object[], required)
+- `notification.statusNotification.statusResponses.careContextReference` (string, required)
+- `notification.statusNotification.statusResponses.hiStatus` (string, required): DELIVERED or ERRORED from the PHR app or health locker; VALID, CORRUPTED, BLANK or ERRORED from the HIU. One of: DELIVERED, ERRORED, VALID, CORRUPTED, BLANK.
+- `notification.statusNotification.statusResponses.description` (string)
+
+## Responses
+
+- `202`: Accepted. The HIE-CM forwards the status to the other side's on-notify callback.
+  See The callback never arrives: /docs/hiecm/v3/troubleshooting/callback-never-arrives
+
+
+---
+
+# Receive the other side's transfer status
+
+`POST /api/v3/patient-record/on-notify`
+
+**Hosted by the PHR application and by the HIU, not by ABDM.** The HIE-CM calls this endpoint at the callback URL registered for your bridge, so the path below is relative to that URL.
+
+This is a callback API for the PHR application and the HIU. This API is used to receive the status of the health record transfer process: the HIU receives what the PHR app sent to notify, and the PHR app receives what the HIU sent.
+
+```bash
+curl --request POST \
+  --url {bridgeUrl}/api/v3/patient-record/on-notify \
+  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
+  --header 'request-id: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
+  --header 'timestamp: 2022-10-06T15:10:00.587Z' \
+  --header 'x-hiu-id: HIU_ID' \
+  --header 'Content-Type: application/json' \
+  --data '{
+  "notification": {
+    "transactionId": "103a6265-8d5d-411b-9a9d-b460b5f00e4e",
+    "doneAt": "2026-03-19T08:01:11.090Z",
+    "statusNotification": {
+      "sessionStatus": "TRANSFERRED",
+      "statusResponses": [
+        {
+          "careContextReference": "COC497647c1-0627-48fa-8131-0dddc1b3e0b4",
+          "hiStatus": "DELIVERED",
+          "description": "Data sent successfully"
+        }
+      ]
+    }
+  }
+}'
+```
+
+## Authorization
+
+- `Authorization` (bearer token, required): JWT access token issued by the ABDM session API after successful validation of client id and secret.
+
+## Headers
+
+- `request-id` (string, required): Random UUID, a v4 style guid, unique per callback.
+- `timestamp` (string, required): ISO 8601 timestamp of when the callback was sent.
+- `x-hiu-id` (string, required): Identifier of the health information user to which the request was intended.
+
+## Body
+
+- `notification` (object, required): The transaction id, the session status and each care context's transfer status.
+- `notification.transactionId` (string, required)
+- `notification.doneAt` (string, required): When the transfer completed.
+- `notification.statusNotification` (object, required)
+- `notification.statusNotification.sessionStatus` (string, required): TRANSFERRED, PARTIAL_TRANSFERRED or FAILED from the PHR app or health locker; RECEIVED, PARTIAL_RECEIVED or FAILED from the HIU. One of: TRANSFERRED, PARTIAL_TRANSFERRED, RECEIVED, PARTIAL_RECEIVED, FAILED.
+- `notification.statusNotification.statusResponses` (object[], required)
+- `notification.statusNotification.statusResponses.careContextReference` (string, required)
+- `notification.statusNotification.statusResponses.hiStatus` (string, required): DELIVERED or ERRORED from the PHR app or health locker; VALID, CORRUPTED, BLANK or ERRORED from the HIU. One of: DELIVERED, ERRORED, VALID, CORRUPTED, BLANK.
+- `notification.statusNotification.statusResponses.description` (string)
+
+## Responses
+
+- `202`: Accepted.
+  See The callback never arrives: /docs/hiecm/v3/troubleshooting/callback-never-arrives
+
+
+---
+
+# List the record sharing history of the signed in user
+
+`GET /api/hiecm/patient-record/v3/audit-history`
+
+Retrieve the complete history of record-sharing transactions for a specific user. It provides details of all past and ongoing transactions, including associated care-contexts. The user is the one the X-AUTH-TOKEN was issued to. Filter by date with startDate and endDate, and page with limit and offset.
+
+```bash
+curl --request GET \
+  --url https://dev.abdm.gov.in/api/hiecm/patient-record/v3/audit-history \
+  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
+  --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
+  --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
+  --header 'X-CM-ID: sbx' \
+  --header 'X-AUTH-TOKEN: Bearer <USER_TOKEN>'
+```
+
+## Authorization
+
+- `Authorization` (bearer token, required): JWT access token issued by the ABDM session API after successful validation of client id and secret.
+
+## Headers
+
+- `REQUEST-ID` (string, required): Random UUID, a v4 style guid, unique per request.
+- `TIMESTAMP` (string, required): ISO 8601 timestamp of when the request was initiated.
+- `X-CM-ID` (string, required): Suffix of the consent manager to which the request was intended. sbx in the sandbox, abdm in production.
+- `X-AUTH-TOKEN` (string, required): JWT access token issued by the PHR service after successful user authentication. If the HIP does not have any role, then it is mandatory.
+
+## Query parameters
+
+- `limit` (integer): The number of records to return.
+- `startDate` (string): Start date of the records, ISO 8601.
+- `endDate` (string): End date of the records, ISO 8601.
+- `offset` (integer): Where to start. When the offset is 0, retrieval starts from the very first record in the dataset.
+
+## Responses
+
+- `200`: The sharing transactions of the user, newest first.
+
+Shape of the 200 response, generated from the schema. The values are placeholders, not a captured response:
+
+```json
+[
+  {
+    "requestId": "ed9f451d-9e07-484d-ab68-9972d6529d68",
+    "abhaAddress": "manishk1991@sbx",
+    "senderFacilityId": "MANISH_PHR_TEST",
+    "senderFacilityName": "MANISH-PHR-TEST",
+    "receiverFacilityId": "MANISH_HIU",
+    "receiverFacilityName": "MANISH_HIU",
+    "counterCode": "f4cd0d8e-25ec-465f-993c-01c91a56e0e4",
+    "transactionId": "f413b202-16b6-4d4a-9900-5cdcfb8baa50",
+    "status": "RECORD_SHARE_REQUESTED",
+    "sharedRecordCount": 2,
+    "consent": {
+      "accessMode": "VIEW",
+      "dataEraseAt": "2026-10-12T08:58:09.738Z",
+      "careContexts": [
+        {
+          "patientReference": "manikandanb87@sbx",
+          "careContextReference": "COC497647c1-0627-48fa-8131-0dddc1b3e0b4"
+        },
+        {
+          "patientReference": "manikandanb87@sbx",
+          "careContextReference": "COC497647c1-0627-48fa-8131-0dddc1b3e0b5"
+        }
+      ]
+    },
+    "dateCreated": "2025-12-08T12:04:53.594Z",
+    "dateModified": "2025-12-08T12:04:53.594Z"
+  }
+]
+```
+
+
+---
+
+# Patient scan and record share errors
+
+Seeing a symptom rather than a code? Start at [Troubleshooting](/docs/pr-20/docs/hiecm/v3/troubleshooting/).
+
+The Patient scan and record share specification records no error code yet. That is a gap in the specification, not a promise that this module cannot fail.
+
+Every code above is recorded in the specification that owns it. The aggregated list across modules is at [error codes](/docs/pr-20/docs/hiecm/v3/reference/error-codes).
+
+[Next Still stuck? Ask for help Where to file what you hit, so the answer lands back in these pages.](/docs/pr-20/docs/support)
+
+
+---
+
+# Patient scan and record share
+
+The patient or end-user can log in to the PHR application and use the "Scan and Record share" feature by scanning the facility's QR code.
+
+This process shares the patient's health records with the Health Information User (HIU) system. It ensures secure authentication and consent before sharing sensitive health information. Patients can easily control and transmit their health data to the intended HIU.
+
+## Base URL and X-CM-ID
+
+| Environment | Base URL                   | X-CM-ID |
+| ----------- | -------------------------- | ------- |
+| Sandbox     | `https://dev.abdm.gov.in`  | `sbx`   |
+| Production  | `https://apis.abdm.gov.in` | `abdm`  |
+
+## Terminology
+
+- **Bridge ID** is the client ID provided by NHA to the HIP. It is alphanumeric, for example `SBX_00XXXX`.
+- **Service ID** is the facility ID generated from the NHPR application. It is alphanumeric, for example `IN02100000XX`.
+
+## The calls
+
+Each side makes its calls in this order. A callback is a POST from the HIE-CM to the URL registered for your bridge.
+
+| Step | PHR app                                                                                                     | HIU                                                                                                   |
+| ---- | ----------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------- |
+| 1    | `POST /api/hiecm/patient-record/v3/share` after scanning the QR code                                        | Receives the share request on `/api/v3/patient-record/share`                                          |
+| 2    | Receives the data push URL and key on `/api/v3/patient-record/on-share`                                     | `POST /api/hiecm/patient-record/v3/on-share` with the data push URL and key                           |
+| 3    | Posts the encrypted records to the data push URL                                                            | Receives the encrypted records at the data push URL                                                   |
+| 4    | `POST /api/hiecm/patient-record/v3/notify`, session status `TRANSFERRED`, `PARTIAL_TRANSFERRED` or `FAILED` | `POST /api/hiecm/patient-record/v3/notify`, session status `RECEIVED`, `PARTIAL_RECEIVED` or `FAILED` |
+| 5    | Receives the other side's status on `/api/v3/patient-record/on-notify`                                      | Receives the other side's status on `/api/v3/patient-record/on-notify`                                |
+| 6    | `GET /api/hiecm/patient-record/v3/audit-history` for the sharing history                                    |                                                                                                       |
+
+The full operation list is in the [record share API reference](/docs/pr-20/reference/hiecm-record-share).
+
+
+---
+
 # Share patient open order
 
 `POST /api/hiecm/scan-gateway/v3/patient/share/open-order`
@@ -30343,7 +31134,7 @@ Using the consent artefact ID, the HIU fetches the consent artefact and requests
 
 ---
 
-# M4 Enrol: Register Healthcare Professionals and Facilities
+# Milestone 4 (M4): Register Healthcare Professionals and Facilities
 
 Milestone 4 is the Registries milestone, commonly referred to as NHPR (National Healthcare Professionals and Facilities Registry). It establishes the identity of healthcare professionals and the details of healthcare facilities within the ABDM ecosystem.
 
@@ -30907,6 +31698,21 @@ Generated from the specifications. Every scheme and header below is declared in 
 ## Scan and Pay
 
 **bearerAuth**, `http` `bearer`.
+
+## Patient scan and record share
+
+**bearerAuth**, `http` `bearer`. JWT access token issued by the ABDM session API after successful validation of client id and secret.
+
+| Header         | Required | What it is                                                                                                                                |
+| -------------- | -------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
+| `REQUEST-ID`   | yes      | Random UUID, a v4 style guid, unique per request.                                                                                         |
+| `TIMESTAMP`    | yes      | ISO 8601 timestamp of when the request was initiated.                                                                                     |
+| `X-HIU-ID`     | yes      | Identifier of the health information user to which the request was intended.                                                              |
+| `X-CM-ID`      | yes      | Suffix of the consent manager to which the request was intended. sbx in the sandbox, abdm in production.                                  |
+| `X-AUTH-TOKEN` | yes      | JWT access token issued by the PHR service after successful user authentication. If the HIP does not have any role, then it is mandatory. |
+| `request-id`   | yes      | Random UUID, a v4 style guid, unique per callback.                                                                                        |
+| `timestamp`    | yes      | ISO 8601 timestamp of when the callback was sent.                                                                                         |
+| `x-hiu-id`     | yes      | Identifier of the health information user to which the request was intended.                                                              |
 
 
 ---

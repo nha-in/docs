@@ -1,4 +1,4 @@
-# M4 Enrol: Register Healthcare Professionals and Facilities
+# Milestone 4 (M4): Register Healthcare Professionals and Facilities
 
 Milestone 4 is the Registries milestone, commonly referred to as NHPR (National Healthcare Professionals and Facilities Registry). It establishes the identity of healthcare professionals and the details of healthcare facilities within the ABDM ecosystem.
 

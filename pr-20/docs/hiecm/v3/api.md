@@ -72,6 +72,12 @@ In M2 and M3 a call is acknowledged now and answered later. The answer arrives a
 
 [Read the whole specification](/docs/pr-20/reference/hiecm-scan-and-pay)
 
+## Patient scan and record share
+
+11 endpoints across 1 use case: Record share. Each endpoint has its own page in the sidebar.
+
+[Read the whole specification](/docs/pr-20/reference/hiecm-record-share)
+
 ## Callbacks with no documented trigger
 
 3 callbacks are declared at module level with no call named against them. Which call produces each one is not documented, so this page does not say.

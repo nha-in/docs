@@ -2031,13 +2031,13 @@ paths:
               properties:
                 scope:
                   type: array
-                  description: The scope of the request. Use search-abha.
                   items:
                     type: string
                     enum:
                       - search-abha
                   example:
                     - search-abha
+                  description: The scope of the request. Use search-abha.
                 mobile:
                   type: string
                   example: "{{rsaMobileEncryptionOutput}}"

@@ -116,6 +116,16 @@
       ]
     },
     {
+      "name": "abdm-record-share",
+      "title": "Patient scan and record share",
+      "files": [
+        "SKILL.md",
+        "references/scaffold.md",
+        "references/integrate.md",
+        "references/debug.md"
+      ]
+    },
+    {
       "name": "abdm-fhir",
       "title": "FHIR, generating and auditing bundles",
       "files": [

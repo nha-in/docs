@@ -127,18 +127,7 @@ From `shared.concept.survey-an-existing-codebase`.
 
 **Act: the calls in this journey, in order**
 
-#### 1. Request a token for accessing a user’s ABHA (`m1_get_v3_profile_account_request_token`)
-
-```bash
-curl --request GET \
-  --url https://abhasbx.abdm.gov.in/abha/api/v3/profile/account/request/token \
-  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
-  --header 'R-token: Bearer {{R-jwtToken}}' \
-  --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
-  --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8'
-```
-
-#### 2. Generate Keycloak token/access token (`gateway_post_gateway_v3_sessions`)
+#### 1. Generate access token (`gateway_post_gateway_v3_sessions`)
 
 ```bash
 curl --request POST \
@@ -154,7 +143,7 @@ curl --request POST \
 }'
 ```
 
-#### 3. Fetch public key (`m1_get_v3_profile_public_certificate`)
+#### 2. Fetch public key (`m1_get_v3_profile_public_certificate`)
 
 ```bash
 curl --request GET \
@@ -179,7 +168,7 @@ A 200 whose body matches:
 
 **Act: the calls in this journey, in order**
 
-#### 1. Generate Keycloak token/access token (`gateway_post_gateway_v3_sessions`)
+#### 1. Generate access token (`gateway_post_gateway_v3_sessions`)
 
 ```bash
 curl --request POST \
@@ -254,7 +243,7 @@ curl --request POST \
 }'
 ```
 
-#### 5. Request enrolment OTP (`m1_post_v3_enrollment_request_otp`)
+#### 5. Request enrolment OTP (optional) (`m1_post_v3_enrollment_request_otp`)
 
 ```bash
 curl --request POST \
@@ -275,7 +264,7 @@ curl --request POST \
 }'
 ```
 
-#### 6. Verify- mobile OTP (`m1_post_v3_enrollment_auth_byabdm`)
+#### 6. Verify- mobile OTP (optional) (`m1_post_v3_enrollment_auth_byabdm`)
 
 ```bash
 curl --request POST \
@@ -344,7 +333,7 @@ A 200 whose body matches:
 
 **Act: the calls in this journey, in order**
 
-#### 1. Generate Keycloak token/access token (`gateway_post_gateway_v3_sessions`)
+#### 1. Generate access token (`gateway_post_gateway_v3_sessions`)
 
 ```bash
 curl --request POST \
@@ -434,7 +423,7 @@ curl --request POST \
 }'
 ```
 
-#### 6. Request enrolment OTP (`m1_post_v3_enrollment_request_otp`)
+#### 6. Request enrolment OTP (optional) (`m1_post_v3_enrollment_request_otp`)
 
 ```bash
 curl --request POST \
@@ -455,7 +444,7 @@ curl --request POST \
 }'
 ```
 
-#### 7. Verify- mobile OTP (`m1_post_v3_enrollment_auth_byabdm`)
+#### 7. Verify- mobile OTP (optional) (`m1_post_v3_enrollment_auth_byabdm`)
 
 ```bash
 curl --request POST \
@@ -524,7 +513,7 @@ A 200 whose body matches:
 
 **Act: the calls in this journey, in order**
 
-#### 1. Generate Keycloak token/access token (`gateway_post_gateway_v3_sessions`)
+#### 1. Generate access token (`gateway_post_gateway_v3_sessions`)
 
 ```bash
 curl --request POST \
@@ -579,7 +568,7 @@ curl --request POST \
 }'
 ```
 
-#### 4. Request enrolment OTP (`m1_post_v3_enrollment_request_otp`)
+#### 4. Request enrolment OTP (optional) (`m1_post_v3_enrollment_request_otp`)
 
 ```bash
 curl --request POST \
@@ -600,7 +589,7 @@ curl --request POST \
 }'
 ```
 
-#### 5. Verify- mobile OTP (`m1_post_v3_enrollment_auth_byabdm`)
+#### 5. Verify- mobile OTP (optional) (`m1_post_v3_enrollment_auth_byabdm`)
 
 ```bash
 curl --request POST \
@@ -669,7 +658,7 @@ A 200 whose body matches:
 
 **Act: the calls in this journey, in order**
 
-#### 1. Generate Keycloak token/access token (`gateway_post_gateway_v3_sessions`)
+#### 1. Generate access token (`gateway_post_gateway_v3_sessions`)
 
 ```bash
 curl --request POST \
@@ -724,7 +713,7 @@ curl --request POST \
 }'
 ```
 
-#### 4. Request enrolment OTP (`m1_post_v3_enrollment_request_otp`)
+#### 4. Request enrolment OTP (optional) (`m1_post_v3_enrollment_request_otp`)
 
 ```bash
 curl --request POST \
@@ -745,7 +734,7 @@ curl --request POST \
 }'
 ```
 
-#### 5. Verify- mobile OTP (`m1_post_v3_enrollment_auth_byabdm`)
+#### 5. Verify- mobile OTP (optional) (`m1_post_v3_enrollment_auth_byabdm`)
 
 ```bash
 curl --request POST \
@@ -814,7 +803,7 @@ A 200 whose body matches:
 
 **Act: the calls in this journey, in order**
 
-#### 1. Generate Keycloak token/access token (`gateway_post_gateway_v3_sessions`)
+#### 1. Generate access token (`gateway_post_gateway_v3_sessions`)
 
 ```bash
 curl --request POST \
@@ -2444,61 +2433,27 @@ curl --request GET \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z'
 ```
 
+#### 4. Request a token for accessing a user’s ABHA (`m1_get_v3_profile_account_request_token`)
+
+```bash
+curl --request GET \
+  --url https://abhasbx.abdm.gov.in/abha/api/v3/profile/account/request/token \
+  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
+  --header 'R-token: Bearer {{R-jwtToken}}' \
+  --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
+  --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8'
+```
+
 **Exit condition (Observe until this is true)**
 
 A 200 whose body matches:
 
 ```json
 {
-  "ABHANumber": "<ABHA_NUMBER>",
-  "preferredAbhaAddress": "<ABHA_ADDRESS>",
-  "mobile": "******0903",
-  "firstName": "Username",
-  "middleName": "<NAME>",
-  "lastName": "<NAME>",
-  "name": "<NAME>",
-  "yearOfBirth": "<DOB>",
-  "dayOfBirth": "<DOB>",
-  "monthOfBirth": "<DOB>",
-  "gender": "M",
-  "profilePhoto": "<BASE64_PHOTO>",
-  "status": "ACTIVE",
-  "stateCode": "27",
-  "districtCode": "478",
-  "pincode": "<PINCODE>",
-  "address": "<ADDRESS>",
-  "kycPhoto": "<BASE64_PHOTO>",
-  "stateName": "MAHARASHTRA",
-  "districtName": "<ADDRESS>",
-  "subdistrictName": "<ADDRESS>",
-  "authMethods": [
-    "MOBILE_OTP",
-    "AADHAAR_BIO",
-    "AADHAAR_OTP",
-    "DEMOGRAPHICS",
-    "PASSWORD"
-  ],
-  "tags": {},
-  "kycVerified": true,
-  "verificationStatus": "VERIFIED",
-  "verificationType": "AADHAAR",
-  "localizedDetails": {
-    "name": "<NAME>",
-    "stateName": "महाराष्ट्र",
-    "districtName": "<ADDRESS>",
-    "villageName": "<ADDRESS>",
-    "townName": "<ADDRESS>",
-    "gender": "पुरुष",
-    "localizedLabels": {
-      "name": "नाव",
-      "abhaNumber": "आभा क्रमांक",
-      "abhaAddress": "आभा पत्ता",
-      "gender": "लिंग",
-      "dob": "जन्मतारीख",
-      "mobile": "मोबाईल"
-    }
-  },
-  "createdDate": "07-05-2024"
+  "token": "<TOKEN>",
+  "expiresIn": 1800,
+  "refreshToken": "<TOKEN>",
+  "refreshExpiresIn": 1296000
 }
 ```
 
