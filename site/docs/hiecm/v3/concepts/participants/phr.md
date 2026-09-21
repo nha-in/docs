@@ -1,61 +1,55 @@
 ---
-title: PHR app
-sidebar_label: PHR app
+title: Personal Health Record (PHR) Application
+sidebar_label: PHR application
 sidebar_position: 7
-description: 'The citizen facing app: what identifies it, the three milestones it builds, and why it is where consent happens.'
-source: site/docs/hiecm/v3/concepts/phr.md, site/docs/hiecm/v3/milestones/p1.mdx, site/docs/hiecm/v3/milestones/p3.mdx, catalogue/hiecm/concepts/roles.md, site/docs/hiecm/v3/concepts/gateway.md
+description: 'The citizen facing application: its role in ABDM, the capabilities each phase adds, and why it is where consent is managed.'
+source: PHR - Sandbox (2).docx, NHA content review of 21 September 2026
 sidebar_class_name: sidebar-icon sidebar-icon--smartphone
 ---
 
-# PHR app
+# Personal Health Record (PHR) Application
 
-You are the citizen's own app. You hold their identity, show them their records,
-and are the place where every consent decision is taken.
+The Personal Health Record ([PHR](/docs/hiecm/v3/getting-started/glossary#phr))
+application functions as the primary digital interface for the Data Principal
+(citizen) within the Ayushman Bharat Digital Mission
+([ABDM](/docs/hiecm/v3/getting-started/glossary#abdm)) ecosystem. It facilitates
+digital identity management, provides access to longitudinal health records,
+and serves as the centralized node for consent artifact management.
 
-## Who you are in ABDM
+## Role and positioning within the ABDM architecture
 
-A [PHR](/docs/hiecm/v3/getting-started/glossary#phr) application acts for the
-citizen, and a citizen and a facility sit on opposite sides of the
-[HIE-CM](/docs/hiecm/v3/getting-started/glossary#hie-cm). That position is fixed
-for the life of your product.
+The PHR application operates on behalf of the citizen and securely connects
+with healthcare facilities through the
+[HIE-CM](/docs/hiecm/v3/getting-started/glossary#hie-cm). Health data is routed
+using the citizen's [ABHA address](/docs/hiecm/v3/getting-started/glossary#abha-address).
+The PHR application acts as an [HIU](/docs/hiecm/v3/getting-started/glossary#hiu)
+for fetching clinical records and as a
+[HIP](/docs/hiecm/v3/getting-started/glossary#hip) for sharing user-uploaded
+health documents and facility linked health documents. It must be listed in
+the ABDM Application Directory after Sandbox exit with its official name and
+marketplace URLs.
 
-You hold no registry identifier of your own. Your users hold the
-[ABHA](/docs/hiecm/v3/getting-started/glossary#abha) numbers and addresses, and
-everything routes on the address. Your own credentials are the client id and
-client secret issued at sandbox signup, which you exchange for a session token.
+## Authorized capabilities and milestones
 
-Within that position the citizen takes both directions through your app. Your
-user is the [HIU](/docs/hiecm/v3/getting-started/glossary#hiu) whenever you
-fetch their records, and the
-[HIP](/docs/hiecm/v3/getting-started/glossary#hip) the moment they link or push
-one from your app.
-
-To be listed for deep links, submit three things at sandbox exit: your
-application name, your Play Store URL and your App Store URL.
-
-## What you can do
-
-| Build | What it gives the user |
+| Integration phase | Functional capabilities |
 | --- | --- |
-| [P1](/docs/hiecm/v3/milestones/p1) | Create or link an ABHA address, eight login routes, profile, card and QR code |
-| [P2](/docs/hiecm/v3/milestones/p2) | Scan and share at a facility, discover old records, link [care contexts](/docs/hiecm/v3/getting-started/glossary#care-context) |
-| [P3](/docs/hiecm/v3/milestones/p3) | Subscriptions, notifications, consent decisions, auto approval, fetching and storing records |
+| [Phase 1 (P1)](/docs/hiecm/v3/milestones/p1) | Facilitation of ABHA number and address creation, multiple authentication (four mandated login routes). |
+| [Phase 2 (P2)](/docs/hiecm/v3/milestones/p2) | Execution of facility-level Scan & Share, profile management, ABHA card and QR code generation, legacy record discovery, and standardized [Care Context](/docs/hiecm/v3/getting-started/glossary#care-context) linkage. |
+| [Phase 3 (P3)](/docs/hiecm/v3/milestones/p3) | Management of user locker subscriptions and system notifications, execution of consent decisions (approval/rejection), configuration of auto-approval policies, and the secure retrieval and storage of health records. |
+| Health Locker ([M2](/docs/hiecm/v3/milestones/m2)) | Processing direct document uploads by the Data Principal necessitates certification as a Health Locker (Health Repository Provider), which requires the successful completion of Milestone 2 (M2) integration. |
 
-Accepting uploads makes you a health locker, and that needs
-[M2](/docs/hiecm/v3/api/m2) as well.
+## Significance and ecosystem value
 
-## Why it is worth it
+The PHR application platform empowers citizens by providing a central
+interface for consent management and control over their health information.
+Through HIE-CM, users receive notifications on the creation or modification of
+Care Contexts linked to their ABHA address, enabling aggregation of
+longitudinal health records based on approved consent policies. In addition,
+PHR applications and Health Lockers provide secure, long-term, user-managed
+storage of health records, complementing the statutory record-retention
+responsibilities of healthcare establishments.
 
-You are the only participant the citizen actually sees. Every consent request
-raised anywhere on the network arrives in your app, and the decision is made
-there.
+## Next steps
 
-The [HIE-CM](/docs/hiecm/v3/getting-started/glossary#hie-cm) tells you when a
-care context is linked or updated for a subscribed address, so records reach
-your user without them chasing a facility. You then store those records for the
-long term, which no other participant does on the citizen's behalf.
-
-## Next
-
-[PHR applications](/docs/hiecm/v3/concepts/phr) is the build guide, screen by
-screen.
+- [PHR applications](/docs/hiecm/v3/concepts/phr) is the build guide, screen
+  by screen.
