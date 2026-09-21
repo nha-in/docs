@@ -6,24 +6,24 @@ v3.1 fingerprint login in a single call. Send the encrypted Aadhaar number and t
 
 **Endpoint:** `POST /abha/api/v3.1/profile/login/verify`
 
-**Flow:Login - Biometric v3.1** - independent API; call the one that fits your identifier / modality.
+**Flow:** **Login - Biometric v3.1** - independent API; call the one that fits your identifier / modality.
 
-**Headers** (plus `Authorization: Bearer `):
+**Headers** (plus `Authorization: Bearer <gateway token>`):
 
 | Header | Required | Description |
 |---|---|---|
 | REQUEST-ID | yes | Unique UUID for every request. |
-| TIMESTAMP | yes | Current UTC TIMESTAMP in ISO-8601 format. |
+| TIMESTAMP | yes | Current UTC timestamp in ISO-8601 format. |
 
 **Request body for this use case:**
 
 | Field | Value / Type | Required | Description |
 |---|---|---|---|
-| `scope` | `["ABHA-login", "Aadhaar-bio-login-verify"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
+| `scope` | `["abha-login", "aadhaar-bio-login-verify"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
 | `authData` | object | yes | Authentication payload for this use case. |
 | `authData.authMethods` | `["bio_login"]` | yes | Authentication method used in this step. |
 | `authData.bio_login` | object | yes | Fingerprint login block (v3.1). |
-| `authData.bio_login.Aadhaar` | string | yes | Aadhaar number, RSA-encrypted. |
+| `authData.bio_login.aadhaar` | string | yes | Aadhaar number, RSA-encrypted. |
 | `authData.bio_login.fingerPrintAuthPid` | string | yes | Base64 PID block captured from a registered fingerprint RD device. |
 
 > **Note:** This API is only in the Postman collection (v3.1). The request/response is taken from there, and the success response shape reuses the v3 biometric verify example.

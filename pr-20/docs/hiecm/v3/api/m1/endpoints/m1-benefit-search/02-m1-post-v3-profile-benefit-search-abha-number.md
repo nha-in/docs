@@ -6,14 +6,14 @@ Lists the benefit programmes linked to an ABHA number. `loginId` is the RSA-encr
 
 **Endpoint:** `POST /abha/api/v3/profile/benefit/search`
 
-**Flow:Benefit - Search** - independent API; call the one that fits your identifier / modality.
+**Flow:** **Benefit - Search** - independent API; call the one that fits your identifier / modality.
 
-**Headers** (plus `Authorization: Bearer `):
+**Headers** (plus `Authorization: Bearer <gateway token>`):
 
 | Header | Required | Description |
 |---|---|---|
 | REQUEST-ID | yes | Unique UUID for every request. |
-| TIMESTAMP | yes | Current UTC TIMESTAMP in ISO-8601 format. |
+| TIMESTAMP | yes | Current UTC timestamp in ISO-8601 format. |
 | BENEFIT_NAME | yes | Benefit / programme name approved by NHA for the integrator. |
 
 **Request body for this use case:**
@@ -21,7 +21,7 @@ Lists the benefit programmes linked to an ABHA number. `loginId` is the RSA-encr
 | Field | Value / Type | Required | Description |
 |---|---|---|---|
 | `scope` | `["search"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
-| `loginHint` | `"ABHA-number"` | yes | Type of identifier sent in `loginId`. |
+| `loginHint` | `"abha-number"` | yes | Type of identifier sent in `loginId`. |
 | `loginId` | string | yes | Identifier value, RSA-encrypted with the ABHA public certificate. |
 
 ```bash

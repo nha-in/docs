@@ -17,12 +17,12 @@ Call it after receiving and persisting a /v1/communication/request bundle. The g
 - The inbound JWE was extracted from the payload field, validated as a five-part string, decrypted with your PKCS8 private key and its protected header parsed for correlation ID, status and workflow ID.
 - The provider is a registered NHCX participant and holds a valid Bearer token.
 - The payer's certificate is available to encrypt the acknowledgement bundle.
-- The acknowledgement bundle mirrors the request (Task completed, intent proposal, code poll, reasonCode echoed) with the provider Organisation listed before the payer Organisation and Bundle.TIMESTAMP updated to the acknowledgement time.
+- The acknowledgement bundle mirrors the request (Task completed, intent proposal, code poll, reasonCode echoed) with the provider Organisation listed before the payer Organisation and Bundle.timestamp updated to the acknowledgement time.
 - Protected header reuses the request's x-hcx-correlation_ID, carries a fresh x-hcx-API_call_ID and a responder x-hcx-status.
 
 ### Postconditions
 
-The gateway returns HTTP 202 with the StatusSuccessResponse envelope (TIMESTAMP, API_call_ID, correlation_ID, result, error) and forwards the bundle to the payer. The payer's system can link the acknowledgement to the original notification by correlation ID and by the shared claim or preauth reference in Task.identifier and Communication.ID. The underlying issue is not resolved by this call: a TAT breach or grievance may still be open, and any documents requested via additionalinfo are supplied through the relevant preauth or claim resubmission path. Validation failures come back as 400, unknown resources as 404, downstream faults as 500.
+The gateway returns HTTP 202 with the StatusSuccessResponse envelope (timestamp, API_call_ID, correlation_ID, result, error) and forwards the bundle to the payer. The payer's system can link the acknowledgement to the original notification by correlation ID and by the shared claim or preauth reference in Task.identifier and Communication.ID. The underlying issue is not resolved by this call: a TAT breach or grievance may still be open, and any documents requested via additionalinfo are supplied through the relevant preauth or claim resubmission path. Validation failures come back as 400, unknown resources as 404, downstream faults as 500.
 
 ### Common mistakes
 

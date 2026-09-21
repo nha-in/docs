@@ -6,25 +6,25 @@ Starts login with an ABHA address. ABDM sends an OTP to the mobile linked with t
 
 **Endpoint:** `POST /abha/api/v3/phr/web/login/abha/request/otp`
 
-**Flow:ABHA Address Login - Mobile OTP** - step 2 of 6
+**Flow:** **ABHA Address Login - Mobile OTP** - step 2 of 6
 - Previous: *Search ABHA address (auth methods)*
 - Next: *ABHA address login via Mobile OTP - verify*
 
-**Headers** (plus `Authorization: Bearer `):
+**Headers** (plus `Authorization: Bearer <gateway token>`):
 
 | Header | Required | Description |
 |---|---|---|
 | REQUEST-ID | yes | Unique UUID for every request. |
-| TIMESTAMP | yes | Current UTC TIMESTAMP in ISO-8601 format. |
+| TIMESTAMP | yes | Current UTC timestamp in ISO-8601 format. |
 
 **Request body for this use case:**
 
 | Field | Value / Type | Required | Description |
 |---|---|---|---|
-| `scope` | `["ABHA-address-login", "mobile-verify"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
-| `loginHint` | `"ABHA-address"` | yes | Type of identifier sent in `loginId`. |
+| `scope` | `["abha-address-login", "mobile-verify"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
+| `loginHint` | `"abha-address"` | yes | Type of identifier sent in `loginId`. |
 | `loginId` | string | yes | Identifier value, RSA-encrypted with the ABHA public certificate. |
-| `otpSystem` | `"ABDM"` | yes | System that generates and delivers the OTP (`Aadhaar` = UIDAI, `ABDM` = ABDM). |
+| `otpSystem` | `"abdm"` | yes | System that generates and delivers the OTP (`aadhaar` = UIDAI, `abdm` = ABDM). |
 
 ```bash
 curl --request POST \

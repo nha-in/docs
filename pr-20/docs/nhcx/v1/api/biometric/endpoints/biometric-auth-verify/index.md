@@ -16,7 +16,7 @@ Immediately after the capture. `authMethods` is `bio` for fingerprint and `iris`
 
 - A `txnId` from `Biometric auth init` for the same modality.
 - The PID block from the capture device.
-- The same headers as init: `Authorization: Bearer `, `process` and `payerid`.
+- The same headers as init: `Authorization: Bearer <session token>`, `process` and `payerid`.
 
 ### Postconditions
 

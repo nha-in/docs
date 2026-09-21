@@ -6,15 +6,15 @@ Creates an ABHA number with Aadhaar face authentication. First call *Face auth -
 
 **Endpoint:** `POST /abha/api/v3/enrollment/enrol/byAadhaar`
 
-**Flow:Create ABHA - Face Authentication** - step 3 of 9
+**Flow:** **Create ABHA - Face Authentication** - step 3 of 9
 - Previous: *Face auth - capture PID / track status*
 - Next: *After ABHA creation - send OTP to verify mobile (optional)*
 
-**Headers** (plus `Authorization: Bearer `):
+**Headers** (plus `Authorization: Bearer <gateway token>`):
 
 | Header | Required | Description |
 |---|---|---|
-| TIMESTAMP | yes | Current UTC TIMESTAMP in ISO-8601 format. |
+| TIMESTAMP | yes | Current UTC timestamp in ISO-8601 format. |
 | REQUEST-ID | yes | Unique UUID for every request. |
 | Benefit-Name | no | **Applicable for user who is enrolling via Benefit Program.** |
 
@@ -26,10 +26,10 @@ Creates an ABHA number with Aadhaar face authentication. First call *Face auth -
 | `authData.authMethods` | `["face_auth"]` | yes | Authentication method used in this step. |
 | `authData.face` | object | yes | Face authentication block. |
 | `authData.face.txnId` | string | yes | Transaction ID returned by the previous step of this flow. |
-| `authData.face.Aadhaar` | string | yes | Aadhaar number, RSA-encrypted. |
+| `authData.face.aadhaar` | string | yes | Aadhaar number, RSA-encrypted. |
 | `authData.face.mobile` | string | no | Mobile number to be linked with the ABHA (plain, 10 digits). |
 | `consent` | object | yes | Consent captured from the user for ABHA enrolment. |
-| `consent.code` | string | yes | Consent code. Use `ABHA-enrollment`. |
+| `consent.code` | string | yes | Consent code. Use `abha-enrollment`. |
 | `consent.version` | string | yes | Consent version. Use `1.4`. |
 
 ```bash

@@ -14,7 +14,7 @@ When the user token has lapsed during a transaction cycle. Refresh automatically
 
 ### Preconditions
 
-- A refresh token from `Biometric auth verify` or an earlier refresh, less than fifteen days old, sent on `R-token` as `Bearer `.
+- A refresh token from `Biometric auth verify` or an earlier refresh, less than fifteen days old, sent on `R-token` as `Bearer <refresh token>`.
 - The ABDM session token on `Authorization`, with `payerid` and `process`.
 
 ### Postconditions

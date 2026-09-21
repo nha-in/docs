@@ -6,27 +6,27 @@ Starts fingerprint login with an ABHA address. `loginId` is the RSA-encrypted AB
 
 **Endpoint:** `POST /abha/api/v3/phr/web/login/abha/request/otp`
 
-**Flow:ABHA Address Login - Fingerprint** - step 1 of 5
+**Flow:** **ABHA Address Login - Fingerprint** - step 1 of 5
 - Previous: none (first call of this flow)
 - Next: *ABHA address login via Fingerprint - verify*
 
-**Headers** (plus `Authorization: Bearer `):
+**Headers** (plus `Authorization: Bearer <gateway token>`):
 
 | Header | Required | Description |
 |---|---|---|
 | REQUEST-ID | yes | Unique UUID for every request. |
-| TIMESTAMP | yes | Current UTC TIMESTAMP in ISO-8601 format. |
+| TIMESTAMP | yes | Current UTC timestamp in ISO-8601 format. |
 
 **Request body for this use case:**
 
 | Field | Value / Type | Required | Description |
 |---|---|---|---|
-| `scope` | `["ABHA-login", "Aadhaar-bio-verify"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
-| `loginHint` | `"ABHA-address"` | yes | Type of identifier sent in `loginId`. |
+| `scope` | `["abha-login", "aadhaar-bio-verify"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
+| `loginHint` | `"abha-address"` | yes | Type of identifier sent in `loginId`. |
 | `loginId` | string | yes | Identifier value, RSA-encrypted with the ABHA public certificate. |
-| `otpSystem` | `"Aadhaar"` | yes | System that generates and delivers the OTP (`Aadhaar` = UIDAI, `ABDM` = ABDM). |
+| `otpSystem` | `"aadhaar"` | yes | System that generates and delivers the OTP (`aadhaar` = UIDAI, `abdm` = ABDM). |
 
-> **Note:** Biometric ABHA-address login uses scope `ABHA-login`, not `ABHA-address-login` (the same in Swagger and Postman).
+> **Note:** Biometric ABHA-address login uses scope `abha-login`, not `abha-address-login` (the same in Swagger and Postman).
 
 ```bash
 curl --request POST \

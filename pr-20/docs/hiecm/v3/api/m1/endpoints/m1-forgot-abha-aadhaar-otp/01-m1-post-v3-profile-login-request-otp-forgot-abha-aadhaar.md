@@ -6,25 +6,25 @@ Starts recovery of a forgotten ABHA number. UIDAI sends an OTP to the Aadhaar-li
 
 **Endpoint:** `POST /abha/api/v3/profile/login/request/otp`
 
-**Flow:Forgot ABHA - Aadhaar OTP** - step 1 of 2
+**Flow:** **Forgot ABHA - Aadhaar OTP** - step 1 of 2
 - Previous: none (first call of this flow)
 - Next: *Forgot ABHA via Aadhaar - verify OTP*
 
-**Headers** (plus `Authorization: Bearer `):
+**Headers** (plus `Authorization: Bearer <gateway token>`):
 
 | Header | Required | Description |
 |---|---|---|
 | REQUEST-ID | yes | Unique UUID for every request. |
-| TIMESTAMP | yes | Current UTC TIMESTAMP in ISO-8601 format. |
+| TIMESTAMP | yes | Current UTC timestamp in ISO-8601 format. |
 
 **Request body for this use case:**
 
 | Field | Value / Type | Required | Description |
 |---|---|---|---|
-| `scope` | `["ABHA-login", "Aadhaar-verify"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
-| `loginHint` | `"Aadhaar"` | yes | Type of identifier sent in `loginId`. |
+| `scope` | `["abha-login", "aadhaar-verify"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
+| `loginHint` | `"aadhaar"` | yes | Type of identifier sent in `loginId`. |
 | `loginId` | string | yes | Identifier value, RSA-encrypted with the ABHA public certificate. |
-| `otpSystem` | `"Aadhaar"` | yes | System that generates and delivers the OTP (`Aadhaar` = UIDAI, `ABDM` = ABDM). |
+| `otpSystem` | `"aadhaar"` | yes | System that generates and delivers the OTP (`aadhaar` = UIDAI, `abdm` = ABDM). |
 
 ```bash
 curl --request POST \

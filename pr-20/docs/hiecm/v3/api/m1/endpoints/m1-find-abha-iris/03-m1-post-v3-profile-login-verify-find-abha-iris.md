@@ -6,22 +6,22 @@ Completes IRIS authentication for the chosen account. Send the `txnId` from *Fin
 
 **Endpoint:** `POST /abha/api/v3/profile/login/verify`
 
-**Flow:Find ABHA - IRIS** - step 3 of 3
+**Flow:** **Find ABHA - IRIS** - step 3 of 3
 - Previous: *Find ABHA via IRIS - send authentication request*
 - Next: none (last call of this flow)
 
-**Headers** (plus `Authorization: Bearer `):
+**Headers** (plus `Authorization: Bearer <gateway token>`):
 
 | Header | Required | Description |
 |---|---|---|
 | REQUEST-ID | yes | Unique UUID for every request. |
-| TIMESTAMP | yes | Current UTC TIMESTAMP in ISO-8601 format. |
+| TIMESTAMP | yes | Current UTC timestamp in ISO-8601 format. |
 
 **Request body for this use case:**
 
 | Field | Value / Type | Required | Description |
 |---|---|---|---|
-| `scope` | `["ABHA-login", "Aadhaar-iris-verify"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
+| `scope` | `["abha-login", "aadhaar-iris-verify"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
 | `authData` | object | yes | Authentication payload for this use case. |
 | `authData.authMethods` | `["iris"]` | yes | Authentication method used in this step. |
 | `authData.iris` | object | yes | IRIS authentication block. |

@@ -2,7 +2,7 @@
 
 `POST v1_coverageeligibility_on_check`
 
-Hosted by the provider. The exchange posts this message to the `endpoint_URL` you registered, at `/v1/coverageeligibility/on_check`, with the headers and the sealed payload the sender posted. Answer HTTP 202 with the receipt first and process afterwards; [Receiving a callback](/docs/nhcx/v1/getting-started/receiving-a-callback) has the rules.
+Hosted by the provider. The exchange posts this message to the `endpoint_url` you registered, at `/v1/coverageeligibility/on_check`, with the headers and the sealed payload the sender posted. Answer HTTP 202 with the receipt first and process afterwards; [Receiving a callback](/docs/nhcx/v1/getting-started/receiving-a-callback) has the rules.
 
 Payer returns the CoverageEligibilityResponse (policy in force, benefits, auth requirements) or an error to the provider through NHCX.
 

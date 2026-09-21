@@ -17,7 +17,7 @@ The payer calls it after receiving a /v1/search/submit Task, acknowledging it wi
 - The inbound search Task was decrypted and its correlation ID, status and workflow ID captured; the 202 acceptance body was already returned.
 - The payer is a registered participant with a valid Bearer token and the requester's certificate for encryption.
 - The response is a JWE whose plaintext carries the ClaimResponse (for claim-document searches) with basedOn and about populated as documented; the loosely typed HcxOnSearchBody requires only a type property.
-- Protected header echoes the search's x-hcx-correlation_ID, carries a fresh API_call_ID, an IST TIMESTAMP and a responder status.
+- Protected header echoes the search's x-hcx-correlation_ID, carries a fresh API_call_ID, an IST timestamp and a responder status.
 
 ### Postconditions
 
@@ -38,7 +38,7 @@ The gateway returns HTTP 202 with the StatusSuccessResponse envelope (or 400, 40
 - Populate about with your own reference ID and the current status so the requester needs no further call.
 - Return 202 to the inbound search first, resolve documents asynchronously, then post this callback.
 - Be idempotent on correlation ID; the same search may be redelivered up to five times.
-- Use a fresh API_call_ID, IST TIMESTAMP and a responder status from response.complete, response.partial or response.error.
+- Use a fresh API_call_ID, IST timestamp and a responder status from response.complete, response.partial or response.error.
 
 ### Related scenario
 

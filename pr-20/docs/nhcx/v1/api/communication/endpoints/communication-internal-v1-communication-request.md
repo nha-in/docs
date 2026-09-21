@@ -16,12 +16,12 @@ The published OpenAPI documents give this path the same semantics as /v1/communi
 
 - Identical to the public endpoint: registered sender and recipient, valid Bearer token, recipient certificate for JWE encryption (RSA-OAEP-256, A256GCM).
 - Request body is a JWEPayload, { "payload": "" }, whose plaintext is the Task plus Communication collection Bundle.
-- Protected header carries sender_code, recipient_code, API_call_ID, correlation_ID, workflow_ID, TIMESTAMP in IST and status request.initiated.
+- Protected header carries sender_code, recipient_code, API_call_ID, correlation_ID, workflow_ID, timestamp in IST and status request.initiated.
 - Whether the internal prefix is reachable from a participant's network is not documented; confirm with the environment index and your onboarding contact.
 
 ### Postconditions
 
-Returns the same response set as the public endpoint: 202 Accepted with a StatusSuccessResponse (TIMESTAMP, API_call_ID, correlation_ID, result, error), or 400 Request Validation failed, 404 Requested resource was not found and 500 Downstream systems down/unhandled exceptions in the same envelope. The bundle is forwarded to the provider's registered callback, which must acknowledge with 202 within 30 seconds and then answer on the communication on_request path under the same correlation ID. No additional state change is documented for the internal variant.
+Returns the same response set as the public endpoint: 202 Accepted with a StatusSuccessResponse (timestamp, API_call_ID, correlation_ID, result, error), or 400 Request Validation failed, 404 Requested resource was not found and 500 Downstream systems down/unhandled exceptions in the same envelope. The bundle is forwarded to the provider's registered callback, which must acknowledge with 202 within 30 seconds and then answer on the communication on_request path under the same correlation ID. No additional state change is documented for the internal variant.
 
 ### Common mistakes
 

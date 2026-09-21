@@ -6,17 +6,17 @@ Updates the profile photo of the logged-in ABHA user (`X-token`). Send the photo
 
 **Endpoint:** `PATCH /abha/api/v3/profile/account`
 
-**Flow:Profile - Update Photo** - step 1 of 1
+**Flow:** **Profile - Update Photo** - step 1 of 1
 - Previous: none (first call of this flow)
 - Next: none (last call of this flow)
 
-**Headers** (plus `Authorization: Bearer `):
+**Headers** (plus `Authorization: Bearer <gateway token>`):
 
 | Header | Required | Description |
 |---|---|---|
-| TIMESTAMP | yes | Current UTC TIMESTAMP in ISO-8601 format. |
+| TIMESTAMP | yes | Current UTC timestamp in ISO-8601 format. |
 | REQUEST-ID | yes | Unique UUID for every request. |
-| X-token | yes | User token (`Bearer `) received after verification / login. |
+| X-token | yes | User token (`Bearer <token>`) received after verification / login. |
 
 **Request body for this use case:**
 
@@ -47,7 +47,7 @@ curl --request PATCH \
 
 - `TIMESTAMP` (string, required): Current UTC timestamp in ISO-8601 format.
 - `REQUEST-ID` (string, required): Unique UUID for every request.
-- `X-token` (string, required): User token (`Bearer `) received after verification / login.
+- `X-token` (string, required): User token (`Bearer <token>`) received after verification / login.
 
 ## Body
 

@@ -36,7 +36,7 @@ HTTP 200 with ParticipantCreateV2Resp: participantid, facilityname, facilitycont
 
 ### Best practices
 
-- Persist transactionid immediately, together with the TIMESTAMP, so the /validate step can be completed by whoever holds the registered phone.
+- Persist transactionid immediately, together with the timestamp, so the /validate step can be completed by whoever holds the registered phone.
 - Verify the mobile number and registry ID against HFR or IRDAI records before calling; the check is strict and every failed attempt is a manual round trip.
 - Treat the error object in a 200 response as meaningful and surface it to the operator rather than assuming success from the HTTP status alone.
 - Do not retry blindly: each call generates a new transaction ID and passcode and invalidates the plan to confirm the previous one.

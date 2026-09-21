@@ -4,7 +4,7 @@
 
 **Endpoint:** `POST /abha/api/v3/enrollment/enrol/capturePID`
 
-**Flow:Find ABHA - Face** - step 3 of 4
+**Flow:** **Find ABHA - Face** - step 3 of 4
 - Previous: *Find ABHA via Face - send authentication request*
 - Next: *Find ABHA via Face - verify*
 

@@ -4,7 +4,7 @@
 
 **Endpoint:** `POST /abha/api/v3/phr/web/login/abha/search`
 
-**Flow:ABHA Address Login - Aadhaar OTP** - step 1 of 6
+**Flow:** **ABHA Address Login - Aadhaar OTP** - step 1 of 6
 - Previous: none (first call of this flow)
 - Next: *ABHA address login via Aadhaar OTP - send OTP*
 

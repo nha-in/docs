@@ -19,7 +19,7 @@ Called after eligibility has confirmed cover and the mandatory documents are in 
 - Diagnosis (ICD-10), procedure (NRCes ndhm-procedure-code), care team and supportingInfo are present, and the mandatory documents named by the InsurancePlan or the eligibility auth-requirements response are attached.
 - For a new PMJAY preauth, either biometric authentication or the Authentication Consent questionnaire response is included (PAYR-1256, PAYR-1271).
 - For 13, 19, 121 or 131 a prior preauth in the right state exists (PAYR-1212, PAYR-1214, PAYR-1218, PAYR-1219 otherwise) and the message reuses the episode's correlation identity.
-- Payer certificate fetched, bundle JWE-encrypted, recipient code taken from processingID, TIMESTAMP in IST.
+- Payer certificate fetched, bundle JWE-encrypted, recipient code taken from processingID, timestamp in IST.
 
 ### Postconditions
 

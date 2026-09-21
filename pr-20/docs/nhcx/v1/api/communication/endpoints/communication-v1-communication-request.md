@@ -17,12 +17,12 @@ Call it whenever the payer needs to communicate outside the direct request-respo
 - Payer and provider both registered on NHCX; a valid Bearer token from the client-credentials session call (1200 s expiry).
 - The provider's public certificate fetched via /fetch/certs (cache up to 24 h) and used to JWE-encrypt with RSA-OAEP-256 and A256GCM.
 - A collection Bundle containing a Task (status completed, intent proposal, code poll, input type include) that references a Communication or CommunicationRequest carrying category, priority and topic; the identifiers key off the claim or preauth reference.
-- Protected header with x-hcx-sender_code, x-hcx-recipient_code, x-hcx-API_call_ID, x-hcx-correlation_ID, x-hcx-workflow_ID, x-hcx-TIMESTAMP (IST +05:30) and x-hcx-status request.initiated. A fresh UUID correlation ID opens the conversation.
+- Protected header with x-hcx-sender_code, x-hcx-recipient_code, x-hcx-API_call_ID, x-hcx-correlation_ID, x-hcx-workflow_ID, x-hcx-timestamp (IST +05:30) and x-hcx-status request.initiated. A fresh UUID correlation ID opens the conversation.
 - HTTP headers Accept, Content-Type and bearer_auth.
 
 ### Postconditions
 
-The gateway validates the JWE headers, workflow ID and NIIP and returns HTTP 202 with a StatusSuccessResponse (TIMESTAMP, API_call_ID, correlation_ID, result with sender_code, recipient_code, entity_type and protocol_status, and an error object). Nothing is decided synchronously; the gateway forwards the bundle to the provider's registered callback. The provider must acknowledge with 202 within 30 seconds, then close the loop by posting an acknowledgement Task bundle to /v1/communication/on_request under the same x-hcx-correlation_ID. Errors are 400 (validation failed), 404 and 500, all in the same envelope. Communication.status completed describes the event, not the resolution of the underlying issue.
+The gateway validates the JWE headers, workflow ID and NIIP and returns HTTP 202 with a StatusSuccessResponse (timestamp, API_call_ID, correlation_ID, result with sender_code, recipient_code, entity_type and protocol_status, and an error object). Nothing is decided synchronously; the gateway forwards the bundle to the provider's registered callback. The provider must acknowledge with 202 within 30 seconds, then close the loop by posting an acknowledgement Task bundle to /v1/communication/on_request under the same x-hcx-correlation_ID. Errors are 400 (validation failed), 404 and 500, all in the same envelope. Communication.status completed describes the event, not the resolution of the underlying issue.
 
 ### Common mistakes
 

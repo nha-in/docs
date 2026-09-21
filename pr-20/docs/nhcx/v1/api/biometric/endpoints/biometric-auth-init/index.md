@@ -10,7 +10,7 @@ PMJAY requires proof that the beneficiary was physically present. A hospital pro
 
 ### When to use
 
-At the desk with the beneficiary present: at admission with `process` `Preauth`, and at discharge, and at every visit of a cyclic case, with `process` `Discharge`. `scope` selects the modality, `Aadhaar-bio-verify` for fingerprint and `Aadhaar-iris-verify` for iris. `authMode` is `FINGERPRINT` or `IRIS`. The NHCX-PMJAY-HMIS Integration Guide and the Biometric Authentication APIs Postman collection also list face on this call, `Aadhaar-face-verify` with `FACE_AUTH`, but show no face request made this way; the face path documented end to end is `Face auth init` on the ABDM proxy host. `payerid` names the scheme payer the authentication is performed for.
+At the desk with the beneficiary present: at admission with `process` `Preauth`, and at discharge, and at every visit of a cyclic case, with `process` `Discharge`. `scope` selects the modality, `aadhaar-bio-verify` for fingerprint and `aadhaar-iris-verify` for iris. `authMode` is `FINGERPRINT` or `IRIS`. The NHCX-PMJAY-HMIS Integration Guide and the Biometric Authentication APIs Postman collection also list face on this call, `aadhaar-face-verify` with `FACE_AUTH`, but show no face request made this way; the face path documented end to end is `Face auth init` on the ABDM proxy host. `payerid` names the scheme payer the authentication is performed for.
 
 ### Preconditions
 
@@ -38,7 +38,7 @@ Returns the `txnId` that `Biometric auth verify` quotes, with a message saying t
 
 ### Related scenario
 
-A PMJAY beneficiary arrives for admission. The desk posts this request with `scope` `["ABHA-login", "Aadhaar-bio-verify"]`, `authMode` `FINGERPRINT`, the ABHA number with hyphens, `process` `Preauth` and the scheme payer's code, and gets a `txnId` back. The fingerprint is captured on the device and sent with that `txnId` to `Biometric auth verify`.
+A PMJAY beneficiary arrives for admission. The desk posts this request with `scope` `["abha-login", "aadhaar-bio-verify"]`, `authMode` `FINGERPRINT`, the ABHA number with hyphens, `process` `Preauth` and the scheme payer's code, and gets a `txnId` back. The fingerprint is captured on the device and sent with that `txnId` to `Biometric auth verify`.
 
 ### Specification
 

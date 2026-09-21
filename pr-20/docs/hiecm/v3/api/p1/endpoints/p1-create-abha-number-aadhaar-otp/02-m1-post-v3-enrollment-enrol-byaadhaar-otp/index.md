@@ -6,15 +6,15 @@ Verifies the Aadhaar OTP and creates the ABHA number, or returns the existing AB
 
 **Endpoint:** `POST /abha/api/v3/enrollment/enrol/byAadhaar`
 
-**Flow:Create ABHA - Aadhaar OTP** - step 2 of 8
+**Flow:** **Create ABHA - Aadhaar OTP** - step 2 of 8
 - Previous: *Send Aadhaar OTP for ABHA enrolment*
 - Next: *After ABHA creation - send OTP to verify mobile (optional)*
 
-**Headers** (plus `Authorization: Bearer `):
+**Headers** (plus `Authorization: Bearer <gateway token>`):
 
 | Header | Required | Description |
 |---|---|---|
-| TIMESTAMP | yes | Current UTC TIMESTAMP in ISO-8601 format. |
+| TIMESTAMP | yes | Current UTC timestamp in ISO-8601 format. |
 | REQUEST-ID | yes | Unique UUID for every request. |
 | Benefit-Name | no | **Applicable for user who is enrolling via Benefit Program.** |
 
@@ -23,13 +23,13 @@ Verifies the Aadhaar OTP and creates the ABHA number, or returns the existing AB
 | Field | Value / Type | Required | Description |
 |---|---|---|---|
 | `authData` | object | yes | Authentication payload for this use case. |
-| `authData.authMethods` | `["OTP"]` | yes | Authentication method used in this step. |
-| `authData.OTP` | object | yes | OTP authentication block. |
-| `authData.OTP.txnId` | string | yes | Transaction ID returned by the previous step of this flow. |
-| `authData.OTP.otpValue` | string | yes | OTP received by the user, RSA-encrypted. |
-| `authData.OTP.mobile` | string | no | Mobile number to be linked with the ABHA (plain, 10 digits). |
+| `authData.authMethods` | `["otp"]` | yes | Authentication method used in this step. |
+| `authData.otp` | object | yes | OTP authentication block. |
+| `authData.otp.txnId` | string | yes | Transaction ID returned by the previous step of this flow. |
+| `authData.otp.otpValue` | string | yes | OTP received by the user, RSA-encrypted. |
+| `authData.otp.mobile` | string | no | Mobile number to be linked with the ABHA (plain, 10 digits). |
 | `consent` | object | yes | Consent captured from the user for ABHA enrolment. |
-| `consent.code` | string | yes | Consent code. Use `ABHA-enrollment`. |
+| `consent.code` | string | yes | Consent code. Use `abha-enrollment`. |
 | `consent.version` | string | yes | Consent version. Use `1.4`. |
 
 ```bash

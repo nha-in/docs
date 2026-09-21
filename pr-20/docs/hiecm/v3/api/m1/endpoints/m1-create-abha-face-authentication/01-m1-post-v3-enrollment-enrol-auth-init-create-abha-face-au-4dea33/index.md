@@ -4,7 +4,7 @@
 
 **Endpoint:** `POST /abha/api/v3/enrollment/enrol/auth/init`
 
-**Flow:Create ABHA - Face Authentication** - step 1 of 9
+**Flow:** **Create ABHA - Face Authentication** - step 1 of 9
 - Previous: none (first call of this flow)
 - Next: *Face auth - capture PID / track status*
 

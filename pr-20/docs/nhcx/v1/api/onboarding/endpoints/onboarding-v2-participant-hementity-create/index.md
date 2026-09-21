@@ -22,7 +22,7 @@ Use during scheme-specific hospital onboarding when the operator directs you to 
 
 ### Postconditions
 
-HTTP 200 with ParticipantCreateResponseV2 containing status and hospitalid. Unlike the other two create calls, the response does not return a participant code, despite the shared description; the participantcode you supplied in the body is the identifier the record is keyed on. There is no asynchronous callback. Errors follow the registry envelope of 400 Client Error, 404 Resource not found and 500 Downstream systems down, each with ErrorResponse (TIMESTAMP, error code, message, trace).
+HTTP 200 with ParticipantCreateResponseV2 containing status and hospitalid. Unlike the other two create calls, the response does not return a participant code, despite the shared description; the participantcode you supplied in the body is the identifier the record is keyed on. There is no asynchronous callback. Errors follow the registry envelope of 400 Client Error, 404 Resource not found and 500 Downstream systems down, each with ErrorResponse (timestamp, error code, message, trace).
 
 ### Common mistakes
 

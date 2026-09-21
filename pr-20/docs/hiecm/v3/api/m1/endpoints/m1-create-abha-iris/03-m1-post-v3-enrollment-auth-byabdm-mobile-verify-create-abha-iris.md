@@ -6,27 +6,27 @@ Verifies the OTP sent by *After ABHA creation - send OTP to verify mobile (optio
 
 **Endpoint:** `POST /abha/api/v3/enrollment/auth/byAbdm`
 
-**Flow:Create ABHA - IRIS** - step 3 of 7
+**Flow:** **Create ABHA - IRIS** - step 3 of 7
 - Previous: *After ABHA creation - send OTP to verify mobile (optional)*
 - Next: *After ABHA creation - send OTP to verify email (optional)*
 
-**Headers** (plus `Authorization: Bearer `):
+**Headers** (plus `Authorization: Bearer <gateway token>`):
 
 | Header | Required | Description |
 |---|---|---|
 | REQUEST-ID | yes | Unique UUID for every request. |
-| TIMESTAMP | yes | Current UTC TIMESTAMP in ISO-8601 format. |
+| TIMESTAMP | yes | Current UTC timestamp in ISO-8601 format. |
 
 **Request body for this use case:**
 
 | Field | Value / Type | Required | Description |
 |---|---|---|---|
-| `scope` | `["ABHA-enrol", "mobile-verify"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
+| `scope` | `["abha-enrol", "mobile-verify"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
 | `authData` | object | yes | Authentication payload for this use case. |
-| `authData.authMethods` | `["OTP"]` | yes | Authentication method used in this step. |
-| `authData.OTP` | object | yes | OTP authentication block. |
-| `authData.OTP.txnId` | string | yes | Transaction ID returned by the previous step of this flow. |
-| `authData.OTP.otpValue` | string | yes | OTP received by the user, RSA-encrypted. |
+| `authData.authMethods` | `["otp"]` | yes | Authentication method used in this step. |
+| `authData.otp` | object | yes | OTP authentication block. |
+| `authData.otp.txnId` | string | yes | Transaction ID returned by the previous step of this flow. |
+| `authData.otp.otpValue` | string | yes | OTP received by the user, RSA-encrypted. |
 
 ```bash
 curl --request POST \

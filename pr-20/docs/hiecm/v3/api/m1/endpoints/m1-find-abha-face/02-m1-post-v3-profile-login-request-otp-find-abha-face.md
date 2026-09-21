@@ -6,28 +6,28 @@ Starts face authentication for the ABHA account picked from *Search ABHA by mobi
 
 **Endpoint:** `POST /abha/api/v3/profile/login/request/otp`
 
-**Flow:Find ABHA - Face** - step 2 of 4
+**Flow:** **Find ABHA - Face** - step 2 of 4
 - Previous: *Search ABHA by mobile*
 - Next: *Face auth - capture PID / track status*
 
-**Headers** (plus `Authorization: Bearer `):
+**Headers** (plus `Authorization: Bearer <gateway token>`):
 
 | Header | Required | Description |
 |---|---|---|
 | REQUEST-ID | yes | Unique UUID for every request. |
-| TIMESTAMP | yes | Current UTC TIMESTAMP in ISO-8601 format. |
+| TIMESTAMP | yes | Current UTC timestamp in ISO-8601 format. |
 
 **Request body for this use case:**
 
 | Field | Value / Type | Required | Description |
 |---|---|---|---|
-| `scope` | `["ABHA-login", "search-ABHA", "Aadhaar-face-verify"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
+| `scope` | `["abha-login", "search-abha", "aadhaar-face-verify"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
 | `loginHint` | `"index"` | yes | Type of identifier sent in `loginId`. |
 | `loginId` | string | yes | Identifier value, RSA-encrypted with the ABHA public certificate. |
-| `otpSystem` | `"Aadhaar"` | yes | System that generates and delivers the OTP (`Aadhaar` = UIDAI, `ABDM` = ABDM). |
+| `otpSystem` | `"aadhaar"` | yes | System that generates and delivers the OTP (`aadhaar` = UIDAI, `abdm` = ABDM). |
 | `txnId` | string | yes | Transaction ID returned by the previous step of this flow. |
 
-> **Note:** The Postman collection sends scope `["ABHA-login","search-ABHA","face-auth"]` for this step. This spec uses `Aadhaar-face-verify`; confirm with NHA.
+> **Note:** The Postman collection sends scope `["abha-login","search-abha","face-auth"]` for this step. This spec uses `aadhaar-face-verify`; confirm with NHA.
 
 ```bash
 curl --request POST \

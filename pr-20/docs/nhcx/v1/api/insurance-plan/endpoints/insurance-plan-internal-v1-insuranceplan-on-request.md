@@ -17,7 +17,7 @@ Same as the public callback: after receiving and acknowledging an insurance plan
 - Inbound request decrypted, correlation ID captured, 202 acceptance already returned.
 - Registered payer with a valid Bearer token and the provider's certificate for encryption.
 - Collection Bundle containing InsurancePlan, Organisation and any Questionnaire resources, filtered to the requesting provider per the MoU.
-- Protected header echoing the request's correlation ID with a fresh API_call_ID, IST TIMESTAMP and responder status.
+- Protected header echoing the request's correlation ID with a fresh API_call_ID, IST timestamp and responder status.
 - Confirmation that the internal route is the one intended for your gateway integration.
 
 ### Postconditions
@@ -37,7 +37,7 @@ Returns 202 Accepted with the StatusSuccessResponse envelope, or 400, 404 or 500
 - Share one bundle builder with the public callback; only the path differs.
 - Acknowledge the inbound Task first, assemble the plan asynchronously, then post.
 - Use the documented claim-condition codes and include Questionnaire resources for mandatory documents.
-- Fresh API_call_ID, IST TIMESTAMP, response.complete or response.error with error details.
+- Fresh API_call_ID, IST timestamp, response.complete or response.error with error details.
 - Provider side: cache, refresh periodically or on treatment change, validate preauth items against the plan.
 
 ### Related scenario

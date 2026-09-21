@@ -16,7 +16,7 @@ X-CM-ID consent manager ID[ Example: sbx ]
 
  **Request Body**
 
-acknowledgement This is a key value which contains the payment status abhaAddress transactionId orderNumber paymentRecipetURL[ Example: { status: [SUCCESS, CANCELED, PENDING, FAIL, REFUND_INITIATED, REFUND_SUCCESS] abhaAddress: transactionId: uniqueId orderNumber: 76274 openOrderRequestId: 939**800-325d-42c3--1*** paymentDate: 2025-01-20T07:47:49.102Z paymentRecipetURL: URL } ]
+acknowledgement This is a key value which contains the payment status abhaAddress transactionId orderNumber paymentRecipetURL[ Example: { status: [SUCCESS, CANCELED, PENDING, FAIL, REFUND_INITIATED, REFUND_SUCCESS] abhaAddress: transactionId: uniqueId orderNumber: 76274**** openOrderRequestId: 939** 800-325d-42c3-****-1******* paymentDate: 2025-01-20T07:47:49.102Z paymentRecipetURL: URL } ]
 
 error is optional object in case of any error or Failure then only send error object
 

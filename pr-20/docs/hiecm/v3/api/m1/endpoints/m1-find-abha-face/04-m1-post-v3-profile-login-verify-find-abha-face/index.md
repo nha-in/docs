@@ -6,22 +6,22 @@ Completes face authentication for the chosen account. Once *Face auth - capture 
 
 **Endpoint:** `POST /abha/api/v3/profile/login/verify`
 
-**Flow:Find ABHA - Face** - step 4 of 4
+**Flow:** **Find ABHA - Face** - step 4 of 4
 - Previous: *Face auth - capture PID / track status*
 - Next: none (last call of this flow)
 
-**Headers** (plus `Authorization: Bearer `):
+**Headers** (plus `Authorization: Bearer <gateway token>`):
 
 | Header | Required | Description |
 |---|---|---|
 | REQUEST-ID | yes | Unique UUID for every request. |
-| TIMESTAMP | yes | Current UTC TIMESTAMP in ISO-8601 format. |
+| TIMESTAMP | yes | Current UTC timestamp in ISO-8601 format. |
 
 **Request body for this use case:**
 
 | Field | Value / Type | Required | Description |
 |---|---|---|---|
-| `scope` | `["ABHA-login", "Aadhaar-face-verify"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
+| `scope` | `["abha-login", "aadhaar-face-verify"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
 | `authData` | object | yes | Authentication payload for this use case. |
 | `authData.authMethods` | `["face_auth"]` | yes | Authentication method used in this step. |
 | `authData.face` | object | yes | Face authentication block. |

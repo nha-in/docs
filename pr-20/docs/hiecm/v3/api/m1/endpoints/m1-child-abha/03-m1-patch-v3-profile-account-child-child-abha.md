@@ -6,18 +6,18 @@ Updates the demographic details (name, DOB, gender) of a Child ABHA. Send `Benef
 
 **Endpoint:** `PATCH /abha/api/v3/profile/account`
 
-**Flow:Child ABHA** - step 3 of 5
+**Flow:** **Child ABHA** - step 3 of 5
 - Previous: *Get Child ABHA list of the parent*
 - Next: *Child ABHA KYC - send Aadhaar OTP*
 
-**Headers** (plus `Authorization: Bearer `):
+**Headers** (plus `Authorization: Bearer <gateway token>`):
 
 | Header | Required | Description |
 |---|---|---|
-| TIMESTAMP | yes | Current UTC TIMESTAMP in ISO-8601 format. |
+| TIMESTAMP | yes | Current UTC timestamp in ISO-8601 format. |
 | REQUEST-ID | yes | Unique UUID for every request. |
 | Benefit-Name | yes | Benefit / programme name approved by NHA for the integrator. |
-| X-token | yes | User token (`Bearer `) received after verification / login. |
+| X-token | yes | User token (`Bearer <token>`) received after verification / login. |
 
 **Request body for this use case:**
 
@@ -54,7 +54,7 @@ curl --request PATCH \
 - `TIMESTAMP` (string, required): Current UTC timestamp in ISO-8601 format.
 - `REQUEST-ID` (string, required): Unique UUID for every request.
 - `BENEFIT_NAME` (string, required): Benefit / program name approved by NHA for the integrator.
-- `X-token` (string, required): User token (`Bearer `) received after verification / login.
+- `X-token` (string, required): User token (`Bearer <token>`) received after verification / login.
 
 ## Body
 

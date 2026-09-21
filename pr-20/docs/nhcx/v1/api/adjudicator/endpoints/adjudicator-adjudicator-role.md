@@ -20,7 +20,7 @@ Before every call to `Adjudicator: act on a case`, because the role that answers
 
 ### Postconditions
 
-The service answers with the role that holds the case in `currentuserrole`, and `errormessage` empty. Once a case is decided, the lookup answers with no role at all. Asked about the hospital's own number, it answers `No Data found with the caseid . Please use the current active case ID.`
+The service answers with the role that holds the case in `currentuserrole`, and `errormessage` empty. Once a case is decided, the lookup answers with no role at all. Asked about the hospital's own number, it answers `No Data found with the caseid <id>. Please use the current active case id.`
 
 ### Common mistakes
 

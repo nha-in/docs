@@ -6,27 +6,27 @@ Verifies the mobile OTP. Returns a short-lived token (`token`, used as the `T-to
 
 **Endpoint:** `POST /abha/api/v3/profile/login/verify`
 
-**Flow:Login - Mobile Number** - step 2 of 3
+**Flow:** **Login - Mobile Number** - step 2 of 3
 - Previous: *Login via Mobile number - send OTP*
 - Next: *Login via Mobile number - verify user (select ABHA)*
 
-**Headers** (plus `Authorization: Bearer `):
+**Headers** (plus `Authorization: Bearer <gateway token>`):
 
 | Header | Required | Description |
 |---|---|---|
 | REQUEST-ID | yes | Unique UUID for every request. |
-| TIMESTAMP | yes | Current UTC TIMESTAMP in ISO-8601 format. |
+| TIMESTAMP | yes | Current UTC timestamp in ISO-8601 format. |
 
 **Request body for this use case:**
 
 | Field | Value / Type | Required | Description |
 |---|---|---|---|
-| `scope` | `["ABHA-login", "mobile-verify"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
+| `scope` | `["abha-login", "mobile-verify"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
 | `authData` | object | yes | Authentication payload for this use case. |
-| `authData.authMethods` | `["OTP"]` | yes | Authentication method used in this step. |
-| `authData.OTP` | object | yes | OTP authentication block. |
-| `authData.OTP.txnId` | string | yes | Transaction ID returned by the previous step of this flow. |
-| `authData.OTP.otpValue` | string | yes | OTP received by the user, RSA-encrypted. |
+| `authData.authMethods` | `["otp"]` | yes | Authentication method used in this step. |
+| `authData.otp` | object | yes | OTP authentication block. |
+| `authData.otp.txnId` | string | yes | Transaction ID returned by the previous step of this flow. |
+| `authData.otp.otpValue` | string | yes | OTP received by the user, RSA-encrypted. |
 
 ```bash
 curl --request POST \

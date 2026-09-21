@@ -4,7 +4,7 @@
 
 **Endpoint:** `POST /abha/api/v3/profile/account/abha/search`
 
-**Flow:Find ABHA - Aadhaar OTP** - step 1 of 3
+**Flow:** **Find ABHA - Aadhaar OTP** - step 1 of 3
 - Previous: none (first call of this flow)
 - Next: *Find ABHA via Aadhaar OTP - send OTP*
 

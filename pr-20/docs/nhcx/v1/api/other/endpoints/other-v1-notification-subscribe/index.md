@@ -17,12 +17,12 @@ Call it on every beneficiary login (Subscribe-on-Login): the user authenticates 
 - ABDM M1 integration completed; BSP sandbox testing on hcxsbx.ABDM.gov.in, certification and production registry onboarding.
 - An HTTPS callback endpoint with TLS 1.2 or higher registered as on_notification_URL, and JWT capability.
 - Access token from the ABDM session token call (01-session/session-token.bru); sent as Authorisation: Bearer with Content-Type application/json.
-- Body is a JWEPayload whose compact JWE carries protected headers alg RSA-OAEP, enc A256GCM, x-hcx-sender_code (your BSP code), x-hcx-recipient_code (NHCX gateway code), x-hcx-TIMESTAMP (ISO 8601) and a unique x-hcx-correlation_ID, plus the subscribe JSON: subscription_ID, topic_code array, recipient_code, subscriber.ID (ABHA ID), on_notification_URL and optional expiry.
+- Body is a JWEPayload whose compact JWE carries protected headers alg RSA-OAEP, enc A256GCM, x-hcx-sender_code (your BSP code), x-hcx-recipient_code (NHCX gateway code), x-hcx-timestamp (ISO 8601) and a unique x-hcx-correlation_ID, plus the subscribe JSON: subscription_ID, topic_code array, recipient_code, subscriber.ID (ABHA ID), on_notification_URL and optional expiry.
 - Explicit user consent obtained before subscribing.
 
 ### Postconditions
 
-NHCX decrypts the request with its private key, validates headers and payload, persists the subscription with Last-Linked-Wins per ABHA ID and returns the subscription state synchronously: HTTP 200 with a SubscribeResponse carrying TIMESTAMP, API_call_ID, correlation_ID, subscription_ID, subscription_status (active, replaced or expired), expiry and message. Thereafter, when a hospital submits a preauth or claim with that ABHA ID and the payer responds, NHCX pushes a notification (notification_ID, topic_code, TIMESTAMP, subscriber.ID, a displayable message and optional domain_values) to the registered callback. Errors: 400 validation, 401 sender not authorised, 403 sender not permitted, 409 duplicate correlation ID, 500 decryption or persistence failure.
+NHCX decrypts the request with its private key, validates headers and payload, persists the subscription with Last-Linked-Wins per ABHA ID and returns the subscription state synchronously: HTTP 200 with a SubscribeResponse carrying timestamp, API_call_ID, correlation_ID, subscription_ID, subscription_status (active, replaced or expired), expiry and message. Thereafter, when a hospital submits a preauth or claim with that ABHA ID and the payer responds, NHCX pushes a notification (notification_ID, topic_code, timestamp, subscriber.ID, a displayable message and optional domain_values) to the registered callback. Errors: 400 validation, 401 sender not authorised, 403 sender not permitted, 409 duplicate correlation ID, 500 decryption or persistence failure.
 
 ### Common mistakes
 

@@ -6,15 +6,15 @@ Creates an ABHA number by authenticating the Aadhaar holder's fingerprint. The P
 
 **Endpoint:** `POST /abha/api/v3/enrollment/enrol/byAadhaar`
 
-**Flow:Create ABHA - Fingerprint** - step 1 of 7
+**Flow:** **Create ABHA - Fingerprint** - step 1 of 7
 - Previous: none (first call of this flow)
 - Next: *After ABHA creation - send OTP to verify mobile (optional)*
 
-**Headers** (plus `Authorization: Bearer `):
+**Headers** (plus `Authorization: Bearer <gateway token>`):
 
 | Header | Required | Description |
 |---|---|---|
-| TIMESTAMP | yes | Current UTC TIMESTAMP in ISO-8601 format. |
+| TIMESTAMP | yes | Current UTC timestamp in ISO-8601 format. |
 | REQUEST-ID | yes | Unique UUID for every request. |
 | Benefit-Name | no | **Applicable for user who is enrolling via Benefit Program.** |
 
@@ -25,14 +25,14 @@ Creates an ABHA number by authenticating the Aadhaar holder's fingerprint. The P
 | `authData` | object | yes | Authentication payload for this use case. |
 | `authData.authMethods` | `["bio"]` | yes | Authentication method used in this step. |
 | `authData.bio` | object | yes | Fingerprint authentication block. |
-| `authData.bio.Aadhaar` | string | yes | Aadhaar number, RSA-encrypted. |
+| `authData.bio.aadhaar` | string | yes | Aadhaar number, RSA-encrypted. |
 | `authData.bio.fingerPrintAuthPid` | string | yes | Base64 PID block captured from a registered fingerprint RD device. |
 | `authData.bio.mobile` | string | no | Mobile number to be linked with the ABHA (plain, 10 digits). |
 | `consent` | object | yes | Consent captured from the user for ABHA enrolment. |
-| `consent.code` | string | yes | Consent code. Use `ABHA-enrollment`. |
+| `consent.code` | string | yes | Consent code. Use `abha-enrollment`. |
 | `consent.version` | string | yes | Consent version. Use `1.4`. |
 
-> **Note:** The Postman collection (Create ABHA - Fingerprint 3.1) sends `authMethods: ["OTP"]`. This spec uses `["bio"]`; confirm with NHA.
+> **Note:** The Postman collection (Create ABHA - Fingerprint 3.1) sends `authMethods: ["otp"]`. This spec uses `["bio"]`; confirm with NHA.
 
 ```bash
 curl --request POST \

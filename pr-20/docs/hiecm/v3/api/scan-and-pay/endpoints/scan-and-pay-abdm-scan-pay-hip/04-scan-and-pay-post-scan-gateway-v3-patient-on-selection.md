@@ -18,7 +18,7 @@ X-CM-ID consent manager ID[ Example: sbx ]
 
 intent This is a key value pair which contains the purpose [ Example: type: PAYMENT_ORDER ]
 
-openOrderRequestId from the share open order requestId [ Example: 059fcb69--4789-a049-62db16c7b5a0 ]
+openOrderRequestId from the share open order requestId [ Example: 059fcb69-****-4789-a049-62db16c7b5a0 ]
 
 abhaAddress of the user/patient
 

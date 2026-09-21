@@ -2,29 +2,29 @@
 
 `POST /abha/api/v3/phr/web/login/abha/request/otp`
 
-Starts login with an ABHA address. UIDAI sends an OTP to the Aadhaar-linked mobile. `loginId` is the RSA-encrypted ABHA address. Use *Search ABHA address (auth methods)* first to check that `Aadhaar_OTP` is allowed.
+Starts login with an ABHA address. UIDAI sends an OTP to the Aadhaar-linked mobile. `loginId` is the RSA-encrypted ABHA address. Use *Search ABHA address (auth methods)* first to check that `AADHAAR_OTP` is allowed.
 
 **Endpoint:** `POST /abha/api/v3/phr/web/login/abha/request/otp`
 
-**Flow:ABHA Address Login - Aadhaar OTP** - step 2 of 6
+**Flow:** **ABHA Address Login - Aadhaar OTP** - step 2 of 6
 - Previous: *Search ABHA address (auth methods)*
 - Next: *ABHA address login via Aadhaar OTP - verify*
 
-**Headers** (plus `Authorization: Bearer `):
+**Headers** (plus `Authorization: Bearer <gateway token>`):
 
 | Header | Required | Description |
 |---|---|---|
 | REQUEST-ID | yes | Unique UUID for every request. |
-| TIMESTAMP | yes | Current UTC TIMESTAMP in ISO-8601 format. |
+| TIMESTAMP | yes | Current UTC timestamp in ISO-8601 format. |
 
 **Request body for this use case:**
 
 | Field | Value / Type | Required | Description |
 |---|---|---|---|
-| `scope` | `["ABHA-address-login", "Aadhaar-verify"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
-| `loginHint` | `"ABHA-address"` | yes | Type of identifier sent in `loginId`. |
+| `scope` | `["abha-address-login", "aadhaar-verify"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
+| `loginHint` | `"abha-address"` | yes | Type of identifier sent in `loginId`. |
 | `loginId` | string | yes | Identifier value, RSA-encrypted with the ABHA public certificate. |
-| `otpSystem` | `"Aadhaar"` | yes | System that generates and delivers the OTP (`Aadhaar` = UIDAI, `ABDM` = ABDM). |
+| `otpSystem` | `"aadhaar"` | yes | System that generates and delivers the OTP (`aadhaar` = UIDAI, `abdm` = ABDM). |
 
 ```bash
 curl --request POST \

@@ -25,7 +25,7 @@ curl --request GET \
 
 ## Headers
 
-- `X-token` (string, required): User token (`Bearer `) received after ABHA creation / login.
+- `X-token` (string, required): User token (`Bearer <token>`) received after ABHA creation / login.
 - `REQUEST-ID` (string, required): Unique UUID for every request.
 - `TIMESTAMP` (string, required): Current UTC timestamp in ISO-8601 format.
 

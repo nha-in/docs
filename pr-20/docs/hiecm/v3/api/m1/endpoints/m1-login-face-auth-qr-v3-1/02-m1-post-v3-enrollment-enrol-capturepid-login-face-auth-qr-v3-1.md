@@ -4,7 +4,7 @@
 
 **Endpoint:** `POST /abha/api/v3/enrollment/enrol/capturePID`
 
-**Flow:Login - Face Auth QR (v3.1)** - step 2 of 3
+**Flow:** **Login - Face Auth QR (v3.1)** - step 2 of 3
 - Previous: *Face auth - generate transaction ID (init)*
 - Next: *Login via Face Auth (QR) - verify*
 

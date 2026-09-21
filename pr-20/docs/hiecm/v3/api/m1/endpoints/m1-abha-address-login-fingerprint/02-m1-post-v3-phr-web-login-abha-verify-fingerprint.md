@@ -6,29 +6,29 @@ Completes fingerprint login with an ABHA address. Send the `txnId` and the finge
 
 **Endpoint:** `POST /abha/api/v3/phr/web/login/abha/verify`
 
-**Flow:ABHA Address Login - Fingerprint** - step 2 of 5
+**Flow:** **ABHA Address Login - Fingerprint** - step 2 of 5
 - Previous: *ABHA address login via Fingerprint - send authentication request*
 - Next: *Get ABHA-address profile*
 
-**Headers** (plus `Authorization: Bearer `):
+**Headers** (plus `Authorization: Bearer <gateway token>`):
 
 | Header | Required | Description |
 |---|---|---|
 | REQUEST-ID | yes | Unique UUID for every request. |
-| TIMESTAMP | yes | Current UTC TIMESTAMP in ISO-8601 format. |
+| TIMESTAMP | yes | Current UTC timestamp in ISO-8601 format. |
 
 **Request body for this use case:**
 
 | Field | Value / Type | Required | Description |
 |---|---|---|---|
-| `scope` | `["ABHA-login", "Aadhaar-bio-verify"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
+| `scope` | `["abha-login", "aadhaar-bio-verify"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
 | `authData` | object | yes | Authentication payload for this use case. |
 | `authData.authMethods` | `["bio"]` | yes | Authentication method used in this step. |
 | `authData.bio` | object | yes | Fingerprint authentication block. |
 | `authData.bio.txnId` | string | yes | Transaction ID returned by the previous step of this flow. |
 | `authData.bio.fingerPrintAuthPid` | string | yes | Base64 PID block captured from a registered fingerprint RD device. |
 
-> **Note:** Biometric ABHA-address login uses scope `ABHA-login`, not `ABHA-address-login` (the same in Swagger and Postman).
+> **Note:** Biometric ABHA-address login uses scope `abha-login`, not `abha-address-login` (the same in Swagger and Postman).
 
 ```bash
 curl --request POST \

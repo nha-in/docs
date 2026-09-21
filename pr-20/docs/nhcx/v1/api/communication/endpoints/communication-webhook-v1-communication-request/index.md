@@ -2,7 +2,7 @@
 
 `POST v1_communication_request`
 
-Hosted by the provider. The exchange posts this message to the `endpoint_URL` you registered, at `/v1/communication/request`, with the headers and the sealed payload the sender posted. Answer HTTP 202 with the receipt first and process afterwards; [Receiving a callback](/docs/nhcx/v1/getting-started/receiving-a-callback) has the rules.
+Hosted by the provider. The exchange posts this message to the `endpoint_url` you registered, at `/v1/communication/request`, with the headers and the sealed payload the sender posted. Answer HTTP 202 with the receipt first and process afterwards; [Receiving a callback](/docs/nhcx/v1/getting-started/receiving-a-callback) has the rules.
 
 Payer pushes a Task plus Communication bundle to a provider mid-claim: TAT alerts, wallet or policy changes, grievances or extra-information requests.
 

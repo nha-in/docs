@@ -25,7 +25,7 @@ curl --request GET \
 
 ## Headers
 
-- `R-token` (string, required): Refresh token (`Bearer `) received at login.
+- `R-token` (string, required): Refresh token (`Bearer <refreshToken>`) received at login.
 - `TIMESTAMP` (string, required): Current UTC timestamp in ISO-8601 format.
 - `REQUEST-ID` (string, required): Unique UUID for every request.
 

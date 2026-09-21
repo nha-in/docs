@@ -6,25 +6,25 @@ Starts IRIS login for an ABHA number. Use the returned `txnId` in *Login via Bio
 
 **Endpoint:** `POST /abha/api/v3/profile/login/request/otp`
 
-**Flow:Login - Biometric v3 (Iris)** - step 1 of 2
+**Flow:** **Login - Biometric v3 (Iris)** - step 1 of 2
 - Previous: none (first call of this flow)
 - Next: *Login via Biometric (Iris) - verify*
 
-**Headers** (plus `Authorization: Bearer `):
+**Headers** (plus `Authorization: Bearer <gateway token>`):
 
 | Header | Required | Description |
 |---|---|---|
 | REQUEST-ID | yes | Unique UUID for every request. |
-| TIMESTAMP | yes | Current UTC TIMESTAMP in ISO-8601 format. |
+| TIMESTAMP | yes | Current UTC timestamp in ISO-8601 format. |
 
 **Request body for this use case:**
 
 | Field | Value / Type | Required | Description |
 |---|---|---|---|
-| `scope` | `["ABHA-login", "Aadhaar-iris-verify"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
-| `loginHint` | `"ABHA-number"` | yes | Type of identifier sent in `loginId`. |
+| `scope` | `["abha-login", "aadhaar-iris-verify"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
+| `loginHint` | `"abha-number"` | yes | Type of identifier sent in `loginId`. |
 | `loginId` | string | yes | Identifier value, RSA-encrypted with the ABHA public certificate. |
-| `otpSystem` | `"ABDM"` | yes | System that generates and delivers the OTP (`Aadhaar` = UIDAI, `ABDM` = ABDM). |
+| `otpSystem` | `"abdm"` | yes | System that generates and delivers the OTP (`aadhaar` = UIDAI, `abdm` = ABDM). |
 
 > **Note:** The Postman collection does biometric login with a single call to `/abha/api/v3.1/profile/login/verify` (see tag *Login - Biometric v3.1*). Confirm which contract is current.
 

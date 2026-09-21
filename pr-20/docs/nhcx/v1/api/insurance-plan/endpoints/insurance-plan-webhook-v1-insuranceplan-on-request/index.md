@@ -2,7 +2,7 @@
 
 `POST v1_insuranceplan_on_request`
 
-Hosted by the provider. The exchange posts this message to the `endpoint_URL` you registered, at `/v1/insuranceplan/on_request`, with the headers and the sealed payload the sender posted. Answer HTTP 202 with the receipt first and process afterwards; [Receiving a callback](/docs/nhcx/v1/getting-started/receiving-a-callback) has the rules.
+Hosted by the provider. The exchange posts this message to the `endpoint_url` you registered, at `/v1/insuranceplan/on_request`, with the headers and the sealed payload the sender posted. Answer HTTP 202 with the receipt first and process afterwards; [Receiving a callback](/docs/nhcx/v1/getting-started/receiving-a-callback) has the rules.
 
 Payer returns the InsurancePlan collection Bundle (InsurancePlan, Organisation, optional Questionnaire) under the request correlation ID.
 

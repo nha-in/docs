@@ -6,26 +6,26 @@ Optional, called after the ABHA is created. Needed only when the `mobile` sent i
 
 **Endpoint:** `POST /abha/api/v3/enrollment/request/otp`
 
-**Flow:Create ABHA - IRIS** - step 2 of 7
+**Flow:** **Create ABHA - IRIS** - step 2 of 7
 - Previous: *Create ABHA - Aadhaar IRIS*
 - Next: *After ABHA creation - verify mobile OTP (optional)*
 
-**Headers** (plus `Authorization: Bearer `):
+**Headers** (plus `Authorization: Bearer <gateway token>`):
 
 | Header | Required | Description |
 |---|---|---|
 | REQUEST-ID | yes | Unique UUID for every request. |
-| TIMESTAMP | yes | Current UTC TIMESTAMP in ISO-8601 format. |
+| TIMESTAMP | yes | Current UTC timestamp in ISO-8601 format. |
 
 **Request body for this use case:**
 
 | Field | Value / Type | Required | Description |
 |---|---|---|---|
 | `txnId` | string | yes | Transaction ID returned by the previous step of this flow. |
-| `scope` | `["ABHA-enrol", "mobile-verify"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
+| `scope` | `["abha-enrol", "mobile-verify"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
 | `loginHint` | `"mobile"` | yes | Type of identifier sent in `loginId`. |
 | `loginId` | string | yes | Identifier value, RSA-encrypted with the ABHA public certificate. |
-| `otpSystem` | `"ABDM"` | yes | System that generates and delivers the OTP (`Aadhaar` = UIDAI, `ABDM` = ABDM). |
+| `otpSystem` | `"abdm"` | yes | System that generates and delivers the OTP (`aadhaar` = UIDAI, `abdm` = ABDM). |
 
 ```bash
 curl --request POST \

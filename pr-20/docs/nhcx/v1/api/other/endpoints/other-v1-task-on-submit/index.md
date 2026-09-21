@@ -17,7 +17,7 @@ The payer calls it after acknowledging a Task (workflow 251 REPROCESS_REQUEST_RE
 - The inbound Task was decrypted, its correlation ID and workflow captured, and the 202 acceptance body returned within 30 seconds.
 - Payer registered with a valid Bearer token and the provider's certificate for encryption.
 - A Task bundle: Task.status completed, Task.output[0].valueReference pointing to a ClaimResponse entry that is structurally identical to a normal adjudication response (total, item adjudication, processNote, adjudication reason).
-- Protected header echoing the request's correlation ID with a fresh API_call_ID, IST TIMESTAMP, the outcome workflow ID and a responder status.
+- Protected header echoing the request's correlation ID with a fresh API_call_ID, IST timestamp, the outcome workflow ID and a responder status.
 
 ### Postconditions
 
@@ -39,7 +39,7 @@ The gateway returns HTTP 202 with the StatusSuccessResponse envelope (400, 404, 
 - Branch on adjudication reason as well as outcome; check processNote for reductions or query text.
 - Terminate the appeal branch of the case state machine on 252 or 253; on 254 respond with workflow 19.
 - Be idempotent on correlation ID; expect redeliveries.
-- Fresh API_call_ID, IST TIMESTAMP, responder status on the callback header.
+- Fresh API_call_ID, IST timestamp, responder status on the callback header.
 
 ### Related scenario
 

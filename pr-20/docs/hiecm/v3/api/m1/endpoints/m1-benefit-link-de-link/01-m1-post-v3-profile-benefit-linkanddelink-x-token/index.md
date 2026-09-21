@@ -6,16 +6,16 @@ Links (`scope: ["link"]`) or de-links (`scope: ["de-link"]`) the benefit named i
 
 **Endpoint:** `POST /abha/api/v3/profile/benefit/linkAndDelink`
 
-**Flow:Benefit - Link / De-link** - independent API; call the one that fits your identifier / modality.
+**Flow:** **Benefit - Link / De-link** - independent API; call the one that fits your identifier / modality.
 
-**Headers** (plus `Authorization: Bearer `):
+**Headers** (plus `Authorization: Bearer <gateway token>`):
 
 | Header | Required | Description |
 |---|---|---|
 | REQUEST-ID | yes | Unique UUID for every request. |
-| TIMESTAMP | yes | Current UTC TIMESTAMP in ISO-8601 format. |
+| TIMESTAMP | yes | Current UTC timestamp in ISO-8601 format. |
 | BENEFIT_NAME | yes | Benefit / programme name approved by NHA for the integrator. |
-| X-token | yes | User token (`Bearer `) received after verification / login. |
+| X-token | yes | User token (`Bearer <token>`) received after verification / login. |
 
 **Request body for this use case:**
 
@@ -48,7 +48,7 @@ curl --request POST \
 - `REQUEST-ID` (string, required): Unique UUID for every request.
 - `TIMESTAMP` (string, required): Current UTC timestamp in ISO-8601 format.
 - `BENEFIT_NAME` (string, required): Benefit / program name approved by NHA for the integrator.
-- `X-token` (string, required): User token (`Bearer `) received after verification / login.
+- `X-token` (string, required): User token (`Bearer <token>`) received after verification / login.
 
 ## Body
 

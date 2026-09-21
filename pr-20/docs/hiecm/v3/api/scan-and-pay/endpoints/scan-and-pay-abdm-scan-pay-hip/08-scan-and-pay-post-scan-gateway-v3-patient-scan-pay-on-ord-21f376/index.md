@@ -16,7 +16,7 @@ TIMESTAMP actual time of the requested was initiated[ Example: 2022-10-06T10:10:
 
  **Request Body**
 
-acknowledgement This is a key value which contains the payment status abhaAddress transactionId orderNumber paymentRecipetURL[ Example: { status: [SUCCESS, CANCELED, PENDING, FAIL, REFUND_INITIATED, REFUND_SUCCESS] abhaAddress: transactionId: uniqueId orderNumber: 76274 paymentRecipetURL: URL } ]
+acknowledgement This is a key value which contains the payment status abhaAddress transactionId orderNumber paymentRecipetURL[ Example: { status: [SUCCESS, CANCELED, PENDING, FAIL, REFUND_INITIATED, REFUND_SUCCESS] abhaAddress: transactionId: uniqueId orderNumber: 76274**** paymentRecipetURL: URL } ]
 
 error is optional object in case of any error or Failure then only send error object
 

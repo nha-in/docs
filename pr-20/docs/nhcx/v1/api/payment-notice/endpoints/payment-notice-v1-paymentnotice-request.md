@@ -16,7 +16,7 @@ Payer-initiated, after the final claim is approved (workflow 26). The same bundl
 
 - The claim has received a response.complete approval and a payment has been initiated in the payer's banking system.
 - The payer holds a valid Bearer token and has fetched the provider's certificate; the bundle is JWE-encrypted for the provider.
-- Protected header carries request.initiated, a fresh correlation UUID for this notice cycle (the workbook says same as the API caller ID), the payer as sender and the provider as recipient, and an IST TIMESTAMP.
+- Protected header carries request.initiated, a fresh correlation UUID for this notice cycle (the workbook says same as the API caller ID), the payer as sender and the provider as recipient, and an IST timestamp.
 - PaymentNotice.amount and PaymentReconciliation.paymentAmount carry the net amount; detail lines itemise TDS and Payment; the claim number is carried as identifier type CLN.
 - Valid provider bank details exist on the payer side (PAYR-1020 otherwise).
 

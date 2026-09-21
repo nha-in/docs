@@ -2,7 +2,7 @@
 
 `POST v1_preauth_on_submit`
 
-Hosted by the provider. The exchange posts this message to the `endpoint_URL` you registered, at `/v1/preauth/on_submit`, with the headers and the sealed payload the sender posted. Answer HTTP 202 with the receipt first and process afterwards; [Receiving a callback](/docs/nhcx/v1/getting-started/receiving-a-callback) has the rules.
+Hosted by the provider. The exchange posts this message to the `endpoint_url` you registered, at `/v1/preauth/on_submit`, with the headers and the sealed payload the sender posted. Answer HTTP 202 with the receipt first and process afterwards; [Receiving a callback](/docs/nhcx/v1/getting-started/receiving-a-callback) has the rules.
 
 Payer returns the ClaimResponseBundle for a pre-authorisation (approved, partially approved, queried or rejected) to the provider via NHCX.
 

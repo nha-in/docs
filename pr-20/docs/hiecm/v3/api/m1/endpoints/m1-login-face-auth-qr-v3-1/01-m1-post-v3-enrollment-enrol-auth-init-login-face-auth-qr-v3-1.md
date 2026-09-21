@@ -4,7 +4,7 @@
 
 **Endpoint:** `POST /abha/api/v3/enrollment/enrol/auth/init`
 
-**Flow:Login - Face Auth QR (v3.1)** - step 1 of 3
+**Flow:** **Login - Face Auth QR (v3.1)** - step 1 of 3
 - Previous: none (first call of this flow)
 - Next: *Face auth - capture PID / track status*
 

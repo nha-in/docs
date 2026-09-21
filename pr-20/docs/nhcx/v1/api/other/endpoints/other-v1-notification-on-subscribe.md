@@ -21,7 +21,7 @@ As a BSP you implement this path on your host, registered through on_notificatio
 
 ### Postconditions
 
-The NHCX-side operation returns HTTP 200 with a SubscribeResponse (TIMESTAMP, API_call_ID, correlation_ID, subscription_ID, subscription_status active, replaced or expired, expiry, message); 400, 401, 403, 409 and 500 return a StatusSuccessResponse with the same descriptions as the subscribe table. On the BSP callback the delivered payload carries notification_ID, topic_code, TIMESTAMP, subscriber.ID, a human-readable message that can be shown directly to the user, and optional domain_values with x-hcx-* headers for audit or custom formatting. Nothing changes in the hospital-payer exchange; the notification is a forked copy of the outcome.
+The NHCX-side operation returns HTTP 200 with a SubscribeResponse (timestamp, API_call_ID, correlation_ID, subscription_ID, subscription_status active, replaced or expired, expiry, message); 400, 401, 403, 409 and 500 return a StatusSuccessResponse with the same descriptions as the subscribe table. On the BSP callback the delivered payload carries notification_ID, topic_code, timestamp, subscriber.ID, a human-readable message that can be shown directly to the user, and optional domain_values with x-hcx-* headers for audit or custom formatting. Nothing changes in the hospital-payer exchange; the notification is a forked copy of the outcome.
 
 ### Common mistakes
 

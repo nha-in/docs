@@ -33,7 +33,7 @@ curl --request GET \
 - `REQUEST-ID` (string, required): Unique UUID for every request.
 - `Content-Type` (string, required)
 - `BENEFIT_NAME` (string, required): Benefit / program name approved by NHA for the integrator.
-- `X-token` (string, required): User token (`Bearer `) received after ABHA creation / login.
+- `X-token` (string, required): User token (`Bearer <token>`) received after ABHA creation / login.
 
 ## Responses
 

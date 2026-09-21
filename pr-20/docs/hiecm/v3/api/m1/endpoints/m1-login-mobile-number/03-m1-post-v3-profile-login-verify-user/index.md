@@ -32,7 +32,7 @@ curl --request POST \
 
 ## Headers
 
-- `T-token` (string, required): Short-lived token (`Bearer `) returned by *Login via Mobile number - verify OTP*.
+- `T-token` (string, required): Short-lived token (`Bearer <token>`) returned by *Login via Mobile number - verify OTP*.
 - `REQUEST-ID` (string, required): Unique UUID for every request.
 - `TIMESTAMP` (string, required): Current UTC timestamp in ISO-8601 format.
 

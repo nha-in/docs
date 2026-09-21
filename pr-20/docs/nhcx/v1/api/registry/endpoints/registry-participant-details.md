@@ -20,7 +20,7 @@ Use it wherever /participant/search would be used: after payer discovery via /fe
 
 ### Postconditions
 
-HTTP 200 with ParticipantSearchResponse: TIMESTAMP and a participants array of full participant records (participant_code, linked_registry_codes, participant_name, scheme_code, roles, address, contact fields, status, signing_cert_path, encryption_cert, endpoint_URL, payment_details). Read-only; nothing changes and no callback follows. 400, 404 and 500 return the ErrorResponse envelope with TIMESTAMP and error code, message and trace.
+HTTP 200 with ParticipantSearchResponse: timestamp and a participants array of full participant records (participant_code, linked_registry_codes, participant_name, scheme_code, roles, address, contact fields, status, signing_cert_path, encryption_cert, endpoint_URL, payment_details). Read-only; nothing changes and no callback follows. 400, 404 and 500 return the ErrorResponse envelope with timestamp and error code, message and trace.
 
 ### Common mistakes
 

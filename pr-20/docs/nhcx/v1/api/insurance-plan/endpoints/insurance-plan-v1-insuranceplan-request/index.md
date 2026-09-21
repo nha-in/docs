@@ -17,7 +17,7 @@ Call it before any preauth or claim for a given payer and policy, ideally at pat
 - Both provider and payer registered on NHCX; valid Bearer token from the client-credentials session call.
 - Payer certificate fetched via /fetch/certs and verified before encryption; JWE with RSA-OAEP-256 and A256GCM.
 - Task bundle with at least one of policyNumber or providerId in Task.input; both may be supplied for precision.
-- Protected header with sender_code, recipient_code, fresh API_call_ID, a fresh UUID correlation_ID for this discovery cycle, IST TIMESTAMP and status request.initiated.
+- Protected header with sender_code, recipient_code, fresh API_call_ID, a fresh UUID correlation_ID for this discovery cycle, IST timestamp and status request.initiated.
 - Recipient code taken from processingID in the get/Policies response, not PayerID.
 - HTTP headers Accept, Content-Type and bearer_auth.
 

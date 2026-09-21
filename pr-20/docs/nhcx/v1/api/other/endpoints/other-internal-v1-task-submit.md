@@ -16,7 +16,7 @@ Same circumstances as /v1/task/submit: a reprocess (Task.code reprocess, reasonC
 
 - As for the public endpoint: active provider with NPI facility code, Bearer token, payer certificate for JWE encryption.
 - Body is a JWEPayload whose plaintext is the Task resource with basedOn referencing the original entity by the sender's reference ID, Task.input with claimNumber and intimation number, and supporting evidence.
-- Protected header with the original correlation ID, fresh API_call_ID, IST TIMESTAMP, workflow ID and status request.initiated.
+- Protected header with the original correlation ID, fresh API_call_ID, IST timestamp, workflow ID and status request.initiated.
 - Confirmation that the internal route is intended for your integration.
 
 ### Postconditions

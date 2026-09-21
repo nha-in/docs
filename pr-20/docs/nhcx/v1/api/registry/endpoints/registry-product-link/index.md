@@ -23,7 +23,7 @@ Use it when a payer introduces a new product, and before any /participant/link/a
 
 ### Postconditions
 
-On success the endpoint returns HTTP 200 with ParticipantCreateResponse, whose single optional field participant_code is the machine-generated participant identifier on the HCX instance. No callback follows. The product becomes the value that /product/getowner resolves back to the owning participant and that policy links refer to. Failures return 400, 404 or 500 with the ErrorResponse envelope (TIMESTAMP plus Error with code, message and trace).
+On success the endpoint returns HTTP 200 with ParticipantCreateResponse, whose single optional field participant_code is the machine-generated participant identifier on the HCX instance. No callback follows. The product becomes the value that /product/getowner resolves back to the owning participant and that policy links refer to. Failures return 400, 404 or 500 with the ErrorResponse envelope (timestamp plus Error with code, message and trace).
 
 ### Common mistakes
 

@@ -2,19 +2,19 @@
 
 `POST /abha/api/v3/enrollment/enrol/byAadhaar`
 
-Creates a Child ABHA linked to the parent's ABHA. Send the **parent's**`X-token` (from the parent's ABHA creation or login) and `Benefit-Name`.** Only for Government integrators approved by NHA.**
+Creates a Child ABHA linked to the parent's ABHA. Send the **parent's** `X-token` (from the parent's ABHA creation or login) and `Benefit-Name`.**Only for Government integrators approved by NHA.**
 
 **Endpoint:** `POST /abha/api/v3/enrollment/enrol/byAadhaar`
 
-**Flow:Benefit - Child ABHA** - step 2 of 6
+**Flow:** **Benefit - Child ABHA** - step 2 of 6
 - Previous: *Create ABHA - Demographic authentication (Demo Auth)*
 - Next: *Get Child ABHA list of the parent*
 
-**Headers** (plus `Authorization: Bearer `):
+**Headers** (plus `Authorization: Bearer <gateway token>`):
 
 | Header | Required | Description |
 |---|---|---|
-| TIMESTAMP | yes | Current UTC TIMESTAMP in ISO-8601 format. |
+| TIMESTAMP | yes | Current UTC timestamp in ISO-8601 format. |
 | REQUEST-ID | yes | Unique UUID for every request. |
 | Benefit-Name | yes | **Applicable for user who is enrolling via Benefit Program.** |
 | X-token | yes | **Applicable for child ABHA creation. X-token of Parent user, user can get X-token after login to the system** |
@@ -35,7 +35,7 @@ Creates a Child ABHA linked to the parent's ABHA. Send the **parent's**`X-token`
 | `authData.child.profilePhoto` | string | no | Base64 encoded profile photo. |
 | `authData.child.parentConsent` | string | no | Parent consent flag for creating a child ABHA. |
 | `consent` | object | yes | Consent captured from the user for ABHA enrolment. |
-| `consent.code` | string | yes | Consent code. Use `ABHA-enrollment`. |
+| `consent.code` | string | yes | Consent code. Use `abha-enrollment`. |
 | `consent.version` | string | yes | Consent version. Use `1.4`. |
 
 ```bash

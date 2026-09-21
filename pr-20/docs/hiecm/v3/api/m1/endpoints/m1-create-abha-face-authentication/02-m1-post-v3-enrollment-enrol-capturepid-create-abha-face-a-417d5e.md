@@ -4,7 +4,7 @@
 
 **Endpoint:** `POST /abha/api/v3/enrollment/enrol/capturePID`
 
-**Flow:Create ABHA - Face Authentication** - step 2 of 9
+**Flow:** **Create ABHA - Face Authentication** - step 2 of 9
 - Previous: *Face auth - generate transaction ID (init)*
 - Next: *Create ABHA - Aadhaar face authentication*
 

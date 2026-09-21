@@ -2,7 +2,7 @@
 
 `GET /abha/api/v3/profile/account/download-abha-card`
 
-**Endpoint:** `GET /abha/api/v3/profile/account/download-ABHA-card`
+**Endpoint:** `GET /abha/api/v3/profile/account/download-abha-card`
 
 **Flow:** **ABHA Card & Profile** - independent API; call the one that fits your identifier / modality.
 
@@ -27,7 +27,7 @@ curl --request GET \
 
 ## Headers
 
-- `X-token` (string, required): User token (`Bearer `) received after ABHA creation / login.
+- `X-token` (string, required): User token (`Bearer <token>`) received after ABHA creation / login.
 - `REQUEST-ID` (string, required): Unique UUID for every request.
 - `TIMESTAMP` (string, required): Current UTC timestamp in ISO-8601 format.
 

@@ -20,7 +20,7 @@ Call it once a participant_code is known, typically after /fetch/participants/li
 
 ### Postconditions
 
-HTTP 200 with ParticipantSearchResponse: TIMESTAMP (Unix TIMESTAMP when the request is sent) and participants, an array of full participant records with participant_code, linked_registry_codes, participant_name, scheme_code, roles, address, primaryEmail, additionalEmail, phone, primaryMobile, additionalMobile, status, signing_cert_path, encryption_cert, endpoint_URL and payment_details. No state changes and no callback. An unknown code returns 404 with the ErrorResponse envelope; 400 and 500 are the other documented outcomes.
+HTTP 200 with ParticipantSearchResponse: timestamp (Unix timestamp when the request is sent) and participants, an array of full participant records with participant_code, linked_registry_codes, participant_name, scheme_code, roles, address, primaryEmail, additionalEmail, phone, primaryMobile, additionalMobile, status, signing_cert_path, encryption_cert, endpoint_URL and payment_details. No state changes and no callback. An unknown code returns 404 with the ErrorResponse envelope; 400 and 500 are the other documented outcomes.
 
 ### Common mistakes
 

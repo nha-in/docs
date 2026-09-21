@@ -6,15 +6,15 @@ Creates an ABHA number by authenticating the Aadhaar holder's IRIS. The PID bloc
 
 **Endpoint:** `POST /abha/api/v3/enrollment/enrol/byAadhaar`
 
-**Flow:Create ABHA - IRIS** - step 1 of 7
+**Flow:** **Create ABHA - IRIS** - step 1 of 7
 - Previous: none (first call of this flow)
 - Next: *After ABHA creation - send OTP to verify mobile (optional)*
 
-**Headers** (plus `Authorization: Bearer `):
+**Headers** (plus `Authorization: Bearer <gateway token>`):
 
 | Header | Required | Description |
 |---|---|---|
-| TIMESTAMP | yes | Current UTC TIMESTAMP in ISO-8601 format. |
+| TIMESTAMP | yes | Current UTC timestamp in ISO-8601 format. |
 | REQUEST-ID | yes | Unique UUID for every request. |
 | Benefit-Name | no | **Applicable for user who is enrolling via Benefit Program.** |
 
@@ -25,11 +25,11 @@ Creates an ABHA number by authenticating the Aadhaar holder's IRIS. The PID bloc
 | `authData` | object | yes | Authentication payload for this use case. |
 | `authData.authMethods` | `["iris"]` | yes | Authentication method used in this step. |
 | `authData.iris` | object | yes | IRIS authentication block. |
-| `authData.iris.Aadhaar` | string | yes | Aadhaar number, RSA-encrypted. |
-| `authData.iris.PID` | string | yes | Base64 PID block captured from a registered IRIS RD device. |
+| `authData.iris.aadhaar` | string | yes | Aadhaar number, RSA-encrypted. |
+| `authData.iris.pid` | string | yes | Base64 PID block captured from a registered IRIS RD device. |
 | `authData.iris.mobile` | string | no | Mobile number to be linked with the ABHA (plain, 10 digits). |
 | `consent` | object | yes | Consent captured from the user for ABHA enrolment. |
-| `consent.code` | string | yes | Consent code. Use `ABHA-enrollment`. |
+| `consent.code` | string | yes | Consent code. Use `abha-enrollment`. |
 | `consent.version` | string | yes | Consent version. Use `1.4`. |
 
 ```bash

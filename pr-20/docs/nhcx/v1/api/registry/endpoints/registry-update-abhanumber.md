@@ -35,7 +35,7 @@ A successful call returns HTTP 200 with UpdateAbhaResponse, which carries option
 
 ### Best practices
 
-- Record both the placeholder and the real ABHA with the TIMESTAMP of the change for audit purposes.
+- Record both the placeholder and the real ABHA with the timestamp of the change for audit purposes.
 - Read successMessage and errorMessage on every response and treat a non-200 status as failure even if the body parses.
 - Immediately re-run /participant/get/policies with forceRefresh: true for the affected beneficiary.
 - Keep the ABHA formatting rule per field: hyphen-free for member lookups and x-hcx-ben-ABHA-ID, XX-XXXX-XXXX-XXXX where NHCX-1018 applies.

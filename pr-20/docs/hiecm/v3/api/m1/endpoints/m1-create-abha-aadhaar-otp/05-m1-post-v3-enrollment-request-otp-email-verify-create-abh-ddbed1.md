@@ -6,26 +6,26 @@ Optional. Sends an ABDM OTP to an email address so it can be linked to the newly
 
 **Endpoint:** `POST /abha/api/v3/enrollment/request/otp`
 
-**Flow:Create ABHA - Aadhaar OTP** - step 5 of 8
+**Flow:** **Create ABHA - Aadhaar OTP** - step 5 of 8
 - Previous: *After ABHA creation - verify mobile OTP (optional)*
 - Next: *After ABHA creation - verify email OTP (optional)*
 
-**Headers** (plus `Authorization: Bearer `):
+**Headers** (plus `Authorization: Bearer <gateway token>`):
 
 | Header | Required | Description |
 |---|---|---|
 | REQUEST-ID | yes | Unique UUID for every request. |
-| TIMESTAMP | yes | Current UTC TIMESTAMP in ISO-8601 format. |
+| TIMESTAMP | yes | Current UTC timestamp in ISO-8601 format. |
 
 **Request body for this use case:**
 
 | Field | Value / Type | Required | Description |
 |---|---|---|---|
 | `txnId` | string | yes | Transaction ID returned by the previous step of this flow. |
-| `scope` | `["ABHA-enrol", "email-verify"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
+| `scope` | `["abha-enrol", "email-verify"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
 | `loginHint` | `"email"` | yes | Type of identifier sent in `loginId`. |
 | `loginId` | string | yes | Identifier value, RSA-encrypted with the ABHA public certificate. |
-| `otpSystem` | `"ABDM"` | yes | System that generates and delivers the OTP (`Aadhaar` = UIDAI, `ABDM` = ABDM). |
+| `otpSystem` | `"abdm"` | yes | System that generates and delivers the OTP (`aadhaar` = UIDAI, `abdm` = ABDM). |
 
 ```bash
 curl --request POST \

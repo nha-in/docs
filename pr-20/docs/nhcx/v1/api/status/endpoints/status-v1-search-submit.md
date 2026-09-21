@@ -17,12 +17,12 @@ Use it when an authorised entity needs the claim documents for a known case numb
 - The caller is an entity authorised to search claim information (the source names NHA and IRDAI) and is registered on NHCX with a valid Bearer token.
 - Request body is a JWE per RFC-7516 with protocol headers per the ProtocolHeader schema.
 - Domain payload is an encrypted Task built per the TaskBundle, with the entity being queried referenced in the about element using the sender's reference ID.
-- Protected header carries sender_code, recipient_code, a fresh API_call_ID, the correlation ID of the request being queried, an IST TIMESTAMP and status request.initiated.
+- Protected header carries sender_code, recipient_code, a fresh API_call_ID, the correlation ID of the request being queried, an IST timestamp and status request.initiated.
 - HTTP headers Accept, Content-Type and bearer_auth.
 
 ### Postconditions
 
-The gateway returns HTTP 202 with a StatusSuccessResponse (TIMESTAMP, API_call_ID, correlation_ID, result with sender_code, recipient_code, entity_type and protocol_status, and error), or 400, 404 or 500 in the same envelope. It forwards the Task to the payer, who responds later on /v1/search/on_submit with the claim document: a ClaimResponse whose basedOn carries the sender's reference ID and whose about carries the recipient's reference ID and the current status of the response entity. No case state changes; Search only reads.
+The gateway returns HTTP 202 with a StatusSuccessResponse (timestamp, API_call_ID, correlation_ID, result with sender_code, recipient_code, entity_type and protocol_status, and error), or 400, 404 or 500 in the same envelope. It forwards the Task to the payer, who responds later on /v1/search/on_submit with the claim document: a ClaimResponse whose basedOn carries the sender's reference ID and whose about carries the recipient's reference ID and the current status of the response entity. No case state changes; Search only reads.
 
 ### Common mistakes
 

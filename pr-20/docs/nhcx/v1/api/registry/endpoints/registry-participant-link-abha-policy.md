@@ -23,7 +23,7 @@ Use it when a policy is issued or renewed, when a member is added to a product, 
 
 ### Postconditions
 
-On success the service returns HTTP 200 with ParticipantLinkAbhaResponse, whose two optional fields are result (a string) and errormessage (errorcode and errordescription). There is no asynchronous callback; the write is immediately visible to /participant/get/policies and /V2/participant/get/policies keyed by ABHA number, member ID or mobile number. The linked payerid and processingid become the values that providers later resolve as the payer and the receiver code for NHCX routing. Failures return 400, 404 or 500 with the ErrorResponse envelope (TIMESTAMP plus Error with code, message and trace).
+On success the service returns HTTP 200 with ParticipantLinkAbhaResponse, whose two optional fields are result (a string) and errormessage (errorcode and errordescription). There is no asynchronous callback; the write is immediately visible to /participant/get/policies and /V2/participant/get/policies keyed by ABHA number, member ID or mobile number. The linked payerid and processingid become the values that providers later resolve as the payer and the receiver code for NHCX routing. Failures return 400, 404 or 500 with the ErrorResponse envelope (timestamp plus Error with code, message and trace).
 
 ### Common mistakes
 

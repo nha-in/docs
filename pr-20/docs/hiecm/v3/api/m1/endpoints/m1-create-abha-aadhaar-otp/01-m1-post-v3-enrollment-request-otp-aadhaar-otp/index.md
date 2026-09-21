@@ -6,26 +6,26 @@ Starts ABHA creation with Aadhaar OTP. UIDAI sends an OTP to the mobile number l
 
 **Endpoint:** `POST /abha/api/v3/enrollment/request/otp`
 
-**Flow:Create ABHA - Aadhaar OTP** - step 1 of 8
+**Flow:** **Create ABHA - Aadhaar OTP** - step 1 of 8
 - Previous: none (first call of this flow)
 - Next: *Create ABHA - verify Aadhaar OTP*
 
-**Headers** (plus `Authorization: Bearer `):
+**Headers** (plus `Authorization: Bearer <gateway token>`):
 
 | Header | Required | Description |
 |---|---|---|
 | REQUEST-ID | yes | Unique UUID for every request. |
-| TIMESTAMP | yes | Current UTC TIMESTAMP in ISO-8601 format. |
+| TIMESTAMP | yes | Current UTC timestamp in ISO-8601 format. |
 
 **Request body for this use case:**
 
 | Field | Value / Type | Required | Description |
 |---|---|---|---|
 | `txnId` | string | no | Transaction ID returned by the previous step of this flow. |
-| `scope` | `["ABHA-enrol"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
-| `loginHint` | `"Aadhaar"` | yes | Type of identifier sent in `loginId`. |
+| `scope` | `["abha-enrol"]` | yes | Scope that selects this use case. Send exactly the values listed for this API. |
+| `loginHint` | `"aadhaar"` | yes | Type of identifier sent in `loginId`. |
 | `loginId` | string | yes | Identifier value, RSA-encrypted with the ABHA public certificate. |
-| `otpSystem` | `"Aadhaar"` | yes | System that generates and delivers the OTP (`Aadhaar` = UIDAI, `ABDM` = ABDM). |
+| `otpSystem` | `"aadhaar"` | yes | System that generates and delivers the OTP (`aadhaar` = UIDAI, `abdm` = ABDM). |
 
 > **Note:** `txnId` is optional here. Leave it empty on the first call, or send a previous `txnId` to resend the OTP.
 
