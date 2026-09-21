@@ -661,7 +661,7 @@ A 200 response. The specification gives no body for it, so read what comes back.
 
 **Act: the calls in this journey, in order**
 
-#### 1. Link patient links  (`p2_get_hip_v3_link_patient_links`)
+#### 1. Link patient links (`p2_get_hip_v3_link_patient_links`)
 
 ```bash
 curl --request GET \
@@ -693,11 +693,7 @@ curl --request POST \
     "patient": {
       "id": "<ABHA_ADDRESS>"
     },
-    "hip": {
-      "id": "cowin_hip_01",
-      "name": "Cowin",
-      "type": "HIP"
-    },
+    "hip": null,
     "hiu": {
       "id": "cowin_hiu_01",
       "name": "Cowin",

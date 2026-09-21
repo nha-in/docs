@@ -14,7 +14,7 @@ Loop limit: 8 passes per step. Hitting the limit is an escalation: state what wa
 
 ## Journeys
 
-### Consent-management-data-flow (`m3-consent-management-data-flow-hiu`)
+### Consent and data flow (`m3-consent-management-data-flow-hiu`)
 
 **Act: the calls in this journey, in order**
 
@@ -38,11 +38,7 @@ curl --request POST \
     "patient": {
       "id": "<ABHA_ADDRESS>"
     },
-    "hip": {
-      "id": "cowin_hip_01",
-      "name": "Cowin",
-      "type": "HIP"
-    },
+    "hip": null,
     "hiu": {
       "id": "cowin_hiu_01",
       "name": "Cowin",

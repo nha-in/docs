@@ -14,7 +14,7 @@ Loop limit: 8 passes per step. Hitting the limit is an escalation: state what wa
 
 ## Journeys
 
-### Registration API's Collection Via Aadhaar (`m4-registration-api-s-collection-via-aadhaar`)
+### HPID, registration via Aadhaar (`m4-registration-api-s-collection-via-aadhaar`)
 
 **Act: the calls in this journey, in order**
 
@@ -153,7 +153,7 @@ curl --request POST \
 
 A 200 response. The specification gives no body for it, so read what comes back.
 
-### Onboarding APIs (`m4-onboarding-apis`)
+### HFR, facility onboarding (`m4-onboarding-apis`)
 
 **Act: the calls in this journey, in order**
 
@@ -404,7 +404,7 @@ curl --request POST \
 
 A 200 response. The specification gives no body for it, so read what comes back.
 
-### Multiple HRP API (`m4-multiple-hrp-api`)
+### HRP bridge services (`m4-multiple-hrp-api`)
 
 **Act: the calls in this journey, in order**
 
@@ -433,7 +433,7 @@ curl --request POST \
 
 A 200 response. The specification gives no body for it, so read what comes back.
 
-### Utilities (`m4-utilities`)
+### HFR, master data (`m4-utilities`)
 
 **Act: the calls in this journey, in order**
 
@@ -556,7 +556,7 @@ A 200 whose body matches:
 ]
 ```
 
-### Search (`m4-search`)
+### HFR, facility search (`m4-search`)
 
 **Act: the calls in this journey, in order**
 
@@ -645,7 +645,7 @@ A 200 whose body matches:
 }
 ```
 
-### HFR-HRP Linkage APIs (`m4-hfr-hrp-linkage-apis`)
+### HFR, linkage to the HPR (`m4-hfr-hrp-linkage-apis`)
 
 **Act: the calls in this journey, in order**
 
@@ -690,7 +690,7 @@ A 200 whose body matches:
 }
 ```
 
-### Authentication (`m4-authentication`)
+### HPR, authentication (`m4-authentication`)
 
 **Act: the calls in this journey, in order**
 
@@ -769,7 +769,7 @@ A 200 whose body matches:
 }
 ```
 
-### Verification (`m4-verification`)
+### HPR, contact verification (`m4-verification`)
 
 **Act: the calls in this journey, in order**
 
@@ -884,7 +884,7 @@ curl --request POST \
 
 A 200 response. The specification gives no body for it, so read what comes back.
 
-### Hpid (`m4-hpid`)
+### HPID, session and role (`m4-hpid`)
 
 **Act: the calls in this journey, in order**
 
@@ -954,7 +954,7 @@ curl --request POST \
 
 A 200 response. The specification gives no body for it, so read what comes back.
 
-### Util (`m4-util`)
+### HPID, categories (`m4-util`)
 
 **Act: the calls in this journey, in order**
 
@@ -995,7 +995,7 @@ A 200 whose body matches:
 ]
 ```
 
-### Profile (`m4-profile`)
+### HPR, profile and password (`m4-profile`)
 
 **Act: the calls in this journey, in order**
 
@@ -1188,7 +1188,7 @@ curl --request GET \
 
 A 200 response. The specification gives no body for it, so read what comes back.
 
-### Forgot Healthcare Professional ID/number (`m4-forgot-healthcare-professional-id-number`)
+### HPR, recover the HPR ID (`m4-forgot-healthcare-professional-id-number`)
 
 **Act: the calls in this journey, in order**
 
@@ -1250,7 +1250,7 @@ A 200 whose body matches:
 }
 ```
 
-### Searched (`m4-searched`)
+### HPR, search (`m4-searched`)
 
 **Act: the calls in this journey, in order**
 
@@ -1299,7 +1299,7 @@ A 200 whose body matches:
 ]
 ```
 
-### Enrollment (`m4-enrollment`)
+### HPR, professional registration (`m4-enrollment`)
 
 **Act: the calls in this journey, in order**
 
@@ -1675,7 +1675,7 @@ A 200 whose body matches:
 }
 ```
 
-### Utility (`m4-utility`)
+### HPR, master data (`m4-utility`)
 
 **Act: the calls in this journey, in order**
 
@@ -1921,7 +1921,7 @@ curl --request POST \
 
 A 200 response. The specification gives no body for it, so read what comes back.
 
-### Hpr (`m4-hpr`)
+### HPR, facility linkage (`m4-hpr`)
 
 **Act: the calls in this journey, in order**
 

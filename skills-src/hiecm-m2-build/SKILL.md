@@ -14,7 +14,7 @@ Loop limit: 8 passes per step. Hitting the limit is an escalation: state what wa
 
 ## Journeys
 
-### Hip-initiated-linking (`m2-abdm-hip-initiated-linking-hip`)
+### HIP initiated linking (`m2-abdm-hip-initiated-linking-hip`)
 
 **Act: the calls in this journey, in order**
 
@@ -118,7 +118,7 @@ Inbound to your bridge at `/api/v3/patients/sms/on-notify`. Acknowledge it and c
 
 A 200 response. The specification gives no body for it, so read what comes back.
 
-### User-initiated-linking (`m2-abdm-user-initiated-linking-hip`)
+### User initiated linking (`m2-abdm-user-initiated-linking-hip`)
 
 **Act: the calls in this journey, in order**
 
@@ -243,7 +243,7 @@ curl --request POST \
 
 A 202 response. The specification gives no body for it, so read what comes back.
 
-### Link-token (`m2-abdm-link-token-hip`)
+### Link token (`m2-abdm-link-token-hip`)
 
 **Act: the calls in this journey, in order**
 
@@ -275,7 +275,7 @@ Inbound to your bridge at `/api/v3/hip/token/on-generate-token`. Acknowledge it 
 
 A 200 response. The specification gives no body for it, so read what comes back.
 
-### Patient-share (`m2-abdm-patient-share-hip`)
+### Patient share (`m2-abdm-patient-share-hip`)
 
 **Act: the calls in this journey, in order**
 
@@ -300,7 +300,7 @@ curl --request POST \
 
 A 202 response. The specification gives no body for it, so read what comes back.
 
-### Consent-management-data-flow (`m2-consent-management-data-flow-hip`)
+### Consent and data flow (`m2-consent-management-data-flow-hip`)
 
 **Act: the calls in this journey, in order**
 

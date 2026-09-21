@@ -67,7 +67,7 @@ curl --request POST \
 }'
 ```
 
-#### 3. Request enrolment OTP (`m1_post_v3_enrollment_request_otp`)
+#### 3. Request enrolment OTP (optional) (`m1_post_v3_enrollment_request_otp`)
 
 ```bash
 curl --request POST \
@@ -88,7 +88,7 @@ curl --request POST \
 }'
 ```
 
-#### 4. Verify- mobile OTP (`m1_post_v3_enrollment_auth_byabdm`)
+#### 4. Verify- mobile OTP (optional) (`m1_post_v3_enrollment_auth_byabdm`)
 
 ```bash
 curl --request POST \
@@ -1325,7 +1325,7 @@ curl --request GET \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z'
 ```
 
-#### 2. Generate Keycloak token/access token (`gateway_post_gateway_v3_sessions`)
+#### 2. Generate access token (`gateway_post_gateway_v3_sessions`)
 
 ```bash
 curl --request POST \
