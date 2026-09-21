@@ -4,15 +4,15 @@
     "to": "/reference/hiecm-gateway"
   },
   {
-    "label": "M1 ABHA identity",
+    "label": "M1 ABHA creation and verification",
     "to": "/reference/hiecm-m1"
   },
   {
-    "label": "M2 Linking and sharing",
+    "label": "M2 Health information provider services",
     "to": "/reference/hiecm-m2"
   },
   {
-    "label": "M3 Consent and fetching",
+    "label": "M3 Health information user services",
     "to": "/reference/hiecm-m3"
   },
   {
