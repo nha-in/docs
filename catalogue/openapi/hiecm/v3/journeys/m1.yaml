@@ -1,226 +1,229 @@
-# catalogue/openapi/hiecm/v3/journeys/m1.yaml
-# Identifiers are encrypted locally under the public certificate before the search call; the helper endpoint in the collection is not part of the final set.
-# Order of calls from the M1 collection of 15 September. Content from the
-# M1 swagger of 16 September. Each ABHA creation method is its own journey
-# so the shared calls appear under every method with that method's example.
-# Biometric login follows the swagger examples; the collection's v3.1 and
-# Face Auth QR calls are not in the final set.
-- id: m1-session
-  title: Session, tokens and certificate
+# Generated from the M1 swagger NHA reissued on 22 September 2026: one journey per
+# tag, tags and call order following the M1 Postman collection. Two hand edits on
+# top, from NHA's review of 21 September: the gateway session call opens Access
+# Tokens & Encryption, and the ABHA access token request sits with the ABHA card
+# and profile rather than with the session.
+- id: m1-create-abha-aadhaar-otp
+  title: Create ABHA, Aadhaar OTP
   steps:
-    - {op: gateway_post_gateway_v3_sessions}
-    - {op: m1_get_v3_profile_public_certificate}
-
-- id: m1-create-aadhaar-otp
-  title: ABHA creation, Aadhaar OTP
+    - op: m1_post_v3_enrollment_request_otp_aadhaar_otp
+    - op: m1_post_v3_enrollment_enrol_byaadhaar_otp
+    - op: m1_post_v3_enrollment_request_otp_mobile_verify_create_ab_1b66bb
+    - op: m1_post_v3_enrollment_auth_byabdm_mobile_verify_create_ab_091285
+    - op: m1_post_v3_enrollment_request_otp_email_verify_create_abh_ddbed1
+    - op: m1_post_v3_enrollment_auth_byabdm_email_verify_create_abh_6d732c
+    - op: m1_get_v3_enrollment_enrol_suggestion_create_abha_aadhaar_otp
+    - op: m1_post_v3_enrollment_enrol_abha_address_create_abha_aadhaar_otp
+- id: m1-create-abha-face-authentication
+  title: Create ABHA, Face Authentication
   steps:
-    - {op: gateway_post_gateway_v3_sessions}
-    - {op: m1_get_v3_profile_public_certificate}
-    - {op: m1_post_v3_enrollment_request_otp, example: ABHA enrolment via Aadhaar-Send OTP}
-    - {op: m1_post_v3_enrollment_enrol_byaadhaar, example: Create ABHA by verifying OTP}
-    - {op: m1_post_v3_enrollment_request_otp, example: Mobile Update - Send OTP, optional: true}
-    - {op: m1_post_v3_enrollment_auth_byabdm, example: Mobile Update - Verify OTP, optional: true}
-    - {op: m1_get_v3_enrollment_enrol_suggestion}
-    - {op: m1_post_v3_enrollment_enrol_abha_address, example: ABHA Address}
-
-- id: m1-create-face
-  title: ABHA creation, face authentication
+    - op: m1_post_v3_enrollment_enrol_auth_init_create_abha_face_au_4dea33
+    - op: m1_post_v3_enrollment_enrol_capturepid_create_abha_face_a_417d5e
+    - op: m1_post_v3_enrollment_enrol_byaadhaar_face
+    - op: m1_post_v3_enrollment_request_otp_mobile_verify_create_ab_6474ce
+    - op: m1_post_v3_enrollment_auth_byabdm_mobile_verify_create_ab_b555fb
+    - op: m1_post_v3_enrollment_request_otp_email_verify_create_abh_880d7e
+    - op: m1_post_v3_enrollment_auth_byabdm_email_verify_create_abh_d8de3e
+    - op: m1_get_v3_enrollment_enrol_suggestion_create_abha_face_au_848b26
+    - op: m1_post_v3_enrollment_enrol_abha_address_create_abha_face_4b1f33
+- id: m1-create-abha-fingerprint
+  title: Create ABHA, Fingerprint
   steps:
-    - {op: gateway_post_gateway_v3_sessions}
-    - {op: m1_get_v3_profile_public_certificate}
-    - {op: m1_post_v3_enrollment_enrol_auth_init, example: Init Transaction}
-    - {op: m1_post_v3_enrollment_enrol_capturepid, example: Capture PID}
-    - {op: m1_post_v3_enrollment_enrol_byaadhaar, example: Create ABHA via Biometrics- Aadhaar Faceauth}
-    - {op: m1_post_v3_enrollment_request_otp, example: Mobile Update - Send OTP, optional: true}
-    - {op: m1_post_v3_enrollment_auth_byabdm, example: Mobile Update - Verify OTP, optional: true}
-    - {op: m1_get_v3_enrollment_enrol_suggestion}
-    - {op: m1_post_v3_enrollment_enrol_abha_address, example: ABHA Address}
-
-- id: m1-create-fingerprint
-  title: ABHA creation, fingerprint
+    - op: m1_post_v3_enrollment_enrol_byaadhaar_fingerprint
+    - op: m1_post_v3_enrollment_request_otp_mobile_verify_create_ab_64b04e
+    - op: m1_post_v3_enrollment_auth_byabdm_mobile_verify_create_ab_3b237a
+    - op: m1_post_v3_enrollment_request_otp_email_verify_create_abh_4833d9
+    - op: m1_post_v3_enrollment_auth_byabdm_email_verify_create_abh_b696ba
+    - op: m1_get_v3_enrollment_enrol_suggestion_create_abha_fingerprint
+    - op: m1_post_v3_enrollment_enrol_abha_address_create_abha_fingerprint
+- id: m1-create-abha-iris
+  title: Create ABHA, IRIS
   steps:
-    - {op: gateway_post_gateway_v3_sessions}
-    - {op: m1_get_v3_profile_public_certificate}
-    - {op: m1_post_v3_enrollment_enrol_byaadhaar, example: Create ABHA via Biometrics- Aadhaar Bio (Fingerprint)}
-    - {op: m1_post_v3_enrollment_request_otp, example: Mobile Update - Send OTP, optional: true}
-    - {op: m1_post_v3_enrollment_auth_byabdm, example: Mobile Update - Verify OTP, optional: true}
-    - {op: m1_get_v3_enrollment_enrol_suggestion}
-    - {op: m1_post_v3_enrollment_enrol_abha_address, example: ABHA Address}
-
-- id: m1-create-iris
-  title: ABHA creation, iris
+    - op: m1_post_v3_enrollment_enrol_byaadhaar_iris
+    - op: m1_post_v3_enrollment_request_otp_mobile_verify_create_abha_iris
+    - op: m1_post_v3_enrollment_auth_byabdm_mobile_verify_create_abha_iris
+    - op: m1_post_v3_enrollment_request_otp_email_verify_create_abha_iris
+    - op: m1_post_v3_enrollment_auth_byabdm_email_verify_create_abha_iris
+    - op: m1_get_v3_enrollment_enrol_suggestion_create_abha_iris
+    - op: m1_post_v3_enrollment_enrol_abha_address_create_abha_iris
+- id: m1-create-abha-demo-auth
+  title: Create ABHA, Demo Auth
   steps:
-    - {op: gateway_post_gateway_v3_sessions}
-    - {op: m1_get_v3_profile_public_certificate}
-    - {op: m1_post_v3_enrollment_enrol_byaadhaar, example: Create ABHA via Biometrics- Aadhaar IRIS}
-    - {op: m1_post_v3_enrollment_request_otp, example: Mobile Update - Send OTP, optional: true}
-    - {op: m1_post_v3_enrollment_auth_byabdm, example: Mobile Update - Verify OTP, optional: true}
-    - {op: m1_get_v3_enrollment_enrol_suggestion}
-    - {op: m1_post_v3_enrollment_enrol_abha_address, example: ABHA Address}
-
-- id: m1-create-demographic
-  title: ABHA creation, demographic authentication
+    - op: m1_post_v3_enrollment_enrol_byaadhaar_demo_auth_create_ab_81107d
+- id: m1-child-abha
+  title: Child ABHA
   steps:
-    - {op: gateway_post_gateway_v3_sessions}
-    - {op: m1_get_v3_profile_public_certificate}
-    - {op: m1_post_v3_enrollment_enrol_byaadhaar, example: DemoAuth API}
-
-- id: m1-create-child
-  title: ABHA creation, child ABHA
+    - op: m1_post_v3_enrollment_enrol_byaadhaar_child_child_abha
+    - op: m1_get_v3_enrollment_profile_children_child_abha
+    - op: m1_patch_v3_profile_account_child_child_abha
+    - op: m1_post_v3_profile_account_request_otp_child_kyc_child_abha
+    - op: m1_post_v3_profile_account_verify_child_kyc_child_abha
+- id: m1-login-mobile-number
+  title: Login, Mobile Number
   steps:
-    - {op: m1_post_v3_enrollment_enrol_byaadhaar, example: CHILD ABHA-Create CHILD ABHA}
-    - {op: m1_get_v3_enrollment_profile_children}
-    - {op: m1_patch_v3_profile_account, example: Update CHILD ABHA Profile}
-    - {op: m1_post_v3_profile_account_request_otp, example: Request CHILD KYC}
-    - {op: m1_post_v3_profile_account_verify, example: Request CHILD KYC - Verify OTP}
-
-- id: m1-login-mobile
-  title: ABHA login, mobile number
-  steps:
-    - {op: m1_post_v3_profile_login_request_otp, example: Login Via Mobile Number - Using Mobile OTP - Send OTP}
-    - {op: m1_post_v3_profile_login_verify, example: Verify Login via Mobile}
-    - {op: m1_post_v3_profile_login_verify_user, example: Login Via Mobile Number - Verify User}
-
-- id: m1-login-aadhaar
-  title: ABHA login, Aadhaar number
-  steps:
-    - {op: m1_post_v3_profile_login_request_otp, example: Login Via Aadhaar Number - Using Aadhaar OTP - Send OTP}
-    - {op: m1_post_v3_profile_login_verify, example: Verify Login via Aadhaar}
-
+    - op: m1_post_v3_profile_login_request_otp_mobile
+    - op: m1_post_v3_profile_login_verify_mobile_otp
+    - op: m1_post_v3_profile_login_verify_user
 - id: m1-login-abha-number-aadhaar-otp
-  title: ABHA login, ABHA number with Aadhaar OTP
+  title: Login, ABHA Number (Aadhaar OTP)
   steps:
-    - {op: m1_post_v3_profile_login_request_otp, example: Login Via ABHA Number - Using Aadhaar OTP - Send OTP}
-    - {op: m1_post_v3_profile_login_verify, example: Verify Login via Aadhaar}
-
+    - op: m1_post_v3_profile_login_request_otp_abha_number_aadhaar_otp
+    - op: m1_post_v3_profile_login_verify_abha_number_aadhaar_otp
 - id: m1-login-abha-number-mobile-otp
-  title: ABHA login, ABHA number with mobile OTP
+  title: Login, ABHA Number (Mobile OTP)
   steps:
-    - {op: m1_post_v3_profile_login_request_otp, example: Login Via ABHA Number - Using ABHA OTP - Send OTP}
-    - {op: m1_post_v3_profile_login_verify, example: Verify Login via Mobile}
-
-- id: m1-login-face
-  title: ABHA login, face authentication
+    - op: m1_post_v3_profile_login_request_otp_abha_number_abha_otp
+    - op: m1_post_v3_profile_login_verify_abha_number_abha_otp
+- id: m1-login-biometric-v3-1
+  title: Login, Biometric v3.1
   steps:
-    - {op: m1_post_v3_profile_login_request_otp, example: Login Via Biometric ( Using Face) - Send Face  Authentication Request}
-    - {op: m1_post_v3_profile_login_verify, example: Verify Login via Biometric - Face}
-
-- id: m1-login-fingerprint
-  title: ABHA login, fingerprint
+    - op: m1_post_v3_1_profile_login_verify_fingerprint
+    - op: m1_post_v3_1_profile_login_verify_iris
+- id: m1-login-face-auth-qr-v3-1
+  title: Login, Face Auth QR (v3.1)
   steps:
-    - {op: m1_post_v3_profile_login_request_otp, example: Login Via Biometric (Using Fingerprint ) - Send Fingerprint Authentication Request}
-    - {op: m1_post_v3_profile_login_verify, example: Verify Login via Biometric - FingerPrint}
-
-- id: m1-login-iris
-  title: ABHA login, iris
+    - op: m1_post_v3_enrollment_enrol_auth_init_login_face_auth_qr_v3_1
+    - op: m1_post_v3_enrollment_enrol_capturepid_login_face_auth_qr_v3_1
+    - op: m1_post_v3_1_profile_login_verify_face_auth_qr
+- id: m1-login-aadhaar-number
+  title: Login, Aadhaar Number
   steps:
-    - {op: m1_post_v3_profile_login_request_otp, example: Login Via Biometric (Using IRIS) - Send Iris Authentication Request}
-    - {op: m1_post_v3_profile_login_verify, example: Verify Login via Biometric - IRIS}
-
-- id: m1-login-abha-address-mobile-otp
-  title: ABHA login, ABHA address with mobile OTP
+    - op: m1_post_v3_profile_login_request_otp_aadhaar
+    - op: m1_post_v3_profile_login_verify_aadhaar_otp
+- id: m1-login-biometric-v3-fingerprint
+  title: Login, Biometric v3 (Fingerprint)
   steps:
-    - {op: m1_post_v3_phr_web_login_abha_search, example: ABHA Address}
-    - {op: m1_post_v3_phr_web_login_abha_request_otp, example: ABHA Address Verification via Mobile OTP}
-    - {op: m1_post_v3_phr_web_login_abha_verify, example: Verify OTP -Mobile Number}
-    - {op: m1_get_v3_phr_web_login_profile_abha_profile}
-    - {op: m1_get_v3_phr_web_login_profile_abha_phr_card}
-
-- id: m1-login-abha-address-aadhaar-otp
-  title: ABHA login, ABHA address with Aadhaar OTP
+    - op: m1_post_v3_profile_login_request_otp_biometric_fingerprint
+    - op: m1_post_v3_profile_login_verify_biometric_fingerprint
+- id: m1-login-biometric-v3-iris
+  title: Login, Biometric v3 (Iris)
   steps:
-    - {op: m1_post_v3_phr_web_login_abha_search, example: ABHA Address}
-    - {op: m1_post_v3_phr_web_login_abha_request_otp, example: ABHA Address Verification via Aadhaar- OTP}
-    - {op: m1_post_v3_phr_web_login_abha_verify, example: Verify OTP -Aadhaar Number}
-    - {op: m1_get_v3_phr_web_login_profile_abha_profile}
-    - {op: m1_get_v3_phr_web_login_profile_abha_phr_card}
-
-- id: m1-login-abha-address-fingerprint
-  title: ABHA login, ABHA address with fingerprint
+    - op: m1_post_v3_profile_login_request_otp_biometric_iris
+    - op: m1_post_v3_profile_login_verify_biometric_iris
+- id: m1-profile-update-mobile
+  title: Profile, Update Mobile
   steps:
-    - {op: m1_post_v3_phr_web_login_abha_request_otp, example: ABHA Address Verification via Biometric - (FingerPrint)}
-    - {op: m1_post_v3_phr_web_login_abha_verify, example: Verify via Biometric - (Fingerprint Authentication)}
-    - {op: m1_get_v3_phr_web_login_profile_abha_profile}
-    - {op: m1_get_v3_phr_web_login_profile_abha_phr_card}
-    - {op: m1_get_v3_phr_web_login_profile_abha_qr_code}
-
-- id: m1-login-abha-address-face
-  title: ABHA login, ABHA address with face authentication
+    - op: m1_post_v3_profile_account_request_otp_update_mobile
+    - op: m1_post_v3_profile_account_verify_update_mobile
+- id: m1-profile-re-kyc
+  title: Profile, Re-KYC
   steps:
-    - {op: m1_post_v3_phr_web_login_abha_request_otp, example: ABHA Address Verification via Biometric - (Face)}
-    - {op: m1_post_v3_phr_web_login_abha_verify, example: Verify via Biometric - (Face Authentication)}
-    - {op: m1_get_v3_phr_web_login_profile_abha_profile}
-    - {op: m1_get_v3_phr_web_login_profile_abha_phr_card}
-    - {op: m1_get_v3_phr_web_login_profile_abha_qr_code}
-
-- id: m1-login-abha-address-iris
-  title: ABHA login, ABHA address with iris
+    - op: m1_post_v3_profile_account_request_otp_re_kyc
+    - op: m1_post_v3_profile_account_verify_re_kyc
+- id: m1-abha-card-profile
+  title: ABHA Card & Profile
   steps:
-    - {op: m1_post_v3_phr_web_login_abha_request_otp, example: ABHA Address Verification via Biometric - (IRIS)}
-    - {op: m1_post_v3_phr_web_login_abha_verify, example: Verify via Biometric - (Iris Authentication)}
-    - {op: m1_get_v3_phr_web_login_profile_abha_profile}
-    - {op: m1_get_v3_phr_web_login_profile_abha_phr_card}
-    - {op: m1_get_v3_phr_web_login_profile_abha_qr_code}
-
-- id: m1-find-mobile-otp
-  title: Find ABHA, mobile OTP
+    - op: m1_get_v3_profile_account_qrcode
+    - op: m1_get_v3_profile_account_abha_card
+    - op: m1_get_v3_profile_account
+    - op: m1_get_v3_profile_account_download_abha_card
+    - op: m1_get_v3_profile_account_request_token
+- id: m1-profile-update-photo
+  title: Profile, Update Photo
   steps:
-    - {op: m1_post_v3_profile_account_abha_search}
-    - {op: m1_post_v3_profile_login_request_otp, example: Find ABHA Via Mobile Number - Send OTP}
-    - {op: m1_post_v3_profile_login_verify, example: Forgot ABHA via Mobile OTP-Verify OTP}
-
-- id: m1-find-aadhaar-otp
+    - op: m1_patch_v3_profile_account_profile_photo
+- id: m1-find-abha-mobile-otp
+  title: Find ABHA, Mobile OTP
+  steps:
+    - op: m1_post_v3_profile_account_abha_search_find_abha_mobile_otp
+    - op: m1_post_v3_profile_login_request_otp_find_abha_mobile
+    - op: m1_post_v3_profile_login_verify_find_abha_mobile
+- id: m1-find-abha-face
+  title: Find ABHA, Face
+  steps:
+    - op: m1_post_v3_profile_account_abha_search_find_abha_face
+    - op: m1_post_v3_profile_login_request_otp_find_abha_face
+    - op: m1_post_v3_enrollment_enrol_capturepid_find_abha_face
+    - op: m1_post_v3_profile_login_verify_find_abha_face
+- id: m1-find-abha-fingerprint
+  title: Find ABHA, Fingerprint
+  steps:
+    - op: m1_post_v3_profile_account_abha_search_find_abha_fingerprint
+    - op: m1_post_v3_profile_login_request_otp_find_abha_fingerprint
+    - op: m1_post_v3_profile_login_verify_find_abha_fingerprint
+- id: m1-find-abha-aadhaar-otp
   title: Find ABHA, Aadhaar OTP
   steps:
-    - {op: m1_post_v3_profile_account_abha_search}
-    - {op: m1_post_v3_profile_login_request_otp, example: Find ABHA Via Aadhaar linked Mobile Number - Send OTP}
-    - {op: m1_post_v3_profile_login_verify, example: Forgot ABHA via Aadhaar OTP-Verify OTP}
-
-- id: m1-find-fingerprint
-  title: Find ABHA, fingerprint
+    - op: m1_post_v3_profile_account_abha_search_find_abha_aadhaar_otp
+    - op: m1_post_v3_profile_login_request_otp_find_abha_aadhaar
+    - op: m1_post_v3_profile_login_verify_find_abha_aadhaar
+- id: m1-find-abha-iris
+  title: Find ABHA, IRIS
   steps:
-    - {op: m1_post_v3_profile_account_abha_search}
-    - {op: m1_post_v3_profile_login_request_otp, example: Find ABHA Via Biometric (Fingerprint) - Send Fingerprint Authentication Request}
-    - {op: m1_post_v3_profile_login_verify, example: Verify Login via Biometric - FingerPrint}
-
-- id: m1-find-face
-  title: Find ABHA, face authentication
+    - op: m1_post_v3_profile_account_abha_search_find_abha_iris
+    - op: m1_post_v3_profile_login_request_otp_find_abha_iris
+    - op: m1_post_v3_profile_login_verify_find_abha_iris
+- id: m1-forgot-abha-mobile-otp
+  title: Forgot ABHA, Mobile OTP
   steps:
-    - {op: m1_post_v3_profile_account_abha_search}
-    - {op: m1_post_v3_profile_login_request_otp, example: Find ABHA Via Biometric (Face) - Send Face Authentication Request}
-    - {op: m1_post_v3_enrollment_enrol_capturepid, example: Capture PID}
-    - {op: m1_post_v3_profile_login_verify, example: Verify Login via Biometric - Face}
-
-- id: m1-find-iris
-  title: Find ABHA, iris
+    - op: m1_post_v3_profile_login_request_otp_forgot_abha_mobile
+    - op: m1_post_v3_profile_login_verify_forgot_abha_mobile
+- id: m1-forgot-abha-aadhaar-otp
+  title: Forgot ABHA, Aadhaar OTP
   steps:
-    - {op: m1_post_v3_profile_account_abha_search}
-    - {op: m1_post_v3_profile_login_request_otp, example: Find ABHA Via Biometric (Iris) - Send Iris Authentication Request}
-    - {op: m1_post_v3_profile_login_verify, example: Verify Login via Biometric - IRIS}
-
-- id: m1-profile-and-card
-  title: Profile management, profile and ABHA card
+    - op: m1_post_v3_profile_login_request_otp_forgot_abha_aadhaar
+    - op: m1_post_v3_profile_login_verify_forgot_abha_aadhaar
+- id: m1-benefit-create-abha-via-demo-auth
+  title: Benefit, Create ABHA via Demo Auth
   steps:
-    - {op: m1_get_v3_profile_account_qrcode}
-    - {op: m1_get_v3_profile_account_abha_card}
-    - {op: m1_get_v3_profile_account}
-    - {op: m1_get_v3_profile_account_request_token}
-
-- id: m1-update-mobile
-  title: Profile management, mobile number update
+    - op: m1_post_v3_enrollment_enrol_byaadhaar_demo_auth_benefit_c_d5c7c3
+- id: m1-benefit-child-abha
+  title: Benefit, Child ABHA
   steps:
-    - {op: m1_post_v3_profile_account_request_otp, example: Update Mobile-Send OTP}
-    - {op: m1_post_v3_profile_account_verify, example: Update Mobile- Verify OTP}
-
-- id: m1-re-kyc
-  title: Profile management, re-KYC
+    - op: m1_post_v3_enrollment_enrol_byaadhaar_demo_auth_benefit_c_d20a11
+    - op: m1_post_v3_enrollment_enrol_byaadhaar_child_benefit_child_abha
+    - op: m1_get_v3_enrollment_profile_children_benefit_child_abha
+    - op: m1_patch_v3_profile_account_child_benefit_child_abha
+    - op: m1_post_v3_profile_account_request_otp_child_kyc_benefit__ec9035
+    - op: m1_post_v3_profile_account_verify_child_kyc_benefit_child_abha
+- id: m1-benefit-search
+  title: Benefit, Search
   steps:
-    - {op: m1_post_v3_profile_account_request_otp, example: ReKyc-Send OTP}
-    - {op: m1_post_v3_profile_account_verify, example: Re-KYC - Verify OTP}
-
-- id: m1-benefit
-  title: Benefit programmes
+    - op: m1_post_v3_profile_benefit_search_xmluid
+    - op: m1_post_v3_profile_benefit_search_abha_number
+    - op: m1_get_v3_profile_benefit_abha_abhanumber
+- id: m1-benefit-link-de-link
+  title: Benefit, Link / De-link
   steps:
-    - {op: m1_post_v3_profile_benefit_search, example: Benefit Search via ABHA}
-    - {op: m1_get_v3_profile_benefit_abha_abhanumber}
-    - {op: m1_post_v3_profile_benefit_linkanddelink, example: LINK or DELINK via ABHA number}
+    - op: m1_post_v3_profile_benefit_linkanddelink_x_token
+    - op: m1_post_v3_profile_benefit_linkanddelink_abha_number
+    - op: m1_post_v3_profile_benefit_linkanddelink_xmluid
+- id: m1-access-tokens-encryption
+  title: Access Tokens & Encryption
+  steps:
+    - op: gateway_post_gateway_v3_sessions
+    - op: m1_get_v3_profile_public_certificate
+- id: m1-abha-address-login-mobile-otp
+  title: ABHA Address Login, Mobile OTP
+  steps:
+    - op: m1_post_v3_phr_web_login_abha_search_abha_address_login_m_27a20f
+    - op: m1_post_v3_phr_web_login_abha_request_otp_mobile_otp
+    - op: m1_post_v3_phr_web_login_abha_verify_mobile_otp
+    - op: m1_get_v3_phr_web_login_profile_abha_profile_abha_address_b038c4
+    - op: m1_get_v3_phr_web_login_profile_abha_phr_card_abha_addres_e1bae9
+    - op: m1_get_v3_phr_web_login_profile_abha_qr_code_abha_address_a48785
+- id: m1-abha-address-login-aadhaar-otp
+  title: ABHA Address Login, Aadhaar OTP
+  steps:
+    - op: m1_post_v3_phr_web_login_abha_search_abha_address_login_a_de8184
+    - op: m1_post_v3_phr_web_login_abha_request_otp_aadhaar_otp
+    - op: m1_post_v3_phr_web_login_abha_verify_aadhaar_otp
+    - op: m1_get_v3_phr_web_login_profile_abha_profile_abha_address_c04e83
+    - op: m1_get_v3_phr_web_login_profile_abha_phr_card_abha_addres_817c0d
+    - op: m1_get_v3_phr_web_login_profile_abha_qr_code_abha_address_26c955
+- id: m1-abha-address-login-fingerprint
+  title: ABHA Address Login, Fingerprint
+  steps:
+    - op: m1_post_v3_phr_web_login_abha_request_otp_fingerprint
+    - op: m1_post_v3_phr_web_login_abha_verify_fingerprint
+    - op: m1_get_v3_phr_web_login_profile_abha_profile_abha_address_8ec4ee
+    - op: m1_get_v3_phr_web_login_profile_abha_phr_card_abha_addres_e751bf
+    - op: m1_get_v3_phr_web_login_profile_abha_qr_code_abha_address_91c62b
+- id: m1-abha-address-login-iris
+  title: ABHA Address Login, IRIS
+  steps:
+    - op: m1_post_v3_phr_web_login_abha_request_otp_iris
+    - op: m1_post_v3_phr_web_login_abha_verify_iris
+    - op: m1_get_v3_phr_web_login_profile_abha_profile_abha_address_809900
+    - op: m1_get_v3_phr_web_login_profile_abha_phr_card_abha_addres_b64ebf
+    - op: m1_get_v3_phr_web_login_profile_abha_qr_code_abha_address_4b4e10

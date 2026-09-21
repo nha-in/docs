@@ -668,7 +668,10 @@ for (const {platform, version, files} of tree) {
         moduleId: module.id,
         kind: entry.kind,
         method: entry.method.toUpperCase(),
-        path: entry.path,
+        // The M1 swagger keys one operation per use case as <path>#<use-case>.
+        // The suffix is never sent to the server; the real URL is in
+        // x-actual-path, and that is what the page, the curl and the samples show.
+        path: op['x-actual-path'] ?? entry.path.replace(/#.*$/, ''),
         // A callback is ABDM calling you. Its examples run against the URL
         // registered for your bridge, never against the gateway host, which
         // is what a curl against dev.abdm.gov.in wrongly suggested.
@@ -680,8 +683,8 @@ for (const {platform, version, files} of tree) {
         // this carries the name. Always an instruction starting with a verb.
         // `x-abdm-title` overrides it where NHA's summary names nothing a rule
         // can rescue. See scripts/lib/titles.mjs.
-        title: titleOverrides[id]
-          ? caseTerms(titleOverrides[id])
+        title: (titleOverrides[id] ?? op['x-abdm-title'])
+          ? caseTerms(titleOverrides[id] ?? op['x-abdm-title'])
           : imperative(cleanTitle(op.summary, {path: entry.path, method: entry.method}), {
               method: entry.method,
               kind: entry.kind,

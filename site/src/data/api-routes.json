@@ -779,13 +779,58 @@
       "abhasbx.abdm.gov.in"
     ],
     "kind": "operation",
-    "operationId": "m1_get_v3_enrollment_enrol_suggestion",
+    "operationId": "m1_get_v3_enrollment_enrol_suggestion_create_abha_aadhaar_otp",
     "module": "M1 ABHA creation and verification",
     "moduleDir": "m1",
     "method": "GET",
-    "path": "/abha/api/v3/enrollment/enrol/suggestion",
-    "summary": "UseCase: ABHA address suggestion",
-    "route": "/docs/hiecm/v3/api/m1/endpoints/m1-create-aadhaar-otp/07-m1-get-v3-enrollment-enrol-suggestion",
+    "path": "/abha/api/v3/enrollment/enrol/suggestion#create-abha-aadhaar-otp",
+    "summary": "After ABHA creation - get ABHA address suggestions",
+    "route": "/docs/hiecm/v3/api/m1/endpoints/m1-create-abha-aadhaar-otp/07-m1-get-v3-enrollment-enrol-suggestion-create-abha-aadhaar-otp",
+    "callbacks": []
+  },
+  {
+    "key": "enrollment/enrol/suggestion",
+    "hosts": [
+      "abhasbx.abdm.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "m1_get_v3_enrollment_enrol_suggestion_create_abha_face_au_848b26",
+    "module": "M1 ABHA creation and verification",
+    "moduleDir": "m1",
+    "method": "GET",
+    "path": "/abha/api/v3/enrollment/enrol/suggestion#create-abha-face-authentication",
+    "summary": "After ABHA creation - get ABHA address suggestions",
+    "route": "/docs/hiecm/v3/api/m1/endpoints/m1-create-abha-face-authentication/08-m1-get-v3-enrollment-enrol-suggestion-create-abha-face-au-848b26",
+    "callbacks": []
+  },
+  {
+    "key": "enrollment/enrol/suggestion",
+    "hosts": [
+      "abhasbx.abdm.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "m1_get_v3_enrollment_enrol_suggestion_create_abha_fingerprint",
+    "module": "M1 ABHA creation and verification",
+    "moduleDir": "m1",
+    "method": "GET",
+    "path": "/abha/api/v3/enrollment/enrol/suggestion#create-abha-fingerprint",
+    "summary": "After ABHA creation - get ABHA address suggestions",
+    "route": "/docs/hiecm/v3/api/m1/endpoints/m1-create-abha-fingerprint/06-m1-get-v3-enrollment-enrol-suggestion-create-abha-fingerprint",
+    "callbacks": []
+  },
+  {
+    "key": "enrollment/enrol/suggestion",
+    "hosts": [
+      "abhasbx.abdm.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "m1_get_v3_enrollment_enrol_suggestion_create_abha_iris",
+    "module": "M1 ABHA creation and verification",
+    "moduleDir": "m1",
+    "method": "GET",
+    "path": "/abha/api/v3/enrollment/enrol/suggestion#create-abha-iris",
+    "summary": "After ABHA creation - get ABHA address suggestions",
+    "route": "/docs/hiecm/v3/api/m1/endpoints/m1-create-abha-iris/06-m1-get-v3-enrollment-enrol-suggestion-create-abha-iris",
     "callbacks": []
   },
   {
@@ -794,13 +839,28 @@
       "abhasbx.abdm.gov.in"
     ],
     "kind": "operation",
-    "operationId": "m1_get_v3_enrollment_profile_children",
+    "operationId": "m1_get_v3_enrollment_profile_children_benefit_child_abha",
     "module": "M1 ABHA creation and verification",
     "moduleDir": "m1",
     "method": "GET",
-    "path": "/abha/api/v3/enrollment/profile/children",
-    "summary": "UseCase: Get Child ABHA address",
-    "route": "/docs/hiecm/v3/api/m1/endpoints/m1-create-child/02-m1-get-v3-enrollment-profile-children",
+    "path": "/abha/api/v3/enrollment/profile/children#benefit-child-abha",
+    "summary": "Get Child ABHA list of the parent",
+    "route": "/docs/hiecm/v3/api/m1/endpoints/m1-benefit-child-abha/03-m1-get-v3-enrollment-profile-children-benefit-child-abha",
+    "callbacks": []
+  },
+  {
+    "key": "enrollment/profile/children",
+    "hosts": [
+      "abhasbx.abdm.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "m1_get_v3_enrollment_profile_children_child_abha",
+    "module": "M1 ABHA creation and verification",
+    "moduleDir": "m1",
+    "method": "GET",
+    "path": "/abha/api/v3/enrollment/profile/children#child-abha",
+    "summary": "Get Child ABHA list of the parent",
+    "route": "/docs/hiecm/v3/api/m1/endpoints/m1-child-abha/02-m1-get-v3-enrollment-profile-children-child-abha",
     "callbacks": []
   },
   {
@@ -809,13 +869,58 @@
       "abhasbx.abdm.gov.in"
     ],
     "kind": "operation",
-    "operationId": "m1_get_v3_phr_web_login_profile_abha_phr_card",
+    "operationId": "m1_get_v3_phr_web_login_profile_abha_phr_card_abha_addres_817c0d",
     "module": "M1 ABHA creation and verification",
     "moduleDir": "m1",
     "method": "GET",
-    "path": "/abha/api/v3/phr/web/login/profile/abha/phr-card",
-    "summary": "Use Case: Generate a PHR Card Profile",
-    "route": "/docs/hiecm/v3/api/m1/endpoints/m1-login-abha-address-mobile-otp/05-m1-get-v3-phr-web-login-profile-abha-phr-card",
+    "path": "/abha/api/v3/phr/web/login/profile/abha/phr-card#abha-address-login-aadhaar-otp",
+    "summary": "Get PHR card",
+    "route": "/docs/hiecm/v3/api/m1/endpoints/m1-abha-address-login-aadhaar-otp/05-m1-get-v3-phr-web-login-profile-abha-phr-card-abha-addres-817c0d",
+    "callbacks": []
+  },
+  {
+    "key": "phr/web/login/profile/phr-card",
+    "hosts": [
+      "abhasbx.abdm.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "m1_get_v3_phr_web_login_profile_abha_phr_card_abha_addres_b64ebf",
+    "module": "M1 ABHA creation and verification",
+    "moduleDir": "m1",
+    "method": "GET",
+    "path": "/abha/api/v3/phr/web/login/profile/abha/phr-card#abha-address-login-iris",
+    "summary": "Get PHR card",
+    "route": "/docs/hiecm/v3/api/m1/endpoints/m1-abha-address-login-iris/04-m1-get-v3-phr-web-login-profile-abha-phr-card-abha-addres-b64ebf",
+    "callbacks": []
+  },
+  {
+    "key": "phr/web/login/profile/phr-card",
+    "hosts": [
+      "abhasbx.abdm.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "m1_get_v3_phr_web_login_profile_abha_phr_card_abha_addres_e1bae9",
+    "module": "M1 ABHA creation and verification",
+    "moduleDir": "m1",
+    "method": "GET",
+    "path": "/abha/api/v3/phr/web/login/profile/abha/phr-card#abha-address-login-mobile-otp",
+    "summary": "Get PHR card",
+    "route": "/docs/hiecm/v3/api/m1/endpoints/m1-abha-address-login-mobile-otp/05-m1-get-v3-phr-web-login-profile-abha-phr-card-abha-addres-e1bae9",
+    "callbacks": []
+  },
+  {
+    "key": "phr/web/login/profile/phr-card",
+    "hosts": [
+      "abhasbx.abdm.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "m1_get_v3_phr_web_login_profile_abha_phr_card_abha_addres_e751bf",
+    "module": "M1 ABHA creation and verification",
+    "moduleDir": "m1",
+    "method": "GET",
+    "path": "/abha/api/v3/phr/web/login/profile/abha/phr-card#abha-address-login-fingerprint",
+    "summary": "Get PHR card",
+    "route": "/docs/hiecm/v3/api/m1/endpoints/m1-abha-address-login-fingerprint/04-m1-get-v3-phr-web-login-profile-abha-phr-card-abha-addres-e751bf",
     "callbacks": []
   },
   {
@@ -824,13 +929,58 @@
       "abhasbx.abdm.gov.in"
     ],
     "kind": "operation",
-    "operationId": "m1_get_v3_phr_web_login_profile_abha_profile",
+    "operationId": "m1_get_v3_phr_web_login_profile_abha_profile_abha_address_809900",
     "module": "M1 ABHA creation and verification",
     "moduleDir": "m1",
     "method": "GET",
-    "path": "/abha/api/v3/phr/web/login/profile/abha-profile",
-    "summary": "Use Case: Retrieves the user’s ABHA Profile",
-    "route": "/docs/hiecm/v3/api/m1/endpoints/m1-login-abha-address-mobile-otp/04-m1-get-v3-phr-web-login-profile-abha-profile",
+    "path": "/abha/api/v3/phr/web/login/profile/abha-profile#abha-address-login-iris",
+    "summary": "Get ABHA-address profile",
+    "route": "/docs/hiecm/v3/api/m1/endpoints/m1-abha-address-login-iris/03-m1-get-v3-phr-web-login-profile-abha-profile-abha-address-809900",
+    "callbacks": []
+  },
+  {
+    "key": "phr/web/login/profile/abha-profile",
+    "hosts": [
+      "abhasbx.abdm.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "m1_get_v3_phr_web_login_profile_abha_profile_abha_address_8ec4ee",
+    "module": "M1 ABHA creation and verification",
+    "moduleDir": "m1",
+    "method": "GET",
+    "path": "/abha/api/v3/phr/web/login/profile/abha-profile#abha-address-login-fingerprint",
+    "summary": "Get ABHA-address profile",
+    "route": "/docs/hiecm/v3/api/m1/endpoints/m1-abha-address-login-fingerprint/03-m1-get-v3-phr-web-login-profile-abha-profile-abha-address-8ec4ee",
+    "callbacks": []
+  },
+  {
+    "key": "phr/web/login/profile/abha-profile",
+    "hosts": [
+      "abhasbx.abdm.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "m1_get_v3_phr_web_login_profile_abha_profile_abha_address_b038c4",
+    "module": "M1 ABHA creation and verification",
+    "moduleDir": "m1",
+    "method": "GET",
+    "path": "/abha/api/v3/phr/web/login/profile/abha-profile#abha-address-login-mobile-otp",
+    "summary": "Get ABHA-address profile",
+    "route": "/docs/hiecm/v3/api/m1/endpoints/m1-abha-address-login-mobile-otp/04-m1-get-v3-phr-web-login-profile-abha-profile-abha-address-b038c4",
+    "callbacks": []
+  },
+  {
+    "key": "phr/web/login/profile/abha-profile",
+    "hosts": [
+      "abhasbx.abdm.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "m1_get_v3_phr_web_login_profile_abha_profile_abha_address_c04e83",
+    "module": "M1 ABHA creation and verification",
+    "moduleDir": "m1",
+    "method": "GET",
+    "path": "/abha/api/v3/phr/web/login/profile/abha-profile#abha-address-login-aadhaar-otp",
+    "summary": "Get ABHA-address profile",
+    "route": "/docs/hiecm/v3/api/m1/endpoints/m1-abha-address-login-aadhaar-otp/04-m1-get-v3-phr-web-login-profile-abha-profile-abha-address-c04e83",
     "callbacks": []
   },
   {
@@ -839,13 +989,58 @@
       "abhasbx.abdm.gov.in"
     ],
     "kind": "operation",
-    "operationId": "m1_get_v3_phr_web_login_profile_abha_qr_code",
+    "operationId": "m1_get_v3_phr_web_login_profile_abha_qr_code_abha_address_26c955",
     "module": "M1 ABHA creation and verification",
     "moduleDir": "m1",
     "method": "GET",
-    "path": "/abha/api/v3/phr/web/login/profile/abha/qr-code",
-    "summary": "Use Case: Generate QR Code By Passing X-token to share user ABHA address Profile Information.",
-    "route": "/docs/hiecm/v3/api/m1/endpoints/m1-login-abha-address-fingerprint/05-m1-get-v3-phr-web-login-profile-abha-qr-code",
+    "path": "/abha/api/v3/phr/web/login/profile/abha/qr-code#abha-address-login-aadhaar-otp",
+    "summary": "Get ABHA-address QR code",
+    "route": "/docs/hiecm/v3/api/m1/endpoints/m1-abha-address-login-aadhaar-otp/06-m1-get-v3-phr-web-login-profile-abha-qr-code-abha-address-26c955",
+    "callbacks": []
+  },
+  {
+    "key": "phr/web/login/profile/qr-code",
+    "hosts": [
+      "abhasbx.abdm.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "m1_get_v3_phr_web_login_profile_abha_qr_code_abha_address_4b4e10",
+    "module": "M1 ABHA creation and verification",
+    "moduleDir": "m1",
+    "method": "GET",
+    "path": "/abha/api/v3/phr/web/login/profile/abha/qr-code#abha-address-login-iris",
+    "summary": "Get ABHA-address QR code",
+    "route": "/docs/hiecm/v3/api/m1/endpoints/m1-abha-address-login-iris/05-m1-get-v3-phr-web-login-profile-abha-qr-code-abha-address-4b4e10",
+    "callbacks": []
+  },
+  {
+    "key": "phr/web/login/profile/qr-code",
+    "hosts": [
+      "abhasbx.abdm.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "m1_get_v3_phr_web_login_profile_abha_qr_code_abha_address_91c62b",
+    "module": "M1 ABHA creation and verification",
+    "moduleDir": "m1",
+    "method": "GET",
+    "path": "/abha/api/v3/phr/web/login/profile/abha/qr-code#abha-address-login-fingerprint",
+    "summary": "Get ABHA-address QR code",
+    "route": "/docs/hiecm/v3/api/m1/endpoints/m1-abha-address-login-fingerprint/05-m1-get-v3-phr-web-login-profile-abha-qr-code-abha-address-91c62b",
+    "callbacks": []
+  },
+  {
+    "key": "phr/web/login/profile/qr-code",
+    "hosts": [
+      "abhasbx.abdm.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "m1_get_v3_phr_web_login_profile_abha_qr_code_abha_address_a48785",
+    "module": "M1 ABHA creation and verification",
+    "moduleDir": "m1",
+    "method": "GET",
+    "path": "/abha/api/v3/phr/web/login/profile/abha/qr-code#abha-address-login-mobile-otp",
+    "summary": "Get ABHA-address QR code",
+    "route": "/docs/hiecm/v3/api/m1/endpoints/m1-abha-address-login-mobile-otp/06-m1-get-v3-phr-web-login-profile-abha-qr-code-abha-address-a48785",
     "callbacks": []
   },
   {
@@ -859,8 +1054,8 @@
     "moduleDir": "m1",
     "method": "GET",
     "path": "/abha/api/v3/profile/account",
-    "summary": "Use Case: Get User Profile Details",
-    "route": "/docs/hiecm/v3/api/m1/endpoints/m1-profile-and-card/03-m1-get-v3-profile-account",
+    "summary": "Get ABHA profile",
+    "route": "/docs/hiecm/v3/api/m1/endpoints/m1-abha-card-profile/03-m1-get-v3-profile-account",
     "callbacks": []
   },
   {
@@ -874,8 +1069,23 @@
     "moduleDir": "m1",
     "method": "GET",
     "path": "/abha/api/v3/profile/account/abha-card",
-    "summary": "Use Case: Retrieve ABHA Card image",
-    "route": "/docs/hiecm/v3/api/m1/endpoints/m1-profile-and-card/02-m1-get-v3-profile-account-abha-card",
+    "summary": "Retrieve ABHA card image",
+    "route": "/docs/hiecm/v3/api/m1/endpoints/m1-abha-card-profile/02-m1-get-v3-profile-account-abha-card",
+    "callbacks": []
+  },
+  {
+    "key": "profile/account/download-abha-card",
+    "hosts": [
+      "abhasbx.abdm.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "m1_get_v3_profile_account_download_abha_card",
+    "module": "M1 ABHA creation and verification",
+    "moduleDir": "m1",
+    "method": "GET",
+    "path": "/abha/api/v3/profile/account/download-abha-card",
+    "summary": "Download ABHA card",
+    "route": "/docs/hiecm/v3/api/m1/endpoints/m1-abha-card-profile/04-m1-get-v3-profile-account-download-abha-card",
     "callbacks": []
   },
   {
@@ -889,8 +1099,8 @@
     "moduleDir": "m1",
     "method": "GET",
     "path": "/abha/api/v3/profile/account/qrCode",
-    "summary": "Use Case: Generate QR Code for an ABHA Profile",
-    "route": "/docs/hiecm/v3/api/m1/endpoints/m1-profile-and-card/01-m1-get-v3-profile-account-qrcode",
+    "summary": "Get ABHA QR code",
+    "route": "/docs/hiecm/v3/api/m1/endpoints/m1-abha-card-profile/01-m1-get-v3-profile-account-qrcode",
     "callbacks": []
   },
   {
@@ -904,8 +1114,8 @@
     "moduleDir": "m1",
     "method": "GET",
     "path": "/abha/api/v3/profile/account/request/token",
-    "summary": "Use Case: Request a token for accessing a user’s ABHA",
-    "route": "/docs/hiecm/v3/api/m1/endpoints/m1-profile-and-card/04-m1-get-v3-profile-account-request-token",
+    "summary": "Refresh user token",
+    "route": "/docs/hiecm/v3/api/m1/endpoints/m1-abha-card-profile/05-m1-get-v3-profile-account-request-token",
     "callbacks": []
   },
   {
@@ -919,8 +1129,8 @@
     "moduleDir": "m1",
     "method": "GET",
     "path": "/abha/api/v3/profile/benefit/abha/{abhanumber}",
-    "summary": "Use Case: Retrieve the benefit details associated with a specific ABHA number",
-    "route": "/docs/hiecm/v3/api/m1/endpoints/m1-benefit/02-m1-get-v3-profile-benefit-abha-abhanumber",
+    "summary": "Get benefits linked to an ABHA number",
+    "route": "/docs/hiecm/v3/api/m1/endpoints/m1-benefit-search/03-m1-get-v3-profile-benefit-abha-abhanumber",
     "callbacks": []
   },
   {
@@ -934,8 +1144,8 @@
     "moduleDir": "m1",
     "method": "GET",
     "path": "/abha/api/v3/profile/public/certificate",
-    "summary": "Use Case: Used to Fetch Public Key",
-    "route": "/docs/hiecm/v3/api/m1/endpoints/m1-session/02-m1-get-v3-profile-public-certificate",
+    "summary": "Get public certificate (RSA encryption key)",
+    "route": "/docs/hiecm/v3/api/m1/endpoints/m1-access-tokens-encryption/02-m1-get-v3-profile-public-certificate",
     "callbacks": []
   },
   {
@@ -944,13 +1154,88 @@
       "abhasbx.abdm.gov.in"
     ],
     "kind": "operation",
-    "operationId": "m1_patch_v3_profile_account",
+    "operationId": "m1_patch_v3_profile_account_child_benefit_child_abha",
     "module": "M1 ABHA creation and verification",
     "moduleDir": "m1",
     "method": "PATCH",
-    "path": "/abha/api/v3/profile/account",
-    "summary": "Use Case: Update the user ABHA Profile Photo , Update the Child ABHA Profile",
-    "route": "/docs/hiecm/v3/api/m1/endpoints/m1-create-child/03-m1-patch-v3-profile-account",
+    "path": "/abha/api/v3/profile/account#child--benefit-child-abha",
+    "summary": "Update Child ABHA profile",
+    "route": "/docs/hiecm/v3/api/m1/endpoints/m1-benefit-child-abha/04-m1-patch-v3-profile-account-child-benefit-child-abha",
+    "callbacks": []
+  },
+  {
+    "key": "profile/account",
+    "hosts": [
+      "abhasbx.abdm.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "m1_patch_v3_profile_account_child_child_abha",
+    "module": "M1 ABHA creation and verification",
+    "moduleDir": "m1",
+    "method": "PATCH",
+    "path": "/abha/api/v3/profile/account#child--child-abha",
+    "summary": "Update Child ABHA profile",
+    "route": "/docs/hiecm/v3/api/m1/endpoints/m1-child-abha/03-m1-patch-v3-profile-account-child-child-abha",
+    "callbacks": []
+  },
+  {
+    "key": "profile/account",
+    "hosts": [
+      "abhasbx.abdm.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "m1_patch_v3_profile_account_profile_photo",
+    "module": "M1 ABHA creation and verification",
+    "moduleDir": "m1",
+    "method": "PATCH",
+    "path": "/abha/api/v3/profile/account#profile-photo",
+    "summary": "Update profile photo",
+    "route": "/docs/hiecm/v3/api/m1/endpoints/m1-profile-update-photo/01-m1-patch-v3-profile-account-profile-photo",
+    "callbacks": []
+  },
+  {
+    "key": "v3.1/profile/login/verify",
+    "hosts": [
+      "abhasbx.abdm.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "m1_post_v3_1_profile_login_verify_face_auth_qr",
+    "module": "M1 ABHA creation and verification",
+    "moduleDir": "m1",
+    "method": "POST",
+    "path": "/abha/api/v3.1/profile/login/verify#face-auth-qr",
+    "summary": "Login via Face Auth (QR) - verify",
+    "route": "/docs/hiecm/v3/api/m1/endpoints/m1-login-face-auth-qr-v3-1/03-m1-post-v3-1-profile-login-verify-face-auth-qr",
+    "callbacks": []
+  },
+  {
+    "key": "v3.1/profile/login/verify",
+    "hosts": [
+      "abhasbx.abdm.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "m1_post_v3_1_profile_login_verify_fingerprint",
+    "module": "M1 ABHA creation and verification",
+    "moduleDir": "m1",
+    "method": "POST",
+    "path": "/abha/api/v3.1/profile/login/verify#fingerprint",
+    "summary": "Login via Biometric (Fingerprint) - v3.1 single step",
+    "route": "/docs/hiecm/v3/api/m1/endpoints/m1-login-biometric-v3-1/01-m1-post-v3-1-profile-login-verify-fingerprint",
+    "callbacks": []
+  },
+  {
+    "key": "v3.1/profile/login/verify",
+    "hosts": [
+      "abhasbx.abdm.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "m1_post_v3_1_profile_login_verify_iris",
+    "module": "M1 ABHA creation and verification",
+    "moduleDir": "m1",
+    "method": "POST",
+    "path": "/abha/api/v3.1/profile/login/verify#iris",
+    "summary": "Login via Biometric (Iris) - v3.1 single step",
+    "route": "/docs/hiecm/v3/api/m1/endpoints/m1-login-biometric-v3-1/02-m1-post-v3-1-profile-login-verify-iris",
     "callbacks": []
   },
   {
@@ -959,13 +1244,118 @@
       "abhasbx.abdm.gov.in"
     ],
     "kind": "operation",
-    "operationId": "m1_post_v3_enrollment_auth_byabdm",
+    "operationId": "m1_post_v3_enrollment_auth_byabdm_email_verify_create_abh_6d732c",
     "module": "M1 ABHA creation and verification",
     "moduleDir": "m1",
     "method": "POST",
-    "path": "/abha/api/v3/enrollment/auth/byAbdm",
-    "summary": "UseCase : Verify- Mobile OTP",
-    "route": "/docs/hiecm/v3/api/m1/endpoints/m1-create-aadhaar-otp/06-m1-post-v3-enrollment-auth-byabdm",
+    "path": "/abha/api/v3/enrollment/auth/byAbdm#email-verify--create-abha-aadhaar-otp",
+    "summary": "After ABHA creation - verify email OTP (optional)",
+    "route": "/docs/hiecm/v3/api/m1/endpoints/m1-create-abha-aadhaar-otp/06-m1-post-v3-enrollment-auth-byabdm-email-verify-create-abh-6d732c",
+    "callbacks": []
+  },
+  {
+    "key": "enrollment/auth/byabdm",
+    "hosts": [
+      "abhasbx.abdm.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "m1_post_v3_enrollment_auth_byabdm_email_verify_create_abh_b696ba",
+    "module": "M1 ABHA creation and verification",
+    "moduleDir": "m1",
+    "method": "POST",
+    "path": "/abha/api/v3/enrollment/auth/byAbdm#email-verify--create-abha-fingerprint",
+    "summary": "After ABHA creation - verify email OTP (optional)",
+    "route": "/docs/hiecm/v3/api/m1/endpoints/m1-create-abha-fingerprint/05-m1-post-v3-enrollment-auth-byabdm-email-verify-create-abh-b696ba",
+    "callbacks": []
+  },
+  {
+    "key": "enrollment/auth/byabdm",
+    "hosts": [
+      "abhasbx.abdm.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "m1_post_v3_enrollment_auth_byabdm_email_verify_create_abh_d8de3e",
+    "module": "M1 ABHA creation and verification",
+    "moduleDir": "m1",
+    "method": "POST",
+    "path": "/abha/api/v3/enrollment/auth/byAbdm#email-verify--create-abha-face-authentication",
+    "summary": "After ABHA creation - verify email OTP (optional)",
+    "route": "/docs/hiecm/v3/api/m1/endpoints/m1-create-abha-face-authentication/07-m1-post-v3-enrollment-auth-byabdm-email-verify-create-abh-d8de3e",
+    "callbacks": []
+  },
+  {
+    "key": "enrollment/auth/byabdm",
+    "hosts": [
+      "abhasbx.abdm.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "m1_post_v3_enrollment_auth_byabdm_email_verify_create_abha_iris",
+    "module": "M1 ABHA creation and verification",
+    "moduleDir": "m1",
+    "method": "POST",
+    "path": "/abha/api/v3/enrollment/auth/byAbdm#email-verify--create-abha-iris",
+    "summary": "After ABHA creation - verify email OTP (optional)",
+    "route": "/docs/hiecm/v3/api/m1/endpoints/m1-create-abha-iris/05-m1-post-v3-enrollment-auth-byabdm-email-verify-create-abha-iris",
+    "callbacks": []
+  },
+  {
+    "key": "enrollment/auth/byabdm",
+    "hosts": [
+      "abhasbx.abdm.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "m1_post_v3_enrollment_auth_byabdm_mobile_verify_create_ab_091285",
+    "module": "M1 ABHA creation and verification",
+    "moduleDir": "m1",
+    "method": "POST",
+    "path": "/abha/api/v3/enrollment/auth/byAbdm#mobile-verify--create-abha-aadhaar-otp",
+    "summary": "After ABHA creation - verify mobile OTP (optional)",
+    "route": "/docs/hiecm/v3/api/m1/endpoints/m1-create-abha-aadhaar-otp/04-m1-post-v3-enrollment-auth-byabdm-mobile-verify-create-ab-091285",
+    "callbacks": []
+  },
+  {
+    "key": "enrollment/auth/byabdm",
+    "hosts": [
+      "abhasbx.abdm.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "m1_post_v3_enrollment_auth_byabdm_mobile_verify_create_ab_3b237a",
+    "module": "M1 ABHA creation and verification",
+    "moduleDir": "m1",
+    "method": "POST",
+    "path": "/abha/api/v3/enrollment/auth/byAbdm#mobile-verify--create-abha-fingerprint",
+    "summary": "After ABHA creation - verify mobile OTP (optional)",
+    "route": "/docs/hiecm/v3/api/m1/endpoints/m1-create-abha-fingerprint/03-m1-post-v3-enrollment-auth-byabdm-mobile-verify-create-ab-3b237a",
+    "callbacks": []
+  },
+  {
+    "key": "enrollment/auth/byabdm",
+    "hosts": [
+      "abhasbx.abdm.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "m1_post_v3_enrollment_auth_byabdm_mobile_verify_create_ab_b555fb",
+    "module": "M1 ABHA creation and verification",
+    "moduleDir": "m1",
+    "method": "POST",
+    "path": "/abha/api/v3/enrollment/auth/byAbdm#mobile-verify--create-abha-face-authentication",
+    "summary": "After ABHA creation - verify mobile OTP (optional)",
+    "route": "/docs/hiecm/v3/api/m1/endpoints/m1-create-abha-face-authentication/05-m1-post-v3-enrollment-auth-byabdm-mobile-verify-create-ab-b555fb",
+    "callbacks": []
+  },
+  {
+    "key": "enrollment/auth/byabdm",
+    "hosts": [
+      "abhasbx.abdm.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "m1_post_v3_enrollment_auth_byabdm_mobile_verify_create_abha_iris",
+    "module": "M1 ABHA creation and verification",
+    "moduleDir": "m1",
+    "method": "POST",
+    "path": "/abha/api/v3/enrollment/auth/byAbdm#mobile-verify--create-abha-iris",
+    "summary": "After ABHA creation - verify mobile OTP (optional)",
+    "route": "/docs/hiecm/v3/api/m1/endpoints/m1-create-abha-iris/03-m1-post-v3-enrollment-auth-byabdm-mobile-verify-create-abha-iris",
     "callbacks": []
   },
   {
@@ -974,13 +1364,58 @@
       "abhasbx.abdm.gov.in"
     ],
     "kind": "operation",
-    "operationId": "m1_post_v3_enrollment_enrol_abha_address",
+    "operationId": "m1_post_v3_enrollment_enrol_abha_address_create_abha_aadhaar_otp",
     "module": "M1 ABHA creation and verification",
     "moduleDir": "m1",
     "method": "POST",
-    "path": "/abha/api/v3/enrollment/enrol/abha-address",
-    "summary": "UseCase: Create ABHA address",
-    "route": "/docs/hiecm/v3/api/m1/endpoints/m1-create-aadhaar-otp/08-m1-post-v3-enrollment-enrol-abha-address",
+    "path": "/abha/api/v3/enrollment/enrol/abha-address#create-abha-aadhaar-otp",
+    "summary": "After ABHA creation - create ABHA address",
+    "route": "/docs/hiecm/v3/api/m1/endpoints/m1-create-abha-aadhaar-otp/08-m1-post-v3-enrollment-enrol-abha-address-create-abha-aadhaar-otp",
+    "callbacks": []
+  },
+  {
+    "key": "enrollment/enrol/abha-address",
+    "hosts": [
+      "abhasbx.abdm.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "m1_post_v3_enrollment_enrol_abha_address_create_abha_face_4b1f33",
+    "module": "M1 ABHA creation and verification",
+    "moduleDir": "m1",
+    "method": "POST",
+    "path": "/abha/api/v3/enrollment/enrol/abha-address#create-abha-face-authentication",
+    "summary": "After ABHA creation - create ABHA address",
+    "route": "/docs/hiecm/v3/api/m1/endpoints/m1-create-abha-face-authentication/09-m1-post-v3-enrollment-enrol-abha-address-create-abha-face-4b1f33",
+    "callbacks": []
+  },
+  {
+    "key": "enrollment/enrol/abha-address",
+    "hosts": [
+      "abhasbx.abdm.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "m1_post_v3_enrollment_enrol_abha_address_create_abha_fingerprint",
+    "module": "M1 ABHA creation and verification",
+    "moduleDir": "m1",
+    "method": "POST",
+    "path": "/abha/api/v3/enrollment/enrol/abha-address#create-abha-fingerprint",
+    "summary": "After ABHA creation - create ABHA address",
+    "route": "/docs/hiecm/v3/api/m1/endpoints/m1-create-abha-fingerprint/07-m1-post-v3-enrollment-enrol-abha-address-create-abha-fingerprint",
+    "callbacks": []
+  },
+  {
+    "key": "enrollment/enrol/abha-address",
+    "hosts": [
+      "abhasbx.abdm.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "m1_post_v3_enrollment_enrol_abha_address_create_abha_iris",
+    "module": "M1 ABHA creation and verification",
+    "moduleDir": "m1",
+    "method": "POST",
+    "path": "/abha/api/v3/enrollment/enrol/abha-address#create-abha-iris",
+    "summary": "After ABHA creation - create ABHA address",
+    "route": "/docs/hiecm/v3/api/m1/endpoints/m1-create-abha-iris/07-m1-post-v3-enrollment-enrol-abha-address-create-abha-iris",
     "callbacks": []
   },
   {
@@ -989,13 +1424,28 @@
       "abhasbx.abdm.gov.in"
     ],
     "kind": "operation",
-    "operationId": "m1_post_v3_enrollment_enrol_auth_init",
+    "operationId": "m1_post_v3_enrollment_enrol_auth_init_create_abha_face_au_4dea33",
     "module": "M1 ABHA creation and verification",
     "moduleDir": "m1",
     "method": "POST",
-    "path": "/abha/api/v3/enrollment/enrol/auth/init",
-    "summary": "UseCase : It will generate the Transaction ID. This Transaction ID will be used for whole face authentication process.",
-    "route": "/docs/hiecm/v3/api/m1/endpoints/m1-create-face/03-m1-post-v3-enrollment-enrol-auth-init",
+    "path": "/abha/api/v3/enrollment/enrol/auth/init#create-abha-face-authentication",
+    "summary": "Face auth - generate transaction ID (init)",
+    "route": "/docs/hiecm/v3/api/m1/endpoints/m1-create-abha-face-authentication/01-m1-post-v3-enrollment-enrol-auth-init-create-abha-face-au-4dea33",
+    "callbacks": []
+  },
+  {
+    "key": "enrollment/enrol/auth/init",
+    "hosts": [
+      "abhasbx.abdm.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "m1_post_v3_enrollment_enrol_auth_init_login_face_auth_qr_v3_1",
+    "module": "M1 ABHA creation and verification",
+    "moduleDir": "m1",
+    "method": "POST",
+    "path": "/abha/api/v3/enrollment/enrol/auth/init#login-face-auth-qr-v3-1",
+    "summary": "Face auth - generate transaction ID (init)",
+    "route": "/docs/hiecm/v3/api/m1/endpoints/m1-login-face-auth-qr-v3-1/01-m1-post-v3-enrollment-enrol-auth-init-login-face-auth-qr-v3-1",
     "callbacks": []
   },
   {
@@ -1004,13 +1454,133 @@
       "abhasbx.abdm.gov.in"
     ],
     "kind": "operation",
-    "operationId": "m1_post_v3_enrollment_enrol_byaadhaar",
+    "operationId": "m1_post_v3_enrollment_enrol_byaadhaar_child_benefit_child_abha",
     "module": "M1 ABHA creation and verification",
     "moduleDir": "m1",
     "method": "POST",
-    "path": "/abha/api/v3/enrollment/enrol/byAadhaar",
-    "summary": "UseCase : Create ABHA number Via Aadhaar by verifying Aadhaar OTP, using Biometrics, using demoAuth and Child ABHA Creation.",
-    "route": "/docs/hiecm/v3/api/m1/endpoints/m1-create-aadhaar-otp/04-m1-post-v3-enrollment-enrol-byaadhaar",
+    "path": "/abha/api/v3/enrollment/enrol/byAadhaar#child--benefit-child-abha",
+    "summary": "Create Child ABHA",
+    "route": "/docs/hiecm/v3/api/m1/endpoints/m1-benefit-child-abha/02-m1-post-v3-enrollment-enrol-byaadhaar-child-benefit-child-abha",
+    "callbacks": []
+  },
+  {
+    "key": "enrollment/enrol/byaadhaar",
+    "hosts": [
+      "abhasbx.abdm.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "m1_post_v3_enrollment_enrol_byaadhaar_child_child_abha",
+    "module": "M1 ABHA creation and verification",
+    "moduleDir": "m1",
+    "method": "POST",
+    "path": "/abha/api/v3/enrollment/enrol/byAadhaar#child--child-abha",
+    "summary": "Create Child ABHA",
+    "route": "/docs/hiecm/v3/api/m1/endpoints/m1-child-abha/01-m1-post-v3-enrollment-enrol-byaadhaar-child-child-abha",
+    "callbacks": []
+  },
+  {
+    "key": "enrollment/enrol/byaadhaar",
+    "hosts": [
+      "abhasbx.abdm.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "m1_post_v3_enrollment_enrol_byaadhaar_demo_auth_benefit_c_d20a11",
+    "module": "M1 ABHA creation and verification",
+    "moduleDir": "m1",
+    "method": "POST",
+    "path": "/abha/api/v3/enrollment/enrol/byAadhaar#demo-auth--benefit-child-abha",
+    "summary": "Create ABHA - Demographic authentication (Demo Auth)",
+    "route": "/docs/hiecm/v3/api/m1/endpoints/m1-benefit-child-abha/01-m1-post-v3-enrollment-enrol-byaadhaar-demo-auth-benefit-c-d20a11",
+    "callbacks": []
+  },
+  {
+    "key": "enrollment/enrol/byaadhaar",
+    "hosts": [
+      "abhasbx.abdm.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "m1_post_v3_enrollment_enrol_byaadhaar_demo_auth_benefit_c_d5c7c3",
+    "module": "M1 ABHA creation and verification",
+    "moduleDir": "m1",
+    "method": "POST",
+    "path": "/abha/api/v3/enrollment/enrol/byAadhaar#demo-auth--benefit-create-abha-via-demo-auth",
+    "summary": "Create ABHA - Demographic authentication (Demo Auth)",
+    "route": "/docs/hiecm/v3/api/m1/endpoints/m1-benefit-create-abha-via-demo-auth/01-m1-post-v3-enrollment-enrol-byaadhaar-demo-auth-benefit-c-d5c7c3",
+    "callbacks": []
+  },
+  {
+    "key": "enrollment/enrol/byaadhaar",
+    "hosts": [
+      "abhasbx.abdm.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "m1_post_v3_enrollment_enrol_byaadhaar_demo_auth_create_ab_81107d",
+    "module": "M1 ABHA creation and verification",
+    "moduleDir": "m1",
+    "method": "POST",
+    "path": "/abha/api/v3/enrollment/enrol/byAadhaar#demo-auth--create-abha-demo-auth",
+    "summary": "Create ABHA - Demographic authentication (Demo Auth)",
+    "route": "/docs/hiecm/v3/api/m1/endpoints/m1-create-abha-demo-auth/01-m1-post-v3-enrollment-enrol-byaadhaar-demo-auth-create-ab-81107d",
+    "callbacks": []
+  },
+  {
+    "key": "enrollment/enrol/byaadhaar",
+    "hosts": [
+      "abhasbx.abdm.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "m1_post_v3_enrollment_enrol_byaadhaar_face",
+    "module": "M1 ABHA creation and verification",
+    "moduleDir": "m1",
+    "method": "POST",
+    "path": "/abha/api/v3/enrollment/enrol/byAadhaar#face",
+    "summary": "Create ABHA - Aadhaar face authentication",
+    "route": "/docs/hiecm/v3/api/m1/endpoints/m1-create-abha-face-authentication/03-m1-post-v3-enrollment-enrol-byaadhaar-face",
+    "callbacks": []
+  },
+  {
+    "key": "enrollment/enrol/byaadhaar",
+    "hosts": [
+      "abhasbx.abdm.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "m1_post_v3_enrollment_enrol_byaadhaar_fingerprint",
+    "module": "M1 ABHA creation and verification",
+    "moduleDir": "m1",
+    "method": "POST",
+    "path": "/abha/api/v3/enrollment/enrol/byAadhaar#fingerprint",
+    "summary": "Create ABHA - Aadhaar fingerprint (bio)",
+    "route": "/docs/hiecm/v3/api/m1/endpoints/m1-create-abha-fingerprint/01-m1-post-v3-enrollment-enrol-byaadhaar-fingerprint",
+    "callbacks": []
+  },
+  {
+    "key": "enrollment/enrol/byaadhaar",
+    "hosts": [
+      "abhasbx.abdm.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "m1_post_v3_enrollment_enrol_byaadhaar_iris",
+    "module": "M1 ABHA creation and verification",
+    "moduleDir": "m1",
+    "method": "POST",
+    "path": "/abha/api/v3/enrollment/enrol/byAadhaar#iris",
+    "summary": "Create ABHA - Aadhaar IRIS",
+    "route": "/docs/hiecm/v3/api/m1/endpoints/m1-create-abha-iris/01-m1-post-v3-enrollment-enrol-byaadhaar-iris",
+    "callbacks": []
+  },
+  {
+    "key": "enrollment/enrol/byaadhaar",
+    "hosts": [
+      "abhasbx.abdm.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "m1_post_v3_enrollment_enrol_byaadhaar_otp",
+    "module": "M1 ABHA creation and verification",
+    "moduleDir": "m1",
+    "method": "POST",
+    "path": "/abha/api/v3/enrollment/enrol/byAadhaar#otp",
+    "summary": "Create ABHA - verify Aadhaar OTP",
+    "route": "/docs/hiecm/v3/api/m1/endpoints/m1-create-abha-aadhaar-otp/02-m1-post-v3-enrollment-enrol-byaadhaar-otp",
     "callbacks": []
   },
   {
@@ -1019,13 +1589,43 @@
       "abhasbx.abdm.gov.in"
     ],
     "kind": "operation",
-    "operationId": "m1_post_v3_enrollment_enrol_capturepid",
+    "operationId": "m1_post_v3_enrollment_enrol_capturepid_create_abha_face_a_417d5e",
     "module": "M1 ABHA creation and verification",
     "moduleDir": "m1",
     "method": "POST",
-    "path": "/abha/api/v3/enrollment/enrol/capturePID",
-    "summary": "UseCase : This API is used to check the status of the transaction ID.",
-    "route": "/docs/hiecm/v3/api/m1/endpoints/m1-create-face/04-m1-post-v3-enrollment-enrol-capturepid",
+    "path": "/abha/api/v3/enrollment/enrol/capturePID#create-abha-face-authentication",
+    "summary": "Face auth - capture PID / track status",
+    "route": "/docs/hiecm/v3/api/m1/endpoints/m1-create-abha-face-authentication/02-m1-post-v3-enrollment-enrol-capturepid-create-abha-face-a-417d5e",
+    "callbacks": []
+  },
+  {
+    "key": "enrollment/enrol/capturepid",
+    "hosts": [
+      "abhasbx.abdm.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "m1_post_v3_enrollment_enrol_capturepid_find_abha_face",
+    "module": "M1 ABHA creation and verification",
+    "moduleDir": "m1",
+    "method": "POST",
+    "path": "/abha/api/v3/enrollment/enrol/capturePID#find-abha-face",
+    "summary": "Face auth - capture PID / track status",
+    "route": "/docs/hiecm/v3/api/m1/endpoints/m1-find-abha-face/03-m1-post-v3-enrollment-enrol-capturepid-find-abha-face",
+    "callbacks": []
+  },
+  {
+    "key": "enrollment/enrol/capturepid",
+    "hosts": [
+      "abhasbx.abdm.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "m1_post_v3_enrollment_enrol_capturepid_login_face_auth_qr_v3_1",
+    "module": "M1 ABHA creation and verification",
+    "moduleDir": "m1",
+    "method": "POST",
+    "path": "/abha/api/v3/enrollment/enrol/capturePID#login-face-auth-qr-v3-1",
+    "summary": "Face auth - capture PID / track status",
+    "route": "/docs/hiecm/v3/api/m1/endpoints/m1-login-face-auth-qr-v3-1/02-m1-post-v3-enrollment-enrol-capturepid-login-face-auth-qr-v3-1",
     "callbacks": []
   },
   {
@@ -1034,13 +1634,133 @@
       "abhasbx.abdm.gov.in"
     ],
     "kind": "operation",
-    "operationId": "m1_post_v3_enrollment_request_otp",
+    "operationId": "m1_post_v3_enrollment_request_otp_aadhaar_otp",
     "module": "M1 ABHA creation and verification",
     "moduleDir": "m1",
     "method": "POST",
-    "path": "/abha/api/v3/enrollment/request/otp",
-    "summary": "Use Case: ABHA enrollment - Send OTP using Aadhaar number Mobile number, ABHA number and Email address",
-    "route": "/docs/hiecm/v3/api/m1/endpoints/m1-create-aadhaar-otp/03-m1-post-v3-enrollment-request-otp",
+    "path": "/abha/api/v3/enrollment/request/otp#aadhaar-otp",
+    "summary": "Send Aadhaar OTP for ABHA enrolment",
+    "route": "/docs/hiecm/v3/api/m1/endpoints/m1-create-abha-aadhaar-otp/01-m1-post-v3-enrollment-request-otp-aadhaar-otp",
+    "callbacks": []
+  },
+  {
+    "key": "enrollment/request/otp",
+    "hosts": [
+      "abhasbx.abdm.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "m1_post_v3_enrollment_request_otp_email_verify_create_abh_4833d9",
+    "module": "M1 ABHA creation and verification",
+    "moduleDir": "m1",
+    "method": "POST",
+    "path": "/abha/api/v3/enrollment/request/otp#email-verify--create-abha-fingerprint",
+    "summary": "After ABHA creation - send OTP to verify email (optional)",
+    "route": "/docs/hiecm/v3/api/m1/endpoints/m1-create-abha-fingerprint/04-m1-post-v3-enrollment-request-otp-email-verify-create-abh-4833d9",
+    "callbacks": []
+  },
+  {
+    "key": "enrollment/request/otp",
+    "hosts": [
+      "abhasbx.abdm.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "m1_post_v3_enrollment_request_otp_email_verify_create_abh_880d7e",
+    "module": "M1 ABHA creation and verification",
+    "moduleDir": "m1",
+    "method": "POST",
+    "path": "/abha/api/v3/enrollment/request/otp#email-verify--create-abha-face-authentication",
+    "summary": "After ABHA creation - send OTP to verify email (optional)",
+    "route": "/docs/hiecm/v3/api/m1/endpoints/m1-create-abha-face-authentication/06-m1-post-v3-enrollment-request-otp-email-verify-create-abh-880d7e",
+    "callbacks": []
+  },
+  {
+    "key": "enrollment/request/otp",
+    "hosts": [
+      "abhasbx.abdm.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "m1_post_v3_enrollment_request_otp_email_verify_create_abh_ddbed1",
+    "module": "M1 ABHA creation and verification",
+    "moduleDir": "m1",
+    "method": "POST",
+    "path": "/abha/api/v3/enrollment/request/otp#email-verify--create-abha-aadhaar-otp",
+    "summary": "After ABHA creation - send OTP to verify email (optional)",
+    "route": "/docs/hiecm/v3/api/m1/endpoints/m1-create-abha-aadhaar-otp/05-m1-post-v3-enrollment-request-otp-email-verify-create-abh-ddbed1",
+    "callbacks": []
+  },
+  {
+    "key": "enrollment/request/otp",
+    "hosts": [
+      "abhasbx.abdm.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "m1_post_v3_enrollment_request_otp_email_verify_create_abha_iris",
+    "module": "M1 ABHA creation and verification",
+    "moduleDir": "m1",
+    "method": "POST",
+    "path": "/abha/api/v3/enrollment/request/otp#email-verify--create-abha-iris",
+    "summary": "After ABHA creation - send OTP to verify email (optional)",
+    "route": "/docs/hiecm/v3/api/m1/endpoints/m1-create-abha-iris/04-m1-post-v3-enrollment-request-otp-email-verify-create-abha-iris",
+    "callbacks": []
+  },
+  {
+    "key": "enrollment/request/otp",
+    "hosts": [
+      "abhasbx.abdm.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "m1_post_v3_enrollment_request_otp_mobile_verify_create_ab_1b66bb",
+    "module": "M1 ABHA creation and verification",
+    "moduleDir": "m1",
+    "method": "POST",
+    "path": "/abha/api/v3/enrollment/request/otp#mobile-verify--create-abha-aadhaar-otp",
+    "summary": "After ABHA creation - send OTP to verify mobile (optional)",
+    "route": "/docs/hiecm/v3/api/m1/endpoints/m1-create-abha-aadhaar-otp/03-m1-post-v3-enrollment-request-otp-mobile-verify-create-ab-1b66bb",
+    "callbacks": []
+  },
+  {
+    "key": "enrollment/request/otp",
+    "hosts": [
+      "abhasbx.abdm.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "m1_post_v3_enrollment_request_otp_mobile_verify_create_ab_6474ce",
+    "module": "M1 ABHA creation and verification",
+    "moduleDir": "m1",
+    "method": "POST",
+    "path": "/abha/api/v3/enrollment/request/otp#mobile-verify--create-abha-face-authentication",
+    "summary": "After ABHA creation - send OTP to verify mobile (optional)",
+    "route": "/docs/hiecm/v3/api/m1/endpoints/m1-create-abha-face-authentication/04-m1-post-v3-enrollment-request-otp-mobile-verify-create-ab-6474ce",
+    "callbacks": []
+  },
+  {
+    "key": "enrollment/request/otp",
+    "hosts": [
+      "abhasbx.abdm.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "m1_post_v3_enrollment_request_otp_mobile_verify_create_ab_64b04e",
+    "module": "M1 ABHA creation and verification",
+    "moduleDir": "m1",
+    "method": "POST",
+    "path": "/abha/api/v3/enrollment/request/otp#mobile-verify--create-abha-fingerprint",
+    "summary": "After ABHA creation - send OTP to verify mobile (optional)",
+    "route": "/docs/hiecm/v3/api/m1/endpoints/m1-create-abha-fingerprint/02-m1-post-v3-enrollment-request-otp-mobile-verify-create-ab-64b04e",
+    "callbacks": []
+  },
+  {
+    "key": "enrollment/request/otp",
+    "hosts": [
+      "abhasbx.abdm.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "m1_post_v3_enrollment_request_otp_mobile_verify_create_abha_iris",
+    "module": "M1 ABHA creation and verification",
+    "moduleDir": "m1",
+    "method": "POST",
+    "path": "/abha/api/v3/enrollment/request/otp#mobile-verify--create-abha-iris",
+    "summary": "After ABHA creation - send OTP to verify mobile (optional)",
+    "route": "/docs/hiecm/v3/api/m1/endpoints/m1-create-abha-iris/02-m1-post-v3-enrollment-request-otp-mobile-verify-create-abha-iris",
     "callbacks": []
   },
   {
@@ -1049,13 +1769,58 @@
       "abhasbx.abdm.gov.in"
     ],
     "kind": "operation",
-    "operationId": "m1_post_v3_phr_web_login_abha_request_otp",
+    "operationId": "m1_post_v3_phr_web_login_abha_request_otp_aadhaar_otp",
     "module": "M1 ABHA creation and verification",
     "moduleDir": "m1",
     "method": "POST",
-    "path": "/abha/api/v3/phr/web/login/abha/request/otp",
-    "summary": "Use Case: Sends an OTP to the Mobile Number, Aadhaar Number, Request Biometric Authentication",
-    "route": "/docs/hiecm/v3/api/m1/endpoints/m1-login-abha-address-mobile-otp/02-m1-post-v3-phr-web-login-abha-request-otp",
+    "path": "/abha/api/v3/phr/web/login/abha/request/otp#aadhaar-otp",
+    "summary": "ABHA address login via Aadhaar OTP - send OTP",
+    "route": "/docs/hiecm/v3/api/m1/endpoints/m1-abha-address-login-aadhaar-otp/02-m1-post-v3-phr-web-login-abha-request-otp-aadhaar-otp",
+    "callbacks": []
+  },
+  {
+    "key": "phr/web/login/request/otp",
+    "hosts": [
+      "abhasbx.abdm.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "m1_post_v3_phr_web_login_abha_request_otp_fingerprint",
+    "module": "M1 ABHA creation and verification",
+    "moduleDir": "m1",
+    "method": "POST",
+    "path": "/abha/api/v3/phr/web/login/abha/request/otp#fingerprint",
+    "summary": "ABHA address login via Fingerprint - send authentication request",
+    "route": "/docs/hiecm/v3/api/m1/endpoints/m1-abha-address-login-fingerprint/01-m1-post-v3-phr-web-login-abha-request-otp-fingerprint",
+    "callbacks": []
+  },
+  {
+    "key": "phr/web/login/request/otp",
+    "hosts": [
+      "abhasbx.abdm.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "m1_post_v3_phr_web_login_abha_request_otp_iris",
+    "module": "M1 ABHA creation and verification",
+    "moduleDir": "m1",
+    "method": "POST",
+    "path": "/abha/api/v3/phr/web/login/abha/request/otp#iris",
+    "summary": "ABHA address login via IRIS - send authentication request",
+    "route": "/docs/hiecm/v3/api/m1/endpoints/m1-abha-address-login-iris/01-m1-post-v3-phr-web-login-abha-request-otp-iris",
+    "callbacks": []
+  },
+  {
+    "key": "phr/web/login/request/otp",
+    "hosts": [
+      "abhasbx.abdm.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "m1_post_v3_phr_web_login_abha_request_otp_mobile_otp",
+    "module": "M1 ABHA creation and verification",
+    "moduleDir": "m1",
+    "method": "POST",
+    "path": "/abha/api/v3/phr/web/login/abha/request/otp#mobile-otp",
+    "summary": "ABHA address login via Mobile OTP - send OTP",
+    "route": "/docs/hiecm/v3/api/m1/endpoints/m1-abha-address-login-mobile-otp/02-m1-post-v3-phr-web-login-abha-request-otp-mobile-otp",
     "callbacks": []
   },
   {
@@ -1064,13 +1829,28 @@
       "abhasbx.abdm.gov.in"
     ],
     "kind": "operation",
-    "operationId": "m1_post_v3_phr_web_login_abha_search",
+    "operationId": "m1_post_v3_phr_web_login_abha_search_abha_address_login_a_de8184",
     "module": "M1 ABHA creation and verification",
     "moduleDir": "m1",
     "method": "POST",
-    "path": "/abha/api/v3/phr/web/login/abha/search",
-    "summary": "Use Case: Search ABHA Profile using ABHA address",
-    "route": "/docs/hiecm/v3/api/m1/endpoints/m1-login-abha-address-mobile-otp/01-m1-post-v3-phr-web-login-abha-search",
+    "path": "/abha/api/v3/phr/web/login/abha/search#abha-address-login-aadhaar-otp",
+    "summary": "Search ABHA address (auth methods)",
+    "route": "/docs/hiecm/v3/api/m1/endpoints/m1-abha-address-login-aadhaar-otp/01-m1-post-v3-phr-web-login-abha-search-abha-address-login-a-de8184",
+    "callbacks": []
+  },
+  {
+    "key": "phr/web/login/search",
+    "hosts": [
+      "abhasbx.abdm.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "m1_post_v3_phr_web_login_abha_search_abha_address_login_m_27a20f",
+    "module": "M1 ABHA creation and verification",
+    "moduleDir": "m1",
+    "method": "POST",
+    "path": "/abha/api/v3/phr/web/login/abha/search#abha-address-login-mobile-otp",
+    "summary": "Search ABHA address (auth methods)",
+    "route": "/docs/hiecm/v3/api/m1/endpoints/m1-abha-address-login-mobile-otp/01-m1-post-v3-phr-web-login-abha-search-abha-address-login-m-27a20f",
     "callbacks": []
   },
   {
@@ -1079,13 +1859,58 @@
       "abhasbx.abdm.gov.in"
     ],
     "kind": "operation",
-    "operationId": "m1_post_v3_phr_web_login_abha_verify",
+    "operationId": "m1_post_v3_phr_web_login_abha_verify_aadhaar_otp",
     "module": "M1 ABHA creation and verification",
     "moduleDir": "m1",
     "method": "POST",
-    "path": "/abha/api/v3/phr/web/login/abha/verify",
-    "summary": "Use Case: Verify OTP - Aadhaar Number, Mobile Number, Verify via Biometric",
-    "route": "/docs/hiecm/v3/api/m1/endpoints/m1-login-abha-address-mobile-otp/03-m1-post-v3-phr-web-login-abha-verify",
+    "path": "/abha/api/v3/phr/web/login/abha/verify#aadhaar-otp",
+    "summary": "ABHA address login via Aadhaar OTP - verify",
+    "route": "/docs/hiecm/v3/api/m1/endpoints/m1-abha-address-login-aadhaar-otp/03-m1-post-v3-phr-web-login-abha-verify-aadhaar-otp",
+    "callbacks": []
+  },
+  {
+    "key": "phr/web/login/verify",
+    "hosts": [
+      "abhasbx.abdm.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "m1_post_v3_phr_web_login_abha_verify_fingerprint",
+    "module": "M1 ABHA creation and verification",
+    "moduleDir": "m1",
+    "method": "POST",
+    "path": "/abha/api/v3/phr/web/login/abha/verify#fingerprint",
+    "summary": "ABHA address login via Fingerprint - verify",
+    "route": "/docs/hiecm/v3/api/m1/endpoints/m1-abha-address-login-fingerprint/02-m1-post-v3-phr-web-login-abha-verify-fingerprint",
+    "callbacks": []
+  },
+  {
+    "key": "phr/web/login/verify",
+    "hosts": [
+      "abhasbx.abdm.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "m1_post_v3_phr_web_login_abha_verify_iris",
+    "module": "M1 ABHA creation and verification",
+    "moduleDir": "m1",
+    "method": "POST",
+    "path": "/abha/api/v3/phr/web/login/abha/verify#iris",
+    "summary": "ABHA address login via IRIS - verify",
+    "route": "/docs/hiecm/v3/api/m1/endpoints/m1-abha-address-login-iris/02-m1-post-v3-phr-web-login-abha-verify-iris",
+    "callbacks": []
+  },
+  {
+    "key": "phr/web/login/verify",
+    "hosts": [
+      "abhasbx.abdm.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "m1_post_v3_phr_web_login_abha_verify_mobile_otp",
+    "module": "M1 ABHA creation and verification",
+    "moduleDir": "m1",
+    "method": "POST",
+    "path": "/abha/api/v3/phr/web/login/abha/verify#mobile-otp",
+    "summary": "ABHA address login via Mobile OTP - verify",
+    "route": "/docs/hiecm/v3/api/m1/endpoints/m1-abha-address-login-mobile-otp/03-m1-post-v3-phr-web-login-abha-verify-mobile-otp",
     "callbacks": []
   },
   {
@@ -1094,13 +1919,73 @@
       "abhasbx.abdm.gov.in"
     ],
     "kind": "operation",
-    "operationId": "m1_post_v3_profile_account_abha_search",
+    "operationId": "m1_post_v3_profile_account_abha_search_find_abha_aadhaar_otp",
     "module": "M1 ABHA creation and verification",
     "moduleDir": "m1",
     "method": "POST",
-    "path": "/abha/api/v3/profile/account/abha/search",
-    "summary": "Use Case: Search ABHA Profile",
-    "route": "/docs/hiecm/v3/api/m1/endpoints/m1-find-mobile-otp/01-m1-post-v3-profile-account-abha-search",
+    "path": "/abha/api/v3/profile/account/abha/search#find-abha-aadhaar-otp",
+    "summary": "Search ABHA by mobile",
+    "route": "/docs/hiecm/v3/api/m1/endpoints/m1-find-abha-aadhaar-otp/01-m1-post-v3-profile-account-abha-search-find-abha-aadhaar-otp",
+    "callbacks": []
+  },
+  {
+    "key": "profile/account/search",
+    "hosts": [
+      "abhasbx.abdm.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "m1_post_v3_profile_account_abha_search_find_abha_face",
+    "module": "M1 ABHA creation and verification",
+    "moduleDir": "m1",
+    "method": "POST",
+    "path": "/abha/api/v3/profile/account/abha/search#find-abha-face",
+    "summary": "Search ABHA by mobile",
+    "route": "/docs/hiecm/v3/api/m1/endpoints/m1-find-abha-face/01-m1-post-v3-profile-account-abha-search-find-abha-face",
+    "callbacks": []
+  },
+  {
+    "key": "profile/account/search",
+    "hosts": [
+      "abhasbx.abdm.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "m1_post_v3_profile_account_abha_search_find_abha_fingerprint",
+    "module": "M1 ABHA creation and verification",
+    "moduleDir": "m1",
+    "method": "POST",
+    "path": "/abha/api/v3/profile/account/abha/search#find-abha-fingerprint",
+    "summary": "Search ABHA by mobile",
+    "route": "/docs/hiecm/v3/api/m1/endpoints/m1-find-abha-fingerprint/01-m1-post-v3-profile-account-abha-search-find-abha-fingerprint",
+    "callbacks": []
+  },
+  {
+    "key": "profile/account/search",
+    "hosts": [
+      "abhasbx.abdm.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "m1_post_v3_profile_account_abha_search_find_abha_iris",
+    "module": "M1 ABHA creation and verification",
+    "moduleDir": "m1",
+    "method": "POST",
+    "path": "/abha/api/v3/profile/account/abha/search#find-abha-iris",
+    "summary": "Search ABHA by mobile",
+    "route": "/docs/hiecm/v3/api/m1/endpoints/m1-find-abha-iris/01-m1-post-v3-profile-account-abha-search-find-abha-iris",
+    "callbacks": []
+  },
+  {
+    "key": "profile/account/search",
+    "hosts": [
+      "abhasbx.abdm.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "m1_post_v3_profile_account_abha_search_find_abha_mobile_otp",
+    "module": "M1 ABHA creation and verification",
+    "moduleDir": "m1",
+    "method": "POST",
+    "path": "/abha/api/v3/profile/account/abha/search#find-abha-mobile-otp",
+    "summary": "Search ABHA by mobile",
+    "route": "/docs/hiecm/v3/api/m1/endpoints/m1-find-abha-mobile-otp/01-m1-post-v3-profile-account-abha-search-find-abha-mobile-otp",
     "callbacks": []
   },
   {
@@ -1109,13 +1994,58 @@
       "abhasbx.abdm.gov.in"
     ],
     "kind": "operation",
-    "operationId": "m1_post_v3_profile_account_request_otp",
+    "operationId": "m1_post_v3_profile_account_request_otp_child_kyc_benefit__ec9035",
     "module": "M1 ABHA creation and verification",
     "moduleDir": "m1",
     "method": "POST",
-    "path": "/abha/api/v3/profile/account/request/otp",
-    "summary": "Use Case: Send OTP - ReKyc, Update Mobile, Child ABHA KYC Request OTP",
-    "route": "/docs/hiecm/v3/api/m1/endpoints/m1-create-child/04-m1-post-v3-profile-account-request-otp",
+    "path": "/abha/api/v3/profile/account/request/otp#child-kyc--benefit-child-abha",
+    "summary": "Child ABHA KYC - send Aadhaar OTP",
+    "route": "/docs/hiecm/v3/api/m1/endpoints/m1-benefit-child-abha/05-m1-post-v3-profile-account-request-otp-child-kyc-benefit-ec9035",
+    "callbacks": []
+  },
+  {
+    "key": "profile/account/request/otp",
+    "hosts": [
+      "abhasbx.abdm.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "m1_post_v3_profile_account_request_otp_child_kyc_child_abha",
+    "module": "M1 ABHA creation and verification",
+    "moduleDir": "m1",
+    "method": "POST",
+    "path": "/abha/api/v3/profile/account/request/otp#child-kyc--child-abha",
+    "summary": "Child ABHA KYC - send Aadhaar OTP",
+    "route": "/docs/hiecm/v3/api/m1/endpoints/m1-child-abha/04-m1-post-v3-profile-account-request-otp-child-kyc-child-abha",
+    "callbacks": []
+  },
+  {
+    "key": "profile/account/request/otp",
+    "hosts": [
+      "abhasbx.abdm.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "m1_post_v3_profile_account_request_otp_re_kyc",
+    "module": "M1 ABHA creation and verification",
+    "moduleDir": "m1",
+    "method": "POST",
+    "path": "/abha/api/v3/profile/account/request/otp#re-kyc",
+    "summary": "Re-KYC - send Aadhaar OTP",
+    "route": "/docs/hiecm/v3/api/m1/endpoints/m1-profile-re-kyc/01-m1-post-v3-profile-account-request-otp-re-kyc",
+    "callbacks": []
+  },
+  {
+    "key": "profile/account/request/otp",
+    "hosts": [
+      "abhasbx.abdm.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "m1_post_v3_profile_account_request_otp_update_mobile",
+    "module": "M1 ABHA creation and verification",
+    "moduleDir": "m1",
+    "method": "POST",
+    "path": "/abha/api/v3/profile/account/request/otp#update-mobile",
+    "summary": "Update mobile - send OTP",
+    "route": "/docs/hiecm/v3/api/m1/endpoints/m1-profile-update-mobile/01-m1-post-v3-profile-account-request-otp-update-mobile",
     "callbacks": []
   },
   {
@@ -1124,13 +2054,58 @@
       "abhasbx.abdm.gov.in"
     ],
     "kind": "operation",
-    "operationId": "m1_post_v3_profile_account_verify",
+    "operationId": "m1_post_v3_profile_account_verify_child_kyc_benefit_child_abha",
     "module": "M1 ABHA creation and verification",
     "moduleDir": "m1",
     "method": "POST",
-    "path": "/abha/api/v3/profile/account/verify",
-    "summary": "Use Case: Verify OTP - ReKyc, Update Mobile, CHILD ABHA KYC",
-    "route": "/docs/hiecm/v3/api/m1/endpoints/m1-create-child/05-m1-post-v3-profile-account-verify",
+    "path": "/abha/api/v3/profile/account/verify#child-kyc--benefit-child-abha",
+    "summary": "Child ABHA KYC - verify Aadhaar OTP",
+    "route": "/docs/hiecm/v3/api/m1/endpoints/m1-benefit-child-abha/06-m1-post-v3-profile-account-verify-child-kyc-benefit-child-abha",
+    "callbacks": []
+  },
+  {
+    "key": "profile/account/verify",
+    "hosts": [
+      "abhasbx.abdm.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "m1_post_v3_profile_account_verify_child_kyc_child_abha",
+    "module": "M1 ABHA creation and verification",
+    "moduleDir": "m1",
+    "method": "POST",
+    "path": "/abha/api/v3/profile/account/verify#child-kyc--child-abha",
+    "summary": "Child ABHA KYC - verify Aadhaar OTP",
+    "route": "/docs/hiecm/v3/api/m1/endpoints/m1-child-abha/05-m1-post-v3-profile-account-verify-child-kyc-child-abha",
+    "callbacks": []
+  },
+  {
+    "key": "profile/account/verify",
+    "hosts": [
+      "abhasbx.abdm.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "m1_post_v3_profile_account_verify_re_kyc",
+    "module": "M1 ABHA creation and verification",
+    "moduleDir": "m1",
+    "method": "POST",
+    "path": "/abha/api/v3/profile/account/verify#re-kyc",
+    "summary": "Re-KYC - verify Aadhaar OTP",
+    "route": "/docs/hiecm/v3/api/m1/endpoints/m1-profile-re-kyc/02-m1-post-v3-profile-account-verify-re-kyc",
+    "callbacks": []
+  },
+  {
+    "key": "profile/account/verify",
+    "hosts": [
+      "abhasbx.abdm.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "m1_post_v3_profile_account_verify_update_mobile",
+    "module": "M1 ABHA creation and verification",
+    "moduleDir": "m1",
+    "method": "POST",
+    "path": "/abha/api/v3/profile/account/verify#update-mobile",
+    "summary": "Update mobile - verify OTP",
+    "route": "/docs/hiecm/v3/api/m1/endpoints/m1-profile-update-mobile/02-m1-post-v3-profile-account-verify-update-mobile",
     "callbacks": []
   },
   {
@@ -1139,13 +2114,43 @@
       "abhasbx.abdm.gov.in"
     ],
     "kind": "operation",
-    "operationId": "m1_post_v3_profile_benefit_linkanddelink",
+    "operationId": "m1_post_v3_profile_benefit_linkanddelink_abha_number",
     "module": "M1 ABHA creation and verification",
     "moduleDir": "m1",
     "method": "POST",
-    "path": "/abha/api/v3/profile/benefit/linkAndDelink",
-    "summary": "Usecase : Benefit LINK or DELINK",
-    "route": "/docs/hiecm/v3/api/m1/endpoints/m1-benefit/03-m1-post-v3-profile-benefit-linkanddelink",
+    "path": "/abha/api/v3/profile/benefit/linkAndDelink#abha-number",
+    "summary": "Link / De-link benefit using ABHA number",
+    "route": "/docs/hiecm/v3/api/m1/endpoints/m1-benefit-link-de-link/02-m1-post-v3-profile-benefit-linkanddelink-abha-number",
+    "callbacks": []
+  },
+  {
+    "key": "profile/benefit/linkanddelink",
+    "hosts": [
+      "abhasbx.abdm.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "m1_post_v3_profile_benefit_linkanddelink_x_token",
+    "module": "M1 ABHA creation and verification",
+    "moduleDir": "m1",
+    "method": "POST",
+    "path": "/abha/api/v3/profile/benefit/linkAndDelink#x-token",
+    "summary": "Link / De-link benefit using X-token",
+    "route": "/docs/hiecm/v3/api/m1/endpoints/m1-benefit-link-de-link/01-m1-post-v3-profile-benefit-linkanddelink-x-token",
+    "callbacks": []
+  },
+  {
+    "key": "profile/benefit/linkanddelink",
+    "hosts": [
+      "abhasbx.abdm.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "m1_post_v3_profile_benefit_linkanddelink_xmluid",
+    "module": "M1 ABHA creation and verification",
+    "moduleDir": "m1",
+    "method": "POST",
+    "path": "/abha/api/v3/profile/benefit/linkAndDelink#xmluid",
+    "summary": "Link / De-link benefit using xmlUid",
+    "route": "/docs/hiecm/v3/api/m1/endpoints/m1-benefit-link-de-link/03-m1-post-v3-profile-benefit-linkanddelink-xmluid",
     "callbacks": []
   },
   {
@@ -1154,13 +2159,28 @@
       "abhasbx.abdm.gov.in"
     ],
     "kind": "operation",
-    "operationId": "m1_post_v3_profile_benefit_search",
+    "operationId": "m1_post_v3_profile_benefit_search_abha_number",
     "module": "M1 ABHA creation and verification",
     "moduleDir": "m1",
     "method": "POST",
-    "path": "/abha/api/v3/profile/benefit/search",
-    "summary": "Use Case: Search for benefits associated with a user’s profile",
-    "route": "/docs/hiecm/v3/api/m1/endpoints/m1-benefit/01-m1-post-v3-profile-benefit-search",
+    "path": "/abha/api/v3/profile/benefit/search#abha-number",
+    "summary": "Benefit search by ABHA number",
+    "route": "/docs/hiecm/v3/api/m1/endpoints/m1-benefit-search/02-m1-post-v3-profile-benefit-search-abha-number",
+    "callbacks": []
+  },
+  {
+    "key": "profile/benefit/search",
+    "hosts": [
+      "abhasbx.abdm.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "m1_post_v3_profile_benefit_search_xmluid",
+    "module": "M1 ABHA creation and verification",
+    "moduleDir": "m1",
+    "method": "POST",
+    "path": "/abha/api/v3/profile/benefit/search#xmluid",
+    "summary": "Benefit search by xmlUid",
+    "route": "/docs/hiecm/v3/api/m1/endpoints/m1-benefit-search/01-m1-post-v3-profile-benefit-search-xmluid",
     "callbacks": []
   },
   {
@@ -1169,28 +2189,193 @@
       "abhasbx.abdm.gov.in"
     ],
     "kind": "operation",
-    "operationId": "m1_post_v3_profile_login_request_otp",
+    "operationId": "m1_post_v3_profile_login_request_otp_aadhaar",
     "module": "M1 ABHA creation and verification",
     "moduleDir": "m1",
     "method": "POST",
-    "path": "/abha/api/v3/profile/login/request/otp",
-    "summary": "Use Case: ABHA Login - Send OTP using Aadhaar number, ABHA number, Mobile number, Biometric Login, Search ABHA, Find ABHA via Biometrics",
-    "route": "/docs/hiecm/v3/api/m1/endpoints/m1-login-mobile/01-m1-post-v3-profile-login-request-otp",
+    "path": "/abha/api/v3/profile/login/request/otp#aadhaar",
+    "summary": "Login via Aadhaar number - send Aadhaar OTP",
+    "route": "/docs/hiecm/v3/api/m1/endpoints/m1-login-aadhaar-number/01-m1-post-v3-profile-login-request-otp-aadhaar",
     "callbacks": []
   },
   {
-    "key": "profile/login/search",
+    "key": "profile/login/request/otp",
     "hosts": [
       "abhasbx.abdm.gov.in"
     ],
     "kind": "operation",
-    "operationId": "m1_post_v3_profile_login_search",
+    "operationId": "m1_post_v3_profile_login_request_otp_abha_number_aadhaar_otp",
     "module": "M1 ABHA creation and verification",
     "moduleDir": "m1",
     "method": "POST",
-    "path": "/abha/api/v3/profile/login/search",
-    "summary": "Use Case: Search ABHA Account Existence",
-    "route": "/docs/hiecm/v3/api/m1/endpoints/m1-post-v3-profile-login-search",
+    "path": "/abha/api/v3/profile/login/request/otp#abha-number-aadhaar-otp",
+    "summary": "Login via ABHA number - send Aadhaar OTP",
+    "route": "/docs/hiecm/v3/api/m1/endpoints/m1-login-abha-number-aadhaar-otp/01-m1-post-v3-profile-login-request-otp-abha-number-aadhaar-otp",
+    "callbacks": []
+  },
+  {
+    "key": "profile/login/request/otp",
+    "hosts": [
+      "abhasbx.abdm.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "m1_post_v3_profile_login_request_otp_abha_number_abha_otp",
+    "module": "M1 ABHA creation and verification",
+    "moduleDir": "m1",
+    "method": "POST",
+    "path": "/abha/api/v3/profile/login/request/otp#abha-number-abha-otp",
+    "summary": "Login via ABHA number - send ABHA (mobile) OTP",
+    "route": "/docs/hiecm/v3/api/m1/endpoints/m1-login-abha-number-mobile-otp/01-m1-post-v3-profile-login-request-otp-abha-number-abha-otp",
+    "callbacks": []
+  },
+  {
+    "key": "profile/login/request/otp",
+    "hosts": [
+      "abhasbx.abdm.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "m1_post_v3_profile_login_request_otp_biometric_fingerprint",
+    "module": "M1 ABHA creation and verification",
+    "moduleDir": "m1",
+    "method": "POST",
+    "path": "/abha/api/v3/profile/login/request/otp#biometric-fingerprint",
+    "summary": "Login via Biometric (Fingerprint) - send authentication request",
+    "route": "/docs/hiecm/v3/api/m1/endpoints/m1-login-biometric-v3-fingerprint/01-m1-post-v3-profile-login-request-otp-biometric-fingerprint",
+    "callbacks": []
+  },
+  {
+    "key": "profile/login/request/otp",
+    "hosts": [
+      "abhasbx.abdm.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "m1_post_v3_profile_login_request_otp_biometric_iris",
+    "module": "M1 ABHA creation and verification",
+    "moduleDir": "m1",
+    "method": "POST",
+    "path": "/abha/api/v3/profile/login/request/otp#biometric-iris",
+    "summary": "Login via Biometric (Iris) - send authentication request",
+    "route": "/docs/hiecm/v3/api/m1/endpoints/m1-login-biometric-v3-iris/01-m1-post-v3-profile-login-request-otp-biometric-iris",
+    "callbacks": []
+  },
+  {
+    "key": "profile/login/request/otp",
+    "hosts": [
+      "abhasbx.abdm.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "m1_post_v3_profile_login_request_otp_find_abha_aadhaar",
+    "module": "M1 ABHA creation and verification",
+    "moduleDir": "m1",
+    "method": "POST",
+    "path": "/abha/api/v3/profile/login/request/otp#find-abha-aadhaar",
+    "summary": "Find ABHA via Aadhaar OTP - send OTP",
+    "route": "/docs/hiecm/v3/api/m1/endpoints/m1-find-abha-aadhaar-otp/02-m1-post-v3-profile-login-request-otp-find-abha-aadhaar",
+    "callbacks": []
+  },
+  {
+    "key": "profile/login/request/otp",
+    "hosts": [
+      "abhasbx.abdm.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "m1_post_v3_profile_login_request_otp_find_abha_face",
+    "module": "M1 ABHA creation and verification",
+    "moduleDir": "m1",
+    "method": "POST",
+    "path": "/abha/api/v3/profile/login/request/otp#find-abha-face",
+    "summary": "Find ABHA via Face - send authentication request",
+    "route": "/docs/hiecm/v3/api/m1/endpoints/m1-find-abha-face/02-m1-post-v3-profile-login-request-otp-find-abha-face",
+    "callbacks": []
+  },
+  {
+    "key": "profile/login/request/otp",
+    "hosts": [
+      "abhasbx.abdm.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "m1_post_v3_profile_login_request_otp_find_abha_fingerprint",
+    "module": "M1 ABHA creation and verification",
+    "moduleDir": "m1",
+    "method": "POST",
+    "path": "/abha/api/v3/profile/login/request/otp#find-abha-fingerprint",
+    "summary": "Find ABHA via Fingerprint - send authentication request",
+    "route": "/docs/hiecm/v3/api/m1/endpoints/m1-find-abha-fingerprint/02-m1-post-v3-profile-login-request-otp-find-abha-fingerprint",
+    "callbacks": []
+  },
+  {
+    "key": "profile/login/request/otp",
+    "hosts": [
+      "abhasbx.abdm.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "m1_post_v3_profile_login_request_otp_find_abha_iris",
+    "module": "M1 ABHA creation and verification",
+    "moduleDir": "m1",
+    "method": "POST",
+    "path": "/abha/api/v3/profile/login/request/otp#find-abha-iris",
+    "summary": "Find ABHA via IRIS - send authentication request",
+    "route": "/docs/hiecm/v3/api/m1/endpoints/m1-find-abha-iris/02-m1-post-v3-profile-login-request-otp-find-abha-iris",
+    "callbacks": []
+  },
+  {
+    "key": "profile/login/request/otp",
+    "hosts": [
+      "abhasbx.abdm.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "m1_post_v3_profile_login_request_otp_find_abha_mobile",
+    "module": "M1 ABHA creation and verification",
+    "moduleDir": "m1",
+    "method": "POST",
+    "path": "/abha/api/v3/profile/login/request/otp#find-abha-mobile",
+    "summary": "Find ABHA via Mobile - send OTP",
+    "route": "/docs/hiecm/v3/api/m1/endpoints/m1-find-abha-mobile-otp/02-m1-post-v3-profile-login-request-otp-find-abha-mobile",
+    "callbacks": []
+  },
+  {
+    "key": "profile/login/request/otp",
+    "hosts": [
+      "abhasbx.abdm.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "m1_post_v3_profile_login_request_otp_forgot_abha_aadhaar",
+    "module": "M1 ABHA creation and verification",
+    "moduleDir": "m1",
+    "method": "POST",
+    "path": "/abha/api/v3/profile/login/request/otp#forgot-abha-aadhaar",
+    "summary": "Forgot ABHA via Aadhaar - send OTP",
+    "route": "/docs/hiecm/v3/api/m1/endpoints/m1-forgot-abha-aadhaar-otp/01-m1-post-v3-profile-login-request-otp-forgot-abha-aadhaar",
+    "callbacks": []
+  },
+  {
+    "key": "profile/login/request/otp",
+    "hosts": [
+      "abhasbx.abdm.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "m1_post_v3_profile_login_request_otp_forgot_abha_mobile",
+    "module": "M1 ABHA creation and verification",
+    "moduleDir": "m1",
+    "method": "POST",
+    "path": "/abha/api/v3/profile/login/request/otp#forgot-abha-mobile",
+    "summary": "Forgot ABHA via Mobile - send OTP",
+    "route": "/docs/hiecm/v3/api/m1/endpoints/m1-forgot-abha-mobile-otp/01-m1-post-v3-profile-login-request-otp-forgot-abha-mobile",
+    "callbacks": []
+  },
+  {
+    "key": "profile/login/request/otp",
+    "hosts": [
+      "abhasbx.abdm.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "m1_post_v3_profile_login_request_otp_mobile",
+    "module": "M1 ABHA creation and verification",
+    "moduleDir": "m1",
+    "method": "POST",
+    "path": "/abha/api/v3/profile/login/request/otp#mobile",
+    "summary": "Login via Mobile number - send OTP",
+    "route": "/docs/hiecm/v3/api/m1/endpoints/m1-login-mobile-number/01-m1-post-v3-profile-login-request-otp-mobile",
     "callbacks": []
   },
   {
@@ -1199,13 +2384,193 @@
       "abhasbx.abdm.gov.in"
     ],
     "kind": "operation",
-    "operationId": "m1_post_v3_profile_login_verify",
+    "operationId": "m1_post_v3_profile_login_verify_aadhaar_otp",
     "module": "M1 ABHA creation and verification",
     "moduleDir": "m1",
     "method": "POST",
-    "path": "/abha/api/v3/profile/login/verify",
-    "summary": "Use Case: ABHA Login - Verify OTP using Aadhaar number, ABHA number, Mobile number, Biometric Verify Login, Find ABHA via Aadhaar, Mobile, Biometrics",
-    "route": "/docs/hiecm/v3/api/m1/endpoints/m1-login-mobile/02-m1-post-v3-profile-login-verify",
+    "path": "/abha/api/v3/profile/login/verify#aadhaar-otp",
+    "summary": "Login via Aadhaar number - verify Aadhaar OTP",
+    "route": "/docs/hiecm/v3/api/m1/endpoints/m1-login-aadhaar-number/02-m1-post-v3-profile-login-verify-aadhaar-otp",
+    "callbacks": []
+  },
+  {
+    "key": "profile/login/verify",
+    "hosts": [
+      "abhasbx.abdm.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "m1_post_v3_profile_login_verify_abha_number_aadhaar_otp",
+    "module": "M1 ABHA creation and verification",
+    "moduleDir": "m1",
+    "method": "POST",
+    "path": "/abha/api/v3/profile/login/verify#abha-number-aadhaar-otp",
+    "summary": "Login via ABHA number - verify Aadhaar OTP",
+    "route": "/docs/hiecm/v3/api/m1/endpoints/m1-login-abha-number-aadhaar-otp/02-m1-post-v3-profile-login-verify-abha-number-aadhaar-otp",
+    "callbacks": []
+  },
+  {
+    "key": "profile/login/verify",
+    "hosts": [
+      "abhasbx.abdm.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "m1_post_v3_profile_login_verify_abha_number_abha_otp",
+    "module": "M1 ABHA creation and verification",
+    "moduleDir": "m1",
+    "method": "POST",
+    "path": "/abha/api/v3/profile/login/verify#abha-number-abha-otp",
+    "summary": "Login via ABHA number - verify ABHA (mobile) OTP",
+    "route": "/docs/hiecm/v3/api/m1/endpoints/m1-login-abha-number-mobile-otp/02-m1-post-v3-profile-login-verify-abha-number-abha-otp",
+    "callbacks": []
+  },
+  {
+    "key": "profile/login/verify",
+    "hosts": [
+      "abhasbx.abdm.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "m1_post_v3_profile_login_verify_biometric_fingerprint",
+    "module": "M1 ABHA creation and verification",
+    "moduleDir": "m1",
+    "method": "POST",
+    "path": "/abha/api/v3/profile/login/verify#biometric-fingerprint",
+    "summary": "Login via Biometric (Fingerprint) - verify",
+    "route": "/docs/hiecm/v3/api/m1/endpoints/m1-login-biometric-v3-fingerprint/02-m1-post-v3-profile-login-verify-biometric-fingerprint",
+    "callbacks": []
+  },
+  {
+    "key": "profile/login/verify",
+    "hosts": [
+      "abhasbx.abdm.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "m1_post_v3_profile_login_verify_biometric_iris",
+    "module": "M1 ABHA creation and verification",
+    "moduleDir": "m1",
+    "method": "POST",
+    "path": "/abha/api/v3/profile/login/verify#biometric-iris",
+    "summary": "Login via Biometric (Iris) - verify",
+    "route": "/docs/hiecm/v3/api/m1/endpoints/m1-login-biometric-v3-iris/02-m1-post-v3-profile-login-verify-biometric-iris",
+    "callbacks": []
+  },
+  {
+    "key": "profile/login/verify",
+    "hosts": [
+      "abhasbx.abdm.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "m1_post_v3_profile_login_verify_find_abha_aadhaar",
+    "module": "M1 ABHA creation and verification",
+    "moduleDir": "m1",
+    "method": "POST",
+    "path": "/abha/api/v3/profile/login/verify#find-abha-aadhaar",
+    "summary": "Find ABHA via Aadhaar OTP - verify OTP",
+    "route": "/docs/hiecm/v3/api/m1/endpoints/m1-find-abha-aadhaar-otp/03-m1-post-v3-profile-login-verify-find-abha-aadhaar",
+    "callbacks": []
+  },
+  {
+    "key": "profile/login/verify",
+    "hosts": [
+      "abhasbx.abdm.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "m1_post_v3_profile_login_verify_find_abha_face",
+    "module": "M1 ABHA creation and verification",
+    "moduleDir": "m1",
+    "method": "POST",
+    "path": "/abha/api/v3/profile/login/verify#find-abha-face",
+    "summary": "Find ABHA via Face - verify",
+    "route": "/docs/hiecm/v3/api/m1/endpoints/m1-find-abha-face/04-m1-post-v3-profile-login-verify-find-abha-face",
+    "callbacks": []
+  },
+  {
+    "key": "profile/login/verify",
+    "hosts": [
+      "abhasbx.abdm.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "m1_post_v3_profile_login_verify_find_abha_fingerprint",
+    "module": "M1 ABHA creation and verification",
+    "moduleDir": "m1",
+    "method": "POST",
+    "path": "/abha/api/v3/profile/login/verify#find-abha-fingerprint",
+    "summary": "Find ABHA via Fingerprint - verify",
+    "route": "/docs/hiecm/v3/api/m1/endpoints/m1-find-abha-fingerprint/03-m1-post-v3-profile-login-verify-find-abha-fingerprint",
+    "callbacks": []
+  },
+  {
+    "key": "profile/login/verify",
+    "hosts": [
+      "abhasbx.abdm.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "m1_post_v3_profile_login_verify_find_abha_iris",
+    "module": "M1 ABHA creation and verification",
+    "moduleDir": "m1",
+    "method": "POST",
+    "path": "/abha/api/v3/profile/login/verify#find-abha-iris",
+    "summary": "Find ABHA via IRIS - verify",
+    "route": "/docs/hiecm/v3/api/m1/endpoints/m1-find-abha-iris/03-m1-post-v3-profile-login-verify-find-abha-iris",
+    "callbacks": []
+  },
+  {
+    "key": "profile/login/verify",
+    "hosts": [
+      "abhasbx.abdm.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "m1_post_v3_profile_login_verify_find_abha_mobile",
+    "module": "M1 ABHA creation and verification",
+    "moduleDir": "m1",
+    "method": "POST",
+    "path": "/abha/api/v3/profile/login/verify#find-abha-mobile",
+    "summary": "Find ABHA via Mobile - verify OTP",
+    "route": "/docs/hiecm/v3/api/m1/endpoints/m1-find-abha-mobile-otp/03-m1-post-v3-profile-login-verify-find-abha-mobile",
+    "callbacks": []
+  },
+  {
+    "key": "profile/login/verify",
+    "hosts": [
+      "abhasbx.abdm.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "m1_post_v3_profile_login_verify_forgot_abha_aadhaar",
+    "module": "M1 ABHA creation and verification",
+    "moduleDir": "m1",
+    "method": "POST",
+    "path": "/abha/api/v3/profile/login/verify#forgot-abha-aadhaar",
+    "summary": "Forgot ABHA via Aadhaar - verify OTP",
+    "route": "/docs/hiecm/v3/api/m1/endpoints/m1-forgot-abha-aadhaar-otp/02-m1-post-v3-profile-login-verify-forgot-abha-aadhaar",
+    "callbacks": []
+  },
+  {
+    "key": "profile/login/verify",
+    "hosts": [
+      "abhasbx.abdm.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "m1_post_v3_profile_login_verify_forgot_abha_mobile",
+    "module": "M1 ABHA creation and verification",
+    "moduleDir": "m1",
+    "method": "POST",
+    "path": "/abha/api/v3/profile/login/verify#forgot-abha-mobile",
+    "summary": "Forgot ABHA via Mobile - verify OTP",
+    "route": "/docs/hiecm/v3/api/m1/endpoints/m1-forgot-abha-mobile-otp/02-m1-post-v3-profile-login-verify-forgot-abha-mobile",
+    "callbacks": []
+  },
+  {
+    "key": "profile/login/verify",
+    "hosts": [
+      "abhasbx.abdm.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "m1_post_v3_profile_login_verify_mobile_otp",
+    "module": "M1 ABHA creation and verification",
+    "moduleDir": "m1",
+    "method": "POST",
+    "path": "/abha/api/v3/profile/login/verify#mobile-otp",
+    "summary": "Login via Mobile number - verify OTP",
+    "route": "/docs/hiecm/v3/api/m1/endpoints/m1-login-mobile-number/02-m1-post-v3-profile-login-verify-mobile-otp",
     "callbacks": []
   },
   {
@@ -1219,8 +2584,8 @@
     "moduleDir": "m1",
     "method": "POST",
     "path": "/abha/api/v3/profile/login/verify/user",
-    "summary": "Use Case: This API is used to verify and confirm the selected ABHA user during login, so the correct account is authenticated and access is granted securely.",
-    "route": "/docs/hiecm/v3/api/m1/endpoints/m1-login-mobile/03-m1-post-v3-profile-login-verify-user",
+    "summary": "Login via Mobile number - verify user (select ABHA)",
+    "route": "/docs/hiecm/v3/api/m1/endpoints/m1-login-mobile-number/03-m1-post-v3-profile-login-verify-user",
     "callbacks": []
   },
   {

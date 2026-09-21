@@ -73,7 +73,7 @@ There is nothing ABDM specific in the mechanics. Your platform's standard RSA li
 
 ## Fetching the public key
 
-M1 has a `public/certificate` API for fetching the public key. Its URL, headers and response shape are on [the certificate call](/docs/hiecm/v3/api/m1/endpoints/m1-session/02-m1-get-v3-profile-public-certificate).
+M1 has a `public/certificate` API for fetching the public key. Its URL, headers and response shape are on [the certificate call](/docs/hiecm/v3/api/m1/endpoints/m1-access-tokens-encryption/02-m1-get-v3-profile-public-certificate).
 
 ## Where to go next
 

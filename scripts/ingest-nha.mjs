@@ -20,7 +20,7 @@ const METHODS = ['get', 'post', 'put', 'patch', 'delete'];
 
 const MODULES = {
   gateway: {label: 'Gateway session', position: 1, icon: 'key-round', roles: ['his', 'phr'], title: 'ABDM gateway, sessions and bridges', summary: 'The access token every call carries, and the bridge registry.', servers: [{url: 'https://dev.abdm.gov.in', description: 'ABDM gateway, sandbox'}, {url: 'https://apis.abdm.gov.in', description: 'ABDM gateway, production'}], expected: 11},
-  m1: {label: 'M1 ABHA creation and verification', position: 2, icon: 'id-card', roles: ['his'], title: 'ABDM M1, ABHA creation and verification', summary: 'Create, find, log into and manage an ABHA.', servers: [{url: 'https://abhasbx.abdm.gov.in', description: 'ABHA service, sandbox'}], expected: 30},
+  m1: {label: 'M1 ABHA creation and verification', position: 2, icon: 'id-card', roles: ['his'], title: 'ABDM M1, ABHA creation and verification', summary: 'Create, find, log into and manage an ABHA.', servers: [{url: 'https://abhasbx.abdm.gov.in', description: 'ABHA service, sandbox'}], expected: 121},
   m2: {label: 'M2 Health information provider services', position: 3, icon: 'link', roles: ['his'], title: 'ABDM M2, health information provider services as a HIP', summary: 'Link care contexts to an ABHA address and share records when consent arrives.', servers: [{url: 'https://dev.abdm.gov.in', description: 'ABDM gateway, sandbox'}, {url: 'https://apis.abdm.gov.in', description: 'ABDM gateway, production'}], expected: 22},
   m3: {label: 'M3 Health information user services', position: 4, icon: 'file-check', roles: ['his'], title: 'ABDM M3, health information user services as an HIU', summary: 'Raise a consent request, fetch its artefacts, and receive records.', servers: [{url: 'https://dev.abdm.gov.in', description: 'ABDM gateway, sandbox'}, {url: 'https://apis.abdm.gov.in', description: 'ABDM gateway, production'}], expected: 12},
   m4: {label: 'M4 HPR and HFR', position: 5, icon: 'building-2', roles: ['his'], title: 'ABDM M4, professional and facility registries', summary: 'Register healthcare professionals and facilities on the NHPR.', servers: [{url: 'https://apihspsbx.abdm.gov.in/v4/int', description: 'NHPR, sandbox'}], expected: 100},
@@ -46,7 +46,10 @@ const phrPlace = (tag, path) => (LOCKER.test(path) ? 'p4' : PHR_TAGS[tag]);
 // Which module an operation lands in. Returns null to drop it.
 const FILES = [
   {file: 'hiecm/gateway.yaml', place: () => 'gateway'},
-  {file: 'abha/M1 ABHA Swagger 1.yaml', place: (tag, path) => (path.includes('/gateway/') ? null : 'm1')},
+  // NHA reissued the M1 swagger on 22 September 2026 with one operation per
+  // use case: the path key carries a #use-case suffix, the real URL sits in
+  // x-actual-path, and the tags follow the M1 Postman collection.
+  {file: 'abha/ABHA Swagger split.yaml', set: 'nha-2026-09-22', fetched: '2026-09-22', titlesFromSummary: true, place: (tag, path) => (path.includes('/gateway/') ? null : 'm1')},
   {file: 'hiecm/hip-initiated-linking.yaml', place: byRole('m2')},
   {file: 'hiecm/user-initiated-linking.yaml', place: byRole('m2')},
   {file: 'hiecm/link-token.yaml', place: byRole('m2')},
@@ -131,8 +134,8 @@ const ids = new Set();
 const order = Object.fromEntries(Object.keys(MODULES).map((id) => [id, []]));
 const normHeader = (name) => M1_HEADERS[name.toLowerCase()] ?? name;
 
-for (const {file, place} of FILES) {
-  const full = join(RAW, file);
+for (const {file, place, set = 'nha-2026-09-16', fetched = '2026-09-16', titlesFromSummary = false} of FILES) {
+  const full = join(RAW, '..', set, file);
   const doc = file.endsWith('.json') ? JSON.parse(readFileSync(full, 'utf8')) : parse(readFileSync(full, 'utf8'));
   if (file.startsWith('M4/')) dedupeM4Components(doc, file);
   const touched = new Set();
@@ -142,10 +145,13 @@ for (const {file, place} of FILES) {
       if (!op) continue;
       const tag = (op.tags ?? ['untagged'])[0];
       const module = place(tag, path);
-      const key = `${method.toUpperCase()} ${path.replace(/^\/(abha\/api|api\/hiecm)/, '').replace(/\{[^}]+\}/g, '{}')}`;
-      if (seenPath.has(key)) { const first = seenPath.get(key); note(first.module, key, `dropped from ${file}: already declared by ${first.file} in the ${first.module} module`); continue; }
+      // The key ignores a #use-case suffix, so a later file's plain path is
+      // still dropped against the M1 swagger's split of the same path, while
+      // one file may declare several use cases of one path.
+      const key = `${method.toUpperCase()} ${path.replace(/#.*$/, '').replace(/^\/(abha\/api|api\/hiecm)/, '').replace(/\{[^}]+\}/g, '{}')}`;
+      if (seenPath.has(key) && seenPath.get(key).file !== file) { const first = seenPath.get(key); note(first.module, key, `dropped from ${file}: already declared by ${first.file} in the ${first.module} module`); continue; }
       if (!module || !MODULES[module]) throw new Error(`${file}: ${method.toUpperCase()} ${path} has tag "${tag}", which no module takes`);
-      seenPath.set(key, {file, module});
+      if (!seenPath.has(key)) seenPath.set(key, {file, module});
       touched.add(module);
       const spec = specs[module];
       const copy = structuredClone(op);
@@ -162,6 +168,10 @@ for (const {file, place} of FILES) {
       copy.operationId = id;
       if (nhaId) copy['x-abdm-nha-operation-id'] = nhaId;
       note(module, id, nhaId ? `operationId was \`${nhaId}\`` : 'operationId added, NHA had none');
+      // The reissued M1 swagger writes each summary as a name, not as a
+      // sentence of documentation, so it is the page title as written rather
+      // than run through the sentence-to-title rules.
+      if (titlesFromSummary && copy.summary && !copy['x-abdm-title']) copy['x-abdm-title'] = copy.summary;
       // 3. M4 summaries
       if (module === 'm4' && !copy.summary) {
         copy.summary = (nhaId ?? slug(path)).replace(/([a-z])([A-Z])/g, '$1 $2').replace(/_/g, ' ').replace(/^./, (c) => c.toUpperCase());
@@ -219,7 +229,7 @@ for (const {file, place} of FILES) {
         specs[module].components[kind][name] = def;
       }
     }
-    specs[module]['x-abdm-sources'].push({file: `catalogue/openapi/.raw/nha-2026-09-16/${file}`, role: 'upstream', hash: sha(full), fetched: '2026-09-16'});
+    specs[module]['x-abdm-sources'].push({file: `catalogue/openapi/.raw/${set}/${file}`, role: 'upstream', hash: sha(full), fetched});
   }
 }
 
