@@ -21,7 +21,7 @@ const METHODS = ['get', 'post', 'put', 'patch', 'delete'];
 const MODULES = {
   gateway: {label: 'Gateway session', position: 1, icon: 'key-round', roles: ['his', 'phr'], title: 'ABDM gateway, sessions and bridges', summary: 'The access token every call carries, and the bridge registry.', servers: [{url: 'https://dev.abdm.gov.in', description: 'ABDM gateway, sandbox'}, {url: 'https://apis.abdm.gov.in', description: 'ABDM gateway, production'}], expected: 11},
   m1: {label: 'M1 ABHA creation and verification', position: 2, icon: 'id-card', roles: ['his'], title: 'ABDM M1, ABHA creation and verification', summary: 'Create, find, log into and manage an ABHA.', servers: [{url: 'https://abhasbx.abdm.gov.in', description: 'ABHA service, sandbox'}], expected: 30},
-  m2: {label: 'M2 Health information provider services', position: 3, icon: 'link', roles: ['his'], title: 'ABDM M2, health information provider services as a HIP', summary: 'Link care contexts to an ABHA address and share records when consent arrives.', servers: [{url: 'https://dev.abdm.gov.in', description: 'ABDM gateway, sandbox'}, {url: 'https://apis.abdm.gov.in', description: 'ABDM gateway, production'}], expected: 21},
+  m2: {label: 'M2 Health information provider services', position: 3, icon: 'link', roles: ['his'], title: 'ABDM M2, health information provider services as a HIP', summary: 'Link care contexts to an ABHA address and share records when consent arrives.', servers: [{url: 'https://dev.abdm.gov.in', description: 'ABDM gateway, sandbox'}, {url: 'https://apis.abdm.gov.in', description: 'ABDM gateway, production'}], expected: 22},
   m3: {label: 'M3 Health information user services', position: 4, icon: 'file-check', roles: ['his'], title: 'ABDM M3, health information user services as an HIU', summary: 'Raise a consent request, fetch its artefacts, and receive records.', servers: [{url: 'https://dev.abdm.gov.in', description: 'ABDM gateway, sandbox'}, {url: 'https://apis.abdm.gov.in', description: 'ABDM gateway, production'}], expected: 12},
   m4: {label: 'M4 HPR and HFR', position: 5, icon: 'building-2', roles: ['his'], title: 'ABDM M4, professional and facility registries', summary: 'Register healthcare professionals and facilities on the NHPR.', servers: [{url: 'https://apihspsbx.abdm.gov.in/v4/int', description: 'NHPR, sandbox'}], expected: 100},
   p1: {label: 'P1 Registration and login', position: 6, icon: 'user-round', roles: ['phr'], title: 'ABDM P1, PHR registration and login', summary: 'Create an ABHA address in a PHR app and log in to it.', servers: [{url: 'https://abhasbx.abdm.gov.in', description: 'ABHA service, sandbox'}], expected: 11},
@@ -287,6 +287,23 @@ specs.m1['x-abdm-sources'].push({file: 'catalogue/openapi/.raw/nha-2026-09-16/ab
     scope.description = 'The scope of the request. Use search-abha.';
     scope.items = {...(scope.items ?? {type: 'string'}), enum: ['search-abha']};
     note('m1', 'POST /abha/api/v3/profile/account/abha/search', 'scope described and constrained to search-abha; the raw file carried only the example. NHA review, 21 September 2026');
+  }
+}
+
+// 11. The HIP calls health-information/notify after pushing the data, so the
+// operation belongs on the M2 list as well as the M3 one. NHA declares it
+// once, under the HIU tag, so it is copied rather than moved (NHA's M2 API
+// review of 21 September 2026 lists it under M2 as "Not Found").
+{
+  const NOTIFY = '/api/hiecm/data-flow/v3/health-information/notify';
+  const notify = specs.m3.paths[NOTIFY]?.post;
+  if (notify) {
+    const copy = structuredClone(notify);
+    copy.operationId = 'm2_post_data_flow_v3_health_information_notify';
+    ids.add(copy.operationId);
+    specs.m2.paths[NOTIFY] = {post: copy};
+    for (const t of copy.tags ?? []) if (!specs.m2.tags.some((x) => x.name === t)) specs.m2.tags.push({name: t, description: ''});
+    note('m2', copy.operationId, 'copied from m3: the HIP sends this notification after the data push, and NHA\'s review of 21 September 2026 lists it under M2');
   }
 }
 

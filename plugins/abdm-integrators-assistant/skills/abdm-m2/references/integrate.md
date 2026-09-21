@@ -8,7 +8,7 @@ The calls themselves: where they live, what they need in their headers, and one 
 - `https://apis.abdm.gov.in` ABDM gateway, production
 ## Endpoints
 
-32 operations, grouped by the journey they belong to.
+33 operations, grouped by the journey they belong to.
 
 ### Other operations
 
@@ -16,6 +16,7 @@ The calls themselves: where they live, what they need in their headers, and one 
 | --- | --- | --- |
 | `POST` | `/api/hiecm/consent/v3/request/hip/on-notify` | Acknowledge the notification sent when a consent request is approved/revoked/ex… |
 | `POST` | `/api/hiecm/data-flow/v3/health-information/hip/on-request` | Health information data request acknowledgement from HIP. |
+| `POST` | `/api/hiecm/data-flow/v3/health-information/notify` | Notifications corresponding to events during data flow |
 | `GET` | `/api/hiecm/gateway/v3/.well-known/openid-configuration` | Get the open ID configuration. |
 | `PUT` | `/api/hiecm/gateway/v3/bridge-service` | v3/gateway/bridge-service |
 | `GET` | `/api/hiecm/gateway/v3/bridge-service/serviceId/{service-id}` | Fetch the details of a service ID. |
