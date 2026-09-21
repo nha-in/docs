@@ -157,8 +157,8 @@ The calls themselves: where they live, what they need in their headers, and one 
 | `X-token` | **Applicable for child abha creation. X-token of Parent user, user can get X-token after login to the system** |
 | `TRANSACTION_ID` | Transaction ID from the ABHA creation response. |
 | `Content-Type` |  |
-| `R-token` | Refresh token (`Bearer `) received at login. |
-| `T-token` | Short-lived token (`Bearer `) returned by *Login via Mobile number - verify OTP*. |
+| `R-token` | Refresh token (`Bearer <refreshToken>`) received at login. |
+| `T-token` | Short-lived token (`Bearer <token>`) returned by *Login via Mobile number - verify OTP*. |
 | `X-CM-ID` | Suffix of the consent manager to which the request was intended |
 ## A request, in full
 
