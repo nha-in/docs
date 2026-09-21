@@ -2150,12 +2150,15 @@ paths:
                 txnId:
                   type: string
                   example: "{{txnId}}"
+                  description: The transaction ID returned by the previous call in this flow.
                 abhaAddress:
                   type: string
                   example: "{{abhaAddress}}"
+                  description: The ABHA address chosen for the account, without the @ suffix.
                 preferred:
                   type: integer
                   example: 1
+                  description: 1 to make this the preferred ABHA address of the account, 0 otherwise.
               required:
                 - txnId
                 - abhaAddress
@@ -2299,6 +2302,7 @@ paths:
                   example:
                     - abha-enrol
                     - face-auth
+                  description: The scopes of the request, which name the flow this call belongs to.
               required:
                 - scope
                 - authData
@@ -2426,9 +2430,11 @@ paths:
                   example:
                     - abha-enrol
                     - face-verify
+                  description: The scopes of the request, which name the flow this call belongs to.
                 txnId:
                   type: string
                   example: ea1dc7aa-d7c3-40ab-bee8-84c6f1eb90fa
+                  description: The transaction ID returned by the previous call in this flow.
               required:
                 - scope
                 - txnId
@@ -4121,12 +4127,15 @@ paths:
                 txnId:
                   type: string
                   example: "{{txnId}}"
+                  description: The transaction ID returned by the previous call in this flow.
                 abhaAddress:
                   type: string
                   example: "{{abhaAddress}}"
+                  description: The ABHA address chosen for the account, without the @ suffix.
                 preferred:
                   type: integer
                   example: 1
+                  description: 1 to make this the preferred ABHA address of the account, 0 otherwise.
               required:
                 - txnId
                 - abhaAddress
@@ -5820,12 +5829,15 @@ paths:
                 txnId:
                   type: string
                   example: "{{txnId}}"
+                  description: The transaction ID returned by the previous call in this flow.
                 abhaAddress:
                   type: string
                   example: "{{abhaAddress}}"
+                  description: The ABHA address chosen for the account, without the @ suffix.
                 preferred:
                   type: integer
                   example: 1
+                  description: 1 to make this the preferred ABHA address of the account, 0 otherwise.
               required:
                 - txnId
                 - abhaAddress
@@ -7511,12 +7523,15 @@ paths:
                 txnId:
                   type: string
                   example: "{{txnId}}"
+                  description: The transaction ID returned by the previous call in this flow.
                 abhaAddress:
                   type: string
                   example: "{{abhaAddress}}"
+                  description: The ABHA address chosen for the account, without the @ suffix.
                 preferred:
                   type: integer
                   example: 1
+                  description: 1 to make this the preferred ABHA address of the account, 0 otherwise.
               required:
                 - txnId
                 - abhaAddress
@@ -10309,9 +10324,11 @@ paths:
                 ABHANumber:
                   type: string
                   example: "{{abha-number}}"
+                  description: The 14 digit ABHA number to sign in to, chosen from the accounts the previous call listed.
                 txnId:
                   type: string
                   example: "{{txnId}}"
+                  description: The transaction ID returned by the previous call in this flow.
               required:
                 - ABHANumber
                 - txnId
@@ -12409,6 +12426,7 @@ paths:
                   example:
                     - abha-enrol
                     - face-auth
+                  description: The scopes of the request, which name the flow this call belongs to.
               required:
                 - scope
                 - authData
@@ -12538,9 +12556,11 @@ paths:
                   example:
                     - abha-enrol
                     - face-verify
+                  description: The scopes of the request, which name the flow this call belongs to.
                 txnId:
                   type: string
                   example: ea1dc7aa-d7c3-40ab-bee8-84c6f1eb90fa
+                  description: The transaction ID returned by the previous call in this flow.
               required:
                 - scope
                 - txnId
@@ -16995,11 +17015,15 @@ paths:
                   type: array
                   items:
                     type: string
+                    enum:
+                      - search-abha
                   example:
                     - search-abha
+                  description: The scope of the request. Use search-abha.
                 mobile:
                   type: string
                   example: "{{rsaMobileEncryptionOutput}}"
+                  description: The mobile number, encrypted with the public key from GET /abha/api/v3/profile/public/certificate.
               required:
                 - scope
                 - mobile
@@ -17815,11 +17839,15 @@ paths:
                   type: array
                   items:
                     type: string
+                    enum:
+                      - search-abha
                   example:
                     - search-abha
+                  description: The scope of the request. Use search-abha.
                 mobile:
                   type: string
                   example: "{{rsaMobileEncryptionOutput}}"
+                  description: The mobile number, encrypted with the public key from GET /abha/api/v3/profile/public/certificate.
               required:
                 - scope
                 - mobile
@@ -18274,9 +18302,11 @@ paths:
                   example:
                     - abha-enrol
                     - face-verify
+                  description: The scopes of the request, which name the flow this call belongs to.
                 txnId:
                   type: string
                   example: ea1dc7aa-d7c3-40ab-bee8-84c6f1eb90fa
+                  description: The transaction ID returned by the previous call in this flow.
               required:
                 - scope
                 - txnId
@@ -18872,11 +18902,15 @@ paths:
                   type: array
                   items:
                     type: string
+                    enum:
+                      - search-abha
                   example:
                     - search-abha
+                  description: The scope of the request. Use search-abha.
                 mobile:
                   type: string
                   example: "{{rsaMobileEncryptionOutput}}"
+                  description: The mobile number, encrypted with the public key from GET /abha/api/v3/profile/public/certificate.
               required:
                 - scope
                 - mobile
@@ -19689,11 +19723,15 @@ paths:
                   type: array
                   items:
                     type: string
+                    enum:
+                      - search-abha
                   example:
                     - search-abha
+                  description: The scope of the request. Use search-abha.
                 mobile:
                   type: string
                   example: "{{rsaMobileEncryptionOutput}}"
+                  description: The mobile number, encrypted with the public key from GET /abha/api/v3/profile/public/certificate.
               required:
                 - scope
                 - mobile
@@ -20504,11 +20542,15 @@ paths:
                   type: array
                   items:
                     type: string
+                    enum:
+                      - search-abha
                   example:
                     - search-abha
+                  description: The scope of the request. Use search-abha.
                 mobile:
                   type: string
                   example: "{{rsaMobileEncryptionOutput}}"
+                  description: The mobile number, encrypted with the public key from GET /abha/api/v3/profile/public/certificate.
               required:
                 - scope
                 - mobile
@@ -26644,6 +26686,7 @@ paths:
                 abhaAddress:
                   type: string
                   example: <ABHA_ADDRESS>
+                  description: The ABHA address chosen for the account, without the @ suffix.
               required:
                 - abhaAddress
             examples:
@@ -27674,6 +27717,7 @@ paths:
                 abhaAddress:
                   type: string
                   example: <ABHA_ADDRESS>
+                  description: The ABHA address chosen for the account, without the @ suffix.
               required:
                 - abhaAddress
             examples:

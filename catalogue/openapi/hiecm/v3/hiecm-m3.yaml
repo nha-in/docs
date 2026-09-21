@@ -176,6 +176,8 @@ paths:
                           nullable: true
                           example: HIU
                           description: The type of the health information user. Allows alpha numeric and special characters like  "^[a-zA-Z0-9_\\-@,. \":/]{0,255}$"
+                      example:
+                        id: cowin_hiu_01
                     careContexts:
                       type: array
                       description: List of care contexts linked at the HIP end for the identified patient.
@@ -1879,6 +1881,7 @@ webhooks:
                     nullable: false
                     example: Dependent service unavailable
       x-abdm-nha-operation-id: consent-management 2
+      x-abdm-triggered-by: m3_post_consent_v3_request_init
   /api/v3/hiu/consent/request/on-status:
     post:
       tags:
@@ -2094,6 +2097,7 @@ webhooks:
                     nullable: false
                     example: Dependent service unavailable
       x-abdm-nha-operation-id: consent-management 4
+      x-abdm-triggered-by: m3_post_consent_v3_request_status
   /api/v3/hiu/consent/request/notify:
     post:
       tags:
@@ -2290,6 +2294,7 @@ webhooks:
                     nullable: false
                     example: Dependent service unavailable
       x-abdm-nha-operation-id: consent-management 6
+      x-abdm-answered-by: m3_post_consent_v3_request_hiu_on_notify
   /api/v3/hiu/consent/on-fetch:
     post:
       tags:
@@ -2770,6 +2775,7 @@ webhooks:
                     nullable: false
                     example: Dependent service unavailable
       x-abdm-nha-operation-id: consent-management 6 (2)
+      x-abdm-triggered-by: m3_post_consent_v3_fetch
   /api/v3/hiu/health-information/on-request:
     post:
       tags:
@@ -2943,6 +2949,7 @@ webhooks:
                     type: string
                     example: No matching resource found for given API Request
       x-abdm-nha-operation-id: data-flow 8
+      x-abdm-triggered-by: m3_post_data_flow_v3_health_information_request
 components:
   securitySchemes:
     bearerAuth:
