@@ -1,5 +1,5 @@
 ---
-title: P1 Identity and profile
+title: P1 Identity and login
 sidebar_label: P1 Identity
 sidebar_position: 9
 sidebar_custom_props:
@@ -12,7 +12,7 @@ sidebar_class_name: sidebar-icon sidebar-icon--contact-round
 
 import ApiLinks from '@site/src/components/docs/ApiLinks';
 
-# P1 Identity and profile
+# P1 Identity and login
 
 P1 is the patient side of [M1 Identity](./m1). M1 is how a hospital system
 creates an [ABHA](/docs/hiecm/v3/getting-started/glossary#abha). P1 is how the
@@ -76,7 +76,7 @@ then follow the ABHA number, and the status changes to KYC Verified.
 ## Login
 
 Sign a user in to a PHR application by any of these routes. Every route is
-mandatory except login by email OTP, which is optional.
+mandatory except the two email OTP routes, which are optional.
 
 | Route | Validated by |
 | --- | --- |
@@ -112,5 +112,4 @@ different key from the ABHA service's, so fetch it before any other PHR call.
 ## Next
 
 - The calls and base URLs: [P1 API reference](/reference/hiecm-p1).
-- The profile, card and QR code the signed in user manages: [P2](./p2).
 - The next milestone: [P2 Linking and records](./p2).

@@ -12,8 +12,8 @@ sidebar_class_name: sidebar-icon sidebar-icon--triangle-alert
 
 During ABDM integration, systems may encounter issues across discovery,
 linking, consent, encryption, and data exchange workflows. This section
-outlines common errors, their causes, and recommended resolutions to help
-ensure smooth implementation.
+lists the error codes, to help ensure smooth implementation. A code can carry
+more than one message: match on the message as well as the code.
 
 | Code | Error |
 | --- | --- |
