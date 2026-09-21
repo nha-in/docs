@@ -5,9 +5,17 @@
 # so a shared call appears under every method with that method's example.
 # The collection's ABHA enrolment via Aadhaar folder is left out: it names the
 # M1 ABHA number operations, which M1 documents, and NHA's PHR V3 document
-# registers an ABHA address by mobile or ABHA number only. The certificate and
-# session token calls sit loose at the end of the folder and form the last
-# journey here.
+# registers an ABHA address by mobile or ABHA number only. The PHR V3 document
+# puts the PHR certificate first, so the PHR public key is never confused with
+# the ABHA service's, and it registers an ABHA address without the verify user
+# call, which belongs to login. The two email OTP routes are optional in that
+# document; every other route is mandatory.
+- id: p1-certificate-and-session
+  title: PHR certificate and session token
+  steps:
+    - {op: p1_get_v3_phr_app_login_public_certificate}
+    - {op: gateway_post_gateway_v3_sessions}
+
 - id: p1-create-abha-address-mobile
   title: Create ABHA address, mobile number
   steps:
@@ -22,7 +30,6 @@
   steps:
     - {op: p1_post_v3_phr_app_enrollment_request_otp, example: OTP Request - ABHA OTP}
     - {op: p1_post_v3_phr_app_enrollment_verify, example: OTP Verify - ABHA OTP}
-    - {op: p1_post_v3_phr_app_login_verify_user, example: Verify User}
     - {op: p1_post_v3_phr_app_enrollment_suggestion, example: Suggestion API (2)}
     - {op: p1_get_v3_phr_app_enrollment_isexists}
     - {op: p1_post_v3_phr_app_enrollment_enrol, example: Enroll ABHA Address (2)}
@@ -44,7 +51,7 @@
     - {op: p1_post_v3_phr_app_login_verify_user, example: Verify - User}
 
 - id: p1-login-email
-  title: PHR login, email
+  title: PHR login, email (optional)
   steps:
     - {op: p1_post_v3_phr_app_login_request_otp, example: OTP Request - Email}
     - {op: p1_post_v3_phr_app_login_verify, example: Login OTP Verify - Email}
@@ -77,7 +84,7 @@
     - {op: p1_post_v3_phr_app_login_verify, example: Login Verify - Password}
 
 - id: p1-login-abha-address-email-otp
-  title: PHR login, ABHA address with email OTP
+  title: PHR login, ABHA address with email OTP (optional)
   steps:
     - {op: p1_post_v3_phr_app_login_request_otp, example: OTP Request - ABHAADDRES Email}
     - {op: p1_post_v3_phr_app_login_verify, example: Login OTP Verify - ABHAADDRESS Email}
@@ -88,9 +95,3 @@
     - {op: p1_post_v3_phr_app_login_request_otp, example: new OTP Request- AADHAAR}
     - {op: p1_post_v3_phr_app_login_verify, example: new OTP verify- AADHAAR}
     - {op: p1_post_v3_phr_app_login_verify_user, example: Verify - User (5)}
-
-- id: p1-certificate-and-session
-  title: PHR certificate and session token
-  steps:
-    - {op: p1_get_v3_phr_app_login_public_certificate}
-    - {op: gateway_post_gateway_v3_sessions}
