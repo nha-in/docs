@@ -2,10 +2,10 @@ openapi: 3.1.1
 info:
   x-portal:
     module: m2
-    label: M2 Linking and sharing
+    label: M2 Health information provider services
     position: 3
     icon: link
-  title: ABDM M2, linking and sharing as a HIP
+  title: ABDM M2, health information provider services as a HIP
   summary: Link care contexts to an ABHA address and share records when consent arrives.
   version: abdm-v3
   license:

@@ -1,4 +1,4 @@
-# Integrate M2, linking and sharing
+# Integrate M2, health information provider services
 
 The calls themselves: where they live, what they need in their headers, and one request written out in full.
 

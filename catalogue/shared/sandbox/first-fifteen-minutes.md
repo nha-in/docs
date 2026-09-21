@@ -145,9 +145,10 @@ running it needs the credentials NHA has not issued yet.
 
 ## When it goes wrong
 
-NHA's FAQ gives a maximum of 5 working days to process a registration. If you are past that
-with no word, raise it on
-[NHA's developer forum](https://devforum.abdm.gov.in). See [Support](/docs/support) for the
+Registration is processed within 5 working days. If you are past that
+with no word, raise it on the
+[support ticketing platform](https://sandboxsupport.abdm.gov.in/) or at
+`integration.support@nha.gov.in`. See [Support](/docs/support) for the
 report format.
 
 If your first real call fails with a 401, that is a different problem from registration: see

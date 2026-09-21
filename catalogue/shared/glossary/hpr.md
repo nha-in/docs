@@ -32,7 +32,8 @@ professional already holds with their council. The councils remain the
 authority, and HPR verifies against them.
 
 HPR and the Health Facility Registry together make up the National
-Healthcare Providers Registry, NHPR, which is milestone M4. Both
+Healthcare Professionals and Facilities Registry, NHPR, which is
+milestone M4. Both
 `hpr.abdm.gov.in` and `facility.abdm.gov.in` now redirect to
 `nhpr.abdm.gov.in`.
 

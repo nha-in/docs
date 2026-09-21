@@ -2,10 +2,10 @@ openapi: 3.1.1
 info:
   x-portal:
     module: m3
-    label: M3 Consent and fetching
+    label: M3 Health information user services
     position: 4
     icon: file-check
-  title: ABDM M3, consent and fetching as an HIU
+  title: ABDM M3, health information user services as an HIU
   summary: Raise a consent request, fetch its artefacts, and receive records.
   version: abdm-v3
   license:

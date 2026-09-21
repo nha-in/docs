@@ -189,7 +189,7 @@ const MODULES = [
   {
     id: 'm1',
     slug: 'abdm-m1',
-    title: 'M1, ABHA identity',
+    title: 'M1, ABHA creation and verification',
     docs: '/docs/hiecm/v3/api/m1',
     spec: 'hiecm-m1.yaml',
     example: 'Add ABHA creation by Aadhaar OTP to this codebase',
@@ -208,7 +208,7 @@ const MODULES = [
   {
     id: 'm2',
     slug: 'abdm-m2',
-    title: 'M2, linking and sharing',
+    title: 'M2, health information provider services',
     docs: '/docs/hiecm/v3/api/m2',
     spec: 'hiecm-m2.yaml',
     example: 'Link a care context for this patient',
@@ -225,7 +225,7 @@ const MODULES = [
   {
     id: 'm3',
     slug: 'abdm-m3',
-    title: 'M3, consent and fetching',
+    title: 'M3, health information user services',
     docs: '/docs/hiecm/v3/api/m3',
     spec: 'hiecm-m3.yaml',
     example: 'Raise a consent request and fetch the records it covers',
