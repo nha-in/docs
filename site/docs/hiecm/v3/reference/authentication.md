@@ -16,15 +16,15 @@ Generated from the specifications. Every scheme and header below is declared in 
 
 **bearerAuth**, `http` `bearer`. The access token from POST /api/hiecm/gateway/v3/sessions.
 
-## M1 ABHA identity
+## M1 ABHA creation and verification
 
 **bearerAuth**, `http` `bearer`.
 
-## M2 Linking and sharing
+## M2 Health information provider services
 
 **bearerAuth**, `http` `bearer`.
 
-## M3 Consent and fetching
+## M3 Health information user services
 
 **bearerAuth**, `http` `bearer`.
 

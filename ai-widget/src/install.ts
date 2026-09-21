@@ -31,10 +31,11 @@ export type Step =
 /** What the panel needs from its host to write a command out. */
 export type Context = {docsOrigin: string; mcpUrl: string | null};
 
-/** The repository that serves the Claude Code plugin marketplace. Update at
-    handover, together with the same constant in site AgentSetup and in
-    scripts/build-skills.mjs. */
-const PLUGIN_REPO = 'eka-care/abdm-docs';
+/** The repository that serves the Claude Code plugin marketplace. The widget
+    is a standalone element with no build-time configuration, so this is the
+    one copy that is not read from MARKETPLACE_REPO the way AgentSetup and
+    scripts/build-skills.mjs are. Update it with them. */
+const PLUGIN_REPO = 'nha-in/docs';
 
 /** What the MCP server is called wherever it is installed. */
 const MCP_NAME = 'abdm-docs';

@@ -20,9 +20,11 @@ import {cn} from '@site/src/lib/utils';
  * is not a command anyone can paste, so they keep the prompt.
  */
 
-/** The repository that serves the Claude Code plugin marketplace. Update at
-    handover, together with the same constant in scripts/build-skills.mjs. */
-const PLUGIN_REPO = 'eka-care/abdm-docs';
+/** The repository that serves the Claude Code plugin marketplace, set at
+    deploy time through MARKETPLACE_REPO (see customFields.marketplaceRepo in
+    site/docusaurus.config.ts). scripts/build-skills.mjs reads the same
+    variable, so this page and agent-setup/prompt.md never disagree. */
+const FALLBACK_REPO = 'nha-in/docs';
 
 function fetchPrompt(base: string) {
   return `Fetch and execute the instructions to set me up for ABDM integration from ${base}/agent-setup/prompt.md`;
@@ -42,9 +44,9 @@ type Surface = {
   id: string;
   label: string;
   /** The line the copy button yields. */
-  command: (base: string) => string;
+  command: (base: string, repo: string) => string;
   /** One click into the agent, where the agent has a scheme for it. */
-  link: ((base: string) => string) | null;
+  link: ((base: string, repo: string) => string) | null;
   note: string;
 };
 
@@ -64,16 +66,16 @@ const TARGETS: Target[] = [
   {
     id: 'claude-code',
     label: 'Claude',
-    command: () =>
-      `claude plugin marketplace add ${PLUGIN_REPO} && claude plugin install abdm-integrators-assistant@abdm-portal`,
+    command: (_base, repo) =>
+      `claude plugin marketplace add ${repo} && claude plugin install abdm-integrators-assistant@abdm-portal`,
     // https://support.claude.com/en/articles/14729294-open-claude-desktop-with-a-link
-    link: (base) =>
+    link: (base, repo) =>
       `claude://code/new?q=${encodeURIComponent(
         guarded(
           [
             'Set this project up for ABDM integration. Run:',
             '',
-            `claude plugin marketplace add ${PLUGIN_REPO}`,
+            `claude plugin marketplace add ${repo}`,
             'claude plugin install abdm-integrators-assistant@abdm-portal',
             '',
             `If the marketplace add fails (the repository may not be accessible), instead fetch and execute the instructions from ${base}/agent-setup/prompt.md`,
@@ -107,7 +109,7 @@ const TARGETS: Target[] = [
         // Codex reads Agent Plugins 1.0, and this repository publishes a
         // marketplace it can add directly. Codex is a CLI with no URL scheme,
         // so there is no deeplink. Do not invent one.
-        command: () => `codex plugin marketplace add ${PLUGIN_REPO}`,
+        command: (_base, repo) => `codex plugin marketplace add ${repo}`,
         link: null,
         note: 'Adds the marketplace. Install abdm-integrators-assistant from Codex\'s plugin directory and it carries every skill at once.',
       },
@@ -139,6 +141,8 @@ export default function AgentSetup(): React.ReactNode {
   const [surface, setSurface] = useState<Surface>(surfacesOf(TARGETS[0])[0]);
   const [copied, setCopied] = useState(false);
   const base = `${siteConfig.url}${siteConfig.baseUrl}`.replace(/\/+$/, '');
+  const repo =
+    (siteConfig.customFields?.marketplaceRepo as string | undefined) ?? FALLBACK_REPO;
 
   return (
     <aside className="agent-setup">
@@ -213,7 +217,7 @@ export default function AgentSetup(): React.ReactNode {
           missing the one line that works for any agent at all. See
           scripts/emit-page-markdown.mjs. */}
       {TARGETS.flatMap(surfacesOf).map((option) => {
-        const line = option.command(base);
+        const line = option.command(base, repo);
         const active = option.id === surface.id;
         return (
           <div
@@ -244,7 +248,7 @@ export default function AgentSetup(): React.ReactNode {
             </div>
 
             {option.link && (
-              <a className="skill-launch" href={option.link(base)}>
+              <a className="skill-launch" href={option.link(base, repo)}>
                 <SquareArrowOutUpRight className="size-3.5" aria-hidden="true" />
                 Open in {option.label}
               </a>

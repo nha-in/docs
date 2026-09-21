@@ -38,6 +38,10 @@ jobs:
           # agent-setup/prompt.md hand to coding agents.
           CHAT_URL: "https://abdm-docs-mcp.dev.eka.care"
           MCP_URL: "https://abdm-docs-mcp.dev.eka.care/mcp"
+          # The plugin marketplace every install command names. The portal's
+          # default is NHA's repository; the rehearsal site points at Eka's, which
+          # is the one that resolves until nha-in/docs is public.
+          MARKETPLACE_REPO: eka-care/abdm-docs
         run: |
           npm ci
           npm run build

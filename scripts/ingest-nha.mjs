@@ -20,9 +20,9 @@ const METHODS = ['get', 'post', 'put', 'patch', 'delete'];
 
 const MODULES = {
   gateway: {label: 'Gateway session', position: 1, icon: 'key-round', roles: ['his', 'phr'], title: 'ABDM gateway, sessions and bridges', summary: 'The access token every call carries, and the bridge registry.', servers: [{url: 'https://dev.abdm.gov.in', description: 'ABDM gateway, sandbox'}, {url: 'https://apis.abdm.gov.in', description: 'ABDM gateway, production'}], expected: 11},
-  m1: {label: 'M1 ABHA identity', position: 2, icon: 'id-card', roles: ['his'], title: 'ABDM M1, ABHA identity', summary: 'Create, find, log into and manage an ABHA.', servers: [{url: 'https://abhasbx.abdm.gov.in', description: 'ABHA service, sandbox'}], expected: 30},
-  m2: {label: 'M2 Linking and sharing', position: 3, icon: 'link', roles: ['his'], title: 'ABDM M2, linking and sharing as a HIP', summary: 'Link care contexts to an ABHA address and share records when consent arrives.', servers: [{url: 'https://dev.abdm.gov.in', description: 'ABDM gateway, sandbox'}, {url: 'https://apis.abdm.gov.in', description: 'ABDM gateway, production'}], expected: 21},
-  m3: {label: 'M3 Consent and fetching', position: 4, icon: 'file-check', roles: ['his'], title: 'ABDM M3, consent and fetching as an HIU', summary: 'Raise a consent request, fetch its artefacts, and receive records.', servers: [{url: 'https://dev.abdm.gov.in', description: 'ABDM gateway, sandbox'}, {url: 'https://apis.abdm.gov.in', description: 'ABDM gateway, production'}], expected: 12},
+  m1: {label: 'M1 ABHA creation and verification', position: 2, icon: 'id-card', roles: ['his'], title: 'ABDM M1, ABHA creation and verification', summary: 'Create, find, log into and manage an ABHA.', servers: [{url: 'https://abhasbx.abdm.gov.in', description: 'ABHA service, sandbox'}], expected: 30},
+  m2: {label: 'M2 Health information provider services', position: 3, icon: 'link', roles: ['his'], title: 'ABDM M2, health information provider services as a HIP', summary: 'Link care contexts to an ABHA address and share records when consent arrives.', servers: [{url: 'https://dev.abdm.gov.in', description: 'ABDM gateway, sandbox'}, {url: 'https://apis.abdm.gov.in', description: 'ABDM gateway, production'}], expected: 21},
+  m3: {label: 'M3 Health information user services', position: 4, icon: 'file-check', roles: ['his'], title: 'ABDM M3, health information user services as an HIU', summary: 'Raise a consent request, fetch its artefacts, and receive records.', servers: [{url: 'https://dev.abdm.gov.in', description: 'ABDM gateway, sandbox'}, {url: 'https://apis.abdm.gov.in', description: 'ABDM gateway, production'}], expected: 12},
   m4: {label: 'M4 HPR and HFR', position: 5, icon: 'building-2', roles: ['his'], title: 'ABDM M4, professional and facility registries', summary: 'Register healthcare professionals and facilities on the NHPR.', servers: [{url: 'https://apihspsbx.abdm.gov.in/v4/int', description: 'NHPR, sandbox'}], expected: 100},
   p1: {label: 'P1 Registration and login', position: 6, icon: 'user-round', roles: ['phr'], title: 'ABDM P1, PHR registration and login', summary: 'Create an ABHA address in a PHR app and log in to it.', servers: [{url: 'https://abhasbx.abdm.gov.in', description: 'ABHA service, sandbox'}], expected: 11},
   p2: {label: 'P2 Management', position: 7, icon: 'files', roles: ['phr'], title: 'ABDM P2, PHR management', summary: 'Manage the PHR profile, link an ABHA number, switch profiles, and handle linking, sharing and consent for the patient.', servers: [{url: 'https://abhasbx.abdm.gov.in', description: 'ABHA service, sandbox'}, {url: 'https://dev.abdm.gov.in', description: 'ABDM gateway, sandbox'}], expected: 32},
@@ -227,6 +227,42 @@ for (const {file, place} of FILES) {
 specs.m1.info.description = 'Encrypt Aadhaar numbers, mobile numbers, OTP values and passwords under the certificate from GET /abha/api/v3/profile/public/certificate. See /docs/hiecm/v3/concepts/encryption.';
 note('m1', 'info', 'description replaced: NHA\'s text names RSA/ECB/PKCS1Padding, /v3/auth/cert and a third-party encryption site; the original is in the raw file');
 specs.m1['x-abdm-sources'].push({file: 'catalogue/openapi/.raw/nha-2026-09-16/abha/M1 ABHA Collection.json', role: 'upstream', hash: sha(join(RAW, 'abha/M1 ABHA Collection.json')), fetched: '2026-09-15', note: 'Used for the order of M1 calls only. See journeys/m1.yaml.'});
+
+// 9. NHA's review of the M3 API pages, 15 September 2026. On consent request
+// init the HIP block is optional and neither the HIP nor the HIU name is
+// required; the corrected request sends hip null. On the health information
+// request the key material fields carried no description beyond a regex.
+{
+  const init = specs.m3.paths['/api/hiecm/consent/v3/request/init']?.post?.requestBody?.content?.['application/json']?.schema?.properties?.consent;
+  if (init) {
+    init.properties.hip.required = ['id'];
+    init.properties.hip.example = null;
+    init.properties.hiu.required = ['id'];
+    note('m3', 'POST /api/hiecm/consent/v3/request/init', 'consent.hip.name and consent.hiu.name are not required, and the example sends hip null, as NHA corrected on 15 September 2026; the raw file marks both names required');
+  }
+  const KEY_MATERIAL = {
+    cryptoAlg: 'The key agreement algorithm. Always ECDH.',
+    curve: 'The curve the key pair is generated on. Always Curve25519.',
+    dhPublicKey: 'The public half of the ephemeral key pair generated for this transaction.',
+    'dhPublicKey.expiry': 'When this key stops being valid, as an ISO 8601 timestamp.',
+    'dhPublicKey.parameters': 'The key parameters. Ephemeral public key.',
+    'dhPublicKey.keyValue': 'The public key, Base64 encoded, in X.509 SubjectPublicKeyInfo form.',
+    nonce: '32 random bytes, Base64 encoded, generated for this transaction. The other side combines it with its own nonce to derive the AES-GCM key and initialisation vector.',
+  };
+  const describeKeyMaterial = (schema, where) => {
+    const km = schema?.properties?.hiRequest?.properties?.keyMaterial;
+    if (!km) return;
+    for (const [path, text] of Object.entries(KEY_MATERIAL)) {
+      const [a, b] = path.split('.');
+      const target = b ? km.properties?.[a]?.properties?.[b] : km.properties?.[a];
+      if (target) target.description = text;
+    }
+    km.description = 'The requester\'s half of the ECDH key agreement. The HIP derives the shared key from it and its own key pair, and encrypts every entry it pushes with AES-GCM.';
+    note('m3', where, 'keyMaterial and its members described; the raw file carried only a regex or nothing');
+  };
+  describeKeyMaterial(specs.m3.paths['/api/hiecm/data-flow/v3/health-information/request']?.post?.requestBody?.content?.['application/json']?.schema, 'POST /api/hiecm/data-flow/v3/health-information/request');
+  describeKeyMaterial(specs.m2.webhooks?.['/api/v3/hip/health-information/request']?.post?.requestBody?.content?.['application/json']?.schema, 'callback POST /api/v3/hip/health-information/request');
+}
 
 for (const [id, m] of Object.entries(MODULES)) {
   const count = Object.values(specs[id].paths).reduce((n, i) => n + METHODS.filter((x) => i[x]).length, 0) + Object.values(specs[id].webhooks).reduce((n, i) => n + METHODS.filter((x) => i[x]).length, 0);

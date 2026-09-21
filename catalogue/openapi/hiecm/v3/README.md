@@ -10,7 +10,7 @@ Name the module in the info block:
 info:
   x-portal:
     module: m1            # folder name under api/
-    label: M1 ABHA identity
+    label: M1 ABHA creation and verification
     position: 2           # order among this gateway's modules
 ```
 

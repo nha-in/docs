@@ -2,10 +2,10 @@ openapi: 3.1.1
 info:
   x-portal:
     module: m1
-    label: M1 ABHA identity
+    label: M1 ABHA creation and verification
     position: 2
     icon: id-card
-  title: ABDM M1, ABHA identity
+  title: ABDM M1, ABHA creation and verification
   summary: Create, find, log into and manage an ABHA.
   version: abdm-v3
   license:

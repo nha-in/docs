@@ -331,6 +331,12 @@ const config: Config = {
     // The chat backend's origin. Null keeps the Ask AI panel a labeled mock,
     // so Pages and preview builds never ship a dead composer.
     chatUrl: process.env.CHAT_URL ?? null,
+    // The repository the plugin marketplace is served from, which is what the
+    // install commands on Build with AI name. The portal is NHA's, so the
+    // default is NHA's repository; a deployment serving the plugin from
+    // somewhere else sets MARKETPLACE_REPO, and scripts/build-skills.mjs reads
+    // the same variable so the page and agent-setup/prompt.md agree.
+    marketplaceRepo: process.env.MARKETPLACE_REPO ?? 'nha-in/docs',
   },
 
   i18n: {
@@ -464,6 +470,35 @@ const config: Config = {
   ],
 
   themeConfig: {
+    // Diagrams take the site's type and sizes here, and its colours from
+    // mdx.css, where the tokens already switch with the theme. Flowchart
+    // labels are SVG text rather than HTML, so the page's font size and line
+    // height cannot make a label outgrow the box Mermaid measured for it.
+    mermaid: {
+      theme: {light: 'base', dark: 'base'},
+      options: {
+        fontFamily: 'ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif',
+        fontSize: 14,
+        sequence: {
+          wrap: true,
+          wrapPadding: 10,
+          width: 250,
+          height: 44,
+          actorMargin: 36,
+          boxMargin: 12,
+          messageMargin: 36,
+          noteMargin: 12,
+          actorFontSize: 14,
+          actorFontWeight: 600,
+          messageFontSize: 13,
+          noteFontSize: 12,
+          mirrorActors: false,
+          useMaxWidth: true,
+        },
+        flowchart: {htmlLabels: false, curve: 'basis', padding: 16, nodeSpacing: 40, rankSpacing: 44, useMaxWidth: true},
+        themeVariables: {sequenceNumberColor: '#ffffff', fontSize: '14px'},
+      },
+    },
     image: 'img/social-card.jpg',
     /**
      * What a link to this site unfurls into, beyond the four tags Docusaurus
@@ -525,11 +560,9 @@ const config: Config = {
           label: 'ABDM sandbox',
           position: 'right',
         },
-        {
-          href: 'https://github.com/eka-care/abdm-docs',
-          label: 'GitHub',
-          position: 'right',
-        },
+        // The repository link lives in TopBar.tsx, which is what src/theme/
+        // Navbar renders instead of this bar; a second copy here was never
+        // shown and could only go stale.
       ],
     },
     // NHA's own footer, transcribed from the ABDM sandbox documentation site:

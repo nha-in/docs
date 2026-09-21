@@ -152,3 +152,47 @@ export function fixProse(text) {
   if (!text) return '';
   return fixArticles(onProse(text, (part) => tidy(respell(part))));
 }
+
+
+/**
+ * NHA's swagger descriptions are written as HTML: <br> for line breaks,
+ * <b> and <strong> for emphasis, <ol><li> for numbered steps, <code> for
+ * field names. The page renders descriptions as Markdown, so the tags reached
+ * the reader as literal text ("<br> <br> </ol>Usage of this API"). This turns
+ * the handful of tags NHA uses into Markdown and drops any other tag.
+ */
+export function htmlToMarkdown(text) {
+  let s = String(text ?? '');
+  if (!/<[a-zA-Z/!]/.test(s)) return s;
+  s = s
+    .replace(/&nbsp;/g, ' ')
+    .replace(/<br\s*\/?>/gi, '\n')
+    .replace(/<\/?p\b[^>]*>/gi, '\n\n')
+    .replace(/<\/?(b|strong)\b[^>]*>/gi, '**')
+    .replace(/<\/?(i|em)\b[^>]*>/gi, '*')
+    .replace(/<\/?code\b[^>]*>/gi, '`')
+    .replace(/<a\b[^>]*href="([^"]*)"[^>]*>([\s\S]*?)<\/a>/gi, '[$2]($1)')
+    // The page's Markdown renderer knows bold and code spans and treats a
+    // blank line as a paragraph break, and nothing else. Each list item
+    // becomes its own paragraph, keeping the number NHA wrote in it.
+    .replace(/<li\b[^>]*>/gi, '\n\n')
+    .replace(/<\/li>/gi, '')
+    .replace(/<\/?[ou]l\b[^>]*>/gi, '\n\n')
+    .replace(/<[^>]+>/g, '');
+  // "** **" from an empty bold, and stray emphasis around whitespace.
+  // An empty bold on one line. Not across a newline: two bold runs on
+  // consecutive lines must stay two runs.
+  s = s.replace(/\*\*[ \t]*\*\*/g, '')
+    // A closing bold jammed against the next word, "**Note:**OTP".
+    .replace(/\*\*(?=[A-Za-z0-9])/g, (m, off, str) => (/\S\*\*$/.test(str.slice(0, off + 2)) && off > 0 && !/\s/.test(str[off - 1]) ? '** ' : m))
+    .replace(/[ \t]+\n/g, '\n').replace(/\n{3,}/g, '\n\n');
+  // Whitespace inside a bold run keeps the renderer from seeing it as one,
+  // and a closing bold jammed against the next word, "**Note:**OTP", reads as
+  // one word. Trim inside the run, then put one space after it.
+  s = s
+    .replace(/\*\*[ \t]+([^*\n]*?)[ \t]*\*\*/g, '**$1**')
+    .replace(/\*\*([^*\n]+?)[ \t]+\*\*/g, '**$1**')
+    .replace(/(\*\*[^*\n]+\*\*)(?=[A-Za-z0-9(])/g, '$1 ')
+    .replace(/\n{3,}/g, '\n\n');
+  return s.trim();
+}

@@ -16,6 +16,7 @@ import {joinKey, hostOf} from './lib/api-join.mjs';
 import {loadJourneys, operationIndex, stepDataName} from './lib/journeys.mjs';
 import {errorsFromSpec} from './lib/spec-errors.mjs';
 import {cleanTitle, cleanGroupLabel, caseTerms, imperative, cleanDescription} from './lib/titles.mjs';
+import {htmlToMarkdown} from './lib/prose.mjs';
 import {fixProse} from './lib/prose.mjs';
 
 /**
@@ -104,7 +105,7 @@ function fields(schema, prefix = '', depth = 0) {
       name: prefix ? `${prefix}.${name}` : name,
       type,
       required: required.has(name),
-      description: property.description ?? '',
+      description: htmlToMarkdown(property.description),
       enum: property.enum,
       format: property.format,
       encrypted: property['x-abdm-encrypted'] === true || ENCRYPTED_FIELDS.has(name),
@@ -172,6 +173,22 @@ function firstExample(content) {
 }
 
 const UNDOCUMENTED_BODY = /^Response body:\s*not documented\.?$/i;
+
+// NHA's specifications carry an author's note on some 5xx responses,
+// "Internal Server Error -> It is just one example, for every api the path
+// will be changed." That is a note to the next editor of the file, not a
+// description of the response, and it reached the page as one. The status
+// text before the arrow is the description; the note is dropped. Some older
+// ingests also wrote "No response was saved in the Postman collection and no
+// documented definition exists", which tells the reader about our tooling
+// rather than about the response.
+function cleanResponseDescription(text) {
+  const s = String(text ?? '').trim();
+  if (/^No response was saved in the Postman collection/i.test(s)) {
+    return 'The specification does not describe this body. Send the call with Try it to see what comes back.';
+  }
+  return htmlToMarkdown(s.replace(/\s*->\s*It is just one example[^\n]*$/i, '')).trim();
+}
 
 // A specification hard wraps its descriptions near column 72, so the first
 // *line* is usually a fragment. Taking it left a quarter of the endpoint
@@ -581,7 +598,7 @@ for (const {platform, version, files} of tree) {
         scheme: scheme.scheme,
         in: scheme.in,
         headerName: scheme.name,
-        description: scheme.description ?? '',
+        description: htmlToMarkdown(scheme.description),
       }];
     };
     const securityFor = (op) => {
@@ -624,7 +641,7 @@ for (const {platform, version, files} of tree) {
         // that will answer it.
         description: UNDOCUMENTED_BODY.test((response.description ?? '').trim())
           ? 'The specification does not describe this body. Send the call with Try it to see what comes back.'
-          : response.description ?? '',
+          : cleanResponseDescription(response.description ?? ''),
         // An explicit example wins; otherwise the response schema supplies
         // one, same as the request side, so a status with a documented body
         // never renders as prose alone.
@@ -650,7 +667,10 @@ for (const {platform, version, files} of tree) {
         kind: entry.kind,
         method: entry.method.toUpperCase(),
         path: entry.path,
-        server: servers[0]?.url ?? '',
+        // A callback is ABDM calling you. Its examples run against the URL
+        // registered for your bridge, never against the gateway host, which
+        // is what a curl against dev.abdm.gov.in wrongly suggested.
+        server: entry.kind === 'callback' ? '{bridgeUrl}' : (servers[0]?.url ?? ''),
         servers,
         summary: caseTerms(fixProse(op.summary ?? id)),
         // What a heading, a sidebar row and a table cell show. NHA's summary
@@ -671,16 +691,16 @@ for (const {platform, version, files} of tree) {
           .map((p) => ({
             name: p.name,
             required: Boolean(p.required),
-            description: p.description ?? '',
+            description: htmlToMarkdown(p.description),
             example: p.example ?? p.schema?.example,
             type: p.schema?.type ?? 'string',
           })),
         pathParams: parameters
           .filter((p) => p.in === 'path')
-          .map((p) => ({name: p.name, required: true, description: p.description ?? '', type: p.schema?.type ?? 'string'})),
+          .map((p) => ({name: p.name, required: true, description: htmlToMarkdown(p.description), type: p.schema?.type ?? 'string'})),
         queryParams: parameters
           .filter((p) => p.in === 'query')
-          .map((p) => ({name: p.name, required: Boolean(p.required), description: p.description ?? '', type: p.schema?.type ?? 'string'})),
+          .map((p) => ({name: p.name, required: Boolean(p.required), description: htmlToMarkdown(p.description), type: p.schema?.type ?? 'string'})),
         body: fields(requestSchema),
         // An explicit example wins; otherwise the schema supplies one, so the
         // panel and the curl are never blank for an operation that takes a body.
@@ -1023,7 +1043,7 @@ for (const {platform, version, files} of tree) {
       for (const [name, scheme] of schemes) {
         lines.push(
           `**${name}**, \`${scheme.type}\`${scheme.scheme ? ` \`${scheme.scheme}\`` : ''}. ${(
-            scheme.description ?? ''
+            htmlToMarkdown(scheme.description)
           )
             .replace(/\s+/g, ' ')
             .trim()}`.trimEnd(),
@@ -1036,7 +1056,7 @@ for (const {platform, version, files} of tree) {
         for (const [, header] of headers) {
           lines.push(
             `| \`${header.name}\` | ${header.required ? 'yes' : 'no'} | ${(
-              header.description ?? ''
+              htmlToMarkdown(header.description)
             )
               .replace(/\s+/g, ' ')
               .trim()} |`,

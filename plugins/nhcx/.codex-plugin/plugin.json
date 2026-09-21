@@ -4,10 +4,10 @@
   "description": "Agent skills for building on the National Health Claims Exchange (NHCX), one per use case in episode order: nhcx-coverage, nhcx-insurance, nhcx-preauth, nhcx-claim, nhcx-payment, nhcx-communication and nhcx-reprocess. Each builds its use case into a hospital information system or a claims desk, held to the NHCX package's pinned FHIR bundles, and installs and runs alone.",
   "author": {
     "name": "ABDM Developer Portal",
-    "url": "https://github.com/eka-care/abdm-docs"
+    "url": "https://github.com/nha-in/docs"
   },
-  "homepage": "https://github.com/eka-care/abdm-docs",
-  "repository": "https://github.com/eka-care/abdm-docs",
+  "homepage": "https://github.com/nha-in/docs",
+  "repository": "https://github.com/nha-in/docs",
   "license": "MIT",
   "keywords": [
     "nhcx",
@@ -34,6 +34,6 @@
       "Read",
       "Write"
     ],
-    "websiteURL": "https://github.com/eka-care/abdm-docs"
+    "websiteURL": "https://github.com/nha-in/docs"
   }
 }

@@ -144,12 +144,12 @@ assert.match(answer({at: 'answer', tool: 'mcp', agent: 'claude'}, ctx).text,
 assert.match(answer({at: 'answer', tool: 'skills', agent: 'other', named: 'Zed'}, ctx).text,
   /Zed included/);
 assert.match(answer({at: 'answer', tool: 'plugin', agent: 'claude'}, ctx).text,
-  /claude plugin marketplace add eka-care\/abdm-docs/);
+  /claude plugin marketplace add nha-in\/docs/);
 // Codex installs the same plugin from the same repository, since Agent
 // Plugins 1.0. Cursor reads the standard but installs from its own
 // marketplace, so it is told that rather than given a command that fails.
 assert.match(answer({at: 'answer', tool: 'plugin', agent: 'codex'}, ctx).text,
-  /codex plugin marketplace add eka-care\/abdm-docs/);
+  /codex plugin marketplace add nha-in\/docs/);
 const cursorPlugin = answer({at: 'answer', tool: 'plugin', agent: 'cursor'}, ctx);
 assert.equal(cursorPlugin.text.includes('```'), false, 'no command Cursor cannot run');
 assert.match(cursorPlugin.text, /not listed in one yet/);

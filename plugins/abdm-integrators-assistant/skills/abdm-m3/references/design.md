@@ -1,4 +1,4 @@
-# Design M3, consent and fetching
+# Design M3, health information user services
 
 What the integration has to do to the journey around the calls: how many questions a patient is asked, where a failure is shown, and what a screen is forbidden to claim. Every rule below comes from a Catalogue atom, cited at the end.
 

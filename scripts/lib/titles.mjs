@@ -14,7 +14,7 @@
 // Acronyms are cased from the glossary, so the Catalogue stays the source of
 // how a term is written.
 import {loadAtoms, catalogueDir} from './atoms.mjs';
-import {fixProse} from './prose.mjs';
+import {fixProse, htmlToMarkdown} from './prose.mjs';
 
 // Acronyms carrying no glossary atom of their own. Each either names a gateway
 // or registry the glossary covers under a longer title, or is ordinary
@@ -295,7 +295,12 @@ export function imperative(title, {method = '', kind = 'operation', vocab = acro
  * that explains something keeps every explanatory word.
  */
 export function cleanDescription(description, {vocab = acronyms()} = {}) {
-  const text = fixProse(String(description ?? '').trim());
+  // Two strings from the source files describe the tooling that produced
+  // them rather than the call: a Postman collection heading, and a misspelling
+  // NHA's swagger carries on every auth/byAbdm operation.
+  const text = fixProse(htmlToMarkdown(String(description ?? '')).trim())
+    .replace(/Flows in the Postman collection:/g, 'Flows:')
+    .replace(/\bperticular\b/g, 'particular');
   if (!text) return '';
 
   const [first, ...rest] = text.split(/(\n\n)/);

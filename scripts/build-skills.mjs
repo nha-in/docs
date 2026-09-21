@@ -189,7 +189,7 @@ const MODULES = [
   {
     id: 'm1',
     slug: 'abdm-m1',
-    title: 'M1, ABHA identity',
+    title: 'M1, ABHA creation and verification',
     docs: '/docs/hiecm/v3/api/m1',
     spec: 'hiecm-m1.yaml',
     example: 'Add ABHA creation by Aadhaar OTP to this codebase',
@@ -208,7 +208,7 @@ const MODULES = [
   {
     id: 'm2',
     slug: 'abdm-m2',
-    title: 'M2, linking and sharing',
+    title: 'M2, health information provider services',
     docs: '/docs/hiecm/v3/api/m2',
     spec: 'hiecm-m2.yaml',
     example: 'Link a care context for this patient',
@@ -225,7 +225,7 @@ const MODULES = [
   {
     id: 'm3',
     slug: 'abdm-m3',
-    title: 'M3, consent and fetching',
+    title: 'M3, health information user services',
     docs: '/docs/hiecm/v3/api/m3',
     spec: 'hiecm-m3.yaml',
     example: 'Raise a consent request and fetch the records it covers',
@@ -1119,9 +1119,11 @@ const promptSkills = abdmSlugs.map((slug) => [
   `${manifest[slug].title}. Sections: ${manifest[slug].sections.join(', ')}.`,
 ]);
 const mcpUrl = process.env.MCP_URL ?? null;
-// The Claude Code plugin marketplace: this repository itself. Update at
-// handover, together with PLUGIN_REPO in site/src/components/docs/AgentSetup.tsx.
-const pluginRepo = process.env.MARKETPLACE_REPO ?? 'eka-care/abdm-docs';
+// The repository the plugin marketplace is served from. The portal is NHA's,
+// so its published artefacts name NHA's repository; a deployment that serves
+// the plugin from somewhere else sets MARKETPLACE_REPO, which the site build
+// reads too (see customFields.marketplaceRepo in site/docusaurus.config.ts).
+const pluginRepo = process.env.MARKETPLACE_REPO ?? 'nha-in/docs';
 // Without DOCUSAURUS_URL every reference is origin-relative, and one note
 // tells the agent what the origin is: wherever it fetched this file from.
 const promptRef = (path) => (siteUrl ? `${siteUrl}${path}` : path);
