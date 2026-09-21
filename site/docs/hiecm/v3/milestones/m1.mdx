@@ -160,6 +160,24 @@ sequenceDiagram
     A-->>S: healthIdNumber, preferredAbhaAddress
 ```
 
+### ABHA creation by fingerprint or iris
+
+Aadhaar Biometric-Based ABHA Creation enables users to create an Ayushman
+Bharat Health Account (ABHA) by securely verifying their identity using
+biometric authentication through an Aadhaar Registered Device (RD). The RD
+Service captures the user's biometric data and generates an encrypted,
+digitally signed PID block, which is submitted along with the Aadhaar details
+for verification. Upon successful authentication and user consent, the user's
+profile is validated and a unique ABHA number is generated, enabling secure
+onboarding into the ABDM digital health ecosystem.
+
+The Registered Device (RD) List and information can be found on the following
+link:
+[uidai.gov.in](https://uidai.gov.in/en/ecosystem/authentication-devices-documents/biometric-devices.html).
+
+The calls, in order, are on the [M1 API reference](/docs/hiecm/v3/api/m1)
+under ABHA creation, fingerprint and ABHA creation, iris.
+
 ### ABHA creation by demographic authentication
 
 <LegacyAnchor id="journey-3-abha-creation-by-demographic-authentication" />
