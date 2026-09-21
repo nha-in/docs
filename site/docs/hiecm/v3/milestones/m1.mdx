@@ -122,20 +122,25 @@ sequenceDiagram
     actor P as Person
     participant S as Your system
     participant A as ABHA service
-    P->>S: Gives Aadhaar number and consent
-    S->>A: Generate Aadhaar OTP
-    A-->>S: Transaction id
-    A->>P: OTP by SMS to Aadhaar linked mobile
-    P->>S: Enters OTP
-    S->>A: Verify Aadhaar OTP
-    A-->>S: Enrolment result and profile details
-    S->>A: Ask for ABHA address suggestions
-    A-->>S: List of suggested addresses
+    Note over S: Holds the gateway access token and the<br/>public key from GET /abha/api/v3/profile/public/certificate
+    P->>S: Aadhaar number and consent
+    S->>A: POST /abha/api/v3/enrollment/request/otp<br/>scope [abha-enrol], loginHint aadhaar,<br/>loginId (encrypted Aadhaar), otpSystem aadhaar
+    A-->>S: txnId
+    A-)P: OTP by SMS to the Aadhaar linked mobile
+    P->>S: OTP, and the mobile number for ABHA communication
+    S->>A: POST /abha/api/v3/enrollment/enrol/byAadhaar<br/>authData.authMethods [otp], otp {txnId,<br/>otpValue (encrypted), mobile}, consent
+    A-->>S: ABHAProfile (ABHANumber, name, dob, gender, photo),<br/>tokens.token, isNew
+    S->>A: POST /abha/api/v3/enrollment/request/otp<br/>scope [abha-enrol, mobile-verify], loginHint mobile,<br/>loginId (encrypted mobile), txnId
+    A-->>S: txnId
+    A-)P: OTP by SMS to the communication mobile
+    P->>S: Mobile OTP
+    S->>A: POST /abha/api/v3/enrollment/auth/byAbdm<br/>scope [abha-enrol, mobile-verify],<br/>authData.authMethods [otp], otp {txnId,<br/>otpValue (encrypted)}
+    A-->>S: authResult success, accounts [ABHANumber]
+    S->>A: GET /abha/api/v3/enrollment/enrol/suggestion<br/>header TRANSACTION_ID txnId
+    A-->>S: abhaAddressList
     P->>S: Picks or types an ABHA address
-    S->>A: Link ABHA address
-    A-->>S: Address linked
-    S->>A: Create ABHA with profile details
-    A-->>S: ABHA number issued
+    S->>A: POST /abha/api/v3/enrollment/enrol/abha-address<br/>txnId, abhaAddress, preferred 1
+    A-->>S: healthIdNumber, preferredAbhaAddress
 ```
 
 ### ABHA creation by face authentication
@@ -159,22 +164,26 @@ proceeding with production deployment.
 ```mermaid
 sequenceDiagram
     autonumber
-    actor P as Person with the ABHA app
+    actor P as Person (ABHA app)
     participant S as Your system
-    participant R as Aadhaar RD service
     participant A as ABHA service
-    S->>A: Start enrolment authentication
-    A-->>S: Transaction id
-    S->>P: Show a QR code built from the transaction id
-    P->>R: Scans it, then authenticates by face
-    R-->>P: Captured PID block
-    P->>S: Authentication confirmed
-    S->>A: Send the captured PID block
-    S->>A: Enrol by Aadhaar
-    A-->>S: ABHA number and profile
-    S->>A: Ask for ABHA address suggestions
-    A-->>S: List of suggested addresses
-    S->>A: Link the chosen ABHA address
+    S->>A: POST /abha/api/v3/enrollment/enrol/auth/init<br/>scope [abha-enrol]
+    A-->>S: txnId
+    S->>P: QR code carrying the txnId
+    P->>P: Scans the QR code in the ABHA app<br/>Face authentication through the Aadhaar RD service
+    S->>A: POST /abha/api/v3/enrollment/enrol/capturePID<br/>txnId, scope [abha-enrol]
+    A-->>S: status of the face authentication
+    S->>A: POST /abha/api/v3/enrollment/enrol/byAadhaar<br/>authData.authMethods [face], face {txnId,<br/>aadhaar (encrypted), rdPidData, mobile}, consent
+    A-->>S: ABHAProfile (ABHANumber, name, dob, gender, photo),<br/>tokens.token, isNew
+    S->>A: POST /abha/api/v3/enrollment/request/otp<br/>scope [abha-enrol, mobile-verify], loginHint mobile,<br/>loginId (encrypted mobile), txnId
+    A-)P: OTP by SMS to the communication mobile
+    P->>S: Mobile OTP
+    S->>A: POST /abha/api/v3/enrollment/auth/byAbdm<br/>scope [abha-enrol, mobile-verify],<br/>authData.authMethods [otp], otp {txnId,<br/>otpValue (encrypted)}
+    A-->>S: authResult success
+    S->>A: GET /abha/api/v3/enrollment/enrol/suggestion<br/>header TRANSACTION_ID txnId
+    A-->>S: abhaAddressList
+    S->>A: POST /abha/api/v3/enrollment/enrol/abha-address<br/>txnId, abhaAddress, preferred 1
+    A-->>S: healthIdNumber, preferredAbhaAddress
 ```
 
 ### ABHA creation by demographic authentication
@@ -193,11 +202,13 @@ sequenceDiagram
     actor P as Person
     participant S as Your system
     participant A as ABHA service
-    P->>S: Gives Aadhaar number, name, date of birth, gender and consent
-    S->>S: Encrypts the Aadhaar number
-    S->>A: Enrol by Aadhaar, authMethods demo_auth
-    A-->>S: ABHA number, profile and a default ABHA address
-    S->>A: Fetch user profile
+    Note over S: Holds the gateway access token and the<br/>public key from GET /abha/api/v3/profile/public/certificate
+    P->>S: Aadhaar number, name as per Aadhaar, date of birth,<br/>gender, consent
+    S->>S: Encrypts the Aadhaar number with the public key
+    S->>A: POST /abha/api/v3/enrollment/enrol/byAadhaar<br/>authData.authMethods [demo_auth],<br/>demo_auth {aadhaar (encrypted), name, dob, gender,<br/>mobile}, consent
+    A-->>S: ABHAProfile (ABHANumber,<br/>phrAddress issued by default), tokens.token, isNew
+    S->>A: GET /abha/api/v3/profile/account<br/>header X-token tokens.token
+    A-->>S: ABHANumber, preferredAbhaAddress, profile fields
 ```
 
 The `enrol/byAadhaar` API is invoked with the appropriate authentication method
@@ -249,16 +260,16 @@ sequenceDiagram
     actor P as Person
     participant S as Your system
     participant A as ABHA service
-    P->>S: Gives mobile number
-    S->>A: Request login OTP
-    A-->>S: Transaction id
-    A->>P: OTP by SMS
-    P->>S: Enters OTP
-    S->>A: Verify mobile OTP
-    A-->>S: Token and list of accounts on this number
+    P->>S: Mobile number
+    S->>A: POST /abha/api/v3/profile/login/request/otp<br/>scope [abha-login, mobile-verify], loginHint mobile,<br/>loginId (encrypted mobile), otpSystem abdm
+    A-->>S: txnId
+    A-)P: OTP by SMS
+    P->>S: OTP
+    S->>A: POST /abha/api/v3/profile/login/verify<br/>scope [abha-login, mobile-verify],<br/>authData.authMethods [otp], otp {txnId,<br/>otpValue (encrypted)}
+    A-->>S: authResult success, token (T-token),<br/>accounts [ABHANumber, name, preferredAbhaAddress]
     P->>S: Picks the account to use
-    S->>A: Verify user for that account
-    A-->>S: Access token for the chosen ABHA
+    S->>A: POST /abha/api/v3/profile/login/verify/user<br/>header T-token, ABHANumber, txnId
+    A-->>S: token (X-token), expiresIn, refreshToken,<br/>refreshExpiresIn
 ```
 
 Login by Aadhaar number, by ABHA number and by ABHA address follow the same two
@@ -282,15 +293,17 @@ sequenceDiagram
     actor P as Person
     participant S as Your system
     participant A as ABHA service
-    P->>S: Gives the identifier they remember
-    S->>S: Encrypts the identifier
-    S->>A: Search for the account
-    A-->>S: Transaction id and the masked mobile the OTP went to
-    A->>P: OTP by SMS
-    S->>A: Request login OTP
-    P->>S: Enters OTP
-    S->>A: Verify the OTP
-    A-->>S: Account and access token
+    P->>S: Mobile number
+    S->>S: Encrypts the mobile number with the public key
+    S->>A: POST /abha/api/v3/profile/account/abha/search<br/>scope [search-abha], mobile (encrypted)
+    A-->>S: txnId, ABHA list (masked ABHA number, name, gender)
+    P->>S: Confirms the account to prove
+    S->>A: POST /abha/api/v3/profile/login/request/otp<br/>scope [abha-login, mobile-verify], loginHint mobile,<br/>loginId index, otpSystem abdm, txnId
+    A-->>S: txnId
+    A-)P: OTP by SMS to the registered mobile
+    P->>S: OTP
+    S->>A: POST /abha/api/v3/profile/login/verify<br/>scope [abha-login, mobile-verify],<br/>authData.authMethods [otp], otp {txnId,<br/>otpValue (encrypted)}
+    A-->>S: authResult success, token (X-token), accounts
 ```
 
 Access to complete profile information and sensitive account details requires
@@ -316,12 +329,13 @@ sequenceDiagram
     autonumber
     participant S as Your system
     participant A as ABHA service
-    S->>A: Fetch user profile with token
-    A-->>S: Profile details
-    S->>A: Download ABHA card
-    A-->>S: Card image in the response
-    S->>A: Fetch ABHA QR code
-    A-->>S: QR code
+    Note over S: Holds the X-token from a login or enrolment response
+    S->>A: GET /abha/api/v3/profile/account<br/>header X-token
+    A-->>S: ABHANumber, preferredAbhaAddress, name, dob, gender,<br/>mobile, kycVerified
+    S->>A: GET /abha/api/v3/profile/account/abha-card<br/>header X-token
+    A-->>S: ABHA card image
+    S->>A: GET /abha/api/v3/profile/account/qrCode<br/>header X-token
+    A-->>S: QR code image
 ```
 
 The workflow also supports profile updates in accordance with applicable ABDM

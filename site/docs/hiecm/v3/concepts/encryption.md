@@ -46,18 +46,23 @@ request sent that way on the sandbox on 11 September 2026 returned
 `91-1234-5678-9015` passed validation and went on to look the account up.
 Strip the dashes for display if you like, but put them back before you encrypt.
 
-Aadhaar, mobile and OTP shapes are as NHA's validation patterns describe them
-and have not been failed deliberately from here.
+Aadhaar, mobile and OTP values follow the validation patterns given on each
+call in the [M1 API reference](/docs/hiecm/v3/api/m1).
 
 ## How the model works
 
 We publish the public half of a key pair. You encrypt with it. Only our private half can decrypt. Your system never holds a secret to do this, only the current certificate.
 
 ```mermaid
-graph LR
-  A["Aadhaar or mobile number<br/>inside your system"] -->|RSA with the ABDM public key| B["Encrypted value"]
-  B -->|sent as the field value| C["ABDM"]
-  C -->|the ABDM private key| D["Plain value, inside ABDM"]
+sequenceDiagram
+    autonumber
+    participant S as Your system
+    participant A as ABHA service
+    S->>A: GET /abha/api/v3/profile/public/certificate
+    A-->>S: publicKey, encryptionAlgorithm
+    S->>S: RSA encrypt the Aadhaar number, mobile number,<br/>OTP or password with that public key
+    S->>A: The Base64 result as the field value,<br/>for example loginId or otp.otpValue
+    A->>A: Decrypts with its private key
 ```
 
 There is nothing ABDM specific in the mechanics. Your platform's standard RSA library does the work. The two things to confirm are which key you are using and which padding.
