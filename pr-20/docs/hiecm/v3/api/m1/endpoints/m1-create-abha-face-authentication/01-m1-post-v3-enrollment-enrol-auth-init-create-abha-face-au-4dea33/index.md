@@ -50,7 +50,7 @@ curl --request POST \
 
 ## Body
 
-- `scope` (string[], required)
+- `scope` (string[], required): The scopes of the request, which name the flow this call belongs to.
 
 ## Responses
 

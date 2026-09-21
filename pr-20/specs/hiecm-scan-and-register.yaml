@@ -604,6 +604,7 @@ webhooks:
                     nullable: false
                     example: Dependent service unavailable
       x-abdm-nha-operation-id: patient-share 1
+      x-abdm-answered-by: scan-and-register_post_patient_share_v3_on_share
 components:
   securitySchemes:
     bearerAuth:

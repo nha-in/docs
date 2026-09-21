@@ -32,7 +32,7 @@ All use cases, and the milestone each belongs to: [Use cases](/docs/pr-20/docs/h
 
 ## Who needs it
 
-M2 is applicable to healthcare facilities and systems that create and maintain digital health records, including hospitals, clinics, laboratories, pharmacies and diagnostic or imaging centres. A citizen pushing their own records from a PHR app builds [P2 Linking and records](/docs/pr-20/docs/hiecm/v3/milestones/p2), the patient side of M2.
+M2 is applicable to healthcare facilities and systems that create and maintain digital health records, including hospitals, clinics, laboratories, pharmacies and diagnostic or imaging centres.
 
 ## Prerequisites
 
@@ -44,6 +44,8 @@ Prior to implementation of Milestone 2, the following requirements shall be fulf
 4. Health information shall be packaged in HL7 FHIR R4 format and conform to the applicable ABDM FHIR profiles published by NRCeS at [nrces.in](https://nrces.in/ndhm/fhir/r4/index.html).
 
 ## Health record formats
+
+Each applicable health-information type shall be represented as a FHIR document Bundle. Depending on the applicable profile and use case, the Bundle may contain structured clinical data and, where permitted, an attachment such as a PDF document or image.
 
 [HRP](/docs/pr-20/docs/hiecm/v3/getting-started/glossary#hrp) can only link the following type of health records to an ABHA Address. All health records must be structured as FHIR (Fast Healthcare Interoperability Resources) formats. The FHIR specifications used by ABDM are published and maintained by the National Resource Centre for E-Health Standards (NRCES) at [nrces.in](https://nrces.in/ndhm/fhir/r4/index.html).
 

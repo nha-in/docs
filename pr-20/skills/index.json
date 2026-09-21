@@ -110,6 +110,7 @@
       "title": "Scan and register",
       "files": [
         "SKILL.md",
+        "references/scaffold.md",
         "references/integrate.md",
         "references/debug.md"
       ]

@@ -874,6 +874,7 @@ webhooks:
                     nullable: false
                     example: Dependent service unavailable
       x-abdm-nha-operation-id: abdm-subscription 2
+      x-abdm-triggered-by: subscription_post_subscription_requests_v3_init
   /api/v3/hiu/subscription-requests/hiu/notify:
     post:
       tags:
@@ -1209,6 +1210,7 @@ webhooks:
                     nullable: false
                     example: Dependent service unavailable
       x-abdm-nha-operation-id: abdm-subscription 3
+      x-abdm-answered-by: subscription_post_subscription_requests_v3_hiu_on_notify
   /api/v3/hiu/subscription/notify:
     post:
       tags:
@@ -1457,6 +1459,7 @@ webhooks:
                     nullable: false
                     example: Dependent service unavailable
       x-abdm-nha-operation-id: abdm-subscription 5
+      x-abdm-answered-by: subscription_post_subscription_requests_v3_hiu_care_conte_96bc45
 components:
   securitySchemes:
     bearerAuth:

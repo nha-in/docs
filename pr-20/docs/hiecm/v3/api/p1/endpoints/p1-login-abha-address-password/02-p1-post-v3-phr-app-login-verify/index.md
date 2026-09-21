@@ -30,7 +30,7 @@ curl --request POST \
     ],
     "password": {
       "abhaAddress": "<ABHA_ADDRESS>",
-      "password": "<BASE64_PHOTO>"
+      "password": "<ENCRYPTED_PASSWORD>"
     }
   }
 }'
@@ -47,8 +47,8 @@ curl --request POST \
 
 ## Body
 
-- `scope` (string[])
-- `authData` (object)
+- `scope` (string[], required)
+- `authData` (object, required)
 - `authData.authMethods` (string[])
 - `authData.otp` (object)
 - `authData.otp.txnId` (string)

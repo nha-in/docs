@@ -376,11 +376,9 @@ paths:
                       description: This should be a UTC Date & Time in ISO format
                     hip:
                       type: object
-                      description: Identifier and name of the health information provider.
+                      description: The HIP that linked the care context. Only id is required.
                       required:
                         - id
-                        - name
-                        - type
                       properties:
                         id:
                           type: string
@@ -787,6 +785,20 @@ paths:
                       example: f29f0e59-8388-4698-9fe6-05db67aeac46
                       description: The request id that was passed
                   description: The request id is from the /discover callback. Allows alpha numeric characters and special characters like "^[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}"
+            example:
+              transactionId: f901b782-bfdf-4224-9f8d-da2cadc20c0d
+              patient:
+                - referenceNumber: <ABHA_ADDRESS>
+                  display: "12345"
+                  careContexts:
+                    - referenceNumber: abc123
+                      display: "12345"
+                  hiType: Prescription
+                  count: 1
+              matchedBy:
+                - MR
+              response:
+                requestId: f29f0e59-8388-4698-9fe6-05db67aeac46
       responses:
         "202":
           description: Accepted
@@ -1000,6 +1012,17 @@ paths:
                       example: f29f0e59-8388-4698-9fe6-05db67aeac46
                       description: The request id that was passed
                   description: The request id is from the link/init callback. Allows alpha numeric characters and special characters like "^[0-9a-fA-F]{8}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{12}"
+            example:
+              transactionId: f901b782-bfdf-4224-9f8d-da2cadc20c0d
+              link:
+                referenceNumber: d353b782-bfdf-4224-9f8d-da2cadc20c0d
+                authenticationType: DIRECT
+                meta:
+                  communicationMedium: MOBILE
+                  communicationHint: OTP
+                  communicationExpiry: "2024-05-01T05:22:34.123Z"
+              response:
+                requestId: f29f0e59-8388-4698-9fe6-05db67aeac46
       responses:
         "202":
           description: Accepted
@@ -1226,6 +1249,17 @@ paths:
                       example: f29f0e59-8388-4698-9fe6-05db67aeac46
                       description: The request id that was passed
                   description: The request id is from the link/confirm callback. Allows alpha numeric characters and special characters like "^[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}"
+            example:
+              patient:
+                - referenceNumber: <ABHA_ADDRESS>
+                  display: "12345"
+                  careContexts:
+                    - referenceNumber: abc123
+                      display: "12345"
+                  hiType: Prescription
+                  count: 1
+              response:
+                requestId: f29f0e59-8388-4698-9fe6-05db67aeac46
       responses:
         "202":
           description: Accepted
@@ -2029,6 +2063,12 @@ paths:
                       example: 6f0b4665-a915-4c92-aa36-65afb4a2cd71
                       description: The requestId that was passed. it must be in Alpha numeric and - in middle and Allows alpha numeric character and special characters like "^[0-9a-fA-F]{8}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{12}"
                   description: The request id is from the /consent/request/hip/notify callback
+            example:
+              acknowledgement:
+                status: OK
+                consentId: e3c74829-3f82-4f94-959e-e10f57bcd57b
+              response:
+                requestId: 6f0b4665-a915-4c92-aa36-65afb4a2cd71
       responses:
         "202":
           description: Accepted
@@ -2254,6 +2294,12 @@ paths:
                           example: 6f0b4665-a915-4c92-aa36-65afb4a2cd71
                           description: The requestId that was passed
                       description: The request id from the /hip/health-information/request callback. Allows alpha numeric character and special characters like "^[0-9a-fA-F]{8}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{12}"
+            example:
+              hiRequest:
+                transactionId: 18235d89-cb13-479d-ad71-7a57d5f669a8
+                sessionStatus: ACKNOWLEDGED
+              response:
+                requestId: 6f0b4665-a915-4c92-aa36-65afb4a2cd71
       responses:
         "202":
           description: Accepted
@@ -2879,6 +2925,7 @@ webhooks:
                     type: string
                     example: Unknown exception
       x-abdm-nha-operation-id: hip-initiated-linking 2
+      x-abdm-triggered-by: m2_post_hip_v3_link_carecontext
   /api/v3/links/context/on-notify:
     post:
       tags:
@@ -3053,6 +3100,7 @@ webhooks:
                     type: string
                     example: Unknown exception
       x-abdm-nha-operation-id: hip-initiated-linking 3
+      x-abdm-triggered-by: m2_post_hip_v3_link_context_notify
   /api/v3/patients/sms/on-notify:
     post:
       tags:
@@ -3227,6 +3275,7 @@ webhooks:
                     type: string
                     example: Unknown exception
       x-abdm-nha-operation-id: hip-initiated-linking 5
+      x-abdm-triggered-by: m2_post_hip_v3_link_patient_links_sms_notify2
   /api/v3/hip/patient/care-context/discover:
     post:
       tags:
@@ -3437,6 +3486,7 @@ webhooks:
                     type: string
                     example: d20b575b-2659-4a1b-8c2d-9e3f5a6b7c8d
       x-abdm-nha-operation-id: abdm-user-initiated-linking 1
+      x-abdm-answered-by: m2_post_user_initiated_linking_v3_patient_care_context_on_8c9340
   /api/v3/hip/link/care-context/init:
     post:
       tags:
@@ -3713,6 +3763,7 @@ webhooks:
                     example: d20b575b-2659-4a1b-8c2d-9e3f5a6b7c8d
                     description: The request id that was passed.Allows alpha numeric characters and special characters like "^[0-9a-fA-F]{8}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{12}"
       x-abdm-nha-operation-id: abdm-user-initiated-linking 3
+      x-abdm-answered-by: m2_post_user_initiated_linking_v3_link_care_context_on_init
   /api/v3/hip/link/care-context/confirm:
     post:
       tags:
@@ -3853,6 +3904,7 @@ webhooks:
                     example: d20b575b-2659-4a1b-8c2d-9e3f5a6b7c8d
                     description: The request id that was passed.Allows alpha numeric characters and special characters like "^[0-9a-fA-F]{8}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{12}"
       x-abdm-nha-operation-id: abdm-user-initiated-linking 5
+      x-abdm-answered-by: m2_post_user_initiated_linking_v3_link_care_context_on_confirm
   /api/v3/hip/token/on-generate-token:
     post:
       tags:
@@ -4077,6 +4129,7 @@ webhooks:
                 type: string
                 example: Forbidden
       x-abdm-nha-operation-id: link-token 1
+      x-abdm-triggered-by: m2_post_v3_token_generate_token
   /api/v3/hip/health-information/request:
     post:
       tags:
@@ -4299,6 +4352,7 @@ webhooks:
                     type: string
                     example: No matching resource found for given API Request
       x-abdm-nha-operation-id: abdm-consent-management 3
+      x-abdm-answered-by: m2_post_data_flow_v3_health_information_hip_on_request
   /health-information/transfer:
     post:
       tags:
@@ -4461,6 +4515,7 @@ webhooks:
                 type: string
                 example: Forbidden
       x-abdm-nha-operation-id: abdm-consent-management 6
+      x-abdm-answered-by: m2_post_data_flow_v3_health_information_notify
 components:
   securitySchemes:
     bearerAuth:

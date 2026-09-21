@@ -4,7 +4,7 @@
 
 The Ayushman Bharat Health Account (ABHA) is a unique health identifier issued under the Ayushman Bharat Digital Mission (ABDM). It serves as the foundational digital identity for individuals within the ABDM ecosystem and enables secure identification, authentication, and exchange of health records.
 
-ABHA facilitates seamless access to digital health services while ensuring interoperability across healthcare providers, health information systems, and personal health applications.
+ABHA facilitates access to digital health services while ensuring interoperability across healthcare providers, health information systems, and personal health applications.
 
 ## Components of ABHA
 

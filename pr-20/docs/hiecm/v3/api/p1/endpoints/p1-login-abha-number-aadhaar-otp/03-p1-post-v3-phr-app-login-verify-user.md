@@ -36,8 +36,8 @@ curl --request POST \
 
 ## Body
 
-- `abhaAddress` (string)
-- `txnId` (string)
+- `abhaAddress` (string, required)
+- `txnId` (string, required)
 
 ## Responses
 

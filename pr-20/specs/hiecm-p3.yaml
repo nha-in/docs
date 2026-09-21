@@ -459,7 +459,6 @@ paths:
               required:
                 - isApplicableForAllHIPs
                 - includedSources
-                - excludedSources
               properties:
                 isApplicableForAllHIPs:
                   type: boolean

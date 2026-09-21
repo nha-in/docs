@@ -733,7 +733,7 @@ In M2 and M3 a call is acknowledged now and answered later. The answer arrives a
 
 ## P1 Registration and login
 
-40 endpoints across 4 use cases: Create ABHA address, PHR login, PHR certificate and session token, Other operations. Each endpoint has its own page in the sidebar.
+39 endpoints across 4 use cases: PHR certificate and session token, Create ABHA address, PHR login, Other operations. Each endpoint has its own page in the sidebar.
 
 [Read the whole specification](/docs/pr-20/reference/hiecm-p1)
 
@@ -779,17 +779,6 @@ In M2 and M3 a call is acknowledged now and answered later. The answer arrives a
 
 [Read the whole specification](/docs/pr-20/reference/hiecm-scan-and-pay)
 
-## Callbacks with no documented trigger
-
-4 callbacks are declared at module level with no call named against them. Which call produces each one is not documented, so this page does not say.
-
-| Module                                  | Method | Arrives at                                                                                                                                                                       | What it carries                                                                                               |
-| --------------------------------------- | ------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
-| M2 Health information provider services | POST   | [`/api/v3/hip/token/on-generate-token`](/docs/pr-20/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/01-m2-post-v3-hip-token-on-generate-token)                                       | This is a call back API of \[/api/hiecm/v3/token/generate-token].                                             |
-| M3 Health information user services     | POST   | [`/api/v3/hiu/consent/request/on-init`](/docs/pr-20/docs/hiecm/v3/api/m3/endpoints/m3-callbacks/01-m3-post-v3-hiu-consent-request-on-init)                                       | Callback API of consent request for patient HIU.                                                              |
-| Scan and Register                       | POST   | [`/api/v3/hip/patient/share`](/docs/pr-20/docs/hiecm/v3/api/scan-and-register/endpoints/scan-and-register-abdm-patient-share-hip/01-scan-and-register-post-v3-hip-patient-share) | This API will be invoked to the HIP for sharing the response of HIECM's /api/hiecm/patient-share/v3/share API |
-| Scan and Pay                            | POST   | [`/v3/patient/share/open-order`](/docs/pr-20/docs/hiecm/v3/api/scan-and-pay/endpoints/scan-and-pay-abdm-scan-pay-hip/01-scan-and-pay-post-v3-patient-share-open-order)           | This is an API is called by HIU to check the status of reports.                                               |
-
 
 ---
 
@@ -825,7 +814,7 @@ curl --request POST \
 
 ## Body
 
-- `abhaAddress` (string, required)
+- `abhaAddress` (string, required): The ABHA address chosen for the account, without the @ suffix.
 
 ## Responses
 
@@ -2011,7 +2000,7 @@ curl --request POST \
 
 ## Body
 
-- `abhaAddress` (string, required)
+- `abhaAddress` (string, required): The ABHA address chosen for the account, without the @ suffix.
 
 ## Responses
 
@@ -5339,9 +5328,9 @@ curl --request POST \
 
 ## Body
 
-- `txnId` (string, required)
-- `abhaAddress` (string, required)
-- `preferred` (integer, required)
+- `txnId` (string, required): The transaction ID returned by the previous call in this flow.
+- `abhaAddress` (string, required): The ABHA address chosen for the account, without the @ suffix.
+- `preferred` (integer, required): 1 to make this the preferred ABHA address of the account, 0 otherwise.
 
 ## Responses
 
@@ -5568,7 +5557,7 @@ curl --request POST \
 
 ## Body
 
-- `scope` (string[], required)
+- `scope` (string[], required): The scopes of the request, which name the flow this call belongs to.
 
 ## Responses
 
@@ -5639,8 +5628,8 @@ curl --request POST \
 
 ## Body
 
-- `scope` (string[], required)
-- `txnId` (string, required)
+- `scope` (string[], required): The scopes of the request, which name the flow this call belongs to.
+- `txnId` (string, required): The transaction ID returned by the previous call in this flow.
 
 ## Responses
 
@@ -6269,9 +6258,9 @@ curl --request POST \
 
 ## Body
 
-- `txnId` (string, required)
-- `abhaAddress` (string, required)
-- `preferred` (integer, required)
+- `txnId` (string, required): The transaction ID returned by the previous call in this flow.
+- `abhaAddress` (string, required): The ABHA address chosen for the account, without the @ suffix.
+- `preferred` (integer, required): 1 to make this the preferred ABHA address of the account, 0 otherwise.
 
 ## Responses
 
@@ -6903,9 +6892,9 @@ curl --request POST \
 
 ## Body
 
-- `txnId` (string, required)
-- `abhaAddress` (string, required)
-- `preferred` (integer, required)
+- `txnId` (string, required): The transaction ID returned by the previous call in this flow.
+- `abhaAddress` (string, required): The ABHA address chosen for the account, without the @ suffix.
+- `preferred` (integer, required): 1 to make this the preferred ABHA address of the account, 0 otherwise.
 
 ## Responses
 
@@ -7535,9 +7524,9 @@ curl --request POST \
 
 ## Body
 
-- `txnId` (string, required)
-- `abhaAddress` (string, required)
-- `preferred` (integer, required)
+- `txnId` (string, required): The transaction ID returned by the previous call in this flow.
+- `abhaAddress` (string, required): The ABHA address chosen for the account, without the @ suffix.
+- `preferred` (integer, required): 1 to make this the preferred ABHA address of the account, 0 otherwise.
 
 ## Responses
 
@@ -7604,8 +7593,8 @@ curl --request POST \
 
 ## Body
 
-- `scope` (string[], required)
-- `mobile` (string, required)
+- `scope` (string[], required): The scope of the request. Use search-abha.
+- `mobile` (string, required): The mobile number, encrypted with the public key from GET /abha/api/v3/profile/public/certificate.
 
 ## Responses
 
@@ -7888,8 +7877,8 @@ curl --request POST \
 
 ## Body
 
-- `scope` (string[], required)
-- `mobile` (string, required)
+- `scope` (string[], required): The scope of the request. Use search-abha.
+- `mobile` (string, required): The mobile number, encrypted with the public key from GET /abha/api/v3/profile/public/certificate.
 
 ## Responses
 
@@ -8071,8 +8060,8 @@ curl --request POST \
 
 ## Body
 
-- `scope` (string[], required)
-- `txnId` (string, required)
+- `scope` (string[], required): The scopes of the request, which name the flow this call belongs to.
+- `txnId` (string, required): The transaction ID returned by the previous call in this flow.
 
 ## Responses
 
@@ -8248,8 +8237,8 @@ curl --request POST \
 
 ## Body
 
-- `scope` (string[], required)
-- `mobile` (string, required)
+- `scope` (string[], required): The scope of the request. Use search-abha.
+- `mobile` (string, required): The mobile number, encrypted with the public key from GET /abha/api/v3/profile/public/certificate.
 
 ## Responses
 
@@ -8532,8 +8521,8 @@ curl --request POST \
 
 ## Body
 
-- `scope` (string[], required)
-- `mobile` (string, required)
+- `scope` (string[], required): The scope of the request. Use search-abha.
+- `mobile` (string, required): The mobile number, encrypted with the public key from GET /abha/api/v3/profile/public/certificate.
 
 ## Responses
 
@@ -8816,8 +8805,8 @@ curl --request POST \
 
 ## Body
 
-- `scope` (string[], required)
-- `mobile` (string, required)
+- `scope` (string[], required): The scope of the request. Use search-abha.
+- `mobile` (string, required): The mobile number, encrypted with the public key from GET /abha/api/v3/profile/public/certificate.
 
 ## Responses
 
@@ -10719,7 +10708,7 @@ curl --request POST \
 
 ## Body
 
-- `scope` (string[], required)
+- `scope` (string[], required): The scopes of the request, which name the flow this call belongs to.
 
 ## Responses
 
@@ -10792,8 +10781,8 @@ curl --request POST \
 
 ## Body
 
-- `scope` (string[], required)
-- `txnId` (string, required)
+- `scope` (string[], required): The scopes of the request, which name the flow this call belongs to.
+- `txnId` (string, required): The transaction ID returned by the previous call in this flow.
 
 ## Responses
 
@@ -11179,8 +11168,8 @@ curl --request POST \
 
 ## Body
 
-- `ABHANumber` (string, required)
-- `txnId` (string, required)
+- `ABHANumber` (string, required): The 14 digit ABHA number to sign in to, chosen from the accounts the previous call listed.
+- `txnId` (string, required): The transaction ID returned by the previous call in this flow.
 
 ## Responses
 
@@ -12018,7 +12007,7 @@ curl --request POST \
 - `notification.careContext.careContextReference` (string, required): An identifier of patient's care context created in HIP. A care context is a group of patient's health data (Not the actual health data)
 - `notification.hiTypes` (string[], required): Type of health data that created in the care context
 - `notification.date` (string, required): This should be a UTC Date & Time in ISO format
-- `notification.hip` (object, required): Identifier and name of the health information provider.
+- `notification.hip` (object, required): The HIP that linked the care context. Only id is required.
 - `notification.hip.id` (string, required): The service ID of the health information provider
 
 ## Responses
@@ -12198,10 +12187,6 @@ curl --request POST \
   "matchedBy": [
     "MR"
   ],
-  "error": {
-    "code": "ABDM-9999",
-    "message": "Unknown exception"
-  },
   "response": {
     "requestId": "f29f0e59-8388-4698-9fe6-05db67aeac46"
   }
@@ -12276,10 +12261,6 @@ curl --request POST \
       "communicationHint": "OTP",
       "communicationExpiry": "2024-05-01T05:22:34.123Z"
     }
-  },
-  "error": {
-    "code": "ABDM-1001",
-    "message": "No data found"
   },
   "response": {
     "requestId": "f29f0e59-8388-4698-9fe6-05db67aeac46"
@@ -12364,10 +12345,6 @@ curl --request POST \
       "count": 1
     }
   ],
-  "error": {
-    "code": "ABDM-1001",
-    "message": "No data found"
-  },
   "response": {
     "requestId": "f29f0e59-8388-4698-9fe6-05db67aeac46"
   }
@@ -13225,10 +13202,6 @@ curl --request POST \
     "status": "OK",
     "consentId": "e3c74829-3f82-4f94-959e-e10f57bcd57b"
   },
-  "error": {
-    "code": "ABDM-1001",
-    "message": "unable to connect database"
-  },
   "response": {
     "requestId": "6f0b4665-a915-4c92-aa36-65afb4a2cd71"
   }
@@ -13290,7 +13263,15 @@ curl --request POST \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
   --header 'X-CM-ID: sbx' \
   --header 'Content-Type: application/json' \
-  --data '"<VALUE>"'
+  --data '{
+  "hiRequest": {
+    "transactionId": "18235d89-cb13-479d-ad71-7a57d5f669a8",
+    "sessionStatus": "ACKNOWLEDGED"
+  },
+  "response": {
+    "requestId": "6f0b4665-a915-4c92-aa36-65afb4a2cd71"
+  }
+}'
 ```
 
 ## Authorization
@@ -13902,9 +13883,7 @@ curl --request POST \
     },
     "hip": null,
     "hiu": {
-      "id": "cowin_hiu_01",
-      "name": "Cowin",
-      "type": "HIU"
+      "id": "cowin_hiu_01"
     },
     "careContexts": [
       {
@@ -19281,9 +19260,14 @@ New to this? Start with [M4 Registry Integration](/docs/pr-20/docs/hiecm/v3/mile
 ```bash
 curl --request GET \
   --url https://abhasbx.abdm.gov.in/abha/api/v3/phr/app/login/public/certificate \
+  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z'
 ```
+
+## Authorization
+
+- `Authorization` (bearer token, required): The access token from POST /api/hiecm/gateway/v3/sessions, sent with a `Bearer ` prefix.
 
 ## Headers
 
@@ -19367,6 +19351,7 @@ Flows:
 ```bash
 curl --request POST \
   --url https://abhasbx.abdm.gov.in/abha/api/v3/phr/app/enrollment/request/otp \
+  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
   --header 'Content-Type: application/json' \
@@ -19381,6 +19366,10 @@ curl --request POST \
 }'
 ```
 
+## Authorization
+
+- `Authorization` (bearer token, required): The access token from POST /api/hiecm/gateway/v3/sessions, sent with a `Bearer ` prefix.
+
 ## Headers
 
 - `REQUEST-ID` (string, required): Unique UUID for each request.
@@ -19388,10 +19377,10 @@ curl --request POST \
 
 ## Body
 
-- `scope` (string[])
-- `loginHint` (string)
-- `loginId` (string)
-- `otpSystem` (string)
+- `scope` (string[], required)
+- `loginHint` (string, required)
+- `loginId` (string, required)
+- `otpSystem` (string, required)
 
 ## Responses
 
@@ -19423,6 +19412,7 @@ Flows:
 ```bash
 curl --request POST \
   --url https://abhasbx.abdm.gov.in/abha/api/v3/phr/app/enrollment/verify \
+  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
   --header 'Content-Type: application/json' \
@@ -19443,6 +19433,10 @@ curl --request POST \
 }'
 ```
 
+## Authorization
+
+- `Authorization` (bearer token, required): The access token from POST /api/hiecm/gateway/v3/sessions, sent with a `Bearer ` prefix.
+
 ## Headers
 
 - `REQUEST-ID` (string, required): Unique UUID for each request.
@@ -19450,8 +19444,8 @@ curl --request POST \
 
 ## Body
 
-- `scope` (string[])
-- `authData` (object)
+- `scope` (string[], required)
+- `authData` (object, required)
 - `authData.authMethods` (string[])
 - `authData.otp` (object)
 - `authData.otp.txnId` (string)
@@ -19503,6 +19497,7 @@ Flows:
 ```bash
 curl --request POST \
   --url https://abhasbx.abdm.gov.in/abha/api/v3/phr/app/enrollment/suggestion \
+  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
   --header 'Content-Type: application/json' \
@@ -19517,6 +19512,10 @@ curl --request POST \
 }'
 ```
 
+## Authorization
+
+- `Authorization` (bearer token, required): The access token from POST /api/hiecm/gateway/v3/sessions, sent with a `Bearer ` prefix.
+
 ## Headers
 
 - `REQUEST-ID` (string, required): Unique UUID for each request.
@@ -19524,12 +19523,12 @@ curl --request POST \
 
 ## Body
 
-- `txnId` (string)
-- `firstName` (string)
-- `lastName` (string)
-- `dayOfBirth` (string)
-- `monthOfBirth` (string)
-- `yearOfBirth` (string)
+- `txnId` (string, required)
+- `firstName` (string, required)
+- `lastName` (string, required)
+- `dayOfBirth` (string, required)
+- `monthOfBirth` (string, required)
+- `yearOfBirth` (string, required)
 - `email` (string)
 
 ## Responses
@@ -19566,9 +19565,14 @@ Flows:
 ```bash
 curl --request GET \
   --url https://abhasbx.abdm.gov.in/abha/api/v3/phr/app/enrollment/isExists \
+  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z'
 ```
+
+## Authorization
+
+- `Authorization` (bearer token, required): The access token from POST /api/hiecm/gateway/v3/sessions, sent with a `Bearer ` prefix.
 
 ## Headers
 
@@ -19608,6 +19612,7 @@ Flows:
 ```bash
 curl --request POST \
   --url https://abhasbx.abdm.gov.in/abha/api/v3/phr/app/enrollment/enrol \
+  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
   --header 'Content-Type: application/json' \
@@ -19622,7 +19627,7 @@ curl --request POST \
     "yearOfBirth": "<DOB>",
     "gender": "M",
     "email": "",
-    "mobile": "<BASE64_PHOTO>",
+    "mobile": "<ENCRYPTED_MOBILE>",
     "address": "<ADDRESS>",
     "stateName": "Maharashtra",
     "stateCode": "27",
@@ -19630,10 +19635,14 @@ curl --request POST \
     "districtCode": "123",
     "pinCode": "<PINCODE>",
     "abhaAddress": "<ABHA_ADDRESS>",
-    "password": "<BASE64_PHOTO>"
+    "password": "<ENCRYPTED_PASSWORD>"
   }
 }'
 ```
+
+## Authorization
+
+- `Authorization` (bearer token, required): The access token from POST /api/hiecm/gateway/v3/sessions, sent with a `Bearer ` prefix.
 
 ## Headers
 
@@ -19642,8 +19651,8 @@ curl --request POST \
 
 ## Body
 
-- `txnId` (string)
-- `phrDetails` (object)
+- `txnId` (string, required)
+- `phrDetails` (object, required)
 - `phrDetails.mobile` (string)
 - `phrDetails.firstName` (string)
 - `phrDetails.middleName` (string)
@@ -19723,6 +19732,7 @@ Flows:
 ```bash
 curl --request POST \
   --url https://abhasbx.abdm.gov.in/abha/api/v3/phr/app/enrollment/request/otp \
+  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
   --header 'Content-Type: application/json' \
@@ -19737,6 +19747,10 @@ curl --request POST \
 }'
 ```
 
+## Authorization
+
+- `Authorization` (bearer token, required): The access token from POST /api/hiecm/gateway/v3/sessions, sent with a `Bearer ` prefix.
+
 ## Headers
 
 - `REQUEST-ID` (string, required): Unique UUID for each request.
@@ -19744,10 +19758,10 @@ curl --request POST \
 
 ## Body
 
-- `scope` (string[])
-- `loginHint` (string)
-- `loginId` (string)
-- `otpSystem` (string)
+- `scope` (string[], required)
+- `loginHint` (string, required)
+- `loginId` (string, required)
+- `otpSystem` (string, required)
 
 ## Responses
 
@@ -19779,6 +19793,7 @@ Flows:
 ```bash
 curl --request POST \
   --url https://abhasbx.abdm.gov.in/abha/api/v3/phr/app/enrollment/verify \
+  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
   --header 'Content-Type: application/json' \
@@ -19799,6 +19814,10 @@ curl --request POST \
 }'
 ```
 
+## Authorization
+
+- `Authorization` (bearer token, required): The access token from POST /api/hiecm/gateway/v3/sessions, sent with a `Bearer ` prefix.
+
 ## Headers
 
 - `REQUEST-ID` (string, required): Unique UUID for each request.
@@ -19806,8 +19825,8 @@ curl --request POST \
 
 ## Body
 
-- `scope` (string[])
-- `authData` (object)
+- `scope` (string[], required)
+- `authData` (object, required)
 - `authData.authMethods` (string[])
 - `authData.otp` (object)
 - `authData.otp.txnId` (string)
@@ -19847,69 +19866,6 @@ Shape of the 200 response, generated from the schema. The values are placeholder
 
 ---
 
-# Verify User, verify user
-
-`POST /abha/api/v3/phr/app/login/verify/user`
-
-Flows:
-- P1-Registration-login › P1 - Create ABHA Address Flow › Enrolment via ABHA Number-ABHA OTP › Verify User
-- P1-Registration-login › P1 - PHR Login › P1 - Login via Mobile Number › Verify - User
-- P1-Registration-login › P1 - PHR Login › P1 - Login via Email (optional) › Verify - User
-- P1-Registration-login › P1 - PHR Login › P1 - Login via ABHA Number-Aadhaar OTP › Verify - User
-- P1-Registration-login › P1 - PHR Login › P1 - Login via ABHA Number-ABHA OTP › Verify - User
-- P1-Registration-login › P1 - PHR Login › P1 - Login via Aadhaar- OTP › Verify - User
-
-```bash
-curl --request POST \
-  --url https://abhasbx.abdm.gov.in/abha/api/v3/phr/app/login/verify/user \
-  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
-  --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
-  --header 'T-token: Bearer <JWT TOKEN>' \
-  --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
-  --header 'Content-Type: application/json' \
-  --data '{
-  "abhaAddress": "<ABHA_ADDRESS>",
-  "txnId": "37d8d312-35a0-41e7-a6e4-1074eb18a5fa"
-}'
-```
-
-## Authorization
-
-- `Authorization` (bearer token, required): The access token from POST /api/hiecm/gateway/v3/sessions, sent with a `Bearer ` prefix.
-
-## Headers
-
-- `REQUEST-ID` (string, required): Unique UUID for each request.
-- `T-token` (string, required): The transaction token from the preceding login step, sent with a `Bearer ` prefix. It is valid only for that login.
-- `TIMESTAMP` (string, required): Request timestamp in UTC, ISO-8601 with Z.
-
-## Body
-
-- `abhaAddress` (string)
-- `txnId` (string)
-
-## Responses
-
-- `200`: OK
-- `400`: Bad Request
-  See Error codes for this module: /docs/hiecm/v3/api/p1/errors
-- `403`: Forbidden
-  See Error codes for this module: /docs/hiecm/v3/api/p1/errors
-
-Shape of the 200 response, generated from the schema. The values are placeholders, not a captured response:
-
-```json
-{
-  "token": "<JWT TOKEN>",
-  "expiresIn": 1800,
-  "refreshToken": "<JWT TOKEN>",
-  "refreshExpiresIn": 1296000
-}
-```
-
-
----
-
 # Suggest an ABHA address
 
 `POST /abha/api/v3/phr/app/enrollment/suggestion`
@@ -19922,6 +19878,7 @@ Flows:
 ```bash
 curl --request POST \
   --url https://abhasbx.abdm.gov.in/abha/api/v3/phr/app/enrollment/suggestion \
+  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
   --header 'Content-Type: application/json' \
@@ -19936,6 +19893,10 @@ curl --request POST \
 }'
 ```
 
+## Authorization
+
+- `Authorization` (bearer token, required): The access token from POST /api/hiecm/gateway/v3/sessions, sent with a `Bearer ` prefix.
+
 ## Headers
 
 - `REQUEST-ID` (string, required): Unique UUID for each request.
@@ -19943,12 +19904,12 @@ curl --request POST \
 
 ## Body
 
-- `txnId` (string)
-- `firstName` (string)
-- `lastName` (string)
-- `dayOfBirth` (string)
-- `monthOfBirth` (string)
-- `yearOfBirth` (string)
+- `txnId` (string, required)
+- `firstName` (string, required)
+- `lastName` (string, required)
+- `dayOfBirth` (string, required)
+- `monthOfBirth` (string, required)
+- `yearOfBirth` (string, required)
 - `email` (string)
 
 ## Responses
@@ -19985,9 +19946,14 @@ Flows:
 ```bash
 curl --request GET \
   --url https://abhasbx.abdm.gov.in/abha/api/v3/phr/app/enrollment/isExists \
+  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z'
 ```
+
+## Authorization
+
+- `Authorization` (bearer token, required): The access token from POST /api/hiecm/gateway/v3/sessions, sent with a `Bearer ` prefix.
 
 ## Headers
 
@@ -20027,6 +19993,7 @@ Flows:
 ```bash
 curl --request POST \
   --url https://abhasbx.abdm.gov.in/abha/api/v3/phr/app/enrollment/enrol \
+  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
   --header 'Content-Type: application/json' \
@@ -20041,7 +20008,7 @@ curl --request POST \
     "yearOfBirth": "<DOB>",
     "gender": "M",
     "email": "",
-    "mobile": "<BASE64_PHOTO>",
+    "mobile": "<ENCRYPTED_MOBILE>",
     "address": "<ADDRESS>",
     "stateName": "Maharashtra",
     "stateCode": "27",
@@ -20049,10 +20016,14 @@ curl --request POST \
     "districtCode": "123",
     "pinCode": "<PINCODE>",
     "abhaAddress": "<ABHA_ADDRESS>",
-    "password": "<BASE64_PHOTO>"
+    "password": "<ENCRYPTED_PASSWORD>"
   }
 }'
 ```
+
+## Authorization
+
+- `Authorization` (bearer token, required): The access token from POST /api/hiecm/gateway/v3/sessions, sent with a `Bearer ` prefix.
 
 ## Headers
 
@@ -20061,8 +20032,8 @@ curl --request POST \
 
 ## Body
 
-- `txnId` (string)
-- `phrDetails` (object)
+- `txnId` (string, required)
+- `phrDetails` (object, required)
 - `phrDetails.mobile` (string)
 - `phrDetails.firstName` (string)
 - `phrDetails.middleName` (string)
@@ -20142,6 +20113,7 @@ Flows:
 ```bash
 curl --request POST \
   --url https://abhasbx.abdm.gov.in/abha/api/v3/phr/app/enrollment/request/otp \
+  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
   --header 'Content-Type: application/json' \
@@ -20156,6 +20128,10 @@ curl --request POST \
 }'
 ```
 
+## Authorization
+
+- `Authorization` (bearer token, required): The access token from POST /api/hiecm/gateway/v3/sessions, sent with a `Bearer ` prefix.
+
 ## Headers
 
 - `REQUEST-ID` (string, required): Unique UUID for each request.
@@ -20163,10 +20139,10 @@ curl --request POST \
 
 ## Body
 
-- `scope` (string[])
-- `loginHint` (string)
-- `loginId` (string)
-- `otpSystem` (string)
+- `scope` (string[], required)
+- `loginHint` (string, required)
+- `loginId` (string, required)
+- `otpSystem` (string, required)
 
 ## Responses
 
@@ -20198,6 +20174,7 @@ Flows:
 ```bash
 curl --request POST \
   --url https://abhasbx.abdm.gov.in/abha/api/v3/phr/app/enrollment/verify \
+  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
   --header 'Content-Type: application/json' \
@@ -20218,6 +20195,10 @@ curl --request POST \
 }'
 ```
 
+## Authorization
+
+- `Authorization` (bearer token, required): The access token from POST /api/hiecm/gateway/v3/sessions, sent with a `Bearer ` prefix.
+
 ## Headers
 
 - `REQUEST-ID` (string, required): Unique UUID for each request.
@@ -20225,8 +20206,8 @@ curl --request POST \
 
 ## Body
 
-- `scope` (string[])
-- `authData` (object)
+- `scope` (string[], required)
+- `authData` (object, required)
 - `authData.authMethods` (string[])
 - `authData.otp` (object)
 - `authData.otp.txnId` (string)
@@ -20278,6 +20259,7 @@ Flows:
 ```bash
 curl --request POST \
   --url https://abhasbx.abdm.gov.in/abha/api/v3/phr/app/enrollment/suggestion \
+  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
   --header 'Content-Type: application/json' \
@@ -20292,6 +20274,10 @@ curl --request POST \
 }'
 ```
 
+## Authorization
+
+- `Authorization` (bearer token, required): The access token from POST /api/hiecm/gateway/v3/sessions, sent with a `Bearer ` prefix.
+
 ## Headers
 
 - `REQUEST-ID` (string, required): Unique UUID for each request.
@@ -20299,12 +20285,12 @@ curl --request POST \
 
 ## Body
 
-- `txnId` (string)
-- `firstName` (string)
-- `lastName` (string)
-- `dayOfBirth` (string)
-- `monthOfBirth` (string)
-- `yearOfBirth` (string)
+- `txnId` (string, required)
+- `firstName` (string, required)
+- `lastName` (string, required)
+- `dayOfBirth` (string, required)
+- `monthOfBirth` (string, required)
+- `yearOfBirth` (string, required)
 - `email` (string)
 
 ## Responses
@@ -20341,9 +20327,14 @@ Flows:
 ```bash
 curl --request GET \
   --url https://abhasbx.abdm.gov.in/abha/api/v3/phr/app/enrollment/isExists \
+  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z'
 ```
+
+## Authorization
+
+- `Authorization` (bearer token, required): The access token from POST /api/hiecm/gateway/v3/sessions, sent with a `Bearer ` prefix.
 
 ## Headers
 
@@ -20383,13 +20374,14 @@ Flows:
 ```bash
 curl --request POST \
   --url https://abhasbx.abdm.gov.in/abha/api/v3/phr/app/enrollment/enrol \
+  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
   --header 'Content-Type: application/json' \
   --data '{
   "txnId": "27d444b7-2a3d-46d8-bf67-e5590b6c46b6",
   "phrDetails": {
-    "mobile": "<BASE64_PHOTO>",
+    "mobile": "<ENCRYPTED_MOBILE>",
     "firstName": "John",
     "middleName": "",
     "lastName": "Doe",
@@ -20406,10 +20398,14 @@ curl --request POST \
     "districtCode": "123",
     "pinCode": "<PINCODE>",
     "abhaAddress": "<ABHA_ADDRESS>",
-    "password": "<BASE64_PHOTO>"
+    "password": "<ENCRYPTED_PASSWORD>"
   }
 }'
 ```
+
+## Authorization
+
+- `Authorization` (bearer token, required): The access token from POST /api/hiecm/gateway/v3/sessions, sent with a `Bearer ` prefix.
 
 ## Headers
 
@@ -20418,8 +20414,8 @@ curl --request POST \
 
 ## Body
 
-- `txnId` (string)
-- `phrDetails` (object)
+- `txnId` (string, required)
+- `phrDetails` (object, required)
 - `phrDetails.mobile` (string)
 - `phrDetails.firstName` (string)
 - `phrDetails.middleName` (string)
@@ -20514,7 +20510,7 @@ curl --request POST \
     "aadhaar-otp-verify"
   ],
   "loginHint": "aadhaar",
-  "loginId": "<BASE64_PHOTO>",
+  "loginId": "<ENCRYPTED_LOGIN_ID>",
   "otpSystem": "aadhaar"
 }'
 ```
@@ -20530,10 +20526,10 @@ curl --request POST \
 
 ## Body
 
-- `scope` (string[])
-- `loginHint` (string)
-- `loginId` (string)
-- `otpSystem` (string)
+- `scope` (string[], required)
+- `loginHint` (string, required)
+- `loginId` (string, required)
+- `otpSystem` (string, required)
 
 ## Responses
 
@@ -20588,7 +20584,7 @@ curl --request POST \
     ],
     "otp": {
       "txnId": "c51ad4d8-ae92-4509-8fb9-b91dea948492",
-      "otpValue": "<BASE64_PHOTO>"
+      "otpValue": "<ENCRYPTED_OTP_VALUE>"
     }
   }
 }'
@@ -20605,8 +20601,8 @@ curl --request POST \
 
 ## Body
 
-- `scope` (string[])
-- `authData` (object)
+- `scope` (string[], required)
+- `authData` (object, required)
 - `authData.authMethods` (string[])
 - `authData.otp` (object)
 - `authData.otp.txnId` (string)
@@ -20697,8 +20693,8 @@ curl --request POST \
 
 ## Body
 
-- `abhaAddress` (string)
-- `txnId` (string)
+- `abhaAddress` (string, required)
+- `txnId` (string, required)
 
 ## Responses
 
@@ -20764,10 +20760,10 @@ curl --request POST \
 
 ## Body
 
-- `scope` (string[])
-- `loginHint` (string)
-- `loginId` (string)
-- `otpSystem` (string)
+- `scope` (string[], required)
+- `loginHint` (string, required)
+- `loginId` (string, required)
+- `otpSystem` (string, required)
 
 ## Responses
 
@@ -20838,8 +20834,8 @@ curl --request POST \
 
 ## Body
 
-- `scope` (string[])
-- `authData` (object)
+- `scope` (string[], required)
+- `authData` (object, required)
 - `authData.authMethods` (string[])
 - `authData.otp` (object)
 - `authData.otp.txnId` (string)
@@ -20934,10 +20930,10 @@ curl --request POST \
 
 ## Body
 
-- `scope` (string[])
-- `loginHint` (string)
-- `loginId` (string)
-- `otpSystem` (string)
+- `scope` (string[], required)
+- `loginHint` (string, required)
+- `loginId` (string, required)
+- `otpSystem` (string, required)
 
 ## Responses
 
@@ -21008,8 +21004,8 @@ curl --request POST \
 
 ## Body
 
-- `scope` (string[])
-- `authData` (object)
+- `scope` (string[], required)
+- `authData` (object, required)
 - `authData.authMethods` (string[])
 - `authData.otp` (object)
 - `authData.otp.txnId` (string)
@@ -21069,6 +21065,7 @@ Shape of the 200 response, generated from the schema. The values are placeholder
 ```bash
 curl --request POST \
   --url https://abhasbx.abdm.gov.in/abha/api/v3/phr/app/login/search \
+  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
   --header 'Content-Type: application/json' \
@@ -21077,6 +21074,10 @@ curl --request POST \
 }'
 ```
 
+## Authorization
+
+- `Authorization` (bearer token, required): The access token from POST /api/hiecm/gateway/v3/sessions, sent with a `Bearer ` prefix.
+
 ## Headers
 
 - `REQUEST-ID` (string, required): Unique UUID for each request.
@@ -21084,7 +21085,7 @@ curl --request POST \
 
 ## Body
 
-- `abhaAddress` (string)
+- `abhaAddress` (string, required)
 
 ## Responses
 
@@ -21146,7 +21147,7 @@ curl --request POST \
     ],
     "password": {
       "abhaAddress": "<ABHA_ADDRESS>",
-      "password": "<BASE64_PHOTO>"
+      "password": "<ENCRYPTED_PASSWORD>"
     }
   }
 }'
@@ -21163,8 +21164,8 @@ curl --request POST \
 
 ## Body
 
-- `scope` (string[])
-- `authData` (object)
+- `scope` (string[], required)
+- `authData` (object, required)
 - `authData.authMethods` (string[])
 - `authData.otp` (object)
 - `authData.otp.txnId` (string)
@@ -21259,10 +21260,10 @@ curl --request POST \
 
 ## Body
 
-- `scope` (string[])
-- `loginHint` (string)
-- `loginId` (string)
-- `otpSystem` (string)
+- `scope` (string[], required)
+- `loginHint` (string, required)
+- `loginId` (string, required)
+- `otpSystem` (string, required)
 
 ## Responses
 
@@ -21333,8 +21334,8 @@ curl --request POST \
 
 ## Body
 
-- `scope` (string[])
-- `authData` (object)
+- `scope` (string[], required)
+- `authData` (object, required)
 - `authData.authMethods` (string[])
 - `authData.otp` (object)
 - `authData.otp.txnId` (string)
@@ -21425,8 +21426,8 @@ curl --request POST \
 
 ## Body
 
-- `abhaAddress` (string)
-- `txnId` (string)
+- `abhaAddress` (string, required)
+- `txnId` (string, required)
 
 ## Responses
 
@@ -21492,10 +21493,10 @@ curl --request POST \
 
 ## Body
 
-- `scope` (string[])
-- `loginHint` (string)
-- `loginId` (string)
-- `otpSystem` (string)
+- `scope` (string[], required)
+- `loginHint` (string, required)
+- `loginId` (string, required)
+- `otpSystem` (string, required)
 
 ## Responses
 
@@ -21566,8 +21567,8 @@ curl --request POST \
 
 ## Body
 
-- `scope` (string[])
-- `authData` (object)
+- `scope` (string[], required)
+- `authData` (object, required)
 - `authData.authMethods` (string[])
 - `authData.otp` (object)
 - `authData.otp.txnId` (string)
@@ -21658,8 +21659,8 @@ curl --request POST \
 
 ## Body
 
-- `abhaAddress` (string)
-- `txnId` (string)
+- `abhaAddress` (string, required)
+- `txnId` (string, required)
 
 ## Responses
 
@@ -21725,10 +21726,10 @@ curl --request POST \
 
 ## Body
 
-- `scope` (string[])
-- `loginHint` (string)
-- `loginId` (string)
-- `otpSystem` (string)
+- `scope` (string[], required)
+- `loginHint` (string, required)
+- `loginId` (string, required)
+- `otpSystem` (string, required)
 
 ## Responses
 
@@ -21799,8 +21800,8 @@ curl --request POST \
 
 ## Body
 
-- `scope` (string[])
-- `authData` (object)
+- `scope` (string[], required)
+- `authData` (object, required)
 - `authData.authMethods` (string[])
 - `authData.otp` (object)
 - `authData.otp.txnId` (string)
@@ -21891,8 +21892,8 @@ curl --request POST \
 
 ## Body
 
-- `abhaAddress` (string)
-- `txnId` (string)
+- `abhaAddress` (string, required)
+- `txnId` (string, required)
 
 ## Responses
 
@@ -21958,10 +21959,10 @@ curl --request POST \
 
 ## Body
 
-- `scope` (string[])
-- `loginHint` (string)
-- `loginId` (string)
-- `otpSystem` (string)
+- `scope` (string[], required)
+- `loginHint` (string, required)
+- `loginId` (string, required)
+- `otpSystem` (string, required)
 
 ## Responses
 
@@ -22032,8 +22033,8 @@ curl --request POST \
 
 ## Body
 
-- `scope` (string[])
-- `authData` (object)
+- `scope` (string[], required)
+- `authData` (object, required)
 - `authData.authMethods` (string[])
 - `authData.otp` (object)
 - `authData.otp.txnId` (string)
@@ -22124,8 +22125,8 @@ curl --request POST \
 
 ## Body
 
-- `abhaAddress` (string)
-- `txnId` (string)
+- `abhaAddress` (string, required)
+- `txnId` (string, required)
 
 ## Responses
 
@@ -24278,9 +24279,7 @@ curl --request POST \
     },
     "hip": null,
     "hiu": {
-      "id": "cowin_hiu_01",
-      "name": "Cowin",
-      "type": "HIU"
+      "id": "cowin_hiu_01"
     },
     "careContexts": [
       {
@@ -24457,10 +24456,6 @@ curl --request POST \
   "acknowledgement": {
     "status": "OK",
     "consentId": "e3c74829-3f82-4f94-959e-e10f57bcd57b"
-  },
-  "error": {
-    "code": "ABDM-1001",
-    "message": "unable to connect database"
   },
   "response": {
     "requestId": "6f0b4665-a915-4c92-aa36-65afb4a2cd71"
@@ -24649,6 +24644,7 @@ Flows:
 ```bash
 curl --request POST \
   --url https://abhasbx.abdm.gov.in/abha/api/v3/phr/app/login/profile/request/otp \
+  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'X-token: Bearer <JWT TOKEN>' \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
@@ -24659,10 +24655,14 @@ curl --request POST \
     "aadhaar-verify"
   ],
   "loginHint": "abha-number",
-  "loginId": "<BASE64_PHOTO>",
+  "loginId": "<ENCRYPTED_LOGIN_ID>",
   "otpSystem": "aadhaar"
 }'
 ```
+
+## Authorization
+
+- `Authorization` (bearer token, required): The access token from POST /api/hiecm/gateway/v3/sessions, sent with a `Bearer ` prefix.
 
 ## Headers
 
@@ -24672,10 +24672,10 @@ curl --request POST \
 
 ## Body
 
-- `scope` (string[])
-- `loginHint` (string)
-- `loginId` (string)
-- `otpSystem` (string)
+- `scope` (string[], required)
+- `loginHint` (string, required)
+- `loginId` (string, required)
+- `otpSystem` (string, required)
 
 ## Responses
 
@@ -24713,6 +24713,7 @@ Flows:
 ```bash
 curl --request POST \
   --url https://abhasbx.abdm.gov.in/abha/api/v3/phr/app/login/profile/verify \
+  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'X-token: Bearer <JWT TOKEN>' \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
@@ -24728,11 +24729,15 @@ curl --request POST \
     ],
     "otp": {
       "txnId": "37d8d312-35a0-41e7-a6e4-1074eb18a5fa",
-      "otpValue": "<BASE64_PHOTO>"
+      "otpValue": "<ENCRYPTED_OTP_VALUE>"
     }
   }
 }'
 ```
+
+## Authorization
+
+- `Authorization` (bearer token, required): The access token from POST /api/hiecm/gateway/v3/sessions, sent with a `Bearer ` prefix.
 
 ## Headers
 
@@ -24742,8 +24747,8 @@ curl --request POST \
 
 ## Body
 
-- `scope` (string[])
-- `authData` (object)
+- `scope` (string[], required)
+- `authData` (object, required)
 - `authData.authMethods` (string[])
 - `authData.otp` (object)
 - `authData.otp.txnId` (string)
@@ -24787,6 +24792,7 @@ Flows:
 ```bash
 curl --request POST \
   --url https://abhasbx.abdm.gov.in/abha/api/v3/phr/app/login/profile/link \
+  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'X-token: Bearer <JWT TOKEN>' \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
@@ -24797,6 +24803,10 @@ curl --request POST \
 }'
 ```
 
+## Authorization
+
+- `Authorization` (bearer token, required): The access token from POST /api/hiecm/gateway/v3/sessions, sent with a `Bearer ` prefix.
+
 ## Headers
 
 - `X-token` (string, required): The user token from a login or enrolment response, sent with a `Bearer ` prefix. It acts for that ABHA holder.
@@ -24805,8 +24815,8 @@ curl --request POST \
 
 ## Body
 
-- `action` (string)
-- `transactionId` (string)
+- `action` (string, required)
+- `transactionId` (string, required)
 
 ## Responses
 
@@ -24841,6 +24851,7 @@ Flows:
 ```bash
 curl --request POST \
   --url https://abhasbx.abdm.gov.in/abha/api/v3/phr/app/login/profile/request/otp \
+  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'X-token: Bearer <JWT TOKEN>' \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
@@ -24851,10 +24862,14 @@ curl --request POST \
     "mobile-verify"
   ],
   "loginHint": "abha-number",
-  "loginId": "<BASE64_PHOTO>",
+  "loginId": "<ENCRYPTED_LOGIN_ID>",
   "otpSystem": "abdm"
 }'
 ```
+
+## Authorization
+
+- `Authorization` (bearer token, required): The access token from POST /api/hiecm/gateway/v3/sessions, sent with a `Bearer ` prefix.
 
 ## Headers
 
@@ -24864,10 +24879,10 @@ curl --request POST \
 
 ## Body
 
-- `scope` (string[])
-- `loginHint` (string)
-- `loginId` (string)
-- `otpSystem` (string)
+- `scope` (string[], required)
+- `loginHint` (string, required)
+- `loginId` (string, required)
+- `otpSystem` (string, required)
 
 ## Responses
 
@@ -24905,6 +24920,7 @@ Flows:
 ```bash
 curl --request POST \
   --url https://abhasbx.abdm.gov.in/abha/api/v3/phr/app/login/profile/verify \
+  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'X-token: Bearer <JWT TOKEN>' \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
@@ -24926,6 +24942,10 @@ curl --request POST \
 }'
 ```
 
+## Authorization
+
+- `Authorization` (bearer token, required): The access token from POST /api/hiecm/gateway/v3/sessions, sent with a `Bearer ` prefix.
+
 ## Headers
 
 - `X-token` (string, required): The user token from a login or enrolment response, sent with a `Bearer ` prefix. It acts for that ABHA holder.
@@ -24934,8 +24954,8 @@ curl --request POST \
 
 ## Body
 
-- `scope` (string[])
-- `authData` (object)
+- `scope` (string[], required)
+- `authData` (object, required)
 - `authData.authMethods` (string[])
 - `authData.otp` (object)
 - `authData.otp.txnId` (string)
@@ -24979,6 +24999,7 @@ Flows:
 ```bash
 curl --request POST \
   --url https://abhasbx.abdm.gov.in/abha/api/v3/phr/app/login/profile/link \
+  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'X-token: Bearer <JWT TOKEN>' \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
@@ -24989,6 +25010,10 @@ curl --request POST \
 }'
 ```
 
+## Authorization
+
+- `Authorization` (bearer token, required): The access token from POST /api/hiecm/gateway/v3/sessions, sent with a `Bearer ` prefix.
+
 ## Headers
 
 - `X-token` (string, required): The user token from a login or enrolment response, sent with a `Bearer ` prefix. It acts for that ABHA holder.
@@ -24997,8 +25022,8 @@ curl --request POST \
 
 ## Body
 
-- `action` (string)
-- `transactionId` (string)
+- `action` (string, required)
+- `transactionId` (string, required)
 
 ## Responses
 
@@ -25027,16 +25052,23 @@ Shape of the 200 response, generated from the schema. The values are placeholder
 ```bash
 curl --request GET \
   --url https://abhasbx.abdm.gov.in/abha/api/v3/phr/app/login/profile \
+  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'X-token: Bearer <JWT TOKEN>' \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
-  --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z'
+  --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
+  --header 'X-AUTH-TOKEN: <X_AUTH_TOKEN>'
 ```
+
+## Authorization
+
+- `Authorization` (bearer token, required): The access token from POST /api/hiecm/gateway/v3/sessions, sent with a `Bearer ` prefix.
 
 ## Headers
 
 - `X-token` (string, required): The user token from a login or enrolment response, sent with a `Bearer ` prefix. It acts for that ABHA holder.
 - `REQUEST-ID` (string, required): Unique UUID for each request.
 - `TIMESTAMP` (string, required): Request timestamp in UTC, ISO-8601 with Z.
+- `X-AUTH-TOKEN` (string, required): The user token issued at login, sent beside X-token, as the PHR V3 document requires on this call.
 
 ## Responses
 
@@ -25092,16 +25124,23 @@ Shape of the 200 response, generated from the schema. The values are placeholder
 ```bash
 curl --request GET \
   --url https://abhasbx.abdm.gov.in/abha/api/v3/phr/app/login/profile/qrCode \
+  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'X-token: Bearer <JWT TOKEN>' \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
-  --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z'
+  --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
+  --header 'X-AUTH-TOKEN: <X_AUTH_TOKEN>'
 ```
+
+## Authorization
+
+- `Authorization` (bearer token, required): The access token from POST /api/hiecm/gateway/v3/sessions, sent with a `Bearer ` prefix.
 
 ## Headers
 
 - `X-token` (string, required): The user token from a login or enrolment response, sent with a `Bearer ` prefix. It acts for that ABHA holder.
 - `REQUEST-ID` (string, required): Unique UUID for each request.
 - `TIMESTAMP` (string, required): Request timestamp in UTC, ISO-8601 with Z.
+- `X-AUTH-TOKEN` (string, required): The user token issued at login, sent beside X-token, as the PHR V3 document requires on this call.
 
 ## Responses
 
@@ -25122,16 +25161,23 @@ curl --request GET \
 ```bash
 curl --request GET \
   --url https://abhasbx.abdm.gov.in/abha/api/v3/phr/app/login/profile/phrCard \
+  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'X-token: Bearer <JWT TOKEN>' \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
-  --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z'
+  --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
+  --header 'X-AUTH-TOKEN: <X_AUTH_TOKEN>'
 ```
+
+## Authorization
+
+- `Authorization` (bearer token, required): The access token from POST /api/hiecm/gateway/v3/sessions, sent with a `Bearer ` prefix.
 
 ## Headers
 
 - `X-token` (string, required): The user token from a login or enrolment response, sent with a `Bearer ` prefix. It acts for that ABHA holder.
 - `REQUEST-ID` (string, required): Unique UUID for each request.
 - `TIMESTAMP` (string, required): Request timestamp in UTC, ISO-8601 with Z.
+- `X-AUTH-TOKEN` (string, required): The user token issued at login, sent beside X-token, as the PHR V3 document requires on this call.
 
 ## Responses
 
@@ -25152,6 +25198,7 @@ curl --request GET \
 ```bash
 curl --request POST \
   --url https://abhasbx.abdm.gov.in/abha/api/v3/phr/app/login/profile/updateProfile \
+  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'X-token: Bearer <JWT TOKEN>' \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
@@ -25176,6 +25223,10 @@ curl --request POST \
 }'
 ```
 
+## Authorization
+
+- `Authorization` (bearer token, required): The access token from POST /api/hiecm/gateway/v3/sessions, sent with a `Bearer ` prefix.
+
 ## Headers
 
 - `X-token` (string, required): The user token from a login or enrolment response, sent with a `Bearer ` prefix. It acts for that ABHA holder.
@@ -25184,22 +25235,22 @@ curl --request POST \
 
 ## Body
 
-- `profilePhoto` (string)
-- `firstName` (string)
-- `middleName` (string)
-- `lastName` (string)
-- `dayOfBirth` (string)
-- `monthOfBirth` (string)
-- `yearOfBirth` (string)
-- `gender` (string)
-- `email` (string)
-- `mobile` (string)
-- `address` (string)
-- `stateName` (string)
-- `districtName` (string)
-- `pinCode` (string)
-- `stateCode` (string)
-- `districtCode` (string)
+- `profilePhoto` (string, required)
+- `firstName` (string, required)
+- `middleName` (string, required)
+- `lastName` (string, required)
+- `dayOfBirth` (string, required)
+- `monthOfBirth` (string, required)
+- `yearOfBirth` (string, required)
+- `gender` (string, required)
+- `email` (string, required)
+- `mobile` (string, required)
+- `address` (string, required)
+- `stateName` (string, required)
+- `districtName` (string, required)
+- `pinCode` (string, required)
+- `stateCode` (string, required)
+- `districtCode` (string, required)
 
 ## Responses
 
@@ -25256,10 +25307,15 @@ Shape of the 200 response, generated from the schema. The values are placeholder
 ```bash
 curl --request GET \
   --url https://abhasbx.abdm.gov.in/abha/api/v3/phr/app/login/profile/request/token \
+  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'R-token: Bearer <JWT TOKEN>' \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z'
 ```
+
+## Authorization
+
+- `Authorization` (bearer token, required): The access token from POST /api/hiecm/gateway/v3/sessions, sent with a `Bearer ` prefix.
 
 ## Headers
 
@@ -25298,10 +25354,15 @@ Shape of the 200 response, generated from the schema. The values are placeholder
 ```bash
 curl --request GET \
   --url https://abhasbx.abdm.gov.in/abha/api/v3/phr/app/login/profile/request/logout \
+  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'X-token: Bearer <JWT TOKEN>' \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z'
 ```
+
+## Authorization
+
+- `Authorization` (bearer token, required): The access token from POST /api/hiecm/gateway/v3/sessions, sent with a `Bearer ` prefix.
 
 ## Headers
 
@@ -25336,10 +25397,15 @@ Shape of the 200 response, generated from the schema. The values are placeholder
 ```bash
 curl --request GET \
   --url https://abhasbx.abdm.gov.in/abha/api/v3/phr/app/login/profile/switch-profile \
+  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'X-token: Bearer <JWT TOKEN>' \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z'
 ```
+
+## Authorization
+
+- `Authorization` (bearer token, required): The access token from POST /api/hiecm/gateway/v3/sessions, sent with a `Bearer ` prefix.
 
 ## Headers
 
@@ -25392,6 +25458,7 @@ Shape of the 200 response, generated from the schema. The values are placeholder
 ```bash
 curl --request POST \
   --url https://abhasbx.abdm.gov.in/abha/api/v3/phr/app/login/profile/verify/switch-profile/user \
+  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'T-token: Bearer <JWT TOKEN>' \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
@@ -25402,6 +25469,10 @@ curl --request POST \
 }'
 ```
 
+## Authorization
+
+- `Authorization` (bearer token, required): The access token from POST /api/hiecm/gateway/v3/sessions, sent with a `Bearer ` prefix.
+
 ## Headers
 
 - `T-token` (string, required): The transaction token from the preceding login step, sent with a `Bearer ` prefix. It is valid only for that login.
@@ -25410,8 +25481,8 @@ curl --request POST \
 
 ## Body
 
-- `abhaAddress` (string)
-- `txnId` (string)
+- `abhaAddress` (string, required)
+- `txnId` (string, required)
 
 ## Responses
 
@@ -25448,6 +25519,7 @@ Flows:
 ```bash
 curl --request POST \
   --url https://abhasbx.abdm.gov.in/abha/api/v3/phr/app/login/profile/request/otp \
+  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'X-token: Bearer <JWT TOKEN>' \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
@@ -25463,6 +25535,10 @@ curl --request POST \
 }'
 ```
 
+## Authorization
+
+- `Authorization` (bearer token, required): The access token from POST /api/hiecm/gateway/v3/sessions, sent with a `Bearer ` prefix.
+
 ## Headers
 
 - `X-token` (string, required): The user token from a login or enrolment response, sent with a `Bearer ` prefix. It acts for that ABHA holder.
@@ -25471,10 +25547,10 @@ curl --request POST \
 
 ## Body
 
-- `scope` (string[])
-- `loginHint` (string)
-- `loginId` (string)
-- `otpSystem` (string)
+- `scope` (string[], required)
+- `loginHint` (string, required)
+- `loginId` (string, required)
+- `otpSystem` (string, required)
 
 ## Responses
 
@@ -25512,6 +25588,7 @@ Flows:
 ```bash
 curl --request POST \
   --url https://abhasbx.abdm.gov.in/abha/api/v3/phr/app/login/profile/verify \
+  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'X-token: Bearer <JWT TOKEN>' \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
@@ -25533,6 +25610,10 @@ curl --request POST \
 }'
 ```
 
+## Authorization
+
+- `Authorization` (bearer token, required): The access token from POST /api/hiecm/gateway/v3/sessions, sent with a `Bearer ` prefix.
+
 ## Headers
 
 - `X-token` (string, required): The user token from a login or enrolment response, sent with a `Bearer ` prefix. It acts for that ABHA holder.
@@ -25541,8 +25622,8 @@ curl --request POST \
 
 ## Body
 
-- `scope` (string[])
-- `authData` (object)
+- `scope` (string[], required)
+- `authData` (object, required)
 - `authData.authMethods` (string[])
 - `authData.otp` (object)
 - `authData.otp.txnId` (string)
@@ -25588,6 +25669,7 @@ Flows:
 ```bash
 curl --request POST \
   --url https://abhasbx.abdm.gov.in/abha/api/v3/phr/app/login/profile/request/otp \
+  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'X-token: Bearer <JWT TOKEN>' \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
@@ -25603,6 +25685,10 @@ curl --request POST \
 }'
 ```
 
+## Authorization
+
+- `Authorization` (bearer token, required): The access token from POST /api/hiecm/gateway/v3/sessions, sent with a `Bearer ` prefix.
+
 ## Headers
 
 - `X-token` (string, required): The user token from a login or enrolment response, sent with a `Bearer ` prefix. It acts for that ABHA holder.
@@ -25611,10 +25697,10 @@ curl --request POST \
 
 ## Body
 
-- `scope` (string[])
-- `loginHint` (string)
-- `loginId` (string)
-- `otpSystem` (string)
+- `scope` (string[], required)
+- `loginHint` (string, required)
+- `loginId` (string, required)
+- `otpSystem` (string, required)
 
 ## Responses
 
@@ -25652,6 +25738,7 @@ Flows:
 ```bash
 curl --request POST \
   --url https://abhasbx.abdm.gov.in/abha/api/v3/phr/app/login/profile/verify \
+  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'X-token: Bearer <JWT TOKEN>' \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
@@ -25673,6 +25760,10 @@ curl --request POST \
 }'
 ```
 
+## Authorization
+
+- `Authorization` (bearer token, required): The access token from POST /api/hiecm/gateway/v3/sessions, sent with a `Bearer ` prefix.
+
 ## Headers
 
 - `X-token` (string, required): The user token from a login or enrolment response, sent with a `Bearer ` prefix. It acts for that ABHA holder.
@@ -25681,8 +25772,8 @@ curl --request POST \
 
 ## Body
 
-- `scope` (string[])
-- `authData` (object)
+- `scope` (string[], required)
+- `authData` (object, required)
 - `authData.authMethods` (string[])
 - `authData.otp` (object)
 - `authData.otp.txnId` (string)
@@ -25729,6 +25820,7 @@ Flows:
 ```bash
 curl --request POST \
   --url https://abhasbx.abdm.gov.in/abha/api/v3/phr/app/login/profile/verify \
+  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'X-token: Bearer <JWT TOKEN>' \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
@@ -25750,6 +25842,10 @@ curl --request POST \
 }'
 ```
 
+## Authorization
+
+- `Authorization` (bearer token, required): The access token from POST /api/hiecm/gateway/v3/sessions, sent with a `Bearer ` prefix.
+
 ## Headers
 
 - `X-token` (string, required): The user token from a login or enrolment response, sent with a `Bearer ` prefix. It acts for that ABHA holder.
@@ -25758,8 +25854,8 @@ curl --request POST \
 
 ## Body
 
-- `scope` (string[])
-- `authData` (object)
+- `scope` (string[], required)
+- `authData` (object, required)
 - `authData.authMethods` (string[])
 - `authData.otp` (object)
 - `authData.otp.txnId` (string)
@@ -25910,7 +26006,7 @@ curl --request POST \
 - `includedSources.period` (object, required): The date range between when the subscription will be active
 - `includedSources.period.from` (string, required): UTC date time in ISO format. Allows alpha numeric character and special characters like  "\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}.\\d{3}Z$"
 - `includedSources.period.to` (string, required): UTC date time in ISO format.Allows alpha numeric character and special characters like  "\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}.\\d{3}Z$"
-- `excludedSources` (object[], required): Excluded sources, carrying the list of hi types.
+- `excludedSources` (object[]): Excluded sources, carrying the list of hi types.
 - `excludedSources.hiTypes` (string[], required): Types of health information document.
 - `excludedSources.purpose` (object, required)
 - `excludedSources.purpose.text` (string, required) One of: Care Management, Break the Glass, Public Health, Healthcare Payment, Disease Specific Healthcare Research, Self Requested.
@@ -30542,6 +30638,12 @@ Two reference implementations exist. Fidelius, at [github.com/sukreet/fidelius](
 
 Several fields in [M1](/docs/pr-20/docs/hiecm/v3/api/m1) do not carry the value you started with. They carry that value encrypted against the ABDM public key. When an API page shows a placeholder such as `{{encrypted aadhaar number}}`, the field name tells you what the value is and the placeholder tells you it must already be encrypted.
 
+## In short
+
+- Encrypt the Aadhaar number, mobile number, OTP and password with RSA against the published public key, and send the base64 ciphertext.
+- M1 calls use the ABHA service's key. PHR calls use the PHR key, which is a different key at a different URL.
+- Your system never holds a secret for this: only the current public certificate.
+
 ## What must be encrypted
 
 Six kinds of value never travel raw in an M1 request body.
@@ -30595,6 +30697,8 @@ There is nothing ABDM specific in the mechanics. Your platform's standard RSA li
 **Encrypt inside your own system, against the published ABDM public key.** This is the production path.
 
 ## Fetching the public key
+
+A [PHR](/docs/pr-20/docs/hiecm/v3/getting-started/glossary#phr) application fetches its own key from `GET /abha/api/v3/phr/app/login/public/certificate`, the first call in [P1](/docs/pr-20/docs/hiecm/v3/api/p1/endpoints/p1-certificate-and-session/01-p1-get-v3-phr-app-login-public-certificate). It is a different key from the ABHA service's, so never encrypt a PHR call with the M1 certificate.
 
 M1 has a `public/certificate` API for fetching the public key. Its URL, headers and response shape are on [the certificate call](/docs/pr-20/docs/hiecm/v3/api/m1/endpoints/m1-access-tokens-encryption/02-m1-get-v3-profile-public-certificate).
 
@@ -31362,39 +31466,30 @@ A record you link reaches the patient's own app, so their medication history sit
 
 ---
 
-# PHR app
+# Personal Health Record (PHR) Application
 
-You are the citizen's own app. You hold their identity, show them their records, and are the place where every consent decision is taken.
+The Personal Health Record ([PHR](/docs/pr-20/docs/hiecm/v3/getting-started/glossary#phr)) application functions as the primary digital interface for the Data Principal (citizen) within the Ayushman Bharat Digital Mission ([ABDM](/docs/pr-20/docs/hiecm/v3/getting-started/glossary#abdm)) ecosystem. It facilitates digital identity management, provides access to longitudinal health records, and serves as the centralized node for consent artifact management.
 
-## Who you are in ABDM
+## Role and positioning within the ABDM architecture
 
-A [PHR](/docs/pr-20/docs/hiecm/v3/getting-started/glossary#phr) application acts for the citizen, and a citizen and a facility sit on opposite sides of the [HIE-CM](/docs/pr-20/docs/hiecm/v3/getting-started/glossary#hie-cm). That position is fixed for the life of your product.
+The PHR application operates on behalf of the citizen and securely connects with healthcare facilities through the [HIE-CM](/docs/pr-20/docs/hiecm/v3/getting-started/glossary#hie-cm). Health data is routed using the citizen's [ABHA address](/docs/pr-20/docs/hiecm/v3/getting-started/glossary#abha-address). The PHR application acts as an [HIU](/docs/pr-20/docs/hiecm/v3/getting-started/glossary#hiu) for fetching clinical records and as a [HIP](/docs/pr-20/docs/hiecm/v3/getting-started/glossary#hip) for sharing user-uploaded health documents and facility linked health documents. It must be listed in the ABDM Application Directory after Sandbox exit with its official name and marketplace URLs.
 
-You hold no registry identifier of your own. Your users hold the [ABHA](/docs/pr-20/docs/hiecm/v3/getting-started/glossary#abha) numbers and addresses, and everything routes on the address. Your own credentials are the client id and client secret issued at sandbox signup, which you exchange for a session token.
+## Authorized capabilities and milestones
 
-Within that position the citizen takes both directions through your app. Your user is the [HIU](/docs/pr-20/docs/hiecm/v3/getting-started/glossary#hiu) whenever you fetch their records, and the [HIP](/docs/pr-20/docs/hiecm/v3/getting-started/glossary#hip) the moment they link or push one from your app.
+| Integration phase                                             | Functional capabilities                                                                                                                                                                                                            |
+| ------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [Phase 1 (P1)](/docs/pr-20/docs/hiecm/v3/milestones/p1)       | Facilitation of ABHA number and address creation, multiple authentication (four mandated login routes).                                                                                                                            |
+| [Phase 2 (P2)](/docs/pr-20/docs/hiecm/v3/milestones/p2)       | Execution of facility-level Scan & Share, profile management, ABHA card and QR code generation, legacy record discovery, and standardized [Care Context](/docs/pr-20/docs/hiecm/v3/getting-started/glossary#care-context) linkage. |
+| [Phase 3 (P3)](/docs/pr-20/docs/hiecm/v3/milestones/p3)       | Management of user locker subscriptions and system notifications, execution of consent decisions (approval/rejection), configuration of auto-approval policies, and the secure retrieval and storage of health records.            |
+| Health Locker ([M2](/docs/pr-20/docs/hiecm/v3/milestones/m2)) | Processing direct document uploads by the Data Principal necessitates certification as a Health Locker (Health Repository Provider), which requires the successful completion of Milestone 2 (M2) integration.                     |
 
-To be listed for deep links, submit three things at sandbox exit: your application name, your Play Store URL and your App Store URL.
+## Significance and ecosystem value
 
-## What you can do
+The PHR application platform empowers citizens by providing a central interface for consent management and control over their health information. Through HIE-CM, users receive notifications on the creation or modification of Care Contexts linked to their ABHA address, enabling aggregation of longitudinal health records based on approved consent policies. In addition, PHR applications and Health Lockers provide secure, long-term, user-managed storage of health records, complementing the statutory record-retention responsibilities of healthcare establishments.
 
-| Build                                         | What it gives the user                                                                                                                    |
-| --------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
-| [P1](/docs/pr-20/docs/hiecm/v3/milestones/p1) | Create or link an ABHA address, eight login routes, profile, card and QR code                                                             |
-| [P2](/docs/pr-20/docs/hiecm/v3/milestones/p2) | Scan and share at a facility, discover old records, link [care contexts](/docs/pr-20/docs/hiecm/v3/getting-started/glossary#care-context) |
-| [P3](/docs/pr-20/docs/hiecm/v3/milestones/p3) | Subscriptions, notifications, consent decisions, auto approval, fetching and storing records                                              |
+## Next steps
 
-Accepting uploads makes you a health locker, and that needs [M2](/docs/pr-20/docs/hiecm/v3/api/m2) as well.
-
-## Why it is worth it
-
-You are the only participant the citizen actually sees. Every consent request raised anywhere on the network arrives in your app, and the decision is made there.
-
-The [HIE-CM](/docs/pr-20/docs/hiecm/v3/getting-started/glossary#hie-cm) tells you when a care context is linked or updated for a subscribed address, so records reach your user without them chasing a facility. You then store those records for the long term, which no other participant does on the citizen's behalf.
-
-## Next
-
-[PHR applications](/docs/pr-20/docs/hiecm/v3/concepts/phr) is the build guide, screen by screen.
+- [PHR applications](/docs/pr-20/docs/hiecm/v3/concepts/phr) is the build guide, screen by screen.
 
 
 ---
@@ -31410,7 +31505,7 @@ Every user needs an ABHA address, `username@abdm`. Consent, notifications and re
 | Job                            | What the user sees                                                                                                                                                                          |
 | ------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Create or link an ABHA address | Register with a mobile number, or with an existing 14 digit ABHA number                                                                                                                     |
-| Log in                         | Mobile number, ABHA address, or ABHA number                                                                                                                                                 |
+| Log in                         | Mobile number, ABHA address, ABHA number, or Aadhaar number                                                                                                                                 |
 | Manage a profile               | Demographics, photo, password, QR code, downloadable ABHA card                                                                                                                              |
 | Share a profile at a facility  | Scan the facility QR code, consent, receive a queue token                                                                                                                                   |
 | Find and link past records     | Search a facility, discover [care contexts](/docs/pr-20/docs/hiecm/v3/getting-started/glossary#care-context), verify by [OTP](/docs/pr-20/docs/hiecm/v3/getting-started/glossary#otp), link |
@@ -31451,7 +31546,7 @@ A Self-Declared profile needs a "Link ABHA number" action: enter the 14 digit nu
 
 ### Login
 
-All these routes are mandatory.
+All these routes are mandatory, except login by email OTP, which is optional.
 
 | Route                                           | Validated by                                                                |
 | ----------------------------------------------- | --------------------------------------------------------------------------- |
@@ -32801,8 +32896,6 @@ sequenceDiagram
 
 ABHA login using a registered mobile number enables individuals to securely access their ABHA-linked profile and services through a mobile OTP-based authentication process. Since a single mobile number may be associated with multiple ABHA accounts, the user may be required to select the appropriate ABHA account after successful verification. Upon completion of the authentication process, authorized access is granted to the individual's ABHA profile and associated services in accordance with ABDM guidelines.
 
-Login by Aadhaar number, by ABHA number and by ABHA address follow the same two steps: request a challenge, then verify it. The [M1 API reference](/docs/pr-20/docs/hiecm/v3/api/m1) lists which routes are mandatory.
-
 ## Find ABHA from mobile number
 
 ```mermaid
@@ -32892,7 +32985,7 @@ All use cases, and the milestone each belongs to: [Use cases](/docs/pr-20/docs/h
 
 ## Who needs it
 
-M2 is applicable to healthcare facilities and systems that create and maintain digital health records, including hospitals, clinics, laboratories, pharmacies and diagnostic or imaging centres. A citizen pushing their own records from a PHR app builds [P2 Linking and records](/docs/pr-20/docs/hiecm/v3/milestones/p2), the patient side of M2.
+M2 is applicable to healthcare facilities and systems that create and maintain digital health records, including hospitals, clinics, laboratories, pharmacies and diagnostic or imaging centres.
 
 ## Prerequisites
 
@@ -32904,6 +32997,8 @@ Prior to implementation of Milestone 2, the following requirements shall be fulf
 4. Health information shall be packaged in HL7 FHIR R4 format and conform to the applicable ABDM FHIR profiles published by NRCeS at [nrces.in](https://nrces.in/ndhm/fhir/r4/index.html).
 
 ## Health record formats
+
+Each applicable health-information type shall be represented as a FHIR document Bundle. Depending on the applicable profile and use case, the Bundle may contain structured clinical data and, where permitted, an attachment such as a PDF document or image.
 
 [HRP](/docs/pr-20/docs/hiecm/v3/getting-started/glossary#hrp) can only link the following type of health records to an ABHA Address. All health records must be structured as FHIR (Fast Healthcare Interoperability Resources) formats. The FHIR specifications used by ABDM are published and maintained by the National Resource Centre for E-Health Standards (NRCES) at [nrces.in](https://nrces.in/ndhm/fhir/r4/index.html).
 
@@ -33234,7 +33329,7 @@ Milestone 3 covers the consent-management and health-information exchange workfl
 ```mermaid
 sequenceDiagram
     autonumber
-    participant S as Your system
+    participant S as Application/System
     participant CM as HIE-CM
     actor P as Patient (PHR app)
     Note over S: Every call carries REQUEST-ID, TIMESTAMP,<br/>X-CM-ID, X-HIU-ID and the gateway access token
@@ -33261,7 +33356,7 @@ sequenceDiagram
     autonumber
     actor P as Patient (PHR app)
     participant CM as HIE-CM
-    participant S as Your system
+    participant S as Application/System
     P->>CM: Reviews the request, sets the date range and expiry
     alt Patient grants
         P->>CM: Grants
@@ -33289,7 +33384,7 @@ sequenceDiagram
 ```mermaid
 sequenceDiagram
     autonumber
-    participant S as Your system
+    participant S as Application/System
     participant CM as HIE-CM
     participant H as HIP
     S->>CM: POST /api/hiecm/consent/v3/fetch<br/>consentId
@@ -33320,13 +33415,11 @@ Using the consent artefact ID, the HIU fetches the consent artefact and requests
 
 Milestone 4 is the Registries milestone, commonly referred to as NHPR (National Healthcare Professionals and Facilities Registry). It establishes the identity of healthcare professionals and the details of healthcare facilities within the ABDM ecosystem.
 
-Neither [HPR](/docs/pr-20/docs/hiecm/v3/getting-started/glossary#hpr) nor [HFR](/docs/pr-20/docs/hiecm/v3/getting-started/glossary#hfr) is responsible for moving health records. Instead, these registries establish who the healthcare professional is and what the healthcare facility is, providing a verified identity and facility layer for subsequent ABDM transactions and health-record flows.
-
-## In short
-
 The Healthcare Professionals Registry (HPR) is a comprehensive repository of registered and verified healthcare professionals. It includes doctors from various Systems of Medicine, including Modern Medicine, Dentistry, Ayurveda, Unani, Siddha, Sowa-Rigpa and Homeopathy, as well as Nurses and Pharmacists delivering healthcare services across India. A healthcare professional registers on the Healthcare Professionals Registry (HPR) and is issued a unique [HPID](/docs/pr-20/docs/hiecm/v3/getting-started/glossary#hpid).
 
 Health Facility Registry (HFR) is a comprehensive repository of health facilities across the country, covering both modern and traditional systems of medicine. It includes public and private health facilities such as hospitals, clinics, diagnostic laboratories, imaging centres, pharmacies, and other healthcare establishments. A healthcare facility is onboarded to the Health Facility Registry (HFR) and is issued a unique Facility ID.
+
+Neither [HPR](/docs/pr-20/docs/hiecm/v3/getting-started/glossary#hpr) nor [HFR](/docs/pr-20/docs/hiecm/v3/getting-started/glossary#hfr) is responsible for moving health records. Instead, these registries establish who the healthcare professional is and what the healthcare facility is, providing a verified identity and facility layer for subsequent ABDM transactions and health-record flows.
 
 ### Relationship with M2 and M3
 
@@ -33344,23 +33437,19 @@ Key identifiers include:
 - **HPID:** 14-digit identifier issued to a registered healthcare professional.
 - **Facility ID:** 12-character identifier beginning with `IN`, issued to a registered healthcare facility.
 
-Not a step by step guide
-
-These pages cover the shape of M4 and the endpoints that are named. They are not yet a step by step guide to building it.
-
 ## M4 scope and capabilities
 
 | Capability             | Key output                                                                                                                                                                                                | Target user                                                                                             |
 | ---------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------- |
 | HPID creation          | A 14 digit HPID, issued after Aadhaar authentication                                                                                                                                                      | Doctors, nurses, pharmacists, and facility managers                                                     |
-| Register professional  | A complete HPR profile, including qualifications, council registration, and current work details                                                                                                          | Healthcare professionals after HPID creation                                                            |
+| Register professional  | A complete HPR profile, including qualifications, council registration, and current work details                                                                                                          | Healthcare professionals after HP-ID creation                                                           |
 | Facility onboarding    | A 12 character unique Facility ID for registration in the HFR                                                                                                                                             | Hospitals, clinics, laboratories, imaging centres, pharmacies, blood banks, and other health facilities |
 | Bridge linkage         | A link between a Facility ID and one or more bridges, each identified as a [HIP](/docs/pr-20/docs/hiecm/v3/getting-started/glossary#hip) or [HIU](/docs/pr-20/docs/hiecm/v3/getting-started/glossary#hiu) | A facility whose software is going live                                                                 |
 | Search and master data | Facility search and nearby search                                                                                                                                                                         | Anyone building either of the above                                                                     |
 
 ## Intended users
 
-- **Facilities going live.** A facility must be registered in the HFR and have a bridge linked to it to share health information as a HIP or retrieve it as an HIU. For facilities that have implemented [M2 Health Information Provider](/docs/pr-20/docs/hiecm/v3/milestones/m2) or [M3 Retrieve](/docs/pr-20/docs/hiecm/v3/milestones/m3), M4 is the next step towards production readiness.
+- **Facilities going live.** A facility must be registered in the HFR and have a bridge linked to it to share health information as a HIP or retrieve it as an HIU. For facilities that have implemented [M2 (Attach)](/docs/pr-20/docs/hiecm/v3/milestones/m2) or [M3 (Retrieve)](/docs/pr-20/docs/hiecm/v3/milestones/m3), M4 is the next step towards production readiness.
 - **Professionals registering.** An HPR ID provides a verified professional identity within ABDM. Currently, registration is available for three categories: doctors, nurses and pharmacists.
 - **Software acting for others.** An [HMIS](/docs/pr-20/docs/hiecm/v3/getting-started/glossary#hmis) or practice management product can drive these calls for its own customers.
 
@@ -33370,9 +33459,9 @@ HPR and HFR represent two connected parts of the healthcare ecosystem. HPR enabl
 
 Once a facility is registered in the HFR, healthcare professionals can link their professional profile to that facility as their place of work. Similarly, an HPR-registered professional can declare the HFR facility where they currently work. This creates a connection between who provides healthcare and where healthcare is provided, allowing professionals and facilities to be linked within the ABDM ecosystem.
 
-## Build it with an agent
+## Build M4 with an AI coding assistant
 
-Hand M4 to the agent you already use, as one file it loads once. Install it, or open it there in one click.
+The M4 skill gives an AI coding assistant this milestone as one file: every M4 call with its fields and identifiers. Install it, or open it in your assistant in one click.
 
 M4 agent skill
 
@@ -33543,12 +33632,12 @@ The first update captures the basic facility information and creates a Facility 
 
 ### What each update carries
 
-| Call                       | Information captured                                                                                                                                                                                   |
-| -------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Basic facility information | Facility name, ownership, system of medicine, facility type and subtype, address with LGD codes, contact details, board and building photographs, and opening hours                                    |
-| Additional information     | Availability of services and units such as a pharmacy, blood bank, dialysis centre, cath lab, diagnostic laboratory, or imaging centre, plus scheme identifiers such as ABPMJAY, Rohini, ECHS and CGHS |
-| Detailed information       | Specialities by system of medicine, bed and ventilator counts, and applicable sections for pharmacy, blood bank, diagnostic laboratory and imaging                                                     |
-| Submit facility            | Captures the tracking ID and optional source of information, and moves the facility application out of Draft status                                                                                    |
+| Call                       | Information captured                                                                                                                                                                                          |
+| -------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Basic facility information | Facility name, ownership, system of medicine, facility type and subtype, address with LGD codes, contact details, board and building photographs, and operating hours                                         |
+| Additional information     | Availability of services and units such as a pharmacy, blood bank, dialysis centre, cath lab, diagnostic laboratory, or imaging centre, along with scheme identifiers such as ABPMJAY, ROHINI, ECHS, and CGHS |
+| Detailed information       | Specialities by system of medicine, bed and ventilator counts, and applicable sections for pharmacy, blood bank, diagnostic laboratory, and imaging services, based on the facility type                      |
+| Submit facility            | Captures the tracking ID and optional source of information, and moves the facility application out of Draft status                                                                                           |
 
 The mandatory fields under detailed information vary based on the facility type, service type, and system of medicine selected during registration. Diagnostic laboratories, imaging centres, blood banks and pharmacies do not require medical infrastructure counts, such as bed or ventilator counts.
 
@@ -33569,12 +33658,14 @@ A shorter verification flow is available for government programmes. An OTP is se
 
 ## Journey 4: linking bridges to a facility
 
+### Facility-Bridge linkage
+
 ```mermaid
 sequenceDiagram
     autonumber
     participant S as Your system
     participant H as HFR service
-    Note over S: Facility ID IN plus 10 characters,<br/>bridgeId from your sandbox registration
+    Note over S: Facility ID, 12 characters beginning with IN,<br/>bridgeId from your sandbox registration
     S->>H: POST /v1/bridges/MutipleHRPAddUpdateServices<br/>facilityId, facilityName, HRP [{bridgeId,<br/>hipName (15 characters or fewer,<br/>unique per facility), type HIP or HIU, active true}]
     H-->>S: Linkage result per bridge
     Note over S,H: One call carries every bridge for the facility. Repeat it to add a bridge or set active false.
@@ -33616,12 +33707,13 @@ P1 is the patient side of [M1 Identity](/docs/pr-20/docs/hiecm/v3/milestones/m1)
 
 - Every user needs an ABHA address, `username@abdm`. Consent, notifications and record sharing all hang off it.
 - Build both creation paths: by mobile number, and by an existing 14 digit ABHA number.
-- All eight login routes are mandatory.
+- Every login route is mandatory except the two email OTP routes, which are optional.
+- Fetch the PHR public key first. It is not the ABHA service's key.
 - A user can hold several ABHA addresses but only one ABHA number.
 
 ## What you build
 
-Registration and login, and the profile the patient reads and edits.
+Registration and login. The profile the patient reads and edits is [P2](/docs/pr-20/docs/hiecm/v3/milestones/p2).
 
 ## Creating an ABHA address
 
@@ -33652,29 +33744,37 @@ A Self-Declared profile needs a "Link ABHA number" action. The user enters the 1
 
 ## Login
 
-Sign a user in to a PHR application by any of these routes, all of them mandatory.
+Sign a user in to a PHR application by any of these routes. Every route is mandatory except login by email OTP, which is optional.
 
-| Route                          | Validated by                                                                |
-| ------------------------------ | --------------------------------------------------------------------------- |
-| Mobile number                  | Mobile OTP, then the user picks which linked ABHA address to sign in as     |
-| An address such as `name@abdm` | Password, mobile OTP or email OTP, by the auth methods the address supports |
-| The 14 digit ABHA number       | ABHA OTP or Aadhaar OTP                                                     |
+| Route                          | Validated by                                                                           |
+| ------------------------------ | -------------------------------------------------------------------------------------- |
+| Mobile number                  | Mobile OTP                                                                             |
+| An address such as `name@abdm` | Password, mobile OTP or email OTP (optional), by the auth methods the address supports |
+| The 14 digit ABHA number       | ABHA OTP or Aadhaar OTP                                                                |
+| The Aadhaar number             | Aadhaar OTP                                                                            |
+
+Every OTP route returns the ABHA addresses linked to that identifier. The user picks the one to sign in as, and you confirm the choice with the verify user call.
 
 Resend OTP unlocks after 60 seconds in every flow. You also need a reset password screen behind login, secure storage of the refresh token, and more than one user profile per install with sign in and sign out.
 
-## Profile, card and QR code
+## Tokens and base URLs
 
-| Element                  | What it holds                                                                              |
-| ------------------------ | ------------------------------------------------------------------------------------------ |
-| Profile screen           | Editable demographics, marked KYC Verified or Self-Declared                                |
-| ABHA number              | Visible only on a KYC Verified profile                                                     |
-| ABHA address card, a PDF | Photo, full name, ABHA number, ABHA address, QR code, date of birth, gender, mobile number |
-| Editable, KYC Verified   | Mobile number, with an OTP to the new number, and address                                  |
-| Editable, Self-Declared  | The same, plus photo, full name, gender and date of birth                                  |
+| Token or URL                          | Value                                              |
+| ------------------------------------- | -------------------------------------------------- |
+| Gateway session token                 | Valid for 20 minutes                               |
+| User token from login                 | Valid for 30 minutes                               |
+| Refresh token                         | Valid for 15 days                                  |
+| PHR APIs, sandbox                     | `https://abhasbx.abdm.gov.in/abha/api/v3/phr/app/` |
+| PHR APIs, production                  | `https://apis.abdm.gov.in/phr/api/phr/app/v3/`     |
+| ABHA address verification, sandbox    | `https://abhasbx.abdm.gov.in/abha/api/v3/phr/web`  |
+| ABHA address verification, production | `https://phr.abdm.gov.in/api/phr/web/v3`           |
+
+Encrypt the Aadhaar number, mobile number, OTP and password with the PHR public key from `GET /abha/api/v3/phr/app/login/public/certificate`. It is a different key from the ABHA service's, so fetch it before any other PHR call.
 
 ## Next
 
 - The calls and base URLs: [P1 API reference](/docs/pr-20/reference/hiecm-p1).
+- The profile, card and QR code the signed in user manages: [P2](/docs/pr-20/docs/hiecm/v3/milestones/p2).
 - The next milestone: [P2 Linking and records](/docs/pr-20/docs/hiecm/v3/milestones/p2).
 
 
@@ -33693,7 +33793,7 @@ P2 is the mirror of [M2 Health Information Provider](/docs/pr-20/docs/hiecm/v3/m
 
 ## What you build
 
-Care context linking, user initiated linking, scan and share at a facility, and health locker subscriptions.
+Profile management, care context linking, user initiated linking, scan and share at a facility, and health locker subscriptions.
 
 ## Scan and share at a facility
 
@@ -33732,6 +33832,19 @@ A citizen pushing a record into your app is the HIP. A health locker, where user
 An uploaded record is shareable once you hold three things: a link token from the generate link token call, a care context added by HIP initiated linking from [M2 Attach](/docs/pr-20/docs/hiecm/v3/milestones/m2), and the M2 health information transfer APIs.
 
 Set the health information type from the contents or from user input. Use `HealthDocumentRecord` when it cannot be determined.
+
+## Profile, card and QR code
+
+The signed in user manages their own profile from your app. Every call takes the user token from login as `X-token`.
+
+| Element                  | What it holds                                                                                                                                                 |
+| ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Profile screen           | Editable demographics, marked KYC Verified or Self-Declared                                                                                                   |
+| ABHA number              | Visible only on a KYC Verified profile                                                                                                                        |
+| ABHA address card, a PDF | Photo, full name, ABHA number, ABHA address, QR code, date of birth, gender, mobile number                                                                    |
+| Editable, KYC Verified   | Mobile number, with an OTP to the new number, and address                                                                                                     |
+| Editable, Self-Declared  | The same, plus photo, full name, gender and date of birth                                                                                                     |
+| Also on the profile      | Update the email and the password, link an ABHA number by mobile OTP or Aadhaar OTP, switch between the profiles on one login, refresh the token, and log out |
 
 ## Next
 
@@ -33924,7 +34037,7 @@ A code is on this page because a response example in a specification returns it.
 
 The Ayushman Bharat Health Account (ABHA) is a unique health identifier issued under the Ayushman Bharat Digital Mission (ABDM). It serves as the foundational digital identity for individuals within the ABDM ecosystem and enables secure identification, authentication, and exchange of health records.
 
-ABHA facilitates seamless access to digital health services while ensuring interoperability across healthcare providers, health information systems, and personal health applications.
+ABHA facilitates access to digital health services while ensuring interoperability across healthcare providers, health information systems, and personal health applications.
 
 ## Components of ABHA
 
@@ -62376,7 +62489,7 @@ UHI creates no registry entry. It issues no ABHA number, registers no profession
 
 ### Seven NHCX agent skills
 
-Seven agent skills build NHCX into a hospital information system or a claims desk, one use case each: coverage, the insurance plan, pre-authorisation, the claim, payment, communication and reprocess. [Build with AI](/docs/pr-20/docs/nhcx/v1/getting-started/build-with-ai#agent-skills) lists them with the command that installs each.
+Seven agent skills build NHCX into a hospital information system or a claims desk, one use case each: coverage, the insurance plan, pre-authorisation, the claim, payment, communication and reprocess. [Build with AI](/docs/pr-20/docs/nhcx/v1/getting-started/build-with-ai#install-a-skill) lists them with the command that installs each.
 
 ### Start on the NHCX sandbox
 
@@ -62419,9 +62532,36 @@ Seven modules have an errors page, and each lists the codes its specification re
 
 ---
 
+# 22 September 2026
+
+3 changes
+
+### PHR calls carry the gateway session token, and their body fields are required
+
+The [P1](/docs/pr-20/reference/hiecm-p1) and [P2](/docs/pr-20/reference/hiecm-p2) references showed 24 PHR application calls with no `Authorization` header and no required body fields. Every one of them takes the access token from the gateway session call, and every field the request body shows is required. Get profile, QR code and PHR card also take `X-AUTH-TOKEN` beside `X-token`. If your app sends those calls without the token, add it.
+
+### The PHR public key is not the ABHA service's key
+
+A [PHR](/docs/pr-20/docs/hiecm/v3/getting-started/glossary#phr) application encrypts the Aadhaar number, mobile number, OTP and password with the key from `GET /abha/api/v3/phr/app/login/public/certificate`, the first call in [P1](/docs/pr-20/docs/hiecm/v3/api/p1/endpoints/p1-certificate-and-session/01-p1-get-v3-phr-app-login-public-certificate). [Encryption](/docs/pr-20/docs/hiecm/v3/concepts/encryption) had sent every reader to the M1 certificate. A PHR call encrypted with the M1 key is refused.
+
+### Consent request init and context notify take an id only
+
+On [consent request init](/docs/pr-20/docs/hiecm/v3/api/m3/endpoints/m3-consent-management-data-flow-hiu/01-m3-post-consent-v3-request-init) the `hiu` block requires `id` alone; the reference had required `name` too, and the request example still sent it. On [link context notify](/docs/pr-20/docs/hiecm/v3/api/m2/endpoints/m2-abdm-hip-initiated-linking-hip/02-m2-post-hip-v3-link-context-notify) the `notification.hip` block requires `id` alone; the reference had required `name` and `type`. Neither extra field is needed.
+
+
+---
+
 # What's new
 
 Changes that affect what you can build against, newest first. Each entry links to what you can now read, run or consume.
+
+## 22 September 2026
+
+3 changes
+
+- [PHR calls carry the gateway session token, and their body fields are required](/docs/pr-20/docs/whats-new/2026-09-22#phr-calls-carry-the-gateway-session-token-and-their-body-fields-are-required)
+- [The PHR public key is not the ABHA service's key](/docs/pr-20/docs/whats-new/2026-09-22#the-phr-public-key-is-not-the-abha-services-key)
+- [Consent request init and context notify take an id only](/docs/pr-20/docs/whats-new/2026-09-22#consent-request-init-and-context-notify-take-an-id-only)
 
 ## 16 September 2026
 

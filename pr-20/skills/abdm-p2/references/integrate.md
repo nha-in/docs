@@ -65,17 +65,19 @@ The calls themselves: where they live, what they need in their headers, and one 
 | `X-token` | The user token from a login or enrolment response, sent with a `Bearer ` prefix. It acts for that ABHA holder. |
 | `REQUEST-ID` | Unique UUID for each request. |
 | `TIMESTAMP` | Request timestamp in UTC, ISO-8601 with Z. |
+| `X-AUTH-TOKEN` | The user token issued at login, sent beside X-token, as the PHR V3 document requires on this call. |
 | `R-token` | The refresh token from a login response, sent with a `Bearer ` prefix, exchanged for a new user token. |
 | `T-token` | The transaction token from the preceding login step, sent with a `Bearer ` prefix. It is valid only for that … |
 | `X-CM-ID` | Suffix of the consent manager to which the request was intended |
-| `X-AUTH-TOKEN` | JWT Authentication token which was issued by ABDM after successful validation of username and password |
 | `X-HIU-ID` | Identifier of the health information user to which the request was intended |
 ## A request, in full
 
 ```bash
 curl --request GET \
   --url https://abhasbx.abdm.gov.in/abha/api/v3/phr/app/login/profile \
+  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'X-token: Bearer <JWT TOKEN>' \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
-  --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z'
+  --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
+  --header 'X-AUTH-TOKEN: <X_AUTH_TOKEN>'
 ```

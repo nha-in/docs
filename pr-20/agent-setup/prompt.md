@@ -16,7 +16,7 @@ Ask the user which of these this project needs, and install only what they name:
 - `abdm-p3`: P3, PHR subscriptions. Sections: scaffold, integrate, debug.
 - `abdm-p4`: P4, health lockers. Sections: scaffold, integrate, debug.
 - `abdm-subscription`: Subscriptions. Sections: scaffold, integrate, debug.
-- `abdm-scan-and-register`: Scan and register. Sections: integrate, debug.
+- `abdm-scan-and-register`: Scan and register. Sections: scaffold, integrate, debug.
 - `abdm-scan-and-pay`: Scan and pay. Sections: scaffold, integrate, debug.
 - `abdm-record-share`: Patient scan and record share. Sections: scaffold, integrate, debug.
 - `abdm-fhir`: FHIR, generating and auditing bundles. Sections: generate, audit.

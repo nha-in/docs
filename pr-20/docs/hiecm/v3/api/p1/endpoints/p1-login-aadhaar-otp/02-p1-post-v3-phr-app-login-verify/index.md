@@ -31,7 +31,7 @@ curl --request POST \
     ],
     "otp": {
       "txnId": "c51ad4d8-ae92-4509-8fb9-b91dea948492",
-      "otpValue": "<BASE64_PHOTO>"
+      "otpValue": "<ENCRYPTED_OTP_VALUE>"
     }
   }
 }'
@@ -48,8 +48,8 @@ curl --request POST \
 
 ## Body
 
-- `scope` (string[])
-- `authData` (object)
+- `scope` (string[], required)
+- `authData` (object, required)
 - `authData.authMethods` (string[])
 - `authData.otp` (object)
 - `authData.otp.txnId` (string)

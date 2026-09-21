@@ -23,10 +23,6 @@ curl --request POST \
       "communicationExpiry": "2024-05-01T05:22:34.123Z"
     }
   },
-  "error": {
-    "code": "ABDM-1001",
-    "message": "No data found"
-  },
   "response": {
     "requestId": "f29f0e59-8388-4698-9fe6-05db67aeac46"
   }

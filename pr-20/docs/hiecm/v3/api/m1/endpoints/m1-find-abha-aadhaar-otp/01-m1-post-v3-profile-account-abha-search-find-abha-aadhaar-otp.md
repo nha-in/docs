@@ -40,8 +40,8 @@ curl --request POST \
 
 ## Body
 
-- `scope` (string[], required)
-- `mobile` (string, required)
+- `scope` (string[], required): The scope of the request. Use search-abha.
+- `mobile` (string, required): The mobile number, encrypted with the public key from GET /abha/api/v3/profile/public/certificate.
 
 ## Responses
 

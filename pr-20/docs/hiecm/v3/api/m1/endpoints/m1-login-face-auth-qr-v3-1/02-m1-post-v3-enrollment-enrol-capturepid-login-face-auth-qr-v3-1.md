@@ -47,8 +47,8 @@ curl --request POST \
 
 ## Body
 
-- `scope` (string[], required)
-- `txnId` (string, required)
+- `scope` (string[], required): The scopes of the request, which name the flow this call belongs to.
+- `txnId` (string, required): The transaction ID returned by the previous call in this flow.
 
 ## Responses
 

@@ -54,7 +54,7 @@ curl --request POST \
 - `notification.careContext.careContextReference` (string, required): An identifier of patient's care context created in HIP. A care context is a group of patient's health data (Not the actual health data)
 - `notification.hiTypes` (string[], required): Type of health data that created in the care context
 - `notification.date` (string, required): This should be a UTC Date & Time in ISO format
-- `notification.hip` (object, required): Identifier and name of the health information provider.
+- `notification.hip` (object, required): The HIP that linked the care context. Only id is required.
 - `notification.hip.id` (string, required): The service ID of the health information provider
 
 ## Responses

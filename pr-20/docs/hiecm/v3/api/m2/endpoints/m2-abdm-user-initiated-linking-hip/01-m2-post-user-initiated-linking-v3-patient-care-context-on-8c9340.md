@@ -31,10 +31,6 @@ curl --request POST \
   "matchedBy": [
     "MR"
   ],
-  "error": {
-    "code": "ABDM-9999",
-    "message": "Unknown exception"
-  },
   "response": {
     "requestId": "f29f0e59-8388-4698-9fe6-05db67aeac46"
   }

@@ -12,7 +12,15 @@ curl --request POST \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
   --header 'X-CM-ID: sbx' \
   --header 'Content-Type: application/json' \
-  --data '"<VALUE>"'
+  --data '{
+  "hiRequest": {
+    "transactionId": "18235d89-cb13-479d-ad71-7a57d5f669a8",
+    "sessionStatus": "ACKNOWLEDGED"
+  },
+  "response": {
+    "requestId": "6f0b4665-a915-4c92-aa36-65afb4a2cd71"
+  }
+}'
 ```
 
 ## Authorization

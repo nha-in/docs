@@ -9,7 +9,7 @@ Every user needs an ABHA address, `username@abdm`. Consent, notifications and re
 | Job                            | What the user sees                                                                                                                                                                          |
 | ------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Create or link an ABHA address | Register with a mobile number, or with an existing 14 digit ABHA number                                                                                                                     |
-| Log in                         | Mobile number, ABHA address, or ABHA number                                                                                                                                                 |
+| Log in                         | Mobile number, ABHA address, ABHA number, or Aadhaar number                                                                                                                                 |
 | Manage a profile               | Demographics, photo, password, QR code, downloadable ABHA card                                                                                                                              |
 | Share a profile at a facility  | Scan the facility QR code, consent, receive a queue token                                                                                                                                   |
 | Find and link past records     | Search a facility, discover [care contexts](/docs/pr-20/docs/hiecm/v3/getting-started/glossary#care-context), verify by [OTP](/docs/pr-20/docs/hiecm/v3/getting-started/glossary#otp), link |
@@ -50,7 +50,7 @@ A Self-Declared profile needs a "Link ABHA number" action: enter the 14 digit nu
 
 ### Login
 
-All these routes are mandatory.
+All these routes are mandatory, except login by email OTP, which is optional.
 
 | Route                                           | Validated by                                                                |
 | ----------------------------------------------- | --------------------------------------------------------------------------- |

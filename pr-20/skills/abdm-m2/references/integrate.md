@@ -69,10 +69,6 @@ curl --request POST \
     "status": "OK",
     "consentId": "e3c74829-3f82-4f94-959e-e10f57bcd57b"
   },
-  "error": {
-    "code": "ABDM-1001",
-    "message": "unable to connect database"
-  },
   "response": {
     "requestId": "6f0b4665-a915-4c92-aa36-65afb4a2cd71"
   }

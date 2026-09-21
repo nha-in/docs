@@ -181,8 +181,6 @@ sequenceDiagram
 
 ABHA login using a registered mobile number enables individuals to securely access their ABHA-linked profile and services through a mobile OTP-based authentication process. Since a single mobile number may be associated with multiple ABHA accounts, the user may be required to select the appropriate ABHA account after successful verification. Upon completion of the authentication process, authorized access is granted to the individual's ABHA profile and associated services in accordance with ABDM guidelines.
 
-Login by Aadhaar number, by ABHA number and by ABHA address follow the same two steps: request a challenge, then verify it. The [M1 API reference](/docs/pr-20/docs/hiecm/v3/api/m1) lists which routes are mandatory.
-
 ## Find ABHA from mobile number
 
 ```mermaid

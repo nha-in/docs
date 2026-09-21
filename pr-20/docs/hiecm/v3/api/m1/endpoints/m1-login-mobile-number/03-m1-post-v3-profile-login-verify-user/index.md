@@ -38,8 +38,8 @@ curl --request POST \
 
 ## Body
 
-- `ABHANumber` (string, required)
-- `txnId` (string, required)
+- `ABHANumber` (string, required): The 14 digit ABHA number to sign in to, chosen from the accounts the previous call listed.
+- `txnId` (string, required): The transaction ID returned by the previous call in this flow.
 
 ## Responses
 

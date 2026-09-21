@@ -98,7 +98,7 @@ curl --request POST \
 - `includedSources.period` (object, required): The date range between when the subscription will be active
 - `includedSources.period.from` (string, required): UTC date time in ISO format. Allows alpha numeric character and special characters like  "\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}.\\d{3}Z$"
 - `includedSources.period.to` (string, required): UTC date time in ISO format.Allows alpha numeric character and special characters like  "\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}.\\d{3}Z$"
-- `excludedSources` (object[], required): Excluded sources, carrying the list of hi types.
+- `excludedSources` (object[]): Excluded sources, carrying the list of hi types.
 - `excludedSources.hiTypes` (string[], required): Types of health information document.
 - `excludedSources.purpose` (object, required)
 - `excludedSources.purpose.text` (string, required) One of: Care Management, Break the Glass, Public Health, Healthcare Payment, Disease Specific Healthcare Research, Self Requested.

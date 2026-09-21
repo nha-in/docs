@@ -6,12 +6,13 @@ P1 is the patient side of [M1 Identity](/docs/pr-20/docs/hiecm/v3/milestones/m1)
 
 - Every user needs an ABHA address, `username@abdm`. Consent, notifications and record sharing all hang off it.
 - Build both creation paths: by mobile number, and by an existing 14 digit ABHA number.
-- All eight login routes are mandatory.
+- Every login route is mandatory except the two email OTP routes, which are optional.
+- Fetch the PHR public key first. It is not the ABHA service's key.
 - A user can hold several ABHA addresses but only one ABHA number.
 
 ## What you build
 
-Registration and login, and the profile the patient reads and edits.
+Registration and login. The profile the patient reads and edits is [P2](/docs/pr-20/docs/hiecm/v3/milestones/p2).
 
 ## Creating an ABHA address
 
@@ -42,27 +43,35 @@ A Self-Declared profile needs a "Link ABHA number" action. The user enters the 1
 
 ## Login
 
-Sign a user in to a PHR application by any of these routes, all of them mandatory.
+Sign a user in to a PHR application by any of these routes. Every route is mandatory except login by email OTP, which is optional.
 
-| Route                          | Validated by                                                                |
-| ------------------------------ | --------------------------------------------------------------------------- |
-| Mobile number                  | Mobile OTP, then the user picks which linked ABHA address to sign in as     |
-| An address such as `name@abdm` | Password, mobile OTP or email OTP, by the auth methods the address supports |
-| The 14 digit ABHA number       | ABHA OTP or Aadhaar OTP                                                     |
+| Route                          | Validated by                                                                           |
+| ------------------------------ | -------------------------------------------------------------------------------------- |
+| Mobile number                  | Mobile OTP                                                                             |
+| An address such as `name@abdm` | Password, mobile OTP or email OTP (optional), by the auth methods the address supports |
+| The 14 digit ABHA number       | ABHA OTP or Aadhaar OTP                                                                |
+| The Aadhaar number             | Aadhaar OTP                                                                            |
+
+Every OTP route returns the ABHA addresses linked to that identifier. The user picks the one to sign in as, and you confirm the choice with the verify user call.
 
 Resend OTP unlocks after 60 seconds in every flow. You also need a reset password screen behind login, secure storage of the refresh token, and more than one user profile per install with sign in and sign out.
 
-## Profile, card and QR code
+## Tokens and base URLs
 
-| Element                  | What it holds                                                                              |
-| ------------------------ | ------------------------------------------------------------------------------------------ |
-| Profile screen           | Editable demographics, marked KYC Verified or Self-Declared                                |
-| ABHA number              | Visible only on a KYC Verified profile                                                     |
-| ABHA address card, a PDF | Photo, full name, ABHA number, ABHA address, QR code, date of birth, gender, mobile number |
-| Editable, KYC Verified   | Mobile number, with an OTP to the new number, and address                                  |
-| Editable, Self-Declared  | The same, plus photo, full name, gender and date of birth                                  |
+| Token or URL                          | Value                                              |
+| ------------------------------------- | -------------------------------------------------- |
+| Gateway session token                 | Valid for 20 minutes                               |
+| User token from login                 | Valid for 30 minutes                               |
+| Refresh token                         | Valid for 15 days                                  |
+| PHR APIs, sandbox                     | `https://abhasbx.abdm.gov.in/abha/api/v3/phr/app/` |
+| PHR APIs, production                  | `https://apis.abdm.gov.in/phr/api/phr/app/v3/`     |
+| ABHA address verification, sandbox    | `https://abhasbx.abdm.gov.in/abha/api/v3/phr/web`  |
+| ABHA address verification, production | `https://phr.abdm.gov.in/api/phr/web/v3`           |
+
+Encrypt the Aadhaar number, mobile number, OTP and password with the PHR public key from `GET /abha/api/v3/phr/app/login/public/certificate`. It is a different key from the ABHA service's, so fetch it before any other PHR call.
 
 ## Next
 
 - The calls and base URLs: [P1 API reference](/docs/pr-20/reference/hiecm-p1).
+- The profile, card and QR code the signed in user manages: [P2](/docs/pr-20/docs/hiecm/v3/milestones/p2).
 - The next milestone: [P2 Linking and records](/docs/pr-20/docs/hiecm/v3/milestones/p2).

@@ -12,7 +12,7 @@
 
 ### Seven NHCX agent skills
 
-Seven agent skills build NHCX into a hospital information system or a claims desk, one use case each: coverage, the insurance plan, pre-authorisation, the claim, payment, communication and reprocess. [Build with AI](/docs/pr-20/docs/nhcx/v1/getting-started/build-with-ai#agent-skills) lists them with the command that installs each.
+Seven agent skills build NHCX into a hospital information system or a claims desk, one use case each: coverage, the insurance plan, pre-authorisation, the claim, payment, communication and reprocess. [Build with AI](/docs/pr-20/docs/nhcx/v1/getting-started/build-with-ai#install-a-skill) lists them with the command that installs each.
 
 ### Start on the NHCX sandbox
 

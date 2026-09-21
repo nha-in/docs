@@ -37,9 +37,9 @@ curl --request POST \
 
 ## Body
 
-- `txnId` (string, required)
-- `abhaAddress` (string, required)
-- `preferred` (integer, required)
+- `txnId` (string, required): The transaction ID returned by the previous call in this flow.
+- `abhaAddress` (string, required): The ABHA address chosen for the account, without the @ suffix.
+- `preferred` (integer, required): 1 to make this the preferred ABHA address of the account, 0 otherwise.
 
 ## Responses
 

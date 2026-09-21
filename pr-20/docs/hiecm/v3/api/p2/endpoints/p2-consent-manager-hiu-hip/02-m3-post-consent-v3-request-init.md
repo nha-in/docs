@@ -24,9 +24,7 @@ curl --request POST \
     },
     "hip": null,
     "hiu": {
-      "id": "cowin_hiu_01",
-      "name": "Cowin",
-      "type": "HIU"
+      "id": "cowin_hiu_01"
     },
     "careContexts": [
       {

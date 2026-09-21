@@ -30,7 +30,7 @@ curl --request POST \
 
 ## Body
 
-- `abhaAddress` (string, required)
+- `abhaAddress` (string, required): The ABHA address chosen for the account, without the @ suffix.
 
 ## Responses
 

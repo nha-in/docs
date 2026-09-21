@@ -25,7 +25,7 @@ curl --request POST \
     "aadhaar-otp-verify"
   ],
   "loginHint": "aadhaar",
-  "loginId": "<BASE64_PHOTO>",
+  "loginId": "<ENCRYPTED_LOGIN_ID>",
   "otpSystem": "aadhaar"
 }'
 ```
@@ -41,10 +41,10 @@ curl --request POST \
 
 ## Body
 
-- `scope` (string[])
-- `loginHint` (string)
-- `loginId` (string)
-- `otpSystem` (string)
+- `scope` (string[], required)
+- `loginHint` (string, required)
+- `loginId` (string, required)
+- `otpSystem` (string, required)
 
 ## Responses
 

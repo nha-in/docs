@@ -33,10 +33,6 @@ curl --request POST \
       "count": 1
     }
   ],
-  "error": {
-    "code": "ABDM-1001",
-    "message": "No data found"
-  },
   "response": {
     "requestId": "f29f0e59-8388-4698-9fe6-05db67aeac46"
   }

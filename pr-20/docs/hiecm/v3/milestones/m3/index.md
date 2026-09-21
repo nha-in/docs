@@ -84,7 +84,7 @@ Milestone 3 covers the consent-management and health-information exchange workfl
 ```mermaid
 sequenceDiagram
     autonumber
-    participant S as Your system
+    participant S as Application/System
     participant CM as HIE-CM
     actor P as Patient (PHR app)
     Note over S: Every call carries REQUEST-ID, TIMESTAMP,<br/>X-CM-ID, X-HIU-ID and the gateway access token
@@ -111,7 +111,7 @@ sequenceDiagram
     autonumber
     actor P as Patient (PHR app)
     participant CM as HIE-CM
-    participant S as Your system
+    participant S as Application/System
     P->>CM: Reviews the request, sets the date range and expiry
     alt Patient grants
         P->>CM: Grants
@@ -139,7 +139,7 @@ sequenceDiagram
 ```mermaid
 sequenceDiagram
     autonumber
-    participant S as Your system
+    participant S as Application/System
     participant CM as HIE-CM
     participant H as HIP
     S->>CM: POST /api/hiecm/consent/v3/fetch<br/>consentId
