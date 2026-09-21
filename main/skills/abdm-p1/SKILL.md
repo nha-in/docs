@@ -12,19 +12,18 @@ If the abdm-docs MCP server is connected, trust its answers over this file: it s
 
 ## What you can do with P1
 
-- Create ABHA number, Aadhaar OTP
+- PHR certificate and session token
 - Create ABHA address, mobile number
 - Create ABHA address, ABHA number with ABHA OTP
 - Create ABHA address, ABHA number with Aadhaar OTP
 - PHR login, mobile number
-- PHR login, email
+- PHR login, email (optional)
 - PHR login, ABHA address with mobile OTP
 - PHR login, ABHA number with Aadhaar OTP
 - PHR login, ABHA number with ABHA OTP
 - PHR login, ABHA address with password
-- PHR login, ABHA address with email OTP
+- PHR login, ABHA address with email OTP (optional)
 - PHR login, Aadhaar OTP
-- PHR certificate and session token
 
 What it cannot do yet matters as much. Read **Before anything else** below before assuming a capability is one endpoint away.
 

@@ -17,7 +17,7 @@ The payer calls it after receiving a /v1/insuranceplan/request Task (code poll),
 - The inbound Task was decrypted, its correlation ID captured and the 202 acceptance body already returned.
 - Payer registered on NHCX with a valid Bearer token and the provider's certificate for JWE encryption.
 - A collection Bundle containing InsurancePlan (with plan.generalCost for the overall sum insured, specificCost per speciality, benefit per package with cost and qualifiers, and the claim-exclusion, claimCondition and claimSupportingInfoRequirement extensions), Organisation entries and any Questionnaire resources.
-- Protected header echoing the request's correlation ID with a fresh API_call_ID, IST TIMESTAMP and responder status; request body declared as a bare object in the OpenAPI but still a JWE per RFC-7516.
+- Protected header echoing the request's correlation ID with a fresh API_call_ID, IST timestamp and responder status; request body declared as a bare object in the OpenAPI but still a JWE per RFC-7516.
 
 ### Postconditions
 
@@ -38,7 +38,7 @@ The gateway returns HTTP 202 with the StatusSuccessResponse envelope (400, 404 a
 - Filter to the requesting provider's empanelled specialities and the named policy; include Questionnaire resources for mandatory documents and STGs.
 - Use the documented claim-condition codes (GovtReserved, ApprovalNotRequired, EnhancementAllowed, QuantityAllowed, IsDayCare, ImplantApplicable, StratificationAllowed, Standalone, ParentProcedure, Unspecified) so provider systems can enforce them.
 - Provider side: cache with periodic refresh, refresh when treatment changes, and validate preauth items against the plan's speciality and package codes.
-- Use a fresh API_call_ID, IST TIMESTAMP and response.complete or response.error.
+- Use a fresh API_call_ID, IST timestamp and response.complete or response.error.
 
 ### Related scenario
 

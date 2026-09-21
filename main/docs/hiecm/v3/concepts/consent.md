@@ -105,6 +105,6 @@ An auto approval policy works like this: the patient authorises the app once, th
 
 - [Hospital, lab and pharmacy systems](/docs/main/docs/hiecm/v3/concepts/hip-hiu), the facility taking each role.
 - [The ABDM gateway](/docs/main/docs/hiecm/v3/concepts/gateway), which holds every artefact here.
-- [M3 Retrieve, Health Information User Services](/docs/main/docs/hiecm/v3/api/m3), the requesting side.
-- [M2 Attach, Health Information Provider Services](/docs/main/docs/hiecm/v3/api/m2), what a record holder validates.
+- [M3 Health Information User, Health Information User Services](/docs/main/docs/hiecm/v3/api/m3), the requesting side.
+- [M2 Health Information Provider, Health Information Provider Services](/docs/main/docs/hiecm/v3/api/m2), what a record holder validates.
 - [How a record travels](/docs/main/docs/hiecm/v3/concepts/data-flow), what happens next.

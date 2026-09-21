@@ -53,7 +53,7 @@ paths:
         - P1-Registration-login › P1 - Create ABHA Address Flow › Enrolment via ABHA Number-Aadhaar OTP › Enroll ABHA Address
       operationId: p1_post_v3_phr_app_enrollment_enrol
       security:
-        - apiKeyAuth: []
+        - bearerAuth: []
       parameters:
         - name: REQUEST-ID
           in: header
@@ -119,13 +119,16 @@ paths:
                       type: string
                     password:
                       type: string
+              required:
+                - txnId
+                - phrDetails
             examples:
               Enroll ABHA Address:
                 summary: Enrolment via Mobile › Enroll ABHA Address
                 value:
                   txnId: 27d444b7-2a3d-46d8-bf67-e5590b6c46b6
                   phrDetails:
-                    mobile: <BASE64_PHOTO>
+                    mobile: <ENCRYPTED_MOBILE>
                     firstName: John
                     middleName: ""
                     lastName: Doe
@@ -142,7 +145,7 @@ paths:
                     districtCode: "123"
                     pinCode: <PINCODE>
                     abhaAddress: <ABHA_ADDRESS>
-                    password: <BASE64_PHOTO>
+                    password: <ENCRYPTED_PASSWORD>
               Enroll ABHA Address (2):
                 summary: Enrolment via ABHA Number-ABHA OTP › Enroll ABHA Address
                 value:
@@ -156,7 +159,7 @@ paths:
                     yearOfBirth: <DOB>
                     gender: M
                     email: ""
-                    mobile: <BASE64_PHOTO>
+                    mobile: <ENCRYPTED_MOBILE>
                     address: <ADDRESS>
                     stateName: Maharashtra
                     stateCode: "27"
@@ -164,7 +167,7 @@ paths:
                     districtCode: "123"
                     pinCode: <PINCODE>
                     abhaAddress: <ABHA_ADDRESS>
-                    password: <BASE64_PHOTO>
+                    password: <ENCRYPTED_PASSWORD>
               Enroll ABHA Address (3):
                 summary: Enrolment via ABHA Number-Aadhaar OTP › Enroll ABHA Address
                 value:
@@ -178,7 +181,7 @@ paths:
                     yearOfBirth: <DOB>
                     gender: M
                     email: ""
-                    mobile: <BASE64_PHOTO>
+                    mobile: <ENCRYPTED_MOBILE>
                     address: <ADDRESS>
                     stateName: Maharashtra
                     stateCode: "27"
@@ -186,7 +189,7 @@ paths:
                     districtCode: "123"
                     pinCode: <PINCODE>
                     abhaAddress: <ABHA_ADDRESS>
-                    password: <BASE64_PHOTO>
+                    password: <ENCRYPTED_PASSWORD>
       responses:
         "200":
           description: OK
@@ -433,7 +436,7 @@ paths:
         - P1-Registration-login › P1 - Create ABHA Address Flow › Enrolment via ABHA Number-Aadhaar OTP › isExists API
       operationId: p1_get_v3_phr_app_enrollment_isexists
       security:
-        - apiKeyAuth: []
+        - bearerAuth: []
       parameters:
         - name: abhaAddress
           in: query
@@ -539,7 +542,7 @@ paths:
         - P1-Registration-login › P1 - Create ABHA Address Flow › Enrolment via ABHA Number-Aadhaar OTP › OTP Request - AADHAR OTP
       operationId: p1_post_v3_phr_app_enrollment_request_otp
       security:
-        - apiKeyAuth: []
+        - bearerAuth: []
       parameters:
         - name: REQUEST-ID
           in: header
@@ -574,6 +577,11 @@ paths:
                   type: string
                 otpSystem:
                   type: string
+              required:
+                - scope
+                - loginHint
+                - loginId
+                - otpSystem
             examples:
               OTP Request - Mobile:
                 summary: Enrolment via Mobile › OTP Request - Mobile
@@ -701,7 +709,7 @@ paths:
         - P1-Registration-login › P1 - Create ABHA Address Flow › Enrolment via ABHA Number-Aadhaar OTP › Suggestion API
       operationId: p1_post_v3_phr_app_enrollment_suggestion
       security:
-        - apiKeyAuth: []
+        - bearerAuth: []
       parameters:
         - name: REQUEST-ID
           in: header
@@ -740,6 +748,13 @@ paths:
                   type: string
                 email:
                   type: string
+              required:
+                - txnId
+                - firstName
+                - lastName
+                - dayOfBirth
+                - monthOfBirth
+                - yearOfBirth
             examples:
               Suggestion API:
                 summary: Enrolment via Mobile › Suggestion API
@@ -900,7 +915,7 @@ paths:
         - P1-Registration-login › P1 - Create ABHA Address Flow › Enrolment via ABHA Number-Aadhaar OTP › OTP Verify - AADHAR OTP
       operationId: p1_post_v3_phr_app_enrollment_verify
       security:
-        - apiKeyAuth: []
+        - bearerAuth: []
       parameters:
         - name: REQUEST-ID
           in: header
@@ -943,6 +958,9 @@ paths:
                           type: string
                         otpValue:
                           type: string
+              required:
+                - scope
+                - authData
             examples:
               OTP Verify - Mobile:
                 summary: Enrolment via Mobile › OTP Verify - Mobile
@@ -1311,7 +1329,7 @@ paths:
       summary: PHR Certificate
       operationId: p1_get_v3_phr_app_login_public_certificate
       security:
-        - apiKeyAuth: []
+        - bearerAuth: []
       parameters:
         - name: REQUEST-ID
           in: header
@@ -1350,7 +1368,7 @@ paths:
       operationId: p1_post_v3_phr_app_login_request_otp
       security:
         - bearerAuth: []
-        - apiKeyAuth: []
+        - bearerAuth: []
       parameters:
         - name: REQUEST-ID
           in: header
@@ -1385,6 +1403,11 @@ paths:
                   type: string
                 otpSystem:
                   type: string
+              required:
+                - scope
+                - loginHint
+                - loginId
+                - otpSystem
             examples:
               OTP Request - Mobile:
                 summary: P1 - Login via Mobile Number › OTP Request - Mobile
@@ -1448,7 +1471,7 @@ paths:
                     - aadhaar-verify
                     - aadhaar-otp-verify
                   loginHint: aadhaar
-                  loginId: <BASE64_PHOTO>
+                  loginId: <ENCRYPTED_LOGIN_ID>
                   otpSystem: aadhaar
       responses:
         "200":
@@ -1644,7 +1667,7 @@ paths:
       summary: Search Auth Methods - ABHAAddress
       operationId: p1_post_v3_phr_app_login_search
       security:
-        - apiKeyAuth: []
+        - bearerAuth: []
       parameters:
         - name: REQUEST-ID
           in: header
@@ -1671,6 +1694,8 @@ paths:
               properties:
                 abhaAddress:
                   type: string
+              required:
+                - abhaAddress
             examples:
               Search Auth Methods - ABHAAddress:
                 summary: P1 - Login via ABHA Address - Password › Search Auth Methods - ABHAAddress
@@ -1796,7 +1821,7 @@ paths:
       operationId: p1_post_v3_phr_app_login_verify
       security:
         - bearerAuth: []
-        - apiKeyAuth: []
+        - bearerAuth: []
       parameters:
         - name: REQUEST-ID
           in: header
@@ -1846,6 +1871,9 @@ paths:
                           type: string
                         password:
                           type: string
+              required:
+                - scope
+                - authData
             examples:
               Login OTP Verify - Mobile:
                 summary: P1 - Login via Mobile Number › Login OTP Verify - Mobile
@@ -1918,7 +1946,7 @@ paths:
                       - password
                     password:
                       abhaAddress: <ABHA_ADDRESS>
-                      password: <BASE64_PHOTO>
+                      password: <ENCRYPTED_PASSWORD>
               Login OTP Verify - ABHAADDRESS Email:
                 summary: P1 - Login via ABHA Address - Email OTP › Login OTP Verify - ABHAADDRESS Email
                 value:
@@ -1943,7 +1971,7 @@ paths:
                       - otp
                     otp:
                       txnId: c51ad4d8-ae92-4509-8fb9-b91dea948492
-                      otpValue: <BASE64_PHOTO>
+                      otpValue: <ENCRYPTED_OTP_VALUE>
       responses:
         "200":
           description: OK
@@ -2505,7 +2533,7 @@ paths:
       operationId: p1_post_v3_phr_app_login_verify_user
       security:
         - bearerAuth: []
-        - apiKeyAuth: []
+        - bearerAuth: []
       parameters:
         - name: REQUEST-ID
           in: header
@@ -2521,6 +2549,7 @@ paths:
           schema:
             type: string
           example: Bearer <JWT TOKEN>
+          description: The transaction token from the preceding login step, sent with a `Bearer ` prefix. It is valid only for that login.
         - name: TIMESTAMP
           in: header
           required: true
@@ -2540,6 +2569,9 @@ paths:
                   type: string
                 txnId:
                   type: string
+              required:
+                - abhaAddress
+                - txnId
             examples:
               Verify User:
                 summary: Enrolment via ABHA Number-ABHA OTP › Verify User
@@ -2726,6 +2758,7 @@ paths:
           schema:
             type: string
           example: Bearer <JWT TOKEN>
+          description: The user token from a login or enrolment response, sent with a `Bearer ` prefix. It acts for that ABHA holder.
       requestBody:
         required: true
         content:
@@ -2763,4 +2796,4 @@ components:
       type: http
       scheme: bearer
       bearerFormat: JWT
-      description: The access token from POST /api/hiecm/gateway/v3/sessions.
+      description: The access token from POST /api/hiecm/gateway/v3/sessions, sent with a `Bearer ` prefix.

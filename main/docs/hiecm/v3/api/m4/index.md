@@ -10,4 +10,4 @@ Register a healthcare professional on the HPR, onboard a facility to the HFR, an
 
 The full operation list is in the [M4 API reference](/docs/main/reference/hiecm-m4).
 
-New to this? Start with [M4 Enrol](/docs/main/docs/hiecm/v3/milestones/m4).
+New to this? Start with [M4 Registry Integration](/docs/main/docs/hiecm/v3/milestones/m4).

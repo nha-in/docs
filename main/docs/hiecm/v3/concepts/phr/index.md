@@ -9,7 +9,7 @@ Every user needs an ABHA address, `username@abdm`. Consent, notifications and re
 | Job                            | What the user sees                                                                                                                                                                        |
 | ------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Create or link an ABHA address | Register with a mobile number, or with an existing 14 digit ABHA number                                                                                                                   |
-| Log in                         | Mobile number, ABHA address, or ABHA number                                                                                                                                               |
+| Log in                         | Mobile number, ABHA address, ABHA number, or Aadhaar number                                                                                                                               |
 | Manage a profile               | Demographics, photo, password, QR code, downloadable ABHA card                                                                                                                            |
 | Share a profile at a facility  | Scan the facility QR code, consent, receive a queue token                                                                                                                                 |
 | Find and link past records     | Search a facility, discover [care contexts](/docs/main/docs/hiecm/v3/getting-started/glossary#care-context), verify by [OTP](/docs/main/docs/hiecm/v3/getting-started/glossary#otp), link |
@@ -19,7 +19,9 @@ Every user needs an ABHA address, `username@abdm`. Consent, notifications and re
 
 A PHR app is two parts, whatever it looks like to the user. The app on the phone signs the person in, shows the screens and scans codes. A server you run holds the client ID and secret, mints the [gateway session token](/docs/main/docs/hiecm/v3/concepts/gateway), and hosts the callback URL registered for your bridge. Every answer to a linking, consent or data request arrives at that URL as a POST, so an app with no server never hears the answer. Never ship the client secret inside the app.
 
-## What you build in M1
+## What you build in P1 and P2
+
+Registration and login are [P1](/docs/main/docs/hiecm/v3/milestones/p1). The profile, card and QR code are [P2](/docs/main/docs/hiecm/v3/milestones/p2).
 
 The ABHA sandbox base URL is `https://abhasbx.abdm.gov.in/abha/api/v3/`. PHR enrolment uses `https://abhasbx.abdm.gov.in/abha/api/v3/phr/app/enrollment/request/otp`.
 
@@ -36,10 +38,11 @@ After validation on either path, show the ABHA addresses already linked to that 
 
 Address rules:
 
-- Letters, numbers, one optional dot and one optional underscore.
-- Starts and ends with a letter or number, 8 to 18 characters long.
-- Creating a `10digitmobile@abdm` address is currently blocked.
-- Creating a `14digit@abdm` address is not allowed, but a user can log in with one. Every 14 digit ABHA number is issued a default address of this shape, written as `14digit@sbx` or `14digit@abdm`. Which environment uses which suffix is not documented yet.
+- Letters (A to Z), digits (0 to 9) and the dot, 8 to 18 characters long.
+- Cannot begin with a digit, and cannot begin or end with a dot.
+- A mobile number cannot be used as an address.
+- Creating a `14digit@abdm` address is not allowed, but a user can log in with one. Every 14 digit ABHA number is issued a default address of this shape.
+- The suffix is `@sbx` in sandbox and `@abdm` in production.
 - Password, where you collect one: 8 characters or longer, one A to Z, one digit, one special character from `!@#$^*_-`, no spaces, no more than 2 consecutive characters or keyboard keys. Password validation is now optional.
 
 ### Linking an ABHA number to an ABHA address
@@ -50,13 +53,14 @@ A Self-Declared profile needs a "Link ABHA number" action: enter the 14 digit nu
 
 ### Login
 
-All these routes are mandatory.
+All these routes are mandatory, except login by email OTP, which is optional.
 
 | Route                                           | Validated by                                                                |
 | ----------------------------------------------- | --------------------------------------------------------------------------- |
 | Mobile number                                   | Mobile OTP, then the user picks which linked ABHA address to sign in as     |
 | An easy to remember address such as `name@abdm` | Password, mobile OTP or email OTP, by the auth methods the address supports |
 | The 14 digit ABHA number                        | ABHA OTP or Aadhaar OTP                                                     |
+| The Aadhaar number                              | Aadhaar OTP                                                                 |
 
 Resend OTP unlocks after 60 seconds in every flow. You also need a reset password screen behind login with a confirmation message, secure storage of the refresh token to extend the session, and more than one user profile per install with sign in and sign out.
 
@@ -133,7 +137,7 @@ Once a care context is linked to the user's ABHA address:
 
 A care context can be linked to a person's address by any facility they visit, without your application being part of it. A subscription is how you find out: a standing watch on one address, delivering to your callback whenever something changes.
 
-NHA expects a PHR app to set one up at two moments, when it creates an address and when a person signs in with an address it has not seen before. The person must be asked to consent to it; signing in does not imply it.
+Set one up at two moments: when it creates an address and when a person signs in with an address it has not seen before. The person must be asked to consent to it; signing in does not imply it.
 
 Once approved, a notification arrives when a care context is linked or updated. Showing it on the device is your job.
 

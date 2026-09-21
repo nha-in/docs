@@ -143,8 +143,8 @@ The whole of M1: the calls, the loop that builds them, every error code and the 
 
 - ScaffoldThe loop that builds the module flow by flow against the sandbox, ending on an observed result rather than on a call returning 200.
 - Design
-- Integrate41 operations, with their hosts, headers and the rules that hold across them.
-- Debug14 recorded error codes, each with its message and what to do about it.
+- Integrate132 operations, with their hosts, headers and the rules that hold across them.
+- Debug17 recorded error codes, each with its message and what to do about it.
 
 `mkdir -p .claude/skills/abdm-m1/references && curl -fsSL https://nha-in.github.io/docs/main/skills/abdm-m1/SKILL.md -o .claude/skills/abdm-m1/SKILL.md && for f in scaffold design integrate debug; do curl -fsSL https://nha-in.github.io/docs/main/skills/abdm-m1/references/$f.md -o .claude/skills/abdm-m1/references/$f.md; done`
 
@@ -155,7 +155,7 @@ Drops the skill into this project. Claude loads it when a task matches.
 How to use it
 
 1. Run the command above in the repository you are integrating.
-2. Ask your agent for the job in your own words. "Add ABHA creation by Aadhaar OTP to this codebase", "why am I getting 900900". The skill loads when the task matches it.
+2. Ask your agent for the job in your own words. "Add ABHA creation by Aadhaar OTP to this codebase", "why am I getting 404". The skill loads when the task matches it.
 3. Check what it writes against these pages. The skill carries the facts, not the sandbox: nothing in it has been run against ABDM.
 4. Open in Claude needs that app installed. It fills the composer and waits: nothing runs until you read it and press Enter.
 

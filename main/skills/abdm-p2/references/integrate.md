@@ -47,7 +47,7 @@ The calls themselves: where they live, what they need in their headers, and one 
 | `GET` | `/api/hiecm/gateway/v3/health-lockers` | Fetch the record with health locker enabled provider details. |
 | `GET` | `/api/hiecm/gateway/v3/providers` | Fetch the list of providers filtered by name. |
 | `GET` | `/api/hiecm/gateway/v3/providers/{provider-id}` | Fetch the record for provider details for requested provider ID. |
-| `POST` | `/api/hiecm/gateway/v3/sessions` | Generate Keycloak token/access token. |
+| `POST` | `/api/hiecm/gateway/v3/sessions` | Generate access token. |
 | `GET` | `/api/hiecm/hip/v3/link/patient/links` | This is the PHR APP API, this API will used to fetch all link care-context for … |
 | `GET` | `/api/hiecm/patient-share/v3/profile/getTokenDetails` | Get the historical token numbers of the patient |
 | `POST` | `/api/hiecm/patient-share/v3/share` | Be invoked from the PHR-HIU application for sharing the patient/user profile wi… |
@@ -62,20 +62,22 @@ The calls themselves: where they live, what they need in their headers, and one 
 
 | Header | What it is |
 | --- | --- |
-| `X-token` |  |
+| `X-token` | The user token from a login or enrolment response, sent with a `Bearer ` prefix. It acts for that ABHA holder. |
 | `REQUEST-ID` | Unique UUID for each request. |
 | `TIMESTAMP` | Request timestamp in UTC, ISO-8601 with Z. |
-| `R-token` |  |
-| `T-token` |  |
+| `X-AUTH-TOKEN` | The user token issued at login. Send it beside X-token. |
+| `R-token` | The refresh token from a login response, sent with a `Bearer ` prefix, exchanged for a new user token. |
+| `T-token` | The transaction token from the preceding login step, sent with a `Bearer ` prefix. It is valid only for that … |
 | `X-CM-ID` | Suffix of the consent manager to which the request was intended |
-| `X-AUTH-TOKEN` | JWT Authentication token which was issued by ABDM after successful validation of username and password |
 | `X-HIU-ID` | Identifier of the health information user to which the request was intended |
 ## A request, in full
 
 ```bash
 curl --request GET \
   --url https://abhasbx.abdm.gov.in/abha/api/v3/phr/app/login/profile \
+  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'X-token: Bearer <JWT TOKEN>' \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
-  --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z'
+  --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
+  --header 'X-AUTH-TOKEN: <X_AUTH_TOKEN>'
 ```

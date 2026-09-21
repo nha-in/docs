@@ -17,7 +17,7 @@ TIMESTAMP actual time of the requested was initiated[ Example: 2022-10-06T10:10:
 
  **Request Body**
 
-acknowledgement This is a key value which contains the payment status abhaAddress transactionId orderNumber paymentRecipetURL[ Example: { status: [SUCCESS, CANCELED, PENDING, FAIL, REFUND_INITIATED, REFUND_SUCCESS] abhaAddress: transactionId: uniqueId orderNumber: 76274 openOrderRequestId: 3876e71 paymentDate: 12314 paymentRecipetURL: URL } ]
+acknowledgement This is a key value which contains the payment status abhaAddress transactionId orderNumber paymentRecipetURL[ Example: { status: [SUCCESS, CANCELED, PENDING, FAIL, REFUND_INITIATED, REFUND_SUCCESS] abhaAddress: transactionId: uniqueId orderNumber: 76274**** openOrderRequestId: 3876e71 paymentDate: 12314 paymentRecipetURL: URL } ]
 
 ```bash
 curl --request POST \
@@ -42,7 +42,7 @@ curl --request POST \
 
 ## Authorization
 
-- `Authorization` (bearer token, required)
+- `Authorization` (bearer token, required): The access token from POST /api/hiecm/gateway/v3/sessions, sent with a `Bearer ` prefix.
 
 ## Headers
 

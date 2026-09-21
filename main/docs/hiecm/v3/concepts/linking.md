@@ -4,18 +4,7 @@ A health record your system creates is invisible to [ABDM](/docs/main/docs/hiecm
 
 ## The unit that gets linked is a care context
 
-You do not link a record. You link a [care context](/docs/main/docs/hiecm/v3/getting-started/glossary#care-context), a group of a patient's records that your system defines. It carries two fields and nothing else.
-
-| Field            | What it is                                                  | Rule                                                                                                     |
-| ---------------- | ----------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
-| Reference number | Your own internal identifier for that group of records      | It has to resolve inside your system, because you will be handed it back later and asked for the records |
-| Display name     | A description the patient reads before they decide anything | No clinical detail. No results, no diagnoses.                                                            |
-
-```json
-{  "patient": {    "referenceNumber": "TMH-PUID-001",    "display": "TMH records for Kiran Kumar",    "careContexts": [      {        "referenceNumber": "2375639",        "display": "OPD records for O3 Oct 2022"      }    ]  }}
-```
-
-A good display name is "OPD records (X-Ray, Prescription) from 3rd March 2023": what kind of visit and when, not what was found. Use one care context per outpatient visit and one per inpatient admission.
+You do not link a record. You link a [care context](/docs/main/docs/hiecm/v3/concepts/care-context), a logical grouping of a patient's health records that your system defines. It carries a reference ID and a display name, and nothing else. What each field holds, and how to structure care contexts per visit and per admission, is on [Care contexts](/docs/main/docs/hiecm/v3/concepts/care-context).
 
 ## Why the record has to be linked first
 
@@ -87,7 +76,7 @@ The full list is on [M2 errors](/docs/main/docs/hiecm/v3/api/m2/errors).
 ## Where this is implemented
 
 - [Hospital, lab and pharmacy systems](/docs/main/docs/hiecm/v3/concepts/hip-hiu), what a facility builds to do the linking.
-- [M2 Attach, Health Information Provider Services](/docs/main/docs/hiecm/v3/api/m2), the call order for all three routes.
+- [M2 Health Information Provider, Health Information Provider Services](/docs/main/docs/hiecm/v3/api/m2), the call order for all three routes.
 - [Consent](/docs/main/docs/hiecm/v3/concepts/consent), what happens once somebody asks for a linked care context.
 - [How a record travels](/docs/main/docs/hiecm/v3/concepts/data-flow), what you do when that request arrives.
 - [PHR applications](/docs/main/docs/hiecm/v3/concepts/phr), the patient side of discovery and linking.

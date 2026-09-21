@@ -15,7 +15,7 @@ curl --request GET \
 
 ## Headers
 
-- `X-Token` (string)
+- `X-Token` (string): The HPR token of the signed-in professional, from the HPR login.
 
 ## Responses
 

@@ -21,7 +21,7 @@ Call it once, at onboarding time, before any transaction API is attempted. The F
 
 ### Postconditions
 
-On success the registry returns HTTP 200 with ParticipantCreateResponse containing only participant_code, described as the machine-generated unique identifier of the participant on the HCX instance; sandbox codes look like 100001@sbx and production codes like XXXXX7583@hcx. There is no asynchronous callback. The new record carries a status (Created, Active, Inactive or Blocked in the architecture description) that the gateway checks on every routing leg, so the code is not usable for transactions until the instance activates it. Failures return 400 Client Error, 404 Resource not found or 500 with the ErrorResponse envelope (TIMESTAMP plus error code, message and trace).
+On success the registry returns HTTP 200 with ParticipantCreateResponse containing only participant_code, described as the machine-generated unique identifier of the participant on the HCX instance; sandbox codes look like 100001@sbx and production codes like XXXXX7583@hcx. There is no asynchronous callback. The new record carries a status (Created, Active, Inactive or Blocked in the architecture description) that the gateway checks on every routing leg, so the code is not usable for transactions until the instance activates it. Failures return 400 Client Error, 404 Resource not found or 500 with the ErrorResponse envelope (timestamp plus error code, message and trace).
 
 ### Common mistakes
 

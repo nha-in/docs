@@ -2,7 +2,7 @@
 
 `POST v1_task_submit`
 
-Hosted by the payer. The exchange posts this message to the `endpoint_URL` you registered, at `/v1/task/submit`, with the headers and the sealed payload the sender posted. Answer HTTP 202 with the receipt first and process afterwards; [Receiving a callback](/docs/nhcx/v1/getting-started/receiving-a-callback) has the rules.
+Hosted by the payer. The exchange posts this message to the `endpoint_url` you registered, at `/v1/task/submit`, with the headers and the sealed payload the sender posted. Answer HTTP 202 with the receipt first and process afterwards; [Receiving a callback](/docs/nhcx/v1/getting-started/receiving-a-callback) has the rules.
 
 Provider sends an FHIR Task asking the payer to reprocess a rejected or short-paid claim or to cancel a preauth; Task.code and reasonCode set the intent.
 

@@ -31,7 +31,7 @@ curl --request POST \
 
 ## Authorization
 
-- `Authorization` (bearer token, required): The access token from POST /api/hiecm/gateway/v3/sessions.
+- `Authorization` (bearer token, required): The access token from POST /api/hiecm/gateway/v3/sessions, sent with a `Bearer ` prefix.
 
 ## Headers
 
@@ -40,10 +40,10 @@ curl --request POST \
 
 ## Body
 
-- `scope` (string[])
-- `loginHint` (string)
-- `loginId` (string)
-- `otpSystem` (string)
+- `scope` (string[], required)
+- `loginHint` (string, required)
+- `loginId` (string, required)
+- `otpSystem` (string, required)
 
 ## Responses
 

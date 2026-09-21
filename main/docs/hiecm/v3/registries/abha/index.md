@@ -1,117 +1,137 @@
-# ABHA, the patient registry
+# ABHA Registry
 
-[ABHA](/docs/main/docs/hiecm/v3/getting-started/glossary#abha) is the Ayushman Bharat Health Account, the patient half of [Registries](/docs/main/docs/hiecm/v3/registries). It answers "who is this patient", and every record flow in [ABDM](/docs/main/docs/hiecm/v3/getting-started/glossary#abdm) starts from that answer.
+## ABHA (Ayushman Bharat Health Account): Identity Framework and Digital Health Access under ABDM
 
-## One account, two identifiers
+The Ayushman Bharat Health Account (ABHA) is a unique health identifier issued under the Ayushman Bharat Digital Mission (ABDM). It serves as the foundational digital identity for individuals within the ABDM ecosystem and enables secure identification, authentication, and exchange of health records.
 
-|                    | ABHA number                                                                                      | ABHA address                                               |
-| ------------------ | ------------------------------------------------------------------------------------------------ | ---------------------------------------------------------- |
-| What it looks like | 14 digits, hyphenated in samples as `91-XXXX-XXXX-XXXX`                                          | A readable name, such as `name@abdm`                       |
-| How it is issued   | After an Aadhaar based [KYC](/docs/main/docs/hiecm/v3/getting-started/glossary#kyc) check passes | Chosen by the person, or issued as a default               |
-| What it is for     | The identity anchor. One person, one number                                                      | Routing. It is the handle other systems address records to |
-| Can exist alone    | No. It always carries a default address                                                          | Yes. A person can hold an address with no number           |
+ABHA facilitates access to digital health services while ensuring interoperability across healthcare providers, health information systems, and personal health applications.
 
-Store both. You match a patient record against the number, and you send the address when you link a [care context](/docs/main/docs/hiecm/v3/getting-started/glossary#care-context) or ask for consent. The number is issued only after a strong KYC process completes.
+## Components of ABHA
 
-## The check digit
+An ABHA account consists of two key identifiers:
 
-Two validation utilities exist: ABHA number validation by the Luhn algorithm, and Aadhaar number validation by the Verhoeff algorithm. Luhn derives the last digit from the ones before it, so you catch a mistyped number locally before spending a call.
+### 1. ABHA Number
 
-## How identity is verified
+The ABHA Number is a unique 14-digit identifier assigned to an individual after successful identity verification.
 
-Verification runs against Aadhaar through the ABHA service, so your system never calls Aadhaar directly. There are four routes:
+**Key Characteristics**
 
-| Route                                                                | How the person proves identity                                                      | Private integrators | Government integrators |
-| -------------------------------------------------------------------- | ----------------------------------------------------------------------------------- | ------------------- | ---------------------- |
-| Aadhaar [OTP](/docs/main/docs/hiecm/v3/getting-started/glossary#otp) | A code sent to the Aadhaar linked mobile number                                     | Mandatory           | Mandatory              |
-| Face authentication                                                  | A QR code scanned in the ABHA app, then face capture through the Aadhaar RD service | Optional            | Optional               |
-| Biometrics                                                           | Fingerprint or IRIS on a registered device, which returns a signed PID block        | Optional            | Optional               |
-| Demographic authentication                                           | Name, date of birth and gender matched against Aadhaar                              | Not required        | Mandatory              |
+- Unique to each individual.
+- Acts as the primary health identity within ABDM.
+- Used for patient identification across healthcare systems.
+- Issued after completion of the KYC verification process.
+- Always associated with at least one ABHA Address.
 
-Build Aadhaar OTP first. It is mandatory for everyone and needs no hardware.
+### 2. ABHA Address
 
-### Child ABHA
+The ABHA Address is a unique and user-friendly identifier in the format: `user@abdm`
 
-A child under six has no Aadhaar number. Child ABHA is a 14 digit identifier created with a parent or legal guardian's consent, so a health record exists from birth. It is restricted to specific government integrators approved by NHA leadership, through programmes including UWIN, RCH and POSHAN. Private integrators cannot use it.
+**Key Characteristics**
 
-## The ABHA address
+- Facilitates secure routing of health information and consent requests.
+- Can be shared with healthcare providers for record linking and data exchange.
+- A default ABHA Address is generated along with every ABHA Number.
+- Users may subsequently create a personalized ABHA Address.
 
-The shape is `name@abdm`.
+## Identity Verification Mechanisms
 
-- **Every number gets a default address**, the number with a suffix: `14digit@sbx` in [sandbox](/docs/main/docs/hiecm/v3/getting-started/glossary#sandbox), `14digit@abdm` in production. The M1 Postman collection shows a `preferredAbhaAddress` field holding the 14 digits with the `@abdm` suffix and no hyphens.
-- **A person can then create a memorable one.** A suggestion call offers addresses, and a custom address is accepted, linked to the number.
-- **An address can exist without a number.** One can be created on the [HIE-CM](/docs/main/docs/hiecm/v3/getting-started/glossary#hie-cm) from mobile number, name, age and gender, self declared and with no KYC. Expect accounts with no number behind them.
+ABHA creation and authentication are performed through ABDM-approved verification methods.
 
-### Address policy
+### Verification Modes
 
-These rules apply:
+**Aadhaar OTP Authentication**
 
-- Letters, numbers and a dot are allowed.
-- It cannot begin with a number.
-- It cannot begin or end with a dot.
-- An all numeric address is allowed only in the `14digit@abdm` default form.
-- A 10 digit mobile number as an address is restricted and not created.
+The individual verifies identity using an OTP sent to the Aadhaar-linked mobile number.
 
-Minimum length differs by flow. Validate against the error the endpoint returns rather than assuming one rule across all of them.
+**Face Authentication**
 
-## What an address is allowed to be
+Identity verification is completed using face authentication through approved Aadhaar RD Service Application.
 
-NHA validates the address on creation, so a form that accepts what NHA refuses produces a failure the person cannot act on. Letters, digits and a single dot are allowed, and beyond that:
+**Biometric Authentication**
 
-- It cannot begin with a digit.
-- It cannot begin or end with a dot.
-- An all digit address is allowed for an ABHA number and nothing else, which is what makes the default `14digit@abdm` legal.
+Verification using fingerprint or iris through registered biometric devices.
 
-Three shapes read as though they should work and do not. A ten digit mobile number as an address is restricted. An ABHA number as an address you create is not allowed, although the default one is issued automatically and signing in with it works on both web and mobile. And anything failing the rules above is refused at creation rather than at submission.
+**Demographic Authentication**
 
-The minimum length is stated twice, differently
+Identity validation based on demographic details such as name, date of birth, and gender, as per applicable demo authentication workflows.
 
-The minimum length is given as 4 characters in one place and as 8 in the test case for creating an address by mobile number. Build to 8, which is the stricter reading.
+## Child ABHA
 
-A password is created alongside the address: at least 8 characters, at least one uppercase letter, one lowercase letter, one digit and one symbol, no spaces, and no more than two consecutive characters or keyboard keys. NHA describes enforcing it as optional for the application, not the password itself as optional.
+A Child ABHA enables digital health record creation for children who may not possess an Aadhaar number.
 
-Offer suggestions rather than an empty box and a policy. Two calls exist for it, address suggestions and address exists, and NHA asks that suggestions be built from the person's name and the username part of their email.
+**Key Features**
 
-## What an ABHA record holds
+- Created with consent of a parent or legal guardian.
+- Enables continuity of health records from birth.
+- Available only through approved government programmes and authorized government entities.
+- Not available for private-sector implementation.
 
-The profile response carries:
+## ABHA Address Guidelines
 
-| Field                                         | What it is                                          |
-| --------------------------------------------- | --------------------------------------------------- |
-| `ABHANumber`                                  | The 14 digit number, hyphenated                     |
-| `preferredAbhaAddress`                        | The address, with its suffix                        |
-| `mobile`                                      | The communication mobile number                     |
-| `firstName`, `middleName`, `lastName`, `name` | Name parts and the joined name                      |
-| `yearOfBirth`, `monthOfBirth`, `dayOfBirth`   | Date of birth as three separate strings             |
-| `gender`                                      | A single letter                                     |
-| `email`                                       | Present once an email is verified, otherwise `null` |
-| `profilePhoto`                                | Base64 image data with no data URI prefix           |
+ABHA Addresses must comply with defined validation standards.
 
-The communication mobile number need not be the Aadhaar linked one. It is verified separately, by its own OTP, after enrolment. Email is optional throughout. An ABHA also carries a card, downloadable as an image, and a QR code, both M1 calls. Field level detail is on [M1 APIs](/docs/main/docs/hiecm/v3/api/m1).
+**Permitted Characters**
 
-## Where the calls go
+- Alphabetic characters (A-Z)
+- Numeric characters (0-9)
+- Dot (.)
 
-```text
-Sandbox     https://abhasbx.abdm.gov.in/abha/api/v3/Production  https://abha.abdm.gov.in/api/abha/v3/
-```
+**Validation Rules**
 
-One exception: login by Aadhaar number using fingerprint or IRIS uses the v3.1 base URL, `https://abhasbx.abdm.gov.in/abha/api/v3.1/`. No production v3.1 URL is given.
+- Cannot begin with a numeric character.
+- Cannot begin or end with a dot (.).
+- Must conform to ABDM validation requirements at the time of creation.
+- Mobile numbers cannot be used directly as ABHA Addresses.
 
-## What M1 does with it
+Organizations should rely on ABDM validation services to verify address eligibility.
 
-[M1](/docs/main/docs/hiecm/v3/api/m1) is the only milestone that writes to this registry. It covers creation, login, profile management and sessions. Login by mobile number, Aadhaar number, ABHA number and ABHA address are all four mandatory for both private and government integrators.
+## Information Associated with an ABHA
 
-## What every other milestone assumes
+An ABHA profile may contain the following information:
 
-- **[M2](/docs/main/docs/hiecm/v3/api/m2)** links a care context to the ABHA address and answers [discovery](/docs/main/docs/hiecm/v3/getting-started/glossary#discovery) against it. See [Linking records](/docs/main/docs/hiecm/v3/concepts/linking).
-- **[M3](/docs/main/docs/hiecm/v3/api/m3)** raises a consent request against the ABHA address. See [Consent](/docs/main/docs/hiecm/v3/concepts/consent).
-- **[PHR applications](/docs/main/docs/hiecm/v3/concepts/phr)** sign a person in by ABHA address and show the records linked to it.
+| Field Category      | Description                                    |
+| ------------------- | ---------------------------------------------- |
+| Personal Details    | Name, gender, date of birth                    |
+| Contact Information | Mobile number and verified email (if provided) |
+| ABHA Details        | ABHA Number and ABHA Address                   |
+| Profile Information | Profile photograph (if available)              |
+| Digital Assets      | ABHA Card and associated QR Code               |
 
-No flow starts without an ABHA, so M1 comes first even when your real goal is M2 or M3.
+## Role of ABHA Across ABDM Milestones
 
-## Next
+### Milestone 1 (M1) - ABHA Management
 
-- [NHPR](/docs/main/docs/hiecm/v3/registries/nhpr), the professional and facility registries.
-- [M1 Create, ABHA Creation and Verification](/docs/main/docs/hiecm/v3/api/m1), the guide.
-- [M1 API reference](/docs/main/reference/hiecm-m1).
-- [Sandbox data dictionary](/docs/main/docs/hiecm/v3/reference/data-dictionary), test identities.
+M1 focuses on:
+
+- ABHA creation
+- Identity verification
+- Login and authentication
+- Profile management
+- Session management
+
+**Supported Login Options**
+
+- Mobile Number
+- Aadhaar Number
+- ABHA Number
+- ABHA Address
+
+### Milestone 2 (M2) - Care Context Linking
+
+M2 enables healthcare providers to link care contexts with an individual's ABHA Address, facilitating discovery and record association.
+
+### Milestone 3 (M3) - Consent Management
+
+M3 enables consent-based health information exchange by using the ABHA Address as the identifier for raising and managing consent requests.
+
+## Importance of ABHA in ABDM
+
+ABHA is the foundational identity layer of the ABDM ecosystem. It enables:
+
+- Unique patient identification.
+- Secure authentication.
+- Health record discovery and linking.
+- Consent-based health information exchange.
+- Interoperable digital health services across India.
+
+Every ABDM health information exchange workflow begins with a valid ABHA identity, making it a critical component of the national digital health ecosystem.

@@ -459,7 +459,6 @@ paths:
               required:
                 - isApplicableForAllHIPs
                 - includedSources
-                - excludedSources
               properties:
                 isApplicableForAllHIPs:
                   type: boolean
@@ -2438,3 +2437,4 @@ components:
       type: http
       scheme: bearer
       bearerFormat: JWT
+      description: The access token from POST /api/hiecm/gateway/v3/sessions, sent with a `Bearer ` prefix.

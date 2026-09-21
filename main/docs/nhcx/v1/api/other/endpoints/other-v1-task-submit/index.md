@@ -18,7 +18,7 @@ After adjudication, when a claim was rejected or partially paid and you have val
 - The original claim or preauth exists; Task.basedOn references it with the sender's reference ID, and Task.input carries claimNumber and the intimation number.
 - Patient resource carries PMJAY Member ID and ABHA number; supporting evidence attached (the FAQ says a document as valueAttachment is mandatory for reprocess).
 - Task.status requested, Task.intent order, Task.code from http://terminology.hl7.org/CodeSystem/financialtaskcode, reasonCode from ndhm-reason-code; Task.description explains when reasonCode is other.
-- Protected header with the original correlation ID, fresh API_call_ID, IST TIMESTAMP, workflow ID and status request.initiated.
+- Protected header with the original correlation ID, fresh API_call_ID, IST timestamp, workflow ID and status request.initiated.
 
 ### Postconditions
 

@@ -37,7 +37,7 @@ HTTP 200 with { access_token, expires_in: 1200, token_type: Bearer }. The access
 - Cache the token in memory keyed by environment and refresh proactively at roughly 80 to 90 percent of the lifetime computed from the expires_in actually received.
 - Serialise refresh behind a lock so concurrent workers do not fire simultaneous token requests.
 - On any 401, discard the cached token, mint a new one and replay the original request exactly once; if the second attempt also fails, stop and alert, since the credentials are wrong or revoked.
-- Never log the access_token or client_secret; log the expiry TIMESTAMP instead.
+- Never log the access_token or client_secret; log the expiry timestamp instead.
 - Store secrets so they can be rotated without a code deploy.
 - The token is validated by ABDM, so a 401 on any NHCX call carries no hint that expiry is the cause; treat 401 as refresh-and-retry first.
 

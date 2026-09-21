@@ -10,6 +10,7 @@ Flows:
 ```bash
 curl --request POST \
   --url https://abhasbx.abdm.gov.in/abha/api/v3/phr/app/enrollment/suggestion \
+  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
   --header 'Content-Type: application/json' \
@@ -24,6 +25,10 @@ curl --request POST \
 }'
 ```
 
+## Authorization
+
+- `Authorization` (bearer token, required): The access token from POST /api/hiecm/gateway/v3/sessions, sent with a `Bearer ` prefix.
+
 ## Headers
 
 - `REQUEST-ID` (string, required): Unique UUID for each request.
@@ -31,12 +36,12 @@ curl --request POST \
 
 ## Body
 
-- `txnId` (string)
-- `firstName` (string)
-- `lastName` (string)
-- `dayOfBirth` (string)
-- `monthOfBirth` (string)
-- `yearOfBirth` (string)
+- `txnId` (string, required)
+- `firstName` (string, required)
+- `lastName` (string, required)
+- `dayOfBirth` (string, required)
+- `monthOfBirth` (string, required)
+- `yearOfBirth` (string, required)
 - `email` (string)
 
 ## Responses

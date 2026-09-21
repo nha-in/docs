@@ -1,4 +1,4 @@
-# Generate Keycloak token/access token
+# Generate access token
 
 `POST /api/hiecm/gateway/v3/sessions`
 
@@ -26,14 +26,13 @@ curl --request POST \
 
 ## Body
 
-- `clientId` (string, required): Mandatory when the clientId.
-- `clientSecret` (string, required): Mandatory when the clientSecret.
+- `clientId` (string, required): The client ID issued to the integrator by ABDM at registration.
+- `clientSecret` (string, required): The client secret issued to the integrator by ABDM along with the client ID.
 - `grantType` (string, required): The method used by the client to obtain an access token, e.g. client_credentials.
 
 ## Responses
 
 - `202`: Accepted
-  See The callback never arrives: /docs/hiecm/v3/troubleshooting/callback-never-arrives
 - `204`: No Content
 - `400`: Bad Request
 - `401`: Unauthorized. The request carried no valid credentials, or the access token has expired. Obtain a fresh token from the session API and retry.

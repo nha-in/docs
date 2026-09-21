@@ -24,7 +24,7 @@ curl --request GET \
 
 ## Authorization
 
-- `Authorization` (bearer token, required): The access token from POST /api/hiecm/gateway/v3/sessions.
+- `Authorization` (bearer token, required): The access token from POST /api/hiecm/gateway/v3/sessions, sent with a `Bearer ` prefix.
 
 ## Headers
 

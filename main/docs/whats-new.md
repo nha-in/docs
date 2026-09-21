@@ -2,6 +2,14 @@
 
 Changes that affect what you can build against, newest first. Each entry links to what you can now read, run or consume.
 
+## 22 September 2026
+
+3 changes
+
+- [PHR calls carry the gateway session token, and their body fields are required](/docs/main/docs/whats-new/2026-09-22#phr-calls-carry-the-gateway-session-token-and-their-body-fields-are-required)
+- [The PHR public key is not the ABHA service's key](/docs/main/docs/whats-new/2026-09-22#the-phr-public-key-is-not-the-abha-services-key)
+- [Consent request init and context notify take an id only](/docs/main/docs/whats-new/2026-09-22#consent-request-init-and-context-notify-take-an-id-only)
+
 ## 16 September 2026
 
 3 changes

@@ -22,7 +22,7 @@ Before the first call, and again whenever the token you hold is more than a few 
 
 ### Postconditions
 
-The gateway returns `accessToken`, `expiresIn`, `refreshToken` and `tokenType` `bearer`. On every NHCX call the token goes in `bearer_auth` as `Bearer `. Some pages and the notification endpoint use `Authorization` instead, so this collection sends both with the same value. The documents put the token's life at 300, 1200 and 6000 seconds in different places, so do not rely on any of them.
+The gateway returns `accessToken`, `expiresIn`, `refreshToken` and `tokenType` `bearer`. On every NHCX call the token goes in `bearer_auth` as `Bearer <token>`. Some pages and the notification endpoint use `Authorization` instead, so this collection sends both with the same value. The documents put the token's life at 300, 1200 and 6000 seconds in different places, so do not rely on any of them.
 
 ### Common mistakes
 
@@ -38,11 +38,11 @@ The gateway returns `accessToken`, `expiresIn`, `refreshToken` and `tokenType` `
 - Keep the token together with the time you got it, and fetch a new one before a call if it is more than a few minutes old.
 - On any `401`, get a new token and retry that call once.
 - Send the token on both `bearer_auth` and `Authorization`.
-- Keep the clock synchronised with NTP and let a date library format the TIMESTAMP.
+- Keep the clock synchronised with NTP and let a date library format the timestamp.
 
 ### Related scenario
 
-A hospital's integration starts its first eligibility check of the day. It posts this request with a new `REQUEST-ID`, the current UTC `TIMESTAMP` and `X-CM-ID` `sbx`, stores the `accessToken` with the time it arrived, and sends it on the check as `bearer_auth: Bearer `. Later a claim call answers `401 Sender is not authorized to execute the operation`. The integration mints a fresh token, retries the claim once, and it goes through.
+A hospital's integration starts its first eligibility check of the day. It posts this request with a new `REQUEST-ID`, the current UTC `TIMESTAMP` and `X-CM-ID` `sbx`, stores the `accessToken` with the time it arrived, and sends it on the check as `bearer_auth: Bearer <token>`. Later a claim call answers `401 Sender is not authorized to execute the operation`. The integration mints a fresh token, retries the claim once, and it goes through.
 
 ### Specification
 

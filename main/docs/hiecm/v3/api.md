@@ -14,19 +14,19 @@ In M2 and M3 a call is acknowledged now and answered later. The answer arrives a
 
 ## M1 ABHA creation and verification
 
-109 endpoints across 7 use cases: Session, tokens and certificate, ABHA creation, ABHA login, Find ABHA, Profile management, Benefit programmes, Other operations. Each endpoint has its own page in the sidebar.
+122 endpoints across 10 use cases: Create ABHA, Child ABHA, Login, Profile, ABHA Card & Profile, Find ABHA, Forgot ABHA, Benefit, Access Tokens & Encryption, ABHA Address Login. Each endpoint has its own page in the sidebar.
 
 [Read the whole specification](/docs/main/reference/hiecm-m1)
 
 ## M2 Health information provider services
 
-21 endpoints across 5 use cases: HIP initiated linking, User initiated linking, Link token, Patient share, Consent and data flow. Each endpoint has its own page in the sidebar.
+20 endpoints across 5 use cases: Link token, HIP initiated linking, User initiated linking, Consent and data flow, Callbacks. Each endpoint has its own page in the sidebar.
 
 [Read the whole specification](/docs/main/reference/hiecm-m2)
 
 ## M3 Health information user services
 
-12 endpoints across 1 use case: Consent and data flow. Each endpoint has its own page in the sidebar.
+12 endpoints across 2 use cases: Consent and data flow, Callbacks. Each endpoint has its own page in the sidebar.
 
 [Read the whole specification](/docs/main/reference/hiecm-m3)
 
@@ -38,7 +38,7 @@ In M2 and M3 a call is acknowledged now and answered later. The answer arrives a
 
 ## P1 Registration and login
 
-48 endpoints across 4 use cases: Create ABHA number, Aadhaar OTP, Create ABHA address, PHR login, PHR certificate and session token. Each endpoint has its own page in the sidebar.
+39 endpoints across 4 use cases: PHR certificate and session token, Create ABHA address, PHR login, Other operations. Each endpoint has its own page in the sidebar.
 
 [Read the whole specification](/docs/main/reference/hiecm-p1)
 
@@ -66,18 +66,20 @@ In M2 and M3 a call is acknowledged now and answered later. The answer arrives a
 
 [Read the whole specification](/docs/main/reference/hiecm-subscription)
 
+## Scan and Register
+
+2 endpoints across 1 use case: Scan and register. Each endpoint has its own page in the sidebar.
+
+[Read the whole specification](/docs/main/reference/hiecm-scan-and-register)
+
+## Patient scan and record share
+
+11 endpoints across 1 use case: Record share. Each endpoint has its own page in the sidebar.
+
+[Read the whole specification](/docs/main/reference/hiecm-record-share)
+
 ## Scan and Pay
 
 18 endpoints across 2 use cases: Scan and pay, Scan and pay details and version update. Each endpoint has its own page in the sidebar.
 
 [Read the whole specification](/docs/main/reference/hiecm-scan-and-pay)
-
-## Callbacks with no documented trigger
-
-3 callbacks are declared at module level with no call named against them. Which call produces each one is not documented, so this page does not say.
-
-| Module                                  | Method | Arrives at                                                                                                                                                                  | What it carries                                                                                                                                                                           |
-| --------------------------------------- | ------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| M2 Health information provider services | POST   | [`/api/v3/hip/patient/care-context/discover`](/docs/main/docs/hiecm/v3/api/m2/endpoints/m2-abdm-user-initiated-linking-hip/01-m2-post-v3-hip-patient-care-context-discover) | This API endpoint is used to discover care contexts associated with a patient. It allows healthcare information providers (HIPs) to retrieve and manage patient care context information. |
-| M2 Health information provider services | POST   | [`/api/v3/hip/patient/share`](/docs/main/docs/hiecm/v3/api/m2/endpoints/m2-abdm-patient-share-hip/01-m2-post-v3-hip-patient-share)                                          | This API will be invoked to the HIP for sharing the response of HIECM's /api/hiecm/patient-share/v3/share API                                                                             |
-| Scan and Pay                            | POST   | [`/v3/patient/share/open-order`](/docs/main/docs/hiecm/v3/api/scan-and-pay/endpoints/scan-and-pay-abdm-scan-pay-hip/01-scan-and-pay-post-v3-patient-share-open-order)       | This is an API is called by HIU to check the status of reports.                                                                                                                           |

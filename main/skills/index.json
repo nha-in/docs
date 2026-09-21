@@ -106,8 +106,28 @@
       ]
     },
     {
+      "name": "abdm-scan-and-register",
+      "title": "Scan and register",
+      "files": [
+        "SKILL.md",
+        "references/scaffold.md",
+        "references/integrate.md",
+        "references/debug.md"
+      ]
+    },
+    {
       "name": "abdm-scan-and-pay",
       "title": "Scan and pay",
+      "files": [
+        "SKILL.md",
+        "references/scaffold.md",
+        "references/integrate.md",
+        "references/debug.md"
+      ]
+    },
+    {
+      "name": "abdm-record-share",
+      "title": "Patient scan and record share",
       "files": [
         "SKILL.md",
         "references/scaffold.md",

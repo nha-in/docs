@@ -17,7 +17,7 @@ Call it after a submission whose callback has not arrived within your operationa
 - You are the original sender of the request being queried and have its API_call_ID persisted.
 - Valid Bearer token; the request body is a JWE per RFC-7516 like every protocol API.
 - The payload inside the JWE is an empty string: no bundle, no Task, no resource. The Status sheet of the requests-and-responses workbook says "Payload should be empty string". The sandbox exit checklists word it as the "encrypted payload of request for which the status is seeking for" and describe no bundle for it.
-- Protected header with sender_code, recipient_code, a fresh API_call_ID, the original request's API_call_ID as correlation_ID, an IST TIMESTAMP and status request.initiated.
+- Protected header with sender_code, recipient_code, a fresh API_call_ID, the original request's API_call_ID as correlation_ID, an IST timestamp and status request.initiated.
 - HTTP headers Accept, Content-Type and bearer_auth.
 
 ### Postconditions

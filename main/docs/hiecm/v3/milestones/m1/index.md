@@ -1,4 +1,4 @@
-# M1 Create: ABHA Creation and Verification
+# M1 Identity: Create and verify ABHA
 
 Milestone 1 focuses on the creation and management of [ABHA](/docs/main/docs/hiecm/v3/getting-started/glossary#abha), the unique health identifier under [ABDM](/docs/main/docs/hiecm/v3/getting-started/glossary#abdm). This milestone enables the creation of ABHA, authentication of users, and retrieval or updating of ABHA profile information through ABDM-compliant workflows. ABHA is a 14-digit unique health identifier issued to an individual upon successful completion of the prescribed verification process. ABHA serves as a foundational component for several ABDM services and workflows. Organizations implementing these services may be required to support ABHA creation and management capabilities, as applicable to their use case.
 
@@ -13,13 +13,21 @@ Milestone 1 focuses on ABHA creation, authentication, and profile management fun
 
 ## Capabilities enabled under Milestone 1 (M1)
 
-| Capability                                                                 | What it enables                                                                                                                                                                  |
-| -------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Session and tokens                                                         | Establish gateway sessions, manage access and refresh tokens, and retrieve public key certificates required for secure ABDM interactions.                                        |
-| ABHA creation                                                              | Support creation of ABHA and associated identifiers in accordance with ABDM onboarding and verification workflows.                                                               |
-| ABHA login                                                                 | Authenticate an ABHA holder using approved identifiers and authentication mechanisms, including mobile number, ABHA number, or ABHA address, as applicable.                      |
-| Profile management                                                         | Retrieve and manage ABHA profile information, display ABHA credentials and QR codes, update eligible profile attributes, and support re-verification workflows where applicable. |
-| [Scan and Register](/docs/main/docs/hiecm/v3/milestones/scan-and-register) | Support patient registration through QR-based workflows and generate service or queue identifiers in accordance with organization-specific processes.                            |
+| Capability                                                                | What it enables                                                                                                                                                                  |
+| ------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Session and tokens                                                        | Establish gateway sessions, manage access and refresh tokens, and retrieve public key certificates required for secure ABDM interactions.                                        |
+| ABHA creation                                                             | Support creation of ABHA and associated identifiers in accordance with ABDM onboarding and verification workflows.                                                               |
+| ABHA login                                                                | Authenticate an ABHA holder using approved identifiers and authentication mechanisms, including mobile number, ABHA number, or ABHA address, as applicable.                      |
+| Profile management                                                        | Retrieve and manage ABHA profile information, display ABHA credentials and QR codes, update eligible profile attributes, and support re-verification workflows where applicable. |
+| [Scan and Register](/docs/main/docs/hiecm/v3/use-cases/scan-and-register) | Support patient registration through QR-based workflows and generate service or queue identifiers in accordance with organization-specific processes.                            |
+
+## Use cases
+
+| Use case                                                                  | What it does                                                                                                                                                                                              |
+| ------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [Scan and Register](/docs/main/docs/hiecm/v3/use-cases/scan-and-register) | A patient scans the QR code at your counter and shares their ABHA profile. Registration needs no typing, every record from the visit links to the right ABHA address, and the patient gets a queue token. |
+
+All use cases, and the milestone each belongs to: [Use cases](/docs/main/docs/hiecm/v3/use-cases).
 
 ## Building blocks you use
 
@@ -32,14 +40,14 @@ The M1 skill gives an AI coding assistant this milestone as one file: every M1 c
 
 M1 agent skill
 
-Every M1 call, its error codes and its certification cases in one file: 55 operations, 89 codes, 122 cases.
+Every M1 call, one per use case, with its error codes in one file: 132 operations, 17 codes.
 
 [SKILL.md](/docs/main/skills/abdm-m1/SKILL.md "The router. Use the command below to take the references with it.")
 
 - ScaffoldThe loop that builds the module flow by flow against the sandbox, ending on an observed result rather than on a call returning 200.
 - Design
-- Integrate41 operations, with their hosts, headers and the rules that hold across them.
-- Debug14 recorded error codes, each with its message and what to do about it.
+- Integrate132 operations, with their hosts, headers and the rules that hold across them.
+- Debug17 recorded error codes, each with its message and what to do about it.
 
 `mkdir -p .claude/skills/abdm-m1/references && curl -fsSL https://nha-in.github.io/docs/main/skills/abdm-m1/SKILL.md -o .claude/skills/abdm-m1/SKILL.md && for f in scaffold design integrate debug; do curl -fsSL https://nha-in.github.io/docs/main/skills/abdm-m1/references/$f.md -o .claude/skills/abdm-m1/references/$f.md; done`
 
@@ -50,25 +58,11 @@ Drops the skill into this project. Claude loads it when a task matches.
 How to use it
 
 1. Run the command above in the repository you are integrating.
-2. Ask your agent for the job in your own words. "Add ABHA creation by Aadhaar OTP to this codebase", "why am I getting 900900". The skill loads when the task matches it.
+2. Ask your agent for the job in your own words. "Add ABHA creation by Aadhaar OTP to this codebase", "why am I getting 404". The skill loads when the task matches it.
 3. Check what it writes against these pages. The skill carries the facts, not the sandbox: nothing in it has been run against ABDM.
 4. Open in Claude needs that app installed. It fills the composer and waits: nothing runs until you read it and press Enter.
 
 ## ABHA creation
-
-A Self-Declared profile may transition to a KYC-verified profile following successful linkage and verification of an ABHA number, in accordance with ABDM guidelines. Relevant profile information is retained and updated as part of the profile lifecycle management process. This section describes the supported onboarding pathways, including workflows for individuals who already possess an ABHA. Interactions involving identity verification are facilitated through ABDM-authorized services and prescribed integration workflows, while the diagrams illustrate the recommended sequence of steps for each implementation flow.
-
-The Aadhaar-based pathways produce the 14-digit [ABHA number](/docs/main/docs/hiecm/v3/getting-started/glossary#abha-number). Aadhaar verifies the individual's identity, the ABHA service issues the number, and the individual selects an [ABHA address](/docs/main/docs/hiecm/v3/getting-started/glossary#abha-address) linked to it. The pathways differ only in the Aadhaar authentication mechanism used.
-
-### Which creation route you must build
-
-| Creation route                     | Private integrator | Government integrator           |
-| ---------------------------------- | ------------------ | ------------------------------- |
-| Aadhaar OTP                        | Mandatory          | Mandatory                       |
-| Aadhaar face authentication        | Optional           | Optional                        |
-| Aadhaar fingerprint or iris        | Optional           | Optional                        |
-| Aadhaar demographic authentication | Not required       | Mandatory                       |
-| Child ABHA                         | Not available      | Only on NHA leadership approval |
 
 ### ABHA creation by an Aadhaar OTP
 
@@ -130,7 +124,15 @@ sequenceDiagram
 
 Individuals who are unable to use OTP-based authentication, including cases where the mobile number linked to Aadhaar is unavailable or inaccessible, may use face authentication as an alternative verification mechanism, subject to ABDM and UIDAI guidelines. Face authentication is performed through authorized Aadhaar Registered Device (RD) services using approved authentication workflows.
 
-ABDM documentation references biometric-based ABHA creation workflows, including face authentication and other supported biometric modalities where applicable. Organizations should implement authentication methods in accordance with the officially published specifications and validate any implementation assumptions through the appropriate NHA guidance and documentation before proceeding with production deployment.
+ABDM documentation references biometric-based ABHA creation workflows, including face authentication and other supported biometric modalities where applicable. Organizations should implement authentication methods in accordance with the officially published specifications and follow them before proceeding with production deployment.
+
+### ABHA creation by fingerprint or iris
+
+Aadhaar Biometric-Based ABHA Creation enables users to create an Ayushman Bharat Health Account (ABHA) by securely verifying their identity using biometric authentication through an Aadhaar Registered Device (RD). The RD Service captures the user's biometric data and generates an encrypted, digitally signed PID block, which is submitted along with the Aadhaar details for verification. Upon successful authentication and user consent, the user's profile is validated and a unique ABHA number is generated, enabling secure onboarding into the ABDM digital health ecosystem.
+
+The Registered Device (RD) List and information can be found on the following link: [uidai.gov.in](https://uidai.gov.in/en/ecosystem/authentication-devices-documents/biometric-devices.html).
+
+The calls, in order, are on the [M1 API reference](/docs/main/docs/hiecm/v3/api/m1) under ABHA creation, fingerprint and ABHA creation, iris.
 
 ### ABHA creation by demographic authentication
 
@@ -157,10 +159,6 @@ The `enrol/byAadhaar` API is invoked with the appropriate authentication method 
 
 ABDM supports guardian-based management of ABHA accounts for eligible children in accordance with applicable policies and implementation guidelines. This functionality is currently made available only to select government integrators, subject to approval by the National Health Authority (NHA). The workflow includes creation of a child ABHA linked to a verified parent or guardian account, updating child profile information, and retrieval of child accounts associated with the parent or guardian.
 
-- **Create.** The same `enrol/byAadhaar` call, with `authMethods` set to `child` and a `child` block carrying the child's name, date of birth and gender, and the parent's ABHA number or ABHA address. The parent is authenticated first.
-- **Update.** `PATCH /v3/profile/account` with the child's ABHA number, name, date of birth and gender.
-- **List.** `GET /v3/enrollment/profile/children`, which returns the children under the account and their count.
-
 ## ABHA login via mobile number
 
 ```mermaid
@@ -182,8 +180,6 @@ sequenceDiagram
 ```
 
 ABHA login using a registered mobile number enables individuals to securely access their ABHA-linked profile and services through a mobile OTP-based authentication process. Since a single mobile number may be associated with multiple ABHA accounts, the user may be required to select the appropriate ABHA account after successful verification. Upon completion of the authentication process, authorized access is granted to the individual's ABHA profile and associated services in accordance with ABDM guidelines.
-
-Login by Aadhaar number, by ABHA number and by ABHA address follow the same two steps: request a challenge, then verify it. The [M1 API reference](/docs/main/docs/hiecm/v3/api/m1) lists which routes are mandatory.
 
 ## Find ABHA from mobile number
 
@@ -232,7 +228,7 @@ The workflow also supports profile updates in accordance with applicable ABDM gu
 
 ## Next
 
-- Register a patient who scanned your counter QR code: [Scan and Register](/docs/main/docs/hiecm/v3/milestones/scan-and-register).
+- Register a patient who scanned your counter QR code: [Scan and Register](/docs/main/docs/hiecm/v3/use-cases/scan-and-register).
 - The calls, base URLs and error shapes: [M1 API reference](/docs/main/docs/hiecm/v3/api/m1).
 - Certification runs once, for the whole integration: [Go live](/docs/main/docs/hiecm/v3/getting-started/going-live).
-- The next milestone: [M2 Attach](/docs/main/docs/hiecm/v3/milestones/m2).
+- The next milestone: [M2 Health Information Provider](/docs/main/docs/hiecm/v3/milestones/m2).

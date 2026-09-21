@@ -17,7 +17,7 @@ Use it in the same circumstances as the public on_request callback: after receiv
 - The inbound communication was decrypted and its correlation ID, status and workflow ID captured.
 - A valid Bearer token and the payer's certificate for encrypting the acknowledgement.
 - The acknowledgement bundle mirrors the request, provider Organisation first, timestamps updated.
-- Protected header echoes the request's x-hcx-correlation_ID, carries a fresh x-hcx-API_call_ID, an IST TIMESTAMP and a responder status; x-hcx-workflow_ID is validated at the gateway.
+- Protected header echoes the request's x-hcx-correlation_ID, carries a fresh x-hcx-API_call_ID, an IST timestamp and a responder status; x-hcx-workflow_ID is validated at the gateway.
 - Confirm the internal prefix is the route you were onboarded to before using it.
 
 ### Postconditions

@@ -20,7 +20,7 @@ Do not call it from an integration. The Participant Registry chapter names it, t
 
 ### Postconditions
 
-The OpenAPI declares a 200 response of type string, with 400 Client Error, 404 Resource not found and 500 Downstream systems down each returning the ErrorResponse envelope (TIMESTAMP plus error code, message and trace). No state change is described and no callback follows. The content of the returned string is not documented.
+The OpenAPI declares a 200 response of type string, with 400 Client Error, 404 Resource not found and 500 Downstream systems down each returning the ErrorResponse envelope (timestamp plus error code, message and trace). No state change is described and no callback follows. The content of the returned string is not documented.
 
 ### Common mistakes
 

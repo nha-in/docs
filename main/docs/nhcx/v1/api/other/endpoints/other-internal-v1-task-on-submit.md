@@ -17,7 +17,7 @@ Same as the public callback: after acknowledging and re-adjudicating a Task, the
 - Inbound Task decrypted, correlation ID captured, 202 acceptance returned within 30 seconds.
 - Registered payer with a valid Bearer token and the provider's certificate.
 - Task bundle with Task.status completed and Task.output[0].valueReference resolving to a ClaimResponse entry in the bundle.
-- Protected header echoing the request's correlation ID with a fresh API_call_ID, IST TIMESTAMP, outcome workflow ID and responder status.
+- Protected header echoing the request's correlation ID with a fresh API_call_ID, IST timestamp, outcome workflow ID and responder status.
 - Confirmation that the internal route is the intended one.
 
 ### Postconditions
@@ -36,7 +36,7 @@ Returns 202 Accepted with the StatusSuccessResponse envelope, or 400, 404 or 500
 - Share the public callback's bundle builder; only the path differs.
 - Acknowledge the inbound Task first, re-adjudicate asynchronously, then post.
 - Provider: reuse the claim ClaimResponse parser, reached via Task.output[0].valueReference.reference.
-- Idempotent handling on correlation ID; fresh API_call_ID and IST TIMESTAMP on the callback.
+- Idempotent handling on correlation ID; fresh API_call_ID and IST timestamp on the callback.
 
 ### Related scenario
 

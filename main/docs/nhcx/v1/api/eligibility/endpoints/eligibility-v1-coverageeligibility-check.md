@@ -23,7 +23,7 @@ Call it at registration or admission, before /v1/preauth/submit. The CoverageEli
 
 ### Postconditions
 
-NHCX replies synchronously with HTTP 202 Accepted and a StatusSuccessResponse acknowledgement (TIMESTAMP, API_call_ID, correlation_ID, result with sender_code, recipient_code, entity_type coverageeligibility and protocol_status such as request.queued or request.dispatched, plus an empty error object). The 202 means only that the JWE structure and open protocol headers validated; the gateway then forwards the request to the payer asynchronously. The eligibility answer arrives later on the provider's /v1/coverageeligibility/on_check endpoint as a CoverageEligibilityResponseBundle, or as a ProtocolResponse carrying x-hcx-error_details, or as a redirect or forward instruction to try another payer. Other documented statuses are 400 request validation failed, 404 resource not found and 500 downstream systems down.
+NHCX replies synchronously with HTTP 202 Accepted and a StatusSuccessResponse acknowledgement (timestamp, API_call_ID, correlation_ID, result with sender_code, recipient_code, entity_type coverageeligibility and protocol_status such as request.queued or request.dispatched, plus an empty error object). The 202 means only that the JWE structure and open protocol headers validated; the gateway then forwards the request to the payer asynchronously. The eligibility answer arrives later on the provider's /v1/coverageeligibility/on_check endpoint as a CoverageEligibilityResponseBundle, or as a ProtocolResponse carrying x-hcx-error_details, or as a redirect or forward instruction to try another payer. Other documented statuses are 400 request validation failed, 404 resource not found and 500 downstream systems down.
 
 ### Common mistakes
 

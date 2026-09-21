@@ -1,6 +1,6 @@
 # P2 Linking and records
 
-P2 is the mirror of [M2 Attach](/docs/main/docs/hiecm/v3/milestones/m2). M2 is a provider publishing a record. P2 is the patient discovering it and linking it to their own [ABHA address](/docs/main/docs/hiecm/v3/getting-started/glossary#abha-address).
+P2 is the mirror of [M2 Health Information Provider](/docs/main/docs/hiecm/v3/milestones/m2). M2 is a provider publishing a record. P2 is the patient discovering it and linking it to their own [ABHA address](/docs/main/docs/hiecm/v3/getting-started/glossary#abha-address).
 
 ## In short
 
@@ -11,7 +11,7 @@ P2 is the mirror of [M2 Attach](/docs/main/docs/hiecm/v3/milestones/m2). M2 is a
 
 ## What you build
 
-Care context linking, user initiated linking, scan and share at a facility, and health locker subscriptions.
+Profile management, care context linking, user initiated linking, scan and share at a facility, and health locker subscriptions.
 
 ## Scan and share at a facility
 
@@ -50,6 +50,19 @@ A citizen pushing a record into your app is the HIP. A health locker, where user
 An uploaded record is shareable once you hold three things: a link token from the generate link token call, a care context added by HIP initiated linking from [M2 Attach](/docs/main/docs/hiecm/v3/milestones/m2), and the M2 health information transfer APIs.
 
 Set the health information type from the contents or from user input. Use `HealthDocumentRecord` when it cannot be determined.
+
+## Profile, card and QR code
+
+The signed in user manages their own profile from your app. Every call takes the user token from login as `X-token`.
+
+| Element                  | What it holds                                                                                                                                                 |
+| ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Profile screen           | Editable demographics, marked KYC Verified or Self-Declared                                                                                                   |
+| ABHA number              | Visible only on a KYC Verified profile                                                                                                                        |
+| ABHA address card, a PDF | Photo, full name, ABHA number, ABHA address, QR code, date of birth, gender, mobile number                                                                    |
+| Editable, KYC Verified   | Mobile number, with an OTP to the new number, and address                                                                                                     |
+| Editable, Self-Declared  | The same, plus photo, full name, gender and date of birth                                                                                                     |
+| Also on the profile      | Update the email and the password, link an ABHA number by mobile OTP or Aadhaar OTP, switch between the profiles on one login, refresh the token, and log out |
 
 ## Next
 

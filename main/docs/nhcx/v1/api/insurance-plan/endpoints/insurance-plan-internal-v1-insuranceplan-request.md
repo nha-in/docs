@@ -16,12 +16,12 @@ Same circumstances as the public request: before any preauth or claim for a paye
 
 - As for the public endpoint: registered provider and payer, Bearer token, payer certificate verified and used for JWE encryption.
 - Body is a JWEPayload, { "payload": "" }, whose plaintext is the TaskBundle.
-- Protected header with sender_code, recipient_code, fresh API_call_ID and correlation_ID, IST TIMESTAMP, status request.initiated.
+- Protected header with sender_code, recipient_code, fresh API_call_ID and correlation_ID, IST timestamp, status request.initiated.
 - Confirmation that the internal prefix is reachable and intended for your integration; the specs are silent on this.
 
 ### Postconditions
 
-Returns 202 Accepted with StatusSuccessResponse (TIMESTAMP, API_call_ID, correlation_ID, result with sender_code, recipient_code, entity_type and protocol_status, error), or 400, 404 or 500 in the same envelope. The payer's plan arrives later on the insurance plan on_request callback under the same correlation ID; the provider must acknowledge that within 30 seconds. An empty plan or a PAYR-1401 to PAYR-1406 error is a documented business outcome. No additional behaviour is documented for the internal variant.
+Returns 202 Accepted with StatusSuccessResponse (timestamp, API_call_ID, correlation_ID, result with sender_code, recipient_code, entity_type and protocol_status, error), or 400, 404 or 500 in the same envelope. The payer's plan arrives later on the insurance plan on_request callback under the same correlation ID; the provider must acknowledge that within 30 seconds. An empty plan or a PAYR-1401 to PAYR-1406 error is a documented business outcome. No additional behaviour is documented for the internal variant.
 
 ### Common mistakes
 

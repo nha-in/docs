@@ -5149,7 +5149,7 @@ paths:
       summary: Get Profile
       operationId: p2_get_v3_phr_app_login_profile
       security:
-        - apiKeyAuth: []
+        - bearerAuth: []
       parameters:
         - name: X-token
           in: header
@@ -5157,6 +5157,7 @@ paths:
           schema:
             type: string
           example: Bearer <JWT TOKEN>
+          description: The user token from a login or enrolment response, sent with a `Bearer ` prefix. It acts for that ABHA holder.
         - name: REQUEST-ID
           in: header
           required: true
@@ -5173,6 +5174,12 @@ paths:
             type: string
             format: date-time
           example: "2022-10-06T15:10:00.587Z"
+        - name: X-AUTH-TOKEN
+          in: header
+          required: true
+          schema:
+            type: string
+          description: The user token issued at login. Send it beside X-token.
       responses:
         "200":
           description: OK
@@ -5302,7 +5309,7 @@ paths:
         - P2-Management › P2 -PHR Profile › P2 - Link ABHA Number › P2 - via Aadhaar OTP › Link Request
       operationId: p2_post_v3_phr_app_login_profile_link
       security:
-        - apiKeyAuth: []
+        - bearerAuth: []
       parameters:
         - name: X-token
           in: header
@@ -5310,6 +5317,7 @@ paths:
           schema:
             type: string
           example: Bearer <JWT TOKEN>
+          description: The user token from a login or enrolment response, sent with a `Bearer ` prefix. It acts for that ABHA holder.
         - name: REQUEST-ID
           in: header
           required: true
@@ -5337,6 +5345,9 @@ paths:
                   type: string
                 transactionId:
                   type: string
+              required:
+                - action
+                - transactionId
             examples:
               Link Request:
                 summary: P2 - via ABHA OTP › Link Request
@@ -5429,7 +5440,7 @@ paths:
       summary: Get PHR Card
       operationId: p2_get_v3_phr_app_login_profile_phrcard
       security:
-        - apiKeyAuth: []
+        - bearerAuth: []
       parameters:
         - name: X-token
           in: header
@@ -5437,6 +5448,7 @@ paths:
           schema:
             type: string
           example: Bearer <JWT TOKEN>
+          description: The user token from a login or enrolment response, sent with a `Bearer ` prefix. It acts for that ABHA holder.
         - name: REQUEST-ID
           in: header
           required: true
@@ -5453,6 +5465,12 @@ paths:
             type: string
             format: date-time
           example: "2022-10-06T15:10:00.587Z"
+        - name: X-AUTH-TOKEN
+          in: header
+          required: true
+          schema:
+            type: string
+          description: The user token issued at login. Send it beside X-token.
       responses:
         "202":
           description: Accepted
@@ -5490,7 +5508,7 @@ paths:
       summary: Get QR Code
       operationId: p2_get_v3_phr_app_login_profile_qrcode
       security:
-        - apiKeyAuth: []
+        - bearerAuth: []
       parameters:
         - name: X-token
           in: header
@@ -5498,6 +5516,7 @@ paths:
           schema:
             type: string
           example: Bearer <JWT TOKEN>
+          description: The user token from a login or enrolment response, sent with a `Bearer ` prefix. It acts for that ABHA holder.
         - name: REQUEST-ID
           in: header
           required: true
@@ -5514,6 +5533,12 @@ paths:
             type: string
             format: date-time
           example: "2022-10-06T15:10:00.587Z"
+        - name: X-AUTH-TOKEN
+          in: header
+          required: true
+          schema:
+            type: string
+          description: The user token issued at login. Send it beside X-token.
       responses:
         "202":
           description: Accepted
@@ -5551,7 +5576,7 @@ paths:
       summary: Logout
       operationId: p2_get_v3_phr_app_login_profile_request_logout
       security:
-        - apiKeyAuth: []
+        - bearerAuth: []
       parameters:
         - name: X-token
           in: header
@@ -5559,6 +5584,7 @@ paths:
           schema:
             type: string
           example: Bearer <JWT TOKEN>
+          description: The user token from a login or enrolment response, sent with a `Bearer ` prefix. It acts for that ABHA holder.
         - name: REQUEST-ID
           in: header
           required: true
@@ -5633,7 +5659,7 @@ paths:
         - P2-Management › P2 -PHR Profile › P2 - Link ABHA Number › P2 - via Aadhaar OTP › Send AADHAAR Otp - Link-DeLink
       operationId: p2_post_v3_phr_app_login_profile_request_otp
       security:
-        - apiKeyAuth: []
+        - bearerAuth: []
       parameters:
         - name: X-token
           in: header
@@ -5641,6 +5667,7 @@ paths:
           schema:
             type: string
           example: Bearer <JWT TOKEN>
+          description: The user token from a login or enrolment response, sent with a `Bearer ` prefix. It acts for that ABHA holder.
         - name: REQUEST-ID
           in: header
           required: true
@@ -5674,6 +5701,11 @@ paths:
                   type: string
                 otpSystem:
                   type: string
+              required:
+                - scope
+                - loginHint
+                - loginId
+                - otpSystem
             examples:
               Send Otp - Update Email:
                 summary: P2 - Update Email (optional) › Send Otp - Update Email
@@ -5700,7 +5732,7 @@ paths:
                     - abha-login
                     - mobile-verify
                   loginHint: abha-number
-                  loginId: <BASE64_PHOTO>
+                  loginId: <ENCRYPTED_LOGIN_ID>
                   otpSystem: abdm
               Send AADHAAR Otp - Link-DeLink:
                 summary: P2 - via Aadhaar OTP › Send AADHAAR Otp - Link-DeLink
@@ -5709,7 +5741,7 @@ paths:
                     - abha-login
                     - aadhaar-verify
                   loginHint: abha-number
-                  loginId: <BASE64_PHOTO>
+                  loginId: <ENCRYPTED_LOGIN_ID>
                   otpSystem: aadhaar
       responses:
         "200":
@@ -5855,7 +5887,7 @@ paths:
       summary: Refresh Token
       operationId: p2_get_v3_phr_app_login_profile_request_token
       security:
-        - apiKeyAuth: []
+        - bearerAuth: []
       parameters:
         - name: R-token
           in: header
@@ -5863,6 +5895,7 @@ paths:
           schema:
             type: string
           example: Bearer <JWT TOKEN>
+          description: The refresh token from a login response, sent with a `Bearer ` prefix, exchanged for a new user token.
         - name: REQUEST-ID
           in: header
           required: true
@@ -5940,7 +5973,7 @@ paths:
       summary: Switch Profile
       operationId: p2_get_v3_phr_app_login_profile_switch_profile
       security:
-        - apiKeyAuth: []
+        - bearerAuth: []
       parameters:
         - name: X-token
           in: header
@@ -5948,6 +5981,7 @@ paths:
           schema:
             type: string
           example: Bearer <JWT TOKEN>
+          description: The user token from a login or enrolment response, sent with a `Bearer ` prefix. It acts for that ABHA holder.
         - name: REQUEST-ID
           in: header
           required: true
@@ -6035,7 +6069,7 @@ paths:
       summary: Update Profile
       operationId: p2_post_v3_phr_app_login_profile_updateprofile
       security:
-        - apiKeyAuth: []
+        - bearerAuth: []
       parameters:
         - name: X-token
           in: header
@@ -6043,6 +6077,7 @@ paths:
           schema:
             type: string
           example: Bearer <JWT TOKEN>
+          description: The user token from a login or enrolment response, sent with a `Bearer ` prefix. It acts for that ABHA holder.
         - name: REQUEST-ID
           in: header
           required: true
@@ -6098,6 +6133,23 @@ paths:
                   type: string
                 districtCode:
                   type: string
+              required:
+                - profilePhoto
+                - firstName
+                - middleName
+                - lastName
+                - dayOfBirth
+                - monthOfBirth
+                - yearOfBirth
+                - gender
+                - email
+                - mobile
+                - address
+                - stateName
+                - districtName
+                - pinCode
+                - stateCode
+                - districtCode
             examples:
               Update Profile:
                 summary: P2 -PHR Profile › Update Profile
@@ -6283,7 +6335,7 @@ paths:
         - P2-Management › P2 -PHR Profile › P2 - Link ABHA Number › P2 - via Aadhaar OTP › Verify AADHAAR Otp - Link-DeLink
       operationId: p2_post_v3_phr_app_login_profile_verify
       security:
-        - apiKeyAuth: []
+        - bearerAuth: []
       parameters:
         - name: X-token
           in: header
@@ -6291,6 +6343,7 @@ paths:
           schema:
             type: string
           example: Bearer <JWT TOKEN>
+          description: The user token from a login or enrolment response, sent with a `Bearer ` prefix. It acts for that ABHA holder.
         - name: REQUEST-ID
           in: header
           required: true
@@ -6339,6 +6392,9 @@ paths:
                           type: string
                         password:
                           type: string
+              required:
+                - scope
+                - authData
             examples:
               Verify Otp - Update Email:
                 summary: P2 - Update Email (optional) › Verify Otp - Update Email
@@ -6399,7 +6455,7 @@ paths:
                       - otp
                     otp:
                       txnId: 37d8d312-35a0-41e7-a6e4-1074eb18a5fa
-                      otpValue: <BASE64_PHOTO>
+                      otpValue: <ENCRYPTED_OTP_VALUE>
       responses:
         "200":
           description: OK
@@ -6813,7 +6869,7 @@ paths:
       summary: Verify User Switch Profile
       operationId: p2_post_v3_phr_app_login_profile_verify_switch_profile_user
       security:
-        - apiKeyAuth: []
+        - bearerAuth: []
       parameters:
         - name: T-token
           in: header
@@ -6821,6 +6877,7 @@ paths:
           schema:
             type: string
           example: Bearer <JWT TOKEN>
+          description: The transaction token from the preceding login step, sent with a `Bearer ` prefix. It is valid only for that login.
         - name: REQUEST-ID
           in: header
           required: true
@@ -6848,6 +6905,9 @@ paths:
                   type: string
                 txnId:
                   type: string
+              required:
+                - abhaAddress
+                - txnId
             examples:
               Verify User Switch Profile:
                 summary: P2 - Switch Profile › Verify User Switch Profile
@@ -7227,6 +7287,7 @@ webhooks:
                     type: string
                     example: d20b575b-2659-4a1b-8c2d-9e3f5a6b7c8d
       x-abdm-nha-operation-id: abdm-user-initiated-linking-phr 2
+      x-abdm-triggered-by: p2_post_user_initiated_linking_v3_patient_care_context_discover
   /api/v3/hiu/patient/care-context/on-init:
     post:
       tags:
@@ -7442,6 +7503,7 @@ webhooks:
                     example: d20b575b-2659-4a1b-8c2d-9e3f5a6b7c8d
                     description: The request id that was passed.Allows alpha numeric characters and special characters like "^[0-9a-fA-F]{8}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{12}"
       x-abdm-nha-operation-id: abdm-user-initiated-linking-phr 4
+      x-abdm-triggered-by: p2_post_user_initiated_linking_v3_link_care_context_init
   /api/v3/hiu/patient/care-context/on-confirm:
     post:
       tags:
@@ -7659,6 +7721,7 @@ webhooks:
                     example: d20b575b-2659-4a1b-8c2d-9e3f5a6b7c8d
                     description: The request id that was passed.Allows alpha numeric characters and special characters like "^[0-9a-fA-F]{8}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{12}"
       x-abdm-nha-operation-id: abdm-user-initiated-linking-phr 6
+      x-abdm-triggered-by: p2_post_user_initiated_linking_v3_link_care_context_confirm
   /api/v3/hiu/patient/on-share:
     post:
       tags:
@@ -7890,10 +7953,11 @@ webhooks:
                     nullable: false
                     example: Dependent service unavailable
       x-abdm-nha-operation-id: profile-share 2
+      x-abdm-triggered-by: p2_post_patient_share_v3_share
 components:
   securitySchemes:
     bearerAuth:
       type: http
       scheme: bearer
       bearerFormat: JWT
-      description: The access token from POST /api/hiecm/gateway/v3/sessions.
+      description: The access token from POST /api/hiecm/gateway/v3/sessions, sent with a `Bearer ` prefix.

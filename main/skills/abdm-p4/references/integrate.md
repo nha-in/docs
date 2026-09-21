@@ -24,7 +24,7 @@ The calls themselves: where they live, what they need in their headers, and one 
 | `GET` | `/api/hiecm/gateway/v3/health-lockers` | Fetch the record with health locker enabled provider details. |
 | `GET` | `/api/hiecm/gateway/v3/providers` | Fetch the list of providers filtered by name. |
 | `GET` | `/api/hiecm/gateway/v3/providers/{provider-id}` | Fetch the record for provider details for requested provider ID. |
-| `POST` | `/api/hiecm/gateway/v3/sessions` | Generate Keycloak token/access token. |
+| `POST` | `/api/hiecm/gateway/v3/sessions` | Generate access token. |
 | `GET` | `/api/hiecm/subscription-requests/v3/patients/lockers` | The API provides the list of health locker that the ABHA address is subscribed … |
 | `GET` | `/api/hiecm/subscription-requests/v3/patients/lockers/{lockerId}` | Get health locker settings of a patient by locker ID. |
 | `GET` | `/api/hiecm/subscription-requests/v3/patients/requests` | Get all the consent and subscription requests with given filters. |

@@ -16,7 +16,9 @@ Ask the user which of these this project needs, and install only what they name:
 - `abdm-p3`: P3, PHR subscriptions. Sections: scaffold, integrate, debug.
 - `abdm-p4`: P4, health lockers. Sections: scaffold, integrate, debug.
 - `abdm-subscription`: Subscriptions. Sections: scaffold, integrate, debug.
+- `abdm-scan-and-register`: Scan and register. Sections: scaffold, integrate, debug.
 - `abdm-scan-and-pay`: Scan and pay. Sections: scaffold, integrate, debug.
+- `abdm-record-share`: Patient scan and record share. Sections: scaffold, integrate, debug.
 - `abdm-fhir`: FHIR, generating and auditing bundles. Sections: generate, audit.
 
 Most projects need one milestone skill to begin with, and `abdm-fhir` alongside it if they produce or hold FHIR documents.
@@ -69,7 +71,9 @@ for f in scaffold integrate debug; do curl -fsSL https://nha-in.github.io/docs/m
 - https://nha-in.github.io/docs/main/skills/abdm-p3/
 - https://nha-in.github.io/docs/main/skills/abdm-p4/
 - https://nha-in.github.io/docs/main/skills/abdm-subscription/
+- https://nha-in.github.io/docs/main/skills/abdm-scan-and-register/
 - https://nha-in.github.io/docs/main/skills/abdm-scan-and-pay/
+- https://nha-in.github.io/docs/main/skills/abdm-record-share/
 - https://nha-in.github.io/docs/main/skills/abdm-fhir/
 
 ## 3. Connect the Docs MCP server
