@@ -1,13 +1,13 @@
 {
-  "plan_version": "2026.09.19",
-  "plan_hash": "sha256:a82137aa983be2f9db094973439a4d566fcf628673d26a69dcd864a4b5d3bf6e",
+  "plan_version": "2026.09.20",
+  "plan_hash": "sha256:746e3e24209aa94dc9b25d1b54ac1bad1daba31feee830c61a89ff3794709133",
   "plan_path": "plan/abdm-v1-phase1-architecture-and-plan.md",
   "plan_url": "https://raw.githubusercontent.com/eka-care/abdm-docs/main/plan/abdm-v1-phase1-architecture-and-plan.md",
   "plan_page_url": "https://github.com/eka-care/abdm-docs/blob/main/plan/abdm-v1-phase1-architecture-and-plan.md",
   "changelog_url": "https://github.com/eka-care/abdm-docs/commits/main/plan/abdm-v1-phase1-architecture-and-plan.md",
   "history_path": "plan/plan-history/",
   "section_ids": "pN-slug, declared inline in the plan as anchor tags. Skills cite plan#<id>.",
-  "breaking": true,
+  "breaking": false,
   "compiled_skills": [
     "portal-architecture",
     "portal-planning",

@@ -2,10 +2,10 @@ openapi: 3.1.1
 info:
   x-portal:
     module: m3
-    label: M3 Consent and fetching
+    label: M3 Health information user services
     position: 4
     icon: file-check
-  title: ABDM M3, consent and fetching as an HIU
+  title: ABDM M3, health information user services as an HIU
   summary: Raise a consent request, fetch its artefacts, and receive records.
   version: abdm-v3
   license:
@@ -138,7 +138,6 @@ paths:
                       nullable: true
                       required:
                         - id
-                        - name
                       properties:
                         id:
                           type: string
@@ -155,12 +154,12 @@ paths:
                           nullable: true
                           example: HIP
                           description: The type of the health information provider. Allows alpha numeric and special characters like  "^[a-zA-Z0-9_\\-@,. \":/]{0,255}$"
+                      example: null
                     hiu:
                       type: object
                       nullable: false
                       required:
                         - id
-                        - name
                       properties:
                         id:
                           type: string
@@ -1100,12 +1099,12 @@ paths:
                           type: string
                           nullable: false
                           example: ECDH
-                          description: Allows alpha numeric character and special characters like "^[a-zA-Z0-9_\\-@,. \":/]{0,255}$"
+                          description: The key agreement algorithm. Always ECDH.
                         curve:
                           type: string
                           nullable: false
                           example: curve25519
-                          description: Allows alpha numeric character and special characters like "^[a-zA-Z0-9_\\-@,. \":/]{0,255}$"
+                          description: The curve the key pair is generated on. Always Curve25519.
                         dhPublicKey:
                           type: object
                           nullable: false
@@ -1118,22 +1117,25 @@ paths:
                               type: string
                               nullable: false
                               example: "2022-12-28T13:18:20.742Z"
-                              description: date and time format "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
+                              description: When this key stops being valid, as an ISO 8601 timestamp.
                             parameters:
                               type: string
                               nullable: false
                               example: Ephemeral public key
-                              description: Allows alpha numeric character and special characters like "^[a-zA-Z0-9_\\-@,. \":/]{0,255}$"
+                              description: The key parameters. Ephemeral public key.
                             keyValue:
                               type: string
                               nullable: false
                               example: BFN7KTdOT0jIAExG2A8Jg+01wMPWxptiGqwHRVvtiVEsUq2FR7P2UdqZxJyPJSeR6muai21iQhasNxnhh8I5M+g=
+                              description: The public key, Base64 encoded, in X.509 SubjectPublicKeyInfo form.
+                          description: The public half of the ephemeral key pair generated for this transaction.
                         nonce:
                           type: string
                           format: uuid
                           nullable: false
                           example: 28236d89-cb13-479d-ad71-7a57d5f669a9
-                      description: The key and algorithm details that is used to encrypt/decrypt the data
+                          description: 32 random bytes, Base64 encoded, generated for this transaction. The other side combines it with its own nonce to derive the AES-GCM key and initialisation vector.
+                      description: The requester's half of the ECDH key agreement. The HIP derives the shared key from it and its own key pair, and encrypts every entry it pushes with AES-GCM.
       responses:
         "202":
           description: Accepted

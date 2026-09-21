@@ -377,10 +377,74 @@ li.docs-step:last-child {
    mermaid computed from that diagram's own viewBox, clamps it back to exactly
    that. A diagram narrower than the column is left at its own size rather than
    stretched, which is what mermaid does when nothing constrains it. */
-@media (max-width: 996px) {
-  .docusaurus-mermaid-container svg {
-    width: 100000px;
-  }
+/* At every width now, not only on phones. The diagrams carry the exact call
+   and its fields on each arrow, so scaling one to fit the column turned 13px
+   labels into 8px ones on the M3 page. A wide diagram scrolls; a narrow one is
+   left at its own size. */
+.docusaurus-mermaid-container svg {
+  width: 100000px;
+}
+
+/* Colours from the site's tokens, so the diagram follows the theme switch.
+   Mermaid writes its own <style> into each svg, hence the !important. */
+.docusaurus-mermaid-container svg text,
+.docusaurus-mermaid-container svg tspan,
+.docusaurus-mermaid-container svg .messageText,
+.docusaurus-mermaid-container svg .noteText,
+.docusaurus-mermaid-container svg .loopText,
+.docusaurus-mermaid-container svg .labelText,
+.docusaurus-mermaid-container svg text.actor > tspan {
+  fill: var(--text) !important;
+}
+.docusaurus-mermaid-container svg .actor,
+.docusaurus-mermaid-container svg .node rect,
+.docusaurus-mermaid-container svg .node polygon,
+.docusaurus-mermaid-container svg .node circle {
+  fill: var(--accent-soft) !important;
+  stroke: var(--accent-line) !important;
+  stroke-width: 1.25px !important;
+}
+.docusaurus-mermaid-container svg .node .label,
+.docusaurus-mermaid-container svg .node .label span,
+.docusaurus-mermaid-container svg .edgeLabel span {
+  color: var(--text) !important;
+}
+
+
+.docusaurus-mermaid-container svg .actor-line,
+.docusaurus-mermaid-container svg .messageLine0,
+.docusaurus-mermaid-container svg .messageLine1,
+.docusaurus-mermaid-container svg .loopLine,
+.docusaurus-mermaid-container svg .edgePath .path,
+.docusaurus-mermaid-container svg .flowchart-link {
+  stroke: var(--text-muted) !important;
+}
+.docusaurus-mermaid-container svg .actor-line {
+  stroke: var(--border-strong) !important;
+}
+.docusaurus-mermaid-container svg #arrowhead path,
+.docusaurus-mermaid-container svg .arrowheadPath,
+.docusaurus-mermaid-container svg marker path {
+  fill: var(--text-muted) !important;
+  stroke: var(--text-muted) !important;
+}
+.docusaurus-mermaid-container svg .note,
+.docusaurus-mermaid-container svg .labelBox {
+  fill: var(--surface-sunken) !important;
+  stroke: var(--border-strong) !important;
+}
+.docusaurus-mermaid-container svg .edgeLabel,
+.docusaurus-mermaid-container svg .edgeLabel rect {
+  background: var(--surface) !important;
+  fill: var(--surface) !important;
+}
+.docusaurus-mermaid-container svg .sequenceNumber {
+  fill: #ffffff !important;
+}
+.docusaurus-mermaid-container svg circle[fill="#333"],
+.docusaurus-mermaid-container svg circle[fill="#333333"] {
+  fill: var(--brand-600) !important;
+  stroke: var(--brand-600) !important;
 }
 
 .docusaurus-mermaid-container::-webkit-scrollbar {

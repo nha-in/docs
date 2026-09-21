@@ -27,7 +27,7 @@ alphabetically.
 info:
   x-portal:
     module: m1              # folder under site/docs/<gateway>/<version>/api/
-    label: M1 ABHA identity # sidebar label
+    label: M1 ABHA creation and verification # sidebar label
     position: 2             # order among this gateway's modules
 ```
 

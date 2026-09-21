@@ -52,7 +52,7 @@ type Exchange = {
 const REDACTED = '********';
 
 const AADHAAR_NOTE =
-  "What you type is encrypted in this browser with NHA's public key and posted only " +
+  "What you type is encrypted in this browser with the ABDM public key and posted only " +
   'to NHA\'s sandbox host. This site has no server of its own and stores nothing you ' +
   'type. Use a sandbox test identity, not a real person\'s Aadhaar number. NHA does ' +
   'not publish a test Aadhaar number, so bring one issued to you for sandbox use.';
@@ -763,7 +763,7 @@ export default function Quickstart() {
             step="encrypt"
             active={active}
             title="Encrypt the Aadhaar number"
-            lede="Fetch NHA's public certificate, then encrypt the number here in your browser. NHA never accepts a raw Aadhaar number.">
+            lede="Fetch the ABDM public certificate, then encrypt the number here in your browser. The ABHA service never accepts a raw Aadhaar number.">
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger asChild>
