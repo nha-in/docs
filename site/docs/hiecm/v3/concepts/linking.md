@@ -1,10 +1,9 @@
 ---
 title: Care contexts and linking
 sidebar_label: Linking
-description: What a care context is, why a record has to be linked before anyone can find it, and how the link token works.
+description: Why a record has to be linked before anyone can find it, the three routes onto the map, and how the link token works.
 source: ABDM__Proposed_Simplified_Milestone_2.md, ABDM__NewDocumant_PHR_app.md
-sidebar_position: 3
-covers: [hiecm.concept.care-context]
+sidebar_position: 4
 sidebar_class_name: sidebar-icon sidebar-icon--link
 ---
 
@@ -14,29 +13,7 @@ A health record your system creates is invisible to [ABDM](/docs/hiecm/v3/gettin
 
 ## The unit that gets linked is a care context
 
-You do not link a record. You link a [care context](/docs/hiecm/v3/getting-started/glossary#care-context), a group of a patient's records that your system defines. It carries two fields and nothing else.
-
-| Field | What it is | Rule |
-| --- | --- | --- |
-| Reference number | Your own internal identifier for that group of records | It has to resolve inside your system, because you will be handed it back later and asked for the records |
-| Display name | A description the patient reads before they decide anything | No clinical detail. No results, no diagnoses. |
-
-```json
-{
-  "patient": {
-    "referenceNumber": "TMH-PUID-001",
-    "display": "TMH records for Kiran Kumar",
-    "careContexts": [
-      {
-        "referenceNumber": "2375639",
-        "display": "OPD records for O3 Oct 2022"
-      }
-    ]
-  }
-}
-```
-
-A good display name is "OPD records (X-Ray, Prescription) from 3rd March 2023": what kind of visit and when, not what was found. Use one care context per outpatient visit and one per inpatient admission.
+You do not link a record. You link a [care context](/docs/hiecm/v3/concepts/care-context), a logical grouping of a patient's health records that your system defines. It carries a reference ID and a display name, and nothing else. What each field holds, and how to structure care contexts per visit and per admission, is on [Care contexts](/docs/hiecm/v3/concepts/care-context).
 
 ## Why the record has to be linked first
 
