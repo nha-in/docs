@@ -38,7 +38,7 @@ In M2 and M3 a call is acknowledged now and answered later. The answer arrives a
 
 ## P1 Registration and login
 
-48 endpoints across 4 use cases: Create ABHA number, Aadhaar OTP, Create ABHA address, PHR login, PHR certificate and session token. Each endpoint has its own page in the sidebar.
+40 endpoints across 4 use cases: Create ABHA address, PHR login, PHR certificate and session token, Other operations. Each endpoint has its own page in the sidebar.
 
 [Read the whole specification](/docs/pr-20/reference/hiecm-p1)
 
