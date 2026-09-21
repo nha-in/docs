@@ -1,6 +1,6 @@
 ---
-title: 'M1 Create: ABHA Creation and Verification'
-sidebar_label: M1 Create
+title: 'M1 Identity: Create and verify ABHA'
+sidebar_label: M1 Identity
 sidebar_position: 1
 sidebar_custom_props:
   roles: [ims, phr]
@@ -13,7 +13,7 @@ import ApiLinks from '@site/src/components/docs/ApiLinks';
 import SkillInstall from '@site/src/components/docs/SkillInstall';
 import LegacyAnchor from '@site/src/components/mdx/LegacyAnchor';
 
-# M1 Create: ABHA Creation and Verification
+# M1 Identity: Create and verify ABHA
 
 Milestone 1 focuses on the creation and management of
 [ABHA](/docs/hiecm/v3/getting-started/glossary#abha), the unique health identifier under
@@ -56,7 +56,15 @@ health record sharing is performed as part of this milestone.
 | ABHA creation | Support creation of ABHA and associated identifiers in accordance with ABDM onboarding and verification workflows. |
 | ABHA login | Authenticate an ABHA holder using approved identifiers and authentication mechanisms, including mobile number, ABHA number, or ABHA address, as applicable. |
 | Profile management | Retrieve and manage ABHA profile information, display ABHA credentials and QR codes, update eligible profile attributes, and support re-verification workflows where applicable. |
-| [Scan and Register](./scan-and-register) | Support patient registration through QR-based workflows and generate service or queue identifiers in accordance with organization-specific processes. |
+| [Scan and Register](/docs/hiecm/v3/use-cases/scan-and-register) | Support patient registration through QR-based workflows and generate service or queue identifiers in accordance with organization-specific processes. |
+
+## Use cases
+
+| Use case | What it does |
+|---|---|
+| [Scan and Register](/docs/hiecm/v3/use-cases/scan-and-register) | A patient scans the QR code at your counter and shares their ABHA profile. Registration needs no typing, every record from the visit links to the right ABHA address, and the patient gets a queue token. |
+
+All use cases, and the milestone each belongs to: [Use cases](/docs/hiecm/v3/use-cases).
 
 ## Building blocks you use
 
@@ -330,9 +338,9 @@ requirements.
 ## Next
 
 - Register a patient who scanned your counter QR code: [Scan and
-  Register](./scan-and-register).
+  Register](/docs/hiecm/v3/use-cases/scan-and-register).
 - The calls, base URLs and error shapes: [M1 API
   reference](/docs/hiecm/v3/api/m1).
 - Certification runs once, for the whole integration: [Go
   live](/docs/hiecm/v3/getting-started/going-live).
-- The next milestone: [M2 Attach](./m2).
+- The next milestone: [M2 Health Information Provider](./m2).

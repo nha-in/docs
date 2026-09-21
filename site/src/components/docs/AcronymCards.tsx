@@ -2,7 +2,7 @@ import React from 'react';
 import Link from '@docusaurus/Link';
 
 export type AcronymCard = {
-  /** The word whose first letter carries the acronym, for example "Create". */
+  /** The milestone's verb, for example "Create". */
   word: string;
   /** The milestone label, for example "M1". */
   label: string;
@@ -13,8 +13,7 @@ export type AcronymCard = {
 
 /**
  * One row of cards, one per milestone: the milestone label and word on one
- * line, with the word's first letter in the accent colour so the acronym
- * reads across the row, and the milestone's title under it.
+ * line, and the milestone's title under it.
  */
 export default function AcronymCards({
   cards,
@@ -29,8 +28,7 @@ export default function AcronymCards({
         <Link key={to} to={to} className="acronym-card" role="listitem">
           <span className="acronym-card__word">
             <span className="acronym-card__label">{ms}</span>{' '}
-            <span className="acronym-card__letter">{word.charAt(0)}</span>
-            {word.slice(1)}
+            {word}
           </span>
           <span className="acronym-card__text">{text}</span>
         </Link>

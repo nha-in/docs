@@ -1,6 +1,6 @@
 ---
-title: 'M2 Attach: Health Information Provider Services'
-sidebar_label: M2 Attach
+title: 'M2 Health Information Provider: Create and link records'
+sidebar_label: M2 Health Information Provider
 sidebar_position: 3
 sidebar_custom_props:
   roles: [hip, his]
@@ -14,7 +14,7 @@ import ApiLinks from '@site/src/components/docs/ApiLinks';
 import SkillInstall from '@site/src/components/docs/SkillInstall';
 import LegacyAnchor from '@site/src/components/mdx/LegacyAnchor';
 
-# M2 Attach: Health Information Provider Services
+# M2 Health Information Provider: Create and link records
 
 Milestone 2 enables a [Health Information Provider](/docs/hiecm/v3/getting-started/glossary#hip) (HIP) to create
 digital health records and to generate and link [care contexts](/docs/hiecm/v3/concepts/care-context)
@@ -61,6 +61,14 @@ as applicable to the integrating entity.
 | Notification to mobile | Enables the HIP to notify the patient upon successful linkage of health records. |
 | Discovery and linking | Enables the identification and linkage of a patient's previously generated health records with the patient's ABHA Address through a discovery request initiated via a PHR application. |
 | Health-information request and transfer | Enables the secure, consent-based exchange of a patient's health records in ABDM-prescribed HL7 FHIR R4 format within the ABDM ecosystem. |
+
+## Use cases
+
+| Use case | What it does |
+|---|---|
+| [Scan and Pay](/docs/hiecm/v3/use-cases/scan-and-pay) | A patient scans the QR code at your counter, sees their open orders in their PHR app and pays there. You answer with the orders and the payment bundle, and report the payment status. The callbacks land on the bridge you register for M2. |
+
+All use cases, and the milestone each belongs to: [Use cases](/docs/hiecm/v3/use-cases).
 
 ## Who needs it
 
@@ -449,7 +457,9 @@ one place on [M2 custom error codes](/docs/hiecm/v3/api/m2/custom-error-codes).
 
 ## Next
 
-- Requesting records from other facilities is [M3 Retrieve](./m3).
+- Take payment for open orders from a patient's app: [Scan and
+  Pay](/docs/hiecm/v3/use-cases/scan-and-pay).
+- Requesting records from other facilities is [M3 Health Information User](./m3).
 - The calls, callbacks and error codes: [M2 API
   reference](/docs/hiecm/v3/api/m2).
 - The cases M2 is tested against: the certification pack NHA issues. Certification runs once, for

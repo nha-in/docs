@@ -187,10 +187,6 @@
   color: var(--text-heading);
 }
 
-.acronym-card__letter {
-  color: var(--accent);
-}
-
 .acronym-card__label {
   font-family: var(--ifm-font-family-base);
   font-size: 0.72rem;
