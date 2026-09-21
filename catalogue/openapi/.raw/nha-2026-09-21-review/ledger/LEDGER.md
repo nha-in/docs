@@ -19,7 +19,7 @@ Branch `fix/nha-review-abha-m1`, PR #20. One row per NHA instruction, grouped by
 | 21 Sept 19:30 | Sandbox2.0 M2 and M3 API review v2 | same | 1598720e3dc6 |
 | 21 Sept 19:30 | Sandbox2.0 M3 flow review-21-09-2026 | same | 0416df132bc1 |
 | 21 Sept 19:30 | Patient record share API document and Postman | `.raw/nha-2026-09-21-record-share/` | 2d3ba3761a8a |
-| 21 Sept | ABHA PHR V3 Updated | same, redacted copy | 3c7251acfdc8 (original) |
+| 21 Sept | ABHA PHR V3 Updated | held outside git, hash in MANIFEST.md | 3c7251acfdc8 |
 | 22 Sept | ABHA Swagger split (reissued M1) | `.raw/nha-2026-09-22/` | 110ea5ff5923 |
 
 The four 15 Sept files NHA resent on 21 Sept are byte-identical to the 15 Sept set. "AI Sandbox Observations Patient Record.docx" is byte-identical to the record share document already in the repo.
@@ -102,7 +102,7 @@ The four 15 Sept files NHA resent on 21 Sept are byte-identical to the 15 Sept s
 
 Endpoints 84 rows, flows 28, content 25. Fixed this session, all through `ingest-nha.mjs` section 13 so the raw file stays as received:
 
-- 24 PHR operations carry the gateway session token (the swagger named an undefined scheme, apiKeyAuth).
+- 21 PHR operations carry the gateway session token (the swagger named an undefined scheme, apiKeyAuth).
 - Every /phr/app request body marks its fields required, as the document does; email on the address suggestion stays optional.
 - X-AUTH-TOKEN on get profile, QR code and PHR card.
 - excludedSources optional on approving a subscription.
@@ -117,11 +117,30 @@ Open, for NHA (Q4 to Q10 below): the loginHint value on Aadhaar number login, AB
 | Item | Status |
 | --- | --- |
 | MCP Go test expected the pre-split M1 operation ids; CI red | Fixed, commit 4913fac8b |
-| The last PR commit deleted the P1 skill's SKILL.md and scaffold instead of regenerating them | Restored (rode in commit 3fbacffc2; re-sliced before push) |
+| The last PR commit deleted the P1 skill's SKILL.md and scaffold instead of regenerating them | Restored in the generated outputs commit |
 | 16 callback pages in P2, scan and pay, scan and register and subscription said their producing call "is not documented" | Fixed: all 54 callbacks paired; fallback sentence reworded |
 | The skill sources under skills-src were stale against the journeys | Regenerated |
 | Broken anchor on What's New 2026-09-15 | Fixed |
-| M2 page: "robust" in NHA's own simplified milestone text | Kept, NHA's wording |
+| M2 page: "robust" in NHA's own simplified milestone text | Replaced, the same rule as "seamless" |
+
+## Adversarial review, 22 September
+
+25 findings against the branch. The report is held with the session record and not committed, because it quotes the personal data it found. Acted on:
+
+- The PHR V3 document carried sandbox testers' names, ABHA addresses and a signed token in its examples, and the first redaction missed them. The document is no longer committed; the manifest records its hash and says why. The six other documents had NHA staff names and emails in their file properties; those fields are cleared. The branch history was rewritten and force-pushed so no commit carries either.
+- What's New said 21 PHR calls, not 24, and no longer claims a refusal nobody observed.
+- The PHR concept page now gives the same address rules as the ABHA registry page, the same login routes as P1, and places the profile under P1 and P2.
+- Voice: the X-AUTH-TOKEN description, the subscriptions paragraph and the M1 production-deployment sentence no longer cite NHA or a document; the encryption page states the padding instead of asking the reader to confirm it; "robust" on M2 goes the way "seamless" went.
+- The health information transfer call is no longer paired as a callback the HIP answers.
+- M4's two sub-headings sit under the H1 as H2s; P1 is titled Identity and login and links P2 once.
+- The M2 custom error page no longer promises causes and resolutions its table does not hold, and says a code can carry more than one message.
+
+Kept, with the reason:
+
+- M4 says HPID registration is open to doctors, nurses and pharmacists, and the capability table adds facility managers. Both sentences are NHA's; the question goes to NHA.
+- The M4 diagrams draw role selection after HP-ID creation, following NHA's bullet list; NHA's sequence table puts it before. Question to NHA.
+- Sentences over 35 words inside list items and bold-led paragraphs on M2, P2, the PHR concept and encryption pages, and the two subscription sections on the PHR concept page: pre-existing, outside NHA's asks, left for a later pass.
+- The ABHA registry page's first H2 restates the title: NHA's heading, kept.
 
 ## Decisions for Sam
 
