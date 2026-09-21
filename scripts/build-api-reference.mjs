@@ -564,7 +564,7 @@ for (const {platform, version, files} of tree) {
       return [
         '## Where this fits',
         '',
-        `\`${moduleFile}\` declares this callback at module level and names no call against it. Which call produces it is not documented, so this page does not say.`,
+        'This callback arrives in the journey listed above. The call that produces it is not yet published; take the order from the journey.',
         '',
       ];
     }

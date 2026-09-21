@@ -462,6 +462,17 @@ const config: Config = {
           {from: '/docs/hiecm/v3/milestones/scan-and-register', to: '/docs/hiecm/v3/use-cases/scan-and-register'},
           {from: '/docs/hiecm/v3/api/m2/endpoints/m2-abdm-patient-share-hip/01-m2-post-v3-hip-patient-share', to: '/docs/hiecm/v3/api/scan-and-register/endpoints/scan-and-register-abdm-patient-share-hip/01-scan-and-register-post-v3-hip-patient-share'},
           {from: '/docs/hiecm/v3/api/m2/endpoints/m2-abdm-patient-share-hip/02-m2-post-patient-share-v3-on-share', to: '/docs/hiecm/v3/api/scan-and-register/endpoints/scan-and-register-abdm-patient-share-hip/02-scan-and-register-post-patient-share-v3-on-share'},
+          // The endpoint pages NHA's API review of 15 September 2026 links to, at
+          // the slugs the pages had then.
+          {from: '/docs/hiecm/v3/api/m2/endpoints/m2-link-care-context-notify', to: '/docs/hiecm/v3/api/m2/endpoints/m2-abdm-hip-initiated-linking-hip/02-m2-post-hip-v3-link-context-notify'},
+          {from: '/docs/hiecm/v3/api/m2/endpoints/m2-on-discover-care-contexts', to: '/docs/hiecm/v3/api/m2/endpoints/m2-abdm-user-initiated-linking-hip/01-m2-post-user-initiated-linking-v3-patient-care-context-on-8c9340'},
+          {from: '/docs/hiecm/v3/api/m2/endpoints/m2-receive-link-confirm', to: '/docs/hiecm/v3/api/m2/endpoints/m2-abdm-user-initiated-linking-hip/03-m2-post-user-initiated-linking-v3-link-care-context-on-confirm'},
+          {from: '/docs/hiecm/v3/api/m2/endpoints/m2-consent-hip-on-notify', to: '/docs/hiecm/v3/api/m2/endpoints/m2-consent-management-data-flow-hip/01-m2-post-consent-v3-request-hip-on-notify'},
+          {from: '/docs/hiecm/v3/api/m2/endpoints/m2-hip-health-information-on-request', to: '/docs/hiecm/v3/api/m2/endpoints/m2-consent-management-data-flow-hip/02-m2-post-data-flow-v3-health-information-hip-on-request'},
+          {from: '/docs/hiecm/v3/api/m2/endpoints/m2-on-discovery-request', to: '/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/05-m2-post-v3-hip-patient-care-context-discover'},
+          {from: '/docs/hiecm/v3/api/m3/endpoints/m3-consent-request-init', to: '/docs/hiecm/v3/api/m3/endpoints/m3-consent-management-data-flow-hiu/01-m3-post-consent-v3-request-init'},
+          {from: '/docs/hiecm/v3/api/m3/endpoints/m3-consent-hiu-on-notify', to: '/docs/hiecm/v3/api/m3/endpoints/m3-consent-management-data-flow-hiu/03-m3-post-consent-v3-request-hiu-on-notify'},
+          {from: '/docs/hiecm/v3/api/m3/endpoints/m3-hiu-health-information-request', to: '/docs/hiecm/v3/api/m3/endpoints/m3-consent-management-data-flow-hiu/05-m3-post-data-flow-v3-health-information-request'},
           {from: '/docs/abdm/v3/glossary', to: '/docs/hiecm/v3/getting-started/glossary'},
           {from: '/docs/abdm/v3/phr', to: '/docs/hiecm/v3/concepts/phr'},
           {from: '/docs/abdm/v3/registries/hpr', to: '/docs/hiecm/v3/registries/nhpr/hpr'},
