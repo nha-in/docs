@@ -811,7 +811,10 @@ for (const {platform, version, files} of tree) {
         writeFileSync(join(dataDir, `${dataName}.json`), `${JSON.stringify(stepped, null, 2)}\n`);
         const dir = join(docsDir, module.dir, 'endpoints', journey.id);
         mkdirSync(dir, {recursive: true});
-        const title = `${i + 1}. ${stepped.title}${step.optional ? ' (optional)' : ''}`;
+        // NHA's own titles already say "(optional)" where a step is; the
+        // journey flag adds it only where the title does not.
+        const optional = step.optional && !/\(optional\)\s*$/i.test(stepped.title) ? ' (optional)' : '';
+        const title = `${i + 1}. ${stepped.title}${optional}`;
         writeFileSync(join(dir, `${nn}-${slug(step.op)}.mdx`), [
           '---',
           // The step number stays in the id. Docusaurus strips an "NN-" file

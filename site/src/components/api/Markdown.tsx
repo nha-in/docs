@@ -1,20 +1,25 @@
 import React from 'react';
+import {marked} from 'marked';
 
 /**
- * The inline markdown an OpenAPI description actually contains.
+ * The markdown an OpenAPI description contains, rendered.
  *
- * Across this catalogue that is code spans and the occasional bold run, and
- * essentially nothing else: 267 code spans, 14 bold runs, no links, no
- * headings, no fenced blocks. Rendering the text raw put literal backticks on
- * half the endpoint pages, so this turns the two constructs that occur into
- * elements and leaves anything rarer as the plain text it already was.
+ * NHA's earlier descriptions carried code spans and the occasional bold run
+ * and nothing else. The M1 swagger reissued on 22 September 2026 writes each
+ * description as a page: a header table, a body table, a bulleted flow
+ * navigation, italics and a blockquoted note. Rendering only two constructs
+ * put raw pipes and asterisks on every one of those pages, so the text goes
+ * through a markdown parser with tables on.
  *
  * A single newline is a soft wrap, as it is in markdown. Specifications hard
  * wrap their descriptions near column 72, and honouring those breaks left
  * ragged half lines on narrow screens. A blank line still starts a paragraph.
  */
+marked.setOptions({gfm: true, breaks: false});
+
 const TOKEN = /(`[^`\n]+`|\*\*[^*\n]+\*\*)/g;
 
+/** Code spans and bold runs in one line of text, for places that take no block markup. */
 export function inline(text: string): React.ReactNode[] {
   return text
     .split(TOKEN)
@@ -37,18 +42,8 @@ export default function Markdown({
   text: string;
   className?: string;
 }) {
-  const paragraphs = text
-    .trim()
-    .split(/\n{2,}/)
-    .filter((paragraph) => paragraph.trim() !== '');
-
-  return (
-    <>
-      {paragraphs.map((paragraph, index) => (
-        <p key={index} className={className}>
-          {inline(paragraph.replace(/\s*\n\s*/g, ' '))}
-        </p>
-      ))}
-    </>
-  );
+  const html = marked.parse(text.trim(), {async: false}) as string;
+  // The description is the build's own data, generated from the
+  // specification, never reader input.
+  return <div className={className} dangerouslySetInnerHTML={{__html: html}} />;
 }
