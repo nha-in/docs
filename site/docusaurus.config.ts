@@ -331,6 +331,12 @@ const config: Config = {
     // The chat backend's origin. Null keeps the Ask AI panel a labeled mock,
     // so Pages and preview builds never ship a dead composer.
     chatUrl: process.env.CHAT_URL ?? null,
+    // The repository the plugin marketplace is served from, which is what the
+    // install commands on Build with AI name. The portal is NHA's, so the
+    // default is NHA's repository; a deployment serving the plugin from
+    // somewhere else sets MARKETPLACE_REPO, and scripts/build-skills.mjs reads
+    // the same variable so the page and agent-setup/prompt.md agree.
+    marketplaceRepo: process.env.MARKETPLACE_REPO ?? 'nha-in/docs',
   },
 
   i18n: {
@@ -554,11 +560,9 @@ const config: Config = {
           label: 'ABDM sandbox',
           position: 'right',
         },
-        {
-          href: 'https://github.com/eka-care/abdm-docs',
-          label: 'GitHub',
-          position: 'right',
-        },
+        // The repository link lives in TopBar.tsx, which is what src/theme/
+        // Navbar renders instead of this bar; a second copy here was never
+        // shown and could only go stale.
       ],
     },
     // NHA's own footer, transcribed from the ABDM sandbox documentation site:
