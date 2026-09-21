@@ -2,7 +2,31 @@
 
 `POST /api/hiecm/scan-gateway/v3/patient/selection`
 
-Select the all open-order and send to HIP for a payment request detail. In this user can select the multiple procedures. <ol type='1'> <li> <b>Header</b> <ol type='a'> <br/> <li>Authorisation will be provided by the gateway session API after the successful verification of client ID and Secret [ Example: Bearer <TOKEN> ]</li><li>REQUEST-ID unique UUID[ Example: 18235d89-cb13-479d-ad71-7a57d5f669a8 ]</li> <li>TIMESTAMP actual time of the requested was initiated[ Example: 2022-10-06T10:10:00.587Z ]</li> <li>X-CM-ID consent manager ID[ Example: sbx ]</li><li>X-AUTH-TOKEN JWT Authentication token which was issued by ABDM after successful validation of user[ Example: Bearer <TOKEN> ]</li><li>X-HIU-ID [ Example: HIU ID ]</li> </ol> </li><li> <b>Request Body</b> <ol type='a'><br/> <li>intent This is a key value pair which contains the purpose [ Example: type: PAYMENT_ORDER ]</li> <li>openOrderRequestId from the share open order requestId [ Example: 059fcb69-****-4789-a049-62db16c7b5a0 ]</li> <li> abhaAddress of the user/patient</li> <li>Procedures which contains the list of open order</li> </ol> </ol>
+Select the all open-order and send to HIP for a payment request detail. In this user can select the multiple procedures.
+
+ **Header**
+
+Authorisation will be provided by the gateway session API after the successful verification of client ID and Secret [ Example: Bearer ]
+
+REQUEST-ID unique UUID[ Example: 18235d89-cb13-479d-ad71-7a57d5f669a8 ]
+
+TIMESTAMP actual time of the requested was initiated[ Example: 2022-10-06T10:10:00.587Z ]
+
+X-CM-ID consent manager ID[ Example: sbx ]
+
+X-AUTH-TOKEN JWT Authentication token which was issued by ABDM after successful validation of user[ Example: Bearer ]
+
+X-HIU-ID [ Example: HIU ID ]
+
+ **Request Body**
+
+intent This is a key value pair which contains the purpose [ Example: type: PAYMENT_ORDER ]
+
+openOrderRequestId from the share open order requestId [ Example: 059fcb69--4789-a049-62db16c7b5a0 ]
+
+ abhaAddress of the user/patient
+
+Procedures which contains the list of open order
 
 ```bash
 curl --request POST \

@@ -8,7 +8,7 @@ Payer returns the ClaimResponseBundle for a pre-authorisation (approved, partial
 
 ```bash
 curl --request POST \
-  --url https://apisbx.abdm.gov.in/hcxv1_preauth_on_submit \
+  --url {bridgeUrl}v1_preauth_on_submit \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'bearer_auth: Bearer <access token>' \
   --header 'x-hcx-sender_code: 1518@hcx' \

@@ -2,12 +2,13 @@
 
 `POST /api/hiecm/user-initiated-linking/v3/link/care-context/on-confirm`
 
-Share the response of the /api/hiecm/user-initiated-linking/v3/link/care-context/on-confirm API. By using this API, the HIP communicates the outcome of the care context confirmation process, ensuring that the system accurately reflects the status of the operation. This process is essential for maintaining the integrity and synchronization of patient health records, supporting seamless and efficient health information exchange within the healthcare ecosystem. <br><ol type="a"><li>In case of success scenario, patient object is mandatory and error object is optional</li>
- <br>
- <li>In case of error scenario, error object is mandatory and patient object is optional</li>
- <br>
- <li>Response is mandatory in both scenarios</li>
- </ol>
+Share the response of the /api/hiecm/user-initiated-linking/v3/link/care-context/on-confirm API. By using this API, the HIP communicates the outcome of the care context confirmation process, ensuring that the system accurately reflects the status of the operation. This process is essential for maintaining the integrity and synchronization of patient health records, supporting seamless and efficient health information exchange within the healthcare ecosystem.
+
+In case of success scenario, patient object is mandatory and error object is optional
+
+In case of error scenario, error object is mandatory and patient object is optional
+
+Response is mandatory in both scenarios
 
 ```bash
 curl --request POST \
@@ -78,5 +79,5 @@ curl --request POST \
   See Everything returns 401: /docs/hiecm/v3/troubleshooting/everything-returns-401
 - `403`: Forbidden
   See Error codes for this module: /docs/hiecm/v3/api/m2/errors
-- `500`: Internal Server Error -> It is just one example, for every api the path will be changed.
+- `500`: Internal Server Error
   See Error codes for this module: /docs/hiecm/v3/api/m2/errors

@@ -37,7 +37,7 @@ curl --request POST \
   See Everything returns 401: /docs/hiecm/v3/troubleshooting/everything-returns-401
 - `403`: Forbidden
 - `404`: server cannot find the requested resource
-- `500`: Internal Server Error -> It is just one example, for every api the path will be changed.
+- `500`: Internal Server Error
 - `503`: Service Unavailable
 
 Shape of the 200 response, generated from the schema. The values are placeholders, not a captured response:

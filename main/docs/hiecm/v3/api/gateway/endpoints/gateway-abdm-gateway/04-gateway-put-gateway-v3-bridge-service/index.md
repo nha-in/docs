@@ -49,4 +49,4 @@ curl --request PUT \
 
 ## Responses
 
-- `default`: No response was saved in the Postman collection and no documented definition exists.
+- `default`: The specification does not describe this body. Send the call with Try it to see what comes back.

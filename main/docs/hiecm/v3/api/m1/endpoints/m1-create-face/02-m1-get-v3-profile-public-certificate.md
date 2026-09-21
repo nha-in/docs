@@ -26,9 +26,9 @@ curl --request GET \
 - `200`: Successful response
 - `400`: The 400 response code indicates a bad request
   See Error codes for this module: /docs/hiecm/v3/api/m1/errors
-- `401`: The 401 response code indicates an unauthorized request. In this context, it refers to the lack of proper authentication during the operation of the Invalid Credentials <br><br>
+- `401`: The 401 response code indicates an unauthorized request. In this context, it refers to the lack of proper authentication during the operation of the Invalid Credentials
   See Everything returns 401: /docs/hiecm/v3/troubleshooting/everything-returns-401
-- `500`: <b>Internal Server Error</b><br><br>  An Internal Server Error (500) indicates that the server encountered an unexpected condition that prevented it from fulfilling the request.
+- `500`: **Internal Server Error** An Internal Server Error (500) indicates that the server encountered an unexpected condition that prevented it from fulfilling the request.
   See Error codes for this module: /docs/hiecm/v3/api/m1/errors
 
 Shape of the 200 response, generated from the schema. The values are placeholders, not a captured response:

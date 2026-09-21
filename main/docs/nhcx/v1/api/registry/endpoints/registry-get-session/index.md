@@ -10,7 +10,7 @@ Every NHCX API call, whether a registry lookup, a certificate fetch or a claim s
 
 ### When to use
 
-Call it at start-up and whenever the cached token is close to expiry. The Integration Handbook documents it as POST /get/session on host apisbx.ABDM.gov.in with Content-Type application/x-www-form-urlencoded and body client_ID=<NHCX_CLIENT_ID>&client_secret=<NHCX_CLIENT_SECRET>&grant_type=client_credentials. The response carries access_token, expires_in 1200 and token_type Bearer. Both sandbox-exit checklists list /get/session as the auth-token API. Note that the FAQ instead lists https://dev.ABDM.gov.in/api/hiecm/gateway/v3/sessions as the Session API, and the OpenAPI entry (operationId getSession) calls the operation internal and returns ParticipantSessionResponse with a single accessToken field; confirm the current host with your onboarding contact. There is no refresh token: renewal is simply another client-credentials call.
+Call it at start-up and whenever the cached token is close to expiry. The Integration Handbook documents it as POST /get/session on host apisbx.ABDM.gov.in with Content-Type application/x-www-form-urlencoded and body client_ID=&client_secret=&grant_type=client_credentials. The response carries access_token, expires_in 1200 and token_type Bearer. Both sandbox-exit checklists list /get/session as the auth-token API. Note that the FAQ instead lists https://dev.ABDM.gov.in/api/hiecm/gateway/v3/sessions as the Session API, and the OpenAPI entry (operationId getSession) calls the operation internal and returns ParticipantSessionResponse with a single accessToken field; confirm the current host with your onboarding contact. There is no refresh token: renewal is simply another client-credentials call.
 
 ### Preconditions
 
@@ -21,7 +21,7 @@ Call it at start-up and whenever the cached token is close to expiry. The Integr
 
 ### Postconditions
 
-HTTP 200 with { access_token, expires_in: 1200, token_type: Bearer }. The access_token is a JWT that should be treated as opaque; place it in the Authorisation (bearer_auth) header as Bearer <token> on every subsequent call. Its lifetime is 1200 seconds (20 minutes); after that any call returns 401. The OpenAPI schema names the field accessToken and omits expiry, so read whichever key is present and assume 1200 seconds when expires_in is absent. A 400 indicates a malformed body. Nothing asynchronous follows.
+HTTP 200 with { access_token, expires_in: 1200, token_type: Bearer }. The access_token is a JWT that should be treated as opaque; place it in the Authorisation (bearer_auth) header as Bearer on every subsequent call. Its lifetime is 1200 seconds (20 minutes); after that any call returns 401. The OpenAPI schema names the field accessToken and omits expiry, so read whichever key is present and assume 1200 seconds when expires_in is absent. A 400 indicates a malformed body. Nothing asynchronous follows.
 
 ### Common mistakes
 

@@ -10,12 +10,12 @@ Every NHCX payload is encrypted end-to-end for exactly one recipient so that eve
 
 ### When to use
 
-Call it before encrypting the first message to a recipient and whenever the 24-hour cache entry for that participantid expires or is evicted after a decrypt or encrypt failure. Providers fetch the payer's certificate before /v1/coverageeligibility/check, /v1/preauth/submit and /v1/claim/submit; payers fetch the provider's certificate before encrypting on_* callbacks. Handbook call: POST /fetch/certs on host apisbx.ABDM.gov.in/pmjay/sbxhcx with bearer_auth Bearer <token>. Synchronous; no workflow or x-hcx-status codes.
+Call it before encrypting the first message to a recipient and whenever the 24-hour cache entry for that participantid expires or is evicted after a decrypt or encrypt failure. Providers fetch the payer's certificate before /v1/coverageeligibility/check, /v1/preauth/submit and /v1/claim/submit; payers fetch the provider's certificate before encrypting on_* callbacks. Handbook call: POST /fetch/certs on host apisbx.ABDM.gov.in/pmjay/sbxhcx with bearer_auth Bearer. Synchronous; no workflow or x-hcx-status codes.
 
 ### Preconditions
 
 - Bearer token from /get/session in bearer_auth with the Bearer prefix; Content-Type: application/json (add Accept: application/json per the common-mistakes guidance).
-- ParticipantCertRequest with the single required field participantid, the recipient's participant code in <code>@hcx form, identical to the value you will place in x-hcx-recipient_code.
+- ParticipantCertRequest with the single required field participantid, the recipient's participant code in `@hcx form, identical to the value you will place in x-hcx-recipient_code.
 - The recipient has completed onboarding with a certificate registered (mandatory at creation).
 
 ### Postconditions

@@ -2,7 +2,7 @@
 
 `POST /api/hiecm/data-flow/v3/health-information/notify`
 
-HIU and HIP during data transfer. </br></br> HIP on the transfer of data would send sessionStatus - one of [TRANSFERRED, FAILED]</br> HIP would also send hiStatus for each careContextReference - on of [DELIVERED, ERRORED]</br> HIU on receipt of data would send sessionStatus - one of [RECEIVED, FAILED]. For example, FAILED when data was not sent or if invalid data was sent</br> HIU would also send hiStatus for each careContextReference - one of [OK, ERRORED]
+HIU and HIP during data transfer. HIP on the transfer of data would send sessionStatus - one of [TRANSFERRED, FAILED] HIP would also send hiStatus for each careContextReference - on of [DELIVERED, ERRORED] HIU on receipt of data would send sessionStatus - one of [RECEIVED, FAILED]. For example, FAILED when data was not sent or if invalid data was sent HIU would also send hiStatus for each careContextReference - one of [OK, ERRORED]
 
 ```bash
 curl --request POST \

@@ -3,11 +3,29 @@
 `POST /api/v3/hiu/patient/on-share`
 
 **Hosted by the HIP/HIU, not by ABDM.** ABDM calls this endpoint at the callback URL registered for your bridge, so the path below is relative to that URL.
-This is an API will be invoked by <b>HIU</b> to share the response of HIECM's /api/hiecm/patient-share/v3/on-share API. <ol type='1'> <li> <b>Header</b> <ol type='a'> <br/> <li>Authorisation will be provided by the gateway session API after the successful verification of client ID and Secret [ Example: <TOKEN> ]</li> <li>REQUEST-ID unique UUID[ Example: 18235d89-cb13-479d-ad71-7a57d5f669a8 ]</li> <li>TIMESTAMP actual time of the requested was initiated[ Example: 2022-10-06T10:10:00.587Z ]</li> <li>X-HIU-ID HIU ID[ Example: HIU ]</li> </ol> </li> <br/> <li> <b>Request Body</b> <ol type='a'><br/> <li>Incase of success scenario,acknowledgement is mandatory and error is optional</li> <li>Incase if failure scenario,error is mandatory and acknowledgment is optional</li> <li>response is mandatory object in both the cases</li> </ol> </ol>
+This is an API will be invoked by **HIU** to share the response of HIECM's /api/hiecm/patient-share/v3/on-share API.
+
+ **Header**
+
+Authorisation will be provided by the gateway session API after the successful verification of client ID and Secret [ Example: ]
+
+REQUEST-ID unique UUID[ Example: 18235d89-cb13-479d-ad71-7a57d5f669a8 ]
+
+TIMESTAMP actual time of the requested was initiated[ Example: 2022-10-06T10:10:00.587Z ]
+
+X-HIU-ID HIU ID[ Example: HIU ]
+
+ **Request Body**
+
+Incase of success scenario,acknowledgement is mandatory and error is optional
+
+Incase if failure scenario,error is mandatory and acknowledgment is optional
+
+response is mandatory object in both the cases
 
 ```bash
 curl --request POST \
-  --url https://abhasbx.abdm.gov.in/api/v3/hiu/patient/on-share \
+  --url {bridgeUrl}/api/v3/hiu/patient/on-share \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \

@@ -3,11 +3,13 @@
 `POST /api/v3/hiu/consent/request/on-init`
 
 **Hosted by the HIP/HIU, not by ABDM.** ABDM calls this endpoint at the callback URL registered for your bridge, so the path below is relative to that URL.
-Result of consent request creation for a patient. <b>consentRequest.ID</b> represents the consentrequest ID created by CM. The result must contain either <b>consentRequest</b> or the <b>error</b> caused. Reasons for error may be <br><br> Invalid references (e.g patient ID, HIU ID), purpose, hiTypes, ranges, persmission
+Result of consent request creation for a patient. **consentRequest.ID** represents the consentrequest ID created by CM. The result must contain either**consentRequest** or the**error** caused. Reasons for error may be
+
+ Invalid references (e.g patient ID, HIU ID), purpose, hiTypes, ranges, persmission
 
 ```bash
 curl --request POST \
-  --url https://dev.abdm.gov.in/api/v3/hiu/consent/request/on-init \
+  --url {bridgeUrl}/api/v3/hiu/consent/request/on-init \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \

@@ -52,7 +52,7 @@ Consent is granted by a person, and the PHR app is where they do it. NHA sets a 
 
 1. **See the request**, with the HIU asking, the purpose, the record types, the date range of records, how long the consent would last, and its status.
 2. **Change it before allowing it**, where the request permits: the access duration, the record date range, the categories shared, and the validity period. This is the one most often left out, and the one that turns a consent screen into a negotiation rather than a demand.
-3. **Allow or refuse it.** NHA's own flow names three outcomes, not two: approve, reject and ignore. An ignored request expires on the requester's window, and the interface has to show that state.
+3. **Allow or refuse it.** The consent flow has three outcomes, not two: approve, reject and ignore. An ignored request expires on the requester's window, and the interface has to show that state.
 4. **See what is already allowed**, so the person can tell which organisations hold access right now. A list of past decisions is not the same thing.
 5. **Take it back** at any time. Two things follow: the status updates at the consent manager, and sharing under that consent stops immediately, not at the end of the period.
 

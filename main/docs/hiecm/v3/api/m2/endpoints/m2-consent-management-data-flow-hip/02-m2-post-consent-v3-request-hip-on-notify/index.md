@@ -2,7 +2,7 @@
 
 `POST /api/hiecm/consent/v3/request/hip/on-notify`
 
-Notification of consents, in cases of consent approval, revocation and expiration. Notified by CM earlier via Gateway API - <b> /api/v3/consent/request/hip/notify </b>
+Notification of consents, in cases of consent approval, revocation and expiration. Notified by CM earlier via Gateway API - **/api/v3/consent/request/hip/notify**
 
 ```bash
 curl --request POST \

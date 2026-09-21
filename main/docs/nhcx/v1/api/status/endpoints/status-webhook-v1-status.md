@@ -8,7 +8,7 @@ Sender asks NHCX where its own in-flight request stands; the gateway answers req
 
 ```bash
 curl --request POST \
-  --url https://apisbx.abdm.gov.in/hcxv1_status \
+  --url {bridgeUrl}v1_status \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'bearer_auth: Bearer <access token>' \
   --header 'x-hcx-sender_code: 1000004446@hcx' \

@@ -15,7 +15,7 @@ The published OpenAPI documents give this path the same semantics as /v1/communi
 ### Preconditions
 
 - Identical to the public endpoint: registered sender and recipient, valid Bearer token, recipient certificate for JWE encryption (RSA-OAEP-256, A256GCM).
-- Request body is a JWEPayload, { "payload": "<compact JWE>" }, whose plaintext is the Task plus Communication collection Bundle.
+- Request body is a JWEPayload, { "payload": "" }, whose plaintext is the Task plus Communication collection Bundle.
 - Protected header carries sender_code, recipient_code, API_call_ID, correlation_ID, workflow_ID, TIMESTAMP in IST and status request.initiated.
 - Whether the internal prefix is reachable from a participant's network is not documented; confirm with the environment index and your onboarding contact.
 
@@ -28,7 +28,7 @@ Returns the same response set as the public endpoint: 202 Accepted with a Status
 - Assuming the internal path behaves differently or bypasses header validation; the specs describe it as identical apart from the operationId.
 - Hard-coding the internal prefix in a participant integration without confirmation that it is the route you were onboarded to.
 - The same envelope errors as the public path: wrong status spelling (NHCX-1011), invalid header (NHCX-1005), duplicate correlation ID (NHCX-1006), invalid workflow (PAYR-1003).
-- Mixing the hcxsbx.ABDM.gov.in/<service> spec host and the apisbx.ABDM.gov.in/pmjay/sbxhcx gateway base; a 404 is the first sign.
+- Mixing the hcxsbx.ABDM.gov.in/ spec host and the apisbx.ABDM.gov.in/pmjay/sbxhcx gateway base; a 404 is the first sign.
 
 ### Best practices
 

@@ -14,7 +14,7 @@ Use it when your client generator or API tooling requires Swagger 2 input, or wh
 
 ### Preconditions
 
-- A GET request to the status service host; the OpenAPI documents in this corpus were captured from https://hcxsbx.ABDM.gov.in/<service>/api-docs, and the status service declares the server prefix /statushcxservice.
+- A GET request to the status service host; the OpenAPI documents in this corpus were captured from https://hcxsbx.ABDM.gov.in//api-docs, and the status service declares the server prefix /statushcxservice.
 - No JWE envelope, no x-hcx-* protocol headers and no correlation ID; the docs do not state that a Bearer token is required for these discovery endpoints.
 - No request body.
 

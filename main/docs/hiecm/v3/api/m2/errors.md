@@ -1,8 +1,8 @@
-# M2 Linking and sharing errors
+# M2 Health information provider services errors
 
 Seeing a symptom rather than a code? Start at [Troubleshooting](/docs/main/docs/hiecm/v3/troubleshooting/).
 
-The M2 Linking and sharing specification records no error code yet. That is a gap in the specification, not a promise that this module cannot fail.
+The M2 Health information provider services specification records no error code yet. That is a gap in the specification, not a promise that this module cannot fail.
 
 Every code above is recorded in the specification that owns it. The aggregated list across modules is at [error codes](/docs/main/docs/hiecm/v3/reference/error-codes).
 

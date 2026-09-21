@@ -60,7 +60,7 @@ curl --request POST \
   See Error codes for this module: /docs/hiecm/v3/api/subscription/errors
 - `404`: server cannot find the requested resource
   See Error codes for this module: /docs/hiecm/v3/api/subscription/errors
-- `500`: Internal Server Error -> It is just one example, for every api the path will be changed.
+- `500`: Internal Server Error
   See Error codes for this module: /docs/hiecm/v3/api/subscription/errors
 - `503`: Service Unavailable
   See Error codes for this module: /docs/hiecm/v3/api/subscription/errors

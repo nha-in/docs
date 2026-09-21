@@ -8,7 +8,7 @@ Provider asks the payer, via NHCX, whether a beneficiary's policy is in force, w
 
 ```bash
 curl --request POST \
-  --url https://apisbx.abdm.gov.in/hcxv1_coverageeligibility_check \
+  --url {bridgeUrl}v1_coverageeligibility_check \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'bearer_auth: Bearer <access token>' \
   --header 'x-hcx-sender_code: 1000004446@hcx' \

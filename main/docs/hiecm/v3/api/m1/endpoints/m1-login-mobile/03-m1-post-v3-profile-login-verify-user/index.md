@@ -35,12 +35,12 @@ curl --request POST \
 
 ## Responses
 
-- `200`: The 200 response code indicates a successful request.<br><br> <p><strong>
-- `400`: The 400 response code indicates a bad request. In this context, it refers to various errors encountered during the OTP (One-Time Password) verification process due to invalid inputs or parameters. <p><br><strong>Types of OTP Verification Errors:</strong></p> <ol> <li> <p><strong>Invakid T-Token:</strong> This error occurs when the T -token.</p> </li> </ol> <ol start="2"> <li> <p><strong>Verify OTP - Invalid Abha Number:</strong> This error occurs when the authentication methods provided for invalid abha number are invalid.</p> </li> </ol>
+- `200`: The 200 response code indicates a successful request. **
+- `400`: The 400 response code indicates a bad request. In this context, it refers to various errors encountered during the OTP (One-Time Password) verification process due to invalid inputs or parameters. **Types of OTP Verification Errors:** **Invakid T-Token:** This error occurs when the T -token. **Verify OTP - Invalid Abha Number:** This error occurs when the authentication methods provided for invalid abha number are invalid.
   See Error codes for this module: /docs/hiecm/v3/api/m1/errors
-- `401`: <strong>Unauthorized:</strong><br> Indicates that the request requires user authentication. The server returns a 401 status code when the client has not provided valid authentication credentials.
+- `401`: **Unauthorized:** Indicates that the request requires user authentication. The server returns a 401 status code when the client has not provided valid authentication credentials.
   See Everything returns 401: /docs/hiecm/v3/troubleshooting/everything-returns-401
-- `500`: <b>Internal Server Error</b><br><br>  An Internal Server Error (500) indicates that the server encountered an unexpected condition that prevented it from fulfilling the request.
+- `500`: **Internal Server Error** An Internal Server Error (500) indicates that the server encountered an unexpected condition that prevented it from fulfilling the request.
   See Error codes for this module: /docs/hiecm/v3/api/m1/errors
 
 Shape of the 200 response, generated from the schema. The values are placeholders, not a captured response:

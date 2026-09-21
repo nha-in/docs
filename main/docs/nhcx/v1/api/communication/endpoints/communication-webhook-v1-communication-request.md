@@ -8,7 +8,7 @@ Payer pushes a Task plus Communication bundle to a provider mid-claim: TAT alert
 
 ```bash
 curl --request POST \
-  --url https://apisbx.abdm.gov.in/hcxv1_communication_request \
+  --url {bridgeUrl}v1_communication_request \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'bearer_auth: Bearer <access token>' \
   --header 'x-hcx-sender_code: 1518@hcx' \

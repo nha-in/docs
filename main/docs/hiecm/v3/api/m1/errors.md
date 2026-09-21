@@ -1,4 +1,4 @@
-# M1 ABHA identity errors
+# M1 ABHA creation and verification errors
 
 Seeing a symptom rather than a code? Start at [Troubleshooting](/docs/main/docs/hiecm/v3/troubleshooting/).
 

@@ -4,11 +4,11 @@
 
 **Hosted by the HIP/HIU, not by ABDM.** ABDM calls this endpoint at the callback URL registered for your bridge, so the path below is relative to that URL.
 Health information user will get notified about the consent request granted or denied, consent revoked, consent expired.
-For consent request grant, status=GRANTED, consentRequestId=<consent-REQUEST-ID>, and consentArtefacts is an array of generated consent artefact Ids. For consent request expiry, status=EXPIRED, consentRequestId=<consent-REQUEST-ID> For consent request denied, status=DENIED, consentRequestId=<consent-REQUEST-ID> For consent revocation, status=REVOKED, consentArtefacts is an array of revoked consent artefact ids.
+For consent request grant, status=GRANTED, consentRequestId=, and consentArtefacts is an array of generated consent artefact Ids. For consent request expiry, status=EXPIRED, consentRequestId= For consent request denied, status=DENIED, consentRequestId= For consent revocation, status=REVOKED, consentArtefacts is an array of revoked consent artefact ids.
 
 ```bash
 curl --request POST \
-  --url https://dev.abdm.gov.in/api/v3/hiu/consent/request/notify \
+  --url {bridgeUrl}/api/v3/hiu/consent/request/notify \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \

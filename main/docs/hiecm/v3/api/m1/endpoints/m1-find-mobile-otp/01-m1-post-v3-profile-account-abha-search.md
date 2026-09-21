@@ -2,7 +2,9 @@
 
 `POST /abha/api/v3/profile/account/abha/search`
 
-Search for ABHA (Ayushman Bharat Health Account) profiles. It allows users to retrieve information about their ABHA profiles using mobile numbers. This is essential for verifying the user’s identity and ensuring secure access to their ABHA profile. <br><br> <strong>Note: </strong> You need to use the Encryption API first. Only an RSA-encrypted mobile number should be in the request body.
+Search for ABHA (Ayushman Bharat Health Account) profiles. It allows users to retrieve information about their ABHA profiles using mobile numbers. This is essential for verifying the user’s identity and ensuring secure access to their ABHA profile.
+
+ **Note:** You need to use the Encryption API first. Only an RSA-encrypted mobile number should be in the request body.
 
 ```bash
 curl --request POST \

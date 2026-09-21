@@ -89,26 +89,28 @@ For the diagrams, "Your system" refers to the [HMIS](/docs/main/docs/hiecm/v3/ge
 ```mermaid
 sequenceDiagram
     autonumber
-    actor P as Patient
     participant S as Your system
     participant CM as HIE-CM
-    participant A as Patient's PHR apps
-    P->>S: Registers, gives ABHA address
-    S->>CM: Request link token
-    CM-->>S: Link token, valid six months
-    Note over S: Store the token against the patient
-    S->>S: New health record created
-    S->>S: Assign the record to a care context
-    S->>CM: Link the care context, carrying the link token
-    CM-->>S: 202 Accepted, nothing decided yet
-    CM->>S: Callback on your bridge with the outcome
-    Note over S: Match response.requestId to the REQUEST-ID you sent
-    CM->>A: Notify every PHR app subscribed to that ABHA address
+    actor P as Patient
+    Note over S: Every call carries REQUEST-ID, TIMESTAMP,<br/>X-CM-ID, X-HIP-ID and the gateway access token
+    S->>CM: POST /api/hiecm/v3/token/generate-token<br/>abhaNumber or abhaAddress, name, gender, yearOfBirth
+    CM-->>S: 202 Accepted
+    CM-)S: callback POST {bridgeUrl}/api/v3/hip/token/on-generate-token<br/>linkToken (valid six months), response.requestId
+    Note over S: Store the linkToken against the patient
+    S->>CM: POST /api/hiecm/hip/v3/link/carecontext<br/>header X-LINK-TOKEN, abhaAddress,<br/>patient [referenceNumber, display,<br/>careContexts [referenceNumber, display], hiTypes,
+    CM-->>S: 202 Accepted
+    CM-)S: callback POST {bridgeUrl}/api/v3/link/on_carecontext<br/>status, error, response.requestId
+    CM-)P: Linked records appear in the PHR app
+    S->>CM: POST /api/hiecm/hip/v3/link/context/notify<br/>notification {patient, careContext, hiTypes, date,<br/>hip} when records are added to a linked context
+    CM-)S: callback POST {bridgeUrl}/api/v3/links/context/on-notify<br/>acknowledgement.status, response.requestId
+    S->>CM: POST /api/hiecm/hip/v3/link/patient/links/sms/notify2<br/>notification {phoneNo,<br/>hip} to tell the patient records are linked
+    CM-)S: callback POST {bridgeUrl}/api/v3/patients/sms/on-notify<br/>acknowledgement.status
+    CM-)P: SMS to the patient
 ```
 
 The HIP generates a [link token](/docs/main/docs/hiecm/v3/getting-started/glossary#link-token) using the patient's ABHA address and demographic details, which is then shared with the patient for authentication. Upon successful verification, a linking token valid for 6 months is created, and the patient's care context is linked to the corresponding ABHA address.
 
-Step 8 is the acknowledgement. Step 9 is the answer. The link is confirmed only when the callback arrives at `/api/v3/link/on_carecontext` on your bridge, so do not mark a record as linked on the strength of the 202. See [the outcome of a care context linking call](/docs/main/docs/hiecm/v3/api/m2/endpoints/m2-abdm-hip-initiated-linking-hip/02-m2-post-v3-link-on-carecontext).
+Step 6 is the acknowledgement. Step 7 is the answer. The link is confirmed only when the callback arrives at `/api/v3/link/on_carecontext` on your bridge, so do not mark a record as linked on the strength of the 202. See [the outcome of a care context linking call](/docs/main/docs/hiecm/v3/api/m2/endpoints/m2-abdm-hip-initiated-linking-hip/02-m2-post-v3-link-on-carecontext).
 
 Which steps are callbacks?
 
@@ -121,28 +123,30 @@ If you hold no valid link token for the patient, generate a new one with the pat
 ```mermaid
 sequenceDiagram
     autonumber
-    actor P as Patient
-    participant A as Patient's PHR app
+    actor P as Patient (PHR app)
     participant CM as HIE-CM
     participant S as Your system
-    P->>A: Selects the facility they visited
-    A->>CM: Discovery request
-    CM->>S: Discovery request with verified and unverified identifiers
-    S->>S: Match against your patient records
-    S-->>CM: List of care contexts, metadata only
-    CM-->>A: Care contexts to review
-    P->>A: Selects the care contexts to link
-    A->>CM: Link the selected care contexts
-    CM->>S: Link request for those care contexts
-    S-->>CM: Link confirmed
-    CM-->>A: Records now linked to the ABHA address
+    P->>CM: Selects your facility and asks to discover records
+    CM-)S: callback POST {bridgeUrl}/api/v3/hip/patient/care-context/discover<br/>transactionId, patient {id, verifiedIdentifiers,<br/>unverifiedIdentifiers, name, gender, yearOfBirth}
+    S->>S: Matches the patient against your records,<br/>unlinked care contexts only
+    S->>CM: POST /api/hiecm/user-initiated-linking/v3/patient/care-context/on-discover<br/>transactionId, patient [referenceNumber, display,<br/>careContexts, hiType, count], matchedBy,<br/>response.requestId
+    CM-->>P: Care contexts to review, metadata only
+    P->>CM: Selects the care contexts to link
+    CM-)S: callback POST {bridgeUrl}/api/v3/hip/link/care-context/init<br/>transactionId, abhaAddress,<br/>patient [referenceNumber, careContexts]
+    S->>S: Creates a link reference and sends an OTP<br/>to the patient's registered contact
+    S->>CM: POST /api/hiecm/user-initiated-linking/v3/link/care-context/on-init<br/>transactionId, link {referenceNumber,<br/>authenticationType DIRECT,<br/>meta {communicationMedium, communicationHint,
+    P->>CM: Enters the OTP
+    CM-)S: callback POST {bridgeUrl}/api/v3/hip/link/care-context/confirm<br/>confirmation {linkRefNumber, token}
+    S->>S: Validates the token and links the care contexts
+    S->>CM: POST /api/hiecm/user-initiated-linking/v3/link/care-context/on-confirm<br/>patient [referenceNumber, display,<br/>careContexts [referenceNumber, display], hiType,<br/>count], response.requestId
+    CM-->>P: Records now linked to the ABHA address
 ```
 
 The patient starts discovery from a PHR app and picks the facility they visited. Your system matches them on the verified and unverified identifiers the gateway passes you, and answers with care contexts.
 
-Step 5 returns eligible care-context metadata without disclosing clinical content: no diagnosis, no test result, no report content.
+Step 4 returns eligible care-context metadata without disclosing clinical content: no diagnosis, no test result, no report content.
 
-Steps 8 to 11 are the link init and confirm requests, answered by your `on-init` and `on-confirm` callbacks. Their fields are on the [M2 API reference](/docs/main/docs/hiecm/v3/api/m2).
+Steps 7 to 13 are the link init and confirm exchange: the gateway calls your `init` and `confirm` callbacks, and you answer each with `on-init` and `on-confirm`. The fields are on the [M2 API reference](/docs/main/docs/hiecm/v3/api/m2).
 
 ## Journey 3: Health information request and transfer
 
@@ -152,18 +156,15 @@ sequenceDiagram
     participant U as HIU
     participant CM as HIE-CM
     participant S as Your system
-    U->>CM: Health information request
-    Note over U,CM: Consent ID, data push URL, date range, public key and nonce
-    CM->>CM: Generate a transaction ID
-    CM-->>U: Transaction ID
-    CM->>S: Forward the request with the transaction ID
-    S->>S: Check the consent is valid and active
-    S->>S: Check the date range sits inside the consent
-    S->>S: Check the encryption parameters
-    S->>S: Build the FHIR bundle, encrypt it, sign it
-    S->>U: Push encrypted data to the data push URL
-    S->>CM: Call health-information/notify, transfer complete
-    U->>CM: Notify the outcome, success or failure
+    CM-)S: callback POST {bridgeUrl}/api/v3/consent/request/hip/notify<br/>notification {status GRANTED, consentId,<br/>consentDetail {hiTypes, permission.dateRange,<br/>careContexts}, signature}
+    S->>CM: POST /api/hiecm/consent/v3/request/hip/on-notify<br/>acknowledgement {status OK, consentId},<br/>response.requestId
+    U->>CM: POST /api/hiecm/data-flow/v3/health-information/request
+    CM-)S: callback POST {bridgeUrl}/api/v3/hip/health-information/request<br/>transactionId, hiRequest {consent.id, dateRange,<br/>dataPushUrl, keyMaterial {cryptoAlg, curve,<br/>dhPublicKey, nonce}}
+    S->>CM: POST /api/hiecm/data-flow/v3/health-information/hip/on-request<br/>hiRequest {transactionId,<br/>sessionStatus ACKNOWLEDGED}, response.requestId
+    S->>S: Checks the consent is GRANTED and the<br/>date range sits inside it, builds one FHIR R4<br/>bundle per care context, encrypts each with<br/>ECDH (Curve25519) and AES-GCM
+    S->>U: POST dataPushUrl<br/>pageNumber, pageCount, transactionId,<br/>entries [content, media, checksum,<br/>careContextReference], keyMaterial
+    S->>CM: POST /api/hiecm/data-flow/v3/health-information/notify<br/>notification {consentId, transactionId,<br/>notifier {type HIP},<br/>statusNotification {sessionStatus TRANSFERRED,
+    U->>CM: POST /api/hiecm/data-flow/v3/health-information/notify<br/>notifier {type HIU}, sessionStatus DELIVERED
 ```
 
 Another facility, an insurer or a citizen's PHR app asks for records under a [consent artefact](/docs/main/docs/hiecm/v3/getting-started/glossary#consent-artefact) the patient granted. Whoever asks is the [HIU](/docs/main/docs/hiecm/v3/getting-started/glossary#hiu).

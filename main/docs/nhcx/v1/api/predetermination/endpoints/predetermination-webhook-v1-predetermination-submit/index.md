@@ -8,7 +8,7 @@ Provider asks the payer what it would approve for a proposed treatment before co
 
 ```bash
 curl --request POST \
-  --url https://apisbx.abdm.gov.in/hcxv1_predetermination_submit \
+  --url {bridgeUrl}v1_predetermination_submit \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'bearer_auth: Bearer <access token>' \
   --header 'x-hcx-sender_code: <participant code>' \

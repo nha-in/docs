@@ -8,7 +8,7 @@ Provider returns the acknowledgement Task bundle for a payer communication, echo
 
 ```bash
 curl --request POST \
-  --url https://apisbx.abdm.gov.in/hcxv1_communication_on_request \
+  --url {bridgeUrl}v1_communication_on_request \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'bearer_auth: Bearer <access token>' \
   --header 'x-hcx-sender_code: 1000004446@hcx' \

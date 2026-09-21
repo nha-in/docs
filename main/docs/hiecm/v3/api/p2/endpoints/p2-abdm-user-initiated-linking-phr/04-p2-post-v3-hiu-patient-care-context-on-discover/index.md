@@ -3,11 +3,19 @@
 `POST /api/v3/hiu/patient/care-context/on-discover`
 
 **Hosted by the HIP/HIU, not by ABDM.** ABDM calls this endpoint at the callback URL registered for your bridge, so the path below is relative to that URL.
-The on-discover API endpoint allows HIUs to receive and process the care contexts associated with a patient. When a request is made to this endpoint, it returns a detailed response containing the patient’s care contexts, transaction details, and any errors that occurred. This ensures that HIUs have the necessary information to manage patient care effectively. <p><strong>NOTE:</strong> In the request body, either 'patient' or 'error' must be included. <ol type = "a"> <li>In case of success scenario, patient object is mandatory and error object is optional</li> <br> <li>In case of error scenario, error object is mandatory and patient object is optional</li> <br> <li>Response is mandatory in both scenarios</li> </ol>
+The on-discover API endpoint allows HIUs to receive and process the care contexts associated with a patient. When a request is made to this endpoint, it returns a detailed response containing the patient’s care contexts, transaction details, and any errors that occurred. This ensures that HIUs have the necessary information to manage patient care effectively.
+
+**NOTE:** In the request body, either 'patient' or 'error' must be included.
+
+In case of success scenario, patient object is mandatory and error object is optional
+
+In case of error scenario, error object is mandatory and patient object is optional
+
+Response is mandatory in both scenarios
 
 ```bash
 curl --request POST \
-  --url https://abhasbx.abdm.gov.in/api/v3/hiu/patient/care-context/on-discover \
+  --url {bridgeUrl}/api/v3/hiu/patient/care-context/on-discover \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
@@ -77,7 +85,7 @@ curl --request POST \
   See Everything returns 401: /docs/hiecm/v3/troubleshooting/everything-returns-401
 - `403`: Forbidden
   See Error codes for this module: /docs/hiecm/v3/api/p2/errors
-- `500`: Internal Server Error -> It is just one example, for every api the path will be changed.
+- `500`: Internal Server Error
   See Error codes for this module: /docs/hiecm/v3/api/p2/errors
 
 Shape of the 200 response, generated from the schema. The values are placeholders, not a captured response:

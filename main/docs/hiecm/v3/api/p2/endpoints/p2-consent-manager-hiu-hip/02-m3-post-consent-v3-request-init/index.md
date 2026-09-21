@@ -22,11 +22,7 @@ curl --request POST \
     "patient": {
       "id": "<ABHA_ADDRESS>"
     },
-    "hip": {
-      "id": "cowin_hip_01",
-      "name": "Cowin",
-      "type": "HIP"
-    },
+    "hip": null,
     "hiu": {
       "id": "cowin_hiu_01",
       "name": "Cowin",
@@ -87,11 +83,11 @@ curl --request POST \
 - `consent.patient.id` (string, required): The abha address of the patient. It must start with Alphanumeric . and  _  in the middle and must be ending with @abdm or @sbx. Allows alpha numeric character and special characters like ^[a-zA-Z0-9][a-zA-Z0-9_.\-!]+[a-zA-Z0-9]@(abdm|sbx)$
 - `consent.hip` (object): Identifier and name of the health information provider.
 - `consent.hip.id` (string, required): The service ID of the health information provider. Allows alpha numeric character and special characters like [A-Z a-z 0-9]+[A-Z a-z 0-9 //_//-]*[A-Z a-z 0-9]$
-- `consent.hip.name` (string, required): The name of the health information provider. Allows alpha numeric and special characters like "^[a-zA-Z]+[A-Za-z0-9_\\-@,().\\s\\xa0:/]+"
+- `consent.hip.name` (string): The name of the health information provider. Allows alpha numeric and special characters like "^[a-zA-Z]+[A-Za-z0-9_\\-@,().\\s\\xa0:/]+"
 - `consent.hip.type` (string): The type of the health information provider. Allows alpha numeric and special characters like  "^[a-zA-Z0-9_\\-@,. \":/]{0,255}$"
 - `consent.hiu` (object, required)
 - `consent.hiu.id` (string, required): The service ID of the health information user.  Allows alpha numeric character and special characters like [A-Z a-z 0-9]+[A-Z a-z 0-9 //_//-]*[A-Z a-z 0-9]$
-- `consent.hiu.name` (string, required): The name of the health information user. Allows alpha numeric and special characters like "^[a-zA-Z]+[A-Za-z0-9_\\-@,().\\s\\xa0:/]+"
+- `consent.hiu.name` (string): The name of the health information user. Allows alpha numeric and special characters like "^[a-zA-Z]+[A-Za-z0-9_\\-@,().\\s\\xa0:/]+"
 - `consent.hiu.type` (string): The type of the health information user. Allows alpha numeric and special characters like  "^[a-zA-Z0-9_\\-@,. \":/]{0,255}$"
 - `consent.careContexts` (object[]): List of care contexts linked at the HIP end for the identified patient.
 - `consent.careContexts.patientReference` (string, required): A patient identifier with which patient is registered in the facility/hospital like abhaAddress @sbx. Allows alpha numeric and special characters like "^[a-zA-Z0-9_\\-@,().\"/: ]{0,255}$"

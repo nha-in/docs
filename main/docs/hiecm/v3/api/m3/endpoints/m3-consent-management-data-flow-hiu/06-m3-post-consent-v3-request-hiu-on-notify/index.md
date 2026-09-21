@@ -2,7 +2,7 @@
 
 `POST /api/hiecm/consent/v3/request/hiu/on-notify`
 
-Consent notifications, specifically for cases when consent is APPROVED, DENIED, or REVOKED or EXPIRED. Notified by CM earlier via Gateway API - <b> /api/v3/hiu/consent/request/notify </b>
+Consent notifications, specifically for cases when consent is APPROVED, DENIED, or REVOKED or EXPIRED. Notified by CM earlier via Gateway API - **/api/v3/hiu/consent/request/notify**
 
 ```bash
 curl --request POST \

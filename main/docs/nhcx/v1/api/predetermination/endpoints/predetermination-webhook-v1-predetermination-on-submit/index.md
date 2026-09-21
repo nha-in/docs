@@ -8,7 +8,7 @@ Payer returns its estimate for a predetermination request to the provider: a `Cl
 
 ```bash
 curl --request POST \
-  --url https://apisbx.abdm.gov.in/hcxv1_predetermination_on_submit \
+  --url {bridgeUrl}v1_predetermination_on_submit \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'bearer_auth: Bearer <access token>' \
   --header 'x-hcx-sender_code: <participant code>' \

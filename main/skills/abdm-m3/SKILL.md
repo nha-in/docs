@@ -3,7 +3,7 @@ name: abdm-m3
 description: Use when building, debugging or testing ABDM Milestone 3: raising a consent request, tracking its status, reading consent artefacts, and fetching encrypted health records as an HIU. Carries the endpoints and the consent rules. Also carries the scaffolding loop that builds it flow by flow and the loop from a failed call to a named fix, in references/.
 ---
 
-# ABDM M3, consent and fetching
+# ABDM M3, health information user services
 
 Generated from the ABDM Developer Portal on 2026-09-16, catalogue version 2026.09.16. Every fact below comes from a page in that portal, which is the place to look when this file does not carry enough.
 

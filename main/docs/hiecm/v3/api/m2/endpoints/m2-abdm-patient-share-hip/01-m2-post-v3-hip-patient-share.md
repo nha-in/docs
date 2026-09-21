@@ -3,11 +3,29 @@
 `POST /api/v3/hip/patient/share`
 
 **Hosted by the HIP/HIU, not by ABDM.** ABDM calls this endpoint at the callback URL registered for your bridge, so the path below is relative to that URL.
-This is an API will be invoked to the <b>HIP</b> to share the response of HIECM's /api/hiecm/patient-share/v3/share API. <ol type='1'> <li> <b>Header</b> <ol type='a'> <br/> <li>REQUEST-ID unique UUID[ Example: 18235d89-cb13-479d-ad71-7a57d5f669a8 ]</li> <li>TIMESTAMP actual time of the requested was initiated[ Example: 2022-10-06T10:10:00.587Z ]</li> <li>X-HIP-ID</li> <li>Authorisation will be provided by the gateway session API after the successful verification of client ID and Secret [ Example: <TOKEN> ]</li></ol> </li> <br/><li> <b>Request Body</b> <ol type='a'><br/> <li>intent This is a key value pair which contains the purpose [ Example: {purpose: PROFILE_SHARE } ]</li> <li>metaData This is a key value pair which contains the location longitude and latitude[ Example: {HIP_ID: ABDM_HIP, context: 123, lat: 20.5937 long: 78.9629} ]</li> <li>profile which contains user details.</li> </ol></ol>
+This is an API will be invoked to the **HIP** to share the response of HIECM's /api/hiecm/patient-share/v3/share API.
+
+ **Header**
+
+REQUEST-ID unique UUID[ Example: 18235d89-cb13-479d-ad71-7a57d5f669a8 ]
+
+TIMESTAMP actual time of the requested was initiated[ Example: 2022-10-06T10:10:00.587Z ]
+
+X-HIP-ID
+
+Authorisation will be provided by the gateway session API after the successful verification of client ID and Secret [ Example: ]
+
+ **Request Body**
+
+intent This is a key value pair which contains the purpose [ Example: {purpose: PROFILE_SHARE } ]
+
+metaData This is a key value pair which contains the location longitude and latitude[ Example: {HIP_ID: ABDM_HIP, context: 123, lat: 20.5937 long: 78.9629} ]
+
+profile which contains user details.
 
 ```bash
 curl --request POST \
-  --url https://dev.abdm.gov.in/api/v3/hip/patient/share \
+  --url {bridgeUrl}/api/v3/hip/patient/share \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \

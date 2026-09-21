@@ -2,28 +2,31 @@
 
 `POST /api/hiecm/scan-gateway/v3/patient/on-share/open-order`
 
-Share the response of HIECM's /hiecm/api/v3/scan-gateway/patient/on-share/open API. <ol type='1'>
- <li>
- <b>Header</b> 
- <ol type='a'>
- <li>AUTHORIZATION will be provided by the gateway session API after the successful verification of client ID and Secret [ Example: Bearer <TOKEN> ]</li>
- <li>REQUEST-ID unique UUID[ Example: 18235d89-cb13-479d-ad71-7a57d5f669a8 ]</li> 
- <li>TIMESTAMP actual time of the requested was initiated[ Example: 2022-10-06T10:10:00.587Z ]</li>
- <li>X-CM-ID consent manager ID [ Example: sbx ]</li>
- </ol>
- </li>
- <li>
- <b>Request Body</b>
- <ol type='a'>
- <li>intent This is a key value pair which contains the purpose [ Example: type: OPEN_PAYMENT_ORDER ]</li>
- <li>ABHA address of the user.</li>
- <li>PatientUid of the user.</li>
- <li>error is optional object in case of any error or Failure then only send error object</li>
- <li>procedures which contains the list of open order</li>
- <li>response which contains the requestId [ Example: requestId: 059fcb69-8ad8-4789-a049-62db16c7b5a0 ]</li>
- </ol>
- </li>
-</ol>
+Share the response of HIECM's /hiecm/api/v3/scan-gateway/patient/on-share/open API.
+
+ **Header**
+
+AUTHORIZATION will be provided by the gateway session API after the successful verification of client ID and Secret [ Example: Bearer ]
+
+REQUEST-ID unique UUID[ Example: 18235d89-cb13-479d-ad71-7a57d5f669a8 ]
+
+TIMESTAMP actual time of the requested was initiated[ Example: 2022-10-06T10:10:00.587Z ]
+
+X-CM-ID consent manager ID [ Example: sbx ]
+
+ **Request Body**
+
+intent This is a key value pair which contains the purpose [ Example: type: OPEN_PAYMENT_ORDER ]
+
+ABHA address of the user.
+
+PatientUid of the user.
+
+error is optional object in case of any error or Failure then only send error object
+
+procedures which contains the list of open order
+
+response which contains the requestId [ Example: requestId: 059fcb69-8ad8-4789-a049-62db16c7b5a0 ]
 
 ```bash
 curl --request POST \

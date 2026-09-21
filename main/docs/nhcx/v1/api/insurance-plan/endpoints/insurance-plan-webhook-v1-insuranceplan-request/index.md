@@ -8,7 +8,7 @@ Provider sends a Task with code poll naming a policy number and/or its HFR ID to
 
 ```bash
 curl --request POST \
-  --url https://apisbx.abdm.gov.in/hcxv1_insuranceplan_request \
+  --url {bridgeUrl}v1_insuranceplan_request \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'bearer_auth: Bearer <access token>' \
   --header 'x-hcx-sender_code: 1000004446@hcx' \

@@ -8,7 +8,7 @@ Authorised entity such as NHA or IRDAI sends a Task to retrieve claim informatio
 
 ```bash
 curl --request POST \
-  --url https://apisbx.abdm.gov.in/hcxv1_search_submit \
+  --url {bridgeUrl}v1_search_submit \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'bearer_auth: Bearer <access token>' \
   --header 'x-hcx-sender_code: 1000004446@hcx' \

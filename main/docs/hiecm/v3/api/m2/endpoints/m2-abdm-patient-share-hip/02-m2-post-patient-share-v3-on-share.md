@@ -2,7 +2,25 @@
 
 `POST /api/hiecm/patient-share/v3/on-share`
 
-Share the response of HIECM's /api/hiecm/patient-share/v3/on-share API. <ol type='1'> <li> <b>Header</b> <ol type='a'> <br/> <li>AUTHORIZATION will be provided by the gateway session API after the successful verification of client ID and Secret [ Example: <TOKEN> ]</li> <li>REQUEST-ID unique UUID[ Example: 18235d89-cb13-479d-ad71-7a57d5f669a8 ]</li> <li>TIMESTAMP actual time of the requested was initiated[ Example: 2022-10-06T10:10:00.587Z ]</li> <li>X-CM-ID consent manager ID[ Example: sbx ]</li> </ol> </li> <br/> <li> <b>Request Body</b> <ol type='a'><br/><li>Incase of success scenario,acknowledgement is mandatory and error is optional </li> <li>Incase of failure scenario,error is mandatory and acknowledgment is optional</li> <li>response is mandatory object in both the cases</li> </ol>
+Share the response of HIECM's /api/hiecm/patient-share/v3/on-share API.
+
+ **Header**
+
+AUTHORIZATION will be provided by the gateway session API after the successful verification of client ID and Secret [ Example: ]
+
+REQUEST-ID unique UUID[ Example: 18235d89-cb13-479d-ad71-7a57d5f669a8 ]
+
+TIMESTAMP actual time of the requested was initiated[ Example: 2022-10-06T10:10:00.587Z ]
+
+X-CM-ID consent manager ID[ Example: sbx ]
+
+ **Request Body**
+
+Incase of success scenario,acknowledgement is mandatory and error is optional
+
+Incase of failure scenario,error is mandatory and acknowledgment is optional
+
+response is mandatory object in both the cases
 
 ```bash
 curl --request POST \

@@ -3,11 +3,33 @@
 `POST /v3/patient/selection`
 
 **Hosted by the HIP/HIU, not by ABDM.** ABDM calls this endpoint at the callback URL registered for your bridge, so the path below is relative to that URL.
-This is the call back API for the selection API. This API needs to implement by HIP to receive all selected open order. <ol type='1'> <li> <b>Header</b> <ol type='a'> <br/> <li>Authorisation will be provided by the gateway session API after the successful verification of client ID and Secret [ Example: Bearer <TOKEN> ]</li><li>REQUEST-ID unique UUID[ Example: 18235d89-cb13-479d-ad71-7a57d5f669a8 ]</li> <li>TIMESTAMP actual time of the requested was initiated[ Example: 2022-10-06T10:10:00.587Z ]</li> <li>X-HIP-ID consent manager ID[ Example: sbx ]</li> </ol> </li> <br/> <li> <b>Request Body</b> <ol type='a'><br/> <li>intent This is a key value pair which contains the purpose [ Example: type: PAYMENT_ORDER ]</li> <li>openOrderRequestId from the share open order requestId [ Example: 059fcb69-****-4789-a049-62db16c7b5a0 ]</li> <li>ABHA address of the user</li> <li>Procedures which contains the list of open order</li><li>Payment Bundle: which contains payment detail.</li> </ol></ol>
+This is the call back API for the selection API. This API needs to implement by HIP to receive all selected open order.
+
+ **Header**
+
+Authorisation will be provided by the gateway session API after the successful verification of client ID and Secret [ Example: Bearer ]
+
+REQUEST-ID unique UUID[ Example: 18235d89-cb13-479d-ad71-7a57d5f669a8 ]
+
+TIMESTAMP actual time of the requested was initiated[ Example: 2022-10-06T10:10:00.587Z ]
+
+X-HIP-ID consent manager ID[ Example: sbx ]
+
+ **Request Body**
+
+intent This is a key value pair which contains the purpose [ Example: type: PAYMENT_ORDER ]
+
+openOrderRequestId from the share open order requestId [ Example: 059fcb69--4789-a049-62db16c7b5a0 ]
+
+ABHA address of the user
+
+Procedures which contains the list of open order
+
+Payment Bundle: which contains payment detail.
 
 ```bash
 curl --request POST \
-  --url https://dev.abdm.gov.in/v3/patient/selection \
+  --url {bridgeUrl}/v3/patient/selection \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \

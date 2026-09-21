@@ -2,7 +2,7 @@
 
 `POST /abha/api/v3/phr/app/enrollment/suggestion`
 
-Flows in the Postman collection:
+Flows:
 - P1-Registration-login › P1 - Create ABHA Address Flow › Enrolment via Mobile › Suggestion API
 - P1-Registration-login › P1 - Create ABHA Address Flow › Enrolment via ABHA Number-ABHA OTP › Suggestion API
 - P1-Registration-login › P1 - Create ABHA Address Flow › Enrolment via ABHA Number-Aadhaar OTP › Suggestion API

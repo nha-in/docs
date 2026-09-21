@@ -4,7 +4,7 @@ Seeing a symptom rather than a code? Start at [Troubleshooting](/docs/main/docs/
 
 A code is on this page because a response example in a specification returns it.
 
-## M1 ABHA identity
+## M1 ABHA creation and verification
 
 | Code        | HTTP | Message                                                                                                                         | Returned by                                |
 | ----------- | ---- | ------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------ |

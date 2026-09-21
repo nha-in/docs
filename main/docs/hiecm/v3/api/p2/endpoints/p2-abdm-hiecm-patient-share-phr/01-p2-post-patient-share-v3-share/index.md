@@ -2,7 +2,29 @@
 
 `POST /api/hiecm/patient-share/v3/share`
 
-This is an API will be invoked from the <b>PHR-HIU</b> to share the user/patient profile with HMIS/LIMS. <ol type='1'> <li> <b>Header</b> <ol type='a'> <br/> <li>Authorisation will be provided by the gateway session API after the successful verification of client ID and Secret [ Example: <TOKEN> ]</li> <li>REQUEST-ID unique UUID[ Example: 18235d89-cb13-479d-ad71-7a57d5f669a8 ]</li> <li>TIMESTAMP actual time of the requested was initiated[ Example: 2022-10-06T10:10:00.587Z ]</li> <li>X-AUTH-TOKEN JWT Authentication token which was issued by ABDM after successful validation of username and password[ Example: <TOKEN> ]</li> <li>X-CM-ID consent manager ID[ Example: sbx ]</li> <li>X-HIU-ID HIU ID[ Example: HIU ]</li> </ol> </li> <br/> <li> <b>Request Body</b> <ol type='a'><br/> <li>intent This is a key value pair which contains the purpose [ Example: {purpose: PROFILE_SHARE } ]</li> <li>metaData This is a key value pair which contains the location longitude and latitude[ Example: {HIP_ID: ABDM_HIP, context: 123, lat: 20.5937 long: 78.9629} ]</li> <li>profile which contains user details.</li> </ol> </ol>
+This is an API will be invoked from the **PHR-HIU** to share the user/patient profile with HMIS/LIMS.
+
+ **Header**
+
+Authorisation will be provided by the gateway session API after the successful verification of client ID and Secret [ Example: ]
+
+REQUEST-ID unique UUID[ Example: 18235d89-cb13-479d-ad71-7a57d5f669a8 ]
+
+TIMESTAMP actual time of the requested was initiated[ Example: 2022-10-06T10:10:00.587Z ]
+
+X-AUTH-TOKEN JWT Authentication token which was issued by ABDM after successful validation of username and password[ Example: ]
+
+X-CM-ID consent manager ID[ Example: sbx ]
+
+X-HIU-ID HIU ID[ Example: HIU ]
+
+ **Request Body**
+
+intent This is a key value pair which contains the purpose [ Example: {purpose: PROFILE_SHARE } ]
+
+metaData This is a key value pair which contains the location longitude and latitude[ Example: {HIP_ID: ABDM_HIP, context: 123, lat: 20.5937 long: 78.9629} ]
+
+profile which contains user details.
 
 ```bash
 curl --request POST \

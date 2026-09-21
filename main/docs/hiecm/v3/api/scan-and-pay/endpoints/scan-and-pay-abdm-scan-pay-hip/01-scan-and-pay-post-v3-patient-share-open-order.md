@@ -3,11 +3,29 @@
 `POST /v3/patient/share/open-order`
 
 **Hosted by the HIP/HIU, not by ABDM.** ABDM calls this endpoint at the callback URL registered for your bridge, so the path below is relative to that URL.
-This is an API is called by HIU to check the status of reports. <ol type='1'> <li> <b>Header</b> <ol type='a'> <br/> <li>Authorisation will be provided by the gateway session API after the successful verification of client ID and Secret [ Example: Bearer <TOKEN> ]</li><li>REQUEST-ID unique UUID[ Example: 18235d89-cb13-479d-ad71-7a57d5f669a8 ]</li> <li>TIMESTAMP actual time of the requested was initiated[ Example: 2022-10-06T10:10:00.587Z ]</li> <li>X-HIP-ID [ Example: HIP ID ]</li> </ol> </li> <br/> <li> <b>Request Body</b> <ol type='a'><br/> <li>intent This is a key value pair which contains the purpose [ Example: type: OPEN_PAYMENT_ORDER ]</li> <li>metaData This is a key value pair which contains hipId and counterId[ Example: { hipId: IN3810000008 counterId:12123 } ]</li> <li>profile which contains user details</li> </ol> </ol>
+This is an API is called by HIU to check the status of reports.
+
+ **Header**
+
+Authorisation will be provided by the gateway session API after the successful verification of client ID and Secret [ Example: Bearer ]
+
+REQUEST-ID unique UUID[ Example: 18235d89-cb13-479d-ad71-7a57d5f669a8 ]
+
+TIMESTAMP actual time of the requested was initiated[ Example: 2022-10-06T10:10:00.587Z ]
+
+X-HIP-ID [ Example: HIP ID ]
+
+ **Request Body**
+
+intent This is a key value pair which contains the purpose [ Example: type: OPEN_PAYMENT_ORDER ]
+
+metaData This is a key value pair which contains hipId and counterId[ Example: { hipId: IN3810000008 counterId:12123 } ]
+
+profile which contains user details
 
 ```bash
 curl --request POST \
-  --url https://dev.abdm.gov.in/v3/patient/share/open-order \
+  --url {bridgeUrl}/v3/patient/share/open-order \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \

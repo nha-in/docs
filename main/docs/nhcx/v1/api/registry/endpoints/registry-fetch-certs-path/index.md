@@ -15,7 +15,7 @@ Use it only if your HCX instance or onboarding contact tells you to; the chapter
 ### Preconditions
 
 - Bearer token from /get/session in bearer_auth with the Bearer prefix; Accept and Content-Type: application/json.
-- ParticipantCertRequest with participantid (required), the target's participant code in <code>@hcx form.
+- ParticipantCertRequest with participantid (required), the target's participant code in `@hcx form.
 - The target participant has completed onboarding with an encryption certificate registered.
 
 ### Postconditions

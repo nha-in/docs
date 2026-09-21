@@ -3,7 +3,7 @@ name: abdm-m2
 description: Use when building, debugging or testing ABDM Milestone 2: care contexts, HIP initiated linking, discovery, and pushing encrypted health records to a requester. Carries the endpoints and the encryption parameters. Also carries the scaffolding loop that builds it flow by flow and the loop from a failed call to a named fix, in references/.
 ---
 
-# ABDM M2, linking and sharing
+# ABDM M2, health information provider services
 
 Generated from the ABDM Developer Portal on 2026-09-16, catalogue version 2026.09.16. Every fact below comes from a page in that portal, which is the place to look when this file does not carry enough.
 

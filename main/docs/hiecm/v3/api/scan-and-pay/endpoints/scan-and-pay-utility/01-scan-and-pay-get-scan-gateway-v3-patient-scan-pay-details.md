@@ -2,22 +2,29 @@
 
 `GET /api/hiecm/scan-gateway/v3/patient/scan-pay/details`
 
-Retrieve the all the details of the user/patient based on the date ranges. <ol type='1'>
- <li>
- <b>Header</b> 
- <ol type='a'>
- <li>AUTHORIZATION will be provided by the gateway session API after the successful verification of client ID and Secret [ Example: Bearer <TOKEN> ]</li>
- <li>REQUEST-ID unique UUID[ Example: 18235d89-cb13-479d-ad71-7a57d5f669a8 ]</li> 
- <li>TIMESTAMP actual time of the requested was initiated[ Example: 2022-10-06T10:10:00.587Z ]</li>
- <li>X-AUTH-TOKEN JWT Authentication token which was issued by ABDM after successful validation of user[ Example: Bearer <TOKEN> ]</li>
- <li>X-CM-ID consent manager ID [ Example: sbx ]</li>
- <li>status [ Example: SUCCESS, CANCELED, PENDING, FAIL, REFUND_INITIATED, REFUND_SUCCESS,ALL ]</li>
- <li>limit [ Example: 10]</li>
- <li>startDate [ Example: 2024-07-13T07:30:10.186Z]</li>
- <li>endDate [ Example: 2025-02-18T08:30:50.189Z]</li>
- <li>offset [ Example: 0]</li>
- </ol>
- </li>
+Retrieve the all the details of the user/patient based on the date ranges.
+
+ **Header**
+
+AUTHORIZATION will be provided by the gateway session API after the successful verification of client ID and Secret [ Example: Bearer ]
+
+REQUEST-ID unique UUID[ Example: 18235d89-cb13-479d-ad71-7a57d5f669a8 ]
+
+TIMESTAMP actual time of the requested was initiated[ Example: 2022-10-06T10:10:00.587Z ]
+
+X-AUTH-TOKEN JWT Authentication token which was issued by ABDM after successful validation of user[ Example: Bearer ]
+
+X-CM-ID consent manager ID [ Example: sbx ]
+
+status [ Example: SUCCESS, CANCELED, PENDING, FAIL, REFUND_INITIATED, REFUND_SUCCESS,ALL ]
+
+limit [ Example: 10]
+
+startDate [ Example: 2024-07-13T07:30:10.186Z]
+
+endDate [ Example: 2025-02-18T08:30:50.189Z]
+
+offset [ Example: 0]
 
 ```bash
 curl --request GET \

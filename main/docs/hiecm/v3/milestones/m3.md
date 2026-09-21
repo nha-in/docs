@@ -80,18 +80,17 @@ Milestone 3 covers the consent-management and health-information exchange workfl
 ```mermaid
 sequenceDiagram
     autonumber
-    actor D as Doctor
     participant S as Your system
-    participant G as HIE-CM gateway
-    participant C as HIE-CM
-    actor P as Patient
-    D->>S: Picks the patient and a date range
-    S->>G: Consent request init with ABHA address
-    G->>C: Forwards the request
-    C-->>G: Acknowledges, creates a request id
-    G-->>S: on-init callback with the consent request id
-    C->>P: Notifies the patient of the request
-    Note over S,C: Your system now waits. You may poll request status.
+    participant CM as HIE-CM
+    actor P as Patient (PHR app)
+    Note over S: Every call carries REQUEST-ID, TIMESTAMP,<br/>X-CM-ID, X-HIU-ID and the gateway access token
+    S->>CM: POST /api/hiecm/consent/v3/request/init<br/>consent {purpose.code, patient.id (ABHA address),<br/>hiu.id, requester {name, identifier}, hiTypes,<br/>permission {accessMode, dateRange, dataEraseAt,
+    CM-->>S: 202 Accepted
+    CM-)S: callback POST {bridgeUrl}/api/v3/hiu/consent/request/on-init<br/>consentRequest.id, response.requestId
+    Note over S: Store consentRequest.id against<br/>the requester and the patient
+    CM-)P: Consent request shown in the PHR app
+    S->>CM: POST /api/hiecm/consent/v3/request/status<br/>consentRequestId, to poll while the patient decides
+    CM-)S: callback POST {bridgeUrl}/api/v3/hiu/consent/request/on-status<br/>consentRequest {id, status REQUESTED, GRANTED,<br/>DENIED, REVOKED or EXPIRED}
 ```
 
 - An HIU requests access to a patient's health data by sending a consent request with the patient's ABHA address via the HIE-CM.
@@ -106,25 +105,22 @@ The consent request ID is the handle for everything that follows. Store it again
 ```mermaid
 sequenceDiagram
     autonumber
-    actor P as Patient
-    participant C as HIE-CM
-    participant G as HIE-CM gateway
+    actor P as Patient (PHR app)
+    participant CM as HIE-CM
     participant S as Your system
-    participant H as HIP
-    P->>C: Views the request details
+    P->>CM: Reviews the request, sets the date range and expiry
     alt Patient grants
-        P->>C: Grants, with an expiry date and time
-        C->>C: Creates one or more consent artefacts
-        C->>G: Notify granted, with artefact ids and request id
-        G->>S: Consent request notify to your system
-        S-->>G: on-notify acknowledgement
-        C->>G: Notify the HIP with care context references
-        G->>H: Consent request HIP notify
+        P->>CM: Grants
+        CM->>CM: Creates one consent artefact per HIP covered
+        CM-)S: callback POST {bridgeUrl}/api/v3/hiu/consent/request/notify<br/>notification {consentRequestId, status GRANTED,<br/>consentArtefacts [id]}
+        S->>CM: POST /api/hiecm/consent/v3/request/hiu/on-notify<br/>acknowledgement [{status OK,<br/>consentId} per artefact], response.requestId
+        Note over CM: The HIP is notified on its own bridge<br/>at /api/v3/consent/request/hip/notify
     else Patient denies
-        P->>C: Denies the request
-        C->>G: Notify denied
-        G->>S: Consent request notify, status denied
+        P->>CM: Denies
+        CM-)S: callback POST {bridgeUrl}/api/v3/hiu/consent/request/notify<br/>notification {consentRequestId, status DENIED}
+        S->>CM: POST /api/hiecm/consent/v3/request/hiu/on-notify<br/>acknowledgement, response.requestId
     end
+    Note over P,S: Revocation or expiry arrives later on the same<br/>callback, status REVOKED or EXPIRED. Stop using the data.
 ```
 
 - If the request is approved, the HIE-CM shares the consent artefact IDs generated for that request with the HIU.
@@ -140,20 +136,18 @@ sequenceDiagram
 sequenceDiagram
     autonumber
     participant S as Your system
-    participant G as HIE-CM gateway
-    participant C as HIE-CM
+    participant CM as HIE-CM
     participant H as HIP
-    S->>G: Consent fetch with the consent artefact id
-    G->>C: Forwards
-    C-->>G: Artefact detail
-    G-->>S: on-fetch callback with the artefact
-    S->>S: Generates an ECDH key pair for this exchange
-    S->>G: Health information request with consent id, date range, data push URL and public key
-    G-->>S: on-request callback with transaction id and status
-    G->>H: Health information request to the HIP
-    H->>S: Pushes encrypted records to your data push callback URL
-    S->>S: Decrypts and renders the records
-    S->>G: Health information notify, receipt of the data
+    S->>CM: POST /api/hiecm/consent/v3/fetch<br/>consentId
+    CM-)S: callback POST {bridgeUrl}/api/v3/hiu/consent/on-fetch<br/>consent {status, consentDetail {hip, careContexts,<br/>hiTypes, permission.dateRange}, signature}
+    S->>S: Generates an ECDH key pair on Curve25519<br/>and a 32 byte nonce for this transaction
+    S->>CM: POST /api/hiecm/data-flow/v3/health-information/request<br/>hiRequest {consent.id, dateRange {from, to},<br/>dataPushUrl, keyMaterial {cryptoAlg ECDH,<br/>curve Curve25519, dhPublicKey {expiry, parameters,
+    CM-)S: callback POST {bridgeUrl}/api/v3/hiu/health-information/on-request<br/>hiRequest {transactionId, sessionStatus REQUESTED},<br/>response.requestId
+    CM->>H: Forwards the request to the HIP on its bridge
+    H->>S: POST dataPushUrl<br/>pageNumber, pageCount, transactionId,<br/>entries [content (encrypted FHIR bundle), checksum,<br/>careContextReference],
+    S->>S: Derives the shared key from the HIP keyMaterial,<br/>decrypts and verifies each entry
+    S->>CM: POST /api/hiecm/data-flow/v3/health-information/notify<br/>notification {consentId, transactionId,<br/>notifier {type HIU, id},<br/>statusNotification {sessionStatus DELIVERED or ERRORED,
+    S->>CM: GET /api/hiecm/data-flow/v3/health-information/request/status/{transaction-id}<br/>to check a transfer that has not arrived
 ```
 
 With an artefact id you fetch the artefact, then ask for the data it covers. The data lands on the data push URL you supplied in that request.

@@ -66,7 +66,7 @@ Three shapes read as though they should work and do not. A ten digit mobile numb
 
 The minimum length is stated twice, differently
 
-NHA's PHR document gives the minimum as 4 characters in its narrative and as 8 in the test case for creating an address by mobile number. Neither has been run against the sandbox from here. Build to 8, which is the stricter reading.
+The minimum length is given as 4 characters in one place and as 8 in the test case for creating an address by mobile number. Build to 8, which is the stricter reading.
 
 A password is created alongside the address: at least 8 characters, at least one uppercase letter, one lowercase letter, one digit and one symbol, no spaces, and no more than two consecutive characters or keyboard keys. NHA describes enforcing it as optional for the application, not the password itself as optional.
 

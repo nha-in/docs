@@ -2,7 +2,7 @@
 
 `POST /abha/api/v3/phr/app/login/profile/verify`
 
-Flows in the Postman collection:
+Flows:
 - P2-Management › P2 -PHR Profile › P2 - Update Email (optional) › Verify OTP - Update Email
 - P2-Management › P2 -PHR Profile › P2 - Update Mobile › Verify OTP - Update Mobile
 - P2-Management › P2 -PHR Profile › P2 - Update Password › Verify Password - Update Password

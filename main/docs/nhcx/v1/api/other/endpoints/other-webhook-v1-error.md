@@ -8,7 +8,7 @@ Where the exchange tells a sender that a request could not be delivered after fi
 
 ```bash
 curl --request POST \
-  --url https://apisbx.abdm.gov.in/hcxv1_error \
+  --url {bridgeUrl}v1_error \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'bearer_auth: Bearer <access token>' \
   --header 'x-hcx-sender_code: nhcx-gateway@hcx' \

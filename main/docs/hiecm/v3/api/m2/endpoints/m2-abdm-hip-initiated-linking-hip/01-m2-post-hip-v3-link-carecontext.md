@@ -2,7 +2,9 @@
 
 `POST /api/hiecm/hip/v3/link/carecontext`
 
-<p><b>Note: </b>While generating the link-token the user/patient is providing both ABHA_number and ABHA_address, then at the time of linking both must be mandatory. If not one should be mandatory either 'ABHA_number' or 'ABHA_address'.</p><br><p> This API endpoint is used by the Ayushman Bharat Digital Mission (ABDM) system to store care context or health record references. Upon successful validation of the ABHA (Ayushman Bharat Health Account) address and the associated link token, the system securely records the relevant care context information. This process ensures that health records are accurately linked and accessible, facilitating efficient and seamless health information exchange across the network. The API plays a critical role in maintaining the integrity and continuity of patient health records, thereby supporting comprehensive and coordinated care.
+**Note:** While generating the link-token the user/patient is providing both ABHA_number and ABHA_address, then at the time of linking both must be mandatory. If not one should be mandatory either 'ABHA_number' or 'ABHA_address'.
+
+ This API endpoint is used by the Ayushman Bharat Digital Mission (ABDM) system to store care context or health record references. Upon successful validation of the ABHA (Ayushman Bharat Health Account) address and the associated link token, the system securely records the relevant care context information. This process ensures that health records are accurately linked and accessible, facilitating efficient and seamless health information exchange across the network. The API plays a critical role in maintaining the integrity and continuity of patient health records, thereby supporting comprehensive and coordinated care.
 
 ```bash
 curl --request POST \

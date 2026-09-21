@@ -2,7 +2,15 @@
 
 `GET /api/hiecm/patient-share/v3/profile/getTokenDetails`
 
-This is an API will be invoked get the historical token numbers of the patient. <ol type='1'> <li> <b>Header</b> <ol type='a'> <br/> <li>AUTHORIZATION will be provided by the gateway session API after the successful verification of client ID and Secret [ Example: <TOKEN> ]</li> <li>REQUEST-ID unique UUID[ Example: 18235d89-cb13-479d-ad71-7a57d5f669a8 ]</li> <li>TIMESTAMP actual time of the requested was initiated[ Example: 2022-10-06T10:10:00.587Z ]</li> </ol> </li> <br/> </ol>
+This is an API will be invoked get the historical token numbers of the patient.
+
+ **Header**
+
+AUTHORIZATION will be provided by the gateway session API after the successful verification of client ID and Secret [ Example: ]
+
+REQUEST-ID unique UUID[ Example: 18235d89-cb13-479d-ad71-7a57d5f669a8 ]
+
+TIMESTAMP actual time of the requested was initiated[ Example: 2022-10-06T10:10:00.587Z ]
 
 ```bash
 curl --request GET \

@@ -2,11 +2,25 @@
 
 `POST /health-information/transfer`
 
-<p><strong>NOTE:</strong> This API is actually the callback URL that is passed as <code>dataPushUrl</code> in the data request API - <code>/api/v3/hip/health-information/request</code>. This API is directly called by HIP Data Bridge and is not mediated via CM, and hence not routed through the Gateway.</p> <ul> <li>This API should be implemented at HIU side. It may be implemented by the Data Bridge representing the HIU.</li> <li>Entry elements may be content or link, although for version 1, entry content is preferred.</li> <li>Entry content (or even link reference content) must be encrypted by means of Elliptic-curve Diffie–Hellman Key Exchange, using the HIU key materials that are passed through the data request API - <code>/api/v3/hip/health-information/request</code>.</li> <li>Media contains the mimetype of content, and for v1, it is "application/fhir+json".</li> <li>Checksum is MD5 checksum of the data content, before encryption.</li> <li>Please refer to the ABDM Sandbox Documentation for the format of FHIR bundle that is passed through content.</li> </ul> <ol type="*"><li><strong>Authorisation token is mandatory for this API.</strong></li></ol>
+**NOTE:** This API is actually the callback URL that is passed as `dataPushUrl` in the data request API - `/api/v3/hip/health-information/request`. This API is directly called by HIP Data Bridge and is not mediated via CM, and hence not routed through the Gateway.
+
+This API should be implemented at HIU side. It may be implemented by the Data Bridge representing the HIU.
+
+Entry elements may be content or link, although for version 1, entry content is preferred.
+
+Entry content (or even link reference content) must be encrypted by means of Elliptic-curve Diffie–Hellman Key Exchange, using the HIU key materials that are passed through the data request API - `/api/v3/hip/health-information/request`.
+
+Media contains the mimetype of content, and for v1, it is "application/fhir+json".
+
+Checksum is MD5 checksum of the data content, before encryption.
+
+Please refer to the ABDM Sandbox Documentation for the format of FHIR bundle that is passed through content.
+
+**Authorisation token is mandatory for this API.**
 
 ```bash
 curl --request POST \
-  --url https://dev.abdm.gov.in/health-information/transfer \
+  --url {bridgeUrl}/health-information/transfer \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'Content-Type: application/json' \
   --data '{

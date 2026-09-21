@@ -15,7 +15,7 @@ Same circumstances as the public request: before any preauth or claim for a paye
 ### Preconditions
 
 - As for the public endpoint: registered provider and payer, Bearer token, payer certificate verified and used for JWE encryption.
-- Body is a JWEPayload, { "payload": "<compact JWE>" }, whose plaintext is the TaskBundle.
+- Body is a JWEPayload, { "payload": "" }, whose plaintext is the TaskBundle.
 - Protected header with sender_code, recipient_code, fresh API_call_ID and correlation_ID, IST TIMESTAMP, status request.initiated.
 - Confirmation that the internal prefix is reachable and intended for your integration; the specs are silent on this.
 

@@ -42,7 +42,7 @@ curl --request GET \
 - `403`: Forbidden
 - `404`: server cannot find the requested resource
 - `500`: Internal Server Error
-- `503`: Internal Server Error -> It is just one example, for every api the path will be changed.
+- `503`: Internal Server Error
 
 Shape of the 200 response, generated from the schema. The values are placeholders, not a captured response:
 

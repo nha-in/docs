@@ -2,7 +2,25 @@
 
 `POST /api/hiecm/scan-gateway/v3/patient/scan-pay/order-status`
 
-Check the status of reports. If the notification is not get from HIP then this API will help to check the status on HIU side. <ol type='1'> <li> <b>Header</b> <ol type='a'> <br/> <li>Authorisation will be provided by the gateway session API after the successful verification of client ID and Secret [ Example: Bearer <TOKEN> ]</li><li>X-AUTH-TOKEN JWT Authentication token which was issued by ABDM after successful validation of user[ Example: Bearer <TOKEN> ]</li><li>REQUEST-ID unique UUID[ Example: 18235d89-cb13-479d-ad71-7a57d5f669a8 ]</li> <li>TIMESTAMP actual time of the requested was initiated[ Example: 2022-10-06T10:10:00.587Z ]</li> <li>X-CM-ID consent manager ID[ Example: sbx ]</li> <li>X-HIU-ID [ EXample: HIU_ID]</li></ol> </li> <br/> <li> <b>Request Body</b> <ol type='a'><br/> <li> queryStatus which contains the orderNumber and requestId[ Example: { orderNumber: 39413413 abhaAddress: <ABHA_ADDRESS> openOrderRequestId: 059fcb69-8ad8-***-a049-62db16c7b5a0 } ] </li> </ol> </ol>
+Check the status of reports. If the notification is not get from HIP then this API will help to check the status on HIU side.
+
+ **Header**
+
+Authorisation will be provided by the gateway session API after the successful verification of client ID and Secret [ Example: Bearer ]
+
+X-AUTH-TOKEN JWT Authentication token which was issued by ABDM after successful validation of user[ Example: Bearer ]
+
+REQUEST-ID unique UUID[ Example: 18235d89-cb13-479d-ad71-7a57d5f669a8 ]
+
+TIMESTAMP actual time of the requested was initiated[ Example: 2022-10-06T10:10:00.587Z ]
+
+X-CM-ID consent manager ID[ Example: sbx ]
+
+X-HIU-ID [ EXample: HIU_ID]
+
+ **Request Body**
+
+ queryStatus which contains the orderNumber and requestId[ Example: { orderNumber: 39413413 abhaAddress: openOrderRequestId: 059fcb69-8ad8-***-a049-62db16c7b5a0 } ]
 
 ```bash
 curl --request POST \

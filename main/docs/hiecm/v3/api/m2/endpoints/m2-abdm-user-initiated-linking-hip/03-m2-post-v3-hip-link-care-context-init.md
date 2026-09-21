@@ -3,11 +3,15 @@
 `POST /api/v3/hip/link/care-context/init`
 
 **Hosted by the HIP/HIU, not by ABDM.** ABDM calls this endpoint at the callback URL registered for your bridge, so the path below is relative to that URL.
-The init API endpoint facilitates the initial linking of care contexts to a patient’s ABHA address. When a request is made to this endpoint, it returns a response containing the transaction ID, ABHA address, patient details, and any errors encountered. This ensures that patient care contexts are accurately linked and managed within the healthcare system.<br> <ol type='a'><b>Note:</b><br><il>Incase of success, HIP will get the patient details in the callback.</il><br><il>In case of failure, HIP will get the error response in the callback.</il></ol>
+The init API endpoint facilitates the initial linking of care contexts to a patient’s ABHA address. When a request is made to this endpoint, it returns a response containing the transaction ID, ABHA address, patient details, and any errors encountered. This ensures that patient care contexts are accurately linked and managed within the healthcare system.
+
+**Note:**
+Incase of success, HIP will get the patient details in the callback.
+In case of failure, HIP will get the error response in the callback.
 
 ```bash
 curl --request POST \
-  --url https://dev.abdm.gov.in/api/v3/hip/link/care-context/init \
+  --url {bridgeUrl}/api/v3/hip/link/care-context/init \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
@@ -72,7 +76,7 @@ curl --request POST \
   See Everything returns 401: /docs/hiecm/v3/troubleshooting/everything-returns-401
 - `403`: Forbidden
   See Error codes for this module: /docs/hiecm/v3/api/m2/errors
-- `500`: Internal Server Error -> It is just one example, for every api the path will be changed.
+- `500`: Internal Server Error
   See Error codes for this module: /docs/hiecm/v3/api/m2/errors
 
 Shape of the 200 response, generated from the schema. The values are placeholders, not a captured response:

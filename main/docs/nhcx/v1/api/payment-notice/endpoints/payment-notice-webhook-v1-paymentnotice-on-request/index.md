@@ -8,7 +8,7 @@ Provider acknowledges a payment notice with a Task bundle (status completed, out
 
 ```bash
 curl --request POST \
-  --url https://apisbx.abdm.gov.in/hcxv1_paymentnotice_on_request \
+  --url {bridgeUrl}v1_paymentnotice_on_request \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'bearer_auth: Bearer <access token>' \
   --header 'x-hcx-sender_code: 1000004446@hcx' \

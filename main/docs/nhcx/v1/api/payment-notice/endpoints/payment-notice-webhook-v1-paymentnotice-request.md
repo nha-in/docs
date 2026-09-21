@@ -8,7 +8,7 @@ Payer pushes a Task bundle with PaymentNotice and PaymentReconciliation (amount,
 
 ```bash
 curl --request POST \
-  --url https://apisbx.abdm.gov.in/hcxv1_paymentnotice_request \
+  --url {bridgeUrl}v1_paymentnotice_request \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'bearer_auth: Bearer <access token>' \
   --header 'x-hcx-sender_code: 1518@hcx' \

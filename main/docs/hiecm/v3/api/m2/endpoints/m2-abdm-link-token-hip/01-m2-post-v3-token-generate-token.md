@@ -2,7 +2,9 @@
 
 `POST /api/hiecm/v3/token/generate-token`
 
-Generate a link token which will be valid for 6 months.. This token can be used for Health Information Provider (HIP) Initiated Linking, enabling HIPs to securely link patient health records to their ABHA (Ayushman Bharat Health Account) address. The generated token ensures that the linking process is authenticated and authorised, maintaining the integrity and security of health information exchange. This functionality is crucial for facilitating seamless and efficient linking of health records within the healthcare ecosystem.<ol type='a'><li><b>Authorisation:</b> We are passing the access-token in the authorisation [Example: Bearer eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJBbFJiNVd]</li></ol>
+Generate a link token which will be valid for 6 months.. This token can be used for Health Information Provider (HIP) Initiated Linking, enabling HIPs to securely link patient health records to their ABHA (Ayushman Bharat Health Account) address. The generated token ensures that the linking process is authenticated and authorised, maintaining the integrity and security of health information exchange. This functionality is crucial for facilitating seamless and efficient linking of health records within the healthcare ecosystem.
+
+**Authorisation:** We are passing the access-token in the authorisation [Example: Bearer eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJBbFJiNVd]
 
 ```bash
 curl --request POST \

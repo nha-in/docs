@@ -7,7 +7,7 @@ This API endpoint serves as a callback for when a subscription request is approv
 
 ```bash
 curl --request POST \
-  --url https://dev.abdm.gov.in/api/v3/hiu/subscription-requests/hiu/notify \
+  --url {bridgeUrl}/api/v3/hiu/subscription-requests/hiu/notify \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
@@ -101,7 +101,7 @@ curl --request POST \
   See Error codes for this module: /docs/hiecm/v3/api/subscription/errors
 - `404`: server cannot find the requested resource
   See Error codes for this module: /docs/hiecm/v3/api/subscription/errors
-- `500`: Internal Server Error -> It is just one example, for every api the path will be changed.
+- `500`: Internal Server Error
   See Error codes for this module: /docs/hiecm/v3/api/subscription/errors
 - `503`: Service Unavailable
   See Error codes for this module: /docs/hiecm/v3/api/subscription/errors

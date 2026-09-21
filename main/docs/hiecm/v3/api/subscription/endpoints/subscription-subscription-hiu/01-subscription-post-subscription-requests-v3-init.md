@@ -91,5 +91,5 @@ curl --request POST \
   See Error codes for this module: /docs/hiecm/v3/api/subscription/errors
 - `500`: Internal Server Error
   See Error codes for this module: /docs/hiecm/v3/api/subscription/errors
-- `503`: Internal Server Error -> It is just one example, for every api the path will be changed.
+- `503`: Internal Server Error
   See Error codes for this module: /docs/hiecm/v3/api/subscription/errors

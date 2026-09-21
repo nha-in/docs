@@ -3,11 +3,12 @@
 `POST /api/v3/hiu/health-information/on-request`
 
 **Hosted by the HIP/HIU, not by ABDM.** ABDM calls this endpoint at the callback URL registered for your bridge, so the path below is relative to that URL.
-Callback API for acknowledgment of Health information request of HIU. CM calls this API when it has validated the Health Information request given the consent ID.<br> Either the hiRequest or error would need to be specified. If the health info request was valid, then the hiRequest.transactionId specifies the transaction context against which HIP would send over the data.
+Callback API for acknowledgment of Health information request of HIU. CM calls this API when it has validated the Health Information request given the consent ID.
+ Either the hiRequest or error would need to be specified. If the health info request was valid, then the hiRequest.transactionId specifies the transaction context against which HIP would send over the data.
 
 ```bash
 curl --request POST \
-  --url https://dev.abdm.gov.in/api/v3/hiu/health-information/on-request \
+  --url {bridgeUrl}/api/v3/hiu/health-information/on-request \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \

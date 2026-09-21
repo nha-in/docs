@@ -1,8 +1,8 @@
-# M3 Consent and fetching errors
+# M3 Health information user services errors
 
 Seeing a symptom rather than a code? Start at [Troubleshooting](/docs/main/docs/hiecm/v3/troubleshooting/).
 
-The M3 Consent and fetching specification records no error code yet. That is a gap in the specification, not a promise that this module cannot fail.
+The M3 Health information user services specification records no error code yet. That is a gap in the specification, not a promise that this module cannot fail.
 
 Every code above is recorded in the specification that owns it. The aggregated list across modules is at [error codes](/docs/main/docs/hiecm/v3/reference/error-codes).
 

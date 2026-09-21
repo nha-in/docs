@@ -2,7 +2,9 @@
 
 `PATCH /abha/api/v3/profile/account`
 
-Update the ABHA (Ayushman Bharat Health Account) profile. It is particularly useful for updating the profile and information of individuals. The endpoint allows users to update essential details such as the ABHA number, date of birth, name, and gender.<br><br>Note: Non-KYC (Know Your Customer) verified ABHA users are permitted to update their profile only once. After the initial update, any further attempts to modify the profile will result in an error. This restriction ensures data integrity and prevents unauthorised changes.
+Update the ABHA (Ayushman Bharat Health Account) profile. It is particularly useful for updating the profile and information of individuals. The endpoint allows users to update essential details such as the ABHA number, date of birth, name, and gender.
+
+Note: Non-KYC (Know Your Customer) verified ABHA users are permitted to update their profile only once. After the initial update, any further attempts to modify the profile will result in an error. This restriction ensures data integrity and prevents unauthorised changes.
 
 ```bash
 curl --request PATCH \
@@ -50,7 +52,7 @@ curl --request PATCH \
   See Error codes for this module: /docs/hiecm/v3/api/m1/errors
 - `422`: This error indicates that a non-KYC (Know Your Customer) verified CHILD ABHA (Ayushman Bharat Health Account) user is permitted to update their profile only once. After the initial update, any further attempts to modify the profile will result in this error. This restriction is likely in place to ensure data integrity and prevent unauthorized changes.
   See Error codes for this module: /docs/hiecm/v3/api/m1/errors
-- `500`: <b>Internal Server Error</b><br><br>  An Internal Server Error (500) indicates that the server encountered an unexpected condition that prevented it from fulfilling the request.
+- `500`: **Internal Server Error** An Internal Server Error (500) indicates that the server encountered an unexpected condition that prevented it from fulfilling the request.
   See Error codes for this module: /docs/hiecm/v3/api/m1/errors
 
 Shape of the 200 response, generated from the schema. The values are placeholders, not a captured response:

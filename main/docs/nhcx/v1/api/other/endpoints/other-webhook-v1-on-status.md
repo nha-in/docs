@@ -8,7 +8,7 @@ The answer to a status request, delivered to the sender that asked. The `x-hcx-s
 
 ```bash
 curl --request POST \
-  --url https://apisbx.abdm.gov.in/hcxv1_on_status \
+  --url {bridgeUrl}v1_on_status \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'bearer_auth: Bearer <access token>' \
   --header 'x-hcx-sender_code: <participant code>' \

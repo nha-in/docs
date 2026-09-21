@@ -39,12 +39,12 @@ curl --request POST \
 
 ## Responses
 
-- `200`: <strong>Successful Response </strong><br> Indicates that the request was processed correctly and the expected result was returned.  this is represented by a 200 status code, meaning the operation was successful.
-- `400`: <strong>Bad Request</strong><br> Indicates that the server cannot process the request due to a client error. The server returns a 400 status code when the request is malformed, such as missing required parameters or having invalid syntax
+- `200`: **Successful Response** Indicates that the request was processed correctly and the expected result was returned.  this is represented by a 200 status code, meaning the operation was successful.
+- `400`: **Bad Request** Indicates that the server cannot process the request due to a client error. The server returns a 400 status code when the request is malformed, such as missing required parameters or having invalid syntax
   See Error codes for this module: /docs/hiecm/v3/api/m1/errors
-- `401`: <strong>Unauthorized</strong><br>  Indicates that the request requires user authentication. The server returns a 401 status code when the client has not provided valid authentication credentials.
+- `401`: **Unauthorized** Indicates that the request requires user authentication. The server returns a 401 status code when the client has not provided valid authentication credentials.
   See Everything returns 401: /docs/hiecm/v3/troubleshooting/everything-returns-401
-- `500`: <b>Internal Server Error</b><br><br>  An Internal Server Error (500) indicates that the server encountered an unexpected condition that prevented it from fulfilling the request.
+- `500`: **Internal Server Error** An Internal Server Error (500) indicates that the server encountered an unexpected condition that prevented it from fulfilling the request.
   See Error codes for this module: /docs/hiecm/v3/api/m1/errors
 
 Shape of the 200 response, generated from the schema. The values are placeholders, not a captured response:

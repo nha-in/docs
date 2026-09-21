@@ -32,7 +32,7 @@ curl --request GET \
 - `200`: Indicates a successful request. The response includes the updated child ABHA profile details
 - `401`: Indicates an unauthorized request due to invalid credentials
   See Everything returns 401: /docs/hiecm/v3/troubleshooting/everything-returns-401
-- `500`: <b>Internal Server Error</b><br><br>  An Internal Server Error (500) indicates that the server encountered an unexpected condition that prevented it from fulfilling the request.
+- `500`: **Internal Server Error** An Internal Server Error (500) indicates that the server encountered an unexpected condition that prevented it from fulfilling the request.
   See Error codes for this module: /docs/hiecm/v3/api/m1/errors
 
 Shape of the 200 response, generated from the schema. The values are placeholders, not a captured response:

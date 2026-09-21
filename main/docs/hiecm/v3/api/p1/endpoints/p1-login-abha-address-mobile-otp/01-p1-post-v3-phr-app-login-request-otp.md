@@ -2,7 +2,7 @@
 
 `POST /abha/api/v3/phr/app/login/request/otp`
 
-Flows in the Postman collection:
+Flows:
 - P1-Registration-login › P1 - PHR Login › P1 - Login via Mobile Number › OTP Request - Mobile
 - P1-Registration-login › P1 - PHR Login › P1 - Login via Email (optional) › OTP Request - Email
 - P1-Registration-login › P1 - PHR Login › P1 - Login via ABHA Address - Mobile OTP › OTP Request - ABHAADDRES Mobile

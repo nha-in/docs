@@ -14,7 +14,7 @@
     },
     {
       "name": "abdm-m1",
-      "title": "M1, ABHA identity",
+      "title": "M1, ABHA creation and verification",
       "files": [
         "SKILL.md",
         "references/scaffold.md",
@@ -25,7 +25,7 @@
     },
     {
       "name": "abdm-m2",
-      "title": "M2, linking and sharing",
+      "title": "M2, health information provider services",
       "files": [
         "SKILL.md",
         "references/scaffold.md",
@@ -36,7 +36,7 @@
     },
     {
       "name": "abdm-m3",
-      "title": "M3, consent and fetching",
+      "title": "M3, health information user services",
       "files": [
         "SKILL.md",
         "references/scaffold.md",

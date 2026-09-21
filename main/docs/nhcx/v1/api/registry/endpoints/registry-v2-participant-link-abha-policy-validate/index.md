@@ -16,7 +16,7 @@ Call it after a successful init call, once the passcode is available, passing bo
 
 - A prior POST /v2/participant/link/abha/policy/init that returned a transaction identifier.
 - The passcode associated with that transaction; the documentation for the sibling participant flows says the passcode is specific to each transaction ID and valid for 24 hours.
-- A valid Bearer token in bearer_auth: Bearer <token>, plus Accept: application/json; there is no request body, and no JWE or x-hcx-* headers are involved.
+- A valid Bearer token in bearer_auth: Bearer, plus Accept: application/json; there is no request body, and no JWE or x-hcx-* headers are involved.
 - The participant service base path, sandbox https://apisbx.ABDM.gov.in/pmjay/sbxhcx/participanthcxservice.
 
 ### Postconditions

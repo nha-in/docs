@@ -19,9 +19,9 @@ Client IDClient secret sensitiveHeld in this page only while the tab is open. It
 
 ### Encrypt the Aadhaar number
 
-Fetch NHA's public certificate, then encrypt the number here in your browser. NHA never accepts a raw Aadhaar number.
+Fetch the ABDM public certificate, then encrypt the number here in your browser. The ABHA service never accepts a raw Aadhaar number.
 
-What you type is encrypted in this browser with NHA's public key and posted only to NHA's sandbox host. This site has no server of its own and stores nothing you type. Use a sandbox test identity, not a real person's Aadhaar number. NHA does not publish a test Aadhaar number, so bring one issued to you for sandbox use.
+What you type is encrypted in this browser with the ABDM public key and posted only to NHA's sandbox host. This site has no server of its own and stores nothing you type. Use a sandbox test identity, not a real person's Aadhaar number. NHA does not publish a test Aadhaar number, so bring one issued to you for sandbox use.
 
 Aadhaar number sensitiveMasked as you type, kept in this page's memory only, cleared when you close the tab.
 

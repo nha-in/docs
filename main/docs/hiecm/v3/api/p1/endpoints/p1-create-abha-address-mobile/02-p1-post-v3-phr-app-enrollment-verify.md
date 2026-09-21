@@ -2,7 +2,7 @@
 
 `POST /abha/api/v3/phr/app/enrollment/verify`
 
-Flows in the Postman collection:
+Flows:
 - P1-Registration-login › P1 - Create ABHA Address Flow › Enrolment via Mobile › OTP Verify - Mobile
 - P1-Registration-login › P1 - Create ABHA Address Flow › Enrolment via ABHA Number-ABHA OTP › OTP Verify - ABHA OTP
 - P1-Registration-login › P1 - Create ABHA Address Flow › Enrolment via ABHA Number-Aadhaar OTP › OTP Verify - AADHAR OTP

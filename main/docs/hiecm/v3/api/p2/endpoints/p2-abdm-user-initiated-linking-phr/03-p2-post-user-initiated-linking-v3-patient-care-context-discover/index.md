@@ -57,5 +57,5 @@ curl --request POST \
   See Everything returns 401: /docs/hiecm/v3/troubleshooting/everything-returns-401
 - `403`: Forbidden
   See Error codes for this module: /docs/hiecm/v3/api/p2/errors
-- `500`: Internal Server Error -> It is just one example, for every api the path will be changed.
+- `500`: Internal Server Error
   See Error codes for this module: /docs/hiecm/v3/api/p2/errors

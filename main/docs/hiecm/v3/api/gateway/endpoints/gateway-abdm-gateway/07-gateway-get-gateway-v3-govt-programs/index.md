@@ -2,7 +2,10 @@
 
 `GET /api/hiecm/gateway/v3/govt-programs`
 
-Retrieve a list of government programmes. When invoked, it queries the system to fetch comprehensive information about various government programmes available. This functionality is particularly useful for users who need to access detailed information about different programmes.<br></br> <b>Note:</b><p>This API will retrive the list of govt-programmes in the form of list.</p>
+Retrieve a list of government programmes. When invoked, it queries the system to fetch comprehensive information about various government programmes available. This functionality is particularly useful for users who need to access detailed information about different programmes.
+ **Note:**
+
+This API will retrive the list of govt-programmes in the form of list.
 
 ```bash
 curl --request GET \

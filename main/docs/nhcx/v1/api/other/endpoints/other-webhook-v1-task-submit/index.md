@@ -8,7 +8,7 @@ Provider sends an FHIR Task asking the payer to reprocess a rejected or short-pa
 
 ```bash
 curl --request POST \
-  --url https://apisbx.abdm.gov.in/hcxv1_task_submit \
+  --url {bridgeUrl}v1_task_submit \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'bearer_auth: Bearer <access token>' \
   --header 'x-hcx-sender_code: 1000004446@hcx' \

@@ -2,7 +2,7 @@
 
 `GET /abha/api/v3/phr/app/enrollment/isExists`
 
-Flows in the Postman collection:
+Flows:
 - P1-Registration-login › P1 - Create ABHA Address Flow › Enrolment via Mobile › isExists API
 - P1-Registration-login › P1 - Create ABHA Address Flow › Enrolment via ABHA Number-ABHA OTP › isExists API Copy
 - P1-Registration-login › P1 - Create ABHA Address Flow › Enrolment via ABHA Number-Aadhaar OTP › isExists API

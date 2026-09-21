@@ -21,7 +21,7 @@ When fingerprint and iris are not possible for the patient. Face authentication 
 
 ### Postconditions
 
-Returns a `txnId`. Render `https://phrsbx.ABDM.gov.in/face-auth?txnId=<txnId>` as a QR code. The patient scans it with the ABHA app and completes the face scan there.
+Returns a `txnId`. Render `https://phrsbx.ABDM.gov.in/face-auth?txnId=` as a QR code. The patient scans it with the ABHA app and completes the face scan there.
 
 ### Common mistakes
 

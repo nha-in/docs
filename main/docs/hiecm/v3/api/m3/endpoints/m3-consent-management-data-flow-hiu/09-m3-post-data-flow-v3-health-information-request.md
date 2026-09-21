@@ -58,14 +58,14 @@ curl --request POST \
 - `hiRequest.dateRange.from` (string, required): Should be a UTC date time in ISO Format.Allows alpha numeric character and special characters like ^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}.\\d{3}Z$
 - `hiRequest.dateRange.to` (string, required): Should be a UTC date time in ISO Format.Allows alpha numeric character and special characters like ^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}.\\d{3}Z$
 - `hiRequest.dataPushUrl` (string, required): The URL to which the Health Information Provider has to send the health information data. Allows alpha numeric character and special characters like "^[a-zA-Z0-9_\\-@,. \":=?/&]{0,255}$"
-- `hiRequest.keyMaterial` (object, required): The key and algorithm details that is used to encrypt/decrypt the data
-- `hiRequest.keyMaterial.cryptoAlg` (string, required): Allows alpha numeric character and special characters like "^[a-zA-Z0-9_\\-@,. \":/]{0,255}$"
-- `hiRequest.keyMaterial.curve` (string, required): Allows alpha numeric character and special characters like "^[a-zA-Z0-9_\\-@,. \":/]{0,255}$"
-- `hiRequest.keyMaterial.dhPublicKey` (object, required)
-- `hiRequest.keyMaterial.dhPublicKey.expiry` (string, required): date and time format "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
-- `hiRequest.keyMaterial.dhPublicKey.parameters` (string, required): Allows alpha numeric character and special characters like "^[a-zA-Z0-9_\\-@,. \":/]{0,255}$"
-- `hiRequest.keyMaterial.dhPublicKey.keyValue` (string, required)
-- `hiRequest.keyMaterial.nonce` (string)
+- `hiRequest.keyMaterial` (object, required): The requester's half of the ECDH key agreement. The HIP derives the shared key from it and its own key pair, and encrypts every entry it pushes with AES-GCM.
+- `hiRequest.keyMaterial.cryptoAlg` (string, required): The key agreement algorithm. Always ECDH.
+- `hiRequest.keyMaterial.curve` (string, required): The curve the key pair is generated on. Always Curve25519.
+- `hiRequest.keyMaterial.dhPublicKey` (object, required): The public half of the ephemeral key pair generated for this transaction.
+- `hiRequest.keyMaterial.dhPublicKey.expiry` (string, required): When this key stops being valid, as an ISO 8601 timestamp.
+- `hiRequest.keyMaterial.dhPublicKey.parameters` (string, required): The key parameters. Ephemeral public key.
+- `hiRequest.keyMaterial.dhPublicKey.keyValue` (string, required): The public key, Base64 encoded, in X.509 SubjectPublicKeyInfo form.
+- `hiRequest.keyMaterial.nonce` (string): 32 random bytes, Base64 encoded, generated for this transaction. The other side combines it with its own nonce to derive the AES-GCM key and initialisation vector.
 
 ## Responses
 

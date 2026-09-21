@@ -2,7 +2,27 @@
 
 `PATCH /api/hiecm/gateway/v3/scanPay/updateVersion`
 
-This is used by the integrators to update the version for the particular service-ID. <ol type='1'> <li> <b>Header</b> <ol type='a'> <br/> <li>Authorisation will be provided by the gateway session API after the successful verification of client ID and Secret [ Example: Bearer <TOKEN> ]</li><li>REQUEST-ID unique UUID[ Example: 18235d89-cb13-479d-ad71-7a57d5f669a8 ]</li> <li>TIMESTAMP actual time of the requested was initiated[ Example: 2022-10-06T10:10:00.587Z ]</li> <li>X-CM-ID [ Example: sbx]</li> </ol> </li> <br/> <li> <b>Request Body</b> <ol type='a'><br/> <li>recordShareEnabled It describes whether the record share is enabled or not.</li><li>scanPayEnabled It describes whether the scan pay is enabled or not.</li><li>scanPayVersion This is a key value pair which contains the version [ Example: type: v2 / v3]</li> <li>serviceId This is a key value pair which contains ServiceId[ Example: SERVICE_ID1,SERVICE_ID2 ]</li></ol> </ol>
+This is used by the integrators to update the version for the particular service-ID.
+
+ **Header**
+
+Authorisation will be provided by the gateway session API after the successful verification of client ID and Secret [ Example: Bearer ]
+
+REQUEST-ID unique UUID[ Example: 18235d89-cb13-479d-ad71-7a57d5f669a8 ]
+
+TIMESTAMP actual time of the requested was initiated[ Example: 2022-10-06T10:10:00.587Z ]
+
+X-CM-ID [ Example: sbx]
+
+ **Request Body**
+
+recordShareEnabled It describes whether the record share is enabled or not.
+
+scanPayEnabled It describes whether the scan pay is enabled or not.
+
+scanPayVersion This is a key value pair which contains the version [ Example: type: v2 / v3]
+
+serviceId This is a key value pair which contains ServiceId[ Example: SERVICE_ID1,SERVICE_ID2 ]
 
 ```bash
 curl --request PATCH \
