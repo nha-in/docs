@@ -2,7 +2,13 @@
 
 `GET /abha/api/v3/profile/account/abha-card`
 
-Retrieve the ABHA card image. It requires valid credentials and headers for authentication.
+**Endpoint:** `GET /abha/api/v3/profile/account/abha-card`
+
+**Flow:** **ABHA Card & Profile** - independent API; call the one that fits your identifier / modality.
+
+---
+
+This API endpoint is used to retrieve the ABHA card image. It requires valid credentials and headers for authentication.
 
 ```bash
 curl --request GET \
@@ -19,9 +25,9 @@ curl --request GET \
 
 ## Headers
 
-- `X-token` (string, required)
-- `REQUEST-ID` (string, required)
-- `TIMESTAMP` (string, required)
+- `X-token` (string, required): User token (`Bearer `) received after ABHA creation / login.
+- `REQUEST-ID` (string, required): Unique UUID for every request.
+- `TIMESTAMP` (string, required): Current UTC timestamp in ISO-8601 format.
 
 ## Responses
 

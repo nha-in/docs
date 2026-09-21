@@ -32,14 +32,14 @@ The M1 skill gives an AI coding assistant this milestone as one file: every M1 c
 
 M1 agent skill
 
-Every M1 call, its error codes and its certification cases in one file: 55 operations, 89 codes, 122 cases.
+Every M1 call, one per use case, with its error codes in one file: 132 operations, 17 codes.
 
 [SKILL.md](/docs/pr-20/skills/abdm-m1/SKILL.md "The router. Use the command below to take the references with it.")
 
 - ScaffoldThe loop that builds the module flow by flow against the sandbox, ending on an observed result rather than on a call returning 200.
 - Design
-- Integrate41 operations, with their hosts, headers and the rules that hold across them.
-- Debug14 recorded error codes, each with its message and what to do about it.
+- Integrate132 operations, with their hosts, headers and the rules that hold across them.
+- Debug17 recorded error codes, each with its message and what to do about it.
 
 `mkdir -p .claude/skills/abdm-m1/references && curl -fsSL https://nha-in.github.io/docs/pr-20/skills/abdm-m1/SKILL.md -o .claude/skills/abdm-m1/SKILL.md && for f in scaffold design integrate debug; do curl -fsSL https://nha-in.github.io/docs/pr-20/skills/abdm-m1/references/$f.md -o .claude/skills/abdm-m1/references/$f.md; done`
 
@@ -50,7 +50,7 @@ Drops the skill into this project. Claude loads it when a task matches.
 How to use it
 
 1. Run the command above in the repository you are integrating.
-2. Ask your agent for the job in your own words. "Add ABHA creation by Aadhaar OTP to this codebase", "why am I getting 900900". The skill loads when the task matches it.
+2. Ask your agent for the job in your own words. "Add ABHA creation by Aadhaar OTP to this codebase", "why am I getting 404". The skill loads when the task matches it.
 3. Check what it writes against these pages. The skill carries the facts, not the sandbox: nothing in it has been run against ABDM.
 4. Open in Claude needs that app installed. It fills the composer and waits: nothing runs until you read it and press Enter.
 
@@ -117,6 +117,14 @@ sequenceDiagram
 Individuals who are unable to use OTP-based authentication, including cases where the mobile number linked to Aadhaar is unavailable or inaccessible, may use face authentication as an alternative verification mechanism, subject to ABDM and UIDAI guidelines. Face authentication is performed through authorized Aadhaar Registered Device (RD) services using approved authentication workflows.
 
 ABDM documentation references biometric-based ABHA creation workflows, including face authentication and other supported biometric modalities where applicable. Organizations should implement authentication methods in accordance with the officially published specifications and validate any implementation assumptions through the appropriate NHA guidance and documentation before proceeding with production deployment.
+
+### ABHA creation by fingerprint or iris
+
+Aadhaar Biometric-Based ABHA Creation enables users to create an Ayushman Bharat Health Account (ABHA) by securely verifying their identity using biometric authentication through an Aadhaar Registered Device (RD). The RD Service captures the user's biometric data and generates an encrypted, digitally signed PID block, which is submitted along with the Aadhaar details for verification. Upon successful authentication and user consent, the user's profile is validated and a unique ABHA number is generated, enabling secure onboarding into the ABDM digital health ecosystem.
+
+The Registered Device (RD) List and information can be found on the following link: [uidai.gov.in](https://uidai.gov.in/en/ecosystem/authentication-devices-documents/biometric-devices.html).
+
+The calls, in order, are on the [M1 API reference](/docs/pr-20/docs/hiecm/v3/api/m1) under ABHA creation, fingerprint and ABHA creation, iris.
 
 ### ABHA creation by demographic authentication
 

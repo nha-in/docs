@@ -1,8 +1,14 @@
-# Get user profile details
+# Get ABHA profile
 
 `GET /abha/api/v3/profile/account`
 
-Manage ABHA (Ayushman Bharat Health Account) profiles. It allows users to fetch the user profile, ensuring that their details are accurate and up-to-date. This is essential for maintaining the integrity and security of the user’s health records.
+**Endpoint:** `GET /abha/api/v3/profile/account`
+
+**Flow:** **ABHA Card & Profile** - independent API; call the one that fits your identifier / modality.
+
+---
+
+This API endpoint is used to manage ABHA (Ayushman Bharat Health Account) profiles. It allows users to fetch the user profile, ensuring that their details are accurate and up-to-date. This is essential for maintaining the integrity and security of the user’s health records.
 
 ```bash
 curl --request GET \
@@ -19,9 +25,9 @@ curl --request GET \
 
 ## Headers
 
-- `X-token` (string, required)
-- `REQUEST-ID` (string, required)
-- `TIMESTAMP` (string, required)
+- `X-token` (string, required): User token (`Bearer `) received after ABHA creation / login.
+- `REQUEST-ID` (string, required): Unique UUID for every request.
+- `TIMESTAMP` (string, required): Current UTC timestamp in ISO-8601 format.
 
 ## Responses
 

@@ -9,42 +9,133 @@ The calls themselves: where they live, what they need in their headers, and one 
 - `https://apis.abdm.gov.in` ABDM gateway, production
 ## Endpoints
 
-41 operations, grouped by the journey they belong to.
+132 operations, grouped by the journey they belong to.
 
 ### Other operations
 
 | Method | Path | What it does |
 | --- | --- | --- |
-| `POST` | `/abha/api/v3/enrollment/auth/byAbdm` | UseCase: Verify- Mobile OTP |
-| `POST` | `/abha/api/v3/enrollment/enrol/abha-address` | UseCase: Create ABHA address |
-| `POST` | `/abha/api/v3/enrollment/enrol/auth/init` | UseCase: It will generate the Transaction ID. This Transaction ID will be used … |
-| `POST` | `/abha/api/v3/enrollment/enrol/byAadhaar` | UseCase: Create ABHA number Via Aadhaar by verifying Aadhaar OTP, using Biometr… |
-| `POST` | `/abha/api/v3/enrollment/enrol/capturePID` | UseCase: This API is used to check the status of the transaction ID. |
-| `GET` | `/abha/api/v3/enrollment/enrol/suggestion` | UseCase: ABHA address suggestion |
-| `GET` | `/abha/api/v3/enrollment/profile/children` | UseCase: Get Child ABHA address |
-| `POST` | `/abha/api/v3/enrollment/request/otp` | Use Case: ABHA enrolment - Send OTP using Aadhaar number Mobile number, ABHA nu… |
-| `POST` | `/abha/api/v3/phr/web/login/abha/request/otp` | Use Case: Sends an OTP to the Mobile Number, Aadhaar Number, Request Biometric … |
-| `POST` | `/abha/api/v3/phr/web/login/abha/search` | Use Case: Search ABHA Profile using ABHA address |
-| `POST` | `/abha/api/v3/phr/web/login/abha/verify` | Use Case: Verify OTP - Aadhaar Number, Mobile Number, Verify via Biometric |
-| `GET` | `/abha/api/v3/phr/web/login/profile/abha-profile` | Use Case: Retrieves the user’s ABHA Profile |
-| `GET` | `/abha/api/v3/phr/web/login/profile/abha/phr-card` | Use Case: Generate a PHR Card Profile |
-| `GET` | `/abha/api/v3/phr/web/login/profile/abha/qr-code` | Use Case: Generate QR Code By Passing X-token to share user ABHA address Profil… |
-| `GET` | `/abha/api/v3/profile/account` | Use Case: Get User Profile Details |
-| `PATCH` | `/abha/api/v3/profile/account` | Use Case: Update the user ABHA Profile Photo, Update the Child ABHA Profile |
-| `GET` | `/abha/api/v3/profile/account/abha-card` | Use Case: Retrieve ABHA Card image |
-| `POST` | `/abha/api/v3/profile/account/abha/search` | Use Case: Search ABHA Profile |
-| `GET` | `/abha/api/v3/profile/account/qrCode` | Use Case: Generate QR Code for an ABHA Profile |
-| `POST` | `/abha/api/v3/profile/account/request/otp` | Use Case: Send OTP - ReKyc, Update Mobile, Child ABHA KYC Request OTP |
-| `GET` | `/abha/api/v3/profile/account/request/token` | Use Case: Request a token for accessing a user’s ABHA |
-| `POST` | `/abha/api/v3/profile/account/verify` | Use Case: Verify OTP - ReKyc, Update Mobile, CHILD ABHA KYC |
-| `GET` | `/abha/api/v3/profile/benefit/abha/{abhanumber}` | Use Case: Retrieve the benefit details associated with a specific ABHA number |
-| `POST` | `/abha/api/v3/profile/benefit/linkAndDelink` | Usecase: Benefit LINK or DELINK |
-| `POST` | `/abha/api/v3/profile/benefit/search` | Use Case: Search for benefits associated with a user’s profile |
-| `POST` | `/abha/api/v3/profile/login/request/otp` | Use Case: ABHA Login - Send OTP using Aadhaar number, ABHA number, Mobile numbe… |
-| `POST` | `/abha/api/v3/profile/login/search` | Use Case: Search ABHA Account Existence |
-| `POST` | `/abha/api/v3/profile/login/verify` | Use Case: ABHA Login - Verify OTP using Aadhaar number, ABHA number, Mobile num… |
-| `POST` | `/abha/api/v3/profile/login/verify/user` | Use Case: This API is used to verify and confirm the selected ABHA user during … |
-| `GET` | `/abha/api/v3/profile/public/certificate` | Use Case: Used to Fetch Public Key |
+| `POST` | `/abha/api/v3.1/profile/login/verify` | Login via Face Auth (QR) - verify |
+| `POST` | `/abha/api/v3.1/profile/login/verify` | Login via Biometric (Fingerprint) - v3.1 single step |
+| `POST` | `/abha/api/v3.1/profile/login/verify` | Login via Biometric (Iris) - v3.1 single step |
+| `POST` | `/abha/api/v3/enrollment/auth/byAbdm` | After ABHA creation - verify email OTP (optional) |
+| `POST` | `/abha/api/v3/enrollment/auth/byAbdm` | After ABHA creation - verify email OTP (optional) |
+| `POST` | `/abha/api/v3/enrollment/auth/byAbdm` | After ABHA creation - verify email OTP (optional) |
+| `POST` | `/abha/api/v3/enrollment/auth/byAbdm` | After ABHA creation - verify email OTP (optional) |
+| `POST` | `/abha/api/v3/enrollment/auth/byAbdm` | After ABHA creation - verify mobile OTP (optional) |
+| `POST` | `/abha/api/v3/enrollment/auth/byAbdm` | After ABHA creation - verify mobile OTP (optional) |
+| `POST` | `/abha/api/v3/enrollment/auth/byAbdm` | After ABHA creation - verify mobile OTP (optional) |
+| `POST` | `/abha/api/v3/enrollment/auth/byAbdm` | After ABHA creation - verify mobile OTP (optional) |
+| `POST` | `/abha/api/v3/enrollment/enrol/abha-address` | After ABHA creation - create ABHA address |
+| `POST` | `/abha/api/v3/enrollment/enrol/abha-address` | After ABHA creation - create ABHA address |
+| `POST` | `/abha/api/v3/enrollment/enrol/abha-address` | After ABHA creation - create ABHA address |
+| `POST` | `/abha/api/v3/enrollment/enrol/abha-address` | After ABHA creation - create ABHA address |
+| `POST` | `/abha/api/v3/enrollment/enrol/auth/init` | Face auth - generate transaction ID (init) |
+| `POST` | `/abha/api/v3/enrollment/enrol/auth/init` | Face auth - generate transaction ID (init) |
+| `POST` | `/abha/api/v3/enrollment/enrol/byAadhaar` | Create Child ABHA |
+| `POST` | `/abha/api/v3/enrollment/enrol/byAadhaar` | Create Child ABHA |
+| `POST` | `/abha/api/v3/enrollment/enrol/byAadhaar` | Create ABHA - Demographic authentication (Demo Auth) |
+| `POST` | `/abha/api/v3/enrollment/enrol/byAadhaar` | Create ABHA - Demographic authentication (Demo Auth) |
+| `POST` | `/abha/api/v3/enrollment/enrol/byAadhaar` | Create ABHA - Demographic authentication (Demo Auth) |
+| `POST` | `/abha/api/v3/enrollment/enrol/byAadhaar` | Create ABHA - Aadhaar face authentication |
+| `POST` | `/abha/api/v3/enrollment/enrol/byAadhaar` | Create ABHA - Aadhaar fingerprint (bio) |
+| `POST` | `/abha/api/v3/enrollment/enrol/byAadhaar` | Create ABHA - Aadhaar IRIS |
+| `POST` | `/abha/api/v3/enrollment/enrol/byAadhaar` | Create ABHA - verify Aadhaar OTP |
+| `POST` | `/abha/api/v3/enrollment/enrol/capturePID` | Face auth - capture PID / track status |
+| `POST` | `/abha/api/v3/enrollment/enrol/capturePID` | Face auth - capture PID / track status |
+| `POST` | `/abha/api/v3/enrollment/enrol/capturePID` | Face auth - capture PID / track status |
+| `GET` | `/abha/api/v3/enrollment/enrol/suggestion` | After ABHA creation - get ABHA address suggestions |
+| `GET` | `/abha/api/v3/enrollment/enrol/suggestion` | After ABHA creation - get ABHA address suggestions |
+| `GET` | `/abha/api/v3/enrollment/enrol/suggestion` | After ABHA creation - get ABHA address suggestions |
+| `GET` | `/abha/api/v3/enrollment/enrol/suggestion` | After ABHA creation - get ABHA address suggestions |
+| `GET` | `/abha/api/v3/enrollment/profile/children` | Get Child ABHA list of the parent |
+| `GET` | `/abha/api/v3/enrollment/profile/children` | Get Child ABHA list of the parent |
+| `POST` | `/abha/api/v3/enrollment/request/otp` | Send Aadhaar OTP for ABHA enrolment |
+| `POST` | `/abha/api/v3/enrollment/request/otp` | After ABHA creation - send OTP to verify email (optional) |
+| `POST` | `/abha/api/v3/enrollment/request/otp` | After ABHA creation - send OTP to verify email (optional) |
+| `POST` | `/abha/api/v3/enrollment/request/otp` | After ABHA creation - send OTP to verify email (optional) |
+| `POST` | `/abha/api/v3/enrollment/request/otp` | After ABHA creation - send OTP to verify email (optional) |
+| `POST` | `/abha/api/v3/enrollment/request/otp` | After ABHA creation - send OTP to verify mobile (optional) |
+| `POST` | `/abha/api/v3/enrollment/request/otp` | After ABHA creation - send OTP to verify mobile (optional) |
+| `POST` | `/abha/api/v3/enrollment/request/otp` | After ABHA creation - send OTP to verify mobile (optional) |
+| `POST` | `/abha/api/v3/enrollment/request/otp` | After ABHA creation - send OTP to verify mobile (optional) |
+| `POST` | `/abha/api/v3/phr/web/login/abha/request/otp` | ABHA address login via Aadhaar OTP - send OTP |
+| `POST` | `/abha/api/v3/phr/web/login/abha/request/otp` | ABHA address login via Fingerprint - send authentication request |
+| `POST` | `/abha/api/v3/phr/web/login/abha/request/otp` | ABHA address login via IRIS - send authentication request |
+| `POST` | `/abha/api/v3/phr/web/login/abha/request/otp` | ABHA address login via Mobile OTP - send OTP |
+| `POST` | `/abha/api/v3/phr/web/login/abha/search` | Search ABHA address (auth methods) |
+| `POST` | `/abha/api/v3/phr/web/login/abha/search` | Search ABHA address (auth methods) |
+| `POST` | `/abha/api/v3/phr/web/login/abha/verify` | ABHA address login via Aadhaar OTP - verify |
+| `POST` | `/abha/api/v3/phr/web/login/abha/verify` | ABHA address login via Fingerprint - verify |
+| `POST` | `/abha/api/v3/phr/web/login/abha/verify` | ABHA address login via IRIS - verify |
+| `POST` | `/abha/api/v3/phr/web/login/abha/verify` | ABHA address login via Mobile OTP - verify |
+| `GET` | `/abha/api/v3/phr/web/login/profile/abha-profile` | Get ABHA-address profile |
+| `GET` | `/abha/api/v3/phr/web/login/profile/abha-profile` | Get ABHA-address profile |
+| `GET` | `/abha/api/v3/phr/web/login/profile/abha-profile` | Get ABHA-address profile |
+| `GET` | `/abha/api/v3/phr/web/login/profile/abha-profile` | Get ABHA-address profile |
+| `GET` | `/abha/api/v3/phr/web/login/profile/abha/phr-card` | Get PHR card |
+| `GET` | `/abha/api/v3/phr/web/login/profile/abha/phr-card` | Get PHR card |
+| `GET` | `/abha/api/v3/phr/web/login/profile/abha/phr-card` | Get PHR card |
+| `GET` | `/abha/api/v3/phr/web/login/profile/abha/phr-card` | Get PHR card |
+| `GET` | `/abha/api/v3/phr/web/login/profile/abha/qr-code` | Get ABHA-address QR code |
+| `GET` | `/abha/api/v3/phr/web/login/profile/abha/qr-code` | Get ABHA-address QR code |
+| `GET` | `/abha/api/v3/phr/web/login/profile/abha/qr-code` | Get ABHA-address QR code |
+| `GET` | `/abha/api/v3/phr/web/login/profile/abha/qr-code` | Get ABHA-address QR code |
+| `GET` | `/abha/api/v3/profile/account` | Get ABHA profile |
+| `PATCH` | `/abha/api/v3/profile/account` | Update Child ABHA profile |
+| `PATCH` | `/abha/api/v3/profile/account` | Update Child ABHA profile |
+| `PATCH` | `/abha/api/v3/profile/account` | Update profile photo |
+| `GET` | `/abha/api/v3/profile/account/abha-card` | Retrieve ABHA card image |
+| `POST` | `/abha/api/v3/profile/account/abha/search` | Search ABHA by mobile |
+| `POST` | `/abha/api/v3/profile/account/abha/search` | Search ABHA by mobile |
+| `POST` | `/abha/api/v3/profile/account/abha/search` | Search ABHA by mobile |
+| `POST` | `/abha/api/v3/profile/account/abha/search` | Search ABHA by mobile |
+| `POST` | `/abha/api/v3/profile/account/abha/search` | Search ABHA by mobile |
+| `GET` | `/abha/api/v3/profile/account/download-abha-card` | Download ABHA card |
+| `GET` | `/abha/api/v3/profile/account/qrCode` | Get ABHA QR code |
+| `POST` | `/abha/api/v3/profile/account/request/otp` | Child ABHA KYC - send Aadhaar OTP |
+| `POST` | `/abha/api/v3/profile/account/request/otp` | Child ABHA KYC - send Aadhaar OTP |
+| `POST` | `/abha/api/v3/profile/account/request/otp` | Re-KYC - send Aadhaar OTP |
+| `POST` | `/abha/api/v3/profile/account/request/otp` | Update mobile - send OTP |
+| `GET` | `/abha/api/v3/profile/account/request/token` | Refresh user token |
+| `POST` | `/abha/api/v3/profile/account/verify` | Child ABHA KYC - verify Aadhaar OTP |
+| `POST` | `/abha/api/v3/profile/account/verify` | Child ABHA KYC - verify Aadhaar OTP |
+| `POST` | `/abha/api/v3/profile/account/verify` | Re-KYC - verify Aadhaar OTP |
+| `POST` | `/abha/api/v3/profile/account/verify` | Update mobile - verify OTP |
+| `GET` | `/abha/api/v3/profile/benefit/abha/{abhanumber}` | Get benefits linked to an ABHA number |
+| `POST` | `/abha/api/v3/profile/benefit/linkAndDelink` | Link / De-link benefit using ABHA number |
+| `POST` | `/abha/api/v3/profile/benefit/linkAndDelink` | Link / De-link benefit using X-token |
+| `POST` | `/abha/api/v3/profile/benefit/linkAndDelink` | Link / De-link benefit using xmlUid |
+| `POST` | `/abha/api/v3/profile/benefit/search` | Benefit search by ABHA number |
+| `POST` | `/abha/api/v3/profile/benefit/search` | Benefit search by xmlUid |
+| `POST` | `/abha/api/v3/profile/login/request/otp` | Login via Aadhaar number - send Aadhaar OTP |
+| `POST` | `/abha/api/v3/profile/login/request/otp` | Login via ABHA number - send Aadhaar OTP |
+| `POST` | `/abha/api/v3/profile/login/request/otp` | Login via ABHA number - send ABHA (mobile) OTP |
+| `POST` | `/abha/api/v3/profile/login/request/otp` | Login via Biometric (Fingerprint) - send authentication request |
+| `POST` | `/abha/api/v3/profile/login/request/otp` | Login via Biometric (Iris) - send authentication request |
+| `POST` | `/abha/api/v3/profile/login/request/otp` | Find ABHA via Aadhaar OTP - send OTP |
+| `POST` | `/abha/api/v3/profile/login/request/otp` | Find ABHA via Face - send authentication request |
+| `POST` | `/abha/api/v3/profile/login/request/otp` | Find ABHA via Fingerprint - send authentication request |
+| `POST` | `/abha/api/v3/profile/login/request/otp` | Find ABHA via IRIS - send authentication request |
+| `POST` | `/abha/api/v3/profile/login/request/otp` | Find ABHA via Mobile - send OTP |
+| `POST` | `/abha/api/v3/profile/login/request/otp` | Forgot ABHA via Aadhaar - send OTP |
+| `POST` | `/abha/api/v3/profile/login/request/otp` | Forgot ABHA via Mobile - send OTP |
+| `POST` | `/abha/api/v3/profile/login/request/otp` | Login via Mobile number - send OTP |
+| `POST` | `/abha/api/v3/profile/login/verify` | Login via Aadhaar number - verify Aadhaar OTP |
+| `POST` | `/abha/api/v3/profile/login/verify` | Login via ABHA number - verify Aadhaar OTP |
+| `POST` | `/abha/api/v3/profile/login/verify` | Login via ABHA number - verify ABHA (mobile) OTP |
+| `POST` | `/abha/api/v3/profile/login/verify` | Login via Biometric (Fingerprint) - verify |
+| `POST` | `/abha/api/v3/profile/login/verify` | Login via Biometric (Iris) - verify |
+| `POST` | `/abha/api/v3/profile/login/verify` | Find ABHA via Aadhaar OTP - verify OTP |
+| `POST` | `/abha/api/v3/profile/login/verify` | Find ABHA via Face - verify |
+| `POST` | `/abha/api/v3/profile/login/verify` | Find ABHA via Fingerprint - verify |
+| `POST` | `/abha/api/v3/profile/login/verify` | Find ABHA via IRIS - verify |
+| `POST` | `/abha/api/v3/profile/login/verify` | Find ABHA via Mobile - verify OTP |
+| `POST` | `/abha/api/v3/profile/login/verify` | Forgot ABHA via Aadhaar - verify OTP |
+| `POST` | `/abha/api/v3/profile/login/verify` | Forgot ABHA via Mobile - verify OTP |
+| `POST` | `/abha/api/v3/profile/login/verify` | Login via Mobile number - verify OTP |
+| `POST` | `/abha/api/v3/profile/login/verify/user` | Login via Mobile number - verify user (select ABHA) |
+| `GET` | `/abha/api/v3/profile/public/certificate` | Get public certificate (RSA encryption key) |
 | `GET` | `/api/hiecm/gateway/v3/.well-known/openid-configuration` | Get the open ID configuration. |
 | `PUT` | `/api/hiecm/gateway/v3/bridge-service` | v3/gateway/bridge-service |
 | `GET` | `/api/hiecm/gateway/v3/bridge-service/serviceId/{service-id}` | Fetch the details of a service ID. |
@@ -60,36 +151,36 @@ The calls themselves: where they live, what they need in their headers, and one 
 
 | Header | What it is |
 | --- | --- |
-| `REQUEST-ID` |  |
-| `TIMESTAMP` |  |
+| `REQUEST-ID` | Unique UUID for every request. |
+| `TIMESTAMP` | Current UTC timestamp in ISO-8601 format. |
 | `BENEFIT_NAME` | **Applicable for user who is enrolling via Benefit Program.** |
 | `X-token` | **Applicable for child abha creation. X-token of Parent user, user can get X-token after login to the system** |
-| `TRANSACTION_ID` |  |
+| `TRANSACTION_ID` | Transaction ID from the ABHA creation response. |
 | `Content-Type` |  |
-| `R-token` |  |
-| `T-token` |  |
+| `R-token` | Refresh token (`Bearer `) received at login. |
+| `T-token` | Short-lived token (`Bearer `) returned by *Login via Mobile number - verify OTP*. |
 | `X-CM-ID` | Suffix of the consent manager to which the request was intended |
 ## A request, in full
 
 ```bash
 curl --request POST \
-  --url https://abhasbx.abdm.gov.in/abha/api/v3/enrollment/auth/byAbdm \
+  --url https://abhasbx.abdm.gov.in/abha/api/v3.1/profile/login/verify \
   --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
   --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
   --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
   --header 'Content-Type: application/json' \
   --data '{
   "scope": [
-    "abha-enrol",
-    "mobile-verify"
+    "abha-login",
+    "aadhaar-face-login-verify"
   ],
   "authData": {
     "authMethods": [
-      "otp"
+      "face_auth"
     ],
-    "otp": {
-      "txnId": "{{txnId}}",
-      "otpValue": "{{encrypted otp}}"
+    "face_login": {
+      "txnId": "8220299c-40ad-40b6-bc52-13a7d46a69d0",
+      "aadhaar": "{{encrypted aadhaar number}}"
     }
   }
 }'
