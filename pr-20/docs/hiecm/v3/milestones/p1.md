@@ -1,4 +1,4 @@
-# P1 Identity and profile
+# P1 Identity and login
 
 P1 is the patient side of [M1 Identity](/docs/pr-20/docs/hiecm/v3/milestones/m1). M1 is how a hospital system creates an [ABHA](/docs/pr-20/docs/hiecm/v3/getting-started/glossary#abha). P1 is how the patient's own [PHR](/docs/pr-20/docs/hiecm/v3/getting-started/glossary#phr) app does it, and how it maintains the account afterwards.
 
@@ -43,7 +43,7 @@ A Self-Declared profile needs a "Link ABHA number" action. The user enters the 1
 
 ## Login
 
-Sign a user in to a PHR application by any of these routes. Every route is mandatory except login by email OTP, which is optional.
+Sign a user in to a PHR application by any of these routes. Every route is mandatory except the two email OTP routes, which are optional.
 
 | Route                          | Validated by                                                                           |
 | ------------------------------ | -------------------------------------------------------------------------------------- |
@@ -73,5 +73,4 @@ Encrypt the Aadhaar number, mobile number, OTP and password with the PHR public 
 ## Next
 
 - The calls and base URLs: [P1 API reference](/docs/pr-20/reference/hiecm-p1).
-- The profile, card and QR code the signed in user manages: [P2](/docs/pr-20/docs/hiecm/v3/milestones/p2).
 - The next milestone: [P2 Linking and records](/docs/pr-20/docs/hiecm/v3/milestones/p2).

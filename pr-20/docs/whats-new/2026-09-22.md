@@ -4,11 +4,11 @@
 
 ### PHR calls carry the gateway session token, and their body fields are required
 
-The [P1](/docs/pr-20/reference/hiecm-p1) and [P2](/docs/pr-20/reference/hiecm-p2) references showed 24 PHR application calls with no `Authorization` header and no required body fields. Every one of them takes the access token from the gateway session call, and every field the request body shows is required. Get profile, QR code and PHR card also take `X-AUTH-TOKEN` beside `X-token`. If your app sends those calls without the token, add it.
+The [P1](/docs/pr-20/reference/hiecm-p1) and [P2](/docs/pr-20/reference/hiecm-p2) references showed 21 PHR application calls with no `Authorization` header and no required body fields. Every one of them takes the access token from the gateway session call, and every field the request body shows is required. Get profile, QR code and PHR card also take `X-AUTH-TOKEN` beside `X-token`. If your app sends those calls without the token, add it.
 
 ### The PHR public key is not the ABHA service's key
 
-A [PHR](/docs/pr-20/docs/hiecm/v3/getting-started/glossary#phr) application encrypts the Aadhaar number, mobile number, OTP and password with the key from `GET /abha/api/v3/phr/app/login/public/certificate`, the first call in [P1](/docs/pr-20/docs/hiecm/v3/api/p1/endpoints/p1-certificate-and-session/01-p1-get-v3-phr-app-login-public-certificate). [Encryption](/docs/pr-20/docs/hiecm/v3/concepts/encryption) had sent every reader to the M1 certificate. A PHR call encrypted with the M1 key is refused.
+A [PHR](/docs/pr-20/docs/hiecm/v3/getting-started/glossary#phr) application encrypts the Aadhaar number, mobile number, OTP and password with the key from `GET /abha/api/v3/phr/app/login/public/certificate`, the first call in [P1](/docs/pr-20/docs/hiecm/v3/api/p1/endpoints/p1-certificate-and-session/01-p1-get-v3-phr-app-login-public-certificate). [Encryption](/docs/pr-20/docs/hiecm/v3/concepts/encryption) had sent every reader to the M1 certificate. Encrypt every PHR call with the PHR key.
 
 ### Consent request init and context notify take an id only
 

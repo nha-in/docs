@@ -206,7 +206,7 @@ Overview of the discovery process:
 Implementing the discovery algorithm. When a discovery request is received, the HRP/HIP is provided with verified and unverified identifiers to help match patient records.
 
 1. **Input Data for Matching.** Verified identifiers are reliable, system-verified attributes: ABHA address, mobile number, name, gender, year of birth. Unverified / user-declared information may include health facility-issued identifiers (e.g., medical registration number / patient ID).
-2. **Record Matching Logic.** The HRP must implement a robust matching algorithm to identify the correct patient records. Matching should be based on a combination of verified identifiers (preferred and higher weight) and supplementary unverified information.
+2. **Record Matching Logic.** The HRP must implement a matching algorithm to identify the correct patient records. Matching should be based on a combination of verified identifiers (preferred and higher weight) and supplementary unverified information.
 3. **Response Construction.** Once matching records are identified, the HRP must organize the records into care contexts. Each care context should follow the defined structure (reference ID + display name). The response must include a list of care contexts associated with the patient.
 4. **Important Compliance Requirement.** No clinical or sensitive information (e.g., diagnosis, reports, test results) must be included in the discovery response. Only metadata describing the care context should be shared.
 

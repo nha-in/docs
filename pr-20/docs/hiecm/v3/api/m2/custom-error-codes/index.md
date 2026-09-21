@@ -1,6 +1,6 @@
 # M2 custom error codes
 
-During ABDM integration, systems may encounter issues across discovery, linking, consent, encryption, and data exchange workflows. This section outlines common errors, their causes, and recommended resolutions to help ensure smooth implementation.
+During ABDM integration, systems may encounter issues across discovery, linking, consent, encryption, and data exchange workflows. This section lists the error codes, to help ensure smooth implementation. A code can carry more than one message: match on the message as well as the code.
 
 | Code      | Error                                                                                                                                                      |
 | --------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |

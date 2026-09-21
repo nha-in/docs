@@ -21,7 +21,7 @@ curl --request GET \
 - `X-token` (string, required): The user token from a login or enrolment response, sent with a `Bearer ` prefix. It acts for that ABHA holder.
 - `REQUEST-ID` (string, required): Unique UUID for each request.
 - `TIMESTAMP` (string, required): Request timestamp in UTC, ISO-8601 with Z.
-- `X-AUTH-TOKEN` (string, required): The user token issued at login, sent beside X-token, as the PHR V3 document requires on this call.
+- `X-AUTH-TOKEN` (string, required): The user token issued at login. Send it beside X-token.
 
 ## Responses
 

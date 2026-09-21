@@ -11735,7 +11735,7 @@ New to this? Start with [M1 Identity](/docs/pr-20/docs/hiecm/v3/milestones/m1).
 
 # M2 custom error codes
 
-During ABDM integration, systems may encounter issues across discovery, linking, consent, encryption, and data exchange workflows. This section outlines common errors, their causes, and recommended resolutions to help ensure smooth implementation.
+During ABDM integration, systems may encounter issues across discovery, linking, consent, encryption, and data exchange workflows. This section lists the error codes, to help ensure smooth implementation. A code can carry more than one message: match on the message as well as the code.
 
 | Code      | Error                                                                                                                                                      |
 | --------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -25068,7 +25068,7 @@ curl --request GET \
 - `X-token` (string, required): The user token from a login or enrolment response, sent with a `Bearer ` prefix. It acts for that ABHA holder.
 - `REQUEST-ID` (string, required): Unique UUID for each request.
 - `TIMESTAMP` (string, required): Request timestamp in UTC, ISO-8601 with Z.
-- `X-AUTH-TOKEN` (string, required): The user token issued at login, sent beside X-token, as the PHR V3 document requires on this call.
+- `X-AUTH-TOKEN` (string, required): The user token issued at login. Send it beside X-token.
 
 ## Responses
 
@@ -25140,7 +25140,7 @@ curl --request GET \
 - `X-token` (string, required): The user token from a login or enrolment response, sent with a `Bearer ` prefix. It acts for that ABHA holder.
 - `REQUEST-ID` (string, required): Unique UUID for each request.
 - `TIMESTAMP` (string, required): Request timestamp in UTC, ISO-8601 with Z.
-- `X-AUTH-TOKEN` (string, required): The user token issued at login, sent beside X-token, as the PHR V3 document requires on this call.
+- `X-AUTH-TOKEN` (string, required): The user token issued at login. Send it beside X-token.
 
 ## Responses
 
@@ -25177,7 +25177,7 @@ curl --request GET \
 - `X-token` (string, required): The user token from a login or enrolment response, sent with a `Bearer ` prefix. It acts for that ABHA holder.
 - `REQUEST-ID` (string, required): Unique UUID for each request.
 - `TIMESTAMP` (string, required): Request timestamp in UTC, ISO-8601 with Z.
-- `X-AUTH-TOKEN` (string, required): The user token issued at login, sent beside X-token, as the PHR V3 document requires on this call.
+- `X-AUTH-TOKEN` (string, required): The user token issued at login. Send it beside X-token.
 
 ## Responses
 
@@ -30690,7 +30690,7 @@ sequenceDiagram
 
 We publish the public half of a key pair. You encrypt with it. Only our private half can decrypt. Your system never holds a secret to do this, only the current certificate.
 
-There is nothing ABDM specific in the mechanics. Your platform's standard RSA library does the work. The two things to confirm are which key you are using and which padding.
+There is nothing ABDM specific in the mechanics. Your platform's standard RSA library does the work. Both keys use `RSA/ECB/OAEPWithSHA-1AndMGF1Padding`. The one thing to confirm is which key you are using.
 
 ## Where to do it
 
@@ -31515,7 +31515,9 @@ Every user needs an ABHA address, `username@abdm`. Consent, notifications and re
 
 A PHR app is two parts, whatever it looks like to the user. The app on the phone signs the person in, shows the screens and scans codes. A server you run holds the client ID and secret, mints the [gateway session token](/docs/pr-20/docs/hiecm/v3/concepts/gateway), and hosts the callback URL registered for your bridge. Every answer to a linking, consent or data request arrives at that URL as a POST, so an app with no server never hears the answer. Never ship the client secret inside the app.
 
-## What you build in M1
+## What you build in P1 and P2
+
+Registration and login are [P1](/docs/pr-20/docs/hiecm/v3/milestones/p1). The profile, card and QR code are [P2](/docs/pr-20/docs/hiecm/v3/milestones/p2).
 
 The ABHA sandbox base URL is `https://abhasbx.abdm.gov.in/abha/api/v3/`. PHR enrolment uses `https://abhasbx.abdm.gov.in/abha/api/v3/phr/app/enrollment/request/otp`.
 
@@ -31532,10 +31534,11 @@ After validation on either path, show the ABHA addresses already linked to that 
 
 Address rules:
 
-- Letters, numbers, one optional dot and one optional underscore.
-- Starts and ends with a letter or number, 8 to 18 characters long.
-- Creating a `10digitmobile@abdm` address is currently blocked.
-- Creating a `14digit@abdm` address is not allowed, but a user can log in with one. Every 14 digit ABHA number is issued a default address of this shape, written as `14digit@sbx` or `14digit@abdm`. Which environment uses which suffix is not documented yet.
+- Letters (A to Z), digits (0 to 9) and the dot, 8 to 18 characters long.
+- Cannot begin with a digit, and cannot begin or end with a dot.
+- A mobile number cannot be used as an address.
+- Creating a `14digit@abdm` address is not allowed, but a user can log in with one. Every 14 digit ABHA number is issued a default address of this shape.
+- The suffix is `@sbx` in sandbox and `@abdm` in production.
 - Password, where you collect one: 8 characters or longer, one A to Z, one digit, one special character from `!@#$^*_-`, no spaces, no more than 2 consecutive characters or keyboard keys. Password validation is now optional.
 
 ### Linking an ABHA number to an ABHA address
@@ -31553,6 +31556,7 @@ All these routes are mandatory, except login by email OTP, which is optional.
 | Mobile number                                   | Mobile OTP, then the user picks which linked ABHA address to sign in as     |
 | An easy to remember address such as `name@abdm` | Password, mobile OTP or email OTP, by the auth methods the address supports |
 | The 14 digit ABHA number                        | ABHA OTP or Aadhaar OTP                                                     |
+| The Aadhaar number                              | Aadhaar OTP                                                                 |
 
 Resend OTP unlocks after 60 seconds in every flow. You also need a reset password screen behind login with a confirmation message, secure storage of the refresh token to extend the session, and more than one user profile per install with sign in and sign out.
 
@@ -31629,7 +31633,7 @@ Once a care context is linked to the user's ABHA address:
 
 A care context can be linked to a person's address by any facility they visit, without your application being part of it. A subscription is how you find out: a standing watch on one address, delivering to your callback whenever something changes.
 
-NHA expects a PHR app to set one up at two moments, when it creates an address and when a person signs in with an address it has not seen before. The person must be asked to consent to it; signing in does not imply it.
+Set one up at two moments: when it creates an address and when a person signs in with an address it has not seen before. The person must be asked to consent to it; signing in does not imply it.
 
 Once approved, a notification arrives when a care context is linked or updated. Showing it on the device is your job.
 
@@ -32839,7 +32843,7 @@ sequenceDiagram
 
 Individuals who are unable to use OTP-based authentication, including cases where the mobile number linked to Aadhaar is unavailable or inaccessible, may use face authentication as an alternative verification mechanism, subject to ABDM and UIDAI guidelines. Face authentication is performed through authorized Aadhaar Registered Device (RD) services using approved authentication workflows.
 
-ABDM documentation references biometric-based ABHA creation workflows, including face authentication and other supported biometric modalities where applicable. Organizations should implement authentication methods in accordance with the officially published specifications and validate any implementation assumptions through the appropriate NHA guidance and documentation before proceeding with production deployment.
+ABDM documentation references biometric-based ABHA creation workflows, including face authentication and other supported biometric modalities where applicable. Organizations should implement authentication methods in accordance with the officially published specifications and follow them before proceeding with production deployment.
 
 ### ABHA creation by fingerprint or iris
 
@@ -33159,7 +33163,7 @@ Overview of the discovery process:
 Implementing the discovery algorithm. When a discovery request is received, the HRP/HIP is provided with verified and unverified identifiers to help match patient records.
 
 1. **Input Data for Matching.** Verified identifiers are reliable, system-verified attributes: ABHA address, mobile number, name, gender, year of birth. Unverified / user-declared information may include health facility-issued identifiers (e.g., medical registration number / patient ID).
-2. **Record Matching Logic.** The HRP must implement a robust matching algorithm to identify the correct patient records. Matching should be based on a combination of verified identifiers (preferred and higher weight) and supplementary unverified information.
+2. **Record Matching Logic.** The HRP must implement a matching algorithm to identify the correct patient records. Matching should be based on a combination of verified identifiers (preferred and higher weight) and supplementary unverified information.
 3. **Response Construction.** Once matching records are identified, the HRP must organize the records into care contexts. Each care context should follow the defined structure (reference ID + display name). The response must include a list of care contexts associated with the patient.
 4. **Important Compliance Requirement.** No clinical or sensitive information (e.g., diagnosis, reports, test results) must be included in the discovery response. Only metadata describing the care context should be shared.
 
@@ -33421,14 +33425,14 @@ Health Facility Registry (HFR) is a comprehensive repository of health facilitie
 
 Neither [HPR](/docs/pr-20/docs/hiecm/v3/getting-started/glossary#hpr) nor [HFR](/docs/pr-20/docs/hiecm/v3/getting-started/glossary#hfr) is responsible for moving health records. Instead, these registries establish who the healthcare professional is and what the healthcare facility is, providing a verified identity and facility layer for subsequent ABDM transactions and health-record flows.
 
-### Relationship with M2 and M3
+## Relationship with M2 and M3
 
 M2 and M3 require a Facility ID in the production environment. Milestone 4 provides the registry layer through which this Facility ID can be obtained. There are two primary routes for facility onboarding:
 
 - **NHPR Portal:** Facilities can be registered directly through the NHPR portal.
 - **M4 APIs:** Products can integrate with the M4 APIs to register.
 
-### HPR and HFR dependency
+## HPR and HFR dependency
 
 The HP-ID registration comes first for the API-based facility onboarding flow. Facility onboarding requires an HPR token, which is associated with a healthcare professional having a valid HPID.
 
@@ -33699,7 +33703,7 @@ Next: [M4 API reference](/docs/pr-20/docs/hiecm/v3/api/m4).
 
 ---
 
-# P1 Identity and profile
+# P1 Identity and login
 
 P1 is the patient side of [M1 Identity](/docs/pr-20/docs/hiecm/v3/milestones/m1). M1 is how a hospital system creates an [ABHA](/docs/pr-20/docs/hiecm/v3/getting-started/glossary#abha). P1 is how the patient's own [PHR](/docs/pr-20/docs/hiecm/v3/getting-started/glossary#phr) app does it, and how it maintains the account afterwards.
 
@@ -33744,7 +33748,7 @@ A Self-Declared profile needs a "Link ABHA number" action. The user enters the 1
 
 ## Login
 
-Sign a user in to a PHR application by any of these routes. Every route is mandatory except login by email OTP, which is optional.
+Sign a user in to a PHR application by any of these routes. Every route is mandatory except the two email OTP routes, which are optional.
 
 | Route                          | Validated by                                                                           |
 | ------------------------------ | -------------------------------------------------------------------------------------- |
@@ -33774,7 +33778,6 @@ Encrypt the Aadhaar number, mobile number, OTP and password with the PHR public 
 ## Next
 
 - The calls and base URLs: [P1 API reference](/docs/pr-20/reference/hiecm-p1).
-- The profile, card and QR code the signed in user manages: [P2](/docs/pr-20/docs/hiecm/v3/milestones/p2).
 - The next milestone: [P2 Linking and records](/docs/pr-20/docs/hiecm/v3/milestones/p2).
 
 
@@ -62538,11 +62541,11 @@ Seven modules have an errors page, and each lists the codes its specification re
 
 ### PHR calls carry the gateway session token, and their body fields are required
 
-The [P1](/docs/pr-20/reference/hiecm-p1) and [P2](/docs/pr-20/reference/hiecm-p2) references showed 24 PHR application calls with no `Authorization` header and no required body fields. Every one of them takes the access token from the gateway session call, and every field the request body shows is required. Get profile, QR code and PHR card also take `X-AUTH-TOKEN` beside `X-token`. If your app sends those calls without the token, add it.
+The [P1](/docs/pr-20/reference/hiecm-p1) and [P2](/docs/pr-20/reference/hiecm-p2) references showed 21 PHR application calls with no `Authorization` header and no required body fields. Every one of them takes the access token from the gateway session call, and every field the request body shows is required. Get profile, QR code and PHR card also take `X-AUTH-TOKEN` beside `X-token`. If your app sends those calls without the token, add it.
 
 ### The PHR public key is not the ABHA service's key
 
-A [PHR](/docs/pr-20/docs/hiecm/v3/getting-started/glossary#phr) application encrypts the Aadhaar number, mobile number, OTP and password with the key from `GET /abha/api/v3/phr/app/login/public/certificate`, the first call in [P1](/docs/pr-20/docs/hiecm/v3/api/p1/endpoints/p1-certificate-and-session/01-p1-get-v3-phr-app-login-public-certificate). [Encryption](/docs/pr-20/docs/hiecm/v3/concepts/encryption) had sent every reader to the M1 certificate. A PHR call encrypted with the M1 key is refused.
+A [PHR](/docs/pr-20/docs/hiecm/v3/getting-started/glossary#phr) application encrypts the Aadhaar number, mobile number, OTP and password with the key from `GET /abha/api/v3/phr/app/login/public/certificate`, the first call in [P1](/docs/pr-20/docs/hiecm/v3/api/p1/endpoints/p1-certificate-and-session/01-p1-get-v3-phr-app-login-public-certificate). [Encryption](/docs/pr-20/docs/hiecm/v3/concepts/encryption) had sent every reader to the M1 certificate. Encrypt every PHR call with the PHR key.
 
 ### Consent request init and context notify take an id only
 

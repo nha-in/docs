@@ -5179,7 +5179,7 @@ paths:
           required: true
           schema:
             type: string
-          description: The user token issued at login, sent beside X-token, as the PHR V3 document requires on this call.
+          description: The user token issued at login. Send it beside X-token.
       responses:
         "200":
           description: OK
@@ -5470,7 +5470,7 @@ paths:
           required: true
           schema:
             type: string
-          description: The user token issued at login, sent beside X-token, as the PHR V3 document requires on this call.
+          description: The user token issued at login. Send it beside X-token.
       responses:
         "202":
           description: Accepted
@@ -5538,7 +5538,7 @@ paths:
           required: true
           schema:
             type: string
-          description: The user token issued at login, sent beside X-token, as the PHR V3 document requires on this call.
+          description: The user token issued at login. Send it beside X-token.
       responses:
         "202":
           description: Accepted

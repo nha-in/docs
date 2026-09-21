@@ -65,7 +65,7 @@ The calls themselves: where they live, what they need in their headers, and one 
 | `X-token` | The user token from a login or enrolment response, sent with a `Bearer ` prefix. It acts for that ABHA holder. |
 | `REQUEST-ID` | Unique UUID for each request. |
 | `TIMESTAMP` | Request timestamp in UTC, ISO-8601 with Z. |
-| `X-AUTH-TOKEN` | The user token issued at login, sent beside X-token, as the PHR V3 document requires on this call. |
+| `X-AUTH-TOKEN` | The user token issued at login. Send it beside X-token. |
 | `R-token` | The refresh token from a login response, sent with a `Bearer ` prefix, exchanged for a new user token. |
 | `T-token` | The transaction token from the preceding login step, sent with a `Bearer ` prefix. It is valid only for that … |
 | `X-CM-ID` | Suffix of the consent manager to which the request was intended |

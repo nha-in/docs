@@ -8,14 +8,14 @@ Health Facility Registry (HFR) is a comprehensive repository of health facilitie
 
 Neither [HPR](/docs/pr-20/docs/hiecm/v3/getting-started/glossary#hpr) nor [HFR](/docs/pr-20/docs/hiecm/v3/getting-started/glossary#hfr) is responsible for moving health records. Instead, these registries establish who the healthcare professional is and what the healthcare facility is, providing a verified identity and facility layer for subsequent ABDM transactions and health-record flows.
 
-### Relationship with M2 and M3
+## Relationship with M2 and M3
 
 M2 and M3 require a Facility ID in the production environment. Milestone 4 provides the registry layer through which this Facility ID can be obtained. There are two primary routes for facility onboarding:
 
 - **NHPR Portal:** Facilities can be registered directly through the NHPR portal.
 - **M4 APIs:** Products can integrate with the M4 APIs to register.
 
-### HPR and HFR dependency
+## HPR and HFR dependency
 
 The HP-ID registration comes first for the API-based facility onboarding flow. Facility onboarding requires an HPR token, which is associated with a healthcare professional having a valid HPID.
 
