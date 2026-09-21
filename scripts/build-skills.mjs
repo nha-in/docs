@@ -317,6 +317,18 @@ const MODULES = [
     rules: [UNVERIFIED],
   },
   {
+    id: 'scan-and-register',
+    slug: 'abdm-scan-and-register',
+    title: 'Scan and register',
+    docs: '/docs/hiecm/v3/use-cases/scan-and-register',
+    spec: 'hiecm-scan-and-register.yaml',
+    journey: null,
+    example: 'Register the patient who just scanned the counter QR code and hand them a token',
+    description:
+      'Use when building, debugging or testing ABDM scan and register: receiving the profile a patient shares by QR code at a counter and answering with a queue token.',
+    rules: [UNVERIFIED],
+  },
+  {
     id: 'scan-and-pay',
     slug: 'abdm-scan-and-pay',
     title: 'Scan and pay',

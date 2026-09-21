@@ -218,6 +218,33 @@ function spliceEndpoints(items: any[]): any[] {
   return out;
 }
 
+/**
+ * Modules whose specification says `x-portal.section: use-cases` (Scan and
+ * Pay today) sit under one Use cases group, at the place of the first of
+ * them, so the API tab separates milestones from use cases the way the Docs
+ * tab does. Everything else keeps its order.
+ */
+function groupUseCases(items: any[]): any[] {
+  const isUseCase = (item: any) =>
+    item.type === 'category' && item.customProps?.section === 'use-cases';
+  const useCases = items.filter(isUseCase);
+  if (useCases.length === 0) return items;
+  const group = {
+    type: 'category',
+    label: 'Use cases',
+    className: 'sidebar-icon sidebar-icon--briefcase',
+    collapsed: true,
+    items: useCases,
+  };
+  const out: any[] = [];
+  let placed = false;
+  for (const item of items) {
+    if (!isUseCase(item)) out.push(item);
+    else if (!placed) { out.push(group); placed = true; }
+  }
+  return out;
+}
+
 async function sidebarItemsGenerator({defaultSidebarItemsGenerator, ...args}: any) {
   const items = await defaultSidebarItemsGenerator(args);
   const dirName: string = args.item.dirName;
@@ -237,7 +264,7 @@ async function sidebarItemsGenerator({defaultSidebarItemsGenerator, ...args}: an
   const withoutIndex = () =>
     items.filter((item: any) => !(item.type === 'doc' && item.id === `${dirName}/index`));
   if (dirName.endsWith('/api')) {
-    return spliceEndpoints(withoutIndex());
+    return groupUseCases(spliceEndpoints(withoutIndex()));
   }
   if (dirName.endsWith('/troubleshooting')) {
     return withoutIndex();
@@ -432,6 +459,9 @@ const config: Config = {
           {from: '/docs/abdm/v3/sandbox', to: '/docs/hiecm/v3/getting-started/sandbox'},
           {from: '/docs/abdm/v3/what-you-can-build', to: '/docs/hiecm/v3/milestones'},
           {from: '/docs/hiecm/v3/getting-started/what-you-can-build', to: '/docs/hiecm/v3/milestones'},
+          {from: '/docs/hiecm/v3/milestones/scan-and-register', to: '/docs/hiecm/v3/use-cases/scan-and-register'},
+          {from: '/docs/hiecm/v3/api/m2/endpoints/m2-abdm-patient-share-hip/01-m2-post-v3-hip-patient-share', to: '/docs/hiecm/v3/api/scan-and-register/endpoints/scan-and-register-abdm-patient-share-hip/01-scan-and-register-post-v3-hip-patient-share'},
+          {from: '/docs/hiecm/v3/api/m2/endpoints/m2-abdm-patient-share-hip/02-m2-post-patient-share-v3-on-share', to: '/docs/hiecm/v3/api/scan-and-register/endpoints/scan-and-register-abdm-patient-share-hip/02-scan-and-register-post-patient-share-v3-on-share'},
           {from: '/docs/abdm/v3/glossary', to: '/docs/hiecm/v3/getting-started/glossary'},
           {from: '/docs/abdm/v3/phr', to: '/docs/hiecm/v3/concepts/phr'},
           {from: '/docs/abdm/v3/registries/hpr', to: '/docs/hiecm/v3/registries/nhpr/hpr'},

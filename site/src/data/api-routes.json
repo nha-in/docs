@@ -2649,7 +2649,7 @@
     "method": "POST",
     "path": "/health-information/transfer",
     "summary": "health information transfer API",
-    "route": "/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/11-m2-post-health-information-transfer",
+    "route": "/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/10-m2-post-health-information-transfer",
     "callbacks": []
   },
   {
@@ -2698,22 +2698,6 @@
     "path": "/api/hiecm/hip/v3/link/patient/links/sms/notify2",
     "summary": "This API will be used by HIP to send SMS notification to patient that a care context is linked.",
     "route": "/docs/hiecm/v3/api/m2/endpoints/m2-abdm-hip-initiated-linking-hip/03-m2-post-hip-v3-link-patient-links-sms-notify2",
-    "callbacks": []
-  },
-  {
-    "key": "patient-share/on-share",
-    "hosts": [
-      "dev.abdm.gov.in",
-      "apis.abdm.gov.in"
-    ],
-    "kind": "operation",
-    "operationId": "m2_post_patient_share_v3_on_share",
-    "module": "M2 Health information provider services",
-    "moduleDir": "m2",
-    "method": "POST",
-    "path": "/api/hiecm/patient-share/v3/on-share",
-    "summary": "This API will be invoked by the HIP for sharing the response of HIECM's /api/hiecm/patient-share/v3/on-share API",
-    "route": "/docs/hiecm/v3/api/m2/endpoints/m2-abdm-patient-share-hip/01-m2-post-patient-share-v3-on-share",
     "callbacks": []
   },
   {
@@ -2777,7 +2761,7 @@
     "method": "POST",
     "path": "/api/v3/consent/request/hip/notify",
     "summary": "This is a callback api to notify hip when consent is APPROVED or REVOKED.",
-    "route": "/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/09-m2-post-v3-consent-request-hip-notify",
+    "route": "/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/08-m2-post-v3-consent-request-hip-notify",
     "callbacks": []
   },
   {
@@ -2793,7 +2777,7 @@
     "method": "POST",
     "path": "/api/v3/hip/health-information/request",
     "summary": "Health information data request to HIP.",
-    "route": "/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/10-m2-post-v3-hip-health-information-request",
+    "route": "/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/09-m2-post-v3-hip-health-information-request",
     "callbacks": []
   },
   {
@@ -2842,22 +2826,6 @@
     "path": "/api/v3/hip/patient/care-context/discover",
     "summary": "This API endpoint is used to discover care contexts associated with a patient. It allows healthcare information providers (HIPs) to retrieve and manage patient care context information.",
     "route": "/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/05-m2-post-v3-hip-patient-care-context-discover",
-    "callbacks": []
-  },
-  {
-    "key": "hip/patient/share",
-    "hosts": [
-      "dev.abdm.gov.in",
-      "apis.abdm.gov.in"
-    ],
-    "kind": "callback",
-    "operationId": "m2_post_v3_hip_patient_share",
-    "module": "M2 Health information provider services",
-    "moduleDir": "m2",
-    "method": "POST",
-    "path": "/api/v3/hip/patient/share",
-    "summary": "This API will be invoked to the HIP for sharing the response of HIECM's /api/hiecm/patient-share/v3/share API",
-    "route": "/docs/hiecm/v3/api/m2/endpoints/m2-callbacks/08-m2-post-v3-hip-patient-share",
     "callbacks": []
   },
   {
@@ -7006,6 +6974,38 @@
     "path": "/v3/patient/share/open-order",
     "summary": "This is an API is called by HIU to check the status of reports.",
     "route": "/docs/hiecm/v3/api/scan-and-pay/endpoints/scan-and-pay-abdm-scan-pay-hip/01-scan-and-pay-post-v3-patient-share-open-order",
+    "callbacks": []
+  },
+  {
+    "key": "patient-share/on-share",
+    "hosts": [
+      "dev.abdm.gov.in",
+      "apis.abdm.gov.in"
+    ],
+    "kind": "operation",
+    "operationId": "scan-and-register_post_patient_share_v3_on_share",
+    "module": "Scan and Register",
+    "moduleDir": "scan-and-register",
+    "method": "POST",
+    "path": "/api/hiecm/patient-share/v3/on-share",
+    "summary": "This API will be invoked by the HIP for sharing the response of HIECM's /api/hiecm/patient-share/v3/on-share API",
+    "route": "/docs/hiecm/v3/api/scan-and-register/endpoints/scan-and-register-abdm-patient-share-hip/02-scan-and-register-post-patient-share-v3-on-share",
+    "callbacks": []
+  },
+  {
+    "key": "hip/patient/share",
+    "hosts": [
+      "dev.abdm.gov.in",
+      "apis.abdm.gov.in"
+    ],
+    "kind": "callback",
+    "operationId": "scan-and-register_post_v3_hip_patient_share",
+    "module": "Scan and Register",
+    "moduleDir": "scan-and-register",
+    "method": "POST",
+    "path": "/api/v3/hip/patient/share",
+    "summary": "This API will be invoked to the HIP for sharing the response of HIECM's /api/hiecm/patient-share/v3/share API",
+    "route": "/docs/hiecm/v3/api/scan-and-register/endpoints/scan-and-register-abdm-patient-share-hip/01-scan-and-register-post-v3-hip-patient-share",
     "callbacks": []
   },
   {

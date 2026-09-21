@@ -17,10 +17,6 @@
     - op: m2_post_user_initiated_linking_v3_patient_care_context_on_8c9340
     - op: m2_post_user_initiated_linking_v3_link_care_context_on_init
     - op: m2_post_user_initiated_linking_v3_link_care_context_on_confirm
-- id: m2-abdm-patient-share-hip
-  title: Patient share
-  steps:
-    - op: m2_post_patient_share_v3_on_share
 - id: m2-consent-management-data-flow-hip
   title: Consent and data flow
   steps:
@@ -37,7 +33,6 @@
     - op: m2_post_v3_hip_patient_care_context_discover
     - op: m2_post_v3_hip_link_care_context_init
     - op: m2_post_v3_hip_link_care_context_confirm
-    - op: m2_post_v3_hip_patient_share
     - op: m2_post_v3_consent_request_hip_notify
     - op: m2_post_v3_hip_health_information_request
     - op: m2_post_health_information_transfer

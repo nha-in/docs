@@ -5157,6 +5157,7 @@ paths:
           schema:
             type: string
           example: Bearer <JWT TOKEN>
+          description: The user token from a login or enrolment response, sent with a `Bearer ` prefix. It acts for that ABHA holder.
         - name: REQUEST-ID
           in: header
           required: true
@@ -5310,6 +5311,7 @@ paths:
           schema:
             type: string
           example: Bearer <JWT TOKEN>
+          description: The user token from a login or enrolment response, sent with a `Bearer ` prefix. It acts for that ABHA holder.
         - name: REQUEST-ID
           in: header
           required: true
@@ -5437,6 +5439,7 @@ paths:
           schema:
             type: string
           example: Bearer <JWT TOKEN>
+          description: The user token from a login or enrolment response, sent with a `Bearer ` prefix. It acts for that ABHA holder.
         - name: REQUEST-ID
           in: header
           required: true
@@ -5498,6 +5501,7 @@ paths:
           schema:
             type: string
           example: Bearer <JWT TOKEN>
+          description: The user token from a login or enrolment response, sent with a `Bearer ` prefix. It acts for that ABHA holder.
         - name: REQUEST-ID
           in: header
           required: true
@@ -5559,6 +5563,7 @@ paths:
           schema:
             type: string
           example: Bearer <JWT TOKEN>
+          description: The user token from a login or enrolment response, sent with a `Bearer ` prefix. It acts for that ABHA holder.
         - name: REQUEST-ID
           in: header
           required: true
@@ -5641,6 +5646,7 @@ paths:
           schema:
             type: string
           example: Bearer <JWT TOKEN>
+          description: The user token from a login or enrolment response, sent with a `Bearer ` prefix. It acts for that ABHA holder.
         - name: REQUEST-ID
           in: header
           required: true
@@ -5863,6 +5869,7 @@ paths:
           schema:
             type: string
           example: Bearer <JWT TOKEN>
+          description: The refresh token from a login response, sent with a `Bearer ` prefix, exchanged for a new user token.
         - name: REQUEST-ID
           in: header
           required: true
@@ -5948,6 +5955,7 @@ paths:
           schema:
             type: string
           example: Bearer <JWT TOKEN>
+          description: The user token from a login or enrolment response, sent with a `Bearer ` prefix. It acts for that ABHA holder.
         - name: REQUEST-ID
           in: header
           required: true
@@ -6043,6 +6051,7 @@ paths:
           schema:
             type: string
           example: Bearer <JWT TOKEN>
+          description: The user token from a login or enrolment response, sent with a `Bearer ` prefix. It acts for that ABHA holder.
         - name: REQUEST-ID
           in: header
           required: true
@@ -6291,6 +6300,7 @@ paths:
           schema:
             type: string
           example: Bearer <JWT TOKEN>
+          description: The user token from a login or enrolment response, sent with a `Bearer ` prefix. It acts for that ABHA holder.
         - name: REQUEST-ID
           in: header
           required: true
@@ -6821,6 +6831,7 @@ paths:
           schema:
             type: string
           example: Bearer <JWT TOKEN>
+          description: The transaction token from the preceding login step, sent with a `Bearer ` prefix. It is valid only for that login.
         - name: REQUEST-ID
           in: header
           required: true
@@ -7896,4 +7907,4 @@ components:
       type: http
       scheme: bearer
       bearerFormat: JWT
-      description: The access token from POST /api/hiecm/gateway/v3/sessions.
+      description: The access token from POST /api/hiecm/gateway/v3/sessions, sent with a `Bearer ` prefix.

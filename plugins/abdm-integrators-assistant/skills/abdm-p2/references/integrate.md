@@ -62,11 +62,11 @@ The calls themselves: where they live, what they need in their headers, and one 
 
 | Header | What it is |
 | --- | --- |
-| `X-token` |  |
+| `X-token` | The user token from a login or enrolment response, sent with a `Bearer ` prefix. It acts for that ABHA holder. |
 | `REQUEST-ID` | Unique UUID for each request. |
 | `TIMESTAMP` | Request timestamp in UTC, ISO-8601 with Z. |
-| `R-token` |  |
-| `T-token` |  |
+| `R-token` | The refresh token from a login response, sent with a `Bearer ` prefix, exchanged for a new user token. |
+| `T-token` | The transaction token from the preceding login step, sent with a `Bearer ` prefix. It is valid only for that … |
 | `X-CM-ID` | Suffix of the consent manager to which the request was intended |
 | `X-AUTH-TOKEN` | JWT Authentication token which was issued by ABDM after successful validation of username and password |
 | `X-HIU-ID` | Identifier of the health information user to which the request was intended |

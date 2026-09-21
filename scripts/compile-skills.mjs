@@ -26,6 +26,7 @@ const MODULES = {
   subscription: 'subscribing an HIU to changes on an ABHA address',
   'scan-and-pay': 'open orders, patient selection and payment status between a facility and a PHR app',
   'record-share': 'a patient sharing chosen records with an HIU from a PHR app after scanning its QR code',
+  'scan-and-register': 'receiving the profile a patient shares by QR code at a counter and answering with a queue token',
 };
 
 function stepData(step, journeyId, i) {

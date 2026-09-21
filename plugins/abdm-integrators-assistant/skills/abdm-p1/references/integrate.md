@@ -43,8 +43,8 @@ The calls themselves: where they live, what they need in their headers, and one 
 | --- | --- |
 | `REQUEST-ID` | Unique UUID for each request. |
 | `TIMESTAMP` | Request timestamp in UTC, ISO-8601 with Z. |
-| `T-token` |  |
-| `X-token` |  |
+| `T-token` | The transaction token from the preceding login step, sent with a `Bearer ` prefix. It is valid only for that … |
+| `X-token` | The user token from a login or enrolment response, sent with a `Bearer ` prefix. It acts for that ABHA holder. |
 | `X-CM-ID` | Suffix of the consent manager to which the request was intended |
 ## A request, in full
 

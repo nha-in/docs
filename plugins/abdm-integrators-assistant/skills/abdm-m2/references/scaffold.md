@@ -384,31 +384,6 @@ Inbound to your bridge at `/api/v3/hip/token/on-generate-token`. Acknowledge it 
 
 A 200 response. The specification gives no body for it, so read what comes back.
 
-### Patient share (`m2-abdm-patient-share-hip`)
-
-**Act: the calls in this journey, in order**
-
-#### 1. Share HIP patient (`m2_post_v3_hip_patient_share`)
-
-Inbound to your bridge at `/api/v3/hip/patient/share`. Acknowledge it and continue.
-
-#### 2. Answer the patient share request (`m2_post_patient_share_v3_on_share`)
-
-```bash
-curl --request POST \
-  --url https://dev.abdm.gov.in/api/hiecm/patient-share/v3/on-share \
-  --header 'Authorization: Bearer <ACCESS_TOKEN_FROM_SESSIONS_CALL>' \
-  --header 'REQUEST-ID: 18235d89-cb13-479d-ad71-7a57d5f669a8' \
-  --header 'TIMESTAMP: 2022-10-06T15:10:00.587Z' \
-  --header 'X-CM-ID: sbx' \
-  --header 'Content-Type: application/json' \
-  --data '"<VALUE>"'
-```
-
-**Exit condition (Observe until this is true)**
-
-A 202 response. The specification gives no body for it, so read what comes back.
-
 ### Consent and data flow (`m2-consent-management-data-flow-hip`)
 
 **Act: the calls in this journey, in order**

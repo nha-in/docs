@@ -156,7 +156,7 @@ The calls themselves: where they live, what they need in their headers, and one 
 | `BENEFIT_NAME` | **Applicable for user who is enrolling via Benefit Program.** |
 | `X-token` | **Applicable for child abha creation. X-token of Parent user, user can get X-token after login to the system** |
 | `TRANSACTION_ID` | Transaction ID from the ABHA creation response. |
-| `Content-Type` |  |
+| `Content-Type` | `application/json`. |
 | `R-token` | Refresh token (`Bearer <refreshToken>`) received at login. |
 | `T-token` | Short-lived token (`Bearer <token>`) returned by *Login via Mobile number - verify OTP*. |
 | `X-CM-ID` | Suffix of the consent manager to which the request was intended |

@@ -348,6 +348,10 @@ for (const {platform, version, files} of tree) {
         // stylesheet gives every other group, so a new specification renders
         // correctly before anyone has picked its icon.
         icon: portal.icon,
+        // Optional. 'use-cases' moves the module under a Use cases group in
+        // the API sidebar (site/docusaurus.config.ts), beside the milestones
+        // rather than among them.
+        section: portal.section,
         dir: portal.module ?? stem,
         file: file.name,
         route: `/reference/${stem}`,
@@ -853,6 +857,7 @@ for (const {platform, version, files} of tree) {
           ...(module.icon && {
             className: `sidebar-icon sidebar-icon--${module.icon}`,
           }),
+          ...(module.section && {customProps: {section: module.section}}),
         },
         null,
         2,

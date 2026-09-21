@@ -5,6 +5,7 @@ info:
     label: Patient scan and record share
     position: 12
     icon: share-2
+    section: use-cases
   title: ABDM patient scan and record share
   summary: A patient scans a facility's QR code in a PHR app and shares chosen health records with that HIU.
   description: |-

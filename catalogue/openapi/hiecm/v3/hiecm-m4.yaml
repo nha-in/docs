@@ -631,6 +631,7 @@ paths:
           required: true
           schema:
             type: string
+          description: The HPR token of the signed-in professional, from the HPR login.
       requestBody:
         content:
           application/json:
@@ -863,11 +864,13 @@ paths:
           required: true
           schema:
             type: string
+          description: The HPR token of the signed-in professional, from the HPR login.
         - name: x-hprid-auth-verifier
           in: header
           required: false
           schema:
             type: string
+          description: The HPR token of the professional verifying the facility submission.
       requestBody:
         content:
           application/json:
@@ -2227,6 +2230,7 @@ paths:
           required: false
           schema:
             type: string
+          description: The HPR token of the signed-in professional, from the HPR login.
       responses:
         "200":
           description: OK

@@ -1,41 +1,31 @@
 ---
-name: abdm-m2
-description: Use when building, debugging or testing ABDM Milestone 2: care contexts, HIP initiated linking, discovery, and pushing encrypted health records to a requester. Carries the endpoints and the encryption parameters. Also carries the scaffolding loop that builds it flow by flow and the loop from a failed call to a named fix, in references/.
+name: abdm-scan-and-register
+description: Use when building, debugging or testing ABDM scan and register: receiving the profile a patient shares by QR code at a counter and answering with a queue token.
 ---
 
-# ABDM M2, health information provider services
+# ABDM Scan and register
 
 Generated from the ABDM Developer Portal on 2026-09-16, catalogue version 2026.09.16. Every fact below comes from a page in that portal, which is the place to look when this file does not carry enough.
 
-This file is a snapshot. Re-download the whole folder from the portal's /skills/abdm-m2/ path when it is older than the work you are doing: this router and every file under references/ that it links to. Fetching this file alone leaves those links pointing at files you do not have.
+This file is a snapshot. Re-download the whole folder from the portal's /skills/abdm-scan-and-register/ path when it is older than the work you are doing: this router and every file under references/ that it links to. Fetching this file alone leaves those links pointing at files you do not have.
 If the abdm-docs MCP server is connected, trust its answers over this file: it serves the current catalogue and stamps every response with its catalogue_version, which you can compare against the version above.
 
-## What you can do with M2
+## What you can do with Scan and register
 
-- Tell ABDM a patient had a visit with you, so their records can be found later.
-- Answer a discovery request when somebody looks for that patient.
-- Send records out encrypted when a consent says you must.
-- Get the link token the linking calls need.
+- Scan and register
 
 What it cannot do yet matters as much. Read **Before anything else** below before assuming a capability is one endpoint away.
 
 ## What is in this folder
 
-- **Scaffold.** Survey the codebase first when one exists, then build it flow by flow against the sandbox, as a loop that ends when the step's exit condition holds rather than on a call returning 200. [references/scaffold.md](references/scaffold.md)
-- **Design.** What the journey around the calls has to do, and what a screen is forbidden to claim. [references/design.md](references/design.md)
-- **Integrate.** 31 operations, with their hosts and headers. [references/integrate.md](references/integrate.md)
-- **Debug.** The loop from a failed call to a named fix. The specification's examples return no error code for this module. [references/debug.md](references/debug.md)
+- **Integrate.** 13 operations, with their hosts and headers. [references/integrate.md](references/integrate.md)
+- **Debug.** The specification's examples return no error code for this module. [references/debug.md](references/debug.md)
 
 This file is the map. Each line above is a file beside it, opened one at a time rather than read through.
 
 ## Before anything else
 
 - No call in this skill has been run against the ABDM sandbox. Treat request and response shapes as unconfirmed, and check a response before you rely on its shape.
-- The design section is the exception. Its rules come from building a working front desk against the sandbox, and each atom it cites names what was observed and the date it was seen.
-- You act as the HIP.
-- M2 is keyed to an ABHA address, so a working M1 integration comes first.
-- You are the side that encrypts, and the parameters arrive from the requester rather than from you. The health information request carries `keyMaterial` with `cryptoAlg`, `curve: Curve25519`, the requester's `dhPublicKey` and a `nonce`. Generate your own Curve25519 pair and your own nonce, and send your public key and nonce back with the data so the requester can derive the same secret.
-- The key derivation and the symmetric cipher applied over that shared secret are not yet published. Confirm both at onboarding before you ship, rather than inferring them from a sample.
 
 ## Practices that hold across every call
 
@@ -62,7 +52,6 @@ This file is the map. Each line above is a file beside it, opened one at a time 
 
 ## Where the detail is
 
-- Every endpoint, with its body fields and responses: /docs/hiecm/v3/api/m2
-- The flows as diagrams: /docs/hiecm/v3/milestones/m2
+- Every endpoint, with its body fields and responses: /docs/hiecm/v3/use-cases/scan-and-register
 - Every error code across modules: /docs/hiecm/v3/reference/error-codes
 - Terms: /docs/hiecm/v3/getting-started/glossary

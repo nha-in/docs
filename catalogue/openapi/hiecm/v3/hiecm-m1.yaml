@@ -8647,6 +8647,7 @@ paths:
           schema:
             type: string
           example: application/json
+          description: "`application/json`."
         - name: BENEFIT_NAME
           in: header
           required: true
@@ -24071,6 +24072,7 @@ paths:
           schema:
             type: string
           example: application/json
+          description: "`application/json`."
         - name: BENEFIT_NAME
           in: header
           required: true
@@ -30438,3 +30440,4 @@ components:
       type: http
       scheme: bearer
       bearerFormat: JWT
+      description: The access token from POST /api/hiecm/gateway/v3/sessions, sent with a `Bearer ` prefix.

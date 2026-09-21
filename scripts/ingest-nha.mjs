@@ -21,7 +21,7 @@ const METHODS = ['get', 'post', 'put', 'patch', 'delete'];
 const MODULES = {
   gateway: {label: 'Gateway session', position: 1, icon: 'key-round', roles: ['his', 'phr'], title: 'ABDM gateway, sessions and bridges', summary: 'The access token every call carries, and the bridge registry.', servers: [{url: 'https://dev.abdm.gov.in', description: 'ABDM gateway, sandbox'}, {url: 'https://apis.abdm.gov.in', description: 'ABDM gateway, production'}], expected: 11},
   m1: {label: 'M1 ABHA creation and verification', position: 2, icon: 'id-card', roles: ['his'], title: 'ABDM M1, ABHA creation and verification', summary: 'Create, find, log into and manage an ABHA.', servers: [{url: 'https://abhasbx.abdm.gov.in', description: 'ABHA service, sandbox'}], expected: 121},
-  m2: {label: 'M2 Health information provider services', position: 3, icon: 'link', roles: ['his'], title: 'ABDM M2, health information provider services as a HIP', summary: 'Link care contexts to an ABHA address and share records when consent arrives.', servers: [{url: 'https://dev.abdm.gov.in', description: 'ABDM gateway, sandbox'}, {url: 'https://apis.abdm.gov.in', description: 'ABDM gateway, production'}], expected: 22},
+  m2: {label: 'M2 Health information provider services', position: 3, icon: 'link', roles: ['his'], title: 'ABDM M2, health information provider services as a HIP', summary: 'Link care contexts to an ABHA address and share records when consent arrives.', servers: [{url: 'https://dev.abdm.gov.in', description: 'ABDM gateway, sandbox'}, {url: 'https://apis.abdm.gov.in', description: 'ABDM gateway, production'}], expected: 20},
   m3: {label: 'M3 Health information user services', position: 4, icon: 'file-check', roles: ['his'], title: 'ABDM M3, health information user services as an HIU', summary: 'Raise a consent request, fetch its artefacts, and receive records.', servers: [{url: 'https://dev.abdm.gov.in', description: 'ABDM gateway, sandbox'}, {url: 'https://apis.abdm.gov.in', description: 'ABDM gateway, production'}], expected: 12},
   m4: {label: 'M4 HPR and HFR', position: 5, icon: 'building-2', roles: ['his'], title: 'ABDM M4, professional and facility registries', summary: 'Register healthcare professionals and facilities on the NHPR.', servers: [{url: 'https://apihspsbx.abdm.gov.in/v4/int', description: 'NHPR, sandbox'}], expected: 100},
   p1: {label: 'P1 Registration and login', position: 6, icon: 'user-round', roles: ['phr'], title: 'ABDM P1, PHR registration and login', summary: 'Create an ABHA address in a PHR app and log in to it.', servers: [{url: 'https://abhasbx.abdm.gov.in', description: 'ABHA service, sandbox'}], expected: 11},
@@ -29,7 +29,8 @@ const MODULES = {
   p3: {label: 'P3 Subscription', position: 8, icon: 'bell', roles: ['phr'], title: 'ABDM P3, PHR subscriptions', summary: 'Read, approve, deny, enable, disable and update the patient\'s subscriptions and subscription requests.', servers: [{url: 'https://dev.abdm.gov.in', description: 'ABDM gateway, sandbox'}], expected: 8},
   p4: {label: 'P4 Locker', position: 9, icon: 'lock', roles: ['phr'], title: 'ABDM P4, health lockers', summary: 'Set up a health locker and list the lockers and requests on an ABHA address.', servers: [{url: 'https://dev.abdm.gov.in', description: 'ABDM gateway, sandbox'}], expected: 4},
   subscription: {label: 'Subscriptions', position: 10, icon: 'bell', roles: ['his'], title: 'ABDM subscriptions', summary: 'Subscribe an HIU to changes on an ABHA address.', servers: [{url: 'https://dev.abdm.gov.in', description: 'ABDM gateway, sandbox'}, {url: 'https://apis.abdm.gov.in', description: 'ABDM gateway, production'}], expected: 6},
-  'scan-and-pay': {label: 'Scan and Pay', position: 11, icon: 'qr-code', roles: ['his'], title: 'ABDM Scan and Pay', summary: 'Open orders, patient selection and payment status between a facility and a PHR app.', servers: [{url: 'https://dev.abdm.gov.in', description: 'ABDM gateway, sandbox'}, {url: 'https://apis.abdm.gov.in', description: 'ABDM gateway, production'}], expected: 18},
+  'scan-and-register': {label: 'Scan and Register', position: 11, icon: 'contact-round', section: 'use-cases', roles: ['his'], title: 'ABDM Scan and Register', summary: 'Receive the profile a patient shares by scanning the counter QR code, and hand back a queue token.', servers: [{url: 'https://dev.abdm.gov.in', description: 'ABDM gateway, sandbox'}, {url: 'https://apis.abdm.gov.in', description: 'ABDM gateway, production'}], expected: 2},
+  'scan-and-pay': {label: 'Scan and Pay', position: 13, icon: 'qr-code', section: 'use-cases', roles: ['his'], title: 'ABDM Scan and Pay', summary: 'Open orders, patient selection and payment status between a facility and a PHR app.', servers: [{url: 'https://dev.abdm.gov.in', description: 'ABDM gateway, sandbox'}, {url: 'https://apis.abdm.gov.in', description: 'ABDM gateway, production'}], expected: 18},
 };
 
 // The patient side follows NHA's PHR collection folders, P1 to P4, by tag.
@@ -53,7 +54,7 @@ const FILES = [
   {file: 'hiecm/hip-initiated-linking.yaml', place: byRole('m2')},
   {file: 'hiecm/user-initiated-linking.yaml', place: byRole('m2')},
   {file: 'hiecm/link-token.yaml', place: byRole('m2')},
-  {file: 'hiecm/patient-share.yaml', place: byRole('m2')},
+  {file: 'hiecm/patient-share.yaml', place: byRole('scan-and-register')},
   {file: 'hiecm/consent-management-data-flow.yaml', place: (tag, path) => (tag.endsWith('-phr') ? phrPlace(tag, path) : tag.endsWith('-hiu') ? 'm3' : 'm2')},
   {file: 'hiecm/subscription.yaml', place: (tag, path) => (tag === 'subscription-phr' || LOCKER.test(path) ? phrPlace(tag, path) : 'subscription')},
   {file: 'hiecm/scan-and-pay.yaml', place: (tag, path) => (tag.endsWith('-phr') ? phrPlace(tag, path) : 'scan-and-pay')},
@@ -100,11 +101,27 @@ function dedupeM4Components(doc, file) {
 // swagger names the gateway session for its operations (gateway, p1, p2), and
 // the M4 files carry their own token call. The other raw files name no source,
 // so their modules get no description rather than a guessed one.
+const GATEWAY_TOKEN = 'The access token from POST /api/hiecm/gateway/v3/sessions, sent with a `Bearer ` prefix.';
 const TOKEN_SOURCE = {
-  gateway: 'The access token from POST /api/hiecm/gateway/v3/sessions.',
-  p1: 'The access token from POST /api/hiecm/gateway/v3/sessions.',
-  p2: 'The access token from POST /api/hiecm/gateway/v3/sessions.',
   m4: 'M4 declares bearer authentication. The HPID calls publish POST /getManagementToken.',
+};
+// 10. Header descriptions NHA's files leave blank. One meaning per header,
+// applied only where the file gave none, so NHA's own wording always wins.
+const HEADER_DESC = {
+  'REQUEST-ID': 'A fresh UUID v4 for this request. Callbacks echo it as `response.requestId`, which is how a reply is matched to the request it answers.',
+  'TIMESTAMP': 'When the request was sent, in ISO 8601 UTC, for example `2026-09-22T10:15:00.000Z`.',
+  'X-CM-ID': 'The consent manager suffix: `sbx` in sandbox, `abdm` in production.',
+  'X-token': 'The user token from a login or enrolment response, sent with a `Bearer ` prefix. It acts for that ABHA holder.',
+  'T-token': 'The transaction token from the preceding login step, sent with a `Bearer ` prefix. It is valid only for that login.',
+  'R-token': 'The refresh token from a login response, sent with a `Bearer ` prefix, exchanged for a new user token.',
+  'BENEFIT_NAME': 'The benefit programme the call is made under.',
+  'TRANSACTION_ID': 'The `txnId` from the preceding enrolment step.',
+  'Content-Type': '`application/json`.',
+  'X-HIP-ID': 'Identifier of the health information provider to which the request was intended.',
+  'X-HIU-ID': 'Identifier of the health information user to which the request was intended.',
+  'x-hprid-auth': 'The HPR token of the signed-in professional, from the HPR login.',
+  'x-hprid-auth-verifier': 'The HPR token of the professional verifying the facility submission.',
+  'X-Token': 'The HPR token of the signed-in professional, from the HPR login.',
 };
 const sha = (p) => 'sha256:' + createHash('sha256').update(readFileSync(p)).digest('hex');
 const slug = (s) => s.toLowerCase().replace(/\{([^}]+)\}/g, '$1').replace(/[^a-z0-9]+/g, '_').replace(/^_+|_+$/g, '');
@@ -114,7 +131,7 @@ const note = (module, op, what) => log.push(`| ${module} | \`${op}\` | ${what} |
 const specs = Object.fromEntries(Object.entries(MODULES).map(([id, m]) => [id, {
   openapi: '3.1.1',
   info: {
-    'x-portal': {module: id, label: m.label, position: m.position, icon: m.icon},
+    'x-portal': {module: id, label: m.label, position: m.position, icon: m.icon, ...(m.section ? {section: m.section} : {})},
     title: m.title, summary: m.summary, version: 'abdm-v3',
     license: {name: 'MIT', identifier: 'MIT'},
     contact: {name: 'ABDM sandbox support', url: 'https://sandboxsupport.abdm.gov.in/'},
@@ -124,7 +141,7 @@ const specs = Object.fromEntries(Object.entries(MODULES).map(([id, m]) => [id, {
   servers: m.servers,
   security: id === 'gateway' ? [] : [{bearerAuth: []}],
   tags: [], paths: {}, webhooks: {},
-  components: {securitySchemes: {bearerAuth: {type: 'http', scheme: 'bearer', bearerFormat: 'JWT', ...(TOKEN_SOURCE[id] ? {description: TOKEN_SOURCE[id]} : {})}}},
+  components: {securitySchemes: {bearerAuth: {type: 'http', scheme: 'bearer', bearerFormat: 'JWT', description: TOKEN_SOURCE[id] ?? GATEWAY_TOKEN}}},
 }]));
 
 const seenPath = new Map();   // "METHOD path" -> module that first declared it
@@ -351,6 +368,24 @@ if (journeysMode) {
 // YAML 1.1 readers resolve an unquoted 2026-09-16 or 1991-24-04 as a timestamp,
 // which loses the string NHA wrote and, on an impossible month, fails the load.
 const DATEISH = /^\d{4}-\d{1,2}-\d{1,2}([Tt ].*)?$|^\d{1,2}-\d{1,2}-\d{4}$/;
+// 10. Fill the header descriptions NHA left blank, every module, paths and
+// webhooks alike. Logged per operation so the log shows what the file lacked.
+for (const [module, spec] of Object.entries(specs)) {
+  for (const group of [spec.paths, spec.webhooks]) {
+    for (const item of Object.values(group ?? {})) {
+      for (const method of METHODS) {
+        const op = item[method];
+        if (!op) continue;
+        const filled = [];
+        for (const p of op.parameters ?? []) {
+          if (p.in === 'header' && !p.description && HEADER_DESC[p.name]) { p.description = HEADER_DESC[p.name]; filled.push(`\`${p.name}\``); }
+        }
+        if (filled.length) note(module, op.operationId, `header description added for ${filled.join(', ')}; NHA gave none`);
+      }
+    }
+  }
+}
+
 const emit = (spec) => {
   const doc = new Document(spec);
   visit(doc, {Scalar(_, node) { if (typeof node.value === 'string' && DATEISH.test(node.value)) node.type = 'QUOTE_DOUBLE'; }});

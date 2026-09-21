@@ -40,12 +40,16 @@
     "to": "/reference/hiecm-subscription"
   },
   {
-    "label": "Scan and Pay",
-    "to": "/reference/hiecm-scan-and-pay"
+    "label": "Scan and Register",
+    "to": "/reference/hiecm-scan-and-register"
   },
   {
     "label": "Patient scan and record share",
     "to": "/reference/hiecm-record-share"
+  },
+  {
+    "label": "Scan and Pay",
+    "to": "/reference/hiecm-scan-and-pay"
   },
   {
     "label": "Session",
