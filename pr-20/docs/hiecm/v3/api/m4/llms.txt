@@ -1,0 +1,107 @@
+# M4
+
+> Every page of the M4 module of the ABDM Developer Portal, fetchable as markdown.
+
+## Pages
+
+- [M4 HPR and HFR](https://nha-in.github.io/docs/pr-20/docs/hiecm/v3/api/m4): M4 base URLs and the HPR and HFR operations.
+- [Login via password](https://nha-in.github.io/docs/pr-20/docs/hiecm/v3/api/m4/endpoints/m4-authentication/01-m4-post-v1-auth-authpassword): Login Via Password
+- [Get public certificate](https://nha-in.github.io/docs/pr-20/docs/hiecm/v3/api/m4/endpoints/m4-authentication/02-m4-get-v1-auth-cert): Get Public Certificate
+- [Verify Aadhaar OTP 1](https://nha-in.github.io/docs/pr-20/docs/hiecm/v3/api/m4/endpoints/m4-authentication/03-m4-post-v1-auth-confirmwithaadhaarotp): Verify Aadhaar OTP 1
+- [Send via Aadhaar OTP](https://nha-in.github.io/docs/pr-20/docs/hiecm/v3/api/m4/endpoints/m4-authentication/04-m4-post-v1-auth-init): Send Via Aadhaar OTP
+- [Send verify OTP](https://nha-in.github.io/docs/pr-20/docs/hiecm/v3/api/m4/endpoints/m4-authentication/05-m4-post-v2-auth-loginviamobilesendotp): Send Verify OTP
+- [Register professional](https://nha-in.github.io/docs/pr-20/docs/hiecm/v3/api/m4/endpoints/m4-enrollment/01-m4-post-v1-doctors-register-professional-new): Register Professional
+- [Update professional](https://nha-in.github.io/docs/pr-20/docs/hiecm/v3/api/m4/endpoints/m4-enrollment/02-m4-post-v1-doctors-update-professional-new): Update Professional
+- [Fetch documents](https://nha-in.github.io/docs/pr-20/docs/hiecm/v3/api/m4/endpoints/m4-enrollment/03-m4-post-v1-doctors-fetch-documents-list): Fetch Documents
+- [Upload documents](https://nha-in.github.io/docs/pr-20/docs/hiecm/v3/api/m4/endpoints/m4-enrollment/04-m4-post-v1-uploads-upload-document): Upload Documents
+- [Get professional info](https://nha-in.github.io/docs/pr-20/docs/hiecm/v3/api/m4/endpoints/m4-enrollment/05-m4-post-v1-doctors-fetch-professional-info): Get Professional Info
+- [Submit the retrieval health ID by Aadhaar](https://nha-in.github.io/docs/pr-20/docs/hiecm/v3/api/m4/endpoints/m4-forgot-healthcare-professional-id-number/01-m4-post-v1-forgot-hprid-aadhaar): Retrieval Health ID By Aadhaar
+- [Submit the retrieval health ID by mobile](https://nha-in.github.io/docs/pr-20/docs/hiecm/v3/api/m4/endpoints/m4-forgot-healthcare-professional-id-number/02-m4-post-v1-forgot-hprid-mobile): Retrieval Health ID By Mobile
+- [Generate mobile OTP](https://nha-in.github.io/docs/pr-20/docs/hiecm/v3/api/m4/endpoints/m4-forgot-healthcare-professional-id-number/03-m4-post-v1-forgot-hprid-mobile-generateotp): Generate Mobile OTP
+- [Send OTP to contact](https://nha-in.github.io/docs/pr-20/docs/hiecm/v3/api/m4/endpoints/m4-hfr-hrp-linkage-apis/01-m4-post-v1-5-facility-sendotptocontact): Send OTP To Contact
+- [Validate OTP](https://nha-in.github.io/docs/pr-20/docs/hiecm/v3/api/m4/endpoints/m4-hfr-hrp-linkage-apis/02-m4-post-v1-5-facility-validateotp): Validate OTP
+- [Get admin token](https://nha-in.github.io/docs/pr-20/docs/hiecm/v3/api/m4/endpoints/m4-hpid/01-m4-post-getmanagementtoken): Get Admin Token
+- [Submit the healdthloginwithmobile](https://nha-in.github.io/docs/pr-20/docs/hiecm/v3/api/m4/endpoints/m4-hpid/02-m4-post-healdthloginwithmobile): Healdthloginwithmobile
+- [Update role and category](https://nha-in.github.io/docs/pr-20/docs/hiecm/v3/api/m4/endpoints/m4-hpid/03-m4-post-profile-updaterole): Update Role And Category
+- [Fetch professional facility](https://nha-in.github.io/docs/pr-20/docs/hiecm/v3/api/m4/endpoints/m4-hpr/01-m4-post-fetchprofessionalfacility): Fetch Professional Facility
+- [Create facility suggestion](https://nha-in.github.io/docs/pr-20/docs/hiecm/v3/api/m4/endpoints/m4-hpr/02-m4-post-hprfacilitysuggestions): Create Facility Suggestion
+- [Submit the facility add and update](https://nha-in.github.io/docs/pr-20/docs/hiecm/v3/api/m4/endpoints/m4-multiple-hrp-api/01-m4-post-v1-bridges-mutiplehrpaddupdateservices): Facility Add And Update
+- [Get filtered address post](https://nha-in.github.io/docs/pr-20/docs/hiecm/v3/api/m4/endpoints/m4-onboarding-apis/01-m4-post-search-address-filter-deduplicate): Get Filtered Address Post
+- [Submit the v15Basic facility information](https://nha-in.github.io/docs/pr-20/docs/hiecm/v3/api/m4/endpoints/m4-onboarding-apis/02-m4-post-v1-5-facility-basic-information): V15Basic Facility Information
+- [Submit the v15Facility additional information](https://nha-in.github.io/docs/pr-20/docs/hiecm/v3/api/m4/endpoints/m4-onboarding-apis/03-m4-post-v1-5-facility-additional-information): V15Facility Additional Information
+- [Submit the v15Facility detailed information](https://nha-in.github.io/docs/pr-20/docs/hiecm/v3/api/m4/endpoints/m4-onboarding-apis/04-m4-post-v1-5-facility-detailed-information): V15Facility Detailed Information
+- [Submit the v15Submit facility details](https://nha-in.github.io/docs/pr-20/docs/hiecm/v3/api/m4/endpoints/m4-onboarding-apis/05-m4-post-v1-5-facility-submit-facility): V15Submit Facility Details
+- [Change password](https://nha-in.github.io/docs/pr-20/docs/hiecm/v3/api/m4/endpoints/m4-profile/01-m4-post-password-change-bypassword): Change Password
+- [Recover password via Aadhaar](https://nha-in.github.io/docs/pr-20/docs/hiecm/v3/api/m4/endpoints/m4-profile/02-m4-post-password-recover-byaadhaar): Recover Password Via Aadhaar
+- [Generate mobile OTP 1](https://nha-in.github.io/docs/pr-20/docs/hiecm/v3/api/m4/endpoints/m4-profile/03-m4-post-password-recover-bymobile-sendmobileotp): Generate Mobile OTP 1
+- [Verify mobile OTP 1](https://nha-in.github.io/docs/pr-20/docs/hiecm/v3/api/m4/endpoints/m4-profile/04-m4-post-password-recover-bymobile-verifymobileotp): Verify Mobile OTP 1
+- [Recover password confirm by Aadhaar](https://nha-in.github.io/docs/pr-20/docs/hiecm/v3/api/m4/endpoints/m4-profile/05-m4-post-password-recover-confirmbyaadhaar): Recover Password Confirm By Aadhaar
+- [Reset password and session](https://nha-in.github.io/docs/pr-20/docs/hiecm/v3/api/m4/endpoints/m4-profile/06-m4-post-password-reset-password): Reset Password And Session
+- [Reset password](https://nha-in.github.io/docs/pr-20/docs/hiecm/v3/api/m4/endpoints/m4-profile/07-m4-post-password-resetpassword): Reset Password
+- [Get account png card](https://nha-in.github.io/docs/pr-20/docs/hiecm/v3/api/m4/endpoints/m4-profile/08-m4-get-v1-account-getidcard): Get Account Png Card
+- [Get user profile by JWT](https://nha-in.github.io/docs/pr-20/docs/hiecm/v3/api/m4/endpoints/m4-profile/09-m4-get-v1-account-information): Get User Profile By JWT
+- [Generate Aadhaar OTPFor re KYC](https://nha-in.github.io/docs/pr-20/docs/hiecm/v3/api/m4/endpoints/m4-profile/10-m4-post-v1-account-rekyc-generateaadhaarotp): Generate Aadhaar OTPFor Re KYC
+- [Verify Aadhaar OTP](https://nha-in.github.io/docs/pr-20/docs/hiecm/v3/api/m4/endpoints/m4-profile/11-m4-post-v1-account-rekyc-verifyaadhaarotp): Verify Aadhaar OTP
+- [Verify Aadhaar OTPGet details](https://nha-in.github.io/docs/pr-20/docs/hiecm/v3/api/m4/endpoints/m4-profile/12-m4-post-v1-account-rekyc-verifyaadhaarotpgetdetails): Verify Aadhaar OTPGet Details
+- [Get user details](https://nha-in.github.io/docs/pr-20/docs/hiecm/v3/api/m4/endpoints/m4-profile/13-m4-get-v1-account-user-details-hprid): Get User Details
+- [Logout](https://nha-in.github.io/docs/pr-20/docs/hiecm/v3/api/m4/endpoints/m4-profile/14-m4-get-v4-auth-logout): Logout
+- [Generate Aadhaar link](https://nha-in.github.io/docs/pr-20/docs/hiecm/v3/api/m4/endpoints/m4-registration-api-s-collection-via-aadhaar/01-m4-post-aadhaar-generatelink): Generate Aadhaar Link
+- [Submit the is Aadhaar authenticated](https://nha-in.github.io/docs/pr-20/docs/hiecm/v3/api/m4/endpoints/m4-registration-api-s-collection-via-aadhaar/02-m4-post-aadhaar-isauthenticated): Is Aadhaar Authenticated
+- [Verify OTP](https://nha-in.github.io/docs/pr-20/docs/hiecm/v3/api/m4/endpoints/m4-registration-api-s-collection-via-aadhaar/03-m4-post-v2-registration-aadhaar-verifyotp): Verify OTP
+- [Submit the demographic auth via mobile](https://nha-in.github.io/docs/pr-20/docs/hiecm/v3/api/m4/endpoints/m4-registration-api-s-collection-via-aadhaar/04-m4-post-v2-registration-aadhaar-demographicauthviamobile): Demographic Auth Via Mobile
+- [Submit the account exist](https://nha-in.github.io/docs/pr-20/docs/hiecm/v3/api/m4/endpoints/m4-registration-api-s-collection-via-aadhaar/05-m4-post-v1-registration-aadhaar-checkhpidaccountexist): Account Exist
+- [Get suggesstion](https://nha-in.github.io/docs/pr-20/docs/hiecm/v3/api/m4/endpoints/m4-registration-api-s-collection-via-aadhaar/06-m4-post-v1-registration-aadhaar-hpid-suggestion): Get Suggesstion
+- [Generate mobile OTP](https://nha-in.github.io/docs/pr-20/docs/hiecm/v3/api/m4/endpoints/m4-registration-api-s-collection-via-aadhaar/07-m4-post-v1-registration-aadhaar-generatemobileotp): Generate Mobile OTP
+- [Verify mobile OTP](https://nha-in.github.io/docs/pr-20/docs/hiecm/v3/api/m4/endpoints/m4-registration-api-s-collection-via-aadhaar/08-m4-post-v1-registration-aadhaar-verifymobileotp): Verify Mobile OTP
+- [Create HPR ID V2](https://nha-in.github.io/docs/pr-20/docs/hiecm/v3/api/m4/endpoints/m4-registration-api-s-collection-via-aadhaar/09-m4-post-v2-registration-aadhaar-createhpridwithpreverified): Create HPR ID V2
+- [Get facility and infrastructure within radius with filter](https://nha-in.github.io/docs/pr-20/docs/hiecm/v3/api/m4/endpoints/m4-search/01-m4-post-facilitymanagement-v1-5-facility-bygeolocation-se-907b10): Get Facility And Infrastructure Within Radius With Filter
+- [Search facility](https://nha-in.github.io/docs/pr-20/docs/hiecm/v3/api/m4/endpoints/m4-search/02-m4-post-facilitymanagement-v1-5-facility-search): Search Facility
+- [Get the exists by HPR ID](https://nha-in.github.io/docs/pr-20/docs/hiecm/v3/api/m4/endpoints/m4-searched/01-m4-get-v1-search-existsbyhprid-hprid): Exists By HPR ID
+- [Search user by HPR ID](https://nha-in.github.io/docs/pr-20/docs/hiecm/v3/api/m4/endpoints/m4-searched/02-m4-get-v1-search-searchbyhprid-hprid): Search User By HPR ID
+- [Search user by mobile no](https://nha-in.github.io/docs/pr-20/docs/hiecm/v3/api/m4/endpoints/m4-searched/03-m4-get-v1-search-searchbymobile-mobile): Search User By Mobile No
+- [Fetch HPID categories](https://nha-in.github.io/docs/pr-20/docs/hiecm/v3/api/m4/endpoints/m4-util/01-m4-get-hpid-get-categories): Fetch HPID Categories
+- [Fetch HPID sub categories from category](https://nha-in.github.io/docs/pr-20/docs/hiecm/v3/api/m4/endpoints/m4-util/02-m4-get-hpid-get-subcategories): Fetch HPID Sub Categories From Category
+- [Get PSU details by ministry](https://nha-in.github.io/docs/pr-20/docs/hiecm/v3/api/m4/endpoints/m4-utilities/01-m4-get-getpsudetailsbyministry): Get Psu Data
+- [Get all facility sub type by facility type](https://nha-in.github.io/docs/pr-20/docs/hiecm/v3/api/m4/endpoints/m4-utilities/02-m4-post-v1-5-facility-fetch-facility-sub-type): Get All Facility Sub Type By Facility Type
+- [Get all facility type by ownership and sys of med](https://nha-in.github.io/docs/pr-20/docs/hiecm/v3/api/m4/endpoints/m4-utilities/03-m4-post-v1-5-facility-fetch-facility-type): Get All Facility Type By Ownership And Sys Of Med
+- [Get master data](https://nha-in.github.io/docs/pr-20/docs/hiecm/v3/api/m4/endpoints/m4-utilities/04-m4-get-v1-5-facility-get-master-data): Get Master Data
+- [Get all master types](https://nha-in.github.io/docs/pr-20/docs/hiecm/v3/api/m4/endpoints/m4-utilities/05-m4-get-v1-5-facility-get-master-types): Get All Master Type
+- [Get all sub types by owner ship type and sub type](https://nha-in.github.io/docs/pr-20/docs/hiecm/v3/api/m4/endpoints/m4-utilities/06-m4-post-v1-5-facility-get-owner-subtype): Get All Sub Types By Owner Ship Type And Sub Type
+- [Get all specialities by system of medicine code](https://nha-in.github.io/docs/pr-20/docs/hiecm/v3/api/m4/endpoints/m4-utilities/07-m4-post-v1-5-facility-get-specialities): Get All Specialities By System Of Medicine Code
+- [Get all district by state ID](https://nha-in.github.io/docs/pr-20/docs/hiecm/v3/api/m4/endpoints/m4-utilities/08-m4-get-v1-5-facility-lgd-districts): Get All District By State ID
+- [Get all states by LGD](https://nha-in.github.io/docs/pr-20/docs/hiecm/v3/api/m4/endpoints/m4-utilities/09-m4-get-v1-5-facility-lgd-states): Get All States By LGD
+- [Get all sub district by district code](https://nha-in.github.io/docs/pr-20/docs/hiecm/v3/api/m4/endpoints/m4-utilities/10-m4-get-v1-5-facility-lgd-subdistricts): Get All Sub District By District Code
+- [Get all affiliated board](https://nha-in.github.io/docs/pr-20/docs/hiecm/v3/api/m4/endpoints/m4-utility/01-m4-get-v1-masters-affiliated-board): Get All Affiliated Board
+- [Get affiliated board by state ID](https://nha-in.github.io/docs/pr-20/docs/hiecm/v3/api/m4/endpoints/m4-utility/02-m4-get-v1-masters-affiliated-board-states-id): Get Affiliated Board By State ID
+- [Get affiliated board by ID](https://nha-in.github.io/docs/pr-20/docs/hiecm/v3/api/m4/endpoints/m4-utility/03-m4-get-v1-masters-affiliated-board-id): Get Affiliated Board By ID
+- [Get college by state](https://nha-in.github.io/docs/pr-20/docs/hiecm/v3/api/m4/endpoints/m4-utility/04-m4-get-v1-masters-colleges-id): Get College By State
+- [Get college by state and medicine ID](https://nha-in.github.io/docs/pr-20/docs/hiecm/v3/api/m4/endpoints/m4-utility/05-m4-get-v1-masters-colleges-stateid-medicineid): Get College By State And Medicine ID
+- [Get all countries](https://nha-in.github.io/docs/pr-20/docs/hiecm/v3/api/m4/endpoints/m4-utility/06-m4-get-v1-masters-countries): Get All Countries
+- [Get countries by ID](https://nha-in.github.io/docs/pr-20/docs/hiecm/v3/api/m4/endpoints/m4-utility/07-m4-get-v1-masters-countries-id): Get Countries By ID
+- [List courses](https://nha-in.github.io/docs/pr-20/docs/hiecm/v3/api/m4/endpoints/m4-utility/08-m4-post-v1-masters-courses): List Courses
+- [Get all districts](https://nha-in.github.io/docs/pr-20/docs/hiecm/v3/api/m4/endpoints/m4-utility/09-m4-get-v1-masters-district): Get All Districts
+- [Get districts by state](https://nha-in.github.io/docs/pr-20/docs/hiecm/v3/api/m4/endpoints/m4-utility/10-m4-get-v1-masters-district-id): Get Districts By State
+- [List government health programmes](https://nha-in.github.io/docs/pr-20/docs/hiecm/v3/api/m4/endpoints/m4-utility/11-m4-get-v1-masters-languages): List Government Health Programmes
+- [Get pi languages by ID](https://nha-in.github.io/docs/pr-20/docs/hiecm/v3/api/m4/endpoints/m4-utility/12-m4-get-v1-masters-languages-id): Get Pi Languages By ID
+- [Get all medical council](https://nha-in.github.io/docs/pr-20/docs/hiecm/v3/api/m4/endpoints/m4-utility/13-m4-get-v1-masters-medical-councils): Get All Medical Council
+- [Get medical council by system of medicine name](https://nha-in.github.io/docs/pr-20/docs/hiecm/v3/api/m4/endpoints/m4-utility/14-m4-get-v1-masters-medical-councils-name): Get Medical Council By System Of Medicine Name
+- [Get all nurse councils](https://nha-in.github.io/docs/pr-20/docs/hiecm/v3/api/m4/endpoints/m4-utility/15-m4-get-v1-masters-nurse-councils): Get All Nurse Councils
+- [Get all states](https://nha-in.github.io/docs/pr-20/docs/hiecm/v3/api/m4/endpoints/m4-utility/16-m4-get-v1-masters-states): Get All States
+- [Get status](https://nha-in.github.io/docs/pr-20/docs/hiecm/v3/api/m4/endpoints/m4-utility/17-m4-get-v1-masters-states-id): Get Status
+- [Get all sub districts](https://nha-in.github.io/docs/pr-20/docs/hiecm/v3/api/m4/endpoints/m4-utility/18-m4-get-v1-masters-sub-districts): Get All Sub Districts
+- [Get all sub districts 1](https://nha-in.github.io/docs/pr-20/docs/hiecm/v3/api/m4/endpoints/m4-utility/19-m4-get-v1-masters-sub-districts-id): Get All Sub Districts 1
+- [Get all medical system](https://nha-in.github.io/docs/pr-20/docs/hiecm/v3/api/m4/endpoints/m4-utility/20-m4-get-v1-masters-system-of-medicines): Get All Medical System
+- [List all university](https://nha-in.github.io/docs/pr-20/docs/hiecm/v3/api/m4/endpoints/m4-utility/21-m4-get-v1-masters-universites): List All University
+- [Get university by college](https://nha-in.github.io/docs/pr-20/docs/hiecm/v3/api/m4/endpoints/m4-utility/22-m4-get-v1-masters-universites-id): Get University By College
+- [Get facilities created by HPR ID](https://nha-in.github.io/docs/pr-20/docs/hiecm/v3/api/m4/endpoints/m4-utility/23-m4-post-getfacilitycreatedbyhprid): Get Facilities Created By HPR ID
+- [Get facilities declared by HPR ID](https://nha-in.github.io/docs/pr-20/docs/hiecm/v3/api/m4/endpoints/m4-utility/24-m4-post-getfacilitydeclaredbyhprid): Get Facilities Declared By HPR ID
+- [Update status](https://nha-in.github.io/docs/pr-20/docs/hiecm/v3/api/m4/endpoints/m4-utility/25-m4-put-hprworkdetails-status): Update Status
+- [Link delink existing facility](https://nha-in.github.io/docs/pr-20/docs/hiecm/v3/api/m4/endpoints/m4-utility/26-m4-post-relinkordelinkprofessionalfromfacility): Link Delink Existing Facility
+- [Generate mobile OTP 2](https://nha-in.github.io/docs/pr-20/docs/hiecm/v3/api/m4/endpoints/m4-verification/01-m4-post-v1-doctors-generate-mobile-otp): Generate Mobile OTP 2
+- [Send verification email](https://nha-in.github.io/docs/pr-20/docs/hiecm/v3/api/m4/endpoints/m4-verification/02-m4-post-v1-doctors-generate-verification-email): Send Verification Email
+- [Submit the regenerate mobile OTP](https://nha-in.github.io/docs/pr-20/docs/hiecm/v3/api/m4/endpoints/m4-verification/03-m4-post-v1-doctors-regenerate-mobile-otp): Regenerate Mobile OTP
+- [Resend verification email](https://nha-in.github.io/docs/pr-20/docs/hiecm/v3/api/m4/endpoints/m4-verification/04-m4-post-v1-doctors-resent-verify-email): Resend Verification Email
+- [Verify email OTP](https://nha-in.github.io/docs/pr-20/docs/hiecm/v3/api/m4/endpoints/m4-verification/05-m4-post-v1-doctors-verify-email-otp): Verify Email OTP
+- [Verify mobile OTP](https://nha-in.github.io/docs/pr-20/docs/hiecm/v3/api/m4/endpoints/m4-verification/06-m4-post-v1-doctors-verify-mobile-otp): Verify Mobile OTP
+- [Send OTP if doctor verified](https://nha-in.github.io/docs/pr-20/docs/hiecm/v3/api/m4/endpoints/m4-verification/07-m4-post-v1-sendotpifdoctorverified): Send OTP If Doctor Verified
+- [Verify doctor verification OTP](https://nha-in.github.io/docs/pr-20/docs/hiecm/v3/api/m4/endpoints/m4-verification/08-m4-post-v1-verifydoctorverificationotp): Verify Doctor Verification OTP
