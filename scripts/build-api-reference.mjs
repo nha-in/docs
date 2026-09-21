@@ -417,6 +417,7 @@ for (const {platform, version, files} of tree) {
     }
     // Only a module that gets an errors page (see the error pages below) is
     // linked to one.
+    const owner = modules.find((m) => m.dir === moduleDir);
     const hasErrorsPage = owner && (errorsFromSpec(owner.spec).length || Object.keys(owner.spec.webhooks ?? {}).length);
     if (/^[45]/.test(status) && hasErrorsPage) {
       return {

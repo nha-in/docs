@@ -3,7 +3,7 @@
   "atoms": 633,
   "mapped": 135,
   "derived": 118,
-  "validatedAgainstBuild": false,
+  "validatedAgainstBuild": true,
   "routes": [
     {
       "atom": "hiecm.concept.m1-avoiding-duplicate-abha",
