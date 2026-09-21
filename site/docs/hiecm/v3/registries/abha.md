@@ -2,7 +2,7 @@
 title: ABHA Registry
 sidebar_label: ABHA
 description: The registry that identifies patients, the 14 digit ABHA number, the ABHA address, and what every milestone assumes about both.
-source: ABDM__Proposed_Simplified_Milestone_1.md, ABDM__NewDocumant_PHR_app.md, ABDM__M1_ABHA_Collection.postman_collection.md
+source: ABHA Updated Content Sbx 2.0.docx, NHA content review of 21 September 2026
 sidebar_position: 1
 covers: [hiecm.concept.abha-number-and-address, hiecm.concept.abha-address-policy]
 sidebar_class_name: sidebar-icon sidebar-icon--id-card
@@ -14,7 +14,7 @@ sidebar_class_name: sidebar-icon sidebar-icon--id-card
 
 The Ayushman Bharat Health Account (ABHA) is a unique health identifier issued under the Ayushman Bharat Digital Mission (ABDM). It serves as the foundational digital identity for individuals within the ABDM ecosystem and enables secure identification, authentication, and exchange of health records.
 
-ABHA facilitates seamless access to digital health services while ensuring interoperability across healthcare providers, health information systems, and personal health applications.
+ABHA facilitates access to digital health services while ensuring interoperability across healthcare providers, health information systems, and personal health applications.
 
 ## Components of ABHA
 
